@@ -1,134 +1,124 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC57246769
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C43224B04;
+	Fri,  2 May 2025 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186987; cv=none; b=dVvoPAg5O4wiYehix8l1YAH4Fr9El1hlMe0ke719pMcwo7NYTl87kYlmqAVhDkUe+NPOXxF4LQrnpbLHuF2hwW0GxlI39Ujz1Ty2Fji/Msvb4CpUeLjao74O69cRQ12o4eg1fpko+56/dCcxif/NklMYoFp1Nm/ZdW07GbxWg8U=
+	t=1746187142; cv=none; b=ECZLyGd7oREry9lB8ieMxdYbkFJU5mIocI+f0HtB+pnwgAWut/UbdTIhTzX9Xei0SCA+1tovtXDpCKV8nSS8DUkbirC7wU3e8qTkphpN1vHI1Lviq3hhxGApysuTKwrHx7k9/AU/pUquqE5UrsnkNo/bQQv263bdHew6pfLQEd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186987; c=relaxed/simple;
-	bh=c+gKYUvL+mRmw0LVpyp2dts7T0YVjJ1xgr2xwpHqjV8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SHeK7GmnsBmbcE+3cPz0aNWKd6/HPfh1K00RrWWfTzutgwHuKBDSb2H6uW7kmb9HgJ9OjOGcTmMoiGKQ8rPCM0X3+tOSc8w1EOExWKFEbSmWl2cmog30yeLYttmJGuDjUfQuPjE6wEhzVozvZnW5piRFKNGIbvmXjqC1964EVVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pJpgYU1j; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746187142; c=relaxed/simple;
+	bh=RwgCDnQ37EObTe/l83jABDwxgXSvAaJZEbvdls3xVr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWLk3vxUMVeLI8IFKPDS/y1XTOFhvqA+K/f8xFvKJLta1bOsKkuWvi0VzPC9H1kVuNpDZUozmR07285HntIyq6wjEsmVi3LZpYo4I5/t50tg/laU2fdj6MWy2M+j0SQD36fJDfrRCFbLuqMK8G+lwUB3OZNyMzcLEVxACTon+08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGa1Ng9Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJpgYU1j"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so17838501fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:56:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746186982; x=1746791782; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rUNwIJ6BVyXnCNfhB8YdWYkkIgckWrMjQ8cfZd889F4=;
-        b=pJpgYU1ji4jGfIxLLtgJESHZTiUhNJ7ZklNVnZg6HcCtRxbwWGmFOhORaqK377mJVh
-         UY0FfG85ofIeI0S9Z6Ka+4N3lb/RR355qxMs4v4iLj8M68kvqGXhE57ucVeQTHM9yzKs
-         BibeDf7FnbQdCS4zhQ5wpnnIZLIrDpAuCmp4Zjv4uNCvhLmfRHB8Gg0fWcE8tcQvMiE2
-         Qk8p64t4tb2nAgBmAEdgdrJRwVlQ6LFEBU0ybhjVGZjvnLzGRT86oXj8WzEyw3MGkyOW
-         EP/wHTa18vLupIM1egkY8dD0lAzU2hUnBC3Iaxfv6uUKM6lJqyaTJMfIl3/kPRJaLwYD
-         jdKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746186982; x=1746791782;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rUNwIJ6BVyXnCNfhB8YdWYkkIgckWrMjQ8cfZd889F4=;
-        b=qA1A9ycIDell4oL4YRo23VQbtdatm3BRrk9YfTLN3Xb9vQNtmH+/bbiwO1wNDIiK5V
-         jvhhQ6sDKLecJkqrdR98JyB7P9Po69Wqz6bMQPuKQmkoSgL98AjkEStuHeUeG6INCl6m
-         XWgjmzqW6D0lZQ4yWWMlIS08zwKoQBAPEyXRNT/YJCrz4jaLv6x/811wVw9ThtpijaRn
-         SbBicYU39/lUPKBZSp0cJQZEvka0Kk/YtgnuycQkA0AaR2NuIJZ0MakhlyfcVaejS8d5
-         Aty1zFFNfy7PVwpzAyL/hGgO3hGJWAUVP7RTbyflxOFnpvptd8ogspgl1X+p04yZciIf
-         /xIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKd4C7y/hX/pY3L5H7a2AJXybztvkjWoG9K7s3tDPhNx2sTNI4t+IDO0DWRpRCBGkDmNffoHh93bPy1os=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJQ1ujHKfyDrWaIFda8n90aIEyT0rVzCIsX87CCEt2itbPRU5y
-	jco6MQ20zN9PBmpJAifuq5DR/i7H7VxCYRcl5U7wqBgPiASJyFV70JWYGI8W3qWb+jz+m54P5rB
-	UA+Jti5jx4olOAAal01u6WfCfXP6D6RY4ut2JzA==
-X-Gm-Gg: ASbGncvhYh0NtK9ZyowNLbfG7yLt/p5HKKGDx1SyB1KQMtwIsnoqqLKn/evOVUrLdiW
-	CFsgGJHV19cSeF3RdJmTvImBS6azPzVD5vadoTXnUJJNCc2U+An3FPDc5NCJk00XQdnv1pCPYJ6
-	5PqT9rCILd/XqzJfJMqtGc9g==
-X-Google-Smtp-Source: AGHT+IFVQ8JKPYO1rnLcM2Y70dcTgwStoWvcnB2aoZEyQzs4B/b3M5+Y/SlSIKfzxsXCMLRLq9S0sgzPIPFIrl/mQKs=
-X-Received: by 2002:a2e:a812:0:b0:310:85ba:115f with SMTP id
- 38308e7fff4ca-320c5be28efmr7733421fa.33.1746186981975; Fri, 02 May 2025
- 04:56:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGa1Ng9Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B625C4CEE4;
+	Fri,  2 May 2025 11:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746187141;
+	bh=RwgCDnQ37EObTe/l83jABDwxgXSvAaJZEbvdls3xVr8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gGa1Ng9QOwviHBkEzyjbOGYNSiaM+mQvYc/nKz5Qq0XA5Ed2TF+IDD3zAle2bWPdU
+	 FCUJ+eO6qbLOQPVmSkan8UqqI/iL2k480/lmex0DBsLSvkSRxWjVSBZtGpWBAr5qHD
+	 xxVDPLnci9qhq1FMTuzQSdcwb2MdxiLNTJb1XLjqiwfPXVMkQ4A5rSfxvLcOfld3td
+	 mWCIPO8LhRD9al7AiChjH4W7mEdhaBf3pWzJ7zMWmVs9uq+p9xDiyHsr4/bRXvpeQK
+	 nNrBe5h6EgaivhdZqPTBRRrZBEGe44BQDC2NQhVoAbhV9xdnxFAsnfzPj5aYGpx+NT
+	 npmxlfiAvqsEA==
+Date: Fri, 2 May 2025 13:58:58 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
+Message-ID: <aBSzgrz9zTaFW5dj@pavilion.home>
+References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-3-frederic@kernel.org>
+ <20250424163024.GC18306@noisy.programming.kicks-ass.net>
+ <aA9ic6m6WAcmVBAw@pavilion.home>
+ <20250502102918.GW4198@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 2 May 2025 13:56:10 +0200
-X-Gm-Features: ATxdqUEieMo6zqI_jOq2JYpn2sJsyAQVwKrVkhKfiEUEH0GD9sH8kJFEH6gZSHg
-Message-ID: <CACRpkdbhYTFpA_jfMPFZ4t4bcVdO0+9iCsjtBnLpy9ok0U_wvQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v6.15
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250502102918.GW4198@noisy.programming.kicks-ass.net>
 
-Hi Linus,
+Le Fri, May 02, 2025 at 12:29:18PM +0200, Peter Zijlstra a écrit :
+> > @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+> >  	/*
+> >  	 * Child events can be freed.
+> >  	 */
+> > -	if (is_child) {
+> > -		if (parent_event) {
+> > -			mutex_unlock(&parent_event->child_mutex);
+> > -			/*
+> > -			 * Kick perf_poll() for is_event_hup();
+> > -			 */
+> > -			perf_event_wakeup(parent_event);
+> > +	if (parent_event) {
+> > +		mutex_unlock(&parent_event->child_mutex);
+> > +		/*
+> > +		 * Kick perf_poll() for is_event_hup();
+> > +		 */
+> > +		perf_event_wakeup(parent_event);
+> 
+> Should not this perf_event_wakeup() be inside the next if() as well?
+> doing anything on parent_event when !ATTACH_CHILD seems dodgy.
 
-here are som Valborg-patches for pincontrol. All are driver
-fixes, nothing exciting at all other than that they fix bugs which
-is nice.
+Good point!
 
-Details are in the signed tag, please pull it in!
+> 
+> > +
+> > +		/*
+> > +		 * Match the refcount initialization. Make sure it doesn't happen
+> > +		 * twice if pmu_detach_event() calls it on an already exited task.
+> > +		 */
+> > +		if (attach_state & PERF_ATTACH_CHILD) {
+> >  			/*
+> >  			 * pmu_detach_event() will have an extra refcount.
+> > +			 * perf_pending_task() might have one too.
+> >  			 */
+> >  			put_event(event);
+> >  		}
+> > +
+> >  		return;
+> >  	}
+> 
+> This is a *much* saner patch, thank you!
+> 
+> So the thing I worried about... which is why I chose for the TOMBSTONE
+> thing, is that this second invocation will now dereference parent_event,
+> even though we've already released our reference count on it. 
+> 
+> This is essentially a use-after-free.
+> 
+> The thing that makes it work is RCU. And I think we're good, since the
+> fail case is two perf_event_exit_event() invocations on the same event,
+> separated by an RCU grace period, and I don't think this can happen.
+> 
+> But its a shame we can't reliably detect that.. Oh well.
 
-Yours,
-Linus Walleij
+It's not RCU but the reference count of the child that protects it.
+In a second invocation, pmu_unregister() still holds a reference to
+the child and that protects the parent as well because the reference
+to the parent is only dropped once the child has dropped its own.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Hopefully that is one less opportunity for a headache :-)
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.15-2
-
-for you to fetch changes up to 12b8a672d2aa053064151659f49e7310674d42d3:
-
-  pinctrl: qcom: Fix PINGROUP definition for sm8750 (2025-04-29 10:27:25 +0200)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.15 series:
-
-- Fix potential NULL dereference in the i.MX driver.
-
-- Fix the pull up/down resistor values in the Meson driver.
-
-- Fix the mapping of the PHY LED pins in the Airhoa driver.
-
-- Fix EINT interrupts on older controllers and a debounce value
-  issue in the Mediatek driver.
-
-- Fix an erronoeus PINGROUP define in the Qualcomm driver.
-
-----------------------------------------------------------------
-Chen-Yu Tsai (1):
-      pinctrl: mediatek: common-v1: Fix EINT breakage on older controllers
-
-Christian Marangi (1):
-      pinctrl: airoha: fix wrong PHY LED mapping and PHY2 LED defines
-
-Dan Carpenter (1):
-      pinctrl: mediatek: common-v1: Fix error checking in mtk_eint_init()
-
-Hao Chang (1):
-      pinctrl: mediatek: Fix new design debounce issue
-
-Hui Wang (1):
-      pinctrl: imx: Return NULL if no group is matched and found
-
-Martin Blumenstingl (1):
-      pinctrl: meson: define the pull up/down resistor value as 60 kOhm
-
-Maulik Shah (1):
-      pinctrl: qcom: Fix PINGROUP definition for sm8750
-
- drivers/pinctrl/freescale/pinctrl-imx.c       |   6 +-
- drivers/pinctrl/mediatek/mtk-eint.c           |   2 +-
- drivers/pinctrl/mediatek/pinctrl-airoha.c     | 159 ++++++++++++--------------
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c |  12 +-
- drivers/pinctrl/meson/pinctrl-meson.c         |   2 +-
- drivers/pinctrl/qcom/pinctrl-sm8750.c         |   4 +-
- 6 files changed, 87 insertions(+), 98 deletions(-)
+-- 
+Frederic Weisbecker
+SUSE Labs
