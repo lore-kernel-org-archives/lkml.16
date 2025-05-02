@@ -1,51 +1,51 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C4D245005;
-	Fri,  2 May 2025 09:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1987F246792;
+	Fri,  2 May 2025 09:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176670; cv=none; b=m0G+6EHipqS8pI0ZQV+Pf4Ax31Qz7NDuGoIqq3xsl/MJmI1F1+f1c6yX0AMKdHL9YFrQyhT8YA21/Lo/zWVzr2ZX+H6p/++c+/rktnB72HV5tDKRGyJr5qI+ljFepD3Dg8SjjK3iIL9yHuqDu6A5z7NAR+5zxCHjpFWCmWzUdk0=
+	t=1746176672; cv=none; b=srK8j+UlVSXtFD8pI4i7IVayy9DDhiXmHA3Z1xYoB2rrp7pfmY8EwM+FtLPSN3a3rjEVvS/jYOlZUew2TfBTaWqCkRsWGZJjAB0c1PeF5YSf+JabWXpDZAJ5sqc0G8v6YeY2byVVlFLagp3N2KhGc338Tn/B/VYpj/pRiSzUx8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176670; c=relaxed/simple;
-	bh=/wVau6KdSpf6tc49isEbiPnqJnfQnF4gLeuIcRrjC7Y=;
+	s=arc-20240116; t=1746176672; c=relaxed/simple;
+	bh=RWzZYwzlUx7IrMbP4+6VrYVj/En9mmm7JCswSe/X8xY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GR4q8brqukaIH4uDYqGM9BLGY+P65Ezu4UeZZaWUdP9Qg0HpV1YcJeDs4U1x/OCCWUY+UTSWezdtI/VIRMQDfZM8NP164GqgdtQAmiJpLP8ueuX1f9tcqj8X3GRblAyqfyd8ppXxotuN7hbD5Cos2HIyvw7JZFeo9YtjDnbXg6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aI2UzuAN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lXQXr6hN; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=hUmlf3U5FSuxk9Rh1fcWif4rFU9F5MuN49yKCUWkQQA/T2mjryc/juyf+CrZPHQSpOZs50dctBqFZfiTVxoFPiVY8QBWZeGKdkg1yqxaOIXeG0EUYZU/6dGrR8HW/PtQsOGVPBXIgeiYtkwC8/2Ghu++GyDXs3w5Rsc5hPtXpQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q7kZ1eSe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rnx9YwdZ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aI2UzuAN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lXQXr6hN"
-Date: Fri, 02 May 2025 09:04:25 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q7kZ1eSe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rnx9YwdZ"
+Date: Fri, 02 May 2025 09:04:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746176666;
+	s=2020; t=1746176668;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nekUBVHwZXDekYhC3FBIuR44hcN7MXZdTQP34PSioSc=;
-	b=aI2UzuANWyYXuSNuvWnszpAx4QZ5BAyn6J6YehLxhPKMnPHuPhCj6mnCCOw7eK+u6FpBQI
-	eoadEC9Ug1+XKPqApOYwiweyfVtQqwcbRvnVFLBHBF6C2RPFcGiMCKVS61k369xk6Ewh95
-	8/GzR9c2/CnrD2euSveKO0QwEJZXGU5OVN1zPRFd/m8KvNlEu6Qxpa2PajS38Wb0aBoBGl
-	Lh7zKygKj67Drh7Z5pggRM4B2Ro+B7o3oWYG7XNRebtKKfdJHB+0h5mHrW7ljzcC5XGwu2
-	YsqJ16Zvc2zeeuZiURtnGIYroyi4ctP1JnK/J2gGPcYObMqT1iEdmeDqOWmlEA==
+	bh=6JQfFU1+hKfdp/gBbMgUd6tqjRUDw3+YagjRlpm0wME=;
+	b=q7kZ1eSeMy6Ugbqm3RmCRsVi4X0w8pxHbeunwc5ozWYTCRAnocr0K78SfDZyL/PkaYp8fQ
+	WXBXF721mu9mc/w1f9nhfGq2IV5VsvWN15LjGkoiBGHYW2tyY3d1y4oRKKXM3uuyEM6h3n
+	4oTdFxPL2w9XqWpMFw1wut43wzlyZXUEYsxThb1Q+JCoRMMEAYVuigqSHQEgf4lXVWVxLw
+	NbNcioePwRe4kJayOjcB/iMLz8OUFbPE8NW+5H0PurfVRrha0v+exJcrBDawUtEfTArcMa
+	l5h1NWPXO82DLsAZnApGK/sn5aa6Uje4MyhNtuskR503WplXb7AyNzDN9R7X4w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746176666;
+	s=2020e; t=1746176668;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nekUBVHwZXDekYhC3FBIuR44hcN7MXZdTQP34PSioSc=;
-	b=lXQXr6hNBJ/NCjBPZXt+2n8uCqW1DUUmlyvbvR5ZrL0sywbGNxY32eqxgC1okrgKU0vEbI
-	07XL8vUuzXinCXAg==
+	bh=6JQfFU1+hKfdp/gBbMgUd6tqjRUDw3+YagjRlpm0wME=;
+	b=Rnx9YwdZ+5T0wyhA1ByH6d16mIU6i8n3EMIvuoNDbbyZ0gMpJg3T5NFbC6jxFBx9tNtUrl
+	s1xUtLlL2SH/TQBw==
 From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/merge] x86/msr: Rename rdpmcl() to rdpmc()
+Subject: [tip: x86/merge] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
 Cc: "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
@@ -55,15 +55,15 @@ Cc: "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
  Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
  Thomas Gleixner <tglx@linutronix.de>, Josh Poimboeuf <jpoimboe@redhat.com>,
  Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250427092027.1598740-5-xin@zytor.com>
-References: <20250427092027.1598740-5-xin@zytor.com>
+In-Reply-To: <20250427092027.1598740-3-xin@zytor.com>
+References: <20250427092027.1598740-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174617666592.22196.16480563173964161379.tip-bot2@tip-bot2>
+Message-ID: <174617666745.22196.15200555517786851071.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -73,17 +73,20 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/merge branch of tip:
 
-Commit-ID:     7d9ccde56bc023f9a968db537963a029aa41d902
-Gitweb:        https://git.kernel.org/tip/7d9ccde56bc023f9a968db537963a029aa41d902
+Commit-ID:     288a4ff0ad29d1a9391b8a111a4b6da51da3aa85
+Gitweb:        https://git.kernel.org/tip/288a4ff0ad29d1a9391b8a111a4b6da51da3aa85
 Author:        Xin Li (Intel) <xin@zytor.com>
-AuthorDate:    Sun, 27 Apr 2025 02:20:16 -07:00
+AuthorDate:    Fri, 02 May 2025 10:20:14 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 02 May 2025 10:25:24 +02:00
+CommitterDate: Fri, 02 May 2025 10:24:39 +02:00
 
-x86/msr: Rename rdpmcl() to rdpmc()
+x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
 
-Now that rdpmc() is gone, rdpmcl() is the sole PMC read helper,
-simply rename rdpmcl() to rdpmc().
+Relocate rdtsc{,_ordered}() from <asm/msr.h> to <asm/tsc.h>.
+
+[ mingo: Do not remove the <asm/tsc.h> inclusion from <asm/msr.h>
+         just yet, to reduce -next breakages. We can do this later
+	 on, separately, shortly before the next -rc1. ]
 
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -99,135 +102,144 @@ Cc: Borislav Petkov <bp@alien8.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Uros Bizjak <ubizjak@gmail.com>
-Link: https://lore.kernel.org/r/20250427092027.1598740-5-xin@zytor.com
+Link: https://lore.kernel.org/r/20250427092027.1598740-3-xin@zytor.com
 ---
- arch/x86/events/amd/uncore.c              |  2 +-
- arch/x86/events/core.c                    |  2 +-
- arch/x86/events/intel/core.c              |  4 ++--
- arch/x86/events/intel/ds.c                |  2 +-
- arch/x86/include/asm/msr.h                |  2 +-
- arch/x86/include/asm/paravirt.h           |  2 +-
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 12 ++++++------
- 7 files changed, 13 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/msr.h | 54 +------------------------------------
+ arch/x86/include/asm/tsc.h | 55 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 55 insertions(+), 54 deletions(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 2a3259d..42c833c 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -108,7 +108,7 @@ static void amd_uncore_read(struct perf_event *event)
- 	if (hwc->event_base_rdpmc < 0)
- 		rdmsrq(hwc->event_base, new);
- 	else
--		rdpmcl(hwc->event_base_rdpmc, new);
-+		rdpmc(hwc->event_base_rdpmc, new);
- 
- 	local64_set(&hwc->prev_count, new);
- 	delta = (new << COUNTER_SHIFT) - (prev << COUNTER_SHIFT);
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7cfd376..600c0b6 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -135,7 +135,7 @@ u64 x86_perf_event_update(struct perf_event *event)
- 	 */
- 	prev_raw_count = local64_read(&hwc->prev_count);
- 	do {
--		rdpmcl(hwc->event_base_rdpmc, new_raw_count);
-+		rdpmc(hwc->event_base_rdpmc, new_raw_count);
- 	} while (!local64_try_cmpxchg(&hwc->prev_count,
- 				      &prev_raw_count, new_raw_count));
- 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 3d80ffb..e8eec16 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2725,12 +2725,12 @@ static u64 intel_update_topdown_event(struct perf_event *event, int metric_end, 
- 
- 	if (!val) {
- 		/* read Fixed counter 3 */
--		rdpmcl((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
-+		rdpmc((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
- 		if (!slots)
- 			return 0;
- 
- 		/* read PERF_METRICS */
--		rdpmcl(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
-+		rdpmc(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
- 	} else {
- 		slots = val[0];
- 		metrics = val[1];
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 00a0a85..346db2f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2277,7 +2277,7 @@ intel_pmu_save_and_restart_reload(struct perf_event *event, int count)
- 	WARN_ON(this_cpu_read(cpu_hw_events.enabled));
- 
- 	prev_raw_count = local64_read(&hwc->prev_count);
--	rdpmcl(hwc->event_base_rdpmc, new_raw_count);
-+	rdpmc(hwc->event_base_rdpmc, new_raw_count);
- 	local64_set(&hwc->prev_count, new_raw_count);
- 
- 	/*
 diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 07d45fc..435a07b 100644
+index 35a78d2..f5c0969 100644
 --- a/arch/x86/include/asm/msr.h
 +++ b/arch/x86/include/asm/msr.h
-@@ -217,7 +217,7 @@ static inline int rdmsrq_safe(u32 msr, u64 *p)
- 	return err;
- }
+@@ -153,60 +153,6 @@ native_write_msr_safe(u32 msr, u32 low, u32 high)
+ extern int rdmsr_safe_regs(u32 regs[8]);
+ extern int wrmsr_safe_regs(u32 regs[8]);
  
--#define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
-+#define rdpmc(counter, val) ((val) = native_read_pmc(counter))
- 
- #endif	/* !CONFIG_PARAVIRT_XXL */
- 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c4dedb9..faa0713 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -244,7 +244,7 @@ static inline u64 paravirt_read_pmc(int counter)
- 	return PVOP_CALL1(u64, cpu.read_pmc, counter);
- }
- 
--#define rdpmcl(counter, val) ((val) = paravirt_read_pmc(counter))
-+#define rdpmc(counter, val) ((val) = paravirt_read_pmc(counter))
- 
- static inline void paravirt_alloc_ldt(struct desc_struct *ldt, unsigned entries)
+-/**
+- * rdtsc() - returns the current TSC without ordering constraints
+- *
+- * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
+- * only ordering constraint it supplies is the ordering implied by
+- * "asm volatile": it will put the RDTSC in the place you expect.  The
+- * CPU can and will speculatively execute that RDTSC, though, so the
+- * results can be non-monotonic if compared on different CPUs.
+- */
+-static __always_inline u64 rdtsc(void)
+-{
+-	EAX_EDX_DECLARE_ARGS(val, low, high);
+-
+-	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
+-
+-	return EAX_EDX_VAL(val, low, high);
+-}
+-
+-/**
+- * rdtsc_ordered() - read the current TSC in program order
+- *
+- * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
+- * It is ordered like a load to a global in-memory counter.  It should
+- * be impossible to observe non-monotonic rdtsc_unordered() behavior
+- * across multiple CPUs as long as the TSC is synced.
+- */
+-static __always_inline u64 rdtsc_ordered(void)
+-{
+-	EAX_EDX_DECLARE_ARGS(val, low, high);
+-
+-	/*
+-	 * The RDTSC instruction is not ordered relative to memory
+-	 * access.  The Intel SDM and the AMD APM are both vague on this
+-	 * point, but empirically an RDTSC instruction can be
+-	 * speculatively executed before prior loads.  An RDTSC
+-	 * immediately after an appropriate barrier appears to be
+-	 * ordered as a normal load, that is, it provides the same
+-	 * ordering guarantees as reading from a global memory location
+-	 * that some other imaginary CPU is updating continuously with a
+-	 * time stamp.
+-	 *
+-	 * Thus, use the preferred barrier on the respective CPU, aiming for
+-	 * RDTSCP as the default.
+-	 */
+-	asm volatile(ALTERNATIVE_2("rdtsc",
+-				   "lfence; rdtsc", X86_FEATURE_LFENCE_RDTSC,
+-				   "rdtscp", X86_FEATURE_RDTSCP)
+-			: EAX_EDX_RET(val, low, high)
+-			/* RDTSCP clobbers ECX with MSR_TSC_AUX. */
+-			:: "ecx");
+-
+-	return EAX_EDX_VAL(val, low, high);
+-}
+-
+ static inline u64 native_read_pmc(int counter)
  {
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 26c354b..15ff62d 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -1019,8 +1019,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
- 	 * used in L1 cache, second to capture accurate value that does not
- 	 * include cache misses incurred because of instruction loads.
- 	 */
--	rdpmcl(hit_pmcnum, hits_before);
--	rdpmcl(miss_pmcnum, miss_before);
-+	rdpmc(hit_pmcnum, hits_before);
-+	rdpmc(miss_pmcnum, miss_before);
- 	/*
- 	 * From SDM: Performing back-to-back fast reads are not guaranteed
- 	 * to be monotonic.
-@@ -1028,8 +1028,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
- 	 * before proceeding.
- 	 */
- 	rmb();
--	rdpmcl(hit_pmcnum, hits_before);
--	rdpmcl(miss_pmcnum, miss_before);
-+	rdpmc(hit_pmcnum, hits_before);
-+	rdpmc(miss_pmcnum, miss_before);
- 	/*
- 	 * Use LFENCE to ensure all previous instructions are retired
- 	 * before proceeding.
-@@ -1051,8 +1051,8 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
- 	 * before proceeding.
- 	 */
- 	rmb();
--	rdpmcl(hit_pmcnum, hits_after);
--	rdpmcl(miss_pmcnum, miss_after);
-+	rdpmc(hit_pmcnum, hits_after);
-+	rdpmc(miss_pmcnum, miss_after);
- 	/*
- 	 * Use LFENCE to ensure all previous instructions are retired
- 	 * before proceeding.
+ 	EAX_EDX_DECLARE_ARGS(val, low, high);
+diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
+index 94408a7..4f7f09f 100644
+--- a/arch/x86/include/asm/tsc.h
++++ b/arch/x86/include/asm/tsc.h
+@@ -5,10 +5,65 @@
+ #ifndef _ASM_X86_TSC_H
+ #define _ASM_X86_TSC_H
+ 
++#include <asm/asm.h>
+ #include <asm/cpufeature.h>
+ #include <asm/processor.h>
+ #include <asm/msr.h>
+ 
++/**
++ * rdtsc() - returns the current TSC without ordering constraints
++ *
++ * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
++ * only ordering constraint it supplies is the ordering implied by
++ * "asm volatile": it will put the RDTSC in the place you expect.  The
++ * CPU can and will speculatively execute that RDTSC, though, so the
++ * results can be non-monotonic if compared on different CPUs.
++ */
++static __always_inline u64 rdtsc(void)
++{
++	EAX_EDX_DECLARE_ARGS(val, low, high);
++
++	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
++
++	return EAX_EDX_VAL(val, low, high);
++}
++
++/**
++ * rdtsc_ordered() - read the current TSC in program order
++ *
++ * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
++ * It is ordered like a load to a global in-memory counter.  It should
++ * be impossible to observe non-monotonic rdtsc_unordered() behavior
++ * across multiple CPUs as long as the TSC is synced.
++ */
++static __always_inline u64 rdtsc_ordered(void)
++{
++	EAX_EDX_DECLARE_ARGS(val, low, high);
++
++	/*
++	 * The RDTSC instruction is not ordered relative to memory
++	 * access.  The Intel SDM and the AMD APM are both vague on this
++	 * point, but empirically an RDTSC instruction can be
++	 * speculatively executed before prior loads.  An RDTSC
++	 * immediately after an appropriate barrier appears to be
++	 * ordered as a normal load, that is, it provides the same
++	 * ordering guarantees as reading from a global memory location
++	 * that some other imaginary CPU is updating continuously with a
++	 * time stamp.
++	 *
++	 * Thus, use the preferred barrier on the respective CPU, aiming for
++	 * RDTSCP as the default.
++	 */
++	asm volatile(ALTERNATIVE_2("rdtsc",
++				   "lfence; rdtsc", X86_FEATURE_LFENCE_RDTSC,
++				   "rdtscp", X86_FEATURE_RDTSCP)
++			: EAX_EDX_RET(val, low, high)
++			/* RDTSCP clobbers ECX with MSR_TSC_AUX. */
++			:: "ecx");
++
++	return EAX_EDX_VAL(val, low, high);
++}
++
+ /*
+  * Standard way to access the cycle counter.
+  */
