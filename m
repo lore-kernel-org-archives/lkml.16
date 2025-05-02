@@ -1,71 +1,71 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65B7224237
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28EC26772C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746170519; cv=none; b=hV08jKpep3xM9xcFtGqb6R5Ih9ayD/d/ecq4/WoX74sHfKxgYg/cNB1oAT5GysexlZkQa0Y1URChunnXKU80F54+PRB4JWqe3O/gR3/LF+Jnfy99Km/PNVgNCBBd2Fc/38KiFS7AGQ2ETjtZwafSGX519vW+BmHq2sIqxP4g+v0=
+	t=1746170523; cv=none; b=OiSgVisq1aoE+vdJzed2dRSQFuBQ7hUK8ArBk0BjjAY9QlHT4UoWPqM2t9EK5qilFkCLQ8pmtAStIMuZM9G2Y04acKpuLNbsmD41pNj3XzFmBRkC5UuC4BVNniGwXluHNMDY8yxCINGVZX892bIboiuoFFdiE+dW/3V/OHPYHTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746170519; c=relaxed/simple;
-	bh=EnC5cdHF3TbsKUEY55JwJp8080ea0nqVvuu+9SIRm84=;
+	s=arc-20240116; t=1746170523; c=relaxed/simple;
+	bh=DGBpbhXvuQ0xEpNrO0isiwgt3s6etMZ8qjti7C0evdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j2Xzac3MSD83mY+wSzHOzozmaP2ng47WuwPuRoMwVzdf7ovu6e2fn6pTb6wb18+YB97KLVVHNZxlCaC3UC1eHD1pTYRSO1T/lB77+aj5C7Nmqpm4z1yEQMSEDImZR0fhisTMdQPazKEP8jg3pCfa5mnTN9RPCKCN9I+Hf1RPj9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrjBkCFa; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=GP7rNlswJgEDvHYcD0/FX8w2pIuX6cSxgAeczBGnf42pqlAuPtov1TEe3kIRI/VV0N5MjGOHu8v+mPxw91WojRjQ7JdFJ/o7u97yyK8pAVgElzreGvDGVahzXd6pknluT7ZB66CXn8AG44kituV/FJURKcBPNYPfKdT1+pffjfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d+D3zhA6; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrjBkCFa"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb48bad09so299321266b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:21:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+D3zhA6"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac7bd86f637so519323366b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746170516; x=1746775316; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746170520; x=1746775320; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mszv+1TRrfEJqnlN0+/XQLFyntyzjNo5JYomyINlSm0=;
-        b=VrjBkCFaCpU4qbeZOxj/zk718xtJJlnX9+rl9tbqMpZ86TTbkkla2UCpPmtYRsbR73
-         m57vjjrJjp1SuENLZrJ+7ypGFxmi42aJO1JvYBXqn+UkWQxMUX3esdENeCpU69gmr4+3
-         o4D56fByy6md9DJkkLHPkd9RmT3TtZVgxpPDggi8YMOjPqRP3wpXPiIwsta50HqVLvLV
-         VQQ7q0hosuZgsAsQh9MhA9Z2HAV4odBA2uTGWK7K0JDNixgGMayWn18Mn5QAtztzh7AC
-         38YAKWtZTEc81Iddp/UgsufkZn8RV35LKaa63Gn7tdIk6fhWgq+LWt/EJT9k1zLyVIo6
-         qt/Q==
+        bh=nLe9Nl33nhWrZdDvjcJcQXnden9NZdZx4I15zXBAdL8=;
+        b=d+D3zhA6u2gRT1ULafZ4DG28fnQ8IIH5GSooq8mPcuoEymfTz66DsxfYimj8iNYy70
+         IbiJAJm029dOhIlIgyGRaMXiVMtDFXcqye1wQ/aKSDEkp5UtA+9M05anLnGBal29Gx9a
+         4THtWFXxryJ1WQOpEfCfTq0otuvsAbo9jloiaGmEfaGy8Q6pnz5wtkee0qp2eZQqeeD8
+         uaMLMmhqaO0WCE16ePln6QhermVK3umVYERvtRPMVL0UtEdb5b5F9N3gIaU1ksMtNwLl
+         aFXrHkK3vIY40wjeft9nq5Y+gQtbD0z/8zi41ZEaillgvKH3pW+0Ijr5ShH6G9lMySOg
+         5u8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746170516; x=1746775316;
+        d=1e100.net; s=20230601; t=1746170520; x=1746775320;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mszv+1TRrfEJqnlN0+/XQLFyntyzjNo5JYomyINlSm0=;
-        b=K5iiSAAp/NQQbYR3qo6jFUbMgS0kemIJ3p+wHvzdqil1wa/EZ8k0l07qcMH/+bZCT8
-         H7CZHYP/9syeZhMEDBzDk7TsxBPXfBBNjimcOeObWUG9Qlk+ZWdSLUrUYrckRVBqvDY2
-         LlJ4GrZv4y70YqjVLnCPwB0p2Nzb2iaQj70s/4GAb2X8nYTqbdgFVH2N+qK88Jn/Eta0
-         QMobObVz6Uyt22vKlKBJ3YDbx14+yWxSvfriFsBkqvnxYSCgQFrgX1RhD7O+SreEN3T5
-         DL/cMZZ3CeZNA0J1DMYxuc0BpD5yWGLtGYa4XKEARG+phH4pNUjkA+FIzSoS3M6tlFdx
-         qzYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCF5W8ITMA7bsIDE097Iz8KgAqp7WN0bXayIwistzhWW2ix1whT9iMhbNrO98WSEVvHSqWUbyJA60Ky9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg5fJvtpIL8ZdysHT4CRBZK7OAJv7VlydWtp/wjG54NWQglsG4
-	tvZSlMaR/aPVKRc6zz8PEo0o/1C97jL99MjuOI75Hxqca3yFypaM
-X-Gm-Gg: ASbGncvJT0KrVCdS02l7gSNSohgMEUXt/RFK6K+Damy/Noyv0qIPPYubQszUHF5mjIZ
-	/NtVoSfoDI1+G3XTcWNyko3Dx4D4U2f4vy+4nLLlZF5ep+fBVPd4RuQXg8MoDMfcpXbHqPXj9zD
-	y0grDdldozrrQigoenfiW/kqSoI4+C7hZEK9Za13bTlbuU78T8jdpOzsqY7NjhOnsJ2VGjn+MNF
-	vY+2n8GQlp09dF31GWfVRajFM5hiVAr2fU9lZaWhxWbinJdrHdKM0rbj+ZUwekzS78h/NuhKi23
-	wtXiekxBm0yzfRtvorbQpzE8djxvi32XvMrpoFnaZOUo6gwPTAE=
-X-Google-Smtp-Source: AGHT+IFfSDV5JbZRPD0lYdfO+LoK4oVGXJrm/3LHFpLnHgTFW21f2kJ1S2E81vtNzM+ZyL3RiGwMkw==
-X-Received: by 2002:a17:906:6a2a:b0:ace:cb59:6c47 with SMTP id a640c23a62f3a-ad17ad88ddfmr202128066b.25.1746170516018;
-        Fri, 02 May 2025 00:21:56 -0700 (PDT)
+        bh=nLe9Nl33nhWrZdDvjcJcQXnden9NZdZx4I15zXBAdL8=;
+        b=aMu4iCIz5fj3XxpfTH7BF/nChJwUMO63T1Iw3AcarLmVN2/dgwCpPf/B6c3UPXuc/g
+         sKpc01I3UIPN3oFiB2Bh1VyFm0zkvl429m54gYqpRyN4hLbRCAz3NEbtff1TOKvG5Tz+
+         lHhMYazKVoB2KUlIAvzdq50wZVxex93ZmLFTanTPBT1iTFAODwB1gslK+ynGckaVFqzi
+         1RP4lQw/pHcxbeAayiTMoCp/XJiE4cAmMU7Egyn1Zvbwcq3Na+ND7+rTpPe8taVN2J8c
+         QdaCfK7pBmn/ZvgDjh1k+iQtZursWud589HngSnYrub2P07D0zptpoK24yovUMGDjKHM
+         jjCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUd4KHQsLfuDBRoJr7dquBySDpQyhgQ6Qm4bhLOBEj6nXt4wGF587Z3VSP6WbqqmXdK+883J1EaljLf/IM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdfBb/gy1gQ6d5eVrKTV1KSsT5SeQHhMDpR67cOj3aoMXE5YZ0
+	c6/vJY1wVwirAcNzjDDzC9isTb8Twr3Cg+DQjmArwfEPiVRNNI88yP8S7IeHaf4=
+X-Gm-Gg: ASbGncsmOyhyaH3Uz9n1AAXPxEbZ0a6dXHpU+1ACZ5GF8gc6tkSH2lUBws+gBNkCi/j
+	p0EnrW07JRo02wvA3D4lz8AGM5HuX+gMZ1ODSuumCMwUeHxjlLeRl6lbBGsF2UVINsCu1X7stGR
+	PDPe9AfHGQoFU007CStH7hxuITis7MlCgJJ0MWSMSup0FIaryIQhaJKaAVag3WJuz1b7TKz41z4
+	FiudgRNo0j5i2Zx5UYRxwyhHPA6Ih6wqzHhTWAWvn8mz33zzJRr8/TBordWFLob5jzr0HNVd7LF
+	ttNJEA3/BTY/mNpW9gU35WwdjcAdSVvZu2WIdzWRfXrGYBuerfE=
+X-Google-Smtp-Source: AGHT+IGGnXUM/UQfhKQAG9Tm1E7L6eKCt04VW7CfVNhHGdFuc1+THezAG4bQV2RaqhajC9diCRAP4A==
+X-Received: by 2002:a17:907:d204:b0:ace:be7c:11df with SMTP id a640c23a62f3a-ad17ad444b4mr189350166b.6.1746170519991;
+        Fri, 02 May 2025 00:21:59 -0700 (PDT)
 Received: from localhost.localdomain ([178.25.124.12])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f3c6bsm5691966b.82.2025.05.02.00.21.55
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f3c6bsm5691966b.82.2025.05.02.00.21.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:21:55 -0700 (PDT)
+        Fri, 02 May 2025 00:21:59 -0700 (PDT)
 From: Dave Penkler <dpenkler@gmail.com>
 To: gregkh@linuxfoundation.org,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: dan.carpenter@linaro.org,
 	Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH 1/3 V2] staging: gpib: Fix PCMCIA config identifier
-Date: Fri,  2 May 2025 09:21:48 +0200
-Message-ID: <20250502072150.32714-2-dpenkler@gmail.com>
+Subject: [PATCH 3/3 V2] staging: gpib: Avoid unused variable warning
+Date: Fri,  2 May 2025 09:21:50 +0200
+Message-ID: <20250502072150.32714-4-dpenkler@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250502072150.32714-1-dpenkler@gmail.com>
 References: <20250502072150.32714-1-dpenkler@gmail.com>
@@ -77,31 +77,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PCMCIA config identifier in the ines_exit_module function
-was never changed because it was misspelled in the original commit.
+This addresses a warning produced by make W=1 with the configuration
+parameter CONFIG_GPIB_PCMCIA=y
 
-Update the config parameter to use the correct identifier from
-gpib/Kconfig
+ines/ines_gpib.c:1115:28: warning: variable 'dev' set but not used [-Wunused-but-set-variable]
 
-Fixes: bb1bd92fa0f2 ("staging: gpib: Add ines GPIB driver")
+Remove the declaration and assignment of the unused variable.
+
 Signed-off-by: Dave Penkler <dpenkler@gmail.com>
 ---
- drivers/staging/gpib/ines/ines_gpib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+V1 -> V2
+  Remove the setting of the unused variable and say so in
+  the commit message
+
+ drivers/staging/gpib/ines/ines_gpib.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
-index 49947ac30feb..5168811ee850 100644
+index a16219c0f7c8..c851fd014f48 100644
 --- a/drivers/staging/gpib/ines/ines_gpib.c
 +++ b/drivers/staging/gpib/ines/ines_gpib.c
-@@ -1487,7 +1487,7 @@ static void __exit ines_exit_module(void)
- 	gpib_unregister_driver(&ines_pci_unaccel_interface);
- 	gpib_unregister_driver(&ines_pci_accel_interface);
- 	gpib_unregister_driver(&ines_isa_interface);
--#ifdef GPIB__PCMCIA
-+#ifdef CONFIG_GPIB_PCMCIA
- 	gpib_unregister_driver(&ines_pcmcia_interface);
- 	gpib_unregister_driver(&ines_pcmcia_unaccel_interface);
- 	gpib_unregister_driver(&ines_pcmcia_accel_interface);
+@@ -1112,12 +1112,9 @@ static int ines_gpib_config_iteration(struct pcmcia_device *link, void *priv_dat
+  */
+ static int ines_gpib_config(struct pcmcia_device *link)
+ {
+-	struct local_info *dev;
+ 	int retval;
+ 	void __iomem *virt;
+ 
+-	dev = link->priv;
+-
+ 	retval = pcmcia_loop_config(link, &ines_gpib_config_iteration, NULL);
+ 	if (retval) {
+ 		dev_warn(&link->dev, "no configuration found\n");
 -- 
 2.49.0
 
