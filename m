@@ -1,87 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591CE25485F;
-	Fri,  2 May 2025 13:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6848225524D;
+	Fri,  2 May 2025 13:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191493; cv=none; b=HQEy7FPtb2lBDbdYXlRt1oevxrdbPCztSLAXmxcatKSelrgrwUc3HKZOLdxmsy3oay8Lamxkl+G/zYuQMPjyETbE+r188m//DwFuVL+U+QBQZD93UT7gac8XCMEk3790IFJUEYRA4b23QH+Qj7M+D27w9RaqgzwSXhHrWEgPEIE=
+	t=1746191496; cv=none; b=mCSxum4vTksIGJh7RNYpnhDS4Fm/lVOk6MrUCpceU8QBDEDWj2wgiN0TAuXeQCylP24l79D4EQ5hmyLFe0rPPeWjjLCIPdCS02tyJShZ9PdkDqZAjJ+tnH5rQsFn22Rru5cm+HI3kurpxnJpKInGxTukTizFPtmTRP67IyaMFgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191493; c=relaxed/simple;
-	bh=TWNx/9PXkgLLuyLmpT398Pb4C9LdkncPESDk5m9mSzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RZf+nVTIZBhdxHo3qJavy8pF5kDbiUuF00zNl1lGaudmTqvlJE3OvTIk5DkP/XpBI9FRtfhAWDRM8vzojTbvfD1jR1CENQ3APYD150XV0QOCwRXOFfObxL7fQWPbrQlOg/eA7CM0KtLfN8RxsYhVGLtNNaAKGXViin4Ot37G3pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 013131688;
-	Fri,  2 May 2025 06:11:22 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5333F66E;
-	Fri,  2 May 2025 06:11:25 -0700 (PDT)
-Message-ID: <43e85d6a-ef99-4d61-910e-1d62814fd9ed@arm.com>
-Date: Fri, 2 May 2025 14:11:02 +0100
+	s=arc-20240116; t=1746191496; c=relaxed/simple;
+	bh=LK0m5S09uQwymDotmRqGkjff/YzKrTkEZb8rKc78Zl0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FX0drIoeAlJ/saEVfADgl3gCu+DaZKz0CTvmBNshT+BwOPQ4EJuGevaVrNo6Sl2h/xyh8lBn++e4aGtC5LEv5Ari1BwYAgoysTbEFQsLrEj5kAzhynsgUqIBR7ZE3q1zzeaHlNXAaWmm9hObUc/iRh88wpIcNJUj32eA9haIIg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUhxmlE7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUhxmlE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D669BC4CEF8;
+	Fri,  2 May 2025 13:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746191494;
+	bh=LK0m5S09uQwymDotmRqGkjff/YzKrTkEZb8rKc78Zl0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jUhxmlE7p5g3OiQZe9EksPASqITZJGH4jIbjwfsKL9nuFRn2kL2uAM9NCURs8a1f/
+	 SUNH5GaSmXAzuK4iXDuB+JRgRoNGCkCokwb+rMAwhC8cEkKTKITnYZVKSDztDB5J2p
+	 7DqXFBb5lscZWAyV1PW46TNQ5BCEL4U1HzWfwWzxBtXBcCPrPfwcjMFldnXX7oAcJO
+	 /bd/7qZdVmbPPsPvutLDGuADRnSBGEbhOzuXcJ0ZXPfUlwbrgZr3wMiO2jO59ozzvC
+	 IlhoQOSFZyG4gYVPfYdNP+hjx5CpDYZaCL8mKUeS6L5WqICjfwnw0o4AIR1tK6GHmB
+	 /it+jwvCSmvpw==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso2712265e87.1;
+        Fri, 02 May 2025 06:11:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYP0X9Sm6nKf3nfoD3R34UD2er/PNLFuxPoQRqWkNbEakw5Fpa21FO1nDl/ejBq92PJeHHXup0qyU=@vger.kernel.org, AJvYcCWo45LK4oO4adK0kD8wIUN9Fyvu1QzeVNJbyLaJqtZzWKX/J8NZnDx4ylUFaMB85tWqGOFxhsg+xxW2UbZ4@vger.kernel.org, AJvYcCXtZUDSS669j8BU/kjtpmkX01mtHvBKbMSY6QLUXvQ7KnzWh2ojMWy2WnU8W872vGG0TmgxENAQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUR1LZl1DEbyjf5dE33iCgd+q2V55hEAlMxeaCRxGxvWSARYqY
+	ALzRreW9MrpXW7F/dnsIgYLXMV6y7cLgyTSrvOZQLEL4gLDyc9YsA0g/v/Slj+LhiuEQaeVhuXM
+	g5NmG1vaErewQ/29FVHNMWQKPZec=
+X-Google-Smtp-Source: AGHT+IEdEEn4W75TgYFwhDu2BtCWaI+eVQnfNjJ68WUtHAcceaTNv5VfX2OxYTlSQ9shxVvG495+ttDBaOpQ0AnuP1A=
+X-Received: by 2002:a05:6512:234f:b0:549:66d8:a1f3 with SMTP id
+ 2adb3069b0e04-54eac2332camr731440e87.40.1746191493168; Fri, 02 May 2025
+ 06:11:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 10/14] dma-contiguous: export
- dma_contiguous_default_area
-To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Olivier Masse <olivier.masse@nxp.com>,
- Thierry Reding <thierry.reding@gmail.com>, Yong Wu <yong.wu@mediatek.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
- Daniel Stone <daniel@fooishbar.org>,
- Rouven Czerwinski <rouven.czerwinski@linaro.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, iommu@lists.linux.dev
-References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
- <20250502100049.1746335-11-jens.wiklander@linaro.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250502100049.1746335-11-jens.wiklander@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250428174322.2780170-2-ardb+git@google.com> <0ad5e887-e0f3-6c75-4049-fd728267d9c0@amd.com>
+In-Reply-To: <0ad5e887-e0f3-6c75-4049-fd728267d9c0@amd.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 2 May 2025 15:11:21 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXE7=u9xNcUHiyFVPbOpwPvntFjdLfTzD0LeD_7it2MEQg@mail.gmail.com>
+X-Gm-Features: ATxdqUHCnZY8z4Ary2AT3uxsxUGdTmlnVzUmAj4WTaZo_j0E0mElkzIG8dLedpk
+Message-ID: <CAMj1kXE7=u9xNcUHiyFVPbOpwPvntFjdLfTzD0LeD_7it2MEQg@mail.gmail.com>
+Subject: Re: [PATCH] x86/boot/sev: Support memory acceptance in the EFI stub
+ under SVSM
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
+	Ingo Molnar <mingo@kernel.org>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/05/2025 10:59 am, Jens Wiklander wrote:
-> Export the global variable dma_contiguous_default_area so
-> dev_get_cma_area() can be called a module.
+On Thu, 1 May 2025 at 20:05, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>
+> On 4/28/25 12:43, Ard Biesheuvel wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Commit
+> >
+> >   d54d610243a4 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
+> >
+> > provided a fix for SEV-SNP memory acceptance from the EFI stub when
+> > running at VMPL #0. However, that fix was insufficient for SVSM SEV-SNP
+> > guests running at VMPL >0, as those rely on a SVSM calling area, which
+> > is a shared buffer whose address is programmed into a SEV-SNP MSR, and
+> > the SEV init code that sets up this calling area executes much later
+> > during the boot.
+> >
+> > Given that booting via the EFI stub at VMPL >0 implies that the firmware
+> > has configured this calling area already, reuse it for performing memory
+> > acceptance in the EFI stub.
+>
+> This looks to be working for SNP guest boot and kexec. SNP guest boot with
+> an SVSM is also working, but kexec isn't. But the kexec failure of an SVSM
+> SNP guest is unrelated to this patch, I'll send a fix for that separately.
+>
 
-What dma_map_ops implementation is in a module? Without any other 
-context, I can't help thinking this smells of something sketchy.
+Thanks for confirming.
 
-Thanks,
-Robin.
+Ingo, Boris, can we get this queued as a fix, please, and merge it
+back into x86/boot as was done before?
 
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: iommu@lists.linux.dev
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->   kernel/dma/contiguous.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 8df0dfaaca18..eb361794a9c5 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -53,6 +53,7 @@
->   #endif
->   
->   struct cma *dma_contiguous_default_area;
-> +EXPORT_SYMBOL(dma_contiguous_default_area);
->   
->   /*
->    * Default global CMA area size can be defined in kernel's .config.
+
+> Thanks,
+> Tom
+>
+> >
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+> > Cc: Kevin Loughlin <kevinloughlin@google.com>
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: fcd042e86422 ("x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0")
+> > Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> > Tom,
+> >
+> > Please confirm that this works as you intended.
+> >
+> > Thanks,
+> >
