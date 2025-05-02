@@ -1,144 +1,134 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC94925CC4E;
-	Fri,  2 May 2025 16:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6589A25D1E2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201763; cv=none; b=OrtMo+8KTkzM60eXnN94zZClWhT9S+fpIVmOJnjOXGIZV4nCbFYd1KMx1OBCXMQZNAIIWfSHKFqAvMINelIErGrOENA+9Pve75RV87OP61TRdXT7zo8yzyjV/u2SaNKvus/caX9IU5a2jMSqP0HASuXDkLI8xmj+mTLiBSY2OQk=
+	t=1746201773; cv=none; b=JEg59Qi/eAwhPpaYPhSMIErMvrGkBT/Cr+uVwVezgPAil8BKBvadMF+w11ugKnhixDtpfGYTMzx+rg2U6VBnpaFnF/ahAcj8L1osJvbogiS8tNcHb2+raXbveH2eu/bxdVeaNImn2zO6xp8ScyTKsRcLzM80eNb2D/ylbBKQjxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201763; c=relaxed/simple;
-	bh=UJ6WwhmFuVCqUdif14DkJqSkQxNVnMZG/jRa4NZF7Ko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8f8NCjpyJYxngUgJxIkPbSCH2YweWNwHq5yHJftOePgpSfs6EnyDGbY3rn8B0up/pvkqiDup+JNYqgoVC9Pt/PoPWEjYDRjQNL4i5kEXWUe1ypArdmJf9OBf5p5e7j7tinUzYrbBXV69D1H+1sPZHF7o5TplbrjpQQ4CfclQGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGlgGK09; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746201773; c=relaxed/simple;
+	bh=nt7pCl0xKFuZMbcsKuarhpz0f9X8gk1jA/yLJS6JUcc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KmxwGdQBBSoaEg9k5hXheG/TdsAGDY2TPbFcP3FEMHkuX/Stzvf5sI/c46kvifbjISbOyUdrm1I7kPT562JE0FsuM1w2dig6fa3iQjjxtGiNNoMOvNReGPcX6ewKyNVRsEI+eV7wpbFzqbaU6dxhlgrtOzPpRtJV5BbLRh9Yb90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B5azY2Vr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGlgGK09"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54ea69e9352so2481415e87.2;
-        Fri, 02 May 2025 09:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746201760; x=1746806560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWXi6ouIHtCt+/SVmgFqOORSK5kSta3bTlozmNEeTOw=;
-        b=aGlgGK09m0o1NTDeLTsKXKByFw3aS6xVU+tQFt9M15LN0ecPn3SIFO/rrVYwyinM91
-         /2k7jcq2kRlliVDSQ8iyxVgM7VOI9npbzuK3HMthX4FkDqnEdj6tQaeogOg29rJch41D
-         PsmDl+WRNmqgj6y+pHDoKusWF0tDfly7//0SfqJB+TkDhuRqqIcRMrRTO3zxyM+eEG6C
-         /SX8XKdp+8I1nPUG6odLg9DBCuAtXcYnzoH+mjA5PXoPqEGNsf7aWLzDZMCn2hVOL+1X
-         6bJAZy+PRsW05Pyc72jjFi3godT989y1Rh2gnQ3yFpVd69a6neLrv++sfR6aRQBypAjz
-         vg5A==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B5azY2Vr"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542DQgbE016121
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 16:02:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1frcGzb8hC2GYxGmVc0gjbhl3/lGMlADlvPYUqYXl2s=; b=B5azY2VrKcqp2fDH
+	NNgpg0OO9B5W60hqqzqsEwm63kQBYjYPSdS+o7RSFap1rpNms/7emM4fRpIuqACG
+	K1vA/G/mavbFcnsWm+vPe2fW387ntQCIKnwZ1yRkXphMgqInW3t0O0eLC+7Z9cy7
+	uKzxSMRF1ZAkMvuN1mL4C35QTScS20khcdabXIHw0UvUduo3FvG21uk3ax2earkR
+	kx+QaMoSQFt9hgrdSBCCit3G7kahqOKWSzW0Jyp4OIcvi68ssphPqPq5Rl5GHjyW
+	UnZ5b/hW9YvmYn8I+NROs9bxTZZT7P1vYjsW8nEasQ2oFfCjC/SJxEy9V81CpAoc
+	TGERRQ==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u78tub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 16:02:51 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b1442e039eeso1407363a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:02:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746201760; x=1746806560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWXi6ouIHtCt+/SVmgFqOORSK5kSta3bTlozmNEeTOw=;
-        b=F7GEN1ZuGtKw8lRAhojjTlF41WgjOAV0TfSs4p7l4IxMNCIPrna1/vtLd99Pn0OjzM
-         ajogo3Ffs1aTU7hj+9Oyv5JKvW+Ftog6A+5hsJGKVTXt8QRhZCuLlpY9MPMUtuVKmRsx
-         S5GDOXOpadk8HlUrQjOi0Yd4U4XGoYrqmVwfXeu9bgrPaNwv9ldWosN6gUTaqlD5QbvL
-         XNjbpywfBi9nRzJ5NpwvVrMa/rMhUsUOJOGobWSPqsFtGZrc/xb00AlQjwRmuMr5rXAg
-         IxHE4aC3NCD3wqpJBYsbt8MzS5quvoA3tLgpNU5bzV5CLCFGIT7BNS5gzn4VTMGKBfJq
-         acNA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3RlZ3uods9nc0U2KKP1f7lOvbUagy5po3kkb9+YnhFgg3/i7HZuSzaJ7iNn4w0ixy+ZKBhHZYvqrG7w/O2w4=@vger.kernel.org, AJvYcCWEs8ozpHP01NG0dnEit/x/8NaNNXwlBEA+m4TiaD15HcqiB55sm/OJXDn9WNZK9xCzkrrC1Y4v@vger.kernel.org, AJvYcCWgMDArRQsCT0vc4JgOaldE4T03tvpH4MXt2gpivWtCnjnjix5Qm76hfXnl9MOS10Ott0RUsfE6ZsrlVIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp+lAZd5iTYsqYS6HMWmkOKjP5cpUoou6KY0G5g9vCzgp7Jv1i
-	NLBuGvFsldzmhzYOA4D++NspRhDDuZUR7Bvkwa3/i9DNHOMxdYyFEIR9zSEmGNNWe+tNVbpt8QW
-	KR/qQsi7wlU/kFjWoVpizkVdXzHY=
-X-Gm-Gg: ASbGnctmPvKJPfcsKqPkmu+tLXYlHpFnuCIAzOgnSl09P+BdAZPMPn/i212jVx9RwXy
-	/H9KyAmoDppk26V4KQblcRDb8lgFkEXz4vN1BMHW075F2cfYTeZ2C6nR5F+SrLfxpcmrd/5/mIS
-	+wtETirYcAx9Cv701XZWpVd329p/uAp4eZlr4gQQ==
-X-Google-Smtp-Source: AGHT+IFQVJp0oLfBErJDYrcvWauZBR16iubXjM5Ov20E4hDu+u4f8dcYnUxZFRb2GWq/A5s6LAVkaHyvKfsIiT02qF0=
-X-Received: by 2002:a05:6512:3b0b:b0:545:a2f:22ba with SMTP id
- 2adb3069b0e04-54eac242c91mr923495e87.37.1746201756548; Fri, 02 May 2025
- 09:02:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746201770; x=1746806570;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1frcGzb8hC2GYxGmVc0gjbhl3/lGMlADlvPYUqYXl2s=;
+        b=FldTCw6bjFUAlNIIAWxm9cArIWCTHOoBNPCCPVaQcgqM5TSwDm4nRkifDI6LbMfLSC
+         cjwk/juFJWFE/KgNycuwQ771bXSyG0rsr2hbGoConqGEG7MtjcFnLrNBEWfxwidWUli1
+         5wDxeZaIsDZZRhf34XpAbdehlsMMmowYQ26keMLNXT4bjjpVp5Nam6zLY50DsM2C06VC
+         XuEvJk4jaOFXSEo2LJTGMWQT9R588ApiN/RViSnfDtuhSjOMrqep30EMiYoiu7G8o1tJ
+         rY6M8jeUDS3wwbtjuxoFfICGL4gyjfH09YJA8uKpqHDrvcMNHtnERJX00RlKOcpWICsI
+         CQ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXpqzKctijGx84YvkZ2Fg8bok8lXS8SHy7ByfDdW4+jSEVcAhumJSpExlNsib6VAEW1jAPf8dWq0EPYF4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLGs34W9GNQvgVtidVQlbLvpiw+iQthWJSA0CBg4hGuFOblnG1
+	QNFeVai34KkyVXLw8p9YVW8mlC9sco1N+ZbA4zRArqPdQlXaZXJInqmbHg0YA636HyQNY/0fOcb
+	vOh4fxkyca4amRZBilLR34IxomX3GVzJ+GY9wYTL/5Zd/IcBMoGGDQA5x1+CTTeQ=
+X-Gm-Gg: ASbGncvEIEC/A/lDzK4q0B+YPcIb9VlmC/apLZs3eG4HCTHRDADZ2YQN45hYr0CNoDf
+	MnyarbSoHohIl6y2f8J0/X942FiCAKEDbCngkV1+zz1Zc8MBnQzhmtujydnnYC4cIqcYMeQAcP1
+	lC7f9i67OQphswWEE3cZoRH74yMB9F9fhyhghQMkHTyEGyb1AzsStWc0D7I14xTRiBpGysp1lpF
+	/9gIi/F3doOi4/jGF8kn3ip3KCBu6StXVdblaFLTR2PF2/q9b50O9jtX7Hy/wSvqjJhmkJjfuFb
+	phbE4F4BXs5jJBakKQK3tdelOIRJSIp+JTAfxCoSOeqkO7wbTJNf
+X-Received: by 2002:a05:6a20:6f90:b0:1f5:95a7:8159 with SMTP id adf61e73a8af0-20cde952d6cmr4451423637.10.1746201770543;
+        Fri, 02 May 2025 09:02:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+5DGedS7lQxaiS0zztOhBE3vSAm0Y8qu2C3qMH794u9G4iH73tZO1pQYXwyOinkWDLCtVwQ==
+X-Received: by 2002:a05:6a20:6f90:b0:1f5:95a7:8159 with SMTP id adf61e73a8af0-20cde952d6cmr4451382637.10.1746201770057;
+        Fri, 02 May 2025 09:02:50 -0700 (PDT)
+Received: from [192.168.1.4] ([122.164.87.156])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3920e67sm952740a12.7.2025.05.02.09.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 09:02:49 -0700 (PDT)
+Message-ID: <41f0eb29-931d-4aad-ab8a-1cc725e9d30a@oss.qualcomm.com>
+Date: Fri, 2 May 2025 21:32:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502140237.1659624-1-ojeda@kernel.org> <20250502140237.1659624-6-ojeda@kernel.org>
-In-Reply-To: <20250502140237.1659624-6-ojeda@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 2 May 2025 09:01:59 -0700
-X-Gm-Features: ATxdqUEluk2jv-DmfiRVYlxsy5N_uo2h5vdZh8glM634BlTDAbUSZr2VxhwzSKA
-Message-ID: <CAJ-ks9=XJ_cX8=vCtAr8Qr+4iaX9fyc8+djiBmg8=FxJTggS9w@mail.gmail.com>
-Subject: Re: [PATCH 5/5] rust: clean Rust 1.88.0's `clippy::uninlined_format_args`
- lint
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
+ reason from IMEM
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>, bod.linux@nxsw.ie
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
+ <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
+ <ac8837b8-3964-40ec-84a6-e25aa06dda39@kernel.org>
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <ac8837b8-3964-40ec-84a6-e25aa06dda39@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEyOCBTYWx0ZWRfX0OUH7ObKOeuh WEaR/CT44fFxmnvzQ4+sJdZUaAXynqyKvCsbQ1q4XwFglaS40vcFXjkClrjCq7/cxDm75nq74pJ C0XnMPIR5wiuYheS0AmuK0vRma/LMWPYz+/DW3PBHxSbBBtAh9uXSq44EUnNCEYEG30LQ4WIEyW
+ RR+62DfkLLKR8Chs/Ojf/xp5KBOSTk1ER3qliiJGOkvW8ciYQZFX9/rT5ypfKbuuu7RPnQCfDcu eTKtnA2q+lohvBtfUhaUJsCi7HcytY1MMOFP+UN6rsMKI6K27zpwvmW/Ci7sM7D6SaTf/zeMWcV G2CheW2bKKsIFJKDP7WgYBZIIjDKKpF6TRBXRvZ0sPBO+Yf4Fhyh56jcFxsGXCvz5W9EqURxk7Q
+ G+jjMbBVOJLfL5f4M39jbaWjbZ/7CeGNdQQDjigMRhPqBPLtkm+q04mKokTxYCWuxt7ooDTS
+X-Proofpoint-GUID: lqoLGLy_j6PufSaG3EZxsEVr6Hn_YQRY
+X-Proofpoint-ORIG-GUID: lqoLGLy_j6PufSaG3EZxsEVr6Hn_YQRY
+X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=6814ecab cx=c_pps a=rz3CxIlbcmazkYymdCej/Q==:117 a=wj/iefQKNY9P1RSDfSoyGA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KK8y6wEurEKhoEb90x8A:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_02,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=930 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020128
 
-On Fri, May 2, 2025 at 7:04=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wrot=
-e:
->
-> Starting with Rust 1.88.0 (expected 2025-06-26) [1], `rustc` may move
-> back the `uninlined_format_args` to `style` from `pedantic` (it was
-> there waiting for rust-analyzer suppotr), and thus we will start to see
 
-Typo: s/suppotr/support/
+On 5/2/2025 7:03 PM, Krzysztof Kozlowski wrote:
+> On 02/05/2025 15:17, Kathiravan Thirumoorthy wrote:
+>>   
+>> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
+>> +					const struct qcom_wdt_match_data *data)
+>> +{
+>> +	struct regmap *imem;
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
+> And how are you handling proper probe ordering? Use phandles and define
+> this as an ABI.
 
-> lints like:
->
->     warning: variables can be used directly in the `format!` string
->        --> rust/macros/kunit.rs:105:37
->         |
->     105 |         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{}", test);
->         |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^
->         |
->         =3D help: for further information visit https://rust-lang.github.=
-io/rust-clippy/master/index.html#uninlined_format_args
->     help: change this to
->         |
->     105 -         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{}", test);
->     105 +         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{test}");
->
-> There is even a case that is a pure removal:
->
->     warning: variables can be used directly in the `format!` string
->       --> rust/macros/module.rs:51:13
->        |
->     51 |             format!("{field}=3D{content}\0", field =3D field, co=
-ntent =3D content)
->        |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^
->        |
->        =3D help: for further information visit https://rust-lang.github.i=
-o/rust-clippy/master/index.html#uninlined_format_args
->     help: change this to
->        |
->     51 -             format!("{field}=3D{content}\0", field =3D field, co=
-ntent =3D content)
->     51 +             format!("{field}=3D{content}\0")
->
-> The lints all seem like nice cleanups, thus just apply them.
->
-> We may want to disable `allow-mixed-uninlined-format-args` in the future.
->
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned i=
-n older LTSs).
-> Cc: Benno Lossin <benno.lossin@proton.me>
-> Link: https://github.com/rust-lang/rust-clippy/pull/14160 [1]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  drivers/gpu/nova-core/gpu.rs              |  2 +-
->  rust/kernel/str.rs                        | 46 +++++++++++------------
->  rust/macros/kunit.rs                      | 13 ++-----
->  rust/macros/module.rs                     | 19 +++-------
->  rust/macros/paste.rs                      |  2 +-
->  rust/pin-init/internal/src/pinned_drop.rs |  3 +-
->  6 files changed, 35 insertions(+), 50 deletions(-)
 
-Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+Sure, I will follow the Konrad's suggestion.
+
+
+> Best regards,
+> Krzysztof
