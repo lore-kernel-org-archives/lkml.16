@@ -1,47 +1,47 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0418C21A421;
-	Fri,  2 May 2025 22:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EA721A928;
+	Fri,  2 May 2025 22:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746223420; cv=none; b=AWeiUa4ZAX0uQrcty6x+9g/5UvsQnxYlesLy1At9leM3UIUWx7E+PXPSOmHpv96MF3pAoxr7xHmv9UfdAj+86R0/o7kjfZzmTOXTbJgYaO7Mph1bvwmuAoNroSVelPPZx+bjyqPPYRi0ADpia9eGQzIvuaOVMH5ICn9ufNRg5Yo=
+	t=1746223421; cv=none; b=POZti3/igHhjbpN5FVUgNP03ceti5AuboGzOUau4sr9FsUkt8PtUDW2JBRwi0jaAQhuCJTOq6ZUkZ7MUT4Lm/XfSH0wUcX9JRctt/nLeM3W84XygNtU9GyabfpC3JPd17XGD5ahobh+sUC2Y4mL68JyBrEQJQSJpeTUs9h5hZpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746223420; c=relaxed/simple;
-	bh=t24n+FDzpECgs0cJRp1pUE2BuXVfxBCOhRixb+z6LvM=;
+	s=arc-20240116; t=1746223421; c=relaxed/simple;
+	bh=47lRR+/wQRGLBB6R1a4X2r1By2rGCYFfXMzszmmnTPc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VcN5vyme3QXXmee/zfohDi/gh6VaSKqojkJocxLTVuv8DB7mBTZyrRgXd3xKOfCf4547IlgulqdSACTTUdP+FrN3xKH/zIizPOwVfHRPmRuM0WICOdQBKjJxMPbD+Hi8Y9KELyWjSxxXA9jGPoReGqMSStTXHtywhOUCIze/6ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=X+b3lC8P; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=DsjKqscfmSlbhDftGLyqsZBzl8dHPPaJdaYQWYM6FxTSgV9eWJJHRoMUqckS87KLdN6s4vuTS0xLX4qF4+dBjjZ+dHXdUSrqDghCp31kg6IIzSfj1UVjiOqEg0dvdzFHMNgPhbvAFAXfbiO77N3vGbXyEW2pqs7DDt2XSSTN/3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TUHdKGea; arc=none smtp.client-ip=198.47.23.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+b3lC8P"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3QNC3963052
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TUHdKGea"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3Qnn3955073
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 2 May 2025 17:03:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1746223406;
-	bh=whQGil0Xbv1Y/NiOlhLRZfAKgrrciEuYwbGY5yUVoJo=;
+	bh=Hr+XMvYoz09jF4Wwv4A7/7gimqHzW9Y6Qly5xqOueuY=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=X+b3lC8PhZUtL/eakfmR4ivYJpy9MSxfQ9JO03jwVPKNQAw9SpJmtZClODWGzLs5X
-	 7afHso1ZwhxuNStV9ZKLQXRKBovXRQqqMw26Kik30M6e3AaT7c3h1z5t3auZUE8LpX
-	 8wf9Ve2l/I6V1jgwkrUfJa6nn2tkJUsUkV4jOMHM=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3Q7X004720
+	b=TUHdKGeaBSDv4TB0dJn0Vk9zIlvaNzkxQGVEAZaVAsuQo2G7EItDHOJF9JCunb0Vt
+	 IZyNdgqzipQocZHgWYMuCJKd2+9ijqk3we37hXPb3kso71ZoOzgTF3oWIWqF6FQ6lU
+	 6Uw4cB5mUyYPJcmA88fBdg7AIhw2Y3+irCrFLpGc=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3QnA054533
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Fri, 2 May 2025 17:03:26 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 17:03:26 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ May 2025 17:03:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 17:03:26 -0500
+ Frontend Transport; Fri, 2 May 2025 17:03:25 -0500
 Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542M3PC3006849;
-	Fri, 2 May 2025 17:03:26 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542M3PBv006849;
+	Fri, 2 May 2025 17:03:25 -0500
 From: Judith Mendez <jm@ti.com>
 To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
         Vignesh Raghavendra
@@ -58,9 +58,9 @@ CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
  Thakkar <devarsht@ti.com>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 09/11] arm64: dts: ti: k3-am62a7-sk: Reserve main_timer2 for C7x DSP
-Date: Fri, 2 May 2025 17:03:23 -0500
-Message-ID: <20250502220325.3230653-10-jm@ti.com>
+Subject: [PATCH v8 03/11] arm64: dts: ti: k3-am62a-mcu: Add R5F remote proc node
+Date: Fri, 2 May 2025 17:03:17 -0500
+Message-ID: <20250502220325.3230653-4-jm@ti.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250502220325.3230653-1-jm@ti.com>
 References: <20250502220325.3230653-1-jm@ti.com>
@@ -76,31 +76,51 @@ X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 From: Hari Nagalla <hnagalla@ti.com>
 
-C7x DSP uses main_timer2, so mark it as reserved in linux DT.
+AM62A SoCs have a single R5F core in the MCU voltage domain.
+Add the R5FSS node with the child node for core0 in MCU voltage
+domain .dtsi file.
 
 Signed-off-by: Hari Nagalla <hnagalla@ti.com>
 Signed-off-by: Judith Mendez <jm@ti.com>
-Reviewed-by: Andrew Davis <afd@ti.com>
+Acked-by: Andrew Davis <afd@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi | 25 ++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-index 9fedbd642679..f811911c1325 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-@@ -701,6 +701,11 @@ &main_uart1 {
- 	status = "reserved";
- };
- 
-+/* main_timer2 is used by C7x DSP */
-+&main_timer2 {
-+	status = "reserved";
-+};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
+index 9ed9d703ff24..ee961ced7208 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
+@@ -174,4 +174,29 @@ mcu_mcan1: can@4e18000 {
+ 		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
+ 		status = "disabled";
+ 	};
 +
- &usbss0 {
- 	status = "okay";
- 	ti,vbus-divider;
++	mcu_r5fss0: r5fss@79000000 {
++		compatible = "ti,am62-r5fss";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x79000000 0x00 0x79000000 0x8000>,
++			 <0x79020000 0x00 0x79020000 0x8000>;
++		power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
++		status = "disabled";
++
++		mcu_r5fss0_core0: r5f@79000000 {
++			compatible = "ti,am62-r5f";
++			reg = <0x79000000 0x00008000>,
++			      <0x79020000 0x00008000>;
++			reg-names = "atcm", "btcm";
++			resets = <&k3_reset 9 1>;
++			firmware-name = "am62a-mcu-r5f0_0-fw";
++			ti,atcm-enable = <0>;
++			ti,btcm-enable = <1>;
++			ti,loczrama = <0>;
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <9>;
++			ti,sci-proc-ids = <0x03 0xff>;
++		};
++	};
+ };
 -- 
 2.49.0
 
