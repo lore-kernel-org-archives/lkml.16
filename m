@@ -1,95 +1,95 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAB823A562;
-	Fri,  2 May 2025 10:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49904238C33
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181167; cv=none; b=irWUtuM/5KdLykq1UzkV1Cw9ltGDhFl2bMvurZ4NtTUzlVF2AvCr7bs4XGQhZaesUvXTaNKDbxLNduCSYsO+QQsUcnDonL5cccpZVxXNcXUA97+z5kGX6R9H023J9fKFLi3K7g5LMJ0u8wzufc4mcFUmUIQfyIe2VTinlfAG1x0=
+	t=1746181186; cv=none; b=BDdWT/EZIFlLouHJ2sIc5XxqPhZHwgyWfcGsK6jLbh9LSdG7NZuWXe2WE8Y8Q2dl+9AnhJhs3lUyFd9CSeY7wjq/eNuR2SSyP7TfAmFvCj+qkF+DFfO0yFVLEJ8n4Mj2pzdKShoWeUaexDRQDMVYyDO40GZzhuJ+wMbvtidOFHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181167; c=relaxed/simple;
-	bh=V/aX7grjyAbnUBNF8gEJ3pf29B1wtQkLIJ8GWeo81oA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1kj3OWFb7NNzZMBnXH5ZaY1S5fVT+fuY2aObw8VMRIhdMbs9pC3mtCeEvDR0bmxIlqxyf1CimLKfCqPKVmw8WWZUZnWeRjZDJ1YSKR5G+r79jMWOQcaKr1Okt1WE9DlZcBnAm1kzPoIrwVhtEJ2DxgKj1KxSucJ6xha4n/p0CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=DIqVbSUj; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1746181186; c=relaxed/simple;
+	bh=rf1UbGG3UspPN/9brMtSukZGCz7Qty1bFnxHg1aKkvU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lijnk7rOmBs7sii8mHRhZZHaSy8ht+GjMPbvY/eI6+HO7SHbJJCNdAD9VRiPXOu87FxCZvv6ldQrHeFOCEIzDnMAIHQy82XY72I3vf6OHUcLA0otVySO6O0nRvFTbmKnfBovS98UkJjRpTp9jzwDKP0mbcgjRyWmhd/XjIO7OBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=DzoasPK4; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="DIqVbSUj"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7678910267FBE;
-	Fri,  2 May 2025 12:19:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746181162; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=OqNM1WJXeRbDYTb+XCGZDpJOZ5winGgziTp4vKwJsdU=;
-	b=DIqVbSUjPvdqVnGTHoWmtUzZozPYBMGgUVS9/eEiESke1uRAIffFioceetMJ1pNuzCUc6F
-	9aKnG6Was5aLEMf+E/4gD0zn7Pe56k5xwTlwSL5ZPet4GRUCGlQAAeV6JbvBTcnposxq6J
-	NgNac+j5Q3Ms9iYjfW/lDOQzeAZykAftgnz+iMwUDXrVwnrwjdoQ3y/6EUd51WoPqyNU5t
-	ySzATta8dg8r9J0x75MLQyFSffKquDifMJG/25yCVeDhNnobtpUieydvzBsQEIWDDrqXN/
-	8MiurPuyHoqUrd6oiHs+mKXBvcbVzUIjxnsSzMK7axB/5NFr/09DdB9d8YU5NQ==
-Date: Fri, 2 May 2025 12:19:15 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Kazuhiro Hayashi <kazuhiro3.hayashi@toshiba.co.jp>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	cip-dev@lists.cip-project.org, bigeasy@linutronix.de,
-	tglx@linutronix.de, rostedt@goodmis.org,
-	linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH 4.4 4.9 v1 0/2] Fix repeated WARNING in
- unpin_current_cpu()
-Message-ID: <aBScIx13vT5c1i8V@duo.ucw.cz>
-References: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="DzoasPK4"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso1151101f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1746181182; x=1746785982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7pFP7994sk6Z7ncZJREiDv0qbX6NYWjwXGSgYC1s9l8=;
+        b=DzoasPK4sV7RwQNpK7n6mfIw5GhfzsJPvep7nqPwRSRHak2AZlHO9AEPAc2Sut1Gr/
+         yLHHKZbRfVwUZZCHX740pkKXAchJS0/Vo6Tz5PtPbm36bNeF5TF+36KcPTuSbzg/vklo
+         mZbEekfpVMElKZ99aw4ZH5UF+SZUN9psS6t5RqaABcBFtjSpaBRI5EaDiRVpTET85TK9
+         MPlxSBq0cLLyMYpkRuWB2vuGN8XosL8RT17WV8xHzBZuB1+6pzZscnnQckxafjld9ZjC
+         LxJ5hUIPEEZOrXiDL67b+ys88MVNwFunTJ+sF8fW7CN0jm6HuUz5sec7r+3+hngk+4qk
+         HeOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746181182; x=1746785982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7pFP7994sk6Z7ncZJREiDv0qbX6NYWjwXGSgYC1s9l8=;
+        b=Bp6dm/yz58APEL7+HSRyThL01la2E85aWRs0ORMHOjgRs2Xh6o27uc2Hnk9V8IAURC
+         7JSYHvV1ULR7I1NteUFyhUYJczTLbwr1H9e6rQ8HVwoe3tFtuCWnX1OqOMN9qfx7NDKb
+         CA6M5iVQyMKgqxYpgQgeaoLtjhJ443ChVHF8ipBGwOYV0+e7sNlg/ASd2JHM1hSrA2Wq
+         nZBQrznqpLcMz3rvc4brEVdbZ01tjYjHsUyDA1JWGPkucRJxQ6Xz0f2wTqw7yRWtPtxy
+         eeYAXgK/mhelVIoPNue0Q82DrvxNS0EKcaZmuzUqLnYn5S1gfYVjkooQEF64tGBu3sIA
+         fiVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0z5jTjXCxaa3qF64oPvwu52MiylpiiMbKGhaggEufL30WS23IlO0Xsh9T9VzLSTjMhn10CsZVsqLtDfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyybDpInMLnlGw8P110Qw9sC3kFXfqrKr6nBmXgB8NLQtovvegH
+	lMR6pXZrh2BmBTHS5ta2Ijq/mStCuxWMFyllPjkvVAVkKYwnrdjWSB4LhO7FizKDYus20KaDAzP
+	ZGrLzHFnOWI8VBoLLBVgSAcACPMD/L5PQXpe2bg==
+X-Gm-Gg: ASbGnctlsKUeIxwYJx384Z+8mcDaFsZSMNtiIvgaQdQhGSCpx6e7sREPoI3LpagxJac
+	suW1yGB9vf3h3xvvnpcydrKAfGeec0gLLY/XuuuQyGVz3xxzTchq1DlsdGqt/62v2I1yU6REfkc
+	f3ahMjbn11h8V2IK4cWN9L7J69fG/7qL5gv+w=
+X-Google-Smtp-Source: AGHT+IGc7/7ZFHGC09Y6oPlxiiiAyWXOIhQLSULd58hpmnRmxebelvil7hczjMUB00Kr9zZDZNhsc+5+jzgD4fz6cfI=
+X-Received: by 2002:a05:6000:1a8b:b0:39c:1f04:bb4a with SMTP id
+ ffacd0b85a97d-3a099ad1b70mr1701591f8f.10.1746181182606; Fri, 02 May 2025
+ 03:19:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RB7aPg18wey2WPOX"
-Content-Disposition: inline
-In-Reply-To: <1738629964-11977-1-git-send-email-kazuhiro3.hayashi@toshiba.co.jp>
-X-Last-TLS-Session-Version: TLSv1.3
-
-
---RB7aPg18wey2WPOX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250501-vmlinux-mmap-v1-0-aa2724572598@isovalent.com>
+ <20250501-vmlinux-mmap-v1-1-aa2724572598@isovalent.com> <CAADnVQK3hSgs_hic2Yuo84vR=2GZNtryki+TDNkNGY_7URsLiw@mail.gmail.com>
+In-Reply-To: <CAADnVQK3hSgs_hic2Yuo84vR=2GZNtryki+TDNkNGY_7URsLiw@mail.gmail.com>
+From: Lorenz Bauer <lmb@isovalent.com>
+Date: Fri, 2 May 2025 11:19:31 +0100
+X-Gm-Features: ATxdqUFBpdbdrog4Z53_JyxwTJC7G2efSJ-kkbIOit1-1PBgRel5uCzelrycCew
+Message-ID: <CAN+4W8hqyi+MFS3975stXPWOxfMtdWQXPFnuvSieFzReDcV0rA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] btf: allow mmap of vmlinux btf
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Thu, May 1, 2025 at 9:26=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> > +
+> > +       return vm_iomap_memory(vma, virt_to_phys(__start_BTF), btf_size=
+);
+>
+> and this one should probably be vm_insert_pages().
+> Since it's not an IO area.
 
-> This is a patch series for v4.4-rt and v4.9-rt to resolve problem that
-> WARNING in unpin_current_cpu() happens repeatedly while kernel is booting.
-> Please see commit message of the second patch (2/2) for more details about
-> the problem and how it's resolved. The first patch (1/2) is a preparation
-> for the fix (2/2), considering compatibility issue in future updates.
->=20
-> As the both v4.4-rt and v4.9-rt have been EOL already, it's not expected
-> that this series is applied to the branches anymore.
-> On the other hand, the Civil Infrastructure Platform Project (CIP)
-> has been maintaining its 4.4 SLTS RT kernel[1][2] based on v4.4-rt,
-> and needs to fix the problem above by this series.
->=20
-> It is much appreciated if RT experts could take a look at the series
-> and give feedbacks about its way to resolve the problem, which is
-> based on the same approach as changes happend around v4.14-rt.
+FYI I went with open coding with remap_pfn_range since that allows me
+to avoid struct page.
 
-Thanks for patches, and sorry for the delays. 4.4.302-cip98-rt55 is
-out, and it should contain your fixes.
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---RB7aPg18wey2WPOX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaBScIwAKCRAw5/Bqldv6
-8r6uAJ0Wfp1mrQfZbs5JoLLK1Gy932Kv/ACeN4n7KoD7fon814lWlDROkejw4Do=
-=szFd
------END PGP SIGNATURE-----
-
---RB7aPg18wey2WPOX--
+Lorenz
