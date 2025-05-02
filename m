@@ -1,161 +1,139 @@
-Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6664F23C516;
-	Fri,  2 May 2025 12:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B6F23C516
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746190505; cv=none; b=qVk1R8FnA+GPY6TbV/DSUsPtxNXg6TlBswluCVJxMxVGYOqFzVqZ8u8P2t9p8/d6vxm6/cbeW9yjklvmJ5I8qufs6YeJUVkedC5sCuFt90sWMyTkeCN/LmJAUbDilRen7OYAsg+AX6rly1fzjve4xOK3EICQfW4a48lUu5HhRs0=
+	t=1746190558; cv=none; b=bf3J7k+3KjTHrzi1x4holkAsT1pb4sAMORr8ml3IlmxXDdJUCGVm4oCuQzUnD/mBp7lLBkJGRdiQuRisiQKQQn878R01lPYCb+vseLA7RoVv0dNV3h9c5HiutbwLHklgAKpuV5c8NDe8HUayvOFOlLgRsFVevhcGHLaqMuJyAB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746190505; c=relaxed/simple;
-	bh=Vr7F6UmAx3IrmOszyFQx5ludxkteP8QYXfmMfxEeDQ4=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=DmSCWh7xEXybRd/XGVl5zWiSvdOE7QZmbPQugOyTYGHywwebTCMry4ecYzPcNxIB0zU4cSDMKH6CXu6hw1qeq4Ofy/4+lNLxuLsiM4eeA8nK6gOrFinLmQ/kyd0bwFCU8oWTiayeqZaCTFlHAsiD3K0FEJs6FxMVayzIWyJV0wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=avXQrZa1; arc=none smtp.client-ip=45.141.101.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1746190558; c=relaxed/simple;
+	bh=k7m5wfThSJzAnnocD4T0hTHkgEoH66cKQUimB1PY/ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LJNVexEcpgZU7HEQRQ+5VB+ycmZsjSPebXHKEqGm7ZTI++orhabcDu45SI7+5uewFlwm8ZsnIlPe+GclBAeNJ8/b8XI15OXLXjT+yLPXpFGNXHfOS9l0xzgrTqOTY605OXYwYQ3nR+ROBYkWh3Jr5OyKevc+EJt5L57FDmV5e54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Kbv7RLxB; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="avXQrZa1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1746190500; bh=Vr7F6UmAx3IrmOszyFQx5ludxkteP8QYXfmMfxEeDQ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=avXQrZa1QLEIvROFUfO5+gq6TjwJm6/q7QA2HynNN9KbB+2JL0TVOLMQU2vAYBAyg
-	 cARo8EQi0jAndXbzNV4cbyEETOy/+PJfDtE2iI26BYCU0o3h+7wLDTJq+3vEls2ILW
-	 3ONoq6WamobddozvDzX/qF6LgDbVLDjss8nUGyZLZRL36MaDDGY4Dec1sIIzrZCXOA
-	 evBBxXfqDB7BDIc01SSigzJm7ao4JCsTRelu8Ca7iDEe0EE2ZwY/mQ1EWeffwMg2uF
-	 jNcLKCXzcHdKTOOJaVGfbXZZt1GlBT6s8c2Dq/8SNCxlNR271do2Jk4u85BGSFHrgK
-	 jZv8Hn7r//z7w==
-Received: from authenticated-user (box.trvn.ru [45.141.101.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 2A42FD348;
-	Fri,  2 May 2025 17:55:00 +0500 (+05)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Kbv7RLxB"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2963dc379so300535066b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746190554; x=1746795354; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vTtxRFIdDHANvRLEITN1xhjB2nGwxMHbp+zrOw808ds=;
+        b=Kbv7RLxBzhu0uZOphH5ecNmcPLf5QVjhthJBy8j8S71AL6CmCA69/WzkW0pta7ryfY
+         F8aKgFd2fnhl/RvbQl126PnB6YagI1naW3ncPa/b+qBQqrNcawarUxjqTn+kOxATBmjY
+         xE1a6q4w28BTzqCO90zmxt9i8kZYQW/a2tYbuLBz54DXA67cKglFHrmoNXc6cfNNMi8d
+         EZZWhKpAzSCm9YGrZeoXYUF8F8iNQkW3YjkF80k5262vnLt8zJ8XsOhhYr+lrocR0Huy
+         HSUa3GUHeHFAGey6loPAYAZrmct45key+vSNNolaP2bKoXTD2jmiEFVNFY1TtJjitSZ9
+         S90Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746190554; x=1746795354;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vTtxRFIdDHANvRLEITN1xhjB2nGwxMHbp+zrOw808ds=;
+        b=gspnGNsN2fIB3YYwKeS322sp7tScDbtvQ0SUNtp/5T/XYuPZ4lTKFc/62ywkGrBUdy
+         4XOcMdkUSjvkMKTJ/0Y1qOWNkSObbsKwKBhqKxy+IkdcEZQ4aGkEKlF0NSa803G5ooT+
+         pLYkW6r3fLR6gj2cePEEmKWhsLF7lW1lgoeHfK7bKxHDwOEiQMz53yqH1aQ7ddY1mxWA
+         aa6FKlV7sV7HOJMQR+Ph9DobvRB6eNaMyOI7cUXewUXF2z7s7OMmWUQCeYdjCN4V+9Lt
+         gm+ptrJUrBEO2PsG7MRKx6jLWy2lp4Pc2j/MLLAbd4A0XL0BudfBpyW6G2RIMYJL133z
+         OWKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnGMeB30zCLQJsrzA40GfqCbwnn6o24sdIWCVH60hYXdhgLilmuV4wA8lai/D+fJm6XoyHw6W8+KX8cmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzkd0c8EZvjYRw3FkNEKjkYLpji0xs4hVla9kCdTNPXZvAN6vg
+	yTSGsRnLC9JOWp8HJcH8ZZHQJ8HNfW7vKliE6nVoqrfrI8aQYh3TGQoa+oP1q7WtayJf4Wh7iWM
+	e
+X-Gm-Gg: ASbGncvajdqK6s1tUyLParRWl8cQuhikubTc5br+uUCptKdkUi2MlERcVyK59C2Nwni
+	X8ar5m6GLaYXWKCiun1BvSBbqH6/kjtDCCWAy+fQ2j+IRqMpIelqbLiYGJi5GAmAkSECraTuGFj
+	yJSJ2TSLpM4L8qpyj3oTwPATw4E2cG0d6IVHc2U/LVAAluGZU6SJ4RfmmC+jhixtRTS+MgMSxpr
+	ikmH8pI/lOzn+GKD5gy+WNGLNtYEU/bU4B0FgevoRW1rV2Lqp6SV98jH1BW7RoPK6ak1gBjX3WC
+	8DGnOvQ+wZuIfMZ80irEkBDeQbx3/rsixlSK4IeOipo=
+X-Google-Smtp-Source: AGHT+IECspaJdwgNmehtHNmLcWXQRGlb35Xt5cxYK3SWshB5tpDmTMfOT2XlBnI+I/l7AOfra9OxPA==
+X-Received: by 2002:a17:907:3f8f:b0:ace:8398:b772 with SMTP id a640c23a62f3a-ad17ad7d68amr249115666b.14.1746190554024;
+        Fri, 02 May 2025 05:55:54 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a68a6sm46841166b.71.2025.05.02.05.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 05:55:53 -0700 (PDT)
+Date: Fri, 2 May 2025 14:55:51 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, cgroups@vger.kernel.org.com, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/cgroup/pids: add "pids.forks" counter
+Message-ID: <bbublxzpnqrzjq5rmmbp772w2darjoahlewqky7caanaknglbx@6wuy5nidsnu3>
+References: <20250502121930.4008251-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 02 May 2025 17:55:00 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
- <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- cros-qcom-dts-watchers@chromium.org, Jens Glathe
- <jens.glathe@oldschoolsolutions.biz>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: x1e/x1p: Add EL2 overlay for WoA
- devices
-In-Reply-To: <86o6wbguv1.wl-maz@kernel.org>
-References: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
- <20250501-sc-el2-overlays-v1-5-9202e59e3348@trvn.ru>
- <86o6wbguv1.wl-maz@kernel.org>
-Message-ID: <9e5c2e9b6685e7a621cca926530bd271@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zswwkexc5vsnudsv"
+Content-Disposition: inline
+In-Reply-To: <20250502121930.4008251-1-max.kellermann@ionos.com>
 
-Marc Zyngier писал(а) 02.05.2025 15:38:
-> On Thu, 01 May 2025 18:03:45 +0100,
-> Nikita Travkin <nikita@trvn.ru> wrote:
->> 
->> WoA devices using x1e/x1p use android firmware to boot, which notably
->> includes Gunyah hypervisor. This means that, so far, Linux-based OS
->> could only boot in EL1 on those devices.
->> 
->> However Windows can replace Gunyah upon boot with it's own hypervisor,
->> and with the use of tools such as "slbounce", it's possible to do the
->> same for Linux-based OS, in which case some modifications to the DT are
->> necessary to facilitate the absence of Gunyah services.
->> 
->> Add a EL2-specific DT overlay and apply it to x1e/x1p WoA devices to
->> create -el2.dtb for each of them alongside "normal" dtb.
->> 
->> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->> ---
->>  arch/arm64/boot/dts/qcom/Makefile      | 36 +++++++++++++++++---------
->>  arch/arm64/boot/dts/qcom/x1-el2.dtso   | 46 ++++++++++++++++++++++++++++++++++
->>  arch/arm64/boot/dts/qcom/x1e80100.dtsi |  2 +-
->>  3 files changed, 71 insertions(+), 13 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/boot/dts/qcom/x1-el2.dtso b/arch/arm64/boot/dts/qcom/x1-el2.dtso
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..7a818045ef098b44632df45253d32e31c5c7aeed
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/x1-el2.dtso
->> @@ -0,0 +1,46 @@
->> +// SPDX-License-Identifier: BSD-3-Clause
->> +
->> +/*
->> + * x1 specific modifications required to boot in EL2.
->> + */
->> +
->> +/dts-v1/;
->> +/plugin/;
->> +
->> +/* We can't and don't need to use zap shader in EL2 as linux can zap the gpu on it's own. */
->> +&gpu_zap_shader {
->> +	status = "disabled";
->> +};
->> +
->> +/*
->> + * When running under Gunyah, this IOMMU is controlled by the firmware,
->> + * however when we take ownership of it in EL2, we need to configure
->> + * it properly to use PCIe.
->> + */
->> +&pcie3 {
->> +	iommu-map = <0 &pcie_smmu 0x30000 0x10000>;
->> +};
->> +
->> +&pcie4 {
->> +	iommu-map = <0 &pcie_smmu 0x40000 0x10000>;
->> +};
->> +
->> +&pcie5 {
->> +	iommu-map = <0 &pcie_smmu 0x50000 0x10000>;
->> +};
->> +
->> +&pcie6a {
->> +	iommu-map = <0 &pcie_smmu 0x60000 0x10000>;
->> +};
->> +
->> +&pcie_smmu {
->> +	status = "okay";
->> +};
->> +
->> +/*
->> + * The "SBSA watchdog" is implemented in software in Gunyah
->> + * and can't be used when running in EL2.
->> + */
->> +&sbsa_watchdog {
->> +	status = "disabled";
->> +};
-> 
-> I also carry this [1] patch to correctly route MSIs from pcie5 to the
-> ITS. There is no reason not to. The same treatment could be applied to
-> pcie3, but I never tried it.
-> 
 
-Oh, interesting... I will add 
+--zswwkexc5vsnudsv
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] kernel/cgroup/pids: add "pids.forks" counter
+MIME-Version: 1.0
 
-    &pcie3 { msi-map = <0 &gic_its 0xb0000 0x10000>; };
-    &pcie5 { msi-map = <0 &gic_its 0xd0000 0x10000>; };
+Hello Max.
 
-to the overlay then. (At least I hope the base value falls in line with
-the rule so far, while I know how to confirm iommu-map via acpi tables,
-not sure where this one is described, if at all)
+On Fri, May 02, 2025 at 02:19:30PM +0200, Max Kellermann <max.kellermann@ionos.com> wrote:
+> Counts the number of fork()/clone() calls, similar to the "processes"
+> row in /proc/stat, but per cgroup.
 
-Will send a v2 shortly, thanks!
+> This helps with analyzing who was responsible for peaks in the global
+> "processes" counter.
 
-Nikita
+bpftrace <<EOD
+kprobe:copy_process
+{
+        @forks[cgroup] = count();
+}
+END {
+        for ($kv : @forks) {
+                printf("%s\t%d\n", cgroup_path($kv.0), (int64)$kv.1);
+        }
+        clear(@forks);
+}
+EOD
 
-> Thanks,
-> 
-> 	M.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20241024161814.1827514-1-maz@kernel.org/
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+...
+> +  pids.forks
+> +	A read-only single value file which exists on non-root cgroups.
+> +
+> +	The number of fork()/clone() calls (whether successful or not).
+> +
+
+It would conceptually fit better as a pids.stat:forks (but there's no
+pids.stat unlike other controllers')
+
+But I don't know this new field justifies introductions of a cgroup
+attribute and (yet) another atomic operation on the forking path.
+
+Does the value have long-term or broad use?
+
+
+Thanks,
+Michal
+
+--zswwkexc5vsnudsv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBTAuwAKCRAt3Wney77B
+SRsQAQDXLaN1zLsyLBL2ikS2bGJHSeMHpyGNSE7RN9r0mxXn2gD+IJW8JRCQxMZw
+c09gMoHZi+qhX9QC5reIDjNkOpV9pQg=
+=PBfx
+-----END PGP SIGNATURE-----
+
+--zswwkexc5vsnudsv--
