@@ -1,76 +1,82 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AAE158DA3
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0E01D515A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746164137; cv=none; b=BrvXb3sZ/xikN0BZlXd4KreMimpp9qIcGqJgwbcxXxZrrx9334g6RC/PdkskvXCbuSnOXj1YowR5sYy3KTmrO8x/5JKJEH4cnb1XywSuBWvoZxm+k3+hvUX7+IWcBc9lyi7JRmedQSXpIUfY0oq0dYjuROZ0FlGW0kj2qob9SGY=
+	t=1746164152; cv=none; b=BWy7iEg04dZUpATtP3cDtektKstgHSV+/Oz+MBSzTQSNsS/S4jHMIAj+R5OMgpOaMl+xdUuruHRbD5tXrJ4gkTQOJX+VatTL1KPYXxuQdukgSLUltNMpANDSfEFJ+ap+jj4ImVOsfQXCyexfUDexR1BZJi4GbeA4cGbvRBa4MjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746164137; c=relaxed/simple;
-	bh=2fKNAd0m/28SZvQm9wt/n28vAWZEcdn9JNM6XgU03NM=;
+	s=arc-20240116; t=1746164152; c=relaxed/simple;
+	bh=fjjyGO0nWAn+BGWCEtV2vyHl03C2bbF2QF26icstcxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R50KQAdsJg1ybBnRKfU9leFzYkIzfPbX7bedAEpBmm81UvohOTzBSbYWkQOQzQHclOo3mylr8ilMiTpH1b0vhj1qK3Fq/v53Xu8WFHNZcKqMNtsvfCm5A8bmHfi8xMRWtOx7H88IsSgAm8MDm4NoZyBCRucBkx9pS29cqbde5+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QFuhHOub; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=BLTLKd3B9E6vsmGEMiGhlo6nHJ4iEBgslG+MQP9wl6k+KCCfSYNRVImF7wztoWS+GkU/ww9tmzRWc2z9/9BgJ2R7EsEgJ/rXUkuDPnmzRVHKDPP2K8A4b8nPZeSHJQa/h37F0KaSSFypPnMeIzIFLj0qvcPcF4CTbTPfijahpCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=EsCYa2Z+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=t24JYgHr; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QFuhHOub"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-227914acd20so23575475ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746164135; x=1746768935; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tz4yf40mtzEV4/YpTdm2/hirFctImt4in0cV4OGFkho=;
-        b=QFuhHOub+uwLfAC3BKlmHncsmy0oQtKELmvLbyfZaWeHFKyJjPd0Wkli/YKuFx8uS2
-         yAu3qZuMi/Mso6mNTL2slj6Xzw5s06kacWNDUuQoOf0PSGS4Bmkl3xBqoXoejbawMLOf
-         b2pWR81sg1qcVqhrwKOxCh0luopqOlTt7Zjzs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746164135; x=1746768935;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tz4yf40mtzEV4/YpTdm2/hirFctImt4in0cV4OGFkho=;
-        b=Gdpr+SWItnc28pd7u2Llx1FVernFgGDrsTEGPoQE5LLZkfSHerKfOKgVifWggn8zAr
-         DyLJSiNjNaOS1u20+Z0wnobqFwhguukFZJvvTrxnKKUHUj/WVGos8QybuDXI8Rhnk1vL
-         G2lYJcRGNB7CiPq60nsGF8/obLrPeqNLoeVWUD6eL1s8E/G2/XDIVhmmBUa5DtUGkWa8
-         xbZxUWmcxXI3heHGfjxV5A1+LtsbTZVOdtHZU4xQzMpGJEhR3EoaJygzFcJY+qAMHgxi
-         Vy0dlhnVax6v+a3TRYgnu6+Rj25T1/6lYCm30Hc0xKsh02XY6/yK/vDlpKs3xEproFEY
-         G9LA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeZHQe15NaGv7HjRNIrCzP2F71QBHLjGCaDuOeKbSPNIYr613w1g1Z7W3snLKXR8P3TIgy5LRIgGZAhsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkVdq/taex+gRIC3ObbSKmNiIdUGV672rJq72kVseog+zLg6Yi
-	ZZdlQCm/HIFQxhbN12EyqID0R+hWqNnzhVBCtTu5F3ewSPx74rHg+vT9uhcwag==
-X-Gm-Gg: ASbGncvHOeLYXWWz910/NH+EVHSOWG9mrzzKKgHpgSRt+vmx6/3pPO2u+NZ/nCCu/2h
-	oHcC9Z3gqnf4M1hZc2czjOUuKuV0CDce7PVfMvWDdlOX3rNqsJJpmoWAZayHKEcq/jRdkLYToP5
-	7IO+HFGdsO8TTyl+wcIPFPtGtQkrJFdrW4Xxl+tdXrhEvd91pL/Xw0SCGoKQMDcTUMwaGKZccHL
-	vATLlR6gj+s92GuuZnrI0WtKXYlSlpnwll/ZDq0xWHTAHYUcrx3ADOJJkx2zSh407uEvm46ngYA
-	cyh9duaoe+Ekj2lgkE3Wjsbh28WEQ18LvA==
-X-Google-Smtp-Source: AGHT+IF7WZbxLedaOYtnoAo4B+GdGFwceB1cOYhZurL9ySD5fBpkCR2CSB9s+2yvylGfqu1unwieKA==
-X-Received: by 2002:a17:903:1c5:b0:223:5187:a886 with SMTP id d9443c01a7336-22e100b754fmr26447245ad.22.1746164134693;
-        Thu, 01 May 2025 22:35:34 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:10:e66e:6e73:436b:6b0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e108fb8ebsm5785905ad.118.2025.05.01.22.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 22:35:34 -0700 (PDT)
-Date: Fri, 2 May 2025 13:35:30 +0800
-From: Sung-Chi Li <lschyi@chromium.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <4x3ouuawdtee3cbj7wwad5aazgfsjo2vbzsib5oxbmjcmny4re@kiseb26pciyj>
-References: <20250429-cros_ec_fan-v1-0-a8d9e3efbb1a@chromium.org>
- <20250429-cros_ec_fan-v1-3-a8d9e3efbb1a@chromium.org>
- <ec2f7e54-0582-475d-af91-42d9be65cd3e@t-8ch.de>
- <aBGCB6_4XR4Z-vFI@google.com>
- <2518c6a3-6524-48b3-8e64-8990a61cc608@t-8ch.de>
- <63b2d985-92d4-40dd-b2b2-ab55796abc52@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EsCYa2Z+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="t24JYgHr"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id 02390114016F;
+	Fri,  2 May 2025 01:35:47 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Fri, 02 May 2025 01:35:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1746164147;
+	 x=1746250547; bh=RktAcX83KBw/vrKDxuivrtacy8sbdy0ib8ss9bNvBNw=; b=
+	EsCYa2Z+/E1V+v4H5ZrtyMHSMm4CGZhRz4Dkt0fMTZQau2qQfYP1KaLEbSJLss0D
+	o1Q9aMypxubJlQXlC6JDGn6eSMnRXPCd6NXHaGj5JfMhGo+ZIlPDvUtFV47Ea71o
+	3K7tRGdln6ShIq5EowETHjAg7gim0V22GUf9NtM7cNFPCHp3fVypbi1oelzn57pf
+	QXZCGVNa9N1WlbwNTnvs1RdBRVE+maUWRXzJE6ZNwvS7nwpRHeVJ3+H/KPBn6HQ8
+	PQjoky/fL8zvDUv27UV35jK/Jizrx+yIBqNYOtb1V6LIWWFBk5PQaGv8mkoEylpu
+	pI2cZoxd3GPgRUwb316jLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746164147; x=
+	1746250547; bh=RktAcX83KBw/vrKDxuivrtacy8sbdy0ib8ss9bNvBNw=; b=t
+	24JYgHrg08lJEtjxbZN9jGjalDQX1uPrCgMT6GWZRxiFUG2k5sX8B9GwH7BmtjBM
+	wkKAbbdBMo6jZM6eJHzyiykWaDTVqTrA3QM4BbSO7RxfggMOV2iV0zSV5umwjfhF
+	x9omMbwRssAbDFoqgSGxlMbXsE4GpCxJqeYCw1+dGrUdLeF7OZnOc6qHnL6Tlywu
+	euQeHFC0ta3/ONS8wE4sSsWg8Plo76RP685BWqGVdojpnJShgXiclvx3c287/lV1
+	DtKwnlJKvA5WDIMnCJkn8zHNEUGbWTMBI/PvMUDnl/ECxuRWUaevhmOLJmzxT4us
+	bMOjVrANEEOYUQxCaZrew==
+X-ME-Sender: <xms:s1kUaJkl6GvyCwo1JqKDIZ-BxWTuA1hP6m4-PXaAAwksPHAdrMgGIQ>
+    <xme:s1kUaE2UoSI6i03ih7atid1ZIgZLsAYTS8FG3CU49MDda7NJWpVOj7cFl6u0T1Wkk
+    I-_8b1cHJX0Iw>
+X-ME-Received: <xmr:s1kUaPqqZV6U-DJX5QNUXLGfhSPueL5F55a8qGh5lx3-aQJQNCzwoHgwERqlT7NEDjeqr8mfSILV1tVxp33Q5V5SlU5LlFY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeduiedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
+    fvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomhepifhrvghgucfmjfcuoehg
+    rhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepleehheduudeugeegje
+    fgheeuudffheevueekgfekueefledtjeetieeutdekkeelnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmpd
+    hnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjghhr
+    ohhsshesshhushgvrdgtohhmpdhrtghpthhtoheptghvvgeskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:s1kUaJnUQTiVdMu_4SOnqy2bQYajzeSh2JogvP7H8j6JClAT_zBWOQ>
+    <xmx:s1kUaH2_WADCup1YaN8VvSDAHYgLiXqeCX8s3UP4NMtkBeJ_V1BeOQ>
+    <xmx:s1kUaIty9k9sduEMJSK-dtCq6yTWAh-EXZiBe9VJiZNwCfoW6PmIrg>
+    <xmx:s1kUaLU4mQtRC3yTw0Q2dCOK2zR3VWYwx80q4_pOr0w0XauEaQP69A>
+    <xmx:s1kUaN_4DTukFTSXWeT337U_gcAdm-xQDZqtK4JZGVWwIvd6Mfy0SZ8j>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 2 May 2025 01:35:47 -0400 (EDT)
+Date: Fri, 2 May 2025 07:35:45 +0200
+From: Greg KH <greg@kroah.com>
+To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2022-49816: xen/pcpu: fix possible memory leak in
+ register_pcpu()
+Message-ID: <2025050238-gents-policy-dc22@gregkh>
+References: <2025050131-CVE-2022-49816-0190@gregkh>
+ <917da057-adfd-4002-ad2b-f2a6ac3a00ee@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,58 +86,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <63b2d985-92d4-40dd-b2b2-ab55796abc52@roeck-us.net>
+In-Reply-To: <917da057-adfd-4002-ad2b-f2a6ac3a00ee@suse.com>
 
-On Wed, Apr 30, 2025 at 08:38:06AM -0700, Guenter Roeck wrote:
-> On 4/30/25 07:36, Thomas Weißschuh wrote:
-> > On 2025-04-30 09:51:03+0800, Sung-Chi Li wrote:
-> > > On Tue, Apr 29, 2025 at 10:45:56PM +0200, Thomas Weißschuh wrote:
-> > > > On 2025-04-29 16:14:23+0800, Sung-Chi Li via B4 Relay wrote:
-> > > > > From: Sung-Chi Li <lschyi@chromium.org>
-> > > > > 
-> > > > > Register fans connected under EC as thermal cooling devices as well, so
-> > > > > these fans can then work with the thermal framework.
-> > > > > 
-> > > > > During the driver probing phase, we will also try to register each fan
-> > > > > as a thermal cooling device based on previous probe result (whether the
-> > > > > there are fans connected on that channel, and whether EC supports fan
-> > > > > control). The basic get max state, get current state, and set current
-> > > > > state methods are then implemented as well.
-> > > > 
-> > > > There is also HWMON_C_REGISTER_TZ, however it depends on OF.
-> > > > But this patch looks very generic, so maybe it makes sense to implement
-> > > > it in the hwmon core.
-> > > > 
-> > > 
-> > > Hi, the HWMON_C_REGISTER_TZ is for registering a thermal sensor, and here I
-> > > registered it as thermal cooling devices, so they are different. I followed
-> > > other hwmon drivers:
-> > > 
-> > >    - gpio-fan.c
-> > >    - aspeed-pwm-tacho.c
-> > >    - max6650.c
-> > >    - qnap-mcu-hwmon.c
-> > >    - ...
+On Thu, May 01, 2025 at 08:19:47PM +0200, Jürgen Groß wrote:
+> On 01.05.25 16:10, Greg Kroah-Hartman wrote:
+> > From: Greg Kroah-Hartman <gregkh@kernel.org>
 > > 
-> > Indeed, sorry.
+> > Description
+> > ===========
 > > 
-> > > . These hwmon drivers also manually registered other cooling devices, and that
-> > > makes sense to me, so I think it is good to just register cooling devices rather
-> > > than make big changes to hwmon core.
+> > In the Linux kernel, the following vulnerability has been resolved:
 > > 
-> > The implementation does look like a lot of boilerplate.
-> > If Guenter doesn't chime in, let's stick with the current approach.
+> > xen/pcpu: fix possible memory leak in register_pcpu()
 > > 
+> > In device_add(), dev_set_name() is called to allocate name, if it returns
+> > error, the name need be freed. As comment of device_register() says, it
+> > should use put_device() to give up the reference in the error path. So fix
+> > this by calling put_device(), then the name can be freed in kobject_cleanup().
+> > 
+> > The Linux kernel CVE team has assigned CVE-2022-49816 to this issue.
 > 
-> Someone could make the necessary improvements to the hwmon core and clean up the drivers
-> implementing that boilerplate today, but that should be a separate patch series, and this
-> series should not depend on it.
+> Please revoke this CVE.
 > 
-> Patches welcome ...
+> The issue can in no way be triggered by an unprivileged user.
 > 
-> Thanks,
-> Guenter
-> 
+> The memory leak could happen only either during boot of dom0, or when
+> hotplugging a physical CPU to a Xen server.
 
-Thank you, I will first complete this series, and see how to improve hwmon core
-afterwards.
+Now rejected, thanks.
+
+greg k-h
