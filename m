@@ -1,108 +1,116 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC882522AB;
-	Fri,  2 May 2025 13:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193762; cv=pass; b=k/quRX5wVdfJ0QODDAqj2j2Bygz+VDc8StbtG0BGYZhPf24fPVU3lWydmo48cBpoF99BhcDUytbYEPMCQgtw7W9ba0nGFCvzibepPz+Bv4SWZyuWvPMsX+DQgVu+nKiqDDaDhR678ffjDlSgT2CXE1ACXfSgLWN8MiUjZM0df7A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193762; c=relaxed/simple;
-	bh=WL14kTMKwwQeDRA9M/Pf0DS2xteO+pBok71KFv+gb+Y=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RwMLaLk6/YDwaf4UnljS6k81zzJW48RiEMW0XYM7Hc3Yc4uN7uqt2E2L8znXbutU/XSJGiiZBvzsxxPlipWf7jsoQeTqhST2ZgLUYkGzqKG+EO40btk9Lk2im+4S6g5gXa196iGPUY/YVVGRoLThGqDulw3L7FasRvR06ACGQdg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=MftJrOxA; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="MftJrOxA"
-ARC-Seal: i=1; a=rsa-sha256; t=1746193750; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NpCh0jiArTROBLLSsxZRomGX+lID93gH/6ylTHvpn6y+lPpiC7gb+/MsXV6izKVUCepK8bOt8C6wLnWWwFSS2nF0jVBsWOK7BU0c1iJL6UO9Nrfm2GNgnI+SXZh22Yvmmql+wKduMmwCwSFne/15yZfhsxLVD1STNC+M35NY3ZE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746193750; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pE3NQLQoX7pnUAcgzy4MZ9RTz0LXx0klT8KZ0dkll3w=; 
-	b=isAIJSwDbCHZKxcFxRBwy3/iGuo6e2HrFuPmqjXGuqBAJfs9c7o79BAdLlo1jCxeD4UmAv6rZs+RaH26BkYrUVgYpGOIn7SM3TC/DntxI9rzLFtBGdFxib8mIZEgbgCWOS5I1NNyszV4bYevmxQJnsDwQtxSEi48bkHdqEqImtM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193750;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=pE3NQLQoX7pnUAcgzy4MZ9RTz0LXx0klT8KZ0dkll3w=;
-	b=MftJrOxAYZ2AVoxrxaTeUIuLnUouUsIJtV2w8DX8DbS0MsKHQdOzFdz0Ll39eGec
-	PKS4zzi/jRSLke4WPf9YNlKR54o1kvFjsYmk3LMij9WbJFZBI1gHNjN9pYzs6H7XIm/
-	2eHKkgqm1/0Rxe3qSydGazl/GvS2rNX0/H2bB2iE=
-Received: by mx.zohomail.com with SMTPS id 1746193747104988.1552914913506;
-	Fri, 2 May 2025 06:49:07 -0700 (PDT)
-Message-ID: <27d03a23-ec61-4dbe-b9ca-1c0cf3d52d29@collabora.com>
-Date: Fri, 2 May 2025 18:49:01 +0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF5F15A848;
+	Fri,  2 May 2025 13:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193819; cv=none; b=lbE4+EkOdXbq7zjMxJo32OJIGWjatKVLlIYuXHjgP7guswtpvhm+N8V+sSLon595Wxwb9oXhfE9i199Mq6+dnqgvkmzhdW6mp0sMTomkTPEu6LkrFY1qX2UruIJJjSQd3OHUubYYrgSUqBo9TsSrMfw9v8Vo4aLlsHdfEQ2qImk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193819; c=relaxed/simple;
+	bh=Nb/eXk2fbpiaVSkfDB5EFnBMcgoaMSvuaoHQKAMHA9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=enWGe5afjDCiN6BZsBf1sxZHv2jNH0fEolJaJlDMZ+yEqdhYxZ30iMWr8UBAUJGgAGAdTRRMcmv4+jI2Sc0wf/mZaOZTkuvZNb23xDja+y/eh9WPiOwo5etP7jXXNVwHctLgbrwMoE53BED/1+WdPkipQBHnFWqzWjrH0i6Lux8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2AAC4CEE4;
+	Fri,  2 May 2025 13:50:18 +0000 (UTC)
+Date: Fri, 2 May 2025 09:50:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
+Cc: paulcacheux@gmail.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Namhyung Kim
+ <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
+Message-ID: <20250502095025.1bc0426e@gandalf.local.home>
+In-Reply-To: <20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
+References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+	<20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 7/7] selftests: vDSO: vdso_config: Avoid
- -Wunused-variables
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
- <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
- <20250502-selftests-vdso-fixes-v1-7-fb5d640a4f78@linutronix.de>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20250502-selftests-vdso-fixes-v1-7-fb5d640a4f78@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
-> Not all users of this header make use of all its variables.
-> For example vdso_test_correctness.c does not use "versions":
-> 
-> In file included from vdso_test_correctness.c:22:
-> vdso_config.h:61:20: warning: ‘versions’ defined but not used [-Wunused-variable]
->    61 | static const char *versions[7] = {
->       |                    ^~~~~~~~
-> 
-> Avoid those warnings through attribute((unused)).
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+On Fri, 02 May 2025 15:15:53 +0200
+Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
 
+> From: Paul Cacheux <paulcacheux@gmail.com>
+> 
+> The shared trace_probe_log variable can be accessed and modified
+> by multiple processes using tracefs at the same time, this new
+> mutex will guarantee it's always in a coherent state.
+> 
+> There is no guarantee that multiple errors happening at the same
+> time will each have the correct error message, but at least this
+> won't crash.
+> 
+> Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
+> 
+
+No space needed between Fixes and SOB.
+
+> Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
 > ---
->  tools/testing/selftests/vDSO/vdso_config.h | 2 ++
->  1 file changed, 2 insertions(+)
+>  kernel/trace/trace_probe.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/vDSO/vdso_config.h b/tools/testing/selftests/vDSO/vdso_config.h
-> index 722260f9756198956f0dfccced907284b6851e76..5fdd0f36233742bc47ae79f23d2cfae5a0f56dee 100644
-> --- a/tools/testing/selftests/vDSO/vdso_config.h
-> +++ b/tools/testing/selftests/vDSO/vdso_config.h
-> @@ -58,6 +58,7 @@
->  #define VDSO_NAMES		1
->  #endif
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
+>  }
 >  
-> +__attribute__((unused))
->  static const char *versions[7] = {
->  	"LINUX_2.6",
->  	"LINUX_2.6.15",
-> @@ -68,6 +69,7 @@ static const char *versions[7] = {
->  	"LINUX_5.10"
->  };
->  
-> +__attribute__((unused))
->  static const char *names[2][7] = {
->  	{
->  		"__kernel_gettimeofday",
-> 
+>  static struct trace_probe_log trace_probe_log;
+> +static DEFINE_MUTEX(trace_probe_log_lock);
+
+Probably should add a comment here saying something like:
+
+/*
+ * The trace_probe_log_lock only protects against the individual
+ * modification of the trace_probe_log. It does not protect against
+ * the log from producing garbage if two probes use it at the same
+ * time. That would only happen if two admins were trying to add
+ * probes simultaneously which they shouldn't be doing.
+ */
+
+-- Steve
 
 
--- 
-Regards,
-Usama
+>  
+>  void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+>  {
+> +	guard(mutex)(&trace_probe_log_lock);
+>  	trace_probe_log.subsystem = subsystem;
+>  	trace_probe_log.argc = argc;
+>  	trace_probe_log.argv = argv;
+> @@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+>  
+>  void trace_probe_log_clear(void)
+>  {
+> +	guard(mutex)(&trace_probe_log_lock);
+>  	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+>  }
+>  
+>  void trace_probe_log_set_index(int index)
+>  {
+> +	guard(mutex)(&trace_probe_log_lock);
+>  	trace_probe_log.index = index;
+>  }
+>  
+> @@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
+>  	char *command, *p;
+>  	int i, len = 0, pos = 0;
+>  
+> +	guard(mutex)(&trace_probe_log_lock);
+> +
+>  	if (!trace_probe_log.argv)
+>  		return;
+>  
+> 
+
