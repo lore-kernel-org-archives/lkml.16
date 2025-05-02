@@ -1,182 +1,153 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF651D554;
-	Fri,  2 May 2025 01:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F13BA45
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 02:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746150767; cv=none; b=rC/8bP7U8PjV59ekdVcZGsAOj1WcP4HwHlmIM9SrEc9Yv32fffu6JEyQV3LXyic1xKxDCVXOWY+M4vLl4UEWoOmJnB6AJDv18ymfnhGf7v0zmA12i0kgu4SM3XvqJE+1R60vmTcmsMOsitU1GzKKPFAeCfIx5Zj0GxmwbqzqUg8=
+	t=1746151222; cv=none; b=ZhMdfo9pAUl1FdFuzbdiZgawm5VhQqaltJv43KuGnWMaBJAmyWcOYzvaSnHNjutw9x6LADX1oQVAdwpqaCvNUyvIgowOMWiPL4Ppgz1TEjJjsZDJTs3xDnbV3dZL6RZcs4+SNEG5gRMPFZxLrUbPFkzOyERz44zAaqnSSMlXxn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746150767; c=relaxed/simple;
-	bh=+6KC8Er2Yg+3lM3yjbM95E/f1pA2PsuQKmRBF9nwBPI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b1oZIbUoAa5BNquNWdSzRGug4dhX8x+TtuI4r+EZNt74IJ6api97VBioEOROLwof6i/SxQSr21wAXY5EmCgfuQzGqtl+YqSjgmEnwtmGbgA1GqG7meSwaVOdjfSrfQVwA1q2CmzwbJVAET7A5UpyDtFnQ3Njn04lBVtT+ZG22xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=e9lmI114; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746151222; c=relaxed/simple;
+	bh=ZXkDydD8p1Uc21PX/F84gcKQrLXSFuEgfF/Sh8BgQlk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hLnrhd15efgmIcMt0tOU5v0C8XXAFg2NxCI3BGDh2s85MQxtax3XYJsirNaxjk932IUHNX7tIfdUKZoirdpFYzj6nz8SqTv4JX9rfLgFNn/qZ+CdSy+xcZMN4GqsOwrRx0skMBiyAZjY1MPni5asWbBNZRUrDMLLnvmVnBrUfTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RQYxdfom; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="e9lmI114"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B325425F61;
-	Fri,  2 May 2025 03:52:43 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id VDfb4-N8fou8; Fri,  2 May 2025 03:52:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746150758; bh=+6KC8Er2Yg+3lM3yjbM95E/f1pA2PsuQKmRBF9nwBPI=;
-	h=Date:From:To:Subject:References:In-Reply-To;
-	b=e9lmI114NV6RHhztBfWeTJ0Ra99aZNmodTieZXLWzA0Bg1z0EMACs5cDutqZOY8LN
-	 tqCkxlAyF0i4fZNoliqbvSbI4l4XfZrqJrv0bHP4WN2dX/A9YZ0ulSF0oquXtmpPkC
-	 Zr0k4E+Kn0O2Xt9CtzIoy2nzr0+ABHpkXYOFqXAMuGFHEzLFahbl5NBZodJgCywHUz
-	 67/9ukio1bbsu/ZVL/X/ElhoxooyX6za26qntX4tFPAE3RsINvG++pMzFnELO5Gd4I
-	 IPtv+RWbhx5bqoHQSrabI38Dem3pZuzNlx1Q5twlKyIrR+RMcwMacnh5t3rKdOxiGC
-	 06c4RsDMTLdig==
-Date: Fri, 2 May 2025 01:52:22 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH 3/4] LoongArch: dts: Add initial SoC devicetree for
- Loongson 2K0300
-Message-ID: <aBQlVrA_fxb22aPF@pie.lan>
-References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-5-ziyao@disroot.org>
- <8c102773-71e2-4c60-b260-07f099ddaae3@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RQYxdfom"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541KeNdt007190;
+	Fri, 2 May 2025 01:59:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=lBN+p
+	zYewV/WF24zN3SzgAWiwurwsgcxGEwDaDvrUwk=; b=RQYxdfom56AJW9us9UDsF
+	CjgK9y8ItMQi9CSoQ/vPI7CFKW+/yo9iWNP3GMuaTw7kXeKjyrf+7pLxDaAYRhdq
+	wRo5jQZbyM5kvMy8B7k7R29H9TWR0NUC+H2ngC9l5S7+JczEHUqAhTzbJh5AScXx
+	cErp4EJuSsusp4rOCHVefKs9pcevbXg65Njk5MXBmG6PCh13ovV0XWydo4OyMvsc
+	YJkRHzBTD2/VXuZLs08qkq/4+90FdpN8QNVCyQrg4L9JC8QTHbf62xnno52qFmbP
+	0oEggOQ2I+1AVqzZzAbd7ECDVvsMWUDblPJ9E1A28K1/f56wA50rCZUEPmeaPJsO
+	g==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ucmdhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 May 2025 01:59:59 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5421aMDV035421;
+	Fri, 2 May 2025 01:59:58 GMT
+Received: from psang-work.osdevelopmeniad.oraclevcn.com (psang-work.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.35])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxd1euw-5
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 02 May 2025 01:59:58 +0000
+From: Prakash Sangappa <prakash.sangappa@oracle.com>
+To: linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        tglx@linutronix.de, bigeasy@linutronix.de, kprateek.nayak@amd.com
+Subject: [PATCH V3 4/4] Sched: Add tracepoint for sched time slice extension
+Date: Fri,  2 May 2025 01:59:55 +0000
+Message-ID: <20250502015955.3146733-5-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
+References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c102773-71e2-4c60-b260-07f099ddaae3@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505020013
+X-Authority-Analysis: v=2.4 cv=ZsHtK87G c=1 sm=1 tr=0 ts=6814271f b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=-a2y3q_jHnAO8POPY3MA:9 cc=ntf awl=host:14638
+X-Proofpoint-ORIG-GUID: d6gd_v_NDBb0nYxLBWhyHtu9qrVoUmWx
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAxMyBTYWx0ZWRfX8We9gt/JWU42 UwIxrJAUwElniPIJysvck+5hz/kkgQsRt9vxwJW1jSDLtP0TR4NObeFFKRXwGumP9NfDK25C686 UFatNfbfroH+ufJNP7Td23dbyIzd4IOKCzvBiwwzPZXjh8xXN2eEJDhLyuFpuhqFj1JejmWf73F
+ IednqszEgZtKAB2ae5yPEwlFcZlrMyWktxapvmmfVInI5fsg3/jb+BIPRIION3DYVIAlRPBctsT aF1JpN88eXBRMDXFWtaa/lkj4aTRR9owfgpirsP54e9AbjOWVP/ffHHK4kHpPs8tSusvaMZJsy0 FQWqxbTXIIYKBmrTK+s8vDua2ix1Z3baKg5dHrrdqzDKyJg1exyyEX6My8dtfPdl0QfGYjT0cQy
+ J0e9pegkUNVzOfUQ2dh6I/QBnAv4Ix8Nhdjo3uTMbGGYWkzwS7A+xH/sms8srRLex2ZkzDU7
+X-Proofpoint-GUID: d6gd_v_NDBb0nYxLBWhyHtu9qrVoUmWx
 
-On Thu, May 01, 2025 at 12:55:04PM +0200, Krzysztof Kozlowski wrote:
-> On 01/05/2025 06:42, Yao Zi wrote:
-> > Add SoC devicetree for 2K0300 SoC, which features one LA264 dual-issue
-> > core and targets embedded market. Only CPU core, legacy interrupt
-> > controllers and UARTs are defined for now.
-> > 
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  arch/loongarch/boot/dts/loongson-2k0300.dtsi | 197 +++++++++++++++++++
-> >  1 file changed, 197 insertions(+)
-> >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > 
-> > diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > new file mode 100644
-> > index 000000000000..6991a368ff94
-> > --- /dev/null
-> > +++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
-> > @@ -0,0 +1,197 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> > + * Copyright (C) 2025 Yao Zi <ziyao@disroot.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +/ {
-> > +	compatible = "loongson,ls2k0300";
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +		serial1 = &uart1;
-> > +		serial2 = &uart2;
-> > +		serial3 = &uart3;
-> > +		serial4 = &uart4;
-> > +		serial5 = &uart5;
-> > +		serial6 = &uart6;
-> > +		serial7 = &uart7;
-> > +		serial8 = &uart8;
-> > +		serial9 = &uart9;
-> 
-> 
-> UARTs depend on connectors, so these are board-level aliases.
-> 
-> 
-> > +	};
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu0: cpu@0 {
-> > +			compatible = "loongson,la264";
-> > +			reg = <0>;
-> > +			device_type = "cpu";
-> > +			clocks = <&cpu_clk>;
-> > +		};
-> > +
-> > +	};
-> > +
-> > +	cpuintc: interrupt-controller {
-> > +		compatible = "loongson,cpu-interrupt-controller";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <1>;
-> > +	};
-> > +
-> > +	cpu_clk: clock-1000m {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <1000000000>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	soc {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges = <0x00 0x10000000 0x00 0x10000000 0x0 0x10000000>,
-> > +			 <0x00 0x02000000 0x00 0x02000000 0x0 0x04000000>,
-> > +			 <0x00 0x40000000 0x00 0x40000000 0x0 0x40000000>;
-> > +
-> > +		liointc0: interrupt-controller@16001400{
-> 
-> Missing space, {
-> 
-> > +			compatible = "loongson,liointc-2.0";
-> > +			reg = <0x0 0x16001400 0x0 0x40>,
-> > +			      <0x0 0x16001040 0x0 0x8>;
-> > +			reg-names = "main", "isr0";
-> > +
-> > +			interrupt-controller;
-> > +			#interrupt-cells = <2>;
-> > +
-> > +			interrupt-parent = <&cpuintc>;
-> > +			interrupts = <2>;
-> > +			interrupt-names = "int0";
-> > +
-> > +			loongson,parent_int_map = <0xffffffff>, /* int0 */
-> > +						  <0x00000000>, /* int1 */
-> > +						  <0x00000000>, /* int2 */
-> > +						  <0x00000000>; /* int3 */
-> > +		};
-> > +
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Trace task's preemption due to a wakeups, getting delayed. Which
+can occurs when the running task requested extra time on cpu.
+Also, indicate the NEED_RESCHED flag set on the task getting
+cleared.
 
-Thanks for finding the issues, will fix all of them in v2.
+Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
+---
+ include/trace/events/sched.h | 28 ++++++++++++++++++++++++++++
+ kernel/entry/common.c        |  8 ++++++--
+ 2 files changed, 34 insertions(+), 2 deletions(-)
 
-Thanks,
-Yao Zi
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8994e97d86c1..4aa04044b14a 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -296,6 +296,34 @@ TRACE_EVENT(sched_migrate_task,
+ 		  __entry->orig_cpu, __entry->dest_cpu)
+ );
+ 
++/*
++ * Tracepoint for delayed resched requested by task:
++ */
++TRACE_EVENT(sched_delay_resched,
++
++	TP_PROTO(struct task_struct *p, unsigned int resched_flg),
++
++	TP_ARGS(p, resched_flg),
++
++	TP_STRUCT__entry(
++		__array( char, comm, TASK_COMM_LEN	)
++		__field( pid_t, pid			)
++		__field( int, cpu			)
++		__field( int, flg			)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
++		__entry->pid		= p->pid;
++		__entry->cpu 		= task_cpu(p);
++		__entry->flg		= resched_flg;
++	),
++
++	TP_printk("comm=%s pid=%d cpu=%d resched_flg_cleared=0x%x",
++		__entry->comm, __entry->pid, __entry->cpu, __entry->flg)
++
++);
++
+ DECLARE_EVENT_CLASS(sched_process_template,
+ 
+ 	TP_PROTO(struct task_struct *p),
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index b26adccb32df..1951e6a4e9bc 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -12,6 +12,7 @@
+ 
+ #include "common.h"
+ 
++#include <trace/events/sched.h>
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/syscalls.h>
+ 
+@@ -100,9 +101,12 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 		local_irq_enable_exit_to_user(ti_work);
+ 
+ 		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY)) {
+-		       if (irq && rseq_delay_resched())
++		       if (irq && rseq_delay_resched()) {
+ 			       clear_tsk_need_resched(current);
+-		       else
++			       trace_sched_delay_resched(current,
++					       ti_work & (_TIF_NEED_RESCHED |
++						       _TIF_NEED_RESCHED_LAZY));
++		       } else
+ 			       schedule();
+ 		}
+ 
+-- 
+2.43.5
+
