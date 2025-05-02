@@ -1,218 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D422AD32;
-	Fri,  2 May 2025 08:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7544315F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746173542; cv=none; b=By7TUKA/4eQZfBr3BzJH4xuTiW13Mc3p64W7Y0TZlJiJGWOmU9JhWjpvpFoBbKmAvQv3Yy/aKvDJsAHVdt6y2tEVaA7i6XVXZlcyfHUKTsbmTKSjWmvGOOQRkJKQ+/AgABEZbbvo63MLi8hseo0cndYAU5X4mH0R4pfvlo7FX+s=
+	t=1746173647; cv=none; b=I80rb0CT7twWP9/vIKSCNc77EPmxO8a/UkVWyEuXyq5p1ZQSXoYfY51ud98giKpIWT2P3kN6OniIBQNjhqvRgZSKwVVxFULI/2tPSg7ar/gkFBj/Ss7bOIAfVVWmHN1GyAw/hXDn8hh5HQAKj0o+n/DuiWaCseZvdFmM9nXNq00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746173542; c=relaxed/simple;
-	bh=fFKF6DIMGJgI0j6u24h/rZ8wvQJckx4dGZIU8VuRAMM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=UCDy6KaE/jyvqa8vYAXlGD0LFIYMiGcu28uY12fluYxchwcKGRLUpvytL41qVO8b+aOfs+wtJPTEEw2z5PaooaoFfvRoPP9Kn3CGmLn94Zo/wDjhiJH7cLoxOHyiB0+Fg1BGQ7CkIJ3FmticumE1QAZz3g+q6RAwWJ/WGMK4m0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JacS998m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746173647; c=relaxed/simple;
+	bh=Jn4eWjXxwsoqBV85M6GsL2+wR4fJEbwSADRw9jJ+1DY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hlqIPYnA1OES3EWd8KBSzfTLmX9GnrgI7Elt9Ftxem1Jo33uTjLGgZt4LhZ0xMhJpOhdVcMe74itbz4Od2EJC5mV/UBqIl35eGOmAINU0YjxUF77ADBju8YGV4q9DFlUClxaw2RZjm/E9E6czlTpQaLLGVWeeA1dbTiAxcbNQOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cyowpTXs; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JacS998m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9CAC4CEE4;
-	Fri,  2 May 2025 08:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746173541;
-	bh=fFKF6DIMGJgI0j6u24h/rZ8wvQJckx4dGZIU8VuRAMM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=JacS998m9s1HIsTW16mFOzxFU5Lwr8fhZkcyda2HotFjwGLMp/u28GU3qFGyFw5L7
-	 p169Yx8zQ+0s16Qt4DNcqVy7tLfZZL9+a41PfMp/TWSseKhBBta344iTchd87XyIiE
-	 G+t/0LEtrXZgyjrQJb8KnZdgzS2bo03iNSBxzD3xHNzrf3tC9hwRUCGWeqA1CPCW7W
-	 FY0ywhg6cx3g60I6MlV40pPi1WWEHuCP33eOONB/YhHroaykYXdqkA1N4dv0ngJBoS
-	 tgOSnY+3F4bD9yrB3oh4v8Bthc0YCK4w9TTRwbhOuCPhUiMxVf15Yw1D+iD9XB7gP+
-	 0RR+RxqEX9APA==
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cyowpTXs"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2279915e06eso19844365ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746173645; x=1746778445; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=h9CBhyGDLFpnb+f5rsG3NlbjD1cjKYpOIM2q4JdOS8g=;
+        b=cyowpTXsjL2zxgXj1XI9wFYIcQbYM50MxhVTzyX8NC0B+biSwUCQoEw/2/7PU7gmmT
+         ulfpw+sw3Ksga/mX6qR488sb9jAWWjSjzsCR/HhV7RJZrDceLrm70nGFXJcqu1+aqc4N
+         EyzE8iETxmM+ltSUuE1Z1IVFyUdO9Vb33q5S08qujdsISd+SCvKoh17ShR+vLDM8FB2a
+         J85AdBGX3BQ62EKhn0g+NKVAAenOd9JKh/FwaSm61XGWX6ZsKZExqaxa7RufTWop1iHA
+         ltXBlO38NIPjT3/X3nvWtwHbsBc39MzxfZTEquBG+HLixgGqRtNonldsuXPWi+wDx6Jk
+         Ne/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746173645; x=1746778445;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9CBhyGDLFpnb+f5rsG3NlbjD1cjKYpOIM2q4JdOS8g=;
+        b=dPlTj+mf28k6i+za/iV7pbKTOpDNacr+VItu1BCvpJOrI0VaYoBeJG8AR45jYSV5Ah
+         /WtQYXUdIYKE+IJeMQoN9EXUcKhfwfgXxvtG21DPCdTyvaFEa7CS+lkOOEg5Wa0UF1Rj
+         6K6NzMrqAyYREypm6nfmsHEWujIOOiBc2crCp0f0bxtdoWFmutYY5nfp6/Y9kfOs2PAz
+         hyGx8QpKi6LwAegNX6BR8bTaVeTpc5CSsZRp+8fI4x6iJZfqdrEaFIrjln2/083PNm+F
+         MbiyBruodXdx8OY5lvExaMNnClymLd4Zmz1/gQxkK7WTfGojOmLkLJnuqOeBNmn5uHa7
+         SyPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOwb2nMaIvaC9QbolkUBS2WcGZkoX8TYXljPgq6mRpk2c0xxv6991JMQ4q7BDcewmY9Ml2BlLy7ffgMYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnqyaUTjzk15rtUHFyN8wvKTNGI4ttDDFVQNYqxyjRdd13PGf4
+	0nIzesduTf/R1gqlkGBvHqmOVtmhMWQbaVGjMGr6VjRYW8nOjBE18XOmMlcjMBU=
+X-Gm-Gg: ASbGncu+DHEYWsxlyaQKdAdolmWDrbdrRmBh+Y9guUIA6i/Y8zWg9p+oJFGaiPye77S
+	oyFwcTJgQf6wQ8blgpnkOayWudR8HnUeoGVTFlj3qseWyTkPqShBir6WgsucrjAaR2Tufs8JBAD
+	OQM6Zu254iEKekURC5rOFceWAi8V9pQc8gv5RvCHKM2ahEcrjtT4LHmT8sfvMQmLYr1YxH5MRnN
+	ZVeZ2IRAx0z4R5rrnuDhX6V6Hjckd1E3yAmv6RaY02hqd/sp1muoWwUj3SVFfbWR84Xb5jlO5zi
+	KWDsUu2d2gQ99an3QsHzbUvwD36fxYdz83QJ/1XchZid1kL9FdYc
+X-Google-Smtp-Source: AGHT+IE8k2uHCd5vOWDOxwC36pkdJWkb0CZOrK041eLixQ2GEf6iz7bejpQdIdbRQPU3r3GiD0ut2w==
+X-Received: by 2002:a17:903:3bc7:b0:223:f9a4:3fa8 with SMTP id d9443c01a7336-22e103571b1mr31592105ad.19.1746173645117;
+        Fri, 02 May 2025 01:14:05 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e15232224sm1644065ad.253.2025.05.02.01.14.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:14:04 -0700 (PDT)
+Date: Fri, 2 May 2025 13:44:02 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Praveen Talari <quic_ptalari@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
+	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
+	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
+	quic_shazhuss@quicinc.com
+Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
+Message-ID: <20250502081402.yjagnnjrfva7u4cb@vireshk-i7>
+References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
+ <20250502031018.1292-2-quic_ptalari@quicinc.com>
+ <20250502053758.utawzhq6famwenc2@vireshk-i7>
+ <8ba02745-378b-4264-883a-b99764701d0b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 10:12:15 +0200
-Message-Id: <D9LIUW74XIRW.2DUQCSLYX1JP4@kernel.org>
-Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Matthew Maurer" <mmaurer@google.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Sami Tolvanen" <samitolvanen@google.com>, "Timur Tabi" <ttabi@nvidia.com>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
- <20250501-debugfs-rust-v3-1-850869fab672@google.com>
-In-Reply-To: <20250501-debugfs-rust-v3-1-850869fab672@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ba02745-378b-4264-883a-b99764701d0b@quicinc.com>
 
-> diff --git a/rust/kernel/debugfs.rs b/rust/kernel/debugfs.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..b589c2d9a8d169bd66e98d289=
-4261784e427230e
-> --- /dev/null
-> +++ b/rust/kernel/debugfs.rs
-> @@ -0,0 +1,155 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2025 Google LLC.
-> +
-> +//! DebugFS Abstraction
-> +//!
-> +//! C header: [`include/linux/debugfs.h`](srctree/include/linux/debugfs.=
-h)
-> +
-> +use crate::str::CStr;
-> +use core::mem::ManuallyDrop;
-> +use core::ops::Deref;
-> +
-> +/// Owning handle to a DebugFS directory.
-> +///
-> +/// This directory will be cleaned up when it goes out of scope.
+On 02-05-25, 13:31, Praveen Talari wrote:
+> Shall i keep commit as you suggested with your SIB.
 
-We should also document that it's a unit struct when `CONFIG_DEBUG_FS`
-is disabled (and the operations are noops). Maybe even do something
-like:
+I already applied it to my tree. You can drop it from your series now.
 
-    #[cfg_attr(CONFIG_DEBUG_FS, doc =3D "`CONFIG_DEBUG_FS=3Dy`")]
-    #[cfg_attr(not(CONFIG_DEBUG_FS), doc =3D "`CONFIG_DEBUG_FS=3Dn`")]
-
-> +///
-> +/// # Invariants
-> +///
-> +/// The wrapped pointer will always be `NULL`, an error, or an owned Deb=
-ugFS `dentry`.
-> +#[repr(transparent)]
-> +pub struct Dir(#[cfg(CONFIG_DEBUG_FS)] *mut bindings::dentry);
-> +
-> +// SAFETY: Dir is just a `dentry` under the hood, which the API promises=
- can be transferred
-> +// between threads.
-> +unsafe impl Send for Dir {}
-> +
-> +// SAFETY: All the native functions we re-export use interior locking, a=
-nd the contents of the
-> +// struct are opaque to Rust.
-> +unsafe impl Sync for Dir {}
-> +
-> +impl Dir {
-> +    /// Create a new directory in DebugFS at the root.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// # use kernel::c_str;
-> +    /// # use kernel::debugfs::Dir;
-> +    /// {
-> +    ///    let parent =3D Dir::new(c_str!("parent"));
-> +    ///    // The path "parent" exists in DebugFS here.
-> +    /// }
-> +    /// // It does not exist here.
-> +    /// ```
-> +    pub fn new(name: &CStr) -> Self {
-> +        Self::create(name, None)
-> +    }
-> +
-> +    /// Create a DebugFS subdirectory.
-> +    ///
-> +    /// This returns a [`SubDir`], which will not be automatically clean=
-ed up when it leaves scope.
-> +    /// To convert this to a handle governing the lifetime of the direct=
-ory, use [`Dir::from`].
-
-But it will be cleaned up when the parent goes out of scope? We should
-also mention that.
-
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// # use kernel::c_str;
-> +    /// # use kernel::debugfs::Dir;
-> +    /// {
-> +    ///    let parent =3D Dir::new(c_str!("parent"));
-> +    ///    // The path "parent" exists in DebugFS here.
-> +    ///    {
-> +    ///        let child =3D parent.subdir(c_str!("child"));
-> +    ///        // The path "parent/child" exists in DebugFS here.
-> +    ///    }
-> +    ///    // The path "parent/child" still exists.
-> +    ///    {
-> +    ///        let child2 =3D Dir::from(parent.subdir(c_str!("child2")))=
-;
-> +    ///        // The path "parent/child2" exists in DebugFS here.
-> +    ///    }
-> +    ///    // The path "parent/child2" is gone.
-> +    /// }
-> +    /// // None of the paths exist here.
-> +    /// ```
-> +    pub fn subdir(&self, name: &CStr) -> SubDir {
-> +        SubDir::new(Self::create(name, Some(self)))
-> +    }
-> +
-> +    /// Create a new directory in DebugFS. If `parent` is [`None`], it w=
-ill be created at the root.
-> +    #[cfg(CONFIG_DEBUG_FS)]
-> +    fn create(name: &CStr, parent: Option<&Self>) -> Self {
-> +        let parent_ptr =3D match parent {
-> +            Some(parent) =3D> parent.as_ptr(),
-> +            None =3D> core::ptr::null_mut(),
-> +        };
-> +        // SAFETY:
-> +        // * `name` argument points to a NUL-terminated string that live=
-s across the call, by
-> +        //   invariants of `&CStr`.
-> +        // * If `parent` is `None`, `parent` accepts null pointers to me=
-an create at root.
-> +        // * If `parent` is `Some`, `parent` accepts live dentry debugfs=
- pointers.
-> +        // * `debugfs_create_dir` either returns an error code or a lega=
-l `dentry` pointer,
-> +        //   so we can call `Self::from_ptr`.
-> +        unsafe { Self::from_ptr(bindings::debugfs_create_dir(name.as_cha=
-r_ptr(), parent_ptr)) }
-
-What about when an error got returned? Should that be exposed to the
-user?
-
-> +    }
-> +
-> +    #[cfg(not(CONFIG_DEBUG_FS))]
-> +    fn create(_name: &CStr, _parent: Option<&Self>) -> Self {
-> +        Self()
-> +    }
-> +
-
-> +impl Drop for Dir {
-> +    fn drop(&mut self) {
-> +        // SAFETY: `debugfs_remove` can take `NULL`, error values, and l=
-egal DebugFS dentries.
-> +        // `as_ptr` guarantees that the pointer is of this form.
-> +        #[cfg(CONFIG_DEBUG_FS)]
-> +        unsafe {
-
-I feel a bit uneasy with seeing `cfg` on `unsafe` code, since now the
-correctness also depends on the configuration. Someone might add/modify
-it making it incorrect under certain configurations.
-
-This case is pretty straight forward, but I'm not so sure if we already
-have such a case.
-
-How about having two modules providing the two implementations and then
-just conditionally import one or the other?
-
----
-Cheers,
-Benno
-
-> +            bindings::debugfs_remove(self.as_ptr())
-> +        }
-> +    }
-> +}
+-- 
+viresh
