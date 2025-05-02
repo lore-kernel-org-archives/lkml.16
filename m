@@ -1,197 +1,220 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36BEE156C63;
-	Fri,  2 May 2025 15:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5743169
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746198703; cv=none; b=FU7S/wydNNyOOFNDoWqIsL2m+Os8TdnCAp0pqVE0DKN0zXGkSLVg1Yq0JiCfjvcBxKCIh2ghPs77DWWVGbxR3gTS26jkyrpgqpka4m4XobqED5OLO33yNEfkEAqxG/dS6pz7lwAKnrld+vMJ5XaLEA2E+wdd56Z6E4PTXVT7gtU=
+	t=1746198704; cv=none; b=CXx2ddoukjj/FKNpU6klwYxblAc1mAHAN7G1IXPJFWpSN6mMv5mAJUmjkQK3aA4f5nczRv+b7iA45MDh4LEgOETpIRCF3huoVHg4vPMHcQSssqyuOw2isEGT53YfIxCksGk4V0hRIiVpbqg9ENeZy/1bkbPY2fsJBQq17Q/w09k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746198703; c=relaxed/simple;
-	bh=U+YSNzUnply29Hjd9uH9yUM2wuQsFaLy2qkKb05i3KE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qemMMqO3IfmCaWgzwt2araf4Fnj3saw7b11q9IUlLh/NQOvgL8T0uV6A8kCEKnVvGp2R9dukhOCIU/HNp4HaH8nZhCyK+VJ1Y9ywn0wGaMULr6TNQ8v0KmKY316yw+xSnwYbfohw+bfRKjIv6dFpX0uMh9/WfiDnduUxfYyYG6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B951688;
-	Fri,  2 May 2025 08:11:26 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86C713F66E;
-	Fri,  2 May 2025 08:11:28 -0700 (PDT)
-Message-ID: <4b2f7c31-c61b-45d8-b32e-16bb91c4289b@arm.com>
-Date: Fri, 2 May 2025 16:11:26 +0100
+	s=arc-20240116; t=1746198704; c=relaxed/simple;
+	bh=FKlZk6KjghNkNzFfe2VS93WmUZ24CsLkd431OYU93qY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Enr/sbRVEU4MPO1NAUEbBk/9R6vRDLcX1RUFI9Li7UorwEPKj/tI/6sFwSODN1KEo+OmCy5OG9pyfl7FtfGt+4ipLCShk3nRYvB8Ui/uXRFcInL6QbUG6Bg69cclIxP9dzzJisspzxicG1Cvgc8G+qkbH6KHE6NfyssvL8mnRp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ajkja3WU; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ajkja3WU"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f632bada3bso9183a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746198700; x=1746803500; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FKlZk6KjghNkNzFfe2VS93WmUZ24CsLkd431OYU93qY=;
+        b=Ajkja3WUo0rxHuf2/tgJlAngX37r2hJMRaaecRC4TysL+C3Y2sFzkbexKIsAkBFG/W
+         JGz3EOJzl22JWyAVISNZq/OL7nVL5ayV/HToFFUIlyJboKCz4vOKuBPqwN8OlVme634p
+         WTxJPF/xEuURWyGHk459ZMLbV7cL3W/OE9/mFw4u1uOcbo7q+WsGGMcHYU0PEzvmJl8h
+         8AuAtW7n+mxztXw5RefMYDzAhWsLiWUZCU9Gn5miHzpsW+bNfmn/azmi+eKQ3/IF/uwS
+         QVmi4P2FcaoCI0efpDbf0f1S2y9ymkBwq4iocbOhVuoWT52yJ4Rab7JLk2podlWfTlkI
+         rDyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746198700; x=1746803500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FKlZk6KjghNkNzFfe2VS93WmUZ24CsLkd431OYU93qY=;
+        b=vVzS9hUMS+HS5JkFfBLI+iXL7hP+frunifypyyVv2Eqjg5TE/vM6FR/UGcTtx5h+my
+         rvUf4Uvt+Zoj7N0ALBF+UPqHl6IbMgtRkKeoDnj2cBnYKbsR5hqgTJrVkP31mH/jDAUK
+         C/RhQhpzF+T9/Q8bhF3dWy0mAd7w3KPa66CskIq4TyYLGNlsxg2/zsDdi/nCBtN2ddTo
+         4CH8EjVDxe9BGqHME3PEKHQBCAG0mvw+Qj6GV6tGU2ogegSG6BfRGJ6S4kV9wMEkFvSd
+         Kv6/Nex2bYcXXWvvBWAMGj+UpmIgWZAfM2Th0BGw9lH5WgnRM4mJPC83AEN4a/TpO8QS
+         OVgA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTGnw5ssY9HmbOMmGGqTL/wsIaq+AyFSK0ZNBNcjJJ0qxEaJfF3OnNx4iCeABEEGb4u9XgZl+O/6PWP8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh7oQbb4hEtKEQGrokInjqkhx2FjyJUgKd7IB+glHoUhEwJHLP
+	G/8RAoM91vePj9KawIBgY1vYGRUS7yFT2zQWFSsOPAXGwSlL5tK+Qcuffwjqzda6pVWp/N1RFCI
+	Tt+ughMs8KAU05gvuYxh4KjlqPm6g86ypXfw4
+X-Gm-Gg: ASbGnctTXdXCGM3DdRCZZ3r2Hso9ovG6681qvGXXrJ9JTwNhhKJf7/IlYbRLqfmS/lJ
+	c3a6RYSl9EaqdLooP9AKGS1p/cQOgoBLTO/rTBqpo7yINxETTtBN/a7ZPVGmUy5D0uX2GXmFPJA
+	zhOZDe+thTnHGJujA6NzNsFS0aXGom0Dmo7fTkNU5IR5wSf6HCPQ==
+X-Google-Smtp-Source: AGHT+IERkzDNyTmOeaZwge9izZvT+3a5JL1Pt5BG92diaSrHdsXlC4LhpWG/7aF50+We9CxCzaJagP6DJzyfICQLxvQ=
+X-Received: by 2002:a50:d556:0:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-5f918c2a177mr184575a12.7.1746198699387; Fri, 02 May 2025
+ 08:11:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/14] tee: add tee_shm_alloc_cma_phys_mem()
-To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Olivier Masse <olivier.masse@nxp.com>,
- Thierry Reding <thierry.reding@gmail.com>, Yong Wu <yong.wu@mediatek.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
- Daniel Stone <daniel@fooishbar.org>,
- Rouven Czerwinski <rouven.czerwinski@linaro.org>
-References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
- <20250502100049.1746335-12-jens.wiklander@linaro.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250502100049.1746335-12-jens.wiklander@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-9-surenb@google.com>
+ <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
+ <CAG48ez29frEbJG+ySVARX-bO_QWe8eUbZiV8Jq2sqYemfuqP_g@mail.gmail.com>
+ <CAJuCfpGxw7L67CvDnTiHN0kdVjFcPoZZ4ZsOHi0=wR7Y2umk0Q@mail.gmail.com>
+ <CAG48ez1cR+kXBsvk4murYDBBxSzg9g5FSU--P8-BCrMKV6A+KA@mail.gmail.com> <CAEf4BzarQAmj477Lyp2aS0i2RM4JaxnAVvem6Kz-Eh1a5x-=6A@mail.gmail.com>
+In-Reply-To: <CAEf4BzarQAmj477Lyp2aS0i2RM4JaxnAVvem6Kz-Eh1a5x-=6A@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 2 May 2025 17:11:03 +0200
+X-Gm-Features: ATxdqUFG2iaTkmFhKeQVVpe2LikO_MhFJjHWYrIsMyz9yg82E2DdMFylx1L3_Nc
+Message-ID: <CAG48ez2tQsqS3+ZfSus+Wi5ur6HbYuaAhhmOOrkDyrZG+gsvXg@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] mm/maps: execute PROCMAP_QUERY ioctl under RCU
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, 
+	shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/05/2025 10:59 am, Jens Wiklander wrote:
-> Add tee_shm_alloc_cma_phys_mem() to allocate a physical memory using
-> from the default CMA pool. The memory is represented by a tee_shm object
-> using the new flag TEE_SHM_CMA_BUF to identify it as physical memory
-> from CMA.
+On Fri, May 2, 2025 at 12:10=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> On Tue, Apr 29, 2025 at 10:25=E2=80=AFAM Jann Horn <jannh@google.com> wro=
+te:
+> > On Tue, Apr 29, 2025 at 7:15=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > > On Tue, Apr 29, 2025 at 8:56=E2=80=AFAM Jann Horn <jannh@google.com> =
+wrote:
+> > > > On Wed, Apr 23, 2025 at 12:54=E2=80=AFAM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > > On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <sure=
+nb@google.com> wrote:
+> > > > > > Utilize speculative vma lookup to find and snapshot a vma witho=
+ut
+> > > > > > taking mmap_lock during PROCMAP_QUERY ioctl execution. Concurre=
+nt
+> > > > > > address space modifications are detected and the lookup is retr=
+ied.
+> > > > > > While we take the mmap_lock for reading during such contention,=
+ we
+> > > > > > do that momentarily only to record new mm_wr_seq counter.
+> > > > >
+> > > > > PROCMAP_QUERY is an even more obvious candidate for fully lockles=
+s
+> > > > > speculation, IMO (because it's more obvious that vma's use is
+> > > > > localized to do_procmap_query(), instead of being spread across
+> > > > > m_start/m_next and m_show as with seq_file approach). We do
+> > > > > rcu_read_lock(), mmap_lock_speculate_try_begin(), query for VMA (=
+no
+> > > > > mmap_read_lock), use that VMA to produce (speculative) output, an=
+d
+> > > > > then validate that VMA or mm_struct didn't change with
+> > > > > mmap_lock_speculate_retry(). If it did - retry, if not - we are d=
+one.
+> > > > > No need for vma_copy and any gets/puts, no?
+> > > >
+> > > > I really strongly dislike this "fully lockless" approach because it
+> > > > means we get data races all over the place, and it gets hard to rea=
+son
+> > > > about what happens especially if we do anything other than reading
+> > > > plain data from the VMA. When reading the implementation of
+> > > > do_procmap_query(), at basically every memory read you'd have to th=
+ink
+> > > > twice as hard to figure out which fields can be concurrently update=
+d
+> > > > elsewhere and whether the subsequent sequence count recheck can
+> > > > recover from the resulting badness.
+> > > >
+> > > > Just as one example, I think get_vma_name() could (depending on
+> > > > compiler optimizations) crash with a NULL deref if the VMA's ->vm_o=
+ps
+> > > > pointer is concurrently changed to &vma_dummy_vm_ops by vma_close()
+> > > > between "if (vma->vm_ops && vma->vm_ops->name)" and
+> > > > "vma->vm_ops->name(vma)". And I think this illustrates how the "ful=
+ly
+> > > > lockless" approach creates more implicit assumptions about the
+> > > > behavior of core MM code, which could be broken by future changes t=
+o
+> > > > MM code.
+> > >
+> > > Yeah, I'll need to re-evaluate such an approach after your review. I
+> > > like having get_stable_vma() to obtain a completely stable version of
+> > > the vma in a localized place and then stop worrying about possible
+> > > races. If implemented correctly, would that be enough to address your
+> > > concern, Jann?
+> >
+> > Yes, I think a stable local snapshot of the VMA (where tricky data
+> > races are limited to the VMA snapshotting code) is a good tradeoff.
+>
+> I'm not sure I agree with VMA snapshot being better either, tbh. It is
+> error-prone to have a byte-by-byte local copy of VMA (which isn't
+> really that VMA anymore), and passing it into ops callbacks (which
+> expect "real" VMA)... Who guarantees that this won't backfire,
+> depending on vm_ops implementations? And constantly copying 176+ bytes
+> just to access a few fields out of it is a bit unfortunate...
 
-If and when it's possible to dynamically delegate any old kernel memory 
-to the TEE, it's far from clear why that should involve poking around in 
-CMA internals...
+Yeah, we shouldn't be passing VMA snapshots into ops callbacks, I
+agree that we need to fall back to using proper locking for that.
 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->   drivers/tee/tee_shm.c    | 55 ++++++++++++++++++++++++++++++++++++++--
->   include/linux/tee_core.h |  4 +++
->   2 files changed, 57 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index e1ed52ee0a16..faaa0a87bb18 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -3,8 +3,11 @@
->    * Copyright (c) 2015-2017, 2019-2021 Linaro Limited
->    */
->   #include <linux/anon_inodes.h>
-> +#include <linux/cma.h>
->   #include <linux/device.h>
->   #include <linux/dma-buf.h>
-> +#include <linux/dma-map-ops.h>
-> +#include <linux/highmem.h>
->   #include <linux/idr.h>
->   #include <linux/io.h>
->   #include <linux/mm.h>
-> @@ -13,7 +16,6 @@
->   #include <linux/tee_core.h>
->   #include <linux/uaccess.h>
->   #include <linux/uio.h>
-> -#include <linux/highmem.h>
->   #include "tee_private.h"
->   
->   static void shm_put_kernel_pages(struct page **pages, size_t page_count)
-> @@ -49,7 +51,14 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
->   	struct tee_shm *parent_shm = NULL;
->   	void *p = shm;
->   
-> -	if (shm->flags & TEE_SHM_DMA_BUF) {
-> +	if (shm->flags & TEE_SHM_CMA_BUF) {
-> +#if IS_ENABLED(CONFIG_CMA)
-> +		struct page *page = phys_to_page(shm->paddr);
-> +		struct cma *cma = dev_get_cma_area(&shm->ctx->teedev->dev);
+> Also taking mmap_read_lock() sort of defeats the point of "RCU-only
+> access". It's still locking/unlocking and bouncing cache lines between
+> writer and reader frequently. How slow is per-VMA formatting?
 
-If you want dma_contiguous_default_area as the commit message implies, 
-use dma_contiguous_default_area. Appearing to support per-device CMA 
-pools but relying on the device not having one is pretty yucky.
+I think this mainly does two things?
 
-But again, why? If you want page-backed DMA-able memory, with all the 
-other assumptions being made here, you may as well just rely on 
-dma_alloc_pages(DMA_ATTR_SKIP_CPU_SYNC) doing what you want, while also 
-being potentially more flexible for !CMA and non-invasive. Or at the 
-very least, could the TEE delegation not be composed on top of the 
-existing CMA heap allocator?
+1. It shifts the latency burden of concurrent access toward the reader
+a bit, essentially allowing writers to preempt this type of reader to
+some extent.
+2. It avoids bouncing cache lines between this type of reader and
+other *readers*.
 
-Thanks,
-Robin.
+> If we
+> take mmap_read_lock, format VMA information into a buffer under this
+> lock, and drop the mmap_read_lock, would it really be that much slower
+> compared to what Suren is doing in this patch set? And if no, that
+> would be so much simpler compared to this semi-locked/semi-RCU way
+> that is added in this patch set, no?
 
-> +
-> +		cma_release(cma, page, shm->size / PAGE_SIZE);
-> +#endif
-> +	} else if (shm->flags & TEE_SHM_DMA_BUF) {
->   		struct tee_shm_dmabuf_ref *ref;
->   
->   		ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
-> @@ -306,6 +315,48 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
->   }
->   EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
->   
-> +struct tee_shm *tee_shm_alloc_cma_phys_mem(struct tee_context *ctx,
-> +					   size_t page_count, size_t align)
-> +{
-> +#if IS_ENABLED(CONFIG_CMA)
-> +	struct tee_device *teedev = ctx->teedev;
-> +	struct cma *cma = dev_get_cma_area(&teedev->dev);
-> +	struct tee_shm *shm;
-> +	struct page *page;
-> +
-> +	if (!tee_device_get(teedev))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	page = cma_alloc(cma, page_count, align, true/*no_warn*/);
-> +	if (!page)
-> +		goto err_put_teedev;
-> +
-> +	shm = kzalloc(sizeof(*shm), GFP_KERNEL);
-> +	if (!shm)
-> +		goto err_cma_crelease;
-> +
-> +	refcount_set(&shm->refcount, 1);
-> +	shm->ctx = ctx;
-> +	shm->paddr = page_to_phys(page);
-> +	shm->size = page_count * PAGE_SIZE;
-> +	shm->flags = TEE_SHM_CMA_BUF;
-> +
-> +	teedev_ctx_get(ctx);
-> +
-> +	return shm;
-> +
-> +err_cma_crelease:
-> +	cma_release(cma, page, page_count);
-> +err_put_teedev:
-> +	tee_device_put(teedev);
-> +
-> +	return ERR_PTR(-ENOMEM);
-> +#else
-> +	return ERR_PTR(-EINVAL);
-> +#endif
-> +}
-> +EXPORT_SYMBOL_GPL(tee_shm_alloc_cma_phys_mem);
-> +
->   int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
->   			     int (*shm_register)(struct tee_context *ctx,
->   						 struct tee_shm *shm,
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index 02c07f661349..3a4e1b00fcc7 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -29,6 +29,7 @@
->   #define TEE_SHM_POOL		BIT(2)  /* Memory allocated from pool */
->   #define TEE_SHM_PRIV		BIT(3)  /* Memory private to TEE driver */
->   #define TEE_SHM_DMA_BUF		BIT(4)	/* Memory with dma-buf handle */
-> +#define TEE_SHM_CMA_BUF		BIT(5)	/* CMA allocated memory */
->   
->   #define TEE_DEVICE_FLAG_REGISTERED	0x1
->   #define TEE_MAX_DEV_NAME_LEN		32
-> @@ -310,6 +311,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
->    */
->   struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
->   
-> +struct tee_shm *tee_shm_alloc_cma_phys_mem(struct tee_context *ctx,
-> +					   size_t page_count, size_t align);
-> +
->   int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
->   			     int (*shm_register)(struct tee_context *ctx,
->   						 struct tee_shm *shm,
+> But I do agree that vma->vm_ops->name access is hard to do in a
+> completely lockless way reliably. But also how frequently VMAs have
+> custom names/anon_vma_name?
+
+I think there are typically two VMAs with vm_ops->name per MM, vvar
+and vdso. (Since you also asked about anon_vma_name: I think
+anon_vma_name is more frequent than that on Android, there seem to be
+58 of those VMAs even in a simple "cat" process.)
+
+> What if we detect that VMA has some
+> "fancy" functionality (like this custom name thing), and just fallback
+> to mmap_read_lock-protected logic, which needs to be supported as a
+> fallback even for lockless approach?
+>
+> This way we can process most (typical) VMAs completely locklessly,
+> while not adding any extra assumptions for all the potentially
+> complicated data pieces. WDYT?
+
+And then we'd also use the fallback path if karg.build_id_size is set?
+And I guess we also need it if the VMA is hugetlb, because of
+vma_kernel_pagesize()? And use READ_ONCE() in places like
+vma_is_initial_heap()/vma_is_initial_stack()/arch_vma_name() for
+accessing both the VMA and the MM?
+
+And on top of that, we'd have to open-code/change anything that
+currently uses the ->vm_ops (such as vma_kernel_pagesize()), because
+between us checking the type of the VMA and later accessing ->vm_ops,
+the VMA object could have been reallocated with different ->vm_ops?
+
+I still don't like the idea of pushing the complexity of "the VMA
+contents are unstable, and every read from the VMA object may return
+data about a logically different VMA" down into these various helpers.
+In my mind, making the API contract "The VMA contents can be an
+internally consistent snapshot" to the API contract for these helpers
+constrains the weirdness a bit more - though I guess the helpers will
+still need READ_ONCE() for accessing properties of the MM either
+way...
