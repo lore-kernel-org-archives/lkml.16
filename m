@@ -1,156 +1,168 @@
-Received: from lgeamrelo11.lge.com (lgeamrelo12.lge.com [156.147.23.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25D722A7F8
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.23.52
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F9EC22A7F8
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175803; cv=none; b=eIfXbvo1I2T+vr2XFQehsSSMLi19O/7Xuta5/qvZY4tSwq3EUAxPuxKFiq+4D9WKpUwIEBbbD7AtaV031R8Fl0qlaur7qcpDD3v/YrH4YtKBBdU7p/ni/mAy3+2TZfh3gnOTUiuxS6MjSzYDOgnfARA5AFRQJY9iNoJY0LVb7Dc=
+	t=1746175840; cv=none; b=SDsojFUnLpp8WfXViJSXE55iloM1+bs6GH2u/yV680dcV2S/V7XKGtYeVYI7+Z83flsRakDILTltzFqcs5imdPOhQ18VgAPixWcxSJ6lz9i+lE6zlUW9mjttPCnjR3oa6RhPgh9Hoxmq2cF1A3YwxsIySkSdL8ZCRF2J1u4BMmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175803; c=relaxed/simple;
-	bh=GdljnzaOmJQUsHwdXbdpdIIhHpWAQPc89HEotf1DmbI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=m6qqrEhGAtreDKJ21ap0WE9QgxrHLQag+kjlgvuffsTL8dLYj80QbhS/z00TX7tfILBLXKnASYqmcyUiI2E/qk1IyTg46QvW+RhT02cXSXN4lUC9tF6dDixsZt9Fj+PRH2FIGVbHxIn1BRMKLz2s/3JzWpK2QQgZRmGLsiqf/BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.23.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
-	by 156.147.23.52 with ESMTP; 2 May 2025 17:19:57 +0900
-X-Original-SENDERIP: 156.147.1.125
-X-Original-MAILFROM: chanho.min@lge.com
-Received: from unknown (HELO localhost.localdomain) (10.178.31.96)
-	by 156.147.1.125 with ESMTP; 2 May 2025 17:19:57 +0900
-X-Original-SENDERIP: 10.178.31.96
-X-Original-MAILFROM: chanho.min@lge.com
-From: Chanho Min <chanho.min@lge.com>
-To: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: linux-kernel@vger.kernel.org,
-	gunho.lee@lge.com,
-	Chanho Min <chanho.min@lge.com>
-Subject: [PATCH] squashfs: Add optional full compressed block caching
-Date: Fri,  2 May 2025 17:19:47 +0900
-Message-Id: <20250502081947.44034-1-chanho.min@lge.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1746175840; c=relaxed/simple;
+	bh=3HZuf3hABWhUbSGWlfLsZ9K0VvtjgygovfJ+zNCxYac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aXR1gm2FGmvCDWvEDaCpE7D3sdV+SlPTQoLfSyN1aiLtVwlzcReJDlrlFeojphZkGZ1JuRcUZKobghUz9br5HZ1vwet4wQMeTYOFhuaI/EnP9k2P/rVGBLeHC+1FSxXcmlmoaIaop9hLiPTf9q8yun0iKqFIKBrSl3t94Xtn8f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Zpkmt4f6Bz9sHR;
+	Fri,  2 May 2025 10:37:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 7dqorby3kjTm; Fri,  2 May 2025 10:37:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Zpkmt3wB0z9sFT;
+	Fri,  2 May 2025 10:37:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 80DB28B765;
+	Fri,  2 May 2025 10:37:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id irIy3YzPPw7A; Fri,  2 May 2025 10:37:02 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0AAAD8B763;
+	Fri,  2 May 2025 10:37:02 +0200 (CEST)
+Message-ID: <35d38a98-7f5c-413d-9c93-7d9ff783b8a7@csgroup.eu>
+Date: Fri, 2 May 2025 10:37:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/powernv: Enable CPU idle state detection for
+ POWER11
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, linux-kernel@vger.kernel.org
+References: <20250421070718.162783-1-aboorvad@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250421070718.162783-1-aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The commit 93e72b3c612adcaca1("squashfs: migrate from ll_rw_block usage to BIO")
-removed caching of compressed blocks in SquashFS, causing fio performance
-regression in workloads with repeated file reads. Without caching, every read
-triggers disk I/O, severely impacting performance in tools like fio.
 
-This patch introduces a new CONFIG_SQUASHFS_COMP_CACHE_FULL Kconfig option to
-enable caching of all compressed blocks, restoring performance to pre-BIO
-migration levels. When enabled, all pages in a BIO are cached in the page
-cache, reducing disk I/O for repeated reads. The fio test results with this
-patch confirm the performance restoration:
 
-For example, fio tests (iodepth=1, numjobs=1,
-ioengine=psync) show a notable performance restoration:
+Le 21/04/2025 à 09:07, Aboorva Devarajan a écrit :
+> [Vous ne recevez pas souvent de courriers de aboorvad@linux.ibm.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> Extend idle state detection to POWER11 by updating the PVR check.
+> This ensures POWER11 correctly recognizes supported stop states,
+> similar to POWER9 and POWER10.
+> 
+> Reviewed-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> 
+> ---
+> 
+> Without Patch: (Power11 - PowerNV systems)
+> 
+> CPUidle driver: powernv_idle
+> CPUidle governor: menu
+> analyzing CPU 927:
+> 
+> Number of idle states: 1
+> Available idle states: snooze
+> snooze:
+> Flags/Description: snooze
+> Latency: 0
+> Usage: 251631
+> Duration: 207497715900
+> 
+> With Patch: (Power11 - PowerNV systems)
+> 
+> CPUidle driver: powernv_idle
+> CPUidle governor: menu
+> analyzing CPU 959:
+> 
+> Number of idle states: 4
+> Available idle states: snooze stop0_lite stop0 stop3
+> snooze:
+> Flags/Description: snooze
+> Latency: 0
+> Usage: 2
+> Duration: 33
+> stop0_lite:
+> Flags/Description: stop0_lite
+> Latency: 1
+> Usage: 1
+> Duration: 52
+> stop0:
+> Flags/Description: stop0
+> Latency: 10
+> Usage: 13
+> Duration: 1920
+> stop3:
+> Flags/Description: stop3
+> Latency: 45
+> Usage: 381
+> Duration: 21638478
+> 
+> 
+>   arch/powerpc/platforms/powernv/idle.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+> index d98b933e4984..10f4d7d5eb44 100644
+> --- a/arch/powerpc/platforms/powernv/idle.c
+> +++ b/arch/powerpc/platforms/powernv/idle.c
+> @@ -1171,8 +1171,8 @@ static void __init pnv_arch300_idle_init(void)
+>          u64 max_residency_ns = 0;
+>          int i;
+> 
+> -       /* stop is not really architected, we only have p9,p10 drivers */
+> -       if (!pvr_version_is(PVR_POWER10) && !pvr_version_is(PVR_POWER9))
+> +       /* stop is not really architected, we only have p9,p10 and p11 drivers */
+> +       if (!(PVR_VER(mfspr(SPRN_PVR)) >= PVR_POWER9))
 
-Disable CONFIG_SQUASHFS_COMP_CACHE_FULL:
-  IOPS=815, BW=102MiB/s (107MB/s)(6113MiB/60001msec)
-Enable CONFIG_SQUASHFS_COMP_CACHE_FULL:
-  IOPS=2223, BW=278MiB/s (291MB/s)(16.3GiB/59999msec)
+Isn't this test too permissive ?
 
-The trade-off is increased memory usage due to caching all compressed blocks.
-The CONFIG_SQUASHFS_COMP_CACHE_FULL option allows users to enable this feature
-selectively, balancing performance and memory usage for workloads with frequent
-repeated reads.
+#define PVR_POWER9	0x004E
+#define PVR_POWER10	0x0080
+#define PVR_POWER11	0x0082
+#define PVR_BE		0x0070
+#define PVR_PA6T	0x0090
 
-Signed-off-by: Chanho Min <chanho.min@lge.com>
----
- fs/squashfs/Kconfig | 21 +++++++++++++++++++++
- fs/squashfs/block.c | 28 ++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+#define PVR_VER_E500V1	0x8020
+#define PVR_VER_E500V2	0x8021
+#define PVR_VER_E500MC	0x8023
+#define PVR_VER_E5500	0x8024
+#define PVR_VER_E6500	0x8040
+#define PVR_VER_7450	0x8000
+#define PVR_VER_7455	0x8001
+#define PVR_VER_7447	0x8002
+#define PVR_VER_7447A	0x8003
+#define PVR_VER_7448	0x8004
 
-diff --git a/fs/squashfs/Kconfig b/fs/squashfs/Kconfig
-index 60fc98bdf421..cc5e4be58afa 100644
---- a/fs/squashfs/Kconfig
-+++ b/fs/squashfs/Kconfig
-@@ -149,6 +149,27 @@ config SQUASHFS_XATTR
- 
- 	  If unsure, say N.
- 
-+config SQUASHFS_COMP_CACHE_FULL
-+	bool "Enable full caching of compressed blocks"
-+	depends on SQUASHFS
-+	default n
-+	help
-+	  This option enables caching of all compressed blocks, Without caching,
-+	  repeated reads of the same files trigger excessive disk I/O, significantly
-+	  reducinng performance in workloads like fio-based benchmarks.
-+
-+	  For example, fio tests (iodepth=1, numjobs=1, ioengine=psync) show:
-+	   Without caching: IOPS=2223, BW=278MiB/s (291MB/s)
-+	   With caching:    IOPS=815, BW=102MiB/s (107MB/s)
-+
-+	  Enabling this option restores performance to pre-regression levels by
-+	  caching all compressed blocks in the page cache, reducing disk I/O for
-+	  repeated reads. However, this increases memory usage, which may be a
-+	  concern in memory-constrained environments.
-+
-+	  Enable this option if your workload involves frequent repeated reads and
-+	  memory usage is not a limiting factor. If unsure, say N.
-+
- config SQUASHFS_ZLIB
- 	bool "Include support for ZLIB compressed file systems"
- 	depends on SQUASHFS
-diff --git a/fs/squashfs/block.c b/fs/squashfs/block.c
-index 2dc730800f44..3061043e915c 100644
---- a/fs/squashfs/block.c
-+++ b/fs/squashfs/block.c
-@@ -88,6 +88,10 @@ static int squashfs_bio_read_cached(struct bio *fullbio,
- 	struct bio_vec *bv;
- 	int idx = 0;
- 	int err = 0;
-+#ifdef CONFIG_SQUASHFS_COMP_CACHE_FULL
-+	struct page **cache_pages = kmalloc_array(page_count,
-+			sizeof(void *), GFP_KERNEL | __GFP_ZERO);
-+#endif
- 
- 	bio_for_each_segment_all(bv, fullbio, iter_all) {
- 		struct page *page = bv->bv_page;
-@@ -110,6 +114,11 @@ static int squashfs_bio_read_cached(struct bio *fullbio,
- 			head_to_cache = page;
- 		else if (idx == page_count - 1 && index + length != read_end)
- 			tail_to_cache = page;
-+#ifdef CONFIG_SQUASHFS_COMP_CACHE_FULL
-+		/* Cache all pages in the BIO for repeated reads */
-+		else if (cache_pages)
-+			cache_pages[idx] = page;
-+#endif
- 
- 		if (!bio || idx != end_idx) {
- 			struct bio *new = bio_alloc_clone(bdev, fullbio,
-@@ -163,6 +172,25 @@ static int squashfs_bio_read_cached(struct bio *fullbio,
- 		}
- 	}
- 
-+#ifdef CONFIG_SQUASHFS_COMP_CACHE_FULL
-+	if (!cache_pages)
-+		goto out;
-+
-+	for (idx = 0; idx < page_count; idx++) {
-+		if (!cache_pages[idx])
-+			continue;
-+		int ret = add_to_page_cache_lru(cache_pages[idx], cache_mapping,
-+						(read_start >> PAGE_SHIFT) + idx,
-+						GFP_NOIO);
-+
-+		if (!ret) {
-+			SetPageUptodate(cache_pages[idx]);
-+			unlock_page(cache_pages[idx]);
-+		}
-+	}
-+	kfree(cache_pages);
-+out:
-+#endif
- 	return 0;
- }
- 
--- 
-2.17.1
+>                  return;
+> 
+>          /*
+> @@ -1189,8 +1189,8 @@ static void __init pnv_arch300_idle_init(void)
+>                  struct pnv_idle_states_t *state = &pnv_idle_states[i];
+>                  u64 psscr_rl = state->psscr_val & PSSCR_RL_MASK;
+> 
+> -               /* No deep loss driver implemented for POWER10 yet */
+> -               if (pvr_version_is(PVR_POWER10) &&
+> +               /* No deep loss driver implemented for POWER10 and POWER11 yet */
+> +               if ((PVR_VER(mfspr(SPRN_PVR)) >= PVR_POWER10) &&
+>                                  state->flags & (OPAL_PM_TIMEBASE_STOP|OPAL_PM_LOSE_FULL_CONTEXT))
+>                          continue;
+> 
+> --
+> 2.49.0
+> 
 
