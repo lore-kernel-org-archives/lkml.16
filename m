@@ -1,163 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2E32609D1;
-	Fri,  2 May 2025 17:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC701B85CA
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 17:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746207719; cv=none; b=D85kBFMo0B3f4m+dk8b4cqH0Cah9j1LzuhtfIrqvfEyVSpTWKxKF49ErQL9kUtRsKiZUN/KJcnO8tq4KgpR3LolDjA7jZ/7937TpT2nC/4d6G0VXffVd3ddKS+Q9cya9BovkIO+WQwXYjy2/OiP0OLoh+J0zfRnDWq4WiNg1Dpg=
+	t=1746207901; cv=none; b=uRK9bdIryWXqkWEe0Wx9EhW7qMzx+X3gu869J26LN/cQZLrcpgq9qdnT9PxdAKyXLSI2uzmlKpl2KH6ygcHEs8aGqUic1nXf82kKAKiquzmjTqO2gruQ06cHxD9IX0Dc3bjWy5DL4xGOq4Junlm3WHLk7RfpY29dXSCqq3xvbfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746207719; c=relaxed/simple;
-	bh=gjLAU0k1Inps/DJel7LWteso31CNi1KBinnEA4wC8H8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pD6krlBujfDpvijuJekcX1RZAzrcP9xQSaiVoLHOaqKNjqe41pcJ70Xpz4Q67QQuZx3JZM8YLNnyxggSBieaOo31yAPfbmNBEqA4WKJV6acx6kgI8SZXOViBu7yoYD3I9F+TA5rX4oihhK5c83N/w7LfOTunAA1cxC8BGIr2KPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bus+bVfa; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746207901; c=relaxed/simple;
+	bh=XmCGPi5E/4vdLYqfzcEUuIa7Pjd6veLPx7s/gT1s0z0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cmw+646gq0inTQPgEjIROQSFil0VtpsrbuBSDpywgHlfhhQt0sFEE0K0Qsc9HYt/E0gRWR6izkMAtYjYRn4K7uGpkFn0IwdB0wpxZDr2detl0ghwD8XncPrTmU2hYcjPMcs17L5muLIzClreRJxQyEqErEeqEEhAWsLRKo/RyVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZfT8qh63; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bus+bVfa"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542E4VOa015015;
-	Fri, 2 May 2025 17:41:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+kUeZbROEI2gs9FNvLUbc43lNYpiMPTgqx6irTa9LjE=; b=bus+bVfaorQL3mQ/
-	K+P1NCk8C74Tkh8lqub94HB2uIdZgqLSx2hKiI644B3uF7qXxazoW2s2GaWEsE29
-	UMX234vwBNShqfUrtBOG5AFfcIQoOz0VhDYFBSw+zeG16QhCXbHA9IubsttLMjX/
-	5auHEmOWRTiflRkmLPnGJ05sIK9Ls4nE/BtKBfAHobNXiiIaVBgbxO7jv87nzQnu
-	QEam9k8fUNN5ENZNXpYwqhjmc/4wAfHoxOI6kRDP3/IL35MXz7Pm2wCs0l0ArmQx
-	fgSFNL9avuIPJ0zck838wsYOZjHOIUf86E2uCGdkadk8V2SOv4MohvcS+y2B9Xew
-	aXVHOQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ub0xrp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 17:41:43 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 542Hfg9r021502
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 17:41:42 GMT
-Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
- 10:41:41 -0700
-Message-ID: <de448e66-01c7-498c-b5ea-d3592ac4b40f@quicinc.com>
-Date: Fri, 2 May 2025 10:41:41 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZfT8qh63"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227a8cdd241so30424845ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746207899; x=1746812699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dY8M+VLKea8pjpC946v5/t8PrnnUb0Gzxs+7tzVnLLg=;
+        b=ZfT8qh63//vQIKv+aV+pTKMNJSSjvLT94HkI9it5Jn5Lrufb7peCm8wUTuJpnfo/ye
+         UthcD5b7RleAhGAsixdB2GixpqQjAB9+HqsNmWbGlezGFqSx22VFJTJiSvyrox/n6Icf
+         K77bNvG8zu4fY+r/AfpLe6xuF9JCrjvc3chodM/LzqN0ACA8W5wOwNb80cchg+M/n/9W
+         BtopYKzjhNzoz/Mjj1rnJQ/MQ5uZZD+DWG+enEdFTzfQhmWwYc69OTs/2/s4v/guugbZ
+         AO7otwmEVRO+NBtCq0408ZJf3H7uzWZHmPE7A2OvDNw3geQtrYk0HefqjR5gx+4izAzk
+         lwLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746207899; x=1746812699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dY8M+VLKea8pjpC946v5/t8PrnnUb0Gzxs+7tzVnLLg=;
+        b=e1Kes6uZqj4hCyy2ITHnc2XShaSZ8OzP98ADOo/aZk59a4ZEzYjyti0qRMGSOUsqww
+         Mx8LJ5FmGAkxnEfohyE0+0BY3liVBtXImjBsMGSHoNVkm2Huc3tZnBisJ6JlwR9fMIZK
+         pzv6OzVHg3wKlMFHkqT/yDoG904ZImxUnV9zX9wnRVUsr1QTyQUUYd8E+2vmyrtHw9o3
+         E7irup8wQ06OaGW9KvwANfYp8dNL5lAr7xs0Wgyf80v7DwBB+3058QEakUZwEucYK3ho
+         Wo5R5SnNfIbcY6Ogcm6DEt2P3dMab75J7QZIUzwpFIDPuhY5aoRAsxBnrjFNnAkkCwvx
+         rJnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzSCJTVFqmPnM73SCJPPJsbhZ5NejSIMtPK8JcI1lSFvAk2wcX2iPhEn8MnLN9iwYXksLSJveS2nPiAEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz69kG9XVUxMteABNvHrPSu7Q2meaUnU71fTczHQmw+F1ziLqJ+
+	6bxroV9xAXT0J6u/eKG0jubhtBoRXB+yBXDifYq4YezZkvBIZqej8LvQLrxyhg==
+X-Gm-Gg: ASbGncunpVgi+/Dlz22chKhyyrKFA1PsF/5fmyJocm0WPSCzuaaWgeaK+khaHkMPp0s
+	x3TdHWhRJMYGfAhttW4uNxfDwNqWCbjzwLL9YmptpVK4CRdydn/Coe4aGpku9VggkFPbTXK+cvg
+	r8u5p+cX0tlzsvveGhYaniCQJt5qIymcxrimSWKQZq0jAG/GIVLO6s3pgPyhT8OWNJTBH3p/Pdl
+	uULG+TAe0xkWT6D7uId3A9hR9TqdI6jD9lo3AxudXBVCOrMCfH1hryP8jxsk3Vb/mB+DfcVewiW
+	tLh61iZkmAr6fn636y5/fQ06JKNb+fNz/GrkxpSX9e04kuVFSNqhCRZR
+X-Google-Smtp-Source: AGHT+IHXWlUErao4J1U1mlwJYk9ATwc8DlkGhI6ADj3IGLu/xR9EZ4EkOFgQ2fo9wnmS3hLmuShE4g==
+X-Received: by 2002:a17:903:187:b0:223:517a:d2a3 with SMTP id d9443c01a7336-22e1032f5a2mr56701275ad.17.1746207898939;
+        Fri, 02 May 2025 10:44:58 -0700 (PDT)
+Received: from thinkpad.. ([220.158.156.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150eae99sm10608815ad.19.2025.05.02.10.44.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 10:44:58 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: lpieralisi@kernel.org,
+	Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	christophe.jaillet@wanadoo.fr,
+	thierry.reding@gmail.com,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jonathanh@nvidia.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: Re: [v3] PCI: tegra194: Fix debugfs directory creation when CONFIG_PCIEASPM is disabled
+Date: Fri,  2 May 2025 23:14:50 +0530
+Message-ID: <174620787968.116062.4174884576928380234.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250407124331.69459-1-18255117159@163.com>
+References: <20250407124331.69459-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] drm/msm/dp: Fix support of LTTPR initialization
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <dmitry.baryshkov@oss.qualcomm.com>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        <laurentiu.tudor1@dell.com>, <abel.vesa@linaro.org>,
-        <johan@kernel.org>, Johan Hovold
-	<johan+linaro@kernel.org>
-References: <20250430001330.265970-1-alex.vinarskis@gmail.com>
- <20250430001330.265970-2-alex.vinarskis@gmail.com>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250430001330.265970-2-alex.vinarskis@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: zfyk4oyKA29xzv6RSz7gZ9mIKO_264-f
-X-Authority-Analysis: v=2.4 cv=KtlN2XWN c=1 sm=1 tr=0 ts=681503d7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=uKgnwDtAFRA4Sjybt-sA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: zfyk4oyKA29xzv6RSz7gZ9mIKO_264-f
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDE0MSBTYWx0ZWRfX8wAJlAWBanzp FZUe5dLRwVglXu+CJbyIMTH718drMl5XJoaFRkMqezQBzytT/QbHePgPGgD4Ch2Vyf3XTy5QSyS spdC8tLo0aVOPEnpvu7tKCpvzRBH/ugyyVjDMw1OtWv1Ju3GC6upRFkBgHSOUTtbM4cIAW/vunv
- oV/jF0aHa/ec//3lyjxHMKMlFLVmkua5NSXELX6blI/wPOhP3T97oa/XHTJlRvo3YSx9hgv5jRa KH2VrALVakWKYZIis49rt5+DWgXDdICqR1WEKZmwdXay8QZjRFh+u7QuzRQQTva9aRwTKaQy1e0 NjUMSkvvixHfhU4HRTr/wv6MCqu792EXsZIJ5U+U8e2zh0jJqHQoOiejp9pQDJnfQdhjynz1Jp9
- +Hcp1bjngyL2FVH1Un6OGlYKsJRhKxtm4aRmz/f9pNlsc3GTEqFiwUGuiX80vE3q8ej43eNP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_03,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020141
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
-
-On 4/29/2025 5:09 PM, Aleksandrs Vinarskis wrote:
-> Initialize LTTPR before msm_dp_panel_read_sink_caps, as DPTX shall
-> (re)read DPRX caps after LTTPR detection, as required by DP 2.1,
-> Section 3.6.7.6.1.
+On Mon, 07 Apr 2025 20:43:31 +0800, Hans Zhang wrote:
+> Previously, the debugfs directory was unconditionally created in
+> tegra_pcie_config_rp() regardless of the CONFIG_PCIEASPM setting.
+> This led to unnecessary directory creation when ASPM support was disabled.
 > 
-> Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
+> Move the debugfs directory creation into init_debugfs() which is
+> conditionally compiled based on CONFIG_PCIEASPM. This ensures:
+> - The directory is only created when ASPM-related debugfs entries are
+>   needed.
+> - Proper error handling for directory creation failures.
+> - Avoids cluttering debugfs with empty directories when ASPM is disabled.
 > 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> Tested-by: Rob Clark <robdclark@gmail.com>
+> [...]
 
-Hi Aleksandrs,
+Applied, thanks!
 
-For this patch and the rest of the series:
+[1/1] PCI: tegra194: Fix debugfs directory creation when CONFIG_PCIEASPM is disabled
+      commit: ed798ff1c52f6fe232ce2e24e68fb63f5470ab97
 
-Tested-by: Jessica Zhang <quic_jesszhan@quicinc.com> # SA8775P
-
-Thanks,
-
-Jessica Zhang
-
-> ---
->   drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> index bbc47d86ae9e..fc07cce68382 100644
-> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> @@ -367,12 +367,12 @@ static int msm_dp_display_send_hpd_notification(struct msm_dp_display_private *d
->   	return 0;
->   }
->   
-> -static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp)
-> +static void msm_dp_display_lttpr_init(struct msm_dp_display_private *dp, u8 *dpcd)
->   {
->   	u8 lttpr_caps[DP_LTTPR_COMMON_CAP_SIZE];
->   	int rc;
->   
-> -	if (drm_dp_read_lttpr_common_caps(dp->aux, dp->panel->dpcd, lttpr_caps))
-> +	if (drm_dp_read_lttpr_common_caps(dp->aux, dpcd, lttpr_caps))
->   		return;
->   
->   	rc = drm_dp_lttpr_init(dp->aux, drm_dp_lttpr_count(lttpr_caps));
-> @@ -385,12 +385,17 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
->   	struct drm_connector *connector = dp->msm_dp_display.connector;
->   	const struct drm_display_info *info = &connector->display_info;
->   	int rc = 0;
-> +	u8 dpcd[DP_RECEIVER_CAP_SIZE];
->   
-> -	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
-> +	rc = drm_dp_read_dpcd_caps(dp->aux, dpcd);
->   	if (rc)
->   		goto end;
->   
-> -	msm_dp_display_lttpr_init(dp);
-> +	msm_dp_display_lttpr_init(dp, dpcd);
-> +
-> +	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
-> +	if (rc)
-> +		goto end;
->   
->   	msm_dp_link_process_request(dp->link);
->   
-
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
