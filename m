@@ -1,146 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2837D2DC78C;
-	Fri,  2 May 2025 19:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8742DC78C;
+	Fri,  2 May 2025 19:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746214291; cv=none; b=cx+vKxJEqJI1EXonnrDbkXxjAlMQR7A1HNUozPt3rVaGQLVlfsWYgTMhNYOwGgMYLfUTklv3AhMnwGM77ZKLrIRMsWDJqs5Ol/MYiktZl8OkjbqZmwe+CZ/Ow58/Ds8qvwx/D7Q48+nElorY3ztVsb0sJr2+i+TjcxHqyfUlPB8=
+	t=1746214297; cv=none; b=mH0DNZK0V+GjIb9WjMZ4i23ZjRtJXhnf5zkhB+6Fhbg50IxfLL+I6K+aAMKC8ig4VG98W5lNjO+HGWL6SZOzjK7jndnGbhvRKEyUdNbV6mVxuMfxoObU+65PSLqsn3K1w2OKJIaTXXHmVSGKMmoJkl1kkX9FTjhj/r6a0/8XuKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746214291; c=relaxed/simple;
-	bh=M5hI8igvUh0TJ227AgSlnOH2SgqlqQg9EBsxC0vnAG0=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=GJS6qg44zw9Fn7ltCiBSC9ZmBS96bZ6IsuKDfuJEPKTaqC1Z4oirkvcCFuowrTSO2nnBkdxPwal6u7Keb+zQlt258bLVvVGg4h0AqQ4aYbqEtcolZOAl65Rw95lNVVfZkYYCPAN0vCB766xsnrAqVpQ8r7av1btYJS/LqXMNscU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOkfOJei; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746214297; c=relaxed/simple;
+	bh=6YMyTJz74oHgAjCD5fmF2xDxlcIzt43ugRi7JkevP+g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bq1JOdH9lNLBlfT0yNqV5s1FWJfHMQ9Eqi9lAvTxKG84NxodvtIqPeK5ocrqcJ3HEpR7wc5JHmBE+knFqINfwSXniyVkgtGBvo/TefAHx3Zg8mK2jmbj7TdA8phgNzS8+B3jwYVTGgXrRcXTBuYv1NRqbF0Vhzr9YU34GJLh0Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DJmQqp/M; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOkfOJei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5853DC4CEE4;
-	Fri,  2 May 2025 19:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746214290;
-	bh=M5hI8igvUh0TJ227AgSlnOH2SgqlqQg9EBsxC0vnAG0=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=kOkfOJeiVHTOyVqOJ+strKRh1AI1dqd8XRTs68spQ6Z5fyslISqXUm6tB13300tJt
-	 uNbqQwrKftoWK01j40VkWbcDo667egy2Qv8URS3YzanZKLV06UjvEjvBItt35w+rLD
-	 pYQWr0nAgA4GLypZxtY6h0tGaD5an2ZqIE7JtBprxwmMsxjlIMp/VY0HIC1luyvsBj
-	 8vLYKpxIX5BzBMlBQ6/e9It7LQ0BzH5PflQztEnTNX+ZxsqoI3d/FQHl4eY3wu4Szp
-	 82nF3IaeGsUVFGPqv4PpLBUi1+JOlTCz0TpY1Z6rQNRo4DS0K5D7udAD921qp8a4vz
-	 0MQ/ff9ranQ9Q==
-Date: Fri, 02 May 2025 14:31:28 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJmQqp/M"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso442031966b.0;
+        Fri, 02 May 2025 12:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746214294; x=1746819094; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7gZpvwlgFSLmiwWzkOrn/YxYzEW5jmXin3hp9eGRugQ=;
+        b=DJmQqp/MvKrH0nSMLPWX6YFAZhYTeZgwI0hQHS8OO6ji54Y1OL0bHsDuHTFwGq8mt6
+         CZszcfVBxv1LgFNiEBi40YMDcphKUEvvjPV4OolIsseEX+jckmb0IoIxzMgRITyc7D84
+         vc4031vmsRKV8k4TzxyjRgDGG/hPSWh20k8CNuA+xzLihwAkmWGirWYcFBkVf2ZLGL0O
+         3NbBX7zpgfVpASu5gbNISnn/lQ0lOfE+Bc57LSUYhGXdWN5TMt23+Ovdjwq0FXONzF4G
+         RveVy/S73QnzTwB0Ek9dBHcu864cQ2vXB+KThvlT6m5GYGwsNZkqXRgBZu7I60r/l/oB
+         FvFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746214294; x=1746819094;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7gZpvwlgFSLmiwWzkOrn/YxYzEW5jmXin3hp9eGRugQ=;
+        b=cP3FcB7dXbBJmvjbBrC+tgRGIZYx+bhh+Sqgqj8sDb7jDtO4XdOZwOltHqhw6TzrKa
+         AL51Tk9OTlTseLo57nm1MXtdbHDzYdojPTi7Asf/eZQvXFQbndzFh/DMXlrF9M0hevQ8
+         vTgbFuZ3QYwY8VrTWIwxTe86Ql/m3U9S/Ow7PHTtgR9NUAZtX8YyIGt0TKot5JWGpksP
+         PqBN5Dvz9quMdhwAP0BlFWDhwDy5xW53Gq5E8vkbwGitJoeAnQKGfu34YesyWte20vd+
+         irz3byx+W1bnp2pR0ShHSPouGGTMLeypru5cuDT9F6ayhIz0vFr3d/HUrmII+eisGXR3
+         MMHg==
+X-Forwarded-Encrypted: i=1; AJvYcCURycgMdYWWa9K2TlXsPCFAS7lmT8C3HxtVl1LttqQ4/rJHGTmHGBSrtAXckcnXZU+tMiK6tO71EyLXsUGM@vger.kernel.org, AJvYcCUWwr3piRjPvl9/8yMgwccURsZXC2tVZsV5XYCyzBVHDLD/asYifc6KOuFAH0pYl4o+3HcgdxkUpvF1nkSO@vger.kernel.org, AJvYcCXGnxAjcpvkRxuObObhHmtB3XGNM5YPvv1iMet0mKgs1axMhE2ughvFG3Ul8xabxpr6KBz0Wq0v4+Bo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/UIEdvJWE45hB3IFbqcxyv865H7K74r5vHbp7/ycrqnK5WUAo
+	cdhAllremDZY6KL92c3WmJFbw4H9kyvd/GgAfFDHcWWJGCQnm/xw
+X-Gm-Gg: ASbGnctZxlLiM06k/FBrx1vNO8xbiEXAMY/Nut/aVF7TFSZ1gFmDSuJ+T7dV6hPplGc
+	bpL05s6h7TkhzKUElypfoJpbqF7k5AgdaDXq/u3tc5BYw7fZ4x8nuLWY1y9WhXIg9qnE4fIKH0H
+	RlMILLjXjg4cx+KJnhgFPtR/vEUxOsZ+5yWQB4sZUC6+v5yI60jWknEzqP5v3FrJnfuWsrJS9Bf
+	u8M0PP4zRLpNUeZVx4djc6TTSYNVqMLDgTj7otIUoVjlhNvV2KinsOscv4Hif23/ZseKMVWwOs0
+	48ma2H+UNBo/NcFBDJGczm/8fpURSP7HTqHaGJjeWK38dnSUvVdBjYDD9Wx0HX5DhVAmiA==
+X-Google-Smtp-Source: AGHT+IFc3Ur95DNTkNHIKLCZ43haAEzHVjbUdImB5kP9fas4dW9nGVrmS3nnfQ77GgSrzq8fbH6FjA==
+X-Received: by 2002:a17:907:868c:b0:aca:a162:67bb with SMTP id a640c23a62f3a-ad17b4708fbmr469455666b.4.1746214294085;
+        Fri, 02 May 2025 12:31:34 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad1894c025esm87824266b.114.2025.05.02.12.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 12:31:33 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH next 0/2] spi: spi-qpic-snand: enable 8 bits ECC strength
+ support
+Date: Fri, 02 May 2025 21:31:15 +0200
+Message-Id: <20250502-qpic-snand-8bit-ecc-v1-0-95f3cd08bbc5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org, 
- Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>, 
- linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
- Luo Jie <quic_luoj@quicinc.com>
-To: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
-References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
-Message-Id: <174621422446.2300145.5789096612500039953.robh@kernel.org>
-Subject: Re: [PATCH 0/6] Add CMN PLL clock controller support for IPQ5018
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIQdFWgC/02OQY6DMAxFr4K8rkdJXGjKVUZdBMfMRIXQJhlUq
+ erdiygasfy23vv/CVlSkAxt9YQkc8hhikvQhwr418UfweCXDEaZWhll8X4LjDm66NF2oaAwo2e
+ rjr1Xtj4bWMhbkj48Vus3RHkUuHyuSe5/S0XZXv8NbbX6yai9/zq6YZgYqW9Y913D9kTtrGG/b
+ SNrpffk7IbgXZF1HVnqSIjEkN3wzmVBnsYxlLaamy9dY+IjXF6vN0ZGgukRAQAA
+X-Change-ID: 20250208-qpic-snand-8bit-ecc-dc804fd08592
+To: Mark Brown <broonie@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
+This small patch set adds support for 8 bits ECC strength, which widens
+the range of the usable SPI NAND chips with the driver.
 
-On Fri, 02 May 2025 14:15:42 +0400, George Moussalem wrote:
-> The CMN PLL block of IPQ5018 supplies output clocks for XO at 24 MHZ,
-> sleep at 32KHZ, and the ethernet block at 50MHZ.
-> 
-> This patch series extends the CMN PLL driver to support IPQ5018.
-> It also adds the SoC specific header file to export the CMN PLL
-> output clock specifiers for IPQ5018. The new table of output
-> clocks is added for the CMN PLL of IPQ5018, which is acquired
-> from the device according to the compatible.
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
-> George Moussalem (6):
->       dt-bindings: clock: qcom: Add CMN PLL support for IPQ5018 SoC
->       clk: qcom: ipq5018: mark XO clock as critical
->       clk: qcom: ipq-cmn-pll: Add IPQ5018 SoC support
->       dt-bindings: mfd: qcom,tcsr: Add compatible for IPQ5018
->       arm64: dts: ipq5018: Add CMN PLL node
->       arm64: dts: qcom: Update IPQ5018 xo_board_clk to use fixed factor clock
-> 
->  .../bindings/clock/qcom,ipq9574-cmn-pll.yaml       | 11 +++-
->  .../devicetree/bindings/mfd/qcom,tcsr.yaml         |  1 +
->  arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts     |  3 +-
->  .../dts/qcom/ipq5018-tplink-archer-ax55-v1.dts     |  3 +-
->  arch/arm64/boot/dts/qcom/ipq5018.dtsi              | 40 +++++++++++-
->  drivers/clk/qcom/gcc-ipq5018.c                     |  2 +-
->  drivers/clk/qcom/ipq-cmn-pll.c                     | 72 ++++++++++++++++++----
->  include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h   | 16 +++++
->  8 files changed, 129 insertions(+), 19 deletions(-)
-> ---
-> base-commit: 8a2d53ce3c5f82683ad3df9a9a55822816fe64e7
-> change-id: 20250501-ipq5018-cmn-pll-8e517de873f8
-> prerequisite-change-id: 20250411-qcom_ipq5424_cmnpll-960a8f597033:v2
-> prerequisite-patch-id: dc3949e10baf58f8c28d24bb3ffd347a78a1a2ee
-> prerequisite-patch-id: da645619780de3186a3cccf25beedd4fefab36df
-> prerequisite-patch-id: 4b5d81954f1f43d450a775bcabc1a18429933aaa
-> prerequisite-patch-id: 541f835fb279f83e6eb2405c531bd7da9aacf4bd
-> 
-> Best regards,
-> --
-> George Moussalem <george.moussalem@outlook.com>
-> 
-> 
-> 
+The series should be integrated via the SPI tree, as that contains
+prerequisite changes.
 
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Gabor Juhos (2):
+      mtd: nand: qpic-common: add defines for ECC_MODE values
+      spi: spi-qpic-snand: add support for 8 bits ECC strength
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+ drivers/mtd/nand/raw/qcom_nandc.c    |  6 +++---
+ drivers/spi/spi-qpic-snand.c         | 21 ++++++++++++++++-----
+ include/linux/mtd/nand-qpic-common.h |  2 ++
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+---
+base-commit: 39d6783f6488786301f36b0e7c619f220c3e8d2c
+change-id: 20250208-qpic-snand-8bit-ecc-dc804fd08592
+prerequisite-change-id: 20250320-qpic-snand-kmalloc-3f6c1fb6c873:v1
+prerequisite-patch-id: ec9e9786ca59fcddf9502d0ba5b0f4e6593aab62
+prerequisite-change-id: 20250501-qpic-snand-validate-ecc-383b3e33e238:v1
+prerequisite-patch-id: 7a549e08b3075d20c5014bb3d2151643aa956f5c
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 8a2d53ce3c5f82683ad3df9a9a55822816fe64e7
- Deps: looking for dependencies matching 4 patch-ids
- Deps: Applying prerequisite patch: [PATCH v2 1/4] dt-bindings: clock: qcom: Add CMN PLL support for IPQ5424 SoC
- Deps: Applying prerequisite patch: [PATCH v2 2/4] clk: qcom: cmnpll: Add IPQ5424 SoC support
- Deps: Applying prerequisite patch: [PATCH v2 3/4] arm64: dts: ipq5424: Add CMN PLL node
- Deps: Applying prerequisite patch: [PATCH v2 4/4] arm64: dts: qcom: Update IPQ5424 xo_board to use fixed factor clock
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com:
-
-arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq5424-rdp466.dtb: clock-controller@9b000 (qcom,ipq5424-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dtb: clock-controller@9b000 (qcom,ipq5018-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: clock-controller@9b000 (qcom,ipq5018-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
-
-
-
-
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
 
