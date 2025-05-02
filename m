@@ -1,323 +1,101 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC1F376
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019791F2B8D
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746215620; cv=none; b=nflQPLbfFOs12tZ4Nl65qUMKnhPh3LfK2JZQ99bgPAYl2YDS5k/KXFGihB6d7mIcofRhDsjC3A/k8vGf94e3g7pYGIlyDs5EPupXlgJ2CqmrPP1dJP7wJnABwtbB5DilPx62DXBOrMeo8nltNxZqdrA2V1gef3FNTX6J52CTLUM=
+	t=1746215780; cv=none; b=Y8K0ibJpWWz56r4zXPlc9nvE5S7qchbvtR4kD3TStA21aEBjJzE/vNpYSYBdp3Ehvx0+lnmKySVpTjgO5UfgbWGk8IgVFN3B+n66lu4oyVX8aLWDBioI53Vhf/uKAoK/B83uq6jtcHY/A9xDAApK/ujK9oeBpFPsjK2APoU2prM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746215620; c=relaxed/simple;
-	bh=pNLofVHa/xZypRTnit0/KCNmtvKYZMxd9/3LLgH8w1k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b4NgO7wi1W/x+/GN9fnM96/9vbZvwKjxWlHdiWcJWZTtp8u+ow8MzvIU7XHv3Xg+nbOARWoQ3GRXz7lNQ+rLEggyN4g40KG3ZcOpdLp1YI3GAqs3E9ib89nIBsndkPr9jjHTh6iodMkPQV2K8C/OWRQAoYkdq/TZHDDTnntYzYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BfmxOTB7; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746215780; c=relaxed/simple;
+	bh=xlSMk+igEoGqHGelwCpnP9t9X+QTloJPu6JprECcilw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aNopRaI166jRomlWQFkogxCLvrArORIXiRtOpYB6V9R90vuKRT1E3QzMjkWcOtY8Ad0irkUXeFjxaMFk1IbG++l8gh0cLUW9U1brTRielHoWrHNDqgWglR+yiU2ChcBa6j28jgWpUf30a/kikvHtHI1weQNbyhLHzoSK2bP9CAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XfZ+AO1f; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BfmxOTB7"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b0b2de67d6aso2506644a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 12:53:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XfZ+AO1f"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85b41281b50so80273839f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 12:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746215618; x=1746820418; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QY24jX2mcRpHEguXZSrHOslq7VyE8AT/RUOOvInkGcU=;
-        b=BfmxOTB72WEgW+st84aqH3NO0VA9+0V/XE8YgWxT278TLrJWRMER6pB7ftAnsOrJzU
-         i8VEeeVkZtWlqvtYYgiCoUJbNVosWbK5ajVDWlFXpP3gU3fgCnq/Hq0aVz8EkiwXgtdP
-         ELm4BNZK+Bn0+drYVFmr5ZlMLFcFN/+AmPY0memE/JSQ9kCcQ6yUGwb1AHda4d1/BV/D
-         qgqvdqh8opPPAbxRMdKky4xq241a7uhipNbntOEwM9kGQZBBg56X6iHuGh+BN5kIrq44
-         Zj4rhqgVwIzLTSfuO+G0bYOrUkq+r8vkvdPk6q9o7A+IhxuRmJsKrJJpCdlion2Bsio6
-         dcHg==
+        d=linuxfoundation.org; s=google; t=1746215777; x=1746820577; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jdhliYzbvYtKg2qoeYrELdpCfzAzWomz8eFEQHj8K7c=;
+        b=XfZ+AO1f4ez6ALp8GcTgAiaIc1H9vFsjs751wMwfg6RX/2EWpmcJ7YWLa8DkAXaPcD
+         SJ64j25HiASZQdRC5qDCY3ENNC+Pq5YkZO40GS5DnC3XSMQXSpvkqonnznKXHQLSQU/z
+         SXp/2ejL0b9GCXsjC1WS5JkCxTkKJ4/2KhnJI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746215618; x=1746820418;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QY24jX2mcRpHEguXZSrHOslq7VyE8AT/RUOOvInkGcU=;
-        b=Tpb8QM0p6vBd+Teb6mT0KOx35ouhY4JmGYW4mQ1HJl8h/6kb9pmyEh8ZgrsshM0dDY
-         yK9ySHrHSYfqt0QDWoLRh7fumT1gI8VnSb5h0NQ+Dh0DSzPDccFLJFp7RDVjpXcL1DbV
-         gap6+qHFQtirEtFTlbRvfVoVt9RNzbeYPVawBfRlQj9ZkK+AYBmxdH8CHmknUK8l8x9x
-         HXg2UKqxUZ36qk8/pcQ8lZUJAKeeCou/GuXTlj/gE4zVN05wDEqAzwyvQdLZqvX+6KMW
-         vU97Ku+oFwQiLuL9S6PQm0EytFBs/FA11u1bYFyAsRWH+VtG8LrZ3lDLsZ3nQne9jCbC
-         kX/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVN/tKyBkxmJmg88Zt0fENhzox5OUGYOo9vMq0QwACpXGsah0NVolSvD4zTLCKJq+Ficgy4JzREMENrqEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQyXv/Dp+1wYBBLZBGuYudduQV0rrgMwU+I12/Lgvj2TLjXtNY
-	NfrzfrPXLwraGa/L5qHeDDrBB3+T4L1iKAqxBgGD68iNZVUqcZCImeRxhcAc7P645G7nhUdJ1Pd
-	/yQ==
-X-Google-Smtp-Source: AGHT+IHB5jen2h1kH8jYNrKitBcw6yMKWSJoP3Wt43EQJQwGMArxvgTwE+Bg4d0pCoXL5tpLZIu1ygKo++o=
-X-Received: from pjbpd15.prod.google.com ([2002:a17:90b:1dcf:b0:30a:2020:e2bd])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4983:b0:2ee:ee77:2263
- with SMTP id 98e67ed59e1d1-30a5adf4b43mr905164a91.7.1746215617757; Fri, 02
- May 2025 12:53:37 -0700 (PDT)
-Date: Fri, 2 May 2025 12:53:36 -0700
-In-Reply-To: <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1746215777; x=1746820577;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jdhliYzbvYtKg2qoeYrELdpCfzAzWomz8eFEQHj8K7c=;
+        b=fsPCuAyXrlSJte2KiWGUWNZFOaNSVSkh5M4OvCgTvqYaxm0fTvIIyg28ICAG+H+4IJ
+         ydtuDY1pjG7DZOcc57A6dWJLht2fdaFGgXcDrBNSU1DPgIP41ainC/R592vNxhPHXap7
+         YuBWQhWQAb03yMwUR+lTTRYsSL1yy5tw4BJRJ24/c2UXb5Qm1H68X1YXCAsg0K96SJwN
+         hu/oBHSpK45LaxQTloIgT3p9UDclIkJzxXaTuRrXudUdmsalOpONEgu/pK/JhF613n8e
+         FyZaMlb/bBnH1eHtr4GRsqka69yZZuEtjcj2dG/K/+Q4D0og2aRO7rZkwhP0+9ow/8c7
+         sV/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUWhCURlHs8LCiz3G7Jm55F64Ok4by5POszXfrJ9VyjcQ+JaFPXR7UO9ee0utwnXAYXderefXMewA3ko4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa0ACMopkN4FixALPCgkdXg8z/ILZPE6hc5QzVYOMBUy+L2UvJ
+	Ilj5HIXCIkU9h7Uld3I7+TGXMweuDthFpAeRx9dB8fvg5K9Nabr4sOBcYM11zCQ=
+X-Gm-Gg: ASbGncsd2rwdDw+EYvUK4D0w+WJRHYLOtKTFQE361bwjZugEV63NDK27Z4YXILO4Cm6
+	nYfL2JZplVBpN3XtL7xHSGvxHrMUYg09IWVVRPPmFriNasCakzIRhcGqR5s3igUHACC5t7Oq6sS
+	refXm/+XQy1wBggyxcDtnIe2+9NV2C5DT+qKvKc8fXmgS3cqlF/Ue0dwmWXIp45KU+yhLPTDpzC
+	9qEiIBwJf/oh8SzeMOMazxgFEqfnLiZI2gtAm/4Lbi37PLMd/CD/UpP8sIJ5/GhhFTS11zGEzZx
+	yS1xqpuU6BWU0laRLPSnWY8THQo4vVvVKt5peDvDs8/aieRdCyI=
+X-Google-Smtp-Source: AGHT+IEXHipGEkbZab0i8/+Zk388KeIbvolMM/RcaYRIZEy+vdl66HVXkkYvwY1yLUPCONHL39+beA==
+X-Received: by 2002:a05:6602:3a15:b0:85e:1879:c708 with SMTP id ca18e2360f4ac-8669fb07f5emr529485439f.1.1746215777004;
+        Fri, 02 May 2025 12:56:17 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a8c8cdesm540615173.17.2025.05.02.12.56.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 12:56:16 -0700 (PDT)
+Message-ID: <91e934ef-5bb5-4e67-b6dd-7f0308d4ee49@linuxfoundation.org>
+Date: Fri, 2 May 2025 13:56:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250430110734.392235199@infradead.org> <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net> <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net> <aBO9uoLnxCSD0UwT@google.com>
- <20250502084007.GS4198@noisy.programming.kicks-ass.net>
-Message-ID: <aBUiwLV4ZY2HdRbz@google.com>
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
- __nocfi functions
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, 
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org, 
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
-	jpoimboe@kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Content-Type: multipart/mixed; charset="UTF-8"; boundary="lefFiOsVgwoJmfzZ"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpupower: change binding's makefile to use -lcpupower
+To: "John B. Wyatt IV" <jwyatt@redhat.com>, Thomas Renninger <trenn@suse.com>
+Cc: linux-pm@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
+ John Kacur <jkacur@redhat.com>, "John B. Wyatt IV"
+ <sageofredondo@gmail.com>, Wander Lairson Costa <wander@redhat.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250429204711.127274-1-jwyatt@redhat.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250429204711.127274-1-jwyatt@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
---lefFiOsVgwoJmfzZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, May 02, 2025, Peter Zijlstra wrote:
-> On Thu, May 01, 2025 at 11:30:18AM -0700, Sean Christopherson wrote:
+On 4/29/25 14:47, John B. Wyatt IV wrote:
+> Originally I believed I needed the .o files to make the bindings. The
+> linking failed due to a missing .so link in Fedora or by using make
+> install-lib from the cpupower directory. Amend the makefile and the
+> README.
 > 
-> > Uh, aren't you making this way more complex than it needs to be? 
+> Big thanks to Wander Lairson Costa <wander@redhat.com> for the help.
 > 
-> Possibly :-)
-> 
-> > IIUC, KVM never
-> > uses the FRED hardware entry points, i.e. the FRED entry tables don't need to be
-> > in place because they'll never be used.  The only bits of code KVM needs is the
-> > __fred_entry_from_kvm() glue.
-> 
-> But __fred_entry_from_kvm() calls into fred_extint(), which then
-> directly uses the fred sysvec_table[] for dispatch. How would we not
-> have to set up that table?
+> Signed-off-by: "John B. Wyatt IV" <jwyatt@redhat.com>
+> Signed-off-by: "John B. Wyatt IV" <sageofredondo@gmail.com>
+> ---
+>   tools/power/cpupower/bindings/python/Makefile |  8 +++-----
+>   tools/power/cpupower/bindings/python/README   | 13 ++++++++-----
+>   2 files changed, 11 insertions(+), 10 deletions(-)
 
-I missed that the first time around.  From my self-reply:
+Applied now for Linux 6.16-rc1 - will be included in pull request to
+PM maintainer.
 
- : Hrm, and now I see that fred_extint() relies on fred_install_sysvec(), which makes
- : me quite curious as to why IRQs didn't go sideways.  Oh, because sysvec_table[]
- : is statically defined at compile time except for PV crud.
- : 
- : So yeah, I think my the patches are correct, they just the need a small bit of
- : prep work to support dynamic setup of sysvec_table.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git/log/?h=cpupower
 
-> > Lightly tested, but this combo works for IRQs and NMIs on non-FRED hardware.
-> 
-> So the FRED NMI code is significantly different from the IDT NMI code
-> and I really didn't want to go mixing those.
-> 
-> If we get a nested NMI I don't think it'll behave well.
-
-Ah, because FRED hardwware doesn't have the crazy NMI unblocking behavior, and
-the FRED NMI entry code relies on that.
-
-But I don't see why we need to care about NMIs from KVM, while they do bounce
-through assembly to create a stack frame, the actual CALL is direct to
-asm_exc_nmi_kvm_vmx().  If it's just the unwind hint that's needed, that
-
-The attached patches handle the IRQ case and are passing my testing.
-
---lefFiOsVgwoJmfzZ
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-x86-fred-Install-system-vector-handlers-even-if-FRED.patch"
-
-From e605366a5ff6dfcfb45084828585e5fcfc5d3bcc Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Fri, 2 May 2025 07:24:01 -0700
-Subject: [PATCH 1/3] x86/fred: Install system vector handlers even if FRED
- isn't fully enabled
-
-Install the system vector IRQ handlers for FRED even if FRED isn't fully
-enabled in hardware.  This will allow KVM to use the FRED IRQ path even
-on non-FRED hardware, which in turn will eliminate a non-CFI indirect CALL
-(KVM currently invokes the IRQ handler via an IDT lookup on the vector).
-
-Not-yet-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-[sean: extract from diff, drop stub, write changelog]
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/idtentry.h | 9 ++-------
- arch/x86/kernel/irqinit.c       | 6 ++++--
- 2 files changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index a4ec27c67988..abd637e54e94 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -460,17 +460,12 @@ __visible noinstr void func(struct pt_regs *regs,			\
- #endif
- 
- void idt_install_sysvec(unsigned int n, const void *function);
--
--#ifdef CONFIG_X86_FRED
- void fred_install_sysvec(unsigned int vector, const idtentry_t function);
--#else
--static inline void fred_install_sysvec(unsigned int vector, const idtentry_t function) { }
--#endif
- 
- #define sysvec_install(vector, function) {				\
--	if (cpu_feature_enabled(X86_FEATURE_FRED))			\
-+	if (IS_ENABLED(CONFIG_X86_FRED))				\
- 		fred_install_sysvec(vector, function);			\
--	else								\
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))			\
- 		idt_install_sysvec(vector, asm_##function);		\
- }
- 
-diff --git a/arch/x86/kernel/irqinit.c b/arch/x86/kernel/irqinit.c
-index f79c5edc0b89..6ab9eac64670 100644
---- a/arch/x86/kernel/irqinit.c
-+++ b/arch/x86/kernel/irqinit.c
-@@ -97,9 +97,11 @@ void __init native_init_IRQ(void)
- 	/* Execute any quirks before the call gates are initialised: */
- 	x86_init.irqs.pre_vector_init();
- 
--	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+	/* FRED's IRQ path may be used even if FRED isn't fully enabled. */
-+	if (IS_ENABLED(CONFIG_X86_FRED))
- 		fred_complete_exception_setup();
--	else
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_FRED))
- 		idt_setup_apic_and_irq_gates();
- 
- 	lapic_assign_system_vectors();
-
-base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
--- 
-2.49.0.906.g1f30a19c02-goog
-
-
---lefFiOsVgwoJmfzZ
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0002-x86-fred-Play-nice-with-invoking-asm_fred_entry_from.patch"
-
-From 12dc39eeb3d5ed1950a9bbaf4ac68c46943d0e9d Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Thu, 1 May 2025 11:20:29 -0700
-Subject: [PATCH 2/3] x86/fred: Play nice with invoking
- asm_fred_entry_from_kvm() on non-FRED hardware
-
-Modify asm_fred_entry_from_kvm() to allow it to be invoked by KVM even
-when FRED isn't fully enabled, e.g. when running with CONFIG_X86_FRED=y
-on non-FRED hardware.  This will allow forcing KVM to always use the FRED
-entry points for 64-bit kernels, which in turn will eliminate a rather
-gross non-CFI indirect call that KVM uses to trampoline IRQs by doing IDT
-lookups.
-
-When FRED isn't enabled, simply skip ERETS and restore RBP and RSP from
-the stack frame prior to doing a "regular" RET back to KVM (in quotes
-because of all the RET mitigation horrors).
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/entry/entry_64_fred.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index 29c5c32c16c3..7aff2f0a285f 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	movq %rsp, %rdi				/* %rdi -> pt_regs */
- 	call __fred_entry_from_kvm		/* Call the C entry point */
- 	POP_REGS
--	ERETS
-+
-+	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
- 1:
- 	/*
- 	 * Objtool doesn't understand what ERETS does, this hint tells it that
-@@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	 * isn't strictly needed, but it's the simplest form.
- 	 */
- 	UNWIND_HINT_RESTORE
--	pop %rbp
-+	leave
- 	RET
- 
- SYM_FUNC_END(asm_fred_entry_from_kvm)
--- 
-2.49.0.906.g1f30a19c02-goog
-
-
---lefFiOsVgwoJmfzZ
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0003-x86-fred-KVM-VMX-Always-use-FRED-for-IRQs-when-CONFI.patch"
-
-From 047137843838e48af8ec9cfd36e62e605b43cacd Mon Sep 17 00:00:00 2001
-From: Sean Christopherson <seanjc@google.com>
-Date: Thu, 1 May 2025 11:10:39 -0700
-Subject: [PATCH 3/3] x86/fred: KVM: VMX: Always use FRED for IRQs when
- CONFIG_X86_FRED=y
-
-Now that FRED provides C-code entry points for handling IRQs, use the FRED
-infrastructure for forwarding IRQs even if FRED fully enabled, e.g. isn't
-supported in hardware.  Avoiding the non-FRED assembly trampolines into
-the IDT handlers for IRQs eliminates the associated non-CFI indirect call
-(KVM performs a CALL by doing a lookup on the IDT using the IRQ vector).
-
-Keep NMIs on the legacy IDT path, as the FRED NMI entry code relies on
-FRED's architectural behavior with respect to NMI blocking, i.e. doesn't
-jump through the myriad hoops needed to deal with IRET "unexpectedly"
-unmasking NMIs.  KVM's NMI path already makes a direct CALL to C-code,
-i.e. isn't problematic for CFI.  KVM does make a short detour through
-assembly code to build the stack frame, but the "FRED entry from KVM"
-path does the same.
-
-Force FRED for 64-bit kernels if KVM_INTEL is enabled, as the benefits of
-eliminating the IRQ trampoline usage far outwieghts the code overhead for
-FRED.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/Kconfig   | 1 +
- arch/x86/kvm/vmx/vmx.c | 8 +++++++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 2eeffcec5382..712a2ff28ce4 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -95,6 +95,7 @@ config KVM_SW_PROTECTED_VM
- config KVM_INTEL
- 	tristate "KVM for Intel (and compatible) processors support"
- 	depends on KVM && IA32_FEAT_CTL
-+	select X86_FRED if X86_64
- 	select KVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
- 	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
- 	help
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ef2d7208dd20..3139658de9ed 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6994,8 +6994,14 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
- 	    "unexpected VM-Exit interrupt info: 0x%x", intr_info))
- 		return;
- 
-+	/*
-+	 * Invoke the kernel's IRQ handler for the vector.  Use the FRED path
-+	 * when it's available even if FRED isn't fully enabled, e.g. even if
-+	 * FRED isn't supported in hardware, in order to avoid the indirect
-+	 * CALL in the non-FRED path.
-+	 */
- 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
--	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+	if (IS_ENABLED(CONFIG_X86_FRED))
- 		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
- 	else
- 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
--- 
-2.49.0.906.g1f30a19c02-goog
-
-
---lefFiOsVgwoJmfzZ--
+thanks,
+-- Shuah
