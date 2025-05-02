@@ -1,364 +1,230 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF902F2F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746165360; cv=none; b=H6yk7QWHfA1+7VZcRW5nXZjS+kR8AdQITOv+omgwaePcl3HyNgZZ9anMFTw7EPl9dhmQ3+cdwr0PdYKTAsRNrMmNx1uhBvkn+EzzFh7N1OF9BjN7OdpXi50SYqJPfViaXSZtDwM/p3WebM8ArelsQziiGYIrGd9Zs6tI282CI0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746165360; c=relaxed/simple;
-	bh=TtQAyY7k8o+pYqZfIFtejAoxTkozvAbrQ4tWdE3Gdh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Fo7elg7gbhJqndq48b4AejYWJCDxJzjBs1XUohxQbBE0reXj1IoCB7TnkcxOdckUQB/ZgAGecnHqCL5qotcXVgH5Y+1qvNDtDDnEoVBB/0An/E6feSvFML2qHAZ6n7ojGkhX2oMhxlaDrgI7A4qOiBwMliNKm8pubmQ2H4x7+V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B7VT+MZT; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D2D1DE4E3;
+	Fri,  2 May 2025 05:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746165375; cv=fail; b=HfI13KgHuFuMGJWKOgJ5aVoEeCeDe3CWhb4nUGY/IifCnu0Dy0qfNj3kfev7zGbbnw4LSZAmYgqVvjIs4FuKRWq8P8LMvyhGRT2a7cf/O2hdA4yYUcmBZcCHIkBwqe4JQe141QGVi4ekOF+C2+SRIu6FKXlfptOiaQqwLRgy4JU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746165375; c=relaxed/simple;
+	bh=0qfUT07JGACtx2qjITDIWhdE0q6KQHHE4nRylbuE7NQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=loWoSn7cLQge/K9FYTakyKl8+1CxWMgaXN1wFspHhUEnhY5GVBTVzX6LVWdXuDx2txX/ijujgKwKAhucNetyz9nz0am+NIBBdmuaPYaI3nE3SXJI0cBKCeKAJZMHsf5VxR2n3cv24FPUMxxgS4cjX4lq7NloloHQgm5Bj6/NAz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=POSQA3WS; arc=fail smtp.client-ip=40.107.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B7VT+MZT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746165356; x=1777701356;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=TtQAyY7k8o+pYqZfIFtejAoxTkozvAbrQ4tWdE3Gdh8=;
-  b=B7VT+MZToh7qwcFHHVxc2UuS/39QEjbqhekPlYwOdvcK3zl4J7JwjnBU
-   q7Q1gi5zQ4PF6K0PtNKDeMJYPQ0RIIQaEW4+lw5B0wjQWWeyPL/oV48uP
-   ffeIq/e3vOEld1LdFqE28IIGvnR5GGxNhT2HmWueZxRZuhTozS8Oxn/7y
-   YzcE5j9p004btaccccPP2er5zZ96m8jk/+9GUia0205tbS1EvoGLvTrAv
-   n7qnI0Nks4zCrifA1+wEYL5TTHkLutHgtWsdkrFV7ztHo4U6XHs1uI40s
-   5sJgq61vyHTkN7a9hMr8u2hfm7sw1coEoAq00YvorKlN5WLdhD18vdpXj
-   g==;
-X-CSE-ConnectionGUID: itxBpgfKR5Sbw5wuF21idA==
-X-CSE-MsgGUID: 96DqoZSmR/WCSDbNNY4XlA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47729228"
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="47729228"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 22:55:55 -0700
-X-CSE-ConnectionGUID: 5BiortiJSNOnK2GgSQKhUw==
-X-CSE-MsgGUID: SmMef99xSCmHuxOzXv5tyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="135087122"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 01 May 2025 22:55:53 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAjNH-0004Z7-1o;
-	Fri, 02 May 2025 05:55:51 +0000
-Date: Fri, 2 May 2025 13:54:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: fpga_flash@38000000
- (arm,versatile-flash): Unevaluated properties are not allowed ('partitions'
- was unexpected)
-Message-ID: <202505021312.5IxUl2WK-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="POSQA3WS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l3yw8smeYHNzrzK0DrlvEumXNEwZVSXq/P2p4CoK+piOFPjV0mb0qINM23k1U7Xv2k9NLd21e9QcSpjwO+HFmoZXf68LM5M8chY6qUGhEZUo9kFvfx+hyTELK/0frsL2A9zlN+q0QCINJMttx9eQ6v9lY3ib8wa3Lih/41vB7SwQXDf3AoaNftlqa9rLwAXs5qWMU95uJRVS5cdvEFSKH5AAw1a90yCKEdM272xCAYonXw8rmjln8TklhX9cYz9EzXgbqz1E9FfbbXUp1JP8opUWJ2iQw+1q0wOawX1O9VYoucbkogbE2c7cwW1YU5CWFICjB0DideKuDPLIFF+SyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dxp5zslcUx3RlD3wbVstEOpKB5q0wCUu4ctzFwAvPiw=;
+ b=Hh7fAIH5gJZvPJTqJk4fm+Ed+nnojkcyZasdThn2SD7c80pI++buHE1o5LbuoGN+WtS6TFiIxtB7OlDCpjY2Mw8tjSpducCPTWMur9zpbDy0Fw1jYbaBBUPuC9TM++GBev4ewXSYM4Ls/9EYEkLYArRft/PvMahECpfJiIjCBnKezHwb/W8+SAoKBwlUTEI5y4ZVlfeVJPQ4cwZYZh6A4Kfn6RcVA9EFlw/YcxtJ55eF771yUj1b+aWotzTVqCARnEcptzpUfHbC7PygcaeMu2b4AG+h35u+yWfBjUSJpIomB7NVA39JQuzbdglh9WVPxmUEHXb8YK6Oc5I2W11iDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=amazon.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dxp5zslcUx3RlD3wbVstEOpKB5q0wCUu4ctzFwAvPiw=;
+ b=POSQA3WS3dZLf14F0fNeDojEsgxmYPo76Rhu5ff0GlKCsN3Qv2vfrTwIyHoFcg7syALQcLDylI8POrv8qH+SiIWLIyb+1HNFdYi8MhbvDTCdDNcVAYjK6qT8wyJoSevd9NxbOElZZjeIaXTOm3oQv2Ea3rpTEn2Eas2TEQIlT8Q=
+Received: from BN0PR07CA0002.namprd07.prod.outlook.com (2603:10b6:408:141::17)
+ by MW6PR12MB7088.namprd12.prod.outlook.com (2603:10b6:303:238::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
+ 2025 05:56:08 +0000
+Received: from MN1PEPF0000ECDA.namprd02.prod.outlook.com
+ (2603:10b6:408:141:cafe::f5) by BN0PR07CA0002.outlook.office365.com
+ (2603:10b6:408:141::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Fri,
+ 2 May 2025 05:56:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000ECDA.mail.protection.outlook.com (10.167.242.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 05:56:07 +0000
+Received: from [10.85.37.104] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
+ 2025 00:56:02 -0500
+Message-ID: <d875adc0-744e-4b1f-a1bf-7e051298a0ae@amd.com>
+Date: Fri, 2 May 2025 11:26:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: EEVDF regression still exists
+To: "Prundeanu, Cristian" <cpru@amazon.com>, Peter Zijlstra
+	<peterz@infradead.org>
+CC: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>, "Saidi, Ali"
+	<alisaidi@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	"Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
+	"Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, Joseph Salisbury
+	<joseph.salisbury@oracle.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
+	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+References: <20250429213817.65651-1-cpru@amazon.com>
+ <20250429215604.GE4439@noisy.programming.kicks-ass.net>
+ <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
+ <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
+ <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDA:EE_|MW6PR12MB7088:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18b46818-ca06-46c8-74a2-08dd893e084f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OCtmUnZKYmE1dSszTUxJcnVJZGJicDNGeTVuUGI4OHd0NXBUVVRiRnlkbVlx?=
+ =?utf-8?B?Q0cxeXdXdHNaMlBVTWlzRVRDSHhVWUNpZ3NRNE42alFvY3FzL2Mya1ZrY2xi?=
+ =?utf-8?B?NXcvbW56ZW4zOGZFT0c2RFJ2bUhkZ1lGRGw4K1RjTk9UWjhVSjd6ZW5qWXRr?=
+ =?utf-8?B?a0lBUGlGa2NvcWFjV2ZYNFdFOWUrY2tyV2NlM1RMUE95dm1ob014QTl1eW1U?=
+ =?utf-8?B?T3IyclJZVUIwSXNFbU10a0ZMVExZREtYcFJWRU5Qd2NDbGtBTFJJZDNZbFgr?=
+ =?utf-8?B?aTQxY09jVWdXZWhTVnpLVFN5ZWxvRG9oT2VtSlJ2YmdvRDhoN1c3MmhYZDBx?=
+ =?utf-8?B?N0t1dTgrR0Q5ZHRPclBPbXRMbHFIV2Zzbkg0bGZBbW45aGFRQTNiQWkzaFNn?=
+ =?utf-8?B?dGtnbmpNV3UzRjAraTVQc1BkOWRFOWlDajJRRmg0VS9qblpBL25NQ0JNNVly?=
+ =?utf-8?B?NlAxNGFDUmhqN2tWMXBSZ0cwRkVTVERGMjhwQi9ObWloVnhtM1RFeGhxN3Jx?=
+ =?utf-8?B?M29SMzkrVFVGOS9LQ2hGTzB6RS80aERHb2tRMG42ZDB1L1NrSFpTYVp4TXFi?=
+ =?utf-8?B?dElZODZVSlBhQUFWR3FTNmdKNVh2UXlJTDBnZ0Z5V3AzUHUzZTQ1c3BCanV3?=
+ =?utf-8?B?TzJJZTNzTjQvRkZnWjZNR0RYMEZXbHJ1WUgyMkRqZW5LRlcrUjEvWkhHR1pI?=
+ =?utf-8?B?aGZ6SGhjWmtiakNGeFBSUVcrUWxVTVFtQVEwMGVDMDNFY0YvV3ViQnhncmQ1?=
+ =?utf-8?B?SHNNWUZBQjlFc2JQclRYbTdod3NCRHdsUzQrZFFmMTFSelRiNnV6Sm1JTlp2?=
+ =?utf-8?B?QmZiTEsrb2JmeGYvZDVmajRtMzRZK09CZzBIR2pLcGxpaUxhd2xQbzlVcEJY?=
+ =?utf-8?B?b1VRSTFOR044SThsWDFjSVZIZkU1akk1Q0lZS1c2Yk9ua2dZeEtaUzQzYXp6?=
+ =?utf-8?B?SEROeWpVTExRd3BNMFNIb0sycFg0dkdqM0c1dHRvSkRiUmJNcjdDU2ZSSXlG?=
+ =?utf-8?B?UTJ4MDhPYXkvemFkWisvRE9SVmZEcENOWUR1TUpWaXBvS24yYWN5UzIwRVU1?=
+ =?utf-8?B?ZHk2ZjRwSFJFNWhTc0ptU1Y2cm9aMllvNjM1NEdMbzdURFBKUDhsOUhrdGtL?=
+ =?utf-8?B?SWd4Qm52S1p0UG9Ea1dlUXFjU1NUNnlYcE5lL3FPRWZxZkhCQUpZQkdVbldy?=
+ =?utf-8?B?LzlwZ1ZJSU91OFAvdEJMMHBHOU9DZ1lpckpERDg5clF6STBPRFk2WXY3MVNp?=
+ =?utf-8?B?Y2FLMkJkM2dBS2RJbklCRjhDbW50K0djSkJEbnpRdWZvNDlCQ3JvTlhRN25X?=
+ =?utf-8?B?WFVNWGlpQ1pLdWVIOFlXNDlSdzFMZ0NTVjc4ZytsVHp0aDJDSUtpN2pEcmoz?=
+ =?utf-8?B?MHVkLzRRZVArcy8weWhSRFJOeGR6K05VeE9SYzZtZDVDV2QyYXFDOE4rK2Fl?=
+ =?utf-8?B?anN3Q0FVcUZxL2ZmT3pMRGlNcUhFME1JVEV3eVgrSThRSUM1UkJmUkxwUURv?=
+ =?utf-8?B?VTJnYVBIaXhmV2dBUUhXQTBQakV5eFp0UWVaVXd1YVpoZTJ5Y3F2QlZtc3BO?=
+ =?utf-8?B?Nk1aTmdrR214NkJvenVPT0hDRkdhZVdSOVVnZm9IMi93T29PY1dYMjJlYWZU?=
+ =?utf-8?B?VnhLR0ltZVJDbTNYZU9qeGwxb3dZb0VXenhLSlV0VzhheWQ2NSt5RVBjOFNp?=
+ =?utf-8?B?ZFpRbC9TaW8xVkRqVzRsMXhyNmJIZFI5YUZZVnVGemVMQVA3R2x0RVJ0T0M5?=
+ =?utf-8?B?Z21aUkJudFB4bi92T0E2UUNaL1h2QWZUZjRia21ScnFpcmQwdkh2MGpUaXZH?=
+ =?utf-8?B?V2sxZ2Z5L3UrMm9wYko0VXZIWUI1VHVUWmIvSjNRNDJHelNjMkNTVlE5SzAz?=
+ =?utf-8?B?b0l3MWdqOVE5VWRXdDh0QUtHaldwdzZ6b2FoWDc1ajUrL096RURsUFVnQ2V3?=
+ =?utf-8?B?NHBpMzhkdFVGc1lTZ0ZVRnFhZ0hXMU92L0doSTUwbTczcHdmNUplSUVhZ0pW?=
+ =?utf-8?B?QThCQ3Z2RjJWOFVMNEhrTEVJRTMxM2FNaGxxbm56TG8vdXBtLzFpMndXT2RD?=
+ =?utf-8?B?Z2tsUGp5VVBwMDZkamZXTTl3ekZ1L091UWY3Zz09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 05:56:07.6434
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18b46818-ca06-46c8-74a2-08dd893e084f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECDA.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7088
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b6ea1680d0ac0e45157a819c41b46565f4616186
-commit: 9ea13d9e40cfb6675a299147bb89d6ca9e7aad9a dt-bindings: mtd: physmap: Ensure all properties are defined
-date:   8 weeks ago
-config: arm-randconfig-051-20250428 (https://download.01.org/0day-ci/archive/20250502/202505021312.5IxUl2WK-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505021312.5IxUl2WK-lkp@intel.com/reproduce)
+Hello Cristian,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505021312.5IxUl2WK-lkp@intel.com/
+On 5/1/2025 9:46 PM, Prundeanu, Cristian wrote:
+> Hi Prateek,
+> 
+> ﻿On 2025-04-29, 22:33, "K Prateek Nayak" <kprateek.nayak@amd.com <mailto:kprateek.nayak@amd.com>> wrote:
+> 
+>>>>> Here are the latest results for the EEVDF impact on database workloads.
+>>>>> The regression introduced in kernel 6.6 still persists and doesn't look
+>>>>> like it is improving.
+>>>>
+>>>> Well, I was under the impression it had actually been solved :-(
+>>>>
+>>>> My understanding from the last round was that Prateek and co had it
+>>>> sorted -- with the caveat being that you had to stick SCHED_BATCH in at
+>>>> the right place in MySQL start scripts or somesuch.
+>>>
+>>> The statement in the previous thread [1] was that using SCHED_BATCH improves
+>>> performance over default. While that still holds true, it is also equally true
+>>> about using SCHED_BATCH on kernel 6.5.
+>>>
+>>> So, when we compare 6.5 with recent kernels, both using SCHED_BATCH, the
+>>> regression is still visible. (Previously, we only compared SCHED_BATCH with
+>>> 6.5 default, leading to the wrong conclusion that it's a fix).
+>>
+>> P.S. Are the numbers for v6.15-rc4 + SCHED_BATCH comparable to v6.5
+>> default?
+> 
+> SCHED_BATCH does improve the performance both on 6.5 and on 6.12+; in my
+> testing, 6.12-SCHED_BATCH does not quite reach the 6.5-default (without
+> SCHED_BATCH) performance. Best case (6.15-rc3-SCHED_BATCH) is -3.6%, and
+> worst case (6.15-rc4-SCHED_BATCH) is -7.0% when compared to 6.5.13-default.
+> 
+> (Please keep in mind that the target isn't to get SCHED_BATCH to the same
+> level as 6.5-default; it's to resolve the regression from 6.5-default to
+> 6.6+ default, and from 6.5-SCHED_BATCH to 6.6+ SCHED_BATCH).
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:310.24-326.5: Warning (unit_address_vs_reg): /soc/cache-controller: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:301.46-308.5: Warning (simple_bus_reg): /soc/interrupt-controller@10120000: simple-bus unit address format error, expected "10121000"
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:310.24-326.5: Warning (simple_bus_reg): /soc/cache-controller: simple-bus unit address format error, expected "10110000"
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:328.7-332.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:530.48-539.5: Warning (simple_bus_reg): /fpga/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dts:140.9-165.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: / (arm,realview-pb1176): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: fpga_flash@38000000 (arm,versatile-flash): $nodename:0: 'fpga_flash@38000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: fpga_flash@38000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: secflash@3c000000 (arm,versatile-flash): $nodename:0: 'secflash@3c000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: soc (arm,realview-pb1176-soc): cache-controller: 'ranges' is a required property
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: soc (arm,realview-pb1176-soc): pmu: 'ranges' is a required property
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb1176.dtb: cache-controller (arm,l220-cache): 'arm,override-auxreg' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dts:42.9-49.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dts:663.46-672.5: Warning (simple_bus_reg): /soc/interrupt-controller@1e000000: simple-bus unit address format error, expected "1e001000"
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dts:213.9-238.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: / (arm,realview-pb11mp): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[1879048192, 536870912]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pb11mp.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
---
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:41.9-45.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-eb.dts:51.39-58.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: ethernet@4e000000 (smsc,lan91c111): reg-io-width: 7 is not one of [1, 2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: ethernet@4e000000 (smsc,lan91c111): Unevaluated properties are not allowed ('reg-io-width' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
---
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:41.9-45.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-eb.dts:51.39-58.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: ethernet@4e000000 (smsc,lan9118): reg-io-width: 7 is not one of [2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan9115.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:41.39-48.5: Warning (simple_bus_reg): /soc/interrupt-controller@1f000100: simple-bus unit address format error, expected "1f001000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:51.46-60.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:62.24-84.5: Warning (simple_bus_reg): /soc/cache-controller: simple-bus unit address format error, expected "1f002000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: ethernet@4e000000 (smsc,lan91c111): reg-io-width: 7 is not one of [1, 2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: ethernet@4e000000 (smsc,lan91c111): Unevaluated properties are not allowed ('reg-io-width' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:41.39-48.5: Warning (simple_bus_reg): /soc/interrupt-controller@1f000100: simple-bus unit address format error, expected "1f001000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:51.46-60.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:62.24-84.5: Warning (simple_bus_reg): /soc/cache-controller: simple-bus unit address format error, expected "1f002000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: ethernet@4e000000 (smsc,lan9118): reg-io-width: 7 is not one of [2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan9115.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:98.31-103.5: Warning (simple_bus_reg): /soc/watchdog@1f000620: simple-bus unit address format error, expected "10100620"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: ethernet@4e000000 (smsc,lan91c111): reg-io-width: 7 is not one of [1, 2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: ethernet@4e000000 (smsc,lan91c111): Unevaluated properties are not allowed ('reg-io-width' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-ctrevb.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:98.31-103.5: Warning (simple_bus_reg): /soc/watchdog@1f000620: simple-bus unit address format error, expected "10100620"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: ethernet@4e000000 (smsc,lan9118): reg-io-width: 7 is not one of [2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan9115.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:41.39-48.5: Warning (simple_bus_reg): /soc/interrupt-controller@1f000100: simple-bus unit address format error, expected "1f001000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:51.46-60.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:62.24-84.5: Warning (simple_bus_reg): /soc/cache-controller: simple-bus unit address format error, expected "1f002000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: ethernet@4e000000 (smsc,lan91c111): reg-io-width: 7 is not one of [1, 2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: ethernet@4e000000 (smsc,lan91c111): Unevaluated properties are not allowed ('reg-io-width' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan91c111.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
---
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:41.39-48.5: Warning (simple_bus_reg): /soc/interrupt-controller@1f000100: simple-bus unit address format error, expected "1f001000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:51.46-60.5: Warning (simple_bus_reg): /soc/interrupt-controller@10040000: simple-bus unit address format error, expected "10041000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:62.24-84.5: Warning (simple_bus_reg): /soc/cache-controller: simple-bus unit address format error, expected "1f002000"
-   arch/arm/boot/dts/arm/arm-realview-eb-mp.dtsi:106.12-113.5: Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
-   arch/arm/boot/dts/arm/arm-realview-eb.dtsi:114.9-139.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: / (arm,realview-eb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: ethernet@4e000000 (smsc,lan9118): reg-io-width: 7 is not one of [2, 4]
-   	from schema $id: http://devicetree.org/schemas/net/smsc,lan9115.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-eb-a9mp-bbrevd.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
---
-   arch/arm/boot/dts/arm/arm-realview-pbx.dtsi:42.9-46.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-pbx.dtsi:130.9-155.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: / (arm,realview-pba8): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pba8.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pba8.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pba8.dtb: issp (simple-bus): $nodename:0: 'issp' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
---
-   arch/arm/boot/dts/arm/arm-realview-pbx.dtsi:42.9-46.4: Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dts:63.23-79.4: Warning (unit_address_vs_reg): /cache-controller: node has a reg or ranges property, but no unit name
-   arch/arm/boot/dts/arm/arm-realview-pbx.dtsi:130.9-155.4: Warning (avoid_unnecessary_addr_size): /bridge: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dts:81.20-84.4: Warning (unique_unit_address_if_enabled): /scu@1f000000: duplicate unit-address (also used in node /interrupt-controller@1f000000)
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: / (arm,realview-pbx): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 134217728]]}
-   	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: flash0@40000000 (arm,versatile-flash): $nodename:0: 'flash0@40000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: flash0@40000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: flash1@44000000 (arm,versatile-flash): $nodename:0: 'flash1@44000000' does not match '^(flash|.*sram|nand)(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
->> arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: flash1@44000000 (arm,versatile-flash): Unevaluated properties are not allowed ('partitions' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/mtd/mtd-physmap.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: bridge (ti,ths8134a): '#address-cells', '#size-cells' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/display/bridge/simple-bridge.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: fpga (simple-bus): $nodename:0: 'fpga' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: mmcsd@10005000 (arm,pl18x): $nodename:0: 'mmcsd@10005000' does not match '^mmc(@.*)?$'
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: mmcsd@10005000 (arm,pl18x): Unevaluated properties are not allowed ('bus-width', 'cap-mmc-highspeed', 'cap-sd-highspeed', 'cd-gpios', 'max-frequency', 'vmmc-supply', 'wp-gpios' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/mmc/arm,pl18x.yaml#
-   arch/arm/boot/dts/arm/arm-realview-pbx-a9.dtb: issp (simple-bus): $nodename:0: 'issp' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
+Ack! I was just curious if all of the performance drop can be
+attributed to aggressive wakeup preemption or not.
+
+> 
+>> One more curious question: Does changing the base slice to a larger
+>> value (say 6ms) in conjunction with setting SCHED_BATCH on v6.15-rc4
+>> affect the benchmark result in any way?
+> 
+> I reran 6.15-rc4, with both 3ms (default) and 6ms. The larger base slice
+> slightly improves performance, more for SCHED_BATCH than for default.
+> 
+> 6ms compared to 3ms same kernel (not compared to 6.5):
+> 
+> Kernel               | Throughput | Latency
+> ---------------------+------------+---------
+> 6.15-rc4 default     |  +1.1%     |  -1.3%
+> 6.15-rc4 SCHED_BATCH |  +2.9%     |  -2.7%
+> 
+> Full details, reports and data:
+> https://github.com/aws/repro-collection/blob/main/repros/repro-mysql-EEVDF-regression/results/20250430/README.md
+> (These perf files all have the same schedstat version, hopefully "perf
+> sched stats diff" worked better this time).
+
+Thank you for the information. Ravi and Swapnil are working to
+get perf sched stats diff to behave well when comparing different
+versions. It should be fixed in subsequent versions.
+
+P.S. I'm still setting up the system and have got my SUT pretty
+close to what you have described. I couldn't quite reproduce the
+regression on baremetal with my previous configuration on v6.15-rc4.
+
+Could you also provide some information on your LDG machine - its
+configuration and he kernel it is running (although this shouldn't
+really matter as long as it is same across runs)
+
+> 
+> -Cristian
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks and Regards,
+Prateek
+
