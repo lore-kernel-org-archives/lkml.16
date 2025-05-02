@@ -1,225 +1,204 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2A01DE4E6;
-	Fri,  2 May 2025 07:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746172187; cv=none; b=Xgo0PfHPtrMgk5vBm35GPZnweRCV16btCfZXu1AnmvZc5urwii1f99+n4SIuWWBdwIBCCQmTz64TOmszjIY5WAcTEUPsqoGEkuaSXDxOnXvfsGsK4c5ESWo44X42ZV8gx4Q27yDbdpq9AfvOoSx8b7c+DiwYdQBQRl0MpvOywjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746172187; c=relaxed/simple;
-	bh=o5gSQje4Y+mu4L+6ke4nM/194PCfXVpCu14D4bT7yVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6imgSPCbmirUojLfnISKlbEf9bzRs+F6yS/Su3ib0tlC67Fk8FZtgyEZDIsUqhSFSJjeG9eAfPOHtScHYi+wS1BxxtBshTJTTe+6rn4qj/bfq9f2w/pv6UKR//VlfiZkALgvyZK+c/913QvXJR94C9ZDeofPMSvtPvk7NJwFXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fD9T6HDo; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F0120C02D;
+	Fri,  2 May 2025 07:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746172203; cv=fail; b=XY4gjIB8LPgoFwOnq63hFW/Zv8l/JYGoMQ6/4GicTd0Nil4W81jy0sZIT7sDdqDsYOmTmWN2pkbPPMi8H5Y2DXKDZ1ThK3iFMFi08Zg4Bn4dsTbpFqIZG1AEC/hgWFs7hk0Mzt2cLSa/2XGkhuux19ahBLyUtVpVzHo3k74f4/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746172203; c=relaxed/simple;
+	bh=GOyB4i9BLqrjMaHx8nxlFQqMVEvoI+0gIRprYeDOYds=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IZQ639LkCVm9zqCmQTUbMc1wu8rVI9172G00LzmLBs3lJYjzjULtCa5/A9vkfW0KcF2SsZVLstZxEFbIVBWc3nP6S/UWG07jFR30S+l3YrsoNJECyP20uKFo4usdz9SHtex1i1nhFa/blyYN5pXBK9BRYhqZiyiOmzoj5e5BBUI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zvBaGafd; arc=fail smtp.client-ip=40.107.92.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fD9T6HDo"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736e52948ebso2285702b3a.1;
-        Fri, 02 May 2025 00:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746172185; x=1746776985; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AzzJ2mwmeJGHY4ioykKRI/8ZtKwwBuIJTZhkzuibLaE=;
-        b=fD9T6HDoHuAUnU6lrlAMBTHSgrcID8+Rzd9fN1HGzi2HmWI0AU730TQ047AgTGs5h1
-         sTmufdYcXQ3WGEAcXjf8IpEJa+1VokzokueYbKekdCwDbE+dnzkuRu2L2aVqP7+81kbA
-         TXgV1Bf7c0lheGMiVzOyBm902h0bbr9OB/ZQTwkzwm2eSZZxAEmo7LuMAHdnR/D0EmTI
-         9ZM5pU0EVw2cFI+++bvFvv3S3IRAEr35D3dHawZ0gtSK1SwlSaqhnQmG55GpAKfouCRe
-         lOjwCvhmq2qnkgXu1Je0no1XsS8FvD4ONSP/N9v1sL/pgCa5yNlagGievu6nYymB3Erv
-         HV3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746172185; x=1746776985;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AzzJ2mwmeJGHY4ioykKRI/8ZtKwwBuIJTZhkzuibLaE=;
-        b=AaJtAmSOktiz0mpntR9Bag+6VO9AGUeBY3n1fKaBPAiLfmgSxR3HWXSI+TIly13vEx
-         srARBwEb9jbV/K1yWbrJFm81R8m9EELjdD00F2rNk+mr6zJRQWucRyIo9IhuRY6mg68l
-         NbXJKp2nkKjbve0gGJllIv0iNPeOgm19yuFmey94ogX1irkNB323wTYknc78uqeM+DFc
-         ioYmtbt15HyNlSCJM7vXVzsvdYX0VbDQgyMyFGiGGCZR6ycu3Hv9VVZkFa4E2EC82aq2
-         NUuCy9E8GHpHOpPfXob2tk0cYORth/97XethJxIDqnsvuGWjHreR66FK2cDq1380WpZI
-         KbSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRnDpxUHpFsdRNphYRJzbecLrly+gECKNLKlnUb9/v9x3r013YjlkGvuqMiSmqMtexCjuDcs9IfFE=@vger.kernel.org, AJvYcCX8XSkD4/sfdMQHs7lwn+VptgLxma6/OuisVSNjO/yPixSvvjBdo54BPG3YE36cuBgRYPE/wbTQtFkESxVz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0W5AfPuo3NPqU+sPsF18LPxmit1SxrPUhvqEabZIBkGi7mwl6
-	GvCAyFPu/sJda1E62+l2FDnID2azEtCzNnL0g+UgADMkmx8mBKrKaOy71w==
-X-Gm-Gg: ASbGnctqbzSETTUeVrAFHpQZmmlzeJFUJA6binhaiPKb1na5cSxKcxDbdi6izK+2xGT
-	BxXhIjI71csr3I4WxGbsZT8XT5g0cHtibtVAym2ZjtkI/VJnLBXqVuB/exTVpToI1VqYnt6gDd8
-	IjGKoyRA0ApFnXfANL7P5uofjgnIDmq5w7Fu5VWs/Cwcev4KJqZaF6Z7Jqhuawr5d5jOupaziwC
-	dsCpiojVaQ/2dSmipS2dUaO5c5KoKn1tZOq4mdmMqv9A72N1cpnOkZ35FtyeJm0gRh/2HFH8Ct2
-	P0TVSOZ/pxZanYhuyM3wI/7oPs1C2glM2pcuh+1c
-X-Google-Smtp-Source: AGHT+IHoafilKSMg6oQYkCchR2ZWjqE81/BpCUb5hHit37M11UCUEseXQA29GQdjLzaIhm3aGRLtuA==
-X-Received: by 2002:a05:6a00:340c:b0:736:a8db:93b4 with SMTP id d2e1a72fcca58-7405890a9f3mr2851356b3a.2.1746172184557;
-        Fri, 02 May 2025 00:49:44 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbb804sm940553b3a.52.2025.05.02.00.49.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:49:43 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id E238E420A6AB; Fri, 02 May 2025 14:49:40 +0700 (WIB)
-Date: Fri, 2 May 2025 14:49:40 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Swapnil Sapkal <swapnil.sapkal@amd.com>, peterz@infradead.org,
-	corbet@lwn.net
-Cc: kprateek.nayak@amd.com, gautham.shenoy@amd.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH] docs/sched: Make the sched-stats documentation consistent
-Message-ID: <aBR5FLEq66tuoEXm@archie.me>
-References: <20250430062559.1188661-1-swapnil.sapkal@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zvBaGafd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l/PpXkSAOhyrAHMkgMWZMnZo0gDuQ4RvSTJnX2XUrqCirSNOxmSstQynkwxBbSYgLQ6NKPdP9e3wmUEqc97KA6cjyA70++JiTsRZffpYh8IK2JTuk2Wa9o9mU2gdsqi75njiIOomITGJ0xzypEcenABvVlxkDROvGooAgZfvaZswy1yYm11BK/2wz6BmtwtRBwlix9VHANLtZor9YsRy5IUiuARgxGSezH3x8m80b5s078DjOF7/knh0KzqzkOwMvP56gwa5xntmW9ppUbAXLIWEgdUAU+ATio3WokMLoEgbmJyZJP2h0e3FXG+l52kXU9WAnQGSWscY0j1ApY9pvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3iKyMnR0ns1Sz1FtOgMHPfnf8jUJVUkXamPdg8NuT2w=;
+ b=AtGfuNqdTcLmcJabVtYaguqjLUX3A8sdcE2uioFGdJwV2lfYyLpauTGPPT8FFJwWT5qOqWGqVAkDdOU7KdiCNZY+5E0hB1HOtrvn0kpWVMqQp4b/kwUDD9ECRLKCan8gEGksDSAjYFBOB4QKitX1nT+3zTudyEjOiZdsrMKOIwSRZVeDYvov9twTGKkawE1SBMmmz4ve7xcJbak9yUfLug3ysR7AzrDMAzuRikHV98Ap1+hWsp2N7hSaEGiMymyO/l6FwXIkrAfGTaBaDDZhfrgQSInKtqZ3DkvNcfe++8EVrzOkmUqesuSzvw/wy4nlJF/2jG4HGxbMCG1w94XwIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3iKyMnR0ns1Sz1FtOgMHPfnf8jUJVUkXamPdg8NuT2w=;
+ b=zvBaGafdxgc0pou2qArovgeXdT2M73/sHEpYZe6eGWDF6FOEtxokQc22NpcfLtGwBWp57hRBxKZ7uehqJPM/LyCdhCL1+YmLZnn60m/lRHfmzmqQFicXuDqyJapmWnUQ29XML2Z3ICcy+T0b9N8AnooIptR6BjlQ7qB14kaHYUw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CY1PR12MB9674.namprd12.prod.outlook.com (2603:10b6:930:106::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
+ 2025 07:49:58 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.028; Fri, 2 May 2025
+ 07:49:58 +0000
+Message-ID: <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
+Date: Fri, 2 May 2025 09:49:52 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
+ struct file
+To: Al Viro <viro@zeniv.linux.org.uk>, Matthew Brost <matthew.brost@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+References: <20250502002437.it.851-kees@kernel.org>
+ <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com> <20250502023447.GV2023217@ZenIV>
+ <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com> <20250502043149.GW2023217@ZenIV>
+ <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com> <20250502053303.GX2023217@ZenIV>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250502053303.GX2023217@ZenIV>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0283.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:e6::12) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eU9GqSvzh0dpF/EK"
-Content-Disposition: inline
-In-Reply-To: <20250430062559.1188661-1-swapnil.sapkal@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY1PR12MB9674:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb6a652c-52a5-4fde-d1f3-08dd894def4d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aXoxNlNNU00zRVZMaFRRVlJyNWZENzFhWGdQa2FpZUlXY2l4dkxqZDdUaHdX?=
+ =?utf-8?B?eW5sZHRYVkM2bnV0OHhOQnlrTWFJMFpLQ0pEL0Rtc21qZ1k1dVRmUVp1Snk4?=
+ =?utf-8?B?N3krVy9tNnR4OVJSZm1nNDlxR1BmVmZlemFpbWNHMlBlSnNQWnJueTZYMFBX?=
+ =?utf-8?B?eldLUHdmcTUrbXdCaTBXOVVhMVNSenE3QjhpNDAydXNwTEkzakNscmp6TGtZ?=
+ =?utf-8?B?b3FTVUIzTmlSbEErbGVWMHU5dUxadUxxZ2loSDhJdDVtZWdJc1RMZmlQTi8r?=
+ =?utf-8?B?SzJrcStFU0FvbzNvWGxIUk4ydHYyUDlMeElCTHYvdklwTFl5TVRRZUw4OWZR?=
+ =?utf-8?B?ZFZHcTdHZUZQbEE5b0QyTWJRalQrYXJMNFh5RG1YVnZuVVBLSHNRT1RnZGk3?=
+ =?utf-8?B?eE96YytJeWdBcFZMMDNwb0ZONXc0SXZNNFUwMWpkYjdEajFlM1dlSFpuOHZX?=
+ =?utf-8?B?TFdWQi82SjJrRk5jdjhQbEExemZLK01zbm1sb0tFYm1wZVhpTmFqN1ZhSFVP?=
+ =?utf-8?B?WlV1cVVjTm12dUlEK2VleXZ3MVZ6em9tR2FxdE11ODRvcGpLT1J2eWc4QVdV?=
+ =?utf-8?B?QUhUUks1UkhGeVQrQ0ZENHJMWmhJd0ZIS0w4Nm9ZY09FZ0NMTGxOUGNVTkcx?=
+ =?utf-8?B?eHdyZkhyL2dnK2pIeUxzcnpWc28wZWtLZ1FEVWVMVXVpNVh4MjhKOHpIdXV4?=
+ =?utf-8?B?aEpiUk1ZT05ETG5Scy9obDhleVE4RDByN3oyUWVqemFpTzlFbU5BUmloT3dI?=
+ =?utf-8?B?VnVhbVJ0ejIzVWtMbUdSVUl6S1NhQW1od01pY25ndVVnL2NtVXZwMTBnTVh4?=
+ =?utf-8?B?WFg0VUIvYk1uY2JRUytBSy90R1ZIKy8zdGZQYmIrT1R1aHpsVEpVd1c0Y25G?=
+ =?utf-8?B?Q1g4MVVIVXVlb1AzUkJHTFNJWlVXVkRIZTlXSmpFWUlkZmwwYU9qUndkTlpr?=
+ =?utf-8?B?YzF2NUFyWnRHbkpaU0VaY1VBTmhUdDc4M1BNay92TjNOU3g5eDV2ZmlDVmtS?=
+ =?utf-8?B?b1BTZXVOREpRNWxYODhiWjBVT0t1emR4STBPLzhZUmV2bGNGVkNtM2E0WVBW?=
+ =?utf-8?B?MDRycGFTT2NpelVyK0kxRXJiWHJQVG1xSDZDb20vT1g3RjQ3VXoydzlCaVhp?=
+ =?utf-8?B?MWxSbWR1VkdMUW1GUFZXVkJCaXQ5NFRxV0h4Ujh5OTZESlFuYlRQOS96Wmo0?=
+ =?utf-8?B?cGpNUEhnTXJxcnROdGxnZWxNSWZNNHpRYUFEMU1VcEZNRlo2Uy9NMVBFZTRh?=
+ =?utf-8?B?RE5sRGkzNVM2dGMzZFlXa3BIeXVpUUlwajRQOVRlNDdOZHVqd3VicUpMVGp5?=
+ =?utf-8?B?SzFxVE9jYWZ6RjRaYU1LSzZlSWtQVkRuWlpBY2NLemRJcTdaWkNobTRhdFpO?=
+ =?utf-8?B?Z2VaK3piVDRSVTVIcDkraXQydGwweWVmc29WbkNsdnhIc1YreTN1VmdWeUF5?=
+ =?utf-8?B?d1JBRFpDMGt3LzVYTzZlMHYxRXdYd1h4cEpSZ3ZiamRvZHcrUm9vZ1Nma1JY?=
+ =?utf-8?B?Unh2cFRubDlYbjRMWGFramhBb2o1N1JzUGIrcTBUWVBjTnVMZ3NZMUx5MTJW?=
+ =?utf-8?B?U3ZSOHMzUWJKR1dpRzcxRWhRQmxOTG1JNFdXMjNmbnlCUmFVQjVnVDMvVHF1?=
+ =?utf-8?B?QVlqQ1dPSjFwUDJFQTdkNW9TV2xxSy96anNzb3NQWDc0V05DL3g4WW1QczdN?=
+ =?utf-8?B?RE9JUzYvTzJBR3BlZkY5TXdwYzN2T0lPMHROb1RHNmhwcDNMWTN1N2VoLzJk?=
+ =?utf-8?B?cGRFTm1oTHBjcG11SWpNTUczS0JjU2dRa0RRTUNLNjJYckdEWEUyZXBwTHh5?=
+ =?utf-8?B?YjM5bXJLNzZSYkJUYXd4ZlFQVUJXdVg0Q3FTSktJUlJjcEtQK0tNRVFrc044?=
+ =?utf-8?B?bW9vVjU3TXZoNkNPUDZPeXEvaTZlVHNtWWpCVHZCVHJwdlcxVlFIZzE5UXF1?=
+ =?utf-8?Q?vYU4/y6MVAg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cnlIK1NzalhsbFJFSEluS0RHeHhodzhmTU95R0lhQWNPdmRRckNyT1dlcERG?=
+ =?utf-8?B?V3lkSWZGZVBjU0ZaUTh6VmdwMjA5c1JlRFZmeHQ4OElDOVN2b2YvekNxd1Iv?=
+ =?utf-8?B?UFZXN0NmYzNVOVpoclJqM091aUp0akUzUUhoczhCMnRBM0FrdUJjdVh5NVlk?=
+ =?utf-8?B?NUtxZDBBclVOcUlJUG9TYXM2dVZLVlViNUQ4MXhId3hEWCtnUlh2b0MzN0Yv?=
+ =?utf-8?B?djJoL2ZmOGRqVE5SQ0Z3b1JxdkJaaktBUVFJT3hWSi9Td2RTSDZ6dkROdmlE?=
+ =?utf-8?B?VzFMSytwREN3RWhML1NINnNsdlNKbFVZcForWkRjQUZUeTdVeGV1QVVpbnB4?=
+ =?utf-8?B?Zlk4RC9YZThjaVUxb0NzTWN2TUJYNTJDTFhTYjBON3lBd0laL1pmRC8vaXRW?=
+ =?utf-8?B?eUo0UVBxYWRKd0dFVjBvU1Rkc3VnTzduQitUNDF1Q2JQeUhqa213WGhTWGhD?=
+ =?utf-8?B?b1JTZitDWUVIdU8reHIrSzlDS01HMWsrNlF5ZmJ1RldJL29zQWUwY2hEU1dN?=
+ =?utf-8?B?Y2NNbVJGSVpnR1pxS1JSeVdVcmZ6cTBjSGZ1aDJINm85VHJ6Q0dqOW14MGNY?=
+ =?utf-8?B?Z3o0WWNCVkRoVDY2S3FhaThzUjZQSXRiNnRyQ1U5d0RDTTByWGozRDN5WmNR?=
+ =?utf-8?B?MUtVczZTSHN2R3lpNElFRXJjTk1vaFg5SWxIY0ZjWERmaWkxVFpMUmpwMEV5?=
+ =?utf-8?B?cllzQldSRVhYbXo3WTMraWpiQWRLRlNhUUpmSitDaVNuelNVSVViR2lXWXRs?=
+ =?utf-8?B?ZTNJSHNOaEpRcS9PclRIcTUrQmtEUjZzL3VGNmVJNWVWMEhmSEt2VnNPZ09J?=
+ =?utf-8?B?L0hram5XSEI5SVpyaDRhcGwvaUV4eGNNNm1QZEZvbnlQT1l0akVKOGNxM0RR?=
+ =?utf-8?B?YVdXeVpKVm9qWStxdXhNWXVDc1ltTkFIQVBHbDFYck9XWUJNQURDeFk3QTVk?=
+ =?utf-8?B?WWlZdEwwYkxGMnJCT0dpUFowMEZCQTZIRkU1VE5Sd3JPWmppQkY1OFlHQmQ5?=
+ =?utf-8?B?bDJCTmJxdlgvT2ErMzBBeXlQaFJsb1hnWVdkSnhsajZGWDhDa3JldEtNRmov?=
+ =?utf-8?B?ZVRMQlNWMDlBM3BkRUJLRVdHNnBrNEx5RTBSbExROEZpdk02SE5BL3RRWnNU?=
+ =?utf-8?B?RlNoMGRXM3gzamRCK0cwdTl6bWtTU1liQXVWQWRXd0lJZCs3M0hhUDdqWUxJ?=
+ =?utf-8?B?UHNZU1p1U08rZXBvL1pkTmFjOFBlLy9wY0xxUHFzb1d4amlRZHUrQUxTYXRz?=
+ =?utf-8?B?b3dOSTVIQmRRdWdHNFpkbTlveHMrSXhDYm1iTUN4cXR2UnVTV1dZK09WRktK?=
+ =?utf-8?B?cGQzSUhRTE9SYjNMN1NGOStITmd1ODNWd2lSMEdnelord0hLWW0zTjFWNFJP?=
+ =?utf-8?B?akJLTXBua0FTcjBqUjdlbDlRZG1PTjFROVhpRzF1OTJ6Z0VxNTRka3pzaUl1?=
+ =?utf-8?B?ZlErdGlmdjZBZm8zaDVpWS9mcHZBajBHMy95MHdFVm0vZHgzeEFmdHNDcmIx?=
+ =?utf-8?B?aVRzRDhXQno4WW1HSmg2MnFwbGJ5QUo1MnEzcWVYeUJIc1VUUlcwMVVRNG5u?=
+ =?utf-8?B?KzlINHU5Vmc3YVR5SzkxRFJGMEpYdDl3dHhZZTUySXJDR2hKbzV3dXhoR0F1?=
+ =?utf-8?B?b2h6dzJ3MHhZd2dFL3VGWjlSdGpJZk9DbmdkdmRnY3hXamtrcDU4UHFzQm43?=
+ =?utf-8?B?N0E4eWpHMTFjL3U1SG11V0ZIdnFqSW41d2cxRWhMUjJBdzViaUhtdUowSUVz?=
+ =?utf-8?B?anNLU3pyb21qTk1zUmdQMEg4clQxR1pBUjU1UjU4VWEvcmYzTU5SZ2M1UDRK?=
+ =?utf-8?B?YVRBV0xaMFFYRUs5ZlUrNGUvYXJGR1A0cGl2M01sdTRDYXBiUEtBekdYbjlC?=
+ =?utf-8?B?VXNMdlhEenJyTFVqenJpN2d5bWY2ak9PNGxSejR4U0hmVldINmEzSUQvNlgz?=
+ =?utf-8?B?aEhNS3VnaHZGMzgwdXNBekNLM2VVYnpEOXVSNkFvYU1nMnVDaW9xVEFRbndo?=
+ =?utf-8?B?eDNnZkxGb2ViTXh1a0JhUXpNY2hJNmMrcTFUYmVJckpIUHRlZWdGTkVEV1lo?=
+ =?utf-8?B?WU4rQlovMXp4czZHcEJjTHZKaU1CcUtlVkxidXE4cGpPRWs0cVBqa2lXZTZO?=
+ =?utf-8?Q?lpJU=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb6a652c-52a5-4fde-d1f3-08dd894def4d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 07:49:58.0245
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7+9tVKNwq4qZgDDCTFqGAmaZ9vvTc5uKceRRZQ3nG2PpUWkrfwh9B1fatkW/pcAO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9674
 
+On 5/2/25 07:33, Al Viro wrote:
+> On Thu, May 01, 2025 at 09:52:08PM -0700, Matthew Brost wrote:
+>> On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
+>>> On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
+> 
+>>> And what is the lifecycle of that thing?  E.g. what is guaranteed about
+>>> ttm_backup_fini() vs. functions accessing the damn thing?  Are they
+>>> serialized on something/tied to lifecycle stages of struct ttm_tt?
+>>
+>> I believe the life cycle is when ttm_tt is destroyed or api allows
+>> overriding the old backup with a new one (currently unused).
+> 
+> Umm...  So can ttm_tt_setup_backup() be called in the middle of
+> e.g. ttm_backup_drop() or ttm_backup_{copy,backup}_page(), etc.?
+> 
+> I mean, if they had been called by ttm_backup.c internals, it would
+> be an internal business of specific implementation, with all
+> serialization, etc. warranties being its responsibility;
+> but if it's called by other code that is supposed to be isolated
+> from details of what ->backup is pointing to...
+> 
+> Sorry for asking dumb questions, but I hadn't seen the original
+> threads.  Basically, what prevents the underlying shmem file getting
+> torn apart while another operation is using it?  It might very well
+> be simple, but I had enough "it's because of... oh, bugger" moments
+> on the receiving end of such questions...
 
---eU9GqSvzh0dpF/EK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's the outside logic which makes sure that the backup structure stays around as long as the BO or the device which needs it is around.
 
-On Wed, Apr 30, 2025 at 06:25:59AM +0000, Swapnil Sapkal wrote:
-> diff --git a/Documentation/scheduler/sched-stats.rst b/Documentation/sche=
-duler/sched-stats.rst
-> index 08b6bc9a315c..ad68cf1c99e1 100644
-> --- a/Documentation/scheduler/sched-stats.rst
-> +++ b/Documentation/scheduler/sched-stats.rst
-> @@ -86,13 +86,16 @@ Domain statistics
->  -----------------
->  One of these is produced per domain for each cpu described. (Note that if
->  CONFIG_SMP is not defined, *no* domains are utilized and these lines
-> -will not appear in the output. <name> is an extension to the domain field
-> -that prints the name of the corresponding sched domain. It can appear in
-> -schedstat version 17 and above.
-> +will not appear in the output.)
-> =20
->  domain<N> <name> <cpumask> 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 =
-19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 =
-44 45
-> =20
-> -The first field is a bit mask indicating what cpus this domain operates =
-over.
-> +The <name> field prints the name of the sched domain and is only support=
-ed
-> +with schedstat version >=3D 17. On previous versions, <cpumask> is the f=
-irst
-> +field.
-> +
-> +The <cpumask> field is a bit mask indicating what cpus this domain opera=
-tes
-> +over.
-> =20
->  The next 33 are a variety of sched_balance_rq() statistics in grouped in=
-to types
->  of idleness (busy, idle and newly idle):
-> @@ -103,12 +106,13 @@ of idleness (busy, idle and newly idle):
->          load did not require balancing when busy
->      3)  # of times in this domain sched_balance_rq() tried to move one or
->          more tasks and failed, when the cpu was busy
-> -    4)  Total imbalance in load when the cpu was busy
-> -    5)  Total imbalance in utilization when the cpu was busy
-> -    6)  Total imbalance in number of tasks when the cpu was busy
-> -    7)  Total imbalance due to misfit tasks when the cpu was busy
-> -    8)  # of times in this domain pull_task() was called when busy
-> -    9)  # of times in this domain pull_task() was called even though the
-> +    4)  Total imbalance in load in this domain when the cpu was busy
-> +    5)  Total imbalance in utilization in this domain when the cpu was b=
-usy
-> +    6)  Total imbalance in number of tasks in this domain when the cpu w=
-as busy
-> +    7)  Total imbalance due to misfit tasks in this domain when the cpu =
-was
-> +        busy
-> +    8)  # of times in this domain detach_task() was called when busy
-> +    9)  # of times in this domain detach_task() was called even though t=
-he
->          target task was cache-hot when busy
->      10) # of times in this domain sched_balance_rq() was called but did =
-not
->          find a busier queue while the cpu was busy
-> @@ -121,13 +125,14 @@ of idleness (busy, idle and newly idle):
->          the load did not require balancing when the cpu was idle
->      14) # of times in this domain sched_balance_rq() tried to move one or
->          more tasks and failed, when the cpu was idle
-> -    15) Total imbalance in load when the cpu was idle
-> -    16) Total imbalance in utilization when the cpu was idle
-> -    17) Total imbalance in number of tasks when the cpu was idle
-> -    18) Total imbalance due to misfit tasks when the cpu was idle
-> -    19) # of times in this domain pull_task() was called when the cpu
-> +    15) Total imbalance in load in this domain when the cpu was idle
-> +    16) Total imbalance in utilization in this domain when the cpu was i=
-dle
-> +    17) Total imbalance in number of tasks in this domain when the cpu w=
-as idle
-> +    18) Total imbalance due to misfit tasks in this domain when the cpu =
-was
-> +        idle
-> +    19) # of times in this domain detach_task() was called when the cpu
->          was idle
-> -    20) # of times in this domain pull_task() was called even though
-> +    20) # of times in this domain detach_task() was called even though
->          the target task was cache-hot when idle
->      21) # of times in this domain sched_balance_rq() was called but did
->          not find a busier queue while the cpu was idle
-> @@ -140,12 +145,16 @@ of idleness (busy, idle and newly idle):
->          load did not require balancing when the cpu was just becoming id=
-le
->      25) # of times in this domain sched_balance_rq() tried to move one o=
-r more
->          tasks and failed, when the cpu was just becoming idle
-> -    26) Total imbalance in load when the cpu was just becoming idle
-> -    27) Total imbalance in utilization when the cpu was just becoming id=
-le
-> -    28) Total imbalance in number of tasks when the cpu was just becomin=
-g idle
-> -    29) Total imbalance due to misfit tasks when the cpu was just becomi=
-ng idle
-> -    30) # of times in this domain pull_task() was called when newly idle
-> -    31) # of times in this domain pull_task() was called even though the
-> +    26) Total imbalance in load in this domain when the cpu was just bec=
-oming
-> +        idle
-> +    27) Total imbalance in utilization in this domain when the cpu was j=
-ust
-> +        becoming idle
-> +    28) Total imbalance in number of tasks in this domain when the cpu w=
-as just
-> +        becoming idle
-> +    29) Total imbalance due to misfit tasks in this domain when the cpu =
-was
-> +        just becoming idle
-> +    30) # of times in this domain detach_task() was called when newly id=
-le
-> +    31) # of times in this domain detach_task() was called even though t=
-he
->          target task was cache-hot when just becoming idle
->      32) # of times in this domain sched_balance_rq() was called but did =
-not
->          find a busier queue while the cpu was just becoming idle
+But putting that aside I was not very keen about the whole idea of never defining the ttm_backup structure and just casting it to a file in the backend either.
 
-LGTM, thanks!
+So I would just completely nuke that unnecessary abstraction and just use a pointer to a file all around.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---eU9GqSvzh0dpF/EK
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBR5FAAKCRD2uYlJVVFO
-o3QKAP9Ge618P+KuauhJsx9azoMfO8C5B5lg83PuMsjz8bf2MwEA/zQ4GFbbCd+S
-ET6fGkbkSSOLFEmm5ZFvbAFPfaaCgQw=
-=TxDO
------END PGP SIGNATURE-----
-
---eU9GqSvzh0dpF/EK--
+Regards,
+Christian.
