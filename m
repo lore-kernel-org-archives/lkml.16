@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FF325DD07;
-	Fri,  2 May 2025 16:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9497125FA2B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204037; cv=none; b=V1JCrnp7gTjXpkIAvqZYHd5jI19GuRqMgrF15Ygm9jg9eUEBKywang+jUimijiTbbAL6jtCjUAxbrtpJdokoXjEbVcl94aK0+tIzYfX2OPmN9xdYhVCU/434ywYDyT4fiRj1Uoj4Oobu0N2xCoJi87AFdSeUJgfdOwxAtu/uabA=
+	t=1746204038; cv=none; b=W4j9X028VOksqFX8RNBv1IMyN4Fiv/2750VaMNgCOMsI4jrv9jwJGYorVOCk6qQ/bDVk3L6ztgR8svVBlM/JGudRHtXzrqwr7omshchLraFfd0ZrHB56uNeasK4bUgwvcMdxp77+iWLLw7ggl80Enl6J/uVG0HvHyzc/1tM6UnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204037; c=relaxed/simple;
-	bh=N//XVIvaq6/HMpjgHBQHsHL01hohbuVsulJUvG3Tr4Q=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MWkDH2xXf0OgGcuQFArQN+BRmfuGnxYJPCTHugoOlm3Asn1ptIu5g9OCWLuKP3iN9Zi50t+1+kDXDmba0kx+X3sqObh4TfmRILiD6iqnRNShlpx9ZUfRwrGGcsieUox1QrMj+yfKR6IYbW44BHnPbXaC/OnaEbICGWK4AlF78Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoC2S4JB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746204038; c=relaxed/simple;
+	bh=E9VSpFVYuF64GBmBG6WKfjAwa3KFWb4ra0Z8fGUkrbE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Qz+60YNGy5U25IFcmbvwqqHANJHzL5wUMihQiuV9nJB4vVbfHLJAY+NLwhcOpVAjC/LZ7zTa+2FrXo3L5YJbtXMP4cglB8W3jHsiq1zKm1ZvJCPFt0pT/xPWZt5Zt+oS0g+uiEBk774rorSH3il8UQ72NKJnlYRmaZCiO0Xbalc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFIjDyQ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoC2S4JB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58203C4CEE4;
-	Fri,  2 May 2025 16:40:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFIjDyQ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F100C4CEE4;
+	Fri,  2 May 2025 16:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746204036;
-	bh=N//XVIvaq6/HMpjgHBQHsHL01hohbuVsulJUvG3Tr4Q=;
+	s=k20201202; t=1746204038;
+	bh=E9VSpFVYuF64GBmBG6WKfjAwa3KFWb4ra0Z8fGUkrbE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MoC2S4JBAy97StK3A2x7990ekm350aOLkXiY1KoIlMJXTaP4qwlNaOU09ALLpQgns
-	 p9EsL+7isnT1Xxt5nurmK++OoeueT9QX/y/zs+1xRKfn0C3NxUO+/oLBdlPcTPdIcu
-	 zjXMREGEe3caQYVmj9/stmuo1bIW+up5WhwskQHmY046vcUMcsvpjd3aTkpalsFKGr
-	 tibLOTH7w0QUDSyCBcLuRldMrFFisqHBoVE8lufuXg3YPNZ/np93BmghfIuGHkBV2y
-	 UAW2yamBUlEDm92S2kPj38KYTMHNqmhH84abGYQVMGu42htlHm6qiva8O5Ve1E8m8v
-	 f8jRff8/j0hFw==
+	b=BFIjDyQ966uKE6sgy+xZGcu95cafVRWFjV3fM7uyMQXfGJABDpz+Op+OKowHnkcVi
+	 9DyHx8OkIE9viI7n1cb3Lpt7AXfLiKT1Kzn+zRoFckiJKYTdopIw78+NhbAOxpPlXm
+	 wwWeoV4zHc8qCUBeCFeoNLSTmNkxQHY7BvaQ9uzkemSrm9cgJY/E1z8kMdhez3zsR0
+	 btCwve1BNt1szdJtbcZb1Zx2jlIb5EKoI3y7r9cIMPridGHxOtWTvy/oVSqyyN8nHb
+	 sE44X7V6oxsQOXyeEmqRTWfuq8UUSrdVNL9XXuBjv0fH3Lsmw1Dn/zGz4Y9pGWN4MN
+	 6Q3tknr24Rk0g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDD3380DBE9;
-	Fri,  2 May 2025 16:41:16 +0000 (UTC)
-Subject: Re: [GIT PULL] bcachefs fixes for rc5
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C96380DBE9;
+	Fri,  2 May 2025 16:41:18 +0000 (UTC)
+Subject: Re: [GIT PULL] slab fix for 6.15-rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <avyfprbtjpphuhxjqekretgco6xs5r23efrlpkqx6uc5lhec7v@igrgjqacgb7i>
-References: <avyfprbtjpphuhxjqekretgco6xs5r23efrlpkqx6uc5lhec7v@igrgjqacgb7i>
+In-Reply-To: <7201bb21-3eba-40ba-b71b-6cd89ed0d76c@suse.cz>
+References: <7201bb21-3eba-40ba-b71b-6cd89ed0d76c@suse.cz>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <avyfprbtjpphuhxjqekretgco6xs5r23efrlpkqx6uc5lhec7v@igrgjqacgb7i>
-X-PR-Tracked-Remote: git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-01
-X-PR-Tracked-Commit-Id: 6846100b00d97d3d6f05766ae86a0d821d849e78
+X-PR-Tracked-Message-Id: <7201bb21-3eba-40ba-b71b-6cd89ed0d76c@suse.cz>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git tags/slab-for-6.15-rc5
+X-PR-Tracked-Commit-Id: be8250786ca94952a19ce87f98ad9906448bc9ef
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2bfcee565c3a36f2781152a767d34c9dc5432f95
-Message-Id: <174620407520.3671706.6155186342341608891.pr-tracker-bot@kernel.org>
-Date: Fri, 02 May 2025 16:41:15 +0000
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 9910affec3337668f354c5513462b6c356414681
+Message-Id: <174620407704.3671706.17277511047720647451.pr-tracker-bot@kernel.org>
+Date: Fri, 02 May 2025 16:41:17 +0000
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 1 May 2025 21:33:43 -0400:
+The pull request you sent on Fri, 2 May 2025 09:05:50 +0200:
 
-> git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-01
+> git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git tags/slab-for-6.15-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2bfcee565c3a36f2781152a767d34c9dc5432f95
+https://git.kernel.org/torvalds/c/9910affec3337668f354c5513462b6c356414681
 
 Thank you!
 
