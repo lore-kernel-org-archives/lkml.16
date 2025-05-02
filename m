@@ -1,120 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149BC82D98;
-	Fri,  2 May 2025 14:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E94782D98
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194528; cv=none; b=HqqGTv+C8Mgo6QnXdRKYTLtDIDClz5ufQZWdOpuiQkih+yh6Q1qzJpxEkpzOcou2IdhPeID362WLWPuNNIXHBkIE/5Fy3TWkON8xiemQeb4xCxOB5dx/LImPwOefT1ruQPjd/gfY+msVyBC3ixY7TwXpE8HyUOGh7pBkiHYp9do=
+	t=1746194580; cv=none; b=mrMV8KSdCdsISoJ+NTXSftFSUEmzEJXfLPzywkezzpDwMaBa7ReiLBG1PwtZDhIR+7kWQih8tpWKZx9AWinciq0/JVkeJl/86wQgTBLL5nYQ21v231yU3wJBrHoQwlZjWZqGynWBJv1t8FgJ0KxA97K/lWx5lBauALchAwX26y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194528; c=relaxed/simple;
-	bh=grOM45npovMq4poufilpVNpeYgGq5makAUaqB0FVEkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EEKysUdphL0OjGy7PetT3J+nyDeHMw89Gkhw1tgilwNs8NtrXU1mo+avGTVpyyWflAOd7g3D+0UoLLJeLgYYNeLloz/gmmqabMJkDGlKzQDkmln7TAWut1qaUvNGAGcRApXOgtgNOKk8UzvD5e3CyzISz9A5WoCz2L9t0NpZbXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fj4Cqql7; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746194580; c=relaxed/simple;
+	bh=F2zdVFItAdmP9ucapL/4OsjVj1IjfBsSOTDIvAGScgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JSNNhF5p4znRIoxsCAVDvDzpD2aTtG2PLoFyZ+jsVIQ2EtXojuYgxmdqvDLBX20yToFkz6u7CyO2q2wh18ayfmilBOpw6ruCuZHqft9ORWDK5WlMghdJvQlfqgH4KXfLG7uWi4IOm29UjC5iEKut9qwUV9fJfTKB5m2xLXJZuGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b7QhHo8A; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fj4Cqql7"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542DkCkK009017;
-	Fri, 2 May 2025 14:02:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	cpSw/BCKKfUOiK0e2lEfi+/V9bSozootwS0N2z7tERM=; b=Fj4Cqql7W0/Ut78o
-	mUks0Q+mC4iU/7GsvI2xSp2Zm0jcYuAWUCqBi9Pz9IlM84o7oFNW+s2YI+WdeBJC
-	n7mUtSZLWsRIKeUMk61tlZqGBvsKYJNz/lrs5br1EdTEZnWSItF7g/cBY/wOJIPy
-	196KfB5Z6qUjiRL7i/1Gr2/liMSNtywkCT4btTZm4c7T0k8oEghdlzo3huR6FAwW
-	mrA1RZcHy6J3jf5v/6LTIhJ2u347GZTjhP8240L6H/tc90YIQ5RD+oEkHcDuS9fU
-	f3auQIZUS86oKJENftqaANi1HzIc4qS2CQS7EhJDrLBJhYxPTB8ULpng84AozIiG
-	9YlUog==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubrj4f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 14:02:01 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 542E20UQ025639
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 14:02:00 GMT
-Received: from [10.216.18.87] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
- 07:01:53 -0700
-Message-ID: <e1b2029b-2461-4cfc-a6b3-acdf5e01c289@quicinc.com>
-Date: Fri, 2 May 2025 19:31:50 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b7QhHo8A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746194579; x=1777730579;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F2zdVFItAdmP9ucapL/4OsjVj1IjfBsSOTDIvAGScgM=;
+  b=b7QhHo8A71wOKJGCEFeWrQjJrlw6e2Pgsd9i+4NkwB8hWqraiZNbzDwt
+   Y/OMXnO5dQXExohlZRqSARier+8EXaM6Ahoz0gFlZxG+QY0MGAbxpgrQ1
+   owbsMtHYFt4gEZonFrC4DgCtILupr1y2TXNgZBNGb3VOmnWyp4S6G6hdr
+   q1k+eiwFLK/feApzftCH5KAP6W/V/G1SS9dDFZcV3lJdTcz5SZTzUAGTU
+   ICch5sCYgvTXAQW/LAIodIBNtY+fHFHCnu7eJrq7lJvQGTUhDZmBurqph
+   Yvxuqu/XNhphnKgyNH6Pgal2bX72fkW2cYtIQcUn2Ae3CAMu0mWwzTNxh
+   w==;
+X-CSE-ConnectionGUID: zWOxBcvORtSo6YGW3MGHxQ==
+X-CSE-MsgGUID: +L17VChUS8SuWKChMTKYNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47763365"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47763365"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:02:58 -0700
+X-CSE-ConnectionGUID: umyZV+QmTYuDpp7pnZnxEg==
+X-CSE-MsgGUID: /cgFCEp7Rue/ouOi24P9Jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134602630"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 02 May 2025 07:02:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 91AFF1A1; Fri, 02 May 2025 17:02:54 +0300 (EEST)
+Date: Fri, 2 May 2025 17:02:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>, Waiman Long <longman@redhat.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/10] [RESEND] lockdep: change 'static const' variables
+ to enum values
+Message-ID: <aBTQjnB8ej3z_van@black.fi.intel.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+ <20250409122314.2848028-6-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby
-	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Viresh Kumar
-	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <psodagud@quicinc.com>,
-        <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-2-quic_ptalari@quicinc.com>
- <20250502053758.utawzhq6famwenc2@vireshk-i7>
- <8ba02745-378b-4264-883a-b99764701d0b@quicinc.com>
- <20250502081402.yjagnnjrfva7u4cb@vireshk-i7>
-Content-Language: en-US
-From: Praveen Talari <quic_ptalari@quicinc.com>
-In-Reply-To: <20250502081402.yjagnnjrfva7u4cb@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ZB74ue-52bsz2Kh-vaA667cgtCjQSJlf
-X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=6814d059 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=6I9h5v2Uro45NzvC834A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDExMCBTYWx0ZWRfX3cCWW6G1+ejf /afaQX/UcoruQjgvPpgOQ0G+3kpBXqenHO2kf7MJXCRxDxswctJtUy/DVKwGgaTd7ZAtQQ7OARa wWi0JJCx0V8WzwYySN5L9jNIbRNwNxkLV0NuteVRCUCPhppjUfcADnpqnRiRNEu3hntVnQJ3XUQ
- Z7bTiYRn2Ql5WyCcFdy0GrI4am0Ls99iXAWz+sT8lkFZsObx1LSxCVq0il2Ihk06ADXK3uGSM+I gCtgbUAYAzJQ6aLdZ37E95uL+xZt3ym1lJUnHrgFEQOm6jk7PCRWKD0H2Ag7/WgVTqKM8v4wcZQ Q96thezQto/tbieNQZLiN8UqH9lfB7knUvxPRNCnAilvR8AuTRKj2s6zt8IigD9g7xRn8P6C5C7
- PwHTvzQ3O+7Nwr0RIUZFrUO60wz7oE95vVslQhQxG0jjs7RavQ2T2rxekhw9G0He3//MsUVi
-X-Proofpoint-ORIG-GUID: ZB74ue-52bsz2Kh-vaA667cgtCjQSJlf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_02,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409122314.2848028-6-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Viresh
+On Wed, Apr 09, 2025 at 02:22:58PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> gcc warns about 'static const' variables even in headers when building
+> with -Wunused-const-variables enabled:
+> 
+> In file included from kernel/locking/lockdep_proc.c:25:
+> kernel/locking/lockdep_internals.h:69:28: error: 'LOCKF_USED_IN_IRQ_READ' defined but not used [-Werror=unused-const-variable=]
+>    69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =
+>       |                            ^~~~~~~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:63:28: error: 'LOCKF_ENABLED_IRQ_READ' defined but not used [-Werror=unused-const-variable=]
+>    63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =
+>       |                            ^~~~~~~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:57:28: error: 'LOCKF_USED_IN_IRQ' defined but not used [-Werror=unused-const-variable=]
+>    57 | static const unsigned long LOCKF_USED_IN_IRQ =
+>       |                            ^~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:51:28: error: 'LOCKF_ENABLED_IRQ' defined but not used [-Werror=unused-const-variable=]
+>    51 | static const unsigned long LOCKF_ENABLED_IRQ =
+>       |                            ^~~~~~~~~~~~~~~~~
+> 
+> This one is easy to avoid by changing the generated constant definition
+> into an equivalent enum.
 
-On 5/2/2025 1:44 PM, Viresh Kumar wrote:
-> On 02-05-25, 13:31, Praveen Talari wrote:
->> Shall i keep commit as you suggested with your SIB.
-> I already applied it to my tree. You can drop it from your series now.
+Any news here, please? The problem still exists in v6.15-rc4.
 
-now i can push V4 right and will not face errors on my series w.r.t this 
-API.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Thanks,
-
-Praveen
-
->
