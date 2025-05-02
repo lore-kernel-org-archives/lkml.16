@@ -1,160 +1,95 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2057.outbound.protection.outlook.com [40.107.101.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4981025B1C2;
-	Fri,  2 May 2025 15:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200811; cv=fail; b=Q1GPT67W+awJxZaNBkR2znSvLIFPXOgRq3GyLntnOmTfygM/iG5V5TvSd68f+m7RwrezpvfpL77aFqc/3gx56Z2m+VW/7ftanx/7Y0qg/98QrDBN7paDan3KvUG5gmGgj0xd2fVeJlH+AO0K0t2U4rJg8fU4VJuhFZmNEZ1rYEk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200811; c=relaxed/simple;
-	bh=XM71ozjRm7ikfMPIl0UgjqqW+4PPHozEhcLcO5ImUHM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dbyWmqGGNbJNSt0WxW9uRtFKKPA4i5JOjVkSoxH4knVTjXYCzJWqqppI8jPTHNSkG427A5Mh5RLrgbmMTWtx5WZix0ti8BWbtcEqZqWup33wE2Cc3AesPXOYcNypsyvJENTnyVWjWHzAW7nzWZ3ZkHlyRljPRxBBJ1z5IDUUrMY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3f1xft2C; arc=fail smtp.client-ip=40.107.101.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3f1xft2C"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o3OFyJWYRFI+j3zsMWSFtnu7YKbggbqeDbKdz+DA+bhd8z7TlLJzQcla+h89R/I3b4bZLis0TiPqSQVmWdQUbhAO//G43RpETQ9sQrJGp8KOqnpEv7IZoKmxmsAsXtLIa9uXG+aHw/GcNu1iv2I2g84lug/MGmbnwxzNhMswb/zOm7RkEhQtaONSdBXslIaqfNpYSVOX+UeZaFZIM57yDDFE81p5TIS3QsK1wCMyV+7nbXdoEYz6HvEMn/1UxUvUNQsBRt1UkYZ9ES9KDlGiddIPBU8lCYslvId9Dapt7bceijgkx4ulPxhR9Qr1dFKdKTXoQpXtjqYE3uYcG+Uaig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9258H++4leLWMXII4GSKyMcW5SvSx6VEQ4DR4j+G5zA=;
- b=sD+DU5+E8vad7Jytk7iwKIiDMc682gE94DgFra3UiGBVwL7Ra+YIOggPjmvwoaTcOAg0TP6YA3KDeXuSsmcl4/VTThBPPZIi+66me2QLIiQStU/HuLxxlgTUsKsVgd3BWp9QmzsaEXwH4yQL44Q22SQbllnv8K50n4oLTRnnUuxE+w6jeR6DTrZrAFGW2xWed+m+SxhYNhI3+NP30k82ynq0jZLpAd51t5j740Kd8NyAgWOa1alFdPVQjGmlgLd9v1sKXkD69ar+mZ/Kg7zszRjUDDuE4MkQYqt/P0F5obh7i0QUt9SasiuT9mMs+/lEGFx9HSirC/O1v9sDlXtC5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9258H++4leLWMXII4GSKyMcW5SvSx6VEQ4DR4j+G5zA=;
- b=3f1xft2C0A+vWjncM5NtaUkiZ0gfBCbFnVeKSsBruryfPRm8n+q+pvJLp0XVoX9k1Nt5saTOFNgaUi1YkoQuaZffCH38CiHF7kVhW8jNybf7KRsXq7bAdG48LxuXXFIHAgDYdrry8I/x/ZgXnVo+IPu0bFBV21dw55uzIrSOA5o=
-Received: from MW4PR03CA0186.namprd03.prod.outlook.com (2603:10b6:303:b8::11)
- by PH7PR12MB5856.namprd12.prod.outlook.com (2603:10b6:510:1d7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Fri, 2 May
- 2025 15:46:48 +0000
-Received: from SJ1PEPF00001CE0.namprd05.prod.outlook.com
- (2603:10b6:303:b8:cafe::42) by MW4PR03CA0186.outlook.office365.com
- (2603:10b6:303:b8::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
- 2 May 2025 15:46:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE0.mail.protection.outlook.com (10.167.242.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 15:46:47 +0000
-Received: from vijendar-linux.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
- 2025 10:46:41 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>, <alsa-devel@alsa-project.org>
-CC: <Mario.Limonciello@amd.com>, <venkataprasad.potturu@amd.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
-	<linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-	<sound-open-firmware@alsa-project.org>, Vijendar Mukunda
-	<Vijendar.Mukunda@amd.com>, Ranjani Sridharan
-	<ranjani.sridharan@linux.intel.com>, Bard Liao
-	<yung-chuan.liao@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	"Peter Ujfalusi" <peter.ujfalusi@linux.intel.com>, Daniel Baluta
-	<daniel.baluta@nxp.com>, Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, Jaroslav Kysela
-	<perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mario Limonciello
-	<mario.limonciello@amd.com>
-Subject: [PATCH 9/9] ASoC: SOF: amd: add build support for soundwire
-Date: Fri, 2 May 2025 21:12:48 +0530
-Message-ID: <20250502154445.3008598-10-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
-References: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAE626AD9;
+	Fri,  2 May 2025 15:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746200905; cv=none; b=MiXAUuPpTr/ocGTe73MTtcrc1jWgWey5Bmg4ORzecnPuCIR8lXfBj6S8mzO9RDSgXv+NPNJWdgC8dXHYW2YB1lsMYHYcNhUnrio+Ax/oun2vWXn47hSP1uk30FspfxeaIyYJ8TUHuKHhQyLsE9zHBT81t/kY7nmDIf59A4X8/6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746200905; c=relaxed/simple;
+	bh=GHwfrJaQDWQTfpH0D69gfiO1j3Mm42uDgXjHCcdgIzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pzgb1d7OWOChcYiICbkwxDeDoLwSLfTuMZjIBgxvBzVlFc2nOByKzGhpBK+ZTiDrt90DAI3Xm4Ah1uykkqQMHFdsf63oF32C54O50JIo4/0O4TLr2ebc+5XgjJ5pEtkDO7uwv7meq9emQ0XDcI2XPxyhfJrkLiiikVM1NdpvZLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52934f4fb23so1628093e0c.1;
+        Fri, 02 May 2025 08:48:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746200901; x=1746805701;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x5cT6OocslYtTAyDezvSuTXCPS/khRuahF27WQth0fg=;
+        b=SGFgPLg3cdw3sthVQR21WWOpDXbm9j6bx4IOZQl1jTuS6MbM81ToOM+lF1fSq9xegQ
+         sxDR3woc9ttRMiXdJQbv9AFb99sb3UHI/brDOfGJush3tNPQl9lBiVTXk5reSEyo6qkT
+         Jos83FaV0ojDhf+0wB9tAyU2JdA1bFWsCI4BTIKiHJTMA+eg4rzkjxXS96bQWF5zZqmF
+         iTEH0G6wwVHJ91RPj7/qT2iAGo3mlDtvCb+Z9/dxnClAOy83b48AFpOK/HucE7kDnXLk
+         aFo4R6nvEOf8cFDVLldzfRuVnTxU6u/pDW2Rb/NrxGkmK/ZvAwYOucvUiRc6lwd4Axvu
+         7K5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUuUNQCHYB5pCxF/Rh7rMp6PP9avYDPleMYrAPJ2GtN5+wtRbRjLLQxaotE4te/Nsnpqe7dKeoxDlmQiExPTDYGcqQ=@vger.kernel.org, AJvYcCX1iHFIdgW2f8q1QY9Vap1FSSUQZXe8cat1LCD6J4SyBrLizivOurUhrx2Vc75I3zI78F0pG8SLHYXg@vger.kernel.org, AJvYcCXrX4Sih+5dD+vkpq6n4QmmWO4UAs6Bw9s+wcIyxm8jivdoHlKkha8xlXUsUlDG9k34qIFiNo9kJtevFH98@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpFuL8euWRdTGSfQ9qgijubp7Wm+vf5DNKBxhgAz6fsZQEsqbt
+	+Psd46RD9uFkwX5zbMujByYv770Qgau6Td25TgYok18dQvvJQRGZqvnEMGco
+X-Gm-Gg: ASbGncs81xx/HEI9KKNdp0YCa+/oQQtkuHuzUrO1jpsRML3qCAQpBwRmWWgK80zSnmW
+	vfBaoUT4JNb24oQwNzRmkeNP0WPwCmwMdD3vn7kIpk4fgnsyG3hALcHuCb7Z0dh4XtPy5tR7dPf
+	S3AiHN+d5EKB4LEmfNlh/LBq1jbW7IjuMacNaz28Sn9qjqXXbvyux0YQjTISs+K9UdJtfCiAIah
+	f07aJiYnwdbTF+XnbNJv8AYVof9SV8VB1eMuuaOPOaYHiPIOWD+SKYTwlmUHHYdYRiMhCL79J8s
+	vwW+f7SWQLG/F1LyBIgKa+WMH+KeHg7ACAm5EyIdYKz456JHFTlxZ5OVT61Ng8A52BYcxehHBhq
+	AsOY=
+X-Google-Smtp-Source: AGHT+IH5Pt9cge/DPNMv5KgRxvsp6RZtI0MGMHbls+9RD77UDJJJBhYaearodtLb0Z+phtB7mOgyHg==
+X-Received: by 2002:a05:6122:208c:b0:523:7c70:bc9c with SMTP id 71dfb90a1353d-52aed6d6fcfmr2416745e0c.5.1746200901443;
+        Fri, 02 May 2025 08:48:21 -0700 (PDT)
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae3ff5ca2sm592789e0c.9.2025.05.02.08.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 08:48:21 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4c2ffd5d9f5so1470822137.0;
+        Fri, 02 May 2025 08:48:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAIf4jf/1VD7P8l+o5v37SyuiwzW+/03vIuth9z/jqwHJaXAmLsI32na1oN2SQQipz2rXltcQzMoB0YALh@vger.kernel.org, AJvYcCVQ4zieicj9HjxF9qnhAzJS8GP9UREdOwEP/WwQ8ra8JoloHK60brW6koNcGtOemMCg2dO451vn5KSNLSw0e4TBgdc=@vger.kernel.org, AJvYcCXMr8ACZgnmEcwEsAQlpY1crJOLw73cGQL/k52iBqMLx7Z51pCgbcE4jYQnsKqyZzD6c9BvPgsOr/Xq@vger.kernel.org
+X-Received: by 2002:a05:6102:3310:b0:4bb:9b46:3f6f with SMTP id
+ ada2fe7eead31-4dafb4d1d12mr2476074137.1.1746200900926; Fri, 02 May 2025
+ 08:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE0:EE_|PH7PR12MB5856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29c79c06-c7bf-4b9a-f79b-08dd89908c21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VYmjbiIvT7lCs4vhLwSNHNlb+nZaiY0YPp9RRG/UhipcfbMhJomW8LTWVJaD?=
- =?us-ascii?Q?tgGrSyQynRQJ+kuqmJAnz0U43dJGab8S8CWoUuEv+F9Na1KPRnMh0PruRH6R?=
- =?us-ascii?Q?vGKjPFmdWD2UbRYX2VG32bZsyn49jV2MqreJabWygoxXsTWl9Hnh3866GbqD?=
- =?us-ascii?Q?wpAWVfpqCMlRGx/ISISgyRXKtrfMrZfVUOfspdeqJUTFjCrcAsdfT+DXU7kY?=
- =?us-ascii?Q?BbqMHtOhtwz44dS+tADIORMd7eUifFQ9OoiSakasjS7MgnPQqv0kwWXLBr9A?=
- =?us-ascii?Q?c5yx66wJKJTLYQeacUowbd6nn71M985UH9RhIfLfLZo03OZzWZVXr0YQhl69?=
- =?us-ascii?Q?Je40A8c3YjSXgpDBa2WCnzK1Ggfiu2PFUHXxbL3TyMrx92QU1mL6RYhhrRAT?=
- =?us-ascii?Q?9Ugng2zuKzoNy6BRP3XyNxY0m5+ctD/8grbsccL92xQI7OJIFtQRrwnw2IGZ?=
- =?us-ascii?Q?AZg7vax5e2oBT7BnU/dJXz/+73TFqUCgyfQtYcqwdcd5nlT1ozYkZQjpGgGA?=
- =?us-ascii?Q?Ce6AhVPIaTb31E6R4GRm7L9FvwXQ8d1O+8XiWmbN3GVJ5jCHpjf4IMVR/cJt?=
- =?us-ascii?Q?zrnlFDDyWvHeVAGlD+HJOlChZBGNbE1Z45KJLZfgik+IngymeCaiPdVO2fQi?=
- =?us-ascii?Q?TMKLfgwhDjjceqck/h99pc6TeUwc95XHA6437RSEtoKq6axAAeKggGyqAIme?=
- =?us-ascii?Q?OqANDH405wm1ZotWGn+eOrPbaPHQMizEV64B/UvccKAGqomFjd8ewBpETY1T?=
- =?us-ascii?Q?xtnsYRSdO+/63/LrMG9S7Mv7O+iVF8kCzaN7P7rAxAKYt535WScaBI7j6nJS?=
- =?us-ascii?Q?rrtq/HSeOuUCiXbSRMV5FNs59PJ4cbm6EwpWmxlYf1ZC9MCAhCEDN991UIOF?=
- =?us-ascii?Q?ztrTufhqqCWwEBgpRODzQZMBgsfXJX6BOLeB4FIXONdHI97kgPa44nJyQb+i?=
- =?us-ascii?Q?ptsp3S8q4dIDKpvr6FMaz6sqmgAuW/o1Z1P7gd3nE/Nrl6bfj9lWxOo572yN?=
- =?us-ascii?Q?C7+KZlZBwyg0Gy1v384KY/FCY19+4gk2vH5w7r5GMl/Nrhs84t0ib2B+Z++d?=
- =?us-ascii?Q?0l0mMestjn0ou8iqCWVAXHmUDhPwJKF2Rnz689MUg+dZntzmE8MtX57MeZiu?=
- =?us-ascii?Q?NedkGs1yTVNSCOD09EdCCj+nXuHY0z5XN+1N6ZE4CdpIlocyNhh36vQPmK8Z?=
- =?us-ascii?Q?gqsTDsRDVSLGhC6BIaG0NDJCNIiZRqs41GybHMWuuOQGxMga0BxJn8RPrg/a?=
- =?us-ascii?Q?caCBwGWazoKXc2/6J+INseSlKeUfxQDrGGr4tQRsNZ4c2G/TAUeOw9jK7nV5?=
- =?us-ascii?Q?xnSXRadDCSoFhBmtcPrt3XBRLUQxk4nj/tIUHIZcqWtkSxMKZ991F0pcrZVZ?=
- =?us-ascii?Q?Oa33SwoRB4GuBI9CyRSispAq2vKD2BQkA77CO+dsev3TrSxwIzbCnR5Dl8/W?=
- =?us-ascii?Q?CUFzzLufvTEmELGDpx5mIuBbLza9EYVAk0RiQ0foBvHyv3Ie+LeAYUwlIu8T?=
- =?us-ascii?Q?dJ95ee0m5KUosFTxceavbzyUQR2n41f1WBrY?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 15:46:47.4471
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29c79c06-c7bf-4b9a-f79b-08dd89908c21
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5856
+References: <20250424084748.105255-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250424084748.105255-1-krzysztof.kozlowski@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 17:48:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVi+kM+_ZHfPd+4Vc0bfvHiTLhGcJpgOa=OiPFnPFFQTQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEOXNNHtSsK7KqHFI4wUvI8RU1jS7OqWqzaK5JiF3ZWgcPwPzm8QxkxzB4
+Message-ID: <CAMuHMdVi+kM+_ZHfPd+4Vc0bfvHiTLhGcJpgOa=OiPFnPFFQTQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: Align wifi node name with bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add build support for SoundWire for ACP7.0/ACP7.1 platforms.
+On Thu, 24 Apr 2025 at 10:47, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
+> wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
+>
+>   r8a774a1-beacon-rzg2m-kit.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- sound/soc/sof/amd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.16.
 
-diff --git a/sound/soc/sof/amd/Kconfig b/sound/soc/sof/amd/Kconfig
-index 984132f32a21..05faf1c6d6fc 100644
---- a/sound/soc/sof/amd/Kconfig
-+++ b/sound/soc/sof/amd/Kconfig
-@@ -98,6 +98,7 @@ config SND_SOC_SOF_AMD_ACP70
- 	depends on SND_SOC_SOF_PCI
- 	depends on AMD_NODE
- 	select SND_SOC_SOF_AMD_COMMON
-+	select SND_SOC_SOF_AMD_SOUNDWIRE_LINK_BASELINE
- 	help
- 	  Select this option for SOF support on
- 	  AMD ACP7.0/ACP7.1 version based platforms.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.45.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
