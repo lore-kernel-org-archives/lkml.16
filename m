@@ -1,106 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B6219E97B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498E4254876
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194707; cv=none; b=acViGf/XkdNvlyczIDkExWsTvVZJL1btJWyKIe8f2vvFdq49WzFw7+3Vi5IBMibwfp7WBO34TWnFEjtBwdub0+uboD+6QZ3dyzlpCajcuSjieeV9fxQfYpCmc7hp3OvQJm+sgpbqlP+LMwUNmJwcgsaukh7OxIUN2+TRneLiU5M=
+	t=1746194708; cv=none; b=MjW5pWG6CZJlgCWU7Lp/xoRGJalcvAk4TzPIaoTp3mj6I5gcLyb79HTC8tyvC786DDglLFS0oqhjenmqgNhQsCjI4fIJs/lf8WVXAoJZkjBjEhlS91bHbxrS+Q1Af0Z1/oeEuGDlklkq+nvl+jh3ObHf7M63VseYORi3fVo8Kcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194707; c=relaxed/simple;
-	bh=2jBbUmVOB62hHyKFi47tXceA9+6d1vaBcgdLP5N/4fE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SoRmbCLYgpOiEDlUMC1WMW19VP1jo3ivRQlpZfnNTp7mPdrqFASQxJlntmE4irHqObmWQuF1ifv4jOK/d3VpwQgPPuHXEyrbnwC/wHhFWB5ytW9Rr6HtM2fMBgZWFqrnC6n3830oEdCRBQBROkNwglyH/p8j2wzInOnQF8BSBRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dm4pKEcx; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746194708; c=relaxed/simple;
+	bh=D9FrQH4n+PdihizMnAjXGJ0f+TPN3pD0AbB60hJwMCs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BrfvV+U7uQesDXtTmTKvlsht4QRrD/AmXGYKNnWDszPKJXCTm6swKq67zF+EOiafYdlNzUI8mlgdtxzhosLId/L9ouxuRbOd+YTNsA8Bt+rVxl9IykwaMWmWPSmk30y6uVCjonVdZ0ZSCD32HD/qlypQWhw/u10WH693/+K2460=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K40oS+KD; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dm4pKEcx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746194707; x=1777730707;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2jBbUmVOB62hHyKFi47tXceA9+6d1vaBcgdLP5N/4fE=;
-  b=dm4pKEcxYyyJps+w1nEOVC89iVNiLTaa/Dv9UvbmNnDKtnYOGYT3Uklt
-   zM5/1D9+RM+WnS4g7jXZIecKKVLuTovJlV/jmvaNmbbeMmhjpC3IA0UHK
-   uRWz6wpqDdAeVDd4iiSC4O8Sxfza8EhyHyV51VZLtaZ5sFOxjwwHzD1KT
-   CeG7E0J/y+fblOprKgmuYl49iQsjS2GAHT9lXSJcU5eY7XbNiL80FRfzW
-   7F7vC6Su+KlXvh3MBbyxuNDmsBNRc1CNHIx3fy/9OGYU2LXR6BUPJlcQO
-   YVgVqsdXkJvyio0K7+jHpQAFtL9v7Koe5kHharOBvzBr/G4H7ItIaY4Qk
-   A==;
-X-CSE-ConnectionGUID: lM+sRtVERbKIAO0tmTzpow==
-X-CSE-MsgGUID: 64gutoeYRGKN7r51AE2gxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="70377083"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="70377083"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:04:39 -0700
-X-CSE-ConnectionGUID: 4pNeTD7QQ82JG1z/2N940Q==
-X-CSE-MsgGUID: Gqq/pudgSIiV3jOC/4Kytg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139826385"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:04:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uAr0B-00000002Dab-3W5P;
-	Fri, 02 May 2025 17:04:31 +0300
-Date: Fri, 2 May 2025 17:04:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v2 1/1] x86/reboot: KVM: Guard
- nmi_shootdown_cpus_on_restart() with ifdeffery
-Message-ID: <aBTQ7-L-bUwzYbKM@smile.fi.intel.com>
-References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com>
- <ZwbazZpTSAn9aAC7@google.com>
- <ZwcT149jx-iOmEfl@surfacebook.localdomain>
- <ZykbvVZ32FKCRT_q@smile.fi.intel.com>
- <Z_UUXOe61BwVkGob@smile.fi.intel.com>
- <f670905f-f14b-4482-83ee-568234647f46@intel.com>
- <Z_U0Vn0V18KYGjkP@smile.fi.intel.com>
- <d40efb68-eb4e-4158-9dc6-5de101adefd1@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K40oS+KD"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so10922a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746194704; x=1746799504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nDe9RtA7TLLrd+vDa4DrWUwMAtXgbf0yt5j9UCuWdJ4=;
+        b=K40oS+KDoYyve/QhEdChMv2ixxs+PRSsEVpBWtf5lquTpS+iffSsqIo1ZE3+8dW4WC
+         i+9lOwDOj1LMex/qm07kMWuNW+MUrU1/x9Xu+6rH7rziI2zGKXKyToTTwRBpAY8jUZhR
+         E4I7duhtszys1nK3zmDJV+W1zCZ/ae7dBGkmN6WZlG4HHqggAfY55nOAWN/+CVyVGkpO
+         zCT38ugw6i2s9+xz913lPsGXi5fj10KLd+ncHDWOY++98okpxlAlHXY6w/kOVvCJy9Fn
+         GItNs7Fjd0ztVHPc2S0+ikwjlGf9t8zxsft6IPhXgnvZ68bCoSQ65C6ApoWpz9yAqlIG
+         ID5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746194704; x=1746799504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nDe9RtA7TLLrd+vDa4DrWUwMAtXgbf0yt5j9UCuWdJ4=;
+        b=s1iQNUgqsFvjbekNahlz/8KbLbpV9I0pF4wQ+Ndphgm45sFcP3nY4y1l4t8wBO7Dro
+         kk8HrbHlQV6lVpsINf3OAhh/w9yyzXB8+0RhOsjLYLGh83W8QMrgKO1V6g3rzbrhXhvk
+         vsbUjlWD/wqMt1htOd7FsrU9IpmU4CcAay4DPccMhYFsLMts/pPSnQFbVgukfzpQCccx
+         SpAn6I3mflu/utcpC3AcSr77LqMBgUb0Bn4AZKfaOQsMLfc5q171RvIcHUsTt7uKzzci
+         kTpTK+MKuUCFqwI3VEpefyDxidVOo4quZAGYquBjXBoE5tBgAbJOfjd25L10a/Af7yJ6
+         NQlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXul1DgbeBkbq8VhaUfxEE5MgVtuaBxg4ZwS2J7DSjK6GZLKYh4WEbE01PIPToD85bLU8wy8RkZpTRK8Co=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmT/5hvjv+1f1fPPg4QQPc55iSDlH9WtD51Erabr3AEg1BnW0T
+	+DB9z/CDBNI3Bh+RV+qL7CFhSt3dkbo483H5CQYbhNAjOmKQlKWb1Cw4JeYsUQqkZntbqWhqZHe
+	y+QmPktmgBjUYbgZprTsg3bMH3jx2NoENrVao
+X-Gm-Gg: ASbGnctQpHn/GHCh93EB68na7etFqqRb4hKeaPh5/d1oZjMeMYKAdqekpeiHvJZtZzU
+	27VH3XqEVzTx+cnWdvtm2KFQHhfe2PyHZsBqvOKWO+FNjH9lB9Oq09E/S01bav1ZOwBi8q1WdVG
+	VBxj9eldyvvzT3cntctAUqRZVy8GhNKgLlwLiy6naZ83l+R5Ps+Q==
+X-Google-Smtp-Source: AGHT+IGQyG7jBeuHSLNmsAImzv0cQUgCHSzQUeks+9StY/yQAdwPY81V2I46PF4Wav7Pheny/ljSV/t3KJ1MePw5oro=
+X-Received: by 2002:a05:6402:1d38:b0:5e4:afad:9a83 with SMTP id
+ 4fb4d7f45d1cf-5f9130fae93mr209007a12.2.1746194704052; Fri, 02 May 2025
+ 07:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d40efb68-eb4e-4158-9dc6-5de101adefd1@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org>
+In-Reply-To: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 2 May 2025 16:04:28 +0200
+X-Gm-Features: ATxdqUEap07yOkwLkXFTwqsri6Zk9OGzrg6-_-HwiNt-HyE-SosQ2SulcKFl1qc
+Message-ID: <CAG48ez3oefetsGTOxLf50d+PGcthj3oJCiMbxtNvkDkRZ-jwEg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 0/6] coredump: support AF_UNIX sockets
+To: Christian Brauner <brauner@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 07:56:58AM -0700, Dave Hansen wrote:
-> On 4/8/25 07:36, Andy Shevchenko wrote:
-> > On Tue, Apr 08, 2025 at 07:17:51AM -0700, Dave Hansen wrote:
-> >> On 4/8/25 05:19, Andy Shevchenko wrote:
-> >>> Any news here? Build error is still reproducible.
-> >> In the end, adding the #ifdefs leads to worse code, less maintainable
-> >> code. I'll take the occasional actual unused static inline in a .c file
-> >> over a mess of #ifdefs to make the compiler happy.
-> >>
-> >> I really think that warning needs to go away in some way, shape or form.
-> >> Either get rid of it entirely, or kick it out of -Wall somehow. It's a
-> >> super pedantic warning that leads to worse code most of the time.
-> > Does it mean you can take Sean's approach?
-> 
-> It looks fine at first glance.
+On Fri, May 2, 2025 at 2:42=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+> I need some help with the following questions:
+>
+> (i) The core_pipe_limit setting is of vital importance to userspace
+>     because it allows it to a) limit the number of concurrent coredumps
+>     and b) causes the kernel to wait until userspace closes the pipe and
+>     thus prevents the process from being reaped, allowing userspace to
+>     parse information out of /proc/<pid>/.
+>
+>     Pipes already support this. I need to know from the networking
+>     people (or Oleg :)) how to wait for the userspace side to shutdown
+>     the socket/terminate the connection.
+>
+>     I don't want to just read() because then userspace can send us
+>     SCM_RIGHTS messages and it's really ugly anyway.
+>
+> (ii) The dumpability setting is of importance for userspace in order to
+>      know how a given binary is dumped: as regular user or as root user.
+>      This helps guard against exploits abusing set*id binaries. The
+>      setting needs to be the same as used at the time of the coredump.
+>
+>      I'm exposing this as part of PIDFD_GET_INFO. I would like some
+>      input whether it's fine to simply expose the dumpability this way.
+>      I'm pretty sure it is. But it'd be good to have @Jann give his
+>      thoughts here.
 
-Can it be applied, please? The problem still persists as of today (v6.15-rc4).
+My only concern here is that if we expect the userspace daemon to look
+at the dumpability field and treat nondumpable tasks as "this may
+contain secret data and resources owned by various UIDs mixed
+together, only root should see the dump", we should have at least very
+clear documentation around this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+[...]
+> Userspace can get a stable handle on the task generating the coredump by
+> using the SO_PEERPIDFD socket option. SO_PEERPIDFD uses the thread-group
+> leader pid stashed during connect(). Even if the task generating the
 
-
+Unrelated to this series: Huh, I think I haven't seen SO_PEERPIDFD
+before. I guess one interesting consequence of that feature is that if
+you get a unix domain socket whose peer is in another PID namespace,
+you can call pidfd_getfd() on that peer, which wouldn't normally be
+possible? Though of course it'll still be subject to the normal ptrace
+checks.
