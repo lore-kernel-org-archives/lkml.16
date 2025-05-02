@@ -1,103 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B90EBA45;
-	Fri,  2 May 2025 07:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3988C20C02D;
+	Fri,  2 May 2025 07:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746172068; cv=none; b=kjXVrbSOmtXaxCeuFR+m//RA2FXVNLqUe6y9IEsQMfgBzROHrl2Jf0YSYLugDYGDpGr10uhNoCIoARacJ//aigR1GfhKJkyk3grQ8FdctahblN9iBSipgk1O7H8uwzKcBBVBF3Dwp0YOCVNCrAqnyTUdOy7qSiXYANSMW9jQB5Q=
+	t=1746172102; cv=none; b=uRo+ACx4htS0HvJF2fDYLX8StQ1EZ/Ds/3M+RzpsLS+htJ2kYZnYLFUZbYROgvWaA3T1iajG7By4exyOfP+e5havefrsLY/5o+L4aeXT2P3a0t14jO0y0yiUc9Ck6IM0erYsr7kfya9ysQ/zO/NpdU1huOR8QikclDFy46pAVi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746172068; c=relaxed/simple;
-	bh=12fU6nHdcWEJMliTffLzTURN5ljUvBtc8NTjS3gHJ9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tyYFJXpEkGx7jiG+lppZX5CuJiJDUAJF9V/MwDnhnaCu1GzcdbSQ1ZhyuknjB0Lcu6ZvzdqPoDSkq6kRDLGLT566jJJJyElxMLHsvY2BAPn/IPZC/5riUFKS3z769Y+6w0L+Cr6lOPwJz8I6XA2zkSBBLGGsK0rL/Xl1iv5CKOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QguFhDS1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746172102; c=relaxed/simple;
+	bh=5zHfjx3LCpBnQnbGMYJn0PwjO0OHGGcGVS3yle+/AtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r3m0RSVUuzDHRxk0cv3BDgP6GoIZe6scOaI2aLJdQnpGRs5zycTg4656qGrqTI9b4qX54YwaviXMTvMC/CotXulaqGXqwJR6Zz0kgSQyoac1sfayQiC17jqR51wBInabesXHSPl88luHkp6u75yBo99xwZngJFFrrM2qAwe81KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GicwYtZp; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QguFhDS1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28025C4CEE9;
-	Fri,  2 May 2025 07:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746172068;
-	bh=12fU6nHdcWEJMliTffLzTURN5ljUvBtc8NTjS3gHJ9A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QguFhDS1SijzgZrzOMhZv+RnKjscPHxDjWyKHP7eGRatpefK76S/jI/5Ez6Rwzv4l
-	 88J/mvWRPCoPY7XFAh5JVhjWE20ok2CvkMDOWYP9cwdObPJ46SISahG8U+sogHhNE2
-	 xBEITy1y7BIU9OGYqmJSJi34BpI6nI2FUGalfOP1YluWa3gk4lWScFdAKAkJT178qg
-	 u95ttLilCwnL4/oMWEykE7e65kBwUWewZ4rZ2s5+Ng1o0ZcMggWS4aXwAGf1xSkl+B
-	 xd3PJ3wOje53Cghkinm/8kfv3BE/JaVZsEMnF720+XVMc4+lQ0L336wY7yETDc1AFr
-	 8/KCx5fJc955g==
-Date: Fri, 2 May 2025 08:47:43 +0100
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD and Regulator due for the
- v6.16 merge window
-Message-ID: <20250502074743.GC3865826@google.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GicwYtZp"
+Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9FD332111565;
+	Fri,  2 May 2025 00:48:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FD332111565
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746172100;
+	bh=AM3bNHyzqOUx4GEbmWQutBtcba47mLTjpsHqzXYUL1k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GicwYtZph1ke0NlDJkXUPvLloDS2qT1VjaqVoz3jzca5MsX0xaqTSQp9WqwiB3v82
+	 AuXpXA3dvVOEB+p2eAFRpz+wS7BofAxmedkfk/wMg1dFyhqo0zA5yyJuIM0teR9Y+5
+	 LtRUkZaRwz1nYKd22qJkKQLCYoNoWH/zbqstp2yA=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Naman Jain <namjain@linux.microsoft.com>
+Subject: [PATCH v7 0/2] uio_hv_generic: Fix ring buffer sysfs creation path
+Date: Fri,  2 May 2025 13:18:09 +0530
+Message-Id: <20250502074811.2022-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
 
-Enjoy!
+Hi,
+This patch series aims to address the sysfs creation issue for the ring
+buffer by reorganizing the code. Additionally, it updates the ring sysfs
+size to accurately reflect the actual ring buffer size, rather than a
+fixed static value.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+PFB change logs:
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Changes since v6:
+https://lore.kernel.org/all/20250424053524.1631-1-namjain@linux.microsoft.com/
+* Rebased to 6.15-rc4 tip where [1] is not present to fix compilation
+  issue on 6.15-rc4 and to enable porting of the fix to previous kernel
+  versions where patch [1] is not present. (addressed Greg's comments)
+* Note: continued to use bin_attrs and not bin_attrs_new so that the fix
+  can be ported to older kernels where bin_attrs_new was not introduced.
 
-are available in the Git repository at:
+[1]: commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-regulator-v6.16
+Changes since v5:
+https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+* Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+  commit msg of both patches.
+* Missed to remove check for "primary_channel->device_obj->channels_kset" in
+  hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+  now. 
+* Changed type for declaring bin_attrs due to changes introduced by
+  commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+  merged recently. Did not use bin_attrs_new since another change is in
+  the queue to change usage of bin_attrs_new to bin_attrs
+  (sysfs: finalize the constification of 'struct bin_attribute').
 
-for you to fetch changes up to 5d61bb1675ff7662f519ca203b1f8cdc455b9df4:
+Changes since v4:
+https://lore.kernel.org/all/20250410060847.82407-1-namjain@linux.microsoft.com/
+* Added Reviewed-By and Tested-By tags from Michael.
+* Fixed syntax by removing extra space (addressed Greg's comment)
+* Rebased to latest linux-next tip
 
-  MAINTAINERS: Add BD96802 specific header (2025-04-24 14:53:20 +0100)
+Changes since v3:
+https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft.com/
+* Addressed Michael's comments regarding handling of return value of
+sysfs_update_group in uio_hv_generic.
 
-----------------------------------------------------------------
-Immutable branch between MFD and Regulator due for the v6.16 merge window
+Changes since v2:
+https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
+Addressed Greg's comments:
+* Split the original patch into two.
+* Updated the commit message to explain the problem scenario.
+* Added comments for new APIs in the kerneldoc format.
+* Highlighted potential race conditions and explained why sysfs should not be created in the
+  driver probe.
 
-----------------------------------------------------------------
-Matti Vaittinen (14):
-      dt-bindings: regulator: Add ROHM BD96802 PMIC
-      dt-bindings: mfd: Add ROHM BD96802 PMIC
-      dt-bindings: mfd: bd96801: Add ROHM BD96805
-      dt-bindings: mfd: bd96802: Add ROHM BD96806
-      mfd: rohm-bd96801: Add chip info
-      mfd: bd96801: Drop IC name from the regulator IRQ resources
-      regulator: bd96801: Drop IC name from the IRQ resources
-      mfd: rohm-bd96801: Support ROHM BD96802
-      regulator: bd96801: Support ROHM BD96802
-      mfd: bd96801: Support ROHM BD96805
-      regulator: bd96801: Support ROHM BD96805 PMIC
-      mfd: bd96801: Support ROHM BD96806
-      regulator: bd96801: Support ROHM BD96806 PMIC
-      MAINTAINERS: Add BD96802 specific header
+* Made minor changes to how the sysfs_update_group return value is handled.
 
- .../devicetree/bindings/mfd/rohm,bd96801-pmic.yaml |  10 +-
- .../devicetree/bindings/mfd/rohm,bd96802-pmic.yaml | 101 ++++
- .../bindings/regulator/rohm,bd96802-regulator.yaml |  44 ++
- MAINTAINERS                                        |   1 +
- drivers/mfd/rohm-bd96801.c                         | 565 ++++++++++++++++-----
- drivers/regulator/bd96801-regulator.c              | 455 +++++++++++++++--
- include/linux/mfd/rohm-bd96801.h                   |   2 +
- include/linux/mfd/rohm-bd96802.h                   |  74 +++
- include/linux/mfd/rohm-generic.h                   |   3 +
- 9 files changed, 1073 insertions(+), 182 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
- create mode 100644 include/linux/mfd/rohm-bd96802.h
+Changes since v1:
+https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
+* Fixed race condition in setting channel->mmap_ring_buffer by
+  introducing a new variable for visibility of sysfs (addressed Greg's
+  comments)
+* Used binary attribute fields instead of regular ones for initializing attribute_group.
+* Make size of ring sysfs dynamic based on actual ring buffer's size.
+* Preferred to keep mmap function in uio_hv_generic to give more control over ring's
+  mmap functionality, since this is specific to uio_hv_generic driver.
+* Remove spurious warning during sysfs creation in uio_hv_generic probe.
+* Added comments in a couple of places.
 
+Changes since RFC patch:
+https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
+* Different approach to solve the problem is proposed (credits to
+  Michael Kelley).
+* Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
+  drivers where rest of the sysfs attributes for a VMBus channel
+  are defined. (addressed Greg's comments)
+* Used attribute groups instead of sysfs_create* functions, and bundled
+  ring attribute with other attributes for the channel sysfs.  
+
+Error logs:
+
+[   35.574120] ------------[ cut here ]------------
+[   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
+[   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
+[   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
+[   35.574197] Call Trace:
+[   35.574199]  <TASK>
+[   35.574200]  ? show_regs+0x69/0x80
+[   35.574217]  ? __warn+0x8d/0x130
+[   35.574220]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574222]  ? report_bug+0x182/0x190
+[   35.574225]  ? handle_bug+0x5b/0x90
+[   35.574244]  ? exc_invalid_op+0x19/0x70
+[   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
+[   35.574252]  ? sysfs_create_bin_file+0x81/0x90
+[   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
+[   35.574271]  vmbus_probe+0x3b/0x90
+[   35.574275]  really_probe+0xf4/0x3b0
+[   35.574279]  __driver_probe_device+0x8a/0x170
+[   35.574282]  driver_probe_device+0x23/0xc0
+[   35.574285]  __device_attach_driver+0xb5/0x140
+[   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
+[   35.574291]  bus_for_each_drv+0x86/0xe0
+[   35.574294]  __device_attach+0xc1/0x200
+[   35.574297]  device_initial_probe+0x13/0x20
+[   35.574315]  bus_probe_device+0x99/0xa0
+[   35.574318]  device_add+0x647/0x870
+[   35.574320]  ? hrtimer_init+0x28/0x70
+[   35.574323]  device_register+0x1b/0x30
+[   35.574326]  vmbus_device_register+0x83/0x130
+[   35.574328]  vmbus_add_channel_work+0x135/0x1a0
+[   35.574331]  process_one_work+0x177/0x340
+[   35.574348]  worker_thread+0x2b2/0x3c0
+[   35.574350]  kthread+0xe3/0x1f0
+[   35.574353]  ? __pfx_worker_thread+0x10/0x10
+[   35.574356]  ? __pfx_kthread+0x10/0x10
+
+
+Naman Jain (2):
+  uio_hv_generic: Fix sysfs creation path for ring buffer
+  Drivers: hv: Make the sysfs node size for the ring buffer dynamic
+
+ drivers/hv/hyperv_vmbus.h    |   6 ++
+ drivers/hv/vmbus_drv.c       | 109 ++++++++++++++++++++++++++++++++++-
+ drivers/uio/uio_hv_generic.c |  39 ++++++-------
+ include/linux/hyperv.h       |   6 ++
+ 4 files changed, 137 insertions(+), 23 deletions(-)
+
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
 -- 
-Lee Jones [李琼斯]
+2.34.1
+
