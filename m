@@ -1,104 +1,103 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D72F24BBFD
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C353254869
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188299; cv=none; b=LBVILPOd74B7oSmITYYKD1AaUYOdLQNJsM+QLdihDbj/ZjF+eNdwPlZZ2tiOJz2KfsjSPVWyFyW0TU3WY/22VfxHr1IQFctL3pYN5GkGX7Q8PL+l8u3UFN+hcN9OpFLP3tG8TGRBfdNQnqU75XV0QFZQHQv0R8R0LKzsr8qNzRQ=
+	t=1746188312; cv=none; b=XXz2t7fB9GIKiM++57M9xZJhKLW5YObtGRLepnPRtf+DJOZo3d+N4eDir6vX35hxac5WgRmfWCk6wrjPuTwtSyiR1A08/owroALbQdNDux1Lgef+Rx+HbkIy4XFohCg3yOhxibVntCuElS3mUxrEqENt1Z7couoxgziAaas3o0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188299; c=relaxed/simple;
-	bh=vGE2Q+jxE6JFBFMDR7fs6IEpZuRYN8Hz1ei0pbuERLc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TNCO3oB5ZY7g7x+t2ks3DgqIsj+27hIO5RqGxSk4FryCezcfjrCFv1yMIoU3iqOiZ0v/6ldC443Q5lKivKuu3QWRSGQP7989t1hUqgz8+Dui+F6IlFoHyfcTSTzE4v2Lt6bLs9gFLy84bfYqY6JrV0vOaJMI3PaRQGWZs1x4j4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qSUDdo/V; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1746188312; c=relaxed/simple;
+	bh=dZCp33kBN0Q18ikutt/A4Xr4aDmA70Q3LWkZ9y/t/yw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sBsG46WK4lssmuVKgHy0FHVREL0Ewop30v+c5dsSL30spXRRXpQX2DNKZjZ8lAZdXbgd0KVFEMgys008eRMjf4xno1lJj/TXRTR2mPQMV6Gwr1mbj80copezvwXRvzJGtnih8bH735YccG8z3MIOkEqjVm4GCO7WtorCMlDXkkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qI2hsB/o; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qSUDdo/V"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-440a4e2bad7so12328055e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:18:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qI2hsB/o"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso9772255e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746188295; x=1746793095; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4EIqRH8s+HJXS4njQ/v+2ek79fyo/PhNx8U1JoTIak=;
-        b=qSUDdo/VPjFGYaD+QtZjS4yzOs4pAZKoD9m9vUR6iniQ/5UDzdShCXE/6Qg91sa4MH
-         HLopWUuUutaoWe8Ln+kycZWMc3OXoudKTzJvfVFbUHxgPVtojjk610iCMNXeGgrpfREm
-         dGWyywIQudq1BpHae5avHPwZQ4Y4CP4AzCaCaZSPMwjE/bpumIX32xujGIsAIaGNZk6i
-         iUiItuWQU5lK0J7o6soH8V31A2Qh7hSbGNifXOrjdHktC0NbkeqR6S9Uc4rF0MzRfbWb
-         hTJa8nD5LZx9LXlXNxdq8E4a30JeFIROtssNGmMKHZZ5PKIRdRBhbG5m7/YSL0cG9iD4
-         ZkgA==
+        d=linaro.org; s=google; t=1746188308; x=1746793108; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1N8+l8M5FlFCClqgtiCzmH9ZrH4j2YuHePm47Kqoteo=;
+        b=qI2hsB/owjtJ6nLSlxkQxnGQmRi4NX6iLVXPpX7HAJVRuPqdCH5zYeeUuezhOqFNOU
+         yn1FNfqV9phQ4y7U9zZnJ8qKbURYJyA807LID0Lu1LV3eh3xJmO2yWD4D1CGmKiR0+th
+         J9SBn/uwW2Wq1NJ/YVyTH0wtPFh84GTCXpeMzKNdlhyeM3yOPRArAhjod8CiIWvIzb7K
+         mO2iYMqDiaaD4kNfHkeWnGbwJtdatcfBJk5AmWzDoKJZdgYzeGfYBdlMGYcvQm0OSxIT
+         1VTP6J65Ap/YJBwLY7OmOVtLoVqp0ooST6kN7Z0DmHaax5xVFme0ORi0MCkWT26LFAlX
+         hzlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746188295; x=1746793095;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4EIqRH8s+HJXS4njQ/v+2ek79fyo/PhNx8U1JoTIak=;
-        b=ZSEQ9uJBhTjWgScLJ92p47wMNa+E5Oo79Lw2KtGF3xYoCeqRiQ9JbSEGnOsCDCp3qY
-         YVYCGyamsv9zg1b4E743GzTWKfp3hASfYSV511OuDswxF4rA89rhGUgF9bhN0AblcUX3
-         X1T24mIyR4xTfg/2H64W5WkRKciQFQPeY7ZaycIvMQ6HAzKCbqltCpxTZsK6TRc2hqLP
-         XDoCraCKrB9NLm3bX7rQkR8IzIyoTcfJzS8ISo2xYtCVXvLasfw9it3U1Z0PkNQ/amTf
-         rp0jFu9HdE6dbMLtBGO3bdAx2lLTyaZzeT08hCYgDwXj9KpwMr9tPVRMLUnw7jrK5cQH
-         rbsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjbrdLJPrR8YdhCy2cgccsS7fkqt+1iKwVHGocu8VRijPNuLqrAyCuSyT5JHdR4nU3VbTF5ytBAJBULfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya0I+WubDf4oN+fm9dDFOIJMgJghPPD8+ybpGH82RGGkak5sF9
-	PW/x3wop4UvnO5pP8GJ0sJM4dGlYu7J2WlQi7YlL7lmRooWMVLk2saxAsoR7rG+qQLvAfTv5H6f
-	a2XdfjDViIA==
-X-Google-Smtp-Source: AGHT+IFmoIah9vIU+ME6LTH3yaSoPOxR0iqcuVmJEVttYxbVNA2iy85jqW8QzQsVUdCyB+30OgU962ian6s4pg==
-X-Received: from wmbjb17.prod.google.com ([2002:a05:600c:54f1:b0:441:bf4e:899c])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8711:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-441bb88d42emr21008445e9.12.1746188295600;
- Fri, 02 May 2025 05:18:15 -0700 (PDT)
-Date: Fri, 02 May 2025 12:18:13 +0000
-In-Reply-To: <20250501163827.2598-1-ujwal.kundur@gmail.com>
+        d=1e100.net; s=20230601; t=1746188308; x=1746793108;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1N8+l8M5FlFCClqgtiCzmH9ZrH4j2YuHePm47Kqoteo=;
+        b=r1Crn7TQLDQ/b+StRyyEFWebmXGlSgzkde7e9waVcjaSRk0jhgSKXMUFA364lVqwir
+         hW9CLGIi+PjpEOs7M17h+ECjMlz+TLWQVKLM8Wglzf5UlF9qEpo4bBeL6yfMNaFjJAc6
+         uPoRbZ0RT6ALPkUJKcJphfRfhuzvr9+c5Qc6rS+WHYQVGh646mq+NMPoDaEV7bOyqDBR
+         xRhLD6rcZQ6pU/aR9JK6d1ODoAjwH9osWCfC2tTxxz+qAiCzwE71W2t3rLspeBvLEnNF
+         j8mVt9KtJ4ADVTT49WBRR0UQ76tFQ4OTEBp6H8V2+9qSBhJOjjaJD1uvM8V8B1Oo4sIb
+         Hppg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRfSL6r+Nxj/GwpdKO3aYwIy6b/suif8DXJ148FsQY+BBDPeHacL2Qrvq12T/dkIpdRletiE9+BbGWQLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvvtTCeZbxt4Ha0i2XEU9TdCNwEX6ZSejNYkznNHg2wPjz9qZX
+	r3l9HiAa9X/n+n1TiFNEKQBS2oBNo2hLFIsHJU6Qx96HJkh2gIFfx6zMTK9ynwA=
+X-Gm-Gg: ASbGncvubJGfAp2ze0Lu3eJ7tjWhLyu61e0oR+sJjmXls7Ax5y4FpyYwWt45Lu/V/Tv
+	OnbTsbp00+uHGebdMyP0PP3RC1Nm+LW36/YHKwY/TItts4dLmpLl6h9yXNsPcGKOtxKVmNp+PEo
+	ZUWBffnKeMxDKhpQVSer/k/7FrFcDDhdq9SmrIvFWDukXQcfHrwXesJfJ55cZ9qQ5A6mtlzQ7gI
+	vrWKcQZnd/kAFJh49J1uCi9HlRBl+b9s9uNhHs9rXdkHGmoD058+5WS/CiD+lYf/zq7rRC+4hUZ
+	vyea8WQC3G3qPUUme+oyd7DmPEvAP0RG+u6gcDhffeGfHmrdK7Us0nBR35NJDBd70+Dahf9iK1M
+	leI39FQ==
+X-Google-Smtp-Source: AGHT+IGycLOTZlvkotfi5COKFzd3MV/rJ1at7iSHEF0LrJp3NZNcKFI4IZK6OMtutAW7B+8/HT8hNg==
+X-Received: by 2002:a05:6000:2501:b0:391:3b11:d604 with SMTP id ffacd0b85a97d-3a099af0f94mr2000619f8f.54.1746188308640;
+        Fri, 02 May 2025 05:18:28 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0c3dsm2071414f8f.12.2025.05.02.05.18.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:18:28 -0700 (PDT)
+Message-ID: <0c09f19b-dbf6-401b-bf4a-8e416487a34b@linaro.org>
+Date: Fri, 2 May 2025 13:18:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com>
-X-Mailer: aerc 0.20.0
-Message-ID: <D9LO37W7M7YJ.2R0GAINJRE55C@google.com>
-Subject: Re: [PATCH 0/4] selftests/mm/uffd: refactor global variables
-From: Brendan Jackman <jackmanb@google.com>
-To: Ujwal Kundur <ujwal.kundur@gmail.com>, <akpm@linux-foundation.org>, 
-	<peterx@redhat.com>, <shuah@kernel.org>
-Cc: <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/23] media: iris: Avoid updating frame size to
+ firmware during reconfig
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-3-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-3-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu May 1, 2025 at 4:38 PM UTC, Ujwal Kundur wrote:
-> This patchset refactors non-composite global variables into a common
-> struct that can be initialized and passed around per-test instead of
-> relying on the presence of global variables.
->
-> This allows:
-> - Better encapsulation
-> - Debugging becomes easier -- local variable state can be viewed per
->   stack frame, and we can more easily reason about the variable
->   mutations
->
-> Patch 1 needs to be applied first and can be followed by any of the
-> other patches.
-> I've ensured that the tests are passing locally (or atleast have the
-> same output as the code on master).
->
-> Ujwal Kundur (4):
->   selftests/mm/uffd: Refactor non-composite global vars into struct
->   selftests/mm/uffd: Swap global vars with global test options
->   selftests/mm/uffd: Swap global variables with global test opts
->   selftests/mm/uffd: Swap global variables with global test opts
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> During reconfig, the firmware sends the resolution aligned to 8 bytes.
+> If the driver sends the same resolution back to the firmware the resolution
+> will be aligned to 16 bytes not 8.
+My question here is why there's an alignment mismatch between the APSS 
+and firmware at all ?
 
-I tested this using this script:
-
-https://github.com/bjackman/linux/blob/523e40a88fac34b17f49614dfb24fd5e18e63685/.github/scripts/run_local.sh
-
-After manually enabling the userfaultfd tests (I disable them in my
-crappy CI thing as they are flaky):
-
-https://github.com/bjackman/linux/blob/523e40a88fac34b17f49614dfb24fd5e18e63685/.github/scripts/test.guest.sh#L15
-
-So
-
-Tested-by: Brendan Jackman <jackmanb@google.com>
+---
+bod
