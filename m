@@ -1,74 +1,47 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506BB230274;
-	Fri,  2 May 2025 11:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94A246766
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186965; cv=none; b=X+5Myw0anM2AD/VbL7Wu0gYDoEgX2w7ESvLRk1kBps0eUxfFwpQd593YHuzmJUDccM/0dTWCJ47ZnXjdKVKy3AO0+INifVzGHTGdFnKGu/DnVV2TIaBYqaKYlxO/2SySEAubCsUhQRaNBjkoUs66zB2HnTdEgeyHBVHDeWL7LpU=
+	t=1746186970; cv=none; b=Gmbl5/IGSGSt9XBKumujofPZHu2IoCv95UTvTnSHx5X/H2SzVqYhX16QaMiW3mMkk5iBu1cndc4VXnUFqrWWZ81SZ5zBSvDOZ67QU+rwz+P6t+MJ/nrlFQK87mUTB8VzrYu3cdelr1VQs4HpwKGKJ9IBFohZuR047+AQKwvRTB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186965; c=relaxed/simple;
-	bh=th3344aMAWm1g8rAJdfWFaFTsrH6CqeVGZ3Rm/J5k0s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UBO4qdJByxTdITi3V0ET/Hih9BFBCR+Wmob4cIoxON/rKqROI8wpt+C53OlyBQh2gZlP5xw1wwAKWDbYC8x8Fq7DPa8CCK2X/V+5RcWmp2OBXyGLWiJ72056g3KpBNzDFsTEGMyun5Y02krMMKEni8Y76ZDAhNfNxwz6NVSXfjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=BjcohYjW; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="BjcohYjW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1746186963; x=1777722963;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=th3344aMAWm1g8rAJdfWFaFTsrH6CqeVGZ3Rm/J5k0s=;
-  b=BjcohYjWSatgbRHWoLMUMjel4sF8nq3vfII3KyGBY6iUl9Nr313SqAsy
-   WushhCqbnncADPfrsIeNrBjdSDx7qtOhrexpsBTha54ewc+oqsjbYsMh9
-   hYOxtkARGsC4BdvCAL4SN5llp++cFV/OzH97cPjpaeJO/wcflEpdGMzsf
-   s=;
-X-IronPort-AV: E=Sophos;i="6.15,256,1739836800"; 
-   d="scan'208";a="821084632"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:55:56 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:62585]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.47.43:2525] with esmtp (Farcaster)
- id bc906e87-2d5c-432a-b5b2-76aa28f1987e; Fri, 2 May 2025 11:55:54 +0000 (UTC)
-X-Farcaster-Flow-ID: bc906e87-2d5c-432a-b5b2-76aa28f1987e
-Received: from EX19D015EUB001.ant.amazon.com (10.252.51.114) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 2 May 2025 11:55:54 +0000
-Received: from EX19D015EUB004.ant.amazon.com (10.252.51.13) by
- EX19D015EUB001.ant.amazon.com (10.252.51.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 2 May 2025 11:55:54 +0000
-Received: from EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a]) by
- EX19D015EUB004.ant.amazon.com ([fe80::2dc9:7aa9:9cd3:fc8a%3]) with mapi id
- 15.02.1544.014; Fri, 2 May 2025 11:55:54 +0000
-From: "Roy, Patrick" <roypat@amazon.co.uk>
-To: "peterz@infradead.org" <peterz@infradead.org>
-CC: "da.gomez@samsung.com" <da.gomez@samsung.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"hch@infradead.org" <hch@infradead.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+	s=arc-20240116; t=1746186970; c=relaxed/simple;
+	bh=C0OUS0W6cxfA76GnIZ86F8ow5n8XNEot5PI7yC4q6Mk=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L10cSMPOGz+YYQGkdYtaDcEa1oajmurx+J5pze7DaJJxqL+ePSmCuBw3lGvKHJzRXiyd5h/pIBnQ2YLgy8zQJEBBNC2bzgmX1Q0T//oQNbVAEyGctFNvt0w8jytS/dxgy1ray+R/EkXqOYFpeXKGCQFdua/wJ7XozRSUSXrVF7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
+ 2025 13:40:55 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Fri, 2 May 2025 13:40:55 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>
+CC: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
-	"masahiroy@kernel.org" <masahiroy@kernel.org>, "mcgrof@kernel.org"
-	<mcgrof@kernel.org>, "nathan@kernel.org" <nathan@kernel.org>,
-	"nicolas@fjasle.eu" <nicolas@fjasle.eu>, "petr.pavlu@suse.com"
-	<petr.pavlu@suse.com>, "samitolvanen@google.com" <samitolvanen@google.com>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH -v2 0/7] module: Strict per-modname namespaces
-Thread-Topic: [PATCH -v2 0/7] module: Strict per-modname namespaces
-Thread-Index: AQHbu1kopZmcI7TbRkO7lgxrIG0DyQ==
-Date: Fri, 2 May 2025 11:55:54 +0000
-Message-ID: <20250502115553.27803-1-roypat@amazon.co.uk>
-References: <20241202145946.108093528@infradead.org>
-In-Reply-To: <20241202145946.108093528@infradead.org>
-Accept-Language: en-US
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, John Ernberg
+	<john.ernberg@actia.se>
+Subject: [PATCH 0/2] xen: swiotlb: 2 fixes SoCs w/o IOMMU (e.g. iMX8QXP)
+Thread-Topic: [PATCH 0/2] xen: swiotlb: 2 fixes SoCs w/o IOMMU (e.g. iMX8QXP)
+Thread-Index: AQHbu1cQRZF4GUbfuk+26xI8NrrtUw==
+Date: Fri, 2 May 2025 11:40:55 +0000
+Message-ID: <20250502114043.1968976-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.49.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2956B14453667460
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -78,20 +51,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Hi Peter,=0A=
-=0A=
-Are you still working on this patch series? I'm working on having KVM remov=
-e=0A=
-virtual machine memory from the kernel's direct map, to harden again=0A=
-speculative execution attacks [1]. At David H.'s LSF/MM/BPF task on=0A=
-guest_memfd, it was suggested to use per-modname namespaces to export=0A=
-set_direct_map_valid() specifically for use in KVM to achieve this.=0A=
-=0A=
-Is there anything I can do to help get this across the finish line=0A=
-(testing/etc.)?=0A=
-=0A=
-Best,=0A=
-Patrick=0A=
-=0A=
-[1]: https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co.=
-uk/=0A=
+There's 2 problems with DMA today when running Xen on the iMX8QXP SoC.
+
+The first identifies as a USB corruption, but is actually a memory
+corruption risk with any small DMA transfer, and just manifests itself
+in USB transfers.
+
+This is a regression fix tracing back to Linux 6.5 when the blamed commit
+(patch series) landed.
+
+The second one causes any attempt to use DMA via the iMX8QXP eDMA v3 block
+to fail with DMA_MAPPING_ERROR when running under Xen because this DMA
+controller wants to do DMA in MMIO space.
+
+I'm a little bit more on the fence with the second one, as that never
+worked, but is still fixing an issue. There is no Fixes or Cc stable on
+this one because of this.
+
+John Ernberg (2):
+  xen: swiotlb: Use swiotlb bouncing if kmalloc allocation demands it
+  xen: swiotlb: Implement map_resource callback
+
+ drivers/xen/swiotlb-xen.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+--=20
+2.49.0
