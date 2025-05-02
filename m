@@ -1,229 +1,64 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889E826981A;
-	Fri,  2 May 2025 17:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20297264FAB;
+	Fri,  2 May 2025 17:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746206155; cv=none; b=AypKU73xcoRFPvx+caxUuyVWTXfl20pYflIuzJd7ckq1CNq1pH/uSAA2ErF+iXsAjYbf+1rUY6qnvz1b47uDVXz7eWaqU82U9Z21D890bKykXp+I7EWAd11culhTHwob0C09TT65qBIEKldkouJqfVf0uBi7Vf8G5du4ZcInsGw=
+	t=1746206161; cv=none; b=nNA4D4FMkD5vY5KtqiyIfBH7Fq9HGv4hZGdiEdwuq9iJVRjW8BJMJFx4V9wC+Lr3ZqTkOBB4gEEBlA6hEm4Mgq03b+XMwxjXayaM1UW/GflnkRfpTRdTmRgSKzrXmwDoxxk/TSS2nRZPjO8e8k7SkjSChGf+qmxDiUurFO/60Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746206155; c=relaxed/simple;
-	bh=7oAJ1fr3d5y8tx00o9/V7vXmU30c4iDM4H6tfuWHMYU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kdTYqYjBg04U8EUdYdWA3sP7+mbekZXVsCvDIhCXTcTIgY725mv4EmChvW5cUx26CNjIKvKPh1X4QaCll1VGuY5YPuNTkSwuYU1Kg8vO9TOW3If6dXxl45QGnUfi49t8R7AQpf5rr2V+PhPcVLYwjSshobN8TaoGVrJFxQfCfRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfPRW2Ty; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfPRW2Ty"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1342905f8f.1;
-        Fri, 02 May 2025 10:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746206152; x=1746810952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BIXFmIK20RXAQ5Up1vrTlXd9d3r7rt4iqcjaj17VsmI=;
-        b=OfPRW2TyFeBLbntD7HET5kqJ8RQrYQ0vwLYhDSst1iVqxxSKYxyaEDZtitS04qXu3S
-         WmiFN+R3S50EFS6P4sDHXtMwvlsZC6DcHuEjicwdmwiNDqK5XkudlVBDX3PhtkXQW8Qc
-         9EVabltMqv4M57gtPxd/KMRIjmtE8XmM122/MwpCcg9YxLfkut6QMiezLzrXCMVz9RIo
-         NbG9xap+YlzafyhCHS8UG2BI9HtXgV+n5qFtXWoU65PbYaO0S1pnyj7tmT4NmB2Ctn4U
-         bNlzc/uCajTK6VuIyPuYoclITrh93oULEXtq+YI+C7SJAUhYPQ0c1ZUoXIF+P08xVjT7
-         lZig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746206152; x=1746810952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BIXFmIK20RXAQ5Up1vrTlXd9d3r7rt4iqcjaj17VsmI=;
-        b=bZo9fBY8qBNpMM97OoVSpMWwwwaGoY1RxNviejjb5XjFwwlGG+EjJ1wrfe7bPr07za
-         6mSd61+IYZPF7Kzq5OSiaGrJ7aqetI2TDir78sN2KfOPOR5muRyYsfZWg8xrJ+cgi03A
-         +8tqkN6iQjJf3PL49QIgW0Pg33rp6AVzO8wNPqLJ+/TlBVumsDctxkm91pwZdb6sG1KM
-         9jnIPWe+eepMXslEE7OOC7UOoOCOKEIr1loyxC6h2u0bEBCAe1oItU5dMyB40p3+EKH8
-         8Za397Gj7xISIROl0PCAXf2hJvayzwUxsL/F4QK0TfoPNnSRlkwejZtNCiXIF8L8/oEp
-         t1Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4QspijuExdZQNfOI94b/QQBpBvYjNzMF5w8GjQns3f3+LF5iPViqmGQcJeFfTWXvJDnCZnGPP85XNciTmgMp5@vger.kernel.org, AJvYcCVHVBSEIZoIwlvZQ9gf6MkPdd4nBwS5Cac6xB/sqF+SkqtHFEdTO+pupQgpUZaJ9bCw/d8=@vger.kernel.org, AJvYcCWWNMYIlexqbVFIrSksxrdBkXAhcLkipAgkXTAAkprtB+MscAk8HoM5Z6u1r9Nv/eCrPyWhV9Rc/+g2HBhG@vger.kernel.org, AJvYcCXVNX5iOYPh03CXrtQUzEKsVtb1QhIZOMADFOHnP9nQUUi5+UOs9BewPmBQIzcouUlJmJy7VxdK0UWTQg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr2+kDfnRQo42BCshKGV/QnV2c+QZSQFoYb7VttkGs9jfdTQiF
-	K2BQYtKpG3mc5f0IOWtBNpqdPJfLG223XtqxNLtM/q9fnCvD5tjiGqNmWDBnFwMe4sFZkbDel9d
-	zpnfmQl+dg4AOXYbL2vD/VA6RYv0=
-X-Gm-Gg: ASbGncsQRmtjfx+V0p9Y+eLYuTaLIDnGzYOJ1QdABX6EyCL5qUjMMezgqqI0kqeOYBq
-	iZh2I6lS6QB5basrO7IQ52pB1eyuSTElU6qv4d5vD46FjcPiLMMuXLNRNq1xWzmWcp+bodpKNH4
-	KmuG+e13iB6x/O0Umoa9A6Ku59vGakdQTdpf8tFQ==
-X-Google-Smtp-Source: AGHT+IHFaDoUkiLv6qrDRiLHOymcCa1QAfKNS9cOooOeYdmz0087AG0msj1NuyGZYt79ubuFELZFUB0DHOcV0IxMdew=
-X-Received: by 2002:a05:6000:4285:b0:38d:ae1e:2f3c with SMTP id
- ffacd0b85a97d-3a098469fb7mr3045104f8f.25.1746206151582; Fri, 02 May 2025
- 10:15:51 -0700 (PDT)
+	s=arc-20240116; t=1746206161; c=relaxed/simple;
+	bh=yg+DZV/18zSXUzvuqa27Vp7oCrRkx8T56YEvilHcQoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e83iVj+23NnrPqKm4KkpE27FmHYrF5UgMikQb+fzl+Ngam65t6UB4ltYo7G3/o2QcWnZbbwOuwqO1NN4mZW7vW/XALgdVPi641Sn0zRee9I/ROghhgEaBbDC1tIBQsIchXs3CLtnsscyU4xjvb64f9uI8DpWZStlaGNy/G8zNP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28702C4CEEF;
+	Fri,  2 May 2025 17:15:57 +0000 (UTC)
+Date: Fri, 2 May 2025 18:15:54 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com,
+	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	shmeerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+	mark.rutland@arm.com, huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH v3 3/3] tools/kselftest: add MTE_FAR hwcap test
+Message-ID: <aBT9yiaLF9LisLR6@arm.com>
+References: <20250410074721.947380-1-yeoreum.yun@arm.com>
+ <20250410074721.947380-4-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-vmlinux-mmap-v2-0-95c271434519@isovalent.com> <20250502-vmlinux-mmap-v2-1-95c271434519@isovalent.com>
-In-Reply-To: <20250502-vmlinux-mmap-v2-1-95c271434519@isovalent.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 2 May 2025 10:15:40 -0700
-X-Gm-Features: ATxdqUHv70xDkjA1O8GM-6_W2bf266rBR3mODzmR7hfuUKQjRknKIt1rPiesetQ
-Message-ID: <CAADnVQ+dMwAFPO-ASojjYPxODpCKf_9FCLjUvn2HeHigL53JdQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/3] btf: allow mmap of vmlinux btf
-To: Lorenz Bauer <lmb@isovalent.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410074721.947380-4-yeoreum.yun@arm.com>
 
-On Fri, May 2, 2025 at 3:20=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wro=
-te:
->
-> User space needs access to kernel BTF for many modern features of BPF.
-> Right now each process needs to read the BTF blob either in pieces or
-> as a whole. Allow mmaping the sysfs file so that processes can directly
-> access the memory allocated for it in the kernel.
->
-> Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
-> ---
->  include/asm-generic/vmlinux.lds.h |  3 ++-
->  kernel/bpf/sysfs_btf.c            | 36 +++++++++++++++++++++++++++++++++=
-+--
->  2 files changed, 36 insertions(+), 3 deletions(-)
->
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmli=
-nux.lds.h
-> index 58a635a6d5bdf0c53c267c2a3d21a5ed8678ce73..1750390735fac7637cc4d2fa0=
-5f96cb2a36aa448 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -667,10 +667,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PRO=
-PELLER_CLANG)
->   */
->  #ifdef CONFIG_DEBUG_INFO_BTF
->  #define BTF                                                            \
-> +       . =3D ALIGN(PAGE_SIZE);                                          =
- \
->         .BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {                           \
->                 BOUNDED_SECTION_BY(.BTF, _BTF)                          \
->         }                                                               \
-> -       . =3D ALIGN(4);                                                  =
- \
-> +       . =3D ALIGN(PAGE_SIZE);                                          =
- \
->         .BTF_ids : AT(ADDR(.BTF_ids) - LOAD_OFFSET) {                   \
->                 *(.BTF_ids)                                             \
->         }
-> diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
-> index 81d6cf90584a7157929c50f62a5c6862e7a3d081..f4b59b1c2e5b11ffffa80662a=
-d39334c730019ee 100644
-> --- a/kernel/bpf/sysfs_btf.c
-> +++ b/kernel/bpf/sysfs_btf.c
-> @@ -7,18 +7,50 @@
->  #include <linux/kobject.h>
->  #include <linux/init.h>
->  #include <linux/sysfs.h>
-> +#include <linux/mm.h>
-> +#include <linux/io.h>
->
->  /* See scripts/link-vmlinux.sh, gen_btf() func for details */
->  extern char __start_BTF[];
->  extern char __stop_BTF[];
->
-> +struct kobject *btf_kobj;
-> +
-> +static int btf_vmlinux_mmap(struct file *filp, struct kobject *kobj,
-> +                           const struct bin_attribute *attr,
-> +                           struct vm_area_struct *vma)
-> +{
-> +       phys_addr_t start =3D virt_to_phys(__start_BTF);
-> +       size_t btf_size =3D __stop_BTF - __start_BTF;
-> +       size_t vm_size =3D vma->vm_end - vma->vm_start;
-> +       unsigned long pfn =3D start >> PAGE_SHIFT;
-> +       unsigned long pages =3D PAGE_ALIGN(btf_size) >> PAGE_SHIFT;
-> +
-> +       if (kobj !=3D btf_kobj)
-> +               return -EINVAL;
-> +
-> +       if (vma->vm_pgoff)
-> +               return -EINVAL;
-> +
-> +       if (vma->vm_flags & (VM_WRITE|VM_EXEC|VM_MAYSHARE))
-> +               return -EACCES;
-> +
-> +       if (pfn + pages < pfn)
-> +               return -EINVAL;
-> +
-> +       if (vm_size >> PAGE_SHIFT > pages)
-> +               return -EINVAL;
-> +
-> +       vm_flags_mod(vma, VM_DONTDUMP, VM_MAYEXEC|VM_MAYWRITE);
-> +       return remap_pfn_range(vma, vma->vm_start, pfn, vm_size, vma->vm_=
-page_prot);
+On Thu, Apr 10, 2025 at 08:47:21AM +0100, Yeoreum Yun wrote:
+> diff --git a/tools/testing/selftests/arm64/abi/hwcap.c b/tools/testing/selftests/arm64/abi/hwcap.c
+> index 35f521e5f41c..a539eeb0bfc0 100644
+> --- a/tools/testing/selftests/arm64/abi/hwcap.c
+> +++ b/tools/testing/selftests/arm64/abi/hwcap.c
+> @@ -1098,6 +1098,12 @@ static const struct hwcap_data {
+>  		.sigill_fn = hbc_sigill,
+>  		.sigill_reliable = true,
+>  	},
+> +	{
+> +		.name = "MTE_FAR",
+> +		.at_hwcap = AT_HWCAP3,
+> +		.hwcap_bit = HWCAP3_MTE_FAR,
+> +		.cpuinfo = "mte_far",
+> +	},
+>  };
 
-remap_pfn_range() should be avoided.
-See big comment in kernel/events/core.c in map_range().
+This is all good but I'd also like to see a test to check the FAR_EL1
+bits are actually exposed to the signal handler when the hwcap is
+present.
 
-The following seems to work:
-diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
-index f4b59b1c2e5b..7d0fd28070d8 100644
---- a/kernel/bpf/sysfs_btf.c
-+++ b/kernel/bpf/sysfs_btf.c
-@@ -20,13 +20,13 @@ static int btf_vmlinux_mmap(struct file *filp,
-struct kobject *kobj,
-                            const struct bin_attribute *attr,
-                            struct vm_area_struct *vma)
- {
--       phys_addr_t start =3D virt_to_phys(__start_BTF);
-+       unsigned long addr =3D (unsigned long)__start_BTF;
-        size_t btf_size =3D __stop_BTF - __start_BTF;
-        size_t vm_size =3D vma->vm_end - vma->vm_start;
--       unsigned long pfn =3D start >> PAGE_SHIFT;
-        unsigned long pages =3D PAGE_ALIGN(btf_size) >> PAGE_SHIFT;
-+       int i, err =3D 0;
-
--       if (kobj !=3D btf_kobj)
-+       if (kobj !=3D btf_kobj || !pages)
-                return -EINVAL;
-
-        if (vma->vm_pgoff)
-@@ -35,14 +35,17 @@ static int btf_vmlinux_mmap(struct file *filp,
-struct kobject *kobj,
-        if (vma->vm_flags & (VM_WRITE|VM_EXEC|VM_MAYSHARE))
-                return -EACCES;
-
--       if (pfn + pages < pfn)
--               return -EINVAL;
--
-        if (vm_size >> PAGE_SHIFT > pages)
-                return -EINVAL;
-
-        vm_flags_mod(vma, VM_DONTDUMP, VM_MAYEXEC|VM_MAYWRITE);
--       return remap_pfn_range(vma, vma->vm_start, pfn, vm_size,
-vma->vm_page_prot);
-+
-+       for (i =3D 0; i < pages && !err; i++, addr +=3D PAGE_SIZE)
-+               err =3D vm_insert_page(vma, vma->vm_start + i * PAGE_SIZE,
-+                                    virt_to_page(addr));
-+       if (err)
-+               zap_page_range_single(vma, vma->vm_start, pages *
-PAGE_SIZE, NULL);
-+       return err;
- }
-
-
-Great that you added:
-        /* Check padding is zeroed */
-        for (int i =3D 0; i < trailing; i++) {
-                if (((__u8 *)raw_data)[btf_size + i] !=3D 0) {
-                        PRINT_FAIL("tail of BTF is not zero at page
-offset %d\n", i);
-                        goto cleanup;
-                }
-        }
-
-but this part is puzzling:
-        trailing =3D page_size - (btf_size % page_size) % page_size;
+-- 
+Catalin
