@@ -1,63 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E773019DF41;
-	Fri,  2 May 2025 22:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0593158DA3;
+	Fri,  2 May 2025 22:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746223367; cv=none; b=F3n2JHhTBQcOAq2ce4579o4gwdaveOmSD4RvX3FX7WIRo6DFUhY3GKUdLY5wSfGYVopDKqTHQrHIT+orHgylEuZkhO4DS8bGgt0EDLk4zOW6qFRydGnPq2B7/88tlqfg5m++3B4VWOmpXcqBt/+sYeGwUuqbeTPm7qvrfEqUrYw=
+	t=1746223416; cv=none; b=stuzGX+RIe4WcAt6dBPg3LWU84E7p+5ihgY9fJ4UNqg1M58Pd6/QThWBgeMPcVZAiCsSLQJwOYDpLUhnQCK3TLimaJhi8g1FXn8krntRr/zxKALrx3FkCQIiGK2m2dg4xPHFGpCZmZ9cNZxveqQs+6QaXIqlDa+RVDnuN1iqXJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746223367; c=relaxed/simple;
-	bh=3gzrjXiwOUYG+iV6LAkIh7EjiTurgAJ5IKVNmI3yevE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=faHxlaegKHkLH5QFDG/tn4xfOdOBXB3ZFivqlUin7xUQDuSg8Xd4F9Dm5wCYW974Fy0BQ9e8Ybh5z/ALcDGnHfccmkqW257NLi7L5jOdChr1GGj6EzMeU05MvmJHS1cct1/j/a4jxNRzK+S2vt0DP6D+GTk50A3rFlwwulbx24Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvdU3dHZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746223416; c=relaxed/simple;
+	bh=/gz01gr3zqJtpxE3uUUJSCto9xDAJRclHDqXM1biExQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HFRfP0Sb2pV0DBMWFAtFh4Ijgqcv3kj/9taFz+dO5B87Yo6d8VLmorTfz5uNxWRPrH14iifmh7ToXYlz+91FgVIF4/g+R9ul/Iot9WWxy2TpQwSz263Azatu9CTwnhgqE9ZQJZIQnq2r+HOJe+5W7YO6MkkXTuK9ISobTUpe1YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pomrzQNG; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvdU3dHZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F12C4CEE4;
-	Fri,  2 May 2025 22:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746223366;
-	bh=3gzrjXiwOUYG+iV6LAkIh7EjiTurgAJ5IKVNmI3yevE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=qvdU3dHZNIKhDIXA5maclU2FaWAJH5RDtKqU1VARcmDU3dyRT7svgZSFIT3azVX/V
-	 odysHjK4jJMHrY7AatMEiMLlvyxDB5GC+TdS1QnntWCQ9/yWBFJlebcY0hPMLyXc1v
-	 pxTbmrGWftAfpCXLGdPZRFtAo2/3SvtZ/NfpES1S8cW9fyLFiH4rSQFbAaZpvv69J8
-	 116Znngyqlhap0Gi+JIAdaE886EUD55l+i4uexksEd32ag/kw6EqopfJY4akwJ9zcD
-	 XH6He0/DSBXnH6+jCEJAwASVVQxtQES5KGDqOaMUqUqN7Wvgh8yMf2jMHVrtxsvsx2
-	 7a9veodjgVOlw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CA8380DBE9;
-	Fri,  2 May 2025 22:03:27 +0000 (UTC)
-Subject: Re: [GIT PULL] Power management fixes for v6.15-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0hWHUokQz-cU=W7+wY4-ZRWKnz4PvUSk17vsDoPb9oqXQ@mail.gmail.com>
-References: <CAJZ5v0hWHUokQz-cU=W7+wY4-ZRWKnz4PvUSk17vsDoPb9oqXQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0hWHUokQz-cU=W7+wY4-ZRWKnz4PvUSk17vsDoPb9oqXQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.15-rc5
-X-PR-Tracked-Commit-Id: 23203ed263f0701368468952d5004e320e5af6db
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b6a218ff8b88d09f86a17167772e7aaff1724e54
-Message-Id: <174622340593.3739591.333055363625407675.pr-tracker-bot@kernel.org>
-Date: Fri, 02 May 2025 22:03:25 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Bard Liao <yung-chuan.liao@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pomrzQNG"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3Q3j320096
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 17:03:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746223406;
+	bh=NMYViS6w+I7OA2PZ0r1nTTXlbZzs6FUNaHc8ZQEVG88=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=pomrzQNGadK1DV7Pe8UHdX17RvRFHFlDk3SaO7SYELRBebUsvgQ7PNWw+M/9rHCXk
+	 OOJTl+2MEaT4FyEUgUYxCptlLIhuQOICXwm4IUdhkJL864OgvSk9G+KbNQ7GqG7qek
+	 JoG41+yf6crLaEZg+W5qcQulU2gb/ZdHtWi0P3iM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3Qst031663
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 17:03:26 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 17:03:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 17:03:25 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542M3PBt006849;
+	Fri, 2 May 2025 17:03:25 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Hari
+ Nagalla <hnagalla@ti.com>,
+        Beleswar Padhi <b-padhi@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>,
+        Andrew Davis <afd@ti.com>, Devarsh
+ Thakkar <devarsht@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 01/11] arm64: dts: ti: k3-am62: Add ATCM and BTCM cbass ranges
+Date: Fri, 2 May 2025 17:03:15 -0500
+Message-ID: <20250502220325.3230653-2-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250502220325.3230653-1-jm@ti.com>
+References: <20250502220325.3230653-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The pull request you sent on Fri, 2 May 2025 22:24:27 +0200:
+Add cbass ranges for ATCM and BTCM on am62x device, without
+these, remoteproc driver fails to probe and attach to the DM
+r5 core and IPC communication is broken.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.15-rc5
+Signed-off-by: Judith Mendez <jm@ti.com>
+Acked-by: Andrew Davis <afd@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am62.dtsi | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b6a218ff8b88d09f86a17167772e7aaff1724e54
-
-Thank you!
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am62.dtsi b/arch/arm64/boot/dts/ti/k3-am62.dtsi
+index bfb55ca11323..59f6dff552ed 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62.dtsi
+@@ -86,7 +86,9 @@ cbass_main: bus@f0000 {
+ 			 /* Wakeup Domain Range */
+ 			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
+ 			 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>,
+-			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
++			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
++			 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM*/
++			 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM*/
+ 
+ 		cbass_mcu: bus@4000000 {
+ 			bootph-all;
+@@ -103,7 +105,9 @@ cbass_wakeup: bus@b00000 {
+ 			#size-cells = <2>;
+ 			ranges = <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
+ 				 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>, /* Peripheral Window */
+-				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
++				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
++				 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM*/
++				 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM*/
+ 		};
+ 	};
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.49.0
+
