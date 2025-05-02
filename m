@@ -1,277 +1,209 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F091A3156
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746160933; cv=none; b=hU8xNmG4RCQ9qtaj7Ff2qqnqxF8HEyye5G++8sOAGUksDBw76TOfM4qK7Zkb1iBw79fu4X5bN69aNe/i3LwQCKccP2FGKf8kRuFGxwjrH219En/kb5QIdLO2PkBQeQJBxoTyTbF8GnDuFlkoMzz1ZmiCC6/iAgRbbNR3mXeDkQs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746160933; c=relaxed/simple;
-	bh=AS5GCwcO4Mg8AL75Z9J2FHBKkN5+JSl/LX+VBO7oJqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Krb6jFlUmBlMGdijcO9rCSjYTjp5levExNvqvgv9aVApKVhjwr8ejFponGIo/CMSV3jG0SRXGUin4K1qrbkKjPjx4/sWM4ZimwXY4oIzjpyf12PeiOE0RJUKs+I6W4laccyWiBxtCGEYa2nw3SLHC0r4UW4rBr88vlAJVtIXeU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lD93qQm0; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBACA38F91;
+	Fri,  2 May 2025 04:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746161482; cv=fail; b=XcwPekjCNu21lRFUGpSEJ/ysz4RlUxsU4hbBBlxsQbpiV3/QgqI6cRQjVocgu1w/GXLFfMPVpHhX9ANrKtG+xuPbNYC0ajRBc/EHDzrXE9NR7faD0WOWnRzNdxwEMDDYLcKAmUaLn6N75ZCXVuB/fAz43ylubc1kc72YDhUACL4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746161482; c=relaxed/simple;
+	bh=8oT7nK9Z0rcIAlSyRSiaPloqkBtCABiavJZlExOzlUk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uB3BwGMvPpvvVT0r5VIbZEkdRcrHjPBzdTfomL2MwB2i9PIwlhy84lqX++nU7PZop7C7HpmfXaIlQHL77is6xULvv094DBm4wSlIFgBT9xS7L3YgaekfNBRwRu0aRcB6rLvilEZC+7+G2s2ICr0R0lBVFKCfMDJVdWMJB9H0MQM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+pCEfNp; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lD93qQm0"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421OAjj018172
-	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 04:42:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7j5UxYN6C9Dd6qHXGE97a7YLEYkg4By51iUOqA+ylAQ=; b=lD93qQm0lfGtQu2b
-	Qol+d3LR4qo4+nRMOn5UzV0/SgDWNud83Pb+Tb1RKqYAJjqowwungs3q4s2MUfb6
-	7PXzNa05DwwAk2Rj1KaQsViGT+LbFMTslw56wXt5S4ADZssd0iVNijqc72MCH2l6
-	30Ndlv6aAvcHhBga9oSw6ybxw3mAwHQpEIpS1CiwVdJO29HkpbWoihIBbqjIwyKC
-	UBZ30zVcfnRHVBUtSNVVIBEI6fDQvOe3F6REV3Q6NwDIuRC03LCduxDPZfxwG8Cu
-	n1Int1HTfaIThrO4uv7x/l7f9t2By+WhIdTJpAy3ufJ9pyI+4lyiGiJNNFzybgLG
-	wm+Kow==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u3y5xs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:42:10 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736c1ea954fso979618b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 21:42:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746160929; x=1746765729;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7j5UxYN6C9Dd6qHXGE97a7YLEYkg4By51iUOqA+ylAQ=;
-        b=sfvywepJmRwDqyiipmtEtApC7Rps1JWFrSwHlG1N41BTU+i/XfP+LZbTHAjvo/91IZ
-         jKRcpkqRE6HyBN5YqaKC+PdfMXNIku3rfqBKADKz5E2BTzHmYv0NaM65eHypsxzBp3PI
-         GgwgjBNvrsrgMtVaQ6WjHNATgy0iTXWg2h9T87sILDbzFukV6AuojG9oROg0kHe1jhdf
-         tfgLbsQSS+EKeznWmM8nqP7IxOqWYSss8ANHf74Ssy/8y8gDKiAG4MtkaN+WJJ6zJOof
-         r7YIxTKAvAM2BpP7oP2P9BEQN5M+MhpXHgCO8jH0dS8FIWnz9cNAlcW7IUYrjrXtpDhH
-         i5rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnEkZvZMyC633shLGwU4qaTo5VhEjKmVMPFIROLqUcVvlNV7vHFik6WOyzBr6Kaor+3f6/jdxsEdfBe98=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3s+54QT/BSD3TRDuq/isEmmQteR1FPx+NOh95ratlkMjc++9f
-	zKkoRObXCB4l07rSdpdNR+HHszsNX8Las7aKWGoDEeYNOrQjyUV3LTpPjIT+YBqJ9y3CFswnbwY
-	7gpxhAGk6fcfpOhDnIDWyjPVM5r6dHEe0/gt08q/UqFD+8Q4t/ReFrdxulHD5K/8=
-X-Gm-Gg: ASbGncubOUlud7E81XDT+cxaulm+1GFq01NTqpatfkcS1hY9EzKu/aiHNN8UVG+OwMQ
-	c+HaSdrcFemMP0ofHrZRgcQOqTRgPXdBGdjPyG42FO5CLq0fVKYz82owlJjAlm3lg1ywHnu6WwM
-	xOCKnsMjGXKYWpgIlgFfEGecccYOZYWjDoVkghJUXApw9CNk224VqIUqcTirtbqTGNGFjEJLmbq
-	C+nl9lwaU1KD98EtlrtemE35X4Ow/q4wN5/FbXNeBb8/0AJd7vpJARpNDHCEbZ7+sS4cryQsKhR
-	SQIxaTLk5lcZBN4W6YetDF4beSQiM4E3jq50dCO9OoLdzA50A/21
-X-Received: by 2002:a05:6a00:4294:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-74058b23ef3mr1866200b3a.21.1746160928682;
-        Thu, 01 May 2025 21:42:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGBQrj67WLhBG3Hq96DBg+5Opa1dABnH/Q1s+TspcF/KflEqOJ5Mrv0bnI/pESCH+hoqmXB/g==
-X-Received: by 2002:a05:6a00:4294:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-74058b23ef3mr1866183b3a.21.1746160928305;
-        Thu, 01 May 2025 21:42:08 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021483sm590790b3a.93.2025.05.01.21.42.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 21:42:07 -0700 (PDT)
-Message-ID: <09579b2c-f312-4c8a-b57a-b240204cd733@oss.qualcomm.com>
-Date: Fri, 2 May 2025 10:12:02 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+pCEfNp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746161481; x=1777697481;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=8oT7nK9Z0rcIAlSyRSiaPloqkBtCABiavJZlExOzlUk=;
+  b=G+pCEfNpCGZxm8obRQDR4auBGpFcTxnUpOalbwPv66OG3VfP06yqHceg
+   BgqkJ79HJDUImMwPCsvH+Xpt6S5M6QGe37dLGegeFrqyj82XopymHGOsi
+   uzJfpRaqwvu5E0LlJa27nwJewiBpMkKFwU5u5He3PtHdFcx12vwX0LX6O
+   7wSzjZYzT8LSegOq+Fo5BZ+fNqX1QUS3u1FOUKqerlprJmjBFsWxKi0kI
+   RwyBNxw8NogKVd5M7Eqei/+ef6nnS58iQ6qT8nMTMRP7hJ0gMQucwKTin
+   +5W6q0YKnV+c9NGViyrpSeQnOREP8h+lSNSWawvc03uZeQO3GZG8NrUwj
+   A==;
+X-CSE-ConnectionGUID: xy9JOm/sQgaSReGbO4SUYQ==
+X-CSE-MsgGUID: FsS7glE4SUWEjma6SuYZog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58468764"
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="58468764"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 21:51:19 -0700
+X-CSE-ConnectionGUID: OecSC39ZRNKU+3zprCLAzw==
+X-CSE-MsgGUID: W0x04yBFQn+92LTSRr6cYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="138576880"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 21:51:17 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 1 May 2025 21:51:16 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 21:51:16 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 1 May 2025 21:51:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dEEDKdSJFMFtV/Dk3ldOKYjnfrIc3F4MlBulfcPnAXPApy40Q+rCdGh/l+OooW3N59rhImleo/3qNmwdlQObM9mwBKTJNuDHhUe/abgVET9Y4wt+Yq4jh5z0yjx1yyPpG64qBTLapewlziDVUo43w/j8xHpW4Mm9ml5aw1cGw34mczZYeE0pZTbK09zr5Oo9CFRqTc9fVZIaoErB6JjKlR9pGCpDFgz7OALSge4HtH7mKAKQ9MRSoaxQuQhkT41NVtziFpJZFdUYbOSha7ZGOT+PqNf0cCsROBNtEfY1sLh7PjS1IcBr9YJHVndhxaMRDky+obY+XNv6SwHRg7xZiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TLUd2R7ud3WNtpnGO+KVRuMpYVPxvUU/noML+cQA4qs=;
+ b=iCnewgivuDkeCoTY3StEFL89OutNmfMINwCmfWr2WqJQp8fmzylCFeOsUibNffdQDiQbsSc/Cgofk3jUdNR/eliegxgq2ZblkCNAQ5UodbyqLersloPYT8prdHZ2evW/PMLEx4hyxF7UxPeR3zGYy0ek+iiJY3HNdzwPaks9Xwn9BGMKfmnKVg4bWLaLxAaaqPmZAsbiT2mlB2D6t/zfs1iRpppUs9ozp+D+6JVw0AdAhcKom+Aj5iIgNnpK7CmfyGOWfgfN4RL6Gfyx5Uj29rcYo1GxO2aqjR+kjEUSV49Rwe3jK9nL54ehRN2DPWA7MF0tmJcHwv1zUZan0VNftg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by SA3PR11MB7414.namprd11.prod.outlook.com (2603:10b6:806:31c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Fri, 2 May
+ 2025 04:50:45 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::9e94:e21f:e11a:332%4]) with mapi id 15.20.8699.012; Fri, 2 May 2025
+ 04:50:45 +0000
+Date: Thu, 1 May 2025 21:52:08 -0700
+From: Matthew Brost <matthew.brost@intel.com>
+To: Al Viro <viro@zeniv.linux.org.uk>
+CC: Kees Cook <kees@kernel.org>, Thomas =?iso-8859-1?Q?Hellstr=F6m?=
+	<thomas.hellstrom@linux.intel.com>, Christian Koenig
+	<christian.koenig@amd.com>, Somalapuram Amaranath
+	<Amaranath.Somalapuram@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
+	<matthew.auld@intel.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>, "Jan
+ Kara" <jack@suse.cz>
+Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
+ struct file
+Message-ID: <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com>
+References: <20250502002437.it.851-kees@kernel.org>
+ <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
+ <20250502023447.GV2023217@ZenIV>
+ <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
+ <20250502043149.GW2023217@ZenIV>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250502043149.GW2023217@ZenIV>
+X-ClientProxiedBy: SJ0PR03CA0273.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::8) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] watchdog: qcom: add support to read the restart
- reason from IMEM
-Content-Language: en-US
-To: Bryan O'Donoghue <bod.linux@nxsw.ie>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
- <linux@roeck-us.net>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250416-wdt_reset_reason-v2-0-c65bba312914@oss.qualcomm.com>
- <20250416-wdt_reset_reason-v2-5-c65bba312914@oss.qualcomm.com>
- <ebd4790b-e7aa-45b1-b7d7-9d1b331ee842@nxsw.ie>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <ebd4790b-e7aa-45b1-b7d7-9d1b331ee842@nxsw.ie>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=Bv6dwZX5 c=1 sm=1 tr=0 ts=68144d22 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=Amq28VNnWxlBxfWyqssA:9 a=QEXdDO2ut3YA:10
- a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-GUID: sYPSWLeLJuc5Fi0Isa39HAFqQGEKPcVl
-X-Proofpoint-ORIG-GUID: sYPSWLeLJuc5Fi0Isa39HAFqQGEKPcVl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAzNCBTYWx0ZWRfX6J4hxEwf2BnW MDkW6wBmxyOY8uTqy/gioCQZJLgA7BAdHKKnxQ6ulgAS62Vf2JlT2s5RuRFoTZz8ywVEPIn7Jwf JGz0NxLBsHrma7ls1ydmCo4r6KePLnyI6bN38FpnB3u4dT/RpicreV3NKXgQwVtzPQj7SMIwd1l
- u3Rexxgi449whI3UrBssTw7pAVyNCP0rqdEzFot0PUcKfdv43rb+wnV0f7MQrgH7q5rlojK+FFl 1mU95RXeV7nKiad9lStGbwxwvWQN4ipf4aqAJNIBm7cxOYT6kBKFXB2UMGV58ZpqGbymjDRu04F oWE05klJdcZYSU43b/0LDd2D0wY3o6aO+0SehmJf3lkKQKvnK9KVYb6dUABPfjrQRBq2i6+R8cB
- +MOgeNZ0bf6SJTvZiaiJ7xzJRf0bRMAVe6h8KvD9QWyYwLTNNW1/kVsOlsQM7wrOv2CDemuU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020034
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SA3PR11MB7414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36f446a9-1ff2-4238-acc1-08dd8934e616
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?453DdmFUfnW0H84hf2CpdSFVM6lwIpDkr7SUchXzBjusM/+abA2k3H+hV8yy?=
+ =?us-ascii?Q?yveA+GaJQS91SQUyGS+Ee0Z2CniaPJT90BcR/U7I0oJ3bEMA+JvjfiHeei9h?=
+ =?us-ascii?Q?RT6vVw7QJ1eUID0y4uwAchzV8jTRoxthYAu7fAFEK5zzbbHBqpmy5sNGhEru?=
+ =?us-ascii?Q?1V/W0RfQyEe/fZxL2A1mZ8f4XO1ZMt57AuHMAYkqmmtSgwbfN6S7qCuB9eY2?=
+ =?us-ascii?Q?C1/U26ZidrydAtcc2hh2IJK3qOH1JONslT+gU+4xmasHxfe0Te4sF7ycpeAF?=
+ =?us-ascii?Q?iiwb1iEGaGqFFRwEWduV/d7k/tZgSqk5hguznovIoazAiNuCYncnSk7eOujC?=
+ =?us-ascii?Q?swBOTEAB2QTJuuI4zNu+JDzInoNiy/POOcvzCHTF1tftGj7rpE2TorJffA4k?=
+ =?us-ascii?Q?Ojjle9a+sQJDSe+6SjtqsGhjJSLtvrrImplSB/6vf5r8Nz0o/KW4r5P+RgBB?=
+ =?us-ascii?Q?3wJeaxpjMNa/KucDWyHl+W3zEaA7kj5oXZlr6aJHibcXK0HrbLFPxB2Vq3Xn?=
+ =?us-ascii?Q?ldoaY6dBYDdI3lwKsBLWhNtWeXL6rJOCkT9sjEF0T6+W1lF4Vyy0mqnbztcB?=
+ =?us-ascii?Q?RviOMToO5FE/9KaUSsy06GzbFNXS0gYFjBRBK8o95qIF2+kLuedFNa3lolgx?=
+ =?us-ascii?Q?Dnphk73QsWUoSkqN14aDv7Ntwmrwr86nL6RKUcUDowR9WNKdWAEvEgr4uzEw?=
+ =?us-ascii?Q?XoBaBLnV0AeevodkxU/ZJ17B982G1/sOXjzUJRN3y/SM222NL1Ppt/bgXpqG?=
+ =?us-ascii?Q?rsqttJw3Ik4jJ7XiZ0s2xjeJdJQh3kDD6sZSNdSl9eK33hkmGGIitiwLjndT?=
+ =?us-ascii?Q?+4WfW+hqKU/hOD/f8EnxNAFJz6BiCbDQbuZmlpk+IcMDNHcfYrctZrI0U1eh?=
+ =?us-ascii?Q?bKm3lyj05/Pr6NJu/H59SlkmspLDmvGrLv2AfRHwj8kqzivopysIC727PNfL?=
+ =?us-ascii?Q?tTtO5S82aQ/iwQ1D9AIAeBiwNi/PWkmvHPWmrVayF+l+pgKOm/Dx+k+nMnak?=
+ =?us-ascii?Q?GbtQOy0HhHA4UIWNCsdf7hfO8GiD2VY8oQO9fHHhxvgFN8KPBrXAk21tUOrZ?=
+ =?us-ascii?Q?z32Wc5TqdEFkZGr1HAn+EOEN20yEhPgB1W8qPNRwjLX3JbNki7kvVRQFKTji?=
+ =?us-ascii?Q?R8DF+rYL9limIu3b1HmTt3yogqHzw+3fV9f/g/AqvzwO+pX4+I504CcPbRH7?=
+ =?us-ascii?Q?Bmi5v+L9POSOETYSPZNhtUNTgVKCbEPNiT1F/K61AmwvlnTsk1dFhrmswQA1?=
+ =?us-ascii?Q?G++FS5hZXN1QzLrRc6BgpcK0iLFDHnHOGHlE8yWIxcrpl503lOkVMZm6w4g+?=
+ =?us-ascii?Q?4TYUe7swhgKwZZRRO+19PkAoEUppePQRYH0FG0JnEdVfqgQVLzt6emE9/Or+?=
+ =?us-ascii?Q?h8GXLi78b8cDFH2HISxeXZ3CTPHD6wUxT2EFWL3g141wuLFngAogmisA8Py2?=
+ =?us-ascii?Q?PabguzcIgJM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Cknkxcd9BKi5s/jJTKVAY2+Cu0lTdzqaaZbOWwHqPUmbBfahrIJ6ow6QPa5G?=
+ =?us-ascii?Q?1ADBnrmUttUCKzPLOUdWx50D6lEsaGObtY12fFbBKf4qkHD9jCODV7rmZnOY?=
+ =?us-ascii?Q?f6ETFiTPvBmEOdUz7Ql7PVGsC/hTCSgqRFUXpnHP1MJstO2HqMoaictR9ry3?=
+ =?us-ascii?Q?QFFDpyKdtfGM3gxK22lzk+KzyU2mVR6Ra3yR8mem9OjRd87w5HhXl1eDJL9c?=
+ =?us-ascii?Q?N4k4bpeuZ6ehOqZBZx621CuCadVp/EH6EXOd3eIT5F+4alXLRVHPsdI3+r4G?=
+ =?us-ascii?Q?OhhJpaybqfPQ2hMvHUgvA5OAjnPfsgfm9Vr7sQsNAP1hkg+bwtzn7oTvGr6s?=
+ =?us-ascii?Q?z0N+U1YGiia7ccaX+I1cBMM4GYOyiMJFCr5jeqP/dNUZrwkim7CDpWU7CDIF?=
+ =?us-ascii?Q?bDoo/MVxdLLLjiffvBxl26cZOcTkprEtbsn/VyW7Whzg8TeY2YrfJoH22seb?=
+ =?us-ascii?Q?tT0MpjHC3P3Rf5FU71M6seitQjU1oCiVeeVTHwj3KrufERl8Ymc55zlk/drP?=
+ =?us-ascii?Q?KybxsOP5f9oObuJOWXKD2K6UcbZzH4y+6cFoJcD+Jl0vvYanvpeWLBRy2Mjl?=
+ =?us-ascii?Q?YYnhC3JcSl9Ut6F/bzkaGfXiHbCAxRl+fLEjSAIBkN61aqbVr41ykfwX3VtO?=
+ =?us-ascii?Q?oFor+1M25pLwyPiqN3bTBlJjnU7CQ12WZJX987hnVyDq2dXUTXh6wkhxJJcK?=
+ =?us-ascii?Q?mX4WKjjZXSQHbNIA0YfiD2hi+SGdjoHhji/i4ct1txrYBIXjbdm7+4z2pZSx?=
+ =?us-ascii?Q?wtXsinPRPcfQjLSzyKQccrvC+Tn3grTFejgqFw7YhoZeo9oq+QAoF2kCoUD1?=
+ =?us-ascii?Q?jzcJ0FOSd3X0E28eSzVqpmdiVSpMxTIUoYNa9toZk1dre5q9CoTh9N8JwcYX?=
+ =?us-ascii?Q?J9FK3/WJk21suJR8zIqdyvfXVnlah0GLJoWXD9jimoySeneOGEh0fot7Cjg+?=
+ =?us-ascii?Q?h2WkWu0HuoJcr6fBbMMbniqjlfRbhpZ7/GZSTFrCHFYCUb+eq7cRmWHQ5cZF?=
+ =?us-ascii?Q?B0zxMV3gHMfcEllXNkbHj1yt2QR2N4Sljg5wZZzqa5ns5qfsh/qy3/nKoEGW?=
+ =?us-ascii?Q?S2ePLEUeJKYad8CEwP7mfSojZYWSAise+6VsQjp+3a236qRBXvdNdKnNiBUX?=
+ =?us-ascii?Q?VGDhR3Cs/tNpPEGKGB+y7cyTpqBLFHFnTiPTGlOsu18GdS6NVrIT7SOZIxz0?=
+ =?us-ascii?Q?t499cKsRpZlBsxPYCTH3BKOZ9A0x8/dZHvW0icj5vZ3C73dY7lVwtkf2bRse?=
+ =?us-ascii?Q?axZp/BC7xUsUwfVnkYNKDqO2AX0hSkevPAma0tncGlTT6D4sONJTd8IKYizj?=
+ =?us-ascii?Q?2bQCpIYco42bJp8Xde2LFIPgY+kuEjEO1D2sDFcUbn3M2p0s0dJDDjNaIYp/?=
+ =?us-ascii?Q?fc/Cw3/vINy/Km/k19+ywDc8m6jM+c2HqQPfj4WU/f+C3T8xPz1qH6rWgrGy?=
+ =?us-ascii?Q?HDowc5N6hSyq/95PB6XN9C378+KZgt0vcVXHm0AbhiDDZxhoA2DlTcLZqOoP?=
+ =?us-ascii?Q?0RlNlI+o1dxUhKNanqemer1Mc53Ze1iRYvnQMGtgVCdgoyI7q8TfMga6/693?=
+ =?us-ascii?Q?8af61gzxeL3McndX3thlbsJrFyDypWCHIr04ibCIo38CbP0/UIGMGCeq5BY3?=
+ =?us-ascii?Q?lQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36f446a9-1ff2-4238-acc1-08dd8934e616
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 04:50:44.9603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6qY3iy6vV3gbAUqU/b69RAOqtFf8if+lyNxap1+XntTH33q1dTsUHsOMymzhqWKtYIkC35fF148p96S/wl1DMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7414
+X-OriginatorOrg: intel.com
 
+On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
+> On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
+> 
+> > I;m fairly certain is just aliasing... but I do understand a file cannot
+> > be embedded. Would comment help here indicating no other fields should
+> > be added to ttm_backup without struct file be converted to pointer or
+> > that just to risky?
+> 
+> What exactly are you trying to do there?  IOW, is that always supposed to
+> be a struct file, or something dependent upon something in struct ttm_tt
+> instance, or...?
 
-On 5/1/2025 5:31 AM, Bryan O'Donoghue wrote:
-> On 16/04/2025 09:29, Kathiravan Thirumoorthy wrote:
->> When the system boots up after a watchdog reset, the EXPIRED_STATUS bit
->> in the WDT_STS register is cleared. To identify if the system was restarted
->> due to WDT expiry, bootloaders update the information in the IMEM region.
->> Update the driver to read the restart reason from IMEM and populate the
->> bootstatus accordingly.
-> Which bootloaders ?
->
-> Do you mean bootrom or one of the subsequent phase bootloaders ?
+Create an opaque ttm_backup object for the rest of TTM / drivers to view
+- it could change if the backup implementation changed.
 
+> 
+> And what is the lifecycle of that thing?  E.g. what is guaranteed about
+> ttm_backup_fini() vs. functions accessing the damn thing?  Are they
+> serialized on something/tied to lifecycle stages of struct ttm_tt?
 
-It is updated by the XBL. I shall mention it explicitly.
+I believe the life cycle is when ttm_tt is destroyed or api allows
+overriding the old backup with a new one (currently unused).
 
-
->
-> Please be specific about which bootloader populates this data i.e. if I
-> switch my bootloader to u-boot do I loose the added flag ?
->
->> For backward compatibility, keep the EXPIRED_STATUS bit check. Add a new
->> function qcom_wdt_get_restart_reason() to read the restart reason from
->> IMEM.
->>
->> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> What I'd really love to see here is an example of reading out the data
-> from sysfs.
->
-> How do I as a user/consumer of this new functionality parse the new data
-> it provides ?
->
-> Ideally do this in the commit log and recommend doing it in the cover
-> letter to, as people don't always read both when commenting on patches.
-
-
-Sure, will mention the sysfs path and its output in the commit log and 
-cover letter.
-
-
->
->> ---
->> Changes in v2:
->> 	- Use the syscon API to access the IMEM region
->> 	- Handle the error cases returned by qcom_wdt_get_restart_reason
->> 	- Define device specific data to retrieve the IMEM compatible,
->> 	  offset and the value for non secure WDT, which allows to
->> 	  extend the support for other SoCs
->> ---
->>    drivers/watchdog/qcom-wdt.c | 47 +++++++++++++++++++++++++++++++++++++++++++--
->>    1 file changed, 45 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
->> index 006f9c61aa64fd2b4ee9db493aeb54c8fafac818..94ba9ec9907a19854cd45a94f8da17d6e6eb33bc 100644
->> --- a/drivers/watchdog/qcom-wdt.c
->> +++ b/drivers/watchdog/qcom-wdt.c
->> @@ -7,9 +7,11 @@
->>    #include <linux/interrupt.h>
->>    #include <linux/io.h>
->>    #include <linux/kernel.h>
->> +#include <linux/mfd/syscon.h>
->>    #include <linux/module.h>
->>    #include <linux/of.h>
->>    #include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->>    #include <linux/watchdog.h>
->>
->>    enum wdt_reg {
->> @@ -39,6 +41,9 @@ static const u32 reg_offset_data_kpss[] = {
->>    };
->>
->>    struct qcom_wdt_match_data {
->> +	const char *compatible;
->> +	unsigned int restart_reason_offset;
->> +	unsigned int non_secure_wdt_val;
->>    	const u32 *offset;
->>    	bool pretimeout;
->>    	u32 max_tick_count;
->> @@ -175,6 +180,15 @@ static const struct watchdog_info qcom_wdt_pt_info = {
->>    	.identity	= KBUILD_MODNAME,
->>    };
->>
->> +static const struct qcom_wdt_match_data match_data_ipq5424 = {
->> +	.compatible = "qcom,ipq5424-imem",
->> +	.restart_reason_offset = 0x7b0,
->> +	.non_secure_wdt_val = 0x5,
->> +	.offset = reg_offset_data_kpss,
->> +	.pretimeout = true,
->> +	.max_tick_count = 0xFFFFFU,
->> +};
->> +
-> You should separate the addition of your compatibles and their
-> descriptor tables from generic functional extensions.
->
-> i.e. add the compat string and the above table in a subsequent patch.
-
-
-Got it. Will split the patch into 2.
-
-
->
->>    static const struct qcom_wdt_match_data match_data_apcs_tmr = {
->>    	.offset = reg_offset_data_apcs_tmr,
->>    	.pretimeout = false,
->> @@ -187,6 +201,29 @@ static const struct qcom_wdt_match_data match_data_kpss = {
->>    	.max_tick_count = 0xFFFFFU,
->>    };
->>
->> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
->> +					const struct qcom_wdt_match_data *data)
->> +{
->> +	struct regmap *imem;
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	imem = syscon_regmap_lookup_by_compatible(data->compatible);
->> +	if (IS_ERR(imem))
->> +		return PTR_ERR(imem);
->> +
->> +	ret = regmap_read(imem, data->restart_reason_offset, &val);
->> +	if (ret) {
->> +		dev_err(wdt->wdd.parent, "failed to read the restart reason info\n");
->> +		return ret;
->> +	}
->> +
->> +	if (val == data->non_secure_wdt_val)
->> +		wdt->wdd.bootstatus = WDIOF_CARDRESET;
->> +
->> +	return 0;
->> +}
->> +
->>    static int qcom_wdt_probe(struct platform_device *pdev)
->>    {
->>    	struct device *dev = &pdev->dev;
->> @@ -267,8 +304,13 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->>    	wdt->wdd.parent = dev;
->>    	wdt->layout = data->offset;
->>
->> -	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
->> -		wdt->wdd.bootstatus = WDIOF_CARDRESET;
->> +	ret = qcom_wdt_get_restart_reason(wdt, data);
->> +	if (ret == -ENODEV) {
->> +		if (readl(wdt_addr(wdt, WDT_STS)) & 1)
->> +			wdt->wdd.bootstatus = WDIOF_CARDRESET;
->> +	} else if (ret) {
->> +		return ret;
->> +	}
->>
->>    	/*
->>    	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
->> @@ -322,6 +364,7 @@ static const struct dev_pm_ops qcom_wdt_pm_ops = {
->>    };
->>
->>    static const struct of_device_id qcom_wdt_of_table[] = {
->> +	{ .compatible = "qcom,apss-wdt-ipq5424", .data = &match_data_ipq5424 },
->>    	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
->>    	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
->>    	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
->>
->> --
->> 2.34.1
->>
->>
+Matt
