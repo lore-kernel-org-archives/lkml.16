@@ -1,113 +1,88 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCCF25D1F8;
-	Fri,  2 May 2025 16:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD4259493;
+	Fri,  2 May 2025 16:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202275; cv=none; b=hTFl65rHX1wNh3lZ6KAAxUx0xLjuwWVXBEqDDXqPrFRLlIgiRXByfxwP2+C275U1fNJZBL4tEfE8+k2cEaIKjYd23famRh4wk3WP/axqLBXpaPWY1VbFSsaPAPR+zaPowZNdQ/HzuBWNmuavXCc9kpUNktnWcdcs34nuBLvl0PY=
+	t=1746202294; cv=none; b=OmH5jrrhSR4V7c4CsW/wB5Zm3EdcHiMywteGOrJi41jXyvtKzx8v4ncL4E2YBRnDJOOZ5rH5EyDDMQvZ6+qd28IR63i72TaZV22duOqQS46sVpqck5sppIQKDpYtkwMSjfwpvw+K5sBE8jaUq6aA8jkDL2y6EQND61Dhh35IvQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202275; c=relaxed/simple;
-	bh=DPug44X9dHryGwrzjaKdUAfjFQzgEW4o8Y6DNXDGvWA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TEzaw2dfVE1l/rtfx5yn3nXteFy5BTcx4rcjQZNddLZdTKE6fMQRQORffaE+M6JrtY2R5FWkG8M73P+Ux/ZNlba8eWh8hh7BzAS7shDnSKqfTka6hDNmY7/cFtU53eqrBJq2+MAWMEsB4qLabi6xuiiQc2jCNMg4XOxSVqCILk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GOfa8Qgn; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746202294; c=relaxed/simple;
+	bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bh7iqmNsNxdkgCPv5/YJ5mkJjGDcem78vnKBu06UY+T5YQy1GVo0PpgwlqCvuPWIEOD8En+Q0O4aUTY8bkkvXNEEfMaUaTXQN6sE+hP/hi21+VybQ50O7OlrSC8qX/3H2DU5Bpk9bpRFopQ5IYwgez5VX5QDlGRtJuUvr7bXQws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGrcrF7s; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GOfa8Qgn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=8E3jSyTAqXG9hYae4q67c9mUvB58U8oFjHxwj1NgMfE=;
-	b=GOfa8QgnA6p/P2afJUuIdU0JcM5ELU4Ulabyv5hhh2ET00b//T59Jxtbf/cjHg
-	Lk2gtzk5vYkYn1voRfa+Wo5mS/bL84w9N3vvSqiZySFJnl/caqBJVwETjgQPvb37
-	CjosNkveiIe7NBbwvjL7Z3PlEwklmvsSjQ2zQWqUfsUGs=
-Received: from [192.168.71.93] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wAHZCl57hRox3kxEA--.23916S2;
-	Sat, 03 May 2025 00:10:34 +0800 (CST)
-Message-ID: <d4adb108-5762-41d3-897f-217b8e7666e5@163.com>
-Date: Sat, 3 May 2025 00:10:33 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGrcrF7s"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47ae894e9b7so46563011cf.3;
+        Fri, 02 May 2025 09:11:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746202290; x=1746807090; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
+        b=RGrcrF7s7iE62EdF+HkUMRTYkD846Z+8yAvWmvXfVajSAoZOHqrgcrBZjv8+n8fh/g
+         PDX7uhWx2LTsIjLY/KV0OJ8nbnAaNuVin/vl2PiP/pdSK8my5eCZore0j81aRJ3/wPW/
+         qESfpGUYLA3hUSiva2y+qqKNSoVn3uJVbKNeHn+7YhX7Ua8CMiZKTRcuZO/Gsc49OzQS
+         12buoRE45OQd2TMswySbJ9phCxpgznCihI/TokBkOLgeBz3wE6mIKiNlR+LG35Goi0I6
+         xojgeMtrrf8KKSvpunq78Ktm4cys/AiUdQ4CxBs3ETTqf1itMGiaMqXpN6lZpYxi6ikN
+         xb0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746202290; x=1746807090;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
+        b=mrTc7WJqD1Zk5jBCoOnmJUN/EnbFNESley0FpEzkv6zt3OXtCJPTRM+Ah+v5Ql5SLE
+         ygKWAeZQstc4KiR7n8vshNiU4pBvhdGiBRsBQnn3PKTOXoBmLMC/VMmsaT+HuwGWHie5
+         2n72hKy+gzLiCjV3ezguxyPD4Fb2srbDWe/euw/7Z1z6PsMh1zDKAJW/soH+pmMp53wD
+         MIt6aDABG8xhAN0MZ0FVz12XRCgpukP6cFYBNTzq689gfmaO549LNdu6K9AqVO9WmZIl
+         P9pNsAYxxkWs+fetgNS8JRjM9BduVXboQE7SA7jWhup0fHF8g+bv1s2HIXlHYsGqTJJA
+         WxUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcTiYamfUdn2PubF/3NE7h3B5BN4FquVi52eaoIa94n21JoHE69zX8epp2RCGyj/JpWohmCR45k91PmiZc@vger.kernel.org, AJvYcCXUK1HcpiOoDW+hu1los4KjsVWCVlivQOKY6LLwZWjiAFdPnps6T3HDfOJbpPKoRDP+L12ogR0+Rx/6KA6b@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdV1Ofj9E/vKahmDeYWX9DQssd78/rFBLeAB9KJ54jkSZ6q1f8
+	WRSoRwWYbZBztV1sXEPtQZqzLewrhcdRNOkGV6WbnZsJQS7R5HzDmt+GvaHqXrmmXo9BuVHgQsL
+	akDZcJh7CtSqQU7NyR3YTTUlTmGdt53HiVKxLrVvsRnc=
+X-Gm-Gg: ASbGncsmGFF0IEH/zFxsoqHwf205U3H0JHzMpPRe0yGDnSj4s6aQDdUnLpgt9iv2/vK
+	2fH1Iy8ral8DktSSUgKV5TywuQCl6URpRdp8xXpHdrygfW/GwJzYhxIMs4rzqdFhhIbUmu/4G5d
+	SKbrGUpnXq7cKDfbJ3kX5U9Y7Uv2ixI2UunQ==
+X-Google-Smtp-Source: AGHT+IGLAcTSARnmJA/Kgr6uTJWmezvLkJPX2YxhNgDW8SpYetDoGiXPi6v2yrZw/2G0zMAf9dBpqWLczPRdekeeSmE=
+X-Received: by 2002:a05:622a:1b10:b0:476:60a1:3115 with SMTP id
+ d75a77b69052e-48c32dbeb1amr57251421cf.33.1746202290456; Fri, 02 May 2025
+ 09:11:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Standardize link status check to return bool
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- jingoohan1@gmail.com, cassel@kernel.org, robh@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250428171027.13237-1-18255117159@163.com>
- <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAHZCl57hRox3kxEA--.23916S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry8Jw4rCFy5ZF47KFWrAFb_yoW8trW5pa
-	45tayIyF18tF4Y9a1Yq3WDCw15tFn7Aa4DJ395u3W7XFy29FW7Xry3GFyftasxJFW5Xr13
-	KF15t3W7JFsxJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3rchUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxZBo2gUgt812AACsh
+References: <20250502153742.598-1-zhiyuzhang999@gmail.com> <a3a6443f-2351-4e55-a12e-4d1f28ba7ca4@oracle.com>
+In-Reply-To: <a3a6443f-2351-4e55-a12e-4d1f28ba7ca4@oracle.com>
+From: Zhiyu Zhang <zhiyuzhang999@gmail.com>
+Date: Sat, 3 May 2025 00:11:19 +0800
+X-Gm-Features: ATxdqUE7NpAQl6AyGoPFkOH6K2jeAL22Fq0V5d4sv1gugCSgZGARFw0ffPFQ0bI
+Message-ID: <CALf2hKsAL=EysQyzgOcztWDLM5X786b9OPPq9sL=oSgamZPjcQ@mail.gmail.com>
+Subject: Re: [External] : [PATCH] ocfs2: Fix potential ERR_PTR dereference in ocfs2_unlock_and_free_folios
+To: Mark Tinguely <mark.tinguely@oracle.com>
+Cc: mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
+	gregkh@linuxfoundation.org, ocfs2-devel@lists.linux.dev, 
+	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Mark Tinguely,
 
+Thank you for sharing the patch status.
 
-On 2025/5/2 23:36, Manivannan Sadhasivam wrote:
-> On Tue, Apr 29, 2025 at 01:10:24AM +0800, Hans Zhang wrote:
->> 1. PCI: dwc: Standardize link status check to return bool.
->> 2. PCI: mobiveil: Refactor link status check.
->> 3. PCI: cadence: Simplify j721e link status check.
->>
-> 
-> Thanks for the cleanup. Looks good to me except the redundancy conversion that
-> Niklas noted. So with that change,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+Actually, I reported this bug on March 22nd
+(https://lore.kernel.org/linux-fsdevel/CALf2hKtnFskBvmZeigK_=mqq9Vd4TWT+YOXcwfNNt1ydOY=0Yg@mail.gmail.com/T/#u),
+but due to not receiving a response from the get_maintainer list and
+being quite busy myself, I have not submitted the patch until today.
 
-Dear Mani,
-
-Thank you very much for your reply. I have sent version v2 to resolve 
-Niklas' review opinions.
+I am sorry to summit duplicated patch as I do not notice the change in
+mainline repo. Please ignore this patch if it boters you.
 
 Best regards,
-Hans
-
-> - Mani
-> 
->> Hans Zhang (3):
->>    PCI: dwc: Standardize link status check to return bool.
->>    PCI: mobiveil: Refactor link status check.
->>    PCI: cadence: Simplify j721e link status check.
->>
->>   drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
->>   drivers/pci/controller/dwc/pci-dra7xx.c                | 2 +-
->>   drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
->>   drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
->>   drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
->>   drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
->>   drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
->>   drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
->>   drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
->>   drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
->>   drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c              | 4 ++--
->>   drivers/pci/controller/dwc/pcie-qcom.c                 | 2 +-
->>   drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
->>   drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
->>   drivers/pci/controller/dwc/pcie-tegra194.c             | 2 +-
->>   drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
->>   drivers/pci/controller/dwc/pcie-visconti.c             | 2 +-
->>   drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
->>   drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
->>   21 files changed, 34 insertions(+), 53 deletions(-)
->>
->>
->> base-commit: 286ed198b899739862456f451eda884558526a9d
->> -- 
->> 2.25.1
->>
-> 
-
+Zhiyu
