@@ -1,157 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE51212FBF;
-	Fri,  2 May 2025 21:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE77C20E005
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222742; cv=none; b=nJrlyMx9N8q5CGpM2aGl7hlX6tQSW87R394OW4l/Hyo44YNQwBuPSdqM/g0H/NjgNfVaqsM/2X4zXNSRQzXVHmj6Tw094lFC2f9Wx/z38Pa9a9kSKEIgGVMy9bqWxSUmPrJobKY8sVm8d/NXMDIDuew79pGS5K67qhS/luMYezc=
+	t=1746222791; cv=none; b=CMF+OsDTXSj2U7VXOX/Uhtd0SuF14H9zWO/KpHLbML6rDJTS9IFczINiKJYJoPd0VEQWvgpynPwY5qCrvZ0J6tiSb/oRWmdi/YPeOsP2BjXuQNj8lA26Vr2qEnyUOmxtYWigPtfe0MgKr1Z+rnY150oOVSxnu6oEOw/hqDpsJMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222742; c=relaxed/simple;
-	bh=0d+B6C4f5BhKibcwQvvX7AE1XP/6ykd4eiWYjI558WQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aq4q+dDij1x1ilL8qVPpGxwPLLfQu3WXMaUuY4RDM2iK1ZR+arNWlGbCXYMZgjxUnm86eBYn0WuVrJHJ68wGgSQq0N57ZpN0JakKha0BqE7QvWL1kKlZ6wwxss1mAaQxxrEdEMFrB7SxM3xJSmt2CJJGNDj1Yj9z8JxNTht1lnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ueoh3jGQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746222791; c=relaxed/simple;
+	bh=BMZyqcPg5pUE6NegbxKX89FEoIQDZjeKXRKHEG1UT3c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QfVD2u8gwx4cXtAhS0PlTflPFC8jpkKnBnrnspjkuPUp7KmP8+duhF71cohvW7QZP/Zs5YD50aDgHpdVwC904zJooRqW547xAiDoDk3rSUHCq5rspA8xa9CBsYkEGlO2D9OWn/oCkxJd4Caf0fWPps1vd7f0Ieo17aYBxx6628w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EViZSYte; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ueoh3jGQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCFEC4CEEB;
-	Fri,  2 May 2025 21:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746222740;
-	bh=0d+B6C4f5BhKibcwQvvX7AE1XP/6ykd4eiWYjI558WQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ueoh3jGQfdluiir5m9D+KAT0kCQ1LZDyRlD89g7UZTWIvS6/pC7RbnsMNMEqu/S1R
-	 +I5+SO2EsYPlgBsnUKBSoPQHaCyFX0hBRFOGnQkRShOv/7jss6xnMjtpk5qUCzLO4m
-	 0oia8FpH9TBUl9PPc8u1dVTSbDp8gAzZqZzwSayWu+h0S5o9jBcdhsSnWW8XYk5cG6
-	 uDqytDKWPFiOcfEmxfM+ulVSx7L8za/KI2yH/+Dry7JvxSO/E8HoYNWfbfb4jVn1o5
-	 HRUdWQo0Ad9kmCYPAG6g5zsC+1U4PTvwJ2it9VGdmdQnm5unWY9p8n+3HRLrfQOCC9
-	 a72/tkdwZc84Q==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH 7/7] Documentation: rust: testing: add docs on the new KUnit `#[test]` tests
-Date: Fri,  2 May 2025 23:51:32 +0200
-Message-ID: <20250502215133.1923676-8-ojeda@kernel.org>
-In-Reply-To: <20250502215133.1923676-1-ojeda@kernel.org>
-References: <20250502215133.1923676-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EViZSYte"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a59538b17so414246a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746222789; x=1746827589; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nwmb/KQXT0NuwPcVJ6Um7FDhzqrO1+rE2ISwKgu6CGU=;
+        b=EViZSYteeaRG5vbFzQli5mIWKjAoCyPOBUc5FHcjyFaCsCC2Eh6fn+RVZUCZfC9e+7
+         T+i/pgYaau2LIE8pKwo+7VfAyiephJIk+HNZF/KQ9puooym9AGB9xLJzrs6DscULKdx/
+         c2hX5IJOthsGs6jGT5mJtnvJNVAk/9yuyikkPeHoFM9uDJnjI8v6izl5dW8Uflm+6tZU
+         Eta3OkbzB2FHUN1SpHM+tLvH6PlHa5NeUW9iF+d9xsyKAXRecZBEiBZfYY4miaimUyWQ
+         vJBs+4Ki8ICgxiaT0zKeptKzCMeSB8EFPRKZymSlrzkexCV510MSrMOomZ+yLUJlgXY4
+         k9qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746222789; x=1746827589;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nwmb/KQXT0NuwPcVJ6Um7FDhzqrO1+rE2ISwKgu6CGU=;
+        b=O8OA2UTSclOEyBWJdSzNyHgjR7B8Rr7DaQba1ytmmo2D5cA6RvGybC/uSjvQmM7eAW
+         j1Y9RcAGG/b8jvoksOKPGShjpEdCHN+WgvYqf7QCHjtgpkL+0aoQjbn2nGED5e6YR7Tu
+         WsqMn1nhjZtseRlZ1FGUz8uZTqPYD5Ock17n2qemdJLxcgUjnaH4ocu5VH+gtM843/to
+         vLVj/lteRrybX2g7iuMmyGnLRnIKsfY74MrNBWdBo0oe6PiGzHNdCLiehDkpwKYohn1E
+         NDLcSdDPaCL6NU4nP8eoxiCB6wbwUODz3vFTs81LzQTWA2pC6leP7QOTZDVhFyMWqdcl
+         gRpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkT1b8+uXKJo6GqmWYWi0/Cx4FvnC2ec0zaJDU+u/yaj0O186dR7h1wj1iCbLjo4rCH+CjuPPYEi1pMhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznWRDBD1Oy1EKYzfw57cUNV0nPnzGu082qS2eZoCNfkk7CTfqW
+	wZtRZJb35kHv3OmUJGTsYIP8exX/8bYVWuqq4UY+f8iEuLbSfkHZM7M9oiCXi8Zo4Lo2C1wAumo
+	PxA==
+X-Google-Smtp-Source: AGHT+IEp9FL/vS1ZkIqGljuqZWqQR+Ft9xvSh9jzolqK/Apw2UN4T6arpa/Bq/Hv1pEMaw2fzKXwn1PyhZg=
+X-Received: from pjyp12.prod.google.com ([2002:a17:90a:e70c:b0:308:64ce:7274])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c12:b0:305:2d68:8d91
+ with SMTP id 98e67ed59e1d1-30a4e622226mr6559092a91.28.1746222789248; Fri, 02
+ May 2025 14:53:09 -0700 (PDT)
+Date: Fri,  2 May 2025 14:51:03 -0700
+In-Reply-To: <20250324140849.2099723-1-chao.gao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324140849.2099723-1-chao.gao@intel.com>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <174622245784.882917.5240595687823642720.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: VMX: Flush shadow VMCS on emergency reboot
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Chao Gao <chao.gao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="utf-8"
 
-There was no documentation yet on the KUnit-based `#[test]`s.
+On Mon, 24 Mar 2025 22:08:48 +0800, Chao Gao wrote:
+> Ensure the shadow VMCS cache is evicted during an emergency reboot to
+> prevent potential memory corruption if the cache is evicted after reboot.
+> 
+> This issue was identified through code inspection, as __loaded_vmcs_clear()
+> flushes both the normal VMCS and the shadow VMCS.
+> 
+> Avoid checking the "launched" state during an emergency reboot, unlike the
+> behavior in __loaded_vmcs_clear(). This is important because reboot NMIs
+> can interfere with operations like copy_shadow_to_vmcs12(), where shadow
+> VMCSes are loaded directly using VMPTRLD. In such cases, if NMIs occur
+> right after the VMCS load, the shadow VMCSes will be active but the
+> "launched" state may not be set.
+> 
+> [...]
 
-Thus add it now.
+Applied to kvm-x86 vmx.  I tagged it for stable, but it's not urgent (I'm 99%
+certain it will never cause problems), so I figure I'd give it a full cycle in
+-next.
 
-It includes an explanation about the `assert*!` macros being mapped to
-KUnit and the support for `-> Result` introduced in these series.
+[1/1] KVM: VMX: Flush shadow VMCS on emergency reboot
+      https://github.com/kvm-x86/linux/commit/a0ee1d5faff1
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- Documentation/rust/testing.rst | 71 ++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
-
-diff --git a/Documentation/rust/testing.rst b/Documentation/rust/testing.rst
-index 6337b83815ab..f43cb77bcc69 100644
---- a/Documentation/rust/testing.rst
-+++ b/Documentation/rust/testing.rst
-@@ -130,6 +130,77 @@ please see:
- 
- 	https://rust.docs.kernel.org/kernel/error/type.Result.html#error-codes-in-c-and-rust
- 
-+The ``#[test]`` tests
-+---------------------
-+
-+Additionally, there are the ``#[test]`` tests. Like for documentation tests,
-+these are also fairly similar to what you would expect from userspace, and they
-+are also mapped to KUnit.
-+
-+These tests are introduced by the ``kunit_tests`` procedural macro, which takes
-+the name of the test suite as an argument.
-+
-+For instance, assume we want to test the function ``f`` from the documentation
-+tests section. We could write, in the same file where we have our function:
-+
-+.. code-block:: rust
-+
-+	#[kunit_tests(rust_kernel_mymod)]
-+	mod tests {
-+	    use super::*;
-+
-+	    #[test]
-+	    fn test_f() {
-+	        assert_eq!(f(10, 20), 30);
-+	    }
-+	}
-+
-+And if we run it, the kernel log would look like::
-+
-+	    KTAP version 1
-+	    # Subtest: rust_kernel_mymod
-+	    # speed: normal
-+	    1..1
-+	    # test_f.speed: normal
-+	    ok 1 test_f
-+	ok 1 rust_kernel_mymod
-+
-+Like documentation tests, the ``assert!`` and ``assert_eq!`` macros are mapped
-+back to KUnit and do not panic. Similarly, the
-+`? <https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-question-mark-operator>`_
-+operator is supported, i.e. the test functions may return either nothing (i.e.
-+the unit type ``()``) or ``Result`` (i.e. any ``Result<T, E>``). For instance:
-+
-+.. code-block:: rust
-+
-+	#[kunit_tests(rust_kernel_mymod)]
-+	mod tests {
-+	    use super::*;
-+
-+	    #[test]
-+	    fn test_g() -> Result {
-+	        let x = g()?;
-+	        assert_eq!(x, 30);
-+	        Ok(())
-+	    }
-+	}
-+
-+If we run the test and the call to ``g`` fails, then the kernel log would show::
-+
-+	    KTAP version 1
-+	    # Subtest: rust_kernel_mymod
-+	    # speed: normal
-+	    1..1
-+	    # test_g: ASSERTION FAILED at rust/kernel/lib.rs:335
-+	    Expected is_test_result_ok(test_g()) to be true, but is false
-+	    # test_g.speed: normal
-+	    not ok 1 test_g
-+	not ok 1 rust_kernel_mymod
-+
-+If a ``#[test]`` test could be useful as an example for the user, then please
-+use a documentation test instead. Even edge cases of an API, e.g. error or
-+boundary cases, can be interesting to show in examples.
-+
- The ``rusttest`` host tests
- ---------------------------
- 
--- 
-2.49.0
-
+--
+https://github.com/kvm-x86/linux/tree/next
