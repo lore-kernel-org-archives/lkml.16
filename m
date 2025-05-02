@@ -1,52 +1,52 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F13BA45
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 02:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F276610A3E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 02:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746151222; cv=none; b=ZhMdfo9pAUl1FdFuzbdiZgawm5VhQqaltJv43KuGnWMaBJAmyWcOYzvaSnHNjutw9x6LADX1oQVAdwpqaCvNUyvIgowOMWiPL4Ppgz1TEjJjsZDJTs3xDnbV3dZL6RZcs4+SNEG5gRMPFZxLrUbPFkzOyERz44zAaqnSSMlXxn0=
+	t=1746151223; cv=none; b=MWDIQzxcIeWD7eP0pTDkSQFqYTZJiHkfNZceluQaR4R2SORmAMvjVd11Rt2Eg6HFmCrJDVsYbX/Q0JulPeIzbROyQys9CvE3xsZ431dwrtf40eNtZkGYRBb4g/Ef1aeDp7k9xKS4syyf28z1NBrsHSO48pYHXnXGHPUkX5+EHPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746151222; c=relaxed/simple;
-	bh=ZXkDydD8p1Uc21PX/F84gcKQrLXSFuEgfF/Sh8BgQlk=;
+	s=arc-20240116; t=1746151223; c=relaxed/simple;
+	bh=atTXP+694Aux8BhuSCLFOHPu0kPkh4AOt9gerkd3pdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hLnrhd15efgmIcMt0tOU5v0C8XXAFg2NxCI3BGDh2s85MQxtax3XYJsirNaxjk932IUHNX7tIfdUKZoirdpFYzj6nz8SqTv4JX9rfLgFNn/qZ+CdSy+xcZMN4GqsOwrRx0skMBiyAZjY1MPni5asWbBNZRUrDMLLnvmVnBrUfTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RQYxdfom; arc=none smtp.client-ip=205.220.177.32
+	 MIME-Version; b=M8MNs287LPDix+k40BZES/PjGS2K9zXb26PyxmNg7bMmzomtI8Zz8phlMlyv4FVmIoVHiro+Ri9S+uSNbsoslxooQHYgoNk28juiNJxBV9v6xmsYSGj5p1KsTob4YDpLBDaw6EJwPChlAFYerNbdIXPm8SN7QjB/GJDOlYx5wFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GXjbuKiL; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RQYxdfom"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541KeNdt007190;
-	Fri, 2 May 2025 01:59:59 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GXjbuKiL"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541KeRND021468;
+	Fri, 2 May 2025 02:00:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=lBN+p
-	zYewV/WF24zN3SzgAWiwurwsgcxGEwDaDvrUwk=; b=RQYxdfom56AJW9us9UDsF
-	CjgK9y8ItMQi9CSoQ/vPI7CFKW+/yo9iWNP3GMuaTw7kXeKjyrf+7pLxDaAYRhdq
-	wRo5jQZbyM5kvMy8B7k7R29H9TWR0NUC+H2ngC9l5S7+JczEHUqAhTzbJh5AScXx
-	cErp4EJuSsusp4rOCHVefKs9pcevbXg65Njk5MXBmG6PCh13ovV0XWydo4OyMvsc
-	YJkRHzBTD2/VXuZLs08qkq/4+90FdpN8QNVCyQrg4L9JC8QTHbf62xnno52qFmbP
-	0oEggOQ2I+1AVqzZzAbd7ECDVvsMWUDblPJ9E1A28K1/f56wA50rCZUEPmeaPJsO
-	g==
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=esKM0
+	Oy8DM3GOqvsuucG+ZW3+3TxMtiamPFuV4U6QY8=; b=GXjbuKiLqzrfxe+EYIgeE
+	rJ1TgDtZtcQvgBMUWg6Yy5JwEan+9E2Sz3eVkJJL2lIa4TqTkvsd9YjIUZPQg27N
+	jMwQO3f4EiDNdXBEu0qG864hSg3U9B58lQ3Xm8AS78/UZdyj6byhnTZzGsMrINCm
+	/5iTX/ipzzhy9GfZ4ihDeodlr99OXNzhuWaOrnCevPoe7AfwfjvvqUPPDtaQ1B49
+	kdsjDvZjcFY3SeNF1Kv4FoyhX8FM+E7ygLsrvkvcrDZgcsTQ97MB20lKZdp5XwLh
+	xVeFyFzQARj8tF0S9yDqoLwICcnLkvhdNEIUn19+8J9iBdGWsxK5RuzFxC3lER93
+	Q==
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ucmdhu-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6uqmdj5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Fri, 02 May 2025 01:59:59 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5421aMDV035421;
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5421aMDU035421;
 	Fri, 2 May 2025 01:59:58 GMT
 Received: from psang-work.osdevelopmeniad.oraclevcn.com (psang-work.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.35])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxd1euw-5
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxd1euw-4
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
 	Fri, 02 May 2025 01:59:58 +0000
 From: Prakash Sangappa <prakash.sangappa@oracle.com>
 To: linux-kernel@vger.kernel.org
 Cc: peterz@infradead.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
         tglx@linutronix.de, bigeasy@linutronix.de, kprateek.nayak@amd.com
-Subject: [PATCH V3 4/4] Sched: Add tracepoint for sched time slice extension
-Date: Fri,  2 May 2025 01:59:55 +0000
-Message-ID: <20250502015955.3146733-5-prakash.sangappa@oracle.com>
+Subject: [PATCH V3 3/4] Sched: Add scheduler stat for cpu time slice extension
+Date: Fri,  2 May 2025 01:59:54 +0000
+Message-ID: <20250502015955.3146733-4-prakash.sangappa@oracle.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
 References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
@@ -64,90 +64,84 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 p
  suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2504070000 definitions=main-2505020013
-X-Authority-Analysis: v=2.4 cv=ZsHtK87G c=1 sm=1 tr=0 ts=6814271f b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=-a2y3q_jHnAO8POPY3MA:9 cc=ntf awl=host:14638
-X-Proofpoint-ORIG-GUID: d6gd_v_NDBb0nYxLBWhyHtu9qrVoUmWx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAxMyBTYWx0ZWRfX8We9gt/JWU42 UwIxrJAUwElniPIJysvck+5hz/kkgQsRt9vxwJW1jSDLtP0TR4NObeFFKRXwGumP9NfDK25C686 UFatNfbfroH+ufJNP7Td23dbyIzd4IOKCzvBiwwzPZXjh8xXN2eEJDhLyuFpuhqFj1JejmWf73F
- IednqszEgZtKAB2ae5yPEwlFcZlrMyWktxapvmmfVInI5fsg3/jb+BIPRIION3DYVIAlRPBctsT aF1JpN88eXBRMDXFWtaa/lkj4aTRR9owfgpirsP54e9AbjOWVP/ffHHK4kHpPs8tSusvaMZJsy0 FQWqxbTXIIYKBmrTK+s8vDua2ix1Z3baKg5dHrrdqzDKyJg1exyyEX6My8dtfPdl0QfGYjT0cQy
- J0e9pegkUNVzOfUQ2dh6I/QBnAv4Ix8Nhdjo3uTMbGGYWkzwS7A+xH/sms8srRLex2ZkzDU7
-X-Proofpoint-GUID: d6gd_v_NDBb0nYxLBWhyHtu9qrVoUmWx
+X-Proofpoint-ORIG-GUID: VpFENSIBJXGoIRujMdpW5sLTndIaZSAv
+X-Authority-Analysis: v=2.4 cv=Vq8jA/2n c=1 sm=1 tr=0 ts=68142720 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=HM_RregbEbY-m7O0KLoA:9 cc=ntf awl=host:14638
+X-Proofpoint-GUID: VpFENSIBJXGoIRujMdpW5sLTndIaZSAv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAxMyBTYWx0ZWRfX3V5K47kZJh6y eNqOXJV1rhkV/SIeciuZBAD1fs7bvTi7fOY3vwbdK8SFGNuUWnqhIdjcTZJ4eLufC28s/c10PAO ExEiOgKolWSQwVgYdRjl/Ue2aoI0tWtLh+QTTVgB8qVTHKskNyQ234TijNiY7pkzV5w1UDRH8fz
+ Xm37W/1xYYyafc5vrPRGXa8e1EgR6DZEOAH6lQqS2hBjn4eltZj0OWl6C5/jMNFoRRMmlG3m6kX wyXycwBwjHzLJXJzI7wK3WYrDKEIX5ukpBltzGDDcynHjTZljhYweJgBHtqNLBgMD09QmmK6DwM YDCdZp7jonAXSU+tXEMNblkUojKdhRxJ2HPV3mXXnz+RX5L60Pg0w9BLVc/oA+ySq/wS9youPpy
+ hHXLC1O1EBh+5mn/KVlZlpIrIv44NO81K0jYBFOQG5vNMGvCRrLG8whKSphoIqnfGxMflqfu
 
-Trace task's preemption due to a wakeups, getting delayed. Which
-can occurs when the running task requested extra time on cpu.
-Also, indicate the NEED_RESCHED flag set on the task getting
-cleared.
+Add scheduler stat to record number of times the thread was granted
+cpu time slice extension.
 
 Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 ---
- include/trace/events/sched.h | 28 ++++++++++++++++++++++++++++
- kernel/entry/common.c        |  8 ++++++--
- 2 files changed, 34 insertions(+), 2 deletions(-)
+ include/linux/sched.h | 2 ++
+ kernel/rseq.c         | 1 +
+ kernel/sched/core.c   | 5 +++++
+ kernel/sched/debug.c  | 1 +
+ 4 files changed, 9 insertions(+)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..4aa04044b14a 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -296,6 +296,34 @@ TRACE_EVENT(sched_migrate_task,
- 		  __entry->orig_cpu, __entry->dest_cpu)
- );
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index cce3a0496703..1367171b4a9e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -340,6 +340,7 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
+ extern void hrtick_local_start(u64 delay);
++extern void update_stat_preempt_delayed(struct task_struct *t);
  
-+/*
-+ * Tracepoint for delayed resched requested by task:
-+ */
-+TRACE_EVENT(sched_delay_resched,
-+
-+	TP_PROTO(struct task_struct *p, unsigned int resched_flg),
-+
-+	TP_ARGS(p, resched_flg),
-+
-+	TP_STRUCT__entry(
-+		__array( char, comm, TASK_COMM_LEN	)
-+		__field( pid_t, pid			)
-+		__field( int, cpu			)
-+		__field( int, flg			)
-+	),
-+
-+	TP_fast_assign(
-+		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__entry->pid		= p->pid;
-+		__entry->cpu 		= task_cpu(p);
-+		__entry->flg		= resched_flg;
-+	),
-+
-+	TP_printk("comm=%s pid=%d cpu=%d resched_flg_cleared=0x%x",
-+		__entry->comm, __entry->pid, __entry->cpu, __entry->flg)
-+
-+);
-+
- DECLARE_EVENT_CLASS(sched_process_template,
+ /* wrapper function to trace from this header file */
+ DECLARE_TRACEPOINT(sched_set_state_tp);
+@@ -563,6 +564,7 @@ struct sched_statistics {
+ 	u64				nr_wakeups_affine_attempts;
+ 	u64				nr_wakeups_passive;
+ 	u64				nr_wakeups_idle;
++	u64				nr_preempt_delay_granted;
  
- 	TP_PROTO(struct task_struct *p),
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index b26adccb32df..1951e6a4e9bc 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -12,6 +12,7 @@
+ #ifdef CONFIG_SCHED_CORE
+ 	u64				core_forceidle_sum;
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 0cfdaf5b6c8e..4c1586977f1b 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -475,6 +475,7 @@ bool rseq_delay_resched(void)
+ 		return false;
  
- #include "common.h"
+ 	t->sched_time_delay = 1;
++	update_stat_preempt_delayed(t);
  
-+#include <trace/events/sched.h>
- #define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
+ 	return true;
+ }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 05a952ec15ae..cb5bc0d41b01 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -936,6 +936,11 @@ void hrtick_local_start(u64 delay)
+ 	rq_unlock(rq, &rf);
+ }
  
-@@ -100,9 +101,12 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
- 		local_irq_enable_exit_to_user(ti_work);
++void update_stat_preempt_delayed(struct task_struct *t)
++{
++	schedstat_inc(t->stats.nr_preempt_delay_granted);
++}
++
+ static void hrtick_rq_init(struct rq *rq)
+ {
+ #ifdef CONFIG_SMP
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 4cba21f5d24d..6b753f56c312 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -1216,6 +1216,7 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 		P_SCHEDSTAT(nr_wakeups_affine_attempts);
+ 		P_SCHEDSTAT(nr_wakeups_passive);
+ 		P_SCHEDSTAT(nr_wakeups_idle);
++		P_SCHEDSTAT(nr_preempt_delay_granted);
  
- 		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY)) {
--		       if (irq && rseq_delay_resched())
-+		       if (irq && rseq_delay_resched()) {
- 			       clear_tsk_need_resched(current);
--		       else
-+			       trace_sched_delay_resched(current,
-+					       ti_work & (_TIF_NEED_RESCHED |
-+						       _TIF_NEED_RESCHED_LAZY));
-+		       } else
- 			       schedule();
- 		}
- 
+ 		avg_atom = p->se.sum_exec_runtime;
+ 		if (nr_switches)
 -- 
 2.43.5
 
