@@ -1,71 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97967257440;
-	Fri,  2 May 2025 15:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10F32566FA
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746198726; cv=none; b=urfXmCQ3+om6se/s6ebBkZ6usKGYHPZL58QXnt9TUrgCd2NP9C2VpQwqlb9NhlaexEawT3lRbnR9BzxD5WpjqHk2x8r4Rpb5m3Jnq6l3L+B6ZcDStp05nzYZQQkxXEYzwxpFrMy8VffzhlMmaEqQJxR1ZR/hfFfC4mV09Fy+LYE=
+	t=1746198782; cv=none; b=Yd6kQskIizAkQ18AYhrgZ/NnSgN8uXeT98xEoSDY/vXfln2Lpl/8Q/Il/X72avJc/TDCtCFC1Q1wxonUfv8JjGNHFnx7dugNf08UUYmifvajQNtJ72hklZiOVXmQA8oBpA97YKB/WRuVryNbFnoVRyRAw4XMBdPlcdEoyCcoAMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746198726; c=relaxed/simple;
-	bh=YejO4QjCqACnUWQ1i7GjVAxbUSM4Hmyho+r7bs0UWbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pK83P/I6St4vTi2eEXDLvO1Ko/gZnFJXBVoEQfq2/h/nNJ7Lh+7hoxgwdGtjtV2WFS4MOvpezEZ0DEoroi8xQ8CnMedgiPY8hupltDNeYNikfr+6rB3VFHH6L0oQdKe0vLCQhk43ku7qkhSIQP118g1FlbcFfVoc29QZW3ntlYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBRoSKR3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746198782; c=relaxed/simple;
+	bh=kHJpIvhRm5qEuCVbTAMGfSvPzJM6QDKFgb+D8QDKxq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nfe6g2+mlu9V9mPX09STy5R2MH4wiw5QbibEjFS5amxc7T8Oeu+2EpCCgYPaXPh3DqIi76aO6LRASg2vEenjDkSEo//meEQlRG2QIV5IiMmGFY4RsNNxEMlDlUXvCitrJHqH3S9R95JbymrmtxqkXsGDilWDa6TA2H7R6PPtxL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=DHKPyrkk; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBRoSKR3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB06EC4CEEE;
-	Fri,  2 May 2025 15:12:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746198726;
-	bh=YejO4QjCqACnUWQ1i7GjVAxbUSM4Hmyho+r7bs0UWbw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rBRoSKR3LDZzUHtBLxoIIVd22crDVmW7Sap8wzZi5pkRHle6rE94wsLmF33nsrhGZ
-	 NVSlLhmA7AwFYzUFUU0Pk2AuvN/cmh+dtwEQ053aAPGw74SN0yvekvI32OmFkGL2aO
-	 c31NzcwoUFRbMAfIVZwRJFIBe49UjGCvHFJlgArfEJ3rvxAz8kvHhJTX26AbL3tDRP
-	 Dk2zTSbRAmzCptlfOwOSIed6Q5PZeqROpqpZeBtYCWRWIAjh++mlHTD1Z5jSQajuWA
-	 cLkhJUQwtoXUSEifILhiPLtvts6itrLkR/cJkl18HoZo/j4e1Ty2r3XE99JR1mosUR
-	 5FOQSkEhXra6w==
-From: William Breathitt Gray <wbg@kernel.org>
-To: linux-iio@vger.kernel.org,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] counter: interrupt-cnt: Convert atomic_t -> atomic_long_t
-Date: Sat,  3 May 2025 00:11:41 +0900
-Message-ID: <174619859099.525726.7989189204506433091.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250331152222.2263776-1-alexander.sverdlin@siemens.com>
-References: <20250331152222.2263776-1-alexander.sverdlin@siemens.com>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="DHKPyrkk"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso3301855a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:12:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746198778; x=1746803578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kHJpIvhRm5qEuCVbTAMGfSvPzJM6QDKFgb+D8QDKxq4=;
+        b=DHKPyrkk+1qGBL1zEOFsWk1juTqUZHnEhfizMkwZZNk030zH73VIcGvqNHSHKNWw0E
+         rSCtLEbFVwzCGxHBOdR4slGclXOhYBrZHj0tHLR/UgbufXoW0xp96/AlB3z5Onm58aO4
+         vGlQK3tVZAe2x78C/oB/xA6My+Udnpe9BeGMjjMXlQMw7V2liRngCAsN/6HXdQ0fX9SB
+         ci3X6Z76i+JdYyLeLEoTYw/AbS+IChP+Ui5K9ZmmiG40vnnElnUpJyZl2nheTIgwhEk6
+         ynS8hQKRGLDG2MxN05kptSsFHRdMrOkLsagJtnGIywbJ+CYxYZAVSkykp52jg7ZHOymO
+         hddQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746198778; x=1746803578;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kHJpIvhRm5qEuCVbTAMGfSvPzJM6QDKFgb+D8QDKxq4=;
+        b=e/pbliLgc42xqJ9bRpqPA2WAJe9lKkLbcQZpfpbfH1rHpiU/fgqJA5tVnCoWCaSss8
+         obw8rtcmegqr7ybZnNXQlN6TYAaCtcMNF0vsE++KC+USHar0ONT0Rgbjbg2LL+yRg8Rm
+         MlvPFLlxqQHbEJls2CVivFpVhYdR2cnbg96lA8eTMtZWrRLZaisbsaDZAqgbXr1peeiH
+         lE6ErJhw4A2v3wiFM0AlbRH54IgPu0Pr1MQcWKxdAmKdSCbg24j8ckxuprGN8AfxwxMn
+         v8waBc1XWPkSBHxxghKl4rnCDWVY/m4+QUTfNOpVAzUuw201SwSd5uLJOOecGN+suzOr
+         eMJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXK9ibRyttaAyTLB4cM/sOdT3lAUkD0kxGe5H/PKo1UuyIKpBUdCo2YVo3TMoygA0pDWhUMYQf3dAWvRkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz39a/PVOnoAehxH5GVZgBPm0byFEUAlHmrdiN/7ey5CrNXZNbR
+	/1Qz5WMJGasT4YL6XeG/OjbnqfR7UV6L6LgcrUWF+YFFHT7ZerOqnRRdhiSRYb9vHKSKG6WoQnR
+	9rZ+mSGJK/g2XaCG/EZUwDJURsOW4heIi5xah+2PuAQKH/njg
+X-Gm-Gg: ASbGnct80CzTHkeB6VJvjPvO1Hc/M4HFwvMIpsXPwOLYewGgLf9KAouYIv4evbou5iW
+	mjFyl4EIOoVwwiWqUeeMtD9vSkr3ji+vk7FDghA89NiWu8W7OpJm+PAef03lqr/DlnZ1n/rhlDk
+	czaVHrowv8gImqsRLXWnJcOUSTjNwid86Cd1lQPfyToMFM2JwuMMQ=
+X-Google-Smtp-Source: AGHT+IH10dat862J8/hfkVJq5kzyiUxXwBhazqVPkNV47H+1QBPSZtq+KvDAV/qMH/8/qbkxuOSNr88fuE3fS6O2lI0=
+X-Received: by 2002:a17:906:f5aa:b0:ace:6bfb:372a with SMTP id
+ a640c23a62f3a-ad17afbc749mr342319366b.54.1746198778257; Fri, 02 May 2025
+ 08:12:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=591; i=wbg@kernel.org; h=from:subject:message-id; bh=RQj68j5/cqpAUS1wZfBkcQLMNh+D78NS/Mb+GMNmC6k=; b=kA0DAAoWtUhWyr4SIysByyZiAGgU4HHIpL4xYI7YJoNAIr++AoFO0gqdmo7exGxAeHpfQw22n Yh1BAAWCgAdFiEEjTfN3eDSJSj46J+2tUhWyr4SIysFAmgU4HEACgkQtUhWyr4SIyt4QAEAhQyL qkWWN43ZTEKQGpxlyGCDYLN44XeaSqvqAcvzi24A/RihHFw2HTGhpqV7lwxUXYv9PtCjqovZCDE Yh0fHxkEL
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+References: <20250502103905.3995477-1-max.kellermann@ionos.com> <CAD=FV=Udm8M2HnMWzzY-cyr7UCVf-0O8uSe-yOAfJ+27YBOTdQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=Udm8M2HnMWzzY-cyr7UCVf-0O8uSe-yOAfJ+27YBOTdQ@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Fri, 2 May 2025 17:12:46 +0200
+X-Gm-Features: ATxdqUH6Hj1BDF3scZBnMGsZSo_ODZ4g6D1H_zc6oESgPOpdSCiUMKiYUs7NxtI
+Message-ID: <CAKPOu+9-O7kfV4-qMLF0bDCzYc7O4AEB5Edf_4ehGd02CvHN=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kernel/watchdog: add /sys/kernel/{hard,soft}lockup_count
+To: Doug Anderson <dianders@chromium.org>
+Cc: akpm@linux-foundation.org, song@kernel.org, joel.granados@kernel.org, 
+	cminyard@mvista.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 2, 2025 at 4:40=E2=80=AFPM Doug Anderson <dianders@chromium.org=
+> wrote:
+> Hmmm. I suspect this has more to do with the fact that both hard and
+> soft lockups nearly always end up being fatal. ...but I guess
+> technically they could be recovered from and the kernel can be
+> configured not to panic, so I guess it would be OK to add something
+> like this.
 
-On Mon, 31 Mar 2025 17:22:20 +0200, A. Sverdlin wrote:
-> Convert the internal counter type to atomic_long_t, which:
-> - doesn't change much for existing in-tree users as they are 32-bit anyway
->   (stm32/i.MX6)
-> - doesn't introduce performace penalty on 32-bit platforms
-> - provides 64-bit resolution on 64-bit platforms with virtually no
->   preformance penalty
-> 
-> [...]
+This isn't really about recovering from such a lockup but about
+detecting it easily+quickly with monitoring tools. A machine that had
+a soft lockup still works (for some definition of "works"), and you
+cannot detect this condition without parsing dmesg.
 
-Applied, thanks!
+softlockup_panic is a bigger hammer with pros and cons of its own.
 
-[1/1] counter: interrupt-cnt: Convert atomic_t -> atomic_long_t
-      commit: 08e2a660b1601963ced37ac8e8d8c134a97f167e
+> It feels like there would be a better place for these to go than
+> straight in `/sys/kernel`, though I don't really know it. Maybe
+> someone else on this thread has opinions? Any chance they could go in
+> "debugfs"?
 
-Best regards,
--- 
-William Breathitt Gray <wbg@kernel.org>
+"oops_count" and "warn_count" in the same directory is prior art.
+ I don't think this belongs in debugfs, as debugfs is not considered a
+stable ABI, and this feature really isn't about debugging but about
+measuring server health.
+
+> Please no embedded ifdefs like this. I personally wouldn't hate it if
+> the "unsigned int" was simply always defined, but if we want to keep
+> it only defined for sysfs then please use a function to increment this
+> that's declared as a static inline noop in the case that sysfs is off.
+
+That would just move the ifdef somewhere else with more code lines,
+for something as trivial as incrementing an integer. It's a question
+of taste, and I'll follow whatever coding style the maintainers
+prefer.
