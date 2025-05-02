@@ -1,45 +1,47 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B82170A2B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2A3F9E6;
+	Fri,  2 May 2025 14:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195439; cv=none; b=HuTlOmaqceCVxNAhyN/8BSpMwvFg4vGE04oXq07Y6pc4e7dqNuhcNjYS3nBSp+4oI9/Eea1B2KG2awqL82VuLouQu6IpYGWSKiVHEhaoigZXsYIYSdp3MMqVP6nopOhoRQ3jk7hxO/soc3eVDf7CfrHFNHSM6J4o9zuLIR+p0Bk=
+	t=1746195453; cv=none; b=cavCfAJT0Zr3GmG+nJmGLsxW49dKmSA/O48/RxVLl0RwYhpFiYjyzTLP7+gudFhX435cY0Nv1rGhD/tfpPyjqSxWhgjpdP+C1ABK5u6rAgf7eHpaMNbhNaQY7xjWnDxZ5sbuprTXezqxKVUcjcMdG4KraYAXrnMJ6pK5Fcwu1Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195439; c=relaxed/simple;
-	bh=wje2Jf63+Uw4AwE+ReIeDCfh5HZVcSQgF5n/p19Y15E=;
+	s=arc-20240116; t=1746195453; c=relaxed/simple;
+	bh=2N8TEGsiMLtjUetJc49vJ9WjD1CCLSGeFZZkcJ6kGII=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WBJLzfCrRh+JTmkewQKr6GSTtgXwFW6mYw/9TEoh2PKWbaRwAiblkSMCc+wM5p9BUN8fO9G6qT+JUue8Du939+U/FLwdn34TXhqnI1YNnORWz3HLFZxbFtNnQWtXjwjCvXtXY5KOWXobbBXuttECc4d0IguAkXzEb268i1zbXfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=E2slgWfg; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8nA0oq4F4Ee269Wp9wlTKiP+SpiXxN3wp2X1mS57Ppfv0CFF04Ix4jqzoHqZo7ZUNhvb6bQd1p/e0ZixYgwrIv6WllHgQratAukTrxWbXjNZmiHdOeneEx5JG4BiHfqx5QHc7WSjhnD4cTFRVOav88Dwt/jnuLzMuK9hiVq7lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6k+0ekJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E2slgWfg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=N5BPCNx3medevuKtUngZzdL1QbG81GRvijuRIVoCR7I=; b=E2slgWfgbsgEWQHiSDoJfni2bH
-	ueiu+xiNPJbtwoOTBQ2ubHM8si35L7WKSzhU5x8zic6QFy/usvtvvMtrd8Ucn7SRXUhExim+SPFjm
-	baF1P4swjeSKb1NqBpNR1+Lt72QDIkllz+BtT1OQe1xTuM0qAxttnTuwmWzZgmZGBrdRXFTOIQmdH
-	c6jpaYWy8DTsrO7nknzU9AA5pQhwWqTQSLgm9dc+rFnmI/Y/rsxy8l8CYc7HQ7RwAhWjFLdq8onzV
-	u/nM8rQC1z874fOCcZrhbZyqvAWtTbZMj9m4u8FUnRPIfktz+tCNTG0VG/TSZa98tyKx64eTorSht
-	Fehjlivw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uArC8-00000002UIK-3S4j;
-	Fri, 02 May 2025 14:16:52 +0000
-Date: Fri, 2 May 2025 15:16:52 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ignacio.MorenoGonzalez@kuka.com, Liam.Howlett@oracle.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
-Message-ID: <aBTT1JIz17g_2pM7@casper.infradead.org>
-References: <20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com>
- <aBTCtOXBhUK_FLU6@casper.infradead.org>
- <3de8814b-9964-489c-8d13-feb319623b82@lucifer.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6k+0ekJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F615C4CEE4;
+	Fri,  2 May 2025 14:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746195452;
+	bh=2N8TEGsiMLtjUetJc49vJ9WjD1CCLSGeFZZkcJ6kGII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t6k+0ekJL9QRE4ELBOS5da/qeX6ubfL2owHdpi9KkWe5nAPf3l8ztARELEwyIG9+Z
+	 uUypwPuSYv2sYRqdH7b/AWiAwI+L17wsCYCuv6IVsZCD8h4+4HtntekG2yuhVXwn6E
+	 DP8/Dk4ko3neerJHTyWrHeMbV1SMirN2CEHPmUYpb4EVwAMsWlzPOPE2eSZRB+6tAR
+	 kumPNt8fyFuuCPQUpf0bW/Ah0YzoKgSRwPp3KzwarBYvUdrmZ8TdR2mVasHUkLoH4s
+	 RsBKIIxOV6nJUdfZf3KLKTPopo/Qa4rD+f3HDiUh6NWR0D2FmhtB9cq9PQ5yohxmTA
+	 +tfnjOeaUZtvQ==
+Date: Fri, 2 May 2025 09:17:30 -0500
+From: Rob Herring <robh@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+	Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: clock: qcom: Add CMN PLL support for
+ IPQ5018 SoC
+Message-ID: <20250502141730.GA1259057-robh@kernel.org>
+References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
+ <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,34 +50,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3de8814b-9964-489c-8d13-feb319623b82@lucifer.local>
+In-Reply-To: <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
 
-On Fri, May 02, 2025 at 02:12:16PM +0100, Lorenzo Stoakes wrote:
-> On Fri, May 02, 2025 at 02:03:48PM +0100, Matthew Wilcox wrote:
-> > On Fri, May 02, 2025 at 11:31:41AM +0200, Ignacio Moreno Gonzalez via B4 Relay wrote:
-> > > From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> > >
-> > > commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-> > > the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-> > > CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
-> > > VM_NOHUGEPAGE does not make sense. For instance, when calling madvise()
-> > > with MADV_NOHUGEPAGE, an error is always returned.
-> >
-> > Isn't that the real problem though?
+On Fri, May 02, 2025 at 02:15:43PM +0400, George Moussalem wrote:
+> The CMN PLL block in the IPQ5018 SoC takes 96 MHZ as the reference
+> input clock. Its output clocks are the XO (24Mhz), sleep (32Khz), and
+> ethernet (50Mhz) clocks.
 > 
-> Hmm, but wouldn't we want users who are trying to set MADV_[NO]HUGEPAGE to
-> be made aware that it isn't going to do anything?
+> Unlike IPQ9574, the CMN PLL to the ethernet block needs to be enabled
+> first in IPQ5018. Hence, add optional phandle to TCSR register space
+> and offset to do so.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  .../devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml  | 11 ++++++++---
+>  include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h         | 16 ++++++++++++++++
+>  2 files changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> index cb6e09f4247f4b25105b25f4ae746c0b3ef47616..25006d65d30e20ef8e1f43537bcf3dca65bae73d 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> @@ -24,12 +24,10 @@ description:
+>  properties:
+>    compatible:
+>      enum:
+> +      - qcom,ipq5018-cmn-pll
+>        - qcom,ipq5424-cmn-pll
+>        - qcom,ipq9574-cmn-pll
+>  
+> -  reg:
+> -    maxItems: 1
+> -
+>    clocks:
+>      items:
+>        - description: The reference clock. The supported clock rates include
+> @@ -50,6 +48,13 @@ properties:
+>    "#clock-cells":
+>      const: 1
+>  
+> +  qcom,cmn-pll-eth-enable:
+> +    description: Register in TCSR to enable CMN PLL to ethernet
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +        - description: phandle of TCSR syscon
+> +        - description: offset of TCSR register to enable CMN PLL to ethernet
 
-... I thought the patch was clear.  Only setting NOHUGEPAGE becomes a
-no-op.  Setting HUGEPAGE remains EINVAL.
-
-> And wouldn't changing this be a possibly 'breaking userspace' thing if
-> somebody somewhere relies on this?
-
-I don't see what userspace could rely on it returning EINVAL, since it
-won't on a kernel which has THP enabled.
-
-> Also this will make this inconsistent with e.g. MADV_COLLAPSE also?
-
-Not sure how ...
+items:
+  - items:
+      - description: phandle of TCSR syscon
+      - description: offset of TCSR register to enable CMN PLL to ethernet
 
