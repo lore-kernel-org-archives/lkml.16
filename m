@@ -1,175 +1,252 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C409256C9B;
-	Fri,  2 May 2025 14:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D91624D2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195971; cv=none; b=Ot/aTKbMzPwsXBoUuHbq+WkjQvvh0gM1adWOyJrqxmaDLVrbM0Ri1q+dQ202DiTxRbu2umT8eHNjrSL+7UEd/RC4eS3izjn36L6eXtNXln4it33C2rq6k547vVVQrllCm0nVnCXv0YmDYSLmwvniBUuswDdFjDDuPaCg9+5WLbQ=
+	t=1746195996; cv=none; b=vAO/ApdtemmImrd1/ZGXXBsJr4G5n18R/OPVHmP7z4yvnCpuQ+L/hWu5wrym0WdHjrDwmI8jV9hUvlfPf8S/URLSvRZ7BI6gVQT5Rvf6wMt/YVmhyzqsGxUSY5h2t6zwQ0OnA8Lsu8elOemVKRcQ9fwjQSzKxXOefdRQoVLpLUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195971; c=relaxed/simple;
-	bh=r7bJ04rxm1egxZUxKBy0DaRcOzZy9pv4ih3VucjjqiQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=sjFh3T5p5BIRX2tHFqAu+MKJfAmzD22MmTsyETTng4nQqqI7eYyDV97JanRnLdb+R5MAAgkVhzeJPcAXUHQdEICXqOcxJMw7G+hfShefUezU+HWqCmcIoJ+xDryKubbj1F8PGKprWOHnC4mk4UL697Yta0qFh/j7BGs185OI8Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GgT39S32; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746195996; c=relaxed/simple;
+	bh=WnH+dqe0udCsTb2yb68GJWUxQUnxpidgGIRNl7dIGho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i+90oxlcAFsPfTeEOC9zbdk3H7k/gYUCt6byzKda2mQkYIk0kqjxTwyuI83aDk5DbnJwDLCzhd78e8QU/U/Kmexk5aU6a19eScFwCMLW7XESiB9tyk/JnzpSO1GmY0T8iUr52ZeDSrT2CnEyBCrCSuj7fxcTmvGvcgBc3ZjF5tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RRdT92hS; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GgT39S32"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=9/d9HGSmnu1K8plMQ/z7T8XUHN+iiRR+u0jykNWAszU=; b=GgT39S32uyjySX0HPX7e53L9DP
-	AvRt81KovfDOhWpovtyAUNYEVYV/JjQQzre1FzF9JgXabkYzt1IQZtRyZaQ/6maBbwZ4Pl97yboaV
-	odume75X6YelhfWEXof2oNUHJzTAahD6ebnv0NggIE7LlHyO1424l+2KtiD4pyI735wWQQFSPruKC
-	D8ZTo3W9ILct4rrJnPd72KWodSRBe2yQo/o8WBdVLGSINUYasjWF6tuZarfGVEUnvCoM/CyJHBWKW
-	JsNeMjyjUROqI9APYnebo7AYIqV7CWFqh8wBmzpAg8zxBd+lxCz0bu3P8euWp+5PzzwzUUGlEb8y0
-	xqw0TNLA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uArKE-00000002iJh-3iXp;
-	Fri, 02 May 2025 14:25:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id EBEDD30078C; Fri,  2 May 2025 16:24:59 +0200 (CEST)
-Message-ID: <20250502141844.154517322@infradead.org>
-User-Agent: quilt/0.66
-Date: Fri, 02 May 2025 16:12:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: mcgrof@kernel.org
-Cc: x86@kernel.org,
- hpa@zytor.com,
- petr.pavlu@suse.com,
- samitolvanen@google.com,
- da.gomez@samsung.com,
- masahiroy@kernel.org,
- nathan@kernel.org,
- nicolas@fjasle.eu,
- linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org,
- linux-kbuild@vger.kernel.org,
- hch@infradead.org,
- gregkh@linuxfoundation.org,
- roypat@amazon.co.uk,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH v3 3/5] module: Extend the MODULE_ namespace parsing
-References: <20250502141204.500293812@infradead.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RRdT92hS"
+Message-ID: <f1f23c1a-f4a8-4807-8028-87e247775ec8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746195982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qhhZm+7v2L3Je3++vQOTPSZ1GcPWDVHw6xWa+wHNGkg=;
+	b=RRdT92hSwCCMwy891Mow09cD2Li4if9SkyeAymSds629ZfnqXVXZ5C91HLIfGYIYRi4i8F
+	BjDHJZvDbyJlUuaXcLd2p/XFKxUuZymv0Eq75l8NFFoSn35kGx9FGjoSpOHzeu2G6n1Rsj
+	T965yfd0A4H7jWOz/naFCzI8fFEC0I8=
+Date: Fri, 2 May 2025 22:25:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kafai Wan <mannkafai@gmail.com>, Song Liu <song@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <20250426160027.177173-1-mannkafai@gmail.com>
+ <20250426160027.177173-2-mannkafai@gmail.com>
+ <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+ <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+ <f951b81f-1b46-4219-82fd-0839e27ab3f3@linux.dev>
+ <CAADnVQ+FANha0fO_BF+iHJ4iZSCPtDfoUkzR8mMFwOakw8+eCg@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <CAADnVQ+FANha0fO_BF+iHJ4iZSCPtDfoUkzR8mMFwOakw8+eCg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Instead of only accepting "module:${name}", extend it with a comma
-separated list of module names and add tail glob support.
 
-That is, something like: "module:foo-*,bar" is now possible.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/module/main.c  |   36 ++++++++++++++++++++++++++++++++++--
- scripts/mod/modpost.c |   36 ++++++++++++++++++++++++++++++++++--
- 2 files changed, 68 insertions(+), 4 deletions(-)
+On 2025/5/1 00:53, Alexei Starovoitov wrote:
+> On Wed, Apr 30, 2025 at 8:55 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>>
+>>
+>>
+>> On 2025/4/30 20:43, Kafai Wan wrote:
+>>> On Wed, Apr 30, 2025 at 10:46 AM Alexei Starovoitov
+>>> <alexei.starovoitov@gmail.com> wrote:
+>>>>
+>>>> On Sat, Apr 26, 2025 at 9:00 AM KaFai Wan <mannkafai@gmail.com> wrote:
+>>>>>
+>>
 
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -1083,12 +1083,44 @@ static char *get_modinfo(const struct lo
- 	return get_next_modinfo(info, tag, NULL);
- }
- 
-+/**
-+ * verify_module_namespace() - does @modname have access to this symbol's @namespace
-+ * @namespace: export symbol namespace
-+ * @modname: module name
-+ *
-+ * If @namespace is prefixed with "module:" to indicate it is a module namespace
-+ * then test if @modname matches any of the comma separated patterns.
-+ *
-+ * The patterns only support tail-glob.
-+ */
- static bool verify_module_namespace(const char *namespace, const char *modname)
- {
-+	size_t len, modlen = strlen(modname);
- 	const char *prefix = "module:";
-+	const char *sep;
-+	bool glob;
- 
--	return strstarts(namespace, prefix) &&
--	       !strsmp(namespace + strlen(prefix), modname);
-+	if (!strstarts(namespace, prefix))
-+		return false;
-+
-+	for (namespace += strlen(prefix); *namespace; namespace = sep) {
-+		sep = strchrnul(namespace, ',');
-+		len = sep - namespace;
-+
-+		glob = false;
-+		if (sep[-1] == '*') {
-+			len--;
-+			glob = true;
-+		}
-+
-+		if (*sep)
-+			sep++;
-+
-+		if (strncmp(namespace, modname, len) == 0 && (glob || len == modlen))
-+			return true;
-+	}
-+
-+	return false;
- }
- 
- static int verify_namespace_is_imported(const struct load_info *info,
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1682,12 +1682,44 @@ void buf_write(struct buffer *buf, const
- 	buf->pos += len;
- }
- 
-+/**
-+ * verify_module_namespace() - does @modname have access to this symbol's @namespace
-+ * @namespace: export symbol namespace
-+ * @modname: module name
-+ *
-+ * If @namespace is prefixed with "module:" to indicate it is a module namespace
-+ * then test if @modname matches any of the comma separated patterns.
-+ *
-+ * The patterns only support tail-glob.
-+ */
- static bool verify_module_namespace(const char *namespace, const char *modname)
- {
-+	size_t len, modlen = strlen(modname);
- 	const char *prefix = "module:";
-+	const char *sep;
-+	bool glob;
- 
--	return strstarts(namespace, prefix) &&
--	       !strcmp(namespace + strlen(prefix), modname);
-+	if (!strstarts(namespace, prefix))
-+		return false;
-+
-+	for (namespace += strlen(prefix); *namespace; namespace = sep) {
-+		sep = strchrnul(namespace, ',');
-+		len = sep - namespace;
-+
-+		glob = false;
-+		if (sep[-1] == '*') {
-+			len--;
-+			glob = true;
-+		}
-+
-+		if (*sep)
-+			sep++;
-+
-+		if (strncmp(namespace, modname, len) == 0 && (glob || len == modlen))
-+			return true;
-+	}
-+
-+	return false;
- }
- 
- static void check_exports(struct module *mod)
+[...]
+
+>>
+>>
+>> bpf_get_func_arg() will be very helpful for bpfsnoop[1] when tracing tp_btf.
+>>
+>> In bpfsnoop, it can generate a small snippet of bpf instructions to use
+>> bpf_get_func_arg() for retrieving and filtering arguments. For example,
+>> with the netif_receive_skb tracepoint, bpfsnoop can use
+>> bpf_get_func_arg() to filter the skb argument using pcap-filter(7)[2] or
+>> a custom attribute-based filter. This will allow bpfsnoop to trace
+>> multiple tracepoints using a single bpf program code.
+> 
+> I doubt you thought it through end to end.
+> When tracepoint prog attaches we have this check:
+>         /*
+>          * check that program doesn't access arguments beyond what's
+>          * available in this tracepoint
+>          */
+>         if (prog->aux->max_ctx_offset > btp->num_args * sizeof(u64))
+>                 return -EINVAL;
+> 
+> So you cannot have a single bpf prog attached to many tracepoints
+> to read many arguments as-is.
+> You can hack around that limit with probe_read,
+> but the values won't be trusted and you won't be able to pass
+> such untrusted pointers into skb and other helpers/kfuncs.
+
+I understand that a single bpf program cannot be attached to multiple
+tracepoints using tp_btf. However, the same bpf code can be reused to
+create multiple bpf programs, each attached to a different tracepoint.
+
+For example:
+
+SEC("fentry")
+int BPF_PROG(fentry_fn)
+{
+	/* ... */
+	return BPF_OK;
+}
+
+The above fentry code can be compiled into multiple bpf programs to
+trace different kernel functions. Each program can then use the
+bpf_get_func_arg() helper to access the arguments of the traced function.
+
+With this patch, tp_btf will gain similar flexibility. For example:
+
+SEC("tp_btf")
+int BPF_PROG(tp_btf_fn)
+{
+	/* ... */
+	return BPF_OK;
+}
+
+Here, bpf_get_func_arg() can be used to access tracepoint arguments.
+
+Currently, due to the lack of bpf_get_func_arg() support in tp_btf,
+bpfsnoop[1] uses bpf_probe_read_kernel() to read tracepoint arguments.
+This is also used when filtering specific argument attributes.
+
+For instance, to filter the skb argument of the netif_receive_skb
+tracepoint by 'skb->dev->ifindex == 2', the translated bpf instructions
+with bpf_probe_read_kernel() would look like this:
+
+bool filter_arg(__u64 * args):
+; filter_arg(__u64 *args)
+ 209: (79) r1 = *(u64 *)(r1 +0) /* all tracepoint's argument has been
+read into args using bpf_probe_read_kernel() */
+ 210: (bf) r3 = r1
+ 211: (07) r3 += 16
+ 212: (b7) r2 = 8
+ 213: (bf) r1 = r10
+ 214: (07) r1 += -8
+ 215: (85) call bpf_probe_read_kernel#-125280
+ 216: (79) r3 = *(u64 *)(r10 -8)
+ 217: (15) if r3 == 0x0 goto pc+10
+ 218: (07) r3 += 224
+ 219: (b7) r2 = 8
+ 220: (bf) r1 = r10
+ 221: (07) r1 += -8
+ 222: (85) call bpf_probe_read_kernel#-125280
+ 223: (79) r3 = *(u64 *)(r10 -8)
+ 224: (67) r3 <<= 32
+ 225: (77) r3 >>= 32
+ 226: (b7) r0 = 1
+ 227: (15) if r3 == 0x2 goto pc+1
+ 228: (af) r0 ^= r0
+ 229: (95) exit
+
+If bpf_get_func_arg() is supported in tp_btf, the bpf program will
+instead look like:
+
+static __noinline bool
+filter_skb(void *ctx)
+{
+    struct sk_buff *skb;
+
+    (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
+    return skb->dev->ifindex == 2;
+}
+
+This will simplify the generated code and eliminate the need for
+bpf_probe_read_kernel() calls. However, in my tests (on kernel
+6.8.0-35-generic, Ubuntu 24.04 LTS), the pointer returned by
+bpf_get_func_arg() is marked as a scalar rather than a trusted pointer:
+
+	0: R1=ctx() R10=fp0
+	; if (!filter_skb(ctx))
+	0: (85) call pc+3
+	caller:
+	 R10=fp0
+	callee:
+	 frame1: R1=ctx() R10=fp0
+	4: frame1: R1=ctx() R10=fp0
+	; filter_skb(void *ctx)
+	4: (bf) r3 = r10                      ; frame1: R3_w=fp0 R10=fp0
+	;
+	5: (07) r3 += -8                      ; frame1: R3_w=fp-8
+	; (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
+	6: (b7) r2 = 0                        ; frame1: R2_w=0
+	7: (85) call bpf_get_func_arg#183     ; frame1: R0_w=scalar()
+	; return skb->dev->ifindex == 2;
+	8: (79) r1 = *(u64 *)(r10 -8)         ; frame1: R1_w=scalar() R10=fp0
+fp-8=mmmmmmmm
+	; return skb->dev->ifindex == 2;
+	9: (79) r1 = *(u64 *)(r1 +16)
+	R1 invalid mem access 'scalar'
+	processed 7 insns (limit 1000000) max_states_per_insn 0 total_states 0
+peak_states 0 mark_read 0
+
+If the returned skb is a trusted pointer, the verifier will accept
+something like:
+
+static __noinline bool
+filter_skb(struct sk_buff *skb)
+{
+    return skb->dev->ifindex == 2;
+}
+
+Which will compile into much simpler and more efficient instructions:
+
+bool filter_skb(struct sk_buff * skb):
+; return skb->dev->ifindex == 2;
+  92: (79) r1 = *(u64 *)(r1 +16)
+; return skb->dev->ifindex == 2;
+  93: (61) r1 = *(u32 *)(r1 +224)
+  94: (b7) r0 = 1
+; return skb->dev->ifindex == 2;
+  95: (15) if r1 == 0x2 goto pc+1
+  96: (b7) r0 = 0
+; return skb->dev->ifindex == 2;
+  97: (95) exit
+
+In conclusion:
+
+1. It will be better if the pointer returned by bpf_get_func_arg() is
+trusted, only when the argument index is a known constant.
+2. Adding bpf_get_func_arg() support to tp_btf will significantly
+simplify and improve tools like bpfsnoop.
+
+[1] https://github.com/bpfsnoop/bpfsnoop
+
+Thanks,
+Leon
 
 
