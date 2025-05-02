@@ -1,298 +1,337 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AAE17A2E1;
-	Fri,  2 May 2025 15:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CC8746E;
+	Fri,  2 May 2025 15:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199980; cv=none; b=COJ3O/yiLxH6P7MPePpBWVUanwpZDD6rm/JW9VhUBH4cJE7Q0fhy30Hm4mz76PWktk9iALHH9GP5JAckCzv5An2PftfglVpzfsm24LbLaCeO3vjqoR2A0bH/tA3JprtYvHKAz/s0XY3QnC19+x5+VJcsmgMh8aORIdCaPo/PXNg=
+	t=1746200027; cv=none; b=Pvd6X6yYZO3JpYS7acZwMy1A48RDst4nmsyZ/owVjqI+xjFWFeMihs4rkCpFjspD+DpLPzWwusj7EVsHFgsE1UMpIXqfaVDjik4WYevZ7GPzmBe7dRaZoKAaVkBP9gFseOwAy+mfZPfrwNelCPJE4CniVMUx+7gb7ftEqMPpNUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199980; c=relaxed/simple;
-	bh=yHpzrVzr/oK3MgmusvBTKE8uAkP7XduR/wfA4fiCQlU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TtRqLkPBxPMSyqstwF4vwHsRTmOUhJIdx5HACiFuoxE3sJJJXRAazGDy2WC2at1f63ngSgdOziZlJSvaukDsLs6Wa8ohzNATMVT0KieB/g+qPVbK6/19e0OziZRCG55zbBygabOPJMmhqjYFfiPrNZBy2VoCby9B8ZaRQmvRPpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hk3KMDE/; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746200027; c=relaxed/simple;
+	bh=PKGaeTrK4FajdED5Mz4076bIbJwsbvqNOF8fiH7cBUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W4H0EHmLtp10vdfZACCodhYBzsQeU5CVWCxrrnLr7Crxb3tng5QYqlc5gffz2LYP+GARvSS4R40mRS4bNz+G0Ni9LAp5adKo0rGpvEJydHJ/vYCoHgsFWiuvFpRIWNBQ/ln8MzuOofhTvq6ee43KkpHbmizkfHbX+fuWfakB8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=WyZhZN1R; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hk3KMDE/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1269143977;
-	Fri,  2 May 2025 15:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746199975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UUgQDcstbAgtUrYmh7Z5aZwvJ2iReYl8nbIcaObLdHo=;
-	b=Hk3KMDE/YXdSf5KnKE8LYCsZjQK+VIjljn9imJ1Vmgq64+rf8RBV6cc7HTEykUweFs/INk
-	/OKXTSSKrG9/Ffy4HxTAUs3l0JCN5niclCfeYE9PM/h6NhYDHUUJ4NumcF3rc+2xDrb4o9
-	vsCVno4BPHBZo7fIKfK4O8SKxsReGBlT3V27VUqN7mLuoVVBkElXOuIZKxo30DxxLbmMqx
-	QupooD9/WizapYrUNFbGvPykpW60elT/dKSiSYwSfOkHJnHh1wVTLHoITslV9Is+0skOIK
-	TpLvF0SZ1zG8hnslMpC6QV4j2XpAsvqqWRD7stns6lRDq8CSVBzPFcbl+Ojmnw==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Vladimir Kondratiev
- <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
-In-Reply-To: <87o6wecdg0.fsf@BLaptop.bootlin.com>
-References: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
- <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
- <CAAhV-H6iOwoYCCob6TmFf1boKQHb0=Mim2bWFvZCMfi9Rw5FPQ@mail.gmail.com>
- <87wmb2ceh7.fsf@BLaptop.bootlin.com>
- <CAAhV-H65b5Ae-cCYYHTx0QBhYJ_fzSVLFGY0RH1PCq0XbvNPQA@mail.gmail.com>
- <87o6wecdg0.fsf@BLaptop.bootlin.com>
-Date: Fri, 02 May 2025 17:32:54 +0200
-Message-ID: <87cycrc9jt.fsf@BLaptop.bootlin.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="WyZhZN1R"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id AsNKucfiRU6wKAsNNuiUsf; Fri, 02 May 2025 17:32:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1746199955;
+	bh=+hpk8cr126p7YYLv2U+Rh60U/JKvVKpYQL3YqdP60hg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=WyZhZN1R+jxM5SFehLWOWGPihwRkEGdeRNXJINrq5NSgjMWDa4P5UgurXfxgdi2z2
+	 Rtl18Y4xExXTUZgG8s4mr0S3wVmtyIvbQhz0btegHbAT17FGXRg0BhnHP+FtiFaREY
+	 +wFE5qLhC2AgUlhCp4VKPiv6MTu32slh7VCC6f3loQZ6kg5MWL0gxHNaYrhC4zwQOv
+	 3lqy0Ls5AfdLnovkX3c5YS/EjSzS4ywRpLZDMQOEGkjLPhruy30tCUJTRO+M1hnToF
+	 E8HirI7HQc8Q8pYcFnO/HC+ifTxnFUsBEwTBEKeXmp26lpyeQS1eBQPj96cj5W9fo+
+	 mbezbb54/O+jA==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 02 May 2025 17:32:35 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: [PATCH] pmdomain: amlogic: Constify some structures
+Date: Fri,  2 May 2025 17:32:19 +0200
+Message-ID: <edc560afe2a8763c93341d161daeb8b33ba606c6.1746199917.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvkedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueetgfffueeivdeitdeuhedtteffueffjedthfevvdegvdevgeduhfektdfhleeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeduvdgrheemsgdvugejmedutdehleemgegvtdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeduvdgrheemsgdvugejmedutdehleemgegvtdekpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrt
- ghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: gregory.clement@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello,=20
+Most structures in this driver are not modified.
 
-> Huacai Chen <chenhuacai@kernel.org> writes:
->
->> On Wed, Apr 30, 2025 at 3:09=E2=80=AFPM Gregory CLEMENT
->> <gregory.clement@bootlin.com> wrote:
->>>
->>> Hello Huacai,
->>>
->>> > Hi, Gregory,
->>> >
->>> > On Sun, Apr 27, 2025 at 6:13=E2=80=AFPM Huacai Chen <chenhuacai@kerne=
-l.org> wrote:
->>> >>
->>> >> Hi, Gregory and Thomas,
->>> >>
->>> >> I'm sorry I'm late, but I have some questions about this patch.
->>> >>
->>> >> On Mon, Apr 14, 2025 at 3:12=E2=80=AFAM Gregory CLEMENT
->>> >> <gregory.clement@bootlin.com> wrote:
->>> >> >
->>> >> > Added support for starting CPUs in parallel on EyeQ to speed up bo=
-ot time.
->>> >> >
->>> >> > On EyeQ5, booting 8 CPUs is now ~90ms faster.
->>> >> > On EyeQ6, booting 32 CPUs is now ~650ms faster.
->>> >> >
->>> >> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->>> >> > ---
->>> >> > Hello,
->>> >> >
->>> >> > This patch allows CPUs to start in parallel. It has been tested on
->>> >> > EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. T=
-hese
->>> >> > systems use CPS to support SMP.
->>> >> >
->>> >> > As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
->>> >> > faster.
->>> >> >
->>> >> > Currently, this support is only for EyeQ SoC. However, it should a=
-lso
->>> >> > work for other CPUs using CPS. I am less sure about MT ASE support,
->>> >> > but this patch can be a good starting point. If anyone wants to add
->>> >> > support for other systems, I can share some ideas, especially for =
-the
->>> >> > MIPS_GENERIC setup that needs to handle both types of SMP setups.
->>> >> >
->>> [...]
->>> >> >   * A logical cpu mask containing only one VPE per core to
->>> >> > @@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
->>> >> >
->>> >> >  cpumask_t cpu_coherent_mask;
->>> >> >
->>> >> > +struct cpumask __cpu_primary_thread_mask __read_mostly;
->>> >> > +
->>> >> >  unsigned int smp_max_threads __initdata =3D UINT_MAX;
->>> >> >
->>> >> >  static int __init early_nosmt(char *s)
->>> >> > @@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
->>> >> >         set_cpu_core_map(cpu);
->>> >> >
->>> >> >         cpumask_set_cpu(cpu, &cpu_coherent_mask);
->>> >> > +#ifdef CONFIG_HOTPLUG_PARALLEL
->>> >> > +       cpuhp_ap_sync_alive();
->>> >> This is a "synchronization point" due to the description from commit
->>> >> 9244724fbf8ab394a7210e8e93bf037abc, which means things are parallel
->>> >> before this point and serialized after this point.
->>> >>
->>> >> But unfortunately, set_cpu_sibling_map() and set_cpu_core_map() cann=
-ot
->>> >> be executed in parallel. Maybe you haven't observed problems, but in
->>> >> theory it's not correct.
->>>
->>> I am working on it. To address your remark, I have a few options that I
->>> evaluate.
->> I suggest to revert this patch temporary in mips-next.
->
->
-> As I previously mentioned, I haven't observed any issues until now. What
-> I'm evaluating is whether there is a real problem with this
-> implementation. Let's examine whether we need a new patch or if this one
-> is sufficient.
->
-> I will have the resutls at the end of the week.
+Constifying these structures moves some data to a read-only section, so
+increase overall security, especially when the structure holds some
+function pointers. (This is the case for see meson_ee_pwrc_domain_desc)
 
-After hundreds of reboots on the EyeQ5, I did not encounter any failures
-during boot. However, while executing the set_cpu_core_map() and
-set_cpu_sibling_map() functions in parallel, modifications to shared
-resources could result in issues. To address this, I proposed the
-following fix:
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   8924	   3832	      0	  12756	   31d4	drivers/pmdomain/amlogic/meson-ee-pwrc.o
 
-diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
-index 1726744f2b2ec..5f30611f45a1c 100644
---- a/arch/mips/kernel/smp.c
-+++ b/arch/mips/kernel/smp.c
-@@ -374,13 +377,13 @@ asmlinkage void start_secondary(void)
-        calibrate_delay();
-        cpu_data[cpu].udelay_val =3D loops_per_jiffy;
-=20
-+#ifdef CONFIG_HOTPLUG_PARALLEL
-+       cpuhp_ap_sync_alive();
-+#endif
-        set_cpu_sibling_map(cpu);
-        set_cpu_core_map(cpu);
-=20
-        cpumask_set_cpu(cpu, &cpu_coherent_mask);
--#ifdef CONFIG_HOTPLUG_PARALLEL
--       cpuhp_ap_sync_alive();
--#endif
-        notify_cpu_starting(cpu);
-=20
- #ifndef CONFIG_HOTPLUG_PARALLEL
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  12396	    336	      0	  12732	   31bc	drivers/pmdomain/amlogic/meson-ee-pwrc.o
 
-It moved these two functions back in the serialized part of the boot. I
-was concerned about potential slowdowns during the boot process, but I
-didn't notice any issues during my test on EyeQ5. Therefore, we can make
-this change.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only.
+---
+ drivers/pmdomain/amlogic/meson-ee-pwrc.c | 78 ++++++++++++------------
+ 1 file changed, 39 insertions(+), 39 deletions(-)
 
+diff --git a/drivers/pmdomain/amlogic/meson-ee-pwrc.c b/drivers/pmdomain/amlogic/meson-ee-pwrc.c
+index fbb2b4103930..55c8c9f66a1b 100644
+--- a/drivers/pmdomain/amlogic/meson-ee-pwrc.c
++++ b/drivers/pmdomain/amlogic/meson-ee-pwrc.c
+@@ -69,27 +69,27 @@ struct meson_ee_pwrc_domain_desc {
+ 	char *name;
+ 	unsigned int reset_names_count;
+ 	unsigned int clk_names_count;
+-	struct meson_ee_pwrc_top_domain *top_pd;
++	const struct meson_ee_pwrc_top_domain *top_pd;
+ 	unsigned int mem_pd_count;
+-	struct meson_ee_pwrc_mem_domain *mem_pd;
++	const struct meson_ee_pwrc_mem_domain *mem_pd;
+ 	bool (*is_powered_off)(struct meson_ee_pwrc_domain *pwrc_domain);
+ };
+ 
+ struct meson_ee_pwrc_domain_data {
+ 	unsigned int count;
+-	struct meson_ee_pwrc_domain_desc *domains;
++	const struct meson_ee_pwrc_domain_desc *domains;
+ };
+ 
+ /* TOP Power Domains */
+ 
+-static struct meson_ee_pwrc_top_domain gx_pwrc_vpu = {
++static const struct meson_ee_pwrc_top_domain gx_pwrc_vpu = {
+ 	.sleep_reg = GX_AO_RTI_GEN_PWR_SLEEP0,
+ 	.sleep_mask = BIT(8),
+ 	.iso_reg = GX_AO_RTI_GEN_PWR_SLEEP0,
+ 	.iso_mask = BIT(9),
+ };
+ 
+-static struct meson_ee_pwrc_top_domain meson8_pwrc_vpu = {
++static const struct meson_ee_pwrc_top_domain meson8_pwrc_vpu = {
+ 	.sleep_reg = MESON8_AO_RTI_GEN_PWR_SLEEP0,
+ 	.sleep_mask = BIT(8),
+ 	.iso_reg = MESON8_AO_RTI_GEN_PWR_SLEEP0,
+@@ -104,20 +104,20 @@ static struct meson_ee_pwrc_top_domain meson8_pwrc_vpu = {
+ 		.iso_mask = BIT(__bit), 			\
+ 	}
+ 
+-static struct meson_ee_pwrc_top_domain sm1_pwrc_vpu = SM1_EE_PD(8);
+-static struct meson_ee_pwrc_top_domain sm1_pwrc_nna = SM1_EE_PD(16);
+-static struct meson_ee_pwrc_top_domain sm1_pwrc_usb = SM1_EE_PD(17);
+-static struct meson_ee_pwrc_top_domain sm1_pwrc_pci = SM1_EE_PD(18);
+-static struct meson_ee_pwrc_top_domain sm1_pwrc_ge2d = SM1_EE_PD(19);
++static const struct meson_ee_pwrc_top_domain sm1_pwrc_vpu = SM1_EE_PD(8);
++static const struct meson_ee_pwrc_top_domain sm1_pwrc_nna = SM1_EE_PD(16);
++static const struct meson_ee_pwrc_top_domain sm1_pwrc_usb = SM1_EE_PD(17);
++static const struct meson_ee_pwrc_top_domain sm1_pwrc_pci = SM1_EE_PD(18);
++static const struct meson_ee_pwrc_top_domain sm1_pwrc_ge2d = SM1_EE_PD(19);
+ 
+-static struct meson_ee_pwrc_top_domain g12a_pwrc_nna = {
++static const struct meson_ee_pwrc_top_domain g12a_pwrc_nna = {
+ 	.sleep_reg = GX_AO_RTI_GEN_PWR_SLEEP0,
+ 	.sleep_mask = BIT(16) | BIT(17),
+ 	.iso_reg = GX_AO_RTI_GEN_PWR_ISO0,
+ 	.iso_mask = BIT(16) | BIT(17),
+ };
+ 
+-static struct meson_ee_pwrc_top_domain g12a_pwrc_isp = {
++static const struct meson_ee_pwrc_top_domain g12a_pwrc_isp = {
+ 	.sleep_reg = GX_AO_RTI_GEN_PWR_SLEEP0,
+ 	.sleep_mask = BIT(18) | BIT(19),
+ 	.iso_reg = GX_AO_RTI_GEN_PWR_ISO0,
+@@ -154,39 +154,39 @@ static struct meson_ee_pwrc_top_domain g12a_pwrc_isp = {
+ 	{ __reg, BIT(14) },					\
+ 	{ __reg, BIT(15) }
+ 
+-static struct meson_ee_pwrc_mem_domain axg_pwrc_mem_vpu[] = {
++static const struct meson_ee_pwrc_mem_domain axg_pwrc_mem_vpu[] = {
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
++static const struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG2),
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
++static const struct meson_ee_pwrc_mem_domain gxbb_pwrc_mem_vpu[] = {
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain meson_pwrc_mem_eth[] = {
++static const struct meson_ee_pwrc_mem_domain meson_pwrc_mem_eth[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain meson8_pwrc_audio_dsp_mem[] = {
++static const struct meson_ee_pwrc_mem_domain meson8_pwrc_audio_dsp_mem[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(1, 0) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_vpu[] = {
++static const struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_vpu[] = {
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_vpu[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_vpu[] = {
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+ 	VPU_MEMPD(HHI_VPU_MEM_PD_REG2),
+@@ -198,28 +198,28 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_vpu[] = {
+ 	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_nna[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_nna[] = {
+ 	{ HHI_NANOQ_MEM_PD_REG0, 0xff },
+ 	{ HHI_NANOQ_MEM_PD_REG1, 0xff },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_usb[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_usb[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(31, 30) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_pcie[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_pcie[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(29, 26) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_ge2d[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_ge2d[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(25, 18) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain axg_pwrc_mem_audio[] = {
++static const struct meson_ee_pwrc_mem_domain axg_pwrc_mem_audio[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(5, 4) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
++static const struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
+ 	{ HHI_MEM_PD_REG0, GENMASK(5, 4) },
+ 	{ HHI_AUDIO_MEM_PD_REG0, GENMASK(1, 0) },
+ 	{ HHI_AUDIO_MEM_PD_REG0, GENMASK(3, 2) },
+@@ -235,12 +235,12 @@ static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_audio[] = {
+ 	{ HHI_AUDIO_MEM_PD_REG0, GENMASK(27, 26) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_nna[] = {
++static const struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_nna[] = {
+ 	{ G12A_HHI_NANOQ_MEM_PD_REG0, GENMASK(31, 0) },
+ 	{ G12A_HHI_NANOQ_MEM_PD_REG1, GENMASK(31, 0) },
+ };
+ 
+-static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_isp[] = {
++static const struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_isp[] = {
+ 	{ G12A_HHI_ISP_MEM_PD_REG0, GENMASK(31, 0) },
+ 	{ G12A_HHI_ISP_MEM_PD_REG1, GENMASK(31, 0) },
+ };
+@@ -270,14 +270,14 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_isp[] = {
+ 
+ static bool pwrc_ee_is_powered_off(struct meson_ee_pwrc_domain *pwrc_domain);
+ 
+-static struct meson_ee_pwrc_domain_desc axg_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc axg_pwrc_domains[] = {
+ 	[PWRC_AXG_VPU_ID]  = VPU_PD("VPU", &gx_pwrc_vpu, axg_pwrc_mem_vpu,
+ 				     pwrc_ee_is_powered_off, 5, 2),
+ 	[PWRC_AXG_ETHERNET_MEM_ID] = MEM_PD("ETH", meson_pwrc_mem_eth),
+ 	[PWRC_AXG_AUDIO_ID] = MEM_PD("AUDIO", axg_pwrc_mem_audio),
+ };
+ 
+-static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
+ 	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &gx_pwrc_vpu, g12a_pwrc_mem_vpu,
+ 				     pwrc_ee_is_powered_off, 11, 2),
+ 	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson_pwrc_mem_eth),
+@@ -287,13 +287,13 @@ static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
+ 				    pwrc_ee_is_powered_off),
+ };
+ 
+-static struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc gxbb_pwrc_domains[] = {
+ 	[PWRC_GXBB_VPU_ID]  = VPU_PD("VPU", &gx_pwrc_vpu, gxbb_pwrc_mem_vpu,
+ 				     pwrc_ee_is_powered_off, 12, 2),
+ 	[PWRC_GXBB_ETHERNET_MEM_ID] = MEM_PD("ETH", meson_pwrc_mem_eth),
+ };
+ 
+-static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
+ 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
+ 				       meson8_pwrc_mem_vpu,
+ 				       pwrc_ee_is_powered_off, 0, 1),
+@@ -303,7 +303,7 @@ static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
+ 						meson8_pwrc_audio_dsp_mem),
+ };
+ 
+-static struct meson_ee_pwrc_domain_desc meson8b_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc meson8b_pwrc_domains[] = {
+ 	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
+ 				       meson8_pwrc_mem_vpu,
+ 				       pwrc_ee_is_powered_off, 11, 1),
+@@ -313,7 +313,7 @@ static struct meson_ee_pwrc_domain_desc meson8b_pwrc_domains[] = {
+ 						meson8_pwrc_audio_dsp_mem),
+ };
+ 
+-static struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
++static const struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
+ 	[PWRC_SM1_VPU_ID]  = VPU_PD("VPU", &sm1_pwrc_vpu, sm1_pwrc_mem_vpu,
+ 				    pwrc_ee_is_powered_off, 11, 2),
+ 	[PWRC_SM1_NNA_ID]  = TOP_PD("NNA", &sm1_pwrc_nna, sm1_pwrc_mem_nna,
+@@ -576,32 +576,32 @@ static void meson_ee_pwrc_shutdown(struct platform_device *pdev)
+ 	}
+ }
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
+ 	.count = ARRAY_SIZE(g12a_pwrc_domains),
+ 	.domains = g12a_pwrc_domains,
+ };
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_axg_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_axg_pwrc_data = {
+ 	.count = ARRAY_SIZE(axg_pwrc_domains),
+ 	.domains = axg_pwrc_domains,
+ };
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_gxbb_pwrc_data = {
+ 	.count = ARRAY_SIZE(gxbb_pwrc_domains),
+ 	.domains = gxbb_pwrc_domains,
+ };
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
+ 	.count = ARRAY_SIZE(meson8_pwrc_domains),
+ 	.domains = meson8_pwrc_domains,
+ };
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_m8b_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_m8b_pwrc_data = {
+ 	.count = ARRAY_SIZE(meson8b_pwrc_domains),
+ 	.domains = meson8b_pwrc_domains,
+ };
+ 
+-static struct meson_ee_pwrc_domain_data meson_ee_sm1_pwrc_data = {
++static const struct meson_ee_pwrc_domain_data meson_ee_sm1_pwrc_data = {
+ 	.count = ARRAY_SIZE(sm1_pwrc_domains),
+ 	.domains = sm1_pwrc_domains,
+ };
+-- 
+2.49.0
 
-Thomas,
-
-how would you like to proceed? Do you want to squash this patch
-into the current commit, or do you prefere I create a separate patch for
-it, or a new version of the patch including this change?
-
-Gregory
-
-
->
-> Gregory
->
->>
->> Huacai
->>
->>>
->>> > I don't know whether you have done reboot tests (for ~1000 times),
->>> > Jiaxun Yang submitted similar patches for LoongArch [1], but during
->>> > reboot tests we encountered problems that I have described in my
->>> > previous reply.
->>> >
->>> > [1] https://lore.kernel.org/loongarch/20240716-loongarch-hotplug-v3-0=
--af59b3bb35c8@flygoat.com/
->>>
->>> I saw that series and I wondered why the last patch was not merged.
->>>
->>> I performed around 100 tests so far without encountering any issues; I
->>> plan to automate them further to gather more data.
->>>
->>> Gregpory
->>>
->>> >
->>> > Huacai
->>> >
->>> >>
->>> >> Huacai
->>> >>
->>> >> > +#endif
->>> >> >         notify_cpu_starting(cpu);
->>> >> >
->>> >> > +#ifndef CONFIG_HOTPLUG_PARALLEL
->>> >> >         /* Notify boot CPU that we're starting & ready to sync cou=
-nters */
->>> >> >         complete(&cpu_starting);
->>> >> > +#endif
->>> >> >
->>> >> >         synchronise_count_slave(cpu);
->>> >> >
->>> >> > @@ -386,11 +395,13 @@ asmlinkage void start_secondary(void)
->>> >> >
->>> >> >         calculate_cpu_foreign_map();
->>> >> >
->>> >> > +#ifndef CONFIG_HOTPLUG_PARALLEL
->>> >> >         /*
->>> >> >          * Notify boot CPU that we're up & online and it can safel=
-y return
->>> >> >          * from __cpu_up
->>> >> >          */
->>> >> >         complete(&cpu_running);
->>> >> > +#endif
->>> >> >
->>> >> >         /*
->>> >> >          * irq will be enabled in ->smp_finish(), enabling it too =
-early
->>> >> > @@ -447,6 +458,12 @@ void __init smp_prepare_boot_cpu(void)
->>> >> >         set_cpu_online(0, true);
->>> >> >  }
->>> >> >
->>> >> > +#ifdef CONFIG_HOTPLUG_PARALLEL
->>> >> > +int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct=
- *tidle)
->>> >> > +{
->>> >> > +       return mp_ops->boot_secondary(cpu, tidle);
->>> >> > +}
->>> >> > +#else
->>> >> >  int __cpu_up(unsigned int cpu, struct task_struct *tidle)
->>> >> >  {
->>> >> >         int err;
->>> >> > @@ -466,6 +483,7 @@ int __cpu_up(unsigned int cpu, struct task_str=
-uct *tidle)
->>> >> >         wait_for_completion(&cpu_running);
->>> >> >         return 0;
->>> >> >  }
->>> >> > +#endif
->>> >> >
->>> >> >  #ifdef CONFIG_PROFILING
->>> >> >  /* Not really SMP stuff ... */
->>> >> >
->>> >> > ---
->>> >> > base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
->>> >> > change-id: 20250411-parallel-cpu-bringup-78999a9235ea
->>> >> >
->>> >> > Best regards,
->>> >> > --
->>> >> > Gr=C3=A9gory CLEMENT, Bootlin
->>> >> > Embedded Linux and Kernel engineering
->>> >> > https://bootlin.com
->>> >> >
->>> >> >
->>>
->>> --
->>> Gr=C3=A9gory CLEMENT, Bootlin
->>> Embedded Linux and Kernel engineering
->>> https://bootlin.com
->
-> --=20
-> Gr=C3=A9gory CLEMENT, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
