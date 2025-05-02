@@ -1,137 +1,152 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E15419FA92
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DA319FA92;
+	Fri,  2 May 2025 05:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746163497; cv=none; b=Ow085jHY7K8D+T4aCuW3pyZVqR7Hkd1IrfhVa33+Rp7F4iwxarIDrs/RhpjBzeobsnCM/Ub1RxHZUCUVTsLfXy9VrpVCHc5DsJ3yZnipvKXkrURvVsVC1F3cyHQhvgrplofCLnrJ3LCsbvRgV0u16TmSw41FQ8/x+POipqQjyLs=
+	t=1746163628; cv=none; b=ca+GgkKfxP0LN1tfyQ6t6Cg5GuQkx7fXsvURdsYtsweuYodJnNjiJDpTGaP1BqwglwNC0pUYzuX9QhZdom3mVrif6JJKxb9AQjHsZN4PDrZ9sZPYJMc3UNHOXmOPc9M8mxAt3rIYyoHYQcLj8K6apFRC3oAnykoYGLKniWSlflI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746163497; c=relaxed/simple;
-	bh=JWEPL1EE/CpYX9MgOwqslYQfNEn0bilVYHt55+rnc/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLE+YaZk/3iSUXnttkVS97Cozx5qaVwvylN3B2sBBqQ84sfBIQZdiqgXUmsqfjBeNmtBHkcjr4UGEAcoSlOjuG2d4OETelKISQo4ozGdwcF/yzmcdzxU044pFwyUU+9XBnQEYmDKK9Fr6XpcLXib43gUUnPmAl5u7fjZPqr/3H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kv7oMd5a; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1746163628; c=relaxed/simple;
+	bh=odnSgFOdLirjt31NXo38qQN3PopxkzqFcHC2l+WN2jk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YdlWGam4n4Vaiqk8Lw/uQcUjH3MBebeQC6wPFG5OJiMLd113exSUEvm0r/ui2+EXZf4bN8F+VEcdMgaaIktokrRaxYNk4TaXN0+VfTorxkHrzaZYMn0lmAHeFbmMfi99yI+cEaGPAWr6ZglREtrFcdgmJBHUwlAz6kDctzzpg4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3tGq5cE; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kv7oMd5a"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549b116321aso1968820e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:24:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3tGq5cE"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c33677183so18577005ad.2;
+        Thu, 01 May 2025 22:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746163494; x=1746768294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q3ZrzTbZzGv85Pi6dndpBJYvMy8n/ymcE4coQYSTCA4=;
-        b=Kv7oMd5akTo2/7W/adXrhD49L9Arzef4A3RJ4XG2ssF9gYwZo3ymlMI6MIMMNecvet
-         vn4RkBcC4x7cS8pGw8LFPVhK1xENzYNeob1oRICUMo4/tP4cwkwvfSwozLx2N9i25QaL
-         FqW4GhytP9pQs61APWFkLWsv8udriBt61M1PeHSiQB1SgKM6BsFv9UtBG3L2B9Z9wIOA
-         LgwhaBqkI1aPeCIYeKobn+zZjX6ieZU+tOurcnPSS9mxAaz1aMJ7o8jkK/3BSNfT547u
-         SZ9ipkmObZthbAshliXlo5wy+5dEN+7ZSomm38swhoJnQGCyJ20PXy4xo2JLZN9IoXAS
-         P+2g==
+        d=gmail.com; s=20230601; t=1746163626; x=1746768426; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+W2gnRsUS77xnxOlsuFy4TaTnkNyy8cVJp3jeOpEsVI=;
+        b=e3tGq5cEQQOJiWHk+T7m3vXOrOtzHDrOEepr1Xgq0tmxdsoXP2KHO8ZE8zhT9buPaT
+         kVBkGbk1YcSzAAJ/8123PQnWLFjm8EvYOVDmPR5RBi7IYoCDaFh5QQWxhOr21YbJ8sg5
+         NLgHXcb0kyf8MpwfRVukAuFkYZCn729Jd1dG8oH/uXKiJvZNufmBkKIriO52RLy0oCXi
+         37jbajfbfKMCVmxTV4e8G3h9KuMXPCuKvfolWBHAf9Z9u+8SnWJAjpKT0oMYeY837qfP
+         FaDv5HOuxC1XDPINZRmgAYdmPrYpX/J0gP/kZK4vzWLuGXqPJ11JwXgJeBi+JezCOOdG
+         Ahlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746163494; x=1746768294;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q3ZrzTbZzGv85Pi6dndpBJYvMy8n/ymcE4coQYSTCA4=;
-        b=EYzjjtzByXOqLAK3Agm8GrsCT8Yvm7VuZ7WeXKVu0Vap58QTevtzIwG3hgyiAcyhlq
-         NPRf9sYRvS9ebMG7w70v3coX76Jikhy0joZP0Qg3I/FjEMSqiDJbRnjOS2BX9SiiQHz1
-         fSK+36dPVqx9e50zpJPFuRaYWsmxmxI1JkAw5eSthB4JW1MBt4MFs5xfYYJiWICCdoJz
-         zd4VUwLbVNF/nSK81mzkGnJCKwcOlp/p6qveMFoK5b3QEkEUhPcbquS98DosedNW9WeV
-         iCw+Xhu+ntG16q6Aeb9C3IWSZ47X5w4ESjBi75VQnPM/zk6VpCjZ7/JAziAEbZDo3quj
-         zViw==
-X-Gm-Message-State: AOJu0Yy2Z/88ibCFEr3fb9mtko9oJAUi+0pd70G7tpp5lO3uoUL5wgju
-	LupSF00dgXfW3Xdnf/4c3Ku/RMnOoPF9866Pf8M1IvmlhkbvCcIh
-X-Gm-Gg: ASbGncthXl0CCsPLk9FngQZgeS/yMeWZ4938cFks41KbufHxXAvwx4nLTcwdHxajO+u
-	9TmEDnaO6SGFN/Czs5WqEdI5ByRFpsdjAYuhEC2LhelLUm2YMf2a8du5emHZGLT3jXznr2Mtymf
-	RLBPLtkaOyekKWOHXmxgfAOWc0fAQP0NGZ1XdCufKiQ7HueoNilKoGDrllOA2eCDembNTvmY+J0
-	reNH4ntcQlbgD4eh+xNHdcYui+NDmJhNasmdISKtZDmprR8ZeaaFLt4lB+3wWjd4zdAnGyOs/Hy
-	lc8o0I7w17Sve39TKPhMIBI9ULVOWWj6+yW6hSudcdP8vJK5Fge9CoJ4G3QXfrzH/T/hxfEvRk3
-	rNcdCC2U0m2jd+kmOi1e/7g==
-X-Google-Smtp-Source: AGHT+IF08T8aFBQR7GQCDh1JQ8RzCZpGXa5rbE8n0mVFXadUPyx2dCjPHtoc/wTXKoS1kie91osF3w==
-X-Received: by 2002:a05:6512:e98:b0:549:8f15:db36 with SMTP id 2adb3069b0e04-54eac244ef1mr342702e87.51.1746163493930;
-        Thu, 01 May 2025 22:24:53 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c55a0sm265917e87.86.2025.05.01.22.24.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 22:24:53 -0700 (PDT)
-Message-ID: <52221c62-689c-44d2-b65d-07a5301090b3@gmail.com>
-Date: Fri, 2 May 2025 08:24:51 +0300
+        d=1e100.net; s=20230601; t=1746163626; x=1746768426;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+W2gnRsUS77xnxOlsuFy4TaTnkNyy8cVJp3jeOpEsVI=;
+        b=nhfw4qhPRXnasjmPaBq1zL+IdtLMpio0W8bLDpw+tBLHsUul/5l4FiqiLQrxWHjNDF
+         4EdPknyQQK47P78Fyqvtpjm8JAResc443doWmRasDOmw2D4yTB1JFkbzF5bL8p0QCbO7
+         MMz4cCkDJ5a/nDKIk5PvysqisSwz7fenknEriy3LUp3UzteJJU9niKOhEqt0jEpqw8IS
+         DUuSQQn2YdVMkRXGgoO2W541L899zOwNdoDgbA+D4g9q5wNsFxO3790gGvzfCecAGDUg
+         +nprx4TcLcNbPVUBGq/iMGFNGSBl0AAmRoWggq/yMOUzrb4cTyZGEMVY+fFuak/RpJls
+         Ekaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFlFpZXAp9z115/8DvElclSInPPU3V/TQ4BXt54TqibYWwusj8c82xwXyEqkysia6DsT4KFxC0@vger.kernel.org, AJvYcCVa7HjiNozwc+kbGaBLEkPOEidPqc9xML5Jtr4E4GqrGiLhQy02RDrhNDSSYavq/GbAxEXvd1PGXST9mgRyQfNc@vger.kernel.org, AJvYcCWCXBlfV5/iBqCkgBESSIo7lbNLsfrkYqnl866rpoEJwlik7iyC0uL1tRGfZU+n+63zHr/OJdnqgM3XZng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcB3wl3sTdApGuAWG5rIoXh3qCa8KQ7UqWcCBg38dSWCBeJpI2
+	9fNbOedrrkycu0dLl95L6/EdOcUGtYQxvSdAzw7ZfkTIDkDGNXVz
+X-Gm-Gg: ASbGncsAgg/AtQUJrTIpJy6tpgZC99l3wuXsNFcyrcP/khqtiFnb05dXv/gxSKaFeDu
+	CtdrY57MhPByQaQAiW5hkP6I9D4ls7Oynw+O0tfDYxphFaXdcqTVUnIOZ2Z230/oAYzcxgSWAzy
+	lE/PDO4hTuI6w1sjf+SX78IXEaiUmv3fFAeflRxUsmnPuubuKXGCu/nN21fLd83YBndQpi9W8nr
+	35ErCSMa4q6Gn9Lj4bxbsuttfP4Bn6W21DmSXkQhWSk/K5jmkZfD0v/VtMmJ5cgds3RRNzYFVLq
+	2tVYZi8sX1kPfo5CqjjPZAHxd2OFYJ9JBWOpPA0kx6Ysrp/nnU7L
+X-Google-Smtp-Source: AGHT+IFWrQwlpkVyXxjGvHZeT39/NVv9qbuhV9CxCJCg9MzVFBK2ltUETHQhVW3N12k0BGHumI/KFg==
+X-Received: by 2002:a17:903:990:b0:21f:988d:5756 with SMTP id d9443c01a7336-22e103dd494mr27747255ad.42.1746163626394;
+        Thu, 01 May 2025 22:27:06 -0700 (PDT)
+Received: from gmail.com ([98.97.38.184])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e10941869sm5612295ad.258.2025.05.01.22.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 22:27:05 -0700 (PDT)
+Date: Thu, 1 May 2025 22:26:48 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, mrpre@163.com, Boris Pismenny <borisp@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 0/2] ktls, sockmap: Fix missing uncharge
+ operation and add selfttest
+Message-ID: <20250502052648.4tcxptx6xbcnpoyt@gmail.com>
+References: <20250425060015.6968-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: bd718x7: Ensure SNVS power state is used as
- requested
-To: Esben Haabendal <esben@geanix.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425060015.6968-1-jiayuan.chen@linux.dev>
 
-Hi Esben,
-
-Oh, it has been a while since I've heard anything from these PMICs :)
-
-On 01/05/2025 17:48, Esben Haabendal wrote:
-> With the introduction of the rohm,reset-snvs-powered DT binding [2], the
-> PMIC settings were only changed when the new property was not found.
+On 2025-04-25 13:59:56, Jiayuan Chen wrote:
+> Cong reported a warning when running ./test_sockmp:
+> https://lore.kernel.org/bpf/aAmIi0vlycHtbXeb@pop-os.localdomain/T/#t
 > 
-> As mentioned in [1] the default for BD71387 and BD71847 is to switch to
-> SNVS power state on watchdog reset.
-
-I suppose you mean READY, not SNVS? Commit seems to state:
-"By default only wathcdog reset changes state from poweroff to ready."
-
-> So even with rohm,reset-snvs-powered added to DT, a watchdog reset causes
-> transitions through READY instead of SNVS.
-
-The original idea of the rohm,reset-snvs-powered was not to configure 
-the SNVS to be the target. The driver was mostly built to assume that 
-the PMIC has been configured by earlier stages like uboot, and configs 
-in the driver were mostly introduced to make power rail enable states 
-controllable by the software - without risking the rails to be left off. 
-Thus, AFAIR, the values set by boot (or other power manager MCUs) 
-haven't been overwritten is the "rohm,reset-snvs-powered" has been found.
-
-Configuring for example the hardware watchdog related stuff at Linux 
-driver boot is somewhat late, since watchdog should probably be running 
-already - and hangs might happen prior the driver probe.
-
-> And with the default reboot
-> method in mxc_restart() is to cause a watchdog reset, we ended up powering
-> off the SNVS domains, and thus losing SNVS state such as SNVS RTC and
-> LPGPR, on reboots.
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 40 at net/ipv4/af_inet.c inet_sock_destruct+0x173/0x1d5
+> Tainted: [W]=WARN
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.15.0-1 04/01/2014
+> Workqueue: events sk_psock_destroy
+> RIP: 0010:inet_sock_destruct+0x173/0x1d5
+> RSP: 0018:ffff8880085cfc18 EFLAGS: 00010202
+> RAX: 1ffff11003dbfc00 RBX: ffff88801edfe3e8 RCX: ffffffff822f5af4
+> RDX: 0000000000000007 RSI: dffffc0000000000 RDI: ffff88801edfe16c
+> RBP: ffff88801edfe184 R08: ffffed1003dbfc31 R09: 0000000000000000
+> R10: ffffffff822f5ab7 R11: ffff88801edfe187 R12: ffff88801edfdec0
+> R13: ffff888020376ac0 R14: ffff888020376ac0 R15: ffff888020376a60
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000556365155830 CR3: 000000001d6aa000 CR4: 0000000000350ef0
+> Call Trace:
+>  <TASK>
+>  __sk_destruct+0x46/0x222
+>  sk_psock_destroy+0x22f/0x242
+>  process_one_work+0x504/0x8a8
+>  ? process_one_work+0x39d/0x8a8
+>  ? __pfx_process_one_work+0x10/0x10
+>  ? worker_thread+0x44/0x2ae
+>  ? __list_add_valid_or_report+0x83/0xea
+>  ? srso_return_thunk+0x5/0x5f
+>  ? __list_add+0x45/0x52
+>  process_scheduled_works+0x73/0x82
+>  worker_thread+0x1ce/0x2ae
 > 
-> With this change, the rohm,reset-snvs-powered property results in the PMIC
-> configuration being modified so POWEROFF transitions to SNVS for all reset
-> types, including watchdog reset.
+> 
+> When we specify apply_bytes, we divide the msg into multiple segments,
+> each with a length of 'send', and every time we send this part of the data
+> using tcp_bpf_sendmsg_redir(), we use sk_msg_return_zero() to uncharge the
+> memory of the specified 'send' size.
+> 
+> However, if the first segment of data fails to send, for example, the
+> peer's buffer is full, we need to release all of the msg. When releasing
+> the msg, we haven't uncharged the memory of the subsequent segments.
+> 
+> This modification does not make significant logical changes, but only
+> fills in the missing uncharge places.
+> 
+> This issue has existed all along, until it was exposed after we added the
+> apply test in test_sockmap:
+> 
+> commit 3448ad23b34e ("selftests/bpf: Add apply_bytes test to test_txmsg_redir_wait_sndmem in test_sockmap")
+> 
+> 
+> Jiayuan Chen (2):
+>   ktls, sockmap: Fix missing uncharge operation
+>   selftests/bpf: Add test to cover sockmap with ktls
 
-As far as I can say, this change is, in principle, fine. The 
-"rohm,reset-snvs-powered" shouldn't be populated in the device-tree, if 
-SNVS is not meant to be used. My only worry is that the BD71837, 47 and 
-50 have been on the field since 2018 - and I am not at all sure all the 
-device-trees are sane... And if we configure the reset to use SNVS 
-state, then the software controlled regulators will not turn ON after 
-the reset. Fail to mark them in the device-tree and the device will be 
-dead until battery is drained or removed.
+For the series thanks Jiayuan for poking into the kTLS side. I doubt
+anyone has used kTLS+apply_bytes yet. Thanks.
 
-Is there a way for you to set the "target state" at boot SW? I think 
-that should work as the Linux driver won't touch the target state if 
-rohm,reset-snvs-powered is set(?)
+For me.
 
-This is not NACK to the change, this is asking if we had a safer way, 
-both for other users and also for you (since I still think these configs 
-should be done prior Linux driver probe)...
-
-Yours,
-	-- Matti
+Acked-by: John Fastabend <john.fastabend@gmail.com>
