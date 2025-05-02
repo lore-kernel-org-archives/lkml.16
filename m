@@ -1,52 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FEE22E40F;
-	Fri,  2 May 2025 08:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4171222A7E1;
+	Fri,  2 May 2025 08:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176180; cv=none; b=C1Kx6s35iya47djwRQjqTjLq5g4Dn2uQegyDnSTYH4b7ic2yjmnVpRDHK85sAn+eSqZJuzv/hHN5Ii9pEVmlF7cOjVmWYOSoANIFXU3plr8bAFwLZQQauh1W4VoLsvAQws7aySE8gq85Lb1ut2uKsN7MX3yT0luaob6DdRoikXU=
+	t=1746176218; cv=none; b=QNIQJxTlMSI7yu6ns7ABa24i7bten7a/Ys34KQo6lJQ+UCXEh2UeWvRlDOKVWeyzlZNBxW5MT7uZUMJV3I1PTFyrRCBRg5LVWhN9djNGtf6mo14/oCLMoX+Vn0c71KmgIZLo3+RunIN/caU9e/M/76SYVKzVrP7B0D49yoVJ8+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176180; c=relaxed/simple;
-	bh=ae3+Hz4hJ9ALh71sYiq5n/XhT19iK2yY+HMBltQrsOM=;
+	s=arc-20240116; t=1746176218; c=relaxed/simple;
+	bh=B2S7t4hxs70eyK+EQYt9MPrDHRd6O/BscLmI9x3WT+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VyKQJ8HNAzApTiZTiVa8ZnepapElHZNp/qGrQjegctprSgp8N9+AL1dd65XI/zSKb9w9G+cMjRXc507a5VQPCEe1DNCvWOomC516j6mDbsIOkqbnXEOc+O6rZytk59O9KXZTtsqdoHAqvYVT81fQEawN40NZFEbCf0RI0U9m4eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: yyHLbRtjRxai6J3g0xzuLQ==
-X-CSE-MsgGUID: faYczQxCSn+NUdGSdyMwYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58065594"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58065594"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 01:56:16 -0700
-X-CSE-ConnectionGUID: j/fiYNFrTiqCMmp0HTkabA==
-X-CSE-MsgGUID: zMXaPiiHRNaG0zyxgMwnTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139737854"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 01:56:14 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uAmBm-000000028HY-2ifl;
-	Fri, 02 May 2025 11:56:10 +0300
-Date: Fri, 2 May 2025 11:56:10 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	dlechner@baylibre.com, nuno.sa@analog.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data
- capture
-Message-ID: <aBSIqmMIuaHQmlV-@smile.fi.intel.com>
-References: <cover.1745841276.git.marcelo.schmitt@analog.com>
- <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
- <CAHp75Vc9CMqkkrEjgGEYPnmkb1R=u+RUvD3FAZ+7bFqi5aDzdw@mail.gmail.com>
- <aBIoRc-gpBswohe-@debian-BULLSEYE-live-builder-AMD64>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKykmRSv1bGynN2FWGK/PvMgM9jn3BlznJorWcU6KA1t8tFxy9lKRNtkEzeY3OGMPoqJpP7exqDLlHfjXmPWgV1khbWP5KdkF/kQTeEOUrn3BLtumt4pqiYy0/IKMLEjbyMqlb4hjID75mNPOTCSE4sxbUIVRDA0dYI+7EXMl4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTuYBJWg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTuYBJWg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C966C4CEE4;
+	Fri,  2 May 2025 08:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746176217;
+	bh=B2S7t4hxs70eyK+EQYt9MPrDHRd6O/BscLmI9x3WT+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uTuYBJWg3ZllVDS6TqDA2/08BRO8eMvMWSJDjVQUYMYMF/gDtP4zorMllb9Hr6OxC
+	 Gb2ApUDw+/SRT/mUanbqi2ScpvoPh3eGt1AKONCl2Trul8z8IkKyDZGjI/EKoT7Hb6
+	 WJuUXuSy9Nh9gbERJBVyn7KsNKQCMjWTKFPQrjHe9crztqPxvxqVlQiRJvkTVdRjwF
+	 khp/fjWKVhJSnTN80enTaqZDFWtq/QaFEgxTvZrVhbY5nsGnqNqjWiu3D8QI+Fa3z6
+	 qxw7NJx6MG8xXPtf4hoRX4/0BktSJz7UYj3gpF0se4EtrBeFNjIWT5y53tXcYJCwnX
+	 mLfjtyYlyZ6dw==
+Date: Fri, 2 May 2025 10:56:52 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: i2c: renesas,riic: Document RZ/V2N
+ (R9A09G056) support
+Message-ID: <2msodreg2o4vpcqbnorgxbqnbw5gytxmpguroox2lvtfvtm24t@iq3zb3xe5whe>
+References: <20250501203310.140137-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,28 +48,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBIoRc-gpBswohe-@debian-BULLSEYE-live-builder-AMD64>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250501203310.140137-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Wed, Apr 30, 2025 at 10:40:21AM -0300, Marcelo Schmitt wrote:
+Hi Lad,
 
-...
-
-> > > +               return dev_err_probe(&st->spi->dev, ret,
-> > > +                                    "Failed to register trigger\n");
-> > 
-> > One line?
+On Thu, May 01, 2025 at 09:33:10PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> It goes up to 89 columns if make in one line. I know there are other places in
-> this driver where 80 columns are exceeded, but in this case it's easier to
-> avoid going beyond 80 columns without drying up the error message.
-> Anyway, I'll make it one line if it's confirmed to be the preferable way to have
-> it.
+> Document support for the I2C Bus Interface (RIIC) found on the Renesas
+> RZ/V2N (R9A09G056) SoC. The RIIC IP is identical to that on RZ/V2H(P),
+> so `renesas,riic-r9a09g057` will be used as a fallback compatible,
+> enabling reuse of the existing driver without changes.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The string literal endings are relaxed in the line limit for 10+ years...
+merged to i2c/i2c-host.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Andi
