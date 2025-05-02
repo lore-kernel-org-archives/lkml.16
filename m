@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C0E79D2;
-	Fri,  2 May 2025 10:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E279D2;
+	Fri,  2 May 2025 10:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182004; cv=none; b=iyApB61+dnjmQYe8jSYuaQUjoXFgB9pJtgT3L7uiWQLiaarjOaXU7evQV19yUfnqEq7LJyjtG4tvih/6OK4LTggkCGxbrBVii4gEtH2y43+apyw80Fk0+lDmuA0hwT2vgqfp9u+G4bH1/J03vRoE4OpfyiRQgx9Kr9k2zeSzklo=
+	t=1746182010; cv=none; b=aCH79Ql9lV+1hXzrl11kYFzTmL7Zt9lVzEq0c54iT+XL71JKVfkuRJXYSGlRXR7DdpcOgP4dWdyxUk8aWvPVmIKAomFToALk921W0Nyjo64PWMLBsbGbHs/oiBuhC5RJ6i8JOwqOeEPWvpE7HuhA7dJAHqb3CHGxvlsQWRZX1J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182004; c=relaxed/simple;
-	bh=kWVYp1X9EMVkhHKe2qMihc1zNSk46s7GyfQUw0nJkjc=;
+	s=arc-20240116; t=1746182010; c=relaxed/simple;
+	bh=IIY2BFC/gCiOqmObT0jMHgCJi9hjERXLLf5rFvHprFc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sQPYkt/zjWWM3VSDTr55AgbjFIzXCKruZk2y2g4hluU7yTCU+HjrZCve4Kpc4/5GeKmJQiv2jmoWSfK2gGhLJr9hPltN31YTSPVGXyr7l9EuC4+uiMCqRqzL3mShLDvIcCLbG9jjMi/un8QEl2q5EF4gYMPuLC+q+IkVFAtYpyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vs3+W5ZS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I9PlMOPf; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=OtznLWb5oau4S74xAto9glKxKvMQnfmQ2F8jlELnxi9zXLQDszPXJSQLasklq6DWK1dN0uEHBidzWaWX85X+WN36hApeOzLZVglVwc43zOoEwbzGzpgZfVWfDdkJCNsl4kcuQWeUIYr0+pQ5i4F12r0A2RTDCDWM6Fbt7zZyKZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GRmlHvBx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qEEm2848; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vs3+W5ZS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I9PlMOPf"
-Date: Fri, 02 May 2025 10:33:19 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GRmlHvBx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qEEm2848"
+Date: Fri, 02 May 2025 10:33:25 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746182000;
+	s=2020; t=1746182006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FiH/hk0vZo1sihawLn/P10wG4NsxuCpp+GocUDhesl4=;
-	b=Vs3+W5ZS3JSKsovNWvBfGhDM8Rx6gD3qMv1KJqEVHhW1NJVfcb+fxhFE08asdheoJURil0
-	CBjH2Ny/4RDPlNHMpVOLKEr4VQI4Mi9QD7ZdOo9nSFvu+gki4icqfRJfSg4X1/O8mpi9s2
-	VA6cUOb1/xN98ubxYpevOixhTYf/AH3GECYcRepHBISnYQ5qsLvp9HBecFbFPJ3OAV9KpL
-	0pORIkoS0gaOmQuIpitg7Rg39g2piiod77bKmFmNRyQnjxjW18+stymZBUUQ0kID6qbUnk
-	vMVcmSmyIkKSbozbHRfITKha6as+deZcsKg5rZZRpfbL1yOIofN1nTvsLzTEAw==
+	bh=9uMNlKex9ex4RFB/3qtioONqy7cgylFnUMP4QMsEB2Y=;
+	b=GRmlHvBxloASP94dvUy6GaL23vLYKdPG0xoKtCha59L+SvyV/ILuS+7v71nknyKKSnp3RI
+	Da8E6WvdU9YqWoheLYfZfng+dbK46ArtU3R6G5e77eufuA+sWr5/FcOhg+NszIgVb/j6FZ
+	sPQ4y3gJLpBzqz7eca7UzY/84guOEves7eFDUNtEbLG3aYdKL4e7ov1g1dW28WliV8mBh6
+	126opCmsG8Xb8Ap+7Ae2zJZokBSqrcVgPgHDGU1tSVb6TSsRF+e8bXuvDLS+ODQmlEqroE
+	KwHxuw9x5oiYbZVh1fortLa1n6+fLkeEoNUOYpcb22LMpVVerIj6U6OLbmv+/Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746182000;
+	s=2020e; t=1746182006;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FiH/hk0vZo1sihawLn/P10wG4NsxuCpp+GocUDhesl4=;
-	b=I9PlMOPf5EcKybqgFszhEjJzzpRqHFpN3t5fZPInCaKaA+aKxKZN57MtbMEv7A02M5PNsV
-	gIVDnKMieSkzvbCA==
+	bh=9uMNlKex9ex4RFB/3qtioONqy7cgylFnUMP4QMsEB2Y=;
+	b=qEEm2848toWbOaQNbomKZ2jWoTRzaRnnuKrUR1f0zxO/NX6r474vR0IaE89OzI4NyBDhPa
+	an0Ml9ekTBoLJ5DA==
 From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Restructure L1TF mitigation
+Subject: [tip: x86/bugs] x86/bugs: Restructure BHI mitigation
 Cc: David Kaplan <david.kaplan@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250418161721.1855190-16-david.kaplan@amd.com>
-References: <20250418161721.1855190-16-david.kaplan@amd.com>
+In-Reply-To: <20250418161721.1855190-13-david.kaplan@amd.com>
+References: <20250418161721.1855190-13-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174618199974.22196.12832189173399649709.tip-bot2@tip-bot2>
+Message-ID: <174618200578.22196.13700533581605582970.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,127 +67,116 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/bugs branch of tip:
 
-Commit-ID:     d43ba2dc8eeeca21811fd9b30e3bd15bb35caaec
-Gitweb:        https://git.kernel.org/tip/d43ba2dc8eeeca21811fd9b30e3bd15bb35caaec
+Commit-ID:     efe313827c98c81156dea9b004877db4ca728b1a
+Gitweb:        https://git.kernel.org/tip/efe313827c98c81156dea9b004877db4ca728b1a
 Author:        David Kaplan <david.kaplan@amd.com>
-AuthorDate:    Fri, 18 Apr 2025 11:17:20 -05:00
+AuthorDate:    Fri, 18 Apr 2025 11:17:17 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 29 Apr 2025 18:57:30 +02:00
+CommitterDate: Tue, 29 Apr 2025 18:51:29 +02:00
 
-x86/bugs: Restructure L1TF mitigation
+x86/bugs: Restructure BHI mitigation
 
-Restructure L1TF to use select/apply functions to create consistent
-vulnerability handling.
+Restructure BHI mitigation to use select/update/apply functions to create
+consistent vulnerability handling.  BHI mitigation was previously selected
+from within spectre_v2_select_mitigation() and now is selected from
+cpu_select_mitigation() like with all others.
 
-Define new AUTO mitigation for L1TF.
+Define new AUTO mitigation for BHI.
 
 Signed-off-by: David Kaplan <david.kaplan@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/20250418161721.1855190-16-david.kaplan@amd.com
+Link: https://lore.kernel.org/20250418161721.1855190-13-david.kaplan@amd.com
 ---
- arch/x86/include/asm/processor.h |  1 +
- arch/x86/kernel/cpu/bugs.c       | 25 +++++++++++++++++++------
- arch/x86/kvm/vmx/vmx.c           |  2 ++
- 3 files changed, 22 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 5d2f7e5..0973bed 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -734,6 +734,7 @@ void store_cpu_caps(struct cpuinfo_x86 *info);
- 
- enum l1tf_mitigations {
- 	L1TF_MITIGATION_OFF,
-+	L1TF_MITIGATION_AUTO,
- 	L1TF_MITIGATION_FLUSH_NOWARN,
- 	L1TF_MITIGATION_FLUSH,
- 	L1TF_MITIGATION_FLUSH_NOSMT,
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index fbb4f13..25d84e2 100644
+index dc75195..100a320 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -67,6 +67,7 @@ static void __init spectre_v2_user_apply_mitigation(void);
- static void __init ssb_select_mitigation(void);
- static void __init ssb_apply_mitigation(void);
- static void __init l1tf_select_mitigation(void);
-+static void __init l1tf_apply_mitigation(void);
- static void __init mds_select_mitigation(void);
- static void __init mds_update_mitigation(void);
- static void __init mds_apply_mitigation(void);
-@@ -245,6 +246,7 @@ void __init cpu_select_mitigations(void)
+@@ -82,6 +82,9 @@ static void __init l1d_flush_select_mitigation(void);
+ static void __init srso_select_mitigation(void);
+ static void __init gds_select_mitigation(void);
+ static void __init gds_apply_mitigation(void);
++static void __init bhi_select_mitigation(void);
++static void __init bhi_update_mitigation(void);
++static void __init bhi_apply_mitigation(void);
+ 
+ /* The base value of the SPEC_CTRL MSR without task-specific bits set */
+ u64 x86_spec_ctrl_base;
+@@ -208,6 +211,7 @@ void __init cpu_select_mitigations(void)
+ 	 */
+ 	srso_select_mitigation();
+ 	gds_select_mitigation();
++	bhi_select_mitigation();
+ 
+ 	/*
+ 	 * After mitigations are selected, some may need to update their
+@@ -225,6 +229,7 @@ void __init cpu_select_mitigations(void)
+ 	taa_update_mitigation();
+ 	mmio_update_mitigation();
+ 	rfds_update_mitigation();
++	bhi_update_mitigation();
+ 
+ 	spectre_v1_apply_mitigation();
  	retbleed_apply_mitigation();
- 	spectre_v2_user_apply_mitigation();
- 	ssb_apply_mitigation();
-+	l1tf_apply_mitigation();
- 	mds_apply_mitigation();
- 	taa_apply_mitigation();
- 	mmio_apply_mitigation();
-@@ -2538,7 +2540,7 @@ EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
+@@ -235,6 +240,7 @@ void __init cpu_select_mitigations(void)
+ 	rfds_apply_mitigation();
+ 	srbds_apply_mitigation();
+ 	gds_apply_mitigation();
++	bhi_apply_mitigation();
+ }
  
- /* Default mitigation for L1TF-affected CPUs */
- enum l1tf_mitigations l1tf_mitigation __ro_after_init =
--	IS_ENABLED(CONFIG_MITIGATION_L1TF) ? L1TF_MITIGATION_FLUSH : L1TF_MITIGATION_OFF;
-+	IS_ENABLED(CONFIG_MITIGATION_L1TF) ? L1TF_MITIGATION_AUTO : L1TF_MITIGATION_OFF;
- #if IS_ENABLED(CONFIG_KVM_INTEL)
- EXPORT_SYMBOL_GPL(l1tf_mitigation);
- #endif
-@@ -2586,22 +2588,33 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ /*
+@@ -1794,12 +1800,13 @@ static bool __init spec_ctrl_bhi_dis(void)
  
- static void __init l1tf_select_mitigation(void)
+ enum bhi_mitigations {
+ 	BHI_MITIGATION_OFF,
++	BHI_MITIGATION_AUTO,
+ 	BHI_MITIGATION_ON,
+ 	BHI_MITIGATION_VMEXIT_ONLY,
+ };
+ 
+ static enum bhi_mitigations bhi_mitigation __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_SPECTRE_BHI) ? BHI_MITIGATION_ON : BHI_MITIGATION_OFF;
++	IS_ENABLED(CONFIG_MITIGATION_SPECTRE_BHI) ? BHI_MITIGATION_AUTO : BHI_MITIGATION_OFF;
+ 
+ static int __init spectre_bhi_parse_cmdline(char *str)
  {
-+	if (!boot_cpu_has_bug(X86_BUG_L1TF) || cpu_mitigations_off()) {
-+		l1tf_mitigation = L1TF_MITIGATION_OFF;
-+		return;
-+	}
+@@ -1821,6 +1828,25 @@ early_param("spectre_bhi", spectre_bhi_parse_cmdline);
+ 
+ static void __init bhi_select_mitigation(void)
+ {
++	if (!boot_cpu_has(X86_BUG_BHI) || cpu_mitigations_off())
++		bhi_mitigation = BHI_MITIGATION_OFF;
 +
-+	if (l1tf_mitigation == L1TF_MITIGATION_AUTO) {
-+		if (cpu_mitigations_auto_nosmt())
-+			l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
-+		else
-+			l1tf_mitigation = L1TF_MITIGATION_FLUSH;
-+	}
++	if (bhi_mitigation == BHI_MITIGATION_AUTO)
++		bhi_mitigation = BHI_MITIGATION_ON;
 +}
 +
-+static void __init l1tf_apply_mitigation(void)
++static void __init bhi_update_mitigation(void)
 +{
- 	u64 half_pa;
- 
- 	if (!boot_cpu_has_bug(X86_BUG_L1TF))
++	if (spectre_v2_cmd == SPECTRE_V2_CMD_NONE)
++		bhi_mitigation = BHI_MITIGATION_OFF;
++
++	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2) &&
++	     spectre_v2_cmd == SPECTRE_V2_CMD_AUTO)
++		bhi_mitigation = BHI_MITIGATION_OFF;
++}
++
++static void __init bhi_apply_mitigation(void)
++{
+ 	if (bhi_mitigation == BHI_MITIGATION_OFF)
  		return;
  
--	if (cpu_mitigations_off())
--		l1tf_mitigation = L1TF_MITIGATION_OFF;
--	else if (cpu_mitigations_auto_nosmt())
--		l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
--
- 	override_cache_bits(&boot_cpu_data);
+@@ -1961,9 +1987,6 @@ static void __init spectre_v2_select_mitigation(void)
+ 	    mode == SPECTRE_V2_RETPOLINE)
+ 		spec_ctrl_disable_kernel_rrsba();
  
- 	switch (l1tf_mitigation) {
- 	case L1TF_MITIGATION_OFF:
- 	case L1TF_MITIGATION_FLUSH_NOWARN:
- 	case L1TF_MITIGATION_FLUSH:
-+	case L1TF_MITIGATION_AUTO:
- 		break;
- 	case L1TF_MITIGATION_FLUSH_NOSMT:
- 	case L1TF_MITIGATION_FULL:
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a1754f7..0aba471 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -273,6 +273,7 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
- 		case L1TF_MITIGATION_OFF:
- 			l1tf = VMENTER_L1D_FLUSH_NEVER;
- 			break;
-+		case L1TF_MITIGATION_AUTO:
- 		case L1TF_MITIGATION_FLUSH_NOWARN:
- 		case L1TF_MITIGATION_FLUSH:
- 		case L1TF_MITIGATION_FLUSH_NOSMT:
-@@ -7704,6 +7705,7 @@ int vmx_vm_init(struct kvm *kvm)
- 		case L1TF_MITIGATION_FLUSH_NOWARN:
- 			/* 'I explicitly don't care' is set */
- 			break;
-+		case L1TF_MITIGATION_AUTO:
- 		case L1TF_MITIGATION_FLUSH:
- 		case L1TF_MITIGATION_FLUSH_NOSMT:
- 		case L1TF_MITIGATION_FULL:
+-	if (boot_cpu_has(X86_BUG_BHI))
+-		bhi_select_mitigation();
+-
+ 	spectre_v2_enabled = mode;
+ 	pr_info("%s\n", spectre_v2_strings[mode]);
+ 
