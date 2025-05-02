@@ -1,175 +1,157 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6352571D2;
-	Fri,  2 May 2025 15:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC3C23B0;
+	Fri,  2 May 2025 15:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200592; cv=none; b=Uy8Jwab9ZyM6WZD/MbT+5AWD6nE7Bu/NW6+BgXl7Ko3ej1akM6DMI0aHtKaqqSdgZpe0gfutoNQPoxoXS+2T/kmHRt8pbttgPm+3GQru3klz2ZY7Kd+L+u2FuGbptM63miGdqFBkVSy9kUNadVLZiJpMToxtvV5B1JcZ5p74H9A=
+	t=1746200664; cv=none; b=Qf9YX9p2XSi0T9ZRtGVZnQrGKDwEH3let9X4KvTSA7N+2BiH5bqEeyMoWNV+n4ROPqZhUEUHa4XFSXv/tcmojQXYOfL0MidqYE5x4k5OJMAv5+Nqbikc2XUlVggvT95rCCGyQ+G/nMlZgCBfKCuCbDad25D7QSZnw3LGjzOc2jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200592; c=relaxed/simple;
-	bh=eBAnraOpFs24oa8cyCRi8zE49i9v3WmI83Gfc+9VYrU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q5eYWRaNjx/ldUN1T99GLa7xLYMG3qBG0fTLz4XV5ARkAPPC4Onx+2MVuS4X/WbFRlQUuQuUcHySQL9vEB5WsmEUd7IveKCW3OoIvJddjDrCbl1A0LK8ibafCSPjrEfQmRgz5ijpi+9ulq8NqTz9pJ/8Fad6GybeRdX9Alh+MKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CcbBc+cP; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746200664; c=relaxed/simple;
+	bh=TQyM6i2rFDdExVbBufTLR1CZrsEvfjOUC4sUoaRycew=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q2MVq4B7NMN+hbQvE/MHn9swuY6/V/rDUyrjrywrnqdLQzKWxoKdoesP1Yh/UUgbZf8P3WQrobgkb+np4hBXNNNjWumRq3RpVHCUH6iYFLha1gL4KvoDhoU80QRBDOAIarJvS9cd98FxwP4Sg398h/cwHHdR2Hu9vAO5j2jnPGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Se9QEeDW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CcbBc+cP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746200587;
-	bh=eBAnraOpFs24oa8cyCRi8zE49i9v3WmI83Gfc+9VYrU=;
-	h=From:Date:Subject:To:Cc:From;
-	b=CcbBc+cPJUJUUYJy1zR+8xwwsmi5CT00hhIA4U6hqXH+Jtp2mTuEpDbP5Tz3y0hRY
-	 EMXGwA+s1tLxbLSOqQrjIdLLGYcTtq2o4v4fH3KVMtG5lGTn+Adggtj56bVYD6H8wo
-	 38YMRcsqg1qOltyDqaqGQsbV+cP3q76KsfsYqIw1QO0ON/8a1zft2wHwzENfnLB6to
-	 i12LyVP4O02xuvZ78B9xspba73Kt/iVYLEa4EfJfNw1PgmYUN4ROY8SnmMpjsXf+9Z
-	 28TpGBOpPbpcL+350f0W5w5Ntrr2TBomlOmLHhrvZyGrM7ZNBXuLOMMBTVuIBKOYvP
-	 HUiDSOAHh+mvQ==
-Received: from [192.168.1.63] (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2727B17E0858;
-	Fri,  2 May 2025 17:43:04 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 02 May 2025 11:32:10 -0400
-Subject: [PATCH] arm64: dts: mediatek: mt6357: Drop regulator-fixed
- compatibles
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Se9QEeDW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6643AC4CEE4;
+	Fri,  2 May 2025 15:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746200663;
+	bh=TQyM6i2rFDdExVbBufTLR1CZrsEvfjOUC4sUoaRycew=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Se9QEeDW8KgYSQ9jDh6c7/wdzkusrTbzH6sGWkooZjLGlmZwX6y2dBEkMkxMghGjv
+	 OJgc+sJCic+7JYZAavKAu1uJKC3SYUUO7dolJK1e9z1/9Knlcznf6etOrZwIos18k7
+	 aZWE380riKN9qF10lZ8rxaUaXacz752yTalkacvbioGiI4wlTDUEd/5uqRe9USgwWK
+	 zwUn+4mf/O91DCWA0x9f8dm8QrAeNKow9tpTkORxX94nhKbfcEO+/UoVD9+6y8ZTJt
+	 C+KQR/OOReEaflFeT+UjNsyN8CxbY+OqSgOYKm212C5q/z97ky6wIWg8eVtx5VykCt
+	 AFwJkNWugMZcQ==
+Received: from [185.201.63.251] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uAsYi-00Ay9o-Uz;
+	Fri, 02 May 2025 16:44:21 +0100
+Date: Fri, 02 May 2025 16:43:57 +0100
+Message-ID: <87tt6310hu.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
+In-Reply-To: <aBR7bk62H3PEUbfi@lpieralisi>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+	<20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
+	<867c31j20i.wl-maz@kernel.org>
+	<aBIlOrqLtbB5e7B/@lpieralisi>
+	<86y0vgh35t.wl-maz@kernel.org>
+	<aBR7bk62H3PEUbfi@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250502-mt6357-regulator-fixed-compatibles-removal-v1-1-a582c16743fe@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAHnlFGgC/xWNQQrDIBBFrxJm3QGjGKFXKV2omaYDGsNoQiHk7
- jXLx3/8d0IlYarwHE4QOrhyWTuMjwHi168LIc+dQSttlVUac5uMdSi07Mm3IvjhH80YS95845C
- o9i2XwyccJ2dcMDaGaKAfbkK3fMde7+v6AypRQfJ8AAAA
-X-Change-ID: 20250502-mt6357-regulator-fixed-compatibles-removal-16737b35cbc3
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Fabien Parent <fparent@baylibre.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.201.63.251
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Some of the regulators in the MT6357 PMIC dtsi have compatible set to
-regulator-fixed, even though they don't serve any purpose: all those
-regulators are handled as a whole by the mt6357-regulator driver. In
-fact this is the only dtsi in this family of chips where this is the
-case: mt6359 and mt6358 don't have any such compatibles.
+On Fri, 02 May 2025 08:59:42 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> 
+> It looks like the msi_prepare() ITS callback (ie where the its_device is
+> allocated) is called everytime an endpoint device driver requests a
+> wired IRQ through:
+> 
+> gicv5_its_msi_prepare+0x68c/0x6f8
+> its_pmsi_prepare+0x16c/0x1b8
+> __msi_domain_alloc_irqs+0x70/0x448
+> __msi_domain_alloc_irq_at+0xf8/0x194
+> msi_device_domain_alloc_wired+0x88/0x10c
+> irq_create_fwspec_mapping+0x3a0/0x4c0
+> irq_create_of_mapping+0xc0/0xe8
+> of_irq_get+0xa0/0xe4
+> platform_get_irq_optional+0x54/0x1c4
+> platform_get_irq+0x1c/0x50
+> 
+> so it becomes "shared" if multiple IWB wires are requested by endpoint
+> drivers.
 
-A side-effect caused by this is that the DT kselftest, which is supposed
-to identify nodes with compatibles that can be probed, but haven't,
-shows these nodes as failures.
+Right, I've reproduced on D05 with MBIGEN:
 
-Remove the useless compatibles to move the dtsi in line with the others
-in its family and fix the DT kselftest failures.
+[    5.505530] Reusing ITT for devID 40000
+[    5.505532] CPU: 36 UID: 0 PID: 557 Comm: (udev-worker) Not tainted 6.15.0-rc4-00079-geef147df4841-dirty #4403 PREEMPT 
+[    5.505535] Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+[    5.505536] Call trace:
+[    5.505537]  show_stack+0x20/0x38 (C)
+[    5.505540]  dump_stack_lvl+0x80/0xf8
+[    5.505543]  dump_stack+0x18/0x28
+[    5.505546]  its_msi_prepare+0xe4/0x1d0
+[    5.505549]  its_pmsi_prepare+0x15c/0x1d0
+[    5.505552]  __msi_domain_alloc_irqs+0x80/0x398
+[    5.505556]  __msi_domain_alloc_irq_at+0x100/0x168
+[    5.505560]  msi_device_domain_alloc_wired+0x9c/0x128
+[    5.505564]  irq_create_fwspec_mapping+0x180/0x388
+[    5.505567]  acpi_irq_get+0xac/0xe8
+[    5.505570]  platform_get_irq_optional+0x1e8/0x208
+[    5.505574]  devm_platform_get_irqs_affinity+0x58/0x298
+[    5.505578]  hisi_sas_v2_interrupt_preinit+0x60/0xb0 [hisi_sas_v2_hw]
+[    5.505582]  hisi_sas_probe+0x164/0x278 [hisi_sas_main]
+[    5.505588]  hisi_sas_v2_probe+0x20/0x38 [hisi_sas_v2_hw]
+[    5.505591]  platform_probe+0x70/0xd0
+[    5.505595]  really_probe+0xc8/0x3a0
+[    5.505598]  __driver_probe_device+0x84/0x170
+[    5.505600]  driver_probe_device+0x44/0x120
+[    5.505603]  __driver_attach+0xfc/0x210
+[    5.505606]  bus_for_each_dev+0x7c/0xe8
+[    5.505608]  driver_attach+0x2c/0x40
+[    5.505611]  bus_add_driver+0x118/0x248
+[    5.505613]  driver_register+0x68/0x138
+[    5.505616]  __platform_driver_register+0x2c/0x40
+[    5.505619]  hisi_sas_v2_driver_init+0x28/0xff8 [hisi_sas_v2_hw]
+[    5.505623]  do_one_initcall+0x4c/0x2c0
+[    5.505626]  do_init_module+0x60/0x230
+[    5.505629]  load_module+0xa64/0xb30
+[    5.505631]  init_module_from_file+0x8c/0xd8
+[    5.505634]  idempotent_init_module+0x1c4/0x2b8
+[    5.505637]  __arm64_sys_finit_module+0x74/0xe8
+[    5.505640]  invoke_syscall+0x50/0x120
+[    5.505642]  el0_svc_common.constprop.0+0x48/0xf0
+[    5.505644]  do_el0_svc+0x24/0x38
+[    5.505646]  el0_svc+0x34/0xf0
+[    5.505650]  el0t_64_sync_handler+0x10c/0x138
+[    5.505654]  el0t_64_sync+0x1ac/0x1b0
+[    5.505681] ID:78 pID:8382 vID:143
 
-Fixes: 55749bb478f8 ("arm64: dts: mediatek: add mt6357 device-tree")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt6357.dtsi | 10 ----------
- 1 file changed, 10 deletions(-)
+And that a few dozen times.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6357.dtsi b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
-index 5fafa842d312f3b01e7d71ddc04ef48ca52bc89d..dca4e5c3d8e210c1e118539153e77e2822066da3 100644
---- a/arch/arm64/boot/dts/mediatek/mt6357.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
-@@ -60,7 +60,6 @@ mt6357_vpa_reg: buck-vpa {
- 			};
- 
- 			mt6357_vfe28_reg: ldo-vfe28 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vfe28";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
-@@ -75,7 +74,6 @@ mt6357_vxo22_reg: ldo-vxo22 {
- 			};
- 
- 			mt6357_vrf18_reg: ldo-vrf18 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vrf18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -83,7 +81,6 @@ mt6357_vrf18_reg: ldo-vrf18 {
- 			};
- 
- 			mt6357_vrf12_reg: ldo-vrf12 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vrf12";
- 				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1200000>;
-@@ -112,7 +109,6 @@ mt6357_vcn33_wifi_reg: ldo-vcn33-wifi {
- 			};
- 
- 			mt6357_vcn28_reg: ldo-vcn28 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vcn28";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
-@@ -120,7 +116,6 @@ mt6357_vcn28_reg: ldo-vcn28 {
- 			};
- 
- 			mt6357_vcn18_reg: ldo-vcn18 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vcn18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -142,7 +137,6 @@ mt6357_vcamd_reg: ldo-vcamd {
- 			};
- 
- 			mt6357_vcamio_reg: ldo-vcamio18 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vcamio";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -175,7 +169,6 @@ mt6357_vsram_proc_reg: ldo-vsram-proc {
- 			};
- 
- 			mt6357_vaux18_reg: ldo-vaux18 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vaux18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-@@ -183,7 +176,6 @@ mt6357_vaux18_reg: ldo-vaux18 {
- 			};
- 
- 			mt6357_vaud28_reg: ldo-vaud28 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vaud28";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
-@@ -191,7 +183,6 @@ mt6357_vaud28_reg: ldo-vaud28 {
- 			};
- 
- 			mt6357_vio28_reg: ldo-vio28 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vio28";
- 				regulator-min-microvolt = <2800000>;
- 				regulator-max-microvolt = <2800000>;
-@@ -199,7 +190,6 @@ mt6357_vio28_reg: ldo-vio28 {
- 			};
- 
- 			mt6357_vio18_reg: ldo-vio18 {
--				compatible = "regulator-fixed";
- 				regulator-name = "vio18";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
+I'll have a think at how to unfsck this. This was previously avoided
+by (IIRC) populating the domain upfront and letting the domain
+matching code do its job. That behaviour seems to have been lost. On
+the other hand, as long as you don't expect the ITT to *grow*, nothing
+horrible should happen.
 
----
-base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
-change-id: 20250502-mt6357-regulator-fixed-compatibles-removal-16737b35cbc3
+But I also get an interesting crash in msi_domain_debig_show(), so
+there is more than just this corner case that is screwed.
 
-Best regards,
+	M.
+
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+Jazz isn't dead. It just smells funny.
