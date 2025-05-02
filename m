@@ -1,157 +1,127 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21353A1DB;
-	Fri,  2 May 2025 13:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03DF1255F25;
+	Fri,  2 May 2025 13:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194296; cv=none; b=p3vJVFXTYX3dK+qnBH+tDYbieR3Gk4EHTeLipwD3Rfpnau3a+M7cYBuk5Rvv1NCr0LJzNvmbDSsbAI9/A8mSSikL85DvIcgwITnZUIRmpblAXCbuliLJRZdA+s+TZpgUp1RNzzCSEgRHGg8mlozltvRop3ai5KN74NaJXCqzjcU=
+	t=1746194390; cv=none; b=T4mT3kYJ6VEn1aqjUPAk0BQshf6aut3s3uKhtzSYyVh4ET08cuHGmrFZJXrG84xlc+BJhwxwjzp+mFEkZp03Tm1z8SH+D+W0iKqDOv9s0gaEkfBdbRcGVEU7vB1UaKPW8T+pMdVomdhQl1pR3qnFeJpfrRuV1BwB8bYIKNoE1cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194296; c=relaxed/simple;
-	bh=jF0ACj55EBpFv4xPXMCtCQ3EGPvqoK59YN51NAA9LEk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=F4w3WMhny0uNA7bXqJ+5dQa6iyPZyq3UeFIBm0fPEW+1BGU2sJAPRbPjsfEpoFEB8C4wUtlEQg5k1e4SANMAquWwBD1mGfqbNSLay7yhZyKK1zfhoysVqNNhWsPnET675b6mjd8ZLbPOhfdthSXVGTt0hi9b7LvmNjkT79deMt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PfV51jlS; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PfV51jlS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2C7061FD4D;
-	Fri,  2 May 2025 13:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746194286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P584kb5pC18NApXstRyZUdloelLwGilieD1MHWeQIGs=;
-	b=PfV51jlS0bSWrPX0Fq4z7gubswGzSTUV2yhyyBK1MvhXioTMNlo66ly4tqaaUi8k0J0fjd
-	X8C1zAcHBuxXtVo3axgKkKwY5KfLOBI3L3lGzryIeCvo0MAGe1QLORvvX369ODdc/YBe+y
-	qjkn1VDLa++8X2yl2HQ7ym7rv2Miuy2pfwP2HrVEUr4VZhn/QR8z1LqDHHS0goWbeZ2hbx
-	JFI6F277FyGEQeo+lc1j0f/G4Al6Zt+0EkW7BH+kW4uNuAuNoEWCK+zeAGN1t/wgOVYXvr
-	V8QZU+rpzRBDHkqFx3arEmFcewWBmQhnIMfVG/f/DAnbSzOyuQuqt6qFACnaOw==
+	s=arc-20240116; t=1746194390; c=relaxed/simple;
+	bh=hG3hp6agnM+x8dzzswp4S2fUNWXzPjMHX8B5indITHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MJcnmu5dPiAfxt4pPZLka0auZcGF8Cm8i0VjWWHPzffQaGjech1uvOEoX3F7GjSns4DnHHSLeM9cWYkZu3TDAoLA3QkKOPcKJ/1X/+sOwONvKS1I78bckLg7klFyGEObGUqEeyqM4PNoLx6qkGqaL1x3vIcfG7B1Zriy0lPAWr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9830A1688;
+	Fri,  2 May 2025 06:59:38 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D14073F673;
+	Fri,  2 May 2025 06:59:41 -0700 (PDT)
+Message-ID: <6a33e85f-6b60-4260-993d-974dd29cf8e6@arm.com>
+Date: Fri, 2 May 2025 14:59:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 15:58:04 +0200
-Message-Id: <D9LQ7NV1LJM9.F2GF0YEEDFEY@bootlin.com>
-Subject: Re: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
- <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
-In-Reply-To: <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 06/14] tee: implement protected DMA-heap
+To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: Olivier Masse <olivier.masse@nxp.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Yong Wu <yong.wu@mediatek.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T . J . Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+ Daniel Stone <daniel@fooishbar.org>,
+ Rouven Czerwinski <rouven.czerwinski@linaro.org>
+References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
+ <20250502100049.1746335-7-jens.wiklander@linaro.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250502100049.1746335-7-jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri May 2, 2025 at 12:52 PM CEST, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:28PM +0200, Mathieu Dubois-Briand wrote:
->> Add driver for Maxim Integrated MAX7360 rotary encoder controller,
->> supporting a single rotary switch.
->
-> ...
->
->> +struct max7360_rotary {
->> +	struct input_dev *input;
->> +	unsigned int debounce_ms;
->> +	struct regmap *regmap;
->> +
->> +	u32 steps;
->> +	u32 axis;
->> +	bool relative_axis;
->> +	bool rollover;
->> +
->> +	unsigned int pos;
->> +};
->
-> I believe `pahole` can recommend better layout (look for the better posit=
-ion
-> of debounce_ms).
->
-> ...
->
+On 02/05/2025 10:59 am, Jens Wiklander wrote:
+> Implement DMA heap for protected DMA-buf allocation in the TEE
+> subsystem.
+> 
+> Restricted memory refers to memory buffers behind a hardware enforced
+> firewall. It is not accessible to the kernel during normal circumstances
+> but rather only accessible to certain hardware IPs or CPUs executing in
+> higher or differently privileged mode than the kernel itself. This
+> interface allows to allocate and manage such protected memory buffers
+> via interaction with a TEE implementation.
+> 
+> The protected memory is allocated for a specific use-case, like Secure
+> Video Playback, Trusted UI, or Secure Video Recording where certain
+> hardware devices can access the memory.
+> 
+> The DMA-heaps are enabled explicitly by the TEE backend driver. The TEE
+> backend drivers needs to implement protected memory pool to manage the
+> protected memory.
 
-Oh yes it does on arm64. Moving it after the regmap pointer, it should
-be better.
+[...]> +static struct sg_table *
+> +tee_heap_map_dma_buf(struct dma_buf_attachment *attachment,
+> +		     enum dma_data_direction direction)
+> +{
+> +	struct tee_heap_attachment *a = attachment->priv;
+> +	int ret;
+> +
+> +	ret = dma_map_sgtable(attachment->dev, &a->table, direction,
+> +			      DMA_ATTR_SKIP_CPU_SYNC);
 
->> +static void max7360_rotaty_report_event(struct max7360_rotary *max7360_=
-rotary, int steps)
->> +{
->> +	if (max7360_rotary->relative_axis) {
->> +		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
->> +	} else {
->> +		unsigned int pos =3D max7360_rotary->pos;
->> +
->> +		if (steps < 0) {
->> +			/* turning counter-clockwise */
->> +			if (max7360_rotary->rollover)
->> +				pos +=3D max7360_rotary->steps + steps;
->> +			else
->
->> +				pos =3D max(0, (int)pos + steps);
->
-> Please, no castings for min()/max()/clamp(). It diminishes the use of tho=
-se
-> macros.
->
+If the memory is inaccessible to the kernel, what does this DMA mapping 
+even mean? What happens when it tries to perform cache maintenance or 
+bounce-buffering on inaccessible memory (which presumably doesn't even 
+have a VA if it's not usable as normal kernel memory)?
 
-Sorry, I'm not sure to get the point. Should I use MIN_T() instead?
+If we're simply housekeeping the TEE's resources on its behalf, and 
+giving it back some token to tell it which resource to go do its thing 
+with, then that's really not "DMA" as far as the kernel is concerned.
 
->
-> ...
->
->> +static int max7360_rotary_probe(struct platform_device *pdev)
->> +{
->> +	struct max7360_rotary *max7360_rotary;
->> +	struct device *dev =3D &pdev->dev;
->> +	struct input_dev *input;
->> +	struct regmap *regmap;
->> +	int irq;
->> +	int error;
->> +
->> +	regmap =3D dev_get_regmap(dev->parent, NULL);
->> +	if (!regmap)
->> +		dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
->
-> Missing return. Copy'n'paste error over all drivers?
->
+[...]
+> +static int protmem_pool_op_static_alloc(struct tee_protmem_pool *pool,
+> +					struct sg_table *sgt, size_t size,
+> +					size_t *offs)
+> +{
+> +	struct tee_protmem_static_pool *stp = to_protmem_static_pool(pool);
+> +	phys_addr_t pa;
+> +	int ret;
+> +
+> +	pa = gen_pool_alloc(stp->gen_pool, size);
+> +	if (!pa)
+> +		return -ENOMEM;
+> +
+> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> +	if (ret) {
+> +		gen_pool_free(stp->gen_pool, pa, size);
+> +		return ret;
+> +	}
+> +
+> +	sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
 
-Probably more an error while replacing all dev_err()+return by
-dev_err_probe(), but yes. I will look for similar issues.
+Where does "pa" come from here (i.e. what's the provenance of the 
+initial "paddr" passed to tee_protmem_static_pool_alloc())? In general 
+we can't call {phys,pfn}_to_page() an arbitrary addresses without 
+checking pfn_valid() first. A bogus address might even crash 
+__pfn_to_page() itself under CONFIG_SPARSEMEM.
 
-> ...
+Thanks,
+Robin.
 
-OK with all other comments.
-
-Thanks for your review.
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+> +	*offs = pa - stp->pa_base;
+> +
+> +	return 0;
+> +}
