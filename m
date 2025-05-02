@@ -1,125 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A5815A848;
-	Fri,  2 May 2025 13:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193735; cv=none; b=AlMKnq2Pl2gqssrX9aptCupSGf1LquwzBOykmtfXvW0BijsGzCXi5jD+6GVicHN+CAboHFdRCo243CEhTu8sYUfKizTHXAhrhxmP5wITvSjNtUlj3JDHzkkLKfGeukQo29Blko0sp35RbfkxtBOVsKCjcs5VOqk7jC2LYLPbjug=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193735; c=relaxed/simple;
-	bh=3v7s2BbaGeQNccalyIeC64GfvVeKFNjQkG7SwA9ywts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mApRqH4rxmvKZDtENMyEsfsmroMDqzvpuLIJ4fLrUpBPpFYzzpxmZhHictOpGwxj/tDMYcXXC4Yqq61ghCABDrJLkDWtbnhOVN0MkUgEGafbTCxxFx4imOF0Bn7CSBU38TR/amYQooTkLK3X4klgQvkCYcoUnTrUFCSSqBFQI9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Sm5g3zs4; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC882522AB;
+	Fri,  2 May 2025 13:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193762; cv=pass; b=k/quRX5wVdfJ0QODDAqj2j2Bygz+VDc8StbtG0BGYZhPf24fPVU3lWydmo48cBpoF99BhcDUytbYEPMCQgtw7W9ba0nGFCvzibepPz+Bv4SWZyuWvPMsX+DQgVu+nKiqDDaDhR678ffjDlSgT2CXE1ACXfSgLWN8MiUjZM0df7A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193762; c=relaxed/simple;
+	bh=WL14kTMKwwQeDRA9M/Pf0DS2xteO+pBok71KFv+gb+Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RwMLaLk6/YDwaf4UnljS6k81zzJW48RiEMW0XYM7Hc3Yc4uN7uqt2E2L8znXbutU/XSJGiiZBvzsxxPlipWf7jsoQeTqhST2ZgLUYkGzqKG+EO40btk9Lk2im+4S6g5gXa196iGPUY/YVVGRoLThGqDulw3L7FasRvR06ACGQdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=MftJrOxA; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Sm5g3zs4"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542Cd1ff016233;
-	Fri, 2 May 2025 13:48:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Tulg1EJFRJb/VsCslzzCnWUmEyBCaO7M21jZGAXvcTI=; b=Sm5g3zs4xOXBqPGI
-	tjGsgb+E314vJswZxMFX+Aq4zOW05B6MZwLSJIbBigHBNtueEGl3Y/A2seIGsJiV
-	mNw0127N8bPiYcUJn+smWJpKdtOzyyDzpeOGTfT5ku1gniZEJWHkEvPqnnBMgQXt
-	D6JgokPjeHLqCL8IMTLkehKoO9pG1+CpLYTOevX9dKoiPzZSWlueyZzMaNX+Un+W
-	si7f4hNzqt+LbM5lrgs4Xc8xZyzdZfPE+jSefUuzs5Sdc0qXdv2vFn7agEU88ai9
-	Yrw7hAvGs1w/mbACDxhO+mQhvfsnX72k11zqlSl/iMgHg1L49krNbIv3sReGWDv7
-	jQfrMQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u4ggya-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 13:48:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 542DmmjX006169
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 13:48:48 GMT
-Received: from [10.50.25.148] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
- 06:48:41 -0700
-Message-ID: <d14e93b5-5bf6-97b2-a35b-c8f05665d678@quicinc.com>
-Date: Fri, 2 May 2025 19:18:38 +0530
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="MftJrOxA"
+ARC-Seal: i=1; a=rsa-sha256; t=1746193750; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NpCh0jiArTROBLLSsxZRomGX+lID93gH/6ylTHvpn6y+lPpiC7gb+/MsXV6izKVUCepK8bOt8C6wLnWWwFSS2nF0jVBsWOK7BU0c1iJL6UO9Nrfm2GNgnI+SXZh22Yvmmql+wKduMmwCwSFne/15yZfhsxLVD1STNC+M35NY3ZE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746193750; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=pE3NQLQoX7pnUAcgzy4MZ9RTz0LXx0klT8KZ0dkll3w=; 
+	b=isAIJSwDbCHZKxcFxRBwy3/iGuo6e2HrFuPmqjXGuqBAJfs9c7o79BAdLlo1jCxeD4UmAv6rZs+RaH26BkYrUVgYpGOIn7SM3TC/DntxI9rzLFtBGdFxib8mIZEgbgCWOS5I1NNyszV4bYevmxQJnsDwQtxSEi48bkHdqEqImtM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193750;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=pE3NQLQoX7pnUAcgzy4MZ9RTz0LXx0klT8KZ0dkll3w=;
+	b=MftJrOxAYZ2AVoxrxaTeUIuLnUouUsIJtV2w8DX8DbS0MsKHQdOzFdz0Ll39eGec
+	PKS4zzi/jRSLke4WPf9YNlKR54o1kvFjsYmk3LMij9WbJFZBI1gHNjN9pYzs6H7XIm/
+	2eHKkgqm1/0Rxe3qSydGazl/GvS2rNX0/H2bB2iE=
+Received: by mx.zohomail.com with SMTPS id 1746193747104988.1552914913506;
+	Fri, 2 May 2025 06:49:07 -0700 (PDT)
+Message-ID: <27d03a23-ec61-4dbe-b9ca-1c0cf3d52d29@collabora.com>
+Date: Fri, 2 May 2025 18:49:01 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 03/23] media: iris: Avoid updating frame size to
- firmware during reconfig
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 7/7] selftests: vDSO: vdso_config: Avoid
+ -Wunused-variables
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
+ <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
+ <20250502-selftests-vdso-fixes-v1-7-fb5d640a4f78@linutronix.de>
 Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Stefan Schmidt
-	<stefan.schmidt@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
-        <stable@vger.kernel.org>
-References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
- <20250502-qcom-iris-hevc-vp9-v3-3-552158a10a7d@quicinc.com>
- <0c09f19b-dbf6-401b-bf4a-8e416487a34b@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <0c09f19b-dbf6-401b-bf4a-8e416487a34b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7ToMQ9cU0PJmm7BnR6f-8whltnB4kcYY
-X-Authority-Analysis: v=2.4 cv=Yaq95xRf c=1 sm=1 tr=0 ts=6814cd40 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=CLQzPvPphrPxIyWN1zsA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwOSBTYWx0ZWRfX76CbQpqSRmPB XDEZS2iYOQyDZawZ4Wo5GEna6ItaCE8myPeHiJkqTBVcja5+ZcQFeucC/Zi8XdfZQtEd2zRc22f Zh64buv9nfvqpfuzSTbg4KhQtdXaRdN5rW+HJ5Y+mjgFT/821PtmB42rZy7S2+ODssgdBnAdnYt
- 7z3gQOGctspYxDwhcGX8qhZzvE11voYengec1DAM1Jl8opvXQtm0DMH0Bce9MTlv6+Bclfjj07r 71UkUrhUr9pB7qI5fkaWzKr8f1Yz6QHGEEhImgMaq0L1G9ZfduwY8zez6dJ+RdC+pSBwlEQVLFK 0RCiWIkEl/vmraTXrFhl/Xv55qyrABUlFuFfuB+8uxSBQM8HQgZ5PM2dFF4Em0/jirCVdT/Flar
- bTXSWmsK/EbeTudwRtGEamQYfYiwM4AZqkp0hr4JRyeMrme+xcxQ7MMDt8qWfBkXHEJ0lznW
-X-Proofpoint-GUID: 7ToMQ9cU0PJmm7BnR6f-8whltnB4kcYY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=962 malwarescore=0
- mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020109
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250502-selftests-vdso-fixes-v1-7-fb5d640a4f78@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-
-
-On 5/2/2025 5:48 PM, Bryan O'Donoghue wrote:
-> On 01/05/2025 20:13, Dikshita Agarwal wrote:
->> During reconfig, the firmware sends the resolution aligned to 8 bytes.
->> If the driver sends the same resolution back to the firmware the resolution
->> will be aligned to 16 bytes not 8.
-> My question here is why there's an alignment mismatch between the APSS and
-> firmware at all ?
+On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
+> Not all users of this header make use of all its variables.
+> For example vdso_test_correctness.c does not use "versions":
 > 
-It's not about the mismatch between APPS and firmware.
-It's about how firmware handles this, it's not expecting the driver to set
-the resolution after reconfig.
+> In file included from vdso_test_correctness.c:22:
+> vdso_config.h:61:20: warning: ‘versions’ defined but not used [-Wunused-variable]
+>    61 | static const char *versions[7] = {
+>       |                    ^~~~~~~~
+> 
+> Avoid those warnings through attribute((unused)).
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Thanks,
-Dikshita
 > ---
-> bod
+>  tools/testing/selftests/vDSO/vdso_config.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/vDSO/vdso_config.h b/tools/testing/selftests/vDSO/vdso_config.h
+> index 722260f9756198956f0dfccced907284b6851e76..5fdd0f36233742bc47ae79f23d2cfae5a0f56dee 100644
+> --- a/tools/testing/selftests/vDSO/vdso_config.h
+> +++ b/tools/testing/selftests/vDSO/vdso_config.h
+> @@ -58,6 +58,7 @@
+>  #define VDSO_NAMES		1
+>  #endif
+>  
+> +__attribute__((unused))
+>  static const char *versions[7] = {
+>  	"LINUX_2.6",
+>  	"LINUX_2.6.15",
+> @@ -68,6 +69,7 @@ static const char *versions[7] = {
+>  	"LINUX_5.10"
+>  };
+>  
+> +__attribute__((unused))
+>  static const char *names[2][7] = {
+>  	{
+>  		"__kernel_gettimeofday",
+> 
+
+
+-- 
+Regards,
+Usama
