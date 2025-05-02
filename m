@@ -1,85 +1,107 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0494518E3F;
-	Fri,  2 May 2025 14:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7A718E3F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196270; cv=none; b=ldBO2DC5ec2TTnH1LSABcWabIxCm/7ZFde0Tnv6cniHmT5IG5Aojen8g293RR8TzaM9NyRGa4ltk6YZ4fFMfB5IHa1bF5luw0hF9lObaBpnVztQlhKQcugiVIEzK/XxuGLOtYU2I++rYlD3RcVm2a567BDk8WN5J8ZnchCa7DZE=
+	t=1746196382; cv=none; b=DoHTT7KWQuMcB2NKphScLnLZNagq17ASYU13F6okaZ4sbNTjTXo19JDpBmlPnt0sR0uw3tYplYVDGnAGuo72qrGuN7/jT9ZhDzBB0TPNTctVhDBBALp9JnmKJLlY7aN1sxtYUlzCTSZXqPs3kpi7/oW8MNA6Kb31tka+RBhm0Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196270; c=relaxed/simple;
-	bh=mf8XsoB1aBck5+SO7c7/AHeQPBhCUYYifaR1NSzuvH0=;
+	s=arc-20240116; t=1746196382; c=relaxed/simple;
+	bh=KtbLasPz5LjPjek7oqwEZqrJPPilE284LnDl4n7NMCQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/+GZUrLRepXgCwEnsHNdM+rD4A65lZPKppWfpjh38Dhw2TQrUjDWxRp3gVhK3Tae87iKD35QSAvcwvOjeYfNmPmuQUmjQ+4ZPo8OOiANCONIA9kVa7hMonbHMZmt0DckBNbYioGIMw2PIyml789RsJ2F8o9d9u/v3nrN+EnyvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=E5iEluk6; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kiVRIg9yUjlOygferxytxB2uPRolSr62tHdnUXAaFjI3O4TmsJ2NII6vTN4aqntZP+2YhiVOfIPgsbXo/MbFLG4QfbcbEx1eESuISPZQ+m2giiCoJlTAChEEVrkuSUW3jFOltWt2NaDPEJE6MvIPbmCTVdvK2jRWF3pueqvP6kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=cH01l50j; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E5iEluk6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=eaJRhq/LPWLeRV5AAUAremjdu0Wx7433M8VtPQ7w/9s=; b=E5iEluk6H0WmxRNwWdAC1xnKq5
-	nR1JWqWonmSreVtsOdrEBqSanhpaGILnf8nAEW0w7uT4OSjElNq//ut1RHHU/dHZ233kIgSg5hIR9
-	UsZXcVd1hbKY/cgwy/5HW2lPvZzVkfO5+dbUpt7dLL7HJ9OMZR0/BUKwnbwKLDsBzblQzGt15G2vn
-	SdkkFRWNvIqoF7czceiaqZT+ZdN/lccPUfXz+SN77w/rez6Bhxtuhp54H9CHQxZRf/G9wtm/QVEaO
-	2hJfmzI1pinUeTsAb0TxyJ6QwvQZsSp5nmfrxAJ4ZVaRJPC5JlNBFc0I8WT9Vctan0jFaejPLdd1J
-	I314kHMg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uArPm-0000000EzXZ-2mbl;
-	Fri, 02 May 2025 14:30:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3706330035E; Fri,  2 May 2025 16:30:58 +0200 (CEST)
-Date: Fri, 2 May 2025 16:30:58 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v2 1/1] x86/reboot: KVM: Guard
- nmi_shootdown_cpus_on_restart() with ifdeffery
-Message-ID: <20250502143058.GV4439@noisy.programming.kicks-ass.net>
-References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com>
- <ZwbazZpTSAn9aAC7@google.com>
- <ZwcT149jx-iOmEfl@surfacebook.localdomain>
- <ZykbvVZ32FKCRT_q@smile.fi.intel.com>
- <Z_UUXOe61BwVkGob@smile.fi.intel.com>
- <f670905f-f14b-4482-83ee-568234647f46@intel.com>
- <Z_U0Vn0V18KYGjkP@smile.fi.intel.com>
- <d40efb68-eb4e-4158-9dc6-5de101adefd1@intel.com>
- <aBTQ7-L-bUwzYbKM@smile.fi.intel.com>
- <ba00197d-dc21-47bd-b183-4971038d9a8d@intel.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="cH01l50j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=j9SL
+	XVtuAhp/oeGZ5KqOEOzkrxPtMVlVq47SbKT7Ckk=; b=cH01l50ju3erEO95qm6q
+	7+Ei17jnc2HtD/8dw2+A33FkvIJ2h1pW0G5H+ZILaVisGHXzD4jsEebI7KlEN6LV
+	mCgeYWy6+GZtUYvqz4nRCtJSdjhdg9rWklFptLuMmIWFt3fHKhQT2OeHQUDsQlVe
+	E/xKx32O4JGZiuWIYXCsAuURCbSLDLC+LXMZrNoQHaoMfRlIUhSNakjYEarFzgeQ
+	m0TRfoFx3cxR9AVpE0QJAD672fJ6k99k/XKCZW3gBU4LV0Vbk8vijd33Glo6dvso
+	LKAaCrSEpQNnrNQg7JhAGsNcUKSvqjksih3Kn363VWeatoeUPyMR6iItz5DueiXX
+	Dw==
+Received: (qmail 1480956 invoked from network); 2 May 2025 16:32:53 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 May 2025 16:32:53 +0200
+X-UD-Smtp-Session: l3s3148p1@VyiCBig0MMoujnsd
+Date: Fri, 2 May 2025 16:32:52 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc5
+Message-ID: <aBTXlNJMM-eNR9LV@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c <linux-i2c@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+References: <nflt7kb4vjqzg52g55lpyp7yvbbuwdj3au6xecuufojtucbhqp@visdczivr45s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1pHgoB93OdiXo67k"
+Content-Disposition: inline
+In-Reply-To: <nflt7kb4vjqzg52g55lpyp7yvbbuwdj3au6xecuufojtucbhqp@visdczivr45s>
+
+
+--1pHgoB93OdiXo67k
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba00197d-dc21-47bd-b183-4971038d9a8d@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 02, 2025 at 07:24:37AM -0700, Dave Hansen wrote:
-> On 5/2/25 07:04, Andy Shevchenko wrote:
-> > Can it be applied, please? The problem still persists as of today (v6.15-rc4).
-> 
-> I fundamentally disagree with the idea that the kernel programmer should
-> be doing the work of telling the compiler *exactly* when a static inline
-> function is unused. Compilers are good at that, humans are not.
-> 
-> The "fixes" for these issues generally make the code worse, not better.
-> 
-> I'd frankly rather have a kernel with some unused 'static inline'
-> functions in .c files than one filled with #ifdefs to shut up the compiler.
+On Fri, May 02, 2025 at 10:44:51AM +0200, Andi Shyti wrote:
+> Hi Wolfram,
+>=20
+> only one fix in this quiet week's pull request.
+>=20
+> Have a good weekend,
+> Andi
+>=20
+> The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add53=
+0e:
+>=20
+>   Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+>=20
+> are available in the Git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags=
+/i2c-host-fixes-6.15-rc5
+>=20
+> for you to fetch changes up to b1852c5de2f2a37dd4462f7837c9e3e678f9e546:
+>=20
+>   i2c: imx-lpi2c: Fix clock count when probe defers (2025-04-29 10:18:51 =
++0200)
 
-Yeah, this unused function warning nonsense is terribly annoying :/
+Thanks, pulled.
+
+
+--1pHgoB93OdiXo67k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgU15EACgkQFA3kzBSg
+KbZBXQ/+Itk6vOKKfwOUkyZWu5OinQtjrs9FP4P3zS/WCTp39bboy5l+WV9BE5lG
+VyB1QJx/kbAZH3vieUkjFpiqePT6gJjXAyyhhr3EqNCHZJk6joh3NWfsec6IEghN
+C2eocUva4Zu+VAyOMNtVbSyuBRdrm+g6oDTsqSvXsAPa8q3nnfP/nTP5/G63y2wC
+LJ+1RbGrbY7I760HMNY5WUMsa+Tdkz9KKMZWQoPfKyML7/WAI4UgL5HVIrzbR7oW
+6LClnJxk6j9qo+u/Lq3ZxhMROOyjEAn14h/Ow6v7oRXAXYFsvp002vHsvUIMpgdh
+a1sjbNQRHY4u+y20zyQExscWtqBr0vpccmt+vngesx7Mt6Vm24TJYt1aw82DCGqo
+RpSiU4hugxX17Xay1agnC0ojXRMpNHL/26EUrwgFtl8X+8CIFaRNqBQ4YihCZpb9
+LJich5bezMo4e5La2H3pKbVCrxBuZ80kOJRPVRPkueZJHIQj1Gwmnt4sKK1fkdCf
+GgyTrIpXHkZOglU+CiqdP+lzI3GO6Oc9N5pwucC46fim8kCTnQ5dKgGKQb031Bn9
+dVakB4z/jDUYGPk/WcLyeHR6efywHsOMCySgSGhETk84yZb//76MjduGcp4iG61o
+CV+/QcSclaP2hp9tvcX7PKEaNVFYf6UcaKdLbT1FJYVt0ZDdA7c=
+=829Q
+-----END PGP SIGNATURE-----
+
+--1pHgoB93OdiXo67k--
