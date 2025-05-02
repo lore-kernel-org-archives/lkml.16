@@ -1,81 +1,177 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE071EB187;
-	Fri,  2 May 2025 06:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 296BE1B5EB5;
+	Fri,  2 May 2025 06:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166528; cv=none; b=WCGvKcedbjs7g4UHmminKLhBO3too2mte0kb6nzLpyjXZneQ42thpx7dMvqepMb1+7Pdilyw0IEc28UmHmggtQYYgOnk48GcHk6rZBuf+YPwl2MS0eGmNCmWbxgSEE4I7J/+o0STNdxJEJdxbCfZR3kyhDM7Cfxf3L+S/+rhR4c=
+	t=1746166674; cv=none; b=tnkJbutGzgVMMBQ69JnULB54Rg/WKxB2uQiDvWvVJzb+LH1OI8MOn/tV9PnN72OKeHKD4qPCm7W9DyHkiKqHX12ucr+eHa3iHFaf7WjFTlxbxI98Ae7ScKCMx1MpWYnHwiqpcEK9gwY8nTgaCwXytpl7PWIxGdjYQkpZg18pn10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166528; c=relaxed/simple;
-	bh=9RqD1rtDZ3nx/5xl4S8rNG4umy0IwWzfFpWHE+myW3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eZpQacDF8TtI8pZM2NGjTUVHkpxSY1gPUw/KhLKySK+MhXG+UajAqC1RSMZ9TeeJYuCU8TIzxAWrfQNKUmHNvnKDfSWuPrWP5uHjTROQWLsTZ3kIyZbOM2skFBkEuN8ERxD9tXq8LdBg4hTmc/xDAfmKPCa5d+UmdbGXURGAKG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=Pmt7L0uh; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1746166674; c=relaxed/simple;
+	bh=rsEUTqd8xsK6TWEmgVEJdPQiJEmzwCazjM3sx4RcdKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FbJgCzrH6tD+K8/G1dzwe+FsTFfqfj+PtEJZKxryADVU0fryd3cc42/Ajq/V8rUrQ6EUILMKfxUn/cdzPGnJF/PjdqQwrJDBUcpGy390CbVJrxpLAF3ORUoKqdQuQUNACxVtotePem2NNiDr3wMsolPjThNvZs/AGhcjfNglVnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=a2beh/TT; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Pmt7L0uh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1746166517; x=1746425717;
-	bh=avL9fBB6weC8oCLy3XgV5GE6YeyH90JKq36fRo/ChEo=;
-	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=Pmt7L0uh10dXvyxFAI/Haz410R6/M2PTAG2jrlPvB5tHIP3Y0oVg4P7NU6/3ZXk2E
-	 0Qq4xSyLmWmnc6fB2W528bU2u8zJ4nSTTBkUzkTNw5i2+8eyQF7XI4ERgWPwoc5TBZ
-	 MFochqFYA3UOvDLqE0NnlnFCjt7BKSYlflHvEIgVDESfuuwXR1vuWifzLxQtgVwQ80
-	 oyVIagjc81Pi0RNbTBqIiPuJt+JAZLAwOdufgf8R6gNReX2ZRSr4t2Jci4m2MdkCwL
-	 CTrCvgDO9zbfEHXoMOQ6bBpnRXvGi0WU4SQCtaVky6gT8c48ngQVtTx+6nU/61Ku5l
-	 pdoq8h6ocMqXw==
-From: Sean Nyekjaer <sean@geanix.com>
-Date: Fri, 02 May 2025 08:15:07 +0200
-Subject: [PATCH v2 2/2] iio: accel: fxls8962af: Fix sign temperature scan
- element
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a2beh/TT"
+Received: from [100.79.193.170] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 14C9B2020950;
+	Thu,  1 May 2025 23:17:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 14C9B2020950
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746166672;
+	bh=AIs11BV7qh3/KZL3dBV10hCv5+2WoDIfLVxf4Jls7kw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a2beh/TTPCQklRtzXhKXinVAJGx/AE2VN4U+ieMGMgKp/VI+Mhi7KDULrlJrVkLL9
+	 leFcLrVQDgi/d05wFAY51mJbqR2OOonqmpeA3meS25hZ4pnSHxglN/HoYcbzk2/XmK
+	 QN0aFBN0w3x+B8rtGJDiEsXa8eu/SWh3gSoGq7wE=
+Message-ID: <e752e64a-1ac6-4c96-91ec-f5797f97aa24@linux.microsoft.com>
+Date: Fri, 2 May 2025 11:47:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-fxls-v2-2-e1af65f1aa6c@geanix.com>
-References: <20250502-fxls-v2-0-e1af65f1aa6c@geanix.com>
-In-Reply-To: <20250502-fxls-v2-0-e1af65f1aa6c@geanix.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Marcelo Schmitt <marcelo.schmitt1@gmail.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sean Nyekjaer <sean@geanix.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+ <2025042501-accuracy-uncombed-cb99@gregkh>
+ <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+ <2025050154-skyward-snagged-973d@gregkh>
+ <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
+ <2025050228-proud-deduce-a73c@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025050228-proud-deduce-a73c@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-TEMP_OUT register contains the 8-bit, 2's complement temperature value.
-Let's mark the temperature scan element signed.
 
-Fixes: a3e0b51884ee ("iio: accel: add support for FXLS8962AF/FXLS8964AF accelerometers")
-Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
----
- drivers/iio/accel/fxls8962af-core.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/accel/fxls8962af-core.c b/drivers/iio/accel/fxls8962af-core.c
-index f515222e008493687921879a0b0ef44fd4ae5d10..e1b752e202b877db606a55a978d63ef52894c60d 100644
---- a/drivers/iio/accel/fxls8962af-core.c
-+++ b/drivers/iio/accel/fxls8962af-core.c
-@@ -750,6 +750,7 @@ static const struct iio_event_spec fxls8962af_event[] = {
- 			      BIT(IIO_CHAN_INFO_OFFSET),\
- 	.scan_index = -1, \
- 	.scan_type = { \
-+		.sign = 's', \
- 		.realbits = 8, \
- 		.storagebits = 8, \
- 	}, \
+On 5/2/2025 11:43 AM, Greg Kroah-Hartman wrote:
+> On Fri, May 02, 2025 at 11:31:03AM +0530, Naman Jain wrote:
+>>
+>>
+>> On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
+>>> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
+>>>>
+>>>>
+>>>> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
+>>>>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
+>>>>>> Hi,
+>>>>>> This patch series aims to address the sysfs creation issue for the ring
+>>>>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
+>>>>>> size to accurately reflect the actual ring buffer size, rather than a
+>>>>>> fixed static value.
+>>>>>>
+>>>>>> PFB change logs:
+>>>>>>
+>>>>>> Changes since v5:
+>>>>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+>>>>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+>>>>>>      commit msg of both patches.
+>>>>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
+>>>>>>      hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+>>>>>>      now.
+>>>>>> * Changed type for declaring bin_attrs due to changes introduced by
+>>>>>>      commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+>>>>>>      merged recently. Did not use bin_attrs_new since another change is in
+>>>>>>      the queue to change usage of bin_attrs_new to bin_attrs
+>>>>>>      (sysfs: finalize the constification of 'struct bin_attribute').
+>>>>>
+>>>>> Please fix up to apply cleanly without build warnings:
+>>>>>
+>>>>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>>>>>     1893 |         .bin_attrs = vmbus_chan_bin_attrs,
+>>>>>          |                      ^~~~~~~~~~~~~~~~~~~~
+>>>>> 1 error generated.
+>>>>
+>>>> Hi Greg,
+>>>> I tried reproducing this error but could not see it. Should I rebase the
+>>>> change to some other tree or use some specific config option, gcc version,
+>>>> compilation flag etc.?
+>>>>
+>>>> I tried the following:
+>>>> * Rebased to latest linux-next tip with below base commit:
+>>>> 393d0c54cae31317deaa9043320c5fd9454deabc
+>>>> * Regular compilation with gcc: make -j8
+>>>> * extra flags:
+>>>>     make -j8  EXTRA_CFLAGS="-Wall -O2"
+>>>>     make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
+>>>> -Werror"
+>>>> * Tried gcc 11.4, 13.3
+>>>> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
+>>>
+>>> I tried this against my char-misc-linus branch (which is pretty much
+>>> just 6.15.0-rc4 plus some iio patches), and it fails with that error
+>>> above.
+>>>
+>>>> BTW I had to edit the type for bin_attrs as this change got merged recently:
+>>>> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+>>>>
+>>>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+>>>> index 576b8b3c60af..f418aae4f113 100644
+>>>> --- a/include/linux/sysfs.h
+>>>> +++ b/include/linux/sysfs.h
+>>>> @@ -107,7 +107,7 @@ struct attribute_group {
+>>>>                                               int);
+>>>>           struct attribute        **attrs;
+>>>>           union {
+>>>> -               struct bin_attribute            **bin_attrs;
+>>>> +               const struct bin_attribute      *const *bin_attrs;
+>>>>                   const struct bin_attribute      *const *bin_attrs_new;
+>>>>           };
+>>>>    };
+>>>
+>>> That commit is not in my char-misc branches, that's coming from
+>>> somewhere else.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> Hi Greg,
+>>
+>> I can send a patch based on char-misc/6.15.0-rc4 which does not have this
+>> patch, but I am worried that it will cause compilation issues when your
+>> branch is merged with linux-next since this change is already there in
+>> linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
+> 
+> Yes, because you want this fix in 6.15-final, right?
+> 
+>> Here are more details of that patch:
+>>
+>> """
+>> sysfs: constify attribute_group::bin_attrs
+>> All users of this field have been migrated to bin_attrs_new.
+>> It can now be constified.
+>>
+>> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+>> Link: https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> """
+> 
+> I know that patch, I will deal with that in linux-next when needed, you
+> shouldn't be worrying about it.  I'm more concerned as to why your patch
+> was not being tested against Linus's tree if you expected it to be in
+> the latest release and backported everywhere as it you asked it to be.
+> 
+> thanks,
+> 
+> greg k-h
 
--- 
-2.47.1
+Sure, thanks. I'll rebase it to 6.15.0-rc4 and send the next version.
 
+Regards,
+Naman
