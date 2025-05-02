@@ -1,115 +1,104 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408FA2566
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AA02566;
+	Fri,  2 May 2025 15:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746198939; cv=none; b=E8yrUNq4zfSyNBXlFfyEr54AuxEv4obFNRP7R0QbOHDJDGkfeBNJlUPPdrX9T/hm8k6z1vBAyIbFL1YGKQ5fZuKuKuXkyWZ/wwVxedEXCkIecxudoB4YxnDwkvRx7+264k3FW/s9KuxJoUcqonCvW4peTMFIK+Fqeyojcsc7xOM=
+	t=1746198991; cv=none; b=Wfb9JBsZJrPwA7wPtfzxABbWbg5Q0DUebP72Hm6rzoqmVySo+FuV9zPounTFDgbED3OMtopZH6d4LyBOvASxVKkVY7t8JcPS/IvJeEEIEtkmDJ3aM0iq2rto1NsEM1z/lhy0vu3OQyJfSAz71tSmrEqC+K5d7XP9cKcWkXJYRic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746198939; c=relaxed/simple;
-	bh=mFj7rvx9G8v9+EiYk7/06RcBARNZQP3y2G/mp7J7IAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZHX4gFRG2VL9vLe1oz+8bbUe0iV2dO+sJJuvTDD5fVxXj4Ql+AosgSpeWzHX+Wogp59ZXizugM2aR23WWvFIqYQLnVTBlxLT5giFnCm8MQgXjwayhMsYGMjDvcUNPe6wJSYml5e+Tk2y9JTw6qoI14wMwaMnx0rCDOfB5Wa5nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Je4gbXv2; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Je4gbXv2"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso2244623f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746198935; x=1746803735; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ujk1BtnXfFfRVWSou7qNXAW7jGu5GKXlOG/QH1lknbc=;
-        b=Je4gbXv2CuWnFAnXb7YXM3nbnp6iJzx4VvrHDxDrCGzev0vGAJ9ucXqfXKkSgt+7Pt
-         TyuBYN1whxO56XvYcCI8sQHsUOqlM0qskl9DJ5r81JPXCXEQ3UI0GGjp3REEZC47XYhN
-         C7IHcq4sQ9uwm7LQuXbYhwkPeNws7L3KmoipkUBtGWLk5GWSHjZ+jYay3sl5ykRP2h0I
-         URXU16cpdPIJ0366JqrTGxx7SJnaiiARnplgB7tCr32eGQCNYJ7G4e2w6kQRteGw23oW
-         Z4ClHfScP94QPlosvHLRjr9jJpAslIDUY5HeiRsajiWuV8S3ZkEGw8sLXvGWL0elmpzh
-         lr9w==
+	s=arc-20240116; t=1746198991; c=relaxed/simple;
+	bh=MYKwIW4ii66kqqivzxqGKw4hsC4aS8QCVXkRotLBCXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fa0sMugC85GNSfLuE9MTV1RSdmJNwjvsKbvMFA3SdrbTkXu1aprqp5RXDAIAzsgN1Ehnh7QnqamVosnZqTSiorzB6FgJrmlK7HMU2fUE3su+GK7oKG7HnEnrgr72+J5vIMp/y5PylqWlPp+bXFLtvK4Gw2U9gH6ZKEqhdN8rvxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47677b77725so26971651cf.3;
+        Fri, 02 May 2025 08:16:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746198935; x=1746803735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ujk1BtnXfFfRVWSou7qNXAW7jGu5GKXlOG/QH1lknbc=;
-        b=XG/KNCsjip3Vou/nAhL+758LqhT/nEUt83VjXdZhsGAIlUJMPqr4Hd+bhJCMQ5WfSX
-         nB7VdhI5cbtvJtV7ufpV+PmiAI2xkOPDf1KtRXkm8+fCR8VFGUfQhU62jT0d5LGZxeRN
-         6rtBJ6Jzsb6LuSuq/qMLi79DBS8DBi9wSvvV6uDvIFkMTIES+lyAdNftW/RUBWx627ys
-         HZbRR8viliYE31NyzDWILUW8ZpUnYt+epBnDQweDvoSgSnuMKPUF/hFrML4uMgt4HAYx
-         otK3g66M/j5IO0lUMSxPjDrRICz9q/tccyK4aCxDDVqBgD036PitqS6Yav9EyJAtlDf7
-         Mu3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXFxaFPlC/cRagkNyKLMj6vit+HMFyO/2nYs9I5V+7X1hwu4VtSgX/M8P4k3OhcYNS0Rl0LYk4CiFe5RLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQhdtp46S7J6jv76FOAJMT8587pIZyk9lyOP7T5GA0uMJLcljD
-	Iw6RiUkntTOEl6kLeMF03sZQAO5uW3eUK5uw6Nb4n5CWz4GjfUJHYI9CMOkwnqJfPmeY6mZ4OhE
-	8
-X-Gm-Gg: ASbGncvPBDCRQCk/eSN1XG5YgdvA/vwzXwzUp/xpfr3gwDwOiiw+Wvd2iKyBSjf7FZM
-	FWJXopZUru4MgnIrfyAZ0IOhkJifQ94VSkizqyuGfjhfW7ImPMeFC2aBp90xBtW3HWCq3S8wQWf
-	tAszJ+NWpzLOl+UHwsQnzPtWxxZWQXMpeQr42I6DdCHrvx2MiyW6IWT7zAG59RVHdOejDxBKPuc
-	7rXVgG6OHnrTJo/PuaeVUsXgqyoYYTnCHqFLhD8+zJbw3TSoPvxw3tIMxaxCfwC+4SLcxNaxhUf
-	C8gV4djs5/RPh4tE+76M2aluPKOKVzrst/EBt74=
-X-Google-Smtp-Source: AGHT+IFldPkZpv2kJ63m7xgTDZKmiC0tyADxjEV7SCj8JMUwdDjNdLorP+ADGNPiJpOiUHA/i9w22A==
-X-Received: by 2002:a5d:5887:0:b0:3a0:870d:3152 with SMTP id ffacd0b85a97d-3a099add459mr2742549f8f.33.1746198935589;
-        Fri, 02 May 2025 08:15:35 -0700 (PDT)
-Received: from myrica ([2.221.137.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0d15sm2456737f8f.13.2025.05.02.08.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:15:35 -0700 (PDT)
-Date: Fri, 2 May 2025 16:15:37 +0100
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, linux-acpi@vger.kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v1 1/1] ACPI: VIOT: Remove (explicitly) unused header
-Message-ID: <20250502151537.GA2724505@myrica>
-References: <20250331072311.3987967-1-andriy.shevchenko@linux.intel.com>
+        d=1e100.net; s=20230601; t=1746198987; x=1746803787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yYuT0Y8Dr244yQMpf5DoOWLTHV02NSRd4xx0AE8mam8=;
+        b=UHiHZU7428ZCrei5GwMcd62BZSh69cno7hY5sOjgJNx38m/sb0I6b0m4P9yFzuq8ax
+         AJz0UBeqJrEaw+5MFr/OxwLd92qtU4CI11dtmz9XrH0toycXT9R3UqEUnt0JgbJ12eAf
+         VwdQ7cxKWfu8f/MvOqNACzYqnptNVE68elSp0b9DVi0cq/N/UMq/j32Ip/dpx5U1NijH
+         40o+s/g+vEN7///jE97AMnGPMMfzwV5gaBkOo0NfVXiFzx+vILY/bl42kRTr8Mwy3mdN
+         uaghqYyUs1OjTpDV8DtC532sR1TIOn6CDXa2rosR8Ze+hc83NEsJgFO2FovaQS3Nvn8R
+         Lvsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVl2yWMiukGHbkuWcVe642tSkn6k++zLS+P48xhANbAXoqj/ZE/7Qgkc/XBKVXphmGtz+Z7sJdFKDHsclw=@vger.kernel.org, AJvYcCWenkV8g3pblZsEx5Z2TsPFCJT7j/tZed7LdxiYzklyvFv0tASWXVf/QWSF3PE/xRJ90cMCfLv1hvG6kVkW9DsJUTA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTZLJbQedDjBUAU6VCPCtPhcBpYX2qTYol8QRubfmhVoa/UxHQ
+	nVLtZMPXNL9d3WxFGUmLQDlDXUfvWYYKGy6THl5mwtKCnWflJyoHjDp6Nw5Q
+X-Gm-Gg: ASbGnctrSXTttzv1jnozG+8pk+n+Fqh7k6mgice8ODmdpDYwwr40Ed2vrg092GMn0v1
+	ueJBI/LTqrXvP1WYGuCLBhqRAT1UpWGAHAeDenxX5FszyBSj3GwOoTGoR9wAXnEbL5gTGL1cK2v
+	8yOA0WkGojRFEl5qM7QPLdznaicx43PL71r2zxAU0zlMx8LLU5u3BWzqLdR75iEAMCp00db6pSt
+	LQMbgJxNEIc7koOQ3IQvdCSnYIuxjTdgPWqLCH4JnOtLXM+NZ1eNtY7OCxrJS8mk79qgdVuCRLI
+	YmFGWfdd9s0nTiObl/zdhshd/QHStuNraEHQfVWNTeeQmDRG7i8ERBKP64Oxg3Hjo5hGYENzOjw
+	4Vt901oQ=
+X-Google-Smtp-Source: AGHT+IHkpv+n4CVzRvCtQ5pMpe/zwO8rwSltiBd6wH3OXh+PZqz/601DXHd6bXAZ4JX/GPIDZCO1ng==
+X-Received: by 2002:a05:622a:2b4b:b0:476:9e90:101d with SMTP id d75a77b69052e-48c32ac95efmr56067131cf.38.1746198987490;
+        Fri, 02 May 2025 08:16:27 -0700 (PDT)
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48b966c8007sm19189921cf.18.2025.05.02.08.16.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 08:16:27 -0700 (PDT)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c5b8d13f73so268774685a.0;
+        Fri, 02 May 2025 08:16:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWBFITz6xdsnap7aQPFF81QyejBUVxeNaUQWupLZBLO07qo7Q5hUTxYz0Z9RFyVsqorvRnMjbYfyaxNwH4=@vger.kernel.org, AJvYcCXq7DmRpi4+TEAqo7vYquTG9Whhlrfvs8PFdBgeT/wyYmznZUzh08VZF7zJ9Aogv8ykGheJQO8dyKrnMLsscCEKxmk=@vger.kernel.org
+X-Received: by 2002:a05:620a:4505:b0:7c5:d1b2:166b with SMTP id
+ af79cd13be357-7cad5b23d93mr540185985a.8.1746198986798; Fri, 02 May 2025
+ 08:16:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331072311.3987967-1-andriy.shevchenko@linux.intel.com>
+References: <20250404080045.367845-2-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20250404080045.367845-2-u.kleine-koenig@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 17:16:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWg-MBH-3rThZeb=dXgaegvsDk86PhR4fTWkvmvyrd3tg@mail.gmail.com>
+X-Gm-Features: ATxdqUEBL5d0NldxcsKp49t-4T7zEkCedlXK0CPN-aqdZN49PjJn54GCq01w5FA
+Message-ID: <CAMuHMdWg-MBH-3rThZeb=dXgaegvsDk86PhR4fTWkvmvyrd3tg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Generalize ARM/RISC-V/RENESAS ARCHITECTURE
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 31, 2025 at 10:23:11AM +0300, Andy Shevchenko wrote:
-> The fwnode.h is not supposed to be used by the drivers as it
-> has the definitions for the core parts for different device
-> property provider implementations. Drop it.
-> 
-> Note, that fwnode API for drivers is provided in property.h
-> which is included here.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, 4 Apr 2025 at 10:00, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+> Triggered by noticing that the pwm-rcar driver isn't covered by the
+> Renesas maintainer entry, add this driver to it. Instead of adding it
+> explicitly, just add a file regex for "rcar" (and drop the one entry
+> that gets redundant by that).
+>
+> Looking at the output of
+>
+>         $ git ls-files | grep rcar
+>
+> only shows files related to that architecture, so no X: line is
+> currently needed.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.16.
 
-> ---
->  drivers/acpi/viot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/viot.c b/drivers/acpi/viot.c
-> index 2aa69a2fba73..c13a20365c2c 100644
-> --- a/drivers/acpi/viot.c
-> +++ b/drivers/acpi/viot.c
-> @@ -19,11 +19,11 @@
->  #define pr_fmt(fmt) "ACPI: VIOT: " fmt
->  
->  #include <linux/acpi_viot.h>
-> -#include <linux/fwnode.h>
->  #include <linux/iommu.h>
->  #include <linux/list.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
-> +#include <linux/property.h>
->  
->  struct viot_iommu {
->  	/* Node offset within the table */
-> -- 
-> 2.47.2
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
