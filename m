@@ -1,33 +1,48 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A098268C76;
-	Fri,  2 May 2025 08:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ABD267F59;
+	Fri,  2 May 2025 08:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746173248; cv=none; b=ECPoOh7k9BXKFWIoBeJy27qX6iM96NLpA0vWG8dU1zWL0uLa48rdIw1/qOXTIzmTnT49JxfoPsJgeBGov050+qCSraSB6ExSM4KtIq64NEoe3FuiKjFB8C7xL0RWuqcEr2tz3BufH6zNO7zqGYLeQAjmLY+lBCBmzGR16NAHIjA=
+	t=1746173254; cv=none; b=Iau2H6GOVbmcmDP6y4FXs0q7RFwm62hZCrxjFt+Q7B6CgyuHeamiZXT1ucKoF/7c0izw49FHpDvBOVDGy+Qx/Af1qZpl1QWYxZUbkrkS/P7qLuWR4TF29Jf86T9fLdcCJrV8iB2adg+OJJvL/RpMF/N3HJUz4DeEY1vCpaGD9NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746173248; c=relaxed/simple;
-	bh=7bnGndJhxjIKSmPxWdEiSSiY/EIdp5jjPS9wr2yP5p8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iUp2C2OO+jrlPhOkcSaTEUfeaANuIe+Coawh0zH+5rAcVPwDOEWRmC5D6oqQfodvqc7NDY7gR/U7VUtdIVtuPsHV6gVwAXEcoSXvYzcitjHU0oVcswgA53W8eZZomF/ML6oxU12cZj7DEQ3zhNVJc+mu0pYHZD+U4A8gN3WCqFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GjBPt3EF; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1746173254; c=relaxed/simple;
+	bh=RHBtlN76qhQ1cJMVuOCHQA/ajktLGzdxL4P4OVaAcI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=G0Gtsuj9AKglYkCbZnAvabk9UFYtUBQvu4N4DLxVBOsApdizanYopIz8Cz1XkqTNxkMY+q2b9B2V64yVZ8O2jiSSrOHmy34PfkaPY1OWBGs6IrCJxBW6imiIgBGUY5vxOlKNkeK+9bPcU+fO/STtaBq+H/eFd9siVjL8vpA0cKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h8RgWL41; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GjBPt3EF"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 64394353;
-	Fri,  2 May 2025 10:07:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1746173231;
-	bh=7bnGndJhxjIKSmPxWdEiSSiY/EIdp5jjPS9wr2yP5p8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GjBPt3EF01vx8CkzVgM8w1gIJcGeEnm1fL3hIojLdFYhRr0ho0s3S16Pg1kafuOrg
-	 MVPwNNT62AAsJzvR1rnGoygEyaaYcob8iH8e0GILBwRxVjcF5CRw1wG1UvgxCwdwEp
-	 n9sKI1s02a/Rwlh8OKP9e5S8JUaPD0B5mJHiLPnI=
-Message-ID: <ce831f65-67d0-4f4c-9f08-3014b1d00dc0@ideasonboard.com>
-Date: Fri, 2 May 2025 11:07:15 +0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h8RgWL41"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NGRV017587;
+	Fri, 2 May 2025 08:07:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RHBtlN76qhQ1cJMVuOCHQA/ajktLGzdxL4P4OVaAcI4=; b=h8RgWL417yrxSQf5
+	Blai1uPAwBR5/XoneOc4QNw9Jk/mjQRBoIbQBc6faqpOpowNwBPkIj3GRgC0KFF/
+	k/WjCC92DxOwNGm+RDCKHysxt7K+b0SSqZYjYhEwspIpUq85gKovrWpOd9kXynhT
+	QDLBQZQuiITt2mwHNW87cihbSou1dKMFkfleZlWBcjnStMzUTdbuUalHl3xpm46X
+	2bDoE+1CkgsSEi/sZX84Hebn7hXCFqPBEYKE/9Q85K389Is5VzbnOdoYvhHRdVDg
+	rmDwtPVXjj44Z6No/e8iO+x2RmgP6vMhoCAq8bmIC9PUuXrvKJBaHG5nCM8kkA6t
+	VEbXwg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u77kgn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 08:07:27 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54287Rot015749
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 2 May 2025 08:07:27 GMT
+Received: from [10.216.18.87] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
+ 01:07:19 -0700
+Message-ID: <2e94f13c-3d43-441c-8532-f6149cb33cd3@quicinc.com>
+Date: Fri, 2 May 2025 13:37:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,233 +50,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
- cut-down versions
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: praneeth@ti.com, vigneshr@ti.com, aradhya.bhatia@linux.dev,
- s-jain1@ti.com, r-donadkar@ti.com, j-choudhary@ti.com, h-shenoy@ti.com,
- jyri.sarha@iki.fi, airlied@gmail.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- simona@ffwll.ch, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-References: <20250429143656.3252877-1-devarsht@ti.com>
- <20250429143656.3252877-3-devarsht@ti.com>
- <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
- <1f8c43cd-8c26-4e42-b144-b91f5ffc2e2e@ti.com>
- <88993439-bfdc-418c-95c6-d6d8bdb5b87f@ideasonboard.com>
- <466254e9-145f-4839-9451-a5f282ff02e9@ti.com>
+Subject: Re: [PATCH v3 3/9] dt-bindings: qcom: geni-se: describe SA8255p
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Viresh Kumar
+	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <psodagud@quicinc.com>,
+        <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
+        Nikunj Kela <quic_nkela@quicinc.com>
+References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
+ <20250502031018.1292-4-quic_ptalari@quicinc.com>
+ <20250502-quirky-prudent-beaver-dcebd0@kuoka>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <466254e9-145f-4839-9451-a5f282ff02e9@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <20250502-quirky-prudent-beaver-dcebd0@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA2MiBTYWx0ZWRfX8U37cO2phlp+ fbyo5GJfCbdeg1fgbvuEO/xaFBNBbGIzHuPI94xcKH4nETWscB+cEjvtFiPA6kQ3Rw6SLW1xxcU 9FaGaIiKGkvGtPztKl01zTWS4jGuQnsh2jZQjcGxOf4WeQHdQ5e9qe36w4rfV+EBY1lp5Tx10CP
+ x3Osf21DqLi3THzTVne0lBWJQ+MKGAWLw+uErEewzZ0W2KcLhlMTfoFfnVstmo8FRu3XvLS9x7s J+L2h8+k+r+S+UoPf4TnG/9i+DWfFUBSHylnHfe49/IcfgSzL5aHysC5kyH0KyF+JUFqdl+eNFQ AB19yMJHjhQY7Er4thJHKKRVobYyftfeOQ+Uz6oKhLPZUuHuwlVLiCZvzn2FCJoDXTaX0ndtDeX
+ 0Q+LlzjxCXZLPsTVo9OymAcgMw9HSiunXGxhhZu+bMwKySNWlNXBSjGEYlwsyWeoblV0Np2O
+X-Proofpoint-GUID: E_Oz6l5T2okETWPs5r6-6ZW746iwpzUX
+X-Proofpoint-ORIG-GUID: E_Oz6l5T2okETWPs5r6-6ZW746iwpzUX
+X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=68147d3f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=D04I9yGVSkTAbIRRv5YA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020062
 
-Hi,
+HI Krzysztof
 
-On 02/05/2025 10:06, Devarsh Thakkar wrote:
-> Hi Tomi
-> 
-> Thanks for quick comments.
-> 
-> On 30/04/25 23:12, Tomi Valkeinen wrote:
->> On 30/04/2025 19:37, Devarsh Thakkar wrote:
->>> Hi Tomi
->>>
->>> Thanks for the review.
->>>
->>> <snip>
->>>>>     @@ -2025,7 +2101,7 @@ int dispc_plane_check(struct dispc_device
->>>>> *dispc, u32 hw_plane,
->>>>>                   const struct drm_plane_state *state,
->>>>>                   u32 hw_videoport)
->>>>>     {
->>>>> -    bool lite = dispc->feat->vid_lite[hw_plane];
->>>>> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
->>>>
->>>> I don't think this is correct. You can't access the vid_info[] with the
->>>> hw-id.
->>>
->>> I don't think hw_id is getting passed to hw_plane here. The
->>> dispc_plane_check is called from tidss_plane_atomic_check which passes
->>> hw_plane as tplane->hw_plane_id and this index starts from actually
->>> instantiated planes i.e. from 0 and are contiguous as these are
->>
->> Well, if tplane->hw_plane_id is not the HW plane id (i.e. it's misnamed
->> now), and tidss_plane.c calls dispc_plane_enable() with tplane-
->>> hw_plane_id as the hw_plane parameter, which is used as a HW plane
->> ID... Then... One of these is wrong, no?
->>
-> 
-> As mentioned here [1], dispc_plane_enable acts on VID_* registers which
-> are only mapped per the instantiated/actual pipes present in the SoC, so
-> the indexing always starts from 0 and we need not worry about skipping
-> un-instantiated planes.
-> 
-> So hw_plane_id -> Index of only instantiated planes starting from 0
-> hw_id -> Hardware Index taking into account instantiated +
-> un-instantiated/skipped planes main used for common0/1 region registers
-> dealing with VID planes.
-> 
-> 
-> For e.g. for AM62L which includes VIDL pipe
-> hw_plane_id -> 0
-> hw_id -> 1
-> 
-> 
->>> populated from vid_order array (hw_plane_id =
->>> feat->vid_order[tidss->num_planes];) and not the hw_id index.
->>>
->>> So for e.g. for AM62L even though hw_id is 1 for VIDL hw_plane is
->>> getting passed as 0 and that's how it is able to access the first and
->>> only member of vid_info struct and read the properties correctly and
->>> function properly as seen in test logs [1].
->>
->> If for AM62L the tplane->hw_plane_id is 0, the the dispc_plane_enable()
->> call would enable the wrong plane, wouldn't it?
->>
->> But even if it all works, I think this highlights how confusing it is...
->>
->>>
->>>>
->>>>>         u32 fourcc = state->fb->format->format;
->>>>>         bool need_scaling = state->src_w >> 16 != state->crtc_w ||
->>>>>             state->src_h >> 16 != state->crtc_h;
->>>>> @@ -2096,7 +2172,7 @@ void dispc_plane_setup(struct dispc_device
->>>>> *dispc, u32 hw_plane,
->>>>>                    const struct drm_plane_state *state,
->>>>>                    u32 hw_videoport)
->>>>>     {
->>>>> -    bool lite = dispc->feat->vid_lite[hw_plane];
->>>>> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
->>>>
->>>> Here too.
->>>
->>> Here also hw_plane is getting passed as 0 and not the hw_id which is 1
->>> for AM62L.
->>>
->>>>
->>>>>         u32 fourcc = state->fb->format->format;
->>>>>         u16 cpp = state->fb->format->cpp[0];
->>>>>         u32 fb_width = state->fb->pitches[0] / cpp;
->>>>> @@ -2210,7 +2286,7 @@ static void dispc_k2g_plane_init(struct
->>>>> dispc_device *dispc)
->>>>>         /* MFLAG_START = MFLAGNORMALSTARTMODE */
->>>>>         REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
->>>>>     -    for (hw_plane = 0; hw_plane < dispc->feat->num_planes;
->>>>> hw_plane++) {
->>>>> +    for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
->>>>>             u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
->>>>>             u32 thr_low, thr_high;
->>>>>             u32 mflag_low, mflag_high;
->>>>> @@ -2226,7 +2302,7 @@ static void dispc_k2g_plane_init(struct
->>>>> dispc_device *dispc)
->>>>>               dev_dbg(dispc->dev,
->>>>>                 "%s: bufsize %u, buf_threshold %u/%u, mflag threshold
->>>>> %u/%u preload %u\n",
->>>>> -            dispc->feat->vid_name[hw_plane],
->>>>> +            dispc->feat->vid_info[hw_plane].name,
->>>>
->>>> Here hw_plane is not actually the hw-id (anymore), but elsewhere in this
->>>> function it is used as a hw-id, which is no longer correct.
->>>
->>> For accessing vid_info hw_plane needs to be used which is the index of
->>> actually instantiated planes and I see it as correctly being passed for
->>> AM62L too. hw_id is only for dispc_k3_vid* functions where we need to
->>> skip the not-instantiated vid regions by adding the offset per the hw_id
->>> index.
->>
->> Hmm, sorry, I don't follow. If we use the same variable, hw_plane, to
->> access the vid_info[], and as a parameter to functions that take
->> hw_plane, e.g., dispc_vid_set_buf_threshold(), isn't one of those uses
->> wrong?
->>
->> Oh, wait... I think I see it now. For some functions using the hw_id as
->> the hw_plane parameter is fine, as they access the VID's registers by
->> just using, e.g. dispc_vid_write(), which gets the address correctly
->> from dispc->base_vid[hw_plane], as that one is indexed from 0 to num_vids.
->>
-> 
-> Yes exactly.
-> 
->> But some functions use registers that have bits based on the hw_id (like
->> dispc_k3_vid_write_irqstatus), and then we use the hw_id for the
->> hw_plane parameter. If that function were to also write a vid register,
->> using the passed hw_plane, it wouldn't work, but I guess we don't do that.
->>
-> 
-> Yes, hw_id is only for dispc_k3_vid* functions dealing with common
-> region registers that play with VID pipes.
-> 
->> It feels broken... We can't have 'hw_plane' that's sometimes the HW id
->> (i.e. 1 for AM62L), and sometimes the driver's index (i.e. 0 for AM62L).
->>
-> 
-> Sorry I don't follow, what exactly is broken here. hw_plane is for
-> instantiated planes present in SoC used in context of VID* register
-> space while doing reg writess and hw_id is the plane hardware index
-> w.r.t larger K3 family i.e used in context for common register space.
+Thank you for review
 
-We have, as an example, these two functions:
+On 5/2/2025 12:07 PM, Krzysztof Kozlowski wrote:
+> On Fri, May 02, 2025 at 08:40:12AM GMT, Praveen Talari wrote:
+>> From: Nikunj Kela <quic_nkela@quicinc.com>
+>>
+>> SA8255p platform abstracts resources such as clocks, interconnect
+>> configuration in Firmware.
+>>
+>> Add DT bindings for the QUP Wrapper on sa8255p platform.
+>>
+>> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+>> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
+>> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+>>
+>> v2 -> v3
+>> - reordered required option
+>
+> ...
+>
+>
+>> +additionalProperties: false
+>> +
+>> +required:
+> Which part of "required: block goes after properties and
+> patternproperties." is unclear?
 
-void dispc_plane_enable(struct dispc_device *dispc, u32 hw_plane, bool 
-enable)
+Yup I understood. it is like
 
-static void dispc_k3_vid_write_irqstatus(struct dispc_device *dispc, u32 
-hw_plane, dispc_irq_t vidstat)
+properties:
 
-When the caller calls these functions on AM62L, what does it provide in 
-'hw_plane' when it wants to enable the first plane of write the 
-irqstatus for the first plane? For dispc_plane_enable(), the caller uses 
-0, for dispc_k3_vid_write_irqstatus(), the caller uses 1...
+-
 
-With a quick look at the code, changing the callers to pass the "old 
-style" hw_plane as the parameter to those irq functions, and the 
-functions internally get the hw_id, would solve most of the problems. 
-There's still dispc_k3_set_irqenable() which manages 'main_disable' and 
-needs the hw_id, but maybe that's fine, even if a bit confusing.
+patternproperties:
 
-  Tomi
+-
 
+required:
+
+
+Thanks,
+
+Praveen Talari
+
+>
+> Look at example schema.
+>
+> Best regards,
+> Krzysztof
+>
