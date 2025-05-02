@@ -1,217 +1,221 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F1519DF5B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746162404; cv=none; b=jVQ1oHk2E85wVdTg5sGEYjTrVEtfsyr8S1Me/n2niOIQH54N3sUJ90T8JYCviOvIvCc5ZxW62RCJb+OIYsrkjzGOzZzhBP+1N65IQKQrv8J5p85CieZf8nyBDPX47vWa5sPL46af/KLCEKGn0PaszIULVLCBv4YqZyxKKJB9Z+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746162404; c=relaxed/simple;
-	bh=9ZiB3IL38HWldjWT5LqovTTFiCQgbLC+OMOMx6NpS40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rup5yUx+iOQ5Uea/KpuaY6hYv6e9rHA5dAduU6YKgTXkvHEvXLMFr9wY1sS2n/1i04m9iK0NDG1UDYYvbEqA4/2J3nEzGU2NY1XTSMJxSWvrrNYohTwpmDxre3jU06JAtBLhpW5MeYWGPzpZYMCErU8cCJjml7KaC3IT73TQNIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YSnf0PGN; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08A94C8E;
+	Fri,  2 May 2025 05:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746162614; cv=fail; b=CaJufsxSH6WdwfvHc579WnpCE91x8XuO9tMGfNX9PBrpQYHLshEgrP6DqKn55mKOoWHYGYkzcHB2FuJ0MrxeFMaEc9pjIUnNrE001+thlpQuqObXf3SKd4YEvTJ/WXicLDsdsMs3XCrvPskvo+s135pkNie915v4LRc9HzcjXuM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746162614; c=relaxed/simple;
+	bh=wmhaGiSUrMWd478WGEmLchDKHHIUzLrUXGBoCE8bzpc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LsvLQ2QFsxsKj6P6xeslmU9y2QFeYKLUNSuz+AFBCjQPHnd0lbCGU1WwzUphGurrPfAaMq4654yawaIMSJXhVL2W3u9IXW1MUwdfNe6HJwy3gCUM/NUkZ6KkWo0X01AWgOdRqt0ubuxYL6QJTxgxKXPrvj4SQlc1NKO+QqxQv/o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=waAsKpen; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YSnf0PGN"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73972a54919so1660549b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746162402; x=1746767202; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/grUUpAeYIKlzRvakzNU+F1AJvJq3WlXjsn/sgH48DI=;
-        b=YSnf0PGNskAGFezRtFrPbvSdT93W/5CaykNQb64PKloeleNxW/MAp0CnGQFlvD7khb
-         v2+sKSEiYlO1iM5243Ip5BrD14k4BlbSRCR3nMjPo2uXnoUMxh427H0Z00KxfzKc8U1c
-         RTNS8dTNoXTZ9UYFpyVZLYVl21JncgF1la47axq0k/ACy42BofqurmaY3aTMDnWm8K0D
-         JJYbfBBF6oclNPzyWBVcL5w6ccU/Zg1n8XA+YOLAxnaSZ8lzBmf9cp4wOH+eXBlJhQtp
-         bmPGuFPYq+KMlDCP5XneBGSfiR0CMDyvLqZpf3j20cKIHT+oilvszb5r0ZRrSMsMSZsS
-         A5eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746162402; x=1746767202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/grUUpAeYIKlzRvakzNU+F1AJvJq3WlXjsn/sgH48DI=;
-        b=mJqSfTPPvd0UOTmoPTpUxmhcr+qcrLY4XLmH5rf8vu7os+IsA7t8gfvNXD7DKcc78U
-         QAW84En6PJtOlOn9W0d2GReAQqAJGdG4djSIO7oFa4kav2AsKXvE7+1n2O1xqoCy0lGT
-         237BKInzHhwFo0Ts3QoHTdUHYwzPRorZHHT7FDlE2oFoS23zTqoMLa+7z52F/BOw3KPU
-         xjNbFupF+Ly1JkAKn0Jt7kOPbTDc7LrNOyRBbOb7NWmJg6XcDhcXeHXjgt4rOHChMXMS
-         G+azEkGlgk2plKlv0w0I8x3W2skXWzeXUHqstBZ2EbrRBtvewBJ4sGiQnYowgxnBhV9q
-         q8XA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhyAnxQNEbcaPWtJ01L4cxiSf8p83SqsuUK0/0liRVzb9CFY3H+ZfJzKEW7fCon1KeTGFUQvCmIHznNac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0u4kOAQm57XoQPhsfR3MuQUBPH9D+r+VHGnVPwMb814meO/yR
-	+rxeCEKzB/Bk7zbQXu7uvl4IeT2SQ20eOkVPv65CihtoQroVP8Y47SlnPPZc/0s=
-X-Gm-Gg: ASbGncsi9To5RFsX2zrsq+GtWmVOGk32myfFBEeQpdbDji+LtQfrp/muUtfv1PMLraE
-	D2HKItmVQhC6EwNi8TJtirzzdEUw9NekPVwG8/NnPDIRkRebFRjZdLA/lNr4ZdXlR/I5KMkUp2l
-	ldW4S9jG7irjSBsXvoTA/yDYbtTMtXR/UTVfzeRNhAMp3dwaocJEwW9aRUrx7POk2WLSPlc8kpo
-	pqOeGK8YsymWEUr4XMBlXDnoUYN9QF5cnZmCw/UR+jCZp7qSBi6IyvAI9xGUlWlfcVUWdaa3E6a
-	6HM/ys5dCtkLtORkTNngBtHGLdYMiW4GktZ7/b8hqQ==
-X-Google-Smtp-Source: AGHT+IEOJiAVSKAjJMccaJnGL2AgSp42k41Qardkh/MDnhjWK4eld/C+RTrDT33wzYWavJoELEolJw==
-X-Received: by 2002:a05:6a21:3514:b0:1f5:a577:dd24 with SMTP id adf61e73a8af0-20cdee3f3dcmr2337675637.25.1746162402149;
-        Thu, 01 May 2025 22:06:42 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa85e4e27sm537304a12.60.2025.05.01.22.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 22:06:41 -0700 (PDT)
-Date: Fri, 2 May 2025 10:36:39 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Seyediman Seyedarab <imandevel@gmail.com>
-Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v3] cpufreq: fix locking order in store_local_boost to
- prevent deadlock
-Message-ID: <20250502050639.2a4mbdav4mdlhbp2@vireshk-i7>
-References: <20250430160943.2836-1-ImanDevel@gmail.com>
+	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="waAsKpen"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=sandisk.com; i=@sandisk.com; q=dns/txt;
+  s=dkim.sandisk.com; t=1746162612; x=1777698612;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wmhaGiSUrMWd478WGEmLchDKHHIUzLrUXGBoCE8bzpc=;
+  b=waAsKpenZyw8wLRwd7Ifj5WGE8A6+gPw7NSa0Z2nClw5MVBwNrqPa+P3
+   NY058m4nHwNTc3uXUMHW+hMmq9Lylyse0wpiXkwXlTQ4xFL6LeZoG6MoL
+   egLsCeIZix8OTQBVAUSUhf1WEczQzfHIgiDdmjlyxNkPlZuW5BDQyJeQr
+   ViGHHWgcTy8epXEmvPSCb71KfaunwObB3Bg2m0xTJEqPUjxqhl47z9euT
+   etytbMY+yFfmDRWvwqDx44+zqwuoR4rYp3B85VfU/wG3G8ODeK/3LtLIV
+   bW2T4YEPAuJ8ENWoJz1eh8hmMW+WcG4jc0Imm0zoMnmJcfIOCVaY8R+ls
+   Q==;
+X-CSE-ConnectionGUID: h+JXy4B4QCCYV1a3LkS6qA==
+X-CSE-MsgGUID: UA9HgyVfQLyHK3FekOAQcw==
+X-IronPort-AV: E=Sophos;i="6.15,255,1739808000"; 
+   d="scan'208";a="83066472"
+Received: from mail-dm6nam12lp2170.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.170])
+  by ob1.hgst.iphmx.com with ESMTP; 02 May 2025 13:10:04 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oma3+I3DNbd81vkEQWoRAx9Cc/3Nm50GQE6QvxpE4Dy4ydoDdsV5BgGDq1NAZXAiuOLHw1mE3zPi5AgDjzq+hDn27rRLkxXdns7uqu35+bmR1CigkUNiszg/YskzgASDA7D4o0FpL1++5D2UhQIRye2FdhJv5torRfqREBUMViSIgak51w8CS24jaQ5mAPwoj50Y5p/XnRHrZhtg467nqGu+zS9p+AXBr9d1SgPSam+IdOQExEEeQmpOEDGPAUG0oV/E0Y5qdsBtPk/SVosVobliv4CB59hbd44HVOOV+auiLXnKYtOLsAWTffelOlLehsnH9As5pZkGYBRct/c9vA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s8cHNDGxxHqw/SKJ2PfyfWspueWWYKfGx0WH9MkTPXc=;
+ b=LpMx9QFBwtVbXM27ZS9wvtRBEnl88eYJh3PCbQ20qW/kWd0oaI2mNfdb9tJiRsmQP8WCt7HHMd0xZv5iDEL3R/e7IFf4FjF+KUSOSy2q+xQtghL67NPxZG+p6RM165Sg3lE6wHB+PWYEooNvTd8BoUtWajuKkbPJLAWk7H2oGC3tFTydLJmMbpgNBlSzuI6MRXaE12EhnQk037iylv1LcCtSgZXSEfbGDmc2jsnQ7bDjYv2iMugc/8NT+dmUo2STSMjNgT0EYJagSTrXSucrLe2QKS1SiCh69frKVLbuSIhzVo+c6tzPvpA0xCQzy8yrR4WRd9bnvMyi5FPFw9Zv0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sandisk.com; dmarc=pass action=none header.from=sandisk.com;
+ dkim=pass header.d=sandisk.com; arc=none
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com (2603:10b6:510:312::5)
+ by CO6PR16MB4226.namprd16.prod.outlook.com (2603:10b6:303:b3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
+ 2025 05:10:02 +0000
+Received: from PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::436c:8204:2171:b839]) by PH7PR16MB6196.namprd16.prod.outlook.com
+ ([fe80::436c:8204:2171:b839%5]) with mapi id 15.20.8699.021; Fri, 2 May 2025
+ 05:10:01 +0000
+From: Avri Altman <Avri.Altman@sandisk.com>
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, "quic_cang@quicinc.com"
+	<quic_cang@quicinc.com>, "bvanassche@acm.org" <bvanassche@acm.org>,
+	"mani@kernel.org" <mani@kernel.org>, "beanhuo@micron.com"
+	<beanhuo@micron.com>, "avri.altman@wdc.com" <avri.altman@wdc.com>,
+	"junwoo80.lee@samsung.com" <junwoo80.lee@samsung.com>,
+	"martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+	"quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
+	"quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
+	"quic_rampraka@quicinc.com" <quic_rampraka@quicinc.com>,
+	"neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"luca.weiss@fairphone.com" <luca.weiss@fairphone.com>,
+	"konrad.dybcio@oss.qualcomm.com" <konrad.dybcio@oss.qualcomm.com>
+CC: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Manivannan
+ Sadhasivam <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] scsi: ufs: qcom: Check gear against max gear in vop
+ freq_to_gear()
+Thread-Topic: [PATCH 1/3] scsi: ufs: qcom: Check gear against max gear in vop
+ freq_to_gear()
+Thread-Index: AQHbuxpVzzz15RUUOU6UtEfehEb90rO+ykYw
+Date: Fri, 2 May 2025 05:10:01 +0000
+Message-ID:
+ <PH7PR16MB6196FCFC818B623C946BD5DAE58D2@PH7PR16MB6196.namprd16.prod.outlook.com>
+References: <20250502042432.88434-1-quic_ziqichen@quicinc.com>
+ <20250502042432.88434-2-quic_ziqichen@quicinc.com>
+In-Reply-To: <20250502042432.88434-2-quic_ziqichen@quicinc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=sandisk.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR16MB6196:EE_|CO6PR16MB4226:EE_
+x-ms-office365-filtering-correlation-id: 1e2d7e0a-bf10-4071-7f7e-08dd893797a6
+x-ms-exchange-atpmessageproperties: SA
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?nmlZGuR0LmSPd1/v0S+ecluiApejxu/pv9bRailFr5Vw1YCNFKV8bEfi5cy4?=
+ =?us-ascii?Q?Y+DHXmIi/XjaKDS3UETQSpOS8gnkBCh+P+Wey25+bYUptTwvCjDwMk8+amSD?=
+ =?us-ascii?Q?rYGTxYLXzTjip7/UKxQxtLNF0veAodYRrJaiqkXRDrkFs99GvA13/QfzUgYR?=
+ =?us-ascii?Q?P72+W2WCdA64U4hIJ2AXQHN3Qmsl2TK4nZvGtrGFCVxSdeyCi1ysZ4cgaiU3?=
+ =?us-ascii?Q?1KBAJQhlMJieCzcK5wqxjbkyVorSwfZsn+N4NB8txlPWR0yayYmbZ8zcggoW?=
+ =?us-ascii?Q?zLHySQjSMlMaf8CQaWJjnI+dtWTy7Ba9pb3iW10gbzJOBKw4ss66LXxDLmSc?=
+ =?us-ascii?Q?J8tY9hG8i5P+gSsORrRXL3gxIWhxvdSIMZ651Ttft8PX/DT9/JBVHZMB6ei4?=
+ =?us-ascii?Q?XUNZswYVl8C3rEm4bAPsAjUA/AcTBNN8YtdoBVdn9bTMk65YbK0TxeZ5+Xu1?=
+ =?us-ascii?Q?pzgU1dlyedfU49yVegotRz0RXsH0oTkd/JVigu0dCGWPr6atvw8yqWfD3Nb5?=
+ =?us-ascii?Q?2+YQYPvUBMaVT5g51IovQh2GY1Db1JZAAHA1wrYrFN4vAV4GL0JDbYtZOoes?=
+ =?us-ascii?Q?QfhFjUN2byzaOZe7RGOyECasFWIb5s2m52IiCNFlDY+DLy5IU2sBChyybV/T?=
+ =?us-ascii?Q?6SUSTVWQaYVGnsurPfg+z20/M3dtpxIsDn5YmDT6T9MjXEqgtzwTJsdq3z8u?=
+ =?us-ascii?Q?AdT+e8zKU+QdWJ+OKmewSttfgbapxenjxh56RjCTr+2/90mCj5NHpvDOXyYJ?=
+ =?us-ascii?Q?JEpZB5azRW0tP+K2tJ5ECjD6zyY+Q9wGb94+0lD5XF62nqz2URzrtCKBH6ZE?=
+ =?us-ascii?Q?lTo884FNKZ74kcl+H/gclXtSe1d1an9XtGkA7IYyobyxe+DVsdIBORjB9Ec9?=
+ =?us-ascii?Q?lXFzgtqZR7ydGPRkDO3zewMobHfKXePbjnWdttTsqPUcaWaIf2lTEuI6VuBS?=
+ =?us-ascii?Q?JLagAxzfVCNBG87mMUC18eITrfXfMPkdynS6v4L1h1XhPPLLAZKTbCvO69q7?=
+ =?us-ascii?Q?FhpGa3xBt+4U+A0340R28ixcD5z2sv5MoaJI6eP6k/07thO3WDeaHl4hLmg7?=
+ =?us-ascii?Q?ir3+8OX658ywEke8gdBKdUlQZPcVMNz3riTs2A+uSyDCiQIwzdh2ibB6v/mI?=
+ =?us-ascii?Q?IZF9N9VI1mpEPXxuuZSkvdmttKwCMPrd1vZpwDP5nljETpS3RLcA/KVUoa/J?=
+ =?us-ascii?Q?TiBKfT7LrtiCjblcBlL8A4u+x+OBLZU36LWwudrXJ0yiL0grx9TmKUeuVJBF?=
+ =?us-ascii?Q?U4Q8O/sOgpSOCfhD3MaZx7yrsHE6zxYrQ+DWAosIl591dn3oJ3bFB/dhW8R4?=
+ =?us-ascii?Q?iQuc75SsILfOs2ViwSIC+aJFiKR31cVn0n2YPjxP9y8VCfMYkUMZz3vlnFwq?=
+ =?us-ascii?Q?k6UoGAspILdJO5e13Ug/w5FqB6EkYREV2/H8HgionaXYYeN0GIufVIai2z4L?=
+ =?us-ascii?Q?3rjhh3Zi1UzmMdH6ai2bfx7BzxoNFun/FHa4v5F+CIw+nyfsVokyqTiCgexS?=
+ =?us-ascii?Q?OLHk8Ia+GLYmbeQ=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR16MB6196.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ddvywIhmhKcgskrDdci4Y//QcxOQqGMzCK7So8k2Fg9jWyqPwOAMfpwcATyR?=
+ =?us-ascii?Q?+0jZRXAvmDF+AjhDu8A7IOWauIkQfVbbVIfwimQ7c8P07XN71z3iaoBd40zv?=
+ =?us-ascii?Q?IeGknF7Z7+WEg3dcPD6AtUx7PXSkJ9BSjBhDGgIMBY+isFqCNXhLMbL61Ups?=
+ =?us-ascii?Q?m19W0YYDzewLq3kJ/Leu1kTrTKPVFmCp6sWFmFRzRSWjqE3rYjuXOdjwu9Mc?=
+ =?us-ascii?Q?qY5///BHsvRVFwUJKtT+ImQoBHum1KadgBUXPYRYqEq0c8JKHjHxRui/Txaw?=
+ =?us-ascii?Q?QK6uRiSvwu3SJmVs9VUHIJmpD17xHr6JRR2uCSi0Vv0OtzBVsDRHjpymPbvU?=
+ =?us-ascii?Q?2dF9/w2451ZH63/Lf0CGrehwH+ET5DD4DBQ4G/yNBCq/4Nqiq3/SEgVCdhIY?=
+ =?us-ascii?Q?cYyBarNgsZPduXXXS6SsoujtwXc+Mh0ay/MNMz3/6lQEEoDm4uy2j1d5GFw+?=
+ =?us-ascii?Q?SVNnvFASIeeqfeAAy7gwehOMK7Py64XVPGehbQdbN3UWt1veRu8DjbJxYoq2?=
+ =?us-ascii?Q?lfKU5Wu+K3h2he7bfT7TnIIfqEp4uEXsZosBcOW5DUiGR5YHNF4h22K6BXJM?=
+ =?us-ascii?Q?3z1w7Iuztekdn857/DOzTzkXtEzMocalDQSPyD+nwX+gZ1YvvaQko7BGEXQu?=
+ =?us-ascii?Q?7ZYxkiBvDPXdBkyIRU3igKaG4UXrEVgrvO+QclclYZ01eiHpDSbVKD2vZ79e?=
+ =?us-ascii?Q?iFhqJGlC7NtQG8MMvmj4U5GM2BbLhDe9suzZVR5B6ybA80u7UBRWZiqrIOzr?=
+ =?us-ascii?Q?iTRY+ljzNuIh/yV0Aq4SHrSf3l2rlfHZTwYs6h2cTr8sA7eYZJomZZQXG/gU?=
+ =?us-ascii?Q?H3Quk1kXNiBeTdfJQMjp9G+k4+Oc44daSDU8XHLZsyyZ+ee0paUg9V26WEWb?=
+ =?us-ascii?Q?LnI1INGGxqYF8e1hwHaa0O3JIaTQ9vgRuK5Hco8k3WkjTgaTADVjvFHoXp4B?=
+ =?us-ascii?Q?Ozh3mKejz/1BZwHwWD02dEXQfmdsHQx6FdWXanjZXCRsBpdySsMeSIM9bId2?=
+ =?us-ascii?Q?t2g2/b59tOtyp8BO91oqf12yz79kP43OVilO7TugJmOqTlECVIGR8fdT8JZN?=
+ =?us-ascii?Q?WNMVumscwIgLewiCJHq7VCe/ad3WjnXyzOJtPE4+CNpXsiXNp3O4+uEDPE5g?=
+ =?us-ascii?Q?8EaTUSXmiFxIuuVQw4o8mWiVG9+TQzDRjP45zs8B4IFhvVhi7+zBFUSmUqAx?=
+ =?us-ascii?Q?zjEnW+A5UJh/oFEswGA1xdWy4bMCz8ht1z/BcFvZO1iLnyL9VySux7Nqsrdu?=
+ =?us-ascii?Q?YvyeEMxsbyi5yk9mtBprRAVf9p5FHG78LeNXFXAICAH+7X2eDEhGpVLJ8itK?=
+ =?us-ascii?Q?nw/y3x1NFND8h4yOd+TcyQT8ou/CvqMdAbQ7VR1URzkZeC46sM1wT+3Aq6ja?=
+ =?us-ascii?Q?22d6/BMjs6EAQdWv8+/zQTXR2IDFLMFjnLXqM5z1JLNcjxvBNJZf+10PFI1D?=
+ =?us-ascii?Q?TEkZdj1NcjR7VHy+kUTzbJ2zP7hiG5CWt5VW9t69iDwkpum7PyejS2Pg85kp?=
+ =?us-ascii?Q?mka2dItWY2Tz2LFDZ0LEU0YhPnpaNk/LxDO2fVICRoxbxs/ePlREt6jJdUE/?=
+ =?us-ascii?Q?ycNZ3IsuwTqKZrjtGRl9ylbkhUvYviOsIIVtDSi9?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430160943.2836-1-ImanDevel@gmail.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	uo1+smVA9L9+9O3HAX2ygE5k27VubO7r3lmqVz1QLQsijyfyFbZwoIsyLcfBnF1HaTXnSQd4QeOWfT3n5IdWa4JoWJXMmprV0H2/zDZb3UBEw9vi8arn5OhwlmaWgxxaWuW2afTUIxurjvnTM6OborXIIf+MZKZf55S9R1wfNbhd1UT1hk/s4IFuq0uRFm86U3Vc8IrqQlzDqF58DS/S0DBBsu6hPjfyFRQtKnhiFkfwRF1JjnStD/++ajEVxVqjcXsK8v6F9CNCaBnbkARDxo/I8pzTiyPRTnpK/jxlqywIRGLluUWjt4MgE8vCQNcCry6LmSZaULjs0rrZLYcJqYcaUqyvNcZ7nGwoQyxyoWgQ7mHJrRz0Qz+4DgsbRkXcUO3x8V+CHM31zK6H3zn4DAdQ9kmvG9g+eWONE8JpQ90lnbpDZ26PjRM7Ja1HU4qn8DNyTpyNtvBO3F2dpWiUYLP3nyUNLKK6HfaI0zH/ik9EKJuByo7H8pKdBFJSJzlmj8pw0B0XgKdgpN/XfOZd7svKyOd+yUi+h0SzBnsL2zaOE9p12OR49wCydxK8EyqYCNav8+JCUwnBK6oXZKNnUq3m2nmFk85tpYNtQUFCL2peJDDVWewsRuusFSi9wPiV
+X-OriginatorOrg: sandisk.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR16MB6196.namprd16.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e2d7e0a-bf10-4071-7f7e-08dd893797a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2025 05:10:01.6808
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ffe0ff2-35d0-407e-a107-79fc32e84ec4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lxZAHMXGwN6BittEaa1TJi5p0H3ya71C+VakP41UsXg+JS6Y0biBlUSGNNC3BGQQLp6T4RG2WefwIbzHypFPtw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR16MB4226
 
-On 30-04-25, 12:09, Seyediman Seyedarab wrote:
-> Lockdep reports a possible circular locking dependency[1] when
-> writing to /sys/devices/system/cpu/cpufreq/policyN/boost,
-> triggered by power-profiles-daemon at boot.
-> 
-> store_local_boost() used to acquire cpu_hotplug_lock *after*
-> the policy lock had already been taken by the store() handler.
-> However, the expected locking hierarchy is to acquire
-> cpu_hotplug_lock before the policy guard. This inverted lock order
-> creates a *theoretical* deadlock possibility.
-> 
-> Acquire cpu_hotplug_lock in the store() handler *only* for the
-> local_boost attribute, before entering the policy guard block,
-> and remove the cpus_read_lock/unlock() calls from store_local_boost().
-> Also switch from guard() to scoped_guard() to allow explicitly wrapping
-> the policy guard inside the cpu_hotplug_lock critical section.
-> 
->  [1]
->  ======================================================
->  WARNING: possible circular locking dependency detected
->  6.15.0-rc4-debug #28 Not tainted
->  ------------------------------------------------------
->  power-profiles-/596 is trying to acquire lock:
->  ffffffffb147e910 (cpu_hotplug_lock){++++}-{0:0}, at: store_local_boost+0x6a/0xd0
-> 
->  but task is already holding lock:
->  ffff9eaa48377b80 (&policy->rwsem){++++}-{4:4}, at: store+0x37/0x90
-> 
->  which lock already depends on the new lock.
-> 
->  the existing dependency chain (in reverse order) is:
-> 
->  -> #2 (&policy->rwsem){++++}-{4:4}:
->         down_write+0x29/0xb0
->         cpufreq_online+0x841/0xa00
->         cpufreq_add_dev+0x71/0x80
->         subsys_interface_register+0x14b/0x170
->         cpufreq_register_driver+0x154/0x250
->         amd_pstate_register_driver+0x36/0x70
->         amd_pstate_init+0x1e7/0x270
->         do_one_initcall+0x67/0x2c0
->         kernel_init_freeable+0x230/0x270
->         kernel_init+0x15/0x130
->         ret_from_fork+0x2c/0x50
->         ret_from_fork_asm+0x11/0x20
-> 
->  -> #1 (subsys mutex#3){+.+.}-{4:4}:
->         __mutex_lock+0xc2/0x930
->         subsys_interface_register+0x83/0x170
->         cpufreq_register_driver+0x154/0x250
->         amd_pstate_register_driver+0x36/0x70
->         amd_pstate_init+0x1e7/0x270
->         do_one_initcall+0x67/0x2c0
->         kernel_init_freeable+0x230/0x270
->         kernel_init+0x15/0x130
->         ret_from_fork+0x2c/0x50
->         ret_from_fork_asm+0x11/0x20
-> 
->  -> #0 (cpu_hotplug_lock){++++}-{0:0}:
->         __lock_acquire+0x1087/0x17e0
->         lock_acquire.part.0+0x66/0x1b0
->         cpus_read_lock+0x2a/0xc0
->         store_local_boost+0x6a/0xd0
->         store+0x50/0x90
->         kernfs_fop_write_iter+0x135/0x200
->         vfs_write+0x2ab/0x540
->         ksys_write+0x6c/0xe0
->         do_syscall_64+0xbb/0x1d0
->         entry_SYSCALL_64_after_hwframe+0x56/0x5e
-> 
-> Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+> The vop freq_to_gear() may return a gear greater than the negotiated max
+> gear, return the negotiated max gear if the mapped gear is greater than i=
+t.
+>=20
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
 > ---
-> Changes in v3:
->  - Rebased over PM tree's linux-next branch
->  - Added a comment to explain why this piece of code is required
->  - Switched from guard() to scoped_guard() to allow explicitly wrapping
->    the policy guard inside the cpu_hotplug_lock critical section.
-> 
-> Changes in v2:
->  - Restrict cpu_hotplug_lock acquisition to only
->    the local_boost attribute in store() handler.
-> 
-> Regards,
-> Seyediman
-> 
->  drivers/cpufreq/cpufreq.c | 23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 21fa733a2..b349adbeb 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -622,10 +622,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
->  	if (!policy->boost_supported)
->  		return -EINVAL;
->  
-> -	cpus_read_lock();
->  	ret = policy_set_boost(policy, enable);
-> -	cpus_read_unlock();
-> -
->  	if (!ret)
->  		return count;
->  
-> @@ -1006,16 +1003,28 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
->  {
->  	struct cpufreq_policy *policy = to_policy(kobj);
->  	struct freq_attr *fattr = to_attr(attr);
-> +	int ret = -EBUSY;
->  
->  	if (!fattr->store)
->  		return -EIO;
->  
-> -	guard(cpufreq_policy_write)(policy);
-> +	/*
-> +	 * store_local_boost() requires cpu_hotplug_lock to be held, and must be
-> +	 * called with that lock acquired *before* taking policy->rwsem to avoid
-> +	 * lock ordering violations.
-> +	 */
-> +	if (fattr == &local_boost)
-> +		cpus_read_lock();
->  
-> -	if (likely(!policy_is_inactive(policy)))
-> -		return fattr->store(policy, buf, count);
-> +	scoped_guard(cpufreq_policy_write, policy) {
-> +		if (likely(!policy_is_inactive(policy)))
-> +			ret = fattr->store(policy, buf, count);
-> +	}
->  
-> -	return -EBUSY;
-> +	if (fattr == &local_boost)
-> +		cpus_read_unlock();
+>  drivers/ufs/host/ufs-qcom.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c in=
+dex
+> 46cca52aa6f1..f5ea703d8ef5 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -1938,9 +1938,11 @@ static u32 ufs_qcom_freq_to_gear_speed(struct
+> ufs_hba *hba, unsigned long freq)
+>  		break;
+>  	default:
+>  		dev_err(hba->dev, "%s: Unsupported clock freq : %lu\n",
+> __func__, freq);
+> -		break;
+> +		return gear;
+Mayby return 0 so it is clear that you are not returning a gear
+
+>  	}
+>=20
+> +	gear =3D min_t(u32, gear, hba->max_pwr_info.info.gear_rx);
+return min_t(u32, gear, hba->max_pwr_info.info.gear_rx);
+
+Thanks,
+Avri
 > +
-> +	return ret;
+>  	return gear;
 >  }
+>=20
+> --
+> 2.34.1
+>=20
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
