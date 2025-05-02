@@ -1,128 +1,184 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3384423C50E
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4993620E6E7
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182155; cv=none; b=XPf9hla3j7mqCIt0FThf0lnWSXdjDK9aR+AJQqirMGtl5/BXeFsff3ovsStjjAClZzq7i5eGNl8CLLBolnN3KuIuwPXAy4HEdhWRV6GBHA4+uSywbYXPKiLs5vVXZZtO/JDLHpX6d5Ex0VZYn1YP1+6+8TWZFGKFSmPjTcelAKU=
+	t=1746182298; cv=none; b=XQrevoQ8U8WMkiIWewcgcIU4akP7hg+CQxQG6au6J/MSUsNGVwAC1XQazS+M7qGf899S91pltJFcJvUXGsxojhfHg+rVSnaXUyzc1A3h39LIt/3xOCJ5WH9dCsYVPJLOThUbSCSYwqre8Evi7Uegkvc5l6VRrCWXmXYbKT3/3+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182155; c=relaxed/simple;
-	bh=YMQVxwaVMwAxpI4MOStKXhl9OZJMpJXac6MsJyy1J3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cm+//6Y/r/kBlSeuS8iKgJXGUzDmoZqyTgpxCUXiR2/kDTxHAq88SUFlDc8jzMUbPOl8jqLba0bPQuUJ8gctoaKPXi3N3r6ZpRygWVOdNOM88oUb6Fny9jnwxyi0kn3VbEDaHrGn6GPINod+ZSTdITTeu/FatacxT9l0leEVD6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cuVaQN/Z; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746182298; c=relaxed/simple;
+	bh=Dsp/Vg3p6mjWb/dCOEj15xgjKuqN4noVHOK2BkCe6n0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pKLZwNgUljgmUNpjkTED+W+H27kLs8SM+fk9HAsqbqZcC1mLIGZmTkqgOC3e9CtvHjSxUH0yYoNXuVn3f/SMt2iMizFWoNgmpJJQ+U6ayotQyWvwBHPMnoW/PawdfvscHkJnJGKOt0RRYw0emPE+uhzh1ehLW+esNhewRrvHzsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dpNExA7J; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cuVaQN/Z"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf3192d8bso33535e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746182152; x=1746786952; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CtsSgTJXGapsZiIyWX9A+s/wE2QFs3U8FxXWY4U190Q=;
-        b=cuVaQN/ZyIKpcc0wGMKAMMVlk1BQnYKmut8vlOYmvPq5trK2WMchffaMheR6JWn3bp
-         WLdxFSfPK1cT0P3UHd6ODHAnQhXOpuqiqoHZj0feg24oEXefNYYxDTpeXppq+aBvTaKl
-         svU3LXvQxXIIzqHcNhGOv8HjXrAbOhyjv5y5+dmy/xFJPpYrkkBprVX926xm0ZpAm7vY
-         12fD5KffIu+Yyd+/oEBHCLWhRzNh/qYqXtbxbNl9nGwrfda2Q/f3g0Wz8Clz9qguknFA
-         mZ/cbg/FfGsKB5foB9wyZPdcmognynfosorT9/Ls64dI+6937Lqklu4/46h99grk/WYq
-         /cSA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dpNExA7J"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421N2wM002130
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:38:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	27eve1BdY3tnRAGhbk65ewCzrhADgzBYCgA51jfhing=; b=dpNExA7JoWLT/JyH
+	x7iXR1JkA+iVcobGXUWBiJBKDGHwoZFbCt3wgauV3xs1Vpd4wupWuTcI49WMlIly
+	KP1kFhOZWabqGmeGQHRc2UXDN9XIY7ScYTQpFSyakfqjAVLBVIScXR9fer0i9M9P
+	8DmqtacryeGMu5zRLxh9e3Gymqwba5LgIQCbP/BAGCl8GduE7FtILmh1HaMek5l0
+	u9C+EZl91iD+z0EyFTf/b3jJ88WnD0pMwT5AgJsemlQmDfBpAJqVsQhcAy4LOSmA
+	52oaYuqEi00BFoSkSBS+AgoA6dmio7m8SxPWxj7On7xx76Y65SxaG3MSNwmAz5So
+	5ZkXow==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u782s7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:38:15 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47ae537a9d6so3737901cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746182152; x=1746786952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CtsSgTJXGapsZiIyWX9A+s/wE2QFs3U8FxXWY4U190Q=;
-        b=WcR9rhYTma/P/GZRbXALkQDTRhAe4D+z1+YcOZCzZDX6qH0NOh8fEOGvzw/XhenfCa
-         i1O4YftiaTfBdiFLgU3Cesy3Kiz9w01f6DAW0QLjwOr61TpTjC2mS4LlGHic5poX7TNL
-         kLYfT1aNFRyXg8dtY9KIX7hbCRWtMiameceZy2QdzArusBuQEjEImSaNYC1hlbXAnbr7
-         upDTNdrU0ZBnA/ophImEvH1Vurj2dW42svPJr1VEW8WbHealXG3cnyieCQbCuUIaB/LL
-         XucNxj4qR6mlPTivgVNIEY6mrQbXRIZXau8Joa5vJnxCAykjN1t/PWbInwXGSuwZuwkl
-         Ld9g==
-X-Gm-Message-State: AOJu0Yz0c6pz+WI89DRtS3syHpPsgybHOQXkdBKCW8JHRt95QnCPffMr
-	vrj52Qo+d2eilXzRbrAQjIdaNT0YhHNaSmls6UqMRA2Ekw9g0LyWSMTjerzX5g==
-X-Gm-Gg: ASbGncuLFqFaXZUUl+QSwpV+Q8tBZOamlcaraFQvNrUmeUR+KKDTgDrOjsXcQaQIyn8
-	I3HbFhY8tZTeglDFYB51VxfHgZaJPa4wIIlBUR2sEc2K42aj4UxgNQRhPaUdLBryMLNeU5bVICo
-	CGOPfVikUEPWYbJdMaqBwjO647Qaxc87WO6qKqlvFSNz6gV9mWcTePnngIYbm52y7HftYiviXEd
-	GcmTRxYwUiKhV2f/d4P5SzT+99DedfBwOlTMmowaXxZNUHHX4GTeadpujqj3MfXHpTFDq+toZNr
-	eahHEjy1rfKEFeHEHsTQ3zyEKVN7QFzg/QEbUiTzbeju6vBqwFysIX73XZLJoA7TG02Yto81Epx
-	5RYK0Ly5cscnOYNPy
-X-Google-Smtp-Source: AGHT+IHBpu5+Cieu3gqJ8jXxnE8iNjMiOB9PP9JbLSiZk2YmB4uIxV8AkyqehbOtRxJxY1xSoUA/kQ==
-X-Received: by 2002:a7b:cd08:0:b0:43d:5b3a:18cc with SMTP id 5b1f17b1804b1-441b641d324mr1930065e9.2.1746182152313;
-        Fri, 02 May 2025 03:35:52 -0700 (PDT)
-Received: from google.com (207.57.78.34.bc.googleusercontent.com. [34.78.57.207])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2af2a0csm85602295e9.18.2025.05.02.03.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 03:35:51 -0700 (PDT)
-Date: Fri, 2 May 2025 10:35:45 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: Per Larsen <perl@immunant.com>
-Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-	james.morse@arm.com, jean-philippe@linaro.org,
-	kernel-team@android.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, lpieralisi@kernel.org,
-	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
-	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
-	tabba@google.com, will@kernel.org, yuzenghui@huawei.com,
-	armellel@google.com, arve@android.com, ahomescu@google.com
-Subject: Re: [PATCH 0/3] KVM: arm64: Support FF-A 1.2 and SEND_DIRECT2 ABI
-Message-ID: <aBSgAScZUp9qIspT@google.com>
-References: <20250502092108.3224341-1-perl@immunant.com>
+        d=1e100.net; s=20230601; t=1746182294; x=1746787094;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=27eve1BdY3tnRAGhbk65ewCzrhADgzBYCgA51jfhing=;
+        b=ll/tH38mD3xgjltAnA/8PpBBTMtAR7c8wJiBxSkeLrvpvogdOToz2Aqdo3UsWKGOZp
+         zmENKevxX8ovHw11D9jlfqC3AGHx24bqSr3Oj+0f80oDqD5SHrVdarU4nAE2ZIyOGovp
+         2CbuNxCxfzicF65T00yzRD7ZawRUHl8sw5GHEbAdh1o8HXepgYHdu862FiDSGeRFz+qf
+         +9EFC8uL7hVsF/T/MGkCLbhGXnWBrvsa/xt7QuLIqcMTum+P2oYi5kLd1Hdyd0U2wsaN
+         1Gnb4Pw0jUSXlcs09OuyPMA+78zytkXfo4uKfqbYKRovQC4jtmQvWgAghqowhlsWqoZ/
+         Ph7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWWD/K02X37BMP1sb5QG8YQg8TwsaA4o6oOyvnNd/uA2TlcZY3y442YbZjQ9hnG7+pr1vjMcqbLeXZYNMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4QDkEqlESDf5nrMXe6ixGydVi42ah3MUWDgFstqTI+ETa18TW
+	u6nxVIEVxMr07o9drP0qnMn6w5G+b99zGDySn9wP/gzHEOErITsrl0xRenz1kD2XHJWGzS+eBpS
+	7kSYa6+dJyQk8hDl4Be0B57zGSFVzSrJVSxzquSDuNdF7kll+oe4nEpfyXqhX6tQ=
+X-Gm-Gg: ASbGncurvGUbKWVfF+jOfp+QbJfdp/NBK0KNdl0vmEdYD6zjZpfIpWlejNkieoYetn/
+	vGVtlVJ9x7v8Rsp1Ree3NbqeA6wMj/PCMFCCzeqpz4GO3s+Oye4uJl7euyr8mNAWZEXzbEmakHm
+	VHjTRiT8hVCTnNKeMtLobMl6vukS7CCEsJMAF9yb2lbLmp+VWZA4P2AUaiMbWLwBcZ2bdDNm/ga
+	ha5l19ufXHloQYJ2iaIHvkxyJ3DRqGFlmUAd79OEDr+68T/XtQsZ4w0SuvX2MagwJ5haM2iTP9y
+	P5j5271r9gGtPluqfydFJsmLJw1cedMe514W3le42nNwPU5b3vCJiIlZi6Rat6fpohQ=
+X-Received: by 2002:ac8:5746:0:b0:472:1d00:1faa with SMTP id d75a77b69052e-48c32ec0727mr11918941cf.13.1746182293946;
+        Fri, 02 May 2025 03:38:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKHvEk56VJXvXDqb2SGsRRKO8oGVRV2j6K8YXDo+30VsX8SRDqdBcc7f+npY1XAg3WGjVVIQ==
+X-Received: by 2002:ac8:5746:0:b0:472:1d00:1faa with SMTP id d75a77b69052e-48c32ec0727mr11918771cf.13.1746182293538;
+        Fri, 02 May 2025 03:38:13 -0700 (PDT)
+Received: from [192.168.65.113] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a3bf9sm30951066b.50.2025.05.02.03.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 03:38:13 -0700 (PDT)
+Message-ID: <bd1ce180-1282-45f1-a893-5cc097eb6613@oss.qualcomm.com>
+Date: Fri, 2 May 2025 12:38:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502092108.3224341-1-perl@immunant.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] clk: qcom: ipq-cmn-pll: Add IPQ5018 SoC support
+To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
+ <20250502-ipq5018-cmn-pll-v1-3-27902c1c4071@outlook.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250502-ipq5018-cmn-pll-v1-3-27902c1c4071@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4MyBTYWx0ZWRfX1uaZefYufitX RDQ7mgWd3DeJCWQoJ/1kAgL3rCZlLZfa8+4VvIq2GiS1fFrWdBbXJXcW06jtJMZQJ1v0xRBVoqI 9tAYYGk1/cPqEFWmHcCAB4Fc9rId6a6ZTHhtChc3FikMyoEXokPbML7QdGSr2ZFxGUjLXzWMEOO
+ Agecj4F/jQ/sPuFQIqv55TXBrwedmv84Eg/rb/yRPFoyAT2SMG+OmCShLwi6gUdcVkNhp4F9QfY er3P1HAmGGTl+mWmuU1DCXf97SirVb7a4R55lElNgeEn/jBOUsK7uP5wypJ0bgx7M7KR6oXAdwB 43AzmLcExx03U5G90K5uxGydBlC6Rto6rBuHCN9f8HXTkHRqo72atKL2yzw1ICfQD8N7LaN2lvC
+ DMv8P1gQBgmkQPFqJYsYyTbetAnh7vg7FlKrpxflswfqqlbnIKBk7FL2+lVNMXehAAYQbxbm
+X-Proofpoint-GUID: 67SnzgrsOSOmI_AGT_Q_NAp3OhBMUjFF
+X-Authority-Analysis: v=2.4 cv=W404VQWk c=1 sm=1 tr=0 ts=6814a097 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=Mz09UsMhJyW2FU7oNKkA:9 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-ORIG-GUID: 67SnzgrsOSOmI_AGT_Q_NAp3OhBMUjFF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 phishscore=0 impostorscore=0 mlxlogscore=704 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020083
 
-On Fri, May 02, 2025 at 02:21:05AM -0700, Per Larsen wrote:
-> Hi,
+On 5/2/25 12:15 PM, George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
 > 
-> The FF-A 1.2 specification introduces a new SEND_DIRECT2 ABI which
-> allows registers x4-x17 to be used for the message payload. This patch
-> set prevents the host from using a lower FF-A version than what has
-> already been negotiated with the hypervisor. This is necessary because
-> the hypervisor does not have the necessary compatibility paths to
-> translate from the hypervisor FF-A version to a previous version.
+> The CMN PLL in IPQ5018 SoC supplies fixed clocks to XO, sleep, and the
+> ethernet block. The CMN PLL to the ethernet block must be enabled first
+> by setting a specific register in the TCSR area set in the device tree.
 > 
-> Support for FF-A 1.2 in the hypervisor is added as a precursor to the
-> addition of the FFA_MSG_SEND_DIRECT_REQ2 messaging interface. The bulk
-> of this change has to do with the upgrade to SMCCC 1.2 required by
-> FF-A 1.2. Additionally, unimplemented FF-A 1.2 interfaces are added to
-> the list of unsupported functions.
-> 
-> Tested by booting Android under QEMU and loading Trusty as the guest
-> VM and observing the SEND_DIRECT2 ABI being used successfully during
-> guest boot.
-> 
-> (This is my second attempt at sending out these patches; sorry about
-> my broken first try and the resulting duplicate messages.)
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
 
-Please tag this series with v2 if this is the second one and include a
-changelog.
+[...]
 
-> 
-> Thanks,
-> Per Larsen
-> 
-> Per Larsen (3):
->   KVM: arm64: Restrict FF-A host version renegotiation
->   KVM: arm64: Bump the supported version of FF-A to 1.2
->   KVM: arm64: Support FFA_MSG_SEND_DIRECT_REQ2 in host handler
-> 
->  arch/arm64/kvm/hyp/nvhe/Makefile |   1 +
->  arch/arm64/kvm/hyp/nvhe/ffa.c    | 235 ++++++++++++++++++++++++++++---
->  include/linux/arm_ffa.h          |   2 +
->  3 files changed, 221 insertions(+), 17 deletions(-)
-> 
-> --
-> 2.49.0
->
+> +static inline int ipq_cmn_pll_eth_enable(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	unsigned int cmn_pll_offset;
+> +	struct regmap *tcsr;
+> +	int ret;
+> +
+> +	tcsr = syscon_regmap_lookup_by_phandle_args(dev->of_node, "qcom,cmn-pll-eth-enable",
+> +						    1, &cmn_pll_offset);
 
-Thanks,
-Seb
+So we have syscon_regmap_lookup_by_phandle_args() and
+syscon_regmap_lookup_by_phandle_optional(), but we could also
+use a syscon_regmap_lookup_by_phandle_args_optional() - could
+you add that in drivers/mfd/syscon.c?
+
+> +	if (IS_ERR(tcsr)) {
+> +		ret = PTR_ERR(tcsr);
+> +		/*
+> +		 * continue if -ENODEV is returned as not all IPQ SoCs
+> +		 * need to enable CMN PLL. If it's another error, return it.
+> +		 */
+> +		if (ret == -ENODEV)
+> +			tcsr = NULL;
+> +		else
+> +			return ret;
+> +	}
+> +
+> +	if (tcsr) {
+> +		ret = regmap_update_bits(tcsr, cmn_pll_offset + TCSR_CMN_PLL_ETH,
+
+I think it's better to just pass the exact register that we need,
+instead of some loosely defined subregion - especially given the
+structure likely will change across platforms
+
+> +					 TCSR_CMN_PLL_ETH_ENABLE, TCSR_CMN_PLL_ETH_ENABLE);
+
+regmap_set_bits()
+
+> +		if (ret)
+> +			return ret;
+
+You can initialize ret to 0 and return ret below, unconditionally
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int ipq_cmn_pll_clk_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	int ret;
+>  
+> +	ret = ipq_cmn_pll_eth_enable(pdev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Fail to enable CMN PLL to ethernet");
+
+Fail*ed*
+
+Konrad
