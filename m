@@ -1,80 +1,135 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D29376
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90315376;
+	Fri,  2 May 2025 21:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746219610; cv=none; b=qU2o4b03IoYl7SHQXVyE+UAfOGTSUjgeIKqVyMC58hNkmv5HH2Sx4ED07GIHS2qw2UrSrYuMXx5MYbWBG5mDAEytsDhIP0EfqZdvjEWKSmWu1bMwDNUU0CthP0wFANP+J4n/cmoZQKu2yHMgOl2TgmOfi1/jLGd7qDZMmcX0/v8=
+	t=1746219647; cv=none; b=phzoEtbcGEGn3mUDUBB7FwD/KfaAWIwxUUTuIKSBWSpeiufcXldLRtVGCIur6591Hm9az0EGrbVAAXAo1besStUOWwAQwktSGpkEJbDxHBCOcX/ACqL45TGQ2W+T8LF56OcdBKha0BKJD32TvmjRkCNaIksPQkfR7KP/NkvjiCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746219610; c=relaxed/simple;
-	bh=YxnTM7JeQrOkS6HQh6jSfucSjgaZdpxVqr2SngmdD+w=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=W++cAIOj41dplr9BSENIQpKZn31G1IJpI8kA6ST0yOltriGxDUcdro3IIbNKJkRUBj9SIwD60PNQ0V+oe82HoYx6ALqPC8NuWKgy3QG2Tg/1rniduoo3oHMJzp/98EilA70Xdrb3ejo5VU7KOO58dVywDJQCmBEGBi7rhO5ni+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=QbngnwCF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746219647; c=relaxed/simple;
+	bh=QV74l1IOGVbOqoSkpgRlO6NEjTmym0E/wjU2qkQ32fw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KO0Zaakx+DGRRTjtd+4TylIF+aoWeOynM2ZrvbgROptKx2KbvkZMV5B6R0SDbL1L63EJuIGE5f+RbFgh1B4t3B8Fw4yNcCuaudHf3EIFNmTCl6YwQha9XUu3tsNJnZmFecTN8i4ECzrpt4KRS1/cLZQ0dzWbsMk5XzYY3pkIpCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExgqAER2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QbngnwCF"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542KxVIc2187021
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 2 May 2025 13:59:32 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542KxVIc2187021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746219572;
-	bh=YxnTM7JeQrOkS6HQh6jSfucSjgaZdpxVqr2SngmdD+w=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=QbngnwCFPSxTRFnW0X8pVNAgJDyCHfml+j1WtUg1fzuYDa8gJlrLGZYJDnR38L/Q1
-	 trln/4gE+cU0XMuji4wIbGsFa2bf3xgqJw2B2NPB+bnCzxYlGVldWJx70dC88d6zFL
-	 OxUByEOFpLQjZPoVUbxQM3081te7CM4C4g1FEITNmrkdI5EXM3asFEaZBDapSrQ8HJ
-	 b0TMHH3EHciLnLwpuGAEAuHP8kWND9wXxdjnGbuZdp4XrlgB3jdDJ31dszNJsJn/fn
-	 uS98Y6IRgCmFwwnspuNOJFqL4dPTKyZ3Grme4gmQ8RsRNKO1gAYN7cpdZkd+ssi3Av
-	 /QQsmNFHQpcqg==
-Date: Fri, 02 May 2025 13:59:30 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Dave Hansen <dave.hansen@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_x86/reboot=3A_KVM=3A_Guard_nm?=
- =?US-ASCII?Q?i=5Fshootdown=5Fcpus=5Fon=5Frestart=28=29_with_ifdeffery?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ba00197d-dc21-47bd-b183-4971038d9a8d@intel.com>
-References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com> <ZwbazZpTSAn9aAC7@google.com> <ZwcT149jx-iOmEfl@surfacebook.localdomain> <ZykbvVZ32FKCRT_q@smile.fi.intel.com> <Z_UUXOe61BwVkGob@smile.fi.intel.com> <f670905f-f14b-4482-83ee-568234647f46@intel.com> <Z_U0Vn0V18KYGjkP@smile.fi.intel.com> <d40efb68-eb4e-4158-9dc6-5de101adefd1@intel.com> <aBTQ7-L-bUwzYbKM@smile.fi.intel.com> <ba00197d-dc21-47bd-b183-4971038d9a8d@intel.com>
-Message-ID: <2F60FA75-E4F4-41F3-BD5D-EAECBE57A3A4@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExgqAER2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCBAC4CEE4;
+	Fri,  2 May 2025 21:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746219647;
+	bh=QV74l1IOGVbOqoSkpgRlO6NEjTmym0E/wjU2qkQ32fw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ExgqAER2CsxrCnnAMm6jRg6gINgp9LGlOtbpHezQgKA+SlqChKBhWB5JTT3F8BKcz
+	 WyBu8J75GKcBiBoM493HVF8pnLHXaYp6WJzC0Sbxf8kv72/jKkJsmWg37D3/E6DH9x
+	 AVMJ/pp3eIG8LdZs9D/W1CiAOFAC3NhB8+3+QS2zaYnHn+HpmNaNfYeALRPcqkW/8K
+	 dVgYMpGiSWtxAIENr8F9WMYO1YCTIdNL3WBIxgpMQPFCzktf4xO/PaZtyphqAiNU9n
+	 3OzuLYfo5zx6WMa/dh7nLZo3pf9Love+B/Ys5wJLPmSUhMMraXMrOReDrSZuvwz5Li
+	 L/yI/DomKf2lw==
+From: KP Singh <kpsingh@kernel.org>
+To: bboscaccy@linux.microsoft.com
+Cc: James.Bottomley@hansenpartnership.com,
+	bpf@vger.kernel.org,
+	code@tyhicks.com,
+	corbet@lwn.net,
+	davem@davemloft.net,
+	dhowells@redhat.com,
+	gnoack@google.com,
+	herbert@gondor.apana.org.au,
+	jarkko@kernel.org,
+	jmorris@namei.org,
+	jstancek@redhat.com,
+	justinstitt@google.com,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev,
+	masahiroy@kernel.org,
+	mic@digikod.net,
+	morbo@google.com,
+	nathan@kernel.org,
+	neal@gompa.dev,
+	nick.desaulniers+lkml@gmail.com,
+	nicolas@fjasle.eu,
+	nkapron@google.com,
+	paul@paul-moore.com,
+	roberto.sassu@huawei.com,
+	serge@hallyn.com,
+	shuah@kernel.org,
+	teknoraver@meta.com,
+	xiyou.wangcong@gmail.com,
+	KP Singh <kpsingh@kernel.org>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+Date: Fri,  2 May 2025 23:00:34 +0200
+Message-ID: <20250502210034.284051-1-kpsingh@kernel.org>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+In-Reply-To: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On May 2, 2025 7:24:37 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wrot=
-e:
->On 5/2/25 07:04, Andy Shevchenko wrote:
->> Can it be applied, please? The problem still persists as of today (v6=
-=2E15-rc4)=2E
->
->I fundamentally disagree with the idea that the kernel programmer should
->be doing the work of telling the compiler *exactly* when a static inline
->function is unused=2E Compilers are good at that, humans are not=2E
->
->The "fixes" for these issues generally make the code worse, not better=2E
->
->I'd frankly rather have a kernel with some unused 'static inline'
->functions in =2Ec files than one filled with #ifdefs to shut up the compi=
-ler=2E
+> This patch series introduces the Hornet LSM. The goal of Hornet is to provide
+> a signature verification mechanism for eBPF programs.
 >
 
-__attribute__((unused)) if they don't need to be inlined?
+[...]
+
+>
+> References: [1]
+> https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gmail.com/
+> [2]
+> https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=cBzdEYbv_kg@mail.gmail.com/
+>
+> Change list: - v2 -> v3 - Remove any and all usage of proprietary bpf APIs
+
+BPF APIs are not proprietary, but you cannot implement BPF program signing
+for BPF users without aligning with the BPF maintainers and the community.
+Signed programs are a UAPI and a key part of how developers experience BPF
+and this is not how we would like signing to be experienced by BPF users.
+
+Some more feedback (which should be pretty obvious) but explicitly:
+
+* Hacks like if (current->pid == 1) return 0; also break your threat model
+  about root being untrusted. This is all the more reason I think signing
+  should be integrated into other LSMs, only a proper LSM policy can breathe
+  life into the root / kernel boundary. 
+
+* You also did not take the feedback into account:
+
+   new = map->ops->map_lookup_elem(map, &key);
+
+  This is not okay without having the BPF maintainers aligned, the same way as 
+
+  https://patchwork.kernel.org/project/netdevbpf/patch/20240629084331.3807368-4-kpsingh@kernel.org/#25928981
+
+  was not okay. Let's not have double standards.
+
+* And you copy pasted tools/testing/selftests/hornet/frozen_skel.h which
+  is what you expect users to do? Not acceptable either.
+
+So for this approach, it's a:
+
+Nacked-by: KP Singh <kpsingh@kernel.org>
+
+Now if you really care about the use-case and want to work with the maintainers
+and implement signing for the community, here's how we think it should be done:
+
+* The core signing logic and the tooling stays in BPF, something that the users
+  are already using. No new tooling.
+* The policy decision on the effect of signing can be built into various
+  existing LSMs. I don't think we need a new LSM for it.
+* A simple UAPI (emphasis on UAPI!) change to union bpf_attr in uapi/bpf.h in
+  the BPF_PROG_LOAD command:
+
+__aligned_u64 signature; 
+__u32 signature_size;
+
