@@ -1,113 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C92182;
-	Fri,  2 May 2025 12:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCCC251782
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189498; cv=none; b=c1A0SeC66qpt8gU7aak4LTmNpHpu0WozrGUOy57nbozOdDHh0MICEDYjMWkX4cFO9/nsaiUUIWLBZxpoE727fhpBHsaONeAZdEVPTYx6sPxMnLFmpZ4A7vBAoiYdaO9+Dq9kc6wpZh65dVvJ0RYxKLInMRSqLxni5ywHyZa2mzY=
+	t=1746189620; cv=none; b=G6OnfriyvRWmr1t7gR57lz9LZ7plb3j9tZGv3kbCCkWadKHpgJ2Guv+UupS/Dqj7l2thbtSw/aqB+KDj5/Lf3EYmiQEJd593hH2REjMWTeH0Cz4ClXuNu3S/W6HTtk2C+yapgiYWbHem7DAV9EnmdId3Jkp9q2LcilwGEtHP0Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189498; c=relaxed/simple;
-	bh=XkAKwcrcu3Kbyc6j3TA7W+HyEBnoC8cpTFtI8G59PAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9JeieJZs+iItXQ9cRZG5kl9XcKspxaJNskngsaRGjLmKeBVXS8Rs6F2PqOuh6Pf836tk5xMta8GNPjZwGg8aB6W7sm2UADeiDm7RsA6OtmLZhbD5Q1uQ5Gc4VOX+W4GiWaYrosRC3xoP+TN4eW/nUjorIvYjMG6GN4MNNaZuYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cyq9WvAz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746189620; c=relaxed/simple;
+	bh=kXHh4bekX0rbt5Td7HC5fwo2DH3JDp731V0c2xbEl1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p0yrJAklRxmbLM7ZMu31C3t+zJLTDO83uXkavJLy5L3WnAqACQsDpPK4ZSQxbN/rnDXEmwtyS20Dw1TBJ2039pOEw01ycTp7UmZR/Vk2GpOlQsv+D+Ax7PiJ/5jXyqgUIrx+IpXqjPqhfXwIV5unL5yckXrEJP0w3f0n7Uw+45M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kCAX5DcH; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cyq9WvAz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EABC4CEE4;
-	Fri,  2 May 2025 12:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746189496;
-	bh=XkAKwcrcu3Kbyc6j3TA7W+HyEBnoC8cpTFtI8G59PAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cyq9WvAzCSi8XgE7tn82RGvlWkpbBBAv0xyFlbV5V5aNWtZ2XxGLOvGlz1/P4yEw3
-	 XE0XyP08vWufSlawXNhQ2tSs64SUdrHg/af5bCABvvR+Gg4VlKPVltVQrmhKyo7adU
-	 WK44zwx4G+CuvJrDKirICcIlbR8/oP5L55bBqSZMd1nDkhacUlhMBn+pbbsS4Zfu/l
-	 k/r+yy2G9zPqKEUavHcVG+GAMfbA4Ew6khVxEoLaVGf2PIgYPuHT/y90G+2jkcbekE
-	 1R8Io2AyK6pS5Mde4xb5V0DMdnZHwKdmVjmydlXfhENQG8iaGQojMtiBZcfPH7CYwa
-	 pRbjeD7+n3jaQ==
-Date: Fri, 2 May 2025 13:38:11 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas,wdt: Document RZ/V2N
- (R9A09G056) support
-Message-ID: <20250502-molasses-provolone-8e03b62cee21@spud>
-References: <20250502120054.47323-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kCAX5DcH"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ee623fe64so1912776f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746189615; x=1746794415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hO4jrfvcXwDOgHznp3vJRhe4wcy5ANNCwq/KWVr/OIk=;
+        b=kCAX5DcH8ZLfwkB7SEtsP3nRJOWEfcU6DzqLGmsKGTjRwHx+ez97kSmPfnCtG96A5x
+         HnVzISr+thTYQnMpIj0EFPl/qu3u+SryIrlh7TnwKZ4DGeYu9gi/t4WJ4AXj2eJCBcrG
+         W2MXeOGFqRF1iWripW8pAezAbQ86PVQH+PBFCE013Sfd8q8IVy5dXXGzimw5RX6knWrS
+         jTZ2dPqLS//ppa1NKZDZXKvKWCy8hOT+hvMd30QbqN6+/pqhYcRiknYTBJH5JTfEfdd0
+         C1xVYgqw+yr3E/JuUZj3JpUVXE8FaW/DhoauZQLXQEVUWzb/3YSGMmwdKN9wIUfoEnnt
+         oKAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746189615; x=1746794415;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hO4jrfvcXwDOgHznp3vJRhe4wcy5ANNCwq/KWVr/OIk=;
+        b=FtTsNHyAfRhtCIyhxu+YmLUa6qe2NYFVKIp9r1g6Ea1x83gzEddm88Cx9GaCrQmj8B
+         7MNT2+v9nuT3s8mWWSVqXf44KwNxP7fHac1z4sWJ3xEqhyv5tm3BfsjMEuUInhZovQnU
+         N7CJqMkPf/Yep8ryksymRZszbixP9sPN8T50osKvLbd6jPI2+ssASUmDMv/7goM5JKRe
+         +XldWCdc2U8ghXkQh/MDLXHQgjSUfL7x2C3Q4xqZ20KbXmTn6xTYe8Qy+5MTYKZEEpCC
+         7uzUMF3dKt/q9UUxAt5DCsGE3vBiNV96ZUd+Tdro/jxtZ/ju+vCbtiUXFVSYjS9zpkNP
+         /YCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFax70WMUgRkfIsvYKRr9K7F6qLokQp5TdDBND4prAR4RJJ5ixPi+v/CBIQo2G88X9Bj8Z+rjg4S6ZrrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwjia/Xe/en8kZ9AVokWTCDp0Jzbl6+TPln9QqRLP4WLMBWOn7
+	bD8jMjoD7+v/knaHmwHAf7OiZ0s58zkg04zPiHdnuqgAt2A8bb0OdYD2FykYjbI=
+X-Gm-Gg: ASbGncu4Vdc1zVFpSRXckvQ/P7cGj9+9wJNX9A/kpRQH+mkaH6KasK3ShW0a/XMC/pK
+	bZZVRj3noKKBZ1U7ozGf/5xW5P0pH9t0DdggEJbxgFjYBd6fhcXsRPvxmZSv7ggR3S8sTvyVV8U
+	CPadPI/AUBnJlqe2cEEzknN+/6/Tpt+v/XbvasjAd0H+oq/d0XfhjAIyebrn8T64vBYlxF6I3iX
+	tsSrlrhSlClASVpcpeIKQxK+w5Ngx4n2iSp3gc1KBoOwTDUmpPpSbzrmOMNtXG/Xk1/abUd8eIs
+	c62gvTyUrA8rk0QptefVIeXksvrR/5QeZJeXRDjSykk24UaevCYarumIilQC4jMbX8NBgPY4IB4
+	goB6hvEhIBLwDoLQy
+X-Google-Smtp-Source: AGHT+IEOS82TsR2KY66VItn5wS/PhdQ5Z/iPWuns9/rZodNO7i5a6/Ht1tcfU7koaHBozYfd9ylhJQ==
+X-Received: by 2002:a05:6000:1a88:b0:3a0:7fc3:b1dc with SMTP id ffacd0b85a97d-3a099add333mr1924412f8f.32.1746189615520;
+        Fri, 02 May 2025 05:40:15 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b107c4sm2043868f8f.76.2025.05.02.05.40.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:40:15 -0700 (PDT)
+Message-ID: <bc9ba136-bd99-4c6c-be97-8915464cfb11@linaro.org>
+Date: Fri, 2 May 2025 13:40:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rtF743oJEpR0T3zD"
-Content-Disposition: inline
-In-Reply-To: <20250502120054.47323-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/23] media: iris: Track flush responses to prevent
+ premature completion
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-10-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-10-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Currently, two types of flush commands are queued to the firmware,
+> the first flush queued as part of sequence change, does not wait for a
+> response, while the second flush queued as part of stop, expects a
+> completion response before proceeding further.
+> 
+> Due to timing issue, the flush response corresponding to the first
+> command could arrive after the second flush is issued. This casuses the
+> driver to incorrectly assume that the second flush has completed,
+> leading to the premature signaling of flush_completion.
+> 
+> To address this, introduce a counter to track the number of pending
+> flush responses and signal flush completion only when all expected
+> responses are received.
 
---rtF743oJEpR0T3zD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is there no other way to correlate command/response than a counter on 
+the APSS side ?
 
-On Fri, May 02, 2025 at 01:00:54PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Document support for the watchdog IP found on the Renesas RZ/V2N
-> (R9A09G056) SoC. The watchdog IP is identical to that on RZ/V2H(P),
-> so `renesas,r9a09g057-wdt` will be used as a fallback compatible,
-> enabling reuse of the existing driver without changes.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Usually command/response protocols have some kind of identifier field or 
+sequence number embedded in the protocol headers.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml =
-b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> index 3e0a8747a357..78874b90c88c 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> @@ -76,7 +76,9 @@ properties:
->            - const: renesas,rcar-gen4-wdt # R-Car Gen4
-> =20
->        - items:
-> -          - const: renesas,r9a09g047-wdt # RZ/G3E
-> +          - enum:
-> +              - renesas,r9a09g047-wdt # RZ/G3E
-> +              - renesas,r9a09g056-wdt # RZ/V2N
->            - const: renesas,r9a09g057-wdt # RZ/V2H(P)
-> =20
->        - const: renesas,r9a09g057-wdt       # RZ/V2H(P)
-> --=20
-> 2.49.0
->=20
->=20
-
---rtF743oJEpR0T3zD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBS8swAKCRB4tDGHoIJi
-0psNAP4mStyLPceWvsvD4MiviARAn1vin/1+kLywOlH0mLGvDgD+O5hRdJvJDg3m
-g8O81b2C4Qdv0yDk9KQCgt7yvijb8Q8=
-=wR3n
------END PGP SIGNATURE-----
-
---rtF743oJEpR0T3zD--
+---
+bod
