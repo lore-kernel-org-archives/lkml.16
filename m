@@ -1,149 +1,96 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5022417C5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA2223FC5A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746184261; cv=none; b=MMx+PFq5oSL5z06mCJoSGakbFxgi/YgrJBcWu0v+PZmJ97TA5ejMFpJhpMqiSX3WDHy0IBty7s2XlqEOAGrIQCyzLF4AyvSBOOBAa0YVVuToICse6xOTJ6qMI3JgMqftVR2rQ+o2UW9SdKcH9gRyPYjVOX0I0POHXlp/rFPEMKE=
+	t=1746184279; cv=none; b=lvmxVIThi4GpAf2uxLeok3/FLV7jfct120gW2Tfw2y/fIvj32Xa6EhD6z44UADjsWid3lXrYtaoEoM6jaQwjunu5nBAs5R6RNnssCLPvBQiGNxVvqqFdFpEw5U6vPM1aRr0hGXe5SRbNJT1VSIxdSxPcoHaF0jkZHNM1PDVVR0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746184261; c=relaxed/simple;
-	bh=s/YKSwmEfZLdYEAVVKpxHe9wk393VQMROKfODJuwNWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BQFcPVPhyc0SHsgCdTAJTwMcIuYpDMcnManYvYPNEYZOnz2FEVEtDMYgKjwPoTChNZ3nGe+zFpftPVwTAxJPR1J3Wj7EspyMiIvIehs5B6zCW0P0qL16r6VlYNnO1Ptp7IY2ImP2EVw0zWNltYwJ735sJEVVTBB/qF6kgHIornQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BIZgde4A; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Vv9F+Vw8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VTnYrFUC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=obJFcnTK; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BIZgde4A";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Vv9F+Vw8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VTnYrFUC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="obJFcnTK"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7791B1F387;
-	Fri,  2 May 2025 11:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746184258;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=68RwN3NuFrSs2yXzuINW3GXKrctQtEUkF8f+0ox5Jz8=;
-	b=BIZgde4ASTOu02FQCP4guJ0N8EXhOjprNpzmLfCbtjRifNnT49Zhd2OsWVWK3NtDODCE1L
-	sZ7yli1v8CjHpHOEL4gpuLY1WzhRnOc6/8LzgD4W8Ewcf5zcTKGmF58OZOD4NuBEyt+SJ/
-	zF4hC+frRR9X+YoxuhtGfR+0JO0hQus=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746184258;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=68RwN3NuFrSs2yXzuINW3GXKrctQtEUkF8f+0ox5Jz8=;
-	b=Vv9F+Vw8ACIJFZOiZ6DrbhdhiG4Fe5gBnEniN8xfX0jZgh7XJYMUVJTeM2lfvdzTC/e0fP
-	D+US2zRhniX3UMCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746184257;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=68RwN3NuFrSs2yXzuINW3GXKrctQtEUkF8f+0ox5Jz8=;
-	b=VTnYrFUCgHIbTcmpbXGumJWvwr+lYUBDw/qYSCnas7LysWK0sgW/w0xxtqBJ5ckfodomGo
-	w76r1e952kQ/FT6uqtoUVfyUnfqdbk3fT898ikGqyZeSk4IB2Ag/lMPPm6/AypJeR/1TcK
-	mPnnqp2DHheBZ6KmO8IYc/iGScGtE/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746184257;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=68RwN3NuFrSs2yXzuINW3GXKrctQtEUkF8f+0ox5Jz8=;
-	b=obJFcnTK2U27dP3+ZPqoo8i4IK+9zSjDVdPX8eREvfkuvpx9yThmWfVmQQwL9qcEo4e+K5
-	1eN8y16BJBo19JAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F65E13687;
-	Fri,  2 May 2025 11:10:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D9UrE0GoFGi8dAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 02 May 2025 11:10:57 +0000
-Date: Fri, 2 May 2025 13:10:56 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, Qu Wenruo <wqu@suse.com>
-Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
-Message-ID: <20250502111056.GP9140@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250430181052.55698-1-ryncsn@gmail.com>
- <20250430181052.55698-3-ryncsn@gmail.com>
+	s=arc-20240116; t=1746184279; c=relaxed/simple;
+	bh=5x2cPJ9xDp00yJ7ZoWTufzMw/GRYyxNXmL3uAafLwq4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6yZvGHBMhv7+WszTB3bG584S1Zbi9RnXc5D23gQUKraWvhXc8QC6+S6JLeyLPTjYCMWJuDFOD2wc0hkdu5D0MaRH+wO/tjv3Y6rm0kNFWe+XRFjgBtmwDXJEDBfmRlKKECoC0bC3GnBR/DALCcBZQNF6nXuVYgoMgJvHpAchzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E65E1688;
+	Fri,  2 May 2025 04:11:07 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA2913F66E;
+	Fri,  2 May 2025 04:11:13 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] coresight: replicator: Fix panic for clearing claim tag
+Date: Fri,  2 May 2025 12:11:08 +0100
+Message-Id: <20250502111108.2726217-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430181052.55698-3-ryncsn@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kvack.org,linux-foundation.org,infradead.org,google.com,kernel.org,redhat.com,linux.alibaba.com,gmail.com,cmpxchg.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[fb.com:email,infradead.org:email,toxicpanda.com:email,suse.com:email,suse.cz:mid,suse.cz:replyto,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 01, 2025 at 02:10:48AM +0800, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
-> 
-> folio_index is only needed for mixed usage of page cache and swap
-> cache, for pure page cache usage, the caller can just use
-> folio->index instead.
-> 
-> It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` but btrfs does not use that method for swap.
-> 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
-> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Qu Wenruo <wqu@suse.com>
+On platforms with a static replicator, a kernel panic occurs during boot:
 
-I've added the patch to our for-next, so Andrew can drop it from his
-patch queue.
+  [    4.999406]  replicator_probe+0x1f8/0x360
+  [    5.003455]  replicator_platform_probe+0x64/0xd8
+  [    5.008115]  platform_probe+0x70/0xf0
+  [    5.011812]  really_probe+0xc4/0x2a8
+  [    5.015417]  __driver_probe_device+0x80/0x140
+  [    5.019813]  driver_probe_device+0xe4/0x170
+  [    5.024032]  __driver_attach+0x9c/0x1b0
+  [    5.027900]  bus_for_each_dev+0x7c/0xe8
+  [    5.031769]  driver_attach+0x2c/0x40
+  [    5.035373]  bus_add_driver+0xec/0x218
+  [    5.039154]  driver_register+0x68/0x138
+  [    5.043023]  __platform_driver_register+0x2c/0x40
+  [    5.047771]  coresight_init_driver+0x4c/0xe0
+  [    5.052079]  replicator_init+0x30/0x48
+  [    5.055865]  do_one_initcall+0x4c/0x280
+  [    5.059736]  kernel_init_freeable+0x1ec/0x3c8
+  [    5.064134]  kernel_init+0x28/0x1f0
+  [    5.067655]  ret_from_fork+0x10/0x20
+
+A static replicator doesn't have registers, so accessing the claim
+register results in a NULL pointer deference.  Fixes the issue by
+accessing the claim registers only after the I/O resource has been
+successfully mapped.
+
+Fixes: 6f4c6f70575f ("coresight: Clear self hosted claim tag on probe")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-replicator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index f1d2f764e898..06efd2b01a0f 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -262,6 +262,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 		drvdata->base = base;
+ 		desc.groups = replicator_groups;
+ 		desc.access = CSDEV_ACCESS_IOMEM(base);
++		coresight_clear_self_claim_tag(&desc.access);
+ 	}
+ 
+ 	if (fwnode_property_present(dev_fwnode(dev),
+@@ -284,7 +285,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 	desc.pdata = dev->platform_data;
+ 	desc.dev = dev;
+ 
+-	coresight_clear_self_claim_tag(&desc.access);
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+ 		ret = PTR_ERR(drvdata->csdev);
+-- 
+2.34.1
+
