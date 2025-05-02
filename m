@@ -1,107 +1,149 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401A4225775
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A047225775
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746180544; cv=none; b=sTZqjwc5ET1GGUpMOtk+NGu1LtH8SH8Rscy2j2OgYTUccLfcMxY2NXYXMUomsZmH47ySIQzHd40iEcds0Ek1ixvAcak4iX40v6DB6Pyl2wjeFz1dY2WVirmaYK7s+FZrPH5+ZdkQs02Y8nZBbsfsKDWLSa1blr/coDZ+8bU4DlE=
+	t=1746180595; cv=none; b=atoNFsNaWEf7Wgr3i08OG5q7UwJ/BjFTPAYyOWAAG2iwrCPEfBS+yDRY/DEE/YofeIq+u/+RuSeBy7Tf86x88qa6HUvRZxIaUJ2V9Nih69Pt69ZQlWvWtr3mScvJKa4fnjQOz7Szx7m3eWLvvOUZyBKNsp0np9gK48O63UIjXOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746180544; c=relaxed/simple;
-	bh=G/yQbTWKw5+TnbyriGPn4AE4fOGUPbORB3d2ncVsOCg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ue7LDLOuPLplOItDm6f5CRA8ZVz4z1iAqRfNmpApNsdcfBQVveD9ncPLb6GKc3RPsb14fm5qbVYEBmPmy/HU8p05I1Gv5YtT8xmSGOnDcNOKBdpOrwuJvtsTFlsNu7Pm1YhmRPP44ADGjBp4Vdd6leJyVqGCY3dCsJ9ScfmiYsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IIcn0eGT; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1746180595; c=relaxed/simple;
+	bh=qlMVNMkQHxK+iWBIahZTo088WtpDWSN9kcDQ7wvfYsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQgACDUDsSyN4UeOy04nCPjfNA27QH/Nk4o+SBxUuCo/dyJNoEVG38qJAlt6nKAAqKjFeNiJxCaiBZzMbNX+F51MBn2ke95KCUl1oku90j5tO66qzdrUHsy+N4mwVODdW128T7MP6K5gZLkMDifZnUdE1rLSgZjFJq6TVm7xtVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A5QNqvAp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IIcn0eGT"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso16886065e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746180540; x=1746785340; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1gpbxUH5zKXlvd7Jg421zxuNqN0FwJbinQ6smtKhC/c=;
-        b=IIcn0eGT5eCAKbH1QQbSw34/ym1+9eKcNKAoGFoU3pW81hXLhYHRTV4/RcS4usiyOv
-         3IBaN12KsRtIATtuVeU1O+ZS4HIEp0x4t+Q7AMvPejYSnsQbSd9/Q68uFnyr8CWZSUBM
-         WXiuSsvVBN8UC7p/kWstwBbFghFLRg1ZpolkA+yJE5eH4WbK3xKmyYjULIB0HLyDhtAE
-         /1SGDinetrhz/lIHhQDStXVQoY5RmqZT61r+Y9VJksOE1yt4XZIpIIezi3/kc5SY/DpU
-         yOBi9FBAFbELMgUVxdkcc3I1Gjfn1e9h/z41Sox2S+2zSuHXcGbUxgerEJYs8YpkoOP5
-         B2LA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="A5QNqvAp"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NCOe015176
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:09:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=eGb1DlUbL3NjKY/kTW9b+ae2
+	nxS0xZx64n5ndmQSd6c=; b=A5QNqvAp5jkwLT+0EyVxkW5mulaAL90Je2+xwzeM
+	qyBWdXFm0tbRwy54j3HeK1MpiN1rita+E4lQKTJIt7Iu49/UToqQxANcpBRy7K/K
+	I3P1L23ExvE1bH/vDER3dlrchk16s0vq/EU3ThgSHe8KSnR+3UUloULe1V8+SCP2
+	iesFZIeyB7x/OhRWuhkjLuUPXguVqWzveeu6f0fVzDsgS1/WZLdJzmXWnNiSJ9JD
+	pIgpkyg6LGKOk5CdrvfXWsmCLRHg64M/rgsO00jJLikmiZ3rTWHw1tBdXLDpS8AD
+	Xfq/3SNCExOlmrkl6RD19f6H9eX8r2NEDhcXe1iQeMPVhw==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6uayv46-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:09:52 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-478f78ff9beso60458971cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:09:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746180540; x=1746785340;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1gpbxUH5zKXlvd7Jg421zxuNqN0FwJbinQ6smtKhC/c=;
-        b=dMzMrubWX9ArvmzkdL8xR+V8hfEjRfDyYC+MLFYr/p/8V4ZU3/ZjsQWZnB6wZ2vrnC
-         IaCpQlZnqDpoWldSO8gLi1xyxNRkupv0sit9WWxwS3WbfKS/rWJcg76m56UqSSRpG803
-         K4RUDBlcyfhhvJ3xFNE+lb8PVJsa4Q3FthUUGNtNzhD094l0XIU6JaDmbgH2LXR0NVI1
-         Acrb7XROl5jDyJAn14GjIByHNWbNbMIHdOg1A0mStiqajQc3al6mwApoZJreD2e74wNm
-         SuGSw4PCVKlfpKtjsBZPVpu2EEK+KjEJfzAb3UB7bhspChDXTRnOmeYUUkz6NfJWK8J6
-         RH0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKA3ImCf37PzcMmQulr2XASW+8kfLZjBTYcEzaorC4ZNnOy3OnlWyYia0SM3Mk8OqyqsPu/MBY8HujgJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi6meIXpW+fXzmeXljsaFWgu8sIIA9pcpTRwh2nMgy8THV0wOv
-	hwPAdcIQoApMwAgtirGdxvhGs2qHfX/eqeMNzo1XdYHYNeWRoptTTHMudRhtz5E=
-X-Gm-Gg: ASbGnctEfl5dygl98v6sPndOCnsLZF5rkOQ4n9Tyv3ewzG6iaVCitQtiw69RrnwKOK9
-	gVmbWFQ+4a8A+gTKJQmvoqphE4SD/N1IfhGb64tuOhqgiJiZE8aDN2oG8kTfDDOVx+ySxSULtXk
-	JL+997g8wbE2+Z3afOYdolew2TbJzQckhP04V7xv/+RxGr7r5AnVLZHa6wmpdJQXxVbSt1zFqgV
-	qK+jgcL2Yq8zufVxzTNUQgMfEhX2uDOksfYpiv8DxRsiiy7Muc0Fo1E/SK26MbuPDsDQF4+mnTW
-	rVPkbcc0zo3Xht0sUVKkQ9x/0Dmdg5Cr9/0wC6uP8g==
-X-Google-Smtp-Source: AGHT+IE47vfNWr5eva9bcWEHLRezwNUBG4506xXlFZEBT+W4RLMrhKjqpzQGXO7HfBEF3Nn5qo8n3Q==
-X-Received: by 2002:a05:600c:348b:b0:43c:fcbc:9680 with SMTP id 5b1f17b1804b1-441bbf31f09mr16912665e9.25.1746180540381;
-        Fri, 02 May 2025 03:09:00 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:f280:a08c:3f15:ae3e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ee39esm39361045e9.21.2025.05.02.03.08.59
+        d=1e100.net; s=20230601; t=1746180591; x=1746785391;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eGb1DlUbL3NjKY/kTW9b+ae2nxS0xZx64n5ndmQSd6c=;
+        b=ds7FHykU/tDLmtRX/JFJx0ZciUJjL0g63A+kbcE4UVBCrB9T1bJOe43Avp6vcDa+9W
+         MXqosRxPS06emjF4RxzCJFYWlIt9zak+j6zKzC3FmapRFSOvghK/iEIADr856aZr8RNj
+         jSZhhRfgNj/oRmXLSEcfwltWiTL98GQm737441vTUj1RQ1RAVi1pshqXFojtqfDUdqPH
+         33z6v/iU7r0F4rSBlLFH05/3gkcn2Y3aBysI2bmjjDVKRJu3E+si3OMk4LGSofYg3BzF
+         2K6Cqthyo72/im6oAbS8S1F+7REkJs3M59nBr733GZ3zx2X5Kz8TbMkWKsy/CQ1G+Hzl
+         Kn2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVj5+akddKi3RebQiyQdOMHTaECXkLV1Bwr1rFmpxLC+NoAwRjH0/lO8p288YgfPPziSN070j42SelAqEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2eOmJjWb3cSouWO0lR81JUxu+OrVxF6SLOEXhxhWjqcnbAlpQ
+	4Wf5s/3svLnEInXVb+foWzmDwbkXDRQ2oB/TfgXEF5IOIwgxVi9OYIrPwymtkC7EJHv5kRZ56YW
+	6te9WrdzieJpNAHYq+2b979mZXE7pK19OO3gr6kKhDsVQYcfqAjYiP2sGvtuKxts=
+X-Gm-Gg: ASbGncs7BJP2uua8vos2yZuj50YJ1URBoLD/f7oyOStPFfI1JJerKuBOd0LWKB1GIq9
+	1p0WezmHViwzoz9nerEJOAORwiUZmbSGWQ8MFkk2tCvFEZK9UHW9p4Hb9T9vKirBoZgRh5rIUpb
+	/VKrFWbBWQQNixiiKCFdVep20S1pHmtNLt4P+5/ej61lWK2ZgSIUpHU9ZdrggZTTBZfoPTHOIEt
+	GandWzFDulMEiDzo4NJKpb9aPdCr3ACDhmZGRQBi3tWIDdMRt3mII+6qWdRzlx2BZIiG242JBC0
+	6MvImWwUcG9VzbQHcZKGqe27acJjwT1JA1OYKmIzsplNJzoFAiMOZY8Y8+B+SSMFfSBH22DNWvA
+	=
+X-Received: by 2002:a05:622a:908:b0:476:7f5c:e303 with SMTP id d75a77b69052e-48c31c1393amr33914641cf.26.1746180591591;
+        Fri, 02 May 2025 03:09:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEI+T+sdPnhpQgFYsQMx/i1P/XK7HsEdfcoW/C3AL1UBNlcOIoAgvN7TUEI2OJ5tLKMoKv/uQ==
+X-Received: by 2002:a05:622a:908:b0:476:7f5c:e303 with SMTP id d75a77b69052e-48c31c1393amr33914241cf.26.1746180591064;
+        Fri, 02 May 2025 03:09:51 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f680dsm309413e87.220.2025.05.02.03.09.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 03:09:00 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] pinctrl: at91: drop unneeded dependency on OF_GPIO
-Date: Fri,  2 May 2025 12:08:41 +0200
-Message-ID: <20250502100841.113091-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+        Fri, 02 May 2025 03:09:49 -0700 (PDT)
+Date: Fri, 2 May 2025 13:09:47 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Rob Clark <robdclark@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] drm/msm: make it possible to disable KMS-related
+ code.
+Message-ID: <lyzp62vwvina435pdskwalcgjmejkbs6u6ozx3nn3epvyjyqo4@2o4w7uxrklp6>
+References: <20250413-msm-gpu-split-v1-0-1132f4b616c7@oss.qualcomm.com>
+ <20250413-msm-gpu-split-v1-3-1132f4b616c7@oss.qualcomm.com>
+ <71594689-06f7-41cb-ba6c-65459388fd1d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71594689-06f7-41cb-ba6c-65459388fd1d@quicinc.com>
+X-Proofpoint-GUID: 1VDBb2fYPIlwFYjyaHPXuAPYXK6QNS5O
+X-Authority-Analysis: v=2.4 cv=KtlN2XWN c=1 sm=1 tr=0 ts=681499f0 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=CDNnaGQRe6Xf55pPQM8A:9 a=CjuIK1q_8ugA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-ORIG-GUID: 1VDBb2fYPIlwFYjyaHPXuAPYXK6QNS5O
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA3OSBTYWx0ZWRfX3twsedDbGPlu dbK+2LmDWOPI6prVxYbFlNrnk7K4jPcwHhJFO1v6smxk4bvdSkIyM+xTugXQyk050DzCVuNzQqA h+kowZZXGVXRYOTOw4tIQDRu0XSvS6wydlzqI8yks7iVGPUiOI1frg19XmZg7kH60ZGre31crLF
+ iLniEjsbqO7Ux/6mrnP+sMqJxYvmMLFTkHgjrVzqCxYCxj1G8yY2kQjVt2y0kTp679VQNqunGHk G9KxqqQ6WgDZYkt7XA3deJ90HsbaTidhDBCgQf3fHrItaJl/8yoFML52muh4jXxB44s2+iGCM1J B/Uz+7sBmU5jJ4lR+dg70oDw/4J7olDOWSYdajJqJpXwr7IH4s/uPLMsO7YFvS43WLgH8sSo+Ew
+ eDEoRZehO+uEvIRSTTMT3XiptaNlzNsETZb3i9PoHc5Qg8zy0maxF9ZRynWaZeRRcZyULCwA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=772 spamscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020079
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Apr 30, 2025 at 01:09:31PM -0700, Abhinav Kumar wrote:
+> 
+> 
+> On 4/13/2025 9:32 AM, Dmitry Baryshkov wrote:
+> > If the Adreno device is used in a headless mode, there is no need to
+> > build all KMS components. Build corresponding parts conditionally, only
+> > selecting them if modeset support is actually required.
+> > 
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> > ---
+> >   drivers/gpu/drm/msm/Kconfig       | 14 ++++++
+> >   drivers/gpu/drm/msm/Makefile      | 16 +++----
+> >   drivers/gpu/drm/msm/dp/dp_debug.c |  4 ++
+> >   drivers/gpu/drm/msm/msm_debugfs.c | 92 ++++++++++++++++++++++-----------------
+> >   drivers/gpu/drm/msm/msm_drv.h     |  7 ++-
+> >   drivers/gpu/drm/msm/msm_kms.h     | 23 ++++++++++
+> >   6 files changed, 108 insertions(+), 48 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+> > index a65077855201746c37ee742364b61116565f3794..5f4d3f050c1fde71c405a1ebf516f4f5a396cfc4 100644
+> > --- a/drivers/gpu/drm/msm/msm_drv.h
+> > +++ b/drivers/gpu/drm/msm/msm_drv.h
+> > @@ -88,6 +88,7 @@ struct msm_drm_private {
+> >   	/* subordinate devices, if present: */
+> >   	struct platform_device *gpu_pdev;
+> > +#ifdef CONFIG_DRM_MSM_KMS
+> >   	/* possibly this should be in the kms component, but it is
+> >   	 * shared by both mdp4 and mdp5..
+> >   	 */
+> 
+> As the comment says, I am also thinking that this should be part of msm_kms
+> struct, to avoid ifdefs. I didnt follow the second half of the comment that
+> this is shared by both mdp4/mdp5. Why does that prevent it from being in the
+> kms component?
 
-This driver does not use any symbols from gpiolib-of.c. There's no
-reason for it to select OF_GPIO directly. This addresses a kismet issue
-reported by the build bot.
+Indeed, there are no such limitations nowadays.
 
-Fixes: 8e86af65f39d ("pinctrl: at91: allow building the module with COMPILE_TEST=y")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505010447.kUlI61vt-lkp@intel.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index db84d80b7e7d3..33db9104df178 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -107,7 +107,6 @@ config PINCTRL_AT91
- 	select PINMUX
- 	select PINCONF
- 	select GPIOLIB
--	select OF_GPIO
- 	select GPIOLIB_IRQCHIP
- 	help
- 	  Say Y here to enable the at91 pinctrl driver
 -- 
-2.45.2
-
+With best wishes
+Dmitry
