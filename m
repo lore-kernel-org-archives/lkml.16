@@ -1,113 +1,252 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C0920F079
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D924D2153DA;
+	Fri,  2 May 2025 21:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222709; cv=none; b=mwdcil8PHvsm4ARP3q4C6ac0Twv3tJdkyXxsxhMMB1jFSBV7h1Hk4kON70w3xARgaVYMuAM2tvCuymLW7ttH06dcYGhTkpgNbqer73Y7KBk8xKNgKBV3MpEX1ic4cB8xIOUFlvwkpXE5+i3PJIvnYpVLnPdPbPS1/6djRheNaCo=
+	t=1746222713; cv=none; b=osVcbt7VM1fDkm28Y5lx7YgMHUwuRFFSjK0np09KwtQoWgBBjHH9s20CR1j8dKhDaWQyZMAUDNafkZm6RdddSYxa+bPseabnTyZHe9a29S3HM8gP+X1bvZjkmRunrm0v+FHHRJT+0TuPRg54V5Rj3yzDgGjG8vNNVNmpAr62g6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222709; c=relaxed/simple;
-	bh=cxIvd5OE8zvjpL5lkuZvXfEwGqMAz1/ZxLm947jF3lc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hUxC/TIX5N2mSQRxI4DWdFIpTTSlUeUIIOtRqI+dhdtAsYm1L42jWR0g8E4XRJRFZLtSEfhsEv4FzEPbhqyHLHTyCo+qyQWbJsflIARSCtaC7i/juSe0ZZ3tJVtLDUweZtcxKxKlFW3DJUwbzgRoCxMjaPQl/IAPpLCh0efGA/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kIbEv27K; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746222713; c=relaxed/simple;
+	bh=1ROB2ECqCRMXxG3uU2grTJzFUCgEFG5F5Pl5x/9OCXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XNHjudJkNTi0nn6oA5cf3hn6HLyJ+xNO6mRdabEXSXnJ18kzFMjMvktcQUu3c7LgGsYG4tlrEnh7PzWCYoy9VhVfQbZ343By85PevNAgsF3WS2peWN7VA3VCTXnpvaU8X0ObRo5LTsqYouC6S4b9harrMZluCkgg/b1ZrnUvB9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzkTLYHI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kIbEv27K"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so3661703a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746222707; x=1746827507; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqA+OjYWd50BoxBzqsGWFpZpdamv6joRxqjx+f01kFA=;
-        b=kIbEv27KPO83ZtzzUlQkxrD+Lub46YSnTqTBxtvDN5jarttWkxJqxsPX4DveedZK8Z
-         rn1Zmz29fxWgzevQ/v+YHbhFlxNpAPCdQl8Dvq06T1MdaPerDd9+MGH0Qg+DCpzmK0Q9
-         U8UZM4n3O4K/sKWfgONXWgGqk/u8BgSAc/A0U2f/1HOupUhIYaL4tJy+lHZTjIFQz0Zg
-         xcm8UxA/laS/djBPkI0dVTGeB9H/rp4ZZ0nOJ3sFmHupPTkajmFjlIY1GR0pxYC+3eOt
-         MlW3t+0SNVDsZnbEPwboXL2VAa9qWPLUzuR4+9NsfVLo9Vj2wPr4vx+ekYgRNYiewQ3t
-         J3xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746222707; x=1746827507;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqA+OjYWd50BoxBzqsGWFpZpdamv6joRxqjx+f01kFA=;
-        b=P5VXB+9lNqOwBs3n9j6QHcoQSAVN8qkHRl4W2p+58n17LODtt1Jg0W4W+vqZpwcPeL
-         lj0BrMV7pkhBwyaOygpt/GoQxuijdfQeU2l6moaJvjBKlfjLoi8EtOPvFORdc5kaWbiU
-         55p84UH1tEVq1yLcoc7ZgURQRrg1rQMA71uQbJKd4vAO/mTBEH083ku1EToZ1zn+Xx8d
-         K+iSV1b38y7M6DDfVlgC0F1AQa4vuuJu7++wmYaVsCVOHhoG4d6bkAweKNHQmk++7uwO
-         EoORt6ef0RbCo60QLnmNJ1RH2l05SyIkKYXhCj53h6/9CWJUocBzP7g8UaAEYYBviyJr
-         PqFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpt70phE3ZHiW79wvuVKEpcjZor27aCEDjcW8VhvYalPCbhDBotJlAh71J+SJ5D+0qNqcF27aoXZ8pF8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBr6WVpALFIYXImmR3A/a1UBliFiWwt5crYsZGk2uC+yFoSjpH
-	BAYKbI1IJqOkVIENOX3DnMS9rO12xcF4gxROuas4cJBxNDcULPTJ6Kl5IxCQznVhw6CohDPLnQC
-	hMA==
-X-Google-Smtp-Source: AGHT+IF7GVKpEPpszl3Lnl1tx1yBLORLBZNrTCEOJ/q8W/bFUFsYqv0Z3klOw9bVvvU4wrEO3W0JSS7J6lc=
-X-Received: from pjbsc16.prod.google.com ([2002:a17:90b:5110:b0:2ff:5df6:7e03])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e183:b0:2ff:6ac2:c5a5
- with SMTP id 98e67ed59e1d1-30a5aeb6e06mr1083512a91.26.1746222707171; Fri, 02
- May 2025 14:51:47 -0700 (PDT)
-Date: Fri,  2 May 2025 14:50:57 -0700
-In-Reply-To: <20250305230000.231025-1-prsampat@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzkTLYHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B17C4CEED;
+	Fri,  2 May 2025 21:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746222712;
+	bh=1ROB2ECqCRMXxG3uU2grTJzFUCgEFG5F5Pl5x/9OCXQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GzkTLYHIlDTRDuzSCnMkf9TZ4FjHbGasKauKRDGMDCDs8lidZ4exNJnYZCZKocCBT
+	 WrP/TRRpCHeB4WY1roIYZw4/LrDM3k9iW8qn65hNKq2Ui7hTk1sRsRQaLnCchUo3KD
+	 EYLWJRzJEbc6Gu38ELyMiZzBVsHJEUBe5GDaFVWJZVsGJEWX4+f9EhNDNhMNwzgSVS
+	 JZAHeRHipJXZ+iol9DUO+6Q3tNTvWTP2LbuwyOPtvJyIuHcP6bxG/FCLWZ0++hbc2S
+	 M/sXaadcXQL8RBUMKne/agJVYy9EzyrxjvB4ThFGAmRAikScgGbReTvcP7IUtNPFkG
+	 U8lcAPsIjcv3A==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH 1/7] rust: kunit: support KUnit-mapped `assert!` macros in `#[test]`s
+Date: Fri,  2 May 2025 23:51:26 +0200
+Message-ID: <20250502215133.1923676-2-ojeda@kernel.org>
+In-Reply-To: <20250502215133.1923676-1-ojeda@kernel.org>
+References: <20250502215133.1923676-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250305230000.231025-1-prsampat@amd.com>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <174622216534.881262.8086472919667553138.b4-ty@google.com>
-Subject: Re: [PATCH v8 00/10] Basic SEV-SNP Selftests
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	"Pratik R. Sampat" <prsampat@amd.com>
-Cc: pbonzini@redhat.com, thomas.lendacky@amd.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, shuah@kernel.org, 
-	pgonda@google.com, ashish.kalra@amd.com, nikunj@amd.com, pankaj.gupta@amd.com, 
-	michael.roth@amd.com, sraithal@amd.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 05 Mar 2025 16:59:50 -0600, Pratik R. Sampat wrote:
-> This patch series extends the sev_init2 and the sev_smoke test to
-> exercise the SEV-SNP VM launch workflow.
-> 
-> Primarily, it introduces the architectural defines, its support in the
-> SEV library and extends the tests to interact with the SEV-SNP ioctl()
-> wrappers.
-> 
-> [...]
+The KUnit `#[test]` support that landed recently is very basic and does
+not map the `assert*!` macros into KUnit like the doctests do, so they
+panic at the moment.
 
-Applied 2-9 to kvm-x86 selftests.  AIUI, the KVM side of things should already
-be fixed.  If KVM isn't fixed, I want to take that discussion/patch to a
-separate thread.
+Thus implement the custom mapping in a similar way to doctests, reusing
+the infrastructure there.
 
-I made minor changes along the way (some details in the commits' []), please
-holler if you disagree with the end result.
+In Rust 1.88.0, the `file()` method in `Span` may be stable [1]. However,
+it was changed recently (from `SourceFile`), so we need to do something
+different in previous versions. Thus create a helper for it and use it
+to get the path.
 
-[01/10] KVM: SEV: Disable SEV-SNP support on initialization failure
-        (no commit info)
-[02/10] KVM: selftests: SEV-SNP test for KVM_SEV_INIT2
-        https://github.com/kvm-x86/linux/commit/68ed692e3954
-[03/10] KVM: selftests: Add vmgexit helper
-        https://github.com/kvm-x86/linux/commit/c4e1a848d721
-[04/10] KVM: selftests: Add SMT control state helper
-        https://github.com/kvm-x86/linux/commit/acf064345018
-[05/10] KVM: selftests: Replace assert() with TEST_ASSERT_EQ()
-        https://github.com/kvm-x86/linux/commit/f694f30e81c4
-[06/10] KVM: selftests: Introduce SEV VM type check
-        https://github.com/kvm-x86/linux/commit/4a4e1e8e92eb
-[07/10] KVM: selftests: Add library support for interacting with SNP
-        https://github.com/kvm-x86/linux/commit/3bf3e0a52123
-[08/10] KVM: selftests: Force GUEST_MEMFD flag for SNP VM type
-        https://github.com/kvm-x86/linux/commit/b73a30cd9caa
-[09/10] KVM: selftests: Abstractions for SEV to decouple policy from type
-        https://github.com/kvm-x86/linux/commit/a5d55f783fb7
-[10/10] KVM: selftests: Add a basic SEV-SNP smoke test
-        https://github.com/kvm-x86/linux/commit/ada014f5fc67
+With this, a failing test suite like:
 
---
-https://github.com/kvm-x86/linux/tree/next
+    #[kunit_tests(my_test_suite)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn my_first_test() {
+            assert_eq!(42, 43);
+        }
+
+        #[test]
+        fn my_second_test() {
+            assert!(42 >= 43);
+        }
+    }
+
+will properly map back to KUnit, printing something like:
+
+    [    1.924325]     KTAP version 1
+    [    1.924421]     # Subtest: my_test_suite
+    [    1.924506]     # speed: normal
+    [    1.924525]     1..2
+    [    1.926385]     # my_first_test: ASSERTION FAILED at rust/kernel/lib.rs:251
+    [    1.926385]     Expected 42 == 43 to be true, but is false
+    [    1.928026]     # my_first_test.speed: normal
+    [    1.928075]     not ok 1 my_first_test
+    [    1.928723]     # my_second_test: ASSERTION FAILED at rust/kernel/lib.rs:256
+    [    1.928723]     Expected 42 >= 43 to be true, but is false
+    [    1.929834]     # my_second_test.speed: normal
+    [    1.929868]     not ok 2 my_second_test
+    [    1.930032] # my_test_suite: pass:0 fail:2 skip:0 total:2
+    [    1.930153] # Totals: pass:0 fail:2 skip:0 total
+
+Link: https://github.com/rust-lang/rust/pull/140514 [1]
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ init/Kconfig           |  3 +++
+ rust/Makefile          |  3 ++-
+ rust/kernel/kunit.rs   |  1 -
+ rust/macros/helpers.rs | 16 ++++++++++++++++
+ rust/macros/kunit.rs   | 28 +++++++++++++++++++++++++++-
+ rust/macros/lib.rs     |  4 ++++
+ 6 files changed, 52 insertions(+), 3 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index 63f5974b9fa6..5f442c64c47b 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -140,6 +140,9 @@ config LD_CAN_USE_KEEP_IN_OVERLAY
+ config RUSTC_HAS_COERCE_POINTEE
+ 	def_bool RUSTC_VERSION >= 108400
+ 
++config RUSTC_HAS_SPAN_FILE
++	def_bool RUSTC_VERSION >= 108800
++
+ config PAHOLE_VERSION
+ 	int
+ 	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..075b38a24997 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -402,7 +402,8 @@ quiet_cmd_rustc_procmacro = $(RUSTC_OR_CLIPPY_QUIET) P $@
+ 		-Clink-args='$(call escsq,$(KBUILD_PROCMACROLDFLAGS))' \
+ 		--emit=dep-info=$(depfile) --emit=link=$@ --extern proc_macro \
+ 		--crate-type proc-macro \
+-		--crate-name $(patsubst lib%.$(libmacros_extension),%,$(notdir $@)) $<
++		--crate-name $(patsubst lib%.$(libmacros_extension),%,$(notdir $@)) \
++		@$(objtree)/include/generated/rustc_cfg $<
+ 
+ # Procedural macros can only be used with the `rustc` that compiled it.
+ $(obj)/$(libmacros_name): $(src)/macros/lib.rs FORCE
+diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+index 1604fb6a5b1b..2659895d4c5d 100644
+--- a/rust/kernel/kunit.rs
++++ b/rust/kernel/kunit.rs
+@@ -323,7 +323,6 @@ mod tests {
+ 
+     #[test]
+     fn rust_test_kunit_example_test() {
+-        #![expect(clippy::eq_op)]
+         assert_eq!(1 + 1, 2);
+     }
+ 
+diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+index a3ee27e29a6f..57c3b0f0c194 100644
+--- a/rust/macros/helpers.rs
++++ b/rust/macros/helpers.rs
+@@ -86,3 +86,19 @@ pub(crate) fn function_name(input: TokenStream) -> Option<Ident> {
+     }
+     None
+ }
++
++pub(crate) fn file() -> String {
++    #[cfg(not(CONFIG_RUSTC_HAS_SPAN_FILE))]
++    {
++        proc_macro::Span::call_site()
++            .source_file()
++            .path()
++            .to_string_lossy()
++            .into_owned()
++    }
++
++    #[cfg(CONFIG_RUSTC_HAS_SPAN_FILE)]
++    {
++        proc_macro::Span::call_site().file()
++    }
++}
+diff --git a/rust/macros/kunit.rs b/rust/macros/kunit.rs
+index 4f553ecf40c0..eb4f2afdbe43 100644
+--- a/rust/macros/kunit.rs
++++ b/rust/macros/kunit.rs
+@@ -101,6 +101,8 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
+     // ```
+     let mut kunit_macros = "".to_owned();
+     let mut test_cases = "".to_owned();
++    let mut assert_macros = "".to_owned();
++    let path = crate::helpers::file();
+     for test in &tests {
+         let kunit_wrapper_fn_name = format!("kunit_rust_wrapper_{}", test);
+         let kunit_wrapper = format!(
+@@ -114,6 +116,27 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
+             test, kunit_wrapper_fn_name
+         )
+         .unwrap();
++        writeln!(
++            assert_macros,
++            r#"
++/// Overrides the usual [`assert!`] macro with one that calls KUnit instead.
++#[allow(unused)]
++macro_rules! assert {{
++    ($cond:expr $(,)?) => {{{{
++        kernel::kunit_assert!("{test}", "{path}", 0, $cond);
++    }}}}
++}}
++
++/// Overrides the usual [`assert_eq!`] macro with one that calls KUnit instead.
++#[allow(unused)]
++macro_rules! assert_eq {{
++    ($left:expr, $right:expr $(,)?) => {{{{
++        kernel::kunit_assert_eq!("{test}", "{path}", 0, $left, $right);
++    }}}}
++}}
++        "#
++        )
++        .unwrap();
+     }
+ 
+     writeln!(kunit_macros).unwrap();
+@@ -152,7 +175,10 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
+         }
+     }
+ 
+-    let mut new_body = TokenStream::from_iter(new_body);
++    let body = new_body;
++    let mut new_body = TokenStream::new();
++    new_body.extend::<TokenStream>(assert_macros.parse().unwrap());
++    new_body.extend(body);
+     new_body.extend::<TokenStream>(kunit_macros.parse().unwrap());
+ 
+     tokens.push(TokenTree::Group(Group::new(Delimiter::Brace, new_body)));
+diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+index 9acaa68c974e..8bd7906276be 100644
+--- a/rust/macros/lib.rs
++++ b/rust/macros/lib.rs
+@@ -6,6 +6,10 @@
+ // and thus add a dependency on `include/config/RUSTC_VERSION_TEXT`, which is
+ // touched by Kconfig when the version string from the compiler changes.
+ 
++// TODO: check that when Rust 1.88.0 is released, this would be enough:
++// #![cfg_attr(not(CONFIG_RUSTC_HAS_SPAN_FILE), feature(proc_macro_span))]
++#![feature(proc_macro_span)]
++
+ #[macro_use]
+ mod quote;
+ mod concat_idents;
+-- 
+2.49.0
+
