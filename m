@@ -1,100 +1,98 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail-106111.protonmail.ch (mail-106111.protonmail.ch [79.135.106.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F96CAD24;
-	Fri,  2 May 2025 09:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038D422F38E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746178635; cv=none; b=ndauSUtYuqfzYv7rDpacsTwhmQAfWuKGOPHx4wiQk5S2frmvrePElzYt7Drc4c+e/F3RnpIMQr4YwIU+tza8yDdKPd3I0HUkgzoawNhebMxqQBG/ixSrthraafblxD+P/xeWJhd6/D+bh6e+mnKrmTBrBeU6weJ67XO01GM/NF0=
+	t=1746178658; cv=none; b=CoOSsvVwQG6INlwgd9bWWeSLliKd9/DXwUR3ZgZEuSNEQBnfRZKz1psbq5jmkhHMuEU4Da+k1AHC8FCYgivOtinNtUfxdU+SnRle6SiZc7FSTKXVFQLigmRVrh2qtccZjWC5bCTleGtci9Tep6I6GhE/dLV316QBRDD8xcqbqSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746178635; c=relaxed/simple;
-	bh=jovtptrEGeHU8Uh+ORr8rtGF8VlX1JF4VpT6y77Xhd0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sLkADyd6Wh1S8/bHNdjTMxXb1zOzm3hACNEKTjl0I7pSR47iBFqX6QvP2Tj/G7CEyL/Siz3fi0ppfV+RwI6xKgGyIhHC577Rvy94fTl1RDtdl2G8YfLXN07hLWOAi2vhygFDMtnqaQu3Ie89+GFwYKjbGUzVdO1fWQ/AuGMNmk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=d7GiNJH+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746178658; c=relaxed/simple;
+	bh=RnvUeWPOArLWpl9zw08AIZIflPF7IKAVOL/3HWjfMSA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VvvbKoYoxtdv/rFSWEc2DBta6owViRMv+8MGi/d2Lr/Bjq+j+TyVpVXIpUEis1cGAhdxXVwICBxJLEDPfnXkm88qvZFRtj1vyDzE+XsNNk2STOL179A1ftrY0XUZkIH9FfTOrr9gdT8e/NvLuEJte+Uce15pQPbALmwkrcUQE4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=mvFXd2PU; arc=none smtp.client-ip=79.135.106.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d7GiNJH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746178629;
-	bh=0jThxcg43rzZCPnIqcWLWu5e6kqgevnJSlPyibcdspo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=d7GiNJH+0ltD52uDGt8zuL0l92v+8U1R0gujWuyeeXtuSAe/3gLMWheTAohfneLTy
-	 frJbReQG782DvVACw2ogrDhra6BdF4BoAy2AqwTOPurXBcCOy62ShXBK4IhDRk539D
-	 ywZwbt0S6Sw9aiM5tf2moEyuNbkYvE6gFYn70QwJRj8DdTJsmfgx5KTYTHKOVHIBYd
-	 ufAhhJht5zhs7Ch5i0ndfWhEy1Xqat/5zNPnxqSeOBmXIYuMHnyD6b6W8mKUliWGFV
-	 XZsp4akpYqF5ZP3JOr+0zc1JuyDg5hieiSY0ZTIU2H412IKlwnlxzdgV/LPxbAStkk
-	 CDi8DYkGU+NCA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zpm6F2Dhkz4x3S;
-	Fri,  2 May 2025 19:37:08 +1000 (AEST)
-Date: Fri, 2 May 2025 19:37:08 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the scmi tree
-Message-ID: <20250502193708.62e01d11@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="mvFXd2PU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1746178652; x=1746437852;
+	bh=YbsmpdpA4diK8KKbR9g2hcNSmpPY3qM16EXc9X+UR0s=;
+	h=From:Date:Subject:Message-Id:To:Cc:From:To:Cc:Date:Subject:
+	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector:List-Unsubscribe:
+	 List-Unsubscribe-Post;
+	b=mvFXd2PU34bOMv6y9+I0qpxVVFj8mx6XMfM3g0m9A1d+mfCfEqsjLaaN+UqE5fLdp
+	 KHaHvHPu1yATA9ifmy27c8sTlTupdfjVZAFWOorBqPcpWx8yPyrJSI1dG0g2UFCQ6i
+	 yhscKDcXLZXKE/3+mSPp557kDDu+Zi1Vj5s0bM1DyIL0ra/njgL0e68AFTq4aXuWWP
+	 f+TJ2fkZ9KqLn3C5XvkYaqx3SIUOrFPLCTSXp1hGef44QxrJLX4X6ZF86xmAv8av5L
+	 mScogeV/mPyed6H2qn9d2m53rWfaBWnZUkUBaAAgzQpXDtLVuBXEldX+JitfSEwDHk
+	 zz4FbPnQg3Y8w==
+From: Sean Nyekjaer <sean@geanix.com>
+Date: Fri, 02 May 2025 11:37:26 +0200
+Subject: [PATCH] iio: imu: inv_icm42600: Fix temperature calculation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/mO5vVHKwjvBk+/rtpbIR+0Z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250502-imu-v1-1-129b8391a4e3@geanix.com>
+X-B4-Tracking: v=1; b=H4sIAFWSFGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwMj3czcUt3UlGSDtMREs5TEVEsloMqCotS0zAqwKdGxtbUAPygjg1U
+ AAAA=
+X-Change-ID: 20250502-imu-edc0faa6dae9
+To: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+Cc: Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>
+X-Mailer: b4 0.14.2
 
---Sig_/mO5vVHKwjvBk+/rtpbIR+0Z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From the documentation:
+"offset to be added to <type>[Y]_raw prior toscaling by <type>[Y]_scale"
+Offset should be applied before multiplying scale, so divide offset by
+scale to make this correct.
 
-Hi all,
+Fixes: bc3eb0207fb5 ("iio: imu: inv_icm42600: add temperature sensor support")
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+---
+ drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-After merging the scmi tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
+index 213cce1c31110e669e7191c8b42c9524c0d3e5db..91f0f381082bda3dbb95dfe1a38adcdc4eaf5419 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_temp.c
+@@ -67,16 +67,18 @@ int inv_icm42600_temp_read_raw(struct iio_dev *indio_dev,
+ 		return IIO_VAL_INT;
+ 	/*
+ 	 * T°C = (temp / 132.48) + 25
+-	 * Tm°C = 1000 * ((temp * 100 / 13248) + 25)
++	 * Tm°C = 1000 * ((temp / 132.48) + 25)
++	 * Tm°C = 7.548309 * temp + 25000
++	 * Tm°C = (temp + 3312) * 7.548309
+ 	 * scale: 100000 / 13248 ~= 7.548309
+-	 * offset: 25000
++	 * offset: 3312
+ 	 */
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 7;
+ 		*val2 = 548309;
+ 		return IIO_VAL_INT_PLUS_MICRO;
+ 	case IIO_CHAN_INFO_OFFSET:
+-		*val = 25000;
++		*val = 3312;
+ 		return IIO_VAL_INT;
+ 	default:
+ 		return -EINVAL;
 
-drivers/firmware/arm_scmi/quirks.c: In function 'scmi_quirk_signature':
-drivers/firmware/arm_scmi/quirks.c:208:24: error: implicit declaration of f=
-unction 'partial_name_hash' [-Wimplicit-function-declaration]
-  208 |                 hash =3D partial_name_hash(tolower(*p++), hash);
-      |                        ^~~~~~~~~~~~~~~~~
-drivers/firmware/arm_scmi/quirks.c:209:18: error: implicit declaration of f=
-unction 'end_name_hash' [-Wimplicit-function-declaration]
-  209 |         hash32 =3D end_name_hash(hash);
-      |                  ^~~~~~~~~~~~~
-drivers/firmware/arm_scmi/quirks.c:211:9: error: implicit declaration of fu=
-nction 'kfree' [-Wimplicit-function-declaration]
-  211 |         kfree(signature);
-      |         ^~~~~
+---
+base-commit: 609bc31eca06c7408e6860d8b46311ebe45c1fef
+change-id: 20250502-imu-edc0faa6dae9
 
-Caused by commit
+Best regards,
+-- 
+Sean Nyekjaer <sean@geanix.com>
 
-  81ce8d705821 ("firmware: arm_scmi: Add common framework to handle firmwar=
-e quirks")
-
-I have disabled CONFIG_ARM_SCMI_QUIRKS for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/mO5vVHKwjvBk+/rtpbIR+0Z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgUkkQACgkQAVBC80lX
-0Gy+BAgAhTaaSwWaWi82VD3pc+h9qgBRr2dlqAtkR2ZvflkvS4guTVyGd+WWsqSs
-H5QwgJ8EKaw6lWO2dcJVImaEwpGEiaxEwTY/ciRYe3hsemWdxHEbpfxPM+e+et92
-XFYDxTAZ/ALnEL93rXsHpcmoxpfrTMkIFYxUNwDsheg28Z8lkPqiKhlrfsxQitQW
-nnnB2/tSGw419WRuEy5GFTk2nqc63GsybkPJQxTqprcT878wXSsIns5SRg9QbtuQ
-3WfqMYsbISR8PYa40hcSjcBQUIFboFpj6JHD2mfDl8FfB00vg5DUIee9j80Jvwoj
-EuJgG7Uwidebm5P8MmNIlaIpwSEwbA==
-=MXvZ
------END PGP SIGNATURE-----
-
---Sig_/mO5vVHKwjvBk+/rtpbIR+0Z--
