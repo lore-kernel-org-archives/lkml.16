@@ -1,209 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBACA38F91;
-	Fri,  2 May 2025 04:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746161482; cv=fail; b=XcwPekjCNu21lRFUGpSEJ/ysz4RlUxsU4hbBBlxsQbpiV3/QgqI6cRQjVocgu1w/GXLFfMPVpHhX9ANrKtG+xuPbNYC0ajRBc/EHDzrXE9NR7faD0WOWnRzNdxwEMDDYLcKAmUaLn6N75ZCXVuB/fAz43ylubc1kc72YDhUACL4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746161482; c=relaxed/simple;
-	bh=8oT7nK9Z0rcIAlSyRSiaPloqkBtCABiavJZlExOzlUk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uB3BwGMvPpvvVT0r5VIbZEkdRcrHjPBzdTfomL2MwB2i9PIwlhy84lqX++nU7PZop7C7HpmfXaIlQHL77is6xULvv094DBm4wSlIFgBT9xS7L3YgaekfNBRwRu0aRcB6rLvilEZC+7+G2s2ICr0R0lBVFKCfMDJVdWMJB9H0MQM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+pCEfNp; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089C838F91
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746161548; cv=none; b=OZFkI3AI/d4aWAB983Jm2fSEcEhN8e7HFFWPvY8wK1FrgkquFEJU/svNU8iauo0rE8ZBv77RbKc6kjp+RiAGQJRfcGPdSWFQdcoTHYQq3y6obNY7gXxhEXLzhALLWZ66Z/m8Gmcdlb8ONElmV1P7bw7Av4jTqADjLR4EkuhzfqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746161548; c=relaxed/simple;
+	bh=OTi7ApWMtPFOuHRDQfUrldYEWzBkLwCGcJMVwp68PQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=km91qvl36bk8U5Rb8fo30gnmVskHFujsyaVBO6RtqCvId3jDaYpMMBk460OUlXN5uWnejSY+y9R04+SzME6cOMTvic5pGoNDFDH2nZgoQiy2JNkQ92stAuQVX43XttLoL0Mbh9d+zzVCcv80bg7qynOgcfaiR3Qo59BdXoosK/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=lU2i+a1n; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+pCEfNp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746161481; x=1777697481;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=8oT7nK9Z0rcIAlSyRSiaPloqkBtCABiavJZlExOzlUk=;
-  b=G+pCEfNpCGZxm8obRQDR4auBGpFcTxnUpOalbwPv66OG3VfP06yqHceg
-   BgqkJ79HJDUImMwPCsvH+Xpt6S5M6QGe37dLGegeFrqyj82XopymHGOsi
-   uzJfpRaqwvu5E0LlJa27nwJewiBpMkKFwU5u5He3PtHdFcx12vwX0LX6O
-   7wSzjZYzT8LSegOq+Fo5BZ+fNqX1QUS3u1FOUKqerlprJmjBFsWxKi0kI
-   RwyBNxw8NogKVd5M7Eqei/+ef6nnS58iQ6qT8nMTMRP7hJ0gMQucwKTin
-   +5W6q0YKnV+c9NGViyrpSeQnOREP8h+lSNSWawvc03uZeQO3GZG8NrUwj
-   A==;
-X-CSE-ConnectionGUID: xy9JOm/sQgaSReGbO4SUYQ==
-X-CSE-MsgGUID: FsS7glE4SUWEjma6SuYZog==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58468764"
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="58468764"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 21:51:19 -0700
-X-CSE-ConnectionGUID: OecSC39ZRNKU+3zprCLAzw==
-X-CSE-MsgGUID: W0x04yBFQn+92LTSRr6cYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="138576880"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 21:51:17 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 1 May 2025 21:51:16 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 21:51:16 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 1 May 2025 21:51:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dEEDKdSJFMFtV/Dk3ldOKYjnfrIc3F4MlBulfcPnAXPApy40Q+rCdGh/l+OooW3N59rhImleo/3qNmwdlQObM9mwBKTJNuDHhUe/abgVET9Y4wt+Yq4jh5z0yjx1yyPpG64qBTLapewlziDVUo43w/j8xHpW4Mm9ml5aw1cGw34mczZYeE0pZTbK09zr5Oo9CFRqTc9fVZIaoErB6JjKlR9pGCpDFgz7OALSge4HtH7mKAKQ9MRSoaxQuQhkT41NVtziFpJZFdUYbOSha7ZGOT+PqNf0cCsROBNtEfY1sLh7PjS1IcBr9YJHVndhxaMRDky+obY+XNv6SwHRg7xZiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TLUd2R7ud3WNtpnGO+KVRuMpYVPxvUU/noML+cQA4qs=;
- b=iCnewgivuDkeCoTY3StEFL89OutNmfMINwCmfWr2WqJQp8fmzylCFeOsUibNffdQDiQbsSc/Cgofk3jUdNR/eliegxgq2ZblkCNAQ5UodbyqLersloPYT8prdHZ2evW/PMLEx4hyxF7UxPeR3zGYy0ek+iiJY3HNdzwPaks9Xwn9BGMKfmnKVg4bWLaLxAaaqPmZAsbiT2mlB2D6t/zfs1iRpppUs9ozp+D+6JVw0AdAhcKom+Aj5iIgNnpK7CmfyGOWfgfN4RL6Gfyx5Uj29rcYo1GxO2aqjR+kjEUSV49Rwe3jK9nL54ehRN2DPWA7MF0tmJcHwv1zUZan0VNftg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
- by SA3PR11MB7414.namprd11.prod.outlook.com (2603:10b6:806:31c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Fri, 2 May
- 2025 04:50:45 +0000
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332%4]) with mapi id 15.20.8699.012; Fri, 2 May 2025
- 04:50:45 +0000
-Date: Thu, 1 May 2025 21:52:08 -0700
-From: Matthew Brost <matthew.brost@intel.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-CC: Kees Cook <kees@kernel.org>, Thomas =?iso-8859-1?Q?Hellstr=F6m?=
-	<thomas.hellstrom@linux.intel.com>, Christian Koenig
-	<christian.koenig@amd.com>, Somalapuram Amaranath
-	<Amaranath.Somalapuram@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
-	<matthew.auld@intel.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-Message-ID: <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com>
-References: <20250502002437.it.851-kees@kernel.org>
- <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
- <20250502023447.GV2023217@ZenIV>
- <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
- <20250502043149.GW2023217@ZenIV>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250502043149.GW2023217@ZenIV>
-X-ClientProxiedBy: SJ0PR03CA0273.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::8) To PH7PR11MB6522.namprd11.prod.outlook.com
- (2603:10b6:510:212::12)
+	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="lU2i+a1n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
+	s=sorc2401; t=1746161360;
+	bh=OTi7ApWMtPFOuHRDQfUrldYEWzBkLwCGcJMVwp68PQ8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lU2i+a1nWXkmo3BYQ6WaTlCCBf1oj6HT1tgYzvRoJcCgkxD6umtFzNIjN1HSz/iV7
+	 mGjEE69Mkf+POqG+SNRKLv3yvfb6q1/Mtqxdhl15Y/Tzf9wUVsfjDZjw5FhZQl0ZfQ
+	 L7F45Wt1U6r0goeYC+Xf4x8DtiDUKFoXgRQBm0sY=
+X-QQ-mid: zesmtpip3t1746161358tf79394f1
+X-QQ-Originating-IP: hdQxLLQ+GVlQDxNtMWIJsoe5jeqhquoI7ZB2ZOBN+Io=
+Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 02 May 2025 12:49:16 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 12450518463310796809
+EX-QQ-RecipientCnt: 6
+From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
+To: Dave Kleikamp <shaggy@kernel.org>
+CC: Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>,
+	jfs-discussion <jfs-discussion@lists.sourceforge.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>
+Subject: BUG:read_message failed in LogSyncRelease
+Thread-Topic: BUG:read_message failed in LogSyncRelease
+Thread-Index: AQHbuxzN08Vq1io1BUKiwvicApeecg==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Fri, 2 May 2025 04:49:16 +0000
+Message-ID:
+	<TYSPR06MB7158A2235E4058D3E32818A5F68D2@TYSPR06MB7158.apcprd06.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SA3PR11MB7414:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36f446a9-1ff2-4238-acc1-08dd8934e616
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?453DdmFUfnW0H84hf2CpdSFVM6lwIpDkr7SUchXzBjusM/+abA2k3H+hV8yy?=
- =?us-ascii?Q?yveA+GaJQS91SQUyGS+Ee0Z2CniaPJT90BcR/U7I0oJ3bEMA+JvjfiHeei9h?=
- =?us-ascii?Q?RT6vVw7QJ1eUID0y4uwAchzV8jTRoxthYAu7fAFEK5zzbbHBqpmy5sNGhEru?=
- =?us-ascii?Q?1V/W0RfQyEe/fZxL2A1mZ8f4XO1ZMt57AuHMAYkqmmtSgwbfN6S7qCuB9eY2?=
- =?us-ascii?Q?C1/U26ZidrydAtcc2hh2IJK3qOH1JONslT+gU+4xmasHxfe0Te4sF7ycpeAF?=
- =?us-ascii?Q?iiwb1iEGaGqFFRwEWduV/d7k/tZgSqk5hguznovIoazAiNuCYncnSk7eOujC?=
- =?us-ascii?Q?swBOTEAB2QTJuuI4zNu+JDzInoNiy/POOcvzCHTF1tftGj7rpE2TorJffA4k?=
- =?us-ascii?Q?Ojjle9a+sQJDSe+6SjtqsGhjJSLtvrrImplSB/6vf5r8Nz0o/KW4r5P+RgBB?=
- =?us-ascii?Q?3wJeaxpjMNa/KucDWyHl+W3zEaA7kj5oXZlr6aJHibcXK0HrbLFPxB2Vq3Xn?=
- =?us-ascii?Q?ldoaY6dBYDdI3lwKsBLWhNtWeXL6rJOCkT9sjEF0T6+W1lF4Vyy0mqnbztcB?=
- =?us-ascii?Q?RviOMToO5FE/9KaUSsy06GzbFNXS0gYFjBRBK8o95qIF2+kLuedFNa3lolgx?=
- =?us-ascii?Q?Dnphk73QsWUoSkqN14aDv7Ntwmrwr86nL6RKUcUDowR9WNKdWAEvEgr4uzEw?=
- =?us-ascii?Q?XoBaBLnV0AeevodkxU/ZJ17B982G1/sOXjzUJRN3y/SM222NL1Ppt/bgXpqG?=
- =?us-ascii?Q?rsqttJw3Ik4jJ7XiZ0s2xjeJdJQh3kDD6sZSNdSl9eK33hkmGGIitiwLjndT?=
- =?us-ascii?Q?+4WfW+hqKU/hOD/f8EnxNAFJz6BiCbDQbuZmlpk+IcMDNHcfYrctZrI0U1eh?=
- =?us-ascii?Q?bKm3lyj05/Pr6NJu/H59SlkmspLDmvGrLv2AfRHwj8kqzivopysIC727PNfL?=
- =?us-ascii?Q?tTtO5S82aQ/iwQ1D9AIAeBiwNi/PWkmvHPWmrVayF+l+pgKOm/Dx+k+nMnak?=
- =?us-ascii?Q?GbtQOy0HhHA4UIWNCsdf7hfO8GiD2VY8oQO9fHHhxvgFN8KPBrXAk21tUOrZ?=
- =?us-ascii?Q?z32Wc5TqdEFkZGr1HAn+EOEN20yEhPgB1W8qPNRwjLX3JbNki7kvVRQFKTji?=
- =?us-ascii?Q?R8DF+rYL9limIu3b1HmTt3yogqHzw+3fV9f/g/AqvzwO+pX4+I504CcPbRH7?=
- =?us-ascii?Q?Bmi5v+L9POSOETYSPZNhtUNTgVKCbEPNiT1F/K61AmwvlnTsk1dFhrmswQA1?=
- =?us-ascii?Q?G++FS5hZXN1QzLrRc6BgpcK0iLFDHnHOGHlE8yWIxcrpl503lOkVMZm6w4g+?=
- =?us-ascii?Q?4TYUe7swhgKwZZRRO+19PkAoEUppePQRYH0FG0JnEdVfqgQVLzt6emE9/Or+?=
- =?us-ascii?Q?h8GXLi78b8cDFH2HISxeXZ3CTPHD6wUxT2EFWL3g141wuLFngAogmisA8Py2?=
- =?us-ascii?Q?PabguzcIgJM=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Cknkxcd9BKi5s/jJTKVAY2+Cu0lTdzqaaZbOWwHqPUmbBfahrIJ6ow6QPa5G?=
- =?us-ascii?Q?1ADBnrmUttUCKzPLOUdWx50D6lEsaGObtY12fFbBKf4qkHD9jCODV7rmZnOY?=
- =?us-ascii?Q?f6ETFiTPvBmEOdUz7Ql7PVGsC/hTCSgqRFUXpnHP1MJstO2HqMoaictR9ry3?=
- =?us-ascii?Q?QFFDpyKdtfGM3gxK22lzk+KzyU2mVR6Ra3yR8mem9OjRd87w5HhXl1eDJL9c?=
- =?us-ascii?Q?N4k4bpeuZ6ehOqZBZx621CuCadVp/EH6EXOd3eIT5F+4alXLRVHPsdI3+r4G?=
- =?us-ascii?Q?OhhJpaybqfPQ2hMvHUgvA5OAjnPfsgfm9Vr7sQsNAP1hkg+bwtzn7oTvGr6s?=
- =?us-ascii?Q?z0N+U1YGiia7ccaX+I1cBMM4GYOyiMJFCr5jeqP/dNUZrwkim7CDpWU7CDIF?=
- =?us-ascii?Q?bDoo/MVxdLLLjiffvBxl26cZOcTkprEtbsn/VyW7Whzg8TeY2YrfJoH22seb?=
- =?us-ascii?Q?tT0MpjHC3P3Rf5FU71M6seitQjU1oCiVeeVTHwj3KrufERl8Ymc55zlk/drP?=
- =?us-ascii?Q?KybxsOP5f9oObuJOWXKD2K6UcbZzH4y+6cFoJcD+Jl0vvYanvpeWLBRy2Mjl?=
- =?us-ascii?Q?YYnhC3JcSl9Ut6F/bzkaGfXiHbCAxRl+fLEjSAIBkN61aqbVr41ykfwX3VtO?=
- =?us-ascii?Q?oFor+1M25pLwyPiqN3bTBlJjnU7CQ12WZJX987hnVyDq2dXUTXh6wkhxJJcK?=
- =?us-ascii?Q?mX4WKjjZXSQHbNIA0YfiD2hi+SGdjoHhji/i4ct1txrYBIXjbdm7+4z2pZSx?=
- =?us-ascii?Q?wtXsinPRPcfQjLSzyKQccrvC+Tn3grTFejgqFw7YhoZeo9oq+QAoF2kCoUD1?=
- =?us-ascii?Q?jzcJ0FOSd3X0E28eSzVqpmdiVSpMxTIUoYNa9toZk1dre5q9CoTh9N8JwcYX?=
- =?us-ascii?Q?J9FK3/WJk21suJR8zIqdyvfXVnlah0GLJoWXD9jimoySeneOGEh0fot7Cjg+?=
- =?us-ascii?Q?h2WkWu0HuoJcr6fBbMMbniqjlfRbhpZ7/GZSTFrCHFYCUb+eq7cRmWHQ5cZF?=
- =?us-ascii?Q?B0zxMV3gHMfcEllXNkbHj1yt2QR2N4Sljg5wZZzqa5ns5qfsh/qy3/nKoEGW?=
- =?us-ascii?Q?S2ePLEUeJKYad8CEwP7mfSojZYWSAise+6VsQjp+3a236qRBXvdNdKnNiBUX?=
- =?us-ascii?Q?VGDhR3Cs/tNpPEGKGB+y7cyTpqBLFHFnTiPTGlOsu18GdS6NVrIT7SOZIxz0?=
- =?us-ascii?Q?t499cKsRpZlBsxPYCTH3BKOZ9A0x8/dZHvW0icj5vZ3C73dY7lVwtkf2bRse?=
- =?us-ascii?Q?axZp/BC7xUsUwfVnkYNKDqO2AX0hSkevPAma0tncGlTT6D4sONJTd8IKYizj?=
- =?us-ascii?Q?2bQCpIYco42bJp8Xde2LFIPgY+kuEjEO1D2sDFcUbn3M2p0s0dJDDjNaIYp/?=
- =?us-ascii?Q?fc/Cw3/vINy/Km/k19+ywDc8m6jM+c2HqQPfj4WU/f+C3T8xPz1qH6rWgrGy?=
- =?us-ascii?Q?HDowc5N6hSyq/95PB6XN9C378+KZgt0vcVXHm0AbhiDDZxhoA2DlTcLZqOoP?=
- =?us-ascii?Q?0RlNlI+o1dxUhKNanqemer1Mc53Ze1iRYvnQMGtgVCdgoyI7q8TfMga6/693?=
- =?us-ascii?Q?8af61gzxeL3McndX3thlbsJrFyDypWCHIr04ibCIo38CbP0/UIGMGCeq5BY3?=
- =?us-ascii?Q?lQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36f446a9-1ff2-4238-acc1-08dd8934e616
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 04:50:44.9603
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6qY3iy6vV3gbAUqU/b69RAOqtFf8if+lyNxap1+XntTH33q1dTsUHsOMymzhqWKtYIkC35fF148p96S/wl1DMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7414
-X-OriginatorOrg: intel.com
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MyirvGjpKb1jhWkj0AFLoslnFQ0/aHTiJlAsblNXmjsc5flbYYrtBON/
+	KR5mdThTLLIhGD2gOdeZYF+8Pl7Ah5NlHsh1HD94SiK2XqB4fO0bgMUMFuHnjy1vbTkcISx
+	UoI4KM8W6yr/kj+2BhM+RVUX4/Ms44jREt6JJyd5SLe9t4kgrCynRdL815QWnaR9EmpegBR
+	SK7TLG0oy/PbDdV1JJmlKDBEDwG3B9Q5ZMhhZQwGfbnfGPe7hekkvgC+iUF0qj9Nu3HRzYZ
+	ckA+jVVTCwDPiQBIjQ5GAOa1XSQMSgRLZ1bv2NgsRzltZDrXNZKwp/4Kd7Mf5vonSz+BmwC
+	MsAb+OeWodA/UVXhcXz5AIMBEkKvPPEWTnxs1jkLw/I+Dis+GxiARqe/cAzfq/YQJqM1Kng
+	l7TcenAh2QzaGpsBAZFS1GefgF2zH8tjcvBC4B1FaFl3X7uUUMhzVfJ4gjZ+6rp8Vo8wDwg
+	kWiOrvYXq7rEI9voLFaWFDcr7F3kxesu1CRQPaNH13dsDT14BhvNqtxo1UvzuMXy4SoS63v
+	3OphvE/N+BUDmCmKYjVz1/pxOJ6S7zJ5HzpmpqlcsKseGtKjCNyofFfs29UuWtLx06aDhrL
+	BFg9VJy9ncmPotnQ1Nms+WbHh9E+EpNlKCEyhpOKY5WQYL0+ym8r3m41OuQCr044F1O1Lz5
+	Lxx84wWwFxWO47Jm7JY1KRc72HtRbxIQdtWQFLhqZTQd0YoDIrLYf6XRrLBD85jacBOnBHU
+	A8rRr2ujvx4p+l2p6S1pVxSFuVWPOsXhW5dsO86H6j0uAddMGVWwBRI0NlS8Vf/un2nAST0
+	1ouqkghJRDj6UhN2iB2GnnnIVwXU+iQML8Q9612QWj6g9VJCzKtllqlXZvMo5/lyrN5kyD7
+	D7Sju7mt52XNUTpxn1a1KhWeH8Dkzw691IPGaeNaZ2Ggya8nhlszjMNAaX4o7CRhBZBU0MI
+	lSBqWKVi68aheIqod8llGBx2QTHr2hlmYh1nOwqxjuFTpU9+zVuKmOlsSZF83UJRvLCYsWC
+	Q6bQ8bAR1XqrTB8R+sxirejH6zdYaZSXPJr1ICfdzfaXXhQ2ud
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
-> On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
-> 
-> > I;m fairly certain is just aliasing... but I do understand a file cannot
-> > be embedded. Would comment help here indicating no other fields should
-> > be added to ttm_backup without struct file be converted to pointer or
-> > that just to risky?
-> 
-> What exactly are you trying to do there?  IOW, is that always supposed to
-> be a struct file, or something dependent upon something in struct ttm_tt
-> instance, or...?
-
-Create an opaque ttm_backup object for the rest of TTM / drivers to view
-- it could change if the backup implementation changed.
-
-> 
-> And what is the lifecycle of that thing?  E.g. what is guaranteed about
-> ttm_backup_fini() vs. functions accessing the damn thing?  Are they
-> serialized on something/tied to lifecycle stages of struct ttm_tt?
-
-I believe the life cycle is when ttm_tt is destroyed or api allows
-overriding the old backup with a new one (currently unused).
-
-Matt
+Dear Maintainers,=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+When using our customized Syzkaller to fuzz the latest Linux kernel, the fo=
+llowing crash (36th)was triggered.=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2=0A=
+git tree: upstream=0A=
+Output:https://github.com/pghk13/Kernel-Bug/blob/main/0103_6.13rc5_%E6%9C%A=
+A%E6%8A%A5%E5%91%8A/%E6%9C%89%E7%9B%B8%E4%BC%BC%E6%A3%80%E7%B4%A2%E8%AE%B0%=
+E5%BD%95/36-kernel%20BUG%20in%20txAbort/36call_trace.txt=0A=
+Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/config.txt=0A=
+C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0103_6.13rc5_%E=
+6%9C%AA%E6%8A%A5%E5%91%8A/%E6%9C%89%E7%9B%B8%E4%BC%BC%E6%A3%80%E7%B4%A2%E8%=
+AE%B0%E5%BD%95/36-kernel%20BUG%20in%20txAbort/36repro.c=0A=
+Syzlang reproducer: https://github.com/pghk13/Kernel-Bug/blob/main/0103_6.1=
+3rc5_%E6%9C%AA%E6%8A%A5%E5%91%8A/%E6%9C%89%E7%9B%B8%E4%BC%BC%E6%A3%80%E7%B4=
+%A2%E8%AE%B0%E5%BD%95/36-kernel%20BUG%20in%20txAbort/36repro.txt=0A=
+=0A=
+=0A=
+=0A=
+This error is triggered in the transaction abort function txAbort, which is=
+ located in the JFS transaction manager code. The error occurs on line 2796=
+ of the fs/jfs/jfs_txnmgr.c file, asserting that mp->nohomeok failed. This =
+indicates that in the specified "metapage" (MP) object, the value of the no=
+homeok flag does not meet the expected condition (possibly 0 or false, whil=
+e the assertion requires it to be non-zero or true).=0A=
+We have reproduced this issue several times on 6.15-rc1 again.=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+=0A=
+If you fix this issue, please add the following tag to the commit:=0A=
+Reported-by: Kun Hu <huk23@m.fudan.edu.cn>,=A0Jiaji Qin <jjtan24@m.fudan.ed=
+u.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>=0A=
+=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=0A=
+read_mapping_page failed!=0A=
+BUG at fs/jfs/jfs_txnmgr.c:2796 assert(mp->nohomeok)=0A=
+------------[ cut here ]------------=0A=
+kernel BUG at fs/jfs/jfs_txnmgr.c:2796!=0A=
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI=0A=
+CPU: 1 UID: 0 PID: 9491 Comm: syz-executor237 Not tainted 6.15.0-rc1 #1 PRE=
+EMPT(full)=0A=
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1=
+.1 04/01/2014=0A=
+RIP: 0010:txAbort+0x51e/0x570=0A=
+Code: e9 96 fd ff ff e8 22 2c 73 fe 48 c7 c1 00 4f cd 8b ba ec 0a 00 00 48 =
+c7 c6 e0 41 cd 8b 48 c7 c7 20 42 cd 8b e8 23 5d 52 fe 90 <0f> 0b e8 fb 2b 7=
+3 fe 48 c7 c1 40 4f cd 8b ba ed 0a 00 00 48 c7 c6=0A=
+RSP: 0018:ffffc90014c7f4c0 EFLAGS: 00010286=0A=
+RAX: 0000000000000034 RBX: dffffc0000000000 RCX: ffffffff819a5799=0A=
+RDX: 0000000000000000 RSI: ffff888022bc0000 RDI: 0000000000000002=0A=
+RBP: 0000000000000003 R08: fffffbfff1c4bb00 R09: ffffed100fdc47ba=0A=
+R10: ffffed100fdc47b9 R11: ffff88807ee23dcb R12: 0000000000000000=0A=
+R13: ffffc90001b69110 R14: ffff8880548a2ba0 R15: ffff8880548a2c48=0A=
+FS: =A0000055558797f880(0000) GS:ffff8880eb36b000(0000) knlGS:0000000000000=
+000=0A=
+CS: =A00010 DS: 0000 ES: 0000 CR0: 0000000080050033=0A=
+CR2: 00007f5264200058 CR3: 0000000023ba8000 CR4: 0000000000750ef0=0A=
+PKRU: 55555554=0A=
+Call Trace:=0A=
+=A0<TASK>=0A=
+=A0txCommit+0x2149/0x4720=0A=
+=A0jfs_create+0x808/0xb40=0A=
+=A0lookup_open+0x11ba/0x15f0=0A=
+=A0path_openat+0xed3/0x2980=0A=
+=A0do_filp_open+0x1f9/0x2f0=0A=
+=A0do_sys_openat2+0x4e3/0x710=0A=
+=A0do_sys_open+0xc6/0x150=0A=
+=A0__x64_sys_openat+0x9d/0x110=0A=
+=A0do_syscall_64+0xcf/0x260=0A=
+=A0entry_SYSCALL_64_after_hwframe+0x77/0x7f=0A=
+RIP: 0033:0x7fbeaee100bd=0A=
+Code: c3 e8 17 2c 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48=0A=
+RSP: 002b:00007ffebb56d188 EFLAGS: 00000246 ORIG_RAX: 0000000000000101=0A=
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fbeaee100bd=0A=
+RDX: 000000000000275a RSI: 0000000020000040 RDI: 00000000ffffff9c=0A=
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001=0A=
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffebb56d19c=0A=
+R13: 00007ffebb56d1a0 R14: 0000000000000000 R15: 0000000000000000=0A=
+=A0</TASK>=0A=
+Modules linked in:=0A=
+---[ end trace 0000000000000000 ]---=0A=
+RIP: 0010:txAbort+0x51e/0x570=0A=
+Code: e9 96 fd ff ff e8 22 2c 73 fe 48 c7 c1 00 4f cd 8b ba ec 0a 00 00 48 =
+c7 c6 e0 41 cd 8b 48 c7 c7 20 42 cd 8b e8 23 5d 52 fe 90 <0f> 0b e8 fb 2b 7=
+3 fe 48 c7 c1 40 4f cd 8b ba ed 0a 00 00 48 c7 c6=0A=
+RSP: 0018:ffffc90014c7f4c0 EFLAGS: 00010286=0A=
+RAX: 0000000000000034 RBX: dffffc0000000000 RCX: ffffffff819a5799=0A=
+RDX: 0000000000000000 RSI: ffff888022bc0000 RDI: 0000000000000002=0A=
+RBP: 0000000000000003 R08: fffffbfff1c4bb00 R09: ffffed100fdc47ba=0A=
+R10: ffffed100fdc47b9 R11: ffff88807ee23dcb R12: 0000000000000000=0A=
+R13: ffffc90001b69110 R14: ffff8880548a2ba0 R15: ffff8880548a2c48=0A=
+FS: =A0000055558797f880(0000) GS:ffff8880eb36b000(0000) knlGS:0000000000000=
+000=0A=
+CS: =A00010 DS: 0000 ES: 0000 CR0: 0000000080050033=0A=
+CR2: 00007f5264200058 CR3: 0000000023ba8000 CR4: 0000000000750ef0=0A=
+PKRU: 55555554=0A=
+2025/04/23 15:35:05 reproducing crash 'kernel BUG in txAbort': final repro =
+crashed as (corrupted=3Dfalse):=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=0A=
+=0A=
+=0A=
+thanks,=0A=
+Kun Hu=0A=
+=0A=
+=0A=
