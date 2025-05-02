@@ -1,222 +1,325 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E9C254AF7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191554; cv=fail; b=KomP6FbHtY9k9ogwmpGeKUEH6PvQ+nzWnGMTxJXSdx9aTnYjt2iOIh95j4jyq+AMzh3LyJ91G5wAyRpcrp9/qvK/xQvD7Bxk/pOW7TfGwl8WCFyZpaLglwFbj8xT6+l9Q7jXgoeO24afJSY//N7f9KpXfjdVG8zSpcPDfyCYGLc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191554; c=relaxed/simple;
-	bh=xswAtoXzvChyigtTllIn+N0vJfYte2k5NKtFsQ5jbOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ryr0onis6pZv97WscShhrBBS4flUG5G1+4n9/s+bHnUcWggbr78pIOb/m5XFDK8I/wwAgrYTtMlNfv8RoyEuPpKYY+FSLOfV0woI7mdABi5kLK89x4oDHuD9bVGhrdwuAairj1uBOs+xu41oyxa9x7o3DuPC1i5WTyFlAcXYtSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=rTjn/zJ/; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vQN1SrPR; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61F1252905;
+	Fri,  2 May 2025 13:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746191606; cv=none; b=Pj8IBZ2ACDsCyH256PsyfsEm22wb/6kKnEDLyZK1iroRNu9B00FPwTS0ZqtvR+IHfiDwyXSX/7T340iNMJ7kpZ+wL1caLe3ATZefoNzoD/wYPrzed64j7yBSkZcunFxMbIiaintv7uKmcF+zPyutqmONhaiSmAciy+t1btcsgxY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746191606; c=relaxed/simple;
+	bh=8rjzfX3W2W2Ua3bnqMyXei5mk/ntSXdZx8V9rkAjM0A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YXP6+qcX6mFz3b1EMJv4q2HdX0WzcXZTovEFDhoCxDelcAPGqaf/GFwSOi2VIePBcVTnTn2myUTTl8MF5DYmb+s1kE8suMI9mQtN7pGGtl5ZgorZVcYi9WEUF/cHIIGORagOjqm9Fd1eHTj2BlVItPzIcDY7CMs94hg+Kek57Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PUfTHgWM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rTjn/zJ/";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vQN1SrPR"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5425WBB9002723;
-	Fri, 2 May 2025 13:12:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=NCJgFAOgRRX4foyyWL
-	AUUbQRSRcF5U36AtH78wP9SnE=; b=rTjn/zJ/TcWyFvjjPHKdFbyqDZAKl51ij2
-	3fXDzcxUsMZL1rGzHvQhkqidx+/sWY5bcEm3ntXT84hKgT8O+j3HIqreGCle7vA/
-	/ZoYcSozvecx6UPLf2UQB+/mc9A5XHoR6htt8quG7WVVXDW9y+lauGEmqC2JrPRl
-	EZZXgJGYAXexw+1x60db4fYeX2sZFxTM3Z4xMvLCAyDrTPcxZuaqXfrqZH9uy62H
-	5AG2Nv52AdHSsy474Nqgua6bdyjmZddZf6jJ1gARntnbJpyzdo0V9Q6v9L/zeOEI
-	ivCefV4MFi/lGCb9SFa2EokAgH42coqlj5X7gaB9kmxxe38+DIng==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6uun9qk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 13:12:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 542C3U7S023728;
-	Fri, 2 May 2025 13:12:21 GMT
-Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazlp17012039.outbound.protection.outlook.com [40.93.1.39])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxm0u7q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 13:12:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sw+24kfx46YwYkoEpHV9RqFmNaOiuaPtdR67Ra21orMMrKK8rSF4QFgXewTG2m9aJJo/+i6LxfMTCA1FfMS3CUuLjzn7wILGY10k5Kc8wceL+rEcOWcnM7XfxQgmSguyYA5g+DnnLTNheogyuIc1zikXtOVgbf2ow8oNWsJwejDEtiI3FmFIKa+4VqJ/c74xvmoxAaerBGvLXeaSIm8llBt8dqFhuc3atIbjh8v7Uqs8ic8PQrhKcTjL54Jxbdkkqaa44EW4CIYst+bBkcnW4yblyjmQeU0HBLjWArxqROWPm7L6SnRRMVpp4GLXb/E2vGcv3R1SOesY/De+Yy8zww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NCJgFAOgRRX4foyyWLAUUbQRSRcF5U36AtH78wP9SnE=;
- b=WGJbMRTw8VBfMZIANEFqecX84ZR8qm26wxeEj8lIfxwMdCvyHGT/YDVGCirTr4d/E2WOZgvsuJFLI7bEa+9WmDBXs4nbMlUTtxXCwoPmq1dNHEK8RQMSCmZ0AUNpwLGuCkmq2w9dZngB0C3Yjc9pfqzSY07lqp0IqhyIB+QHTygC0dayyIBntPMHVxiyetBrh1MiJbZ/lsxiyKKcA8iIK97xcp1zuV6zZKKd5agRSRgmEtSy5MpV0R/jLZ1sUs+ZLPGfDQ7iLFmy/sb2zJ4uPu/gDuvX5C+JBFBhLS2dNjYWn3vao6RGScuzIQb26cmZ3orFj0+PgGQX06BTy+rzAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NCJgFAOgRRX4foyyWLAUUbQRSRcF5U36AtH78wP9SnE=;
- b=vQN1SrPRGZS7D4jbH8IbBItDEtaWNUGUnyeDMWRzt4OkHNda0Oq/FllkxrVfaxRZGO0IgVUfOG69hlmILb92T0SQugMHp1oSA3SMxpbPZLcPGEADWo4J17kYv6blccJ0RCRmhmRhXo/vNQ4q7DnV84n73Z/NDeHibRR1dC5ckpA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CY8PR10MB7265.namprd10.prod.outlook.com (2603:10b6:930:79::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
- 2025 13:12:18 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Fri, 2 May 2025
- 13:12:18 +0000
-Date: Fri, 2 May 2025 14:12:16 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Ignacio.MorenoGonzalez@kuka.com, Liam.Howlett@oracle.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
-Message-ID: <3de8814b-9964-489c-8d13-feb319623b82@lucifer.local>
-References: <20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com>
- <aBTCtOXBhUK_FLU6@casper.infradead.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBTCtOXBhUK_FLU6@casper.infradead.org>
-X-ClientProxiedBy: LO4P123CA0553.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:33b::7) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PUfTHgWM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746191604; x=1777727604;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=8rjzfX3W2W2Ua3bnqMyXei5mk/ntSXdZx8V9rkAjM0A=;
+  b=PUfTHgWMvFJxTxND5TgwBvNsgJId94eVBVfY440xMak13A4AWz2tAXMD
+   Tao5LLz6glxthe48jZDAji454nEQ7pCS0yaWIRtt58SJAPgIb8CALdIzn
+   XjXoRZMkps0dcuyhpJu5ErZ/E3FMm724c1VeqkvyhLDVla9PiJNPNQ+hb
+   UI2miYeVyfl8xb9sD5fQDWVHBUH7OlS2t6VwkIU4+iQP76IHZjN0OWL7D
+   k2GhxH/HW2A29ksO0xD7OsaxXM/E0fegq45MRQzdcYeFZs+un+N0qk1rp
+   Yr6I/ELrKocmRKRB/psq9q++qBO2KKjoqZHjZWXykBb5aSUxgu2PFj0aa
+   w==;
+X-CSE-ConnectionGUID: 3nKXHhdgS9Wu9QsbB212VA==
+X-CSE-MsgGUID: 8DsjZxQjR+S24+L33e3JJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="59233288"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="59233288"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:13:23 -0700
+X-CSE-ConnectionGUID: uqJeJQZ9QjyJ9pDg+lbEpA==
+X-CSE-MsgGUID: eaKgRDz1TzO6Du8usPzXEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="135599266"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.135])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:13:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 May 2025 16:13:03 +0300 (EEST)
+To: "Xin Li (Intel)" <xin@zytor.com>, mingo@redhat.com
+cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+    linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+    linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, 
+    x86@kernel.org, hpa@zytor.com, acme@kernel.org, jgross@suse.com, 
+    andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org, 
+    mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+    irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+    wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+    bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+    pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com, 
+    luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com, 
+    haiyangz@microsoft.com, decui@microsoft.com, dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH v4A 01/15] x86/msr: Add missing includes of <asm/msr.h>
+In-Reply-To: <20250501054241.1245648-1-xin@zytor.com>
+Message-ID: <a34d7955-aa31-7bef-52cf-65dc4bb7a5c1@linux.intel.com>
+References: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com> <20250501054241.1245648-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CY8PR10MB7265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c3b63ba-0429-4d6d-21a1-08dd897af731
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OmzmFMIyjDIJrJsoWjbDThzWfvsK+tJS3Uwr+0+Eal2msjqbbM00U0kW0/Ll?=
- =?us-ascii?Q?WpOWP+5D6okNGsOqxW/IUrauoi7FdogmJsDcT/FlTRRL7LCuVvcVk3OOSpXo?=
- =?us-ascii?Q?70kNwOsvJg07GzTJdb2gqL0J4WG1EpC9M1UbIh53tGsrm8iYfZ17P7m4l9XC?=
- =?us-ascii?Q?eziM99WCU9sxFXMZkklmbYdXFlr1VXNhAnc99Wm1DQYXt2X+aQSg5Ufia4VP?=
- =?us-ascii?Q?5JgIQfIDy9DfYwPWTRx5EsiHp8vjizBuhPpIFILickAWe2//mGDapuALKG2J?=
- =?us-ascii?Q?vWnenod/IG8e4vwXggYMJm7DuHLZ3QI7RwqIrNHAsVdTaGyjIquUmRtdnGKg?=
- =?us-ascii?Q?IcjXnuO1uTcvCqGB/ykTFXdMBKZxIFupX9/8TfYO5GImywwIvV8DWLaYQLRT?=
- =?us-ascii?Q?/gd2VPO8nKMGHYVcN7RALJYOggXySSVT8NtMwBCQJU0J0uynp9XSZHDQZ2nT?=
- =?us-ascii?Q?ODYqo7upysLPuDjpmrJ0jYFnC+s/oPhoXa54mDZCcL6eMQ/SEhRgy/Zgyb/x?=
- =?us-ascii?Q?YNH+XqYv/R6dLqKMRw2FTx5MShl5swal3bwTD3yZH5V01O2mZ2pCVvD/nX8G?=
- =?us-ascii?Q?bmNmOwhRuQwJswRE6/iO/BWcXWs4L3jtDzXq7fFcDzLOFrC+DcgfMEI/HAMK?=
- =?us-ascii?Q?hO+CbTMXZg6QOlUC0r98TVPugTa0LYtKxYX+goSedd38pBfLpcGxFieEWlfR?=
- =?us-ascii?Q?RMTiTRXIGQMUcwqcy5iiNLfw2JHOcg1LbOKsveM0cYaGxGMFAEzSPfPy6fCh?=
- =?us-ascii?Q?9MvT3+M75smhArpwwQ68/kr3kDoyf3MqAaEvgSic42g/7HkTClKs7uzVnCD2?=
- =?us-ascii?Q?UNwS9U+e9Ct5/miYchSIpbyEsy3SxWGEhXhcnLx+OvY4m5WBvWAttgVvByMa?=
- =?us-ascii?Q?FH4fqbdVCAT1URS2n+boxJOGtIGKkGojfh7Aj0V7TNt8UrPWGiUkotXjZluH?=
- =?us-ascii?Q?r1EyKSBhNhH5dyuKfeIX5IJv9TS7mLm5LgYxjC/UYA6QcWLylGAmlqk1xpuO?=
- =?us-ascii?Q?yrrHfdR0SnwYDcyl7FCdN1NA+tT1CEcVtb3p/Ti1HhRwvA/fEo4GIDcnsNA+?=
- =?us-ascii?Q?GmmvYQ/2n3mPT0zVoU7Nji4OLLvC6uT/DehWsj5urYtx8MPNsymnF/5iFbrD?=
- =?us-ascii?Q?lWqeDelVeQKpHDmE3RLNlOFihQNeJ2Dhql8AroJgclUg9rj89FkHDO/8lIeE?=
- =?us-ascii?Q?unYa7VX3rHukoOLI1XEH1AcOztO/UyhnKwdf9LkPXYoq/57fx9fYbhisr5c7?=
- =?us-ascii?Q?KT15ye7eT6pzz9A0RPCQ85K2yTS16/Twn9h95EhDEH6ydLnmj6TDb+nPBI3q?=
- =?us-ascii?Q?hEruFkBnQ0QRgR33o/uwUXjMKh1Cn19jgltvFakg1qpNOjBL2qfhE0yvoG+9?=
- =?us-ascii?Q?qH8HJX1MTFV/1pxIlbwwej+VlcOmKpP/DYnDKZT3pYyiQ8SqrN0Pno9vJ1db?=
- =?us-ascii?Q?kODTEQB8gGc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mgV23dZ4O92suL6H5XwDyDPuS2SSaSChCJuEwLX8cHruQQpmWGbiYDtQgo7l?=
- =?us-ascii?Q?ZySw8blxoHpuJtHI8OsT4dkQVvT/pMHKPGsm9qnjyx6GjanCeoX4MbJVk8CT?=
- =?us-ascii?Q?2qqOaXrKMmcCy7IQtg+hDRoPs6cp2iKhQeeiv+YAdQJcDHxoHmiJRqsTrFoI?=
- =?us-ascii?Q?QKqWERcUdpCiKEHMa5IyAilYsUJeiSEd2zC+Pe4Amj/JDvj8Vtqs0l99e3Cz?=
- =?us-ascii?Q?Q/UVFkqZCpt1mEBB5l3LXIvn8ToBB0mS6bnBnieKzZqdJZJMwwwt9v6YrdZ3?=
- =?us-ascii?Q?LbudbIF1XHGspte3+F5ggbF4EztAILvZqsi4xjRpaZXB5ECXY/VsxW/EQiZK?=
- =?us-ascii?Q?EcXaK+2NW7PHMjtgWs3GX38tMjVUzs0LalH3O2yRdwLbmZYBGYKfqYVRUJDe?=
- =?us-ascii?Q?niJBc9nn8CN65cOeqolQFCvqf06pqZ+ucNUVuCm3z+tOPKtLQwOGvTvbZUnT?=
- =?us-ascii?Q?802chxoSy5wcSbo6gHww8vQtnVV1JU1rjdV+BrrKlKUm1UKZusmWFj86QS6b?=
- =?us-ascii?Q?VBC+Z1GPMKR3hLzIQ2N65Dqxuqc93lrE30dNIA+NiecsMnxGcDi7yk/3KcuN?=
- =?us-ascii?Q?A2vKfB3uOyO3Akkti74zOQPRxmU6IdZak2AZShEu9qgyBlbgGS4tQ2vwUEpb?=
- =?us-ascii?Q?qfnuSKQwPuIamRBl0A5HgKz3hXsHS/dfsOf95fr+1d0AyNsBsZuaLxGHKF9L?=
- =?us-ascii?Q?kMtEVDwLNWzJBTZHMMaJS9U7lCtYDsNKAaxrFZ2n7Kru2epz7D8QTPKY9Sx4?=
- =?us-ascii?Q?2KBd5m7YdHb9L5m4CR2GwE9/v9mT8LwTFT3K2IVltFK8nJczCv/XHab/oySv?=
- =?us-ascii?Q?x3I2J21o5P+2D0C4PWakoYXhiQV7Dfp0NiG/iTBVZZh7ORVHS72nYsrXnB6f?=
- =?us-ascii?Q?AbIP8tezHlDrFwdsi+innJCIIz6NQeZA87VMPupZ6ATgeeMLLtDBaYfMkP24?=
- =?us-ascii?Q?uksh8lebG4X/Sr5oxKNVTbbHjVF5BTJRAzNSVpfHDp3zmh5PwtKmU8b4y+HZ?=
- =?us-ascii?Q?DjnZcAv9VdjI1bisB+PausaMuCEEtQBplPOMFPnFBn4IbBgU6lMrn/psXd1K?=
- =?us-ascii?Q?BU+o/ueyoOaRfm/NQcOEwo5SWEAsnpkP5tnEHa04A6u67wlbTWSPe3awBeZD?=
- =?us-ascii?Q?UfEdI1GXa0CfW95wRbTBd16I6mLCXP9qqt8HOWJfr2x0W4blICwGvTEyi22H?=
- =?us-ascii?Q?bA0RmU7WZCyCrJtzOU8EO20aosbYzXoqrKj4rKeeCXAIVBzUr5B1D/n3ESEL?=
- =?us-ascii?Q?zpi5gzWaamsrQurDBKcP46IsGS597m5ruoZHCtMwkZSrU1PSKZ1weZhCQJHZ?=
- =?us-ascii?Q?tWnampEzVIT27WvzozMgB7sPZA8klc9wlA1o5X81osGkSiDu9+ZRL/Me0KPs?=
- =?us-ascii?Q?VGqdMkdz8IwNFl2sq+nVyOOSeeHwSgkjkkZw6hKNXbHwasmR+oi6Jqowl6OA?=
- =?us-ascii?Q?GrVghm8iR484/WfZfvvzH9O40FG7IMeFApDgtqxRZ2y9EPsoxtyLch45JGxQ?=
- =?us-ascii?Q?R9AKN22Ki8HICpyP4hCT/fvrsuT9vrabOimnSoUaVDX2tuKbz+1ND1zoZpX8?=
- =?us-ascii?Q?g9B4Or4lW04z8nMB0FU8dT4eO+W6jCJuVQXEgaFNfl+E/YU2o16fnNevvOjl?=
- =?us-ascii?Q?gQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/sOabX9IITOdAdn063oAH3F6K24bRaBZVP15fbmBIw7xu6NYAHRaPSoWUePI7MEq5T0qqgoXjB2HQjId3SKo5rMZdLlx9U3UAEzzocvBBwX2QArnJtrzCcybl5dTmtqvHckdTKi8Ns2bYOUbddF1D/MnVXfbVR8KkpYZ3ared+9lY+L5ZZP9Ob9052Ka49x9x+xUCcMDVKP46Nj9iYZSaar9B+bTQlA+vw16v7P9g3/7z7jJpL6YudT9QLDhybFb/KAAoLwc0AYbMXrzkmQSCM57hQf35gCQaHXUWk/dupb6XkC4s29OkB4yrfMUPEoN93LiQgyLiu2KfY1/QHv2cx361KfC7DurWUhPfLKJqXYQ7LcSYRR3Zlsc6nB2M1OwmSH65Xr+bUw3hcci1jt3dUKJFNdQvQPF0des+a8ZqWNvJRZD8l9j6q0VCh5ymFsavPjlTx/t1pYFYmaztrHyY6XYJNmwpIFWZlBctQ6wV0oQuJXlVi0pQnOoxi74kXAuqoekW33a3AbP4REb4Ichh7YqtUGp6DZ6iI5UCVhgHlHqbJkHj0y3yCOb3b2Jib7Q710fe3ODzlLpenpLUzal9a5QikGV5hC5dZApdF/4eqw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c3b63ba-0429-4d6d-21a1-08dd897af731
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 13:12:18.3469
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gIGS5iV3ST5D19wjx8ALLIGWnchrx/tIlA0IXNab7LDrH0zsZjBfPC9J4LxBys4yogu+WD+o+rZX9VxkbcdCH3zBOC+i6p7FQ1U8sKkM/aU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7265
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505020104
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwNSBTYWx0ZWRfXzZ0OdJMWWsIV 5yWcfakkImre1jsSZRCbHWPlry7nFOqoeRihtoPg+/YyDKD66OZf48B7nI0+sx9cc0ppsW1KszM sOwa+67fSpPMSvxGMALuqmK2GB4gURpeYgFj5VQ1hd5dadeeQZ+7xjW5Ykjko6OyBXUIdH4Qvnq
- PfIq4I+HiAuL81VVuPLTb1n0+j2ZOCAnM43lMeOcxk6ogp/L0PV67E7TPVLNXVTIeTGnd68WQCu E/OZc2Baa5316lYyvnn7jH8OmxOYUzllJisP9qJtx4D0KUQVOf+XSjcHlFyQMUM6ypWQgFLkkpS Ir9QezmJeqXkQOf0x9P+1pON0OQi6461jj12y2jAZaChZ7eMCcZ/7a5mg7QKQ9FZr5POjWKX1ts
- XWX27/8u2HM/s/AfpTeHCHzmFBhAXe6F+1hKT57YDCWc+bFyaAsPEJKYoRqFO/3Gjvfj2dmV
-X-Authority-Analysis: v=2.4 cv=Ve/3PEp9 c=1 sm=1 tr=0 ts=6814c4b6 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=TAZUD9gdAAAA:8 a=nKKxTX1O6c7vVNDmn_4A:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 cc=ntf awl=host:13130
-X-Proofpoint-ORIG-GUID: XipkUWxi4CKGxGVmwpvDXiHComXoB7F1
-X-Proofpoint-GUID: XipkUWxi4CKGxGVmwpvDXiHComXoB7F1
+Content-Type: multipart/mixed; BOUNDARY="8323328-2124274657-1746191047=:958"
+Content-ID: <69d4ead6-fa09-8594-add2-0d027d3e7e6c@linux.intel.com>
 
-On Fri, May 02, 2025 at 02:03:48PM +0100, Matthew Wilcox wrote:
-> On Fri, May 02, 2025 at 11:31:41AM +0200, Ignacio Moreno Gonzalez via B4 Relay wrote:
-> > From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> >
-> > commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-> > the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-> > CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
-> > VM_NOHUGEPAGE does not make sense. For instance, when calling madvise()
-> > with MADV_NOHUGEPAGE, an error is always returned.
->
-> Isn't that the real problem though?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hmm, but wouldn't we want users who are trying to set MADV_[NO]HUGEPAGE to
-be made aware that it isn't going to do anything?
+--8323328-2124274657-1746191047=:958
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <914dd26d-9889-125a-917d-3b9acfbc7938@linux.intel.com>
 
-And wouldn't changing this be a possibly 'breaking userspace' thing if
-somebody somewhere relies on this?
+On Wed, 30 Apr 2025, Xin Li (Intel) wrote:
 
-Also this will make this inconsistent with e.g. MADV_COLLAPSE also?
+> For some reason, there are some TSC-related functions in the MSR
+> header even though there is a tsc.h header.
+>=20
+> To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
+> to <asm/tsc.h> and to eventually eliminate the inclusion of
+> <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
+> reference definitions from <asm/msr.h>.
+>=20
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>=20
+> Change in v4A:
+> *) Use "git grep -l -e $PATTERN | grep -v -f <(git grep -l -e 'asm/msr\.h=
+')"
+>    to ensure ALL required *direct* inclusion of <asm/msr.h> (Ilpo J=E4rvi=
+nen).
+>=20
+> Change in v4:
+> *) Add missing includes in a different patch (Ilpo J=E4rvinen).
+> *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
+>=20
+> Change in v3:
+> * Add a problem statement to the changelog (Dave Hansen).
+> ---
+>  arch/x86/coco/sev/core.c                                    | 1 +
+>  arch/x86/events/amd/core.c                                  | 1 +
+>  arch/x86/events/amd/ibs.c                                   | 1 +
+>  arch/x86/events/amd/iommu.c                                 | 2 ++
+>  arch/x86/events/amd/lbr.c                                   | 1 +
+>  arch/x86/events/amd/power.c                                 | 1 +
+>  arch/x86/events/core.c                                      | 1 +
+>  arch/x86/events/intel/bts.c                                 | 1 +
+>  arch/x86/events/intel/core.c                                | 1 +
+>  arch/x86/events/intel/cstate.c                              | 1 +
+>  arch/x86/events/intel/ds.c                                  | 1 +
+>  arch/x86/events/intel/knc.c                                 | 1 +
+>  arch/x86/events/intel/p4.c                                  | 1 +
+>  arch/x86/events/intel/p6.c                                  | 1 +
+>  arch/x86/events/intel/pt.c                                  | 1 +
+>  arch/x86/events/intel/uncore.c                              | 1 +
+>  arch/x86/events/intel/uncore_discovery.c                    | 1 +
+>  arch/x86/events/intel/uncore_nhmex.c                        | 1 +
+>  arch/x86/events/intel/uncore_snb.c                          | 1 +
+>  arch/x86/events/intel/uncore_snbep.c                        | 1 +
+>  arch/x86/events/msr.c                                       | 2 ++
+>  arch/x86/events/perf_event.h                                | 1 +
+>  arch/x86/events/probe.c                                     | 2 ++
+>  arch/x86/events/rapl.c                                      | 1 +
+>  arch/x86/events/utils.c                                     | 1 +
+>  arch/x86/events/zhaoxin/core.c                              | 1 +
+>  arch/x86/hyperv/hv_apic.c                                   | 1 +
+>  arch/x86/hyperv/hv_init.c                                   | 1 +
+>  arch/x86/hyperv/hv_spinlock.c                               | 1 +
+>  arch/x86/hyperv/hv_vtl.c                                    | 1 +
+>  arch/x86/hyperv/ivm.c                                       | 1 +
+>  arch/x86/include/asm/fred.h                                 | 1 +
+>  arch/x86/include/asm/kvm_host.h                             | 1 +
+>  arch/x86/include/asm/microcode.h                            | 2 ++
+>  arch/x86/include/asm/mshyperv.h                             | 1 +
+>  arch/x86/include/asm/msr.h                                  | 1 +
+>  arch/x86/include/asm/resctrl.h                              | 2 ++
+>  arch/x86/include/asm/suspend_32.h                           | 1 +
+>  arch/x86/include/asm/suspend_64.h                           | 1 +
+>  arch/x86/include/asm/switch_to.h                            | 2 ++
+>  arch/x86/kernel/acpi/sleep.c                                | 1 +
+>  arch/x86/kernel/amd_nb.c                                    | 1 +
+>  arch/x86/kernel/apic/apic.c                                 | 1 +
+>  arch/x86/kernel/apic/apic_numachip.c                        | 1 +
+>  arch/x86/kernel/cet.c                                       | 1 +
+>  arch/x86/kernel/cpu/amd.c                                   | 1 +
+>  arch/x86/kernel/cpu/aperfmperf.c                            | 1 +
+>  arch/x86/kernel/cpu/bus_lock.c                              | 1 +
+>  arch/x86/kernel/cpu/feat_ctl.c                              | 1 +
+>  arch/x86/kernel/cpu/hygon.c                                 | 1 +
+>  arch/x86/kernel/cpu/mce/inject.c                            | 1 +
+>  arch/x86/kernel/cpu/microcode/core.c                        | 1 +
+>  arch/x86/kernel/cpu/mshyperv.c                              | 1 +
+>  arch/x86/kernel/cpu/resctrl/core.c                          | 1 +
+>  arch/x86/kernel/cpu/resctrl/monitor.c                       | 1 +
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                   | 1 +
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c                      | 1 +
+>  arch/x86/kernel/cpu/sgx/main.c                              | 1 +
+>  arch/x86/kernel/cpu/topology.c                              | 1 +
+>  arch/x86/kernel/cpu/topology_amd.c                          | 1 +
+>  arch/x86/kernel/cpu/tsx.c                                   | 1 +
+>  arch/x86/kernel/cpu/zhaoxin.c                               | 1 +
+>  arch/x86/kernel/fpu/core.c                                  | 1 +
+>  arch/x86/kernel/fpu/xstate.c                                | 1 +
+>  arch/x86/kernel/fpu/xstate.h                                | 1 +
+>  arch/x86/kernel/fred.c                                      | 1 +
+>  arch/x86/kernel/hpet.c                                      | 1 +
+>  arch/x86/kernel/kvm.c                                       | 1 +
+>  arch/x86/kernel/paravirt.c                                  | 1 +
+>  arch/x86/kernel/process.c                                   | 1 +
+>  arch/x86/kernel/process_64.c                                | 1 +
+>  arch/x86/kernel/trace_clock.c                               | 2 +-
+>  arch/x86/kernel/traps.c                                     | 1 +
+>  arch/x86/kernel/tsc.c                                       | 1 +
+>  arch/x86/kernel/tsc_sync.c                                  | 1 +
+>  arch/x86/kvm/svm/avic.c                                     | 1 +
+>  arch/x86/kvm/svm/sev.c                                      | 1 +
+>  arch/x86/kvm/svm/svm.c                                      | 1 +
+>  arch/x86/kvm/vmx/nested.c                                   | 1 +
+>  arch/x86/kvm/vmx/pmu_intel.c                                | 1 +
+>  arch/x86/kvm/vmx/sgx.c                                      | 1 +
+>  arch/x86/kvm/vmx/vmx.c                                      | 1 +
+>  arch/x86/lib/insn-eval.c                                    | 1 +
+>  arch/x86/lib/kaslr.c                                        | 2 +-
+>  arch/x86/mm/mem_encrypt_identity.c                          | 1 +
+>  arch/x86/mm/tlb.c                                           | 1 +
+>  arch/x86/pci/amd_bus.c                                      | 1 +
+>  arch/x86/pci/mmconfig-shared.c                              | 3 ++-
+>  arch/x86/power/cpu.c                                        | 1 +
+>  arch/x86/realmode/init.c                                    | 1 +
+>  arch/x86/virt/svm/sev.c                                     | 1 +
+>  arch/x86/xen/enlighten_pv.c                                 | 1 +
+>  arch/x86/xen/pmu.c                                          | 1 +
+>  arch/x86/xen/suspend.c                                      | 1 +
+>  drivers/accel/habanalabs/common/habanalabs_ioctl.c          | 2 --
+>  drivers/acpi/acpi_extlog.c                                  | 1 +
+>  drivers/acpi/processor_perflib.c                            | 1 +
+>  drivers/acpi/processor_throttling.c                         | 6 +++++-
+>  drivers/char/agp/nvidia-agp.c                               | 1 +
+>  drivers/cpufreq/amd-pstate-ut.c                             | 2 ++
+>  drivers/cpufreq/elanfreq.c                                  | 1 -
+>  drivers/cpufreq/sc520_freq.c                                | 1 -
+>  drivers/crypto/ccp/sev-dev.c                                | 1 +
+>  drivers/edac/amd64_edac.c                                   | 1 +
+>  drivers/edac/ie31200_edac.c                                 | 1 +
+>  drivers/edac/mce_amd.c                                      | 1 +
+>  drivers/hwmon/hwmon-vid.c                                   | 4 ++++
+>  drivers/idle/intel_idle.c                                   | 1 +
+>  drivers/misc/cs5535-mfgpt.c                                 | 1 +
+>  drivers/net/vmxnet3/vmxnet3_drv.c                           | 4 ++++
+>  drivers/platform/x86/intel/ifs/core.c                       | 1 +
+>  drivers/platform/x86/intel/ifs/load.c                       | 1 +
+>  drivers/platform/x86/intel/ifs/runtest.c                    | 1 +
+>  drivers/platform/x86/intel/pmc/cnp.c                        | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 1 +
+>  .../platform/x86/intel/speed_select_if/isst_if_mbox_msr.c   | 1 +
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 1 +
+>  drivers/platform/x86/intel/turbo_max_3.c                    | 1 +
+>  .../platform/x86/intel/uncore-frequency/uncore-frequency.c  | 1 +
+>  drivers/powercap/intel_rapl_common.c                        | 1 +
+>  drivers/powercap/intel_rapl_msr.c                           | 1 +
+>  .../intel/int340x_thermal/processor_thermal_device.c        | 1 +
+>  drivers/thermal/intel/intel_tcc_cooling.c                   | 1 +
+>  drivers/thermal/intel/x86_pkg_temp_thermal.c                | 1 +
+>  drivers/video/fbdev/geode/display_gx.c                      | 1 +
+>  drivers/video/fbdev/geode/gxfb_core.c                       | 1 +
+>  drivers/video/fbdev/geode/lxfb_ops.c                        | 1 +
+>  127 files changed, 142 insertions(+), 8 deletions(-)
+>=20
 
-I guess you could argue MADV_NOHUGEPAGE with !THP is just a no-op... But
-definitely not MADV_HUGEPAGE.
+> diff --git a/arch/x86/kernel/trace_clock.c b/arch/x86/kernel/trace_clock.=
+c
+> index b8e7abe00b06..708d61743d15 100644
+> --- a/arch/x86/kernel/trace_clock.c
+> +++ b/arch/x86/kernel/trace_clock.c
+> @@ -4,7 +4,7 @@
+>   */
+>  #include <asm/trace_clock.h>
+>  #include <asm/barrier.h>
+> -#include <asm/msr.h>
+> +#include <asm/tsc.h>
 
-Another angle to this as well is - we are causing these VMAs to have a
-pointless VMA flag set that presumably can't be set any other way.
+Does this change belong to this patch?
 
-So I do think the proposed solution is right, and is the least impactful
-one.
+It might even cause a build failure until the second patch which moves=20
+the tsc related things to the other file (unless there's indirect include=
+=20
+path to asm/msr.h).
 
->
-> +++ b/include/linux/huge_mm.h
-> @@ -596,6 +596,8 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
->  static inline int hugepage_madvise(struct vm_area_struct *vma,
->                                    unsigned long *vm_flags, int advice)
->  {
-> +       if (advice == MADV_NOHUGEPAGE)
-> +               return 0;
->         return -EINVAL;
->  }
->
->
+> diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
+> index a58f451a7dd3..b5893928d55c 100644
+> --- a/arch/x86/lib/kaslr.c
+> +++ b/arch/x86/lib/kaslr.c
+> @@ -8,7 +8,7 @@
+>   */
+>  #include <asm/asm.h>
+>  #include <asm/kaslr.h>
+> -#include <asm/msr.h>
+> +#include <asm/tsc.h>
+
+Same thing here.
+
+>  #include <asm/archrandom.h>
+>  #include <asm/e820/api.h>
+>  #include <asm/shared/io.h>
+
+> diff --git a/drivers/accel/habanalabs/common/habanalabs_ioctl.c b/drivers=
+/accel/habanalabs/common/habanalabs_ioctl.c
+> index 8729a0c57d78..dc80ca921d90 100644
+> --- a/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+> +++ b/drivers/accel/habanalabs/common/habanalabs_ioctl.c
+> @@ -17,8 +17,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/vmalloc.h>
+> =20
+> -#include <asm/msr.h>
+> -
+
+I suggested making a separate patch out of these removals. Currently you=20
+do them without any clear warning in the changelog which only talks about=
+=20
+adding asm/msr.h.
+
+> diff --git a/drivers/acpi/processor_throttling.c b/drivers/acpi/processor=
+_throttling.c
+> index 00d045e5f524..ecd7fe256153 100644
+> --- a/drivers/acpi/processor_throttling.c
+> +++ b/drivers/acpi/processor_throttling.c
+> @@ -18,9 +18,13 @@
+>  #include <linux/sched.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/acpi.h>
+> +#include <linux/uaccess.h>
+>  #include <acpi/processor.h>
+>  #include <asm/io.h>
+> -#include <linux/uaccess.h>
+> +#include <asm/asm.h>
+
+???
+
+> +#ifdef CONFIG_X86
+> +#include <asm/msr.h>
+> +#endif
+
+
+I really appreciate you took the effort to do this change the correct
+way! :-)
+
+--
+ i.
+--8323328-2124274657-1746191047=:958--
