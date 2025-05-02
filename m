@@ -1,230 +1,93 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BA2245000
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD930245000;
+	Fri,  2 May 2025 12:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746187451; cv=none; b=tdKdAW7GVPssyHwW3yySz8bEmgFpmdKo0edaPqTL2Kww58RQ6rrR9/bmj41ZIHsoCS10aHdg0VDlqP8bJJ2+HBYdBsgH0akBy4cdfD9mPPrdntiXCHHL/e7S/VV/u4uPaqIqiS0jTc/ET9Yp2Cm80Qe7yMBT95oL1d82U5rDbNc=
+	t=1746187464; cv=none; b=KsQu8yIIiY9QC2UNSafwMOfrGbDDvHRLJRtdt8T0HGQeAyBk6jJe24Z8T0j2dSdW6LwDp576rhss8OyE61FvKO+hTuEdyGUwy1MX+OsGwfthwcMYik3CheegnmdwPvr2aSDF27MEUJLT4ebLsjjkbyJPc2yz42b20hlG3SA+BEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746187451; c=relaxed/simple;
-	bh=k4toQUQd4GXmpTZtzVU6CEYOWMfMFzWaAitrU1KmboY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WIexZC3q95uwmW1fKWQtxA+Mo9O3sgFw+sNUC4qZZqYY7YtLWSNNtmUR4GqeHju4zqIWqxSVk7sXxQz63wzTBTm7C5w7rShfMYfTbX/6mWtaI54Ce7qgI9xPiElNZe9SJjIAld+yoH2qJPYEDTWBOSppmqWg2vJqACYYRwA2ZAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XHoq/QPZ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746187464; c=relaxed/simple;
+	bh=m7SHXIJlHN3BFPabIlQ6y1QGcxPbcE0eg/81bW8PVRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M76QsbjkG/QMOcm3fRqhTtk+WgVhRc2fea8tBTbDpSqvLhllXyddLwVqixHn4gUOfEjGjKZwxBwoLhuGYC4CbWY2LWiLoZfkSSb1CFKt7c2LqUPVAeXzwjYi7WRmZlp11+sq+Wz28wJbd1Uvq7Y+4TbgZrV88sRa0wZMm7JtGCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH7yrfze; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XHoq/QPZ"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac345bd8e13so324357066b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746187447; x=1746792247; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BPRPIKfVSGRq6ITejbYYVt34aehlUZuBk2QnZqFxJlA=;
-        b=XHoq/QPZRT/kAdl4Tmg2DqqDg8Ad9aMkr/jb1BOxlpICsEzUjkm5KoEcrpPv01wkKv
-         JpIIK04NlTi74lxIMUs9759cWEQF/W69teoNMs4jffv8c8/GL17xwAc9qlg6VbRJbfqU
-         fbrgQCAHSkTyhhCwUvl5fVD/UAnaPUoL0rZdlzYOweGp3+7SVItw+DO5752w2gPk+seB
-         HR5lg4Anty32d5HUaq58R6MPv4YvqCjTjkDIcpqiymOd9/GwOb7EGL7vUnYjVwWI+t4T
-         iTld+KB0oRBGRZGtOav+IYZOyf95dGiajwMR1zILH7dShY6q4TV2/ELuF28jlnZ48X0G
-         2rtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746187447; x=1746792247;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BPRPIKfVSGRq6ITejbYYVt34aehlUZuBk2QnZqFxJlA=;
-        b=bQdd3j393AQhwtRthFPXKarZhSNQzKRmsEdGI7QTymqSx2qr8V8n/dYpfEylJxUefW
-         m1d01HLDzXBNyCJLf4d0McdRSdS/Ijias41lYZgg+0EBIyBhWtIBeLCpVGheKJYHzsF2
-         XbQvqMi5s+tXMG2qCFtusr6dLC6A5TfZLoVzlwHcct/uBPXCWVnH9DRIf8KIwQsdyGSQ
-         Ia53N/oVe2esp2bVMc8sxJ3jZxv1zr52rNmx6l7YU/2zcgHY7u5dx509xTFW6uEalo78
-         rYVJL2J94gi2GMqul0YtlKNJMUhweMMfmBIiIjKOwlroDXoqtFFmLkZtQXkY7fpDEZF6
-         PSuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiAN01Cce9YSwZizfhGmVbIm+hxUvT7HZr3+N0WOSsaLmwfnP9u0VR00yOl0Fg9894VviYjoNQL4B3ORE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzWUeS5A4H1OX38R3q0FP/QQbnq9AxN/6bb7Q1ebZ+V+Li+ue0
-	pi8abhhLPlH27TpBgYDtnFjKGwH30WZt3fU4uoYoy/cT0kOa8p5UDy4nP5BzOYyZazSSJ1SqkC8
-	g+BBt37eMqRc21/7jbL2nYhhXnh3DJ4+mMsInDg==
-X-Gm-Gg: ASbGncs44qMkJ53TtIUHnl0vD/hkmOWEbTfS0MEGxOga3L3IbQnE3f76drE5GkbWADT
-	vlrev0kYKnVhlIiRpKBDCX6Gt4+howiOSzY7iNenGIDgYbgZRtzH7Q2aXUbcoOLcBjSKHbjYLk7
-	gwAGcpMtdaJYJQrNYOwTdL
-X-Google-Smtp-Source: AGHT+IFexHphn+QwtEkGN0QtvusZk4g7qhyXzh59CokpzsuzOfXNl9izhrW/FeZ+1YAKnoX41c8fmxfpp5LBg3FF4pw=
-X-Received: by 2002:a17:907:c28f:b0:acb:5583:6fe4 with SMTP id
- a640c23a62f3a-ad17ad3b23dmr269340766b.6.1746187447432; Fri, 02 May 2025
- 05:04:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH7yrfze"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CEC6C4CEE4;
+	Fri,  2 May 2025 12:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746187464;
+	bh=m7SHXIJlHN3BFPabIlQ6y1QGcxPbcE0eg/81bW8PVRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AH7yrfzeIz0E1XtU/6YSvpOZykzoZTml4IoQyLF1cvRfnxwGCZVE0qNQ+y4gQAHz1
+	 Nd6Q9V0V3w3ksB4GPdop22vc/V7MY4suW7khS3flSnpHWVf4heHnoxwRg+Yvl3xm3n
+	 liTPtpCvCnATWIrZMZPnERRaF0UEcqg+pA3Iri3pFvX9e8e0yqFnkSJ0v2JQfwMDUG
+	 YSilDIRTllul47VPMS1ljNpm7LHSFDbIJacOFZKWkoY6IjY23Q7pGdsq/b4CbOX7C+
+	 XaJMPMpK5ojvW0zvKEM+9efgSOrG1A2Oa55R5TA04MtTifzddnqi4bhCD8Byn6m4G/
+	 62eShyzrEFUjw==
+Date: Fri, 2 May 2025 14:04:21 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
+Message-ID: <aBS0xd6KqoWRpj7u@pavilion.home>
+References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-3-frederic@kernel.org>
+ <20250424163024.GC18306@noisy.programming.kicks-ass.net>
+ <aA9ic6m6WAcmVBAw@pavilion.home>
+ <20250502102918.GW4198@noisy.programming.kicks-ass.net>
+ <20250502113002.GF4356@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429151800.649010-1-neelx@suse.com> <20250430080317.GF9140@twin.jikos.cz>
- <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
- <20250430133026.GH9140@suse.cz> <CAPjX3FdexSywSbJQfrj5pazrBRyVns3SdRCsw1VmvhrJv20bvw@mail.gmail.com>
- <20250502105630.GO9140@suse.cz>
-In-Reply-To: <20250502105630.GO9140@suse.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Fri, 2 May 2025 14:03:55 +0200
-X-Gm-Features: ATxdqUEf1RQiTTyAISQFpziz--aYmeR-Yd3u2T6S9hrE9Iviu6ITi3lYgPSwwQY
-Message-ID: <CAPjX3Ffy2=CQP2mx9Wa3BBR54fEAcuo8ADqeTVdcAmCO7g+gmg@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250502113002.GF4356@noisy.programming.kicks-ass.net>
 
-On Fri, 2 May 2025 at 12:56, David Sterba <dsterba@suse.cz> wrote:
->
-> On Wed, Apr 30, 2025 at 04:13:20PM +0200, Daniel Vacek wrote:
-> > On Wed, 30 Apr 2025 at 15:30, David Sterba <dsterba@suse.cz> wrote:
-> > >
-> > > On Wed, Apr 30, 2025 at 10:21:18AM +0200, Daniel Vacek wrote:
-> > > > > The benefit of duplicating the length in each eb is that it's in the
-> > > > > same cacheline as the other members that are used for offset
-> > > > > calculations or bit manipulations.
-> > > > >
-> > > > > Going to the fs_info->nodesize may or may not hit a cache, also because
-> > > > > it needs to do 2 pointer dereferences, so from that perspective I think
-> > > > > it's making it worse.
-> > > >
-> > > > I was considering that. Since fs_info is shared for all ebs and other
-> > > > stuff like transactions, etc. I think the cache is hot most of the
-> > > > time and there will be hardly any performance difference observable.
-> > > > Though without benchmarks this is just a speculation (on both sides).
-> > >
-> > > The comparison is between "always access 1 cacheline" and "hope that the
-> > > other cacheline is hot", yeah we don't have benchmarks for that but the
-> > > first access pattern is not conditional.
-> >
-> > That's quite right. Though in many places we already have fs_info
-> > anyways so it's rather accessing a cacheline in eb vs. accessing a
-> > cacheline in fs_info. In the former case it's likely a hot memory due
-> > to accessing surrounding members anyways, while in the later case is
-> > hopefully hot as it's a heavily shared resource accessed when
-> > processing other ebs or transactions.
-> > But yeah, in some places we don't have the fs_info pointer yet and two
-> > accesses are still needed.
->
-> The fs_info got added to eb because it used to be passed as parameter to
-> many functions.
+Le Fri, May 02, 2025 at 01:30:02PM +0200, Peter Zijlstra a écrit :
+> On Fri, May 02, 2025 at 12:29:18PM +0200, Peter Zijlstra wrote:
+> 
+> > > @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+> > >  	/*
+> > >  	 * Child events can be freed.
+> > >  	 */
+> > > -	if (is_child) {
+> > > -		if (parent_event) {
+> > > -			mutex_unlock(&parent_event->child_mutex);
+> > > -			/*
+> > > -			 * Kick perf_poll() for is_event_hup();
+> > > -			 */
+> > > -			perf_event_wakeup(parent_event);
+> > > +	if (parent_event) {
+> > > +		mutex_unlock(&parent_event->child_mutex);
+> > > +		/*
+> > > +		 * Kick perf_poll() for is_event_hup();
+> > > +		 */
+> > > +		perf_event_wakeup(parent_event);
+> > 
+> > Should not this perf_event_wakeup() be inside the next if() as well?
+> > doing anything on parent_event when !ATTACH_CHILD seems dodgy.
+> 
+> I made this change, and munged the original changelog on top and stuffed
+> the patches into queue/perf/core.
 
-Makes sense.
+Looks good, but it looks like you trimmed the changelog with the
+race windows part. Though I must confess, who wants to read that anyway? ;-)
 
-> > In theory fs_info could be shuffled to move nodesize to the same
-> > cacheline with buffer_tree. Would that feel better to you?
->
-> We'd get conflicting requirements for ordering in fs_info. Right now
-> the nodesize/sectorsize/... are in once cacheline in fs_info and they're
-> often used together in many functions. Reordering it to fit eb usage
-> pattern may work but I'm not convinced we need it.
-
-I agree.
-
-> > > > > I don't think we need to do the optimization right now, but maybe in the
-> > > > > future if there's a need to add something to eb. Still we can use the
-> > > > > remaining 16 bytes up to 256 without making things worse.
-> > > >
-> > > > This really depends on configuration. On my laptop (Debian -rt kernel)
-> > > > the eb struct is actually 272 bytes as the rt_mutex is significantly
-> > > > heavier than raw spin lock. And -rt is a first class citizen nowadays,
-> > > > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
-> > > > I think it would be nice to slim the struct below 256 bytes even there
-> > > > if that's your aim.
-> > >
-> > > I configured and built RT kernel to see if it's possible to go to 256
-> > > bytes on RT and it seems yes with a big sacrifice of removing several
-> > > struct members that cache values like folio_size or folio_shift and
-> > > generating worse code.
-> > >
-> > > As 272 is a multiple of 16 it's a reasonable size and we don't need to
-> > > optimize further. The number of ebs in one slab is 30, with the non-rt
-> > > build it's 34, which sounds OK.
-> >
-> > That sounds fair. Well the 256 bytes were your argument in the first place.
->
-> Yeah, 256 is a nice number because it aligns with cachelines on multiple
-> architectures, this is useful for splitting the structure to the "data
-> accessed together" and locking/refcounting. It's a tentative goal, we
-> used to have larger eb size due to own locking implementation but with
-> rwsems it got close/under 256.
->
-> The current size 240 is 1/4 of cacheline shifted so it's not all clean
-> but whe have some wiggle room for adding new members or cached values,
-> like folio_size/folio_shift/addr.
-
-Sounds like we could force align to cacheline or explicitly pad to
-256B? The later could be a bit tricky though.
-
-> >
-> > Still, with this:
-> >
-> > --- a/fs/btrfs/extent_io.h
-> > +++ b/fs/btrfs/extent_io.h
-> > @@ -82,7 +82,10 @@ void __cold extent_buffer_free_cachep(void);
-> >  struct extent_buffer {
-> >         u64 start;
-> >         u32 folio_size;
-> > -       unsigned long bflags;
-> > +       u8 folio_shift;
-> > +       /* >= 0 if eb belongs to a log tree, -1 otherwise */
-> > +       s8 log_index;
-> > +       unsigned short bflags;
->
-> This does not compile because of set_bit/clear_bit/wait_on_bit API
-> requirements.
-
-Yeah, I realized when I tried to implement it. It was just an email
-idea when sent.
-
-> >         struct btrfs_fs_info *fs_info;
-> >
-> >         /*
-> > @@ -94,9 +97,6 @@ struct extent_buffer {
-> >         spinlock_t refs_lock;
-> >         atomic_t refs;
-> >         int read_mirror;
-> > -       /* >= 0 if eb belongs to a log tree, -1 otherwise */
-> > -       s8 log_index;
-> > -       u8 folio_shift;
-> >         struct rcu_head rcu_head;
-> >
-> >         struct rw_semaphore lock;
-> >
-> > you're down to 256 even on -rt. And the great part is I don't see any
-> > sacrifices (other than accessing a cacheline in fs_info). We're only
-> > using 8 flags now, so there is still some room left for another 8 if
-> > needed in the future.
->
-> Which means that the size on non-rt would be something like 228, roughly
-> calculating the savings and the increase due to spinloct_t going from
-> 4 -> 32 bytes. Also I'd like to see the generated assembly after the
-> suggested reordering.
-
-If I see correctly the non-rt will not change when I keep ulong
-bflags. The -rt build goes down to 264 bytes. That's a bit better for
-free but still not ideal from alignment POV.
-
-> The eb may not be perfect, I think there could be false sharing of
-> refs_lock and refs but this is a wild guess and based only on code
-
-refs_lock and refs look like they share the same cacheline in every
-case. At least on x86.
-But still, the slab object is not aligned in the first place. Luckily
-the two fields roam together.
-
-Out of curiosity, is there any past experience where this kind of
-optimizations make a difference within a filesystem code?
-I can imagine perhaps for fast devices like NVDIMM or DAX the CPU may
-become the bottleneck? Or are nowadays NVMe devices already fast
-enough to saturate the CPU?
-
-I faintly recall one issue where I debugged a CPU which could not keep
-up with handling the interrupts of finished IO on NVMe submitted by
-other CPUs. Though that was on xfs (or maybe ext4) not on btrfs. But
-that was a power-play of one against the rest as the interrupt was not
-balanced or spread to more CPUs.
-
-> observation. You may have more luck with other data structures with
-> unnecessary holes but please optimize for non-RT first.
-
-Clearly non-rt is the default and most important. No questions here.
+-- 
+Frederic Weisbecker
+SUSE Labs
