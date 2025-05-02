@@ -1,235 +1,320 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABD919DF5B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 17:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F2619DF5B;
+	Fri,  2 May 2025 17:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746207068; cv=none; b=GwPc2co6e3c5qzBmo3bqIkycL9NRs0w0BDiOF8hbjVzY52oWf3WMUksvnwdY5rAlDf6ipJgU0y84rAMOKOyE5kg7PqlWJc5steND9oiLlBWipDyGbcurjOxa7wCBhebB1cQLqP5rsB7SRJl0rSAwB1AI+t0eMm5+c5v3tpUKhUU=
+	t=1746207180; cv=none; b=Rvszdk2xXO28JSDsEKUnCnmYCDCdibNJNYittuVob5lhZxhsEAIlnBGh7bnPmWHrnhkH9pWuqjRvzJ1Jf3HpeL0txTWYJ0R+3X07G73nLzoQ/bFqksU78RTw1C2oognbEt/GQ2Sqs4hpo2R98F66biqpNpN0Et08vBQ3CLmsHyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746207068; c=relaxed/simple;
-	bh=M+7B4daGccErNTyFVD7UF/LbMQuW1ksDcmHRoalpovQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ia75+bS72enrrFKl/qi/tmcc/rMikjBau2e1MMbzeVE4fKY/L5yXj/SHH/izw0rDxSXqUBR8PxUGFT1e82iBADa1Orj2tt9ozxrEJ6zHnlkY2ouWYUsxgKWQJeiDY2LX8lIFypZaC5td18nYaZ2uIEDN2lPwLUctZXlTuZNb2Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wwyYbNKk; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746207180; c=relaxed/simple;
+	bh=Im5xGaDvrPfuEOqU8Rk8ElrZ/HrvjBhJLUzFELeba3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gVzCeXVGqri90BV6N6If4p6yfHpuFns/PshUSTmzTGmvFlG+gtaVd4JmFrg4zKgPAgQrVWbOvBe9dZEqDYXwJ+mzlVi3ZDhPcBpE1alQ142CQa9Wziz4wDAT56CH5lCMfYlepd2waYazo7uTf1ETPGP4nf6hCUre4VQYPwJS+QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9MbOnBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wwyYbNKk"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e8fc176825so21555076d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:31:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746207064; x=1746811864; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bMCFjcDYKufJvMwFbFoS0kPacOFt/H1BGkqn/nrFgq0=;
-        b=wwyYbNKk1EMrF3zPLpzPKtn/CSx+s/VoMRedmf1z2AkF7gse4ql+Gzu+WtjllAgfaS
-         f0N4MnMCxkU8BI/h2Ukx54jjyTKwfeBZkJZbSUynQyaRinOMFiIw6xy7NDrM9a1hf3rF
-         iRmZKF75teBngCGTC4LQ+CKHV6cvjsHj3AKQJYknG46zCYVwDtmaAkV1iRgLKdfZpIwI
-         5iH/k0vyQc6RgKJi6meIYNqzVr6IYDhih7bpXoWjhDmAkA6GovK1QTGaOVxQq83nFCiN
-         jRY+fI81X+mzS3Tonw7RKz3DbKu/lLpWX/vRapP3LGdcZxhXUuOD9CuA6PkLN2ZmwLT/
-         4pmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746207064; x=1746811864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bMCFjcDYKufJvMwFbFoS0kPacOFt/H1BGkqn/nrFgq0=;
-        b=ss8/dto7dnNp0QtyBdc5svctMbTuiWsZtX8HFUJ9w8MKEWueNKZEj/L/Q5j2d0tMD5
-         3Eiuf8Z9X2ZQ7Zz1drsLyw2Mebd3ltDDfZZlJid+4vX1aWjq6zcLDy0BaHjyupslEXs1
-         z/qgqsME/Ctt/+iuuaTmD94ZIO9KOqwHL4SxUnIXLpiouspKJl08g9OYrdEi0O2QJ2tx
-         lvfaW4gzONnPuonTSlk01IcCEVsxo8NBQc18Na+WKqCppp7kG23IJzxrNrYBLu0BRxIn
-         dlx4B2lbv5ncw/S2cQsSTS2P8RxdxA0Z/vicvjJZ/B2jPny1mG8CH1DvoGHYyYDIhjgL
-         VsHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJMy8aldTrHypL/hAyg6mxPXVW+uHmQKX4VpreIMuoyACmdTxklVOBEU3fWSzyvIR6gyUaCWmMda0mwpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnDIzGVPnWFfc9oWGx9wix8MTzg83UCnxuU/5003ZcgSSHR/iW
-	XF+NNy/69q4iU6yX0O+gPuHRSAF6IlHObmCuXxArhVOyi0kCuTdU1TpgbY2IqfpslD/fpUZZeB/
-	tpZvuhYF+uG5QhkbD/7+D+d4hVIQUoO1cYoE=
-X-Gm-Gg: ASbGncsDVlU7wsaXAyQEeEvz7iUBWdJCUKQN71SI4nTHqx/fdBCsrfq3+uMelaI3L7f
-	PcYgf8o4ZGAITbjTxC5bfJjaJ4Bux3IRCIiBX5umChj0nGdiVfJP0RxnLGTdF8OgMC+0YKDDBev
-	yficCzd0zm19zCA55wE4qJbMGeO5j5Y1NeF6JTcF5ge8Z6hsMXcE0cXlQ=
-X-Google-Smtp-Source: AGHT+IFketDgIAyIg1nzLpZwpgdnRMDBObLxDNHG1f3j9ZJ7VtHRnYWzb9gAuuD1s4QoK/s07tDlq6e1k6CDT2Gw9WA=
-X-Received: by 2002:ad4:5d63:0:b0:6e6:6c7f:1116 with SMTP id
- 6a1803df08f44-6f51578445fmr53465476d6.24.1746207063804; Fri, 02 May 2025
- 10:31:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9MbOnBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9540DC4CEE4;
+	Fri,  2 May 2025 17:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746207180;
+	bh=Im5xGaDvrPfuEOqU8Rk8ElrZ/HrvjBhJLUzFELeba3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e9MbOnBT0Y+Wd3VC1KxHANpC/6Mx4dlJB8LhzyJv2ckS8Wfw3WSnUNEwjC6sIw9gr
+	 Ib8187DqzClwPRRU3DoLMUMvk7jXG2DE4WGDtgds5/JMs4K6tms3NdpU0bQjqSpBzC
+	 vI97M21xWovcmFHxitwBXZCRzU3c8opzLp3555CwacfFZUSyfQ9rM8Wj4xOZdG5PUM
+	 mUjIToDHBk4q9S+bOpgUhAmhP1OBMf74m9FpRBucmNrsVR9CXt6ePP7wZJu+9qHmvo
+	 2H/1Xb/NNSggIQ089d25YxACVQVrCfWIyjqg7Tdbddy6DdnW8pIqabU9eqernNrqEx
+	 eXmMPPpO3se+A==
+Date: Fri, 2 May 2025 17:32:58 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: ardb@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	decui@microsoft.com, dimitri.sivanich@hpe.com,
+	haiyangz@microsoft.com, hpa@zytor.com, imran.f.khan@oracle.com,
+	jacob.jun.pan@linux.intel.com, jgross@suse.com,
+	justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
+	kys@microsoft.com, lenb@kernel.org, mingo@redhat.com,
+	nikunj@amd.com, papaluri@amd.com, perry.yuan@amd.com,
+	peterz@infradead.org, rafael@kernel.org, russ.anderson@hpe.com,
+	steve.wahl@hpe.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+	tim.c.chen@linux.intel.com, tony.luck@intel.com, wei.liu@kernel.org,
+	xin@zytor.com, yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com,
+	bperkins@microsoft.com, sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+Message-ID: <aBUByjvfjLsPU_5f@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250430204720.108962-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501193556.23473-1-yabinc@google.com> <02c125c9-7a1f-4dfd-b058-02a38ed5b598@arm.com>
-In-Reply-To: <02c125c9-7a1f-4dfd-b058-02a38ed5b598@arm.com>
-From: Yabin Cui <yabinc@google.com>
-Date: Fri, 2 May 2025 10:30:52 -0700
-X-Gm-Features: ATxdqUFmx2hBUO3uk91d37roh8hs55lc6aLf5LBhD3FNcxdPEhGgyk4RnUvPDUU
-Message-ID: <CALJ9ZPMYj=+ZsbPDWHe80R_i3GiMmKBviZ+WBRaj3jm96ZH+VQ@mail.gmail.com>
-Subject: Re: [PATCH v3] perf: Allocate non-contiguous AUX pages by default
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Liang Kan <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430204720.108962-1-romank@linux.microsoft.com>
 
-On Fri, May 2, 2025 at 3:51=E2=80=AFAM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> On 5/2/25 01:05, Yabin Cui wrote:
-> > perf always allocates contiguous AUX pages based on aux_watermark.
-> > However, this contiguous allocation doesn't benefit all PMUs. For
-> > instance, ARM SPE and TRBE operate with virtual pages, and Coresight
-> > ETR allocates a separate buffer. For these PMUs, allocating contiguous
-> > AUX pages unnecessarily exacerbates memory fragmentation. This
-> > fragmentation can prevent their use on long-running devices.
-> >
-> > This patch modifies the perf driver to be memory-friendly by default,
-> > by allocating non-contiguous AUX pages. For PMUs requiring contiguous
-> > pages (Intel BTS and some Intel PT), the existing
-> > PERF_PMU_CAP_AUX_NO_SG capability can be used. For PMUs that don't
-> > require but can benefit from contiguous pages (some Intel PT), a new
-> > capability, PERF_PMU_CAP_AUX_PREFER_LARGE, is added to maintain their
-> > existing behavior.
-> >
-> > Signed-off-by: Yabin Cui <yabinc@google.com>
-> > ---
-> > Changes since v2:
-> > Let NO_SG imply PREFER_LARGE. So PMUs don't need to set both flags.
-> > Then the only place needing PREFER_LARGE is intel/pt.c.
-> >
-> > Changes since v1:
-> > In v1, default is preferring contiguous pages, and add a flag to
-> > allocate non-contiguous pages. In v2, default is allocating
-> > non-contiguous pages, and add a flag to prefer contiguous pages.
-> >
-> > v1 patchset:
-> > perf,coresight: Reduce fragmentation with non-contiguous AUX pages for
-> > cs_etm
-> >
-> >  arch/x86/events/intel/pt.c  |  2 ++
-> >  include/linux/perf_event.h  |  1 +
-> >  kernel/events/ring_buffer.c | 20 +++++++++++++-------
-> >  3 files changed, 16 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-> > index fa37565f6418..25ead919fc48 100644
-> > --- a/arch/x86/events/intel/pt.c
-> > +++ b/arch/x86/events/intel/pt.c
-> > @@ -1863,6 +1863,8 @@ static __init int pt_init(void)
-> >
-> >       if (!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries))
-> >               pt_pmu.pmu.capabilities =3D PERF_PMU_CAP_AUX_NO_SG;
-> > +     else
-> > +             pt_pmu.pmu.capabilities =3D PERF_PMU_CAP_AUX_PREFER_LARGE=
-;
-> >
-> >       pt_pmu.pmu.capabilities         |=3D PERF_PMU_CAP_EXCLUSIVE |
-> >                                          PERF_PMU_CAP_ITRACE |
->
-> Why this PMU has PERF_PMU_CAP_AUX_PREFER_LARGE fallback option but
-> not the other PMU in arch/x86/events/intel/bts.c even though both
-> had PERF_PMU_CAP_AUX_NO_SG ?
+On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
+> When starting APs, confidential guests and paravisor guests
+> need to know the CPU number, and the pattern of using the linear
+> search has emerged in several places. With N processors that leads
+> to the O(N^2) time complexity.
+> 
+> Provide the CPU number in the AP wake up callback so that one can
+> get the CPU number in constant time.
+> 
+> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+> The diff in ivm.c might catch your eye but that code mixes up the
+> APIC ID and the CPU number anyway. That is fixed in another patch:
+> https://lore.kernel.org/linux-hyperv/20250428182705.132755-1-romank@linux.microsoft.com/
+> independently of this one (being an optimization).
+> I separated the two as this one might be more disputatious due to
+> the change in the API (although it is a tiny one and comes with
+> the benefits).
+> 
+> [V3]
+> 	- Fixed the cpu nummber to be unsigned int within the patch and
+> 	  in the do_boot_cpu() function.
+> 	** Thank you, Thomas! **
+> 
+> [V2]
+> 	https://lore.kernel.org/linux-hyperv/20250430161413.276759-1-romank@linux.microsoft.com/
+> 	- Remove the struct used in v1 in favor of passing the CPU number
+> 	  directly to the callback not to increase complexity.
+> 	** Thank you, Michael! **
+> [V1]
+> 	https://lore.kernel.org/linux-hyperv/20250428225948.810147-1-romank@linux.microsoft.com/
+> ---
+>  arch/x86/coco/sev/core.c           | 13 ++-----------
+>  arch/x86/hyperv/hv_vtl.c           | 12 ++----------
+>  arch/x86/hyperv/ivm.c              |  2 +-
+>  arch/x86/include/asm/apic.h        |  8 ++++----
+>  arch/x86/include/asm/mshyperv.h    |  5 +++--
+>  arch/x86/kernel/acpi/madt_wakeup.c |  2 +-
+>  arch/x86/kernel/apic/apic_noop.c   |  8 +++++++-
+>  arch/x86/kernel/apic/x2apic_uv_x.c |  2 +-
+>  arch/x86/kernel/smpboot.c          | 10 +++++-----
 
-Because Intel BTS always use NO_SG, while in some cases Intel PT
-doesn't use NO_SG.
->
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index 0069ba6866a4..56d77348c511 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -301,6 +301,7 @@ struct perf_event_pmu_context;
-> >  #define PERF_PMU_CAP_AUX_OUTPUT                      0x0080
-> >  #define PERF_PMU_CAP_EXTENDED_HW_TYPE                0x0100
-> >  #define PERF_PMU_CAP_AUX_PAUSE                       0x0200
-> > +#define PERF_PMU_CAP_AUX_PREFER_LARGE                0x0400
-> >
-> >  /**
-> >   * pmu::scope
-> > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> > index 5130b119d0ae..4d2f1c95673e 100644
-> > --- a/kernel/events/ring_buffer.c
-> > +++ b/kernel/events/ring_buffer.c
-> > @@ -679,7 +679,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct per=
-f_event *event,
-> >  {
-> >       bool overwrite =3D !(flags & RING_BUFFER_WRITABLE);
-> >       int node =3D (event->cpu =3D=3D -1) ? -1 : cpu_to_node(event->cpu=
-);
-> > -     int ret =3D -ENOMEM, max_order;
-> > +     int ret =3D -ENOMEM, max_order =3D 0;
->
-> 0 order is now the default allocation granularity. This might benefit
-> from a comment above explaining that max_order could change only with
-> PERF_PMU_CAP_AUX_NO_SG or PERF_PMU_CAP_AUX_PREFER_LARGE PMU flags etc.
->
-Will add the comment in the next respin.
-> >
-> >       if (!has_aux(event))
-> >               return -EOPNOTSUPP;
-> > @@ -689,8 +689,8 @@ int rb_alloc_aux(struct perf_buffer *rb, struct per=
-f_event *event,
-> >
-> >       if (!overwrite) {
-> >               /*
-> > -              * Watermark defaults to half the buffer, and so does the
-> > -              * max_order, to aid PMU drivers in double buffering.
-> > +              * Watermark defaults to half the buffer, to aid PMU driv=
-ers
-> > +              * in double buffering.
-> >                */
-> >               if (!watermark)
-> >                       watermark =3D min_t(unsigned long,
-> > @@ -698,16 +698,22 @@ int rb_alloc_aux(struct perf_buffer *rb, struct p=
-erf_event *event,
-> >                                         (unsigned long)nr_pages << (PAG=
-E_SHIFT - 1));
-> >
-> >               /*
-> > -              * Use aux_watermark as the basis for chunking to
-> > +              * For PMUs that need or prefer large contiguous buffers,
-> > +              * use aux_watermark as the basis for chunking to
-> >                * help PMU drivers honor the watermark.
-> >                */
-> > -             max_order =3D get_order(watermark);
-> > +             if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
-> > +                                             PERF_PMU_CAP_AUX_PREFER_L=
-ARGE))
-> > +                     max_order =3D get_order(watermark);
-> >       } else {
-> >               /*
-> > -              * We need to start with the max_order that fits in nr_pa=
-ges,
-> > +              * For PMUs that need or prefer large contiguous buffers,
-> > +              * we need to start with the max_order that fits in nr_pa=
-ges,
-> >                * not the other way around, hence ilog2() and not get_or=
-der.
-> >                */
-> > -             max_order =3D ilog2(nr_pages);
-> > +             if (event->pmu->capabilities & (PERF_PMU_CAP_AUX_NO_SG |
-> > +                                             PERF_PMU_CAP_AUX_PREFER_L=
-ARGE))
-> > +                     max_order =3D ilog2(nr_pages);
-> >               watermark =3D 0;
-> >       }
-> >
->
-> Although not really sure, could event->pmu->capabilities check against th=
-e ORed
-> PMU flags PERF_PMU_CAP_AUX_NO_SG and PERF_PMU_CAP_AUX_PREFER_LARGE be con=
-tained
-> in a helper pmu_prefers_cont_alloc(struct *pmu ...) or something similar =
-?
+Since this is tagged as a hyperv-next patch, I'm happy to pick this up.
 
-Sure, but I feel it's not very worthwhile. Maybe add a local variable
-use_contiguous_pages? It can also work as another comment near
-max_order.
+Some changes should be acked by x86 maintainers.
+
+Thanks,
+Wei.
+
+>  9 files changed, 26 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index 82492efc5d94..8b6d310b61b9 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -1179,7 +1179,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+>  		free_page((unsigned long)vmsa);
+>  }
+>  
+> -static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+> +static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, unsigned int cpu)
+>  {
+>  	struct sev_es_save_area *cur_vmsa, *vmsa;
+>  	struct ghcb_state state;
+> @@ -1187,7 +1187,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>  	unsigned long flags;
+>  	struct ghcb *ghcb;
+>  	u8 sipi_vector;
+> -	int cpu, ret;
+> +	int ret;
+>  	u64 cr4;
+>  
+>  	/*
+> @@ -1208,15 +1208,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>  
+>  	/* Override start_ip with known protected guest start IP */
+>  	start_ip = real_mode_header->sev_es_trampoline_start;
+> -
+> -	/* Find the logical CPU for the APIC ID */
+> -	for_each_present_cpu(cpu) {
+> -		if (arch_match_cpu_phys_id(cpu, apic_id))
+> -			break;
+> -	}
+> -	if (cpu >= nr_cpu_ids)
+> -		return -EINVAL;
+> -
+>  	cur_vmsa = per_cpu(sev_vmsa, cpu);
+>  
+>  	/*
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> index 582fe820e29c..4d6e0e198041 100644
+> --- a/arch/x86/hyperv/hv_vtl.c
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -237,17 +237,9 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+>  	return ret;
+>  }
+>  
+> -static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
+> +static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, unsigned int cpu)
+>  {
+> -	int vp_id, cpu;
+> -
+> -	/* Find the logical CPU for the APIC ID */
+> -	for_each_present_cpu(cpu) {
+> -		if (arch_match_cpu_phys_id(cpu, apicid))
+> -			break;
+> -	}
+> -	if (cpu >= nr_cpu_ids)
+> -		return -EINVAL;
+> +	int vp_id;
+>  
+>  	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+>  	vp_id = hv_vtl_apicid_to_vp_id(apicid);
+> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> index c0039a90e9e0..6025da891a83 100644
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -288,7 +288,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa)
+>  		free_page((unsigned long)vmsa);
+>  }
+>  
+> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
+> +int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu)
+>  {
+>  	struct sev_es_save_area *vmsa = (struct sev_es_save_area *)
+>  		__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> index f21ff1932699..33f677e2db75 100644
+> --- a/arch/x86/include/asm/apic.h
+> +++ b/arch/x86/include/asm/apic.h
+> @@ -313,9 +313,9 @@ struct apic {
+>  	u32	(*get_apic_id)(u32 id);
+>  
+>  	/* wakeup_secondary_cpu */
+> -	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
+> +	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, unsigned int cpu);
+>  	/* wakeup secondary CPU using 64-bit wakeup point */
+> -	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
+> +	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, unsigned int cpu);
+>  
+>  	char	*name;
+>  };
+> @@ -333,8 +333,8 @@ struct apic_override {
+>  	void	(*send_IPI_self)(int vector);
+>  	u64	(*icr_read)(void);
+>  	void	(*icr_write)(u32 low, u32 high);
+> -	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
+> -	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
+> +	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, unsigned int cpu);
+> +	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, unsigned int cpu);
+>  };
+>  
+>  /*
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 07aadf0e839f..cab952f722e4 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -268,11 +268,12 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
+>  #ifdef CONFIG_AMD_MEM_ENCRYPT
+>  bool hv_ghcb_negotiate_protocol(void);
+>  void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
+> +int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, unsigned int cpu);
+>  #else
+>  static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
+>  static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
+> -static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
+> +static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip,
+> +		unsigned int cpu) { return 0; }
+>  #endif
+>  
+>  #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
+> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+> index d5ef6215583b..f48581888d53 100644
+> --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> @@ -169,7 +169,7 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
+>  	return 0;
+>  }
+>  
+> -static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+> +static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip, unsigned int cpu)
+>  {
+>  	if (!acpi_mp_wake_mailbox_paddr) {
+>  		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
+> diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noop.c
+> index b5bb7a2e8340..58abb941c45b 100644
+> --- a/arch/x86/kernel/apic/apic_noop.c
+> +++ b/arch/x86/kernel/apic/apic_noop.c
+> @@ -27,7 +27,13 @@ static void noop_send_IPI_allbutself(int vector) { }
+>  static void noop_send_IPI_all(int vector) { }
+>  static void noop_send_IPI_self(int vector) { }
+>  static void noop_apic_icr_write(u32 low, u32 id) { }
+> -static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
+> +
+> +static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip,
+> +	unsigned int cpu)
+> +{
+> +	return -1;
+> +}
+> +
+>  static u64 noop_apic_icr_read(void) { return 0; }
+>  static u32 noop_get_apic_id(u32 apicid) { return 0; }
+>  static void noop_apic_eoi(void) { }
+> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+> index 7fef504ca508..15209f220e1f 100644
+> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
+> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+> @@ -667,7 +667,7 @@ static __init void build_uv_gr_table(void)
+>  	}
+>  }
+>  
+> -static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip)
+> +static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip, unsigned int cpu)
+>  {
+>  	unsigned long val;
+>  	int pnode;
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index c10850ae6f09..b013296b100f 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -715,7 +715,7 @@ static void send_init_sequence(u32 phys_apicid)
+>  /*
+>   * Wake up AP by INIT, INIT, STARTUP sequence.
+>   */
+> -static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip)
+> +static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip, unsigned int cpu)
+>  {
+>  	unsigned long send_status = 0, accept_status = 0;
+>  	int num_starts, j, maxlvt;
+> @@ -862,7 +862,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+>   * Returns zero if startup was successfully sent, else error code from
+>   * ->wakeup_secondary_cpu.
+>   */
+> -static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+> +static int do_boot_cpu(u32 apicid, unsigned int cpu, struct task_struct *idle)
+>  {
+>  	unsigned long start_ip = real_mode_header->trampoline_start;
+>  	int ret;
+> @@ -916,11 +916,11 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+>  	 * - Use an INIT boot APIC message
+>  	 */
+>  	if (apic->wakeup_secondary_cpu_64)
+> -		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
+> +		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip, cpu);
+>  	else if (apic->wakeup_secondary_cpu)
+> -		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
+> +		ret = apic->wakeup_secondary_cpu(apicid, start_ip, cpu);
+>  	else
+> -		ret = wakeup_secondary_cpu_via_init(apicid, start_ip);
+> +		ret = wakeup_secondary_cpu_via_init(apicid, start_ip, cpu);
+>  
+>  	/* If the wakeup mechanism failed, cleanup the warm reset vector */
+>  	if (ret)
+> 
+> base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
+> -- 
+> 2.43.0
+> 
