@@ -1,101 +1,129 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9C235044
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C917F4C8E;
+	Fri,  2 May 2025 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746184336; cv=none; b=GLYemhFSpIsc2MhBaUt+Y1yzHnYoxTh1BDLkW4dAhKeR1I5fABmjGxkAdzNRPB7Lh9HUHg0NNE2IHVOJfdOwWjG21MXpA47UGAU0oPS8jQMpb0PzeQ74dc5B0XjSXd4+Hl8wDZzMsIu1lDd3pIM/vC8zI4LmFkmqxd/A3gyhKpU=
+	t=1746184362; cv=none; b=iFa6suUZm7S/py7+EWKseKueUFX+Oz5nvOiFIaqrIMxi3VukUpwif+243V0n4A+qHRWlhPtyOQTKuBj8H3a/Xt/MWOqL1XX5kTUbrbROV2dE8JgceGFozD+De0Xn9In8CH7UyUfJPYCwlOQqA7GXYitwdUulfgIqZKvFW6rbqpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746184336; c=relaxed/simple;
-	bh=CfOQILRrI2oOpfR8BBk2bJsADb5RlDrgVjWRzEAU4SE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FLjGAoWx2u7XDS3qjOj7Ql95CMQVCHRWHmukO0LwimlI/kcFMM3EHfjPdlQDUkFaOXGiRPVQyW22QUETkwD89WUpEG6q38ZthEXK+kpZFQBJy+x73UtGsrhWBrCp2cx9z7FznU2kRbV8I52WIaQEao2Pi6GlB9rKyXdavFwUsMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=lWgDRGAY; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746184362; c=relaxed/simple;
+	bh=HMqeC1OMZArVwOzbxY5VF+9CW94Lcz9kqjJE1K8hK/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fkBC4IWmQxyVM7nk6n2lKa0HJaRRRILJq4Gze0hKQuX+V/4XDtboWws84rsQEjrly6VGRrDnJ5e2kWmWTq0/z/PdkmkAtfABzysJfrJ5WNB0lPbWSuPiDY6Qsbv2ZRyLDuVULtSsVtDC5wSo4+HoJMGcX/6i+uZbJ8qZPc+yJq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kLnba+JA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="lWgDRGAY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746184331; x=1746443531;
-	bh=xRovayJYx3DtpzagwTmA/2L4kuh33mTIVzdNmHqy2Ro=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=lWgDRGAY6FfVEr3lCeLwc3j9jijXccPqX7uGSwKQ5S+cR8iFvZ3FKMlSqCGUMth4d
-	 O3lMTH3sBRUJRi2M5RAEHHrtQS0VxtcN3e5KI2tJH7SDEaJGIx5MP0sYsmrVBg8ajz
-	 dTCDJRU/M/19ru+JCswb3OIa0o8OPf1q+tZIBW9146lcp9oqx3PUuZnnSBWXYpKOWI
-	 Gw60ustEeVyich43wgfwh09Yd84LbMpXeH8GDm23IIxdvIW0p6K4VEHYKbN2DDQ0P0
-	 RZLleXPCrZN99zgASEy8mx4vopqjLgSEje7CV61v3Z4OefvhM14q4UxWtId3GeCC3j
-	 5JrFmFO6sCk3A==
-Date: Fri, 02 May 2025 11:12:05 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 3/5] rust: Add missing SAFETY documentation for ARef example
-Message-ID: <aBSofsTTbt4pgsDU@mango>
-In-Reply-To: <87ikmjz45e.fsf@kernel.org>
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <ih3kqi48IA3vGKmMFL796yktZHuDzsSsrSz1KA_EIHnhlZaeKRQ2dK0FtgmzWTeVNoy9iVs9rNPjAp-ozQO3Xw==@protonmail.internalid> <20250502-unique-ref-v10-3-25de64c0307f@pm.me> <87ikmjz45e.fsf@kernel.org>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 038d256563889b47a1222ea27d8e05b406ef8404
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kLnba+JA"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542AesVt026297;
+	Fri, 2 May 2025 11:12:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=XLx6kh8gqc/W7oj/R
+	K1RaFTmdMauBPRTQG17yYFaDQY=; b=kLnba+JAB7eUsjPPxa+SwzBM4Tz72YnFF
+	ATJHMb0cjHfKYo4L0bO9c6PiMBVumGTcqLHHaGaXHXEARQ42fdRGM/LPZ7t69W/u
+	ocvVI919TKtWxYxy08JgleR651FKh8EBqYA9oyKHkLFtLcLasvo5OtyYG3r1FpT2
+	0hzi5SwldnKPlulbG9a0GFuWFME9JDu0uq5aJDERK0WuBXw22/SLwvsmA+qdUWzl
+	g9IMvBQ81Tz3nIXo3MRcbp/2JaGWn4G7r0NkCMTtjcBwv3VpYo8rc/FxzGDcw3GQ
+	xQ2PWCK+F8aHD9Dr/SNRq9VDosaDa2Y8xVOeQSe1m4PmTijpr4EhA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46cvgs835v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:12:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 542BCEvu016112;
+	Fri, 2 May 2025 11:12:15 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469a70sp8s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:12:15 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 542BCBlL60293444
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 11:12:11 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 189D220040;
+	Fri,  2 May 2025 11:12:11 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1176F20049;
+	Fri,  2 May 2025 11:12:07 +0000 (GMT)
+Received: from li-80eaad4c-2afd-11b2-a85c-af8123d033e3.ibm.com (unknown [9.124.221.183])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  2 May 2025 11:12:06 +0000 (GMT)
+From: "Nysal Jan K.A." <nysal@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: luogengkun@huaweicloud.com, dianders@chromium.org,
+        joel.granados@kernel.org, song@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, "Nysal Jan K.A." <nysal@linux.ibm.com>
+Subject: [PATCH] watchdog: Fix the SOFTLOCKUP_DETECTOR=n case
+Date: Fri,  2 May 2025 16:41:20 +0530
+Message-ID: <20250502111120.282690-1-nysal@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250430205503.4a316f48@canb.auug.org.au>
+References: <20250430205503.4a316f48@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4NyBTYWx0ZWRfX/adalclWWXp+ ks9pJMxtIel3CmGGrp3GcWIVCtESxeDMNnyzfKl8wefmgznMSZ8/jszoqaTMiXEGEpQvobA/DrA EtwDozbWLOf2Nx0O61fQ6bQPvUBsIIo7NgsSPjI86oP8Pz7NGwpjXsnGbAEFaozWYxWxWK/Olt1
+ q4ntQoqKWhg29VoCgluuvzXg6o4qqhmn2UbB5m+FFW7eQFPmMkaJ3jCgS2NPPBLwD1W+mOhDt9C M1UqG6hxpntME+ka7Kjc/vyxQujglQoFLEZilbuYw3Jr0qJZJEjYRNq+UEMgmsFD8Wsb7ED4aar T6e40QrrGrkqcFgcI8vhDqpGcrgr66YBzhfG+YVnEDyOhDKx42Tvg/TwkeB+RxdpwzWCxjqxbZw
+ JxtHHxoRjOPJobtx0Qyv7ubjIUI1aV7LZnkuLHyBE77NXRyoOZ3bOt8aBCFBVAgrjD11VMhD
+X-Authority-Analysis: v=2.4 cv=Asru3P9P c=1 sm=1 tr=0 ts=6814a88f cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=sOSd7Ic9yzPgF-7c_ocA:9
+X-Proofpoint-GUID: EAvv4iEC7eFg2QV0Ow-ErRfgoKkl4Chq
+X-Proofpoint-ORIG-GUID: EAvv4iEC7eFg2QV0Ow-ErRfgoKkl4Chq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1011 lowpriorityscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 spamscore=0 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020087
 
-On 250502 1241, Andreas Hindborg wrote:
-> >
-> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> > index d7fa8934c545f46a646ca900ab8957a04b0ad34d..33d2b4e4a87b991c6d934f4=
-e8d2c6c71a15b1bcb 100644
-> > --- a/rust/kernel/types.rs
-> > +++ b/rust/kernel/types.rs
-> > @@ -498,7 +498,9 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
-> >      ///
-> >      /// struct Empty {}
-> >      ///
-> > -    /// # // SAFETY: TODO.
-> > +    /// // SAFETY: The `RefCounted` implementation for `Empty` does no=
-t count references
-> > +    /// // and never frees the underlying object. Thus we can act as h=
-aving a
-> > +    /// // refcount on the object that we pass to the newly created `A=
-Ref`.
-> >      /// unsafe impl RefCounted for Empty {
-> >      ///     fn inc_ref(&self) {}
-> >      ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
-> > @@ -506,7 +508,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
-> >      ///
-> >      /// let mut data =3D Empty {};
-> >      /// let ptr =3D NonNull::<Empty>::new(&mut data).unwrap();
-> > -    /// # // SAFETY: TODO.
-> > +    /// // SAFETY: We keep `data` around longer than the `ARef`.
->=20
-> I still think this applies:
->=20
-> >> How about:
-> >>
-> >>   The `RefCounted` implementation for `Empty` does not count reference=
-s
-> >>   and never frees the underlying object. Thus we can act as having a
-> >>   refcount on the object that we pass to the newly created `ARef`.
-> >>
+Update watchdog_thresh when SOFTLOCKUP_DETECTOR=n.
+Additionally fix a build failure in this case as well.
 
-Hi Andreas,
+Fixes: 0bff3dababb07 ("watchdog: fix watchdog may detect false positive of softlockup")
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Closes: https://lore.kernel.org/all/339e2b3e-c7ee-418f-a84c-9c6360dc570b@linux.ibm.com
+Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
+---
+The "Fixes:" SHA1 points to the commit in mm-nonmm-unstable and will need updating
 
-I agree. Sorry, I just messed up the fix. Your wording landed in the
-previous to-be-fixed unsafe comment, as you can see.
+ kernel/watchdog.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Happens when you are too much in a hurry and didn't touch the patch for
-too long :/
-
-I will fix it in the next version.
-
-Best,
-
-Oliver
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 80d1a1dae27..2d283e92be5 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -923,10 +923,12 @@ static __init void lockup_detector_setup(void)
+ }
+ 
+ #else /* CONFIG_SOFTLOCKUP_DETECTOR */
+-static void __lockup_detector_reconfigure(void)
++static void __lockup_detector_reconfigure(bool thresh_changed)
+ {
+ 	cpus_read_lock();
+ 	watchdog_hardlockup_stop();
++	if (thresh_changed)
++		watchdog_thresh = READ_ONCE(watchdog_thresh_next);
+ 	lockup_detector_update_enable();
+ 	watchdog_hardlockup_start();
+ 	cpus_read_unlock();
+-- 
+2.47.0
 
