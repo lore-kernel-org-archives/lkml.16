@@ -1,349 +1,287 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344BD19F464;
-	Fri,  2 May 2025 15:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89C0259CAC
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200927; cv=none; b=Vxdv17GA53YApcRk6FcDmq7ccPkdNeOZ+uynX3Kd0iYN4plY0hDG+SnAJsYUALZesqflctc1CrzTgrk6tz4DRo/cPt4qsdPkS2u/G7mJZS59J5/4KFSY6uj8rflvb3iIrfGucn8v3AkYFsAPMTN2MKdwus9wwEdGw1BcLHbjAsw=
+	t=1746200932; cv=none; b=dwLgnmQSJFr6zPWTTehPEDAWVETkyi5VLLcrc1cn+ZHHgyrj+182xSLLEKEpjccvf2XYZhAkEOGrRHlbAkKhabGZc7XwRKvIlTNLiiCeCzC8h86wquLM/wg40AIk+CGW8cFbdo6doKs+MP/RQUvDo6crEuZcIvJ2ycu/87WqnqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200927; c=relaxed/simple;
-	bh=mP5AS04TcizErRTZJv6rfHissbP7jezQD250An5julU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=he2Gg8pOdUahqkkRQa7ECo///f6LdrP4m+s5uNcoXiLhDI6R4V6bHl3LDds+3R1Uk0ysetQgYPKYJNlc7MmW2+Lv/nLwj+dECR+aV/PSLDrXaJU+4k9oBSipqo7A1HlcUyy1bBIGLOGAVslVtM/Up8dpX7dzvP3y/3wnRLaPjuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YodJNQ9p; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746200932; c=relaxed/simple;
+	bh=FPeCjzIRvdfI3vGWlR2T8Gy9kCqxNdJDC8jzb7oidcc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sROyI16jgODSRfLWbHQDuTMvR31Gpkl44B5X9bJggVrgpAgGl/FOhBP3xOilX9oCdvlv9qHLJncHLyX0s4MrYjumLw+LLGVxU4YTz98H3W525tjDyqPBJv25S3ZWjEovtg6JmPLOUjGXmd9A+GeVX18awhbdo6ii4hApNeVTLX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PFMj+9Ni; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YodJNQ9p"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7403f3ece96so3106473b3a.0;
-        Fri, 02 May 2025 08:48:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PFMj+9Ni"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so12757a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746200925; x=1746805725; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xk4svxxZUEpAVs1r4kwm1XdNSaKAUXHR5V+kAkQVJAI=;
-        b=YodJNQ9pPuLL4OpyfvcdiV4lN0sbFpr6N2Fs84B9o8qxiWtN9HZfLgTlKjEBok4hn6
-         IXdzjYoIo9HjFTEbfTfXVLr6o5yc7rktTehM9cXBsJ/gFY96abUfLElPZuRlaNiuZVtp
-         FNIjVqmGeDS03nkti+1Br+sI4UM4oQRxKCJX7Mr4qvTwIZyfUMBpG21Kmy8QvCif+y8Z
-         ZmwEp4XJytKLUazvFDCTG0vHDY7QHKgDC2wRzDbc92VKX/cHXlaBNWPMu2F3Ul4qwqCD
-         Hc/RT52YcAtH6t5CmMxHlkqIfNIqBhGuL8/wKKvt/5afIanxUtpGVEfNFuXeJDI/ypkk
-         MlNg==
+        d=google.com; s=20230601; t=1746200929; x=1746805729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wVrSpLcZ6r4nzuYBSe89GJo/s5JqpuFLlwBBSO4pcJo=;
+        b=PFMj+9NibIr9bJ3EA6D5pn8umkL1aYiDpUq9shjI9MXWSHIdxegZTD+tJ8w44q1oCv
+         bjXLnxq1fEpPxvAaOYKKBkqp29huemnYl7VYIrA2FD88QtY3LczZxCsRV6a4QnnNH1ib
+         RZ2BkZIRvcOr5eUg2TLK/QduTlcj1m33Djn3/3635azwmj4maluU3eMK3ydw0Av6Km+l
+         voajUKVMRy/mFPs14yXEtB+NhyMcAXqXvBxXKlaRh+m2sWjD+F6bk9fxmyPzmmTO1kdr
+         tBxjctdWTXteC4T5RMjwi30h7bzjLG+ceh1k6VRMmuMpuAMzrrK89l5cPg47gXNyltFe
+         pBug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200925; x=1746805725;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xk4svxxZUEpAVs1r4kwm1XdNSaKAUXHR5V+kAkQVJAI=;
-        b=bel6RPx8FOFR4+Xc140owN7CC4deK6B8dZF0/mTj09aqbpG1JrM4SDOmnYUHTZrsFU
-         4QmrEiXfrLpy/Dk0bnje68csyqOmBT3Drykf+QB6uS/XKKafdtqjfBecD7ukDcFrk5Zv
-         Eowx9/38Yw2oWs2TXYCSU5hM9tUjsx1tTX9yiHKX8vH+HjRMytL5QINtj+4voqQE/+c1
-         Sl3v2IGhy8ZbuOMmj7AelVO6d35D1IOvGaTZLyogUNx3L8/q9dPb5jXXMJzELicRAbBK
-         6QqodPoOSSWd8RDkJhDtgp1M11EI6Bq4jyKPYW073vCAcFaxiYRP5Fi3yoyuwZHI0Ttn
-         9sfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIG+0o2298inRHRxiKHEyXzMSDnEVr4zwWqsNVbH7acdOXe026vx9x5rKsm4/g8o3UnCkQg3YCAcb79r7iLqMVQrOZMA==@vger.kernel.org, AJvYcCXj/cF4oYv4ZE+/QZkXHTNXfeWTcSuliDwAP8ngZy/Yt9SreRpEgpkfz9kHpRX/lRsj32EnFFSQBQi+2CA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8q3Rr1oMjoFnB27Z5du57zyMh9Va6x/SYyiPLZcB3JPwl1ezy
-	jfYg7Sqneeapw0spjzP2GpC+zJLEZqQjRzunB+CQIgPic2R4emFcyfUS1g==
-X-Gm-Gg: ASbGnctsnH4z00cjEkreymjqyKf3gmrDGg/oYBQSMSnFRio9u8b0EiwQkS4ZfanqBpa
-	ObJN0OUpwZPK4r7dDVrU8qRYwHXPp2Q4OLdCfHLVrxOq6ZgQ8AsxAYSP4W3s0uh3SQLVM5MlpnE
-	tTE+YKGLSYBKCF+F0LKRS6kezg1z/iC3aBH/ojT0nkpuGkZqkL4d3lhCxqWwzDebosPOdMmOZ58
-	12oB014eRDzMIZxwT9bOyqh4rgYg7pV/mQYHNAM9/0SVd0Geeh6BM3tiQVJKcxQsUbIEb/OTUvQ
-	shguCVnkoUfLX8NsKMcXnEixuZA3wFoUiA==
-X-Google-Smtp-Source: AGHT+IEpwvOVCuVWiYXlWYRp3tCadcUCKaI8F9pfqzXMq8eEdoBOoVaJ/1U7XrW3MtPC+S2TZFskDw==
-X-Received: by 2002:a05:6a00:32ca:b0:736:3be3:3d76 with SMTP id d2e1a72fcca58-74058aedda8mr4206271b3a.17.1746200925179;
-        Fri, 02 May 2025 08:48:45 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbbafesm1788537b3a.54.2025.05.02.08.48.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 08:48:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746200929; x=1746805729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wVrSpLcZ6r4nzuYBSe89GJo/s5JqpuFLlwBBSO4pcJo=;
+        b=SlZBMyP40gG1DutXvJoDNmt69Rn4RJ9sow9tKvMb1zx4l6q/3zYiUcHw0TgLBpvx5t
+         waKKSX4A2pA3w/sN1ZW1AZ8NFU0GAyH7u7S+XZzXSR5U7ou6XTLnj5EHApR9Wh858OXN
+         Qy6e0gLIZxwXYVRf7QxsCrxVoFBj5pyxFieZEVbvxaj4AvAyj83m4vRCb2YUjEGt3vqJ
+         7HZv4RkVhUWfTvugH9Xk+uUs9deBLVKViXNIbsD//CiLUVTs40sBfmQew1qsVfY4NfRP
+         0T21+AvYywhIQ0Ql/NSWWEhgtlzuiFryA+PBbLHtXp1dn7XqEuDk6M5WRNkYbbfL5nN2
+         Ex3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWNSNvDIP8B3XCHb6kJGhpwSWRyt7hGMDgoIZ5xsm/uoRrmHui9g6z/SMeTBGhzqOFk9mhl1kMJs4+TAVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpod7UalpcAkN1JFJbV1VZNo3Q3+wA+FEy+41Poq6z4p9Iq0h1
+	faLjW3rWumsw9cmdWJjXLIx7bsYH14mU+m0DBZ40AC9Ld9tuqvPsx/jyEMPKWvmZeMOwR9UOLpr
+	CSLOlk0S34tXNPpNSzNH4k6ec+j3cCC24V2m1
+X-Gm-Gg: ASbGncsvVSl0UqFVH5nqnfB+6h8iKuoJlIidXR8iSfSOhbycsXnCRuhhiD7TbHvaKeG
+	xXDnyAIdxsSzj7whiZwNKxdqKiJGVQD+tbXUg8hDc28IR/WkJChqjcoqWTK5uAZGXCHhTqTTH29
+	VXrC+By/1IqselNGzhrKnXWcmXyi+Fd11EziJXiXhssCKfJqeGkQDg
+X-Google-Smtp-Source: AGHT+IH4/tWjZeDHJdM8PWTKrL3Ooj7FlnPJ2nQpTmyA6onllO1fxO0OriRQr9OWjDedxUeXcZYMB/Mj/uPv11WJEF0=
+X-Received: by 2002:a05:6402:6c5:b0:5f7:fcf7:a358 with SMTP id
+ 4fb4d7f45d1cf-5f9145ecf1dmr214753a12.6.1746200928787; Fri, 02 May 2025
+ 08:48:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 02 May 2025 12:48:30 -0300
-Message-Id: <D9LSK7PPIU4V.1Q5FXYODQ170H@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "Gabriel Marcano" <gabemarcano@yahoo.com>,
- <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>,
- "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] platform/x86: alienware-wmi-wmax: Expose GPIO
- debug methods
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250502-awcc-gpio-v3-0-ea9a932d1124@gmail.com>
- <20250502-awcc-gpio-v3-1-ea9a932d1124@gmail.com>
- <aab2237f-d32e-b335-56d3-144274849edf@linux.intel.com>
-In-Reply-To: <aab2237f-d32e-b335-56d3-144274849edf@linux.intel.com>
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616
+MIME-Version: 1.0
+References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
+ <20250501-debugfs-rust-v3-1-850869fab672@google.com> <aBRoNKjB063QhGZo@pollux>
+In-Reply-To: <aBRoNKjB063QhGZo@pollux>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Fri, 2 May 2025 08:48:36 -0700
+X-Gm-Features: ATxdqUF2I5oMt95aeCSU6GeI6VpXDIeABWR6x24vNbPICz6nkDSzJCmGZL0fx_8
+Message-ID: <CAGSQo00hYLubqJy9zkO3_O3b6V15WtmoSybC+Ep5uJeU6k3t4A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Fri May 2, 2025 at 9:45 AM -03, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 2 May 2025, Kurt Borja via B4 Relay wrote:
+On Thu, May 1, 2025 at 11:37=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
 >
->> From: Kurt Borja <kuurtb@gmail.com>
->>=20
->> Devices with the AWCC interface come with a USB RGB-lighting STM32 MCU,
->> which has two GPIO pins with debug capabilities:
->>=20
->>  - Device Firmware Update mode (DFU)
->>  - Negative Reset (NRST)
->>=20
->> The WMAX device has methods to toggle or read the state of these GPIO
->> pins. Expose these methods through DebugFS, hidden behind an unsafe
->> module parameter to avoid common users from toying with these without
->> consideration.
->>=20
->> Suggested-by: Gabriel Marcano <gabemarcano@yahoo.com>
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->> ---
->>  Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
->>  drivers/platform/x86/dell/alienware-wmi-wmax.c  | 105 +++++++++++++++++=
-++++++-
->>  2 files changed, 123 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/Documentation/ABI/testing/debugfs-alienware-wmi b/Documenta=
-tion/ABI/testing/debugfs-alienware-wmi
->> index 48cfd4d0b002efd7b68d9c1d3aa91a3a05f49db5..c7f525d6baac962be8278060=
-8f8da5c0368600cc 100644
->> --- a/Documentation/ABI/testing/debugfs-alienware-wmi
->> +++ b/Documentation/ABI/testing/debugfs-alienware-wmi
->> @@ -42,3 +42,23 @@ Description:
->>  		details.
->> =20
->>  		RO
->> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/total=
-_gpios
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		Total number of GPIO pins reported by the device.
->> +
->> +		RO
->> +
->> +What:		/sys/kernel/debug/alienware-wmi-<wmi_device_name>/gpio_ctl/pinX
->> +Date:		May 2025
->> +KernelVersion:	6.16
->> +Contact:	Kurt Borja <kuurtb@gmail.com>
->> +Description:
->> +		This file controls GPIO pin X status.
->> +
->> +		See Documentation/wmi/devices/alienware-wmi.rst for details.
->> +
->> +		RW
->> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
-atform/x86/dell/alienware-wmi-wmax.c
->> index faeddfe3b79e0aa51e7c8c6b23aa4ac5c7218706..2bf9d85426b8f2cc5482be48=
-050c81f9b6a30d00 100644
->> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
->> @@ -38,6 +38,9 @@
->>  #define AWCC_METHOD_GET_FAN_SENSORS		0x13
->>  #define AWCC_METHOD_THERMAL_INFORMATION		0x14
->>  #define AWCC_METHOD_THERMAL_CONTROL		0x15
->> +#define AWCC_METHOD_FWUP_GPIO_CONTROL		0x20
->> +#define AWCC_METHOD_READ_TOTAL_GPIOS		0x21
->> +#define AWCC_METHOD_READ_GPIO_STATUS		0x22
->>  #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
->> =20
->>  #define AWCC_FAILURE_CODE			0xFFFFFFFF
->> @@ -281,6 +284,8 @@ struct awcc_priv {
->>  	struct device *hwdev;
->>  	struct awcc_fan_data **fan_data;
->>  	unsigned long temp_sensors[AWCC_ID_BITMAP_LONGS];
->> +
->> +	u32 gpio_count;
->>  };
->> =20
->>  static const enum platform_profile_option awcc_mode_to_platform_profile=
-[AWCC_PROFILE_LAST] =3D {
->> @@ -571,6 +576,38 @@ static int awcc_thermal_information(struct wmi_devi=
-ce *wdev, u8 operation, u8 ar
->>  	return awcc_wmi_command(wdev, AWCC_METHOD_THERMAL_INFORMATION, &args, =
-out);
->>  }
->> =20
->> +static int awcc_fwup_gpio_control(struct wmi_device *wdev, u8 pin, u8 s=
-tatus)
->> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D status,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +	u32 out;
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_FWUP_GPIO_CONTROL, &args, &o=
-ut);
->> +}
->> +
->> +static int awcc_read_total_gpios(struct wmi_device *wdev, u32 *count)
->> +{
->> +	struct wmax_u32_args args =3D {};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_TOTAL_GPIOS, &args, cou=
-nt);
->> +}
->> +
->> +static int awcc_read_gpio_status(struct wmi_device *wdev, u8 pin, u32 *=
-status)
->> +{
->> +	struct wmax_u32_args args =3D {
->> +		.operation =3D pin,
->> +		.arg1 =3D 0,
->> +		.arg2 =3D 0,
->> +		.arg3 =3D 0,
->> +	};
->> +
->> +	return awcc_wmi_command(wdev, AWCC_METHOD_READ_GPIO_STATUS, &args, sta=
-tus);
->> +}
->> +
->>  static int awcc_game_shift_status(struct wmi_device *wdev, u8 operation=
-,
->>  				  u32 *out)
->>  {
->> @@ -1318,6 +1355,47 @@ static int awcc_debugfs_pprof_data_read(struct se=
-q_file *seq, void *data)
->>  	return 0;
->>  }
->> =20
->> +static int awcc_gpio_pin_show(struct seq_file *seq, void *data)
->> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(seq->file);
->> +	struct wmi_device *wdev =3D seq->private;
->> +	u32 status;
->> +	int ret;
->> +
->> +	ret =3D awcc_read_gpio_status(wdev, pin, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	seq_printf(seq, "%u\n", status);
->> +
->> +	return 0;
->> +}
->> +
->> +static ssize_t awcc_gpio_pin_write(struct file *file, const char __user=
- *buf,
->> +				   size_t count, loff_t *ppos)
->> +{
->> +	unsigned long pin =3D debugfs_get_aux_num(file);
->> +	struct seq_file *seq =3D file->private_data;
->> +	struct wmi_device *wdev =3D seq->private;
->> +	bool status;
->> +	int ret;
->> +
->> +	if (!ppos || *ppos)
->> +		return -EINVAL;
->> +
->> +	ret =3D kstrtobool_from_user(buf, count, &status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D awcc_fwup_gpio_control(wdev, pin, status);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return count;
->> +}
->> +
->> +DEFINE_SHOW_STORE_ATTRIBUTE(awcc_gpio_pin);
->> +
->>  static void awcc_debugfs_remove(void *data)
->>  {
->>  	struct dentry *root =3D data;
->> @@ -1327,11 +1405,15 @@ static void awcc_debugfs_remove(void *data)
->> =20
->>  static void awcc_debugfs_init(struct wmi_device *wdev)
->>  {
->> -	struct dentry *root;
->> -	char name[64];
->> +	struct awcc_priv *priv =3D dev_get_drvdata(&wdev->dev);
->> +	struct dentry *root, *gpio_ctl;
->> +	char pin_name[8], name[64];
->> +	u32 gpio_count;
->> +	int ret;
->> =20
->>  	scnprintf(name, sizeof(name), "%s-%s", "alienware-wmi", dev_name(&wdev=
-->dev));
->>  	root =3D debugfs_create_dir(name, NULL);
->> +	gpio_ctl =3D debugfs_create_dir("gpio_ctl", root);
->> =20
->>  	debugfs_create_devm_seqfile(&wdev->dev, "system_description", root,
->>  				    awcc_debugfs_system_description_read);
->> @@ -1344,6 +1426,25 @@ static void awcc_debugfs_init(struct wmi_device *=
-wdev)
->>  		debugfs_create_devm_seqfile(&wdev->dev, "pprof_data", root,
->>  					    awcc_debugfs_pprof_data_read);
->> =20
->> +	ret =3D awcc_read_total_gpios(wdev, &gpio_count);
->> +	if (ret) {
->> +		dev_dbg(&wdev->dev, "Failed to get total GPIO Pin count\n");
->> +		goto out_add_action;
->> +	} else if (gpio_count > AWCC_MAX_RES_COUNT) {
->> +		dev_dbg(&wdev->dev, "Reported GPIO Pin count may be corrupted: %u\n",=
- gpio_count);
->> +		goto out_add_action;
->> +	}
->> +
->> +	priv->gpio_count =3D gpio_count;
->> +	debugfs_create_u32("total_gpios", 0444, gpio_ctl, &priv->gpio_count);
->> +
->> +	for (unsigned int i =3D 0; i < gpio_count; i++) {
->> +		scnprintf(pin_name, sizeof(pin_name), "pin%u", i);
+> On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
+> > +/// Owning handle to a DebugFS directory.
+> > +///
+> > +/// This directory will be cleaned up when it goes out of scope.
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// The wrapped pointer will always be `NULL`, an error, or an owned D=
+ebugFS `dentry`.
+> > +#[repr(transparent)]
+> > +pub struct Dir(#[cfg(CONFIG_DEBUG_FS)] *mut bindings::dentry);
 >
-> Hi,
->
-> This might trigger a warning from the compiler that the resulting string=
-=20
-> might not fit into pin_name. Did you check the warnings?
+> Should probably use Opaque instead of a raw pointer.
 
-Hi Ilpo,
-
-W=3D1 currently throws no warnings.
-
-gpio_count does not exceed AWCC_MAX_RES_COUNT (16) so it should fit into
-`pin_name` right?
-
-Anyway, to avoid this we can reuse `name[]` here instead.
-
---=20
- ~ Kurt
+Opaque usage is problematic here:
+1. It was explicitly requested in the first patch that I not expose
+the reference counted nature of the dentry we were being provided. At
+the same time, the dentry we are provided isn't a borrow - it doesn't
+live for a fixed lifetime, it goes away when we clean it up. This
+means that if I do `Dir(Opaque<dentry>)`, there's no way to represent
+the return value of directory creation - it's not `Box<Dir>` or
+`Arc<Dir>`, and I've been requested to hide the fact that it's
+`ARef<Dir>` and not decrement the refcount myself. We can't know the
+lifetime at the callsite, so we can't use a `&'a Dir` either. This
+lands with the raw pointer wrapper. I could, technically, produce
+`InnerDir(Opaque<dentry>)` and `Dir(ManuallyDrop<ARef<Dir>>)`, and
+then impl `Drop` for `Dir` to `remove` instead of `dput`, but that
+seems like a bunch of work to construct infrastructure and then
+suppress it that doesn't actually help.
+2. If you were suggesting `Dir(*mut Opaque<dentry>)`, I think this is
+meaningless and will just cause cast noise. My understanding is that
+the use of `Opaque` is to remove restrictions Rust has over legal
+references and values, e.g. it's initialized, it's not being mutated,
+thread safety invariants, etc. However, pointers in Rust explicitly do
+not induce any of these requirements on their pointee (otherwise
+`ptr::dangling()` would be immediate UB in many situations).
+3. Unless we produce an `ARef<Opaque<dentry>>` at some point (which
+again, we've been asked to pretend isn't there), I don't think there's
+any way for the DebugFS bindings to produce a legal `&'a
+Opaque<dentry>`, so there's not really a purpose.
 
 >
->> +		debugfs_create_file_aux_num(pin_name, 0644, gpio_ctl, wdev, i,
->> +					    &awcc_gpio_pin_fops);
->> +	}
->> +
->> +out_add_action:
->>  	devm_add_action_or_reset(&wdev->dev, awcc_debugfs_remove, root);
->>  }
->> =20
->>=20
->>=20
-
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYKAB0WIQSHYKL24lpu7U7AVd8WYEM49J/UZgUCaBTpUAAKCRAWYEM49J/U
-ZqoIAQCv01mmsojPgQITXeQ0yZXK+Ut0wHt8bUQ7YwkBhv+sEwD4nA6RixZlAJS4
-MZd2bP9Ps2wypq66mDNVH6JbN+ClCw==
-=Umvk
------END PGP SIGNATURE-----
-
---2142283f20f7abef593b3d7efbed664fd04997633010f80d36cd4224e616--
+> > +// SAFETY: Dir is just a `dentry` under the hood, which the API promis=
+es can be transferred
+>
+> [`Dir`]
+>
+> > +// between threads.
+> > +unsafe impl Send for Dir {}
+> > +
+> > +// SAFETY: All the native functions we re-export use interior locking,=
+ and the contents of the
+> > +// struct are opaque to Rust.
+> > +unsafe impl Sync for Dir {}
+> > +
+> > +impl Dir {
+> > +    /// Create a new directory in DebugFS at the root.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// # use kernel::c_str;
+> > +    /// # use kernel::debugfs::Dir;
+> > +    /// {
+> > +    ///    let parent =3D Dir::new(c_str!("parent"));
+> > +    ///    // The path "parent" exists in DebugFS here.
+> > +    /// }
+> > +    /// // It does not exist here.
+>
+> This ready like an explanation for scopes; I think we should drop those c=
+omments
+> and the scope.
+>
+> > +    /// ```
+> > +    pub fn new(name: &CStr) -> Self {
+> > +        Self::create(name, None)
+> > +    }
+> > +
+> > +    /// Create a DebugFS subdirectory.
+> > +    ///
+> > +    /// This returns a [`SubDir`], which will not be automatically cle=
+aned up when it leaves scope.
+> > +    /// To convert this to a handle governing the lifetime of the dire=
+ctory, use [`Dir::from`].
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// # use kernel::c_str;
+> > +    /// # use kernel::debugfs::Dir;
+> > +    /// {
+> > +    ///    let parent =3D Dir::new(c_str!("parent"));
+> > +    ///    // The path "parent" exists in DebugFS here.
+> > +    ///    {
+> > +    ///        let child =3D parent.subdir(c_str!("child"));
+> > +    ///        // The path "parent/child" exists in DebugFS here.
+> > +    ///    }
+> > +    ///    // The path "parent/child" still exists.
+> > +    ///    {
+> > +    ///        let child2 =3D Dir::from(parent.subdir(c_str!("child2")=
+));
+> > +    ///        // The path "parent/child2" exists in DebugFS here.
+> > +    ///    }
+> > +    ///    // The path "parent/child2" is gone.
+> > +    /// }
+> > +    /// // None of the paths exist here.
+>
+> I think the fact that you need all those comments here proves that it's n=
+ot
+> really intuitive. Please see me comment on SubDir below.
+>
+> > +    /// ```
+> > +    pub fn subdir(&self, name: &CStr) -> SubDir {
+> > +        SubDir::new(Self::create(name, Some(self)))
+> > +    }
+> > +
+> > +    /// Create a new directory in DebugFS. If `parent` is [`None`], it=
+ will be created at the root.
+> > +    #[cfg(CONFIG_DEBUG_FS)]
+> > +    fn create(name: &CStr, parent: Option<&Self>) -> Self {
+> > +        let parent_ptr =3D match parent {
+> > +            Some(parent) =3D> parent.as_ptr(),
+> > +            None =3D> core::ptr::null_mut(),
+> > +        };
+> > +        // SAFETY:
+> > +        // * `name` argument points to a NUL-terminated string that li=
+ves across the call, by
+> > +        //   invariants of `&CStr`.
+> > +        // * If `parent` is `None`, `parent` accepts null pointers to =
+mean create at root.
+> > +        // * If `parent` is `Some`, `parent` accepts live dentry debug=
+fs pointers.
+> > +        // * `debugfs_create_dir` either returns an error code or a le=
+gal `dentry` pointer,
+> > +        //   so we can call `Self::from_ptr`.
+> > +        unsafe { Self::from_ptr(bindings::debugfs_create_dir(name.as_c=
+har_ptr(), parent_ptr)) }
+>
+> Please split up in two calls, such that we don't have two unsafe function=
+ calls
+> in a single unsafe block.
+>
+> > +    }
+> > +
+> > +    #[cfg(not(CONFIG_DEBUG_FS))]
+> > +    fn create(_name: &CStr, _parent: Option<&Self>) -> Self {
+> > +        Self()
+> > +    }
+> > +
+> > +    /// Constructs a new DebugFS [`Dir`] from the underlying pointer.
+> > +    ///
+> > +    /// # Safety
+> > +    ///
+> > +    /// The pointer must either be an error code, `NULL`, or represent=
+ a transfer of ownership of a
+> > +    /// live DebugFS directory.
+> > +    #[cfg(CONFIG_DEBUG_FS)]
+> > +    unsafe fn from_ptr(ptr: *mut bindings::dentry) -> Self {
+> > +        Self(ptr)
+> > +    }
+> > +
+> > +    /// Returns the pointer representation of the DebugFS directory.
+> > +    ///
+> > +    /// Due to the type invariant, the value returned from this functi=
+on will always be an error
+> > +    /// code, NUL, or a live DebugFS directory.
+>
+> Maybe put this in a '# Guarantees' section.
+>
+> > +    // If this function is ever needed with `not(CONFIG_DEBUG_FS)`, ha=
+rdcode it to return `ENODEV`.
+>
+> I think you mean ERR_PTR(ENODEV).
+>
+> > +    #[cfg(CONFIG_DEBUG_FS)]
+> > +    fn as_ptr(&self) -> *mut bindings::dentry {
+> > +        self.0
+> > +    }
+> > +}
+> > +
+> > +impl Drop for Dir {
+> > +    fn drop(&mut self) {
+> > +        // SAFETY: `debugfs_remove` can take `NULL`, error values, and=
+ legal DebugFS dentries.
+> > +        // `as_ptr` guarantees that the pointer is of this form.
+> > +        #[cfg(CONFIG_DEBUG_FS)]
+> > +        unsafe {
+> > +            bindings::debugfs_remove(self.as_ptr())
+> > +        }
+> > +    }
+> > +}
+> > +
+> > +/// Handle to a DebugFS directory that will stay alive after leaving s=
+cope.
+> > +#[repr(transparent)]
+> > +pub struct SubDir(ManuallyDrop<Dir>);
+>
+> I think it's not very intuitive if the default is that a SubDir still exi=
+sts
+> after it has been dropped. I think your first approach being explicit abo=
+ut this
+> with keep() consuming the SubDir was much better; please keep this approa=
+ch.
