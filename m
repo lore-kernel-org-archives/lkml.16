@@ -1,382 +1,295 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazolkn19013076.outbound.protection.outlook.com [52.103.20.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C1D19D07B;
-	Fri,  2 May 2025 04:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746158739; cv=none; b=crZv2m46tC0YPdOkTLkdmmNEBZQM7VN5tQCL9aWMeSIPNlc3dPO+McI3NXnObP9C6zmX414WCbD7p9hDz6oCvEisJdpTvqcoK3TVhh77cTbkqu162BskBbJ/NCnnpbDNFHD1oM54I/i05UL/cVDbCgJGSjhYhXPz1t+Cw5RGtwY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746158739; c=relaxed/simple;
-	bh=ragGZp5EXIMYmqKTr2Emci/TSzBIqAUcffY7UKDO2Nc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ejJIGNootGcyB34b+ZpuZtkzciXy6nCcmWf0JqZnR6tplX9qKXLJvZ/QK0IfL0a10WRdhGx7YDiHFdgLRcxIUpJay4V9xpFXm6hehcrKirVPcxrcvazoB5wCjknC4qrJmp+/4D+WPKbDr0ni9EB+ljBJLrFOwa70SJ5I7gQS1VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hx8WOcLY; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C2128F1;
+	Fri,  2 May 2025 04:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746158915; cv=fail; b=o/cz3wFUeT+v0ea3fZxYDXHj1Pr9+UVAyuH8JhoIYjAMn2Ag/VheiTkOvdIbKsJbZxXJtt7NLHZAx3Agz14ZIzv7vn1bC/+H2NeBnZqRYOMcYFynLpU0NodpcE7kKi2Blk34qrK7YquBIJXjKvVXGuBMhBu7rUwBs0Lvo7ULfZw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746158915; c=relaxed/simple;
+	bh=Ipd9emE2DQhrjGPD935THLYkgfSDo7Nimw286XrRBKs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ueWW5HIEXvGUndmJZ6NM/gJnp+ddFDZ+NF8Uev6T4uO1mdPNdtQYJBb67WuQN6zWuqUV4J6EGbZ5QY9aCbtWFsoUYQCAwNLFoIkCuIgoWKh5Da/evnu9qZ5TNeBcHRDk0Ml9VwBj1WcXUpnwInjnYQoujgPLVNVy1oXCQSfWzos=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=eWZXNHDV; arc=fail smtp.client-ip=52.103.20.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hx8WOcLY"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227d6b530d8so16921955ad.3;
-        Thu, 01 May 2025 21:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746158736; x=1746763536; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q8rtwXd/8ryLn7PMv/3BI/1btBWjP67A1M55jgL3p1I=;
-        b=Hx8WOcLYpFWJD5v9VF3wsFHFvwNhAklavUM0i8kTiSkEtaC82iI9r1PwRjo04qtPo6
-         EkjALwB9YU9lcHlhE9Sucj+/jIRYNCbqvL/Aathm5EzZ0yVfvJ93O9tprngyc0ujgNTu
-         Y2d181b7QAwGD0Vnpy/kT/FcjCXcBk4sA1ZFY7Ky8RruY8oAfUgh06lc9ckWjPZLw68d
-         hoqyAhqmRVKsWMTXQogGaq13tm+fPOTPiK4jcyO+ago4+jLzU04tzCT3hm219SvFWgUV
-         XOG/HCx2wf/m6K6YJ0nb1PcbS7fsvXM7CXY8TN6NrGTIVCfuxDNPQeADPbMCWjdc/zzO
-         pzaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746158736; x=1746763536;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8rtwXd/8ryLn7PMv/3BI/1btBWjP67A1M55jgL3p1I=;
-        b=ISSCyoebRDbYSNua2DILOwwTVTwC4Xn3sUC7SLJX5s4MVireTxeHi88srsP2wP1ATY
-         njhLaYPvK2UYd7Lam/BhwTtRavmG1q46kA84BKPowzrB/ZwWZJvf9pm5N3JYS6zqRpd0
-         PYu6qYm/zP7VBSrwfBZQrZkmkMqlGlEejeYXC+sa95TlssCwi3VlYa0ykkRQBKkbKHcj
-         l+ui1GQRcqEJtqgICA+co65/ODDGoZ/aPtD7zM2a6BAngxEjiFmUf5i1fe9CbP6ln0Qa
-         ncjAVleKEyaXJl46fXIFqxWdUIPjviZYQOjKdJdxKzfJq/vBjKFScoSCNSVZ7kmxHFSe
-         aZqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8p0dJdPp9hpeScWPM4ft9bin5J1U+zzw2J4eCt1qXgDbvsgerwNQaxn6AzGRU+qAjAXhrZkE3xIvPAxRp@vger.kernel.org, AJvYcCX5ZMjjN3Gyj3Xx2l9sUMIlQt2ShHkSb4TJGcKKTEFPAK2vd9gGkO2ysK8DJ3p1OU9fawcuFB1FkjWDQe5Z@vger.kernel.org, AJvYcCXkeMeKCmQqg8/mOEeMADQcR5+PouabdlrR3t235AG+kAf9EHChZ6/HTwM5gzMMgqJRX2Lc+xM70DcxbQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVWPBmUgaAC9z9IGc8uZdh8PUooQCUcjMc5rcV3CTNRSgc7H9n
-	VIlOI/NVmpOHx2x+ltMKR+eBEJ4lzjMJgtEp5CCQNlJId1XjOkBb
-X-Gm-Gg: ASbGncukmqh58o4DNzhSS6Xy98ZDxBe8M4SfYS/vjo5VMzn9DP97GvbwWzGH9YTq7MA
-	EixeY26yk1acn+zLpQbe2nQMpZAotQ2s2OFjyUxiq3MhNpnKr6te0yAn6qIxQ0DmyN5VLg6tU/2
-	wsfxoNknYrMq7ACRkFSgmZ4rq2Zl48TTebQkb/WVjzxqVqX9gYUagP9oBKSEvREwGXwYogSBmiA
-	kwDTBQ36beX39P2XVDITC29WVhNSNS7zfiCO7iPOqKvS2Mtro1n2dRjfMYJW26KiwpGdbYogceM
-	Nc+VEa1E5bMUN5phEjzLybh2ayCsoLufOwxASNXfjM4tMXSF2uDdfSxWcSgTXl7KYWl1BtYoOXc
-	AcrEPU+jIw/iG5I97hOk=
-X-Google-Smtp-Source: AGHT+IEf3+uT4scOVSUlWdwMAEVx4CjYg+szZX2Ppg1uSU729mUa1LeAuSEqHWUWSIGC5cTyM8JORw==
-X-Received: by 2002:a17:903:2405:b0:215:4a4e:9262 with SMTP id d9443c01a7336-22e102b84cbmr20583985ad.8.1746158736282;
-        Thu, 01 May 2025 21:05:36 -0700 (PDT)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e108fb836sm4510635ad.141.2025.05.01.21.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 21:05:35 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: simona@ffwll.ch,
-	deller@gmx.de,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	akpm@linux-foundation.org
-Cc: weh@microsoft.com,
-	tzimmermann@suse.de,
-	hch@lst.de,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH v2 2/3] fbdev/deferred-io: Support contiguous kernel memory framebuffers
-Date: Thu,  1 May 2025 21:05:24 -0700
-Message-Id: <20250502040525.822075-3-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250502040525.822075-1-mhklinux@outlook.com>
-References: <20250502040525.822075-1-mhklinux@outlook.com>
-Reply-To: mhklinux@outlook.com
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="eWZXNHDV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vn3rGm9y/N4U74MNXXYBdOVLIZEb4mr907ETC9IMArepvR2PRIbARTNhxAvYtnwjtcF3HbtgpVWaEFEyZWrlNa1bC1d1aaxGbv77necOEZyDPvOpxkcRzFYOZN5CsDX0UPYJ6PF96A/nW0DN1QnpxfH+rsTN7DO0jpJMv0YFtYETXDJdlpTUEKGFY3zbHH0hY9Wgbg/2NDHvZiwRt+4jR3fxV+3eiUGofI0JkKnTmyUW40UMbmAJZ8MxYzq791ciAVqybz/wWKwxJ2LPDGEYl8r+Z4cBTIunmptocmtBnZxWBmFgyG3/WV8yfbTxv77dnZIE4Y+5tYtPuVNdsKx1CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CuldBf2vD5Ueodak/LG2QmCsYGRG6HHCVDQXm91jIsw=;
+ b=FpU8BfZEOO0F6V5YiVQGF2LRaWMlUbZXle9TPOi5URrdPK1hRypoWW3RGCG7dqE8s49/sfojsvOmXniFFXqqf0tGJYKaaFNrwcqOtsW0P0I0NAZvcZYjDlBqzM/5YtWPfyhCyTi+cnCRmyOt19el0AdKXvvR2uObyofZ8vbOJszbxREYbPRyRSfWRIVK5X1xfnDoNMae6jRQB3vGP8NyX1tsG8UPjbGAHT9PQY0ql1lBQkNf2AQMdJQUQZQgXdYCU62R+ulpuFosJ/gnfIVQ9OIVZP27N3YZZLys96oL0+/yXDKJdGE/UHPYTdpcuVYhSOjrzT7dpc1uCCpJ6g0lzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CuldBf2vD5Ueodak/LG2QmCsYGRG6HHCVDQXm91jIsw=;
+ b=eWZXNHDVpmt5XKAJWuAi18ktp4f1T4SyxSImd/IhB6zJ+m0Vt0RduWlP8nG9tCZOgARvz1vI2mEs8empbKsDCwFgUTgho708LNkVDc8N6IOuoUg9Ft/HEanwmK4d3h+L1P56Izj4aKEmoBBRVOruJmcKm9kNF7AOFuorOqTAxz1Ky4OsgCPANjiIOOBrsx5BQf7N+EPME83DKMDC7TtG/GasmHzrfQQ9PKPLMMDBms6NwUbXH/p9Eq8cH2pntv2j0U4oCcgAaXv6AtOwUTgcJrYU9KB02kLuRd+7QZU27VsNgdZ5sP5PEGe1vQt1Cbj/r2qXlM2uOgidu5QHc3oDIg==
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
+ by PH0PR02MB8646.namprd02.prod.outlook.com (2603:10b6:510:10e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
+ 2025 04:08:29 +0000
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8699.010; Fri, 2 May 2025
+ 04:08:29 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "decui@microsoft.com" <decui@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org" <lenb@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "maz@kernel.org"
+	<maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "rafael@kernel.org"
+	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "suzuki.poulose@arm.com"
+	<suzuki.poulose@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+	<will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
+	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
+	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: RE: [PATCH hyperv-next v9 11/11] PCI: hv: Get vPCI MSI IRQ domain
+ from DeviceTree
+Thread-Topic: [PATCH hyperv-next v9 11/11] PCI: hv: Get vPCI MSI IRQ domain
+ from DeviceTree
+Thread-Index: AQHbuIIGiFt9aynoMUK6tNHuTgnFP7O+vmPw
+Date: Fri, 2 May 2025 04:08:28 +0000
+Message-ID:
+ <BN7PR02MB4148C37D53E84A5BBAB999F8D48D2@BN7PR02MB4148.namprd02.prod.outlook.com>
+References: <20250428210742.435282-1-romank@linux.microsoft.com>
+ <20250428210742.435282-12-romank@linux.microsoft.com>
+In-Reply-To: <20250428210742.435282-12-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|PH0PR02MB8646:EE_
+x-ms-office365-filtering-correlation-id: c55fbe45-7705-4e35-b193-08dd892efe75
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799006|8060799006|8062599003|19110799003|461199028|440099028|3412199025|12091999003|41001999003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?sSGUMc6YxWe/gGiDo/aCfkMIiUef44vfc9FclxLJQHXfSbBtmZsuTacZRfcu?=
+ =?us-ascii?Q?Tlor6MzFACnecpewPUF9Fnk3tRrjZCRJmzDyqMWyUCqk2Aj+ox9OHns3NW1o?=
+ =?us-ascii?Q?53IsCUOF9mz35ehNTNy18a57nOp3304CnStDwYaSQZrVbAnL4UVEnYlfb8zm?=
+ =?us-ascii?Q?WyeHQN4Vr+D18ha5riwGmYFzcVlvY2GX7Lvi1VVtl+TRszkNy8DK12tVjRAQ?=
+ =?us-ascii?Q?9uUYKaSQ6/cJuf2BeaV2KjeO0bVsClFnbLjCE41ErDtg3Di4NxHnfkPGKVMV?=
+ =?us-ascii?Q?7FxvpCHmezQsE6hnjcNr56em84Jgfdw3KYWpoQvvIMdqtRsKUdfeQcxB9at3?=
+ =?us-ascii?Q?3PrrANkfhU+mX/z5n6hWCaVOPNNC3DSdpNh+JnsZokx3s7OFXluQG5gh3+uM?=
+ =?us-ascii?Q?l7cm0dF//gSDL+eXsq68VJLfLSeDe8l6ErOPDjxBuhROBylXVeOVozyq+4bk?=
+ =?us-ascii?Q?CM6A5xrd9aVcOPCrOL8+ckX4yRRbyUDu/IWQDzQu84+/RmcnkArfvn6dc8zO?=
+ =?us-ascii?Q?5mmGex+RsPZEDHpCTDct8imSG2ysrnM6hGGiQbO7gbC0LW+kpaYqov0lq3uU?=
+ =?us-ascii?Q?fRfPywUn/lVDULzxIMZpl5IOLr4kVcjlhoAlnEhlyCD+rmjVZeXOan6/BTCQ?=
+ =?us-ascii?Q?nC9fS9SJ0nGzhC2yr8A/Do3cKKrCGMEz7oKQOhdgb01kXBWljv2f/8cIhJ+l?=
+ =?us-ascii?Q?i0ciKrZrJed9AmvtUqH9rRbJeaGEUaxYHWzTCOmNg/JmY1MQ+D+95DjpC/p6?=
+ =?us-ascii?Q?x0iutfTOL/mEKHtsd6Lw3G2PGUV5v3mgmX3XyBWCg7Cre2gpksiEv43sfDzt?=
+ =?us-ascii?Q?1twuQthkifLV/fiV+WNQx1sN9UaGSjxJfXqixIYNZLqWz426Lyy6euUWIPqo?=
+ =?us-ascii?Q?f6CED9VW7ex6kg5xdmePcIZa8dHwdKnn8OuqWVJPZKiDxdDWzZcj7hIAr6Oj?=
+ =?us-ascii?Q?JDdRhh9/9l6+Q0htxKk6CeSQHvi6zMLJXB0QfkImImgFXvXrPZVToomyJl31?=
+ =?us-ascii?Q?aaIosr/DSGdz/EwrrnyIIpiPxj0wMa1eCD3+6mKz+V8Vd+gjAFnwYwcg19OT?=
+ =?us-ascii?Q?jQxwrhP6Jmi88dLh8QK0gmpr+/LgA/5nSb3ZlhOucJgnznbRFDQPgc7r0fw4?=
+ =?us-ascii?Q?nq4sjw0OG04W+hSDYQjcmECZwOfB0xsZzg=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?4fiNAP8E1MuxVkSOBa3fhp3BgBsy5xnHDXRhcLoTd0LgzkZM+ImrVyKYJEj7?=
+ =?us-ascii?Q?rMmZd1blnzCqYX9hwTJFt5CFK98VfGzUu/NRfmlw8SwMEQILn1sPxQl/3ohV?=
+ =?us-ascii?Q?ej0ZD9eplRpDgZdZ8dQ1SQEg6nyzLmPcqrf+9u96Kuz4HuJKVwxGCoC/dUS9?=
+ =?us-ascii?Q?Ih4FrTlDoFVcrhPe10tJbAINiIa2WYrOTE7aOBr5Gp0yikNfG7xXqey8PZIa?=
+ =?us-ascii?Q?PaE1UzUYgEvroMv/9WlzoEzm5JOxa0ow1ejl63Mh1gzzdrVdG0xTAxOYcC9I?=
+ =?us-ascii?Q?KaCisKIUlzhlzsoyqtpULwqxhggz7meMse1Mq6mtM/Nbfm9tS2EBeXaId4we?=
+ =?us-ascii?Q?mZ0Q6ZHUusuWwpwZ4QWPjiZ/v4fXlL5uI+/JBcoJaOxxB6ws9QKhz6YwK9Rr?=
+ =?us-ascii?Q?F7vlaklA6TIcHPQEUYmdMgnhJ8f14BkBLcIukccrqmZbWTJwXm9kUXaqD9rN?=
+ =?us-ascii?Q?udO+YFDNzVr8MQ+WDpiuDrNsLjNsX/VGXHnQbFs3VuBcUD3GSYHitD8F12w1?=
+ =?us-ascii?Q?vk6Ivf46c968OxfcDJoFzyBoPLzgjAifR6skV0jcK8STbw7UABBUxS3gS+gz?=
+ =?us-ascii?Q?k//NsiksAo/r0pYJeNOMHMpOXXPG/EDVEHzTWNL6O12d1lrGaDtX8BNWFvNN?=
+ =?us-ascii?Q?UyhqJyLAOIERjSFr21YtJCXw3C04UpuKgcStXPqXbHoQNsASoxfZHB8V/U/8?=
+ =?us-ascii?Q?fnw7jc5zsVJ6ARodvo1HKCnaavih0Gv20X58HWiGYMQpNOQ8rROp+T2Y8sHr?=
+ =?us-ascii?Q?uB27OmUEYIYUrVBWFKfp4Jzwx889hACUi4+122bvg0HibrP7BF42BTicWoiv?=
+ =?us-ascii?Q?yV3jigcMARK0Af5tYnU4Bz3jCLsoCKkT+i9Y/0smb7vjTOUqxvUz9J0JU5Id?=
+ =?us-ascii?Q?W4P4hnvzrXnjj+YqUB1dbY9DpmtT4Tg68+31C9p6UBI0QlrUyJ1jMwnbymIL?=
+ =?us-ascii?Q?ugVXLRLNgoZC9SNbhHJOOTzwU/ygOzN3w5nLGWWyoHvJNl8RMgqFjQ5Wyndv?=
+ =?us-ascii?Q?2lvXzN++gyNJ7cbbJIjZdkCLtgywPmiqadlKBHd1PNpSb4JLxDjYv6OItfKC?=
+ =?us-ascii?Q?yMM3GYSNBUuzi/7hDsXvDZbGBy0pqmp9mGZvNEn3U7UswEaxB5HEGAJx+NI4?=
+ =?us-ascii?Q?1LC4fSM251eACl4Q+QTGThZ9mlzbvmnZW9VTnMs1k/8uFOC1jLBnhh/JqSui?=
+ =?us-ascii?Q?7pxXY2f4YnO8gwiylxXopk2lfXUPOeF0YwzKILJCVwgmxenP9EM12wTjnOQ?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c55fbe45-7705-4e35-b193-08dd892efe75
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2025 04:08:28.6901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8646
 
-From: Michael Kelley <mhklinux@outlook.com>
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 28, 2025=
+ 2:08 PM
+>=20
+> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
+> arm64. It won't be able to do that in the VTL mode where only DeviceTree
+> can be used.
+>=20
+> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
+> case, too.
+>=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Current defio code works only for framebuffer memory that is allocated
-with vmalloc(). The code assumes that the underlying page refcount can
-be used by the mm subsystem to manage each framebuffer page's lifecycle,
-including freeing the page if the refcount goes to 0. This approach is
-consistent with vmalloc'ed memory, but not with contiguous kernel memory
-allocated via alloc_pages() or similar. The latter such memory pages
-usually have a refcount of 0 when allocated, and would be incorrectly
-freed page-by-page if used with defio. That free'ing corrupts the memory
-free lists and Linux eventually panics. Simply bumping the refcount after
-allocation doesn’t work because when the framebuffer memory is freed,
-__free_pages() complains about non-zero refcounts.
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-Commit 37b4837959cb ("video: deferred io with physically contiguous
-memory") from the year 2008 purported to add support for contiguous
-kernel memory framebuffers. The motivating device, sh_mobile_lcdcfb, uses
-dma_alloc_coherent() to allocate framebuffer memory, which is likely to
-use alloc_pages(). It's unclear to me how this commit actually worked at
-the time, unless dma_alloc_coherent() was pulling from a CMA pool instead
-of alloc_pages(). Or perhaps alloc_pages() worked differently or on the
-arm32 architecture on which sh_mobile_lcdcfb is used.
-
-In any case, for x86 and arm64 today, commit 37b4837959cb9 is not
-sufficient to support contiguous kernel memory framebuffers. The problem
-can be seen with the hyperv_fb driver, which may allocate the framebuffer
-memory using vmalloc() or alloc_pages(), depending on the configuration
-of the Hyper-V guest VM (Gen 1 vs. Gen 2) and the size of the framebuffer.
-
-Fix this limitation by adding defio support for contiguous kernel memory
-framebuffers. A driver with a framebuffer allocated from contiguous
-kernel memory must set the FBINFO_KMEMFB flag to indicate such.
-
-Tested with the hyperv_fb driver in both configurations -- with a vmalloc()
-framebuffer and with an alloc_pages() framebuffer on x86. Also verified a
-vmalloc() framebuffer on arm64. Hardware is not available to me to verify
-that the older arm32 devices still work correctly, but the path for
-vmalloc() framebuffers is essentially unchanged.
-
-Even with these changes, defio does not support framebuffers in MMIO
-space, as defio code depends on framebuffer memory pages having
-corresponding 'struct page's.
-
-Fixes: 3a6fb6c4255c ("video: hyperv: hyperv_fb: Use physical memory for fb on HyperV Gen 1 VMs.")
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
-Changes in v2:
-* Tweaked code comments regarding framebuffers allocated with
-  dma_alloc_coherent() [Christoph Hellwig]
-
- drivers/video/fbdev/core/fb_defio.c | 128 +++++++++++++++++++++++-----
- include/linux/fb.h                  |   1 +
- 2 files changed, 109 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-index 4fc93f253e06..f8ae91a1c4df 100644
---- a/drivers/video/fbdev/core/fb_defio.c
-+++ b/drivers/video/fbdev/core/fb_defio.c
-@@ -8,11 +8,40 @@
-  * for more details.
-  */
- 
-+/*
-+ * Deferred I/O ("defio") allows framebuffers that are mmap()'ed to user space
-+ * to batch user space writes into periodic updates to the underlying
-+ * framebuffer hardware or other implementation (such as with a virtualized
-+ * framebuffer in a VM). At each batch interval, a callback is invoked in the
-+ * framebuffer's kernel driver, and the callback is supplied with a list of
-+ * pages that have been modified in the preceding interval. The callback can
-+ * use this information to update the framebuffer hardware as necessary. The
-+ * batching can improve performance and reduce the overhead of updating the
-+ * hardware.
-+ *
-+ * Defio is supported on framebuffers allocated using vmalloc() and allocated
-+ * as contiguous kernel memory using alloc_pages() or kmalloc(). These
-+ * memory allocations all have corresponding "struct page"s. Framebuffers
-+ * allocated using dma_alloc_coherent() should not be used with defio.
-+ * Such allocations should be treated as a black box owned by the DMA
-+ * layer, and should not be deconstructed into individual pages as defio
-+ * does. Framebuffers in MMIO space are *not* supported because MMIO space
-+ * does not have corrresponding "struct page"s.
-+ *
-+ * For framebuffers allocated using vmalloc(), struct fb_info must have
-+ * "screen_buffer" set to the vmalloc address of the framebuffer. For
-+ * framebuffers allocated from contiguous kernel memory, FBINFO_KMEMFB must
-+ * be set, and "fix.smem_start" must be set to the physical address of the
-+ * frame buffer. In both cases, "fix.smem_len" must be set to the framebuffer
-+ * size in bytes.
-+ */
-+
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/string.h>
- #include <linux/mm.h>
-+#include <linux/pfn_t.h>
- #include <linux/vmalloc.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-@@ -37,7 +66,7 @@ static struct page *fb_deferred_io_get_page(struct fb_info *info, unsigned long
- 	else if (info->fix.smem_start)
- 		page = pfn_to_page((info->fix.smem_start + offs) >> PAGE_SHIFT);
- 
--	if (page)
-+	if (page && !(info->flags & FBINFO_KMEMFB))
- 		get_page(page);
- 
- 	return page;
-@@ -137,6 +166,15 @@ static vm_fault_t fb_deferred_io_fault(struct vm_fault *vmf)
- 
- 	BUG_ON(!info->fbdefio->mapping);
- 
-+	if (info->flags & FBINFO_KMEMFB)
-+		/*
-+		 * In this path, the VMA is marked VM_PFNMAP, so mm assumes
-+		 * there is no struct page associated with the page. The
-+		 * PFN must be directly inserted and the created PTE will be
-+		 * marked "special".
-+		 */
-+		return vmf_insert_pfn(vmf->vma, vmf->address, page_to_pfn(page));
-+
- 	vmf->page = page;
- 	return 0;
- }
-@@ -163,13 +201,14 @@ EXPORT_SYMBOL_GPL(fb_deferred_io_fsync);
- 
- /*
-  * Adds a page to the dirty list. Call this from struct
-- * vm_operations_struct.page_mkwrite.
-+ * vm_operations_struct.page_mkwrite or .pfn_mkwrite.
-  */
--static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long offset,
-+static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, struct vm_fault *vmf,
- 					    struct page *page)
- {
- 	struct fb_deferred_io *fbdefio = info->fbdefio;
- 	struct fb_deferred_io_pageref *pageref;
-+	unsigned long offset = vmf->pgoff << PAGE_SHIFT;
- 	vm_fault_t ret;
- 
- 	/* protect against the workqueue changing the page list */
-@@ -182,20 +221,34 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
- 	}
- 
- 	/*
--	 * We want the page to remain locked from ->page_mkwrite until
--	 * the PTE is marked dirty to avoid mapping_wrprotect_range()
--	 * being called before the PTE is updated, which would leave
--	 * the page ignored by defio.
--	 * Do this by locking the page here and informing the caller
--	 * about it with VM_FAULT_LOCKED.
-+	 * The PTE must be marked writable before the defio deferred work runs
-+	 * again and potentially marks the PTE write-protected. If the order
-+	 * should be switched, the PTE would become writable without defio
-+	 * tracking the page, leaving the page forever ignored by defio.
-+	 *
-+	 * For vmalloc() framebuffers, the associated struct page is locked
-+	 * before releasing the defio lock. mm will later mark the PTE writaable
-+	 * and release the struct page lock. The struct page lock prevents
-+	 * the page from being prematurely being marked write-protected.
-+	 *
-+	 * For FBINFO_KMEMFB framebuffers, mm assumes there is no struct page,
-+	 * so the PTE must be marked writable while the defio lock is held.
- 	 */
--	lock_page(pageref->page);
-+	if (info->flags & FBINFO_KMEMFB) {
-+		unsigned long pfn = page_to_pfn(pageref->page);
-+
-+		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address,
-+					       __pfn_to_pfn_t(pfn, PFN_SPECIAL));
-+	} else {
-+		lock_page(pageref->page);
-+		ret = VM_FAULT_LOCKED;
-+	}
- 
- 	mutex_unlock(&fbdefio->lock);
- 
- 	/* come back after delay to process the deferred IO */
- 	schedule_delayed_work(&info->deferred_work, fbdefio->delay);
--	return VM_FAULT_LOCKED;
-+	return ret;
- 
- err_mutex_unlock:
- 	mutex_unlock(&fbdefio->lock);
-@@ -207,10 +260,10 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
-  * @fb_info: The fbdev info structure
-  * @vmf: The VM fault
-  *
-- * This is a callback we get when userspace first tries to
-- * write to the page. We schedule a workqueue. That workqueue
-- * will eventually mkclean the touched pages and execute the
-- * deferred framebuffer IO. Then if userspace touches a page
-+ * This is a callback we get when userspace first tries to write to a
-+ * page. We schedule a workqueue. That workqueue will eventually do
-+ * mapping_wrprotect_range() on the written pages and execute the
-+ * deferred framebuffer IO. Then if userspace writes to a page
-  * again, we repeat the same scheme.
-  *
-  * Returns:
-@@ -218,12 +271,11 @@ static vm_fault_t fb_deferred_io_track_page(struct fb_info *info, unsigned long
-  */
- static vm_fault_t fb_deferred_io_page_mkwrite(struct fb_info *info, struct vm_fault *vmf)
- {
--	unsigned long offset = vmf->pgoff << PAGE_SHIFT;
- 	struct page *page = vmf->page;
- 
- 	file_update_time(vmf->vma->vm_file);
- 
--	return fb_deferred_io_track_page(info, offset, page);
-+	return fb_deferred_io_track_page(info, vmf, page);
- }
- 
- /* vm_ops->page_mkwrite handler */
-@@ -234,9 +286,25 @@ static vm_fault_t fb_deferred_io_mkwrite(struct vm_fault *vmf)
- 	return fb_deferred_io_page_mkwrite(info, vmf);
- }
- 
-+/*
-+ * Similar to fb_deferred_io_mkwrite(), but for first writes to pages
-+ * in VMAs that have VM_PFNMAP set.
-+ */
-+static vm_fault_t fb_deferred_io_pfn_mkwrite(struct vm_fault *vmf)
-+{
-+	struct fb_info *info = vmf->vma->vm_private_data;
-+	unsigned long offset = vmf->pgoff << PAGE_SHIFT;
-+	struct page *page = phys_to_page(info->fix.smem_start + offset);
-+
-+	file_update_time(vmf->vma->vm_file);
-+
-+	return fb_deferred_io_track_page(info, vmf, page);
-+}
-+
- static const struct vm_operations_struct fb_deferred_io_vm_ops = {
- 	.fault		= fb_deferred_io_fault,
- 	.page_mkwrite	= fb_deferred_io_mkwrite,
-+	.pfn_mkwrite	= fb_deferred_io_pfn_mkwrite,
- };
- 
- static const struct address_space_operations fb_deferred_io_aops = {
-@@ -246,11 +314,31 @@ static const struct address_space_operations fb_deferred_io_aops = {
- int fb_deferred_io_mmap(struct fb_info *info, struct vm_area_struct *vma)
- {
- 	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
-+	vm_flags_t flags = VM_DONTEXPAND | VM_DONTDUMP;
- 
- 	vma->vm_ops = &fb_deferred_io_vm_ops;
--	vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
--	if (!(info->flags & FBINFO_VIRTFB))
--		vm_flags_set(vma, VM_IO);
-+	if (info->flags & FBINFO_KMEMFB) {
-+		/*
-+		 * I/O fault path calls vmf_insert_pfn(), which bug checks
-+		 * if the vma is not marked shared. mmap'ing the framebuffer
-+		 * as PRIVATE doesn't really make sense anyway, though doing
-+		 * so isn't harmful for vmalloc() framebuffers. So there's
-+		 * no prohibition for that case.
-+		 */
-+		if (!(vma->vm_flags & VM_SHARED))
-+			return -EINVAL;
-+		/*
-+		 * Set VM_PFNMAP so mm code will not try to manage the pages'
-+		 * lifecycles. We don't want individual pages to be freed
-+		 * based on refcount. Instead the memory must be returned to
-+		 * the free pool in the usual way. Cf. the implementation of
-+		 * remap_pfn_range() and remap_pfn_range_internal().
-+		 */
-+		flags |= VM_PFNMAP | VM_IO;
-+	} else if (!(info->flags & FBINFO_VIRTFB)) {
-+		flags |= VM_IO;
-+	}
-+	vm_flags_set(vma, flags);
- 	vma->vm_private_data = info;
- 	return 0;
- }
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 05cc251035da..a1121116eef0 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -396,6 +396,7 @@ struct fb_tile_ops {
- 
- /* hints */
- #define FBINFO_VIRTFB		0x0004 /* FB is System RAM, not device. */
-+#define FBINFO_KMEMFB		0x0008 /* FB is allocated in contig kernel mem */
- #define FBINFO_PARTIAL_PAN_OK	0x0040 /* otw use pan only for double-buffering */
- #define FBINFO_READS_FAST	0x0080 /* soft-copy faster than rendering */
- 
--- 
-2.25.1
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 70 ++++++++++++++++++++++++++---
+>  1 file changed, 64 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 6084b38bdda1..a48524d2a1eb 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -50,6 +50,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/acpi.h>
+>  #include <linux/sizes.h>
+> +#include <linux/of_irq.h>
+>  #include <asm/mshyperv.h>
+>=20
+>  /*
+> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct ir=
+q_domain
+> *domain,
+>  	int ret;
+>=20
+>  	fwspec.fwnode =3D domain->parent->fwnode;
+> -	fwspec.param_count =3D 2;
+> -	fwspec.param[0] =3D hwirq;
+> -	fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
+> +	if (is_of_node(fwspec.fwnode)) {
+> +		/* SPI lines for OF translations start at offset 32 */
+> +		fwspec.param_count =3D 3;
+> +		fwspec.param[0] =3D 0;
+> +		fwspec.param[1] =3D hwirq - 32;
+> +		fwspec.param[2] =3D IRQ_TYPE_EDGE_RISING;
+> +	} else {
+> +		fwspec.param_count =3D 2;
+> +		fwspec.param[0] =3D hwirq;
+> +		fwspec.param[1] =3D IRQ_TYPE_EDGE_RISING;
+> +	}
+>=20
+>  	ret =3D irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+>  	if (ret)
+> @@ -887,10 +896,44 @@ static const struct irq_domain_ops hv_pci_domain_op=
+s =3D {
+>  	.activate =3D hv_pci_vec_irq_domain_activate,
+>  };
+>=20
+> +#ifdef CONFIG_OF
+> +
+> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
+> +{
+> +	struct device_node *parent;
+> +	struct irq_domain *domain;
+> +
+> +	parent =3D of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
+> +	if (!parent)
+> +		return NULL;
+> +	domain =3D irq_find_host(parent);
+> +	of_node_put(parent);
+> +
+> +	return domain;
+> +}
+> +
+> +#endif
+> +
+> +#ifdef CONFIG_ACPI
+> +
+> +static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
+> +{
+> +	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
+> +
+> +	gsi_domain_disp_fn =3D acpi_get_gsi_dispatcher();
+> +	if (!gsi_domain_disp_fn)
+> +		return NULL;
+> +	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
+> +				     DOMAIN_BUS_ANY);
+> +}
+> +
+> +#endif
+> +
+>  static int hv_pci_irqchip_init(void)
+>  {
+>  	static struct hv_pci_chip_data *chip_data;
+>  	struct fwnode_handle *fn =3D NULL;
+> +	struct irq_domain *irq_domain_parent =3D NULL;
+>  	int ret =3D -ENOMEM;
+>=20
+>  	chip_data =3D kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> @@ -907,9 +950,24 @@ static int hv_pci_irqchip_init(void)
+>  	 * way to ensure that all the corresponding devices are also gone and
+>  	 * no interrupts will be generated.
+>  	 */
+> -	hv_msi_gic_irq_domain =3D acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_N=
+R,
+> -							  fn, &hv_pci_domain_ops,
+> -							  chip_data);
+> +#ifdef CONFIG_ACPI
+> +	if (!acpi_disabled)
+> +		irq_domain_parent =3D hv_pci_acpi_irq_domain_parent();
+> +#endif
+> +#ifdef CONFIG_OF
+> +	if (!irq_domain_parent)
+> +		irq_domain_parent =3D hv_pci_of_irq_domain_parent();
+> +#endif
+> +	if (!irq_domain_parent) {
+> +		WARN_ONCE(1, "Invalid firmware configuration for VMBus
+> interrupts\n");
+> +		ret =3D -EINVAL;
+> +		goto free_chip;
+> +	}
+> +
+> +	hv_msi_gic_irq_domain =3D irq_domain_create_hierarchy(irq_domain_parent=
+, 0,
+> +		HV_PCI_MSI_SPI_NR,
+> +		fn, &hv_pci_domain_ops,
+> +		chip_data);
+>=20
+>  	if (!hv_msi_gic_irq_domain) {
+>  		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+> --
+> 2.43.0
+>=20
 
