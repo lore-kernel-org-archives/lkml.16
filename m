@@ -1,186 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A56238C15;
-	Fri,  2 May 2025 09:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70F528382;
+	Fri,  2 May 2025 10:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179870; cv=none; b=HDXUO6ISFSGutqgpxrKnke66KOL+735mycbMicVwXADve8gklBIKwbxMtlIpaTYYCYiRi1/E2fh+TAAt0VRISHAS6k3WRQq4N9TPfL9FXhgsBm5HAP2jECB2JgAX0H+WijzM0KnFpk1ITr8iaklyApZtPUOuPY8DaPxlkB9NUFs=
+	t=1746180038; cv=none; b=mFFKNUgfThzp8dDhrwDfc1MTU0Am9VUI4b1oTjkfwFblAn25IlQDyL+Q6UCvaIe2KfCjThVZx7UV9LHlH3GQ24r6Zq8DsNuZ7WBGZZEIs/ISP9Yap6r/fnvoW7F9+FMdDN7gAqkX4XmZX3e88N/TFudNgt3QFgYbq+sf+EVuNPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179870; c=relaxed/simple;
-	bh=pW1H8xXE21A+n17a+0P5k7+tQf/Aa0cTWaK+S948R4s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sjeLUENcct5CbUwBA73LMw9fbtCx0ZLEhJM5TOR1VM2R9BkE67X8FtXcEvYEVoz1k9R5FZht7aT6KacEl1w2MPxsHlWAMmqrd5epmCFQuN2cqXwo481iod0S+Zm6pbCbfl6jHdtVp9KED6ku2qTo0L26cdP5G+oIuN7iwR3oPo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDPm6fIN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746180038; c=relaxed/simple;
+	bh=xvxeFqmwwqfFPGDg9Kr/q4evyXy2QadqZQMvYNW4DGY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tgSAFWjixXM6Ok3kX7JLh4Sb4+gPj2a5Ny1QN/MqNRd7JrowSVUCK0ijxpTW33jlWR0xnRGd5NRLF4Ps7u486clzI5NA3jaQDOfIc255ndumQccCp9BGz6g+LmN74BzvDQZxagpzvKGJh01HAjmYyg1Y3OeU+4TJJpkTpXvaMOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Og/KlTv0; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDPm6fIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF68C4CEED;
-	Fri,  2 May 2025 09:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746179869;
-	bh=pW1H8xXE21A+n17a+0P5k7+tQf/Aa0cTWaK+S948R4s=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NDPm6fINYnhGBeSfvFNgqO/AnV4iA4AnGFqqrk5aE+5rqVTjGTwRhpP7iMrILQr/P
-	 DdILNeLXVmqJltLISpeZ6yEwnzgiG1b69h3l9aJG9+XRZ+wqowTXiKPFdXy9YpG/iy
-	 3QBrNBcC9MorTP4JZH3m+MkQrafRgEAUd9PAhYNgrQEwnuFPFum42zYaOB0z+RoN7S
-	 di/ilaVBvsXnEM886gxQapzZz00wFLowQRp0bv1P5Fz2+gkK6b23JaJ2hNifMb4oLy
-	 FlcTh5Gqs+KULhcCTop+tz/xHkd6urhWFmGdzyc8sKVryJMbA4kEF8D1Umwv07/OAi
-	 b6B9CJ6avteJA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Oliver Mangold" <oliver.mangold@pm.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
-In-Reply-To: <20250502-unique-ref-v10-1-25de64c0307f@pm.me> (Oliver Mangold's
-	message of "Fri, 02 May 2025 09:02:29 +0000")
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
-	<d6hUddIgwZqRCgQQQV7L2VG4idnic0hOdWqt67Itt_xixs1RI25dMrPZRMyoIe2W_FS4eL6X66J_iclD2aUA0Q==@protonmail.internalid>
-	<20250502-unique-ref-v10-1-25de64c0307f@pm.me>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Fri, 02 May 2025 11:57:30 +0200
-Message-ID: <87zffvz65x.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Og/KlTv0"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5426mq8c008008;
+	Fri, 2 May 2025 06:00:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=+s7qNhrdsXhtcpRF2pny6jBhlRT
+	PMk/+y1XlqUe41dU=; b=Og/KlTv0QTDmC5Hwb+CLU0vGz8eTG32oxclgtOi2zMv
+	vNwrGzLuZqoYdvXdr7F2yuCV8C9+dWTKKrrNg6L3NOTBNE5xJk5UyrfzaTDlQC3U
+	eGSLq2DXi1eqKZIghgfDXo/yNJV96ESFs2Par3R2VJ7fNs5MmZREutxml+0+9svL
+	jfBacfBnAXP6qVAjXnWqhG82u5eZ2fSDVvEeRN+V9Of/v71Q5WPO/CpHvPxgz6dB
+	zxGvz99uluUIWUTY+wrO77nESFpllaCcCDuAV/6tLSb3y0Sdi+wW0wlNcCsxD4WL
+	rEufHCMWiBSKyS96+w+KJ1QlFgxvRM8c7YLg66mJ4sQ==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46b6u1m50k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 06:00:29 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 542A0Pxt000899
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 06:00:25 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 2 May 2025
+ 06:00:25 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 2 May 2025 06:00:24 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.211])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 542A0H3G019409;
+	Fri, 2 May 2025 06:00:20 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH] MAINTAINERS: add maintainers for ad4851 driver
+Date: Fri, 2 May 2025 13:00:16 +0300
+Message-ID: <20250502100016.26279-1-antoniu.miclaus@analog.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=RuDFLDmK c=1 sm=1 tr=0 ts=681497bd cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=ZmWbj0fSwbq9jPR7GREA:9
+X-Proofpoint-GUID: sr1sbG4cO3zoosvDyqoosMSJJXhEROZe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA3OCBTYWx0ZWRfX3hF3+/L/jBCN 3IywNiNt7Dh6shnz/PqwjwDYBp7hEbpghKgNaWoZS4XReW5pyhJ/7Ww+xN9FW0selYewQ1QV9Fq NvVlE7gX47BkTl7LjMKYM883jPSe323tdtNVvylt2wvyCPRgOysijGVGcEUicoZWnORh78Lw7Fb
+ lmiMiLpqplTIX5LBq2i36H8sk3ircdU1uTJQICc+yN+C2oPsvHDAkdGq5KkDqz4uqDUNAHAWX3w 3t4PcgAJKSfSPgrtuA+STLQYPdTobwrwUDMCAFjT1xJvvuOAL9sXo7lf4ms9uLh/I0WNmXhNFge jwMvFhTvKM2lewc2KezevleuRp2kqgaflbjeOvS63zV29zRhmXqZyY/Rn88OWx74f9E1ykc+7Nk
+ gwd4apm28QCh4IBTNtCwxMdp3Mu4q0QGsm4hq8hnKk9F0ecJ1xctJCYUw3p0pb1Pi1zM109Z
+X-Proofpoint-ORIG-GUID: sr1sbG4cO3zoosvDyqoosMSJJXhEROZe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=811 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020078
 
-"Oliver Mangold" <oliver.mangold@pm.me> writes:
+Add the ad4851 entry in the MAINTAINERS file.
 
-> From: Asahi Lina <lina@asahilina.net>
->
-> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-> C FFI) type that *may* be owned by Rust, but need not be. Unlike
-> AlwaysRefCounted, this mechanism expects the reference to be unique
-> within Rust, and does not allow cloning.
->
-> Conceptually, this is similar to a KBox<T>, except that it delegates
-> resource management to the T instead of using a generic allocator.
->
-> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> [ om:
->   - split code into separate file and `pub use` it from types.rs
->   - make from_raw() and into_raw() public
->   - fixes to documentation
-> ]
-> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  rust/kernel/types.rs         |   3 ++
->  rust/kernel/types/ownable.rs | 117 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 120 insertions(+)
->
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 9d0471afc9648f2973235488b441eb109069adb1..5d8a99dcba4bf733107635bf3f0c15840ec33e4c 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -11,6 +11,9 @@
->  };
->  use pin_init::{PinInit, Zeroable};
->
-> +pub mod ownable;
-> +pub use ownable::{Ownable, OwnableMut, Owned};
-> +
->  /// Used to transfer ownership to and from foreign (non-Rust) languages.
->  ///
->  /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
-> diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..52e7a69019f1e2bbbe3cf715651b67a5a5c7c13d
-> --- /dev/null
-> +++ b/rust/kernel/types/ownable.rs
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Owned reference types.
-> +
-> +use core::{
-> +    marker::PhantomData,
-> +    mem::ManuallyDrop,
-> +    ops::{Deref, DerefMut},
-> +    ptr::NonNull,
-> +};
-> +
-> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
-> +///
-> +/// It allows such types to define their own custom destructor function to be called when
-> +/// a Rust-owned reference is dropped.
-> +///
-> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that:
-> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that owned reference exists (i.e.
-> +///   until the [`release()`](Ownable::release) trait method is called).
-> +/// - That the C code follows the usual mutable reference requirements. That is, the kernel will
-> +///   never mutate the [`Ownable`] (excluding internal mutability that follows the usual rules)
-> +///   while Rust owns it.
-> +pub unsafe trait Ownable {
-> +    /// Releases the object (frees it or returns it to foreign ownership).
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the object is no longer referenced after this call.
-> +    unsafe fn release(this: NonNull<Self>);
-> +}
-> +
-> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] or `&mut Owned<T>` Rust reference
-> +/// may be dereferenced into a `&mut T`.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that access to a `&mut T` is safe, implying that it is okay to call
-> +/// [`core::mem::swap`] on the `Ownable`. This excludes pinned types (meaning: most kernel types).
-> +pub unsafe trait OwnableMut: Ownable {}
-> +
-> +/// An owned reference to an ownable kernel object.
-> +///
-> +/// The object is automatically freed or released when an instance of [`Owned`] is
-> +/// dropped.
-> +///
-> +/// # Invariants
-> +///
-> +/// The pointer stored in `ptr` is valid for the lifetime of the [`Owned`] instance.
-> +pub struct Owned<T: Ownable> {
-> +    ptr: NonNull<T>,
-> +    _p: PhantomData<T>,
-> +}
-> +
-> +// SAFETY: It is safe to send `Owned<T>` to another thread when the underlying `T` is `Send` because
-> +// it effectively means sending a `&mut T` (which is safe because `T` is `Send`).
-> +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
-> +
-> +// SAFETY: It is safe to send `&Owned<T>` to another thread when the underlying `T` is `Sync`
-> +// because it effectively means sharing `&T` (which is safe because `T` is `Sync`).
-> +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
-> +
-> +impl<T: Ownable> Owned<T> {
-> +    /// Creates a new instance of [`Owned`].
-> +    ///
-> +    /// It takes over ownership of the underlying object.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the underlying object is acquired and can be considered owned by
-> +    /// Rust.
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-
-This part "the underlying object is acquired" is unclear to me. How about:
-
-  Callers must ensure that *ownership of* the underlying object has been
-  acquired. That is, the object can be considered owned by the caller.
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4a0089db6670..d5a985ae62bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1350,6 +1350,16 @@ F:	Documentation/iio/ad4695.rst
+ F:	drivers/iio/adc/ad4695.c
+ F:	include/dt-bindings/iio/adc/adi,ad4695.h
+ 
++ANALOG DEVICES INC AD4851 DRIVER
++M:	Sergiu Cuciurean <sergiu.cuciurean@analog.com>
++M:	Dragos Bogdan <dragos.bogdan@analog.com>
++R:	Antoniu Miclaus <antoniu.miclaus@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
++F:	drivers/iio/adc/ad4851.c
++
+ ANALOG DEVICES INC AD7091R DRIVER
+ M:	Marcelo Schmitt <marcelo.schmitt@analog.com>
+ L:	linux-iio@vger.kernel.org
+-- 
+2.49.0
 
