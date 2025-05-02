@@ -1,87 +1,104 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD0E220696
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F9A267709;
+	Fri,  2 May 2025 07:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171352; cv=none; b=Z7IUtfsfBtDHFRsQ/fok8Vc9kHevl0opIFN8XFw2CpSREaxQyc4iNaMK0anUNthcJ0ReR8wsfGM34aNy/oyuGb0TQDxhVfOw4tpkPzO1gaEfb+wFE/BFrrioS4nYZkQHULjx/qEQoWAZoayRsNuPJJRNoYsx93G4RHObTJ6rZoc=
+	t=1746171358; cv=none; b=hijseKgxOGdORREbnk2uayYS5EUPS5DSPBjIDvWF783oN/41dOGSKhzoYPNXu73sfAzww9v5lxy4fpJNIFl5nh/gTA6zyjvhXFEP93rBdgEafLJ0DHeQMyq4A5jqIDL4xxpcoWOHVTDZJbfCl0Gjnqr9NuUBOo5Or8cRbc+zdHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171352; c=relaxed/simple;
-	bh=hOhh3gEilCO3bcXc9+T6C/ljAGT1BE1jLApD9olwcxE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kxmbVF/CDRu28pMahTuJsXuvDI1OwDOScJB4nLnxoGKD+hKwBpJdNc+9J7lHOYBgrvTUcSGk+zc+cx+8UBSQXCFMSzWJsRgc5/k9VtGNvq8ocZeDuN7WhqJwqaQCuYTwKHkUUXxwTVbYGcBlN+znXSs9glVoYO1GVkpekICPEDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MFQ7np5A; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746171358; c=relaxed/simple;
+	bh=7SzGhijHGcDpGmbMY9GoSxFvyrhaiVItUu3izTL/Iug=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=KbJtZmrtLVNFefkMfncKn0fYz+u+i0OKmO2HACkX6EiIaPr5rEZm+4wHztjdDmsqMhHewg+6hdHA0FRtnCrCE6NF5gBqiDCl6aNPcKNv8PIbav//SzCfnr1rDYRmPXX8dKHgnRL1LpxmLIjc4f5G5iJhCqCVqrYpKGSbCwRl8iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eDAtgNpI; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFQ7np5A"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acae7e7587dso251065566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746171349; x=1746776149; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hOhh3gEilCO3bcXc9+T6C/ljAGT1BE1jLApD9olwcxE=;
-        b=MFQ7np5AbpumU0qnSawzY4y3hNJhSOXwVKK5ZpdzOqmih5RvCa90AV9Rnqn7lJHpDz
-         TxLWxNsl6nyuw8Z7OhGhueOe+C9NkinSpntSti7eBYLx0qS4fX6Oy+c4z62Bu7T4ezLz
-         YPKfD+o7h6eVVtrVx0MRfj8CjfVq+5WDmL1wWN5BWfc3t87sbr1/s8AwFyjcbAAbXRdf
-         zKdx7vv7UI0H5urEUS3tXALxkqyOjEqoCqsZEtf2tZgXjiVmBBGa+4ZEiEBcyTYusl+v
-         xNRibualjzaWUVIaCBZj6Wdr67uyhA69qDy2NzlO6vomzAaBA+0+4GDjGZlAqQ/PXNfV
-         jylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171349; x=1746776149;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hOhh3gEilCO3bcXc9+T6C/ljAGT1BE1jLApD9olwcxE=;
-        b=St36VgNtGDJBT7zCqI0gehYKVITm8EPBN3tbfTiaa27EhKLFqSO2Ftjg0RNBaXABfk
-         o4xqpCUdK5dYvSczavgNXNB8g6zNaY4vvDzsHMriJs0U87+6UNODK+vYn9NsxPFsDBKm
-         qCFMe0ExU9kkDrydwLsQL0qF49u3yhN0Beuc8SzahrwmKH8j9l2NUAf8LHTGvbY/eFJK
-         rGCP9Ao7nyUirkrldw22vom4h/vWaf+AMNaF9/0lRVgy6c6XW7ufCnjST2Avzc9el/DZ
-         md7tfmd4Djs5EkL/PtEm4GbTXNOGNq7UpTjSQV3bJSrYB7pzp9JooAP/ZH1MRwBDqF5M
-         hL8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWvHTfmQKuYP1id8QT524vkQ+rwo0uLwkcWLPLYr/hSjQDjtCl9pcNOE3D5BTLUmqgVD0Yo4Yn1Q6+b35M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5fNlbZ335gMJ0gNhJV/NzZGYBqw67EJWxy5ls/dDvVy+uNIWL
-	Mnh/JD+LrOhnyZl251rpD01bDyCdjCRjT8cBIkjIHe48hjuL0ABz/fCgnhssTDp5HSBn
-X-Gm-Gg: ASbGncsdQywbF1g7uan+cCmLIEXFHAd0Xy/q+ktn2yEc6O3rCeyWOE/h4ovH6io5Wkb
-	0Z/+ob8ItOFgqnQtUjhLRQHdx7bJLTXKZTRjQByJSlgqWOhQpK1mqT0znNvS/krbcjv004HAbcP
-	BrjBdHJAuaEmq6u7lrYioOoemcwawtksSiUeokN5y/LGfDiYjsJfvmmcc3qv4ikhwRl90nXX311
-	wtJ+5LjX8l8Oj9vf8h7UAcR34GwZtMH4A5z7TFmYeGLILD4uZ94+9zjSPHVI1whLaWxlsPPit2L
-	ToCnMsj+SZ9dfBqXDQ9IipXbYEMULx7Lt2nIkzN9uQpiUWG86QxNWqY31iaQDvVTLKiPUx43
-X-Google-Smtp-Source: AGHT+IFmMkOv/J65q6St3Eqyd/NtN3HZGXk6Qgc025AViPhYRjkJUNoBSU15Qo5gJTx9+pgeUU3iwQ==
-X-Received: by 2002:a17:907:7d93:b0:ac2:a5c7:7fc9 with SMTP id a640c23a62f3a-ad17af4e24bmr180816966b.51.1746171348852;
-        Fri, 02 May 2025 00:35:48 -0700 (PDT)
-Received: from chimera.vu.local ([145.108.89.167])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a3c1esm7807066b.52.2025.05.02.00.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:35:48 -0700 (PDT)
-From: Thomas Andreatta <thomasandreatta2000@gmail.com>
-X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
-To: dan.carpenter@linaro.org
-Cc: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	thomas.andreatta2000@gmail.com,
-	thomasandreatta2000@gmail.com
-Subject: Re: [PATCH 1/8] Staging: gpib: agilent_82357a: changing return type void in int
-Date: Fri,  2 May 2025 09:35:48 +0200
-Message-Id: <20250502073548.32948-1-thomas.andreatta2000@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <aBRxQhLxs13zuFZy@stanley.mountain>
-References: <aBRxQhLxs13zuFZy@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eDAtgNpI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2388F43B5D;
+	Fri,  2 May 2025 07:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746171347;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I4hyhLmJzZSjiqbJhNLTC62EEcInqQ9hw2AM6wZ9RsY=;
+	b=eDAtgNpIbZc1oGoe5ruFOwTuzyuOJ3rMW2HDFZZ9NamH3mE1O57Pj+P9KtDrqR+Qc0ODt6
+	zIEPfQHj/adwzIZCX2FmMDjGa9sP2FyVCy0k7+mR82xvmG5VGQ4bMnzVMXkFpP+o5A18do
+	B/V5Hsm4OJbmY1/kTUBD7OPbSyAXpDosleES+/SHBACV0BEbKRmMjrauev4k6kaCMNjYig
+	XGcVcJ6HXPvJGuDCdGht6DESTYZW8cpnEJ/iy1h1/qOy05r/VD5GpLEAdxx2nD3rOdUwQd
+	CFz+LVObL7KYrEQXBqzpee9FwGQknpK8dgIbh1MThr0oPB8OpcKjBu3ondA4iQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 02 May 2025 09:35:45 +0200
+Message-Id: <D9LI2Y0J2KZY.15PIU2T55GIH0@bootlin.com>
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Lee Jones" <lee@kernel.org>
+Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
+ <20250501125943.GN1567507@google.com>
+In-Reply-To: <20250501125943.GN1567507@google.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedukeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepk
+ hhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegumhhithhrhidrthhorhhokhhhohhvsehgmhgrihhlrdgtohhm
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-My bad.
-Thanks for the nudge!
+On Thu May 1, 2025 at 2:59 PM CEST, Lee Jones wrote:
+> On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
+>
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> +static int max7360_probe(struct i2c_client *client)
+>> +{
+>> +	struct device *dev =3D &client->dev;
+>> +	struct regmap *regmap;
+>> +	int ret;
+>> +
+>> +	regmap =3D devm_regmap_init_i2c(client, &max7360_regmap_config);
+>> +	if (IS_ERR(regmap))
+>> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regm=
+ap\n");
+>
+> dev_err_ptr_probe()
+>
 
-Best,
-Thomas
+I believe dev_err_ptr_probe() is meant to be used for the opposite case,
+where the variable holding the error is an int but the function has to
+return a pointer. Here regmap is a pointer but we have to return an int,
+so I believe neither dev_err_ptr_probe() or any similar macro can really
+help us.
+
+OK for all other points.
+
+Thanks for your review,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
