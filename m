@@ -1,112 +1,112 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2D51AA1DB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132321EF372;
+	Fri,  2 May 2025 19:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212481; cv=none; b=Q8BzH4QC37XMqM54Vi9HncsqJQnSP0JsM3DVVk3BMjG2l9/VPp/wFoymWU4qgfZeQGzAhQKdBF1lDfCz6er/WO7eS9QQxMqj2sBcA/4XwA0OvU7WAnx496iP430sKaOUxPBNEVa880uSCgyiw1NYJ/ctsXXIDqT2jo/cnKzwY6Y=
+	t=1746212493; cv=none; b=g/x0zV04ZPzyDHz7RiV9SJ60uHgAGdsc1hYFbbCsz6zt6pp1ZGt4TPOfjHZ/RB35AGjQuFDebxRcN77scZHlteWOq1xo4MrWuKnJEyfVKkDtL9Unmnsi4e2NHgvWGbHTNotn2oQU2sq8msMdjKlOetm47PuB0OEQRJy1pkjELa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746212481; c=relaxed/simple;
-	bh=0DJRj/roTx2TlUPmbcSX3CMHGsoBIXB/OFsCbOGjL7s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=fXgKM1HcPVlmkgstgkIxCb/uWiWSnnt0jg8l93yzI9NvukM3992h6g/LcqFp0aLCYaPVzURAp72b7e90XNnuzQWU0GWzoEi1035Czi/N087fZu6seyVx7o2Mh3P830fCivLwqLR05nSlb0U+H0SztoPhVrIbLzon4uRijTbfUEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eyDPLfTN; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1746212493; c=relaxed/simple;
+	bh=1wZOixwKxeQr1a/J8UDK8Pi43lF4NiEy/AG7Bfq7Re4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jvLPWy+5MRVkRMf43EBNNz33qYg75iBoGIJz8vN6R5HBiR3hJjMV45vFE3LUxjGZvnNbigH0mMLHeuLIUTmIvAp0rGTlEhS7lD3uKQEarJHmxDX37swFinxTRYDg8VTQLB+rnEcNME4jt3ejsZlq52KSCuLd+sEvd+1dFV135zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad1pf0qY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eyDPLfTN"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542IttTN008675;
-	Fri, 2 May 2025 19:01:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=jxcag99Lf5vM47fPYCnfh7DS4x/qq
-	Pn4W6mmCiyQxxc=; b=eyDPLfTNIg/lGMSU8Ehg9wn6GcdCmuIj338tcdrkafRSP
-	WKxGQHVnHEtyQchpZd1iJGpsmUDQUm1kX/dTrqFRt+Qj/TnjMuiLEGpoKESOkd7f
-	Bbho+T8GA3B0bb0coYgzmYN04ksVyD34o458Q6y+M/DwyIwHRNL9fDq62dM/g+El
-	sLqe0rFxCLmfMn8ChDc3yEpyudM3s3VbtcDcMolqGA/hWkprWN1MogANaMQrj6ne
-	GX0ELfp/M2VwnyxAi7MHGU1+IpKdyXj7EST4fdLj3y2QM57zR2Gq3dxffLH+eIVg
-	5bTEVW2snIGVwHcAQ3hpKDDyy1bfc2NAyGHC5JWLw==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6uqnw80-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 19:01:04 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 542IFENI023804;
-	Fri, 2 May 2025 19:01:03 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxmc18f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 19:01:03 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 542J12rF022528;
-	Fri, 2 May 2025 19:01:02 GMT
-Received: from chyser-vm6.osdevelopmeniad.oraclevcn.com (chyser-vm6.appad3iad.osdevelopmeniad.oraclevcn.com [100.100.242.35])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 468nxmc184-1;
-	Fri, 02 May 2025 19:01:02 +0000
-From: chris hyser <chris.hyser@oracle.com>
-To: "Chris Hyser" <chris.hyser@oracle.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Mel Gorman" <mgorman@suse.de>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Jonathan Corbet" <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [Patch v2 0/2] sched/numa, mm/numa: Soft Affinity via numa_preferred_nid.
-Date: Fri,  2 May 2025 14:59:40 -0400
-Message-ID: <20250502190059.4121320-1-chris.hyser@oracle.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad1pf0qY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E94C4AF0B;
+	Fri,  2 May 2025 19:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746212492;
+	bh=1wZOixwKxeQr1a/J8UDK8Pi43lF4NiEy/AG7Bfq7Re4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ad1pf0qYzwltvdPY6h8Js7Wl0DIi8myWiHDbcB1cSBFmzC9mSMZIPVR3BzKgM172m
+	 iNbS2PosMuTAbtnfjwddEk4KPhjyGSUg++66mDTKZrsIB5l5jfSyawi9NoRtv+9Ugr
+	 9yW2VrOWsvi5+c9H0fxkfqM66iJospU3LRQ+8ichWKhhRhKOJp+Dv1OWNINvU9Ezyg
+	 5sIx2RJl+l0vTrSnRFv+OwqUskys08h2ypCepqgKWFG3x7vv8krLXDTq2yxXgyHLtx
+	 MK9Twz/c6du9hpjl974CokWewDDKj+Ip54dDwHTqq0tZrmsXUL9WYr1nKApR5jGYep
+	 EYLuC24pH8Llg==
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	llvm@lists.linux.dev
+Subject: [PATCH RFC 0/4] stackleak: Support Clang stack depth tracking
+Date: Fri,  2 May 2025 12:01:23 -0700
+Message-Id: <20250502185834.work.560-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2385; i=kees@kernel.org; h=from:subject:message-id; bh=1wZOixwKxeQr1a/J8UDK8Pi43lF4NiEy/AG7Bfq7Re4=; b=owGbwMvMwCVmps19z/KJym7G02pJDBmiYq0zXwVaP2MzO3LzSIm1wIuVjpVbzNOfXP638PIW1 evsBc8fd5SyMIhxMciKKbIE2bnHuXi8bQ93n6sIM4eVCWQIAxenAEwk6QfDb9YtkgtfuS4K4mA/ bzvl+EbWn7wiUjFvVCN5Q1IPTbA6XMjI8Fxv72puDZ2kv5tVLwqtW5KzIaDc7Xzr9HCGstmZxw5 6MwEA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_04,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=955 phishscore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505020153
-X-Proofpoint-ORIG-GUID: 0GzJGuw9mQ521sNWC0uU3TYK8B001jDO
-X-Authority-Analysis: v=2.4 cv=Vq8jA/2n c=1 sm=1 tr=0 ts=68151670 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=WsHKUha7AAAA:8 a=glSDMOvTweIbZLxOEDYA:9 a=H4LAKuo8djmI0KOkngUh:22 cc=ntf
- awl=host:13130
-X-Proofpoint-GUID: 0GzJGuw9mQ521sNWC0uU3TYK8B001jDO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDE1MiBTYWx0ZWRfX3O7D82ma882B YnNjwCc/FExxz+YSUq0Kfid0Oj+NrU4whetDv1sGfLVwGapkRzfBek5k54rPNyUARU4H2PBFwvN nh/8ltZgo/Qyo0IRWXLlu5P3778Ia8BVyHdi/D5Z2uViPDHk6DvR3IyPAXN11ctgQHQ1EOfvaLR
- 09gYi/B8GVlmMUI33OMCm/2qKU03UpOKzkiV3HkKRBkbNnMjduzKl07WFnCsZrmrmChRzxCM+EO /Jxm8U2OWgDz5Vx410sozW8JMBIunezPY4iXlkzgNrJMCSwYAYT0HJPBkE//gDlZv4Bsvyqt/dR xH7ICnWAaT44BS7SHaqmro2aztMQvZYb7lRpmoGEZQaSIpmJGAcUoIgm55qcG2X00II0XZK+74x
- 0xOZjBmrIY4+SpGBY7sXAQUI2Rz3zxxl7NAFk/cNzX6FfQsW1GFTg9mF9O/JkrgekLN17LYF
 
-Soft Affinity (value of hard affinity with graceful handling of overload) as a
-concept has been around for years. The original implementation was rejected
+Hi,
 
-https://lore.kernel.org/lkml/20190702172851.GA3436@hirez.programming.kicks-ass.net/
+As part of looking at what GCC plugins could be replaced with Clang
+implementations, this series uses the recently proposed stack depth
+tracking callback in Clang[1] to implement the stackleak feature.
 
-with an alternative, using numa_preferred_nid, suggested by Peter Zijlstra.
+-Kees
 
-This is a simple implementation with most of the changes associated with a
-prctl() to set/get the value. It does not modify the scheduler's behavior but
-simply exploits the current NUMA balancing behavior.
+[1] https://github.com/llvm/llvm-project/pull/138323
 
-The intent is to provide a mechanism whereby a knowledgble user, system admin,
-or importantly, a NUMA aware application can force Auto NUMA Balancing to prefer
-the "correct" node, for example pinned memory like RDMA buffers or other
-scenarios where heavily accessed memory ranges are pinned and not subject to
-NUMA hint faults.
+Kees Cook (4):
+  stackleak: Rename CONFIG_GCC_PLUGIN_STACKLEAK to CONFIG_STACKLEAK
+  stackleak: Rename stackleak_track_stack to __sanitizer_cov_stack_depth
+  stackleak: Split STACKLEAK_CFLAGS from GCC_PLUGINS_CFLAGS
+  stackleak: Support Clang stack depth tracking
 
-[PATCH v2 1/2] sched/numa: Add ability to override task's numa_preferred_nid.
- include/linux/sched.h |  1 +
- init/init_task.c      |  1 +
- kernel/sched/core.c   |  5 ++++-
- kernel/sched/debug.c  |  1 +
- kernel/sched/fair.c   | 15 +++++++++++++--
- 5 files changed, 20 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst |  2 +-
+ Documentation/security/self-protection.rst  |  2 +-
+ arch/arm/boot/compressed/Makefile           |  2 +-
+ arch/arm/kernel/entry-common.S              |  2 +-
+ arch/arm/vdso/Makefile                      |  2 +-
+ arch/arm64/kernel/entry.S                   |  2 +-
+ arch/arm64/kernel/pi/Makefile               |  2 +-
+ arch/arm64/kernel/vdso/Makefile             |  1 +
+ arch/arm64/kvm/hyp/nvhe/Makefile            |  2 +-
+ arch/riscv/kernel/entry.S                   |  2 +-
+ arch/riscv/kernel/pi/Makefile               |  2 +-
+ arch/riscv/purgatory/Makefile               |  2 +-
+ arch/s390/kernel/entry.S                    |  2 +-
+ arch/sparc/vdso/Makefile                    |  3 +-
+ arch/x86/entry/calling.h                    |  4 +-
+ arch/x86/entry/vdso/Makefile                |  3 +-
+ arch/x86/include/asm/init.h                 |  2 +-
+ arch/x86/purgatory/Makefile                 |  2 +-
+ drivers/firmware/efi/libstub/Makefile       |  6 +--
+ drivers/misc/lkdtm/stackleak.c              |  8 ++--
+ include/linux/init.h                        |  4 +-
+ include/linux/sched.h                       |  4 +-
+ include/linux/stackleak.h                   |  6 +--
+ kernel/Makefile                             |  4 +-
+ kernel/stackleak.c                          |  4 +-
+ lib/Makefile                                |  2 +-
+ scripts/Makefile.gcc-plugins                | 13 +++---
+ scripts/Makefile.ubsan                      | 12 +++++
+ scripts/gcc-plugins/stackleak_plugin.c      | 52 ++++++++++-----------
+ security/Kconfig.hardening                  | 25 ++++++----
+ tools/objtool/check.c                       |  2 +-
+ tools/testing/selftests/lkdtm/config        |  2 +-
+ 32 files changed, 105 insertions(+), 78 deletions(-)
 
-[PATCH v2 2/2] sched/numa: prctl to set/override task's numa_preferred_nid
- Documentation/scheduler/sched-preferred-node.rst | 67 ++++++++++++++++++++++++++++++++
- include/linux/sched.h                            |  9 +++++
- include/uapi/linux/prctl.h                       |  8 ++++
- kernel/sched/fair.c                              | 64 ++++++++++++++++++++++++++++++
- kernel/sys.c                                     |  5 +++
- tools/include/uapi/linux/prctl.h                 |  6 +++
- 6 files changed, 159 insertions(+)
+-- 
+2.34.1
+
