@@ -1,172 +1,319 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8661E487;
-	Fri,  2 May 2025 03:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092379C0
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 03:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746156587; cv=none; b=sNDZBZ270Wc1eJgvK890UoJzA4eMbujHfsXhfFjAudZsXsQg1vudraqlb2iGmthi/251KaEjO8/T8MFsfsXnIdyGDKVhVb4Gsa+dqw/xB2Wx93pUU8PE6C7FxsC8EpKFpZW6JOHOPXGCr+dxkiGFeCvwkp7+JVJHXLIZX1RhvAg=
+	t=1746156919; cv=none; b=bRL4ldmqHA0meKuvUtMJ0odvbxrwDdQnIyIhPSc47h/PdHQKkUFRUyDmSJQta5owSz9OIm0wbb88w3CBajEyhoPym6MC8nC1zTWvUkDOKWP0HKUXhg38hY68gb04xTGq5d5c9m08Mz95yE5NPX9N/q8LBYKWSNLk2HI4I8+dq40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746156587; c=relaxed/simple;
-	bh=1Vfo6UxyrVA8Uw2LFErCgOYbbOibb5xD9ULhiLHKILI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mBth8AX1PwKHIgruzpECMNjKpeeXWUax+4RMaE2NSqOsX/gzQ/7aygv5/MN+e02En050xj5we/DHD3wYk+yZID0eeKisC4SzSGwKXoiPGacevuLlPdAY5ThlT8V20vkiMeSaTJEZO7KtGBRZmuqcxqBn9QYtlGZfD6dGS92VP88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=mALTpKF4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746156919; c=relaxed/simple;
+	bh=/AqwtxrtSX92HB+ltd96zxBnqRXnaKye3tK5eqTrdl4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lN8V54M5OVyCkCCt0BtsoSZHT56XMFQLPmhf3xpKirMF7TdCpYaY9iwPwr5h1dfF+EsmpDVbgaHS1xBHgITk9YUA9Xqc1BDWtjkeXkpKrL3f/5Te/ner0iSSl2zPKHCvR7UYhl5CaQwf7hL9/109hucTNE4oyafE4RFnYJQvcV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DWGmmypD; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="mALTpKF4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44CBC4CEE9;
-	Fri,  2 May 2025 03:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746156584;
-	bh=1Vfo6UxyrVA8Uw2LFErCgOYbbOibb5xD9ULhiLHKILI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mALTpKF4SJBYkZgWGKhNgqJesO7HoQnZzCbTTiN8MU2+R8R+ED7sS/B5yBZWB+/ac
-	 s3XDg347KVjXWG6LwRSOqghv3wXEagFovu9dBIt3mfUOO7ydNYjI0oI3Q7rT/uPn5b
-	 artr3EP8Wbos0/CvDjqWm14UPP7rACTTXMmC7Og4=
-Date: Thu, 1 May 2025 20:29:43 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-Cc: "jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>, =?UTF-8?B?55m954OB?=
- =?UTF-8?B?5YaJ?= <baishuoran@hrbeu.edu.cn>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "syzkaller@googlegroups.com"
- <syzkaller@googlegroups.com>, linux-fsdevel
- <linux-fsdevel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- gfs2@lists.linux.dev
-Subject: Re: WARNING in __folio_mark_dirty
-Message-Id: <20250501202943.e72b7bae3d1957efa60db553@linux-foundation.org>
-In-Reply-To: <TYSPR06MB7158B63753ECD29758D09D49F68D2@TYSPR06MB7158.apcprd06.prod.outlook.com>
-References: <TYSPR06MB7158B63753ECD29758D09D49F68D2@TYSPR06MB7158.apcprd06.prod.outlook.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DWGmmypD"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5423YsRC321198
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 22:34:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746156894;
+	bh=5KWOJEGKQS82scl1TDsAbW4xFotjv57FL8CFCVogxNw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=DWGmmypDzhWwsACSHz2wQpcp+1odtFj88Y2PF/HDMlhQAQYqzcxDzQMu2jb5GkQbB
+	 NFTSbS0UtMPfli63YJkgbOM6cnCuBiUwPPl3sxg8WJ+6xKTWDl9ypm8sUQsnPOkAst
+	 NtXTFaAReXDL4r2HYWjUwWHs1OGQeVmt7LMVWY0A=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5423Ys19055232
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 1 May 2025 22:34:54 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
+ May 2025 22:34:53 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 1 May 2025 22:34:53 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5423Yrhn061439;
+	Thu, 1 May 2025 22:34:53 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <vkoul@kernel.org>, <kishon@kernel.org>, <mripard@kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <sakari.ailus@linux.intel.com>, <u.kleine-koenig@baylibre.com>,
+        <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>,
+        <r-donadkar@ti.com>, <tomi.valkeinen@ideasonboard.com>,
+        <devarsht@ti.com>
+Subject: [PATCH v3 1/2] phy: cadence: cdns-dphy: Fix PLL lock and O_CMN_READY polling
+Date: Fri, 2 May 2025 09:04:50 +0530
+Message-ID: <20250502033451.2291330-2-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20250502033451.2291330-1-devarsht@ti.com>
+References: <20250502033451.2291330-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, 2 May 2025 03:26:20 +0000 "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn> wrote:
+PLL lockup and O_CMN_READY assertion can only happen after common state
+machine gets enabled (by programming DPHY_CMN_SSM register), but driver was
+polling them before the common state machine was enabled. To fix this :
 
-> Dear Maintainers，
-> 
+- Add new function callbacks for polling on PLL lock and O_CMN_READY
+  assertion.
+- As state machine and clocks get enabled in power_on callback only, move
+  the clock related programming part from configure callback to power_on
+  callback and poll for the PLL lockup and O_CMN_READY assertion after
+  state machine gets enabled.
+- The configure callback only saves the PLL configuration received from the
+  client driver which will be applied later on in power_on callback.
+- Add checks to ensure configure is called before power_on and state
+  machine is in disabled state before power_on callback is called.
+- Disable state machine in power_off so that client driver can
+  re-configure the PLL by following up a power_off, configure, power_on
+  sequence.
 
-Let's Cc the gfs2 developers.
+Cc: stable@vger.kernel.org
+Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V3:
+- Move out clock programming logic to power_on as PLL polling and enable
+  can happen only after SSM enable
+- Disable state machine on power off
 
-Do you know if this is reproducible on any other filesystem?
+V2: 
+- Return error code on polling timeout
+- Moved out calibration logic to separate patch
 
-> 
-> When using our customized Syzkaller to fuzz the latest Linux kernel, the following crash (37th and 76th)was triggered.
-> 
-> 
-> 37th：
-> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-> git tree: upstream
-> Output:https://github.com/pghk13/Kernel-Bug/blob/main/1220_6.13rc_KASAN/2.%E5%9B%9E%E5%BD%92-11/14-KASAN_%20slab-out-of-bounds%20Read%20in%20hfsplus_bnode_read/14call_trace.txt
-> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0305_6.15rc1/config.txt
-> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/37repro.c
-> Syzlang reproducer: https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/37repro.txt
-> 
-> 76th：
-> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-> git tree: upstream
-> Output:https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/76call_trace.txt
-> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0305_6.15rc1/config.txt
-> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/76repro.c
-> Syzlang reproducer: https://github.com/pghk13/Kernel-Bug/blob/main/0219_6.13rc7_todo/76-UBSAN_%20shift-out-of-bounds%20in%20bch2_trans_iter_init_outlined/76repro.txt
-> 
-> 
-> 
-> The two errors seem to have the same error points, but there are a few differences in the process. They all trigger warnings in the __folio_mark_dirty+0xb50/0xf10 function of backing-dev.h:251. In __folio_mark_dirty function, a warning is triggered when the code tries to access or modify the backing-dev information. The 76th call stack has longer call chains from file writebacks: writeback work queues → writeback inodes → GFS2 write inodes → log refreshes.
-> We have reproduced this issue several times on 6.15-rc1 again.
-> 
-> 
-> 
-> 
-> If you fix this issue, please add the following tag to the commit:
-> Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>
-> 
-> 
-> 
-> 37th：
-> ==================================================================
-> WARNING: CPU: 2 PID: 9494 at ./include/linux/backing-dev.h:251 __folio_mark_dirty+0xb50/0xf10
-> Modules linked in:
-> CPU: 2 UID: 0 PID: 9494 Comm: gfs2_logd/syz:s Not tainted 6.15.0-rc1 #1 PREEMPT(full)
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> RIP: 0010:__folio_mark_dirty+0xb50/0xf10
-> Code: ff ff 48 8d 78 70 e8 af e3 76 09 31 ff 89 c6 89 44 24 08 e8 72 d3 c5 ff 8b 44 24 08 85 c0 0f 85 af f9 ff ff e8 51 d1 c5 ff 90 <0f> 0b 90 e9 a1 f9 ff ff e8 43 d1 c5 ff 90 0f 0b 90 e9 59 f5 ff ff
-> RSP: 0018:ffffc90014bb7b18 EFLAGS: 00010046
-> RAX: 0000000000000000 RBX: ffff88804298cb58 RCX: ffffffff81f5408e
-> RDX: 0000000000000000 RSI: ffff888023edc900 RDI: 0000000000000002
-> RBP: ffffea00015c9d80 R08: 0000000000000000 R09: ffffed10085319a0
-> R10: ffffed100853199f R11: ffff88804298ccff R12: 0000000000000246
-> R13: ffff888049bd8bc8 R14: 0000000000000001 R15: 0000000000000001
-> FS:  0000000000000000(0000) GS:ffff888097c6b000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007ff2c7be9028 CR3: 000000000e180000 CR4: 0000000000750ef0
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  mark_buffer_dirty+0x358/0x410
->  gfs2_unpin+0x106/0xef0
->  buf_lo_after_commit+0x155/0x230
->  gfs2_log_flush+0xd95/0x2cb0
->  gfs2_logd+0x29b/0x12c0
->  kthread+0x447/0x8a0
->  ret_from_fork+0x48/0x80
->  ret_from_fork_asm+0x1a/0x30
->  </TASK>
-> extracting prog: 1h56m11.644263162s
-> minimizing prog: 14m12.695891417s
-> simplifying prog options: 0s
-> extracting C: 32.234365976s
-> simplifying C: 9m50.565845853s
-> 
-> 
-> 
-> 
-> 
-> 76th：
-> ==================================================================
-> WARNING: CPU: 3 PID: 3051 at ./include/linux/backing-dev.h:251 __folio_mark_dirty+0xb50/0xf10
-> Modules linked in:
-> CPU: 3 UID: 0 PID: 3051 Comm: kworker/u18:5 Not tainted 6.15.0-rc1 #1 PREEMPT(full)
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> Workqueue: writeback wb_workfn (flush-7:0)
-> RIP: 0010:__folio_mark_dirty+0xb50/0xf10
-> Code: ff ff 48 8d 78 70 e8 af e3 76 09 31 ff 89 c6 89 44 24 08 e8 72 d3 c5 ff 8b 44 24 08 85 c0 0f 85 af f9 ff ff e8 51 d1 c5 ff 90 <0f> 0b 90 e9 a1 f9 ff ff e8 43 d1 c5 ff 90 0f 0b 90 e9 59 f5 ff ff
-> RSP: 0018:ffffc90011e2f410 EFLAGS: 00010046
-> RAX: 0000000000000000 RBX: ffff88804266bfd8 RCX: ffffffff81f5408e
-> RDX: 0000000000000000 RSI: ffff888043e48000 RDI: 0000000000000002
-> RBP: ffffea000086e9c0 R08: 0000000000000000 R09: ffffed10084cd830
-> R10: ffffed10084cd82f R11: ffff88804266c17f R12: 0000000000000246
-> R13: ffff888012bf87f0 R14: 0000000000000001 R15: 0000000000000001
-> FS: 0000000000000000(0000) GS:ffff8880eb46b000(0000) knlGS:0000000000000000
-> CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f6410e8e140 CR3: 0000000023648000 CR4: 0000000000750ef0
-> PKRU: 55555554
-> Call Trace:
-> <TASK>
-> mark_buffer_dirty+0x358/0x410
-> gfs2_unpin+0x106/0xef0
-> buf_lo_after_commit+0x155/0x230
-> gfs2_log_flush+0xd95/0x2cb0
-> gfs2_write_inode+0x371/0x450
-> __writeback_single_inode+0xad7/0xf50
-> writeback_sb_inodes+0x5f5/0xee0
-> __writeback_inodes_wb+0xbe/0x270
-> wb_writeback+0x728/0xb50
-> wb_workfn+0x96e/0xe90
-> process_scheduled_works+0x5de/0x1bd0
-> worker_thread+0x5a9/0xd10
-> kthread+0x447/0x8a0
-> ret_from_fork+0x48/0x80
-> ret_from_fork_asm+0x1a/0x30
-> </TASK>
-> 
-> 
-> 
-> thanks,
-> Kun Hu
-> 
+ drivers/phy/cadence/cdns-dphy.c | 109 +++++++++++++++++++++++++-------
+ 1 file changed, 85 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
+index ed87a3970f83..a94109a63788 100644
+--- a/drivers/phy/cadence/cdns-dphy.c
++++ b/drivers/phy/cadence/cdns-dphy.c
+@@ -79,6 +79,7 @@ struct cdns_dphy_cfg {
+ 	u8 pll_ipdiv;
+ 	u8 pll_opdiv;
+ 	u16 pll_fbdiv;
++	u64 hs_clk_rate;
+ 	unsigned int nlanes;
+ };
+ 
+@@ -99,6 +100,8 @@ struct cdns_dphy_ops {
+ 	void (*set_pll_cfg)(struct cdns_dphy *dphy,
+ 			    const struct cdns_dphy_cfg *cfg);
+ 	unsigned long (*get_wakeup_time_ns)(struct cdns_dphy *dphy);
++	int (*wait_for_pll_lock)(struct cdns_dphy *dphy);
++	int (*wait_for_cmn_ready)(struct cdns_dphy *dphy);
+ };
+ 
+ struct cdns_dphy {
+@@ -108,6 +111,8 @@ struct cdns_dphy {
+ 	struct clk *pll_ref_clk;
+ 	const struct cdns_dphy_ops *ops;
+ 	struct phy *phy;
++	bool is_configured;
++	bool is_powered;
+ };
+ 
+ /* Order of bands is important since the index is the band number. */
+@@ -191,6 +196,26 @@ static unsigned long cdns_dphy_get_wakeup_time_ns(struct cdns_dphy *dphy)
+ 	return dphy->ops->get_wakeup_time_ns(dphy);
+ }
+ 
++static int cdns_dphy_wait_for_pll_lock(struct cdns_dphy *dphy)
++{
++	int ret = 0;
++
++	if (dphy->ops->wait_for_pll_lock)
++		ret = dphy->ops->wait_for_pll_lock(dphy);
++
++	return ret;
++}
++
++static int cdns_dphy_wait_for_cmn_ready(struct cdns_dphy *dphy)
++{
++	int ret = 0;
++
++	if (dphy->ops->wait_for_cmn_ready)
++		ret = dphy->ops->wait_for_cmn_ready(dphy);
++
++	return ret;
++}
++
+ static unsigned long cdns_dphy_ref_get_wakeup_time_ns(struct cdns_dphy *dphy)
+ {
+ 	/* Default wakeup time is 800 ns (in a simulated environment). */
+@@ -232,7 +257,6 @@ static unsigned long cdns_dphy_j721e_get_wakeup_time_ns(struct cdns_dphy *dphy)
+ static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
+ 					const struct cdns_dphy_cfg *cfg)
+ {
+-	u32 status;
+ 
+ 	/*
+ 	 * set the PWM and PLL Byteclk divider settings to recommended values
+@@ -249,13 +273,6 @@ static void cdns_dphy_j721e_set_pll_cfg(struct cdns_dphy *dphy,
+ 
+ 	writel(DPHY_TX_J721E_WIZ_LANE_RSTB,
+ 	       dphy->regs + DPHY_TX_J721E_WIZ_RST_CTRL);
+-
+-	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
+-			   (status & DPHY_TX_WIZ_PLL_LOCK), 0, POLL_TIMEOUT_US);
+-
+-	readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
+-			   (status & DPHY_TX_WIZ_O_CMN_READY), 0,
+-			   POLL_TIMEOUT_US);
+ }
+ 
+ static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
+@@ -263,6 +280,23 @@ static void cdns_dphy_j721e_set_psm_div(struct cdns_dphy *dphy, u8 div)
+ 	writel(div, dphy->regs + DPHY_TX_J721E_WIZ_PSM_FREQ);
+ }
+ 
++static int cdns_dphy_j721e_wait_for_pll_lock(struct cdns_dphy *dphy)
++{
++	u32 status;
++
++	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_PLL_CTRL, status,
++			       status & DPHY_TX_WIZ_PLL_LOCK, 0, POLL_TIMEOUT_US);
++}
++
++static int cdns_dphy_j721e_wait_for_cmn_ready(struct cdns_dphy *dphy)
++{
++	u32 status;
++
++	return readl_poll_timeout(dphy->regs + DPHY_TX_J721E_WIZ_STATUS, status,
++			       status & DPHY_TX_WIZ_O_CMN_READY, 0,
++			       POLL_TIMEOUT_US);
++}
++
+ /*
+  * This is the reference implementation of DPHY hooks. Specific integration of
+  * this IP may have to re-implement some of them depending on how they decided
+@@ -278,6 +312,8 @@ static const struct cdns_dphy_ops j721e_dphy_ops = {
+ 	.get_wakeup_time_ns = cdns_dphy_j721e_get_wakeup_time_ns,
+ 	.set_pll_cfg = cdns_dphy_j721e_set_pll_cfg,
+ 	.set_psm_div = cdns_dphy_j721e_set_psm_div,
++	.wait_for_pll_lock = cdns_dphy_j721e_wait_for_pll_lock,
++	.wait_for_cmn_ready = cdns_dphy_j721e_wait_for_cmn_ready,
+ };
+ 
+ static int cdns_dphy_config_from_opts(struct phy *phy,
+@@ -298,6 +334,7 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
+ 		return ret;
+ 
+ 	opts->wakeup = cdns_dphy_get_wakeup_time_ns(dphy) / 1000;
++	cfg->hs_clk_rate = opts->hs_clk_rate;
+ 
+ 	return 0;
+ }
+@@ -334,13 +371,23 @@ static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
+ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+ {
+ 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+-	struct cdns_dphy_cfg cfg = { 0 };
+-	int ret, band_ctrl;
+-	unsigned int reg;
++	int ret = 0;
+ 
+-	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
+-	if (ret)
+-		return ret;
++	ret = cdns_dphy_config_from_opts(phy, &opts->mipi_dphy, &dphy->cfg);
++	if (!ret)
++		dphy->is_configured = true;
++
++	return ret;
++}
++
++static int cdns_dphy_power_on(struct phy *phy)
++{
++	struct cdns_dphy *dphy = phy_get_drvdata(phy);
++	int ret = 0, band_ctrl;
++	u32 reg;
++
++	if (!dphy->is_configured || dphy->is_powered)
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Configure the internal PSM clk divider so that the DPHY has a
+@@ -363,9 +410,9 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+ 	 * Configure the DPHY PLL that will be used to generate the TX byte
+ 	 * clk.
+ 	 */
+-	cdns_dphy_set_pll_cfg(dphy, &cfg);
++	cdns_dphy_set_pll_cfg(dphy, &dphy->cfg);
+ 
+-	band_ctrl = cdns_dphy_tx_get_band_ctrl(opts->mipi_dphy.hs_clk_rate);
++	band_ctrl = cdns_dphy_tx_get_band_ctrl(dphy->cfg.hs_clk_rate);
+ 	if (band_ctrl < 0)
+ 		return band_ctrl;
+ 
+@@ -373,19 +420,26 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+ 	      FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
+ 	writel(reg, dphy->regs + DPHY_BAND_CFG);
+ 
+-	return 0;
+-}
++	/* Start TX state machine. */
++	writel(DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
++	       dphy->regs + DPHY_CMN_SSM);
+ 
+-static int cdns_dphy_power_on(struct phy *phy)
+-{
+-	struct cdns_dphy *dphy = phy_get_drvdata(phy);
++	ret = cdns_dphy_wait_for_pll_lock(dphy);
++	if (ret) {
++		dev_err(&dphy->phy->dev, "Failed to lock PLL with err %d\n", ret);
++		return ret;
++	}
++
++	ret = cdns_dphy_wait_for_cmn_ready(dphy);
++	if (ret) {
++		dev_err(&dphy->phy->dev, "O_CMN_READY signal failed to assert with err %d\n", ret);
++		return ret;
++	}
+ 
+ 	clk_prepare_enable(dphy->psm_clk);
+ 	clk_prepare_enable(dphy->pll_ref_clk);
+ 
+-	/* Start TX state machine. */
+-	writel(DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
+-	       dphy->regs + DPHY_CMN_SSM);
++	dphy->is_powered = true;
+ 
+ 	return 0;
+ }
+@@ -393,10 +447,17 @@ static int cdns_dphy_power_on(struct phy *phy)
+ static int cdns_dphy_power_off(struct phy *phy)
+ {
+ 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
++	u32 reg;
+ 
+ 	clk_disable_unprepare(dphy->pll_ref_clk);
+ 	clk_disable_unprepare(dphy->psm_clk);
+ 
++	/* Stop TX state machine. */
++	reg = readl(dphy->regs + DPHY_CMN_SSM);
++	writel(reg & ~DPHY_CMN_SSM_EN, dphy->regs + DPHY_CMN_SSM);
++
++	dphy->is_powered = false;
++
+ 	return 0;
+ }
+ 
+-- 
+2.39.1
+
