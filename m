@@ -1,125 +1,201 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48A123C4F1
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F460225413
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181801; cv=none; b=fy3dG1tL32C77QHlyInOx+d1cAOGQ9qhsNfYCQs3dPTNTbRMjKQJRlhFXEVkSPkFAR8V3bNaXt6lpsGrFfYRqbFl6U+4t/adl4ZnaSiESt0yZ5GzX57dxUvYwz/F7LfOYhM7A8supblNEpaxyRv40/PpuvBcnzIovpwLyUTtwFQ=
+	t=1746181823; cv=none; b=bOUjStY6dvozzoPhlHZCaCtzHD0Qbqb4Yoi/EdixIix3VbmV/Qouab+GmTFvO6cp4AUxnRmFGuV6EKtwpex0cduntkvTPAwgdnpNDWPKSbskAdEJsRxqfIEMAb5b6B6jR5sL0SlMKw58g4gsEmU2ExuDSfetLeghy5W/3oMn53Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181801; c=relaxed/simple;
-	bh=i7lDDRucUlwhNKwX/fbh3u9h2y2t42fMvoTgrZxh8fY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EifgVQg7gYXQKKBDF7CZULJFGTo/ki000jK4N71dA5V05kRT5Cki/5FzEguuyITCvlCJXfXEbIsJjF0HI+JgF8CIbwJsUW7/jcCQFiHuQ2jazq7vTymKSI6V4CIdrM3fhmaHIwUWPF7Vp9x86m/rOfmGuT5hXOFVB8TeZP26GKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l1Gai6KP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746181823; c=relaxed/simple;
+	bh=3kNMqTh9H9ygp+57pUlvRr1l2ON0YKc8lAqIAihPrxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ipbVm6OiVd1uenYZKkH87wxQbnZZqfur5mCMySbTsg2uNYeSRF3w5GUkqqA4IcPk8CEpEcNhaSc2jdJz6ifajsTlq0OYlH1ngfWYa73/9R58HAKl0dzI49AySzqlz6RXBPfTE+t5QZkS/2sT1bCNYwfVN98etSQBsM3lyvNtZR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYrg1DN7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rZNfHJ6/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYrg1DN7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rZNfHJ6/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l1Gai6KP"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NLrd010409
-	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:29:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Dn7fvn/GQzMSROH7cCLUoBJLbxJJYWAddOeCioJDak=; b=l1Gai6KPbjpr7o5J
-	Hr3ZMqRKavmSUhCNa2QUgclx25l+PA+ZDkUUwmSv/bpX6CkpPUdOCmNuFbM3jLYC
-	nqpoJL86ruqNcxZs3JGPm9deAxexS9Xuy/SV9HuXQWQiG5uKQyWKapWrxJ9QFpPy
-	ZDY+c8jG6YBlQf0eAiKPYzR1BuKr+MIF3yr+uJWajlMla4WlMMXx5H8FrpB60d/o
-	DMn/q2rqb0V274gBVqH+aO3DM+MeXx7sxSUBkBlErL/wDKT3NrcPbwxWaMJZ3IsL
-	UpbjTuMX519ima7NKU+H61fuSuCDhSqyCV4AWspkRQWHx0ClM5WPYbBCYscuTzKO
-	4DtUhQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubr1bq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:29:58 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5466ca3e9so45569985a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:29:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746181798; x=1746786598;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Dn7fvn/GQzMSROH7cCLUoBJLbxJJYWAddOeCioJDak=;
-        b=fJDfjzOFzeZw01GyX1fUo1gZ4jll9iyZ2H5RUfad0pBpMN7ZG6WgLvV/M3L2bLUK+R
-         hGufKoDcXIn/hPTHeWJzwm1CY4K6RuPb2cgZXvBlQxsh6xYo0HBi4DwH0uxVr60NeQLh
-         sG0Q/IMWDkRcMtBTV6cYBXNX2tRm+tvJ0VCrkBa/xN8KiVs2T2nlSJpcCZQG/j4cwWvw
-         /bNuMyopAEHMzNDfJ5tfy//w/x+Ocn9osLiyTxCXzpVFMeN8q1HkpmEu/5QYV3ZeZ9oW
-         JnLPPjwxBBL0E06/KvRVhnf/+YK9Im/xLy458/R9xv04DqQGuOxiFCqbDi9tDGG9A7bX
-         Tecw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbdJp972Uvuphewb50pYIxtD+SsC6h8etpYEHBV3fatVrGLH013WRr1r7QzgEvtBl3YyIDW/uZgXAmXsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytoqyHAguAER9LuHuwav9Ip4WKYIPxckGJXWlur4etjjMXC0GT
-	2y0lUGVzoOyLQ9TvHjiiOnbYx2M6ZCgRcGzJ+9joZNyKPg1U1azqE/GYvYbWn6/AnhLuB8OWrT1
-	Bymx6jHOyF70wVw8NQtggmOZSdXytZszzkXlQQUpl1KoZwQOCxVP/INybyBrAbjI=
-X-Gm-Gg: ASbGncuNRcRSfBifXVmRhfVpF184RO0uMP69F3n334sEp+77cwOerdweinke4vndODI
-	305bjvIs8zMIAH27ksGZaih8FVt7YoNovhWTFn8yRJhau5t2KXHEloHRVkz2sbBKqUgzvA2Nu49
-	mySyn3P50j0jScGcAZ+BI+sMK6cD3W3vtM2KranmUFs7zkPGQVUlH3LLbneCiU35wbJyk81ppUD
-	QPwSXlz2SACxxMrhb4eoymy6QUGMDLhfLqoQjbFO627vSa8umdOUjyz82MfaJdGX4lwY+GGbAsS
-	t3rUdzA3jwZ6jqipx+UHezAA07DvTVZxOEYy8xPDR/2emlMw3qE+sP1uiBmvAMp8D/A=
-X-Received: by 2002:ac8:7f8f:0:b0:472:15be:54ad with SMTP id d75a77b69052e-48c32ebec71mr11930251cf.14.1746181797955;
-        Fri, 02 May 2025 03:29:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExpZCizKsiNGnAZGjO17fHH8yFM+oPe1mErUD+l8Dx92sb7vZcW1igq+h+lNhd+1RWdEMubQ==
-X-Received: by 2002:ac8:7f8f:0:b0:472:15be:54ad with SMTP id d75a77b69052e-48c32ebec71mr11930041cf.14.1746181797657;
-        Fri, 02 May 2025 03:29:57 -0700 (PDT)
-Received: from [192.168.65.113] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914731dsm29461266b.28.2025.05.02.03.29.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 03:29:57 -0700 (PDT)
-Message-ID: <1435b068-3bb9-4285-8399-81fc278152c4@oss.qualcomm.com>
-Date: Fri, 2 May 2025 12:29:54 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYrg1DN7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rZNfHJ6/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYrg1DN7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rZNfHJ6/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2AC8721171;
+	Fri,  2 May 2025 10:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746181820;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
+	b=MYrg1DN7xQ336giz5Istmut0rhBXoQd4Z1n26ZqffhPJTipcxlYr2F5UJf2TVEL1BaV62+
+	Vd8kLw1tuVoUtY4aqZQEx4h8g0QYCnVxp/hQ5Ug8g3Wn/w7ZYuLowkcD5ScOcReVrlndB9
+	GhDz2x9fnUBu6uYSEzGhBm88Gw5qzig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746181820;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
+	b=rZNfHJ6/FkYNSR3auvJuX6eLWW31hJONLMPz3XKx9pK1YsGnaNkjSiD96NCQSQN3RMMEyy
+	7oy9AKqca5wvofBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746181820;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
+	b=MYrg1DN7xQ336giz5Istmut0rhBXoQd4Z1n26ZqffhPJTipcxlYr2F5UJf2TVEL1BaV62+
+	Vd8kLw1tuVoUtY4aqZQEx4h8g0QYCnVxp/hQ5Ug8g3Wn/w7ZYuLowkcD5ScOcReVrlndB9
+	GhDz2x9fnUBu6uYSEzGhBm88Gw5qzig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746181820;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
+	b=rZNfHJ6/FkYNSR3auvJuX6eLWW31hJONLMPz3XKx9pK1YsGnaNkjSiD96NCQSQN3RMMEyy
+	7oy9AKqca5wvofBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 02A6F13687;
+	Fri,  2 May 2025 10:30:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QtBrALyeFGgIagAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 02 May 2025 10:30:20 +0000
+Date: Fri, 2 May 2025 12:30:14 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member
+ field
+Message-ID: <20250502103014.GN9140@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250429151800.649010-1-neelx@suse.com>
+ <20250430080317.GF9140@twin.jikos.cz>
+ <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
+ <CAPjX3FdpjOfu61KTnQFKdGgh4u5eVz_AwenoPVNgP_eiuka3hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] clk: qcom: ipq5018: mark XO clock as critical
-To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
- <20250502-ipq5018-cmn-pll-v1-2-27902c1c4071@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250502-ipq5018-cmn-pll-v1-2-27902c1c4071@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 8jOayan9Vp8NsMIJpICi76G0gcXUhDk1
-X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=68149ea6 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=N5ds6sLAiLYF8mbRe1EA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4MiBTYWx0ZWRfX+2ZC2cC3Qlkr NlrfY+iR7GGcvRC3DMZUFSJxSh0IPbuHxRL8G79CJpQLMppF8XksO8pChJOLawHV1ED5BKkNppl L1oez/7abmox2lOkDol3TXbL+b/SEtQluHwcvaezd1ev7gM81Ipjpi7LzBnNznIg8R4Up34sV/T
- zbgD/bz62olbdoRhfNqwY7gOlbX7eyQ1isrUgiVIb75lUmPA+nfNXl3nxV/Q5f1o9X1CT+61eNk Qb2kiGxa+YwUF1WU7iRQp+4Zv1GN+my6A4bfRILkgvzNOJLvgLzOwjNWR6+7e1yHDNhVOp1G+mU 4xHuC4gtUyz8XxY5MrqV6Z29PmkAQrLS0HzgKAF0W2OIRFObfX4Fbfl+vy3ZPP5KrQKmzJCTKN+
- e3alYzSVUlY8KhKEyKsYg93Lgn+a5qNcPHOI2W4XcXdqrPLXui6GonfkAeJBBBNs7fj64ozG
-X-Proofpoint-ORIG-GUID: 8jOayan9Vp8NsMIJpICi76G0gcXUhDk1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPjX3FdpjOfu61KTnQFKdGgh4u5eVz_AwenoPVNgP_eiuka3hw@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
 
-On 5/2/25 12:15 PM, George Moussalem via B4 Relay wrote:
-> From: George Moussalem <george.moussalem@outlook.com>
+On Wed, Apr 30, 2025 at 02:31:33PM +0200, Daniel Vacek wrote:
+> On Wed, 30 Apr 2025 at 10:21, Daniel Vacek <neelx@suse.com> wrote:
+> >
+> > On Wed, 30 Apr 2025 at 10:03, David Sterba <dsterba@suse.cz> wrote:
+> > >
+> > > On Tue, Apr 29, 2025 at 05:17:57PM +0200, Daniel Vacek wrote:
+> > > > Even super block nowadays uses nodesize for eb->len. This is since commits
+> > > >
+> > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
+> > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
+> > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
+> > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
+> > > >
+> > > > With these the eb->len is not really useful anymore. Let's use the nodesize
+> > > > directly where applicable.
+> > >
+> > > I've had this patch in my local branch for some years from the times we
+> > > were optimizing extent buffer size. The size on release config is 240
+> > > bytes. The goal was to get it under 256 and keep it aligned.
+> > >
+> > > Removing eb->len does not change the structure size and leaves a hole
+> > >
+> > >  struct extent_buffer {
+> > >         u64                        start;                /*     0     8 */
+> > > -       u32                        len;                  /*     8     4 */
+> > > -       u32                        folio_size;           /*    12     4 */
+> > > +       u32                        folio_size;           /*     8     4 */
+> > > +
+> > > +       /* XXX 4 bytes hole, try to pack */
+> > > +
+> > >         long unsigned int          bflags;               /*    16     8 */
+> > >         struct btrfs_fs_info *     fs_info;              /*    24     8 */
+> > >         void *                     addr;                 /*    32     8 */
+> > > @@ -5554,8 +5556,8 @@ struct extent_buffer {
+> > >         struct rw_semaphore        lock;                 /*    72    40 */
+> > >         struct folio *             folios[16];           /*   112   128 */
+> > >
+> > > -       /* size: 240, cachelines: 4, members: 14 */
+> > > -       /* sum members: 238, holes: 1, sum holes: 2 */
+> > > +       /* size: 240, cachelines: 4, members: 13 */
+> > > +       /* sum members: 234, holes: 2, sum holes: 6 */
+> > >         /* forced alignments: 1, forced holes: 1, sum forced holes: 2 */
+> > >         /* last cacheline: 48 bytes */
+> > >  } __attribute__((__aligned__(8)));
+> > >
+> > > The benefit of duplicating the length in each eb is that it's in the
+> > > same cacheline as the other members that are used for offset
+> > > calculations or bit manipulations.
+> > >
+> > > Going to the fs_info->nodesize may or may not hit a cache, also because
+> > > it needs to do 2 pointer dereferences, so from that perspective I think
+> > > it's making it worse.
+> >
+> > I was considering that. Since fs_info is shared for all ebs and other
+> > stuff like transactions, etc. I think the cache is hot most of the
+> > time and there will be hardly any performance difference observable.
+> > Though without benchmarks this is just a speculation (on both sides).
+> >
+> > > I don't think we need to do the optimization right now, but maybe in the
+> > > future if there's a need to add something to eb. Still we can use the
+> > > remaining 16 bytes up to 256 without making things worse.
+> >
+> > This really depends on configuration. On my laptop (Debian -rt kernel)
+> > the eb struct is actually 272 bytes as the rt_mutex is significantly
+> > heavier than raw spin lock. And -rt is a first class citizen nowadays,
+> > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
+> > I think it would be nice to slim the struct below 256 bytes even there
+> > if that's your aim.
 > 
-> The XO clock must not be disabled, so let's add the CLK_IS_CRITICAL
-> flag to avoid the kernel trying to disable the XO clock (when parenting
-> it under the CMN PLL reference clock), else the kernel will panic and
-> the following message will appear in the kernel logs:
+> Eventually we can get there by using ushort for bflags and moving
+> log_index and folio_shift to fill the hole.
+> Let me know what you think.
 
-Remove the struct definition for this clock (and the assignment in
-blah_blah_clks[]) and replace it with:
-
-qcom_branch_set_clk_en(regmap, 0x30030); /* GCC_XO_CLK */
-
-Konrad
+The bflags are atomic bits and this requires unsigned long. Also the
+short int type is something we want to avoid because it's not a natural
+type on many architectures and generates worse code. I don't think we
+need to optimize for RT kernels, it's now part of mainline kernel but by
+far not a common configuration.
