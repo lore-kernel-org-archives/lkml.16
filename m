@@ -1,91 +1,183 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82743231846;
-	Fri,  2 May 2025 09:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A1A23184A;
+	Fri,  2 May 2025 09:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176889; cv=none; b=NfT3wiwvhsFrpBehySnKxTm26KEZTT6f2HfOe1KeZ5FiyyCK3xm2UWyz9n583jIUOyDHb9NN9N71BSZ/EQKm6XyUaOyM5PDwrydq2H/9ZxVKEe+OptUCpdBT+1xoLojBLRW8EN2zTiRJ8ROfOio89Wsnu92kop7UFjrpqaj2HLE=
+	t=1746176905; cv=none; b=jFsP4CUp8pSeRtWI94H2vxOBHaYO0UTvCvWgHHU3kYxm9p6tlzVk0s83HhmMUsGR0wkmgXCKWOZMEvb4zRqcoE85xOM7cx6xG/c7AW2reVRgxQ6oY8YCmG6UQerc3i/yqqTDuFUBO7bDF2JobhoEx77X4QZ9ETC4/BlWn/4z2zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176889; c=relaxed/simple;
-	bh=R/f/0PpRRl12uL9hXEC0Bh2MUCLLMpgVcEN+eY3c5Ds=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qAw4qOQUVbFMC1T5O9jcGzAUoeWl1I2c835cS/xqXAX/aqaV2npu+i627q3gyRFJnxu3sIfeTDdKhTl+VJZKxlC26fv0RP/dZu4zch4o3qLeIuqD/NpIfvQRVR6aHwxH4xoXr4OkYyHUc986it12Q/YhSn+NW1e3wNLmw2pUO2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Z+tMKMcf; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746176905; c=relaxed/simple;
+	bh=eNLevQHHQAD4rAIc55GjBUxARGFUE3AIHvX1ZNgcr9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UO8vRJJ6k7BLSJPeRz2AlZeK1D6smXBZvJBJJAjcynNHrGEJv1Q/8qx0SQXVsoZdkNGbVXNcgnUJB05GGKrFfqHYPpAziQqzb0qYQHs+DXhpTAf/pCP8zWj7vA9AZ7BVZhzIJP9rtPPR9omp6MYDS7vn/7eMOsUORBZ3d4N1yhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yHhrXQDF; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z+tMKMcf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746176877;
-	bh=pbmq+7IGU9/SNSn7Fm2+UuynPvmmeana33Zi7tIiSYc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Z+tMKMcf1GeW6OARiz+SoAWuDXF4qJcYp7TxFDu9IGsBCS2z9JZqTFPH3yaRBuMEN
-	 6jePCjQP5DMBK7TZ6H8xb1kg6MK/rW0g2hQbBuFXiJGyTCudLEuF4cTSjWvS32Uh9X
-	 urNtKAMys8RHQrj/oEKs1N1/NbhQ0ZXbECSorbQ2swicsvmF4GN99VSB8Mhp5DIjuu
-	 WLmfgjagsfITBhQbpH7vuzVExrGK4UGjnxez2rIbIKmb2HUS9op+Z80xlOBBOF0LGV
-	 yghuRdaNjcqQWdEVKZx77U/r9lRsgtm657GltHMBeyVyzHNNXURE9SF5uvPNCw+Tue
-	 HFVvgQH+JWWow==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZplSX71WXz4x3J;
-	Fri,  2 May 2025 19:07:56 +1000 (AEST)
-Date: Fri, 2 May 2025 19:07:55 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
- <rui.zhang@intel.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the thermal tree
-Message-ID: <20250502190755.31379819@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yHhrXQDF"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54297thx3827106
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 04:07:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746176875;
+	bh=MCXA41Ish/7Jei7o/eseHM2xmg9pFZPuBLzeUlIR67s=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=yHhrXQDFMyCoPhhHLWtaWNqza8g8gbzocqHe3jZNQr4zIl5LCrvxpjVAUbxomKH9w
+	 C58fcII/WAi7JUFCBV0zhEBEQyKRvw4bqTkhgQQkjgzdhRFW2JMi43DfREvQU0U+WO
+	 rqMLMfS6RdmTrGDUTpphESBUVEulV/0e0vPbl1sA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54297t4N021278
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 04:07:55 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 04:07:55 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 04:07:54 -0500
+Received: from [172.24.30.16] (lt9560gk3.dhcp.ti.com [172.24.30.16])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54297nmp052556;
+	Fri, 2 May 2025 04:07:50 -0500
+Message-ID: <f6434e4a-c37c-41dc-91b4-0cc2d33730ba@ti.com>
+Date: Fri, 2 May 2025 14:37:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LO937PrQosqz_Q5CBT7T5YT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 4/4] net: ti: icssg-prueth: Fix kernel panic during
+ concurrent Tx queue access
+To: Jesper Dangaard Brouer <hawk@kernel.org>, <dan.carpenter@linaro.org>,
+        <john.fastabend@gmail.com>, <daniel@iogearbox.net>, <ast@kernel.org>,
+        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
+        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, <danishanwar@ti.com>
+References: <20250428120459.244525-1-m-malladi@ti.com>
+ <20250428120459.244525-5-m-malladi@ti.com>
+ <074a9a19-9050-44dd-a0bf-536ae8318da2@kernel.org>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <074a9a19-9050-44dd-a0bf-536ae8318da2@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
---Sig_/LO937PrQosqz_Q5CBT7T5YT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jesper,
 
-Hi all,
+On 5/2/2025 12:44 PM, Jesper Dangaard Brouer wrote:
+> 
+> 
+> On 28/04/2025 14.04, Meghana Malladi wrote:
+>> Add __netif_tx_lock() to ensure that only one packet is being
+>> transmitted at a time to avoid race conditions in the netif_txq
+>> struct and prevent packet data corruption. Failing to do so causes
+>> kernel panic with the following error:
+>>
+>> [ 2184.746764] ------------[ cut here ]------------
+>> [ 2184.751412] kernel BUG at lib/dynamic_queue_limits.c:99!
+>> [ 2184.756728] Internal error: Oops - BUG: 00000000f2000800 [#1] 
+>> PREEMPT SMP
+>>
+>> logs: https://gist.github.com/ 
+>> MeghanaMalladiTI/9c7aa5fc3b7fb03f87c74aad487956e9
+>>
+>> The lock is acquired before calling emac_xmit_xdp_frame() and released 
+>> after the
+>> call returns. This ensures that the TX queue is protected from 
+>> concurrent access
+>> during the transmission of XDP frames.
+>>
+>> Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
+>> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+>> ---
+>>   drivers/net/ethernet/ti/icssg/icssg_common.c | 7 ++++++-
+>>   drivers/net/ethernet/ti/icssg/icssg_prueth.c | 7 ++++++-
+>>   2 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/ 
+>> net/ethernet/ti/icssg/icssg_common.c
+>> index a120ff6fec8f..e509b6ff81e7 100644
+>> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
+>> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+>> @@ -660,6 +660,8 @@ static u32 emac_run_xdp(struct prueth_emac *emac, 
+>> struct xdp_buff *xdp,
+>>               struct page *page, u32 *len)
+>>   {
+>>       struct net_device *ndev = emac->ndev;
+>> +    struct netdev_queue *netif_txq;
+>> +    int cpu = smp_processor_id();
+>>       struct bpf_prog *xdp_prog;
+>>       struct xdp_frame *xdpf;
+>>       u32 pkt_len = *len;
+>> @@ -679,8 +681,11 @@ static u32 emac_run_xdp(struct prueth_emac *emac, 
+>> struct xdp_buff *xdp,
+>>               goto drop;
+>>           }
+>> -        q_idx = smp_processor_id() % emac->tx_ch_num;
+>> +        q_idx = cpu % emac->tx_ch_num;
+>> +        netif_txq = netdev_get_tx_queue(ndev, q_idx);
+>> +        __netif_tx_lock(netif_txq, cpu);
+>>           result = emac_xmit_xdp_frame(emac, xdpf, page, q_idx);
+>> +        __netif_tx_unlock(netif_txq);
+>>           if (result == ICSSG_XDP_CONSUMED) {
+>>               ndev->stats.tx_dropped++;
+>>               goto drop;
+>> diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/ 
+>> net/ethernet/ti/icssg/icssg_prueth.c
+>> index ee35fecf61e7..b31060e7f698 100644
+>> --- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+>> +++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+>> @@ -1075,20 +1075,25 @@ static int emac_xdp_xmit(struct net_device 
+>> *dev, int n, struct xdp_frame **frame
+>>   {
+>>       struct prueth_emac *emac = netdev_priv(dev);
+>>       struct net_device *ndev = emac->ndev;
+>> +    struct netdev_queue *netif_txq;
+>> +    int cpu = smp_processor_id();
+>>       struct xdp_frame *xdpf;
+>>       unsigned int q_idx;
+>>       int nxmit = 0;
+>>       u32 err;
+>>       int i;
+>> -    q_idx = smp_processor_id() % emac->tx_ch_num;
+>> +    q_idx = cpu % emac->tx_ch_num;
+>> +    netif_txq = netdev_get_tx_queue(ndev, q_idx);
+>>       if (unlikely(flags & ~XDP_XMIT_FLAGS_MASK))
+>>           return -EINVAL;
+>>       for (i = 0; i < n; i++) {
+>>           xdpf = frames[i];
+>> +        __netif_tx_lock(netif_txq, cpu);
+>>           err = emac_xmit_xdp_frame(emac, xdpf, NULL, q_idx);
+>> +        __netif_tx_unlock(netif_txq);
+> 
+> Why are you taking and releasing this lock in a loop?
+> 
+> XDP gain performance by sending a batch of 'n' packets.
+> This approach looks like a performance killer.
+> 
 
-After merging the thermal tree, today's linux-next build (arm64 defconfig)
-produced this warning:
+Yes, I agree with you. This wasn't the intended change. Thank you for 
+pointing this out. The lock and unlock should happen outside the loop. 
+Will fix this in v2.
 
-drivers/thermal/mediatek/lvts_thermal.c:266:13: warning: 'lvts_debugfs_exit=
-' defined but not used [-Wunused-function]
-  266 | static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
-      |             ^~~~~~~~~~~~~~~~~
+> 
+>>           if (err != ICSSG_XDP_TX) {
+>>               ndev->stats.tx_dropped++;
+>>               break;
+> 
+> 
 
-Introduced by commit
+-- 
+Thanks,
+Meghana Malladi
 
-  ef280c17a840 ("thermal/drivers/mediatek/lvts: Fix debugfs unregister on f=
-ailure")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LO937PrQosqz_Q5CBT7T5YT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgUi2sACgkQAVBC80lX
-0GzwdQf7BKkrPp72zXuEI5SWYga1G9m5xLj00pAFUA3AFaTvXExoV4zqN0YD2Vcy
-o5RY5vhxhnCKwI7Dvkxy6L7GmAGuvLqOQD4zFr6xGKMOHVVZGIPUZFcc+0qaiF6S
-RLG2WQaIA/dYdr/yX/3vvcmaEuD1xB4CTIIjrB+jFBMFnE1xcj/iObvoZl4RuzQW
-2/W26yHC1jbZq1kOJwJR0oiozi3NJ3S/9R1VuMs0UF7sAx+kdvj0bpnlr00QHbPi
-ojL6zMKbyVGchYCo5HXLUWHe3O9o+XrWxxrDb2zJPC6rdcRGEcRscsLba0TZh8el
-F8d8/IeWDf2rhRWC4OKO4dJseeP8Wg==
-=Z/fD
------END PGP SIGNATURE-----
-
---Sig_/LO937PrQosqz_Q5CBT7T5YT--
