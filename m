@@ -1,179 +1,135 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB00C8632B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 22:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A9520297D
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 22:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746225301; cv=none; b=f1Q1U5LkKnbxkpqEML/evFmnPX91WS+3nLGVFnMl7V+U988iyOszmrugJuvReMaHNvIDiRyzuXVVtSeOVcJhwp2lCzdAAcAKpkVf7zuLuDq0eEtxGqkrGdxnh9Mh/ECzYFY8nE2AHccYbVpSxflNQn2ba6MWeh5RlBN7nfuaU0s=
+	t=1746225338; cv=none; b=ssHrkHyysCWG29Utex6xfDiOokij+Ld/C7rNVEH9HYIdoJR9dDt9jZ1MFVqm/IN0N4NY6/ua3KwtotrR2iHIYjlhQWkbocUtvZaMCvoi4V2DiP/R883L/oDbmTD8Cdl/ufpr6wAamWnjcR0a5yZYNXUpqF5V9E7QbAx3myUBUXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746225301; c=relaxed/simple;
-	bh=jfXsnIIu2VwY0c7zeFjxjocJ4orROMa5yuTcrfzPiZw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=X8sZw0anO4QmQG+KKVR3eKrib279dPmwuIqk50h9/lBRwJGtCv9tpeHDAfSPcC+YANp+HGE7aNqsQ9r3Jlf75KmqqKt67R3rGSbkMPQRgvVjEW33kAEJF0WDik87LWef0cFZ99repQknBqUQdgw9D8rV3sCcaL6wepkuYLC2MGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ij9ysuqP; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746225338; c=relaxed/simple;
+	bh=HIvoANCYobIgEBaeF1o0L3N8Y/liT74RM47L1xXFkN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQMjktYwCgNx2Os0mBaSwgADTflXGkAvr0jdsRis3wmVco1tFxtq4m9wTpVH/cGiU0xDXlUnluPy3TvDRcWktbnIay4f1fuhuN07sEM+/RF7BeGmbIZohZ7fyexuPQ1JlnEjqCRtMTXVpjDQFy/K9oSl6y/m00VAdh+FwcjduHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bQ8JLnKN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ij9ysuqP"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so3882998a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 15:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746225299; x=1746830099; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KWVFcVyteM0rANhl8jUHaWIPAf+EazchM+HNHio5hZg=;
-        b=Ij9ysuqPhaKQa2iqJtaujgY5AWGr9mG9/RTExbyKQ0eJ0d3ovcCfADgLlxCslrqOds
-         b2VdApiZbH6rBR6AtIQetA74oDYJeH+RhBsJFy7216duL7WQX29T99x6cO70Jf5ddfpz
-         9GvXUApTKWAiP7arRTuEkz+fxqmivFWAS5uFubwY5g2flcfHG38ift1wH3rRGFrxNSzV
-         Nm7wreS3yu5tHdJKTTgj/JFhWJyPvsFF8vLJKcV4sgqgdMGtB52BtqdrsZvjJxUTb6vj
-         QrxMuPgGOZvN4jeoXtLLN8EPRBN/7oVo8N2HRVOQjufzuLtkTSGBUkggR1r46omVJQ/y
-         KgAQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bQ8JLnKN"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542KAn0t015700
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 22:35:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=SuCVsDN6g4TFy2W7M3iJ3Plk
+	T8Xwqrsi5URWt0X1wqI=; b=bQ8JLnKNZEpvENFCL6angT79ippzHBQMcphYQ1va
+	DY3KUzWc1BJbIMfVp1kqy4SdhEe/n+z5BS8DffimnnB+uGh5QIMsztMXGbz/d7H+
+	P2TeZn23s6KCyTl0ExHijlsMe12COcBNSRH3BDygToDHUc7RT8VhLlp8sWrLB2wz
+	0ZiCX15HoG1l+igrrqS36JLkcIqlB2IvnPIFN3RyTD/Zblhvr+hQmDvz6sMPFHZI
+	+l0i2oUzLgp3xnHLzM1QBWWMtXIUwRRK0CjzkOFQwKUu/4NgF1y3x7AEfWQ1NVhs
+	AyzgJ8bouC+Y1D8TA2GrU+BvvCzKoMzp0Nj2buVE9SIkuw==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u79jgp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 22:35:35 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4769a1db721so65576971cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 15:35:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746225299; x=1746830099;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KWVFcVyteM0rANhl8jUHaWIPAf+EazchM+HNHio5hZg=;
-        b=UuCPx4aDOiqkegSCgxITt04MpJ33zZR26JL3FV2pkLs/VDDCPoyGes/a4f1gz0ueV2
-         GENPlc5GQe2Nyjrx9M5e1wDGXXxTQNRxw+SSIM/5sxpfxBsN18bHLIN6VUYUbmteZvvb
-         Y4/i2zLgXzrpd59N7Bt8vSS3Mt4f34gtIUx33jlyYkQidjNPh72LGRhsP5EE0Z0zwCwZ
-         v/GfhbHrjQijlgicEy0ulylpRehehS16iBhnSh27SRN4nB0BttpT4lKHulIFYEFohDa9
-         P0cYT/iTkp1+IwDo7vicUaLz3foCzF3G1DLsgmU13PF+6G+f5T+Inp36q9IpkHuBVZ3U
-         IHnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWe5mC4CiDgaK4TIdYTRR2hwqPGPys04Y4beRj8Jq0A/5opQXG+reyaN/RdBGNAGAl5zc7fF6yuBJxgwrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywDtC/RddKKzvR8V2OC9v5t+V+G96GVbJLsXoduvSEqxZcGiMa
-	/K1ESj3bTC8HY2OOXdmjouPAqoJ2dw4e56fwM5ZNCy8SWVUMp88ctNFVHlYyTxGm49SPasLr+Vd
-	tzA==
-X-Google-Smtp-Source: AGHT+IF80pgQ+j2xTDzPXwHebe4UI50ZVfwHe6IkhFUfpDgyVqGJc1Jvql34RQu3S0D0rnfWmpMDMB/HWeQ=
-X-Received: from pjuj6.prod.google.com ([2002:a17:90a:d006:b0:2fc:d77:541])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d648:b0:2ff:53a4:74f0
- with SMTP id 98e67ed59e1d1-30a4e6aa8d7mr7031771a91.29.1746225299268; Fri, 02
- May 2025 15:34:59 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  2 May 2025 15:34:56 -0700
+        d=1e100.net; s=20230601; t=1746225327; x=1746830127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuCVsDN6g4TFy2W7M3iJ3PlkT8Xwqrsi5URWt0X1wqI=;
+        b=J7QG73t0gRaZk3tEQdBpkEiVtShL5L4MUxtl9IIZtjuOmP6LDN0rICn81iwnhotV1a
+         VxsnmEmBj117aKFX4Y/mhUhFNJlgmt1YGRwOACDcCvJ8YTzGoECjJupy9TpRoBcWXX5w
+         /V1EqHnje8FWU8MHMWfbCgkKA7FVyE2tihflARgDJ86Sx6VZ4Tnt68V+lvhe5nsTjwJh
+         fHUTbTFs4E4z3b8qu6QyXl+9CWCJkdw53b1LaAt1vLS1Gm5nWcHBzHTjW/gFARU2FV+J
+         CM7iNMAwU3NbUf8lUphWWvGWJPzuvoD3G+sWpi2syku2pzX6EdoyPbWnUt5BXPKaRM8W
+         LdnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNVMluQZAQ9CM8SydCIkluPrHk4zH/AIb2rVSZTD3WxxMrLYcWVcCzy2bcgANNUZ5IUiyRG/XnURrEZiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4HtbDRyfOscAV+FE5naQNwjVYC/FyWlB8fACDJ5f18xGuixbT
+	YNdn6X8l4tei/Xttt0qyunDEq3IMs4oO0k8+W1HL8gsK+dP1CCaAw7AQexvQp8I7uV7gilRLyPn
+	zi0bVin2WdxgwVbyTS+FVLwfhbfKeP57xoamv96aBM46PGpX6BI4CoAwhU73pheQ=
+X-Gm-Gg: ASbGncuVsjNSuvX0xh+fA+lsyjVLPqfX98kFucr1P4prW+vuDGfVoRi0vxAui82V3QS
+	QaS2YGiG0vHMoWijF1g5IMKWZNCICvQ6H++snuk1IrvNVaSheWdnwS/vFSLOzlnHueN7ZL3SgVm
+	wZ+kg72tBIpoiXhkp5hgAm3UmwzXzKTPBGej4CrxVJlThmRDEVZyUmZBRzFmK9PGXD/BHYChrIz
+	MeOxFIt6BN0y8nq7aNmjK8jEDfbUaf74x+LtnL+mjpR0MKulmvsuXTpxC9Y4ZatsHwFuK0fAGlW
+	I7HY/Lg1vIDbu1x0FreLOjwcyBSG2uz0/nulRToGwZ7xti8iAJ1POC5AnpHLKntTFHZTyGKtDfE
+	=
+X-Received: by 2002:a05:622a:5516:b0:47a:fb28:8ef0 with SMTP id d75a77b69052e-48c31a23f65mr71764361cf.29.1746225326971;
+        Fri, 02 May 2025 15:35:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCBMAjKkyCR6eC9CmEoV6+y+5w+kEc9kjQxO9VMh2wrtzgWX679IWlyC5ahNpaQha1KzNuUw==
+X-Received: by 2002:a05:622a:5516:b0:47a:fb28:8ef0 with SMTP id d75a77b69052e-48c31a23f65mr71763981cf.29.1746225326656;
+        Fri, 02 May 2025 15:35:26 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202901770csm4948771fa.37.2025.05.02.15.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 15:35:25 -0700 (PDT)
+Date: Sat, 3 May 2025 01:35:24 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Subject: Re: [PATCH v2 3/4] clk: qcom: camcc-sc8180x: Add SC8180X camera
+ clock controller driver
+Message-ID: <xyvuctx5w2cr6pi2ddjd5m5xqnirloflwkewpg2bcfn2neipe3@mzkis6iklj7o>
+References: <20250430-sc8180x-camcc-support-v2-0-6bbb514f467c@quicinc.com>
+ <20250430-sc8180x-camcc-support-v2-3-6bbb514f467c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250502223456.887618-1-seanjc@google.com>
-Subject: [PATCH] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count transitions
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Larabel <Michael@michaellarabel.com>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430-sc8180x-camcc-support-v2-3-6bbb514f467c@quicinc.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDE4NSBTYWx0ZWRfX6l1NVW4SdWHB JAqqeutRFJHWL1wZzxFhzbv4vEWdoFkkYEZcMJaerC1TpCzD8ZoQ2A3zjy4sp2RcFMJANGTE0rT IDhOeW049HK8pRGZUUaxCRzGUDG6cRTDkCU+AmEr8Uys9swQT9+Z5rNBLTynorZccw2bllc+4ov
+ 0GzPg8TW7pndtX2ZJHvwkm8Yqa9swGHgoJ2HQG2Iz8mGfYxArfUj83Yf37jm8xTImWRaJW/o89j G4X5sSyhnfpGwErY1qRdWYx3zYm2ODWaSy3FKe6Upi+imJw84Nd8lPNnJeV7W+Q+dKMc+TE1Jei McnAuDQY2sIhohHsI+ITT9OkoQvx/nPANoWojjlf9R0EfVc+6yWu4xryVG4w1L+fKGRovUL07cY
+ +E6plzOb+iW05PWxAm0wSHfnbj4ZA1JC2e3Fu0KD9oF8P9KmM9QbnN7W37VE5/o56wryjv4l
+X-Proofpoint-GUID: hPFTxC4sO6I0FWOYbGWqX3QBTec1bs6u
+X-Proofpoint-ORIG-GUID: hPFTxC4sO6I0FWOYbGWqX3QBTec1bs6u
+X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=681548b7 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=XyGygVz_FukL3ZPvZxcA:9 a=CjuIK1q_8ugA:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=829 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020185
 
-Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-only if KVM has at least one active VM.  Leaving the bit set at all times
-unfortunately degrades performance by a wee bit more than expected.
+On Wed, Apr 30, 2025 at 04:08:57PM +0530, Satya Priya Kakitapalli wrote:
+> Add support for the camera clock controller for camera clients to
+> be able to request for camcc clocks on SC8180X platform.
+> 
+> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
 
-Use a dedicated spinlock and counter instead of hooking virtualization
-enablement, as changing the behavior of kvm.enable_virt_at_load based on
-SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-result in performance issues for flows that are sensitive to VM creation
-latency.
+Would it make sense to merge this driver with the camcc-sm8150.c? It
+seems that the blocks are pretty similar.
 
-Similarly, don't bother optimizing the 1=>N and N=>1 transitions, e.g. by
-using atomic_inc_return() to avoid taking the spinlock, as ensuring that
-BP_SPEC_REDUCE is guaranteed to be set before KVM_RUN is non-trivial.  KVM
-already serializes VM creation against kvm_lock (to add the VM to vm_list),
-and the spinlock will only be held for a handful of cycles for the 1<=>N
-cases.  I.e. the complexity needed to ensure correctness outweighs the
-marginal benefits of eliding the lock.  See the Link for details.
+>  drivers/clk/qcom/Kconfig         |   10 +
+>  drivers/clk/qcom/Makefile        |    1 +
+>  drivers/clk/qcom/camcc-sc8180x.c | 2897 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 2908 insertions(+)
+> 
 
-Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
-Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
-Reported-by: Michael Larabel <Michael@michaellarabel.com>
-Closes: https://www.phoronix.com/review/linux-615-amd-regression
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/svm.c | 43 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 37 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index cc1c721ba067..364959fd1040 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
- 	kvm_cpu_svm_disable();
- 
- 	amd_pmu_disable_virt();
--
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
- }
- 
- static int svm_enable_virtualization_cpu(void)
-@@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
- 		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
--
- 	return 0;
- }
- 
-@@ -5032,10 +5026,46 @@ static void svm_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
- 	sev_vcpu_deliver_sipi_vector(vcpu, vector);
- }
- 
-+#ifdef CONFIG_CPU_MITIGATIONS
-+static DEFINE_SPINLOCK(srso_lock);
-+static int srso_nr_vms;
-+
-+static void svm_toggle_srso_spec_reduce(void *set)
-+{
-+	if (set)
-+		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+	else
-+		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+}
-+
-+static void svm_srso_add_remove_vm(int count)
-+{
-+	bool set;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-+		return;
-+
-+	guard(spinlock)(&srso_lock);
-+
-+	set = !srso_nr_vms;
-+	srso_nr_vms += count;
-+
-+	WARN_ON_ONCE(srso_nr_vms < 0);
-+	if (!set && srso_nr_vms)
-+		return;
-+
-+	on_each_cpu(svm_toggle_srso_spec_reduce, (void *)set, 1);
-+}
-+#else
-+static void svm_srso_add_remove_vm(int count) { }
-+#endif
-+
- static void svm_vm_destroy(struct kvm *kvm)
- {
- 	avic_vm_destroy(kvm);
- 	sev_vm_destroy(kvm);
-+
-+	svm_srso_add_remove_vm(-1);
- }
- 
- static int svm_vm_init(struct kvm *kvm)
-@@ -5061,6 +5091,7 @@ static int svm_vm_init(struct kvm *kvm)
- 			return ret;
- 	}
- 
-+	svm_srso_add_remove_vm(1);
- 	return 0;
- }
- 
-
-base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
 -- 
-2.49.0.906.g1f30a19c02-goog
-
+With best wishes
+Dmitry
