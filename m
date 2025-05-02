@@ -1,65 +1,65 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB62244676
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E82244697
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176397; cv=none; b=pKHkGsPdrXH7u1Y5H2USsjRtXCJfouVftsYT59aNpk9nYYQhEi6PHqprSayozZcmp7W5YZ4BOlX1OGXKtJZPHUkgk72Rea9w8+X/zp97MgIzOaj6Xqyk+MQBBhUG5XuvrvplD2TuEvKIomGc5q+Alpr4IdkbMcAc3XrnqgcCGqY=
+	t=1746176397; cv=none; b=WcwwUhb/93+SW6aL520Izs1CbpyQwUsMl8sdhVwUFzqPki7yxKtkwh9cbrGeRhTgviP8OkxIMraRur+ElskjCxWd2U9cvIcPCxZ/QejN1gOloQw4B/TZ6As79/IM8fM8Czw6Ia6BetJbKn3ro1uJltOauJr1PFCV7+r+08pvx8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746176397; c=relaxed/simple;
-	bh=0rvyNRmAVs22sEiy/QOTFVu+897s6keqDCf6txYk6JI=;
+	bh=GewjN5JZ5QEnNVyIalTXmzdJfxf0mZMpZbF1p7s74so=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YC0JDl9FSdxKm9/3+H/U0u1L7M3ynTlwFeQ5i8bcGQ2VZy1FjM8mjmFAda9l31tXsnVaTHR+OyTlcZJnPWwLHdmir9nZOl2GJYw0ErNKdPfeBh8XBbaF1RKrQsfXf4MjScH33BwoaO7AuU7I7vXj8kpCO9w2mtaaTgO1c8sV6Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PCFKe6fc; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:To:Cc; b=Ovs8NxmiV2cCq8ULH1mbp/Dj6ObKAOnwbYI2RwNusR/ehKMxrgZQJXv3VFYtZwkVHCqEAmaKoOYnt/hLnl5R/C4qYbPBO84Oj44NOHbko5rz+LcwFWy9lcSGyOz3NnL8IYmbO0gNgnD5aqZ7jCDR8D3ybL1XiL6HKMEPgAq0WZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=REuEnF2V; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PCFKe6fc"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1703338f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:59:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="REuEnF2V"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1029623f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746176393; x=1746781193; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746176394; x=1746781194; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EN+18LA857SctMCPq7PChnoB5bYuEFe9lArdedXnm4g=;
-        b=PCFKe6fcmGYcvL0JzflxqYFd9SH4b7F06hG39DcUAmwgJWlnBozTdipnUPjmNMmvFw
-         4NJde2XmNVx0j8IGYaecNFWgGAL1WQJv0a6JOp6d4WDNfo2K5cc5UonwF35TkZh+ix/f
-         Y0vE048ZWfjEpoE2NNYiqarUaM1YiEt2HoM3rWSG3r8IDsyfXI2aIQpgc431VthYKqBL
-         aDm9JOqRNJouywOx6hkMTkwoNarjioTdBKnNolybDLLDNvFaHnFzH25Y7EJu62vwedYP
-         5z6UroZtehJreQkXHcpHfMTQnelNH41NomHh9q4lHOmGnPxkMXF9zkIrWwyPBb0iOiMR
-         ImJg==
+        bh=7VQVpAhnQOcCRYJ0IuR7EAkGj4zu20WsPxA2gwCBLx8=;
+        b=REuEnF2VypvMkvCsuQvZLIVtpwEXX5V0zZeg/7JuTVidAnc88naKfiLWQ+Ie3zPwEt
+         a23z7OBwn1bZLdwB5prwjpIE0xwJHsLSz+NriKN1niajVBNvK1Dnb4RB2cTuEfqyMYqd
+         zXchpMNyTaipR0qwHaMFXQRrLvsiulEG8ytZ5gE5uRJFfuLmxqlUmjKid6o9QgPHDNwZ
+         91+1bjxFX40wqzw4XyRMHjy8R35osChnN0YJ2N1uPlOtf098gcc5SqOCR14bQ7X6Zses
+         pOpu6gvbF0GM3Gvy305yloHcTsdYyqOHWlgdQoOV8NQjYe0WqWXPPc6lewoXS/R4dV83
+         GpMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746176393; x=1746781193;
+        d=1e100.net; s=20230601; t=1746176394; x=1746781194;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EN+18LA857SctMCPq7PChnoB5bYuEFe9lArdedXnm4g=;
-        b=SDilmxBB8C9Ddkjewkur2Qylsj++3gp2b1uH3JLHacBHWrADg4jdEmcuMNnUKcH6K/
-         I2CKrIs777hEeK1+vgJv/nGHbGQcCJ9nTG0wKo5hwqszseo1wBaz6bhMMv+4mAZd2CIj
-         VukT+rBB1bi9p6G+KcrUNOxj34NA3QzYHff15e0Ukj80xKgEW2Z3fv812vMsi5uK8xjm
-         MNIfTl55rJ41mls/AuR1ghSct5aGcVxw3wVW92OrthOrSfPR89xOWppg07k94xyKaBjI
-         rL562Zx9C2PXDZ/pOf9l3k6dVbTq5OrEmUvlp4FqrjyHxWaJzJGU4WAJDnSzMZnEEYi9
-         PCtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXol/wCo+H3rK2XPKFwnOuE12eZYXUDk0cP2sLxm/oqdo7fRncLu/WnKSQI1iZavIKEtZXgWzwgAb0IUlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI9RvcHfJd6S3ARNVakeXZT4JM70ZocfHHXMJfdU6F7zKbctPL
-	UqmC54+cEXTMs1PTlQqyAfYCt7Q6mbnrPlvxIpZmGTgxGmYX/zxo1T9gmK1m7gk=
-X-Gm-Gg: ASbGncuZmTJt3XcH7j8A+N1NLRqvUIETNjlXwZemTPYmFaU0Gajv9L6UO+KZE7pSUuk
-	VcSSZzk8+TIYZ9tul2nn+FVmpu7YeNgI0c3/LCzJ8uDEQZUWrVYOErDsY6ZLeevao0xZhwA5z4U
-	6lVfjdGSkEj3Ro9VPHg1kt8LSVJo6WWT0WEO/Et8ws8azmCzscW84vQQ6Lkrh5FOcrAMLjkZH9M
-	aOzNhQscsTXS4j1stu3vChH5zLKycU27FHi4jfSqWw3n5g9f2Ux0W7Py1MprBowJOsFcle6Pqv5
-	4X6EyJFgtT3iFdcWV7HV7Ob5TYtoiDl9XxE=
-X-Google-Smtp-Source: AGHT+IHdDxSM/FWZRtGoOZpkx03AgkDUaEUG/u3se1MxfUPpvgHvDAXIO8mVc8mZr+ucaQ37xObY0A==
-X-Received: by 2002:a05:6000:4210:b0:3a0:8020:8aed with SMTP id ffacd0b85a97d-3a09846404dmr1749548f8f.21.1746176393327;
-        Fri, 02 May 2025 01:59:53 -0700 (PDT)
+        bh=7VQVpAhnQOcCRYJ0IuR7EAkGj4zu20WsPxA2gwCBLx8=;
+        b=EIFqtVqmh1eHyY/nYzTJQR8B7lMXF2iXPzj8BE+UUUwP7ODdVb6UdVQgZwnrzrK3b9
+         P/pEE7j9DoQcz1tbN6BVFgXU/LPDPw6su1nxAd/oDKcvG/gh58w8obvPRqEmBAzLVkEj
+         TE+0pGwtJV7XOVbcyJTgB0aXVCto7OEDJoS1Dys0HRXzXnbsVaeLpNQd197/pimmi0Mk
+         o9A+mf2MBWGUrmDMpPcpI76PhqbdmYtJXXvwDEgQqZ1edBxx2sy/uV/Og9nogWi7JOG+
+         pG1z1e3YuBWhTBKEQy/Hnp3WsVuC7872n+aaF3rZGs2KsYfP0GSLgb7dFQdM1nk6GlSe
+         IM1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXtYHZ3zqVz0p/LrfBjEqT+/KIR7xWPdk2ySMsMjRxOxb0bww7nAgwcfJlPv7PYup0c9XEhkgy+9aopACQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNiK5sdieyI3nZRTzjwJHvhy26dCDlKfMkhpHLIgyTJW9xz8Gl
+	LE4DwfK10gg0iDcvXT+uRwOX+fIpV7HCSbWB0EMSFbuEjAXDZa/XUQDvRkgaoMw=
+X-Gm-Gg: ASbGncuhYaLqy3/fqf4do/fSoLLaRXozWbqwiCWesEz79r4XlTtdIXxFnRZG8nDsWD9
+	rxFaHoJLkWkRqlJEu+ZkOrPswkVHDmZfIk+TkUVNhqr9Ij6C5J/MhvdzUztnjhjF6WwThyFDxiH
+	fM12np2i4tN6O8gygUREvw0MgpbDloVfxVMYQV8UAXgnnoeqURC2rPyR/zfBxazEgLKMvYsnJzB
+	YS9dG6EetP0miOgPBs6+W1EbAwSIPkOdphSHqo3/bnvurHqOCiWMbPJm/H9BrCF2Pyu1TWJfFa2
+	8Dr5B/bUwFUQhbjjE3f097rk3T5ON6JaefU9iwhPadR9OQ==
+X-Google-Smtp-Source: AGHT+IHQBxxYw4TPkCVhivNKZQXWIM25Cnsq2fJIJFroZbvmM5OL56pj85WS8b3cNucOQHIYyCOoQw==
+X-Received: by 2002:a05:6000:40c9:b0:391:b93:c971 with SMTP id ffacd0b85a97d-3a094058683mr4162100f8f.20.1746176394370;
+        Fri, 02 May 2025 01:59:54 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:f280:a08c:3f15:ae3e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b17017sm1552055f8f.92.2025.05.02.01.59.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b17017sm1552055f8f.92.2025.05.02.01.59.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 01:59:52 -0700 (PDT)
+        Fri, 02 May 2025 01:59:53 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 02 May 2025 10:59:48 +0200
-Subject: [PATCH v2 2/5] powerpc: 83xx/gpio: use new line value setter
+Date: Fri, 02 May 2025 10:59:49 +0200
+Subject: [PATCH v2 3/5] powerpc: 44x/gpio: use new line value setter
  callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-gpiochip-set-rv-powerpc-v2-2-488e43e325bf@linaro.org>
+Message-Id: <20250502-gpiochip-set-rv-powerpc-v2-3-488e43e325bf@linaro.org>
 References: <20250502-gpiochip-set-rv-powerpc-v2-0-488e43e325bf@linaro.org>
 In-Reply-To: <20250502-gpiochip-set-rv-powerpc-v2-0-488e43e325bf@linaro.org>
 To: Madhavan Srinivasan <maddy@linux.ibm.com>, 
@@ -81,21 +81,21 @@ Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1879;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1671;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=N5uZ2gnFZdQj3L5KTNtg0bPlLnvDhqttnz7x8ZTZmpM=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoFImF1uingLTiEjC1c1U5yBJ6QKL/UetAJDwss
- 2MfnCf+vDuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBSJhQAKCRARpy6gFHHX
- chpaD/9ia9Dv5hQRbtr0XBXvr4ParzZnQUg3MfXxDNrXszqdEGfJSGKw7ZvkKLFOajdDIdiP21F
- +/oHoYCMeHqai/Kp0EB22ZbR64mqrJb5+FHSI2uD4cpAVDggq0ypV9agRCKnY+kLuo7k1RWF32+
- TGXMRWRnzBsHLR/kYMPJEIFr2i6eCZbmIPSM9MpYmNJEZDAhljJRCPR2nC1MAmEqwLKBVOTOb/s
- R5l1OjrR9qkcE4K24qYfSI5/FD8ZMwvYF6EMz5jq9QdoNhwDTuiRmviA5wInU28fRNGpMJDHRGY
- Yf+k152e4dGm2edm9Q24ifx376enSdleBwyLbMXNo30+zTBDE58cuVqq95N0VruBoCfRXCs1wgI
- tR0VRALJdNnJaPtcNLT/Mo+8TJDEUIjg2Ok0MDlPe24Y2qA6AEpfAjTgs8YWY0VHsbDKxSfPQeb
- cjcP8Za1icbhGvpGdEHCZf9s2TWCU8eiwblsP/ggElw9wyxKIV4wwgLgphcmcXniWawlIlz4ehE
- Idwbmu8vIXSEuRuX0B2qXxPcejaNsg7jGA2i285fXa3api1N8J7QZS/pSVT3/AybJBRYqNLKCzO
- +BwMIxr4BUlUej+Kgchh8Qfu5MurvtggZLBy1KKI1EhoiMgoezZzWOfS1rvZDVDkJ7GUZZraHi/
- wlE0XEJAUuwQByA==
+ bh=E7Ff3/1EcYz2Nw6QSP2p8LNuROZlM9cH/LUaLu34ItI=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoFImFaUc3gwNuye/ggncACVXaJIT/sGhSnQxG1
+ k8BocsYj+eJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaBSJhQAKCRARpy6gFHHX
+ cuKeEAClIackuAKdOU+yl0nzsAvzc25o+JND+09tQcnbWh3AsifpuV7rlyzUrzurd+n71xUXbBh
+ awXQhZPFM03p2pHjU8sSoe03IWWl/P/iUQFGfK3UFx/dFs6zbSSmvCrUQR43C2zLhN8WmBOwGpD
+ vOa4MEAW+pXxdy/M2U8w2OQDBYIknSvZr8q+QNpm3v2aTlKJkXmxQ4s1m8HnsYd/KxgQ5lZ/ooB
+ RgdkMP1NOrVNSASt0s+QJVYySccm/6xFXSgfhZPF4QN87mFgRnVxEW6ZMOzJ4SENiWPrKxLGmpz
+ tQpB+JIWIs5aOa4fuWDe98rfWqUpHnxJ0jWKMmb1rdmjR8R4QYQq3ygwJXhP6HSxJs0om1niN4/
+ SrrDwUSyhNNIp4EicjN3o15Sj8wJ6pIbQ5oDNgSiiiQNq8kTSa6apDB9p/SbZPO1IYe7AgjPtUR
+ Finp1+Ml4Xqh45uqDF/rpvHaIdjVuAorJXbcNbLRYJ6MW8cPj6se5CVDixKrvgYH+3oC8MDkxAQ
+ wHyyy/EMl2ZtLXCot4mdnb8Da5Nn/0zXT8j0syLnFlsgoEASpOqTT1V2/RYp15J+Oc412XmMnrP
+ 4qvzerCJIicUdBfX65VXU1iM2RR5zud6VbTmAbqQvm7x4RZyH497DL72cGrNKnipgTI3q1iTaxs
+ RutDOCWUZ+MhTSQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
@@ -106,57 +106,44 @@ an integer, allowing to indicate failures. Convert the driver to using
 them.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/powerpc/platforms/44x/gpio.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-index 4d8fa9ed1a678..6e37dfc6c5c9e 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -92,10 +92,11 @@ static void mcu_power_off(void)
- 	mutex_unlock(&mcu->lock);
+diff --git a/arch/powerpc/platforms/44x/gpio.c b/arch/powerpc/platforms/44x/gpio.c
+index e5f2319e5cbe2..d540e261d85aa 100644
+--- a/arch/powerpc/platforms/44x/gpio.c
++++ b/arch/powerpc/platforms/44x/gpio.c
+@@ -75,8 +75,7 @@ __ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 		clrbits32(&regs->or, GPIO_MASK(gpio));
  }
  
--static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-+static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+-static void
+-ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++static int ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
  {
- 	struct mcu *mcu = gpiochip_get_data(gc);
- 	u8 bit = 1 << (4 + gpio);
-+	int ret;
+ 	struct ppc4xx_gpio_chip *chip = gpiochip_get_data(gc);
+ 	unsigned long flags;
+@@ -88,6 +87,8 @@ ppc4xx_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ 	spin_unlock_irqrestore(&chip->lock, flags);
  
- 	mutex_lock(&mcu->lock);
- 	if (val)
-@@ -103,14 +104,16 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- 	else
- 		mcu->reg_ctrl |= bit;
- 
--	i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctrl);
-+	ret = i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL,
-+					mcu->reg_ctrl);
- 	mutex_unlock(&mcu->lock);
+ 	pr_debug("%s: gpio: %d val: %d\n", __func__, gpio, val);
 +
-+	return ret;
++	return 0;
  }
  
- static int mcu_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
- {
--	mcu_gpio_set(gc, gpio, val);
--	return 0;
-+	return mcu_gpio_set(gc, gpio, val);
- }
+ static int ppc4xx_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+@@ -179,7 +180,7 @@ static int __init ppc4xx_add_gpiochips(void)
+ 		gc->direction_input = ppc4xx_gpio_dir_in;
+ 		gc->direction_output = ppc4xx_gpio_dir_out;
+ 		gc->get = ppc4xx_gpio_get;
+-		gc->set = ppc4xx_gpio_set;
++		gc->set_rv = ppc4xx_gpio_set;
  
- static int mcu_gpiochip_add(struct mcu *mcu)
-@@ -123,7 +126,7 @@ static int mcu_gpiochip_add(struct mcu *mcu)
- 	gc->can_sleep = 1;
- 	gc->ngpio = MCU_NUM_GPIO;
- 	gc->base = -1;
--	gc->set = mcu_gpio_set;
-+	gc->set_rv = mcu_gpio_set;
- 	gc->direction_output = mcu_gpio_dir_out;
- 	gc->parent = dev;
- 
+ 		ret = of_mm_gpiochip_add_data(np, mm_gc, ppc4xx_gc);
+ 		if (ret)
 
 -- 
 2.45.2
