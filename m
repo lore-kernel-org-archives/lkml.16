@@ -1,156 +1,157 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B861A5B87;
-	Fri,  2 May 2025 19:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3421B1F2BAD
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746214976; cv=none; b=kpH43NkJWqMeBCAzif/dWbaM4ftb681xinLNiRFGjsrnnM/PAGutyLLqZptoWR8rTrj3lhndiHDkwQOx4gquWsxweDOBLIgAwjHNOKZ88wJCUUWu996BVvgd0wloDaD7qEZT10Obcchqtma6HIxX9kv9Od1QbZAY5pu3PgVWsRo=
+	t=1746215052; cv=none; b=h9UdwS3sKzHVIH2oAj/KnZyYOGcQjiBMJ/3bNC/dcBuJozXPFYOMYhNPLcrnRwmYvSz4aoZjG0QSHLvz9VQLSkDp7d667dDV6V+sP3NmxdLKMr//B4JF/adqYX7gdnWJq3HKeJMoFqDL2x1IdAgJmJeY8V/4GeRBovky/F7PWW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746214976; c=relaxed/simple;
-	bh=lHxaPE1V/iBb0Ob2a47aF8gBCnU0EX+sS1hy2Zzqhxc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=FXxpwF6BxSdc6AoGsUm9tz+F0IVW/d9I0zvP/OpvvyYi+R3giGDf2gvRfrJzPO4vgKMPoCJCOY8ECcO0I78WJHMqIiICqg7iSW1NwEEJoTWelXioAqQU5W/CszjBEWeYhyB0U0jjUA9/pbNztHfz2evlRLz+AROc9vDdWugAemE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=LHHGPW1L; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1746215052; c=relaxed/simple;
+	bh=u7M8GWj4IaX6mHqj2i5wR0WVsdjlkUXEkduLTA39lkM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=srGMgqALQoT3qNaOCho5C78VbFb8fageoTzDSz9IKjs1yTzGrRkfV0WAtEf2TYtowo+lG+n3KCT4SVSPG7y48eOipGBTzpn8NBDBH/KSN6Uh8b7jRBgVmh/I+Ah/Ba5A4d1W9SUejjsj3w4+HF2wrgQmuk/XFo+H36euyvJSFXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=N/8AKUe6; arc=none smtp.client-ip=212.77.101.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="LHHGPW1L"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542A2XW0004552;
-	Fri, 2 May 2025 21:42:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	ZBSQ/MFbMMoLpjs5IbY8opKOJCgMFn19DU9Uv51GkJk=; b=LHHGPW1LicnvmNoO
-	Sz+C6YDsl7Z89HXN6/qoA3TsKM+qLXJb4bn3ZYdsj3tsufWXJhdGO2lpCh57gZdu
-	vXnXXPySKu3bIa21c7zW0O5B7/eq2FHFvt+suJeaNo7cunPvWzLuN3Bho9r1pPxM
-	Oz+gWJzRFwpskkOpFhJsil+A2P1RPkH6IIWw70szTGsweHPZzCSr6k6jHgh8+lIc
-	B+Wf4sF3HCtgVXOE32R7GvqhpgosGLzvvLi5a+N6RT6/nsDSyLOHKWCGVKBXVGSq
-	DH9aST1vWcmNjpGAXpBu6ENByu1DR9lkvvUCqu7myg0L7kdZ5rMo9wIv1wsHFPjD
-	j2EoxQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46b6tmc9re-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 21:42:29 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B09674002D;
-	Fri,  2 May 2025 21:41:21 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 94BBDA6041B;
-	Fri,  2 May 2025 21:39:28 +0200 (CEST)
-Received: from [10.252.136.96] (10.252.136.96) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
- 2025 21:39:28 +0200
-Message-ID: <4c8a1359-e7e3-4e1c-a159-e761ed749712@foss.st.com>
-Date: Fri, 2 May 2025 21:39:27 +0200
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="N/8AKUe6"
+Received: (wp-smtpd smtp.wp.pl 515 invoked from network); 2 May 2025 21:44:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1746215047; bh=M8iujvxQGOpd8snMonMxwTWSoEQvZ8kYbB55eRI/Mo0=;
+          h=From:To:Cc:Subject;
+          b=N/8AKUe6Injy9Ohy5Wkyyu/L+NPlcfznrBAkLB8+T9oV+0O+5Vn9y6Nap6W+piWxk
+           fXoabanY3CIrc+3IHpmAQUNZOMnT1mjFqdR+rorFGs9zaJ8skIsKPs3RS73sFr/vZq
+           /Gys/YVPdza1NRBe/68jItaqRypxg6Gc3Nm2iThM9aRpxGLmdQ42yNioZbgRgLKXbF
+           Cbh8Hu9ta/9V8GXXir2lUYnzM6Q/S0czV3LOJ35dDLqXMwAw110wugXnjCImLOtmZo
+           hUu3+jys4dwBeyevSYmq0Ov9j2WxWSLjrZR937ijgSFSNjGfJz/6/ri8Q1K6VSZSWp
+           XZT93LH+6cXyQ==
+Received: from 83.5.150.21.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.150.21])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <johannes.berg@intel.com>; 2 May 2025 21:44:07 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: johannes.berg@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH iw,v2] iw: fix EHT capabilities on Big Endian platforms
+Date: Fri,  2 May 2025 21:44:05 +0200
+Message-Id: <20250502194405.3489240-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sylvain Petinot <sylvain.petinot@foss.st.com>
-Subject: Re: [PATCH v6 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: <benjamin.mugnier@foss.st.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <laurent.pinchart@ideasonboard.com>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tomm.merciai@gmail.com>
-References: <20250427193050.23088-1-sylvain.petinot@foss.st.com>
- <20250427193050.23088-3-sylvain.petinot@foss.st.com>
- <aBCosy0h83UMNvSI@kekkonen.localdomain>
- <f496004b-8301-4f7b-85cc-f2f82bc94060@foss.st.com>
- <aBPzucFjWvN8crSs@kekkonen.localdomain>
-Content-Language: en-US
-In-Reply-To: <aBPzucFjWvN8crSs@kekkonen.localdomain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_04,2025-04-30_01,2025-02-21_01
+X-WP-DKIM-Status: good (id: wp.pl)                                                      
+X-WP-MailID: 2b1ff6474733ec445ba36c34ed366773
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [EcME]                               
 
-Hi Sakari,
+IE fields are encoded in Little Endian and are not correctly
+printed on Big Endian platforms.
 
-Le 02/05/2025 à 00:20, Sakari Ailus a écrit :
-> Hi Sylvain,
-> 
-> On Wed, Apr 30, 2025 at 04:19:14PM +0200, Sylvain Petinot wrote:
->>>> +static int vd56g3_subdev_init(struct vd56g3 *sensor)
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	/* Init remaining sub device ops */
->>>> +	sensor->sd.internal_ops = &vd56g3_internal_ops;
->>>> +	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
->>>> +	sensor->sd.entity.ops = &vd56g3_subdev_entity_ops;
->>>> +
->>>> +	/* Init source pad */
->>>> +	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
->>>> +	sensor->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
->>>> +	ret = media_entity_pads_init(&sensor->sd.entity, 1, &sensor->pad);
->>>> +	if (ret) {
->>>> +		dev_err(sensor->dev, "Failed to init media entity : %d", ret);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	/* Init controls */
->>>> +	ret = vd56g3_init_controls(sensor);
->>>> +	if (ret) {
->>>> +		dev_err(sensor->dev, "Controls initialization failed %d", ret);
->>>> +		goto err_media;
->>>> +	}
->>>> +
->>>> +	/* Init vd56g3 struct : default resolution + raw8 */
->>>> +	sensor->sd.state_lock = sensor->ctrl_handler.lock;
->>>> +	ret = v4l2_subdev_init_finalize(&sensor->sd);
->>>> +	if (ret) {
->>>> +		dev_err(sensor->dev, "subdev init error: %d", ret);
->>>> +		goto err_ctrls;
->>>> +	}
->>>> +
->>>> +	return vd56g3_update_controls(sensor);
->>>
->>> You're not holding the control handler's lock in the above call.
->>
->> If your comment is related to the fact that 'vd56g3_update_controls() can
->> fail and that we do not free control handler not cleanup media entity, it's
->> fixed in V7.
-> 
-> It's not. The access to the control handler is serialised by a mutex and
-> you're not holding that mutex whilst calling vd56g3_update_controls() here.
-> The same issue exists in accessing sub-device state.
-> 
+Fixes: 5a71b722270c ("iw: Print local EHT capabilities")
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ util.c | 40 +++++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
 
-I'm sorry, I missed that ...
-That should be better with something like :
-
-	state = v4l2_subdev_lock_and_get_active_state(&sensor->sd);
-	ret = vd56g3_update_controls(sensor);
-	v4l2_subdev_unlock_state(state);
-
-I'll prepare and push a V8.
-
-> ...
-> 
->>>> +	ret = vd56g3_parse_dt(sensor);
->>>> +	if (ret)
->>>> +		return dev_err_probe(dev, ret, "Failed to parse Device Tree.");
->>>
->>> No need for the trailing dot in these messages. Same elsewhere.
->>
->> You're right, Fixed in V7.
->> I took the opportunity to harmonize the error messages (Capital letter, no
->> space before ':', no trailing dot, missing '\n').
-> 
-> Ack, sounds good!
-> 
-
+diff --git a/util.c b/util.c
+index c6d5974..9403528 100644
+--- a/util.c
++++ b/util.c
+@@ -1538,22 +1538,31 @@ static void __print_eht_capa(int band,
+ 	unsigned int i;
+ 	const char *pre = indent ? "\t" : "";
+ 
+-	#define PRINT_EHT_CAP(_var, _idx, _bit, _str) \
++	#define PRINT_EHT_MAC_CAP(_idx, _bit, _str) \
+ 	do { \
+-		if (_var[_idx] & BIT(_bit)) \
++		if (mac_cap[_idx] & BIT(_bit)) \
+ 			printf("%s\t\t\t" _str "\n", pre); \
+ 	} while (0)
+ 
+-	#define PRINT_EHT_CAP_MASK(_var, _idx, _shift, _mask, _str) \
++	#define PRINT_EHT_MAC_CAP_MASK(_idx, _shift, _mask, _str) \
+ 	do { \
+-		if ((_var[_idx] >> _shift) & _mask) \
+-			printf("%s\t\t\t" _str ": %d\n", pre, (_var[_idx] >> _shift) & _mask); \
++		if ((mac_cap[_idx] >> _shift) & _mask) \
++			printf("%s\t\t\t" _str ": %d\n", pre, \
++			       (mac_cap[_idx] >> _shift) & _mask); \
++	} while (0)
++
++	#define PRINT_EHT_PHY_CAP(_idx, _bit, _str) \
++	do { \
++		if (le32toh(phy_cap[_idx]) & BIT(_bit)) \
++			printf("%s\t\t\t" _str "\n", pre); \
+ 	} while (0)
+ 
+-	#define PRINT_EHT_MAC_CAP(...) PRINT_EHT_CAP(mac_cap, __VA_ARGS__)
+-	#define PRINT_EHT_MAC_CAP_MASK(...) PRINT_EHT_CAP_MASK(mac_cap, __VA_ARGS__)
+-	#define PRINT_EHT_PHY_CAP(...) PRINT_EHT_CAP(phy_cap, __VA_ARGS__)
+-	#define PRINT_EHT_PHY_CAP_MASK(...) PRINT_EHT_CAP_MASK(phy_cap, __VA_ARGS__)
++	#define PRINT_EHT_PHY_CAP_MASK(_idx, _shift, _mask, _str) \
++	do { \
++		if ((le32toh(phy_cap[_idx]) >> _shift) & _mask) \
++			printf("%s\t\t\t" _str ": %d\n", pre, \
++			       (le32toh(phy_cap[_idx]) >> _shift) & _mask); \
++	} while (0)
+ 
+ 	printf("%s\t\tEHT MAC Capabilities (0x", pre);
+ 	for (i = 0; i < 2; i++)
+@@ -1627,7 +1636,7 @@ static void __print_eht_capa(int band,
+ 	PRINT_EHT_PHY_CAP(2, 1, "Rx 4096-QAM In Wider Bandwidth DL OFDMA Supported");
+ 
+ 	if (!from_ap &&
+-	    !(he_phy_cap[0] & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8))) {
++	    !(le16toh(he_phy_cap[0]) & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8))) {
+ 		static const char * const mcs[] = { "0-7", "8-9", "10-11", "12-13" };
+ 
+ 		printf("%s\t\tEHT-MCS Map (20 Mhz Non-AP STA) (0x", pre);
+@@ -1649,8 +1658,9 @@ static void __print_eht_capa(int band,
+ 		 * If no Channel Width bits are set, but we are an AP, we use
+ 		 * this MCS logic also.
+ 		 */
+-		if (he_phy_cap[0] & ((BIT(1) | BIT(2)) << 8) ||
+-		    (from_ap && !(he_phy_cap[0] & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8)))) {
++		if (le16toh(he_phy_cap[0]) & ((BIT(1) | BIT(2)) << 8) ||
++		    (from_ap && !(le16toh(he_phy_cap[0]) &
++		    ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8)))) {
+ 			printf("%s\t\tEHT-MCS Map (BW <= 80) (0x", pre);
+ 			for (i = 0; i < 3; i++)
+ 				printf("%02x", ((__u8 *)mcs_set)[i]);
+@@ -1665,7 +1675,7 @@ static void __print_eht_capa(int band,
+ 		}
+ 		mcs_set += 3;
+ 
+-		if (he_phy_cap[0] & (BIT(3) << 8)) {
++		if (le16toh(he_phy_cap[0]) & (BIT(3) << 8)) {
+ 			printf("%s\t\tEHT-MCS Map (BW = 160) (0x", pre);
+ 			for (i = 0; i < 3; i++)
+ 				printf("%02x", ((__u8 *)mcs_set)[i]);
+@@ -1680,7 +1690,7 @@ static void __print_eht_capa(int band,
+ 		}
+ 
+ 		mcs_set += 3;
+-		if (band == NL80211_BAND_6GHZ && (phy_cap[0] & BIT(1))) {
++		if (band == NL80211_BAND_6GHZ && (le32toh(phy_cap[0]) & BIT(1))) {
+ 			printf("%s\t\tEHT-MCS Map (BW = 320) (0x", pre);
+ 			for (i = 0; i < 3; i++)
+ 				printf("%02x", ((__u8 *)mcs_set)[i]);
+@@ -1695,7 +1705,7 @@ static void __print_eht_capa(int band,
+ 		}
+ 	}
+ 
+-	if (ppet && ppet_len && (phy_cap[1] & BIT(11))) {
++	if (ppet && ppet_len && (le32toh(phy_cap[1]) & BIT(11))) {
+ 		printf("%s\t\tEHT PPE Thresholds ", pre);
+ 		for (i = 0; i < ppet_len; i++)
+ 			if (ppet[i])
 -- 
-Sylvain
+2.39.5
 
