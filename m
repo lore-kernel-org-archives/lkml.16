@@ -1,126 +1,132 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8562566E1
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B6B2566E1;
+	Fri,  2 May 2025 14:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197058; cv=none; b=hj4UPN1+CjMZOsY7u6bogr3NYz3yOaPcWOc8AAIfXTt7QUXwAsps/umRc/nkLQ22Aq5XmgZZp0ObvR0WRfRIWyW8K3k5CrrennY/QwVuokOzknGO0AhhJof4e6/1iZhDx5+Nn3A2p3Cq1bS6mGgZbRUdhF12dupU2SZP3/WPGpA=
+	t=1746197066; cv=none; b=E20/cz763qI7eyuOYzYSgSQmc5WaX8R8CZpY8wAkETIv8Bsw8P65CKOgjno4a2G9XOpXE7J5QjBW30cSD3vv48PUajblBf5YjJBmJPhiJtLjc5+1kzT/VnZN5SIB4KowVSXVg54NM7qkcOtxt+3jo8SPrYZS00FT3dkKFPZ3o/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746197058; c=relaxed/simple;
-	bh=YM4nxjGPM82cBAL4PTrSn6HY1CBpx/x5i09S17FY5OQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W+Ai9w3lQPzKntdxw6rv3lPDHyNAyA+SN57BEIzKLYOmkwn9K2OL4zCFuxBvwN5e3Oymjq03ph8wOEDGz7fT8kRQnb4RPycJMmqkwFATzRaJ5K2jIbX6Lb48TQKuEyifcdXbuUSjAAZZaEf1tJDMlZpHThnmUr+fGzLglf77h+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=UNTorgAf; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746197066; c=relaxed/simple;
+	bh=yvAbT+8bC9VSwOvpKi4IZnmaG7R36yD4eqhef706yAU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oQ3l4ncSg6Ya6WVk2lA/fsu8NO/GeC/5xDd0m6+InANzezhLMMYvael+NWuDkgglExbkyFGOshOBrn9KUVVZoMplNXe7Tjzc8rFeNmGbNx1vVybaaMhK/oM0cqa2fZm0dxJi7EpVyhu021nRdRAE4hjIovf8Gl3dYHZx0aMXRzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vXPR0PCL; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="UNTorgAf"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so250847a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746197055; x=1746801855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lHJMmFhWBAYHhFK9RzSHB8nkJipHNujcMDYDDiWaOvo=;
-        b=UNTorgAf/qmSMD7O6j5Y2Ra6DA3YUVhnKAHqH1dYeG4HmAL2R8t6nDmfbt7+kj+ahJ
-         B/9yggX9i4bRQu0yjUD5LZAFb2khyYvTxVBdd29hC1GTw/kGaPq7mJxx7V+n61IPOHJj
-         ApS2p2wXxHuduXytWzYnSZcfIVs+hgOvMXut0CjSuVpVuBsseDNa7Yh94Ea8K4e5x3dm
-         LBqUGE20zABTt30rnQjvMiWzCuDgIHHqSmYmzbGQbwqpV+gxDOp4PfQwNBwuUKmHADiS
-         VmZFyqpkxYFabcXD5V/RiRwFQ8CklxSs54bWbliwVE4vYiIjcEPUucdjf0+9lXU1sWZ8
-         dYdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746197055; x=1746801855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lHJMmFhWBAYHhFK9RzSHB8nkJipHNujcMDYDDiWaOvo=;
-        b=qPmfqAHXVd4C6WwH/6F2ohxDPN6SRkzDi4QyhTU0N/5U+FM0NiOCAIkPUeQdO+1V83
-         LqP6dq98aw8Wa+e4PD4ZUzlTZJYX7oGkc41RGe1K3lLFpzz9BzNJTYEFgGZYty+sXlLA
-         +GgPz+dp55nNij9u4ugN7hzA03vjrD/UZxMUT0dp12zChTlIExRMwD69OEsy8tIZHdQp
-         37HrIZT1bf77s4hDNa/cTY78+MbROM/83HJyBVrP/nCOGmPVEGhLe4CB0mXS3ML+IHO6
-         810ayzr3nTvTJqdRyLcE5t4kjplYNB/xzl2/HgRg4fn46cEG2iq56mwgwMy8bX2qAAER
-         +1aw==
-X-Forwarded-Encrypted: i=1; AJvYcCXU067G3SIQ6I7j6yCjfWzYElGn7BRklrhGjlxZPj/MduzSiV3cWuT/OhSQQfNxGYxbKa6kFV7r3uROqyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEZRVYQfLAKggIRGz6VxaOR44NrC2ah4t5o50ovolE4Y9l+S8w
-	E1sgWZP3wWv8xmnViFLXako4toSs6vUgnPwe53/OcQCRtHvLo9yCnrtVvv4SEUTBJCta8dWF7O5
-	8A/vzLK2EX1OFr1b87iRxWcbFYgs68DbQ3yunmA==
-X-Gm-Gg: ASbGncvR8hXcOdIn+uY1Z5T9INTVzTnq/4PS41UqtDUfCTG9ZZ2mAUk8sM40mS+ea4C
-	8+a0120T/+8eBr3HsWf7YmckXvJW3VLboGrU9+w8fblgj/cJSbbps+5suHicPNuU0LOqMGlslgF
-	WlAC0km9xMg0aRe/AkAZBv
-X-Google-Smtp-Source: AGHT+IFl0inJgS/yeEgPzKt0JdBYw8YwsH3yKlEbg2EjHzlsz5lARVOHJjj/0pA+2oUAPwhkj56tuNJXuuBKO+AOaGs=
-X-Received: by 2002:a17:90b:4d10:b0:2fe:a747:935a with SMTP id
- 98e67ed59e1d1-30a4e6beca4mr1964031a91.4.1746197055246; Fri, 02 May 2025
- 07:44:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vXPR0PCL"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542EiEr63882172
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 09:44:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746197054;
+	bh=1wmfIKm7N506C2a5N3qHxuYy4t3bfiFN97CIf5mSVFo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=vXPR0PCLpRkX85Oc6tod53Uxy0Hg3B63NCJBWuQaY1a+4mTsqYeXlXqgQNEoXNxWF
+	 QegY0X+W9oXKQ1j2tFIOWiQr7smo599NlQ7h+n9/HG/p9CLBzzGBUuOgxPdPCiEBpN
+	 XB6/DH8G+CtHaRQyh8UxhGW8aZdbMDr6u18oHJWM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542EiEat011001
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 09:44:14 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 09:44:13 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 09:44:14 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542EiDit040995;
+	Fri, 2 May 2025 09:44:13 -0500
+From: Nishanth Menon <nm@ti.com>
+To: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
+        Siddharth
+ Vadapalli <s-vadapalli@ti.com>
+CC: Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v2 0/7] AM64 and J7X DT: Enable PCIe 64-bit Address Space
+Date: Fri, 2 May 2025 09:44:11 -0500
+Message-ID: <174619700947.3122830.6151754441565392409.b4-ty@ti.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250422120042.3746004-1-s-vadapalli@ti.com>
+References: <20250422120042.3746004-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426011728.4189119-1-csander@purestorage.com>
-In-Reply-To: <20250426011728.4189119-1-csander@purestorage.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Fri, 2 May 2025 07:44:04 -0700
-X-Gm-Features: ATxdqUHs8vyPK-Db2sBcRK85cf37jk2QFZvL-ryJRX27GGq9LbBC89_UfkXgsd8
-Message-ID: <CADUfDZq54SYfc6XNa6b3i7oktLfL+T-C-DSfka5wyh1WafbowA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] block: avoid hctx spinlock for plug with multiple queues
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Jens,
-Christoph has reviewed this series. Would you mind queueing it up for 6.16?
+Hi Siddharth Vadapalli,
 
-Thanks,
-Caleb
+On Tue, 22 Apr 2025 17:30:35 +0530, Siddharth Vadapalli wrote:
+> The Cadence PCIe Controllers in TI's K3 SoCs namely:
+> AM64, J7200, J721E, J721S2 (AM68), J722S, J742S2 and J784S4 (AM69)
+> support two address regions:
+> 1. 128 MB address region in the 32-bit address space
+> 2. 4 GB address region in the 64-bit address space
+> 
+> Currently, the 128 MB region in the 32-bit address space is enabled in
+> the device-tree. This might be suitable for most of the use-cases, but
+> for those use-cases requiring larger address regions than 128 MB it is
+> necessary to switch to the 64-bit address space with the 4 GB address
+> region. This series implements the corresponding device-tree changes to
+> support the 4 GB address region as the default configuration. Existing
+> use-cases should continue to work without any regression.
+> 
+> [...]
 
-On Fri, Apr 25, 2025 at 6:17=E2=80=AFPM Caleb Sander Mateos
-<csander@purestorage.com> wrote:
->
-> blk_mq_flush_plug_list() has a fast path if all requests in the plug
-> are destined for the same request_queue. It calls ->queue_rqs() with the
-> whole batch of requests, falling back on ->queue_rq() for any requests
-> not handled by ->queue_rqs(). However, if the requests are destined for
-> multiple queues, blk_mq_flush_plug_list() has a slow path that calls
-> blk_mq_dispatch_list() repeatedly to filter the requests by ctx/hctx.
-> Each queue's requests are inserted into the hctx's dispatch list under a
-> spinlock, then __blk_mq_sched_dispatch_requests() takes them out of the
-> dispatch list (taking the spinlock again), and finally
-> blk_mq_dispatch_rq_list() calls ->queue_rq() on each request.
->
-> Acquiring the hctx spinlock twice and calling ->queue_rq() instead of
-> ->queue_rqs() makes the slow path significantly more expensive. Thus,
-> batching more requests into a single plug (e.g. io_uring_enter syscall)
-> can counterintuitively hurt performance by causing the plug to span
-> multiple queues. We have observed 2-3% of CPU time spent acquiring the
-> hctx spinlock alone on workloads issuing requests to multiple NVMe
-> devices in the same io_uring SQE batches.
->
-> Add a medium path in blk_mq_flush_plug_list() for plugs that don't have
-> elevators or come from a schedule, but do span multiple queues. Filter
-> the requests by queue and call ->queue_rqs()/->queue_rq() on the list of
-> requests destined to each request_queue.
->
-> With this change, we no longer see any CPU time spent in _raw_spin_lock
-> from blk_mq_flush_plug_list and throughput increases accordingly.
->
-> Caleb Sander Mateos (3):
->   block: take rq_list instead of plug in dispatch functions
->   block: factor out blk_mq_dispatch_queue_requests() helper
->   block: avoid hctx spinlock for plug with multiple queues
->
->  block/blk-mq.c      | 110 +++++++++++++++++++++++++++++++-------------
->  block/mq-deadline.c |   2 +-
->  2 files changed, 79 insertions(+), 33 deletions(-)
->
-> v2:
-> - Leave unmatched requests in plug list instead of building a new list
-> - Add Reviewed-by tags
->
-> --
-> 2.45.2
->
+I have applied the following to branch ti-k3-dts-next on [1].
+
+NOTE: I have ignored the checkpatch warning on long lines since the
+documentation added in the context of the line makes more sense than splitting
+it up.
+
+Thank you!
+
+[1/7] arm64: dts: ti: k3-am64-main: switch to 64-bit address space for PCIe0
+      commit: 1159f911435b9371575d9956bb5aef579265d29a
+[2/7] arm64: dts: ti: k3-j7200-main: switch to 64-bit address space for PCIe1
+      commit: 46e3d7d7048872ffb90aa25e360b975dc1c3e28b
+[3/7] arm64: dts: ti: k3-j721e: add ranges for PCIe0 DAT1 and PCIe1 DAT1
+      commit: 1025003a1e068a25b35e1dbb39cad18e23278c0f
+[4/7] arm64: dts: ti: k3-j721e-main: switch to 64-bit address space for PCIe0 and PCIe1
+      commit: f0f78192d3b3b3c3c935de0d681e7bf2117bbb13
+[5/7] arm64: dts: ti: k3-j721s2-main: switch to 64-bit address space for PCIe1
+      commit: 5a765365c689b90ea81f651a43bc30cd9c9c4ed8
+[6/7] arm64: dts: ti: k3-j722s-main: switch to 64-bit address space for PCIe0
+      commit: 0fde00328cf8245bf498349a696ba22d6a4a1916
+[7/7] arm64: dts: ti: k3-j784s4-j742s2-main-common: switch to 64-bit address space for PCIe0 and PCIe1
+      commit: b1f9ec6545c6423e106f0aeddc3b8651b5ad116c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+
