@@ -1,154 +1,135 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7FE1A5B88;
-	Fri,  2 May 2025 07:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527E18E050;
+	Fri,  2 May 2025 07:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171079; cv=none; b=Bht+KkFO05sJsNlXffbFKEF3AJl1lrqFuhiPCOGZ+IkRtBcnHq14ZBCDS4F7W4Qx9IyGz1gxpOHfJG7MuecP0pZfeAOw6vZCFaGNNfCYdkkLVb6zPvq/Il3Qfe0R1MOk1aKCBCCPuJc3EgXZJMKKYcVP6QpTAlC9zXAjWRkIJJQ=
+	t=1746171201; cv=none; b=lHupkyrVF3SuwFvd69fbkPP33z/gYDkjX+HyuGNxbnoupUmWABMVq1u+n1pV07U1DlU5ln8Ajuk7lk2K+WdbTUuv9r/sHUrAX+E/xr3/j0IcRcrNVpkEeyHBjFJEPAjWpJ5dAmaokS9i72+/UsgeukTakPcjKtOEXfGlbhjUgzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171079; c=relaxed/simple;
-	bh=wtoQr0xWC7SiqYlR1iiTaHqZi3kSYO3Wq5NsfIXggRU=;
+	s=arc-20240116; t=1746171201; c=relaxed/simple;
+	bh=RHZAl8gKjBWKHRR3oRdcYJeuSxDITPOEBdfRxQvq5qQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NvmMyxEZ6I8jf1i09nkkDZBHazgZEK2GFDUo9cm6+kWymEougB+r2MBa2MOUXjTXHHu/N1ra2p9+slHQErc7/ig6z6ZTmh/1JquT0vijub3ISFcZdzbeN+dGilIUoZ9RD8PVkofdJ6VjmSuQXKIRkome+xhRCj+/8r97xq9tfok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdqG+Fwy; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQNVprkuJWlgp0D+dpVRSkvx7RY/2/8CgMHwfRDstyuaXWNzz68NLJhnkzPl6h6HgTFB57EDoUSH5V4VKDPtaAMhmXvoO+MCMjiUvBObqxPJKq3rviVzeu/NP8Mp+9a5g3zrW16AcO7WPHnC0v38sssyOxCfvlfXVtPx7q5ix5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqlTauB3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdqG+Fwy"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22435603572so20241505ad.1;
-        Fri, 02 May 2025 00:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746171077; x=1746775877; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WhyG+qPql1C6VOEStks/G335oAHhX6Klfc0SAJXR260=;
-        b=KdqG+FwyuPZx7cr9Qv2cDQSRFJ7Ghy/9mz0uQq40At0o8lY7LzQ3NuDDlc5edKE0Tj
-         JkQ/Tvi+N/5aj1EKnd5xKpvZg/jK999Fc1mgqIds4z1z4WISOrCNBWwv/XxphBAPgCcE
-         qYaYoZu9ZdhAb3kkFVTn563I6caJmK65CvDDJBA1XqWt3lMGkfAgg5PttS4ScZj8Dgtu
-         0cQ6+/tl3cw5yIM1QclAIJIDq/xiLcqFxRyONolF2oSv/8d+Kq5eE7YpRofuZQLKMtH0
-         29Z+C1/78MMAiSISScy3XXu7IA+XFRRmeN8Pa5r2cDqS2ZijTh55gYPf9RSzM3D0Xv0v
-         t+5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171077; x=1746775877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WhyG+qPql1C6VOEStks/G335oAHhX6Klfc0SAJXR260=;
-        b=ZjAuazlb4qNvgp1wj1KQhzGO0Z5YVjYa6IxnKqTlfyTFlmLRVrv5ZJ/fh4zXFmk4Jc
-         ig2el3yLoYdHukROUiwU66IyNQbSA6p0fxIxBDrbS0j/+vA/Hj/izdzbsBQ4Z4joSyQc
-         D450GdUA7xkxwfFp6WPhBvvs6jdQPcL/zyTlaKOPDAvXiWHpVkgTRu8i0MCc62uYt2r9
-         cf+zReKEDYc0R3HXADvXiNkDkLeczntFQtwXSMgFpKiGPBmztIOU2gvsuQjl5HnYOgJe
-         uDQTnBb1F28xZB/eFEzeTOjFfN2oZLJFqHNqgu9eHOHa/OIQrJQ02JaA75WfVNaGNxhN
-         Y3Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVR30b/sHtpVdCNqUlIbchncu7XuvdOEwhlc3G3He6w7qv7DxVbx91oiEoqaBdSVpRSf3r2zy6Zzc=@vger.kernel.org, AJvYcCW1FCaK5S4AZslQmImhkquByBiQlERYmq4MgVxKKcNjAa/JVbcjepWGW2aC8fLpjt1n+/xLEOPAB9Bptp/u@vger.kernel.org, AJvYcCW72uvveCSxlRYCC6NH0+PHIhlYzw6mo9+8UtRBw1BXTGan03kzaHr6KzObY1j5MpUJeSJnd8OBHLc8TSI=@vger.kernel.org, AJvYcCXwuc/7e3mjYhvIGiCyfL4B4A2354O6BbknvxuDzOno3g0uFdCGdWwLcX8C/3TtiodTndtMKDIn810NoILlYOhX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR7Oijcb2IPNQoRM/xxe+FoNrQ6kVbE7D54h1fGICpHd4iUP3y
-	vfj0A97XP1u6PC8FN385iTp36jUkL9A34HaSvfrb+pcKBMHQHGOp
-X-Gm-Gg: ASbGncu25O3ALcydYRuE+WXqdiW4n62WZCN9g5jVUDLGG9igbNaDb2huHbg3fH0l4bT
-	/aQ9+a2e1b83EPXTOlOkomsqZ9NShRBppy78/qRR/V/KRpvWkYkah0dnm+DtQxhVYO6RTYYkQSe
-	WVoYy/Hlduxa2TeeOZWeYlvLOyM8mhDQ0IvY3LQhOsjjVvHySwZyZ3cFdt3gmUtFO6w7VmmUOdu
-	uhCRCjzpGbBcLtciBQ31DygA355hKKQdSkBp56hSGHjSUU5t3fs6tONFo3JIvVcPv/ZLInNcB50
-	Mb4uq/w1AoPO7YHrdOoocjkmdUewZ6AKlKuJw+S1
-X-Google-Smtp-Source: AGHT+IH52a6BgPoPUu5N1D3Rb40EG6pjnTkV9nhRgxYGSZyv07U3fjSm8A6SXkBygATuXX2l4VA+sQ==
-X-Received: by 2002:a17:903:2f91:b0:224:191d:8a87 with SMTP id d9443c01a7336-22e1034418bmr27532815ad.26.1746171077036;
-        Fri, 02 May 2025 00:31:17 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522f7c8sm937775ad.228.2025.05.02.00.31.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:31:15 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id B8C52420A6AB; Fri, 02 May 2025 14:31:13 +0700 (WIB)
-Date: Fri, 2 May 2025 14:31:13 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
-	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
-	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v3 16/23] Documentation: userspace-api: iommufd: Update
- vQUEUE
-Message-ID: <aBR0wWzQablOklyW@archie.me>
-References: <cover.1746139811.git.nicolinc@nvidia.com>
- <0beddeaaa4a8a7a45ce93ff21c543ae58be64908.1746139811.git.nicolinc@nvidia.com>
- <aBRA75V9l9WlI2Q3@archie.me>
- <aBRYVkOKfFGMb5Y+@Asurada-Nvidia>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqlTauB3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F25E8C4CEE4;
+	Fri,  2 May 2025 07:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746171201;
+	bh=RHZAl8gKjBWKHRR3oRdcYJeuSxDITPOEBdfRxQvq5qQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bqlTauB3vLClzkmpRYqC6anjX4GxZJcGxwF9HLfrD0xrlzBJFKLrOYwnk7ZfIErZ0
+	 zUrIlzzHyNe256IYEs5lmH97+i8o5Lgm6UYruBXhZ43dmWgYkK2JD4NadQIAQ2Woqk
+	 whGc3BJ2xaoAZfDK0nwFjp4Ovy75t1XWcd8TdBBGX2hFnadEnaMno559lz+dqi2p22
+	 TuUzj7mBgWk0T6g6+dekWFJDOSWpjGIbSfvXsTqMjrKrVaAHCHbwsPmyhcFcc5OOtM
+	 o9w2kp3KUVDUKDpual/ahLRh3rKpO+T6WP5Z2acIGRQV5VNcS+u5r1s5EIHzMvB9gn
+	 lQfM9Pmh+WsBQ==
+Date: Fri, 2 May 2025 09:33:15 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <aBR1O6d6YBszgVlU@pollux>
+References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
+ <20250501-debugfs-rust-v3-1-850869fab672@google.com>
+ <aBRoNKjB063QhGZo@pollux>
+ <2025050230-browsing-backstab-8de9@gregkh>
+ <aBRutTMBtq-uCnii@pollux>
+ <2025050205-reassign-entire-4078@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vde97DQHR/3Yogi4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBRYVkOKfFGMb5Y+@Asurada-Nvidia>
+In-Reply-To: <2025050205-reassign-entire-4078@gregkh>
 
+On Fri, May 02, 2025 at 09:11:37AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, May 02, 2025 at 09:05:25AM +0200, Danilo Krummrich wrote:
+> > On Fri, May 02, 2025 at 09:00:07AM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, May 02, 2025 at 08:37:40AM +0200, Danilo Krummrich wrote:
+> > > > On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
+> > > > > +/// Handle to a DebugFS directory that will stay alive after leaving scope.
+> > > > > +#[repr(transparent)]
+> > > > > +pub struct SubDir(ManuallyDrop<Dir>);
+> > > > 
+> > > > I think it's not very intuitive if the default is that a SubDir still exists
+> > > > after it has been dropped. I think your first approach being explicit about this
+> > > > with keep() consuming the SubDir was much better; please keep this approach.
+> > > 
+> > > Wait, let's step back.  Why do we care about the difference between a
+> > > "subdir" and a "dir"?  They both are the same thing, and how do you
+> > > describe a subdir of a subdir?  :)
+> > 
+> > We care about the difference, because Dir originally had keep() which drops the
+> > Dir instance without actually removing it. For subdirs this is fine, since
+> > they'll be cleaned up when the parent is removed.
+> 
+> But does that mean a subdir can not be cleaned up without dropping the
+> parent first?  For many subsystems, they make a "root" debugfs
+> directory, and then add/remove subdirs all the time within that.
 
---vde97DQHR/3Yogi4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In the following I will call the first top level directory created by a module /
+driver "root".
 
-On Thu, May 01, 2025 at 10:29:58PM -0700, Nicolin Chen wrote:
-> On Fri, May 02, 2025 at 10:50:07AM +0700, Bagas Sanjaya wrote:
-> > On Thu, May 01, 2025 at 04:01:22PM -0700, Nicolin Chen wrote:
-> > > +- IOMMUFD_OBJ_VQUEUE, representing a hardware accelerated virtual qu=
-eue, as a
-> > > +  subset of IOMMU's virtualization features, for the IOMMU HW to dir=
-ectly read
-> > > +  or write the virtual queue memory owned by a guest OS. This HW-acc=
-eleration
-> > > +  allows VM to work with the IOMMU HW directly without a VM Exit, i.=
-e. reducing
-> > > +  overhead from the hypercalls. Along with this vQUEUE object, iommu=
-fd provides
-> > > +  user space an mmap interface for VMM to mmap a physical MMIO regio=
-n from the
-> > > +  host physical address space to the guest physical address space, a=
-llowing the
-> > > +  guest OS to control the allocated vQUEUE HW. Thus, when allocating=
- a vQUEUE,
-> > > +  the VMM must request a pair of VMA info (vm_pgoff/size) for an mma=
-p syscall.
-> > > +  The length argument of an mmap syscall can be smaller than the giv=
-en size for
-> > > +  a partial mmap, but the addr argument of the mmap syscall should n=
-ever offset
-> > > +  from the returned vm_pgoff, which implies that an mmap will always=
- start from
-> >=20
-> > Did you mean never be offset from returned vm_pgoff?
->=20
-> Yes. Will fix this.
->=20
-> > > +  the beginning of the physical MMIO region.
-> > > +
-> >=20
-> > Confused...
->=20
-> Meaning that VMM should just use the given vm_pgoff as is, without
-> adding any offset to the vm_pgoff.
+The logic I propose is that "root" is of type Dir, which means there is no
+keep() and if dropped the whole tree under root is removed.
 
-Understood, thanks!
-=20
---=20
-An old man doll... just what I always wanted! - Clara
+A subdir created under a Dir is of type SubDir and has the keep() method and if
+called consumes the type instance and subsequently can only ever be removed by
+dropping root.
 
---vde97DQHR/3Yogi4
-Content-Type: application/pgp-signature; name=signature.asc
+Alternatively a SubDir can be converted into a Dir, and hence don't has keep()
+anymore and if dropped will be removed.
 
------BEGIN PGP SIGNATURE-----
+So, the result is that we still can add / remove subdirs as we want.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBR0wQAKCRD2uYlJVVFO
-o2GmAQD6yTz+9Kdn/nHALYBCiSbtX+ewWJjZ0spXlFlQyWBmSgEA9HdlnssGmaCv
-oibhf/yiDjC4MkNfQVDV7Jw5qTjhagQ=
-=zmrU
------END PGP SIGNATURE-----
+The advantage is that we don't have keep() for root, which would be a dedicated
+API for driver / modules to create bugs. If a driver / module would call keep()
+on the root, it would not only mean that we leak the root directory, but also
+all subdirs and files that we called keep() on.
 
---vde97DQHR/3Yogi4--
+This becomes even more problematic if we start attaching data to files. Think of
+an Arc that is attached to a file, which keeps driver data alive just because we
+leaked the root.
+
+> > However, we don't want users to be able to call keep() on the directory that has
+> > been created first, since if that's done we loose our root anchor to ever free
+> > the tree, which almost always would be a bug.
+> 
+> Then do a call to debugfs_lookup_and_remove() which is what I really
+> recommend doing for any C user anyway.  That way no dentry is ever
+> "stored" anywhere.
+> 
+> Anyway, if Dir always has an implicit keep() call in it, then I guess
+> this is ok.  Let's see how this shakes out with some real-world users.
+> We can always change it over time if it gets unwieldy.
+
+I really advise against it, Rust allows us to model such subtile differences
+properly (and easily) with the type system to avoid bugs. Let's take advantage
+of that.
+
+Using debugfs_lookup_and_remove() wouldn't change anything, since we want to
+attach the lifetime of a directory to a corresponding object.
+
+(Otherwise we're back to where we are with C, i.e. the user has to remember to
+call the correct thing at the correct time, rather than letting the type system
+take care instead.)
+
+So, instead of debugfs_remove() we'd call debugfs_lookup_and_remove() from
+Dir::drop(), which only changes what we store in Dir, i.e. struct dentry pointer
+vs. CString.
