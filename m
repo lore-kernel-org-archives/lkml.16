@@ -1,309 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76150231825;
-	Fri,  2 May 2025 09:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75927267B77;
+	Fri,  2 May 2025 09:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176672; cv=none; b=SZQcfwsFAFDzR/uDyVlvl7+ek25hicJVQw5b7bBqplh0PgmUlNjAL7y6RJWo/gnIc81AyE0i6jOoym/w/0zd3yn7k4Sj2fWOWyor/r3z8FqgCd1FIT8iUPECKtSvd6WMglSbbS54CwaRwa0rwIzkFd79P16/rLOPaxwxRAShxSQ=
+	t=1746176674; cv=none; b=Ddc/Mcm/Lfh1Q+MlpODEFDtiTUDgv6W5oRWrPn5VCpazY8yUqdQPg6OFJbVbjQCkDzrBy9VBNpybglMJwnvbYjwNt+7E6wKlcg05dC5Jt5oSoPxKn6lS/Ji/Ybh0m/pxytHEQKFSBIEnSG5kEnsOVuP7a+aan5vcNHteALuaWk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176672; c=relaxed/simple;
-	bh=gsj6A2AtEaBXqWN9aEAjeaBWWdcyOd+wRo45TojsJwk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VybPyvzXwvlDipJioPDamI08CC2BkSyak4c81nGxcKRg/4ElUerWZzrV4FAyZvT6uQFhkZnLbCchhLLWgKi9Gpb/NSwwwnqwN+ksbvirPeoex/ErOspbX5+ODtJyndbFq/A/yfX2wJGyBl4lZuGO+/b1I6g/O5YQ8vvjtQMINJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fslbjb2J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P7zDfDm6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746176674; c=relaxed/simple;
+	bh=I7kWDbCb9YT/O0Cj2R2bStAeSRvHrutnIYH0yo5EYFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t76UFxCbQCkp90228Q+7CN0MXWONgRek/Ozbh/GiS3ODFNXN0CRDzJukUpPWUkDcDhJNmWFIxNseXL/Nb8HkpBaqo80pCPs5fGzGdQ3AvJIP3XvOx/N0fE7E6exkQPFrgcYauz3/LfHKEiCd/lgDa4ohyF1tpHsgaKMY0Tye5M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHP2L7o9; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fslbjb2J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P7zDfDm6"
-Date: Fri, 02 May 2025 09:04:21 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746176662;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UiFvvFrPnFl/Y1xZdiVoGX4WHrYLDBvz99ttpbyI3mo=;
-	b=Fslbjb2Jo37HkzjIapi4lILKhAX5l4vs/Y1Z96O4mO/VjrgymTSoQWmecczLtjLWdCfn/a
-	mo8CL2wFEjMoKuDc+Fxr9m2AkK280dvHEp176/Z0bv+nwEGwxQLdwE6ybvwGTuNPC6M0cp
-	Ra156s8XvLyv58AfaddIje3UdyKQLovJWWjDBBH75KkXL+b1FkZPvBEE97sUvyn3XEBNIC
-	yXJFiDbkP6l1qhRC9N09nczDlIFTlpTM34+eYf/IXEx+vtzq/KR8gZTOji/gyJpbIaJwGG
-	POkptqqTg1auV2ZnhC3q+Hr+ptT6c1oKiDg2geqTT9W/djlfqxoO1Yz3+x/4Ag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746176662;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UiFvvFrPnFl/Y1xZdiVoGX4WHrYLDBvz99ttpbyI3mo=;
-	b=P7zDfDm6t40/c3abDhkveXM77A/pTnkXzpH8VqtJ++K5N/tLIY63IrSlJ43d3aomY0wRiz
-	OVtfg80IijqNQDCg==
-From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/merge] x86/msr: Convert __rdmsr() uses to native_rdmsrq() uses
-Cc: "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Josh Poimboeuf <jpoimboe@redhat.com>, Juergen Gross <jgross@suse.com>,
- Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
- Stefano Stabellini <sstabellini@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250427092027.1598740-10-xin@zytor.com>
-References: <20250427092027.1598740-10-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHP2L7o9"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6fead317874so15771147b3.0;
+        Fri, 02 May 2025 02:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746176671; x=1746781471; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ax6rAQxnmMYtNEHshOX9p41p7YxJfMs7tSxdQeWwIh8=;
+        b=EHP2L7o9uzzb5K7rVvAG0U3ueCu+nA8hXzCKmoFEP8bUPmOrIiKhzoLQpcToBjeccW
+         /WdJhbC/iX3kT/Oj8s+P0KXkJNZHc3A9e4x4SdaTi65sK+M3nU5qrL/RctvnN9bFbrqB
+         JqTIdBdsNUGVsjfVRMlImVFWTexnyaofAjPoYVXzi6386tRevDilERE09LNYbOhtRV/7
+         J/7wBR8IDOJjyP09ERpq4IF2hVFK+faLABwK4tTiiwTCUyXAGq3pysvAg/5PGbHtcYh3
+         ccTqkmSkso923v5xrBjF3z53bLrLJrU+S5RymYyz4VZh/HVvU85fr1uFlkPF1yh8m8q7
+         Dfkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746176671; x=1746781471;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ax6rAQxnmMYtNEHshOX9p41p7YxJfMs7tSxdQeWwIh8=;
+        b=rcgd2HdToi3VGbJ72uzz4XjBtK2rpUItG9aPt6jmxyclGriSuaGlSRJbzv96UJA3V2
+         FrzhDiipfiShb+T/BfkV+mcmgu/pIJ1O3DwYWgA/br0hdpfhw96MmbHDqP++mrvIU4Pe
+         jEA6oaalPxg6ztE6Own1IbjUeZtkNo1ROqjwIMmtUhQBIx1+lqZmTCVBGo0o1OcCYB10
+         MOa+vM0VWaCdI9hcNO09flDOCugmi1lnRoe/v2RokBt5QnVvWttxjSmFIDqz0yGq9bpc
+         iSSbtP9sKUtSV6/n7bfac43UYAIBmXFeZGkCDLKRUdvgtOzoN4BYghB58YeVEIq6P8np
+         FFAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcT8i1YTvWGEfiRdrcmGKs92qHcl5uPwlXtCDgqJBFYXeuuusXF13pk8F9N4oqpkopiyjpeno6yfzh5IX2ir4=@vger.kernel.org, AJvYcCUuhidYu0piXblS3dtZpppuxfC90DKv4GpVpa8ZytfC+44qmzg0dZ7Y5c/wFCWV4BxCurwZ010q1PxJjg==@vger.kernel.org, AJvYcCV5VjhM2yySPliwv4JiWLBrfChCl4Vfn5mxGpZifDC3teyjlevx+vM9fla/lY0akzYiO9JfnRCaaoGA@vger.kernel.org, AJvYcCVSrI377ArsAHzNhz03ZUkP2PSdH3Bw+2oDU8LkvdHXF0xPbS443OaMG7ZqiGdRRKjcNTRLEweXCaz3@vger.kernel.org, AJvYcCWAtmF56APy6D45Le4Cusho02EcH/3p78tGY0qQQLBcHyRQW1lQCpmXCSbU1TmEnYjNRFnyK5XvalMnmepO@vger.kernel.org, AJvYcCWabstch6zBM8uGmmGHd6qp6dR66IUr0A4SqEz7CeYkw410wB9LQFkxPGFrvrlbrDaGcYWUqSWa6WbT@vger.kernel.org, AJvYcCWsp0xdoL1q4Z/ywX6zqKVLJRtI/ziyetGe9sR9ppIapMBov+C3ln5nmfe+gm3MBJ5PtGvOwowMKhJCwHk=@vger.kernel.org, AJvYcCXBxT4p3DYAz3uASiHh7mPhOG7WDtccg5E1bKMuD20973jlQr8ip4QgNrWboEvJncqtyjuaeSUioN4=@vger.kernel.org, AJvYcCXv0N2Eb4L6F/H7zFaA3Srkk8CX0rTzVrxYK+yU9LJz7AcYD3+9QsvNRIBPBR9QPRCu4uoc6RKM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWPElaiTtdND9WHemUoS/sPU6GlZ3c+YzwOfrvNj8g6bJKi/Vt
+	7xX1+08jg6oTeYZL9JbUJG9WjLUV57fpfKr4RRnaCPuBtAmHHoaIRcu6XA2/9e+Jch3wV5QjqJf
+	vqRLhIDDXqpZ3t98+zOyjahEC60Y=
+X-Gm-Gg: ASbGncuqgu2NCJdWa2ZzKmyI3FtN1MDFFhUr4HMlrldJJaBbQSKapl+ZN6ik+S4iBh4
+	9KdLhNulu42Gnygr9F7EaV9z/MMfxZq7PH4KKo8aDlvuFwckPTh0pGEC82588DIUG4AduaYYkWL
+	WaO0HfFQgZmq8JAUEXy9j9mDWxJK6zqFoX6aYGsIG5quYVsPgapnXdYQ==
+X-Google-Smtp-Source: AGHT+IFeIif58xXASLlUQ5gUuhwQWQfmgZ6uEgeqnbXUDfU31RgSE83NowbSJaAJgLlbclQ9hMc30P2+IT7ECEc6eyc=
+X-Received: by 2002:a05:690c:7307:b0:703:ac44:d367 with SMTP id
+ 00721157ae682-708ced214admr35881097b3.6.1746176671162; Fri, 02 May 2025
+ 02:04:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174617666160.22196.10501829134860070654.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250423094058.1656204-1-tmyu0@nuvoton.com> <20250423094058.1656204-2-tmyu0@nuvoton.com>
+ <20250501122214.GK1567507@google.com> <CAOoeyxVL2MV83CJaYCXMiw0b5YUzk728H4B9GY1q9h_P8D43fg@mail.gmail.com>
+ <20250502080754.GD3865826@google.com>
+In-Reply-To: <20250502080754.GD3865826@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 2 May 2025 17:04:19 +0800
+X-Gm-Features: ATxdqUELjUMd__-XSmruQ7aiBehkcn0fiRFxm_J9Q8eFjgTFGBlNo-dtZFMfegY
+Message-ID: <CAOoeyxWpYmcg1_FBXYqDfMi28R5ZXp2Sk2PhUo=cL10Nn3iVEw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/merge branch of tip:
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=882=E6=97=A5 =E9=
+=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+...
+> > > > +static const struct mfd_cell nct6694_devs[] =3D {
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > >
+> > > These are all identical.
+> > >
+> > > I thought you were going to use PLATFORM_DEVID_AUTO?  In fact, you ar=
+e
+> > > already using PLATFORM_DEVID_AUTO since you are calling
+> > > mfd_add_hotplug_devices().  So you don't need this IDs.
+> > >
+> > > MFD_CELL_NAME() should do.
+> > >
+> >
+> > Yes, it uses PLATFORM_DEVID_AUTO, but in my implementation, the
+> > sub-devices use cell->id instead of platform_device->id, so it doesn't
+> > affect the current behavior.
+> > However, if you think there's a better approach or that this should be
+> > changed for consistency or correctness, I'm happy to update it, please
+> > let me know your recommendation.
+> >
+> > When using MFD_CELL_NAME(), the platform_device->id for the GPIO
+> > devices is assigned values from 1 to 16, and for the I2C devices from
+> > 1 to 6, but I need the ID offset to start from 0 instead.
+>
+> Oh no, don't do that.  mfd_cell isn't supposed to be used outside of MFD.
+>
+> Just use the platform_device id-- if you really need to start from 0.
+>
+> As an aside, I'm surprised numbering starts from 1.
+>
 
-Commit-ID:     3204877d05ca17162270890e3f28552741a1b1a2
-Gitweb:        https://git.kernel.org/tip/3204877d05ca17162270890e3f28552741a1b1a2
-Author:        Xin Li (Intel) <xin@zytor.com>
-AuthorDate:    Sun, 27 Apr 2025 02:20:21 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 02 May 2025 10:36:35 +02:00
+OK, I will use platform_device->id instead. However, I'm still unsure
+why the ID starts from1.
 
-x86/msr: Convert __rdmsr() uses to native_rdmsrq() uses
+Additionally, I noticed that when calling mfd_add_devices()
+separately, the IDs are also assigned consecutively (e.g., GPIO: 1~16,
+I2C: 17~22, ...).
 
-__rdmsr() is the lowest level MSR write API, with native_rdmsr()
-and native_rdmsrq() serving as higher-level wrappers around it.
+Do you have any recommendations on how I should implement this?
 
-  #define native_rdmsr(msr, val1, val2)                   \
-  do {                                                    \
-          u64 __val = __rdmsr((msr));                     \
-          (void)((val1) = (u32)__val);                    \
-          (void)((val2) = (u32)(__val >> 32));            \
-  } while (0)
 
-  static __always_inline u64 native_rdmsrq(u32 msr)
-  {
-          return __rdmsr(msr);
-  }
-
-However, __rdmsr() continues to be utilized in various locations.
-
-MSR APIs are designed for different scenarios, such as native or
-pvops, with or without trace, and safe or non-safe.  Unfortunately,
-the current MSR API names do not adequately reflect these factors,
-making it challenging to select the most appropriate API for
-various situations.
-
-To pave the way for improving MSR API names, convert __rdmsr()
-uses to native_rdmsrq() to ensure consistent usage.  Later, these
-APIs can be renamed to better reflect their implications, such as
-native or pvops, with or without trace, and safe or non-safe.
-
-No functional change intended.
-
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/r/20250427092027.1598740-10-xin@zytor.com
----
- arch/x86/coco/sev/core.c                  | 2 +-
- arch/x86/events/amd/brs.c                 | 2 +-
- arch/x86/hyperv/hv_vtl.c                  | 4 ++--
- arch/x86/hyperv/ivm.c                     | 2 +-
- arch/x86/include/asm/mshyperv.h           | 2 +-
- arch/x86/kernel/cpu/common.c              | 2 +-
- arch/x86/kernel/cpu/mce/core.c            | 4 ++--
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 2 +-
- arch/x86/kvm/vmx/vmx.c                    | 4 ++--
- arch/x86/mm/mem_encrypt_identity.c        | 4 ++--
- 10 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 85b16a0..ff82151 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -277,7 +277,7 @@ static noinstr struct ghcb *__sev_get_ghcb(struct ghcb_state *state)
- 
- static inline u64 sev_es_rd_ghcb_msr(void)
- {
--	return __rdmsr(MSR_AMD64_SEV_ES_GHCB);
-+	return native_rdmsrq(MSR_AMD64_SEV_ES_GHCB);
- }
- 
- static __always_inline void sev_es_wr_ghcb_msr(u64 val)
-diff --git a/arch/x86/events/amd/brs.c b/arch/x86/events/amd/brs.c
-index 3f5ecfd..06f35a6 100644
---- a/arch/x86/events/amd/brs.c
-+++ b/arch/x86/events/amd/brs.c
-@@ -49,7 +49,7 @@ static __always_inline void set_debug_extn_cfg(u64 val)
- 
- static __always_inline u64 get_debug_extn_cfg(void)
- {
--	return __rdmsr(MSR_AMD_DBG_EXTN_CFG);
-+	return native_rdmsrq(MSR_AMD_DBG_EXTN_CFG);
- }
- 
- static bool __init amd_brs_detect(void)
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 079b276..4580936 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -150,11 +150,11 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
- 	input->vp_context.rip = rip;
- 	input->vp_context.rsp = rsp;
- 	input->vp_context.rflags = 0x0000000000000002;
--	input->vp_context.efer = __rdmsr(MSR_EFER);
-+	input->vp_context.efer = native_rdmsrq(MSR_EFER);
- 	input->vp_context.cr0 = native_read_cr0();
- 	input->vp_context.cr3 = __native_read_cr3();
- 	input->vp_context.cr4 = native_read_cr4();
--	input->vp_context.msr_cr_pat = __rdmsr(MSR_IA32_CR_PAT);
-+	input->vp_context.msr_cr_pat = native_rdmsrq(MSR_IA32_CR_PAT);
- 	input->vp_context.idtr.limit = idt_ptr.size;
- 	input->vp_context.idtr.base = idt_ptr.address;
- 	input->vp_context.gdtr.limit = gdt_ptr.size;
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 8209de7..09a165a 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -111,7 +111,7 @@ u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size)
- 
- static inline u64 rd_ghcb_msr(void)
- {
--	return __rdmsr(MSR_AMD64_SEV_ES_GHCB);
-+	return native_rdmsrq(MSR_AMD64_SEV_ES_GHCB);
- }
- 
- static inline void wr_ghcb_msr(u64 val)
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 15d00da..7784443 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -305,7 +305,7 @@ void hv_set_non_nested_msr(unsigned int reg, u64 value);
- 
- static __always_inline u64 hv_raw_get_msr(unsigned int reg)
- {
--	return __rdmsr(reg);
-+	return native_rdmsrq(reg);
- }
- 
- #else /* CONFIG_HYPERV */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 079ded4..cefc999 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -164,7 +164,7 @@ static void ppin_init(struct cpuinfo_x86 *c)
- 
- 	/* Is the enable bit set? */
- 	if (val & 2UL) {
--		c->ppin = __rdmsr(info->msr_ppin);
-+		c->ppin = native_rdmsrq(info->msr_ppin);
- 		set_cpu_cap(c, info->feature);
- 		return;
- 	}
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 96db2fd..e9b3c5d 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -121,7 +121,7 @@ void mce_prep_record_common(struct mce *m)
- {
- 	m->cpuid	= cpuid_eax(1);
- 	m->cpuvendor	= boot_cpu_data.x86_vendor;
--	m->mcgcap	= __rdmsr(MSR_IA32_MCG_CAP);
-+	m->mcgcap	= native_rdmsrq(MSR_IA32_MCG_CAP);
- 	/* need the internal __ version to avoid deadlocks */
- 	m->time		= __ktime_get_real_seconds();
- }
-@@ -1298,7 +1298,7 @@ static noinstr bool mce_check_crashing_cpu(void)
- 	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
- 		u64 mcgstatus;
- 
--		mcgstatus = __rdmsr(MSR_IA32_MCG_STATUS);
-+		mcgstatus = native_rdmsrq(MSR_IA32_MCG_STATUS);
- 
- 		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
- 			if (mcgstatus & MCG_STATUS_LMCES)
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 6e5edd7..324bd49 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -482,7 +482,7 @@ int resctrl_arch_pseudo_lock_fn(void *_plr)
- 	 * the buffer and evict pseudo-locked memory read earlier from the
- 	 * cache.
- 	 */
--	saved_msr = __rdmsr(MSR_MISC_FEATURE_CONTROL);
-+	saved_msr = native_rdmsrq(MSR_MISC_FEATURE_CONTROL);
- 	native_wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 	closid_p = this_cpu_read(pqr_state.cur_closid);
- 	rmid_p = this_cpu_read(pqr_state.cur_rmid);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d8412cf..63de5f6 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -381,7 +381,7 @@ static __always_inline void vmx_disable_fb_clear(struct vcpu_vmx *vmx)
- 	if (!vmx->disable_fb_clear)
- 		return;
- 
--	msr = __rdmsr(MSR_IA32_MCU_OPT_CTRL);
-+	msr = native_rdmsrq(MSR_IA32_MCU_OPT_CTRL);
- 	msr |= FB_CLEAR_DIS;
- 	native_wrmsrq(MSR_IA32_MCU_OPT_CTRL, msr);
- 	/* Cache the MSR value to avoid reading it later */
-@@ -7308,7 +7308,7 @@ void noinstr vmx_spec_ctrl_restore_host(struct vcpu_vmx *vmx,
- 		return;
- 
- 	if (flags & VMX_RUN_SAVE_SPEC_CTRL)
--		vmx->spec_ctrl = __rdmsr(MSR_IA32_SPEC_CTRL);
-+		vmx->spec_ctrl = native_rdmsrq(MSR_IA32_SPEC_CTRL);
- 
- 	/*
- 	 * If the guest/host SPEC_CTRL values differ, restore the host value.
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index 5eecdd9..25f6677 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -526,7 +526,7 @@ void __head sme_enable(struct boot_params *bp)
- 	me_mask = 1UL << (ebx & 0x3f);
- 
- 	/* Check the SEV MSR whether SEV or SME is enabled */
--	RIP_REL_REF(sev_status) = msr = __rdmsr(MSR_AMD64_SEV);
-+	RIP_REL_REF(sev_status) = msr = native_rdmsrq(MSR_AMD64_SEV);
- 	feature_mask = (msr & MSR_AMD64_SEV_ENABLED) ? AMD_SEV_BIT : AMD_SME_BIT;
- 
- 	/*
-@@ -557,7 +557,7 @@ void __head sme_enable(struct boot_params *bp)
- 			return;
- 
- 		/* For SME, check the SYSCFG MSR */
--		msr = __rdmsr(MSR_AMD64_SYSCFG);
-+		msr = native_rdmsrq(MSR_AMD64_SYSCFG);
- 		if (!(msr & MSR_AMD64_SYSCFG_MEM_ENCRYPT))
- 			return;
- 	}
+Thanks,
+Ming
