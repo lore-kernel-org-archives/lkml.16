@@ -1,128 +1,118 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564B425A2DA
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93915264FA5;
+	Fri,  2 May 2025 16:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204863; cv=none; b=hzyLm7EeVldpzClJpDT1CaxkTTVzxxi1yd8B6XS+C42L70r67S+TAfQ3qc3WbpLinzipGfvSfHNuwBrOL/b8eWi94WEF4ghYE2mdxFBCznrEuOrZPZkFQb97lYIxBWZouTN8nJuYO2J6yMqHjLEqhw4F2GC7lVuBAtC4f/I0KDM=
+	t=1746204869; cv=none; b=ebxjM+QeTw/ftPg8GZ08rarXTm1KMJFSGYQPHBvG+4i1PGqtONXr0PIRwVcOegbpuuCYLlkW7UfAudJn2cqjsVtgWVpV9ddVeq3oSUNVHBDJ/mdeyoYMh0NwSiQPYIiLC79zAzRK6S24h1sLBkti2Chx/lx+M7enNhzrmdNp7wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204863; c=relaxed/simple;
-	bh=3M12KVAiXepaMce8WCfsepjU54GrGCHwMIvFLVFLQ2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuULbq7vIIx75VHQaUoRagZekZQqQYGI3H2HKxdMOy1Jy0vp3j1Gxo517aAdnfaK5ErSAYWU8uogoNWa/Jx+1q/w5fqxX3/tqU0vgPXWm59lCePHf9yggfkCOutwbVE5UGmd+FyzleVRtZ4a5X6PdfT4Pme+jJP4RGG2FXeryFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uAteA-00065d-2h; Fri, 02 May 2025 18:53:58 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uAte9-000mLr-0c;
-	Fri, 02 May 2025 18:53:57 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uAte9-00GahR-07;
-	Fri, 02 May 2025 18:53:57 +0200
-Date: Fri, 2 May 2025 18:53:57 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Adam Ford <aford173@gmail.com>
-Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com,
-	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-	festevam@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, paulk@sys-base.io, hverkuil@xs4all.nl,
-	laurent.pinchart@ideasonboard.com, sebastian.fricke@collabora.com,
-	ming.qian@nxp.com, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 05/11] arm64: dts: imx8mp: drop gpcv2 vpu
- power-domains and clocks
-Message-ID: <20250502165357.ncuve25xwvydhxz3@pengutronix.de>
-References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
- <20250502150513.4169098-6-m.felsch@pengutronix.de>
- <CAHCN7xJ5p+dwJD7i7caqwhmrz8+gZDVeqfdWA_=He-H+aTJgRg@mail.gmail.com>
+	s=arc-20240116; t=1746204869; c=relaxed/simple;
+	bh=amLX7FDEwYM1CydOTz1TzXbPOF2Acs7PuTpiYKs/K6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G9PgFh4Oe568lqLX2kREVHnBvT2qydR8sqDb6LIQykPb2/XkVbwIPFDdwhcY8PxF1PIr2e6L+C8W9tfi20aXa4qCuu5jTzRuC2N/cOdcQ8PcO87CHzsgNs0RP+k8oYy1h3EEU/doLeMpKDiDX5p9hZDIYofpl56y6bGYxOzvtL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aBjKyihP; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aBjKyihP"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54af20849bbso2596247e87.0;
+        Fri, 02 May 2025 09:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746204862; x=1746809662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhPxxO8YPt82z7DOp+d+tt8ExEv/tDtudEGn21E0idc=;
+        b=aBjKyihPUoic/kZ8U8vQsfSjkvBrYVSbiWIQzHBOoGgPY6cbyHEmWsaPRipdpXeRby
+         dTdKcvG923ZDJT5lXZdnn/uMh+zoWVcOlmDn1Sa7faDWFerxCuww3NKjUegiKJJmLKg4
+         BfrEuuUaj5tS7ImLMb/Ks+1kbzpE/NFT0Qd4rfbmzNayuUV06unLdPrxvmLkW1zZm+Zm
+         su7Cr2zhcc9+qtvHDfPBj1Hc8rDHnZNcwShLOX55cXyutwmV9osUP4ioh1c5U7VGn6gI
+         eooyRQVswHOK+9j1ibLNdiD7NoebWBspUmvGy+qvnyYHD68LvSUwmgvFM8i5jvnvYt39
+         bABg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746204862; x=1746809662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rhPxxO8YPt82z7DOp+d+tt8ExEv/tDtudEGn21E0idc=;
+        b=Tz8uwTMyePrPZ5Phj3TiFWBb9wlSHeCcuRQyMQhJefIHszxPrCh0k1TnopTSHDIn/1
+         NNUKwcVYnrJjVMFnvXef2vI654ZutTMv+GQIBBP1mdLP4QSxBCYbaUXtzIz8dPCFuEks
+         1G+4TueUZj7fc9AkzP8OOpoOWOjQ/svlAMWx0K4dBWeTeHE5Lpak1wzSGcKe1ladXkqo
+         H8bKBW7Qf0sGxnzMO97MqKSQsqoBnx0f3sLCWTRdpRHpJP4+zmYDrqm6wT7j4uDo4/Of
+         vtrSzLREQ74Uafpx1ZkT0BQ2Au+NbvLcLBghvGVj79mK/2Z5WL/z8ymKts/W4QrSudL7
+         P1hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDO39Q8LJERmAZdCTc9zV54ja77l12yCyqi7ju2hs66n0nM6lzvk9DAHmBnrIJclE9QLSR9AVQ@vger.kernel.org, AJvYcCVnzTFXBmrnuo2hKNKNxQFAGvsZWIPx0xJ6CE9eUuBtVUuKMQuna4EyKeFr/5VK+YesE2nrWIUU7h8MBJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuG2KruIUKJu7tlYV2a19aQG35pzcOrxtJQ71OxuBihQzz7+lc
+	4zamMxPNmfVKaEJ6418Eh3Nts1uE6V/YgAmAgijYCTfYzQhJJYH1MT1KEd7ZHIm5Jg==
+X-Gm-Gg: ASbGnct3Yq5eakD5fhZnz/mGPhQaiAT8H1zUBlOdNAaNnjvgtuq9yDGvt4J+Q4pEwdJ
+	sxhl+JqclFjCak0xjhpEdDEyCuDDmGft6WNZicgSYurL/hMZZuah//nykwl9qfaGnIglZqLMgQ3
+	XFDGjeoOs/8NrPBRHd16MEo49uqpLdClTSfAqHHvyifW6KrtreUMRJRYqiX8WJH1uMo6pX/43n8
+	CQmrkPFZfjw5soqNrKLkEnRyW4q22+SY6UesgKpu7LB76/JCUZjKgrJc0NxY9LXFTWmdbr7et9n
+	ugpm21IqhntjOT/6imyzsd9497dpfzx0qKc4IRhyVWM4qys1l8IymhfXqVWL4A==
+X-Google-Smtp-Source: AGHT+IGbvaDTC9NrNKd+YptZd2762bNPwxplnUaVY985tpKbgOAhcZCYedFWxnpKU5vEqKbeSyCHwQ==
+X-Received: by 2002:a05:6512:239a:b0:549:7145:5d24 with SMTP id 2adb3069b0e04-54eac242b4bmr1023552e87.46.1746204862291;
+        Fri, 02 May 2025 09:54:22 -0700 (PDT)
+Received: from localhost.localdomain ([91.193.179.235])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6969sm396685e87.248.2025.05.02.09.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 09:54:21 -0700 (PDT)
+From: Andrey Kriulin <kitotavrik.s@gmail.com>
+X-Google-Original-From: Andrey Kriulin <kitotavrik.media@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Kriulin <kitotavrik.media@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] fs: minix: Fix handling of corrupted directories
+Date: Fri,  2 May 2025 19:50:57 +0300
+Message-ID: <20250502165059.63012-1-kitotavrik.media@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHCN7xJ5p+dwJD7i7caqwhmrz8+gZDVeqfdWA_=He-H+aTJgRg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 25-05-02, Adam Ford wrote:
-> On Fri, May 2, 2025 at 10:10 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > The GPCv2 G1, G2 and VC8000E power-domain don't need to reference the
-> > VPUMIX power-domain nor their module clocks since the power and reset
-> > handling is done by the VPUMIX blkctrl driver.
-> >
-> It was my understanding that having this dependency ensures the order
-> of the bring-up, but maybe I am wrong.  Do you know if the 8MP
+If the directory is corrupted and the number of nlinks is less than 2 
+(valid nlinks have at least 2), then when the directory is deleted, the
+minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+value.
 
-If that is true, the 8MM should be broken.
+Make nlinks validity check for directory in minix_lookup.
 
-> suspend-resume works properly?
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-No I didn't test suspend/resume.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
+---
+ fs/minix/namei.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> Should this get a fixes tag?
+diff --git a/fs/minix/namei.c b/fs/minix/namei.c
+index 8938536d8..5717a56fa 100644
+--- a/fs/minix/namei.c
++++ b/fs/minix/namei.c
+@@ -28,8 +28,13 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
+ 		return ERR_PTR(-ENAMETOOLONG);
+ 
+ 	ino = minix_inode_by_name(dentry);
+-	if (ino)
++	if (ino) {
+ 		inode = minix_iget(dir->i_sb, ino);
++		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
++			iput(inode);
++			return ERR_PTR(-EIO);
++		}
++	}
+ 	return d_splice_alias(inode, dentry);
+ }
+ 
+-- 
+2.47.2
 
-It's just a cleanup, therefore I didn't add the fixes-tag.
-
-Regards,
-  Marco
-
-
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 7 -------
-> >  1 file changed, 7 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > index e0d3b8cba221..cf9b6c487bd5 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > @@ -879,24 +879,17 @@ pgc_mediamix: power-domain@10 {
-> >
-> >                                         pgc_vpu_g1: power-domain@11 {
-> >                                                 #power-domain-cells = <0>;
-> > -                                               power-domains = <&pgc_vpumix>;
-> >                                                 reg = <IMX8MP_POWER_DOMAIN_VPU_G1>;
-> > -                                               clocks = <&clk IMX8MP_CLK_VPU_G1_ROOT>;
-> >                                         };
-> >
-> >                                         pgc_vpu_g2: power-domain@12 {
-> >                                                 #power-domain-cells = <0>;
-> > -                                               power-domains = <&pgc_vpumix>;
-> >                                                 reg = <IMX8MP_POWER_DOMAIN_VPU_G2>;
-> > -                                               clocks = <&clk IMX8MP_CLK_VPU_G2_ROOT>;
-> > -
-> >                                         };
-> >
-> >                                         pgc_vpu_vc8000e: power-domain@13 {
-> >                                                 #power-domain-cells = <0>;
-> > -                                               power-domains = <&pgc_vpumix>;
-> >                                                 reg = <IMX8MP_POWER_DOMAIN_VPU_VC8000E>;
-> > -                                               clocks = <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
-> >                                         };
-> >
-> >                                         pgc_hdmimix: power-domain@14 {
-> > --
-> > 2.39.5
-> >
-> >
-> 
