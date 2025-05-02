@@ -1,124 +1,135 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C022A4F8;
-	Fri,  2 May 2025 12:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CCC22D4DB
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746187324; cv=none; b=rhq2UfcjOxezNygql3Myb731a6sL0BfX7uY2bchdBHrD+mQBv1Y2oBbjiMCXHeJiYRbnFrpnhGWI835Ki+Aj+U+KQ8wnTog06cnSL75o/xXvFtdSsJriLgeQyJQXe4wbRX1TTGAwcxzQxXsa9wc+aJnPrZvdCJeXVa264TxrXhM=
+	t=1746187369; cv=none; b=bGFYcNMh3w4fhsJGD74eF6udWvPIybdd8cqmDF6NT/39LlZxyVPcCJnUgn3mumAH4WYdz5nSIt8/1tYZedEqzgNrFXBVzmJ2BW8mOVUH/gYWmhiTeERRTsRAaiK6Lw46g/S0WUdlvdR0U7ZXUo8IOvG00V4gguZGGLs4vNMvqAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746187324; c=relaxed/simple;
-	bh=Ov3TH6/gAc95Pzt0yjU/p7c0Mol+Jpj/Ok88KS9RzAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Au0ULsNeabTOrc46/Ji1eKSa+3WgRLHl+p11XJQ8i73CT3zdCs4xQWWfIVfsdlQqEd4EX4eZbTmCFtUY1wi+ZqOCQC9wtuBYISmtasV9xX6zHHbUxC4Rsp/aMIxxVy2BFHAJltSvUeayHWvzoGRyDt6zCb2PgXDShIOfDXYN2pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60657f417c4so932977eaf.0;
-        Fri, 02 May 2025 05:02:02 -0700 (PDT)
+	s=arc-20240116; t=1746187369; c=relaxed/simple;
+	bh=g4eFzVvT77yBI+Qw2ofVmfNImjSBjNLhFW9sOqt1FCg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MdcWO0VRTCDOkBLhrxuBDsBCb3nlgLCAZHWvVefdh+XNPup/+8q3YEUMKY22SHXDLR0UwvAknjrVFzcmch8DxjGkeIKucjXRfAt+tbdNB8YF0Czph1Zf9ZXhoKp0KdYb1WqEhK87uXtJNkRzecXfC1AZFLdZMl0D03XvYKUNbXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xSdmdqaX; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xSdmdqaX"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so11901935e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746187366; x=1746792166; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UncE169T2um0/KVNW8FIzn79zOglaPAb564ZSpvpVsE=;
+        b=xSdmdqaX69MQUlrEAq9p6w8qRT6XBtLfr3BgIdmzCrwZryaTYdZpXVQagcFclU1+O7
+         H2TqMkgw1UmrKvAKZmFnLKqNBjyoaln9If6yDBkQ+Kz5ScGtvGf53rvYhFXeA12X4Uq9
+         aznHIxk5loGQ/5Rb6kc2ALtv/D9rDRT0hYbsNgmFnp9pVrjpoDghwFn/cHw8pUkasuGq
+         ypqkmH854Ea8NU/zpccoXSVMaAQZe5z1VVn5KROkYHhcFTFS6i6f1dCpxcj04MvnzKdF
+         EpXkmT83K3VYlqfBSsOEJnxgR0NqFbDkITrh2XhvhC6dij02spIsjpKi4SmbDwdXg9Ew
+         /6FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746187320; x=1746792120;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MY8XikeU0AVzM/KkOL4D4V6UOM1fbLtQGUrNKfsnaxY=;
-        b=vU46DGhbU/+aUDWFvrfmXOArrhAuIf5TgQpyIsDByGsNNKgFuHyz7jF40UdBNg2Vqz
-         U/1+qmlXg4BV3YoZe8XZziTUVO8IS65sWpxjHuf5tKFDUDkmiIYHbte79YX1ODEVkbMR
-         5zHE1Ye5UhEF3o9ntShuJWPhkDIv8ACruC2y7U5CTHgyCP9oeCS2+2bTys0+qd7CFIEX
-         kkL4yLDMNL6ZUgcMA6BU2GNq59BDzfp6a76vZxH9OoQz2DQ6KC4p4Wx4EhXZL5Yt8r1A
-         aNlnLZPfGW1tmiM9KQBm1+IxVpSaIUXSFU45KCZbEo2+KlApTjA0rArRW3D99vPN2O9W
-         qdGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCt5E5K8k71hj1JR1gV5BC9ufs75kDAksW/tfrb++JMRuWr/dRrS5TKsttw83nrxkEFoZimkFxvkNNx2QDOvG/h7o=@vger.kernel.org, AJvYcCVZRucraizZ3I1hwhVuZgMmmb51iQidKy9loy85iG5H0/iNNfIU5tSSrGeJLMh38Oh6goo0/k1NBJe8s2oL@vger.kernel.org, AJvYcCVc99QgWSIFBpX17gvo8MQr0EarVCEuI183w7xMJ/f9U3LJseJaPuOITHd1C6rklDu3gSLmyANwJAFo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFQPkqknbAZhRTmFERcXhStgvd5PcNFYc6mqF4NpAdVwr3Nnh6
-	bGit1m9cQi0uVPVlVp6nFpqogSytIzfXKzaqhmuxd1HldH4bhCHjDZPU6VkK
-X-Gm-Gg: ASbGncs/+ysRyPJoJ4dsHnuM/rdfM/xyhMhZ+SePGtNR1jXboR3mMdLJOBwydUvSzh/
-	JK4E70RUhlabefTwN1NyleYtWhAGMio7kJI7yVSxOTI45upX6BVdSZK0kUN456EhtaHZZ7FzHnI
-	i8Gcl5ayJQ6jjJIrbjnTvZZj5tsUhBAdFFopdWirMcYsgK3jVFCM89naHhADrCqlQ7vPjdq6NK2
-	8WoLu+3yfJ4L7MD+CX/HRkyNE6dUKUF+a6Z0Zrd450DeXwFh/peR01MiFiA4cAoyYEA8OsxwyKI
-	7G1BqRevS36vlvApu7Yhaouf6Cty7CKu6zqDtFKwiBYdYDYvl1fh3y54mh4u9LB5+VXi8C1Jr34
-	yfCNuHV7bEMe9odbpgQ==
-X-Google-Smtp-Source: AGHT+IEgmSfyUoIkcrKdmZldJXPZErYnzwDhNF8r6srwlVHmkgz/O/GLn1gsa4i9gvpaRaBqBucZFQ==
-X-Received: by 2002:a05:6820:a0b:b0:607:8929:4501 with SMTP id 006d021491bc7-607ee6c3948mr1249539eaf.1.1746187320376;
-        Fri, 02 May 2025 05:02:00 -0700 (PDT)
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com. [209.85.167.176])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7fb6466sm485161eaf.26.2025.05.02.05.01.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 05:01:59 -0700 (PDT)
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4033c70577fso719628b6e.0;
-        Fri, 02 May 2025 05:01:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8ARwF3TaRZ2e2r/H1tMeUq7kYM5c7V2hLKkINPOHj2912rO8dvkOkjTcLwrdGnEur8i35JHl3gnrGwRzZcx36jMI=@vger.kernel.org, AJvYcCWg71gOOx3gQ5oz3+9bDTiHwWwn7hgJRR6V2AE90dLrFFI48+kjVRqnYjZJ5ymmFtIqz7vRDSLut0RJ@vger.kernel.org, AJvYcCWoUof2u/8y9xP/qoYenYxuojSEsXeR35ttkqIF5QinpEocZii4tCqk4Oacw4WPiGHWElpGdl9H0hb1XxHA@vger.kernel.org
-X-Received: by 2002:a05:6808:182a:b0:401:f4e4:5e0e with SMTP id
- 5614622812f47-403414b6397mr1305952b6e.33.1746187318706; Fri, 02 May 2025
- 05:01:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746187366; x=1746792166;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UncE169T2um0/KVNW8FIzn79zOglaPAb564ZSpvpVsE=;
+        b=fFgEkAW+LfdQyc3WN/ny3KI+zMEz+usCVvwTchT3bo85U4T5MH6JAVyDQlf65nMPCR
+         Ate/CSHokFqDmYxKhpTrphCZAlEclz+8/I8nZMDDRmCETVL8Zgqtn0SjER2Dqi0L0/y4
+         QH8NA4uo9/bx5zZ4ONdb7a1Oebt+bG/55NXHnJXToEAPG5SetFLp1jsSgCoFRXalBW7Q
+         I5LA4ivm3pk1ltru4+yTLYYPoxhsLZCyBMZzSZzicYVUe6aYRmEDULwC+EUoao6Yiylc
+         82IGmubmuo95A3vuuSp3UaJ+qIFn+9bCcYzyxNS+jyNnnrhwTiW9gWz0WmBYfPJm4CKk
+         +IOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTV24uDlEKMNmGOMDNoJOv+YNGzPfcKjKuYdztQDWwlRqpfMogw6zU/8OVE2sjXJulMIJnoSbVM1RU17o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs3WE4yWsEb9mU/vpNgXqZSvsykhryF44SdbVPDHc6QzE+xzKs
+	mNpUKwlrfhNr3glRJVe+DOzOjxShsJcCGPdcfJY2POPMsu062wWeMWf/c9stCav9av+wGKUOYA7
+	lNiOVpTV23Wr6MQ==
+X-Google-Smtp-Source: AGHT+IGr1We1bnkxCvwGNQjj5LrNx2TT3BLBrEN6cQ0S7gvJeMbwhyujVOviCnm19NUM4mVEhK7xhW4ZTpJ7yPM=
+X-Received: from wmqe18.prod.google.com ([2002:a05:600c:4e52:b0:441:b607:4ec0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4ec9:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-441bbeb4843mr19195785e9.9.1746187366501;
+ Fri, 02 May 2025 05:02:46 -0700 (PDT)
+Date: Fri, 2 May 2025 12:02:44 +0000
+In-Reply-To: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250501123709.56513-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250501123709.56513-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250501123709.56513-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 2 May 2025 14:01:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUWCEgwQ39f8wN2FobZK+0BoyXNm=eKfmYs50sABwomvA@mail.gmail.com>
-X-Gm-Features: ATxdqUGawMLisO3F1rvM5sjYPkJMq15HZKLhxKiBy_fyPwGI47XSqoAGJERmrvE
-Message-ID: <CAMuHMdUWCEgwQ39f8wN2FobZK+0BoyXNm=eKfmYs50sABwomvA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clocksource/drivers/renesas-ostm: Enable OSTM reprobe
- for RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
+Message-ID: <aBS0ZP9tFnujvodq@google.com>
+Subject: Re: [PATCH] rust: elaborate safety requirements for `AlwaysReferenceCounted`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Oliver Mangold <oliver.mangold@pm.me>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Prabhakar,
+On Fri, May 02, 2025 at 01:53:57PM +0200, Andreas Hindborg wrote:
+> Clarify that implementers of `AlwaysReferenceCounted` must prevent the
+> implementer from being directly initialized by users.
+> 
+> It is a violation of the safety requirements of `AlwaysReferenceCounted` if
+> its implementers can be initialized on the stack by users. Although this
+> follows from the safety requirements, it is not immediately obvious.
+> 
+> The following example demonstrates the issue. Note that the safety
+> requirements for implementing `AlwaysRefCounted` and for calling
+> `ARef::from_raw` are satisfied.
+> 
+>   struct Empty {}
+> 
+>   unsafe impl AlwaysRefCounted for Empty {
+>       fn inc_ref(&self) {}
+>       unsafe fn dec_ref(_obj: NonNull<Self>) {}
+>   }
+> 
+>   fn unsound() -> ARef<Empty> {
+>       use core::ptr::NonNull;
+>       use kernel::types::{ARef, RefCounted};
+> 
+>       let mut data = Empty {};
+>       let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+>       let aref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
+> 
+>       aref
+>   }
 
-On Thu, 1 May 2025 at 14:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add CONFIG_ARCH_R9A09G056 to the probe condition in renesas-ostm.c so that
-> the OSTM platform driver can reprobe for the RZ/V2N (R9A09G056) SoC. Like
-> RZ/G2L and RZ/V2H(P), the RZ/V2N contains the Generic Timer Module (OSTM)
-> which requires its reset to be deasserted before any register access.
-> Enabling the platform_device probe path ensures the driver defers until
-> resets are available.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+I don't think it's entirely impossible to write an AlwaysRefCounted
+value that can be on the stack. The type just needs a lifetime
+parameter. For example, this API is not unsound:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+struct MyDataStorage {
+    // ...
+}
 
-> --- a/drivers/clocksource/renesas-ostm.c
-> +++ b/drivers/clocksource/renesas-ostm.c
-> @@ -225,7 +225,7 @@ static int __init ostm_init(struct device_node *np)
->
->  TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
->
-> -#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057)
-> +#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057) || defined(CONFIG_ARCH_R9A09G056)
+impl MyDataStorage {
+    fn as_aref(&self) -> ARef<MyData<'_>> {
+        unsafe { ARef::from_raw(ptr::from_ref(self).cast()) }
+    }
+}
 
-What about simplifying this to a check for CONFIG_ARM64?
-The only SoCs which don't want this are RZ/A1 and RZ/A2, because they
-are Cortex-A9 and thus do not have the architectured timer, which is
-mandatory on ARM64.
+#[repr(transparent)]
+struct MyData<'s> {
+    storage: MyDataStorage,
+    _lifetime: PhantomData<&'s MyDataStorage>,
+}
 
->  static int __init ostm_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
+unsafe impl AlwaysRefCounted for MyData<'_> {
+    fn inc_ref(&self) {}
+    unsafe fn dec_ref(_obj: NonNull<Self>) {}
+}
 
-Gr{oetje,eeting}s,
+impl Deref for MyData<'_> {
+    type Target = MyDataStorage;
+    fn deref(&self) -> &MyDataStorage {
+        &self.storage
+    }
+}
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Alice
