@@ -1,110 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FD324336D;
-	Fri,  2 May 2025 12:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C022A4F8;
+	Fri,  2 May 2025 12:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746187292; cv=none; b=e+sHJom2r51lYAHutgxm05pdHgIiasECQKatiiNsKN5Z96ZJkLDfLLbYB1ild5PH1egdMPz3fP6jnPj5t/sIZvKvVerUv7dC12+xjUgSpUUhNHFTh5lwKG+648aNwYcA0xGK/PExKFbrT/jiWgO3xgZIAvUFkk19zO2Put1jPxQ=
+	t=1746187324; cv=none; b=rhq2UfcjOxezNygql3Myb731a6sL0BfX7uY2bchdBHrD+mQBv1Y2oBbjiMCXHeJiYRbnFrpnhGWI835Ki+Aj+U+KQ8wnTog06cnSL75o/xXvFtdSsJriLgeQyJQXe4wbRX1TTGAwcxzQxXsa9wc+aJnPrZvdCJeXVa264TxrXhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746187292; c=relaxed/simple;
-	bh=LCocTjnjID418++BEBg5N/uceuxSWBYVXC5XCu+s4nA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qglsVtf311hX2SOk8vZB8DyCf3W+MU5r3xULgfjs9ekQszT2dlnoIDwJoMP39FlHtvirt6jg23VUJipHYmTxbvh7QW0Ud9q5NetxCBL6r93J1cqA19nfpnPd42m/fwIgJ0j/1fmC/BqeENnsYf5Ed7p+jKmDpxO6HtEVAB535xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=feShMfdB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="feShMfdB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F193BC4CEE4;
-	Fri,  2 May 2025 12:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746187291;
-	bh=LCocTjnjID418++BEBg5N/uceuxSWBYVXC5XCu+s4nA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=feShMfdBsSfQv3QgyGPh0uzcAmZy8pIQdauK+51OtlRhlTTb4CJk4Mvr2H0hbiXFy
-	 OltRRwlCr5eoeTMHNJKAGixq/4lFNOcVfg/jGOfT6+Zt5HAJRXzBpUP4oMwp5p+1l0
-	 pzqTfoNP+8ptnVzK8QtXEvWdQ9icXOSxvSrqk2+Sr92AeVVAw84D50/EN0ezorkfJy
-	 z+Rx2zKaJP9CTqUzdqUQfMaqzritM3q+ha91LrNqvIyQ28gxFuQ6Ls5tx6AreDIOm0
-	 CxTw3VJJjvJKLFPQjRlUjTFUuuRVmT+aBQURmiCpo3sk3jr4eIZMMOnyTcf5M+z0t1
-	 KwsgSnSZJ4C8A==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Oliver Mangold" <oliver.mangold@pm.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 3/5] rust: Add missing SAFETY documentation for ARef
- example
-In-Reply-To: <aBSofsTTbt4pgsDU@mango> (Oliver Mangold's message of "Fri, 02
-	May 2025 11:12:05 +0000")
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
-	<ih3kqi48IA3vGKmMFL796yktZHuDzsSsrSz1KA_EIHnhlZaeKRQ2dK0FtgmzWTeVNoy9iVs9rNPjAp-ozQO3Xw==@protonmail.internalid>
-	<20250502-unique-ref-v10-3-25de64c0307f@pm.me> <87ikmjz45e.fsf@kernel.org>
-	<Ku_y8PI3VVq03v1Vz1YJOPR1fMOyOIKO-L4Rtq4t3kTDcJIHaiEuRnb551OrfID8sYsVvxSi-RGBZW9mjnMAqA==@protonmail.internalid>
-	<aBSofsTTbt4pgsDU@mango>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Fri, 02 May 2025 14:01:22 +0200
-Message-ID: <877c2zz0fh.fsf@kernel.org>
+	s=arc-20240116; t=1746187324; c=relaxed/simple;
+	bh=Ov3TH6/gAc95Pzt0yjU/p7c0Mol+Jpj/Ok88KS9RzAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Au0ULsNeabTOrc46/Ji1eKSa+3WgRLHl+p11XJQ8i73CT3zdCs4xQWWfIVfsdlQqEd4EX4eZbTmCFtUY1wi+ZqOCQC9wtuBYISmtasV9xX6zHHbUxC4Rsp/aMIxxVy2BFHAJltSvUeayHWvzoGRyDt6zCb2PgXDShIOfDXYN2pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60657f417c4so932977eaf.0;
+        Fri, 02 May 2025 05:02:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746187320; x=1746792120;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MY8XikeU0AVzM/KkOL4D4V6UOM1fbLtQGUrNKfsnaxY=;
+        b=vU46DGhbU/+aUDWFvrfmXOArrhAuIf5TgQpyIsDByGsNNKgFuHyz7jF40UdBNg2Vqz
+         U/1+qmlXg4BV3YoZe8XZziTUVO8IS65sWpxjHuf5tKFDUDkmiIYHbte79YX1ODEVkbMR
+         5zHE1Ye5UhEF3o9ntShuJWPhkDIv8ACruC2y7U5CTHgyCP9oeCS2+2bTys0+qd7CFIEX
+         kkL4yLDMNL6ZUgcMA6BU2GNq59BDzfp6a76vZxH9OoQz2DQ6KC4p4Wx4EhXZL5Yt8r1A
+         aNlnLZPfGW1tmiM9KQBm1+IxVpSaIUXSFU45KCZbEo2+KlApTjA0rArRW3D99vPN2O9W
+         qdGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCt5E5K8k71hj1JR1gV5BC9ufs75kDAksW/tfrb++JMRuWr/dRrS5TKsttw83nrxkEFoZimkFxvkNNx2QDOvG/h7o=@vger.kernel.org, AJvYcCVZRucraizZ3I1hwhVuZgMmmb51iQidKy9loy85iG5H0/iNNfIU5tSSrGeJLMh38Oh6goo0/k1NBJe8s2oL@vger.kernel.org, AJvYcCVc99QgWSIFBpX17gvo8MQr0EarVCEuI183w7xMJ/f9U3LJseJaPuOITHd1C6rklDu3gSLmyANwJAFo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFQPkqknbAZhRTmFERcXhStgvd5PcNFYc6mqF4NpAdVwr3Nnh6
+	bGit1m9cQi0uVPVlVp6nFpqogSytIzfXKzaqhmuxd1HldH4bhCHjDZPU6VkK
+X-Gm-Gg: ASbGncs/+ysRyPJoJ4dsHnuM/rdfM/xyhMhZ+SePGtNR1jXboR3mMdLJOBwydUvSzh/
+	JK4E70RUhlabefTwN1NyleYtWhAGMio7kJI7yVSxOTI45upX6BVdSZK0kUN456EhtaHZZ7FzHnI
+	i8Gcl5ayJQ6jjJIrbjnTvZZj5tsUhBAdFFopdWirMcYsgK3jVFCM89naHhADrCqlQ7vPjdq6NK2
+	8WoLu+3yfJ4L7MD+CX/HRkyNE6dUKUF+a6Z0Zrd450DeXwFh/peR01MiFiA4cAoyYEA8OsxwyKI
+	7G1BqRevS36vlvApu7Yhaouf6Cty7CKu6zqDtFKwiBYdYDYvl1fh3y54mh4u9LB5+VXi8C1Jr34
+	yfCNuHV7bEMe9odbpgQ==
+X-Google-Smtp-Source: AGHT+IEgmSfyUoIkcrKdmZldJXPZErYnzwDhNF8r6srwlVHmkgz/O/GLn1gsa4i9gvpaRaBqBucZFQ==
+X-Received: by 2002:a05:6820:a0b:b0:607:8929:4501 with SMTP id 006d021491bc7-607ee6c3948mr1249539eaf.1.1746187320376;
+        Fri, 02 May 2025 05:02:00 -0700 (PDT)
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com. [209.85.167.176])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7fb6466sm485161eaf.26.2025.05.02.05.01.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:01:59 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4033c70577fso719628b6e.0;
+        Fri, 02 May 2025 05:01:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8ARwF3TaRZ2e2r/H1tMeUq7kYM5c7V2hLKkINPOHj2912rO8dvkOkjTcLwrdGnEur8i35JHl3gnrGwRzZcx36jMI=@vger.kernel.org, AJvYcCWg71gOOx3gQ5oz3+9bDTiHwWwn7hgJRR6V2AE90dLrFFI48+kjVRqnYjZJ5ymmFtIqz7vRDSLut0RJ@vger.kernel.org, AJvYcCWoUof2u/8y9xP/qoYenYxuojSEsXeR35ttkqIF5QinpEocZii4tCqk4Oacw4WPiGHWElpGdl9H0hb1XxHA@vger.kernel.org
+X-Received: by 2002:a05:6808:182a:b0:401:f4e4:5e0e with SMTP id
+ 5614622812f47-403414b6397mr1305952b6e.33.1746187318706; Fri, 02 May 2025
+ 05:01:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250501123709.56513-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250501123709.56513-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250501123709.56513-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 14:01:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUWCEgwQ39f8wN2FobZK+0BoyXNm=eKfmYs50sABwomvA@mail.gmail.com>
+X-Gm-Features: ATxdqUGawMLisO3F1rvM5sjYPkJMq15HZKLhxKiBy_fyPwGI47XSqoAGJERmrvE
+Message-ID: <CAMuHMdUWCEgwQ39f8wN2FobZK+0BoyXNm=eKfmYs50sABwomvA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clocksource/drivers/renesas-ostm: Enable OSTM reprobe
+ for RZ/V2N SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-"Oliver Mangold" <oliver.mangold@pm.me> writes:
+Hi Prabhakar,
 
-> On 250502 1241, Andreas Hindborg wrote:
->> >
->> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->> > index d7fa8934c545f46a646ca900ab8957a04b0ad34d..33d2b4e4a87b991c6d934f4e8d2c6c71a15b1bcb 100644
->> > --- a/rust/kernel/types.rs
->> > +++ b/rust/kernel/types.rs
->> > @@ -498,7 +498,9 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->> >      ///
->> >      /// struct Empty {}
->> >      ///
->> > -    /// # // SAFETY: TODO.
->> > +    /// // SAFETY: The `RefCounted` implementation for `Empty` does not count references
->> > +    /// // and never frees the underlying object. Thus we can act as having a
->> > +    /// // refcount on the object that we pass to the newly created `ARef`.
->> >      /// unsafe impl RefCounted for Empty {
->> >      ///     fn inc_ref(&self) {}
->> >      ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
->> > @@ -506,7 +508,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->> >      ///
->> >      /// let mut data = Empty {};
->> >      /// let ptr = NonNull::<Empty>::new(&mut data).unwrap();
->> > -    /// # // SAFETY: TODO.
->> > +    /// // SAFETY: We keep `data` around longer than the `ARef`.
->>
->> I still think this applies:
->>
->> >> How about:
->> >>
->> >>   The `RefCounted` implementation for `Empty` does not count references
->> >>   and never frees the underlying object. Thus we can act as having a
->> >>   refcount on the object that we pass to the newly created `ARef`.
->> >>
+On Thu, 1 May 2025 at 14:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Hi Andreas,
+> Add CONFIG_ARCH_R9A09G056 to the probe condition in renesas-ostm.c so that
+> the OSTM platform driver can reprobe for the RZ/V2N (R9A09G056) SoC. Like
+> RZ/G2L and RZ/V2H(P), the RZ/V2N contains the Generic Timer Module (OSTM)
+> which requires its reset to be deasserted before any register access.
+> Enabling the platform_device probe path ensures the driver defers until
+> resets are available.
 >
-> I agree. Sorry, I just messed up the fix. Your wording landed in the
-> previous to-be-fixed unsafe comment, as you can see.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/drivers/clocksource/renesas-ostm.c
+> +++ b/drivers/clocksource/renesas-ostm.c
+> @@ -225,7 +225,7 @@ static int __init ostm_init(struct device_node *np)
 >
-> Happens when you are too much in a hurry and didn't touch the patch for
-> too long :/
+>  TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
 >
-> I will fix it in the next version.
+> -#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057)
+> +#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057) || defined(CONFIG_ARCH_R9A09G056)
 
-Cool! Also check my response to v9: https://lore.kernel.org/all/87cycrz1pa.fsf@kernel.org
+What about simplifying this to a check for CONFIG_ARM64?
+The only SoCs which don't want this are RZ/A1 and RZ/A2, because they
+are Cortex-A9 and thus do not have the architectured timer, which is
+mandatory on ARM64.
 
+>  static int __init ostm_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
 
-Best regards,
-Andreas Hindborg
+Gr{oetje,eeting}s,
 
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
