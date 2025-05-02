@@ -1,134 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EBC1EFFA2;
-	Fri,  2 May 2025 19:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3551C1EFFBB
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212976; cv=none; b=OcEbEEsSYmw8kBY+IxeIzbGtLUOS34it6XgNGoZIyzJgVdrgYEnyP3SYJ/HKr54Yycw2hfpTiEwjKW2UrOUq+sUBf8iIhYNcwHg/EWRgGHtcb00kaHf57SV9xpn2m3w/W8dso/PKogjOgNXLhdkorz8xkfwGw8X8TE7nAIbI0Bo=
+	t=1746212996; cv=none; b=hSTldVN2hgWGb/7v7EX1JKFDBMs5lVl7iop8htQc6d7gNCtXhasCyu8sm9jpvSrf0sXBdMhSbjULVrYjF/EsTiPWNzwojjMFnQdRFQ1YlCbZjOq4KdKpQHSrMSDeYENrSktJJrRz950He/PodnkRq0UeVq6gvzuTqUNDlnFKzIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746212976; c=relaxed/simple;
-	bh=MaT6m/oZyNFM8P+0xZFYFUmM26PLpT+c1agjvAb0MxI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mkWFhIHO5i07AoIaJAhT8q+hDYnRZvpC4dxFTlvvHdG3f6o12DgVEKgDN/zm261jJQ52sKl8iWjFhWaS3JhG/BEynNGtC30CQ3/BsJ2q+wTtAQ6UIqfSq2koI3QV75kh1sqt0r+OUv7SyuXlcMWK1dthP2OroIn/iSbJ4efZ4uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2UqVy1hY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I4GFsysY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746212996; c=relaxed/simple;
+	bh=GJ2pIjBchyImO+6fT+NNHDZxYbsmpgk+t2LIWLflrk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GVzPtMkTXSM48HvseG0JBMziAVcR6IYTWupU5yzPmx3tZTtntzjJmlFPO50I1cSZVo5A8Lp3WzoBOGx+KdIYthIe9fERIvrx+oAGdUz1BVw1ZruUIwxh7sCGv9OK3FpvsZQk1LIes/R4jQNTOAgXsRVM3Q+8OcwQtU/gJ5qFLwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tLKGNqPs; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2UqVy1hY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I4GFsysY"
-Date: Fri, 02 May 2025 19:09:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746212972;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p+P7xGI5GdriEKLGKPO6+wNOq1MXu9f1CdUtqMQ3jP4=;
-	b=2UqVy1hYmWRUmbnqhBVVhkZrtRr12hr0iNJmzvPQmQ5PwAraSQeYNgxLret6AQX3gwbI9g
-	hsNyOMqITu71dXXcChfmRZzO36TMadCSkka64iMHJm6nAazH0H9mbgoOgYAV26/WtScMpH
-	FrIF1Z5/L9r8vloogKk/wQ4sCA+YiMmEz9lR2VVKXajkH9D/D+2T2uZ2Ox7XqLyAxBV/Y9
-	A9/0u1gPR81SL3E4IsKQpshqhD4hVws9C59Lv1N18BmstRQ2mxCAk7jPP+cu9T8eowjZ4Z
-	OrGDX+IEGE9KJFxUz43xA1irh+EOhiWnSxyyZKwxrdQxx1L7Vr7mE5kspJX9CA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746212972;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=p+P7xGI5GdriEKLGKPO6+wNOq1MXu9f1CdUtqMQ3jP4=;
-	b=I4GFsysY1H17jYgkJ4y8GIcgNyB0fCAHy7raQeNIysX8Nrm5/dUyAlkRIoaI2O8LVIiDCX
-	EXd+egAyhQdR+dBQ==
-From:
- tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] arm64: vdso: Work around invalid absolute
- relocations from GCC
-Cc: Jan Stancek <jstancek@redhat.com>, thomas.weissschuh@linutronix.de,
- Thomas Gleixner <tglx@linutronix.de>,
- Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250430-vdso-absolute-reloc-v2-1-5efcc3bc4b26@linutronix.de>
-References: <20250430-vdso-absolute-reloc-v2-1-5efcc3bc4b26@linutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tLKGNqPs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pqT1CsyDucN3pt8NP7y+prQ7/LGXACbbn0G9sn9Egp0=; b=tLKGNqPsFgqT2Qjcsyz63JrvoT
+	pvPJ2lsbTZ2Snh6b6qeZBmtN8L2aSm01cloc4ublKiUU8My7d1S44jBfpESszgYddAOi7+Oq13bg5
+	PgHFLZvZcNWDUQVUUYw4/FmnYMaJx5/cw4VT/qbKo8sG2uWAkZvulcJL9KRSFE1lBjfznV8doUJ6z
+	cqN2fbjSwTaPnEM31xx/OinJO7ZPMQjwCi/ua8WngSOsZ82S3Atcxv3PbvgXOY3W3J6swbJcMlRrH
+	7l3KZKTsUDEatCsqRWRCgwagAFhyX5K4PACfvN4zwoi6C4gp6gCOVB4QZv74jWaeUzBC6PA7+W7O9
+	uebq4YbA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAvkp-0000000AtAh-1eng;
+	Fri, 02 May 2025 19:09:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 99217300321; Fri,  2 May 2025 21:08:38 +0200 (CEST)
+Date: Fri, 2 May 2025 21:08:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v12 21/21] selftests/futex: Add futex_numa_mpol
+Message-ID: <20250502190838.GB24078@noisy.programming.kicks-ass.net>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-22-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174621297192.22196.5751074600127323972.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416162921.513656-22-bigeasy@linutronix.de>
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Wed, Apr 16, 2025 at 06:29:21PM +0200, Sebastian Andrzej Siewior wrote:
+> diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
+> index 9d305520e849b..b664e8f92bfd7 100644
+> --- a/tools/testing/selftests/futex/include/futex2test.h
+> +++ b/tools/testing/selftests/futex/include/futex2test.h
+> @@ -8,6 +8,11 @@
+>  
+>  #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
+>  
+> +struct futex32_numa {
+> +	futex_t futex;
+> +	futex_t numa;
+> +};
+> +
+>  /**
+>   * futex_waitv - Wait at multiple futexes, wake on any
+>   * @waiters:    Array of waiters
+> @@ -20,3 +25,32 @@ static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned lon
+>  {
+>  	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
+>  }
+> +
+> +static inline int futex2_wait(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+> +			      unsigned long flags, struct timespec *timo, clockid_t clockid)
+> +{
+> +	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
 
-Commit-ID:     0c314cda93258cd1f0055a278a6576b5d4aeabf5
-Gitweb:        https://git.kernel.org/tip/0c314cda93258cd1f0055a278a6576b5d4a=
-eabf5
-Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-AuthorDate:    Wed, 30 Apr 2025 11:20:13 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 02 May 2025 20:57:11 +02:00
+I'm confused, sure this should be __NR_futex_wait
 
-arm64: vdso: Work around invalid absolute relocations from GCC
+> +}
+> +
+> +/*
+> + * futex_wait2() - block on uaddr with optional timeout
+> + * @val:	Expected value
+> + * @flags:	FUTEX2 flags
+> + * @timeout:	Relative timeout
+> + * @clockid:	Clock id for the timeout
+> + */
+> +static inline int futex2_wait2(void *uaddr, long val, unsigned int flags,
+> +			      struct timespec *timeout, clockid_t clockid)
 
-All vDSO code needs to be completely position independent.  Symbol
-references are marked as hidden so the compiler emits PC-relative
-relocations.
+And this should be futex2_wait().
 
-However GCC emits absolute relocations for symbol-relative references with
-an offset >=3D 64KiB. After recent refactorings in the vDSO code this is the
-case in __arch_get_vdso_u_timens_data() with a page size of 64KiB.
 
-Work around the issue by preventing the optimizer from seeing the offsets.
-
-Fixes: 83a2a6b8cfc5 ("vdso/gettimeofday: Prepare do_hres_timens() for introdu=
-ction of struct vdso_clock")
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Link: https://lore.kernel.org/all/20250430-vdso-absolute-reloc-v2-1-5efcc3bc4=
-b26@linutronix.de
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D120002
-Closes: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
----
- arch/arm64/include/asm/vdso/gettimeofday.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/=
-asm/vdso/gettimeofday.h
-index 92a2b59..3322c70 100644
---- a/arch/arm64/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -99,6 +99,19 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock=
-_mode,
- 	return res;
- }
-=20
-+#if IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB)
-+static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_d=
-ata(void)
-+{
-+	const struct vdso_time_data *ret =3D &vdso_u_time_data;
-+
-+	/* Work around invalid absolute relocations */
-+	OPTIMIZER_HIDE_VAR(ret);
-+
-+	return ret;
-+}
-+#define __arch_get_vdso_u_time_data __arch_get_vdso_u_time_data
-+#endif /* IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB) =
-*/
-+
- #endif /* !__ASSEMBLY__ */
-=20
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+> +{
+> +	return syscall(__NR_futex_wait, uaddr, val, 1, flags, timeout, clockid);
+> +}
+> +
+> +/*
+> + * futex2_wake() - Wake a number of futexes
+> + * @nr:		Number of threads to wake at most
+> + * @flags:	FUTEX2 flags
+> + */
+> +static inline int futex2_wake(void *uaddr, int nr, unsigned int flags)
+> +{
+> +	return syscall(__NR_futex_wake, uaddr, 1, nr, flags);
+> +}
+> -- 
+> 2.49.0
+> 
