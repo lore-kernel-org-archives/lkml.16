@@ -1,93 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5931D221FDF;
-	Fri,  2 May 2025 23:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C595521518F;
+	Fri,  2 May 2025 23:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746228307; cv=none; b=VVpqg4mBDTWigzk3wOILvz35bkgzPD0qpBu6UZ/1bngJDJSXAYvKJDjR+EtRXKYhHFW4cIgx2xHwjg8DRf8rAUoP4coUcxNpLkl585WVO9oKoDyjcXwnG9k/fQp+AuZHfdKnk+kZQCKtIfM+nPgrbVzf9+/uMtXZq8F84xtnpb8=
+	t=1746228433; cv=none; b=F+EK0rSlDkGRP5WdtwgsJp0B5pPUPxVcJ4bbfXqr/OEb3OJeasUvdeRao4pG28gE4Tkr4I9ED5icZxrtmff/Me8hnYHW0YDV/jpxAdx0c+fa5+vPz3xjRLTcvrTPQaETJZFS9BtUnSuNvOoUKwTmSFRrrW2XgUwlsBxlf1mUu6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746228307; c=relaxed/simple;
-	bh=eb5KciJXkl3HDPCEw0qiCLQRmvO8SKa4rXPKIEeTS9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pun2Rhv7H04Jo7IQWnPSAa43jOxqFr4+WP0p6/++4nq6HdeK1REVFdx6WCaMbRYp0tVnNV0feR01xcFezfNAxikLfXEQVwwLU3AsnTkRhg2jHadoQfF15f2R1tNJADcovydcQUeJqwiY0SQzljl3pd3pDIY2fpvJdV2mhPjK+Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9ONNAha; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746228433; c=relaxed/simple;
+	bh=Hnnqy6HQL4YnWgXmdwGS2nXyeFF+0Q2siOEdENo0eRE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=XUDgAgLEdmNkZvB2P3G1KBRv/4HsW25gDvTtQw6dznw8HBU+o7iymhU8aGh25/CMQOb5GebNxbOEfa/JjEOi0CJ8rIWxCpJ0nZibd6bsPWVHSDX+Rjzj4OLLPY4ne6WlPyt3mqSmXwdfU2wHXZjrHcj8RsHB5tnQ+Eeku8JGlwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5/hYGlw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9ONNAha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423B4C4CEE4;
-	Fri,  2 May 2025 23:25:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5/hYGlw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F84C4CEE4;
+	Fri,  2 May 2025 23:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746228306;
-	bh=eb5KciJXkl3HDPCEw0qiCLQRmvO8SKa4rXPKIEeTS9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r9ONNAhaly/rlbvcsPcoJCObm6AmTSQzEtUZyWGZIjPeO4fXhnATFAuU4QSs8MrIQ
-	 +3tlQk/pCz8s3M2FcMwfQn9igjQUiOOXPHi9JNLvkaF7iy8D7oOAjMNhQLI3V+kEjP
-	 GZRldtmAwfVnDVelpgqaXhOcVzX147Ny6NoB8ddRSyXafjIdP1AjBNT0x82pLMDdHd
-	 YFEItrynP09QPLAsrQzJGScU4EsaH8pOEUOlr6c/CN5KhbCsKSx3dFesDOG9W5e92P
-	 elRNVZu4PbXNipx94ap/zNFUKAErZ9Bm+Qg8B9zTOEdpi7SVoZno+1HeNtqq4jemRJ
-	 JYrCYFt2owt6Q==
-Date: Sat, 3 May 2025 08:25:02 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for
- the v6.16 merge window
-Message-ID: <aBVUTvVnfuLFxzh4@finisterre.sirena.org.uk>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
- <20250502074743.GC3865826@google.com>
+	s=k20201202; t=1746228433;
+	bh=Hnnqy6HQL4YnWgXmdwGS2nXyeFF+0Q2siOEdENo0eRE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=O5/hYGlwnpYBhK7zltWWNWHhyUeP4nWKOb1C/zslmwVclYQGqN7i9vRYueYPJhR6Z
+	 ehCV4KMCIeOFP9Mo/bg+rsW9biuZRwxeCKWW2S+jOU4w5sVLk/V7DfVi5EAWo8qvCw
+	 jqy/lMlsXljitEhZE1/VFuopq8tvskoO36k761OqopeQ6swptHOaIEvHuc71cLajiO
+	 QgQDkzJkFlJ7lv7YuQInJnfbN7VA3AkKMupfDwWfL8x0vAoZHqsSd1/M9lIQgSzrpA
+	 qgyDmokeEB7X1UqUOvlIIdZxbezW/WLVEd2bpe4b5R8g3UpWrzm5xWCwdER7zRUBp2
+	 RRpGSX7AlHVuQ==
+Date: Fri, 02 May 2025 18:27:11 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SyMKlR+M/ktQmLQY"
-Content-Disposition: inline
-In-Reply-To: <20250502074743.GC3865826@google.com>
-X-Cookie: Well begun is half done.
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org
+To: Alexey Charkov <alchark@gmail.com>
+In-Reply-To: <20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com>
+References: <20250503-wmt-soc-driver-v2-0-8c774ad84d47@gmail.com>
+ <20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com>
+Message-Id: <174622843145.3029685.15692022572710133575.robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
+ identification
 
 
---SyMKlR+M/ktQmLQY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, 03 May 2025 02:04:23 +0400, Alexey Charkov wrote:
+> VIA/WonderMedia SoC's have a chip ID register inside their system
+> configuration controller space, which can be used to identify
+> appropriate hardware quirks at runtime. Add binding for it.
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  .../bindings/hwinfo/via,vt8500-scc-id.yaml         | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
 
-On Fri, May 02, 2025 at 08:47:43AM +0100, Lee Jones wrote:
-> Enjoy!
->=20
-> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089a=
-c8:
->=20
->   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
->=20
-> are available in the Git repository at:
->=20
->   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags=
-/ib-mfd-regulator-v6.16
+My bot found errors running 'make dt_binding_check' on your patch:
 
-You need to specify a separate url and pushurl for the git remote so git
-generates PRs with a public URL people can use.
+yamllint warnings/errors:
 
---SyMKlR+M/ktQmLQY
-Content-Type: application/pgp-signature; name="signature.asc"
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
+ 	 $id: http://devicetree.org/schemas/soc/vt8500/via,vt8500-scc-id.yaml
+ 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
 
------BEGIN PGP SIGNATURE-----
+doc reference errors (make refcheckdocs):
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgVVE4ACgkQJNaLcl1U
-h9DMJQf/SHQS3n+pyc/R3Nl0jWWt4mg7G/MxocIr1vqBItuwh/nnyqoF3SHZ7QFJ
-4Kt6BB+MZvcQy1dYhyGpu1qblsvhQkc8kQfV9Bj+TgukAb9Dec/z5Xu9Z0krArTP
-x0IQstkMWY6dIMuuAbOLWgMJwIzEL4KthLMKVpkkbyxRRm/qKf+YRf6kZUOB0uJK
-H7RC7hj3aectvZGUNs6tiqIGPQALsGWp3QXATHIJ9hH0xsRWDWBdPJ4nvs7RFLkq
-vl1GyqeEkTiaP2y+v8QFlY7j/ICb5v/8kBxSaN6WnUs35GzY/YNCT4OgZl4UuaWL
-fEHej/HmLyScw6Qe/2b76kaRsejjpA==
-=UZez
------END PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com
 
---SyMKlR+M/ktQmLQY--
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
