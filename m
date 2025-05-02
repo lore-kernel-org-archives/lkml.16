@@ -1,88 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C595521518F;
-	Fri,  2 May 2025 23:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754ED21A435;
+	Fri,  2 May 2025 23:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746228433; cv=none; b=F+EK0rSlDkGRP5WdtwgsJp0B5pPUPxVcJ4bbfXqr/OEb3OJeasUvdeRao4pG28gE4Tkr4I9ED5icZxrtmff/Me8hnYHW0YDV/jpxAdx0c+fa5+vPz3xjRLTcvrTPQaETJZFS9BtUnSuNvOoUKwTmSFRrrW2XgUwlsBxlf1mUu6U=
+	t=1746228536; cv=none; b=aKLFqHEzxJrEZhq7E0om/hKkfX2ABO4a3cHc0UTa0+kvGzU5G3NaQqaR1yTNF0oYxBBTJPfNlFD5Clbiu4vGeYCtClXkMeEbkFexCqCFa55IUD7PWBF0gZYSx8yFLpHa04vS9kv4ZYIpjTxVhU2s1RLprUHAcfoinkvNGX7nEoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746228433; c=relaxed/simple;
-	bh=Hnnqy6HQL4YnWgXmdwGS2nXyeFF+0Q2siOEdENo0eRE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=XUDgAgLEdmNkZvB2P3G1KBRv/4HsW25gDvTtQw6dznw8HBU+o7iymhU8aGh25/CMQOb5GebNxbOEfa/JjEOi0CJ8rIWxCpJ0nZibd6bsPWVHSDX+Rjzj4OLLPY4ne6WlPyt3mqSmXwdfU2wHXZjrHcj8RsHB5tnQ+Eeku8JGlwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5/hYGlw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746228536; c=relaxed/simple;
+	bh=nvcnVxQ8mkmBuPkKOUM1JReoQkJkbcWkplexO2snD4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rv8YhATCIyjotQZ18ThSbgRMwjhB3Jpzxd6kUDf/gTJmv/QDkSMN9W1La4O4pg2EotzjNWH6gqhh7QCF67KhQghDK/f9ZKnvKMd9uXeYwPrNgzpHbLmOHnXBMymQACaPjxQ+KbXp+mvg77oyYShviPblKmxfUT7k985G2E+hToM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBTKg/a+; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5/hYGlw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F84C4CEE4;
-	Fri,  2 May 2025 23:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746228433;
-	bh=Hnnqy6HQL4YnWgXmdwGS2nXyeFF+0Q2siOEdENo0eRE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=O5/hYGlwnpYBhK7zltWWNWHhyUeP4nWKOb1C/zslmwVclYQGqN7i9vRYueYPJhR6Z
-	 ehCV4KMCIeOFP9Mo/bg+rsW9biuZRwxeCKWW2S+jOU4w5sVLk/V7DfVi5EAWo8qvCw
-	 jqy/lMlsXljitEhZE1/VFuopq8tvskoO36k761OqopeQ6swptHOaIEvHuc71cLajiO
-	 QgQDkzJkFlJ7lv7YuQInJnfbN7VA3AkKMupfDwWfL8x0vAoZHqsSd1/M9lIQgSzrpA
-	 qgyDmokeEB7X1UqUOvlIIdZxbezW/WLVEd2bpe4b5R8g3UpWrzm5xWCwdER7zRUBp2
-	 RRpGSX7AlHVuQ==
-Date: Fri, 02 May 2025 18:27:11 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBTKg/a+"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso1586764f8f.1;
+        Fri, 02 May 2025 16:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746228533; x=1746833333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E5Y/kDAPZ2CZYOoK7lx97X9msDYYLQQQiBCs0XHK4jM=;
+        b=fBTKg/a+yyr+G7UGFsf82hLhbtv1cHJtV0kWJNDRTtT/Prd+TT9b0VS1+4PuusUDzb
+         BTVlZ4fLh8IOnlcYCPz2j7TC8E2n98LUHyixh3Wg0vs7TqfVCsVitgkxPVAKwrXSrVhX
+         DzweQElcRPUbWugjC94MZHWj8x6RLnyEnBP7G7zVEOmUn5oYUN4qMx54xlpv/dEwHulC
+         UJek98hxWElrdR5MvklHfiVSvikGoFexq4yPfxz0zFcO6u24VJ/aMyzAQ1NS8be0XqPd
+         xVuUEI23l2ENqt9d2GsmuA+LWJglPwUbn/YUDHLtG9O083rK7GnqMZgS/PPDp/LPVb9s
+         9EjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746228533; x=1746833333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E5Y/kDAPZ2CZYOoK7lx97X9msDYYLQQQiBCs0XHK4jM=;
+        b=PTlCKwgSuk0B7Esfk70vxVIHuCDucDRer+1AoE4XCiLaWuBqzq+zJpDU0AdjZNFFWj
+         l7AbjSu9pXjyNRzwHZd4Rrj3z5nTU+YpC3/yWBNL7uXaUF0jvcdKoUN5il/qs73NgPcP
+         liaqIJCcn7Hmk53hgrlrBkZKSejZRlV1bFbmAVO3A/IKuFUUrACzfjnbT9UmcDaMjOXO
+         gUxHqm5KJKfGTms0LXylru6O1voys8dpH0BV4qAo+TZOwb9yXpEJIqOrzKUmEhGjwFJ6
+         UHngRj+UAQd46LVsnZb+n18kN8kMajdRNADQWogEzfqxCts9RaXqWNFtMUmE1NGqN40U
+         xuaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSSdD/wJQHrBcmk8iz5QKQLmHN65okMMVovN3CPNoqf16QJgOyPeYmKxy+I7ovr+984956jkic9w==@vger.kernel.org, AJvYcCW3EIjpCK/xYo9LbOZKLRdCIx4U8wRIwN5UrRP2Y61IeigD9wzGJhNEBvXkI+ClSS5dbKKFl4p9yo4fHVJ+@vger.kernel.org, AJvYcCXsrssxwmZbxgJ0Rmr47Y5HvB0qLL82UN7fOgyiTBeU3H697jF53ai1O2eVrvBUFnieLbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4cPhanYjGpk+Bfu6TQrC3cW1zqraD1jrRDCCjaxUZeRrhRVPb
+	vNQzUvfjNkLLfUZwNP2w6Qjdx4OCljsfUL6r+wZ7xHR9plP8jDmI7VLqgQHkuNj5jGDirpm0vLg
+	cK0KyixOFhd5EZKZ6UAm9uroNXko=
+X-Gm-Gg: ASbGncsAYcFEDOY9+pLnaTHLjFvrq/nMFWK381PTW8yniv3oNGz+O56XeFH3bKxOydB
+	uIiByaJjFR7yFNFT0UyDxNb28VXN7xuPMwFZTNTFMfI8dwV8kTq+V005k5Wm0DmeQ7SXWqJmUrG
+	ZtEoVtM66ySZBC/K8vpMo/jCJ/8NI+Vd11iMuhTaUCtgkR2HmxdQ==
+X-Google-Smtp-Source: AGHT+IHahTU3EsKjJS4KqWDLrHSw8tBkBTgO/rSSEgaMpl4WxL15g4KW6c6VsUGT/meziHY4zl3UdemkSxNBn99UoQ0=
+X-Received: by 2002:a05:6000:4009:b0:39c:2678:302b with SMTP id
+ ffacd0b85a97d-3a099ae972amr3369768f8f.45.1746228532438; Fri, 02 May 2025
+ 16:28:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org
-To: Alexey Charkov <alchark@gmail.com>
-In-Reply-To: <20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com>
-References: <20250503-wmt-soc-driver-v2-0-8c774ad84d47@gmail.com>
- <20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com>
-Message-Id: <174622843145.3029685.15692022572710133575.robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
- identification
+References: <20250502001742.3087558-1-shakeel.butt@linux.dev>
+ <20250502001742.3087558-4-shakeel.butt@linux.dev> <CAADnVQJ-XEEwVppk-qY2mmGB4R18_nqH-wdv5nuJf2LST5=Aaw@mail.gmail.com>
+ <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
+In-Reply-To: <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 2 May 2025 16:28:41 -0700
+X-Gm-Features: ATxdqUHDXke86Kdeln5DJ1QQfuaMZgpak68ymkpjleDqI7ms9r9I1efg5Nota0k
+Message-ID: <CAADnVQ+dhiuvrmTiKeGCnjDk9=4ygETJXR+E4zQr5H2MzBLBCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] memcg: no irq disable for memcg stock lock
+To: Shakeel Butt <shakeel.butt@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Meta kernel team <kernel-team@meta.com>, 
+	Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 2, 2025 at 4:03=E2=80=AFPM Shakeel Butt <shakeel.butt@gmail.com=
+> wrote:
+>
+> On Fri, May 2, 2025 at 11:29=E2=80=AFAM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Thu, May 1, 2025 at 5:18=E2=80=AFPM Shakeel Butt <shakeel.butt@linux=
+.dev> wrote:
+> > >
+> > > There is no need to disable irqs to use memcg per-cpu stock, so let's
+> > > just not do that. One consequence of this change is if the kernel whi=
+le
+> > > in task context has the memcg stock lock and that cpu got interrupted=
+.
+> > > The memcg charges on that cpu in the irq context will take the slow p=
+ath
+> > > of memcg charging. However that should be super rare and should be fi=
+ne
+> > > in general.
+> > >
+> > > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > > ---
+> > >  mm/memcontrol.c | 17 +++++++----------
+> > >  1 file changed, 7 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > index cd81c70d144b..f8b9c7aa6771 100644
+> > > --- a/mm/memcontrol.c
+> > > +++ b/mm/memcontrol.c
+> > > @@ -1858,7 +1858,6 @@ static bool consume_stock(struct mem_cgroup *me=
+mcg, unsigned int nr_pages,
+> > >  {
+> > >         struct memcg_stock_pcp *stock;
+> > >         uint8_t stock_pages;
+> > > -       unsigned long flags;
+> > >         bool ret =3D false;
+> > >         int i;
+> > >
+> > > @@ -1866,8 +1865,8 @@ static bool consume_stock(struct mem_cgroup *me=
+mcg, unsigned int nr_pages,
+> > >                 return ret;
+> > >
+> > >         if (gfpflags_allow_spinning(gfp_mask))
+> > > -               local_lock_irqsave(&memcg_stock.lock, flags);
+> > > -       else if (!local_trylock_irqsave(&memcg_stock.lock, flags))
+> > > +               local_lock(&memcg_stock.lock);
+> > > +       else if (!local_trylock(&memcg_stock.lock))
+> > >                 return ret;
+> >
+> > I don't think it works.
+> > When there is a normal irq and something doing regular GFP_NOWAIT
+> > allocation gfpflags_allow_spinning() will be true and
+> > local_lock() will reenter and complain that lock->acquired is
+> > already set... but only with lockdep on.
+>
+> Yes indeed. I dropped the first patch and didn't fix this one
+> accordingly. I think the fix can be as simple as checking for
+> in_task() here instead of gfp_mask. That should work for both RT and
+> non-RT kernels.
 
-On Sat, 03 May 2025 02:04:23 +0400, Alexey Charkov wrote:
-> VIA/WonderMedia SoC's have a chip ID register inside their system
-> configuration controller space, which can be used to identify
-> appropriate hardware quirks at runtime. Add binding for it.
-> 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  .../bindings/hwinfo/via,vt8500-scc-id.yaml         | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
+Like:
+if (in_task())
+  local_lock(...);
+else if (!local_trylock(...))
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml: $id: Cannot determine base path from $id, relative path/filename doesn't match actual path or filename
- 	 $id: http://devicetree.org/schemas/soc/vt8500/via,vt8500-scc-id.yaml
- 	file: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Most of the networking runs in bh, so it will be using
+local_trylock() path which is probably ok in !PREEMPT_RT,
+but will cause random performance issues in PREEMP_RT,
+since rt_spin_trylock() will be randomly failing and taking
+slow path of charging. It's not going to cause permanent
+nginx 3x regression :), but unlucky slowdowns will be seen.
+A task can grab that per-cpu rt_spin_lock and preempted
+by network processing.
