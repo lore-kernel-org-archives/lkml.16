@@ -1,107 +1,129 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7A718E3F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4781013D2B2;
+	Fri,  2 May 2025 14:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196382; cv=none; b=DoHTT7KWQuMcB2NKphScLnLZNagq17ASYU13F6okaZ4sbNTjTXo19JDpBmlPnt0sR0uw3tYplYVDGnAGuo72qrGuN7/jT9ZhDzBB0TPNTctVhDBBALp9JnmKJLlY7aN1sxtYUlzCTSZXqPs3kpi7/oW8MNA6Kb31tka+RBhm0Eg=
+	t=1746196411; cv=none; b=r331JxHe7swVAkD/tl4gZGMwxoU99TvPBCx6MyPS+5sw/PbU4+AgtJOIMNN49R15dYY2Nz0PnSsKWWoP/lwe/x6R7qY2uYDKzq48iLP04g+CAGB86PPFiJKQMdYEiOj9hRWUNF3fu2bLJbREQHBgm+QCeVDSxg2+TziZ5SGVHtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196382; c=relaxed/simple;
-	bh=KtbLasPz5LjPjek7oqwEZqrJPPilE284LnDl4n7NMCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiVRIg9yUjlOygferxytxB2uPRolSr62tHdnUXAaFjI3O4TmsJ2NII6vTN4aqntZP+2YhiVOfIPgsbXo/MbFLG4QfbcbEx1eESuISPZQ+m2giiCoJlTAChEEVrkuSUW3jFOltWt2NaDPEJE6MvIPbmCTVdvK2jRWF3pueqvP6kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=cH01l50j; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1746196411; c=relaxed/simple;
+	bh=Da9pU0S33Sm8761fbLW109yCTeHilJy0K3ZjKqxSk8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OwHHlG60S4ggjtpN+yeI6VvEPr5dsYj1d9mFQ0t5HOJW9SlEKj1162ecpNQ6BZj5PSfil8Utq2OZ+6ADygnVLGkYwTfubOns6U4xYvkm/yhKHsCUNQRaEl7s/zxjbH/QmfO/N64ZR43Rk1dYNi1hwXE+5VuRCjmgmUzU1xISvPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SshfHWT5; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="cH01l50j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=j9SL
-	XVtuAhp/oeGZ5KqOEOzkrxPtMVlVq47SbKT7Ckk=; b=cH01l50ju3erEO95qm6q
-	7+Ei17jnc2HtD/8dw2+A33FkvIJ2h1pW0G5H+ZILaVisGHXzD4jsEebI7KlEN6LV
-	mCgeYWy6+GZtUYvqz4nRCtJSdjhdg9rWklFptLuMmIWFt3fHKhQT2OeHQUDsQlVe
-	E/xKx32O4JGZiuWIYXCsAuURCbSLDLC+LXMZrNoQHaoMfRlIUhSNakjYEarFzgeQ
-	m0TRfoFx3cxR9AVpE0QJAD672fJ6k99k/XKCZW3gBU4LV0Vbk8vijd33Glo6dvso
-	LKAaCrSEpQNnrNQg7JhAGsNcUKSvqjksih3Kn363VWeatoeUPyMR6iItz5DueiXX
-	Dw==
-Received: (qmail 1480956 invoked from network); 2 May 2025 16:32:53 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 May 2025 16:32:53 +0200
-X-UD-Smtp-Session: l3s3148p1@VyiCBig0MMoujnsd
-Date: Fri, 2 May 2025 16:32:52 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] i2c-host-fixes for v6.15-rc5
-Message-ID: <aBTXlNJMM-eNR9LV@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-References: <nflt7kb4vjqzg52g55lpyp7yvbbuwdj3au6xecuufojtucbhqp@visdczivr45s>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SshfHWT5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F40E843B2B;
+	Fri,  2 May 2025 14:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746196407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iG38rxrxedshMrjwOdKoCWkbIQoaDAbwPk5ua/Lna1o=;
+	b=SshfHWT5AAEbvqga99fh44jx331gw9A8WTnlDEbKtt0/zookyFHOYY3J3vRkTG41a/9rSf
+	OZQXJNTcoN3sNJ7DPW0q5YWoZDF577i5RSuj+1FJL//n459FxSXkJz1tAJhGMtqao5Uzs7
+	hQKnjLOqYRrFNIL57rF6MCqsf1j79Isejc2c/LURRzqE5DcwKHbHKyO4TBnPqfM+tYxy5D
+	fg1AWqn5a3TLF7k/tOX6hjPXRTmWm9uGJKe6C3XTIjQ17L8XDs5P8ucDio5Dv8QEspdi+k
+	g0jyN7Wcw+8ABRQCMqzl07Xzb5SPmzNr0lcInImLFb8mossP0zW3iJ32eUctoQ==
+Date: Fri, 2 May 2025 16:33:19 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
+ Ayush Singh <ayush@beagleboard.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana
+ Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
+Message-ID: <20250502163311.1e23aa9a@booty>
+In-Reply-To: <20250430125154.195498-2-herve.codina@bootlin.com>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+	<20250430125154.195498-2-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1pHgoB93OdiXo67k"
-Content-Disposition: inline
-In-Reply-To: <nflt7kb4vjqzg52g55lpyp7yvbbuwdj3au6xecuufojtucbhqp@visdczivr45s>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvjedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhhiugesghhisghsohhnrdgurhhophgsvggrrhdrihgurdgruhdprhgtphhtthhopegrfhgusehtihdrtghom
+ hdprhgtphhtthhopegrhihushhhsegsvggrghhlvggsohgrrhgurdhorhhgpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
+On Wed, 30 Apr 2025 14:51:45 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
 
---1pHgoB93OdiXo67k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> An export-symbols node allows to export symbols for symbols resolution
+> performed when applying a device tree overlay.
+> 
+> When a device tree overlay is applied on a node having an export-symbols
+> node, symbols listed in the export-symbols node are used to resolve
+> undefined symbols referenced from the overlay.
+> 
+> This allows:
+>   - Referencing symbols from an device tree overlay without the need to
+>     know the full base board. Only the connector definition is needed.
+> 
+>   - Using the exact same overlay on several connectors available on a given
+>     board.
+> 
+> For instance, the following description is supported with the
+> export-symbols node:
+>  - Base device tree board A:
+>     ...
+>     foo_connector: connector1 {
+>         export-symbols {
+>            connector = <&foo_connector>;
+>         };
+>     };
+> 
+>     bar_connector: connector2 {
+>         export-symbols {
+>            connector = <&bar_connector>;
+>         };
+>     };
+>     ...
+> 
+>  - Base device tree board B:
+>     ...
+>     front_connector: addon-connector {
+>         export-symbols {
+>            connector = <&front_connector>;
+>         };
+>     };
+>     ...
+> 
+>  - Overlay describing an addon board the can be connected on connectors:
+>     ...
+>     node {
+>         ...
+>         connector = <&connector>;
+>         ...
+>     };
+>     ...
+> 
+> Thanks to the export-symbols node, the overlay can be applied on
+> connector1 or connector2 available on board A but also on
+> addon-connector available on board B.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Tested-by: Ayush Singh <ayush@beagleboard.org>
 
-On Fri, May 02, 2025 at 10:44:51AM +0200, Andi Shyti wrote:
-> Hi Wolfram,
->=20
-> only one fix in this quiet week's pull request.
->=20
-> Have a good weekend,
-> Andi
->=20
-> The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add53=
-0e:
->=20
->   Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags=
-/i2c-host-fixes-6.15-rc5
->=20
-> for you to fetch changes up to b1852c5de2f2a37dd4462f7837c9e3e678f9e546:
->=20
->   i2c: imx-lpi2c: Fix clock count when probe defers (2025-04-29 10:18:51 =
-+0200)
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Thanks, pulled.
-
-
---1pHgoB93OdiXo67k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgU15EACgkQFA3kzBSg
-KbZBXQ/+Itk6vOKKfwOUkyZWu5OinQtjrs9FP4P3zS/WCTp39bboy5l+WV9BE5lG
-VyB1QJx/kbAZH3vieUkjFpiqePT6gJjXAyyhhr3EqNCHZJk6joh3NWfsec6IEghN
-C2eocUva4Zu+VAyOMNtVbSyuBRdrm+g6oDTsqSvXsAPa8q3nnfP/nTP5/G63y2wC
-LJ+1RbGrbY7I760HMNY5WUMsa+Tdkz9KKMZWQoPfKyML7/WAI4UgL5HVIrzbR7oW
-6LClnJxk6j9qo+u/Lq3ZxhMROOyjEAn14h/Ow6v7oRXAXYFsvp002vHsvUIMpgdh
-a1sjbNQRHY4u+y20zyQExscWtqBr0vpccmt+vngesx7Mt6Vm24TJYt1aw82DCGqo
-RpSiU4hugxX17Xay1agnC0ojXRMpNHL/26EUrwgFtl8X+8CIFaRNqBQ4YihCZpb9
-LJich5bezMo4e5La2H3pKbVCrxBuZ80kOJRPVRPkueZJHIQj1Gwmnt4sKK1fkdCf
-GgyTrIpXHkZOglU+CiqdP+lzI3GO6Oc9N5pwucC46fim8kCTnQ5dKgGKQb031Bn9
-dVakB4z/jDUYGPk/WcLyeHR6efywHsOMCySgSGhETk84yZb//76MjduGcp4iG61o
-CV+/QcSclaP2hp9tvcX7PKEaNVFYf6UcaKdLbT1FJYVt0ZDdA7c=
-=829Q
------END PGP SIGNATURE-----
-
---1pHgoB93OdiXo67k--
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
