@@ -1,241 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27E819049A;
-	Fri,  2 May 2025 20:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD0219049A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216257; cv=none; b=ewdYGskpMFPgxyt5wgAVB1W5YPXRVNOMaAqVkDEve70fdNczdKhRMUcIbJRjlZ/V2bnGUaJ6Yl1poV70lWb26ldVxherJcuxgzb19Seo/nNN8/xSs1ADPcP02SuOTt1WA4dO1Q3NLc90veOyIBr52EpqyfLcJLykMpsid/v7KMk=
+	t=1746216270; cv=none; b=VbjmHoa1bMPAE1/Osy1BDNIvGDSJV5qtG4z9X6Y+FfQtSAqY4rRocX8SUG9Vmfs9N9YrWvyMpy3HywFjel33eOMV839lXPimYaSbHosSU1DR7ZwGcmo4DuHzZ4pE/w+OXZOtA822FhGKct86caT9HQW5rfvBUd2Vbk/p7+vIYBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216257; c=relaxed/simple;
-	bh=zHAzDksuhtyOMnpLkmQcgNJPZrdaq51FS+IDIZ5Noi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=prTeLsidZvxUKFSIn1HOXPAmpsDgG/zYRuaEUoh+yyZENDcbpVtpeXkvTeQBEPTDrSXPeQODUR3MB8heYbrJSI8U/XyAiyM9dGLYUf/mh1a4r7VjNwOIj87pWRFcvDxXLZaeer0kowNwJc95d1DxoEz23VQY+jRU8KdP5Aeywbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwkN4k6X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746216270; c=relaxed/simple;
+	bh=Ytm/GvlCXo1rzdBBm9nHFFC0YSOj7VcNOCaaHJVVRPM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hz1OPWEossQPtXjULb5UlRGx4rag2cjvPNSl7H5glCkJQeWSpmlgGeBoZv6WDzkr2h3wk+9UyttkIOtasBoODgTqZEIO5j5LuMySpuCEOMEB8cwroWB06lGjgpgTz358KGWNDzyyHkn8AVbcdtB3W5rV3eelooYknvyDPham8j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=CDSfpHGf; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwkN4k6X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5017BC4CEE4;
-	Fri,  2 May 2025 20:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746216256;
-	bh=zHAzDksuhtyOMnpLkmQcgNJPZrdaq51FS+IDIZ5Noi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NwkN4k6Xx20U+Py3Z8BVrngKl0DeW+mpRV310vi2BtiMvuKBOl7P7xjbR8hQHLRwC
-	 fEbQyUTMIH5S/1wpmWrsdVpNA1t4wMBfIT+1xaninTZ7j7hU7m/darJaidsaEvpY03
-	 xYFtsG122Aw6l+6o8qgwEvcTd4NUaA03rJzfTaQD6ABgURrFsGVvHkCacj9DiUTgg5
-	 zF0FMOXqcnlfOjdE8S4RKQ5gNsOl+X5B2BE1TUegbQ7XlZXfmnVuu+je9oEC5GyxY5
-	 F6/nrsiYovIH0tesn+lHstBz+fKY8Q7kwnMpdXruOGTsniZb3N8YP0e9gQ4hH82w23
-	 kB0aK8uYah/2Q==
-Date: Fri, 2 May 2025 13:04:15 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	Dave Chinner <david@fromorbit.com>, hch <hch@lst.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/2] xfs: add inode to zone caching for data placement
-Message-ID: <20250502200415.GS25675@frogsfrogsfrogs>
-References: <20250430084117.9850-1-hans.holmberg@wdc.com>
- <20250430084117.9850-3-hans.holmberg@wdc.com>
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="CDSfpHGf"
+Received: (wp-smtpd smtp.wp.pl 49005 invoked from network); 2 May 2025 22:04:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1746216265; bh=4uXnc6THj5050EedKYJrhkloNDi/wDIkoo7Dg956Prg=;
+          h=From:To:Cc:Subject;
+          b=CDSfpHGfaGKtlC/4IzyxCtgJ0uTMLbyNgLpPMEEf6pdEf0Tn2XmaGl8IL+wqfVqQD
+           je4XRQ7g4HufICG1uhzuszg0fWIFkTGWBJaLYs8sTD4u5OCPE+3+72F4ZX4UePaYV6
+           6WT/THtxfY7SjSL4DtXn7BGsHr23Cilcp6M8jvs3TLDO7V+C38Id8NOLjDMmE7ln35
+           EcMW0bF4DF4ckbVX21AvyOxq9wZCvu3dWa4j7PotFJhNK2EjSFJ3ouTCcrLWRA2Bbu
+           mLLZZzK+FvVy2pl97TDjh7cjNn/NhHtyAfZ6bnZ3NegS5vvXo9i+TSPOajf6MGjfDL
+           4+IsVHnOENK7w==
+Received: from 83.5.150.21.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.150.21])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <johannes.berg@intel.com>; 2 May 2025 22:04:25 +0200
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: johannes.berg@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
+Subject: [PATCH iw] util: rename hz to Hz vol 2
+Date: Fri,  2 May 2025 22:04:24 +0200
+Message-Id: <20250502200424.3492403-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430084117.9850-3-hans.holmberg@wdc.com>
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                                      
+X-WP-MailID: 44d60f18ebb128d826032c567aa0246a
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [wfO0]                               
 
-On Wed, Apr 30, 2025 at 08:41:21AM +0000, Hans Holmberg wrote:
-> Placing data from the same file in the same zone is a great heuristic
-> for reducing write amplification and we do this already - but only
-> for sequential writes.
-> 
-> To support placing data in the same way for random writes, reuse the
-> xfs mru cache to map inodes to open zones on first write. If a mapping
-> is present, use the open zone for data placement for this file until
-> the zone is full.
-> 
-> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
+In most places, the Hz unit is used. This commit changes
+hz to Hz in other places.
 
-It seems like a decent idea to try to land random writes to the same
-file in the same zone.  This helps us reduce seeking out of the zone on
-subsequent reads, right?
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+---
+ util.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If so, then I've understood the purpose, and:
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+diff --git a/util.c b/util.c
+index c6d5974..1ebb19e 100644
+--- a/util.c
++++ b/util.c
+@@ -1630,7 +1630,7 @@ static void __print_eht_capa(int band,
+ 	    !(he_phy_cap[0] & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8))) {
+ 		static const char * const mcs[] = { "0-7", "8-9", "10-11", "12-13" };
+ 
+-		printf("%s\t\tEHT-MCS Map (20 Mhz Non-AP STA) (0x", pre);
++		printf("%s\t\tEHT-MCS Map (20 MHz Non-AP STA) (0x", pre);
+ 		for (i = 0; i < mcs_len; i++)
+ 			printf("%02x", ((__u8 *)mcs_set)[i]);
+ 		printf("):\n");
+@@ -1644,8 +1644,8 @@ static void __print_eht_capa(int band,
+ 	} else {
+ 		static const char * const mcs[] = { "0-9", "10-11", "12-13"};
+ 
+-		/* Bit 1 corresponds to 2.4Ghz 40Mhz support
+-		 * Bit 2 corresponds to 5/6Ghz 40 and 80Mhz support
++		/* Bit 1 corresponds to 2.4GHz 40MHz support
++		 * Bit 2 corresponds to 5/6GHz 40 and 80MHz support
+ 		 * If no Channel Width bits are set, but we are an AP, we use
+ 		 * this MCS logic also.
+ 		 */
+-- 
+2.39.5
 
---D
-
-> ---
->  fs/xfs/xfs_mount.h      |   1 +
->  fs/xfs/xfs_zone_alloc.c | 109 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 110 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index e5192c12e7ac..f90c0a16766f 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -230,6 +230,7 @@ typedef struct xfs_mount {
->  	bool			m_update_sb;	/* sb needs update in mount */
->  	unsigned int		m_max_open_zones;
->  	unsigned int		m_zonegc_low_space;
-> +	struct xfs_mru_cache	*m_zone_cache;  /* Inode to open zone cache */
->  
->  	/*
->  	 * Bitsets of per-fs metadata that have been checked and/or are sick.
-> diff --git a/fs/xfs/xfs_zone_alloc.c b/fs/xfs/xfs_zone_alloc.c
-> index d509e49b2aaa..80add26c0111 100644
-> --- a/fs/xfs/xfs_zone_alloc.c
-> +++ b/fs/xfs/xfs_zone_alloc.c
-> @@ -24,6 +24,7 @@
->  #include "xfs_zone_priv.h"
->  #include "xfs_zones.h"
->  #include "xfs_trace.h"
-> +#include "xfs_mru_cache.h"
->  
->  void
->  xfs_open_zone_put(
-> @@ -796,6 +797,100 @@ xfs_submit_zoned_bio(
->  	submit_bio(&ioend->io_bio);
->  }
->  
-> +/*
-> + * Cache the last zone written to for an inode so that it is considered first
-> + * for subsequent writes.
-> + */
-> +struct xfs_zone_cache_item {
-> +	struct xfs_mru_cache_elem	mru;
-> +	struct xfs_open_zone		*oz;
-> +};
-> +
-> +static inline struct xfs_zone_cache_item *
-> +xfs_zone_cache_item(struct xfs_mru_cache_elem *mru)
-> +{
-> +	return container_of(mru, struct xfs_zone_cache_item, mru);
-> +}
-> +
-> +static void
-> +xfs_zone_cache_free_func(
-> +	void				*data,
-> +	struct xfs_mru_cache_elem	*mru)
-> +{
-> +	struct xfs_zone_cache_item	*item = xfs_zone_cache_item(mru);
-> +
-> +	xfs_open_zone_put(item->oz);
-> +	kfree(item);
-> +}
-> +
-> +/*
-> + * Check if we have a cached last open zone available for the inode and
-> + * if yes return a reference to it.
-> + */
-> +static struct xfs_open_zone *
-> +xfs_cached_zone(
-> +	struct xfs_mount		*mp,
-> +	struct xfs_inode		*ip)
-> +{
-> +	struct xfs_mru_cache_elem	*mru;
-> +	struct xfs_open_zone		*oz;
-> +
-> +	mru = xfs_mru_cache_lookup(mp->m_zone_cache, ip->i_ino);
-> +	if (!mru)
-> +		return NULL;
-> +	oz = xfs_zone_cache_item(mru)->oz;
-> +	if (oz) {
-> +		/*
-> +		 * GC only steals open zones at mount time, so no GC zones
-> +		 * should end up in the cache.
-> +		 */
-> +		ASSERT(!oz->oz_is_gc);
-> +		ASSERT(atomic_read(&oz->oz_ref) > 0);
-> +		atomic_inc(&oz->oz_ref);
-> +	}
-> +	xfs_mru_cache_done(mp->m_zone_cache);
-> +	return oz;
-> +}
-> +
-> +/*
-> + * Update the last used zone cache for a given inode.
-> + *
-> + * The caller must have a reference on the open zone.
-> + */
-> +static void
-> +xfs_zone_cache_create_association(
-> +	struct xfs_inode		*ip,
-> +	struct xfs_open_zone		*oz)
-> +{
-> +	struct xfs_mount		*mp = ip->i_mount;
-> +	struct xfs_zone_cache_item	*item = NULL;
-> +	struct xfs_mru_cache_elem	*mru;
-> +
-> +	ASSERT(atomic_read(&oz->oz_ref) > 0);
-> +	atomic_inc(&oz->oz_ref);
-> +
-> +	mru = xfs_mru_cache_lookup(mp->m_zone_cache, ip->i_ino);
-> +	if (mru) {
-> +		/*
-> +		 * If we have an association already, update it to point to the
-> +		 * new zone.
-> +		 */
-> +		item = xfs_zone_cache_item(mru);
-> +		xfs_open_zone_put(item->oz);
-> +		item->oz = oz;
-> +		xfs_mru_cache_done(mp->m_zone_cache);
-> +		return;
-> +	}
-> +
-> +	item = kmalloc(sizeof(*item), GFP_KERNEL);
-> +	if (!item) {
-> +		xfs_open_zone_put(oz);
-> +		return;
-> +	}
-> +	item->oz = oz;
-> +	xfs_mru_cache_insert(mp->m_zone_cache, ip->i_ino, &item->mru);
-> +}
-> +
->  void
->  xfs_zone_alloc_and_submit(
->  	struct iomap_ioend	*ioend,
-> @@ -819,11 +914,16 @@ xfs_zone_alloc_and_submit(
->  	 */
->  	if (!*oz && ioend->io_offset)
->  		*oz = xfs_last_used_zone(ioend);
-> +	if (!*oz)
-> +		*oz = xfs_cached_zone(mp, ip);
-> +
->  	if (!*oz) {
->  select_zone:
->  		*oz = xfs_select_zone(mp, write_hint, pack_tight);
->  		if (!*oz)
->  			goto out_error;
-> +
-> +		xfs_zone_cache_create_association(ip, *oz);
->  	}
->  
->  	alloc_len = xfs_zone_alloc_blocks(*oz, XFS_B_TO_FSB(mp, ioend->io_size),
-> @@ -1211,6 +1311,14 @@ xfs_mount_zones(
->  	error = xfs_zone_gc_mount(mp);
->  	if (error)
->  		goto out_free_zone_info;
-> +
-> +	/*
-> +	 * Set up a mru cache to track inode to open zone for data placement
-> +	 * purposes. The magic values for group count and life time is the
-> +	 * same as the defaults for file streams, which seems sane enough.
-> +	 */
-> +	xfs_mru_cache_create(&mp->m_zone_cache, mp,
-> +			5000, 10, xfs_zone_cache_free_func);
->  	return 0;
->  
->  out_free_zone_info:
-> @@ -1224,4 +1332,5 @@ xfs_unmount_zones(
->  {
->  	xfs_zone_gc_unmount(mp);
->  	xfs_free_zone_info(mp->m_zone_info);
-> +	xfs_mru_cache_destroy(mp->m_zone_cache);
->  }
-> -- 
-> 2.34.1
-> 
