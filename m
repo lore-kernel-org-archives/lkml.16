@@ -1,134 +1,251 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C82526772A;
-	Fri,  2 May 2025 16:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887019D081;
+	Fri,  2 May 2025 16:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746203182; cv=none; b=QOx0A87YO5p2jM9Ss9wUkcRgrntQUVypwtpiViLwu5FtdvjijFxPkWRq9YXwUIkcF8/RLp1u1EBJDx1jRd6VYnZx+IKpVCdU6EC0r7gxUtTxGB652Nq62TJEFfUKx32o1J9QHm/tT432l7E2R1o5iawpYV1mhghHKsMu84vj1gc=
+	t=1746203240; cv=none; b=ZNWA+tJC2uS3iASekpFGG3sv/QQxjkiQa4whtFGBv+9padIOBapfkJVlymT6K9ltJj7Xjyc012u0jE4SSSiY4DU6Obe1P5hgMb+Ai6y85yu3Lfx7NtimpTbWCBV6KbORD7yfIpBKUE2KAlYbMo3QD2tSrn8yANL0AFtVUMCmAHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746203182; c=relaxed/simple;
-	bh=QylBnlgHnGfVEutJuWqfV07AbfoifMMiy9mc+lSQ1HE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V0MN2ATWP8YhXtmMVSmIrN8V2sjuB3jOe1pB7anJVIED0wuTRr3AlrVlM2AOotyk5nu2V5unqr0bsXPpXXEDyZ2P+ecHSmuLZB7RWqhbOvWsLpwB2jfsZFsd+jdeYpsqaknSDeq+F7dauEswQVtUAcCvDMPCmtdRg7SB/CoqOpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=J8P9NANC; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746203240; c=relaxed/simple;
+	bh=XMB5Gz0uzjZYtHTuXzVR/zhdVlhFwhyEhphtCUKQsfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIxS+nKBqt2CozqDLw7fi6orM8Uo5sGGJCNlPZAKB4WAa05wXn7npR53QVCses+NF5Wc3q2Ieg3fNhHmM1boitj1Dn4tTqrKH/8FN3qcY79p1NwY3brLKc7EKXPQDi9F7UDXmVpAYVSSlYvYPLWCZV6nqm/S6RjhYfdiIa5G0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUQDmuBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J8P9NANC"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542GPu7m268300
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 11:25:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746203156;
-	bh=36Kf5XVejWF+uquKt22aS/Ci0ZPLGS0PETWsE7ZHJ78=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=J8P9NANCBqGGLQlkpqzyu6W9XUJkIKUF3tYS7r7w0TIgvtA93heBpFW9eXKseXYLF
-	 bWyDhuA95TrSHYamEmsE7J9b8PEnZGSc0sFn7wIENp+uz+Lra4SnfmqVPd7U+Zaa2c
-	 3ATCg2ivfKINWztVQQGbZUPKlvBvvGZmVXhX9d0M=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542GPus6118985
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 11:25:56 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 11:25:55 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 11:25:56 -0500
-Received: from ws.dhcp.ti.com (ws.dhcp.ti.com [10.24.69.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542GPex8028994;
-	Fri, 2 May 2025 11:25:51 -0500
-From: Rishikesh Donadkar <r-donadkar@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <devarsht@ti.com>,
-        <y-abhilashchandra@ti.com>, <s-jain1@ti.com>, <jai.luthra@linux.dev>,
-        <jai.luthra@ideasonboard.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <imx@lists.linux.dev>, <r-donadkar@ti.com>
-Subject: [PATCH v2 2/4] arm64: dts: ti: k3-am62x: Add required voltage supplies for IMX219
-Date: Fri, 2 May 2025 21:55:37 +0530
-Message-ID: <20250502162539.322091-3-r-donadkar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250502162539.322091-1-r-donadkar@ti.com>
-References: <20250502162539.322091-1-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUQDmuBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2509C4CEE4;
+	Fri,  2 May 2025 16:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746203237;
+	bh=XMB5Gz0uzjZYtHTuXzVR/zhdVlhFwhyEhphtCUKQsfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TUQDmuBMz853IiK9HNFGj6U7ttRzxHIxniPvIVI4D/SP67dIy4HzhHRd8C5XtvnUH
+	 8aFJqjoKzDNb1ap9uISuvyjUSz22el7lxP8x24fGsU0mgwgygRxAazfZcLta8SKIOc
+	 16QRTaaAeUUprV0IJS8cAD8b4EjTstqto5372aDBle0uIFliNqUhIfNFnaN5HiJ87n
+	 M8nMtNttWfqGKU1P7Eberj3D+JfFk613YVpjjjtpWRAkRZIVuXvbbUYLD/oxTn9UY+
+	 mzKgH6khmQUzdesVZ3/tx89PbQqjPKshu9LbysnNJCWug/4YgmHCh/fw6goH6lO8Nq
+	 R98TSstmRFwmA==
+Date: Fri, 2 May 2025 13:27:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH 08/11] perf hist: Hide unused mem stat columns
+Message-ID: <aBTyYv_yXCPkn2d0@x1>
+References: <20250430205548.789750-1-namhyung@kernel.org>
+ <20250430205548.789750-9-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430205548.789750-9-namhyung@kernel.org>
 
-The device tree overlay for the IMX219 sensor requires three voltage
-supplies to be defined: VANA (analog), VDIG (digital core), and VDDL
-(digital I/O) [1].
+On Wed, Apr 30, 2025 at 01:55:45PM -0700, Namhyung Kim wrote:
+> Some mem_stat types don't use all 8 columns.  And there are cases only
+> samples in certain kinds of mem_stat types are available only.  For that
+> case hide columns which has no samples.
+> 
+> The new output for the previous data would be:
+> 
+>   $ perf mem report -F overhead,op,comm --stdio
+>   ...
+>   #           ------ Mem Op -------
+>   # Overhead     Load  Store  Other  Command
+>   # ........  .....................  ...............
+>   #
+>       44.85%    21.1%  30.7%  48.3%  swapper
+>       26.82%    98.8%   0.3%   0.9%  netsli-prober
 
-Add the corresponding voltage supply definitions in the overlay so
-that the same topography as dt-bindings is present in the DT overlay.
+/me curious about this "Other" column.
 
-Link: https://datasheets.raspberrypi.com/camera/camera-module-2-schematics.pdf [1]
-Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
----
- .../boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso  | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Maps to MEM_STAT_OP_OTHER, that comes from mem_stat_index, that comes
+from:
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-index dd090813a32d6..149c59c071823 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
-@@ -15,6 +15,33 @@ clk_imx219_fixed: imx219-xclk {
- 		#clock-cells = <0>;
- 		clock-frequency = <24000000>;
- 	};
-+
-+	reg_2p8v: regulator-2p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "2P8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1p2v: regulator-1p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P2V";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		vin-supply = <&vcc_3v3_sys>;
-+		regulator-always-on;
-+	};
- };
- 
- &main_i2c2 {
-@@ -40,6 +67,10 @@ ov5640: camera@10 {
- 
- 				clocks = <&clk_imx219_fixed>;
- 
-+				VANA-supply = <&reg_2p8v>;
-+				VDIG-supply = <&reg_1p8v>;
-+				VDDL-supply = <&reg_1p2v>;
-+
- 				reset-gpios = <&exp1 13 GPIO_ACTIVE_HIGH>;
- 
- 				port {
--- 
-2.34.1
+int mem_stat_index(const enum mem_stat_type mst, const u64 val)
+{
+        union perf_mem_data_src src = {
+                .val = val,
+        };
 
+                int idx = mem_stat_index(hists->mem_stat_types[i],
+                                         mem_info__const_data_src(mi)->val);
+
+struct mem_info *mi
+
+
+union perf_mem_data_src {
+        __u64 val;
+        struct {
+                __u64   mem_op:5,       /* type of opcode */
+                        mem_lvl:14,     /* memory hierarchy level */
+                        mem_snoop:5,    /* snoop mode */
+                        mem_lock:2,     /* lock instr */
+                        mem_dtlb:7,     /* tlb access */
+                        mem_lvl_num:4,  /* memory hierarchy level number */
+                        mem_remote:1,   /* remote */
+                        mem_snoopx:2,   /* snoop mode, ext */
+                        mem_blk:3,      /* access blocked */
+                        mem_hops:3,     /* hop level */
+                        mem_rsvd:18;
+        };
+};
+
+As the percentage for "Other" is so high I think some other patch in
+this series will elucidate that :-)
+
+Lemme continue testing...
+
+- Arnaldo
+
+>        7.19%    51.7%  13.7%  34.6%  perf
+>        5.81%    89.7%   2.2%   8.1%  qemu-system-ppc
+>        4.77%   100.0%   0.0%   0.0%  notifications_c
+>        1.77%    95.9%   1.2%   3.0%  MemoryReleaser
+>        0.77%    71.6%   4.1%  24.3%  DefaultEventMan
+>        0.19%    66.7%  22.2%  11.1%  gnome-shell
+>        ...
+> 
+> On Intel machines, the event is only for loads or stores so it'll have
+> only one columns like below:
+> 
+>   #            Mem Op
+>   # Overhead     Load  Command
+>   # ........  .......  ...............
+>   #
+>       20.55%   100.0%  swapper
+>       17.13%   100.0%  chrome
+>        9.02%   100.0%  data-loop.0
+>        6.26%   100.0%  pipewire-pulse
+>        5.63%   100.0%  threaded-ml
+>        5.47%   100.0%  GraphRunner
+>        5.37%   100.0%  AudioIP~allback
+>        5.30%   100.0%  Chrome_ChildIOT
+>        3.17%   100.0%  Isolated Web Co
+>        ...
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/ui/hist.c   | 35 +++++++++++++++++++++++++++++++++--
+>  tools/perf/util/hist.c |  2 ++
+>  tools/perf/util/hist.h |  1 +
+>  3 files changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index 427ce687ad815a62..661922c4d7863224 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+> @@ -178,6 +178,9 @@ int hpp__fmt_mem_stat(struct perf_hpp_fmt *fmt __maybe_unused, struct perf_hpp *
+>  	for (int i = 0; i < MEM_STAT_LEN; i++) {
+>  		u64 val = he->mem_stat[mem_stat_idx].entries[i];
+>  
+> +		if (hists->mem_stat_total[mem_stat_idx].entries[i] == 0)
+> +			continue;
+> +
+>  		ret += hpp__call_print_fn(hpp, print_fn, fmtstr, 100.0 * val / total);
+>  	}
+>  
+> @@ -405,12 +408,31 @@ static int hpp__header_mem_stat_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hp
+>  	int ret = 0;
+>  	int len;
+>  	enum mem_stat_type mst = hpp__mem_stat_type(fmt);
+> +	int mem_stat_idx = -1;
+> +
+> +	for (int i = 0; i < hists->nr_mem_stats; i++) {
+> +		if (hists->mem_stat_types[i] == mst) {
+> +			mem_stat_idx = i;
+> +			break;
+> +		}
+> +	}
+> +	assert(mem_stat_idx != -1);
+>  
+> -	(void)hists;
+>  	if (line == 0) {
+>  		int left, right;
+>  
+> -		len = fmt->len;
+> +		len = 0;
+> +		/* update fmt->len for acutally used columns only */
+> +		for (int i = 0; i < MEM_STAT_LEN; i++) {
+> +			if (hists->mem_stat_total[mem_stat_idx].entries[i])
+> +				len += MEM_STAT_PRINT_LEN;
+> +		}
+> +		fmt->len = len;
+> +
+> +		/* print header directly if single column only */
+> +		if (len == MEM_STAT_PRINT_LEN)
+> +			return scnprintf(hpp->buf, hpp->size, "%*s", len, fmt->name);
+> +
+>  		left = (len - strlen(fmt->name)) / 2 - 1;
+>  		right = len - left - strlen(fmt->name) - 2;
+>  
+> @@ -423,10 +445,14 @@ static int hpp__header_mem_stat_fn(struct perf_hpp_fmt *fmt, struct perf_hpp *hp
+>  				 left, graph_dotted_line, fmt->name, right, graph_dotted_line);
+>  	}
+>  
+> +
+>  	len = hpp->size;
+>  	for (int i = 0; i < MEM_STAT_LEN; i++) {
+>  		int printed;
+>  
+> +		if (hists->mem_stat_total[mem_stat_idx].entries[i] == 0)
+> +			continue;
+> +
+>  		printed = scnprintf(buf, len, "%*s", MEM_STAT_PRINT_LEN,
+>  				    mem_stat_name(mst, i));
+>  		ret += printed;
+> @@ -1214,6 +1240,11 @@ int perf_hpp__alloc_mem_stats(struct perf_hpp_list *list, struct evlist *evlist)
+>  		if (hists->mem_stat_types == NULL)
+>  			return -ENOMEM;
+>  
+> +		hists->mem_stat_total = calloc(nr_mem_stats,
+> +					       sizeof(*hists->mem_stat_total));
+> +		if (hists->mem_stat_total == NULL)
+> +			return -ENOMEM;
+> +
+>  		memcpy(hists->mem_stat_types, mst, nr_mem_stats * sizeof(*mst));
+>  		hists->nr_mem_stats = nr_mem_stats;
+>  	}
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 7759c1818c1ad168..afc6855327ab0de6 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -354,6 +354,7 @@ static int hists__update_mem_stat(struct hists *hists, struct hist_entry *he,
+>  
+>  		assert(0 <= idx && idx < MEM_STAT_LEN);
+>  		he->mem_stat[i].entries[idx] += period;
+> +		hists->mem_stat_total[i].entries[idx] += period;
+>  	}
+>  	return 0;
+>  }
+> @@ -3054,6 +3055,7 @@ static void hists_evsel__exit(struct evsel *evsel)
+>  
+>  	hists__delete_all_entries(hists);
+>  	zfree(&hists->mem_stat_types);
+> +	zfree(&hists->mem_stat_total);
+>  
+>  	list_for_each_entry_safe(node, tmp, &hists->hpp_formats, list) {
+>  		perf_hpp_list__for_each_format_safe(&node->hpp, fmt, pos) {
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 3990cfc21b1615ae..fa5e886e5b04ec9b 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -135,6 +135,7 @@ struct hists {
+>  	int			nr_hpp_node;
+>  	int			nr_mem_stats;
+>  	enum mem_stat_type	*mem_stat_types;
+> +	struct he_mem_stat	*mem_stat_total;
+>  };
+>  
+>  #define hists__has(__h, __f) (__h)->hpp_list->__f
+> -- 
+> 2.49.0.906.g1f30a19c02-goog
