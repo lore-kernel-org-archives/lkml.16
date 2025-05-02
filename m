@@ -1,237 +1,186 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58371266B60
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1319C253324;
+	Fri,  2 May 2025 07:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171444; cv=none; b=hIXV+kHkQ0PJw9qEitRMAlspGwxKlMElPgLeAR7sZlkP8oqX4a9/ZtCmkrZmReBmh17Yk7LIddNo+HroEoZzasu+3ouTCCjA/6NDz+4s63Z25HBtvug9UzA0ocKTt7JicdjTDLQYWCL5Same8BE5QTY7qZmLFVW84U4pIAjpKk4=
+	t=1746171472; cv=none; b=l1EVdFpdAo9ma7N2EemxvemRSn8lIiqXBDzXNGLZ0mwLJ+rsnhg0QheG+wOyZA+jWECbnOmsGRgvWimToKU13QvXrkcHPyU5pfQg/UZ631jyIcaT9UQmPL9Y5VW7/D01Xyk4TuLzFCKuNbZdc4Ah6IaJ6x3ky4tFKpAGrKNcuN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171444; c=relaxed/simple;
-	bh=yw2kr8qoJgTuo0OlcCpqsXASmAmWDLCSNVYi22Rfxxg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RT0MH/BkoWVgUL+17xQn7D1deMbAPlcaC4/zO7xe9SEvN8++dF68GFS+8eL+UVZgPVI5ANkybO6s5SnZCqfVSoRS4HJ+KMSuwmZzkJSIdn+Du6pjimiv4OyyZOOFikjm9UnicQA9NoAkyNhkHUMx8GC6L1VNex5pVA5ap60dx+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d6e10e3644so20595235ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:37:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171441; x=1746776241;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FGrdew00+8l59Fo/xofXWgYCISSbTLhRTgi361OmL7A=;
-        b=N079BJTHG+kzCBZHJPuI3X/XLkCUVQuK9lO5vJajucgIBANgAh46CHBu9FYYdew1/W
-         PLw+JBbQiSHcsO02UOGToSq9KXj7UgvHeuXs6PjXpKF8Y9cGPY6xCaPid9IbqSPGLtTh
-         jbRqOmhyUkwlqMDdpjZdIvM//a2VzB+rgiVcRy+N1kpNpTVOhCwXgV/TAuCWB3N7Ytnf
-         7SG7bJG6NMT6CyphbSL5y9gvuuLmQ5dU3Nv8DDoCQYz2HbA6Gjc3PLHqEb3tYDKjCB33
-         5ebu5hYDFyLbkPrZZJ+dAhztfp0E9TFsZb4PbPLFpYw+814Ib0UldfvCL3fAQGxa72mN
-         J21g==
-X-Forwarded-Encrypted: i=1; AJvYcCWsy/ddS6w8Q9hbQtnMyTV7a2NavgVBU6S/5WtkeyiHr+9nF8x5GqgisWoW6QmVBSW48dpcgdgNidsQFyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHae5xVSV9e0ncRnZnEdNvDiAdT1UObmxPPaTzeP/Bz5J1vc6x
-	FNN9aNccUq4QcTa76u2yzFtnV7/qTNsdY9MdBvzOuUjK4vWVcnMTlap8UyQ6cdauLXo+5iqO6HK
-	EdtH04JICfz1QbK+Qxp3ICxg9zXPzUtQbTIB3bKK52O8wMMYjuEcy1Yo=
-X-Google-Smtp-Source: AGHT+IG0GhLNoOAjn8WkDr5PHpgkC96ThCEXH/xYd6yz3+9o6IVPYNKMNMedyFtK5hplrNXK+++132BclH8OPHRwiNTKO0eJaKnH
+	s=arc-20240116; t=1746171472; c=relaxed/simple;
+	bh=agbvgyrGl+TBT7C8n1D5AKZSi7AVfqShVIdXyQcDkH8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=llk6B1gKukcguYMtt6XlTR7CeT3IKCywgCjFRJYguq6tQjxiIB4tE0d8Jm2Q+1LLVty4Nt6ZKgx3K7X8Bp7DQeN2MrvQeNgdnO9lWYNNNtGkWNpyag0CNtg9fI34xY8ccmhoFteW7B32cpNdbc6AdyuX+0KDxckP23qXznUuGZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RbORFC7n; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RbORFC7n"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NHse015251;
+	Fri, 2 May 2025 07:37:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zu+Hb+CVAoyO+KdtfrNp2BOt+4pQRVp0db4DBgtZrDw=; b=RbORFC7n9ev7V8Ds
+	e3NkpkSqtpboc/9zNQLxn2UnyGg+dXeLe8zBaqbT9pN6Mt1KQN86JnkT/wfb5e6K
+	9YV7v9CcFC+JyZ//o3HZuXxC/xetVW4C3gELV+Cv+xhJJqih58iDwF/V8CtgMGzr
+	vCzLwJmRZAsqcNCnc5UDFFzNZXh2t2ZxE2mSqLD+YINUNLaPNi/bxDHjxLmwoRh+
+	SFnirsRqWbiJbde3K7pbhj+Ev/F3oGNFg+wbzIGRDNVcYN1wFmbqTf5t98cy9nhI
+	s+y2W3L8qtal39rELrFoQ+SAWD05atXWr2ekQCZhqgp86p+cVmzzJOSVb40RQpGH
+	a8MaDg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6uayfmq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 07:37:44 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5427bhPv001222
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 2 May 2025 07:37:43 GMT
+Received: from [10.216.18.87] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
+ 00:37:36 -0700
+Message-ID: <e72aeda8-035d-4144-a9ce-ae276bca87bf@quicinc.com>
+Date: Fri, 2 May 2025 13:07:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1609:b0:3d9:36bd:8c5f with SMTP id
- e9e14a558f8ab-3d97c1acb86mr18088725ab.11.1746171441478; Fri, 02 May 2025
- 00:37:21 -0700 (PDT)
-Date: Fri, 02 May 2025 00:37:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68147631.050a0220.53db9.0006.GAE@google.com>
-Subject: [syzbot] [net?] BUG: soft lockup in sctp_generate_timeout_event
-From: syzbot <syzbot+7d36dbfae4115f887499@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
+To: Viresh Kumar <viresh.kumar@linaro.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Viresh Kumar
+	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <psodagud@quicinc.com>,
+        <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
+References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
+ <20250502031018.1292-2-quic_ptalari@quicinc.com>
+ <20250502053758.utawzhq6famwenc2@vireshk-i7>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <20250502053758.utawzhq6famwenc2@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8LF-cETM9CLSq0X51y9q-pef9javSjYK
+X-Authority-Analysis: v=2.4 cv=KtlN2XWN c=1 sm=1 tr=0 ts=68147649 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=pLippShZzUuVUgE2s9MA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 8LF-cETM9CLSq0X51y9q-pef9javSjYK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA1OCBTYWx0ZWRfX2J7kak+qqEEN QoVKYFamX0DMmsWDVCNTcPGHFbFxUr2uC/RTJv8R5MDfTl9UoaVDE38mdYm47bVY5WBNv4LHpt7 RuiIFAIt7zZnBMfc+ZqDEi6XhMuWXD3r7KhOh0b1C+xv1d7YFmOGOnbhRbFCnSHPZhkroaPJdk7
+ e8YexEs5iG+4Kl8blHloQjKK5560KSJbQvA9FSvJSdE8xfB2IcUoxjltISqJYFBYx1/MB8ANicT jT9Hd27cqETDnriK4kL1h0vJnLzL4idYUmwTRYB/PK5caDl2pNVYfX3mDp/zWmwxHqsXoGeH14n GHSlFNeGbSj22p9eQ2X1jPUjd4FJ95l4iIqK5ZUQ4xZDN1jPI4/s5t2UuLcmUUoHrMR0tvHoLK4
+ op5YZWmY3lV25yUe6uXKnFCrZkczlmgeDKq75iZBx/4nRpZFT9iQlf6z5VHKxLoZI8VrL3JQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020058
 
-Hello,
+Hi Viresh
 
-syzbot found the following issue on:
+Thank you for review.
 
-HEAD commit:    b4432656b36e Linux 6.15-rc4
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=13fee39b980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-dashboard link: https://syzkaller.appspot.com/bug?extid=7d36dbfae4115f887499
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c9ea4f1822ea/disk-b4432656.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c5effc66ca81/vmlinux-b4432656.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/49364ea611a8/bzImage-b4432656.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7d36dbfae4115f887499@syzkaller.appspotmail.com
-
-watchdog: BUG: soft lockup - CPU#1 stuck for 123s! [syz.0.827:8572]
-Modules linked in:
-irq event stamp: 19239949
-hardirqs last  enabled at (19239948): [<ffffffff8b55e3c4>] irqentry_exit+0x74/0x90 kernel/entry/common.c:357
-hardirqs last disabled at (19239949): [<ffffffff8b55cdbe>] sysvec_apic_timer_interrupt+0xe/0xc0 arch/x86/kernel/apic/apic.c:1049
-softirqs last  enabled at (2908914): [<ffffffff8185c3fa>] __do_softirq kernel/softirq.c:613 [inline]
-softirqs last  enabled at (2908914): [<ffffffff8185c3fa>] invoke_softirq kernel/softirq.c:453 [inline]
-softirqs last  enabled at (2908914): [<ffffffff8185c3fa>] __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
-softirqs last disabled at (2908917): [<ffffffff8185c3fa>] __do_softirq kernel/softirq.c:613 [inline]
-softirqs last disabled at (2908917): [<ffffffff8185c3fa>] invoke_softirq kernel/softirq.c:453 [inline]
-softirqs last disabled at (2908917): [<ffffffff8185c3fa>] __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
-CPU: 1 UID: 0 PID: 8572 Comm: syz.0.827 Not tainted 6.15.0-rc4-syzkaller-gb4432656b36e #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-RIP: 0010:rcu_read_lock include/linux/rcupdate.h:842 [inline]
-RIP: 0010:ip6_pol_route+0x19e/0x1180 net/ipv6/route.c:2264
-Code: c0 45 31 c9 41 57 e8 f1 d2 90 f7 48 83 c4 08 e8 78 a5 48 01 41 89 c6 31 ff 89 c6 e8 2c 8a b2 f7 45 85 f6 74 10 e8 12 ad 99 f7 <84> c0 74 0e e8 d9 85 b2 f7 eb 58 e8 d2 85 b2 f7 eb 51 e8 4b a5 48
-RSP: 0018:ffffc90000a07ce0 EFLAGS: 00000202
-RAX: 0000000000000001 RBX: 0000000000000002 RCX: 9f9af6a53f4fb200
-RDX: ffff888025f61e00 RSI: ffffffff8bc1cdc0 RDI: ffffffff8bc1cd80
-RBP: ffffc90000a07e00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: ffffffff8a0d38b2 R12: ffffc90000a08380
-R13: 0000000000000000 R14: 0000000000000001 R15: ffffffff8a0d38b2
-FS:  00007f576e13d6c0(0000) GS:ffff8881261cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000309e2000 CR4: 00000000003526f0
-DR0: 0000200000000300 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-Call Trace:
- <IRQ>
- pol_lookup_func include/net/ip6_fib.h:616 [inline]
- __fib6_rule_action net/ipv6/fib6_rules.c:237 [inline]
- fib6_rule_action+0x206/0x7d0 net/ipv6/fib6_rules.c:275
- fib_rules_lookup+0x767/0xe90 net/core/fib_rules.c:339
- fib6_rule_lookup+0x18e/0x6f0 net/ipv6/fib6_rules.c:112
- ip6_route_output_flags_noref net/ipv6/route.c:2674 [inline]
- ip6_route_output_flags+0x364/0x5d0 net/ipv6/route.c:2686
- ip6_dst_lookup_tail+0x299/0x1500 net/ipv6/ip6_output.c:1156
- ip6_dst_lookup_flow+0x47/0xe0 net/ipv6/ip6_output.c:1259
- sctp_v6_get_dst+0xffa/0x1bc0 net/sctp/ipv6.c:384
- sctp_transport_route+0x115/0x2f0 net/sctp/transport.c:457
- sctp_packet_config+0x478/0xd90 net/sctp/output.c:103
- sctp_packet_singleton+0x158/0x330 net/sctp/outqueue.c:777
- sctp_outq_flush_ctrl net/sctp/outqueue.c:914 [inline]
- sctp_outq_flush+0x4f0/0x3140 net/sctp/outqueue.c:1212
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:-1 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1198 [inline]
- sctp_do_sm+0x5332/0x5a20 net/sctp/sm_sideeffect.c:1169
- sctp_generate_timeout_event+0x22e/0x360 net/sctp/sm_sideeffect.c:295
- call_timer_fn+0x17b/0x5f0 kernel/time/timer.c:1789
- expire_timers kernel/time/timer.c:1840 [inline]
- __run_timers kernel/time/timer.c:2414 [inline]
- __run_timer_base+0x61a/0x860 kernel/time/timer.c:2426
- run_timer_base kernel/time/timer.c:2435 [inline]
- run_timer_softirq+0xb7/0x180 kernel/time/timer.c:2445
- handle_softirqs+0x283/0x870 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:7090
-Code: 24 20 f6 44 24 21 02 74 0c 90 0f 0b 48 f7 03 08 00 00 00 74 64 bf 01 00 00 00 e8 eb c3 39 f6 e8 86 43 70 f6 fb bf 01 00 00 00 <e8> 4b ab ff ff 48 c7 44 24 40 00 00 00 00 9c 8f 44 24 40 8b 44 24
-RSP: 0018:ffffc90003777800 EFLAGS: 00000286
-RAX: 9f9af6a53f4fb200 RBX: 0000000000000000 RCX: 9f9af6a53f4fb200
-RDX: 0000000000000000 RSI: ffffffff8d749f78 RDI: 0000000000000001
-RBP: ffffc900037778b0 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
-R10: dffffc0000000000 R11: fffffbfff1efda6f R12: 0000000000000000
-R13: 0000000000000000 R14: dffffc0000000000 R15: 1ffff920006eef00
- irqentry_exit+0x6f/0x90 kernel/entry/common.c:354
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:lock_is_held_type+0x137/0x190 kernel/locking/lockdep.c:5943
-Code: 01 75 44 48 c7 04 24 00 00 00 00 9c 8f 04 24 f7 04 24 00 02 00 00 75 4c 41 f7 c4 00 02 00 00 74 01 fb 65 48 8b 05 89 64 1f 07 <48> 3b 44 24 08 75 43 89 d8 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f
-RSP: 0018:ffffc90003777978 EFLAGS: 00000206
-RAX: 9f9af6a53f4fb200 RBX: 0000000000000000 RCX: 9f9af6a53f4fb200
-RDX: 0000000000000000 RSI: ffffffff8d9350da RDI: ffffffff8bc1cde0
-RBP: 00000000ffffffff R08: ffffc90003777c5f R09: 0000000000000000
-R10: ffffc90003777c30 R11: fffff520006eef8c R12: 0000000000000246
-R13: ffff888025f61e00 R14: ffffffff8df3b8c0 R15: 0000000000000000
- lock_is_held include/linux/lockdep.h:249 [inline]
- __might_resched+0xa6/0x610 kernel/sched/core.c:8780
- __might_fault+0x77/0x130 mm/memory.c:7149
- __copy_from_user include/linux/uaccess.h:106 [inline]
- check_xstate_in_sigframe arch/x86/kernel/fpu/signal.c:33 [inline]
- __fpu_restore_sig arch/x86/kernel/fpu/signal.c:344 [inline]
- fpu__restore_sig+0x1a4/0x10a0 arch/x86/kernel/fpu/signal.c:489
- restore_sigcontext arch/x86/kernel/signal_64.c:95 [inline]
- __ia32_sys_rt_sigreturn+0x661/0x7b0 arch/x86/kernel/signal_64.c:266
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f576d38e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f576e13d0e8 EFLAGS: 00000246
-RAX: fffffffffffffffc RBX: 00007f576d5b5fa8 RCX: 00007f576d38e969
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f576d5b5fa8
-RBP: 00007f576d5b5fa0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f576d5b5fac
-R13: 0000000000000000 R14: 00007ffeaf203f10 R15: 00007ffeaf203ff8
- </TASK>
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 2912 Comm: kworker/u8:8 Not tainted 6.15.0-rc4-syzkaller-gb4432656b36e #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Workqueue: events_unbound toggle_allocation_gate
-RIP: 0010:csd_lock_wait kernel/smp.c:340 [inline]
-RIP: 0010:smp_call_function_many_cond+0xe69/0x11c0 kernel/smp.c:885
-Code: 00 45 8b 2f 44 89 ee 83 e6 01 31 ff e8 20 6d 0b 00 41 83 e5 01 49 bd 00 00 00 00 00 fc ff df 75 07 e8 cb 68 0b 00 eb 37 f3 90 <43> 0f b6 04 2c 84 c0 75 10 41 f7 07 01 00 00 00 74 1e e8 b0 68 0b
-RSP: 0018:ffffc9000bc8f700 EFLAGS: 00000293
-RAX: ffffffff81b45620 RBX: ffff8880b883ad40 RCX: ffff88802f0d9e00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc9000bc8f860 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
-R10: dffffc0000000000 R11: fffffbfff1efda6f R12: 1ffff11017127e99
-R13: dffffc0000000000 R14: 0000000000000001 R15: ffff8880b893f4c8
-FS:  0000000000000000(0000) GS:ffff8881260cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffffa814fb0 CR3: 000000000dd36000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-Call Trace:
- <TASK>
- on_each_cpu_cond_mask+0x3f/0x80 kernel/smp.c:1052
- on_each_cpu include/linux/smp.h:71 [inline]
- text_poke_sync arch/x86/kernel/alternative.c:2455 [inline]
- text_poke_bp_batch+0x319/0x940 arch/x86/kernel/alternative.c:2665
- text_poke_flush arch/x86/kernel/alternative.c:2856 [inline]
- text_poke_finish+0x30/0x50 arch/x86/kernel/alternative.c:2863
- arch_jump_label_transform_apply+0x1c/0x30 arch/x86/kernel/jump_label.c:146
- static_key_enable_cpuslocked+0x128/0x250 kernel/jump_label.c:210
- static_key_enable+0x1a/0x20 kernel/jump_label.c:223
- toggle_allocation_gate+0xad/0x240 mm/kfence/core.c:850
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+On 5/2/2025 11:07 AM, Viresh Kumar wrote:
+> On 02-05-25, 08:40, Praveen Talari wrote:
+>> To configure a device to a specific performance level, consumer drivers
+>> currently need to determine the OPP based on the exact level and then
+>> set it, resulting in code duplication across drivers.
+>>
+>> The new helper API, dev_pm_opp_set_level(), addresses this issue by
+>> providing a streamlined method for consumer drivers to find and set the
+>> OPP based on the desired performance level, thereby eliminating
+>> redundancy.
+>>
+>> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
+>>
+>> v2 -> v3
+>> - moved function defination to pm_opp.h from core.c with inline
+>> - updated return value with IS_ERR(opp)
+>>
+>> v1 -> v2
+>> - reorder sequence of tags in commit text
+> As Trilok mentioned, this is not the right place for this.
+>
+>> ---
+>>   include/linux/pm_opp.h | 27 +++++++++++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
+>>
+>> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+>> index e7b5c602c92f..31ed8a7b554e 100644
+>> --- a/include/linux/pm_opp.h
+>> +++ b/include/linux/pm_opp.h
+>> @@ -197,6 +197,28 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
+>>   void dev_pm_opp_remove_table(struct device *dev);
+>>   void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask);
+>>   int dev_pm_opp_sync_regulators(struct device *dev);
+>> +
+>> +/*
+>> + * dev_pm_opp_set_level() - Configure device for a level
+>> + * @dev: device for which we do this operation
+>> + * @level: level to set to
+>> + *
+>> + * Return: 0 on success, a non-zero value if there is an error otherwise.
+>> + */
+> No need of these for simple wrappers.
+>
+>> +static inline int dev_pm_opp_set_level(struct device *dev, unsigned int level)
+>> +{
+>> +	struct dev_pm_opp *opp = dev_pm_opp_find_level_exact(dev, level);
+>> +	int ret;
+>> +
+>> +	if (IS_ERR(opp))
+>> +		return IS_ERR(opp);
+> IS_ERR is wrong here, should be PTR_ERR.
+>
+>> +
+>> +	ret = dev_pm_opp_set_opp(dev, opp);
+>> +	dev_pm_opp_put(opp);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   #else
+>>   static inline struct opp_table *dev_pm_opp_get_opp_table(struct device *dev)
+>>   {
+>> @@ -461,6 +483,11 @@ static inline int dev_pm_opp_sync_regulators(struct device *dev)
+>>   	return -EOPNOTSUPP;
+>>   }
+>>   
+>> +static inline int dev_pm_opp_set_level(struct device *dev, unsigned int level)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>> +
+> No need of these too for such wrappers. And then this isn't rebased
+How come? i have synced  linux-next today itself and pushed from it, 
+even i didn't face any issue.
+Let me know how/where rebased i.e linux-next or linux?
+> over latest changes in the OPP core.
+>
+> I modified it and applied the below version to my tree now.
+>
