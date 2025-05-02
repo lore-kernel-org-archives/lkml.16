@@ -1,222 +1,178 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C31AF4D5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B1EBA3F;
+	Fri,  2 May 2025 05:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746164283; cv=none; b=Y2VkE3PX0q9GvVFW7He7Zbs2Gkbt9aXP7xjE5H1Tt1ogDgZXFYubRV3CjjMhlDJHjHx7Tw/P5S3q2GORvZ5PORBp4aX0Ur/G2EFSSfEFgtJNTG8v1IPvnzWQ59Cb/6x+zRkS/kgED+cSz3kL3D2lMt5bU2kGoKsojvmpNVRtipA=
+	t=1746164858; cv=none; b=dq6+nKnO1k/ON5frBE0WZ+2ob9d6nUxFB2OayTzWBEuUXUuxT5F9SjZW06RPDKz15eUzg8p18bi2NFOxP4fu6IhWJYXMfs7ybDldQuTtWjBnuV8oxNbhnsm87EZZY3ToTjOwM8A5bk7SrWfL1qk/v+FMGRWY3p4f1TrCZaOGwE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746164283; c=relaxed/simple;
-	bh=N/Fwk495kD9mepOgV0IPLwaThwSJRDLJnhumIXeiRno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jy5HLU/9QSss/fCvMz4uxKBwCpuf5lyvhAmyTn+q0PLV7mSkY9Z+mC1XkC4h2594ltM0Jb+6Z1JAWshqUAKxmNaSP/zzvKc8JDu76xj0l1pwbo/buIaTdcLaMGHGm8qCW8cSyEQJmYjOOa8O38ocOs5h78st7O8fr9mnCgxZLXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kH6QIXCx; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746164858; c=relaxed/simple;
+	bh=CRlm8DglgsjDBM3aRfMpTQ7akikLGNAa4uzuEFyxihU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WhreWaRz97+Utjfse6yzwNrIqv72g9T1M3gvU15ZDibMGGjrTa28SULnO3r/n/7m2M8YmBtbrWAC+KFZ22b3Xz88mu/bsIaniVy9vFYfJdupLSn60xRURoKidTcQ5StnkmFmkngzntHcuy1avT83y1QLIqd1G4RlKWI2Vz/w0ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=R4OZ87Vt; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kH6QIXCx"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af52a624283so1548546a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746164281; x=1746769081; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YaX+qGxsFULZ7aFPA9lXuC3vgye3yN1BRqF93u06YOM=;
-        b=kH6QIXCxDGDbgypMyPjky0LYSk1QUTu0nprBfhSuqcgoy4ZHqMOIe66zMNqVGBSrpO
-         D0w6k5Jflw40imWBOas27XH0LKJI8dXWN5fVShJ5unpfVGMqAPYCLmF1d2p/YhXQyx+N
-         iL+C7jSY/KbI60dOwiXWP8QGTj43Sx5zZqJCMcfP4dMP+sggypKexSVMQ3v+Jkd4E8qW
-         72JdoBxWY7h74zqS6Ihu2hnHeWoKwfEH4BGlZ55rtFEF5ncGqpTI6H2Q4mGjxFeAQ2/N
-         aqpeP6J7XZm9y1Cy0StSJUZZZ5vLY2go6ZiVipRzBBf3bLC9Enw6QlbTSpv/GT/Zr8Wi
-         4oRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746164281; x=1746769081;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YaX+qGxsFULZ7aFPA9lXuC3vgye3yN1BRqF93u06YOM=;
-        b=FEVBn/zsqH8Scxpq2fruWFezvygijPIt+qfllXUG4ft7PsWErbV5eeoiKc9aksIClE
-         BOfTy5zhqJtGnCngHh3T3a6HatDIemi/yUYJx8UHQ8E8BsPyur+Li3u+PSTadsWaC3yh
-         zrGSncAVO9xgNuFIghZxmAqhmu86izk+Csj74tz/3xa0N8Nu2nofilSxbumL3yIl8qSP
-         Vx7zgZAU32XPzRnt7pJYcCkYaBjihWggMz6xx+r0UHD/TQEQSRhjoz5bftyEBZdlqPva
-         oPb/Z8/hl5kxQVXzKAWoCncRX5oAeQBIyFahEYeuQ8TkSt6uiXKTDXfzC8ohcfCSpNOz
-         97cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvnQ5fbKCipv4hVI7nWIeid2lQJceY1w2vXUoMQQKlEY4bCRACd7ZObQ5cqXue3eXu6xEqn+mq8mcbgMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbZyAGOzOgg5fLkb4GjN44zWpL5rQhKvgWiJYLw14x46PXBYzV
-	ZUkVu8mR8HMFkytR6pJ5DWj6w0XgulFWDlG0qihkeVWWNg4gPnrJr0MbjoX/ecooO5sRJulqQfS
-	p
-X-Gm-Gg: ASbGncueul5TTqeR79SNvwGPSuGnfZCsUCXGQfeaklJymzD+k0yJINoRtxk7+UUBUqL
-	X+uOKUcdPNCs7zmS2SifH+Ew4B9WDEUr+ovRvKcwkjwGxk/oPWrfkPfanPgnBR6mx2OuUbyN4Kh
-	3SuICOmh1Na800tWyQ9NSnkfRTVEQDFGG8hCAHg16aM+8wgXZQ3/PV4IIn5FxAXJpmKwG0KBGEl
-	GOC3VcHA6DRNcwN/BQ1MxGe0FlWskcaFpGJ8r6Clf9Dpa5EYSltHtsfR1GKUVWPjetrVga9jHs7
-	LmcacgeLR0AoJsrtLTMetB23zFNQwsUtFOZKW44rlg==
-X-Google-Smtp-Source: AGHT+IHL3pc4Gg50CajefQDLcK4ACzy8Pdk2nQi1FceIxJmjgGkFLMkDvveyaUAdVzjKAu9GfP26qw==
-X-Received: by 2002:a17:90b:544c:b0:2fa:3174:e344 with SMTP id 98e67ed59e1d1-30a42fd0638mr7349801a91.14.1746164281091;
-        Thu, 01 May 2025 22:38:01 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a34778329sm4692345a91.28.2025.05.01.22.38.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 22:38:00 -0700 (PDT)
-Date: Fri, 2 May 2025 11:07:58 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pm@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
-	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
-	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
-	quic_shazhuss@quicinc.com
-Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
-Message-ID: <20250502053758.utawzhq6famwenc2@vireshk-i7>
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-2-quic_ptalari@quicinc.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="R4OZ87Vt"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5425kkje1780668
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 1 May 2025 22:46:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5425kkje1780668
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746164809;
+	bh=MGfso3qvTctMT+qsQxGakZO6pbzlMRbsUmiKDI86FZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R4OZ87Vtppt5v9J2EdCzFLGVKWqP9EyshJYqWkW/qTgZnPrKpAhmgz8UT6Lojiu5l
+	 3QxrJYjGaM6aeq1eXQl6//Q5LykfWO5JlHATefd0jJ3v3VKCPJg+MIR68f3r6FpFxK
+	 8EIKOQe66SNOYTTakLEaSq1FAWyDFKx+7iRJKmpNvkKCckyVnN9JkgFVdRZaBePpUX
+	 G3GLZWcf3mlcEh3Jo/PBnU7abFTYXnU6q9bRCny3G16L20vDzM7u5tQ2mA/xjHPwXP
+	 t6yVIaio1jQGUu4AErWBVEVJjIujrXCOMnr4hHudfxLoqaUxld7T63lIdgwLtHTD7s
+	 IKsiUxtRR1dXQ==
+Message-ID: <5e9bfa4b-4440-4d7b-895c-03a3358d4ae6@zytor.com>
+Date: Thu, 1 May 2025 22:46:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502031018.1292-2-quic_ptalari@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
+ __nocfi functions
+To: Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
+        kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        gregkh@linuxfoundation.org, jpoimboe@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+        samitolvanen@google.com, ojeda@kernel.org
+References: <20250430110734.392235199@infradead.org>
+ <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+ <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
+ <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+ <aBO9uoLnxCSD0UwT@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aBO9uoLnxCSD0UwT@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 02-05-25, 08:40, Praveen Talari wrote:
-> To configure a device to a specific performance level, consumer drivers
-> currently need to determine the OPP based on the exact level and then
-> set it, resulting in code duplication across drivers.
-> 
-> The new helper API, dev_pm_opp_set_level(), addresses this issue by
-> providing a streamlined method for consumer drivers to find and set the
-> OPP based on the desired performance level, thereby eliminating
-> redundancy.
-> 
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> 
-> v2 -> v3
-> - moved function defination to pm_opp.h from core.c with inline
-> - updated return value with IS_ERR(opp)
-> 
-> v1 -> v2
-> - reorder sequence of tags in commit text
+>> Something like so... except this is broken. Its reporting spurious
+>> interrupts on vector 0x00, so something is buggered passing that vector
+>> along.
 
-As Trilok mentioned, this is not the right place for this.
+I'm a bit late to the party :)
 
+Peter kind of got what I had in the FRED patch set v8 or earlier:
+
+https://lore.kernel.org/lkml/20230410081438.1750-34-xin3.li@intel.com/
+
+
+> Uh, aren't you making this way more complex than it needs to be?  IIUC, KVM never
+> uses the FRED hardware entry points, i.e. the FRED entry tables don't need to be
+> in place because they'll never be used.  The only bits of code KVM needs is the
+> __fred_entry_from_kvm() glue.
+
++1
+
+> 
+> Lightly tested, but this combo works for IRQs and NMIs on non-FRED hardware.
+> 
+> --
+>  From 664468143109ab7c525c0babeba62195fa4c657e Mon Sep 17 00:00:00 2001
+> From: Sean Christopherson <seanjc@google.com>
+> Date: Thu, 1 May 2025 11:20:29 -0700
+> Subject: [PATCH 1/2] x86/fred: Play nice with invoking
+>   asm_fred_entry_from_kvm() on non-FRED hardware
+> 
+> Modify asm_fred_entry_from_kvm() to allow it to be invoked by KVM even
+> when FRED isn't fully enabled, e.g. when running with CONFIG_X86_FRED=y
+> on non-FRED hardware.  This will allow forcing KVM to always use the FRED
+> entry points for 64-bit kernels, which in turn will eliminate a rather
+> gross non-CFI indirect call that KVM uses to trampoline IRQs by doing IDT
+> lookups.
+> 
+> When FRED isn't enabled, simply skip ERETS and restore RBP and RSP from
+> the stack frame prior to doing a "regular" RET back to KVM (in quotes
+> because of all the RET mitigation horrors).
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->  include/linux/pm_opp.h | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>   arch/x86/entry/entry_64_fred.S | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index e7b5c602c92f..31ed8a7b554e 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -197,6 +197,28 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
->  void dev_pm_opp_remove_table(struct device *dev);
->  void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask);
->  int dev_pm_opp_sync_regulators(struct device *dev);
+> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+> index 29c5c32c16c3..7aff2f0a285f 100644
+> --- a/arch/x86/entry/entry_64_fred.S
+> +++ b/arch/x86/entry/entry_64_fred.S
+> @@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>   	movq %rsp, %rdi				/* %rdi -> pt_regs */
+>   	call __fred_entry_from_kvm		/* Call the C entry point */
+>   	POP_REGS
+> -	ERETS
 > +
-> +/*
-> + * dev_pm_opp_set_level() - Configure device for a level
-> + * @dev: device for which we do this operation
-> + * @level: level to set to
-> + *
-> + * Return: 0 on success, a non-zero value if there is an error otherwise.
-> + */
+> +	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
 
-No need of these for simple wrappers.
+Neat!
 
-> +static inline int dev_pm_opp_set_level(struct device *dev, unsigned int level)
-> +{
-> +	struct dev_pm_opp *opp = dev_pm_opp_find_level_exact(dev, level);
-> +	int ret;
-> +
-> +	if (IS_ERR(opp))
-> +		return IS_ERR(opp);
+I ever had a plan to do this with "sub $0x8,%rsp; iret;" for non-FRED
+case.  But obviously doing nothing here is the best.
 
-IS_ERR is wrong here, should be PTR_ERR.
+>   1:
+>   	/*
+>   	 * Objtool doesn't understand what ERETS does, this hint tells it that
+> @@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>   	 * isn't strictly needed, but it's the simplest form.
+>   	 */
+>   	UNWIND_HINT_RESTORE
+> -	pop %rbp
+> +	leave
 
-> +
-> +	ret = dev_pm_opp_set_opp(dev, opp);
-> +	dev_pm_opp_put(opp);
-> +
-> +	return ret;
-> +}
-> +
->  #else
->  static inline struct opp_table *dev_pm_opp_get_opp_table(struct device *dev)
->  {
-> @@ -461,6 +483,11 @@ static inline int dev_pm_opp_sync_regulators(struct device *dev)
->  	return -EOPNOTSUPP;
->  }
->  
-> +static inline int dev_pm_opp_set_level(struct device *dev, unsigned int level)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
+This is a smart change.
 
-No need of these too for such wrappers. And then this isn't rebased
-over latest changes in the OPP core.
-
-I modified it and applied the below version to my tree now.
-
--- 
-viresh
-
-Author: Praveen Talari <quic_ptalari@quicinc.com>
-Date:   Fri May 2 10:58:22 2025 +0530
-
-    OPP: Add dev_pm_opp_set_level()
-
-    To configure a device to a specific performance level, consumer drivers
-    currently need to determine the OPP based on the exact level and then
-    set it, resulting in code duplication across drivers.
-
-    The new helper API, dev_pm_opp_set_level(), addresses this issue by
-    providing a streamlined method for consumer drivers to find and set the
-    OPP based on the desired performance level, thereby eliminating
-    redundancy.
-
-    Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-    [ Viresh: Lot of fixes in the code, and rebased over latest changes.
-               Fixed commit log too. ]
-    Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- include/linux/pm_opp.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 8313ed981535..cf477beae4bb 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -197,6 +197,7 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- void dev_pm_opp_remove_table(struct device *dev);
- void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask);
- int dev_pm_opp_sync_regulators(struct device *dev);
-+
- #else
- static inline struct opp_table *dev_pm_opp_get_opp_table(struct device *dev)
- {
-@@ -717,4 +718,14 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
-        return dev_pm_opp_get_freq_indexed(opp, 0);
- }
-
-+static inline int dev_pm_opp_set_level(struct device *dev, unsigned int level)
-+{
-+       struct dev_pm_opp *opp __free(put_opp) = dev_pm_opp_find_level_exact(dev, level);
-+
-+       if (IS_ERR(opp))
-+               return PTR_ERR(opp);
-+
-+       return dev_pm_opp_set_opp(dev, opp);
-+}
-+
- #endif         /* __LINUX_OPP_H__ */
+When !X86_FEATURE_FRED, the FRED stack frame set up for ERETS is
+implicitly skipped by leave.  Maybe add a comment to explain LEAVE works
+for both cases?
