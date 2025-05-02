@@ -1,143 +1,87 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A782525D1E2
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B88825F78A;
+	Fri,  2 May 2025 16:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204207; cv=none; b=B6/6lwhvZY+6bB0/8194TnXuIx64zicUszUuZoaNs3fE1li2QmPzFql7Tkk0YhweJz2S4q1MXukn+r39Nx9hVMourt0gw3U5spbd/MtTo5NffQuBavuRgN88sP2nz0cokJfIw5I6kbhkE9r/A1OBvSpbFCvP2j3aB1e0lbUoC+g=
+	t=1746204209; cv=none; b=no/tU1R7sBTxvbTAkE603TsvaDF+bqsVwIQj/G4aiWoM4n6iykcCkmptvJV/Nx/Cjjglge4HlxM56cN5sZV2qzQkEOb+1DR2a+9weDIuw6Qnk8aKTCO7K1h/NClh9WQZt9SnwkVnysZMmXSoPBqJD8qximvbW3Dmf23bP6pQ4uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204207; c=relaxed/simple;
-	bh=HSWejsQUIC5AVkuX0S8B3IVpbNA6F4zhsZS0ah5X99o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=neauP+9Bn/FgaG54IDtFsitOSFOn0R1ZJekYl452hEBXwI+gJ5djW2BzfHZkgP2jD5ELDmYzv+2UhAhLWiUts7VFiqyULZ1tyo6QCDXsqXZ5e8ZWI4TILgg1HvyXIBCTqjDIYr0Q5pLNTkLKKyHg5UGC/xAybRqDX0CBuvEU1bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W4jAsoWx; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746204209; c=relaxed/simple;
+	bh=yw1w5T04gn1gvO0Eacj6I5K1Un/3y0OZ9jtnwYuxfQs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BG9OPWAsX/q311tAWVTK04b2U1lLq2QI7lOGmkgMbNcu71kGJRez1b+ySoYKPSYayE8Asq5vP7OD7M+dtsBgmsn6eiMPsF+BRk61IQWcrLClseEmx4UGYxWkkvBkk330xRtYiSdtt4l+kjtO9DD3cUxyP6K/V6Ffm5aTxEwkvPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZlhKchsb; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W4jAsoWx"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d91a45d148so335ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746204205; x=1746809005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfhSF1OBdwUfsA1pakNcUwq7Cj4Gcs5LK2vK2irHdRY=;
-        b=W4jAsoWxAl2hQcwXwKhaxrR5OTdkXvIMnG65vu+uH9e4Uo74a/G0jAWzW6P19qaFyx
-         qk+u0KyQV9Id/WoB3zxf11uhqi56tHH2wHEpWP846hsOLXjBjCmdEBdcD6HK/OTnPS+y
-         uHBAYPTy5QyS04PNnK//ttWYwzwAeCmSfEp+KYuGr87yGzCpiraX63BFkvFr6yhMFAt7
-         eBJ54KhZFhv1aMaMW9T21BrDJR9DMBSvQ+ppluvftRF6hfqo5Q8Sy8Fajivp51V/hYgp
-         KFhKoda4OOP15zmSWGH4O36kpYPxk8KcqryX4vmNGxYsFrqKhmzKZMcMCVRH4cxvDvao
-         oYWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746204205; x=1746809005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tfhSF1OBdwUfsA1pakNcUwq7Cj4Gcs5LK2vK2irHdRY=;
-        b=sGBZeMpiUJb5aui8ngzS1y7xCeDInepgrl6NchzyD4kh7CKrN0e9uto+bPW633i/VM
-         m31vIYJ5DyirXYkIZVs+4WOY6cW8DGrsXtwXmngaHSGnKAeFn72uSCojs57D8Id5AdJ3
-         dTU29QR5UKG22Nm9m+RzsFAJau8mxDGJrbZ8YG+TnnvlBcqyMyi/JLMb6HpXylEUfiyj
-         t+1iuDN3ihhWg3tuqtStkW1LooMZ6QLL+LUeUaNe3D4qL8iqhbEJ1hIyrJaQm40oP8/4
-         T/E4vxxgajdoROp+jxOMYBnGGBGzwQ1ozm0e2Ua8XH16i1x8k9JpbcO2MFfmMlByoO/0
-         q/dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTtTvUGhLRTgYlwVWZ8rLTn03VJxNJ43R3R0u7aFtu+I6CHrRE0ypxkFMoauyzBgA8rbNKqJusipRzjAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysCpkpTxwyRKMFmkqLkqdTyPmbY6+1CZCiY2oXchB/ZyFCLMdy
-	4iNIBiyh+06jHSduGqhiIr4r3oIGQW6PHA4c2AtdsBhnRPwc5zpafFVK8s4hHkFLI6p3XnLHRdx
-	h+QXWRXmwWeYjxcprGhNNkhe7iVijmuNEaMfY
-X-Gm-Gg: ASbGncsAimvT4UZjd+oLhOmzHrWPArVt5wtXZzHKzGvsz3XdP7M/wTcXejaVYTpSuEU
-	XfEJC5qBwrPddig1i9KF9Ony0c+DeqqmnVocC6CLUgS/hQx35QiPBJshCUoP44Y0CexktbzytVY
-	a3nIuvytdl4wu5L2gx4gdSf5qKyU1YUM26tg==
-X-Google-Smtp-Source: AGHT+IGl8Ey1mD7g9HdYk+68mf77nPG69tteIpFx6Qvv3ot7wI3HcIw7QJ3SYNwPij9nPcd00LD5BKx8PJeqjrdMYP8=
-X-Received: by 2002:a05:6e02:b4c:b0:3d9:6463:a8cd with SMTP id
- e9e14a558f8ab-3d96f2523dcmr6638415ab.14.1746204204424; Fri, 02 May 2025
- 09:43:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZlhKchsb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746204205;
+	bh=yw1w5T04gn1gvO0Eacj6I5K1Un/3y0OZ9jtnwYuxfQs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ZlhKchsbqYhfIVV4s70fGnYsp+E1osDveIH6MLobr/hdKC9sDWd1sDPYepOJ86Nvr
+	 A5zbLtspETWeaG9Rwnk6UGMnZHSrbVDnSZvsiOajp0nFU2y1u5Yv+J8+MI6qI3jcRl
+	 zg3+DK5SwEUk4cSVHzyxX/XQDZOgtrBo+YuBIo4WHXhUDduMWsu+VlHGE255GmU6uW
+	 HE/N5PgfrWAi6VM5foTbQqnioTobveP2kjZQ3uX1inOKNXZXNzUTjgbwR6Ahe7m/lo
+	 I/+vq99PmhPF97LS3r/tEEnCUb6yR53qB62yhaypSEKa3cARlwgyUR8FQSZQ3wc/pD
+	 1lnmAZs4SHhxQ==
+Received: from [192.168.1.63] (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 42A1517E0858;
+	Fri,  2 May 2025 18:43:23 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH 0/2] Correct MT8365's infracfg-nao DT node description as a
+ pure syscon
+Date: Fri, 02 May 2025 12:43:20 -0400
+Message-Id: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430171534.132774-1-irogers@google.com> <20250430171534.132774-3-irogers@google.com>
- <aBTs6yvKlCYYgU2O@yury>
-In-Reply-To: <aBTs6yvKlCYYgU2O@yury>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 2 May 2025 09:43:12 -0700
-X-Gm-Features: ATxdqUEaNzyEBZLtUQ1jfImxKvfknBZnmDSgU_oST5gHw-xFYWsjcme0fXmFH_E
-Message-ID: <CAP-5=fXqLh7RdUok5oqVwyGOWCH3fktmVeECdi4ENBWnEHeJYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] bitmap: Silence a clang -Wshorten-64-to-32 warning
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Arnd Bergmann <arnd@arndb.de>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Jakub Kicinski <kuba@kernel.org>, Jacob Keller <jacob.e.keller@intel.com>, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACj2FGgC/x3NQQqDMBBA0avIrDsQ00SLVykuYjKjAzWRREQQ7
+ 97g8m3+v6BQFiowNBdkOqRIihXtqwG/uDgTSqgGrbRVVmlc98+7syiRs/M8Y3QJfVo3t8v0IzR
+ dMGHq2RruoUa2TCznM/iO9/0HdP/nXXAAAAA=
+X-Change-ID: 20250502-mt8365-infracfg-nao-compatible-46d4db7f54f7
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Alexandre Mergnat <amergnat@baylibre.com>, 
+ Amjad Ouled-Ameur <aouledameur@baylibre.com>, 
+ =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
+ Fabien Parent <fparent@baylibre.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Fri, May 2, 2025 at 9:03=E2=80=AFAM Yury Norov <yury.norov@gmail.com> wr=
-ote:
->
-> Hi Ian,
->
-> On Wed, Apr 30, 2025 at 10:15:31AM -0700, Ian Rogers wrote:
-> > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > inadvertent truncation. In some instances this truncation can lead to
-> > changing the sign of a result, for example, truncation to return an
-> > int to fit a sort routine. Silence the warning by making the implicit
-> > truncation explicit. This isn't to say the code is currently incorrect
-> > but without silencing the warning it is hard to spot the erroneous
-> > cases.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  include/linux/bitmap.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-> > index 595217b7a6e7..4395e0a618f4 100644
-> > --- a/include/linux/bitmap.h
-> > +++ b/include/linux/bitmap.h
-> > @@ -442,7 +442,7 @@ static __always_inline
-> >  unsigned int bitmap_weight(const unsigned long *src, unsigned int nbit=
-s)
-> >  {
-> >       if (small_const_nbits(nbits))
-> > -             return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
-> > +             return (int)hweight_long(*src & BITMAP_LAST_WORD_MASK(nbi=
-ts));
->
-> This should return unsigned int, I guess?
+Introduce a new compatible to the binding and use it in the infracfg-nao
+node in the mt8365.dtsi to correctly describe the node and prevent probe
+errors.
 
-Hi Yury, I don't disagree. The issue there is that this could break
-printf flags, etc. reliant on the return type. I've tried to keep the
-patch minimal in this regard.
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Nícolas F. R. A. Prado (2):
+      dt-bindings: mfd: syscon: Add mediatek,mt8365-infracfg-nao
+      arm64: dts: mediatek: mt8365: Describe infracfg-nao as a pure syscon
 
-> Also, most of the functions you touch here have their copies in tools.
-> Can you please keep them synchronized?
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi          | 5 ++---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250502-mt8365-infracfg-nao-compatible-46d4db7f54f7
 
-Yes, I do most of my work on the perf tool in the tools directory and
-these patches come from adding -Wshorten-64-to-32 there due to a bug
-found in ARM code that -Wshorten-64-to-32 would have caught:
-https://lore.kernel.org/lkml/20250331172759.115604-1-leo.yan@arm.com/
-The most recent patch series for tools is:
-https://lore.kernel.org/linux-perf-users/20250430175036.184610-1-irogers@go=
-ogle.com/
-However, I wanted to get the kernel versions of these headers agreed
-before syncing them into the tools directory.
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-Thanks,
-Ian
-
-
-
-> Thanks,
-> Yury
->
-> >       return __bitmap_weight(src, nbits);
-> >  }
-> >
-> > --
-> > 2.49.0.906.g1f30a19c02-goog
