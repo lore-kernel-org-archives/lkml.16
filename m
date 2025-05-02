@@ -1,98 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9980A1A239E;
-	Fri,  2 May 2025 08:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9C31A239E;
+	Fri,  2 May 2025 08:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746173075; cv=none; b=jYrWAZ4CBSulP03fjxiStTK3SN7is0vgXzBxhjoNq9kOH92fZi2JpizMUul4XmfVX7RsHjS+FWbXvGfy2Jt7SU/AX/L/YJ6paTRKp3r/6Vb3UjYebTysj4ZxTp5xb8K8NTLXDAG6M0WMahnOQJ2WVBxxlScIxB0HoDBHMNFwh4o=
+	t=1746173088; cv=none; b=lb/eH/jpvg3w6o+f/dANy2OKIm4FhGQY/xrZxEK24Bh70nVdCX2VXE6yZUj8wwHvgddkBAyLQ1fNKXcUh8y2KygoaFPdqFROvbUom8ezXjHSDt92Fqu/OzIWHdcvbyio0EVre2YOOf5dVJXLoHNas4xlmduOly3XRdX7oaZ/a8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746173075; c=relaxed/simple;
-	bh=ArvrCl6LeK7SKJMaqMa0YkfqbqIqXzNihw4OxLI2rLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJdu53IazZufEGP1Q0jraCfhI6fx7zeJ8sBY9pMGDJ3qoGqTHGxjZK3saWFsYN1mXoXn2CPqOkF2fFaqI+SNlW3nu8XwWA2yDddOlNCzX6whaDZ2pAoIp2N8RA7yHuit8/gxrdRlmQDXI22Q+fFr+HoyAzXv6Xsy8ryobAfapFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HS9tIkpO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746173088; c=relaxed/simple;
+	bh=lpFYu7EcDLoKz0qYfMmHW8QQH2ESF/DMhc3myvypuo8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m4pB5q0BubMgVl+B9UQ0YGvcQBNnxeodsIq/VFOCs9gux7ucOyLQSxuRotsKXB5RTba9wYDJ+M3aZQyK2jN5tJbvAhdynT0HoMIYX4P4KcWw+h5aqmZCRNt2DQ6AxkOfuZLxelvsBZQ4VwYZTIWH/MhG4rgDnmANR1r9TYrrUsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cN/XaZgW; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HS9tIkpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D417C4CEE4;
-	Fri,  2 May 2025 08:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746173075;
-	bh=ArvrCl6LeK7SKJMaqMa0YkfqbqIqXzNihw4OxLI2rLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HS9tIkpO8zMLCggb8vl44ZNDuQBxzvUdWXU1jVpSVWelUTA8pwi6EqPs/1oRly8nR
-	 rkz1ou8EDkUVpYt6FyMUMjcR6aH+aCKwXVgujJ2dymSaYyYkCbjelG3DpKILRLLJxc
-	 OktdShWNq6CAoztHBMKNjZBgXfvUJXPxRvJugeLm8wtt0fQhvTTRR4roM3uw7b8d1T
-	 WkN1+2Fa01CA69Y3UGXWwNdQV3UZwg3EDmP9XPhoJBGWWQLZRFvUbdkf8PBSb3frks
-	 yHmxRBiP5BbJj2kRub8CFz+ubXNo6ygf1WPpCZKCLVCXoqS2/VDJY4buA3NtpRiLhI
-	 0qb6/lxJ0+gCg==
-Date: Fri, 2 May 2025 10:04:27 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
-Message-ID: <aBR8i56xO6uNCt/G@lpieralisi>
-References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
- <20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
- <867c31j20i.wl-maz@kernel.org>
- <aBJO9GEyb+0t6W6u@lpieralisi>
- <86tt64h0x9.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cN/XaZgW"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1673962f8f.1;
+        Fri, 02 May 2025 01:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746173084; x=1746777884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lpFYu7EcDLoKz0qYfMmHW8QQH2ESF/DMhc3myvypuo8=;
+        b=cN/XaZgWZapqgr0KH1LsHvblrbDl8iQ1RwkDoD/2sX4Vl0msqUjkBtckdow/fF4T+q
+         fAlsjbxHUHCdBsjZIOaUjjA4LYq2baUJqlkmMldTYFeV/dqTgswZfGEUNhoph4gpgUfi
+         5nzW2tC124v9nEnQebkWEJB+7ETrVIEZLuFygGtqJoLK0ZnwmuB+w1EEuk45ELZpwukS
+         W/3swyBwjtUyTTOwO8G2W9/1toFKr3KAwFj+aS2hM9UzuawB/5pNUELTbm+jFAhfPyAS
+         uhh+qxNSB0yyqb27vFy1rSP1xpEXnCAqiTntuUfJElvdWm6Zjts0vRy64GHLZylHVwEy
+         AXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746173084; x=1746777884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lpFYu7EcDLoKz0qYfMmHW8QQH2ESF/DMhc3myvypuo8=;
+        b=WfwXc+ggCcg6HJ4el27BAyEkmiGIXjpuMU/qFbNVWRnQOzlmdBJRWcUUbYA/4orX+J
+         1lLUaZx080aHxnupYnes+UhFGi/wrQejXoVjxnhUVUCliYJISw/HWrwji6WwtPR37yZ2
+         LUkOGgTh/XjbIGYrGRaunbQ8FFCxgN4UUKbl1HvA1FcuB4JiwGSgtnLW+vMQZS3d+b0T
+         b1n/DdZKIG+ZJO5lYX56zjJdsM0k08Jja8PsbndH7FhpJbyEWvuAXwdIzQt8xNBC7OV+
+         6vlHLvciNeE96H2X4qqMRfSkhji5pENUydLkAV4AnzH0gynuti2F2s3gk3JKcOgBFVrc
+         B93Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW6XtGflFW3Ec4TF1x2CoDNNj34fmTb/I66eWa4LJ8mGnNQQKBJcwfGSAIC4XHu+cqZ2W7ef+7CDYo=@vger.kernel.org, AJvYcCWzsvhfuvHl39stj/s4ZXjvinV0p/oDNd6IU3NCG+mPQkrZghMESTIxRqtWHr6IDTH4G55I+JocMzFPjfORf87knz4=@vger.kernel.org, AJvYcCXwvtPR4c1csC5+bnMuJHksc6H3cR34w20gKEDfUtWhaK/0KYz4tof4ZznxpSdiIel+p57GqlKFbyueewKn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFTZXqjWgiMATu/x5QqqTxu/2fQOL0Q9T+E7IGZ/QcsM4x/+YJ
+	+B+38O39XpQ/jYiiFUze5q8K8tD40h4IFucZF4bZ1EopUJ6t4yMsuNEk3vijEkHuGJxedqOsEHb
+	jGlyqCKVuQy7Ja0bdxi3OtHiK7kE=
+X-Gm-Gg: ASbGncvlmz0bgcSSxM9ggRY0HvAM6HAFqcm5/N3Xj039S+3KwyNwS1tbHk20n2tUAdg
+	BVZ2assO1Q898xqlBvORkBU/vTZJ45a/7vM0kEPz11dUNOJ+OMyjIfnaVaREJnNCgIzxiLo0sT7
+	XRaAtzzl52/Q1+IBVbpmRO848=
+X-Google-Smtp-Source: AGHT+IHr2IhG6YD236IIPh74F3zA2fk0M1SGYv6Q9ytCaIbxSKQI/seMnkMYbdORGJhuLgiPX7q768hIKAA81Ped+G0=
+X-Received: by 2002:a05:6000:240c:b0:3a0:8a19:db31 with SMTP id
+ ffacd0b85a97d-3a094034de9mr4142802f8f.9.1746173083977; Fri, 02 May 2025
+ 01:04:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86tt64h0x9.wl-maz@kernel.org>
+References: <20250501204003.141134-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <24rt2nozt3gk26vctj6zx2rgvoteus7lpzboysifbndhmcjzwn@6szzps23svdw>
+In-Reply-To: <24rt2nozt3gk26vctj6zx2rgvoteus7lpzboysifbndhmcjzwn@6szzps23svdw>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 2 May 2025 09:04:18 +0100
+X-Gm-Features: ATxdqUHSpJnUjBOW0KVTVCyxTEZrwfTdCU5SjEskSWT927WSZ1jUaaU8C_VvQB0
+Message-ID: <CA+V-a8s2b+Epjhn_9z1zREY6ohraF142+b8jtEthD-34fRy84A@mail.gmail.com>
+Subject: Re: [PATCH v10] i2c: riic: Implement bus recovery
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 01, 2025 at 03:15:46PM +0100, Marc Zyngier wrote:
+Hi Andi,
 
-[...]
+On Thu, May 1, 2025 at 10:19=E2=80=AFPM Andi Shyti <andi.shyti@kernel.org> =
+wrote:
+>
+> Hi Lad,
+>
+> On Thu, May 01, 2025 at 09:40:03PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Implement I2C bus recovery support for the RIIC controller by making us=
+e
+> > of software-controlled SCL and SDA line manipulation. The controller al=
+lows
+> > forcing SCL and SDA levels through control bits, which enables generati=
+on
+> > of manual clock pulses and a stop condition to free a stuck bus.
+> >
+> > This implementation wires up the bus recovery mechanism using
+> > i2c_generic_scl_recovery and provides get/set operations for SCL and SD=
+A.
+> >
+> > This allows the RIIC driver to recover from bus hang scenarios where SD=
+A
+> > is held low by a slave.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+>
+> I'm happy to see this patch in. Thanks Wolfram for your tests and
+> reviews.
+>
+> Merged to i2c/i2c-host.
+>
+Thank you.
 
-> > If we are, we use the msi_alloc_info_t->hwirq to define the LPI eventid,
-> > basically the IWB wire, if not we just allocate an eventid available from
-> > the device bitmap.
-> > 
-> > Other than that (and being forced to provide an IWB irqchip.irq_write_msi_msg()
-> > pointer even if the IWB can't write anything otherwise we dereference
-> > NULL) this works.
-> 
-> Not even MBIGEN allows you to change the event. If you really want to
-> ensure things are even tighter, invent a MSI_FLAG_HARDCODED_MSG flag,
-> and pass that down the prepare path.
-
-I tried to set a new alloc flag in the IWB msi_domain_template.ops.set_desc()
-callback and it works.
-
-It can be set in the IWB driver (and does not change anything else),
-it works so happy days.
-
-> > Is there a better way to implement this ? I would post this code with
-> > v3 but instead of waiting I thought I could inline it here, feel free
-> > to ignore it (or flame me if it is a solved problem I failed to spot,
-> > we need to find a way for the IWB driver to pass the "fixed event" info
-> > to the ITS - IWB eventIDs are hardwired it is not like the MBIgen where
-> > the irq_write_msi_msg() callback programs the wire-to-eventid
-> > translation in HW).
-> 
-> It's *exactly* the same. And see above for a potential explicit
-> solution. The empty irq_write_msi_msg() is not a problem. It's
-> actually pretty clean, given how the whole thing works.
-> 
-> Please fold this into your v3, and we'll take it from there.
-
-I will with the new alloc flag above, thanks.
-
-Lorenzo
+Cheers,
+Prabhakar
