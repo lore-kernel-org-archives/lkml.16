@@ -1,127 +1,195 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03DF1255F25;
-	Fri,  2 May 2025 13:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8C7255F25;
+	Fri,  2 May 2025 13:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194390; cv=none; b=T4mT3kYJ6VEn1aqjUPAk0BQshf6aut3s3uKhtzSYyVh4ET08cuHGmrFZJXrG84xlc+BJhwxwjzp+mFEkZp03Tm1z8SH+D+W0iKqDOv9s0gaEkfBdbRcGVEU7vB1UaKPW8T+pMdVomdhQl1pR3qnFeJpfrRuV1BwB8bYIKNoE1cE=
+	t=1746194394; cv=none; b=DloQe+kDThNjVnnhY/CC39RbT7Brnebd86LdmytddXfooqnT+FHlq38ajyoWLpE2nBTJYL1ZoHWNaCn+QHuhbtTMj/tl1yqsa0gYJux1SVQ8XAInLf76RETDU+60aEaYkQ+8lf04R/Op3oJA55V4FF8d4gYWc3Ob1fu1xLx437s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194390; c=relaxed/simple;
-	bh=hG3hp6agnM+x8dzzswp4S2fUNWXzPjMHX8B5indITHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MJcnmu5dPiAfxt4pPZLka0auZcGF8Cm8i0VjWWHPzffQaGjech1uvOEoX3F7GjSns4DnHHSLeM9cWYkZu3TDAoLA3QkKOPcKJ/1X/+sOwONvKS1I78bckLg7klFyGEObGUqEeyqM4PNoLx6qkGqaL1x3vIcfG7B1Zriy0lPAWr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9830A1688;
-	Fri,  2 May 2025 06:59:38 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D14073F673;
-	Fri,  2 May 2025 06:59:41 -0700 (PDT)
-Message-ID: <6a33e85f-6b60-4260-993d-974dd29cf8e6@arm.com>
-Date: Fri, 2 May 2025 14:59:40 +0100
+	s=arc-20240116; t=1746194394; c=relaxed/simple;
+	bh=88NFVXZUaDaRJYWPhXI1WcMj18KEdbphqFNzYdApJss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DoXP6Hy9J30ntua0dL2iNNjdZLrfr3PXepVyCFk1SHjq99OMRYh/fek9rp0XTqil6FqrnAeOa2BAmqltMuBz6VROLRDD12ElshU9NL9jYG9hWJ26bI1BT+3lyyRxAgy1BZqnTgI25+31zNCrf9uwM+2C/23kq+lYGQfhbh9HTfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+G+d2AF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+G+d2AF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01393C4CEF7;
+	Fri,  2 May 2025 13:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746194394;
+	bh=88NFVXZUaDaRJYWPhXI1WcMj18KEdbphqFNzYdApJss=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=q+G+d2AFwxPqZ1IbpSQtcKHBOzh4UNnex+XQiq6pey/o04QI/GbkT8coaMy7npKwh
+	 4WNzhwxDUp/NwasAuvuJv4qgyiqrvOHRvrdz88cfY3YLRELKQgHwOzWPMeof7K8xX5
+	 TgjiLeAsrtFaOvsPUzOZapPRuJKhw2kmGwguLtTkXIG/rs/oyw3Dj/MU/RvHFPwIpc
+	 SniKzQoGE956mklUPyZFfLBYr5MkNpYE/Jt9ryjYAQHBm1c/rjSu56XtrjnUeMKD6M
+	 san9fjYMy7gYRW5Z5EHoNCL4NGdvQFB4XsGXPyAmZhIU/as8R6LDdWXxw+Q/sv8Uea
+	 GqmFQuJ/LNEhw==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so2404420e87.2;
+        Fri, 02 May 2025 06:59:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVBM1aPMbyljPXMdX3nI6Q+D5d35wUbvWL5OjkpiuU3bB217Wxw6OsgGSsD5prpPh3y457ZrGV1+NwVn/Yy@vger.kernel.org, AJvYcCVsgVHfiXa9dEgijEAntrHIAxW3Y5S51P9uIhSPLpDTyWuZizg25iSxQ9ObfggLy0y8l2jWqBctH7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaducT3UFmyhaP4yHphr/EuCRbLw/wO8S8tySeffQwed9hYLtq
+	8iWplPEjS7rgM8jaI0r4fWBT4FPlIyXHlB2ySTOktIp6JcAVOHzr48VGX/c9ML6fBXz5kZtC8fw
+	GlCrymEaXZO7EGo1LpF4aZJQb7Kk=
+X-Google-Smtp-Source: AGHT+IGr5b1a1gQxlQm0D4LZ5TZhA73SmaQyU2KyUmenM1TrcRCJnJx7hdIKg/Xc3Nyl46yYwNTsjCSg6z9AKg81Lv0=
+X-Received: by 2002:a05:6512:3d94:b0:545:6fa:bf60 with SMTP id
+ 2adb3069b0e04-54eac20b3cbmr882115e87.19.1746194392276; Fri, 02 May 2025
+ 06:59:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/14] tee: implement protected DMA-heap
-To: Jens Wiklander <jens.wiklander@linaro.org>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Olivier Masse <olivier.masse@nxp.com>,
- Thierry Reding <thierry.reding@gmail.com>, Yong Wu <yong.wu@mediatek.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
- "T . J . Mercier" <tjmercier@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
- Daniel Stone <daniel@fooishbar.org>,
- Rouven Czerwinski <rouven.czerwinski@linaro.org>
-References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
- <20250502100049.1746335-7-jens.wiklander@linaro.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250502100049.1746335-7-jens.wiklander@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250424080950.289864-1-vkuznets@redhat.com> <20250424080950.289864-3-vkuznets@redhat.com>
+ <CAMj1kXFMmhROmaDZ0gsw+ozG5iSkMvSXb15qexToUSAFyBn5hQ@mail.gmail.com>
+ <87ldrka6w6.fsf@redhat.com> <CAMj1kXE0WcenLEB+60=+oc+aKfbqZkwYZf-TrOyDY=ShXQ2pYw@mail.gmail.com>
+ <87a57v9pt4.fsf@redhat.com> <CAMj1kXFkFCOqU2jvG_o97DzrhpXKyUd=WxPhHFA-_0ddPSvs0g@mail.gmail.com>
+ <877c2z9lbw.fsf@redhat.com>
+In-Reply-To: <877c2z9lbw.fsf@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 2 May 2025 15:59:41 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH00miQoZcPygSz+C5dWN0U2AhjTn+HfRki2smfMwjWEQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGExM_e4qzwbqX3tr9hmm5GsxfyeFI24AH5nF7tC6nIL9PhK0VQ65QSApg
+Message-ID: <CAMj1kXH00miQoZcPygSz+C5dWN0U2AhjTn+HfRki2smfMwjWEQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/efi: Implement support for embedding SBAT data
+ for x86
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/05/2025 10:59 am, Jens Wiklander wrote:
-> Implement DMA heap for protected DMA-buf allocation in the TEE
-> subsystem.
-> 
-> Restricted memory refers to memory buffers behind a hardware enforced
-> firewall. It is not accessible to the kernel during normal circumstances
-> but rather only accessible to certain hardware IPs or CPUs executing in
-> higher or differently privileged mode than the kernel itself. This
-> interface allows to allocate and manage such protected memory buffers
-> via interaction with a TEE implementation.
-> 
-> The protected memory is allocated for a specific use-case, like Secure
-> Video Playback, Trusted UI, or Secure Video Recording where certain
-> hardware devices can access the memory.
-> 
-> The DMA-heaps are enabled explicitly by the TEE backend driver. The TEE
-> backend drivers needs to implement protected memory pool to manage the
-> protected memory.
+On Fri, 2 May 2025 at 15:46, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Ard Biesheuvel <ardb@kernel.org> writes:
+>
+> > On Fri, 2 May 2025 at 14:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >>
+> >> Ard Biesheuvel <ardb@kernel.org> writes:
+> >>
+> >> > On Mon, 28 Apr 2025 at 12:59, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >> >>
+> >> >> Ard Biesheuvel <ardb@kernel.org> writes:
+> >> >>
+> >> >> > On Thu, 24 Apr 2025 at 10:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> >>
+> >> ...
+> >>
+> >> >> >>  $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+> >> >> >>         $(call if_changed,ld)
+> >> >> >>
+> >> >> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> >> index 3b2bc61c9408..d0a27905de90 100644
+> >> >> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> >> >> >> @@ -49,9 +49,22 @@ SECTIONS
+> >> >> >>                 *(.data.*)
+> >> >> >>
+> >> >> >>                 /* Add 4 bytes of extra space for the obsolete CRC-32 checksum */
+> >> >> >> +#ifndef CONFIG_EFI_SBAT
+> >> >> >>                 . = ALIGN(. + 4, 0x200);
+> >> >> >> +#else
+> >> >> >> +               /* Avoid gap between '.data' and '.sbat' */
+> >> >> >> +               . = ALIGN(. + 4, 0x1000);
+> >> >> >> +#endif
+> >> >> >>                 _edata = . ;
+> >> >> >>         }
+> >> >> >> +#ifdef CONFIG_EFI_SBAT
+> >> >> >> +       .sbat : ALIGN(0x1000) {
+> >> >> >> +               _sbat = . ;
+> >> >> >> +               *(.sbat)
+> >> >> >> +               _esbat = ALIGN(0x200);
+> >> >> >> +               . = _esbat;
+> >> >> >> +       }
+> >> >> >> +#endif
+> >> >> >>         . = ALIGN(L1_CACHE_BYTES);
+> >> >> >>         .bss : {
+> >> >> >>                 _bss = . ;
+> >> >> >
+> >> >> > This looks a bit odd - see below
+> >> >> >
+> >> >> >> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+> >> >> >> index b5c79f43359b..ab851490ef74 100644
+> >> >> >> --- a/arch/x86/boot/header.S
+> >> >> >> +++ b/arch/x86/boot/header.S
+> >> >> >> @@ -207,6 +207,19 @@ pecompat_fstart:
+> >> >> >>                 IMAGE_SCN_MEM_READ              | \
+> >> >> >>                 IMAGE_SCN_MEM_WRITE             # Characteristics
+> >> >> >>
+> >> >> >> +#ifdef CONFIG_EFI_SBAT
+> >> >> >> +       .ascii ".sbat\0\0\0"
+> >> >> >> +       .long   ZO__esbat - ZO__sbat            # VirtualSize
+> >> >> >> +       .long   setup_size + ZO__sbat           # VirtualAddress
+> >> >> >> +       .long   ZO__esbat - ZO__sbat            # SizeOfRawData
+> >> >> >> +       .long   setup_size + ZO__sbat           # PointerToRawData
+> >> >> >> +
+> >> >> >> +       .long   0, 0, 0
+> >> >> >> +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA  | \
+> >> >> >> +               IMAGE_SCN_MEM_READ              | \
+> >> >> >> +               IMAGE_SCN_MEM_DISCARDABLE       # Characteristics
+> >> >> >> +#endif
+> >> >> >> +
+> >> >> >
+> >> >> > This puts the .sbat section at the very end of the file. However, the
+> >> >> > virtual size of .data is 'ZO__end - ZO__data' not 'ZO__edata -
+> >> >> > ZO__data', and so the .sbat section will overlap with .bss in the
+> >> >> > memory view of the image.
+> >> >>
+> >> >> Missed that, will fix, thanks! A stupid question though: does this
+> >> >> matter in practice for SBAT? I don't think anyone needs SBAT data after
+> >> >> kernel starts booting so we can consider it 'discarded'. BSS data can
+> >> >> then do whatever it wants.
+> >> >>
+> >> >
+> >> > It violates the PE/COFF spec, and some PE loaders and signing tools
+> >> > are very pedantic about the layout.
+> >>
+> >> Turns out it the problem is slightly harder to address then I initially
+> >> thought.
+> >
+> > Yeah I was afraid this was going to be tricky.
+> >
+> > ...
+> >
+> >> The problem is similar for zboot.
+> >
+> > How so?
+> >
+>
+> zboot-header.S has:
+>
+>     .ascii          ".data\0\0\0"
+>     .long           __data_size
+>     .long           _etext - .Ldoshdr
+>     .long           __data_rawsize
+>     .long           _etext - .Ldoshdr
+>
+> where the difference between '__data_rawsize' and '__data_size' is:
+>
+>  PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
+>  PROVIDE(__data_size = ABSOLUTE(_end - _etext));
+>
+> and "_end" is the end of BSS. So if we put '.sbat' right after '.data'
+> then '.data' will cover it too (so we will get an overlap). If we put
+> if after '.bss' then we're going to get a hole (size of '.bss') upon
+> (aarch64 example):
+>
+>  objcopy  -O binary arch/arm64/boot/vmlinuz.efi.elf arch/arm64/boot/vmlinuz.efi
+>
+> as AFAIU it won't be able to squeeze the binary, it only truncates the
+> tail throwing away secions without content (in particular, '.sbat').
+>
 
-[...]> +static struct sg_table *
-> +tee_heap_map_dma_buf(struct dma_buf_attachment *attachment,
-> +		     enum dma_data_direction direction)
-> +{
-> +	struct tee_heap_attachment *a = attachment->priv;
-> +	int ret;
-> +
-> +	ret = dma_map_sgtable(attachment->dev, &a->table, direction,
-> +			      DMA_ATTR_SKIP_CPU_SYNC);
-
-If the memory is inaccessible to the kernel, what does this DMA mapping 
-even mean? What happens when it tries to perform cache maintenance or 
-bounce-buffering on inaccessible memory (which presumably doesn't even 
-have a VA if it's not usable as normal kernel memory)?
-
-If we're simply housekeeping the TEE's resources on its behalf, and 
-giving it back some token to tell it which resource to go do its thing 
-with, then that's really not "DMA" as far as the kernel is concerned.
-
-[...]
-> +static int protmem_pool_op_static_alloc(struct tee_protmem_pool *pool,
-> +					struct sg_table *sgt, size_t size,
-> +					size_t *offs)
-> +{
-> +	struct tee_protmem_static_pool *stp = to_protmem_static_pool(pool);
-> +	phys_addr_t pa;
-> +	int ret;
-> +
-> +	pa = gen_pool_alloc(stp->gen_pool, size);
-> +	if (!pa)
-> +		return -ENOMEM;
-> +
-> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +	if (ret) {
-> +		gen_pool_free(stp->gen_pool, pa, size);
-> +		return ret;
-> +	}
-> +
-> +	sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
-
-Where does "pa" come from here (i.e. what's the provenance of the 
-initial "paddr" passed to tee_protmem_static_pool_alloc())? In general 
-we can't call {phys,pfn}_to_page() an arbitrary addresses without 
-checking pfn_valid() first. A bogus address might even crash 
-__pfn_to_page() itself under CONFIG_SPARSEMEM.
-
-Thanks,
-Robin.
-
-> +	*offs = pa - stp->pa_base;
-> +
-> +	return 0;
-> +}
+Ah I misread your patch - I thought .sbat was between .text and .data,
+which arguably makes more sense.
