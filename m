@@ -1,276 +1,87 @@
-Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D8A13957E;
-	Fri,  2 May 2025 21:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FC120D51F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222645; cv=none; b=idVuxNwDxq0df6giwM4H0uQ8wvlpbWsFHFb+QpldRI2dzBCw171SQsKlY/JQsgERNlox+MQNCyRyCqjTNL0uj25sPtWAJiD/p0ybw1QO9HHQEWrSZCAPv+Wccus76sczeR3yZmLvKIubBNP30cFvXEeOv6+jd7ecKIKpK7jdKvo=
+	t=1746222665; cv=none; b=LA2jJ685dIJABH7nqkjHbGpJzgSIXNMK5BuuNKF0nYdcz3WLSxPI6EjtCUjJ/U3sqaAL3ALhREnRbg+XI8NylmF41P1NESXlVsQpRz9sLn56kxqDNsuKnagEU8SBIQO91EbyfvcYMyvM0y/AUTyq0OQJAVa436XZ5yQZ7CmKj5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222645; c=relaxed/simple;
-	bh=nA0uq6freXuq9nGzsTGr+7vQi5PL9rcdASghoAFPmTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=shv/SeYeydI3MmM/y4LKQIHxaO9au0NFOgOkFcYMhCLbyQETNGVpDL4H6YoAso35tXOm6HQHiukpm0DK6KSE/TFcqAPK+Ix18knNooNFoKt3OjGRUBKVKxFv5tmDZON1W5aWRK2yNAscyBP6vf4GcS935k4zgROIj5d5iCu3IjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=L4FEM3JG; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=L4FEM3JG; arc=none smtp.client-ip=46.255.227.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
+	s=arc-20240116; t=1746222665; c=relaxed/simple;
+	bh=E6M0IvoLmXk8zvn7QAi4bJE+3u5ywWMaqGMb1cp3f4A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pP3vCkcrfQ06/7eWRCGKiFJryQHm6X7iqSScwGJxDm9pvGSb+ytKjwkqVIbWLRLAc9j5UWWjkMQ+kKkCvBhnel5GPKV0PwFbeHpBo+jRQBrpXUXi52JiN0H1MtvA/+WtJF5nMubLM4RUdW/uaF393O7uLe82Y68bwfCpPy0oi+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YOGsvt10; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="L4FEM3JG";
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="L4FEM3JG"
-Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
-	by gmmr-2.centrum.cz (Postfix) with ESMTP id 054D220258BE;
-	Fri,  2 May 2025 23:50:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1746222635; bh=ozFHTCk4j8th6UsxDGZ1WDBrNh7xmpTX2eWy7wAljlo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L4FEM3JGIrnZUMEfaDNN4lLtq3jG8CBtt9p2l3PNZSJhiv8qfCVMpHfR0bbsIh/JV
-	 Id4I8Iug9fwqPWBYNZoi7HS9gPAQQ6SANhY+20NvRJzaRmMg5sccXIQfab35WiXC1l
-	 uXVI7Xgk2j4V/tCgnd88IUEXzI5j/x6NyAK2fE3Q=
-Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 01A5719C;
-	Fri,  2 May 2025 23:50:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1746222635; bh=ozFHTCk4j8th6UsxDGZ1WDBrNh7xmpTX2eWy7wAljlo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L4FEM3JGIrnZUMEfaDNN4lLtq3jG8CBtt9p2l3PNZSJhiv8qfCVMpHfR0bbsIh/JV
-	 Id4I8Iug9fwqPWBYNZoi7HS9gPAQQ6SANhY+20NvRJzaRmMg5sccXIQfab35WiXC1l
-	 uXVI7Xgk2j4V/tCgnd88IUEXzI5j/x6NyAK2fE3Q=
-Received: from antispam36.centrum.cz (antispam36.cent [10.30.208.36])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 00088EF;
-	Fri,  2 May 2025 23:50:34 +0200 (CEST)
-X-CSE-ConnectionGUID: 5OJCA9afS+OGGX4cGo5iwQ==
-X-CSE-MsgGUID: qonAHIxLSja2i0+mAlbagQ==
-X-ThreatScanner-Verdict: Negative
-X-IPAS-Result: =?us-ascii?q?A2EzAAB0PRVo/0vj/y5aGQEBAQEBAQEBAQEBAQEBAQEBA?=
- =?us-ascii?q?RIBAQEBAQEBAQEBAQFACYFKgzSBcoRVkXGLeYYzi3+Bag8BAQEBAQEBAQEJU?=
- =?us-ascii?q?QQBAT+ESAKLOSc4EwECBAEBAQEDAgMBAQEBAQEBAQENAQEGAQEBAQEBBgYBA?=
- =?us-ascii?q?oEdhTVTgmIBhAAGIwQLAUYQGA0CJgICVgcSgwKCMAEDMbMpfzMaAmXccAJJB?=
- =?us-ascii?q?VVkgSmBGy4BiE8BhHxwhHdCgg2EB3aEGw6DdYJpBIMvFIQthDOBQ4NegmeCI?=
- =?us-ascii?q?IsjSIEFHANZLAFVEw0KCwcFgWkDKgsMCxIcFW4zHYIPhR+CD4IEiQ6ETS1Ph?=
- =?us-ascii?q?TGBKkdAAwsYDUgRLDcUGwY9AW4HlVKDZQcBYypDCXhmk2qQB6BjgQeBPoQlh?=
- =?us-ascii?q?E6cfRoeFZdTHgOSZS6HZZBtIqNzN4RpgX6BfzMiMIMiUhnRaXY8AgcBCgEBA?=
- =?us-ascii?q?wmCO41PM4FLAQE?=
-IronPort-PHdr: A9a23:Y0vQYBcFz/vqoLQ3dKYCiZoUlGM+k9jLVj580XLHo4xHfqnrxZn+J
- kuXvawr0ASTG92DoKgb0LeI+4nbGkU+or+5+EgYd5JNUxJXwe43pCcHROOjNwjQAcWuURYHG
- t9fXkRu5XCxPBsdMs//Y1rPvi/6tmZKSV3wOgVvO+v6BJPZgdip2OCu4Z3TZBhDiCagbb9oI
- xi7oxvdutMKjYd+Jao91BnEr3VIdulX2GhlOU+dkxHg68i/+5Ju7z5esO87+c5aVqX6caU4T
- bhGAzkjLms4+s7luwTdQAWW/ncSXX0YnRVRDwXb4x/0Q4/9vSTmuOVz3imaJtD2QqsvWTu+9
- adrSQTnhzkBOjUk7WzYkM1wjKZcoBK8uxxyxpPfbY+JOPZieK7WYMgXTnRdUMlPSyNBA5u8b
- 4oRAOoHIeZYtJT2q18XoRejGQWgGObjxzlVjXH0wKI6yfwsHwHY0gE+AtwAvnfaotL3O6ccX
- u+60KbGwC7fb/5Vwzrx9JLFfgwjrPyKQLl+cdDRyU4qFw7dlFuft5DlPymI3esCqWeb6fRlV
- eGygGMgsQ5xuDuvyd0piobTnIIY0UrL9Tl9wIkvPt20UlJ0YN+9HZZWqiqVOJd4TNk4TGF0p
- CY11KcGuZijcSQX1JgqyB7RZ+GDfoaI/x/uSOafLzh3iX9meb+yiBm//0ijx+DiWce501RHo
- yREn9TMuX0Byh/e58qGR/dg/Uqs3yuE2QPL6uxcLk05lLDXJ4Ahz7MwjJYfr1rPEy3slEj0j
- KKablso9vWm5uj9fLnquIOQO5VqhgzxLqgigMiyDOU+PwMTRWaU4/6826fm/UDhRbVKieA5n
- bfBvZDBIMQbura5AwhI0oY/8xq/Dymp0NAfnXQfI1JFfQuLj5PsO1HSOPD0EOqzj06wnzh1w
- fDGIqfhAojILnTZjLjgfK5x609ayAUt0dBS/51ZB7AbLP7tWkL8tMbUAgEnPwG22erqCtVw2
- psbWW2VA6+ZNK3SsUWP5uIqO+SDfpUVuDXnJPgg/fHul2Q0lkUBfamtx5QXc2q0EehnIkmBe
- 3rjns8BEXsWvgo5VOHqkl2DXiRVZ3qoRaI84So0B5y8DYffXYCgm6aO3D2+HpFMem9GDVWMH
- W/yd4qYQ/cMdD6SIsh5nzMeT7ihSJUu1RS0uw/g0LdoNPbU+ikCupL4ztR6++zSmQko9TNoF
- 8Sdz32NT2Zsk2IHRDI73btyoU9jxVeZ16h3nfhYGcZU5/NTXQc2LYTcwPBiC9DuRgLBec+ES
- FKnQtWgHDEwQcs9w9oLY0tmGNWikArM0DapA7MPkLyLHpM0/rrG33ftP8Z912rG1K45glY8Q
- ctPLWimi7V79wjSAY7JjkqYm7+kdaQbwS7N8nqMwnCSvEFZVw5wV7/JXXcFZkvZtdj5/F/NT
- 6eyCbQ7NQtM0cGDJbVMatHwkFpJWunjN8raY2+qn2ewBA2Ixq+XbIbwdGQSwiPdCFAekwAU/
- 3aJKxQxBju7r2LZFjxuGkrjY1nw/ulmtHO7Ukg0whmXYEJ7ybq1+wMaiOeGS/wNw70EuD0uq
- yluEFmh2NLWDsKMpxB9c6VEfdM9/FBH2Hrdtwx8OJygMq9jikcdcwtppUPu0Qt4CoFbnMg0o
- 3Ml0hByJbib0FxfbTOY247/OrnNJmn15hCvZP2e5laL1NeQ57dK7fEQqEvqtwLvEVAttz1j0
- t9Iwz6f64/MAQ46T538SAA0+gJ8qrWcZTMytK3O0ng5CaSoqHf80tSKB6NxwwyjdtJWKouNC
- Av7CIsRFZ79e6QRh1G1Y0dcb6hp/6kuMpbjLqPesJM=
-IronPort-Data: A9a23:EEiIx6qbBnVAyP7+dphWhKp2FPpeBmLuZBIvgKrLsJaIsI4StFCzt
- garIBmPaayDazOjc49+bonk/BsA7ZLTzdNlHQdopXpnHy5D+ePIVI+TRqvS04J+DSFhoGZPt
- Zh2hgzodZhsJpPkjk7wdOWn9D8kiPzgqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvU0
- T/Ji5OZYQLNNwJcaDpOtvre8Ek35pwehRtB1rAATaEW1LPhvyZNZH4vDfnZB2f1RIBSAtm7S
- 47rpJml/nnU9gsaEdislLD2aCUiGtY+6iDT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
- I4lWaqYEl51Y/KWyIzxZDEDe812FfUuFLYquhFTu+TLp6HNWyOEL/mDkCjalGDXkwp6KTgmy
- BAWFNwCRk2kpcmfkbu1capLqesTcMLEO94epUg1mFk1Dd5+KXzCa6rPoMRdwC9p34ZFEPDCf
- dccLzF9BPjCS0ERfA1KVdRkxrju2SSXnz5w8Tp5oYI++WvayQVr+LHxNNPOPNeYLSlQth/B9
- jiXpD6jU3n2MvSGzjys0lO8otTNlHn6AMEXPbmy//FT1Qj7Kms7TUd+uUGAieOog0j4QdVVJ
- lYI4QInt610/0uuJvH0RR6xpXeelhcAX9NLVeYogCmdmvT84AuDAGUACDlbZ7QOsM4wWCxv0
- 1qhnM3gDj8pt6eaIVqU9a+RhTezPzUFaGEFeCkIRBcE5N+lp5s85jrfQ9AmHKOrg9ndHTDr3
- yvMvCU4n68Uj8MAy+O851+vqz6luJnFZhQ46gXeQiSu6QYRTIqkYZG4rFvW9/BNKK6HQVSb+
- nsJgc6T6KYJF57lvDeRSe8JEZm36Pufdj7Rm1hiG98m7TvFxpK4VdwOpmsjeQEzaJlCJmKBj
- FLvhD69LaR7ZBOCBZKbqaroYyj25cAMzejYa80=
-IronPort-HdrOrdr: A9a23:jGD9paHeST9gu3fKpLqE5ceALOsnbusQ8zAXPo5KJSC9Ffbo8P
- xG/c5rsSMc5wx+ZJhNo7q90ey7MBDhHP1OkOws1NWZPTUO0VHAROpfBMnZsl/d8kbFmdK1u5
- 0MT0EHMr3NMWQ=
-X-Talos-CUID: =?us-ascii?q?9a23=3AX0yZnmvMULluB+31Nv6Q1w6K6It4VV/25SbZLXT?=
- =?us-ascii?q?7LklGeOGeZljN+bxdxp8=3D?=
-X-Talos-MUID: 9a23:b/dQSATKcsKi3LnZRXT1gzdLFOZ4x5+sARoMydYDks2OPCNJbmI=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.15,257,1739833200"; 
-   d="scan'208";a="118293229"
-Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
-  by antispam36.centrum.cz with ESMTP; 02 May 2025 23:50:34 +0200
-Received: from localhost.localdomain (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id 13CC1100AE2B1;
-	Fri,  2 May 2025 23:50:34 +0200 (CEST)
-From: =?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	xen-devel@lists.xenproject.org,
-	x86@kernel.org,
-	stable@vger.kernel.org,
-	=?UTF-8?q?Petr=20Van=C4=9Bk?= <arkamar@atlas.cz>
-Subject: [PATCH v2 1/1] mm: fix folio_pte_batch() on XEN PV
-Date: Fri,  2 May 2025 23:50:19 +0200
-Message-ID: <20250502215019.822-2-arkamar@atlas.cz>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250502215019.822-1-arkamar@atlas.cz>
-References: <20250502215019.822-1-arkamar@atlas.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YOGsvt10"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff854a2541so2403305a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746222663; x=1746827463; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5S6kzWyRg3t7ibhxxMYEu25/92uJhpv9EtUoQxKeGk=;
+        b=YOGsvt10ihETK7UkeflFAgQFbqAlZJETITu9Ap06+rkxIivojked0at2FmuXBZwx25
+         YjLl9oQepJQmAZXPfwZ5zMZK251pUE8IA9rpGS8oLIx1u7Gha4jiUVthjULowISCA3vx
+         uw1llKQqrM+oHf7cNk8TTufI/NYJ+pxdddofmrg9Ejac9KXhey8zoQEjLlOPix8hW2O5
+         iJFPtvOHgM0Jqsh3CqdiQnLE06qFhcM7seaUR2+3u1NSZdd1KX0g9giKhW4KND+5i6sg
+         AvXP/Yqp1PIOJVCyJkyyxRhdL+FgvPCEIZKr5Pus6mmHO9LKri32SU0doWUYpStzk/q3
+         MxuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746222663; x=1746827463;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5S6kzWyRg3t7ibhxxMYEu25/92uJhpv9EtUoQxKeGk=;
+        b=k4RTDaB1nh/xCz+frP6dJUajEKm58riFdghC0sGrZxoMdeXDy/7dErYiOr8LIg7bEn
+         OUk31jNkQept+NQPd7eeJYOZzkFCDzRLwJrxWdtXKb2ltWgTfRBw8nTw94z0ZJccPERw
+         Awz815fagZpLQxLTOitr6MLiEcZxK12HgeMRbGpuJ/PScfOJDsnsIoQVeOKAhuqB3C+a
+         D0O+EC6VNrXWA7Q5DiHqivPJ9fo9ztOfv1Cr2KqGnSFPKrgfUvuNoAY9X1ERo3+87hsH
+         a0eVSTEyF8IyQWzcZkDy3FWKfVjvzOI5ZBvxqLRGh9uHYVsdg8Ughll/GpPZkq1p8SXZ
+         VMzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc6wOE41CniSowXN/8MlYhXClXgw8lkt+M1MHEOG/saNzrHFEppzs1pGVrdHGPgvO1pAlCjK1KF7RiUPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAoAjiRtTUwtwfRBgjBxKxNL8l+6TXvzgT9UUuFUODKt6Anm+2
+	m7TdgFTXVDsdvLzYdP7mn6onIv3H2Z27KdA1HDdFpG6iJlWJQXS492G1r+Puon3IlGRJQ2eYmco
+	NLg==
+X-Google-Smtp-Source: AGHT+IEqmM5AJyCRJVxSDwYAUvBgTR1EcndjlzikTaOt866pVxcotcKieikdc2dTfpexkvGIF4+QSAcOhiI=
+X-Received: from pjbqn8.prod.google.com ([2002:a17:90b:3d48:b0:2ef:d283:5089])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5250:b0:301:a0e9:66f
+ with SMTP id 98e67ed59e1d1-30a4e5b2c34mr8131657a91.14.1746222662809; Fri, 02
+ May 2025 14:51:02 -0700 (PDT)
+Date: Fri,  2 May 2025 14:50:49 -0700
+In-Reply-To: <20250430220954.522672-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250430220954.522672-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <174622206428.880669.10703752422020171252.b4-ty@google.com>
+Subject: Re: [PATCH v2] KVM: x86/mmu: Prevent installing hugepages when mem
+ attributes are changing
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Roth <michael.roth@amd.com>
+Content-Type: text/plain; charset="utf-8"
 
-On XEN PV, folio_pte_batch() can incorrectly batch beyond the end of a
-folio due to a corner case in pte_advance_pfn(). Specifically, when the
-PFN following the folio maps to an invalidated MFN,
+On Wed, 30 Apr 2025 15:09:54 -0700, Sean Christopherson wrote:
+> When changing memory attributes on a subset of a potential hugepage, add
+> the hugepage to the invalidation range tracking to prevent installing a
+> hugepage until the attributes are fully updated.  Like the actual hugepage
+> tracking updates in kvm_arch_post_set_memory_attributes(), process only
+> the head and tail pages, as any potential hugepages that are entirely
+> covered by the range will already be tracked.
+> 
+> [...]
 
-	expected_pte = pte_advance_pfn(expected_pte, nr);
+Applied to kvm-x86 fixes, thanks!
 
-produces a pte_none(). If the actual next PTE in memory is also
-pte_none(), the pte_same() succeeds,
+[1/1] KVM: x86/mmu: Prevent installing hugepages when mem attributes are changing
+      https://github.com/kvm-x86/linux/commit/9129633d568e
 
-	if (!pte_same(pte, expected_pte))
-		break;
-
-the loop is not broken, and batching continues into unrelated memory.
-
-For example, with a 4-page folio, the PTE layout might look like this:
-
-[   53.465673] [ T2552] folio_pte_batch: printing PTE values at addr=0x7f1ac9dc5000
-[   53.465674] [ T2552]   PTE[453] = 000000010085c125
-[   53.465679] [ T2552]   PTE[454] = 000000010085d125
-[   53.465682] [ T2552]   PTE[455] = 000000010085e125
-[   53.465684] [ T2552]   PTE[456] = 000000010085f125
-[   53.465686] [ T2552]   PTE[457] = 0000000000000000 <-- not present
-[   53.465689] [ T2552]   PTE[458] = 0000000101da7125
-
-pte_advance_pfn(PTE[456]) returns a pte_none() due to invalid PFN->MFN
-mapping. The next actual PTE (PTE[457]) is also pte_none(), so the loop
-continues and includes PTE[457] in the batch, resulting in 5 batched
-entries for a 4-page folio. This triggers the following warning:
-
-[   53.465751] [ T2552] page: refcount:85 mapcount:20 mapping:ffff88813ff4f6a8 index:0x110 pfn:0x10085c
-[   53.465754] [ T2552] head: order:2 mapcount:80 entire_mapcount:0 nr_pages_mapped:4 pincount:0
-[   53.465756] [ T2552] memcg:ffff888003573000
-[   53.465758] [ T2552] aops:0xffffffff8226fd20 ino:82467c dentry name(?):"libc.so.6"
-[   53.465761] [ T2552] flags: 0x2000000000416c(referenced|uptodate|lru|active|private|head|node=0|zone=2)
-[   53.465764] [ T2552] raw: 002000000000416c ffffea0004021f08 ffffea0004021908 ffff88813ff4f6a8
-[   53.465767] [ T2552] raw: 0000000000000110 ffff888133d8bd40 0000005500000013 ffff888003573000
-[   53.465768] [ T2552] head: 002000000000416c ffffea0004021f08 ffffea0004021908 ffff88813ff4f6a8
-[   53.465770] [ T2552] head: 0000000000000110 ffff888133d8bd40 0000005500000013 ffff888003573000
-[   53.465772] [ T2552] head: 0020000000000202 ffffea0004021701 000000040000004f 00000000ffffffff
-[   53.465774] [ T2552] head: 0000000300000003 8000000300000002 0000000000000013 0000000000000004
-[   53.465775] [ T2552] page dumped because: VM_WARN_ON_FOLIO((_Generic((page + nr_pages - 1), const struct page *: (const struct folio *)_compound_head(page + nr_pages - 1), struct page *: (struct folio *)_compound_head(page + nr_pages - 1))) != folio)
-
-Original code works as expected everywhere, except on XEN PV, where
-pte_advance_pfn() can yield a pte_none() after balloon inflation due to
-MFNs invalidation. In XEN, pte_advance_pfn() ends up calling
-__pte()->xen_make_pte()->pte_pfn_to_mfn(), which returns pte_none() when
-mfn == INVALID_P2M_ENTRY.
-
-The pte_pfn_to_mfn() documents that nastiness:
-
-	If there's no mfn for the pfn, then just create an
-	empty non-present pte.  Unfortunately this loses
-	information about the original pfn, so
-	pte_mfn_to_pfn is asymmetric.
-
-While such hacks should certainly be removed, we can do better in
-folio_pte_batch() and simply check ahead of time how many PTEs we can
-possibly batch in our folio.
-
-This way, we can not only fix the issue but cleanup the code: removing the
-pte_pfn() check inside the loop body and avoiding end_ptr comparison +
-arithmetic.
-
-Fixes: f8d937761d65 ("mm/memory: optimize fork() with PTE-mapped THP")
-Cc: stable@vger.kernel.org
-Co-developed-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
----
- mm/internal.h | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index e9695baa5922..25a29872c634 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -248,11 +248,9 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
- 		bool *any_writable, bool *any_young, bool *any_dirty)
- {
--	unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
--	const pte_t *end_ptep = start_ptep + max_nr;
- 	pte_t expected_pte, *ptep;
- 	bool writable, young, dirty;
--	int nr;
-+	int nr, cur_nr;
- 
- 	if (any_writable)
- 		*any_writable = false;
-@@ -265,11 +263,15 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 	VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
- 	VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) != folio, folio);
- 
-+	/* Limit max_nr to the actual remaining PFNs in the folio we could batch. */
-+	max_nr = min_t(unsigned long, max_nr,
-+		       folio_pfn(folio) + folio_nr_pages(folio) - pte_pfn(pte));
-+
- 	nr = pte_batch_hint(start_ptep, pte);
- 	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
- 	ptep = start_ptep + nr;
- 
--	while (ptep < end_ptep) {
-+	while (nr < max_nr) {
- 		pte = ptep_get(ptep);
- 		if (any_writable)
- 			writable = !!pte_write(pte);
-@@ -282,14 +284,6 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		if (!pte_same(pte, expected_pte))
- 			break;
- 
--		/*
--		 * Stop immediately once we reached the end of the folio. In
--		 * corner cases the next PFN might fall into a different
--		 * folio.
--		 */
--		if (pte_pfn(pte) >= folio_end_pfn)
--			break;
--
- 		if (any_writable)
- 			*any_writable |= writable;
- 		if (any_young)
-@@ -297,12 +291,13 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		if (any_dirty)
- 			*any_dirty |= dirty;
- 
--		nr = pte_batch_hint(ptep, pte);
--		expected_pte = pte_advance_pfn(expected_pte, nr);
--		ptep += nr;
-+		cur_nr = pte_batch_hint(ptep, pte);
-+		expected_pte = pte_advance_pfn(expected_pte, cur_nr);
-+		ptep += cur_nr;
-+		nr += cur_nr;
- 	}
- 
--	return min(ptep - start_ptep, max_nr);
-+	return min(nr, max_nr);
- }
- 
- /**
--- 
-2.48.1
-
+--
+https://github.com/kvm-x86/linux/tree/next
