@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B14F1D6DBC;
-	Fri,  2 May 2025 20:33:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9668F1FDE31;
+	Fri,  2 May 2025 20:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746218005; cv=none; b=aP+9YNHpua72PsVJ9TpQY86E8ZK1hxiJ5n27+KtVfx6aSdFXbBAW+1fh5HNetoyjLM4OyLh3RoRCHGo7aKiUH+d/xbWkY+oc7ViomRiCslzObVx9uSmfqVqAYl72gfQR4dhfwOt7JREOpijo9oPaws37fm029xNGvOQZgGE8fxs=
+	t=1746218005; cv=none; b=pRNxGegCbur2Hl2zpnhpVaBWSVNO96krU08t0BjG6/4k1v3Zvv41vBxD35CZ8TOp0U+sMoWYlzvRcpJTD14Jj4xNKZ0yzQcnUNMPmtP9EvjpRK3ys/HrLUsdqa9R3E/uh6qEtOZRb7uK+YkjxEdRJA5wDyOTVKF7dscC6CkpQGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746218005; c=relaxed/simple;
-	bh=eQpPThGYqXJRVg1cJBD6NhPKcv8CfiVLMcrOd0iMaKU=;
+	bh=8cRp8SM0LX/HE5Z3KnJSbT0t2IN1vaMmNamccM78RCU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DipUT1eUhduXd1WhneGdq9RPL3Oq0Ow3yE7HeZ7LxMU1wv6S0TkHCnQfqstGga6xfUKCOFOt1nWTHfOnNKCnoASlnKMPd4ZDcMNb2O9Hki35nQvXRq0APVf+FkdvNRmk3yv0VrWE0AAS4Ony/cLlPta3PazeyPx0pdGP9t2XRcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkH/ix8e; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=PfNu7k1+xR3ls8hgMQfTJenTs5t0g4lVg0cTRlUIPbJjc9PnM65TQIAPoJKOVdrHxqJt2cRlydVCEgd+SY7qD2ltZ8ea/0rAgXRrrLTozuraWwl7ZaNZUDDKaT9QBYewSH7CIjWNwk/lBuCcIRMyH+QpUFo0uZSua4QvFruxkco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmZ+vHtB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkH/ix8e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0CEC4CEEF;
-	Fri,  2 May 2025 20:33:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmZ+vHtB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1456DC4CEF4;
+	Fri,  2 May 2025 20:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746218004;
-	bh=eQpPThGYqXJRVg1cJBD6NhPKcv8CfiVLMcrOd0iMaKU=;
+	s=k20201202; t=1746218005;
+	bh=8cRp8SM0LX/HE5Z3KnJSbT0t2IN1vaMmNamccM78RCU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LkH/ix8eRlN6Y0c0oKhTaKSTPGgY9N23Pj1ddgDD+5yZaWnWJIAiQM2ptXkfGTP4C
-	 7+9TcCJAEyTU+L9ZiKBurfiJ2Pfpu5dr9TmYoC4/8tX0UokT44/tg/M3Yd9DM9ye2S
-	 YQSqmr1HcdkNhGIPO9csXUTYpI3HqIUmBa6zbT814HDozm4+ZcTt2T/Zz/ndzE3jR4
-	 C2YvSHwLUW7kqwOiwrtRJED46fEmzVwQPZVe/XQjf3aalChU+ixfCkMNc2+Xtqrr+A
-	 NCmHgPbuYokTGFzlPmSitkFD4huqqarulMLGe3Fy29Bd0qIs6uFC+45R2e1xp7aSVN
-	 u8dZU2VGKznmg==
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2cc57330163so1611082fac.2;
+	b=VmZ+vHtBaP8SSohqqvMbuo/9dCNweJUIT1eTA8IbZzfbagwotj1lRz3ma4h4LYlc/
+	 q5Z65x7TjCE5xFP00y4yDAEFn2clHK+U7B0mCpeXgauBWtaKsZNh54N3Muk290/ffY
+	 q8LRgtoYCCBdXhGPcTQ4ewx8tCECuchfEETsDJoDqWM4Nk9xIYBAlp1D5IwxtP9tdL
+	 9YxCmJhxfm2gQ5ASaCUihgOry/tQI4win9t5vyfsK5WqpPzw2Cl8i/qZq1IiUmdCBv
+	 DWFp6bFBEYsM1EESOO41nOBOwlYINsr9OWIfH4theOH2OXkX41RMIR0l9ecPM/feGB
+	 dy0cyd6c9JMQg==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso1419852a12.1;
         Fri, 02 May 2025 13:33:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUncAM1h1Kgvgnww9MhrZiVxwvaE8XkX58CuUkbO7OdCS1kCVbAi4BK/YZIUX+ATGS2Aw4MpDp0UPQ=@vger.kernel.org, AJvYcCW2A9ylygLQTPV7kaWWPwfCFbn/+vSIrcdQ7KAswbyaos0/CDdbryBWpxhhf1xLegS+kdx9ybGFauPwvW8=@vger.kernel.org, AJvYcCXpLhXMuFs62q/w3SPpfCgl6v9BH8TTP113mhCr5pV9UIYn/QdLw86zBZMPSf59BtCQb+he6/IVZMakZX4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysbK88LUQ9EKp+gvswjo+VSAzIXMDIavEwCyJMGg5/oDK3at4I
-	tj0cdVrdMo4DXUX5itvmoqyeauBQwWUEBg/2HUV+d1jJBkDUzViGgyiTx45vqicHzJLsvpEs+ID
-	vCF0tdbeN233ReThvIMgBJ4wRc5Q=
-X-Google-Smtp-Source: AGHT+IEW5MPykyB7DblG9VdsAylYs04/gOlOoePxUKgxqXrheHVFXIzMetPRzrJbAUzi6p6p+9yRpLrYq8JRplfSSJY=
-X-Received: by 2002:a05:6870:82a4:b0:2d4:d07c:7cb6 with SMTP id
- 586e51a60fabf-2dab2f5203amr2247004fac.1.1746218003811; Fri, 02 May 2025
+X-Forwarded-Encrypted: i=1; AJvYcCU2DV/pZwkRoswNU6ToS2yz//AVrUpM90D176WfH72Wxl2Ah1Gu/PiIyYdm/5x4xouAa2LmVe7V+ARf6jfz@vger.kernel.org, AJvYcCVj0YyURC591o7N+dYpDK4VZmD7qm6OU5XwdIqS+YckiNW7wRkinHGnij6j9wONn8/BfWXIaG1KfWVHmU0MR4dN7w==@vger.kernel.org, AJvYcCWMagO67K4EB/7VL45s65FAkNBOCAOMiae3xMtjTyIXID0hfsdkr/W/fM/RAL2n0QAV6jmUE5fYlHAKaQslGg==@vger.kernel.org, AJvYcCXEMkOxfPu8otAk4gKTj0ocME1zcHZ7fxWyYQX0xw/aRgxQs5D41acTt0mJHv9M5KWMcoQiKSBNFbhU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqvABPKw7lp7P7+p8riYuEpyao6/QThFql/4Z62/L+Hj6iPhNJ
+	VzatmsSslGu3plVjpVAjvr0tIMaRYcSrw9tOpMFrAgrdrGlcCe99sVm2KH8Z1jNUUWQy5Ur+ysT
+	9SUJr5+w/AF9VakuO7pUTnL629A==
+X-Google-Smtp-Source: AGHT+IFJAjhO8qP9BM2k4YXGFjxF2DDTVd060jMohyR4Ip3XSKyXWvnjjpfR8v4ueb8Q+ILn2MtJ1K5BoJWlIuzn/k0=
+X-Received: by 2002:a05:6402:354a:b0:5e5:ba77:6f42 with SMTP id
+ 4fb4d7f45d1cf-5f919836e4cmr7202023a12.4.1746218003663; Fri, 02 May 2025
  13:33:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,112 +42,123 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <10629535.nUPlyArG6x@rjwysocki.net> <22630663.EfDdHjke4D@rjwysocki.net>
- <c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com>
-In-Reply-To: <c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 2 May 2025 22:33:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jWTtaQEcx0p+onU3eujgAJpF_V57wzZCuYv2NVnEb7VQ@mail.gmail.com>
-X-Gm-Features: ATxdqUE5iv8R1HouAoR17904_EO8U54r-IoWclkxHnMpERA0eCldJYj2Oa7ePFY
-Message-ID: <CAJZ5v0jWTtaQEcx0p+onU3eujgAJpF_V57wzZCuYv2NVnEb7VQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] PM: sleep: Resume children after resuming the parent
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Saravana Kannan <saravanak@google.com>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20250423-dt-memory-region-v2-v2-0-2fbd6ebd3c88@kernel.org>
+ <20250423-dt-memory-region-v2-v2-4-2fbd6ebd3c88@kernel.org> <938c4876-d284-4f11-a4ac-9f3831d3c14d@amd.com>
+In-Reply-To: <938c4876-d284-4f11-a4ac-9f3831d3c14d@amd.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 2 May 2025 15:33:12 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKhjE-67k2jN3x5qjRYbT4100fDCfkpt7TjESgOi_f8sA@mail.gmail.com>
+X-Gm-Features: ATxdqUGr4Vb6qq9G8I43FJO0ja1hmdvZAb79PHSBzn0-jffEIRPNg2KLlUCVYFA
+Message-ID: <CAL_JsqKhjE-67k2jN3x5qjRYbT4100fDCfkpt7TjESgOi_f8sA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] remoteproc: Use of_reserved_mem_region_* functions
+ for "memory-region"
+To: tanmay.shah@amd.com
+Cc: Saravana Kannan <saravanak@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>, Chen-Yu Tsai <wens@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jon,
-
-On Thu, May 1, 2025 at 11:51=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> w=
+On Fri, May 2, 2025 at 10:40=E2=80=AFAM Tanmay Shah <tanmay.shah@amd.com> w=
 rote:
 >
-> Hi Rafael,
 >
-> On 14/03/2025 12:50, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Hello Rob,
+>
+> Thanks for the patch. Please find my comments below.
+>
+>
+> On 4/23/25 2:42 PM, Rob Herring (Arm) wrote:
+> > Use the newly added of_reserved_mem_region_to_resource() and
+> > of_reserved_mem_region_count() functions to handle "memory-region"
+> > properties.
 > >
-> > According to [1], the handling of device suspend and resume, and
-> > particularly the latter, involves unnecessary overhead related to
-> > starting new async work items for devices that cannot make progress
-> > right away because they have to wait for other devices.
+> > The error handling is a bit different in some cases. Often
+> > "memory-region" is optional, so failed lookup is not an error. But then
+> > an error in of_reserved_mem_lookup() is treated as an error. However,
+> > that distinction is not really important. Either the region is availabl=
+e
+> > and usable or it is not. So now, it is just
+> > of_reserved_mem_region_to_resource() which is checked for an error.
 > >
-> > To reduce this problem in the resume path, use the observation that
-> > starting the async resume of the children of a device after resuming
-> > the parent is likely to produce less scheduling and memory management
-> > noise than starting it upfront while at the same time it should not
-> > increase the resume duration substantially.
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> > v2:
+> >   - Use strstarts instead of strcmp for resource names as they include
+> >     the unit-address.
+> >   - Drop the unit-address from resource name for imx and st drivers
+> > ---
+> >   drivers/remoteproc/imx_dsp_rproc.c        | 45 ++++++++------------
+> >   drivers/remoteproc/imx_rproc.c            | 68 ++++++++++++----------=
+--------
+> >   drivers/remoteproc/qcom_q6v5_adsp.c       | 24 ++++-------
+> >   drivers/remoteproc/qcom_q6v5_mss.c        | 60 +++++++++-------------=
+-----
+> >   drivers/remoteproc/qcom_q6v5_pas.c        | 69 +++++++++++-----------=
+---------
+> >   drivers/remoteproc/qcom_q6v5_wcss.c       | 25 +++++------
+> >   drivers/remoteproc/qcom_wcnss.c           | 23 ++++-------
+> >   drivers/remoteproc/rcar_rproc.c           | 36 +++++++---------
+> >   drivers/remoteproc/st_remoteproc.c        | 41 +++++++++---------
+> >   drivers/remoteproc/stm32_rproc.c          | 44 +++++++++-----------
+> >   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 +++++--------
+> >   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 28 +++++--------
+> >   drivers/remoteproc/ti_k3_r5_remoteproc.c  | 28 +++++--------
+> >   drivers/remoteproc/xlnx_r5_remoteproc.c   | 51 +++++++++-------------=
+-
+> >   14 files changed, 221 insertions(+), 349 deletions(-)
 > >
-> > Accordingly, modify the code to start the async resume of the device's
-> > children when the processing of the parent has been completed in each
-> > stage of device resume and only start async resume upfront for devices
-> > without parents.
+> > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/im=
+x_dsp_rproc.c
+> > index 90cb1fc13e71..fffae6ff4a5c 100644
+>
+> [ ... ]
+>
+> > diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remotepr=
+oc/xlnx_r5_remoteproc.c
+> > index 5aeedeaf3c41..b73e97074c01 100644
+> > --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
+> > +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> > @@ -460,49 +460,44 @@ static int add_mem_regions_carveout(struct rproc =
+*rproc)
+> >   {
+> >       struct rproc_mem_entry *rproc_mem;
+> >       struct zynqmp_r5_core *r5_core;
+> > -     struct of_phandle_iterator it;
+> > -     struct reserved_mem *rmem;
+> >       int i =3D 0;
 > >
-> > Also make it check if a given device can be resumed asynchronously
-> > before starting the synchronous resume of it in case it will have to
-> > wait for another that is already resuming asynchronously.
+> >       r5_core =3D rproc->priv;
 > >
-> > In addition to making the async resume of devices more friendly to
-> > systems with relatively less computing resources, this change is also
-> > preliminary for analogous changes in the suspend path.
+> >       /* Register associated reserved memory regions */
+> > -     of_phandle_iterator_init(&it, r5_core->np, "memory-region", NULL,=
+ 0);
+> > +     while (1) {
+> > +             int err;
+> > +             struct resource res;
 > >
-> > On the systems where it has been tested, this change by itself does
-> > not affect the overall system resume duration in a measurable way.
-> >
-> > Link: https://lore.kernel.org/linux-pm/20241114220921.2529905-1-saravan=
-ak@google.com/ [1]
-> > Suggested-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > -     while (of_phandle_iterator_next(&it) =3D=3D 0) {
+> > -             rmem =3D of_reserved_mem_lookup(it.node);
+> > -             if (!rmem) {
+> > -                     of_node_put(it.node);
+> > -                     dev_err(&rproc->dev, "unable to acquire memory-re=
+gion\n");
+> > -                     return -EINVAL;
+> > -             }
+> > +             err =3D of_reserved_mem_region_to_resource(r5_core->np, i=
+++, &res);
 >
->
-> I have noticed a suspend regression with -next on a couple of our Tegra
-> boards. Bisect was pointing to the following merge commit ...
->
-> # first bad commit: [218a7bbf861f83398ac9767620e91983e36eac05] Merge
-> branch 'pm-sleep' into linux-next
->
-> On top of next-20250429 I found that by reverting the following changes
-> that suspend is working again ...
->
-> Revert "PM: sleep: Resume children after resuming the parent"
-> Revert "PM: sleep: Suspend async parents after suspending children"
-> Revert "PM: sleep: Make suspend of devices more asynchronous"
+> Here i++ is not needed as it's done at the end of the loop.
+> This bug breaks RPMsg communication on zynqmp platform.
 
-I see.
+Thanks for debugging it. I'll fix that up.
 
-Do all three commits need to be reverted to make things work again?
-The first one only touches the resume path, so it would be surprising
-if it caused a suspend regression to occur.
-
-The most likely commit to cause this issue to happen is the second one
-because it effectively changes the suspend ordering for "async"
-devices.
-
-> I have been looking into this a bit more to see what device is failing
-> and by adding a bit of debug I found that entry to suspend was failing
-> on the Tegra194 Jetson AGX Xavier (tegra194-p2972-0000.dts) platform
-> when one of the I2C controllers (i2c@c240000) was being suspended.
->
-> I found that if I disable only this I2C controller in device-tree
-> suspend worked again on top of -next. This I2C controller has 3 devices
-> on the platform; two ina3221 devices and one Cypress Type-C controller.
-> I then found that removing only the two ina3221 devices (in
-> tegra194-p2888.dtsi) also allows suspend to work.
->
-> At this point, I am still unclear why this is now failing.  If you have
-> any thoughts or things I can try please let me know.
-
-So are the devices in question "async"?  To check this, please see the
-"async" attribute in the "power" subdirectory of the sysfs device
-directory for each of them.
-
-If they are "async", you can write "disable" to this attribute to turn
-them into "sync" devices.  I'd do this and see what happens.
-
-Overall, it looks like some dependencies aren't properly represented
-by device links on this platform.
-
-Thanks, Rafael
+Rob
