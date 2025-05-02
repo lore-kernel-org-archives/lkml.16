@@ -1,88 +1,138 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD4259493;
-	Fri,  2 May 2025 16:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58842580EA;
+	Fri,  2 May 2025 16:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202294; cv=none; b=OmH5jrrhSR4V7c4CsW/wB5Zm3EdcHiMywteGOrJi41jXyvtKzx8v4ncL4E2YBRnDJOOZ5rH5EyDDMQvZ6+qd28IR63i72TaZV22duOqQS46sVpqck5sppIQKDpYtkwMSjfwpvw+K5sBE8jaUq6aA8jkDL2y6EQND61Dhh35IvQs=
+	t=1746202334; cv=none; b=nM3NZeG6dzWtIizpXbHKd5jrXV/S4L8b1nKsY6NXaGznhrMyyuv3oyQ2xfoc19ouiwPvLgGG3AIpl9r2+Ewm2jys99CVR5/lXgFhihMCAnFwUBsLWBS1DZmp2T2Odh/ewgjwlAXfBz01b8CSgGDqiK/OP2D1oGfthwz5XdgNQB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202294; c=relaxed/simple;
-	bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bh7iqmNsNxdkgCPv5/YJ5mkJjGDcem78vnKBu06UY+T5YQy1GVo0PpgwlqCvuPWIEOD8En+Q0O4aUTY8bkkvXNEEfMaUaTXQN6sE+hP/hi21+VybQ50O7OlrSC8qX/3H2DU5Bpk9bpRFopQ5IYwgez5VX5QDlGRtJuUvr7bXQws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGrcrF7s; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746202334; c=relaxed/simple;
+	bh=oIBoHhr4ygbJf9Q+KP535Pj4mKXpGFceRyolVWXj4HA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pmMf4SVswafm8yIenlHpyWixNPrAGOle+XrHxHOMPnb9MXe/G+YzsdWXwsDAf8Lrntt4NPc/meWkVbpQrnRf37PuL+EliQ8KF2cHWzH6qbBQBou0nCaaJ46YHyJGPM45oSiz4D0+Gquv2Elk0ayXozqmuvcW8TNwJLpQoIaRb64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilrraeZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGrcrF7s"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47ae894e9b7so46563011cf.3;
-        Fri, 02 May 2025 09:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746202290; x=1746807090; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
-        b=RGrcrF7s7iE62EdF+HkUMRTYkD846Z+8yAvWmvXfVajSAoZOHqrgcrBZjv8+n8fh/g
-         PDX7uhWx2LTsIjLY/KV0OJ8nbnAaNuVin/vl2PiP/pdSK8my5eCZore0j81aRJ3/wPW/
-         qESfpGUYLA3hUSiva2y+qqKNSoVn3uJVbKNeHn+7YhX7Ua8CMiZKTRcuZO/Gsc49OzQS
-         12buoRE45OQd2TMswySbJ9phCxpgznCihI/TokBkOLgeBz3wE6mIKiNlR+LG35Goi0I6
-         xojgeMtrrf8KKSvpunq78Ktm4cys/AiUdQ4CxBs3ETTqf1itMGiaMqXpN6lZpYxi6ikN
-         xb0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746202290; x=1746807090;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FpRpQtjRv7U53wWwY4VCfXb19CcJoypmcqGSPRHC3Kk=;
-        b=mrTc7WJqD1Zk5jBCoOnmJUN/EnbFNESley0FpEzkv6zt3OXtCJPTRM+Ah+v5Ql5SLE
-         ygKWAeZQstc4KiR7n8vshNiU4pBvhdGiBRsBQnn3PKTOXoBmLMC/VMmsaT+HuwGWHie5
-         2n72hKy+gzLiCjV3ezguxyPD4Fb2srbDWe/euw/7Z1z6PsMh1zDKAJW/soH+pmMp53wD
-         MIt6aDABG8xhAN0MZ0FVz12XRCgpukP6cFYBNTzq689gfmaO549LNdu6K9AqVO9WmZIl
-         P9pNsAYxxkWs+fetgNS8JRjM9BduVXboQE7SA7jWhup0fHF8g+bv1s2HIXlHYsGqTJJA
-         WxUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcTiYamfUdn2PubF/3NE7h3B5BN4FquVi52eaoIa94n21JoHE69zX8epp2RCGyj/JpWohmCR45k91PmiZc@vger.kernel.org, AJvYcCXUK1HcpiOoDW+hu1los4KjsVWCVlivQOKY6LLwZWjiAFdPnps6T3HDfOJbpPKoRDP+L12ogR0+Rx/6KA6b@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdV1Ofj9E/vKahmDeYWX9DQssd78/rFBLeAB9KJ54jkSZ6q1f8
-	WRSoRwWYbZBztV1sXEPtQZqzLewrhcdRNOkGV6WbnZsJQS7R5HzDmt+GvaHqXrmmXo9BuVHgQsL
-	akDZcJh7CtSqQU7NyR3YTTUlTmGdt53HiVKxLrVvsRnc=
-X-Gm-Gg: ASbGncsmGFF0IEH/zFxsoqHwf205U3H0JHzMpPRe0yGDnSj4s6aQDdUnLpgt9iv2/vK
-	2fH1Iy8ral8DktSSUgKV5TywuQCl6URpRdp8xXpHdrygfW/GwJzYhxIMs4rzqdFhhIbUmu/4G5d
-	SKbrGUpnXq7cKDfbJ3kX5U9Y7Uv2ixI2UunQ==
-X-Google-Smtp-Source: AGHT+IGLAcTSARnmJA/Kgr6uTJWmezvLkJPX2YxhNgDW8SpYetDoGiXPi6v2yrZw/2G0zMAf9dBpqWLczPRdekeeSmE=
-X-Received: by 2002:a05:622a:1b10:b0:476:60a1:3115 with SMTP id
- d75a77b69052e-48c32dbeb1amr57251421cf.33.1746202290456; Fri, 02 May 2025
- 09:11:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilrraeZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9ACC4CEE4;
+	Fri,  2 May 2025 16:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746202334;
+	bh=oIBoHhr4ygbJf9Q+KP535Pj4mKXpGFceRyolVWXj4HA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ilrraeZlcDUAQ/GSbU7RteYAGpWdWZLitu4sOfw/srjuMVxWYq5pD5dIo1mAimLnx
+	 qlW8HwK0dy4y2dg4v3QnU4hKF8uZiR7jm1f3bxu3hil08qrv+wrPwRlH5MtfqQ6Xrp
+	 BqOZdNIpAHowgPPpwb4toDRF75B8zLY1wD+C2GcxHaUN/1sklXb3eg2ppF/vtuZuic
+	 oU5p3VWXemkQbHfwJagFnDuC0MG8FmP5dvtQNERqZ3aaDMHxUtqPVZlTRUmuT57HAg
+	 ntijOf3pYY5Rk+sKjxQUfErmj+vnNgNzOlA2mwt0BL9EZQji9GhfV8s1FU8vhfp3Lf
+	 kil+ZxwZ25c6A==
+Date: Fri, 2 May 2025 09:12:09 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kbuild@vger.kernel.org, Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com
+Subject: Re: [PATCH 2/3] randstruct: Force full rebuild when seed changes
+Message-ID: <20250502161209.GA2850065@ax162>
+References: <20250501193839.work.525-kees@kernel.org>
+ <20250501194826.2947101-2-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502153742.598-1-zhiyuzhang999@gmail.com> <a3a6443f-2351-4e55-a12e-4d1f28ba7ca4@oracle.com>
-In-Reply-To: <a3a6443f-2351-4e55-a12e-4d1f28ba7ca4@oracle.com>
-From: Zhiyu Zhang <zhiyuzhang999@gmail.com>
-Date: Sat, 3 May 2025 00:11:19 +0800
-X-Gm-Features: ATxdqUE7NpAQl6AyGoPFkOH6K2jeAL22Fq0V5d4sv1gugCSgZGARFw0ffPFQ0bI
-Message-ID: <CALf2hKsAL=EysQyzgOcztWDLM5X786b9OPPq9sL=oSgamZPjcQ@mail.gmail.com>
-Subject: Re: [External] : [PATCH] ocfs2: Fix potential ERR_PTR dereference in ocfs2_unlock_and_free_folios
-To: Mark Tinguely <mark.tinguely@oracle.com>
-Cc: mark@fasheh.com, jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	gregkh@linuxfoundation.org, ocfs2-devel@lists.linux.dev, 
-	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501194826.2947101-2-kees@kernel.org>
 
-Hi Mark Tinguely,
+Hi Kees,
 
-Thank you for sharing the patch status.
+On Thu, May 01, 2025 at 12:48:17PM -0700, Kees Cook wrote:
+> While the randstruct GCC plugin was being rebuilt if the randstruct
+> seed changed, Clangs build did not notice the change. Include the hash
+> header directly so that it becomes a universal build dependency and full
+> rebuilds will happen if it changes.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nicolas Schier <nicolas.schier@linux.dev>
+> Cc: Petr Pavlu <petr.pavlu@suse.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: <linux-kbuild@vger.kernel.org>
+> ---
+>  include/linux/vermagic.h    |  1 -
+>  scripts/Makefile.randstruct |  3 ++-
+>  scripts/basic/Makefile      | 11 ++++++-----
+>  3 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/vermagic.h b/include/linux/vermagic.h
+> index 939ceabcaf06..335c360d4f9b 100644
+> --- a/include/linux/vermagic.h
+> +++ b/include/linux/vermagic.h
+> @@ -33,7 +33,6 @@
+>  #define MODULE_VERMAGIC_MODVERSIONS ""
+>  #endif
+>  #ifdef RANDSTRUCT
+> -#include <generated/randstruct_hash.h>
+>  #define MODULE_RANDSTRUCT "RANDSTRUCT_" RANDSTRUCT_HASHED_SEED
+>  #else
+>  #define MODULE_RANDSTRUCT
+> diff --git a/scripts/Makefile.randstruct b/scripts/Makefile.randstruct
+> index 24e283e89893..ab87219c6149 100644
+> --- a/scripts/Makefile.randstruct
+> +++ b/scripts/Makefile.randstruct
+> @@ -12,6 +12,7 @@ randstruct-cflags-y	\
+>  	+= -frandomize-layout-seed-file=$(objtree)/scripts/basic/randstruct.seed
+>  endif
+>  
+> -export RANDSTRUCT_CFLAGS := $(randstruct-cflags-y)
+> +export RANDSTRUCT_CFLAGS := $(randstruct-cflags-y) \
+> +			    -include $(objtree)/scripts/basic/randstruct_hash.h
 
-Actually, I reported this bug on March 22nd
-(https://lore.kernel.org/linux-fsdevel/CALf2hKtnFskBvmZeigK_=mqq9Vd4TWT+YOXcwfNNt1ydOY=0Yg@mail.gmail.com/T/#u),
-but due to not receiving a response from the get_maintainer list and
-being quite busy myself, I have not submitted the patch until today.
+As the kernel test robot points out (on a report that you weren't
+included on for some reason...), this breaks the build in several
+places on next-20250502.
 
-I am sorry to summit duplicated patch as I do not notice the change in
-mainline repo. Please ignore this patch if it boters you.
+https://lore.kernel.org/202505021409.yC9C70lH-lkp@intel.com/
 
-Best regards,
-Zhiyu
+  $ make -skj"$(nproc)" ARCH=arm LLVM=1 clean allmodconfig arch/arm/vdso/vgettimeofday.o
+  clang: error: cannot specify -o when generating multiple output files
+
+There are places in the kernel that filter out RANDSTRUCT_CFLAGS and
+this appears to cause other '-include' flags to be filtered out as well,
+such as the one in the efistub that includes hidden.h.
+
+>  KBUILD_CFLAGS	+= $(RANDSTRUCT_CFLAGS)
+> diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
+> index dd289a6725ac..31637ce4dc5c 100644
+> --- a/scripts/basic/Makefile
+> +++ b/scripts/basic/Makefile
+> @@ -8,9 +8,10 @@ hostprogs-always-y	+= fixdep
+>  # before running a Clang kernel build.
+>  gen-randstruct-seed	:= $(srctree)/scripts/gen-randstruct-seed.sh
+>  quiet_cmd_create_randstruct_seed = GENSEED $@
+> -cmd_create_randstruct_seed = \
+> -	$(CONFIG_SHELL) $(gen-randstruct-seed) \
+> -		$@ $(objtree)/include/generated/randstruct_hash.h
+> -$(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
+> +      cmd_create_randstruct_seed = $(CONFIG_SHELL) $(gen-randstruct-seed) \
+> +		$(obj)/randstruct.seed $(obj)/randstruct_hash.h
+> +
+> +$(obj)/randstruct_hash.h $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
+>  	$(call if_changed,create_randstruct_seed)
+> -always-$(CONFIG_RANDSTRUCT) += randstruct.seed
+> +
+> +always-$(CONFIG_RANDSTRUCT) += randstruct.seed randstruct_hash.h
+> -- 
+> 2.34.1
+> 
