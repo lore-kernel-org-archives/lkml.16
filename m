@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA78B23C4F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F823C4F5;
 	Fri,  2 May 2025 10:15:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746180949; cv=none; b=uVqSANqaqHaLONub7zadX9PjgFy2wJSgFVVbz7YiQk5fxZSdvtA/eGbBYH4s9qB1swlsA1TY4ca2DJS/9w7VQ0PK3bpeCqkT8zQtduE8uHFwQAI93Py0bgzzZNl97iM8NtZftsOH+MA5BcvlIqukGyHGP+GFZW3wRSovEYw+wwE=
+	t=1746180949; cv=none; b=JTebajrlKAOEilaWqTRPazg5w1wIf1srBqNPclEd/cl65vRy/I5hsH6DYS5dtIwZNOPBPYULLps8bc5ysCUqStbJ0aHT1DukAJk7a075QttCcO/dVTcIn3+jpyB8s4X774+3PhefcdqJsvpEeZi/Q4+gDvqQ2/PSoWzlf1o6u70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746180949; c=relaxed/simple;
-	bh=GNNkjEXjixDEFRou+UGsnQuwh82DaXrunosdKnJxIpw=;
+	bh=J5bRSUSSinWxsTQKxhKwV/BUAMuxf53BzmqIIG9qPGo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KSIX5+32RU7g2w7XGBRNA3E4xa3H4NMY5CLTE6WDppHqF9xL1n6gdsyMdcj6pBVuBd6dRd7zDC59ifWNd1kQrEsU2tirjKb3QuvHQuu4AfVJVxZpBGdrjg7QJ7RRyAfYlqI8d3d5c3jyq4TxizY+kyuQuAYktzEGQExnKLbS3Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0M1ec8I; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=cOeQPvyk7hiPTxeu5D0c1O0ev+EmIii9rItU0AO9PtIlR6Z5M6QCHbBhyg+oBB1kc255VgWDnmA4eLgpDvihXD7qwCAETq7WTTJ1utgfnoWO2l6vLqYkk4d8iFP0UVxKVX/1NRMR9E/gWyGdfHPd1SXkRESLKaFBevyo0YIBvzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hpwl9D7p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0M1ec8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E38CC4CEFD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hpwl9D7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2330FC4CEF9;
 	Fri,  2 May 2025 10:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746180949;
-	bh=GNNkjEXjixDEFRou+UGsnQuwh82DaXrunosdKnJxIpw=;
+	bh=J5bRSUSSinWxsTQKxhKwV/BUAMuxf53BzmqIIG9qPGo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Y0M1ec8I1RCkMCButUNlSzGNaceMSfdPCAuJP4v7ZnBWBfvhRnN3L3+OR0RvPbn4N
-	 nVfV5/N5Kr2cXWYrcqqADX0UkZ+t7yGf940kEbnvqQezmvcmnbVuNpcHI8cj+KMXbj
-	 Wm3Z736D9izkaSYsdJ1x0Rn0EI+YFnSj6EBBu3PPcOfJ45dEg9+f5jCEJ5q+S/+pS/
-	 I9F6LzaHsQV8QDyGd6lc/i/svtI6PEuVTqVmxX5zr0EkGySlWpJQLsWeQ2ZLO9c8Pd
-	 a+R/zVNajFIDr7sPUH0UKeXnmk85NqG7zvOG2u5XgoIWGlxdlL4OZgpqyLZSR6DEc4
-	 sbcfFDfW+Xi7w==
+	b=Hpwl9D7pwiiaxefC0OhsVLYXFwgE0foS5aZMC/VT4LYEdE9nsxQtV/TBoK3lxvg15
+	 AUOPswuUtW0zQFzAwqu4l/hn88kuhLrTufotC1NoQRm9kxyN+22fE7A8hR+CDuTi73
+	 8Go9RKzqOz6IoKVzAJ6EIrVl56/FmS49LnqnUrc/qXcwZa8pNoJCJpSymwM0xIb84W
+	 di8UM+h1E7EsmK4nWcQhW0fjUw/l9an9JNqQ5GpLik0j1SblYKqxC+mK3Pj1P5wFCQ
+	 /KV/UDqT8LyE1/VSpzKSaRQB8xIGDETUF6kOgxmkgODefhlQ7uWJcQV8REtGAbtMvp
+	 J5mAXX9v5lqEQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DC6C3ABAA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B829C3ABA3;
 	Fri,  2 May 2025 10:15:49 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Fri, 02 May 2025 14:15:48 +0400
-Subject: [PATCH 6/6] arm64: dts: qcom: Update IPQ5018 xo_board_clk to use
- fixed factor clock
+Date: Fri, 02 May 2025 14:15:47 +0400
+Subject: [PATCH 5/6] arm64: dts: ipq5018: Add CMN PLL node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-ipq5018-cmn-pll-v1-6-27902c1c4071@outlook.com>
+Message-Id: <20250502-ipq5018-cmn-pll-v1-5-27902c1c4071@outlook.com>
 References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
 In-Reply-To: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -54,11 +53,11 @@ Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  George Moussalem <george.moussalem@outlook.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746180946; l=1998;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746180945; l=2861;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=LxxatdRb90i4on9YIidoVQJCRrrcChIjg+ks5OFGzsg=;
- b=qCfczu/hRv/nE0TSXTdWP0CI16lOIV3RTDfLOzPPumJyG3yT7ydLhYyjcaXLKICiDDgcr+qFA
- CdI3ZL5c5YuCAHgmMJF6Tl86pdjVRSigL5rd0vjWq6ufBaUyD7sh4aL
+ bh=GI/nnrynnAP1TcHu1Q2Qi498C3gSFhYoszdpVbk+97o=;
+ b=iLRTIzMIHJDOiyCzc1cvE6X2r8oDkWhwj6GlOV84ZwFtIuxHXw264Wc9wZcdCkttKUOCJIZsG
+ Hj72J9IBs0VDDr72Z8igaQcE4EIvg3pbTYjIMSiBeDfLGUY1mm04YDW
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -68,55 +67,100 @@ Reply-To: george.moussalem@outlook.com
 
 From: George Moussalem <george.moussalem@outlook.com>
 
-The xo_board_clk is fixed to 24 MHZ, which is routed from WiFi output
-clock 96 MHZ (also being the reference clock of CMN PLL) divided by 4
-to the analog block routing channel.
+Add CMN PLL node for enabling output clocks to the networking
+hardware blocks on IPQ5018 devices.
+
+The reference clock of CMN PLL is routed from XO to the CMN PLL
+through the internal WiFi block.
+.XO (96 MHZ)-->WiFi (multiplier/divider)--> 48 MHZ to CMN PLL.
 
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts             | 3 ++-
- arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts | 3 ++-
- arch/arm64/boot/dts/qcom/ipq5018.dtsi                      | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 39 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-index 8460b538eb6a3e2d6b971bd9637309809e0c0f0c..abb629678c023a2eb387ebf229f6dd1c30133b19 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-@@ -80,5 +80,6 @@ &usbphy0 {
- };
- 
- &xo_board_clk {
--	clock-frequency = <24000000>;
-+	clock-div = <4>;
-+	clock-mult = <1>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts b/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts
-index 5bb021cb29cd39cb95035bfac1bdbc976439838b..7a25af57749c8e8c9a6a185437886b04b0d99e8e 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dts
-@@ -124,5 +124,6 @@ uart_pins: uart-pins-state {
- };
- 
- &xo_board_clk {
--	clock-frequency = <24000000>;
-+	clock-div = <4>;
-+	clock-mult = <1>;
- };
 diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 78368600ba44825b38f737a6d7837a80dc32efb6..7e40f80e4795de25d55b5a19c1beb98e5abcdef3 100644
+index 8914f2ef0bc47fda243b19174f77ce73fc10757d..78368600ba44825b38f737a6d7837a80dc32efb6 100644
 --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
 +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -31,7 +31,8 @@ sleep_clk: sleep-clk {
- 		};
+@@ -2,12 +2,13 @@
+ /*
+  * IPQ5018 SoC device tree source
+  *
+- * Copyright (c) 2023 The Linux Foundation. All rights reserved.
++ * Copyright (c) 2023-2025 The Linux Foundation. All rights reserved.
+  */
  
- 		xo_board_clk: xo-board-clk {
--			compatible = "fixed-clock";
+ #include <dt-bindings/clock/qcom,apss-ipq.h>
+-#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/qcom,ipq5018-cmn-pll.h>
+ #include <dt-bindings/clock/qcom,gcc-ipq5018.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
+ 
+ / {
+@@ -16,6 +17,14 @@ / {
+ 	#size-cells = <2>;
+ 
+ 	clocks {
++		ref_96mhz_clk: ref-96mhz-clk {
 +			compatible = "fixed-factor-clock";
-+			clocks = <&ref_96mhz_clk>;
++			clocks = <&xo_clk>;
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <2>;
++		};
++
+ 		sleep_clk: sleep-clk {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+@@ -25,6 +34,12 @@ xo_board_clk: xo-board-clk {
+ 			compatible = "fixed-clock";
  			#clock-cells = <0>;
  		};
++
++		xo_clk: xo-clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <48000000>;
++		};
+ 	};
  
+ 	cpus {
+@@ -147,6 +162,21 @@ usbphy0: phy@5b000 {
+ 			status = "disabled";
+ 		};
+ 
++		cmn_pll: clock-controller@9b000 {
++			compatible = "qcom,ipq5018-cmn-pll";
++			reg = <0 0x0009b000 0 0x800>;
++			clocks = <&ref_96mhz_clk>,
++				 <&gcc GCC_CMN_BLK_AHB_CLK>,
++				 <&gcc GCC_CMN_BLK_SYS_CLK>;
++			clock-names = "ref",
++				      "ahb",
++				      "sys";
++			#clock-cells = <1>;
++			assigned-clocks = <&cmn_pll IPQ5018_CMN_PLL_CLK>;
++			assigned-clock-rates-u64 = /bits/ 64 <9600000000>;
++			qcom,cmn-pll-eth-enable = <&tcsr 0x105c0>;
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq5018-tlmm";
+ 			reg = <0x01000000 0x300000>;
+@@ -187,6 +217,11 @@ tcsr_mutex: hwlock@1905000 {
+ 			#hwlock-cells = <1>;
+ 		};
+ 
++		tcsr: syscon@1937000 {
++			compatible = "qcom,tcsr-ipq5018", "syscon";
++			reg = <0x01937000 0x21000>;
++		};
++
+ 		sdhc_1: mmc@7804000 {
+ 			compatible = "qcom,ipq5018-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0x7804000 0x1000>;
 
 -- 
 2.49.0
