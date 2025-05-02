@@ -1,119 +1,156 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FE31E98EA;
-	Fri,  2 May 2025 07:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E261EC4;
+	Fri,  2 May 2025 07:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746169297; cv=none; b=Gy1yhCvZ9H+mpx0e/Z1BjZF2k9iyj2YdTeq8b+IfVIR52xVdc3aVlAqxVq7TkirxUqQVAEx1G3jCp4tTnEym7Px36Ld1+Zj2r7TYeZfZdKxMBmDd0/4EwLUB1Er1xcGZidZtBHUDbVXHbbuZdRZ2iu9G/dqR13sRB5XkJwXdWZA=
+	t=1746169322; cv=none; b=UCsVvW3e3R2bd8sA+rG6+cwdG4CCm4bkcmYNS9iG5bjcUShI3491YrONxzRWcvHLROdKPqceZ78VSYHTl4zY9TRJoBnnaJmwMVqXivqvjmjkTJUB6t7aAcIvabVwi22xVqqcnl1J7fbMrpbtqjV8hdU/FCuNwAQL+KcLG9gAzQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746169297; c=relaxed/simple;
-	bh=GvDDf81Wz8kmvhvd60Ue0MYrQ9Kyf2n/GxjwQ2yjYdQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GUHQ2GC5h1ZYjgfxxCF3R1FoYMNn4nXIfUuU/rwTSW+KGcms0LoM8o22sSGT5xnVHCsHs4lhAcHcrwwpKae77NY+TKeVgwvcbc0yvk8lF3PqczUlRS5w8pUmngIPN7TCgpGatV2B2HPQnGWDpbJWi+4LaFdBv6YDMPON6Mk8FEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-81-68146a3d5fcd
-Message-ID: <9837bbe0-d494-43bb-8e92-8cbf47a32b68@sk.com>
-Date: Fri, 2 May 2025 15:46:21 +0900
+	s=arc-20240116; t=1746169322; c=relaxed/simple;
+	bh=PqKFG0JGTq4eNIheoo3AmOMJYkd1B6YTqiR8CVnXhYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msIyGUv34/LBSNSIp6mo4JmNyrPqH/+MJwWsl99oMPPiRqj02sPwGZM89ZX5Js8whW96oxXUMURJgBboNLSl6TrA1QPK0hhuwLgDtbHR2zg8HYll0lLBgH5l5VJSdV+BORKZKA0D4QI5cKgPR+tIGjsUuIT8S5As/x+PFgLWuPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVzAz7NO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVzAz7NO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA19BC4CEE4;
+	Fri,  2 May 2025 07:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746169322;
+	bh=PqKFG0JGTq4eNIheoo3AmOMJYkd1B6YTqiR8CVnXhYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mVzAz7NOcx1ADL3FUVTSgq3yUEZzwYx7NJwUzsmRXywuZZfgaqRVVnbjTYnCBWn/+
+	 ozbIFqkDfjOl4d3Rl+/Pp3ome9P5BtNz48awS8Hj+qfRGFbCrGJ74DTNvSaNx1bZ2P
+	 t00t1/SwcM+Ir/whEIsspwLv4L0IolBjsDtpE/RIvY27YsVbbAzRkzcR6Nb5Bjub0k
+	 7ZVTqC2pJ+5WH2BD/BUAT4eKVKVMvUnrztaNJcMa3Azyezp5xJ69v5vl0bw93YrOZZ
+	 f6q0IPkxDDt0w2bQefK1iHmui6miOEE9S7u8wb739OslNMv4OgZDdNoEZIwPp/8ADm
+	 J4mmDCmDZ2d0Q==
+Date: Fri, 2 May 2025 09:01:59 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add bindings for QIXIS CPLD
+Message-ID: <20250502-meticulous-bulky-wildebeest-c1a8b6@kuoka>
+References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
+ <20250430153634.2971736-2-ioana.ciornei@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Andrew Morton <akpm@linux-foundation.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Gregory Price <gourry@gourry.net>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] mm/mempolicy: Fix error code in sysfs_wi_node_add()
-To: Dan Carpenter <dan.carpenter@linaro.org>, Rakie Kim <rakie.kim@sk.com>
-References: <aAij2oUCP1zmcoPv@stanley.mountain>
-Content-Language: ko
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <aAij2oUCP1zmcoPv@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsXC9ZZnoa5tlkiGwYZ+a4s569ewWXyY18pu
-	MX3qBUaLn3ePs1sc3zqP3WLrLWmLy7vmsFncW/Of1YHDY+esu+we3W2X2T0W73nJ5LHp0yR2
-	jzvX9rB5nJjxm8Xj8ya5APYoLpuU1JzMstQifbsErox3r30LrvFUbFvVydzA+J+zi5GTQ0LA
-	ROL+0b2MMPaPy6vYQGxeAUuJPZvvMYHYLAIqEj2rl7BDxAUlTs58wgJiiwrIS9y/NQMozsXB
-	LDCFSWJT429mkISwgK/E4v/fWEFsEQEvidmvl4ItEBLQl3i1bCKYzSwgIjG7sw2snk1ATeLK
-	y0lgyzgFDCTetuxlhqgxk+ja2gVVLy+x/e0cZpBlEgK32SQe/5jDCnG1pMTBFTdYJjAKzkJy
-	4CwkO2YhmTULyawFjCyrGIUy88pyEzNzTPQyKvMyK/SS83M3MQJjZVntn+gdjJ8uBB9iFOBg
-	VOLhDSgQzhBiTSwrrsw9xCjBwawkwhtjABTiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVI
-	ID2xJDU7NbUgtQgmy8TBKdXAGHr/zxuz5utfvvop73I9tVFv2rtbpSWyBmdSlGa7lq2ODs3y
-	XCdTJduQOVmqcsqbGQk7df64LKt3srt3mF92zfbd3pfK+rzZDt9eGKq78seuGXJlU62d/HKj
-	Wx1O3vep50sX+JsiViH7t4jLRL4u1HxHzOPDHFdNKjfP3L/88dws7ZboK75/lFiKMxINtZiL
-	ihMBdBeWM5ECAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsXCNUNLT9c2SyTDYOdcfYs569ewWXyY18pu
-	MX3qBUaLn3ePs1sc3zqP3WLrLWmLw3NPslpc3jWHzeLemv+sFoeuPWd14PLYOesuu0d322V2
-	j8V7XjJ5bPo0id3jzrU9bB4nZvxm8fh228Nj8YsPTB6fN8kFcEZx2aSk5mSWpRbp2yVwZbx7
-	7Vtwjadi26pO5gbG/5xdjJwcEgImEj8ur2IDsXkFLCX2bL7HBGKzCKhI9Kxewg4RF5Q4OfMJ
-	C4gtKiAvcf/WDKA4FwezwBQmiU2Nv5lBEsICvhKL/39jBbFFBLwkZr9eyghiCwnoS7xaNhHM
-	ZhYQkZjd2QZWzyagJnHl5SSwZZwCBhJvW/YyQ9SYSXRt7YKql5fY/nYO8wRGvllI7piFZNQs
-	JC2zkLQsYGRZxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERgLy2r/TNzB+OWy+yFGAQ5GJR7e
-	gALhDCHWxLLiytxDjBIczEoivDEGQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8XuGpCUIC6Ykl
-	qdmpqQWpRTBZJg5OqQbGONVJfNE1s/oEMz2mTyr4/P/67xv2R/huHfv8qYFx88ba6Ekyu6fn
-	zJnq+zPwDu8FBTs52yLp1P6u5sjV/nfSguq3L1i/48unj6HxEuw2uScn9GfeETi/hGnNQw82
-	deM0hRnbWv5dc2PPc7s4OVpu4/vGadUa/5LTipJl/c/2di3wW7i1oadRiaU4I9FQi7moOBEA
-	BCkJ+YECAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250430153634.2971736-2-ioana.ciornei@nxp.com>
 
-Hi Dan,
-
-On 4/23/2025 5:24 PM, Dan Carpenter wrote:
-> Return -EEXIST if the node already exists.  Don't return success.
+On Wed, Apr 30, 2025 at 06:36:29PM GMT, Ioana Ciornei wrote:
+> This adds device tree bindings for the board management controller -
+> QIXIS CPLD - found on some Layerscape based boards such as LX2160A-RDB,
+> LX2160AQDS, LS1028AQDS etc.
 > 
-> Fixes: 1bf270ac1b0a ("mm/mempolicy: support memory hotplug in weighted interleave")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 > ---
-> Potentially returning success was intentional?  This is from static
-> analysis and I can't be totally sure.
+>  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
 > 
->   mm/mempolicy.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index f43951668c41..0538a994440a 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3539,7 +3539,7 @@ static const struct kobj_type wi_ktype = {
->   
->   static int sysfs_wi_node_add(int nid)
->   {
-> -	int ret = 0;
-> +	int ret;
->   	char *name;
->   	struct iw_node_attr *new_attr;
->   
-> @@ -3569,6 +3569,7 @@ static int sysfs_wi_node_add(int nid)
->   	if (wi_group->nattrs[nid]) {
->   		mutex_unlock(&wi_group->kobj_lock);
->   		pr_info("node%d already exists\n", nid);
-> +		ret = -EEXIST;
+> diff --git a/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+> new file mode 100644
+> index 000000000000..562878050916
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
 
-Returning -EEXIST here looks good to me, but could you remove the above pr_info
-as well?  I mean the following change is needed.
+Filename matching compatible.
 
--		pr_info("node%d already exists\n", nid)
-+		ret = -EEXIST;
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP's QIXIS CPLD board management controller
+> +
+> +maintainers:
+> +  - Ioana Ciornei <ioana.ciornei@nxp.com>
+> +
+> +description: |
+> +  The board management controller found on some Layerscape boards contains
+> +  different IP blocks like GPIO controllers, interrupt controllers, reg-muxes
+> +  etc.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,lx2160a-qds-qixis-i2c
+> +      - fsl,lx2162a-qds-qixis-i2c
+> +      - fsl,ls1028a-qds-qixis-i2c
 
-We don't need the above pr_info here because we delegate a warning message to
-its caller wi_node_notifier().
+Keep alphabetical order.
 
-This can close another warning report below.
-https://lore.kernel.org/all/202505020458.yLHRAaW9-lkp@intel.com
+What is actual device name? I2C? Is this an I2C controller or device?
 
-If you apply my suggestion then please add
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
 
-	Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
+This says device, so i2c in compatible is wrong.
 
-Thanks,
-Honggyu
+Anyway drop description, redundant.
 
->   		goto out;
->   	}
->   
+
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+
+Why?
+
+> +
+> +  "#size-cells":
+> +    const: 0
+
+Why? Drop cells.
+
+> +
+> +  mux-controller:
+> +    $ref: /schemas/mux/reg-mux.yaml#
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+
+Keep same order as in properties
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        qixis@66 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+> +            compatible = "fsl,lx2160a-qds-qixis-i2c";
+> +            reg = <0x66>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+
+So were do you use address/size cells?
+
+Best regards,
+Krzysztof
 
