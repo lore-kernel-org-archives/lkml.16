@@ -1,110 +1,205 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453841DF75C;
-	Fri,  2 May 2025 12:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188044; cv=none; b=l4LKV7wzsVgnWbrpU94SCMbnFdeRO+GAEIDqGqVemlGZRd4bWMngJ+PHwEUB/opHVNS6Ee3S2ei8Xvcdoh0jlWkA1KY/8PwmCYwtwdJ1yuELNwGcwTnAuEDKwwL9BVcALOn3X9fCuH+9DgpG2vjdl63vEppZdZs4RKHX6MlRA9k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188044; c=relaxed/simple;
-	bh=qzjeHjcOjowLZFXG/jZEPH3BZj/3SWbgVlFBrv8GAno=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=Ujf8FCWuMzoAyxWc/LgbU4y3vBU87am760gdLLZ6S0m8BrcQbe8pND4bENGjbjIgaFoFdDThI1EILm98eVv98q4IH51CWA6sZUT7oNdGsrY1QZcc8QYKDISWVht5o3GirphP81H4SROz8oyix1qyO2jn/xDL4vTm8RDQ3wqHKKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=d/uuvasm; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB46F1DF75C;
+	Fri,  2 May 2025 12:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746188049; cv=pass; b=avz1KktmutRYF4HtWAtTlQ3fiJc/h5tHvUCuzY9PH2S1dBvfP/cGyL4D/4wH5J76+05nAzR1lut+OUBLlGbxnQNGygxdu3fvnJ5ndSSGhjuHpgD4N9Tx84SQgWlObu98OIuY0qjgvGKz/VRHA4Y0W/aomAVd9J2Pex5o3/2jvo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746188049; c=relaxed/simple;
+	bh=AAXs10Y+D9FMrTQBVnyIpowAABizRcyBZniMr4ggzuA=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Yil1/+wTUINR4FCt8U+td4f+DqKUt2DZo26WMt+QF2YDzyJMyi54krEzBPnGINUVpwDQIgSR5jgqDR9UH7hBjVis3se+wXhtmPzPLpA/rbqsGs2bcaLn1BQLfJZb3UeRjMGcADFcqL+G5S5rla/0WT501xG48CsDneeCLqLXaLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=Fj6/0mNv; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="d/uuvasm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 19C0B43302;
-	Fri,  2 May 2025 12:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746188033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ThJ+c2xPN7+O9usD5U/qLq9TQibJ4VHLal34gC1vvYI=;
-	b=d/uuvasmN9JzH4M4NCNhdkVa5tRVmROXv4Mq8GrwEzVYZj8oYVsai3/iqwy08Q7Df6UGr+
-	xsG1TOu1eXgtMRRcoC3XPsWbwLuVqvDE4S6QJL9fiZZbn5NCYuhJrCNLtzl8bDnOysj/Y3
-	VbxXGtFHZIEETA276bBvEl/fq/YkRLieftEni44Kq778fZ1aV+wAxSgCvqZkJQfG5fc5pf
-	vzBkBuSrMkClwr6lKdpUSogXCcEv57SVZDahpLLsHUddVaiRmMto/vd6Klt64+ACM+8nYi
-	Td/L9MKGKSB+zRNqstUgCNmPs+0vxZdmVOnJpimSYIXaZg/RfhGdIx1wjqWkQg==
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="Fj6/0mNv"
+ARC-Seal: i=1; a=rsa-sha256; t=1746188029; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Xup1rjjGkskWuen+LfS8z173/CkhfoAgQ9jB7lZQtn655iAuoyErN6jciiYiCDPHJfIMqY+fE7NXW3hWQPqqGndORw3tuEXslA9spDTuMRmS69QlWASyOyZqw/6H+BwxfSeqzjUBuBvezfL5t/v8hbKtJGWacoGe77y3BhlGe6k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746188029; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=sH1dNx1Lo5zk4iM9N5df3G7uOySVxlRSII1dvHZ4avs=; 
+	b=kdBL/7jonJvrkAs7z+wv2iAN+x37SxSPIW7zj3Kei7b9+OtKpkkmuZC2GlCKRCTVAf/wVG9yWoxmwKkMhA2VqrKHd8zLNXmkBko1xNRMDysD1U6kbtHNr0pj2soa86z/64jHEk+OlxQbSNX8+KL7WQ0yKAc9EldLiV8RnR0UQHw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746188029;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=sH1dNx1Lo5zk4iM9N5df3G7uOySVxlRSII1dvHZ4avs=;
+	b=Fj6/0mNvjWcr1hRUUVoOOe6aFqd/1BfIyjdGipGTn5vhkChv3kB/kyy+UGIbfBjc
+	Hhz6TQ0RBkPceVE1IjkOd1FoqczhVF6fhk2p84TpBBHJs/nvRXnhlGGfETmSzmZqblN
+	uGJHB7twfnkD8zL6ree7AoLkWb32xiqYWLlcuCOg=
+Received: by mx.zohomail.com with SMTPS id 1746188027151311.4298556984256;
+	Fri, 2 May 2025 05:13:47 -0700 (PDT)
+Message-ID: <19160409-948f-4ae6-894a-6cfefcef4d4c@collabora.com>
+Date: Fri, 2 May 2025 17:13:42 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] selftests/timens: Print TAP headers
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Shuah Khan <shuah@kernel.org>
+References: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
+ <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 14:13:51 +0200
-Message-Id: <D9LNZVEKP7VV.2UC5AY0D45CR2@bootlin.com>
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v7 04/11] pwm: max7360: Add MAX7360 PWM support
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-4-4e0608d0a7ff@bootlin.com>
- <aBScGRN-1C81gtC5@smile.fi.intel.com>
-In-Reply-To: <aBScGRN-1C81gtC5@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Fri May 2, 2025 at 12:19 PM CEST, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:22PM +0200, mathieu.dubois-briand@bootlin.c=
-om wrote:
->> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
->>=20
->> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->> +					     const void *_wfhw, struct pwm_waveform *wf)
->> +{
->> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
->> +
->> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
->> +	wf->duty_offset_ns =3D 0;
->> +	wf->duty_length_ns =3D DIV64_U64_ROUND_UP(wfhw->duty_steps * MAX7360_P=
-WM_PERIOD_NS,
->
-> Does the numerator have already 64-bit type? Otherwise (u)int*(u)int will=
- be
-> just an (u)int.
->
+On 5/2/25 5:03 PM, Thomas Weißschuh wrote:
+> The TAP specification requires that the output begins with a header line.
+> These headers lines are missing in the timens tests.
+> 
+> Print such a line.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Err no, this section has been modified back and forth, but today we have
-u8 * 2 * 1000000L, so we will always fit in a u32.
+> ---
+>  tools/testing/selftests/timens/clock_nanosleep.c | 2 ++
+>  tools/testing/selftests/timens/exec.c            | 2 ++
+>  tools/testing/selftests/timens/futex.c           | 2 ++
+>  tools/testing/selftests/timens/gettime_perf.c    | 2 ++
+>  tools/testing/selftests/timens/procfs.c          | 2 ++
+>  tools/testing/selftests/timens/timens.c          | 2 ++
+>  tools/testing/selftests/timens/timer.c           | 2 ++
+>  tools/testing/selftests/timens/timerfd.c         | 2 ++
+>  tools/testing/selftests/timens/vfork_exec.c      | 2 ++
+>  9 files changed, 18 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
+> index 72d41b955fb2263ae74c34b446fb322d1bd50c6a..346bff3d128dfa8c8c743cc2eba74917994bb2f7 100644
+> --- a/tools/testing/selftests/timens/clock_nanosleep.c
+> +++ b/tools/testing/selftests/timens/clock_nanosleep.c
+> @@ -115,6 +115,8 @@ int main(int argc, char *argv[])
+>  {
+>  	int ret, nsfd;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	ksft_set_plan(4);
+> diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
+> index d12ff955de0d8f6665fa957e81438e373af9f92c..a644162d56fdc86827b83a45f83c2597c253aa6a 100644
+> --- a/tools/testing/selftests/timens/exec.c
+> +++ b/tools/testing/selftests/timens/exec.c
+> @@ -36,6 +36,8 @@ int main(int argc, char *argv[])
+>  		return 0;
+>  	}
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	ksft_set_plan(1);
+> diff --git a/tools/testing/selftests/timens/futex.c b/tools/testing/selftests/timens/futex.c
+> index 6b2b9264e851caed06a628589eda0bf81ff33f16..339633ae037a74d2026ca835ac8600cd0394ae01 100644
+> --- a/tools/testing/selftests/timens/futex.c
+> +++ b/tools/testing/selftests/timens/futex.c
+> @@ -66,6 +66,8 @@ int main(int argc, char *argv[])
+>  	pid_t pid;
+>  	struct timespec mtime_now;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	ksft_set_plan(2);
+> diff --git a/tools/testing/selftests/timens/gettime_perf.c b/tools/testing/selftests/timens/gettime_perf.c
+> index 6b13dc277724126a9d2d5e17c805217760df72ad..d6658b7b754877fbf67237d6c22787a2a89066ce 100644
+> --- a/tools/testing/selftests/timens/gettime_perf.c
+> +++ b/tools/testing/selftests/timens/gettime_perf.c
+> @@ -67,6 +67,8 @@ int main(int argc, char *argv[])
+>  	time_t offset = 10;
+>  	int nsfd;
+>  
+> +	ksft_print_header();
+> +
+>  	ksft_set_plan(8);
+>  
+>  	fill_function_pointers();
+> diff --git a/tools/testing/selftests/timens/procfs.c b/tools/testing/selftests/timens/procfs.c
+> index 1833ca97eb247b1b45b7a86f0ca800d4a6e58c74..0a9ff90ee69a9327ed905428f1462fa189ffd830 100644
+> --- a/tools/testing/selftests/timens/procfs.c
+> +++ b/tools/testing/selftests/timens/procfs.c
+> @@ -180,6 +180,8 @@ int main(int argc, char *argv[])
+>  {
+>  	int ret = 0;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	ksft_set_plan(2);
+> diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
+> index 387220791a052e6013bd0fb4162f123d85152183..a9c0534ef8f67184c34882ae163472c179f593e4 100644
+> --- a/tools/testing/selftests/timens/timens.c
+> +++ b/tools/testing/selftests/timens/timens.c
+> @@ -151,6 +151,8 @@ int main(int argc, char *argv[])
+>  	time_t offset;
+>  	int ret = 0;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	check_supported_timers();
+> diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
+> index 5b939f59dfa4d64e4c2e4dc8eb6a644d44211f13..51babe63e233bdaaef35c1cafbcb5b5cc91c021e 100644
+> --- a/tools/testing/selftests/timens/timer.c
+> +++ b/tools/testing/selftests/timens/timer.c
+> @@ -75,6 +75,8 @@ int main(int argc, char *argv[])
+>  	pid_t pid;
+>  	struct timespec btime_now, mtime_now;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	check_supported_timers();
+> diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
+> index a4196bbd6e33f41b6a3ae346070037aff1cf4087..e58bc8b64ce2738dccb8c2a2c88e592c237b55d5 100644
+> --- a/tools/testing/selftests/timens/timerfd.c
+> +++ b/tools/testing/selftests/timens/timerfd.c
+> @@ -82,6 +82,8 @@ int main(int argc, char *argv[])
+>  	pid_t pid;
+>  	struct timespec btime_now, mtime_now;
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	check_supported_timers();
+> diff --git a/tools/testing/selftests/timens/vfork_exec.c b/tools/testing/selftests/timens/vfork_exec.c
+> index 5b8907bf451dde3f3e2699f87797c155b9115aab..b957e1a651243adde41ec5cd57bbd12a7cac9eeb 100644
+> --- a/tools/testing/selftests/timens/vfork_exec.c
+> +++ b/tools/testing/selftests/timens/vfork_exec.c
+> @@ -91,6 +91,8 @@ int main(int argc, char *argv[])
+>  		return check("child after exec", &now);
+>  	}
+>  
+> +	ksft_print_header();
+> +
+>  	nscheck();
+>  
+>  	ksft_set_plan(4);
+> 
 
-I will use DIV_ROUND_UP() instead.
 
-
-> ...
-
-OK with all other comments.
-
-Thanks for your review.
-Mathieu
-
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- 
+Regards,
+Usama
