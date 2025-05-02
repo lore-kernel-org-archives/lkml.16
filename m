@@ -1,52 +1,49 @@
-Received: from smtp.smtpout.orange.fr (smtp-71.smtpout.orange.fr [80.12.242.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13D619004A;
-	Fri,  2 May 2025 15:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A145F22F155
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746198050; cv=none; b=eLU4udB7R0dfkf4GTXyuzdJJyfnkpylmWBeSM3RwVAlAce3eOfnzhCgk6hae9F05CO2yu8f6NEdgEpYILY9nBpPFQdCHXmBt8G+XhHbc6nFaGwXymViL1/7CbizlaUYc5nT5cge1Of+uCNbNGCQXRYq02+RzdyI9+HoA+Dib3iw=
+	t=1746198117; cv=none; b=GDpXXI8aPYWsU7SXia4jf8rhgO1UxtUJyWl0CjFzB9NELWXTxz2F0MmC89ol+6KyVsWpo8t/RcY1og9JfYWXslKG/CuvU4hTjf9sQEWSJ4Dao1J+mtCv6VXLQiniQTliYM+8QVQro1MU59kVFTsDxJ0C+1wu1ky5IbmcW5IMZH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746198050; c=relaxed/simple;
-	bh=dC2Y1O5qazKCP6X5USs05T/PU1V9Nks638uqbD9EaB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VfZaZ8r4vU8XDtUim3jtO+pB3jSSIzOYYyVRI8xLGU2AbA+/Vc6y3NRZ8YIKXL7KnLJhka25GeW5tD5BJ8i6SHBqTbKHgRsM0ido8LwE6Ak/qOvD0QH0TFsP7DofCXkabzQJqxtbGIAVqVpwf/FUfgMdTyGPd/cPKaSNR5gkpp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sjMryabD; arc=none smtp.client-ip=80.12.242.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sjMryabD"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id ArjhuI7RsSMUrArjkuJEbc; Fri, 02 May 2025 16:51:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746197498;
-	bh=WjZ/X+9NMMif7OyiK71JbAQs+u2dkiGWcjzAyUuvLBE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=sjMryabDPp3Mn5I/w6t+4ZGxjGnRvLA5GTEcOeCkqKLheOAxYapN5MAMkZERbzquh
-	 TkCOBHPRIJY0b0AdgrebihxkMK9OS5ca+C3UAruXgUiU8tyCtQIr5b/HqjiU5yOrvG
-	 096tcr91wUm/QjeEqQNG+V9DXmZiZX8DIaBeJkNYUg/PMGF6E1Nu5wT1tHKWfilj7B
-	 lX+LtLMti9wgy+KcXXg+PTOrfu/koKViCBjKbeeUzzAB9AEqIoEzqeQUvxifp6aXsf
-	 JixqSrCg5LUJA9LSqN4VgX3WQ78XEVSeRikJSXAOwLkzBgb7haJwUjNA5/WMDJYeNi
-	 snSrYBV9RGG9w==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 02 May 2025 16:51:38 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+	s=arc-20240116; t=1746198117; c=relaxed/simple;
+	bh=B1p0307AbGuUVy0xQNjE2egVjJKppcbO+fozf3RhI5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zd4lKwU3p7Ta+O7cVHvItoPODjiBYQGQaf+oabiHfyEegQVyFmLJBxobb0SGZ8OSbJ5AVJRB/Us8r/WRzKZoYi9wSgyUw+gz7kNvHdTEE2YASz1ngBcTiqhLKOCFxkJDCqnx15nzc1tVsp7uVe3vup2ei8//PpRiLoDdP4s9QIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <m.felsch@pengutronix.de>)
+	id 1uArtR-0002iK-Ov; Fri, 02 May 2025 17:01:37 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: nicolas.dufresne@collabora.com,
+	benjamin.gaignard@collabora.com,
+	p.zabel@pengutronix.de,
+	mchehab@kernel.org,
+	shawnguo@kernel.org,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	paul.kocialkowski@bootlin.com,
+	hverkuil@xs4all.nl,
+	laurent.pinchart@ideasonboard.com,
+	sebastian.fricke@collabora.com,
+	ming.qian@nxp.com
 Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-leds@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] leds: rgb: leds-mt6370-rgb: Improve definition of some struct linear_range
-Date: Fri,  2 May 2025 16:51:22 +0200
-Message-ID: <1ce4245107e0a51dce502a007a69899bda018d5f.1746197460.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	devicetree@vger.kernel.org
+Subject: [RFC PATCH 00/11] VC8000E H.264 V4L2 Stateless Encoder
+Date: Fri,  2 May 2025 17:00:53 +0200
+Message-Id: <20250502150105.4167289-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,45 +51,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
+X-SA-Exim-Mail-From: m.felsch@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Use LINEAR_RANGE() instead of hand-writing it. It is more robust, should
-the layout of the structure change one day.
+Hi all,
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/leds/rgb/leds-mt6370-rgb.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+this RFC implements the kernel V4L2 stateless encoding counter part for
+the Verisilicon VC8000E encoder. The encoder is capable of H.264 and
+H.265 encoding and can be found on several SoCs e.g. NXP i.MX8MP.
 
-diff --git a/drivers/leds/rgb/leds-mt6370-rgb.c b/drivers/leds/rgb/leds-mt6370-rgb.c
-index ebd3ba878dd5..c5927d0eb830 100644
---- a/drivers/leds/rgb/leds-mt6370-rgb.c
-+++ b/drivers/leds/rgb/leds-mt6370-rgb.c
-@@ -199,17 +199,17 @@ static const struct reg_field mt6372_reg_fields[F_MAX_FIELDS] = {
- 
- /* Current unit: microamp, time unit: millisecond */
- static const struct linear_range common_led_ranges[R_MAX_RANGES] = {
--	[R_LED123_CURR]	= { 4000, 1, 6, 4000 },
--	[R_LED4_CURR]	= { 2000, 1, 3, 2000 },
--	[R_LED_TRFON]	= { 125, 0, 15, 200 },
--	[R_LED_TOFF]	= { 250, 0, 15, 400 },
-+	[R_LED123_CURR]	= LINEAR_RANGE(4000, 1, 6, 4000),
-+	[R_LED4_CURR]	= LINEAR_RANGE(2000, 1, 3, 2000),
-+	[R_LED_TRFON]	= LINEAR_RANGE(125, 0, 15, 200),
-+	[R_LED_TOFF]	= LINEAR_RANGE(250, 0, 15, 400),
- };
- 
- static const struct linear_range mt6372_led_ranges[R_MAX_RANGES] = {
--	[R_LED123_CURR]	= { 2000, 1, 14, 2000 },
--	[R_LED4_CURR]	= { 2000, 1, 14, 2000 },
--	[R_LED_TRFON]	= { 125, 0, 15, 250 },
--	[R_LED_TOFF]	= { 250, 0, 15, 500 },
-+	[R_LED123_CURR]	= LINEAR_RANGE(2000, 1, 14, 2000),
-+	[R_LED4_CURR]	= LINEAR_RANGE(2000, 1, 14, 2000),
-+	[R_LED_TRFON]	= LINEAR_RANGE(125, 0, 15, 250),
-+	[R_LED_TOFF]	= LINEAR_RANGE(250, 0, 15, 500),
- };
- 
- static const unsigned int common_tfreqs[] = {
+The RFC is based on Pauls initial attempts [1].
+
+This patchset is still in a *very very* early state since the uAPI handling
+still needs to be figured out. It's clearly not for productive use yet!
+The only reason of publishing the driver in this early state is to align
+with other developers also working on V4L2 stateless H.264 encoding.
+
+That said, paired with the GStreamer userspace [2] the driver is capable
+of:
+ * H.264 encoding
+ * I/P frame handling
+ * Arbitrary frame sizes
+ * YUV420M input
+
+Note: Be aware that the GStreamer element [2] is in a *very* early state
+too, so don't expect to much. There are limitations like: the element
+requires to work on its own buffers, so there is no fast-path and
+always a copy involved.
+
+@DT folks
+The dt-bindings are missing yet.
+
+[1] https://github.com/bootlin/linux/tree/hantro/h264-encoding-v5.11
+[2] https://gitlab.freedesktop.org/dude/gstreamer/-/tree/h264-stateless-encoder
+
+Regards,
+  Marco
+
+Marco Felsch (7):
+  arm64: dts: imx8mp: drop gpcv2 vpu power-domains and clocks
+  arm64: dts: imx8mp: add VC8000E encoder node
+  arm64: dts: imx8mp: fix VPU_BUS clock setting
+  media: hantro: use hantro_decoded_buffer only for dst_vq
+  media: verisilicon: add H264 encoder support
+  media: verisilicon: split read/write debug
+  media: hantro: add support for i.MX8MP VC8000E
+
+Michael Tretter (3):
+  media: uapi: add documentation for the V4L2 H.264 stateless encoding
+    API
+  media: uapi: add nal unit header fields to encode_params
+  media: uapi: add more V4L2_H264_ENCODE_FLAGs
+
+Paul Kocialkowski (1):
+  media: Introduce Hantro V4L2 H.264 stateless encoding API
+
 -- 
-2.49.0
+2.39.5
 
