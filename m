@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9EA1F12F8;
-	Fri,  2 May 2025 07:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C7419E83E;
+	Fri,  2 May 2025 07:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746169900; cv=none; b=TzpQFV+NRldQJi+OriX3eyoZdtyn3y0VsnEWpYqsdzINjdWGhEqpwU9NkqSxHZcDL7MM3tdOnFQUGYUwEPSTD6aI6olvdv03WTNAdhB6Oj9SYeYuDIeyi/WDWPDRaBGrTbs6e9LSGaa8yTuweAfrPtbh1764lTeEJ2zzNQpiqV4=
+	t=1746170012; cv=none; b=BqWdNKGFnrd5b5yFp6yAMzbPywagRmnQOsJ8CIslnO3ne8rif1syRtD5Bpt1XV0/YSWe1rNFTwBB/hh9Sq5dwbWaqGdHOXNG1zhoLFy1iIYbgtnJ2Zmx0yn656p4obZM+g/U8E/70NQJQRXopg727Kan24Pc1Mj+T4PzJTvnJ4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746169900; c=relaxed/simple;
-	bh=Cl23HrG0NbI4zaeaKlMyqc6cU44bqn21N7OPQNvcZ0A=;
+	s=arc-20240116; t=1746170012; c=relaxed/simple;
+	bh=L66J/eQYes/GoM+dSimhqwXOafQgvfhtmOkECvbQyYk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KywVn8qdaFKzd6zzzRceh0Rw9kWq3ihldbfwpoBcMWQ9b06whwbk2bN2dMMD2fccoTY7vd0JrSiDB50xQcMizpwVZ5H+1+fsAQVcHpeehnqL8cLHByH4u0rW5LpmD42EXqsqvSd6aIVrzGvvZI/iTnnf+XYTQfL8PJtgxjn3nA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=k+dCcuTM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUl7oBY9M6wXpIxJOjegA9IMpVPRbYDh/myGT/VnrZLISbNRNDfYUXIXVeW7XMNSOIFGNO6/DZyS9b9irrGnmE70J7b/189Fy39XUnXOpzr1kj2XxUS+H/SZ6+ne6Gz7E/qhbSTEQvBRQiNrBKzc+igdUg6utps4dBotsYIjb+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=olWs2xSb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="k+dCcuTM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F495C4CEE4;
-	Fri,  2 May 2025 07:11:39 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="olWs2xSb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358F9C4CEE4;
+	Fri,  2 May 2025 07:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746169900;
-	bh=Cl23HrG0NbI4zaeaKlMyqc6cU44bqn21N7OPQNvcZ0A=;
+	s=korg; t=1746170010;
+	bh=L66J/eQYes/GoM+dSimhqwXOafQgvfhtmOkECvbQyYk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k+dCcuTM/Bc3TFFQtnFq70WegTPt5Y3lVJ46EWIgXXmORvbYCn8mSXIFw9LokrpG8
-	 NwgGbK+P5u0sn485Q1ajovz13P4m7IPNGVieHrFgfNgKH8VQqR8qLXdmzj3ap4Ey6k
-	 bxGhyAIimD0/W3MqDBDIc4fAh1HvarJkzrU91Q5I=
-Date: Fri, 2 May 2025 09:11:37 +0200
+	b=olWs2xSb9VKrNz3V3Tz8OaqO0bZEmj/zi6rjuraKEBP+kHtGZIoAbqY8QwnJOyEe6
+	 c3ynuHQGlwxyAPsd5NcEz9Z/b+HQxyC/hqsdll3Tp5FbRE5P/Vh3Z7D//xjDghcp4S
+	 LZBoHFVmI+iMk+q1cyGqyyxZAq/WE5Viy0fkJpGk=
+Date: Fri, 2 May 2025 09:13:28 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
@@ -37,13 +37,11 @@ Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
 	Sami Tolvanen <samitolvanen@google.com>,
 	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
-Message-ID: <2025050205-reassign-entire-4078@gregkh>
+Subject: Re: [PATCH v3 4/4] rust: samples: Add debugfs sample
+Message-ID: <2025050253-wriggly-pod-e420@gregkh>
 References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
- <20250501-debugfs-rust-v3-1-850869fab672@google.com>
- <aBRoNKjB063QhGZo@pollux>
- <2025050230-browsing-backstab-8de9@gregkh>
- <aBRutTMBtq-uCnii@pollux>
+ <20250501-debugfs-rust-v3-4-850869fab672@google.com>
+ <aBRtrfTaaC3Vk9fL@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,43 +50,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBRutTMBtq-uCnii@pollux>
+In-Reply-To: <aBRtrfTaaC3Vk9fL@pollux>
 
-On Fri, May 02, 2025 at 09:05:25AM +0200, Danilo Krummrich wrote:
-> On Fri, May 02, 2025 at 09:00:07AM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, May 02, 2025 at 08:37:40AM +0200, Danilo Krummrich wrote:
-> > > On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
-> > > > +/// Handle to a DebugFS directory that will stay alive after leaving scope.
-> > > > +#[repr(transparent)]
-> > > > +pub struct SubDir(ManuallyDrop<Dir>);
-> > > 
-> > > I think it's not very intuitive if the default is that a SubDir still exists
-> > > after it has been dropped. I think your first approach being explicit about this
-> > > with keep() consuming the SubDir was much better; please keep this approach.
-> > 
-> > Wait, let's step back.  Why do we care about the difference between a
-> > "subdir" and a "dir"?  They both are the same thing, and how do you
-> > describe a subdir of a subdir?  :)
+On Fri, May 02, 2025 at 09:01:01AM +0200, Danilo Krummrich wrote:
+> On Thu, May 01, 2025 at 10:47:44PM +0000, Matthew Maurer wrote:
+> > +struct RustDebugFs {
+> > +    // As we only hold this for drop effect (to remove the directory) we have a leading underscore
+> > +    // to indicate to the compiler that we don't expect to use this field directly.
 > 
-> We care about the difference, because Dir originally had keep() which drops the
-> Dir instance without actually removing it. For subdirs this is fine, since
-> they'll be cleaned up when the parent is removed.
+> This feels like an introduction to Rust in the kernel for Rust beginners, which
+> is a great thing!
+> 
+> However, I wonder if, instead, we may want a dedicated (or even multiple) sample
+> modules or sample drivers, where we go into such detail and leave those samples
+> to focus only on the corresponding API?
 
-But does that mean a subdir can not be cleaned up without dropping the
-parent first?  For many subsystems, they make a "root" debugfs
-directory, and then add/remove subdirs all the time within that.
+People search for the specific example of what they want to do, so I
+recommend just leaving all of these comments in for now as knowing to
+search for a different example is usually not going to happen :)
 
-> However, we don't want users to be able to call keep() on the directory that has
-> been created first, since if that's done we loose our root anchor to ever free
-> the tree, which almost always would be a bug.
 
-Then do a call to debugfs_lookup_and_remove() which is what I really
-recommend doing for any C user anyway.  That way no dentry is ever
-"stored" anywhere.
+> 
+> > +    _debugfs: Dir,
+> > +}
+> > +
+> > +static EXAMPLE: AtomicU32 = AtomicU32::new(8);
+> > +
+> > +impl kernel::Module for RustDebugFs {
+> > +    fn init(_this: &'static ThisModule) -> Result<Self> {
+> > +        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
+> > +        let debugfs = Dir::new(c_str!("sample_debugfs"));
+> > +
+> > +        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
+> > +        let sub = debugfs.subdir(c_str!("subdir"));
+> > +
+> > +        // Create a single file in the subdirectory called "example" that will read from the
+> > +        // `EXAMPLE` atomic variable.
+> > +        sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
+> > +            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
+> > +        });
+> > +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
+> > +
+> > +        // Change the value in the variable displayed by the file. This is intended to demonstrate
+> > +        // that the module can continue to change the value used by the file.
+> > +        EXAMPLE.store(10, Ordering::Relaxed);
+> > +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
+> > +
+> > +        // Save the root debugfs directory we created to our module object. It will be
+> > +        // automatically cleaned up when our module is unloaded because dropping the module object
+> > +        // will drop the `Dir` handle. The base directory, the subdirectory, and the file will all
+> > +        // continue to exist until the module is unloaded.
+> 
+> Same with this comment.
+> 
+> @Greg: I know you proposed this one; for educational purposes I suppose. What's
+> your take on the above?
 
-Anyway, if Dir always has an implicit keep() call in it, then I guess
-this is ok.  Let's see how this shakes out with some real-world users.
-We can always change it over time if it gets unwieldy.
+I like it and want to see this here as it helps explain both how to use
+this, AND how to have maintainers review code that uses the api that are
+not that familiar with how Rust does things.
 
 thanks,
 
