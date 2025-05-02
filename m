@@ -1,109 +1,102 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C9D33062
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C0A8467
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746147784; cv=none; b=KhYtsjTKiszyPYSc4TIHjWasxUCotTEuf3vZstUBuEdrtvkCYukx5GfAb+JuXcl+F1NRxo38N0FYZoa+EyLN8lftkGTxffATZeCl79wFew1Aw+OvhsMTh1GBFjAzr5nscWEzOCZqP0WYTOjJDbvzc9WRf7luxZBRc6FzzcgZLjY=
+	t=1746147902; cv=none; b=QqmDZTLUbeagaKn0EIKCshaIz5jxET78R1Yc8ndDHEz2Pk2UzmJc363K0YVBgJan2CtMm213FBzDzXa3bfr1VtQmOEXMuK27DsWL61AYJhN9Waqs5GBCNJwgMl1/fJ0Byci4XhaTz1gGqH850e3R4o82tbclJGeS1SXrF6t3THg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746147784; c=relaxed/simple;
-	bh=pZ6oKDCA5Kf7RJiXDZG6hIiEfrnTuH/Cfd/Y1mQ1UU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bfCEPDposwStKQkiJSamHVIf6x3MPN4CcIZO4mw7VlpL9E3HGPtjJvozvQJKX5pQ6BV0j0BiShmZNKF/fwb2ymmwdAHYNyeKK/3AE5077xq+kvECqk4cQEjqPQJSLW+NB8Nb8+UzT+DC6YDHYx7b0OBBU547vDnYlScmVZ6okAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fNeRE9nU; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1746147902; c=relaxed/simple;
+	bh=vhlVuXi8YA72d8p0j+EDkAR9M4GEwVDBp87iOO8b9Jw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J4dwcysQBYMsP4nr3/WYQSJajX9JiTSxcJbNkX1veqPGyaeZ0JBBkjbcWF+czCm3bujr70J6WypTdagWG82CTdGukn9y/m7MOjdiKiS/duRP/117cuAMbHUaW6eY+5nYLjmsR+jy+mZOVFAHn+jyyeOaem/nDKWK05HgGEEdzJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IVwXBHvr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fNeRE9nU"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746147772; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=5wOtn7+0eH5S9Osa2VOzYdwINzoQRtielagFITbsLqQ=;
-	b=fNeRE9nUs1hI46BwO2txo00v+lHCRLoSUH4B4l+PRoUxhQwGkLxtqIQlSzgiMVVN/c/7nop0SBj2eCv4niWTasLO3jrMktFbVQTE2iNjD9fQVYJTvDdws4ch3F+CtSKli31P7PnOAjvbHWuzpaUKygdtFP8YQ0yPSVSPEVt3wnE=
-Received: from 30.0.191.233(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WYtQLJQ_1746147769 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 02 May 2025 09:02:50 +0800
-Message-ID: <57dc4929-268b-4f3f-a0f8-43d6ec85974f@linux.alibaba.com>
-Date: Fri, 2 May 2025 09:02:46 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IVwXBHvr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746147899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TYSdSFwzjhXcSLgkgaEemwI8IC5UbKlgSIinlVdAjNc=;
+	b=IVwXBHvrTwA4G1WOooOhnRJoejUevpU8QIEbBKLmS01KIzlHK3LnB0r/qrRwkS9LWFJQS1
+	hAmHDxclbsHqi0kAAWu2xQ5qyOXgRxCZZwYZMwmfBIuLwyGcLotYI2DOcwZIWzBFuG6bA1
+	3Y8Z1RGdLn2++8Fb/gy/V+oMQ8ImJqM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-v6cGtQwjNLKML5NP6cyq4A-1; Thu,
+ 01 May 2025 21:04:56 -0400
+X-MC-Unique: v6cGtQwjNLKML5NP6cyq4A-1
+X-Mimecast-MFC-AGG-ID: v6cGtQwjNLKML5NP6cyq4A_1746147894
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C01271800261;
+	Fri,  2 May 2025 01:04:53 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.80.189])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4136B19560A3;
+	Fri,  2 May 2025 01:04:49 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v8 0/2] memcg: Fix test_memcg_min/low test failures
+Date: Thu,  1 May 2025 21:04:41 -0400
+Message-ID: <20250502010443.106022-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
- support for tmpfs
-To: Daniel Gomez <da.gomez@kernel.org>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
- david@redhat.com, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
- ryan.roberts@arm.com, ioworker0@gmail.com, da.gomez@samsung.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org,
- Eero Tamminen <eero.t.tamminen@intel.com>
-References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
- <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
- <aBEP-6iFhIC87zmb@intel.com>
- <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
- <aBIHYqzar5J8uxGO@intel.com>
- <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+v8:
+ - Ignore the low event count of child 2 with memory_recursiveprot on
+   in patch 1 as originally suggested by Michal.
 
+v7:
+ - Skip the vmscan change as the mem_cgroup_usage() check for now as
+   it is currently redundant.
 
-On 2025/4/30 21:24, Daniel Gomez wrote:
-> On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville Syrjälä wrote:
->> On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
->>> On 2025/4/30 01:44, Ville Syrjälä wrote:
->>>> On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
->>>> Hi,
->>>>
->>>> This causes a huge regression in Intel iGPU texturing performance.
->>>
->>> Unfortunately, I don't have such platform to test it.
->>>
->>>>
->>>> I haven't had time to look at this in detail, but presumably the
->>>> problem is that we're no longer getting huge pages from our
->>>> private tmpfs mount (done in i915_gemfs_init()).
->>>
->>> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE
->>> in the shmem_pwrite(),
->>
->> pwrite is just one random way to write to objects, and probably
->> not something that's even used by current Mesa.
->>
->>> which prevents tmpfs from allocating large
->>> folios. As mentioned in the comments below, tmpfs like other file
->>> systems that support large folios, will allow getting a highest order
->>> hint based on the size of the write and fallocate paths, and then will
->>> attempt each allowable huge order.
->>>
->>> Therefore, I think the shmem_pwrite() function should be changed to
->>> remove the limitation that the write size cannot exceed PAGE_SIZE.
-> 
-> To enable mTHP on tmpfs, the necessary knobs must first be enabled in sysfs
-> as they are not enabled by default IIRC (only THP, PMD level). Ville, I
-> see i915_gemfs the huge=within_size mount option is passed. Can you confirm
-> if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also marked as
-> 'always' when the regression is found?
+v6:
+ - The memcg_test_low failure is indeed due to the memory_recursiveprot
+   mount option which is enabled by default in systemd cgroup v2 setting.
+   So adopt Michal's suggestion to adjust the low event checking
+   according to whether memory_recursiveprot is enabled or not.
 
-The tmpfs mount will not be controlled by 
-'/sys/kernel/mm/transparent_hugepage/hugepages-*Kb/enabled' (except for 
-the debugging options 'deny' and 'force').
+The test_memcontrol selftest consistently fails its test_memcg_low
+sub-test (with memory_recursiveprot enabled) and sporadically fails
+its test_memcg_min sub-test. This patchset fixes the test_memcg_min
+and test_memcg_low failures by adjusting the test_memcontrol selftest
+to fix these test failures.
 
-> Even if these are enabled, the possible difference may be that before, i915 was
-> using PMD pages (THP) always and now mTHP will be used, unless the file size is
-> as big as the PMD page. I think the always mount option would also try to infer
-> the size to actually give a proper order folio according to that size. Baolin,
-> is that correct?
+Waiman Long (2):
+  selftests: memcg: Allow low event with no memory.low and
+    memory_recursiveprot on
+  selftests: memcg: Increase error tolerance of child memory.current
+    check in test_memcg_protection()
 
-Right.
+ .../selftests/cgroup/test_memcontrol.c        | 22 ++++++++++++++-----
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-> And Ville, can you confirm if what i915 needs is to enable PMD-size allocations
-> always?
+-- 
+2.49.0
+
