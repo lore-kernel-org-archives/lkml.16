@@ -1,256 +1,127 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAA9255F58
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8402F15A848;
+	Fri,  2 May 2025 14:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194713; cv=none; b=nuItOG/vvMU9kzS7ZmpK1TEVTi/d++3rznt+G0k1+bO0gsudRBzfbvFs5Csw8YxcqPjUmRbre5gVhBRmBs21Nki1JN8LGQ5giJZnrenwLDRs4v/taax59uFh9BAN0dDuLW9uBlDhBmcrLmB3u6jsNn7pc/zY8WQZ6PKCMz+xqqY=
+	t=1746194856; cv=none; b=sM5CI7vt0xIaW6JgHFnDIOdm6kCEdg49wL6ve2MKyzHPNG1Gc2PPZOhXYpmGMAzacMCcoNg8ndHGc5i1XGFuuLVl03LUF/izjcrmi10PSqq8vKH8wM0SxewrJzTQI6yAWHMpff0fyPLZIVIcLS7rMsT36OvKejj2QlPXQVIQgNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194713; c=relaxed/simple;
-	bh=u3bCcvNuqwsKSKUwyi8x1R/rJebyJfXEs0GloV4+rzg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E4Er+88ITAHeVkCnGeoKsZjtZdWtfYBL8zoxUM6fSnlyMO/i3ZcYUShlmBftiYCTPW4qfJ+22g8nGNxHIufVSKCMJDd1a5PTgp7TeX4iLMyGMtZSNdpUM0+5xzLAvp9v2USF8SCxW5DpwvLEvVpSakpEGKkcABxqCARQh5lqhBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KCfaLU10; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746194856; c=relaxed/simple;
+	bh=d7e/BxF8TUjSA3tEyDtY7crUEk0g5PG6PGzTvVanYqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbCXAfUojCVeFWlYk4rtadn94ipix5JUnQbZwyOmyeE/Pkgu++dKZgS3qxTg+ibq31DgZNrc3Q1bOMDAz1sTSvdbisjeL/rtB2RFz6+N9/G08T10BgPi8b7i1ij7ufW27NVvEFhMeUR3HQTDZBaVbaYg3+gannge9Euv+i2vJjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Z/LC/4L2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KCfaLU10"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso7751a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746194709; x=1746799509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AIUkLEuO/0R6FFK/5E6ascv0dB5aqKKlLkCLuO+aNpk=;
-        b=KCfaLU10xRMqbHREUYrJKzO6l9byY3YKXP+U4AwoHmmlI0vY5ifnKznttHivHx0Wir
-         753GXVnkeUG0R+1XkuGj7FSZqwqN9SsHF98L/zYxxE4bfDv9g+wrxmhk8TvUFUqAmH0G
-         fhCQSjQKHkIoymrF9Qv5zVBaSqeweq5P66u+40rpto6Hu2jZOPc78/4+1ERuQvieaaSA
-         NeNt279zwpq0RtSk5VtvdtY3KVGhvVLUm2cbDabfjYAzdhqcrt6+92A2W5ncic1Gyjv8
-         DP2o08WF3wLcgOejsB+rZtuwumUOPLqqdRXhVy8Ep5wuEJcv+GzA9rl809vxhL1URdcf
-         4E9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746194709; x=1746799509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AIUkLEuO/0R6FFK/5E6ascv0dB5aqKKlLkCLuO+aNpk=;
-        b=fxFLbmfUcvrlXdd6WjxusWMLb7LFIRJyQPJp6VGkdS8tK6xqB2wwAAYaAXk2uoDLsn
-         np+AG05P7FmQY4ZYuYzQYZ+w9zoqTyYOQ8uTi8VHGcbLHpHVbH/oq/9uVEcNKbxGJ9QQ
-         Lbj0vhhiFd0v8VFibctFpTVXWnduLHxGldG53pe+Y8wNbJ3QkOmU6eUABph8cq4pNjEY
-         rxTBlFu49gzq9yxuf07uOiBhV9Iq1/sMWCXOcGArJMjsJ8VCnGGY+JxQIhVoms0Dlrq5
-         b8Lrixzeyrrg1NG75oLkcZqId4p2/ANqISgWaX6po4wd6nNTZW3PaPLc3sIKP2MIPDCb
-         PYKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgrcbZ/fD70waBEPv+SOOYedSiDj2hGUYN3JW4mcE+kGvqDgPKRUiPwxp/yFuY/1F5tFw3vmWQ26FrhB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfIzrML+H95b2/AcXvQRnOrq/X57BhlV9xJmVAuzRsHKogfQgR
-	p2FoF2OLEBl3PzqfChnj/7UDU1XGGV7bOz3zxrux6MfjdIskYKg0ZgRorcGbajx5xObPeZ8ncrK
-	RfteaN213CrLUtQS9XoWnfMolqj4DVv3WqD0x
-X-Gm-Gg: ASbGncsIYTlHB3LEoBw9Cm3vo/Cg3+nUSxqhr6rKQEZKPR7c2LqzMMnJsCFSfnmLXuc
-	0Y85I49QWVfF7ENU/aVFrmPZGerZjbfvoR9wnGZNiD9R5l3gTe4GNUdiTxIjHnokMqtyDgMbWCR
-	SJEFp5+xecqEVxyP0QWNjG/IcAAu1Q7YT5nSeUOQkIrfGLSc2+aw==
-X-Google-Smtp-Source: AGHT+IH079h8T97+GdbfLlz4ZTQu0SIeE7/FcxZKXrGaki/lyIvv7PFx+pafXehKr4vx1Hbtav8zz1kPAxAFy1FP/mk=
-X-Received: by 2002:a50:c018:0:b0:5f7:f888:4cb5 with SMTP id
- 4fb4d7f45d1cf-5f918c08662mr174264a12.1.1746194708830; Fri, 02 May 2025
- 07:05:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Z/LC/4L2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D52EC4CEE4;
+	Fri,  2 May 2025 14:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746194855;
+	bh=d7e/BxF8TUjSA3tEyDtY7crUEk0g5PG6PGzTvVanYqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z/LC/4L2Eru4VYZ0NiiqWiYuLOtJPX5P/ekk31UfSch8CdE0wFxXZiCJAErSCE+sE
+	 PKzO560NlLDxapjUfzHZqxX+nHwA0Gd7pa5XWneWNhau8ZLCHxhbHyguSnIUf4mJAB
+	 OfqTLur3oUO2RzjLNcmN9hcpMgdXqqb0JgqUj7L8=
+Date: Fri, 2 May 2025 16:07:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] rust: alloc: add Vec::push_within_capacity
+Message-ID: <2025050215-affluent-repair-3bb2@gregkh>
+References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+ <20250502-vec-methods-v5-3-06d20ad9366f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org> <20250502-work-coredump-socket-v2-3-43259042ffc7@kernel.org>
-In-Reply-To: <20250502-work-coredump-socket-v2-3-43259042ffc7@kernel.org>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 2 May 2025 16:04:32 +0200
-X-Gm-Features: ATxdqUHMFraIA12GhTqlpB1U5cC0A5UkJsNTEJvN5fJ5qnYj4W9vpCcDcDr5py4
-Message-ID: <CAG48ez1w+25tbSPPU6=z1rWRm3ZXuGq0ypq4jffhzUva9Bwazw@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 3/6] coredump: support AF_UNIX sockets
-To: Christian Brauner <brauner@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502-vec-methods-v5-3-06d20ad9366f@google.com>
 
-On Fri, May 2, 2025 at 2:42=E2=80=AFPM Christian Brauner <brauner@kernel.or=
-g> wrote:
-> diff --git a/fs/coredump.c b/fs/coredump.c
-[...]
-> @@ -801,6 +841,73 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                 }
->                 break;
->         }
-> +       case COREDUMP_SOCK: {
-> +               struct file *file __free(fput) =3D NULL;
-> +#ifdef CONFIG_UNIX
-> +               ssize_t addr_size;
-> +               struct sockaddr_un unix_addr =3D {
-> +                       .sun_family =3D AF_UNIX,
-> +               };
-> +               struct sockaddr_storage *addr;
+On Fri, May 02, 2025 at 01:19:31PM +0000, Alice Ryhl wrote:
+> This introduces a new method called `push_within_capacity` for appending
+> to a vector without attempting to allocate if the capacity is full. Rust
+> Binder will use this in various places to safely push to a vector while
+> holding a spinlock.
+> 
+> The implementation is moved to a push_within_capacity_unchecked method.
+> This is preferred over having push() call push_within_capacity()
+> followed by an unwrap_unchecked() for simpler unsafe.
+> 
+> Panics in the kernel are best avoided when possible, so an error is
+> returned if the vector does not have sufficient capacity. An error type
+> is used rather than just returning Result<(),T> to make it more
+> convenient for callers (i.e. they can use ? or unwrap).
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/kernel/alloc/kvec.rs        | 46 ++++++++++++++++++++++++++++++++++++----
+>  rust/kernel/alloc/kvec/errors.rs | 23 ++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 4 deletions(-)
+> 
+> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> index ebca0cfd31c67f3ce13c4825d7039e34bb54f4d4..e9bf4c97a5a78fc9b54751b57f15a33c716c607b 100644
+> --- a/rust/kernel/alloc/kvec.rs
+> +++ b/rust/kernel/alloc/kvec.rs
+> @@ -21,6 +21,9 @@
+>      slice::SliceIndex,
+>  };
+>  
+> +mod errors;
+> +pub use self::errors::PushError;
 > +
-> +               /*
-> +                * TODO: We need to really support core_pipe_limit to
-> +                * prevent the task from being reaped before userspace
-> +                * had a chance to look at /proc/<pid>.
-> +                *
-> +                * I need help from the networking people (or maybe Oleg
-> +                * also knows?) how to do this.
-> +                *
-> +                * IOW, we need to wait for the other side to shutdown
-> +                * the socket/terminate the connection.
-> +                *
-> +                * We could just read but then userspace could sent us
-> +                * SCM_RIGHTS and we just shouldn't need to deal with
-> +                * any of that.
-> +                */
-
-I don't think userspace can send you SCM_RIGHTS if you don't do a
-recvmsg() with a control data buffer?
-
-> +               if (WARN_ON_ONCE(core_pipe_limit)) {
-> +                       retval =3D -EINVAL;
-> +                       goto close_fail;
-> +               }
+>  /// Create a [`KVec`] containing the arguments.
+>  ///
+>  /// New memory is allocated with `GFP_KERNEL`.
+> @@ -307,17 +310,52 @@ pub fn spare_capacity_mut(&mut self) -> &mut [MaybeUninit<T>] {
+>      /// ```
+>      pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
+>          self.reserve(1, flags)?;
+> +        // SAFETY: The call to `reserve` was successful, so the capacity is at least one greater
+> +        // than the length.
+> +        unsafe { self.push_within_capacity_unchecked(v) };
+> +        Ok(())
+> +    }
+>  
+> +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> +    ///
+> +    /// Fails if the vector does not have capacity for the new element.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// let mut v = KVec::with_capacity(10, GFP_KERNEL)?;
+> +    /// for i in 0..10 {
+> +    ///     v.push_within_capacity(i)?;
+> +    /// }
+> +    ///
+> +    /// assert!(v.push_within_capacity(10).is_err());
+> +    /// # Ok::<(), Error>(())
+> +    /// ```
+> +    pub fn push_within_capacity(&mut self, v: T) -> Result<(), PushError<T>> {
+> +        if self.len() < self.capacity() {
+> +            // SAFETY: The length is less than the capacity.
+> +            unsafe { self.push_within_capacity_unchecked(v) };
+> +            Ok(())
+> +        } else {
+> +            Err(PushError(v))
+> +        }
+> +    }
 > +
-> +               retval =3D strscpy(unix_addr.sun_path, cn.corename, sizeo=
-f(unix_addr.sun_path));
-> +               if (retval < 0)
-> +                       goto close_fail;
-> +               addr_size =3D offsetof(struct sockaddr_un, sun_path) + re=
-tval + 1,
-> +
-> +               file =3D __sys_socket_file(AF_UNIX, SOCK_STREAM, 0);
-> +               if (IS_ERR(file))
-> +                       goto close_fail;
-> +
-> +               /*
-> +                * It is possible that the userspace process which is
-> +                * supposed to handle the coredump and is listening on
-> +                * the AF_UNIX socket coredumps. This should be fine
-> +                * though. If this was the only process which was
-> +                * listen()ing on the AF_UNIX socket for coredumps it
-> +                * obviously won't be listen()ing anymore by the time it
-> +                * gets here. So the __sys_connect_file() call will
-> +                * often fail with ECONNREFUSED and the coredump.
+> +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The length must be less than the capacity.
+> +    pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
 
-Why will the server not be listening anymore? Have the task's file
-descriptors already been closed by the time we get here?
+Why does this have to be public?  Does binder need to call this instead
+of just push_within_capacity()?
 
-(Maybe just get rid of this comment, I agree with the following
-comment saying we should let userspace deal with this.)
+thanks,
 
-> +                * In general though, userspace should just mark itself
-> +                * non dumpable and not do any of this nonsense. We
-> +                * shouldn't work around this.
-> +                */
-> +               addr =3D (struct sockaddr_storage *)(&unix_addr);
-> +               retval =3D __sys_connect_file(file, addr, addr_size, O_CL=
-OEXEC);
-
-Have you made an intentional decision on whether you want to connect
-to a unix domain socket with a path relative to current->fs->root (so
-that containers can do their own core dump handling) or relative to
-the root namespace root (so that core dumps always reach the init
-namespace's core dumping even if a process sandboxes itself with
-namespaces or such)? Also, I think this connection attempt will be
-subject to restrictions imposed by (for example) Landlock or AppArmor,
-I'm not sure if that is desired here (since this is not actually a
-connection that the process in whose context the call happens decided
-to make, it's something the system administrator decided to do, and
-especially with Landlock, policies are controlled by individual
-applications that may not know how core dumps work on the system).
-
-I guess if we keep the current behavior where the socket path is
-namespaced, then we also need to keep the security checks, since an
-unprivileged user could probably set up a namespace and chroot() to a
-place where the socket path (indirectly, through a symlink) refers to
-an arbitrary socket...
-
-An alternative design might be to directly register the server socket
-on the userns/mountns/netns or such in some magic way, and then have
-the core dumping walk up the namespace hierarchy until it finds a
-namespace that has opted in to using its own core dumping socket, and
-connect to that socket bypassing security checks. (A bit like how
-namespaced binfmt_misc works.) Like, maybe userspace with namespaced
-CAP_SYS_ADMIN could bind() to some magic UNIX socket address, or use
-some new setsockopt() on the socket or such, to become the handler of
-core dumps? This would also have the advantage that malicious
-userspace wouldn't be able to send fake bogus core dumps to the
-server, and the server would provide clear consent to being connected
-to without security checks at connection time.
-
-> +               if (retval)
-> +                       goto close_fail;
-> +
-> +               /* The peer isn't supposed to write and we for sure won't=
- read. */
-> +               retval =3D  __sys_shutdown_sock(sock_from_file(file), SHU=
-T_RD);
-> +               if (retval)
-> +                       goto close_fail;
-> +
-> +               cprm.limit =3D RLIM_INFINITY;
-> +#endif
-> +               cprm.file =3D no_free_ptr(file);
-> +               break;
-> +       }
->         default:
->                 WARN_ON_ONCE(true);
->                 retval =3D -EINVAL;
-> @@ -818,7 +925,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                  * have this set to NULL.
->                  */
->                 if (!cprm.file) {
-> -                       coredump_report_failure("Core dump to |%s disable=
-d", cn.corename);
-> +                       if (cn.core_type =3D=3D COREDUMP_PIPE)
-> +                               coredump_report_failure("Core dump to |%s=
- disabled", cn.corename);
-> +                       else
-> +                               coredump_report_failure("Core dump to :%s=
- disabled", cn.corename);
->                         goto close_fail;
->                 }
->                 if (!dump_vma_snapshot(&cprm))
-> @@ -839,8 +949,25 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                 file_end_write(cprm.file);
->                 free_vma_snapshot(&cprm);
->         }
-> -       if ((cn.core_type =3D=3D COREDUMP_PIPE) && core_pipe_limit)
-> -               wait_for_dump_helpers(cprm.file);
-> +
-> +       if (core_pipe_limit) {
-> +               switch (cn.core_type) {
-> +               case COREDUMP_PIPE:
-> +                       wait_for_dump_helpers(cprm.file);
-> +                       break;
-> +               case COREDUMP_SOCK: {
-> +                       /*
-> +                        * TODO: Wait for the coredump handler to shut
-> +                        * down the socket so we prevent the task from
-> +                        * being reaped.
-> +                        */
-
-Hmm, I'm no expert but maybe you could poll for the POLLRDHUP event...
-though that might require writing your own helper with a loop that
-does vfs_poll() and waits for a poll wakeup, since I don't think there
-is a kernel helper analogous to a synchronous poll() syscall yet.
-
-> +                       break;
-> +               }
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +
->  close_fail:
->         if (cprm.file)
->                 filp_close(cprm.file, NULL);
+greg k-h
