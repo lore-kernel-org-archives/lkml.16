@@ -1,72 +1,44 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A691C1F22
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1BA320F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746170185; cv=none; b=uAL/RwCg28/lfF8EbAclYvmPZM5WVfTkDWZYGGnn7+rQo0039DaNqO7gGTv0svNQuEK1cYXK76Z42ubFS5LJBl3FHjSRDh6LyaN4rgmg3fbR8FV94lXaloNOQ5qd4xj5DawzozWCS0dp03/FyiSfW6Kn38jwQgfB6o/lcNJXtVk=
+	t=1746170227; cv=none; b=udzjohKJBuk5MLEYPByncPdWDheaUwHFhE0tlpEs9ypZWYl81PRr/kxCVQTEj5IbDNy4giBzTY20P1is6bJECl1CYxd5XEkmpjkF43pKkoTukdX8PE+93Vjk5oFvG6zQjoJoKwgGaK+7hySaoSGXBH9pwK03RJ/XCyAoAegRWeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746170185; c=relaxed/simple;
-	bh=TEn8q9fQLQPZ4XryW0ZjyzXlzHST0D5QNErlYACy7d4=;
+	s=arc-20240116; t=1746170227; c=relaxed/simple;
+	bh=tQvp3NxwC/YEco1LbxJCrlsE1/zq81i5Juvdy/z8NGU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpVw/wx7DARxpS4I0lDQ5STWXLUpRhJx0GAToad1uMrXU1fO0eu0tfFkSQ51RvZjO61uBLAXGxmSrfRJq36kSUrIVbobH6NCqraIPbGG9bk3Zi4wFlFATWRbC7VEwQlwr0B607GA7RNEXK7ABeb3QyVbWs00Trdvi0nAPHyGRYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p93Z/XUq; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=JS7cWE735qOJaJk0CcTGjPHZrAqesUqb+wSOdbMMgG8qLTr3rot42/wXQKNzYNy6YgbaMHDV1zLQyAbGYsWbzPk7NPe6wA7lQdauYP18w7zflbCLrNG79kFq9GpPh9edCSg6g+RRdoPPkt2kjkAC3A4cSOvIpgvfDS4GRfwCEQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P671J4yh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p93Z/XUq"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-391342fc0b5so867971f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:16:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746170182; x=1746774982; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gBU2uNDQCYbDHEbrbUInGkBBuJpJ+ziGBCavc7pVcyw=;
-        b=p93Z/XUqkF/YrOt/4s6eZl+EJFwalWPRNvSlc0avihC+zctbc4xw2LKHGdFEldaYCl
-         TmSO96tV1MTNTYA6UwIrm1cz0ZVSs8VjQMnC7PWkt0YyAN1dswn/92VRR+vPxqxZ8Alt
-         98mNqX77Iwl0lc3b++O6AuR3ptnspHBC42SjOY/wgD4I8KmWNAXD0OchZ8XZgOhLyJgD
-         uOPY7o2nqam4K1gUZPvBIJe0nZYHpCUqm0GQqXDsYq8osbnCtddmrM50Hfs6CWhV1vdj
-         qwEe0X0RYOgFYP4C+xmVoSW1q2hh+FJAouxz6yJOpQtRWuBCWQLx7gxVV0bujqOKy49C
-         C53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746170182; x=1746774982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gBU2uNDQCYbDHEbrbUInGkBBuJpJ+ziGBCavc7pVcyw=;
-        b=FxT4/PBH77PppEc8EL0E5qK+v9Fuv6/G/CzXGOVsBexCWw8PazbGsxfUmKHni/bekO
-         9q95cIIjpe4zB6SX3Pc35UE8aHBDTx6nJjzPS9z3akBgLe0UTyFKTXKuMK3lQmRzC35d
-         Fj0os90YjLtZBxsUAU4+9zyp0J8NLYxpJJdVHHrF4tDpVVHKAs799au47VyXqT1ArZ/3
-         NWWZ2QkJYYw9ZBANJ/K0cpvf9bXyDaISEOfP32P3th3kRDXoGGIBxXkZ5n0wsGjM6iVr
-         xvTBpulgAJL7YDt/Ms477cu3A0bdXr0UjXAe/0ViPG9iLSwH/CGhsrTO0n2KlrQh6POZ
-         6PkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiAFOcl5ZiegSzSi8NYmbmqS6f1wdA5CwCfRxNwzpEwt4KfhCiKS04ekuIyDbZ+Zc8rPQUbqfDsQAwQMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxc4xlMc9BbiXKHYW3qNbhbwEztqb6EHlD4AehdYdptcAiwV6N
-	l2p+1p0+ZvYnMwL364QVlo58kwKj0sFT9+2NO5siK2swIctaQnoRtxq0IH355BA=
-X-Gm-Gg: ASbGncuP8Gl6aK6We4aNa3EoObGJa/nJ6M0Zpx5CarL0ZBjqxEkPrZT+3c4kT+qcBg/
-	JnhqLYFbz9jF6lGSOy9bq22bIp5JraIA92V5jBRBzggR1EiQ9b4h3wJ0Uynl/XZmQF5ii/Knhdu
-	vQ9BlynCvMDyBzbLrtMuvdwsElV4Vd9aB5A/iCN2WpJfNCBdfsXyCeaSi54LUZl6+5JpBnB6tyz
-	udF5ACh01vRKpjJLuc6XOBl6Eaq5HNLLz1DE7M3GxUOiIGZcppruMmrYVvJpYay6qGz/aBYjAhw
-	D8gW+0YXkDTJ6/Fyi8x0uVAb1xAJRf6hlMb8LLsHO4kVJA==
-X-Google-Smtp-Source: AGHT+IGoljjX2Mq++EkXquUoZWnI1wA/aHixjMFIJrg5drkNpGswC9dHeERArqW4lNSPCvTr79mfoA==
-X-Received: by 2002:a05:6000:4205:b0:39e:db6a:4744 with SMTP id ffacd0b85a97d-3a099addb5dmr1039941f8f.32.1746170181783;
-        Fri, 02 May 2025 00:16:21 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099b170d0sm1308789f8f.99.2025.05.02.00.16.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:16:21 -0700 (PDT)
-Date: Fri, 2 May 2025 10:16:18 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Thomas Andreatta <thomasandreatta2000@gmail.com>
-Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: Re: [PATCH 1/8] Staging: gpib: agilent_82357a: changing return type
- void in int
-Message-ID: <aBRxQhLxs13zuFZy@stanley.mountain>
-References: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
- <e902b9d53283d350e6f97399dd3fea646fdb5d88.1746133676.git.thomas.andreatta2000@gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P671J4yh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A36C4CEE4;
+	Fri,  2 May 2025 07:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746170225;
+	bh=tQvp3NxwC/YEco1LbxJCrlsE1/zq81i5Juvdy/z8NGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P671J4yhg2htogLz49Z4PTn8h5Ats3uSMKbNO9BpBO+H51icN7goa2Gl+EDXw4PLf
+	 Zb+7M/NuJVuuxgbMbc5WZ2jel3goKT1jmW7wzU6CGIjffEtOUQQNosfUylckv2QOA8
+	 M3H3MziFgQrqcCnXUR7lQjlwSYiuJTQklnNZsrlU=
+Date: Fri, 2 May 2025 09:17:02 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Gupta, Nipun" <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] cdx: MAINTAINERS: Explicitly mention Greg who
+ handles patches
+Message-ID: <2025050249-cufflink-renegade-7eef@gregkh>
+References: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
+ <20250430-cdx-clean-v2-6-7dbfda9364a9@linaro.org>
+ <2025050158-tingly-doubling-9795@gregkh>
+ <45859218-1bde-48e9-bdcf-4ec94fbd47a6@linaro.org>
+ <86cd570d-416a-49ab-84e3-6bf54873f8eb@linaro.org>
+ <c2644e83-89b5-baad-005a-ed578200d956@amd.com>
+ <1039be19-bcb3-4fec-afe7-ce4c217a3753@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,11 +47,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e902b9d53283d350e6f97399dd3fea646fdb5d88.1746133676.git.thomas.andreatta2000@gmail.com>
+In-Reply-To: <1039be19-bcb3-4fec-afe7-ce4c217a3753@linaro.org>
 
-This patch will break the build.  Also you need to work against
-linux-next.  Dave Penkler already did this work.
+On Fri, May 02, 2025 at 08:57:12AM +0200, Krzysztof Kozlowski wrote:
+> On 02/05/2025 08:52, Gupta, Nipun wrote:
+> > 
+> > 
+> > On 02-05-2025 11:57, Krzysztof Kozlowski wrote:
+> >> On 01/05/2025 18:06, Krzysztof Kozlowski wrote:
+> >>> On 01/05/2025 17:59, Greg Kroah-Hartman wrote:
+> >>>> On Wed, Apr 30, 2025 at 08:41:34PM +0200, Krzysztof Kozlowski wrote:
+> >>>>> Patches for CDX bus drivers are applied by Greg Kroah-Hartman, so list
+> >>>>> him in the maintainers entry because otherwise contributors would be
+> >>>>> surprised their patches got lost.
+> >>>>>
+> >>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>>>> ---
+> >>>>>   MAINTAINERS | 1 +
+> >>>>>   1 file changed, 1 insertion(+)
+> >>>>>
+> >>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>>>> index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..505d7d45ad7d1c007e89a555264ff8cbeaf6e1f4 100644
+> >>>>> --- a/MAINTAINERS
+> >>>>> +++ b/MAINTAINERS
+> >>>>> @@ -1008,6 +1008,7 @@ F:	Documentation/devicetree/bindings/w1/amd,axi-1wire-host.yaml
+> >>>>>   F:	drivers/w1/masters/amd_axi_w1.c
+> >>>>>   
+> >>>>>   AMD CDX BUS DRIVER
+> >>>>> +M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>>>
+> >>>> Sorry, but no, I'm not the maintainer of this driver.  It's up to the
+> >>>> maintainer(s) of it to send me the patches on to be merged, it is not up
+> >>>> to me to maintain the code at all.
+> >>>>
+> >>> Sure, I understand. I  will send a v3 without maintainers patch and I
+> >>> assume the maintainers will pick them up (unless drivers are orphaned).
+> >>
+> >>
+> >> And now I found this:
+> >> https://lore.kernel.org/lkml/929198a2-6b3b-0f1b-3f36-cd8955ca6f19@amd.com/
+> >>
+> >> "We do not maintain a tree and  patches go via Greg's tree."
+> >>
+> >> which means that patches won't be picked up. Your email does not pop up
+> >> on b4/get_maintainers. Overall this means cdx driver might be abandoned,
+> >> from contributors point of view.
+> > 
+> > We usually copy Greg once the patches are reviewed/acked from our side 
+> > if he is not already on the list. Do you suggest any alternate approach 
+> > in maintaining the drivers like cdx which do not have their own tree?
+> 
+> 
+> Either you have the tree or person having the tree appears on
+> maintainers output. There is no other option.
 
-regards,
-dan carpenter
+What?  No, we do this for many subsystems already.  Look at the entry
+for "USB TYPEC BUS FOR ALTERNATE MODES" as one simple example.  The
+patches go to the list, Heikki reviews them and if he says "ack" or
+"signed-off-by" then I pick them up and add them to my tree and away the
+patch goes.
 
+That last bit is NOT explicitly documented in MAINTAINERS as it does not
+need to be (otherwise you will have too many lines in that file).  This
+is just one more subsystem that does it this way, not a big deal.
+
+> If you refuse to take the patches and handle them, I claim this is
+> orphaned from the kernel point of view, even if occasionally Greg takes
+> these. I believe Greg was already pointing this issue more than once.
+
+They are "handling" them in that they are reviewing them when they get
+the chance and then I need to then pick them up.  Again, totally normal.
+
+I will not dispute the fact that this is confusing for submitters, and
+maybe the cdx maintainers need to get a tree and start doing more work,
+but I am NOT going to be the one telling any maintainer to do more work
+than they are willing to do as that would just be rude :)
+
+thanks,
+
+greg k-h
