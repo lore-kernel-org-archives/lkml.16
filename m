@@ -1,43 +1,65 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED3E252905;
-	Fri,  2 May 2025 12:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188061; cv=pass; b=dxithaM9ljm4GfzJx7ZCuxLp/LTptYEorZ3kPX51EnyXjR+1Ldt821ZqKmWP2ub3wfARpu3ZKOKJlIr1AjuavvGfU+vSBW1JTrtZgdVix2+BypKuDLHGgLzite4NUqyeWQfqv+yOsICNQ4ZGhQbSDardlgAQvT8DXod9nYV48xM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188061; c=relaxed/simple;
-	bh=QWQ0tYUydSfvMr+CPdPk2VH7cysCF2J6Vz3KTfOueMA=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZSrOwiB57EIbCFj+N7bnv3P0wecrXTbRq33p3Hr5mFR3h4NFyxkqItgibydBVtJNpqMhr48QatiZloDq3dgIQMVgRApa38CJExc3zWjiJJxMxqA/tkxMnE8AbPn/DTNsy8899hctnFo+k7/oRyggciE5Ygeu72TGyrSFBvqaIJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=hGtTGPzg; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D99250C08
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746188087; cv=none; b=gyObrNZNfXYiuQorHESP9fqrm6EdA/Y8nc9+RanJbOD7GveGncb6Me52BdFRpllcf791Z/pAC+6adV1fmkADAT+V24uxdz1eAkd/2c0WwEym+cF49u6t2DM1wfc/OKHYvZbIXJPqM0DdCt+tEd5nJgmoUH5eUJ4vBaUo2TiYC/I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746188087; c=relaxed/simple;
+	bh=HZYmVYIn1/rBiM7syr+wRrAG9d066stiloGUYRn7DDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iwwyg4su4n7lUB12+S3/OeaA30xRNjEYdI/HAayW+FPEJK2SyzPaUY2mVpomLalxrPxWM18RuxVpLNoohzF+5Zr6RE8F7JVCdPlpNt5X9lvkXuiYF+ZtP8jLdQnvp0NUuPmK0d/gidARszXSW7Bw50yNb1bzJLUtx3mhiac9hWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WZQNp1mr; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="hGtTGPzg"
-ARC-Seal: i=1; a=rsa-sha256; t=1746188049; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GbJQBUcLrVskjQDydlPHVXHWh4/z8entqzW57nLfZLw6dmynYihABXs4L9oKwBLOJfpURysXCUaSDTsg85IcVKZi6n9TIlF6+MvTWXclhcVWIRnr3h9PIRmOUMqNLewofLKFcqJpc4ma+I26I3UxIAXiEx8R+cu49Vj1ZELvklI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746188049; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=4ws5VbGnfhpvS/oFMBDujAqRrocy+NzsCJj/FruTxjw=; 
-	b=B4l+0br4CrJVYJqs1vnn2pDqrAwgcaFUynkso+RGWJbcQjy3sZcBqS45p+06+m1Nz9i7EHwdftu0zIJNZpb4Qa/k67yno/T3sOkQV/0TGrDkIC9JUIBEUQRYWYMNeiYvgp68gB1vM/LEn/6YVQ4YlfchZPLDAnbJ0ORMg/kzaO8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746188049;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=4ws5VbGnfhpvS/oFMBDujAqRrocy+NzsCJj/FruTxjw=;
-	b=hGtTGPzgYR/YsJTPCgz9TuBf6aD7T54LPkyZT8+JIbImCnLZB7IgE5vhVuh4FiLn
-	B8f98+drMN1wx+wjJBXkVyQOUNOvtyomZUVrGpyb3XHh2qRa5sfxEaZVxVXFp2h2TLE
-	TnKQgrAjyryV1PWvTFomuPbJcvm5QavOc1rSdx/Y=
-Received: by mx.zohomail.com with SMTPS id 1746188046798467.3546517732965;
-	Fri, 2 May 2025 05:14:06 -0700 (PDT)
-Message-ID: <5203d87f-a098-4f76-81cb-4966181de4eb@collabora.com>
-Date: Fri, 2 May 2025 17:14:02 +0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZQNp1mr"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39129fc51f8so1243632f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746188083; x=1746792883; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G9/dhZTszQP4J3gm1E4yy+01r7zQbwLu4nWEf7PFly8=;
+        b=WZQNp1mr8VC7MDAVTJWgK3J79P1rB9OuidbLm13wiX+ZprrZ0qfaCBaVah0JL5k10F
+         rWVFknUMZBdkp60A7oQYetfFl1iCKwY2GDrDtFpvL5zCQQ/v59A3/G4xA4o0gIcQtmT3
+         DlF5wbKHqCKcSBIkVpL/xWTSuAbeGUJUYokbRT9ZO2xuQDx7xiQCciPATb7kYYlPCg2g
+         YddMUeQIVD9PuDpZsXZUbGP5LgBMYf01DL6b6X8Ekj69Y4fL9uh7yxmOsUYXdImkDsUd
+         oDeiqN9ARfHUR4JJUAVM91paMD1xXTjXvH19Z+TUkLB2QsjgTFX4AEl1C9T0wV0h6Qcr
+         8yUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746188083; x=1746792883;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G9/dhZTszQP4J3gm1E4yy+01r7zQbwLu4nWEf7PFly8=;
+        b=ZAWPcz6sITI5H7t8P1CL6nJAZgkY41LaM+MA+lf5VrY2IYbHZ0WLOb7WCHhaX/wI9x
+         as1BMDc8MNLO1oQREzlVyrERL4yvbUmkBhk5+WmYv0splidcF76E8VkkakxONgH1fokD
+         6W2A22S5BLV+r8PbCxEgw7acNVZKleIXjhL5L8AwHltr/GmnwF6vLvjupR6XEG7Rven3
+         u4fv333Bw91xfmb6jloawfn9qZfm6Wt0+Wwvb3voPznIp/Csi6Z9uYPQz0P3+AYV0b4u
+         uiRxtatIO67vurehEF4lO90RXHsBloNjsPBcw+6pBrdmXlsfkqHfNwiAyHxylKEDTrqJ
+         ZP1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVmyNVwFZtVYB9eT4jyqQ+NjD0JpaE7z/2xbIgtP2AUjwQJmdFqqOVNtTxcdFWeWP257jrRPpOyMNVIoMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwGneZD2EmxMVzgUz8Lyx6KjonWrkeph/MDm9KoS+phLcIW+Zj
+	Uzd7WvDhA/y+J7MOLRRERyvJKr9hcdTR5Yges8UIXG886FYTRh1Ni7zfjn8/4vY=
+X-Gm-Gg: ASbGncucGhDI1oGOhPrLjUygqUSQMOCd00WEtrd6EXhySbT4OGfV9NgFExVD4uS6PtF
+	wKZsTE0/xnN2HFm/BeM/cmWXR+8J+PU77My9xHv0jLPjbcRLQ0NGmyHuhylwZ7FtC3HJvt6AVSw
+	2brk30nZ5Uu5byDvc4+Uuw2o7Dq3zRbjAFCe9Wqw25VpaE0808vtd/wqU+8rg/89stf8E/tqANX
+	MauU3nTZ1+i+AJicFoUhQ7mNKAQWdtOmSQbPSl8jvc2GvHuryO+nqrzGopdhhtpnHFAygLH9Yl8
+	jmj4nXyRvLDZ/LmAmiVydGGcFxTK8X8K2Jh/eNgexyK2ci0fDefaaMQ0fgpooIpyaqpLzPy+fUo
+	jSJvCBQ==
+X-Google-Smtp-Source: AGHT+IEmgqcEFRtHrXSw4fQDalGgiK4l0caLdup6FQi2z7S6MyjWPzeXMWBgDXMYxCLrm+F9zlpjxA==
+X-Received: by 2002:a05:6000:2dc3:b0:391:3d12:9afa with SMTP id ffacd0b85a97d-3a099ad9754mr1845534f8f.21.1746188083483;
+        Fri, 02 May 2025 05:14:43 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm2029587f8f.38.2025.05.02.05.14.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:14:42 -0700 (PDT)
+Message-ID: <8e0bc60a-35fe-4a78-a710-3642842fa5f5@linaro.org>
+Date: Fri, 2 May 2025 13:14:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,51 +67,187 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] selftests/timens: timerfd: Use correct clockid type
- in tclock_gettime()
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Shuah Khan <shuah@kernel.org>
-References: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
- <20250502-selftests-timens-fixes-v1-3-fb517c76f04d@linutronix.de>
+Subject: Re: [PATCH v3 01/23] media: iris: Skip destroying internal buffer if
+ not dequeued
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-1-552158a10a7d@quicinc.com>
 Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20250502-selftests-timens-fixes-v1-3-fb517c76f04d@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-1-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 5/2/25 5:03 PM, Thomas Weißschuh wrote:
-> tclock_gettime() is a wrapper around clock_gettime().
-> The first parameter of clock_gettime() is of type "clockid_t",
-> not "clock_t".
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Firmware might hold the DPB buffers for reference in case of sequence
+> change, so skip destroying buffers for which QUEUED flag is not removed.
+> Also, make sure that all buffers are released during streamoff.
 > 
-> Use the correct type instead.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-
+> Cc: stable@vger.kernel.org
+> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+> Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 > ---
->  tools/testing/selftests/timens/timerfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/media/platform/qcom/iris/iris_buffer.c | 20 +++++++++++++++-
+>   drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
+>   drivers/media/platform/qcom/iris/iris_vdec.c   |  4 ++--
+>   drivers/media/platform/qcom/iris/iris_vidc.c   | 33 ++++++++++++++++++++++++--
+>   4 files changed, 54 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-> index d6adf66bd8df064f5b76ccc265c13217d7a53f5b..402e2e4155450d946796b8297a8be85f93cea16f 100644
-> --- a/tools/testing/selftests/timens/timerfd.c
-> +++ b/tools/testing/selftests/timens/timerfd.c
-> @@ -15,7 +15,7 @@
->  #include "log.h"
->  #include "timens.h"
->  
-> -static int tclock_gettime(clock_t clockid, struct timespec *now)
-> +static int tclock_gettime(clockid_t clockid, struct timespec *now)
->  {
->  	if (clockid == CLOCK_BOOTTIME_ALARM)
->  		clockid = CLOCK_BOOTTIME;
+> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+> index e5c5a564fcb8..981fedb000ed 100644
+> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
+> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
+>   	return 0;
+>   }
+>   
+> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+> +static int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
+>   {
+>   	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>   	struct iris_buffer *buf, *next;
+> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>   	for (i = 0; i < len; i++) {
+>   		buffers = &inst->buffers[internal_buf_type[i]];
+>   		list_for_each_entry_safe(buf, next, &buffers->list, list) {
+> +			/*
+> +			 * during stream on, skip destroying internal(DPB) buffer
+> +			 * if firmware did not return it.
+> +			 * during close, destroy all buffers irrespectively.
+> +			 */
+> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
+> +				continue;
+> +
+>   			ret = iris_destroy_internal_buffer(inst, buf);
+>   			if (ret)
+>   				return ret;
+> @@ -405,6 +413,16 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>   	return 0;
+>   }
+>   
+> +int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane)
+> +{
+> +	return iris_destroy_internal_buffers(inst, plane, true);
+> +}
+> +
+> +int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane)
+> +{
+> +	return iris_destroy_internal_buffers(inst, plane, false);
+> +}
+> +
+>   static int iris_release_internal_buffers(struct iris_inst *inst,
+>   					 enum iris_buffer_type buffer_type)
+>   {
+> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+> index c36b6347b077..00825ad2dc3a 100644
+> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
+> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+>   int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+>   int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
+>   int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
+> +int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane);
+> +int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane);
+>   int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
+>   int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
+>   int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
+> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+> index 4143acedfc57..9c049b9671cc 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
+>   
+>   	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>   
+> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	ret = iris_destroy_dequeued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
+>   
+>   	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>   
+> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	ret = iris_destroy_dequeued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+> index ca0f4e310f77..a8144595cc78 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
+> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+> @@ -221,6 +221,33 @@ static void iris_session_close(struct iris_inst *inst)
+>   		iris_wait_for_session_response(inst, false);
+>   }
+>   
+> +static void iris_check_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
+> +{
+> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+> +	struct iris_buffer *buf, *next;
+> +	struct iris_buffers *buffers;
+> +	const u32 *internal_buf_type;
+> +	u32 internal_buffer_count, i;
+> +	u32 count = 0;
+> +
+> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
+> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
+> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
+> +	} else {
+> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
+> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
+> +	}
+> +
+> +	for (i = 0; i < internal_buffer_count; i++) {
+> +		buffers = &inst->buffers[internal_buf_type[i]];
+> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
+> +			count++;
+> +		if (count)
+> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
+> +				count, internal_buf_type[i]);
+> +	}
+> +}
+> +
+>   int iris_close(struct file *filp)
+>   {
+>   	struct iris_inst *inst = iris_get_inst(filp, NULL);
+> @@ -233,8 +260,10 @@ int iris_close(struct file *filp)
+>   	iris_session_close(inst);
+>   	iris_inst_change_state(inst, IRIS_INST_DEINIT);
+>   	iris_v4l2_fh_deinit(inst);
+> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	iris_destroy_all_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	iris_destroy_all_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	iris_check_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	iris_check_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>   	iris_remove_session(inst);
+>   	mutex_unlock(&inst->lock);
+>   	mutex_destroy(&inst->ctx_q_lock);
 > 
 
+I left some comments in the previous cycle
 
--- 
-Regards,
-Usama
+https://lore.kernel.org/linux-arm-msm/a056266e-612d-4abf-916f-3db49b00dbde@linaro.org
+
+I don't see those addressed in this cycle. Can you give some feedback 
+from your POV.
+
+---
+bod
