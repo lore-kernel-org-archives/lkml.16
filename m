@@ -1,394 +1,281 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502D6241CB0;
-	Fri,  2 May 2025 09:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6423433CE;
+	Fri,  2 May 2025 09:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176593; cv=none; b=uT7QktLT2FzBU/j63DeN26jk/vHfOo9wuSTFxw7qVw2hyZxwHf60YDdZAMQJj47saTQztcb8vAgLnf7Y3gho1B9KcOXNFYfpkf0CwfEaSh024DxL1B+MXtyeYSEnbS4iBBuy2SPiog+xGliQ/pqWc9OXxvcXeheBDWwpc8+Y05Q=
+	t=1746176662; cv=none; b=uA4bCMhk4EuJh7WFi774OxvP3eVhZcSnhKFpME8ls6XItKexcGdFHsTStYoZiR6jLAYq5t8riz50Q/3pmtPMnDsJSYVYoVTw8ol10MpZMx0eMWhhmYci9haOTvMOxmNN3g2SWvZCq9y3jLsCSjktESBfi3nTkFAVPll8dTVpR1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176593; c=relaxed/simple;
-	bh=2DoRPY90HPb0vreL+1wdH6ifr2K0c+o6aU/jTWhXrT8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N6GblCxAfQKesSXcTpvNnyaI5SzQaICC0D4OTpzlqaqbPl+RZnM3aJihBxEO1cpcIuQJzc/Q/Wyn9UtzqajEe269G85HjxM8sishWpTll48VgytY8rHz904ivEREoX8QvTs3dhSlFHlW92T8EOGVi4PfI8ONP8F7WcmYfbuDfIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=fVboQKcO; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746176662; c=relaxed/simple;
+	bh=8xRBW7BjKjLy+wVGSuSOr3agsqbvD1P1kl2sha3112s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=U/lJOEptxKjLCwD49lTQQtUL4zlyJuaz+4fo9uQqBl9YW45vtTMy5wT/9uEcA0W90sEcZmHX0eqGDeo5caeq0R9pR29OQ67EjMD50sSuhO5fC8sMVzLhX2Pf/nvGDh1yBIHckMfeVQjxitflM3kXiRasSjeCl0z5+CgsG6KhcIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FDajAH90; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gVdIr99C; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="fVboQKcO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746176589; x=1746435789;
-	bh=FBltpZVjhwV8MQLDJxwMyi9+Fo4qdGjW9Xkiy47VWYM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=fVboQKcOlH/bRO/jj7J2ZV2Czt6Xrl3RxiaEG+LduJDjYs/j0XYmfGSYLDQDZPItZ
-	 hZR0DC4KQ5TvgCy5WUQVdbJ9rcc8YXFj6HrIEc7T3Z0gFqdpXQIlfcc+3BSKhgr4Ih
-	 bXTmcFQdsZQlFHR9A5BpKyvklgWtOFuRGR8hRirqQ4BogPLV5b8xM+D/pPbbILQzYi
-	 8bYd26/y48HFscFE1RcKyrdUixXaR1umPwW6pNiYbL+obfRw67+Eb12D2G25jZarlo
-	 z5x1iAGKpfZfH5kAiY3FW5C47PINedSeY5cUho1XeD/RIySefNckEKHaeJud37rWNq
-	 IMZ9F2/6b0m6Q==
-Date: Fri, 02 May 2025 09:03:04 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
-Subject: [PATCH v10 5/5] rust: Add OwnableRefCounted and SimpleOwnableRefCounted
-Message-ID: <20250502-unique-ref-v10-5-25de64c0307f@pm.me>
-In-Reply-To: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
-References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: cd62f5405a586d7b2198e4e2882e4ab22b8e2e3b
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FDajAH90";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gVdIr99C"
+Date: Fri, 02 May 2025 09:04:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746176658;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xbi71XM0OV2kWNw9zbHk+Y6isPvtJsbX6ZMUFMUZwJA=;
+	b=FDajAH90JP4eTZRQy+ygkghgg3Ez9HasFTywsFyPdxHu46uPwLeGfDAHqV9nc7HVYsmIgb
+	vmaYku/x2KNmr87x39riiFbFwngITNUcXvqeVi/Zt62b3QeR5jNPNK9E0uPxl2uoSRbK//
+	tOA/QIauDdCGIX72i9iImIrwsnTZhA9tATekF5ll6GxbzCe5fitEcL3ORYVIG6GsWeoZZy
+	uzWApE072DE611LxNOzHnw5WPVzU0Ha1Q5+zZ7NWsb7mdi4HL53/ibMrqnyk5I5gqsYMpo
+	E6DeG1v0IH6gIgXMU09d6yBeX9JGLiTy53skOhqZX0PIWU7rj7rHhtrdrJmppA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746176658;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xbi71XM0OV2kWNw9zbHk+Y6isPvtJsbX6ZMUFMUZwJA=;
+	b=gVdIr99CFyL8uPNxYCJ7ryXsw9DhV9okFNfEz2f0y5YEGAhFpeT9UCAU9V0he0NNHhnrOK
+	AH9gmi5EqKLVDJCg==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/merge] x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
+Cc: "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, Juergen Gross <jgross@suse.com>,
+ Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>,
+ Stefano Stabellini <sstabellini@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250427092027.1598740-15-xin@zytor.com>
+References: <20250427092027.1598740-15-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174617665757.22196.213699917175739032.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Types implementing one of these traits can safely convert between an
-ARef<T> and an Owned<T>.
+The following commit has been merged into the x86/merge branch of tip:
 
-This is useful for types which generally are accessed through an ARef
-but have methods which can only safely be called when the reference is
-unique, like e.g. `block::mq::Request::end_ok()`.
+Commit-ID:     444b46a128ccd0883f83ffa2e6b4a1f64ea4ca1c
+Gitweb:        https://git.kernel.org/tip/444b46a128ccd0883f83ffa2e6b4a1f64ea4ca1c
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Sun, 27 Apr 2025 02:20:26 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 02 May 2025 10:36:36 +02:00
 
-Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
+
+The third argument in wrmsr(msr, low, 0) is unnecessary.  Instead, use
+wrmsrq(msr, low), which automatically sets the higher 32 bits of the
+MSR value to 0.
+
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Link: https://lore.kernel.org/r/20250427092027.1598740-15-xin@zytor.com
 ---
- rust/kernel/types.rs         |   8 +-
- rust/kernel/types/ownable.rs | 244 +++++++++++++++++++++++++++++++++++++++=
-++++
- 2 files changed, 251 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/hv_apic.c                 | 6 +++---
+ arch/x86/include/asm/apic.h               | 2 +-
+ arch/x86/include/asm/switch_to.h          | 2 +-
+ arch/x86/kernel/cpu/amd.c                 | 2 +-
+ arch/x86/kernel/cpu/common.c              | 8 ++++----
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 4 ++--
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 2 +-
+ arch/x86/kernel/cpu/umwait.c              | 4 ++--
+ arch/x86/kernel/kvm.c                     | 2 +-
+ 9 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 33d2b4e4a87b991c6d934f4e8d2c6c71a15b1bcb..3a58905599eb9acb0e701c97bd9=
-2d3b93b9515cf 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -12,7 +12,7 @@
- use pin_init::{PinInit, Zeroable};
-=20
- pub mod ownable;
--pub use ownable::{Ownable, OwnableMut, Owned};
-+pub use ownable::{Ownable, OwnableMut, OwnableRefCounted, Owned, SimpleOwn=
-ableRefCounted};
-=20
- /// Used to transfer ownership to and from foreign (non-Rust) languages.
- ///
-@@ -544,6 +544,12 @@ fn from(b: &T) -> Self {
-     }
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index a079a14..bfde0a3 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -76,10 +76,10 @@ static void hv_apic_write(u32 reg, u32 val)
+ {
+ 	switch (reg) {
+ 	case APIC_EOI:
+-		wrmsr(HV_X64_MSR_EOI, val, 0);
++		wrmsrq(HV_X64_MSR_EOI, val);
+ 		break;
+ 	case APIC_TASKPRI:
+-		wrmsr(HV_X64_MSR_TPR, val, 0);
++		wrmsrq(HV_X64_MSR_TPR, val);
+ 		break;
+ 	default:
+ 		native_apic_mem_write(reg, val);
+@@ -93,7 +93,7 @@ static void hv_apic_eoi_write(void)
+ 	if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
+ 		return;
+ 
+-	wrmsr(HV_X64_MSR_EOI, APIC_EOI_ACK, 0);
++	wrmsrq(HV_X64_MSR_EOI, APIC_EOI_ACK);
  }
-=20
-+impl<T: OwnableRefCounted> From<Owned<T>> for ARef<T> {
-+    fn from(b: Owned<T>) -> Self {
-+        T::into_shared(b)
-+    }
-+}
-+
- impl<T: RefCounted> Drop for ARef<T> {
-     fn drop(&mut self) {
-         // SAFETY: The type invariants guarantee that the `ARef` owns the =
-reference we're about to
-diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.rs
-index 52e7a69019f1e2bbbe3cf715651b67a5a5c7c13d..b79459d07870ea4fa4f5df0c756=
-5ac72d65e2c53 100644
---- a/rust/kernel/types/ownable.rs
-+++ b/rust/kernel/types/ownable.rs
-@@ -2,6 +2,7 @@
-=20
- //! Owned reference types.
-=20
-+use crate::types::{ARef, RefCounted};
- use core::{
-     marker::PhantomData,
-     mem::ManuallyDrop,
-@@ -115,3 +116,246 @@ fn drop(&mut self) {
-         unsafe { T::release(self.ptr) };
-     }
+ 
+ static bool cpu_is_self(int cpu)
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 0174dd5..68e10e3 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -209,7 +209,7 @@ static inline void native_apic_msr_write(u32 reg, u32 v)
+ 	    reg == APIC_LVR)
+ 		return;
+ 
+-	wrmsr(APIC_BASE_MSR + (reg >> 4), v, 0);
++	wrmsrq(APIC_BASE_MSR + (reg >> 4), v);
  }
-+
-+/// A trait for objects that can be wrapped in either one of the reference=
- types [`Owned`] and
-+/// [`ARef`].
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that:
-+///
-+/// - Both the safety requirements for [`Ownable`] and [`RefCounted`] are =
-fulfilled.
-+/// - [`try_from_shared()`](OwnableRefCounted::into_shared) only returns a=
-n [`Owned`] if exactly
-+///   one [`ARef`] exists.
-+/// - [`into_shared()`](OwnableRefCounted::into_shared) set the reference =
-count to the value which
-+///   the returned [`ARef`] expects for an object with a single reference
-+///   in existence. This implies that if [`into_shared()`](OwnableRefCount=
-ed::into_shared) is left
-+///   on the default implementation, which just rewraps the underlying obj=
-ect, the reference count
-+///   needs not to be modified when converting a [`Owned`] to an [`ARef`].
-+///
-+/// # Examples
-+///
-+/// A minimal example implementation of [`OwnableRefCounted`], [`Ownable`]=
- and its usage with
-+/// [`ARef`] and [`Owned`] looks like this:
-+///
-+/// ```
-+/// # #![expect(clippy::disallowed_names)]
-+/// use core::cell::Cell;
-+/// use core::ptr::NonNull;
-+/// use kernel::alloc::{flags, kbox::KBox, AllocError};
-+/// use kernel::types::{
-+///     ARef, RefCounted, Owned, Ownable, OwnableRefCounted,
-+/// };
-+///
-+/// struct Foo {
-+///     refcount: Cell<usize>,
-+/// }
-+///
-+/// impl Foo {
-+///     fn new() -> Result<Owned<Self>, AllocError> {
-+///         // Use a `KBox` to handle the actual allocation.
-+///         let result =3D KBox::new(
-+///             Foo {
-+///                 refcount: Cell::new(1),
-+///             },
-+///             flags::GFP_KERNEL,
-+///         )?;
-+///         let result =3D NonNull::new(KBox::into_raw(result))
-+///             .expect("Raw pointer to newly allocation KBox is null, thi=
-s should never happen.");
-+///         // SAFETY: We just allocated the `Foo`, thus it is valid.
-+///         Ok(unsafe { Owned::from_raw(result) })
-+///     }
-+/// }
-+///
-+/// // SAFETY: We increment and decrement each time the respective functio=
-n is called and only free
-+/// // the `Foo` when the refcount reaches zero.
-+/// unsafe impl RefCounted for Foo {
-+///     fn inc_ref(&self) {
-+///         self.refcount.replace(self.refcount.get() + 1);
-+///     }
-+///
-+///     unsafe fn dec_ref(this: NonNull<Self>) {
-+///         // SAFETY: The underlying object is always valid when the func=
-tion is called.
-+///         let refcount =3D unsafe { &this.as_ref().refcount };
-+///         let new_refcount =3D refcount.get() - 1;
-+///         if new_refcount =3D=3D 0 {
-+///             // The `Foo` will be dropped when `KBox` goes out of scope=
-.
-+///             // SAFETY: The `Box<Foo>` is still alive as the old refcou=
-nt is 1.
-+///             unsafe { KBox::from_raw(this.as_ptr()) };
-+///         } else {
-+///             refcount.replace(new_refcount);
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: We only convert into an `Owned` when the refcount is 1.
-+/// unsafe impl OwnableRefCounted for Foo {
-+///     fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<S=
-elf>> {
-+///         if this.refcount.get() =3D=3D 1 {
-+///             // SAFETY: The `Foo` is still alive as the refcount is 1.
-+///             Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
-+///         } else {
-+///             Err(this)
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: We are not `AlwaysRefCounted`.
-+/// unsafe impl Ownable for Foo {
-+///     unsafe fn release(this: NonNull<Self>) {
-+///         // SAFETY: Using `dec_ref()` from `RefCounted` to release is o=
-kay, as the refcount is
-+///         // always 1 for an `Owned<Foo>`.
-+///         unsafe{ Foo::dec_ref(this) };
-+///     }
-+/// }
-+///
-+/// let foo =3D Foo::new().unwrap();
-+/// let mut foo =3D ARef::from(foo);
-+/// {
-+///     let bar =3D foo.clone();
-+///     assert!(Owned::try_from(bar).is_err());
-+/// }
-+/// assert!(Owned::try_from(foo).is_ok());
-+/// ```
-+pub unsafe trait OwnableRefCounted: RefCounted + Ownable + Sized {
-+    /// Checks if the [`ARef`] is unique and convert it to an [`Owned`] it=
- that is that case.
-+    /// Otherwise it returns again an [`ARef`] to the same underlying obje=
-ct.
-+    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<Self>=
->;
-+
-+    /// Converts the [`Owned`] into an [`ARef`].
-+    fn into_shared(this: Owned<Self>) -> ARef<Self> {
-+        // SAFETY: Safe by the requirements on implementing the trait.
-+        unsafe { ARef::from_raw(Owned::into_raw(this)) }
-+    }
-+}
-+
-+/// This trait allows to implement [`Ownable`] and [`OwnableRefCounted`] t=
-ogether in a simplified
-+/// way, only requiring to implement [`RefCounted`] and providing the meth=
-od
-+/// [`is_unique()`](SimpleOwnableRefCounted::is_unique).
-+///
-+/// For non-standard cases where conversion between [`Ownable`] and [`RefC=
-ounted`] does not allow
-+/// [`Ownable::release()`] and [`RefCounted::dec_ref()`] to be the same me=
-thod, [`Ownable`]
-+/// and [`OwnableRefCounted`] should be implemented separately.
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that:
-+///
-+/// - The safety requirements for [`Ownable`] are fulfilled and [`RefCount=
-ed::dec_ref()`] can
-+///   be used for [`Ownable::release()`].
-+/// - [`is_unique`](SimpleOwnableRefCounted::is_unique) must only return `=
-true` in case only one
-+///   [`ARef`] exists and it is impossible for one to be obtained other th=
-an by cloning an existing
-+///   [`ARef`] or converting an [`Owned`] to an [`ARef`].
-+/// - It is safe to convert an unique [`ARef`] into an [`Owned`] simply by=
- re-wrapping the
-+///   underlying object without modifying the refcount.
-+///
-+/// # Examples
-+///
-+/// A minimal example implementation of [`RefCounted`] and [`SimpleOwnable=
-RefCounted`]
-+/// and its usage with [`ARef`] and [`Owned`] looks like this:
-+///
-+/// ```
-+/// # #![expect(clippy::disallowed_names)]
-+/// use core::cell::Cell;
-+/// use core::ptr::NonNull;
-+/// use kernel::alloc::{flags, kbox::KBox, AllocError};
-+/// use kernel::types::{
-+///     ARef, Owned, RefCounted, SimpleOwnableRefCounted,
-+/// };
-+///
-+/// struct Foo {
-+///     refcount: Cell<usize>,
-+/// }
-+///
-+/// impl Foo {
-+///     fn new() -> Result<Owned<Self>, AllocError> {
-+///         // Use a KBox to handle the actual allocation.
-+///         let result =3D KBox::new(
-+///             Foo {
-+///                 refcount: Cell::new(1),
-+///             },
-+///             flags::GFP_KERNEL,
-+///         )?;
-+///         let result =3D NonNull::new(KBox::into_raw(result))
-+///             .expect("Raw pointer to newly allocation KBox is null, thi=
-s should never happen.");
-+///         // SAFETY: We just allocated the `Foo`, thus it is valid.
-+///         Ok(unsafe { Owned::from_raw(result) })
-+///     }
-+/// }
-+///
-+/// // SAFETY: we ensure that:
-+/// // - The `Foo` is only dropped when the refcount is zero.
-+/// // - `is_unique()` only returns `true` when the refcount is 1.
-+/// unsafe impl RefCounted for Foo {
-+///     fn inc_ref(&self) {
-+///         self.refcount.replace(self.refcount.get() + 1);
-+///     }
-+///
-+///     unsafe fn dec_ref(this: NonNull<Self>) {
-+///         // SAFETY: The underlying object is always valid when the func=
-tion is called.
-+///         let refcount =3D unsafe { &this.as_ref().refcount };
-+///         let new_refcount =3D refcount.get() - 1;
-+///         if new_refcount =3D=3D 0 {
-+///             // The `Foo` will be dropped when KBox goes out of scope.
-+///             // SAFETY: The `Box<Foo>` is still alive as the old refcou=
-nt is 1.
-+///             unsafe { KBox::from_raw(this.as_ptr()) };
-+///         } else {
-+///             refcount.replace(new_refcount);
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: we ensure that:
-+/// // - `is_unique()` only returns `true` when the refcount is 1.
-+/// unsafe impl SimpleOwnableRefCounted for Foo {
-+///     fn is_unique(&self) -> bool {
-+///         self.refcount.get() =3D=3D 1
-+///     }
-+/// }
-+///
-+/// let foo =3D Foo::new().unwrap();
-+/// let mut foo =3D ARef::from(foo);
-+/// {
-+///     let bar =3D foo.clone();
-+///     assert!(Owned::try_from(bar).is_err());
-+/// }
-+/// assert!(Owned::try_from(foo).is_ok());
-+/// ```
-+pub unsafe trait SimpleOwnableRefCounted: RefCounted {
-+    /// Checks if exactly one [`ARef`] to the object exists. In case the o=
-bject is [`Sync`], the
-+    /// check needs to be race-free.
-+    fn is_unique(&self) -> bool;
-+}
-+
-+#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-+// SAFETY: Safe by the requirements on implementation of [`SimpleOwnableRe=
-fCounted`].
-+unsafe impl<T: SimpleOwnableRefCounted> OwnableRefCounted for T {
-+    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<Self>=
-> {
-+        if T::is_unique(&*this) {
-+            // SAFETY: Safe by the requirements on implementation of [`Sim=
-pleOwnable`].
-+            Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
-+        } else {
-+            Err(this)
-+        }
-+    }
-+}
-+
-+#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-+// SAFETY: Safe by the requirements on implementation of [`SimpleOwnableRe=
-fCounted`].
-+unsafe impl<T: SimpleOwnableRefCounted> Ownable for T {
-+    unsafe fn release(this: NonNull<Self>) {
-+        // SAFETY: Safe by the requirements on implementation of
-+        // [`SimpleOwnableRefCounted::dec_ref()`].
-+        unsafe { RefCounted::dec_ref(this) };
-+    }
-+}
-+
-+impl<T: OwnableRefCounted> TryFrom<ARef<T>> for Owned<T> {
-+    type Error =3D ARef<T>;
-+    /// Tries to convert the [`ARef`] to an [`Owned`] by calling
-+    /// [`try_from_shared()`](OwnableRefCounted::try_from_shared). In case=
- the [`ARef`] is not
-+    /// unique, it returns again an [`ARef`] to the same underlying object=
-.
-+    fn try_from(b: ARef<T>) -> Result<Owned<T>, Self::Error> {
-+        T::try_from_shared(b)
-+    }
-+}
-
---=20
-2.49.0
-
-
+ 
+ static inline void native_apic_msr_eoi(void)
+diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
+index 4f21df7..499b1c1 100644
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -61,7 +61,7 @@ static inline void refresh_sysenter_cs(struct thread_struct *thread)
+ 		return;
+ 
+ 	this_cpu_write(cpu_tss_rw.x86_tss.ss1, thread->sysenter_cs);
+-	wrmsr(MSR_IA32_SYSENTER_CS, thread->sysenter_cs, 0);
++	wrmsrq(MSR_IA32_SYSENTER_CS, thread->sysenter_cs);
+ }
+ #endif
+ 
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index e153cd1..d8365c4 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1207,7 +1207,7 @@ void amd_set_dr_addr_mask(unsigned long mask, unsigned int dr)
+ 	if (per_cpu(amd_dr_addr_mask, cpu)[dr] == mask)
+ 		return;
+ 
+-	wrmsr(amd_msr_dr_addr_masks[dr], mask, 0);
++	wrmsrq(amd_msr_dr_addr_masks[dr], mask);
+ 	per_cpu(amd_dr_addr_mask, cpu)[dr] = mask;
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index cefc999..ef9751d 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1982,9 +1982,9 @@ void enable_sep_cpu(void)
+ 	 */
+ 
+ 	tss->x86_tss.ss1 = __KERNEL_CS;
+-	wrmsr(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1, 0);
+-	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1), 0);
+-	wrmsr(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32, 0);
++	wrmsrq(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1);
++	wrmsrq(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1));
++	wrmsrq(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32);
+ 
+ 	put_cpu();
+ }
+@@ -2198,7 +2198,7 @@ static inline void setup_getcpu(int cpu)
+ 	struct desc_struct d = { };
+ 
+ 	if (boot_cpu_has(X86_FEATURE_RDTSCP) || boot_cpu_has(X86_FEATURE_RDPID))
+-		wrmsr(MSR_TSC_AUX, cpudata, 0);
++		wrmsrq(MSR_TSC_AUX, cpudata);
+ 
+ 	/* Store CPU and node number in limit. */
+ 	d.limit0 = cpudata;
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 324bd49..1190c48 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -905,7 +905,7 @@ int resctrl_arch_measure_cycles_lat_fn(void *_plr)
+ 	 * Disable hardware prefetchers.
+ 	 */
+ 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
+-	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
++	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
+ 	mem_r = READ_ONCE(plr->kmem);
+ 	/*
+ 	 * Dummy execute of the time measurement to load the needed
+@@ -1001,7 +1001,7 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
+ 	 * Disable hardware prefetchers.
+ 	 */
+ 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
+-	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
++	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
+ 
+ 	/* Initialize rest of local variables */
+ 	/*
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index f724b8f..c85ace2 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1708,7 +1708,7 @@ void resctrl_arch_mon_event_config_write(void *_config_info)
+ 		pr_warn_once("Invalid event id %d\n", config_info->evtid);
+ 		return;
+ 	}
+-	wrmsr(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config, 0);
++	wrmsrq(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config);
+ }
+ 
+ static void mbm_config_write_domain(struct rdt_resource *r,
+diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
+index 0050eae..933fcd7 100644
+--- a/arch/x86/kernel/cpu/umwait.c
++++ b/arch/x86/kernel/cpu/umwait.c
+@@ -33,7 +33,7 @@ static DEFINE_MUTEX(umwait_lock);
+ static void umwait_update_control_msr(void * unused)
+ {
+ 	lockdep_assert_irqs_disabled();
+-	wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
++	wrmsrq(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached));
+ }
+ 
+ /*
+@@ -71,7 +71,7 @@ static int umwait_cpu_offline(unsigned int cpu)
+ 	 * the original control MSR value in umwait_init(). So there
+ 	 * is no race condition here.
+ 	 */
+-	wrmsr(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached, 0);
++	wrmsrq(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 27f7192..f364222 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -400,7 +400,7 @@ static void kvm_disable_steal_time(void)
+ 	if (!has_steal_clock)
+ 		return;
+ 
+-	wrmsr(MSR_KVM_STEAL_TIME, 0, 0);
++	wrmsrq(MSR_KVM_STEAL_TIME, 0);
+ }
+ 
+ static u64 kvm_steal_clock(int cpu)
