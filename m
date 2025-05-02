@@ -1,154 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AB31EEE6;
-	Fri,  2 May 2025 16:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F061C84D9;
+	Fri,  2 May 2025 16:30:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746203419; cv=none; b=tIq+kr9OAINVcC0+FqIua32UopqYnT+FgYedZ423/pKwaHUl5KV3HcWdUct+EyeONk8F0eL/mUx6bcIgCuQG/oYx6yZvzXB7Vzqwa/KWz5duxEsJZ5XMUt39uG3KzMZkySUMIxxTxwBIlXqZyvn+/kpgSH/grVZjNaqHir2Dr4Y=
+	t=1746203439; cv=none; b=YBIe9yWBpJrvVeU7g3AjMrbloCxqIPNXL+xCW0F9bfq0n3PcuKubhUNx7vwUQecop/3L8Xv6oOfnZw7HI57qbgf3oS3Nk9WHAH41QaePljegwipJgGjRNDG/lx8IMhZtWBHziOM6lFO2V+QxdWsbHSiMxlLabSjhjey7qmMoh+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746203419; c=relaxed/simple;
-	bh=EpbjrjQeBOmnCpxYDHoY++MSJMrwC1iPEWEi23m1lO0=;
+	s=arc-20240116; t=1746203439; c=relaxed/simple;
+	bh=b4KW8DRpdIOoOpm5z8Xulzrc1y/zPePgYFJq0Ljb+aw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6rfySxQSDRBz9nFpXeGeSACfJQADo2zRx2eHC+xrQ2nlGzVGQsX5GBNEfGkiES7/PjSEUIkAmtotmKAlTz0zcFD6W4EEd02LURnaLVvjueG2oeKdbhttZfs1b+BcCcqvpXyx0shM+IwAgVzQ/JY/tY6S5oMm5OyJz2zN9Nqaeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDtQZoNv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YVfFjQry4n5BiW2SqUHLUlriaQeydxe/DExDSEiZ6FUDTl4SeN9L+CKhxSz/UqYjFePxJkAJb/IufySjr1q/LuhJ8dhAwZcMfK72EfaekVMssOxcDngO2S/+buz6RNubENUxxXgQ2UNoMuGJHLbFgCmMlaxc04FkJ7OGrpuUUrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dar82fKs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDtQZoNv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F3DAC4CEE4;
-	Fri,  2 May 2025 16:30:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dar82fKs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29794C4CEE4;
+	Fri,  2 May 2025 16:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746203418;
-	bh=EpbjrjQeBOmnCpxYDHoY++MSJMrwC1iPEWEi23m1lO0=;
+	s=k20201202; t=1746203438;
+	bh=b4KW8DRpdIOoOpm5z8Xulzrc1y/zPePgYFJq0Ljb+aw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nDtQZoNv3cL3FOfTEYBe1NF+bWdWh2+E+X7U/ShyvXhUmYjdAY3d5DELCw45a+Y6e
-	 1p1vMCQ+JK29fe1vfYQ6Ikkh0M5aTIRAhd6yFD2q7MuATUw+kVYPlJlYzx+iOXOWpW
-	 5SerVYfBPrK+2dK9qmH6AyUM2Yyjfq1U5vz2QwvQ3S4uu3L0hLG/HrfTdtSe9tHRVK
-	 8F/7KwwCLaxcanaHlYrBwz3yjSbyLeoxaYFRBGg6tGnQuWDhqkzyVJBCP8ITvEwtVF
-	 RTgzfAbdHwURWBosZlc5Y04pLnUmKrvznn1r+gznWn3Ny+Utq00x2IgOH/QTRePRAw
-	 JvsDz1WxjyCiQ==
-Date: Fri, 2 May 2025 17:30:14 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
- calibration support
-Message-ID: <20250502-yarn-answering-f395beaa1440@spud>
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
- <20250502-wip-bl-ad7606-calibration-v2-4-174bd0af081b@baylibre.com>
+	b=Dar82fKsqelaAi2SRJbl+RrxrWQY4cFskX2JFj/2pDnLsOcutwSgRVhAl/Et6QfDF
+	 HswgQZUzJJGxzWHTcZ5rbd/d3JFKalkewooEb3JuDiRAXu6xCD8D8RX3drXklx3uP+
+	 oTysWsjGS5D6z/8GZFX26ck9fVMzQBPJaJJ2h0QikfMnY8WnLLWPnZPSuDBznjnxEx
+	 KrjyZPJ4JB+/z7EzdcRFd5TQQuGwhc1lhMjT66A1F0OIJeLPqopMi0/HruMRhkIF4o
+	 qLir6Z9AuXa4hIa7d9EATLEjGsFt1jgPes1eyra62TcfPs6+wU/Qzh5a/ZzoeE34GF
+	 hdqBCmSdZN3wA==
+Date: Fri, 2 May 2025 13:30:35 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH 11/11] perf mem: Add 'dtlb' output field
+Message-ID: <aBTzK_vZ0kBh9CLV@x1>
+References: <20250430205548.789750-1-namhyung@kernel.org>
+ <20250430205548.789750-12-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HfgoTnyluTIFnd9A"
-Content-Disposition: inline
-In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-4-174bd0af081b@baylibre.com>
-
-
---HfgoTnyluTIFnd9A
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250430205548.789750-12-namhyung@kernel.org>
 
-On Fri, May 02, 2025 at 03:27:01PM +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add gain calibration support by a per-channel resistor value.
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
->  .../devicetree/bindings/iio/adc/adi,ad7606.yaml    | 29 ++++++++++++++++=
-++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> index 29f12d650442b8ff2eb455306ce59a0e87867ddd..d4b8ea51f60be367e79a4db18=
-d932cbca9c7dc91 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> @@ -204,6 +204,15 @@ patternProperties:
->            considered a bipolar differential channel. Otherwise it is bip=
-olar
->            single-ended.
-> =20
-> +      adi,rfilter-ohms:
-> +        description:
-> +          For ADCs that supports gain calibration, this property must be=
- set to
-> +          the value of the external RFilter resistor. Proper gain error
-> +          correction is applied based on this value.
-> +        default: 0
-> +        minimum: 0
+On Wed, Apr 30, 2025 at 01:55:48PM -0700, Namhyung Kim wrote:
+> This is a breakdown of perf_mem_data_src.mem_dtlb values.  It assumes
+> PMU drivers would set PERF_MEM_TLB_HIT bit with an appropriate level.
+> And having PERF_MEM_TLB_MISS means that it failed to find one in any
+> levels of TLB.  For now, it doesn't use PERF_MEM_TLB_{WK,OS} bits.
+> 
+> Also it seems Intel machines don't distinguish L1 or L2 precisely.  So I
+> added ANY_HIT (printed as "L?-Hit") to handle the case.
+> 
+>   $ perf mem report -F overhead,dtlb,dso --stdio
+>   ...
+>   #           --- D-TLB ----
+>   # Overhead   L?-Hit   Miss  Shared Object
+>   # ........  ..............  .................
+>   #
+>       67.03%    99.5%   0.5%  [unknown]
+>       31.23%    99.2%   0.8%  [kernel.kallsyms]
+>        1.08%    97.8%   2.2%  [i915]
+>        0.36%   100.0%   0.0%  [JIT] tid 6853
+>        0.12%   100.0%   0.0%  [drm]
+>        0.05%   100.0%   0.0%  [drm_kms_helper]
+>        0.05%   100.0%   0.0%  [ext4]
+>        0.02%   100.0%   0.0%  [aesni_intel]
+>        0.02%   100.0%   0.0%  [crc32c_intel]
+>        0.02%   100.0%   0.0%  [dm_crypt]
+>        ...
 
-Perhaps obvious to those working on these ADCs, but this is a series
-resistor so a default of zero for the existing devices makes sense.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-> +        maximum: 65536
-> +
->      required:
->        - reg
->        - bipolar
-> @@ -256,6 +265,25 @@ allOf:
->        properties:
->          adi,oversampling-ratio-gpios: false
-> =20
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - adi,ad7605-4
-> +              - adi,ad7606-4
-> +              - adi,ad7606-6
-> +              - adi,ad7606-8
-> +              - adi,ad7607
-> +              - adi,ad7608
-> +              - adi,ad7609
-> +              - adi,ad7616
-> +    then:
-> +      patternProperties:
-> +        "^channel@[0-9a-f]+$":
-> +          properties:
-> +            adi,rfilter-ohms: false
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -398,6 +426,7 @@ examples:
->                  reg =3D <8>;
->                  diff-channels =3D <8 8>;
->                  bipolar;
-> +                adi,rfilter-ohms =3D <2048>;
->              };
-> =20
->          };
->=20
-> --=20
-> 2.49.0
->=20
-
---HfgoTnyluTIFnd9A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBTzFQAKCRB4tDGHoIJi
-0vZBAQD2cyiq/b9QR+BcUGzKmRbVuDtTnqIln/sWTRPzGOYiXAEArB2eBMq4S9EA
-cIhDP1W+NVvY9Nr7KbNiBI8o7Y7WNwQ=
-=nmcM
------END PGP SIGNATURE-----
-
---HfgoTnyluTIFnd9A--
+root@number:~# perf report --header | grep cpudesc
+# cpudesc : AMD Ryzen 9 9950X3D 16-Core Processor
+root@number:~# perf mem report -F overhead,dtlb,dso --stdio | head -20
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 2K of event 'cycles:P'
+# Total weight : 2637
+# Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc
+#
+#           ---------- D-TLB -----------                                   
+# Overhead   L1-Hit L2-Hit   Miss  Other  Shared Object                    
+# ........  ............................  .................................
+#
+    77.47%    18.4%   0.1%   0.6%  80.9%  [kernel.kallsyms]                
+     5.61%    36.5%   0.7%   1.4%  61.5%  libxul.so                        
+     2.77%    39.7%   0.0%  12.3%  47.9%  libc.so.6                        
+     2.01%    34.0%   1.9%   1.9%  62.3%  libglib-2.0.so.0.8400.1          
+     1.93%    31.4%   2.0%   2.0%  64.7%  [amdgpu]                         
+     1.63%    48.8%   0.0%   0.0%  51.2%  [JIT] tid 60168                  
+     1.14%     3.3%   0.0%   0.0%  96.7%  [vdso]                           
+root@number:~#
