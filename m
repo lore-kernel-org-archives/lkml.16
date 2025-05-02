@@ -1,203 +1,145 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7621A5B8B;
-	Fri,  2 May 2025 18:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D4610A1F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212248; cv=none; b=tCEDha3EQxsP56zOymoGcbCBzu/74/HzfTR8O/MGDTztirU1gFIO1HcjnYercYbwEm/R8uxUB/ypSsY+CyMdPVNbrSGIqCppIigR38NPBiSvfLQVp/4Iz2BjZHLwNdnFi9ZM/NBptsn55lBpekGhY2PDp092iHn+FK8hFTVo5hA=
+	t=1746212313; cv=none; b=meA9cDrb7sCOHneji4FHKNGNpkpVCrSBPrz4wQj0vP4azJTu5hNCq6dBzRCuFoaMJ3paXuEFtWEng1u909r5DclawYvGG+mMMDNJ+AH5y3dafmq8bycmTctFJOWtZchNbbXLyFnqjKcUbR6ECHNqwG05KAW6Ch4INDozRDnExMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746212248; c=relaxed/simple;
-	bh=r7BH7MiZ8RXQGcC+LlmEL+ahpVyhkEUtYREt1IOOaAw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JMIrP76cQlGBrFE+CqHmBWQl0n8UNE13zC5fvRr/MmwLdckUZy6RSKPOl1GZTkRQ6InklP4QD4MVHqtJ8l9Ec/YDYDvgA3xST0WN4mA6ipqYN6+000w8k6aAaYccum/aaSA08lhhVe6G7/QhplNC+tpUAAegCP7pCtlOqegGYqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=n9iwAjy0; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="n9iwAjy0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1746212237; bh=0WplOH6reEOyo56HZrQ4jKNXZI+yjUubamsmQNCRUCY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
-	 Subject;
-	b=n9iwAjy0SCwI/oTEelalFezKHV0RYG0VDpXqybVxfyGwi0IM8vAl35OpIi4W9R5KH
-	 vcn9pyiozd6b2WhOhl5ary39qNouueeR7Na7VJHTW7l9wfSyNspiOIwqFAwyqRk/IH
-	 raKvFnLjkZ1HjaHlohVzkXJi+Q0inLIuRcCfUiwHL5pK9Mec2rTTHqvR6LXXcB5wG3
-	 01IAhKNJP2PAMsz9CcgBjdbmBrZjvYBn7r/1r+0IJo3pDIasBfOYc4edY0F3GXtbmN
-	 hzyYyWe+iugeNy/+eCBSyEizxi3ufvcdwqq2q51dZXiHUL2rVbWf0rsA2yqHdNv7mR
-	 IPDFxF8RvoSPQ==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zq0XX6cB1zPlkm;
-	Fri,  2 May 2025 20:57:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:363c:9000:3afa:e4e0:adc6:326
-Received: from localhost (unknown [IPv6:2001:9e8:363c:9000:3afa:e4e0:adc6:326])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1/NAHScjHSrb5WnifYoZ30p9gOLHTIMgjg=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zq0XS4PQKzPkbD;
-	Fri,  2 May 2025 20:57:12 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
- <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Martin
- KaFai Lau <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,
-  Song Liu <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,
-  John Fastabend <john.fastabend@gmail.com>,  KP Singh
- <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao Luo
- <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Puranjay Mohan
- <puranjay@kernel.org>,  Xu Kuohai <xukuohai@huaweicloud.com>,  Catalin
- Marinas <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Hari
- Bathini <hbathini@linux.ibm.com>,  Christophe Leroy
- <christophe.leroy@csgroup.eu>,  Naveen N Rao <naveen@kernel.org>,
-  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael Ellerman
- <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,  Mykola
- Lysenko <mykolal@fb.com>,  Shuah Khan <shuah@kernel.org>,  Henriette
- Herzog <henriette.herzog@rub.de>,  Saket Kumar Bhaskar
- <skb99@linux.ibm.com>,  Cupertino Miranda <cupertino.miranda@oracle.com>,
-  Jiayuan Chen <mrpre@163.com>,  Matan Shachnai <m.shachnai@gmail.com>,
-  Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,  Shung-Hsi Yu
- <shung-hsi.yu@suse.com>,  Daniel Xu <dxu@dxuuu.xyz>,  bpf@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org,  linux-kselftest@vger.kernel.org,
-  Maximilian Ott <ott@cs.fau.de>,  Milan Stephan <milan.stephan@fau.de>
-Subject: Re: [PATCH bpf-next v3 08/11] bpf: Fall back to nospec for Spectre v1
-In-Reply-To: <CAP01T76kOixPct5cOPHGKubFWSbSS7ztEnZc02v2wWGPOUYRCQ@mail.gmail.com>
-	(Kumar Kartikeya Dwivedi's message of "Fri, 2 May 2025 01:55:54 +0200")
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
-	<20250501073603.1402960-9-luis.gerhorst@fau.de>
-	<CAP01T76kOixPct5cOPHGKubFWSbSS7ztEnZc02v2wWGPOUYRCQ@mail.gmail.com>
-User-Agent: mu4e 1.12.8; emacs 30.1
-Date: Fri, 02 May 2025 20:57:11 +0200
-Message-ID: <875xiij0xk.fsf@fau.de>
+	s=arc-20240116; t=1746212313; c=relaxed/simple;
+	bh=zoTQVjJ3FyrRRCnyr5OBzcdq2EmPXQ1x0Lb2YQyaxy8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dZ1HaePs8wjY+bL68Im5xlWKapU4Z4CTdiB1nuDDm0JzNFg/hbfdfmK4t1nYgJP3OiiADx864Cn1sZG5KXC/QNTYK/JrVNpNWp/RBIFrKE80RexAdFNSSCHun177WKb60jUoCQe9c6M/Z7nN6i1WT7NvaciNcP+2xzUPMB8hqGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85b3827969dso265966139f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:58:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746212310; x=1746817110;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uAOzJSFBfDSYukAOktP0k0eJ72hAOlOQTKQeME/mnmU=;
+        b=u9T6pwP8zBjdE7gOcUgnQ8A1ZabBa5wyjztSqUOtV0Flz5jV5sPDR6qqmOaPH5J4nl
+         8y+aQr+tFxaFuRVSRFs7X+RNWWFg1AvBSEGv5oqfz4Su59itY2Vikgr4FII9ySG+fawK
+         mazCy3JyATPSqsK/SIWJXiJIV7ciDXbR0S0C1JCFeKkzLssdq99U/FB1Y+lnQigFEGSn
+         kHobV60DFS8bXaYS4bAgwySIJ+n2E7Pfpj3wYS3vcAZE4PVO6BpL+517skgkSThefNes
+         kC6zeghq4V82Ac3G2WzC7hpXKuI+K4uf2sYHLnKRIbaDeNrNDzDpieKyVQg8Ii3gQwNw
+         fkXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyfXeOiglx7k1wTxZolh7sIZqptwiD2g+q1GJ1DFyCBng0mcQVquKVz/CE3J/N+cwY8kCzKIo1GYLTdGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybPDAwzEVOkoZSsm1KHbzHKG0xhcFJZ9Xe/k2pVdqvT16JHjxm
+	eZf0tmQshNfrRyKreYpC+VvaWwB992DiZf7tGyiLYulHDVIWjPhQJSsDgNRrKP1az1NS3AM0VWf
+	f8eHQRpOAHJMRbnmasNaBCQSz1OsK25Jsn7ZT37bNOXPfH2mTrICzbqU=
+X-Google-Smtp-Source: AGHT+IEvo5HzJ1SeLr8XPnomT+eKZlYj0uEg29543xurggx1vIJ1iMF2xCzAsVlfrK4um5l3l1C7o3e3GwCC3f7qXKhuYkxGzjlB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6602:2d8b:b0:861:c744:5a4a with SMTP id
+ ca18e2360f4ac-8670b7d17e6mr27261039f.5.1746212310400; Fri, 02 May 2025
+ 11:58:30 -0700 (PDT)
+Date: Fri, 02 May 2025 11:58:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681515d6.a70a0220.254cdc.0007.GAE@google.com>
+Subject: [syzbot] [i2c?] KMSAN: kernel-infoleak in i2cdev_ioctl_smbus
+From: syzbot <syzbot+08b819a87faa6def6dfb@syzkaller.appspotmail.com>
+To: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, wsa+renesas@sang-engineering.com
+Content-Type: text/plain; charset="UTF-8"
 
-Kumar Kartikeya Dwivedi <memxor@gmail.com> writes:
+Hello,
 
-> Back when all of this surfaced, compiler folks came up with another
-> solution, to rely on Intel's guarantee that conditional moves are not
-> predicted.
->
-> if (condition) {
->    mask = !condition ? 0UL : ~0UL; // CMOVcc
->    ptr &= mask;
->    x = *ptr;
-> }
->
-> In case the condition being true in the speculative domain leads to
-> problems, the speculative domain will just read from NULL and not leak
-> sensitive data.
+syzbot found the following issue on:
 
-Yes, that is an alternative approach.
+HEAD commit:    02ddfb981de8 Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=166989b3980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
+dashboard link: https://syzkaller.appspot.com/bug?extid=08b819a87faa6def6dfb
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1593b02f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154d41cc580000
 
-> The assumption is that cost of instrumentation in speculative domain <
-> completely stalling it until prior instructions are done using lfence.
-> So speculation is still helpful when the branch is not mispredicted.
-> Now I imagine it's not fun to do such analysis in the verifier (I've
-> tried), but theoretically we could break it down into emitting
-> bytecode from the compiler side, and lifting the compiler to do it for
-> us, and ensuring the end result produced is sane (by still following
-> speculative paths) from the verifier.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5ca57f5a3f77/disk-02ddfb98.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3f23cbc11e68/vmlinux-02ddfb98.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/73e63afac354/bzImage-02ddfb98.xz
 
-> You talk about this in the paper and in the presentation as future work.
-> My question is mainly whether you considered implementing this, if
-> yes, what made you choose a nospec barrier over something like above?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+08b819a87faa6def6dfb@syzkaller.appspotmail.com
 
-The primary motivation was cerainly that it's the easiest to implement
-with the current verifier design.
+=====================================================
+BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+BUG: KMSAN: kernel-infoleak in _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+BUG: KMSAN: kernel-infoleak in _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ instrument_copy_to_user include/linux/instrumented.h:114 [inline]
+ _inline_copy_to_user include/linux/uaccess.h:196 [inline]
+ _copy_to_user+0xcc/0x120 lib/usercopy.c:26
+ copy_to_user include/linux/uaccess.h:225 [inline]
+ i2cdev_ioctl_smbus+0x586/0x660 drivers/i2c/i2c-dev.c:394
+ i2cdev_ioctl+0xa14/0xf40 drivers/i2c/i2c-dev.c:478
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:892
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:892
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-I mostly decided not to pursue the "verification-only" approach (and
-insert the insn in LLVM) because it would require changes to the eBPF
-instruction set.
+Uninit was stored to memory at:
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:495 [inline]
+ __i2c_smbus_xfer+0x254d/0x2f60 drivers/i2c/i2c-core-smbus.c:607
+ i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:545
+ i2cdev_ioctl_smbus+0x4a1/0x660 drivers/i2c/i2c-dev.c:389
+ i2cdev_ioctl+0xa14/0xf40 drivers/i2c/i2c-dev.c:478
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:892
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:892
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Other consideration include:
+Local variable msgbuf1.i created at:
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:334 [inline]
+ __i2c_smbus_xfer+0x86a/0x2f60 drivers/i2c/i2c-core-smbus.c:607
+ i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:545
 
-* The approach could potentially improve performance (the compiler could
-  for example compute the minimal-cut to reduce the number of fences)
-  and simplify the verifier to some extent (no more inserting of insns).
+Bytes 0-1 of 2 are uninitialized
+Memory access of size 2 starts at ffff88812e8b7d06
+Data copied to user address 0000200000000080
 
-* It could have the downside that non/partially-vulnerable architectures
-  can not benefit from improved performance as easily as it is the case
-  with the current design.
+CPU: 1 UID: 0 PID: 5885 Comm: syz-executor221 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+=====================================================
 
-* The best choice for the instruction-set extension is not clear to me.
-  For Spectre v1 USLH [1] would suffice and then one only needs a cmov, so
-  that's easy. But this does not cover Spectre v4 (which is currently
-  the main source of overhead). It could be 'nospec_vX rY' to tell the
-  verifier that a certain register must not be used under speculation
-  from a specific variant, or something generic/catch-all like the
-  current 'nospec'.
 
-* From a security perspective, LLVM SLH is not as strong as the
-  verifier's Spectre v1 mitigation. This is because it does not harden
-  secret-dependent control flow as shown in [1] while the Linux verifier
-  does (where "secrets" are unreadable/uninitialized registers and
-  kernel pointers). It may be the case the this is not a problem for
-  eBPF by conincidence because the verifier also restricts
-  secret-dependent control flow. Without looking into it in detail I am
-  not sure. If one finds that it is a problem, it may also not be
-  important to fix if we adopt the verification-only approach you
-  mention, or one could change LLVM to extend the mitigation.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> Was it the complexity of realizing this during verification?
-> Are there any implications of reading from NULL that would cause problems?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-In theory yes, in practice I would assume no and that it works out. I am
-not aware of any documents from Intel / ARM that state that accessing
-NULL speculatively acts as a speculation barrier (I remember reading
-some paper that suggested it practically does, but I can not find it
-now). If it does not (portably), a downside would be that the verifier
-will have to analyze a lot more speculative instructions.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-> Also, did you characterize how much difference it could make?
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-[1] has SPEC2017 benchmarks for LLVM-/U-SLH and a naive lfence-based
-approach (lfence after every branch), for these USLH is about twice as
-fast (150%) as the naive fence-based approach (300%). But this is only
-for Spectre v1 and the Spectre v4 overhead would have to be added.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Both number are also very high compared to the programs from the
-VeriFence paper. There the *combined* overhead for Spectre v1 and v4 was
-0% for very small programs and 16%-60% for larger programs. I have since
-also measured the overhead for Katran and there it is 100%-150%.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-I am currently working on a prototype to reduce the Spectre v4 (and
-Spectre v1) overhead and for Katran I was able to lower it to 15%-30% by
-using more precise analysis of the speculative execution using a
-fence-based approach. Most remaining fence are now still from Spectre v4
-(not v1 which would be adressed by SLH) and I hope to eliminate some
-more using a SLH-style approach for v4. I will of course also have to
-check how this carries over to other programs, but it certainly seems
-possible to eliminate almost all fences because there are rarely any
-'real' gadgets in non-malicious programs (only false positive one can
-not eliminate without reasoning about the cache).
-
-> The drop in SCTP throughput seems to suggest so, since CPU-bound
-> computation was moved into the program.
-> Otherwise most programs mostly defer to helpers for heavy lifting.
-> Not that it was as fast as a helper would be, even without nospec, but still.
->
-> Also a bit sad we don't split the program into BBs already, which
-> could help reduce your mitigation's cost + plus also reduce cost of
-> instruction patching (unrelated).
-
-In the prototype I mention I also tried tackling that. However, at least
-for Katran it was uncommon to have more than one v1-induced fence per
-basic block. Therefore it might not be worth it.
-
-> Anyway, all that said, this is valuable stuff, so I was just curious.
-
-[1] https://www.usenix.org/system/files/usenixsecurity23-zhang-zhiyuan-slh.pdf
-    ("Ultimate SLH: Taking Speculative Load Hardening to the Next Level
-    - Section 5.1: Exploiting Secret-Dependent Control Flow")
+If you want to undo deduplication, reply with:
+#syz undup
