@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C921E32D5;
-	Fri,  2 May 2025 22:21:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F66B1E32D5;
+	Fri,  2 May 2025 22:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746224494; cv=none; b=ENsJvfuGfx47nrvkGzl1yMbq90Y18WSqQ73GHU+Zi3JGdzVf0j565JEYKI27a4l+7ia1mnKB7RMn/v4FF6rzHxlVkYLZUFqk31fOok8AZ5O6mPiC6zwZgSXyMwhGOry63IejXq7n2r6rQUQJaHlXfMNurp3G4A7ed2TsSMOzlR4=
+	t=1746224497; cv=none; b=IO8LRq/eiyMX3WPvoQLG3imLsT12vHZOpfpF5N2dsdAgFI/6johiFGGk3HFD2s2CRM6KBs2p05+wcFfKr8Npimpzjd8tW6fSh8LuDq5JmVtXNuIp08GSh+OXl5t56pAASJKZKYNbOYkrwARCBgGc70DUNEEf9Hl9SZ7Fy7gmMco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746224494; c=relaxed/simple;
-	bh=fG3d8Fg02oXt1YvEIlNOJZJDDmmHsyAC/nldx3bMtys=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Gkxj8GPVaqzbZoruzWbmtLZvssTOVYbrrdGo815gRS70UprpWVu6GuW5xUD0Clcv4RxW+oHzbhyR2OKepwPGGmW3j6CK3hc1pdZsxdQb1tY1Z5Uih/9dSWQncEyi/DFuQ3VzRr6j2PwnI7fZMrM3p5ELAa+0u7hjrX3yu2e093g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+AE/QWq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746224497; c=relaxed/simple;
+	bh=Wkl/xCbUI7do4AVTMYybZh5OgAcqp0zypayddyCDUA8=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=H7XKtHXNgzWOlV7+3jpFYWuKDCGO4hh49RjoW3VyNCcws3HQUAOfd0m2YWstes+8OzBIcRTN5CuvU73QOFThnPqnpnJKO8vjyp9rsBNMKwr4o66nmvqN795mRtwIzDPLkH1qMkYiltjX77QECgqEGf3sKj2geZL/zSiXitplpYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uePdJnZq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+AE/QWq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB8EC4CEED;
-	Fri,  2 May 2025 22:21:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uePdJnZq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 341B1C4CEE4;
+	Fri,  2 May 2025 22:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746224493;
-	bh=fG3d8Fg02oXt1YvEIlNOJZJDDmmHsyAC/nldx3bMtys=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=a+AE/QWqp48WrIEZhiOtaMhrcmSKcsN4ugRZFeXcq+pSqDawvHs5UjmckxRI+8JC0
-	 ONAOJ7u8NjwogtHjdHgwtye/gQgITGDJZTiszeXjoe6vrYDTmI/K0G599D9UfYDTDY
-	 GE0HpB601Z1xIpLd+izhLBxS6n30NYnjzs6M3mxBRUGqlKiR9PdyZD7+WOv9hOWEuy
-	 chlf3xA7zlLQuaU5EP5pQ7bCbSV5o0HPnfR8dqRlr4W3Wcxlsw9lFteFNRRFP1xapB
-	 OOR4w2BEXw+bMdiylcQih1v5Vbr2tbgNij6POYtkwmMyn6J73nuX3ogJZvb0SqJQ+u
-	 Nqmb+nNUFfEPw==
+	s=k20201202; t=1746224497;
+	bh=Wkl/xCbUI7do4AVTMYybZh5OgAcqp0zypayddyCDUA8=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=uePdJnZqFALHxuAlpLfwRmV4/KsfUtSVZ0inrPLOQKQfWgkhvLnfGXF520tJGwvk+
+	 o3RefBoOsJv8okJCeGSONP5zPaGRkN+FbwsmxQPjBw59eBUxDjIjVcUG3rg4Jd8uQ+
+	 TtuSLZ6RSLTPWyYMuvrnR8rWxFPwe0jXFf18RNhqkwnuaRtfdDhY4lebjCYBDQm6BX
+	 rvdamVo4MqvfWtWHTHvLelMLxu3rv+YgFTt1Yw4ZkrKLTpW535gxZ7tDOR+jr5uSTi
+	 OLLGc/dNzjaqQdVLmu6i3I4zUVL5FhUcJRrGl3aOwPaAuL8QNTKZYZ0+Yk22x3Wk49
+	 PfGPoqKUD8JtA==
 From: Mark Brown <broonie@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, llvm@lists.linux.dev, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: kernel test robot <lkp@intel.com>, Dmitry Baryshkov <lumag@kernel.org>
-In-Reply-To: <20250427105105.18164-3-krzysztof.kozlowski@linaro.org>
-References: <20250427105105.18164-3-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 1/2] ASoC: codecs: wsa88xx/wcd938x: Drop kerneldoc
- marker from inner comment
-Message-Id: <174622448885.4079618.3910091697301287558.b4-ty@kernel.org>
-Date: Sat, 03 May 2025 07:21:28 +0900
+To: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+ nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ shawnguo@kernel.org, s.hauer@pengutronix.de, linux-sound@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Chancel Liu <chancel.liu@nxp.com>
+In-Reply-To: <20250421105701.2273588-1-chancel.liu@nxp.com>
+References: <20250421105701.2273588-1-chancel.liu@nxp.com>
+Subject: Re: [PATCH 1/2] ASoC: fsl_rpmsg: Configure CPU DAI for card that
+ sits on rpmsg-micfil-channel
+Message-Id: <174622449321.4079618.327380910498912102.b4-ty@kernel.org>
+Date: Sat, 03 May 2025 07:21:33 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,10 +49,9 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Sun, 27 Apr 2025 12:51:06 +0200, Krzysztof Kozlowski wrote:
-> Drop the kerneldoc marker from a comment within a function:
-> 
->   wsa883x.c:1402: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+On Mon, 21 Apr 2025 19:57:00 +0900, Chancel Liu wrote:
+> Sound card that sits on rpmsg-micfil-channel has different settings on
+> CPU DAI.
 > 
 > 
 
@@ -67,10 +61,10 @@ Applied to
 
 Thanks!
 
-[1/2] ASoC: codecs: wsa88xx/wcd938x: Drop kerneldoc marker from inner comment
-      commit: 9cd54a6bf119891711b281fb45789f66255c892d
-[2/2] ASoC: codecs: tas2764: Fix Wvoid-pointer-to-enum-cast warning
-      commit: c23c7c60711e34963c78f18fc3b9aaa313b6c8ce
+[1/2] ASoC: fsl_rpmsg: Configure CPU DAI for card that sits on rpmsg-micfil-channel
+      commit: 17fa55fe77d8234131ce0728a735da6dea19acd5
+[2/2] ASoC: fsl_rpmsg: Allocate a smaller buffer size for capture stream
+      commit: 2056d7a7df5d9a08144671afccb6970ccd595b89
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
