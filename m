@@ -1,15 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251FA2571CA
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E8F2571A9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195246; cv=none; b=F3Ycb+wyVrfkWpO863KRcfybD03q4yBMk8uId+rLfKt+5s94vBgh0LnMLYmltNR6G+28V7NpM2QxDBREJqb1WfOheS1QcUyYMtdzA9Mnc7Y9/mGD06j3V3TWdHIiGWIEERwLyWBftUl/I49V29ioi6zZc+bIf932khWG1mDDOvY=
+	t=1746195246; cv=none; b=nfF1bpBK2/NssUzjbQKbG9MW0ZSquANyVBIynn/L7GDLds5KKtxOwQy6S4L9V2iWjoiv9rR/IGfUG4FGKW0ITCJGFFTe4V2jJeLU+IkQSABwAUL9SU2Me+58Fj54qG5N4Hrl25Kh52IaezLZwAfebUfW14UCpfC+TzPXiCvd5js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746195246; c=relaxed/simple;
-	bh=wKNEquMMqRCDDxXwq44IRpJvSwnrG9pSA9GxTv2slhE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HYhQFQ9GnyFKXn2a+jiZQKrh8c5UrYK6p/ZUpm+cqTZi+X2AdnN3DrztPPvjN8lBypjVgDo7XAW6TSjhzKVoQRGr6h7TuLDGdxxJ3w9cdxOmK7TXLH5cJejgY3hr8V27ZGFbaGYDBRwUh3EmiYYtYbVvg2y0CbDpd0ieebdnyDQ=
+	bh=Q5aUEap/j8onzIWPM9KgOWl8xHnHPU8XimRr1awIUwI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aEbNTcfYo1rw74Bu4bgQdKfWTf+3tXOLe3Zi1U6MwLk4r7+/aPLEagfZgllgL+Df3Sy8KBSjdJz5lV8qtHR3WkQWZIch/OPo+sHLE7cKMekTsAi/909wkySaHLXo6cH8VBrz6nzoLpReExiTCzlpuo1smjtxuYuuSQgG0qoHGbQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,31 +18,31 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1uAr9M-0000vE-CQ
+	id 1uAr9M-0000w6-Mf
 	for linux-kernel@vger.kernel.org; Fri, 02 May 2025 16:14:00 +0200
 Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <mkl@pengutronix.de>)
-	id 1uAr9L-000lQh-2N
+	id 1uAr9M-000lR2-0P
 	for linux-kernel@vger.kernel.org;
-	Fri, 02 May 2025 16:13:59 +0200
+	Fri, 02 May 2025 16:14:00 +0200
 Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 67D484065C8
+	by bjornoya.blackshift.org (Postfix) with SMTP id CABB74065CE
 	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:13:59 +0000 (UTC)
 Received: from hardanger.blackshift.org (unknown [172.20.34.65])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 8CF8340659C;
+	by bjornoya.blackshift.org (Postfix) with ESMTPS id E74FA4065A0;
 	Fri, 02 May 2025 14:13:56 +0000 (UTC)
 Received: from hardanger.blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 1e9aea9b;
+	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id de45ef16;
 	Fri, 2 May 2025 14:13:56 +0000 (UTC)
 From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 0/3] can: rx-offload: fix order of unregistration calls
-Date: Fri, 02 May 2025 16:13:43 +0200
-Message-Id: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
+Date: Fri, 02 May 2025 16:13:46 +0200
+Subject: [PATCH 3/3] can: mcan: m_can_class_unregister: fix order of
+ unregistration calls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,10 +51,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABfTFGgC/x3MQQqAIBBA0avErBswJaSuEi2sGWtANBQiCO+et
- HyL/18onIULzN0LmW8pkmLD0Hewny4ejELNoJUe1ag07i5ifjB5H5IjJA7Im52MnawxRNDCK7O
- X558ua60fshOVEmQAAAA=
-X-Change-ID: 20250502-can-rx-offload-del-eb79379733dd
+Message-Id: <20250502-can-rx-offload-del-v1-3-59a9b131589d@pengutronix.de>
+References: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
+In-Reply-To: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
  Thomas Kopp <thomas.kopp@microchip.com>, 
  Vincent Mailhol <mailhol.vincent@wanadoo.fr>, kernel@pengutronix.de, 
@@ -64,15 +64,15 @@ Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
  Marc Kleine-Budde <mkl@pengutronix.de>, stable@vger.kernel.org
 X-Mailer: b4 0.15-dev-048ad
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1661; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=wKNEquMMqRCDDxXwq44IRpJvSwnrG9pSA9GxTv2slhE=;
- b=owEBbQGS/pANAwAKAQx0Zd/5kJGcAcsmYgBoFNMZ+DcELaBl0lz4gVEsR+oe731Z3vOvy7b2m
- b2FTbj9YuWJATMEAAEKAB0WIQSf+wzYr2eoX/wVbPMMdGXf+ZCRnAUCaBTTGQAKCRAMdGXf+ZCR
- nMwvB/9BEUC1dtYbDGi5TQBbvaBKY6YrVwI3NEpZhtUZWIIHSiOte6QcTtsFg97q+xbvSge7DqT
- vE/jLpU74PHl1GpDIrvyuzUO2XEAywLHiPPudUsTmWYNuJtYvo3lvHzkbI/ejsCmUM/ZEjB2RpG
- i62671TdSBAp57MN4J2M2H5POJlTqd2uLAfdVliGnOX6O+VSBax0gdtA7QqB+PtL8Bk2coH+b8u
- hyx6ilTkOcCBa0p0GCY5Q/HkibJq8kStPIUnIDgj800Tb3BrmTNG3jDu/LZVBXzsmoqzqAmz62t
- GzmcfQ1ZGb7WR4PwhLiDmUDBG/pAQHSyVcwqpEBnpkzFFvj3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1395; i=mkl@pengutronix.de;
+ h=from:subject:message-id; bh=Q5aUEap/j8onzIWPM9KgOWl8xHnHPU8XimRr1awIUwI=;
+ b=owEBbQGS/pANAwAKAQx0Zd/5kJGcAcsmYgBoFNMh3UbqdYlr7CYNpBI0bFUBQXmQiPOeOyZrU
+ g8+euFtBeaJATMEAAEKAB0WIQSf+wzYr2eoX/wVbPMMdGXf+ZCRnAUCaBTTIQAKCRAMdGXf+ZCR
+ nPHaB/97GcHyND3HHSgiFPYIWFmO62VdzZbPx/n1WNPQt1+uqtw6LMICf3+QNpl8SOJVJJFj2SV
+ TRg60q5Yo8pEZWbfVp6/Buppex7/67VKXM7BBTd9Q2Htu6g0O8WNBLXU9yPeIn74/rju2WhuVvz
+ jJXwsVpuSCH98sk2UdAZVlyamEy2Gn3nwAbWZSmk8ansBmAlO4YCnWIqzraIuB1ChMseY/LsNyl
+ 6GauScLC3qQGpZV+OgcI11FsiBak3FQcC/2pjGqQLtWZ0gityXXQiOSbvJg40uCNnwN6N0kAnO7
+ pk4Oo43gTPDZyYIDfIGtkX3asiE4A5y8xEQvHwsrEYwmJOBW
 X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
  fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -85,40 +85,38 @@ remove callback. A CAN driver's remove function calls
 unregister_candev(), which calls net_device_ops::ndo_stop further down
 in the call stack for interfaces which are in the "up" state.
 
-With the mcp251xfd driver the removal of the module causes the
-following warning:
-
-| WARNING: CPU: 0 PID: 352 at net/core/dev.c:7342 __netif_napi_del_locked+0xc8/0xd8
-
-as can_rx_offload_del() deletes the NAPI, while it is still active,
+The removal of the module causes the a warning, as
+can_rx_offload_del() deletes the NAPI, while it is still active,
 because the interface is still up.
 
 To fix the warning, first unregister the network interface, which
 calls net_device_ops::ndo_stop, which disables the NAPI, and then call
 can_rx_offload_del().
 
-All other driver using the rx-offload helper have been checked and the
-same issue has been found in the rockchip and m_can driver. These have
-been fixed, but only compile time tested. On the mcp251xfd the fix was
-tested on hardware.
-
+Fixes: 1be37d3b0414 ("can: m_can: fix periph RX path: use rx-offload to ensure skbs are sent from softirq context")
+Cc: stable@vger.kernel.org
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
-Marc Kleine-Budde (3):
-      can: mcp251xfd: mcp251xfd_remove(): fix order of unregistration calls
-      can: rockchip_canfd: m_can_class_unregister: fix order of unregistration calls
-      can: mcan: m_can_class_unregister: fix order of unregistration calls
+ drivers/net/can/m_can/m_can.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/net/can/m_can/m_can.c                  | 2 +-
- drivers/net/can/rockchip/rockchip_canfd-core.c | 2 +-
- drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
----
-base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
-change-id: 20250502-can-rx-offload-del-eb79379733dd
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 884a6352c42b..7c430eaff5dd 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -2462,9 +2462,9 @@ EXPORT_SYMBOL_GPL(m_can_class_register);
+ 
+ void m_can_class_unregister(struct m_can_classdev *cdev)
+ {
++	unregister_candev(cdev->net);
+ 	if (cdev->is_peripheral)
+ 		can_rx_offload_del(&cdev->offload);
+-	unregister_candev(cdev->net);
+ }
+ EXPORT_SYMBOL_GPL(m_can_class_unregister);
+ 
 
-Best regards,
 -- 
-Marc Kleine-Budde <mkl@pengutronix.de>
+2.47.2
 
 
