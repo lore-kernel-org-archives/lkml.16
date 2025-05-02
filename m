@@ -1,70 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FD522D78B;
-	Fri,  2 May 2025 09:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A78229B2E;
+	Fri,  2 May 2025 09:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746177920; cv=none; b=oyXqNXJVzqp+vR7mrghG4s/VAsjaS9xyx/MwmdOpzvnBM2u726IyoXF6fIOyVgEE79BQAYl5IweINxyhZCsoHHcCqG/VnvebWWrrMfsTAFh7dk4yInuGTemyddzT2nBHlFALevomTbHD3SGZRGIwkHvQlfd57DEg3PuD28ap9ZA=
+	t=1746177978; cv=none; b=XBD5oscXoHq1sm6/GC/IqfQvgZW4twfMYoYGChmo0dCh/UHxSWciNs/LiYaE8LiSA6iScX44XYD8jp9GQHG9dfqMcSj2Z/TkpWURZZCKtELfTs0/gdbDS+M3f1HVvA00ixKBqrNMwJ8afSxiYvm7hKQODN9fNUS2tIBziwr3lJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746177920; c=relaxed/simple;
-	bh=6q6hCP/w+PMu5oMDcYrXYJBpy4Q+Ne5Kza1OqgsuBZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YET4A+gDQcpfTwgClB/q5blW/GzL8+HdygioT4/Q7/mATp4tVWFlouH/lK2QTlrgtx0UmDdtQUs6eJiTWOxkbK7f9FyzNZE9txcJ4GUwVsdmfVolA2V4SDEv5bbpUWZOIyluwC6uH89WWo6boT7s+fz/tQppBvjshUqoBvP0Bsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMYtrvdz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746177978; c=relaxed/simple;
+	bh=/r0atEBdpILwjy4O7MLex3WN3fl8Y37ugsOOXsz/Gvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZvzY+1MiA+odty3/+jkVOT/8PJOtiaSUgORtvhdprQyLQ/ok8UPpjnOCOOaE6wPsmr4yfFXQ7gQhi9Fc2FDUtDFKnBqBjHAEeFeWCL04I/g/5k+0uDqBiCoLI4hhGMeHPwdFKOZO9ewoTWUEz2pCESMeOzOlnEFxYrPOPAVV924=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbWpqVm4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMYtrvdz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52B3C4CEE4;
-	Fri,  2 May 2025 09:25:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbWpqVm4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF33DC4CEE4;
+	Fri,  2 May 2025 09:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746177920;
-	bh=6q6hCP/w+PMu5oMDcYrXYJBpy4Q+Ne5Kza1OqgsuBZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pMYtrvdzA59Nxhg7pLZBk751ciPkwbE6G2BV+L426NiTNOaEqwqUC11Fg9UNTwo7Z
-	 wI95b6iO0KWel8FW0t6P49QbIm0Gvb6vevwKueo2XpE6NI3nSwLUUnkuWCTSi55b/H
-	 wA6EiCEXEwke/uIh9TRXhI6P4fQiP3cLqAuuAHrraqT1e19ykZqO/XH1/6SwUpPGS+
-	 k0rjMMmSlx9C9hRaCGNIsTm8AVzCVY0JvxGHS9vilZT2srvaLMTWcDOlFP2V8Pbyoi
-	 vbiiWo3Vo5hEkxubhoYXgJJK7MULd3cWGMyk5HBlHTiDeBD+dXL0hbw6bGPUyyZZ5U
-	 oLpw41AIgs1uQ==
-Date: Fri, 2 May 2025 10:25:10 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- andy@kernel.org, dlechner@baylibre.com, matthias.bgg@gmail.com,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- krzk+dt@kernel.org, nuno.sa@analog.com, conor+dt@kernel.org,
- linux-iio@vger.kernel.org, zhiyong.tao@mediatek.com, kernel@collabora.com
-Subject: Re: [PATCH] dt-bindings: iio: adc: Add compatible for Dimensity
- 1200 MT6893
-Message-ID: <20250502102510.05a37520@jic23-huawei>
-In-Reply-To: <174527153072.2973088.9157423165074778113.robh@kernel.org>
-References: <20250416120235.147889-1-angelogioacchino.delregno@collabora.com>
-	<174527153072.2973088.9157423165074778113.robh@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746177976;
+	bh=/r0atEBdpILwjy4O7MLex3WN3fl8Y37ugsOOXsz/Gvw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=DbWpqVm4VLKelZS6AecoC4T85QBufUxfxbrxnuFFd/43YQJcq1pzBVaesRE6WfRtl
+	 5A+n+/E5/CjiZPUMh4lFVU6WKnRrq18WoS+/ivkE60vmlWKas9TunUVnAkcUdXIMv9
+	 mcepiH2oyLJ3AwMY3F9JTKR08KniSOURaR+rNsObTeWAbN3eM0XJZHAvE4xd8LRA1a
+	 eTDQTu5xIcbgy50PnpINQsNYmedUQoFzPgJF+IVfLqMVrU9lmStcI3ObNaYdc1Hgt9
+	 SbaaAQBNy1RYg7x0WWeiPOTVBXy8AzpO+44Ak7NivlaqDys/s9Cj3R1Z7WYrRTEuBe
+	 921jA9ii8JGFA==
+Message-ID: <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org>
+Date: Fri, 2 May 2025 10:26:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bpftool: build bpf bits with -std=gnu11
+To: =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250502085710.3980-1-holger@applied-asynchrony.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20250502085710.3980-1-holger@applied-asynchrony.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 21 Apr 2025 16:38:51 -0500
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
-
-> On Wed, 16 Apr 2025 14:02:35 +0200, AngeloGioacchino Del Regno wrote:
-> > Add a compatible for the Dimensity 1200 (MT6893) SoC; The AUXADC
-> > IP in this chip is fully compatible with the one found in MT8173.
-> > 
-> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> > ---
-> >  .../devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml      | 1 +
-> >  1 file changed, 1 insertion(+)
-> >   
+On 02/05/2025 09:57, Holger Hoffstätte wrote:
+> A gcc-15-based bpf toolchain defaults to C23 and fails to compile various
+> kernel headers due to their use of a custom 'bool' type.
+> Explicitly using -std=gnu11 works with both clang and bpf-toolchain.
 > 
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> 
+> Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
 
-Applied.
+Thanks! I tested that it still works with clang.
+
+Acked-by: Quentin Monnet <qmo@kernel.org>
+
+I didn't manage to compile with gcc, though. I tried with gcc 15.1.1 but
+option '--target=bpf' is apparently unrecognised by the gcc version on
+my setup.
+
+Out of curiosity, how did you build using gcc for the skeleton? Was it
+enough to run "CLANG=gcc make"? Does it pass the clang-bpf-co-re build
+probe successfully?
+
+Thanks,
+Quentin
