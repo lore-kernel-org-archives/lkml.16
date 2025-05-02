@@ -1,128 +1,176 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C922522E3FD;
-	Fri,  2 May 2025 16:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B53D25E46E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746203899; cv=none; b=IHW5XUry1IDaHGqx7wrEXu4HnnSuEayMKcOitlbYIYin7RKAHJP87ou5EUjprIKNvbrHc3DklNg+spaXlUic33ytm/JquTCysDKdyWOXtvSXvdP84HY9Fz/vLZ07eU7J3vLQE2Vg/YDF9dqt/fo/N7xO2BANG15ahBhWNcZHU4c=
+	t=1746203902; cv=none; b=NKXbXWZGd0u+XC+89vsjkVyFfEIyUtn47N4CDzaSbmhxOSc+PVgIG/lLOshG7d9zrDc6RMaLB3iZctMDYv/47ro5e98JMbKVev/sv252QiieuminircIl3jI3Q9G1tWRb4fjItsoXZJOtrZ7C785uE3s/GmnyCk2PXvWHzlds3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746203899; c=relaxed/simple;
-	bh=StNCSoWqTHQVNnBSV3C33tQMvr1ACyrW1L37/XLZkWw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XkcAu6GKHWJsuPfYy1KmnULDsKgLYKOlU6OMUmKWuTW3QUYZtUYK8yyXfBItGY8zCxXWuMdAmJwzyG3R/2NPJI/A7iMgxDPktD8u+vmPgHCmtf4RsHn5TTmcwsJEGi+3dpXOcWlY1k1eOVw2XTBp8mClQ/yBDpXDX9XogiNKC10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VtI0M86i; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746203902; c=relaxed/simple;
+	bh=XsE7SiV+aikMHOLaaXZ7a8kPrkm9AwB5yoxuMKmx1sQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gbc4ILc5kf5+d5IbDgMhb0kO41YYLQj9z0cXeNh9nxYOH/NyCWyZ1VSFg401vQsq6VGx25HC4CvjQmKzN5cR1DxUD7NooZ9q9ejwmvupDoa0dxgcECq1s6+qH5v4sdJXJvslgPco4/dREE/iYMtJJMjHVnbXEsOXhR/Zc7USVB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGx84i8k; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VtI0M86i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746203895;
-	bh=StNCSoWqTHQVNnBSV3C33tQMvr1ACyrW1L37/XLZkWw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VtI0M86iGqKNtCI/YHmVpMgC6HBmTIfOrA4YY+0vvgofcTMarsQ8v2IXDHfd+7LN2
-	 T34mfNirbEGRJenY9I0GDGUhwqurv/+5uI6DwA1HgtTEmIKBBwe8NIvbomKHRU9j4M
-	 EsoT3AYwn5z1ay8+NSg7SdmxFAUIVi7dtBkq0zc/B0Kx9fg58aw/Ni1uG6PZv6GvEv
-	 G0iLOL4zMW+gs81SiTPTKABjdSW0VpAJD6E3OANANxmE0PaeUE+uY+rqlsiJE6V37/
-	 y+Kv5j/4cb6N0mEPzL4+G7uB2tL3KAZQOGGQsx6q+Z5IuH++z9L6tXPGSRRJj1tgox
-	 dYzpmcjweClWA==
-Received: from [IPv6:2606:6d00:15:ec4::5ac] (unknown [IPv6:2606:6d00:15:ec4::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48F3F17E0657;
-	Fri,  2 May 2025 18:38:13 +0200 (CEST)
-Message-ID: <2d82e4e0aa4c244e8b2d3f1e46e92760cd6238d7.camel@collabora.com>
-Subject: Re: [RFC PATCH 03/11] media: uapi: add nal unit header fields to
- encode_params
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Marco Felsch <m.felsch@pengutronix.de>, benjamin.gaignard@collabora.com,
- 	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, Sascha
- Hauer	 <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com,
- 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- paulk@sys-base.io, 	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	sebastian.fricke@collabora.com, ming.qian@nxp.com
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Michael
- Tretter <m.tretter@pengutronix.de>
-Date: Fri, 02 May 2025 12:38:11 -0400
-In-Reply-To: <20250502150513.4169098-4-m.felsch@pengutronix.de>
-References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
-	 <20250502150513.4169098-4-m.felsch@pengutronix.de>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGx84i8k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746203899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=14Itu0wJcqKS8hAd7pT4xJxMeQ8wSKPFd/cQcnRkK64=;
+	b=LGx84i8kY2T9BL6D2VoQo0QYzwa8M4yyYSExh5iRfV1rsE9uHChD1roDYYFdHGuht9riKZ
+	FJki0wdvR/faRBACcD4WqchHsYNYUdBGWw4kBA0OsOyX6cp/Q+nkC2V7b+WTbYh56R4nx6
+	Sn/M2Z4wR1fVH9HhG206Wl/DlMtHpXY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-0VCUz4kOPi68S57gWY7n9w-1; Fri, 02 May 2025 12:38:17 -0400
+X-MC-Unique: 0VCUz4kOPi68S57gWY7n9w-1
+X-Mimecast-MFC-AGG-ID: 0VCUz4kOPi68S57gWY7n9w_1746203897
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso9363775e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:38:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746203897; x=1746808697;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=14Itu0wJcqKS8hAd7pT4xJxMeQ8wSKPFd/cQcnRkK64=;
+        b=r1/0F0dEEiIDRoFSeMZbkfOgtQgBNfOB7utiLGoaWCA5ktgV5gbHFU6ry2jREAbxjC
+         cN1K9lmIEdWT2HJDCKWZNRIX4OxhT8Bk9D0KBl1oEDaARqKpVpbOSWOaDRvjCt9Hq5W3
+         U+0v+EgGDoG6XNBuqUe2bNXDd+hY8yb1tzsl3CuoerIKWd/obYOB5puXSstfQiqOvt3+
+         S6mRXDRPUH4klAjcN8x98fw18B8ZqDRu78ycFCMb/zaIX8eBHH75RG2uNs4RxrqQ/Gzx
+         gwn9przkJhnLqUCaWc0zpUnCQTzt8uABkTGVKGCE42xUz02SMCYmESkRLjAoQ8PkMrKU
+         ykpw==
+X-Gm-Message-State: AOJu0YxIMscErBpscBzrakSVy7nTBH8vPUZm6FspdXWfKd/5kTCeZis4
+	P4+jj5nLVu+AyqprjZE46D0wmXCh0RA0SM77RLbjZwiqKayMAeOaLpJnDJ0BYjZNCCvMcpOaU8K
+	/KGuQ7Aj8GtMOtkAPxDDjHlANyLeqhoE3v7Aya0cNB/3RCvJGkwKNazFgIzt8mg==
+X-Gm-Gg: ASbGncsmfXXOrF2YDcUKZUSFriarSsiONpul0Urqau+AH8WRcNHP7FPiwP/U4F32DPZ
+	deK4b2iSf9qJkNFzjF2O60tcxpfvKp0o1q+dLEegAqvMzGLuDCOLHhLCaC0w7iN8T6JAeEiQZX/
+	Xx1ZsOScfY8EH1ctPZxyBs+iAlbTV0+z2RqqQDtvVlAqXiPdQTfFqvH8t1JfK6X93L+T6LFLI5/
+	ZtgIJB6xRFccsyB4YaiZQKc52Gu0ddjOX0yVoSXKbP/NzfcH9+F1U3iJZYfYjSuGF5HEYGb/JTi
+	a+KfjudL4CR/eI+jFOR68QeDJiL19WlwYLGHLNENCOSk3zFq
+X-Received: by 2002:a05:600c:528f:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-441bb852744mr33828565e9.5.1746203896706;
+        Fri, 02 May 2025 09:38:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMHXR/p+bYllCeFUiu3mvj1rpI7ZOiyLrHoitDd00Nmz4qAV27N+1EVZD+X61FQi8x3pEBZA==
+X-Received: by 2002:a05:600c:528f:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-441bb852744mr33828185e9.5.1746203896267;
+        Fri, 02 May 2025 09:38:16 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28732sm94362125e9.37.2025.05.02.09.38.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 09:38:15 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <34535b8c-35c8-4a7f-8363-f5a9c5a69023@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+ <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <34535b8c-35c8-4a7f-8363-f5a9c5a69023@intel.com>
+Date: Fri, 02 May 2025 18:38:12 +0200
+Message-ID: <xhsmho6wb9de3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi,
+On 02/05/25 06:53, Dave Hansen wrote:
+> On 5/2/25 02:55, Valentin Schneider wrote:
+>> My gripe with that was having two separate mechanisms
+>> - super early entry around SWITCH_TO_KERNEL_CR3)
+>> - later entry at context tracking
+>
+> What do you mean by "later entry"?
+>
 
-Le vendredi 02 mai 2025 à 17:05 +0200, Marco Felsch a écrit :
-> From: Michael Tretter <m.tretter@pengutronix.de>
-> 
-> The VEPU540 and VEPU580 may prepare the NAL unit headers in the coded
-> params. These values have to be provided by user space and be written
-> into the hardware registers.
+I meant the point at which the deferred operation is run in the current
+patches, i.e. ct_kernel_enter() - kernel entry from the PoV of context
+tracking.
 
-To be reworked in future version. This commit message refers to RK356x and
-RK3688 encoders block from Rockchip. Though, its possible this applies for
-Hantro IP too.
+> All of the paths to enter the kernel from userspace have some
+> SWITCH_TO_KERNEL_CR3 variant. If they didn't, the userspace that they
+> entered from could have attacked the kernel with Meltdown.
+>
+> I'm theorizing that if this is _just_ about avoiding TLB flush IPIs that
+> you can get away with a single mechanism.
 
-Nicolas
- 
-> Furthermore, nal_ref_idc indicates if a picture will be used as
-> reference and is a hint to the driver, if it needs to keep the
-> reconstructed buffer or not.
-> 
-> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-> ---
->  include/uapi/linux/v4l2-controls.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 670f822ee758..a8df393c9ead 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -1694,6 +1694,9 @@ struct v4l2_ctrl_h264_decode_params {
->  	__u32 flags;
->  };
->  
-> +#define V4L2_H264_NAL_CODED_SLICE_NON_IDR_PIC	1
-> +#define V4L2_H264_NAL_CODED_SLICE_IDR_PIC	5
-> +
->  #define V4L2_CID_STATELESS_H264_ENCODE_PARAMS	(V4L2_CID_CODEC_STATELESS_BASE + 8)
->  
->  /**
-> @@ -1719,6 +1722,8 @@ struct v4l2_ctrl_h264_decode_params {
->   * @pic_init_qp_minus26: initial value minus 26 of luma qp for each slice.
->   * @chroma_qp_index_offset: offset that shall be added to qp luma for addressing the
->   * table of qp chroma values for the Cb chroma component.
-> + * @nal_ref_idc: nal_ref_idc for the header of the generated NAL unit
-> + * @nal_unit_type: one of the V4L2_H264_NAL_CODED_SLICE_{} values
->   * @flags: combination of V4L2_H264_ENCODE_FLAG_{} flags.
->   * @reference_ts: timestamp of the V4L2 buffer to use as reference
->   */
-> @@ -1751,6 +1756,16 @@ struct v4l2_ctrl_h264_encode_params {
->  
->  	__u32 flags; /* V4L2_H264_ENCODE_FLAG_ */
->  
-> +	/*
-> +	 * If nal_ref_idc is 0, the NAL unit won't be used as reference by
-> +	 * later NAL units. Any other value indicates that the NAL unit may be
-> +	 * used as reference.
-> +	 */
-> +	__u8 nal_ref_idc;
-> +
-> +	/* TODO Can we infer the nal_unit_type from the slice_type? */
-> +	__u8 nal_unit_type;
-> +
->  	/* Reference */
->  
->  	__u64 reference_ts;
+So right now there would indeed be the TLB flush IPIs, but also the
+text_poke() ones (sync_core() after patching text).
+
+These are the two NOHZ-breaking IPIs that show up on my HP box, and that I
+also got reports for from folks using NOHZ_FULL + CPU isolation in
+production, mostly on SPR "edge enhanced" type of systems.
+
+There's been some other sources of IPIs that have been fixed with an ad-hoc
+solution - disable the mechanism for NOHZ_FULL CPUs or do it differently
+such that an IPI isn't required, e.g.
+
+  https://lore.kernel.org/lkml/ZJtBrybavtb1x45V@tpad/
+
+While I don't expect the list to grow much, it's unfortunately not just the
+TLB flush IPIs.
+
