@@ -1,55 +1,53 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1913B4689;
-	Fri,  2 May 2025 02:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3F34689;
+	Fri,  2 May 2025 02:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746153300; cv=none; b=rRQnhAEA9bouCbfFiwEjafEAvn4eMegBslu2nZ+GHuI4ZRjt55mBGEFd3SzNs/+nanPpYUIYCf8RoBYJcDbzt0/Vi3Y3w+vj6XMV0Kvi1dRunI+2rVI7mD2Uc14WeDyUWUslXUuhqUnrv/CI6vWhbzbXJoIxV1CJTwZIv5qIk5M=
+	t=1746153413; cv=none; b=qaHR44GznOaQzubA7LEf18JDw0veYavzvLr2p80DGAb5H8hAnmhjwgaNKtmXHwTS5SSBXRA6vqQjAmcBGp/MokXTnf9Lm6jo3PW1e2baTQjaNVYzocUBxqov/sLLwBB40z+AYw9MnNsU6sbQS9Agh18VBjoUgTqSTQMcJTdayNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746153300; c=relaxed/simple;
-	bh=f5h1Ie7dXSDU8i0YNIdrMw8K7HFjGkJ4NCJCiwAwALs=;
+	s=arc-20240116; t=1746153413; c=relaxed/simple;
+	bh=kGjqdNL6uWTxYXfoihhELmFCGnZqUTkDeX57TXY79HE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B2C5J6D9rCYOLZBt5AtfhTtL6FU+jvhn9aAvdd4plSATn2ipkeQEf1DxuxisuKO+x1W9V01WAW+9b0Q6owFxtGdCY/PhflvdUJh2fWFl9ducBipUrGL8ISrpRDUuYkL3dI9F/IjNWVVhSwR9B54Aa+xuKj5+Slw7G6u1Yj8zIsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=wWJocYSy; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=usFmv94pQ/P80ogU19Nim2IKSmFbtCJ6UvVnoP2uee8Zhv80vh5g0edYuMIWJW9FYHyvFoenCdT75simxZMbWL7eSy+W3CUK3NgHUnEmOLQRPudh50N6YowhB6+y2hdsMZnb5BOE9ipSADlnqyHgb0pBjEOVtvL4L1wRSrc5MMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvxly764; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="wWJocYSy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=P8bGVFcQNC8bUMcQFTsN63CjDxjXndvf41sHelhW6H0=; b=wWJocYSy4eEtn2ABOR4emJvlY/
-	6Tnj9e1xzI+e33h7hXaotSUYbz4BhuLe5sco8BPyM2GklEjHS5hFpp3X8VFJpeN8zY854LaEaZzCE
-	boOkWSUpK/cHocbZVJMuT+BPEcDeLOVFRajKMBmAvKWA5st1J60p0MTJnqaj7061jJqXaa27fP0RB
-	DGHpsPoz6ZHW0aNdmaL0VLocXD8wngmT+TSv/c+IlsST2UPiZqavOodfz1zE6v/QPuo94hz66VDPz
-	RHLZQOpmf7CPd2ztkj0h6V74x6S5r6LvzDUHcIDkvWwhcs4QN5vaY3hO979aB4Q5pvXp1Z+lJArx+
-	1imCFZ0Q==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAgEh-0000000FDhl-3Vaf;
-	Fri, 02 May 2025 02:34:47 +0000
-Date: Fri, 2 May 2025 03:34:47 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-Message-ID: <20250502023447.GV2023217@ZenIV>
-References: <20250502002437.it.851-kees@kernel.org>
- <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvxly764"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDF0C4CEE3;
+	Fri,  2 May 2025 02:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746153413;
+	bh=kGjqdNL6uWTxYXfoihhELmFCGnZqUTkDeX57TXY79HE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gvxly764wJbgzP9snvgCvOl2pbOzHoX4FAL21k1/SmWVDnmwm7Muxgc2uMhdtoYBI
+	 er2RlDHi8pKyojvj0RFjRrlPAt1EwEpMcmpzdGWy6dOeb/kALWD9dsGkJWmcH2C7xw
+	 RL4wTkqSvJz1M/p2zACHb3aBMMM2LvTTbK/PeIRaSmmU5CKU0IJSL8RSRrn2SaP+n9
+	 KC6ZKmzwztSvOW6lwDpOeqJAJbtFo1lHL5LVUm9K8mRN53cCRdzBnjrtBUNpty6shX
+	 0qtm/durPsaBGrDJA1EmDApizIxI/xpw6QfFi6eVIu2mEEvJK2NZDSFIG+LmC2UuoF
+	 X1vIvfnnfZmOg==
+Date: Thu, 1 May 2025 19:36:47 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, stable@vger.kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	Marcus Seyfarth <m.seyfarth@gmail.com>
+Subject: Re: [PATCH 2/2] include/linux/typecheck.h: Zero initialize dummy
+ variables
+Message-ID: <20250502023647.GC1744689@ax162>
+References: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org>
+ <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
+ <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com>
+ <20250502012449.GA1744689@ax162>
+ <20250502020534.GU2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,36 +56,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20250502020534.GU2023217@ZenIV>
 
-On Thu, May 01, 2025 at 07:13:12PM -0700, Matthew Brost wrote:
-> On Thu, May 01, 2025 at 05:24:38PM -0700, Kees Cook wrote:
-> > Casting through a "void *" isn't sufficient to convince the randstruct
-> > GCC plugin that the result is intentional. Instead operate through an
-> > explicit union to silence the warning:
-> > 
-> > drivers/gpu/drm/ttm/ttm_backup.c: In function 'ttm_file_to_backup':
-> > drivers/gpu/drm/ttm/ttm_backup.c:21:16: note: randstruct: casting between randomized structure pointer types (ssa): 'struct ttm_backup' and 'struct file'
-> >    21 |         return (void *)file;
-> >       |                ^~~~~~~~~~~~
-> > 
-> > Suggested-by: Matthew Brost <matthew.brost@intel.com>
+On Fri, May 02, 2025 at 03:05:34AM +0100, Al Viro wrote:
+> On Thu, May 01, 2025 at 06:24:49PM -0700, Nathan Chancellor wrote:
 > 
-> I forgot the policy if suggest-by but will add:
-> Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+> > > How long has that been valid? Because this is certainly new to the
+> > > kernel, and sparse does complain about this initializer.
+> > 
+> > As you noted, brace initialization for scalars appears to always be
+> > valid (at least in my testing) but as Al points out, empty braces for
+> > scalars is only supported in GCC 13+ and Clang 17+ (I think [1] was the
+> > clang commit), so that is not going to fly...
 > 
-> Thomas was out today I suspect he will look at this tomorrow when he is
-> back too.
+> From some digging around it looks like
+> 	* {} for compounds had been an extension for quite a while
+> 	* C++11 got it into standard, with semantics defined as "same
+> value you get for static-duration variables of that type without an
+> explicit initializer".  For scalar types as well, with the same
+> semantics.
+> 	* On C side that happened (again, with scalar types allowed)
+> in 2022; N2912 is the first draft with that change already merged,
+> N2913 is the corresponding editor's report, saying that change in question
+> (N2900) got merged in January/February virtual meeting.
+> 	IOW, C23 has it, no previous versions do.  For C17 this syntax
+> is an error, and AFAICS you need at least -std=c2x or -std=gnu2x to have
+> it acceptable.
 
-[fsdevel and the rest of VFS maintainers Cc'd]
+Neat, thanks for digging around.
 
-NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
+> We can make sparse accept it (either unconditionally or with sufficient
+> -std in arguments), but that won't do a damn thing for cc(1).  Does
+> clang (any version) really accept it with -std=gnu11?
 
-Reason: struct file should *NOT* be embedded into other objects without
-the core VFS being very explicitly aware of those.  The only such case
-is outright local to fs/file_table.c, and breeding more of those is
-a really bad idea.
+Yes, it appears that both GCC and clang accept it even with -std=gnu89:
+https://godbolt.org/z/GYKrKhTdf
 
-Don't do that.  Same goes for struct {dentry, super_block, mount}
-in case anyone gets similar ideas.
+The clang commit mentions that this is exposed to older C modes like the
+GNU extension was.
+
+I guess another option to locally silence the warning would be to insert
+something like
+
+  #if defined(__clang__) && __clang_major__ >= 21
+  #define typecheck_init = {}
+  #else
+  #define typecheck_init
+  #endif
+
+  #define typecheck(type,x) \
+  ({    type __dummy typecheck_init; \
+        typeof(x) __dummy2 typecheck_init; \
+        (void)(&__dummy == &__dummy2); \
+        1; \
+  })
+
+but maybe that is just too ugly or worthless.
+
+Cheers,
+Nathan
