@@ -1,58 +1,93 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70F528382;
-	Fri,  2 May 2025 10:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D2420E702
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746180038; cv=none; b=mFFKNUgfThzp8dDhrwDfc1MTU0Am9VUI4b1oTjkfwFblAn25IlQDyL+Q6UCvaIe2KfCjThVZx7UV9LHlH3GQ24r6Zq8DsNuZ7WBGZZEIs/ISP9Yap6r/fnvoW7F9+FMdDN7gAqkX4XmZX3e88N/TFudNgt3QFgYbq+sf+EVuNPY=
+	t=1746180058; cv=none; b=Pu58fsg5PI73x3HlM+9E+bDTXvRadxICc0R+GG424M1SDY1PRPmxnPRRzRbbhbahyMcrfKjRhzjSfGARfwvd6KxAUgVqiDgS5VIu05pyAK7ZpyqDWNKERiMLjQIYt1ViYfGWQsjSsv7gTBG7tV5+fu7YrXsB5OqK7uVm3LJNlDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746180038; c=relaxed/simple;
-	bh=xvxeFqmwwqfFPGDg9Kr/q4evyXy2QadqZQMvYNW4DGY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tgSAFWjixXM6Ok3kX7JLh4Sb4+gPj2a5Ny1QN/MqNRd7JrowSVUCK0ijxpTW33jlWR0xnRGd5NRLF4Ps7u486clzI5NA3jaQDOfIc255ndumQccCp9BGz6g+LmN74BzvDQZxagpzvKGJh01HAjmYyg1Y3OeU+4TJJpkTpXvaMOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Og/KlTv0; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1746180058; c=relaxed/simple;
+	bh=vCWwdAowEJBs6cvWQ7lIUrdUovkUmMtp1i6POol9XM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YyAzkntVVrOjm/6++vS1fvPWJ/F5ZRL5msRp07Euy+qewC3cQ0peYS0GgRkwG6J3x7VuZMot5q1T+8iC/GZbhomCzWlSqMc4DZkziiIRvSYYtY54ZGKjup2spo9kdtRVTRNjAli2yQdw2wlp9LUt9IVXPKzcLpEZWfhvJyNteKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lILZ+Ba4; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Og/KlTv0"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5426mq8c008008;
-	Fri, 2 May 2025 06:00:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=+s7qNhrdsXhtcpRF2pny6jBhlRT
-	PMk/+y1XlqUe41dU=; b=Og/KlTv0QTDmC5Hwb+CLU0vGz8eTG32oxclgtOi2zMv
-	vNwrGzLuZqoYdvXdr7F2yuCV8C9+dWTKKrrNg6L3NOTBNE5xJk5UyrfzaTDlQC3U
-	eGSLq2DXi1eqKZIghgfDXo/yNJV96ESFs2Par3R2VJ7fNs5MmZREutxml+0+9svL
-	jfBacfBnAXP6qVAjXnWqhG82u5eZ2fSDVvEeRN+V9Of/v71Q5WPO/CpHvPxgz6dB
-	zxGvz99uluUIWUTY+wrO77nESFpllaCcCDuAV/6tLSb3y0Sdi+wW0wlNcCsxD4WL
-	rEufHCMWiBSKyS96+w+KJ1QlFgxvRM8c7YLg66mJ4sQ==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46b6u1m50k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 06:00:29 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 542A0Pxt000899
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 06:00:25 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 2 May 2025
- 06:00:25 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 2 May 2025 06:00:24 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.211])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 542A0H3G019409;
-	Fri, 2 May 2025 06:00:20 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH] MAINTAINERS: add maintainers for ad4851 driver
-Date: Fri, 2 May 2025 13:00:16 +0300
-Message-ID: <20250502100016.26279-1-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lILZ+Ba4"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac25d2b2354so276800866b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746180055; x=1746784855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ItVLbwXh6klaFZ4DOTZKuJkyifurR/QGuqAr/eTlGU=;
+        b=lILZ+Ba4INSx0smZ4cNKOx16Jw5Um9PE2xGKNsOtjqSdd/B97FLiQZzJJcGhMKQq2V
+         wrCd6Wfqj0Ekey/4awoq9yqHVi3h4A41BG1C0gchOg5irt3wrz/LoMYGIk07FI8ORbL5
+         ZP6mmPwJLamfHRQqw9qY646pQkruAF6txP4OzgNEKdakqMpeQkKSGD5/gVtMNPSQ4J+Y
+         7YN/T5dJj6SpykXZtV6ovY6sTndDDEtxdntHOj1KzLyju9BzNTTe2+czhhkV2RmfWECP
+         k2nNc/MKa0IUIHa2dQf+N4FQ006+Fgz4ociY1kb+ptf2V9uIjNGSWBVP5ekMTW/JUMen
+         Z2kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746180055; x=1746784855;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ItVLbwXh6klaFZ4DOTZKuJkyifurR/QGuqAr/eTlGU=;
+        b=ExR8YAsG0b9zb1Q/w1YY5LowpCc3XLlWrmUEPDnEk0vFuJN0i+PnLlrnqZV2i3xSBf
+         xOaITPzCHRXIZqKsj0g+D8FgZlceT0xLJ3/YyFwK1IgEC8VdWtJs5HkKGACJVqwIQQbm
+         2i6+p/A13L2XVi5okzhDNjWbKgSyQqtsJBPRfiju3Kh9mnjbhS7E45dyRm8lpDTY3F38
+         hha6x67RQVYp1Anvn0EcYH0VEirQeudr6HbKQXDw8ikFpWLj8KiUYgICfFtqI91grJ3M
+         slFS21fqu5SIKrPVP910n0OJton3PCW3Lh0bn4ybjIuvMedPp7ccNtsDkzSoXQBqkS51
+         GCeQ==
+X-Gm-Message-State: AOJu0YxZmgkk8xnF7FSjdMn6l7m9tpaapAFCVzgd1LJFciAQWbSRFYxI
+	omtx4Z6Oq3SBTwMO1qgy+N6o20SqAK8X2Y05BtbOTDNoj702r14HU1S63AgdHDf2+musoBU3aN0
+	XKGE=
+X-Gm-Gg: ASbGncuZGvEcpNYR+QuS45fNmuhSFuf8RYQJuOE3ef64psEmqBLOD89Ek1ScrjGFhhP
+	XN0ufURgZsOy5QVImcjgaIi8A5ZhbD14GB6Jab27C5q18WESZge9BZJLMX6SVSdnN6j5amR2z1b
+	zds7nSHDVuqJ4jGGKP8bT6eTA7Jt5ehxZleUN39gisivwmpr3FbFaZahdBUdthFu5UKDqpXJowS
+	tF0tnlUnY/bw8Vu8oKhHan/076Jz3+rrKZGWY7o8mqaeWtl0hdvSaEPzB2kwpJVtOZiW4Ohwlzw
+	97Am5s8KbHG7QwkbAVV+he60sxvuY7u2pZDt8v3QuKUN1HA8ArmrFzSj32eER7r2lE8oEthpKOY
+	SGnb/M/jnLI2ux/2d9w==
+X-Google-Smtp-Source: AGHT+IHsIhA3Bp5ORflZ8bo2wewMeJPgYiXyKbBXizljuVxA1br3p39Mij4FHprUjRbWMN7T6ANK8g==
+X-Received: by 2002:a17:907:3f0f:b0:ace:9d35:6987 with SMTP id a640c23a62f3a-ad17ad24ac3mr199033566b.3.1746180054591;
+        Fri, 02 May 2025 03:00:54 -0700 (PDT)
+Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891473a1sm26030566b.4.2025.05.02.03.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 03:00:53 -0700 (PDT)
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v8 01/14] tee: tee_device_alloc(): copy dma_mask from parent device
+Date: Fri,  2 May 2025 11:59:15 +0200
+Message-ID: <20250502100049.1746335-2-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250502100049.1746335-1-jens.wiklander@linaro.org>
+References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,52 +95,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=RuDFLDmK c=1 sm=1 tr=0 ts=681497bd cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=ZmWbj0fSwbq9jPR7GREA:9
-X-Proofpoint-GUID: sr1sbG4cO3zoosvDyqoosMSJJXhEROZe
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA3OCBTYWx0ZWRfX3hF3+/L/jBCN 3IywNiNt7Dh6shnz/PqwjwDYBp7hEbpghKgNaWoZS4XReW5pyhJ/7Ww+xN9FW0selYewQ1QV9Fq NvVlE7gX47BkTl7LjMKYM883jPSe323tdtNVvylt2wvyCPRgOysijGVGcEUicoZWnORh78Lw7Fb
- lmiMiLpqplTIX5LBq2i36H8sk3ircdU1uTJQICc+yN+C2oPsvHDAkdGq5KkDqz4uqDUNAHAWX3w 3t4PcgAJKSfSPgrtuA+STLQYPdTobwrwUDMCAFjT1xJvvuOAL9sXo7lf4ms9uLh/I0WNmXhNFge jwMvFhTvKM2lewc2KezevleuRp2kqgaflbjeOvS63zV29zRhmXqZyY/Rn88OWx74f9E1ykc+7Nk
- gwd4apm28QCh4IBTNtCwxMdp3Mu4q0QGsm4hq8hnKk9F0ecJ1xctJCYUw3p0pb1Pi1zM109Z
-X-Proofpoint-ORIG-GUID: sr1sbG4cO3zoosvDyqoosMSJJXhEROZe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=811 lowpriorityscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 adultscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020078
 
-Add the ad4851 entry in the MAINTAINERS file.
+If a parent device is supplied to tee_device_alloc(), copy the dma_mask
+field into the new device. This avoids future warnings when mapping a
+DMA-buf for the device.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Reviewed-by: Sumit Garg <sumit.garg@kernel.org>
 ---
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/tee/tee_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4a0089db6670..d5a985ae62bb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1350,6 +1350,16 @@ F:	Documentation/iio/ad4695.rst
- F:	drivers/iio/adc/ad4695.c
- F:	include/dt-bindings/iio/adc/adi,ad4695.h
+diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+index d113679b1e2d..685afcaa3ea1 100644
+--- a/drivers/tee/tee_core.c
++++ b/drivers/tee/tee_core.c
+@@ -922,6 +922,8 @@ struct tee_device *tee_device_alloc(const struct tee_desc *teedesc,
+ 	teedev->dev.class = &tee_class;
+ 	teedev->dev.release = tee_release_device;
+ 	teedev->dev.parent = dev;
++	if (dev)
++		teedev->dev.dma_mask = dev->dma_mask;
  
-+ANALOG DEVICES INC AD4851 DRIVER
-+M:	Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-+M:	Dragos Bogdan <dragos.bogdan@analog.com>
-+R:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Supported
-+W:	https://ez.analog.com/linux-software-drivers
-+F:	Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
-+F:	drivers/iio/adc/ad4851.c
-+
- ANALOG DEVICES INC AD7091R DRIVER
- M:	Marcelo Schmitt <marcelo.schmitt@analog.com>
- L:	linux-iio@vger.kernel.org
+ 	teedev->dev.devt = MKDEV(MAJOR(tee_devt), teedev->id);
+ 
 -- 
-2.49.0
+2.43.0
 
