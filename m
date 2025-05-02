@@ -1,158 +1,124 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276272566E1
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C982256C66;
+	Fri,  2 May 2025 14:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197099; cv=none; b=IceXqxE/43LjvnL1Wb/VPHCTcjUf/SoU19oIQPkSJjnqo7PfVlxXrG+0J9+2WFs5vXYESBcbEYTtuMKNzObwVFQ/xYXLD1ruFBJvVt8vjY0nr1iUuNVb/wRPJK77mzN/BqbbzE2JrfdJmOq2ow7n5fI36uOJWilkPRi09spAye4=
+	t=1746197110; cv=none; b=XmZqiQUNsGjWdjIl27eY9eL7Cx7P6OQ5FL7OhaTzc9z2EjWVP91gdfH3E/ZerIQHWc2WL43Y+CnQfLye8AymPjYp9mH52rROIBA9OoQCJJybszzauFo5mvYD3p4y0VQ8oRx/FZ5p4/hiPiO/jnT8I11z5iDGD3s6F7z4lfg+DzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746197099; c=relaxed/simple;
-	bh=K2v+V9BeNPO6z1mSHU2f46T3osTrV14m8I6JlOMOUTc=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/BsZp4aB/ERZMyo8vLUG6vbCyR8QWjGstAU4rFQF61BmNyBG7Dfgof6U/hkbM4ADuHIvyaaM5Tg+QvZ663132VpUJa+ZJa4JAWJv8wrSXODm07GbpWl7JbH1WVwKMzr7bZqLbktRD5GtHwHfvftnqW583vBYYsf6zTu5tvKvSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nfS2RhDL; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746197110; c=relaxed/simple;
+	bh=eYirp61IwA6Rjxuke4pGlaR15pXcpswx8TAjOX0pBm4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sC77Mc29BP1zLY2lLdRyLGAlTj3SmU9rUsZVc/SHxtvSJmEihGnKyy9nqzdSFA88mUTzOwrEnAhhuNWo+wduTaEpVp7OOadGMYjj37ls6suC2olD7LubjeS8bU4anq/8NGWwgBICK1mVgKHT/u61l8WssvCHhxJWs4rx0i89Nn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NZ55NKZA; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfS2RhDL"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5e39d1e0eso233439185a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746197096; x=1746801896; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y1D5cABUWl03Gb3dEb9Zn/xPv0rDHSpYAcBsKyT8bso=;
-        b=nfS2RhDLjtxVsuw/2kdqZtMrVgvVzdjD6q/qgmtQyIk4SQKB7Xj9FOkVUlx1iFjOxw
-         DckQRfrv1dCFElZJe8va4so/3UoQtCaks//dU8vn4oo7lEFJwGYwtr+l9H1uIraA2fMA
-         ylm7/vyRPzgkt0xCH5Ofv9xJp5W+q5ydiPNtZLJWs3qLlwxqY5SYrBtrMBtf6/Fx6s3f
-         1wSCiIozGGZVb3rtvdJMXHitxMlwolq87GwIHi0JKcpMlLc/36cgwB8fz2vBeMdP3uBj
-         Fk73zDZgqpLyMkSGElIHZIjD2Z3ZdFGlg3Eqq3r9vYj1145aU5HvMDTxtIEAGfPBVuiY
-         poTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746197096; x=1746801896;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y1D5cABUWl03Gb3dEb9Zn/xPv0rDHSpYAcBsKyT8bso=;
-        b=QHZNepZAJouvtRJuYcdjoGFjgKV96dOE44MWcpsEzrPcVkZ66er1aaSOx4Cs5sMR1l
-         /Uyha7UXYcw5l6N9ztSOyU0HBBSpfonXlM6zWIl8DWTKoT3p58NLWNltFeXmWbDlUbVS
-         sJM0jTerwY4+xQy6N4hkGDvuxkJ/OdO5VuCzWEvhn3Vi33QsAEtgXXKiTPcm0HOH/6DG
-         YZYCz2ws8nLKNYRa6YMuv+aERxQeM/pmjt6kqfHNTk3l5a3ZijSw3y7Qqas7xHqgRDEk
-         sQs0xWA+3ODJlU7pWNlIld76GPqFmqZNmFLUFV1Wx0UbCyZBiCQ1uu9M2aD82KX5pmoT
-         OQUw==
-X-Gm-Message-State: AOJu0YxG1Fvao1GplUhCh1mPzaJcJSF8592alBR4sj5QLg+PXT44MvA2
-	QgM1Whmm5looyWmHLiGymj2nBMkLGfhlgoGBvhU5BGmFhSp1XBQt
-X-Gm-Gg: ASbGnctcceLDooPbbU1OsDcowKBiSJz6hW9p56xGyKTDD3e0ZPP2dIB0OlRWW1kbh1m
-	dYqB4OsZR02tPfnm+M8Gceb7O/McjnqxtM118ChTsBwJHq6xitx7mLZXrE7dn6KPujJxhrM9ED6
-	AcXIzB6kz+Of7uuBxkPpl/HxPm1guj+S72T0oDN5YaPVLC02Us1NkzrvppuIO5Fsv4777LQ80vY
-	sLSjgTvR43I7Ch2k5VtV1L8hcrZB5a0eHwypTqJiXwYpY+XDv2vull5xijel3De6abUKb9QYesi
-	zPBOoK7b1YoeY/10AFrrs0ukaIjKJfhlMGLTSchDFFY2kycvamX9n/ilIuhFI48PGWX1GvO5qvQ
-	U4RDmz2VJpXwokAMEImV6tDU/1gBpvH0=
-X-Google-Smtp-Source: AGHT+IHRPivqnggcPnth+cCtUlU5ktQEZ68fxYNwiRGEvvMI6JWX9VzuD4MXwQqFgO70AGZX+P3yaQ==
-X-Received: by 2002:a05:620a:1a9e:b0:7c7:bb3f:fd40 with SMTP id af79cd13be357-7cad5b2383emr418969385a.5.1746197095964;
-        Fri, 02 May 2025 07:44:55 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23d0d0fsm189599885a.50.2025.05.02.07.44.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 07:44:55 -0700 (PDT)
-Message-ID: <6814da67.050a0220.2f3283.cdc1@mx.google.com>
-X-Google-Original-Message-ID: <aBTaZbjRBhRl7mDS@winterfell.>
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 0EDF21200043;
-	Fri,  2 May 2025 10:44:55 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 02 May 2025 10:44:55 -0400
-X-ME-Sender: <xms:ZtoUaHvANPzb0oMXyUaUUbvZer1Qt2-dLwySerQz7pmaYVQKqdy9pQ>
-    <xme:ZtoUaIeSvirOVsOwHJBs7DuaKe5rsRVY3U4oZC_m5ad1Ng--Wv30Fd1hZdzbz_3qV
-    oJDIY7uHahqT7ayTg>
-X-ME-Received: <xmr:ZtoUaKwFnohi7sgoHTCIucE4KPLorIxgmI8iH_LCfO_zQ4eK-On72pDn5iQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvjedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
-    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgvpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtgho
-    mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphht
-    thhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhngh
-    hosehrvgguhhgrthdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheplhhonhhgmhgrnhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnh
-    grthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtkhdruggvshgruhhl
-    nhhivghrshdolhhkmhhlsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:ZtoUaGNe1Mu8wfVu8CTHH9LCHKLyYxsXz9SOJ--aWi_9AyGtYZE_jw>
-    <xmx:ZtoUaH_mwK8azKp1HllcyJC66m8qPsryEX2dja-9RL-71VRnMwU3dQ>
-    <xmx:ZtoUaGXaMkRsonYzmvw8dMOu5aksFuwaqDvT_yRsy7fjff1-yE0x-g>
-    <xmx:ZtoUaIdMlxeymlj3_FZFsirwcAxVKnXIqvP1dFwzi8h4SuivDFozuw>
-    <xmx:Z9oUaFesUaE_dn_vLVrg6F7MIorzBO9-4lWvzZ3QYq1oCOoJmM4hR6XI>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 2 May 2025 10:44:54 -0400 (EDT)
-Date: Fri, 2 May 2025 07:44:53 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] lockdep: Move hlock_equal() to the respective
- ifdeffery
-References: <20250415085857.495543-1-andriy.shevchenko@linux.intel.com>
- <aBTP9AaJ0uyzAjxG@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NZ55NKZA"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542EiqR63883493
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 09:44:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746197092;
+	bh=m6yQn4QfB0hC25F9cY87ostqbnKwXQMlrXFsKG/EbB0=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NZ55NKZAsxorzG6zcWae1wFzvHFNADcoAoUl7a89jWvLzUuNoNVypyRo7I5TAvjt4
+	 MDoGK8kV0AiFjP8+1VRyMJrycZ059Fzo/8xGVz9n9NGN/+j24iZGaW2qdESZCa9bHg
+	 6FQJCPiKAB5wjJJc4H8SR783V06ol7V0TU+I1ZJE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542EiqoB037936
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 09:44:52 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 09:44:52 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 09:44:52 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542EiqRu041427;
+	Fri, 2 May 2025 09:44:52 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Francesco Dolcini <francesco@dolcini.it>
+CC: Nishanth Menon <nm@ti.com>,
+        Francesco Dolcini
+	<francesco.dolcini@toradex.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/6] arm64: dts: ti: Add Toradex Verdin AM62P
+Date: Fri, 2 May 2025 09:44:51 -0500
+Message-ID: <174619707844.3123252.13529152591624600690.b4-ty@ti.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250430102815.149162-1-francesco@dolcini.it>
+References: <20250430102815.149162-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBTP9AaJ0uyzAjxG@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Andy,
+Hi Francesco Dolcini,
 
-On Fri, May 02, 2025 at 05:00:20PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 15, 2025 at 11:58:56AM +0300, Andy Shevchenko wrote:
-> > When hlock_equal() is unused, it prevents kernel builds with clang,
-> > `make W=1` and CONFIG_WERROR=y, CONFIG_LOCKDEP=y and
-> > CONFIG_LOCKDEP_SMALL=n:
-> > 
-> >   lockdep.c:2005:20: error: unused function 'hlock_equal' [-Werror,-Wunused-function]
-> > 
-> > Fix this by moving the function to the respective existing ifdeffery
-> > for its the only user.
-> > 
-> > See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-> > inline functions for W=1 build").
+On Wed, 30 Apr 2025 12:28:09 +0200, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
 > 
-> Any news here, please? The problem still exists in v6.15-rc4.
+> This series adds support for the Toradex Verdin AM62 SoM which can be used on
+> different carrier boards (Verdin Development Board, Dahlia, Yavia, Mallow and
+> Ivy).
 > 
+> The module consists of an TI AM62P family SoC, a TPS65219 PMIC, a Gigabit
+> Ethernet PHY, up to 8GB of LPDDR4 RAM, an eMMC, a TLA2024 ADC, an I2C EEPROM,
+> an RX8130 RTC, plus an optional Bluetooth/Wi-Fi module.
+> 
+> [...]
 
-This is in my radar, so it will be in a PR to tip soon. I didn't reply
-earlier because I meant to find a whole cleanup for ifdefferies in
-lockdep:
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-	https://lore.kernel.org/lkml/Z46BJ8FhWCIXbM7p@boqun-archlinux/
+[1/6] dt-bindings: arm: ti: Add Toradex Verdin AM62P
+      commit: cd156f8741e362f3e0b0282c4abc3d0d0fecda57
+[2/6] arm64: dts: ti: add Toradex Verdin AM62P
+      commit: 87f95ea316ac68598544d512a3750cd4a73b5683
+[3/6] arm64: dts: ti: am62p-verdin: add dahlia
+      commit: c98ac03937e24913f90efe16832bac6c22ada76f
+[4/6] arm64: dts: ti: am62p-verdin: add mallow
+      commit: cfdd38cfeb87d2a69303f3cf1bbc57d404826b28
+[5/6] arm64: dts: ti: am62p-verdin: add yavia
+      commit: b0a01514cd906bb90eb2c7589a69429bced7ba1d
+[6/6] arm64: dts: ti: am62p-verdin: add ivy
+      commit: 441870bb81b22d4a3937caeb4b890a94b40c689d
 
-to avoid whack-a-mole fixes. I never found time so I have to postpone
-that. Thanks!
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+-- 
 Regards,
-Boqun
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
