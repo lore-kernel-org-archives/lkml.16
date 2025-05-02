@@ -1,147 +1,192 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAB222A7E5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB938828
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174940; cv=none; b=hfO4T5xf0FpAU5NdLJP1vTmvjDtO0ZNHTS9aaIyFpDXH2w40Ss6x5Wpcf4GkyX2GWmguVRRN0cyW3e/O6JmxaalL0PLrL+4RkZuhsL4fKSyKSWMd2qqg0M9xjKvTOe0wFslTzvSjTv8HW290tsATpvULF8DTyjy8ka4rm+3UwvU=
+	t=1746175009; cv=none; b=jyaBgOB3wFahTURFDSRnjZQIpeTloasDUwz4jafJIZEK0g9AGVcIIYbNFCRAX7aUIFti+ac8ToYNKfX2ZBnWyiLxjknI68ihJVwPMmVFpfifrYsb/tK+3fiGbgSlynyMCOy00akXcxn1/0s85twDGbbqgHI7q/+fQt1L8PtrQiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174940; c=relaxed/simple;
-	bh=LUBY75erqJBugAhNu+5GPQ9ZxN0mQ9SsLVRTeLJn3zs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qIl7h0NBCDEme+CeGH+NDaLdzLWpTPbGe0he2G6gP8Vds7hjBEdxtbHxzYjLaoR5IRBdlWnG+h7FXjfE62VqQtBGMYK5bsW/RqBOJUtBFxEWOrnlRQz02+EZ8y/oVWkMu10dC7j1mzWV+lRLQMIycMeFMBLofkDA1t8OonT61cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lHBPwyTa; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746175009; c=relaxed/simple;
+	bh=Eby6Ixd7Sqr+f64ZRlid2zaQNkag4H366Ovb7GyEdVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WqHW/8Bx2GmOxAIF7ipkbqm0AI/2zZYL2FrrrX3d3PCe+UpmbfX26x6czMvPymRUdq1vS/XVueBZ8uraT20XxFIcwK9NRUg/cbpWBugikKN+YzzxkYbopK8PyyIyi/FVY9UW5CNwn5OxGYAmnUzYDVPQIwd2oWnH+aiV7hO47aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qfpvADb5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=296wPOAA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qfpvADb5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=296wPOAA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lHBPwyTa"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so6914595e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746174937; x=1746779737; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=f7r6WR049enygy037lONQ9m9pD13OBTo4e15DUJyoKE=;
-        b=lHBPwyTa1A7MHnIeD2Ba9CUh5JzMIrcQ/qkuTgNmt7BO3hWaSSqfq72FH/WugH21or
-         6pPy6tPulSkQnkogT9oUOKGR5HTQQzyz2bAVrLb/he0sN25DbJK7CNW0ez4bnrvPVAHu
-         tA67e72bjpqltxxwKjuK8yoLR+fIPcGAIge+V7V4Bo8IDEv8R+BlY92KZzMqFDr6vaDL
-         MqCBwbiHrToi202x/zP/2PGogcREm6BsPI+9eYFcPVB7pxe51j0u/mM8GD9uevcHMofq
-         2ELgc0Qv1lm+TPsBsK4r9sY7gEy59pnL80/0Zpcc3Fp0c5Ct8FjlQ+dJnMJupLcVOTLD
-         V82A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746174937; x=1746779737;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f7r6WR049enygy037lONQ9m9pD13OBTo4e15DUJyoKE=;
-        b=ZvxF7CxiwOnIdbIjFuIfyehoPQgjghHLjSIYZYUVIrJS/0045c2/H3XJkOtSJuDVTy
-         eftbw2eRfNWs6YpdwGsRX09JmQYLr2hbejs9JImDVHzkyISw6t7nSj62Evh2vQ7QqF6I
-         2ugD5y1nIVKouadDHUUMKM03EWmxjTZqcARQkIzzDS24w7EZWzFrLezukTzJFHBMJ7Kw
-         D/isOz3a97/m/EGdF2btXgEZ4jB+Af15le0FwTQW/lJ1t0q8Nx02FeDK/qpNVsWtVq3T
-         DkjzIJQgwKCh7c69U6xPPDOOvIJcrxXsgPDnih1NPnCVbMmB0jXV1IgZC2ydqwwogGf1
-         MGPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOCEA77orb7IkyRmO1BAhQCWnb7gRi9R4XhrRHmBdbswZRZg8xc4EaV5NXrKAHBQigtmcZrS24Pwc2ODA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9y8PsRANRx03jHSqUFYTc7dSA63IUpkYd+ZhLfsTzaDvhonty
-	tpwEtaYeGVHKGZ7wns3xCZeu76gSVI1UxJ+2xTaSBT2tYQSPnlHDciilM80ixH5H4Zl98tV26Gp
-	UooDSx3OE1P0AQQ==
-X-Google-Smtp-Source: AGHT+IGJkCdyZwfRFOBv6xVkehjXZ02i6s82Mg6JkS5KgBztkzCNpCn2kt3Ktou857DyL5RBsEPF7VOnppmsNZo=
-X-Received: from wmbjg12.prod.google.com ([2002:a05:600c:a00c:b0:43c:eaf6:525e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:820d:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-441bbe98fbbmr16071135e9.4.1746174937358;
- Fri, 02 May 2025 01:35:37 -0700 (PDT)
-Date: Fri, 2 May 2025 08:35:35 +0000
-In-Reply-To: <d5e8e635-08c4-4d3d-99a8-27f3b3a2153b@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qfpvADb5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="296wPOAA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qfpvADb5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="296wPOAA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6C3291F792;
+	Fri,  2 May 2025 08:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746175005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7c1sgaTvleI1TMZ//trb2GsMEWDtTJkR2GRbK/NkDi0=;
+	b=qfpvADb5mA/IpvqWzkKrAAuPkhnOvww63jqtKhPNBU3WcSP7y4CW289kSfK+KrLaY/Y7iz
+	xkQmUuJ2N13whlpY2j4V/UfIYvMZX8zvpe7DSbx2yO6PfX2p6DREMmxrVSuPq5s1LW+PIk
+	K2LzSUPqUdHE0QM+N+dzQsBjaLSYoFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746175005;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7c1sgaTvleI1TMZ//trb2GsMEWDtTJkR2GRbK/NkDi0=;
+	b=296wPOAAi8sGe228c67BqB1aFUinH1qllCOLf+pOKvqjG5e8Bn0kpTaiQYnfyYcF4qyv3r
+	b6wYBm8KLM4w39Dg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qfpvADb5;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=296wPOAA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746175005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7c1sgaTvleI1TMZ//trb2GsMEWDtTJkR2GRbK/NkDi0=;
+	b=qfpvADb5mA/IpvqWzkKrAAuPkhnOvww63jqtKhPNBU3WcSP7y4CW289kSfK+KrLaY/Y7iz
+	xkQmUuJ2N13whlpY2j4V/UfIYvMZX8zvpe7DSbx2yO6PfX2p6DREMmxrVSuPq5s1LW+PIk
+	K2LzSUPqUdHE0QM+N+dzQsBjaLSYoFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746175005;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7c1sgaTvleI1TMZ//trb2GsMEWDtTJkR2GRbK/NkDi0=;
+	b=296wPOAAi8sGe228c67BqB1aFUinH1qllCOLf+pOKvqjG5e8Bn0kpTaiQYnfyYcF4qyv3r
+	b6wYBm8KLM4w39Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4AAD13687;
+	Fri,  2 May 2025 08:36:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Hm4tMRyEFGhVSwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 02 May 2025 08:36:44 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v3 0/3] Implement numa node notifier
+Date: Fri,  2 May 2025 10:36:21 +0200
+Message-ID: <20250502083624.49849-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
- <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com> <D9JVKYI3LL5L.2SFOJMSK91HLA@kernel.org>
- <d433986a-fdad-4859-b8bf-080a18158189@gmail.com> <D9L1TI5NVKJU.361JFPWMLDWN4@kernel.org>
- <7bc9f839-a69a-4819-ba6d-36eadd8776b3@gmail.com> <D9L6XO6T7JEU.CK47C5BOQ0NG@kernel.org>
- <d5e8e635-08c4-4d3d-99a8-27f3b3a2153b@gmail.com>
-Message-ID: <aBSD108aP1pATvrn@google.com>
-Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
-From: Alice Ryhl <aliceryhl@google.com>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Benno Lossin <lossin@kernel.org>, Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, 
-	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, Ralf Jung <post@ralfj.de>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 6C3291F792
+X-Spam-Score: -1.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,suse.cz,gmail.com,huawei.com,sk.com,suse.de];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, May 02, 2025 at 02:08:13AM +0200, Christian Schrefl wrote:
-> [cc Ralf]
-> 
-> On 02.05.25 12:51 AM, Benno Lossin wrote:
-> > On Thu May 1, 2025 at 9:11 PM CEST, Christian Schrefl wrote:
-> >> On 01.05.25 8:51 PM, Benno Lossin wrote:
-> >>> On Wed Apr 30, 2025 at 7:30 PM CEST, Christian Schrefl wrote:
-> >>>> On 30.04.25 11:45 AM, Benno Lossin wrote:
-> >>>>> On Wed Apr 30, 2025 at 10:36 AM CEST, Christian Schrefl wrote:
-> >>>>>> +/// This implementation works because of the "`!Unpin` hack" in rustc, which allows (some kinds of)
-> >>>>>> +/// mutual aliasing of `!Unpin` types. This hack might be removed at some point, after which only
-> >>>>>> +/// the `core::pin::UnsafePinned` type will allow this behavior. In order to simplify the migration
-> >>>>>> +/// to future rust versions only this polyfill of this type should be used when this behavior is
-> >>>>>> +/// required.
-> >>>>>> +///
-> >>>>>> +/// In order to disable niche optimizations this implementation uses [`UnsafeCell`] internally,
-> >>>>>> +/// the upstream version however will not. So the fact that [`UnsafePinned`] contains an
-> >>>>>> +/// [`UnsafeCell`] must not be relied on (Other than the niche blocking).
-> >>>>>
-> >>>>> I would make this last paragraph a normal comment, I don't think we
-> >>>>> should expose it in the docs.
-> >>>>
-> >>>> I added this as docs since I wanted it to be a bit more visible,
-> >>>> but I can replace the comment text (about `UnsafeCell`) with this paragraph
-> >>>> and drop it from the docs if you want.
-> >>>
-> >>> I think we shouldn't talk about these implementation details in the
-> >>> docs.
-> >>
-> >> Alright, what do you think of:
-> >>
-> >> // As opposed to the upstream Rust type this contains a `PhantomPinned`` and `UnsafeCell<T>`
-> > 
-> > There are two '`' after PhantomPinned.
-> > 
-> >> // - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<T>`
-> > 
-> > s/ a / an /
-> > 
-> > I find the phrasing 'avoid needing <negative impl>' a bit weird, I'd
-> > just say "`PhantomPinned` to ensure the struct always is `!Unpin` and
-> > thus enables the `!Unpin` hack".
-> 
-> Thanks I'll use that.
-> 
-> > 
-> > If you have a link to somewhere that explains that hack, then I'd also
-> > put it there. I forgot if it's written down somewhere.
-> 
-> I haven't found anything that describes the hack in detail.
-> From what I understand its a combination of disabling `noalias`
-> [0] (this PR enables it for `Unpin` types) and disabling 
-> `dereferencable` [1] on `&mut !Unpin` types.
-> Related rust issue about this [2].
-> 
-> Maybe Alice, Ralf or someone else form the rust side can provide
-> a better reference?
-> 
-> [0]: https://github.com/rust-lang/rust/pull/82834
-> [1]: https://github.com/rust-lang/rust/pull/106180
-> [2]: https://github.com/rust-lang/rust/issues/63818
+v2 -> v3:
+  - Add Suggested-by (David)
+  - Replace last N_NORMAL_MEMORY mention in slub (David)
+  - Replace the notifier for autoweitght-mempolicy
+  - Fix build on !CONFIG_MEMORY_HOTPLUG
 
-I wrote this a long time ago:
-https://gist.github.com/Darksonn/1567538f56af1a8038ecc3c664a42462
+v1 -> v2:
+  - Remove status_change_nid_normal and the code that
+    deals with it (David & Vlastimil)
+  - Remove slab_mem_offline_callback (David & Vlastimil)
+  - Change the order of canceling the notifiers
+    in {online,offline}_pages (Vlastimil)
+  - Fix up a couple of whitespaces (Jonathan Cameron)
+  - Add RBs-by
 
-But it doesn't really take the angle of explaining the !Unpin hack. It's
-more of an early doc arguing for having an UnsafePinned type.
+Memory notifier is a tool that allow consumers to get notified whenever
+memory gets onlined or offlined in the system.
+Currently, there are 10 consumers of that, but 5 out of those 10 consumers
+are only interested in getting notifications when a numa node changes its
+memory state.
+That means going from memoryless to memory-aware of vice versa.
 
-Alice
+Which means that for every {online,offline}_pages operation they get
+notified even though the numa node might not have changed its state.
+
+While we are doing this, remove status_change_nid_normal, as the only
+current user (slub) does not really need it.
+This allows us to further simplify and clean up the code.
+
+The first patch gets rid of status_change_nid_normal in slub.
+The second patch implements a numa node notifier that does just that, and have
+those consumers register in there, so they get notified only when they are
+interested.
+
+The third patch replaces 'status_change_nid{_normal}' fields within
+memory_notify with a 'nid', as that is only what we need for memory
+notifer and update the only user of it (page_ext).
+
+Consumers that are only interested in numa node states change are:
+
+ - memory-tier
+ - slub
+ - cpuset
+ - hmat
+ - cxl
+ - autoweight-mempolicy
+
+Oscar Salvador (3):
+  mm,slub: Do not special case N_NORMAL nodes for slab_nodes
+  mm,memory_hotplug: Implement numa node notifier
+  mm,memory_hotplug: Rename status_change_nid parameter in memory_notify
+
+ drivers/acpi/numa/hmat.c  |   6 +-
+ drivers/base/node.c       |  21 +++++++
+ drivers/cxl/core/region.c |  14 ++---
+ drivers/cxl/cxl.h         |   4 +-
+ include/linux/memory.h    |  38 ++++++++++++-
+ kernel/cgroup/cpuset.c    |   2 +-
+ mm/memory-tiers.c         |   8 +--
+ mm/memory_hotplug.c       | 117 +++++++++++++++++++++-----------------
+ mm/mempolicy.c            |   8 +--
+ mm/page_ext.c             |  12 +---
+ mm/slub.c                 |  45 +++------------
+ 11 files changed, 153 insertions(+), 122 deletions(-)
+
+-- 
+2.49.0
+
