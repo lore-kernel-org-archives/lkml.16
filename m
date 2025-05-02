@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188F51AA1DB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1885512CDAE;
 	Fri,  2 May 2025 19:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212445; cv=none; b=QzedvakBL9wQIjP49SjzLuJ8OUVfJKAmGjo469YrLJnAdUIztBYXlYDqb9InDdpIhzQZCAL0a/XkUV0KDpYIPIYZc3nSyCtitg2V1DAavZUxD7tX4z0E2eeP4qQ/roX+HEoQvRD8snrC+4nTmXPLcYCYfTDi3xfeh9csaTwMiVo=
+	t=1746212445; cv=none; b=jD7RdEJWSNYccAlYUBcklvVfFL2htOv1cY7TzI5fYtgRMDJYNfQFdV+M5dbWoUds6U1q3nxKmEkxapMaV7aMsqxzlpJTBDZdkFLdeGEFjtAOhV8EXDXb0vg5H/o72u8NrC/B9sE5iFQ3jVBM9Zwb31HqPcDoqIExSHwZR+Q/K5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746212445; c=relaxed/simple;
-	bh=0kd70aDRShcJ+DgP88hGfkolBgZTKMYLZwsSsPfBMro=;
+	bh=vXaXCEnytVJuFEeQkEbX7/pKBg2a7GeFNnk0YyHXzz8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=swEcHaR3Tyu+oTz4lj0X3Zbp6oQQGkTQB2jCCn6TcfvyZDsPt2/sQL3PQfUDB6E9YUgMbo0qZ1c8AQilFcW4LSMIQh8Umu35Ydv3Jbc7r3nVUL+tUkN9l2xLvTPXTfFO9JCdexPXryIOfbOfAwcYrci7rXuzFLNtOhrfrKicwyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rm4rEMps; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Tkyxr94VSin21pSIo92BbQY1XHzClTGv5au5c8Dl2JDanmffsvNkUHRFCDa8VpEXtzeh5ZmMiezUPwXFQB253G2eoV7t0QxoiNq/QlYzIrr8dE7m+zZxtuSzfnfmQ92Mn9Co+TMTdsGLAmzMzVpN+QKs3Lifs8l4uO8y1YGjO1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWtQ38pH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rm4rEMps"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AEFB8C4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWtQ38pH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A02CEC4CEED;
 	Fri,  2 May 2025 19:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746212444;
-	bh=0kd70aDRShcJ+DgP88hGfkolBgZTKMYLZwsSsPfBMro=;
+	bh=vXaXCEnytVJuFEeQkEbX7/pKBg2a7GeFNnk0YyHXzz8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Rm4rEMpsdLZGkjUckftL5noeRRyE3cY6vhhIxPEIYMEGl6IM7G0WYyJyC15uLRezs
-	 r1fPrZZ/eypIuyjeUbjM54YwwghgnxjaGlqiRkn0uGQf+hxTfF21RoMO6XrlLeJMrW
-	 RaLJGlZIxGn6glFAA7/5y9vqgAVdLqHGLsKvGr9Uspko1+29pa+5hBhFCwoTQhQsWW
-	 7GaKwa8l1nzGhgFR8qHvomuSfUSXS5QtkaGm2IHQo0HoOe3z1I1WXOcVmTIWwmq+lz
-	 JhE2l19GJhqmMFVOSD2bNL86C27RyGGx/Hq1R3FIBaOi2HjVuVdorptHtVtd9BLHHO
-	 4r3SgQQ/cKYRg==
+	b=LWtQ38pHo/Yrv8BQE28Ry2jM8EPgFF1ojO+brYE244/p5eNOGlyJhFQvbZgIudlLk
+	 SL+j/AKe/TtTzF0qbA5AGNBZoivreYwDtIyiPXe2AZzWI0EcgWxejHiAC4qmzw2Rcq
+	 aQu0b7MBgz1fl22MsHTqRmaVZMIyeIvwE3de5vRoIiDBaWXoJzXUYLVnGoSqTqjx6x
+	 orcfqpZFnvwI1nmg/WqM3pI/hZiXXnTwsRvZMaMmN6mhSzgdnNc1T2AFDT2BkGkw1s
+	 lYlyuBdqDsPlWRBL3vHjfoPAGU3qdImYMlIHBt8HvNbgvmOxHMFFrrNnHf3gBq8eGD
+	 Ic7kL4WMcCdeA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44C0C3ABB6;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C049C3ABB0;
 	Fri,  2 May 2025 19:00:44 +0000 (UTC)
 From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Fri, 02 May 2025 14:00:31 -0500
-Subject: [PATCH v3 3/4] PCI: tegra: Allow building as a module
+Date: Fri, 02 May 2025 14:00:29 -0500
+Subject: [PATCH v3 1/4] irqdomain: Export irq_domain_free_irqs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-pci-tegra-module-v3-3-556a49732d70@gmail.com>
+Message-Id: <20250502-pci-tegra-module-v3-1-556a49732d70@gmail.com>
 References: <20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com>
 In-Reply-To: <20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com>
 To: Thomas Gleixner <tglx@linutronix.de>, 
@@ -56,11 +56,11 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
  Aaron Kling <webgeek1234@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746212443; l=1592;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746212443; l=788;
  i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=ediBwXdejZJpog3kftYSmvTQosQLVWrtV7PiuRz9nKw=;
- b=fyglllN1LQYdTPKsWYdjPwSOuvVIV4KKD8qg16D+m+tf7wg1uxixsLEoVSt6kfqC6bVH7RkdF
- eJc4roXh56OA3OSFyYtJtmoQOpNwkVRFxpGPXAYe5fmMsQgBaDCXRUv
+ bh=WmKEd3TO9tPKzFNggls+Iy5PtWJNMd2mTPJMCu0pPuI=;
+ b=5j2exqFnp877XdJQRSpPH1+pl+krTkOiipDlqB1XtSl0j/ACPysLiY9RIWoW1Ior+5VwHyQWD
+ fkDQkbov+V3B3j8ZePdrczxtPlJqWbji8Hjns5IP/C56zBrmuRIJUfY
 X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
  pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
 X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
@@ -70,43 +70,26 @@ Reply-To: webgeek1234@gmail.com
 
 From: Aaron Kling <webgeek1234@gmail.com>
 
-This changes the module macro back to builtin, which does not define an
-exit function. This will prevent the module from being unloaded. There
-are concerns with modules not cleaning up IRQs on unload, thus this
-needs specifically disallowed.
+Add export for irq_domain_free_irqs() so that we can allow drivers like
+the pci-tegra driver to be loadable as a module.
 
 Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- drivers/pci/controller/Kconfig     | 2 +-
- drivers/pci/controller/pci-tegra.c | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
- 	  driver.
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index ec6d8e72d980f604ded2bfa2143420e0e0095920..36cd79a8a2ce960b07b03c40067343ec8f632452 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1890,6 +1890,7 @@ void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
+ 	irq_domain_free_irq_data(virq, nr_irqs);
+ 	irq_free_descs(virq, nr_irqs);
+ }
++EXPORT_SYMBOL_GPL(irq_domain_free_irqs);
  
- config PCI_TEGRA
--	bool "NVIDIA Tegra PCIe controller"
-+	tristate "NVIDIA Tegra PCIe controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on PCI_MSI
- 	help
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index b3cdbc5927de3742161310610dc5dcb836f5dd69..1539d172d708c11c3d085721ab9416be3dea6b12 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2802,4 +2802,7 @@ static struct platform_driver tegra_pcie_driver = {
- 	.probe = tegra_pcie_probe,
- 	.remove = tegra_pcie_remove,
- };
--module_platform_driver(tegra_pcie_driver);
-+builtin_platform_driver(tegra_pcie_driver);
-+MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-+MODULE_DESCRIPTION("NVIDIA PCI host controller driver");
-+MODULE_LICENSE("GPL");
+ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq)
+ {
 
 -- 
 2.48.1
