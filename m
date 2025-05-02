@@ -1,173 +1,224 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2054.outbound.protection.outlook.com [40.107.93.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C242F2F;
-	Fri,  2 May 2025 05:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746163830; cv=fail; b=IIdZ03GJFhzjdbMsYNiQ6EfqaMzND6++ePrwtxFCEavd6CU83JYlWfVkKWd2o19LnTaLG7+/Q3ZMqXkHqUBM5x2v7edvZhdVWvI6d6sZ05wrFnuBQQ671SHU33U2tdTdAfoaYRe7qeaMxdac9EeM55Yrorw+cfzBt4I0iuFWce8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746163830; c=relaxed/simple;
-	bh=0spCbB4+Iy1AmxZgs1ADco68FwW8EAIDLBc+L02pdjc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tg7WMduBTggh7DrReF6iWdmC9ws9oeH0y4JiX/5Hdw+dZFLsUrVG/zOrFY9HpIKNrvg/gllfKPSmrnF7e0oH+Ym4anIax+B9RIDbwf8cVOjAVjFoM/2laYIENWayhMmjyZYropgdotNuV5JJQ3/FYauLgeM8Q6Tx2pSDavpfFiE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=o2Au+jkG; arc=fail smtp.client-ip=40.107.93.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF30192B8C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746163921; cv=none; b=m9I+tt+5ri8eyeXFPNOjH2VbAjUnOT8F/n7shvvvFdY5tzjZbbnjG7LZ1ve2gtvfiGyrYckd/mSyFB2uD6X1Kwd0PpxXcNRnp1O5QPkRRa+xXIWRRcAEWFkyPa5nK6PBkgkUMSbAk56vAi/pcDUZiJitmAMa+GNyw1rU1zgpDu0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746163921; c=relaxed/simple;
+	bh=usJVdZHK/QHhzFDHOhC3JAVS9UlWcT9i2Wt2pFBV7Ys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/C5IaLT+1UEb46XB9RR+D//CVjDjFDAeUP5uvnyYx8bsvRf37SYcdtYreX5pd6RObi08EUOwmxLdi/pqRD05f7H+BT7c/rkItjxkphFeT4pWmWtIl5GzUs0HMRGQaEiK/8P5n5hX/Q4vRpoo+KiXbc8wy/MXA1rWxF26o3H2Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FhT5NlW4; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="o2Au+jkG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VKHzASEFw7OcIfWXCv98GDJKojtG6RsBpPwoOxsGMp+UXXLx3WKHE46Gb8RgNC3n5Y7xzWTL861ko96wya82j2qsp8/EVYtfj2RDT1/u5/9ZETUpDaQg6z5lxbAjXEzdWe3qJUHp4mz6mSxU3oNTm13mee+lvu0bsIEhCxSMbhxyDiqu5j4hHVwudYTM+9L4QmcfjFcphcq9M394TiOCLcvmtIwZg8kkxK0JBDf05zXK26GHHIDFxrxgwymIm78wRMxOx0lLRLn21XhPUk2pZuevBr/YxHLUdQW4Z55ZZ6rwbyP+GpTKIDhI32r4YHjxYXrXU6O5QOxrlq/C4vyRRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7VDGk+tekDA6ZKybBQwk6jRrhp7LDw1yJngeaMCibCA=;
- b=w2vvJXq5aR18Pi1D1kx+iBit/X8G/T7+JhciN35uFWaY251ZtYQWKYIJPo68PhCz+wj3Fs3TPaLRxdid7XKUWwuHeGMr99j9gRk/fBW7Q2+6a60jqmAyw6/Ylob5Pcd/+aLyliLxrpmKAfROoWPoX95sE27BVzXZEgVwf5q7CF7fQml8vW+LpwcaDC25NYKjSvTIXeiZM94OSKBAhyre6tZfiw7/rH7PG3qGz0Vqp9Qr3y0Hi7DRe6/xvTrqvL2C4qYO6HBlkjb4LXiWLeKkDEyLkiVaFeC9cORPIg8smA87Cg4Zyk5WntASWMStAe9Hy+BRDw3lEy7Ey4ZeyLpQww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7VDGk+tekDA6ZKybBQwk6jRrhp7LDw1yJngeaMCibCA=;
- b=o2Au+jkGzcd/Ggpo9eyKsEi6V4DUTOmkhUnji/3RgEodNiRfOrAYLlBpoK86XY0M9wbGk3Mchr34zYBMs9u2LrHSJgNgdKzadv6wxpwW7PetKGhV3uBvtolVGye/pkLBEluluYaig0byhAxkc3lUi2lWugiVqgggiRf66S7Vbahqy3JXGdb8xUxyi43EuRk08J+QzlrT4WS+AWiriPyl2loKZiRml7hNZ4knclMZtwTI+ZpkZdjhv2s//wufydyWodZSymE1Tbg/JiG6JsC2TPd0N1WrrXrXy630bC/o3rpphQUNE6lEhADEMqHs0+IS2n8BsRtI6TCrM2+uK/9eww==
-Received: from SN7PR04CA0202.namprd04.prod.outlook.com (2603:10b6:806:126::27)
- by SA1PR12MB8598.namprd12.prod.outlook.com (2603:10b6:806:253::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Fri, 2 May
- 2025 05:30:23 +0000
-Received: from SN1PEPF00026367.namprd02.prod.outlook.com
- (2603:10b6:806:126:cafe::49) by SN7PR04CA0202.outlook.office365.com
- (2603:10b6:806:126::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
- 2 May 2025 05:30:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SN1PEPF00026367.mail.protection.outlook.com (10.167.241.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 05:30:22 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 1 May 2025
- 22:30:08 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 1 May
- 2025 22:30:07 -0700
-Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 1 May 2025 22:30:04 -0700
-Date: Thu, 1 May 2025 22:29:58 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
-	<will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
-	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
-	<shuah@kernel.org>, <jsnitsel@redhat.com>, <nathan@kernel.org>,
-	<peterz@infradead.org>, <yi.l.liu@intel.com>, <mshavit@google.com>,
-	<praan@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
-	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
-Subject: Re: [PATCH v3 16/23] Documentation: userspace-api: iommufd: Update
- vQUEUE
-Message-ID: <aBRYVkOKfFGMb5Y+@Asurada-Nvidia>
-References: <cover.1746139811.git.nicolinc@nvidia.com>
- <0beddeaaa4a8a7a45ce93ff21c543ae58be64908.1746139811.git.nicolinc@nvidia.com>
- <aBRA75V9l9WlI2Q3@archie.me>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FhT5NlW4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2295d78b433so16737865ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746163919; x=1746768719; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EuQJSqMieCdA49kvmDy4IyuB0LzUEBY1NlpAym9Qp94=;
+        b=FhT5NlW4VuHR3zxx+3fZQWJsaEamQW5M9NJSZ1h4eBt3NKK8ttIuNwL2Feiwt8WwhG
+         z+8MspMFKdsD/sZrxscqRMfk4qgXgpx8DRVToU8uuiUxuZrRMil6s4G8fsdUbxTCLlME
+         xtcuVmSjC0zKIbz6h0m+seVgW7gYccWQslDck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746163919; x=1746768719;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EuQJSqMieCdA49kvmDy4IyuB0LzUEBY1NlpAym9Qp94=;
+        b=eLLVl277BGjuMVIP0wEKnlfk8kqKleVawesHo0Eb3ha2+vA8m0kud7ucfos/15T560
+         9SKi97Y3fX8XWG9sP8xS+ufPqBaWyelHrIn2CQbcKKpCD3kMvrWtYETRCmYf4ExvGiZD
+         uM2cdoz9fQrcl53x1FE1L8taTyK/LMjbbKgI4XVJ/pqXpIPeEIv9a8tGbHCX12B+Kk0m
+         7M8h9LWVZ/wTogLa7G+gUzTbVpT9z1ucoynCThcL2g8CZUAJs2IP+ZoGDJeN25eXrpK4
+         OXAwBTDU/ILC83h7bv09/whu6t0fVosncOlgliWB8EW5hetsC2xp/e67z05rMbm82bFT
+         lfdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtUVyz2/zVK4YLCUVmqivmuBu9xrPr9A9CLhZqAUg/Ybu49372I7jhj/UTYlFm2827xojLVsJFubF7x9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8FnYbjQ2eNwYLBMwlrQdKQTVfVei+H4zSgTdoU1RQKBk6eLKO
+	/p4j+9jhbt8YmxkIj130ay02rHspPtHALhmAUGNva32zAb4Rlw00ADFOBMfpYQ==
+X-Gm-Gg: ASbGncsnKa0fbMjhuT3AWSd2CNSLPCeO88Hn4GSYnm66Yd7rzezk5aH5WAQ7EqhGAdL
+	oG9of7WlBETEvpOYhrIayhbIOj+inIMuXhO2TIET/1hrGOSOUg25lRVXlU3AT1SqoMv8Ep53m8N
+	WieShqv5uL5J1LZ6ia+jUVbCT9vwuQ6UeAKaDt2w8mgoldE3b8wrGzrraqIYPzg3rhF2yb9BFLW
+	tl1FX6zyUB3Ah5kTp1g32up0ZQEothoINm9h0yVjolLb8DpKh9fIKXFMBWdhp+xJ7aYGdaTXKu9
+	8H6rANolrBZgbUzjgOKCdluq427d42Jk9Q==
+X-Google-Smtp-Source: AGHT+IEg5hGIJsupBIjuos3OKynkR03wDTIHxLSn0l4PtdYPmXd+1wOHbVQYP7FSLZwrEVutzqN7vw==
+X-Received: by 2002:a17:903:11ce:b0:224:f12:3746 with SMTP id d9443c01a7336-22e10340bf2mr22776705ad.30.1746163919276;
+        Thu, 01 May 2025 22:31:59 -0700 (PDT)
+Received: from google.com ([2401:fa00:1:10:e66e:6e73:436b:6b0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e10848fe9sm5845215ad.16.2025.05.01.22.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 22:31:58 -0700 (PDT)
+Date: Fri, 2 May 2025 13:31:55 +0800
+From: Sung-Chi Li <lschyi@chromium.org>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 2/3] hwmon: (cros_ec) add PWM control over fans
+Message-ID: <f63hek7p5d74xrkcbm7wk5s3fc6mlgyjkiovpyprlro4blyckf@in5an2tk6twb>
+References: <20250429-cros_ec_fan-v1-0-a8d9e3efbb1a@chromium.org>
+ <20250429-cros_ec_fan-v1-2-a8d9e3efbb1a@chromium.org>
+ <0933ec48-9a4b-49d0-8670-50b6ff6433f5@t-8ch.de>
+ <aBHKepQx_drHfnp8@google.com>
+ <0483bdf2-c1a2-4a8e-b0ee-b00cafdda557@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aBRA75V9l9WlI2Q3@archie.me>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00026367:EE_|SA1PR12MB8598:EE_
-X-MS-Office365-Filtering-Correlation-Id: aff26d88-3724-49f6-0a84-08dd893a6f94
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nZ2uD2AT8L++SZZnsQoTEM4NGr7+TZPaarbLyC/sO/vSUIlsgQV4Lgc7AKUo?=
- =?us-ascii?Q?1WftLCJANoWYcoZJyIHJX7Ktx86/4bb8nFofK3coyDxNnniFXpVxA0VT0/n2?=
- =?us-ascii?Q?QKDLdT4kW5PXtieQd7j4mVkOYsAKAyNxEJz1o0/Ab+sWWBoJq//9LZXZ11Re?=
- =?us-ascii?Q?dinvsQxxysEYRwmb3GRFKsYdnpVK/wrWlwuAIgSX4sCNheXd1NdIbn1NyYeL?=
- =?us-ascii?Q?Z2mM4oOdHwU+iuP5a/5p+9eLWYulxAaCaWMycvsQWYHRXJL9ySEJwsQlztUD?=
- =?us-ascii?Q?vNMGqGVJi2t7AZo3CYZ0XsbUjs48Kuzr5eyP/J2Z93s/q6JPQ4bB+kIkOYCw?=
- =?us-ascii?Q?piiDcCWvUleBxVAYqi7qsVmTmaIVK6NTbSOmTYMJ/SZ2e50lE3GY6phcFy3u?=
- =?us-ascii?Q?ND1qxlwQa6M28tryu9F8RibOArx72CWpKDLUuCLbtp6bKg4SUvaEgED0XnK6?=
- =?us-ascii?Q?OcvIfCnkmbAh9/vMZp6bd7LmS7OUwhQ/huZVXVPVXNA13a8FSKWFt8w5U649?=
- =?us-ascii?Q?TKtwnFaCXEYk5Jd1ZVFv6i0oZnQSMCWqL+QB62pcQSlv6EeOMyFSpPj+WBFe?=
- =?us-ascii?Q?shEF4x3U3VBVYpHn51qQgAynED0fEDtXzSlT7ii5aCR1bdls6DRhE4ordszI?=
- =?us-ascii?Q?KkT2zhP2EwT0Yf0fOIGuXim5zSfUDjfZoKCOSjksFT4iH9ti6a6W4JjA1tGd?=
- =?us-ascii?Q?BLZMkKjqq7aNNa8g7KZU5JdvF+THIwrc5kcUJo9N831ykAQf5Yur5GS/tauc?=
- =?us-ascii?Q?r+DADwKo9uAHuEnEHbMWwumGRktbNOgtqHJoDSx9Iyxz93iM58+0PH0xBv2H?=
- =?us-ascii?Q?WVu5rWE1oLjrFNch6elMrRUFPt5kP1PYuEd9rxP5ICxZdOkrCrTUUY7YQ/GR?=
- =?us-ascii?Q?m0PX489zPorXJVkaNi/2NJAkaE/q93M0Tw9GHlQl2+kMUwUOUfYBV4oGxDOp?=
- =?us-ascii?Q?CqbiL8TJDyUyB/za05u4PIX1ClEv4guJwqKjl18TIbdM3hgdq6f16Cqj608x?=
- =?us-ascii?Q?NpSM0iH4f5+BBaMIzHynvihFwbTSzlNH/66O9XKN7Xbr1FjSbqBHG5pt5CiY?=
- =?us-ascii?Q?L7qS//8QxJlyPB6vHWufmHDXeYvwcx6hFAVENTcDaQBoLVbP6QDfA0WOrw9C?=
- =?us-ascii?Q?yKoCGUsX47D1/CfPNxfCHsJcJdBqB67uIPOGTDYW8DSDb182BVmB47XZ77q/?=
- =?us-ascii?Q?nGgmzEUYiiBrM+SSMJaC10WR3TtP2hgyupv5Vg44BPKEz+5u5HEdpDDiuosV?=
- =?us-ascii?Q?SR8dWIAKXi4Rj3zKF6iGJGXg3KfJ61HCREZRJhN6KZVLjkEcOk3V4PPBABh4?=
- =?us-ascii?Q?8l3BU1tYm+FQ0SHSAfkol1svc4Ic2rtVD7z6HyJQBXSZFkIZChZ8dODjyeSD?=
- =?us-ascii?Q?8G53NqbK34gQ/iW/XN32OXIqSzl3hQ2mW9i4EQL17W8q9yrCiN7FqX5qYuFK?=
- =?us-ascii?Q?Amp63HItSB2jcH1j6Uv0DV/49JA+NfPgvHS9vMq8b4vqhTUwhRAlvlLcqpza?=
- =?us-ascii?Q?HkCgM9m0Dzg5f97hLeHtn1ldxse44oyf+dSd?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 05:30:22.7980
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aff26d88-3724-49f6-0a84-08dd893a6f94
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00026367.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8598
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0483bdf2-c1a2-4a8e-b0ee-b00cafdda557@t-8ch.de>
 
-On Fri, May 02, 2025 at 10:50:07AM +0700, Bagas Sanjaya wrote:
-> On Thu, May 01, 2025 at 04:01:22PM -0700, Nicolin Chen wrote:
-> > +- IOMMUFD_OBJ_VQUEUE, representing a hardware accelerated virtual queue, as a
-> > +  subset of IOMMU's virtualization features, for the IOMMU HW to directly read
-> > +  or write the virtual queue memory owned by a guest OS. This HW-acceleration
-> > +  allows VM to work with the IOMMU HW directly without a VM Exit, i.e. reducing
-> > +  overhead from the hypercalls. Along with this vQUEUE object, iommufd provides
-> > +  user space an mmap interface for VMM to mmap a physical MMIO region from the
-> > +  host physical address space to the guest physical address space, allowing the
-> > +  guest OS to control the allocated vQUEUE HW. Thus, when allocating a vQUEUE,
-> > +  the VMM must request a pair of VMA info (vm_pgoff/size) for an mmap syscall.
-> > +  The length argument of an mmap syscall can be smaller than the given size for
-> > +  a partial mmap, but the addr argument of the mmap syscall should never offset
-> > +  from the returned vm_pgoff, which implies that an mmap will always start from
+On Wed, Apr 30, 2025 at 04:48:15PM +0200, Thomas Weißschuh wrote:
+> On 2025-04-30 15:00:10+0800, Sung-Chi Li wrote:
+> > On Tue, Apr 29, 2025 at 11:20:09PM +0200, Thomas Weißschuh wrote:
+> > > On 2025-04-29 16:14:22+0800, Sung-Chi Li via B4 Relay wrote:
+> > > > From: Sung-Chi Li <lschyi@chromium.org>
+> > > > 
+> > > > Newer EC firmware supports controlling fans through host commands, so
+> > > > adding corresponding implementations for controlling these fans in the
+> > > > driver for other kernel services and userspace to control them.
+> > > > 
+> > > > The driver will first probe the supported host command versions (get and
+> > > > set of fan PWM values, get and set of fan control mode) to see if the
+> > > > connected EC fulfills the requirements of controlling the fan, then
+> > > > exposes corresponding sysfs nodes for userspace to control the fan with
+> > > > corresponding read and write implementations.
+> > > > As EC will automatically change the fan mode to auto when the device is
+> > > > suspended, the power management hooks are added as well to keep the fan
+> > > > control mode and fan PWM value consistent during suspend and resume. As
+> > > > we need to access the hwmon device in the power management hook, update
+> > > > the driver by storing the hwmon device in the driver data as well.
+> > > > 
+> > > > Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
+> > > > ---
+> > > >  Documentation/hwmon/cros_ec_hwmon.rst |   5 +-
+> > > >  drivers/hwmon/cros_ec_hwmon.c         | 237 +++++++++++++++++++++++++++++++++-
+> > > >  2 files changed, 237 insertions(+), 5 deletions(-)
 > 
-> Did you mean never be offset from returned vm_pgoff?
-
-Yes. Will fix this.
-
-> > +  the beginning of the physical MMIO region.
-> > +
+> <snip>
 > 
-> Confused...
+> > > > +static int cros_ec_hwmon_read_pwm_value(struct cros_ec_device *cros_ec,
+> > > > +					u8 index, u8 *pwm_value)
+> > > > +{
+> > > > +	int ret = cros_ec_hwmon_read_pwm_raw_value(cros_ec, index, pwm_value);
+> > > 
+> > > The _raw_ function is unnecessary.
+> > > 
+> > 
+> > This is to share with the `cros_ec_hwmon_cooling_get_cur_state`, and there is a
+> > unit conversion needed, so extract the same process into a _raw_ function.
+> 
+> What's the advantage of scaling the value for the cooling device?
+> The hwmon core thermal zone implementation also uses the hwmon values
+> directly.
+> 
 
-Meaning that VMM should just use the given vm_pgoff as is, without
-adding any offset to the vm_pgoff.
+After rethinking about this, I think using the same unit between hwmon and
+thermal cooling devices is easier. As a result, will remove the _raw_ functions,
+and update logics in the cooling device commit.
 
-Thanks
-Nicolin
+> > > > +
+> > > > +	if (ret == 0)
+> > > > +		*pwm_value = *pwm_value * 255 / 100;
+> > > > +	return ret;
+> > > > +}
+> > > > +
+> > > > +static int cros_ec_hwmon_read_pwm_enable(struct cros_ec_device *cros_ec,
+> > > > +					 u8 index, u8 *control_method)
+> > > > +{
+> > > > +	struct ec_params_auto_fan_ctrl_v2 req = {
+> > > > +		.fan_idx = index,
+> > > > +		.cmd = EC_AUTO_FAN_CONTROL_CMD_GET,
+> > > > +	};
+> > > > +	struct ec_response_auto_fan_control resp;
+> > > > +	int ret = cros_ec_cmd(cros_ec, 2, EC_CMD_THERMAL_AUTO_FAN_CTRL, &req,
+> > > > +			      sizeof(req), &resp, sizeof(resp));
+> > > 
+> > > Keep &foo and sizeof(foo) together on the same line please.
+> > > 
+> > 
+> > This is automatically formatted by clang-format. I will keep it like this in the
+> > v2 patch. If it is important for readablity, please share with me, and I will
+> > update that in the v2 patch.
+> 
+> It's not that important. But unfortunate that clang-format will make the
+> formatting worse.
+> 
+
+Ok, I will keep them in the same row.
+
+<snip>
+
+> > > > +	};
+> > > > +	int ret;
+> > > > +
+> > > > +	/* No CROS EC supports no fan speed control */
+> > > > +	if (val == 0)
+> > > > +		return -EOPNOTSUPP;
+> > > > +
+> > > > +	req.set_auto = (val != 1) ? true : false;
+> > > > +	ret = cros_ec_cmd(cros_ec, 2, EC_CMD_THERMAL_AUTO_FAN_CTRL, &req,
+> > > > +			  sizeof(req), NULL, 0);
+> > > 
+> > > Use a full 100 columns.
+> > > 
+> > 
+> > Hmm, I found the style guide actually strongly prefer 80:
+> > https://www.kernel.org/doc/html/v6.14/process/coding-style.html#breaking-long-lines-and-strings
+> 
+> I don't think it is a strong recommendation anymore.
+> The hwmon core also doesn't seem to be religious about it.
+> 
+
+Ok, I will update the series with 100 columns.
+
+<snip>
+
+> > > > +static int cros_ec_hwmon_resume(struct platform_device *pdev)
+> > > > +{
+> > > > +	const struct cros_ec_hwmon_platform_priv *platform_priv =
+> > > > +		dev_get_drvdata(&pdev->dev);
+> > > > +	const struct cros_ec_hwmon_priv *priv =
+> > > > +		dev_get_drvdata(platform_priv->hwmon_dev);
+> > > > +	size_t i;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!priv->fan_control_supported)
+> > > > +		return 0;
+> > > > +
+> > > > +	/*
+> > > > +	 * EC sets fan control to auto after suspended, restore settings to
+> > > > +	 * before suspended.
+> > > > +	 */
+> > > > +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+> > > > +		if (!(priv->manual_fans & BIT(i)))
+> > > > +			continue;
+> > > 
+> > > Given that we can read the actual state from the EC I'd prefer to read
+> > > it back and store it during suspend() instead of storing it during write().
+> > > 
+> > 
+> > Do you mean reading fan mode and fan PWM value during suspend, or we will keep
+> > updating `manual_fans` while write(), and do not cache the PWM value while
+> > write()? That involves whether we need to send a get fan mode for every write
+> > PWM value.
+> 
+> This one:
+> "reading fan mode and fan PWM value during suspend"
+> 
+
+Sounds good, update the logic to only caching values when suspending, and remove
+the behavior of caching values when writing. The write of PWM values is then
+changed to fetch the fan control method first.
