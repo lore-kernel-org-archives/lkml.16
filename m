@@ -1,166 +1,174 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE7925A64E
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C5325C6E1;
+	Fri,  2 May 2025 16:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201525; cv=none; b=GxfNTeX+ptbZokESeQ+CxphLgZTR8my4zr/9DT9QyezpbwSGmAtmMLwBhQOYNLTSOJAhSpdPSqgAKLKpvRkoig4F42xdt8bdYrJJpcqnVxaJmjDzL+Bk1BPKN0K3F++VRPtDoJU7fdFBvtWBCt4K4J73VubQbLRULhgK+fvfC+0=
+	t=1746201654; cv=none; b=CkvyMKaN/WU9ELAXkX5qtagmeevihKjPIS3ChgqOQDj4HWt5IOVedOUs1OhhWBABxr5BVWFSLOgnisXBvnieb1WGQfwqoboEu3MNQ/sHt7vPl1GtsnQc2FjejqR3BKI/inuF/n5PUsDmvcd8wNa9xmgVSNCC5OZiK4s2ML69Z/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201525; c=relaxed/simple;
-	bh=5RQg0jFO3YwelNMJyzI18tPXYVp3HS0KWiJ/0p/cDlA=;
+	s=arc-20240116; t=1746201654; c=relaxed/simple;
+	bh=ytHKODURza7J0qG2g8cd79DBWYjObajhXHIR7ASo5uI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hEAPiaONsFdkvJT0tHYSYev2Isaeawz7vuhb/4Psnk3QAs3i0g6vnIa0r8jXidzEZQw/CvlqKS0slL8/cWrKClaj61u1Z/9bf6t/znoCuWmtVUXJIbWWYdle/9h+mQ+Ett4cPfeDuSXg6OcdKVWSyuHqpU6XZ29ucI7oBAke5hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vPQ1JcOQ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ok0Xa/VQdfarA35eTgFrmG+M2hhx3kLl7dpDgCBdXScDVuXwF0gCml+DKH8kLfpNLHmEbpJEVg7fIwr2Eoum6DptfxA5n5AB4lwbrUUNc9N8In4T57+r1iaWdHyrvq9NkVxWWc3O0uPYYeWrQqLKk1EaUJfKAyS/cg0i8NlGQMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXSS1bAx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vPQ1JcOQ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22c336fcdaaso28321025ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:58:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746201523; x=1746806323; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H+PQK7cd6vQouY+QWssyC04ldZ+G2r7jfC6DHSaivAY=;
-        b=vPQ1JcOQ4dJ5rdCHoOxq+u419LvNdAN/KXawisHd0oK42XwhB+EnQanqiXZAcb1YWQ
-         NZEw/CUywhL+s6w4FtottB3AssL/8aY3O9ZGZlATOpDRz86W8dJ2Ka4jjzuPt+34rNW7
-         GfdRTDSCuqwW1/ftgxctK0MFP61RBeGywcaNuzl2jiF0vfWqmQZ9laM2gpMMWJjxa9Pp
-         njV8L7IBl0UBpilfUAa0recq4Hc27g4rId0cQ1zf7obIeShycHcOmFiu8BOeoTNtjExI
-         Y+3/8AyufxPpuQHWCIT6m/VO23MLItCijSL34tm5J/Pb5OyGCK1pS4vn+g7lcKvxqtia
-         7hwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746201523; x=1746806323;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+PQK7cd6vQouY+QWssyC04ldZ+G2r7jfC6DHSaivAY=;
-        b=Rzn5dNFzF/uCVlQSEqVfh0IrVA6SXuyShTRPlIJ4yzFBPOsZwpYwaWahO6t+8FbLpl
-         W/JgJ/llFp2sC0ehUrNvMhTF1AHbuMBoxpfhDhKYiubnxXiPM0V+YxR47S3pywHm1zVn
-         YoXZKVmllsTpbKkLnprQV1dY6jiMBnxxEH1mjqWestm4T7BMs33fGayQb9pcifndpxA5
-         dRc2aTZcWMaZXbj+SuJj2xbSgaTMig9f6eWueBTfgJdR4q7HEszXM2WVF8Uizzr+7f/0
-         6XIz3Mafp5AEu5/5HsbPhKX/lkdq45ClJSBvSBKPLlMvd0Ad+mh/wPmPqjNtsgpH+ngq
-         4ucA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGHQU2/fleR1vPoVYTKftcVhuJZdM97YiPZTyKQXriHeXPa0QIWjj2JEFEUA7MZTtlml0sumrLpmi3vLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLMjm8TZdQrPSHJHolySyZ2nb90hOUoxnioeQhrUu6Weoa8b8y
-	88tf9YPaFhXdDR0DElm+9OAjUBG8HpzrqjK0T1n3iCV2buduJxut5AKZAMjXbA==
-X-Gm-Gg: ASbGncuvrcy6mW1cg2aZ21ZLgIkMqRDvWHwqM3lIVSxZZMyQiTubSclwoYq4AETTURN
-	ttAGzvZoUcJeE5utZa2hJjXKkzqObrW07ozHGJV4+aaWlQbX8Sf/ameS1FHQo0z3W4eBd2dpqau
-	mnv2hxKZAjsG+RtMQGey9c/QosihDdapHyKwD1byDts/vdeF35n/xsnXuNDLaOxkWAtfS3D979+
-	ug1bH3sVreUo+Sj6/wdoZm4QUT92huLSo95F/5Cn7q5+sn/l0zLkRM7I18xjdYFbug01DTchyO4
-	adDaGbbXqW3BQxjzxXQ1q2ngErYdyWqMrhQXMNaJIfXJAUIvxr89bysRQVfXW7EB
-X-Google-Smtp-Source: AGHT+IFlt0LgLQmKQSlUwziRdLcwFuwYuvRWbdQ8rrLtwPvn17wSyVYVfRE70VydKdb5hQWDriS11A==
-X-Received: by 2002:a17:902:da91:b0:224:10a2:cad9 with SMTP id d9443c01a7336-22e1039fdebmr55655375ad.41.1746201522811;
-        Fri, 02 May 2025 08:58:42 -0700 (PDT)
-Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522952csm9134125ad.185.2025.05.02.08.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:58:42 -0700 (PDT)
-Date: Fri, 2 May 2025 21:28:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <hans.zhang@cixtech.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk, 
-	hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
- suspend
-Message-ID: <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
-References: <20250502150027.GA818097@bhelgaas>
- <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXSS1bAx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5D2C4CEE4;
+	Fri,  2 May 2025 16:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746201653;
+	bh=ytHKODURza7J0qG2g8cd79DBWYjObajhXHIR7ASo5uI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RXSS1bAx1hIWZJurAtU/etvjPHp88oygQMX9UTuCCs0tGl/3AOCmLonhYUSAmKL3f
+	 Mzt45VQDCE4qu2nawPsdC8byrqGHfYqBOL+ULJE3f1Q0t8qPkQQ9Cpjx0QWH3NWy2+
+	 iwWkq8gzG1C+pIji5Hm/AP5G4B2XCIVkX5UL4VBS8iSHfTAis1CoVFUIt/aj84lY1c
+	 XWlltAI/DTap/Tl+tpbvT+ifiySqF+3GAsFEIrpJpTLcN5zAAhzTVzju4pMGo1U4+2
+	 RDUYKudGMWXgARA5mn09yObEHbLVooHXUtsj10P+/h73CrWawAFNoxVDcFiyAIwEKq
+	 SQtV8uZQKgttw==
+Date: Fri, 2 May 2025 13:00:50 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Joe Mario <jmario@redhat.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
+Subject: Re: [RFC/PATCHSET 00/11] perf mem: Add new output fields for data
+ source (v1)
+Message-ID: <aBTsMkY1nAVpIUQ4@x1>
+References: <20250430205548.789750-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
+In-Reply-To: <20250430205548.789750-1-namhyung@kernel.org>
 
-On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
-> 
-> 
-> On 2025/5/2 23:00, Bjorn Helgaas wrote:
-> > EXTERNAL EMAIL
-> > 
-> > On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
-> > > From: Hans Zhang <hans.zhang@cixtech.com>
-> > > 
-> > > When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
-> > 
-> > CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
-> > dynamically regardless of the config.
-> > 
-> 
-> Dear Bjorn,
-> 
-> Thank you very much for your reply.
-> 
-> Yes. To reduce the power consumption of the SOC system, we have enabled ASPM
-> L1 by default.
-> 
-> > > NVMe controllers fail to release LPI MSI-X interrupts during system
-> > > suspend, leading to a system hang. This occurs because the driver's
-> > > existing power management path does not fully disable the device
-> > > when ASPM is active.
-> > 
-> > I have no idea what this has to do with ASPM L1.  I do see that
-> > nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
-> > janky and racy).  But this doesn't explain anything about what would
-> > cause a system hang.
-> 
-> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM: calling
-> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
-> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
-> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
-> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
-> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
-> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
-> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
-> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
-> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
-> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
-> pcie_phy_common_exit end
-> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
-> sky1_pcie_suspend_noirq
-> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
-> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
-> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
-> 7110000.system-controller:clock-controller: PM: calling
-> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
-> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
-> 7110000.system-controller:clock-controller: PM: genpd_suspend_noirq+0x0/0x80
-> returned 0 after 1 usecs
-> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
-> 
-> 
-> Hans: Before I added the printk for debugging, it hung here.
-> 
-> 
-> I added the log output after debugging printk.
-> 
-> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
-> Our hardware is in STR(suspend to ram), and the controller and PHY will lose
-> power.
-> 
-> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
-> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
-> controller and PHY will be reinitialized. If suspend does not close the AXI
-> and APB clock, and the AXI is reopened during the resume process, the APB
-> clock will cause the reference count of the kernel API to accumulate
-> continuously.
-> 
+On Wed, Apr 30, 2025 at 01:55:37PM -0700, Namhyung Kim wrote:
+> Hello,
+ 
+> The perf mem uses PERF_SAMPLE_DATA_SRC which has a lot of information
+> for memory access.  It has various sort keys to group related samples
+> together but it's still cumbersome to see the result.  While perf c2c
+> command provides a way to investigate the data in a specific way, I'd
+> like to add more generic ways using new output fields.
+ 
+> For example, the following is the 'cache' output field which breaks
+> down the sample weights into different level of caches.
 
-So this is the actual issue (controller loosing power during system suspend) and
-everything else (ASPM, MSIX write) are all side effects of it.
+Super cool!
+ 
+>   $ perf mem record -a sleep 1
+>   
+>   $ perf mem report -F cache,dso,sym --stdio
+>   ...
+>   #
+>   # -------------- Cache --------------
+>   #      L1     L2     L3 L1-buf  Other  Shared Object                                  Symbol
+>   # ...................................  .....................................  .........................................
+>   #
+>        0.0%   0.0%   0.0%   0.0% 100.0%  [kernel.kallsyms]                      [k] ioread8
+>      100.0%   0.0%   0.0%   0.0%   0.0%  [kernel.kallsyms]                      [k] _raw_spin_lock_irq
+>        0.0%   0.0%   0.0%   0.0% 100.0%  [xhci_hcd]                             [k] xhci_update_erst_dequeue
+>        0.0%   0.0%   0.0%  95.8%   4.2%  [kernel.kallsyms]                      [k] smaps_account
+>        0.6%   1.8%  22.7%  45.5%  29.5%  [kernel.kallsyms]                      [k] sched_balance_update_blocked_averages
+>       29.4%   0.0%   1.6%  58.8%  10.2%  [kernel.kallsyms]                      [k] __update_load_avg_cfs_rq
+>        0.0%   8.5%   4.3%   0.0%  87.2%  [kernel.kallsyms]                      [k] copy_mc_enhanced_fast_string
+>       63.9%   0.0%   8.0%  23.8%   4.3%  [kernel.kallsyms]                      [k] psi_group_change
+>        3.9%   0.0%   9.3%  35.7%  51.1%  [kernel.kallsyms]                      [k] timerqueue_add
+>       35.9%  10.9%   0.0%  39.0%  14.2%  [kernel.kallsyms]                      [k] memcpy
+>       94.1%   0.0%   0.0%   5.9%   0.0%  [kernel.kallsyms]                      [k] unmap_page_range
+>       25.7%   0.0%   4.9%  51.0%  18.4%  [kernel.kallsyms]                      [k] __update_load_avg_se
+>        0.0%  24.9%  19.4%   9.6%  46.1%  [kernel.kallsyms]                      [k] _copy_to_iter
+>       12.9%   0.0%   0.0%  87.1%   0.0%  [kernel.kallsyms]                      [k] next_uptodate_folio
+>       36.8%   0.0%   9.5%  16.6%  37.1%  [kernel.kallsyms]                      [k] update_curr
+>      100.0%   0.0%   0.0%   0.0%   0.0%  bpf_prog_b9611ccbbb3d1833_dfs_iter     [k] bpf_prog_b9611ccbbb3d1833_dfs_iter
+>       45.4%   1.8%  20.4%  23.6%   8.8%  [kernel.kallsyms]                      [k] audit_filter_rules.isra.0
+>       92.8%   0.0%   0.0%   7.2%   0.0%  [kernel.kallsyms]                      [k] filemap_map_pages
+>       10.6%   0.0%   0.0%  89.4%   0.0%  [kernel.kallsyms]                      [k] smaps_page_accumulate
+>       38.3%   0.0%  29.6%  27.1%   5.0%  [kernel.kallsyms]                      [k] __schedule
+ 
+> Please see the description of each commit for other fields.
+ 
+> New mem_stat field was added to the hist_entry to save this
+> information.  It's a generic data structure (array) to handle
+> different type of information like cache-level, memory location,
+> snoop-result, etc.
+ 
+> The first patch is a fix for the hierarchy mode and it was sent
+> separately.  I just add it here not to break the hierarchy mode.  The
+> second patch is to enable SAMPLE_DATA_SRC without SAMPLE_ADDR and
+> perf_event_attr.mmap_data which generate a lot more data.
 
-Yes, this issue is more common with several vendors and we need to come up with
-a generic solution instead of hacking up the client drivers. I'm planning to
-work on it in the coming days. Will keep you in the loop.
+I merged it and added a test for the hierachy mode as mentioned in my
+reply to that patch.
+ 
+> The name of some new fields are the same as the corresponding sort
+> keys (mem, op, snoop) so I had to change the order whether it's
+> applied as an output field or a sort key.  Maybe it's better to name
+> them differently but I couldn't come up with better ideas.
 
-- Mani
+Looks ok at first sight.
+ 
+> That means, you need to use -F/--fields option to specify those fields
+> and the sort keys you want.  Maybe we can change the default output
+> and sort keys for perf mem report with this.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Maybe we can come up with aliases to help using these new features
+without having to create a long command line, maybe:
+
+perf cache
+
+Or some other more suitable name.
+
+That would just be translated into the long command line for 'perf
+report', kinda like 'perf kvm', but maybe we can do it like with 'perf
+archive', i.e. just a shell wrapper?
+ 
+> The code is available at 'perf/mem-field-v1' branch in
+
+I'll test it, and I'm CCing Joe Mario, who I think will be very much
+interesting in trying this!
+
+- Arnaldo
+ 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+ 
+> Thanks,
+> Namhyung
+ 
+> Namhyung Kim (11):
+>   perf hist: Remove output field from sort-list properly
+>   perf record: Add --sample-mem-info option
+>   perf hist: Support multi-line header
+>   perf hist: Add struct he_mem_stat
+>   perf hist: Basic support for mem_stat accounting
+>   perf hist: Implement output fields for mem stats
+>   perf mem: Add 'op' output field
+>   perf hist: Hide unused mem stat columns
+>   perf mem: Add 'cache' and 'memory' output fields
+>   perf mem: Add 'snoop' output field
+>   perf mem: Add 'dtlb' output field
+> 
+>  tools/perf/Documentation/perf-record.txt |   7 +-
+>  tools/perf/builtin-record.c              |   6 +
+>  tools/perf/ui/browsers/hists.c           |  50 ++++-
+>  tools/perf/ui/hist.c                     | 272 ++++++++++++++++++++++-
+>  tools/perf/ui/stdio/hist.c               |  57 +++--
+>  tools/perf/util/evsel.c                  |   2 +-
+>  tools/perf/util/hist.c                   |  78 +++++++
+>  tools/perf/util/hist.h                   |  22 ++
+>  tools/perf/util/mem-events.c             | 183 ++++++++++++++-
+>  tools/perf/util/mem-events.h             |  57 +++++
+>  tools/perf/util/record.h                 |   1 +
+>  tools/perf/util/sort.c                   |  42 +++-
+>  12 files changed, 718 insertions(+), 59 deletions(-)
+> 
+> -- 
+> 2.49.0.906.g1f30a19c02-goog
