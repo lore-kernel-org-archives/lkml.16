@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D1D376;
-	Fri,  2 May 2025 18:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9F6376;
+	Fri,  2 May 2025 18:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211149; cv=none; b=NCtp5/6TXXZnH3Td629lqOd1iadvF7yh7jXTQ0VIclSMWFBAWF0CTvyhNpkinU9ciAQ7wlUMCrQX7UvJu45ui7MPNzaYSfVL2LO55nnAG9oogef5GStIZXx/tylx1SO8cEgV4P52nOGUEgr7Y1R2CrHce0zwY+QiuMvGIVwmAf8=
+	t=1746211175; cv=none; b=ZVG6S/Zt1oDd+gWtg2vrPS4Yu9QCM6WgmuS96l3bXFTXq/SGTQPbNUlYbDhfwZayFOELdAz+Ep7Qw82kQNqWoclf8lDGDZIsLszizdX4HypDcF/SFyCT82KOsuZmmpjnwFNNQYIqd44pCckv9kh//vuwC2mTTTr43I73upxnpaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211149; c=relaxed/simple;
-	bh=k4bpnd3rel4lDav3D9jMnc5FYe9j0M+IePk2yRuFE1w=;
+	s=arc-20240116; t=1746211175; c=relaxed/simple;
+	bh=rH0hTL/ovF1cYLOsrCSmIfftUclU8Y+oSWIs4cAcA3M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IjcGHVkpGEH/ZWrE9Q7MKOB+bBHdAkEVTPdxw20tQ7P2Jn1M1eYBn6aIdtar6SBB0ZqIr2ho15Za2R7qYPLmtJPKMHdCyZDsVxcpPCGwFPtMMHZ1+f5iB4Igt+rRw6xsjJrt52/GArihI5B1s8/1bj6JJ1iQ41Nb4KzL/UivJV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOzadMwX; arc=none smtp.client-ip=192.198.163.16
+	 In-Reply-To:Content-Type; b=ZH0Ncto13o5rnNIm/D3tIM2TESH4wwTz34FrXnJfLwGxTwGx7lX7DTYjVPJ+CIAoxnx4bGxMh0Wnh6V8qekYW0Aki3HZO3gwJVb2TB1+QdyjKeldeBBL5g30jG7yK/6W7TpPm4ai2I1jo0lsAYtHOJbnTvAcNEmc8er8uMnWu8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFxzeSBv; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOzadMwX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFxzeSBv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746211147; x=1777747147;
+  t=1746211174; x=1777747174;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=k4bpnd3rel4lDav3D9jMnc5FYe9j0M+IePk2yRuFE1w=;
-  b=BOzadMwXEuVvzwvoBXPG5MF6D+hpefwgnr20D1OcnRL7vaP9ChdzfC1F
-   t/0qXBlysGHBKmFNm6/TJn2yP19iBfgpb3FluXD+HtsWfwAj3cGzLQ/wi
-   mYCMDQ4MrurSGVWXXoJ/ibww7jxAR3yJ7H+JdVeNx9DmfTW5xQCp5v5U8
-   91/A4zH/OlaFjPWVwtuW0xwvZCbLriaQXzBQHCqp9Wnavy3uTwJsVG1jt
-   mt2s9+TTUkjuhlQTIkCE/TKdAla6MH5iU/CpEhs7ranQCpqs7sJT/9S1i
-   5D8DbV/noPMJ+Wf1naPEsUcBEVK3T2V/CCK+c7nbnrhWIqRcwg+QrQ7Mx
-   Q==;
-X-CSE-ConnectionGUID: TWXq+50sQ9OvVX7sLHORiQ==
-X-CSE-MsgGUID: 7KqujmUZQImA/N0emTYZ2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35518220"
+  bh=rH0hTL/ovF1cYLOsrCSmIfftUclU8Y+oSWIs4cAcA3M=;
+  b=iFxzeSBvJF6QxSfKxd61gsPHr80B/25A1D4xun2yd57dGfLnRC168TYG
+   /V3y48IAQSN52krgepaGG1pw3Dg+BAFjWAiqy6QaXFls0xi+cbTgMQWrj
+   1xj4579aOqh8XrlscyT/fsmHbxxCnLT8K/L1LY3jEj3DkOfUG9ENyr5Ah
+   fabJhempYBTk4h31b5N0tzLtxYTbL8sQM4c7fWdB+1XM5JH3JAtcaNpG4
+   I8tJMaBhxI6NKrKI1VLcY2lkboRh80oK4G4P0ac/nz6bV6R299qMg8Cn+
+   n/a6h0g9aKNLjiIsRPyOZo67NPrJfi2257V1ehr3Le7yW9uOni70mLU+V
+   A==;
+X-CSE-ConnectionGUID: pYwrbHTfRuuwHG8+12MRRQ==
+X-CSE-MsgGUID: 1sbcc46BR2iPqRcOjD0ixA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35518292"
 X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="35518220"
+   d="scan'208";a="35518292"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:06 -0700
-X-CSE-ConnectionGUID: /0mAd8ECTXqelpKpeQuAfA==
-X-CSE-MsgGUID: 6eMiZhjuRfSko/i4n3d/bA==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:33 -0700
+X-CSE-ConnectionGUID: q0hFwjtbQLOO4bDICzglEA==
+X-CSE-MsgGUID: j7CeDysPRziSOaNh1q4L1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
-   d="scan'208";a="134663527"
+   d="scan'208";a="134663550"
 Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:04 -0700
-Message-ID: <9dcf8bd9-f4c3-4c7d-a717-ff3eb95f12b9@intel.com>
-Date: Fri, 2 May 2025 11:39:02 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:32 -0700
+Message-ID: <425b4cbc-d36c-42b6-9071-3e0afab91441@intel.com>
+Date: Fri, 2 May 2025 11:39:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 12/18] x86/kexec: add support for passing kexec
- handover (KHO) data
+Subject: Re: [PATCH v7 13/18] x86/e820: temporarily enable KHO scratch for
+ memory below 1M
 To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
@@ -68,7 +68,7 @@ Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
  saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
  thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
 References: <20250501225425.635167-1-changyuanl@google.com>
- <20250501225425.635167-13-changyuanl@google.com>
+ <20250501225425.635167-14-changyuanl@google.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -114,25 +114,23 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250501225425.635167-13-changyuanl@google.com>
+In-Reply-To: <20250501225425.635167-14-changyuanl@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 5/1/25 15:54, Changyuan Lyu wrote:
 > From: Alexander Graf <graf@amazon.com>
 > 
-> kexec handover (KHO) creates a metadata that the kernels pass between each
-> other during kexec. This metadata is stored in memory and kexec image
-> contains a (physical) pointer to that memory.
+> KHO kernels are special and use only scratch memory for memblock
+> allocations, but memory below 1M is ignored by kernel after early boot
+> and cannot be naturally marked as scratch.
 > 
-> In addition, KHO keeps "scratch regions" available for kexec: physically
-> contiguous memory regions that are guaranteed to not have any memory that
-> KHO would preserve. The new kernel bootstraps itself using the scratch
-> regions and sets all handed over memory as in use. When subsystems that
-> support KHO initialize, they introspect the KHO metadata, restore preserved
-> memory regions, and retrieve their state stored in the preserved memory.
+> To allow allocation of the real-mode trampoline and a few (if any) other
+> very early allocations from below 1M forcibly mark the memory below 1M
+> as scratch.
 > 
-> Enlighten x86 kexec-file and boot path about the KHO metadata and make sure
-> it gets passed along to the next kernel.
+> After real mode trampoline is allocated, clear that scratch marking.
+
+It's much more clear now, thanks!
 
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
