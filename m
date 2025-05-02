@@ -1,176 +1,156 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C3F256C81
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B57519B5B4;
+	Fri,  2 May 2025 14:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197687; cv=none; b=ILSDIW2MflkKaIBT5JB7Q1lpan22bt4fbFFwgtHR4pfroNsQT/Q0OHYGBQsCZDhaKT1Ef7SoVd4iNpGWv02EHf8r2p/vah+y0Tq5nyzju1ULeR3NEQw86uNaa8tqbbp8LUItmp3rOzmwDY9xabJ/IiL0mPWtUMjnVfxBYwBFxFs=
+	t=1746197884; cv=none; b=p3Sw2VMdUqHW+trdIuOuM6CYDo0ORA82ZMfPgSOApRsxb/UkwagYqAfJ/K8+gQv6YKZTs+PcPL+e7tLp2b+HKGZS4FBYXS4CKuTngT62E5zj678TSBHrKl+rVzXMayrKS8tND09EMhJ23CBcKDf9z4B7b/6Sq1OOHSMKeTLlTUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746197687; c=relaxed/simple;
-	bh=RpJVwCDKSnByw8jtUR+cMwoe+OU/wu1hEclu+sJDocE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=ezkUC/J2wntSguoAj+FVQ7lxrHw/9x8OVNs3rQzG6xsb0JCm4XBPFfccojpFlRMPBG1ANDet7LADNZ6ldsrC1Zo62WUvfNc2ZDNwcHp7yg36QHMzkwaGzZOGbuSdYWqLOgCmZNzc7FMwc7L6eavTRTjcBReuI/9BN1lWv+o9ZAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yzhds76e; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yzhds76e"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30572effb26so2118809a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746197685; x=1746802485; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:to:from
-         :reply-to:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=APu7gvDG+GWIH3CqaZfGtDjeCKACn6athf5zXmMCeek=;
-        b=Yzhds76eaOQr2njwQU5f9nPC1YVy34MCcet94KqjdhZYmtlqsngK+2siuJzjLpu7eU
-         Zqv9z5ImAl5iYPsDkyVPWxgh/jRQM2Z5BKBJf/keBHdKZu+943f2/7thr9dGsHlFDeTu
-         hFusV2bSuqNohCi6U8aJ28tNWx5DRfP24GQokGIQTMqTlM4UIS+ibpnpTkwJAYcXSUUS
-         YW+Ozu+HV0iH4auF+Tsp/FsegDnP9S2atEXidnJI+2xhcwShx2RWsuC8bag1V1ToVT93
-         X5euz488YP+ehb9hRGS+SASl/kUCJvu5MlNJ0twFfDwD3hLyG/14Sc+g3xo7U9uAoRol
-         1+SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746197685; x=1746802485;
-        h=content-transfer-encoding:mime-version:message-id:subject:to:from
-         :reply-to:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=APu7gvDG+GWIH3CqaZfGtDjeCKACn6athf5zXmMCeek=;
-        b=dOLkTWRp6qnQjbHZePE9lmd9qajTkBJu3v6THxscEAsNPEyR2a2XVpOYw//Ujylhg5
-         xDxxwA7kgaQk66aJI/c1RlPhLkXlDMxsCor6ZVi1zAYBbqHbu+LyYwjE0g7wQRJq10QA
-         jep/2EI7W8j+bdW4rOFTrNHZJjmWiF3Yg44DBl1c9zSkI+zOMPi/IIF0gHzWooDS78Vz
-         xpJTGZRVRHNZj6zGJJsQw0bblN6X0XIIC/9ZSpUC0lscPsmHm/ZbeZ/v32d86kx2WGIP
-         fVGVA26r7fCkIo/bj/Rm+4hpcWE5JjfDL6Yg5/rLhzrDped9n/nR9sQTYkS/NjaJeWOt
-         KWyw==
-X-Gm-Message-State: AOJu0YzEpYqmBnnIF7D1czwLopxFmpRcp9GP2s7FtU3rXZnHHgEoEUdi
-	ztl2M5Tlb9Iu4WoTO3SB2Bhdi8R+JsJVb1XhzHpR/XywtgnalMR6C8zB0B/oOcw=
-X-Gm-Gg: ASbGncu65u+FozB8AO1CpK9n7QEFFDRjJRwNhmECv802QAWh77zqVlGIjn8jdp3xSCP
-	3u3Xa4hQD4/piTjMawUaxEknJX1hBmwllRt12wQtl9xnb2ARLO2DXfWIMb0qlb2DLIeen2VK4gi
-	FeiZQT4s5Hvl7McccQzdphcUpG5mbjVZppEQijciI8eAV/dI9bQVxbdqPXWG+3BwJh90KSCaD0o
-	nDJQLKn29s/TdMo0JzOKWJ59R1GsDqNT/GjSqRjp470uOzfRjQrGHpkpCal4/a06cMFFHMvZe1i
-	4vCQaPH9ViQUWba2cC1UGB60AfqUl6ufgsRuLcPzpIbKUqtk49jathRyDxE3IYAa94cmUh0ATO2
-	NsiaUNKbI/jKuwqJ0
-X-Google-Smtp-Source: AGHT+IHn7Y8AVYxoDs0398AiB0UwBhBWtyMBWcsUNuI/tSXRCHjv9HaSrzogEksiiNkjADgvql5Ezw==
-X-Received: by 2002:a17:90b:57cc:b0:2ff:58c7:a71f with SMTP id 98e67ed59e1d1-30a4e692471mr4374925a91.32.1746197685063;
-        Fri, 02 May 2025 07:54:45 -0700 (PDT)
-Received: from 179-190-173-23.cable.cabotelecom.com.br ([179.190.173.23])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0aasm6423373a91.35.2025.05.02.07.54.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 07:54:43 -0700 (PDT)
-Date: Fri, 02 May 2025 07:54:43 -0700 (PDT)
-X-Google-Original-Date: 2 May 2025 09:54:41 -0500
-Reply-To: sales1@theleadingone.net
-From: Winston Taylor <sglvlinks@gmail.com>
-To: linux-kernel@vger.kernel.org
-Subject: wts
-Message-ID: <20250502095441.4F3E93927FC16CE9@gmail.com>
+	s=arc-20240116; t=1746197884; c=relaxed/simple;
+	bh=joLM/u39YqBQ3W0TxpsBGRYa+ZZYfB/buBDGV5XcTuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gBNwFz4Qa8RiY5oq2R4H0vpyd8wM1q3y8VtHEK0DmBql0xbjKmlT5yfqnp2AHjF4vPPkZJq5iPUvTAoE/IQ7ipKsfmgYP25EJ+joMFc88xWfcPwG1/MP5zLqr7a2u94IZ05pfIzYrv0ULIJO4QHltRA8lcX7IN8iCF3/7xw+PwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66A701688;
+	Fri,  2 May 2025 07:57:52 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 78B843F66E;
+	Fri,  2 May 2025 07:57:57 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	broonie@kernel.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	joey.gouly@arm.com,
+	james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	shameerali.kolothum.thodi@huawei.com,
+	ardb@kernel.org,
+	ryan.roberts@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
+Date: Fri,  2 May 2025 15:57:55 +0100
+Message-Id: <20250502145755.3751405-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello ,
+create_init_idmap() could be called before .bss section initialization
+which is done in early_map_kernel() since data/test_prot could be set
+wrong for PTE_MAYBE_NG macro.
 
- These are available for sale. If you=E2=80=99re interested in purchasing=
-=20
-these, please email me
+PTE_MAYBE_NG macro is set according to value of "arm64_use_ng_mappings".
+and this variable is located in .bss section.
 
- 960GB SSD SATA 600 pcs/18 USD
+   # llvm-objdump-21 --syms vmlinux-gcc | grep arm64_use_ng_mappings
+     ffff800082f242a8 g O .bss    0000000000000001 arm64_use_ng_mappings
 
-S/N MTFDDAK960TDS-1AW1ZABDB
+If .bss section doesn't initialized, "arm64_use_ng_mappings" would be set
+with garbage value ant then the text_prot or data_prot could be set
+with garbgae value.
 
-Brand New C9200L-48T-4X-E  $1,200 EAC
-Brand New ST8000NM017B  $70 EA
+Here is what i saw with kernel compiled via llvm-21
 
-Brand New ST20000NM007D
-QTY 86  $100 EACH
-Brand New ST4000NM000A   $30 EA
-Brand New WD80EFPX   $60 EA
- Brand New WD101PURZ    $70 EA
+  // create_init_idmap()
+  ffff80008255c058: d10103ff     	sub	sp, sp, #0x40
+  ffff80008255c05c: a9017bfd     	stp	x29, x30, [sp, #0x10]
+  ffff80008255c060: a90257f6     	stp	x22, x21, [sp, #0x20]
+  ffff80008255c064: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  ffff80008255c068: 910043fd     	add	x29, sp, #0x10
+  ffff80008255c06c: 90003fc8     	adrp	x8, 0xffff800082d54000
+  ffff80008255c070: d280e06a     	mov	x10, #0x703     // =1795
+  ffff80008255c074: 91400409     	add	x9, x0, #0x1, lsl #12 // =0x1000
+  ffff80008255c078: 394a4108     	ldrb	w8, [x8, #0x290] ------------- (1)
+  ffff80008255c07c: f2e00d0a     	movk	x10, #0x68, lsl #48
+  ffff80008255c080: f90007e9     	str	x9, [sp, #0x8]
+  ffff80008255c084: aa0103f3     	mov	x19, x1
+  ffff80008255c088: aa0003f4     	mov	x20, x0
+  ffff80008255c08c: 14000000     	b	0xffff80008255c08c <__pi_create_init_idmap+0x34>
+  ffff80008255c090: aa082d56     	orr	x22, x10, x8, lsl #11 -------- (2)
 
-Intel Xeon Gold 5418Y Processors
+Note (1) is load the arm64_use_ng_mappings value in w8.
+and (2) is set the text or data prot with the w8 value to set PTE_NG bit.
+If .bss section doesn't initialized, x8 can include garbage value
+-- In case of some platform, x8 loaded with 0xcf -- it could generate
+wrong mapping. (i.e) text_prot is expected with
+PAGE_KERNEL_ROX(0x0040000000000F83) but
+with garbage x8 -- 0xcf, it sets with (0x0040000000067F83)
+and This makes boot failure with translation fault.
 
-QTY $70 each
+This error cannot happen according to code generated by compiler.
+here is the case of gcc:
 
+   ffff80008260a940 <__pi_create_init_idmap>:
+   ffff80008260a940: d100c3ff      sub     sp, sp, #0x30
+   ffff80008260a944: aa0003ed      mov     x13, x0
+   ffff80008260a948: 91400400      add     x0, x0, #0x1, lsl #12 // =0x1000
+   ffff80008260a94c: a9017bfd      stp     x29, x30, [sp, #0x10]
+   ffff80008260a950: 910043fd      add     x29, sp, #0x10
+   ffff80008260a954: f90017e0      str     x0, [sp, #0x28]
+   ffff80008260a958: d00048c0      adrp    x0, 0xffff800082f24000 <reset_devices>
+   ffff80008260a95c: 394aa000      ldrb    w0, [x0, #0x2a8]
+   ffff80008260a960: 37000640      tbnz    w0, #0x0, 0xffff80008260aa28 <__pi_create_init_idmap+0xe8> ---(3)
+   ffff80008260a964: d280f060      mov     x0, #0x783      // =1923
+   ffff80008260a968: d280e062      mov     x2, #0x703      // =1795
+   ffff80008260a96c: f2e00800      movk    x0, #0x40, lsl #48
+   ffff80008260a970: f2e00d02      movk    x2, #0x68, lsl #48
+   ffff80008260a974: aa2103e4      mvn     x4, x1
+   ffff80008260a978: 8a210049      bic     x9, x2, x1
+   ...
+   ffff80008260aa28: d281f060      mov     x0, #0xf83      // =3971
+   ffff80008260aa2c: d281e062      mov     x2, #0xf03      // =3843
+   ffff80008260aa30: f2e00800      movk    x0, #0x40, lsl #48
 
+In case of gcc, according to value of arm64_use_ng_mappings (annoated as(3)),
+it branches to each prot settup code.
+However this is also problem since it branches according to garbage
+value too -- idmapping with wrong pgprot.
 
-CPU  4416+   200pcs/$500
+To resolve this, annotate arm64_use_ng_mappings as ro_after_init.
 
-CPU  5418Y    222pcs/$700
+Fixes: 84b04d3e6bdb ("arm64: kernel: Create initial ID map from C code")
+Cc: <stable@vger.kernel.org> # 6.9.x
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+There is another way to solve this problem by setting
+test/data_prot with _PAGE_DEFAULT which doesn't include PTE_MAYBE_NG
+with constanst check in create_init_idmap() to be free from
+arm64_use_ng_mappings. but i think it would be better to change
+arm64_use_ng_mappings as ro_after_init because it doesn't change after
+init phase and solve this problem too.
+---
+ arch/arm64/kernel/cpufeature.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- 
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index d2104a1e7843..967ffb1cbd52 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -114,7 +114,7 @@ static struct arm64_cpu_capabilities const __ro_after_init *cpucap_ptrs[ARM64_NC
 
-8TB 7.2K RPM SATA
-6Gbps 512   2500pcs/$70
+ DECLARE_BITMAP(boot_cpucaps, ARM64_NCAPS);
 
+-bool arm64_use_ng_mappings = false;
++bool arm64_use_ng_mappings __ro_after_init = false;
+ EXPORT_SYMBOL(arm64_use_ng_mappings);
 
-960GB SSD SATA   600pcs/$30
-serial number MTFDDAK960TDS-1AW1ZABDB
-
-
-SK Hynix 48GB 2RX8 PC5 56008 REO_1010-XT
-PH HMCGY8MG8RB227N AA
-QTY 239 $50 EACH
-
-
-SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
-M386A8K40BM2-CTD60 S
-QTY 320 $42 each
-
-
-Ipad pro 129 2021 MI 5th Gen 256 WiFi + Cellular
-quantity 24 $200 EACH
-
-=20
-Ipad pro 12.9 2022 m2 6th Gen 128 WiFi + Cellular
-quantity - 44 $250 EAC
-
-Brand New NVIDIA GeForce RTX 4090 Founders
-Edition 24GB - QTY: 56 - $700 each
-
- Brand New ASUS TUF Gaming GeForce RTX 4090 OC
- 24GB GDDR6X Graphics Card
- QTY87 $1000 each
-=20
-Refurbished MacBook Pro with Touch Bar 13 inches
-MacBook Pro 2018 i5 8GB 256gb quantity $ 200 EACH
-MacBook Pro 2019 i5 8GB 256gb Quantity $ 200
-MacBook Pro 2020 i5 8gb 256gb Quantity $200
-MacBook Pro 2022 i5 m2 8gb 256gb quantity $250 EACH
-
- 
-
-Refurbished Apple iPhone 14 Pro Max - 256 GB
-quantity-10 $35O EACH
-
-Refurbished Apple iPhone 13 Pro Max has
-quantity-22 $300 EACH
-
-
-Apple MacBook Pro 14-inch with M3 Pro chip, 512GB SSD (Space=20
-Black)[2023
-QTY50
-USD 280
-
-
-Apple MacBook Air 15" (2023) MQKR3LL/A M2 8GB 256GB
-QTY25
-USD 300 EACH
-
-
-HP EliteBook 840 G7 i7-10610U 16GB RAM 512GB
-SSD Windows 11 Pro TOUCH Screen
-QTY 237 USD 100 each
-
-
- Best Regards,
-
-300 Laird St, Wilkes-Barre, PA 18702, USA
-Mobile: +1 570-890-5512
-Email: sales1@theleadingone.net
-www.theleadingone.net
+ DEFINE_PER_CPU_READ_MOSTLY(const char *, this_cpu_vector) = vectors;
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
