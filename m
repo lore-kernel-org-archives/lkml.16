@@ -1,247 +1,235 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDE31EBFFF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58B81EBFFF;
+	Fri,  2 May 2025 20:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216761; cv=none; b=VLNnBhCV5TOC/iXqYqQ4AKqtZDHWFmU0N/oiz8fBfT0aVk1ZjcL8cuzh91aX/0GmRpSn4TTWOWJ1hZxMNPbWvPRUlidpg8l/kPujZDiPPhK2GlIvitaE8SVYDyXMg28SaKtwwE1SoVhbtBPSZSQJSqwBX9QUtPd4kg/+QhMoReM=
+	t=1746216802; cv=none; b=A3LNT2VER0yxE6v9y9MPAqoZKlj9K2hDPKB5HYj5pycyZEli2Yq9QhcBpQqBVyYLVTZTwtEZdD/7hcYjpW4nVh+e7K9yIVq15+wVVwthU7IQb9f8WqqyhSIL6f+YcKffXgtKJnqrZKWEHB/LVbHKUAHZkZveZ+8hW0ZDX4ps3Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216761; c=relaxed/simple;
-	bh=p3B2nfPE8QwHYR+zmqzvHe4k7bgYrvqEM+/3KwFxr1w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DaH+Y8RqYzHUzsoBjnYynZjDWlu+JKMZx/42LtOZqMLNKSfe0lIGiXIazldbr5WHlDZbnmukknadiMdukeCetBUz2e0HVu2gTyLBcQUAw9hn43EV2lJMB8o76KnvXWFfnQCgGpPNGi6Zq+rORxASgEoO8o9x/f1c4ELxrcpMsnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nGIe3I8/; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1746216802; c=relaxed/simple;
+	bh=ud5kPFd0X0qVPSg4fD5da0mFAuqP+3DF97NZsjzX95U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EiZO8+Nk5CVgNOT7cDxNw92XZiQDQ7Cr0ljxXRmGzQ+41BcvQXA5E26eMPxL4//FdHtWlpGeYJiEeBhl/XhV0tKesdk946lDJWf0m8HwPOyW4GrKhY1NgmGOs52Mb5UsqomFfjIm5nEKpmocEbaCa2ec73ufa1uGBTs2PcoysuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAEcku5N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nGIe3I8/"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542ItwNi021016;
-	Fri, 2 May 2025 19:01:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=QVIvK
-	xugLN/IBEos0H/iKCLQbIdmIzlG7+JrQ2WMzos=; b=nGIe3I8/rLi03eeIM4AGZ
-	tWkTCFZR9qtQnsxIzqudhI54FMb2/fcee6rM8653U/x+wSj1QeMvBqAbM8SSU7Ia
-	2rHb9FMc3SytirRmzNg7gb/YIfCzHxclqiu4RpSi/ejrhSpcXvfKqF4NLV4LSvXh
-	6amGGFgN+XwGj/mu9QIb7mxe5OmZU7piQ2FC0OXLySxnEH/9WZ/InIZL91Qk5TD1
-	UlUdM9To6fXPqma7lIGfVpdAHLz/TnrOVh4CnQDWppmfGdp83/MzoNYG/hNro5M7
-	FygivCOFXl4xTKp9UwUjvdTSWKhPAqpmMmX+J/+4QVIja4JdYWo+BVeCtE50Rao0
-	g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6umdvr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 19:01:05 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 542Iepmn023726;
-	Fri, 2 May 2025 19:01:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxmc197-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 02 May 2025 19:01:04 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 542J12rH022528;
-	Fri, 2 May 2025 19:01:04 GMT
-Received: from chyser-vm6.osdevelopmeniad.oraclevcn.com (chyser-vm6.appad3iad.osdevelopmeniad.oraclevcn.com [100.100.242.35])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 468nxmc184-2;
-	Fri, 02 May 2025 19:01:04 +0000
-From: chris hyser <chris.hyser@oracle.com>
-To: "Chris Hyser" <chris.hyser@oracle.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Mel Gorman" <mgorman@suse.de>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Jonathan Corbet" <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH v2 1/2] sched/numa: Add ability to override task's numa_preferred_nid.
-Date: Fri,  2 May 2025 14:59:41 -0400
-Message-ID: <20250502190059.4121320-2-chris.hyser@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250502190059.4121320-1-chris.hyser@oracle.com>
-References: <20250502190059.4121320-1-chris.hyser@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAEcku5N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5360BC4CEE4;
+	Fri,  2 May 2025 20:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746216801;
+	bh=ud5kPFd0X0qVPSg4fD5da0mFAuqP+3DF97NZsjzX95U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NAEcku5Nxv9GRrH+L3Iv16BNKPw2uuy+IMAMt90iPCt+ePynUTiSzPsznqzxwQD/9
+	 C17Lj0STrmFVoPn7ELJh55vaiGisuowphWqqPYV4yq7kmQIy/pkL/yvdYvTMAi/hV0
+	 dgD/jTpX77cq13Br+NwbHwqvWk3/4S5SzA+28kp0zHzmcp5yUC19esm7Ym07ZOgBHS
+	 xk/fufQrNpRoG3j5hH4MuoVrzW8GaHK2yMUTKCcV8kBk0VTpm7Cs+yb7EwXWSWRgv7
+	 kR8TacvlojjWGanqW01wpH6leNdoQsaImm1eJlQetuMQqjq8hDVLhZ9AJjdcr5BS3n
+	 +N3I3zez2Wg6Q==
+Date: Fri, 2 May 2025 13:13:20 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: [PATCH v10.1 05/15] xfs: ignore HW which cannot atomic write a
+ single block
+Message-ID: <20250502201320.GV25675@frogsfrogsfrogs>
+References: <20250501165733.1025207-1-john.g.garry@oracle.com>
+ <20250501165733.1025207-6-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_04,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505020153
-X-Authority-Analysis: v=2.4 cv=dfSA3WXe c=1 sm=1 tr=0 ts=68151671 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=dt9VzEwgFbYA:10 a=JfrnYn6hAAAA:8 a=yPCof4ZbAAAA:8 a=ZV2RWA6qNQhVJjVnkKQA:9 a=1CNFftbPRP8L7MoqJWF3:22 cc=ntf
- awl=host:13130
-X-Proofpoint-GUID: cRFtdR0oOe1zvPDWrL3GSHWs965pW4l_
-X-Proofpoint-ORIG-GUID: cRFtdR0oOe1zvPDWrL3GSHWs965pW4l_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDE1MiBTYWx0ZWRfX5SVAI9tOqblo /b8uk5e6E/uOkzSoi72pw8TV3WYuKI8BXyB5s+RDxWPFT2+Qf/NpkUJ6UUJKhCliYyBmmdEclDu /my7emWtYfqTgKu7QrZtLn7+mzfGpI4RnxbpMtXNRoYC4dJRAfwTkAD7rWmkDw0Nf0Xaa5aFjS6
- qR1lY+9tlYlWclZGcZa3mY7UBPIA02Av4tMu4c1DwPIuMpZgwLBzVZPhwK1rwjB3I+Wwra9xh8d n2/q4gB7O9NfccSZazkEFs0bGADXP67YsIRlJhH1UghXz5KetoPML76Zd6R9P9hmyFKbBfUEWrO SGQxdwMyrBP/VDwPbKZzx9051nOghjSad9lhwOjxsHyyrGxPLDo9nAXTb/J6t6WTCxZp2S7ci3v
- 27ZCtdfJsMIeDvM98fHXH+a6BsyUmV8umzppFSraI5W948N0h0riRv7yW8W2cUgzc/pvdpst
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501165733.1025207-6-john.g.garry@oracle.com>
 
-This patch allows directly setting and subsequent overriding of a task's
-"Preferred Node Affinity" by setting the task's numa_preferred_nid and
-relying on the existing NUMA balancing infrastructure.
+From: Darrick J. Wong <djwong@kernel.org>
 
-NUMA balancing introduced the notion of tracking and using a task's
-preferred memory node for both migrating/consolidating the physical pages
-accessed by a task and to assist the scheduler in making NUMA aware
-placement and load balancing decisions.
+Currently only HW which can write at least 1x block is supported.
 
-The existing mechanism for determining this, Auto NUMA Balancing, relies on
-periodic removal of virtual mappings for blocks of a task's address space.
-The resulting faults can indicate a task's preference for an accessed node.
+For supporting atomic writes > 1x block, a CoW-based method will also be
+used and this will not be resticted to using HW which can write >= 1x
+block.
 
-This has two issues that this patch seeks to overcome:
+However for deciding if HW-based atomic writes can be used, we need to
+start adding checks for write length < HW min, which complicates the
+code.  Indeed, a statx field similar to unit_max_opt should also be
+added for this minimum, which is undesirable.
 
-- there is a trade-off between faulting overhead and the ability to detect
-  dynamic access patterns. In cases where the task or user understand the
-  NUMA sensitivities, this patch can enable the benefits of setting a
-  preferred node used either in conjunction with Auto NUMA Balancing's
-  default parameters or adjusting the NUMA balance parameters to reduce the
-  faulting rate (potentially to 0).
+HW which can only write > 1x blocks would be uncommon and quite weird,
+so let's just not support it.
 
-- memory pinned to nodes or to physical addresses such as RDMA cannot be
-  migrated and have thus far been excluded from the scanning. Not taking
-  those faults however can prevent Auto NUMA Balancing from reliably
-  detecting a node preference with the scheduler load balancer then
-  possibly operating with incorrect NUMA information.
-
-The following results were from TPCC runs on an Oracle Database. The system
-was a 2-node AMD machine with a database running on each node with local
-memory allocations. No tasks or memory were pinned.
-
-There are four scenarios of interest:
-
-- Auto NUMA Balancing OFF.
-    base value
-
-- Auto NUMA Balancing ON.
-    1.2% - ANB ON better than ANB OFF.
-
-- Use the prctl(), ANB ON, parameters set to prevent faulting.
-    2.4% - prctl() better then ANB OFF.
-    1.2% - prctl() better than ANB ON.
-
-- Use the prctl(), ANB parameters normal.
-    3.1% - prctl() and ANB ON better than ANB OFF.
-    1.9% - prctl() and ANB ON better than just ANB ON.
-    0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting off
-
-The primary advantage of PNA and ANB on is that the resulting NUMA hint
-faults are also used to periodically check that a task is on it's preferred
-node perhaps having been migrated during load balancing.
-
-In benchmarks pinning large regions of heavily accessed memory, the
-advantages of the prctl() over Auto NUMA Balancing alone is significantly
-higher.
-
-Suggested-by: Peter Zijlstra<peterz@infradead.org>
-Signed-off-by: Chris Hyser <chris.hyser@oracle.com>
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+Signed-off-by: John Garry <john.g.garry@oracle.com>
 ---
- include/linux/sched.h |  1 +
- init/init_task.c      |  1 +
- kernel/sched/core.c   |  5 ++++-
- kernel/sched/debug.c  |  1 +
- kernel/sched/fair.c   | 15 +++++++++++++--
- 5 files changed, 20 insertions(+), 3 deletions(-)
+v10.1: rename xfs_getsize_buftarg and rebase on previous changes to
+xfs_getsize_buftarg
+---
+ fs/xfs/xfs_buf.h   |    4 ++--
+ fs/xfs/xfs_inode.h |   14 ++------------
+ fs/xfs/xfs_buf.c   |   44 ++++++++++++++++++++++++++++++++++++--------
+ fs/xfs/xfs_super.c |    6 +++---
+ 4 files changed, 43 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f96ac1982893..373046c82b35 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1350,6 +1350,7 @@ struct task_struct {
- 	short				pref_node_fork;
- #endif
- #ifdef CONFIG_NUMA_BALANCING
-+	int				numa_preferred_nid_force;
- 	int				numa_scan_seq;
- 	unsigned int			numa_scan_period;
- 	unsigned int			numa_scan_period_max;
-diff --git a/init/init_task.c b/init/init_task.c
-index e557f622bd90..1921a87326db 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -184,6 +184,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- 	.vtime.state	= VTIME_SYS,
- #endif
- #ifdef CONFIG_NUMA_BALANCING
-+	.numa_preferred_nid_force = NUMA_NO_NODE,
- 	.numa_preferred_nid = NUMA_NO_NODE,
- 	.numa_group	= NULL,
- 	.numa_faults	= NULL,
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 79692f85643f..3488450ee16e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7980,7 +7980,10 @@ void sched_setnuma(struct task_struct *p, int nid)
- 	if (running)
- 		put_prev_task(rq, p);
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 132210705602b4..7759fe35d93ea7 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -112,7 +112,7 @@ struct xfs_buftarg {
+ 	struct percpu_counter	bt_readahead_count;
+ 	struct ratelimit_state	bt_ioerror_rl;
  
--	p->numa_preferred_nid = nid;
-+	if (unlikely(p->numa_preferred_nid_force != NUMA_NO_NODE))
-+		p->numa_preferred_nid = p->numa_preferred_nid_force;
-+	else
-+		p->numa_preferred_nid = nid;
+-	/* Atomic write unit values */
++	/* Atomic write unit values, bytes */
+ 	unsigned int		bt_bdev_awu_min;
+ 	unsigned int		bt_bdev_awu_max;
  
- 	if (queued)
- 		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 557246880a7e..a52ba5cf033c 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -1158,6 +1158,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
- 		P(mm->numa_scan_seq);
+@@ -374,7 +374,7 @@ struct xfs_buftarg *xfs_alloc_buftarg(struct xfs_mount *mp,
+ extern void xfs_free_buftarg(struct xfs_buftarg *);
+ extern void xfs_buftarg_wait(struct xfs_buftarg *);
+ extern void xfs_buftarg_drain(struct xfs_buftarg *);
+-extern int xfs_setsize_buftarg(struct xfs_buftarg *, unsigned int);
++extern int xfs_configure_buftarg(struct xfs_buftarg *, unsigned int);
  
- 	P(numa_pages_migrated);
-+	P(numa_preferred_nid_force);
- 	P(numa_preferred_nid);
- 	P(total_numa_faults);
- 	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index eb5a2572b4f8..26781452c636 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2642,9 +2642,15 @@ static void numa_migrate_preferred(struct task_struct *p)
- 	unsigned long interval = HZ;
+ #define xfs_getsize_buftarg(buftarg)	block_size((buftarg)->bt_bdev)
+ #define xfs_readonly_buftarg(buftarg)	bdev_read_only((buftarg)->bt_bdev)
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index bdbbff0d8d9920..d7e2b902ef5c97 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -356,19 +356,9 @@ static inline bool xfs_inode_has_bigrtalloc(const struct xfs_inode *ip)
+ 	(XFS_IS_REALTIME_INODE(ip) ? \
+ 		(ip)->i_mount->m_rtdev_targp : (ip)->i_mount->m_ddev_targp)
  
- 	/* This task has no NUMA fault statistics yet */
--	if (unlikely(p->numa_preferred_nid == NUMA_NO_NODE || !p->numa_faults))
-+	if (unlikely(p->numa_preferred_nid == NUMA_NO_NODE))
- 		return;
+-static inline bool
+-xfs_inode_can_hw_atomic_write(
+-	struct xfs_inode	*ip)
++static inline bool xfs_inode_can_hw_atomic_write(const struct xfs_inode *ip)
+ {
+-	struct xfs_mount	*mp = ip->i_mount;
+-	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
+-
+-	if (mp->m_sb.sb_blocksize < target->bt_bdev_awu_min)
+-		return false;
+-	if (mp->m_sb.sb_blocksize > target->bt_bdev_awu_max)
+-		return false;
+-
+-	return true;
++	return xfs_inode_buftarg(ip)->bt_bdev_awu_max > 0;
+ }
  
-+	/* Execute rest of function if forced PNID */
-+	if (p->numa_preferred_nid_force == NUMA_NO_NODE) {
-+		if (unlikely(!p->numa_faults))
-+			return;
+ /*
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 292891d6ff69ac..770dc4ca79e4c4 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1714,13 +1714,45 @@ xfs_free_buftarg(
+ 	kfree(btp);
+ }
+ 
++/*
++ * Configure this buffer target for hardware-assisted atomic writes if the
++ * underlying block device supports is congruent with the filesystem geometry.
++ */
++static inline void
++xfs_configure_buftarg_atomic_writes(
++	struct xfs_buftarg	*btp)
++{
++	struct xfs_mount	*mp = btp->bt_mount;
++	unsigned int		min_bytes, max_bytes;
++
++	min_bytes = bdev_atomic_write_unit_min_bytes(btp->bt_bdev);
++	max_bytes = bdev_atomic_write_unit_max_bytes(btp->bt_bdev);
++
++	/*
++	 * Ignore atomic write geometry that is nonsense or doesn't even cover
++	 * a single fsblock.
++	 */
++	if (min_bytes > max_bytes ||
++	    min_bytes > mp->m_sb.sb_blocksize ||
++	    max_bytes < mp->m_sb.sb_blocksize) {
++		min_bytes = 0;
++		max_bytes = 0;
 +	}
 +
- 	/* Periodically retry migrating the task to the preferred node */
- 	interval = min(interval, msecs_to_jiffies(p->numa_scan_period) / 16);
- 	p->numa_migrate_retry = jiffies + interval;
-@@ -3578,6 +3584,7 @@ void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
- 
- 	/* New address space, reset the preferred nid */
- 	if (!(clone_flags & CLONE_VM)) {
-+		p->numa_preferred_nid_force = NUMA_NO_NODE;
- 		p->numa_preferred_nid = NUMA_NO_NODE;
- 		return;
- 	}
-@@ -9303,7 +9310,11 @@ static long migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
- 	if (!static_branch_likely(&sched_numa_balancing))
- 		return 0;
- 
--	if (!p->numa_faults || !(env->sd->flags & SD_NUMA))
-+	/* Execute rest of function if forced PNID */
-+	if (p->numa_preferred_nid_force == NUMA_NO_NODE && !p->numa_faults)
-+		return 0;
++	btp->bt_bdev_awu_min = min_bytes;
++	btp->bt_bdev_awu_max = max_bytes;
++}
 +
-+	if (!(env->sd->flags & SD_NUMA))
- 		return 0;
++/* Configure a buffer target that abstracts a block device. */
+ int
+-xfs_setsize_buftarg(
++xfs_configure_buftarg(
+ 	struct xfs_buftarg	*btp,
+ 	unsigned int		sectorsize)
+ {
+ 	int			error;
  
- 	src_nid = cpu_to_node(env->src_cpu);
--- 
-2.43.5
-
++	ASSERT(btp->bt_bdev != NULL);
++
+ 	/* Set up metadata sector size info */
+ 	btp->bt_meta_sectorsize = sectorsize;
+ 	btp->bt_meta_sectormask = sectorsize - 1;
+@@ -1733,6 +1765,9 @@ xfs_setsize_buftarg(
+ 		return -EINVAL;
+ 	}
+ 
++	if (bdev_can_atomic_write(btp->bt_bdev))
++		xfs_configure_buftarg_atomic_writes(btp);
++
+ 	return 0;
+ }
+ 
+@@ -1795,13 +1830,6 @@ xfs_alloc_buftarg(
+ 	btp->bt_daxdev = fs_dax_get_by_bdev(btp->bt_bdev, &btp->bt_dax_part_off,
+ 					    mp, ops);
+ 
+-	if (bdev_can_atomic_write(btp->bt_bdev)) {
+-		btp->bt_bdev_awu_min = bdev_atomic_write_unit_min_bytes(
+-						btp->bt_bdev);
+-		btp->bt_bdev_awu_max = bdev_atomic_write_unit_max_bytes(
+-						btp->bt_bdev);
+-	}
+-
+ 	/*
+ 	 * When allocating the buftargs we have not yet read the super block and
+ 	 * thus don't know the file system sector size yet.
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 83de3ac39ae53b..ed23e6ffe644b6 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -557,7 +557,7 @@ xfs_setup_devices(
+ {
+ 	int			error;
+ 
+-	error = xfs_setsize_buftarg(mp->m_ddev_targp, mp->m_sb.sb_sectsize);
++	error = xfs_configure_buftarg(mp->m_ddev_targp, mp->m_sb.sb_sectsize);
+ 	if (error)
+ 		return error;
+ 
+@@ -566,7 +566,7 @@ xfs_setup_devices(
+ 
+ 		if (xfs_has_sector(mp))
+ 			log_sector_size = mp->m_sb.sb_logsectsize;
+-		error = xfs_setsize_buftarg(mp->m_logdev_targp,
++		error = xfs_configure_buftarg(mp->m_logdev_targp,
+ 					    log_sector_size);
+ 		if (error)
+ 			return error;
+@@ -580,7 +580,7 @@ xfs_setup_devices(
+ 		}
+ 		mp->m_rtdev_targp = mp->m_ddev_targp;
+ 	} else if (mp->m_rtname) {
+-		error = xfs_setsize_buftarg(mp->m_rtdev_targp,
++		error = xfs_configure_buftarg(mp->m_rtdev_targp,
+ 					    mp->m_sb.sb_sectsize);
+ 		if (error)
+ 			return error;
