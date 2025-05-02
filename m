@@ -1,119 +1,95 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E024A146A68;
-	Fri,  2 May 2025 20:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026D3146A68
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746217079; cv=none; b=AKrAW4FAToXpC6SaERwMbORX7X/czuQ8e24AfFF5PyZRB6Q+dONyn+ap6pQKqpJJ/q045UkNyqlBdV3ST3xnywiBGqjlix1h2PdxfrZ+dT+4ICaY/4saoKUpePMT1L4OQj8UpCOe2B1l1w7lPvCbqXTYkeslPivQkdjU7YNGlBE=
+	t=1746217159; cv=none; b=tgl2SaKxoGUJDFDXSfz1nei6SyvD88BB2nYTADpmMOJJHam74oWdRB5g4qgPge8mboFSzYOHS0qoqJuIEvXqByoeLDJbl7Lak5XaPMF+qWjmjnxdbxrlPMIjk8TB8IuttAsurUyxSdq+r1oUacKvl6YPw/KWTwSrmMBIELAe55o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746217079; c=relaxed/simple;
-	bh=E5gwB1+Hj5oqS1YcS2EpyRAcex38Ij8qcYJuEEvjAHw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=h8E9rM+nuHZWCJ2BnM3id0Ou1vbdzoug3SLiSwbG9MyBs3nc74UlLGqqX35irMh50AhX4oG/ZBe7qt+t9oLBNBwDEwqf4vuxdlghWnB92XQUYKXLNLvMlY8QLqJoKtTW9raYxFULfRIg2ho82PDszxxPishraKDZXMiHVa+k30E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ByyXYM2V; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByyXYM2V"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso25209651fa.1;
-        Fri, 02 May 2025 13:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746217076; x=1746821876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SaIqjq9KpAJ/+nEjnkzbnEUUUTwKcNBa7HBXrlZhXUI=;
-        b=ByyXYM2VAKpbeHN0s3yWGbZPFbdS0viJPaMFVdn6VU414szNCJYzxGIFbjjpin9E4g
-         7VmODe2GPP748mJCw9/vn2EKpopVq544iXOsnSCWY/npD+6PERg1dQ1MMImQnaPu7+cx
-         uJ6SjkxFkNYxv3KB4V88mLC30etXyJVrstRGPjZmEnq9/3eYXcINvB2PrEtyY7aKWx/3
-         bfLitrTGOejIX6I05kKdLSqf2hBfwmFR/+FWEyJWdWX+Kve0u+LXh0XvKh/IJ/5+najA
-         XbGD4T2/3LCyEO431eN/873oXbTLIEpPOaiUzfDtQ0arU1eWas0N3NJxuC/2hB6RRn5M
-         DzRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746217076; x=1746821876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SaIqjq9KpAJ/+nEjnkzbnEUUUTwKcNBa7HBXrlZhXUI=;
-        b=B0UgX2lzfK8kb7f36C+cZKlfCZ2FkskWPzeOl/zqvIYV5rJtK/Obhk1E4mDGue9JhT
-         rRdyr4irW8ZvvOwebgTb5pEoObiVDQnHjR2dH5NP/NS1gJutznKQXkxxO5j3rsWT0ydk
-         x+zLZD/fBjBKQ3Xjyq0yTX1Rwcnvu4CgwT0I/2NYegshVbWL/wATosGHoh30BbMYU8O3
-         KG8rEJdutyrdQorruxlSoSmgqpbfXZT8XDgHJHX3O/uFEBp/+lZDy+mo9iQ1zrbcGOey
-         dAd7KbcVYrmIELEdQymFym0dNowSBE1zzP5x0/+85gkeob2oMuMR+idmtL9/cwvoWwGY
-         QIew==
-X-Forwarded-Encrypted: i=1; AJvYcCVGFj3+bpqR2mmsglLX5vaO2LroYjemSv3AIQVpqRf9w3m/JXYHsL0ZLn6+cgbmrBcZqZKa5qqbCAGx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Sd4L2w1/UNev9p8zcGvaCPEC/bVa6YZ1owO6VKpsle/pgcZG
-	LtO5GodoZULufmTO0KjwqQljwc61XsTO81Pjy9+mxOkbKbKx1+z6VSJqKaHHR+ZFw+fH/8VfECS
-	IFHrkN22wMM5vO5vu/JNCZPL3ZBVAAPdM
-X-Gm-Gg: ASbGncsWvL930uCWDj/3fg5ny8AFoqFSfrcH2qGNANlRj7uCwSJLvcMQ1Yn+CfEBQk7
-	vIsKsgiFU1L73ZvDdeCwaMwUS/YgpwTURHC0FR9fJdcRgBoj8YaqtX38036KMaU7jOlXDEYkG3g
-	IKH4qE1oO2nY31ItfOF5IHlmGmPkafwjqDGZu/azRr3yWLT3u++P0JmV7m
-X-Google-Smtp-Source: AGHT+IGUIpUOwOcjH8Jb2We6DvKK+Y9vC3VbvRom4zxzK8kuLQbrpp4eguR5QpLbs6UKaD39zSQNimjKImedo4vnQJ4=
-X-Received: by 2002:a2e:bc81:0:b0:30b:aaca:9b2e with SMTP id
- 38308e7fff4ca-31fb8f0440bmr23267921fa.0.1746217075658; Fri, 02 May 2025
- 13:17:55 -0700 (PDT)
+	s=arc-20240116; t=1746217159; c=relaxed/simple;
+	bh=yYuqw05ixaJvRe4CUY2qg+SReCrNCvaLdxtBMpCKO2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JEyPSdLTr82xLGPbJba1UYu9Qvy3O1Mv2ejKtHZZFU/0fyhxYfvk/sPddwspQ+9fOy/bcCQ2Vup72qkuWQxDCIJqEjk8DPJZPhUtP0auo29Rp4TMMc0IOwh7YHgXZjnrlNmt6JYfSKp7xzFG/0m2a2KD3OTrNksClw+V1BkaG54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8697C4CEE4;
+	Fri,  2 May 2025 20:19:13 +0000 (UTC)
+Date: Fri, 2 May 2025 21:19:11 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Peter Collingbourne <pcc@google.com>
+Cc: David Hildenbrand <david@redhat.com>, Yeoreum Yun <yeoreum.yun@arm.com>,
+	will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com,
+	joey.gouly@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	shameerali.kolothum.thodi@huawei.com, huangxiaojia2@huawei.com,
+	mark.rutland@arm.com, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH v3 2/4] prtcl: introduce PR_MTE_STORE_ONLY
+Message-ID: <aBUovySaQN8m8L0w@arm.com>
+References: <20250410080723.953525-1-yeoreum.yun@arm.com>
+ <20250410080723.953525-3-yeoreum.yun@arm.com>
+ <390f3d5e-8da6-4286-b8a9-72eabcc3abd5@redhat.com>
+ <aBUC5fsSVzGkQtUV@arm.com>
+ <CAMn1gO7ai3EvHhepJJQXOvjc8_Mp6DEAZg0J1gMKSJTECnU0VA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Fri, 2 May 2025 15:17:44 -0500
-X-Gm-Features: ATxdqUHhe8LA-u1SUoZI1t1lKuVpSxdtHJ51mjP2n5B4HdsAv7qKe-L79Iba8hs
-Message-ID: <CAH2r5mvFmxyPuxTOzGVvDOq1N3nYwh2ogj7yA-rrABdXgGpjbQ@mail.gmail.com>
-Subject: [GIT PULL] smb3 client fixes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMn1gO7ai3EvHhepJJQXOvjc8_Mp6DEAZg0J1gMKSJTECnU0VA@mail.gmail.com>
 
-Please pull the following changes since commit
-b4432656b36e5cc1d50a1f2dc15357543add530e:
+On Fri, May 02, 2025 at 11:03:02AM -0700, Peter Collingbourne wrote:
+> On Fri, May 2, 2025 at 10:37 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Thu, Apr 24, 2025 at 10:34:57PM +0200, David Hildenbrand wrote:
+> > > On 10.04.25 10:07, Yeoreum Yun wrote:
+> > > > PR_MTE_STORE_ONLY is used to restrict the MTE tag check for store
+> > > > opeartion only.
+> > > >
+> > > > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> > > > ---
+> > > >   include/uapi/linux/prctl.h | 2 ++
+> > > >   1 file changed, 2 insertions(+)
+> > > >
+> > > > diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> > > > index 15c18ef4eb11..83ac566251d8 100644
+> > > > --- a/include/uapi/linux/prctl.h
+> > > > +++ b/include/uapi/linux/prctl.h
+> > > > @@ -244,6 +244,8 @@ struct prctl_mm_map {
+> > > >   # define PR_MTE_TAG_MASK          (0xffffUL << PR_MTE_TAG_SHIFT)
+> > > >   /* Unused; kept only for source compatibility */
+> > > >   # define PR_MTE_TCF_SHIFT         1
+> > > > +/* MTE tag check store only */
+> > > > +# define PR_MTE_STORE_ONLY         (1UL << 19)
+> > >
+> > > That is the next available bit after PR_MTE_TAG_MASK, correct?
+> > >
+> > > Would we want to leave some space to grow PR_MTE_TAG_MASK in the future
+> > > (could that happen?)?
+> >
+> > The current mask covers 16 tags (bits 59:56 of a pointer) and given the
+> > reluctance to have a tag storage of 4 bits per 16 bytes (3% of RAM), I
+> > doubt we'd ever grow this.
+> >
+> > However, you have a good point, we could indeed leave 32 bits for the
+> > tag mask, just in case MTE gets so much traction that someone wants 8
+> > bits per tag (and likely a bigger granule than 16 bytes). It doesn't
+> > cost us anything to add additional bits from (PR_MTE_TAG_SHIFT + 32).
+> 
+> If it's 8 bits per tag wouldn't the exclusion mask need to be 256
+> bits? I probably wouldn't try to anticipate this case since it would
+> likely require a different API anyway.
 
-  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+Yep, not sure what I was thinking. So all good with the original patch.
 
-are available in the Git repository at:
-
-  git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc4-smb3-client-fixes
-
-for you to fetch changes up to c59f7c9661b9d3ee33a21d7b4f1dd4b77079e3e7:
-
-  smb: client: ensure aligned IO sizes (2025-05-01 08:35:58 -0500)
-
-----------------------------------------------------------------
-Four client fixes:
-- fix posix mkdir error to ksmbd (also avoids crash in
-cifs_destroy_request_bufs)
-- two smb1 fixes: fixing querypath info and setpathinfo to old servers
-- fix rsize/wsize when not multiple of page size to address DIO reads/write=
-s
-
-----------------------------------------------------------------
-Jethro Donaldson (1):
-      smb: client: fix zero length for mkdir POSIX create context
-
-Pali Roh=C3=A1r (2):
-      cifs: Fix and improve cifs_query_path_info() and cifs_query_file_info=
-()
-      cifs: Fix changing times and read-only attr over SMB1
-smb_set_file_info() function
-
-Paulo Alcantara (1):
-      smb: client: ensure aligned IO sizes
-
- fs/smb/client/cifspdu.h    |   5 +-
- fs/smb/client/cifsproto.h  |   4 +
- fs/smb/client/cifssmb.c    |  57 ++++++++++++
- fs/smb/client/connect.c    |  23 +----
- fs/smb/client/file.c       |   6 +-
- fs/smb/client/fs_context.c |  25 ++----
- fs/smb/client/fs_context.h |  47 ++++++++++
- fs/smb/client/smb1ops.c    | 223 +++++++++++++++++++++++++++++++++++++++++=
------
- fs/smb/client/smb2pdu.c    |   9 +-
- 9 files changed, 324 insertions(+), 75 deletions(-)
-
---=20
-Thanks,
-
-Steve
+-- 
+Catalin
