@@ -1,141 +1,118 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5159F2550D6;
-	Fri,  2 May 2025 13:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA45255F2F;
+	Fri,  2 May 2025 13:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746192976; cv=none; b=RkwBzGvG/3YxlnEbyV6o9okDADFYE6xQ4Nw4wtRAmedsUZcFcGJyWCRRl4eLjKEWZxm25jXrLZbz6iLblmj6JFW64/gadhe240/f365fSLraKs+vqlyVqVG1wWysOtm3rEdSjI971V00CJ/NLFnPo1K1FX+xvaZeDn1D9Ibj3zs=
+	t=1746192995; cv=none; b=sIZYMUg8l4RNallqxOfqB3wXGUT3CWSGTJ4UkSqZ2NPzOROtVOdEYqjWg1xRWhAQ/vl6X1xxOPm7+3LLf8c/ZDpyoC2ETSNNyY3UxnUV53HAVOylxIvO90WkTsbxwaf0YqdOPBkyy7HBnRLWP+8Ez7/iO5OX5OetSBHuTfZ40+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746192976; c=relaxed/simple;
-	bh=p8c3MbtNwl5Pewr9e1GY1En7dmL+sTpQhoypuBvqU8A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NMMK+o8YEdOM5qxUvqboWPbUG5m7s2sYd+0tA0/2hPSB/M5OATAPeH1nsAQeprK9axDXMbtbFV4u7SZ6PI3Z6Lw1CMOvehlSVnRhjLxULW4V2b18qBKY9mWJrJ1Ce1osgoNho7ccaIwyJ/2qCBvg9TkgWkKYF9VzhZIc5liEZxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bo5uwkoj; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bo5uwkoj"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so1878011b3a.2;
-        Fri, 02 May 2025 06:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746192973; x=1746797773; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLmaA5uonAzNRBDrxOb1nuL7jrpixwfGwlbOt4uTpN0=;
-        b=bo5uwkojI8SFuW+aBaMKiCa5DKLHi5bcxIkm4EDBIgbpp/yTsgmWg3IXXdCohU199W
-         vkQlzbLK2dcVOE+SjI0y4lS++cNKSrP92lbLVyDo+dDXh7N1UOdISp8Q2olpNYsCH2bz
-         PXtOfik22PWDynQuDlZrZgvTXXYYwU1lqsre8tGE2WsKmuBwP8Jynui8Azdsb1nURTGw
-         ZLNMgLQaCIZUEfuKXoBCtrAUg3eievk/WtZ2ZNxGATcEe9bySSJgcAoDNjf6k8cmM8yG
-         YnhApKbGO/sdmJX5tdQ7J+mgiK71T6gCXYhe/unHfvuRNDtJigWNxNuReKBUhAon8aqC
-         ezCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746192973; x=1746797773;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLmaA5uonAzNRBDrxOb1nuL7jrpixwfGwlbOt4uTpN0=;
-        b=PZEshJenDFwp4YbvQx+pAuLTK7Hk8u4Jtle7BvTlXrlBOHRl2ly6a+q7FBd3L0HCUc
-         KXfrq4sW6rEEPSz7Z+xrGsE+QrFmL8msUtDmvMG6zncuMejOmX7ZztFdlB4Q2FAAiZJc
-         xygBwI+gvrOO0EJiCgbMpHLPbnYKqvf7V7NiENFIgc72Ap0S4nJf2oGpnmqm7f8WlQNX
-         j3i935NzWATn7/mvgYyEA+bzOATvxxKg9M5nLSixaRlTjPVK3oF1/7u3aaGMzeIEtPvR
-         SV10w8JC6tLB5jBu7dPUwAdzhZz6Mxblt9z/NHskYia+UJpSTAEUDYnrK9NSgabxocHa
-         JSiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGFYmKCi4AgTBxsqZNN0YGpjJAu+RNp7TOFh0dGlUNSQzP3z+97CuWqBVw5zVyznFtLtThAp+n0rrv@vger.kernel.org, AJvYcCUXVsLWrMRj9vxWD3HekvrzioBbY4puplpDc4aYQXO84qYagj/j/O+rnVEPLGceBeCTrLjnaNbpw/QjdACfffo=@vger.kernel.org, AJvYcCXVJx8O+oduRZg2ZksRzUGs12rMdvwjL4fZedkK3XqsFgfgZ+ijY49j502K5xqieVquIDOsNSFFi4iAIO6C@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3hAlYci/AUk2+ueGPBkkiqtSUACknVqPUneISyZ4PY906axdb
-	qD58jcGOwV6hHwXvh7uCp1CmIWzl8/zcOKUgX3W7GxNLVQJIBZfL
-X-Gm-Gg: ASbGncvc36MuyCemCnBDRosmxegBXJdmyFasTtxgy/z6iqWmygM91ioYRB+Ybh9J48g
-	ix+Vq0tdwgS2B1DMeoQbJlY7lUCM427ymW6K/ri9eb8w4j2knVV1eYYSKsF3BH8yi+tGd/kDkx+
-	gLrFjR/+Nw8qm9s278FAThSwJx6K82uiHKfqXo9zHQJnV3QbNtQldRu7i71gG0sl8L3PJjnRl96
-	AEleWz9LbDxEZooBmUdRi/zZ6HJp51N0+QnVYcFlNeMIZIodHVnfLQSsZedsFeEVgGPO9c0jz5H
-	ue067tN1rna4gfRyPCEYQRl5LHz8rjonBKewcFld/oM+dEVmjDm/oyXxhcrvTuBCYXGMsFFGAbd
-	9FkzRnnL9FeUM/g==
-X-Google-Smtp-Source: AGHT+IEOILX2vQR/myshaWH3Dh7E7ynM9LzzmUxm4Ukl2zos7BQpxW1zIVho4LN54M+5bqdRs8dsXw==
-X-Received: by 2002:a05:6a00:2e05:b0:740:595e:1676 with SMTP id d2e1a72fcca58-740595e2134mr4205978b3a.8.1746192973492;
-        Fri, 02 May 2025 06:36:13 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021067sm1544064b3a.107.2025.05.02.06.36.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 06:36:12 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <6d9f62c5-64f0-49d1-870c-d13011d397fd@roeck-us.net>
-Date: Fri, 2 May 2025 06:36:11 -0700
+	s=arc-20240116; t=1746192995; c=relaxed/simple;
+	bh=YkL5Sek6sKkNb5QPcwiGHgAOXcB7VAT2/hWfW0vv42c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pS3BKuA243ghpfIvhwx8qseA+LBUdx0g0k9ATpRX/orfn8OmYXZh7i4E59fbtcE7TdgnFaUHCyAyRJHHbJiiSSXzf3Bsb5LKaurYiLgkvZr6gu0P044hEQEzk19/t3ZvmcgY7JAO/4PO4m4OEcW8LLKFI87TYKVOw7iV/qBmpaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: LuQl2AJBRty9VMF7cKpb0A==
+X-CSE-MsgGUID: qnNuzaWoS7G6GVcUAA/haQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="48010918"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="48010918"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:36:32 -0700
+X-CSE-ConnectionGUID: iT+/KeGTTMmXK8SB/AUeuQ==
+X-CSE-MsgGUID: co/n8w5QTjCuGHdPXo51sA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="165705967"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:36:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uAqZ1-00000002DAq-1LQ3;
+	Fri, 02 May 2025 16:36:27 +0300
+Date: Fri, 2 May 2025 16:36:27 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <aBTKW538TX-jw977@smile.fi.intel.com>
+References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
+ <20250502-wip-bl-ad7606-calibration-v2-5-174bd0af081b@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] watchdog: qcom: introduce the device data for
- IPQ5424 watchdog device
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, bod.linux@nxsw.ie
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
- <20250502-wdt_reset_reason-v3-3-b2dc7ace38ca@oss.qualcomm.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250502-wdt_reset_reason-v3-3-b2dc7ace38ca@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-5-174bd0af081b@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/2/25 06:17, Kathiravan Thirumoorthy wrote:
-> To retrieve the restart reason from IMEM, certain device specific data
-> like IMEM compatible to lookup, location of IMEM to read, etc should be
-> defined. To achieve that, introduce the separate device data for IPQ5424
-> and add the required details subsequently.
+On Fri, May 02, 2025 at 03:27:02PM +0200, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
 > 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> Add gain calibration support, using resistor values set on devicetree,
+> values to be set accordingly with ADC external RFilter, as explained in
+> the ad7606c-16 datasheet, rev0, page 37.
+> 
+> Usage example in the fdt yaml documentation.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+...
+
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		int reg, r_gain;
+
+Both are defined in DT as unsigned. Are you able to use int as u32 in DT compiler?
+
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* channel number (here) is from 1 to num_channels */
+> +		if (reg < 1 || reg > num_channels) {
+> +			dev_warn(dev, "invalid ch number (ignoring): %d\n", reg);
+> +			continue;
+> +		}
+> +
+> +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> +					       &r_gain);
+> +		if (ret == -EINVAL)
+> +			/* Keep the default register value. */
+> +			continue;
+> +		if (ret)
+> +			return ret;
+
+> +		if (r_gain < AD7606_CALIB_GAIN_MIN ||
+> +		    r_gain > AD7606_CALIB_GAIN_MAX)
+
+Seems like minimum check is not needed. See above why.
+
+> +			return dev_err_probe(st->dev, -EINVAL,
+> +					     "wrong gain calibration value.");
+> +
+> +		/* Chan reg is 1-based index. */
+> +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> +					  r_gain / AD7606_CALIB_GAIN_STEP);
+
+Wonder if we need DIV_ROUND_CLOSEST() instead...
+
+> +		if (ret)
+> +			return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
