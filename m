@@ -1,105 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BDA8828;
-	Fri,  2 May 2025 08:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1376D22A7ED
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174890; cv=none; b=mULRbjnBn/1D3AeFCKnUfDs/m05sXp4Ho26vgVzp2+yRBlt0Q0v3pvaUAUZTwZ0gB5mZJ6xbVOaDtf0+04KokWeWfKT5RYTRKjw4Ba0m8EdyvqCOB3Gmlf2ie0zCzjrpMvOGlvPfz7jfP3OrMFT6CMsLBVCSF+9Z3SnLkVrZDNY=
+	t=1746174911; cv=none; b=LMSyOyA8izncjbTbLe7BTnSsawu1XGDrgoiqIfNou/rScqQnw95PDvS8mDMpI3DI4jitqBXO2C5zAADGVRocyLQn71Pi3ep2UWZD9IMwPvnws66XDd4WfpgWLeBLNdBEr3fTwIjViHoAuANaavaIS98wmzPXMHD0WBbmdGZICGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174890; c=relaxed/simple;
-	bh=gavfjvHRT5wusZDL+2oOWK7fIEbSI+GHndbQUpjG4qw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oaJ23Fh4bqTBFzi7QuRj2UfWnbR2yayr8f7TX8W0sl3rjsTbx/uIub/Ud3/6oodobt7bOER9WwZ6vkwRhAWo6EbqxZFYxHFs1oufnObrfqBNA3AP1ntLWULy83/0rzPd20PQKKBBLm+nywD2PMkcrssmoaqzirhDp68xBwdecq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk0E1b12; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746174911; c=relaxed/simple;
+	bh=WgaG5HEwDg1hR1FxgLdW1ysgzjnL/9WPjU9+4FX24jU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=frTdmAryKS0CaaQ419DjzyGI+P1WryQtDT1of8AVtf2LBnaFSo8c3xCB+Chkq89t9mbl052uvehKIb2M06ruiZck8HZqmFHDDvCrI32uXGSKJN4GqGzdu7ciWMMbk28EOxfBMa2OHDy9dK/hd9Ruig6f/CEvSYEsxFDSoewcMEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaLd6RGh; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk0E1b12"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20B6C4CEE4;
-	Fri,  2 May 2025 08:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746174889;
-	bh=gavfjvHRT5wusZDL+2oOWK7fIEbSI+GHndbQUpjG4qw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gk0E1b12WMFQI1HXXe5kJMMGbjgnrnVylLLQTKdAUBj7zymfCpmn/Dn8qnPcyNUHe
-	 kcuMiuw1lZa55uGxYbWjFTYuET/yCRLXLi1lnDKpLUdI+BP2mgXxljd6cEaFK4SS3V
-	 Thre+RBYrTSsvadMwwkrQXI92o28IqPv+kQfGU7mvCSZmlH+8S4VJGNLyDheam56m/
-	 nJNYgVrd+EZDf+KS8OFYnvOBP3E0Ut8EhlKD6aUMFqW6izVYE42a5y1GHZBItYqgt6
-	 OVR/ZHuGQsbWbBSI/2ct7f8J9MjymchYcvJhPTfoTCnARcmkx4XCLQN7baoILdL4Xf
-	 Z76g7Ii+1sB1w==
-Message-ID: <6ae54415-aadb-4f26-bdae-63a036bff112@kernel.org>
-Date: Fri, 2 May 2025 10:34:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaLd6RGh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746174909; x=1777710909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WgaG5HEwDg1hR1FxgLdW1ysgzjnL/9WPjU9+4FX24jU=;
+  b=gaLd6RGhRrRwu9D4gg1aqcJc7AhBtDDbALvHIUzACrfvUezVhhLl5Gvr
+   s60fVjBO8W6KqBWG6wWfLIlMElMEseoqjWnKU0i/GIcyd2elK3xr9QhUy
+   kW68YmXQ8cS20i1o+1CxFOjzuP4qQyNWGDmXq5AAvGzb6xPcTCNJf4XjT
+   oew5y6iml+T/RxZRs5GwfNblihrQdRFXTAsfnN380PVzAPVWXGlBo97ia
+   anNq4NKy/KDo8yeTBdSWvhqbV4Rw/8/Rau0bh9naCOveSkZ+7I9T3CBfS
+   0xIwGCQJ+JABIiE3yDE/Iq4cwbr+zwU8ayUNV4t+SfK+JsJw6AAFqwCpl
+   g==;
+X-CSE-ConnectionGUID: tDgXGzVVTeyPUzHaRFPNtQ==
+X-CSE-MsgGUID: gqa8IawbSMaTefI2RM0H6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58480220"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58480220"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 01:35:08 -0700
+X-CSE-ConnectionGUID: 4WcVytTxSVKEgFb+l1ugkw==
+X-CSE-MsgGUID: uCwUYYhITauOkBxWL2hN1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="165511540"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 02 May 2025 01:34:51 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAlr7-0004cj-0U;
+	Fri, 02 May 2025 08:34:49 +0000
+Date: Fri, 2 May 2025 16:33:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Andreatta <thomasandreatta2000@gmail.com>, dpenkler@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	Thomas Andreatta <thomas.andreatta2000@gmail.com>
+Subject: Re: [PATCH 2/8] Staging: gpib: Updated return type
+ `request_system_control`
+Message-ID: <202505021518.8HGGOavD-lkp@intel.com>
+References: <28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/7] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU
- Timer
-To: Caleb James DeLisle <cjd@cjdns.fr>, linux-mips@vger.kernel.org
-Cc: tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, tsbogend@alpha.franken.de, daniel.lezcano@linaro.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
-References: <20250430133433.22222-1-cjd@cjdns.fr>
- <20250430133433.22222-2-cjd@cjdns.fr>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250430133433.22222-2-cjd@cjdns.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000@gmail.com>
 
-On 30/04/2025 15:34, Caleb James DeLisle wrote:
-> Add device tree bindings for the so-called high-precision timer (HPT)
-> in the EcoNet EN751221 SoC.
-> 
-> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+Hi Thomas,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+kernel test robot noticed the following build errors:
 
-Best regards,
-Krzysztof
+[auto build test ERROR on staging/staging-linus]
+[also build test ERROR on linus/master v6.15-rc4]
+[cannot apply to staging/staging-testing staging/staging-next next-20250501]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Andreatta/Staging-gpib-agilent_82357a-changing-return-type-void-in-int/20250502-053306
+base:   staging/staging-linus
+patch link:    https://lore.kernel.org/r/28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000%40gmail.com
+patch subject: [PATCH 2/8] Staging: gpib: Updated return type `request_system_control`
+config: arm64-randconfig-003-20250502 (https://download.01.org/0day-ci/archive/20250502/202505021518.8HGGOavD-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505021518.8HGGOavD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505021518.8HGGOavD-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/staging/gpib/eastwood/fluke_gpib.c:710:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fluke_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/eastwood/fluke_gpib.c:710:28: note: (near initialization for 'fluke_unaccel_interface.request_system_control')
+   drivers/staging/gpib/eastwood/fluke_gpib.c:745:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fluke_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/eastwood/fluke_gpib.c:745:28: note: (near initialization for 'fluke_hybrid_interface.request_system_control')
+   drivers/staging/gpib/eastwood/fluke_gpib.c:772:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fluke_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/eastwood/fluke_gpib.c:772:28: note: (near initialization for 'fluke_interface.request_system_control')
+   cc1: some warnings being treated as errors
+--
+>> drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1023:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fmh_gpib_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1023:28: note: (near initialization for 'fmh_gpib_unaccel_interface.request_system_control')
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1051:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fmh_gpib_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1051:28: note: (near initialization for 'fmh_gpib_interface.request_system_control')
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1079:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fmh_gpib_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1079:28: note: (near initialization for 'fmh_gpib_pci_interface.request_system_control')
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1107:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
+     .request_system_control = fmh_gpib_request_system_control,
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1107:28: note: (near initialization for 'fmh_gpib_pci_unaccel_interface.request_system_control')
+   cc1: some warnings being treated as errors
+
+
+vim +710 drivers/staging/gpib/eastwood/fluke_gpib.c
+
+55936779f49612 Dave Penkler 2024-09-18  700  
+95cfc75234534b Dave Penkler 2025-01-11  701  static gpib_interface_t fluke_unaccel_interface = {
+95cfc75234534b Dave Penkler 2025-01-11  702  	.name = "fluke_unaccel",
+95cfc75234534b Dave Penkler 2025-01-11  703  	.attach = fluke_attach_holdoff_all,
+95cfc75234534b Dave Penkler 2025-01-11  704  	.detach = fluke_detach,
+95cfc75234534b Dave Penkler 2025-01-11  705  	.read = fluke_read,
+95cfc75234534b Dave Penkler 2025-01-11  706  	.write = fluke_write,
+95cfc75234534b Dave Penkler 2025-01-11  707  	.command = fluke_command,
+95cfc75234534b Dave Penkler 2025-01-11  708  	.take_control = fluke_take_control,
+95cfc75234534b Dave Penkler 2025-01-11  709  	.go_to_standby = fluke_go_to_standby,
+95cfc75234534b Dave Penkler 2025-01-11 @710  	.request_system_control = fluke_request_system_control,
+95cfc75234534b Dave Penkler 2025-01-11  711  	.interface_clear = fluke_interface_clear,
+95cfc75234534b Dave Penkler 2025-01-11  712  	.remote_enable = fluke_remote_enable,
+95cfc75234534b Dave Penkler 2025-01-11  713  	.enable_eos = fluke_enable_eos,
+95cfc75234534b Dave Penkler 2025-01-11  714  	.disable_eos = fluke_disable_eos,
+95cfc75234534b Dave Penkler 2025-01-11  715  	.parallel_poll = fluke_parallel_poll,
+95cfc75234534b Dave Penkler 2025-01-11  716  	.parallel_poll_configure = fluke_parallel_poll_configure,
+95cfc75234534b Dave Penkler 2025-01-11  717  	.parallel_poll_response = fluke_parallel_poll_response,
+95cfc75234534b Dave Penkler 2025-01-11  718  	.line_status = fluke_line_status,
+95cfc75234534b Dave Penkler 2025-01-11  719  	.update_status = fluke_update_status,
+95cfc75234534b Dave Penkler 2025-01-11  720  	.primary_address = fluke_primary_address,
+95cfc75234534b Dave Penkler 2025-01-11  721  	.secondary_address = fluke_secondary_address,
+95cfc75234534b Dave Penkler 2025-01-11  722  	.serial_poll_response = fluke_serial_poll_response,
+95cfc75234534b Dave Penkler 2025-01-11  723  	.serial_poll_status = fluke_serial_poll_status,
+95cfc75234534b Dave Penkler 2025-01-11  724  	.t1_delay = fluke_t1_delay,
+95cfc75234534b Dave Penkler 2025-01-11  725  	.return_to_local = fluke_return_to_local,
+55936779f49612 Dave Penkler 2024-09-18  726  };
+55936779f49612 Dave Penkler 2024-09-18  727  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
