@@ -1,157 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA08239082;
-	Fri,  2 May 2025 10:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66ED223C4E4
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182342; cv=none; b=JfY5oYIujVqSrTaEn4R/eBWSH6C218xU6jjugjQ4FBVDsWnFDYTKLUEBsfaO1zQNiqV2FCl5aXAmBFweRlJjGGL8nypCiRoN9OMlsKABVD0EaH9FMuvalQ4hXHTlNZg7MMotFRwMpL/1h/qImN+vyX2fXIKbedIuAuoMl3+M2v0=
+	t=1746182351; cv=none; b=eTzoWTVuuUeArCOe/qRmCJlqzUUYt2hqjtiS4Uut7ER6LvJqP8WphCZl44kRmeHRfurGj+BMMw/3l1U+2SL5di3JCzbLntsBjahPk6kPSjGqI/CQaLnEecIX7LMZZA11Ay5FRQAuUVFAUdnIFb7BWkll02De/bL193uKW7pNg2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182342; c=relaxed/simple;
-	bh=f7lGEWra8akwIBqJIdDB2Ng4TJev3lq1HYEQGeCLqaM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R7F5FEUiDSjzCgrphPp/MGRi/hPzkQ0mNEzgjk3VC62pRt9S5kjK8mKoslR36It0naaHxwfbZ9+VmE1gSqWwJ+x+6tgaIEOS3d9XDJyYmIiil9r8/9ZzAxL4/G5wazkrY/ZmQOnQXI8c9MtxK5NgrMnMcB8kfHOk8h4LHqvE6DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGbzGH5D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746182351; c=relaxed/simple;
+	bh=C9bqEmm3kramZyyM1PP0llBLUiugdMK+MXIMYOhipxQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lR6OM+b+5C9uviHUWoJmu5c3i6I38gLtRKxTOBEP3c5DmsBlnF5wukno/WoL2nVGmvpQLV7oAqGc/4iQCxeciz7Ods9OREiEEJC3lWRyFXzZ9sSKuysTBDzxVZeBBfKvZEUID2LosD57AImketipuyXc7H9Im4k9zPLSXm76sLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=SkshiVWn; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGbzGH5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC3E5C4CEE4;
-	Fri,  2 May 2025 10:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746182341;
-	bh=f7lGEWra8akwIBqJIdDB2Ng4TJev3lq1HYEQGeCLqaM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jGbzGH5DE4S+7Ga2FSmBFzvPVYlnNUId/ZuwQPwvXiwrn578RcqxykB1stEFAQTMx
-	 YV+Oi6V1RNEJmVfux5IOw97KnNflWZ8d5NoPJFJY54jYXd5TaSSYikXEPxLJjjgmh+
-	 a8IGul716ov0eiZqwxqhTW8Y+YHkGth3Kjc1Tu0rVWTU4HubmglJl9WQhzE7g/raYp
-	 cYa3/gRNEEliI8QxK/TybV0QY7EtGI8ige1MxDdeQuPQNNyOu6NsbnhgjQAQA8rqnr
-	 aGlpuqzp0U2vuH07TBvnY+dkyqAr2EuSK10wSQIb3pgmdLHcSD+iJeV8IrUIM/aDnQ
-	 DeqEXC8HIAmvg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAnnH-00AryN-Rp;
-	Fri, 02 May 2025 11:38:59 +0100
-Date: Fri, 02 May 2025 11:38:58 +0100
-Message-ID: <86o6wbguv1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Nikita Travkin <nikita@trvn.ru>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="SkshiVWn"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso2879303a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:39:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746182347; x=1746787147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nh6OyTEaRIP4JEj3g79TeNhKXaJQFCWid10EPU50POc=;
+        b=SkshiVWnbrv4XuY1Sylvo3VQCTn2aDHkOVD63yetww8disM9gdFzdMFstlp+zmOA7v
+         2lJodCVsXHW1JicVbAPsjraLB9ng6AiFFUKWX02BiQkxH01rH0RDKQPpBxmZIYOxgCA1
+         ZGLh0rPHH0z3d1xk40TdkrZJ/PqkhIqnw7c2njxa5vwgUPl5FZXQzzkMsmUEuoj+4aKx
+         eAyK3r2fgtt3x/bG2Px0wcmMPzMaCSW9hGf2T44ELzpQxaOVHX/oSlvuccfjaWCQVNiU
+         /yAxnV+AiNPi1UKpVjIbjqg1P+NTX6YQbsZ9PVOoug+0X/uvdsCCfi5038oqGUnU4F4y
+         osdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746182347; x=1746787147;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nh6OyTEaRIP4JEj3g79TeNhKXaJQFCWid10EPU50POc=;
+        b=no9bVsLaVTFtOOeNvfcEYu3EYeM54W1/8m0Yx1ssdHH6XFeXS8z8IhLaSKlrNqCOp0
+         BnOSR8sJ6tpPrHtcYKdpsOnhWfJevFTxE5M4XsNQPPjZbcHDu6YZKQ/HKJa3E0lt1fNq
+         bFkg5OKAn3+g+bKeVxzedwaFGXj6bPO9Tyup8tf48g1QIoNFl4WpkoXUdFmWinuzxp8f
+         wmAsTx57wnh8VDQBPKdSkimxoFSk3FxJHA3qfpiBjr8l2o2UnDZTfbq23BXCUzJmRqk6
+         AUbG+4cj/RidP9UmEYP6K26E4E/lDT+uovbXjdeP1ZJ8+bAHPi2Cj7YSASzzaxqrDdYu
+         dlpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhXeL5wFVHtqelYq3MzEkz5DhjvefQrvstct11sepagr2evgXtHhSneWBrVJiyJOQ3L+MwoqVBufRz6uk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoMT5yCAge2BimzB1CTDQj8uRX5JKLLKwASOW2RVjW52GIA+yH
+	AuDYlHvrCpjJ4YKXnDh1OcUA0/3cYX3svzpIUB8x8UBOLc8cGAgZtIZQOVR/etCv5D10MDwgTnJ
+	v
+X-Gm-Gg: ASbGnctsA4k1HYFk3qmYsrJOB/vkmOLLbfLAZZAQx2NQT1KnJrBcnEavQRdpoLSs9jJ
+	lwtyYQzN8ok05bzHLI9pthSBbpDn7cJF5l+aB1dc6EUDvc7mKcdaDGggEuWHl5SsivHmEmbJV10
+	EQw0AA4oXLX3g+tumtgplIwuRHoOp7bEQLAeeg4skJVz+nZK5BOB53aLmpCUUA/01/UtAepWqGX
+	13+351uRXemHJt3daq4vuj3HFD2xh23ks5c8n/SfTR5SEsEWWW/5UOjly6h+w1q+0hlW+3G9/IU
+	ArAI7B313xm73C7RU3yzFJcLgDgpqRkMPj1d/zRpGrGP+QIkeXvPBOs4ClvC4SYcC6vqkmUZiaU
+	NPqZZP3wavmLdvO6IidTkkCijgaaWzbOvuirGFrxA
+X-Google-Smtp-Source: AGHT+IGklk1vAFvyeWl3LzPI+8ph34p43t2JasY3HHBdDDlmVqcAUrvQ9NmvZqjD3Vf0x1DuCYwlCQ==
+X-Received: by 2002:a17:906:730f:b0:ad0:c6ae:c0c9 with SMTP id a640c23a62f3a-ad17af4cb91mr259745966b.40.1746182347526;
+        Fri, 02 May 2025 03:39:07 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c025esm28889966b.114.2025.05.02.03.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 03:39:07 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: akpm@linux-foundation.org,
+	song@kernel.org,
+	joel.granados@kernel.org,
+	dianders@chromium.org,
+	cminyard@mvista.com,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: x1e/x1p: Add EL2 overlay for WoA devices
-In-Reply-To: <20250501-sc-el2-overlays-v1-5-9202e59e3348@trvn.ru>
-References: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
-	<20250501-sc-el2-overlays-v1-5-9202e59e3348@trvn.ru>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH 1/2] kernel/watchdog: add /sys/kernel/{hard,soft}lockup_count
+Date: Fri,  2 May 2025 12:39:04 +0200
+Message-ID: <20250502103905.3995477-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: nikita@trvn.ru, andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cros-qcom-dts-watchers@chromium.org, jens.glathe@oldschoolsolutions.biz, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 01 May 2025 18:03:45 +0100,
-Nikita Travkin <nikita@trvn.ru> wrote:
-> 
-> WoA devices using x1e/x1p use android firmware to boot, which notably
-> includes Gunyah hypervisor. This means that, so far, Linux-based OS
-> could only boot in EL1 on those devices.
-> 
-> However Windows can replace Gunyah upon boot with it's own hypervisor,
-> and with the use of tools such as "slbounce", it's possible to do the
-> same for Linux-based OS, in which case some modifications to the DT are
-> necessary to facilitate the absence of Gunyah services.
-> 
-> Add a EL2-specific DT overlay and apply it to x1e/x1p WoA devices to
-> create -el2.dtb for each of them alongside "normal" dtb.
-> 
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile      | 36 +++++++++++++++++---------
->  arch/arm64/boot/dts/qcom/x1-el2.dtso   | 46 ++++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi |  2 +-
->  3 files changed, 71 insertions(+), 13 deletions(-)
->
+There is /proc/sys/kernel/hung_task_detect_count,
+/sys/kernel/warn_count and /sys/kernel/oops_count but there is no
+userspace-accessible counter for hard/soft lockups.  Having this is
+useful for monitoring tools.
 
-[...]
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ kernel/watchdog.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-> diff --git a/arch/arm64/boot/dts/qcom/x1-el2.dtso b/arch/arm64/boot/dts/qcom/x1-el2.dtso
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..7a818045ef098b44632df45253d32e31c5c7aeed
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/x1-el2.dtso
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +
-> +/*
-> + * x1 specific modifications required to boot in EL2.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +/* We can't and don't need to use zap shader in EL2 as linux can zap the gpu on it's own. */
-> +&gpu_zap_shader {
-> +	status = "disabled";
-> +};
-> +
-> +/*
-> + * When running under Gunyah, this IOMMU is controlled by the firmware,
-> + * however when we take ownership of it in EL2, we need to configure
-> + * it properly to use PCIe.
-> + */
-> +&pcie3 {
-> +	iommu-map = <0 &pcie_smmu 0x30000 0x10000>;
-> +};
-> +
-> +&pcie4 {
-> +	iommu-map = <0 &pcie_smmu 0x40000 0x10000>;
-> +};
-> +
-> +&pcie5 {
-> +	iommu-map = <0 &pcie_smmu 0x50000 0x10000>;
-> +};
-> +
-> +&pcie6a {
-> +	iommu-map = <0 &pcie_smmu 0x60000 0x10000>;
-> +};
-> +
-> +&pcie_smmu {
-> +	status = "okay";
-> +};
-> +
-> +/*
-> + * The "SBSA watchdog" is implemented in software in Gunyah
-> + * and can't be used when running in EL2.
-> + */
-> +&sbsa_watchdog {
-> +	status = "disabled";
-> +};
-
-I also carry this [1] patch to correctly route MSIs from pcie5 to the
-ITS. There is no reason not to. The same treatment could be applied to
-pcie3, but I never tried it.
-
-Thanks,
-
-	M.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20241024161814.1827514-1-maz@kernel.org/
-
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 9fa2af9dbf2c..09994bfb47af 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -63,6 +63,29 @@ int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+  */
+ unsigned int __read_mostly hardlockup_panic =
+ 			IS_ENABLED(CONFIG_BOOTPARAM_HARDLOCKUP_PANIC);
++
++#ifdef CONFIG_SYSFS
++
++static unsigned int hardlockup_count;
++
++static ssize_t hardlockup_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++				     char *page)
++{
++	return sysfs_emit(page, "%u\n", hardlockup_count);
++}
++
++static struct kobj_attribute hardlockup_count_attr = __ATTR_RO(hardlockup_count);
++
++static __init int kernel_hardlockup_sysfs_init(void)
++{
++	sysfs_add_file_to_group(kernel_kobj, &hardlockup_count_attr.attr, NULL);
++	return 0;
++}
++
++late_initcall(kernel_hardlockup_sysfs_init);
++
++#endif // CONFIG_SYSFS
++
+ /*
+  * We may not want to enable hard lockup detection by default in all cases,
+  * for example when running the kernel as a guest on a hypervisor. In these
+@@ -169,6 +192,10 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
+ 		unsigned int this_cpu = smp_processor_id();
+ 		unsigned long flags;
+ 
++#ifdef CONFIG_SYSFS
++		++hardlockup_count;
++#endif
++
+ 		/* Only print hardlockups once. */
+ 		if (per_cpu(watchdog_hardlockup_warned, cpu))
+ 			return;
+@@ -311,6 +338,28 @@ unsigned int __read_mostly softlockup_panic =
+ static bool softlockup_initialized __read_mostly;
+ static u64 __read_mostly sample_period;
+ 
++#ifdef CONFIG_SYSFS
++
++static unsigned int softlockup_count;
++
++static ssize_t softlockup_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++				     char *page)
++{
++	return sysfs_emit(page, "%u\n", softlockup_count);
++}
++
++static struct kobj_attribute softlockup_count_attr = __ATTR_RO(softlockup_count);
++
++static __init int kernel_softlockup_sysfs_init(void)
++{
++	sysfs_add_file_to_group(kernel_kobj, &softlockup_count_attr.attr, NULL);
++	return 0;
++}
++
++late_initcall(kernel_softlockup_sysfs_init);
++
++#endif // CONFIG_SYSFS
++
+ /* Timestamp taken after the last successful reschedule. */
+ static DEFINE_PER_CPU(unsigned long, watchdog_touch_ts);
+ /* Timestamp of the last softlockup report. */
+@@ -742,6 +791,10 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	touch_ts = __this_cpu_read(watchdog_touch_ts);
+ 	duration = is_softlockup(touch_ts, period_ts, now);
+ 	if (unlikely(duration)) {
++#ifdef CONFIG_SYSFS
++		++softlockup_count;
++#endif
++
+ 		/*
+ 		 * Prevent multiple soft-lockup reports if one cpu is already
+ 		 * engaged in dumping all cpu back traces.
 -- 
-Without deviation from the norm, progress is not possible.
+2.47.2
+
