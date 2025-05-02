@@ -1,175 +1,136 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E6321579C;
-	Fri,  2 May 2025 22:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC661FC10E;
+	Fri,  2 May 2025 22:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746223434; cv=none; b=jzhlxKfwGMhSEGqWWEfBmPYOGVCDCboPqv2956PIeI+qJPHuh34nR+fgzBOIIpsjzNbRQDUB97i0Wc7hMp1X8OQn94syJs/iLBwfVngzOeBCtYgesCueXGGeMXap9iWFBYIuc/B6fBRqqT7uujFtE1kzdFL8MWmkoquHqsA0EtU=
+	t=1746223485; cv=none; b=q5wmzYYPDV/j1IBN9Z09w4sE2c1gG1+eHNscS4DfHYjU+W8DbgGAjaomORvPGcX6kI4KN/F49EMavrUrEwxyll1KnUwr+SrmqDUM3RaqlF9+LpGJGTvFHQPRpVL54qkKEDIzobBVYyR99CVEaAjd6KHVyKt2KUIAHEdfefZ8GYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746223434; c=relaxed/simple;
-	bh=DpP+88hJLy7CP597o93+6YUD+p4vmlKs4pFy5wAegVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHeICr53qlBROZGNs7nZsNh+h+aSb/2NdAILW/5fEaKYhF4+jf0RciBEtOQkI2YSLexnBJzeDq56MEbrnY1k5GrA8xE/eGIbX3SVM9ppJ+syp2Aw9vsGUmxSToET706BPMVaVSmEcQOOMzSVpQbd0WnhO1fMT6f4hmS0CRGXMWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1uAyTu-0001Wu-00; Sat, 03 May 2025 00:03:42 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 00C67C01A2; Sat,  3 May 2025 00:03:08 +0200 (CEST)
-Date: Sat, 3 May 2025 00:03:08 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
-Message-ID: <aBVBHFGH2kICjnT3@alpha.franken.de>
-References: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
- <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
- <CAAhV-H6iOwoYCCob6TmFf1boKQHb0=Mim2bWFvZCMfi9Rw5FPQ@mail.gmail.com>
- <87wmb2ceh7.fsf@BLaptop.bootlin.com>
- <CAAhV-H65b5Ae-cCYYHTx0QBhYJ_fzSVLFGY0RH1PCq0XbvNPQA@mail.gmail.com>
- <87o6wecdg0.fsf@BLaptop.bootlin.com>
- <87cycrc9jt.fsf@BLaptop.bootlin.com>
+	s=arc-20240116; t=1746223485; c=relaxed/simple;
+	bh=dRIhoysQGSyJs2hdqVmcNTx/4yoP6dvGtwt8OZlsnmY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=N4a3BwVa93XqIB60T93N0dXYJ+pM4D4neE2K6/yX7/+OR01rnwRws6KPbJZrM2evZ6fdlPJhTWvlH56fjKPpYU/Piz5ERY/G/XoirI/9x9wGh8yYIOyCDaZCujF96wJqxT6+VZm5WTdQ007Rn/Ve41C3I2lhkPIkiY83R7cueA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zlv1tpFF; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zlv1tpFF"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c336fcdaaso32228405ad.3;
+        Fri, 02 May 2025 15:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746223483; x=1746828283; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7affcrby2vNkam9EwwwwjCrmVQatX9FyWXaqSRxB4wg=;
+        b=Zlv1tpFFX9VWAQRfCpXK7Y3pQJWJL5Vd/E+g4ARGEYNsdaAc1koUJNlxfeIejCyj8B
+         4zj1ui+/URmGsdHnXNjdCYIepQitM83iSv/HkW1nSjyRDinZ4at7jVM37M9LSv6rkZzQ
+         1P3eN1dTw6PvYoIj+gCoL8gv+7/Hhe0NpXvYZRlNA7N0JQC7dNo+Zlw0WLLsO3mkjyvN
+         2kSIv/7M/yNbxTLxsCSoKPOFtE6Hyouv2pI530tzbZJAdJpBc3HaLuRskdzYIlRNKD2L
+         W40LHltKsGYsXup8Y2etbm2uxQsrpK74f2YH7G1pwyny7jgVjWX3Aph7pD5nW6TgCQny
+         DWAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746223483; x=1746828283;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7affcrby2vNkam9EwwwwjCrmVQatX9FyWXaqSRxB4wg=;
+        b=hwUOu9dOY+ZiQ4+cZaZKqHAbTdqC0zDoGxgv92ZEpPWIGpyXr+j410octqsTsetUSR
+         4WQAvOZZ2QryFVZlRm8n2WSeSyE8FvIojudJNaOEPHXOokPz8pdlCPY8iXLTiMCEqQjo
+         TpyR9AS4XwvUAGkph4b3fC2y8lRZ4nbmdSMTxuO64Xf/SHanZqJ4UhHxC6ATSBYwk8Z8
+         5oLQUDv6hMQJbx+YYgtlX1+UQ85dadMxsBSqn/Ps4JEokzZuK0lHDawTT0Ue+hKSOkd/
+         ytFUymohkKvqRR7499wJQIUZCrK1rn1AvjuEpfNC0DNrF5iersIYf0pguRPROUYeJbq4
+         4zhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9I2Vahpw0suqUNFuMe5abKWnFTGM1mcWgx9e1hTkKd6OEkFprEXXwJ0KSzJSNvs1YuYasf7fJieF5zc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0EJxeOyERxsBzgjRT7H7dUB0InkRlT/63rMw7d/PFuZwh20bl
+	pzjTK87/VpMTrQG838o+8JN0IuR9piR0wGS1RzJ85Bveu3ZVXCO3
+X-Gm-Gg: ASbGncslh4hSkPz8oujER0VLjC4q+p7Glsfx5vcEsKSeLVjCMZXdtJ/2ub9QmGfg7kr
+	p2Wdglh06qsFbBEn8XqljsjFF+v+1iMdHwepYhXlqxrxZnEXxMr6DPA/OvM8e9B7WdhoEZKfzA6
+	jvsoK7BuQI1QTjQNFhvETDyCN/azyVN9c6XVvAewdxN4nQ85stK3X+alqJnIQLDgZEw0ULHD/lS
+	E8BZlo6G2ax0HDelVsIe7RyRsC8nXArjjad0fzVRmo2k2yZmEREs6q2epax3w5vGypa00UfOwKs
+	yOuKchR4dzJJi54TvdxwYcZwIIlNuVvWkDXpBhP+erKwGB16K9aq
+X-Google-Smtp-Source: AGHT+IFSEK0BFBWq98gRMREk3vYKHwod79qnzPoBE27xjeSvNK9HzGZJPObIMMGJCWFIuUJZRuoBrw==
+X-Received: by 2002:a17:902:d481:b0:224:10a2:cae1 with SMTP id d9443c01a7336-22e1038971bmr54216585ad.37.1746223482750;
+        Fri, 02 May 2025 15:04:42 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c48ac4sm1301153a12.55.2025.05.02.15.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 15:04:42 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH v2 0/3] ARM: vt8500: Add runtime SoC version identification
+Date: Sat, 03 May 2025 02:04:22 +0400
+Message-Id: <20250503-wmt-soc-driver-v2-0-8c774ad84d47@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87cycrc9jt.fsf@BLaptop.bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGZBFWgC/3XMyw6CMBCF4Vchs3YMDBeNK9/DsKDtFCYRSlpSN
+ aTvbmXv8j/J+XYI7IUD3IodPEcJ4pYcdCpAT8MyMorJDVRSWzZU42veMDiNxktkj4apM91FmYY
+ t5NPq2cr7AB997knC5vzn8GP1W/9SscISlbkqW1NLlab7OA/yPGs3Q59S+gIa5icqrAAAAA==
+X-Change-ID: 20250423-wmt-soc-driver-de26d67bd4ef
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746223484; l=2281;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=dRIhoysQGSyJs2hdqVmcNTx/4yoP6dvGtwt8OZlsnmY=;
+ b=ydF//7uFMmST3aeLF7U0I+Vqit9hRbYNg2pIAe0z+Xv3le8sthrn9K5pHbECZQOCAaTfImeb8
+ ZvWJxWgSWskBfPA29c6mH7vKgaUStaCZmF+EhDKv5JYHfKfPihGIPNx
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-On Fri, May 02, 2025 at 05:32:54PM +0200, Gregory CLEMENT wrote:
-> Hello, 
-> 
-> > Huacai Chen <chenhuacai@kernel.org> writes:
-> >
-> >> On Wed, Apr 30, 2025 at 3:09 PM Gregory CLEMENT
-> >> <gregory.clement@bootlin.com> wrote:
-> >>>
-> >>> Hello Huacai,
-> >>>
-> >>> > Hi, Gregory,
-> >>> >
-> >>> > On Sun, Apr 27, 2025 at 6:13 PM Huacai Chen <chenhuacai@kernel.org> wrote:
-> >>> >>
-> >>> >> Hi, Gregory and Thomas,
-> >>> >>
-> >>> >> I'm sorry I'm late, but I have some questions about this patch.
-> >>> >>
-> >>> >> On Mon, Apr 14, 2025 at 3:12 AM Gregory CLEMENT
-> >>> >> <gregory.clement@bootlin.com> wrote:
-> >>> >> >
-> >>> >> > Added support for starting CPUs in parallel on EyeQ to speed up boot time.
-> >>> >> >
-> >>> >> > On EyeQ5, booting 8 CPUs is now ~90ms faster.
-> >>> >> > On EyeQ6, booting 32 CPUs is now ~650ms faster.
-> >>> >> >
-> >>> >> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> >>> >> > ---
-> >>> >> > Hello,
-> >>> >> >
-> >>> >> > This patch allows CPUs to start in parallel. It has been tested on
-> >>> >> > EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. These
-> >>> >> > systems use CPS to support SMP.
-> >>> >> >
-> >>> >> > As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
-> >>> >> > faster.
-> >>> >> >
-> >>> >> > Currently, this support is only for EyeQ SoC. However, it should also
-> >>> >> > work for other CPUs using CPS. I am less sure about MT ASE support,
-> >>> >> > but this patch can be a good starting point. If anyone wants to add
-> >>> >> > support for other systems, I can share some ideas, especially for the
-> >>> >> > MIPS_GENERIC setup that needs to handle both types of SMP setups.
-> >>> >> >
-> >>> [...]
-> >>> >> >   * A logical cpu mask containing only one VPE per core to
-> >>> >> > @@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
-> >>> >> >
-> >>> >> >  cpumask_t cpu_coherent_mask;
-> >>> >> >
-> >>> >> > +struct cpumask __cpu_primary_thread_mask __read_mostly;
-> >>> >> > +
-> >>> >> >  unsigned int smp_max_threads __initdata = UINT_MAX;
-> >>> >> >
-> >>> >> >  static int __init early_nosmt(char *s)
-> >>> >> > @@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
-> >>> >> >         set_cpu_core_map(cpu);
-> >>> >> >
-> >>> >> >         cpumask_set_cpu(cpu, &cpu_coherent_mask);
-> >>> >> > +#ifdef CONFIG_HOTPLUG_PARALLEL
-> >>> >> > +       cpuhp_ap_sync_alive();
-> >>> >> This is a "synchronization point" due to the description from commit
-> >>> >> 9244724fbf8ab394a7210e8e93bf037abc, which means things are parallel
-> >>> >> before this point and serialized after this point.
-> >>> >>
-> >>> >> But unfortunately, set_cpu_sibling_map() and set_cpu_core_map() cannot
-> >>> >> be executed in parallel. Maybe you haven't observed problems, but in
-> >>> >> theory it's not correct.
-> >>>
-> >>> I am working on it. To address your remark, I have a few options that I
-> >>> evaluate.
-> >> I suggest to revert this patch temporary in mips-next.
-> >
-> >
-> > As I previously mentioned, I haven't observed any issues until now. What
-> > I'm evaluating is whether there is a real problem with this
-> > implementation. Let's examine whether we need a new patch or if this one
-> > is sufficient.
-> >
-> > I will have the resutls at the end of the week.
-> 
-> After hundreds of reboots on the EyeQ5, I did not encounter any failures
-> during boot. However, while executing the set_cpu_core_map() and
-> set_cpu_sibling_map() functions in parallel, modifications to shared
-> resources could result in issues. To address this, I proposed the
-> following fix:
-> 
-> diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
-> index 1726744f2b2ec..5f30611f45a1c 100644
-> --- a/arch/mips/kernel/smp.c
-> +++ b/arch/mips/kernel/smp.c
-> @@ -374,13 +377,13 @@ asmlinkage void start_secondary(void)
->         calibrate_delay();
->         cpu_data[cpu].udelay_val = loops_per_jiffy;
->  
-> +#ifdef CONFIG_HOTPLUG_PARALLEL
-> +       cpuhp_ap_sync_alive();
-> +#endif
->         set_cpu_sibling_map(cpu);
->         set_cpu_core_map(cpu);
->  
->         cpumask_set_cpu(cpu, &cpu_coherent_mask);
-> -#ifdef CONFIG_HOTPLUG_PARALLEL
-> -       cpuhp_ap_sync_alive();
-> -#endif
->         notify_cpu_starting(cpu);
->  
->  #ifndef CONFIG_HOTPLUG_PARALLEL
-> 
-> It moved these two functions back in the serialized part of the boot. I
-> was concerned about potential slowdowns during the boot process, but I
-> didn't notice any issues during my test on EyeQ5. Therefore, we can make
-> this change.
-> 
-> 
-> Thomas,
-> 
-> how would you like to proceed? Do you want to squash this patch
-> into the current commit, or do you prefere I create a separate patch for
-> it, or a new version of the patch including this change?
+VIA/WonderMedia SoCs have a chip ID register, which is helpful for
+selecting support for correct sets of hardware quirks at runtime, add
+code for it.
 
-please send a seperate patch with just the fix
+This will enable the use of SOC bus match tables in individual drivers,
+allowing for finer grained feature selection where device trees might
+not provide full information about what the hardware expects (such as
+with non-user-visible SoC revisions having different behavior within
+the same user-visible SoC version).
 
-Thomas.
+This series intentionally omits the updates to MAINTAINERS, as there
+are multiple VT8500 related submissions this cycle which may go via
+different trees (and cause pain in sequencing the merges). It will be
+updated separately in a single pass to cover everything VT8500 related.
 
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+Changes in v2:
+- Moved the DT binding under hwinfo directory
+- Changed the compatible string to be based on SoC version
+- Reworked the driver into a platform one, and switched to devm_ functions
+  (all of the above - thanks Krzysztof)
+- Link to v1: https://lore.kernel.org/r/20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com
+
+---
+Alexey Charkov (3):
+      dt-bindings: soc: Add VIA/WonderMedia SoC identification
+      soc: Add VIA/WonderMedia SoC identification driver
+      ARM: dts: vt8500: add DT nodes for the system config ID register
+
+ .../bindings/hwinfo/via,vt8500-scc-id.yaml         |  37 ++++++
+ arch/arm/boot/dts/vt8500/vt8500.dtsi               |   5 +
+ arch/arm/boot/dts/vt8500/wm8505.dtsi               |   5 +
+ arch/arm/boot/dts/vt8500/wm8650.dtsi               |   5 +
+ arch/arm/boot/dts/vt8500/wm8750.dtsi               |   5 +
+ arch/arm/boot/dts/vt8500/wm8850.dtsi               |   5 +
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/vt8500/Kconfig                         |  20 ++++
+ drivers/soc/vt8500/Makefile                        |   2 +
+ drivers/soc/vt8500/wmt-socinfo.c                   | 125 +++++++++++++++++++++
+ 11 files changed, 211 insertions(+)
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250423-wmt-soc-driver-de26d67bd4ef
+
+Best regards,
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Alexey Charkov <alchark@gmail.com>
+
