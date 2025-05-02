@@ -1,163 +1,194 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776932AF10
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488AF1E47CA
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188378; cv=none; b=OFKEt9E8zL08WZETbKHBUE5rsP31S8bHdTC6cGkucg60LmUcN3OiDUhn1i8Ufj5qm4aE09FvoKw+d+d4D9TJlyJDwdz9cXrYnm/XyaARClOM3QBlD4P/crpIviktxvkC7s0OcwmnLLokAZ3IYVLk9J3QU0WXuF7RhrQPk+fSago=
+	t=1746188445; cv=none; b=A0TW1bxf7nYJdCQ5ymAR3LpqHzgZXpLvosPAw/1bVbqoxuYS9RZCwXBnzIZJh+QwZmEZWBgjyzGhizimTAdiC9034L0oxkijoWPLHi3MTZYxQIMRWlUOntr9cow2tZE6G0zgUFallAUtncThGTh3rRtpqbx0qGd6gwd3pG6WCyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188378; c=relaxed/simple;
-	bh=FENMmhfwQ5oOAyyY9sISJmBTjz0OnuIFHSOtBaRZYy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZrSwCwhAeC1xjkuAWuorOeHnmZrxb2pImFD7+nn8lL4jPO7N3HCIa+0oWYjzzDYMC1q0WbAyP3dm6BSRmx6/Ph1fxTOmgDy1mHBEGf3OMQrZWWc9tucOlY+NtxIopV21aLGtLLv6KFDieHwbDG0qfTv+XJM250erJO985aFmx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=U1FW+5Aa; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1746188445; c=relaxed/simple;
+	bh=q9Wt2nv3tB4D1QRkd4VGcrAcWby6DCCuswobmhTV6vA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEZjhns8ZWzzmVJs9We8PKEcw4+N0ft6gYwKP1sBdjQ70z/EA3OKHxCpPdC8lZ1zAVZ7mROvO/mO28nTryzEascAJ9/KBPrvFVi4lqwZoOWNMQAAG5QQwIXVFqk8sYn2cK2laxCwSNu16iyP6xKYSqpKwV+cPOXlL3Z8rrDjHPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V6DegJyw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H+e5aQFV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zIljpT8R; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TfQgwou6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="U1FW+5Aa"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso12353715e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746188373; x=1746793173; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qjSigm8B1BUt7izc6EoCs9OHgMLeKXN4gHZNIhC4uLY=;
-        b=U1FW+5AaDNuYGPGS6vEf6no5Nio/sLPdPP7dtPYR22Pu+E19JuVBMrx8pE6bOqE29W
-         xGhlm8DyZ3ED+f8qSXX6Yk3jzfVuvvjuUz1XbXo4j/yLy9etY6lsa1Fqwt6/TUbYiqzL
-         mnjOyzEMe2saDO2ah8lHDV0QfC+m82wIiMHTtErLcOudPneN5J2ZTWABAgwEMkeKPJWf
-         hWQfRxDcnVebhIu0vapimtnU3xnib1lrjLkBaZY43Pe7UeH1xBhrdHAQCYuj9W92nhFm
-         91FBfHeZQC2LpAjusba4bSqjZuLHrWb/recOfGqFmPXBVV0T2q7OIUNAWgWEsba8O6rv
-         sH5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746188373; x=1746793173;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qjSigm8B1BUt7izc6EoCs9OHgMLeKXN4gHZNIhC4uLY=;
-        b=YujkD9ex3iP9MEnVQhxZlLVVWegPMeuIY+EJugdUMIBwpmTjhn9F9NzNNJo0KWHY92
-         pSIn9tJtLEpqfhqARsOIMMY1KW6x+g+6BZr7yVvBEM/W3lleIUnmWnK/hKQ7FhAzHEid
-         EdxG3dw0A6u2mb1tpSa+qe4BcO+VfbVbrSDAk0CipM3I144cI4z6CySwHnl7c4WdjpiP
-         KqrXk+cVnheZvjB8TAofqbSaYKwsDL8v2sRLhesHUtn1rVULE/yd4BPpDIA2xE4lIv4m
-         LaFsm+yGnrT4N8jBOOXyIg4YcrQ/uusYG9H5lxcKoeYKlTDmv21MskJa4zZvsnCAMUqx
-         YEwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXU4xESWH3mEyFZq4J64POlQeqMrRp7zxnFyf91smvsbo61wSWF1uPZkhw5oUjrhyuAZbg8B0SRTHo6FzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbUqbUecx1N5/Fjn4yzptOOB4eoEM/5u6auAS3FFi/arMmSsC+
-	1mjXE7iozk0e1v0vuG7EtacLeMjFV+ANH7Eu0O2jJbuESgu3KyVEv1hI6KD1nw8=
-X-Gm-Gg: ASbGncsRrcNzLYWrBW0cQBC6BwpMn8T8JObWMwpUB1M4WtlV66iXVMapFcnbjCl3TSk
-	h18fFWNjj/2joMNJD6lBftkup/6LDmE9R31O0cFhzlCz07c2MS4oBW6m8Xm6IRcdWPtPwuz6n6o
-	FdF5e8ylsGHfQMfbfhI/JtCb8kIzPqFusecxKvL6twB0M7mE5RX7UPcTDwT4b7+D44DZd5VAJmS
-	QxzB9wU+okHvrmYSh+7ECChE29ezlXIXyJcSeeB8ecKrs4fUCINuw06AijYZs4+t37e5eL/EPRV
-	hZIOqn/hC6Zyp9hd0aqUNKImx++Px6v3BDBO96Hid9LrzTvmWLcu8Thbmk1Y5DzdZFG9wuaWlbu
-	MyCntDLH4vjlWCCa5nwdziT/VXPkfdY9LXVxYQj79qE2mtggG7dk=
-X-Google-Smtp-Source: AGHT+IGcxrAqqNqdPnNdNq7itJRByTv87m6oPO4uxZVjY1/A+JmfUDtTIVX5DaOH4UncYJ+Fr7Scxw==
-X-Received: by 2002:a05:600c:6dcf:b0:441:bbe5:f562 with SMTP id 5b1f17b1804b1-441bbe5f680mr16473815e9.16.1746188372670;
-        Fri, 02 May 2025 05:19:32 -0700 (PDT)
-Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a286cfsm42312875e9.29.2025.05.02.05.19.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 05:19:32 -0700 (PDT)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: tj@kernel.org,
-	hannes@cmpxchg.org,
-	mkoutny@suse.com,
-	cgroups@vger.kernel.org.com,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] kernel/cgroup/pids: add "pids.forks" counter
-Date: Fri,  2 May 2025 14:19:30 +0200
-Message-ID: <20250502121930.4008251-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V6DegJyw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H+e5aQFV";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zIljpT8R";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TfQgwou6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F14451F387;
+	Fri,  2 May 2025 12:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746188440; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l3XGzJGzTYHGCyVRD8KTVZyUw74RJvDiVdSvzltzOus=;
+	b=V6DegJywf70AoxraMTuMW3jX9SKGfYwdLkLahmtXuDy5LAxewP6td7SnDTTO+NzYfktOsm
+	PnN3lOm084p+AOAKJdweLY4xX5KFWpqGMyspqZW0t/WEwJnouVx9eWrpAcHZTdN9CYO+k7
+	Q7qO4v9gXdHur7d7rPmxltYcck5Y6uw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746188440;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l3XGzJGzTYHGCyVRD8KTVZyUw74RJvDiVdSvzltzOus=;
+	b=H+e5aQFVjUIdjrBDL6m5nNJPljJgie3g0+7oaAQxYM88121amB/4uERDL6LtjksEXKCWEk
+	Fzwdmp4cEKLT92CA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=zIljpT8R;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=TfQgwou6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746188438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l3XGzJGzTYHGCyVRD8KTVZyUw74RJvDiVdSvzltzOus=;
+	b=zIljpT8RYZGWd/HBqgGRL0/G/EPLljblmAn6xhBisAStcablM7g7QF0gUsaHrQXmW0jKTl
+	dwjOsB7J49AfnSGAcZGtH3/MakJXuhOpKUZuo7xVVEnTlXycCvM2AcykGc1HUaDAs/6A/P
+	zz76gazA5mrQeaa7EMBz8jLGP4fox9o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746188438;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l3XGzJGzTYHGCyVRD8KTVZyUw74RJvDiVdSvzltzOus=;
+	b=TfQgwou6GFyRLC590TZR8fNmQk57E8vvDttvruRgNUVOqSnjaPNyXinuLP4siuNGqte9Jx
+	ZbU7EJsr0SUHThAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DBE861372E;
+	Fri,  2 May 2025 12:20:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lB6qNZa4FGiICAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 02 May 2025 12:20:38 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 520F6A0921; Fri,  2 May 2025 14:20:38 +0200 (CEST)
+Date: Fri, 2 May 2025 14:20:38 +0200
+From: Jan Kara <jack@suse.cz>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [RFC PATCH v2 0/3] eliminate mmap() retry merge, add
+ .mmap_prepare hook
+Message-ID: <uevybgodhkny6dihezto4gkfup6n7znaei6q4ehlkksptlptwr@vgm2tzhpidli>
+References: <cover.1746116777.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1746116777.git.lorenzo.stoakes@oracle.com>
+X-Rspamd-Queue-Id: F14451F387
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.01
+X-Spam-Flag: NO
 
-Counts the number of fork()/clone() calls, similar to the "processes"
-row in /proc/stat, but per cgroup.  This helps with analyzing who was
-responsible for peaks in the global "processes" counter.
+On Thu 01-05-25 18:25:26, Lorenzo Stoakes wrote:
+> During the mmap() of a file-backed mapping, we invoke the underlying driver
+> file's mmap() callback in order to perform driver/file system
+> initialisation of the underlying VMA.
+> 
+> This has been a source of issues in the past, including a significant
+> security concern relating to unwinding of error state discovered by Jann
+> Horn, as fixed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
+> error path behaviour") which performed the recent, significant, rework of
+> mmap() as a whole.
+> 
+> However, we have had a fly in the ointment remain - drivers have a great
+> deal of freedom in the .mmap() hook to manipulate VMA state (as well as
+> page table state).
+> 
+> This can be problematic, as we can no longer reason sensibly about VMA
+> state once the call is complete (the ability to do - anything - here does
+> rather interfere with that).
+> 
+> In addition, callers may choose to do odd or unusual things which might
+> interfere with subsequent steps in the mmap() process, and it may do so and
+> then raise an error, requiring very careful unwinding of state about which
+> we can make no assumptions.
+> 
+> Rather than providing such an open-ended interface, this series provides an
+> alternative, far more restrictive one - we expose a whitelist of fields
+> which can be adjusted by the driver, along with immutable state upon which
+> the driver can make such decisions:
+> 
+> struct vm_area_desc {
+> 	/* Immutable state. */
+> 	struct mm_struct *mm;
+> 	unsigned long start;
+> 	unsigned long end;
+> 
+> 	/* Mutable fields. Populated with initial state. */
+> 	pgoff_t pgoff;
+> 	struct file *file;
+> 	vm_flags_t vm_flags;
+> 	pgprot_t page_prot;
+> 
+> 	/* Write-only fields. */
+> 	const struct vm_operations_struct *vm_ops;
+> 	void *private_data;
+> };
+> 
+> The mmap logic then updates the state used to either merge with a VMA or
+> establish a new VMA based upon this logic.
+> 
+> This is achieved via new file hook .mmap_prepare(), which is, importantly,
+> invoked very early on in the mmap() process.
+> 
+> If an error arises, we can very simply abort the operation with very little
+> unwinding of state required.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- Documentation/admin-guide/cgroup-v2.rst |  5 +++++
- kernel/cgroup/pids.c                    | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+)
+Looks sensible. So is there a plan to transform existing .mmap hooks to
+.mmap_prepare hooks? I agree that for most filesystems this should be just
+easy 1:1 replacement and AFAIU this would be prefered?
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 1a16ce68a4d7..88f996e083e2 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -2294,6 +2294,11 @@ PID Interface Files
- 	The maximum value that the number of processes in the cgroup and its
- 	descendants has ever reached.
- 
-+  pids.forks
-+	A read-only single value file which exists on non-root cgroups.
-+
-+	The number of fork()/clone() calls (whether successful or not).
-+
-   pids.events
- 	A read-only flat-keyed file which exists on non-root cgroups. Unless
- 	specified otherwise, a value change in this file generates a file
-diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
-index 8f61114c36dd..fb18741f85ba 100644
---- a/kernel/cgroup/pids.c
-+++ b/kernel/cgroup/pids.c
-@@ -49,6 +49,9 @@ enum pidcg_event {
- struct pids_cgroup {
- 	struct cgroup_subsys_state	css;
- 
-+	/* the "pids.forks" counter */
-+	atomic64_t			forks;
-+
- 	/*
- 	 * Use 64-bit types so that we can safely represent "max" as
- 	 * %PIDS_MAX = (%PID_MAX_LIMIT + 1).
-@@ -147,6 +150,7 @@ static void pids_charge(struct pids_cgroup *pids, int num)
- 	struct pids_cgroup *p;
- 
- 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
-+		atomic64_add(num, &p->forks);
- 		int64_t new = atomic64_add_return(num, &p->counter);
- 
- 		pids_update_watermark(p, new);
-@@ -168,6 +172,7 @@ static int pids_try_charge(struct pids_cgroup *pids, int num, struct pids_cgroup
- 	struct pids_cgroup *p, *q;
- 
- 	for (p = pids; parent_pids(p); p = parent_pids(p)) {
-+		atomic64_add(num, &p->forks);
- 		int64_t new = atomic64_add_return(num, &p->counter);
- 		int64_t limit = atomic64_read(&p->limit);
- 
-@@ -342,6 +347,14 @@ static int pids_max_show(struct seq_file *sf, void *v)
- 	return 0;
- }
- 
-+static s64 pids_forks_read(struct cgroup_subsys_state *css,
-+			   struct cftype *cft)
-+{
-+	struct pids_cgroup *pids = css_pids(css);
-+
-+	return atomic64_read(&pids->forks);
-+}
-+
- static s64 pids_current_read(struct cgroup_subsys_state *css,
- 			     struct cftype *cft)
- {
-@@ -404,6 +417,11 @@ static struct cftype pids_files[] = {
- 		.flags = CFTYPE_NOT_ON_ROOT,
- 		.read_s64 = pids_peak_read,
- 	},
-+	{
-+		.name = "forks",
-+		.read_s64 = pids_forks_read,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
- 	{
- 		.name = "events",
- 		.seq_show = pids_events_show,
+								Honza
 -- 
-2.47.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
