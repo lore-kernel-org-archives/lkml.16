@@ -1,62 +1,32 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2066.outbound.protection.outlook.com [40.107.236.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D2D1DE4E3;
-	Fri,  2 May 2025 05:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746165375; cv=fail; b=HfI13KgHuFuMGJWKOgJ5aVoEeCeDe3CWhb4nUGY/IifCnu0Dy0qfNj3kfev7zGbbnw4LSZAmYgqVvjIs4FuKRWq8P8LMvyhGRT2a7cf/O2hdA4yYUcmBZcCHIkBwqe4JQe141QGVi4ekOF+C2+SRIu6FKXlfptOiaQqwLRgy4JU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746165375; c=relaxed/simple;
-	bh=0qfUT07JGACtx2qjITDIWhdE0q6KQHHE4nRylbuE7NQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=loWoSn7cLQge/K9FYTakyKl8+1CxWMgaXN1wFspHhUEnhY5GVBTVzX6LVWdXuDx2txX/ijujgKwKAhucNetyz9nz0am+NIBBdmuaPYaI3nE3SXJI0cBKCeKAJZMHsf5VxR2n3cv24FPUMxxgS4cjX4lq7NloloHQgm5Bj6/NAz4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=POSQA3WS; arc=fail smtp.client-ip=40.107.236.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E237083A;
+	Fri,  2 May 2025 06:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746165671; cv=none; b=UNg6y0jsJxoFaqLkfm9wjdatzASlYUi23IDNr4BH/x8xma7vFEBaiCChUkXxS3J8fL11qdCrApQdOJqT0icuiQkfkMsmXzrU1PUz3cyn9pq4BV2zXFpTyB+lRFY38q1QFh2cdRulGTl/W2o8DIqOC7TNFqCn5euYCq1tW6uatcs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746165671; c=relaxed/simple;
+	bh=AVxBl5tihGLUMFHt3lxk0q44vNka5p+fcSzp6TxyzLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qFYbaw5eYTsfDa8VfXmGLFTkEVx4S3vxKeeNeqnMj2eqG4hbbCSjj8N9Isyd2h614zhx2GR033Mc9HzKjhdxxKYO5EfZSJR/0MFD+Sz+SVJZLfLeZJ8JfLGHA4nWQT3L1a9W04Ty8A16/ga25pX96+e2SHCH/Gji822iDNPgcNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ESYZ4B3F; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="POSQA3WS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l3yw8smeYHNzrzK0DrlvEumXNEwZVSXq/P2p4CoK+piOFPjV0mb0qINM23k1U7Xv2k9NLd21e9QcSpjwO+HFmoZXf68LM5M8chY6qUGhEZUo9kFvfx+hyTELK/0frsL2A9zlN+q0QCINJMttx9eQ6v9lY3ib8wa3Lih/41vB7SwQXDf3AoaNftlqa9rLwAXs5qWMU95uJRVS5cdvEFSKH5AAw1a90yCKEdM272xCAYonXw8rmjln8TklhX9cYz9EzXgbqz1E9FfbbXUp1JP8opUWJ2iQw+1q0wOawX1O9VYoucbkogbE2c7cwW1YU5CWFICjB0DideKuDPLIFF+SyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dxp5zslcUx3RlD3wbVstEOpKB5q0wCUu4ctzFwAvPiw=;
- b=Hh7fAIH5gJZvPJTqJk4fm+Ed+nnojkcyZasdThn2SD7c80pI++buHE1o5LbuoGN+WtS6TFiIxtB7OlDCpjY2Mw8tjSpducCPTWMur9zpbDy0Fw1jYbaBBUPuC9TM++GBev4ewXSYM4Ls/9EYEkLYArRft/PvMahECpfJiIjCBnKezHwb/W8+SAoKBwlUTEI5y4ZVlfeVJPQ4cwZYZh6A4Kfn6RcVA9EFlw/YcxtJ55eF771yUj1b+aWotzTVqCARnEcptzpUfHbC7PygcaeMu2b4AG+h35u+yWfBjUSJpIomB7NVA39JQuzbdglh9WVPxmUEHXb8YK6Oc5I2W11iDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=amazon.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dxp5zslcUx3RlD3wbVstEOpKB5q0wCUu4ctzFwAvPiw=;
- b=POSQA3WS3dZLf14F0fNeDojEsgxmYPo76Rhu5ff0GlKCsN3Qv2vfrTwIyHoFcg7syALQcLDylI8POrv8qH+SiIWLIyb+1HNFdYi8MhbvDTCdDNcVAYjK6qT8wyJoSevd9NxbOElZZjeIaXTOm3oQv2Ea3rpTEn2Eas2TEQIlT8Q=
-Received: from BN0PR07CA0002.namprd07.prod.outlook.com (2603:10b6:408:141::17)
- by MW6PR12MB7088.namprd12.prod.outlook.com (2603:10b6:303:238::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
- 2025 05:56:08 +0000
-Received: from MN1PEPF0000ECDA.namprd02.prod.outlook.com
- (2603:10b6:408:141:cafe::f5) by BN0PR07CA0002.outlook.office365.com
- (2603:10b6:408:141::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Fri,
- 2 May 2025 05:56:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000ECDA.mail.protection.outlook.com (10.167.242.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 05:56:07 +0000
-Received: from [10.85.37.104] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
- 2025 00:56:02 -0500
-Message-ID: <d875adc0-744e-4b1f-a1bf-7e051298a0ae@amd.com>
-Date: Fri, 2 May 2025 11:26:00 +0530
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ESYZ4B3F"
+Received: from [100.79.193.170] (unknown [4.194.122.170])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 42434211159B;
+	Thu,  1 May 2025 23:01:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42434211159B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746165668;
+	bh=n6KFWWoXYHxscjPof2OutrHwg+xGPVvT7uzE7cJP4LU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ESYZ4B3Fcg3Ko2lR5YdEo+mqD7tWwDu0FDc4cb8270QuBWO7kKB5QfUmcdX2YPrKb
+	 ufdjCvBIHn+keFgdpmDDKJMvDVYMD6rjCCkiargQqN/+r2pfG6LfA1IHnzZtXp2809
+	 a7gX0PvtbE2Z7BjkSYkzePiQSW2uiwTrAFZGz3Jg=
+Message-ID: <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
+Date: Fri, 2 May 2025 11:31:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,167 +34,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: EEVDF regression still exists
-To: "Prundeanu, Cristian" <cpru@amazon.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>, "Saidi, Ali"
-	<alisaidi@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	"Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
-	"Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, Joseph Salisbury
-	<joseph.salisbury@oracle.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
-	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
- <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
- <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
- <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
+Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
+ path
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>
+References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+ <2025042501-accuracy-uncombed-cb99@gregkh>
+ <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
+ <2025050154-skyward-snagged-973d@gregkh>
 Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025050154-skyward-snagged-973d@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECDA:EE_|MW6PR12MB7088:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18b46818-ca06-46c8-74a2-08dd893e084f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OCtmUnZKYmE1dSszTUxJcnVJZGJicDNGeTVuUGI4OHd0NXBUVVRiRnlkbVlx?=
- =?utf-8?B?Q0cxeXdXdHNaMlBVTWlzRVRDSHhVWUNpZ3NRNE42alFvY3FzL2Mya1ZrY2xi?=
- =?utf-8?B?NXcvbW56ZW4zOGZFT0c2RFJ2bUhkZ1lGRGw4K1RjTk9UWjhVSjd6ZW5qWXRr?=
- =?utf-8?B?a0lBUGlGa2NvcWFjV2ZYNFdFOWUrY2tyV2NlM1RMUE95dm1ob014QTl1eW1U?=
- =?utf-8?B?T3IyclJZVUIwSXNFbU10a0ZMVExZREtYcFJWRU5Qd2NDbGtBTFJJZDNZbFgr?=
- =?utf-8?B?aTQxY09jVWdXZWhTVnpLVFN5ZWxvRG9oT2VtSlJ2YmdvRDhoN1c3MmhYZDBx?=
- =?utf-8?B?N0t1dTgrR0Q5ZHRPclBPbXRMbHFIV2Zzbkg0bGZBbW45aGFRQTNiQWkzaFNn?=
- =?utf-8?B?dGtnbmpNV3UzRjAraTVQc1BkOWRFOWlDajJRRmg0VS9qblpBL25NQ0JNNVly?=
- =?utf-8?B?NlAxNGFDUmhqN2tWMXBSZ0cwRkVTVERGMjhwQi9ObWloVnhtM1RFeGhxN3Jx?=
- =?utf-8?B?M29SMzkrVFVGOS9LQ2hGTzB6RS80aERHb2tRMG42ZDB1L1NrSFpTYVp4TXFi?=
- =?utf-8?B?dElZODZVSlBhQUFWR3FTNmdKNVh2UXlJTDBnZ0Z5V3AzUHUzZTQ1c3BCanV3?=
- =?utf-8?B?TzJJZTNzTjQvRkZnWjZNR0RYMEZXbHJ1WUgyMkRqZW5LRlcrUjEvWkhHR1pI?=
- =?utf-8?B?aGZ6SGhjWmtiakNGeFBSUVcrUWxVTVFtQVEwMGVDMDNFY0YvV3ViQnhncmQ1?=
- =?utf-8?B?SHNNWUZBQjlFc2JQclRYbTdod3NCRHdsUzQrZFFmMTFSelRiNnV6Sm1JTlp2?=
- =?utf-8?B?QmZiTEsrb2JmeGYvZDVmajRtMzRZK09CZzBIR2pLcGxpaUxhd2xQbzlVcEJY?=
- =?utf-8?B?b1VRSTFOR044SThsWDFjSVZIZkU1akk1Q0lZS1c2Yk9ua2dZeEtaUzQzYXp6?=
- =?utf-8?B?SEROeWpVTExRd3BNMFNIb0sycFg0dkdqM0c1dHRvSkRiUmJNcjdDU2ZSSXlG?=
- =?utf-8?B?UTJ4MDhPYXkvemFkWisvRE9SVmZEcENOWUR1TUpWaXBvS24yYWN5UzIwRVU1?=
- =?utf-8?B?ZHk2ZjRwSFJFNWhTc0ptU1Y2cm9aMllvNjM1NEdMbzdURFBKUDhsOUhrdGtL?=
- =?utf-8?B?SWd4Qm52S1p0UG9Ea1dlUXFjU1NUNnlYcE5lL3FPRWZxZkhCQUpZQkdVbldy?=
- =?utf-8?B?LzlwZ1ZJSU91OFAvdEJMMHBHOU9DZ1lpckpERDg5clF6STBPRFk2WXY3MVNp?=
- =?utf-8?B?Y2FLMkJkM2dBS2RJbklCRjhDbW50K0djSkJEbnpRdWZvNDlCQ3JvTlhRN25X?=
- =?utf-8?B?WFVNWGlpQ1pLdWVIOFlXNDlSdzFMZ0NTVjc4ZytsVHp0aDJDSUtpN2pEcmoz?=
- =?utf-8?B?MHVkLzRRZVArcy8weWhSRFJOeGR6K05VeE9SYzZtZDVDV2QyYXFDOE4rK2Fl?=
- =?utf-8?B?anN3Q0FVcUZxL2ZmT3pMRGlNcUhFME1JVEV3eVgrSThRSUM1UkJmUkxwUURv?=
- =?utf-8?B?VTJnYVBIaXhmV2dBUUhXQTBQakV5eFp0UWVaVXd1YVpoZTJ5Y3F2QlZtc3BO?=
- =?utf-8?B?Nk1aTmdrR214NkJvenVPT0hDRkdhZVdSOVVnZm9IMi93T29PY1dYMjJlYWZU?=
- =?utf-8?B?VnhLR0ltZVJDbTNYZU9qeGwxb3dZb0VXenhLSlV0VzhheWQ2NSt5RVBjOFNp?=
- =?utf-8?B?ZFpRbC9TaW8xVkRqVzRsMXhyNmJIZFI5YUZZVnVGemVMQVA3R2x0RVJ0T0M5?=
- =?utf-8?B?Z21aUkJudFB4bi92T0E2UUNaL1h2QWZUZjRia21ScnFpcmQwdkh2MGpUaXZH?=
- =?utf-8?B?V2sxZ2Z5L3UrMm9wYko0VXZIWUI1VHVUWmIvSjNRNDJHelNjMkNTVlE5SzAz?=
- =?utf-8?B?b0l3MWdqOVE5VWRXdDh0QUtHaldwdzZ6b2FoWDc1ajUrL096RURsUFVnQ2V3?=
- =?utf-8?B?NHBpMzhkdFVGc1lTZ0ZVRnFhZ0hXMU92L0doSTUwbTczcHdmNUplSUVhZ0pW?=
- =?utf-8?B?QThCQ3Z2RjJWOFVMNEhrTEVJRTMxM2FNaGxxbm56TG8vdXBtLzFpMndXT2RD?=
- =?utf-8?B?Z2tsUGp5VVBwMDZkamZXTTl3ekZ1L091UWY3Zz09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 05:56:07.6434
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18b46818-ca06-46c8-74a2-08dd893e084f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECDA.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7088
 
-Hello Cristian,
 
-On 5/1/2025 9:46 PM, Prundeanu, Cristian wrote:
-> Hi Prateek,
-> 
-> ﻿On 2025-04-29, 22:33, "K Prateek Nayak" <kprateek.nayak@amd.com <mailto:kprateek.nayak@amd.com>> wrote:
-> 
->>>>> Here are the latest results for the EEVDF impact on database workloads.
->>>>> The regression introduced in kernel 6.6 still persists and doesn't look
->>>>> like it is improving.
->>>>
->>>> Well, I was under the impression it had actually been solved :-(
->>>>
->>>> My understanding from the last round was that Prateek and co had it
->>>> sorted -- with the caveat being that you had to stick SCHED_BATCH in at
->>>> the right place in MySQL start scripts or somesuch.
->>>
->>> The statement in the previous thread [1] was that using SCHED_BATCH improves
->>> performance over default. While that still holds true, it is also equally true
->>> about using SCHED_BATCH on kernel 6.5.
->>>
->>> So, when we compare 6.5 with recent kernels, both using SCHED_BATCH, the
->>> regression is still visible. (Previously, we only compared SCHED_BATCH with
->>> 6.5 default, leading to the wrong conclusion that it's a fix).
+
+On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
+> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
 >>
->> P.S. Are the numbers for v6.15-rc4 + SCHED_BATCH comparable to v6.5
->> default?
+>>
+>> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
+>>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
+>>>> Hi,
+>>>> This patch series aims to address the sysfs creation issue for the ring
+>>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
+>>>> size to accurately reflect the actual ring buffer size, rather than a
+>>>> fixed static value.
+>>>>
+>>>> PFB change logs:
+>>>>
+>>>> Changes since v5:
+>>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
+>>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
+>>>>     commit msg of both patches.
+>>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
+>>>>     hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
+>>>>     now.
+>>>> * Changed type for declaring bin_attrs due to changes introduced by
+>>>>     commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
+>>>>     merged recently. Did not use bin_attrs_new since another change is in
+>>>>     the queue to change usage of bin_attrs_new to bin_attrs
+>>>>     (sysfs: finalize the constification of 'struct bin_attribute').
+>>>
+>>> Please fix up to apply cleanly without build warnings:
+>>>
+>>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+>>>    1893 |         .bin_attrs = vmbus_chan_bin_attrs,
+>>>         |                      ^~~~~~~~~~~~~~~~~~~~
+>>> 1 error generated.
+>>
+>> Hi Greg,
+>> I tried reproducing this error but could not see it. Should I rebase the
+>> change to some other tree or use some specific config option, gcc version,
+>> compilation flag etc.?
+>>
+>> I tried the following:
+>> * Rebased to latest linux-next tip with below base commit:
+>> 393d0c54cae31317deaa9043320c5fd9454deabc
+>> * Regular compilation with gcc: make -j8
+>> * extra flags:
+>>    make -j8  EXTRA_CFLAGS="-Wall -O2"
+>>    make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
+>> -Werror"
+>> * Tried gcc 11.4, 13.3
+>> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
 > 
-> SCHED_BATCH does improve the performance both on 6.5 and on 6.12+; in my
-> testing, 6.12-SCHED_BATCH does not quite reach the 6.5-default (without
-> SCHED_BATCH) performance. Best case (6.15-rc3-SCHED_BATCH) is -3.6%, and
-> worst case (6.15-rc4-SCHED_BATCH) is -7.0% when compared to 6.5.13-default.
+> I tried this against my char-misc-linus branch (which is pretty much
+> just 6.15.0-rc4 plus some iio patches), and it fails with that error
+> above.
 > 
-> (Please keep in mind that the target isn't to get SCHED_BATCH to the same
-> level as 6.5-default; it's to resolve the regression from 6.5-default to
-> 6.6+ default, and from 6.5-SCHED_BATCH to 6.6+ SCHED_BATCH).
+>> BTW I had to edit the type for bin_attrs as this change got merged recently:
+>> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+>>
+>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+>> index 576b8b3c60af..f418aae4f113 100644
+>> --- a/include/linux/sysfs.h
+>> +++ b/include/linux/sysfs.h
+>> @@ -107,7 +107,7 @@ struct attribute_group {
+>>                                              int);
+>>          struct attribute        **attrs;
+>>          union {
+>> -               struct bin_attribute            **bin_attrs;
+>> +               const struct bin_attribute      *const *bin_attrs;
+>>                  const struct bin_attribute      *const *bin_attrs_new;
+>>          };
+>>   };
+> 
+> That commit is not in my char-misc branches, that's coming from
+> somewhere else.
+> 
+> thanks,
+> 
+> greg k-h
 
-Ack! I was just curious if all of the performance drop can be
-attributed to aggressive wakeup preemption or not.
+Hi Greg,
 
-> 
->> One more curious question: Does changing the base slice to a larger
->> value (say 6ms) in conjunction with setting SCHED_BATCH on v6.15-rc4
->> affect the benchmark result in any way?
-> 
-> I reran 6.15-rc4, with both 3ms (default) and 6ms. The larger base slice
-> slightly improves performance, more for SCHED_BATCH than for default.
-> 
-> 6ms compared to 3ms same kernel (not compared to 6.5):
-> 
-> Kernel               | Throughput | Latency
-> ---------------------+------------+---------
-> 6.15-rc4 default     |  +1.1%     |  -1.3%
-> 6.15-rc4 SCHED_BATCH |  +2.9%     |  -2.7%
-> 
-> Full details, reports and data:
-> https://github.com/aws/repro-collection/blob/main/repros/repro-mysql-EEVDF-regression/results/20250430/README.md
-> (These perf files all have the same schedstat version, hopefully "perf
-> sched stats diff" worked better this time).
+I can send a patch based on char-misc/6.15.0-rc4 which does not have 
+this patch, but I am worried that it will cause compilation issues when 
+your branch is merged with linux-next since this change is already there 
+in linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
 
-Thank you for the information. Ravi and Swapnil are working to
-get perf sched stats diff to behave well when comparing different
-versions. It should be fixed in subsequent versions.
+Here are more details of that patch:
 
-P.S. I'm still setting up the system and have got my SUT pretty
-close to what you have described. I couldn't quite reproduce the
-regression on baremetal with my previous configuration on v6.15-rc4.
+"""
+sysfs: constify attribute_group::bin_attrs
+All users of this field have been migrated to bin_attrs_new.
+It can now be constified.
 
-Could you also provide some information on your LDG machine - its
-configuration and he kernel it is running (although this shouldn't
-really matter as long as it is same across runs)
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: 
+https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> 
-> -Cristian
-> 
+"""
 
--- 
-Thanks and Regards,
-Prateek
-
+Regards,
+Naman
