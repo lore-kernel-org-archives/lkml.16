@@ -1,116 +1,137 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDF119D891;
-	Fri,  2 May 2025 08:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5642D19D891;
+	Fri,  2 May 2025 08:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175642; cv=none; b=ITU4YuqEPl6EAiqqC3ynwKMplCq/JLWTtuS69CEzYPHmfJRzMIZiJGshVFBzmG987JFPLG3A/7v20QLzhzAaRDpVeeXD9zc+xI8LwAKfaTDCWyyj/NV3/U613IDLDdc7RlkDRm8dXQu2B42lZmA3OoT8ia/GtYtGa2osgjC611M=
+	t=1746175669; cv=none; b=PpJhUHGson0FFSfk4O5tdET7UypnvZmiKvGY5OzheN5WYUq6tXU0mpcOS9FKwVwf6Ih5BwJsSHmvQAPFFAiRhMSL7tHkCzSzj6u4J/FNhW6QB6qosrSy7dBOZgoZ4H4CDNG9CF8eEj13YLagZ6tTaT0pdd0YLLcLgup1u491GMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175642; c=relaxed/simple;
-	bh=9jBEmF43nusgTr6KyTmUAJm0NR2nhBaGOUcA3wtOdK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KcMolMnSQSgAFBfFYFmnYA7kkxrMCu8AMNRl5J6RrLrbxFxPetH1Iti8Ett3NlpDzV3A2OY5WLxpmIH8O5Is3ZvkwT//o/sQPo3r2Fhq40UvHoJiOWoFKtKdTJ6+vecdgE2kpRDSRG1N/Yn22sWeQA43wnxmxPDBA4gik3Szaww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=Ayhuehes; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1746175669; c=relaxed/simple;
+	bh=NCirDjbr0P+QIBLiB7dQOcgcs9vpxXzMLjZHxOXUKuc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mz64U8qm0AFfbqviw2rRXafEtg5v65w4j/UCCCmAGWjLJ7DfOz9+OLUOEBvYwZdPClos3H330mdgP3M/LGKrWaBrL8X3LsMGegjjfE0qpe24JRbU5D7Kg0hhcyECeTl7GbIt2qlsDICxOR6FzQZY3C901Aw3MEDy4QHRXMnIIHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDTH9KZO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="Ayhuehes"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 7CF532E08A45;
-	Fri,  2 May 2025 11:47:03 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1746175625;
-	bh=ohQ4wDME3+jOfuoNUWNuty5n8n/agiEfl/vn/jqYItw=;
-	h=Received:From:Subject:To;
-	b=AyhuehesFwovsPSmR0MZyoajTVTni2qhfxW79mnN8YToxlRWDmJJBV0IghempDIt5
-	 WcMMsTieq/Eiiqx6VAprgIR1wTaeSqM+YmJg4Bexcm9Bfttzeq7u+8L1PX9MKuzesI
-	 rWLGXwZSkEindfsVPjfwa2Cah+hxn3rFhHI866Sc=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-30db1bc464dso15256371fa.0;
-        Fri, 02 May 2025 01:47:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCUJpjb3GOKGsRjLO8EbwOVnurMkxC2pSpvzArouscXIlko06xsFYS9YEFZCiJUjCozWz1lMpadK79VhSqjh@vger.kernel.org,
- AJvYcCVe9M0f0CoEOJTEwtXiUwNMaulCYvgfzyzqfxPR+O2YtEGoNeb7Y6nJC76sQWTyGmJIy1ItEVgQLqoobx7dDJW8VVxIpQ==@vger.kernel.org,
- AJvYcCXmhjZbrQKVYjl0FbhvUC9iP/YRgkP/5sC+yetLlQTlB5BAmRsiz1fvBMLciraWHHeSg25UhzIEtVGSNlXrmNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP6x0m8MRq8Oa+HxC/+0xS1X9blFYk6RDRTxDGi26++3/Auf//
-	fEmZg69mePFyBRhpO/JnfhaZVoYlBeIRHV/fq+paS4qxUuPVKrurMc1FofnGq0aDo9oHFDHis7x
-	IghiD6tRnf5ncDemivspXbJpEDcA=
-X-Google-Smtp-Source: 
- AGHT+IF2KuGQUkaQynK7BvHDDgcmIvf+dtrqh24xlrv01gfQDql9QFAC3rjArY5rugDsp4TPyfbzCFjBGU71NHrcUUE=
-X-Received: by 2002:a05:651c:543:b0:30b:cb10:3a20 with SMTP id
- 38308e7fff4ca-320c5be287emr5435431fa.32.1746175622620; Fri, 02 May 2025
- 01:47:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDTH9KZO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CADC4CEE4;
+	Fri,  2 May 2025 08:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746175668;
+	bh=NCirDjbr0P+QIBLiB7dQOcgcs9vpxXzMLjZHxOXUKuc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dDTH9KZOh1hEj5xVKE8c4rjCXx6+gYnRq4nmbWqx+h06O4kbsj8rs3Cjor4bsvuxy
+	 IGVhsrPI+9HG3K1KPCVrJLkQ3Kyirq8fgViGp0hv3zYpPjFmdxqCXAP69SStXn19Yc
+	 xZWCq1QmxZ0v7nWggAMIJEEYmbb3XqEW2L93TLA/wto4PyFRIW34manFUmZq4gqR1+
+	 vbspoZbhRI9zQSxguE6Omoh41tLkqsiCmh4u0le1Z66WjXGuVl8Is5qO1QBDnoWcYK
+	 EutwhLC4Zr2qRZPlZdambTEO6RkFZPV6w2KfF5SvNs1BJmunFL4TSduEEXhshF1N66
+	 qkplJtD0MN8lA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uAm3e-00Apre-AY;
+	Fri, 02 May 2025 09:47:46 +0100
+Date: Fri, 02 May 2025 09:47:45 +0100
+Message-ID: <86r017h00e.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Per Larsen <perl@immunant.com>
+Cc: linux-kernel@vger.kernel.org,
+	"qperret@google.com" <qperret@google.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	kernel-team@android.com,
+	"will@kernel.org" <will@kernel.org>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	yuzenghui@huawei.com,
+	Armelle Laine <armellel@google.com>,
+	arve@android.org
+Subject: Re: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
+In-Reply-To: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
+References: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <aBSE71VKfBlQg_fZ@stanley.mountain>
-In-Reply-To: <aBSE71VKfBlQg_fZ@stanley.mountain>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 2 May 2025 10:46:51 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwFcLKRZv9_cGacJSEmOZ30CaQzS75_Vfb1DDWaNBXUvzg@mail.gmail.com>
-X-Gm-Features: ATxdqUFHSB-iugiUyjDoWuzAutbINVAvgH5CdPUAvbLxfNlUcPpwyQ8n87sJuWg
-Message-ID: 
- <CAGwozwFcLKRZv9_cGacJSEmOZ30CaQzS75_Vfb1DDWaNBXUvzg@mail.gmail.com>
-Subject: Re: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
- oxp_psy_ext_set_prop()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>,
-	=?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174617562406.8474.1202650304836171656@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: perl@immunant.com, linux-kernel@vger.kernel.org, qperret@google.com, sebastianene@google.com, kernel-team@android.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, catalin.marinas@arm.com, yuzenghui@huawei.com, armellel@google.com, arve@android.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, 2 May 2025 at 10:40, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->
-> The "val->intval" variable is an integer which comes from the user.  This
-> code has an upper bounds check but the lower bounds check was
-> accidentally omitted.  The write_to_ec() take a u8 value as a parameter
-> so negative values would be truncated to positive values in the 0-255
-> range.
->
-> Return -EINVAL if the user passes a negative value.
->
-> Fixes: 202593d1e86b ("platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer")
+On Fri, 02 May 2025 04:52:39 +0100,
+Per Larsen <perl@immunant.com> wrote:
+> 
+> FF-A implementations with the same major version must interoperate with
+> earlier minor versions per DEN0077A 1.2 REL0 13.2.1 but FF-A version 1.1
+> broke the ABI on several structures and 1.2 relies on SMCCC 1.2 is not
+> backwards compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
+> 
+> If we return the negotiated hypervisor version when the host requests a
+> lesser minor version, the host will rely on the FF-A interoperability
+> rules. Since the hypervisor does not currently have the necessary
+> compatibility paths (e.g. to handle breaking changes to the SMC calling
+> convention), return NOT_SUPPORTED.
+> 
+> Signed-off-by: Per Larsen <perlarsen@google.com>
+> Signed-off-by: Per Larsen <perl@immunant.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index 3369dd0c4009..10e88207b78e 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -712,7 +712,24 @@ static void do_ffa_version(struct arm_smccc_res *res,
+> 
+>   hyp_spin_lock(&version_lock);
+>   if (has_version_negotiated) {
+> - res->a0 = hyp_ffa_version;
+> + /*
+> + * FF-A implementations with the same major version must
+> + * interoperate with earlier minor versions per DEN0077A 1.2
+> + * REL0 13.2.1 but FF-A version 1.1 broke the ABI on several
+> + * structures and 1.2 relies on SMCCC 1.2 is not backwards
+> + * compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
 
-Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+I can't parse this sentence. Missing words?
+
+> + *
+> + * If we return the negotiated hypervisor version when the host
+> + * requests a lesser minor version, the host will rely on the
+> + * aforementioned FF-A interoperability rules. Since the
+> + * hypervisor does not currently have the necessary compatibility
+> + * paths (e.g. to paper over the above-mentioned calling
+> + * convention changes), return NOT_SUPPORTED.
+> + */
+> + if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(hyp_ffa_version))
+> + res->a0 = FFA_RET_NOT_SUPPORTED;
+> + else
+> + res->a0 = hyp_ffa_version;
+>   goto unlock;
+>   }
+> 
+
+Something has gone seriously wrong with your email, and the patches
+are badly mangled and unusable. They are also sent as individual
+patches and not as a thread, which is a sign that you didn't send them
+using git. Please fix this for your next posting.
+
+More to the meat of the patches: why should the hypervisor paper over
+anything if the spec is broken? Why can't the host just as well decide
+for itself what to do?
 
 Thanks,
-Antheas
 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/platform/x86/oxpec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> index 4b48f4571b09..de70ca7e8493 100644
-> --- a/drivers/platform/x86/oxpec.c
-> +++ b/drivers/platform/x86/oxpec.c
-> @@ -582,7 +582,7 @@ static int oxp_psy_ext_set_prop(struct power_supply *psy,
->
->         switch (psp) {
->         case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-> -               if (val->intval > 100)
-> +               if (val->intval < 0 || val->intval > 100)
->                         return -EINVAL;
->                 return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
->         case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-> --
-> 2.47.2
->
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
