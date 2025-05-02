@@ -1,467 +1,217 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFE21862;
-	Fri,  2 May 2025 18:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211691; cv=fail; b=K1zBKOyj4nfoZrdfUJ3kLJ6HUliQ9bi0TlLir7e25MynVYCraA9fMt+D5VBKJygXwBSuMGnLfC5yc7souJTClB4I2WiZNFvhsox7AaAjsZyvPK+sGN96TLKUCk7bGf9BAEV71cq/2sVeTaNv46pWvCxLgYmfbw3LhXpmC367eM8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211691; c=relaxed/simple;
-	bh=9WgM4vlS3b1CSE1sLPWQq7kJT0MRHm4Y9jrGz6+seYM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PQOFo/F2zQuA6NQ1KVRvGAaRNFhSBhnS4pkJyshgLdCTwzTLEiSFhUMRJpYBD4zSRg9CxF/lUuKL7AN4mlkb46+CKnPeM43jMDsIlDWOlUvYJkpMJvdDpoScWiQqWxFkzb6VaqBAbpTXr5LrLo7n/RCegUaXb2KrvOSUX5h7krQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4T3+ULcD; arc=fail smtp.client-ip=40.107.92.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40718194080;
+	Fri,  2 May 2025 18:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746211741; cv=none; b=BWPLk8GR7oqSwC2SWghVfARxVa7kpdtcPYgXg9Z+v+F0lZqte+KKrj5EQ9aIHPA369lVfHsZRhP7Y9IbFG9C/OtpAQCVyZEW8mmFDghjMqe3qkTIbUvOQs3Vcn1YbUrx+88w3Mx3i0mexnjaJl1Sw7aOpgHpHtecFg1WQ3YB1J0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746211741; c=relaxed/simple;
+	bh=WMD/ZpJXQOOvEeURoC3nrQkO/gBhJRC+agPAI49lcNk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ldcEeuzLjsz8o24eOBaZtZq29wWQrKpzxxG/oh0bTDm9Fm1XeGFhuQTAc9VrHMzaWBTQJS9dMSlDcg4pr0LgE6WVGIU4PDq0BVkFLvqLgMyO0dt1aUQLordXWq7Jip7yedtVwQi9SzZ7sgtZ11m5fr0a6+/nA7IkqMWfCCYdci8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YoH20NMq; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4T3+ULcD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YLmyZ2BcriX1Ks5YEqLwIfLKtw8bWCQpid+H4SOO5skaSIHCC2rJbYfwQ8gqnsXwEasKSAb3Oi2C+R9oEwpmZ8KWfis7rfuVzX75dl5OGs6df6vYpv/cpXeaN6ln5zwZVGTBtAr1kNaaIy+x1RTZn7VR0eMoW+mCqWxSyElurMyFe0nkIUDHDdUZ1SoFDE7xMOALzsdkTTDU8zNEf1eWGCamKljczFovqA4w1nB7VVedCP5aTXWhi+ntGiPcruXSKqBWrO9YqYRf8WphIkSq4W4WJX8G7SsFXha1SO8dX+H5ZS4Jq9WIc+V72B6IoZYwXt1YvIxSMI8sRvWaI9Pf6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XHuiqb7e7bmTAXpxHynifFyHzC7jYpZqobbU0G4UrlQ=;
- b=nQghsL7DaCZM03e8afz0bFgZVuLr5LRDoU077A2ZrhqVP5pLoTW+YF/Ds5cMMWir2nJx1/XzpdxnPcSxvwOiYti3fX49foMO1q086LJTuMo5/EWJ2NGg0XOMsk2OkHgp6lDP23adt3EZKEbXAZZWqaiAl3Io1mFAfV+VidBlMIQfCN6NEyoTO7yrCGurYLxznfUGJ8NOQ2NcPNIro9wN1Lhs+nyy14GsCfaYZUnMWuhk7JbZDBNMjV9gG/qCkuY7A7Ouq+ED+DG6e46H1QXqqX1SXFML3tF6SJFAjf5cjiLY78ZbRsD5KiPFNJaTbuI7EYkHBQYVGJLvQTBW3JfqqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmx.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XHuiqb7e7bmTAXpxHynifFyHzC7jYpZqobbU0G4UrlQ=;
- b=4T3+ULcDZKQdCFwG0wHimUVFD96ADbbBGGBjNxy7rPxkqn1yw0qiwFDsTop40wfBQHCfT667o2yKTvEjIzW8o6cq+A2YYKD+D0VLrosiEn6DNjAli1rFn9OAVrhSN9sQIRD/ByUIhB4MNEmmAH1N8oZPifZsiOzl4HdL8jIvUrs=
-Received: from CH0PR04CA0089.namprd04.prod.outlook.com (2603:10b6:610:74::34)
- by DM4PR12MB6184.namprd12.prod.outlook.com (2603:10b6:8:a6::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.25; Fri, 2 May 2025 18:48:03 +0000
-Received: from CH2PEPF0000009C.namprd02.prod.outlook.com
- (2603:10b6:610:74:cafe::73) by CH0PR04CA0089.outlook.office365.com
- (2603:10b6:610:74::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.24 via Frontend Transport; Fri,
- 2 May 2025 18:48:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000009C.mail.protection.outlook.com (10.167.244.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 18:48:02 +0000
-Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 2 May 2025 13:48:02 -0500
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <W_Armin@gmx.de>, <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>,
-	<mario.limonciello@amd.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<benjamin.chan@amd.com>, <bin.du@amd.com>, <gjorgji.rosikopulos@amd.com>,
-	<king.li@amd.com>, <dantony@amd.com>, Pratap Nirujogi
-	<pratap.nirujogi@amd.com>
-Subject: [PATCH v9] platform/x86: Add AMD ISP platform config for OV05C10
-Date: Fri, 2 May 2025 14:46:36 -0400
-Message-ID: <20250502184736.2507703-1-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YoH20NMq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746211739; x=1777747739;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WMD/ZpJXQOOvEeURoC3nrQkO/gBhJRC+agPAI49lcNk=;
+  b=YoH20NMqL8UKmMQCNswzeZzJvjsE8mkKmptUZtLcTrzmRSy79cZ2DUqR
+   cqYe5Qxe3/TVXzp9CsftzlkbPGTK92Yn3TY097A7YQ1p3T7aBAM040eBa
+   t+72KRHgSzoJy9cmmUfZhOY/UKnIYBDKZDoFdF1FxxdrG2LyhBw4w3Nox
+   74wB42HkasMe4dEAm2Ve1nSjBlgcJVsj/SgTEU6fs+OGFRclVcsCg5cvL
+   LOTu8wOoW6L07WRLYjg5FdkxSr5Foxcu7AbexSPPizvktbTQySuwyB/tx
+   VpE5LjDIQ/ddne2CFh+pqfGS+R/R7NkkA6JCN0ngFa9qcvrssRsdHZk9C
+   w==;
+X-CSE-ConnectionGUID: k3+o+N20QImciT8L4HWcJw==
+X-CSE-MsgGUID: mvWTFVC2TwGglFWaAa8/TA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35519037"
+X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
+   d="scan'208";a="35519037"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:48:58 -0700
+X-CSE-ConnectionGUID: mLsB7Ke5S/m3fnkWp6UCEw==
+X-CSE-MsgGUID: pwkXt0gzRcWUAVnMnw+7cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
+   d="scan'208";a="134664791"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:48:57 -0700
+Message-ID: <c348c507-c06b-4611-87f4-c498e144fa45@intel.com>
+Date: Fri, 2 May 2025 11:48:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009C:EE_|DM4PR12MB6184:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ff420af-2977-4f5f-7b80-08dd89a9de6c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026|30052699003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LEaodcEUmEzxNam0hLHbLAKTPhnzVmX6y5EwK1m0kAdXZnlwbDQyQUVsMrL7?=
- =?us-ascii?Q?8keRi5Flgu0kWR4j9EF3h/bIOCbHNE8hgcXkDjjJc3tAWGXRCHva975m1/dn?=
- =?us-ascii?Q?hQ5ijsm7TqM15YKTf8cPtfrY+buXJilyl1mYPFDDgHcS8odC9UY8k5y3tw+m?=
- =?us-ascii?Q?PXekvaUhey0Zfwb83jsMckTxfQnDsggsJddBdR5S/hI454ZlU/7SCAIQwlQ7?=
- =?us-ascii?Q?Wni1zGtzPXSzd4AuU4sejUsqC7tS4OeNHqLc6pSHiVP3sP42aLppripJLvJn?=
- =?us-ascii?Q?Du+RaTHa3qOU3fI/dMsDwXJJlRH/uk0ehe243r2mAn2bx8BPxj4lTTpbF9xt?=
- =?us-ascii?Q?ltrgyVBC0iprNZFIhATyCl/DmVPWny1uMDHKeNxmUdF4+vp5TJBi/W35Xax2?=
- =?us-ascii?Q?SD6LbMOxuNeTJ2K78PQLQbNJSvBsBOQMPYBcM706lMTILHerLNWP8xcdZVIi?=
- =?us-ascii?Q?wc3j5X4JHIjG+/7oErgEC5fJj153JD3TeBr+B0fjaNzmdqez/Ubvzzw0EVUy?=
- =?us-ascii?Q?hz7oesivsM2WxxMpINs/NnuaR9zadk1Bc9ii7R3ZVdbm+2d4DgBXm2vX8L55?=
- =?us-ascii?Q?gukhPmLr3DPnSnrQiaWL/6BbWh5a3G50f1clqR5pPEwWMD1qas1i7wcbi0oC?=
- =?us-ascii?Q?WqrRewt31ejk72M4SnYFC1VdjxVRaCwJTMTc3DgBnJqcZFslXwM12gXB5zYz?=
- =?us-ascii?Q?JGkTJW03onEs8fznD/WPHNgH3hB6DXHdcURyh7d5dLgjAG4Mh4U2bVAeKQGs?=
- =?us-ascii?Q?qhhJR8cTlzc5kPdkg9P3vttK0Wk/MaqysDbNL6evPL28MmqGk2Vb3nZn9yHn?=
- =?us-ascii?Q?nTLjHjaX0BjH9k9fBSGCVcpY4b3ZaSq8HvaD6dd1i5kkKkmJCp0JNeB8CmDh?=
- =?us-ascii?Q?csgAQrrUA+4o2KQN+NynlO4efyn2U48M5z5k4KjB61JxKH22yhWUHfhtJyWh?=
- =?us-ascii?Q?B9sLrSuSCpDWw/jbFPgol/cpkmou0DKo6Jke4bmhH5QKQNj2msJcvsncASzW?=
- =?us-ascii?Q?eeQOzkvJoOhjbPYJVfvLPMkxatQsnSL4qrfDoIr2TiZzURR33DRRHRGunAp2?=
- =?us-ascii?Q?aF2SDkWdHIHZtFiu02RbBqelJIaOcptigYAidrqf40gazqrachP5zr5Uz6y3?=
- =?us-ascii?Q?pF/7zfskBcNMFnbklZ/ze10Dy801cgtq6qtj8DO6tY+zp6LRd5k7aw1A8H9L?=
- =?us-ascii?Q?7URTZIKDkIR+6zRcdcTDhB3HmriMSrNNy1770zarUDQRA5a9Yi+LfYsJBn7+?=
- =?us-ascii?Q?6a/BiHPX7kQUPfsgi6UvipaLJUG3zbtzfsGKfkjadHC7Q0kjVQpvSiHqc5DF?=
- =?us-ascii?Q?TOZ3wn0usMc6fNJgIbep4uPUq78cgtEgPfM4nKE8P1t8To4XNI6thPXpVUeq?=
- =?us-ascii?Q?FztChbFBogrNhqgGKiv2cg3iZy8IHbueZy+G4pHzaxkpMqwjQlWSxKMYuCF8?=
- =?us-ascii?Q?Phb7qWmUEGl1RJ0gO6s4PxorvZxcS6uqr20S58mvAHRMTI1F76KNzYDgtc29?=
- =?us-ascii?Q?bjmUYNeG9cHMQscqz+owffnwuaA5YAeIE+bj?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026)(30052699003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 18:48:02.9936
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ff420af-2977-4f5f-7b80-08dd89a9de6c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6184
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/18] x86/boot: make sure KASLR does not step over KHO
+ preserved memory
+To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
+ ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
+ devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com,
+ graf@amazon.com, hpa@zytor.com, jgowans@amazon.com,
+ kexec@lists.infradead.org, krzk@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+ pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org,
+ ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org,
+ saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+ thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+References: <20250501225425.635167-1-changyuanl@google.com>
+ <20250501225425.635167-15-changyuanl@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250501225425.635167-15-changyuanl@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-ISP device specific configuration is not available in ACPI. Add
-swnode graph to configure the missing device properties for the
-OV05C10 camera device supported on amdisp platform.
+On 5/1/25 15:54, Changyuan Lyu wrote:
+> KHO uses "scratch regions" to bootstrap a kexec'ed kernel. These regions are
+> guaranteed to not have any memory that KHO would preserve.
 
-Add support to create i2c-client dynamically when amdisp i2c
-adapter is available.
+I understand how these changelogs got written. They were written by
+someone thinking *only* about KHO and hacking it into the existing code.
+That's fine and understandable.
 
-Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
----
-Changes v8 -> v9:
+But everyone else is coming at this from the perspective of not knowing
+what scratch memory is.
 
-* Add mutex protection in instantiate_isp_i2c_client()
+"Scratch memory" in the KHO world is basically "normal kernel memory" to
+anybody else. So I think it's a disservice to everyone else reading
+these changelogs to act like it's something special.
 
- drivers/platform/x86/amd/Kconfig    |  11 ++
- drivers/platform/x86/amd/Makefile   |   1 +
- drivers/platform/x86/amd/amd_isp4.c | 283 ++++++++++++++++++++++++++++
- 3 files changed, 295 insertions(+)
- create mode 100644 drivers/platform/x86/amd/amd_isp4.c
+The thing that *is* special is that KHO kernels don't have a lot of
+"normal kernel memory". At least they're designed to tolerate lots of
+handed-off memory and little "scratch memory"
 
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index c3e086ea64fc..152a68a470e8 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -32,3 +32,14 @@ config AMD_WBRF
- 
- 	  This mechanism will only be activated on platforms that advertise a
- 	  need for it.
-+
-+config AMD_ISP_PLATFORM
-+	tristate "AMD ISP4 platform driver"
-+	depends on I2C && X86_64 && ACPI
-+	help
-+	  Platform driver for AMD platforms containing image signal processor
-+	  gen 4. Provides camera sensor module board information to allow
-+	  sensor and V4L drivers to work properly.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called amd_isp4.
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-index c6c40bdcbded..b0e284b5d497 100644
---- a/drivers/platform/x86/amd/Makefile
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
- obj-$(CONFIG_AMD_HSMP)		+= hsmp/
- obj-$(CONFIG_AMD_PMF)		+= pmf/
- obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-+obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
-diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-new file mode 100644
-index 000000000000..312a92f60dcc
---- /dev/null
-+++ b/drivers/platform/x86/amd/amd_isp4.c
-@@ -0,0 +1,283 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * AMD ISP platform driver for sensor i2-client instantiation
-+ *
-+ * Copyright 2025 Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/units.h>
-+
-+#define AMDISP_OV05C10_I2C_ADDR		0x10
-+#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
-+#define AMDISP_OV05C10_HID		"OMNI5C10"
-+#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
-+#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
-+
-+/*
-+ * AMD ISP platform definition to configure the device properties
-+ * missing in the ACPI table.
-+ */
-+struct amdisp_platform {
-+	struct i2c_board_info board_info;
-+	struct notifier_block i2c_nb;
-+	struct i2c_client *i2c_dev;
-+	struct mutex lock; /* protects i2c client creation */
-+};
-+
-+/* Top-level OV05C10 camera node property table */
-+static const struct property_entry ov05c10_camera_props[] = {
-+	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-+	{ }
-+};
-+
-+/* Root AMD ISP OV05C10 camera node definition */
-+static const struct software_node camera_node = {
-+	.name = AMDISP_OV05C10_HID,
-+	.properties = ov05c10_camera_props,
-+};
-+
-+/*
-+ * AMD ISP OV05C10 Ports node definition. No properties defined for
-+ * ports node for OV05C10.
-+ */
-+static const struct software_node ports = {
-+	.name = "ports",
-+	.parent = &camera_node,
-+};
-+
-+/*
-+ * AMD ISP OV05C10 Port node definition. No properties defined for
-+ * port node for OV05C10.
-+ */
-+static const struct software_node port_node = {
-+	.name = "port@",
-+	.parent = &ports,
-+};
-+
-+/*
-+ * Remote endpoint AMD ISP node definition. No properties defined for
-+ * remote endpoint node for OV05C10.
-+ */
-+static const struct software_node remote_ep_isp_node = {
-+	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
-+};
-+
-+/*
-+ * Remote endpoint reference for isp node included in the
-+ * OV05C10 endpoint.
-+ */
-+static const struct software_node_ref_args ov05c10_refs[] = {
-+	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
-+};
-+
-+/* OV05C supports one single link frequency */
-+static const u64 ov05c10_link_freqs[] = {
-+	925 * HZ_PER_MHZ,
-+};
-+
-+/* OV05C supports only 2-lane configuration */
-+static const u32 ov05c10_data_lanes[] = {
-+	1,
-+	2,
-+};
-+
-+/* OV05C10 endpoint node properties table */
-+static const struct property_entry ov05c10_endpoint_props[] = {
-+	PROPERTY_ENTRY_U32("bus-type", 4),
-+	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
-+				     ARRAY_SIZE(ov05c10_data_lanes)),
-+	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
-+				     ARRAY_SIZE(ov05c10_link_freqs)),
-+	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
-+	{ }
-+};
-+
-+/* AMD ISP endpoint node definition */
-+static const struct software_node endpoint_node = {
-+	.name = "endpoint",
-+	.parent = &port_node,
-+	.properties = ov05c10_endpoint_props,
-+};
-+
-+/*
-+ * AMD ISP swnode graph uses 5 nodes and also its relationship is
-+ * fixed to align with the structure that v4l2 expects for successful
-+ * endpoint fwnode parsing.
-+ *
-+ * It is only the node property_entries that will vary for each platform
-+ * supporting different sensor modules.
-+ */
-+#define NUM_SW_NODES 5
-+
-+static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
-+	&camera_node,
-+	&ports,
-+	&port_node,
-+	&endpoint_node,
-+	&remote_ep_isp_node,
-+	NULL
-+};
-+
-+static const struct acpi_device_id amdisp_sensor_ids[] = {
-+	{ AMDISP_OV05C10_HID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-+
-+static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
-+{
-+	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-+}
-+
-+static void instantiate_isp_i2c_client(struct amdisp_platform *ov05c10, struct i2c_adapter *adap)
-+{
-+	struct i2c_board_info *info = &ov05c10->board_info;
-+	struct i2c_client *i2c_dev;
-+
-+	if (ov05c10->i2c_dev)
-+		return;
-+
-+	if (!info->addr) {
-+		dev_err(&adap->dev, "invalid i2c_addr 0x%x detected\n", info->addr);
-+		return;
-+	}
-+
-+	guard(mutex)(&ov05c10->lock);
-+
-+	i2c_dev = i2c_new_client_device(adap, info);
-+	if (IS_ERR(i2c_dev)) {
-+		dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev);
-+		return;
-+	}
-+	ov05c10->i2c_dev = i2c_dev;
-+}
-+
-+static int isp_i2c_bus_notify(struct notifier_block *nb,
-+			      unsigned long action, void *data)
-+{
-+	struct amdisp_platform *ov05c10 = container_of(nb, struct amdisp_platform, i2c_nb);
-+	struct device *dev = data;
-+	struct i2c_client *client;
-+	struct i2c_adapter *adap;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		adap = i2c_verify_adapter(dev);
-+		if (!adap)
-+			break;
-+		if (is_isp_i2c_adapter(adap))
-+			instantiate_isp_i2c_client(ov05c10, adap);
-+		break;
-+	case BUS_NOTIFY_REMOVED_DEVICE:
-+		client = i2c_verify_client(dev);
-+		if (!client)
-+			break;
-+		if (ov05c10->i2c_dev == client) {
-+			dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
-+			ov05c10->i2c_dev = NULL;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct amdisp_platform *prepare_amdisp_platform(struct device *dev)
-+{
-+	struct amdisp_platform *isp_ov05c10;
-+	int ret;
-+
-+	isp_ov05c10 = devm_kzalloc(dev, sizeof(*isp_ov05c10), GFP_KERNEL);
-+	if (!isp_ov05c10)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mutex_init(&isp_ov05c10->lock);
-+	isp_ov05c10->board_info.dev_name = "ov05c10";
-+	strscpy(isp_ov05c10->board_info.type, "ov05c10", I2C_NAME_SIZE);
-+	isp_ov05c10->board_info.addr = AMDISP_OV05C10_I2C_ADDR;
-+
-+	ret = software_node_register_node_group(ov05c10_nodes);
-+	if (ret) {
-+		mutex_destroy(&isp_ov05c10->lock);
-+		return ERR_PTR(ret);
-+	}
-+
-+	isp_ov05c10->board_info.swnode = ov05c10_nodes[0];
-+
-+	return isp_ov05c10;
-+}
-+
-+static int try_to_instantiate_i2c_client(struct device *dev, void *data)
-+{
-+	struct amdisp_platform *ov05c10 = (struct amdisp_platform *)data;
-+	struct i2c_adapter *adap = i2c_verify_adapter(dev);
-+
-+	if (!ov05c10 || !adap)
-+		return 0;
-+	if (!adap->owner)
-+		return 0;
-+
-+	if (is_isp_i2c_adapter(adap))
-+		instantiate_isp_i2c_client(ov05c10, adap);
-+
-+	return 0;
-+}
-+
-+static int amd_isp_probe(struct platform_device *pdev)
-+{
-+	struct amdisp_platform *ov05c10;
-+	int ret;
-+
-+	ov05c10 = prepare_amdisp_platform(&pdev->dev);
-+	if (IS_ERR(ov05c10))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
-+				     "failed to prepare AMD ISP platform fwnode\n");
-+
-+	ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
-+	ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-+	if (ret)
-+		goto error_unregister_sw_node;
-+
-+	/* check if adapter is already registered and create i2c client instance */
-+	i2c_for_each_dev((void *)ov05c10, try_to_instantiate_i2c_client);
-+
-+	platform_set_drvdata(pdev, ov05c10);
-+	return 0;
-+
-+error_unregister_sw_node:
-+	software_node_unregister_node_group(ov05c10_nodes);
-+	mutex_destroy(&ov05c10->lock);
-+	return ret;
-+}
-+
-+static void amd_isp_remove(struct platform_device *pdev)
-+{
-+	struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
-+
-+	bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-+	i2c_unregister_device(ov05c10->i2c_dev);
-+	software_node_unregister_node_group(ov05c10_nodes);
-+	mutex_destroy(&ov05c10->lock);
-+}
-+
-+static struct platform_driver amd_isp_platform_driver = {
-+	.driver	= {
-+		.name			= AMD_ISP_PLAT_DRV_NAME,
-+		.acpi_match_table	= amdisp_sensor_ids,
-+	},
-+	.probe	= amd_isp_probe,
-+	.remove	= amd_isp_remove,
-+};
-+
-+module_platform_driver(amd_isp_platform_driver);
-+
-+MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-+MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-+MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+When you run through these again, could you please try to write these
+changelogs and comments for folks that are not familiar with KHO?
 
+> +/*
+> + * If KHO is active, only process its scratch areas to ensure we are not
+> + * stepping onto preserved memory.
+> + */
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+> +{
+
+I thought we agreed to rework this to unconditionally define the
+kho_scratch structures so the #ifdef can go away?
+
+> +	struct kho_scratch *kho_scratch;
+> +	struct setup_data *ptr;
+> +	int i, nr_areas = 0;
+> +
+> +	ptr = (struct setup_data *)boot_params_ptr->hdr.setup_data;
+> +	while (ptr) {
+> +		if (ptr->type == SETUP_KEXEC_KHO) {
+> +			struct kho_data *kho = (struct kho_data *)ptr->data;
+> +
+> +			kho_scratch = (void *)kho->scratch_addr;
+> +			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
+> +
+> +			break;
+> +		}
+> +
+> +		ptr = (struct setup_data *)ptr->next;
+> +	}
+> +
+> +	if (!nr_areas)
+> +		return false;
+> +
+> +	for (i = 0; i < nr_areas; i++) {
+> +		struct kho_scratch *area = &kho_scratch[i];
+> +		struct mem_vector region = {
+> +			.start = area->addr,
+> +			.size = area->size,
+> +		};
+> +
+> +		if (process_mem_region(&region, minimum, image_size))
+> +			break;
+> +	}
+> +
+> +	return true;
+> +}
+> +#else
+> +static inline bool process_kho_entries(unsigned long minimum,
+> +				       unsigned long image_size)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  static unsigned long find_random_phys_addr(unsigned long minimum,
+>  					   unsigned long image_size)
+>  {
+> @@ -775,7 +824,8 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+>  		return 0;
+>  	}
+>  
+> -	if (!process_efi_entries(minimum, image_size))
+> +	if (!process_kho_entries(minimum, image_size) &&
+> +	    !process_efi_entries(minimum, image_size))
+>  		process_e820_entries(minimum, image_size);
+>  
+>  	phys_addr = slots_fetch_random();
+
+I made a comment about this in the last round, making this the second
+thing that I've noticed that was not addressed.
+
+Could you please go back through the last round of comments before you
+repost these?
+
+Just to be clear: these are making progress, but they're not OK from the
+x86 side yet.
