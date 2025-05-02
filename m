@@ -1,137 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4854A32;
-	Fri,  2 May 2025 17:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B532D256C8B;
+	Fri,  2 May 2025 17:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746206702; cv=none; b=AEK0qDt+AqYdkXdlAav2Af+uQQaw5rZRoTWQU0ZmjDuH03C7XfXGVeX1KtIbT6dthCWb7gxWqoHdIx+masx0UiRbYzXZTn+j4IU918i/61HCDI5YF7Ja6POJ//DoKuplEKWmXumFkiDPUaMHLb8v9y4cvCuSe2ayvqtfLtgn4xY=
+	t=1746206722; cv=none; b=c6UVFJn0xmkwD2jlvGCWs7eo3jboyfm9YSdpdF/YBMHyEjwlVsIFXCrvhz1VX4XhbnMHIGgBewxzdK5ImrBDLrpuSQd5Vgt1SkHbcTKVJrR9uQ5pnMrtvVgo9Y12d9B7VRVB4ANhVYK2raUdPq6+MI0ryn06mPum1wCrYNAMGHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746206702; c=relaxed/simple;
-	bh=2cGLsKah/POrdc4clt/UyRsunwEB/yKQBASlqHtH9KM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Azflk/10zau2TGHFBiwhJBDHejTEOnBqchal4Ykb30IgUsiWZZwNpxnU1FXgVqs55p095HkVfg2HqRqcfe1UY1FCzcr+j9pUul0rpiF2mxxnSLDo/L2qGQiN89azarh4NFZbHi/vnDwQcIgle0OnDsKtBvo2A5OJjdhMH9dti/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tM64lHtg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746206722; c=relaxed/simple;
+	bh=UtQh+/YSXXqkRAun9KktFMfLGSEdqy4gdJOL8UsStjU=;
+	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=O1f0TJ8+88+1CLlTa5L8Ad2+6zfuFanK+CeUZgfZDq00zeghqvCdOAyQ1SmRrcKCsMb68295mwVp2jU1Z0dUP//lFPnwMO6K+agK8dwUgij9kXq97UhbBuDqm2PHybGKwTLdCvqT6SbQzWQisxyTZJtXzQ6gxrnz+6IqcJrHwx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=u9cpXScg; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tM64lHtg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39609C4CEE4;
-	Fri,  2 May 2025 17:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746206701;
-	bh=2cGLsKah/POrdc4clt/UyRsunwEB/yKQBASlqHtH9KM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tM64lHtgaSfwvXo8jexwrAKozvGBRLCgRO3RgS05BGSJOUVaOLufohC1+pr0f0DOZ
-	 Lm5zvZ3aOoKCDbqAG8N5NkXAR4N5/+s+vBqujq8orRi1kbriywsWZa0MUlGElNk8j/
-	 mD27RYxQm1HNZX451I0tesXS10GkBXfNmZuzau8o=
-From: Shuah Khan <skhan@linuxfoundation.org>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	brendan.higgins@linux.dev,
-	davidgow@google.com,
-	rmoar@google.com,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] kbuild: use ARCH from compile.h in unclean source tree msg
-Date: Fri,  2 May 2025 11:24:56 -0600
-Message-ID: <20250502172459.14175-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u9cpXScg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746206720; x=1777742720;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=UtQh+/YSXXqkRAun9KktFMfLGSEdqy4gdJOL8UsStjU=;
+  b=u9cpXScgSFK3Hjhr2QPpl4jKXRNdRPZfqLXF2ziF1jauzMtGP3dGF1gn
+   aznB/tGnPSzfFfBpkngy/57spIkvnAFZ3+uRBiUmh8/xs/+ZxjLpOJc1O
+   gWuUwMl//8FiYhAX/lm8l3hlgSxwGARsiiPYAHXt7czGseeDmtQysGJLk
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,257,1739836800"; 
+   d="scan'208";a="192951124"
+Subject: Re: EEVDF regression still exists
+Thread-Topic: EEVDF regression still exists
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 17:25:16 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:26814]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.224:2525] with esmtp (Farcaster)
+ id 68d9cd7a-6a75-4597-83ee-277d0e2c4386; Fri, 2 May 2025 17:25:15 +0000 (UTC)
+X-Farcaster-Flow-ID: 68d9cd7a-6a75-4597-83ee-277d0e2c4386
+Received: from EX19D001UWB004.ant.amazon.com (10.13.138.4) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 2 May 2025 17:25:15 +0000
+Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
+ EX19D001UWB004.ant.amazon.com (10.13.138.4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 2 May 2025 17:25:15 +0000
+Received: from EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0]) by
+ EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0%5]) with mapi id
+ 15.02.1544.014; Fri, 2 May 2025 17:25:15 +0000
+From: "Prundeanu, Cristian" <cpru@amazon.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: K Prateek Nayak <kprateek.nayak@amd.com>, "Mohamed Abuelfotoh, Hazem"
+	<abuehaze@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "Benjamin
+ Herrenschmidt" <benh@kernel.crashing.org>, "Blake, Geoff"
+	<blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>, "Doebel, Bjoern"
+	<doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>, Swapnil Sapkal
+	<swapnil.sapkal@amd.com>, Joseph Salisbury <joseph.salisbury@oracle.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov
+	<bp@alien8.de>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
+	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Thread-Index: AQHbuU8Zth8BPweWAUWz5H5EpP8DD7O7+3yAgANMZ4A=
+Date: Fri, 2 May 2025 17:25:14 +0000
+Message-ID: <B27ECDA1-632D-44CD-AB99-B7A9C27393E4@amazon.com>
+References: <20250429213817.65651-1-cpru@amazon.com>
+ <20250430100259.GK4439@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250430100259.GK4439@noisy.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <65213DACC676A045A3614A07465F5362@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When make finds the source tree unclean, it prints a message to run
-"make ARCH=x86_64 mrproper" message using the ARCH from the command
-line. The ARCH specified in the command line could be different from
-the ARCH of the existing build in the source tree.
-
-This could cause problems in regular kernel build and kunit workflows.
-
-Regular workflow:
-
-- Build x86_64 kernel
-	$ make ARCH=x86_64
-- Try building another arch kernel out of tree with O=
-	$ make ARCH=um O=/linux/build
-- kbuild detects source tree is unclean
-
-  ***
-  *** The source tree is not clean, please run 'make ARCH=um mrproper'
-  *** in /linux/linux_srcdir
-  ***
-
-- Clean source tree as suggested by kbuild
-	$ make ARCH=um mrproper
-- Source clean appears to be clean, but it leaves behind generated header
-  files under arch/x86
- 	arch/x86/realmode/rm/pasyms.h
-
-A subsequent x86_64e build fails with
-  "undefined symbol sev_es_trampoline_start referenced ..."
-
-kunit workflow runs into this issue:
-
-- Build x86_64 kernel
-- Run kunit tests:  it tries to build for user specified ARCH or uml
-  as default:
-	$ ./tools/testing/kunit/kunit.py run
-
-- kbuild detects unclean source tree
-
-  ***
-  *** The source tree is not clean, please run 'make ARCH=um mrproper'
-  *** in /linux/linux_6.15
-  ***
-
-- Clean source tree as suggested by kbuild
-	$ make ARCH=um mrproper
-- Source clean appears to be clean, but it leaves behind generated header
-  files under arch/x86
-
-The problem shows when user tries to run tests on ARCH=x86_64:
-
-	$ ./tools/testing/kunit/kunit.py run ARCH=x86_64
-
-	"undefined symbol sev_es_trampoline_start referenced ..."
-
-Build trips on arch/x86/realmode/rm/pasyms.h left behind by a prior
-x86_64 build.
-
-Problems related to partially cleaned source tree are hard to debug.
-Change Makefile to unclean source logic to use ARCH from compile.h
-UTS_MACHINE string. With this change kbuild prints:
-
-	$ ./tools/testing/kunit/kunit.py run
-
-  ***
-  *** The source tree is not clean, please run 'make ARCH=x86_64 mrproper'
-  *** in /linux/linux_6.15
-  ***
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Makefile b/Makefile
-index 5aa9ee52a765..7ee29136b4da 100644
---- a/Makefile
-+++ b/Makefile
-@@ -674,7 +674,7 @@ ifeq ($(KBUILD_EXTMOD),)
- 		 -d $(srctree)/include/config -o \
- 		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
- 		echo >&2 "***"; \
--		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
-+		echo >&2 "*** The source tree is not clean, please run 'make ARCH=$(shell grep UTS_MACHINE $(srctree)/include/generated/compile.h | cut -d '"' -f 2) mrproper'"; \
- 		echo >&2 "*** in $(abs_srctree)";\
- 		echo >&2 "***"; \
- 		false; \
--- 
-2.47.2
-
+T24gMjAyNS0wNC0zMCwgMDU6MDMsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQu
+b3JnIDxtYWlsdG86cGV0ZXJ6QGluZnJhZGVhZC5vcmc+PiB3cm90ZToNCg0KPiBBbnl3YXksIGxv
+b2tpbmcgYXQgdGhlIHR3byBpbmRpdmlkdWFsIHJlcG9ydHMgc2lkZSBieSBzaWRlOg0KPg0KPiAt
+IHNjaGVkdWxlKCkgbGVmdCB0aGUgcHJvY2Vzc29yIGlkbGUgLS0gaXMgdXANCj4NCj4gdnMuDQo+
+DQo+IC0gcHVsbF90YXNrKCkgY291bnQgb24gY3B1IG5ld2x5IGlkbGUgLS0gaXMgZG93bg0KPiAt
+IGxvYWRfYmFsYW5jZSgpIHN1Y2Nlc3MgY291bnQgb24gY3B1IG5ld2x5IGlkbGUgLS0gaXMgZG93
+bg0KPg0KPiBXaGljaCBzZWVtIHJlbGF0ZWQgYW5kIHdvdWxkIHN1Z2dlc3Qgd2UgbG9vayBhdCBu
+ZXdpZGxlIGJhbGFuY2UuIE9uZSBvZg0KPiB0aGUgdGhpbmdzIHdlJ3ZlIHNlZW4gYmVmb3JlIGlz
+IHRoYXQgbmV3aWRsZSB3YXMgYWZmZWN0ZWQgYnkgdGhlIHNob3J0ZXINCj4gc2xpY2Ugb2YgRUVW
+REYuIEJ1dCBpdCBpcyBhbHNvIHF1aXRlIHBvc3NpYmxlIHNvbWV0aGluZyBjaGFuZ2VkIGluIHRo
+ZQ0KPiBsb2FkLWJhbGFuY2VyIGhlcmUuDQo+DQo+IEFsc28gb2Ygbm90ZSBpcyB0aGF0IC4xNSBz
+ZWVtcyB0byBoYXZlIGEgbG93ZXIgbnVtYmVyIG9mICd0dHd1KCkgd2FzDQo+IGNhbGxlZCB0byB3
+YWtlIHVwIG9uIHRoZSBsb2NhbCBjcHUnIC0tIHdoaWNoIEknbSBub3QgcXVpdGUgc3VyZSBob3cg
+dG8NCj4gcmh5bWUgd2l0aCB0aGUgcHJldmlvdXMgb2JzZXJ2YXRpb24uIFRoZSBuZXdpZGxlIHRo
+aW5nIHNlZW1zIHRvIHN1Z2dlc3QNCj4gbm90IGVub3VnaCBtaWdyYXRpb25zLCB3aGlsZSB0aGlz
+IHdvdWxkIHN1Z2dlc3QgdG9vIG1hbnkgbWlncmF0aW9ucy4NCg0KQSAyeCBsb25nZXIgc2xpY2Ug
+b24gNi4xNSBkb2VzIGltcHJvdmUgcGVyZm9ybWFuY2Ugc29tZSwgYnV0IG5vdCBieSBhIGxvdC4N
+Ckkgd2VudCBiYWNrIHRvIGxvb2sgYXQgbXkgcHJldmlvdXMgdGVzdHMsIGFuZCBiYWNrIGluIFNl
+cHRlbWJlciBJIGRpZCB0cnkNCm11bHRpcGxlIHNsaWNlIHZhbHVlcyAoMS41bXMsIDNtcywgNm1z
+LCAxMm1zKSBvbiA2LjUgYW5kIDYuNi4gVGhlIHJlc3BvbnNlDQp3YXMgbm9pc3kgKG11Y2ggbGVz
+cyBvbiBDRlMgaG93ZXZlciksIGFuZCBub3QgbGluZWFyLCBwZWFraW5nIGF0IDNtcy4NCkRvZXMg
+dGhlIGxhY2sgb2YgbGluZWFyaXR5IG1hdGNoIHlvdXIgZXhwZWN0YXRpb25zPyBXb3VsZCBpdCBo
+YXZlIHJlYXNvbg0KdG8gY2hhbmdlIGluIG1vcmUgcmVjZW50IGtlcm5lbHM/DQoNCkFub3RoZXIs
+IG1vcmUgcmVjZW50IG9ic2VydmF0aW9uIGlzIHRoYXQgNi4xNS1yYzQgaGFzIHdvcnNlIHBlcmZv
+cm1hbmNlIHRoYW4NCnJjMyBhbmQgZWFybGllciBrZXJuZWxzLiBNYXliZSB0aGF0IGNhbiBoZWxw
+IG5hcnJvdyBkb3duIHRoZSBjYXVzZT8NCkkndmUgYWRkZWQgdGhlIHBlcmYgcmVwb3J0cyBmb3Ig
+cmMzIGFuZCByYzIgaW4gdGhlIHNhbWUgbG9jYXRpb24gYXMgYmVmb3JlLg0KDQpodHRwczovL2dp
+dGh1Yi5jb20vYXdzL3JlcHJvLWNvbGxlY3Rpb24vYmxvYi9tYWluL3JlcHJvcy9yZXByby1teXNx
+bC1FRVZERi1yZWdyZXNzaW9uL3Jlc3VsdHMvMjAyNTA0MjgvUkVBRE1FLm1kI3Jhdy1kYXRhDQoN
+Cg0K
