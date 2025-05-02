@@ -1,183 +1,204 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62686231831
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4597B233144
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179671; cv=none; b=gxwTCJsprUjvCqN0+4mzxhwR5e0Q9MEQDh/sSYhW5bByazLgsfUDWCf7rJde0bkCIfSSwB8MV7reSPk729sOXSzdGls00TtrBMY/T9WVn8sT9/1e9H6X0Ufk8ATXqpIGXb2CPGV6/H1kFlQ71c5bNdbEABkgUpoJjb5USNGIBNM=
+	t=1746179730; cv=none; b=bQSNwhHzJ1FBoFB0HWLsN24qEGY05pNQDY/TJbsnCL5+1QQqp4xjxvG6o8KK7c1R+hDiTLVgYUF5osh+zzyrcEJdrPQiv81T5kOv72FCAqb7PlDMFhVIVbjiFbIxSJgLZXS+nkFngu4iU55zjVgdzyapp6oyV8emW4sFKtUonyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179671; c=relaxed/simple;
-	bh=3LU789saYyrutCozDG0IOlxxmIN4Z1wthUFZjP4Ozbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i9O5mgP2YsiyS5FuliH4V0ZLQ8Dl0jfByCvD8kX7leCQNPrcdXTl0p+tqVDuU9abV2MqUTbTf0u/vSZ1WLTcmxVCX6+wN7MhL9R069+BKUkPXcAph97LYavQYxaDPzUd3rtaYNjR/rphxEeEm48zna23ujHmjNZO6hyZG4fdYXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=he/Xkw6I; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746179730; c=relaxed/simple;
+	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nAAuFCFapzjlhxBJ2TALOYFNn/f9hhSSTXwNle6ZACvFM+VVvWuoBLTOkL2QP20V/+rY+nRiN+x4ZugX9NjDVbKrOmDUNDovK+uxoOdfOjnoxvrtQmsD5jKSLSkp45WsETYoCxOVUJMVX0CyzeCCp3heFgL2iDo6BUnIMiH33j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/2SNfyP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="he/Xkw6I"
-Message-ID: <64c14861-c7ef-4608-9e12-4567775bc5af@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746179665;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/2SNfyP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746179728;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+yfmn0tK+qTWIj7LV5pZmbdVGhS233Htkxsoag4Qbfs=;
-	b=he/Xkw6IHpnh5DFcegTV1kjxZyzUViCF0HeVZJfHd7nZG5VBoVd/NqeMJj7Iu4gWuiLsFY
-	gFvkkKLg01jjL42Nk+vnGqzdJGhTi98/NewFAuxP5+Z3JJ319nCmIB2wemEw11z5Fzo90e
-	Bh2XJ0OBcUPlVLlGKNl9KJ2eNWPaMS8=
-Date: Fri, 2 May 2025 11:54:22 +0200
+	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+	b=c/2SNfyPnj7Q9740GNXSjSEGfyVQvNzu1kfdfMKK8wnyBIbvhRbHp3RRvGxNKhur9XdPjf
+	NDwyDWSpxQFULU3QRWu9NWeR+N9O9AzjSw5ovLXlF7ih/C0yxFkdnAFJo+C44m7WQjSUzY
+	0rKen5oRNhg+LimqnoXiLxENKrWjTpg=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-52-NZRNbi8cOpmlDKY17OLgtA-1; Fri, 02 May 2025 05:55:27 -0400
+X-MC-Unique: NZRNbi8cOpmlDKY17OLgtA-1
+X-Mimecast-MFC-AGG-ID: NZRNbi8cOpmlDKY17OLgtA_1746179726
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39130f02631so496915f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 02:55:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+        b=pjH1Db1GWw6G11F8PmNdR5knGroJ5XZ2/wdhJ79oMgvZ0Sg7NI6BBhJAdKHNb8gU8b
+         n5smain1pLs37c3hizsgqI3HLEGXL8lZGYZJtYxiPOR7OZ7+ppbAJPZvSoWMkhyuFTT+
+         RK9n0n2QqM5QrZ04b8pyjxRvwUGjpN/sMexxm5C2wpx24HCpdkYp466yoTZEYpG0y3Gf
+         ipPjnzS+dueMu/DhT/WJLvYTpOver3BoXvbezs392+36QMlDDR8OhwO/Dd+tjTb+T1J6
+         FaOc31mZt//rHObe1dOUn0FiPhGPfgjSIdkk92pd41yLHJI+cOYYF4cpNRltO26bww5k
+         Gi5w==
+X-Gm-Message-State: AOJu0YySgbRcIXpl3gOkB4npLcgkGsc+DjRMpb4ZxYg/exytZK8NsR4J
+	X3HiMotoMGvYGDDLqhyRl57GNvaMiAfkRjZtQBaIRaTuqp4MqQUzSEuvNln4TYvWiwnZntc5LUL
+	0y1WGkii6l9Ek/ScTXFjnCuVSFdyDcK3czIlMNfEOzykAdhecWEKrvPT3ok2ChQ==
+X-Gm-Gg: ASbGncuNQvl9YGbSo4WXdXrwmhAheBmK9HzrleipNjioWBtxg/C4OFgyGnbvb1+qym2
+	LmBRygdsTo/Ok9dG5R6dPpsNKiYY8q9265TEirH+7b4AANEtxHZpZiw7bxVbQI0ULssOIhrxlYR
+	7Zh0Zh1FSRrvzfg0idjB7+HumrgJhJMvn8suj07Iwnc5XiolWCadfOODzCevSG0Zu4ZiIxHt85p
+	LznfbvcqmsUsEFkBvuwI08rFYJhbt/dxPXhunxFPpEOqumIgDWWa2vOya9XgqxS8ZtBQTR8IOIv
+	t4pzwU5QAgZWtOskbBCTQ5TH9PiRHXPYUU00XCQ6bQptvCxX
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613285f8f.54.1746179725813;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 02:55:24 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+Date: Fri, 02 May 2025 11:55:21 +0200
+Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-To: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>,
- jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- zyjzyj2000@gmail.com
-References: <6813a531.050a0220.14dd7d.0018.GAE@google.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <6813a531.050a0220.14dd7d.0018.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On 01.05.25 18:45, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    8bac8898fe39 Merge tag 'mmc-v6.15-rc1' of git://git.kernel..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16b6d774580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8bac8898.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/2a76d594c0f5/vmlinux-8bac8898.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/dae09c25780d/bzImage-8bac8898.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 1046 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
+On 30/04/25 13:00, Dave Hansen wrote:
+> On 4/30/25 12:42, Steven Rostedt wrote:
+>>> Look at the syscall code for instance:
+>>>
+>>>> SYM_CODE_START(entry_SYSCALL_64)
+>>>>         swapgs
+>>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+>>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+>>> You can _trivially_ audit this and know that swapgs doesn't touch memory
+>>> and that as long as PER_CPU_VAR()s and the process stack don't have
+>>> their mappings munged and flushes deferred that this would be correct.
+>> Hmm, so there is still a path for this?
+>>
+>> At least if it added more ways to debug it, and some other changes to make
+>> the locations where vmalloc is dangerous smaller?
+>
+> Being able to debug it would be a good start. But, more generally, what
+> we need is for more people to be able to run the code in the first
+> place. Would a _normal_ system (without setups that are trying to do
+> NOHZ_FULL) ever be able to defer TLB flush IPIs?
+>
+> If the answer is no, then, yeah, I'll settle for some debugging options.
+>
+> But if you shrink the window as small as I'm talking about, it would
+> look very different from this series.
+>
+> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
+> unconditionally flush the TLB on the way back into the kernel (in the
+> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
+> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
+> point of a NOHZ_FULL task is to minimize the number of kernel entries
+> then a little extra overhead there doesn't sound too bad.
+>
 
-This is a known problem. It seems to be related with the following commit.
+Right, so my thought per your previous comments was to special case the
+TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
+just like you've described - but keep the context tracking mechanism for
+other deferrable operations.
 
-commit 1a633bdc8fd9e9e4a9f9a668ae122edfc5aacc86
-Author: Bob Pearson <rpearsonhpe@gmail.com>
-Date:   Fri Mar 29 09:55:15 2024 -0500
+My gripe with that was having two separate mechanisms
+- super early entry around SWITCH_TO_KERNEL_CR3)
+- later entry at context tracking
 
-     RDMA/rxe: Let destroy qp succeed with stuck packet
+Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
+context_tracking infra to dynamically defer operations (atomically reading
+and writing to context_tracking.state), which means we unconditionally run
+all possible deferrable operations. This doesn't scream scalable, even
+though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
 
-     In some situations a sent packet may get queued in the NIC longer than
-     than timeout of a ULP. Currently if this happens the ULP may try to 
-reset
-     the link by destroying the qp and setting up an alternate 
-connection but
-     will fail because the rxe driver is waiting for the packet to finish
-     getting sent and be returned to the skb destructor function where 
-the qp
-     reference holding things up will be dropped. This patch modifies 
-the way
-     that the qp is passed to the destructor to pass the qp index and 
-not a qp
-     pointer.  Then the destructor will attempt to lookup the qp from 
-its index
-     and if it fails exit early. This requires taking a reference on the 
-struct
-     sock rather than the qp allowing the qp to be destroyed while the sk is
-     still around waiting for the packet to finish.
+Yet another option is to duplicate the context tracking state specifically
+for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
+also not super savoury.
 
-     Link: 
-https://lore.kernel.org/r/20240329145513.35381-15-rpearsonhpe@gmail.com
-     Signed-off-by: Bob Pearson <rpearsonhpe@gmail.com>
-     Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+I suppose I can start poking around running deferred ops in that
+SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
+this gets me :-)
 
-Zhu Yanjun
+Again, thanks for the insight and the suggestions Dave!
 
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 1046 Comm: kworker/u4:9 Not tainted 6.15.0-rc4-syzkaller-00040-g8bac8898fe39 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: rxe_wq do_work
-> RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-> Code: 80 3c 20 00 74 08 4c 89 ff e8 41 ee 8c f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 11 fe 2a f9 41 f6 c6 01 75 0e e8 26 f9 2a f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 35 c4 fa 01 48 89 c7 be 0e 00
-> RSP: 0018:ffffc90000007a08 EFLAGS: 00010246
-> RAX: ffffffff8894c5aa RBX: ffff88803ec8d280 RCX: ffff888035088000
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: ffffffff886e3f04 R12: dffffc0000000000
-> R13: 1ffff11007d91a5b R14: 0000000000025820 R15: ffff888034060000
-> FS:  0000000000000000(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f7c6d874fc8 CR3: 00000000428c8000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   <IRQ>
->   skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1149
->   napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
->   e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
->   e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
->   e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
->   __napi_poll+0xc4/0x480 net/core/dev.c:7324
->   napi_poll net/core/dev.c:7388 [inline]
->   net_rx_action+0x6ea/0xdf0 net/core/dev.c:7510
->   handle_softirqs+0x283/0x870 kernel/softirq.c:579
->   do_softirq+0xec/0x180 kernel/softirq.c:480
->   </IRQ>
->   <TASK>
->   __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
->   local_bh_enable include/linux/bottom_half.h:33 [inline]
->   rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
->   __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4656
->   neigh_output include/net/neighbour.h:539 [inline]
->   ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
->   __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
->   ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
->   rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
->   rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
->   rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
->   rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
->   do_task+0x1ad/0x6b0 drivers/infiniband/sw/rxe/rxe_task.c:127
->   process_one_work kernel/workqueue.c:3238 [inline]
->   process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
->   worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
->   kthread+0x70e/0x8a0 kernel/kthread.c:464
->   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
+> Also, about the new hardware, I suspect there's some mystery customer
+> lurking in the shadows asking folks for this functionality. Could you at
+> least go _talk_ to the mystery customer(s) and see which hardware they
+> care about? They might already even have the magic CPUs they need for
+> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
+> happy to help figure it out.
 
