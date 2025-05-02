@@ -1,111 +1,139 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF702571D5;
-	Fri,  2 May 2025 16:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CC7268C48;
+	Fri,  2 May 2025 16:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204766; cv=none; b=cRn2U1ZHZz/BGLpNNEi7qmQpMfu+mJezjKg/fllzM1Wp77zDosFUYiWTonLJUp8wfljDyA3JzCzcZVFCLWjifnT/4fK2ig7dXKUC0UNSnRPVBKK+w9PwzyFPQDl3V0sFNRg87pwassyKpvgn88OZVuFVScP8N6VGU41XiKn5f8M=
+	t=1746204789; cv=none; b=jKkkByB0+GncdLn4+1OQIzECEP/MbgBTan4QEQVWS4DrOlhGvQTMrI0rSiwJ5WuOdtPvxksRK7ZWZbF8oRLvTc6Yq4hD61PMo6ZYCXw++y6V6yJ1SixUZuAzVP3eIwTuqFHXnjiuUam6dojHbyGOqoMqLBjgcSQW5ZXCZOjPYGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204766; c=relaxed/simple;
-	bh=26hkBOX6SosTAb5YFKXego/kgdS2SaV+sWyHWN5vTkY=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ze/f0j/iB6LDoTRdwJDriVnl9xMTSLRLUrIDJzNWe+6zc90qeF4u9sccr7QVLr7H1y3s2+/p8miXZ37Bzg0cSHTMyJDho93q3i2Bi6v9d+vyHoG6GRZYj+xlR6IF8zAlkMf7BdPIn84HvcvzvCibVuVrsejakt9qRCnc6HmUTlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=fgWeneZJ; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1746204789; c=relaxed/simple;
+	bh=g4VUCjRthehjpe2xs+A0+SCTnyPwxFun1Jy7XN11WVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oc3gdVhSlHMCvDCqzweePL9pMqe9wg9OvQjR3nprWDRomw119LGCnHr4Aq3kRKR7jAwZ5DyFzQ38wvRMFao7HNRVC62j3EnUjbnA5jy5jc4g5Ob6c5mapep0IA+D4io5FzdqNqGFwQfNtr+tBxpI3VkNj5cEE9kXbcc6/qL/3OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOgNXoes; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fgWeneZJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOgNXoes"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30820167b47so2379962a91.0;
+        Fri, 02 May 2025 09:53:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746204760; x=1777740760;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=26hkBOX6SosTAb5YFKXego/kgdS2SaV+sWyHWN5vTkY=;
-  b=fgWeneZJAXMliQNyFxJ84x9mlpcYk0+nn3I95SzaEDUYKxStFyynarXC
-   I9+kVINIaEqGzZIkRRu8Yan0x73YXVp3PwYdg2eR8ixQk5Q86kcuLadCY
-   +LUoZPZGkLINkF0YS+K7XNGorzrUS7aObiYzGJ44aB1MiymoCImt/YO7F
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.15,257,1739836800"; 
-   d="scan'208";a="401365857"
-Subject: Re: EEVDF regression still exists
-Thread-Topic: EEVDF regression still exists
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 16:52:40 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:54137]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.224:2525] with esmtp (Farcaster)
- id 9bdfdfaf-bb97-4a6a-9618-f4a74663dc15; Fri, 2 May 2025 16:52:39 +0000 (UTC)
-X-Farcaster-Flow-ID: 9bdfdfaf-bb97-4a6a-9618-f4a74663dc15
-Received: from EX19D002UWA003.ant.amazon.com (10.13.138.235) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 2 May 2025 16:52:39 +0000
-Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
- EX19D002UWA003.ant.amazon.com (10.13.138.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 2 May 2025 16:52:38 +0000
-Received: from EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0]) by
- EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0%5]) with mapi id
- 15.02.1544.014; Fri, 2 May 2025 16:52:38 +0000
-From: "Prundeanu, Cristian" <cpru@amazon.com>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: K Prateek Nayak <kprateek.nayak@amd.com>, "Mohamed Abuelfotoh, Hazem"
-	<abuehaze@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "Benjamin
- Herrenschmidt" <benh@kernel.crashing.org>, "Blake, Geoff"
-	<blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>, "Doebel, Bjoern"
-	<doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>, Swapnil Sapkal
-	<swapnil.sapkal@amd.com>, Joseph Salisbury <joseph.salisbury@oracle.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
-	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Thread-Index: AQHbuU8Zth8BPweWAUWz5H5EpP8DD7O7MGMA//+vIgCAAK8gAIACE5kAgAFpKQCAADNhAA==
-Date: Fri, 2 May 2025 16:52:38 +0000
-Message-ID: <935376C2-71B9-4E41-9738-99A4BCC55B48@amazon.com>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
- <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
- <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
- <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
- <20250502084844.GT4198@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250502084844.GT4198@noisy.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0D14B31FC3DA854E8AD8251CD7584CBE@amazon.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1746204787; x=1746809587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n7UI2Y6MBJpdKB31fdutcaWyVKKdFp08Cn0ReKUGIo8=;
+        b=dOgNXoesIB7QCjUEDBpYQWErykfMD1g+l+5wlV8mz5rwY07rXOdkWQupPxvqpmDtKZ
+         QgPL3uBMQ/b+tuFTeSh+X8uWHJZoeX4F69JTQ9FCzhBs4HykOo+TtdQwqRsjatYFw6LJ
+         oCL5QVoIJTUF/pA61gYKzw3pCbAShLl24kppM+29Rnp4oWdSS1xMdP8z8/YF6QEiJy0O
+         zKGAHN+dSvX2hk07RYy7jqo12DeJiTUL3ZciGex2dO1wFm6zFwHNn1hyLvfW7CmEYoW8
+         N5353EAokrXt0t/kmrXCCC+oY2JySDtJGnDq7KWU8L/9Sos6DQP0cdBhhV9mEyxhYLqn
+         tskg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746204787; x=1746809587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n7UI2Y6MBJpdKB31fdutcaWyVKKdFp08Cn0ReKUGIo8=;
+        b=Tx+8MJkQAaE1RVnle+xe8NSyi8jBdQJyZaMEq0G8hh4iAPFEXVsGYrGrQX/K7i1CRi
+         u9+9d6vEKfIOeN1hf15EG1XGMH7Kxn6/i2f2nwx6oaaGXnd5Bfw5xNeke1FeCzBiBem9
+         EGz0QmMfF4Gnp72hwRWkyJf97cs5uL7cqIPmgqK+k9tdLGKmsyDNiuZvppZaOgXXL2W1
+         Le18q4jZbhw3MPWcjcnQHsqe3A1o5bj6khUW9Fcwu//RuEknPgtA3kE3TW+Qiy0nP46e
+         s8xQtuk7ny0bPd76Blm+EZScVu2B1p2SorGWiAvgmsvlD/pPropz8b7IIIv0qMqmU6Oz
+         b1FQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqNMEPC2HX4byDJ9hlLwTyl5Pd/AxndIlz2fqyO1yLn2suXz2hz1IVo7DWtAm7gyAlWVxQAPlAK3C7GRc=@vger.kernel.org, AJvYcCWvgfmQr4u1KisA8EUUlfdd1FzcMxQDSuQY7ERGUX+h0nrc6D+QgZBA8fcJYJ3wmt0GQdDAnJgjObvp@vger.kernel.org, AJvYcCXnwHVj9emEcuX6eoQ8eAmupTCEWdh+A/FgU70TbL0ukUAOST159qm1U3iUEhT7lBK3BmJ41QLgsJdZt2Hg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF53Glky94WkKAFS3rc5sejXOl4WG85HVWGXCfFIT1n1eKbQgP
+	+wNXwoIdX1SrGsWRP1EJMgijNAs+yezhcZ+lTwOfX9S9zbgOyzVyexPgbeB1wMf3gJ5SzdHk/R5
+	LMRXyYyKUVK/R0UWWnXhDgIidJlroNLDATQ0=
+X-Gm-Gg: ASbGncsW5RuElAGMECInupXQRnTEBKa+hl2x1kk4Dedyc3dPAieaX12hIVtZMQKAaEr
+	/jCQoRlt/+Xe0z/jv4j5Cn+N4tYnwvw2oe2WxEPq1hvaniXaay+oVt0Pkb5XJ4iKa7sltQIKrKb
+	Fpu5FfRzVLXTIdbEgDzkPY/g==
+X-Google-Smtp-Source: AGHT+IHGTYOtyWFxjXS9Ul06M6JVtewP0QqLDSWygChMn5nReUMS9WxVTU7k4hPxbBaUObqwnTWe5V/cpuVhKJnX2Y4=
+X-Received: by 2002:a17:90b:254d:b0:302:fc48:4f0a with SMTP id
+ 98e67ed59e1d1-30a4e04c98dmr5766332a91.0.1746204787157; Fri, 02 May 2025
+ 09:53:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250502150513.4169098-1-m.felsch@pengutronix.de> <20250502150513.4169098-8-m.felsch@pengutronix.de>
+In-Reply-To: <20250502150513.4169098-8-m.felsch@pengutronix.de>
+From: Adam Ford <aford173@gmail.com>
+Date: Fri, 2 May 2025 11:52:55 -0500
+X-Gm-Features: ATxdqUE-GbFHdhVzbDY9mw-AkKfv1gk9sfEHekiKJv7IfKQ5yld-yg7UXiz-NTw
+Message-ID: <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com, 
+	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, 
+	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, paulk@sys-base.io, 
+	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	sebastian.fricke@collabora.com, ming.qian@nxp.com, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gMjAyNS0wNS0wMiwgMDM6NTAsICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQu
-b3JnIDxtYWlsdG86cGV0ZXJ6QGluZnJhZGVhZC5vcmc+PiB3cm90ZToNCg0KPiBPbiBUaHUsIE1h
-eSAwMSwgMjAyNSBhdCAwNDoxNjowN1BNICswMDAwLCBQcnVuZGVhbnUsIENyaXN0aWFuIHdyb3Rl
-Og0KPiANCj4+IChQbGVhc2Uga2VlcCBpbiBtaW5kIHRoYXQgdGhlIHRhcmdldCBpc24ndCB0byBn
-ZXQgU0NIRURfQkFUQ0ggdG8gdGhlIHNhbWUNCj4+IGxldmVsIGFzIDYuNS1kZWZhdWx0OyBpdCdz
-IHRvIHJlc29sdmUgdGhlIHJlZ3Jlc3Npb24gZnJvbSA2LjUtZGVmYXVsdCB0bw0KPj4gNi42KyBk
-ZWZhdWx0LCBhbmQgZnJvbSA2LjUtU0NIRURfQkFUQ0ggdG8gNi42KyBTQ0hFRF9CQVRDSCkuDQo+
-DQo+IE5vLCB0aGUgdGFyZ2V0IGRlZmluaXRlbHkgaXMgbm90IHRvIG1ha2UgNi42KyBkZWZhdWx0
-IG1hdGNoIDYuNSBkZWZhdWx0Lg0KPg0KPiBUaGUgdGFyZ2V0IHZlcnkgbXVjaCBpcyBnZXR0aW5n
-IHlvdSBwZXJmb3JtYW5jZSBzaW1pbGFyIHRvIHRoZSA2LjUNCj4gZGVmYXVsdCB0aGF0IHlvdSB3
-ZXJlIGhhcHB5IHdpdGggd2l0aCBrbm9icyB3ZSBjYW4gbGl2ZSB3aXRoLg0KDQpJZiB3ZSdyZSB0
-YWxraW5nIGFib3V0IG5ldyBrbm9icyBpbiA2LjYrLCBhYnNvbHV0ZWx5Lg0KDQpGb3IgdGhpcyBw
-YXJ0aWN1bGFyIGNhc2UsIFNDSEVEX0JBVENIIGV4aXN0ZWQgYmVmb3JlIDYuNi4gVXNlcnMgd2hv
-IGFscmVhZHkNCmVuYWJsZSBTQ0hFRF9CQVRDSCBub3cgaGF2ZSBubyByZWNvdXJzZS4gV2UgY2Fu
-J3QsIHdpdGggYSBzdHJhaWdodCBmYWNlLA0KY2xhaW0gdGhhdCB0aGlzIGlzIGEgc3VmZmljaWVu
-dCBmaXgsIG9yIHRoYXQgdGhlcmUgaXMgbm8gcmVncmVzc2lvbi4NCg0KSSBhbSwgb2YgY291cnNl
-LCBpbnRlcmVzdGVkIHRvIGRpc2N1c3MgYW55IGtub2IgdHdlYWtzIGFzIGEgc3RvcC1nYXAgbWVh
-c3VyZS4NCihUaGF0IGlzIGFsc28gd2h5IEkgcHJvcG9zZWQgbW92aW5nIE5PX1BMQUNFX0xBRyBh
-bmQgTk9fUlVOX1RPX1BBUklUWSB0byBzeXNjdGwNCmEgZmV3IG1vbnRocyBiYWNrOiB0byBnaXZl
-IHVzZXJzLCBpbmNsdWRpbmcgZGlzdHJvIG1haW50YWluZXJzLCBhIHJlYXNvbmFibGUNCndheSB0
-byBwcmVjb25maWd1cmUgdGhlaXIgc3lzdGVtcyBpbiBhIHN0YW5kYXJkLCBwZXJzaXN0ZW50IHdh
-eSwgd2hpbGUgdGhpcyBpcw0KYmVpbmcgd29ya2VkIG9uKS4NCk5vbmUgb2YgdGhpcyBzaG91bGQg
-YmUgY29uc2lkZXJlZCBhIHBlcm1hbmVudCBzb2x1dGlvbiB0aG91Z2guIEl0J3Mgbm90IGEgZml4
-LA0KYW5kIHdhcyBuZXZlciBtZWFudCB0byBiZSBhbnl0aGluZyBidXQgYSBzaG9ydC10ZXJtIHJl
-bGllZiB3aGlsZSBkZWJ1Z2dpbmcgdGhlDQpyZWdyZXNzaW9uIGlzIG9uZ29pbmcuDQoNCg0K
+On Fri, May 2, 2025 at 10:10=E2=80=AFAM Marco Felsch <m.felsch@pengutronix.=
+de> wrote:
+>
+> The VPU_PLL clock must be set before the VPU_BUS clock which is derived
+> from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 600MHz.
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/=
+dts/freescale/imx8mp.dtsi
+> index 97b09b647ec7..7f4bdefb3480 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+>                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
+>                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
+>                         clock-names =3D "g1", "g2", "vc8000e";
+> -                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_BUS>, <&=
+clk IMX8MP_VPU_PLL>;
+> -                       assigned-clock-parents =3D <&clk IMX8MP_VPU_PLL_O=
+UT>;
+> +                       assigned-clocks =3D <&clk IMX8MP_VPU_PLL>, <&clk =
+IMX8MP_CLK_VPU_BUS>;
+> +                       assigned-clock-parents =3D <0>, <&clk IMX8MP_VPU_=
+PLL_OUT>;
+>                         assigned-clock-rates =3D <600000000>, <600000000>=
+;
+
+I think there was a move to make the default be overdrive [1]  and [2]
+and use a 'nominal' device tree for those who are not in overdrive
+mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
+600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
+values here should be 800MHz and if we should add the nominal values
+of 600MHz to the imx8m-nominal.dtsi file.
+
+adam
+
+>                         interconnects =3D <&noc IMX8MP_ICM_VPU_G1 &noc IM=
+X8MP_ICN_VIDEO>,
+>                                         <&noc IMX8MP_ICM_VPU_G2 &noc IMX8=
+MP_ICN_VIDEO>,
+
+
+[1] - https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/c=
+ommit/arch/arm64/boot/dts/freescale/imx8mp.dtsi?h=3Dnext-20250502&id=3D9f75=
+95b3e5ae0ead20a74a5f2a8f0434b3254ac5
+
+[2] - https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/c=
+ommit/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi?h=3Dnext-20250502&i=
+d=3D4b98bf3bff7353d94824c4d874ff2d7f38acc49a
+
+> --
+> 2.39.5
+>
+>
