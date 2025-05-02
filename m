@@ -1,78 +1,153 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF1D23FC5A;
-	Fri,  2 May 2025 11:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6D12AD3E;
+	Fri,  2 May 2025 11:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746184112; cv=none; b=e84RDTQKtOF7twRaQ6EasoYS3KSNtPWz8stPNXGi+MSOgD4uWWFvWw470PY0x1BamqEOirquPm2lfzCnSjp6cdLQNyPQYBAaKv4woPYrsqcj3lEUC5l7vfJ+V1E7PoCz3r4sqnuo0hzLusOplScHCtuXIdBjSdt7Ne5sxZiTZPg=
+	t=1746184185; cv=none; b=hptrQFbLqGVpdX5WfpJ0rZEXHP9e/1ETzEJoQkSoifm9ys9tqbyOaYUtlH4mSuLGGHlYLVeVy+AAgH+ZDMbtrWbn5CnINF6etv8+d5on4yCRkunIDXQLwfqN8qOLU0gcCyBZxwISBBF7ONE81D7kgPqwS0y/auUHOOekNCKc3uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746184112; c=relaxed/simple;
-	bh=MTlzj5d2urKFEAV7iZYPY4R3fhJhN8yR0DXLHI6gP50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKdlvMW2JoydPvzq6yQHnYydcCsNcX9L0KgFSV1/63uYbTxGpW3VuSrwdlXmvzzOfONnArV+qQ1/aJIK+SIzgRPQxfI+JeSXDeQ0E/s1Vf5rUIL+mQmYEs+YrFXiB9ceM/ZwBOp8o2BX3Ixu5A3NR9YI9pK38AXtDBBpnkIGpHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kG8HmKNj; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746184185; c=relaxed/simple;
+	bh=1KupARu2ixwnWnF/VeD8fbwWOgpRBQAhNeatCM2WB28=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CZPgUPb2EKEk77j27UiqCg8TPc7ZGu46wh4Bj5XrVR62W3ZNa60Ty3rIE3qOMJ8TVKGIzdmN3sP1DGz4WznLH9MQ2Tr/ruvPwHUSY6r0PFNxnFAYkXmqUcWQpCqcgWBb++jgqRTezVP4UneaI4TFdw1H2k1y7OWQF9ih7SjyBnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NirENkiQ; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kG8HmKNj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=82slXiOoQVQC9//as6jdxQ6yG/Hw27pBqImDHueRTQc=; b=kG8HmKNjrK+7DQFDdc/MrJOMH4
-	Y0nlMW4CXIzpC7crHUmkOOlocJehtXtXKUzA4aVtzUGnerxozQrWEotMZUdXDJTuXRaX78tTyC70s
-	2ryexNLCNcJnWPOj6ZP004b3M5oGAdO3IPu6JGvMdusFAl1ZBD0NcLEo2wWAVoqOeHEDcQjQ+yqsv
-	y5sqM4TbomGC2kUX+czUqgE/Zpth7Ud2EzoOi7MpYgqCPKambMTKgDVCC0fVDs8yIwJyP5qsr4Rci
-	daVXRfSTj2jZ6a2qFppqYinMcJBjk0gIkRio2Jo5V5Xh03CnWDozNID5TuMgd7f+sQ8In2Dbhcue2
-	WSp0S2Dg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uAoFe-0000000Endv-1amq;
-	Fri, 02 May 2025 11:08:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6F11730057C; Fri,  2 May 2025 13:08:17 +0200 (CEST)
-Date: Fri, 2 May 2025 13:08:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, seanjc@google.com, ardb@kernel.org, kees@kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
-	jpoimboe@kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250502110817.GX4198@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <CABgObfZQ2n6PB0i4Uc6k4Rm9bVESt0aafOcdLzW4hwX3sN-ExA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NirENkiQ"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542B9UKj389669
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 06:09:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746184170;
+	bh=Tz0Qyi+rYLdiyL94yfUmQf0GAPdsB4sjN3Vr+h5NUMw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=NirENkiQRPkeD/oD+xACE05qKJzX4WNXrM2HgkHdb6nSm78hCRUW+iwVZ3IP4u9mS
+	 rFdkMyrUnQlr8YUUlGapbbtEiTjKo1I91LjamguOPa1GBXTl3X4OI/srLjl2o50AaN
+	 G4wutEZjEYRTzR+oO/kuiPNbUhAXtDzvSqwxOkc8=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542B9UTB017423
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 06:09:30 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 06:09:30 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 06:09:30 -0500
+Received: from [10.249.134.35] ([10.249.134.35])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542B9OFu058493;
+	Fri, 2 May 2025 06:09:25 -0500
+Message-ID: <19dd4cc6-c110-4c2d-b725-5e7bd1a4226c@ti.com>
+Date: Fri, 2 May 2025 16:39:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgObfZQ2n6PB0i4Uc6k4Rm9bVESt0aafOcdLzW4hwX3sN-ExA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] arm64: dts: ti: k3-am62x: Add required voltage
+ supplies for IMX219
+To: Devarsh Thakkar <devarsht@ti.com>, <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <y-abhilashchandra@ti.com>,
+        <s-jain1@ti.com>, <jai.luthra@linux.dev>,
+        <jai.luthra@ideasonboard.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <imx@lists.linux.dev>
+References: <20250429154133.3377962-1-r-donadkar@ti.com>
+ <20250429154133.3377962-3-r-donadkar@ti.com>
+ <f223d5ec-5549-414a-842d-b9aeb80915e5@ti.com>
+Content-Language: en-US
+From: "Donadkar, Rishikesh" <r-donadkar@ti.com>
+In-Reply-To: <f223d5ec-5549-414a-842d-b9aeb80915e5@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, May 01, 2025 at 08:33:57PM +0200, Paolo Bonzini wrote:
-> On Wed, Apr 30, 2025 at 1:26 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > Notably the KVM fastop emulation stuff -- which I've completely rewritten for
-> > this version -- the generated code doesn't look horrific, but is slightly more
-> > verbose. I'm running on the assumption that instruction emulation is not super
-> > performance critical these days of zero VM-exit VMs etc.
-> 
-> It's definitely going to be slower, but I guess it's okay these days.
 
-Yeah, it adds a bunch of branches at the very least. But that was indeed
-the argument, we shouldn't care much these days.
-
-> It's really only somewhat hot with really old processors
-> (pre-Westmere) and only when running big real mode code.
-
-Right, really old stuff :-)
+On 02-05-2025 13:45, Devarsh Thakkar wrote:
+> On 29/04/25 21:11, Rishikesh Donadkar wrote:
+>> The device tree overlay for the IMX219 sensor requires three voltage
+>> supplies to be defined: VANA (analog), VDIG (digital core), and VDDL
+>> (digital I/O).
+>>
+>> Add the corresponding voltage supply definitions to avoid dtbs_check
+>> warnings.
+>>
+> On a side-note device-tree overlay requiring these voltages is an
+> implied reason, it's mainly because the schematics mention that and
+> bindings want to capture same topography in device-tree too.
+>
+> So maybe good to mention that and share schematic link too in commit
+> message :
+>
+> https://datasheets.raspberrypi.com/camera/camera-module-2-schematics.pdf
+>
+> With these changes, feel free to add,
+>
+> Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
+Hi Devarsh, Thanks for the review. I will do this in the next revision.
+>
+> Regards
+> Devarsh
+>
+>> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
+>> ---
+>>   .../boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso  | 31 +++++++++++++++++++
+>>   1 file changed, 31 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
+>> index dd090813a32d6..149c59c071823 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
+>> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso
+>> @@ -15,6 +15,33 @@ clk_imx219_fixed: imx219-xclk {
+>>   		#clock-cells = <0>;
+>>   		clock-frequency = <24000000>;
+>>   	};
+>> +
+>> +	reg_2p8v: regulator-2p8v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "2P8V";
+>> +		regulator-min-microvolt = <2800000>;
+>> +		regulator-max-microvolt = <2800000>;
+>> +		vin-supply = <&vcc_3v3_sys>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_1p8v: regulator-1p8v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "1P8V";
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		vin-supply = <&vcc_3v3_sys>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	reg_1p2v: regulator-1p2v {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "1P2V";
+>> +		regulator-min-microvolt = <1200000>;
+>> +		regulator-max-microvolt = <1200000>;
+>> +		vin-supply = <&vcc_3v3_sys>;
+>> +		regulator-always-on;
+>> +	};
+>>   };
+>>   
+>>   &main_i2c2 {
+>> @@ -40,6 +67,10 @@ ov5640: camera@10 {
+>>   
+>>   				clocks = <&clk_imx219_fixed>;
+>>   
+>> +				VANA-supply = <&reg_2p8v>;
+>> +				VDIG-supply = <&reg_1p8v>;
+>> +				VDDL-supply = <&reg_1p2v>;
+>> +
+>>   				reset-gpios = <&exp1 13 GPIO_ACTIVE_HIGH>;
+>>   
+>>   				port {
