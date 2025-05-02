@@ -1,104 +1,149 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB0941AAC;
-	Fri,  2 May 2025 18:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD67741AAC
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746210151; cv=none; b=Srm59kgofNwqKnWf+XNxdw6kD8qJsnaE2kGsr58LHI4a5MgL9O+bSYhrzMb2b1LIc90okCWrfGd/pIj6GMvwH8I3vcOX+A7QM9cX3IF2Ks2dbJrsoFCxoQpzDZr07m0SkebXL+CKSV3Gk8H8KZ3ip1iEGgmPXP+iE8si2LWSwIo=
+	t=1746210316; cv=none; b=PD1XPuEN6VryMqBl5HVZm+G+y0dUQmg+6PbtLYU4PoJMKUs833yOHrulZ50QkzBajs+kAs9CSVUA6uPAX4xXVyLOmc3KnUxuMXxjnynq8peu0Zyo1T9va19tB1BZDq5vtBWnfNMBPn1uGVkRWt2uQwMy+X02k9ZMMUw0kV9B7Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746210151; c=relaxed/simple;
-	bh=6J7/uRIuLsGRl3+yn6EaUPLpqCsoENhZNpl6V9Vmzk4=;
+	s=arc-20240116; t=1746210316; c=relaxed/simple;
+	bh=7988R3mZpKGG6Ak4AjVYu0TJ2HcEVdVBtPTKH/kklsc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aY4HzA63O8ym54QRknOnkmYMaD0gAr7wyyQOXrHItH21QUIrAzpqbi9NqzBDFDkV6/JxlqiZvV9ftKFY969NJwkCPw18TYAh1lUsqW84TKjfNqaLWrStVterx2thrQEs38AD1PajBiGDAQRWstKfS3mWHxmY3LlVhW4V1gEyF/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7yforOH; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pcj5QQ3cEP/T4IEs+dTGdszT4Zfd/xI4NALO1+SDWkOo2rsM7jSDvsBVmqwhrhm52SksWVxU9NF6k9JI72Y8njSK5OiKKKyJMsk7JsLx3bveTSviAv9ypdLqFNE4BDbjdKcVZg/Nso03FB410SBSc7JKI6GtSGT2RjuebiYsXro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XkbS006O; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7yforOH"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acbb48bad09so410503066b.0;
-        Fri, 02 May 2025 11:22:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkbS006O"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2263428c8baso14205ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:25:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746210146; x=1746814946; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746210314; x=1746815114; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6J7/uRIuLsGRl3+yn6EaUPLpqCsoENhZNpl6V9Vmzk4=;
-        b=L7yforOHZl57lLjL4jjUtHZwmTBa9RtIFtojEilq74tZd9eUvDqDmsjpLpEyIsdMsR
-         xmknZ79XxPU+XzKbaH2Q6NR1NvEyXaI5vWNIDwZvMg/CvFx8qyZ5bGEF8Yf7OyizWpkI
-         xijYrtPlFN1WYMTxnycGZlnqt1fNvPnODoTa3HqEsCCr8o+WMNSjwr/U757oxpVoE7/0
-         JmpcatbZersdYCZNVNqr5mbaMwxF4XKBFcmpmLG7glAaNr+1qZE5ulvhXX+JSSGJxGty
-         UgZOjER6KF1Vkk56AD2Z2HwIGPT89PIUelpIz6aUwftqNW1l4FCoE688t/8S8mkHigc1
-         CBwQ==
+        bh=Emot1Htzetmhc9hYsA7C5Lev8H41HDZmzIfFRACzMi8=;
+        b=XkbS006OiWglzXMoAHq0vCs3PMcGVmUkA4h9xiU04TYsY4Qxw/0JjdkzjMUfd+Otno
+         rq4ERrGa3gv2axIGktsOvX9pcIqZMuOc+/Un8XhU5Vr/kBvtktS+hb91nhvl4BC7CPXQ
+         fnhl8K+sR4qJibPBRzGQfm4bpU/Ywk65AHxQP9ygvJcg2C+V+RgUF4uv+nXeEmr5Wf8C
+         R/proTwxUcNJzmZUeGvKcj3B/QBFdqR3qHOXEDu9ReMHo23MockyQNzQ08idkmqEx3UJ
+         06GQsC/+THIAsnAOznpcAT1fhhruM7jIxZTbIo/+trhjlj/WkukFJx1QWBJ5L7a8Z2OE
+         Y5KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746210146; x=1746814946;
+        d=1e100.net; s=20230601; t=1746210314; x=1746815114;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6J7/uRIuLsGRl3+yn6EaUPLpqCsoENhZNpl6V9Vmzk4=;
-        b=XYyS1l/zT01KKwEPVOq83+YDEfNv1KmFCGqVOcIm9r31uZ0Pb0snEcQeqoEnuFB917
-         3xl1gbQYQBv3egz2xiqvNUKwG+gxZ2gOdEgw5KS/U05Hhs4jmjAt45saN0WsvuJLC0LI
-         ceUXE1NSPJ5AyRF/8KcVBS/Dk4BrJbb8FtY9V6FTZ2ChhqgaS8WCUGnlphZa4PgcdT3b
-         QPyVJaPHL7WjRd7xxpl0RXJxKAlPDxq2P6HCeDggqnUWSnyh5qUg/mfr5p/X2hyIyy7M
-         tUmjHDjFc9djexFX6ItJLkMEBZABqblW0EErKjrlz1nFkXRS+WwWe5NqffJ5tDs7UU10
-         PbVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJBMQYKAakXGkX+iYk8EuroBDdtBN4r12WxvdNxNYaVv4lqFeKESMYg4rVMTZDUbeeQbuUKAVKt1fhD/qG@vger.kernel.org, AJvYcCXA0GW2cMFMzVx8l38B/mSKBsKq/vNN4KV27zSzPxEBbbIsvUPJwZ6IFs9SzYKnNHXTmGtHHhojXpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh350Ei+QlzbcEJBJfUMU3+wM3PGA1BGUJ6F6bm8zKZqZzCh77
-	OMNO2SWK4EQKpyYh7TwMt+yUkpOVYHCPKJ9YkviL/HkbXlnG84h55bKEmQ86JDe3U6JizBMqxb7
-	E29S3B+fvbMjWJgDRWpLPmwFMECjjibxC
-X-Gm-Gg: ASbGncshjvt9G2xGSMOej/mjN/evJ93/V57PoGj/201fkDbckHMjUWCmYlWY7Ob+KNx
-	YKFq0g9eK2vzRolhlvu9I9Zq9pm9vIrTwgKzGakksXb0UyYR0ntwM82tw+hJ9N+KdLEM2wMPXT2
-	e8FhTnUSm87jY9Vhyz+7AwgA==
-X-Google-Smtp-Source: AGHT+IEAoGMcKAG453+qDN/enhkMBwUIrSB02oOrWBQTElxchm0fov7SknM8MCfXmwipvwvMTuTBtfswcPOhsEjhiSc=
-X-Received: by 2002:a17:907:1c1b:b0:ac7:ed72:3426 with SMTP id
- a640c23a62f3a-ad17aefb38fmr392003666b.40.1746210145422; Fri, 02 May 2025
- 11:22:25 -0700 (PDT)
+        bh=Emot1Htzetmhc9hYsA7C5Lev8H41HDZmzIfFRACzMi8=;
+        b=G5ndcuFf29lk37gqfirbcG00CtDiMuMGEy8TOBvqNMv1PXIhLT082UfuiyM+SBgFAb
+         Zj+dnto6hI/qbLOgcgEPTCHA6RTe+q2cy1vhPgS/1Y5gmOpi4vPFHO0CSY2kXUADbYnj
+         Cc8Cescct1wcWzkr0lUtkoYK2jC8Ps66DAA0LKiQYfskDPxSoNY5QXdBejz2+0cr2K1c
+         X/CMh44cxXHEFOAUmcVZSVwSKNdC17Q+JzIMNo2cLuS/zQWJQgWpIScgysNXyjoNSvMx
+         7/+yV0b9ri18wWHoTV2b2DUDTh4QSKNXmZPbdX/hAVbBVFS23p1y4XyeS3wdU8od9KXK
+         FruA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2u4ougvMIoqjtaw/7LcdqW72qKIOSHdEL+9q0pK2J4yF/HUDxbnZC583sZwZKdBODG3Le2EJK8v5Ia8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVCBh++1JY7uYiLMDMjmTVCfj4aqrqoDQ98y+4m5TPFtmcJ/nF
+	S2mW/f1LVa1FZS0SS5WchyHpXxPjR6sTwCPFsH5zVr3j3X+I9UnN/933Qzj9jMtpdEGNFlygeS0
+	GpvikRBfj4Nu2e1sWJEuT8L4rfQpy6CY3eyWA
+X-Gm-Gg: ASbGncvQzb3g5G8x7VO0nht1XsSJzW09XoIRkxdnjMh9dlLyLlGtP4mP/W0oG6wS9rN
+	umjAI3DkmvGUi9mJgV1jNyFpO5auQTJAOm4/Q0bbLJ3C3CpI5e1Vw3TBug0GkgV9RWhq6CYEtJn
+	pcJcoyvc20s8RtLzzM0JzTfd/DMs/cIrexFyCOulKVSgdGfBM09qbG
+X-Google-Smtp-Source: AGHT+IEnS0W1NZg6BUaKBaLsmGLWSW5k5kMx7vCqjZJE1BvXZ91WD0nASnnl5YMQZHiCSuFVgwr9C6f8WFlXw0DbnC4=
+X-Received: by 2002:a17:903:1b68:b0:223:ff93:322f with SMTP id
+ d9443c01a7336-22e18a3edc1mr240885ad.2.1746210313713; Fri, 02 May 2025
+ 11:25:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v2-1-e70c6d71baa3@baylibre.com>
-In-Reply-To: <20250502-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v2-1-e70c6d71baa3@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 2 May 2025 21:21:49 +0300
-X-Gm-Features: ATxdqUFLPd4jdoc55Mq5GSKJPyX2j1AIDOCJP2PIvDaL4AY2JKzpIjlMSVOEmYw
-Message-ID: <CAHp75VdtoxGu1qv7i6uhuPhAeVF7OUF3d5trxqcmupC+ZeAf0A@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: adc: ad7606_spi: add offload scan mask check
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Angelo Dureghello <adureghello@baylibre.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250410074721.947380-1-yeoreum.yun@arm.com> <20250410074721.947380-3-yeoreum.yun@arm.com>
+ <aBT8BWqoljvcAU_w@arm.com>
+In-Reply-To: <aBT8BWqoljvcAU_w@arm.com>
+From: Peter Collingbourne <pcc@google.com>
+Date: Fri, 2 May 2025 11:25:01 -0700
+X-Gm-Features: ATxdqUEsIDCdc1MXwbGpU0vqEfxYt1UlHJ7H90sjFz9gZvQP6g4z1_zIOkLmOYo
+Message-ID: <CAMn1gO4Ft2R+_CN+XdTsO0YpUQZN7zShMSg-XT90U698Rnifjw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64/mm/fault: use original FAR_EL1 value when
+ ARM64_MTE_FAR is supported
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, will@kernel.org, broonie@kernel.org, 
+	anshuman.khandual@arm.com, joey.gouly@arm.com, yury.khrustalev@arm.com, 
+	maz@kernel.org, oliver.upton@linux.dev, frederic@kernel.org, 
+	shmeerali.kolothum.thodi@huawei.com, james.morse@arm.com, 
+	mark.rutland@arm.com, huangxiaojia2@huawei.com, akpm@linux-foundation.org, 
+	surenb@google.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, nd@arm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 2, 2025 at 6:42=E2=80=AFPM David Lechner <dlechner@baylibre.com=
-> wrote:
+On Fri, May 2, 2025 at 10:08=E2=80=AFAM Catalin Marinas <catalin.marinas@ar=
+m.com> wrote:
 >
-> Validate the scan mask when SPI offloading is being used.
+> + Peter Collingbourne as he added the SA_EXPOSE_TAGBITS flag.
 >
-> Since this family of ADCs is simultaneous sampling, there isn't a way
-> to selectively disable channels when reading sample data. (Technically,
-> AD7616 has a sequencer so could have some control, but that is for
-
-so it could
-
-> another day).
+> On Thu, Apr 10, 2025 at 08:47:20AM +0100, Yeoreum Yun wrote:
+> > Use the original FAR_EL1 value when an MTE tag check fault occurs,
+> > if ARM64_MTE_FAR is supported.
+> > This allows reports to include not only the logical tag (memory tag)
+> > but also the address tag information.
+> >
+> > Applications that require this information should install a signal hand=
+ler with
+> > the SA_EXPOSE_TAGBITS flag.
+> > While this introduces a minor ABI change,
+> > most applications do not set this flag and therefore will not be affect=
+ed.
 >
-> For "regular" IIO triggered buffer reads, this isn't a problem and the
-> IIO core will demux the data and ignore data from disabled channels.
-> However, since SPI offloading is done completely in hardware, we don't
-> have a way to do the same. So before this patch, if less than all
-> channels were enabled, the data would be misplaced in the buffer.
+> It is indeed a minor ABI in that a tag check fault resulting in a
+> signal will report the bits 63:60 as well, not just 59:56 of the address
+> (if the signal handler was registered with SA_EXPOSE_TAGBITS).
 >
-> By adding a check in update_scan_mode, we can fail to enable the buffer
-> instead of having bad data returned to userspace.
+> I don't think user-space would notice but asking Peter.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+On Android we don't set bits 63:60 on heap addresses when MTE is
+enabled (and userspace programs aren't allowed to modify them in
+addresses they get back from the heap allocator either) so the fault
+handler should continue to see them as 0. Of course, a userspace
+program could be breaking the rules and setting those bits anyway, but
+in that case it looks like the only consequence would be that the
+error reports from the heap allocator would sometimes be missing some
+information (and this could already happen if the access results in a
+non-MTE fault) which I think is acceptable.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Peter
+
+>
+> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> > ---
+> >  arch/arm64/mm/fault.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > index ec0a337891dd..f21d972f99b1 100644
+> > --- a/arch/arm64/mm/fault.c
+> > +++ b/arch/arm64/mm/fault.c
+> > @@ -837,9 +837,12 @@ static int do_tag_check_fault(unsigned long far, u=
+nsigned long esr,
+> >       /*
+> >        * The architecture specifies that bits 63:60 of FAR_EL1 are UNKN=
+OWN
+> >        * for tag check faults. Set them to corresponding bits in the un=
+tagged
+> > -      * address.
+> > +      * address if ARM64_MTE_FAR isn't supported.
+> > +      * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
+> >        */
+> > -     far =3D (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & MTE_TAG_M=
+ASK);
+> > +     if (!cpus_have_cap(ARM64_MTE_FAR))
+> > +             far =3D (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & M=
+TE_TAG_MASK);
+> > +
+> >       do_bad_area(far, esr, regs);
+> >       return 0;
+> >  }
+> > --
+> > LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
