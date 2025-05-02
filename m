@@ -1,25 +1,62 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99CD221C9E4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 06:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746167491; cv=none; b=FPhBV1co9Sj+Mx8UleECOb2/rwsfbAha5d0IDvnyr4kNg69ZTTt8NEUtmjOQqf9zUCVDaCBwdBAnWWZuN6yfPl3iGjU2SCKMNZ7OCrTriHxZkhG5phG+A6ll6TIfEeFuEP4MHOsSerD9sCB12zW9kpqu6O0Gp6DvM0rI+of29XU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746167491; c=relaxed/simple;
-	bh=ppNang/M+HWbm5hVHmLn3PBm4cLiUtrarwQAqnwwU3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fy7B5Dzdat0EHq5krW4s7jO4DmItr6nNz/FEIlXlwlBA/weSylYiizktC/7XDsYJFBHLymgW8JpkcaIXzdkiAKRt41PCrC/9lJIqjA7+ZFBvEHPFUoTTOnUEHVGbL7lb/Pisola0ZS+HuLCu/+wNyciIuoXKeb2TC99vgOMJNc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF03C1063;
-	Thu,  1 May 2025 23:31:19 -0700 (PDT)
-Received: from [10.163.80.122] (unknown [10.163.80.122])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 653E03F66E;
-	Thu,  1 May 2025 23:31:23 -0700 (PDT)
-Message-ID: <39ad8cb6-94fb-47dd-ad39-ac9ce1916d8c@arm.com>
-Date: Fri, 2 May 2025 12:01:20 +0530
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2044.outbound.protection.outlook.com [40.107.237.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87317264A9D;
+	Fri,  2 May 2025 06:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746167607; cv=fail; b=TQU/v7r2Bw5ga9Wnul/jfqdAjq+GBAD5ilxmOQnxQ5y3puJ7rUC8cIqDf6s3uiSkadJGySWAG3lks/Zw59VNPtsnSnD6MEffBGei0+y4uTDMtE7Zn/bEid6abwbhYEiR3hO4hwiTVDILXoCNg4ySze6tEtxgs6zxpt3BebfWoDY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746167607; c=relaxed/simple;
+	bh=I2rrhybQ9iH6Jo1eIC+GODKeOMkrycAM0D0x8Au0Wn4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=GODZdryfrFAxl/wlV9Sxt/cTB3f/06WZJgim+b+Bn/Juq4VxDrqhZxVlic6KuS+/8ZWwgmfJGoWiX0GA+A7L9hhv8XBIxp4Sbr0Dimc1aZg4k/Vj8ThWN1nHVF1Z56U+wTSm/1h2CMUsypMZimJnHzjMfP0wd9c9OOSUsurSMaw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NSDYrYRZ; arc=fail smtp.client-ip=40.107.237.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NSDYrYRZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nsiT1arWRjL1UTiRprvWZ0dtaNkKw54UDhrCHhX+J6w8vqVwlhDU4VCA74ijZuOkifzpCov6H33Jv4NmSfIGk3UQzRjSvaehGzKlQouiJuUrSYyBQYPqnZBESjACxkb0E+kEEkB+B88SIUYcKsXYqUQ/0K5z1fHmJOM/tcPEtbL8Ku4JDKwQNAXDluUvc6y4xSWEZzrPmHhO5Re+3i6q/2iCnArXvOJ0Rt+3KIUd6QPwbhLs1atA0dgTGd9EAAjn02Z93rdF0IjboE2ursFbtVDgHRPezpvdei/uhGLNk/9hqD6Sd8S2q8sg+bHTJH4g5rBTZtXvXVpgkTa4WUndKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rK4WmrIeb2b5bvnykqexAOgdy3PvAb2i9pydo2nq594=;
+ b=NOv31shlRm8c8YmcB3naUwWluPMyYEUqQQkGA/sZm99hQHKIi4+lhhoxYufpSRSn+IdOg7rrFtav0SqUmEpt7Z5Z0i+jkl0GwLbnxZSQFKHZGt3SPHShmtwboi4PGehWHS6Oze+mbRc2QGrsTgrjAMKi0VSFK1geN6WKxDsK65X09xsHMRTq98CPIyOeiSyVU43dTtGRkM1Ohp9b3t1iXlNDJ1w7fEqIoyb84rCFc4gI8apDwqzDCqDfkAjg/W4+7NsxMf22QuUJk9eoqlCHIZC0hjv/cBLKi37vF7fAEgO3cJfz1uOtwJiXitYz2L5v2yS5IwGDHX/Wevi25BMK7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=amazon.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rK4WmrIeb2b5bvnykqexAOgdy3PvAb2i9pydo2nq594=;
+ b=NSDYrYRZrxOSssi4S8D3vEtHgSPfZ8rEQ62YVEKZFDdDp8vT6yxpRHXza/x/eBdo/0oxsPxray3GKSzqan1DXJS8CsXsMwgikqRMBOi5mYVJVMTZue8UhaEF0bPckZorJNymxzIqouwkocxNNdSZwFw59YCt0lV8V+k0hW3mTLs=
+Received: from BN0PR04CA0027.namprd04.prod.outlook.com (2603:10b6:408:ee::32)
+ by LV3PR12MB9353.namprd12.prod.outlook.com (2603:10b6:408:21b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
+ 2025 06:33:21 +0000
+Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
+ (2603:10b6:408:ee:cafe::9b) by BN0PR04CA0027.outlook.office365.com
+ (2603:10b6:408:ee::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Fri,
+ 2 May 2025 06:33:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 06:33:21 +0000
+Received: from [10.85.37.104] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
+ 2025 01:33:17 -0500
+Message-ID: <7d3bd258-fa45-4e85-8700-90203bacdeea@amd.com>
+Date: Fri, 2 May 2025 12:03:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,288 +64,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/9] coresight: Disable trace bus clock properly
-To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-6-leo.yan@arm.com>
+Subject: Re: EEVDF regression still exists
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: "Prundeanu, Cristian" <cpru@amazon.com>, Peter Zijlstra
+	<peterz@infradead.org>
+CC: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>, "Saidi, Ali"
+	<alisaidi@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	"Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
+	"Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>, Joseph Salisbury
+	<joseph.salisbury@oracle.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
+	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+References: <20250429213817.65651-1-cpru@amazon.com>
+ <20250429215604.GE4439@noisy.programming.kicks-ass.net>
+ <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
+ <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
+ <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
+ <d875adc0-744e-4b1f-a1bf-7e051298a0ae@amd.com>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250423151726.372561-6-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <d875adc0-744e-4b1f-a1bf-7e051298a0ae@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|LV3PR12MB9353:EE_
+X-MS-Office365-Filtering-Correlation-Id: fef9ca9f-86d4-467a-66e4-08dd89433bff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T3Y5Z1A3VUM5MjFHcllOb0RyMnJ0dy9aNXYwSHl1cStnaDFrMlErUVh2SklS?=
+ =?utf-8?B?SGNyNU9jZkdKNmtoZ21iQ2dlMko4ajVOL3YxTmdDa2pOMzVndUM1V1VqdjAv?=
+ =?utf-8?B?aG9CYzdkS1g4WnRqV25XczVyNEljbGUyWHhPSUd2UzRsL3luZEFqY0VKQXZE?=
+ =?utf-8?B?cWEvL2MvSnlIaEJ4clVpOXZKeXM0T3hHQUJIR0Z1ZFlhU0wxSmRteTdXcytq?=
+ =?utf-8?B?THJxeC9Da1hJNi9Ga3p2VzcyRUZybE1JY2dWTUtVQkFMd3NWTDJWYm5KSUxH?=
+ =?utf-8?B?SjRJMnZGUjBYV2o0Q2I0T1FvcnllT3FsbkhoVG5UWlA5dzZZQlAyL2IyNk5T?=
+ =?utf-8?B?VVFaRnVMamRxSVhCYWVLaFNHY2FFMU5RbFQ3d1BJbHUrNGM1N2EwRDFRV1hF?=
+ =?utf-8?B?RElYZkw5dk5EQ2IvQlg3cm93RnFBUG5QVVZFaG1FbGdyT2s5cG5NVmFyeGlC?=
+ =?utf-8?B?UEZxOHRuSk1pY2JGVjltTGQvaVJGVzNMdGtVNGwwMFNWZDBmdDlMenhTUkEy?=
+ =?utf-8?B?M0FjRmJIamdiUUlRd0JTZWFkWEI1ZzVMOUw3UDliMWVreFBzbXkzVEN4YTFT?=
+ =?utf-8?B?K0RmQWRsOUhjc0J4RUlnd2VuSzZCVU9VRVVadHpmaDJEZ1R3NEpDYlYyU1Ax?=
+ =?utf-8?B?M2NGZmNncW5sWmt0Zy9kanRLd2YxaERIbCsxNGJTTkFFRjI5dWdyUGY1bVdQ?=
+ =?utf-8?B?c09KK3R6T1o3a21DWkhVR055OHAyM3FjTk5jVkVqbXNleDU4YVFYRmV1bGc3?=
+ =?utf-8?B?bXBzMnpzWDJRbUY5RXlYWXgybDRNZi92WTRxamEreE14d2hNSzI1cUxRTWJp?=
+ =?utf-8?B?VG1iVEtsamNnRXNuTC9iQ1RudE5VVVZDWk8yUFBVL3phZTZJc3RtT1BvcjBE?=
+ =?utf-8?B?R081YnlodjdCM2NTeXhja2RrWnJsYXNHMWRMUEVBYTdHVm8yZ0R2Y3dtc3dX?=
+ =?utf-8?B?UmZPWTFTWGRBNThHUFp0WnFmeUdwdUZncFBDb2M3MWRSa2UxV3YvYmlwWEI5?=
+ =?utf-8?B?a0hEeklTVkdlZ29FQzY3VFhzL1NrMUFBT2dVbmZxamIreUd6YUNSbUN3Ukh5?=
+ =?utf-8?B?Z1o2dDk3VlZWMkhpeDZlemw5dWcvTkl0dXdvYlhkTzM3Z0JWbW12SFZSUFUw?=
+ =?utf-8?B?WTFZY0ZWc04zVlNDNm91M2dKb2gzL0xGK3pxbG1VK3J2TjE0aXFwVUhmYS9n?=
+ =?utf-8?B?eUxUencwTzdzeDRNZDNqZWt6SUYwN1BYSHFpcEhudG11aXJSRmllLzRjSjdq?=
+ =?utf-8?B?UzZpV05tK1V3Z0xrUzZLMDd6d1c3ZE9zT0JpUFFNWDNVeFl4MlkvdjZJZE02?=
+ =?utf-8?B?a2t4TjIwb1RnYXhQWTBPS1hyd2hDU3ZBazB4MjdHSVJ4MmN3UkFIb1dIdGNW?=
+ =?utf-8?B?VUZVNERpblN5QjlESHc0cjVHL1RJOUZNbWZ4Mll4amxMRVdWOURXSmVaTlkz?=
+ =?utf-8?B?cEZrM09OSUR0RTR6Y3VXVnByNXZ3QWtlNUZJUk1hNmw0Ym5DUUhJVzJ0c1N4?=
+ =?utf-8?B?aVJXOXk0V25hTFNRbFhva1duMTlVNjMveW5XSHpvU3puVFplSC9qUytwK0R3?=
+ =?utf-8?B?TW82NlZjRmxkRDZFR21LNlhSZjNGYm9jRFVhYWpNQ1MxR3JNU001cWU3bVJH?=
+ =?utf-8?B?eE5ETnRlVldiQXRqTWVIVkdvSmc0cmRRRFN5dHNDVGV3MGtCcDY3Z3NlaFA1?=
+ =?utf-8?B?WUtGRlZKKzFTbTBMZGxCTUMrT0dNUTVtc0xCZlE2R0xKNzlQM3NSY05ieXBP?=
+ =?utf-8?B?UDBVYVI3MGVUMmtwbEJ1LzNqeGpLVlZ4M2dVNEJ2K2NtRUNaWjVBOVVicjhY?=
+ =?utf-8?B?d29PaE0zemFYd2o4K2tFNzZBQXorUnhXdWQ5d0F6SUlmNVlzQU5DNWhPYXBq?=
+ =?utf-8?B?b2JEYi9jd3M5V0oyYkVyNDN4YTE3QThWTURHTkRubEsvcUFBMGErVzJBTTRD?=
+ =?utf-8?B?Ny9CdW5qOXNkZFZnVjN5bnYrd2c4U3c0QTlkc1hiTlBKVGRxaDhiVkZWajFP?=
+ =?utf-8?B?aWpCcE1wTkl5WHlTYnBkR3pUWHY1Y3FobGZtYWtjSlNTcStUeWFsVUd1YXlF?=
+ =?utf-8?Q?l8GHtl?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 06:33:21.8456
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fef9ca9f-86d4-467a-66e4-08dd89433bff
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9353
 
-On 4/23/25 20:47, Leo Yan wrote:
-> Some CoreSight components have trace bus clocks 'atclk' and are enabled
-> using clk_prepare_enable().  These clocks are not disabled when modules
-> exit.
-> 
-> As atclk is optional, use devm_clk_get_optional_enabled() to manage it.
-> The benefit is the driver model layer can automatically disable and
-> release clocks.
-> 
-> Check the returned value with IS_ERR() to detect errors but leave the
-> NULL pointer case if the clock is not found.  And remove the error
-> handling codes which are no longer needed.
-> 
-> Fixes: d1839e687773 ("coresight: etm: retrieve and handle atclk")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-etb10.c      | 10 ++++------
->  drivers/hwtracing/coresight/coresight-etm3x-core.c |  9 +++------
->  drivers/hwtracing/coresight/coresight-funnel.c     | 36 +++++++++++-------------------------
->  drivers/hwtracing/coresight/coresight-replicator.c | 34 ++++++++++------------------------
->  drivers/hwtracing/coresight/coresight-stm.c        |  9 +++------
->  drivers/hwtracing/coresight/coresight-tpiu.c       | 10 +++-------
->  6 files changed, 34 insertions(+), 74 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-> index 7948597d483d..45c2f8f50a3f 100644
-> --- a/drivers/hwtracing/coresight/coresight-etb10.c
-> +++ b/drivers/hwtracing/coresight/coresight-etb10.c
-> @@ -730,12 +730,10 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
-> +
->  	dev_set_drvdata(dev, drvdata);
->  
->  	/* validity for the resource is already checked by the AMBA core */
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> index 8927bfaf3af2..adbb134f80e6 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
-> @@ -832,12 +832,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  
->  	spin_lock_init(&drvdata->spinlock);
->  
-> -	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
->  
->  	drvdata->cpu = coresight_get_cpu(dev);
->  	if (drvdata->cpu < 0)
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index 3fb9d0a37d55..ec6d3e656548 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -213,7 +213,6 @@ ATTRIBUTE_GROUPS(coresight_funnel);
->  
->  static int funnel_probe(struct device *dev, struct resource *res)
->  {
-> -	int ret;
->  	void __iomem *base;
->  	struct coresight_platform_data *pdata = NULL;
->  	struct funnel_drvdata *drvdata;
-> @@ -231,12 +230,9 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> @@ -248,10 +244,8 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  	 */
->  	if (res) {
->  		base = devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(base)) {
-> -			ret = PTR_ERR(base);
-> -			goto out_disable_clk;
-> -		}
-> +		if (IS_ERR(base))
-> +			return PTR_ERR(base);
->  		drvdata->base = base;
->  		desc.groups = coresight_funnel_groups;
->  		desc.access = CSDEV_ACCESS_IOMEM(base);
-> @@ -260,10 +254,9 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  	dev_set_drvdata(dev, drvdata);
->  
->  	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata)) {
-> -		ret = PTR_ERR(pdata);
-> -		goto out_disable_clk;
-> -	}
-> +	if (IS_ERR(pdata))
-> +		return PTR_ERR(pdata);
-> +
->  	dev->platform_data = pdata;
->  
->  	raw_spin_lock_init(&drvdata->spinlock);
-> @@ -273,17 +266,10 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  	desc.pdata = pdata;
->  	desc.dev = dev;
->  	drvdata->csdev = coresight_register(&desc);
-> -	if (IS_ERR(drvdata->csdev)) {
-> -		ret = PTR_ERR(drvdata->csdev);
-> -		goto out_disable_clk;
-> -	}
-> +	if (IS_ERR(drvdata->csdev))
-> +		return PTR_ERR(drvdata->csdev);
->  
-> -	ret = 0;
-> -
-> -out_disable_clk:
-> -	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
-> -		clk_disable_unprepare(drvdata->atclk);
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int funnel_remove(struct device *dev)
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 87346617b852..460af0f7b537 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -219,7 +219,6 @@ static const struct attribute_group *replicator_groups[] = {
->  
->  static int replicator_probe(struct device *dev, struct resource *res)
->  {
-> -	int ret = 0;
->  	struct coresight_platform_data *pdata = NULL;
->  	struct replicator_drvdata *drvdata;
->  	struct coresight_desc desc = { 0 };
-> @@ -238,12 +237,9 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> @@ -255,10 +251,8 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	 */
->  	if (res) {
->  		base = devm_ioremap_resource(dev, res);
-> -		if (IS_ERR(base)) {
-> -			ret = PTR_ERR(base);
-> -			goto out_disable_clk;
-> -		}
-> +		if (IS_ERR(base))
-> +			return PTR_ERR(base);
->  		drvdata->base = base;
->  		desc.groups = replicator_groups;
->  		desc.access = CSDEV_ACCESS_IOMEM(base);
-> @@ -271,10 +265,8 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	dev_set_drvdata(dev, drvdata);
->  
->  	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata)) {
-> -		ret = PTR_ERR(pdata);
-> -		goto out_disable_clk;
-> -	}
-> +	if (IS_ERR(pdata))
-> +		return PTR_ERR(pdata);
->  	dev->platform_data = pdata;
->  
->  	raw_spin_lock_init(&drvdata->spinlock);
-> @@ -285,17 +277,11 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	desc.dev = dev;
->  
->  	drvdata->csdev = coresight_register(&desc);
-> -	if (IS_ERR(drvdata->csdev)) {
-> -		ret = PTR_ERR(drvdata->csdev);
-> -		goto out_disable_clk;
-> -	}
-> +	if (IS_ERR(drvdata->csdev))
-> +		return PTR_ERR(drvdata->csdev);
->  
->  	replicator_reset(drvdata);
-> -
-> -out_disable_clk:
-> -	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
-> -		clk_disable_unprepare(drvdata->atclk);
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int replicator_remove(struct device *dev)
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index c32d0bd92f30..f13fbab4d7a2 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -842,12 +842,9 @@ static int __stm_probe(struct device *dev, struct resource *res)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-> index 4b9634941752..cac1b5bba086 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-> @@ -128,7 +128,6 @@ static const struct coresight_ops tpiu_cs_ops = {
->  
->  static int __tpiu_probe(struct device *dev, struct resource *res)
->  {
-> -	int ret;
->  	void __iomem *base;
->  	struct coresight_platform_data *pdata = NULL;
->  	struct tpiu_drvdata *drvdata;
-> @@ -144,12 +143,9 @@ static int __tpiu_probe(struct device *dev, struct resource *res)
->  
->  	spin_lock_init(&drvdata->spinlock);
->  
-> -	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
-> -	if (!IS_ERR(drvdata->atclk)) {
-> -		ret = clk_prepare_enable(drvdata->atclk);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
+Hello Cristian,
 
-LGTM
+On 5/2/2025 11:26 AM, K Prateek Nayak wrote:
+> Could you also provide some information on your LDG machine - its
+> configuration and he kernel it is running (although this shouldn't
+> really matter as long as it is same across runs)
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+So I'm looking at logs at LDG side which is a 4th Generation EPYC system
+with 192CPUs running the repro on baremetal and I see:
+
+[20250502.061627] [INFO] STARTING TEST
+[20250502.061627] [INFO] 768 VU
+...
+Vuser 2:VU 2 : Assigning WID=1 based on VU count 768, Warehouses = 24 (1 out of 1)
+Vuser 2:Processing 1000000000000 transactions with output suppressed...
+...
+
+Now that is equal to 4 * 192CPUs that my LDG has which means I might
+need to match the same configuration as your LDG to mimic your exact
+scenario.
+
+768VU each processing 1000000000000 transactions sent to a 16vCPU
+SUT instance seems like a highly overloaded (and unrealistic) scenario
+but perhaps your LDG is also a similar 16vCPU instance which caps the
+VU at 64?
+
+Currently doing a trial run, staring at logs to see what I need to
+adjust based on the errors. I'll adjust the LDG based on your comments
+and try to reproduce the scenario over the weekend.
+
+-- 
+Thanks and Regards,
+Prateek
+
