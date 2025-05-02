@@ -1,120 +1,136 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADBE221721
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A3F1BEF77
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185480; cv=none; b=l++dA0PRKobkS4OGi0sGROcUhzl+7OLus4e0APiyw5IjGg8V37fU7xUMFSvGrYHjbkIOripJUePkWoN4bZcgoKUckH8OcdR1s7JeJ235Q1eMJlZL8yayQpcny/4D1dMtQVkLBMVCMtC6bNBgTi/ObYFFusXlcbyQGAeJQuvkW3M=
+	t=1746185580; cv=none; b=H0Rl2jx1uKcV+aumkm4L2DeRsRl5pB4NqjjVlCHhPbCpjtK8zsvoNsmYP4Kn1adyf0LPI+P7VKEorudsrfYxCId4McCTbHrZiKgF0xw0awOH8aKEZbevz3xU3k/wJOUEEy5zRd0PMJxwZHOjfTGbB+/229R6bx0zI2uo1C4IOq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185480; c=relaxed/simple;
-	bh=nsiFImJLoqRMPYE6uUcBaLQvv1p2h76vbEMvfRkjgS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HySSQK3JuxdgmguIkW3ROc7kKr+MxW7rux54JkVnWY4g9iyYtl+SDi749uSm6hlvUC3L5hNOnOq4QoqVdiKwJXKuI2Mfu7qVSc8wYUcurler5hN1T2kloMuAaxRVliHkDJlrVXtxpfLCIUscAJexGc/+VbQYxu6HjfS6GS2FYy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BFAYSYv9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1746185580; c=relaxed/simple;
+	bh=7A1HSBrvNQWxj/2gNm3WkF5r1onxQz5OycCMNYENKLk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=C15+QwPlVNJ5QsHdpcMmGxeoW5hDTJ6uJJQcSkHSZTyvYulJzEy0Sfb1prxJKUm5HPgHFVO9c1DqfNuNlzQ1b8mH8yMleyeTZIKzXRGxOElZi2QvWGW4CwXQ0SZo4boat7Ay2YCOA8mXbph0DgTNiI1UEQtW4oqrbPRjvOetebM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lTCliXWO; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BFAYSYv9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54b10594812so105563e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:31:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lTCliXWO"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so9534085e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746185475; x=1746790275; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7PVZ4QM5gmv4w9v0TZil7CgJhd3wgbN41SsSO9rADow=;
-        b=BFAYSYv9JpU8W61tifLJgclE8j7BYvenRD3psfh7CDkO3Vhdy5uhgLv9u6XRljMn0y
-         uGhbtq9/tkaR3mDqrLZyrnBX97Lfs3rVLK1sBFguyv/KWObjto2wVI2nwAR4eAZwLyG7
-         CaqtlZhZ3LZipuziJKb27Tebk+E3NHjT7fI3BUxNjvid833CfJogXI3NhP3Ht3WuC2Ry
-         +ePFZq3OpYjqBXDEUigEr36+02/5i0PEpRBelolSibIJxISt5uRofoGhAMiGiWsdTr3e
-         h4Jr3C7/TjeEQJZvIU6q7pZpyi19b7PE5WczLnaBAeKaGqpfbb6X1XWI0F7zFAZZdl8d
-         GZfw==
+        d=google.com; s=20230601; t=1746185573; x=1746790373; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ehdcrv2mT2VKoMiW5G3gmtm0EefPx2m3GmPmUMuFdMY=;
+        b=lTCliXWOi2e1WQXt8r929+0SvTVRGxfKCo+4niifv9Ra6CrTQm1sU92lkE+DZEh0lr
+         TPiQ9bgbyobl9foTBNH9+FhGqzZVcjLdZoWYIbIaVEcf8UchA/f9VOxNRGCTmTk6bUWv
+         UeIoXZrD9ORyUkxzblrlmSuAsJHhKjpO1AJ7LMEMM/MLlzagFVgvixY6pYAHCl+pimDb
+         /WXzQaAKuVzf+FkONh5lwj3dlvPRzKTOZK4s+ijC+rpdUBxTae4bPWJx+abA74J4PfhZ
+         +KzTdrIF1e/PspGmM8v13UQqYpOyJ/sfpMUEpERqJjDV5VRqP846MlbBiqhzHxWDuThY
+         4shQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746185475; x=1746790275;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7PVZ4QM5gmv4w9v0TZil7CgJhd3wgbN41SsSO9rADow=;
-        b=xLoW1EE10KlSlxUxFjgst4faS/vGf5kr/issjy5ZwMPFYb+kzTWzEa78eYbwXbSFVU
-         q1/zMFfvOYdMF6JHzNf5wYKGZi/VmD7nTi273fVAxDvMQMzt3DFz/Tz0GNiaTPrBV8Ac
-         wqRN7ioZ32BbkZNgidm0mqThcMAdzcaSbiyiFvEpz325qQjoqhDAnKHFLsyz70gmxTFv
-         fvQr9a9YGxSsBi4LcGNT3mTasQ6dTgKGPurjbrcLEJ2nQvUEjJcf6hGYyJu1XajtrB+Y
-         mV+fjU7Y7GuZHQ+tH538gB6OECsIhQFVDVyaJWuSsxRM9i7SFojZVIXnj2QVyMmc3MVQ
-         ryDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiMaydGUpS5LVTJnz+SGPMjviRsi0J6AMVtUNgnFvABG8u9vb3TwCnmphG2iTXncSzUxxhiIvb8fMWmUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8CkpkmdeIVs8tIJ4BKcgRSej+RADu0+nk/0wR9nd32tBOYX/d
-	fg4N+Ama1Cy3FrLyW3s2M2N4/zUcdDwXl/Rg0CUXEVJGTzi1lEK3UEgxDJSpGpfDHDZLyEA4XY+
-	WH3u7BwlTE3RPg8u2hVK7uzCuxU2+lNP1pNojzQ==
-X-Gm-Gg: ASbGncs+fUuftcqfYoVOvIfG1VKigExt8sHioSMF01A+/B8fDucIX0l6GdWHbh0FZSd
-	lPhdkLA3hf60m1x117kIvI5EXxiu7+5ELS5noLT+zvha01+MoITyVeSD200UoQcrCc7gttDfv9g
-	6yXVNU2JgV7NCWx9cMf8ACExnMbPOfhvATNlxolhTIUm4VW1+X7NgdYw==
-X-Google-Smtp-Source: AGHT+IGaxwPjwZjPSxduV7/nv7xqHS4FaobXkSF8oU2RzlJXTcBtUuY8b6IbKqMF4S/Rcv+Wp8xW5CzYLKbGOnG9ITs=
-X-Received: by 2002:a05:6512:234e:b0:545:c23:9a94 with SMTP id
- 2adb3069b0e04-54eac24302emr669308e87.48.1746185475382; Fri, 02 May 2025
- 04:31:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746185573; x=1746790373;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ehdcrv2mT2VKoMiW5G3gmtm0EefPx2m3GmPmUMuFdMY=;
+        b=wI0AZbd94+lHbchyPfkJFqsv1eLv/hjwOVndNBGIx0MB7jb5l1RSrAAXo2id2HwBal
+         1Zgciy+yEFy2gw81vMuBkEbB/+v/TSPhk8itLx4Lf5sw+6Dd2J32IyZAxqRKn8g7IVOD
+         akngy/hog4izpNPrmFxky9cH1jCdYV2/9QdP36/YH15VUk9GG5HoD4itswdHAO2NVx0e
+         Ul076ssP/uzTSHRX4K5pvnSdlbcBW+J/0hhOJiPojGt7YQZuJzUkB8FMBcK+4Yb6zimp
+         7aIxWYx5o4LZ1iF1qOTCDtGS05tDUB+QtUP4GRyE9k7pRk6EabnV7F5Zo4ZGnCqfyGJ7
+         9ckQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8xPQp2OCIDXSpc6vz0d4wpr3ypzGuMgWhak3YURCaF5J+REFBQ88UqGjeVXlZhO6fStRqzTlB0I54UQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk0jpAQbf+wV3YJQjQyYNOnJ3iAduqUOiDPv4e67Hw7CTZFM5V
+	kMI9cIwvAmStfztNl53BI3yniU2D4Wv4kg47QxFXocRZ3LI4IvaKy+Vt9h61Uuf1bvrmJU2WLx/
+	VKWcMOGPsdaSN4Q==
+X-Google-Smtp-Source: AGHT+IGTFJg1P18OgzK6caFU87y4YhrHM/eoMM1Nq1UEWOnC7eYMyFOfE3yruvrd/4zA8FAvrqLG7/6uMPFF5xQ=
+X-Received: from wmbfl26.prod.google.com ([2002:a05:600c:b9a:b0:43d:55a1:bffc])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5247:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-441bbeb0f11mr18023905e9.14.1746185573652;
+ Fri, 02 May 2025 04:32:53 -0700 (PDT)
+Date: Fri, 2 May 2025 11:32:51 +0000
+In-Reply-To: <20250502-unique-ref-v10-2-25de64c0307f@pm.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250502-irq-qcom-mpm-fix-no-wake-v1-1-8a1eafcd28d4@linaro.org>
-In-Reply-To: <20250502-irq-qcom-mpm-fix-no-wake-v1-1-8a1eafcd28d4@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 2 May 2025 13:31:04 +0200
-X-Gm-Features: ATxdqUF7UFBB_n-kwTbMKu89mjJ3x0a4dj381-gCLDZrKHfAIyHJguUXxuGeqH8
-Message-ID: <CAMRc=Mcg0xRvZWEP3hmWyrLF-gsfzR9DS0umE3NffqKbrRUgdQ@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/qcom-mpm: Fix crash when trying to handle
- non-wake GPIOs
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawn.guo@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexey Klimov <alexey.klimov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <20250502-unique-ref-v10-2-25de64c0307f@pm.me>
+Message-ID: <aBStYylT7wy9JiDx@google.com>
+Subject: Re: [PATCH v10 2/5] rust: Rename AlwaysRefCounted to RefCounted
+From: Alice Ryhl <aliceryhl@google.com>
+To: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, May 2, 2025 at 1:22=E2=80=AFPM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> On Qualcomm chipsets not all GPIOs are wakeup capable. Those GPIOs do not
-> have a corresponding MPM pin and should not be handled inside the MPM
-> driver. The IRQ domain hierarchy is always applied, so we need to
-> explicitly disconnect the hierarchy for those. The pinctrl-msm driver mar=
-ks
-> these with GPIO_NO_WAKE_IRQ. qcom-pdc has a check for this, but
-> irq-qcom-mpm is currently missing the check. This is causing crashes when
-> setting up interrupts for non-wake GPIOs, e.g.
->
->  root@rb1:~# gpiomon -c gpiochip1 10
->    irq: IRQ159: trimming hierarchy from :soc@0:interrupt-controller@f2000=
-00-1
->    Unable to handle kernel paging request at virtual address ffff8000a1dc=
-3820
->    Hardware name: Qualcomm Technologies, Inc. Robotics RB1 (DT)
->    pc : mpm_set_type+0x80/0xcc
->    lr : mpm_set_type+0x5c/0xcc
->    Call trace:
->     mpm_set_type+0x80/0xcc (P)
->     qcom_mpm_set_type+0x64/0x158
->     irq_chip_set_type_parent+0x20/0x38
->     msm_gpio_irq_set_type+0x50/0x530
->     __irq_set_trigger+0x60/0x184
->     __setup_irq+0x304/0x6bc
->     request_threaded_irq+0xc8/0x19c
->     edge_detector_setup+0x260/0x364
->     linereq_create+0x420/0x5a8
->     gpio_ioctl+0x2d4/0x6c0
->
-> Fix this by copying the check for GPIO_NO_WAKE_IRQ from qcom-pdc.c, so th=
-at
-> MPM is removed entirely from the hierarchy for non-wake GPIOs.
->
-> Cc: stable@vger.kernel.org
-> Reported-by: Alexey Klimov <alexey.klimov@linaro.org>
-> Tested-by: Alexey Klimov <alexey.klimov@linaro.org>
-> Fixes: a6199bb514d8 ("irqchip: Add Qualcomm MPM controller driver")
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
+On Fri, May 02, 2025 at 09:02:37AM +0000, Oliver Mangold wrote:
+> AlwaysRefCounted will become a marker trait to indicate that it is allowed
+> to obtain an ARef<T> from a `&T`, which cannot be allowed for types which
+> are also Ownable.
+> 
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>  // SAFETY: All instances of `Request<T>` are reference counted. This
+> -// implementation of `AlwaysRefCounted` ensure that increments to the ref count
+> +// implementation of `RefCounted` ensure that increments to the ref count
+>  // keeps the object alive in memory at least until a matching reference count
+>  // decrement is executed.
+
+It looks like "keeps" now fits on the previous line. I would reflow all
+text in this patch.
+
+> -/// Types that are _always_ reference counted.
+> +/// Types that are internally reference counted.
+>  ///
+>  /// It allows such types to define their own custom ref increment and decrement functions.
+> -/// Additionally, it allows users to convert from a shared reference `&T` to an owned reference
+> -/// [`ARef<T>`].
+>  ///
+>  /// This is usually implemented by wrappers to existing structures on the C side of the code. For
+>  /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to create reference-counted
+> @@ -410,9 +408,8 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>  /// at least until matching decrements are performed.
+>  ///
+>  /// Implementers must also ensure that all instances are reference-counted. (Otherwise they
+> -/// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
+> -/// alive.)
+> -pub unsafe trait AlwaysRefCounted {
+> +/// won't be able to honour the requirement that [`RefCounted::inc_ref`] keep the object alive.)
+> +pub unsafe trait RefCounted {
+>      /// Increments the reference count on the object.
+>      fn inc_ref(&self);
+>  
+> @@ -425,11 +422,21 @@ pub unsafe trait AlwaysRefCounted {
+>      /// Callers must ensure that there was a previous matching increment to the reference count,
+>      /// and that the object is no longer used after its reference count is decremented (as it may
+>      /// result in the object being freed), unless the caller owns another increment on the refcount
+> -    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+> -    /// [`AlwaysRefCounted::dec_ref`] once).
+> +    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls [`RefCounted::dec_ref`] once).
+>      unsafe fn dec_ref(obj: NonNull<Self>);
+>  }
+>  
+> +/// An extension to RefCounted, which declares that it is allowed to convert
+> +/// from a shared reference `&T` to an owned reference [`ARef<T>`].
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that no safety invariants are violated by upgrading an `&T`
+> +/// to an [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and [`Ownable`]
+> +/// cannot be implemented for the same type, as this would allow to violate the uniqueness
+> +/// guarantee of [`Owned<T>`] by derefencing it into an `&T` and obtaining an [`ARef`] from that.
+> +pub unsafe trait AlwaysRefCounted: RefCounted {}
+
+Adding a new trait should not happen in a commit called "rename X to Y".
+Consider renaming this patch to "split AlwaysRefCounted into two traits"
+or similar.
+
+Alice
