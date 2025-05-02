@@ -1,59 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79DC23C4EB;
-	Fri,  2 May 2025 14:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E295D70830;
+	Fri,  2 May 2025 14:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194897; cv=none; b=Ri9NZBRiwiwc7xr7xHV+OW5APEWc3yr3zmGe8l9BjGa4KxM3c2dSKv3ZqU/pwXjFdjZ7yK9nHsmGnZJx1P4mAurTE5rjSvXf3Zx+XcXn7rr97d0YBGd++xs0nvTdtpik9CVobiN0ycSd9xWLRcXJZZ/hY0jmTHsC0bACBENgrlE=
+	t=1746194957; cv=none; b=SK8QUkYQgBgyB5ZlOAZe80ONbtHR4GZ/EyO7bxd/qpmF1nRuD6tM8ZF3Xdhpv1bfjmwZHxYT9zskOptmqQDk7atqC3apJ7qd1Hzsn2OCq6KAZ8dE5CJ46rp8+NFjJjN4167ENO5BwkgIi9LGlWJjiHiqDAeH80BF8X00QXVysq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194897; c=relaxed/simple;
-	bh=M0N5hcrLVErdGk+gFeKjzddxxWgY7OZLy22j2pld19Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZOma46wGz3zWLwB2dfDKqve7oZNr9dXGyGLeRMj/OGAAb4yL2LEvA+pno+WMEF+qMH5TGDDV3ikCqYBn1dvxHZPXKMqTe5BVcQ1jO3h7+k+y8fi0fZZEqxGy0D98OyVV4avEGao++eUWpJXezaBkkM6+GJReCeIIOL0JS7/5Bbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2RQLRbcd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746194957; c=relaxed/simple;
+	bh=x10rJVRO+bobuZENwdtQ9uPUVVMm4D4dXAPYpSKSIiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L0RpHhwN6YJV7eCE2lG/atuRVzcPoP2vpwn7ma5McGKloUAdKAX0PkJ+6rwEKuwsZjJ5QSx1nQX03kP7mEWoY+PFDRdiy/lDRD9dC3FZXDSdbmhihnTWPHE8ElfBrRBFck7/1KVPFd44G54Tcby1YxsQG8yVo475xhFSs7Igl9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p7ILztUJ; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2RQLRbcd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3D3C4CEE4;
-	Fri,  2 May 2025 14:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746194897;
-	bh=M0N5hcrLVErdGk+gFeKjzddxxWgY7OZLy22j2pld19Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2RQLRbcdZ1CxQW7ykUO6Yx7whDIeSHSXksaEDYS8MbFm3vq5JUV2JVn7EP4/MOQ6W
-	 eK2nZuRgQkygUjvSoM6VBFCHSgnckB9dwAvv+7sbOuA7X0CUpsknMgeDi5wKYAuKCk
-	 NRVsFWSabxzUVf6yTL9xhc9E2xWsvzGWWtjNIoO8=
-Date: Fri, 2 May 2025 16:08:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Benno Lossin <benno.lossin@proton.me>,
-	Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [PATCH v5 0/7] Additional methods for Vec
-Message-ID: <2025050251-canopy-stained-75f0@gregkh>
-References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p7ILztUJ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2353A43930;
+	Fri,  2 May 2025 14:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746194953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KFncIClPHZHqPRHwYeVO7dn4vVHyo3SFbQeh1DTCLyA=;
+	b=p7ILztUJkSqkTIf9Ci0t06hKjp+n8QXM9kCo6TrS6OTCPxYmC6iIf3D7y4H5H1RmYO3M9E
+	9VdcVG7O3VmCeaxm1+v//m13J9WSsxZnPNdAiQBUKwsCSj1yAf3Gh8NixBdYJ1tU+qReBW
+	A6cGn2FVE/cA2PKDAilyL+GqsTVmJ5fcTlBQdAMIE2bzIgziUgu/36VVOVG2QGGjECh/LS
+	ABodCoR5ZKUzIYeQcPvpfZZOwbR9GFf5fLSDxP1M2HavJmKDHWObRcnVm4D62+NyG7OWXS
+	/yYlxAPQ6cEwuGsYGUuegenNepzPVKMU+CTr8eDZ+7YyQDD8fE53txxCxs4+2A==
+Date: Fri, 2 May 2025 16:09:10 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Ayush Singh <ayush@beagleboard.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Andi Shyti <andi.shyti@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree-spec@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 1/1] schemas: i2c: Introduce I2C bus extensions
+Message-ID: <20250502160910.448f63dd@booty>
+In-Reply-To: <20250430152201.209797-2-herve.codina@bootlin.com>
+References: <20250430152201.209797-1-herve.codina@bootlin.com>
+	<20250430152201.209797-2-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfetudeugfehheeliefhjeejuddvledtuddttdevledthfehgeeugfetheekgfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghng
+ hdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, May 02, 2025 at 01:19:28PM +0000, Alice Ryhl wrote:
-> This adds various Vec methods. Some of them are needed by Rust Binder,
-> and others are needed in other places. Each commit explains where it is
-> needed.
-> 
-> This series is based on top of alloc-next and rust: alloc: split
-> `Vec::set_len` into `Vec::{inc,dec}_len`
-> https://lore.kernel.org/rust-for-linux/20250416-vec-set-len-v4-0-112b222604cd@gmail.com/
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Hello Herv=C3=A9,
 
-I had one tiny question, but it's not really an issue, over looks great:
+On Wed, 30 Apr 2025 17:22:00 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> An I2C bus can be wired to the connector and allows an add-on board to
+> connect additional I2C devices to this bus.
+>=20
+> Those additional I2C devices could be described as sub-nodes of the I2C
+> bus controller node however for hotplug connectors described via device
+> tree overlays there is additional level of indirection, which is needed
+> to decouple the overlay and the base tree:
+>=20
+>   --- base device tree ---
+>=20
+>   i2c1: i2c@abcd0000 {
+>       compatible =3D "xyz,i2c-ctrl";
+>       i2c-bus-extension@0 {
+>           i2c-bus =3D <&i2c_ctrl>;
+>       };
+>       ...
+>   };
+>=20
+>   i2c5: i2c@cafe0000 {
+>       compatible =3D "xyz,i2c-ctrl";
+>       i2c-bus-extension@0 {
+>           i2c-bus =3D <&i2c-sensors>;
+                        ^^^^^^^^^^^
+
+This should be i2c_sensors (with an underscore)...
+
+>       };
+>       ...
+>   };
+>=20
+>   connector {
+>       i2c_ctrl: i2c-ctrl {
+>           i2c-parent =3D <&i2c1>;
+>           #address-cells =3D <1>;
+>           #size-cells =3D <0>;
+>       };
+>=20
+>       i2c-sensors {
+
+...and this should have a label:
+
+        i2c-sensors: i2c-sensors {
+
+With those fixed you can add my:
+
++Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
