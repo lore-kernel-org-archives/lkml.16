@@ -1,144 +1,111 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from freeshell.de (freeshell.de [116.202.128.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C881E5B62;
-	Fri,  2 May 2025 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7201E5B62;
+	Fri,  2 May 2025 11:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185014; cv=none; b=osDXjMz7z3TvR5RrTV/Pr9VN+i+4UsqNkekmmHrcX8UD7kONHuXPO59sxibhAp05FwEE9AkRCpGa3Oz1MqB7oMnm9SIYUUKehsyyOi6aFqsZLNuzxKIfnatunEPPGzT8pxsbi4w9Opvd/JQGZEPx0lIN3hmjD7f9NK9FWnFEKno=
+	t=1746185091; cv=none; b=BCBuW/q/sIJWWbC1Mpx/7PpkeCIj8Lc5QySZLP5T/McpSY6VtxGgFdRFGSwHCe3xbbvVNA67/eKz85PXwbT6135RYh4uJ6i4idtlS02s6HtVEHuUF7tjKF7+8RbSS5ShZqh8F93JcqK0OHXmLoJyF3Sokm/jxaydq9g2xH6rU0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185014; c=relaxed/simple;
-	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aUCWQpoSrcP0KEtS9ljATKEOt7WiXA5RQ2z+e0iHBPRJeKQCPi3tt0EeYalYNgp2ATSgIPh+L2QvHQlqOv9R+GpI/hsa+uZofrQvEZLA+bgRvMLfVVWYFA+fIWQ5+1a1mWqy87yKc5dwVNsHTfdkX6Kp7houkXPsPp4kxzVElJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lmV94JNE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmV94JNE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=; b=lmV94JNEzV4MsUJuxpPUrg3Bax
-	VPmVO1/zySgMAd5F2IJnFvPiwZNPECAQ1noECVKMioFjFmA+n5SOAzV+kGbk/f9S1iWtVP9rLg6cZ
-	hHF7SAR0m7IaJh5tCHy2qA/R/vkevPz7ZR3+xa+Zh5GSLdg0ezbI6iHsuifF9HE00+OjyODMdnQyb
-	JkPl44vhH6EmamOKaWacZeeUgT5U6RxA5F79Ex/83F13pJOquOWPbK7ely8gHy1uVeRQNWbA0aBQP
-	f+nYHty39Jk6K+NlHv/lPYoCn7B5BgUPqoEMb82IHPQShd8FJim54uJ17ucrfOJGKm432KMXzRw1R
-	RwhYSB9w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAoTJ-0000000FKnO-0XWf;
-	Fri, 02 May 2025 11:22:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C1A530057C; Fri,  2 May 2025 13:22:16 +0200 (CEST)
-Date: Fri, 2 May 2025 13:22:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
-	Nicolas Saenz Julienne <nsaenz@amazon.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
-	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Vishal Annapurve <vannapurve@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+	s=arc-20240116; t=1746185091; c=relaxed/simple;
+	bh=cKOTqHsBhMM6YjpkOCPn/l8zd9SEgokeFwXnmYii7q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GgjwZKa0Bl1vi5bz9dng9utGtuupTNtj3fW5L62SKlw+EivobP3YI8PFqrKdJjXJ7JXiffX0Hq2aEeftCpJNi+9Mt7Vs3x/yG1siZOvB86GexIdZd6iWvA4kSjIVJw448TtxwDwlHhr0AzMXOa2Nvd10G8iOg5ZLbnE1VrXg/No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
+Received: from [192.168.2.35] (unknown [98.97.61.17])
+	(Authenticated sender: e)
+	by freeshell.de (Postfix) with ESMTPSA id 1FF12B4C2411;
+	Fri,  2 May 2025 13:24:44 +0200 (CEST)
+Message-ID: <d96b2243-0eb8-4596-bbef-7e7f9419d1ed@freeshell.de>
+Date: Fri, 2 May 2025 04:24:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: dts: starfive: jh7110-common: use macros for MMC0
+ pins
+To: Icenowy Zheng <uwu@icenowy.me>, Emil Renner Berthing <kernel@esmil.dk>,
+ Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, E Shattow <e@freeshell.de>
+References: <20250424060605.638678-1-uwu@icenowy.me>
+Content-Language: en-US
+From: E Shattow <e@freeshell.de>
+In-Reply-To: <20250424060605.638678-1-uwu@icenowy.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
+On 4/23/25 23:06, Icenowy Zheng wrote:
+> The pin names of MMC0 pinmux is defined in the pinctrl dt binding header
+> associated with starfive,jh7110-pinctrl .
+> 
+> Include the header file and use these names instead of raw numbers for
+> defining MMC0 pinmux.
+> 
+> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+> ---
+> This is only a prettying commit. The resulting DTB files have the same
+> content with or without this patch (verified by doing sha256sum on
+> arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2-v1.3b.dtb).
+> 
+>  .../boot/dts/starfive/jh7110-common.dtsi      | 21 ++++++++++---------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> index c2f70f5e2918f..a2c72b385a905 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -8,6 +8,7 @@
+>  #include "jh7110.dtsi"
+>  #include "jh7110-pinfunc.h"
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/starfive,jh7110-pinctrl.h>
+>  
+>  / {
+>  	aliases {
+> @@ -428,16 +429,16 @@ GPOEN_ENABLE,
+>  		};
+>  
+>  		mmc-pins {
+> -			pinmux = <PINMUX(64, 0)>,
+> -				 <PINMUX(65, 0)>,
+> -				 <PINMUX(66, 0)>,
+> -				 <PINMUX(67, 0)>,
+> -				 <PINMUX(68, 0)>,
+> -				 <PINMUX(69, 0)>,
+> -				 <PINMUX(70, 0)>,
+> -				 <PINMUX(71, 0)>,
+> -				 <PINMUX(72, 0)>,
+> -				 <PINMUX(73, 0)>;
+> +			pinmux = <PINMUX(PAD_SD0_CLK, 0)>,
+> +				 <PINMUX(PAD_SD0_CMD, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA0, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA1, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA2, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA3, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA4, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA5, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA6, 0)>,
+> +				 <PINMUX(PAD_SD0_DATA7, 0)>;
+>  			bias-pull-up;
+>  			drive-strength = <12>;
+>  			input-enable;
 
-> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
-> You can go buy the Intel hardware off the shelf today.
+Ref:
+https://lore.kernel.org/lkml/ZQ2PR01MB1307BD49C0A49DAD3AA76049E600A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn/
+"[PATCH] riscv: dts: starfive: jh7110-common: Use named definition for
+mmc1 card detect"
 
-To be fair, the Intel RAR thing is pretty horrific :-( Definitely
-sub-par compared to the AMD and ARM things.
+Thanks for taking this. Read previous comments from Hal there is yet
+some description in dts/upstream/src/riscv/starfive/jh7110-pinfunc.h
+that needs to change / be improved on.
 
-Furthermore, the paper states it is a uarch feature for SPR with no
-guarantee future uarchs will get it (and to be fair, I'd prefer it if
-they didn't).
 
-Furthermore, I suspect it will actually be slower than IPIs for anything
-with more than 64 logical CPUs due to reduced parallelism.
+
+-E
