@@ -1,55 +1,73 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6DD259CA7;
-	Fri,  2 May 2025 15:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE7925A64E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201480; cv=none; b=m870OkvHvZg77kDRK2E+BgRseUW+wOX66iyeHsnGyzs8vyiCf8b3rG3cYVy622sLIf+LgbphxIMKYzsuyhUh5VJMAwjO3x8p5mB47DKDgxbVEGntiNTv2cgnZeYAWDIATJKKGkBcU8LbO3lt0ZWUcY5lpiiRemKp8vnEhtG6lis=
+	t=1746201525; cv=none; b=GxfNTeX+ptbZokESeQ+CxphLgZTR8my4zr/9DT9QyezpbwSGmAtmMLwBhQOYNLTSOJAhSpdPSqgAKLKpvRkoig4F42xdt8bdYrJJpcqnVxaJmjDzL+Bk1BPKN0K3F++VRPtDoJU7fdFBvtWBCt4K4J73VubQbLRULhgK+fvfC+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201480; c=relaxed/simple;
-	bh=8QYuu7fU5WUIXfLa2awfgrXyGtQ8swMWYYVzxECzPEw=;
+	s=arc-20240116; t=1746201525; c=relaxed/simple;
+	bh=5RQg0jFO3YwelNMJyzI18tPXYVp3HS0KWiJ/0p/cDlA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D03PFSh4B34DGsaXDTREOMxKAB3DDE9Jz1gxSR1FruBLcjZ9OVlBD2AE8IfL/zZNc6zvt5kotvQiWV2t93BkRogPXH6Sip+G/BkwVSvlVZgYbcHdx1q8k47dXrfV4AW5q8WTokyXjVbWOfgtXw4Zjt8zbQKOrzYPsTdV73zuvmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=s2GAqAeM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEAPiaONsFdkvJT0tHYSYev2Isaeawz7vuhb/4Psnk3QAs3i0g6vnIa0r8jXidzEZQw/CvlqKS0slL8/cWrKClaj61u1Z/9bf6t/znoCuWmtVUXJIbWWYdle/9h+mQ+Ett4cPfeDuSXg6OcdKVWSyuHqpU6XZ29ucI7oBAke5hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vPQ1JcOQ; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="s2GAqAeM"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AFE20353;
-	Fri,  2 May 2025 17:57:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1746201468;
-	bh=8QYuu7fU5WUIXfLa2awfgrXyGtQ8swMWYYVzxECzPEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s2GAqAeMwGyk87qn58OiHrgsgvDI9wlMCxw6tM5KORPioPIiY1cmhZ4Y0rEEV43Rk
-	 ZHjsi56wlLzk/opQb+UNzFOMac7F4k2CqiXSQp2+Qt3+cGTHMzV5Jn+a0EtAh9nzzb
-	 R52QvJGHsjKV22hApy2kl1o8bPbbX+ATTa2Iy05k=
-Date: Fri, 2 May 2025 18:57:47 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 04/13] media: nxp: imx8-isi: Use
- devm_clk_bulk_get_all() to fetch clocks
-Message-ID: <20250502155747.GB20093@pendragon.ideasonboard.com>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-4-ef695f1b47c4@nxp.com>
- <20250421211438.GN17813@pendragon.ideasonboard.com>
- <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vPQ1JcOQ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22c336fcdaaso28321025ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746201523; x=1746806323; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=H+PQK7cd6vQouY+QWssyC04ldZ+G2r7jfC6DHSaivAY=;
+        b=vPQ1JcOQ4dJ5rdCHoOxq+u419LvNdAN/KXawisHd0oK42XwhB+EnQanqiXZAcb1YWQ
+         NZEw/CUywhL+s6w4FtottB3AssL/8aY3O9ZGZlATOpDRz86W8dJ2Ka4jjzuPt+34rNW7
+         GfdRTDSCuqwW1/ftgxctK0MFP61RBeGywcaNuzl2jiF0vfWqmQZ9laM2gpMMWJjxa9Pp
+         njV8L7IBl0UBpilfUAa0recq4Hc27g4rId0cQ1zf7obIeShycHcOmFiu8BOeoTNtjExI
+         Y+3/8AyufxPpuQHWCIT6m/VO23MLItCijSL34tm5J/Pb5OyGCK1pS4vn+g7lcKvxqtia
+         7hwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746201523; x=1746806323;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+PQK7cd6vQouY+QWssyC04ldZ+G2r7jfC6DHSaivAY=;
+        b=Rzn5dNFzF/uCVlQSEqVfh0IrVA6SXuyShTRPlIJ4yzFBPOsZwpYwaWahO6t+8FbLpl
+         W/JgJ/llFp2sC0ehUrNvMhTF1AHbuMBoxpfhDhKYiubnxXiPM0V+YxR47S3pywHm1zVn
+         YoXZKVmllsTpbKkLnprQV1dY6jiMBnxxEH1mjqWestm4T7BMs33fGayQb9pcifndpxA5
+         dRc2aTZcWMaZXbj+SuJj2xbSgaTMig9f6eWueBTfgJdR4q7HEszXM2WVF8Uizzr+7f/0
+         6XIz3Mafp5AEu5/5HsbPhKX/lkdq45ClJSBvSBKPLlMvd0Ad+mh/wPmPqjNtsgpH+ngq
+         4ucA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGHQU2/fleR1vPoVYTKftcVhuJZdM97YiPZTyKQXriHeXPa0QIWjj2JEFEUA7MZTtlml0sumrLpmi3vLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLMjm8TZdQrPSHJHolySyZ2nb90hOUoxnioeQhrUu6Weoa8b8y
+	88tf9YPaFhXdDR0DElm+9OAjUBG8HpzrqjK0T1n3iCV2buduJxut5AKZAMjXbA==
+X-Gm-Gg: ASbGncuvrcy6mW1cg2aZ21ZLgIkMqRDvWHwqM3lIVSxZZMyQiTubSclwoYq4AETTURN
+	ttAGzvZoUcJeE5utZa2hJjXKkzqObrW07ozHGJV4+aaWlQbX8Sf/ameS1FHQo0z3W4eBd2dpqau
+	mnv2hxKZAjsG+RtMQGey9c/QosihDdapHyKwD1byDts/vdeF35n/xsnXuNDLaOxkWAtfS3D979+
+	ug1bH3sVreUo+Sj6/wdoZm4QUT92huLSo95F/5Cn7q5+sn/l0zLkRM7I18xjdYFbug01DTchyO4
+	adDaGbbXqW3BQxjzxXQ1q2ngErYdyWqMrhQXMNaJIfXJAUIvxr89bysRQVfXW7EB
+X-Google-Smtp-Source: AGHT+IFlt0LgLQmKQSlUwziRdLcwFuwYuvRWbdQ8rrLtwPvn17wSyVYVfRE70VydKdb5hQWDriS11A==
+X-Received: by 2002:a17:902:da91:b0:224:10a2:cad9 with SMTP id d9443c01a7336-22e1039fdebmr55655375ad.41.1746201522811;
+        Fri, 02 May 2025 08:58:42 -0700 (PDT)
+Received: from thinkpad ([220.158.156.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522952csm9134125ad.185.2025.05.02.08.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 08:58:42 -0700 (PDT)
+Date: Fri, 2 May 2025 21:28:38 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk, 
+	hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
+ suspend
+Message-ID: <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
+References: <20250502150027.GA818097@bhelgaas>
+ <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,172 +76,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
 
-Hi Frank,
-
-On Thu, May 01, 2025 at 09:02:04PM -0400, Frank Li wrote:
-> On Tue, Apr 22, 2025 at 12:14:38AM +0300, Laurent Pinchart wrote:
-> > On Tue, Apr 08, 2025 at 05:53:02PM -0400, Frank Li wrote:
-> > > Use devm_clk_bulk_get_all() helper to simplify clock handle code.
-> > >
-> > > No functional changes intended.
-> > >
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
-> > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
-> > >  2 files changed, 6 insertions(+), 43 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > index ecfc95882f903..015350c6f2784 100644
-> > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
-> > >  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
-> > >  };
-> > >
-> > > -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
-> > > -	{ .id = "axi" },
-> > > -	{ .id = "apb" },
-> > > -};
-> > > -
-> > >  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > >  	.model			= MXC_ISI_IMX8MN,
-> > >  	.num_ports		= 1,
-> > > @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > >  	.reg_offset		= 0,
-> > >  	.ier_reg		= &mxc_imx8_isi_ier_v1,
-> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > -	.clks			= mxc_imx8mn_clks,
-> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > >  	.buf_active_reverse	= false,
-> > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > >  	.has_36bit_dma		= false,
-> > > @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
-> > >  	.reg_offset		= 0x2000,
-> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > -	.clks			= mxc_imx8mn_clks,
-> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > >  	.buf_active_reverse	= true,
-> > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > >  	.has_36bit_dma		= true,
-> > > @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
-> > >  	.reg_offset		= 0x0,
-> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > -	.clks			= mxc_imx8mn_clks,
-> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > >  	.buf_active_reverse	= true,
-> > >  	.has_36bit_dma		= false,
-> > >  };
-> > > @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
-> > >  	.reg_offset		= 0,
-> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > -	.clks			= mxc_imx8mn_clks,
-> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > >  	.buf_active_reverse	= true,
-> > >  	.gasket_ops		= &mxc_imx93_gasket_ops,
-> > >  	.has_36bit_dma		= false,
-> > > @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
-> > >  {
-> > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > >
-> > > -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
-> > > +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
-> > >
-> > >  	return 0;
-> > >  }
-> > > @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
-> > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > >  	int ret;
-> > >
-> > > -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
-> > > +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
-> > >  	if (ret) {
-> > >  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
-> > >  		return ret;
-> > > @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
-> > >   * Probe, remove & driver
-> > >   */
-> > >
-> > > -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
-> > > -{
-> > > -	unsigned int size = isi->pdata->num_clks
-> > > -			  * sizeof(*isi->clks);
-> > > -	int ret;
-> > > -
-> > > -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
-> > > -	if (!isi->clks)
-> > > -		return -ENOMEM;
-> > > -
-> > > -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
-> > > -				isi->clks);
-> > > -	if (ret < 0) {
-> > > -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
-> > > -			ret);
-> > > -		return ret;
-> > > -	}
-> > > -
-> > > -	return 0;
-> > > -}
-> > > -
-> > >  static int mxc_isi_probe(struct platform_device *pdev)
-> > >  {
-> > >  	struct device *dev = &pdev->dev;
-> > > @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
-> > >  	if (!isi->pipes)
-> > >  		return -ENOMEM;
-> > >
-> > > -	ret = mxc_isi_clk_get(isi);
-> > > -	if (ret < 0) {
-> > > -		dev_err(dev, "Failed to get clocks\n");
-> > > -		return ret;
-> > > -	}
-> > > +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
-> >
-> > This prevents validating that the DT contains the expected clocks, which
-> > could cause hard to debug issues. Isn't it a problem ?
+On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
 > 
-> It is checked by dt-binding. Now no warning by DTB_CHECK under arm64 freecale.
-> CHECK_DTB should be enough to find expected clocks.
+> 
+> On 2025/5/2 23:00, Bjorn Helgaas wrote:
+> > EXTERNAL EMAIL
+> > 
+> > On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
+> > > From: Hans Zhang <hans.zhang@cixtech.com>
+> > > 
+> > > When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
+> > 
+> > CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
+> > dynamically regardless of the config.
+> > 
+> 
+> Dear Bjorn,
+> 
+> Thank you very much for your reply.
+> 
+> Yes. To reduce the power consumption of the SOC system, we have enabled ASPM
+> L1 by default.
+> 
+> > > NVMe controllers fail to release LPI MSI-X interrupts during system
+> > > suspend, leading to a system hang. This occurs because the driver's
+> > > existing power management path does not fully disable the device
+> > > when ASPM is active.
+> > 
+> > I have no idea what this has to do with ASPM L1.  I do see that
+> > nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
+> > janky and racy).  But this doesn't explain anything about what would
+> > cause a system hang.
+> 
+> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM: calling
+> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
+> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
+> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
+> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
+> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
+> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
+> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
+> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
+> pcie_phy_common_exit end
+> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
+> sky1_pcie_suspend_noirq
+> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
+> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
+> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
+> 7110000.system-controller:clock-controller: PM: calling
+> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
+> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
+> 7110000.system-controller:clock-controller: PM: genpd_suspend_noirq+0x0/0x80
+> returned 0 after 1 usecs
+> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
+> 
+> 
+> Hans: Before I added the printk for debugging, it hung here.
+> 
+> 
+> I added the log output after debugging printk.
+> 
+> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
+> Our hardware is in STR(suspend to ram), and the controller and PHY will lose
+> power.
+> 
+> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
+> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
+> controller and PHY will be reinitialized. If suspend does not close the AXI
+> and APB clock, and the AXI is reopened during the resume process, the APB
+> clock will cause the reference count of the kernel API to accumulate
+> continuously.
+> 
 
-Yes, the DTB check will catch issues at build time, but the driver will
-not enforce that. I'm not sure if there's a clear policy here, and if
-ensuring at runtime in drivers that the expected clocks are present is
-considered as a good practice by the DT maintainers. Rob, Krzysztof,
-Conor, do you have an opinion ?
+So this is the actual issue (controller loosing power during system suspend) and
+everything else (ASPM, MSIX write) are all side effects of it.
 
-> > > +	if (isi->num_clks < 0)
-> > > +		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
-> > >
-> > >  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
-> > >  	if (IS_ERR(isi->regs)) {
-> > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > index e7534a80af7b4..bd3cfe5fbe063 100644
-> > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> > > @@ -169,8 +169,6 @@ struct mxc_isi_plat_data {
-> > >  	const struct mxc_isi_ier_reg  *ier_reg;
-> > >  	const struct mxc_isi_set_thd *set_thd;
-> > >  	const struct mxc_gasket_ops *gasket_ops;
-> > > -	const struct clk_bulk_data *clks;
-> > > -	unsigned int num_clks;
-> > >  	bool buf_active_reverse;
-> > >  	bool has_36bit_dma;
-> > >  };
-> > > @@ -282,6 +280,7 @@ struct mxc_isi_dev {
-> > >
-> > >  	void __iomem			*regs;
-> > >  	struct clk_bulk_data		*clks;
-> > > +	int				num_clks;
-> > >  	struct regmap			*gasket;
-> > >
-> > >  	struct mxc_isi_crossbar		crossbar;
+Yes, this issue is more common with several vendors and we need to come up with
+a generic solution instead of hacking up the client drivers. I'm planning to
+work on it in the coming days. Will keep you in the loop.
+
+- Mani
 
 -- 
-Regards,
-
-Laurent Pinchart
+மணிவண்ணன் சதாசிவம்
