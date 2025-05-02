@@ -1,125 +1,169 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35A92586C9
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE26D23B0;
+	Fri,  2 May 2025 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200034; cv=none; b=dJ3CfYRp10h0DevKz7dC91hber0jdURfvbvIg7Btg3SKtnxe8CSBG3wcj+am6vwodJ9JdPyFykQ9XuUu4Jdc0/1v5+ePPXKhSvhDZ/9f5SNdTD/XXv1wSJmW/C1YOEl5JhKBvD6gfC9EqDG5aeqv0KG9gRg3WJxJ1L14SlQNdzE=
+	t=1746200190; cv=none; b=OKrgATmpoASVt6cXBD73KRMMFE+HswvClsgGIy9rqL1zzcl8dkcJIUfkrOj7os4vcWifjDKb+VzfvAPDUxlJE0/LAjucakUzJEPKYmPrZqNP0RhQ8pMQQ0r1/C5vze4DlqvSX8FTnc8az9oixwDxwLzXGpgq1ITw/Gj4zW3FPjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200034; c=relaxed/simple;
-	bh=5rFlY49Gy7MqAan8qMT69245dWRNC9TAb+2SwDWa/eM=;
+	s=arc-20240116; t=1746200190; c=relaxed/simple;
+	bh=OpAQrB/oue+iEzkT/7L711k9l4b8H/6bGWPqCs/H+ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=quNLRgNt/W34TLRCU+5nrPgkHv7eypLwgwdmqeKhPKZMTMHkKJaqXALfgeSPaATBAczMEO6DOF9p+IcnK7EC8fCPQkVzLa7RlrDOFS0SNEc40wA7dcCWmiD6d1I+we9ZV8MHU1lHz9JvkrPIXenc69gnmwgnz9jLnocEbtiF1wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mB9rHwOF; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFkZ/Of/rd7Mz8F0HI6LlMHP2P3BIhjKJ4ZrzhJZmOFwcca9bI35CEsBQymXpxjU706HFSunDvbbWi86kePRfdIdMYQI5gRED7L+t8Vwa6KLF7f8uyQRQejJ76niL2yFWUpOY/1LUwl+t4ZmC+pjV/TvdybA3cpPHlSyjHq6xHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ThOk+f3A; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mB9rHwOF"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301c4850194so1917243a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746200031; x=1746804831; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
-        b=mB9rHwOFyLtV9SjomCRXMN92o9rWkn/Tj+B2gcOWoLEptMMG/H12fZ+C4/MZzhisJH
-         VccXx9Q0Pwi8H5O9wYEl17du9RSaiGkLBE8HBgn9vY6EBPeMwlzhm/CUjHnhpQmy+pXX
-         aHTbGbsMaz/MXEdLy/cb9/+xIi/Dv9AAGHQBiKO5IjckCwk9HNw8G03V/oKrUWaYD4k3
-         pQ/BzUu/TiJTPUbiW7KydBt/NKldOyxx0rFDLCYu+NcnSEQ0SSjm4BpUntM4BphfGeYO
-         00CAHfezzlXSK/Xo/jxbx52dJFqz8/UD0yAeqK2PSOjUtJEdYhlAsDoNLpqG/yZ1+y92
-         N5wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200031; x=1746804831;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=taWo/oLDWVZbyDjSNAZehyOATbpReUCldO8JJfOFkWs=;
-        b=GSOsV0hbsUmBUug2CCE7GVrLmv6KaYgX9DnlyUVcqHnymrOTulRRU7LtnVp6a6m0CB
-         d9VG+XyD5/rhZHL8xcjjLiuYyoKrLkEHxCLoKP1QNrAMj8gdhTvaGTNOsOI69R0glmlu
-         /Ptjgzxmuy7IJyzEtG94iJwR1eTOfwPSnahQCNseokJ3zqsKe6yidZfW+5oY1pRkfyJz
-         KWaJlft79WwJEZAANYmiK6QabFo3+Zfn1I+v7Im4DeGNVezXoOlE7DU8tRLc0Hmws6yh
-         hxw45Reby3PaOqo6LjH/kHhxdXuAJIDkkERXqsnFbXB4Mxj8eTAOQiPH85t3uutYTjYi
-         RhPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2v+E2DF/TVQvPo7muePhmTUK+lnKFdwJljA0lYRP70q2pvvTdXttwFW4vKm8MDM1fyUTVjkzIsgSHWcU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2WFFCYxw1HVGxHjTUCmiOlOPWykQrYQDnAokkRfiEibiEj6Ew
-	ejCXJqWw5ZEgxynd1cWvFM44c5TiBkSEspOURg3MQ4ytY4urqH9u0fZSvrkZwQ==
-X-Gm-Gg: ASbGncuU0Z0qgQxIO5PoYxOtbK6+cmg84u52ZLXt7uDugrWmDbM9kxbk8VViI4+ywcR
-	e4k5mPkSXtczqh+Xf92xGUslcT2nn0YB65COuMmxGYr71OCBGkotWySzEFjX+FsbIynoLtVxucJ
-	WoXtHU/fNG8JviBmR9w38S+Ts5uMRlStP5jalpQ3jVm2Gx5rrtRb4U6ywijOzue+/VqjMrpE3Jc
-	ki1nsLLoz+AmyHfE35rFT/om2csSo1xjJ4BYDoks/K3WUd1CBWUNoUZDU13fSAr3Azd7PTKZEKv
-	gdQKKiufLcwgMVb4fur/TX3YUAMfFbO3RakrWYG7j9/Va9XezOpERA==
-X-Google-Smtp-Source: AGHT+IHLXisD3c2J54ZWFDiygB6xrYnjRSUfVuj5VJsMbLrYQomvw2y4f37h/jQnsxHbfb2LtmC93g==
-X-Received: by 2002:a17:90b:4fc3:b0:309:ebe3:1ef9 with SMTP id 98e67ed59e1d1-30a4e5ae182mr6519708a91.12.1746200030960;
-        Fri, 02 May 2025 08:33:50 -0700 (PDT)
-Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0aasm6496034a91.35.2025.05.02.08.33.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:33:50 -0700 (PDT)
-Date: Fri, 2 May 2025 21:03:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: webgeek1234@gmail.com
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] PCI: tegra: Allow building as a module
-Message-ID: <skblez3ros5kdix42prwjn4hethckxtfw2dmqvgdirczg5tz7r@pxti3m23mfix>
-References: <20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com>
- <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ThOk+f3A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746200188; x=1777736188;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OpAQrB/oue+iEzkT/7L711k9l4b8H/6bGWPqCs/H+ts=;
+  b=ThOk+f3ApKHqPudWHa3pgadePwYzu4meKTcLmnDrdt55lXbGzXoM2QeQ
+   RF/Sgc1IvP8a9dOJFY++QOinzervDdNezUUIeuBHDZKot+TE8ih8Q0HGZ
+   XnrzOH1LWSLdpPOJIR9ogTEX59Go3LrmIHCZ7bzt9/64U79ZKlhv85YvP
+   TcrSvwhnhIxYit2b4+Ahkx4NY2eN4v1HkDUEb4GA+3l5mYxeF1sGasIdY
+   8Z3XW+n7NTkpQ6hAnEfhWVDdrH8dMTOgXpVNFqth33EsnXLiRchJ4fvW5
+   n3QuOKAZh8VXOAPb+8Jr1mfuCx/d0GkEAw9AGlxalUDmIkAGQ5Fi/XREs
+   Q==;
+X-CSE-ConnectionGUID: RwDFfA9jS6CFXu69Ka7uzA==
+X-CSE-MsgGUID: XNQ2+q+fSW2nP2N1KxQc6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58508461"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58508461"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 08:36:27 -0700
+X-CSE-ConnectionGUID: 1Tr+RxKCS8W7df/mIMbyXw==
+X-CSE-MsgGUID: O0M4VKRTRTSDLUzRmY6urA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="139843076"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 02 May 2025 08:36:23 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAsR1-0004px-30;
+	Fri, 02 May 2025 15:36:19 +0000
+Date: Fri, 2 May 2025 23:36:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: oushixiong1025@163.com, Sumit Semwal <sumit.semwal@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: Re: [PATCH 2/3] drm/prime: Support importing DMA-BUF without sg_table
+Message-ID: <202505022224.FCDQ8TCB-lkp@intel.com>
+References: <20250430085658.540746-2-oushixiong1025@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428-pci-tegra-module-v2-3-c11a4b912446@gmail.com>
+In-Reply-To: <20250430085658.540746-2-oushixiong1025@163.com>
 
-On Mon, Apr 28, 2025 at 08:05:48PM -0500, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
-> 
-> This changes the module macro back to builtin, which does not define an
-> exit function. This will prevent the module from being unloaded. There
-> are concerns with modules not cleaning up IRQs on unload, thus this
-> needs specifically disallowed.
-> 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  drivers/pci/controller/Kconfig     | 2 +-
->  drivers/pci/controller/pci-tegra.c | 5 ++++-
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
->  	  driver.
->  
->  config PCI_TEGRA
-> -	bool "NVIDIA Tegra PCIe controller"
-> +	tristate "NVIDIA Tegra PCIe controller"
->  	depends on ARCH_TEGRA || COMPILE_TEST
->  	depends on PCI_MSI
->  	help
-> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> index b3cdbc5927de3742161310610dc5dcb836f5dd69..1539d172d708c11c3d085721ab9416be3dea6b12 100644
-> --- a/drivers/pci/controller/pci-tegra.c
-> +++ b/drivers/pci/controller/pci-tegra.c
-> @@ -2802,4 +2802,7 @@ static struct platform_driver tegra_pcie_driver = {
->  	.probe = tegra_pcie_probe,
->  	.remove = tegra_pcie_remove,
+Hi,
 
-Please drop the .remove() callback also which becomes unused.
+kernel test robot noticed the following build warnings:
 
-- Mani
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus usb/usb-testing usb/usb-next usb/usb-linus xen-tip/linux-next linus/master v6.15-rc4]
+[cannot apply to tegra/for-next drm-xe/drm-xe-next rmk-arm/drm-armada-devel rmk-arm/drm-armada-fixes next-20250501]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/oushixiong1025-163-com/drm-prime-Support-importing-DMA-BUF-without-sg_table/20250430-170136
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250430085658.540746-2-oushixiong1025%40163.com
+patch subject: [PATCH 2/3] drm/prime: Support importing DMA-BUF without sg_table
+config: arc-randconfig-002-20250501 (https://download.01.org/0day-ci/archive/20250502/202505022224.FCDQ8TCB-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505022224.FCDQ8TCB-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505022224.FCDQ8TCB-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/gpu/drm/drm_prime.c:925:24: warning: no previous prototype for 'drm_gem_prime_import_dev_skip_map' [-Wmissing-prototypes]
+     925 | struct drm_gem_object *drm_gem_prime_import_dev_skip_map(struct drm_device *dev,
+         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/drm_gem_prime_import_dev_skip_map +925 drivers/gpu/drm/drm_prime.c
+
+   913	
+   914	/**
+   915	 * drm_gem_prime_import_dev_skip_map - core implementation of the import callback
+   916	 * @dev: drm_device to import into
+   917	 * @dma_buf: dma-buf object to import
+   918	 * @attach_dev: struct device to dma_buf attach
+   919	 *
+   920	 * This function exports a dma-buf without get it's scatter/gather table.
+   921	 *
+   922	 * Drivers who need to get an scatter/gather table for objects need to call
+   923	 * drm_gem_prime_import_dev() instead.
+   924	 */
+ > 925	struct drm_gem_object *drm_gem_prime_import_dev_skip_map(struct drm_device *dev,
+   926								 struct dma_buf *dma_buf,
+   927								 struct device *attach_dev)
+   928	{
+   929		struct dma_buf_attachment *attach;
+   930		struct drm_gem_object *obj;
+   931		int ret;
+   932	
+   933		if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+   934			obj = dma_buf->priv;
+   935			if (obj->dev == dev) {
+   936				/*
+   937				 * Importing dmabuf exported from our own gem increases
+   938				 * refcount on gem itself instead of f_count of dmabuf.
+   939				 */
+   940				drm_gem_object_get(obj);
+   941				return obj;
+   942			}
+   943		}
+   944	
+   945		attach = dma_buf_attach(dma_buf, attach_dev, true);
+   946		if (IS_ERR(attach))
+   947			return ERR_CAST(attach);
+   948	
+   949		get_dma_buf(dma_buf);
+   950	
+   951		obj = dev->driver->gem_prime_import_attachment(dev, attach);
+   952		if (IS_ERR(obj)) {
+   953			ret = PTR_ERR(obj);
+   954			goto fail_detach;
+   955		}
+   956	
+   957		obj->import_attach = attach;
+   958		obj->resv = dma_buf->resv;
+   959	
+   960		return obj;
+   961	
+   962	fail_detach:
+   963		dma_buf_detach(dma_buf, attach);
+   964		dma_buf_put(dma_buf);
+   965	
+   966		return ERR_PTR(ret);
+   967	}
+   968	EXPORT_SYMBOL(drm_gem_prime_import_dev_skip_map);
+   969	
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
