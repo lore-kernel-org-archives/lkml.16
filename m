@@ -1,132 +1,126 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7B01EB5E6;
-	Fri,  2 May 2025 19:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3339F1EF372;
+	Fri,  2 May 2025 19:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212694; cv=none; b=ETn/vh4T20dnHZ+dm+M7xWR/j65YzQMdLw9TRJLh7uckIJMLDv60h6x4TIOI43yMRYWowtLDDePBGL4Y4bQkesS3LorkDSIIT5duiGPCSQ3ePq7y3Cc3u2uh+vPfDs+ylmH4aEoF2VA5s28JePZrqoQ8auOB1fFDtabaEGGxjk8=
+	t=1746212975; cv=none; b=dtcvpKp0XuQNU8iHKI6cZFHj/oCc2hgRXQsOCpauRbxPC6AwsA+zdevK/cRED92fQs7sjlR3PA3Pyjcv5WmSlaSWFubLaYCg2e9U9jpiAh7jbWOfP7NZ40wbLZ+OjGq5hZ83oNdW3mo+l2la0beuLsoLWZM2aXjA0bA2KV4P6yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746212694; c=relaxed/simple;
-	bh=p7XIGW72I/91fLazyIlExCv1uQr/qO433Ug1xE3MvsU=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=C8PQEPUk7xvW2zcKJXpvEC9TymtQg1kcizbU0eAi84WE+zorQTO1MEdP22BUSYZ0p9BOSIKITbSTvBqBomX5dW3iBwFVQtERcxK0cx+vNVF5pCtLvv0wFcpTc7AwFPh1VIfq5yPVKBdOOKniJNBPe+hMU9XTktRJeo8DdgL3TsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=p4qqZM6h; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1746212975; c=relaxed/simple;
+	bh=zg/IEQz7gJw8zrPiVfIWKxHIf9cXnsyiKM4G8wd4zZs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NcfJ6TCi+bu8VKsktDxamtI3fAy9bjlzfXZ1YqpWMkQzWADanlPXIazX+2vfOPJDOf1FmETnWUH/Y/Mcky2J81Cnu0nxN0QEmSWJknvttX8aDR2LaX4mAdFg2p2+3tLpEgTdF2RqKh0EVENZZo18iIHZMrhrOstmyBtfVkyw1vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kvtf0oRn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/QtCpPtC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="p4qqZM6h"
-Received: from localhost (web.docker-mailserver_default [172.18.0.2])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 71034BBAC4;
-	Fri,  2 May 2025 19:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1746212684;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kvtf0oRn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/QtCpPtC"
+Date: Fri, 02 May 2025 19:09:26 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746212972;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qM7bXBHe1bXroHuK8JaLfF5A62uJE4FV4UFgd1YY7Z4=;
-	b=p4qqZM6hk7CsMYNc6A9L8oCFEPGgrrln3MTHLjBn5mo9Gn59CYx++5icdw48Q0QaIFEBOq
-	PmTfTckQgiXuEWVWwLo99fCwoVmRNDeIx0TqYfT9zyvxGX16hiZXip562t8NQkXAHCA0O3
-	03CWY4qHkYXKWd4x10AY+TpFjqHG0VsG9hdaPPXMGSb7scb0Ee4rJ/Ak3K7bEI8T6lF00Q
-	JJvqN9tl6F71Y5bP0EDfK7VFuYiu1b3pewx94S9+gPV4wARKwvMyGT1QQbmZLDijA3D9+s
-	i4GEwXZMRHF/3sdmaQIGlB9Dd9tw5/gKjIFeCYZc3M8gpnhMQObe7f3HJOyzOQ==
+	bh=tEt9mvmL31MTjKxEzdKHB5liGKKvSnwmpLSICWzpJWo=;
+	b=Kvtf0oRnTIsfiEZHMAZHY789oRNnimz67Th8Yq0ZsYzaEsB7EQcjynK9MTY1mf/vnrizx+
+	DH2fUJ8jPy/ifvJlmYGFbwWss1luVDKJzhs8UYnND+rX5bWZfiWeRZA9OiukMZXMgsb/09
+	l5hCTw1i3EBJgVdEy2CFz0wmUfcrvKn3cYYUEifvzi0Uu5bWpUSaqKH5Q7zZZV26xJVrhT
+	+AObP8xOsFd0Y2ty3Lelt+2BZtaTOkZ3FYa7SbMWfAqoUZfF+swoso7757a9Ni+aQgD1Vk
+	zzGRY8upv3gNS2riFjgwwBiyhZNr3Xd7Db4kUd9xTrkqBuaI9rjdTCYz0WRR/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746212972;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tEt9mvmL31MTjKxEzdKHB5liGKKvSnwmpLSICWzpJWo=;
+	b=/QtCpPtCJpU03mzMX2Tw9kfIqL+TXosHs79+hFAoTYtZ0jgZes7Yjpkr4ibMNMkh8RvmFv
+	L+EjSyCaM+IramCw==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] vdso: Reject absolute relocations during build
+Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250430-vdso-absolute-reloc-v2-2-5efcc3bc4b26@linutronix.de>
+References: <20250430-vdso-absolute-reloc-v2-2-5efcc3bc4b26@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 02 May 2025 21:04:44 +0200
-From: barnabas.czeman@mainlining.org
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
- =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
- <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, Konrad Dybcio <konradybcio@kernel.org>, Rob Clark
- <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Dmitry
- Baryshkov <lumag@kernel.org>, Adam Skladowski <a_skl39@protonmail.com>,
- Sireesh Kodali <sireeshkodali@protonmail.com>, Srinivas Kandagatla
- <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
- <danct12@riseup.net>
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: Add initial support for MSM8937
-In-Reply-To: <656da4e9-b609-43f4-9afd-006698a2c7d6@oss.qualcomm.com>
-References: <20250421-msm8937-v5-0-bf9879ef14d9@mainlining.org>
- <20250421-msm8937-v5-3-bf9879ef14d9@mainlining.org>
- <2e3d94a4-d9e1-429e-9f65-d004c80180e5@oss.qualcomm.com>
- <790a0b7537e0b82b70bc4b32612ecee6@mainlining.org>
- <70635d75-03f9-49ea-8098-57cb144fda94@oss.qualcomm.com>
- <5ccb39f9393b44761127717096a38a46@mainlining.org>
- <68e2c0ee-d5e2-40fd-9ca0-262ed3270628@oss.qualcomm.com>
- <31559417a92d1e1ff17d0f3add9a1ba0@mainlining.org>
- <656da4e9-b609-43f4-9afd-006698a2c7d6@oss.qualcomm.com>
-Message-ID: <c7d9f42017f10bac303b483127859c18@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <174621296673.22196.7605277890848696857.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-25 23:02, Konrad Dybcio wrote:
-> On 4/25/25 10:22 PM, barnabas.czeman@mainlining.org wrote:
->> On 2025-04-25 21:26, Konrad Dybcio wrote:
->>> On 4/25/25 5:13 PM, barnabas.czeman@mainlining.org wrote:
->>>> On 2025-04-25 11:57, Konrad Dybcio wrote:
->>>>> On 4/23/25 4:46 PM, barnabas.czeman@mainlining.org wrote:
->>>>>> On 2025-04-23 16:03, Konrad Dybcio wrote:
->>>>>>> On 4/21/25 10:18 PM, Barnabás Czémán wrote:
->>>>>>>> From: Dang Huynh <danct12@riseup.net>
->>>>>>>> 
->>>>>>>> Add initial support for MSM8937 SoC.
->>>>>>>> 
->>>>>>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
->>>>>>>> Co-developed-by: Barnabás Czémán 
->>>>>>>> <barnabas.czeman@mainlining.org>
->>>>>>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>>>>>>> ---
->>>>> 
->>>>> [...]
->>>>> 
->>>>>>>> +            gpu_opp_table: opp-table {
->>>>>>>> +                compatible = "operating-points-v2";
->>>>>>>> +
->>>>>>>> +                opp-19200000 {
->>>>>>>> +                    opp-hz = /bits/ 64 <19200000>;
->>>>>>>> +                    opp-supported-hw = <0xff>;
->>>>>>> 
->>>>>>> The comment from the previous revision still stands
->>>>>> If i remove opp-supported-hw i will got -22 EINVAL messages and 
->>>>>> the opp will be not fine.
->>>>> 
->>>>> Right, I have a series pending to improve this situation a bit..
->>>>> 
->>>>> In the meantime, you should be able to define the nvmem cell and
->>>>> fill in meaningful values for this platform
->>>> As I wrote in the previous revision there is no nvmem for GPU on 
->>>> msm8937 only on msm8940.
->>> 
->>> This seems not to be the case
->>> 
->>> https://github.com/penglezos/android_kernel_xiaomi_msm8953/blob/pie/arch/arm/boot/dts/qcom/msm8937.dtsi#L2046-L2191
->>> 
->> These are on msm-4.9 was moved to msm8940.dtsi
->> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/arch/arm64/boot/dts/qcom/msm8937-gpu.dtsi#L162
->> https://git.codelinaro.org/clo/la/kernel/msm-4.9/-/blob/LA.UM.10.6.2.c26-01500-89xx.0/arch/arm64/boot/dts/qcom/msm8940.dtsi#L600
->> 475 MHz and 500 MHz is for msm8940 at least based on 4.9
-> 
-> I'll try to get a more conclusive answer internally
-Any information? I am thinking about define nvmem cells based on 3.18
-> 
-> Konrad
+The following commit has been merged into the timers/urgent branch of tip:
+
+Commit-ID:     7aeb1538be5df3efa1d799e5428ac3a0ae802293
+Gitweb:        https://git.kernel.org/tip/7aeb1538be5df3efa1d799e5428ac3a0ae8=
+02293
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Wed, 30 Apr 2025 11:20:14 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 02 May 2025 20:57:11 +02:00
+
+vdso: Reject absolute relocations during build
+
+All vDSO code needs to be completely position independent.
+Symbol references are marked as hidden so the compiler emits
+PC-relative relocations. However there are cases where the compiler may
+still emit absolute relocations, as they are valid in regular PIC DSO code.
+These would be resolved by the linker and will break at runtime.
+
+Introduce a build-time check for absolute relocations.
+The check is done on the object files as the relocations will not exist
+anymore in the final DSO. As there is no extension point for the
+compilation of each object file, perform the validation in vdso_check.
+
+Debug information can contain legal absolute relocations and readelf can
+not print relocations from the .text section only. Make use of the fact
+that all global vDSO symbols follow the naming pattern "vdso_u_".
+
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250430-vdso-absolute-reloc-v2-2-5efcc3bc4=
+b26@linutronix.de
+Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D120002
+---
+ lib/vdso/Makefile.include | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
+index cedbf15..04257d0 100644
+--- a/lib/vdso/Makefile.include
++++ b/lib/vdso/Makefile.include
+@@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) :=3D $(addprefix $(GE=
+NERIC_VDSO_DIR), getrand
+ #
+ # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
+ # dynamic relocations, ignore R_*_NONE.
++#
++# Also validate that no absolute relocations against global symbols are pres=
+ent
++# in the object files.
+ quiet_cmd_vdso_check =3D VDSOCHK $@
+       cmd_vdso_check =3D if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_=
+\w*_"; \
+ 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
++			     rm -f $@; /bin/false); fi && \
++		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_=
+ABS.*vdso_u_"; \
++		       then (echo >&2 "$@: absolute relocations are not supported"; \
+ 			     rm -f $@; /bin/false); fi
