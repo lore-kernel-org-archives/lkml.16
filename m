@@ -1,127 +1,258 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F20A156C63;
-	Fri,  2 May 2025 14:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24E1223DFD;
+	Fri,  2 May 2025 14:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197390; cv=none; b=DJvEpaFqAI6VOyJf9hUNr4fA0DHzqFR9heFWlr1Hox89O4k1b/R0bOA7Yp8DK+sOcW8zptUV55Kb9dFpoWqftF5YYMR13ERbMdAg2PRvaGHhG5X52DiuzWP9O8Nn0p3lEpqxq9tDj9DImcCmQLEgMGYnbvgWWxTuB1/F2zM146Y=
+	t=1746197463; cv=none; b=fwkTs9eKCWUR2y6+zoNa6OA8lGgFksvvVBpxXmMpp3iWC1qSrR23F7oJGkDnxqcEj35N1yPvGB13xqWq5kQsGQ+66ry+DaflRWeP4AiZBfWep7hzEoUAXvefAb9HMiWIS/cAR57mRZ8e9OsIBQFaJPY18ZkbIgKCz0bH1xLLaOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746197390; c=relaxed/simple;
-	bh=WdSkY0SFbzKaDrAB0hKsDpkwOWOA9GGQwzYI390I1AI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O6sShvNBnFTvXvzzhKl45u3q5EpLldejTAHCo+hz/xxZmKLPDkvlyywDJkz+aLVw8nxBhi3FEA7v0vgEQmSc+nTf4nLRiBA1y8bGOjPD/TMzhgy9iEX5mCTbneBXlkofigxEAOAYj3TZv3CtlZqhraY34klS/ZVxp59j0nKK6Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YINDoVXX; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746197463; c=relaxed/simple;
+	bh=wROx4eoHYvLsgLDBgrbUwkZ5Y0yAK3AR0szM8tP5Dkw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Po9guuyc/hPF9gMIEfA4eytc3A2aaKbVlVRT/nXihomMROXMCsdmN4txBp+MF+QGbeLdhwih1Yl4XHlyNpeUBbcvL7QslwwJtMP3nBrKBKxfOWnFzH1/rpGnW8ieA3N4XK1x6Gv2i5akjaF3OIHT+5XwEU7LfOELzwgVwV1xDjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c965NMee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YINDoVXX"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542EnZlG253461
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 09:49:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746197375;
-	bh=i4/jusf2Aa0zeSOt4O3iLnwmJBt0CRJJuL2eBj1uMhU=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=YINDoVXXjJDbV7erQnWP0Gty7XaKwMtMNJ94QIn2McScwhf7BP2GRa57kfacI13DO
-	 eBYLoRDgRqzEigr7YH4WULQroKOHjtNR0LQscKx4Bqa3u1L3jkOX1KlCVRGJUgK8H3
-	 b038iefF/rnE2UtIwTagAUce/CG3rNoEMcq1ZWTk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542EnZ3a064657
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 09:49:35 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 09:49:34 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 09:49:34 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542EnYM0003137;
-	Fri, 2 May 2025 09:49:34 -0500
-Date: Fri, 2 May 2025 09:49:34 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Daniel Schultz <d.schultz@phytec.de>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-am62a: Set Critical Temp. to 105C
-Message-ID: <20250502144934.t6hjiwp2f64ovb34@deeply>
-References: <20250502142606.2840508-1-d.schultz@phytec.de>
- <20250502142606.2840508-2-d.schultz@phytec.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c965NMee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1AAC4CEE4;
+	Fri,  2 May 2025 14:51:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746197463;
+	bh=wROx4eoHYvLsgLDBgrbUwkZ5Y0yAK3AR0szM8tP5Dkw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c965NMeemuOE2tHUemIunFhXB5Q/oEmjrbHFqQFbllVIGIK4f8lrroqpVu7OI1oDK
+	 lub+yxE6XxlL4uVfVhZXxyazKe9kEi2XPuYMkNYcJDdBUSndqvzg8bWiNrjShiU7sw
+	 3zXE2Y3M65rS0GZv+jO2olzEaJdqFgrTzuPfVGhCTNhEmRPrtU2djOx60PWP7xx8ca
+	 scCzbXwDx76NGslljeFJrtaxflkdW5TkgPlTrJOJijBVWA1RMV9YVdY8Y/DNDQFYOu
+	 3B9PLlOjqoSUqNJbslsen+hP/tKTTcb4bbnuekDkSR/wXgeD3JrS9LofRMrH7m7OEg
+	 Wh20ZuSP1xPDw==
+Received: from [84.207.203.52] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uArjB-00AxAm-2F;
+	Fri, 02 May 2025 15:51:01 +0100
+Date: Fri, 02 May 2025 15:50:40 +0100
+Message-ID: <87v7qj12yn.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
+In-Reply-To: <aBR7bk62H3PEUbfi@lpieralisi>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+	<20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
+	<867c31j20i.wl-maz@kernel.org>
+	<aBIlOrqLtbB5e7B/@lpieralisi>
+	<86y0vgh35t.wl-maz@kernel.org>
+	<aBR7bk62H3PEUbfi@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250502142606.2840508-2-d.schultz@phytec.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 84.207.203.52
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 07:26-20250502, Daniel Schultz wrote:
-> The AM62Ax SoC supports two temperature ranges:
-> * A: -40 to 105C - Extended Industrial
-> * I: -40 to 125C - Automotive
+On Fri, 02 May 2025 08:59:42 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> By default, use the lower limit (105 °C) so that any AM62A running
-> in Extended Industrial mode will shut down safely before overheating.
+> On Thu, May 01, 2025 at 02:27:26PM +0100, Marc Zyngier wrote:
+> > On Wed, 30 Apr 2025 14:27:22 +0100,
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > 
+> > > On Wed, Apr 30, 2025 at 12:57:01PM +0100, Marc Zyngier wrote:
+> > > > On Thu, 24 Apr 2025 11:25:32 +0100,
+> > > > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > > > > 
+> > > > > The GICv5 architecture implements the Interrupt Wire Bridge (IWB) in
+> > > > > order to support wired interrupts that cannot be connected directly
+> > > > > to an IRS and instead uses the ITS to translate a wire event into
+> > > > > an IRQ signal.
+> > > > > 
+> > > > > An IWB is a special ITS device with its own deviceID; upon probe,
+> > > > > an IWB calls into the ITS driver to allocate DT/ITT tables for its
+> > > > > events (ie wires).
+> > > > > 
+> > > > > An IWB is always associated with a single ITS in the system.
+> > > > > 
+> > > > > An IWB is connected to an ITS and it has its own deviceID for all
+> > > > > interrupt wires that it manages; the IWB input wire number is
+> > > > > exposed to the ITS as an eventID. This eventID is not programmable
+> > > > > and therefore requires special handling in the ITS driver.
+> > > > > 
+> > > > > Add an IWB driver in order to:
+> > > > > 
+> > > > > - Probe IWBs in the system and allocate ITS tables
+> > > > > - Manage IWB IRQ domains
+> > > > > - Handle IWB input wires state (enable/disable)
+> > > > > - Add the required IWB IRQchip representation
+> > > > > - Handle firmware representation to Linux IRQ translation
+> > > > > 
+> > > > > Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > > > > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > > > > Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+> > > > > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> > > > > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > > Cc: Marc Zyngier <maz@kernel.org>
+> > > > > ---
+> > > > >  drivers/irqchip/Makefile         |   2 +-
+> > > > >  drivers/irqchip/irq-gic-v5-its.c |  68 ++++++--
+> > > > >  drivers/irqchip/irq-gic-v5-iwb.c | 356 +++++++++++++++++++++++++++++++++++++++
+> > > > >  drivers/irqchip/irq-gic-v5.c     |   2 +
+> > > > >  drivers/irqchip/irq-gic-v5.h     |  28 +++
+> > > > >  5 files changed, 437 insertions(+), 19 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > > > > index 4280395e3bdff7858102f0b4eaaea1121cace52f..7bfb2369fbe494a64b72308d95ae33de93c6b8c6 100644
+> > > > > --- a/drivers/irqchip/Makefile
+> > > > > +++ b/drivers/irqchip/Makefile
+> > > > > @@ -37,7 +37,7 @@ obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o
+> > > > >  obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+> > > > >  obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+> > > > >  obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o irq-gic-v5-irs.o
+> > > > > -obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o
+> > > > > +obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o irq-gic-v5-iwb.o
+> > > > >  obj-$(CONFIG_HISILICON_IRQ_MBIGEN)	+= irq-mbigen.o
+> > > > >  obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
+> > > > >  obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
+> > > > > diff --git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
+> > > > > index da349b4709cc5ec8978859237838f039389ca4a1..b5eb4dbfe2296dc6620889eb9291b542cae4aeb6 100644
+> > > > > --- a/drivers/irqchip/irq-gic-v5-its.c
+> > > > > +++ b/drivers/irqchip/irq-gic-v5-its.c
+> > > > > @@ -786,9 +786,8 @@ static struct gicv5_its_dev *gicv5_its_find_device(struct gicv5_its_chip_data *i
+> > > > >  	return dev ? dev : ERR_PTR(-ENODEV);
+> > > > >  }
+> > > > >  
+> > > > > -static struct gicv5_its_dev *gicv5_its_alloc_device(
+> > > > > -				struct gicv5_its_chip_data *its, int nvec,
+> > > > > -				u32 dev_id)
+> > > > > +struct gicv5_its_dev *gicv5_its_alloc_device(struct gicv5_its_chip_data *its,
+> > > > > +					     int nvec, u32 dev_id, bool is_iwb)
+> > > > >  {
+> > > > >  	struct gicv5_its_dev *its_dev;
+> > > > >  	int ret;
+> > > > > @@ -815,6 +814,7 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
+> > > > >  	its_dev->device_id = dev_id;
+> > > > >  	its_dev->num_events = nvec;
+> > > > >  	its_dev->num_mapped_events = 0;
+> > > > > +	its_dev->is_iwb = is_iwb;
+> > > > >  
+> > > > >  	ret = gicv5_its_device_register(its, its_dev);
+> > > > >  	if (ret) {
+> > > > > @@ -827,9 +827,11 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
+> > > > >  
+> > > > >  	/*
+> > > > >  	 * This is the first time we have seen this device. Hence, it is not
+> > > > > -	 * shared.
+> > > > > +	 * shared, unless it is an IWB that is a shared ITS device by
+> > > > > +	 * definition, its eventids are hardcoded and never change - we allocate
+> > > > > +	 * it once for all and never free it.
+> > > > 
+> > > > I'm not convinced the IWB should be treated differently from any other
+> > > > device. Its lifetime is not tied to its inputs, so all that's needed
+> > > > is to probe it, get a bunch of interrupts, and that's about it.
+> > > 
+> > > I need to check again how this works for devices requesting wires
+> > > from an IWB if we don't allow ITS device sharing.
+> > 
+> > There is no sharing. Each IWB has its own devid, and the endpoint
+> > drivers don't have to know about anything ITS related.
 > 
-> If the bootloader detects an Automotive-grade device, it should
-> override this and raise the critical trip point to 125 °C.
+> I patched the IWB driver to work like an MBIgen.
 > 
-> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-> ---
->  arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> It looks like the msi_prepare() ITS callback (ie where the its_device is
+> allocated) is called everytime an endpoint device driver requests a
+> wired IRQ through:
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-> index 39ff9118b6c4..40dcb9bab965 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
+> gicv5_its_msi_prepare+0x68c/0x6f8
+> its_pmsi_prepare+0x16c/0x1b8
+> __msi_domain_alloc_irqs+0x70/0x448
+> __msi_domain_alloc_irq_at+0xf8/0x194
+> msi_device_domain_alloc_wired+0x88/0x10c
+> irq_create_fwspec_mapping+0x3a0/0x4c0
+> irq_create_of_mapping+0xc0/0xe8
+> of_irq_get+0xa0/0xe4
+> platform_get_irq_optional+0x54/0x1c4
+> platform_get_irq+0x1c/0x50
+> 
+> so it becomes "shared" if multiple IWB wires are requested by endpoint
+> drivers.
 
-Why not create a separate header for industrial grade and rename this as
-automotive grade and let the board file pick the right grade used on the
-board?
+You shouldn't get into the allocation when the endpoint device probes.
+The assumption is that all the interrupts should be allocated only
+*once*.
 
-> @@ -19,7 +19,7 @@ main0_alert: main0-alert {
->  			};
->  
->  			main0_crit: main0-crit {
-> -				temperature = <125000>;	/* milliCelsius */
-> +				temperature = <105000>;	/* milliCelsius */
->  				hysteresis = <2000>;	/* milliCelsius */
->  				type = "critical";
->  			};
-> @@ -50,7 +50,7 @@ main1_alert: main1-alert {
->  			};
->  
->  			main1_crit: main1-crit {
-> -				temperature = <125000>;	/* milliCelsius */
-> +				temperature = <105000>;	/* milliCelsius */
->  				hysteresis = <2000>;	/* milliCelsius */
->  				type = "critical";
->  			};
-> @@ -81,7 +81,7 @@ main2_alert: main2-alert {
->  			};
->  
->  			main2_crit: main2-crit {
-> -				temperature = <125000>;	/* milliCelsius */
-> +				temperature = <105000>;	/* milliCelsius */
->  				hysteresis = <2000>;	/* milliCelsius */
->  				type = "critical";
->  			};
-> -- 
-> 2.25.1
+If that's not the case, it probably means that something has been
+subtly broken when this code was last massaged, and that it needs
+fixing.
+
+I'll resurrect my D05 shortly to collect some traces.
+
 > 
+> I don't have an MBIgen enabled platform but I don't see how it could
+> behave differently but it could be that I have stared at this code
+> path for too long.
+> 
+> > > > The other thing is that the IWB really is a standalone thing. It
+> > > > shouldn't have its fingers in the ITS code, and should only rely on
+> > > > the core infrastructure to get its interrupts.
+> > > > 
+> > > > As much as I dislike it, the MBIGEN actually provides a decent example
+> > > > of how this could be structured.
+> > > 
+> > > We wrote that code already, I should have posted it. An MBIgen can
+> > > programme the eventids it sents to the ITS, an IWB can't. So yes,
+> > > I can make an IWB MBIgen like but the ITS code has to know it is
+> > > allocating an IRQ for an IWB - one way or another, the eventids
+> > > are not programmable.
+> > 
+> > They are not programmable on the MBIGEN either, despite what the code
+> > does. Everything on this HW is hardcoded.
+> 
+> I don't understand then how in the GICv3 ITS we can guarantee that the
+> eventid we "allocate" for a wire matches the one sent on the MBIgen->ITS
+> bus. AFAICS, the ITS eventid is an offset from the LPI base that is
+> allocated dynamically.
+>
+> Let's say an endpoint driver requires wire X. The ITS, in
+> its_alloc_device_irq() grabs a bit from the lpi_map bitmap that has
+> nothing to do with X.
+>
+> I don't get how the two can be made to match unless we do something
+> like I am going to do with the IWB.
+
+The driver allocates n LPIs, which are mapped as events 0 to n-1. Just
+like with the IWB. When I say it is the same, it is *EXACTLY* the same.
+
+> This, unless mbigen_write_msi_msg() does something with the
+> X<->{msg->data} translation (if that function does nothing it should be
+> removed because it is really misleading).
+
+It doesn't do anything when it comes to the eventid. But misleading or
+not has nothing to do with your problem.
+
+	M.
 
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Jazz isn't dead. It just smells funny.
