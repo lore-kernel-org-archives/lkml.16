@@ -1,171 +1,188 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322DC257AD4;
-	Fri,  2 May 2025 15:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5694919004A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199581; cv=none; b=lA8hvOQVxzlCLQSb618JeekaJLi0UHN93RpEUULoNwgpIJ+F0iGV7WkoPaV7LVjct/uxIibUmKHvyvWoKzf//KcqLiB4r/Z65jXYTEK9B9G5SJcyBFZiABs461NbI3xDs+h7F3xWBL51SSo8b0hi8mrVRYUi/Ji5DVWYQ5bgQ/Y=
+	t=1746199621; cv=none; b=KoGFXSziaMb6iMw0ikXoUf9uzG8ZpDJk/2pBQRr8Kx22Cijkf595pUVt0mae3rID/6TQbN2N6yey/RIcZ7s7p56gFGTIml5DKeKrg+xaCjJzu9qjo0Oyov04LRbrTOfzWg7jWUpUOGbFFxQrN1/BFD3IXM2Wnl2c/gaVRm140H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199581; c=relaxed/simple;
-	bh=TOFMUxNS2/4TZSVKVnuIHht89nFkd+rBPXsXltpT5Tc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iaJeGZG7IuG3FSJ+rzyyM5muflMjnJa7+f4LN/zl8cMZsQIv795FHgj43slKgSkqtckIC1aS+DDmExqLyDHUutu2pAvZEtqaIctVfw5e5fToteKIrDgFn5cFQzx063DKEtDT8EbbFgltQ4WaoCOpnFEPwcqW2kVIU/l0VGYJ8es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jmj20tWy; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746199621; c=relaxed/simple;
+	bh=hLW15ayYi6SnXVYov9TgVyvpQxM/q5FOvyu0WDhrQvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z48Fd+UMNOQEYqJ86TV/jv3/AhlyKUu7lYhsiF3Vi6DOsDpMLkmnsrEoo1ej4NlF0K3HwgEa27Khja+TNdvza9pzthu1UGPTFZCWZgiSIS+zLmIOpyfIBTW0TX+w6W1BrpDtSrBM9Z0/nG1BehFqLd+uEEZHbnsGAADOg2weFWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DzfUgjCl; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmj20tWy"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1275981f8f.1;
-        Fri, 02 May 2025 08:26:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DzfUgjCl"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so11319a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746199576; x=1746804376; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1746199617; x=1746804417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4gHMqjVT46s55Pozie3W8hy9mIfIJmy04WVvupkhU18=;
-        b=jmj20tWy2VIlhBQf1Yxu22iPVgw2vtwUhU8NXCdikoUoO33JDYxjvA23U2SmkCrTIL
-         dTXwkkhObQm+JqlcoGTlElomfPVFf3Fo5KEtr250rviWlw7K1+aWnfrIBrMzWy+2lug2
-         YjXstHGnVtpOsoB6AA12AQUsCsk3l5vyRcu9B6Fz+kQE/ZS4NpkaCFxFCi8P+BfNLUGF
-         Xe6lyh/vV6eAq/NXZ2sBBZ/d0GEPW++KM2/LKW2HH1JQypzZQIefc2N9iQIGhk1eKGdg
-         nX4TIrur5pltZ8xzwhIiZDN98BUC5Wjcw8dPUghE0uqS8R2l768RV313laSzt99DBRYA
-         +mIg==
+        bh=oHb0ZzxGlBB6NHKFNbHGJJeCMu/az8eLbQ7nlZew+9Q=;
+        b=DzfUgjClzI4/KUAoSMf5aiTAtZXkE51WRvNVskMeGrKFnGopa52FeE3Pgy1vmRVTU1
+         veJQlGCL9/Qx0EkbcMz8je9IW1LKWU/tPhOKhQhWY8B/PtSjyfyw3imM9bNlFdy3WQrR
+         m1yxIa6faJI5VjIJdeVpS/uNgRscH/gJOAixDOvgRANgj8wqcNYoAfXnb8J8LKKkc1AT
+         rG8P18t/ekoAQWY45wsIFzqWwtiC4s07o8zwFUlkz1rk2ONQMxiDTKOPsDhlIY7CKyl9
+         ZTuCKdJCCPFBvm7RhuOEpFA9ihOp3SE22rMMcxdKbBTb35UeuOMnOcvWMhAuQD+dmThI
+         PV2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746199576; x=1746804376;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4gHMqjVT46s55Pozie3W8hy9mIfIJmy04WVvupkhU18=;
-        b=SLXX5C7rVmntdXfRYTFNMP2ZxHI0rILzo8wtLcFnB29n13Gi3XiMs8WvwhS6GL0+rS
-         whw5wquzkfpP73O23tPrLo9vt5wCyTQLYVI8kY0BncBVk8sGr5UjeuZhrFZ2GUk9kuH8
-         DhJ4T2r9W4eUZNNroI0F2TLxV0Fudws2DKeL3EbhZ3pO/S1G24Az2GDYq2IWIugih9MH
-         JpDtS2CynfNCYZEvwNsbv3GKW8gApkH0VyQXWXo5ug7W4XNsvkKcDyQ7qO5jqSUHq02H
-         Nabt5yA9JRPIRoZnN7sk3dCF3NkeW99o2UjdGk4lLy7///0b9uJZHuNXjLAaIxSQBKvM
-         ma+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBlAf5vlmGpkYkxMo0mDH88uQpp5CP0UuaSmCzxS6rraSXwpclKvm2HONN4rSjJCX70KHqUw6PaoBx@vger.kernel.org, AJvYcCVjiywK4/2I/7vYEFJZ5XfJvRCP5TtTSGlB9bwGZ9f4WY5JY+tlVXSjBEoMviDYum7ZPPsCd7DISJ0y@vger.kernel.org, AJvYcCW99fCVcFp6O8YbKYj6Q2/BrG8ca0dw7IOULewVp0BaWnQLN22JRFLyidWn2JpRNiL8VGi8xkqNwdfKBeFK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtuIpaRSTaI89LXvsPFBhboV1M9uvIw9zelrBsAllgHG1V3sLC
-	yZodr/t9EeT59d9VWXjTWFnFPEYst30X11VaXvV2pzEwPJSgRNkd
-X-Gm-Gg: ASbGncvJu1dxVvRcOPBKLps4ix/P3jUB9t81Ix/NVOBVxsWhzPvv69giRd8V0x0z4oU
-	mTeLKO5fGv7QMKJP56Lsye065/M6AALWPqS5K8QUjg4fAlsBQqcxbbJEd5uzaWouv8ucwhU1/nl
-	6/2dzPCyn8YGQRQe/TqjNb2v/5r+P+WY8MlVXm31YFzqorBQAmCKBuTzUhrAzGBv69LfPfV0Wkg
-	Zo2I6U64jUiuFb6Yj98+/28suVudnRE17NW1otQtTzlp1mmiHY8rmShK97fFbIZDgJLdUuM+4ZB
-	swsw9sZQGjOLwVEvOWQ63yx8Xcl36K/+cBxrtXQU7XDGjc/o6giDJdp/USYbLQe975IYFGBfOoP
-	4oGT/zRuFvTmJ
-X-Google-Smtp-Source: AGHT+IHNWS05xGhNo7XYO5K4ZF3dmLlkeAuJQLxQS55Busa5I9j1z85zKYmNTNx6fVe0V1kyy86myg==
-X-Received: by 2002:a05:6000:1a89:b0:39f:cfc:d520 with SMTP id ffacd0b85a97d-3a09835604bmr2912802f8f.15.1746199576192;
-        Fri, 02 May 2025 08:26:16 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b170b8sm2355945f8f.82.2025.05.02.08.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:26:15 -0700 (PDT)
-Message-ID: <0ebaa8bc80dc8dcbad6b55beb7e9e59d4eac48a4.camel@gmail.com>
-Subject: Re: [PATCH v4 02/10] iio: backend: add support for data alignment
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 02 May 2025 16:26:19 +0100
-In-Reply-To: <20250502085905.24926-3-antoniu.miclaus@analog.com>
-References: <20250502085905.24926-1-antoniu.miclaus@analog.com>
-	 <20250502085905.24926-3-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+        d=1e100.net; s=20230601; t=1746199617; x=1746804417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oHb0ZzxGlBB6NHKFNbHGJJeCMu/az8eLbQ7nlZew+9Q=;
+        b=U12Mc+bWmSBHCWfj6MFCqN/BfE15zcytnRYNvjtCKsjk0eWtxj+pxSB+kbPOQWm4/4
+         +D6XqNFyUNkxmDgc8jJjyEU4rnOW4dEly3IkcORUN/+nolJtXkfm3EZW7EWixT1NLKRu
+         VCJol3KlPkmOo+nIwwseOrf2jtdyutBEV+SStl3UEvl7h/Uxfrclq7hzwX6q4+vge0Qm
+         l0Gkacqc6jEtJD03gDI3YTbUvyiR125IVNy60dzpNCp/bUENYExwDbQYaKU4INdFcB17
+         mCwfj9WL9ijHW+UdEJLvyo9nfvrGHptRurAFYIZ/2HulBgvKJgdR5pGLKUU+v44DV0W/
+         7j5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUEC1doSpKDvsyg3IRTj8xPpdhzTYWJEIvV/+gBvX1X4MFUbp6emRpT/i9aHsB2gS6FfZGLda+/vZYNokM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV5lSI8QDC3/q6Jmgnb0XW0ZUredxWjMMVRej07xKn4Y6PfmQ7
+	UeKDj70Zb8HVhyVcrMr9YFKsMh4rQyDzI1x20hNSYb/AGxG/dLuQVgIYcvuSQkpyZzvAP0QVok/
+	hdMGcZNsz+acqN8BV8pAtIdYwYYmzk0DbyuxR
+X-Gm-Gg: ASbGncsfXTTdsbBjPpXR87DlLAE6FdTMpLAyJQ7iiPeKuX+Pj1y0ciaei1ljsJt5ulM
+	zJWqZUd1PFjsqPC6Rcmhlb2S16C+2q8SY0/bJ/9Y05eU1niSJPndg8MxhZrj9/SGfCjsIiQaueh
+	UWlx5+3fS5pYH57TC32FHtBztl/aJnd72vZz4buEb6OFZosA0tBw==
+X-Google-Smtp-Source: AGHT+IE/jsfd3H3yBbKiN8dMrqyRJlNNmsTZdJpQFgt4OoMxHc8Yf7S8yh/e6oWWssFQ84fXTZBdZr1AlAKZB/MOXHQ=
+X-Received: by 2002:a50:8719:0:b0:5e5:b44c:ec8f with SMTP id
+ 4fb4d7f45d1cf-5f918c0853dmr175309a12.3.1746199616297; Fri, 02 May 2025
+ 08:26:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250428181218.85925-1-npache@redhat.com> <20250428181218.85925-8-npache@redhat.com>
+ <CAG48ez2oge4xs1pSz_T9L46g=wQnFyC63kQKsXwbHGRWAxQ+aw@mail.gmail.com>
+ <CAA1CXcBHJbs7_DGVR929NOD5G4nkJ3LguDrL9itV8-QS+BNUpg@mail.gmail.com>
+ <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com> <CAG48ez0oe6oZ0QTDWr1rtUJFFTLO69sVpdoCmo+CxZUb6L1seg@mail.gmail.com>
+ <b91af3df-643e-4131-96e7-2680f322194d@redhat.com>
+In-Reply-To: <b91af3df-643e-4131-96e7-2680f322194d@redhat.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 2 May 2025 17:26:20 +0200
+X-Gm-Features: ATxdqUEpkMTf_H-rMFPW7kzp3FCFlwgrzXrEa9BFkSIOp67pix4PyNJ7gFGimKI
+Message-ID: <CAG48ez25Wo7BSt4dn3v+xO0mojvjtBpd02kaAu7kn_+AfgSrNQ@mail.gmail.com>
+Subject: Re: [PATCH v5 07/12] khugepaged: add mTHP support
+To: David Hildenbrand <david@redhat.com>
+Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, willy@infradead.org, 
+	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
+	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
+	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
+	rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-05-02 at 11:58 +0300, Antoniu Miclaus wrote:
-> Add backend support for staring the capture synchronization.
-> When activated, it initates a proccess that aligns the sample's most
-> significant bit (MSB) based solely on the captured data, without
-> considering any other external signals.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+On Fri, May 2, 2025 at 5:19=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 02.05.25 14:50, Jann Horn wrote:
+> > On Fri, May 2, 2025 at 8:29=E2=80=AFAM David Hildenbrand <david@redhat.=
+com> wrote:
+> >> On 02.05.25 00:29, Nico Pache wrote:
+> >>> On Wed, Apr 30, 2025 at 2:53=E2=80=AFPM Jann Horn <jannh@google.com> =
+wrote:
+> >>>>
+> >>>> On Mon, Apr 28, 2025 at 8:12=E2=80=AFPM Nico Pache <npache@redhat.co=
+m> wrote:
+> >>>>> Introduce the ability for khugepaged to collapse to different mTHP =
+sizes.
+> >>>>> While scanning PMD ranges for potential collapse candidates, keep t=
+rack
+> >>>>> of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
+> >>>>> represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER pte=
+s. If
+> >>>>> mTHPs are enabled we remove the restriction of max_ptes_none during=
+ the
+> >>>>> scan phase so we dont bailout early and miss potential mTHP candida=
+tes.
+> >>>>>
+> >>>>> After the scan is complete we will perform binary recursion on the
+> >>>>> bitmap to determine which mTHP size would be most efficient to coll=
+apse
+> >>>>> to. max_ptes_none will be scaled by the attempted collapse order to
+> >>>>> determine how full a THP must be to be eligible.
+> >>>>>
+> >>>>> If a mTHP collapse is attempted, but contains swapped out, or share=
+d
+> >>>>> pages, we dont perform the collapse.
+> >>>> [...]
+> >>>>> @@ -1208,11 +1211,12 @@ static int collapse_huge_page(struct mm_str=
+uct *mm, unsigned long address,
+> >>>>>           vma_start_write(vma);
+> >>>>>           anon_vma_lock_write(vma->anon_vma);
+> >>>>>
+> >>>>> -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, ad=
+dress,
+> >>>>> -                               address + HPAGE_PMD_SIZE);
+> >>>>> +       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _a=
+ddress,
+> >>>>> +                               _address + (PAGE_SIZE << order));
+> >>>>>           mmu_notifier_invalidate_range_start(&range);
+> >>>>>
+> >>>>>           pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
+> >>>>> +
+> >>>>>           /*
+> >>>>>            * This removes any huge TLB entry from the CPU so we won=
+'t allow
+> >>>>>            * huge and small TLB entries for the same virtual addres=
+s to
+> >>>>
+> >>>> It's not visible in this diff, but we're about to do a
+> >>>> pmdp_collapse_flush() here. pmdp_collapse_flush() tears down the
+> >>>> entire page table, meaning it tears down 2MiB of address space; and =
+it
+> >>>> assumes that the entire page table exclusively corresponds to the
+> >>>> current VMA.
+> >>>>
+> >>>> I think you'll need to ensure that the pmdp_collapse_flush() only
+> >>>> happens for full-size THP, and that mTHP only tears down individual
+> >>>> PTEs in the relevant range. (That code might get a bit messy, since
+> >>>> the existing THP code tears down PTEs in a detached page table, whil=
+e
+> >>>> mTHP would have to do it in a still-attached page table.)
+> >>> Hi Jann!
+> >>>
+> >>> I was under the impression that this is needed to prevent GUP-fast
+> >>> races (and potentially others).
+> >
+> > Why would you need to touch the PMD entry to prevent GUP-fast races for=
+ mTHP?
+> >
+> >>> As you state here, conceptually the PMD case is, detach the PMD, do
+> >>> the collapse, then reinstall the PMD (similarly to how the system
+> >>> recovers from a failed PMD collapse). I tried to keep the current
+> >>> locking behavior as it seemed the easiest way to get it right (and no=
+t
+> >>> break anything). So I keep the PMD detaching and reinstalling for the
+> >>> mTHP case too. As Hugh points out I am releasing the anon lock too
+> >>> early. I will comment further on his response.
+> >
+> > As I see it, you're not "keeping" the current locking behavior; you're
+> > making a big implicit locking change by reusing a codepath designed
+> > for PMD THP for mTHP, where the page table may not be exclusively
+> > owned by one VMA.
+>
+> That is not the intention. The intention in this series (at least as we
+> discussed) was to not do it across VMAs; that is considered the next
+> logical step (which will be especially relevant on arm64 IMHO).
 
-Couple of notes from me...
-
-> changes in v4:
-> =C2=A0- implement iio_backend_interface_data_align with timeout parameter=
-.
-> =C2=A0drivers/iio/industrialio-backend.c | 14 ++++++++++++++
-> =C2=A0include/linux/iio/backend.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 3 +++
-> =C2=A02 files changed, 17 insertions(+)
->=20
-> diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industriali=
-o-
-> backend.c
-> index 038c9e1e2857..b7cbbc7a8fcd 100644
-> --- a/drivers/iio/industrialio-backend.c
-> +++ b/drivers/iio/industrialio-backend.c
-> @@ -796,6 +796,20 @@ int iio_backend_filter_type_set(struct iio_backend *=
-back,
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL_NS_GPL(iio_backend_filter_type_set, "IIO_BACKEND");
-> =C2=A0
-> +/**
-> + * iio_backend_data_align - Perform the data alignment process.
-> + * @back: Backend device
-> + * @timeout: Timeout value.
-> + *
-
-dData align is not a straightforward thing so a description is definitely
-helpful here. Please add one
-> + * RETURNS:
-> + * 0 on success, negative error number on failure.
-> + */
-> +int iio_backend_interface_data_align(struct iio_backend *back, u32 timeo=
-ut)
-
-It would be nice to have a suffix in the time parameter. I would do timeout=
-_us.
-We should also document/define what happens if 0 is passed. Should we accep=
-t it?
-Should we block indefinitely? For starters, I would likely not accept 0.
-=20
-> +{
-> +	return iio_backend_op_call(back, interface_data_align, timeout);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(iio_backend_interface_data_align, "IIO_BACKEND");
-> +
-> =C2=A0/**
-> =C2=A0 * iio_backend_ddr_enable - Enable interface DDR (Double Data Rate)=
- mode
-> =C2=A0 * @back: Backend device
-> diff --git a/include/linux/iio/backend.h b/include/linux/iio/backend.h
-> index 5526800f5d4a..452cb2838dad 100644
-> --- a/include/linux/iio/backend.h
-> +++ b/include/linux/iio/backend.h
-> @@ -109,6 +109,7 @@ enum iio_backend_filter_type {
-> =C2=A0 * @debugfs_print_chan_status: Print channel status into a buffer.
-> =C2=A0 * @debugfs_reg_access: Read or write register value of backend.
-> =C2=A0 * @filter_type_set: Set filter type.
-> + * @interface_data_align: Perform the data alignment process.
-> =C2=A0 * @ddr_enable: Enable interface DDR (Double Data Rate) mode.
-> =C2=A0 * @ddr_disable: Disable interface DDR (Double Data Rate) mode.
-> =C2=A0 * @data_stream_enable: Enable data stream.
-> @@ -161,6 +162,7 @@ struct iio_backend_ops {
-> =C2=A0				=C2=A0 unsigned int writeval, unsigned int
-> *readval);
-> =C2=A0	int (*filter_type_set)(struct iio_backend *back,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum iio_backend_filter_typ=
-e type);
-> +	int (*interface_data_align)(struct iio_backend *back, u32 timeout);
-> =C2=A0	int (*ddr_enable)(struct iio_backend *back);
-> =C2=A0	int (*ddr_disable)(struct iio_backend *back);
-> =C2=A0	int (*data_stream_enable)(struct iio_backend *back);
-> @@ -203,6 +205,7 @@ int devm_iio_backend_request_buffer(struct device *de=
-v,
-> =C2=A0				=C2=A0=C2=A0=C2=A0 struct iio_dev *indio_dev);
-> =C2=A0int iio_backend_filter_type_set(struct iio_backend *back,
-> =C2=A0				enum iio_backend_filter_type type);
-> +int iio_backend_interface_data_align(struct iio_backend *back, u32 timeo=
-ut);
-> =C2=A0int iio_backend_ddr_enable(struct iio_backend *back);
-> =C2=A0int iio_backend_ddr_disable(struct iio_backend *back);
-> =C2=A0int iio_backend_data_stream_enable(struct iio_backend *back);
+Ah, so for now this is supposed to only work for PTEs which are in a
+PMD which is fully covered by the VMA? So if I make a 16KiB VMA and
+then try to collapse its contents to an order-2 mTHP page, that should
+just not work?
