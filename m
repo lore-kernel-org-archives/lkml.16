@@ -1,98 +1,87 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0BAC2E0;
-	Fri,  2 May 2025 00:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FAF4690;
+	Fri,  2 May 2025 00:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746145721; cv=none; b=Oy/XBz/BAraRGYOpjTUf5jayKZjeE+3pWyBvLANeQVjVnF1zkIwu/wnv/xw1ZW6ZKNVLNhKLs+rAYlrTDUDib+kSS50JlMXhuseKbBbSiOP45T7TtFcBYWy/dR/Er7hSc41i63DvJm1tmTGhYQIfpe3RraG8UDIlVyjyXypm9/Q=
+	t=1746146159; cv=none; b=YHfbh2lPlRVNA5uebtzZaVxmWzwVZikkhwfI7o4Z/VUx9stDpZPwySFmxhkhQoYSVXXbwKs2oVHY958hYshn2ZrKKfmXU8oN2xKPyTb8/U/Nsuxn4wr11XRZhUG33UFC2d7XRtgcmYn3/zMR+eEyCJVuxyOLgBdBi+Rob1l2ApA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746145721; c=relaxed/simple;
-	bh=41F5qJAqo1GXXVxnrBrRIl0INyJpmHJaX3Q0ndGq7XQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlJep3ydfBdqhnv68KKnf+8k4Fos7gWvrgjyvxJp2JtADOZEcB198prfCDVprbiOub0zHopbETWFTb5jAyQPJIlfXyiT/qwX4asfk5RRX9RWfmlV9YBpM1WwYuJyErX4WnUOfVeydxZVoPmPq+BYT1ipUygluAurq4Ky3C6Swzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=TmxrxU1a; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1746146159; c=relaxed/simple;
+	bh=r6cZ5DSQF3o0HeCCObfwUfYlDtCGgIB48FkNaQjiLrM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YhczO5weclDMMQuPxP8WgvxCxSYl8uyCcmGUO9AgbLk/UpCLVH6qCrz11WohTMzLMEOF8ZTSsGPr1v6hMXHGCNvqcSPywl9OxdWkX4KWxeE++TD+yvQghFnlPDQg7IsBqMqbGhPZOWyCODYGr6X6S0AdfIjN4wXLLdUFFzsTvAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZxVOGTRW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="TmxrxU1a"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=owuCWq2JyFGAqOe0Re/Y9wDqtd94HJni5eLJSVYkbZI=; b=TmxrxU1aWxRu6SZbwXmp2SD+hH
-	aQzcSmsT5C9R1NqX/CCWo38Mih6N87k7zUh/xMgapkMfwh1oHdkHeoPcdk44o0DEzF3l5U+vqIdDD
-	il6CgWKsIIwWj2dGBKuUtMBX8MJvcNthkZnvPqygWjdE8/QFeBuaE6W5gU1h6Bg34CHWMS6QD1Bhk
-	Q/zgQTYrL20SY4WkHbchtUxND3WatsYV7NanO/HObbZ01uOZZt8UmSOyK5ondJL/VWi03f3mz4NYx
-	ZeLha92WgSQkhRCA+BJGiIFGao0M07nWCXA9CI7SUYrDgWy3O7yZhUyXTmGogMyf/E7OBAVpu8BEd
-	j+rYGfTg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAeGZ-0000000EaLn-0Gl5;
-	Fri, 02 May 2025 00:28:35 +0000
-Date: Fri, 2 May 2025 01:28:35 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev, stable@vger.kernel.org,
-	Linux Kernel Functional Testing <lkft@linaro.org>,
-	Marcus Seyfarth <m.seyfarth@gmail.com>
-Subject: Re: [PATCH 2/2] include/linux/typecheck.h: Zero initialize dummy
- variables
-Message-ID: <20250502002835.GT2023217@ZenIV>
-References: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org>
- <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
- <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZxVOGTRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC394C4CEE3;
+	Fri,  2 May 2025 00:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746146159;
+	bh=r6cZ5DSQF3o0HeCCObfwUfYlDtCGgIB48FkNaQjiLrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZxVOGTRW15HvfWwscTK1CyhkU7Z0go8+g3X1Tx0IO+X6s2A0wZzwujqf7KkAM3rfo
+	 SerkH9ABOcdbuUmxcJCSJtCW+GF8tU5uQGYr7rJY8LfxJPqG/URjiPpyLqXC1F81IB
+	 m37cxSxymyVLc09B33S2IR3AZjFGRqsCNuhqhUgs=
+Date: Thu, 1 May 2025 17:35:57 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: linux-kernel@vger.kernel.org, anthony.yznaga@oracle.com, arnd@arndb.de,
+ ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
+ devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com,
+ graf@amazon.com, hpa@zytor.com, jgowans@amazon.com,
+ kexec@lists.infradead.org, krzk@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
+ mingo@redhat.com, pasha.tatashin@soleen.com, pbonzini@redhat.com,
+ peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org,
+ rostedt@goodmis.org, rppt@kernel.org, saravanak@google.com,
+ skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+ thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Subject: Re: [PATCH v7 06/18] kexec: include asm/early_ioremap.h
+Message-Id: <20250501173557.1880f3aa8694352e0eb153b4@linux-foundation.org>
+In-Reply-To: <20250501225425.635167-7-changyuanl@google.com>
+References: <20250501225425.635167-1-changyuanl@google.com>
+	<20250501225425.635167-7-changyuanl@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 01, 2025 at 04:28:25PM -0700, Linus Torvalds wrote:
-> On Thu, 1 May 2025 at 16:00, Nathan Chancellor <nathan@kernel.org> wrote:
-> >
-> > +({     type __dummy = {}; \
-> > +       typeof(x) __dummy2 = {}; \
-> 
-> I'm actually surprised that this doesn't cause warnings in itself.
-> 
-> The types in question are not necessarily compound types, and can be
-> simple types like 'int'.
-> 
-> The fact that you can write
-> 
->        int x = {};
-> 
-> without the compiler screaming bloody murder about that insanity blows
-> my mind, but it does seem to be valid C (*).
-> 
-> How long has that been valid? Because this is certainly new to the
-> kernel, and sparse does complain about this initializer.
-> 
-> So honestly, this will just cause endless sparse warnings instead. I
-> think disabling this warning for now is likely the right thing to do.
-> 
->                 Linus
-> 
-> (*) Yes, the empty initializer is new in C23, but we've used that in
-> the kernel for non-scalar objects for a long time.
+On Thu,  1 May 2025 15:54:13 -0700 Changyuan Lyu <changyuanl@google.com> wrote:
 
-For scalars it had been flat-out invalid all along - doesn't even
-need -Wpedantic for gcc to reject that.  I hadn't checked C23, but
-older variants all fail on that.
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The early_memremap() function is decleared in a header that is only indirectly
+> included here:
+> 
+> kernel/kexec_handover.c:1116:8: error: call to undeclared function 'early_memremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>  1116 |         fdt = early_memremap(fdt_phys, fdt_len);
+>       |               ^
+> 
+> ...
+>
+> --- a/kernel/kexec_handover.c
+> +++ b/kernel/kexec_handover.c
+> @@ -17,6 +17,9 @@
+>  #include <linux/memblock.h>
+>  #include <linux/notifier.h>
+>  #include <linux/page-isolation.h>
+> +
+> +#include <asm/early_ioremap.h>
+> +
+>  /*
+>   * KHO is tightly coupled with mm init and needs access to some of mm
+>   * internal APIs.
 
-We can force sparse to accept that thing, but I rather wonder if it's
-a good idea.  Both gcc 12 and clang 14 give hard error with -std=gnu11;
-do we really want to bump the minimal versions that much?
+When resending, it's best to fold little fixes like this into the base
+patch, along with a little note and the author's signed-off-by.
+
+I shall queue this as a fix to be folded into "kexec: add KHO parsing
+support", thanks.
