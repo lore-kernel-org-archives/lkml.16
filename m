@@ -1,208 +1,151 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA054146A68
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BABE25D1E1
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202101; cv=none; b=ow/xU75q4/TXqJAF7lSQKoGxqkfESK4ZKpTfmnXfmW0y5rc98dS7OMj0fUsQw9jfjeIN+34jQM9ToiSrhiKC1SKuaLWFqS3jCmj14MZp5fUtxMmq/5vDX85r0w27xg0LyqKB/1vCaoTmh4XgZNwNYOjJ5d37hlLGxyPQXCAs3eM=
+	t=1746202110; cv=none; b=SNnTdDi5FDcdYkNsRVclL3b8+9+3eyvLX4P3ZvmxJTqnwTdwWC04JFpIgSJ6ian+/G0SZBMnkfXAXBYCmnDMHuqRa9CZSgrEp+VeJLjRtwKfCxYQmsBKkbMeAmWJ1qudjYVHrRQs1CcLfVeeEqVpSYmZ7Sr3Mg4jlAeks6aRCpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202101; c=relaxed/simple;
-	bh=EWGiktsus5+/o19nyZqxpCKSl+7liaK/rjrKxK1GacA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9rmsSmj1yGbENv7O4g31aEaAuOPWpHDbNOQmh/01e9X9HfUgegAQXE0qnD/a5zq00zlTzkpIhaB0GEfzaPEtdr3uF8g5t52vMzJo2Tj3xJwWW1ULmORpV3au8JBtkyfNG6jlkFryC755EIrQXcjXaNp1md2bNPNkv8PDxFUjAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Htfg8dlY; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1746202110; c=relaxed/simple;
+	bh=Aiw78cv/p68kfnHm9huW2dP7/SF2x9C9ceZ11r4BIG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kJBQYkEdYCI2qNtvheoMPaiIkkfY5Ubv0MmfxyEz3VeTYTOsGllo+hHzES/3daVusxRpxggWCQsfU/JfY47sXCpn0jbdNvAYmiwCBMIaSuyL3F+pA9/3B8Q21s1uefMQGqNurdhF4R3vMYBl2G0xoQsMnCIs1zPkkWb2ZnX0JIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kzOEDFEz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Htfg8dlY"
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 72BC23F7DF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1746202089;
-	bh=3CisZnV7pjBTrd6barH3Ffmi1vw4zOqiBAICZChs/hU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=Htfg8dlYfXjHLF5GwOlrzQbw21B0YWI9TUM02aNcd55ReS9L8Wqz2AoqELEf5XlrM
-	 cWg31GeWU8hrVjGblnoTnXIygsMDi4+4dMa96qC8OKFQ2ReM8WlMA1toIt8tkvd9z1
-	 458tm7IKbx7SFu5VMaDUZTSrzeO49xX5/KnkkR4CAuv0on3uEvLaGJ5JrhtYu8GPG2
-	 MhJDEgXc9hqHa9V/PvTMVmsC3Gg0yZQ7S81TVXYv0LvoOlvlDgdV6n774XpkwQ/8sF
-	 IBbSHOwn6nvg+zd9BSFUy7QNFl+8OChCPDeeUdu501hXTtnA0H9sy4B5ZX7/9Iv6CB
-	 8F2o/aNVFVhuA==
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acf0113e311so200085366b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:08:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kzOEDFEz"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542Dxtfs015317
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 16:08:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZCURuZphALca4oH54vQyehTX8P10HSrIKR7pzdxmoGo=; b=kzOEDFEzns8z6IKY
+	VXiK3lU2R9FtEJXfIuXSeIuGjANAeIHkUaH7UZMchouRAl0MGM3yKdgFztz5vDVT
+	cNrs06uZmUz4e4TVMRxwr4Erx7nVYobpvfzA5WtxA2d9Mq2KKQroX/rR7wnnjkKn
+	8jLcSfrAwYqko1uSWk6ZTc2VGsADLOS3ofRt0ghC2q+rZJKNkvIP4SiurWTN+qt2
+	ToJglBlsn069C2iZLRd/pIFNWUvzGjP2+4MNrHYclV0V54gf7hUXWocfzSNn7BRO
+	bTKfxhvRRdBLyGU40DJ9CUDcDWQQK4dfDgLDOB6MKJ3eYLH71SadEwdhJTVcHg5K
+	7Qgm1g==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u20v2w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 16:08:27 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7391d68617cso3190904b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:08:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746202089; x=1746806889;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3CisZnV7pjBTrd6barH3Ffmi1vw4zOqiBAICZChs/hU=;
-        b=oUQX7I8y514kg2M+6GSidoiDRBn8/Ja2+GM01yebJGAL7nUxlvNMPfvHM1m000r12l
-         tbwpxyeFsRsnbzIxzHdrpOY9AezbpRft/pbzgdJJWqa/4shthSqP7GSVX4KX3UHxb4ui
-         10hnVUYt95XYeqHAZYxhCDsipS0GVjH/6ncIotkqY7la6smJY+B6feSOcRX5dxzO9smE
-         1hkSnYL7flCuhnKrrMKJFcB/6aHjbSXROBNIBZX6Nzlr4s0SU9dfNuGARTtZwl0HRfUL
-         dfFHIxkoJCBikz6oh65zTO/O9WfVEUhbcJFQRBCQf0JaoPH9KmAiK0XbDffzyQsHKXL+
-         gFGg==
-X-Gm-Message-State: AOJu0YyJFB3nyaCspKPebCo2KWOu8aLWFlxjV7vs56iSFFrcIZ9U615q
-	6U0YHfsQpC0ZQ3TEwGZg3kV6st9zCz3h9OllQCb1Ge3SHaU7NgQ/B+BQg1GbAFl/jy4+2Int5gy
-	Vr0V4uMEq1rtPb8Ywlb7fSGupUYvc4UWZIRxFjQhRRBhoDFeFdyNUn6jGSofmy6+l0OiamdjDJ7
-	N5ZnH3BG2Q6pW9vzuGqCjWWJql9lYzCVmtnBPtEmcEHbz1dTwAjTJl
-X-Gm-Gg: ASbGnctHlaKybmjUdAVKmcXCSrz+wH/WDmghjESWLEgdXtNXV3BnbIO4ITLAJK6rIqe
-	lua7qcNgz1ErFrvspvu1O7ML8NXkG/yaDT7G2h9M6XLbEL4BKnVk9JAf2WVDoMxQgjtZd
-X-Received: by 2002:a17:907:6e93:b0:ab7:cfe7:116f with SMTP id a640c23a62f3a-ad17af50ba6mr318240766b.46.1746202088754;
-        Fri, 02 May 2025 09:08:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEr9plp3S4dQ544LaoyFbcAWDmz+kpgB70DWFpnKwx/6/nfuEShDUm7vfsqSJ3aI2C6UpRBZ8JzEemIwm+iSxA=
-X-Received: by 2002:a17:907:6e93:b0:ab7:cfe7:116f with SMTP id
- a640c23a62f3a-ad17af50ba6mr318236366b.46.1746202088361; Fri, 02 May 2025
- 09:08:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746202106; x=1746806906;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZCURuZphALca4oH54vQyehTX8P10HSrIKR7pzdxmoGo=;
+        b=RRNANfjrVsVyYdEfqDPtJXDRxgPeLGDJjjhyI2U3/p617HBKRPz/LO9Q4Lz3wRctKM
+         YjLIVQXrBDEvJqyg2M8V2Ieu7XsKM2punbwOpXd1jhoey5mO8arGjsB4urvFDAQD/4K/
+         D1e4IxN7YGCWAk3ILy56pr+acL0kevvruFXEznc7czd55RzqokNk60JtgXBFE/sBkwy1
+         ubepGv4Yv+ZMgWbVZAndEK0eqRvy83TIalVu4iH+9FVVqaGnN+1ggwdn5jUgnodfFo3o
+         GFH2lYEovcIHjzkO6Irqu5Zfj2M1C9VK16uXVG71C3L3PCC+9YoI4CO0LzwRe4chl52Y
+         UC9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUvjfWCk8xCtzXNKuUOtdLoXSyEgd2r3enSMKWotosULnXvz59YVV6DM9NiZfwLRpL2BEvujeLvmCTXgKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ0Zi9o0QcQODpazZHgCr7iB+nV3PGuf7wc472YCpOch/NnFgY
+	LTFX65DLl5FoYhZMQFf9TmJcuirMB2z6UVeZm7mKD6scrFMH4VccfME0uucuLOxJRUWKi1jq9lx
+	Cm6HOU6N9HlJTrvDmBjCpaf8pswsTiu8msRop7CmYNDPwcoCKafH8ybLiDW5GXvs=
+X-Gm-Gg: ASbGncvz8MU3SEPtXwpaxhVCv12PP9W4gnfmNzZ2KH08jn4fJ2AcJXt2KhOIqGTgkEZ
+	+AHU8TkVJWpuw/+Jxj2GYBphEyhY6cAsO8U6pl9mAcBPuuElbC6jMNlVgHeJjbrNV9f9bPcwS/9
+	TntCc/swQhO7JqUzyK1Nd7t+vlY1+2rsvKKhzavEqNaX4ekpfncvu0BgfWkLW2OO78rQ7KSE+Cu
+	60Yito4rsUi2uBxR8iJEH1UKyAQyNQTtm2ox1Hfv0Rh/pYE3U+6TNp4RBqde92JIqIoEyRXiSRx
+	+o3HtTiWY7Tlw3M16vmqXnEmffzwM9oHievfU2goEGM3qcXTXU6z
+X-Received: by 2002:a05:6a21:2d0a:b0:1ee:d664:17a4 with SMTP id adf61e73a8af0-20bd7662d30mr9078753637.10.1746202106428;
+        Fri, 02 May 2025 09:08:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFngvS5zV7065QKg5lJ9bJgIZHUtGEmOAi1Tej78hd+AnKg2zkgE5D/a4yAbK+mQc/qiES88A==
+X-Received: by 2002:a05:6a21:2d0a:b0:1ee:d664:17a4 with SMTP id adf61e73a8af0-20bd7662d30mr9078706637.10.1746202106026;
+        Fri, 02 May 2025 09:08:26 -0700 (PDT)
+Received: from [192.168.1.4] ([122.164.87.156])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3922041sm956661a12.2.2025.05.02.09.08.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 09:08:25 -0700 (PDT)
+Message-ID: <83c427de-c678-4408-9b04-2f3d2eef9fac@oss.qualcomm.com>
+Date: Fri, 2 May 2025 21:38:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502014412.682674-1-rdunlap@infradead.org>
-In-Reply-To: <20250502014412.682674-1-rdunlap@infradead.org>
-From: Ryan Lee <ryan.lee@canonical.com>
-Date: Fri, 2 May 2025 09:07:56 -0700
-X-Gm-Features: ATxdqUH1VSosWBuE6vF-uqoJMXP5CM2bLoq1d2PsBwhsXzhf70B3sJUNYIK_FnA
-Message-ID: <CAKCV-6vV1o6KmPjD3k-LWo-VYEEaZ8QS_tdM=GezT9XH2M=Hng@mail.gmail.com>
-Subject: Re: [PATCH] apparmor: fix some kernel-doc issues in header files
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, John Johansen <john.johansen@canonical.com>, 
-	John Johansen <john@apparmor.net>, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
+ reason from IMEM
+Content-Language: en-US
+To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>, bod.linux@nxsw.ie
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
+ <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
+ <f8b57c99-2f6a-496b-a6fe-3e2aa6b0b989@roeck-us.net>
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <f8b57c99-2f6a-496b-a6fe-3e2aa6b0b989@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=6814edfb cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=wj/iefQKNY9P1RSDfSoyGA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=9TRSRwEFIUlA1hFsN1MA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEyOSBTYWx0ZWRfXzguAJiqFCEaG Hj4JAJZdPNcvvQlBwbtovvMKMuniMJ5o+Hfe9xrLaTFhUpFFsOetVevrmEDflcd8Nh4jkl7B6G4 I7A8I8mqA912IWPeTyzU5nj4C7CvU44IFXThOe/WmcVb0Mi7wFImqQjzwk/SfhgypXQooK+s4Xv
+ UqHsY15tbG8/iTooRP3RjgT0L1UdHuDSBz/nU0KTrMW50HqX/Q1W8US+cpoqdMn/Mjga3cv8Hm2 lf/k/oTew0Iwmh70E/9P2bUooWjj+NaqYIJ3W7wZKN0kyZKUptll4pwa7LfQsnqoIDvbHtTn1fa iTqmnw5QC9HjgnMjHhthg629+oaDoUuAde8tQaKDBfp49qOQMW0d5X4+KwZvjwprz7G5ySjifRD
+ oNjNehtHhgOyBdyDPR8e7HhDRykwtCFuocHRa3xi2gHbIOy80MEdzYAw0TjhmS0gIbsyu+og
+X-Proofpoint-GUID: ChKI6T_REjfXq9BlXll6XQRLCd4aCJbU
+X-Proofpoint-ORIG-GUID: ChKI6T_REjfXq9BlXll6XQRLCd4aCJbU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_02,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=956
+ lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ clxscore=1015 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020129
 
-On Thu, May 1, 2025 at 6:44=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
- wrote:
->
->
 
-The commit message should also have an introduction like that says
-something like "This commit fixes apparmor documentation comment
-issues found by [name of the tool you used]:"
+On 5/2/2025 7:03 PM, Guenter Roeck wrote:
+>>   static int qcom_wdt_probe(struct platform_device *pdev)
+>>   {
+>>       struct device *dev = &pdev->dev;
+>> @@ -273,8 +304,13 @@ static int qcom_wdt_probe(struct platform_device 
+>> *pdev)
+>>       wdt->wdd.parent = dev;
+>>       wdt->layout = data->offset;
+>>   -    if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>> -        wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>> +    ret = qcom_wdt_get_restart_reason(wdt, data);
+>> +    if (ret == -ENODEV) {
+>> +        if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>> +            wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>> +    } else if (ret) {
+>> +        return ret;
+>> +    }
+>
+> Seems odd to me that there is now a function 
+> qcom_wdt_get_restart_reason()
+> but it doesn't handle all means to get the restart reason. Maybe I 
+> missed it,
+> but what is the reason for that ? Why not move reading WDT_STS into
+> qcom_wdt_get_restart_reason() as well ?
 
-> cred.h:128: warning: expecting prototype for end_label_crit_section(). Pr=
-ototype was for end_current_label_crit_section() instead
-> file.h:108: warning: expecting prototype for aa_map_file_perms(). Prototy=
-pe was for aa_map_file_to_perms() instead
->
-> lib.h:159: warning: Function parameter or struct member 'hname' not descr=
-ibed in 'basename'
-> lib.h:159: warning: Excess function parameter 'name' description in 'base=
-name'
->
-> match.h:21: warning: This comment starts with '/**', but isn't a kernel-d=
-oc comment. Refer Documentation/doc-guide/kernel-doc.rst
->  * The format used for transition tables is based on the GNU flex table
->  * The format used for transition tables is based on the GNU flex table
->
-> perms.h:109: warning: Function parameter or struct member 'accum' not des=
-cribed in 'aa_perms_accum_raw'
-> perms.h:109: warning: Function parameter or struct member 'addend' not de=
-scribed in 'aa_perms_accum_raw'
-> perms.h:136: warning: Function parameter or struct member 'accum' not des=
-cribed in 'aa_perms_accum'
-> perms.h:136: warning: Function parameter or struct member 'addend' not de=
-scribed in 'aa_perms_accum'
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: John Johansen <john.johansen@canonical.com>
-> Cc: John Johansen <john@apparmor.net>
-> Cc: apparmor@lists.ubuntu.com
-> Cc: linux-security-module@vger.kernel.org
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> ---
->  security/apparmor/include/cred.h  |    2 +-
->  security/apparmor/include/file.h  |    2 +-
->  security/apparmor/include/lib.h   |    2 +-
->  security/apparmor/include/match.h |    2 +-
->  security/apparmor/include/perms.h |    8 ++++----
->  5 files changed, 8 insertions(+), 8 deletions(-)
->
-> --- linux-next-20250501.orig/security/apparmor/include/cred.h
-> +++ linux-next-20250501/security/apparmor/include/cred.h
-> @@ -117,7 +117,7 @@ static inline struct aa_label *aa_get_cu
->  #define __end_current_label_crit_section(X) end_current_label_crit_secti=
-on(X)
->
->  /**
-> - * end_label_crit_section - put a reference found with begin_current_lab=
-el..
-> + * end_current_label_crit_section - put a reference found with begin_cur=
-rent_label..
->   * @label: label reference to put
->   *
->   * Should only be used with a reference obtained with
-> --- linux-next-20250501.orig/security/apparmor/include/file.h
-> +++ linux-next-20250501/security/apparmor/include/file.h
-> @@ -104,7 +104,7 @@ void aa_inherit_files(const struct cred
->
->
->  /**
-> - * aa_map_file_perms - map file flags to AppArmor permissions
-> + * aa_map_file_to_perms - map file flags to AppArmor permissions
->   * @file: open file to map flags to AppArmor permissions
->   *
->   * Returns: apparmor permission set for the file
-> --- linux-next-20250501.orig/security/apparmor/include/lib.h
-> +++ linux-next-20250501/security/apparmor/include/lib.h
-> @@ -170,7 +170,7 @@ struct aa_policy {
->
->  /**
->   * basename - find the last component of an hname
-> - * @name: hname to find the base profile name component of  (NOT NULL)
-> + * @hname: hname to find the base profile name component of  (NOT NULL)
->   *
->   * Returns: the tail (base profile name) name component of an hname
->   */
-> --- linux-next-20250501.orig/security/apparmor/include/match.h
-> +++ linux-next-20250501/security/apparmor/include/match.h
-> @@ -17,7 +17,7 @@
->  #define DFA_START                      1
->
->
-> -/**
-> +/*
->   * The format used for transition tables is based on the GNU flex table
->   * file format (--tables-file option; see Table File Format in the flex
->   * info pages and the flex sources for documentation). The magic number
-> --- linux-next-20250501.orig/security/apparmor/include/perms.h
-> +++ linux-next-20250501/security/apparmor/include/perms.h
-> @@ -101,8 +101,8 @@ extern struct aa_perms allperms;
->
->  /**
->   * aa_perms_accum_raw - accumulate perms with out masking off overlappin=
-g perms
-> - * @accum - perms struct to accumulate into
-> - * @addend - perms struct to add to @accum
-> + * @accum: perms struct to accumulate into
-> + * @addend: perms struct to add to @accum
->   */
->  static inline void aa_perms_accum_raw(struct aa_perms *accum,
->                                       struct aa_perms *addend)
-> @@ -128,8 +128,8 @@ static inline void aa_perms_accum_raw(st
->
->  /**
->   * aa_perms_accum - accumulate perms, masking off overlapping perms
-> - * @accum - perms struct to accumulate into
-> - * @addend - perms struct to add to @accum
-> + * @accum: perms struct to accumulate into
-> + * @addend: perms struct to add to @accum
->   */
->  static inline void aa_perms_accum(struct aa_perms *accum,
->                                   struct aa_perms *addend)
->
 
-With the commit message addition that I mentioned above:
+No specific reason as such. I was little hesitant use "goto" statements 
+and such as. So I thought this would be little cleaner approach. Please 
+let me know if I have consolidate everything under 
+qcom_wdt_get_restart_reason().
 
-Reviewed-by: Ryan Lee <ryan.lee@canonical.com>
+
+>
+> Guenter
+>
+>
+>>         /*
+>>        * If 'timeout-sec' unspecified in devicetree, assume a 30 second
