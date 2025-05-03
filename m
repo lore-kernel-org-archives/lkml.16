@@ -1,48 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C002D283FF2;
-	Sat,  3 May 2025 19:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746302398; cv=none; b=FdLyjGQWNdIM/WCmPN27fJX5UHW3U8lZH1uyjA6h91vx2Rr+UB7E1IDEWDKepQofBrDtsTZbffY2oS+S2UVr16hHXIffRY4FJLaTZLM82UV5lcV/s8Gy12xaEf9hFFQARDy74QtU4bD8Mgus5glMrHTGj5J5QoQ5krwfCeVKZX0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746302398; c=relaxed/simple;
-	bh=gdhaTlGl8svKPWDxZ3pZi8kE3ywkX/zSLudtSlstuOw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DZYnHabPf3trV8o0Qfea0U476cKk09Q7ilYHCLcnAS+9MO5W3w9u2x1paFMfOoWe0ZzAJWIlaiAWOxAGuLD3yFpV/qa1tCSFT5Ij/FG7/3+cKopUElTDneL+xu3fvSz4ccltirfUTdPCcLQBLfh3fGqqH4rvjy3wlqo6vBThIbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrUCwc5f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrUCwc5f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8717DC4CEEE;
-	Sat,  3 May 2025 19:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746302398;
-	bh=gdhaTlGl8svKPWDxZ3pZi8kE3ywkX/zSLudtSlstuOw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GrUCwc5foghAT/DIcNqRa8pQz48O5r91IXHVzsNKBfWp22HdAE5NdiGaFzzUTMSIc
-	 AUUzRn/PPLl2l0B2wT3Q5B1fWAle77L/6IaICK+iP+dTADbgUETH87HN2z8iII/y1u
-	 etbJ1HKXMG9d0j5kjWlCmpWIBbMRAI4z2YSWRWvJmDxUA0pDHS7t1svRCqE8xkpLd5
-	 9plv1LhNe7TrU2D9P0QgxHQxe4r2R4a3Sg4T5ABPMIkZm5DeCGkCSeRh5tkSyzR2JC
-	 GhI3agbYwJBGl6EvexY8+r5tWQ+4OfgSH6FYAmKlgeKeojha1gLtRD2fMETMdba8j5
-	 bJnff4ZMavsgw==
-From: cel@kernel.org
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>
-Cc: sargun@sargun.me,
-	<linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 18/18] nfsd: remove legacy dprintks from GETATTR and STATFS codepaths
-Date: Sat,  3 May 2025 15:59:36 -0400
-Message-ID: <20250503195936.5083-19-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250503195936.5083-1-cel@kernel.org>
-References: <20250503195936.5083-1-cel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC9327E7E4;
+	Sat,  3 May 2025 20:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746302495; cv=pass; b=o4WyWDnCFWilbl9/NY9eSt1BwplycWA09l07PHZGs5yf8mv2FMX1iUNkoohf4wFjC1WnmlsZRxzhytSYzKW5sSOUZ25+nq+GoRG3hB0USeuqoj/r+gd8/XT98hc/zQKLFTEX/pVd5/g02RYB3FRQbkqcNx8pkswi0/qqFP8Prds=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746302495; c=relaxed/simple;
+	bh=yg3cKO+FNhzvb7iusX0rv9HVvAb2iqpoXLtlIZBc33Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MQV7dAL65ALgOMtwDJxDD9S9IhUHZHf7xGKo5Sg3MasS57Hk5jlZXC7eQECG4rOR6fm9J/hJoKzWbspRtFzg8GYEC3VFycQcILgCpw10orCfso29eOnKStd1tsy99qglnGrJCp5CvD8DGeMu5oikpZjvwlvyvnFtlbylC6EDd+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pablo.ct.ws; spf=pass smtp.mailfrom=pablo.ct.ws; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pablo.ct.ws
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pablo.ct.ws
+ARC-Seal: i=1; a=rsa-sha256; t=1746302453; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BkS0QhaC+/H2iODRTl4XHkGQpj/UfEhhueUWKXZ0TknakQBCimmfehejBqeJjjCVfZ7SrwrwOjrAF0GGPAWzWRJ8inIkx5msrnUs2Rd0QFqt56Y2S2/hM5rKln6oTSFH8QX+ZfVIxQiEl91SGYOZxPS0NyCwxzr1yv7LlhGJEO4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746302453; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/ekhqu4U2vEuZl1TA3R6FVmJfh3zffTqbt5hhe2+IiI=; 
+	b=iBYQFxbBvWKeJ7A7pAgVZT4lKeTXzZAzEL+gzXBdWZQ3eecXH4Ut6CJxqE5CN6HJqbl4qGZgDWcb5F2Zs48i1MTYIPo11KwbxgOuNfJD/G+RAFWIgzQ405b8p8ewwYaINMrENXhtg3VNfew7la9qHAqMGGWk7doppBVTiyvKNZM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	spf=pass  smtp.mailfrom=pablo@pablo.ct.ws;
+	dmarc=pass header.from=<pablo@pablo.ct.ws>
+Received: by mx.zohomail.com with SMTPS id 1746302449821514.9158028836918;
+	Sat, 3 May 2025 13:00:49 -0700 (PDT)
+From: Pablo <pablo@pablo.ct.ws>
+To: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	hdegoede@redhat.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	andy@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	koike@igalia.com,
+	pablolucas890@gmail.com,
+	Pablo <pablo@pablo.ct.ws>
+Subject: [PATCH] staging: media: atomisp: fix coding style
+Date: Sat,  3 May 2025 17:00:30 -0300
+Message-Id: <20250503200030.5982-1-pablo@pablo.ct.ws>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,64 +49,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-From: Jeff Layton <jlayton@kernel.org>
+Fix a coding style:
+"ERROR: that open brace { should be on the previous line"
+issue reported in ia_css_vf.host.c:94.
 
-Observability here is now covered by static tracepoints.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Pablo <pablo@pablo.ct.ws>
 ---
- fs/nfsd/nfs3proc.c | 6 ------
- fs/nfsd/nfsproc.c  | 4 ----
- 2 files changed, 10 deletions(-)
+ Hey, this is my first patch, I apreciate any feedback, thanks!
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c   | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 6019ce3a8036..8902fae8c62d 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -72,9 +72,6 @@ nfsd3_proc_getattr(struct svc_rqst *rqstp)
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index ece5e3da3..0ce75d9bd 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -91,8 +91,7 @@ configure_kernel(
+ 	unsigned int vf_log_ds = 0;
  
- 	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
- 
--	dprintk("nfsd: GETATTR(3)  %s\n",
--		SVCFH_fmt(&argp->fh));
--
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = fh_verify(rqstp, &resp->fh, 0,
- 				 NFSD_MAY_NOP | NFSD_MAY_BYPASS_GSS_ON_ROOT);
-@@ -651,9 +648,6 @@ nfsd3_proc_fsstat(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd3_fsstatres *resp = rqstp->rq_resp;
- 
--	dprintk("nfsd: FSSTAT(3)   %s\n",
--				SVCFH_fmt(&argp->fh));
--
- 	resp->status = nfsd_statfs(rqstp, &argp->fh, &resp->stats, 0);
- 	fh_put(&argp->fh);
- 	resp->status = nfsd3_map_status(resp->status);
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index fe0f1c372f18..7c573d792252 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -57,8 +57,6 @@ nfsd_proc_getattr(struct svc_rqst *rqstp)
- 
- 	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
- 
--	dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
--
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = fh_verify(rqstp, &resp->fh, 0,
- 				 NFSD_MAY_NOP | NFSD_MAY_BYPASS_GSS_ON_ROOT);
-@@ -617,8 +615,6 @@ nfsd_proc_statfs(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd_statfsres *resp = rqstp->rq_resp;
- 
--	dprintk("nfsd: STATFS   %s\n", SVCFH_fmt(&argp->fh));
--
- 	resp->status = nfsd_statfs(rqstp, &argp->fh, &resp->stats,
- 				   NFSD_MAY_BYPASS_GSS_ON_ROOT);
- 	fh_put(&argp->fh);
+ 	/* First compute value */
+-	if (vf_info)
+-	{
++	if (vf_info) {
+ 		err = sh_css_vf_downscale_log2(out_info, vf_info, &vf_log_ds);
+ 		if (err)
+ 			return err;
 -- 
-2.49.0
+2.34.1
 
