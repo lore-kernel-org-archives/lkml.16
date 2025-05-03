@@ -1,95 +1,168 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7CD19E967
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 06:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A105118C332;
+	Sat,  3 May 2025 07:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746255183; cv=none; b=F/VR8A61X2+CqpQgc4RV0driEEJBM3hHE5RU782IYHFQmMOag6dQeEkedLBgXn6T0gCHlTvNN3wmI3MC5Jih9uEXgP6WdcUXYVbSQ6hp0LVrg9rko6H3hTpIo39gqTmktpaZgx3heRpyTBoo+QeBwNn/rZOeW0dd18jLUccEijw=
+	t=1746255615; cv=none; b=euGW2GTv8ToBDZVlVC7MBZukCZrIuFjVk5PUZXxeWlfjfi2NXNeSdGtaIYs2vcpSEWSw95diYaEoWEDzWKQwY4rc80u+6M5tAVhofMcATdmzrzfBQgTilKh7Zc3+R4rakit8YPPZKi+6bpBdKFzjtMYv3/d0LDwxsz5FvQp3bdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746255183; c=relaxed/simple;
-	bh=l0AzVZ2FROvsUB1Hp9YrG/3G5OrEjJQyEi8OEhMviXE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ltLpB6pJ4n4m0mwxFL+v1wmrf5oxuw/6ajyWLt2q/8y3meq6tc+hSkajV4JdywQP21PW6GSQD66t/XZtQrmQb3bugGaHRf0jRK0yfP+uCvekmBicIsShAoLF/TBXnQaVsN89LsHoWG6+hqBv6BGY/YRJC6ckMfUDctATQJgjpbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=karlexai.com; spf=pass smtp.mailfrom=karlexai.com; dkim=pass (2048-bit key) header.d=karlexai.com header.i=@karlexai.com header.b=P50AwPWi; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=karlexai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=karlexai.com
+	s=arc-20240116; t=1746255615; c=relaxed/simple;
+	bh=fsuOl5MM4ucZnw4FToLNMrK6xqOPuW/PYrnM7YID4DQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OyEx8vR9L56+Iw4bU1EZqg9h63LNx8B5Dn18J2Xtx3P0ReDEDShwpPh8B1Sto942YGDEc2r4JbP5nIiq2Ax92CzN8apuZh0g7Pm0LQYj07njo5GkH2jWyj4CJTQVB6mtSA4QxZRJfXKx3sKGg5YrsbMkSMu1Mer3a2NYicP3ftM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ErK4dPjl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=karlexai.com header.i=@karlexai.com header.b="P50AwPWi"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acb2faa9f55so349088266b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 23:53:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=karlexai.com; s=google; t=1746255180; x=1746859980; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=l0AzVZ2FROvsUB1Hp9YrG/3G5OrEjJQyEi8OEhMviXE=;
-        b=P50AwPWiz2fOVW5BmUCBKT11Cs3esT8GBwbeD0ps3snR8nBOWagKnYIWkZoLSl0QuI
-         1IJ8qv9gGqK799vakhCutpg9nr/l0UiT+NoiK9ReKcLs8tHqLJ/32ypzJLQisrdJ6BSi
-         zk0ew5JN7ijf8FUnkTmjQRoE+JZfa4fjmhf6hUzstXzsnOhyLYO4nof+GFUF4FXb1u2y
-         NSHXg1fAnzyAQSWsP9obCc/BSIBj4xSIlAz61tm5wRQvh/pyOwE57LCyGsw6uPI18gq3
-         7VcbvdUG5BxDsgcHOaD0f5vujbfiu/OsuVnitUPzRvrSDVz+qyYyU+suEwPC8lNURzxW
-         kSLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746255180; x=1746859980;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l0AzVZ2FROvsUB1Hp9YrG/3G5OrEjJQyEi8OEhMviXE=;
-        b=w29+mycaFMs+ZAYIBHSBTs6KHZXLncAcKZLhyWliS6aeSUcay9z0PCfYcG86SzDnr8
-         AbxEUQfct3HrLhN4VB9Nl5COSmGC+Ac01SF31V8Ni7Zz1otn6GHRscZ66Vj/X2OQzgg+
-         NESSH2F3dQH9Sa5I9nTtSTaoIrLywk4DszaTpJwjvwDlBh8IRvuXzhnte2sLxhv608SZ
-         LFKktDjQubjsoQzklPJ5DmJm23h/6WyDup6mygQGwSaBoGYpfW8rGE2DAYHIVXUnxjEY
-         EZ4DlnYRO03ai+vVrI28kbuyjpQZ1bsj8zB3Fzk0gl7JQHtd+a9c9zrZWwLZl77fyWWe
-         Tn/g==
-X-Gm-Message-State: AOJu0YyQ0pkAb2zAvLHGYXsXfEAtPuXZ9TbxkevZ6NMy4i5iliw7kWxg
-	0iPNTW/z23dbPWtYZYYD7z6YYLL3orjciAfMb3IRzkut2Jv9sLaIrB4zXTgkOEvC8RxBcFd+70H
-	tMpvae+kWCsORM/gtG+7yXnKLx9g50HY5ZRijU9KzLA7lGSIJkVuarg==
-X-Gm-Gg: ASbGncvZAGeBAeM2pb3/8aWusLpJhzC4QQPJ4dITxyh0XEEKxutUnA9pRh/xjGtPVM1
-	k15EgVqi1jm+rE5swGvF5m2KzItOrnB5OaV8nITOP4HtavGGFXASQXuN7+xWtI4S4YB3hU5cu8a
-	/jzoVVDcT2KL8JHitWW0fWHVPwJKnOUlmcthuY25QD8WbT8fDqAW8YGb4=
-X-Google-Smtp-Source: AGHT+IGeoGRVT5n5ddquTmrFAKQX5XJ0EhdoA+jv93EV2Eu8bp2WsuI2pTW5KYNMuLaToR5c4uxNkLH8PzBAEu4sTqo=
-X-Received: by 2002:a17:907:2d07:b0:acb:5f9a:7303 with SMTP id
- a640c23a62f3a-ad1a4a0a0d5mr6582366b.35.1746255179773; Fri, 02 May 2025
- 23:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ErK4dPjl"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5434lcZm006376;
+	Sat, 3 May 2025 06:59:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NgLeN5VZkeSiPFB2WCWDd93UA38Mb55ObzOHv882Vus=; b=ErK4dPjlum/vC5J/
+	AU8ignha1YrYedgyxlDEq6GYYgXWxOacZV1Eo3XTJ+NituRu/8+WTcGkKaO5Ut8P
+	9sprU88s50rSVa47ifn/EPTVQfRYJ3IARlMWF8nt1OBEIB37U+0E6foegsIMSfwW
+	T7IqTIVlUERJS8D+xBMyhoMmcedzYYvBwSwslNO8+dj/imqQ0j2TPilBcrv3pjau
+	axOPKfUILXiQA0oQqdIBEbtP9ih3d9+XgKdGN/z5QGvnFdBfglSFXJ5+dQb/zlnG
+	j0y4CfLb0044T4+VSPcFsFpOViv4eplHQ2XwUP+MpFleqwqZLVJFsDRSlsfBSlou
+	d9nQTw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce984d5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 06:59:46 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5436xjSr023814
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 3 May 2025 06:59:45 GMT
+Received: from [10.216.30.160] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
+ 23:59:38 -0700
+Message-ID: <e070cce2-5037-4c22-af4e-5783bfaa51c5@quicinc.com>
+Date: Sat, 3 May 2025 12:29:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Vikram R <vikram@karlexai.com>
-Date: Sat, 3 May 2025 12:22:48 +0530
-X-Gm-Features: ATxdqUFeR6lU_RnEVAJro_FfmXkXVu0v2jvifaAHY4ZgAQ5wvxxPOXFed4Wd7s0
-Message-ID: <CAELLoAjVdYkmZR15e4TTzy21PxGBu=rbFp31uwMULcFvZx4V4Q@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BANNOUNCE=5D_Call_for_Contributors=3A_ASIOS_=E2=80=93_AI=E2=80=91Nat?=
-	=?UTF-8?Q?ive_OS_=28Kernel_Work=29?=
-To: linux-kernel@vger.kernel.org
-Cc: linux-newbie@vger.kernel.org, kernelnewbies@kernelnewbies.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/7] drm/msm: a6x: Rework qmp_get() error handling
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Viresh Kumar
+	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Maya Matuszczyk <maccraft123mc@gmail.com>,
+        "Anthony
+ Ruhier" <aruhier@mailbox.org>,
+        Dmitry Baryshkov <lumag@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250419-gpu-acd-v5-0-8dbab23569e0@quicinc.com>
+ <20250419-gpu-acd-v5-3-8dbab23569e0@quicinc.com>
+ <skrb5hkl66gt6vr6c42tx2ipfn62uuouztd2g37xlhreeq7nqj@r6ohzexpwmy7>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <skrb5hkl66gt6vr6c42tx2ipfn62uuouztd2g37xlhreeq7nqj@r6ohzexpwmy7>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA1OCBTYWx0ZWRfXxYx8NKd1jrlU
+ 3EhPj1LNv0deJSXgltdFpDVPEwfg63hVQHz8p35itW6qnOpswhvgxPlX4mcOzE53WJ1xFKFMZBr
+ /IJRbpnfsflHCnQ5B1gg5yyZ7FzzkD/v3zO+YsFvQO0K8kiDf5Z51rn2asL8W/HfrNDfMZC+dEp
+ 4Lliax+8sYZq9w0aNcs7nttD9Q7OcFfYUAcw4ccMhvUKV3s5a/T2BvUVovH80fk3HdY4J/ZpG5D
+ dsqss3+NFRKgDvZOq7ffUwHwrwBKNmXakmXq8BgI6CmAr+rRyXLhTkQJBxA/zjSkt7tQpr4xpxH
+ z2C+TolToFuLe3NLdnr7aqBm2VnnBNFpz5ratY5oSxnqBTK6PwM51QcKa3/DFkXFXD1CM6Sew1w
+ Dhgw8Oth9RTxNAp3JQ0FpWVZSZdXZAHCTbedYRqgvvzU+n6ds+fIY62GpnMse6zVFtXOJCtM
+X-Proofpoint-ORIG-GUID: 9QGvogbD9ghAWpoHKMAQYvNAx3dHsIob
+X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=6815bee2 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8 a=b3CbU_ItAAAA:8 a=KmM3JoVms-3i-2Ah5kEA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=Rv2g8BkzVjQTVhhssdqe:22
+X-Proofpoint-GUID: 9QGvogbD9ghAWpoHKMAQYvNAx3dHsIob
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_03,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030058
 
-ASIOS is a new AI=E2=80=91native OS (Ubuntu 24.04 LTS base) bringing
-deterministic scheduling, NUMA=E2=80=91GPU optimizations, zero=E2=80=91copy=
- I/O, and
-eBPF telemetry into the Linux kernel.
+On 4/23/2025 6:58 PM, Dmitry Baryshkov wrote:
+> On Sat, Apr 19, 2025 at 08:21:32PM +0530, Akhil P Oommen wrote:
+>> Fix the following for qmp_get() errors:
+>>
+>> 1. Correctly handle probe defer for A6x GPUs
+>> 2. Ignore other errors because those are okay when GPU ACD is
+>> not required. They are checked again during gpu acd probe.
+>>
+>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> Tested-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+>> Tested-by: Anthony Ruhier <aruhier@mailbox.org>
+>> ---
+>>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> If this a fix for the existing commit, it should come first and have a
+> proper Fixes: tag. If not, please squash it into the first patch.
 
-Key directions=E2=80=94
-=E2=80=94 Deterministic CPU scheduling for reproducible AI runs
-=E2=80=94 NUMA=E2=80=91aware memory placement tuned for GPU DMA
-=E2=80=94 Zero=E2=80=91copy GPU I/O via GPUDirect RDMA/Storage
-=E2=80=94 eBPF=E2=80=91based telemetry hooks
+This patch is dependent on the ACD support patch, so we can't reorder it
+(mentioned in the added comment below). No Fixes tag because qmp
+messaging was unused until now, so there is no point in backports. I
+prefer to keep this patch separate because this looks logically separate
+to me and we are changing the behavior for a6x gpu probe (removed
+adreno_is_a7xx() check).
 
-**Call for contributors:** scheduler/MM, GPU/accelerator integration,
-eBPF instrumentation.
+-Akhil
 
-Project links=E2=80=94
-GitHub: <https://github.com/asi-os>
-Discord: <https://discord.gg/rWuU7cWU4E>
-Roadmap: <https://github.com/asi-os/asios-docs/blob/main/docs/ARCHITECTURE.=
-md>
+> 
+>>
+>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> index 6bd6d7c67f98b38cb1d23f926b5e6ccbd7f2ec53..48b4ca8894ba38176481b62b7fd1406472369df1 100644
+>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>> @@ -2043,9 +2043,10 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+>>  		goto detach_cxpd;
+>>  	}
+>>  
+>> +	/* Other errors are handled during GPU ACD probe */
+>>  	gmu->qmp = qmp_get(gmu->dev);
+>> -	if (IS_ERR(gmu->qmp) && adreno_is_a7xx(adreno_gpu)) {
+>> -		ret = PTR_ERR(gmu->qmp);
+>> +	if (PTR_ERR_OR_ZERO(gmu->qmp) == -EPROBE_DEFER) {
+>> +		ret = -EPROBE_DEFER;
+>>  		goto detach_gxpd;
+>>  	}
+>>  
+>>
+>> -- 
+>> 2.48.1
+>>
+> 
 
-Please reply on=E2=80=91list with questions or join us on Discord to dive i=
-nto
-the design.
-
-Vikram Karlex R
-KarLex AI, Inc. | <https://asios.ai> | <https://karlex.ai>
