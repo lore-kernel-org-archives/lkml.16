@@ -1,98 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.cyberprotect.ru (mx1.cyberprotect.ru [185.232.107.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30036DCE1;
-	Sat,  3 May 2025 18:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E1E7081C;
+	Sat,  3 May 2025 18:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.232.107.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746296921; cv=none; b=uYf6gS+qlhVBFvHqN6WpdyUTg3jvD1rglUjbQ8dv5pPFvRQ9gMhWlYLjEmv5c05PtDP5WtZqcwMyTG+u3WIX3PcMNFyFPYVc/HNenGW+euv5NFX7qAb66AFQLXpnCvqiUys9t0bmPSS07wg4jyHLvW0G1TyVIHUbZyuu6HIRrsk=
+	t=1746297811; cv=none; b=Po14UiayQ99ERbm+7xMSRqLK0w1A3iknYInLCfuZRZNAkVBTy8YM3/d+10n+eejPjG6Xehf7EMQ5o1SWkbY1jjB98bdgIM87dIyyv0RIn3V0it2r6YTdNDgK8z5mYyrVibk6my9+OQ5HNeVLBxyWNFxu9ru3q2ixZcA0XQ3eaAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746296921; c=relaxed/simple;
-	bh=3fKBodp5CHqkWEFP9lvNQWnLHEOn5YEIduo8h9PK+nI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o7ziVV4IWZFFHxUf2ZF1KafTf5aYvhqc7+25g+IRl/qU6BDrcEJPN9BeJZcjFAKg6j1jJYeZySq1bOMfofgie/7ToXjneDQtvb9xe4G3NtKbEI3PtN1gC0pKskxyQHS4E0ExokuuL6TZL9hDwiDK4ForQt+inpF3DCK5l88vbwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuL9IAtO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746297811; c=relaxed/simple;
+	bh=USaZuTsR8q/Z19BZKpqGh4iXZ0cGELGuZYmQNFyB+TY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jqs02RsGLJsfSIQiVyg2xeQ9lEDt2xl62xP2vzURWQ0DeCKnLtd7wrGb8tZ22JoCRztpjZyd+RdHrM3kJjbxHJUqUetNUWdtq8c0tyo2yTrVDq5zSaO9C4FqwO6vFngYCDKHBmWWCSl2ItOVOgDhLkKB+3Wfg202p1grGUsfIhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cyberprotect.ru; spf=pass smtp.mailfrom=cyberprotect.ru; dkim=permerror (0-bit key) header.d=cyberprotect.ru header.i=@cyberprotect.ru header.b=8ZqGtmvY; dkim=pass (2048-bit key) header.d=cyberprotect.ru header.i=@cyberprotect.ru header.b=KGkdryGF; arc=none smtp.client-ip=185.232.107.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cyberprotect.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyberprotect.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuL9IAtO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4890C4CEE3;
-	Sat,  3 May 2025 18:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746296920;
-	bh=3fKBodp5CHqkWEFP9lvNQWnLHEOn5YEIduo8h9PK+nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NuL9IAtOE7d193OKwDBV73buJtEMeabKO9HM7XEjD+YA88mKiDABuwUGNX+FGv4R4
-	 4VDW1tO3Vy2KCTyHsvoSRv8BvS8GJOU8rWIXholkdw6QYaFO/GZmhacyMu+2RD5HI0
-	 dcfPQT/uu+hFaXu11qKuPsmiUSJbhxf+ZoJmm+fbf6GnxZSlE5DPHlNpKR21xM//Bf
-	 2KW3zSwmof5v9vOd2UQx256HHwi4VmgCnx+oW0zYB7iLwUJTpLwHe20qIbSjE2DIVx
-	 iLPt0T7jUHJR+tpo49FRs9as7xJXRVxeq1fzmyjOQm6moyc3+7xYBJ9RKHwEN8+12k
-	 RH27QZpxtPM8A==
-Date: Sat, 3 May 2025 11:28:37 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, pbonzini@redhat.com, 
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
-	ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
- <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net>
- <aBO9uoLnxCSD0UwT@google.com>
- <20250502084007.GS4198@noisy.programming.kicks-ass.net>
- <aBUiwLV4ZY2HdRbz@google.com>
- <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+	dkim=permerror (0-bit key) header.d=cyberprotect.ru header.i=@cyberprotect.ru header.b="8ZqGtmvY";
+	dkim=pass (2048-bit key) header.d=cyberprotect.ru header.i=@cyberprotect.ru header.b="KGkdryGF"
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=cyberprotect.ru; s=dkim; h=MIME-Version:Date:From:Sender:Reply-To;
+	bh=/SyZKvqdJwrb2CSWfcnGSl3g9y4CF8icT7ILLzdG87I=; b=8ZqGtmvYqzie0st09pRbdH0VRz
+	LaUaxUI/in3xRF1pZpJdMoMGmmasMN13AO/ZukxE1DGVYDGCa0sqPvSBcHAw==;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=cyberprotect.ru; s=dkim-r; h=MIME-Version:Date:From:Sender:Reply-To;
+	bh=/SyZKvqdJwrb2CSWfcnGSl3g9y4CF8icT7ILLzdG87I=; b=KGkdryGF98IC+ihtKbQlTiXLRb
+	KJ7UxEr14q0rC7X7wXx4cuiNsvANjNxGAKpTMu6/vZQ7qx00NJJiU22EONhwbuqtjUBlJAWyyTfkd
+	unX+jboqfqFc8Xa+pxW9lTQQ3hBYZJN+0E/DjGpJiFKGcM18mKMVCIJThP/aIchq8N0mctvLqzhjL
+	vMIe9dNMLI4Q/NA3Kgp7ScZieesKuzU4nabWzrvZpqNrcXbw13FJNQrhdKhfu+KjZ/ti1MiXApFiN
+	SLZV/bghoH1zi5E2H3pYme5eWKrlpaVJKxD8bYJeOPXTRDY/oyRxlGYQ6JQJBeZkNexz8LR9XCcR+
+	X8XXsWjg==;
+From: Pavel Paklov <Pavel.Paklov@cyberprotect.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <pavel.paklov@cyberprotect.ru>, Steve French <sfrench@samba.org>, Paulo
+ Alcantara <pc@cjr.nz>, Ronnie Sahlberg <lsahlber@redhat.com>, Tom Talpey
+	<tom@talpey.com>, <linux-cifs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Jay Shin
+	<jaeshin@redhat.com>, Paulo Alcantara <pc@manguebit.com>, Steve French
+	<stfrench@microsoft.com>
+Subject: [PATCH 6.1] smb: client: fix double free of TCP_Server_Info::hostname
+Date: Sat, 3 May 2025 17:57:56 +0000
+Message-ID: <20250503175819.2818701-1-Pavel.Paklov@cyberprotect.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Sat, May 03, 2025 at 11:50:23AM +0200, Peter Zijlstra wrote:
-> > +++ b/arch/x86/entry/entry_64_fred.S
-> > @@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> >  	movq %rsp, %rdi				/* %rdi -> pt_regs */
-> >  	call __fred_entry_from_kvm		/* Call the C entry point */
-> >  	POP_REGS
-> > -	ERETS
-> > +
-> > +	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
-> >  1:
-> >  	/*
-> >  	 * Objtool doesn't understand what ERETS does, this hint tells it that
-> > @@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
-> >  	 * isn't strictly needed, but it's the simplest form.
-> >  	 */
-> >  	UNWIND_HINT_RESTORE
-> > -	pop %rbp
-> > +	leave
-> >  	RET
-> 
-> So this, while clever, might be a problem with ORC unwinding. Because
-> now the stack is different depending on the alternative, and we can't
-> deal with that.
-> 
-> Anyway, I'll go have a poke on Monday (or Tuesday if Monday turns out to
-> be a bank holiday :-).
+From: Pavel Paklov <pavel.paklov@cyberprotect.ru>
 
-Can we just adjust the stack in the alternative?
+From: Paulo Alcantara <pc@manguebit.com>
 
-	ALTERNATIVE "add $64 %rsp", __stringify(ERETS), X86_FEATURE_FRED
-1:
-	UNWIND_HINT_RESTORE
-	pop %rbp
-	RET
+commit fa2f9906a7b333ba757a7dbae0713d8a5396186e upstream
 
+When shutting down the server in cifs_put_tcp_session(), cifsd thread
+might be reconnecting to multiple DFS targets before it realizes it
+should exit the loop, so @server->hostname can't be freed as long as
+cifsd thread isn't done.  Otherwise the following can happen:
+
+  RIP: 0010:__slab_free+0x223/0x3c0
+  Code: 5e 41 5f c3 cc cc cc cc 4c 89 de 4c 89 cf 44 89 44 24 08 4c 89
+  1c 24 e8 fb cf 8e 00 44 8b 44 24 08 4c 8b 1c 24 e9 5f fe ff ff <0f>
+  0b 41 f7 45 08 00 0d 21 00 0f 85 2d ff ff ff e9 1f ff ff ff 80
+  RSP: 0018:ffffb26180dbfd08 EFLAGS: 00010246
+  RAX: ffff8ea34728e510 RBX: ffff8ea34728e500 RCX: 0000000000800068
+  RDX: 0000000000800068 RSI: 0000000000000000 RDI: ffff8ea340042400
+  RBP: ffffe112041ca380 R08: 0000000000000001 R09: 0000000000000000
+  R10: 6170732e31303000 R11: 70726f632e786563 R12: ffff8ea34728e500
+  R13: ffff8ea340042400 R14: ffff8ea34728e500 R15: 0000000000800068
+  FS: 0000000000000000(0000) GS:ffff8ea66fd80000(0000)
+  000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007ffc25376080 CR3: 000000012a2ba001 CR4:
+  PKRU: 55555554
+  Call Trace:
+   <TASK>
+   ? show_trace_log_lvl+0x1c4/0x2df
+   ? show_trace_log_lvl+0x1c4/0x2df
+   ? __reconnect_target_unlocked+0x3e/0x160 [cifs]
+   ? __die_body.cold+0x8/0xd
+   ? die+0x2b/0x50
+   ? do_trap+0xce/0x120
+   ? __slab_free+0x223/0x3c0
+   ? do_error_trap+0x65/0x80
+   ? __slab_free+0x223/0x3c0
+   ? exc_invalid_op+0x4e/0x70
+   ? __slab_free+0x223/0x3c0
+   ? asm_exc_invalid_op+0x16/0x20
+   ? __slab_free+0x223/0x3c0
+   ? extract_hostname+0x5c/0xa0 [cifs]
+   ? extract_hostname+0x5c/0xa0 [cifs]
+   ? __kmalloc+0x4b/0x140
+   __reconnect_target_unlocked+0x3e/0x160 [cifs]
+   reconnect_dfs_server+0x145/0x430 [cifs]
+   cifs_handle_standard+0x1ad/0x1d0 [cifs]
+   cifs_demultiplex_thread+0x592/0x730 [cifs]
+   ? __pfx_cifs_demultiplex_thread+0x10/0x10 [cifs]
+   kthread+0xdd/0x100
+   ? __pfx_kthread+0x10/0x10
+   ret_from_fork+0x29/0x50
+   </TASK>
+
+Fixes: 7be3248f3139 ("cifs: To match file servers, make sure the server hostname matches")
+Reported-by: Jay Shin <jaeshin@redhat.com>
+Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Pavel Paklov <pavel.paklov@cyberprotect.ru>
+---
+Backport fix for CVE-2025-21673
+ fs/smb/client/connect.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+index 01ce81f77e89..2b0657fe2a3f 100644
+--- a/fs/smb/client/connect.c
++++ b/fs/smb/client/connect.c
+@@ -1066,6 +1066,7 @@ static void clean_demultiplex_info(struct TCP_Server_Info *server)
+ 	kfree(server->origin_fullpath);
+ 	kfree(server->leaf_fullpath);
+ #endif
++	kfree(server->hostname);
+ 	kfree(server);
+ 
+ 	length = atomic_dec_return(&tcpSesAllocCount);
+@@ -1688,8 +1689,6 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+ 	kfree_sensitive(server->session_key.response);
+ 	server->session_key.response = NULL;
+ 	server->session_key.len = 0;
+-	kfree(server->hostname);
+-	server->hostname = NULL;
+ 
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
 -- 
-Josh
+2.43.0
+
