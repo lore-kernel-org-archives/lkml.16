@@ -1,176 +1,68 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078C91922DC
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 15:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ADB1AA1E8
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 15:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746285987; cv=none; b=YFnEM9wswVIzHygj1FCxIwxhS+YOUpu9GLZxIrOrjPLv2Q6R6mrouAmgynYmHiyw5QDPNTOagtqb9a83jOgkneHmVdr0dcu9H74C7FgcqPjcuiaHyZ7SNyp1gQH1hdTVzF5s7NW9xL4kKz9Ze3vCQFjmpyNfyfYKF5xPoy0o+6M=
+	t=1746286186; cv=none; b=P0Lgw/aicpIBq18yviFtrwxrJtKrQeuQ+c2ZpzL2dj0Mbq8AS/c17/K+3W7andO+mHvLVxU4GSaXAKBod7fBkT2SXs+3E1Hk4NXrzJWcYztnyXX3xV/Lk17LmRkdvcQarV3JF4tyGqmCwcq+6iu5RPcn+UTsREkz+f3fBA6kiYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746285987; c=relaxed/simple;
-	bh=r11E+HpnRZYCNiloV1sknkTKk2/42qd15cojiZBEXf0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZEXumkY5lXvQGJIoipaTqxVJ5MnuKVqqioYgsuMNp9id/tRThKZOnsShvbbgpdvtkB9kcE7iQ7oGcxwCCT6nRmJ+an+ZqidGQI6+oMqv5HSHBZ7p/M+O4yVqr5AdaELKukZFU0VgbON8R6hxMaSQkvvRqAL2wkczHmLBWL/uB3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d817cf6e72so30379055ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 08:26:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746285985; x=1746890785;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FjEQiCQ1advZTEcLfEU1Q4dTXCIr3UpII6DXMN8vdK8=;
-        b=AqQnneGu2r60CzpUxTZT0ESspalddOvJshgT7JhZ4cQz+jp732NbVugGLYAcvHzZRq
-         92fdUWLknVvAg9/uQmhIrNQuk2okoazinwRSwfXA+cfoWEPsPXfhdfMfxlmC5lVCJcaT
-         Bxqj9X4m7GwGdUBuNvSW3Rd8oVzVNobiqVPgy9HIe3w5mcRQpItYe4UXj0nEi7AOG5yz
-         L+NjYk9paIzMLQ9l9xCxS7tTwAcOJKa5uoBXLcqOqcwKlFbrZZ5oRDScl8Up9wHQ77Md
-         7yovUfsPuR6Yr/9WbkKxd0BLq3JmSseWMWPx4Bp1812X3NuawzNhN9XoB+BC7jWdaaR5
-         T0bA==
-X-Forwarded-Encrypted: i=1; AJvYcCUttQMmHO/OGxKGnJY1iOzddcZ45C19j9dLcbGojEYDG5xgdy9EvFf5W5g51dN3VrQpvchA6lF71wi1oA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8Ag4FCx4i0hoLcDKWW4Sptr+qY25HN4O6ZPEM/gc2VgArbFM7
-	+/3sRaijHxhUMKRXFYqR3qtIqPBMMpv9Yf0UiT5fVZGmvFQnFMjhFG7p0+bsMVuvX9OTpSSjBQr
-	dSvL9/6zGtsMntT3z0dYL9Sj1l3O8hbgCWW/KNnNFcDmv/pzbcPRtzBY=
-X-Google-Smtp-Source: AGHT+IEwI6B+dlKHv/y/aEPxt0aVvx7ZJ7WD6o5hHU84RsVaN6gwX/WD2oCD2wet+VskTJ0A07Ju6JKY057qQT4hNakRZV6worUV
+	s=arc-20240116; t=1746286186; c=relaxed/simple;
+	bh=tpaPvT47aBvZguhH2V6EL4v2nJvM4f4FDtOTXArLw5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQQZMW/lv9+kqs8jWXxIRp1L4TuY4SNaiP7veOQy0Y/cFx9S1DgP/e2VionTeA1Fu/SpHVEwfBsPZjlqMvdcMZpZAl9HcLL3fx2T9e5oAVoQaZwrovgoQVe5IZqM2UIXhNueBcEqecsO2Y18un5JalBmXJbawT0WMnD67YQIRtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=wXY4hZNJ; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="wXY4hZNJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1746286181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9kPzeNn/PbIKy+mZs6eCVZhmWhgjarI79NiBr0GcvpU=;
+	b=wXY4hZNJg+DgzROyV+eG7p9cXGL+S4Gfqqp6d9pOGEiLYD0DBCayxVy2KPWZvxvG4wc4x9
+	0F+eFo1atCuJNsvgomixVqGR98C8O20zHJY9MHWohsIAG6KFf1WpqOq3QwuLvXPEASMxVT
+	2o9HusfPenEp8r0iyemlUaeAfoZcigs/l60mrzsVrFknRMNfwABHgHmxplafBubiv1FWjw
+	Q96yfpJLOTtU0iCVz5NEuXkY6lu9SoCiLi5YuoLoomkGbb5Pg95QyMbc8lrhbAHqJoSDa1
+	Yj4NlcXk2/OjQx/H6WYjD+HbMUs2PBGPK+h1mXcs+Y8F5yDHzVZiLpC6ZbwQ8Q==
+From: Diederik de Haas <didi.debian@cknow.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Dragan Simic <dsimic@manjaro.org>,
+	Vasily Khoruzhick <anarsoul@gmail.com>,
+	Tianling Shen <cnsztl@gmail.com>,
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH 0/2] Add phy+vcc supply to NanoPi R5S and Q64-B
+Date: Sat,  3 May 2025 17:22:17 +0200
+Message-ID: <20250503152917.138648-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:17c7:b0:3d9:6d60:709e with SMTP id
- e9e14a558f8ab-3d97ada9f06mr73351205ab.4.1746285985151; Sat, 03 May 2025
- 08:26:25 -0700 (PDT)
-Date: Sat, 03 May 2025 08:26:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681635a1.a70a0220.254cdc.001e.GAE@google.com>
-Subject: [syzbot] [net?] KASAN: global-out-of-bounds Read in fib6_ifdown (2)
-From: syzbot <syzbot+ba503006f24effba2ba0@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+Testing on my NanoPi R5S and Quartz64 Model B brought some more issues
+with power supplies to light, so fix them as well.
 
-syzbot found the following issue on:
+Diederik de Haas (2):
+  arm64: dts: rockchip: Add phy-supply to gmac0 on NanoPi R5S
+  arm64: dts: rockchip: Add vcc-supply to SPI flash on rk3566-quartz64-b
 
-HEAD commit:    95d3481af6dc Merge tag 'spi-fix-v6.15-rc4' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16fe6a70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=541aa584278da96c
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba503006f24effba2ba0
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bca0f4580000
+ arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts | 1 +
+ arch/arm64/boot/dts/rockchip/rk3568-nanopi-r5s.dts | 1 +
+ 2 files changed, 2 insertions(+)
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-95d3481a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6ece5d5205be/vmlinux-95d3481a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eba7ece24cf0/bzImage-95d3481a.xz
+-- 
+2.49.0
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ba503006f24effba2ba0@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: global-out-of-bounds in fib6_ifdown+0x7f5/0x8f0 net/ipv6/route.c:4901
-Read of size 8 at addr ffffffff9af98530 by task syz-executor/19807
-
-CPU: 3 UID: 0 PID: 19807 Comm: syz-executor Not tainted 6.15.0-rc4-syzkaller-00256-g95d3481af6dc #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- fib6_ifdown+0x7f5/0x8f0 net/ipv6/route.c:4901
- fib6_clean_node+0x2a4/0x5b0 net/ipv6/ip6_fib.c:2199
- fib6_walk_continue+0x44f/0x8d0 net/ipv6/ip6_fib.c:2124
- fib6_walk+0x182/0x370 net/ipv6/ip6_fib.c:2172
- fib6_clean_tree+0xd4/0x110 net/ipv6/ip6_fib.c:2252
- __fib6_clean_all+0x107/0x2d0 net/ipv6/ip6_fib.c:2268
- rt6_sync_down_dev net/ipv6/route.c:4951 [inline]
- rt6_disable_ip+0x2ec/0x990 net/ipv6/route.c:4956
- addrconf_ifdown.isra.0+0x11d/0x1a90 net/ipv6/addrconf.c:3854
- addrconf_notify+0x220/0x19e0 net/ipv6/addrconf.c:3777
- notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
- call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2176
- call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
- call_netdevice_notifiers net/core/dev.c:2228 [inline]
- dev_close_many+0x319/0x630 net/core/dev.c:1731
- unregister_netdevice_many_notify+0x578/0x26f0 net/core/dev.c:11952
- unregister_netdevice_many net/core/dev.c:12046 [inline]
- unregister_netdevice_queue+0x305/0x3f0 net/core/dev.c:11889
- unregister_netdevice include/linux/netdevice.h:3374 [inline]
- __tun_detach+0x1249/0x1540 drivers/net/tun.c:620
- tun_detach drivers/net/tun.c:636 [inline]
- tun_chr_close+0xc2/0x230 drivers/net/tun.c:3390
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xafb/0x2c30 kernel/exit.c:953
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- get_signal+0x2673/0x26d0 kernel/signal.c:3034
- arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fae80990887
-Code: Unable to access opcode bytes at 0x7fae8099085d.
-RSP: 002b:00007ffc98e694b8 EFLAGS: 00000206 ORIG_RAX: 0000000000000029
-RAX: 0000000000000003 RBX: 0000000000000003 RCX: 00007fae80990887
-RDX: 0000000000000006 RSI: 0000000000000001 RDI: 000000000000000a
-RBP: 00007ffc98e69bec R08: 00007ffc98e694dc R09: 0079746972756365
-R10: 00007ffc98e69540 R11: 0000000000000206 R12: 00007fae80b7ec80
-R13: 00000000000927c0 R14: 000000000003d637 R15: 00007fae80b80e40
- </TASK>
-
-The buggy address belongs to the variable:
- __key.0+0x30/0x40
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1af98
-flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000002000 ffffea00006be608 ffffea00006be608 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner info is not present (never set?)
-
-Memory state around the buggy address:
- ffffffff9af98400: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
- ffffffff9af98480: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
->ffffffff9af98500: 00 00 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
-                                     ^
- ffffffff9af98580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9
- ffffffff9af98600: f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9 00 00 f9 f9
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
