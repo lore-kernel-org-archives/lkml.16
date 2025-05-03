@@ -1,85 +1,143 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06411E260C
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 11:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D72417D2;
+	Sat,  3 May 2025 11:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746273161; cv=none; b=B3/FiYbbyVycSCuTzy9iVjwt5dN8avvFHJcB8ClKXIOJBXOsVBa/yo6AUbHFQYiqAFaCHXoYmNN84Eb+ioW1ghlLbGRLTfISDNzNnlIVBWe5XJsA5b6ojRsOrwJVW4MQlmwLJGBSINkIEP9//u2qUb4KLKVa/iS/kxmQrGQ+4FY=
+	t=1746273168; cv=none; b=k9ZZ/FO5KxOdl/G23PEl1I2DjEstG953vq4NBTHPkw9c72RGWmDERtP9/VS1FJvlX+f1gtmuOuTx6kCpfi2mM8lBsQ0ky2xOOvEp2jkB2XcXPDmrj9KLcK4B6OAZFfY3h3F/+G0h7m4Mt/dQ78KerhDGFuS10PE0pEH1yk0v6bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746273161; c=relaxed/simple;
-	bh=+VOkYvZgU76psOdFtOF3W43doZlN1sDEPP5n0VsCTSY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F9EK1xpOn4hILdwgQksWaio2Nn11ZoS4Jfy02Lg+jpGqCLJoPZUQqTYLgDOgnji0HgEHLdRC9xXYsQ/G3CxGWt5gQO0gv+EGdtOGNRb+eYV7gPZyHJGwj2ghn7haZmTD4HyHmuKgayH+TI6RECWaq7ysVhzzASw3SKHbxT93cqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kWBSGrxk; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746273168; c=relaxed/simple;
+	bh=tyWqtL/rut5YPhdVN3q+GvWjCSJidX/06j4iYfBzgBw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XbVEuoNvwC1dD9emW+AcmN0XW5+g5MYZD946oRNDMLF+v84FwlrNrq4e4g/jSIl4jlAinyn/fwGW6JNmD6XmdQDeeyw8eKQ5uDurF9ULuzC5jUk62WRWpneBXqbSwKhatgRq9CmpU3uN+JctTUoij+nk+ci/FtDUQZCPoQgDZi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhKNDZW4; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kWBSGrxk"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746273155;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NCH7FxqQS+cz0AmUB/MfZEOwpq2pP89BZV8jkLcroFM=;
-	b=kWBSGrxklgzmkr9WbO3wU1YeYvf83k6LJ/R/RprDHI+x/Tlr/Wtg6LDc9HgQ8P/50jLDbu
-	3vR1nwNY+v/V86AY/HshAbOqNDUPefvk7FAMFrZD/ygaI3Z0fzu5OnPfMjThc5hYKk7CwC
-	Wpu8S/psWMbHquuogpyTUg6siN7At0A=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ovl: Replace offsetof() with struct_size() in ovl_cache_entry_new()
-Date: Sat,  3 May 2025 13:52:03 +0200
-Message-ID: <20250503115202.342582-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhKNDZW4"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1956211a12.1;
+        Sat, 03 May 2025 04:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746273166; x=1746877966; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fYFsZT9R2VetUjXXmQTVLyqYCEKJfHUeK1FBA0cF88Y=;
+        b=XhKNDZW4nzuqMbIRKVlHvla6E/g3R6LdFtD/u7aexs6YXcKw9o+QJP5hmF1jgHv0+i
+         49EZl199eOA2BjseDv3hyKK3GNtU01LSldQ6ehRa8vkkZ/fLkAg5C5XlZR9lVOPO/FFZ
+         mJgl71JlWljkVUHg4aWSE4balt5nWIxem937la0RR5OXdXL+xISTf/FLFzREG2yvCpTR
+         COX8Dq4/Ko2o1Gh2eZvOSpAfRUZpDUEprB6sR+9qhbiVQBeQjR84CrWIxtAqSvaKvDpb
+         j9F8qFi0Oq3f+Enh1Ng27pHtYLMN/YTIBze1QqvdNHuRYewt6ipJZ+sAhzJcb+WFU7o9
+         Ewtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746273166; x=1746877966;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fYFsZT9R2VetUjXXmQTVLyqYCEKJfHUeK1FBA0cF88Y=;
+        b=hAp6H6HQv7SfocT5+6PbpfRnG72DY5g2bw7QGOs9+4uxw5wAS592YjfvWnuiwMVA5l
+         81/nDF9O+5onjHbNT1BZe0Ebd1DQklJPDZvD3cz7DOh55Axk8XWZX6S+hQHjjLE7YhE+
+         4uTeV/AbpHa6G9iK/gxfy/1gMHR+SkHl5l1UNBGtrvg4b827GZyP6UhZ1oZyFDT9BTw9
+         efNwE5uqA/zr9Oo5XbxeqBA0kYyj8LTyxKP+DZOW9QjnkkPkBBq7WQyeJTBSc4ebNfz5
+         LlEJEiBfp4iFKmFhmhDGWp48uCTbj6Z0rSXAaDRF2dLlE4L6CdmERKUIOskjikSBunc/
+         jG/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXaAW+cpvEiSv90yO4l8uqG+AtYelTxi7f4WvY2USYoSm24vk6B9v+yskgvZIXOm+u1xfnr7GsifYJG3+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKfPBIp1kTyl3WMyr/7OLuEpUNn4FdXLwJ6bsiWIHtIW3JwtnQ
+	+ChWLbFxZ1QhYrNWMzw/Nt5rM/z5s7WMhwjpuM21+uVkYfDrLQTf
+X-Gm-Gg: ASbGnctKAXWbhDfVBdMqcgTjjnDshrJJJdnLg1jssn9AyLo/kWx/NojUQuMMcQ5txpn
+	zKjePPedwj37K6I7Hwx865orS3zfs0N8f26JFzZjQYMZ/4br3TnF0JT7Kkk/VwlKWCtSSlNDVMP
+	6RaWrKOe7OAXuc1TO5Bh/lCfY2AJ8s+3zWEQB7FlbWxADB3a8fytXSQ1I+jCsZ3bJeX243gTjSE
+	KddS/fHltkRgG2qZZlQ0QnmrB46n/E8w53TP2zkIpC1ijaII1cI81QfPbksVevbWrucCwQQeo53
+	NmrzhQ0/yi0KYHJD4xGyS2zuc5PpbDO5NgPBdhyR0rtPJUYJpOES
+X-Google-Smtp-Source: AGHT+IHzLqx/Mq4tjxRSZGRUqqxUAcZk4Rr55wtw7HQwhDfPrVgPnRa9BXlPqHPX1lZMyz81Ef7Dqg==
+X-Received: by 2002:a17:90b:51c2:b0:2fe:994d:613b with SMTP id 98e67ed59e1d1-30a5aedd058mr4089145a91.35.1746273166217;
+        Sat, 03 May 2025 04:52:46 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4745f9a0sm4879878a91.5.2025.05.03.04.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 May 2025 04:52:45 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Date: Sat, 03 May 2025 15:52:31 +0400
+Subject: [PATCH v3 1/3] dt-bindings: hwinfo: Add VIA/WonderMedia SoC
+ identification
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-wmt-soc-driver-v3-1-2daa9056fa10@gmail.com>
+References: <20250503-wmt-soc-driver-v3-0-2daa9056fa10@gmail.com>
+In-Reply-To: <20250503-wmt-soc-driver-v3-0-2daa9056fa10@gmail.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746273161; l=1709;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=tyWqtL/rut5YPhdVN3q+GvWjCSJidX/06j4iYfBzgBw=;
+ b=aBVAj3FRh3C/HeLG1KrEZgKHxNVznXy3dLXZzSekK/QXHKCFcyGSzx6Vc+6KcMmBIQVus65V8
+ ASkpJiy/j07AVcBP9xhmuag+j68tcuVX/SD+BkOLAtnHPf0kKNjFANI
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Compared to offsetof(), struct_size() provides additional compile-time
-checks for structs with flexible arrays (e.g., __must_be_array()).
+VIA/WonderMedia SoC's have a chip ID register inside their system
+configuration controller space, which can be used to identify
+appropriate hardware quirks at runtime. Add binding for it.
 
-No functional changes intended.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
-Changes in v2:
-- Add missing include
-- Link to v1: https://lore.kernel.org/lkml/20250503091535.280888-2-thorsten.blum@linux.dev/
----
- fs/overlayfs/readdir.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/hwinfo/via,vt8500-scc-id.yaml         | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
-index 881ec5592da5..efe4700c797e 100644
---- a/fs/overlayfs/readdir.c
-+++ b/fs/overlayfs/readdir.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/cred.h>
- #include <linux/ratelimit.h>
-+#include <linux/overflow.h>
- #include "overlayfs.h"
- 
- struct ovl_cache_entry {
-@@ -147,9 +148,8 @@ static struct ovl_cache_entry *ovl_cache_entry_new(struct ovl_readdir_data *rdd,
- 						   u64 ino, unsigned int d_type)
- {
- 	struct ovl_cache_entry *p;
--	size_t size = offsetof(struct ovl_cache_entry, name[len + 1]);
- 
--	p = kmalloc(size, GFP_KERNEL);
-+	p = kmalloc(struct_size(p, name, len + 1), GFP_KERNEL);
- 	if (!p)
- 		return NULL;
- 
+diff --git a/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml b/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..b0f425a4a882be8537f9873fdaa4ddf49d3c825c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwinfo/via,vt8500-scc-id.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: VIA/WonderMedia SoC system configuration information
++
++maintainers:
++  - Alexey Charkov <alchark@gmail.com>
++
++description:
++  The system configuration controller on VIA/WonderMedia SoC's contains a chip
++  identifier and revision used to differentiate between different hardware
++  versions of on-chip IP blocks having their own peculiarities which may or
++  may not be captured by their respective DT compatible strings
++
++properties:
++  compatible:
++    items:
++      - const: via,vt8500-scc-id
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    chipid@d8120000 {
++        compatible = "via,vt8500-scc-id";
++        reg = <0xd8120000 0x4>;
++    };
+
 -- 
 2.49.0
 
