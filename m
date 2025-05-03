@@ -1,66 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E641D5ADC;
-	Sat,  3 May 2025 10:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467CC1A841C;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746266770; cv=none; b=sNkNu+DT1CwN5uSSzrW9VrATEoknIT37i4dmFCcU58Hm0Iv+KP3Mog2DFKisu+N/6LCtvispnpkRxUrV6wDJbhJtiP3ZzK6Au++VogQ85AmMqRZQfVEOI0vGqdZmI0ASzFr91roQzVAE0ldSycsyBiMQBRgjkn714nZNwG39IyM=
+	t=1746266836; cv=none; b=KAJhkw7hH0Csi/3gxepkb6ZnJDNTNCVNy1/dsVak8WgwgYFaqRCIMm9eoF1H07DT5pz+sdang3SdTj53xc5s9b928ZZhsn8UwkHZU6cxipQ+NEtIz61GrOERjThCWJUVbyOIBRvmaDjeMwR4jQJsieqIFrVs7Q4cIxrEzNewnr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746266770; c=relaxed/simple;
-	bh=7/cQZqkxkHiOalA49M4Elh0cibV7uEPqheQC1nTN8Io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nhrMxqD6CPEkWpg8Ne9AHA/CwOC5Ss7RtsBbH6msHeAGoqw8fb9cJVrsHAnXK0uaig6dfVMh5jNRmD0082PW+N4vM+G59ez5Uth6KqMDboF98t5eiewUZSsbMmbTScJVRvWSZQlYsBzkjQ/+edtbl+ys2XHew8Niss0g3hcfD88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046B7C4CEE3;
-	Sat,  3 May 2025 10:06:05 +0000 (UTC)
-Date: Sat, 3 May 2025 11:06:03 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, will@kernel.org, nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com, morbo@google.com,
-	justinstitt@google.com, broonie@kernel.org, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org, joey.gouly@arm.com,
-	james.morse@arm.com, hardevsinh.palaniya@siliconsignals.io,
-	shameerali.kolothum.thodi@huawei.com, ryan.roberts@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH] arm64/cpufeature: annotate arm64_use_ng_mappings with
- ro_after_init to prevent wrong idmap generation
-Message-ID: <aBXqi4XpCsN3otHe@arm.com>
-References: <20250502145755.3751405-1-yeoreum.yun@arm.com>
- <CAMj1kXEoYcS6YPU0mBdvijDRK6ZVB7mPYZsCVpz7sYotabrxtQ@mail.gmail.com>
- <aBUHlGvZuI2O0bbs@arm.com>
- <aBULdGn+klwp8CEu@e129823.arm.com>
+	s=arc-20240116; t=1746266836; c=relaxed/simple;
+	bh=bxleu5u97OIiv0Xv9kfYVfxcAPSFPeqSvomHkN8FMOI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Nyzhk51W2gCy7Cj329uIoFdSYQ97FAOXwl/2DLFscUfKX+aQjGuYKXLAh3c1q5JEMeLJlDtUXyitUBTIK/stOyfq91CN2uuvap9hBBIeBruT7SczNnPCUiihLWwVc1m6x0jLOgCGwzPDIsQGTQRIy6s15lchCEuwcQ4pIp9ojA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWf2E/kH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWf2E/kH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B8F93C4CEEB;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746266835;
+	bh=bxleu5u97OIiv0Xv9kfYVfxcAPSFPeqSvomHkN8FMOI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=hWf2E/kHGdRQEj9+Taj8WsRIvcNxwSu1lPELYJ742ucFbBk7K+u2KKHeoeQMwuTSa
+	 lstMEAUvJW79DJCGqQy+8N06P2wlJur3+5Y4WC+t39T5WlJ5X1NES+UnxeC+s00GK3
+	 IGMKTxwTDAWQA31sdIelsojSNkl0sJCDNnpa0SEfSfTpbTrS0tbgsSGt9jvXbyrELq
+	 cgXo0yIIERRWELkKluUVxFmD8HUavqWNoE8SJaL0brQhsgVgEQ2tSp2p3jp1pOkv8+
+	 FIhQsRZKvUFY9n1GrPKW9Rj/dn/MAlAkpBqP30l9i7BGb12F07Jdg5t3fcKaFo9O5r
+	 NmAVRD8+0ou1Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AE8C3ABB0;
+	Sat,  3 May 2025 10:07:15 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Date: Sat, 03 May 2025 10:06:48 +0000
+Subject: [PATCH v4 1/9] dt-bindings: gpio: Add Apple Mac SMC GPIO block
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBULdGn+klwp8CEu@e129823.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-smc-6-15-v4-1-500b9b6546fc@svenpeter.dev>
+References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
+In-Reply-To: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2207; i=sven@svenpeter.dev;
+ h=from:subject:message-id;
+ bh=7EVhNhPla32kZTqn+E4bqYHzUCjdjU3KtFUCmUQI7UM=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4boqyPVVjZlh0udX7netF2fc79rZdm5M/5tNhc4u+ZmB
+ zSZ78vsKGVhEONgkBVTZNm+3970ycM3gks3XXoPM4eVCWQIAxenAEzk5VSGX0xtEn/bj3YcOSdd
+ s9NTLtet7q9g9Y6w19zSV3Mf27lcnMbIMKn+x0XnqqLANRdOsCY+FuZSFSqX/Hv7eueL7roP6pJ
+ anAA=
+X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
+ auth_id=167
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-On Fri, May 02, 2025 at 07:14:12PM +0100, Yeoreum Yun wrote:
-> > On Fri, May 02, 2025 at 06:41:33PM +0200, Ard Biesheuvel wrote:
-> > > Making arm64_use_ng_mappings __ro_after_init seems like a useful
-> > > change by itself, so I am not objecting to that. But we don't solve it
-> > > more fundamentally, please at least add a big fat comment why it is
-> > > important that the variable remains there.
-> >
-> > Maybe something like the section reference checker we use for __init -
-> > verify that the early C code does not refer anything in the BSS section.
-> 
-> Maybe but it would be better to be checked at compile time (I don't
-> know it's possible) otherwise, early C code writer should check
-> mandatroy by calling is_kernel_bss_data() (not exist) for data it refers.
+From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 
-This would be compile time (or rather final link time). See
-scripts/mod/modpost.c (the sectioncheck[] array) on how we check if, for
-example, a .text section references a .init one. We could move the whole
-pi code to its own section (e.g. .init.nommu.*) and add modpost checks
-for references to the bss or other sections.
+Add the DT binding for the Apple Mac System Management Controller GPIOs.
+
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ .../devicetree/bindings/gpio/apple,smc-gpio.yaml   | 37 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 38 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml b/Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..07305eeb2595f59d5c28f6e507295b828dafd4a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/apple,smc-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple Mac System Management Controller GPIO
++
++maintainers:
++  - Sven Peter <sven@svenpeter.dev>
++
++description:
++  Apple Mac System Management Controller GPIO block.
++
++properties:
++  compatible:
++    const: apple,smc-gpio
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++required:
++  - compatible
++  - gpio-controller
++  - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio {
++        compatible = "apple,smc-gpio";
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a70d79a5f6ae98fc0055f1da20dbecc095ea5c65..7f91f0225133490607ba0d79ad4225892ef31a66 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2267,6 +2267,7 @@ F:	Documentation/devicetree/bindings/arm/apple/*
+ F:	Documentation/devicetree/bindings/clock/apple,nco.yaml
+ F:	Documentation/devicetree/bindings/cpufreq/apple,cluster-cpufreq.yaml
+ F:	Documentation/devicetree/bindings/dma/apple,admac.yaml
++F:	Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
+ F:	Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+ F:	Documentation/devicetree/bindings/input/touchscreen/apple,z2-multitouch.yaml
+ F:	Documentation/devicetree/bindings/interrupt-controller/apple,*
 
 -- 
-Catalin
+2.34.1
+
+
