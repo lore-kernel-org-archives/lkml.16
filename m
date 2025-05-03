@@ -1,97 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7C01CD0C;
-	Sat,  3 May 2025 20:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD211A23B0;
+	Sat,  3 May 2025 20:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746304402; cv=none; b=B9PqjWlsnOr9R7AJ9CPUptaayf4LTf31jp/fdhISdiX2IpRSu/oXuss6nYhTAF++ciiEJYvsOQZTDTlpyin3AgPDy1jbi0RRQf7dZyVVXFm/002q0YaEkpBRbGKs7me4TbNd+EdRBBrKXBvxtZbkI72rCEqHeSl3yPxaFGdIL8k=
+	t=1746305011; cv=none; b=XDUVid30vlghu2U4IArDPqwNc2sVGgj7rM73DOjL06PDPuhHdQoNMbu1B609Axztw9Ec8yFWjNWo9MiawQHdCZIBKtYNIhVGcgK/G8Sxh7NMTY5aCIBhRKAPkLSEcLnwczFBoOmGBjEkxfxbFlkYCmTW1ZeqathzHCBv47O5VaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746304402; c=relaxed/simple;
-	bh=lzIwPmqPMdz3XojcJkKNZG+joQBPqTC3+fqltwxxtFQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=D+aF0nKrzZfOnkagcepyYW9eTUKLXx1o4uZ0ltRGn+1iBgJsWoUe8p9LO6pO2AalFpLuyCjlf5bjcqE88NB7b/EkmHNV1LkBMgzcvkAQDbJDYHoQxzf0HSXCQMoOW0hQw9yGV4qgKWREbO0c7x9YcgII37LtaX06LLHw20AdfYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ7YSeyc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746305011; c=relaxed/simple;
+	bh=2kYIDxUSNIhuk6XAdC4IwpYi/8qYhnjXYhU2lSsqvVg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=p2YeXj7XHCyQx7xHQLGiev9uWuLgwt8QgSuPhO2oK0RR/wls+SCP+f33rerQUOHJrX9nSZf4bSvQ89FPlOpMhY3u5wdZDoX9YPDJOVwIKwQok1bGTkgQwFiuUUVCrK9J21GSrMRTSzqSLy5MwOncnQqx8Gk7qgnnubgNyXUaAzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=pN5ooFea; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ7YSeyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A15BC4CEE3;
-	Sat,  3 May 2025 20:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746304401;
-	bh=lzIwPmqPMdz3XojcJkKNZG+joQBPqTC3+fqltwxxtFQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=vQ7YSeycPSASlx4k6K6opncdc46F2A6XnMD8LkzQ8Qn8O5iGgrJ8IpAH87+kUlPwx
-	 /zBmQ5JQzrWoPKSKgj935gVZVLdNCo3Au4HBhVtfCGKWFi/HpLuK6MJlb4b4KpAKVm
-	 yLZW1j4gRYNUOlWC0IL0+u7ee40wKdAvmHzZaO2BOY6/1f8ia9pQWhc7traWGLhibv
-	 E9mwYR8R03GvBVDJ6uqc0PH4SzRxFH9M71zOTYuaFK9TpkK7206ZcrQEsh4LZPVlag
-	 viOSBDMfMjlxFj0k29M9jlatfoU1/AS1blG1L7YQ+05JWE/lEeK9ZPbtIQx+nqDZNK
-	 4jXC06ppAY2cQ==
-Date: Sat, 03 May 2025 15:33:19 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="pN5ooFea"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZqfrX6vc0z9sJ2;
+	Sat,  3 May 2025 22:43:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1746305005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+f8DYjNt9PFVqfIo6Y2nTQ6Nf76jZWR3hZhg9UXSZtI=;
+	b=pN5ooFea8VqSwKhSdv3X8cXmhNOp0oDEsa+k08S18kr31iY7q8poHgZ/XGRPuxVE8y0erV
+	Rbjx5BubcXqZB1wgNmepp2mFYwF7zJ8stfB69/9WodhC74mpEi7oG4SaIliXfNepDXfWb9
+	hDFALnt/PhhEmNUR1H9HQfXuRP0EBhItwxqblzmmZSI6MviRaiexjsPxKFYGtwH4nTAyhJ
+	2i/ccjlUItPrTIbhLWOJgPEHnxd5HpoXLKjfS9jKrDKs3xyX0ABKir3oKO3Ps4Yl00kuzs
+	+IKWVz58xt6BE5FwudyKifKc7bQeRu04q9cSo6EVuI1SzCdgnJQrDXROFZvtcw==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 03 May 2025 16:43:21 -0400
+Subject: [PATCH] usb: misc: adutux: replace kmalloc() with kmalloc_array()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org, 
- Ricardo Neri <ricardo.neri@intel.com>, 
- "Ravi V. Shankar" <ravi.v.shankar@intel.com>, Wei Liu <wei.liu@kernel.org>, 
- linux-acpi@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org, 
- x86@kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, 
- Michael Kelley <mhklinux@outlook.com>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com>
-Message-Id: <174630439938.1202156.1298422301463941407.robh@kernel.org>
-Subject: Re: [PATCH v3 04/13] dt-bindings: x86: Add CPU bindings for x86
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-adutux_kmalloc_array-v1-1-80c74c4bd3e7@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAOh/FmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwNj3cSU0pLSivjs3MScnPzk+MSiosRK3WQLwyTTFPNk4yRjcyWg1oK
+ i1LTMCrCx0bG1tQDjbD3oZgAAAA==
+X-Change-ID: 20250503-adutux_kmalloc_array-c81b5d7c3b37
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1538;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=2kYIDxUSNIhuk6XAdC4IwpYi/8qYhnjXYhU2lSsqvVg=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeFpJalZ2elM5N1NQd3lFbEwxK0dwL1k5YWlhSXJmOFE4Cnc2Tm5ud3l2bngxb3V1K2Fj
+ MlpIS1F1REdCZURySmdpeS84YzViU0htak1VZHY1MWFZS1p3OG9FTW9TQmkxTUEKSnBKMG5KRmh
+ CL3ZWaHFCVlhiY2QrMDdNbmhuQTFUMDUybmJKUnNsTmQvbE1kWG0zSkd5N3hjaHc0WGo3dHB1Zg
+ pESzNNZ3dTZjg2UnZpRGdadTc3dnpiL0hrK2JLejRsMjl2M09CUURFZTB4dAo9RmVGVwotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
+Replace kmalloc with internal multiplication with kmalloc_array to
+improve code readability and prevent potential overflows.
 
-On Sat, 03 May 2025 12:15:06 -0700, Ricardo Neri wrote:
-> Add bindings for CPUs in x86 architecture. Start by defining the `reg` and
-> `enable-method` properties and their relationship to x86 APIC ID and the
-> available mechanisms to boot secondary CPUs.
-> 
-> Start defining bindings for Intel processors. Bindings for other vendors
-> can be added later as needed.
-> 
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
->  .../devicetree/bindings/x86/cpus.yaml         | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/x86/cpus.yaml
-> 
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/usb/misc/adutux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-My bot found errors running 'make dt_binding_check' on your patch:
+diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
+index ed6a19254d2ff9fead898adad0b3996822e10167..000a3ade743258f381d85397395a43c28a8481cc 100644
+--- a/drivers/usb/misc/adutux.c
++++ b/drivers/usb/misc/adutux.c
+@@ -680,7 +680,7 @@ static int adu_probe(struct usb_interface *interface,
+ 	in_end_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
+ 	out_end_size = usb_endpoint_maxp(dev->interrupt_out_endpoint);
+ 
+-	dev->read_buffer_primary = kmalloc((4 * in_end_size), GFP_KERNEL);
++	dev->read_buffer_primary = kmalloc_array(4, in_end_size, GFP_KERNEL);
+ 	if (!dev->read_buffer_primary)
+ 		goto error;
+ 
+@@ -690,7 +690,7 @@ static int adu_probe(struct usb_interface *interface,
+ 	memset(dev->read_buffer_primary + (2 * in_end_size), 'c', in_end_size);
+ 	memset(dev->read_buffer_primary + (3 * in_end_size), 'd', in_end_size);
+ 
+-	dev->read_buffer_secondary = kmalloc((4 * in_end_size), GFP_KERNEL);
++	dev->read_buffer_secondary = kmalloc_array(4, in_end_size, GFP_KERNEL);
+ 	if (!dev->read_buffer_secondary)
+ 		goto error;
+ 
 
-yamllint warnings/errors:
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250503-adutux_kmalloc_array-c81b5d7c3b37
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/x86/cpus.example.dtb: cpus: cpu@0: 'cache-level' is a required property
-	from schema $id: http://devicetree.org/schemas/cpus.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250503191515.24041-5-ricardo.neri-calderon@linux.intel.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
 
