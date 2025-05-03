@@ -1,105 +1,155 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731CA1A8401
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 10:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D771E1E1C;
+	Sat,  3 May 2025 11:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746269505; cv=none; b=sG2kzvacCrjRNGvoRIMBd5PbHVdaz4xzLNzvgUtFLhPmyDzlLVLbE2VLlFOC2yTnhw75HTGUgznvYmGNyilBg3FUVJ+IzK5A8DBM8KRM/3OpUkATEbChh+Nxqi9j9F9QO1YMa+nO2yTB3OS205FwFhSZPA+DVJ+yinIbdqSIz+I=
+	t=1746270649; cv=none; b=WiFjvDnziFPP99I6lHwzpSMmumZoYlbDY8ytJM26T7YiNGZ+1YtwkHi24MvsH7zkp/Tau0vawrlCp1dtGBmPxrnlnBT7HymcgFw9z93Eyg0n+BXg10NIUxmJWvHz92UZUIpHvrADS0/8A8hhZ+Lve6WEy2nQGm7Y9ExznNKS7hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746269505; c=relaxed/simple;
-	bh=dSucHwVtqOFmPoMKpg5Bd4dRqgxmOyXDuUiIVO7MFl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SSNfNGvXYfOaPG3MH/hhwASqBD8UbtLmLwh7jHmNrWanq55kO1kn7ze4tAn/0f1iafXX9y332v1127ax7Qbo7WAOGJWTtrJxO8zdzjutdAC1aOMVeFlDqFeUSGneFSqAjdShrG9hfOUPdb4Y5WBvca0tFkKfiArfQcjxoaHogrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DuDhl037; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746270649; c=relaxed/simple;
+	bh=vXenSqa0GZCAiizDDRHiVREyyv4vVmy/9Ku0iAbN+dI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kUBvpSx9WVltEoYnrxyz70sez/BrzBbwMZ0xKuFwAvzOA3lgXxibUnmgnWVXg9P8i8OONgxhWgJkYcln2qNBNjJIEjhygEi3XHDxlA3ftYb2smJVjMkFszoX1SJbAx58+vaVFiNLn20h6MhKOT/RFtAYOqsZM9WGhrWKBgzQsXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IIxTMjD7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DuDhl037"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efc457bso1894812f8f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 03:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746269500; x=1746874300; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NKmm5TvrPg9oQ1URCXS5LBX8P812WGgG3aH+bVrAxB8=;
-        b=DuDhl037pufB7Yn2LoecGZTfMBEzj1RCwQco/Cy5mo9ad+KJ+fT19K3WtExfW8HY6w
-         rBfXKB89RFl42KfSWIOe7pIW/yo3Al4zuyoIuZXJ8JyeyBs14sq6gmrdpdkpLSRnqqMx
-         aMg4MXJmVnLrh01llHPL8kvgmLvWbznlgX6s33aUc+gtsZxgDdEXJCU8/Sz6TgFP8JLA
-         HYXzT/Pc8v5XuDHeAV20txi7Wx1GF+X3fvfs8BKXkW4SbXS4G+fJaoXi3rjJ9tIF5mcm
-         90jVkQNPPogxrCCYKEIKaL/DdAWNhqHjOMJYn5DJQ7ZLCpAIwMtkJsrb4fixAi5UOBpN
-         jZ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746269500; x=1746874300;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NKmm5TvrPg9oQ1URCXS5LBX8P812WGgG3aH+bVrAxB8=;
-        b=f1yd/gzmDsQ+OlD/taFvmMGWTXkcAkhpWS8UGrZvoTAoZoKMALCjQeGmQ84AzimOqz
-         4myt4KKzl85UENbXWwKACCO3UDsXMCEcdzaXyKOYROY5dUs6RT6piTZqWMPlKAjSUw1L
-         Xgjs5mNNrjU8XpdDLcPQnZz01U6fkKj1kiX7PVh0FyBxpULvfoNZHMDDBJ4aghsKG/R8
-         llbsyvseGJvfmXpeU4YAQfGedjYGX0me9QU60RA4WfYwUnUB7Xbg9GIFGaXUj5zGPAKw
-         tImCxtbAFATA8KAbWEzS36El3NbRcbdBGZ/Ny0xAKdkrx4vhri5VGporgXr31Oi40r3N
-         QGYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqsqwg6FnpOaM2mG0brg0WL5OwdnPvbbwgYs6gx2XV/jcmRTFOvWo/oM+H/Gi8ChDboDqlVaBm0srM1V0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzayzt5Sx+YpES4vJsxCYpCbv5ua1T5QIRI/VAsbtC731/CbIbt
-	tV3H+9ieS9lX/Y7O5UK0rWKCv6D42/q8EJsIo0eO4duK7uSA5dNL
-X-Gm-Gg: ASbGncufamreeTiuelMqGOn26AzIKjOsqy+gFN40Yu63EE6frd/fs+JDGINv+oXKfKM
-	Lf1MEJh/pLVLOm2UJnlzzdNX0Rqf9qOhESUIgK9mLwIq4tBAlPvBTdq8DumgT0J1AFBCsC5F0CS
-	hnFY6tVLNaZLog/5lFqfKz6X/UC0Blyibpddrr7Jtp8190ytgkNJrXIDtAKQd09LTzrQ2amX7kP
-	0TEkutVzXMqPqSLd7r4FOTDc5pOIsLvY252efgma33nraQ2NdmlJFV8QQNUKpYICDqp8vB/zqE8
-	B1FzExy6rfg7ThWy1w44Lt6WFzE8cuI8705c1QQBh4h65O4bsC70kksiVP/2mIWrbjgDJt6wYE+
-	hXaOn2JqArMubdQ==
-X-Google-Smtp-Source: AGHT+IGpvbqKFgXd6ruS4Gr8hR4TzxizfJhYh/jSoL+HlKMpT1QlR7Aji7JVEgjh5nC9pu63SxIg8w==
-X-Received: by 2002:a05:6000:4387:b0:390:df75:ddc4 with SMTP id ffacd0b85a97d-3a09fdbc112mr674998f8f.44.1746269499519;
-        Sat, 03 May 2025 03:51:39 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0fe7asm4579200f8f.61.2025.05.03.03.51.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 03:51:39 -0700 (PDT)
-Date: Sat, 3 May 2025 11:51:37 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>,
- linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>
-Subject: Re: [PATCH -v2] x86/microcode: Consolidate the loader enablement
- checking
-Message-ID: <20250503115137.3c113eaf@pumpkin>
-In-Reply-To: <20250414112633.GBZ_zw6WlMbXr7q7cM@fat_crate.local>
-References: <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-	<20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
-	<20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
-	<20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
-	<20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
-	<20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local>
-	<875xjcteq2.ffs@tglx>
-	<20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
-	<20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
-	<Z_zoG9Dn0u4ngMrj@gmail.com>
-	<20250414112633.GBZ_zw6WlMbXr7q7cM@fat_crate.local>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IIxTMjD7"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5433fuLW009129;
+	Sat, 3 May 2025 11:10:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=4kcWSo/1jWP
+	WH2YjhIK885fOUoUgdAST5h3YUEgrNoc=; b=IIxTMjD7zDNLSdz0zhaL8rLz0A3
+	n68OCYQ2Y+gsC7AE49e8jOp6FyIb3eTPHmNhMs9O0nZiEjpGNajRu2F1SUDEFwZ+
+	ww7lgTKughDwoR3BQHZJ+DBLzvYlDx23v1p/IF9TF8whGSY8WjELuaFPd3eLiG59
+	sFF565OUg1Dd9LtGJarwRMlKaLUVMMrkUew1ww7ACo05GmbkxJFzXNe9cRyNrrjl
+	IiehPfKrN2IwwoM6dJGqGh5tgxORUXjmmR+LAPdX9sVKtRZK+vv5PXV5Qnivz474
+	S59HDcDAiljWKCMQg/g3yZB+P702v53nkaGNADXjs7VwQ25YBhJbWjDozxg==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep0mwx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 11:10:37 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 543BAY22023619;
+	Sat, 3 May 2025 11:10:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7kjmsc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 11:10:33 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 543BAX8A023602;
+	Sat, 3 May 2025 11:10:33 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com ([10.213.97.252])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 543BAXFT023597
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 11:10:33 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
+	id D0618573; Sat,  3 May 2025 16:40:32 +0530 (+0530)
+From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+To: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        broonie@kernel.or, andersson@kernel.org, konradybcio@kernel.org,
+        johan+linaro@kernel.org, dianders@chromium.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Subject: [PATCH v4 3/5] i2c: qcom-geni: Load i2c qup Firmware from linux side
+Date: Sat,  3 May 2025 16:40:27 +0530
+Message-Id: <20250503111029.3583807-4-quic_vdadhani@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
+References: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=6815f9ad cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=zIdmu9zckVospZd7ahEA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: gV4CgntbKIFOWK_ftvcY6amYs39Ctlwm
+X-Proofpoint-GUID: gV4CgntbKIFOWK_ftvcY6amYs39Ctlwm
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA5OSBTYWx0ZWRfX5kvPdaUcL+Fa
+ sgI10ZL0VAoJllbRrmlPRNDOVCW2RA8BA5sxmIS8B022ZhqoTjK5B8eMZ7u2cuQQQ9HA8tKSl7x
+ BoGe2AaBOe7n23niMpHv+2f/42ij846AS3hReX0O6xSHk8AUk10FHt//g/c6OLPCgPglaIlipW7
+ uopHem3izAxkeGjS9EiJU47HjDY7aCrVvpI3VrqZ5EHCp3XxqoeDAENLgZAJ0/bBh8Cvf+pGMcN
+ IfNoRi9gQ9vCM5sMpU53k/VB1usQzqbt0ZZj+44NlAU5hjlgJQP5IxKq5f9KkbB3vVtjb/x/ShQ
+ zQ4T74fcWUR12aiImAETLbM3Qw2tk72NCAquS+5RCAw707Yyn51+OVcw/Mn+vO+tmfrhUPguVlG
+ 91a2uOt/2qdnXn/OCY1pBnbA9uGpETiNdJsb2Bd7DzQo85L1jiFCk2dFUXbmDxKCJKLdrDsj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1011 impostorscore=0 spamscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505030099
 
-On Mon, 14 Apr 2025 13:26:33 +0200
-Borislav Petkov <bp@alien8.de> wrote:
+Add provision to load firmware of Serial engine for I2C protocol from
+Linux Execution Environment on running on APPS processor.
 
-...
-> An additional thing we could do - and since I'm fan of namespaces - we can
-> start supporting a "microcode=" cmdline in parallel and have it do
-> 
-> 	microcode=disable
+Co-developed-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+---
+Dependencies:
 
-You probably want 'loader' in the name as well.
+This patch depends on patch 2 of this series.
 
-	David
+v3 - >v4:
+
+- Add a patch dependency note.
+
+v3 Link: https://lore.kernel.org/linux-arm-msm/20250303124349.3474185-8-quic_vdadhani@quicinc.com/
+
+v2 -> v3:
+
+- Load firmware only if the protocol is invalid.
+
+v2 Link: https://lore.kernel.org/linux-arm-msm/20250124105309.295769-7-quic_vdadhani@quicinc.com/
+
+v1 -> v2:
+
+- No change.
+
+v1 Link: https://lore.kernel.org/linux-arm-msm/20241204150326.1470749-6-quic_vdadhani@quicinc.com/
+---
+---
+ drivers/i2c/busses/i2c-qcom-geni.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index ccea575fb783..97be9e468c75 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -870,7 +870,13 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		goto err_clk;
+ 	}
+ 	proto = geni_se_read_proto(&gi2c->se);
+-	if (proto != GENI_SE_I2C) {
++	if (proto == GENI_SE_INVALID_PROTO) {
++		ret = geni_load_se_firmware(&gi2c->se, GENI_SE_I2C);
++		if (ret) {
++			dev_err_probe(dev, ret, "i2c firmware load failed ret: %d\n", ret);
++			goto err_resources;
++		}
++	} else if (proto != GENI_SE_I2C) {
+ 		ret = dev_err_probe(dev, -ENXIO, "Invalid proto %d\n", proto);
+ 		goto err_resources;
+ 	}
+-- 
+2.34.1
+
