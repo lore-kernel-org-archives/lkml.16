@@ -1,193 +1,214 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2087.outbound.protection.outlook.com [40.107.223.87])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A2619E7F9;
-	Sat,  3 May 2025 05:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746250884; cv=fail; b=mf8RK+HTex/RvqAHXfGkILdG37sWLEdjTc+cfBGweQZn8rtQKrghkUTHYlkfTr7FlnxS3FIffbhE1oy1fQX9UOG+RdYXBuIw73WBtDmJR1EWfEkehm1UXf8a9WuM26Xaq4dh2jxMpcumdaA1TRmhow4EwO56Uy7Kgq7koi+u828=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746250884; c=relaxed/simple;
-	bh=+3ewSb2gk43eXNBUL6zd2bBoekiIsYROn/3nTDKZlJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kAa+c1DixkvgzPkNpultE+qKbX2sBkuG8E3DhDiv7D6tusyx1Nm74wzie9gVrPVB4oxSZIvwAS8qk/MZTcT4L0VpgMgH1t1YjkBSZF7xu2/83dJ8cB0CDVwXJ0eRra1k6GoZ4vA/G+jMrHEAUeahhFI3RRnS44c5NS9fiRenZ/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Atdl2ukd; arc=fail smtp.client-ip=40.107.223.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D819D8BC
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 05:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746250909; cv=none; b=MrnBeLxVP6pYOqH785/lwsoIyjqIvXUsmzIU7TkCAb1QPKwuMJKsefQHRZCaP0UMxUuVTGU3+IJM79PWZfSXmzCGgbeHkzVzicA2ValQjFKDaevy04AsFGmYemWYfbM7DLaGI8OuCH7tedTcpXfKOVt3w+20+2J8GCGLw9/UZSs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746250909; c=relaxed/simple;
+	bh=q0eAETRmKsPtS7GTtwnbg+OJfUU7opW559y9TXWQb2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wh8aOc8gDFj8bokO2exdKaVrJKIIAFMB2q3tbrCU3zerZn+Wt7LQMrP3gPRZvzm1VVkytp+dSRwy1UsGeBVEQPwdAQPeeI/zLVaQRbMnvpd+OJ2IOtYaPt3nZgmJnnafFNRYk6uHAkigN3O2veak780fRjNkepiekXDmKnG12ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RXccz21A; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Atdl2ukd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iMVIO+0pXX4AoEgkjInjLe6bRcCLuwriHD0oduzeDUh08495Yg1kU68wT0G2fqLqhKrNWMM+PR5Yd4Zqe25nmOx9rZz+OC6iAKuOoGM4/gvKxSR9WMU9+UNhCgnwFQRoPcNccCxpZKqHSbAuwksF4bGExX5kk2M535yoLoogBlSGJdRG0TR3pUkiXq+E8KH3dWvNKBHsMhfzRYE4BpvEQI6R1VfPSUlgYMiLE3HAeB1wMnxxp5fnJVmMn8S5ewTBflwAGWpQPbe8sOWgGv0giZwjkIFDOEI13reNjKn8SpMl5bBrCwhj1yojfny18aolGtriJO0djLdGGNGWZZ5WYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xU0HlWDNqmf04tVBW9N6vjdJ2NKVa0JBpRjlAbPQF6k=;
- b=PpJhl7RzOs8WWx+74gXYUCh6FlBK3acqo0d50B15U93Jl52ScZPotx6xBroWS6axLQ3Ir0Xpib2qIo0OjWKdC5uJJM19+OtuPGAtQOccFKXowoIFCUBS/6lEYLUFHzVCE4aQScF5zJ4lV5fZVkAHwqQjbND1v4e0eICXBSG/2CttBwGoV+dcp9QPrGEfIzN4wxpgN12l3zIAv58UL9xKACKhve6+rAQKhOgp+HaCH9QIh/Zh1iiEoUxTsNe2SbfKu/oTf4iKSZOQ0GiovYnvGTi451zAN2AEkiY8Qddx199pOS9jJPXhM+9/8b7iSlq/3w+7bcent0jO4zAeuB1A9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xU0HlWDNqmf04tVBW9N6vjdJ2NKVa0JBpRjlAbPQF6k=;
- b=Atdl2ukdvULEeg1b6wKglCMEvvY80MJTJaiFjsMWp4L0RgFKVMHQnrhn2gQsr71I5eYEJBIFT6dkYbC43O+/Cd3o9lP52Ws4wbUFzZ+FKWwfyMBVlyai2OwT0aVewwmusq8+BPs/U/fmWs8uxoP6G9CdazfMKU9f1ZjW/FgGewoU5XkcgNdgz9gySks7QCj3mCfCKwSuKlJ6PagQkJyWLuwldROmPmCW5pEuEM+oFgMInUeZZxCHLry4SSKwYQVYdDmn9/tpqHGcUMrv5Uqde/QBkMP4mU5Z0YUYdi7ps6/2w7A8A4ZXSEM04hu3rjo+wfZdaaCLyy1R/DQ1qYWmJw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by PH8PR12MB8431.namprd12.prod.outlook.com (2603:10b6:510:25a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Sat, 3 May
- 2025 05:41:16 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8699.024; Sat, 3 May 2025
- 05:41:16 +0000
-Date: Sat, 3 May 2025 07:41:05 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Ihor Solodrai <ihor.solodrai@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Changwoo Min <changwoo@igalia.com>,
-	Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: selftests/sched_ext: testing on BPF CI
-Message-ID: <aBWscQBhh9qRmxAY@gpd3>
-References: <3fb44500b87b0f1d8360bc7a1f3ae972d3c5282f@linux.dev>
- <0a039ded-b67d-4a0c-a851-e3aafff57321@linux.dev>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a039ded-b67d-4a0c-a851-e3aafff57321@linux.dev>
-X-ClientProxiedBy: MI0P293CA0007.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::10) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RXccz21A"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5433kwI9018992
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 05:41:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=5KpXDftb6Ovg8fC5Csp3/qO7
+	lNm71j48LLDisZjHCHg=; b=RXccz21ArRQ/9XUjtN7UQAqSHI/wdL7FyA0x2T0b
+	eDNsTOfwJkfKAEyQpSXzj5wrymxLRI82rbCMy1lb+VRXhgW5cDgWPngBeAbfoVgG
+	p8456VGF3Im0r3QbBuX8jVlS3J71gNVWZ0TotI40mvrCYBEPWghTPgfvwIan6vhs
+	y23wV2i9dA1aM8A7ecTZhXl2BVI4TIQF9fcTznrdlgQQ9VggbuRJBanlpJUTMv4x
+	fq8zR3vw8CTlFYDhx1PF/LXUb34ePUF1R3+NFdaD7dxqrAvFeCdh/vOvCtlpEot6
+	cm/87pcq+bP3jXudjB1Pgr0nXuGAe/+WGRU2C8NsidfWiA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbh7841c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 05:41:46 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4766afee192so14069761cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 22:41:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746250905; x=1746855705;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5KpXDftb6Ovg8fC5Csp3/qO7lNm71j48LLDisZjHCHg=;
+        b=X1MUM9LpycsJjAeBcuJSvoTbnmA5PLiH5tA+anCGQZMvDb3UwL8QxPpSxNTy+xTFSZ
+         6Vkagpcty3pC1FwCK6kY1v0HieKgPa72VwW2ItY2pteVyMvdNw+Yf2MbpPt150iGyqjG
+         fO5AB4GzC5Z08AqPHe60YzWBMHNz8poLUnAAhAfikMcUYdRDMH954lcVnfH6Z5OBWyXt
+         Jpt1ds03ANcL62dxeKAfyQC+cBG0CptpEvasVp/0tpFv7v3+qaZ+5jmHV+RntIuGZ5fU
+         O4iEzxykKOM3QvGeT+cnZ8EqsQNQjwpW514YMVbWs5J88K/Ompq8otFUOa1foH2i8AhM
+         BcPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKNT6Go3lmms9sDfWvZC9lulgABuBOgu+CT1oObG0ug5GxBBLbkAh/gu6sL22iQlWbV/qlTEHk68aNssI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7+cfKHlG/FhEOsoQBoww0Df0Ky6DURUAoJKJR+9aBy+4IQoWB
+	nglXe19O8sA8wCCcNFKY7/sjJNWKI6x71eCMCuikXrlOD5u2aw7WJWOSOR4Vtb90BMqJBp0AtK+
+	P5lY+0t7e4nWUzniAL615cPbVZNGFFcTQmZbpY5MD136WFkzpeyWTBfWBed6Yv90=
+X-Gm-Gg: ASbGncvzCMw/QQNe//4FccP3sPbS6ko0gAPuCdvrC20zj1fTRxWTBgiEgO5ki/2Cqi1
+	ZJ1HThr8KSHuQZpo9N3CWpUnaWwugq2V0akOcffQgjRj7pUcRhQYYC5BvzQN5v5hP/GfVcUqeji
+	geXSVJbBuf/h92ULwAKOWOIDe9LWNySialxp+UlBbHivzUiv2VomiUdzhWqIJthuejCbb0ww32A
+	wsuCfaZi1ikGBoR2URh/dI5WFz9ZiuvF2kaolftTVGTyNM3mxqz8fQihPPYO2uRvBFOJT6aGtCM
+	eM9ZWHoWB6V/bdOBO1+ssFJdrw8gZptwdBIritBgyKSB8sFPLwByuxIompMn8dvEpVJSmd+35KA
+	=
+X-Received: by 2002:a05:622a:59cb:b0:48b:42ca:13d6 with SMTP id d75a77b69052e-48c31160cd0mr65412041cf.7.1746250905550;
+        Fri, 02 May 2025 22:41:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGFrywm96tWAeoxFx5+AhywAWsJxWn4Z/d5zAW0fzBPsXteeqpsqblog7s9PlyRRVInkgDHQ==
+X-Received: by 2002:a05:622a:59cb:b0:48b:42ca:13d6 with SMTP id d75a77b69052e-48c31160cd0mr65411951cf.7.1746250905248;
+        Fri, 02 May 2025 22:41:45 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94b1734sm649908e87.32.2025.05.02.22.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 22:41:43 -0700 (PDT)
+Date: Sat, 3 May 2025 08:41:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
+Subject: Re: [PATCH v3] arm64: dts: qcom: sa8775p: Add default pin
+ configurations for QUP SEs
+Message-ID: <xvmk4paonzafxm5aesu67ggkwpdak2ughhi35wap45rjtuplsk@xe52pvnudsbp>
+References: <20250429173334.303003-1-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|PH8PR12MB8431:EE_
-X-MS-Office365-Filtering-Correlation-Id: 50a77b30-197a-4a48-195d-08dd8a051f1f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BwlJgjKF4di0VSTZB/D4UfGe8ieOSB9dMG0G3/vgRj77C5ensRNAf779CCZr?=
- =?us-ascii?Q?3ge1qI3LsczIt9wowyGr0t2N2zpo2mAYRH/2Dv2r3U/OpZk3EIlibYFLUXN8?=
- =?us-ascii?Q?xOvSg2/gxiiYRNfeuVWo1gGZDPDN8eHwjISEv9lHQj30ek1W8fCjCTLoRT4Y?=
- =?us-ascii?Q?mgC2OQ92O3p9K/50RZs/gauG3BcsK3MMY0Bxp1hJNCwtAUgV4xCqntxetb6r?=
- =?us-ascii?Q?3XafchNCTwAr4cOPkDFvU+oupNRlDwC70F14CzbEcI9iRcaH09tMRwSVYhGn?=
- =?us-ascii?Q?Hlq33fVNx0K/YBr29iq9fa7X+bqfGohPGLPTcZuMFodRi/g/jouFhl2nNsaS?=
- =?us-ascii?Q?UB6M9xoG2EOIGfUunU/Wq1dIDHIoPqM6SNVEoOghvVr7wcVlYKwwcHUQOOTN?=
- =?us-ascii?Q?cRvL+jB1K67vJaWjiqqmlOLTHF3ce2XX5Y+ziq4SWZfafu3cwfSW/C0l/N+s?=
- =?us-ascii?Q?cjzR/W/gKhYd8Lxryo9Bq6ioXsn1pVLcU7ztPWuhXT3KvwJGVdApGP6rv0QJ?=
- =?us-ascii?Q?7SaXfRxjx47UwLdzf6HiZFtUS1zNoCfchnwH+OdN3p9UgqfEwqiCQO22YpeD?=
- =?us-ascii?Q?UGf8TKurM6uoyzg55sLE+gsudgkQ99HsyD1erN3KI40Y6wQcrUkATHTNKnQM?=
- =?us-ascii?Q?5wiMDhj4x3Z0fpyXKtA2YMhmvETgqL5Zb8HCiyI1tgmq+7ASTq5M3EracZcK?=
- =?us-ascii?Q?8Fk5BJqa07h8g5BISurEc8Dr7h4eZpyVSqKlYUXNm6GS/UvU6GXMt6frA3Gw?=
- =?us-ascii?Q?epaQeHkRYl9o53ddytIJVCLB4UbVSIAkNe6pAVP5LbBmfwG3++hMIgi1o6Oi?=
- =?us-ascii?Q?usv9qXJB673q6Z+jlLJu6DUBK3BDj3hYCwvUXtLwm7KF1HvuKZXsE9Vf16OT?=
- =?us-ascii?Q?4oiTAvAy3HPZLrga9ZRT+V82xzmAst6kjCSiUguu77q09q1yswfy9peznZRM?=
- =?us-ascii?Q?1jcs87hCOi7pr/5Fm33vHRFFifIbmax1u6KuV80LqE2z87iW/dnhFoVeYNlu?=
- =?us-ascii?Q?uJCdacjlBWad+BSXjSKn+wQG5P28VCUn9Cfv7ikCkpm57LKiQSJGGIVbQrhD?=
- =?us-ascii?Q?SXcKGIEuFVg8qI9nq4AHW18QbRPS3vXdE8hEUah4Kj2dPiBagw+4taHn/gbt?=
- =?us-ascii?Q?/ELdJyPde57fGaCGBVo6JhDGsCrciAqLMqYownR7AcrY/r3PqTZd6effn9Aa?=
- =?us-ascii?Q?asZZeWkwEmxXzv73GvnujcnoU+Hc0fvGaBpf+9DTYToqOvu27zSchvgdPrKP?=
- =?us-ascii?Q?gYY4d3cuIeyVP5nqAW8+59Y2YwfD9BuuuExVVbfWYfEpOMfIKt+YH/1rk4jo?=
- =?us-ascii?Q?Fpqp7lyPF5sPOYeFgnR9tPI7wx7b2acjhj9Ubez3mOiJ/dKOPvIlxd4u5bYx?=
- =?us-ascii?Q?2tLidLkE6W7i0MhK5mbQuNTjv4mw7Nd+GUWTieDyBzjfJ36h4N+M4lqi43QM?=
- =?us-ascii?Q?KulKqdHf0SE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?viIb34FNytSNtoxsPTGl0Ar/L1affwVQ1Bbn6r3oix0QRGtSiNz8qJZAMSxt?=
- =?us-ascii?Q?Xvf87VzZGDSy2FJisinqoUWa6cetfx/pOE8uLfyQiP87P75iHdUxgG2EOFty?=
- =?us-ascii?Q?N8xJ6U9wYpRPpS7gduJojXfxyiH2CB2czvcAw1ZBK9j7Z0F3pDCHofEslQrr?=
- =?us-ascii?Q?0CWsmbgRrHfuE/fPxxANP5yItfTrbHlrR8TR4a1OokWe16qgWeuPwOI9CBoF?=
- =?us-ascii?Q?T1eyR4Rl+3q46SaZCMSx7ZkWqv4NM1R0yjk90e3D8hSFs2mPJKq5O5GMClQ/?=
- =?us-ascii?Q?Kz028Df/zhKS5qmEB18wOQBHm8mil1gFeVonfZ2VF1Ap4rsSQ22qf1fin1IM?=
- =?us-ascii?Q?Hgq3idH8ne+y9oouhaaO72Efw2Oxg6Rcx+aNpD01NkKBn4xhu7hX2GuAPDey?=
- =?us-ascii?Q?59DmCYaCCoLzmMyFf3u294VeVYf43JeOs0QuY6iX0xbtJp45LibXiGvp7V5y?=
- =?us-ascii?Q?v5NTQHzjVgIretQJR7ExTTCM1H1KoFbS3aPryRBGpM+grU2iWQhK93pC7YGA?=
- =?us-ascii?Q?TMEtMlsBo7nYebiKqqt9qJfpIFD0UsWZ7N7JSPtCUtenBgQneYlPYCXoZ3zU?=
- =?us-ascii?Q?PzuSU8UHYGpGidpuRc55MpN0pQSxr74a/eOlavMrDRJzGpiZx05rXJPFbX35?=
- =?us-ascii?Q?Q24Y4DD+lUmDKNtU13mPf5zX6j8njjO8qPTYSOqjeTkKx9fhowgY+SNdWr+D?=
- =?us-ascii?Q?JlcZcTyPr/C4DPQ6pAoq9jil2OfQYesfiNXSyObXLZ6haJGIHJPrkeH0oF08?=
- =?us-ascii?Q?a4rfSPexjJ2T0QjnCJg9o3vk6BITgglTFk3sSO1NO75J4UDwon1OyDSHfoY5?=
- =?us-ascii?Q?jMBTft0/TaCi0kCOY/VJuUfCq/k6InBbuH7Fw9q7dXJno1TYOE6LzjuwMOUm?=
- =?us-ascii?Q?tM8gu+kFZOKyYELqKqxUhqriZ/a211nPSJaTmPzbccYMq20C1s4UVIc2QK0p?=
- =?us-ascii?Q?3BLF2WQPyoHFiilsiuFuiD5I7yMgqYII2EGRKvz/Nb1BM9pfeZMV4YHHY7XC?=
- =?us-ascii?Q?ExxZpZo73r4GbF/pal+6sLSyEb0X7EPZM8472Znef69mn6aaYNOyFGrhPSHy?=
- =?us-ascii?Q?X06bumFnRANqjI6pQgoa4a1+vy+qonzwk1MEXVtS/zVpt1QcIsb9z6ic3qLC?=
- =?us-ascii?Q?NW4PLzgGvTJa/OCVqyx5THJzOZnXL7nalUT+jVMl6iXWSR84I77tW7TyyHiA?=
- =?us-ascii?Q?pIj0oJTFfE3LCAwxew+GC9oUdj/9emu4rihg/XkzUhWoUazTsDYXTuDLDs85?=
- =?us-ascii?Q?ZwCKW5dv0HqNo0ccUlaX8X2bm6K9lEVm98MY8IqEPCIopXn1Ld6Zog734h9v?=
- =?us-ascii?Q?F5Cezu3xus5gqSLKtGGUChbWKBvjmH4Tcpom8mSrSOOfHhO/NP4kh+9Kkutc?=
- =?us-ascii?Q?Yd5mAe47+xigRgaPdC2sTiQluqDhGe1+T3ivVtGURbSHYhFOzbJ2078Ln1uH?=
- =?us-ascii?Q?yW7Pg960A6oV4ryJhYFNbhg9nRtaz6Pq3yoKsy0QM8FnkdXE+Q9qd9fVMQDT?=
- =?us-ascii?Q?vgRgBmFa48MFyxkTdhrNxfZaebjBYdkLfeJ/aN7G4m5+iSB3011imI1qwewj?=
- =?us-ascii?Q?+Vg+9RAc4syst45GG2DGJ3fieguTwnzC8kY3Ex5R?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50a77b30-197a-4a48-195d-08dd8a051f1f
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 05:41:15.9437
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cu1sbbHRbA9mKuGolkWrUtQT9KYVVbo5RcAkpyHqgEC7pV1IKMZzOUGIfPAXBX573ZsmN08EqL1fmnRaIPoxzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB8431
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429173334.303003-1-quic_vdadhani@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=fMY53Yae c=1 sm=1 tr=0 ts=6815ac9a cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=_CnAHy6i7R4rVe1gsZYA:9
+ a=CjuIK1q_8ugA:10 a=a_PwQJl-kcHnX1M80qC6:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: zFBz23JqEoGZZI8ohn34882kbfjyl-Sg
+X-Proofpoint-ORIG-GUID: zFBz23JqEoGZZI8ohn34882kbfjyl-Sg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA0NiBTYWx0ZWRfXwPDpHc2S7UhW
+ Tew8RaOxx32wuapHBKishh2mm08I1MaYU3jb1e+pfqVwOBXPs5yQ7OOgPiuOU7yuEXTxErQRp6a
+ 2LyYt+NIaRODXhoZ2v40tSOlKDSb+tf0CqswLNwVGj0g8wHkF/I7B6fkqks94arh1XmSyZCEB90
+ dUcK9ogFt6dX6glXKP2zVTIUmP8howl5DdPy+OoAPWlZikxhwJGdemIiVspUvYh2FyATBDSc4ZL
+ rFmJW/GXFtDZXk6jF3zexvYnZmJ9YllJlVyK8yd19ANAhchH5vSrHS+UMbSypsITA9wzVc1KUFQ
+ Gf0+FKR7imaf/r0niLtg801g1x/gc8xLakJJTXPuTVInGUFMV1zmBk7BVEWvPMtsXf3RNVquBmM
+ C3aytZAmpl6qyBKMr4IbrNCI+9LvyuUN8ufiYHFCoTVbtd7ci4ne14DLMO3ajZGud2zw5i3n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_03,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=988 malwarescore=0 spamscore=0 mlxscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505030046
 
-Hi Ihor,
+On Tue, Apr 29, 2025 at 11:03:34PM +0530, Viken Dadhaniya wrote:
+> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
+> Serial Engines (SEs) are missing in the SoC device tree. These
+> configurations are required by client teams when enabling any SEs as I2C,
+> SPI, or Serial protocols.
+> 
+> Add default pin configurations for Serial Engines (SEs) for all supported
+> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
+> change facilitates slave device driver clients to enable usecase with
+> minimal modifications.
+> 
+> Remove duplicate pin configurations from target-specific file as same pin
+> configuration is included in the SoC device tree.
+> 
+> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+> ---
+> v2 -> v3:
+> 
+> - Remove duplicate pin configurations from target-specific file.
+> 
+> v2 Link: https://lore.kernel.org/lkml/20250324151047.842648-1-quic_vdadhani@quicinc.com/
+> 
+> v1 -> v2:
+> 
+> - Drop drive-strength and bias property from soc dtsi.
+> - Update commit log.
+> 
+> v1 Link: https://lore.kernel.org/lkml/20250225154136.3052757-1-quic_vdadhani@quicinc.com/
+> ---
+> ---
+> ---
+>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |  35 -
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 750 +++++++++++++++++++++
+>  2 files changed, 750 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> index 967913169539..3b4243ef37e7 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> @@ -508,15 +508,11 @@ queue3 {
+>  
+>  &i2c11 {
+>  	clock-frequency = <400000>;
+> -	pinctrl-0 = <&qup_i2c11_default>;
+> -	pinctrl-names = "default";
+>  	status = "okay";
+>  };
+>  
+>  &i2c18 {
+>  	clock-frequency = <400000>;
+> -	pinctrl-0 = <&qup_i2c18_default>;
+> -	pinctrl-names = "default";
+>  	status = "okay";
+>  };
+>  
+> @@ -678,8 +674,6 @@ &sleep_clk {
+>  };
+>  
+>  &spi16 {
+> -	pinctrl-0 = <&qup_spi16_default>;
+> -	pinctrl-names = "default";
+>  	status = "okay";
+>  };
+>  
+> @@ -712,80 +706,53 @@ ethernet0_mdio: ethernet0-mdio-pins {
+>  		};
+>  	};
+>  
+> -	qup_uart10_default: qup-uart10-state {
+> -		pins = "gpio46", "gpio47";
+> -		function = "qup1_se3";
+> -	};
+> -
+>  	qup_spi16_default: qup-spi16-state {
+> -		pins = "gpio86", "gpio87", "gpio88", "gpio89";
+> -		function = "qup2_se2";
+>  		drive-strength = <6>;
+>  		bias-disable;
+>  	};
 
-On Fri, May 02, 2025 at 02:40:45PM -0700, Ihor Solodrai wrote:
-> On 2025-01-28 4:21 p.m., Ihor Solodrai wrote:
-> > Hi Tejun, Andrea.
-> > 
-> > I tested a couple of variants of bpf-next + sched_ext source tree,
-> > just sharing the results.
-> > 
-> > I found a working state: BPF CI pipeline ran successfully twice
-> > (that's 8 build + run of selftests/sched_ext/runner in total).
-> > 
-> > Working state requires most patches between sched_ext/master and
-> > sched_ext/for-6.14-fixes [1], and also the patch
-> >    "tools/sched_ext: Receive updates from SCX repo" [2]
-> > 
-> > On plain bpf-next the dsp_local_on test fails [3].
-> > Without the patch [2] there is a build error [4]: missing
-> > SCX_ENUM_INIT definition.
-> > 
-> > We probably don't want to enable selftests/sched_ext on BPF CI with
-> > that many "temporary" patches. I suggest to wait until all of this is
-> > merged upstream.
-> > 
-> 
-> Hi everyone. I tried enabling sched_ext selftests on CI today, and there
-> are no issues on bpf-next tip (f263336a41da).
-> 
-> https://github.com/kernel-patches/vmtest/actions/runs/14802453691
-> 
-> If there are no objections, I'm going to push this to BPF CI on Monday.
-> 
-> As a reminder, this means that selftests/sched_ext test runner will be built
-> and executed for pending BPF patches, and BPF CI pipeline will fail in case
-> of problems there.
+If you are movign parts of these pinstates to the sa8775p.dtsi, then you
+should also turn these declarations into label-based updates:
 
-I don't have any objection. The sched_ext selftests are in a stable state
-now and I think it's a good idea to run them periodically against the
-latest BPF patches to catch potential breakages early.
+&qup_spi16_default {
+	drive-strength = <6>;
+	bias-disable;
+};
 
-Thanks,
--Andrea
+Otherwise the configuration is fragile: if the name gets changed, then
+two parts will not match.
 
+>  
+>  	qup_i2c11_default: qup-i2c11-state {
+> -		pins = "gpio48", "gpio49";
+> -		function = "qup1_se4";
+>  		drive-strength = <2>;
+>  		bias-pull-up;
+>  	};
+>  
 > 
-> > You can check the full list of patches here:
-> > https://github.com/kernel-patches/vmtest/pull/332/files
-> > 
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/log/?h=for-6.14-fixes
-> > [2] https://lore.kernel.org/all/Z1ucTqJP8IeIXZql@slm.duckdns.org/
-> > [3] https://github.com/kernel-patches/vmtest/actions/runs/13019837022
-> > [4] https://github.com/kernel-patches/vmtest/actions/runs/13020458479
-> 
+
+-- 
+With best wishes
+Dmitry
