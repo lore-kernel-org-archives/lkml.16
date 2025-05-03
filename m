@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AA51E47BA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5A1E633C;
 	Sat,  3 May 2025 10:07:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746266836; cv=none; b=I8L5GURAC8ipl/qgK3moiuglhvHNkQmbzGW+I/H0NH1my+p+3fBFtP+iVUq9rFLPwHsSssZiBq1YlOZkNMcFnZMmJFLyKMvRr9T4fwUPO1ufSPszdGIEWU/hUk3jDFiERQ2MS+R/Iw9TCrORTzutADbatG0f1M5oQW7x2uEQPvE=
+	t=1746266836; cv=none; b=YsPeueGyRqZ3vxZz7ZtEm/sV7wnt//QUP/FczCazI1N0IiDwlEeFJNCm836BDo1yCWMgQvaN52OcDTHk7nUtoy3sCPozeCNAIO0WNmBKRXtDu1XfpWGlIPYSuCgCcicGs07DxqGuiJjKdatJ2TsKYoPqvQ1hrU+Wi69wR3rGWXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746266836; c=relaxed/simple;
-	bh=SeVbHk3bm1013tFt4ArF0cJJ34AgTIU3dpY3JE5P3G4=;
+	bh=wtZXovpm5BhGJm95IGnSaS5EDCcED8O/F+H6LBoX7x4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f+cbEPz3fNp2kFl848emif/sx9iskK03stLcIJvk5iGM8M0sDXXDoMCKi7+COa4EIF7X6WYi1ovHd3/ikf7iVz+eHZwdD9O0QSk6lMGugXLm/kxIR0BeqdT0mSKLInCJg953ZX6y51QHBqXNUfSestKc7+vVMA6xQfujKGdScgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osOdCdGh; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=si/SG26Yj425tZHeyV8Qcoe6knxoTAM7eHwwPj8sxeQwEH9DZo0MRG3A0kjnLGoP3Js8JJm1HP9AD4aggNGP9V0b7okN8qtn8+deeMwunR594LIfAfa7H+RhEFadtmBcdOKfNiu/izKrGaUs1pvQBLRKBu/C7IiCq+2lqkFxpWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BogwD8M7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osOdCdGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 126FAC116C6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BogwD8M7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 28433C116B1;
 	Sat,  3 May 2025 10:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746266836;
-	bh=SeVbHk3bm1013tFt4ArF0cJJ34AgTIU3dpY3JE5P3G4=;
+	bh=wtZXovpm5BhGJm95IGnSaS5EDCcED8O/F+H6LBoX7x4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=osOdCdGhQkN5wlfkS0yBTImO91xlWQ5xQmfkR0pyRsPBxxG7YmqUL2YdCeObpPJ7j
-	 ttcvsZHM9ws+ULWZkwFc9uqrpPBUcHs13aPqMjACxAEZ/Fh4wpPJL+bkU1W41GCpdF
-	 Xqozf2gIGknw2v2byG8QYiEipxVDoQN71MG9YwJVnPyw8zqyOEKFBfHen8C94cXUnC
-	 g6W+GZR6R02QidBkyDkJk9GwyjN5pokdd6AsW18HEFxXBXoJ4t0HLGwwJHOskMUGQ5
-	 C3nZXz5d0lQfpbjopV1mBqJ8us2rGI7IckAA/nLwt90pYv59HFrKprK9/pUdu2bEuu
-	 6QbkAFSEJoWRg==
+	b=BogwD8M7HMB/x7SVFn1jYO+cavA321UBBoBa/l+GLpcW+okTS1MP+FG1YVaz0OB7Z
+	 xqqAV1XWt8j10H+ZnxybsDD3JZBB3Y7GofsiCx5KkPaLXJQXZq1atriVefLwRWMIML
+	 ytgN1yZPer4HTlm6mQjReOm1NXN7B4ehmHSyAlphGPxrG1cA8DSy4VsDEFkqXlaROy
+	 oOqn/dPQOPFM5Jc1WiWoUynpAMYQvPZR1otb3k2A4V/8Hu2gq8UqgxM1wTA+cS8XU6
+	 76Asfd1iuyW+DoacH/d34AkjMWolnASr2M1a8D31BniwUu07z2Dl5mXVh5MvOBPVlJ
+	 To4n0O5+ZPQUw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08260C3ABB2;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A6FC3ABB0;
 	Sat,  3 May 2025 10:07:16 +0000 (UTC)
 From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Date: Sat, 03 May 2025 10:06:54 +0000
-Subject: [PATCH v4 7/9] arm64: dts: apple: t8103: Add SMC node
+Date: Sat, 03 May 2025 10:06:56 +0000
+Subject: [PATCH v4 9/9] arm64: dts: apple: t600x: Add SMC node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-smc-6-15-v4-7-500b9b6546fc@svenpeter.dev>
+Message-Id: <20250503-smc-6-15-v4-9-500b9b6546fc@svenpeter.dev>
 References: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
 In-Reply-To: <20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev>
 To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
@@ -55,13 +55,13 @@ Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2037; i=sven@svenpeter.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1851; i=sven@svenpeter.dev;
  h=from:subject:message-id;
- bh=t/YZFmmAcri76xOjcBnVdujID0Y2bH/dcODoZmGa3f0=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ4boq7MeG3W3qXSEGHU7XnX4k70gfznLNR+3c65/388Q3
- hyf5RbcUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZjIvrWMDCd3rNuu9u14Eo+m
- 5O7ptnp/dfU5RDday606aJ/uJ+ync4uRYc1k21x2/h0LWAymebWmyah7GDRP8zG+fJC38IPgkuC
- pnAA=
+ bh=asgFHWE+Y4/VDiSrToyfl0Yn74umJgKBLDT/bgdqN0Y=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4boqwv9W1hXrXl85egORZ91dt9vt2mWbwp2t1jwcpbQo
+ iZtZbvlHaUsDGIcDLJiiizb99ubPnn4RnDppkvvYeawMoEMYeDiFICJ7E1h+O/0KJ1lw8S3t4Sn
+ nIqs/utTsnt9fvKpI6eui0U/2xy7WW4Kwz/lCyVLRDfu6pJbtsBpXnWb75mKshP8apu79c7MOjk
+ 7fCoHAA==
 X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
  fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
 X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
@@ -72,60 +72,57 @@ Reply-To: sven@svenpeter.dev
 From: Hector Martin <marcan@marcan.st>
 
 Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Sven Peter <sven@svenpeter.dev>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sven Peter <sven@svenpeter.dev>
 ---
- arch/arm64/boot/dts/apple/t8103.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi | 35 +++++++++++++++++++++++++++++++
  1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-index 20faf0c0d80927b2e18dd966a61b5507b322c72f..58270e7d79b07ee98340f140972a6f0d14c86dcb 100644
---- a/arch/arm64/boot/dts/apple/t8103.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-@@ -836,6 +836,41 @@ wdt: watchdog@23d2b0000 {
- 			interrupts = <AIC_IRQ 338 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+index 110bc6719512e334e04b496fb157cb4368679957..4993a8ace87b2fc7e645b08c19fcd9b0c21896aa 100644
+--- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
++++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+@@ -24,6 +24,41 @@ aic: interrupt-controller@28e100000 {
+ 		power-domains = <&ps_aic>;
+ 	};
  
-+		smc: smc@23e400000 {
-+			compatible = "apple,t8103-smc", "apple,smc";
-+			reg = <0x2 0x3e400000 0x0 0x4000>,
-+				<0x2 0x3fe00000 0x0 0x100000>;
-+			reg-names = "smc", "sram";
-+			mboxes = <&smc_mbox>;
++	smc: smc@290400000 {
++		compatible = "apple,t6000-smc", "apple,smc";
++		reg = <0x2 0x90400000 0x0 0x4000>,
++			<0x2 0x91e00000 0x0 0x100000>;
++		reg-names = "smc", "sram";
++		mboxes = <&smc_mbox>;
 +
-+			smc_gpio: gpio {
-+				compatible = "apple,smc-gpio";
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			smc_reboot: reboot {
-+				compatible = "apple,smc-reboot";
-+				nvmem-cells = <&shutdown_flag>, <&boot_stage>,
-+					<&boot_error_count>, <&panic_count>, <&pm_setting>;
-+				nvmem-cell-names = "shutdown_flag", "boot_stage",
-+					"boot_error_count", "panic_count", "pm_setting";
-+			};
++		smc_gpio: gpio {
++			compatible = "apple,smc-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
 +		};
 +
-+		smc_mbox: mbox@23e408000 {
-+			compatible = "apple,t8103-asc-mailbox", "apple,asc-mailbox-v4";
-+			reg = <0x2 0x3e408000 0x0 0x4000>;
-+			interrupt-parent = <&aic>;
-+			interrupts = <AIC_IRQ 400 IRQ_TYPE_LEVEL_HIGH>,
-+				<AIC_IRQ 401 IRQ_TYPE_LEVEL_HIGH>,
-+				<AIC_IRQ 402 IRQ_TYPE_LEVEL_HIGH>,
-+				<AIC_IRQ 403 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "send-empty", "send-not-empty",
-+				"recv-empty", "recv-not-empty";
-+			#mbox-cells = <0>;
++		smc_reboot: reboot {
++			compatible = "apple,smc-reboot";
++			nvmem-cells = <&shutdown_flag>, <&boot_stage>,
++				<&boot_error_count>, <&panic_count>, <&pm_setting>;
++			nvmem-cell-names = "shutdown_flag", "boot_stage",
++				"boot_error_count", "panic_count", "pm_setting";
 +		};
++	};
 +
- 		pinctrl_smc: pinctrl@23e820000 {
- 			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
- 			reg = <0x2 0x3e820000 0x0 0x4000>;
++	smc_mbox: mbox@290408000 {
++		compatible = "apple,t6000-asc-mailbox", "apple,asc-mailbox-v4";
++		reg = <0x2 0x90408000 0x0 0x4000>;
++		interrupt-parent = <&aic>;
++		interrupts = <AIC_IRQ 0 754 IRQ_TYPE_LEVEL_HIGH>,
++			<AIC_IRQ 0 755 IRQ_TYPE_LEVEL_HIGH>,
++			<AIC_IRQ 0 756 IRQ_TYPE_LEVEL_HIGH>,
++			<AIC_IRQ 0 757 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "send-empty", "send-not-empty",
++			"recv-empty", "recv-not-empty";
++		#mbox-cells = <0>;
++	};
++
+ 	pinctrl_smc: pinctrl@290820000 {
+ 		compatible = "apple,t6000-pinctrl", "apple,pinctrl";
+ 		reg = <0x2 0x90820000 0x0 0x4000>;
 
 -- 
 2.34.1
