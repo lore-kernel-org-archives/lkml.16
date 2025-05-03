@@ -1,70 +1,48 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B34F28150E;
-	Sat,  3 May 2025 19:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AF32820B8;
+	Sat,  3 May 2025 19:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746302394; cv=none; b=ENUh1l+fZB9FjhCliT5ERrGCHf/SCqHoNiUipf0hWZy4OKut5Vvsxq1PTLGJWCB2HShH2c1iKy3pmtatZ9cKsdRmHo8qbdS+yethcGE+ev+w9T6dR2jH3hc4085A5KT17yzUbXfV0ud5neWms/UgFhEiDcy+3nMnp1KvOhfev4M=
+	t=1746302394; cv=none; b=fyr7tcgqRnr5XQ/NOHQkNgt8/AWenK/bH8bck1HSXeekGMfGrzZb8I9SMtIo+jZiu+Zr+8wiQluReYuqFaBilUpZ7VpJKvvXJHS3bu7T7sVrkPcPLyYO0f3aBqnoJL6OxzF4EIBYxUuLhDpu9K8a1wmX7gBq9iUDi0Hs39jUt2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746302394; c=relaxed/simple;
-	bh=gU74hqXq8gUI3W0CQRs8UPvO2W64+odu6oE3qMydXNk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ieRUFJlpMWnWaAFOGlRKpXsvet8XJO/EwE9LP9iPmoZrOWezt2gYN33Pp87KjCEZjt7id+OKaXZ5VTJY7gGLx5XEDvCmcDV86/mkULeMlR2Nu3t9+CFssnXOnzdbGwt7WGOiH0FZuQm+pWlfjsX5zLW3ER9Nk08zHR3OUnyctEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BlaE5EW6; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=hXJpa8SOENSd84UvNO/LlV+Wj+S1H3eee9wa5eQWBmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q5qKG6l6r/nU9xpY1/F+CfVKT86DLiUc2WOz71+ZofGVseCydKXwJF7lXaCHb1Lczzv9G2+pY4wR7ITdQU1G249qjpqdFMvJn3BY8PVTyhxBbtQV70aSSmp0ezRE8NPgyyq160/gY6Eaev/HBnEWMtcbZzxqwBbumfV/ffPLiig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qakcm/7a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlaE5EW6"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8f254b875so35064616d6.1;
-        Sat, 03 May 2025 12:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746302391; x=1746907191; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1mbnIenwaAh9cJypd/Gpwl4cnjxkwwDmZM+HdWEs+o=;
-        b=BlaE5EW6vP4bghJ4kPIskJEblK3Y6NUcPyukaGs24D3f7rxNOmfCntYulieXAPWzZC
-         DAJVHq8HEZI7/6fYzmR8ol0LKToxweJ57oK7uCwedBrp0rl2/Lm5LSNeJITP76/QaiJa
-         sbfqcGLg8uGYXWNbhB4CwqTikDwxF4790DananL+V02hLuLzwsElkmyMmOpzcbwar/U7
-         lA+vW+bR+y8JUo7/vUQOeC3khT1LeLADQcgXBUyIb7QkrnnPWZkzl7766OEe9vlzthJk
-         MxSc7SlVGAWJfLrGgjOQvfBjSJPEJegsxVsESzYklZQBUFKYFvto8uns8rbHG13bFGAc
-         yitw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746302391; x=1746907191;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s1mbnIenwaAh9cJypd/Gpwl4cnjxkwwDmZM+HdWEs+o=;
-        b=ppbPOCq7hUBFAphm/MeEwAzLJN+71BjvPCeFjVpyL4iTRvsaFfzRvaMuquSuvMRzXp
-         jNuN6TeWFYE/K5Ws7LKftgmOItuqDsq5o+0l9hiC/Oj13QZXib2MJ252y3DNIBHzpFDo
-         lKT/pV5usAAR8JdHQuoXArdWRt4Tdnfg75WiBdna3C7p0ISxdpfokVspxvxvlLvwGPHZ
-         qhbKDIBLIp0pLPlqcKGR4odhJGZ6eqPUoJaSpAfav+rnmlPX+/hbSH7pRn0QAtpYPaVw
-         x2Ri5oxHMFvRhDeI21G1RgYG2K38e5La1t4XxW5ZhmI4HW/Wj9GPHMWlFEHbgA3V3XBG
-         M5eA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgQKZcCJy7SeMFjrAGHd7z2d7TAMLXALba3Si42ZqbKXpN7wxc7ELSl7V7pPu3uWVmXSNt5QXQUAw+awQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS6Ckl4apP5xHmmI5OBX5Ro08Maf168Hbkg+7ltEGbwBusvyog
-	e7bED5HQ9DENe/D2XYUq/pePCATMErKHQi9uz6JVZ8DBk5cFcldi
-X-Gm-Gg: ASbGncuufeUFWSAK2InMLG8F/1VpL7WrPDfy9D1y6s1uEZPca4XyaOEXPWvLumAMuxG
-	wZ5Cc1Sc4svE58uTH78y4SHqj50aGF2BQ96pkQJdeiqvYH4o9vlpjpSeE0uopFAGD3zBf1ASBcD
-	FndzZhXBpSRdH5c7znxkGR+PzlcQI/WXTz/1a4Y8AmVFOfsikKV3OVW1w4a3oFJ4WuF4gla0v0p
-	fb8JUDJxhgsCf9LAmgC9QpW9v+XTC2DtigGfdvKfvKnRefEWWDw8ReI9PHi79pGuYO9kiNReNEV
-	537/p6zPJvzP2b12RM4PwlXvnZygx4oMq8o2csTBo5rz7ipkCDMxs1NtBCZC9hgxu/xnbkUx
-X-Google-Smtp-Source: AGHT+IEcjJdx+HiU3ArdgIRP5VndtHr6Bi6xFwtCX+gArCzOlQZ9wL3L1AhJJLgejhW51g3y+bWe0w==
-X-Received: by 2002:a05:6214:404:b0:6f4:c8c9:c4fb with SMTP id 6a1803df08f44-6f5237552e3mr47167386d6.11.1746302391081;
-        Sat, 03 May 2025 12:59:51 -0700 (PDT)
-Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3b03ddsm35310866d6.7.2025.05.03.12.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 12:59:50 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: shuah@kernel.org,
-	brauner@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH] selftests/filesystems: Fix typo in file_stressor.c
-Date: Sat,  3 May 2025 12:59:11 -0700
-Message-ID: <20250503195911.426158-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qakcm/7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C291FC4CEEF;
+	Sat,  3 May 2025 19:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746302394;
+	bh=hXJpa8SOENSd84UvNO/LlV+Wj+S1H3eee9wa5eQWBmM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Qakcm/7ap110weZv79I9oAWDD2FfDBoIJdGyACJEvXwM5a3ZdQH1rhSVN8t5Oq4yH
+	 XIZu4ceL3c729QGDBpp+0an/ZcLyvM1Dwht2oIhkr7VM6zBAs2bkOlyvHWxhUeEkbr
+	 2SV/wl7u8YTgb1KhrE/h73A912CkU4Ss0sNqrn4qMLBByOySF2v+OcD3Wp7ouhmBT9
+	 0u+45wfzQ++sFRPZM3AWFG+YSfVDGDtxWrbC6ekcOw3fqZhqD6kQ4AFgXlISQm/fq+
+	 mGPWLb/FcR+dI1ry6/WjmL/er/eEEq/IGuVqtH75QjJGn7P5ZM1p9jTRHBHjiCv2GD
+	 ea6MwS3W/hDsA==
+From: cel@kernel.org
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>
+Cc: sargun@sargun.me,
+	<linux-nfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 14/18] nfsd: remove old LINK dprintks
+Date: Sat,  3 May 2025 15:59:32 -0400
+Message-ID: <20250503195936.5083-15-cel@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250503195936.5083-1-cel@kernel.org>
+References: <20250503195936.5083-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,26 +51,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change spelling from rougly to roughly.
+From: Jeff Layton <jlayton@kernel.org>
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Observability here is now covered by static tracepoints.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- tools/testing/selftests/filesystems/file_stressor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs3proc.c | 7 -------
+ fs/nfsd/nfsproc.c  | 7 -------
+ 2 files changed, 14 deletions(-)
 
-diff --git a/tools/testing/selftests/filesystems/file_stressor.c b/tools/testing/selftests/filesystems/file_stressor.c
-index 1136f93a9977..01dd89f8e52f 100644
---- a/tools/testing/selftests/filesystems/file_stressor.c
-+++ b/tools/testing/selftests/filesystems/file_stressor.c
-@@ -156,7 +156,7 @@ TEST_F_TIMEOUT(file_stressor, slab_typesafe_by_rcu, 900 * 2)
- 			ssize_t nr_read;
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index f207fba722eb..ebf9bcac9e7f 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -559,13 +559,6 @@ nfsd3_proc_link(struct svc_rqst *rqstp)
+ 	struct nfsd3_linkargs *argp = rqstp->rq_argp;
+ 	struct nfsd3_linkres  *resp = rqstp->rq_resp;
  
- 			/*
--			 * Concurrently read /proc/<pid>/fd/ which rougly does:
-+			 * Concurrently read /proc/<pid>/fd/ which roughly does:
- 			 *
- 			 * f = fget_task_next(p, &fd);
- 			 * if (!f)
+-	dprintk("nfsd: LINK(3)     %s ->\n",
+-				SVCFH_fmt(&argp->ffh));
+-	dprintk("nfsd:   -> %s %.*s\n",
+-				SVCFH_fmt(&argp->tfh),
+-				argp->tlen,
+-				argp->tname);
+-
+ 	fh_copy(&resp->fh,  &argp->ffh);
+ 	fh_copy(&resp->tfh, &argp->tfh);
+ 	resp->status = nfsd_link(rqstp, &resp->tfh, argp->tname, argp->tlen,
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index a12ad08b000a..6636fd075ca8 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -481,13 +481,6 @@ nfsd_proc_link(struct svc_rqst *rqstp)
+ 	struct nfsd_linkargs *argp = rqstp->rq_argp;
+ 	struct nfsd_stat *resp = rqstp->rq_resp;
+ 
+-	dprintk("nfsd: LINK     %s ->\n",
+-		SVCFH_fmt(&argp->ffh));
+-	dprintk("nfsd:    %s %.*s\n",
+-		SVCFH_fmt(&argp->tfh),
+-		argp->tlen,
+-		argp->tname);
+-
+ 	resp->status = nfsd_link(rqstp, &argp->tfh, argp->tname, argp->tlen,
+ 				 &argp->ffh);
+ 	fh_put(&argp->ffh);
 -- 
-2.43.5
+2.49.0
 
