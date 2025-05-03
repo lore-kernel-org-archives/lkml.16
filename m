@@ -1,186 +1,130 @@
-Received: from 190-102-104-130.static.hvvc.us (190-102-104-130.static.hvvc.us [190.102.104.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08A88F58;
-	Sat,  3 May 2025 17:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=190.102.104.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C94198E77;
+	Sat,  3 May 2025 18:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746295153; cv=none; b=hSApOe+0qppFyDyOmeRUlzEH01JWiFBRSz0ofBowVw/Px6GyvOKag7SEUFfXUV5gvSyqXPUlGnSY9X7ETDLu/OlxcNDudN49YeMs50oSoE1/UH8zf/mfvJzC4uJXtjNPzCb7au2sM9KBpOVRgGw8G5CGyGU6EH6YUBVgc05g0ck=
+	t=1746295513; cv=none; b=DBd8dUxcuXB683dWl7u31klJrT1mEfhrRtaJHI/KZFmDT90enGv9mnmvaNLR60ufAGgRNADPMkuWuskSorm0QOGBrdlKpSqLUrF0EmVzEhVOwXIhfZnDJxXad7MqcS9XGui5RtkjtTnnv91JaGrD83JTdfStEeSVlEZNEVmHgDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746295153; c=relaxed/simple;
-	bh=bCYEJYasft7mO5UXVByZt6FWWPs8yPW+I7ZXaGOWmyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U09mMmX6F95SEIykeH1yUaDUlrx+ibpJrL44BrFUGZJS+FI10ZlQIVoynpXHahO2am0ltIaFrnrD1dNlJCDRXKqnv17OfPIIg8Zqlgcbm6aQtWeIG1XgAzb25iKH7ICopaIqeWolbyAhm0TAkLkR/KN9eCmLMrUZKzZWweRlGgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=MichaelLarabel.com; spf=pass smtp.mailfrom=MichaelLarabel.com; dkim=pass (2048-bit key) header.d=michaellarabel.com header.i=@michaellarabel.com header.b=LA07Vxab; arc=none smtp.client-ip=190.102.104.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=MichaelLarabel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=MichaelLarabel.com
+	s=arc-20240116; t=1746295513; c=relaxed/simple;
+	bh=55Fe24q7vIaHhB804cpFvu9KXYV1dEvQwZDCf4u0muM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=KaYR9SM3m+VqfhbXWDyjTwotwl0R2MDCLqYx7LflTbFhTx5XAiDuTBk+PbeozV9ZaCm5244R6gXyNDbneOv7mH2VTvZ41r+is09DHtLI7AxCX0/SW9HxYq62efLpUai31Rt0i6f4+tFWNTh5jddA1Pggn2x2PrFax6aT2QZYYSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8RKQ4dG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=michaellarabel.com header.i=@michaellarabel.com header.b="LA07Vxab"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=michaellarabel.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uv/0MiJ1oDkQMuH3qE4kY+TiLMBt3lujQa/XExr5xos=; b=LA07VxabDoKmuEZP80o5PzsE/t
-	CMCH0BYU8DjELheVtDWM2b0iXd5/PcATqZHnOSyzt+wSh43Wqm6FsMfR25QIPG45c8dQA93wWx7Hf
-	lkxjWOQYIE2gh59FvEkrQGJaKofbvZeDAccY88C1WCIgFSsbqN7kLt5neV7vQwiM//L0LS6Sf8+3t
-	2p+Gz6LBB1DquOIpF3cX10xvJNKi1eI1FdpgY8zmZr8KwT8W/iTtB+Eymmgf5NRnOg94bU8xz/4r7
-	p7z1H92OFLS7+rSDQCWnhgHU6WMyIXk/htEDrNvIYXmDZ0uR4WcqsGHQyJlrFlyTX9G/EF9ht6REf
-	mqo3IxcA==;
-Received: from c-24-15-38-32.hsd1.in.comcast.net ([24.15.38.32]:1872 helo=[192.168.1.194])
-	by milan.phoronix.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <Michael@MichaelLarabel.com>)
-	id 1uBH8l-0000000Av9i-1Bi2;
-	Sat, 03 May 2025 13:59:04 -0400
-Message-ID: <ee6ad3c2-57f5-40a9-b655-006e65a80d3b@MichaelLarabel.com>
-Date: Sat, 3 May 2025 12:59:02 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8RKQ4dG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2260c91576aso28958845ad.3;
+        Sat, 03 May 2025 11:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746295511; x=1746900311; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n/PkEjRtPqGBzsdgorm91zAu8hl4Zpj64cOLy+qt4uk=;
+        b=Y8RKQ4dG+V8tm9PgTdDhuPI+GRgaI2nppbmrLNB9GZfzCTfttCu6I83+tPuqzp+zYt
+         WN3i0q0Jfwoo6XmybZPtMFQNvtiVtvucpZAcMn9+Gl8zmGmF6K28QGK2eRgp7o3BWGfA
+         lXcnBJJ5Gq+l+tbaqLacONS4jHz6mJR5wAQCM4+1s/dQOHY4ioyG3bYJlZ1thQEtjfIG
+         KzaxPr2kbxZivV+sUi3JlIU+cfXfccdggU3g7qI6CTl9Hfxfc5UwuBUjEOZoUEkgYTda
+         y5PC7CiTDqDNTR9NGZtTZ9dM35zlM1JxSMPHyFjG7p2E6evv+p3Dz+y+hkbemVGqWFWN
+         /Mhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746295511; x=1746900311;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n/PkEjRtPqGBzsdgorm91zAu8hl4Zpj64cOLy+qt4uk=;
+        b=QjBPO7lc6CAEg7qPD5JX3ui+VWi1Gj83gFtzYJt7mfWLKakE9QBFA95DSfJXm1Wn77
+         e/8+KmWQ0t7zkxCC872lVbyFJGeJ5iWTKIVK9CmWbV+R8ouwv9c4CLq2McgZMvxyz0Iy
+         vaAvXxknxBDwvCUmxMOOnbhqDZ1bPUEseBvx5wbKohwImbdC94kDaOviwIfyV05OpAqY
+         W3bJmEuVn/AfjDhEGQLDX+Xof+kmcl3qLiWL/SxQb8JLQI33WW9DK+MNZXvNdk8v/1O9
+         cEbRiBzaqD60R2B8Fow7Dl8ExyMKqCoigU0E36TvQ56A/Uz/xnDWXqnFmE7nCn4IxV1z
+         0GKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBiIBR2SeLZlg0LG7OK939WweGAzISCFWJ3yHvgxZy7bev8+0poxyspApoK0euldWgnXBb4NSWCDC5/sWpGwO3D9I3Ww==@vger.kernel.org, AJvYcCUuD6LWG+NeRIdJ+a1im0WwPLxCicsW3nQfjW4r1SwYLU6LOUIgf0pRRR/qfL1k31FAD4kUuQEDhO0=@vger.kernel.org, AJvYcCXL6NdIpeNhUg8Z7x3RIKndF5vWpU/E3HEMGXvBrYmD4EZ29BDvV/H3zeMg3K4OQX5NwgkFVls5Sr58oNVS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhrMm8Q1AJN/LQXzW1LgJd8qvgK2U/3SScKMFlZWrgpv+K38Yq
+	dtmfwHTqqnLEkpIpyffn20NTnUM+Q7rNMIewBOFwS7qGS5oRFlM4
+X-Gm-Gg: ASbGncty3X4udeHJtrWAtlSbAKHwqApNKK9OB7BD00hxoDWLrP7R0Ez37/BHqaGrwIc
+	rUmkfXiDYjc8vnyixsGqTniVUJbL3oXkkW+eUDCCwMVQBiBfYc7718ehJ32xOwj+hPlHr1yq721
+	3fg1SJGGBsSyd1c5/b1sp+1GHvtJafZL/j4AmNKztORioIEkGi7Dz18XNTUVFmbO4Dt3+aV7IDk
+	sKvkaWeYTQ6la/Sp9eg/Gg0Gh5Ca5nZldR3tpgFlwL0uWCpgUn0H+IOWs4r2fKEIXRZcaShdi6V
+	8d6UJDfKZt5CYY8zIPnyqSbXN1GVoBWDACFa87PiyzZRowbuYNJx12H+SJpuL8dE9IVqz8F/Z6T
+	7nzLCl9GbFGyl5cVFld+REtpe
+X-Google-Smtp-Source: AGHT+IEbIxip9Ci3Kt8zSoH7Tpz0Zha7CXjsiwTgyoOeVMqijIS8bddEhMHIwd0XcWTXROvBhbrzTQ==
+X-Received: by 2002:a17:902:d50a:b0:223:6657:5008 with SMTP id d9443c01a7336-22e1ea83ad7mr30760955ad.24.1746295510896;
+        Sat, 03 May 2025 11:05:10 -0700 (PDT)
+Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fc85sm26648015ad.110.2025.05.03.11.05.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 May 2025 11:05:10 -0700 (PDT)
+Date: Sat, 03 May 2025 11:05:07 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>, Hans de Goede <hdegoede@redhat.com>,
+ =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>,
+ Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
+ Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
+User-Agent: Thunderbird for Android
+In-Reply-To: <d99f91d0-e511-4012-b681-c348ab5c2fc1@oracle.com>
+References: <20250503000142.1190354-1-derekjohn.clark@gmail.com> <20250503000142.1190354-7-derekjohn.clark@gmail.com> <d99f91d0-e511-4012-b681-c348ab5c2fc1@oracle.com>
+Message-ID: <1BC3B1AB-98D8-42CC-9CD7-2770BE19228C@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM
- count transitions
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Borislav Petkov <bp@alien8.de>
-References: <20250502223456.887618-1-seanjc@google.com>
-Content-Language: en-CA
-From: Michael Larabel <Michael@MichaelLarabel.com>
-In-Reply-To: <20250502223456.887618-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - milan.phoronix.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - MichaelLarabel.com
-X-Get-Message-Sender-Via: milan.phoronix.com: authenticated_id: michael@michaellarabel.com
-X-Authenticated-Sender: milan.phoronix.com: michael@michaellarabel.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
- From my testing this patch is in good shape for returning the EPYC 
-Turin server bare metal performance w/o VMs back to where it was on 
-Linux 6.14.
 
-Thanks,
 
-Michael
+On May 3, 2025 2:42:38 AM PDT, ALOK TIWARI <alok=2Ea=2Etiwari@oracle=2Ecom=
+> wrote:
+>Hi Derek,
+>
+>Thanks for your patch=2E
+>
+>On 03-05-2025 05:31, Derek J=2E Clark wrote:
+>> +	attribute_id =3D
+>> +		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
+>> +		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
+>> +		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, LWMI_GZ_THERMAL_MODE_CUSTOM) |
+>> +		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
+>> +
+>> +	//capdata =3D devm_kzalloc(&priv->wdev->dev, sizeof(*capdata), GFP_KE=
+RNEL);
+>> +	//if (!capdata)
+>> +	//	return -ENOMEM;
+>
+>remove this dead code
+>
 
-On 5/2/25 5:34 PM, Sean Christopherson wrote:
-> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-> only if KVM has at least one active VM.  Leaving the bit set at all times
-> unfortunately degrades performance by a wee bit more than expected.
+Woops=2E=2E=2E thanks=2E
+
+Are you planning on reviewing the other 4 patches?  If not I'll fix these =
+up and send an update today=2E
+
+Cheers,=20
+Derek
+
+>> +
+>> +	ret =3D lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
+>> +	if (ret)
+>> +		return ret;
 >
-> Use a dedicated spinlock and counter instead of hooking virtualization
-> enablement, as changing the behavior of kvm.enable_virt_at_load based on
-> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-> result in performance issues for flows that are sensitive to VM creation
-> latency.
 >
-> Similarly, don't bother optimizing the 1=>N and N=>1 transitions, e.g. by
-> using atomic_inc_return() to avoid taking the spinlock, as ensuring that
-> BP_SPEC_REDUCE is guaranteed to be set before KVM_RUN is non-trivial.  KVM
-> already serializes VM creation against kvm_lock (to add the VM to vm_list),
-> and the spinlock will only be held for a handful of cycles for the 1<=>N
-> cases.  I.e. the complexity needed to ensure correctness outweighs the
-> marginal benefits of eliding the lock.  See the Link for details.
+>Reviewed-by: Alok Tiwari <alok=2Ea=2Etiwari@oracle=2Ecom>
 >
-> Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
-> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
-> Reported-by: Michael Larabel <Michael@michaellarabel.com>
-> Closes: https://www.phoronix.com/review/linux-615-amd-regression
-> Cc: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/svm/svm.c | 43 ++++++++++++++++++++++++++++++++++++------
->   1 file changed, 37 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index cc1c721ba067..364959fd1040 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
->   	kvm_cpu_svm_disable();
->   
->   	amd_pmu_disable_virt();
-> -
-> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> -		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
->   }
->   
->   static int svm_enable_virtualization_cpu(void)
-> @@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
->   		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
->   	}
->   
-> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> -		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-> -
->   	return 0;
->   }
->   
-> @@ -5032,10 +5026,46 @@ static void svm_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
->   	sev_vcpu_deliver_sipi_vector(vcpu, vector);
->   }
->   
-> +#ifdef CONFIG_CPU_MITIGATIONS
-> +static DEFINE_SPINLOCK(srso_lock);
-> +static int srso_nr_vms;
-> +
-> +static void svm_toggle_srso_spec_reduce(void *set)
-> +{
-> +	if (set)
-> +		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-> +	else
-> +		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-> +}
-> +
-> +static void svm_srso_add_remove_vm(int count)
-> +{
-> +	bool set;
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-> +		return;
-> +
-> +	guard(spinlock)(&srso_lock);
-> +
-> +	set = !srso_nr_vms;
-> +	srso_nr_vms += count;
-> +
-> +	WARN_ON_ONCE(srso_nr_vms < 0);
-> +	if (!set && srso_nr_vms)
-> +		return;
-> +
-> +	on_each_cpu(svm_toggle_srso_spec_reduce, (void *)set, 1);
-> +}
-> +#else
-> +static void svm_srso_add_remove_vm(int count) { }
-> +#endif
-> +
->   static void svm_vm_destroy(struct kvm *kvm)
->   {
->   	avic_vm_destroy(kvm);
->   	sev_vm_destroy(kvm);
-> +
-> +	svm_srso_add_remove_vm(-1);
->   }
->   
->   static int svm_vm_init(struct kvm *kvm)
-> @@ -5061,6 +5091,7 @@ static int svm_vm_init(struct kvm *kvm)
->   			return ret;
->   	}
->   
-> +	svm_srso_add_remove_vm(1);
->   	return 0;
->   }
->   
->
-> base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+>Thanks,
+>Alok
+
+- Derek
