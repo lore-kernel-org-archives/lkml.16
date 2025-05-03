@@ -1,65 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E54221290;
-	Sat,  3 May 2025 12:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7AF22D4C5;
+	Sat,  3 May 2025 12:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746275423; cv=none; b=p2LMmw1X0d8EOwt8HC2Zja3ZjhuBLlRkWR12iIHGdmOZp3FtBUqXGFTL/1bpQXYPAWia4b02oPROjt6HONKjS58tOr1Ex8KUVzDURLXaWVO67gvzDtYv3DkH1Wf8Kyfw2P9hOs9JxK6sInj0qt4SqzQeToxzQhrQh2Lf/nj5TZo=
+	t=1746275459; cv=none; b=EtyObXXIKBsFubl3v9yoDW82mUPWkW8BWZ2WN6vnIIj3FbZbsotmnauq2vp0ZmTK2l88uQZImTIl+fhbe1/3UcsMgZUDZa1Wh7g/vTAx8oCmU3rWuhaPkGJsw12atujeaeLePK2TKrMpOdZ8iLgGd9f+w5wMDVW1Tm6Ts6JlyPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746275423; c=relaxed/simple;
-	bh=4RqM3dbTeHOhSEudiVNOdmYSNfw8s93ZXvQIrXjPVo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CE5S2n+kkdn16EGw5Dgt157/zGKZtcnWWggJqWqkn2TqHBCSC4tc2Ce8a8TLe37KgjW1ikF7Uuoaz1a1+9fj0WBDMxXFT6jvT6pbKW9uKEidqLLSu+PxnpOMVeHp3GgCr14eqMpPOVPIQXbSMR4W0CozHI7R4WeRurfxnQDe6EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pAZNFr/V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746275459; c=relaxed/simple;
+	bh=F3iwU5W0ytAG5DZzAz0Pko7BcqXYuXoReD9umCq5y9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KK7i9PwMM3jodqkc917vIp23OWNok350YJ9ekW2w3Rhb84YyVgEeZkc/ByYnEoaLZYIVcfRggoW2FzBMRCw7ZOxe1WG1kt/SMlY4cksiVwrpiBz1xlp5VqoDD86QuLkFISvD1lGEZjJDxXgtgNGwU7SGgyTvP7Eq4A+pCvOxF7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DryTNpCN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pAZNFr/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EEBC4CEE3;
-	Sat,  3 May 2025 12:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746275422;
-	bh=4RqM3dbTeHOhSEudiVNOdmYSNfw8s93ZXvQIrXjPVo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pAZNFr/V9FXhsZ/ggFR4jGuswVDQ+QDfi7WT3+HpWNkRFxGlXn0QtUmEZu065bkEy
-	 HJ3NUf6ivLnHklTzq9STPGzgoq7ez3ykK+UEkaBVvegahCX4H2i57CcQuqtZEfs8zN
-	 7Ofnl+RCmVaI/zmDIY5mUqXHnwMOhSnkeuQFBa/k=
-Date: Sat, 3 May 2025 14:30:19 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "zhilin.yang" <zlyang_001@163.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: u_ether: Continue to send skbs if remote
- wakeup fails
-Message-ID: <2025050321-apprehend-lavish-ea92@gregkh>
-References: <20250502145352.557174-1-zlyang_001@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DryTNpCN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C231BC4CEF0;
+	Sat,  3 May 2025 12:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746275458;
+	bh=F3iwU5W0ytAG5DZzAz0Pko7BcqXYuXoReD9umCq5y9I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DryTNpCNV/P8VTvvl0iFClplGzorNqqgJ5PePgMPnpb2RdK9lwYxx4gcoZu77IUHc
+	 I8XgbpRwEBPi9R9TDZ8AbqZNUfL7hWLBNKsIMdCBay0/xs4n4LAEPeRCMXAox6PhbL
+	 amXWB3M2XgQQoAJKEyfCC8NCbDVliD7qh6tZljhenQfbdOAfOFNyDlqaJlm7F5k2Ex
+	 jqGYuzscPmTsXWcyqOl9kkKYXIdNxt+ewcJ2IJyNddKFcMHuuMXwXtVJhHbflawugG
+	 CKV65m7rlff6WhZJ4C0QzIkSylaeqT33kdLFH20xVKd1lDrqPlOvRG2/g2+8cRqjP4
+	 jxSMMV6lsc/Qg==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bee278c2aso43350861fa.0;
+        Sat, 03 May 2025 05:30:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUpN9Q+unzKZlnj0smO8bPfLklfxde/KRmFz+0CE+ZEaj8bFLydK+4BORaFsTrglblyKLbgmD5XbbyDwGg=@vger.kernel.org, AJvYcCVZwkCUBLA/VprlVHcgTCwikQHcJcFTpgz7TNZHljdqreG15wa0E6toifaeu1yVe741Q9dEcnk77th1EhDgXg==@vger.kernel.org, AJvYcCXlT9Qiyb2tgqQOvVC+7W6ravtVWvUy4pjFJuigYNAN8Sh/v7YMG7q1ANw/ufA45k89YXPLjgfqFBo1zR2M@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc+I7Oe3SidOEhBElrLGuTFEv/CwVLNHa1/DYMwfh0X56LBPMw
+	PRN6j6a0+d1R9AC2q7oSFCLx5MEysdYPSzVnIoRxyMK5JO/1RsLzGClkRadupN5IqZJ2rTrkANu
+	1UgAgZo10x+VdkC5Q0/VZE/FPnxc=
+X-Google-Smtp-Source: AGHT+IHdHYcdxqrU0jxedHiIX/DSHN9bJqdJ17KruC0sSGUND1apkQDk4JNLlIIRBpD12/tqSX1r3rXG1qQEIyd4eEk=
+X-Received: by 2002:a2e:bd81:0:b0:30b:ab00:846a with SMTP id
+ 38308e7fff4ca-320aada845bmr21042721fa.3.1746275457474; Sat, 03 May 2025
+ 05:30:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502145352.557174-1-zlyang_001@163.com>
+References: <20250502141204.500293812@infradead.org> <20250502141844.046738270@infradead.org>
+In-Reply-To: <20250502141844.046738270@infradead.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 3 May 2025 21:30:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQkRoPNnCuhgXZUhHSFdFp2Uj7tnbw3k4QwuW+LXZ9e=w@mail.gmail.com>
+X-Gm-Features: ATxdqUGuUX0K-0vXXSyYkLfKuGao-VeiZU_DoB0ygbRGOceLMoJ2jc2-zfcs2ik
+Message-ID: <CAK7LNAQkRoPNnCuhgXZUhHSFdFp2Uj7tnbw3k4QwuW+LXZ9e=w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] module: Add module specific symbol namespace support
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
+	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
+	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 02, 2025 at 10:53:52PM +0800, zhilin.yang wrote:
-> While UDC suspends, u_ether attempts to remote wakeup
-> the host if there are any pending transfers. If there are no
-> pending transfers, the is_suspend flag is set. If the is_suspend
-> flag is set, it attempts to remote wakeup the host when start to
-> send skbs. However, if host does not support remote wakeup, skbs
-> will never be sent.
+On Fri, May 2, 2025 at 11:26=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> Designate the "module:${modname}" symbol namespace to mean: 'only
+> export to the named module'.
+>
+> Notably, explicit imports of anything in the "module:" space is
+> forbidden.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/module/main.c  |   33 +++++++++++++++++++++++++++++++--
+>  scripts/mod/modpost.c |   11 ++++++++++-
+>  2 files changed, 41 insertions(+), 3 deletions(-)
+>
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -1083,6 +1083,14 @@ static char *get_modinfo(const struct lo
+>         return get_next_modinfo(info, tag, NULL);
+>  }
+>
+> +static bool verify_module_namespace(const char *namespace, const char *m=
+odname)
+> +{
+> +       const char *prefix =3D "module:";
+> +
+> +       return strstarts(namespace, prefix) &&
+> +              !strsmp(namespace + strlen(prefix), modname);
 
-Please properly wrap your changelog at 72 columns.
+Apparently, you did not spend time for per-commit compile testing.
 
-> To fix this, stop to queue skbs and return NETDEV_TX_BUSY only if
-> remote wakeup operation is successful.
-> 
-> Signed-off-by: zhilin.yang <zlyang_001@163.com>
+I believe it is a typo of "strcmp()".
 
-Please use your name, which I doubt has a "." in it, right?  :)
+I got this build error.
 
-Also, what git commit id does this fix?
+../kernel/module/main.c: In function 'verify_module_namespace':
+../kernel/module/main.c:1091:17: error: implicit declaration of
+function 'strsmp'; did you mean 'strsep'?
+[-Wimplicit-function-declaration]
+ 1091 |                !strsmp(namespace + strlen(prefix), modname);
+      |                 ^~~~~~
+      |                 strsep
 
-thanks,
 
-greg k-h
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
