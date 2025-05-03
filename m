@@ -1,167 +1,79 @@
-Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35200163
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 11:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD22A1CA;
+	Sat,  3 May 2025 11:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746273299; cv=none; b=oea9X5kQJbPWUYPFERLbIsHj/jglLri5LsEJMkAdPEtKJ9OEKQ1jRAnxMSN+gFB20nIJl6umtkjwLADjSQGPeOKkexFXas7SZx+EliouokPLI54hRsJI1BxBgPdbEylr7hNGfdRtLA2jegdTxHMqKxw5rFlCQnlzHfD1pZ93v/Q=
+	t=1746273500; cv=none; b=C4nSnS3CdxC0P0JKa17037+g7OgUiN/i2WtNu5A07DbZnBu0QwwNpTiCsm+JFbA9N/XjynPHu2nFlC0i3X89VnyDO+zLCgkvkuO4BzHA3ZZoRM9A6/GPBO2KkiH/N3qEnyrhPeZ2HOMJU23GLv2ayINtoLUDQ9hv2dmoJzT/4KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746273299; c=relaxed/simple;
-	bh=5CjXQsdqWAg+gyidCgo9GoCdIerm0eyLNvlKuMOG1kk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ojv/jrkc+2NE6GiIIcPr7AkuNKYltJuA9ifftKluLYUzMdUhtkq7y+WeRe8n8l6Cq7GhTOa0LU94lNxbGMzs87Nqh5JLNCLBSLXTuMQwSQV2joTsNtAPSYsCtAdgU8diIdWRqL4g4xK/sK60xLTMVhi7icaRAQG0y5RdTBnpZX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=iA1otZ0X; arc=none smtp.client-ip=188.40.203.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1746273500; c=relaxed/simple;
+	bh=Bo2kM4vpWeOzKCXc2t+PVRRC6F4rzJU4RcIaI8kD8nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0kaJWmasd7FE0+op9wzuq0udKRzxZ7BUZdXtrcevMZvSnGwvzEG+ZvGQbiqqV0jDZYaofA2am4t1UIKxRekaKJyMTEEhYJCAl9lbXw2fpcqKyAc7SNysUd1dYkABAo82ikWMpDrhFGHvesNu1NsXokx7GfKb8FgAxh+4SxrxXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpC5CK+o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="iA1otZ0X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap4-20230908; h=Sender:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
-	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7UELWRjZ/SlrrzAPPhew+mZufs5Uy/ZW6LtuMmduX3Q=; b=iA1otZ0XxE/DRuiT6t8hDI/4hH
-	bA940Y/88rDA6tVEe2SSexOqcvey0EiIQ14OH18I0OxnckyyemHak7PWm2tKKiXfQFmlGLyjUEnh1
-	/iJ6Gx6B/n98SR8741saU91ELEgll2aeCfDdZaviNeJ6GEdUPBvon5Vt7xsHp0i6BZzvwVLzbyDSS
-	NETM1p5c5/EiRu3B0FiLN6D13CFTAgC4ZkYhjA7skM84Iiyn/Yws1QDYV6RY2EkbfElxxPGkBX1/z
-	T17X2dq0STjCtjPTrE6DDfcKEpIOeHZVMfi9PshLqUgcwCixMxidtX4Gg25RdFUUTv0/AvJ35ejo4
-	yO0D3Lsw==;
-Received: from [213.55.184.223] (helo=[10.164.176.253])
-	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uBApb-005L19-Ey; Sat, 03 May 2025 12:14:55 +0100
-Message-ID: <f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-From: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Vineeth Pillai <vineeth@bitbyteword.org>,
- Luca Abeni	 <luca.abeni@santannapisa.it>
-Date: Sat, 03 May 2025 13:14:53 +0200
-In-Reply-To: <aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
-References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
-	 <aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
-Organization: Codethink
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpC5CK+o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23DAC4CEE3;
+	Sat,  3 May 2025 11:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746273499;
+	bh=Bo2kM4vpWeOzKCXc2t+PVRRC6F4rzJU4RcIaI8kD8nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BpC5CK+opqWUTeYkEKlTYv7V5RumKqveSSjujEpqSr/YXAnoj+I6qY+Ucvjl85sNh
+	 bxS5DgYLALN3eb67OW/hpt1bDy3aFJemupmEckOfX6//31XpwTwYCnsp36+EPm2Lj3
+	 BqJgJx3gwebE7VjH382cbtEBjzu+XLryBgnRUuwHLOOFYdNxeFs6fXJ9h3gh3SdvTa
+	 dcZI8hAc3Fm1JOJMVGKsN94+GWeGbpBNY4FEn40bxcPrbnNSYR8xWk0fK9waWUwWkr
+	 3/KrH2TL3dcyOu5wwJqXHWp5NmiuyIW0azkaznW1gWVBFRRIa5+BFSYlVn0AhF1EyA
+	 ymbnXYg1yWhEw==
+Date: Sat, 3 May 2025 13:58:10 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <aBYE0rPmS6L6PJbs@polis>
+References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
+ <20250501-debugfs-rust-v3-1-850869fab672@google.com>
+ <aBRoNKjB063QhGZo@pollux>
+ <CAGSQo00hYLubqJy9zkO3_O3b6V15WtmoSybC+Ep5uJeU6k3t4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: marcel.ziswiler@codethink.co.uk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo00hYLubqJy9zkO3_O3b6V15WtmoSybC+Ep5uJeU6k3t4A@mail.gmail.com>
 
-Hi Juri
+On Fri, May 02, 2025 at 08:48:36AM -0700, Matthew Maurer wrote:
+> On Thu, May 1, 2025 at 11:37 PM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
+> > > +/// Owning handle to a DebugFS directory.
+> > > +///
+> > > +/// This directory will be cleaned up when it goes out of scope.
+> > > +///
+> > > +/// # Invariants
+> > > +///
+> > > +/// The wrapped pointer will always be `NULL`, an error, or an owned DebugFS `dentry`.
+> > > +#[repr(transparent)]
+> > > +pub struct Dir(#[cfg(CONFIG_DEBUG_FS)] *mut bindings::dentry);
+> >
+> > Should probably use Opaque instead of a raw pointer.
+> 
+> Opaque usage is problematic here:
 
-Thanks for getting back to me.
-
-On Fri, 2025-05-02 at 15:55 +0200, Juri Lelli wrote:
-> Hi Marcel,
->=20
-> On 28/04/25 20:04, Marcel Ziswiler wrote:
-> > Hi
-> >=20
-> > As part of our trustable work [1], we also run a lot of real time sched=
-uler (SCHED_DEADLINE) tests on the
-> > mainline Linux kernel. Overall, the Linux scheduler proves quite capabl=
-e of scheduling deadline tasks down
-> > to a
-> > granularity of 5ms on both of our test systems (amd64-based Intel NUCs =
-and aarch64-based RADXA ROCK5Bs).
-> > However, recently, we noticed a lot of deadline misses if we introduce =
-overrunning jobs with reclaim mode
-> > enabled (SCHED_FLAG_RECLAIM) using GRUB (Greedy Reclamation of Unused B=
-andwidth). E.g. from hundreds of
-> > millions of test runs over the course of a full week where we usually s=
-ee absolutely zero deadline misses,
-> > we
-> > see 43 million deadline misses on NUC and 600 thousand on ROCK5B (which=
- also has double the CPU cores).
-> > This is
-> > with otherwise exactly the same test configuration, which adds exactly =
-the same two overrunning jobs to the
-> > job
-> > mix, but once without reclaim enabled and once with reclaim enabled.
-> >=20
-> > We are wondering whether there are any known limitations to GRUB or wha=
-t exactly could be the issue.
-> >=20
-> > We are happy to provide more detailed debugging information but are loo=
-king for suggestions how/what
-> > exactly to
-> > look at.
->=20
-> Could you add details of the taskset you are working with? The number of
-> tasks, their reservation parameters (runtime, period, deadline) and how
-> much they are running (or trying to run) each time they wake up. Also
-> which one is using GRUB and which one maybe is not.
-
-We currently use three cores as follows:
-
-#### core x
-
-|sched_deadline =3D sched_period | sched_runtime | CP max run time 90% of s=
-ched_runtime | utilisation | reclaim |
-| -- | -- | -- | -- | -- |
-|  5 ms  | 0.15 ms | 0.135 ms |  3.00% | no |
-| 10 ms  | 1.8 ms  | 1.62 ms  | 18.00% | no |
-| 10 ms  | 2.1 ms  | 1.89 ms  | 21.00% | no |
-| 14 ms  | 2.3 ms  | 2.07 ms  | 16.43% | no |
-| 50 ms  | 8.0 ms  | 7.20 ms  | 16:00% | no |
-| 10 ms  | 0.5 ms  | **1      |  5.00% | no |
-
-Total utilisation of core x is 79.43% (less than 100%)
-
-**1 - this shall be a rogue process. This process will
- a) run for the maximum allowed workload value=20
- b) do not collect execution data
-
-This last rogue process is the one which causes massive issues to the rest =
-of the scheduling if we set it to do
-reclaim.
-
-#### core y
-
-|sched_deadline =3D sched_period | sched_runtime | CP max run time 90% of s=
-ched_runtime | utilisation | reclaim |
-| -- | -- | -- | -- | -- |
-|  5 ms  | 0.5 ms | 0.45 ms | 10.00% | no |
-| 10 ms  | 1.9 ms | 1.71 ms | 19.00% | no |
-| 12 ms  | 1.8 ms | 1.62 ms | 15.00% | no |
-| 50 ms  | 5.5 ms | 4.95 ms | 11.00% | no |
-| 50 ms  | 9.0 ms | 8.10 ms | 18.00% | no |
-
-Total utilisation of core y is 73.00% (less than 100%)
-
-#### core z
-
-The third core is special as it will run 50 jobs with the same configuratio=
-n as such:
-
-|sched_deadline =3D sched_period | sched_runtime | CP max run time 90% of s=
-ched_runtime | utilisation |
-| -- | -- | -- | -- |
-|  50 ms  | 0.8 ms | 0.72 ms | 1.60% |
-
-jobs 1-50 should run with reclaim OFF
-
-Total utilisation of core y is 1.6 * 50 =3D 80.00% (less than 100%)
-
-Please let me know if you need any further details which may help figuring =
-out what exactly is going on.
-
-> Adding Luca in Cc so he can also take a look.
->=20
-> Thanks,
-
-Thank you!
-
-> Juri
-
-Cheers
-
-Marcel
+Yes, when I wrote this I was back at your v1 in my mind -- the raw pointer is
+fine..
