@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B1D1553A3
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 23:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6698238D54;
+	Sat,  3 May 2025 23:56:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746316581; cv=none; b=vEiRTwYSX2jOe3IztRMACsJhpG/zFsIVB8Hbbz1VUMl2bw+oe0ChOKJ5duNyWdrd/txw3FJTR2s2GVwvHWGponAVD+OP4PIDlzdWvyevV1sUCM+umgz4cpxmFwDbH8CEejRwurLBW1g7tN4xPyrCpsjKzprtPUydKvo3haFsDGs=
+	t=1746316584; cv=none; b=IH9aQ57xzk6gzwkfIJN/Rz/FoU9qpSpgextgBf29beDCRNtHCZxx4nDy18WRRRXavqKcTAaosJ448vqat6rzb5fahsO/GkPU6aLUn5C3luf4Fnz/qCN8PrAkk8tygVYHCtel+r/HxKZOs7QUlQB9NMt6Gby2IAnXjhCT0R1fGuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746316581; c=relaxed/simple;
-	bh=NsbQ28AQYUMxdmDbRR+S3Im5XcudWRmv5nObzP+tmEY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ui+JH9vb+JfUscLw8QCFxI8WlkCzoXF2ohgFBzyqgZrQ4hrlKRfAKI9TagNo03ZWuF83IT974F8qtxuLgqrBT404m2/KNZWi92PaQUJv9Xs+7JmiuGf+oImue8eM9ZBq8NKgej+26VJkcSBakG4qI0s16617McOoeZGcbQB3aoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXTsGSMW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746316584; c=relaxed/simple;
+	bh=WR30OQEd7TUzZlyS8tpcaJGyIKqL4+BBLT74IdUGvFc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EOMqJO1lmjdLurYd7ZOE9Uzx7QyRFs811ZqoILoRXjieZiKhj+izEmlDOvUL3vBFtCMhLVb1BFPbYf1yeffFg3RWuCK5LMvJ8r2qVR0tSUtxjdkZU9l/BIPzkzlo592mPt7uenccvwvd2dtrrpxFoilJ3eQJSQs4FPIhr5RCRDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqlcqpqD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXTsGSMW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EA6C4CEE3;
-	Sat,  3 May 2025 23:56:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqlcqpqD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B812EC4CEEE;
+	Sat,  3 May 2025 23:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746316581;
-	bh=NsbQ28AQYUMxdmDbRR+S3Im5XcudWRmv5nObzP+tmEY=;
+	s=k20201202; t=1746316583;
+	bh=WR30OQEd7TUzZlyS8tpcaJGyIKqL4+BBLT74IdUGvFc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JXTsGSMWW75mWdsuVEvAt0GxIZxRodsruwZDIQ15EJdJvSk22x8gHuqVlAnqEJnvI
-	 MMZEDsC/M43+UNWVY5imerpoVfZGWaA1qltxm5o9REUidDv2Fm2+o1BMx2SCI1xdew
-	 GKX+8f60jD657bTQ/eMXouT9PP0G4lAe0P40r0keiHZzkB/RT3nFErmA7Mna0SIDSS
-	 xAO2xpzTw89vVXIWFF2BIgcXX/8tJHPcDKkjMZk7OpMkGKw/gLN7FeLssAQY1ZBXRh
-	 ZFFu8GIceOOxnQjMxD5px2h4pxufE+5LBJqgquAx7IB4rEg8uax5yHrZshjFso0O53
-	 C1VZ1wVqA+YGQ==
+	b=BqlcqpqDwQrfkskexBEOXfIII7r7aao+Xz18UpidZY/UnKzo6QXQ2DyHFZbJGBc9B
+	 HCEKYMtvkNtNXFAisu6s11IvxeAK4SWsZVD9SYzDurkNu5LeSTE5yGYThIYy4d6iGq
+	 o0EFO4etjgbgYmw3tGmfGsQx8efVQsfpsCguX37PIYeo5c/NdM5mMTcvUV8EVRuo+E
+	 Ht2VaQ24vgj6VAwuqByz3/HobSw+kRfj7vbQh3Ob+8AyMgFgAD9rZqvVy8D0eGbWmf
+	 9i5mehifk8aJ5SerJbTxR9+95gTYnv3/0i3NS3L6/ltmY/Disxx1Jvfl4IdgCgHMil
+	 5/g/6S718oONw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFF8380DBE9;
-	Sat,  3 May 2025 23:57:00 +0000 (UTC)
-Subject: Re: [GIT PULL] arm64 fixes for 6.15-rc5
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C37380DBE9;
+	Sat,  3 May 2025 23:57:03 +0000 (UTC)
+Subject: Re: [PULL REQUEST] i2c-for-6.15-rc5
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250503230151.2578203-1-cmarinas@kernel.org>
-References: <20250503230151.2578203-1-cmarinas@kernel.org>
-X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
-X-PR-Tracked-Message-Id: <20250503230151.2578203-1-cmarinas@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: fee4d171451c1ad9e8aaf65fc0ab7d143a33bd72
+In-Reply-To: <aBZwsuhgpgETHQOO@shikoro>
+References: <aBZwsuhgpgETHQOO@shikoro>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aBZwsuhgpgETHQOO@shikoro>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc5
+X-PR-Tracked-Commit-Id: 8e17493ea2d1c9f72e5e31160f75f8be56f79ffb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e8ab83e34bdc458b5cd77f201e4ed04807978fb1
-Message-Id: <174631661940.3942549.18022262367009295112.pr-tracker-bot@kernel.org>
-Date: Sat, 03 May 2025 23:56:59 +0000
-To: Catalin Marinas <cmarinas@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: cbdd17b239fdee51eac87aa332a2793a22392e3c
+Message-Id: <174631662185.3942549.14152596635222428651.pr-tracker-bot@kernel.org>
+Date: Sat, 03 May 2025 23:57:01 +0000
+To: Wolfram Sang <wsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun,  4 May 2025 00:01:51 +0100:
+The pull request you sent on Sat, 3 May 2025 21:38:26 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e8ab83e34bdc458b5cd77f201e4ed04807978fb1
+https://git.kernel.org/torvalds/c/cbdd17b239fdee51eac87aa332a2793a22392e3c
 
 Thank you!
 
