@@ -1,404 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117D5625;
-	Sat,  3 May 2025 00:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C2EEC3
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 00:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746232590; cv=none; b=Il2weqY8R0mX+0RAY2oJ98XkOAh6/F3eeHst0RmI1vRKXsLE/x98eorT1U7MYsgXpeB3fSPolV0LTqCjrF8x2zFvxgr70dSL8wucRlvN+A+QnySK+kRhm9HPD1ZUfP1fhCzhkyJWKzJuwNE9mEeotSasdkgEU0RtduNmjbKcPOU=
+	t=1746232911; cv=none; b=aotafMRrhNmfjBV9Nb80FQyFxi3FOYawIHblkvWfFR+Aw1SSL4j1GlgDirLqzRZXsYhPlQynCPz46TAgvVSqgXC5xRSdpuKSO44KxsTIj61GgOEunA0IhcCuTZmFALr9c0e5VtbFJQjaVseHHzaZs/qzegwMJuoRDF6PDQYLrXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746232590; c=relaxed/simple;
-	bh=9vXVxFH9J/W84trDs2dR6CJK23BfRglIs8GvXOA3J2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gSEgzoksAFaVDqYkb/FQoqeofWWmndCiWEbwnsQHbtYqo78CfIKcxsGrxk98ZsqXztWkLY1Fyux0QRi+YcQKKpxrjM3qTyChML7yuMuqdF7rL+C+PgCKUoGBvrsvTSIaF7muibFmL2qESCOty+Qb0kGEGB1Ewvt+mlazN7f76dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsbxC10G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746232911; c=relaxed/simple;
+	bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iiR3CD/FFl9aK5LVNPX6XZ/8EIBQ4usH9z/klRbPfnIFkQCUN68leMK4JTrGZ56pEIEQCjQRFzxrST0Ei/nv+rqkntQlXWMUsYNPfHuDv2/pNJIRo1USxzYoFacsFmTqtmdGL8KmGP/iO0C/3b0dbX6MJ0H7VFsdpJhJJuW6+0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fys8bcl8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsbxC10G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 250ACC4CEE4;
-	Sat,  3 May 2025 00:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746232589;
-	bh=9vXVxFH9J/W84trDs2dR6CJK23BfRglIs8GvXOA3J2o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GsbxC10GjLX9BKMxVLShJKW9sdbkeWF1ynqAEusjlzlyrSJZ1OI+y0GPSucvoxcWb
-	 jJx+wu2hq1CJnV+ZVuY65GwaAt0aSPzI8rM3rzQLb+RjivLePV3nFnx7GjlTx4BCLz
-	 s7RrWfKwujDnsPUzxGZe01nCAobNL2yCob6y6V4N2BJ4XULQLzXQtISE7/9gKBv2tt
-	 BoTYTJ0DOuEqsgXYLrjqysYRlHJpm/JBrY/UBjLn5YONMT4jxhO52C/LOQ6LSBhgSi
-	 1JukSNoZTFjwfbSPGeC4juroVkXRMDkXY0f8C6ybXu7BwsZWUDscAJ7Q/bOfGk9sjG
-	 Iyj9ihovjtC9A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-Date: Fri,  2 May 2025 17:36:20 -0700
-Message-ID: <20250503003620.45072-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fys8bcl8"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5430GcvW009473
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 00:41:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=zexFTSyGgt2dJ/AMnsrfN4
+	8UoyxFFEE4fgdHUg7YobU=; b=fys8bcl8fIp7KA+O32PyHq2JtGU14cxmMYZ4xN
+	YKioSBrgdxbkQS9OH7EhMFKqUbnAuVtTJb1g/bGEz2H2BAuZZrOtzEMWgWWBPvnU
+	u390xYhDuDoSSehlA2vMU99ug+BkepMxnm6uJ4jAA/O3IdE4sOqSAgaBUIa1ITKU
+	FJL6o3G9yhaiip9Jd/si+Fombe2uFeIveAttv0/UEdVzyDLVFWh0rtpQ1aCnGqfv
+	TdyUhogRaT1piuZLoFcARg04EjuJZdphOl29pb55E8KEm6iuf8NskGGg6Lnqjtaj
+	u1imG9EGGSGEF6x9/zYXm0lPhIhHYoZWv8jx1a1o6A56anbg==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u2hrfp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 00:41:47 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4767bab171dso29326231cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:41:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746232907; x=1746837707;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zexFTSyGgt2dJ/AMnsrfN48UoyxFFEE4fgdHUg7YobU=;
+        b=mKxnjfsFNhuRE8POb2z77mGNUODPuKTr/1b15m1FviBY48EUFc0xQDSBD7JPCqtzMt
+         tWfOqRwlJn+YpWW7xsRbyIsHpXCtsILX2LkwgHeo34NxcNFxkkfCk5ioQKSZBRjAmeah
+         W6dj/yahkMdCv3X1OCQ3K0FFeVoOEB5TcMib+8STvZGDmtGjMJP0zKKklWt9ofXDIEtp
+         hdhQIq6c4zacIrKitog8DdfIg1//KwVUa3JhO3EzBshmm0ilL+bkwcq2t2tiR61Q85J4
+         +KBtNv+8OvcPIBCmeLXsHxHlGOi2mr6zQknhe30ctPsAG/hkgzgjJhG0Imlu8DAtRih7
+         dWmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXiLsw3FKMp66HGvVjaypOByBX9wvWK43oWQTdHCAHuImXFo/aoZuC1oweAE1z2xSdAfNBTdaOzphiN98U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweEvgqC0FQEhPzvFGxRgj8ASl529U+FDceRUEGui0FO6MzqGaE
+	x6CxvZYkKTwbmA7XSnJZV5T7sC08OKB8CFncWZaR74z6cszdXvYQjoHl2fpOpHkvE2D4J1VdPoq
+	ZiWFgXLJHnaebg30EyW6/6VQFlv403Nqssj4YGtrbu2sKqctufal6YDN7X2zp1PE=
+X-Gm-Gg: ASbGncsctOiIqGgrKETbOGWeKfZHlNo299KhYMiYpCDeauZpE8GIOZPu/NwMFxIX7CN
+	G32SUoyhh3mGWpflyD3htoDq+p2ru8WGTbjAjYWmbtImtpuT9d5yEMeVSYuurwG6hrEaxIpodXd
+	4B9CkLyUlDu6nLryZFUDRGghuBT19iWptXXU83aLE8tYiZKXUkyHvybzHHZhzLjtB8nqagA48Of
+	v7qv5+YAD3z28l6kTmQFb5BFciZykQu0Yylmzi/NCbSykoR+RK09w3VQ8qcnmePGiA/h2l8sRXX
+	4ivAvYJi424jrP1Sog0WKTucBslbJWAPq+EQ0c9OS/czZNb+t2aPcWdcl/+n9EeESQ39TBjU3pK
+	fXi+l/evXoLQg7tu8GXaFgBA/
+X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866451cf.32.1746232906736;
+        Fri, 02 May 2025 17:41:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF7ecc30BJA+9Dx4O2PmVKjj7HnCIZKZlWFDy70IW+m8VjDZnT+As04kBFqepzl7sWmZNnhPg==
+X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866191cf.32.1746232906399;
+        Fri, 02 May 2025 17:41:46 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6b0asm551924e87.249.2025.05.02.17.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 17:41:45 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sat, 03 May 2025 03:41:43 +0300
+Subject: [PATCH] dmaengine: qcom: bam_dma: keep remotely controlled units
+ on during boot
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAEZmFWgC/x3MQQqAIBBA0avIrBtQQ4OuEi1Mp5qFFhoRSHdPW
+ r7F/xUKZaYCo6iQ6ebCR2pQnQC/u7QRcmgGLbWRRva4uIghOsxU6EI1WBt0UNqTh9acmVZ+/t8
+ 0v+8HG4v6oF8AAAA=
+X-Change-ID: 20250503-bam-dma-reset-1766d2d12cec
+To: Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2188;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoFWZHNxF/NqZ/oMAwyOsaLbJ64y6qBo00AnWJe
+ ngMwguH6VuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaBVmRwAKCRCLPIo+Aiko
+ 1ba5CACYaPErHkCfSuXCLhGYyXn2t3IdJzsUI05QV2QihSTAiEucd3//V/nGS1yyrJXRKXFdiAk
+ Hh5ACwYoqHvwCceszI3Q/n4xM9YGlX7MLYHQ07rHJwD68Yr5t9MA75A5m2V4Y98PCqIq/E8Op4J
+ fOn27jHuCvbqd2btAgcqGbHNhxCoSNdAG6r2ufdrNGGgdH0F3iRWDjB5DTByhKtOXcS3v3lAOZl
+ 7nWgSBSaZfA3nwJf8kSnfRPATOGP0HKV+Zy8pT8oMYUmwHzJbBL7H/35cSZR0j/bNjMgTb7wDdL
+ bNnfZ7ZF9kmiTmWBr0HHZEL8Z3Wd3AmSuYehz6EbKl4E3rN0
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-GUID: jNjBbdT9d-_JUrtffoSji2KJHZt2ATy5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDAwMSBTYWx0ZWRfX05M3NSP12Men 24CSvDt850sUo4c95jSdqdtIART16YwXK+nGYtcG6pPMPcaTfnyWVAyZaLHrBSsIrUGfMSAyA11 Or1Xiv+0SKMNZqmvOud97yXlftp5BhjK7wTc7S+Dv4UPeNUEUFSc7Q42nio3OWT9J/1KVW1JXsU
+ j3MtYdwNfeLs6QhN8qk74gEkDs1Ank9fu1lwcmGSvoGcgf8OqdCwTV6GgpahE20/8e9W+7COLcj +KN28Ku84dW7NJlbjfu4zRJzq+EG8zAkwzWhI/jy54f6zp+2Ufp+f3Ws5EFFoGAqblvlYisU+t8 PtYUSX8gzWJY8KOTz3g3YH6k3A/Z48d54/HyLkocg7COQabpkKpK8vgJRR5q/2fuN3QrdRyuH0c
+ 35LM3smVbEQSQUbRGF35t3rxik5PDoy3FLId/qcmGdBiviVrqIa2E6kW2ztxUqWmiRcpnNQQ
+X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=6815664b cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=KvPR1SqjJM-xazvS2iAA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: jNjBbdT9d-_JUrtffoSji2KJHZt2ATy5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030001
 
-When it profile a target process (and its children), it's
-straight-forward to track parallelism using sched-switch info.  The
-parallelism is kept in machine-level in this case.
+The commit 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM
+underflow") made sure the BAM DMA device gets suspended, disabling the
+bam_clk. However for remotely controlled BAM DMA devices the clock might
+be disabled prematurely (e.g. in case of the earlycon this frequently
+happens before UART driver is able to probe), which causes device reset.
 
-But when it profile multiple processes like in the system-wide mode,
-it might not be clear how to apply the (machine-level) parallelism to
-different tasks.  That's why it disabled the latency profiling for
-system-wide mode.
+Use sync_state callback to ensure that bam_clk stays on until all users
+are probed (and are able to vote upon corresponding clocks).
 
-But it should be able to track parallelism in each process and it'd
-useful to profile latency issues in multi-threaded programs.  So this
-patch tries to enable it.
-
-However using sched-switch info can be a problem since it may emit a lot
-more data and more chances for losing data when perf cannot keep up with
-it.
-
-Instead, it can maintain the current process for each CPU when it sees
-samples.  And the process updates parallelism so that it can calculate
-the latency based on the value.  One more point to improve is to remove
-the idle task from latency calculation.
-
-Here's an example:
-
-  # perf record -a -- perf bench sched messaging
-
-This basically forks each sender and receiver tasks for the run.
-
-  # perf report --latency -s comm --stdio
-  ...
-  #
-  #  Latency  Overhead  Command
-  # ........  ........  ...............
-  #
-      98.14%    95.97%  sched-messaging
-       0.78%     0.93%  gnome-shell
-       0.36%     0.34%  ptyxis
-       0.23%     0.23%  kworker/u112:0-
-       0.23%     0.44%  perf
-       0.08%     0.10%  KMS thread
-       0.05%     0.05%  rcu_preempt
-       0.05%     0.05%  kworker/u113:2-
-       ...
-
-So the latency profile is similar to the overhead.  But when you run
-with -t option to make it multi-threaded:
-
-  # perf record -a -- perf bench sched messaging -t
-
-Then the latency profile result differs with the overhead.
-
-  # perf report --latency -s comm --stdio
-  ...
-  #
-  #  Latency  Overhead  Command
-  # ........  ........  ...............
-  #
-      58.94%    94.52%  sched-messaging
-      19.12%     1.22%  perf
-      12.13%     0.77%  ptyxis
-       4.07%     0.28%  gnome-shell
-       1.31%     0.08%  perf-exec
-       0.95%     0.06%  kworker/u113:2-
-       0.86%     0.05%  KMS thread
-       0.85%     0.05%  kworker/18:1-mm
-       ...
-
-A side effect is that it will most likely show latency output column
-for system-wide mode by default.
-
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- tools/perf/builtin-record.c | 16 ++---------
- tools/perf/builtin-report.c | 56 +++++++++++++++++++++++++++++--------
- tools/perf/util/event.c     | 48 ++++++++++++++++++++++++-------
- tools/perf/util/machine.c   | 21 ++++++++++++++
- tools/perf/util/machine.h   |  4 +++
- tools/perf/util/thread.h    | 23 +++++++++++++++
- 6 files changed, 133 insertions(+), 35 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8898357325cf4132..67f746601ac05e4d 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -4062,19 +4062,9 @@ int cmd_record(int argc, const char **argv)
- 	}
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index bbc3276992bb012a1b79937bdbd069fc01f75331..09ef450a9fb8e3efe6e664eb17caffb0bd337f84 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -1367,6 +1367,9 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
  
- 	if (record.latency) {
--		/*
--		 * There is no fundamental reason why latency profiling
--		 * can't work for system-wide mode, but exact semantics
--		 * and details are to be defined.
--		 * See the following thread for details:
--		 * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
--		 */
--		if (record.opts.target.system_wide) {
--			pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
--			err = -EINVAL;
--			goto out_opts;
--		}
--		record.opts.record_switch_events = true;
-+		/* It can use sample->cpu to get process-level parallelism. */
-+		if (!target__has_cpu(&record.opts.target))
-+			record.opts.record_switch_events = true;
- 	}
- 
- 	if (rec->buildid_mmap) {
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index f0299c7ee0254a37..4294508b9df52d83 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1280,6 +1280,22 @@ static int process_attr(const struct perf_tool *tool __maybe_unused,
++	if (bdev->controlled_remotely || bdev->powered_remotely)
++		pm_runtime_get_sync(&pdev->dev);
++
  	return 0;
+ 
+ err_unregister_dma:
+@@ -1414,6 +1417,16 @@ static void bam_dma_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(bdev->bamclk);
  }
  
-+static bool is_latency_requested(void)
++static void bam_dma_sync_state(struct device *dev)
 +{
-+	if (symbol_conf.parallelism_list_str || symbol_conf.prefer_latency)
-+		return true;
++	struct bam_device *bdev = dev_get_drvdata(dev);
 +
-+	if (sort_order && (strstr(sort_order, "latency") ||
-+			   strstr(sort_order, "parallelism")))
-+		return true;
-+
-+	if (field_order && (strstr(field_order, "latency") ||
-+			    strstr(field_order, "parallelism")))
-+		return true;
-+
-+	return false;
++	if (bdev->controlled_remotely || bdev->powered_remotely) {
++		pm_runtime_mark_last_busy(bdev->dev);
++		pm_runtime_put_autosuspend(bdev->dev);
++	}
 +}
 +
- #define CALLCHAIN_BRANCH_SORT_ORDER	\
- 	"srcline,symbol,dso,callchain_branch_predicted," \
- 	"callchain_branch_abort,callchain_branch_cycles"
-@@ -1735,18 +1751,10 @@ int cmd_report(int argc, const char **argv)
- 	}
- 
- 	symbol_conf.enable_latency = true;
--	if (report.disable_order || !perf_session__has_switch_events(session)) {
--		if (symbol_conf.parallelism_list_str ||
--			symbol_conf.prefer_latency ||
--			(sort_order && (strstr(sort_order, "latency") ||
--				strstr(sort_order, "parallelism"))) ||
--			(field_order && (strstr(field_order, "latency") ||
--				strstr(field_order, "parallelism")))) {
--			if (report.disable_order)
--				ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
--			else
--				ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
--			return -1;
-+	if (report.disable_order) {
-+		if (is_latency_requested()) {
-+			ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
-+			goto error;
- 		}
- 		/*
- 		 * If user did not ask for anything related to
-@@ -1755,6 +1763,30 @@ int cmd_report(int argc, const char **argv)
- 		symbol_conf.enable_latency = false;
- 	}
- 
-+	if (!perf_session__has_switch_events(session)) {
-+		if (evlist__combined_sample_type(session->evlist) & PERF_SAMPLE_CPU) {
-+			struct machine *machine = &session->machines.host;
-+
-+			/*
-+			 * Maintain current process for each CPU to track
-+			 * parallelism in process level.
-+			 */
-+			ret = machine__create_current_table(machine);
-+			if (ret < 0)
-+				goto error;
-+		} else if (is_latency_requested()) {
-+			ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
-+			goto error;
-+		}
-+		else {
-+			/*
-+			 * If user did not ask for anything related to
-+			 * latency/parallelism explicitly, just don't show it.
-+			 */
-+			symbol_conf.enable_latency = false;
-+		}
-+	}
-+
- 	if (last_key != K_SWITCH_INPUT_DATA) {
- 		if (sort_order && strstr(sort_order, "ipc")) {
- 			parse_options_usage(report_usage, options, "s", 1);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c23b77f8f854ad21..6c2c9cd68e3afb5e 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -767,16 +767,44 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 			al->socket = env->cpu[al->cpu].socket_id;
- 	}
- 
--	/* Account for possible out-of-order switch events. */
--	al->parallelism = max(1, min(machine->parallelism, machine__nr_cpus_avail(machine)));
--	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
--		al->filtered |= (1 << HIST_FILTER__PARALLELISM);
--	/*
--	 * Multiply it by some const to avoid precision loss or dealing
--	 * with floats. The multiplier does not matter otherwise since
--	 * we only print it as percents.
--	 */
--	al->latency = sample->period * 1000 / al->parallelism;
-+	if (symbol_conf.enable_latency) {
-+		if (machine->current && al->cpu >= 0) {
-+			struct thread *curr = machine->current[al->cpu];
-+
-+			if (curr) {
-+				thread__dec_parallelism(curr);
-+				thread__put(curr);
-+			}
-+
-+			curr = machine__findnew_thread(machine, sample->pid,
-+						       sample->pid);
-+			if (curr) {
-+				machine->current[al->cpu] = curr;
-+
-+				thread__inc_parallelism(curr);
-+				thread__get(curr);
-+			}
-+
-+			al->parallelism = curr ? thread__parallelism(curr) : 1;
-+		} else {
-+			/* Account for possible out-of-order switch events. */
-+			al->parallelism = max(1, min(machine->parallelism,
-+						     machine__nr_cpus_avail(machine)));
-+		}
-+
-+		if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
-+			al->filtered |= (1 << HIST_FILTER__PARALLELISM);
-+		/*
-+		 * Multiply it by some const to avoid precision loss or dealing
-+		 * with floats. The multiplier does not matter otherwise since
-+		 * we only print it as percents.
-+		 */
-+		al->latency = sample->period * 1000 / al->parallelism;
-+
-+		/* It won't be exciting to see idle threads in latency profile. */
-+		if (sample->pid == 0)
-+			al->latency = 0;
-+	}
- 
- 	if (al->map) {
- 		if (symbol_conf.dso_list &&
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2531b373f2cf7ca0..8c0e7d418a88f528 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -117,6 +117,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	}
- 
- 	machine->current_tid = NULL;
-+	machine->current = NULL;
- 	err = 0;
- 
- out:
-@@ -183,6 +184,12 @@ void machine__exit(struct machine *machine)
- 	zfree(&machine->current_tid);
- 	zfree(&machine->kallsyms_filename);
- 
-+	if (machine->current) {
-+		for (int i = 0; i < machine__nr_cpus_avail(machine); i++)
-+			thread__put(machine->current[i]);
-+		zfree(&machine->current);
-+	}
-+
- 	threads__exit(&machine->threads);
- }
- 
-@@ -3271,3 +3278,17 @@ int machine__hit_all_dsos(struct machine *machine)
+ static int __maybe_unused bam_dma_runtime_suspend(struct device *dev)
  {
- 	return dsos__hit_all(&machine->dsos);
- }
-+
-+int machine__create_current_table(struct machine *machine)
-+{
-+	int nr = machine__nr_cpus_avail(machine);
-+
-+	if (nr == 0)
-+		return -EINVAL;
-+
-+	machine->current = calloc(nr, sizeof(*machine->current));
-+	if (machine->current == NULL)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index b56abec84fed1e3f..13d23b14b25e51fc 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -64,6 +64,8 @@ struct machine {
- 	};
- 	struct machines   *machines;
- 	bool		  trampolines_mapped;
-+	/* per-CPU current process for parallelism */
-+	struct thread	  **current;
+ 	struct bam_device *bdev = dev_get_drvdata(dev);
+@@ -1474,6 +1487,7 @@ static struct platform_driver bam_dma_driver = {
+ 		.name = "bam-dma-engine",
+ 		.pm = &bam_dma_pm_ops,
+ 		.of_match_table = bam_of_match,
++		.sync_state = bam_dma_sync_state,
+ 	},
  };
  
- /*
-@@ -332,4 +334,6 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 
- int machine__hit_all_dsos(struct machine *machine);
- 
-+int machine__create_current_table(struct machine *machine);
-+
- #endif /* __PERF_MACHINE_H */
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index cd574a896418ac94..5233436404408d10 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -39,6 +39,7 @@ DECLARE_RC_STRUCT(thread) {
- 	pid_t			ppid;
- 	int			cpu;
- 	int			guest_cpu; /* For QEMU thread */
-+	int			parallelism; /* Valid for group leaders */
- 	refcount_t		refcnt;
- 	/**
- 	 * @exited: Has the thread had an exit event. Such threads are usually
-@@ -359,4 +360,26 @@ void thread__free_stitch_list(struct thread *thread);
- void thread__resolve(struct thread *thread, struct addr_location *al,
- 		     struct perf_sample *sample);
- 
-+static inline int thread__parallelism(const struct thread *thread)
-+{
-+	return RC_CHK_ACCESS(thread)->parallelism ? : 1;
-+}
-+
-+static inline void thread__set_parallelism(struct thread *thread, int parallelism)
-+{
-+	RC_CHK_ACCESS(thread)->parallelism = parallelism;
-+}
-+
-+static inline void thread__inc_parallelism(struct thread *thread)
-+{
-+	if (thread__pid(thread))
-+		RC_CHK_ACCESS(thread)->parallelism++;
-+}
-+
-+static inline void thread__dec_parallelism(struct thread *thread)
-+{
-+	if (thread__pid(thread) && RC_CHK_ACCESS(thread)->parallelism > 0)
-+		RC_CHK_ACCESS(thread)->parallelism--;
-+}
-+
- #endif	/* __PERF_THREAD_H */
+
+---
+base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
+change-id: 20250503-bam-dma-reset-1766d2d12cec
+
+Best regards,
 -- 
-2.49.0
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
