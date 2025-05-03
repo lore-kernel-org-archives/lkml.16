@@ -1,75 +1,144 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581A82DC789;
-	Sat,  3 May 2025 19:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1CD27E1DC;
+	Sat,  3 May 2025 19:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746299316; cv=none; b=MmWYygqvpoSm5F8l3Jk/9xULemJe+Bx53QIgJXvk2gSnfihtGgcjdESwxNjPPX84B9UfM6OFSV4kAH2uwEr47irXOoBwuFMuddcxm05SKZJRiRrG5ZifMO1391/tQo8GRVAu/YoRryj3IgJtBO19veq/AUkNl4m71lpFg187dIw=
+	t=1746299413; cv=none; b=XqQYHIxcx4Sw0pLiGi2qhqx+OlIjeEhgF8auj9D6nKpSjxJrl12bgeCLXQuBstzE4VufR2WtAqrSSzGECY9ixG27Yzn4bhfh4McT4vV/NPzm/6sIM9eu7jtUHT5lZTDV0Um6nARhCdTx89RzqxlTtfxph7knEipQxaseQp2Lt1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746299316; c=relaxed/simple;
-	bh=jvvG37KAbI59JUlaTYZdzQe6qpr7rWpxcAPSbfNKf54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eXcCGVBacOdxmhJnkXKubIRa4xqzC7bN1fV+aiehkDxb7YgY8IvOSxrW81Iroz5M15ttRoTn1vp8bCzp4lW2X1NV4494H7qhVWW2XrpYLspcvFoOUMAImb06eiOlbW07WBTY7NUQ/F3aBMP6mA+pkBW6RnG4xi62whay8v6Mo7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=01OHnSf9; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1746299413; c=relaxed/simple;
+	bh=v4Qdkyf8Y3iGQ05r5Hs38Sy/RlRbceKXnRy9fjwloE4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=BXsvhdHZ3kIXPTFRLO06ZtxBNEIAp+6hv4gpu9BzIpa6po/a7raCyjN9Llu1E7YYa+5m9aebEmUY9bxzoWoLryaobreiXFQlYkMMTg/n/nPKKSDmYGENe3jDvIS2DLwc1aC+Tgw3dxpu22skmsrEi6ZvTouolhM/c5QfQbDMRxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YAll8NmU; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="01OHnSf9"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Zqcl63cfxzlgqV0;
-	Sat,  3 May 2025 19:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1746299312; x=1748891313; bh=jvvG37KAbI59JUlaTYZdzQe6
-	qpr7rWpxcAPSbfNKf54=; b=01OHnSf9Ix0g38JrXYhc7n5oVyRYYVQdrf2LsJ5J
-	yX5QMDIIshGr9jy5tP1bqbzoVJ4iWdDGlIcpqmZUf//Ccr5x2HuCHTVDxBxZ5p0t
-	8u99WsVoH393gGU+u0aY+fMTbBdUbxNwCLDEWcM/Kbz6DLZfE2Z0Z1KdIesdJPiv
-	lP/r+Eup3zoMSyyw4tsmGk0cWZVY/VkK3gJnMWFcXbQx+HcJS6uE8YZDv1K24ulT
-	OoX4gdXPRxMAAC6zgriKG4wdGHEP8sUU3/Mf8X5nCdla/g0L5ZgHAT46Aa6ASUUL
-	cwc0xAuKpV236rJdi6rcR9gKoC8K6hl3YUX9ilTBFAT28w==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id By_zUa0p23QT; Sat,  3 May 2025 19:08:32 +0000 (UTC)
-Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Zqcky33Y6zlgqTv;
-	Sat,  3 May 2025 19:08:24 +0000 (UTC)
-Message-ID: <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
-Date: Sat, 3 May 2025 12:08:23 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YAll8NmU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746299412; x=1777835412;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=v4Qdkyf8Y3iGQ05r5Hs38Sy/RlRbceKXnRy9fjwloE4=;
+  b=YAll8NmUFmAOEw3aT35yY8ypWHVm5yvnnEQrP0BA+BDoat1Jl/3deARo
+   0x8sgpMvJgFttW5U+nBH4G1a9+IPfXamNpW8cqY2zYP4QWhTIRgIg7yw7
+   94kYuaLz9pWlRcrY7gCwdlJk4pSuP2eIhfmc6sG0WzO//arqIrrjg9vi8
+   O1o18bUz+LQhZf53+e9PLddDZS6UPFp5ur8n6XkkkNRfrwVDNYkMVWEie
+   8IeGlwowrGuE9/i3vZUSy+YjCdYju7yYe0Pg8sk8w8DWBbZFKvZcH5eQm
+   4XOyXpP9zanmUBFTAwZmKCXJFgjrAnnX7K70PfG70ZHv/JAn3r1HzuBM/
+   Q==;
+X-CSE-ConnectionGUID: eTJ9ddaUTu2TiHO4ktGgNA==
+X-CSE-MsgGUID: anHjMvW/Tdalu6VPCpk47Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11422"; a="48095604"
+X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
+   d="scan'208";a="48095604"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2025 12:10:10 -0700
+X-CSE-ConnectionGUID: 3l3QVmyPRi2Yvw4UWZsr+g==
+X-CSE-MsgGUID: FHmJDk/kRXWQ79jZnLHYrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
+   d="scan'208";a="140046082"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa004.fm.intel.com with ESMTP; 03 May 2025 12:10:09 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org ,
+	linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: [PATCH v3 01/13] x86/acpi: Add a helper function to setup the wakeup mailbox
+Date: Sat,  3 May 2025 12:15:03 -0700
+Message-Id: <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
- warning
-To: Christoph Hellwig <hch@infradead.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aBO_32OsMj3hsJsv@kspp> <aBRrP8EuNkeAtPC9@infradead.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <aBRrP8EuNkeAtPC9@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 5/1/25 11:50 PM, Christoph Hellwig wrote:
-> (I still wish we'd kill the stupid struct and this test and just used
-> the simpler and cleaner bitshifting and masking)
+In preparation to move the functionality to wake secondary CPUs up out of
+the ACPI code, add a helper function that stores the physical address of
+the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
 
-Bit-shifting and masking results in faster code. For slow path code I
-prefer bitfields because this results in much more compact source code.
+There is a slight change in behavior: now the APIC callback is updated
+before configuring CPU hotplug offline behavior. This is fine as the APIC
+callback continues to be updated unconditionally, regardless of the
+restriction on CPU offlining.
 
-Bart.
+The wakeup mailbox is only supported for CONFIG_X86_64 and needed only with
+CONFIG_SMP=y.
+
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+Changes since v2:
+ - Introduced this patch.
+
+Changes since v1:
+ - N/A
+---
+ arch/x86/include/asm/smp.h         |  4 ++++
+ arch/x86/kernel/acpi/madt_wakeup.c | 10 +++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index 0c1c68039d6f..3622951d2ee0 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -146,6 +146,10 @@ static inline struct cpumask *cpu_l2c_shared_mask(int cpu)
+ 	return per_cpu(cpu_l2c_shared_map, cpu);
+ }
+ 
++#ifdef CONFIG_X86_64
++void setup_mp_wakeup_mailbox(u64 addr);
++#endif
++
+ #else /* !CONFIG_SMP */
+ #define wbinvd_on_cpu(cpu)     wbinvd()
+ static inline int wbinvd_on_all_cpus(void)
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index f36f28405dcc..04de3db307de 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -227,7 +227,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 
+ 	acpi_table_print_madt_entry(&header->common);
+ 
+-	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
++	setup_mp_wakeup_mailbox(mp_wake->mailbox_address);
+ 
+ 	if (mp_wake->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
+ 	    mp_wake->header.length >= ACPI_MADT_MP_WAKEUP_SIZE_V1) {
+@@ -243,7 +243,11 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 		acpi_mp_disable_offlining(mp_wake);
+ 	}
+ 
+-	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+-
+ 	return 0;
+ }
++
++void __init setup_mp_wakeup_mailbox(u64 mailbox_paddr)
++{
++	acpi_mp_wake_mailbox_paddr = mailbox_paddr;
++	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
++}
+-- 
+2.43.0
+
