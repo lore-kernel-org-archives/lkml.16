@@ -1,154 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD3315350B;
-	Sat,  3 May 2025 22:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C231FAA
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 23:01:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746311997; cv=none; b=qOQ84snHOOQgf7u+eu/y8cxFoUxhPqroLxoFdekG4KWRAXIK4MsMlXkMgkNHLERhfulHzE564AYDp/M0g3Z5dYhi02gcMAg2eP46p1qa4rgHFmNP6Zt5noMr4be5mY2KBcb+xp9pZ8f0ONX5Y5EHnMm059pyJiZma6MNnhBAoYY=
+	t=1746313315; cv=none; b=NecHOkZAm1vmHCvyQis7GsFf6D7aks9w8cLW/qPQHolnUACGT66P81Z1N8gt9YYqkTevDTmxepPIoJXAYR0Rr/sY3/Jh4stX9lSOZ6o4URcvPtX6jkMGvipf5f4EFJdqW6EBahFkSYDAw+qCi4Gv5a4mOmH30VhTR8s97z3Zrbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746311997; c=relaxed/simple;
-	bh=q/xAnCXUh7gKnEZY83rtkQmLm5+SBilPqhFLOnA9tCc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MoeCyG2zUnyMC3v0NhgCi9dVHUtN9IqfceYa0kCouHE/bvGwg9WLi0W1ikTLxhkdWzd7wL/b5MuFKPCczL9LZ8kJFJxFyQ7pVFjeHRal/5FgxzPBwkpSI8DRjFMBJmjFWwV3UAS5X2GYZNz7JfsadLAnyTPLySjxPGPQJOsUu0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvcK7mTk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746313315; c=relaxed/simple;
+	bh=D04544YY5YKWIz+eOOancW9M0tIDtWJNvQo1W+YhcT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TfYMddeyOWLfFuDciMZygGoa2ARdArh/P8d4qO5XbqV5nzCel3YZlcC9wiinVLIVHwsyM4DNs0JwJlArdeqjcr0qRV9wiPpWoHJYQNSt8JT2nWS1xppLFoLCYHVfRzzDLcbYMWlx1uttBoeVcVkMN7WmLlmLkNsJrB6QFpJ4K90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8H3Nx7f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvcK7mTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D60FC4CEE3;
-	Sat,  3 May 2025 22:39:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8H3Nx7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7050FC4CEE3;
+	Sat,  3 May 2025 23:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746311997;
-	bh=q/xAnCXUh7gKnEZY83rtkQmLm5+SBilPqhFLOnA9tCc=;
-	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
-	b=DvcK7mTkvKmWGxzoRf9hCH1JhrQTgb2jv2whuFoqqKpflpZKLD3Ngz3jHjnDWZxj4
-	 O9qfOFXAFPN9FlJsNhATlg2xM690ZevuWT1K0H2EzAJHKHs0OnGgoeOQuHZrj7iQXF
-	 QSGPvxaV9mEzP9/pyKH+faQUrxgw5N2cpJn4QePSKkYuAotHLiSBmC6tUpx1KJyygi
-	 8ZHfeaWwT/8M0enFKllfh8NwDlbvQJTCZH280co1jzKPuVp7wY1nScU8IqxfdejtdF
-	 0j9QsWR5IjUg6pNDr0KTdwffoqDYSph/HC3ZCRckMbd1vkePbUuOXc8mS9PxmKjIjr
-	 5OFIr4EC54VvQ==
-Message-ID: <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org>
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in
- kernel 6.14.3 and above
-From: Niklas Schnelle <niks@kernel.org>
-Reply-To: niks@kernel.org
-To: Mingyen Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=98=8E=E8=AB=BA=29?=	
- <Mingyen.Hsieh@mediatek.com>, "stable@vger.kernel.org"
- <stable@vger.kernel.org>,  "fossben@pm.me"	 <fossben@pm.me>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
- "linux-mediatek@lists.infradead.org"
-	 <linux-mediatek@lists.infradead.org>, Allan Wang
- =?UTF-8?Q?=28=E7=8E=8B=E5=AE=B6=E5=81=89=29?=
-	 <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	 <regressions@lists.linux.dev>
-Date: Sun, 04 May 2025 00:39:52 +0200
-In-Reply-To: <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-References: 
-	<EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me>
-	 <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	s=k20201202; t=1746313314;
+	bh=D04544YY5YKWIz+eOOancW9M0tIDtWJNvQo1W+YhcT8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U8H3Nx7fg8O4Zbd2BdnB5FwH/GXIQDayV/jEpHLxSpWW/FoKlMzI+RULL9IG9z1aX
+	 pPzavXXcQ5VrXBfCk7w9WiA1fF9Zk7zvcWlDJ0LbcBY1yBwuOuGPI+B8APhRgPgVzd
+	 RHCuk9O1Hsq379RzC10htGKnATBuscJmGtUGjbVoXkccZu32gh1IP5nMVRfSyo/zxg
+	 zVVHC8MfZT3tM2bDzccoHS7R7/ME6U107EZLHFDr8p22tUszWTEE7Hp0Q4IC0L9iQQ
+	 f3MPvIDzgH3EEujJn35QCrufmEzAytCftplRVaaMqAOcpOFFdK1FxAtNhBZRfG2VT/
+	 /MUBWitJD/Hng==
+From: Catalin Marinas <cmarinas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 6.15-rc5
+Date: Sun,  4 May 2025 00:01:51 +0100
+Message-Id: <20250503230151.2578203-1-cmarinas@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=E8=AB=
-=BA) wrote:
-> On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
-> >=20
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >=20
-> >=20
-> > Hello all,
-> >=20
-> > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed that
-> > I could no longer ping *.local addresses provided by Avahi. In
-> > addition, I also noticed that I was not able to get a DHCP IPv6
-> > address from my router, no matter how many times I rebooted the
-> > router or reconnected with NetworkManager.
-> >=20
-> > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses immediately.
-> > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
-> > address will stay there for a while before disappearing later,
-> > possibly because the DHCP lease expired? I am not sure exactly when
-> > it stops working.
-> >=20
-> > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
-> > offending commit that causes mDNS to fail:
-> >=20
-> > commit 80007d3f92fd018d0a052a706400e976b36e3c87
-> > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
-> >=20
-> > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_=
-cmd
-> >=20
-> > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upst=
-ream.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO firm=
-ware.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling M=
-LO when the
-> > firmware supports it")
-> >=20
-> > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++--------=
----
-> > --------------------------------------------
-> > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
-> >=20
-> > I do not know if this same commit is also causing the IPv6 issues as
-> > testing that requires quite a bit of time to reproduce. What I do
-> > know with certainty as of this moment is that it definitely breaks in
-> > kernel 6.14.3.
-> >=20
-> > I've attached my hardware info as well as dmesg logs from the last
-> > working kernel from the bisect and 6.14.4 which exhibits the issue.
-> > Please let me know if there's any other info you need.
-> >=20
-> > Thanks!
-> > Benjamin Xiao
->=20
-> Hi,
->=20
-> Thanks for reporting this issue, we will aim into this.
->=20
-> Can you provide me with your testing steps?
->=20
-> Best Regards,
-> Yen.
->=20
+Hi Linus,
 
-Hi Yan,
+Please pull the arm64 fix below. Thanks.
 
-I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
-mt7925e WiFI module.=C2=A0My setup is just a home router with native IPv6
-both for my uplink and in the LAN. The problems with IPv6 can already
-be seen just in the LAN for example by checking which IP was used for
-SSH, in my setup it should always be IPv6 but falls back to IPv4 in the
-broken state.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
-mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4. This
-fully restores IPv6 for me. Also note I'm running this with the mt7925
-firmware version 20250425073330 from linux-firmware's master branch as
-I had some dropped connections with earlier firmware.
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-So it definitely looks like that commit also broke IPv6 and not just
-mDNS. Note that if if I use DHCPv6 instead of router advertisements, on
-the latest firmware, but without the revert, I get a global IPv6
-address added to the interface but then native IPv6 addresses are still
-uncreachable. With the offending patch reverted my SSH session to an
-IPv6 only host works fine and is stable. Also I'd be willing to test a
-proper fix as I rely on IPv6 heavily due to having to use CGNAT for
-IPv4 but not for IPv6.
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
-Thanks,
-Niklas
+for you to fetch changes up to fee4d171451c1ad9e8aaf65fc0ab7d143a33bd72:
+
+  arm64: errata: Add missing sentinels to Spectre-BHB MIDR arrays (2025-05-01 17:44:18 +0100)
+
+----------------------------------------------------------------
+Add missing sentinels to the arm64 Spectre-BHB MIDR arrays, otherwise
+is_midr_in_range_list() reads beyond the end of these arrays.
+
+----------------------------------------------------------------
+Will Deacon (1):
+      arm64: errata: Add missing sentinels to Spectre-BHB MIDR arrays
+
+ arch/arm64/kernel/proton-pack.c | 2 ++
+ 1 file changed, 2 insertions(+)
