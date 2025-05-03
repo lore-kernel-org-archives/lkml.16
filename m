@@ -1,77 +1,41 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62A1D516F;
-	Sat,  3 May 2025 15:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB11719DF66;
+	Sat,  3 May 2025 15:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746285684; cv=none; b=pTRh8ZItUE9loQf+uA/a9IewKIE/bQOICwY8yuiWpSq0u3E8hmK+p02nkkO8glmaDEx/AFTxz7CRgrrCtT80ta+fsB++SONUEMhjByXlW5DpaueVZMScR33YTDjp6FXP/LrUB4kccWEZ6V6c97N2eLISRbskv5gsEaS0StmBSSw=
+	t=1746285867; cv=none; b=la/0vJtm85z5ZCq/n5oG/8mkRMkEorEOTdek5qNHdXgACDkXVIPIGzOEocanDatDuLZTg3ukzOS3UGWVOpMpLdU0J5ui5M72Y77McPQsT6sGL8obp+KdgMijwSOuXegjDTzJyCnAWePnE7stQdTCv0JO1BdMTpVy12XFAW2LfHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746285684; c=relaxed/simple;
-	bh=SpJDUPr0U8TkbmUTQyNs659xyulgzQJ4MpAQ8Dg7G9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CSfH+gFDuRsAHTovlurPaUisSo3PWXtpwgAsVBmgvTpJaqBU1ibFsp4Ote+QEsh4jMmLTzcgNrH+vIThGYm1s6GiWpt4ILSAfU8Kcu6jsVLQpoISr7TfsDD+yifGz1hYuv0kgutefM4aGRVyWIprHbDkrebQSHFqR4XsG93XIXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qg71ppPp; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg71ppPp"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736c277331eso3914468b3a.1;
-        Sat, 03 May 2025 08:21:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746285682; x=1746890482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ceE3GFXp3363IGmCZMbOrujPi+bJut1p/8h1YkV0Ew=;
-        b=Qg71ppPpgCQEmZVO98XOg9fHSZ0WG092PPp/JFxOWj38Y+Z3ZXnhFcghe22gwR1VpN
-         3xBQSUJ/bAKzYX/sEl+0iErcmsX00OeJEFR4odXQmdqrGraesv6Bn3sWrYUVU/bQsixB
-         JxRg1DulxLkJwYMO1DQFNfADgP7c71PfgoUDNaERzpEVHL/aMNuUvflVXgNmWDkbirqC
-         czN7ghZgg5QrjWWxkGs1WDVs+FJHYtaOjOvZaD/56LbMHiamsBdJNu57QLzZi7uz1lzR
-         tV0XdMikW7YqSona/PYxyNlECwwMY3GdE+oiMFYU0h7LH4PI/QnfcU8BVlsY0x1WavoF
-         bFuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746285682; x=1746890482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9ceE3GFXp3363IGmCZMbOrujPi+bJut1p/8h1YkV0Ew=;
-        b=wPePN62U+uPPRGtLNSXStirvYzkUSoc9zbj/0xPRKQkHrveOlC3SWHJQ6kEgWN1pR3
-         dwR/O02D9fpDC+x28jlgX3U5p9xEGw1C8ytRszDrXhvWVbsg3ePQSE+qDc/LbL0r7HAb
-         93DGE+ih6yOLTdo88z6YImwZrOBGjw7nuju8Zy5AyhYEHgbBghHVT5id4v6c/G3dVs0h
-         ZRSQpJsBzuhDsmYhxjvTTreF/YsyV2r4kk8WL0QhX4ez8rNqoYc4Lg0DGmAn/swZAHKK
-         hYzdjtCIfKricMwDroQjaSF2xSi3TF1VkODnLyXRYb0i2Egld6UvyfJDrEepstjx+mS0
-         5Tig==
-X-Forwarded-Encrypted: i=1; AJvYcCU5fTxDF9sq3nOC0Qzy76Ri2W6wQoSIi1PZBo9ZiyF30N3QlieqmJ1lvjNSU+FxGVC9LtVDBsuaDo+w@vger.kernel.org, AJvYcCVn0cyraPxx8cm/X5vz4/f/xxvCuFqB9H7KKW+NwaB2UYcsAC4LubttoqK7OQwalUrQUoILSdfRpyMm@vger.kernel.org, AJvYcCXhEX6n02VW3hfWMONVW5g7kKL+OdqKrFoikfeWCBiiBhTpxf7hOi/q81RKfZWsY3a/YdsSCXhGrpWBIooR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpTDAiP+ZJBewg3PZ++AtuBGNh7VAuQw33cG1cVxemszeQsPEc
-	2PuqPgrcGmy1Gyiwm1W21lB92BSK6F0G892e3sYNnXwYttC6I/ymaufHs+9nQJM=
-X-Gm-Gg: ASbGncv0i2aoiZSxXbkmDalMPW44kgHlqiPpxoF0dMY9rnFAZMOVwOh7U/uWVPdgZgi
-	J/tttY8kV4t/i68W99O5eSoPQVEt+6X9xT1PVD4v5IUnb5Dn+/ddP4kHq2h+I2/MjO5/9JEfBpx
-	UzvhJTS04RT0gepnvNtaGf4wEm02HuunKv5hvr+JT9l+crYbW9qwYPqCiGXO+0b6ORKMPI6OIw1
-	C19ra3U/bMVYQEXGQvdj1LdhrWjI12FWw0wjIcDvhV2cSrmBCIBpK4fU99a4l8xwhuF54Wb1ste
-	KJYZRjpkk+OLbXgjmiit+0XVMt+YS3kiUhQt1e2RNiLil3qbqA==
-X-Google-Smtp-Source: AGHT+IGB1eVC7bpXKehsOgrTdh5zfEiwEb4D0LPEyTWErLbbJuBw7p9mdKcuvmqdRMbF5D1Ru8iF9w==
-X-Received: by 2002:a05:6a21:3416:b0:1ee:450a:8259 with SMTP id adf61e73a8af0-20bd8d4b1cdmr15194234637.18.1746285682276;
-        Sat, 03 May 2025 08:21:22 -0700 (PDT)
-Received: from localhost ([2804:30c:4024:1700:8e03:72a4:b895:b221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058d7a3a6sm3450199b3a.2.2025.05.03.08.21.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 08:21:21 -0700 (PDT)
-Date: Sat, 3 May 2025 12:22:40 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: akshay bansod <akshaybansod997@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] iio: dac: ad559*: fixed coding style issue (shorthand
- unsigned)
-Message-ID: <aBY0wHEzjbBex-Hn@debian-BULLSEYE-live-builder-AMD64>
-References: <20250503095532.132041-1-akshaybansod997@gmail.com>
+	s=arc-20240116; t=1746285867; c=relaxed/simple;
+	bh=gSeBUIyCXbgUeJ1qEnFhiYYbVkUlzBClu5aLAvkWV8U=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cv9Y+Poqc6lDTSmr5BVNPn6ubFYNaF4tqYeY7cv4kCPhDeZxpFwaCE30mdR84rl/JF5P6IrpQhy1vj6jfjg1qhskZ3loT65yiRMFNAsQTg1gOQGNG7Vxm01/K16T0RjZJUO/04Pw12bDMI/IdMYO7CtM2EsXrDeKzthjBM+4/UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1uBEd0-000000005hU-2PCp;
+	Sat, 03 May 2025 15:24:06 +0000
+Date: Sat, 3 May 2025 16:24:02 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Elad Yifee <eladwf@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net 1/2] net: ethernet: mtk_eth_soc: reset all TX queues on
+ DMA free
+Message-ID: <27713d0004ead6e57d070f9e19c0d13709ba2512.1746285649.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,75 +44,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503095532.132041-1-akshaybansod997@gmail.com>
 
-Hello akshay,
+The purpose of resetting the TX queue is to reset the
+byte and packet count as well as to clear the software
+flow control XOFF bit.
 
-Overall, your patch looks good to me.
-Though, I think it may get slightly better if you consider my suggestions below.
+MediaTek developers pointed out that netdev_reset_queue would only
+resets queue 0 of the network device.
 
-Regards,
-Marcelo
+Queues that are not reset may cause unexpected issues.
 
-On 05/03, akshay bansod wrote:
-> checkpatch.pl flagged use of shorthand 'unsigned' as warning
-> trivial fix: replaced use of shorthand 'unsigned' with 'unsigned int'
-> 
-> Signed-off-by: akshay bansod <akshaybansod997@gmail.com>
-> ---
-...
-> @@ -55,7 +55,7 @@ static int ad5592r_gpio_set(struct gpio_chip *chip, unsigned int offset,
->  	return st->ops->reg_write(st, AD5592R_REG_GPIO_SET, st->gpio_val);
->  }
->  
-> -static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-> +static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+Packets may stop being sent after reset and "transmit timeout" log may
+be displayed.
 
-Hmm, the driver code was mostly contained within 80 columns before.
-While it doesn't break any code style rule having it like that, I'd break the
-line to keep the code under 80 columns.
+Import fix from MediaTek's SDK to resolve this issue.
 
-static int ad5592r_gpio_direction_input(struct gpio_chip *chip,
-					unsigned int offset)
+Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/319c0d9905579a46dc448579f892f364f1f84818
+Fixes: f63959c7eec31 ("net: ethernet: mtk_eth_soc: implement multi-queue support for per-port queues")
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-Though, since that's just my personal preference, I think it should be fine if
-you decide to keep the function declaration in one line.
-
->  {
->  	struct ad5592r_state *st = gpiochip_get_data(chip);
->  	int ret;
-...
-> @@ -30,7 +30,7 @@ static int ad5592r_spi_wnop_r16(struct ad5592r_state *st, __be16 *buf)
->  	return spi_sync_transfer(spi, &t, 1);
->  }
->  
-> -static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
-> +static int ad5592r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
-
-I'd also break this one, but you may chose not to if you think it's better to
-keep it in one line.
-
->  {
->  	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
->  
-> @@ -39,7 +39,7 @@ static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
->  	return spi_write(spi, &st->spi_msg, sizeof(st->spi_msg));
->  }
->  
-> -static int ad5592r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
-> +static int ad5592r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
-
-Same here.
-
->  {
->  	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
->  	int ret;
-...
-> @@ -102,6 +102,7 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
->  static int ad5593r_i2c_probe(struct i2c_client *i2c)
->  {
->  	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
-> +
-The addition of a blank line here is desirable, but it doesn't fit this patch's
-scope. Drop that from this patch. You may propose another patch adding that if
-you want.
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 217355d79bbb7..d6d4c2daebab0 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -3274,11 +3274,19 @@ static int mtk_dma_init(struct mtk_eth *eth)
+ static void mtk_dma_free(struct mtk_eth *eth)
+ {
+ 	const struct mtk_soc_data *soc = eth->soc;
+-	int i;
++	int i, j, txqs = 1;
++
++	if (MTK_HAS_CAPS(eth->soc->caps, MTK_QDMA))
++		txqs = MTK_QDMA_NUM_QUEUES;
++
++	for (i = 0; i < MTK_MAX_DEVS; i++) {
++		if (!eth->netdev[i])
++			continue;
++
++		for (j = 0; j < txqs; j++)
++			netdev_tx_reset_queue(netdev_get_tx_queue(eth->netdev[i], j));
++	}
+ 
+-	for (i = 0; i < MTK_MAX_DEVS; i++)
+-		if (eth->netdev[i])
+-			netdev_reset_queue(eth->netdev[i]);
+ 	if (!MTK_HAS_CAPS(soc->caps, MTK_SRAM) && eth->scratch_ring) {
+ 		dma_free_coherent(eth->dma_dev,
+ 				  MTK_QDMA_RING_SIZE * soc->tx.desc_size,
+-- 
+2.49.0
