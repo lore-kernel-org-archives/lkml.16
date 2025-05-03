@@ -1,229 +1,301 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D54315F;
-	Sat,  3 May 2025 09:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE84B171092;
+	Sat,  3 May 2025 10:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746266142; cv=none; b=OOCpc1vDvhzFDq1oMnKKrnj31jr0iea7NPThDGyiMXccbkXUkRqvRLMoBQJDbpv+SFCjEKLeI+/0Bt1y/UD8K00okpFz4eBcCRhGIhUyFMCTJZqzo2KAc8iPGtMyYESTn2HpgtbQSR/H6DLxRLr0Ryqnn98wdkQSYSX8aJ5VkAI=
+	t=1746266746; cv=none; b=KRSRSneYUgLHK7uUid4bKsDiLOq0bivTZYnRJmJ2OgOgv8Eiut2VHEOeEY1BWQeJBmtyxKmkvKMOV/CSt/Zs7Z4TgBM0enEjSTl7ASG/i88056JxC5jmv33h55gbwT1meVrMT0buL09GA0WWlK/Cj8vm8z7ABlDmGHW99mQEkoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746266142; c=relaxed/simple;
-	bh=QsjQOqs9rNCb6wlXwkkUKTzyWATUgzGPtz62hjqj04U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GqQyPg0MtJXRDu9DD+xW/Czcwt0YcNm4Bi8JN07abGki1ASgDHxygcawSuOpzve0JPkha9hMf1BJx2s8n5ggXDxfxJkugl+LLc5OZoYSGc7mN7+AVObYIoQbDkMZ2DPWgtpqr3JdZ2UNtK2iXAG/BT14fTBzUvRcpxy5g5I3IUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhloYE4A; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1746266746; c=relaxed/simple;
+	bh=uF2T2BIyw+/xcyCGJDU/6x2DZb941ZpmFA/Q3XtBUSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JHwhYYpqiwvR7enYThpGGtPDkWqFwXZpe5a2BE8n/XTI0my92gF60afxNwfLqCYDJXB1UFqSZScF93yFroz4MZZ5GsQ1qNDEA0IofbR9uYkrHB/8cWNEeGkzalihwIIZSV48X1zoRrXafuWYGir4AYoKERxVhcjAcvUvpiZdssk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmEMbroi; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhloYE4A"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fb0f619dso35483265ad.1;
-        Sat, 03 May 2025 02:55:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmEMbroi"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1613518f8f.0;
+        Sat, 03 May 2025 03:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746266140; x=1746870940; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r2FFqPQS0cGePNUSaEag1bMy/aHVdoE23x6HNRbtcvE=;
-        b=VhloYE4AigwI2KLyD9tQKWesvuj6kG+sZJUrABWgVFBfBt7mZOW1yfyIM/9IxrgEjS
-         Q9bo1Ji+tqjGo0q46MvBX/bOpo+xyURWjwdj/dw+tAKZV2V+Qz58nRDM7TEn0RcKAOmL
-         olotzhQeNRdC3NWRDlmQGYgQWsLYJpqnnLZ11t5kd1DMkOjmpmfhPTLSiy0MlKsgrZN9
-         PhNm/ckG13aX4IW+LxUUPFwvXKHFOhFRpHn7Pyf5iZ2H7WwlQLMGvIDDShYCBF993ic0
-         GTG7RxLN3078F+JYAQKMaIzCqzkdHoYTjPtFzAJWVLrCQ6Yh0V8FrCgGQtaTSiHSo8HL
-         3Atg==
+        d=gmail.com; s=20230601; t=1746266742; x=1746871542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BMtY8QqPx6OiDjuqDLYhvMGsySH/FA5PX2dXiSgpBl4=;
+        b=NmEMbroiPqWRUmd6CoaDTPR6W3S7nx7/fp9KGkRcVlbja+JSH6gWk9c7ho4EI52iJZ
+         8qap80AoPnACyiI95cOBb/rHmIDF1BNVJgQ3QjaQ7PyMe03Wnze7+IrUMEQyu/AoxXPq
+         eGpFaKs6hhzj8YFAtjRYS4xZH8hpjF6T2AXzGVOk7+d90zHndua+/sBkAqluRzH/m61O
+         fP7WDSSDye269XPxzfplaqqGpOJ8vKT30Qts0W5UiqhIczodjvMZpcxkMmzojWMcZKtT
+         eOAfLOjIXDYchkuFiVCK4QSuj3ieKxp4qR3do9Q2+PI0hPNAlzMhAPe/eLFdntRq9sL6
+         sQYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746266140; x=1746870940;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r2FFqPQS0cGePNUSaEag1bMy/aHVdoE23x6HNRbtcvE=;
-        b=KgUa1o5DCX4xvJaXuyQ5v9TcEvwFB8D+HFWaS58m/VJZOly3PUDuFwQQdLIERjJsdQ
-         1mxsAToTKUWfpPUZJrpE+IVI5G4U04tl8mv+vP/Eh3GtNTLjGqaoUS3lwPC+wJ8DRZOK
-         BvR3my7TeNn+Ww12AGldsTak8bNXDEM0Q/NLQJlE8WOPyO8ILrl3NyuIIiTVi9LWiY/z
-         cCt00BdLKxZF5Xe1hcjbWkoAGWzkVjLG7rqwTjzc27g8kKeqB8Jm4prcPOkNAm9/UHT8
-         KgMIik/X2wlvWtWU0IXGXaGxR0MOmADwwiUSkhq5eFAIoKHMRwpEra0Rubx/B0cVZTTf
-         FB1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUP5W5JnEkgF2TUltocG8e5dTb3LqvSitrKsKbanvABsqghQ4Ys5UdGUSnE9S4O5DRqDec57QmR1BcqjoZ8@vger.kernel.org, AJvYcCUZTgcLDi5x96fTTg3Du1pRyolp0PG6LAbtU6KBH5hgckxs6R0K4SEkn9Z0UIW01g/MyLFwETUDTCvw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0pvdBIgBVgpgW4J0ndFCBkzSYVm1va3caEAwRmKPdhmJKFRC2
-	2IeWJAHsliXWK9eGyXNRT61yd5ixTmJlhJMzgVa2ZpcGzC6F8xA+
-X-Gm-Gg: ASbGncvgCBRq2fo66ToCrcb7q8VlchWo9L8Nbhpe5DcBhACb55ObPFIBD7W4XWlS7VN
-	ryajGjVaMN/A1PF49687usbLRYXAxGTQRFxErsNJnpWzM5XfC6ZZ0XjM1TgS2uH5kquRUI8dVvA
-	TwLg0EC18e5auwsi1vsG+zbMjkkQBceYtec9j3sDSxLI1K0uct/Cq95x7QyI6lDTNQZ5gV65Exc
-	anqIdq9MJWQLwrzY26AaMktwf/tBJz9zRTh1KPbM2R81WVwFApdjGX/51NJzs/u4lUG1jQZg6PW
-	9hYdLhf7d8YmJWwq/BQKhUvPDKS+1B8TKj4CmrSCsSxT5oKl0rV5goqNuw/2
-X-Google-Smtp-Source: AGHT+IHdkFFj/To09DWxc81m7ALbu06mLkZUP8cKiy8xtrdnioKoWhr5mFDpUzvkl43XFEATvCd9tg==
-X-Received: by 2002:a17:902:e750:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22e1030a3afmr120736405ad.24.1746266140170;
-        Sat, 03 May 2025 02:55:40 -0700 (PDT)
-Received: from localhost.localdomain ([36.50.162.227])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522948csm20883585ad.159.2025.05.03.02.55.35
+        d=1e100.net; s=20230601; t=1746266742; x=1746871542;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BMtY8QqPx6OiDjuqDLYhvMGsySH/FA5PX2dXiSgpBl4=;
+        b=A5b69UpSNkhH7RDNNmIKxCPL7s8r+DNnfW1/BGwfVTWdEZEqXfTjL/ZX6DmB/dM2NK
+         1rLRWe4030/J3MLNslGvE2NlbUnQgvLlpuxP8O6H7R53QMvjizhjX3DeLYI/Lhl+zPpv
+         SOGQVtSrAd064JvoVlKXYZefAjaIXVstIm3yEaK8lDsZW/3lHF+WibMwaFLgRfHGY1ex
+         Nq5BF1Tv+Cmx5duv55QsOfaGBcqqm//qFvzOV5GAbjeBWeVv+RK6ZdgQwO9b9D3I1ojq
+         32QWRPgmfuYr9qHxnq/aDPY7hTM31Qm+wUKJYNSjM7OHldnfIeso+JnhlJsgu5rTsyLO
+         IPPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdlI/Dl6SQh7JPGIhhl6Bhq6JGYbrOkb9x38PSv+n6fuKiTq2u1LbENvjARpKt9xkuxLk3OF6JRMLaJ7o=@vger.kernel.org, AJvYcCXUDVZQYRHyWdWmpEFYTKLlasgCmftqYXdjYAPvgn8GjMLSnyMv29a4SoIHa/V/6Gg2lMXmSnp4C9XqjOAEtndsiA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjK4KGVnPitfEpncOxD+Ce10EqsQTfQhi/Bvg6qosG7pQAZf+C
+	KvuMBBgWC8u1BOal3D6UqvgbYf4Oa45xkGzowgAKhLhjNF3fCaPO
+X-Gm-Gg: ASbGncurGIqdNsCrAHiZYe8TNFR2ipYTjuMzDVY9OMJJf0nl32HJ2F/ETKQuCNMpRXc
+	ZXXlIguonByMmGoI04jVlkQv54j3nNrQBQfzOMSRGjtu7YBHmC/af6h0YuwwCJ5U706sdahrhCY
+	x4l1jFg9EdlYIq5+JD7OFJn/AKn5JomH6+pQ4E04JWBiZaXmcgjPRpCUOE/esamGCKEPRydfl20
+	OPyGOicYuky3oS3nATtwQjrKYwC2M6YUubjEv6Nlq6SBCUk6lI0l4EqBcTzvR/296uYGYut/z4Z
+	I5IygGT00EV11XTWFNY3E3R5P6eYhR0TlXMQmCfP1Vd/u/qg0+60uYq4CHsxiRPSk1lP9SeeV9+
+	eaP4=
+X-Google-Smtp-Source: AGHT+IGQyKlOxBSM7B2+EZ2eft7OAT912MJRMXi8G6uxK9ya5aWgGaesS68wg/MSidCEfv4CFqh63A==
+X-Received: by 2002:a05:6000:2484:b0:3a0:88e1:5e18 with SMTP id ffacd0b85a97d-3a09fd6f850mr641212f8f.1.1746266741727;
+        Sat, 03 May 2025 03:05:41 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10013sm4449634f8f.65.2025.05.03.03.05.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 02:55:39 -0700 (PDT)
-From: akshay bansod <akshaybansod997@gmail.com>
-To: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] iio: dac: ad559*: fixed coding style issue (shorthand unsigned)
-Date: Sat,  3 May 2025 15:25:29 +0530
-Message-ID: <20250503095532.132041-1-akshaybansod997@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Sat, 03 May 2025 03:05:41 -0700 (PDT)
+Date: Sat, 3 May 2025 11:05:38 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Dirk Gouders <dirk@gouders.net>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+ <kan.liang@linux.intel.com>, Yury Norov <yury.norov@gmail.com>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Thomas Gleixner <tglx@linutronix.de>,
+ Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, James Clark
+ <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan
+ <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor
+ <nathan@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey
+ <ben.gainey@arm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol
+ Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, Eder
+ Zulian <ezulian@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>, Brian
+ Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Howard
+ Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, Colin
+ Ian King <colin.i.king@gmail.com>, Dominique Martinet
+ <asmadeus@codewreck.org>, Jann Horn <jannh@google.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Yang Jihong
+ <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, Andi Kleen
+ <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, Ilkka
+ Koskinen <ilkka@os.amperecomputing.com>, Anshuman Khandual
+ <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao
+ Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, Gabriele
+ Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, Casey Chen
+ <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, Li
+ Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>,
+ Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>, Thomas
+ Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Andrew Kreimer <algonell@gmail.com>, Krzysztof =?UTF-8?B?xYFvcGF0b3dza2k=?=
+ <krzysztof.m.lopatowski@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Jean-Philippe Romain
+ <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang
+ <xu.yang_2@nxp.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>,
+ Zixian Cai <fzczx123@gmail.com>, Stephen Brennan
+ <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 04/47] perf bench: Silence -Wshorten-64-to-32
+ warnings
+Message-ID: <20250503110538.0d264e4a@pumpkin>
+In-Reply-To: <ghfrhnaypq.fsf@gouders.net>
+References: <20250430175036.184610-1-irogers@google.com>
+	<20250430175036.184610-5-irogers@google.com>
+	<gho6wdh00l.fsf@gouders.net>
+	<CAP-5=fUdpa40MDNu0aDBO7o8H3YMe-cYsg-YfqUUZUY4M4XLeA@mail.gmail.com>
+	<ghecx9guoj.fsf@gouders.net>
+	<CAP-5=fXJpD_f6dUqroVpqe-OX5kyOPc1zpbyOZoQtqvQWBGr=Q@mail.gmail.com>
+	<gha57xgs8b.fsf@gouders.net>
+	<20250502130635.0eabb190@pumpkin>
+	<ghfrhnaypq.fsf@gouders.net>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-checkpatch.pl flagged use of shorthand 'unsigned' as warning
-trivial fix: replaced use of shorthand 'unsigned' with 'unsigned int'
+On Fri, 02 May 2025 16:12:17 +0200
+Dirk Gouders <dirk@gouders.net> wrote:
 
-Signed-off-by: akshay bansod <akshaybansod997@gmail.com>
----
- drivers/iio/dac/ad5592r-base.c | 14 +++++++-------
- drivers/iio/dac/ad5592r-base.h |  4 ++--
- drivers/iio/dac/ad5592r.c      |  4 ++--
- drivers/iio/dac/ad5593r.c      |  5 +++--
- 4 files changed, 14 insertions(+), 13 deletions(-)
+> David Laight <david.laight.linux@gmail.com> writes:
+>=20
+> > On Thu, 01 May 2025 01:11:16 +0200
+> > Dirk Gouders <dirk@gouders.net> wrote:
+> > =20
+> >> Ian Rogers <irogers@google.com> writes:
+> >>  =20
+> >> > On Wed, Apr 30, 2025 at 3:19=E2=80=AFPM Dirk Gouders <dirk@gouders.n=
+et> wrote:   =20
+> >> >>
+> >> >> Ian Rogers <irogers@google.com> writes:
+> >> >>   =20
+> >> >> > On Wed, Apr 30, 2025 at 1:23=E2=80=AFPM Dirk Gouders <dirk@gouder=
+s.net> wrote:   =20
+> >> >> >>
+> >> >> >> Hi Ian,
+> >> >> >>
+> >> >> >> considering so many eyes looking at this, I am probably wrong.
+> >> >> >>
+> >> >> >> So, this is only a "gauge reply" to see if it's worth I really r=
+ead
+> >> >> >> through all the commits ;-)
+> >> >> >>
+> >> >> >> Ian Rogers <irogers@google.com> writes:
+> >> >> >>
+> >> >> >> [SNIP]
+> >> >> >>   =20
+> >> >> >> > diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/=
+sched-pipe.c
+> >> >> >> > index 70139036d68f..b847213fd616 100644
+> >> >> >> > --- a/tools/perf/bench/sched-pipe.c
+> >> >> >> > +++ b/tools/perf/bench/sched-pipe.c
+> >> >> >> > @@ -102,7 +102,8 @@ static const char * const bench_sched_pipe=
+_usage[] =3D {
+> >> >> >> >  static int enter_cgroup(int nr)
+> >> >> >> >  {
+> >> >> >> >       char buf[32];
+> >> >> >> > -     int fd, len, ret;
+> >> >> >> > +     int fd;
+> >> >> >> > +     ssize_t ret, len;
+> >> >> >> >       int saved_errno;
+> >> >> >> >       struct cgroup *cgrp;
+> >> >> >> >       pid_t pid;
+> >> >> >> > @@ -118,7 +119,7 @@ static int enter_cgroup(int nr)
+> >> >> >> >       cgrp =3D cgrps[nr];
+> >> >> >> >
+> >> >> >> >       if (threaded)
+> >> >> >> > -             pid =3D syscall(__NR_gettid);
+> >> >> >> > +             pid =3D (pid_t)syscall(__NR_gettid);
+> >> >> >> >       else
+> >> >> >> >               pid =3D getpid();
+> >> >> >> >
+> >> >> >> > @@ -172,23 +173,25 @@ static void exit_cgroup(int nr)
+> >> >> >> >
+> >> >> >> >  static inline int read_pipe(struct thread_data *td)
+> >> >> >> >  {
+> >> >> >> > -     int ret, m;
+> >> >> >> > +     ssize_t ret;
+> >> >> >> > +     int m;
+> >> >> >> >  retry:
+> >> >> >> >       if (nonblocking) {
+> >> >> >> >               ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, =
+1, -1);   =20
+> >> >> >>
+> >> >> >> The epoll_wait(), I know of, returns an int and not ssize_t.
+> >> >> >>
+> >> >> >> That shouldn't show up, because it doesn't cause real problems..=
+.   =20
+> >> >> >
+> >> >> > So the function is read_pipe so it should probably return a ssize=
+_t. I
+> >> >> > stopped short of that but made ret a ssize_t to silence the trunc=
+ation
+> >> >> > warning on the read call. Assigning smaller to bigger is of cours=
+e not
+> >> >> > an issue for epoll_wait.   =20
+> >> >>
+> >> >> Oh yes, I missed that ret is also used for the result of read().
+> >> >>
+> >> >> Some lines down there is also a combination of
+> >> >>
+> >> >> ret =3D enter_cgroup() (which is int)
+> >> >>
+> >> >> and
+> >> >>
+> >> >> ret =3D write()
+> >> >>
+> >> >>
+> >> >> Just confusing but yes, because ret is also used for read() and wri=
+te()
+> >> >> in those cases it should be ssize_t.
+> >> >>
+> >> >> I'm sorry for the noise.   =20
+> >> >
+> >> > No worries, I'm appreciative of the eyes. I suspect we'll only pick =
+up
+> >> > the first patches in this series to fix what is a bug on ARM. I think
+> >> > I'm responsible for too much noise here ;-)   =20
+> >>=20
+> >> A final thought (in case this patch will also be picked):
+> >>=20
+> >> Why not, in case of read_pipe() and worker_thread() just cast
+> >> read() and write() to int?  Both get counts of sizeof(int) and
+> >> it would clearly show: we know the result fits into an int. =20
+> >
+> > This is an obvious case of the entire insanity of these changes. =20
+>=20
+> You mean, because there is still the -1 case where the sign-lost can
+> happen?
+>=20
+> I guess your reply is in combination with your replies to another thread
+> to this subject.  As far as I understood, Ian also has problems with
+> full understanding and I wonder if it helps to talk about a real
+> example.  As far as I understood you say that code like this
+> (from tools/perf/bench/sched-pipe.c) is simply wrong:
+>=20
+> static inline int read_pipe(struct thread_data *td)
+> {
+> 	int ret, m;
+> retry:
+> 	if (nonblocking) {
+> 		ret =3D epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
+> 		if (ret < 0)
+> 			return ret;
+> 	}
+> 	ret =3D read(td->pipe_read, &m, sizeof(int));
+> 	if (nonblocking && ret < 0 && errno =3D=3D EWOULDBLOCK)
+> 		goto retry;
+> 	return ret;
+> }
+>=20
+> And from your reply I understand that casting the read() explicitely to
+> int is insane.  And now, I wonder what you would suggest -- honestly, I
+> am expecting to learn something, here.
 
-diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
-index 5f2cd5172..9aa051a74 100644
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -21,7 +21,7 @@
- 
- #include "ad5592r-base.h"
- 
--static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret = 0;
-@@ -55,7 +55,7 @@ static int ad5592r_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	return st->ops->reg_write(st, AD5592R_REG_GPIO_SET, st->gpio_val);
- }
- 
--static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret;
-@@ -73,7 +73,7 @@ static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- }
- 
- static int ad5592r_gpio_direction_output(struct gpio_chip *chip,
--					 unsigned offset, int value)
-+					 unsigned int offset, int value)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 	int ret;
-@@ -99,7 +99,7 @@ static int ad5592r_gpio_direction_output(struct gpio_chip *chip,
- 	return st->ops->reg_write(st, AD5592R_REG_GPIO_IN_EN, st->gpio_in);
- }
- 
--static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned offset)
-+static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
- 
-@@ -188,7 +188,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- {
- 	const struct ad5592r_rw_ops *ops = st->ops;
- 	int ret;
--	unsigned i;
-+	unsigned int i;
- 	u8 pulldown = 0, tristate = 0, dac = 0, adc = 0;
- 	u16 read_back;
- 
-@@ -472,7 +472,7 @@ static const struct iio_chan_spec_ext_info ad5592r_ext_info[] = {
- };
- 
- static void ad5592r_setup_channel(struct iio_dev *iio_dev,
--		struct iio_chan_spec *chan, bool output, unsigned id)
-+		struct iio_chan_spec *chan, bool output, unsigned int id)
- {
- 	chan->type = IIO_VOLTAGE;
- 	chan->indexed = 1;
-@@ -489,7 +489,7 @@ static void ad5592r_setup_channel(struct iio_dev *iio_dev,
- static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
- {
- 	struct ad5592r_state *st = iio_priv(iio_dev);
--	unsigned i, curr_channel = 0,
-+	unsigned int i, curr_channel = 0,
- 		 num_channels = st->num_channels;
- 	struct iio_chan_spec *channels;
- 	struct fwnode_handle *child;
-diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
-index cc7be426c..d78f5bb72 100644
---- a/drivers/iio/dac/ad5592r-base.h
-+++ b/drivers/iio/dac/ad5592r-base.h
-@@ -42,8 +42,8 @@ enum ad5592r_registers {
- #define AD5592R_REG_CTRL_DAC_RANGE	BIT(4)
- 
- struct ad5592r_rw_ops {
--	int (*write_dac)(struct ad5592r_state *st, unsigned chan, u16 value);
--	int (*read_adc)(struct ad5592r_state *st, unsigned chan, u16 *value);
-+	int (*write_dac)(struct ad5592r_state *st, unsigned int chan, u16 value);
-+	int (*read_adc)(struct ad5592r_state *st, unsigned int chan, u16 *value);
- 	int (*reg_write)(struct ad5592r_state *st, u8 reg, u16 value);
- 	int (*reg_read)(struct ad5592r_state *st, u8 reg, u16 *value);
- 	int (*gpio_read)(struct ad5592r_state *st, u8 *value);
-diff --git a/drivers/iio/dac/ad5592r.c b/drivers/iio/dac/ad5592r.c
-index 92d1b629b..a40f590e6 100644
---- a/drivers/iio/dac/ad5592r.c
-+++ b/drivers/iio/dac/ad5592r.c
-@@ -30,7 +30,7 @@ static int ad5592r_spi_wnop_r16(struct ad5592r_state *st, __be16 *buf)
- 	return spi_sync_transfer(spi, &t, 1);
- }
- 
--static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
-+static int ad5592r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
- {
- 	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
- 
-@@ -39,7 +39,7 @@ static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
- 	return spi_write(spi, &st->spi_msg, sizeof(st->spi_msg));
- }
- 
--static int ad5592r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
-+static int ad5592r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
- {
- 	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
- 	int ret;
-diff --git a/drivers/iio/dac/ad5593r.c b/drivers/iio/dac/ad5593r.c
-index 9a8525c61..3bdb54820 100644
---- a/drivers/iio/dac/ad5593r.c
-+++ b/drivers/iio/dac/ad5593r.c
-@@ -40,7 +40,7 @@ static int ad5593r_read_word(struct i2c_client *i2c, u8 reg, u16 *value)
- 	return 0;
- }
- 
--static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
-+static int ad5593r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
- {
- 	struct i2c_client *i2c = to_i2c_client(st->dev);
- 
-@@ -48,7 +48,7 @@ static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
- 			AD5593R_MODE_DAC_WRITE | chan, value);
- }
- 
--static int ad5593r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
-+static int ad5593r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
- {
- 	struct i2c_client *i2c = to_i2c_client(st->dev);
- 	s32 val;
-@@ -102,6 +102,7 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
- static int ad5593r_i2c_probe(struct i2c_client *i2c)
- {
- 	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
-+
- 	if (!i2c_check_functionality(i2c->adapter,
- 				     I2C_FUNC_SMBUS_BYTE | I2C_FUNC_I2C))
- 		return -EOPNOTSUPP;
--- 
-2.49.0
+If you look through pretty much all 'posix' userspace code the return
+value from 'read' is assigned to an 'int' variable.
+If the compiler is going to complain that the return value doesn't fit
+into a 32bit int, it better have a pretty good idea the return value
+might exceed 2^^32.
+That requires knowledge of what 'read' does and analysis of the domain
+(not just type) of the length passed to read.
+
+Now if you add an (int) cast, you won't get an error (on 32bit) if
+the value is a pointer - and that is an error you always want.
+
+I'm pretty sure that it is also true the linux limits read (and write)
+to INT_MAX - so, for linux, the return value from read() always fits
+int 'int'.
+
+The underlying problem is that if you start adding unnecessary casts for
+integer type conversions you end up with so many casts that it is far too
+easy for a 'broken' one to slip into the code.
+
+If you scan the kernel for min_t() there are plenty of very dubious ones.
+They've been added to 'fix' a compile time warning, but there are plenty
+that cast to u8, u16 or long (where there are u64 lurking).
+One of the u16 ones I found was a real bug and found/fixed separately
+from my scans of all the min_t().
+
+	David=20
+
+>=20
+> Best regards,
+>=20
+> Dirk
 
