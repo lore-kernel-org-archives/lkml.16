@@ -1,152 +1,242 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62C7182;
-	Sat,  3 May 2025 12:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2921F152C
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 12:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746274066; cv=none; b=Ti/WO3QxZRvtZpO7RDZsnJIOcdK4BWFjCgyrPwkN4Yg6mhoPpibTMwCISNtdSRquC78llMNk7weoOFACIu9Uh6nqo01qvIqa8etShRKDPZD5VJGeDKZCk+9Cy73Yld7QJlfW3vaLJlIJPGn4FpUqy5Q8dTy8y+NNT/pZnlj1isQ=
+	t=1746274291; cv=none; b=HNr+alGKNEhS3z9oz2dNGB9dNaHjo4daJYNJmVp7hSWINYDZ621kiJvgwOlditCnaUuFaKxUYCR7dDEvbPaPtWhBqvwUZl5HxNeDINxBKIxuROh1/4gcSpsptNy1a38abUdrWnQJ/b8MPDkuKHk0XJe9ei82QzgFGNAT5YwhIOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746274066; c=relaxed/simple;
-	bh=xURoyVohLnXtIHjBFLS8HV022V4nATDEUMvGaKCIqSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ahYt5aAKtf9+2/qRBPVyXcXsCPhCF4X6g4eqgkfdi0mvwUoZr5MrABVWkNY9oyX8DsJayIrALvTlwa5NSpaGEsBwbajiaqcSDvf8DynHHQTwNttrGfLscFAblsLMD9C8Ry+6yaLgYQUJFKtv+gHV3T6gjYJm6XDqMMVOgNWR4S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NtK7Ho7X; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NtK7Ho7X"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 110A540E0206;
-	Sat,  3 May 2025 12:07:39 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qO-hxwK00kTd; Sat,  3 May 2025 12:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746274050; bh=xp0Sbz9Zv7k2nPjyqhgjhsdzmEuEZZQ52kdsfDfr8TU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NtK7Ho7Xua1WTZ0NdRFhb/reD/GdGIN1EzXDdpCf0nQHgIs97iSObZbDg11BFZvKK
-	 Jfqdwg2PVtLjMHE/bCksoP0iccxtJV2Wj5MkFnPeSqdYS1UgX5N62h97hzf8W09rKO
-	 oJ7BFChpfRqw3LqOZl0N3S8Pn6NsPzAmflLxTbUruclVK2PbJ3RKbKizx254ydNZwe
-	 kKGKXmBxmnlmBLCAKFjJx1WP1JGaKiE46di7osPdDxZ9c4b3lYRp95rmS6p3IfVjVn
-	 DXimgcvjTOCx9ZP+lf18mKkA5MA7RXfs0HLSoo0PVRFCTzZ0mOhQ0J8jakGiEpEoQt
-	 ITzbF6I81FecLPSSLsyn/GFEDJ/UbnJ3RBeIctu9fZtw1uzutCYtYMKgn+E21F4qXC
-	 1OTy6g8WIytYA+/2UQ2nEOdBF7mD+f+CMqFa1ew+a7XuGpumYQvTPbUPsfYsZdsX42
-	 64WrkC17HuLyPgDrRyj7Tbwdn4Xtrn23V+AFs/Bsum9Ue/BspFdfRp6v5JffrOOOLM
-	 31BaxYiBrfyEZB0HYQxFVisg6R2zpETchVQ0APAtfEuIJCvK96Ku9X9WTQCGr5eRiL
-	 sfHg+djY/Yd675KpbKZONB5FsYSNPA30jBEMGPYYZ4d4JGwO2MpXomjgxK8euI3cfY
-	 H0EWNlbGBBcxbYYuiHueyC5U=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AEB6A40E0192;
-	Sat,  3 May 2025 12:07:18 +0000 (UTC)
-Date: Sat, 3 May 2025 14:07:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu: Make
- task_struct::thread constant size)
-Message-ID: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+	s=arc-20240116; t=1746274291; c=relaxed/simple;
+	bh=6fTHyu9bRz7JFDb3svNNwfepCkjZ1lsZANKZ+jhYnjE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BLLrnS/uUNDNMsMxbLWB2eM9DdNOAwCSyrInY3m0pemDdaxxNQrz9LyPOuSZVGyty6UwOTwGEb3Bef4ISzjtZol7jg31IFco2eSJ/SDk6H64hVPrR4+K0WWZmzHGORfSSjKYiO5zaKkj4hO6mNDt+HQU3P1NQX6OKhLNEawsmX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86176e300fdso287205239f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 05:11:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746274288; x=1746879088;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xpICkILdajduER/YLuCCCNObz/t1lP6UyNT/xJlM5rY=;
+        b=QPymfrl3aIKiYYrb1vyfb8bvMz7QfVk44w4GSezXwff9sfStMbl0qltGE86LTDjxxo
+         liwDfRjXavQTxk9LVYY/EQ8PBI3WDRRXaPG43bzWg1zBIXD4iXyzhA6Ml3Ha1DFYXCye
+         vL04NRs/WIghuo9+hHxdRWYIE0HdrgnCb+1y8KrnkQHC7EYODH+gNp4bZrRnJA81Otzv
+         mjmv06nvxvBs961y1SFrOb/73CqSFFlbWR7jU9wqUqta8qpEqsix/+IpMIeb3u6Wg/L4
+         CPzz00cnZvmNPX5dTCsYB7ZPdURyBF3umiiQVqnVzlCTn8/zZXVk70TDFLbnfONOAjMJ
+         VTjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1UhKvFXJVhyneEFnwEba8Rou7v9oX4lrGXFJbop0qdTigXgl+qSx9sDmgKQ+qdva5/xwD/rzwWrQ5rNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+vfwr8d3UfBNyxUnlZ0jwvd8SEFWC3ZYGhNrowPxw8tOpF13U
+	4uFHRxT3dmHbjplLnGSYTqKkCBWRa1RAvCWNrFp1McCpQF/F+1kTDAJ8cydWJDIrk4LFf0xHmpy
+	fUdhuhQLJeK0+2FK1O4wsFXLVPi2SBX1vR3vtb55PBiXNxv+uThJWqIs=
+X-Google-Smtp-Source: AGHT+IEA4eq27hApebar8OS4dbm0j62fWqYJiIuVwPD6OA9pwNTVqN+a0MBkk1tasN0/jYrN24P5m3TQeDg1RHD9QIH/3drZ+27j
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:1b0a:b0:3d3:d994:e92e with SMTP id
+ e9e14a558f8ab-3da5b31e5e4mr6002615ab.17.1746274288749; Sat, 03 May 2025
+ 05:11:28 -0700 (PDT)
+Date: Sat, 03 May 2025 05:11:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681607f0.a70a0220.254cdc.001a.GAE@google.com>
+Subject: [syzbot] [usb?] [net?] BUG: using smp_processor_id() in preemptible
+ code in usbnet_skb_return
+From: syzbot <syzbot+efc5e3c9e61a69ecf48f@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	netdev@vger.kernel.org, oneukum@suse.com, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 14, 2025 at 07:34:48AM -0000, tip-bot2 for Ingo Molnar wrote:
-> The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
-> now that the FPU structure is not embedded in the task struct anymore, which
-> reduces text footprint a bit.
+Hello,
 
-Well, hardened usercopy still doesn't like it on 32-bit, see splat below:
+syzbot found the following issue on:
 
-I did some debugging printks and here's what I see:
+HEAD commit:    615dca38c2ea Merge 6.15-rc4 into usb-next
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=118108d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9354c815d9df4c56
+dashboard link: https://syzkaller.appspot.com/bug?extid=efc5e3c9e61a69ecf48f
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-That's the loop in copy_uabi_to_xstate(), copying the first FPU state
-- XFEATURE_FP - to the kernel buffer:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-[    1.752756] copy_uabi_to_xstate: i: 0 dst: 0xcab11f40, offset: 0, size: 160, kbuf: 0x00000000, ubuf: 0xbfcbca80
-[    1.754600] copy_from_buffer: dst: 0xcab11f40, src: 0xbfcbca80, size: 160
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5780386f6283/disk-615dca38.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6f6f6640257e/vmlinux-615dca38.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/23030a651560/bzImage-615dca38.xz
 
-hardened wants to check it:
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+efc5e3c9e61a69ecf48f@syzkaller.appspotmail.com
 
-[    1.755823] __check_heap_object: ptr: 0xcab11f40, slap_address: 0xcab10000, size: 2944
-[    1.757102] __check_heap_object: offset: 2112
+BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
+caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
+ usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+ usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
+ usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
+ __dev_set_mtu net/core/dev.c:9443 [inline]
+ netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
+ netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
+ dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
+ dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
+ dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
+ sock_do_ioctl+0x19d/0x280 net/socket.c:1204
+ sock_ioctl+0x42f/0x6a0 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe33dfabd49
+Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
+RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
+RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
+ </TASK>
+BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
+caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
+ usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+ usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
+ usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
+ __dev_set_mtu net/core/dev.c:9443 [inline]
+ netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
+ netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
+ dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
+ dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
+ dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
+ sock_do_ioctl+0x19d/0x280 net/socket.c:1204
+ sock_ioctl+0x42f/0x6a0 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe33dfabd49
+Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
+RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
+RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
+ </TASK>
+BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
+caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
+ usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+ usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
+ usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
+ __dev_set_mtu net/core/dev.c:9443 [inline]
+ netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
+ netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
+ dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
+ dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
+ dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
+ sock_do_ioctl+0x19d/0x280 net/socket.c:1204
+ sock_ioctl+0x42f/0x6a0 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe33dfabd49
+Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
+RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
+RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
+ </TASK>
+BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
+caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
+ check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
+ usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
+ usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
+ usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
+ __dev_set_mtu net/core/dev.c:9443 [inline]
+ netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
+ netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
+ dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
+ dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
+ dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
+ sock_do_ioctl+0x19d/0x280 net/socket.c:1204
+ sock_ioctl+0x42f/0x6a0 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe33dfabd49
+Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
+RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
+RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
+ </TASK>
 
-and figures out it is in some weird offset 2112 from *task_struct* even
-though:
 
-[    1.750149] copy_uabi_to_xstate: sizeof(task_struct): 1984
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-btw, the buffer is big enough too:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-[    1.749077] copy_uabi_to_xstate: sizeof(&fpstate->regs.xsave): 576
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-but then it decides to BUG because an overwrite attempt is being done on
-task_struct which is bollocks now as struct fpu is not part of it anymore.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-And this is where I'm all out of ideas so lemme CC folks.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-[    1.757898] __check_heap_object: will abort: offset: 2112, size: 160
-
-[    1.758951] usercopy: Kernel memory overwrite attempt detected to SLUB object 'task_struct' (offset 2112, size 160)!
-[    1.760651] ------------[ cut here ]------------
-[    1.761474] kernel BUG at mm/usercopy.c:102!
-[    1.762240] Oops: invalid opcode: 0000 [#1] SMP
-[    1.763063] CPU: 6 UID: 0 PID: 1182 Comm: rc Not tainted 6.15.0-rc2+ #35 PREEMPT(full) 
-[    1.764374] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[    1.765952] EIP: usercopy_abort+0x79/0x88
-[    1.768411] Code: c1 89 44 24 0c 0f 45 cb 8b 5d 0c 89 74 24 10 89 4c 24 04 c7 04 24 98 f0 c5 c1 89 5c 24 20 8b 5d 08 89 5c 24 1c e8 d3 8b e7 ff <0f> 0b ba 89 8f ce c1 89 55 f0 89 d6 eb 97 90 3e 8d 74 26 00 85 d2
-[    1.771573] EAX: 00000068 EBX: 00000840 ECX: 00000000 EDX: 00000006
-[    1.772638] ESI: c1cdb354 EDI: c1ce0c9a EBP: cc751d40 ESP: cc751d0c
-[    1.773707] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010292
-[    1.774831] CR0: 80050033 CR2: 00511860 CR3: 0cde1000 CR4: 003506d0
-[    1.775921] Call Trace:
-[    1.776498]  __check_heap_object+0x117/0x14c
-[    1.777314]  __check_object_size+0x1af/0x250
-[    1.778129]  ? vprintk+0x13/0x1c
-[    1.778778]  copy_from_buffer+0xbc/0x114
-[    1.779498]  copy_uabi_to_xstate+0x1b7/0x31c
-[    1.780251]  copy_sigframe_from_user_to_xstate+0x27/0x34
-[    1.781171]  __fpu_restore_sig+0x4ae/0x4c4
-[    1.781954]  fpu__restore_sig+0x60/0xb0
-[    1.784487]  ia32_restore_sigcontext+0xe4/0x108
-[    1.785464]  __do_sys_sigreturn+0x66/0xac
-[    1.786191]  ia32_sys_call+0x226a/0x30e0
-[    1.786942]  do_int80_syscall_32+0x83/0x158
-[    1.787735]  entry_INT80_32+0x108/0x108
-[    1.788424] EIP: 0xb7f8b232
-[    1.788989] Code: ab 01 00 05 f5 6d 02 00 83 ec 14 8d 80 44 7f ff ff 50 6a 02 e8 df f6 00 00 c7 04 24 7f 00 00 00 e8 7e 9b 01 00 66 90 90 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-[    1.792057] EAX: 000004a0 EBX: ffffffff ECX: bfcbce44 EDX: 00000000
-[    1.793184] ESI: 00000000 EDI: 00000001 EBP: 005118c0 ESP: bfcbcde0
-[    1.794284] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000286
-[    1.795440] Modules linked in:
-[    1.796088] ---[ end trace 0000000000000000 ]---
-[    1.796932] EIP: usercopy_abort+0x79/0x88
-[    1.797671] Code: c1 89 44 24 0c 0f 45 cb 8b 5d 0c 89 74 24 10 89 4c 24 04 c7 04 24 98 f0 c5 c1 89 5c 24 20 8b 5d 08 89 5c 24 1c e8 d3 8b e7 ff <0f> 0b ba 89 8f ce c1 89 55 f0 89 d6 eb 97 90 3e 8d 74 26 00 85 d2
-[    1.803256] EAX: 00000068 EBX: 00000840 ECX: 00000000 EDX: 00000006
-[    1.804604] ESI: c1cdb354 EDI: c1ce0c9a EBP: cc751d40 ESP: cc751d0c
-[    1.805686] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010292
-[    1.806814] CR0: 80050033 CR2: 00511860 CR3: 0cde1000 CR4: 003506d0
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+If you want to undo deduplication, reply with:
+#syz undup
