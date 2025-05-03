@@ -1,155 +1,111 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1132B8834
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 00:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFADFF4ED;
+	Sat,  3 May 2025 00:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746232082; cv=none; b=LWqsAFntT7O4efohvpct38+96NCiULvkSdIjYq+KUTxDPBFFZeUUje778SyJIEEg9s75RsZeExuuS5o6RNRDrb51VNB5e1NP36I3rGhdSd3xb2SHDcKlTVmjxMpztEuqg6tPPddRFe/BS3gvqq129k/an6eQXIW43XmC9jby6bA=
+	t=1746232418; cv=none; b=CdtNSA7drOHRB/hlzCRBdXOe7s/7CM9IDbNCXmOOn8LY8+BP5rWaySaUEjd1muGF/dKt6uOpWNGdY4lmkteVikFwgcszuM4UhRpp/7oLjdWjDdq9T1WVXEZmfXDxS7vy6O5M0t2hFyT0T7xA22omnhIyrRRyi5ton0wjP9qwy18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746232082; c=relaxed/simple;
-	bh=gQqpjFEGTESzcQc3cHLIM8wYkUkAS2w/iH2qcHSYAB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FIYkjXywFuqzYcuZ+G/DDZEQZhZtscENUEAeiB+gZWuBdU/HCxieSWJvw8CBx+ENWI/Is0wkoeCVO7eVeaWJ8iNcuxWIo4mX8c2e3O+zP3RkrlNmOmt85YknxP45Ee1i+Zq9/4DsbNoWSNH7oR6xsYlrifxUyjK+LNBUKDeZMEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DNghIuaS; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746232418; c=relaxed/simple;
+	bh=LTFSqRPGVj9+2UnDPZdR4t+X833DnDXklT+MH1u2efg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a65tN8IpOnfLWnWPqa4xVrQlsKUNPbpinfY996LkhzVJhH99M1QbaF8SmAk6/zJtTy5ImVYE08tRL90iKCedwFqznGuaByGSb3gvHOy6KZvxwqWsC65BO7z7qG8rQ6HpPQGPz+J/EH5S2pBw2ldqgGkcAe9lYQAEE3xlseJhmbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ez2a3965; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DNghIuaS"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so277449366b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:27:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez2a3965"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso420658766b.3;
+        Fri, 02 May 2025 17:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746232078; x=1746836878; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
-        b=DNghIuaS//ao7zg4E4bOUfZFfnmVv244bA8LHl0nMILlEc04NXNPtUhhD30uQObJIr
-         kJDLufVuQOxX0YFP242/TIJfA1UqgsCVdMIIvXgYdwJ2vAyizsSJihHzZCyiqmIgAswz
-         3Si5eyGU2mpGCkHkN6sBCqNOmb9IZz8HHi+mU=
+        d=gmail.com; s=20230601; t=1746232415; x=1746837215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+E+nfEIr9NP36BWGBRQtg1rt+NJr2xiXzbROWvXLKsI=;
+        b=ez2a3965lvaHEwNpoMTeKP0ufSCnlSkNMjZ+p+EUTDb6Fqh6HOiZr/o6OsWtV5pvU0
+         2jodku7oSpC3XfcLHMAOipaJ8/slFyCZOXjAfOYUO2HoV1t1O8XLaULS2F9H3YZJdT/O
+         ANztSRTCoaQ3OUZFw69ZIzO9u8lLeclEY9p+TJM2wYPGqAyxyHjP9fBup3VTswU+tYX9
+         KdvtB9c1S+75vxkGMw4OCbjAlKbwD9bpjpdCeolD3S/JX3W07N240pfKLh/obI8U5aK+
+         O++TzabBv4UgAEjFCgGj/Y39g7cOJv8a9gVHh334iT5Sc2d/B2NM2ybh0A/KppqBzXTU
+         BDMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746232078; x=1746836878;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
-        b=UO9Yreuikof7VUAouNKSBxyBPFnJSDpeN0MpdSQ5cR26Ug3tUb2IqnEo3Coi1UFHRp
-         w79mu/M4ki+TTHs5ktTrgnGtUESyMojUBIVk1CCKZjo+7F63fiU2cnFD+xI4FodrBR6L
-         8QhFyZjss6n8DXcIz2obV2BlTRutoXopSV2giN0t6op3Ev8oJhoBlMv9dEtFxT1H6Cvh
-         121Syqh5+j1dr4+mY6/eWjmiJwheAZnVs32HMWhX/WvAJo9jiDFfo/apHFxbohrkIuNU
-         B7fWRLgE52aK/syNBgXtJ2faJftqNvUpTuT0YEnQVgezDoCwLIB4ZhQcdXxwpTShGOpr
-         TrsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHfXVbYADmto6MbTK1sSv8lwNTt20cku/7UNSxkvfANxrmY8CJvaqalfaxVbJWYc7ankk2swBHJGbxa1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG9LARXad81n/Srym0fbxM0vYsYHkUd2t6lLvi2LG0ZQc461AZ
-	WGH6UG2Q2VQvLWwwzoZ0pBO/g5Yz5ar6Kvu4uq15OwNohJh7EF8LJiA9QCd+2jTNtkVMtCsJsIV
-	YIIAcDg==
-X-Gm-Gg: ASbGncuQNq98g4blAS9ZpGKVGMTHX4gtK4h/XxgEdE5+ytJjdsX4ce5Z+4ZsxI4DhdK
-	WZyQU+n0fMZHHxNTT3WMeutaBFdW60cEYwJPImTTFJX3UehMfXln47XIwMV9B2+IIpCdVA7IXdC
-	N1jJFowQuse5mjxvLgeh+UT79YnLCvIJKKFudO94a7rdsAwE+UiHN/cGEVucIfZWN/BBq2l8WRi
-	W4lUFpDH8Zqvbkca+2DR+v469wijbwALhg12QLDr5/Q4hnMuaptTktKeHQePcWurTDLpjY3eEkj
-	MrRIUDENN6K/Qbyl6rw0FGKgrHP82HNI+A3jgkx+vFmJySAydw6a6E071d14Z3TDYg+QYU8Xt6J
-	Nt09EYs0JHjtMmh8=
-X-Google-Smtp-Source: AGHT+IEdWF/ywnU3RQsmVBpiflYDC/D2j1QWSQhW8c4q4R4TX12vXaHyBCPlOGR1w3C5tgcKTO/4RA==
-X-Received: by 2002:a17:907:9904:b0:ac6:f6e2:7703 with SMTP id a640c23a62f3a-ad17ad3aac1mr343941466b.8.1746232078119;
-        Fri, 02 May 2025 17:27:58 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777c8bbesm1965316a12.22.2025.05.02.17.27.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 17:27:57 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso3844307a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:27:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX8skmjnSCTFAwi0VsNopcSACvVkkCb3YHi1n7NrpZxdvJ4e4gyOZyqinVsLm9ekxJUmw2naBNr9mn96Xo=@vger.kernel.org
-X-Received: by 2002:a05:6402:5193:b0:5f6:2758:149c with SMTP id
- 4fb4d7f45d1cf-5fa78012829mr4374591a12.10.1746232076465; Fri, 02 May 2025
- 17:27:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746232415; x=1746837215;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+E+nfEIr9NP36BWGBRQtg1rt+NJr2xiXzbROWvXLKsI=;
+        b=Qm1SLTyb11CPNaC5vZUJ1AF9q3mOZWWCvVpbB72f8CP32ECjMSobhBAAdixnje/AX8
+         xJ2TBF3G/KgvpoVT6z5WaQcZy6v87di+d1XpDpZvfi9fPlXfOaVDAWcaK/ZesounEdiT
+         PA70Rc4hBu/m1gbUfg8YG9ruVuhDO70bcTR++jB1bpjkQ2gjpPlpVswHMZXgyZroVj7U
+         pfviNQcO0ZyQWEQqAxCxaeSnYuct3F9OoAo268qTYbICKbs9JH3ircAlDakDuwOmX235
+         mR6nx31ETzZyyNZSEhZxw8+yXzZiUGaiqv5p4v0xiB0IcDpv7uEpK2TEPGa863Zb4Tmw
+         GnyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcRMnHjl0FY7hRqDWFNzCyr0xka8Ump3iEjkIOELFN9QtssWjNm012vqbFXF3ioUH4TUw1z3NuypYmLgv1@vger.kernel.org, AJvYcCXELKwl3MqVIx6E87ppRUx/gXI+gs3vow5qEPRv6ii5tvo65p4T5MyYX0JxeKg77+Xn8B6hxiITgmnmgA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ4CMcc712VL8TqKbW5selJCxinV2/SXONLJnCvG87dJwJm6WL
+	Xdcv4xQ0R4vfwoFZU9psVm/R92j1wMJ83vMJsYYG5mFrCsFX/usW
+X-Gm-Gg: ASbGncvsxPSA+1Syc99SGhPTpoxEkkN8rFKTPir3a5X2j7DpWZVFTo2ccerAbtu+y9d
+	HIlxJh8TOyuQjuVmhJRMxYdSZ5U/0ctTCk0TnwdQtcwN4v0DIlOypOVo6rYBPmA0z/ZQwz5Is0X
+	gVWIdSFnyV13KtNtRHu5/8zac7GQDd7Ff5CvlP0If/Covgo+EkFVWMfiW5+SSObeFHhPOVb2WXy
+	Z2hEM2zrDt2yG/wnou1qlvQLUgvsEurAiNUWoMByfDFRrI88tbzlaJ/UvwnVUi74V5QOEtJyyQA
+	n2bz+5dAo0s8PBr72jQKjBQlmGOh4HKIbqYzVHZZeX905iHGGc/O9TiqvejZNPtHTB79fL+cpTg
+	Z7Ld99aTlIS5AkpM7Itj+rsnVtGc=
+X-Google-Smtp-Source: AGHT+IFM6+9C5okAv1Q2Ar6XRN4BhOe7EdlWhBGPViB13IYuUYqQrOlnTc3vqHqy4JoYQUI57MlrfQ==
+X-Received: by 2002:a17:907:9725:b0:ac6:f3f5:3aa5 with SMTP id a640c23a62f3a-ad17b5a8abemr525443766b.16.1746232414604;
+        Fri, 02 May 2025 17:33:34 -0700 (PDT)
+Received: from localhost.localdomain (host-82-56-126-113.retail.telecomitalia.it. [82.56.126.113])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c032fsm116057366b.123.2025.05.02.17.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 17:33:34 -0700 (PDT)
+From: Luca Carlon <carlon.luca@gmail.com>
+To: w_armin@gmx.de
+Cc: carlon.luca@gmail.com,
+	jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lucas.demarchi@intel.com
+Subject: Re: Suspend/resume failing due to SPD5118
+Date: Sat,  3 May 2025 02:33:33 +0200
+Message-ID: <20250503003333.5693-1-carlon.luca@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <666a5de4-92a1-4ffa-9535-c34ec7cf49bc@gmx.de>
+References: <666a5de4-92a1-4ffa-9535-c34ec7cf49bc@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502234818.1744432-1-dan.j.williams@intel.com>
-In-Reply-To: <20250502234818.1744432-1-dan.j.williams@intel.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 2 May 2025 17:27:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
-X-Gm-Features: ATxdqUH-LQIXIc6u6p011Nom2TN3yeXoWHvmWULI7dubRZjGAyvNHQxUJyyztQA
-Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
-Subject: Re: [RFC PATCH] cleanup: Introduce "acquire"/"drop" cleanup helpers
- for interruptible locks
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: peterz@infradead.org, David Lechner <dlechner@baylibre.com>, 
-	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-"
+> Interesting, please check which i2c controller handles the SPD5118 chip (cat /sys/bus/i2c/devices/i2c-1/name).
 
-On Fri, 2 May 2025 at 16:48, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> +       struct mutex *lock __drop(mutex_unlock) =
-> +               mutex_intr_acquire(&mds->poison.lock);
-> +       if (IS_ERR(lock))
-> +               return PTR_ERR(lock);
+$ cat /sys/bus/i2c/devices/i2c-1/name
+SMBus I801 adapter at efa0
 
-I do think you'd want to have some macro to make this less full of
-random boiler plate.
+> Can you access the i2c bus (using i2cdetect) and/or the spd5118 chip after such a failed resume attempt?
 
-I'd like to point out that when I said that thing you quote:
+In my case, the suspend fails, and therefore I do not think I can reach the resume.
 
-    "You should aim for a nice
+However, if you mean to list the installed busses, this is the list before trying to suspend:
 
-     struct rw_semaphore *struct rw_semaphore *exec_update_lock
-         __cleanup(release_exec_update_lock) = get_exec_update_lock(task);"
+i2c-0   unknown         Synopsys DesignWare I2C adapter         N/A
+i2c-1   unknown         SMBus I801 adapter at efa0              N/A
+i2c-2   i2c             i915 gmbus dpa                          I2C adapter
+i2c-3   i2c             i915 gmbus dpb                          I2C adapter
+i2c-4   i2c             i915 gmbus dpc                          I2C adapter
+i2c-5   i2c             i915 gmbus dpd                          I2C adapter
+i2c-6   i2c             i915 gmbus tc1                          I2C adapter
+i2c-7   i2c             AUX A/DDI A/PHY A                       I2C adapter
+i2c-8   i2c             AUX C/DDI C/PHY C                       I2C adapter
+i2c-9   i2c             AUX D/DDI D/PHY D                       I2C adapter
 
-that comment was fairly early in the whole cleanup.h process, and
-"cond_guard()" - which then turned out to not work very well - was
-actually a "let's try to clean that up" thing.
+after the failed attempt, the list is unchanged.
 
-And the real issues have been that people who wanted this actually had
-truly ugly code that they wanted to mindlessly try to rewrite to use
-cleanup. And in the process it actually just got worse.
+If this is not what you wanted, please let me know, I can try to provide more info.
 
-So I don't think you should take that early off-the-cuff remark of
-mine as some kind of solid advice.
+Thank you.
 
-I don't know what the best solution is, but it's almost certainly not
-this "write out a lot of boiler plate".
-
-Now, the two things that made me suggest that was not that the code
-was pretty, but
-
- (a) having an explicit cleanup syntax that matches the initial assignment
-
-     ie that "__drop(mutex_unlock)" pairs with mutex_intr_acquire()"
-
-and
-
- (b) having those two things *together* in the same place
-
-where that (a) was to avoid having arbitrary crazy naming that made no
-sense ("__free()" of a lock that you didn't allocate, but that you
-took? No thank you), and (b) was to avoid having that situation where
-you first assign NULL just because you're going to do the locking
-elsewhere, and the lock release function is described in a totally
-different place from where we acquire it.
-
-So the goal of "cond_guard()" was to have those things together, but
-obviously it just then ended up being very messy.
-
-Your patch may end up fixing some of that failure of cond_guard(), but
-at the same time I note that your patch is horribly broken. Look at
-your change to drivers/cxl/core/mbox.c: you made it use
-
-+       struct mutex *lock __drop(mutex_unlock) =
-+               mutex_intr_acquire(&mds->poison.lock);
-
-but then you didn't remove the existing unlocking, so that function still has
-
-        mutex_unlock(&mds->poison.lock);
-
-at the end. So I think the patch shows that it's really easy to just
-mess up the conversion, and that this is certainly not a way to "fix"
-things.
-
-               Linus
+Luca Carlon
