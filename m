@@ -1,242 +1,446 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2921F152C
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 12:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2074D188907;
+	Sat,  3 May 2025 12:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746274291; cv=none; b=HNr+alGKNEhS3z9oz2dNGB9dNaHjo4daJYNJmVp7hSWINYDZ621kiJvgwOlditCnaUuFaKxUYCR7dDEvbPaPtWhBqvwUZl5HxNeDINxBKIxuROh1/4gcSpsptNy1a38abUdrWnQJ/b8MPDkuKHk0XJe9ei82QzgFGNAT5YwhIOQ=
+	t=1746274323; cv=none; b=lqdgQwdpkXtcPpn01Ok76OD4GX0LhWVizKn4aLJ94kLOitqKO39PGzkiYZJqJjZDcfyPLozukFBmPle2BzBPnv4MVbyMFi7VZ8ermt0LWk8rY5TJu6Za+EoLgkLVpLXfBrMbeoqg+j7vglRccwxPGpis+ysfJ167MC8+VgSmSIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746274291; c=relaxed/simple;
-	bh=6fTHyu9bRz7JFDb3svNNwfepCkjZ1lsZANKZ+jhYnjE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BLLrnS/uUNDNMsMxbLWB2eM9DdNOAwCSyrInY3m0pemDdaxxNQrz9LyPOuSZVGyty6UwOTwGEb3Bef4ISzjtZol7jg31IFco2eSJ/SDk6H64hVPrR4+K0WWZmzHGORfSSjKYiO5zaKkj4hO6mNDt+HQU3P1NQX6OKhLNEawsmX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86176e300fdso287205239f.1
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 05:11:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746274288; x=1746879088;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xpICkILdajduER/YLuCCCNObz/t1lP6UyNT/xJlM5rY=;
-        b=QPymfrl3aIKiYYrb1vyfb8bvMz7QfVk44w4GSezXwff9sfStMbl0qltGE86LTDjxxo
-         liwDfRjXavQTxk9LVYY/EQ8PBI3WDRRXaPG43bzWg1zBIXD4iXyzhA6Ml3Ha1DFYXCye
-         vL04NRs/WIghuo9+hHxdRWYIE0HdrgnCb+1y8KrnkQHC7EYODH+gNp4bZrRnJA81Otzv
-         mjmv06nvxvBs961y1SFrOb/73CqSFFlbWR7jU9wqUqta8qpEqsix/+IpMIeb3u6Wg/L4
-         CPzz00cnZvmNPX5dTCsYB7ZPdURyBF3umiiQVqnVzlCTn8/zZXVk70TDFLbnfONOAjMJ
-         VTjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1UhKvFXJVhyneEFnwEba8Rou7v9oX4lrGXFJbop0qdTigXgl+qSx9sDmgKQ+qdva5/xwD/rzwWrQ5rNQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+vfwr8d3UfBNyxUnlZ0jwvd8SEFWC3ZYGhNrowPxw8tOpF13U
-	4uFHRxT3dmHbjplLnGSYTqKkCBWRa1RAvCWNrFp1McCpQF/F+1kTDAJ8cydWJDIrk4LFf0xHmpy
-	fUdhuhQLJeK0+2FK1O4wsFXLVPi2SBX1vR3vtb55PBiXNxv+uThJWqIs=
-X-Google-Smtp-Source: AGHT+IEA4eq27hApebar8OS4dbm0j62fWqYJiIuVwPD6OA9pwNTVqN+a0MBkk1tasN0/jYrN24P5m3TQeDg1RHD9QIH/3drZ+27j
+	s=arc-20240116; t=1746274323; c=relaxed/simple;
+	bh=U8MMQTplse4Z1r5cYboK58N2YA6nypi+2uMkPNeTt+w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ebQwI2i1H7xRznvnsNDtYXpzcym+VY0H3D+KgPM/4rfXYfmOwSBCIMNb7R2QEO2XYqLRZFolD994Lj4ipj5srpc3f17nHcAmsll3csAUFUvNZ+s7KmB0JBCsuhmWlh2+yYT6IDccYXVmuUJ6sU1euaQshqwm0HePyQWA6h9MEFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=Y3xQaMme; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="Y3xQaMme"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=NKVm6lL6FaNYQNpdoHGEa30fCxpZQQ/Rp2yExdHlgPc=; b=Y3xQaMmeDXt5TPFlsS4F+CjRIM
+	YOhQRPTmQJMyMfk+wC+8Kk3LPvaP2b2nfe8muvgH+sAdLfchaYfLEz5959mj2oId9x9iq1Ou3xsnV
+	ZnBxagYM67sVw4ZlpCYbY6xa7ZUO20zoQemVb9mUOFyH9bbKEIN/M+y6j+7yHcI6bVB4Z5KH9S6Jt
+	x6FQLA9uPTGkandJ8+1DgJvXeFZ5y6hhH5j6B+ceqKOvK7Ln91lR0kGTLir8ykRL0p4XfMd9m/UA3
+	E3/Tv+/NoZ4L8tWXa1pEMAJlzA1jtp0tUngqLk4cPhSo4DysrmqBv/Z1HbQxRBScvU6X4vnOHgFBU
+	XOPx/PiA==;
+Received: from [122.175.9.182] (port=4672 helo=cypher.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpa (Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1uBBik-000000006Og-3TEI;
+	Sat, 03 May 2025 17:41:54 +0530
+From: Parvathi Pudi <parvathi@couthit.com>
+To: danishanwar@ti.com,
+	rogerq@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nm@ti.com,
+	ssantosh@kernel.org,
+	tony@atomide.com,
+	richardcochran@gmail.com,
+	glaroque@baylibre.com,
+	schnelle@linux.ibm.com,
+	m-karicheri2@ti.com,
+	s.hauer@pengutronix.de,
+	rdunlap@infradead.org,
+	diogo.ivo@siemens.com,
+	basharath@couthit.com,
+	parvathi@couthit.com,
+	horms@kernel.org,
+	jacob.e.keller@intel.com,
+	m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com,
+	afd@ti.com,
+	s-anna@ti.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pratheesh@ti.com,
+	prajith@ti.com,
+	vigneshr@ti.com,
+	praneeth@ti.com,
+	srk@ti.com,
+	rogerq@ti.com,
+	krishna@couthit.com,
+	pmohan@couthit.com,
+	mohan@couthit.com
+Subject: [PATCH net-next v7 01/11] dt-bindings: net: ti: Adds DUAL-EMAC mode support on PRU-ICSS2 for AM57xx, AM43xx and AM33xx SOCs
+Date: Sat,  3 May 2025 17:40:57 +0530
+Message-Id: <20250503121107.1973888-2-parvathi@couthit.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250503121107.1973888-1-parvathi@couthit.com>
+References: <20250503121107.1973888-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0a:b0:3d3:d994:e92e with SMTP id
- e9e14a558f8ab-3da5b31e5e4mr6002615ab.17.1746274288749; Sat, 03 May 2025
- 05:11:28 -0700 (PDT)
-Date: Sat, 03 May 2025 05:11:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681607f0.a70a0220.254cdc.001a.GAE@google.com>
-Subject: [syzbot] [usb?] [net?] BUG: using smp_processor_id() in preemptible
- code in usbnet_skb_return
-From: syzbot <syzbot+efc5e3c9e61a69ecf48f@syzkaller.appspotmail.com>
-To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	netdev@vger.kernel.org, oneukum@suse.com, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: parvathi@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: parvathi@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-Hello,
+Documentation update for the newly added "pruss2_eth" device tree
+node and its dependencies along with compatibility for PRU-ICSS
+Industrial Ethernet Peripheral (IEP), PRU-ICSS Enhanced Capture
+(eCAP) peripheral and using YAML binding document for AM57xx SoCs.
 
-syzbot found the following issue on:
-
-HEAD commit:    615dca38c2ea Merge 6.15-rc4 into usb-next
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=118108d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9354c815d9df4c56
-dashboard link: https://syzkaller.appspot.com/bug?extid=efc5e3c9e61a69ecf48f
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5780386f6283/disk-615dca38.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6f6f6640257e/vmlinux-615dca38.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/23030a651560/bzImage-615dca38.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+efc5e3c9e61a69ecf48f@syzkaller.appspotmail.com
-
-BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
-caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
-CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
- usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
- usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
- usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
- __dev_set_mtu net/core/dev.c:9443 [inline]
- netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
- netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
- dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
- dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
- dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
- sock_do_ioctl+0x19d/0x280 net/socket.c:1204
- sock_ioctl+0x42f/0x6a0 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe33dfabd49
-Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
-RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
-RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
- </TASK>
-BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
-caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
-CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
- usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
- usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
- usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
- __dev_set_mtu net/core/dev.c:9443 [inline]
- netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
- netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
- dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
- dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
- dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
- sock_do_ioctl+0x19d/0x280 net/socket.c:1204
- sock_ioctl+0x42f/0x6a0 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe33dfabd49
-Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
-RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
-RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
- </TASK>
-BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
-caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
-CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
- usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
- usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
- usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
- __dev_set_mtu net/core/dev.c:9443 [inline]
- netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
- netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
- dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
- dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
- dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
- sock_do_ioctl+0x19d/0x280 net/socket.c:1204
- sock_ioctl+0x42f/0x6a0 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe33dfabd49
-Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
-RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
-RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
- </TASK>
-BUG: using smp_processor_id() in preemptible [00000000] code: dhcpcd/2879
-caller is usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
-CPU: 1 UID: 0 PID: 2879 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00098-g615dca38c2ea #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- check_preemption_disabled+0xd0/0xe0 lib/smp_processor_id.c:49
- usbnet_skb_return+0x74/0x490 drivers/net/usb/usbnet.c:331
- usbnet_resume_rx+0x4b/0x170 drivers/net/usb/usbnet.c:708
- usbnet_change_mtu+0x1be/0x220 drivers/net/usb/usbnet.c:417
- __dev_set_mtu net/core/dev.c:9443 [inline]
- netif_set_mtu_ext+0x369/0x5c0 net/core/dev.c:9496
- netif_set_mtu+0xb0/0x160 net/core/dev.c:9520
- dev_set_mtu+0xae/0x170 net/core/dev_api.c:247
- dev_ifsioc+0xa31/0x18d0 net/core/dev_ioctl.c:572
- dev_ioctl+0x223/0x10e0 net/core/dev_ioctl.c:821
- sock_do_ioctl+0x19d/0x280 net/socket.c:1204
- sock_ioctl+0x42f/0x6a0 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe33dfabd49
-Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-RSP: 002b:00007fff83666778 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fe33dedd6c0 RCX: 00007fe33dfabd49
-RDX: 00007fff83676968 RSI: 0000000000008922 RDI: 0000000000000005
-RBP: 00007fff83686b28 R08: 00007fff83676928 R09: 00007fff836768d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff83676968 R14: 0000000000000028 R15: 0000000000008922
- </TASK>
-
-
+Co-developed-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../devicetree/bindings/net/ti,icss-iep.yaml  |  10 +-
+ .../bindings/net/ti,icssm-prueth.yaml         | 233 ++++++++++++++++++
+ .../bindings/net/ti,pruss-ecap.yaml           |  32 +++
+ .../devicetree/bindings/soc/ti/ti,pruss.yaml  |   9 +
+ 4 files changed, 281 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+ create mode 100644 Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
+index e36e3a622904..ea2659d90a52 100644
+--- a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
++++ b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
+@@ -8,6 +8,8 @@ title: Texas Instruments ICSS Industrial Ethernet Peripheral (IEP) module
+ 
+ maintainers:
+   - Md Danish Anwar <danishanwar@ti.com>
++  - Parvathi Pudi <parvathi@couthit.com>
++  - Basharath Hussain Khaja <basharath@couthit.com>
+ 
+ properties:
+   compatible:
+@@ -17,9 +19,11 @@ properties:
+               - ti,am642-icss-iep
+               - ti,j721e-icss-iep
+           - const: ti,am654-icss-iep
+-
+-      - const: ti,am654-icss-iep
+-
++      - enum:
++          - ti,am654-icss-iep
++          - ti,am5728-icss-iep
++          - ti,am4376-icss-iep
++          - ti,am3356-icss-iep
+ 
+   reg:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml b/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+new file mode 100644
+index 000000000000..a98ad45ca66f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
+@@ -0,0 +1,233 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ti,icssm-prueth.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments ICSSM PRUSS Ethernet
++
++maintainers:
++  - Roger Quadros <rogerq@ti.com>
++  - Andrew F. Davis <afd@ti.com>
++  - Parvathi Pudi <parvathi@couthit.com>
++  - Basharath Hussain Khaja <basharath@couthit.com>
++
++description:
++  Ethernet based on the Programmable Real-Time Unit and Industrial
++  Communication Subsystem.
++
++properties:
++  compatible:
++    enum:
++      - ti,am57-prueth     # for AM57x SoC family
++      - ti,am4376-prueth   # for AM43x SoC family
++      - ti,am3359-prueth   # for AM33x SoC family
++
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      phandle to OCMC SRAM node
++
++  ti,mii-rt:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      phandle to the MII_RT peripheral for ICSS
++
++  ti,iep:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      phandle to IEP (Industrial Ethernet Peripheral) for ICSS
++
++  ti,ecap:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      phandle to Enhanced Capture (eCAP) event for ICSS
++
++  interrupts:
++    items:
++      - description: High priority Rx Interrupt specifier.
++      - description: Low priority Rx Interrupt specifier.
++
++  interrupt-names:
++    items:
++      - const: rx_hp
++      - const: rx_lp
++
++  ethernet-ports:
++    type: object
++    additionalProperties: false
++
++    properties:
++      '#address-cells':
++        const: 1
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      ^ethernet-port@[0-1]$:
++        type: object
++        description: ICSSM PRUETH external ports
++        $ref: ethernet-controller.yaml#
++        unevaluatedProperties: false
++
++        properties:
++          reg:
++            items:
++              - enum: [0, 1]
++            description: ICSSM PRUETH port number
++
++          interrupts:
++            maxItems: 3
++
++          interrupt-names:
++            items:
++              - const: rx
++              - const: emac_ptp_tx
++              - const: hsr_ptp_tx
++
++        required:
++          - reg
++
++    anyOf:
++      - required:
++          - ethernet-port@0
++      - required:
++          - ethernet-port@1
++
++required:
++  - compatible
++  - sram
++  - ti,mii-rt
++  - ti,iep
++  - ti,ecap
++  - ethernet-ports
++  - interrupts
++  - interrupt-names
++
++allOf:
++  - $ref: /schemas/remoteproc/ti,pru-consumer.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    /* Dual-MAC Ethernet application node on PRU-ICSS2 */
++    pruss2_eth: pruss2-eth {
++      compatible = "ti,am57-prueth";
++      ti,prus = <&pru2_0>, <&pru2_1>;
++      sram = <&ocmcram1>;
++      ti,mii-rt = <&pruss2_mii_rt>;
++      ti,iep = <&pruss2_iep>;
++      ti,ecap = <&pruss2_ecap>;
++      interrupts = <20 2 2>, <21 3 3>;
++      interrupt-names = "rx_hp", "rx_lp";
++      interrupt-parent = <&pruss2_intc>;
++
++      ethernet-ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pruss2_emac0: ethernet-port@0 {
++          reg = <0>;
++          phy-handle = <&pruss2_eth0_phy>;
++          phy-mode = "mii";
++          interrupts = <20 2 2>, <26 6 6>, <23 6 6>;
++          interrupt-names = "rx", "emac_ptp_tx", "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++
++        pruss2_emac1: ethernet-port@1 {
++          reg = <1>;
++          phy-handle = <&pruss2_eth1_phy>;
++          phy-mode = "mii";
++          interrupts = <21 3 3>, <27 9 7>, <24 9 7>;
++          interrupt-names = "rx", "emac_ptp_tx", "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++      };
++    };
++  - |
++    /* Dual-MAC Ethernet application node on PRU-ICSS1 */
++    pruss1_eth: pruss1-eth {
++      compatible = "ti,am4376-prueth";
++      ti,prus = <&pru1_0>, <&pru1_1>;
++      sram = <&ocmcram>;
++      ti,mii-rt = <&pruss1_mii_rt>;
++      ti,iep = <&pruss1_iep>;
++      ti,ecap = <&pruss1_ecap>;
++      interrupts = <20 2 2>, <21 3 3>;
++      interrupt-names = "rx_hp", "rx_lp";
++      interrupt-parent = <&pruss1_intc>;
++
++      pinctrl-0 = <&pruss1_eth_default>;
++      pinctrl-names = "default";
++
++      ethernet-ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pruss1_emac0: ethernet-port@0 {
++          reg = <0>;
++          phy-handle = <&pruss1_eth0_phy>;
++          phy-mode = "mii";
++          interrupts = <20 2 2>, <26 6 6>, <23 6 6>;
++          interrupt-names = "rx", "emac_ptp_tx",
++                                          "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++
++        pruss1_emac1: ethernet-port@1 {
++          reg = <1>;
++          phy-handle = <&pruss1_eth1_phy>;
++          phy-mode = "mii";
++          interrupts = <21 3 3>, <27 9 7>, <24 9 7>;
++          interrupt-names = "rx", "emac_ptp_tx",
++                                          "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++      };
++    };
++  - |
++    /* Dual-MAC Ethernet application node on PRU-ICSS */
++    pruss_eth: pruss-eth {
++      compatible = "ti,am3359-prueth";
++      ti,prus = <&pru0>, <&pru1>;
++      sram = <&ocmcram>;
++      ti,mii-rt = <&pruss_mii_rt>;
++      ti,iep = <&pruss_iep>;
++      ti,ecap = <&pruss_ecap>;
++      interrupts = <20 2 2>, <21 3 3>;
++      interrupt-names = "rx_hp", "rx_lp";
++      interrupt-parent = <&pruss_intc>;
++
++      pinctrl-0 = <&pruss_eth_default>;
++      pinctrl-names = "default";
++
++      ethernet-ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pruss_emac0: ethernet-port@0 {
++          reg = <0>;
++          phy-handle = <&pruss_eth0_phy>;
++          phy-mode = "mii";
++          interrupts = <20 2 2>, <26 6 6>, <23 6 6>;
++          interrupt-names = "rx", "emac_ptp_tx",
++                                          "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++
++        pruss_emac1: ethernet-port@1 {
++          reg = <1>;
++          phy-handle = <&pruss_eth1_phy>;
++          phy-mode = "mii";
++          interrupts = <21 3 3>, <27 9 7>, <24 9 7>;
++          interrupt-names = "rx", "emac_ptp_tx",
++                                          "hsr_ptp_tx";
++          /* Filled in by bootloader */
++          local-mac-address = [00 00 00 00 00 00];
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml b/Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml
+new file mode 100644
+index 000000000000..42f217099b2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/ti,pruss-ecap.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments PRU-ICSS Enhanced Capture (eCAP) event module
++
++maintainers:
++  - Murali Karicheri <m-karicheri2@ti.com>
++  - Parvathi Pudi <parvathi@couthit.com>
++  - Basharath Hussain Khaja <basharath@couthit.com>
++
++properties:
++  compatible:
++    const: ti,pruss-ecap
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pruss2_ecap: ecap@30000 {
++        compatible = "ti,pruss-ecap";
++        reg = <0x30000 0x60>;
++    };
+diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+index 927b3200e29e..b5336bcbfb01 100644
+--- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+@@ -251,6 +251,15 @@ patternProperties:
+ 
+     type: object
+ 
++  ecap@[a-f0-9]+$:
++    description:
++      PRU-ICSS has a Enhanced Capture (eCAP) event module which can generate
++      and capture periodic timer based events which will be used for features
++      like RX Pacing to rise interrupt when the timer event has occurred.
++      Each PRU-ICSS instance has one eCAP module irrespective of SOCs.
++    $ref: /schemas/net/ti,pruss-ecap.yaml#
++    type: object
++
+   mii-rt@[a-f0-9]+$:
+     description: |
+       Real-Time Ethernet to support multiple industrial communication protocols.
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
