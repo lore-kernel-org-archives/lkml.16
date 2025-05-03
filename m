@@ -1,73 +1,91 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD962690CC
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 13:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B7213FEE;
+	Sat,  3 May 2025 13:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746278797; cv=none; b=IcXd1kYnS5XIiu/7aC1HgHne0wllkLwjMNp4rBPStT3IojE8/LqbiLKdsagNGaERzHBDx5O1InYS5XkdL3VPC+TsDmcL2bshwSLV26wA7XYLS7dCgYq4Kxv8/eZk4gznn/vzR+DxeZSgaI7E1GlXCq1IUWSG26Zjt6MexftbY0Y=
+	t=1746279618; cv=none; b=hSdo3moU920lqrJI2w3ZpjPDRsFixvVBKwoLiQnJ/6iJ4xPWTSyyARRQdcEuKheu0pMGWkRkgUG1JhprxGnF1cDMe8dVrT+uzuT72Q61du/WS2/Vdffxk1Ki86wKH4LXNUxax1RScssrRJIG+CXIO6yOl2DSW9nGlj0QFp/MUTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746278797; c=relaxed/simple;
-	bh=zFz7W87tRbM4TJFTmR0zPkVWfwg7WoDQnmpho5Kw6a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dUpRru8bjpPjIq7nTpneb0M8vAZ3ksCC4zloKxK2PMJHAGwGC9DtKG5v9V3g2Q3z8YfTvIspLvDPSxBA1GNqaZs2NncPqXsXI4BaPO6xDKkDSvuvLUM6nM+4Yzft/majafbtE5aibntf+apmud9hkfrOXHOWZlez6nF8IWAJRiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q3RMNEZj; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746279618; c=relaxed/simple;
+	bh=ncF4KvhuxeHE7ggXSI3uznrikpy8lB4Nyu6AvOT3fm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MTvR29npreDW20PrCHEpaFDe5geI2bgSbNesY1HQowDXqhjT1hyvwiqGGfJRcTPApuflw/+CKuuIydfkV1b5Dt3Lnul4vO0tIFjw9/3G0YU+6vmSBoz8EGto8slPaWt93ODSlhQUm5Epd6bbnvLycrS1+9yP13l9k397TjEes/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwe7R1xm; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q3RMNEZj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746278783;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MpqJ2xhiGc3MNQIlCoyC543UAV+C7aQQFpSzMtqzOHM=;
-	b=q3RMNEZjE/g+HJjD1MiV97P9MqziDWA9xA0U9NNA0yMM9hlgmf9n7SVg6LvP4FbwfwNuZq
-	tDh+BdxWE5a4k255MOJ02UB7kb3rqEP3ORSPRosCV/Ur4VrIgWfQQ4KTP0Ikiofs+0nRoi
-	aT2UGHa4g3Fsmi0EnzSa01NcM4oKbNQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ovl: Annotate struct ovl_entry with __counted_by()
-Date: Sat,  3 May 2025 15:25:36 +0200
-Message-ID: <20250503132537.343082-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwe7R1xm"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30572effb26so2903917a91.0;
+        Sat, 03 May 2025 06:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746279616; x=1746884416; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2U0Gh95jLT4YIXSOtY/Axi783QDt6YjjlaILb3YAGJc=;
+        b=gwe7R1xmEURXS4707ftqXQ5qQZ/1SCv9LnZ445sLskuSp8HWuV365nLX5zQmF+dwx3
+         Y2YrqjL6x6R8Aq/rUjdSmpu1VSfFTF2RYCkCIDWXHYhIe+jRjABHkU33r+ZDRk+zjQRh
+         5N3i+tjlVOgxJkN2GH+T6IEwkhzZ/A+35xnV3sClgY4Eu/UkSkWE625hXRCdXBwZ8Vzj
+         TQMM5PqgYeWjXkKIG2XFeitOZbh+F0nH6hgwIjz6FL0CKTEKodmLBdIxTcyebG0DpXIs
+         MNbnS6HVF8Q3645100kPmptYMk08LvYnz/5fft29z71JCHd/AokN12fUqCn7AJEE4/hE
+         3fRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746279616; x=1746884416;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2U0Gh95jLT4YIXSOtY/Axi783QDt6YjjlaILb3YAGJc=;
+        b=Py1Hz7AGvW8RpVjPXCl/Lk2VrcHt83qBgzHLdJnADmAZrwUOSdN/zAWCW+bhgXDGJg
+         L1jZ/5+FCR+wd0F48dDkKQwGfYb7c+yG+I2GieHqBI/ZdeFTPRx2P73qeJq9u+0EdW6L
+         B342GZaFZsE3W1YWBmCOPWBzD58SvuQGaUoWkZx1qLuK6bwYtoZdgA1l6WO5YdLlkvC9
+         /ODpOw+ABKjFfmXlHUYp78foPCslP7wmthVjvw23FJb8r2z+n5Ruvzvy8l0IsQUwc15m
+         UapG+ZhN9IGopCOISKtTYKXN6rAw1y/pGkI/PJ7dqt4F9KW1rYCytU03BlvwI2tholM1
+         MYVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvIE+kisOzICinr9fd/ergbnxEWjH4JZhzAbanZqSpFBNHThpBJvQxx4TaDq4MNt3FZVmQOfDt@vger.kernel.org, AJvYcCWvKMPjKYc8XWClynMV9GR2sRyWaegFDhNPPql85FFqhquq7I0vpVvrv2+Mj2v0EEQE/eNcS+eicpk=@vger.kernel.org, AJvYcCXtDj3F2FvkTW/LsTte37IztKOytwxlJ8817xF1txT5fE99ImO0gil1faE+bb6U0GYCTOUKKNhGlAPIuY4W@vger.kernel.org
+X-Gm-Message-State: AOJu0YysJNkjW2RkE8WpCwe+431reMjbY9cns5QmPVj1gv0Fv7bMbw1H
+	zSztbYMsEXkpQ/La6Uo/xLtjfEqaIeknKblFL0UtbO5LBeatEbZg27Z8Iw0SQSI=
+X-Gm-Gg: ASbGncvYJj2CSYTd3VGb/TM6R4Q3DCbNEFSV33tPqGrLyPsQ2yN2nuBXdncFcq/zTMd
+	Er194xiBs3rP2xQo5yw/mmi2pcgNTlNqV9v9essLvm4p0sNgbC6eFR8M+12bW1yWYE4ywCLcr+t
+	tDW1G0HsvFmUg9PGVTk6JckAOFZyBZKCWKetI6ZbAOeb9Ngnk30xcLfuB50v+WFD1jnfadOyO13
+	tnuE/MKOosy8T1RzYJ7VJwekJSYiHz/Ksal2+V1KQpTEaHkVWGV4ftlwFMu1VT48amZkVLNtQlC
+	MV/hDswpEtYJSlqE9R5fNR17/6iM04ifYkEajgTL7dq75Ls/AeMO8Q91Dnke
+X-Google-Smtp-Source: AGHT+IHFQniELYcTgmi3Z5ImYoPmg9txKfljjgWfX32mK6252ape3L0moqGlglAwVabyiRaRmSMDfA==
+X-Received: by 2002:a17:90b:1dc7:b0:308:5273:4df8 with SMTP id 98e67ed59e1d1-30a4e5a57e5mr12438772a91.10.1746279615799;
+        Sat, 03 May 2025 06:40:15 -0700 (PDT)
+Received: from localhost ([2804:30c:4024:1700:8e03:72a4:b895:b221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30a34829e51sm7767076a91.49.2025.05.03.06.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 May 2025 06:40:14 -0700 (PDT)
+Date: Sat, 3 May 2025 10:41:33 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Sean Nyekjaer <sean@geanix.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] iio: accel: fxls8962af: Fix temperature
+ calculation
+Message-ID: <aBYdDQYcOlDgvn9W@debian-BULLSEYE-live-builder-AMD64>
+References: <20250502-fxls-v2-0-e1af65f1aa6c@geanix.com>
+ <20250502-fxls-v2-1-e1af65f1aa6c@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502-fxls-v2-1-e1af65f1aa6c@geanix.com>
 
-Add the __counted_by() compiler attribute to the flexible array member
-'__lowerstack' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS
-and CONFIG_FORTIFY_SOURCE.
+On 05/02, Sean Nyekjaer wrote:
+> According to spec temperature should be returned in milli degrees Celsius.
+> Add in_temp_scale to calculate from Celsius to milli Celsius.
+> 
+> Fixes: a3e0b51884ee ("iio: accel: add support for FXLS8962AF/FXLS8964AF accelerometers")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Nyekjaer <sean@geanix.com>
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- fs/overlayfs/ovl_entry.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
-index cb449ab310a7..afb7762f873f 100644
---- a/fs/overlayfs/ovl_entry.h
-+++ b/fs/overlayfs/ovl_entry.h
-@@ -51,7 +51,7 @@ struct ovl_path {
- 
- struct ovl_entry {
- 	unsigned int __numlower;
--	struct ovl_path __lowerstack[];
-+	struct ovl_path __lowerstack[] __counted_by(__numlower);
- };
- 
- /* private information held for overlayfs's superblock */
--- 
-2.49.0
-
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
