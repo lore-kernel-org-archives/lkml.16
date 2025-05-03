@@ -1,81 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D819D8BC
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 05:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373DB78F43
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 05:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746250909; cv=none; b=MrnBeLxVP6pYOqH785/lwsoIyjqIvXUsmzIU7TkCAb1QPKwuMJKsefQHRZCaP0UMxUuVTGU3+IJM79PWZfSXmzCGgbeHkzVzicA2ValQjFKDaevy04AsFGmYemWYfbM7DLaGI8OuCH7tedTcpXfKOVt3w+20+2J8GCGLw9/UZSs=
+	t=1746251198; cv=none; b=qEawQD8cr3fTePNGfgCb3aRDLf63lLK4FQ08jmC9gdmcHusF9D1xu4+IDCGl/pHoD2TTeDNDOn//xHCUzc/vvJl09VtGvEmA2HkDWWbbZdLYLXnuf78IRLqPHHK1zHpF7KRwepSLsEiLlPA6HM1i5rWvpBFxDIRX6aPZj9C8EGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746250909; c=relaxed/simple;
-	bh=q0eAETRmKsPtS7GTtwnbg+OJfUU7opW559y9TXWQb2k=;
+	s=arc-20240116; t=1746251198; c=relaxed/simple;
+	bh=FZkziwf+DNshxofsJT6BEaExHEp9WU3/A33fWGZvXpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wh8aOc8gDFj8bokO2exdKaVrJKIIAFMB2q3tbrCU3zerZn+Wt7LQMrP3gPRZvzm1VVkytp+dSRwy1UsGeBVEQPwdAQPeeI/zLVaQRbMnvpd+OJ2IOtYaPt3nZgmJnnafFNRYk6uHAkigN3O2veak780fRjNkepiekXDmKnG12ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RXccz21A; arc=none smtp.client-ip=205.220.180.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQvYlF5yu9mn+S53fA5Ku8XibZdBARStGH/Yelp868wwzZnah4yupvPymWTsAWhGO7dy7taEbTUNJ8qX1YEZiys5npTSlBr62roZ/cZ3CdoDxTE8YULMJQ8gnGcs0gx9kAKxZxUXyn9j1hwEaI40LnXjPoFaEHoLecuh1+szydk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BzhZkqfs; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RXccz21A"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5433kwI9018992
-	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 05:41:46 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BzhZkqfs"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5434lcYe006376
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 05:46:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=5KpXDftb6Ovg8fC5Csp3/qO7
-	lNm71j48LLDisZjHCHg=; b=RXccz21ArRQ/9XUjtN7UQAqSHI/wdL7FyA0x2T0b
-	eDNsTOfwJkfKAEyQpSXzj5wrymxLRI82rbCMy1lb+VRXhgW5cDgWPngBeAbfoVgG
-	p8456VGF3Im0r3QbBuX8jVlS3J71gNVWZ0TotI40mvrCYBEPWghTPgfvwIan6vhs
-	y23wV2i9dA1aM8A7ecTZhXl2BVI4TIQF9fcTznrdlgQQ9VggbuRJBanlpJUTMv4x
-	fq8zR3vw8CTlFYDhx1PF/LXUb34ePUF1R3+NFdaD7dxqrAvFeCdh/vOvCtlpEot6
-	cm/87pcq+bP3jXudjB1Pgr0nXuGAe/+WGRU2C8NsidfWiA==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbh7841c-1
+	:references:subject:to; s=qcppdkim1; bh=MF/so5t7HZgWT3eWuH3tumGi
+	2Fh4xLxU/AxIoXWE++Y=; b=BzhZkqfsgSeMovLa1hzrnq/tT0WtuOTPshrJJ7No
+	MkFhJQSbbVtVLBVeC0qBdKlFiAtj1A9sNaQ5sn7QLqHcek8G2EY32NpfPSrjYD1a
+	/Anw+zDNVnBTlr1zYO/tG18SRW7uOFRoY+jV7NYmOFGdHKxCAZk/nNcZd2CfoFzP
+	GHseGOdB1aJ6kE8LJLqPnFReeMzRonobKimQL7xVlO8uRYUMaSZVfJoj07l+Kgyn
+	ITF6f5JhQAuKjDaJXS1YoI12XHfskVO59q/gx3NFz7svleoeJvmo4JXItdFTk+BB
+	H98UiSmvWxwpJ+6tgTq7GkjdMzrS1e5g80gu+InXhz+AqQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce98237-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 05:41:46 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4766afee192so14069761cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 22:41:46 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 05:46:36 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c793d573b2so386716985a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 22:46:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746250905; x=1746855705;
+        d=1e100.net; s=20230601; t=1746251195; x=1746855995;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5KpXDftb6Ovg8fC5Csp3/qO7lNm71j48LLDisZjHCHg=;
-        b=X1MUM9LpycsJjAeBcuJSvoTbnmA5PLiH5tA+anCGQZMvDb3UwL8QxPpSxNTy+xTFSZ
-         6Vkagpcty3pC1FwCK6kY1v0HieKgPa72VwW2ItY2pteVyMvdNw+Yf2MbpPt150iGyqjG
-         fO5AB4GzC5Z08AqPHe60YzWBMHNz8poLUnAAhAfikMcUYdRDMH954lcVnfH6Z5OBWyXt
-         Jpt1ds03ANcL62dxeKAfyQC+cBG0CptpEvasVp/0tpFv7v3+qaZ+5jmHV+RntIuGZ5fU
-         O4iEzxykKOM3QvGeT+cnZ8EqsQNQjwpW514YMVbWs5J88K/Ompq8otFUOa1foH2i8AhM
-         BcPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKNT6Go3lmms9sDfWvZC9lulgABuBOgu+CT1oObG0ug5GxBBLbkAh/gu6sL22iQlWbV/qlTEHk68aNssI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7+cfKHlG/FhEOsoQBoww0Df0Ky6DURUAoJKJR+9aBy+4IQoWB
-	nglXe19O8sA8wCCcNFKY7/sjJNWKI6x71eCMCuikXrlOD5u2aw7WJWOSOR4Vtb90BMqJBp0AtK+
-	P5lY+0t7e4nWUzniAL615cPbVZNGFFcTQmZbpY5MD136WFkzpeyWTBfWBed6Yv90=
-X-Gm-Gg: ASbGncvzCMw/QQNe//4FccP3sPbS6ko0gAPuCdvrC20zj1fTRxWTBgiEgO5ki/2Cqi1
-	ZJ1HThr8KSHuQZpo9N3CWpUnaWwugq2V0akOcffQgjRj7pUcRhQYYC5BvzQN5v5hP/GfVcUqeji
-	geXSVJbBuf/h92ULwAKOWOIDe9LWNySialxp+UlBbHivzUiv2VomiUdzhWqIJthuejCbb0ww32A
-	wsuCfaZi1ikGBoR2URh/dI5WFz9ZiuvF2kaolftTVGTyNM3mxqz8fQihPPYO2uRvBFOJT6aGtCM
-	eM9ZWHoWB6V/bdOBO1+ssFJdrw8gZptwdBIritBgyKSB8sFPLwByuxIompMn8dvEpVJSmd+35KA
+        bh=MF/so5t7HZgWT3eWuH3tumGi2Fh4xLxU/AxIoXWE++Y=;
+        b=a3Fuy4toPXgvj41fNw0bMcVFrEK5AsXazRpGhbsBjH2xpWRgD7AcRnpiGds2LNUV+D
+         t9S8QAtePjNZxWHtQPLXPNPaJr/zxRa4tMNZKkjIl3P0pdGDScKYSLYPVZDCNI/kkTVu
+         fU5eG6k84dm6NECFfiR0XHJsknaWOT/JnlGy3XrEOAaE2LLga+zFdxOQSjEDPsGNBjQg
+         t/VPhvk8rdVdvd66YDbYGbsKuk+gfHz+cagMdhiSfJKYVtCqc5c64QyILD5aVkcjYJIC
+         NmmSxdZIZuTsv9rWRZreD8pC49kmxygPR/qhLOfRcyOyX655woeRxVQBf4vfXP/sV5fs
+         k8nA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnskiGylRmAtotObf1SU+NTlZZwEF8Rf80699dcZBsJfBaT+UIpxz5D+PGWcuAxHYSpJpwNUTpGHH8Rf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5oFa0q2zs0h7GchpTchye/nMdrRyMvQhAnkQIax3gIVcDQCAD
+	H9E4/yBhYB8kIQmbG09BwfxwNEpyk4A/6smRVY3BmTANGGSt5CUEavEqCEETWW5uGPZiPN7CB01
+	gp2I10CkmCrbIoNQhoHIT8Gf4qX6FZ5zKQ/Y38SYQVa/cJJrTwoQUxFImblSq8Oc=
+X-Gm-Gg: ASbGncsG+e6i9cczLK/glVZdtU/pD85aXJIp0YQr81IM/zz5QiS0itWQx/tXA1E5kjV
+	le++ZeE9wNRiikb/g0FI6lhrUH8qwKRhgfzlELj9ZU6tq6oDTfEgfbD2wofkiPklXEX6lTMbK5b
+	73QkfC7k4br+u1f95zAX73owol8qUKwxH8WcBWYnKyA95ra4t2qHhrrEFM4lX0NXg6LcnC+vwqn
+	2Igr1gnWrdP4aq2Wgji5I7gK7rwiniUeSgj1lppChqt1n7aERQoM2MArj6a+QzwTIsCD9Va266r
+	XQ49suWxCXtVIpMsCY198jxQBdgvteHSDekc48mOj419riBWWCYbci/CvAIwgUd200EdXgmnomw
 	=
-X-Received: by 2002:a05:622a:59cb:b0:48b:42ca:13d6 with SMTP id d75a77b69052e-48c31160cd0mr65412041cf.7.1746250905550;
-        Fri, 02 May 2025 22:41:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGGFrywm96tWAeoxFx5+AhywAWsJxWn4Z/d5zAW0fzBPsXteeqpsqblog7s9PlyRRVInkgDHQ==
-X-Received: by 2002:a05:622a:59cb:b0:48b:42ca:13d6 with SMTP id d75a77b69052e-48c31160cd0mr65411951cf.7.1746250905248;
-        Fri, 02 May 2025 22:41:45 -0700 (PDT)
+X-Received: by 2002:a05:622a:4a09:b0:476:8225:dac9 with SMTP id d75a77b69052e-48d5da48b21mr26804891cf.45.1746251194790;
+        Fri, 02 May 2025 22:46:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMgvUFBcAgYiEH2v/8tiGWbtw2LOg1LR2AfqMw15DOu+nL+S40ZYWy5mZq0KGU7+YBjPKWMA==
+X-Received: by 2002:a05:622a:4a09:b0:476:8225:dac9 with SMTP id d75a77b69052e-48d5da48b21mr26804721cf.45.1746251194472;
+        Fri, 02 May 2025 22:46:34 -0700 (PDT)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94b1734sm649908e87.32.2025.05.02.22.41.41
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202a89f450sm6249821fa.80.2025.05.02.22.46.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 22:41:43 -0700 (PDT)
-Date: Sat, 3 May 2025 08:41:40 +0300
+        Fri, 02 May 2025 22:46:33 -0700 (PDT)
+Date: Sat, 3 May 2025 08:46:31 +0300
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sibi Sankar <quic_sibis@quicinc.com>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        Xilin Wu <wuxilin123@gmail.com>,
+        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
-Subject: Re: [PATCH v3] arm64: dts: qcom: sa8775p: Add default pin
- configurations for QUP SEs
-Message-ID: <xvmk4paonzafxm5aesu67ggkwpdak2ughhi35wap45rjtuplsk@xe52pvnudsbp>
-References: <20250429173334.303003-1-quic_vdadhani@quicinc.com>
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+Message-ID: <qgojusp6c5mglve35sgncwpuft2flnvfysstbyieysktdlxwp3@lp73etm4zzai>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
+ <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
+ <aBHvwUAISo2JhYSz@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,129 +95,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429173334.303003-1-quic_vdadhani@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=fMY53Yae c=1 sm=1 tr=0 ts=6815ac9a cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=_CnAHy6i7R4rVe1gsZYA:9
- a=CjuIK1q_8ugA:10 a=a_PwQJl-kcHnX1M80qC6:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: zFBz23JqEoGZZI8ohn34882kbfjyl-Sg
-X-Proofpoint-ORIG-GUID: zFBz23JqEoGZZI8ohn34882kbfjyl-Sg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA0NiBTYWx0ZWRfXwPDpHc2S7UhW
- Tew8RaOxx32wuapHBKishh2mm08I1MaYU3jb1e+pfqVwOBXPs5yQ7OOgPiuOU7yuEXTxErQRp6a
- 2LyYt+NIaRODXhoZ2v40tSOlKDSb+tf0CqswLNwVGj0g8wHkF/I7B6fkqks94arh1XmSyZCEB90
- dUcK9ogFt6dX6glXKP2zVTIUmP8howl5DdPy+OoAPWlZikxhwJGdemIiVspUvYh2FyATBDSc4ZL
- rFmJW/GXFtDZXk6jF3zexvYnZmJ9YllJlVyK8yd19ANAhchH5vSrHS+UMbSypsITA9wzVc1KUFQ
- Gf0+FKR7imaf/r0niLtg801g1x/gc8xLakJJTXPuTVInGUFMV1zmBk7BVEWvPMtsXf3RNVquBmM
- C3aytZAmpl6qyBKMr4IbrNCI+9LvyuUN8ufiYHFCoTVbtd7ci4ne14DLMO3ajZGud2zw5i3n
+In-Reply-To: <aBHvwUAISo2JhYSz@linaro.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA0NiBTYWx0ZWRfXz8xXOh5d4T8G
+ NSQ5uTSIGkqJf9projXcHczOnw57s6ULAyatNBlSHzmIoYKIqMCa5u+Kex3aKQ0KA7wvX3ZeGYV
+ hjVxq132BvMbDRj1ELK5QtBSbJBQTOiwjf5Wx0T+Z0AXPB//BsXD8QyJznrQJnLQlQVquygSxIu
+ rI+X1SrOZaaSdz0lVS0RPAa7ekW0Jj5ou0jIuBCmX6ofeqA9WqB0Drejto2Nq66QPPkYoehlsh4
+ fX+4QPmisguT+i+10VxFyQTC+7thr3QlBJvMVR7TywhZc4xluVbxF+jrszm0dJ7h2oqAasAXQE0
+ gqADBDa6tmtlWMf+g1+r+FlvrUTihK4UhchLBRsahyOpHVbmMkk79KLTCa7jXm9wtz2EArlTkYx
+ c86qeyCGDrYQ/Hdrc3uKYjaI5I2+24QtEDBiHiB8LHoPiVOt70VyIrjI/BvEbcdgu6IPguCX
+X-Proofpoint-ORIG-GUID: WSHo-p0dqGSGT9kMewN5u3EuPPPFHjS9
+X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=6815adbc cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=ZJu6mct0EmN0ZqeJLYoA:9 a=CjuIK1q_8ugA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: WSHo-p0dqGSGT9kMewN5u3EuPPPFHjS9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-03_03,2025-04-30_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=0 mlxlogscore=988 malwarescore=0 spamscore=0 mlxscore=0
- adultscore=0 bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2505030046
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030046
 
-On Tue, Apr 29, 2025 at 11:03:34PM +0530, Viken Dadhaniya wrote:
-> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
-> Serial Engines (SEs) are missing in the SoC device tree. These
-> configurations are required by client teams when enabling any SEs as I2C,
-> SPI, or Serial protocols.
+On Wed, Apr 30, 2025 at 12:39:13PM +0300, Abel Vesa wrote:
+> On 25-04-30 01:26:13, Sebastian Reichel wrote:
+> > Hi,
+> > 
+> > On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+> > > It all started with the support for CRD back when we had different
+> > > compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+> > > is now figured out at runtime while using only the DP compatible.
+> > > 
+> > > It's almost funny how this got copied over from CRD and spread to all
+> > > X Elite platforms.
+> > > 
+> > > TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+> > > beyond X Elite to newer platforms.
+> > > 
+> > > Functionally nothing changes.
+> > 
+> > Looking at the diff I wonder if this part should also be simplified:
+> > 
+> > /delete-property/ #sound-dai-cells;
+> > 
+> > This is done by all upstream X1E boards, so maybe just drop the
+> > #sound-dai-cells directly in x1e80100.dtsi?
 > 
-> Add default pin configurations for Serial Engines (SEs) for all supported
-> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
-> change facilitates slave device driver clients to enable usecase with
-> minimal modifications.
+> Yeah, I'm not sure about that.
 > 
-> Remove duplicate pin configurations from target-specific file as same pin
-> configuration is included in the SoC device tree.
+> Though the DP3 PHY is currently used as eDP, I think it could be used
+> as DP. So I think it makes more sense to keep the DP3 controller as is
+> in the SoC dtsi and delete the #sound-dai-cells property in each board
+> specific dts. Don't know if it will ever be the case with this SoC, but
+> maybe someone will use DP3 with the PHY configured as DP rather than
+> eDP.
 > 
-> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-> ---
-> v2 -> v3:
+> Not sure if I'm 100% right about this though.
 > 
-> - Remove duplicate pin configurations from target-specific file.
-> 
-> v2 Link: https://lore.kernel.org/lkml/20250324151047.842648-1-quic_vdadhani@quicinc.com/
-> 
-> v1 -> v2:
-> 
-> - Drop drive-strength and bias property from soc dtsi.
-> - Update commit log.
-> 
-> v1 Link: https://lore.kernel.org/lkml/20250225154136.3052757-1-quic_vdadhani@quicinc.com/
-> ---
-> ---
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |  35 -
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 750 +++++++++++++++++++++
->  2 files changed, 750 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> index 967913169539..3b4243ef37e7 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> @@ -508,15 +508,11 @@ queue3 {
->  
->  &i2c11 {
->  	clock-frequency = <400000>;
-> -	pinctrl-0 = <&qup_i2c11_default>;
-> -	pinctrl-names = "default";
->  	status = "okay";
->  };
->  
->  &i2c18 {
->  	clock-frequency = <400000>;
-> -	pinctrl-0 = <&qup_i2c18_default>;
-> -	pinctrl-names = "default";
->  	status = "okay";
->  };
->  
-> @@ -678,8 +674,6 @@ &sleep_clk {
->  };
->  
->  &spi16 {
-> -	pinctrl-0 = <&qup_spi16_default>;
-> -	pinctrl-names = "default";
->  	status = "okay";
->  };
->  
-> @@ -712,80 +706,53 @@ ethernet0_mdio: ethernet0-mdio-pins {
->  		};
->  	};
->  
-> -	qup_uart10_default: qup-uart10-state {
-> -		pins = "gpio46", "gpio47";
-> -		function = "qup1_se3";
-> -	};
-> -
->  	qup_spi16_default: qup-spi16-state {
-> -		pins = "gpio86", "gpio87", "gpio88", "gpio89";
-> -		function = "qup2_se2";
->  		drive-strength = <6>;
->  		bias-disable;
->  	};
+> Dmitry, Bjorn, do you think that is accurate enough?
 
-If you are movign parts of these pinstates to the sa8775p.dtsi, then you
-should also turn these declarations into label-based updates:
+Yes, this sounds logical. DP3 is repurposed for eDP on a board level, so
+the SoC configuration should not contain any specific config for that
+port.
 
-&qup_spi16_default {
-	drive-strength = <6>;
-	bias-disable;
-};
-
-Otherwise the configuration is fragile: if the name gets changed, then
-two parts will not match.
-
->  
->  	qup_i2c11_default: qup-i2c11-state {
-> -		pins = "gpio48", "gpio49";
-> -		function = "qup1_se4";
->  		drive-strength = <2>;
->  		bias-pull-up;
->  	};
->  
+> 
+> > 
+> > Greetings,
+> > 
+> > -- Sebastian
+> 
 > 
 
 -- 
