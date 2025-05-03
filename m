@@ -1,215 +1,103 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C04B1A840A;
-	Sat,  3 May 2025 07:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D032EAF9
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 08:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746257812; cv=none; b=ddOZka5Z3KC2rxSYcpcjlr1L9Oyi7HLZO04FReZill6EQTLfiF3sPnwqrPjnH6WjW4WVdmVJatg9ApUgM7wOVQEHSgm9u5X1gHjOmo7BE0aqNBP9t+PGmqZzeWALRkznDCn7gZEh0ZAga+o7h1o6Pr/JRqUAUi9YF0/cad1Lugk=
+	t=1746259533; cv=none; b=BP46Sxf9D+yzgZZ2GviVGyRE7mwThCDz8qNisnEH89pi7GhJLzHzdC8c/3iIeXFgxWynC6oOn+Do/ZevofmfKltF5952XCHBhu8R/gTE0oiOQmnQs3S4ZqKhQZXcbS0GyTfUkaCEpNEvD2MeAMDesIt//uOwSUtcf7Tw9V8tFiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746257812; c=relaxed/simple;
-	bh=TVRFmkhoIEa24F+uA5f7IoZ4vojB54oNc+ZZi69ynPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IjWv6nmRR+uf6DiuRAoxRbaDwxzSspFfU+4NGyifjpOH4bghYWnQgCx7/QP3f+G9WxEU8psUcoFx03ApQdpUNzaI+F7jEELhaFWiuj5/E41G/b+yTw3wgt0alWqLfhQAR8m2aRwL3VyiwYVvxHh5X074/43C7RPDHLBwmQU1tiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=AW6G1eRE; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746259533; c=relaxed/simple;
+	bh=bjf5yJdyuYmO2ewbTmco0EEG24WY4zujXbqvKsXCtUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hTSNfO3c9kmJ6wgkKkhXuaZsYcmr+zCvvQXJhSrRwplfCRDbPy/RO+DXCPF/hp+/M0BvAGYG3c2eYJtgDuIRZL6DQBFMlnF/w+JVDvXQoRXYuVzrifOFHdpLPiWqzzcc9Yo16jJKChvm6Dxm3GlS/lQjSUWMaJCQFMCxiyNkkcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=muXSOKMV; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="AW6G1eRE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746257239;
-	bh=TVRFmkhoIEa24F+uA5f7IoZ4vojB54oNc+ZZi69ynPw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AW6G1eRE2BAM44E51PivMNxnNrJSwkZfqByT2RsiltnyAc/kA5SUTwRHJfMF8QDhW
-	 e9vxZtINEG6n+p3o0BPcuxfQquZjSmjgAZTFNfIJauQy0xLKonbI0L3jGB9JPDp2Lq
-	 4/NeqNRNF5G0RHOw4gLohybSx9CG6WmyzkISmZdY=
-Date: Sat, 3 May 2025 09:27:18 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: lschyi@chromium.org
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org, Sung-Chi Li <lschyi@google.com>
-Subject: Re: [PATCH v2 3/3] hwmon: (cros_ec) register fans into thermal
- framework cooling devices
-Message-ID: <b2432c5c-2589-4cfe-821f-47e5128af2d0@t-8ch.de>
-References: <20250502-cros_ec_fan-v2-0-4d588504a01f@chromium.org>
- <20250502-cros_ec_fan-v2-3-4d588504a01f@chromium.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="muXSOKMV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=okT1G
+	bV7fpg16Pizw/hGVwDxaBdUKFxs0kpe7FMQo2s=; b=muXSOKMVwKHNyIMADTHKJ
+	x1R92ZDGmCGBpP3WCOafufy3+/s+krus7MktB9sh5cDC62/sbR6ehzCtidfNAYZ4
+	xwm8+FkTJtFwILZdGNRfBYqNXbj+ElygrrDr+3I4lryadFPMPayTYKQBvh19eevl
+	e0AGtitxUVhOyUpxQzauu8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3dSsozhVoZs+1EA--.41171S2;
+	Sat, 03 May 2025 16:04:58 +0800 (CST)
+From: Changhang Luo <luochanghang_nudt@163.com>
+To: gregkh@linuxfoundation.org
+Cc: rafael@kernel.org,
+	dakr@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Changhang Luo <luochanghang_nudt@163.com>
+Subject: [PATCH] driver:fix a bug of function remove_nodes in "drivers/base/devres.c"
+Date: Sat,  3 May 2025 16:04:54 +0800
+Message-Id: <20250503080454.3667-1-luochanghang_nudt@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502-cros_ec_fan-v2-3-4d588504a01f@chromium.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3dSsozhVoZs+1EA--.41171S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr48KFy7Ar18GryfWr1Dtrb_yoW8Cry8pa
+	95CrW5CwnFqr1UGFs293yqgF4fZw18trZFga43C3yUAr43ur97Kr13ta4rtry5CayUZF4U
+	XayYqrnrWwn5ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pMNtx-UUUUU=
+X-CM-SenderInfo: poxruxxdqjxtxqjb03lgw6il2tof0z/1tbiXRQ+9WgQg7euLwABsO
 
-On 2025-05-02 13:34:47+0800, Sung-Chi Li via B4 Relay wrote:
-> From: Sung-Chi Li <lschyi@chromium.org>
-> 
-> Register fans connected under EC as thermal cooling devices as well, so
-> these fans can then work with the thermal framework.
-> 
-> During the driver probing phase, we will also try to register each fan
-> as a thermal cooling device based on previous probe result (whether the
-> there are fans connected on that channel, and whether EC supports fan
-> control). The basic get max state, get current state, and set current
-> state methods are then implemented as well.
-> 
-> Signed-off-by: Sung-Chi Li <lschyi@chromium.org>
-> ---
->  Documentation/hwmon/cros_ec_hwmon.rst |  2 ++
->  drivers/hwmon/cros_ec_hwmon.c         | 66 +++++++++++++++++++++++++++++++++++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/Documentation/hwmon/cros_ec_hwmon.rst b/Documentation/hwmon/cros_ec_hwmon.rst
-> index 5b802be120438732529c3d25b1afa8b4ee353305..82c75bdaf912a116eaafa3149dc1252b3f7007d2 100644
-> --- a/Documentation/hwmon/cros_ec_hwmon.rst
-> +++ b/Documentation/hwmon/cros_ec_hwmon.rst
-> @@ -27,3 +27,5 @@ Fan and temperature readings are supported. PWM fan control is also supported if
->  the EC also supports setting fan PWM values and fan mode. Note that EC will
->  switch fan control mode back to auto when suspended. This driver will restore
->  the fan state before suspended.
-> +If a fan is controllable, this driver will register that fan as a cooling device
-> +in the thermal framework as well.
-> diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
-> index c5e42e2a03a0c8c68d3f8afbb2bb45b93a58b955..abfcf44fb7505189124e78c651b0eb1e0533b4e8 100644
-> --- a/drivers/hwmon/cros_ec_hwmon.c
-> +++ b/drivers/hwmon/cros_ec_hwmon.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> +#include <linux/thermal.h>
+The resource management mechanism in Linux divides resources 
+into different groups for easier management. Each closed group
+has a start and an close resource node to represent the scope
+of the resource group. The function "remove_nodes" is try to move
+the nodes in the same group into the todo list. Fisrt the function
+moves the normal nodes into the todo list, then scan the left node
+and color the group value of two if the start and close resource
+nodes contained in [current node, end).
 
-Needs a dependency on CONFIG_THERMAL.
+While, in the second pass section here is:
+  if (list_empty(&grp->node[1].entry))
+     grp->color++;
+which means that the color is set to 2 when the grp_node[1] is not
+in the list.This situation is inconsistent with the original design
+intention that color value is set to 2 if the start and close nodes
+ both contained in [current node, end).
 
->  #include <linux/types.h>
->  #include <linux/units.h>
->  
-> @@ -27,6 +28,11 @@ struct cros_ec_hwmon_priv {
->  	u8 manual_fan_pwm_values[EC_FAN_SPEED_ENTRIES];
->  };
->  
-> +struct cros_ec_hwmon_cooling_priv {
-> +	struct cros_ec_hwmon_priv *hwmon_priv;
-> +	u8 index;
-> +};
-> +
->  static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index, u16 *speed)
->  {
->  	int ret;
-> @@ -300,6 +306,34 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
->  	NULL
->  };
->  
-> +static int
-> +cros_ec_hwmon_cooling_get_max_state(struct thermal_cooling_device *cdev,
-> +				    unsigned long *val)
-> +{
-> +	*val = 255;
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_hwmon_cooling_get_cur_state(struct thermal_cooling_device *cdev,
-> +					       unsigned long *val)
-> +{
-> +	const struct cros_ec_hwmon_cooling_priv *priv = cdev->devdata;
-> +	u8 read_val;
-> +	int ret = cros_ec_hwmon_read_pwm_value(priv->hwmon_priv->cros_ec, priv->index, &read_val);
+So it should be
+  if (!list_empty(&grp->node[1].entry))
+    grep->color++;
+that the grep->node[1] is verified to be contained 
+[current node, end) and then color is increased to 2.
 
-Split declaration and assignment.
+Finally,
+  if(grp->color ==2){
+    list_move_tail(&grp->node[0].entry,tode);
+    list_del_init(&grp->node[1].entry);
+  }
+the closed group can be removed currectly.
 
-> +
-> +	if (ret == 0)
-> +		*val = read_val;
-> +	return ret;
-> +}
-> +
-> +static int cros_ec_hwmon_cooling_set_cur_state(struct thermal_cooling_device *cdev,
-> +					       unsigned long val)
-> +{
-> +	const struct cros_ec_hwmon_cooling_priv *priv = cdev->devdata;
-> +
-> +	return cros_ec_hwmon_write_pwm_input(priv->hwmon_priv->cros_ec, priv->index, val);
-> +}
-> +
->  static const struct hwmon_ops cros_ec_hwmon_ops = {
->  	.read = cros_ec_hwmon_read,
->  	.read_string = cros_ec_hwmon_read_string,
-> @@ -307,6 +341,12 @@ static const struct hwmon_ops cros_ec_hwmon_ops = {
->  	.is_visible = cros_ec_hwmon_is_visible,
->  };
->  
-> +static const struct thermal_cooling_device_ops cros_ec_thermal_cooling_ops = {
-> +	.get_max_state = cros_ec_hwmon_cooling_get_max_state,
-> +	.get_cur_state = cros_ec_hwmon_cooling_get_cur_state,
-> +	.set_cur_state = cros_ec_hwmon_cooling_set_cur_state,
-> +};
+then
+  list_del_init(grep->node[1].entry);
+while
 
-Move this directly after the definition of the functions.
+Signed-off-by: Changhang Luo <luochanghang_nudt@163.com>
+---
+ drivers/base/devres.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
->  static const struct hwmon_chip_info cros_ec_hwmon_chip_info = {
->  	.ops = &cros_ec_hwmon_ops,
->  	.info = cros_ec_hwmon_info,
-> @@ -374,6 +414,31 @@ static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cro
->  	       is_cros_ec_cmd_fulfilled(cros_ec, EC_CMD_THERMAL_AUTO_FAN_CTRL, 2);
->  }
->  
-> +static void cros_ec_hwmon_register_fan_cooling_devices(struct device *dev,
-> +						       struct cros_ec_hwmon_priv *priv)
-> +{
-> +	struct cros_ec_hwmon_cooling_priv *cpriv;
-> +	size_t i;
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index d8a733ea5..68f64256a 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -477,7 +477,7 @@ static int remove_nodes(struct device *dev,
+ 		BUG_ON(!grp || list_empty(&grp->node[0].entry));
+ 
+ 		grp->color++;
+-		if (list_empty(&grp->node[1].entry))
++		if (!list_empty(&grp->node[1].entry))
+ 			grp->color++;
+ 
+ 		BUG_ON(grp->color <= 0 || grp->color > 2);
+-- 
+2.25.1
 
-if (!IS_ENABLED(CONFIG_THERMAL))
-	return;
-
-> +
-> +	if (!priv->fan_control_supported)
-> +		return;
-> +
-> +	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
-> +		if (!(priv->usable_fans & BIT(i)))
-> +			continue;
-> +
-> +		cpriv = devm_kzalloc(dev, sizeof(*cpriv), GFP_KERNEL);
-> +		if (!cpriv)
-> +			return;
-> +
-> +		cpriv->hwmon_priv = priv;
-> +		cpriv->index = i;
-> +		devm_thermal_of_cooling_device_register(
-> +			dev, NULL, devm_kasprintf(dev, GFP_KERNEL, "cros-ec-fan%zu", i), cpriv,
-
-What happens for multiple/chained ECs? If both provide sensors the
-thermal device names will collide.
-
-Error handling for devm_kasprintf() is missing.
-
-> +			&cros_ec_thermal_cooling_ops);
-
-Error handling for devm_thermal_of_cooling_device_register() is missing.
-
-> +	}
-> +}
-> +
->  static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -402,6 +467,7 @@ static int cros_ec_hwmon_probe(struct platform_device *pdev)
->  	cros_ec_hwmon_probe_fans(priv);
->  	priv->fan_control_supported =
->  		cros_ec_hwmon_probe_fan_control_supported(priv->cros_ec);
-> +	cros_ec_hwmon_register_fan_cooling_devices(dev, priv);
->  
->  	hwmon_dev = devm_hwmon_device_register_with_info(dev, "cros_ec", priv,
->  							 &cros_ec_hwmon_chip_info, NULL);
-> 
-> -- 
-> 2.49.0.906.g1f30a19c02-goog
-> 
-> 
