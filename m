@@ -1,83 +1,98 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730727081C;
-	Sat,  3 May 2025 18:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30036DCE1;
+	Sat,  3 May 2025 18:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746296479; cv=none; b=KCvd1lCuWX4JK7zQ/yMxlFSmDZ2RA1YWEDeY1bMoKwGYQ7wSEumrvWvK+iuhMpbfKUx+VxIoYcC8klZ1LaMrLdpUqOSXKZHobuYjjSlO5fAEBzRfBVl3MUs8pjfd3zTIzXjYEWBPSOLaSp/MPNsV0EqLKtc5ODOujHo9YnQiB/8=
+	t=1746296921; cv=none; b=uYf6gS+qlhVBFvHqN6WpdyUTg3jvD1rglUjbQ8dv5pPFvRQ9gMhWlYLjEmv5c05PtDP5WtZqcwMyTG+u3WIX3PcMNFyFPYVc/HNenGW+euv5NFX7qAb66AFQLXpnCvqiUys9t0bmPSS07wg4jyHLvW0G1TyVIHUbZyuu6HIRrsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746296479; c=relaxed/simple;
-	bh=CYwIFeC0sURXEvXP777r3Z0BskxeSWFp8rznqWY4Dzs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q34nCm6Fyld2HvKFKma1+uV1k0YvMTh4lbkPwvAoPEZFXqsdg1kllJN4w6EjTdRv/k9/GhqJrS3qyzc5t9ug9fa2KJbr+cfVaa4zz+V5Pv0C9sU9uAb3lHzMBduiuxLgsj5/GNvIHOaMrIvQNpLh1qlqgBXmsc3a7LQd+AnRXIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=INTlC1a5; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746296921; c=relaxed/simple;
+	bh=3fKBodp5CHqkWEFP9lvNQWnLHEOn5YEIduo8h9PK+nI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o7ziVV4IWZFFHxUf2ZF1KafTf5aYvhqc7+25g+IRl/qU6BDrcEJPN9BeJZcjFAKg6j1jJYeZySq1bOMfofgie/7ToXjneDQtvb9xe4G3NtKbEI3PtN1gC0pKskxyQHS4E0ExokuuL6TZL9hDwiDK4ForQt+inpF3DCK5l88vbwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuL9IAtO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INTlC1a5"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f94b7bd964so2478834b6e.1;
-        Sat, 03 May 2025 11:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746296477; x=1746901277; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CYwIFeC0sURXEvXP777r3Z0BskxeSWFp8rznqWY4Dzs=;
-        b=INTlC1a5uf+IxMRDPv253XWT1OkI4TuDFp+VHI0QAXkXKn8QaUdZZD//tC9BNgD/gX
-         F0aSs5yvsVTxKuM2lsdw9Lq9J2aRnf1ixNkkT+p80z1Bf1J6H6BwYQfTnO3cT9b9TvPH
-         9iOD8767YyDbqbUAOEVlGyhdXSPaKK068PqW1eZnQMY+FeyK+qnI+xDbh3iln9Je4J1i
-         8vN6pTrG9S0XCaOh3rM4l6j4MvfemoDcMP3ClwcC2p1bN1YGRTrqLz+hquRdsOXrdlNF
-         UCPulDwyuHjEaETOvrYCwMjIBZZEqPbcZSOZtLqlof9yKvTC3xT3j12qR9e3oTIloKOO
-         EJrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746296477; x=1746901277;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CYwIFeC0sURXEvXP777r3Z0BskxeSWFp8rznqWY4Dzs=;
-        b=diJp+QdBZuQNVYEVC3jnZKJo95eVi6+pJ/OecK8IKV5wkHl7glbzz2d6ylTQqGsUPi
-         F/WvxknRHqqPNrg9j7CCQqWVnRLfzOuy8yjn+WOgnLiazRulzm6bLMM6XJWKskZAu18S
-         knGP3VlDTtXNlyga77t3wDKLhv6jukabAj09g4un7NTkXvMmy6rWTCDI5qx2PaEOZhJn
-         EQiXmMnT28HDA0+N7eKxDjw3KXK020WgLPBUF+lw4jpARjFJ1NA4dJ4snzbmtirRI1A9
-         JrpIqzcStej46JbYIm+Wzl2hK8cVKOMLHWi80+uRsnGfNMq0mljp0Nlbs2wLNmfCckAR
-         4p3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfNhW7BJJWj62HbSW1jFshZjdW1KtQc7R/6W+xurWPEsyJNHWtf6Gr5EKqbmoxPTY1FDn0JfcsA5Gu@vger.kernel.org, AJvYcCWXG/MHVknJXe8OUEzDWZpIv94bVD1eUHFleh/YEzVQUZLWBHbJlCTzVDzNQT7vg/FguIso2ZNn0KvVBA4F@vger.kernel.org, AJvYcCXWhkS84RDpGeba/Lh8wUBZTQAvejbQ9DCOsnSVlPlOgGJLhF2b+BtbdlSj7ARUJGtNRwUr5eIik9Rt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUwaTEKhgsRQC6jrlC4A+qEayuuR+UjdWo5oO0+/yJny9CK2mp
-	X9xpNX/QnAifkOq2zqn/fG3d4uE5ME7vnC+AQr65rE5v/MppgIOUzGCmHt/IUX1nx2K7M+SW14d
-	A3x7JlGA6313KvzjppeQO2PEeF0M=
-X-Gm-Gg: ASbGncukF+ltki758kIKkx8fyZ6GiLcEWG71Sp8UqG5F37bmZKTC9vFsOlKjDdOSfXA
-	aG9ibZTZ3taz/lxmQcdLYLvkXjEdgZoUnte7c20VFNhPWopbCOPgcoqI6TU/vwh1DnWdwmH8iIV
-	iGAmQkMWh7YdtgvkAubfxMsg==
-X-Google-Smtp-Source: AGHT+IE3tEb9+y0QpyQV5D1Q707PzF6MCKD6WZN6PTD4zOMRfmafShUdh7xzFvarhazzyRUKyF3kv/W+chlBUuyPP/k=
-X-Received: by 2002:a05:6808:13cd:b0:403:51ac:23ea with SMTP id
- 5614622812f47-4035a55f64fmr944995b6e.9.1746296477382; Sat, 03 May 2025
- 11:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuL9IAtO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4890C4CEE3;
+	Sat,  3 May 2025 18:28:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746296920;
+	bh=3fKBodp5CHqkWEFP9lvNQWnLHEOn5YEIduo8h9PK+nI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NuL9IAtOE7d193OKwDBV73buJtEMeabKO9HM7XEjD+YA88mKiDABuwUGNX+FGv4R4
+	 4VDW1tO3Vy2KCTyHsvoSRv8BvS8GJOU8rWIXholkdw6QYaFO/GZmhacyMu+2RD5HI0
+	 dcfPQT/uu+hFaXu11qKuPsmiUSJbhxf+ZoJmm+fbf6GnxZSlE5DPHlNpKR21xM//Bf
+	 2KW3zSwmof5v9vOd2UQx256HHwi4VmgCnx+oW0zYB7iLwUJTpLwHe20qIbSjE2DIVx
+	 iLPt0T7jUHJR+tpo49FRs9as7xJXRVxeq1fzmyjOQm6moyc3+7xYBJ9RKHwEN8+12k
+	 RH27QZpxtPM8A==
+Date: Sat, 3 May 2025 11:28:37 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, pbonzini@redhat.com, 
+	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org, samitolvanen@google.com, 
+	ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
+References: <20250430110734.392235199@infradead.org>
+ <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+ <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
+ <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+ <aBO9uoLnxCSD0UwT@google.com>
+ <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+ <aBUiwLV4ZY2HdRbz@google.com>
+ <20250503095023.GE4198@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503095532.132041-1-akshaybansod997@gmail.com> <aBY0wHEzjbBex-Hn@debian-BULLSEYE-live-builder-AMD64>
-In-Reply-To: <aBY0wHEzjbBex-Hn@debian-BULLSEYE-live-builder-AMD64>
-From: Akshay Bansod <akshaybansod997@gmail.com>
-Date: Sat, 3 May 2025 23:51:06 +0530
-X-Gm-Features: ATxdqUEYo5SC1cZKvrEP_lX5gKSFaQoSdgKGIoAOyuhlfm3y7fKdoLzeq30RpbM
-Message-ID: <CANm0iNgg-yxFMeRGdr6DC3T-x2HEznCiCc9pqpErLu-NPriqjw@mail.gmail.com>
-Subject: Re: [PATCH] iio: dac: ad559*: fixed coding style issue (shorthand unsigned)
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250503095023.GE4198@noisy.programming.kicks-ass.net>
 
-Hello Marcelo,
+On Sat, May 03, 2025 at 11:50:23AM +0200, Peter Zijlstra wrote:
+> > +++ b/arch/x86/entry/entry_64_fred.S
+> > @@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+> >  	movq %rsp, %rdi				/* %rdi -> pt_regs */
+> >  	call __fred_entry_from_kvm		/* Call the C entry point */
+> >  	POP_REGS
+> > -	ERETS
+> > +
+> > +	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
+> >  1:
+> >  	/*
+> >  	 * Objtool doesn't understand what ERETS does, this hint tells it that
+> > @@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+> >  	 * isn't strictly needed, but it's the simplest form.
+> >  	 */
+> >  	UNWIND_HINT_RESTORE
+> > -	pop %rbp
+> > +	leave
+> >  	RET
+> 
+> So this, while clever, might be a problem with ORC unwinding. Because
+> now the stack is different depending on the alternative, and we can't
+> deal with that.
+> 
+> Anyway, I'll go have a poke on Monday (or Tuesday if Monday turns out to
+> be a bank holiday :-).
 
-Thanks for the review.
-I'll split this into two separate patches and make the necessary changes.
+Can we just adjust the stack in the alternative?
 
-Regards
-akshay
+	ALTERNATIVE "add $64 %rsp", __stringify(ERETS), X86_FEATURE_FRED
+1:
+	UNWIND_HINT_RESTORE
+	pop %rbp
+	RET
+
+-- 
+Josh
