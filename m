@@ -1,271 +1,196 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB9246B8
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 07:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1337083A
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 07:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746256205; cv=none; b=LfplOuIuJfZD/fQLswLhW+Na9YQaQwosT70lihXV/KkstQVTIfwSSA/SzZP8364SGAqzfEs0OgT0nKKxyFk9BTPZ1A51L3tOTMVm8qzfTign1H3yyWZjeH58hhwJUNey3NrSXlnWkO5XlKokyUpNQKvmOPS0SrcooKTQvofNf9k=
+	t=1746256630; cv=none; b=jWoiJzXsJsrgXSfsft+6NaHVClL7GYdoEzApW7tMkJM1SPu5s+0lgN8JtNaGoI8Hf6FP26MIKLA6DE/LDXXZPeg6cmI53VGcEY7NtsB7GuM0nMmevVech1Kzz9DPH2FgcKznlLeTm3ed+TRalnBKI1tWawHrYM4G2gWGVNM9jrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746256205; c=relaxed/simple;
-	bh=Tjd3qlzfN1pyYw9U0UC81AGMC57EcEBEsh/GOc+z5pU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=XdFTXM9xi0ytRKfXkPQG02nqoTDpaIqXAusuUCDsDJRGZnF5gW3ce9F0RpQjwqNuxKS/5M/8QdX7rCdy8RTRRh9GnWFrlCv3qd8On14c0xj9LzKqFG6TMPyCZ1LsRzcpVRmFyMHPWJ/CRU0kY9uoE57Z64kNpv5Y5GLk7bxIY4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d8a9b1c84eso37040865ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 00:10:03 -0700 (PDT)
+	s=arc-20240116; t=1746256630; c=relaxed/simple;
+	bh=zpaWzihcAkuFU7mOqkmcCp0zLATW5X8ucLZXXq16CRE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VA2110aAIu2QP00Ij9UOQaDV3lZZ2D0TWahUkCKVslPzsxzr9wQwsJhAlb2XAnZZOHxcFQc9IkpsroLz1nIZeLt8bGvyRyukGMIsmlQcfwaYK/svfF0eppdwxZHe/+Nn2Qt0SHxWDtOc0zhkzsEdlKJLESgDI1VyGtb3zueC/d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=USQTKPJB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="USQTKPJB"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5437F1cb008119
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 07:17:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=hNcb6Gt2GU+K2Wi4MQP5kS
+	7q72CjyKeIq2SG9MvFUcI=; b=USQTKPJBPplgMjd97YJLDJckRumEbguqRAhtHB
+	9BrkHmawrsgkpLKvkPlk2nuyzZp92z9+9k+B/gqYLT8KZUJZpDVA1ih0uUEEqQ16
+	LhOR8vborCjdH1/nbJi14vL5kMQ/5J9OizSZHSeunjCW03aPWjNZVsVpmMVVKOa2
+	iNnfeDLBEA00KDOK5de+yVIAa7Q0mfHN5XMdHJ9rGrz2KhGqZFFciPnd1MqHdwnC
+	sV2iYtK/GwmR9V+HNqbZskLD0oNaFjJifNVVN688Dpzb3L7clDw7W1CDgTcKWEar
+	4diYZY5cBUEFLvz3HQzIRtOLCLnoO97c7KJkXQDRKJwanNjw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9856t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 07:17:07 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5b9333642so329867885a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 00:17:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746256202; x=1746861002;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4NDqDWuCurJ/GrnBBjQopOxynYgpnhBCpcbU3adDSU=;
-        b=ucAJGRmJ8Zieh8yl93VVzifAGS/1vDmFUjODo/6VhuEEVcySOJmaMgq3Q1JP7JS5M/
-         iVYYztl9JGjvFsgJZ820yxerCDjLHvJjNaWw8D0IGJe6bR9Fy2whB4T7Ag8ydCpkd6gA
-         991wpKKHqIfRrO1LhxKP4Lt6RJ6jcplrx3zpxUw3vJPhqXG2g5pIFCVztMcKzMGemOj0
-         0F3DLO90hvWQxJILCAeSxZv5jrEaI1lFudx1IWzVJazNwhNlVhIhZ7asD94/pRvmv6Zk
-         W2n6OWjaebuci7+OmdSPf26f8Lzxv6u6q06GuVdi+HGPN0nJZFHBQg953MXrnSb88/1N
-         NgKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCw4gFoQOx4TWFKPsa7bbMUQOg8/al9hWdmiyyyLKRLt93q57qRNwK02AGMz/kf7kDpwV22czI0KVVwPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqWGb068Qo9KyKETdJKB3QH+2bARsqYGPVmyrvNEqPdhzqvguZ
-	tVrk3nz0blNHNSOn7YAnlhQqopk0zO2qZkfegKZvr8sSYUQqqbj6TzrfPy1pssI6Eec1q7Sx6Ud
-	ffYgFRfbQNtkIi2BlBlN/ncYvf8+e/PTXcA3zV3mTx0tcBIUlLa4SRxI=
-X-Google-Smtp-Source: AGHT+IG8RnE1eK5qAb1C615hKxRjWRWs6JleYACpnGqv86TdCKmLLVzedC7t/Tqyb5dxucUVm4MM0bIUDPi+/AbE7HXcZDHJ/MqX
+        d=1e100.net; s=20230601; t=1746256625; x=1746861425;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hNcb6Gt2GU+K2Wi4MQP5kS7q72CjyKeIq2SG9MvFUcI=;
+        b=gn34rZSECyC8uzLYvdYocAzk8KGkH6g9YrcXZjTYZANQtevpEqeIqFic0OGWyF6PX0
+         eB6CcSsVrSUYWnFHSrbw1NncLXU2bwJCFGedBfLDtwLzWXwntEtvM4fWreCdW92axoj5
+         ybgHPvXBlGpnnZuslXe91KnHxsxXTmNs76nCeRxg6jBziBR4/TOdJCcvXunEyunMr7kB
+         PLWENN8c5INiGCRUBeT1cykvVuEyqS5k0O7PtogPl697nIX7SwJYZLkCS2YN/pCWUddO
+         P6tniDzmkA5XTq+ze8/sdkkqvIIkHRasxqaFyOERwxqjq4bJk8IzX+GTr20FpPXv0OSh
+         oA6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUZKk8zEC/E+A+pIAotaWEyhSuVWSF/9TOIbvhT8A7jWHQziry2WQ3dEkcBZMn1UecLz3CVoJBDR4RAYhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJD9gvWVdHDHtNJpkpUxB7e2q49bawuUAv1mXc24N+NMGnlSWv
+	0585V9VFHRPfRSf0LfvvRzAaOSkohQGf6zOCAW/zU2gK8TFxDPbaDfxccSJqAQxVYela8+rKUj3
+	OCdWSZMR8ESZIeK577tegmkhLnedQf3ZB1BSlNGJegnJLU8ylGtrz1MrhKf48w7TIjcNcbz/z0w
+	==
+X-Gm-Gg: ASbGnctgOJ1c573VqWVRzx26yV25eQciUSTMUnpmq4ZLEI/Cizz2iWqlDDXeGrKyAPs
+	sN4Iq/VI6JI1Nogbqfl91TNBK9j7shn070q+yL3I9ZAzPKHKPfKJNdB7yMecAhYbMmVdrz0A+4H
+	40QrY0iEh/C6Q+IVVZD+vpYoVQ0LXcldLq94besTbyOJp4nH3XfMnyHToncGGY5eiSTcfARPbCi
+	4zA+PZOsCDkwe5Z2cAgrd6hx7ryr1EQXv2/xx1fCIvcy2x8hb9/wmcG3JOiZKKiiwDAAEcVPx5q
+	Z0ZZq3Xe5nY2vJaF6IsgE6pLuynV8GfImgOaPqiNLOEleLTmcPd4NdnRSf9Ii6BFG7emgm78IbU
+	K+tJFR4Hwj5weAM2+bMQif6Fb
+X-Received: by 2002:a05:620a:4711:b0:7c5:3e22:616e with SMTP id af79cd13be357-7cae3b05993mr23304185a.56.1746256625495;
+        Sat, 03 May 2025 00:17:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzZAh6r7yk34zBACICarYn+7ksNe9H7A/jXSfVMrZqR4QFbAiT+CavYkAqQqGM9qu4e0Vd/A==
+X-Received: by 2002:a05:620a:4711:b0:7c5:3e22:616e with SMTP id af79cd13be357-7cae3b05993mr23301485a.56.1746256625139;
+        Sat, 03 May 2025 00:17:05 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c5557sm692816e87.84.2025.05.03.00.17.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 May 2025 00:17:03 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH v2 00/11] drm/msm: rework the ties between KMS and GPU
+ parts of the driver
+Date: Sat, 03 May 2025 10:16:59 +0300
+Message-Id: <20250503-msm-gpu-split-v2-0-1292cba0f5ad@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:168a:b0:3d8:1d7c:e190 with SMTP id
- e9e14a558f8ab-3da5b271b75mr1785505ab.7.1746256202698; Sat, 03 May 2025
- 00:10:02 -0700 (PDT)
-Date: Sat, 03 May 2025 00:10:02 -0700
-In-Reply-To: <20250503065556.1496-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6815c14a.050a0220.11da1b.000b.GAE@google.com>
-Subject: Re: [syzbot] [mm?] BUG: Bad page state in page_cache_ra_order
-From: syzbot <syzbot+7b3842775c9ce6b69efc@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOvCFWgC/13MwQqDMAzG8VeRnBdpaqdsp73H8OBc1IK12qhsi
+ O++Tthll8A/8P02EA6WBa7JBoFXK9YPMfQpgbqrhpbRPmODVvqsDBE6cdiOC8rY2xl1oYjNhY1
+ qFMTNGLixr8O7l7E7K7MP74Nf6fv9SdmftBIqJMp0Yx455XVx8yLptFR97Z1L44Fy3/cPq4nWm
+ LEAAAA=
+X-Change-ID: 20250411-msm-gpu-split-2701e49e40f0
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3290;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=zpaWzihcAkuFU7mOqkmcCp0zLATW5X8ucLZXXq16CRE=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoFcLs8czfk2fFmfLywbFlWfcNnIy7EbvZg8VT8
+ /qJGFPSEjuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaBXC7AAKCRCLPIo+Aiko
+ 1ezOCACf61qvE4g158ByABGSe5jNgTEE03FziSvWkgJ8Q6a1kEDquwUWSM+kLn2Fw082s/18auQ
+ GaFv7xvox6sh1/lYH9wKmeBMHF1XdEjN4mUVzdN9C9ex6tltonKwfXNMtTH3WT9XPC5awHbif9P
+ kfdavGnHZjbnmaqkVMCrpy/GQ7z+QNgjvZXlPTd+ymoDjeFiyCgYZSpwFknfPo0/Ob838jBaZ7H
+ soAlQGItpaUhPixnN45BHGXaM18QwU+56sKMJHMgTmqKP/rsj+1xFT4280eDV/087Nag/YvVebH
+ EYwuNOj2xV9kWyrdDW8W22TeY14O4EuXGWQFqCfnRrc6ik5Q
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA2MCBTYWx0ZWRfXwLb3T6ve9KDP
+ nl0yHKyPO826ZsWHaw00rqFJLQlCGgtDlQ9ek5NOWislt5lCdsTAaDjyTZkV6tubzib+X78g8hq
+ cVVfilqZtQpH2tPrMIsOMT+VJsRux4RB3D8kWQgH9c78OPxkQ9UBbx7M6qD0SU5E5en1GF3uqcp
+ eROsqe16b5PaYTqDdtAbuCbEUmNChOrHL3dXo6bmKDZO/zgYuWbwS2Pec7YNsR+yaFYWTeimnbC
+ 9HDlrCrJ+KAzUaMMY1k5Bq4AW2+38hRHWBR5iqHobP0kmReOB0hONP9XvLoJkuiFn+qY8Vh13KF
+ pYkI8ZWQ6vM0lXLNRqKAPmVesNQXtklDLaDkGroWRK30zAx13WbABMLmoZCuVOvYX4+lfSYgBhK
+ hWONRpRB9eJqRWnizJyc+xJidGjJKX/byApiLKZZZcj8pbUqOR02v2CYZw+27aGmh2ZkzYIo
+X-Proofpoint-ORIG-GUID: GhdqCd9MGcB5mgbWecDJqt50LRgbBkDw
+X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=6815c2f3 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=3aS5ecUQXdRO32CnfYUA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-GUID: GhdqCd9MGcB5mgbWecDJqt50LRgbBkDw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_03,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030060
 
-Hello,
+Currently the KMS and GPU parts of the msm driver are pretty much
+intertwined. It is impossible to register a KMS-only device and
+registering a GPU-only DRM device requires modifying the DT.  Not to
+mention that binding the GPU-only device creates an interim platform
+devices, which complicates IOMMU setup.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-BUG: Bad page state in prep_new_page
+Rework the driver:
+- Make it possible to disable KMS parts (if MDP4, MDP5 and DPU drivers
+  are disabled).
+- Register GPU-only devices without an interim platform device.
+- Add module param that makes msm driver register GPU and KMS devices
+  separately.
 
-BUG: Bad page state in process syz.0.16  pfn:4be01
-page does not match folio
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffffffffffffffff pfn:0x4be01
-ksm flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000000 ffffea00012f8000 00000000ffffffff ffffffffffffffff
-raw: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: nonzero pincount
-page_owner tracks the page as allocated
-page last allocated via order 9, migratetype Unmovable, gfp_mask 0x152c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_HARDWALL), pid 6495, tgid 6495 (syz.0.16), ts 89599699971, free_ts 84897122939
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
- prep_new_page+0x16/0xb0 mm/page_alloc.c:1726
- get_page_from_freelist+0x135b/0x3800 mm/page_alloc.c:3692
- __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4974
- alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
- alloc_pages_noprof mm/mempolicy.c:2392 [inline]
- folio_alloc_noprof+0x20/0x2d0 mm/mempolicy.c:2402
- filemap_alloc_folio_noprof+0x3a1/0x470 mm/filemap.c:1007
- ractl_alloc_folio mm/readahead.c:186 [inline]
- ra_alloc_folio mm/readahead.c:441 [inline]
- page_cache_ra_order+0x4c0/0xd00 mm/readahead.c:509
- do_sync_mmap_readahead mm/filemap.c:3225 [inline]
- filemap_fault+0x1a5e/0x2740 mm/filemap.c:3403
- __do_fault+0x10a/0x490 mm/memory.c:5098
- do_shared_fault mm/memory.c:5582 [inline]
- do_fault mm/memory.c:5656 [inline]
- do_pte_missing+0x1a6/0x3fb0 mm/memory.c:4160
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0x103d/0x2a40 mm/memory.c:6140
- handle_mm_fault+0x3fe/0xad0 mm/memory.c:6309
- do_user_addr_fault+0x60c/0x1370 arch/x86/mm/fault.c:1337
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-page last free pid 6330 tgid 6330 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2729
- vfree+0x176/0x960 mm/vmalloc.c:3383
- kcov_put kernel/kcov.c:439 [inline]
- kcov_put kernel/kcov.c:435 [inline]
- kcov_close+0x34/0x60 kernel/kcov.c:535
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xafb/0x2c30 kernel/exit.c:953
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- get_signal+0x2673/0x26d0 kernel/signal.c:3034
- arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Modules linked in:
-CPU: 1 UID: 0 PID: 6495 Comm: syz.0.16 Not tainted 6.15.0-rc4-syzkaller-g95d3481af6dc-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- bad_page+0xb3/0x1f0 mm/page_alloc.c:505
- free_tail_page_prepare+0x44f/0x5b0 mm/page_alloc.c:1000
- free_pages_prepare mm/page_alloc.c:1238 [inline]
- __free_frozen_pages+0x96a/0xff0 mm/page_alloc.c:2729
- __folio_put+0x329/0x450 mm/swap.c:112
- folio_put_refs include/linux/mm.h:1600 [inline]
- filemap_free_folio+0x132/0x170 mm/filemap.c:235
- delete_from_page_cache_batch+0x741/0x9b0 mm/filemap.c:339
- truncate_inode_pages_range+0x279/0xe30 mm/truncate.c:376
- kill_bdev block/bdev.c:91 [inline]
- blkdev_flush_mapping+0xfb/0x290 block/bdev.c:712
- blkdev_put_whole+0xc4/0xf0 block/bdev.c:719
- bdev_release+0x47e/0x6d0 block/bdev.c:1144
- blkdev_release+0x15/0x20 block/fops.c:660
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xafb/0x2c30 kernel/exit.c:953
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
- x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa53558e969
-Code: Unable to access opcode bytes at 0x7fa53558e93f.
-RSP: 002b:00007ffdfd5c04e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa53558e969
-RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: 00000006fd5c05df R09: 00007fa53577d260
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fa53577d260 R14: 0000000000000003 R15: 00007ffdfd5c05a0
- </TASK>
-BUG: Bad page state in process syz.0.16  pfn:4be00
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x4be00
-head: order:0 mapcount:0 entire_mapcount:1 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000049(locked|uptodate|head|node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000000049 dead000000000100 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-head: 00fff00000000049 dead000000000100 dead000000000122 0000000000000000
-head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-head: 00fff00000000000 0000000000000000 00000000ffffffff 0000000000000000
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-page_owner tracks the page as allocated
-page last allocated via order 9, migratetype Unmovable, gfp_mask 0x152c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_HARDWALL), pid 6495, tgid 6495 (syz.0.16), ts 89599699971, free_ts 84897115361
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1718
- prep_new_page+0x16/0xb0 mm/page_alloc.c:1726
- get_page_from_freelist+0x135b/0x3800 mm/page_alloc.c:3692
- __alloc_frozen_pages_noprof+0x263/0x23a0 mm/page_alloc.c:4974
- alloc_pages_mpol+0x1fb/0x550 mm/mempolicy.c:2301
- alloc_pages_noprof mm/mempolicy.c:2392 [inline]
- folio_alloc_noprof+0x20/0x2d0 mm/mempolicy.c:2402
- filemap_alloc_folio_noprof+0x3a1/0x470 mm/filemap.c:1007
- ractl_alloc_folio mm/readahead.c:186 [inline]
- ra_alloc_folio mm/readahead.c:441 [inline]
- page_cache_ra_order+0x4c0/0xd00 mm/readahead.c:509
- do_sync_mmap_readahead mm/filemap.c:3225 [inline]
- filemap_fault+0x1a5e/0x2740 mm/filemap.c:3403
- __do_fault+0x10a/0x490 mm/memory.c:5098
- do_shared_fault mm/memory.c:5582 [inline]
- do_fault mm/memory.c:5656 [inline]
- do_pte_missing+0x1a6/0x3fb0 mm/memory.c:4160
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0x103d/0x2a40 mm/memory.c:6140
- handle_mm_fault+0x3fe/0xad0 mm/memory.c:6309
- do_user_addr_fault+0x60c/0x1370 arch/x86/mm/fault.c:1337
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-page last free pid 6330 tgid 6330 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0x69d/0xff0 mm/page_alloc.c:2729
- vfree+0x176/0x960 mm/vmalloc.c:3383
- kcov_put kernel/kcov.c:439 [inline]
- kcov_put kernel/kcov.c:435 [inline]
- kcov_close+0x34/0x60 kernel/kcov.c:535
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xafb/0x2c30 kernel/exit.c:953
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- get_signal+0x2673/0x26d0 kernel/signal.c:3034
- arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-Modules linked in:
-CPU: 0 UID: 0 PID: 6495 Comm: syz.0.16 Tainted: G    B               6.15.0-rc4-syzkaller-g95d3481af6dc-dirty #0 PREEMPT(full) 
-Tainted: [B]=BAD_PAGE
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x16c/0x1f0 lib/dump_stack.c:120
- bad_page+0xb3/0x1f0 mm/page_alloc.c:505
- free_page_is_bad_report mm/page_alloc.c:938 [inline]
- free_page_is_bad mm/page_alloc.c:948 [inline]
- free_pages_prepare mm/page_alloc.c:1254 [inline]
- __free_frozen_pages+0x76e/0xff0 mm/page_alloc.c:2729
- __folio_put+0x329/0x450 mm/swap.c:112
- folio_put_refs include/linux/mm.h:1600 [inline]
- filemap_free_folio+0x132/0x170 mm/filemap.c:235
- delete_from_page_cache_batch+0x741/0x9b0 mm/filemap.c:339
- truncate_inode_pages_range+0x279/0xe30 mm/truncate.c:376
- kill_bdev block/bdev.c:91 [inline]
- blkdev_flush_mapping+0xfb/0x290 block/bdev.c:712
- blkdev_put_whole+0xc4/0xf0 block/bdev.c:719
- bdev_release+0x47e/0x6d0 block/bdev.c:1144
- blkdev_release+0x15/0x20 block/fops.c:660
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xafb/0x2c30 kernel/exit.c:953
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
- x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa53558e969
-Code: Unable to access opcode bytes at 0x7fa53558e93f.
-RSP: 002b:00007ffdfd5c04e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa53558e969
-RDX: 0000000000000064 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000003 R08: 00000006fd5c05df R09: 00007fa53577d260
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fa53577d260 R14: 0000000000000003 R15: 00007ffdfd5c05a0
- </TASK>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+Changes in v2:
+- Got rid of mdp4_crtc.id and msm_drm_private.num_crtcs
+- Moved msm_drm_private.wq and msm_drm_private.event_thread to struct
+  msm_kms (Rob Clark)
+- Moved HDMI / DSI / DP pointers to msm_kms (Abhinav)
+- Link to v1: https://lore.kernel.org/r/20250413-msm-gpu-split-v1-0-1132f4b616c7@oss.qualcomm.com
 
+---
+Dmitry Baryshkov (11):
+      drm/msm: move wq handling to KMS code
+      drm/msm: move helper calls to msm_kms.c
+      drm/msm/mdp4: get rid of mdp4_crtc.id
+      drm/msm: get rid of msm_drm_private::num_crtcs
+      drm/msm: move KMS driver data to msm_kms
+      drm/msm: make it possible to disable KMS-related code.
+      drm/msm: bail out late_init_minor() if it is not a GPU device
+      drm/msm: rearrange symbol selection
+      drm/msm: rework binding of Imageon GPUs
+      drm/msm: enable separate binding of GPU and display devices
+      drm/msm: make it possible to disable GPU support
 
-Tested on:
+ drivers/gpu/drm/msm/Kconfig                       |  54 ++++--
+ drivers/gpu/drm/msm/Makefile                      |  31 +--
+ drivers/gpu/drm/msm/adreno/adreno_device.c        |  39 +---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c          |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c       |  13 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c           |  35 ++--
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_crtc.c         |   9 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c          |  13 +-
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h          |   2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c         |   2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c          |  17 +-
+ drivers/gpu/drm/msm/disp/msm_disp_snapshot_util.c |  12 +-
+ drivers/gpu/drm/msm/dp/dp_debug.c                 |   4 +
+ drivers/gpu/drm/msm/dp/dp_display.c               |   6 +-
+ drivers/gpu/drm/msm/dsi/dsi.c                     |   4 +-
+ drivers/gpu/drm/msm/hdmi/hdmi.c                   |  13 +-
+ drivers/gpu/drm/msm/msm_debugfs.c                 | 222 ++++++++++++----------
+ drivers/gpu/drm/msm/msm_drv.c                     | 205 +++++++++++++-------
+ drivers/gpu/drm/msm/msm_drv.h                     |  34 ++--
+ drivers/gpu/drm/msm/msm_gpu.h                     |  71 ++++++-
+ drivers/gpu/drm/msm/msm_kms.c                     |  41 +++-
+ drivers/gpu/drm/msm/msm_kms.h                     |  46 +++++
+ drivers/gpu/drm/msm/msm_submitqueue.c             |  12 +-
+ 23 files changed, 549 insertions(+), 340 deletions(-)
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250411-msm-gpu-split-2701e49e40f0
 
-commit:         95d3481a Merge tag 'spi-fix-v6.15-rc4' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=177498d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca17f2d2ba38f7a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=7b3842775c9ce6b69efc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15719774580000
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
