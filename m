@@ -1,257 +1,122 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ED62566;
-	Sat,  3 May 2025 11:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A253AD2C;
+	Sat,  3 May 2025 11:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746271090; cv=none; b=rNcmkl653iGHeKfwN07X0VsWrUWqLHUN5dnJJRMvHG85y60Y76sG5U1oaoQCs5kzE+Xqemwj4aBTE4HcHQ9NrfJn1pwSbf0srO2FUSUTyu8VP4rpQp5W0Mij6o6F8jt+Auml07cAZ+MMv2ZsRzQIrH9FV/7yT+qlvH0w8hMxcHY=
+	t=1746271136; cv=none; b=DHNOFZ5CdZ5YC39ZP9bvJoeLc7d8hSsz/IvJUpxP5RO0SJuiKZdxWb0ZQm/4kQgKYLsYlss51vbIXMGycozNUzMeGN7ge/Zx8k+FqpsFjqY6OL7ERwNUqmQF+58XK+xDukrDuLtKuN7b21Njqp2eWn9Ivg67RKvP5B3u9NGJyW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746271090; c=relaxed/simple;
-	bh=IwmPfB0nMw4wQO4Q8gQVoJPDj+jJkZ0bDWNCHeQiVSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=E39fLkjvM/33VFROTfmW2XU8Hlb8Ldvx2ek63bCqgoUFNij5lFXjgoYK9+iMvLbC03AJChUoMyqYyDpr92npUyNOEV5wgfbuO+fFft7B/o3MhDcyV2zozBvtYkPIIie/TfefH5Fie5+nGX61BXJ1BKzvXwV0DHZJPFkk0DgVQKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E0YsHYtE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746271136; c=relaxed/simple;
+	bh=tmca2YOGD+SM8+DR6QVH7oS7rb2oO+5XURYj4WfEP/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fSFnbBIX3UbwheuPIAfjGuItx3a4u1PAfGcSKm40Mm54so7hl/2Xl5xlVhEQ7AYM++20EujjP2Sah2vjj/BNW75rrCUvQ5+0SovkXUW2W4BtYMEX3IuPP5HgOACFzt+icElrB599pD/95SjWw3YlEWtvI6H/cf1pcyXNfU+Sb4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjA6CHPi; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E0YsHYtE"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5439KQxE030808;
-	Sat, 3 May 2025 11:18:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	v+rj8A+/RL/LR4wulUWWObJ9WjVatqY2VuYSjNkuI4I=; b=E0YsHYtEb1in8NKk
-	VmmDzHzCHz5uyhT0izrDeVtSyzTU0QAEXKwv6Y5jlIX7zlzxUwYuyUBtsRecHG4W
-	ESzd2h1zRczlx6rgqyhBVYUNXJ0QJapK7fTAaNjwKYD9F+mZHJxI779Jjy1Gi4ce
-	JDELRv4SzKwMgiLISAa57Vz/sGcmpDf6cvL8yH6mBFSKptckdHoAV+ZzKilNN+MM
-	YKNv2Ic86cJKNKVdPay3FoY8lGygknk1Mb7j0RAHzlJui6jOc9xcvX3gFLW/Eo4n
-	iyTr7Qp1vkjy93eYLzEEU75tqhobUA90drjw9oy8zgRnWkfUpWKJeWEjcSh977g8
-	LOx4/Q==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dd3n0ccx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 May 2025 11:18:03 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 543BI25E007376
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 3 May 2025 11:18:02 GMT
-Received: from [10.216.15.108] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 3 May 2025
- 04:17:56 -0700
-Message-ID: <9cc6bdf8-ba4c-4561-962a-74ceb09b72a8@quicinc.com>
-Date: Sat, 3 May 2025 16:47:52 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjA6CHPi"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e163543ceso1859695ad.2;
+        Sat, 03 May 2025 04:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746271134; x=1746875934; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kOKTqtMlz4ZjHiXz5jB19w0TVv9Od8mbjFDiMBB1SOw=;
+        b=RjA6CHPi04zYJ0ZSS7IvyDz/XOTAt8Dur957VO7US56FMtcLFX0uK7vG3jGgrEr+D9
+         edXrCuhzBiBkDgM24443Nsz6FlAOVdOwBVbGV5/lQggvi/qU+ZJAJM7RmooKUueDJF4R
+         2ekythq1vzR1AVXvYCPHPDEbBQxmeb6pUBn5AM7oeCDA/i1VNAWivouc0QHewUVzJ+Vp
+         +tZfRCb0AvNzLWl+teCTH+ciSZwjbD2tj/tc5wEjLsWC649OwshS4YqLfT63+TuFIgNm
+         S0tWhJ+OITUgJEW214y5c3VmXVn3SyxlDEeAxG+LedMn9f41T3NmBAC66aE7lqw3elpn
+         K0xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746271134; x=1746875934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kOKTqtMlz4ZjHiXz5jB19w0TVv9Od8mbjFDiMBB1SOw=;
+        b=wEnzvhh+OtgPRAN/wGreE6X0bahx5cCeqO5pqH54prprCMZ1LxtkYgY26kZgCUoptm
+         ne6wLBi3G3E/bNcWT2BI8DDDGgp1+Fdb9zyYGW3Kc2e8M4D8s7b2bjXuqo5UGSQ9Bk33
+         WTiEse1AG8anKreLArmyrtPOuNMmUloC4dr37MB2oXnDhlGOfOVVzaHnyC8XH6Hx7RFP
+         CWxwl1WruqELBTwbyX04KfbzQHsmGBp54NgHO+Q6g0gUrPPsTWP1ckRitzUhc8wd3bh8
+         uRcHVSTS28eit5D18EuiCy0mop1oV4+T4S08lcfprlR0nVrl9rvhqk24NQ4FNjWdZbjj
+         raaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWL/oqHX4NH6xn8+xL/20j179OT8tDAllIGOwNNfvdLtDQBCca9eZTyTuJse6qpsTGM605+5h8IfZXLpX75qQ0=@vger.kernel.org, AJvYcCX9np9oB7XA9lyY0YLybx1adNsKS8ZygCQY0D1lih22IYqzjnpOIvbYIuXtFm9mYwVjxk69deImPpFJaXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU2A707bN5s4QpIJru2rxjWk7/zbOGsb3A2ChVcZnd91mj3CLl
+	Gqai5CbHVDgGsTweZtvl9f6VS8u0tXIYwnRj4aBbccEiPFETSthK+Ufhmzrx2xFbrBOpfrCbYzd
+	uOu3AeCsEVYI3W+QUz5YrGYP8360=
+X-Gm-Gg: ASbGncsrjXRRQD6hsk+GwAUau+bWTe82sIZPavOqdJfXA67hKnw7hB8KbJkGXZ18/wK
+	f6ciripNCqZHKQnkPjwsSB4d3N5CGrSEFqeweSdAQJvHpng9Nc4OQwN89vNlmI7QHnx/LKL5/dE
+	9bENLnuVSDqE9ceiFqvbpsVg==
+X-Google-Smtp-Source: AGHT+IEsBdLwXM+/CELGTzKyTo6DlLWfvxjIw/4GPiiLANrQjix53Q+3RmD4HrklIHpjDDnThHgcGuWfWoWVrKGpOYw=
+X-Received: by 2002:a17:90b:38c4:b0:2fe:7f51:d2ec with SMTP id
+ 98e67ed59e1d1-30a4e4108c1mr3835307a91.0.1746271134241; Sat, 03 May 2025
+ 04:18:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/9] soc: qcom: geni-se: Add support to load QUP SE
- Firmware via Linux subsystem
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andi.shyti@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <broonie@kernel.or>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <johan+linaro@kernel.org>, <dianders@chromium.org>,
-        <agross@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>
-CC: <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
-References: <20250303124349.3474185-1-quic_vdadhani@quicinc.com>
- <20250303124349.3474185-7-quic_vdadhani@quicinc.com>
- <58f46660-a17a-4e20-981a-53cad7320e5a@oss.qualcomm.com>
-Content-Language: en-US
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <58f46660-a17a-4e20-981a-53cad7320e5a@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDEwMSBTYWx0ZWRfX8wUtxIrglT2s
- gp8w2QTWyAP0ZoufNpOeNNGWgFP9Bc/4XkzYQktzUDmHtR8bN/YLQlsIGAGu9Z5iel1Gy06rQYu
- RczJnXaNAhuNsIQnt0yjCK5BUaZz0CNhzSdhqxEcPsng5rmSVFtYMKE3I95QONxkvwrwu9IfvyF
- kRI4kzA+7fUaEyp7jKR9zk/A54qBKN3tyxJYi3vRoJ9Hgxv8BjiPMA9Gepce6/WDTAyrFWHQMlm
- yQn7sOtDpUwH6s5urs+d5m4HofFTBKegNDFKiIQd1ZElX9ql7DEZV1ilXDa2oLL+HmDdlz7KJZq
- ykyer+y57CNyz/SENzJ+ZToOdHO08C465xyMJ/YFgOLjEHaMHg/W61n7dQBXKGHqYzI8U2c1Cd/
- zBAo4TJLjx10+vRchDssVIR3cApl3xDaI27Gms2VgtM8gSVwKLtyRNwLEw8/Lp5ja3IQVXY5
-X-Proofpoint-GUID: 2LjAd4IIF8oey1n9p2R5HfZXhswjM3Cy
-X-Proofpoint-ORIG-GUID: 2LjAd4IIF8oey1n9p2R5HfZXhswjM3Cy
-X-Authority-Analysis: v=2.4 cv=UNDdHDfy c=1 sm=1 tr=0 ts=6815fb6b cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=Avv4mH6Nrv_2uyHhmYkA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-03_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 adultscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505030101
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+ <20250501-configfs-v6-1-66c61eb76368@kernel.org> <ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+ <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+ <87msbw1s9e.fsf@kernel.org> <86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
+ <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+ <87h62419r5.fsf@kernel.org> <FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
+ <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
+ <87bjsc154u.fsf@kernel.org> <CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
+ <TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
+ <CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com> <875xij1ouy.fsf@kernel.org>
+In-Reply-To: <875xij1ouy.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 3 May 2025 13:18:40 +0200
+X-Gm-Features: ATxdqUGkJihz9NI2m6_vV-_CfNdYjkcfgniu1JqMt6YMEGQBob_Q3PXl7kW2HPM
+Message-ID: <CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
+	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Breno Leitao <leitao@debian.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, May 2, 2025 at 8:57=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> Right, they are not from const context, but they are inside a `let`
+> statement, so if all the captured variables are constant (which they
+> are), the let statement will be evaluated in const context [1], right?
 
+No, I don't think so. Though I don't know what you mean by "captured
+variables" here or why you point to [const-eval.const-context.init].
 
-On 3/8/2025 11:36 PM, Konrad Dybcio wrote:
-> On 3.03.2025 1:43 PM, Viken Dadhaniya wrote:
->> Load the firmware to QUP SE based on the 'firmware-name' property specified
->> in devicetree. Populate Serial engine and base address details in the probe
->> function of the protocol driver and pass to firmware load routine.
->>
->> Skip the firmware loading if the firmware is already loaded in Serial
->> Engine's firmware memory area.
->>
->> Co-developed-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
-> 
-> [...]
-> 
->> +static bool elf_phdr_valid(const struct elf32_phdr *phdr)
->> +{
->> +	if (phdr->p_type != PT_LOAD || !phdr->p_memsz)
->> +		return false;
->> +
->> +	if (MI_PBT_PAGE_MODE_VALUE(phdr->p_flags) == MI_PBT_NON_PAGED_SEGMENT &&
->> +	    MI_PBT_SEGMENT_TYPE_VALUE(phdr->p_flags) != MI_PBT_HASH_SEGMENT &&
->> +	    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) != MI_PBT_NOTUSED_SEGMENT &&
->> +	    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) != MI_PBT_SHARED_SEGMENT)
->> +		return true;
->> +
->> +	return false;
-> 
-> return (contents of the if condition)
-> 
->> +}
->> +
->> +/**
->> + * valid_seg_size() - Validate the segment size.
->> + * @pelfseg: Pointer to the ELF header.
->> + * @p_filesz: Pointer to the file size.
->> + *
->> + * Validate the ELF segment size by comparing the file size.
->> + *
->> + * Return: true if the segment is valid, false if the segment is invalid.
->> + */
->> +static bool valid_seg_size(struct elf_se_hdr *pelfseg, Elf32_Word p_filesz)
->> +{
->> +	if (p_filesz >= pelfseg->fw_offset + pelfseg->fw_size_in_items * sizeof(u32) &&
->> +	    p_filesz >= pelfseg->cfg_idx_offset + pelfseg->cfg_size_in_items * sizeof(u8) &&
->> +	    p_filesz >= pelfseg->cfg_val_offset + pelfseg->cfg_size_in_items * sizeof(u32))
->> +		return true;
->> +	return false;
->> +}
-> 
-> same here
-> 
-> [...]
-> 
->> +static int geni_configure_xfer_mode(struct qup_se_rsc *rsc)
->> +{
->> +	/* Configure SE FIFO, DMA or GSI mode. */
->> +	switch (rsc->mode) {
->> +	case GENI_GPI_DMA:
->> +		setbits32(rsc->se->base + QUPV3_SE_GENI_DMA_MODE_EN,
->> +			  GENI_DMA_MODE_EN_GENI_DMA_MODE_EN_BMSK);
->> +		writel_relaxed(0x0, rsc->se->base + SE_IRQ_EN);
->> +		writel_relaxed(SE_GSI_EVENT_EN_BMSK, rsc->se->base + SE_GSI_EVENT_EN);
->> +		break;
->> +
->> +	case GENI_SE_FIFO:
->> +		clrbits32(rsc->se->base + QUPV3_SE_GENI_DMA_MODE_EN,
->> +			  GENI_DMA_MODE_EN_GENI_DMA_MODE_EN_BMSK);
->> +		writel_relaxed(SE_IRQ_EN_RMSK, rsc->se->base + SE_IRQ_EN);
->> +		writel_relaxed(0x0, rsc->se->base + SE_GSI_EVENT_EN);
->> +		break;
->> +
->> +	case GENI_SE_DMA:
->> +		setbits32(rsc->se->base + QUPV3_SE_GENI_DMA_MODE_EN,
->> +			  GENI_DMA_MODE_EN_GENI_DMA_MODE_EN_BMSK);
-> 
-> This write is common across all 3 modes
+The way I read the reference is that Rust only guarantees evaluation
+at compile-time within const contexts, and a `let` statement is not a
+const context and its initializer is not one of the ones listed in
+[const-eval.const-context.init]. `const fn` isn't a const context
+either.
 
-In FIFO mode, the operation is to clear the bit, while in DMA mode, the 
-operation is to set the bit.
+Which makes sense -- the `let` initializers are just "normal"
+expressions, i.e. you don't want to limit the kinds of code you can
+run there.
 
-> 
->> +		writel_relaxed(SE_IRQ_EN_RMSK, rsc->se->base + SE_IRQ_EN);
->> +		writel_relaxed(0x0, rsc->se->base + SE_GSI_EVENT_EN);
-> 
-> These two writes are common across !GPI_DMA
+For instance, here there is a panic at runtime trying to mimic a bit the pa=
+tch:
 
-We have different operations in all three modes, so it's not possible to 
-combine any of them.
+    https://godbolt.org/z/v5qdK9vve
 
-> 
->> +		break;
->> +
->> +	default:
->> +		dev_err(rsc->se->dev, "invalid se mode: %d\n", rsc->mode);
->> +		return -EINVAL;
-> 
-> I wouldn't expect this to ever fail..
+Similarly, if I take your patch and put there an `assert!(false)` in
+`add` -- I see no build error and `objdump` shows the panic call from
+the sample.
 
-Yes, that's correct. But including a default case helps handle 
-unexpected or invalid input gracefully.
-
-Please let me know if you would like me to remove it.
-
-> 
->> +	}
->> +	return 0;
->> +}
->> +
->> +/**
->> + * geni_enable_interrupts() Enable interrupts.
->> + * @rsc: Pointer to a structure representing SE-related resources.
->> + *
->> + * Enable the required interrupts during the firmware load process.
->> + *
->> + * Return: None.
->> + */
->> +static void geni_enable_interrupts(struct qup_se_rsc *rsc)
->> +{
->> +	u32 reg_value;
->> +
->> +	/* Enable required interrupts. */
->> +	writel_relaxed(M_COMMON_GENI_M_IRQ_EN, rsc->se->base + GENI_M_IRQ_ENABLE);
->> +
->> +	reg_value = S_CMD_OVERRUN_EN | S_ILLEGAL_CMD_EN |
->> +				S_CMD_CANCEL_EN | S_CMD_ABORT_EN |
->> +				S_GP_IRQ_0_EN | S_GP_IRQ_1_EN |
->> +				S_GP_IRQ_2_EN | S_GP_IRQ_3_EN |
->> +				S_RX_FIFO_WR_ERR_EN | S_RX_FIFO_RD_ERR_EN;
-> 
-> The S-es should be aligned, similarly for other additions in this patch
-
-Sure, updated in v4.
-
-> 
-> [...]
-> 
->> +	/* Flash firmware revision register. */
->> +	reg_value = (hdr->serial_protocol << FW_REV_PROTOCOL_SHFT) |
->> +		    (hdr->fw_version & 0xFF << FW_REV_VERSION_SHFT);
-> 
-> Use FIELD_PREP and GENMASK to denote bitfields
-
-Sure, updated in v4.
-
-> 
->> +	writel_relaxed(reg_value, rsc->se->base + SE_GENI_FW_REVISION);
->> +
->> +	reg_value = (hdr->serial_protocol << FW_REV_PROTOCOL_SHFT) |
->> +		    (hdr->fw_version & 0xFF << FW_REV_VERSION_SHFT);
->> +
->> +	writel_relaxed(reg_value, rsc->se->base + SE_S_FW_REVISION);
->> +}
-> 
-> Konrad
+Cheers,
+Miguel
