@@ -1,123 +1,64 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5442D1E1041;
-	Sat,  3 May 2025 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD5D1CAA96
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 09:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746263341; cv=none; b=FSETU3+Vtb3XQ2qY0LWQ5XRSlItvnjDlABFh1jQPB1R9rfixY8UqYhA+RoEr7j9ws+xpFrF/IqHH2S+oVGCgwRrlr87jHfn/nH8NIwkEOI2ar6iQVMrzSkuQJF5WzuIOFVbcG93h6U1sbwl+x0j965HlgomUmADxmnJNSzdGc/U=
+	t=1746263379; cv=none; b=MGjv8he2fr7UhS6N4I1tA9hDe4St1aFlvMCUsQRuqiMt8nWOMNXd9zEwNt5bAZMHkdABhbrWLBP59vmZ+LZJ3q5pyg+8pEMdZ4YPWKgzJaAelGJWEEyVAkpJm1yeTU/J+HIr441E0JpNlXqJkGetm6SU5aW/+G1vc0c1lbl/1fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746263341; c=relaxed/simple;
-	bh=5Ehg8aQGjsmQjFGFetFWzPdWaPT+YpJgL6j24A8jE6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KZgdbIgL+8/1/s3MdNE8Bx5MVa5qAbsTikrd+mw3wgkW3nd+flXL50ARr4KdTZUTV4PrP2RanHGrq8NSfvOgF62lVNGvxRjS2V+a4QenRkXeSBgsJ3z6F587tDAyUQDhbWR7HMjoPJdtjUX1xVzs4iBfR/7LOrPaKbKXKdk3U6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=f61YVFsd; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746263379; c=relaxed/simple;
+	bh=YbEwlaReyot7biCcizo7GYJ5t5FqKE1DesEL4SbPXro=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=R5+phssd5ZsNjmPdHblaSmCVyhm4rP1Nueo+8xiOHRxlDKfrLJYVSq3/62LpRZZq+Mm7E5qWzJl0bVRmYn2qUVqR8KFC7vKV4jsmM3Nb+OUurxydIKZFhU0w0pLpnmT6gZ8MwOT6LXiVbB1k/xrhgeUhTza4tWXAMMa3E0ziAVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=PuCu9P0E; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="f61YVFsd"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 1C45425DA3;
-	Sat,  3 May 2025 11:08:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 7-CJBNnZefvM; Sat,  3 May 2025 11:08:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746263338; bh=5Ehg8aQGjsmQjFGFetFWzPdWaPT+YpJgL6j24A8jE6I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=f61YVFsdF+CKMaZb2y/knpFU/fkUZvkKAhHxfBo5p6IdU9ndhC7ppsyMWAnO4q+Bw
-	 bbsPsMPNgko41UNU2sq5XTJ/PT/L/cISYONIYzeXFgo40Tx7TvIneDOFGFocK67y4l
-	 0n61gGcZRkfx+Zsy2GoA/UXx4RONt4VRnAysjq04YnEO/tCEzhzdVLN2SvlJZOXBV4
-	 8rX+dYmUS4kGJE6D8sEk4IaV+ZACGr03fNMUHeA0PZ/K36yteuLb5NzXLF6aXh5Lxp
-	 qTYVgdwOPc7t3jb0Yp12Of44QzAIYOZWsHrhvuQc3OFACx+yPuUTXFi6yCfdUYGpD7
-	 C6qK2Jjg61/JQ==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Sat, 03 May 2025 14:38:30 +0530
-Subject: [PATCH RFC 4/4] Input: melfas-mip4 - add support for event formats
- 4 and 9
+	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="PuCu9P0E"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gEC3pPQP4avgN9s/eV6Lfc5jmQ1Pro6TAZhhjF7CcpI=; b=PuCu9P0EYNr2XnJRbD2/eSiz4E
+	YtIAnM5wG3YB2qMyUOwWRxz70sxOAa9giU05zniME2dtSDlEHS1odLK77WwhsmKkwUXdxTIJH1pZI
+	39W2/cL0Jr38FTM/IwPrnPwCWM2I2T8CWMlqvHy7cExXgopItDXxrP5j47G+FvX3/NnnrG8q/uXRi
+	G8Fiip2rd1MRvmBRpy+ojJP6e7HffwCgfpGPwq+gLMHpmIAZwI9h/afQBDNyU3fYW6pIb+2QQgUzy
+	KLAKK893U0k6uS0gR1WcLEPSalCNoi0+QI2wfCWUc6W7lg9aDJINLnvsiVtliFSj8cuMAR+1E03bs
+	kbD3I6Wg==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1uB8sG-00GbeH-S8
+	for linux-kernel@vger.kernel.org;
+	Sat, 03 May 2025 11:09:33 +0200
+Message-ID: <986c138a-85eb-470d-835b-42a999b6c1bd@bit-philosophy.net>
+Date: Sat, 3 May 2025 11:09:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-mip4-touchkey-v1-4-b483cda29a5b@disroot.org>
-References: <20250503-mip4-touchkey-v1-0-b483cda29a5b@disroot.org>
-In-Reply-To: <20250503-mip4-touchkey-v1-0-b483cda29a5b@disroot.org>
-To: Sangwon Jee <jeesw@melfas.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Henrik Rydberg <rydberg@bitmath.org>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746263323; l=1820;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=5Ehg8aQGjsmQjFGFetFWzPdWaPT+YpJgL6j24A8jE6I=;
- b=Sew6ti7sPKMTm/ndloE+nJ0EfetoZLWaI8nmFXFOcUVHBRHbuQ4Qlb87y9FaGhF+EEL7FYpzr
- zbaqhzjMAgsCUwYreLNmJLWGMiSd/etJe58aigFrtkZMKfmFw4rySOL
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <bitullah@bit-philosophy.net>
+Subject: Bitstreams OS on Discord (was low-jitter, fair pay philosophy)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Valid event formats in this driver is limited to 0, 1, and 3. These are
-event formats for MIP4 touchscreen devices. Add support for event
-formats 4 and 9, which belong to touchkey devices.
+I have also setup Bitstreams OS on Discord.
 
-While at it, simplify the logic in function mip4_query_device where
-valid event formats are checked. Use a human-readable switch-case block
-instead of an if statement with obscure conditions.
+I started this project a long time ago, and Discord seems perfect for 
+it, being a branch of the planned development.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- drivers/input/touchscreen/melfas_mip4.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Check it out at: https://discord.gg/2UDVDytE
 
-diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
-index 57b657694a420220be135c2f78d3ddad3ef6f520..95a78c86873355d0a8e0207b1eb4a8408f55cee4 100644
---- a/drivers/input/touchscreen/melfas_mip4.c
-+++ b/drivers/input/touchscreen/melfas_mip4.c
-@@ -360,9 +360,19 @@ static int mip4_query_device(struct mip4_ts *ts)
- 		dev_dbg(&ts->client->dev, "event_format: %d, event_size: %d\n",
- 			ts->event_format, ts->event_size);
- 
--		if (ts->event_format == 2 || ts->event_format > 3)
-+		switch (ts->event_format) {
-+		/* Touchscreens */
-+		case 0:
-+		case 1:
-+		case 3:
-+		/* Touchkeys */
-+		case 4:
-+		case 9:
-+			break;
-+		default:
- 			dev_warn(&ts->client->dev,
- 				 "Unknown event format %d\n", ts->event_format);
-+		}
- 	}
- 
- 	return 0;
-@@ -440,6 +450,8 @@ static void mip4_report_keys(struct mip4_ts *ts, u8 *packet)
- 	switch (ts->event_format) {
- 	case 0:
- 	case 1:
-+	case 4:
-+	case 9:
- 		key = packet[0] & 0x0F;
- 		down = packet[0] & 0x80;
- 		break;
-@@ -552,6 +564,8 @@ static int mip4_handle_packet(struct mip4_ts *ts, u8 *packet)
- 	switch (ts->event_format) {
- 	case 0:
- 	case 1:
-+	case 4:
-+	case 9:
- 		type = (packet[0] & 0x40) >> 6;
- 		break;
- 
+Light!
+Ywe Cærlyn
+Abbed,
+https://bit-philosophy.net/
 
--- 
-2.49.0
 
