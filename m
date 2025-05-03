@@ -1,76 +1,42 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFBA266560
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 13:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746278375; cv=fail; b=YP2qS5QnNYHZVBMmMvxglqC+ZHup7sh0PrJfRtNe2SbFSSVRC+FHoDeqEPyew8fynYt8pvvD1N3F+hDtkgojBWExoUQeKAq1Nl/F62BNPxfO+qBaRMRK7YvSyHyVPpKw0YSMoNWJaHf6vfzmc4s8EvX9gfDzLDF272diQ4HT2nE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746278375; c=relaxed/simple;
-	bh=hMAlmKbOMATHWyzGHb//l77yTuaniwcj4Qxgv6eCjc0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Wrh1LcCYUQRK0z04UJFOvqnYrkOBOQ2b61OWuHbRlKJo1KEoMc+9OnqiYkl/b8YCH9vAlGmrZEw7FWMfhwxYGaon+tprWLOJCraSJRzCGNEzJGtuuKKouUyGy2iSauyRn13RgwYScbMrGp+TLgvFK66XI2tM8rZ4rU6H/8l5WdU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tqHE6DGo; arc=fail smtp.client-ip=40.107.94.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD962690CC
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 13:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746278797; cv=none; b=IcXd1kYnS5XIiu/7aC1HgHne0wllkLwjMNp4rBPStT3IojE8/LqbiLKdsagNGaERzHBDx5O1InYS5XkdL3VPC+TsDmcL2bshwSLV26wA7XYLS7dCgYq4Kxv8/eZk4gznn/vzR+DxeZSgaI7E1GlXCq1IUWSG26Zjt6MexftbY0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746278797; c=relaxed/simple;
+	bh=zFz7W87tRbM4TJFTmR0zPkVWfwg7WoDQnmpho5Kw6a8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dUpRru8bjpPjIq7nTpneb0M8vAZ3ksCC4zloKxK2PMJHAGwGC9DtKG5v9V3g2Q3z8YfTvIspLvDPSxBA1GNqaZs2NncPqXsXI4BaPO6xDKkDSvuvLUM6nM+4Yzft/majafbtE5aibntf+apmud9hkfrOXHOWZlez6nF8IWAJRiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q3RMNEZj; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tqHE6DGo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RiERQ+EymohCNCMtfmRaaRpVE8FLKbghvFBZfvA5wZRUJ8gnODMworNqKSW9NJNegZWLq4Bzs+8tOrQ8Fx3WPtF+2/hRWx12VMOg3jjQBpXCqPLuWccpi0H9xu6nzNHUI3coDINDehvrtyPHhoLlFohMupyXEbDeJoMjFLhuMq/d+pLaRil+7hPohTGOeglBJszmk/+N/NWp1W1XAjcAw8XXz0TdyikmSMmhELE9DxBXSPLmx9rFZrwjCxCBCngxU4x0n/f0LzfWGRg+X30A8BP5NsbF9gJWik+BLkSCG+FUhUjnrK2CdTcp5jsSOqRluy1DnQEFqfgj99EoATM83g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XThhfT990yCc2xQ1ru4NmFFbo4KjWfIRuJptyrW4mmc=;
- b=hpO0fQWOGgAUJaJJ5D7mbskayjEh4czOkyf2KZTquSqaNXOJpd3JWtzbSL+vbzAUJAa8eDS/L2jk0M3ALRe2gus2ccsMxPtPuJ/wtoO2mONAnys4xoceLfDhY29t/NJ+dXGl8B+cvUzbMUXwpl5ObYRbtqF7QL3rJxL7Bstmm61etixrFeoW+cE+gOeKvImhIRbGaQoY7WHBXvNgHfIS5hbX9uCxL2KaehuRgDbDvWQNkVMoEmD7bucQIGinvrX6umZtBwbmNKiIA3sBLxoWY7c08a8jZNQpeeeFSoh5bF0oepQan6X5UzMtuEr2mPcN01PLqrGywAcM/b3H3Tanvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XThhfT990yCc2xQ1ru4NmFFbo4KjWfIRuJptyrW4mmc=;
- b=tqHE6DGoedmGOqgCqTAbIF5iJy7nmIxncKXojcAywtwnLODzr5KeL6buCHSRtyC4vOirsgRl1Kk6YAJy+0M5g1svGYDOypwzQBQq8adlgzYvdmO0M/q7jzv91GtKuvIz5ibhuGK48/0blve7ABb/4BwWZpu8K3tuGd0LG427c60=
-Received: from SA1PR05CA0020.namprd05.prod.outlook.com (2603:10b6:806:2d2::22)
- by PH0PR12MB5632.namprd12.prod.outlook.com (2603:10b6:510:14c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Sat, 3 May
- 2025 13:19:31 +0000
-Received: from SN1PEPF00036F3D.namprd05.prod.outlook.com
- (2603:10b6:806:2d2:cafe::8c) by SA1PR05CA0020.outlook.office365.com
- (2603:10b6:806:2d2::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.14 via Frontend Transport; Sat,
- 3 May 2025 13:19:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SN1PEPF00036F3D.mail.protection.outlook.com (10.167.248.21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Sat, 3 May 2025 13:19:30 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 3 May
- 2025 08:19:30 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 3 May
- 2025 08:19:30 -0500
-Received: from amd-BIRMANPLUS.mshome.net (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Sat, 3 May 2025 08:19:29 -0500
-From: Jason Andryuk <jason.andryuk@amd.com>
-To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>
-CC: Jason Andryuk <jason.andryuk@amd.com>, <xen-devel@lists.xenproject.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] xenbus: Allow PVH dom0 a non-local xenstore
-Date: Sat, 3 May 2025 09:19:35 -0400
-Message-ID: <20250503131935.1885-1-jason.andryuk@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q3RMNEZj"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746278783;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MpqJ2xhiGc3MNQIlCoyC543UAV+C7aQQFpSzMtqzOHM=;
+	b=q3RMNEZjE/g+HJjD1MiV97P9MqziDWA9xA0U9NNA0yMM9hlgmf9n7SVg6LvP4FbwfwNuZq
+	tDh+BdxWE5a4k255MOJ02UB7kb3rqEP3ORSPRosCV/Ur4VrIgWfQQ4KTP0Ikiofs+0nRoi
+	aT2UGHa4g3Fsmi0EnzSa01NcM4oKbNQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ovl: Annotate struct ovl_entry with __counted_by()
+Date: Sat,  3 May 2025 15:25:36 +0200
+Message-ID: <20250503132537.343082-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,106 +44,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3D:EE_|PH0PR12MB5632:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22331140-6d84-46e3-995f-08dd8a452375
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013|30052699003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BwdAME9mYlk1D3vSntdUTciEPrrbMko6u/UG5zl2GvIHcYV8svLeDhJ3N/YV?=
- =?us-ascii?Q?/uEj6v9lS/fz525NFHkbSEqz/9qWNsJ27Wy6+zIDIGbvEHdxm7PrTWkAts4Z?=
- =?us-ascii?Q?4cgKKwbPLuC9wTjiDIC4kmCvuxihVvcc3u1yPkIvFqkkeAYn+gUpEvyru5fy?=
- =?us-ascii?Q?ZEpmOxDgyL6EajN32A1kmmFX4a44eex8qxGsnZ7aBwew0tDQJUOyR+uXPGdp?=
- =?us-ascii?Q?+n6BG+0T6st7+J2Is5ovO1mAZTo3NIc6MdxdnnQta+4pQt1I/0ByUNSLYdMI?=
- =?us-ascii?Q?LfNMOlGCH87GZGjTnzxJgQAj7L+k3Mwi85ZXezrz+7OhpJNCZWhjQWXeqCNm?=
- =?us-ascii?Q?OPx30wAk7+D8GYzpXKzvctuUSV67sPFp749fI90DszlIQTE8Qfm57J41uKiP?=
- =?us-ascii?Q?wsXMKkcDP9B4fQBiSMCgE+f9pQ7pYzF6UfyzLukoIzty6yy6O7vcuot7k7f6?=
- =?us-ascii?Q?AGDsiCoWJknIRekjr/XG/JIHwl33O41xN/a+jF1yfsIpLTR9B0Dy/BgFvnEn?=
- =?us-ascii?Q?RlInJN23AbMnhXzVCK6TklvauMZeC6F6Z4uEjGaBbkfcsJCNxjJMHW7bYJb2?=
- =?us-ascii?Q?bx8RgcjhbLKzNSHlprkUz2lQgN4tqUUaWgxqZYn57LZOkezXOHV+8hJabRUh?=
- =?us-ascii?Q?gahZFMJZLlwusGcPVFwFLoHEnP2Sr+6+kRA3I3euFGB8PZzhQp3OPN4P3BWm?=
- =?us-ascii?Q?yGLVuNg0AQBpBeCFYrm0m+gS74Xg8CnVk2DOBEa/zvKI/tEnHasuD2onEs/D?=
- =?us-ascii?Q?5pFjjQbtbhUIt7w2aBQq36EoAy9ej7M5OKNmboYZapq3OXRau8Cx2liMR0gM?=
- =?us-ascii?Q?1pNO9LdoHyOip0mt8uNGhMFG5AG2Q3iHN9+EhdTbV6ZpVmUAn8Y3hPvzjkpQ?=
- =?us-ascii?Q?+4mtQVMqqPIbuL+gJW2lZgkYvs6i7IpryYSHXo1Iflj4EsYxqjUzF5JHgDX/?=
- =?us-ascii?Q?ntyZp8zjx0LT/I8RA6P0mlxVyM34dUKJdJr6gihT0BEjtj0Qu9HQY+779UZZ?=
- =?us-ascii?Q?4RI3t0ltMrK9aNHbQ7ySItGRoxgBNpQPMHqX4pjPF0nl52upA1BMf4amX8Vz?=
- =?us-ascii?Q?AhYGB0RbV2oNao7NvY+YSZu8F3GNuJuHp/h1EZ6uNyBHj0ZzedaZ1Pw6RiTu?=
- =?us-ascii?Q?HjmtwSKLYpx1BXUp6pvFYBAHtwK2BokWz2t2R3sbM53UePtMbjuOzuOkHI6F?=
- =?us-ascii?Q?ly6eOqlZoQw3BTdclm1kdQAtznvqIteJF3FwMmnjD7l2U1EdRcsCeIdvxh6p?=
- =?us-ascii?Q?ZYSAFb6drMvXCvUGcWXaBF3Jy1SayGDhAMCppRlX9yg+fJRLQ0BZ15VEJJW/?=
- =?us-ascii?Q?oO3gARUyEx4zqmzyI18OPtpXrTZEDYlvB7fTK2uEpAdCOzFQjiPEMxDnW66w?=
- =?us-ascii?Q?jC1qMAYrNSNuAWBpQs2w6hRfkRHrIFBv5S6gcExbEc9Rf18Oh+u+XISO4V15?=
- =?us-ascii?Q?t8Ah6+wVnG5tat5vURbXPK4JC9PxKUzmsLFiuHC4thk+sXOiMeHfbDFiiqPv?=
- =?us-ascii?Q?29WYzIV4yWHquX/lS+iMXB7rh2GpkadcClZ0?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013)(30052699003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 13:19:30.8131
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22331140-6d84-46e3-995f-08dd8a452375
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3D.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5632
+X-Migadu-Flow: FLOW_OUT
 
-Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
-currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
-xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
-late init path.
+Add the __counted_by() compiler attribute to the flexible array member
+'__lowerstack' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS
+and CONFIG_FORTIFY_SOURCE.
 
-Drop the use of xen_initial_domain() and just check for the event
-channel instead.  This matches the PV case where there is no check for
-initial domain.
-
-Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
-chance that high bits are set for the 32bit event channel.
-
-Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ fs/overlayfs/ovl_entry.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-index 6d32ffb01136..7604f70ee108 100644
---- a/drivers/xen/xenbus/xenbus_probe.c
-+++ b/drivers/xen/xenbus/xenbus_probe.c
-@@ -966,9 +966,15 @@ static int __init xenbus_init(void)
- 	if (xen_pv_domain())
- 		xen_store_domain_type = XS_PV;
- 	if (xen_hvm_domain())
-+	{
- 		xen_store_domain_type = XS_HVM;
--	if (xen_hvm_domain() && xen_initial_domain())
--		xen_store_domain_type = XS_LOCAL;
-+		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
-+		if (err)
-+			goto out_error;
-+		xen_store_evtchn = (int)v;
-+		if (!v)
-+			xen_store_domain_type = XS_LOCAL;
-+	}
- 	if (xen_pv_domain() && !xen_start_info->store_evtchn)
- 		xen_store_domain_type = XS_LOCAL;
- 	if (xen_pv_domain() && xen_start_info->store_evtchn)
-@@ -987,10 +993,6 @@ static int __init xenbus_init(void)
- 		xen_store_interface = gfn_to_virt(xen_store_gfn);
- 		break;
- 	case XS_HVM:
--		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
--		if (err)
--			goto out_error;
--		xen_store_evtchn = (int)v;
- 		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
- 		if (err)
- 			goto out_error;
+diff --git a/fs/overlayfs/ovl_entry.h b/fs/overlayfs/ovl_entry.h
+index cb449ab310a7..afb7762f873f 100644
+--- a/fs/overlayfs/ovl_entry.h
++++ b/fs/overlayfs/ovl_entry.h
+@@ -51,7 +51,7 @@ struct ovl_path {
+ 
+ struct ovl_entry {
+ 	unsigned int __numlower;
+-	struct ovl_path __lowerstack[];
++	struct ovl_path __lowerstack[] __counted_by(__numlower);
+ };
+ 
+ /* private information held for overlayfs's superblock */
 -- 
-2.34.1
+2.49.0
 
