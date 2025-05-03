@@ -1,74 +1,137 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B161D5CDE
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 10:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80191B4248;
+	Sat,  3 May 2025 10:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746268493; cv=none; b=PJkI7CxT1zfiHPKNvVxbYUCNLe7Lg4Z6V5+wsrn4UlvreiYiI4YOudVbUnlQuao1Ll/48wNc3ZPo39uPXmqO18LMmc8PXKh8//RqEFzN0NHxsLCk8bp0jMopoUoRWs8B+Ptv4cNcXYCwrn9MaBHGakxr77+T/E+gf6WnZifKM08=
+	t=1746268808; cv=none; b=pcm0q8nY+i+OwSWoctUj3K/sItKMihPIbD620ogPFdKkyCli02T5Vm1I0RH+rIGLAaEyfePrh7q5mVMWfe4NOqzfRC6TQGnFizBMODGHRvz0jOO+DNWlBfv8RdKBUAMyUvha0OWe0UVZSxbyTzR/+PM9/3mOs9UuzNNDHgYsLJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746268493; c=relaxed/simple;
-	bh=pGORQP99i+9J5l8UfBNVWEWdosSqp5aiEJue5Nc4nL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sAsULMX9MnUlR4myrTGw6ITFlmQmHPUJig/+muUO1wD8LW29HASPcMr1EFaWW8EouTRH7HvxcXBQ6vUDBG8w5JpITivTcyl1F8hNEzxdIQVKDvmdMLd+yRxdpevo1XHl2QcT6/nJciZEMKi4m9FH9IAYV0M7UcS5yLZUpxLMBxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rVEiaA96; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746268808; c=relaxed/simple;
+	bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qOEWtwytEs1BYwkjySc0XTE6rwU1vNZStcXr6fO48H0JgZfJbK3M00WYhlzkawSyOlcYPZyqlk6dUiXuECkByv7Sb8SMAcAZe6X452wq8X/XSIHURMKh16mjj3fnMMpz7RBkji+7IqMN9SVRdRup8m6TmYOH4WVhVayLMGu76Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=wy8biJhs; arc=none smtp.client-ip=45.141.101.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rVEiaA96"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746268489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HaEkVw3CpeevXqujMU8zoiIYMYq8s7lghpVO2Lk9Sl4=;
-	b=rVEiaA96eEy3tZ5jKKt3ChRFfaDMn+qreOK4TaLSmhqWZD7S44vwacbyUACjK/UBLO7bLw
-	dcZMOnZKur9z0dT3FQkObeEEbjt5l6IVIocAott9MdUOdQ2GMVY2sVK+Z/5Si0JysoQySN
-	OiSijeTPqOVxmM9WsQ0qEpw9EHywvN4=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-unionfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ovl: Replace offsetof() with struct_size() in ovl_stack_free()
-Date: Sat,  3 May 2025 12:34:16 +0200
-Message-ID: <20250503103415.281123-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="wy8biJhs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1746268799; bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=wy8biJhsZvTe8aZLZDuQTIk9+QthKGXJto0p4qoT94ZUNAGufDkHYtdPjWjuypdJM
+	 TmyzGPfrpYA0FTDZD5r/QQJufc8PQf0COxqmeOp/cdomAXlMmH4ZrXRvHbYaggnIqB
+	 EPd6fSTddqnYhWvHAdV83drRXi9BoCbJXrLAE0EpAZVemhvsv+awPb0kNmN1ZQL+az
+	 iLtrBEO9KN9kCDjWsgI42a/whP5bv3myvLmEoW9A6rXQKEZzwXjGg/7nE0FGI4CNao
+	 smq0n/6+aun1hCVEPCOtTu88lJ4W9ZuOB+xIsynjzU9mui9K2xoDY1WiDmCFgEXdcN
+	 NfDf87hpknNLw==
+Received: from authenticated-user (box.trvn.ru [45.141.101.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id D310FC970;
+	Sat,  3 May 2025 15:39:57 +0500 (+05)
+From: Nikita Travkin <nikita@trvn.ru>
+Date: Sat, 03 May 2025 15:39:28 +0500
+Subject: [PATCH v2 1/5] arm64: dts: qcom: sc7180: Add EL2 overlay for WoA
+ devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-sc-el2-overlays-v2-1-24e9b4572e15@trvn.ru>
+References: <20250503-sc-el2-overlays-v2-0-24e9b4572e15@trvn.ru>
+In-Reply-To: <20250503-sc-el2-overlays-v2-0-24e9b4572e15@trvn.ru>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: Marc Zyngier <maz@kernel.org>, 
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2416; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBoFfJ7RlS9PLDUos+d10Kfi/0N5eXPeY/wQ+nk/
+ 7xUw+YDvAiJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCaBXyewAKCRBDHOzuKBm/
+ dc77D/kBF/Cxy28SDF5cWtPzl4bvWkfy4c108avGiM+/5T8fO5ADY2g1F8GPUGi8I4lflMYiPT9
+ TUmbe4SzAcnkxn0EYukMb/I9Osd/Rd/0IUz27vP/fF1YLA/1+DG6VNZdcEK/GzyzS+LZ8PWyyEy
+ IBsfH+QzMfKjQFRINGodipA9J/CHb5yuT6tMbCoT2U7rz2Clr84OxZl6pqOuDKONjiDwUTnWnYi
+ V87FHgl49RGQ4Yc9Gh0IbgjfQmS6eHb2p0hHIIxwl+mvUzYOclFnN2Bydkt+4Lc4qSpBBAoTftM
+ yoW5W3Hm6P5G0ft7Pm5MlDKeSvDJtMJ+OwBBaUCBhDjTHmIctbfPIfPXZpkXqoQQsJAhDJ2u8YX
+ sDY0BOr3fc1qMamNYL3p58W+TJKhmFjbYoQe8bLNCT7fxYHVzwx2Gy6CXss+bF9TWpOM5jJ0oOD
+ BYo+DtZXn7SAbQdOgvIoL2HyAjhEr9iG/rb3qDPKpD+ny/aVSHiX4SvJZp9RTHmV98NHrWiUvHY
+ 9rRb3y1gxeTEGSx7ZAB1X4lFrfFwj/4v4M/VnkVvQAbWYDBUMcNWJRaT7WtYO3NwF/U/lwhbXEe
+ jiPfHJTfoVpLV2W2FIHoEXr6YKb2uWNa7ISxCvlnife1bRBrHMAwuZh6HO2yvjOmVtTU9IBIj5L
+ yzOlIFDgPW40RdQ==
+X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
+ fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-Compared to offsetof(), struct_size() provides additional compile-time
-checks for structs with flexible arrays (e.g., __must_be_array()).
+WoA devices using sc7180 use android firmware to boot, which notably
+includes QHEE hypervisor. This means that, so far, Linux-based OS could
+only boot in EL1 on those devices.
 
-No functional changes intended.
+However Windows can replace QHEE upon boot with it's own hypervisor, and
+with the use of tools such as "slbounce", it's possible to do the same
+for Linux-based OS, in which case some modifications to the DT are
+necessary to facilitate the absence of QHEE services.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Add a EL2-specific DT overlay and apply it to sc7180 WoA devices to
+create -el2.dtb for each of them alongside "normal" dtb.
+
+Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
- fs/overlayfs/util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile        |  3 ++-
+ arch/arm64/boot/dts/qcom/sc7180-el2.dtso | 22 ++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-index 0819c739cc2f..dea0df3272e3 100644
---- a/fs/overlayfs/util.c
-+++ b/fs/overlayfs/util.c
-@@ -145,9 +145,9 @@ void ovl_stack_free(struct ovl_path *stack, unsigned int n)
- 
- struct ovl_entry *ovl_alloc_entry(unsigned int numlower)
- {
--	size_t size = offsetof(struct ovl_entry, __lowerstack[numlower]);
--	struct ovl_entry *oe = kzalloc(size, GFP_KERNEL);
-+	struct ovl_entry *oe;
- 
-+	oe = kzalloc(struct_size(oe, __lowerstack, numlower), GFP_KERNEL);
- 	if (oe)
- 		oe->__numlower = numlower;
- 
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index adb4d026bcc4b24d73de92e204db8d525b0770e6..06da6f6791d69f56bafc3dad3e721c9ff2a1a68a 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -138,7 +138,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride-r3.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
++sc7180-acer-aspire1-el2-dtbs	:= sc7180-acer-aspire1.dtb sc7180-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb sc7180-acer-aspire1-el2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1-lte.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-el2.dtso b/arch/arm64/boot/dts/qcom/sc7180-el2.dtso
+new file mode 100644
+index 0000000000000000000000000000000000000000..49a98676ca4db270ecb55e8f801d0800ef9e4def
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-el2.dtso
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: BSD-3-Clause
++
++/*
++ * sc7180 specific modifications required to boot in EL2.
++ */
++
++/dts-v1/;
++/plugin/;
++
++/* We can't and don't need to use zap shader in EL2 as linux can zap the gpu on it's own. */
++&gpu {
++	zap-shader {
++		status = "disabled";
++	};
++};
++
++/* Venus can be used in EL2 if booted similarly to ChromeOS devices. */
++&venus {
++	video-firmware {
++		iommus = <&apps_smmu 0x0c42 0x0>;
++	};
++};
+
 -- 
 2.49.0
 
