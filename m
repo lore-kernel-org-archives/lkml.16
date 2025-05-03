@@ -1,867 +1,424 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869E01E51E7;
-	Sat,  3 May 2025 11:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381341E51E7
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 11:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746270652; cv=none; b=APmt0aXlsqahzW6mPxArKJW0RuOWc+6n9Nh0QWW6n4fCzA3ltR0cfNEUccPT9ZlmuU10+dn0bfECxWsMKhkAYCrqCf8/oONamWzUA1lin2hPi2m1yBqF5AbQ8IMsuDdYD7EB5QtmeBe8UJRuSUtGs/ICnEXMxz72o0D6HInd6fE=
+	t=1746270667; cv=none; b=tnHh+L94UrQHdYrQLqLX9tVkORBvZomNMdnD4+7ys0+3yBhd0aBIB2IrZ9dwNVQcVBJaSJ9NMXnhW8GwBmETawKybbCwlza3SdsDKe8x0zXVmN++xr7swFHu9/XAfkYJPEAQqANwaJUf9/TnvAvgXlcWnvlrQa0blXa/HBeFiNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746270652; c=relaxed/simple;
-	bh=02H81q4igY4G92Qs703fdDOqF7RbJ+imUuhF/4rcYZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r24E24KvPmO1hk7eyZM7XTZwhbO6Vds3FhmQAtxRHP8QQhwdfrSxEzNGYt9li4lXBhzDxIkXU/K3cai3EUG7KIIlUtbL0p6H2f/EmFL/dqajoF6a4E+B5OV1saYIfcj1L1HWKLljCNSI0Z+fXgenxk6iiydUbd4PSuN75R/+K3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h3HufcSH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h3HufcSH"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5439uGqM004439;
-	Sat, 3 May 2025 11:10:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JSLwf8myn3Ld7CtY7NysQK1OFOJBDIwjdy6WQYkgpgo=; b=h3HufcSHX7LSZgCf
-	bV/ypvA1BW6QNz15IJjFgmwKbLX1DQdpwdnVsZrADmNdnjKYcz5JYBxeKpfFR0NT
-	ftyraO569BPwJgt+bSze8Xa01fnZ0tp3QAQIeiOIPAa7updO5IrFXnP9dRT6wC/h
-	Cz6anT7dgDc5aPvVaFvXmTmoRN2DGNrpUqMLzqvs/x8i2GLaQay86tQZQp2mb6Ut
-	zTqh44ePcB78/TAUWMGPIC8eecctwI0JRek3Px/3GxsBukYVkpCs4JJrr+Nvgqhw
-	WTWYmjxyeVgX8um3EJ7nbuOB74M+3IH4M1tUnVC7LUq54vZiMbX85OApOH1tmj9C
-	itc7cg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46daqxghgq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 May 2025 11:10:37 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 543BAXZq023601;
-	Sat, 3 May 2025 11:10:33 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7kjms8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 May 2025 11:10:33 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 543BAXtt023592;
-	Sat, 3 May 2025 11:10:33 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com ([10.213.97.252])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 543BAXUG023589
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 03 May 2025 11:10:33 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
-	id 5BA5853B; Sat,  3 May 2025 16:40:32 +0530 (+0530)
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-To: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        broonie@kernel.or, andersson@kernel.org, konradybcio@kernel.org,
-        johan+linaro@kernel.org, dianders@chromium.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>
-Subject: [PATCH v4 2/5] soc: qcom: geni-se: Add support to load QUP SE Firmware via Linux subsystem
-Date: Sat,  3 May 2025 16:40:26 +0530
-Message-Id: <20250503111029.3583807-3-quic_vdadhani@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
-References: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
+	s=arc-20240116; t=1746270667; c=relaxed/simple;
+	bh=Ohm4EX9WW8lsaYKGqRawPQMv8dGNS1eAL9Di3qauiMw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=aj70cPo7CV7bfDK1ckbysVg8/9FgiCnZDsyM0eYJLxplkjGQt8UnetUn5o3bc2w1NzpqwkuJKlnSteFjKR+EBZEh2gcvrEE0hTJoKhUZvtYsu2RjcgsW4ry5CegJrDX94t9ozH14b9I2XXEHiw+GWx88xXb1J6qQPdht7sTUFzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b3888569bso273926039f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 04:11:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746270663; x=1746875463;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VFnUYSNbrEw9knsQeKQlTPLMgEPfdfa6aqnomOS1iLg=;
+        b=V2OVlX5QZ8yuimcCMHStINRFcktX4KOuFaOEkZwbrp1Gk/JM9BejrLWPl4glVUGKbV
+         OC8+wSH+qSYqnmrZ2O53+Vg/WgNo7uPNgPhDZe6M1cEmz/k1WqqHB+Zw07BfMqAPFUTS
+         y0YFageQK7VyzjSzgP/m1/F09GmoZzrq7xH8ayh8nnA2W9SqjGvdKPuR/6PFCh3d36aJ
+         /G9uCZKeifqZHoAULHAjpoccDxKIb7Cw8KjfIKGmHSKy7gLm17HxLvRmL4C8ELN5ewkv
+         U4rbMkhoGYIuvMMPoeajHdzdnnNMUQeIvgsdo0/qT2qaM3FvVWEfbdeC0ojJeQloo9tN
+         CnSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxl48mHN6hMD0HSBpkvGiJgDN1HAUw1oXY36a53zeJdL133HJVxz0VTkPaXl6HQeyse3A8qfqStdQHIDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw33feqmFda/8TY/ajOa/Axq1rQB4GJy7xfEFjAVXVlWxftUJXH
+	wYmwiMEZPDnQ3U4f8RQDgtdhIzt6DmjP82rLUqCl9hKwGtrPpsp0lkwL+bt2jBmda+zDQTDLqRT
+	CWRfVhtFO+A5y3XCx7sAdODiSFEmvrehdyUVi2H0O0NdblOSygkjSY1w=
+X-Google-Smtp-Source: AGHT+IE1tqoNBKvRGTpgW5ttndbh/65NW3Xcf8+wxw21OiM0c+Rb9ED87djMVduLScJ2mkDRFMr97SQKbkCuSEapzvz6IDLAbKwi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: hxZ0VKUjLtKVloosslBkl4-EsoLdYTV5
-X-Proofpoint-ORIG-GUID: hxZ0VKUjLtKVloosslBkl4-EsoLdYTV5
-X-Authority-Analysis: v=2.4 cv=baZrUPPB c=1 sm=1 tr=0 ts=6815f9ad cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=sClmPrBuAd1zpBMvlVoA:9 a=AqsFaLKkRaLYCVmb:21 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA5OSBTYWx0ZWRfX8MQe7eScFeFj
- eOfD62L3y29IgQOT9gqjzrjg8fKqUGwu1tQiXdmEZsOGu2vo1sgbPS2Ef1/C+C8SrPQQSps3hkN
- gqKrBwcetu26dHgQj0frxH7Ts/qMclP0za5w5QpKjVxTthRCi58BFV1VIGZGv7rAxyfUEWNmzIC
- wiTp3X6CcTeyMGk8yhKInyr3oKRY4mkrjJ1FA2Paqhjyv2vMhtl+6JfZlc0V0szCrF3n2jJ6lB6
- 7NHr75PHyZOv/ErDfsUZWSCzwZvtfdjLFb7EznrPNMyEXRT+QfYSbmD64UuX+PaSRBoIOzdpU3r
- t1pV4kARnnnK8RcbTobWmXn2AbW17LHYcLsco2yAfdvbqAwuPQlq1QqoO6T1WOhOQ/zRMDkZVKL
- I09XNXCTQSdxjYCkZjaxst3uXZ8A2Y2F0fqnkiSyXb+cz0afDrioPgQ/j7iL2JEsAAZixfYw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-03_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 suspectscore=0 spamscore=0 adultscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505030099
+X-Received: by 2002:a5e:9e0d:0:b0:85e:73da:c56a with SMTP id
+ ca18e2360f4ac-864a3d2789amr996007739f.3.1746270663246; Sat, 03 May 2025
+ 04:11:03 -0700 (PDT)
+Date: Sat, 03 May 2025 04:11:03 -0700
+In-Reply-To: <20250503102133.1547-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6815f9c7.a70a0220.254cdc.0019.GAE@google.com>
+Subject: Re: [syzbot] [mm?] BUG: Bad page state in page_cache_ra_order
+From: syzbot <syzbot+7b3842775c9ce6b69efc@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In Qualcomm SoCs, firmware loading for Serial Engines (SE) within the QUP
-hardware has traditionally been managed by TrustZone (TZ). This restriction
-poses a significant challenge for developers, as it limits their ability to
-enable various protocols on any of the SEs from the Linux side, reducing
-flexibility.
+Hello,
 
-Load the firmware to QUP SE based on the 'firmware-name' property specified
-in devicetree at bootup time.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Co-developed-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
----
-v3 -> v4:
+EXEC (disabled)
+[   22.481730][    T1] evm: security.SMACK64TRANSMUTE (disabled)
+[   22.485666][    T1] evm: security.SMACK64MMAP (disabled)
+[   22.489224][    T1] evm: security.apparmor (disabled)
+[   22.492684][    T1] evm: security.ima
+[   22.495141][    T1] evm: security.capability
+[   22.498056][    T1] evm: HMAC attrs: 0x1
+[   22.504042][    T1] PM:   Magic number: 9:345:23
+[   22.507301][    T1] video4linux vbi43: hash matches
+[   22.510770][    T1] gadget gadget.32: hash matches
+[   22.515003][    T1] printk: legacy console [netcon0] enabled
+[   22.518877][    T1] netconsole: network logging started
+[   22.523237][    T1] gtp: GTP module loaded (pdp ctx size 128 bytes)
+[   22.532220][    T1] rdma_rxe: loaded
+[   22.536188][    T1] cfg80211: Loading compiled-in X.509 certificates for=
+ regulatory database
+[   22.544732][    T1] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[   22.550553][    T1] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06=
+c7248db18c600'
+[   22.557101][  T838] platform regulatory.0: Direct firmware load for regu=
+latory.db failed with error -2
+[   22.563921][    T1] clk: Disabling unused clocks
+[   22.563938][  T838] platform regulatory.0: Falling back to sysfs fallbac=
+k for: regulatory.db
+[   22.567256][    T1] ALSA device list:
+[   22.575868][    T1]   #0: Dummy 1
+[   22.578140][    T1]   #1: Loopback 1
+[   22.580682][    T1]   #2: Virtual MIDI Card 1
+[   22.587838][    T1] md: Waiting for all devices to be available before a=
+utodetect
+[   22.590848][    T1] md: If you don't use raid, use raid=3Dnoautodetect
+[   22.593626][    T1] md: Autodetecting RAID arrays.
+[   22.595734][    T1] md: autorun ...
+[   22.597177][    T1] md: ... autorun DONE.
+[   22.638506][    T1] EXT4-fs (sda1): mounted filesystem b4773fba-1738-4da=
+0-8a90-0fe043d0a496 ro with ordered data mode. Quota mode: none.
+[   22.644832][    T1] VFS: Mounted root (ext4 filesystem) readonly on devi=
+ce 8:1.
+[   22.650043][    T1] devtmpfs: mounted
+[   22.741058][    T1] Freeing unused kernel image (initmem) memory: 27132K
+[   22.744578][    T1] Write protecting the kernel read-only data: 212992k
+[   22.768906][    T1] Freeing unused kernel image (text/rodata gap) memory=
+: 1000K
+[   22.779726][    T1] Freeing unused kernel image (rodata/data gap) memory=
+: 1336K
+[   22.935360][    T1] x86/mm: Checked W+X mappings: passed, no W+X pages f=
+ound.
+[   22.944857][    T1] Failed to set sysctl parameter 'max_rcu_stall_to_pan=
+ic=3D1': parameter not found
+[   22.949433][    T1] Run /sbin/init as init process
+[   22.969151][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   22.972476][    T1] BUG: KASAN: user-memory-access in lru_add+0x192/0xd7=
+0
+[   22.975136][    T1] Read of size 8 at addr 00000000320bb7c0 by task init=
+/1
+[   22.977923][    T1]=20
+[   22.978936][    T1] CPU: 2 UID: 0 PID: 1 Comm: init Not tainted 6.15.0-r=
+c4-syzkaller-g95d3481af6dc-dirty #0 PREEMPT(full)=20
+[   22.978958][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
+BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+[   22.978968][    T1] Call Trace:
+[   22.978975][    T1]  <TASK>
+[   22.978982][    T1]  dump_stack_lvl+0x116/0x1f0
+[   22.979046][    T1]  kasan_report+0xe0/0x110
+[   22.979061][    T1]  ? lru_add+0x192/0xd70
+[   22.979078][    T1]  kasan_check_range+0xef/0x1a0
+[   22.979097][    T1]  lru_add+0x192/0xd70
+[   22.979114][    T1]  folio_batch_move_lru+0x112/0x3b0
+[   22.979131][    T1]  ? __pfx_lru_add+0x10/0x10
+[   22.979148][    T1]  ? __pfx_folio_batch_move_lru+0x10/0x10
+[   22.979165][    T1]  ? __pfx___filemap_add_folio+0x10/0x10
+[   22.979186][    T1]  __folio_batch_add_and_move+0x369/0xc90
+[   22.979225][    T1]  ? __pfx_lru_add+0x10/0x10
+[   22.979240][    T1]  ? const_folio_flags+0x5b/0x100
+[   22.979257][    T1]  filemap_add_folio+0x1bb/0x220
+[   22.979274][    T1]  ? __pfx_filemap_add_folio+0x10/0x10
+[   22.979292][    T1]  ? page_cache_ra_unbounded+0x3fb/0x750
+[   22.979309][    T1]  page_cache_ra_unbounded+0x305/0x750
+[   22.979328][    T1]  page_cache_ra_order+0x961/0xcb0
+[   22.979348][    T1]  page_cache_async_ra+0x5cb/0x8a0
+[   22.979365][    T1]  filemap_readahead.isra.0+0x11c/0x190
+[   22.979390][    T1]  ? __pfx_filemap_readahead.isra.0+0x10/0x10
+[   22.979425][    T1]  filemap_get_pages+0x2c1/0x1c20
+[   22.979444][    T1]  ? __lock_acquire+0x5ca/0x1ba0
+[   22.979469][    T1]  ? __pfx_filemap_get_pages+0x10/0x10
+[   22.979488][    T1]  ? atime_needs_update+0x8b/0x710
+[   22.979508][    T1]  ? __pfx___might_resched+0x10/0x10
+[   22.979531][    T1]  filemap_read+0x3d2/0xe90
+[   22.979552][    T1]  ? __pfx_filemap_read+0x10/0x10
+[   22.979576][    T1]  ? _raw_spin_unlock_irqrestore+0x3b/0x80
+[   22.979593][    T1]  ? stack_depot_save_flags+0x3e6/0xa50
+[   22.979616][    T1]  generic_file_read_iter+0x344/0x450
+[   22.979634][    T1]  ? kasan_save_stack+0x33/0x60
+[   22.979657][    T1]  ? kasan_save_track+0x14/0x30
+[   22.979680][    T1]  ext4_file_read_iter+0x1d6/0x6a0
+[   22.979705][    T1]  __kernel_read+0x3f0/0xb60
+[   22.979728][    T1]  ? __pfx___kernel_read+0x10/0x10
+[   22.979755][    T1]  integrity_kernel_read+0x7e/0xb0
+[   22.979773][    T1]  ? __pfx_integrity_kernel_read+0x10/0x10
+[   22.979790][    T1]  ? __local_bh_enable_ip+0xa4/0x120
+[   22.979809][    T1]  ? kernel_fpu_end+0x5e/0x70
+[   22.979827][    T1]  ? _sha256_update+0xc8/0xf0
+[   22.979846][    T1]  ima_calc_file_hash_tfm+0x2c7/0x3d0
+[   22.979868][    T1]  ? __pfx_ima_calc_file_hash_tfm+0x10/0x10
+[   22.979899][    T1]  ? ext4_getattr+0x33d/0x8b0
+[   22.979923][    T1]  ? ima_alloc_tfm+0x21a/0x2e0
+[   22.979943][    T1]  ? ext4_file_getattr+0x25f/0x380
+[   22.979958][    T1]  ima_calc_file_hash+0x1ba/0x490
+[   22.979981][    T1]  ima_collect_measurement+0x897/0xa40
+[   22.980006][    T1]  ? __pfx_ima_collect_measurement+0x10/0x10
+[   22.980030][    T1]  ? __pfx___up_read+0x10/0x10
+[   22.980049][    T1]  ? __pfx_ext4_xattr_get+0x10/0x10
+[   22.980070][    T1]  ? xattr_resolve_name+0x27b/0x3f0
+[   22.980094][    T1]  ? vfs_getxattr_alloc+0xec/0x340
+[   22.980119][    T1]  ? ima_get_hash_algo+0x27c/0x400
+[   22.980137][    T1]  ? __pfx_ima_get_hash_algo+0x10/0x10
+[   22.980157][    T1]  ? process_measurement+0x11fa/0x23e0
+[   22.980175][    T1]  process_measurement+0x11fa/0x23e0
+[   22.980196][    T1]  ? avc_has_perm_noaudit+0x149/0x3b0
+[   22.980211][    T1]  ? __pfx_process_measurement+0x10/0x10
+[   22.980233][    T1]  ? __pfx_avc_has_perm+0x10/0x10
+[   22.980246][    T1]  ? avc_has_perm+0x11a/0x1c0
+[   22.980260][    T1]  ? __pfx_avc_has_perm+0x10/0x10
+[   22.980284][    T1]  ? file_map_prot_check+0x1eb/0x360
+[   22.980301][    T1]  ima_file_mmap+0x1a8/0x1d0
+[   22.980321][    T1]  ? __pfx_ima_file_mmap+0x10/0x10
+[   22.980342][    T1]  security_mmap_file+0x88c/0x990
+[   22.980365][    T1]  vm_mmap_pgoff+0xec/0x450
+[   22.980384][    T1]  ? __pfx_vm_mmap_pgoff+0x10/0x10
+[   22.980406][    T1]  vm_mmap+0x8e/0xc0
+[   22.980429][    T1]  elf_load+0x19a/0x890
+[   22.980457][    T1]  load_elf_binary+0x35e7/0x4f80
+[   22.980491][    T1]  ? __pfx_load_elf_binary+0x10/0x10
+[   22.980514][    T1]  ? find_held_lock+0x2b/0x80
+[   22.980531][    T1]  ? bprm_execve+0x8a2/0x1650
+[   22.980554][    T1]  bprm_execve+0x8c0/0x1650
+[   22.980577][    T1]  ? __pfx_bprm_execve+0x10/0x10
+[   22.980598][    T1]  ? copy_strings_kernel+0x153/0x190
+[   22.980620][    T1]  kernel_execve+0x2ef/0x3b0
+[   22.980640][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   22.980664][    T1]  kernel_init+0x14a/0x2b0
+[   22.980685][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   22.980706][    T1]  ret_from_fork+0x45/0x80
+[   22.980720][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   22.980741][    T1]  ret_from_fork_asm+0x1a/0x30
+[   22.980768][    T1]  </TASK>
+[   22.980774][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   23.168879][    T1] Kernel panic - not syncing: KASAN: panic_on_warn set=
+ ...
+[   23.171855][    T1] CPU: 2 UID: 0 PID: 1 Comm: init Not tainted 6.15.0-r=
+c4-syzkaller-g95d3481af6dc-dirty #0 PREEMPT(full)=20
+[   23.176379][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
+BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+[   23.180688][    T1] Call Trace:
+[   23.182122][    T1]  <TASK>
+[   23.183403][    T1]  dump_stack_lvl+0x3d/0x1f0
+[   23.185409][    T1]  panic+0x71c/0x800
+[   23.187090][    T1]  ? __pfx_panic+0x10/0x10
+[   23.188969][    T1]  ? __pfx__printk+0x10/0x10
+[   23.190938][    T1]  ? end_report+0x4c/0x170
+[   23.192832][    T1]  ? check_panic_on_warn+0x1f/0xb0
+[   23.194953][    T1]  ? lru_add+0x192/0xd70
+[   23.196745][    T1]  check_panic_on_warn+0xab/0xb0
+[   23.198798][    T1]  end_report+0x107/0x170
+[   23.200620][    T1]  kasan_report+0xee/0x110
+[   23.202514][    T1]  ? lru_add+0x192/0xd70
+[   23.204296][    T1]  kasan_check_range+0xef/0x1a0
+[   23.206317][    T1]  lru_add+0x192/0xd70
+[   23.208019][    T1]  folio_batch_move_lru+0x112/0x3b0
+[   23.210132][    T1]  ? __pfx_lru_add+0x10/0x10
+[   23.212067][    T1]  ? __pfx_folio_batch_move_lru+0x10/0x10
+[   23.214409][    T1]  ? __pfx___filemap_add_folio+0x10/0x10
+[   23.216747][    T1]  __folio_batch_add_and_move+0x369/0xc90
+[   23.219103][    T1]  ? __pfx_lru_add+0x10/0x10
+[   23.221059][    T1]  ? const_folio_flags+0x5b/0x100
+[   23.223259][    T1]  filemap_add_folio+0x1bb/0x220
+[   23.225339][    T1]  ? __pfx_filemap_add_folio+0x10/0x10
+[   23.227645][    T1]  ? page_cache_ra_unbounded+0x3fb/0x750
+[   23.229983][    T1]  page_cache_ra_unbounded+0x305/0x750
+[   23.232345][    T1]  page_cache_ra_order+0x961/0xcb0
+[   23.234487][    T1]  page_cache_async_ra+0x5cb/0x8a0
+[   23.236650][    T1]  filemap_readahead.isra.0+0x11c/0x190
+[   23.238986][    T1]  ? __pfx_filemap_readahead.isra.0+0x10/0x10
+[   23.241621][    T1]  filemap_get_pages+0x2c1/0x1c20
+[   23.243762][    T1]  ? __lock_acquire+0x5ca/0x1ba0
+[   23.245838][    T1]  ? __pfx_filemap_get_pages+0x10/0x10
+[   23.248105][    T1]  ? atime_needs_update+0x8b/0x710
+[   23.250285][    T1]  ? __pfx___might_resched+0x10/0x10
+[   23.252510][    T1]  filemap_read+0x3d2/0xe90
+[   23.254388][    T1]  ? __pfx_filemap_read+0x10/0x10
+[   23.256516][    T1]  ? _raw_spin_unlock_irqrestore+0x3b/0x80
+[   23.258926][    T1]  ? stack_depot_save_flags+0x3e6/0xa50
+[   23.261292][    T1]  generic_file_read_iter+0x344/0x450
+[   23.263521][    T1]  ? kasan_save_stack+0x33/0x60
+[   23.265545][    T1]  ? kasan_save_track+0x14/0x30
+[   23.267568][    T1]  ext4_file_read_iter+0x1d6/0x6a0
+[   23.269722][    T1]  __kernel_read+0x3f0/0xb60
+[   23.271661][    T1]  ? __pfx___kernel_read+0x10/0x10
+[   23.273820][    T1]  integrity_kernel_read+0x7e/0xb0
+[   23.275991][    T1]  ? __pfx_integrity_kernel_read+0x10/0x10
+[   23.278446][    T1]  ? __local_bh_enable_ip+0xa4/0x120
+[   23.280677][    T1]  ? kernel_fpu_end+0x5e/0x70
+[   23.282652][    T1]  ? _sha256_update+0xc8/0xf0
+[   23.284695][    T1]  ima_calc_file_hash_tfm+0x2c7/0x3d0
+[   23.286936][    T1]  ? __pfx_ima_calc_file_hash_tfm+0x10/0x10
+[   23.289425][    T1]  ? ext4_getattr+0x33d/0x8b0
+[   23.291389][    T1]  ? ima_alloc_tfm+0x21a/0x2e0
+[   23.293368][    T1]  ? ext4_file_getattr+0x25f/0x380
+[   23.295493][    T1]  ima_calc_file_hash+0x1ba/0x490
+[   23.297597][    T1]  ima_collect_measurement+0x897/0xa40
+[   23.299865][    T1]  ? __pfx_ima_collect_measurement+0x10/0x10
+[   23.302357][    T1]  ? __pfx___up_read+0x10/0x10
+[   23.304358][    T1]  ? __pfx_ext4_xattr_get+0x10/0x10
+[   23.306502][    T1]  ? xattr_resolve_name+0x27b/0x3f0
+[   23.308664][    T1]  ? vfs_getxattr_alloc+0xec/0x340
+[   23.310837][    T1]  ? ima_get_hash_algo+0x27c/0x400
+[   23.312976][    T1]  ? __pfx_ima_get_hash_algo+0x10/0x10
+[   23.315246][    T1]  ? process_measurement+0x11fa/0x23e0
+[   23.317504][    T1]  process_measurement+0x11fa/0x23e0
+[   23.319690][    T1]  ? avc_has_perm_noaudit+0x149/0x3b0
+[   23.321944][    T1]  ? __pfx_process_measurement+0x10/0x10
+[   23.324293][    T1]  ? __pfx_avc_has_perm+0x10/0x10
+[   23.326158][    T1]  ? avc_has_perm+0x11a/0x1c0
+[   23.327938][    T1]  ? __pfx_avc_has_perm+0x10/0x10
+[   23.330041][    T1]  ? file_map_prot_check+0x1eb/0x360
+[   23.332243][    T1]  ima_file_mmap+0x1a8/0x1d0
+[   23.334106][    T1]  ? __pfx_ima_file_mmap+0x10/0x10
+[   23.336153][    T1]  security_mmap_file+0x88c/0x990
+[   23.338258][    T1]  vm_mmap_pgoff+0xec/0x450
+[   23.340181][    T1]  ? __pfx_vm_mmap_pgoff+0x10/0x10
+[   23.342347][    T1]  vm_mmap+0x8e/0xc0
+[   23.343995][    T1]  elf_load+0x19a/0x890
+[   23.345725][    T1]  load_elf_binary+0x35e7/0x4f80
+[   23.347891][    T1]  ? __pfx_load_elf_binary+0x10/0x10
+[   23.350128][    T1]  ? find_held_lock+0x2b/0x80
+[   23.352067][    T1]  ? bprm_execve+0x8a2/0x1650
+[   23.354013][    T1]  bprm_execve+0x8c0/0x1650
+[   23.355923][    T1]  ? __pfx_bprm_execve+0x10/0x10
+[   23.357981][    T1]  ? copy_strings_kernel+0x153/0x190
+[   23.360182][    T1]  kernel_execve+0x2ef/0x3b0
+[   23.362124][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   23.364188][    T1]  kernel_init+0x14a/0x2b0
+[   23.366047][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   23.368110][    T1]  ret_from_fork+0x45/0x80
+[   23.369970][    T1]  ? __pfx_kernel_init+0x10/0x10
+[   23.372037][    T1]  ret_from_fork_asm+0x1a/0x30
+[   23.374051][    T1]  </TASK>
+[   23.376076][    T1] Kernel Offset: disabled
+[   23.377924][    T1] Rebooting in 86400 seconds..
 
-- Update the commit message.
-- Resolve kernel test robot warnings.
-- Add a multiline comment in the Copyright section.
-- Remove valid_seg_size and geni_config_common_control functions, and add the code inline.
-- Rename read_elf function to geni_read_elf.
-- Add a firmware size check.
-- Assign *pelfseg after finding a match.
-- Break one large condition check into multiple checks to improve code readability.
-- Remove return type documentation for void functions.
-- Update error messages to be more descriptive.
-- Correct indentation.
-- Rename geni_flash_fw_revision function to geni_write_fw_revision.
-- Remove __func__ from all print statements.
-- Move resource_on to the appropriate section after parsing the firmware file.
-- Update variable names and function arguments as suggested.
-- Use FIELD_GET, FIELD_PREP, and GENMASK.
-- Use memcpy_toio() instead of memcpy.
-- Remove duplicate registers and bitmask macros.
-- Remove rsc struct and add required variables in geni_se struct.
 
-v3 Link: https://lore.kernel.org/linux-arm-msm/20250303124349.3474185-7-quic_vdadhani@quicinc.com/
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
+go1.23.7.linux-amd64'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
+.1-go1.23.7.linux-amd64/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.23.7'
+GODEBUG=3D''
+GOTELEMETRY=3D'local'
+GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build3760460994=3D/tmp/go-build -gno-record-gc=
+c-switches'
 
-v2 -> v3:
+git status (err=3D<nil>)
+HEAD detached at c6b4fb399
+nothing to commit, working tree clean
 
-- Remove code related to the 'qcom,xfer-mode' property.
-- Add logic to read the boolean property 'qcom,gsi-dma-allowed' and select the transfer mode.
-- Hardcode FIFO mode for the serial driver as GSI mode is currently not supported.
-- Update function descriptions as suggested.
-- Enhance error handling and remove redundant if conditions.
-- Drop the ternary operator.
 
-v2 Link: https://lore.kernel.org/linux-arm-msm/20250124105309.295769-6-quic_vdadhani@quicinc.com/
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3Dc6b4fb399236b655a39701fd51c33522caa06811 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20250425-123509'" -o ./b=
+in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
+_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"c6b4fb399236b655a39701fd51c33522ca=
+a06811\"
+/usr/bin/ld: /tmp/ccqfTbRm.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
 
-v1 -> v2:
 
-- Remove the fixed firmware path and add logic to read the path from the device tree.
-- Remove code related to the 'qcom,load-firmware' property.
-- Resolve kernel test robot warnings.
-- Update the commit message.
-- Update Copyright year.
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D160920f4580000
 
-v1 Link: https://lore.kernel.org/linux-kernel/20241204150326.1470749-5-quic_vdadhani@quicinc.com/
----
----
- drivers/soc/qcom/qcom-geni-se.c      | 404 +++++++++++++++++++++++++--
- include/linux/soc/qcom/geni-se.h     |  31 +-
- include/linux/soc/qcom/qup-fw-load.h |  89 ++++++
- 3 files changed, 502 insertions(+), 22 deletions(-)
- create mode 100644 include/linux/soc/qcom/qup-fw-load.h
 
-diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-index 4cb959106efa..ad9595275a9e 100644
---- a/drivers/soc/qcom/qcom-geni-se.c
-+++ b/drivers/soc/qcom/qcom-geni-se.c
-@@ -1,11 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0
--// Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+/*
-+ *  Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+ *  Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
- 
- /* Disable MMIO tracing to prevent excessive logging of unwanted MMIO traces */
- #define __DISABLE_TRACE_MMIO__
- 
- #include <linux/acpi.h>
- #include <linux/clk.h>
-+#include <linux/firmware.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
-@@ -15,6 +19,7 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/soc/qcom/geni-se.h>
-+#include <linux/soc/qcom/qup-fw-load.h>
- 
- /**
-  * DOC: Overview
-@@ -80,9 +85,9 @@
-  * common to all the serial engines and are independent of serial interfaces.
-  */
- 
--#define MAX_CLK_PERF_LEVEL 32
--#define MAX_CLKS 2
--
-+#define MAX_CLK_PERF_LEVEL	32
-+#define MAX_CLKS		2
-+#define MAX_PROTOCOL		6
- /**
-  * struct geni_wrapper - Data structure to represent the QUP Wrapper Core
-  * @dev:		Device pointer of the QUP wrapper core
-@@ -110,28 +115,23 @@ struct geni_se_desc {
- static const char * const icc_path_names[] = {"qup-core", "qup-config",
- 						"qup-memory"};
- 
-+static const char * const protocol_name[MAX_PROTOCOL] = { "None", "SPI", "UART",
-+							  "I2C", "I3C", "SPI SLAVE"};
-+
- #define QUP_HW_VER_REG			0x4
- 
- /* Common SE registers */
--#define GENI_INIT_CFG_REVISION		0x0
--#define GENI_S_INIT_CFG_REVISION	0x4
--#define GENI_OUTPUT_CTRL		0x24
--#define GENI_CGC_CTRL			0x28
- #define GENI_CLK_CTRL_RO		0x60
--#define GENI_FW_S_REVISION_RO		0x6c
- #define SE_GENI_BYTE_GRAN		0x254
- #define SE_GENI_TX_PACKING_CFG0		0x260
- #define SE_GENI_TX_PACKING_CFG1		0x264
- #define SE_GENI_RX_PACKING_CFG0		0x284
- #define SE_GENI_RX_PACKING_CFG1		0x288
--#define SE_GENI_M_GP_LENGTH		0x910
--#define SE_GENI_S_GP_LENGTH		0x914
- #define SE_DMA_TX_PTR_L			0xc30
- #define SE_DMA_TX_PTR_H			0xc34
- #define SE_DMA_TX_ATTR			0xc38
- #define SE_DMA_TX_LEN			0xc3c
- #define SE_DMA_TX_IRQ_EN		0xc48
--#define SE_DMA_TX_IRQ_EN_SET		0xc4c
- #define SE_DMA_TX_IRQ_EN_CLR		0xc50
- #define SE_DMA_TX_LEN_IN		0xc54
- #define SE_DMA_TX_MAX_BURST		0xc5c
-@@ -140,9 +140,7 @@ static const char * const icc_path_names[] = {"qup-core", "qup-config",
- #define SE_DMA_RX_ATTR			0xd38
- #define SE_DMA_RX_LEN			0xd3c
- #define SE_DMA_RX_IRQ_EN		0xd48
--#define SE_DMA_RX_IRQ_EN_SET		0xd4c
- #define SE_DMA_RX_IRQ_EN_CLR		0xd50
--#define SE_DMA_RX_LEN_IN		0xd54
- #define SE_DMA_RX_MAX_BURST		0xd5c
- #define SE_DMA_RX_FLUSH			0xd60
- #define SE_GSI_EVENT_EN			0xe18
-@@ -179,7 +177,7 @@ static const char * const icc_path_names[] = {"qup-core", "qup-config",
- /* SE_DMA_GENERAL_CFG */
- #define DMA_RX_CLK_CGC_ON		BIT(0)
- #define DMA_TX_CLK_CGC_ON		BIT(1)
--#define DMA_AHB_SLV_CFG_ON		BIT(2)
-+#define DMA_AHB_SLV_CLK_CGC_ON		BIT(2)
- #define AHB_SEC_SLV_CLK_CGC_ON		BIT(3)
- #define DUMMY_RX_NON_BUFFERABLE		BIT(4)
- #define RX_DMA_ZERO_PADDING_EN		BIT(5)
-@@ -220,12 +218,12 @@ static void geni_se_io_init(void __iomem *base)
- {
- 	u32 val;
- 
--	val = readl_relaxed(base + GENI_CGC_CTRL);
-+	val = readl_relaxed(base + SE_GENI_CGC_CTRL);
- 	val |= DEFAULT_CGC_EN;
--	writel_relaxed(val, base + GENI_CGC_CTRL);
-+	writel_relaxed(val, base + SE_GENI_CGC_CTRL);
- 
- 	val = readl_relaxed(base + SE_DMA_GENERAL_CFG);
--	val |= AHB_SEC_SLV_CLK_CGC_ON | DMA_AHB_SLV_CFG_ON;
-+	val |= AHB_SEC_SLV_CLK_CGC_ON | DMA_AHB_SLV_CLK_CGC_ON;
- 	val |= DMA_TX_CLK_CGC_ON | DMA_RX_CLK_CGC_ON;
- 	writel_relaxed(val, base + SE_DMA_GENERAL_CFG);
- 
-@@ -891,6 +889,376 @@ int geni_icc_disable(struct geni_se *se)
- }
- EXPORT_SYMBOL_GPL(geni_icc_disable);
- 
-+/**
-+ * geni_read_elf() - Read an ELF file.
-+ * @se: Pointer to the SE resources structure.
-+ * @fw: Pointer to the firmware buffer.
-+ * @pelfseg: Pointer to the SE-specific ELF header.
-+ *
-+ * Read the ELF file and output a pointer to the header data, which
-+ * contains the firmware data and any other details.
-+ *
-+ * Return: 0 if successful, otherwise return an error value.
-+ */
-+static int geni_read_elf(struct geni_se *se, const struct firmware *fw, struct elf_se_hdr **pelfseg)
-+{
-+	const struct elf32_hdr *ehdr;
-+	struct elf32_phdr *phdrs, *phdr;
-+	const struct elf_se_hdr *elfseg;
-+	const u8 *addr;
-+	int i;
-+
-+	if (!fw || fw->size < sizeof(struct elf32_hdr))
-+		return -EINVAL;
-+
-+	ehdr = (struct elf32_hdr *)fw->data;
-+	phdrs = (struct elf32_phdr *)(ehdr + 1);
-+
-+	if (ehdr->e_phnum < 2)
-+		return -EINVAL;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &phdrs[i];
-+
-+		if (fw->size < phdr->p_offset + phdr->p_filesz)
-+			return -EINVAL;
-+
-+		if (phdr->p_type != PT_LOAD || !phdr->p_memsz)
-+			continue;
-+
-+		if (MI_PBT_PAGE_MODE_VALUE(phdr->p_flags) != MI_PBT_NON_PAGED_SEGMENT ||
-+		    MI_PBT_SEGMENT_TYPE_VALUE(phdr->p_flags) == MI_PBT_HASH_SEGMENT ||
-+		    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_NOTUSED_SEGMENT ||
-+		    MI_PBT_ACCESS_TYPE_VALUE(phdr->p_flags) == MI_PBT_SHARED_SEGMENT)
-+			continue;
-+
-+		if (phdr->p_filesz < sizeof(struct elf_se_hdr))
-+			continue;
-+
-+		addr = fw->data + phdr->p_offset;
-+		elfseg = (const struct elf_se_hdr *)addr;
-+
-+		if (elfseg->magic != MAGIC_NUM_SE || elfseg->version != 1)
-+			continue;
-+
-+		if (phdr->p_filesz < elfseg->fw_offset + elfseg->fw_size_in_items * sizeof(u32) ||
-+		    phdr->p_filesz < elfseg->cfg_idx_offset + elfseg->cfg_items_size * sizeof(u8) ||
-+		    phdr->p_filesz < elfseg->cfg_val_offset + elfseg->cfg_items_size * sizeof(u32))
-+			continue;
-+
-+		if (elfseg->serial_protocol != se->protocol)
-+			continue;
-+
-+		*pelfseg = (struct elf_se_hdr *)addr;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+/**
-+ * geni_configure_xfer_mode() - Set the transfer mode.
-+ * @se: Pointer to a structure representing SE-related resources.
-+ *
-+ * Set the transfer mode to either FIFO or DMA according to the mode specified by the protocol
-+ * driver.
-+ *
-+ * Return: 0 if successful, otherwise return an error value.
-+ */
-+static int geni_configure_xfer_mode(struct geni_se *se)
-+{
-+	/* Configure SE FIFO, DMA or GSI mode. */
-+	switch (se->mode) {
-+	case GENI_GPI_DMA:
-+		geni_setbits32(se->base + SE_GENI_DMA_MODE_EN, GENI_DMA_MODE_EN);
-+		writel_relaxed(0x0, se->base + SE_IRQ_EN);
-+		writel_relaxed(DMA_RX_EVENT_EN | DMA_TX_EVENT_EN |
-+			       GENI_M_EVENT_EN | GENI_S_EVENT_EN,
-+			       se->base + SE_GSI_EVENT_EN);
-+		break;
-+
-+	case GENI_SE_FIFO:
-+		geni_clrbits32(se->base + SE_GENI_DMA_MODE_EN, GENI_DMA_MODE_EN);
-+		writel_relaxed(DMA_RX_IRQ_EN | DMA_TX_IRQ_EN | GENI_M_IRQ_EN | GENI_S_IRQ_EN,
-+			       se->base + SE_IRQ_EN);
-+		writel_relaxed(0x0, se->base + SE_GSI_EVENT_EN);
-+		break;
-+
-+	case GENI_SE_DMA:
-+		geni_setbits32(se->base + SE_GENI_DMA_MODE_EN, GENI_DMA_MODE_EN);
-+		writel_relaxed(DMA_RX_IRQ_EN | DMA_TX_IRQ_EN | GENI_M_IRQ_EN | GENI_S_IRQ_EN,
-+			       se->base + SE_IRQ_EN);
-+		writel_relaxed(0x0, se->base + SE_GSI_EVENT_EN);
-+		break;
-+
-+	default:
-+		dev_err(se->dev, "Invalid geni-se transfer mode: %d\n", se->mode);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+/**
-+ * geni_enable_interrupts() - Enable interrupts.
-+ * @se: Pointer to a structure representing SE-related resources.
-+ *
-+ * Enable the required interrupts during the firmware load process.
-+ *
-+ */
-+static void geni_enable_interrupts(struct geni_se *se)
-+{
-+	u32 reg_value;
-+
-+	/* Enable required interrupts. */
-+	writel_relaxed(M_COMMON_GENI_M_IRQ_EN, se->base + SE_GENI_M_IRQ_EN);
-+
-+	reg_value = S_CMD_OVERRUN_EN | S_ILLEGAL_CMD_EN |
-+		    S_CMD_CANCEL_EN | S_CMD_ABORT_EN |
-+		    S_GP_IRQ_0_EN | S_GP_IRQ_1_EN |
-+		    S_GP_IRQ_2_EN | S_GP_IRQ_3_EN |
-+		    S_RX_FIFO_WR_ERR_EN | S_RX_FIFO_RD_ERR_EN;
-+	writel_relaxed(reg_value, se->base + SE_GENI_S_IRQ_ENABLE);
-+
-+	/* DMA mode configuration. */
-+	reg_value = RESET_DONE_EN | SBE_EN | DMA_DONE_EN;
-+	writel_relaxed(reg_value, se->base + SE_DMA_TX_IRQ_EN_SET);
-+	reg_value = FLUSH_DONE_EN | RESET_DONE_EN | SBE_EN | DMA_DONE_EN;
-+	writel_relaxed(reg_value, se->base + SE_DMA_RX_IRQ_EN_SET);
-+}
-+
-+/**
-+ * geni_write_fw_revision() - Write the firmware revision.
-+ * @se: Pointer to a structure representing SE-related resources.
-+ * @serial_protocol: serial protocol type.
-+ * @fw_version: QUP firmware version.
-+ *
-+ * Write the firmware revision and protocol into the respective register.
-+ *
-+ * Return: None.
-+ */
-+static void geni_write_fw_revision(struct geni_se *se, u16 serial_protocol, u16 fw_version)
-+{
-+	u32 reg_value;
-+
-+	reg_value = FIELD_PREP(FW_REV_PROTOCOL_MSK, serial_protocol);
-+	reg_value |= FIELD_PREP(FW_REV_VERSION_MSK, fw_version);
-+
-+	writel_relaxed(reg_value, se->base + SE_GENI_FW_REVISION);
-+	writel_relaxed(reg_value, se->base + SE_S_FW_REVISION);
-+}
-+
-+/**
-+ * geni_load_se_fw() - Load Serial Engine specific firmware.
-+ * @se: Pointer to a structure representing SE-related resources.
-+ * @fw: Pointer to the firmware structure.
-+ *
-+ * Load the protocol firmware into the IRAM of the Serial Engine.
-+ *
-+ * Return: 0 if successful, otherwise return an error value.
-+ */
-+static int geni_load_se_fw(struct geni_se *se, const struct firmware *fw)
-+{
-+	const u32 *fw_data, *cfg_val_arr;
-+	const u8 *cfg_idx_arr;
-+	u32 i, reg_value, ramn_cnt;
-+	int ret;
-+	struct elf_se_hdr *hdr;
-+
-+	ret = geni_read_elf(se, fw, &hdr);
-+	if (ret) {
-+		dev_err(se->dev, "ELF parsing failed ret: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ramn_cnt = hdr->fw_size_in_items;
-+	if (hdr->fw_size_in_items % 2 != 0)
-+		ramn_cnt++;
-+
-+	if (ramn_cnt >= MAX_GENI_CFG_RAMn_CNT)
-+		return -EINVAL;
-+
-+	ret = geni_icc_set_bw(se);
-+	if (ret)
-+		return ret;
-+
-+	ret = geni_icc_enable(se);
-+	if (ret)
-+		return ret;
-+
-+	ret = geni_se_resources_on(se);
-+	if (ret)
-+		goto err;
-+
-+	ramn_cnt = hdr->fw_size_in_items;
-+	if (hdr->fw_size_in_items % 2 != 0)
-+		ramn_cnt++;
-+
-+	if (ramn_cnt >= MAX_GENI_CFG_RAMn_CNT)
-+		goto err_resource;
-+
-+	fw_data = (const u32 *)((u8 *)hdr + hdr->fw_offset);
-+	cfg_idx_arr = (const u8 *)hdr + hdr->cfg_idx_offset;
-+	cfg_val_arr = (const u32 *)((u8 *)hdr + hdr->cfg_val_offset);
-+
-+	/* Disable high priority interrupt until current low priority interrupts are handled. */
-+	geni_setbits32(se->wrapper->base + QUPV3_COMMON_CFG, FAST_SWITCH_TO_HIGH_DISABLE);
-+
-+	/* Set AHB_M_CLK_CGC_ON to indicate hardware controls se-wrapper cgc clock. */
-+	geni_setbits32(se->wrapper->base + QUPV3_SE_AHB_M_CFG, AHB_M_CLK_CGC_ON);
-+
-+	/* Let hardware to control common cgc. */
-+	geni_setbits32(se->wrapper->base + QUPV3_COMMON_CGC_CTRL, COMMON_CSR_SLV_CLK_CGC_ON);
-+
-+	/* Allows to drive corresponding data according to hardware value. */
-+	writel_relaxed(0x0, se->base + GENI_OUTPUT_CTRL);
-+
-+	/* Set SCLK and HCLK to program RAM */
-+	geni_setbits32(se->base + SE_GENI_CGC_CTRL, PROG_RAM_SCLK_OFF | PROG_RAM_HCLK_OFF);
-+	writel_relaxed(0x0, se->base + SE_GENI_CLK_CTRL);
-+	geni_clrbits32(se->base + SE_GENI_CGC_CTRL, PROG_RAM_SCLK_OFF | PROG_RAM_HCLK_OFF);
-+
-+	/* Enable required clocks for DMA CSR, TX and RX. */
-+	reg_value = AHB_SEC_SLV_CLK_CGC_ON | DMA_AHB_SLV_CLK_CGC_ON |
-+		    DMA_TX_CLK_CGC_ON | DMA_RX_CLK_CGC_ON;
-+	geni_setbits32(se->base + SE_DMA_GENERAL_CFG, reg_value);
-+
-+	/* Let hardware control CGC by default. */
-+	writel_relaxed(DEFAULT_CGC_EN, se->base + SE_GENI_CGC_CTRL);
-+
-+	/* Set version of the configuration register part of firmware. */
-+	writel_relaxed(hdr->cfg_version, se->base + SE_GENI_INIT_CFG_REVISION);
-+	writel_relaxed(hdr->cfg_version, se->base + SE_GENI_S_INIT_CFG_REVISION);
-+
-+	/* Configure GENI primitive table. */
-+	for (i = 0; i < hdr->cfg_items_size; i++)
-+		writel_relaxed(cfg_val_arr[i],
-+			       se->base + SE_GENI_CFG_REG0 + (cfg_idx_arr[i] * sizeof(u32)));
-+
-+	/* Configure condition for assertion of RX_RFR_WATERMARK condition. */
-+	reg_value = geni_se_get_rx_fifo_depth(se);
-+	writel_relaxed(reg_value - 2, se->base + SE_GENI_RX_RFR_WATERMARK_REG);
-+
-+	/* Let hardware control CGC */
-+	geni_setbits32(se->base + GENI_OUTPUT_CTRL, DEFAULT_IO_OUTPUT_CTRL_MSK);
-+
-+	ret = geni_configure_xfer_mode(se);
-+	if (ret)
-+		goto err_resource;
-+
-+	geni_enable_interrupts(se);
-+
-+	geni_write_fw_revision(se, hdr->serial_protocol, hdr->fw_version);
-+
-+	ramn_cnt = hdr->fw_size_in_items;
-+	if (hdr->fw_size_in_items % 2 != 0)
-+		ramn_cnt++;
-+
-+	if (ramn_cnt >= MAX_GENI_CFG_RAMn_CNT)
-+		goto err_resource;
-+
-+	/* Program RAM address space. */
-+	memcpy_toio(se->base + SE_GENI_CFG_RAMN, fw_data, ramn_cnt * sizeof(u32));
-+
-+	/* Put default values on GENI's output pads. */
-+	writel_relaxed(0x1, se->base + GENI_FORCE_DEFAULT_REG);
-+
-+	/* High to low SCLK and HCLK to finish RAM. */
-+	geni_setbits32(se->base + SE_GENI_CGC_CTRL, PROG_RAM_SCLK_OFF | PROG_RAM_HCLK_OFF);
-+	geni_setbits32(se->base + SE_GENI_CLK_CTRL, SER_CLK_SEL);
-+	geni_clrbits32(se->base + SE_GENI_CGC_CTRL, PROG_RAM_SCLK_OFF | PROG_RAM_HCLK_OFF);
-+
-+	/* Serial engine DMA interface is enabled. */
-+	geni_setbits32(se->base + SE_DMA_IF_EN, DMA_IF_EN);
-+
-+	/* Enable or disable FIFO interface of the serial engine. */
-+	if (se->mode == GENI_SE_FIFO)
-+		geni_clrbits32(se->base + SE_FIFO_IF_DISABLE, FIFO_IF_DISABLE);
-+	else
-+		geni_setbits32(se->base + SE_FIFO_IF_DISABLE, FIFO_IF_DISABLE);
-+
-+err_resource:
-+	geni_se_resources_off(se);
-+err:
-+	geni_icc_disable(se);
-+	return ret;
-+}
-+
-+/**
-+ * qup_fw_load() - Initiate firmware load.
-+ * @se: Pointer to a structure representing SE-related resources.
-+ * @fw_name: Name of the firmware.
-+ *
-+ * Load the firmware into a specific SE. Read the associated ELF file,
-+ * copy the data into a buffer in kernel space using the request_firmware API, write the
-+ * data into the SE's IRAM register, and then free the buffers. Handle firmware loading
-+ * and parsing for a specific protocol.
-+ *
-+ * Return: 0 if successful, otherwise return an error value.
-+ */
-+static int qup_fw_load(struct geni_se *se, const char *fw_name)
-+{
-+	int ret;
-+	const struct firmware *fw;
-+	struct device *dev = se->dev;
-+
-+	ret = request_firmware(&fw, fw_name, dev);
-+	if (ret) {
-+		dev_err(dev, "request_firmware failed for %d: %d\n", se->protocol, ret);
-+		return ret;
-+	}
-+
-+	ret = geni_load_se_fw(se, fw);
-+
-+	release_firmware(fw);
-+
-+	return ret;
-+}
-+
-+/**
-+ * geni_load_se_firmware() - Initiate firmware loading.
-+ * @se: Serial engine details.
-+ * @protocol: Protocol (SPI, I2C, or UART) for which the firmware is to be loaded.
-+ *
-+ * If the device tree properties are configured to load QUP firmware and the firmware
-+ * is not already loaded, start the firmware loading process. If the device tree properties
-+ * are not defined, skip loading the firmware, assuming it is already loaded by TZ.
-+ *
-+ * Return: 0 if successful, otherwise return an error value.
-+ */
-+int geni_load_se_firmware(struct geni_se *se, enum geni_se_protocol_type protocol)
-+{
-+	const char *fw_name;
-+	int ret;
-+
-+	if (protocol >= MAX_PROTOCOL) {
-+		dev_err(se->dev, "Invalid geni-se protocol: %d", protocol);
-+		return  -EINVAL;
-+	}
-+
-+	ret = device_property_read_string(se->wrapper->dev, "firmware-name", &fw_name);
-+	if (ret)
-+		return  -EINVAL;
-+
-+	se->protocol = protocol;
-+
-+	if (of_property_read_bool(se->dev->of_node, "qcom,enable-gsi-dma"))
-+		se->mode = GENI_GPI_DMA;
-+	else
-+		se->mode = GENI_SE_FIFO;
-+
-+	/* GSI mode is not supported by the UART driver; therefore, setting FIFO mode */
-+	if (protocol == GENI_SE_UART)
-+		se->mode = GENI_SE_FIFO;
-+
-+	ret = qup_fw_load(se, fw_name);
-+	if (ret)
-+		return ret;
-+
-+	dev_dbg(se->dev, "Firmware load for %s protocol is successful for xfer mode %d\n",
-+		protocol_name[se->protocol], se->mode);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(geni_load_se_firmware);
-+
- static int geni_se_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-diff --git a/include/linux/soc/qcom/geni-se.h b/include/linux/soc/qcom/geni-se.h
-index 2996a3c28ef3..c6c01c3cf819 100644
---- a/include/linux/soc/qcom/geni-se.h
-+++ b/include/linux/soc/qcom/geni-se.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
- 
- #ifndef _LINUX_QCOM_GENI_SE
-@@ -36,6 +37,7 @@ enum geni_se_protocol_type {
- 	GENI_SE_I2C,
- 	GENI_SE_I3C,
- 	GENI_SE_SPI_SLAVE,
-+	GENI_SE_INVALID_PROTO = 255,
- };
- 
- struct geni_wrapper;
-@@ -61,6 +63,8 @@ struct geni_icc_path {
-  * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
-  * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
-  * @icc_paths:		Array of ICC paths for SE
-+ * @mode:		Transfer mode se fifo, dma or gsi.
-+ * @protocol:		Protocol spi or i2c or serial.
-  */
- struct geni_se {
- 	void __iomem *base;
-@@ -70,24 +74,32 @@ struct geni_se {
- 	unsigned int num_clk_levels;
- 	unsigned long *clk_perf_tbl;
- 	struct geni_icc_path icc_paths[3];
-+	enum geni_se_xfer_mode mode;
-+	enum geni_se_protocol_type protocol;
- };
- 
- /* Common SE registers */
-+#define SE_GENI_INIT_CFG_REVISION	0x0
-+#define SE_GENI_S_INIT_CFG_REVISION	0x4
- #define GENI_FORCE_DEFAULT_REG		0x20
- #define GENI_OUTPUT_CTRL		0x24
-+#define SE_GENI_CGC_CTRL		0x28
- #define SE_GENI_STATUS			0x40
- #define GENI_SER_M_CLK_CFG		0x48
- #define GENI_SER_S_CLK_CFG		0x4c
- #define GENI_IF_DISABLE_RO		0x64
--#define GENI_FW_REVISION_RO		0x68
-+#define SE_GENI_FW_REVISION_RO		0x68
-+#define SE_GENI_S_FW_REVISION_RO	0x6c
- #define SE_GENI_CLK_SEL			0x7c
- #define SE_GENI_CFG_SEQ_START		0x84
-+#define SE_GENI_CFG_REG0		0x100
- #define SE_GENI_DMA_MODE_EN		0x258
- #define SE_GENI_M_CMD0			0x600
- #define SE_GENI_M_CMD_CTRL_REG		0x604
- #define SE_GENI_M_IRQ_STATUS		0x610
- #define SE_GENI_M_IRQ_EN		0x614
- #define SE_GENI_M_IRQ_CLEAR		0x618
-+#define SE_GENI_S_IRQ_ENABLE		0x644
- #define SE_GENI_M_IRQ_EN_SET		0x61c
- #define SE_GENI_M_IRQ_EN_CLEAR		0x620
- #define SE_GENI_S_CMD0			0x630
-@@ -109,13 +121,22 @@ struct geni_se {
- #define SE_GENI_S_GP_LENGTH		0x914
- #define SE_DMA_TX_IRQ_STAT		0xc40
- #define SE_DMA_TX_IRQ_CLR		0xc44
-+#define SE_DMA_TX_IRQ_EN_SET		0xc4c
- #define SE_DMA_TX_FSM_RST		0xc58
- #define SE_DMA_RX_IRQ_STAT		0xd40
- #define SE_DMA_RX_IRQ_CLR		0xd44
-+#define SE_DMA_RX_IRQ_EN_SET		0xd4c
- #define SE_DMA_RX_LEN_IN		0xd54
- #define SE_DMA_RX_FSM_RST		0xd58
- #define SE_HW_PARAM_0			0xe24
- #define SE_HW_PARAM_1			0xe28
-+#define SE_DMA_GENERAL_CFG		0xe30
-+#define SE_GENI_FW_REVISION		0x1000
-+#define SE_S_FW_REVISION		0x1004
-+#define SE_GENI_CFG_RAMN		0x1010
-+#define SE_GENI_CLK_CTRL		0x2000
-+#define SE_DMA_IF_EN			0x2004
-+#define SE_FIFO_IF_DISABLE		0x2008
- 
- /* GENI_FORCE_DEFAULT_REG fields */
- #define FORCE_DEFAULT	BIT(0)
-@@ -137,7 +158,7 @@ struct geni_se {
- 
- /* GENI_FW_REVISION_RO fields */
- #define FW_REV_PROTOCOL_MSK		GENMASK(15, 8)
--#define FW_REV_PROTOCOL_SHFT		8
-+#define FW_REV_VERSION_MSK		GENMASK(7, 0)
- 
- /* GENI_CLK_SEL fields */
- #define CLK_SEL_MSK			GENMASK(2, 0)
-@@ -325,9 +346,9 @@ static inline u32 geni_se_read_proto(struct geni_se *se)
- {
- 	u32 val;
- 
--	val = readl_relaxed(se->base + GENI_FW_REVISION_RO);
-+	val = readl_relaxed(se->base + SE_GENI_FW_REVISION_RO);
- 
--	return (val & FW_REV_PROTOCOL_MSK) >> FW_REV_PROTOCOL_SHFT;
-+	return FIELD_GET(FW_REV_PROTOCOL_MSK, val);
- }
- 
- /**
-@@ -531,5 +552,7 @@ void geni_icc_set_tag(struct geni_se *se, u32 tag);
- int geni_icc_enable(struct geni_se *se);
- 
- int geni_icc_disable(struct geni_se *se);
-+
-+int geni_load_se_firmware(struct geni_se *se, enum geni_se_protocol_type protocol);
- #endif
- #endif
-diff --git a/include/linux/soc/qcom/qup-fw-load.h b/include/linux/soc/qcom/qup-fw-load.h
-new file mode 100644
-index 000000000000..08d8a22ae514
---- /dev/null
-+++ b/include/linux/soc/qcom/qup-fw-load.h
-@@ -0,0 +1,89 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+#ifndef _LINUX_QCOM_QUP_FW_LOAD
-+#define _LINUX_QCOM_QUP_FW_LOAD
-+
-+#include <linux/kernel.h>
-+
-+/*Magic numbers*/
-+#define MAGIC_NUM_SE			0x57464553
-+
-+#define MAX_GENI_CFG_RAMn_CNT		455
-+
-+#define MI_PBT_NON_PAGED_SEGMENT	0x0
-+#define MI_PBT_HASH_SEGMENT		0x2
-+#define MI_PBT_NOTUSED_SEGMENT		0x3
-+#define MI_PBT_SHARED_SEGMENT		0x4
-+
-+#define MI_PBT_FLAG_PAGE_MODE		BIT(20)
-+#define MI_PBT_FLAG_SEGMENT_TYPE	GENMASK(26, 24)
-+#define MI_PBT_FLAG_ACCESS_TYPE		GENMASK(23, 21)
-+
-+#define MI_PBT_PAGE_MODE_VALUE(x) FIELD_GET(MI_PBT_FLAG_PAGE_MODE, x)
-+
-+#define MI_PBT_SEGMENT_TYPE_VALUE(x) FIELD_GET(MI_PBT_FLAG_SEGMENT_TYPE, x)
-+
-+#define MI_PBT_ACCESS_TYPE_VALUE(x) FIELD_GET(MI_PBT_FLAG_ACCESS_TYPE, x)
-+
-+#define M_COMMON_GENI_M_IRQ_EN	(GENMASK(6, 1) | \
-+				M_IO_DATA_DEASSERT_EN | \
-+				M_IO_DATA_ASSERT_EN | M_RX_FIFO_RD_ERR_EN | \
-+				M_RX_FIFO_WR_ERR_EN | M_TX_FIFO_RD_ERR_EN | \
-+				M_TX_FIFO_WR_ERR_EN)
-+
-+/* DMA_TX/RX_IRQ_EN fields */
-+#define DMA_DONE_EN		BIT(0)
-+#define SBE_EN			BIT(2)
-+#define RESET_DONE_EN		BIT(3)
-+#define FLUSH_DONE_EN		BIT(4)
-+
-+/* GENI_CLK_CTRL fields */
-+#define SER_CLK_SEL		BIT(0)
-+
-+/* GENI_DMA_IF_EN fields */
-+#define DMA_IF_EN		BIT(0)
-+
-+#define QUPV3_COMMON_CFG		0x120
-+#define FAST_SWITCH_TO_HIGH_DISABLE	BIT(0)
-+
-+#define QUPV3_SE_AHB_M_CFG		0x118
-+#define AHB_M_CLK_CGC_ON		BIT(0)
-+
-+#define QUPV3_COMMON_CGC_CTRL		0x21C
-+#define COMMON_CSR_SLV_CLK_CGC_ON	BIT(0)
-+
-+/* access ports */
-+#define geni_setbits32(_addr, _v) writel_relaxed(readl_relaxed(_addr) |  (_v), _addr)
-+#define geni_clrbits32(_addr, _v) writel_relaxed(readl_relaxed(_addr) & ~(_v), _addr)
-+
-+/**
-+ * struct elf_se_hdr - firmware configurations
-+ *
-+ * @magic: set to 'SEFW'
-+ * @version: A 32-bit value indicating the structure’s version number
-+ * @core_version: QUPV3_HW_VERSION
-+ * @serial_protocol: Programmed into GENI_FW_REVISION
-+ * @fw_version: Programmed into GENI_FW_REVISION
-+ * @cfg_version: Programmed into GENI_INIT_CFG_REVISION
-+ * @fw_size_in_items: Number of (uint32_t) GENI_FW_RAM words
-+ * @fw_offset: Byte offset of GENI_FW_RAM array
-+ * @cfg_items_size: Number of GENI_FW_CFG index/value pairs
-+ * @cfg_idx_offset: Byte offset of GENI_FW_CFG index array
-+ * @cfg_val_offset: Byte offset of GENI_FW_CFG values array
-+ */
-+struct elf_se_hdr {
-+	u32 magic;
-+	u32 version;
-+	u32 core_version;
-+	u16 serial_protocol;
-+	u16 fw_version;
-+	u16 cfg_version;
-+	u16 fw_size_in_items;
-+	u16 fw_offset;
-+	u16 cfg_items_size;
-+	u16 cfg_idx_offset;
-+	u16 cfg_val_offset;
-+};
-+#endif /* _LINUX_QCOM_QUP_FW_LOAD */
--- 
-2.34.1
+Tested on:
+
+commit:         95d3481a Merge tag 'spi-fix-v6.15-rc4' of git://git.ke..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dca17f2d2ba38f7a=
+0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D7b3842775c9ce6b69=
+efc
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D160e20f45800=
+00
 
