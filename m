@@ -1,56 +1,52 @@
 Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3872B199223;
-	Sat,  3 May 2025 04:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536D51A23BA;
+	Sat,  3 May 2025 04:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746245303; cv=fail; b=eq2IE7bf445e7zeTZ5P75sU5yWUST3JZEjhjfgSRCd3i+i/i9UpuhrpqLqihIUWPY7xt6zPMvsUiN0OVmQWReeXxSpJHWzDeabwmfaQbEgQLD9n+N8vd6WLlBwD2VLjxhDBvhZV8ms/Oy3/4XixMmwaodUTuzoH1Lj6cKYTaA6U=
+	t=1746245309; cv=fail; b=ZFUcYxdyYp8BdvXCiqG8M5xkd4H8+ZT0GiRr3lliGawBZ0AN5oEW+haF7UkBzZDX/qRoBCc/cgTOMv3GXfcVfhcFskHmSI/GBvfvQpi4w+Ywb0l+N5rsMfvB/ECJ9VX/2YOBRn2DCxKOK3wvilKByZPvxKkpovc+ug/ZOBr1Rs8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746245303; c=relaxed/simple;
-	bh=Vg5fPo4TpWTgk5fFk/idqn+nRfht3KLHv0ZmssFmwq0=;
+	s=arc-20240116; t=1746245309; c=relaxed/simple;
+	bh=GpM6TxmHpN21nhh4mSbkpgl1Yrcq4xyuHsq3TyHMOn0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R3jqEH+HjMlN4ImyjR8T6B0/Im0dFyIxUwYikZ9rd5rBvGPqg2OyYUIRWYBK27jv4nXP8i1ifcik7UgbTbd82cbObucu1DMBs7PCLQY12dpKi/b/PTWUHsxKUWaOvZ+69M43WSPRfgIRMwaP2BqMXDbet3coeYt9pzceQyTmrp8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rv6gCzyD; arc=fail smtp.client-ip=40.107.243.76
+	 Content-Type:MIME-Version; b=lI7troLGChPEh2XmIrVXArCBGXNbIw688g+itVxj0z+k8CmIRGvRNmRSr5/GWf3PoCoVr48VeDwiY5QomMztlPUuOCtGqqYu1m36weBY1XhpA2Un1FDk3RZAbf+P2kV9bSn3w+uTCzcVDwERPWyiw+Z3lTsp2gXaaQdL1yWWpAE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cjPgxYjI; arc=fail smtp.client-ip=40.107.243.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rv6gCzyD"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cjPgxYjI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IOYAYOZgie47lPBvSpmjBkyB9xJQAfVBp+DHmJxGEkme5habCOfnJF455SD3dwRIgVd3SoCRvYx7rk28ZstIPSY8nvHbEFOcpPa+oes9cUy18aMj8f53v3Z7367Gp69OYS+ud0YMn74Gee7aBoAiGIJNJSPik1hH0jaBAJZUZOgWwItKKCGj73zEGBwWqMRBX6w0v5WikrFvCYgbiMitGjkrxgRlff8ry/Cpi7QXPYExZJ01QGa9qkTosRt+Nns9BJPLe9Fw1o/i5oaLUejtoQ0z/e5ZASdf69yKmPXyD85PZZlHox+u/dRkG7dSiBC0qHEyxdTcTrjcyNpNvQRR9A==
+ b=L2dkItn8PF6T/L6NVwRsgjqAobKw+kqkKhorx+sCWhF/DmJlXvKghnaIpNjT6r8mpOC+hKt/POpIUrJ25cQZjXAULBBJ4tbAJ9OXGBOb88Tp+4VF3wO50JFk0YJijHnqdrJlmrdRIFUv6hU7ZD+X49BSzIfmHmWNEnD+OrnOsMnoBTM7ZokXO54Fh6DvNIFQjS5zklWa3FjTqmaSHkk65lYaCx5EfKOLYNWFzSJpCRe/Yn9pc+6R4vx2ACbHJSI6c9r1mCf6i9+sPN3aZ3qZ9s+IhrPDyxZI6rA9gupbYXXVoMOKnt/yQe6MU4jwPDbm1NIren6EUzkN2ht9Vf8sJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FCEway+8+NeihLFuv1fu+sQbokP6ai9LvEdqlw+FZAM=;
- b=e07EdlQFsw0ru/FhWV5TMWajbL6Pv7/Fm0Q/k+RgEzeqU27GKGTCENOMei+vvdfhb/xVsms32fb3k3e9645WE/JT7GKEvNmXchXrIACkD9Qs18uBx3fH/NTm3dvzLw7ObPwJqLZTI2XG/X+1BVjAw8GQm4StuEpPxtDKFmdAADs/kUqvi6kdHobOoXu/6Y2Sjq3+0diCISavxWTduUJlTYrBih41QZImb+814IUpTefKSiFqETPiRtWmpy/Mi8BtkDbmV2oN/P648cW2CC6yiYRT/pAB60ll42o/L4I4iQy9P0kVkh1wf1R1nTHU1XMq9v3mAjowB+gjnvGKfm4IxA==
+ bh=HJJjYPq7YjhCCFoKY5WRYVF00YL8/1WCa2GeXBHE4xU=;
+ b=ktXwAQGyPhbIF/6b5FD6DVlmSLVHFTuAmbWQEvPB4Qhs9+qqz9YFRpefjB+OWk6/NVw7VUQzexwln5sgBq/g6ryha8vW46bZp78OmsTZd3GuuMpzPl2u3RqZl1ZD47heTXqhBAciNAHMFCtVWr7FjfXYzqog+eqrhWqyhwbyaEN8oA0RXASzSPgzgkwRILJ6kTJk2EEsw7EACfKA3Fqg6Dl8E0T5H8QeXpfGfFII+fcSDpDeYOlUGsVjnMpDFiT20qbW7/+1WWEIDkxQ/EO9fLk3+gBKvFYn0EMp8AoF0qoSCW3dTsfNyPnDBFKdpqCFdC37ondjzUKGE+Jm2OyE4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FCEway+8+NeihLFuv1fu+sQbokP6ai9LvEdqlw+FZAM=;
- b=rv6gCzyD7MkNmlUabD6GbPK4pPml/l4SCYwRyOjEjATVhnVeXSE3i86sJdlo/eu/dMWKJiRH5efsRZmTKC50lWFLyD+OXITQBPmfVNgTo1aUdzWLW1U6zjcbFR1UUyYzJHZ6tk0DxhMuCBATCJMpnyU8ZTi/m+SijYx0KHX4nYEZB0LAYamM0U9Nvqx6yBDtIrScoIvF2xYRrcZKjhbbBHFelVZ/4K0qXqGu/a62GpGLhmTpRNS9fZtjLEWgosX1lA8MT6BakT32s7Ipk1ZIQnZRSpo5QLaHZBbNnfK1DacSWPo59KjLdZ2MM5aK+rSIpTHMdsdXrH3AqKHkeTtUIA==
+ bh=HJJjYPq7YjhCCFoKY5WRYVF00YL8/1WCa2GeXBHE4xU=;
+ b=cjPgxYjIGxwchM0NGhGI1/P1cPK9DxvqzXVlxQEeY9F2Jz7c7XmlJKNdxwx2B9YorSVK+4quCx44IEZYLIXjlAgIalu165kAunHtiAFiwl6dgyarreubms7Gjhr8H9yLngCPWXKfcEYma6kkca10Q3zQfPLKy2JcdcOAL2u8IL8gXwHOE+pbGPlVkhraGUSArJ1BgUeuQwqGU0UG+XDDLAdxRzvpfNC/AG7Ga+WseIDhY0kXqlfpbrt5d11sJ0aUPlGk2V0KxRDD7F+QCcWQb9Kh5WMhiBZ7utj444Ra/UgEH8pVHWtaeKoXx6JBREw2XOUaIcL7Iit9VhKGbXj8bQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
  by CH3PR12MB7713.namprd12.prod.outlook.com (2603:10b6:610:14d::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Sat, 3 May
- 2025 04:08:17 +0000
+ 2025 04:08:23 +0000
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.021; Sat, 3 May 2025
- 04:08:16 +0000
+ 04:08:23 +0000
 From: Joel Fernandes <joelagnelf@nvidia.com>
 To: linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>,
 	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>
+	Simona Vetter <simona@ffwll.ch>
 Cc: nouveau@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	Alexandre Courbot <acourbot@nvidia.com>,
@@ -60,18 +56,17 @@ Cc: nouveau@lists.freedesktop.org,
 	Timur Tabi <ttabi@nvidia.com>,
 	Ben Skeggs <bskeggs@nvidia.com>,
 	rust-for-linux@vger.kernel.org,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2 4/7] nova-core: docs: Document fwsec operation and layout
-Date: Sat,  3 May 2025 00:07:56 -0400
-Message-ID: <20250503040802.1411285-5-joelagnelf@nvidia.com>
+	Joel Fernandes <joelagnelf@nvidia.com>
+Subject: [PATCH v2 7/7] gpu: nova-core: Clarify falcon code
+Date: Sat,  3 May 2025 00:07:59 -0400
+Message-ID: <20250503040802.1411285-8-joelagnelf@nvidia.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250503040802.1411285-1-joelagnelf@nvidia.com>
 References: <20250503040802.1411285-1-joelagnelf@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN9PR03CA0041.namprd03.prod.outlook.com
- (2603:10b6:408:fb::16) To SN7PR12MB8059.namprd12.prod.outlook.com
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0040.namprd03.prod.outlook.com
+ (2603:10b6:408:fb::15) To SN7PR12MB8059.namprd12.prod.outlook.com
  (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,302 +76,152 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CH3PR12MB7713:EE_
-X-MS-Office365-Filtering-Correlation-Id: 389378ae-e389-44cf-dcda-08dd89f821a2
+X-MS-Office365-Filtering-Correlation-Id: 27ca6ca1-7f5e-4623-25bb-08dd89f82580
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RlZsSDNTamxnc2JFd3pLNk1wc1ZvQ1NKWDBCRStnK2xGME1GNkFkdWxmSVN1?=
- =?utf-8?B?dlU2VEZwVUhyWmZLNVY3M0QrYS93VjhZNDYvYnkvWnF0UjVraGpPSzkzaStu?=
- =?utf-8?B?T2FaeDhlOVVRQVE2ZkxwUDhQd0JhdkJGME9hNnZ1eWg5VERRSDVpazRrd3Z6?=
- =?utf-8?B?OXgvSlQvMndNcis3THozTDB4WVYwdVhhV1E0Rmo4R1laSWxhN2Rhbk53WnM1?=
- =?utf-8?B?U1ZldXl0T3lTc2Ztd09qOVlWVlhuQ0RrRVpkOEV3eDd1K3hweTdTWGhPTktS?=
- =?utf-8?B?OUhzMFN1TlR3Vm1ybGpjemY3ZVZlNSsrSlNXckZmN0tEdVhzU0UvcmcvQ0Rv?=
- =?utf-8?B?ZTJnVnFBdFlqZWRiaUNVRXBjTXlML2FiNUZlVHdHbm1YSjVXMmptSTZ6eUhj?=
- =?utf-8?B?TUE3QnBPT1l5U0lud2ZSNzRJdTNhc29meTRObnpKZk9zZC85OXN2YXhra1R1?=
- =?utf-8?B?Y3JldFp5Vm43eUxqMWx6MzVFMlkrQ0tNbksyZDhNaHJCbmJ3ZjJxYWFiTUpL?=
- =?utf-8?B?VHAzOHludFlOOGJGQ3duY3NoV00xTnNOQUZ1NkdmekoxaEhTVFFvTjhLVWgx?=
- =?utf-8?B?RFFZQXRJeW02QjZZbjJWTGxhZnhoRmZBK2YzRHdWWnBHbWpieU9DeEMxQjI1?=
- =?utf-8?B?R2VoTmtDalBxQXFEWTJQVlhyVENKb0RnaUNlUGQ2ZHA5N09JbDZUS0VMVFNu?=
- =?utf-8?B?WXZBUmFBOWxPVklMeExMVy9PdzNDSUgzaTFONGppeHdLa29ad0NGRkR2eklN?=
- =?utf-8?B?b2VsOE9pclVVWnpEdHlSU3ZxVkFVVWFRcVRWd09GQmNiT05zanJLUzR0Tk5y?=
- =?utf-8?B?dWdCR2hnU1gzQWJzamw5a21pNjE4QlRERWhkaFlYVFhsZ2srV2taallRWnRT?=
- =?utf-8?B?YkI4cDJGZmdxcFk1MWdFOUd6djVUQVgxaWM2Nks3VlNLSE5YQy83Tm81MzRS?=
- =?utf-8?B?ODJPU245TEQwV1lMTndQMXp5anQ1dmVVOFphS1l3TllRRUdPUWpDNTF1MkN3?=
- =?utf-8?B?SU9FM0xBRTRVZkEyWkdzM0Z4UW5OL2lpUlNTSXgrVmQ0TEZiQWlMbVJGRDI5?=
- =?utf-8?B?ZXJSbEtzYzIxSFJtL2p2cWxqQnMzbzNMOERibC90b25vU2NUZlMyVTI0YmlE?=
- =?utf-8?B?UU1MYkNvNTNRNHZpMXVpbHJjUE5zREt6aEVIK3RlL2dQU3dJd3ArWk9xaDNJ?=
- =?utf-8?B?aTlQbDl3emNjaWZtWXFiYkxPYkdEY3VQKysyb01YMzdlRSsvcU5INllMbk45?=
- =?utf-8?B?bXFMWXZYeHRMN1RzbVJhdnVxK0ZUb25EQjVqRzdBTkNlWU1tWFFFOFV2d0Rl?=
- =?utf-8?B?czU4ZDNCdENZeFZmdDliZks1SHlGbVBmWHJWdVd6aVNBVnduaGRuMzVyWFlu?=
- =?utf-8?B?MTBuRVFHa1R4VzFpUGpSdzJwNk5jL1hIVGhWTGhaczhkamFldjFacmREWmxW?=
- =?utf-8?B?QkM0R3JNOHU1MkdtMGN2UE8vY2d5czhwSml5clU3VVpMOTFxdG5zR3I4MDBS?=
- =?utf-8?B?bVZ6anlKQTdhOG50bU50N1dXWmozZm1FNWp0NVA1TWI1VEhFbk5EeXp6aHh0?=
- =?utf-8?B?U1hnaG1KTUdIRG4wakpnV2ZPbEtqZkwvS3M0K2xjbkx4N0YwTDRzR0tnNUhs?=
- =?utf-8?B?dElYWk1GVVlMK3FPeHh3Z3N6RW15ZktEVXdQSitvUzFtYVIza1BSK0Rrd3Ju?=
- =?utf-8?B?Rkh3NTBwTDZGOTQxa2xEL1laYStXYnFLb1N3U0NPZ3d1Q1dQc2pDSnNONENk?=
- =?utf-8?B?WjhUdHZQaUVtL3EvbnJMWlVLQzE1NnlyVDdSNmVYOFdiaU9hVTc5UW1UU0wz?=
- =?utf-8?B?K0tQa2d5eFVjbHRiZ1ovQXRoMHl1RllkQmR4Mkg1dkZVZVlBWjd4Q1VxQk9z?=
- =?utf-8?B?Ui9BSnczRGVoOVpPTlY0bkQ4YWtKTmRvazdpS0Z2bWt0R1E9PQ==?=
+	=?us-ascii?Q?0QVTLBIRN02DsNXEau+kUdxh7jQnY8S4NfBPGd9mB/gVwNUCb8LsCZg3zdL9?=
+ =?us-ascii?Q?PoLrDmE1ddP7T4xTc3kxnS1i73EoVm7RMwxTo373G/LI6A5VidCWPc7bjo0N?=
+ =?us-ascii?Q?Y03yn7ck+atqct/0bm94zHQvZBw3Fsc654IZWJRWOYahOTg5JvoxYqPP+Geq?=
+ =?us-ascii?Q?/3xSZjbmXPEqdRpFfpI99cCHOdA1LH+yYTUp7YghdK7SdeaM+/rMQQ9n0xGY?=
+ =?us-ascii?Q?jWRWHf3gHdYuRz7OgL/WQlNYveqzuTNyEcUznMB27sMmO6NE2exeYojVnWvm?=
+ =?us-ascii?Q?nXaeKrgmyt05H9As8VClvueIzF9prlJehvgnY+CWViV3fYeAPKsmfgwtaFND?=
+ =?us-ascii?Q?BiVXEB8lv0vOaHqU0m7tMl8GtTwqjIoK8rvJKgy+ypRTFuHJSj/47QjcQgFw?=
+ =?us-ascii?Q?NgG0ZsCXHA60njKorzGnhyeHWHZye/1TJ+sjInrK6aw2Y1VHcygglmrEBM46?=
+ =?us-ascii?Q?OVvlUzi6rdc/bdNQSQgxz2KdZm/DxDwXrp3QWAu00uij4YcoE/qTR43rudXZ?=
+ =?us-ascii?Q?0HaPaZlsCg+XVo/zGpdgOTQXvq4UEc4ljjsGImMViGuTcT1bJ+yWte0wtuiX?=
+ =?us-ascii?Q?xEdKjKam4fweB0lvirB7JwvPBBoDFUdgfJMopHRUHSuqo82hHSJa/SBjtQNi?=
+ =?us-ascii?Q?UoNcffNno7+QYfVk7uschpICb+9rLhYVECSxbinrnCnuYMxVRcBNxeP3FWrY?=
+ =?us-ascii?Q?yBGE4QUSBo0EwjPrUUbyw/lbyO3a31Oj5RJS5MK6WHQSDq0TNg1YRdC50YMg?=
+ =?us-ascii?Q?gvPVXvxmEKU6V5hKnwhafJxqluhxxgJXHOaq3ge/aaRubEPAeCDNjdgbaxIg?=
+ =?us-ascii?Q?4qktx5ugimcP75tl7JecZFnXmgn6d5mbrTqDUIkFjRjHdK6WadSmvGqIKuoQ?=
+ =?us-ascii?Q?j891jcXsz7GKNLzeAto23+owo46mWR7hmsu4OfI1aboEJ418Ngbq2UWYW6fR?=
+ =?us-ascii?Q?k3+JUoBUE4pHdHECIK/64ZbtD+Oz1HC/2BuQLl3/AkYkwRJNjBd+GvIIT91a?=
+ =?us-ascii?Q?rhDyTVuUpRymd6nzkegembwbbWFiKn7eqTqYgUaFp57c2RdaTw5H/Z/I03Db?=
+ =?us-ascii?Q?eI1LYykeTdJygl8YMWy5Dl4jC6BAVmEvdpCvFbkyReSjIU7lKRnlqGJl8XrQ?=
+ =?us-ascii?Q?JUhIOJC4qnxIaUEXtErb2JCiHIpeir/6vNWkOenxtA8ZC4oLEM+5wml6OIx7?=
+ =?us-ascii?Q?QVap7GrMCKfUIBa4xYIU/DbX4LTnE8zt3EOTqTyC+wm9nkjxezjQE4CJd492?=
+ =?us-ascii?Q?GltX0UBK5oHCOq0YDSXTRhFSK/+fglq8cPvcD9tEJW7bpcX3IwHUgiEcpiVU?=
+ =?us-ascii?Q?mjB5zCKF6/g419SNpj1LfW06VqZ/2ZAWp3vMB1E+IQA5gdBas416vBvCo2U7?=
+ =?us-ascii?Q?ZqqxMxQxgjYqpVXNLldDsbD64zRUQCxyWl7YVQlASyIv/SD3BX2fOMR8QZKO?=
+ =?us-ascii?Q?4Ez0O0OBEo8=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dU4rL08vMUI3Y0E3S1ZNRVR6UEZsWjRlZ0tvbkdEN3Q5QlA0QW9zNHdvZ2hE?=
- =?utf-8?B?QzdPSUxmdThFdERZRkJOSzlLcGk1NWFiUUdDK1A2UUlzR3NSVDluZEN6U25t?=
- =?utf-8?B?V2QvTW54L0ttTElYbFF0VmtiVW5rOE53T0JvL1d6c05JT0RzMVJ1bXQ1ZDE5?=
- =?utf-8?B?VEZiZTNRMHZ3T05GQlI2WCtTQTF3aFRGQjZ4cFZRQXhxUTViZ3k3eWJoQmxS?=
- =?utf-8?B?a2tuOFlIUHA3RW9JU3BsZFk1WnV0SnE1Q2FwK3p0L0FLSWRyVE9BcjZSczlN?=
- =?utf-8?B?bldWMlRCQURlSTN6UTFpM0pQTFNjbTVWTTVicG5ibVhaeTh0c0VkRXIrTG4y?=
- =?utf-8?B?MkEzSFBvL2hlYThZSHZmMXoxVldtMHdjMFRqRWZ3YjFqNW9haGJERHVHU2s1?=
- =?utf-8?B?bW9kMU5tcjRLTTQzTDg3ZXRLbU1rUFBWd254WUFQWWladHJBWDREQ3hpQm5V?=
- =?utf-8?B?TExNVkpob3R4UnBCNXE5Z2Y3dlgvSVZKaU9uUGEyUFVEejdIL2hyT0graW9V?=
- =?utf-8?B?TEhiN2I4R1E5ejZIN25Cc2JuencyWFhCanZXcFFSeVBHSThNWkhMNStGTEF3?=
- =?utf-8?B?aG13dWE3eHhLWUxHVzRTaG5pd2ZISDRXd1NkMHRrcmkzK0NkMlMyZURFM0tr?=
- =?utf-8?B?NERDcHhyM0trMXBGTzRjcWpNZFZEaTQ2Y0xoRU9la1ByUmpVL1hXeGIvcU44?=
- =?utf-8?B?b0Q2WWRBV1hMU3BJQ0wzS3lwUndHVkx0L0VpYVZxTUNCYlhmTC9acUdUYWtN?=
- =?utf-8?B?Yk9zOTRDMjJYeksyaGxTblVsNFllRTkyeURVMGg4Y2pzNU1FaVMyT2ZhZlE3?=
- =?utf-8?B?NC9jRkRFNFVpRzQweW5OOExoS2N5UHlYWnVSNm5PM1VYR05YeUthdXBxbldZ?=
- =?utf-8?B?alF5eWt4ZXhucHlyTnZuYmdMbS9idHhKaGhQL3JRWG9VZ1psaEo0ZmxtaXZQ?=
- =?utf-8?B?eXdxSkxZaVlsOW1jVndNaHB0aE5BK2dUMTloLzRHUFo2aHBOWXZnT2dwTGZv?=
- =?utf-8?B?MUVESEpjdXA4d1V6ZTFDc1JnSG5yYmNmdmFXTFNXTkRLYVBaSlpSS1R6STN0?=
- =?utf-8?B?ZzFDSW9ySi9sb3pVNnRHSnlYZXU0NWFJdnIrVEd6WkFyNDRkVTI0QUd2NzFj?=
- =?utf-8?B?c0lwL1FxdzJSUnJLLytTZWMzeWRSV1owNmdjY2JVME9iZEZOOHd0bnJ4bUpV?=
- =?utf-8?B?MWsxOGFUemZlbk93YjA5d0t2LzVKU0hYMUtWV1AyYXU3LzFMMS9NcFJncjBm?=
- =?utf-8?B?SFo4U0JaamRMcktHR285cjVZSlN4eUpZSDdwNHBudGRZemFDUElpLytsVWVq?=
- =?utf-8?B?bXYzNFFkdU9UdHNmeHdJbWkybkdBSStqVnFocFBRTmZNUG1ZMUg4MFhpYm1G?=
- =?utf-8?B?TnlsUSs1ZjkwL0U4R2p5SkxRR3Evem1Ca0xlWkN2UlFQSWl4T2NVM1hTUkRH?=
- =?utf-8?B?ODNja2E1RDVaUHdOaUJJM1RvTnVZVjBQbzJLNkcvQUVua0JsVDZRcFVKblQx?=
- =?utf-8?B?VWpOUFNsUGNOQzRUcVVoVGo2V1Y1bkk1NkFaT2tjcGxMNUo0a2pXM1RiMU80?=
- =?utf-8?B?Wlg3NHg1WThEdEJlZkJGYnhZK2NOTGZyZHYwSU11VEprajI5YzI3bVBTWWRX?=
- =?utf-8?B?RVZ2R09LZjdoT05WMGNSS0pvc3JVdWFFYUF6MC9mNU1aMkJoUW85a1p3ZDVN?=
- =?utf-8?B?VXd1ajJhUDIwTlNKL0NMQjZEUE1xVnVaanBWZUI0amQ2VGRnVk9rYmRRUFov?=
- =?utf-8?B?UHYwbURVam9uVVl1Q1BqMmVJbWljUGcvNzNPamNoT3pTOTR2Zlhmd25tM1gz?=
- =?utf-8?B?RjFFcWRTdzlob1BqNzhRNTVUUWhNejY5aVBXRGoxTE5iQ2IxcUcwdTYvUFdO?=
- =?utf-8?B?SGRBWFhZd0QxVTdWUnNTYVZFSXU2RzVDUTBkbDRGUER0RjlVK2VYTUFpL1hW?=
- =?utf-8?B?blZIUHAzSUZHOFplenNDV1l2bGwwaHRzazRDa2tmYU1MbHZxa1lmdCsrTDFp?=
- =?utf-8?B?bE5YWWwrNEhTdmZ2THpLUm9TY0ZHZDZUU0xKcmVhR0hUdjJtalkwaE0yV2lh?=
- =?utf-8?B?QmFzbzV0Z1J4MFMwZk9JeXpoendUUjFmZkphOWgxdGM5cEVqRUlUU2JVc0Uz?=
- =?utf-8?Q?I7SUpkLIly0XNVJdfFu2TuuHj?=
+	=?us-ascii?Q?bD/fhTM5f+m+/LrjAfkf9kBLP6BJtclKhyoe8zlbxid5IMKr/gmHoNIQBS71?=
+ =?us-ascii?Q?SYKCmG58UKvSojleCC4HDGnKS10ZjrVPX6SL/qmJY496JzRnTRbZ7f1QM7bG?=
+ =?us-ascii?Q?9C50/CgnnCNA4ZmUq9rCfN1rpWKDneHfjRDCzT/hOWi/d9T4e8+oGtzle7ST?=
+ =?us-ascii?Q?h6JDO9gT3HwTeXJuqoCiuFiTs+zTHRIhf1O9/jSTlmXsWMZMKDgpu+oMvhXQ?=
+ =?us-ascii?Q?0l6WBufdzJKneXb7hwVCwBUC8LJK2cdDpz3NebfBn/xUuNGGQZA8J9NYWxAl?=
+ =?us-ascii?Q?q+mCLLzaZGm6mxC89SLOtrs0UkLN+mc7Wl+Cwn8upweO2J7bAULl7n9PjF5P?=
+ =?us-ascii?Q?z69YfMCgCsLJuA58F8QGTo5BKMXf4Bx1IkFcD+AwzwqvOk9G96fxyMR26u+9?=
+ =?us-ascii?Q?ifg2mmNHPMviCkJXhXRBBRc5u+NR+5TSGZJwZJKlFV0xKYKPjGFTX9Ls3PxW?=
+ =?us-ascii?Q?K13yhVywquqfpywsn6UAR+mE+MgJfn79VXpphndnbVf2nlAGXylvbyZmkVQ4?=
+ =?us-ascii?Q?EogFovyKy/FKlVNLyCXp4jLw3y4xewEXGvO45NypVmdauI1NkdbNKLLXmYxa?=
+ =?us-ascii?Q?p4WD+Z+H7Dm/fv1AjPlKywwz45wyo8kUhiVs8Pvp+quUHvPNdkNoWUWjuXvh?=
+ =?us-ascii?Q?hYGGFjMxUlzaVrk+ANV0UGxsRT1PMxoGOPyJ/Lg4UzBVE+nhz12ePd43Um+1?=
+ =?us-ascii?Q?ZuaFBM4/9AkYSF/uhtSaICCtnm0dm7Q8msHOkz2KQNGSN7vBvVXsIs6PRNt/?=
+ =?us-ascii?Q?nV/uSv61MhLfeOrqhe2ro+31y6/fVGoMVzNmudzj0SreDBEKnD3fjViONd/a?=
+ =?us-ascii?Q?eLWPOaXvOu0xV27TR8d2ae+SryxLnyBxN2llDA3v8QciHinSGJQmuW3BMA8D?=
+ =?us-ascii?Q?+o3D9M40xIiiO27Q3MRzppRHHBJyxl5M5iCOHQnWPnq3AmlVoi7PIe0ve6D/?=
+ =?us-ascii?Q?ZshiddMcKlHxXIpSi9XlTjjrlezzvjqGu7hJP969tr9t0V9Y17GHpsU0QZH6?=
+ =?us-ascii?Q?Y3WhTKQDbs3S7NydBx9numkMvmvd74Smiy3SADiY5sqt2x+HduVqry59cR7z?=
+ =?us-ascii?Q?5vSop265lTN4+f1rGGpwLghOGLZ9LjkArh7r4bTNBUbqPkwam2o2B0MDAi7d?=
+ =?us-ascii?Q?VdxOHhiL94OpleQTyq6xfANs/IN5Y6ZTK3NKgXYXEyXEZBXxqU7YLu1JNC17?=
+ =?us-ascii?Q?kEtV+XGStC3QD43xORlUxAxTBis2VdJvdz4wI6LPr+qXWJpdHLfV2KvYPa/Q?=
+ =?us-ascii?Q?GmJZejAWTk0DMQ5obDgjoD9qgPjvtY8B2yoFdN79b7xKB4uSabGTzibMhafo?=
+ =?us-ascii?Q?mqeg36K/LimcqoyqDiLcOlh82chsGZgs3lE/haurutxMa08NoM7ZnEg3o7X5?=
+ =?us-ascii?Q?TPp63A6ICmAMpddMWSgBf1l/lDYTL5fmP8OsDX0e1OL2HWTEVM/pVzKafLjG?=
+ =?us-ascii?Q?hQzY2bjwfAM99Fucezi7+dnJL3t3NI3/V2a4oKV4+AavPhvcaSo/V6AL1nG2?=
+ =?us-ascii?Q?8McAIHW/ywKHburQphY9CMdyhHo8ifOiaIpQr9E6QlfBJiAzxFhZLeKGnKkz?=
+ =?us-ascii?Q?bCqo/1+530iFcz+rhJQ0Ttk12IGqCfq3ywP7apFT3+wwdQc4T6Rx5Yn+Gxm3?=
+ =?us-ascii?Q?VQ=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 389378ae-e389-44cf-dcda-08dd89f821a2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27ca6ca1-7f5e-4623-25bb-08dd89f82580
 X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 04:08:16.6555
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 04:08:23.1736
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u1vJ1QELDf+voDp2MgP9LO2Vad5TvN7dn7dfkySbKkMSgsxM8U9e87GAARMs/9u7EiYBQxdFQOyw1CaUPzcFsA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZopAqv543i91Vn3RGTvIRhEi3k1byT/OJTJy4trVsg3P+YAfh9vLUenMYdMlfb6sLePJN9VCLqhC21RODBcRaw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7713
 
-Add explanation of fwsec with diagrams. This helps clarify how the
-nova-core falcon boot works.
+Add documentation strings, comments and AES mode for completeness
+to the Falcon signatures.
 
 Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 ---
- Documentation/gpu/nova/core/fwsec.rst | 180 ++++++++++++++++++++++++++
- Documentation/gpu/nova/index.rst      |   1 +
- 2 files changed, 181 insertions(+)
- create mode 100644 Documentation/gpu/nova/core/fwsec.rst
+ drivers/gpu/nova-core/falcon.rs | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/gpu/nova/core/fwsec.rst b/Documentation/gpu/nova/core/fwsec.rst
-new file mode 100644
-index 000000000000..bed941ac3f2b
---- /dev/null
-+++ b/Documentation/gpu/nova/core/fwsec.rst
-@@ -0,0 +1,180 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+=========================
-+FWSEC (Firmware Security)
-+=========================
-+This document briefly/conceptually describes the FWSEC (Firmware Security) image
-+and its role in the GPU boot sequence. As such, this information is subject to
-+change in the future and is only current as of the Ampere GPU family. However,
-+hopefully the concepts described will be useful for understanding the kernel code
-+that deals with it. All the information is derived from publicly available
-+sources such as public drivers and documentation.
-+
-+The role of FWSEC to provide secure boot, it is running in Heavy-secure mode. It does
-+firmware verification after GPU reset and load various ucode images on to the other
-+microcontrollers on the GPU such as the PMU and GSP.
-+
-+FWSEC itself is an application stored in the VBIOS ROM in the FWSEC partition of
-+ROM (see vbios.rst for more details). It contains different commands like FRTS
-+(Firmware Runtime Services) and SB (Secure Booting other microcontrollers after
-+reset and loading them with other non-FWSEC ucode). The kernel driver only needs to
-+to do FRTS, since SB is already already after reset by the time the kernel driver
-+is loaded.
-+
-+The FRTS command carves out the WPR2 region (Write protected region) which contains
-+data data required for power management. Once setup, only HS mode ucode can
-+access it (see falcon.rst for privilege levels).
-+
-+The FWSEC image is located in the VBIOS ROM in the partition of the ROM that contains
-+various ucode images (also known as applications) -- one of them being FWSEC. For how
-+it is extracted, see vbios.rst and the vbios.rs source code.
-+
-+The Falcon data for each ucode images (including the FWSEC image) is a combination
-+of headers, data sections (DMEM) and instruction code sections (IMEM). All these
-+ucode images are stored in the same ROM partition and the PMU table is used to look
-+up the application to load it based on its application ID (see vbios.rs).
-+
-+For the purposes of nova-core driver, the FWSEC contains an 'application interface'
-+called DMEMMAPPER which is used to the "FWSEC-FRTS" command (among other commands it
-+is capable of executing). For Ampere, FWSEC is running on the GSP in Heavy-secure
-+mode and runs FRTS.
-+
-+FWSEC Memory Layout
-+-------------------
-+The memory layout of the FWSEC image is as follows (this is using an GA-102
-+Ampere GPU as an example and could vary for future GPUs and is subject to change
-+completely, it is just provided as an example):
-+
-+Here is a block diagram of the FWSEC memory layout::
-+ ┌───────────────────────────────────────────────────────────────┐
-+ │                         FWSEC ROM image (type 0xE0)           │
-+ │                                                               │
-+ │  ┌─────────────────────────────────┐                          │
-+ │  │     PMU Falcon Ucode Table      │                          │
-+ │  │     (PmuLookupTable)            │                          │
-+ │  │  ┌─────────────────────────┐    │                          │
-+ │  │  │ Table Header            │    │                          │
-+ │  │  │ - version: 0x01         │    │                          │
-+ │  │  │ - header_size: 6        │    │                          │
-+ │  │  │ - entry_size: 6         │    │                          │
-+ │  │  │ - entry_count: N        │    │                          │
-+ │  │  │ - desc_version:3(unused)│    │                          │
-+ │  │  └─────────────────────────┘    │                          │
-+ │  │         ...                     │                          │
-+ │  │  ┌─────────────────────────┐    │                          │
-+ │  │  │ Entry for FWSEC (0x85)  │    │                          │
-+ │  │  │ (PmuLookupTableEntry)   │    │                          │
-+ │  │  │ - app_id: 0x85 (FWSEC)  │ ───┼────┐                     │
-+ │  │  │ - target_id: 0x01 (PMU) │    │    │                     │
-+ │  │  │ - data: offset ─────────┼────┼────┼───┐ look up FWSEC   │
-+ │  │  └─────────────────────────┘    │    │   │ application.    │
-+ │  └─────────────────────────────────┘    │   │                 │
-+ │                                         │   │                 │
-+ │                                         │   │                 │
-+ │  ┌─────────────────────────────────┐    │   │                 │
-+ │  │     FWSEC Ucode Component       │<───┘   │                 │
-+ │  │     (aka Falcon data)           │        │                 │
-+ │  │  ┌─────────────────────────┐    │        │                 │
-+ │  │  │ FalconUCodeDescV3       │<───┼────────┘                 │
-+ │  │  │ - hdr                   │    │                          │
-+ │  │  │ - stored_size           │    │                          │
-+ │  │  │ - pkc_data_offset       │    │                          │
-+ │  │  │ - interface_offset ─────┼────┼────────────────┐         │
-+ │  │  │ - imem_phys_base        │    │                │         │
-+ │  │  │ - imem_load_size        │    │                │         │
-+ │  │  │ - imem_virt_base        │    │                │         │
-+ │  │  │ - dmem_phys_base        │    │                │         │
-+ │  │  │ - dmem_load_size        │    │                │         │
-+ │  │  │ - engine_id_mask        │    │                │         │
-+ │  │  │ - ucode_id              │    │                │         │
-+ │  │  │ - signature_count       │    │    look up sig │         │
-+ │  │  │ - signature_versions --------------+          │         │
-+ │  │  └─────────────────────────┘    │     │          │         │
-+ │  │         (no gap)                │     │          │         │
-+ │  │  ┌─────────────────────────┐    │     │          │         │
-+ │  │  │ Signatures Section      │<───┼─────┘          │         │
-+ │  │  │ (384 bytes per sig)     │    │                │         │
-+ │  │  │ - RSA-3K Signature 1    │    │                │         │
-+ │  │  │ - RSA-3K Signature 2    │    │                │         │
-+ │  │  │   ...                   │    │                │         │
-+ │  │  └─────────────────────────┘    │                │         │
-+ │  │                                 │                │         │
-+ │  │  ┌─────────────────────────┐    │                │         │
-+ │  │  │ IMEM Section (Code)     │    │                │         │
-+ │  │  │                         │    │                │         │
-+ │  │  │ Contains instruction    │    │                │         │
-+ │  │  │ code etc.               │    │                │         │
-+ │  │  └─────────────────────────┘    │                │         │
-+ │  │                                 │                │         │
-+ │  │  ┌─────────────────────────┐    │                │         │
-+ │  │  │ DMEM Section (Data)     │    │                │         │
-+ │  │  │                         │    │                │         │
-+ │  │  │ ┌─────────────────────┐ │    │                │         │
-+ │  │  │ │ Application         │ │<───┼────────────────┘         │
-+ │  │  │ │ Interface Table     │ │    │                          │
-+ │  │  │ │ (FalconAppifHdrV1)  │ │    │                          │
-+ │  │  │ │ Header:             │ │    │                          │
-+ │  │  │ │ - version: 0x01     │ │    │                          │
-+ │  │  │ │ - header_size: 4    │ │    │                          │
-+ │  │  │ │ - entry_size: 8     │ │    │                          │
-+ │  │  │ │ - entry_count: N    │ │    │                          │
-+ │  │  │ │                     │ │    │                          │
-+ │  │  │ │ Entries:            │ │    │                          │
-+ │  │  │ │ ┌─────────────────┐ │ │    │                          │
-+ │  │  │ │ │ DEVINIT (ID 1)  │ │ │    │                          │
-+ │  │  │ │ │ - id: 0x01      │ │ │    │                          │
-+ │  │  │ │ │ - dmemOffset X ─┼─┼─┼────┐                          │
-+ │  │  │ │ └─────────────────┘ │ │    │                          │
-+ │  │  │ │ ┌─────────────────┐ │ │    │                          │
-+ │  │  │ │ │ DMEMMAPPER(ID 4)│ │ │    │                          │
-+ │  │  │ │ │ - id: 0x04      │ │ │    │ Used only for DevInit    │
-+ │  │  │ │ │  (NVFW_FALCON_  │ │ │    │ application (not FWSEC)  │
-+ │  │  │ │ │   APPIF_ID_DMEMMAPPER)   │                          │
-+ │  │  │ │ │ - dmemOffset Y ─┼─┼─┼────┼─────┐                    │
-+ │  │  │ │ └─────────────────┘ │ │    │     │                    │
-+ │  │  │ └─────────────────────┘ │    │     │                    │
-+ │  │  │                         │    │     │                    │
-+ │  │  │ ┌─────────────────────┐ │    │     │                    │
-+ │  │  │ │ DEVINIT Engine      │<┼────┘     │ Used by FWSEC      │
-+ │  │  │ │ Interface           │ │    │     │         app.       │
-+ │  │  │ └─────────────────────┘ │    │     │                    │
-+ │  │  │                         │    │     │                    │
-+ │  │  │ ┌─────────────────────┐ │    │     │                    │
-+ │  │  │ │ DMEM Mapper (ID 4)  │<┼────+─────┘                    │
-+ │  │  │ │ (FalconAppifDmemmapperV3)  │                          │
-+ │  │  │ │ - signature: "DMAP" │ │    │                          │
-+ │  │  │ │ - version: 0x0003   │ │    │                          │
-+ │  │  │ │ - Size: 64 bytes    │ │    │                          │
-+ │  │  │ │ - cmd_in_buffer_off │ │────┼────────────┐             │
-+ │  │  │ │ - cmd_in_buffer_size│ │    │            │             │
-+ │  │  │ │ - cmd_out_buffer_off│ │────┼────────────┼─────┐       │
-+ │  │  │ │ - cmd_out_buffer_sz │ │    │            │     │       │
-+ │  │  │ │ - init_cmd          │ │    │            │     │       │
-+ │  │  │ │ - features          │ │    │            │     │       │
-+ │  │  │ │ - cmd_mask0/1       │ │    │            │     │       │
-+ │  │  │ └─────────────────────┘ │    │            │     │       │
-+ │  │  │                         │    │            │     │       │
-+ │  │  │ ┌─────────────────────┐ │    │            │     │       │
-+ │  │  │ │ Command Input Buffer│<┼────┼────────────┘     │       │
-+ │  │  │ │ - Command data      │ │    │                  │       │
-+ │  │  │ │ - Arguments         │ │    │                  │       │
-+ │  │  │ └─────────────────────┘ │    │                  │       │
-+ │  │  │                         │    │                  │       │
-+ │  │  │ ┌─────────────────────┐ │    │                  │       │
-+ │  │  │ │ Command Output      │<┼────┼──────────────────┘       │
-+ │  │  │ │ Buffer              │ │    │                          │
-+ │  │  │ │ - Results           │ │    │                          │
-+ │  │  │ │ - Status            │ │    │                          │
-+ │  │  │ └─────────────────────┘ │    │                          │
-+ │  │  └─────────────────────────┘    │                          │
-+ │  └─────────────────────────────────┘                          │
-+ │                                                               │
-+ └───────────────────────────────────────────────────────────────┘
-+
-+.. note::
-+   The FWSEC image also plays a role in memory scrubbing (ECC initialization) and VPR
-+   (Video Protected Region) initialization as well. Before the nova-core driver is even
-+   loaded, the FWSEC image is running on the GSP in heavy-secure mode. After the devinit
-+   sequence completes, it does VRAM memory scrubbing (ECC initialization). On consumer
-+   GPUs, it scrubs only part of memory and then initiates 'async scrubbing'. Before this
-+   async scrubbing completes, the unscrubbed VRAM cannot be used for allocation (thus DRM
-+   memory allocators need to wait for this scrubbing to complete).
-\ No newline at end of file
-diff --git a/Documentation/gpu/nova/index.rst b/Documentation/gpu/nova/index.rst
-index 91cc802ed94f..22e5712ac6b0 100644
---- a/Documentation/gpu/nova/index.rst
-+++ b/Documentation/gpu/nova/index.rst
-@@ -28,4 +28,5 @@ vGPU manager VFIO driver and the nova-drm driver.
+diff --git a/drivers/gpu/nova-core/falcon.rs b/drivers/gpu/nova-core/falcon.rs
+index e9ee0c83dfc5..003db40d3303 100644
+--- a/drivers/gpu/nova-core/falcon.rs
++++ b/drivers/gpu/nova-core/falcon.rs
+@@ -89,13 +89,19 @@ fn try_from(value: u8) -> Result<Self> {
+ /// register.
+ #[repr(u8)]
+ #[derive(Debug, Default, Copy, Clone)]
++/// Security mode of the Falcon microprocessor.
++/// See falcon.rst for more details.
+ pub(crate) enum FalconSecurityModel {
+     /// Non-Secure: runs unsigned code without privileges.
+     #[default]
+     None = 0,
+-    /// Low-secure: runs unsigned code with some privileges. Can only be entered from `Heavy` mode.
++    /// Light-Secured (LS): runs signed code with some privileges
++    /// Its signature can only be verified and entered from `Heavy` mode.
++    /// Also known as Privilege Level 2 or PL2.
+     Light = 2,
+-    /// High-Secure: runs signed code with full privileges.
++    /// Heavy-Secured: runs signed code with full privileges.
++    /// Its signature can only be verified by the Falcon Boot ROM (BROM).
++    /// Also known as Privilege Level 3 or PL3.
+     Heavy = 3,
+ }
  
-    core/guidelines
-    core/vbios
-+   core/fwsec
-    core/todo
+@@ -117,10 +123,13 @@ fn try_from(value: u8) -> core::result::Result<Self, Self::Error> {
+ }
+ 
+ /// Signing algorithm for a given firmware, used in the [`crate::regs::NV_PFALCON2_FALCON_MOD_SEL`]
+-/// register.
++/// register. It is passed to the Falcon Boot ROM (BROM) as a parameter.
+ #[repr(u8)]
+ #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+ pub(crate) enum FalconModSelAlgo {
++    /// AES.
++    #[expect(dead_code)]
++    Aes = 0,
+     /// RSA3K.
+     #[default]
+     Rsa3k = 1,
+@@ -184,15 +193,19 @@ pub(crate) enum FalconMem {
+     Dmem,
+ }
+ 
+-/// Target/source of a DMA transfer to/from falcon memory.
++/// FBIF (Framebuffer Interface) aperture type. Used to determine
++/// the memory type of the external memory access for a DMA memory
++/// transfer (by the Falcon's FramebufferDMA (FBDMA) engine located
++/// inside the falcon). See falcon.rst for more details.
+ #[derive(Debug, Clone, Default)]
+ pub(crate) enum FalconFbifTarget {
+     /// VRAM.
+     #[default]
++    /// Local Framebuffer (GPU's VRAM memory)
+     LocalFb = 0,
+-    /// Coherent system memory.
++    /// Coherent system memory (System DRAM).
+     CoherentSysmem = 1,
+-    /// Non-coherent system memory.
++    /// Non-coherent system memory (System DRAM).
+     NoncoherentSysmem = 2,
+ }
+ 
 -- 
 2.43.0
 
