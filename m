@@ -1,123 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A887280CE7;
-	Sat,  3 May 2025 19:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E955F1E8847;
+	Sat,  3 May 2025 19:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746299422; cv=none; b=XnDtHqvsDjKRFXxXRK8wL7h5LHMwN3LCDQUJrp5aMdh1tmwBrpfooZqHGPTiSeQNnbiIOMfzsD8gt2jtVBkuhww3hE9iKdQ4WccV4S/wPkiiRDPr/wcfaZMzB9yX8k9Obcn/etsdz3gj0JT1wdU8hUljMBaKipvmEayFjJ+hC9k=
+	t=1746299649; cv=none; b=SxCe/tr3HdMnr1lJmJk6+nJdKJaSMaH8ZCNm+6MpGNn9qziG2wrq9okUhkXZLLwITj0N786NhtHcxFLvYhmFaz93t0txHaqbrdRcmV5dAzd4DAWNe6otsDWohEHqriWDlAEoRubjihWIgLSJo5FNGxt1mAr6vpD0FLxanMpUDkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746299422; c=relaxed/simple;
-	bh=ETQow3I3jVQQbfoDkbZ6LD9Df4riH/sjwHO2fajMiE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LKIehVKFQZ53rhzP9rGhvJAnpPewrsW39L8UXTuz/hqHcEEn7/VUnOrn7eIxrrEmb+q2AfrrckLuEGg5U4p4lg7ZdfUdwIdCtHsh8OVzqAQ2DSfEuVo/PwEUODe2gc/NqrRDkPND+Amr6rBWOrOl5yb8BUUEpbfFyZCctscMgEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aZO5uDaW; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746299649; c=relaxed/simple;
+	bh=INtqWdF1ttpcGxLYcmEEmkHcr1sBjwlLz2bhiN/ZlGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvqMca0//DYrjQcxKLwFoQcOQFv4/Z14vWahmJPCIdAEWaQRvutl4rDDLTFL0T+pgkrr9bbXlRx9g7g0d25V/YYsVjljnpFQF5RKIzw2nDTGKEf2H8yDG/g05aUX/rVIRP3Ss8Ga25ORPwZzyB1T4mO4vlK2NAw3JIoqydxTQSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RKuStUz1; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aZO5uDaW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746299420; x=1777835420;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=ETQow3I3jVQQbfoDkbZ6LD9Df4riH/sjwHO2fajMiE0=;
-  b=aZO5uDaWGvdggdlPNJFlXva1la+oZ+B1/6k3mpn3mrlzNG/Rv4yd6OVX
-   CRHu5wF2mDlYDu1vlVKK7ptgxOEEtxHuyqUbMUtLRXiTSWyiuruEnM534
-   nkI09cQFtVJpFtBSLr0FS919g8orUgJH0FPlwMl2eemyZxoFJoXgVS1PR
-   UxZHw7+kAJjThbO0kyFMbThP1J3i6QxNBrrc00PcyscxWfzzQupPErY+y
-   DYxtT+h1Q5KR/PaF6jPY0GSZib39GJVo4lsKFb2rGddzKEK5G4Qgjrhsk
-   REHZCWjuTFGWyUNVGdR0f9rQWQVCu4eMWRymC196DPqjfhUwZCSVHYUeF
-   A==;
-X-CSE-ConnectionGUID: J4F2she8Tf+h4phYEaiVcQ==
-X-CSE-MsgGUID: 9MM4zJbWSNCN2ORaTZ8iMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11422"; a="48095666"
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="48095666"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2025 12:10:17 -0700
-X-CSE-ConnectionGUID: Cg2HYCxrS3K8KM6RbaS3ew==
-X-CSE-MsgGUID: AOkYwIMJRhiXoovjmJrE9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="140046125"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmviesa004.fm.intel.com with ESMTP; 03 May 2025 12:10:16 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: x86@kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: devicetree@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Chris Oo <cho@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-acpi@vger.kernel.org ,
-	linux-kernel@vger.kernel.org,
-	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot secondary CPUs
-Date: Sat,  3 May 2025 12:15:15 -0700
-Message-Id: <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RKuStUz1"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4ZqcsV3dB1zm0yTv;
+	Sat,  3 May 2025 19:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1746299638; x=1748891639; bh=INtqWdF1ttpcGxLYcmEEmkHc
+	r1sBjwlLz2bhiN/ZlGY=; b=RKuStUz1pg6Z4V5+H5A4kb2tpH0qoqhbIkzY5+Di
+	0Mx4FqbPL+wKIdXv00tSUygKf7k37efg+NegA9USEA+BtS9sCBdNxuJsDmcEZkXo
+	KGK//P45RgKzu8d8/alXy0VIGoamRPWPYuJuGoA+pRvHTZS5rvfZ8o0ph1X5HX6J
+	iTP5Of7qhYNNVXT8DuQLC0J7+xnCouyLt/xHnb0fNLYt31jsZFJ6Oj4CRIgSwz0L
+	IaOUfuFPOR6U+kODE48fdLjKvbhtxcv8R6c3Ms1Bh+fzGYiKJWiOfkB3GG1TY+aB
+	jrLZOMGZ2glyEj1WRg+H+/FJlug51RvdD9ZeWxSGVVTS0g==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id DqXzoqknLYju; Sat,  3 May 2025 19:13:58 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZqcrR2bKbzm0yMS;
+	Sat,  3 May 2025 19:13:09 +0000 (UTC)
+Message-ID: <08163d8b-4056-4b84-82a1-3dd553ee6468@acm.org>
+Date: Sat, 3 May 2025 12:13:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce
+ CONFIG_NO_AUTO_INLINE
+To: Brendan Jackman <jackmanb@google.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>, chenlinxuan@uniontech.com,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Sagi Grimberg <sagi@grimberg.me>, Andrew Morton <akpm@linux-foundation.org>,
+ Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>, Peter Huewe
+ <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>,
+ Juergen Gross <jgross@suse.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-integrity@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+ Winston Wen <wentao@uniontech.com>, kasan-dev@googlegroups.com,
+ xen-devel@lists.xenproject.org, Changbin Du <changbin.du@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
+ <20250429123504.GA13093@lst.de> <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
+ <20250501150229.GU4439@noisy.programming.kicks-ass.net>
+ <D9KXE2YX8R2M.3L7Q6NVIXKPE9@google.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <D9KXE2YX8R2M.3L7Q6NVIXKPE9@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The hypervisor is an untrusted entity for TDX guests. It cannot be used
-to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
-be used.
+On 5/1/25 8:22 AM, Brendan Jackman wrote:
+> Personally I sometimes spam a bunch of `noinline` into code
+> I'm debugging so this seems like a way to just slap that same thing on
+> the whole tree without dirtying the code, right?
 
-Instead, the virtual firmware boots the secondary CPUs and places them in
-a state to transfer control to the kernel using the wakeup mailbox.
+If this is for test builds only, has it been consider to add
+-fno-inline-functions as a local change in the top-level Makefile?
 
-The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
-the mailbox if detected early during boot (enumerated via either an ACPI
-table or a DeviceTree node).
-
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-Changes since v2:
- - Unconditionally use the wakeup mailbox in a TDX confidential VM.
-   (Michael).
- - Edited the commit message for clarity.
-
-Changes since v1:
- - None
----
- arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index cd48bedd21f0..30a5a0c156c1 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -299,7 +299,15 @@ int __init hv_vtl_early_init(void)
- 		panic("XSAVE has to be disabled as it is not supported by this module.\n"
- 			  "Please add 'noxsave' to the kernel command line.\n");
- 
--	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
-+	/*
-+	 * TDX confidential VMs do not trust the hypervisor and cannot use it to
-+	 * boot secondary CPUs. Instead, they will be booted using the wakeup
-+	 * mailbox if detected during boot. See setup_arch().
-+	 *
-+	 * There is no paravisor present if we are here.
-+	 */
-+	if (!hv_isolation_type_tdx())
-+		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_cpu);
- 
- 	return 0;
- }
--- 
-2.43.0
-
+Bart.
