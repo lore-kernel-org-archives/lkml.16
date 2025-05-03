@@ -1,178 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C2EEC3
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 00:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31158E55B
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 00:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746232911; cv=none; b=aotafMRrhNmfjBV9Nb80FQyFxi3FOYawIHblkvWfFR+Aw1SSL4j1GlgDirLqzRZXsYhPlQynCPz46TAgvVSqgXC5xRSdpuKSO44KxsTIj61GgOEunA0IhcCuTZmFALr9c0e5VtbFJQjaVseHHzaZs/qzegwMJuoRDF6PDQYLrXc=
+	t=1746233044; cv=none; b=u373wFYbkGZ91E2WKvUYNZyL6H0WR3O5DEk090gCsRekA/eevFU1yrvlMLjCWGTVG7X2HFSZ9B9+x0DjJib1Yv+N5CITjvfKUQKOdjn+OcOfkBYj+69HoIuzKqU+Wwq+FnrPus08QZs31p9MPKltBQiq9qvpsaw8mcd0m1LPkxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746232911; c=relaxed/simple;
-	bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iiR3CD/FFl9aK5LVNPX6XZ/8EIBQ4usH9z/klRbPfnIFkQCUN68leMK4JTrGZ56pEIEQCjQRFzxrST0Ei/nv+rqkntQlXWMUsYNPfHuDv2/pNJIRo1USxzYoFacsFmTqtmdGL8KmGP/iO0C/3b0dbX6MJ0H7VFsdpJhJJuW6+0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fys8bcl8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746233044; c=relaxed/simple;
+	bh=bfn5jHdupCe/Bp8CwsTGa22WPx/H4w8bsI+mDk3rv9E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hImjKXc4/2x3tC3nvhin09QvS9BSQV2RdJCic4p+YhzcgU+tYzRD2lrIhAOSejKA/DxMZRb1mdsKByUfwfii5gz8WdsP+WtorBbYyJbRrPu6YO1ILwdfZ4TQ/hqzExcSTU40tofArWxlvh953q2rORGZDphdnLuJ5vWybyclpZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4x9nNNxk; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fys8bcl8"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5430GcvW009473
-	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 00:41:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=zexFTSyGgt2dJ/AMnsrfN4
-	8UoyxFFEE4fgdHUg7YobU=; b=fys8bcl8fIp7KA+O32PyHq2JtGU14cxmMYZ4xN
-	YKioSBrgdxbkQS9OH7EhMFKqUbnAuVtTJb1g/bGEz2H2BAuZZrOtzEMWgWWBPvnU
-	u390xYhDuDoSSehlA2vMU99ug+BkepMxnm6uJ4jAA/O3IdE4sOqSAgaBUIa1ITKU
-	FJL6o3G9yhaiip9Jd/si+Fombe2uFeIveAttv0/UEdVzyDLVFWh0rtpQ1aCnGqfv
-	TdyUhogRaT1piuZLoFcARg04EjuJZdphOl29pb55E8KEm6iuf8NskGGg6Lnqjtaj
-	u1imG9EGGSGEF6x9/zYXm0lPhIhHYoZWv8jx1a1o6A56anbg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u2hrfp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 00:41:47 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4767bab171dso29326231cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:41:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4x9nNNxk"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b1f8d149911so2214983a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746233042; x=1746837842; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=05VqBXS0yAKL5tu5gN5xSZOcx+MYxuWO7pZiN7dCuow=;
+        b=4x9nNNxk1O6NBqddfD5pDj7DEdxp7LM7TfyhhQGvxcX6l7BAku62ku4v0LxOY1SdX3
+         qgtTwYqvdlq6aDaXAwnGd6zYfGw8qcd2ij/E7UX7bzpIJfEhJqPE8brctsmpmz548WpD
+         gbpxsTDFiv7b/jgEvAg/rTjLsUYqMG9psGXfu+Ek3xRzpuhY/lbpu/TzzxXKfWrQGvzw
+         j7UmKQcEIWERIG3fCgqO8Ur/Eo/zYvbZCiP1taHDWbnvT2LXWZm+kBaIFusNXlZ1NBt5
+         LnukA4s8Ex8nbUkK4Bdw+LipbcQr6rY2Ap1uOztMGG9ldcAoWaaFeF45IJ5bI45vCA8I
+         UVPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746232907; x=1746837707;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zexFTSyGgt2dJ/AMnsrfN48UoyxFFEE4fgdHUg7YobU=;
-        b=mKxnjfsFNhuRE8POb2z77mGNUODPuKTr/1b15m1FviBY48EUFc0xQDSBD7JPCqtzMt
-         tWfOqRwlJn+YpWW7xsRbyIsHpXCtsILX2LkwgHeo34NxcNFxkkfCk5ioQKSZBRjAmeah
-         W6dj/yahkMdCv3X1OCQ3K0FFeVoOEB5TcMib+8STvZGDmtGjMJP0zKKklWt9ofXDIEtp
-         hdhQIq6c4zacIrKitog8DdfIg1//KwVUa3JhO3EzBshmm0ilL+bkwcq2t2tiR61Q85J4
-         +KBtNv+8OvcPIBCmeLXsHxHlGOi2mr6zQknhe30ctPsAG/hkgzgjJhG0Imlu8DAtRih7
-         dWmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXiLsw3FKMp66HGvVjaypOByBX9wvWK43oWQTdHCAHuImXFo/aoZuC1oweAE1z2xSdAfNBTdaOzphiN98U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweEvgqC0FQEhPzvFGxRgj8ASl529U+FDceRUEGui0FO6MzqGaE
-	x6CxvZYkKTwbmA7XSnJZV5T7sC08OKB8CFncWZaR74z6cszdXvYQjoHl2fpOpHkvE2D4J1VdPoq
-	ZiWFgXLJHnaebg30EyW6/6VQFlv403Nqssj4YGtrbu2sKqctufal6YDN7X2zp1PE=
-X-Gm-Gg: ASbGncsctOiIqGgrKETbOGWeKfZHlNo299KhYMiYpCDeauZpE8GIOZPu/NwMFxIX7CN
-	G32SUoyhh3mGWpflyD3htoDq+p2ru8WGTbjAjYWmbtImtpuT9d5yEMeVSYuurwG6hrEaxIpodXd
-	4B9CkLyUlDu6nLryZFUDRGghuBT19iWptXXU83aLE8tYiZKXUkyHvybzHHZhzLjtB8nqagA48Of
-	v7qv5+YAD3z28l6kTmQFb5BFciZykQu0Yylmzi/NCbSykoR+RK09w3VQ8qcnmePGiA/h2l8sRXX
-	4ivAvYJi424jrP1Sog0WKTucBslbJWAPq+EQ0c9OS/czZNb+t2aPcWdcl/+n9EeESQ39TBjU3pK
-	fXi+l/evXoLQg7tu8GXaFgBA/
-X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866451cf.32.1746232906736;
-        Fri, 02 May 2025 17:41:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF7ecc30BJA+9Dx4O2PmVKjj7HnCIZKZlWFDy70IW+m8VjDZnT+As04kBFqepzl7sWmZNnhPg==
-X-Received: by 2002:a05:622a:4d8b:b0:476:90ea:8ee4 with SMTP id d75a77b69052e-48c32bc28f6mr90866191cf.32.1746232906399;
-        Fri, 02 May 2025 17:41:46 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6b0asm551924e87.249.2025.05.02.17.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 17:41:45 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 03 May 2025 03:41:43 +0300
-Subject: [PATCH] dmaengine: qcom: bam_dma: keep remotely controlled units
- on during boot
+        d=1e100.net; s=20230601; t=1746233042; x=1746837842;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=05VqBXS0yAKL5tu5gN5xSZOcx+MYxuWO7pZiN7dCuow=;
+        b=UUNHcqnvpiR2IZDdDXU40B6AXXo8ymoeieL214DEt3ymoLx3L5VnD4wudw7fnCQqd5
+         vBDQ/7c8AncrJe/tCFfGYKl2U0nNeFfgJOl/aruZdKsJrk4aueuB9JS+et2moUfztN6Y
+         HwtPwuW1aShPvmh/yJ68x5pPuKZWI7/LqKMvU7UQALjjuY0+B0U2VlUFQHmyvWmwgqQa
+         QdfgoUUkdU04J1jtlZIyXqkVNK4MGk0uM1GLY3S+q8mxH/2DUaDWCA1cmdmdq1sVYxIh
+         WKdBnj+l2kAq7qehDIh9eWANxK8pH2UtCx0vlFsqmSlt7WcumJ/wTWaG63gyiPSuV4Nn
+         TeVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO9CvFViBD0gQ+4tR4dYYAAWTVORfLamO2FEUpuj+J1R5iIYlqr2HFSKFvCIcTg7SZQRPxS8ZPwGu3irY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyl0qqmhGpz2013Wj8/q/RF8cKLyiguBi8eooWrsMZTyWWAT4c
+	JftAU+XWsisGh1D4j/bpE1QMVh63gUTO/gQNm5nP78iJKvxdbVbpNyac9Foxdr05+WFWCrryfi+
+	Mt3BGTg==
+X-Google-Smtp-Source: AGHT+IHK0JO/JeVBfD4PiqeGqLmt7Wa1VBq/3axwhSlYL5RlTJWQSKMC9Bxdcr7xXOQOhbVWaslz1tp3MwG3
+X-Received: from pgam8.prod.google.com ([2002:a05:6a02:2b48:b0:af2:2c5c:55e])
+ (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:4041:b0:1f5:717b:46dc
+ with SMTP id adf61e73a8af0-20e0750936emr1527155637.27.1746233042329; Fri, 02
+ May 2025 17:44:02 -0700 (PDT)
+Date: Sat, 03 May 2025 00:43:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAEZmFWgC/x3MQQqAIBBA0avIrBtQQ4OuEi1Mp5qFFhoRSHdPW
- r7F/xUKZaYCo6iQ6ebCR2pQnQC/u7QRcmgGLbWRRva4uIghOsxU6EI1WBt0UNqTh9acmVZ+/t8
- 0v+8HG4v6oF8AAAA=
-X-Change-ID: 20250503-bam-dma-reset-1766d2d12cec
-To: Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAM5mFWgC/1WNuQ7CMBBEfyXaGku+1k7yB3R0FIgiXm/ABZftI
+ CTEvxMOIVHOjOa9OxTOiQv0zR0yX1NJp+Mc1KIB2g/HHYsU5wxaapQolYgcpt1YRJ5KFUOtA+0
+ FK2eD89SRcjA/z5nHdHtTN7BermD7KTNfptlQv8tP0DdvvNXtP95QROo8Bx9Vf7UvdBgKCzodD qn2jTHSYHAOFXrEVqMNhrQiM0rbjdHrlr02roXt4/EE8Fe6k+oAAAA=
+X-Change-Id: 20250501-debugfs-rust-attach-e164b67c9c16
+X-Developer-Key: i=mmaurer@google.com; a=ed25519; pk=2Ezhl7+fEjTOMVFpplDeak2AdQ8cjJieLRVJdNzrW+E=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746233040; l=1489;
+ i=mmaurer@google.com; s=20250429; h=from:subject:message-id;
+ bh=bfn5jHdupCe/Bp8CwsTGa22WPx/H4w8bsI+mDk3rv9E=; b=2/Xqy5pHd698ZnU5Wp1ahq0qRMeomzFSeny1p/563BBtvB0SJ5Bwe9dt5kAQ1tHAxHm19SZ1g
+ dDyRykRUErwDcTl5l+3ZgQn/oa1iy/fmLhovZ4RLXzDB9cFi+/SgAsp
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2188;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=cZKzoyqoY7N34pp0epge8nAGtWJ5Lp3SZJtzdzdjcvU=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoFWZHNxF/NqZ/oMAwyOsaLbJ64y6qBo00AnWJe
- ngMwguH6VuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaBVmRwAKCRCLPIo+Aiko
- 1ba5CACYaPErHkCfSuXCLhGYyXn2t3IdJzsUI05QV2QihSTAiEucd3//V/nGS1yyrJXRKXFdiAk
- Hh5ACwYoqHvwCceszI3Q/n4xM9YGlX7MLYHQ07rHJwD68Yr5t9MA75A5m2V4Y98PCqIq/E8Op4J
- fOn27jHuCvbqd2btAgcqGbHNhxCoSNdAG6r2ufdrNGGgdH0F3iRWDjB5DTByhKtOXcS3v3lAOZl
- 7nWgSBSaZfA3nwJf8kSnfRPATOGP0HKV+Zy8pT8oMYUmwHzJbBL7H/35cSZR0j/bNjMgTb7wDdL
- bNnfZ7ZF9kmiTmWBr0HHZEL8Z3Wd3AmSuYehz6EbKl4E3rN0
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: jNjBbdT9d-_JUrtffoSji2KJHZt2ATy5
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDAwMSBTYWx0ZWRfX05M3NSP12Men 24CSvDt850sUo4c95jSdqdtIART16YwXK+nGYtcG6pPMPcaTfnyWVAyZaLHrBSsIrUGfMSAyA11 Or1Xiv+0SKMNZqmvOud97yXlftp5BhjK7wTc7S+Dv4UPeNUEUFSc7Q42nio3OWT9J/1KVW1JXsU
- j3MtYdwNfeLs6QhN8qk74gEkDs1Ank9fu1lwcmGSvoGcgf8OqdCwTV6GgpahE20/8e9W+7COLcj +KN28Ku84dW7NJlbjfu4zRJzq+EG8zAkwzWhI/jy54f6zp+2Ufp+f3Ws5EFFoGAqblvlYisU+t8 PtYUSX8gzWJY8KOTz3g3YH6k3A/Z48d54/HyLkocg7COQabpkKpK8vgJRR5q/2fuN3QrdRyuH0c
- 35LM3smVbEQSQUbRGF35t3rxik5PDoy3FLId/qcmGdBiviVrqIa2E6kW2ztxUqWmiRcpnNQQ
-X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=6815664b cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=KvPR1SqjJM-xazvS2iAA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: jNjBbdT9d-_JUrtffoSji2KJHZt2ATy5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-03_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505030001
+Message-ID: <20250503-debugfs-rust-attach-v1-0-dc37081fbfbc@google.com>
+Subject: [PATCH WIP 0/2] rust: debugfs: Support attaching data to DebugFS directories
+From: Matthew Maurer <mmaurer@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Matthew Maurer <mmaurer@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-The commit 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM
-underflow") made sure the BAM DMA device gets suspended, disabling the
-bam_clk. However for remotely controlled BAM DMA devices the clock might
-be disabled prematurely (e.g. in case of the earlycon this frequently
-happens before UART driver is able to probe), which causes device reset.
+We can wait to properly review and land this until after we've decided
+on the final interface for the first part, but since dakr@kernel.org was
+poking at how this might work in his review of the previous patchset, I
+wanted to upload this sketch as context.
 
-Use sync_state callback to ensure that bam_clk stays on until all users
-are probed (and are able to vote upon corresponding clocks).
+The general concept here is that you select an owning directory and
+attach data to it while converting its lifetime to be invariant (e.g.
+can't be shortened) so that you know that the DebugFS contents will be
+cleaned up before the data. You can then implement things underneath
+that directory using the attached data.
 
-Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Matthew Maurer <mmaurer@google.com>
 ---
- drivers/dma/qcom/bam_dma.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Matthew Maurer (2):
+      rust: debugfs: Add interface to build debugfs off pinned objects
+      rust: debugfs: Extend sample to use attached data
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index bbc3276992bb012a1b79937bdbd069fc01f75331..09ef450a9fb8e3efe6e664eb17caffb0bd337f84 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -1367,6 +1367,9 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	if (bdev->controlled_remotely || bdev->powered_remotely)
-+		pm_runtime_get_sync(&pdev->dev);
-+
- 	return 0;
- 
- err_unregister_dma:
-@@ -1414,6 +1417,16 @@ static void bam_dma_remove(struct platform_device *pdev)
- 	clk_disable_unprepare(bdev->bamclk);
- }
- 
-+static void bam_dma_sync_state(struct device *dev)
-+{
-+	struct bam_device *bdev = dev_get_drvdata(dev);
-+
-+	if (bdev->controlled_remotely || bdev->powered_remotely) {
-+		pm_runtime_mark_last_busy(bdev->dev);
-+		pm_runtime_put_autosuspend(bdev->dev);
-+	}
-+}
-+
- static int __maybe_unused bam_dma_runtime_suspend(struct device *dev)
- {
- 	struct bam_device *bdev = dev_get_drvdata(dev);
-@@ -1474,6 +1487,7 @@ static struct platform_driver bam_dma_driver = {
- 		.name = "bam-dma-engine",
- 		.pm = &bam_dma_pm_ops,
- 		.of_match_table = bam_of_match,
-+		.sync_state = bam_dma_sync_state,
- 	},
- };
- 
-
+ rust/kernel/debugfs.rs       | 206 ++++++++++++++++++++++++++++++++++++++++---
+ samples/rust/rust_debugfs.rs | 110 ++++++++++++++++++++++-
+ 2 files changed, 302 insertions(+), 14 deletions(-)
 ---
-base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
-change-id: 20250503-bam-dma-reset-1766d2d12cec
+base-commit: 33035b665157558254b3c21c3f049fd728e72368
+change-id: 20250501-debugfs-rust-attach-e164b67c9c16
+prerequisite-change-id: 20250428-debugfs-rust-3cd5c97eb7d1:v4
+prerequisite-patch-id: 7ac67017c11249cd04fc4beca6cfdb5b83aa89de
+prerequisite-patch-id: 2e8256a6ef25afc95279e740f43d17ec169a65f2
+prerequisite-patch-id: 0abd76fd2d71ba300d8a5ce5b3b61751feec88fa
+prerequisite-patch-id: 5919cceb97187adfc71e9c1899f85d5af092bde6
 
 Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Matthew Maurer <mmaurer@google.com>
 
