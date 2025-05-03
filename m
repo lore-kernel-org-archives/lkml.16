@@ -1,269 +1,94 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2072.outbound.protection.outlook.com [40.107.100.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA434367;
-	Sat,  3 May 2025 14:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746283092; cv=fail; b=sC36lU63rDAXad5Ffw0OJDkDgwxdTflq0OkYGTZrOjtcgfWH59Qa3bZskm80M8wgciQGpBZPdlKeUOIPexmnyb37q7DY4PQVt4FsvQzUoFkENNNFiH5ma/zqs3jhcA+9LczJSyto7EYcz97PHLKqW4dynrhZ1Y0Xh2u8JVdZIUI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746283092; c=relaxed/simple;
-	bh=l6GKToBiFamiVpJ3TL/rLTkersWTMRQegr9fTOxDEnM=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=HcYubI8MFJqGaL0xedYTcMrbRrFMFUhga+3BUbRIq0NtcwkSPtAW7bbTmFllNLBVGtTdLLD849WIbUdeoZlCmm1QNBw6YyERU31Rm9IYJr3bAZI+o/JpKqAQ13CrtqQErtcDFNXoK2k1RDE9aTWspHRmZxWmvrOdbmVe1y01sfE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VY/VvnVG; arc=fail smtp.client-ip=40.107.100.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C8367;
+	Sat,  3 May 2025 14:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746283162; cv=none; b=XT7l5ihF2Jgz6Lfvi3SIS5TRLgeu+4TX71tbbs5JaPtb1iawtwXCfM/Yqo0NVjFQ6bc+sqPbg0uCf7Vo0bLKs4lceB5XEr0Lle7daU52foDh/sVIv9H+ZbVd3TqNzMi2PE2AvnCqrRS877+TPTI/GeN39mxdmfAuZ5Y/ipbAz2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746283162; c=relaxed/simple;
+	bh=Jr9HzCArpmz5liqhpXLnd+1v5ot8JBjFOX4E/k8pSis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjksMK/Nl9HUZWnEL1DkgtVWOflR3hI3C/tmQYiPGmTfSFrTnFtjN5KmEfF2RQPzVirZApGs6JGusugP65paZVGbUgGe1QvGyt/uk8Ai4ffFGrYDpg4glxYiiZmEsDta8ssr7AejQ4MTimJuAgT2cOLM4r/2QhlcWuDHMz1TXdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTr0Sjcf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VY/VvnVG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=St8lgrQN0Eyl1slrh6e664XniVM/35i/VZY5m+yzJTKNLjYHnZWWZ5pG3BXQTLSqTpaFqyE4eAhjy1xSWaXh1CNVIwtKUUVYecRRXcxncFLR/SRl40pFtFF7wbYpCtPVN1debcgTWJsD2t4QpKL1xJTN8gV4OA94TdKagYGNgtbRvgSAeDD++HK/fGqu+PlJh5x5XaLeKFvFIGLkZN8iHEILr33V+bnMiaV9+b0XXQjnl0c5hMjV0vsTbsVi6W8b440XIbJXpl1P+mOB0siisMqBXtjj5CiAiz3EqQEondcEfU01wSUzv2vdcPjCaOMJ/FOYQU6YTnfx4tO/pDDRCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gmQGqE0do93SL801k9OaetlC1kMvhZl08GXDD+mW0Lo=;
- b=xROB43UIgBPZLhugLjO2kTebzEyt1ywoTvRkOspxunvmfZdtGp4ng+ZZ2Eu/58BaT5SHXs3UJBA9pwsm0jbztdwSmkWQWReAJx2F/It1mITIz3GAMrDBxYkK8CcDWm+dzzl5s4JoP/5ezX/SSJr+7R/Ln8k+LzIXFmfS6T0OpcpzgqMLSXrsHxSSjr4KGewkbqXxlnlqcKlhpjJN/YtZBLPGDJII3FBpgv+USDA5rP/ck73V5lOY5t3MCo0g/S+TNxX2ksopURqF5ndl5JBEsfthB8SjiQKOzqh3JN41A9yXIf/7Y++nsiMIeHJKoJSNZ38SM0HGYkzlQc5it0UfAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gmQGqE0do93SL801k9OaetlC1kMvhZl08GXDD+mW0Lo=;
- b=VY/VvnVG4gpSVkAD45OkQ9mS95aJPxW/2h6nrnUQV9bZ4yHHbcsvdQlzPkcd3xM48CWLR1IvP027u/EmGieUSQVDqsIMYh7/xnDopO6SQplk5y2PH7ZBXUuBbAvMXx3Z8oWq8dJ0KkWbZR8VzV7mJ2i4fLc7M3iV6Djp+Rk9NSj6B9VSp6NKVf/KmH6LgPN9nmsqf3QjRuHEXwXgzupimFO+p3Y0voJGDcBXBxOvUS0Y2sBkR5dG1UNFDKiCXrnXwFTA9ReTIQ44xzidbWQy227sQQyn1Eat66jRfM3YMl8FQxzArZPgzmYlMtu7JTtUyWBypblLvl2p46ej4sZiZw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by IA1PR12MB8286.namprd12.prod.outlook.com (2603:10b6:208:3f8::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Sat, 3 May
- 2025 14:38:07 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8699.022; Sat, 3 May 2025
- 14:38:00 +0000
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 03 May 2025 23:37:56 +0900
-Message-Id: <D9MLOQC5G7XH.3GTUIRCCN8X70@nvidia.com>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2 17/21] rust: num: Add an upward alignment helper for
- usize
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Joel Fernandes" <joelagnelf@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
- <corbet@lwn.net>
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
- <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
- <D9LEQ1U1PLO8.3N22GRY380ZM3@nvidia.com>
- <d6962ea3-282d-437c-b3cf-ce701d514558@nvidia.com>
- <D9M5K55GTN6S.1X827WU0Z50UM@nvidia.com>
- <112d971f-20c8-4598-86c9-6822d9c24001@nvidia.com>
-In-Reply-To: <112d971f-20c8-4598-86c9-6822d9c24001@nvidia.com>
-X-ClientProxiedBy: TYCP286CA0322.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3b7::11) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTr0Sjcf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96100C4CEE3;
+	Sat,  3 May 2025 14:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746283161;
+	bh=Jr9HzCArpmz5liqhpXLnd+1v5ot8JBjFOX4E/k8pSis=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RTr0SjcfzhXo8r92rzo29xHJTs63RuGBhSar+SkuDRwLHDeAi0VZKk7+ZgpwqUFW8
+	 p7/5e32srT9aD/0JRnfyHmsepXDCGJg9pvUd6lHh39qq1CgWMg4FBYLZq9oCA+Qklo
+	 yqg0LN+h/yrQPTzo0IEmQ0v5Mu/+TrU0aFNvx2zKyzQyAMamUR9dFi0wrWgztb4tpf
+	 1Pst1Up70ptz/Ki1YP5czDTwSPQAUIp4D8T3xw83KEGGyqTkEhqXlO2m4SOjOQ67P5
+	 3qtyEmSBgychtj7+fW1LwO/+b2KJw3a/Uqo1sMKJzfRnDlzgdXhMnbZcXh/smTqFqm
+	 hy3e2a1WL/btQ==
+Date: Sat, 3 May 2025 17:39:16 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: keyrings@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] KEYS: Reduce smp_mb() calls in key_put()
+Message-ID: <aBYqlBoSq4FwiDKD@kernel.org>
+References: <20250430152554.23646-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA1PR12MB8286:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b634c65-f55a-4f51-7517-08dd8a501a0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|10070799003|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UlhCVW5hUVF1T3FXbEJ4b2s2K2R0YzJuYUMwVGdieTR6bTRzVTI0VEd0TnRx?=
- =?utf-8?B?Z1FYaUJQTWJZSFdWS0VZS25NemprYlVISnlHRzJwT3BaanJXcUJIejJkMjB1?=
- =?utf-8?B?NCtXMmdLM1hnR2lMTHphTjAxYTNXSWh4ZWtjQkNZcU9aSHYxOTdaeCt2UmRC?=
- =?utf-8?B?TERaQWZtc01nQllqZXp6Qkx0Qm12VFRpV2hScHVyVmJRNVZWeVpndDBVTWY3?=
- =?utf-8?B?NU14dnYzN3MxZHVQbE5aWERPaER1aFhqVTk0TDdRbm04UUF2V2wyY0pWblcw?=
- =?utf-8?B?bEpGSWFaaGZhRDF6aW9adEZlTzRYYUxWQm5samhoWkJXRE00ZmVyRko4MXpr?=
- =?utf-8?B?N3N5RTFlcEtFK0xsUllVeklIRWsvZG8vK3hOVnlWejY5VzFsaXVCZmw4OEFr?=
- =?utf-8?B?MmFncGlUWkpHcEVGNmFhQ3B6TGdhbzdNLzVDTUpFVkxCVytESUMvNlo3bFQx?=
- =?utf-8?B?MEZhWHdtRXNBT2krRXJVbngyeXZDR0ladVdtTGQzSUQ2eFBPbmJZZ3BuNng4?=
- =?utf-8?B?cGZKT3RDcmttVys3YXNsMlBibFFHaERsTFIwQ1BWZ0pwSTI0M3hlZ0tZSnpP?=
- =?utf-8?B?eU9QMGF0RUlYckJvQjBSQW10Sm5rN3ppK24zSXVKWWtBUE9lbDVBTGt1UEJv?=
- =?utf-8?B?QlozMzNHNXF5d2l6NEw0RGFzcFRFL1dYZ3puem5ZRWFGUDF1YzN2OUJVcTJy?=
- =?utf-8?B?b2hpZHcwUkp1RUt4YzBxSGJzTWcvRVZpS2YwUTRvZEpoclFHSFZYbzVIMS9G?=
- =?utf-8?B?WEsrVTdIVjhMYlZKcVE5Ny9ueTZIcmV2WGdMUkZYeE1YZUtRWENZVE9uUlR6?=
- =?utf-8?B?aWxNUkNyRGtCV200L0pKSEEreFh1RmwxcmMrUWVIWlBScTdFTmtyRnpwa3o1?=
- =?utf-8?B?MVdNeFVDbVN6R0R3Tk9Qb3d1eFZVa0VUdnUvYjQ4dlErT1BBdnBQUHdPOUM5?=
- =?utf-8?B?V0tZRC9SaVBmdklhWTlYaTM3TXdjMjE3Q1dCTmRFVDhiTXZBbEU5M3Vxci9U?=
- =?utf-8?B?cEVYUzFDNlVFM1pGaitXNUI4aXdaNUNpeU1ZSHBZTnVTaUJJNnhRWTFGZVQ1?=
- =?utf-8?B?VnN6ZC94eFgyYlM4Nkx1S0xCMSs2UUZqQUJoeWY5TGMvSUZBL1ArWFpsc0VO?=
- =?utf-8?B?Z1UwL1hyMCtvYThoSFQxdk1YTnptaUxlTk8zTTBGdVRPMXpoZk9UdFJneWgr?=
- =?utf-8?B?Z0Z2QWYvVGVPMHY3emdaYTArZWlRUXp6N0pyZU54MUlvaUtMbHIwTVRzZlM4?=
- =?utf-8?B?VytXazR3N3RtZlhFNUkrVE9FaGlzVXBXaDMxc1pETllHLzBZZjdWcHI5cm0y?=
- =?utf-8?B?V01GQjhEUWVUU3dDdE9IWVREQVFNOUVjUzNnVS82V3daaGJobjd4MGZKRGdF?=
- =?utf-8?B?QjgvZkxwVDFvUzJLZnZNcWFFVnArYkFtV3grQVdyMng3ajgwdk1DYjMyR2Uy?=
- =?utf-8?B?ZkN4UXEwaE8zWDkxN3M4Y0RETUY5RUFjWTF0OFJxQkJaZm5LZ3dtUVZ6Q1E3?=
- =?utf-8?B?cXNpQTBIWWtrN3drakFhbnJjV2t6YW5nNjNXQWdCNHNKYUJ4T2h1eEVnS1dY?=
- =?utf-8?B?bHE4TkhhZENzaWhZbVpHNTZrWXdUcHNqSEdaakgzTHdyY0hORkNKKzdWeDNX?=
- =?utf-8?B?bTZWWFpEYWFLL2VMVE5NTHk2WEduS3FEK3ZyNjJCV21lNlIzSHFRd0xWT1JK?=
- =?utf-8?B?NmYxZmszK3I1TTE4N05DUGNPdzFhcHcvNnEyNkJGL1M1UmRyRWdIa0taTmE1?=
- =?utf-8?B?RVBaRlptcFJOaWdFNjczbUx6eDV1U0dpekJuQ1JpeFVETVJhMzJab0xGRVUy?=
- =?utf-8?B?V2FaYjFwNW5zQ0haaE8zeFZuZkNRZGdTTk0yeFlybEo2eHlnUzVoaStkUkdp?=
- =?utf-8?B?THZsL0diTGkwOTVXeUQ3T003RlpEaU5OMWRrZFJISUNtTXJJQUEvOWZjWE4r?=
- =?utf-8?B?YXJrQ2ZoZjltUStVWUhOMVJsUEllZ2dSa2o5RUxjcERKQ0huWFhVRnRTL0l6?=
- =?utf-8?B?T0RpU1FoNDdBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T3E3SjIrbUM5d3IrMFMrajBtc2xtYnZudnRqcGlGZTF0N0hCMVNCZ1NmVjA5?=
- =?utf-8?B?Tk1YZ09FRTcxdVJjSUR0dHhQemdyU0lhSkZrZmFkRG1heXhoczZvUUYvQk12?=
- =?utf-8?B?bG5Ha21zOHk5UmxYc0hMUVJwZG4vY3BSNGplSkFKMXFuMTg0YUo5NElqRFM1?=
- =?utf-8?B?MHZMaHpGRmo1UGtvbXEyVWk5LzFVUC9ranVnRHRSZk8rQncxaWFSSVgrakNa?=
- =?utf-8?B?VVA0MDM4ZkpabngvV1dacjJnWmIrNzIwU0NLUTFwODNXd3VtWlp2VFNxM3lK?=
- =?utf-8?B?RXFhR3phL2tMSWk3R0NZQ3NjN1hDVVA1KzAwaUNSSjdYdjBLYVVKSHlSay9q?=
- =?utf-8?B?cDBIVjFLR0xwZmpndXc4RHMwY0ZOYjlwVFBLTE9IOXR3c1JjQmtkbHFPT2V3?=
- =?utf-8?B?U05sNFAzVkhDQTNyRURzamI2UlBueTBRbHRGYUJxTjNjeEhNK20xR1BRSkhH?=
- =?utf-8?B?aG8vbWpmWVJYbTcxUE5OKzQrSnZXYlZHNloyUUEzM3VTUGwybjZwVTRCZHhV?=
- =?utf-8?B?Q0ltVlpwQVpqSmxLUWYvbXFmLzAvSUoyRis1L0R6MCtCRnpiTGJjaU8zM2Jr?=
- =?utf-8?B?OUdSaGZKR1JuWVUyU2RZY2J6Y0Z2REU1bEUyb090OVBsMWpmdDJFdTh3cGRl?=
- =?utf-8?B?dmg5aUhDN0RjSFRNaUxwK1BFYkpwcGdzUG1qY1NZMG5YLytYRzYxbFhNTzJW?=
- =?utf-8?B?YzkyWHZsNkwzZUJ6S056MHR6VHBRc0VoWG5tcTgya0IrdndlV0VEdCs1VEti?=
- =?utf-8?B?K3ZJbVFSNjJmMGE2RUxZV3ZuZ2JzZVA3QStneTE1TGxXRFNDYXJwR2xzN25y?=
- =?utf-8?B?RUpsZmpIQlc1dlFheFE3ZEpNeUdnaE1WQXo3UXhEdERUaTdSZ2UzNW9MNEtT?=
- =?utf-8?B?ZG5ZdWpHUTc2SjFXQng0MUR2SU8xa2pKSlQxUjFVdjI0ZmUxMkcweW1jUHdZ?=
- =?utf-8?B?UmVwQ3dKWUZDaWl0LzU1UEhoUTZnTlhzclJtM0Q2S2ZnRmtCR3RGU2ZpNk9H?=
- =?utf-8?B?RFdOTnJVaVMvM1lWTG8zbFZRejZzWmlVeUJnYUY0dWF3TVBTWC9HOHQ2Ynlp?=
- =?utf-8?B?Y1c5SHp0cGg1cExIYlhmMmU2MWJRQnFValNNL0FQNHlwZTBDazRZSDRxK2RC?=
- =?utf-8?B?T0kwcGYvZGVDUHQzd2FWMWJibERKVzhJQWZWS3lGTHZmOWl1dDdFWkpPQndl?=
- =?utf-8?B?SjNmRzl3eDVqSTBIMWx2eURhc2xZc1ROWFhyLzI3c0RmYzJkOEtjYkZuQ0lm?=
- =?utf-8?B?bE5YWUFDVkViVTFXNEtCSXlRZjZUWlEwQVNRZDUzY1Y0dldsS1FTZkJlajF0?=
- =?utf-8?B?bHVBS01pajJ2MElaRlBBUGI5bDlnRjVlRFphUWFlU3RRZCtrVjJWOUlUZXhN?=
- =?utf-8?B?bTFBOVpCN1hTMnRJdDYzRXJZdzdROWduUGs0cW1Pd3l4ZC9DbTdYM09iaCsw?=
- =?utf-8?B?Z0grUFhRV0pqM3I5bnJsNWM0M2tITDFtMVRrajhseDA0M1FEeFZPNlVQeUdP?=
- =?utf-8?B?aHQrOFNBUktyNE5OTVZsRDlidndhVjZNbXNaWW5tQ1VUODdieTRSMlY1ZVV5?=
- =?utf-8?B?S3BxdmVMbkhkaHgya3ptUFYveCsxdzBDREpJU2kxUTdJZmJ0UmlJa01GU3Y5?=
- =?utf-8?B?SE5xa3VVRVVVR3ZFYWZESzg4N0o2VFZWb3JjQ0owNURIcWw3TTBYQWN5R1d5?=
- =?utf-8?B?bTRtZ1lhTDJqdDBSU3Z0UmZKbk1UeFpPMFJ6b3VIZlpkVmp5MitNczRKL1pQ?=
- =?utf-8?B?RUtNYjdjdUp4Qnp0RG5qbkFlZW85aFVMWFBuVzlLMWk0RGpJcEhuMVhMZVFV?=
- =?utf-8?B?Rk80TjdBZ1V5RnNNaTZJcDc3ekxjOVBvdkpDT2dFVHJMUHk4VUc0ZkZHdkF5?=
- =?utf-8?B?Q1cvTndLN0dUSnFxY3FpTXNreGRUbFRrV1F6cy9pVjI1SnVSODBjNk9zTlAy?=
- =?utf-8?B?RGYvRTFDNThJUzNucTNHUlNiTGhPT1l2V3JRYVlQTzEvUlBmK045TW52Y0RO?=
- =?utf-8?B?S0diWDVEVnZIZ3N3TkRoK2xhMHJWYnJGc1VsOW80b2hXS1ZkbUdueVp0UzRi?=
- =?utf-8?B?OHFVcjFnUnRVZUxWd3JsWFovWW1Obk95a0tabkxZYmJRQnFhWlVrWURHWkVY?=
- =?utf-8?B?WUJ3VFhDQjdEWkVQQ0dDb0ZoQTdYVmE0SWE3bVlPOWFtdHoydmFFWFc1UmlL?=
- =?utf-8?Q?TyF8nKh9j0LQyUSN80pm17EmaEFwfl2fFB5GpxkadJPT?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b634c65-f55a-4f51-7517-08dd8a501a0a
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 14:38:00.0017
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hmBg1tegRY1ediMyOhgS2AzTUqjI5qvu/z1nQBlFhQGIK+mU7DWoouhHKxITJPaqbwumaxN5avQoWIDI1smppQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8286
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430152554.23646-1-jarkko@kernel.org>
 
-On Sat May 3, 2025 at 12:02 PM JST, Joel Fernandes wrote:
->
->
-> On 5/2/2025 9:59 PM, Alexandre Courbot wrote:
->>> pub trait AlignUp {
->>>     fn align_up(self, alignment: Self) -> Self;
->>> }
->>>
->>> macro_rules! align_up_impl {
->>>     ($($t:ty),+) =3D> {
->>>         $(
->>>             impl AlignUp for $t {
->>>                 fn align_up(self, alignment: Self) -> Self {
->>>                     (self + alignment - 1) & !(alignment - 1)
->>>                 }
->>>             }
->>>         )+
->>>     }
->>> }
->>>
->>> align_up_impl!(usize, u8, u16, u32, u64, u128);
->>>
->>> Or, we can even combine the 2 approaches. Use macros for the "impl Alig=
-nable"
->>> and use generics on the Alignable trait.
->>>
->>> macro_rules! impl_alignable {
->>>     ($($t:ty),+) =3D> {
->>>         $(
->>>             impl Alignable for $t {}
->>>         )+
->>>     };
->>> }
->>>
->>> impl_alignable!(usize, u8, u16, u32, u64, u128);
->>>
->>> pub trait AlignUp {
->>>     fn align_up(self, alignment: Self) -> Self;
->>> }
->>>
->>> impl<T> AlignUp for T
->>> where
->>>     T: Alignable,
->>> {
->>>     fn align_up(self, alignment: Self) -> Self {
->>>         let one =3D T::from(1u8);
->>>         (self + alignment - one) & !(alignment - one)
->>>     }
->>> }
->>>
->>> Thoughts?
->> I think that's the correct way to do it and am fully on board with this
->> approach.
->>=20
->> The only thing this doesn't solve is that it doesn't provide `const`
->> functions. But maybe for that purpose we can use a single macro that
->> nicely panics at build-time should an overflow occur.
->
-> Great, thanks. I split the traits as follows and it is cleaner and works.=
- I will
-> look into the build-time overflow check and the returning of Result chang=
-e on
-> Monday. Let me know if any objections.
+On Wed, Apr 30, 2025 at 06:25:53PM +0300, Jarkko Sakkinen wrote:
+> Rely only on the memory ordering of spin_unlock() when setting
+> KEY_FLAG_FINAL_PUT under key->user->lock in key_put().
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> ---
+>  security/keys/key.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/security/keys/key.c b/security/keys/key.c
+> index 7198cd2ac3a3..aecbd624612d 100644
+> --- a/security/keys/key.c
+> +++ b/security/keys/key.c
+> @@ -656,10 +656,12 @@ void key_put(struct key *key)
+>  				spin_lock_irqsave(&key->user->lock, flags);
+>  				key->user->qnkeys--;
+>  				key->user->qnbytes -= key->quotalen;
+> +				set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
+>  				spin_unlock_irqrestore(&key->user->lock, flags);
+> +			} else {
+> +				set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
+> +				smp_mb(); /* key->user before FINAL_PUT set. */
+>  			}
+> -			smp_mb(); /* key->user before FINAL_PUT set. */
+> -			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
 
-Looking good IMHO, apart maybe from the names of the `BitOps` and
-`Unsigned` traits that are not super descriptive and don't need to be
-split for the moment anyway.
+Oops, my bad (order swap), sorry. Should have been:
+	
+ 				spin_unlock_irqrestore(&key->user->lock, flags);
+			} else {
+				smp_mb(); /* key->user before FINAL_PUT set. */
+ 			}
+			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
 
-Actually it may be a good idea to move this into its own patch/series so
-it gets more attention as this is starting to look like the `num` or
-`num_integer` crates and we might be well-advised to take more
-inspiration from them in order to avoid reinventing the wheel. It is
-basically asking the question "how do we want to extend the integer
-types in a useful way for the kernel", so it's actually pretty important
-that we get our answer right. :)
+Should spin_lock()/unlock() be good enough or what good does smp_mb() do
+in that branch? Just checking if I'm missing something before sending
+fixed version.
 
-To address our immediate needs of an `align_up`, it just occurred to me
-that we could simply use the `next_multiple_of` method, at least
-temporarily. It is implemented with a modulo and will therefore probably
-result in less efficient code than a version optimized for powers of
-two, but it will do the trick until we figure out how we want to extend
-the primitive types for the kernel, which is really what this patch is
-about - we will also need an `align_down` for instance, and I don't know
-of a standard library equivalent for it...
-
-> I added the #[inline] and hopefully that
-> gives similar benefits to const that you're seeking:
-
-A `const` version is still going to be needed, `#[inline]` encourages the
-compiler to try and inline the function, but AFAIK it doesn't allow use
-in const context.
+BR, Jarkko
