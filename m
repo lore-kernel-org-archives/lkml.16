@@ -1,96 +1,154 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8625BD529;
-	Sat,  3 May 2025 15:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62A1D516F;
+	Sat,  3 May 2025 15:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746285639; cv=none; b=eXH7DLjQgLpkQVZylc8v8mePsvD+csDAy35TlROSQ54ZLKXZjer33RoFf7+fug3oWtaq1VWKfKGs7JHQG3D6k65sLAgITnAYDUcLv+YNgaC99fuUynGLC9PEso81Lrqg15LN7qhCvPO/hYlsmoWAHQZcGyPd/MzEjqznSb4ig+0=
+	t=1746285684; cv=none; b=pTRh8ZItUE9loQf+uA/a9IewKIE/bQOICwY8yuiWpSq0u3E8hmK+p02nkkO8glmaDEx/AFTxz7CRgrrCtT80ta+fsB++SONUEMhjByXlW5DpaueVZMScR33YTDjp6FXP/LrUB4kccWEZ6V6c97N2eLISRbskv5gsEaS0StmBSSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746285639; c=relaxed/simple;
-	bh=WnOwiAbTOzs90jSrXC5bZ9hiEklBZ9dGAADpnd5Evoc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C05B/7y0ifyR5QDS9fKcdlpb9/xyQmrBS1lyt1r4JIJosO49K6vhTuriaVVMdhrVHo3F90+HI541q3/hf01+zjzCVDUikSc2mC52Urpo96lNA4/HUqOqzEHUQHPLysC3QkJ4TI0IRGdmssjYKWH/xyFFam/sX9etTySvke1E6EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=OI1C6deS; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746285684; c=relaxed/simple;
+	bh=SpJDUPr0U8TkbmUTQyNs659xyulgzQJ4MpAQ8Dg7G9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CSfH+gFDuRsAHTovlurPaUisSo3PWXtpwgAsVBmgvTpJaqBU1ibFsp4Ote+QEsh4jMmLTzcgNrH+vIThGYm1s6GiWpt4ILSAfU8Kcu6jsVLQpoISr7TfsDD+yifGz1hYuv0kgutefM4aGRVyWIprHbDkrebQSHFqR4XsG93XIXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qg71ppPp; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="OI1C6deS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=EjcDYrHrfsWdwpPP6OffxdP9Ov3fR2yq6A3OOg3IpEs=; b=OI1C6deSV2rWXR8k0KU0g8khKJ
-	2sJvPWd5Ln1aVYQ0KnzPXCsLnES7wzDbFTx/hdw0xEOoQo+c4iFZuc2dk0gmLaG/XeH4NRam2M5C9
-	ggk629MgT719kvU5Hn2c3ZENEVmx2NwqZBAZtU3UsCYEN7vVhLq+oKdqwRMfKvrhexLe51Jv1nqGO
-	dJZQQjUXKQsakZtsUZ0rT69kpHy/thv6c/+qM5GDXyymd2eBKFrQwhPc5/9XIr4T4Y+D1ZYHEDeNp
-	rLRd0jjvYFk6tpWTqBASNLP81rNFuYROAB4Dg0x2qBAQLS+qURON1sgvCJFLSRyCvQKnbfA6HQwLU
-	zPt78tEA==;
-Received: from i53875bbc.versanet.de ([83.135.91.188] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uBE45-0003pc-JE; Sat, 03 May 2025 16:42:05 +0200
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
- hjc@rock-chips.com, mripard@kernel.org, neil.armstrong@linaro.org,
- dmitry.baryshkov@oss.qualcomm.com, knaerzche@gmail.com,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v4 0/7] Convert inno hdmi to drm bridge
-Date: Sat, 03 May 2025 16:42:04 +0200
-Message-ID: <9503607.rMLUfLXkoz@diego>
-In-Reply-To: <20250422070455.432666-1-andyshrk@163.com>
-References: <20250422070455.432666-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg71ppPp"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736c277331eso3914468b3a.1;
+        Sat, 03 May 2025 08:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746285682; x=1746890482; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ceE3GFXp3363IGmCZMbOrujPi+bJut1p/8h1YkV0Ew=;
+        b=Qg71ppPpgCQEmZVO98XOg9fHSZ0WG092PPp/JFxOWj38Y+Z3ZXnhFcghe22gwR1VpN
+         3xBQSUJ/bAKzYX/sEl+0iErcmsX00OeJEFR4odXQmdqrGraesv6Bn3sWrYUVU/bQsixB
+         JxRg1DulxLkJwYMO1DQFNfADgP7c71PfgoUDNaERzpEVHL/aMNuUvflVXgNmWDkbirqC
+         czN7ghZgg5QrjWWxkGs1WDVs+FJHYtaOjOvZaD/56LbMHiamsBdJNu57QLzZi7uz1lzR
+         tV0XdMikW7YqSona/PYxyNlECwwMY3GdE+oiMFYU0h7LH4PI/QnfcU8BVlsY0x1WavoF
+         bFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746285682; x=1746890482;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ceE3GFXp3363IGmCZMbOrujPi+bJut1p/8h1YkV0Ew=;
+        b=wPePN62U+uPPRGtLNSXStirvYzkUSoc9zbj/0xPRKQkHrveOlC3SWHJQ6kEgWN1pR3
+         dwR/O02D9fpDC+x28jlgX3U5p9xEGw1C8ytRszDrXhvWVbsg3ePQSE+qDc/LbL0r7HAb
+         93DGE+ih6yOLTdo88z6YImwZrOBGjw7nuju8Zy5AyhYEHgbBghHVT5id4v6c/G3dVs0h
+         ZRSQpJsBzuhDsmYhxjvTTreF/YsyV2r4kk8WL0QhX4ez8rNqoYc4Lg0DGmAn/swZAHKK
+         hYzdjtCIfKricMwDroQjaSF2xSi3TF1VkODnLyXRYb0i2Egld6UvyfJDrEepstjx+mS0
+         5Tig==
+X-Forwarded-Encrypted: i=1; AJvYcCU5fTxDF9sq3nOC0Qzy76Ri2W6wQoSIi1PZBo9ZiyF30N3QlieqmJ1lvjNSU+FxGVC9LtVDBsuaDo+w@vger.kernel.org, AJvYcCVn0cyraPxx8cm/X5vz4/f/xxvCuFqB9H7KKW+NwaB2UYcsAC4LubttoqK7OQwalUrQUoILSdfRpyMm@vger.kernel.org, AJvYcCXhEX6n02VW3hfWMONVW5g7kKL+OdqKrFoikfeWCBiiBhTpxf7hOi/q81RKfZWsY3a/YdsSCXhGrpWBIooR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpTDAiP+ZJBewg3PZ++AtuBGNh7VAuQw33cG1cVxemszeQsPEc
+	2PuqPgrcGmy1Gyiwm1W21lB92BSK6F0G892e3sYNnXwYttC6I/ymaufHs+9nQJM=
+X-Gm-Gg: ASbGncv0i2aoiZSxXbkmDalMPW44kgHlqiPpxoF0dMY9rnFAZMOVwOh7U/uWVPdgZgi
+	J/tttY8kV4t/i68W99O5eSoPQVEt+6X9xT1PVD4v5IUnb5Dn+/ddP4kHq2h+I2/MjO5/9JEfBpx
+	UzvhJTS04RT0gepnvNtaGf4wEm02HuunKv5hvr+JT9l+crYbW9qwYPqCiGXO+0b6ORKMPI6OIw1
+	C19ra3U/bMVYQEXGQvdj1LdhrWjI12FWw0wjIcDvhV2cSrmBCIBpK4fU99a4l8xwhuF54Wb1ste
+	KJYZRjpkk+OLbXgjmiit+0XVMt+YS3kiUhQt1e2RNiLil3qbqA==
+X-Google-Smtp-Source: AGHT+IGB1eVC7bpXKehsOgrTdh5zfEiwEb4D0LPEyTWErLbbJuBw7p9mdKcuvmqdRMbF5D1Ru8iF9w==
+X-Received: by 2002:a05:6a21:3416:b0:1ee:450a:8259 with SMTP id adf61e73a8af0-20bd8d4b1cdmr15194234637.18.1746285682276;
+        Sat, 03 May 2025 08:21:22 -0700 (PDT)
+Received: from localhost ([2804:30c:4024:1700:8e03:72a4:b895:b221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74058d7a3a6sm3450199b3a.2.2025.05.03.08.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 May 2025 08:21:21 -0700 (PDT)
+Date: Sat, 3 May 2025 12:22:40 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: akshay bansod <akshaybansod997@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] iio: dac: ad559*: fixed coding style issue (shorthand
+ unsigned)
+Message-ID: <aBY0wHEzjbBex-Hn@debian-BULLSEYE-live-builder-AMD64>
+References: <20250503095532.132041-1-akshaybansod997@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250503095532.132041-1-akshaybansod997@gmail.com>
 
-Am Dienstag, 22. April 2025, 09:04:39 Mitteleurop=C3=A4ische Sommerzeit sch=
-rieb Andy Yan:
-> From: Andy Yan <andy.yan@rock-chips.com>
->=20
-> When preparing to convert the current inno hdmi driver into a
-> bridge driver, I found that there are several issues currently
-> existing with it:
->=20
-> 1. When the system starts up, the first time it reads the EDID, it
->    will fail. This is because RK3036 HDMI DDC bus requires it's PHY's
->    reference clock to be enabled first before normal DDC communication
->    can be carried out.
->=20
-> 2. The signal is unstable. When running the glmark2 test on the screen,
->    there is a small probability of seeing some screen flickering.
->    This is because The HSYNC/VSYNC polarity of rk3036 HDMI are controlled
->    by GRF. This part is missing in the current driver.
->=20
-> PATCH 1~6 are try to Fix Document in the dt-binding, then add the
-> missing part in driver and dts.
-> PATCH 7 converts the curren driver to drm bridge mode.
+Hello akshay,
 
-After resurrecting my rk3036-kylin which hasn't sucessfully booted in a
-while, I could veryify this series, so on a rk3036-kylin
+Overall, your patch looks good to me.
+Though, I think it may get slightly better if you consider my suggestions below.
 
-Tested-by: Heiko Stuebner <heiko@sntech.de>
+Regards,
+Marcelo
 
+On 05/03, akshay bansod wrote:
+> checkpatch.pl flagged use of shorthand 'unsigned' as warning
+> trivial fix: replaced use of shorthand 'unsigned' with 'unsigned int'
+> 
+> Signed-off-by: akshay bansod <akshaybansod997@gmail.com>
+> ---
+...
+> @@ -55,7 +55,7 @@ static int ad5592r_gpio_set(struct gpio_chip *chip, unsigned int offset,
+>  	return st->ops->reg_write(st, AD5592R_REG_GPIO_SET, st->gpio_val);
+>  }
+>  
+> -static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+> +static int ad5592r_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
 
-I'll probably apply patches 1-4 to drm-misc later today, as that solely
-touches the Rockchip (and only rk3036-)side and patches 5+6 to the
-rockchip tree.
+Hmm, the driver code was mostly contained within 80 columns before.
+While it doesn't break any code style rule having it like that, I'd break the
+line to keep the code under 80 columns.
 
-Patch 7 should probably get some attention by people more familiar with
-drm-bridges, so I'll let that sit for a bit longer.
+static int ad5592r_gpio_direction_input(struct gpio_chip *chip,
+					unsigned int offset)
 
+Though, since that's just my personal preference, I think it should be fine if
+you decide to keep the function declaration in one line.
 
-Thanks a lot for working on all this
-Heiko
+>  {
+>  	struct ad5592r_state *st = gpiochip_get_data(chip);
+>  	int ret;
+...
+> @@ -30,7 +30,7 @@ static int ad5592r_spi_wnop_r16(struct ad5592r_state *st, __be16 *buf)
+>  	return spi_sync_transfer(spi, &t, 1);
+>  }
+>  
+> -static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
+> +static int ad5592r_write_dac(struct ad5592r_state *st, unsigned int chan, u16 value)
 
+I'd also break this one, but you may chose not to if you think it's better to
+keep it in one line.
 
+>  {
+>  	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
+>  
+> @@ -39,7 +39,7 @@ static int ad5592r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
+>  	return spi_write(spi, &st->spi_msg, sizeof(st->spi_msg));
+>  }
+>  
+> -static int ad5592r_read_adc(struct ad5592r_state *st, unsigned chan, u16 *value)
+> +static int ad5592r_read_adc(struct ad5592r_state *st, unsigned int chan, u16 *value)
+
+Same here.
+
+>  {
+>  	struct spi_device *spi = container_of(st->dev, struct spi_device, dev);
+>  	int ret;
+...
+> @@ -102,6 +102,7 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
+>  static int ad5593r_i2c_probe(struct i2c_client *i2c)
+>  {
+>  	const struct i2c_device_id *id = i2c_client_get_device_id(i2c);
+> +
+The addition of a blank line here is desirable, but it doesn't fit this patch's
+scope. Drop that from this patch. You may propose another patch adding that if
+you want.
