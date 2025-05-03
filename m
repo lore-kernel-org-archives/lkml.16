@@ -1,165 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay3-3.pub.mailoutpod3-cph3.one.com (mailrelay3-3.pub.mailoutpod3-cph3.one.com [46.30.212.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E54E1624E9;
-	Sat,  3 May 2025 18:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9827081C
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 18:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746297987; cv=none; b=LUjjTFRMGXGF7k9tKC5r6eluXz2Cv0/8uVOKD1MLw2nzSEfR0k9iYUmgFot3fDAooqa9wGQylgxlEXb5BQqi5VqrId8IdHyD5LIN3lsHjzqzuDLoJbBfVUxLfVTJvbHPtdb09qNpwkzO9Sx77Q04MMe6BSQYtsGmoQIPxC3cTzk=
+	t=1746297989; cv=none; b=UyweAGXNMNpvLXntBIQhvdU+1a5lYfeSnMjiJzQussqoljbL4H/b2vZSmwwGlh32U596qwOdCmaf8aCkqAWdqaW7uILSsHHx65QHu+anMyWSiLyu8hnhjqlGhTvZYaBQjF5j9ia6ywew4ZCY4qxfOd4b9E3kgFY4L98pPPJAuv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746297987; c=relaxed/simple;
-	bh=vcmcNB9M/mnVV0u1TxfACvPzuwlKwH4U0CbHSsTxvvI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LTV9uPovcfUVpx0R0fNBn8a6AZnVPuNXlr4YIg0hS/I0w6ORPbyxAbFMS2pAL95YpjjFEqLtOSNtfnMeBMWPeHQZ2/ee+EbiZcRiAcdF0QKyqQLYRXvjs4acVJfrDdSHkIS0zDc6FjeXokPKVeQ95Q1wuF+YSXES2Blq3+whyiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/5UvviY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746297989; c=relaxed/simple;
+	bh=mq5X6iFm3sj6rGvKJsuQOgjHMlGVeYO+zOKsnKvdjis=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=tnJ4UjncuTfKhaOSPhMaeLppxoUcCrtYQgK6+Ehxt9CaKtHFqrR6V1mao/7Xvll4QTvBOLXzckcWA0VpgkEPzeT+OrxBc+cxN44j4SXpPfriATS1pxh91LFEsWN4NjrubT/EN/rOFTtJtab2bVgdcCPiE3Qh6XmFEp+0hfSQmBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=V/7LL8rs; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=QS4DoFWS; arc=none smtp.client-ip=46.30.212.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/5UvviY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80319C4AF0B;
-	Sat,  3 May 2025 18:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746297986;
-	bh=vcmcNB9M/mnVV0u1TxfACvPzuwlKwH4U0CbHSsTxvvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E/5UvviYXd4M/OBy3fCYKWszd1r5TVBDxzzXa7gIW6vO6mFVvSMi54bi4L3Uwhs1g
-	 PLzjB05PAVxHMjRVuzOHqmdYVq4m5w7qJrugDaGHCthgNxITLShvMcjsSNJrNG5tIn
-	 Tsvbg55gZqviiFr4CixWjxeEH65ktOuo79s19KniMgtvIG6c8rA5JDn6aFdQ4RACmX
-	 3hxFSp7SDdxrhq28NWPPIatdxubInTKge/hEATyNT0ghtVG173sO6TSKjDKuq+6SSa
-	 rfiX9QESpHzV8mIM/SdJ4UoN2CFpw5tA4fIHuzXcdey1KFJlUcwgkMHGYwmpzQ0fF7
-	 a21e4Ah5ghrUA==
-From: Kees Cook <kees@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	llvm@lists.linux.dev
-Subject: [PATCH v3 1/3] gcc-plugins: Force full rebuild when plugins change
-Date: Sat,  3 May 2025 11:46:18 -0700
-Message-Id: <20250503184623.2572355-1-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250503184001.make.594-kees@kernel.org>
-References: <20250503184001.make.594-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="V/7LL8rs";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="QS4DoFWS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746297978; x=1746902778;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=SgDQY5rPFVDOVTM0LSU4AZU6By/eM3JenPb1tAEbTQI=;
+	b=V/7LL8rsdalGXRmDc7eeP2apUPbY+9JKdoItqiT4W9oNG4imy5XqC43VUYwhhJuLNllkyXk7Mmrbf
+	 /pa3fhZzPdE8L0JRZ0MoxcIiwhhyrM689fzbbLBqQ3csTwKTVgsjBADhFBgjkfXav+AwaMXXdUAxDg
+	 +ZGU5ByM9Mmd5tg5pyAoN3xTJ2dC0Dr8p2jJpXHtr6I8UjEg9FKC43Ev8p58fgN4xiif8yeQ8Dg4S8
+	 4peH27EpUgEFRQ+G31XnPvGzKh7CxtLM0MltoNTmwNMzVxw8vCgiH5r7R0LASxkzxAyzNUW2Qj0tIb
+	 4o2i+hjQevTcMibx4aH1DaR3+cc4ixA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746297978; x=1746902778;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=SgDQY5rPFVDOVTM0LSU4AZU6By/eM3JenPb1tAEbTQI=;
+	b=QS4DoFWSeTzdHRbJWED7Q3S92zeZ0LW1eHmdjFBQEogzhAwTxSWwEAdJZmikiEUUT3DYK20kNosVm
+	 t7+0XVWAw==
+X-HalOne-ID: e5ce362a-284e-11f0-923b-2b8368a4d5c5
+Received: from smtpclient.apple (unknown [85.191.60.109])
+	by mailrelay3.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id e5ce362a-284e-11f0-923b-2b8368a4d5c5;
+	Sat, 03 May 2025 18:46:18 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4099; i=kees@kernel.org; h=from:subject; bh=vcmcNB9M/mnVV0u1TxfACvPzuwlKwH4U0CbHSsTxvvI=; b=owGbwMvMwCVmps19z/KJym7G02pJDBliyftYMz0PPeCzUN3AeedYZIn/ro+vFtTaZi1jryxji P75JD6uo5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCI9nQx/eAXnbl5/btvnlRlX neQ7dc5/2MPWInTRLi1CKTM3dB1fOyPDsRulL/9NuPHAXNpf6bDhB6OrK7VcI7jMZ5xn+2H9ye0 kLwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <fddf0457275576c890d16921465cf473@beldev.am>
+Date: Sat, 3 May 2025 20:46:07 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Nhat Pham <nphamcs@gmail.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Yosry Ahmed <yosry.ahmed@linux.dev>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <fddf0457275576c890d16921465cf473@beldev.am>
+To: Igor Belousov <igor.b@beldev.am>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-There was no dependency between the plugins changing and the rest of the
-kernel being built. This could cause strange behaviors as instrumentation
-could vary between targets depending on when they were built.
 
-Generate a new header file, gcc-plugins.h, any time the GCC plugins
-change. Include the header file in compiler-version.h when its associated
-feature name, GCC_PLUGINS, is defined. This will be picked up by fixdep
-and force rebuilds where needed.
 
-Add a generic "touch" kbuild command, which will be used again in
-a following patch. Add a "normalize_path" string helper to make the
-"TOUCH" output less ugly.
+> On May 2, 2025, at 10:07=E2=80=AFAM, Igor Belousov <igor.b@beldev.am> =
+wrote:
+>=20
+> On 2025-05-02 12:01, Vitaly Wool wrote:
+>> From: Igor Belousov <igor.b@beldev.am>
+>> Use vmalloc for page allocations for zblock blocks to avoid extra
+>> pressure on the memmory subsystem with multiple higher order
+>> allocations.
+>> While at it, introduce a module parameter to opportunistically
+>> allocate pages of lower orders via try_page_alloc() for faster
+>> allocations whenever possible.
+>> Since vmalloc works fine with non-power of 2 numbers of pages,
+>> rewrite the block size tables to use that opportunity.
+>> Signed-off-by: Igor Belousov <igor.b@beldev.am>
+>> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+>> ---
+>> Tests run on qemu-arm64 (8 CPUs, 1.5G RAM, 4K pages):
+>> 1. zblock
+>> 43205.38user
+>> 7320.53system
+>> 2:12:04elapsed
+>> zswpin 346127
+>> zswpout 1642438
+>> 2. zsmalloc
+>> 47194.61user
+>> 7978.48system
+>> 2:25:03elapsed
+>> zswpin 448031
+>> zswpout 1810485
+>> So zblock gives a nearly 10% advantage.
+>> Please note that zsmalloc *crashes* on 16K page tests so I couldn't
+>> compare performance in that case.
+>=20
+> Right, and it looks like this:
+>=20
+> [  762.499278]  bug_handler+0x0/0xa8
+> [  762.499433]  die_kernel_fault+0x1c4/0x36c
+> [  762.499616]  fault_from_pkey+0x0/0x98
+> [  762.499784]  do_translation_fault+0x3c/0x94
+> [  762.499969]  do_mem_abort+0x44/0x94
+> [  762.500140]  el1_abort+0x40/0x64
+> [  762.500306]  el1h_64_sync_handler+0xa4/0x120
+> [  762.500502]  el1h_64_sync+0x6c/0x70
+> [  762.500718]  __pi_memcpy_generic+0x1e4/0x22c (P)
+> [  762.500931]  zs_zpool_obj_write+0x10/0x1c
+> [  762.501117]  zpool_obj_write+0x18/0x24
+> [  762.501305]  zswap_store+0x490/0x7c4
+> [  762.501474]  swap_writepage+0x260/0x448
+> [  762.501654]  pageout+0x148/0x340
+> [  762.501816]  shrink_folio_list+0xa7c/0xf34
+> [  762.502008]  shrink_lruvec+0x6fc/0xbd0
+> [  762.502189]  shrink_node+0x52c/0x960
+> [  762.502359]  balance_pgdat+0x344/0x738
+> [  762.502537]  kswapd+0x210/0x37c
+> [  762.502691]  kthread+0x12c/0x204
+> [  762.502920]  ret_from_fork+0x10/0x20
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: <linux-hardening@vger.kernel.org>
-Cc: <linux-kbuild@vger.kernel.org>
----
- include/linux/compiler-version.h |  4 ++++
- scripts/Makefile.gcc-plugins     |  2 +-
- scripts/Makefile.lib             | 18 ++++++++++++++++++
- scripts/gcc-plugins/Makefile     |  4 ++++
- 4 files changed, 27 insertions(+), 1 deletion(-)
+In fact we don=E2=80=99t know if zsmalloc is actually supposed to work =
+with 16K pages. That=E2=80=99s the question to Sergey and Minchan. If it =
+is indeed supposed to handle 16K pages, I would suggest that you =
+submitted a full report with reproduction steps and/or provided a fix if =
+possible.
 
-diff --git a/include/linux/compiler-version.h b/include/linux/compiler-version.h
-index 573fa85b6c0c..74ea11563ce3 100644
---- a/include/linux/compiler-version.h
-+++ b/include/linux/compiler-version.h
-@@ -12,3 +12,7 @@
-  * and add dependency on include/config/CC_VERSION_TEXT, which is touched
-  * by Kconfig when the version string from the compiler changes.
-  */
-+
-+#ifdef GCC_PLUGINS
-+#include <generated/gcc-plugins.h>
-+#endif
-diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index 5b8a8378ca8a..e50dc931be49 100644
---- a/scripts/Makefile.gcc-plugins
-+++ b/scripts/Makefile.gcc-plugins
-@@ -38,7 +38,7 @@ export DISABLE_STACKLEAK_PLUGIN
- 
- # All the plugin CFLAGS are collected here in case a build target needs to
- # filter them out of the KBUILD_CFLAGS.
--GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
-+GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -DGCC_PLUGINS
- export GCC_PLUGINS_CFLAGS
- 
- # Add the flags to the build!
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 2fe73cda0bdd..6fc2a82ee3bb 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -296,6 +296,19 @@ $(foreach m, $1, \
- 	$(addprefix $(obj)/, $(call suffix-search, $(patsubst $(obj)/%,%,$m), $2, $3))))
- endef
- 
-+# Remove ".." and "." from a path, without using "realpath"
-+# Usage:
-+#   $(call normalize_path,path/to/../file)
-+define normalize_path
-+$(strip $(eval elements :=) \
-+$(foreach elem,$(subst /, ,$1), \
-+	$(if $(filter-out .,$(elem)), \
-+	     $(if $(filter ..,$(elem)), \
-+		  $(eval elements := $(wordlist 2,$(words $(elements)),x $(elements))), \
-+		  $(eval elements := $(elements) $(elem))))) \
-+$(subst $(space),/,$(elements)))
-+endef
-+
- # Build commands
- # ===========================================================================
- # These are shared by some Makefile.* files.
-@@ -343,6 +356,11 @@ quiet_cmd_copy = COPY    $@
- $(obj)/%: $(src)/%_shipped
- 	$(call cmd,copy)
- 
-+# Touch a file
-+# ===========================================================================
-+quiet_cmd_touch = TOUCH   $(call normalize_path,$@)
-+      cmd_touch = touch $@
-+
- # Commands useful for building a boot image
- # ===========================================================================
- #
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index 320afd3cf8e8..05b14aba41ef 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -66,3 +66,7 @@ quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
- 
- $(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
- 	$(call if_changed_dep,plugin_cxx_o_c)
-+
-+$(obj)/../../include/generated/gcc-plugins.h: $(plugin-single) $(plugin-multi) FORCE
-+	$(call if_changed,touch)
-+always-y += ../../include/generated/gcc-plugins.h
--- 
-2.34.1
+~Vitaly
 
