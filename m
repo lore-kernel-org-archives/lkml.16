@@ -1,102 +1,154 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8841A5B8B
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 22:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD3315350B;
+	Sat,  3 May 2025 22:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746310785; cv=none; b=SxdIGyoOkqMr1tWjmm30ABRPfHUJ3HugoIvJQby2YQ7zWeDBOtbVb2QQQhZZ5bXzMHkJcaHmGwusp95jKhRJuIx//gjLqK3YnfBueBwC7TMsWq95i/sEQw6/XmSL84F7lHOKzNfuvNUTkmFuTazuFyC82l209gpUJgzrzE/x+uI=
+	t=1746311997; cv=none; b=qOQ84snHOOQgf7u+eu/y8cxFoUxhPqroLxoFdekG4KWRAXIK4MsMlXkMgkNHLERhfulHzE564AYDp/M0g3Z5dYhi02gcMAg2eP46p1qa4rgHFmNP6Zt5noMr4be5mY2KBcb+xp9pZ8f0ONX5Y5EHnMm059pyJiZma6MNnhBAoYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746310785; c=relaxed/simple;
-	bh=K7bpm3hmvNgfHOZKQIcgkQweXOrSWSr5prf6mDtV8Ps=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=lISKVtnbLDHccPcXOwG37lOiwo+odGw0qHQdZ8JXyLxZfmZOzXIqCZHn/FbmzJF+KbtjJf4Q38cOyEdFUMDGRP206hWCDLKk/WHG2Fgfsdjakm+g8NiUt9biY6DmSWBkIcJB9Z65Ap2q2PT/vcbOEdYgfobbMqTXcQJeGd9y8cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BQnG6SK3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746311997; c=relaxed/simple;
+	bh=q/xAnCXUh7gKnEZY83rtkQmLm5+SBilPqhFLOnA9tCc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MoeCyG2zUnyMC3v0NhgCi9dVHUtN9IqfceYa0kCouHE/bvGwg9WLi0W1ikTLxhkdWzd7wL/b5MuFKPCczL9LZ8kJFJxFyQ7pVFjeHRal/5FgxzPBwkpSI8DRjFMBJmjFWwV3UAS5X2GYZNz7JfsadLAnyTPLySjxPGPQJOsUu0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvcK7mTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BQnG6SK3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746310780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4/c3VdkF4DbF4Om460TBXja0mJFR59DDuAT798jGta4=;
-	b=BQnG6SK3L4nQZwrIeZLRtYWYptksft0IOmrJwwfaaz1nfZm6RpEJ2MmQLyrzVHLE2pVU6O
-	hsYbjhETvfsc2efMwEE3p9HC3SROa+QjKRbJnA1M3KdjZGjGs0ve8M05aOZWKW4uv0G7vJ
-	vWAslCEjBoyA7dKXc0rLhvC9qXXtBD4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-215-mxxNZJgJOQeS8RMv7PlrJA-1; Sat,
- 03 May 2025 18:19:35 -0400
-X-MC-Unique: mxxNZJgJOQeS8RMv7PlrJA-1
-X-Mimecast-MFC-AGG-ID: mxxNZJgJOQeS8RMv7PlrJA_1746310770
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA65E195608E;
-	Sat,  3 May 2025 22:19:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 103E719560A3;
-	Sat,  3 May 2025 22:19:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <aBYqlBoSq4FwiDKD@kernel.org>
-References: <aBYqlBoSq4FwiDKD@kernel.org> <20250430152554.23646-1-jarkko@kernel.org>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: dhowells@redhat.com, keyrings@vger.kernel.org,
-    Lukas Wunner <lukas@wunner.de>,
-    Ignat Korchagin <ignat@cloudflare.com>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    "David S. Miller" <davem@davemloft.net>,
-    Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-    Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-    "Serge E. Hallyn" <serge@hallyn.com>,
-    James Bottomley <James.Bottomley@hansenpartnership.com>,
-    Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-    linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-    linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] KEYS: Reduce smp_mb() calls in key_put()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvcK7mTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D60FC4CEE3;
+	Sat,  3 May 2025 22:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746311997;
+	bh=q/xAnCXUh7gKnEZY83rtkQmLm5+SBilPqhFLOnA9tCc=;
+	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
+	b=DvcK7mTkvKmWGxzoRf9hCH1JhrQTgb2jv2whuFoqqKpflpZKLD3Ngz3jHjnDWZxj4
+	 O9qfOFXAFPN9FlJsNhATlg2xM690ZevuWT1K0H2EzAJHKHs0OnGgoeOQuHZrj7iQXF
+	 QSGPvxaV9mEzP9/pyKH+faQUrxgw5N2cpJn4QePSKkYuAotHLiSBmC6tUpx1KJyygi
+	 8ZHfeaWwT/8M0enFKllfh8NwDlbvQJTCZH280co1jzKPuVp7wY1nScU8IqxfdejtdF
+	 0j9QsWR5IjUg6pNDr0KTdwffoqDYSph/HC3ZCRckMbd1vkePbUuOXc8mS9PxmKjIjr
+	 5OFIr4EC54VvQ==
+Message-ID: <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org>
+Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in
+ kernel 6.14.3 and above
+From: Niklas Schnelle <niks@kernel.org>
+Reply-To: niks@kernel.org
+To: Mingyen Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=98=8E=E8=AB=BA=29?=	
+ <Mingyen.Hsieh@mediatek.com>, "stable@vger.kernel.org"
+ <stable@vger.kernel.org>,  "fossben@pm.me"	 <fossben@pm.me>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+ "linux-mediatek@lists.infradead.org"
+	 <linux-mediatek@lists.infradead.org>, Allan Wang
+ =?UTF-8?Q?=28=E7=8E=8B=E5=AE=B6=E5=81=89=29?=
+	 <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>
+Date: Sun, 04 May 2025 00:39:52 +0200
+In-Reply-To: <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
+References: 
+	<EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me>
+	 <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1121542.1746310761.1@warthog.procyon.org.uk>
-Date: Sat, 03 May 2025 23:19:21 +0100
-Message-ID: <1121543.1746310761@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Jarkko Sakkinen <jarkko@kernel.org> wrote:
+On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=E8=AB=
+=BA) wrote:
+> On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
+> >=20
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >=20
+> >=20
+> > Hello all,
+> >=20
+> > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed that
+> > I could no longer ping *.local addresses provided by Avahi. In
+> > addition, I also noticed that I was not able to get a DHCP IPv6
+> > address from my router, no matter how many times I rebooted the
+> > router or reconnected with NetworkManager.
+> >=20
+> > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses immediately.
+> > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
+> > address will stay there for a while before disappearing later,
+> > possibly because the DHCP lease expired? I am not sure exactly when
+> > it stops working.
+> >=20
+> > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
+> > offending commit that causes mDNS to fail:
+> >=20
+> > commit 80007d3f92fd018d0a052a706400e976b36e3c87
+> > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+> > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
+> >=20
+> > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_=
+cmd
+> >=20
+> > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upst=
+ream.
+> >=20
+> > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO firm=
+ware.
+> >=20
+> > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling M=
+LO when the
+> > firmware supports it")
+> >=20
+> > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++--------=
+---
+> > --------------------------------------------
+> > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
+> >=20
+> > I do not know if this same commit is also causing the IPv6 issues as
+> > testing that requires quite a bit of time to reproduce. What I do
+> > know with certainty as of this moment is that it definitely breaks in
+> > kernel 6.14.3.
+> >=20
+> > I've attached my hardware info as well as dmesg logs from the last
+> > working kernel from the bisect and 6.14.4 which exhibits the issue.
+> > Please let me know if there's any other info you need.
+> >=20
+> > Thanks!
+> > Benjamin Xiao
+>=20
+> Hi,
+>=20
+> Thanks for reporting this issue, we will aim into this.
+>=20
+> Can you provide me with your testing steps?
+>=20
+> Best Regards,
+> Yen.
+>=20
 
-> Oops, my bad (order swap), sorry. Should have been:
-> 	
->  				spin_unlock_irqrestore(&key->user->lock, flags);
-> 			} else {
-> 				smp_mb(); /* key->user before FINAL_PUT set. */
->  			}
-> 			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-> 
-> Should spin_lock()/unlock() be good enough or what good does smp_mb() do
-> in that branch? Just checking if I'm missing something before sending
-> fixed version.
+Hi Yan,
 
-spin_unlock() is semi-permeable, so stuff after it can leak into the inside of
-it up as far as the spin_lock().  With your change, the garbage collector can
-no longer guarantee that key_put() will have done with accessing key->user
-when it sees KEY_FLAG_FINAL_PUT is set.
+I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
+mt7925e WiFI module.=C2=A0My setup is just a home router with native IPv6
+both for my uplink and in the LAN. The problems with IPv6 can already
+be seen just in the LAN for example by checking which IP was used for
+SSH, in my setup it should always be IPv6 but falls back to IPv4 in the
+broken state.
 
-So, NAK on this patch, I think.  If you want a second opinion, I'd suggest
-waving it in front of Paul McKenney.
+As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
+mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4. This
+fully restores IPv6 for me. Also note I'm running this with the mt7925
+firmware version 20250425073330 from linux-firmware's master branch as
+I had some dropped connections with earlier firmware.
 
-Possibly we only need smp_mb() in the IN_QUOTA branch in key_put().
+So it definitely looks like that commit also broke IPv6 and not just
+mDNS. Note that if if I use DHCPv6 instead of router advertisements, on
+the latest firmware, but without the revert, I get a global IPv6
+address added to the interface but then native IPv6 addresses are still
+uncreachable. With the offending patch reverted my SSH session to an
+IPv6 only host works fine and is stable. Also I'd be willing to test a
+proper fix as I rely on IPv6 heavily due to having to use CGNAT for
+IPv4 but not for IPv6.
 
-David
 
+Thanks,
+Niklas
