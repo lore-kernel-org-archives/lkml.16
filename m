@@ -1,122 +1,124 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A253AD2C;
-	Sat,  3 May 2025 11:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F0D1E47C5
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 11:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746271136; cv=none; b=DHNOFZ5CdZ5YC39ZP9bvJoeLc7d8hSsz/IvJUpxP5RO0SJuiKZdxWb0ZQm/4kQgKYLsYlss51vbIXMGycozNUzMeGN7ge/Zx8k+FqpsFjqY6OL7ERwNUqmQF+58XK+xDukrDuLtKuN7b21Njqp2eWn9Ivg67RKvP5B3u9NGJyW8=
+	t=1746271247; cv=none; b=gdtmydIOqXtPaDdrvGeeYMfJ7OLoa4HPF+Cbl9hNZvbPUc/HN3P+REbHET5GL70w+BmgFWNYNE45IWxMhs240/QyDZUhgBEj8MV1g4e3k9XGcVX5XQv2aStOilONtBy8RrA0JPpRi6+z6z8FhuYN0WvknqFjB6wxIJZuS3Q5Raw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746271136; c=relaxed/simple;
-	bh=tmca2YOGD+SM8+DR6QVH7oS7rb2oO+5XURYj4WfEP/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fSFnbBIX3UbwheuPIAfjGuItx3a4u1PAfGcSKm40Mm54so7hl/2Xl5xlVhEQ7AYM++20EujjP2Sah2vjj/BNW75rrCUvQ5+0SovkXUW2W4BtYMEX3IuPP5HgOACFzt+icElrB599pD/95SjWw3YlEWtvI6H/cf1pcyXNfU+Sb4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjA6CHPi; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746271247; c=relaxed/simple;
+	bh=ZZwm4+3kqdZaoUrJVAZp3I6AuMg2MOE7m9ADXt1bIrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UhGSiGavA11SMG3aIB205ivl9/mO3BwkC/4pdIpGASNBSe0+ngUxugYaQZNz76PnPccLgq1OYBzIFzunWRaaZlbfIa1O1v7dNLZYAQF1DngdFvYlBU5QnpA4B/8OESBHmgh+QzrCRYBHUiI90qa3ottYSKHSkzHQWXCdo3uCmv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gAFPu/kV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjA6CHPi"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e163543ceso1859695ad.2;
-        Sat, 03 May 2025 04:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746271134; x=1746875934; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kOKTqtMlz4ZjHiXz5jB19w0TVv9Od8mbjFDiMBB1SOw=;
-        b=RjA6CHPi04zYJ0ZSS7IvyDz/XOTAt8Dur957VO7US56FMtcLFX0uK7vG3jGgrEr+D9
-         edXrCuhzBiBkDgM24443Nsz6FlAOVdOwBVbGV5/lQggvi/qU+ZJAJM7RmooKUueDJF4R
-         2ekythq1vzR1AVXvYCPHPDEbBQxmeb6pUBn5AM7oeCDA/i1VNAWivouc0QHewUVzJ+Vp
-         +tZfRCb0AvNzLWl+teCTH+ciSZwjbD2tj/tc5wEjLsWC649OwshS4YqLfT63+TuFIgNm
-         S0tWhJ+OITUgJEW214y5c3VmXVn3SyxlDEeAxG+LedMn9f41T3NmBAC66aE7lqw3elpn
-         K0xQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gAFPu/kV"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5438rWUQ028725
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 11:20:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZZwm4+3kqdZaoUrJVAZp3I6AuMg2MOE7m9ADXt1bIrY=; b=gAFPu/kVSF7z2zpw
+	JsmfR/Fl+CYVrdezpvlE9Fu9Thwz3L0nnxqf/tRBEO/Ponq0O360EE6/9Eyn2msj
+	aN5xZI/IJvtfIQKnoT9wC++Yqfxw6cbxJ8EIqvKRLZhA3OmQFtOIqUDx3POo2wHO
+	5SRfa6/5SeaagKEdvoKuOpBK3MVqirzm4OA6waCPv6MOnRz+xM9jBzGr/Xd8LvTT
+	BTfNHC/Fmxm0sNv4L9QIcovlumy6c3UbVcNy0/0Pa4yd02Ol5XV3o9SHOzyU0xnV
+	tXDGEPFAYJfPtV3jIOUp/cJrx/ikbgPWrmIy10uFoO3TSiHDr0D7s7qwquKrsUpW
+	Jlf3gw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbc58gv6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 11:20:44 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8fd4ef023so6873086d6.2
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 04:20:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746271134; x=1746875934;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kOKTqtMlz4ZjHiXz5jB19w0TVv9Od8mbjFDiMBB1SOw=;
-        b=wEnzvhh+OtgPRAN/wGreE6X0bahx5cCeqO5pqH54prprCMZ1LxtkYgY26kZgCUoptm
-         ne6wLBi3G3E/bNcWT2BI8DDDGgp1+Fdb9zyYGW3Kc2e8M4D8s7b2bjXuqo5UGSQ9Bk33
-         WTiEse1AG8anKreLArmyrtPOuNMmUloC4dr37MB2oXnDhlGOfOVVzaHnyC8XH6Hx7RFP
-         CWxwl1WruqELBTwbyX04KfbzQHsmGBp54NgHO+Q6g0gUrPPsTWP1ckRitzUhc8wd3bh8
-         uRcHVSTS28eit5D18EuiCy0mop1oV4+T4S08lcfprlR0nVrl9rvhqk24NQ4FNjWdZbjj
-         raaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWL/oqHX4NH6xn8+xL/20j179OT8tDAllIGOwNNfvdLtDQBCca9eZTyTuJse6qpsTGM605+5h8IfZXLpX75qQ0=@vger.kernel.org, AJvYcCX9np9oB7XA9lyY0YLybx1adNsKS8ZygCQY0D1lih22IYqzjnpOIvbYIuXtFm9mYwVjxk69deImPpFJaXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU2A707bN5s4QpIJru2rxjWk7/zbOGsb3A2ChVcZnd91mj3CLl
-	Gqai5CbHVDgGsTweZtvl9f6VS8u0tXIYwnRj4aBbccEiPFETSthK+Ufhmzrx2xFbrBOpfrCbYzd
-	uOu3AeCsEVYI3W+QUz5YrGYP8360=
-X-Gm-Gg: ASbGncsrjXRRQD6hsk+GwAUau+bWTe82sIZPavOqdJfXA67hKnw7hB8KbJkGXZ18/wK
-	f6ciripNCqZHKQnkPjwsSB4d3N5CGrSEFqeweSdAQJvHpng9Nc4OQwN89vNlmI7QHnx/LKL5/dE
-	9bENLnuVSDqE9ceiFqvbpsVg==
-X-Google-Smtp-Source: AGHT+IEsBdLwXM+/CELGTzKyTo6DlLWfvxjIw/4GPiiLANrQjix53Q+3RmD4HrklIHpjDDnThHgcGuWfWoWVrKGpOYw=
-X-Received: by 2002:a17:90b:38c4:b0:2fe:7f51:d2ec with SMTP id
- 98e67ed59e1d1-30a4e4108c1mr3835307a91.0.1746271134241; Sat, 03 May 2025
- 04:18:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746271243; x=1746876043;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZwm4+3kqdZaoUrJVAZp3I6AuMg2MOE7m9ADXt1bIrY=;
+        b=l8oemk5V+W97DA2kJfiXmSX5+JWEhMmYxyLuuQ49KQOsIVvBElE9SseruNwZVQ2fy1
+         8C8sy8U/XROeGiGJgmYh3+jL1PBlJ7mEZe2Ocj8CXCUFV2dxfNdiDmvxjfmjZ1R+HNsB
+         Arvjg8HnJWRptrfsGN0xVwPn228laDmkaLilnBtxtSKJB6k2x4jcfV/NBDMzwdzxoB2J
+         8IeJKTHFsf7sTr2pGY89RJb4cVktl1eIN7YmFmKUFSM6LAYRUhtLOVnxeF+DwxRe0fsG
+         N6p7ae00a4RgocPyoyLZjdIm5fm6k+Z6z73zbCG6jQZyhwLoYcyUS8393gaFIcbsdUNV
+         P7eA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIb1GU4JEewZYSDBsMIBUf3AbAVIRu+W0Y1z+6TP73bQpQs8jpUYy2IsBqjeMRq280+5i+Fl8c/Zg+JfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz85QJPs+0pNsNALJ5BNDnS7ps0hGyH8JtwLyvhf1+IqSNAeNQ/
+	PYOGezurbahRXlKl+MaT/fw2/SQQxrzTSkNdZtatGqRD/Hz+x/+M1//XIlS1SelLMVKz0YOQM8Z
+	Vcc2pJo+R1g0dl9LVrAaa/7HdZ+LM6drajnT/OZDOqOUOJ1SO4emDffztHvXfDK4=
+X-Gm-Gg: ASbGncugGLShO22dPAZ0a8AoNqRAsSs3OG9MsjhP+sNgoVgpuwbun6+FOYnj/id8JvV
+	O5KR152CUNUMD0Ki5hAZAAbWchC4AvobWNb4/wa3y/hoapVsJXROoX6ngIhXjn4WG03EokjlYaN
+	Hwvgxz46ltR+DMQdpx4k2ZmOdeEqi+YlMD/vv52a6qMh0HgTc6gbVnG8pX9JTfsmco6d+E1if8V
+	kUnbYbPIK94qM5cHWUTeGCI+IdGgHB2M4H/RL/u+XTOx2nbWQyzT8VsHenLmufdD1Tzfiz65TmZ
+	Mz2eK3T9pLLL1WW6KUn1c8tVCldqZfH/7nAEvSDH80Eme1zVPUS+lszYIsDXj+hMd+I=
+X-Received: by 2002:a05:620a:190f:b0:7c5:687f:d79d with SMTP id af79cd13be357-7cad5b4a71cmr328841485a.8.1746271243650;
+        Sat, 03 May 2025 04:20:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEPb7K6LSDWBZT1Dho5YFFLrfHITP13o2fAlVZXPwohh1JHtEdiAWbk/ZWvd2Xrvglqu4P/0g==
+X-Received: by 2002:a05:620a:190f:b0:7c5:687f:d79d with SMTP id af79cd13be357-7cad5b4a71cmr328839085a.8.1746271243159;
+        Sat, 03 May 2025 04:20:43 -0700 (PDT)
+Received: from [192.168.65.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540d6esm179999466b.185.2025.05.03.04.20.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 May 2025 04:20:42 -0700 (PDT)
+Message-ID: <64268903-fec1-4418-95ac-665738435366@oss.qualcomm.com>
+Date: Sat, 3 May 2025 13:20:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
- <20250501-configfs-v6-1-66c61eb76368@kernel.org> <ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
- <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
- <87msbw1s9e.fsf@kernel.org> <86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
- <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
- <87h62419r5.fsf@kernel.org> <FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
- <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
- <87bjsc154u.fsf@kernel.org> <CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
- <TbTextfZAMlWFS5cWlUE-Wtnp1bv8P783IQQbWUcnHvEgBjpIxukMngLdPkqNR9jWT9O_OtOY1ejin9JoOnsww==@protonmail.internalid>
- <CANiq72m8VWKRyFai0Xg8AZUTjG0eUVG8nY-ZCQOqOnvwsW0ZaA@mail.gmail.com> <875xij1ouy.fsf@kernel.org>
-In-Reply-To: <875xij1ouy.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 3 May 2025 13:18:40 +0200
-X-Gm-Features: ATxdqUGkJihz9NI2m6_vV-_CfNdYjkcfgniu1JqMt6YMEGQBob_Q3PXl7kW2HPM
-Message-ID: <CANiq72m0cuf5YKfOY8oNg83dzWEqqyddGKKh_6fwQQ4hoCp+yQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
-	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Breno Leitao <leitao@debian.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Add support to load QUP SE firmware from
+To: Viken Dadhaniya <quic_vdadhani@quicinc.com>, andi.shyti@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.or,
+        andersson@kernel.org, konradybcio@kernel.org, johan+linaro@kernel.org,
+        dianders@chromium.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
+References: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250503111029.3583807-1-quic_vdadhani@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: qmRoU44Ae8G6e5BQ1w60r7Oc-NXknjVQ
+X-Authority-Analysis: v=2.4 cv=O7Y5vA9W c=1 sm=1 tr=0 ts=6815fc0c cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EGseXkZT_eIdJ_7nNB0A:9
+ a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: qmRoU44Ae8G6e5BQ1w60r7Oc-NXknjVQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDEwMSBTYWx0ZWRfX47i8P74kILX3
+ Mm4mgsZTXonARS0/yIbHqer6zEHYLCvyhsV686j9XFw7ID6lLNE6fXK+5RpcBE6YPkANPOpXP00
+ n5PbB1NUYrBj7FSPtbheQizTac6V7snp9IfAk4WI4cw61NDVeFpmRhurchp98DbG6n6V+OSP2Bk
+ sBWvNmjquASEsyWf1Z1cZZgCvr8NQP1eIZSSoDNwhYiOi6TnPE+x+KXzYMTEyxgOFQHI+NnMrGQ
+ YtForxAO1TC0i0RIVcMqJq7ANi3GHCUCMr2L8ZEBqvzpT1vrkffU86CyCRZThm4lOQyx/c3c/Sn
+ SXINfzVkP7HCYtg7WiohSOvuhiBSll0y51WyFo6F/iLFu+Asy0QH+qku4KOu37lV/JznstKHri+
+ FwII6bPh8HayLidcwNqFs8moSFWAx1rZ4kUc+NBp1pc3FBuv0l1izm6rNtyLRYXUTTkQl168
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 priorityscore=1501 adultscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030101
 
-On Fri, May 2, 2025 at 8:57=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
-org> wrote:
->
-> Right, they are not from const context, but they are inside a `let`
-> statement, so if all the captured variables are constant (which they
-> are), the let statement will be evaluated in const context [1], right?
+On 5/3/25 1:10 PM, Viken Dadhaniya wrote:
 
-No, I don't think so. Though I don't know what you mean by "captured
-variables" here or why you point to [const-eval.const-context.init].
+You sent this series at 1:10 PM and replied to review comments on the
+previous revision at 1:11 PM - please refrain from doing that, as
+you're effectively stalling your submission because of lingering
+unsolved problems that ultimately still need to be solved before
+the patches are merged.
 
-The way I read the reference is that Rust only guarantees evaluation
-at compile-time within const contexts, and a `let` statement is not a
-const context and its initializer is not one of the ones listed in
-[const-eval.const-context.init]. `const fn` isn't a const context
-either.
-
-Which makes sense -- the `let` initializers are just "normal"
-expressions, i.e. you don't want to limit the kinds of code you can
-run there.
-
-For instance, here there is a panic at runtime trying to mimic a bit the pa=
-tch:
-
-    https://godbolt.org/z/v5qdK9vve
-
-Similarly, if I take your patch and put there an `assert!(false)` in
-`add` -- I see no build error and `objdump` shows the panic call from
-the sample.
-
-Cheers,
-Miguel
+Konrad
