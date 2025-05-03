@@ -1,48 +1,48 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB1A2798E6
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 14:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CD9268FF4
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 14:39:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746283183; cv=none; b=h7aUGlGZGwdSBtC3xL3Pkmc2D0k5Kr0ipfg0kl9zVoAVOJ/26H1MX1zcYYEgGtI7jbk3aYyLduduS4SKhHogXRI/mebpwGd4kBsqyIUK4fnMH/98xR97CAX4e8SmiMRhr/5reY5me53dQcTI/LW3w3fcLRlX0TXYBvxL7SrewcE=
+	t=1746283189; cv=none; b=ZNfL36+OlCMYfu0oErmwxdTjTLqf9ZxEyMwqza47dAy6MIliz7X8rreF+opw6/3iEuBMNZyOEDHwqnzfUKKgEyUqGhdosS1dB75M7Dn6yRwK8RFl6Yovkf4TT9Ed2DUHHPSovQIzdQobOYNNnt/sY9yev4OMT2FJ9eQCvhJImSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746283183; c=relaxed/simple;
-	bh=Y1Ih+B7V3riu0tf9b1r2d+GpHBiYz/f+IiY2sNEbobg=;
+	s=arc-20240116; t=1746283189; c=relaxed/simple;
+	bh=X2H9vXmKjO+gJWdzLddERjKxcXf8lPOxIeoMy8671J0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hjmtYWuRl60OhkSUJ48vI2IJMfGysPBGPzexS5bh8ld5od7RDBcI/rJsKwtnVUvGdGvFNpc7oFBX14a0OlX0o/MG0qzNHGOU7rfHL3Y3hoIl2bqguDf8P+pcsQsFiqvMMuiJ9/JM1dOIqHZeeeWZiIOL8/iB0Xys8QoIgyApmD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FXMVcxfQ; arc=none smtp.client-ip=170.10.129.124
+	 Content-Disposition:In-Reply-To; b=Dqoi/e6fE+57uBcJ9sGT+HA+VcP0J8/zTYa0CGT12oAmAC1+8rDrcIQWyr+wpIfjCVHNc9fUHhKtwVhYOwze0pRXji6VjDPbeelaYi6XjL610Ug6pjXxDA8bW5gRVUYJ99d0DkdvF4b2uGIST5QCNzZYDdEMvF9LCiUbHOp56FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ibhq5zxa; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FXMVcxfQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ibhq5zxa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746283180;
+	s=mimecast20190719; t=1746283185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=j0kJYhfu8vF1mjLFoB0t+CIUCAM73kbVIq1ExPK13dQ=;
-	b=FXMVcxfQDcUuirZJS9fYvlQazcsCvmS5hMbKA+TpKhA9JOhfvaJKn4NDWUf10ToBBnrLXg
-	y+JgNJ4yAmo3IP+bTq3rmlpcEGqPYeT2QyryhZkJVFL6/OtXiDWZs9rWEFEpxBjy1BjLpr
-	1YB8kLEmiW/oYke5OpebrnZnI0DUdyg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 in-reply-to:in-reply-to; bh=+DmxfC8rGy/UAYF1Q6xSBguY0xVPIRYkk0B3H71yht8=;
+	b=Ibhq5zxaMsbKX0ISG3LaiNhAAScZOvIo2MP8fssRgXgbpvPL7Icg+M66pfTAxTUAXmxIi+
+	jGj/fEPSXzOlMFaozgQqEzVIY55uUHtl2nVAqAfKQJcQabaqsR8SDxLOmJXUX35X+Q790l
+	CDILmHJYLE14vd1qT6zooweCkrcr64U=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-yQZtQixpOzmbSMAQrDQVxA-1; Sat,
- 03 May 2025 10:39:37 -0400
-X-MC-Unique: yQZtQixpOzmbSMAQrDQVxA-1
-X-Mimecast-MFC-AGG-ID: yQZtQixpOzmbSMAQrDQVxA_1746283176
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-43-Pck23KyaPW-2geQtqQnEvQ-1; Sat,
+ 03 May 2025 10:39:43 -0400
+X-MC-Unique: Pck23KyaPW-2geQtqQnEvQ-1
+X-Mimecast-MFC-AGG-ID: Pck23KyaPW-2geQtqQnEvQ_1746283182
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9BB93180056F;
-	Sat,  3 May 2025 14:39:35 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4A4219560AE;
+	Sat,  3 May 2025 14:39:41 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.23])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 53F9D19560A3;
-	Sat,  3 May 2025 14:39:31 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id BA51C180036E;
+	Sat,  3 May 2025 14:39:37 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat,  3 May 2025 16:38:55 +0200 (CEST)
-Date: Sat, 3 May 2025 16:38:50 +0200
+	oleg@redhat.com; Sat,  3 May 2025 16:39:01 +0200 (CEST)
+Date: Sat, 3 May 2025 16:38:56 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Ingo Molnar <mingo@kernel.org>
 Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
@@ -52,9 +52,9 @@ Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	"Chang S . Bae" <chang.seok.bae@intel.com>
-Subject: [PATCH tip/x86/fpu 4/6] x86/fpu: arch_dup_task_struct: always use
- memcpy_and_pad()
-Message-ID: <20250503143850.GA8997@redhat.com>
+Subject: [PATCH tip/x86/fpu 5/6] x86/fpu: fpu__drop: check TIF_NEED_FPU_LOAD
+ instead of PF_KTHREAD|PF_USER_WORKER
+Message-ID: <20250503143856.GA9009@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,38 +65,33 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20250409211127.3544993-1-mingo@kernel.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-It makes no sense to copy the bytes after sizeof(struct task_struct),
-FPU state will be initialized in fpu_clone().
+PF_KTHREAD|PF_USER_WORKER tasks should never clear TIF_NEED_FPU_LOAD,
+so the TIF_NEED_FPU_LOAD check should equally filter them out.
 
-A plain memcpy(dst, src, sizeof(struct task_struct)) should work too,
-but "_and_pad" looks more safe.
+And this way an exiting userspace task can avoid the unnecessary "fwait"
+if it does context_switch() at least once on its way to exit_thread().
 
 Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 ---
- arch/x86/kernel/process.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/x86/kernel/fpu/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 7a1bfb61d86f..d01adc028274 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -93,11 +93,9 @@ EXPORT_PER_CPU_SYMBOL_GPL(__tss_limit_invalid);
-  */
- int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 8d674435f173..fa131299c7da 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -693,8 +693,7 @@ void fpu__drop(struct task_struct *tsk)
  {
--	/* init_task is not dynamically sized (incomplete FPU state) */
--	if (unlikely(src == &init_task))
--		memcpy_and_pad(dst, arch_task_struct_size, src, sizeof(init_task), 0);
--	else
--		memcpy(dst, src, arch_task_struct_size);
-+	/* fpu_clone() will initialize the "dst_fpu" memory */
-+	memcpy_and_pad(dst, arch_task_struct_size, src,
-+			sizeof(struct task_struct), 0);
+ 	struct fpu *fpu;
  
- #ifdef CONFIG_VM86
- 	dst->thread.vm86 = NULL;
+-	/* PF_KTHREAD tasks do not use the FPU context area: */
+-	if (tsk->flags & (PF_KTHREAD | PF_USER_WORKER))
++	if (test_tsk_thread_flag(tsk, TIF_NEED_FPU_LOAD))
+ 		return;
+ 
+ 	fpu = x86_task_fpu(tsk);
 -- 
 2.25.1.362.g51ebf55
 
