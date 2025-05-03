@@ -1,78 +1,176 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671CD19DF66;
-	Sat,  3 May 2025 15:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078C91922DC
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 15:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746285871; cv=none; b=alZDVQ8wKO/9b5iLqa6A6dtZ3D/5AmQcXebZxktg8D3IeqDA5y5LQy5aUZVDDUJivd+bTbUDKypUMU6ynd9RcJd1f8EwKQUdIw+bNkl3wAbdkMWSBWuisWyF2cPKDlYkIszzDaU2Q8m8hJBrettleh8CE1vkkwxlG89bSvk8AaM=
+	t=1746285987; cv=none; b=YFnEM9wswVIzHygj1FCxIwxhS+YOUpu9GLZxIrOrjPLv2Q6R6mrouAmgynYmHiyw5QDPNTOagtqb9a83jOgkneHmVdr0dcu9H74C7FgcqPjcuiaHyZ7SNyp1gQH1hdTVzF5s7NW9xL4kKz9Ze3vCQFjmpyNfyfYKF5xPoy0o+6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746285871; c=relaxed/simple;
-	bh=tmbnxlsppWiYguxYb+RlfQKZJApep4Se6ntHEGHoW4Q=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qx2MMYXbpvvMXYNj73S0deHdkEzYSwSuHkCX9iVLm2yZFGiSp8UoZ3RSa1GV8tGsoo9n2DfiiL6b1/CB6cRKeosRrEALfqp4vMxLntJoac7cVyGAK3hmPKoGAnfm/BdUnZIu1qYAWRsI+M5pPg24wGSTGhRgsfl3UdUZ5QXjIYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uBEdI-000000005ht-3H7E;
-	Sat, 03 May 2025 15:24:24 +0000
-Date: Sat, 3 May 2025 16:24:21 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Elad Yifee <eladwf@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net 2/2] net: mediatek: do not reset PSE when seting FE
- register
-Message-ID: <226fada6d179db1655751e689ab30a1cbd682f49.1746285649.git.daniel@makrotopia.org>
-References: <27713d0004ead6e57d070f9e19c0d13709ba2512.1746285649.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1746285987; c=relaxed/simple;
+	bh=r11E+HpnRZYCNiloV1sknkTKk2/42qd15cojiZBEXf0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZEXumkY5lXvQGJIoipaTqxVJ5MnuKVqqioYgsuMNp9id/tRThKZOnsShvbbgpdvtkB9kcE7iQ7oGcxwCCT6nRmJ+an+ZqidGQI6+oMqv5HSHBZ7p/M+O4yVqr5AdaELKukZFU0VgbON8R6hxMaSQkvvRqAL2wkczHmLBWL/uB3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d817cf6e72so30379055ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 08:26:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746285985; x=1746890785;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FjEQiCQ1advZTEcLfEU1Q4dTXCIr3UpII6DXMN8vdK8=;
+        b=AqQnneGu2r60CzpUxTZT0ESspalddOvJshgT7JhZ4cQz+jp732NbVugGLYAcvHzZRq
+         92fdUWLknVvAg9/uQmhIrNQuk2okoazinwRSwfXA+cfoWEPsPXfhdfMfxlmC5lVCJcaT
+         Bxqj9X4m7GwGdUBuNvSW3Rd8oVzVNobiqVPgy9HIe3w5mcRQpItYe4UXj0nEi7AOG5yz
+         L+NjYk9paIzMLQ9l9xCxS7tTwAcOJKa5uoBXLcqOqcwKlFbrZZ5oRDScl8Up9wHQ77Md
+         7yovUfsPuR6Yr/9WbkKxd0BLq3JmSseWMWPx4Bp1812X3NuawzNhN9XoB+BC7jWdaaR5
+         T0bA==
+X-Forwarded-Encrypted: i=1; AJvYcCUttQMmHO/OGxKGnJY1iOzddcZ45C19j9dLcbGojEYDG5xgdy9EvFf5W5g51dN3VrQpvchA6lF71wi1oA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8Ag4FCx4i0hoLcDKWW4Sptr+qY25HN4O6ZPEM/gc2VgArbFM7
+	+/3sRaijHxhUMKRXFYqR3qtIqPBMMpv9Yf0UiT5fVZGmvFQnFMjhFG7p0+bsMVuvX9OTpSSjBQr
+	dSvL9/6zGtsMntT3z0dYL9Sj1l3O8hbgCWW/KNnNFcDmv/pzbcPRtzBY=
+X-Google-Smtp-Source: AGHT+IEwI6B+dlKHv/y/aEPxt0aVvx7ZJ7WD6o5hHU84RsVaN6gwX/WD2oCD2wet+VskTJ0A07Ju6JKY057qQT4hNakRZV6worUV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27713d0004ead6e57d070f9e19c0d13709ba2512.1746285649.git.daniel@makrotopia.org>
+X-Received: by 2002:a05:6e02:17c7:b0:3d9:6d60:709e with SMTP id
+ e9e14a558f8ab-3d97ada9f06mr73351205ab.4.1746285985151; Sat, 03 May 2025
+ 08:26:25 -0700 (PDT)
+Date: Sat, 03 May 2025 08:26:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681635a1.a70a0220.254cdc.001e.GAE@google.com>
+Subject: [syzbot] [net?] KASAN: global-out-of-bounds Read in fib6_ifdown (2)
+From: syzbot <syzbot+ba503006f24effba2ba0@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Hello,
 
-Remove redundant PSE reset.
-When setting FE register there is no need to reset PSE,
-doing so may cause FE to work abnormal.
+syzbot found the following issue on:
 
-Link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/3a5223473e086a4b54a2b9a44df7d9ddcc2bc75a
-Fixes: dee4dd10c79aa ("net: ethernet: mtk_eth_soc: ppe: add support for multiple PPEs")
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+HEAD commit:    95d3481af6dc Merge tag 'spi-fix-v6.15-rc4' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fe6a70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=541aa584278da96c
+dashboard link: https://syzkaller.appspot.com/bug?extid=ba503006f24effba2ba0
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13bca0f4580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-95d3481a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6ece5d5205be/vmlinux-95d3481a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/eba7ece24cf0/bzImage-95d3481a.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ba503006f24effba2ba0@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: global-out-of-bounds in fib6_ifdown+0x7f5/0x8f0 net/ipv6/route.c:4901
+Read of size 8 at addr ffffffff9af98530 by task syz-executor/19807
+
+CPU: 3 UID: 0 PID: 19807 Comm: syz-executor Not tainted 6.15.0-rc4-syzkaller-00256-g95d3481af6dc #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ fib6_ifdown+0x7f5/0x8f0 net/ipv6/route.c:4901
+ fib6_clean_node+0x2a4/0x5b0 net/ipv6/ip6_fib.c:2199
+ fib6_walk_continue+0x44f/0x8d0 net/ipv6/ip6_fib.c:2124
+ fib6_walk+0x182/0x370 net/ipv6/ip6_fib.c:2172
+ fib6_clean_tree+0xd4/0x110 net/ipv6/ip6_fib.c:2252
+ __fib6_clean_all+0x107/0x2d0 net/ipv6/ip6_fib.c:2268
+ rt6_sync_down_dev net/ipv6/route.c:4951 [inline]
+ rt6_disable_ip+0x2ec/0x990 net/ipv6/route.c:4956
+ addrconf_ifdown.isra.0+0x11d/0x1a90 net/ipv6/addrconf.c:3854
+ addrconf_notify+0x220/0x19e0 net/ipv6/addrconf.c:3777
+ notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2176
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ dev_close_many+0x319/0x630 net/core/dev.c:1731
+ unregister_netdevice_many_notify+0x578/0x26f0 net/core/dev.c:11952
+ unregister_netdevice_many net/core/dev.c:12046 [inline]
+ unregister_netdevice_queue+0x305/0x3f0 net/core/dev.c:11889
+ unregister_netdevice include/linux/netdevice.h:3374 [inline]
+ __tun_detach+0x1249/0x1540 drivers/net/tun.c:620
+ tun_detach drivers/net/tun.c:636 [inline]
+ tun_chr_close+0xc2/0x230 drivers/net/tun.c:3390
+ __fput+0x3ff/0xb70 fs/file_table.c:465
+ task_work_run+0x14d/0x240 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xafb/0x2c30 kernel/exit.c:953
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ get_signal+0x2673/0x26d0 kernel/signal.c:3034
+ arch_do_signal_or_restart+0x8f/0x7d0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fae80990887
+Code: Unable to access opcode bytes at 0x7fae8099085d.
+RSP: 002b:00007ffc98e694b8 EFLAGS: 00000206 ORIG_RAX: 0000000000000029
+RAX: 0000000000000003 RBX: 0000000000000003 RCX: 00007fae80990887
+RDX: 0000000000000006 RSI: 0000000000000001 RDI: 000000000000000a
+RBP: 00007ffc98e69bec R08: 00007ffc98e694dc R09: 0079746972756365
+R10: 00007ffc98e69540 R11: 0000000000000206 R12: 00007fae80b7ec80
+R13: 00000000000927c0 R14: 000000000003d637 R15: 00007fae80b80e40
+ </TASK>
+
+The buggy address belongs to the variable:
+ __key.0+0x30/0x40
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1af98
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea00006be608 ffffea00006be608 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff9af98400: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+ ffffffff9af98480: 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+>ffffffff9af98500: 00 00 f9 f9 f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9
+                                     ^
+ ffffffff9af98580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9
+ ffffffff9af98600: f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9 00 00 f9 f9
+==================================================================
+
+
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ---
- 1 file changed, 3 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index d6d4c2daebab0..6b5f36ccb3fec 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -3561,9 +3561,6 @@ static int mtk_open(struct net_device *dev)
- 			}
- 			mtk_gdm_config(eth, target_mac->id, gdm_config);
- 		}
--		/* Reset and enable PSE */
--		mtk_w32(eth, RST_GL_PSE, MTK_RST_GL);
--		mtk_w32(eth, 0, MTK_RST_GL);
- 
- 		napi_enable(&eth->tx_napi);
- 		napi_enable(&eth->rx_napi);
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
