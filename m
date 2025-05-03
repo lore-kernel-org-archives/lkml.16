@@ -1,364 +1,140 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B4E19DFA7;
-	Sat,  3 May 2025 04:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746245307; cv=fail; b=gIqBpobAbr+Bcb1a+jkPaT5UkRvsJy7WOcC01UVfbDiEWhE4zxDQ+zwBRlrqeG+KxCTVftIRoKsamNjIdYe3YVQnk1D5MUH0XIot0k54qFU0jlsswd/+d6KIuyPA3FQQBvA4Bt+CxkMZlrogj7ylnvuyRrqxSCdlTkTKr9HnWzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746245307; c=relaxed/simple;
-	bh=G6RKmyX+qjGh0b779nzOoRQEZjtshbsKN2ORYTpLBck=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R/BPO6NcnVUJ9FeNGrmbJ4IGXMy44IpGuxeedMckxQot6k0/6cVq8VFXIat5LkHEMkpekCpzSS3pP4svOjTLCABU7zlwlQ9RX94vXXZ6eo9Pyaeyi+crffw6TfAKka9oF5QZX+K96sYPDhx0A8jpeqnEW+Y65wp7qcq86OkzFGE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=R0r5xWcG; arc=fail smtp.client-ip=40.107.243.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE11F171C9
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 04:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746246855; cv=none; b=W+nMAajr43ANPItqmJiCVUhJKUEI1c4+87RTaKyvhKY5PTm6QxCLraZW5yzXNzNdxFor1FKpID1DCi6SvBx3VZLcELQ4i7IeelqGL1iqqje0u/QPkPbgroydWjgc/HkLb3uFS4P+0m4ToADZ7qgBoOxVt2nrHt1GuNMbpODkO/E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746246855; c=relaxed/simple;
+	bh=R7eh3ISHlYxc5GGzwM7XT6sydBgX7ObFkDhbGijofpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hDBESlI7MRZO1JHefQjFYadGK9tAV9lAS7V4RP26N+aSNPS8XyxNxlSLCARaMaRkmxsN/vCOsj6zUDn15fQXcmPGci8rkqjmEp7hnEj9wMxG0qL2gegygrTbw5njpBsBq5C2NLTTt3N4Z4OBOCbIXmaXvEfAJCqyNMR27gXviw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QB7sVZsf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="R0r5xWcG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=L/QXjGDM+PU0QguQHJlJos0BnrMb+TFTJyNzU62Q4KmdXizrxdY8CZbw8qxMfExCt9/adzL//BeaCLCwv2uJKkGK1AfUDBqxOnLz0q9IdWSJ6aj5zEWvLzpqYuozd0p8VECY81Zwfqcldt+8ww33Pw+W3Wt45cYo8BRJ4fohc8phIFMbqXsiIytWcyszxcNm3DrZOLOPgMAL9z9Kkq+e7/7BVy+vdzXfSS8U8Cfq0jaAcSs3dhcscxJzphUSvbLiZWvoiJUXDex7nL5KDqyxXK3rWgxH8mPJ+IIBt5j7be2tjFaxiP7iRrettlVv4dFDLyOgl3MvZesuRgxjDV+SaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qc70Y0Z52EZ3TqA7lQSDoymZPh1CTaawWZyxC6Ffdak=;
- b=ozxMAnbvLkuFz5Xq1ywHQm6stp0AbN+oQPtCsm78HgVvvLUryTYFBJUiagFbxMJAfzglluLGgDNVTDNme+SJBlosUAsExEgptAOw0dTmduIPnTZ3E3SXRCeE6kJmDvNXPMnN92HVGm43KR+07NnGx3gCLS0X6PbabHZf69H+nMx0tAT6MyI6tDnraDnlnX5Qgok3jPeHKV2wV+j3JGVDu4JKeGzYAiOvZul96oIX+BFhoYMYNKlFKEJs614jj2dkQmOgOyeqetr6TP+XtPrp24cDlx++EXYNtidG0Bb8gYwDtV/YLzfJALS65SfG7oznqvM0oI7w70VgZdWG4VtOjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qc70Y0Z52EZ3TqA7lQSDoymZPh1CTaawWZyxC6Ffdak=;
- b=R0r5xWcGtM9zkI3p+dq0AWDm499OWkM1M3FlARkc5hmwjnteUYMxlGtsuOJcybZ0Rod0m+unQ2GHk6VBnUD4qRFbuvS0iNN1df77xYQkag9qcyZd6c1ehOLGVELmuJD3ofXNv6gqOXqgqXudidRh+r0UJ7I4COtprIviYx3tB+sFpGkzv3X/DRM1IncSmGV6fdJaKPhTc+IgErsqWf17COyeTThkwmohSyfBQ2EQswHUs86c9Ns6fzBMdcjtMpshZz5W8M4rBZHOFNYP5IW1ft2Rb5qqyZzB/lWONI2ai2diF6jrRPJUby/J6xE6NEnrhs16W5K/lYRDicNXrdxUdQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CH3PR12MB7713.namprd12.prod.outlook.com (2603:10b6:610:14d::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Sat, 3 May
- 2025 04:08:21 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.021; Sat, 3 May 2025
- 04:08:21 +0000
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Shirish Baskaran <sbaskaran@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>,
-	Ben Skeggs <bskeggs@nvidia.com>,
-	rust-for-linux@vger.kernel.org,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2 6/7] docs: nova-core: Document basics of the Falcon
-Date: Sat,  3 May 2025 00:07:58 -0400
-Message-ID: <20250503040802.1411285-7-joelagnelf@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250503040802.1411285-1-joelagnelf@nvidia.com>
-References: <20250503040802.1411285-1-joelagnelf@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN0PR03CA0001.namprd03.prod.outlook.com
- (2603:10b6:408:e6::6) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QB7sVZsf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5433SBis025094
+	for <linux-kernel@vger.kernel.org>; Sat, 3 May 2025 04:34:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=FRHnCwMP8vhcj5PnuVB1xzbC
+	QCSf4DjArkeySLBpK0A=; b=QB7sVZsfQTCgW3AICbnLx87aYv6sTr5FIegbs5lW
+	Qor3n68tLChW0btMz5wxZFXZbQ/lOtgVBaJXnex1MgAJbMfeoKCQo1MFyTXUHNom
+	p8wOybQmaGK9toHAfwMI7tQ8ZesmvgsEJ2+eFfU3gQPAbsXih8B2dEyAIypFFrIf
+	6xCUr1vxX/WAbLUDC0TgOFRFmjFIsU2a40K9t3z0afV94ngXC9awXkZkr2UYIrdp
+	RK/ez6kVg62kPzYlxbxyP/mOGgHkNite9MFW8YgEJKsTn27E7qdcRV9cR9GExF8s
+	4uHmelGi0/oCyrqaLcYLwRM7o5pxrEui+asCvYEPByv/sA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9c6g7cy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 04:34:12 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f2c7056506so47247266d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 21:34:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746246851; x=1746851651;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRHnCwMP8vhcj5PnuVB1xzbCQCSf4DjArkeySLBpK0A=;
+        b=gmrQjiRy68V/wuJoq9SipHi/3an5hVojabjQ9MlmNW8qOwtHs/vZuEppcpdwLPgd0h
+         liI53Phw1/hlMXqSJTgb5mPLfLBEr9o5yqG3cGl+2/JG87EWXAeie0G94t7w6AJ8yF8E
+         XmVoMHsAk0je50GP1YvIFN2njcNMs86FMPrC4SZFMw0bJpQS6CZO36mFqXM6nBIep4c4
+         EyZ5YNhfvlQhi3s9M9RQdh7nUYDvx7RsnSKfdfxK/UjCSrd20bF1pjdEqmURcpGuqaol
+         CX+sxawqs4U9fgv9XbK8hjWEIIPXHLIBWtw67pXxiJLPZkRYv9Q8aqm7BWYB6/Ts89ot
+         bEgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFjNpuYRoS7s2NSSCnwXCvogR4LGhEntUf+MTI+3UP4kTyiN1o7oeyApvtmG9StPyLihVh8B7WEyeM0kY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwihvAT3+u4P11erTjr3FL6c1/AbAxg5WmegLmRx1TF02NrTep4
+	05HYx5E6U6SjiisohuEP2WNvapaF4hmtg47OSSsl7B9tz0nU5ex/wmWeAGqyfyP6KmAD4Ic2C+M
+	xMD89nbroP3b87HTb/wd7//6b02bM3AOe8W7UoTEf16i98+wNKEbyCrxG+OIFsAw=
+X-Gm-Gg: ASbGnctk17UTcE30TKX7XngZJSChUFFNaCTSYfPhzurMvt0MvWGugVyKtZbzTmnGg4R
+	I4DWHe8U0oUDEvSK4GAVkvleu/KbIVS9zV0A2u5Y3AjGcU82uQq/IEmJeo12yQ/QqyIjLZ6K6ZR
+	UtaypEz4jj3dMwCQ8dA12Ln7IN+1f0j4DKPfzFUAoadV5yVT4QDlXUOiKxa0JwGvm1kOvsbzRMW
+	Yj+6579jonUZGkptWxteKZ9NBF0ZzQaehGIbVkMDQG76cyuGTdWyTzXnrEHxhHeRKs+YfWjjsBc
+	8xFowLysiaaXo+rpADe7TFte8TWgelSjiBGT/So30+585pmamOU+fcw+RlCY4rNYNTrI6xAjFHM
+	=
+X-Received: by 2002:a05:6214:b6e:b0:6f4:d60d:dd29 with SMTP id 6a1803df08f44-6f5157301d3mr92485316d6.5.1746246851595;
+        Fri, 02 May 2025 21:34:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdtTMunWJIdNzuGE3JjLa6Bo7EoaBJJr0Rr3GrubyAqm13CmOAIBUkvnjIlDM/WcwlSPlOkg==
+X-Received: by 2002:a05:6214:b6e:b0:6f4:d60d:dd29 with SMTP id 6a1803df08f44-6f5157301d3mr92485046d6.5.1746246851197;
+        Fri, 02 May 2025 21:34:11 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee6ccsm637203e87.122.2025.05.02.21.34.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 21:34:10 -0700 (PDT)
+Date: Sat, 3 May 2025 07:34:07 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Lyude Paul <lyude@redhat.com>, Andy Yan <andy.yan@rock-chips.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Vitalii Mordan <mordan@ispras.ru>,
+        Sui Jingfeng <sui.jingfeng@linux.dev>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: cdns-mhdp8546: unlock on error in
+ cdns_mhdp_atomic_enable()
+Message-ID: <f7w562h4ulorcxsnukbgdcizeg3g6yfhlst2o3467wihqnkdn5@qaw3kiicavqy>
+References: <aBHZBjiOVkI_8Shg@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CH3PR12MB7713:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9fffa790-2df9-4e07-df51-08dd89f8244b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Nk9JaVNPWFdsY3R0RW5oT1JnTk9uMUxQL3FGOTVqUnlaMkw4ZDdyOHVhdFBV?=
- =?utf-8?B?c1BQV0tGTUdRaTVzNk15SjVHRTJPa3VTUFMrdGVPdlQxMzhLYUw0MkpVK0xx?=
- =?utf-8?B?UXl1UmtuVzh3aUdSRzN3ZDZMNCtvRFpGbGRHbXN3a0tpdUdOYmJaMEpsbDZW?=
- =?utf-8?B?M2dONHY3ZjlRaGJjbmhyZk9EWmYyK25lMnVjaUlnQnptU2JsTjByQWZsYVYv?=
- =?utf-8?B?ZU1GbGRpQVY5STBSZDFlMk0zYlgxR1NzRTJRVDdueUhJeGxTQUwzTkltMWF3?=
- =?utf-8?B?VzFrN1BYR1VYRHAvNUd4aDZveUwxbmVwSytnOVBlSEk2T0xmMEFWMmQxd0VK?=
- =?utf-8?B?djF6VHB3L05ubTl1amh4TFdsUHZFNS93R1dkNzg3VWlrOXZVRzZkVzNtYWhX?=
- =?utf-8?B?MFNpMllGSHRvTjFjN2ljNFJZSUs5NTFqMWdCQjJIdWxQMURxeTZZd3ZNOFcr?=
- =?utf-8?B?OTluT2xtM1ZqT1gxcWJkeGpwRDdGRWZFNnJteGhxcnBBZit1YUFlMUp3eGlQ?=
- =?utf-8?B?Q1ErbVE4T0ZOcjVkTXpaTHVac2VLSnZTWmlXU2pDY0R2MGVYcFYwVmFHR3cx?=
- =?utf-8?B?VTNzMUJXSUk5NTNpOWtidG96SkVQZ2xpSDArV3hoZERyajJSM1o2Z2lzbmFl?=
- =?utf-8?B?NmtNdlFWSzJVdHhsemNxdmhEVEtUeWF2Sm9nSjM1S0NrY09lS0N4aU14cklJ?=
- =?utf-8?B?czRGWkxTTDVhNTQwUFZCVlB5K2poVDZGVEtyN0gyRUMvTjdhZlIvaGFZbm5R?=
- =?utf-8?B?WFNmcm1lUVMrZjFjeGNzREE4U3g2S1IrUVlROEVNNVkwc0pEZ0tGem5NUG0v?=
- =?utf-8?B?Z05JV1R2NW8yWldUaDB1ajA5cEd2Q1Fpd1JzY0VhODJEUnBjQ2hYN01QTm9r?=
- =?utf-8?B?RjlyeGtZTmloMjNiRUtZSkZDcklHUkYxWGFxZHBVQ3F6VDJ2eDgzakpDWXBo?=
- =?utf-8?B?ZVBkOVVCeHJLNWFxeGhWd0ZvTmxGY24yZUppdzM3TEtjbnFqTHR4RlBBNjN1?=
- =?utf-8?B?MkI0ZDczMU1zUkRNa0JINzhlQTRwOWFZbEw2bENHelJIOUo0bC9hZmI2a2xZ?=
- =?utf-8?B?YjhsaDJJYmZsdUl3SGFMQldlQ0pCa3g2NGlFV3BKazBYRDNwRng1U1Q0a2VT?=
- =?utf-8?B?NnIrR0lVek51SHIwdGloRTNpamEzWXlEUlgvTGNWYzVxM25aWlhrRjU0S0F1?=
- =?utf-8?B?NUtkbHJFQjBIYWtQeDlaVXpFNmpXOHZrdktkTnJIWllVVjFsb1dNMnBzblIr?=
- =?utf-8?B?bDNJdnZqK2p5SWM5c1htY1JRTlFndXh6R28zRXRjSjBWM3dSeElVaGhpTGxI?=
- =?utf-8?B?ZEp6MnphSmRKbDdrMEZYM0VubTBydjhrYzRqUXpnUnlwZjcxeXkrT3hqb1cv?=
- =?utf-8?B?VURoRHlHREExWFdmS0NXVHY1SkwvVTI4NnJWRWJFYmpGa1JGQUhvOXZwTTJ4?=
- =?utf-8?B?eS82Sk1ybUZXM0ZiWU9EbGEwUGlLMW5lS3dxeDNYSU9pcUFnMUc3Rkt0TkVJ?=
- =?utf-8?B?UDdVZDk5cTlsSmRQZ3NVLzlmc2ZuV0F5WFBNYzRhNDNVRGVUZkloamlydm1H?=
- =?utf-8?B?cFM4Snl3ZE9PbWFQNlpJbmd1U3pLTVVqSlZCcmtJd1Y5Y21OTnRNRElMSHE1?=
- =?utf-8?B?bFNCcWI4ZlhLeU4vcno4WlR1ZXI2TjdqUmxxVlZFdnJKSHVQSC9va1BxL0dZ?=
- =?utf-8?B?eDNBNDlQUVNsYTJtdzh5NmkraVdFZmFqWWZ6Nk1OSUdSU0szNjNqOUkzSG1N?=
- =?utf-8?B?ek8rT0lQaklDUmNLak5sSjZmTFJuTUI4UDVnbWkvMTJEaHdVWXRMT0Ftdkhk?=
- =?utf-8?B?aE1iYjkyeG52ZkdPamxkNXNXUGlzc3FQZklMR1MrWGRCUzR5b1BlMEk3U2xB?=
- =?utf-8?B?YVhleUozdkVEK0lXYk9ack4rRCtlRHBuQnVPc29vbU5oS2UwVllpMzVzWFhr?=
- =?utf-8?Q?F/w/qsrQ69c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VHg2d1pvQVJkOGJOWkNpaU9ibjhDNVJYQytmT3BCT21RYkhyUFNPRlZ6V21C?=
- =?utf-8?B?dk8yc1Y2Si93UU5DV2c3WEI0emxlVDFkVGdPWHArS05mN0szVW1OR2kvZ2NV?=
- =?utf-8?B?VTNISldmbmwxVndqQzdBY1ovYVFOZEQyREkzYStaa0NoZkdGOTJJL2FVTXEr?=
- =?utf-8?B?UUwrSGlObmVtZzFSTHpYSmlGV05kbEtVWU5JYSt0WXBSUE5QSUIzeW1xTnB1?=
- =?utf-8?B?TTl1ZHdkNmhvZ3F2VkdyMk1jV1dkZGFXUG9sR0ZpK0dMSS81MWFMUG5SUWJE?=
- =?utf-8?B?ZUpXN1VzRDF6ZGZYZDhjWmdxOEhPclhYcHFOM052ZnFieGs4VzJkZWNReHBT?=
- =?utf-8?B?UHhUOUdyZE03Q0s0NXc1N3NOMUJIbW15K21oa2EvMUQyRURxNUhJVGwzM0Y0?=
- =?utf-8?B?aVNiRldUWSsyT3gwTkNldFY4MGhFMkFnU2swaDRiWm0wS0JxQk1zYlhBVjg1?=
- =?utf-8?B?RnZERHNmNWlrc2VrSTBQNFlrL0tRWkl6RUFNVEdNNVlLTTRueUg0a2NjUm5n?=
- =?utf-8?B?M2xxM2dtMW5nOXB0Y0VkRDYzZW5OelVkaFdxTXcvSXJuR0gzZzl3anhHSHFK?=
- =?utf-8?B?MTRZaXRuQlZLOWQ4V2xmVDVQZkpMN1ZPaHJIckxpK3hTdHRscm5yMkhOV2xx?=
- =?utf-8?B?WlFMRG40M1E3blBwVy9aZkYxTUhvckt0a2JaMU5lRDRDK3lnZXhxclpxNWVv?=
- =?utf-8?B?b1RGVFJ4SmhnbEZhUFcyZ0JHRVIxdU1xNmczRkw3VXBTZ0xiZkU2ZGVyb1lD?=
- =?utf-8?B?d0I3dHpzY1Z1NUphVVZidVFZaWFRaGFqcFkrN0I4SzVSVU5jZlR3dU5oL0Ur?=
- =?utf-8?B?Mm55UFJMdVVlUGJQS3RlWUdGWGJFRXFLdzFvdEZFQjgyQjE0KzZ3czFZZWVQ?=
- =?utf-8?B?RFl6TThSUmtYZjhuSk9KVlR6S0hpcTNRcGMwMnFHeW8rSXprYXUvT3RCdmQy?=
- =?utf-8?B?bW1sQUp4K2ZZQjdISDY2eGFDa0V1SEVJVmJXcDZDdHYzQ2J5bEI1dHNMZWEv?=
- =?utf-8?B?T0hyYlBwTy9aOFZzcThlVVp0T0ZiNG9XRUdFalFnbGNKU2dhS1RGQ09pbmRV?=
- =?utf-8?B?ZXFsNDQxRm1HM0JxTGUrVkF4bEh6ZEFUSnlrVmUxY1NqN0VqQ0JOaGl6TjA0?=
- =?utf-8?B?M3Fxclc5RTFFY3krVGlIYVpONm40cG9NOXJVTTJyWWRWYW9LS0FyYkdFQ1Nl?=
- =?utf-8?B?Ry83UmZXeTMvbXpDRTduR3BqL0p3UUVzSFVxNFp3Uk1TTS9NbW5CdEFyOUZG?=
- =?utf-8?B?Tllremt6aHhEV3cyTTR0Y1ozVktUb01Od2ErWHZXR2QxcVNIK09lUVRZcnlQ?=
- =?utf-8?B?RElLS1krdU02cU5uMTE0Zno4eVpoVDhHc0lsMFlya29DMTRlR3VRRjBwSm14?=
- =?utf-8?B?Z05BUm5HZUhaTy8zb2ViYzB4cll6QjNnTWM3ejBZRmtMRDYyeXZEYWhsaHhH?=
- =?utf-8?B?L1VXUElSa2poQnVTMHFZblIyQUI3SEwrWFBnTlpORzlIeXRrRE1jblFvVE9q?=
- =?utf-8?B?NGdSbHA5VFNXUEZXQ09nS05TY1BxWWROMXgyVVFHd3RMR0hJWHhyckRRN2lj?=
- =?utf-8?B?OTNrKzRJZXZza2JyV1c0WDI1UEJ1WjJXN0MvVWk0emltZWF4cTRLaHBZN0lv?=
- =?utf-8?B?WEl1RVduOFpSczFIMENyamU1RFhUbEd2ZnB0cUVpMlU4Qk1KelNmTUY2UjB0?=
- =?utf-8?B?V1UxN1pJVk9LNHFDWkZYaVRMdENVVk5MQjFaR3RKbTd4S20xc3pzZW5RN1Fl?=
- =?utf-8?B?MUJra0w4R3VlZG9USlJqQnpsYVF2b3RJVDY5U3FITlpTS1dNZTc3YzA4MCtt?=
- =?utf-8?B?Zm9RN2FOcTBkZHJQd2RnWHpyMkxhQVV0bGZwWEJ2OHZhS3p6cjU5bndDdkNT?=
- =?utf-8?B?bUVsZkM3NzlXMXFna3pqVlFqelhZVE91bTZsc1pOcWIwUTNaR21YSmh6MUpF?=
- =?utf-8?B?QW0vUk9IdUhkbmtlbFVBUFlhSE1wR1piM0lQaGQ3bzFXbDZIL1RlWkR3WmtM?=
- =?utf-8?B?NkoxdnZVeXNJN25ub05STUE5RFpvcVE4Ry9acUI1RS8zK1RsZyt6OXVxbFY1?=
- =?utf-8?B?NUgyb3hhUEV0L29aUk5NK3lvZ2YvYnBlWUZpUUFDWEVmVTllS2F1aHp5TzEx?=
- =?utf-8?B?bUpxcWQ4NkdmWno4MjBVa1dxVndTWlA0a1RwNHBKNy9qcXJidVluK2lVNEpK?=
- =?utf-8?B?RFE9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fffa790-2df9-4e07-df51-08dd89f8244b
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 04:08:21.1268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5dGoX3pIOkAtqoyXmN7nVmEWjLqE7yWvLk+xb8tKfzNyW44ZjFmlSfnggTTn+yf0GIdoL5JiOOoH/9Wtp+mVwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7713
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBHZBjiOVkI_8Shg@stanley.mountain>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDAzNCBTYWx0ZWRfXywJ5F3saEyKp
+ Fd5gW6+YemD8ZN6dAGt4ZecXjDv+QJekhtxWyMe/pdH4iewtK+2HzXwyfmOju/BwFKcSVqNuMA4
+ q55alQNE4K/hxGv/8SxioMPIa0ZYAsiNO+kqjM6FfwsjoJ4rliUMkwJSph+0I30NO1uhI9RMtnq
+ ZARHchda58z+RuemYyU+IimF6TqtU5ZBR0ZXqnhMFaiWXr+fkTAsL11zL8bjw4fS4jhZ/csI+vs
+ fag2RFQoxUMTbRUrc4WATuq+jgYWiU9q9lpYhdJnxMm4utQYkTRcrzZNx8BWfPaetmyMIHUs0gh
+ DubDZNLlYtivx1sRj3zsPUp90d7V9CdB4FG9fEzYVG7rgUSJ0UNcRt34mCqdpFSw2+pA7KET2ve
+ BZJOrnQxbm3v5yzHaqpYzaLVLG86fdfup3w5dICv4ShSrMqwcbU/nn39mExZbm0VT9X/HKfE
+X-Proofpoint-GUID: RZmw_tVvNxqFSPeesPL8kjp1SVyr-fUQ
+X-Proofpoint-ORIG-GUID: RZmw_tVvNxqFSPeesPL8kjp1SVyr-fUQ
+X-Authority-Analysis: v=2.4 cv=BYzY0qt2 c=1 sm=1 tr=0 ts=68159cc4 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=7MWD5bQIOqUMkJ40eKAA:9
+ a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_02,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 impostorscore=0
+ suspectscore=0 clxscore=1015 malwarescore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505030034
 
-Instances of the Falcon microcontroller appear in modern Nvidia GPUs and
-are crucial to the GPU boot process. Document some concepts which will
-make nova-core boot code easier to digest. All the information is
-derived from public sources such as public documents, OpenRM and Nouveau
-code.
+On Wed, Apr 30, 2025 at 11:02:14AM +0300, Dan Carpenter wrote:
+> Unlock and reschedule if drm_mode_duplicate() fails.  In real life, the
+> drm_mode_duplicate() function does a small allocation and those never
+> fail in current kernels.  So this doesn't really affect runtime but
+> the missing unlock triggers a static checker warning.
+> 
+> Fixes: 935a92a1c400 ("drm: bridge: cdns-mhdp8546: Fix possible null pointer dereference")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
----
- Documentation/gpu/nova/core/falcon.rst | 156 +++++++++++++++++++++++++
- Documentation/gpu/nova/index.rst       |   1 +
- 2 files changed, 157 insertions(+)
- create mode 100644 Documentation/gpu/nova/core/falcon.rst
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-diff --git a/Documentation/gpu/nova/core/falcon.rst b/Documentation/gpu/nova/core/falcon.rst
-new file mode 100644
-index 000000000000..f2b89cc2a159
---- /dev/null
-+++ b/Documentation/gpu/nova/core/falcon.rst
-@@ -0,0 +1,156 @@
-+==============================
-+Falcon (FAst Logic Controller)
-+==============================
-+The following sections describe the Falcon core and the ucode running on it.
-+The descriptions are based on the Ampere GPU or earlier designs; however, they
-+should mostly apply to future designs as well, but everything is subject to
-+change. The overview provided here is mainly tailored towards understanding the
-+interactions of nova-core driver with the Falcon.
-+
-+NVIDIA GPUs embed small RISC-like microcontrollers called Falcon cores, which
-+handle secure firmware tasks, initialization, and power management. Modern
-+NVIDIA GPUs may have multiple such Falcon instances (e.g., GSP (the GPU system
-+processor) and SEC2 (the security engine)) and also may integrate a RISC-V core.
-+This core is capable of running both RISC-V and Falcon code.
-+
-+The code running on the Falcons is also called Ucode and will be referred to as
-+such in the following sections.
-+
-+Falcons have separate instruction and data memories (IMEM/DMEM) and provide a
-+small DMA engine (via the FBIF - "Frame Buffer Interface") to load code from
-+system memory. The nova-core driver must reset and configure the Falcon, load
-+its firmware via DMA, and start its CPU.
-+
-+Falcon security levels
-+======================
-+Falcons can run in Non-secure (NS), Light Secure (LS), or Heavy Secure (HS)
-+modes.
-+
-+Heavy Secured (HS) also known as Privilege Level 3 (PL3)
-+--------------------------------------------------------
-+HS ucode is the most trusted code and has access to pretty much everything on
-+the chip. The HS binary includes a signature in it which is verified at boot.
-+This signature verification is done by the hardware itself, thus establishing a
-+root of trust. For example, the FWSEC-FRTS command (see fwsec.rst) runs on the
-+GSP in HS mode. FRTS, which involves setting up and loading content into the WPR
-+(Write Protect Region), has to be done by the HS ucode and cannot be done by the
-+host CPU or LS ucode.
-+
-+Light Secured (LS or PL2) and Non Secured (NS or PL0)
-+-----------------------------------------------------
-+These modes are less secure than HS. Like HS, the LS or NS ucode binary also
-+typically includes a signature in it. To load firmware in LS or NS mode onto a
-+Falcon, another Falcon needs to be running in HS mode, which also establishes the
-+root of trust. For example, in the case of an Ampere GPU, the CPU runs the "Booter"
-+ucode in HS mode on the SEC2 Falcon, which then authenticates and runs the
-+run-time GSP binary (GSP-RM) in LS mode on the GSP Falcon. Similarly, as an
-+example, after reset on an Ampere, FWSEC runs on the GSP which then loads the
-+devinit engine onto the PMU in LS mode.
-+
-+Root of trust establishment
-+---------------------------
-+To establish a root of trust, the code running of a Falcon has to be something
-+that that cannot be erased and is hardwired into a read-only-memory (ROM). This
-+follows industry norms for verification of firmware. This code is called the
-+Boot ROM (BROM). The nova-core driver on the CPU communicates with Falcon's Boot
-+ROM through various Falcon registers prefixed with "BROM" (see regs.rs).
-+
-+After nova-core driver reads the necessary ucode from VBIOS, it programs the
-+BROM and DMA registers to trigger the Falcon to load the HS ucode from the system
-+memory into the Falcon's IMEM/DMEM. Once the HS ucode is loaded, it is verified
-+by the Falcon's Boot ROM.
-+
-+Once the verified HS code is running on a Falcon, it can verify and load other
-+LS/NS ucode binaries onto other Falcons and start them. The process of signature
-+verification is the same as HS; just in this case, the hardware (BROM) doesn't
-+compute the signature, but the HS ucode does.
-+
-+Thus the root of trust is:
-+     Hardware (Boot ROM running on the Falcon) -> HS ucode -> LS/NS ucode.
-+
-+Example on Ampere GPU, the boot verification flow is:
-+     Hardware (Boot ROM running on the SEC2) ->
-+          HS ucode (Booter running on the SEC2) ->
-+               LS ucode (GSP-RM running on the GSP)
-+
-+.. note::
-+     While the CPU can load HS ucode onto a Falcon microcontroller and have it
-+     verified by the hardware and run, the CPU itself typically does not load
-+     LS or NS ucode and run it. Loading of LS or NS ucode is done mainly by the
-+     HS ucode. For example, on an Ampere GPU, after the Booter ucode runs on the
-+     SEC2 in HS mode and loads the GSP-RM binary onto the GSP, it needs to run
-+     the "SEC2-RTOS" ucode at runtime. This presents a problem where there is
-+     no one to load the SEC2-RTOS ucode onto the SEC2 (i.e., the CPU is incapable
-+     of loading LS code, and GSP-RM has to run LS mode). To overcome this,
-+     the GSP is temporarily made to run HS ucode (which is itself loaded by
-+     the CPU via the nova-core driver using a "GSP-provided sequencer")
-+     which then loads the SEC2-RTOS ucode onto the SEC2 in LS mode. The GSP
-+     then resumes running its own GSP-RM LS ucode.
-+
-+Falcon memory subsystem and DMA engine
-+======================================
-+Falcons have separate instruction and data memories (IMEM/DMEM)
-+and contains a small DMA engine called FBDMA (Framebuffer DMA) which does
-+DMA transfers to/from the IMEM/DMEM memory inside the Falcon via the FBIF
-+(Framebuffer Interface), to external memory.
-+
-+DMA transfers are possible from the Falcon's memory to both the system memory
-+and the framebuffer memory (VRAM).
-+
-+To perform a DMA via the FBDMA, the FBIF is configured to decide how the memory
-+is accessed (also known as aperture type). In the nova-core driver, this is
-+determined by the `FalconFbifTarget` enum.
-+
-+The IO-PMP block (Input/Output Physical Memory Protection) unit in the Falcon
-+controls access by the FBDMA to the external memory.
-+
-+Conceptual diagram (not exact) of the Falcon and its memory subsystem is as follows:
-+
-+           External Memory (Framebuffer / System DRAM)
-+                            ▲  │
-+                            │  │
-+                            │  ▼
-+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━┻━━━━━━━━━━━━━━━━━━━━━━┓
-+┃                           │                         ┃
-+┃   ┏━━━━━━━━━━━━━━━┓       │                         ┃
-+┃   ┃     FBIF      ┣━━━━━━━┛                         ┃  FALCON
-+┃   ┃ (FrameBuffer  ┃   Memory Interface              ┃  PROCESSOR
-+┃   ┃  InterFace)   ┃                                 ┃
-+┃   ┃  Apertures    ┃                                 ┃
-+┃   ┃  Configures   ┃                                 ┃
-+┃   ┃  mem access   ┃                                 ┃
-+┃   ┗━━━━━━━▲━━━━━━━┛                                 ┃
-+┃           │                                         ┃
-+┃           │ FBDMA uses configured FBIF apertures    ┃
-+┃           │ to access External Memory
-+┃           │
-+┃   ┏━━━━━━━▼━━━━━━━┓      ┏━━━━━━━━━━━━━━━━┓
-+┃   ┃    FBDMA      ┃  cfg ┃     RISC       ┃
-+┃   ┃ (FrameBuffer  ┣<────>┫     CORE       ┣─────>. Direct Core Access
-+┃   ┃  DMA Engine)  ┃      ┃                ┃      ┃
-+┃   ┃ - Master dev. ┃      ┃ (can run both  ┃      ┃
-+┃   ┗━━━━━━━▲━━━━━━━┛      ┃ Falcon and     ┃      ┃
-+┃           │        cfg-->┃ RISC-V code)   ┃      ┃
-+┃           │        /     ┃                ┃      ┃
-+┃           │        |     ┗━━━━━━━━━━━━━━━━┛      ┃    ┏━━━━━━━━━━━━┓
-+┃           │        │                             ┃    ┃   BROM     ┃
-+┃           │        │                             <───>┫ (Boot ROM) ┃
-+┃           │       /                              ┃    ┗━━━━━━━━━━━━┛
-+┃           │      ▼                               ┃
-+┃   ┏━━━━━━━━━━━━━━━┓                              ┃
-+┃   ┃    IO-PMP     ┃ Controls access by FBDMA     ┃
-+┃   ┃ (IO Physical  ┃ and other IO Masters         ┃
-+┃   ┃ Memory Protect)                              ┃
-+┃   ┗━━━━━━━▲━━━━━━━┛                              ┃
-+┃           │                                      ┃
-+┃           │ Protected Access Path for FBDMA      ┃
-+┃           ▼                                      ┃
-+┃   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓      ┃
-+┃   ┃       Memory                          ┃      ┃
-+┃   ┃   ┏━━━━━━━━━━━━━━━┓  ┏━━━━━━━━━━━━━┓  ┃      ┃
-+┃   ┃   ┃    IMEM       ┃  ┃    DMEM     ┃  ┃<─────┛
-+┃   ┃   ┃ (Instruction  ┃  ┃   (Data     ┃  ┃
-+┃   ┃   ┃  Memory)      ┃  ┃   Memory)   ┃  ┃
-+┃   ┃   ┗━━━━━━━━━━━━━━━┛  ┗━━━━━━━━━━━━━┛  ┃
-+┃   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-diff --git a/Documentation/gpu/nova/index.rst b/Documentation/gpu/nova/index.rst
-index 301435c5cf67..75a98ab63055 100644
---- a/Documentation/gpu/nova/index.rst
-+++ b/Documentation/gpu/nova/index.rst
-@@ -28,6 +28,7 @@ vGPU manager VFIO driver and the nova-drm driver.
- 
-    core/guidelines
-    core/vbios
-+   core/falcon
-    core/fwsec
-    core/devinit
-    core/todo
 -- 
-2.43.0
-
+With best wishes
+Dmitry
