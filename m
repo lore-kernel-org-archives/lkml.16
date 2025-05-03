@@ -1,108 +1,84 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904DC1E0DEB
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 14:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687EDEEBB;
+	Sat,  3 May 2025 14:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746281040; cv=none; b=MDHSeUVVCgM8VNkoypsIf3a2rc4UhDAyYdZpNilpBRmwPOvAxyklJOYy9f9OIptOGbe+2yTW95bcXuc+0ooTcCJpUOg89xG30u8LnEJWZCYZRMuGbrGv8q1Mfcs334f4PwSkplH12bKssuMWLVIdF3QSfjFouryOVE4EFfgrrjo=
+	t=1746281076; cv=none; b=g50MS906ORHwF6beXxOI9ZXyYz3Iey0blWhg9qKYx1XK9Wng/RuxlxKVroGMSl9DQHjv0qV5y8IV3jIqdgtE7Nmi8lm7/v8r0Kza9H7WyXW4PUJ7+VpqEoI0VAp1L21nYl5GWxJN550rdrdF2Q3Wv+XOrFXN7PuoC5ykt3coRb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746281040; c=relaxed/simple;
-	bh=EMrs8wHAxIwazzNrklKhbJssyCiqWrFWNMoW8lVGmUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVl2/U7LbWSqcItVdiKvUDW/VPtD1TQpB9HNOasTO6ez9i5wrv7U1FI3pN2k7rD3t9qouX5975KgvbMBCcFan5sbHiau7wvPljM72Xdh3GkF64hhVC0NvWcNVPrMQ+CD4i9JFB1l0Znh3flAIuqknpljlXwUxiF/fvG41Qee4vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uBDSo-0004un-FQ; Sat, 03 May 2025 16:03:34 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uBDSm-000uwH-1H;
-	Sat, 03 May 2025 16:03:32 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 010774074C8;
-	Sat, 03 May 2025 14:03:31 +0000 (UTC)
-Date: Sat, 3 May 2025 16:03:31 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Markus Schneider-Pargmann <msp@baylibre.com>
-Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Vishal Mahaveer <vishalm@ti.com>, 
-	Kevin Hilman <khilman@baylibre.com>, Dhruva Gole <d-gole@ti.com>, 
-	Sebin Francis <sebin.francis@ti.com>, Kendall Willis <k-willis@ti.com>, Akashdeep Kaur <a-kaur@ti.com>, 
-	Simon Horman <horms@kernel.org>, Vincent MAILHOL <mailhol.vincent@wanadoo.fr>, 
-	linux-can@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/4] can: m_can: Add am62 wakeup support
-Message-ID: <20250503-petite-echidna-from-hyperborea-cfd7fc-mkl@pengutronix.de>
-References: <20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com>
+	s=arc-20240116; t=1746281076; c=relaxed/simple;
+	bh=LGpoxawfydihDKyci4BWvfYhj1LwcVx7TSv/wKobEhs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hXUxKHah/yb6YlUVNul7fn+tghNmi9NzXTxRZ/lQoeezwZeWWu3/iz8tWFYyKQzTNWlrGokwDdrFMC1xKsusVP7mhc438osuaQ4D1UHQSJMaGOu+5kBUrtHFK8+jQeeVgZAsqrY/7PvrahlGuN/lPgF0RiDIPylfTmv8QrW0qq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwb8pb1K; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwb8pb1K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37B3C4CEE3;
+	Sat,  3 May 2025 14:04:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746281075;
+	bh=LGpoxawfydihDKyci4BWvfYhj1LwcVx7TSv/wKobEhs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hwb8pb1KVcDOgZUiniudSiiFrWa4x2nJN7rF8xnD5soxr7coO/WAig/MI4q/vxG+1
+	 CZrWvS+f/pKUZs+oWjyP2Y2TNNhkc0GQzRMkjpBuad0MJxfW9sRMrRCxGoRkNTB7B3
+	 DYes0gatEDOmCqcxu6eymaXzJNnI9GC3Fs0nR7eXVKSuYJRiIpcDiJuBldKBw1r+3F
+	 0EYPrOsbXiArYGAuRXA/+GM1yYRB6dvKjmXOnPQS73yBS7IrCDaT3KeOlo/sJoXE5n
+	 vSO3G+D0aEQ9KP4J4WLzC7Md7CKwwNWUjfGOC4NT+mYc7GetAXeKjnBHZ152YiTHKF
+	 trIT4GjHFZ5bQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Pengyu Luo <mitltlatltl@gmail.com>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: add EXTCON dependency
+Date: Sat,  3 May 2025 16:04:26 +0200
+Message-Id: <20250503140431.438727-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="msi7s5izy7ouaffb"
-Content-Disposition: inline
-In-Reply-To: <20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---msi7s5izy7ouaffb
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 0/4] can: m_can: Add am62 wakeup support
-MIME-Version: 1.0
+max8971 is written to work with or without extcon, but it fails
+to link when built-in when the extcon subsystem is in a loadable
+module:
 
-On 21.04.2025 10:10:36, Markus Schneider-Pargmann wrote:
+x86_64-linux-ld: drivers/power/supply/max8971_charger.o: in function `max8971_probe':
+max8971_charger.c:(.text+0x2ab): undefined reference to `extcon_find_edev_by_node'
 
-[...]
+Add the appropriate dependency that allows the working cases but
+prevents the link failure.
 
-> Devicetree Bindings
-> -------------------
-> The wakeup-source property is used with references to
-> system-idle-states. This depends on the dt-schema pull request that adds
-> bindings for system-idle-states and updates the binding for wakeup-source:
->   https://github.com/devicetree-org/dt-schema/pull/150
+Fixes: 60cd40eee4f4 ("power: supply: Add support for Maxim MAX8971 charger")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/power/supply/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-How can we get an Ack for patch 1 by the DT people?
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 797c8d1b04aa..daab8214e225 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -621,6 +621,7 @@ config CHARGER_MAX77976
+ config CHARGER_MAX8971
+ 	tristate "Maxim MAX8971 battery charger driver"
+ 	depends on I2C
++	depends on EXTCON || !EXTCON
+ 	select REGMAP_I2C
+ 	help
+ 	  The MAX8971 is a compact, high-frequency, high-efficiency switch-mode
+-- 
+2.39.5
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---msi7s5izy7ouaffb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgWIjAACgkQDHRl3/mQ
-kZzihggAjm7BmW/gTNjnz7/mLUDVwqHN3vnG3QhYzxEcY2FBA6MgB61J03UbA0y0
-XSRp9R1WqWFpBn0no67iaoU3AFSeG3cTqVi8688dvhN/7GG4Tdy9QjAuEpTzaJUG
-rSKZuHf82aSMxE3/2FbS3MV18YbZCty29kTaTUdkpk4YS28wa5+nDGSSyvYLqy98
-DVE/2elgBNkO0DEBKtiNr8NDtljgfutKCq02mhGklVuz07tj430xJh9T4BBZKA6M
-oJ6FxIGyiN5sSGj41WJ+ixkuL/L4zob4ji73p3lMVbkr0UZnE5wTo8sAbT0mBzmK
-x/+zfIi7bMwR/HMVddln20TQ0ZeGxw==
-=s7eO
------END PGP SIGNATURE-----
-
---msi7s5izy7ouaffb--
