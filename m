@@ -1,123 +1,300 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF5227E7EF;
-	Sat,  3 May 2025 15:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96562277017;
+	Sat,  3 May 2025 15:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746285122; cv=none; b=QY3wBxIGQxJ2y9em/jSC4RXs6zHIP0cbrvcxmzus0wbMwxq/v3n23IrCquJbnm3cyW9pCN0Xh9v8sr0efFALWnh3PX13+4FrD/nIR3EKELbndDDSyAsS2hxstTuO3rBGcZ0od4DyO1xaGZ/qst/OmbynNhsnCOjjsOco+WR/noY=
+	t=1746285304; cv=none; b=dZ7SWU9BKYbd/8pZ7aM+n6Ka54L0MUeBDdQXZLrsc463w2YjH7VRdv2c2HFyw8YlJd4kFYp/VsWZaiqUYGVyBVzlNCWkBBV7VH8YbWM4oOhD4W97XIxkHA9ISVtRqduy+sixY5hsI47ni5k8DuWQUfbf3FImA7pAvTpB4VVRkZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746285122; c=relaxed/simple;
-	bh=PHa//c4vqEnZ0+OPlLXjavzM0fk+wIBSvy6eTxGOhIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mpMv31FkV8E3PNn1xBz5v7LK+h3mcK3FevDv5ziAL3ivK34DEITH1NpktaGz+uZOOC0/laSEYaaemRo2AYDff/ooK9HfYKvDHBtlVeTOGwu9nyG8a/TQ0r4t/m2NzIcqXJM6aFTWi8+LmrRh5HzUIH5fBuiyUhdELIoyzKBlNdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2FlJqhU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746285304; c=relaxed/simple;
+	bh=8Pb5XTCjEDvmUtoWsSUpSGXOWwa3p8V7YsO7T7i9cTI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=gsj7n7yp4J+ALN+MthHOv/PUHhyiiJtYTXikBF4kqp+snBnhL4zvtDvhpxxBU+tn5PS37nlev61NFB/pN4SZjSwnHPw4ZwoPRn3UFfC1AXttTrjr8VAQVxnNxv9s+gspY/Ko8wIGfE6RW6BmRDAxcQ9q80RFxX+gBuZaCl+5Iig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dtTx64Gz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gCyQcvb9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2FlJqhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D960EC4CEE7;
-	Sat,  3 May 2025 15:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746285122;
-	bh=PHa//c4vqEnZ0+OPlLXjavzM0fk+wIBSvy6eTxGOhIk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l2FlJqhUmap0Jq0UgBLqJ+/k2eOsDHUsuuKJf+V2N86nNdzedMdRvCjhLf507wFvX
-	 Q74AmADkhNm8fH1xS2bKm3YI/tYxbENu4knl1aoUu/fwtVCCq32hHZKtievggaxqrY
-	 laGPdvkwPLPjNnkfPPDaLh6LNtpejcMNr6YH7Y7O25DgZQupQlqRKWikEsxhT9Y9us
-	 shEon/kmaxByxrih3AdJclbUhQp33Qiynjz6XnhipbgtkbSbOBqnNMl1UrdkK58Q5d
-	 dEiXxxR3CBa8wNyy5Xp8On7fxnzSPh2DNEhIvnkS5V8v6/eA2/Nj1IhK1ghIkHXJt1
-	 Ozlobx4scvHrQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Sat, 03 May 2025 11:11:33 -0400
-Subject: [PATCH v3 17/17] nfsd: remove legacy dprintks from GETATTR and
- STATFS codepaths
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dtTx64Gz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gCyQcvb9"
+Date: Sat, 03 May 2025 15:14:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746285300;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FkJuB66SV39nuptTv1fPi/pDJugIBtzqQoU1P6CNrXk=;
+	b=dtTx64GzHONQhEJ/7zdpZ5EgY4toLBKg2owtp/3rrfuMCgi++yJ8VW+lGAM7p6eI/UX3HB
+	FgWyNuhtUmmDUoSrfssNfHenaoRzqK9gKesN+1yGnYoKeO6alBTdTqLsPTur5RYePl9n/g
+	XEnVK7Rr0tnB69ltWFjpsEPjnjp/UCmtf/N0bP6ZQ4b+AoxanNpzWLKR898fTvXmepqaMq
+	cILQEAcc/u3vMSUuot8XDeOM+Yt3yHwPQGs7CmhxCzwr8OB+KxiIJGY22c133ps/4lODhv
+	nIgDEJsbir8UAmm89OwWyGfNqasyk5F+5XqBYmsbfjsD/EXSZ2e3IjrtDgFwVg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746285300;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FkJuB66SV39nuptTv1fPi/pDJugIBtzqQoU1P6CNrXk=;
+	b=gCyQcvb9GmmpSvmKFoYCzqko0gr/H9FsvllkHoriT7aeVJanDZIEsSPxv0uXaorENuRRHW
+	6GvelHK8M6xW+zCg==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/microcode: Consolidate the loader enablement checking
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,  <stable@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+References:
+ <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174628529460.22196.11450380316905137027.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-nfsd-tracepoints-v3-17-d89f445969af@kernel.org>
-References: <20250503-nfsd-tracepoints-v3-0-d89f445969af@kernel.org>
-In-Reply-To: <20250503-nfsd-tracepoints-v3-0-d89f445969af@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, 
- Anna Schumaker <anna@kernel.org>, NeilBrown <neil@brown.name>
-Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1906; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=PHa//c4vqEnZ0+OPlLXjavzM0fk+wIBSvy6eTxGOhIk=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoFjIvBSerR3sfNO6/8qndS+coEw4nuI1CJHP+P
- +ZZTaNGRYKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaBYyLwAKCRAADmhBGVaC
- FXzTD/9W6/gR0XuUz7aCZNM5NoEkHTWJG6zFs0keGZX7qPz3TWnyKb224sakNNez6sIR6e4E24g
- UKUdGZlR4+K5I0LcVm9+UAw0djO2wZkowdMG3U24WRw6ESNEz82gKggI9E6i/4By2QX0f8LVgPA
- REEOYlXIB+AIwFd6Gn77D/SazpQroSgwAy+p2FP0OiQLxzUPvkgJ/OaZ8CdgB1IayZVOIWKFRsU
- +C56PvgIYXBtiuLcWEK2M+EOlAc2F3jucrGtiyiqZbHzfrSU1DnGs2bqoma6Fyc7G+c5o0+ql5C
- uz0CZJoV9Rb6vRbvEJXmC6AX0fZZJXnmv7HrYD8aznLrgxJJFePkpQ3oj07c5/WZJT3NDBR0iLD
- ytKra3hWjb0Sbxm0cRjuLfgzZJj3BqFaBrVGKhGfwgbqptkiUS0vmULl4PtVNYnW5OAk9O5xS+8
- VBW8Bujas4YitYxNwi5ssNd+JcGYPmR1HObKPENVpfm6wzXp3gi7WbSf2ficXW/KiSJ/ofFYaKq
- pog3aNhGcZwsEHFi7jKLN4oizfNG4FfD3lmnAODNK0gh/FpZXwOFl184iGvlAl+VUyk2nkhYVS4
- l9ImNNxDmwRHlUMGajcBZLmbHKk4Byq+Ct50nPdYHGmMcA51g/nE8r3fEFs6ciRF8hDEC3ZbRFT
- s7iGID4HN24wiMQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+The following commit has been merged into the x86/urgent branch of tip:
+
+Commit-ID:     eb72bdfbd0a757f30ebe4f9ec161cb246d19e5ed
+Gitweb:        https://git.kernel.org/tip/eb72bdfbd0a757f30ebe4f9ec161cb246d19e5ed
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Mon, 14 Apr 2025 11:59:33 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Sat, 03 May 2025 16:40:56 +02:00
+
+x86/microcode: Consolidate the loader enablement checking
+
+Consolidate the whole logic which determines whether the microcode loader
+should be enabled or not into a single function and call it everywhere.
+
+Well, almost everywhere - not in mk_early_pgtbl_32() because there the kernel
+is running without paging enabled and checking dis_ucode_ldr et al would
+require physical addresses and uglification of the code.
+
+But since this is 32-bit, the easier thing to do is to simply map the initrd
+unconditionally especially since that mapping is getting removed later anyway
+by zap_early_initrd_mapping() and avoid the uglification.
+
+Fixes: 4c585af7180c1 ("x86/boot/32: Temporarily map initrd for microcode loading")
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: <stable@kernel.org>
+Link: https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com
 ---
- fs/nfsd/nfs3proc.c | 6 ------
- fs/nfsd/nfsproc.c  | 4 ----
- 2 files changed, 10 deletions(-)
+ arch/x86/include/asm/microcode.h         |  2 +-
+ arch/x86/kernel/cpu/microcode/amd.c      |  6 +-
+ arch/x86/kernel/cpu/microcode/core.c     | 58 +++++++++++++----------
+ arch/x86/kernel/cpu/microcode/intel.c    |  2 +-
+ arch/x86/kernel/cpu/microcode/internal.h |  1 +-
+ arch/x86/kernel/head32.c                 |  4 +--
+ 6 files changed, 41 insertions(+), 32 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 5b0b5a00e13062a5e9387431aaf5d6a1adfea50f..59b1987a1e16f5dad2efe627e8c81e654edc1413 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -72,9 +72,6 @@ nfsd3_proc_getattr(struct svc_rqst *rqstp)
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 695e569..d53148f 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -17,10 +17,12 @@ struct ucode_cpu_info {
+ void load_ucode_bsp(void);
+ void load_ucode_ap(void);
+ void microcode_bsp_resume(void);
++bool __init microcode_loader_disabled(void);
+ #else
+ static inline void load_ucode_bsp(void)	{ }
+ static inline void load_ucode_ap(void) { }
+ static inline void microcode_bsp_resume(void) { }
++bool __init microcode_loader_disabled(void) { return false; }
+ #endif
  
- 	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
+ extern unsigned long initrd_start_early;
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 4a10d35..96cb992 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -1098,15 +1098,17 @@ static enum ucode_state load_microcode_amd(u8 family, const u8 *data, size_t siz
  
--	dprintk("nfsd: GETATTR(3)  %s\n",
--		SVCFH_fmt(&argp->fh));
+ static int __init save_microcode_in_initrd(void)
+ {
+-	unsigned int cpuid_1_eax = native_cpuid_eax(1);
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+ 	struct cont_desc desc = { 0 };
++	unsigned int cpuid_1_eax;
+ 	enum ucode_state ret;
+ 	struct cpio_data cp;
+ 
+-	if (dis_ucode_ldr || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
++	if (microcode_loader_disabled() || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
+ 		return 0;
+ 
++	cpuid_1_eax = native_cpuid_eax(1);
++
+ 	if (!find_blobs_in_containers(&cp))
+ 		return -EINVAL;
+ 
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index b3658d1..079f046 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -41,8 +41,8 @@
+ 
+ #include "internal.h"
+ 
+-static struct microcode_ops	*microcode_ops;
+-bool dis_ucode_ldr = true;
++static struct microcode_ops *microcode_ops;
++static bool dis_ucode_ldr = false;
+ 
+ bool force_minrev = IS_ENABLED(CONFIG_MICROCODE_LATE_FORCE_MINREV);
+ module_param(force_minrev, bool, S_IRUSR | S_IWUSR);
+@@ -84,6 +84,9 @@ static bool amd_check_current_patch_level(void)
+ 	u32 lvl, dummy, i;
+ 	u32 *levels;
+ 
++	if (x86_cpuid_vendor() != X86_VENDOR_AMD)
++		return false;
++
+ 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, lvl, dummy);
+ 
+ 	levels = final_levels;
+@@ -95,27 +98,29 @@ static bool amd_check_current_patch_level(void)
+ 	return false;
+ }
+ 
+-static bool __init check_loader_disabled_bsp(void)
++bool __init microcode_loader_disabled(void)
+ {
+-	static const char *__dis_opt_str = "dis_ucode_ldr";
+-	const char *cmdline = boot_command_line;
+-	const char *option  = __dis_opt_str;
++	if (dis_ucode_ldr)
++		return true;
+ 
+ 	/*
+-	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
+-	 * completely accurate as xen pv guests don't see that CPUID bit set but
+-	 * that's good enough as they don't land on the BSP path anyway.
++	 * Disable when:
++	 *
++	 * 1) The CPU does not support CPUID.
++	 *
++	 * 2) Bit 31 in CPUID[1]:ECX is clear
++	 *    The bit is reserved for hypervisor use. This is still not
++	 *    completely accurate as XEN PV guests don't see that CPUID bit
++	 *    set, but that's good enough as they don't land on the BSP
++	 *    path anyway.
++	 *
++	 * 3) Certain AMD patch levels are not allowed to be
++	 *    overwritten.
+ 	 */
+-	if (native_cpuid_ecx(1) & BIT(31))
+-		return true;
 -
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = fh_verify(rqstp, &resp->fh, 0,
- 				 NFSD_MAY_NOP | NFSD_MAY_BYPASS_GSS_ON_ROOT);
-@@ -647,9 +644,6 @@ nfsd3_proc_fsstat(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd3_fsstatres *resp = rqstp->rq_resp;
- 
--	dprintk("nfsd: FSSTAT(3)   %s\n",
--				SVCFH_fmt(&argp->fh));
+-	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
+-		if (amd_check_current_patch_level())
+-			return true;
+-	}
 -
- 	resp->status = nfsd_statfs(rqstp, &argp->fh, &resp->stats, 0);
- 	fh_put(&argp->fh);
- 	resp->status = nfsd3_map_status(resp->status);
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 80f3c0c6c63d16c9324c92dca52c8814d9429bb1..1d1825cc3eda96b678dcb1fee62fbe84a144c9e2 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -57,8 +57,6 @@ nfsd_proc_getattr(struct svc_rqst *rqstp)
+-	if (cmdline_find_option_bool(cmdline, option) <= 0)
+-		dis_ucode_ldr = false;
++	if (!have_cpuid_p() ||
++	    native_cpuid_ecx(1) & BIT(31) ||
++	    amd_check_current_patch_level())
++		dis_ucode_ldr = true;
  
- 	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
+ 	return dis_ucode_ldr;
+ }
+@@ -125,7 +130,10 @@ void __init load_ucode_bsp(void)
+ 	unsigned int cpuid_1_eax;
+ 	bool intel = true;
  
--	dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+-	if (!have_cpuid_p())
++	if (cmdline_find_option_bool(boot_command_line, "dis_ucode_ldr") > 0)
++		dis_ucode_ldr = true;
++
++	if (microcode_loader_disabled())
+ 		return;
+ 
+ 	cpuid_1_eax = native_cpuid_eax(1);
+@@ -146,9 +154,6 @@ void __init load_ucode_bsp(void)
+ 		return;
+ 	}
+ 
+-	if (check_loader_disabled_bsp())
+-		return;
 -
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = fh_verify(rqstp, &resp->fh, 0,
- 				 NFSD_MAY_NOP | NFSD_MAY_BYPASS_GSS_ON_ROOT);
-@@ -615,8 +613,6 @@ nfsd_proc_statfs(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd_statfsres *resp = rqstp->rq_resp;
+ 	if (intel)
+ 		load_ucode_intel_bsp(&early_data);
+ 	else
+@@ -159,6 +164,11 @@ void load_ucode_ap(void)
+ {
+ 	unsigned int cpuid_1_eax;
  
--	dprintk("nfsd: STATFS   %s\n", SVCFH_fmt(&argp->fh));
++	/*
++	 * Can't use microcode_loader_disabled() here - .init section
++	 * hell. It doesn't have to either - the BSP variant must've
++	 * parsed cmdline already anyway.
++	 */
+ 	if (dis_ucode_ldr)
+ 		return;
+ 
+@@ -810,7 +820,7 @@ static int __init microcode_init(void)
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+ 	int error;
+ 
+-	if (dis_ucode_ldr)
++	if (microcode_loader_disabled())
+ 		return -EINVAL;
+ 
+ 	if (c->x86_vendor == X86_VENDOR_INTEL)
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 819199b..2a397da 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -389,7 +389,7 @@ static int __init save_builtin_microcode(void)
+ 	if (xchg(&ucode_patch_va, NULL) != UCODE_BSP_LOADED)
+ 		return 0;
+ 
+-	if (dis_ucode_ldr || boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	if (microcode_loader_disabled() || boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+ 		return 0;
+ 
+ 	uci.mc = get_microcode_blob(&uci, true);
+diff --git a/arch/x86/kernel/cpu/microcode/internal.h b/arch/x86/kernel/cpu/microcode/internal.h
+index 5df6217..50a9702 100644
+--- a/arch/x86/kernel/cpu/microcode/internal.h
++++ b/arch/x86/kernel/cpu/microcode/internal.h
+@@ -94,7 +94,6 @@ static inline unsigned int x86_cpuid_family(void)
+ 	return x86_family(eax);
+ }
+ 
+-extern bool dis_ucode_ldr;
+ extern bool force_minrev;
+ 
+ #ifdef CONFIG_CPU_SUP_AMD
+diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
+index de001b2..375f2d7 100644
+--- a/arch/x86/kernel/head32.c
++++ b/arch/x86/kernel/head32.c
+@@ -145,10 +145,6 @@ void __init __no_stack_protector mk_early_pgtbl_32(void)
+ 	*ptr = (unsigned long)ptep + PAGE_OFFSET;
+ 
+ #ifdef CONFIG_MICROCODE_INITRD32
+-	/* Running on a hypervisor? */
+-	if (native_cpuid_ecx(1) & BIT(31))
+-		return;
 -
- 	resp->status = nfsd_statfs(rqstp, &argp->fh, &resp->stats,
- 				   NFSD_MAY_BYPASS_GSS_ON_ROOT);
- 	fh_put(&argp->fh);
-
--- 
-2.49.0
-
+ 	params = (struct boot_params *)__pa_nodebug(&boot_params);
+ 	if (!params->hdr.ramdisk_size || !params->hdr.ramdisk_image)
+ 		return;
