@@ -1,115 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7AF22D4C5;
-	Sat,  3 May 2025 12:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85F421ADCC
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 12:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746275459; cv=none; b=EtyObXXIKBsFubl3v9yoDW82mUPWkW8BWZ2WN6vnIIj3FbZbsotmnauq2vp0ZmTK2l88uQZImTIl+fhbe1/3UcsMgZUDZa1Wh7g/vTAx8oCmU3rWuhaPkGJsw12atujeaeLePK2TKrMpOdZ8iLgGd9f+w5wMDVW1Tm6Ts6JlyPU=
+	t=1746275597; cv=none; b=HrlLsT+7t/RrfZ7J3kDwaFs58JPYYdr2zmD3T9U+f7AcoIKQh4+4L3fx7B7kTXVogigpcCvj3QTHnSeXqcXOTfLGyuLXp4oKaX9Bj0yKUDRxNQby1dscv1E+YVyzj4f26kjRO0u5UsecaTbECj0Um5ryJL1S3h5xdUxzmzThXrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746275459; c=relaxed/simple;
-	bh=F3iwU5W0ytAG5DZzAz0Pko7BcqXYuXoReD9umCq5y9I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KK7i9PwMM3jodqkc917vIp23OWNok350YJ9ekW2w3Rhb84YyVgEeZkc/ByYnEoaLZYIVcfRggoW2FzBMRCw7ZOxe1WG1kt/SMlY4cksiVwrpiBz1xlp5VqoDD86QuLkFISvD1lGEZjJDxXgtgNGwU7SGgyTvP7Eq4A+pCvOxF7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DryTNpCN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746275597; c=relaxed/simple;
+	bh=L7ClMYH5A0ty4sZpYAAeXld01qwZCg4pepzbvqcz8H0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HlU4jPW+seBEA11kKb4WUqHBrqNsohSYMvjM7D7XgsqmdStMZH+rgMkvUd3W52IBEu4UqPxS4JbEhsAKEipC6CFQ2zjRn1oUa33ITzh0rTnBbDA+8ScL/iCHpqPnSq1nMy29KzFfrPv/CnrxdP0VkmdVkfv2l0gS39gFvLtZDCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=D1Vk2BHv; arc=none smtp.client-ip=185.26.156.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DryTNpCN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C231BC4CEF0;
-	Sat,  3 May 2025 12:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746275458;
-	bh=F3iwU5W0ytAG5DZzAz0Pko7BcqXYuXoReD9umCq5y9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DryTNpCNV/P8VTvvl0iFClplGzorNqqgJ5PePgMPnpb2RdK9lwYxx4gcoZu77IUHc
-	 I8XgbpRwEBPi9R9TDZ8AbqZNUfL7hWLBNKsIMdCBay0/xs4n4LAEPeRCMXAox6PhbL
-	 amXWB3M2XgQQoAJKEyfCC8NCbDVliD7qh6tZljhenQfbdOAfOFNyDlqaJlm7F5k2Ex
-	 jqGYuzscPmTsXWcyqOl9kkKYXIdNxt+ewcJ2IJyNddKFcMHuuMXwXtVJhHbflawugG
-	 CKV65m7rlff6WhZJ4C0QzIkSylaeqT33kdLFH20xVKd1lDrqPlOvRG2/g2+8cRqjP4
-	 jxSMMV6lsc/Qg==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bee278c2aso43350861fa.0;
-        Sat, 03 May 2025 05:30:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUpN9Q+unzKZlnj0smO8bPfLklfxde/KRmFz+0CE+ZEaj8bFLydK+4BORaFsTrglblyKLbgmD5XbbyDwGg=@vger.kernel.org, AJvYcCVZwkCUBLA/VprlVHcgTCwikQHcJcFTpgz7TNZHljdqreG15wa0E6toifaeu1yVe741Q9dEcnk77th1EhDgXg==@vger.kernel.org, AJvYcCXlT9Qiyb2tgqQOvVC+7W6ravtVWvUy4pjFJuigYNAN8Sh/v7YMG7q1ANw/ufA45k89YXPLjgfqFBo1zR2M@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc+I7Oe3SidOEhBElrLGuTFEv/CwVLNHa1/DYMwfh0X56LBPMw
-	PRN6j6a0+d1R9AC2q7oSFCLx5MEysdYPSzVnIoRxyMK5JO/1RsLzGClkRadupN5IqZJ2rTrkANu
-	1UgAgZo10x+VdkC5Q0/VZE/FPnxc=
-X-Google-Smtp-Source: AGHT+IHdHYcdxqrU0jxedHiIX/DSHN9bJqdJ17KruC0sSGUND1apkQDk4JNLlIIRBpD12/tqSX1r3rXG1qQEIyd4eEk=
-X-Received: by 2002:a2e:bd81:0:b0:30b:ab00:846a with SMTP id
- 38308e7fff4ca-320aada845bmr21042721fa.3.1746275457474; Sat, 03 May 2025
- 05:30:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="D1Vk2BHv"
+Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
+	by mailgate02.uberspace.is (Postfix) with ESMTPS id B291217F9F4
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 14:33:07 +0200 (CEST)
+Received: (qmail 32620 invoked by uid 988); 3 May 2025 12:33:07 -0000
+Authentication-Results: phoenix.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Sat, 03 May 2025 14:33:07 +0200
+From: Illia Ostapyshyn <illia@yshyn.com>
+To: linux-kernel@vger.kernel.org,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Florian Rommel <mail@florommel.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Dongliang Mu <dzm91@hust.edu.cn>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>,
+	Brendan Jackman <jackmanb@google.com>,
+	Illia Ostapyshyn <illia@yshyn.com>
+Subject: [PATCH 0/2] scripts/gdb: Fixes related to lx_per_cpu()
+Date: Sat,  3 May 2025 14:32:30 +0200
+Message-ID: <20250503123234.2407184-1-illia@yshyn.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502141204.500293812@infradead.org> <20250502141844.046738270@infradead.org>
-In-Reply-To: <20250502141844.046738270@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 3 May 2025 21:30:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQkRoPNnCuhgXZUhHSFdFp2Uj7tnbw3k4QwuW+LXZ9e=w@mail.gmail.com>
-X-Gm-Features: ATxdqUGuUX0K-0vXXSyYkLfKuGao-VeiZU_DoB0ygbRGOceLMoJ2jc2-zfcs2ik
-Message-ID: <CAK7LNAQkRoPNnCuhgXZUhHSFdFp2Uj7tnbw3k4QwuW+LXZ9e=w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] module: Add module specific symbol namespace support
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
-	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: /
+X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-1.876393) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -0.476393
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=yshyn.com; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=L7ClMYH5A0ty4sZpYAAeXld01qwZCg4pepzbvqcz8H0=;
+	b=D1Vk2BHvAKRjY/5IHc4WUaLBAciIUNY+rdtYN4ARMdCzsyOvlQ7J3WMi0Ag3n5zvTq2WFpEffp
+	xTjba3P32wV+uYrNvN1Jt2DShU1RpVn/WQNOi+u7aWssSCHuRE3sPbJgUdLKLjRS1egBlgc3N0Zg
+	MifvWK5ia7REcd7WEI4rSEoGivBTBHbckE347A0Xl68uC1dzQm+pvZTqXav/Cy8ZgeMoCJ04d4iB
+	9yU9yF4W1phu8/gPXsCPerEOaFmjog+96W+IzT7suLojs6DRLanq8avePWrdIUvI7QMsM2VQa80/
+	XLCD7aFiVnC0sKt9AghVFlYk5wXh7Bv9fpGZWdLQ==
 
-On Fri, May 2, 2025 at 11:26=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> Designate the "module:${modname}" symbol namespace to mean: 'only
-> export to the named module'.
->
-> Notably, explicit imports of anything in the "module:" space is
-> forbidden.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/module/main.c  |   33 +++++++++++++++++++++++++++++++--
->  scripts/mod/modpost.c |   11 ++++++++++-
->  2 files changed, 41 insertions(+), 3 deletions(-)
->
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -1083,6 +1083,14 @@ static char *get_modinfo(const struct lo
->         return get_next_modinfo(info, tag, NULL);
->  }
->
-> +static bool verify_module_namespace(const char *namespace, const char *m=
-odname)
-> +{
-> +       const char *prefix =3D "module:";
-> +
-> +       return strstarts(namespace, prefix) &&
-> +              !strsmp(namespace + strlen(prefix), modname);
+Hi all,
 
-Apparently, you did not spend time for per-commit compile testing.
+these patches (1) fix kgdb detection on systems featuring a single CPU and
+(2) update the documentation to reflect the current usage of lx_per_cpu()
+and update an outdated example of its usage.
 
-I believe it is a typo of "strcmp()".
+Illia Ostapyshyn (2):
+  scripts/gdb: Fix kgdb probing on single-core systems
+  scripts/gdb: Update documentation for lx_per_cpu
 
-I got this build error.
-
-../kernel/module/main.c: In function 'verify_module_namespace':
-../kernel/module/main.c:1091:17: error: implicit declaration of
-function 'strsmp'; did you mean 'strsep'?
-[-Wimplicit-function-declaration]
- 1091 |                !strsmp(namespace + strlen(prefix), modname);
-      |                 ^~~~~~
-      |                 strsep
+ .../debugging/gdb-kernel-debugging.rst        | 34 ++++++++-----------
+ .../zh_CN/dev-tools/gdb-kernel-debugging.rst  | 34 ++++++++-----------
+ .../zh_TW/dev-tools/gdb-kernel-debugging.rst  | 34 ++++++++-----------
+ scripts/gdb/linux/cpus.py                     |  4 +--
+ scripts/gdb/linux/utils.py                    |  2 +-
+ 5 files changed, 48 insertions(+), 60 deletions(-)
 
 
+base-commit: 95d3481af6dc90fd7175a7643fd108cdcb808ce5
+-- 
+2.47.2
 
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
