@@ -1,72 +1,42 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C20E1FAA;
-	Sat,  3 May 2025 23:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CEA4400;
+	Sat,  3 May 2025 23:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746313382; cv=none; b=ey0NiUU8I987tdaRkaauSq7jcCzju+Jc9V+FEy+Dcr+T0d/s3+RnGA13SwduYaGkCHTggBtsi47I+wBciSFf6m5LTIhi83iue03vzA2iBjpVbWWN9nzgwWs22J7x6uyGHXjgk9gcoyxqYVwzjPAObTNExIyfK1Ahjvw9SCYuTEA=
+	t=1746313582; cv=none; b=Y0U9e+wbBmivrbEcMdkarAsxp3v5YXuGA6K28ozscg4dQ6vu7Y+5sDCpkWU7TBXIWF1m4fajVjn2vdZnVU0ROGr7RpoFjO5b9st8dV99kBEciewrBlxg0U5m+BfFyoXoMJqsxVPUua3+G6t2BuiAUXlk5RT5fw7vqih2L1WIjIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746313382; c=relaxed/simple;
-	bh=Ze/ucH/TJIDtmTnwnUkyCVTHkjlJt8F4eCnpOypYzXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s8MnMa9Y5kyr4f8pFfBhHnNNKdyXZs9h/sjNFuItkgpStCMDouAidkIzF61Jnxghajjo3Ecejwt/OBEzIAtlDGcVWcCJifcjMJP/AP3fpxhfaCMBOFdYwN5HRNucgvhNi8p4sjeyLPrHmQDenc4S3Ci4dr/lf6JERDhyBVC+iSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mLiB81Ft; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746313582; c=relaxed/simple;
+	bh=avkmmnbkwKnFk3/3A4l2Hup57et7T9MaqDFdBBP/6E4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ki5YL8+H4a5WMeB9WeHjxGVFrghIfeIL99hXcMy8i+OgEqRrXCebrEQA0zg/jPhWG7Eeq1L+Q3KhF0BbrdoHRIGLnOx4dN0PlinqVJEs2AXhJqYsWRsYA4oILSGwYV+dHJ3wReKEnY2YwtmxCfnzdkfbZOsPUsL/uVq4g88uyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=svRJbogy; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLiB81Ft"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39efc1365e4so1416681f8f.1;
-        Sat, 03 May 2025 16:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746313379; x=1746918179; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlHKqKUaOYpS5+aBx+GgXRJ1qdQccLtNIy7hEaMpn7Q=;
-        b=mLiB81Ft4A+MgU8Bk3SW1/MjxiTmeuagwJBlLRT6vmvyM94GCmEM7xMkJTDFZ2aEn3
-         xYQDyq0Elwv0Ojd8NXzD/eaeNQABg1SKAr+BvHmIXTuqq6JSc4LRHW4NlyZH+IK9KOKZ
-         nb2bOy3A6tE4KIvHr5bUgFKu3m/TmMLcjInRGz2Rh40woPKHgp59qW5jMux/MEc7/ylq
-         YdKa9BVYohN5stFylWx6wEzfivhIVrNbl6eFxIp2l9u4wxllH30WgX4Gohif9cbWazjB
-         PnBZBtrm9QIbsjstA/jh5wr+mCqoOdscdUsNrH2tBgd/+qR2YAFZ1u6FWyd7T5NsFFR7
-         ae/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746313379; x=1746918179;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wlHKqKUaOYpS5+aBx+GgXRJ1qdQccLtNIy7hEaMpn7Q=;
-        b=Evud+LmOZ8GslAaJRqhaRnv9U50RyWzDOtgmkuXAzkVky6syvkd/B2890vHJ8iAv46
-         WjvDF/bB1YtlK0kaKm4uG93a1a76Avph2K4NPX/WgOr9IR/MzTCWlk8ZbkSHzV8OBV0M
-         f2SMWt0V99/C1USt5CW1Jsfcq10IR16E9bB37HFMCU2gCItAZQ/qzADIg8/O28boB2vA
-         Tze7NO9zhGQdVwJPEWShe+oEpcHJPAVZnsCEdB5oKvwDsNx2IWkFrfsCGVGB/MMbnSNv
-         ks+UL2XfcXVePyD29JNhlZYTDlg7lLXKcr4pPjdUsOx10J07OSSPtC89cFqDV718tUoU
-         ot3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUY5uY/fu4qgQvyeRt7mbX8nG2ebK35mPTCpYXnbjgmnwu8whmtpbXxzhwuyK9SZ8noEjjoKGDZYKGn3vir@vger.kernel.org, AJvYcCVQK3GE/qq4BATTmdTQAy+dHEpO5aea8e2IbDDtwekfdqhYHjn99L9YXkhnpkhBmG9b8C5GebweaM4=@vger.kernel.org, AJvYcCXelIn0k4YpFxXzMs2JSZaWVTnhT1ea64SwIuWN2x55ZRdKW9L/4jDgucm7SRrCCzwj0Dd3ZKU89cdRnzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCZBQUukDXCe0qbTIZpGafK03NpF7acDXrsdzDuolY5sDUHWzz
-	1uJ0kExHYcuW141PTsmYnqZRHUEoNU3JQYU7fSUcSwFuqt7LmY3vvzIJD8pONJ0=
-X-Gm-Gg: ASbGnctA+STEDmMECklvFy5FlL/AVb+7QNYl/acCcFTEGjH4/cb+fwjO20A37Y4eV/h
-	B5MO0GYRb/SI39S5kP3uWxUCyAROvVcekNm5vukyYWabUdYQEZEquk+WFLxKcHCq7P35cjvif+5
-	aCu22yn4KW3hwZmktJ83PLM+XuiqIF7+W6xBeBEQBil7MmOc5mzArAMFdxjdASSA7CJvsOJx/us
-	0X1zn8I1Im+6QXvUtnIfw0SmILcJLAiTrBjS1BhbLqqDHbT7fu7pHy5UbfB7gMw9AcVm2z4Vl/C
-	4ddePKEOuuZsMwIDeLe0lPSbnLt0K0QAD+XKttbF+FTm7djyIj+uAOLa7w==
-X-Google-Smtp-Source: AGHT+IHkqW08MGO8FsSu58uDyOJe87EkK3pwda6LZu/QU05GvHZvgkOsUCyPLD0s4ki5roHaN7On1A==
-X-Received: by 2002:a05:6000:4304:b0:39f:e7b:2c87 with SMTP id ffacd0b85a97d-3a099adcdcfmr4716263f8f.29.1746313378572;
-        Sat, 03 May 2025 16:02:58 -0700 (PDT)
-Received: from puma.museclub.art ([185.189.115.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0c25sm6015860f8f.17.2025.05.03.16.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 16:02:57 -0700 (PDT)
-From: Eugene Shalygin <eugene.shalygin@gmail.com>
-To: eugene.shalygin@gmail.com
-Cc: pkarc <ivanchojara@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (ausus-ec-sensors) add MAXIMUS VI HERO.
-Date: Sun,  4 May 2025 01:00:06 +0200
-Message-ID: <20250503230020.1005801-1-eugene.shalygin@gmail.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="svRJbogy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=X+mjigEnyGCW5I7Hm29e05FCuKbXFHKkUSHgp3w5jzo=; b=svRJbogyNwVF/FFM
+	vvojn6UrSkfL4WoVjoD4V83itlhGCKjRV7rT/u+G+xdTtYgRB+zrKcxE5BB5cen+8AMbUBqaYCZK7
+	shDBCDuhRp4XYLaQe/gf1c21nhNNtrbOZlR2lhe+Ye7lNmuDfxkgrSlUB2F4nByHU7SxQVMaUmhw/
+	lbep2FU85voemxmzjE5WkzNdS7S5zLDC65uuiyHDP0KJ0EvUXwB0uCBLOss/JxMhRuUkmt9sXSVLs
+	8FOfB13dSXZc3y/SqyI+odoqqAy4aSYw3d2mnboyJoMpub0mWhCZYkSvqyXYNet+cSzzGmI9n5RHp
+	WaIAIlyVcTaez+sTTQ==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uBLvm-001GEx-10;
+	Sat, 03 May 2025 23:06:02 +0000
+From: linux@treblig.org
+To: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] scsi: isci: Remove unused sci_remote_device_reset
+Date: Sun,  4 May 2025 00:06:01 +0100
+Message-ID: <20250503230601.124794-1-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -76,58 +46,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: pkarc <ivanchojara@gmail.com>
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Add support for MAXIMUS VI HERO.
+sci_remote_device_reset() last use was removed in 2012 by
+commit 14aaa9f0a318 ("isci: Redesign device suspension, abort, cleanup.")
 
-Signed-off-by: pkarc <ivanchojara@gmail.com>
-Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- Documentation/hwmon/asus_ec_sensors.rst |  1 +
- drivers/hwmon/asus-ec-sensors.c         | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+ drivers/scsi/isci/remote_device.c | 30 ------------------------------
+ drivers/scsi/isci/remote_device.h | 15 ---------------
+ 2 files changed, 45 deletions(-)
 
-diff --git a/Documentation/hwmon/asus_ec_sensors.rst b/Documentation/hwmon/asus_ec_sensors.rst
-index 3f5a2d1ffe65..816d1f9947ea 100644
---- a/Documentation/hwmon/asus_ec_sensors.rst
-+++ b/Documentation/hwmon/asus_ec_sensors.rst
-@@ -4,6 +4,7 @@ Kernel driver asus_ec_sensors
- =================================
- 
- Supported boards:
-+ * MAXIMUS VI HERO
-  * PRIME X470-PRO
-  * PRIME X570-PRO
-  * PRIME X670E-PRO WIFI
-diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
-index 964673c67597..e0a95197c71b 100644
---- a/drivers/hwmon/asus-ec-sensors.c
-+++ b/drivers/hwmon/asus-ec-sensors.c
-@@ -313,6 +313,15 @@ struct ec_board_info {
- 	enum board_family family;
- };
- 
-+static const struct ec_board_info board_info_maximus_vi_hero = {
-+	.sensors = SENSOR_SET_TEMP_CHIPSET_CPU_MB |
-+		SENSOR_TEMP_T_SENSOR |
-+		SENSOR_TEMP_VRM | SENSOR_SET_TEMP_WATER |
-+		SENSOR_FAN_CPU_OPT | SENSOR_FAN_WATER_FLOW,
-+	.mutex_path = ACPI_GLOBAL_LOCK_PSEUDO_PATH,
-+	.family = family_intel_300_series,
-+};
-+
- static const struct ec_board_info board_info_prime_x470_pro = {
- 	.sensors = SENSOR_SET_TEMP_CHIPSET_CPU_MB |
- 		SENSOR_TEMP_T_SENSOR | SENSOR_TEMP_VRM |
-@@ -527,6 +536,8 @@ static const struct ec_board_info board_info_tuf_gaming_x670e_plus = {
+diff --git a/drivers/scsi/isci/remote_device.c b/drivers/scsi/isci/remote_device.c
+index 287e1ba8ddd7..82deb6a83a8c 100644
+--- a/drivers/scsi/isci/remote_device.c
++++ b/drivers/scsi/isci/remote_device.c
+@@ -392,36 +392,6 @@ enum sci_status sci_remote_device_stop(struct isci_remote_device *idev,
  	}
+ }
  
- static const struct dmi_system_id dmi_table[] = {
-+	DMI_EXACT_MATCH_ASUS_BOARD_NAME("MAXIMUS VI HERO",
-+					&board_info_maximus_vi_hero),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("PRIME X470-PRO",
- 					&board_info_prime_x470_pro),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("PRIME X570-PRO",
+-enum sci_status sci_remote_device_reset(struct isci_remote_device *idev)
+-{
+-	struct sci_base_state_machine *sm = &idev->sm;
+-	enum sci_remote_device_states state = sm->current_state_id;
+-
+-	switch (state) {
+-	case SCI_DEV_INITIAL:
+-	case SCI_DEV_STOPPED:
+-	case SCI_DEV_STARTING:
+-	case SCI_SMP_DEV_IDLE:
+-	case SCI_SMP_DEV_CMD:
+-	case SCI_DEV_STOPPING:
+-	case SCI_DEV_FAILED:
+-	case SCI_DEV_RESETTING:
+-	case SCI_DEV_FINAL:
+-	default:
+-		dev_warn(scirdev_to_dev(idev), "%s: in wrong state: %s\n",
+-			 __func__, dev_state_name(state));
+-		return SCI_FAILURE_INVALID_STATE;
+-	case SCI_DEV_READY:
+-	case SCI_STP_DEV_IDLE:
+-	case SCI_STP_DEV_CMD:
+-	case SCI_STP_DEV_NCQ:
+-	case SCI_STP_DEV_NCQ_ERROR:
+-	case SCI_STP_DEV_AWAIT_RESET:
+-		sci_change_state(sm, SCI_DEV_RESETTING);
+-		return SCI_SUCCESS;
+-	}
+-}
+-
+ enum sci_status sci_remote_device_frame_handler(struct isci_remote_device *idev,
+ 						     u32 frame_index)
+ {
+diff --git a/drivers/scsi/isci/remote_device.h b/drivers/scsi/isci/remote_device.h
+index 561ae3f2cbbd..c1fdf45751cd 100644
+--- a/drivers/scsi/isci/remote_device.h
++++ b/drivers/scsi/isci/remote_device.h
+@@ -159,21 +159,6 @@ enum sci_status sci_remote_device_stop(
+ 	struct isci_remote_device *idev,
+ 	u32 timeout);
+ 
+-/**
+- * sci_remote_device_reset() - This method will reset the device making it
+- *    ready for operation. This method must be called anytime the device is
+- *    reset either through a SMP phy control or a port hard reset request.
+- * @remote_device: This parameter specifies the device to be reset.
+- *
+- * This method does not actually cause the device hardware to be reset. This
+- * method resets the software object so that it will be operational after a
+- * device hardware reset completes. An indication of whether the device reset
+- * was accepted. SCI_SUCCESS This value is returned if the device reset is
+- * started.
+- */
+-enum sci_status sci_remote_device_reset(
+-	struct isci_remote_device *idev);
+-
+ /**
+  * enum sci_remote_device_states - This enumeration depicts all the states
+  *    for the common remote device state machine.
 -- 
 2.49.0
 
