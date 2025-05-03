@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687EDEEBB;
-	Sat,  3 May 2025 14:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF95EEBB
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 14:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746281076; cv=none; b=g50MS906ORHwF6beXxOI9ZXyYz3Iey0blWhg9qKYx1XK9Wng/RuxlxKVroGMSl9DQHjv0qV5y8IV3jIqdgtE7Nmi8lm7/v8r0Kza9H7WyXW4PUJ7+VpqEoI0VAp1L21nYl5GWxJN550rdrdF2Q3Wv+XOrFXN7PuoC5ykt3coRb8=
+	t=1746281119; cv=none; b=NJ/jUHAPQPVTbMMhxSkZ9aSW0SF/9PFd5mDoyrA9grxuAX5gPDnmHhasEBuEjB89gXOTBlNU295eulYwRXTbe3uz1ozbZCDMNMgE7LFto2yE8QOZ01qf+2LgyCL+2IimBVB/lqfiRO4IX60tIgw7baZJmOyydPZGmG7P8gHKumQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746281076; c=relaxed/simple;
-	bh=LGpoxawfydihDKyci4BWvfYhj1LwcVx7TSv/wKobEhs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hXUxKHah/yb6YlUVNul7fn+tghNmi9NzXTxRZ/lQoeezwZeWWu3/iz8tWFYyKQzTNWlrGokwDdrFMC1xKsusVP7mhc438osuaQ4D1UHQSJMaGOu+5kBUrtHFK8+jQeeVgZAsqrY/7PvrahlGuN/lPgF0RiDIPylfTmv8QrW0qq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwb8pb1K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746281119; c=relaxed/simple;
+	bh=g9NJHAlBW7HIs4g5OZs65GWHHdecEv7BH2OMVTqtXm4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RWcPuL/KrEE+b9zqHGCmtjYYempn6p301DiHQaKpj1pwHQwl1Q/W1FHBdNq/VQYmtP4onysrDHiel7G0mYlrvbM8yngmOwXVn218RoJ6ahgi3Wht9Q24euiZFOMrS+xd663duYdngtLy/UNnBiTbfSneQyIcZ8pV83plfCMQaZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcQdPQhx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwb8pb1K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B37B3C4CEE3;
-	Sat,  3 May 2025 14:04:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcQdPQhx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB08C4CEE3;
+	Sat,  3 May 2025 14:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746281075;
-	bh=LGpoxawfydihDKyci4BWvfYhj1LwcVx7TSv/wKobEhs=;
+	s=k20201202; t=1746281118;
+	bh=g9NJHAlBW7HIs4g5OZs65GWHHdecEv7BH2OMVTqtXm4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=hwb8pb1KVcDOgZUiniudSiiFrWa4x2nJN7rF8xnD5soxr7coO/WAig/MI4q/vxG+1
-	 CZrWvS+f/pKUZs+oWjyP2Y2TNNhkc0GQzRMkjpBuad0MJxfW9sRMrRCxGoRkNTB7B3
-	 DYes0gatEDOmCqcxu6eymaXzJNnI9GC3Fs0nR7eXVKSuYJRiIpcDiJuBldKBw1r+3F
-	 0EYPrOsbXiArYGAuRXA/+GM1yYRB6dvKjmXOnPQS73yBS7IrCDaT3KeOlo/sJoXE5n
-	 vSO3G+D0aEQ9KP4J4WLzC7Md7CKwwNWUjfGOC4NT+mYc7GetAXeKjnBHZ152YiTHKF
-	 trIT4GjHFZ5bQ==
+	b=kcQdPQhx6qjw/50nyP5lVELmS57Wke1KJP9KZU2MEN47M9P6JXFJH8eKItZ2QsnQB
+	 2Cn6IJWIiLsAV17YXdj3WjwZoQLU3DjPoBxkfNqp1g9JWobNrBRvd6zzLepXPe1JBo
+	 OBd1iESxQRohOC3+pZkbhxFFwa68OqOyPNazA5Y62Qs2IqbofuQGcWQ4DEp6c9BmsM
+	 yTQpCjkvbzSfpXKbK7+FufsXTDZBeJKK+YGl6+JxVRkq5Vx3r6gvrljH7KkutjBaGj
+	 5Ps1hGAjj5zqmoKynERQoPGmpjdp+dnNSdmHQJdaAV0dcstS+wxqYf5oH2yBE0SC/i
+	 7M70TDTUWgclg==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Sebastian Reichel <sre@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Pengyu Luo <mitltlatltl@gmail.com>,
-	linux-pm@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Joel Granados <joel.granados@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] power: supply: add EXTCON dependency
-Date: Sat,  3 May 2025 16:04:26 +0200
-Message-Id: <20250503140431.438727-1-arnd@kernel.org>
+Subject: [PATCH] arm64/fpsimd: hide unused sve_to_fpsimd() function
+Date: Sat,  3 May 2025 16:05:10 +0200
+Message-Id: <20250503140514.487947-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,34 +49,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-max8971 is written to work with or without extcon, but it fails
-to link when built-in when the extcon subsystem is in a loadable
-module:
+The one caller outside of an #ifdef was removed:
 
-x86_64-linux-ld: drivers/power/supply/max8971_charger.o: in function `max8971_probe':
-max8971_charger.c:(.text+0x2ab): undefined reference to `extcon_find_edev_by_node'
+arch/arm64/kernel/fpsimd.c:676:13: error: 'sve_to_fpsimd' defined but not used [-Werror=unused-function]
+  676 | static void sve_to_fpsimd(struct task_struct *task)
+      |             ^~~~~~~~~~~~~
 
-Add the appropriate dependency that allows the working cases but
-prevents the link failure.
+Add annother #ifdef around the definition.
 
-Fixes: 60cd40eee4f4 ("power: supply: Add support for Maxim MAX8971 charger")
+Fixes: 929fa99b1215 ("arm64/fpsimd: signal: Always save+flush state early")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/power/supply/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/fpsimd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 797c8d1b04aa..daab8214e225 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -621,6 +621,7 @@ config CHARGER_MAX77976
- config CHARGER_MAX8971
- 	tristate "Maxim MAX8971 battery charger driver"
- 	depends on I2C
-+	depends on EXTCON || !EXTCON
- 	select REGMAP_I2C
- 	help
- 	  The MAX8971 is a compact, high-frequency, high-efficiency switch-mode
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 92c1f647fef8..be8cb5b550a4 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -662,6 +662,7 @@ static void fpsimd_to_sve(struct task_struct *task)
+ 	__fpsimd_to_sve(sst, fst, vq);
+ }
+ 
++#ifdef CONFIG_ARM64_SVE
+ /*
+  * Transfer the SVE state in task->thread.sve_state to
+  * task->thread.uw.fpsimd_state.
+@@ -691,6 +692,7 @@ static void sve_to_fpsimd(struct task_struct *task)
+ 		fst->vregs[i] = arm64_le128_to_cpu(*p);
+ 	}
+ }
++#endif
+ 
+ void cpu_enable_fpmr(const struct arm64_cpu_capabilities *__always_unused p)
+ {
 -- 
 2.39.5
 
