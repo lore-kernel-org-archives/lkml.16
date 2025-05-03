@@ -1,71 +1,168 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3450A19ABD8
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 10:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110C71DDC18;
+	Sat,  3 May 2025 10:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746266954; cv=none; b=ibaMjzqB/qlas4nC69DgC3+eARxh163+z791BqN6CZAIG35OO2wpSWTImTQVnZPnD4GdRx1uNCBWBHC4F4uUHJ5PwbPtUpaZWNt6un/IGtdVKLG+5em0Z3Dp6wrepBCKS/yMZVWxyvqemsaLGDK4SuD1GV2KUGQK4XCka6Y2Rko=
+	t=1746267050; cv=none; b=HIV4Z3tOscpPjDtgPV0l8F7GU8fqpPIw11u/d1htVmm5DCK98ERrwnFtbQBTXRkbykUTryVIt8IrNpNFu3HyzJQ9pTpM9RiOzJ6vpkkWVY1RL3z/GTn5gZ0zuF04BF21tx2hN5kNcUPTg1W1fV/m8ujzwLYl9js4dmr1PxZEkv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746266954; c=relaxed/simple;
-	bh=+xcZEYy8/MdBIFUjE8EDeqVy5uog5t0NsiP2Ifz3DDA=;
+	s=arc-20240116; t=1746267050; c=relaxed/simple;
+	bh=xk/wEgqqIO2by4Z2qvxQ7ilU/SdwMkhsAd06Cg0FC4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5J/N5xHiXD2iHWC5kohhWrzVPRvxvDDjGuaWpeKr1oocQg7yNenrdGdbqaMN7zR0R17mPcu764Or4gTfAn/q0FdAyb0lKPjTu5mKCaq+TU0reb6q4jQAOOcfPdVWDRdOj35vSJm8v460N0kKBEVq1KKHOSeA6XyUdX+do9a0eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HdmkUb0b; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TdevJW3Cp8UO6bmNZ2yzCOzkAuTFj5aSPPueBwAOG6D2Ujl9skK+rsnS+/aWmrlKeoV9LtyRtbdQjTJBisEtmnOEySUAKlvEsr7ovoPfGiHxixUU6gCWONlBc27u4TPSl8VbIY1eaVobK7iXGVEecRr4A3fLAQ0CTyjKT7/NcKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfpvM7H/; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HdmkUb0b"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=QPqVojQUKozUgx8QIPic+aeF6sUNM3GUPzmbj52BxRo=; b=HdmkUb0bm1EhZ6ordPmEOifOdm
-	KD3//QxTE7nYNCRfRnPTFaodtrj4gLuW8Ha6vzb1J37yKkLdXDM0EK+sWOyeWvuBD3VPTNKyUt4IM
-	BbyJliutJ+P2niZ33sjEEwd0rjrtTFEHXQdL+nOdo6AQV1ZW+5ZBRRt8tvJ57EgEOfDqH8tly5jDR
-	/YPaQdWKV9TyzqR6q+1GtJUGzuKrW7yd8a5uquGmZipCvprnxhG/PSCOJ2krzEfvlkfY5We39RyMc
-	fdODqa6WW9Pi4hXAywjgTJl/WOwp94+AMw4RBTLrQHhPm6I1byeDgR+rjdT6R4MjW1tvdV+N+1TTs
-	1MXtmMbA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uB9nt-0000000FCVK-2LWL;
-	Sat, 03 May 2025 10:09:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2AFB5300780; Sat,  3 May 2025 12:09:05 +0200 (CEST)
-Date: Sat, 3 May 2025 12:09:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v12 00/21] futex: Add support task local hash maps,
- FUTEX2_NUMA and FUTEX2_MPOL
-Message-ID: <20250503100905.GG4356@noisy.programming.kicks-ass.net>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416163142.aKBzQeqK@linutronix.de>
- <20250502194807.GD24078@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfpvM7H/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746267048; x=1777803048;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xk/wEgqqIO2by4Z2qvxQ7ilU/SdwMkhsAd06Cg0FC4E=;
+  b=YfpvM7H/3qN4l2C1Bfnnms9DXbxHUndcxWNIfITVwVXT2/PjVIWZr1UM
+   n3lLpKTYaXYo0hdBTKmNeHDDV5YVzKMkOIf0999IMDJNLrZIR4YgeQ7Le
+   927dZJJhLxDJI4DxgnMEVb8oaDYpu6kNu3ZyzPN1CdOtx7udvL+b0P3FU
+   j81MSkbq07mWKks1svvSGu7kTZJmwil7vvLMmYIYVLVJWWvTVFDsjgH2c
+   nJqDXarICUzjnEsZ227bBXiI7j3z4fbJ80NNtkdERMdfGuPFmKK6Kpoao
+   NDSxyljgKNPakQ0OJi3in9O/R/t22MCRaOcOEaBiqVwDnMknr4KinRqbK
+   g==;
+X-CSE-ConnectionGUID: MXiKWX7aRYi3FHo/2bCaQA==
+X-CSE-MsgGUID: Q1AyCUmUTmagDo9cMZ+Z+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47821848"
+X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
+   d="scan'208";a="47821848"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2025 03:10:47 -0700
+X-CSE-ConnectionGUID: BNpdvW4RT16cYCbbG1zdoQ==
+X-CSE-MsgGUID: Np7Cl7wiQS6yWBIt/JW9VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
+   d="scan'208";a="139986440"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 03 May 2025 03:10:45 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uB9pS-0005I9-1Q;
+	Sat, 03 May 2025 10:10:42 +0000
+Date: Sat, 3 May 2025 18:10:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH 09/12] tracing: branch: Use trace_tracing_is_on_cpu()
+ instead of "disabled" field
+Message-ID: <202505031738.buFg2SBt-lkp@intel.com>
+References: <20250502205349.299144667@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250502194807.GD24078@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250502205349.299144667@goodmis.org>
 
-On Fri, May 02, 2025 at 09:48:07PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 06:31:42PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-04-16 18:29:00 [+0200], To linux-kernel@vger.kernel.org wrote:
-> > > v11…v12: https://lore.kernel.org/all/20250407155742.968816-1-bigeasy@linutronix.de
-> 
-> I made a few changes (mostly the stuff I mailed about) and pushed out to
-> queue/locking/futex.
+Hi Steven,
 
-And again, with hopefully less build errors included :-)
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on linus/master v6.15-rc4 next-20250502]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-mmiotrace-Remove-reference-to-unused-per-CPU-data-pointer/20250503-050317
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250502205349.299144667%40goodmis.org
+patch subject: [PATCH 09/12] tracing: branch: Use trace_tracing_is_on_cpu() instead of "disabled" field
+config: arc-randconfig-001-20250503 (https://download.01.org/0day-ci/archive/20250503/202505031738.buFg2SBt-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250503/202505031738.buFg2SBt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505031738.buFg2SBt-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   kernel/trace/trace_branch.c: In function 'probe_likely_condition':
+>> kernel/trace/trace_branch.c:56:43: error: implicit declaration of function 'raw_smp_process_id'; did you mean 'raw_smp_processor_id'? [-Wimplicit-function-declaration]
+      56 |         if (!tracer_tracing_is_on_cpu(tr, raw_smp_process_id()))
+         |                                           ^~~~~~~~~~~~~~~~~~
+         |                                           raw_smp_processor_id
+
+
+vim +56 kernel/trace/trace_branch.c
+
+    29	
+    30	static void
+    31	probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
+    32	{
+    33		struct trace_array *tr = branch_tracer;
+    34		struct trace_buffer *buffer;
+    35		struct ring_buffer_event *event;
+    36		struct trace_branch *entry;
+    37		unsigned long flags;
+    38		unsigned int trace_ctx;
+    39		const char *p;
+    40	
+    41		if (current->trace_recursion & TRACE_BRANCH_BIT)
+    42			return;
+    43	
+    44		/*
+    45		 * I would love to save just the ftrace_likely_data pointer, but
+    46		 * this code can also be used by modules. Ugly things can happen
+    47		 * if the module is unloaded, and then we go and read the
+    48		 * pointer.  This is slower, but much safer.
+    49		 */
+    50	
+    51		if (unlikely(!tr))
+    52			return;
+    53	
+    54		raw_local_irq_save(flags);
+    55		current->trace_recursion |= TRACE_BRANCH_BIT;
+  > 56		if (!tracer_tracing_is_on_cpu(tr, raw_smp_process_id()))
+    57			goto out;
+    58	
+    59		trace_ctx = tracing_gen_ctx_flags(flags);
+    60		buffer = tr->array_buffer.buffer;
+    61		event = trace_buffer_lock_reserve(buffer, TRACE_BRANCH,
+    62						  sizeof(*entry), trace_ctx);
+    63		if (!event)
+    64			goto out;
+    65	
+    66		entry	= ring_buffer_event_data(event);
+    67	
+    68		/* Strip off the path, only save the file */
+    69		p = f->data.file + strlen(f->data.file);
+    70		while (p >= f->data.file && *p != '/')
+    71			p--;
+    72		p++;
+    73	
+    74		strscpy(entry->func, f->data.func);
+    75		strscpy(entry->file, p);
+    76		entry->constant = f->constant;
+    77		entry->line = f->data.line;
+    78		entry->correct = val == expect;
+    79	
+    80		trace_buffer_unlock_commit_nostack(buffer, event);
+    81	
+    82	 out:
+    83		current->trace_recursion &= ~TRACE_BRANCH_BIT;
+    84		raw_local_irq_restore(flags);
+    85	}
+    86	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
