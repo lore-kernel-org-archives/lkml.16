@@ -1,919 +1,592 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2089.outbound.protection.outlook.com [40.107.220.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EAD192D8A;
-	Sat,  3 May 2025 00:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746230520; cv=none; b=EhDWbkQ5CrHzxokv4HRVKQUtij/q/O0i1hMmsAMHBHC1j5ap6+pOqlTDcHjidzDWFhdklml581GKrpcdLhm6Qos77flACwS1Z1wcy12gK+onMmqGUK3h5XFoogM5NZawK+mpLotIswYrxSHxiQ7sodi08dPq6WCht0MZMGbHP8Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746230520; c=relaxed/simple;
-	bh=FlGN0TNknuBiRqKuJorlTYp7AM9oNNFXx1JMOaCU0qM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HFxqGN2Zf9VOGGKCZTV6UU98i22S2QqzA150Z3tUFAP+gO0yCtkrJisM3sT55aNVyJsGcdiGHO/TH2qzcnBErCL/SQSeGDVwUReDudWpkPT4EduE06mfz3FEIfUUSCCBtZIkZlC7ixvAIcdqPvsxmfCuwCedzH+zrN04IJX3h84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3mc6tea; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A813C1F;
+	Sat,  3 May 2025 00:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746231231; cv=fail; b=aIzGwNqskQLWVy03moCLT2wDaju509VmI6+M1wj2GgRuOAbf17+ugiu8HIwi4RMwSFzck+aFaP68535AgL8p/qq85yKaU5okMVWhNOfOYKtgFUmROyf/3Vnjqyf0qzUPkV6swdfUtj2OdPucBIxzmpux4uatqI+4MOtzMC4Z1yQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746231231; c=relaxed/simple;
+	bh=0J8Q4QhupwCj751FCDFkY2VO+o6MfXc8ZnW0F8F8z3I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jpgdnwxncRyZC/l9g/vRc8p44Eknu7xntv9FEcwgmYZTvgabJobtGzCwr4H2VQPEWPFDrRPBJQZapn6oDC58lPHfGL11CdYI2Qhq+UozTdS+8hG+9R0gU8oGiW+xov4rTY5YwsA34erCxgl5KUJGOx4keSFZWKuE/LkpMWrQij0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tNKA8lp4; arc=fail smtp.client-ip=40.107.220.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3mc6tea"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso117011b3a.0;
-        Fri, 02 May 2025 17:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746230517; x=1746835317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I6qcAonrFWnvhd19P9zj1ZbKkB06IbCRb2zcb+S0ymQ=;
-        b=Z3mc6teadUuP70HEuCFMg9L8yJQ+YwBMaE6ptCXRq/lWFd5RRpKlSeqKvr/dwH7jjI
-         34iMFQUFe8wask+ZmpCaQhZXJwrompkquZgy6/0+DYrrQ4VMEE9ak5Y3bLcBOzN9TmCk
-         ahK3BXtu/6yRMiB064ibMiC/xekj9zl5UFrImoqQ13w6ccJ0GOzTR/emOBX/iwjtclWx
-         deOxMSWgYstyuPRPsnrWUgLej4Hq7JwBwmPJBAB99wQTNF7ONzpoXth+6ig4y2vrdwbZ
-         hA7AjRNDyW3+uVlfPvY1bb6Us56JiKhxC78it2RSVGcELvL40JtGKRk7Yupkjd8TEBci
-         l2Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746230517; x=1746835317;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I6qcAonrFWnvhd19P9zj1ZbKkB06IbCRb2zcb+S0ymQ=;
-        b=uo7RY3aQGMSYVHJOjWy7ebWEWXEzse+hs/Ep2D5l9+eCN3jTxXBlt2Mx0bK2kO4ZLp
-         /XMlk3YcYl2X695O7gvp63HLHBWIIPciYqx2v6GFzHtcyxBA0RiIY2LgAxcFHiR4zeTO
-         hy5WjMrS9SXvuQTo35K+e+DiIyve+Va/SMxGAeD/su1Q0CPb5kmeNF8M2DmnRqm/sucb
-         WsYtP6Vf3xZa8BbVe5t++RzPxGsShF2lEm8m+zaxMl7zQhI1jUZFmxjnZkWd+WpqmrTJ
-         gFHqkTxhUfCHSQog266MpIA9l2FYFiVf7zbviAY5+gtcpBvWhWkk8KXZEtUTYZX896iq
-         seVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUaj0zvpkVYZxhFD98gV6UgD+lUvpHZKbodmBRcehwLt5MVjw1HGEAePFpwpzEZagRIQcNaChvxvvH0uoBT9Iv/I9hXVQ==@vger.kernel.org, AJvYcCVFiwN8SmPFK6i8RMiRmp/JMokMVO4Fc8YgV4TZYaisDmbZotXR11Sr5Hf1JpjkQrx5ifYr/gL2VU4WpgEi@vger.kernel.org, AJvYcCWFoRCkZ3oHGhlF1tikqmGmQHdU8Y5jwRmeQbLJO91xZHc0VcBBDQTkZJC5VJDo5J5Nt7GqlRRlV/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT3IIWJQBcnw7tMDse2YAtVumj4hvyRlZOgrhNBFO9wrPYebxH
-	BbOIGxFInsuRDJR4MJS4ZbK2QUl4Ac1KDPT/5lnb2m58wU8jVEo1
-X-Gm-Gg: ASbGnctdQpcLa/7kh316pgmLhpVWqQSVXLIt1i0mb7U40vkXWjYLR0CC+0LV805dWNQ
-	UjRLE+JKx8kPG64vx4lLOP19kRmJIMCZCFi61ZlUQ56lD19oJjHjZcXzudV9x1eUprRU/yQRtWk
-	yOn3s4FQT9j0Qtp3Fhc0IYobKF4l98l3bUWj4Bon6UHxMzqbplV+xc6Co3i15Lcf4KFR/MwA6IB
-	NER/Um5Ck8UyBYdi9n2BcdM6u2MpSIYHoDh9qERB4jCvXSPkQKwAuZ8o8zlzYPt2lYqOl66wBSd
-	kRXkhDbtzSGWPfm4bHaggLCcP63T9EWxRGPaG7kbIAGtHBI4f1yMzT+NRQ8+yQfwFu0xGKn2wEt
-	uFHblHjbs2kGVRTkGgAy4cnxf25dzREwzF+R5L0zZkqU9ixeT5g==
-X-Google-Smtp-Source: AGHT+IGHo/XzRUpwiskoXb1DnWtLAXuSt6eQO8OZNAc4wyvDoSATEw+MwK8PvfKW1E0rSa+Ev/E7lw==
-X-Received: by 2002:a05:6a21:3a88:b0:203:bac4:c6d4 with SMTP id adf61e73a8af0-20cdfdf1bbemr6925485637.29.1746230516520;
-        Fri, 02 May 2025 17:01:56 -0700 (PDT)
-Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbb0b5sm2206680b3a.41.2025.05.02.17.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 17:01:56 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>,
-	Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>,
-	Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 6/6] platform/x86: Add Lenovo Other Mode WMI Driver
-Date: Fri,  2 May 2025 17:01:42 -0700
-Message-ID: <20250503000142.1190354-7-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250503000142.1190354-1-derekjohn.clark@gmail.com>
-References: <20250503000142.1190354-1-derekjohn.clark@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tNKA8lp4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jTlxN2qc5g7oOVx+OX7qx7VSFFW/G4tG+OYwPMt/CzdPLPBrXTV4mH0/Zp6ZEaDDOLyIBiC7OqdZimB14i4KPq0ZbhGRGMokDR9mZNUkHgDCRTtRx0FKdnyh4OJFIFoXoleO13KHf1ieO5qs90c17yothGm/y4nTLoaFHjJk2/W7G534bTlhJEaYR67CCM3QEE8ZZabJlwstBdmcx3IOSTPANaHBptSc8NYE4bOhEPl1p2u8WyYmzVpgtP1grUSOs0zRBc76jTb2D3nuxTRamrW2H0v8hIEFCX4DGJeiUsEnnXw7M1Ro7UxDVNlpGQotiNznN60l/Z9GhQLFgDqbRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Larz2GMLXjf+4pjdqjdTlLULuMNQ9AlmvJXtNOax8Ns=;
+ b=IO0+FF3isUBDgzXvXQ0tf58BmHd+yBSute6EKiJy329zSsD6aalbPaDCFNNp4zf8SI70JeK5Y9WoNmowshO1okBqfw2o/u6BP7Wy/2wgJBBdZ3I/bl3LY3k6HPQl90La98k6FIfJtzosoNAm/tEdGyWFTgOqSYyhPuZShUknU6rasBnBEoPCUG3xVeUgiGN09pLib5MfU6x+Ari1/CeXeY8Ua1WOng7LmxQoWc1OBI5StTjweAqp4HXGjyx665VYBRh9b/tcQaPmAJJvcAS8BTkcYGBoEeEZDBUPvRjp24XtvhcVdMTGRuA8C5UFu/Tg5ktJNhsCrgJlwAaT3McH8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Larz2GMLXjf+4pjdqjdTlLULuMNQ9AlmvJXtNOax8Ns=;
+ b=tNKA8lp4UpfX5WP8/QUl32UbPqReP3ehNn44TGpFaRp/f9XXfnwVep4CfryMiZooMJE5gBuARvVZHE3GYzBw9GwHTV4BnN/Z+Ay+cZyF+E2Y2fH+B400XU06K7hmCqSlCeW9reamnSprF8Hvjj+sOR0aatDa7D8MkiBhJmoLS24=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by CH3PR12MB9284.namprd12.prod.outlook.com (2603:10b6:610:1c7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Sat, 3 May
+ 2025 00:13:47 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8678.028; Sat, 3 May 2025
+ 00:13:47 +0000
+Message-ID: <9d064273-a627-4d28-901c-caed6837f9cc@amd.com>
+Date: Fri, 2 May 2025 20:13:45 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9] platform/x86: Add AMD ISP platform config for OV05C10
+Content-Language: en-GB
+To: Armin Wolf <W_Armin@gmx.de>, Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, mario.limonciello@amd.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
+ king.li@amd.com, dantony@amd.com
+References: <20250502184736.2507703-1-pratap.nirujogi@amd.com>
+ <f2909e89-fcc1-467d-a2a5-ea8942b755c4@gmx.de>
+ <dc625df0-7053-42c9-b79a-0cfaffc9392c@amd.com>
+ <d9b24a50-f92b-4653-98c7-28ed5c5dad46@gmx.de>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <d9b24a50-f92b-4653-98c7-28ed5c5dad46@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQZPR01CA0101.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:83::20) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|CH3PR12MB9284:EE_
+X-MS-Office365-Filtering-Correlation-Id: 844a274b-2ec5-4d0e-f9f7-08dd89d75fb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Y3BXdmJVU2lGdVJYakZ0a1JtcTdQV0hOYXo0bnRjYXNtMkszeGJMSVZGWHZV?=
+ =?utf-8?B?T1JoQjRoL3V6UnFIVy9KSk00d2ozU2c3eHcwTUNicEZ1ckFEbHFzNGNYbkFW?=
+ =?utf-8?B?akZnR3BYQU1GT3laL3p3cGxTcVJhYzhnY3B2NXhHUUxpTjMyVFk4eDYySkF6?=
+ =?utf-8?B?TkMwNlpmTDQ5Q0ZLWHFTeVM5d01FV3lZTnBrQ0ZlVmtCeFJUR0I5Tm8yejFI?=
+ =?utf-8?B?YjFYMGxnUnJ3SU5GZVJ0K3czOGMzSW1iTkcwa1h3MWVHSmV5UWsvQnk3V1oz?=
+ =?utf-8?B?LzI0d1U2WEIrRi9JdFNjOXg4MXRpVjNHZ0ordytUMnRGMjNqb0g3OFFIVmZJ?=
+ =?utf-8?B?L0xUZkdvaUlPZzI1a2NzZ3IrdXhJaGFQUHhyZTZZNW13UXBHL25JYlE4c2xE?=
+ =?utf-8?B?ZGdBS0RGVm9Ua1JpQUprQmFiTjFtN3FXeWdvQzRjYjZKNTZ4V0g0d2wrTTJu?=
+ =?utf-8?B?b0E3ZmZxbDJQTGxyWXdUSGtvVHhuSTJSVjZiREVzZDltM3lwKzFDejk2RHJh?=
+ =?utf-8?B?QlBRMUV2MHBsUFlDaFRmK2JzVFQySG4wOUtHUDYrUVFESXBMSXNBRzR2SDlw?=
+ =?utf-8?B?VEtBVUs0bnJjcE1vcUJtVWphaWFjVDJxUzRKR0VhWTFhcFpiMUs3cFRTa0RN?=
+ =?utf-8?B?enB6ZmZJMlR0Zm1uaFRac01NeHk0OVp4ZHN5YjZrTXlUOWppT1RxY2lrdzZr?=
+ =?utf-8?B?a3dXei9LbVhuWVpXUzdBTXpsRWpVU0g0K01peGg2T2hRRHVrRVpjQldwZldT?=
+ =?utf-8?B?Mndsd20vZnlUcytNcUlKRUt3Z1lxSmpoQUFvK1lDWkx3aUFQQit1RDFxWFhp?=
+ =?utf-8?B?OG9ldE1selVONXc4dmREREpzSytKUU5yZ29Vek5ETXliQ3lOeFU3N1ZVVWc0?=
+ =?utf-8?B?TWZpZHU3N1FTMkFjV1YwdG5rUzF6VVFPbE9CQm9hSFhScGQwM3BCWGhaakRp?=
+ =?utf-8?B?QkxMVG1BcWlQNWEzcWxTSXhtS3hBaklGdTdBWlJZakNjcE81L1dpSllLWVZ4?=
+ =?utf-8?B?OG5YZzBQdFM4SlpTbXRPZmQ3U1U2cVlYWGQ4QWxXbHdFbWNUYkFwaTNiSm5M?=
+ =?utf-8?B?ekdEMEhGV1RFaEJGY3JJUHlGZ3ZCZHFoRis1eE42UEgvZVhCL0ZrQ2NWQXJs?=
+ =?utf-8?B?YThYNC9UMmFETEtVb0N4TC9QOEdUQzBjMThnQUxyRzRHQ0lVcTZDTzdnMk5D?=
+ =?utf-8?B?OFQxRjQrRUhPM2xWQ0RFM1VYSmdDTjE0a0RrenZySHIyaUJQSEtCN2VjV1hm?=
+ =?utf-8?B?ZXV6K2U4ak9abnd0WHBhUWN2RllleEhTbFBlcGhzc05TMWk1c1hjYThhdXA5?=
+ =?utf-8?B?Ykh1NXVjYnM4NVVPWFpaMFA2WUJtYlVlQkJoVzkxdyt3WUx6QXUrT2MzdnFS?=
+ =?utf-8?B?NFlzOEI4eUJSVFlqWVNjdENtWU52Z0dZSUg2dVc4Sk0vMFRnQ2ZBQ2JuUVVM?=
+ =?utf-8?B?NjA2SlRzVDNSamZHZXh5WHVQMmhrVUN5TTJWR3R2NTVnY3BORUxPV2hxL0hV?=
+ =?utf-8?B?SXdqY1luSkE5TW5RSnhrTEdjVHdwY0M3a2FNK0VNL28wN3RKZjcveFE4Z1d4?=
+ =?utf-8?B?c1ljMFZIS1pscVFERVFxUDV0WlBVeWZIRi9ub2VJK09QT21UaEc0QlhXRFpS?=
+ =?utf-8?B?cThySFI2Q0p4YUNXSDBBcmE4M00zeVNJYUhRYmJON0tlS245ZVBTcFFMNEVE?=
+ =?utf-8?B?WHp2SUUzS0IxQ0I3KzRuWkRqSmxKUjNTRkpUS3N0aGg1Z0toc0hQMTVmQXlV?=
+ =?utf-8?B?WklMd0grTkdaRHJOMUZpWUZRbVFwZUJrZm8zUnJnY2U4K0JGd0g3RmZyMUht?=
+ =?utf-8?B?bHhPcmdPYmtaS0xxbDlLYUVSdzlpNkRIN2RDbUxCa0s5NXdCaWdPQXNEODJr?=
+ =?utf-8?B?aGZvb0tEQytBM285Wit3SEdYZ1J3OE82aWFhUjZiMVlnVzdsZ05GdjJhVC9T?=
+ =?utf-8?Q?8GEPlHdz1M0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SzVLV1R5ME1lQUp0VUR1em1Bc3Y4R2MySS8wUW1kQ3JzUjg2aUE4UWs4ejJk?=
+ =?utf-8?B?UXlRVGNKQlZNS1JVK1cwZHZOOE5jQ0ZpbENKOVN3TksrWUd2T2UyZTAxaTJs?=
+ =?utf-8?B?UWt6bFBQc2Fmbk5UUENWKzdQYUhzb3o4bWkwNmkyOTkxSytPTHAxRENzZ1dy?=
+ =?utf-8?B?YWRlUzdkT29rRS9aM2lsUkN6ZzM2TllZOUlYVmNBL09hU01rSURpRXh5ZTdH?=
+ =?utf-8?B?YTh4THFrZXZ2OElEdHd1U1hHaUFNRDhYSnRJUjVHcEVXYTUxcDczVTRhV1Er?=
+ =?utf-8?B?VGJpMS9QQUgwdzhLamtXU0M2R3NEY0dkaHBRVEczUjQ1dnNrMmxpSlJiZDNM?=
+ =?utf-8?B?RWVxZDZJeTlmVVIvcTdpS0EwclRrUDFqeXZid2NHVTh0MUJRM3orRVNDRjNu?=
+ =?utf-8?B?dHNPSDJoWlI1S05VMUNka3l2eS9QK21VMGxGTVdxUXR5ZGxOQzlzM2kyeEw4?=
+ =?utf-8?B?U2JFcXkzVUpSSkFkQzA2SG82c3ZNSDZNTk5vSkxsUFpWSE1LODJETCtOb01z?=
+ =?utf-8?B?NHdud0ZFSHNacGpxVUhHY2N6NTB2MGhyOUgvVy9FbjlNRmlhTUk0UnNJMENL?=
+ =?utf-8?B?OWdIR0ZmZEdxQS9HZ3N2WXVDVHp6UXZkZStZeGJBb1lMeWI5Y1loTmc3aEtT?=
+ =?utf-8?B?NFcvb1ZlaDBpQm53elFnOThwN2VVeFNTVjlRTUpwd3ZZOVhvZEw5ZVRkY3ZQ?=
+ =?utf-8?B?aEl0TzcrQUorbGUxUXRlWGx6dDZYUnZEUTdHbWFiZmlzQ21YRlQwaUptMUN3?=
+ =?utf-8?B?UGNRTWk1aUpoekNDN2xJUm5EZUFTZXR4QVFmTUpaaEJ0VFVSdVhPWDR0Rzdz?=
+ =?utf-8?B?RC95cC9KdzVDeGJmUTdKS2pHNVlOcnlSVFQzN2lZdWZoa2FOSlluVjRYN0ht?=
+ =?utf-8?B?UVBDUmZneFlPcDE3dVg3NUs5dzArR0NlNnFyL05TY01HMXY4ZTZ4dWNsRkpP?=
+ =?utf-8?B?Y0kzcVI0cmRCUUplaExrZVJlWDBpSWFsTnMvUnB5Q2JoWXptUGRvZUFwQ3N2?=
+ =?utf-8?B?amo3S1pWTlppTjlhWFVCd1J1TUsrTDJGRERROEZIb2ovb1dvcjlyYS9sOGVy?=
+ =?utf-8?B?MnZpQ2J6aDlGRURzS1lDbjBtVkhYbXdUZEM4dUNVUFF2Yk5NTWJjbTlJQ3Nk?=
+ =?utf-8?B?aUxxcmk2RG1CbXE5RTloNnBaUmQrekdwTUJJZlBPcWtNTzE2SWNTS2FSMlIz?=
+ =?utf-8?B?RFZwR01DM3pCQUtzWTJVVWw0K2s1ZEpoZmlCWG1wbHdmUzZnSDRMeE5BTlhu?=
+ =?utf-8?B?b0dKT2lJMkZHNTM5UHdhdFlLWnIzWHdmU0NFVDR5T2ZDclo5SzNGN0pkOHZT?=
+ =?utf-8?B?bUVSVTR6Q0JLYkNjOCtXUk5qNUZEclVVZWpwRnczMDc4YzZEQmluMmsxbE03?=
+ =?utf-8?B?cWtCTXBERkw3YU5ndHoxMUNtNThmUnVjK3hBOWtoN3JBVnNwSmFvNEZSWDZR?=
+ =?utf-8?B?ckFWRUFzeGNGQlpGanRXdk9XeEtuNTdXeWxUUzJjYklmblZ5WU1iNjdNYThy?=
+ =?utf-8?B?T3VtUjRXYTFGMFZqS3N6VEVuUE1tSzhCb0RoWWlaVE8yL0UxdnU4SkprVkti?=
+ =?utf-8?B?OGpDRUpITktTTFJMQXNLOUp4aGdNS2piaWVXWmRwMVRhQ0NhTTc1TWNQS21U?=
+ =?utf-8?B?Qmdzd0lnbnRpTS9vRWJKTGQ5SFhNeW1LZmJQMUhDUzU1NUp2TmJHLzRpd25D?=
+ =?utf-8?B?aHd5UWZ6cExLeHNpTEJsOXM2aFBjempyQUZiMUpEOTI1RDVtZ2NTMEZySXUr?=
+ =?utf-8?B?QXRGRHV2YmxhMTJvbnR1TExmaDQxaGRUcXBSNlJQckE1dTZJUVY5R0hacEpi?=
+ =?utf-8?B?SHRQY0wwb1djeWNmMGlQcE4xS05PZHk5L3d4UUVERk0vWktteml0Y1VHcE16?=
+ =?utf-8?B?WVE2SnRkR084dE9FRDZ3VlhSWnVEOHZMMklyWTEzVFZKT3Y2dWJ4U3VVSjRr?=
+ =?utf-8?B?UC8zU3VNc0NCb2JqZEhKNlNpaDJqQSt1OGpDTWViSHI0emtXUE5hdEFzZ1l0?=
+ =?utf-8?B?dGZFUEhOSFh2cHR0cE9Mb0xDK2lZamwyYndERm9uUDFlTUpSSWIrNWpxbHo1?=
+ =?utf-8?B?RGcyUWR1Y1hyTUFVKzZlZlZrcUI4MUQ5VDlrTklrQmNFV1VmZXkyc0lKc096?=
+ =?utf-8?Q?3dPOLrrSDeDsMIe0O0ldC2vS1?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 844a274b-2ec5-4d0e-f9f7-08dd89d75fb0
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 00:13:47.5146
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GyVud56/ZVOaGI6Unuu1sebIxqZ/EYoyu03Codzy4+yICNPaJ4NpIk3a2eOcC/iOUVfij+Kz+tQGpwyG1f9VMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9284
 
-Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" WMI
-interface that comes on some Lenovo "Gaming Series" hardware. Provides a
-firmware-attributes class which enables the use of tunable knobs for SPL,
-SPPT, and FPPT.
+Hi Armin,
 
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
----
-v7:
- - Use stach allocated capdata01 stuct instead of getting a pointer from
-   lenovo-wmi-capdata01.
- - Fix typos.
-v6:
-- Pass locally stored pointer to cd01_list back to lenovo-wmi-capdata01
-  instead of itterating over the list locally. Due to ACPI event handing
-  the list is now mutexed.
-- Fix typos and rewordings from v5 review.
-v5:
-- Switch from locally storing capability data list to storing a pointer
-  from the capability data interface.
-- Add portion of Gamezone driver that relies on the exported functions
-  of this driver.
-- Properly initialize IDA and use it for naming the firmware-attributes
-  path.
-- Rename most defines to clearly indicate they are from this driver.
-- Misc fixes from v4 review.
-v4:
-- Treat Other Mode as a notifier chain head, use the notifier chain to
-  get the current mode from Gamezone.
-- Add header file for Other Mode specific structs and finctions.
-- Use component master bind to cache the capdata01 array locally.
-- Drop all reference to external driver private data structs.
-- Various fixes from review.
-v3:
-- Add notifier block and store result for getting the Gamezone interface
-  profile changes.
-- Add driver as master component of capdata01 driver.
-- Use FIELD_PREP where appropriate.
-- Move macros and associated functions out of lemovo-wmi.h that are only
-  used by this driver.
-v2:
-- Use devm_kmalloc to ensure driver can be instanced, remove global
-  reference.
-- Ensure reverse Christmas tree for all variable declarations.
-- Remove extra whitespace.
-- Use guard(mutex) in all mutex instances, global mutex.
-- Use pr_fmt instead of adding the driver name to each pr_err.
-- Remove noisy pr_info usage.
-- Rename other_method_wmi to lenovo_wmi_om_priv and om_wmi to priv.
-- Use list to get the lenovo_wmi_om_priv instance in some macro
-  called functions as the data provided by the macros that use it
-  doesn't pass a member of the struct for use in container_of.
-- Do not rely on GameZone interface to grab the current fan mode.
----
- MAINTAINERS                                |   1 +
- drivers/platform/x86/Kconfig               |  15 +
- drivers/platform/x86/Makefile              |   1 +
- drivers/platform/x86/lenovo-wmi-gamezone.c |   8 +-
- drivers/platform/x86/lenovo-wmi-other.c    | 657 +++++++++++++++++++++
- drivers/platform/x86/lenovo-wmi-other.h    |  16 +
- 6 files changed, 697 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/lenovo-wmi-other.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-other.h
+On 5/2/2025 6:31 PM, Armin Wolf wrote:
+> Caution: This message originated from an External Source. Use proper 
+> caution when opening attachments, clicking links, or responding.
+> 
+> 
+>> Hi Armin,
+>>
+>> On 5/2/2025 5:14 PM, Armin Wolf wrote:
+>>> Caution: This message originated from an External Source. Use proper
+>>> caution when opening attachments, clicking links, or responding.
+>>>
+>>>
+>>> Am 02.05.25 um 20:46 schrieb Pratap Nirujogi:
+>>>
+>>>> ISP device specific configuration is not available in ACPI. Add
+>>>> swnode graph to configure the missing device properties for the
+>>>> OV05C10 camera device supported on amdisp platform.
+>>>>
+>>>> Add support to create i2c-client dynamically when amdisp i2c
+>>>> adapter is available.
+>>>>
+>>>> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
+>>>> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
+>>>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+>>>> ---
+>>>> Changes v8 -> v9:
+>>>>
+>>>> * Add mutex protection in instantiate_isp_i2c_client()
+>>>>
+>>>>   drivers/platform/x86/amd/Kconfig    |  11 ++
+>>>>   drivers/platform/x86/amd/Makefile   |   1 +
+>>>>   drivers/platform/x86/amd/amd_isp4.c | 283
+>>>> ++++++++++++++++++++++++++++
+>>>>   3 files changed, 295 insertions(+)
+>>>>   create mode 100644 drivers/platform/x86/amd/amd_isp4.c
+>>>>
+>>>> diff --git a/drivers/platform/x86/amd/Kconfig
+>>>> b/drivers/platform/x86/ amd/Kconfig
+>>>> index c3e086ea64fc..152a68a470e8 100644
+>>>> --- a/drivers/platform/x86/amd/Kconfig
+>>>> +++ b/drivers/platform/x86/amd/Kconfig
+>>>> @@ -32,3 +32,14 @@ config AMD_WBRF
+>>>>
+>>>>         This mechanism will only be activated on platforms that
+>>>> advertise a
+>>>>         need for it.
+>>>> +
+>>>> +config AMD_ISP_PLATFORM
+>>>> +     tristate "AMD ISP4 platform driver"
+>>>> +     depends on I2C && X86_64 && ACPI
+>>>> +     help
+>>>> +       Platform driver for AMD platforms containing image signal
+>>>> processor
+>>>> +       gen 4. Provides camera sensor module board information to allow
+>>>> +       sensor and V4L drivers to work properly.
+>>>> +
+>>>> +       This driver can also be built as a module.  If so, the module
+>>>> +       will be called amd_isp4.
+>>>> diff --git a/drivers/platform/x86/amd/Makefile
+>>>> b/drivers/platform/x86/ amd/Makefile
+>>>> index c6c40bdcbded..b0e284b5d497 100644
+>>>> --- a/drivers/platform/x86/amd/Makefile
+>>>> +++ b/drivers/platform/x86/amd/Makefile
+>>>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
+>>>>   obj-$(CONFIG_AMD_HSMP)              += hsmp/
+>>>>   obj-$(CONFIG_AMD_PMF)               += pmf/
+>>>>   obj-$(CONFIG_AMD_WBRF)              += wbrf.o
+>>>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp4.o
+>>>> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/
+>>>> x86/amd/amd_isp4.c
+>>>> new file mode 100644
+>>>> index 000000000000..312a92f60dcc
+>>>> --- /dev/null
+>>>> +++ b/drivers/platform/x86/amd/amd_isp4.c
+>>>> @@ -0,0 +1,283 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0+
+>>>> +/*
+>>>> + * AMD ISP platform driver for sensor i2-client instantiation
+>>>> + *
+>>>> + * Copyright 2025 Advanced Micro Devices, Inc.
+>>>> + */
+>>>> +
+>>>> +#include <linux/i2c.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/property.h>
+>>>> +#include <linux/units.h>
+>>>> +
+>>>> +#define AMDISP_OV05C10_I2C_ADDR              0x10
+>>>> +#define AMDISP_OV05C10_PLAT_NAME "amdisp_ov05c10_platform"
+>>>> +#define AMDISP_OV05C10_HID           "OMNI5C10"
+>>>> +#define AMDISP_OV05C10_REMOTE_EP_NAME "ov05c10_isp_4_1_1"
+>>>> +#define AMD_ISP_PLAT_DRV_NAME                "amd-isp4"
+>>>> +
+>>>> +/*
+>>>> + * AMD ISP platform definition to configure the device properties
+>>>> + * missing in the ACPI table.
+>>>> + */
+>>>> +struct amdisp_platform {
+>>>> +     struct i2c_board_info board_info;
+>>>> +     struct notifier_block i2c_nb;
+>>>> +     struct i2c_client *i2c_dev;
+>>>> +     struct mutex lock; /* protects i2c client creation */
+>>>> +};
+>>>> +
+>>>> +/* Top-level OV05C10 camera node property table */
+>>>> +static const struct property_entry ov05c10_camera_props[] = {
+>>>> +     PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+>>>> +     { }
+>>>> +};
+>>>> +
+>>>> +/* Root AMD ISP OV05C10 camera node definition */
+>>>> +static const struct software_node camera_node = {
+>>>> +     .name = AMDISP_OV05C10_HID,
+>>>> +     .properties = ov05c10_camera_props,
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * AMD ISP OV05C10 Ports node definition. No properties defined for
+>>>> + * ports node for OV05C10.
+>>>> + */
+>>>> +static const struct software_node ports = {
+>>>> +     .name = "ports",
+>>>> +     .parent = &camera_node,
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * AMD ISP OV05C10 Port node definition. No properties defined for
+>>>> + * port node for OV05C10.
+>>>> + */
+>>>> +static const struct software_node port_node = {
+>>>> +     .name = "port@",
+>>>> +     .parent = &ports,
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * Remote endpoint AMD ISP node definition. No properties defined for
+>>>> + * remote endpoint node for OV05C10.
+>>>> + */
+>>>> +static const struct software_node remote_ep_isp_node = {
+>>>> +     .name = AMDISP_OV05C10_REMOTE_EP_NAME,
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * Remote endpoint reference for isp node included in the
+>>>> + * OV05C10 endpoint.
+>>>> + */
+>>>> +static const struct software_node_ref_args ov05c10_refs[] = {
+>>>> +     SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
+>>>> +};
+>>>> +
+>>>> +/* OV05C supports one single link frequency */
+>>>> +static const u64 ov05c10_link_freqs[] = {
+>>>> +     925 * HZ_PER_MHZ,
+>>>> +};
+>>>> +
+>>>> +/* OV05C supports only 2-lane configuration */
+>>>> +static const u32 ov05c10_data_lanes[] = {
+>>>> +     1,
+>>>> +     2,
+>>>> +};
+>>>> +
+>>>> +/* OV05C10 endpoint node properties table */
+>>>> +static const struct property_entry ov05c10_endpoint_props[] = {
+>>>> +     PROPERTY_ENTRY_U32("bus-type", 4),
+>>>> +     PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
+>>>> + ARRAY_SIZE(ov05c10_data_lanes)),
+>>>> +     PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies",
+>>>> ov05c10_link_freqs,
+>>>> + ARRAY_SIZE(ov05c10_link_freqs)),
+>>>> +     PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
+>>>> +     { }
+>>>> +};
+>>>> +
+>>>> +/* AMD ISP endpoint node definition */
+>>>> +static const struct software_node endpoint_node = {
+>>>> +     .name = "endpoint",
+>>>> +     .parent = &port_node,
+>>>> +     .properties = ov05c10_endpoint_props,
+>>>> +};
+>>>> +
+>>>> +/*
+>>>> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
+>>>> + * fixed to align with the structure that v4l2 expects for successful
+>>>> + * endpoint fwnode parsing.
+>>>> + *
+>>>> + * It is only the node property_entries that will vary for each
+>>>> platform
+>>>> + * supporting different sensor modules.
+>>>> + */
+>>>> +#define NUM_SW_NODES 5
+>>>> +
+>>>> +static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
+>>>> +     &camera_node,
+>>>> +     &ports,
+>>>> +     &port_node,
+>>>> +     &endpoint_node,
+>>>> +     &remote_ep_isp_node,
+>>>> +     NULL
+>>>> +};
+>>>> +
+>>>> +static const struct acpi_device_id amdisp_sensor_ids[] = {
+>>>> +     { AMDISP_OV05C10_HID },
+>>>> +     { }
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
+>>>> +
+>>>> +static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
+>>>> +{
+>>>> +     return !strcmp(adap->owner->name, "i2c_designware_amdisp");
+>>>> +}
+>>>> +
+>>>> +static void instantiate_isp_i2c_client(struct amdisp_platform
+>>>> *ov05c10, struct i2c_adapter *adap)
+>>>> +{
+>>>> +     struct i2c_board_info *info = &ov05c10->board_info;
+>>>> +     struct i2c_client *i2c_dev;
+>>>> +
+>>>> +     if (ov05c10->i2c_dev)
+>>>> +             return;
+>>>> +
+>>>> +     if (!info->addr) {
+>>>> +             dev_err(&adap->dev, "invalid i2c_addr 0x%x
+>>>> detected\n", info->addr);
+>>>
+>>> I just noticed: could it be that info->addr is static? In this case
+>>> this check would be pointless.
+>>>
+>> I agree this check is not important. I will remove it.
+>>
+>> Instead of moving i2c_board_info variable outside 'struct
+>> amdisp_platform' to make it static, I think the existing definition is
+>> still valid to use. Its because 'struct amdisp_platform' variable is
+>> passed to notifier_call and i2c_for_each_dev() only after it is
+>> initialized with valid params in prepare_amdisp_platform().
+>>
+>> Should I keep the 'struct amdisp_platform' definition as it is and
+>> only remove the check? Please let me know your opinion.
+> 
+> Please just remove this check.
+> 
+thanks for confirming, will remove this and submit v10 addressig the 
+comments shortly.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 673535395ae8..764eadee48ac 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13168,6 +13168,7 @@ F:	drivers/platform/x86/lenovo-wmi-capdata01.*
- F:	drivers/platform/x86/lenovo-wmi-events.*
- F:	drivers/platform/x86/lenovo-wmi-gamezone.*
- F:	drivers/platform/x86/lenovo-wmi-helpers.*
-+F:	drivers/platform/x86/lenovo-wmi-other.*
- 
- LENOVO WMI HOTKEY UTILITIES DRIVER
- M:	Jackie Dong <xy-jackie@139.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index aaa1a69c10ca..be5ab24960b5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -485,6 +485,21 @@ config LENOVO_WMI_DATA01
- 	tristate
- 	depends on ACPI_WMI
- 
-+config LENOVO_WMI_TUNING
-+	tristate "Lenovo Other Mode WMI Driver"
-+	depends on ACPI_WMI
-+	select FW_ATTR_CLASS
-+	select LENOVO_WMI_DATA01
-+	select LENOVO_WMI_EVENTS
-+	select LENOVO_WMI_HELPERS
-+	help
-+	  Say Y here if you have a WMI aware Lenovo Legion device and would like to use the
-+	  firmware_attributes API to control various tunable settings typically exposed by
-+	  Lenovo software in Windows.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called lenovo-wmi-other.
-+
- config IDEAPAD_LAPTOP
- 	tristate "Lenovo IdeaPad Laptop Extras"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 60058b547de2..f3e64926a96b 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
- obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
- obj-$(CONFIG_LENOVO_WMI_GAMEZONE)	+= lenovo-wmi-gamezone.o
- obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
-+obj-$(CONFIG_LENOVO_WMI_TUNING)	+= lenovo-wmi-other.o
- 
- # Intel
- obj-y				+= intel/
-diff --git a/drivers/platform/x86/lenovo-wmi-gamezone.c b/drivers/platform/x86/lenovo-wmi-gamezone.c
-index 7723041ed53b..376f1e643944 100644
---- a/drivers/platform/x86/lenovo-wmi-gamezone.c
-+++ b/drivers/platform/x86/lenovo-wmi-gamezone.c
-@@ -374,7 +374,12 @@ static int lwmi_gz_probe(struct wmi_device *wdev, const void *context)
- 		return ret;
- 
- 	priv->event_nb.notifier_call = lwmi_gz_event_call;
--	return devm_lwmi_events_register_notifier(&wdev->dev, &priv->event_nb);
-+	ret = devm_lwmi_events_register_notifier(&wdev->dev, &priv->event_nb);
-+	if (ret)
-+		return ret;
-+
-+	priv->mode_nb.notifier_call = lwmi_gz_mode_call;
-+	return devm_lwmi_om_register_notifier(&wdev->dev, &priv->mode_nb);
- }
- 
- static const struct wmi_device_id lwmi_gz_id_table[] = {
-@@ -396,6 +401,7 @@ module_wmi_driver(lwmi_gz_driver);
- 
- MODULE_IMPORT_NS("LENOVO_WMI_EVENTS");
- MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
-+MODULE_IMPORT_NS("LENOVO_WMI_OTHER");
- MODULE_DEVICE_TABLE(wmi, lwmi_gz_id_table);
- MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
- MODULE_DESCRIPTION("Lenovo GameZone WMI Driver");
-diff --git a/drivers/platform/x86/lenovo-wmi-other.c b/drivers/platform/x86/lenovo-wmi-other.c
-new file mode 100644
-index 000000000000..145b15b779e8
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-other.c
-@@ -0,0 +1,657 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo Other Mode WMI interface driver.
-+ *
-+ * This driver uses the fw_attributes class to expose the various WMI functions
-+ * provided by the "Other Mode" WMI interface. This enables CPU and GPU power
-+ * limit as well as various other attributes for devices that fall under the
-+ * "Gaming Series" of Lenovo laptop devices. Each attribute exposed by the
-+ * "Other Mode" interface has a corresponding Capability Data struct that
-+ * allows the driver to probe details about the attribute such as if it is
-+ * supported by the hardware, the default_value, max_value, min_value, and step
-+ * increment.
-+ *
-+ * These attributes typically don't fit anywhere else in the sysfs and are set
-+ * in Windows using one of Lenovo's multiple user applications.
-+ *
-+ * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/component.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/gfp_types.h>
-+#include <linux/idr.h>
-+#include <linux/kobject.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_profile.h>
-+#include <linux/types.h>
-+#include <linux/wmi.h>
-+
-+#include "lenovo-wmi-capdata01.h"
-+#include "lenovo-wmi-events.h"
-+#include "lenovo-wmi-gamezone.h"
-+#include "lenovo-wmi-helpers.h"
-+#include "lenovo-wmi-other.h"
-+#include "firmware_attributes_class.h"
-+
-+#define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
-+
-+#define LWMI_DEVICE_ID_CPU 0x01
-+
-+#define LWMI_FEATURE_ID_CPU_SPPT 0x01
-+#define LWMI_FEATURE_ID_CPU_SPL 0x02
-+#define LWMI_FEATURE_ID_CPU_FPPT 0x03
-+
-+#define LWMI_TYPE_ID_NONE 0x00
-+
-+#define LWMI_FEATURE_VALUE_GET 17
-+#define LWMI_FEATURE_VALUE_SET 18
-+
-+#define LWMI_ATTR_DEV_ID_MASK GENMASK(31, 24)
-+#define LWMI_ATTR_FEAT_ID_MASK GENMASK(23, 16)
-+#define LWMI_ATTR_MODE_ID_MASK GENMASK(15, 8)
-+#define LWMI_ATTR_TYPE_ID_MASK GENMASK(7, 0)
-+
-+#define LWMI_OM_FW_ATTR_BASE_PATH "lenovo-wmi-other"
-+
-+static BLOCKING_NOTIFIER_HEAD(om_chain_head);
-+static DEFINE_IDA(lwmi_om_ida);
-+
-+enum attribute_property {
-+	DEFAULT_VAL,
-+	MAX_VAL,
-+	MIN_VAL,
-+	STEP_VAL,
-+	SUPPORTED,
-+};
-+
-+struct lwmi_om_priv {
-+	struct component_master_ops *ops;
-+	/* *cd01_list is only valid after master bind and while capdata01 exists */
-+	struct device *fw_attr_dev;
-+	struct kset *fw_attr_kset;
-+	struct notifier_block nb;
-+	struct wmi_device *wdev;
-+	void *cd01_list;
-+	int ida_id;
-+};
-+
-+struct tunable_attr_01 {
-+	struct capdata01 *capdata;
-+	struct device *dev;
-+	u32 feature_id;
-+	u32 device_id;
-+	u32 type_id;
-+};
-+
-+struct tunable_attr_01 ppt_pl1_spl = { .device_id = LWMI_DEVICE_ID_CPU,
-+				       .feature_id = LWMI_FEATURE_ID_CPU_SPL,
-+				       .type_id = LWMI_TYPE_ID_NONE };
-+struct tunable_attr_01 ppt_pl2_sppt = { .device_id = LWMI_DEVICE_ID_CPU,
-+					.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
-+					.type_id = LWMI_TYPE_ID_NONE };
-+struct tunable_attr_01 ppt_pl3_fppt = { .device_id = LWMI_DEVICE_ID_CPU,
-+					.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
-+					.type_id = LWMI_TYPE_ID_NONE };
-+
-+struct capdata01_attr_group {
-+	const struct attribute_group *attr_group;
-+	struct tunable_attr_01 *tunable_attr;
-+};
-+
-+/**
-+ * lwmi_om_register_notifier() - Add a notifier to the blocking notifier chain
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call blocking_notifier_chain_register to register the notifier block to the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-EEXIST on error.
-+ */
-+int lwmi_om_register_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&om_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * lwmi_om_unregister_notifier() - Remove a notifier from the blocking notifier
-+ * chain.
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call blocking_notifier_chain_unregister to unregister the notifier block from the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+int lwmi_om_unregister_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&om_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * devm_lwmi_om_unregister_notifier() - Remove a notifier from the blocking
-+ * notifier chain.
-+ * @data: Void pointer to the notifier_block struct to register.
-+ *
-+ * Call lwmi_om_unregister_notifier to unregister the notifier block from the
-+ * lenovo-wmi-other driver notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+static void devm_lwmi_om_unregister_notifier(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	lwmi_om_unregister_notifier(nb);
-+}
-+
-+/**
-+ * devm_lwmi_om_register_notifier() - Add a notifier to the blocking notifier
-+ * chain.
-+ * @dev: The parent device of the notifier_block struct.
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call lwmi_om_register_notifier to register the notifier block to the
-+ * lenovo-wmi-other driver notifier chain. Then add devm_lwmi_om_unregister_notifier
-+ * as a device managed action to automatically unregister the notifier block
-+ * upon parent device removal.
-+ *
-+ * Return: 0 on success, or on error.
-+ */
-+int devm_lwmi_om_register_notifier(struct device *dev,
-+				   struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret = lwmi_om_register_notifier(nb);
-+	if (ret < 0)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_lwmi_om_unregister_notifier,
-+					nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
-+
-+/**
-+ * lwmi_om_notifier_call() - Call functions for the notifier call chain.
-+ * @mode: Pointer to a thermal mode enum to retrieve the data from.
-+ *
-+ * Call blocking_notifier_call_chain to retrieve the thermal mode from the
-+ * lenovo-wmi-gamezone driver.
-+ *
-+ * Return: 0 on success, or on error.
-+ */
-+static int lwmi_om_notifier_call(enum thermal_mode *mode)
-+{
-+	int ret;
-+
-+	ret = blocking_notifier_call_chain(&om_chain_head, LWMI_GZ_GET_THERMAL_MODE, &mode);
-+	if ((ret & ~NOTIFY_STOP_MASK) != NOTIFY_OK)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/* Attribute Methods */
-+
-+/**
-+ * int_type_show() - Emit the data type for an integer attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kobj_attribute: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ *
-+ * Return: Number of characters written to buf.
-+ */
-+static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *kattr,
-+			     char *buf)
-+{
-+	return sysfs_emit(buf, "integer\n");
-+}
-+
-+/**
-+ * attr_capdata01_show() - Get the value of the specified attribute property
-+ *
-+ * @kobj: Pointer to the driver object.
-+ * @kobj_attribute: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ * @tunable_attr: The attribute to be read.
-+ * @prop: The property of this attribute to be read.
-+ *
-+ * Retrieves the given property from the capability data 01 struct for the
-+ * specified attribute's "custom" thermal mode. This function is intended
-+ * to be generic so it can be called from any integer attributes "_show"
-+ * function.
-+ *
-+ * If the WMI is success the sysfs attribute is notified.
-+ *
-+ * Return: Either number of characters written to buf, or an error code.
-+ */
-+static ssize_t attr_capdata01_show(struct kobject *kobj,
-+				   struct kobj_attribute *kattr, char *buf,
-+				   struct tunable_attr_01 *tunable_attr,
-+				   enum attribute_property prop)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct capdata01 capdata;
-+	u32 attribute_id;
-+	int value, ret;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, LWMI_GZ_THERMAL_MODE_CUSTOM) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	//capdata = devm_kzalloc(&priv->wdev->dev, sizeof(*capdata), GFP_KERNEL);
-+	//if (!capdata)
-+	//	return -ENOMEM;
-+
-+	ret = lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
-+	if (ret)
-+		return ret;
-+
-+	switch (prop) {
-+	case DEFAULT_VAL:
-+		value = capdata.default_value;
-+		break;
-+	case MAX_VAL:
-+		value = capdata.max_value;
-+		break;
-+	case MIN_VAL:
-+		value = capdata.min_value;
-+		break;
-+	case STEP_VAL:
-+		value = capdata.step;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return sysfs_emit(buf, "%d\n", value);
-+}
-+
-+/**
-+ * att_current_value_store() - Set the current value of the given attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kobj_attribute: Pointer to the attribute calling this function.
-+ * @buf: The buffer to read from, this is parsed to `int` type.
-+ * @count: Required by sysfs attribute macros, pass in from the callee attr.
-+ * @tunable_attr: The attribute to be stored.
-+ *
-+ * Sets the value of the given attribute when operating under the "custom"
-+ * smartfan profile. The current smartfan profile is retrieved from the
-+ * lenovo-wmi-gamezone driver and error is returned if the result is not
-+ * "custom". This function is intended to be generic so it can be called from
-+ * any integer attribute's "_store" function. The integer to be sent to the WMI
-+ * method is range checked and an error code is returned if out of range.
-+ *
-+ * If the value is valid and WMI is success, then the sysfs attribute is
-+ * notified.
-+ *
-+ * Return: Either count, or an error code.
-+ */
-+static ssize_t attr_current_value_store(struct kobject *kobj,
-+					struct kobj_attribute *kattr,
-+					const char *buf, size_t count,
-+					struct tunable_attr_01 *tunable_attr)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct wmi_method_args_32 args;
-+	struct capdata01 capdata;
-+	enum thermal_mode mode;
-+	u32 attribute_id;
-+	u32 value;
-+	int ret;
-+
-+	ret = lwmi_om_notifier_call(&mode);
-+	if (ret)
-+		return ret;
-+
-+	if (mode != LWMI_GZ_THERMAL_MODE_CUSTOM)
-+		return -EBUSY;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	ret = lwmi_cd01_get_data(priv->cd01_list, attribute_id, &capdata);
-+	if (ret)
-+		return ret;
-+
-+	ret = kstrtouint(buf, 10, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (value < capdata.min_value || value > capdata.max_value)
-+		return -EINVAL;
-+
-+	args.arg0 = attribute_id;
-+	args.arg1 = value;
-+
-+	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
-+				    (unsigned char *)&args, sizeof(args), NULL);
-+
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+};
-+
-+/**
-+ * attr_current_value_show() - Get the current value of the given attribute
-+ * @kobj: Pointer to the driver object.
-+ * @kobj_attribute: Pointer to the attribute calling this function.
-+ * @buf: The buffer to write to.
-+ * @tunable_attr: The attribute to be read.
-+ *
-+ * Retrieves the value of the given attribute for the current smartfan profile.
-+ * The current smartfan profile is retrieved from the lenovo-wmi-gamezone driver.
-+ * This function is intended to be generic so it can be called from any integer
-+ * attribute's "_show" function.
-+ *
-+ * If the WMI is success the sysfs attribute is notified.
-+ *
-+ * Return: Either number of characters written to buf, or an error code.
-+ */
-+static ssize_t attr_current_value_show(struct kobject *kobj,
-+				       struct kobj_attribute *kattr, char *buf,
-+				       struct tunable_attr_01 *tunable_attr)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(tunable_attr->dev);
-+	struct wmi_method_args_32 args;
-+	enum thermal_mode mode;
-+	u32 attribute_id;
-+	int retval;
-+	int err;
-+
-+	err = lwmi_om_notifier_call(&mode);
-+	if (err)
-+		return err;
-+
-+	attribute_id =
-+		FIELD_PREP(LWMI_ATTR_DEV_ID_MASK, tunable_attr->device_id) |
-+		FIELD_PREP(LWMI_ATTR_FEAT_ID_MASK, tunable_attr->feature_id) |
-+		FIELD_PREP(LWMI_ATTR_MODE_ID_MASK, mode) |
-+		FIELD_PREP(LWMI_ATTR_TYPE_ID_MASK, tunable_attr->type_id);
-+
-+	args.arg0 = attribute_id;
-+
-+	err = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET,
-+				    (unsigned char *)&args, sizeof(args),
-+				    &retval);
-+
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%d\n", retval);
-+}
-+
-+/* Lenovo WMI Other Mode Attribute macros */
-+#define __LWMI_ATTR_RO(_func, _name)                                  \
-+	{                                                             \
-+		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-+		.show = _func##_##_name##_show,                       \
-+	}
-+
-+#define __LWMI_ATTR_RO_AS(_name, _show)                               \
-+	{                                                             \
-+		.attr = { .name = __stringify(_name), .mode = 0444 }, \
-+		.show = _show,                                        \
-+	}
-+
-+#define __LWMI_ATTR_RW(_func, _name) \
-+	__ATTR(_name, 0644, _func##_##_name##_show, _func##_##_name##_store)
-+
-+/* Shows a formatted static variable */
-+#define __LWMI_ATTR_SHOW_FMT(_prop, _attrname, _fmt, _val)                     \
-+	static ssize_t _attrname##_##_prop##_show(                             \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return sysfs_emit(buf, _fmt, _val);                            \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_##_prop =              \
-+		__LWMI_ATTR_RO(_attrname, _prop)
-+
-+/* Attribute current value read/write */
-+#define __LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname)                          \
-+	static ssize_t _attrname##_current_value_store(                        \
-+		struct kobject *kobj, struct kobj_attribute *kattr,            \
-+		const char *buf, size_t count)                                 \
-+	{                                                                      \
-+		return attr_current_value_store(kobj, kattr, buf, count,       \
-+						&_attrname);                   \
-+	}                                                                      \
-+	static ssize_t _attrname##_current_value_show(                         \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return attr_current_value_show(kobj, kattr, buf, &_attrname);  \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_current_value =        \
-+		__LWMI_ATTR_RW(_attrname, current_value)
-+
-+/* Attribute property read only */
-+#define __LWMI_TUNABLE_RO_CAP01(_prop, _attrname, _prop_type)                  \
-+	static ssize_t _attrname##_##_prop##_show(                             \
-+		struct kobject *kobj, struct kobj_attribute *kattr, char *buf) \
-+	{                                                                      \
-+		return attr_capdata01_show(kobj, kattr, buf, &_attrname,       \
-+					   _prop_type);                        \
-+	}                                                                      \
-+	static struct kobj_attribute attr_##_attrname##_##_prop =              \
-+		__LWMI_ATTR_RO(_attrname, _prop)
-+
-+#define LWMI_ATTR_GROUP_TUNABLE_CAP01(_attrname, _fsname, _dispname)      \
-+	__LWMI_TUNABLE_CURRENT_VALUE_CAP01(_attrname);                    \
-+	__LWMI_TUNABLE_RO_CAP01(default_value, _attrname, DEFAULT_VAL);   \
-+	__LWMI_ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname); \
-+	__LWMI_TUNABLE_RO_CAP01(max_value, _attrname, MAX_VAL);           \
-+	__LWMI_TUNABLE_RO_CAP01(min_value, _attrname, MIN_VAL);           \
-+	__LWMI_TUNABLE_RO_CAP01(scalar_increment, _attrname, STEP_VAL);   \
-+	static struct kobj_attribute attr_##_attrname##_type =            \
-+		__LWMI_ATTR_RO_AS(type, int_type_show);                   \
-+	static struct attribute *_attrname##_attrs[] = {                  \
-+		&attr_##_attrname##_current_value.attr,                   \
-+		&attr_##_attrname##_default_value.attr,                   \
-+		&attr_##_attrname##_display_name.attr,                    \
-+		&attr_##_attrname##_max_value.attr,                       \
-+		&attr_##_attrname##_min_value.attr,                       \
-+		&attr_##_attrname##_scalar_increment.attr,                \
-+		&attr_##_attrname##_type.attr,                            \
-+		NULL,                                                     \
-+	};                                                                \
-+	static const struct attribute_group _attrname##_attr_group = {    \
-+		.name = _fsname, .attrs = _attrname##_attrs               \
-+	}
-+
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
-+			      "Set the CPU sustained power limit");
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
-+			      "Set the CPU slow package power tracking limit");
-+LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
-+			      "Set the CPU fast package power tracking limit");
-+
-+static struct capdata01_attr_group cd01_attr_groups[] = {
-+	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
-+	{ &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
-+	{ &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
-+	{},
-+};
-+
-+/**
-+ * lwmi_om_fw_attr_add() - Register all firmware_attributes_class members
-+ * @priv: The Other Mode driver data.
-+ *
-+ * Return: Either 0, or an error code.
-+ */
-+static int lwmi_om_fw_attr_add(struct lwmi_om_priv *priv)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	priv->ida_id = ida_alloc(&lwmi_om_ida, GFP_KERNEL);
-+	if (priv->ida_id < 0)
-+		return priv->ida_id;
-+
-+	priv->fw_attr_dev = device_create(&firmware_attributes_class, NULL,
-+					  MKDEV(0, 0), NULL, "%s-%u",
-+					  LWMI_OM_FW_ATTR_BASE_PATH,
-+					  priv->ida_id);
-+	if (IS_ERR(priv->fw_attr_dev)) {
-+		err = PTR_ERR(priv->fw_attr_dev);
-+		goto err_free_ida;
-+	}
-+
-+	priv->fw_attr_kset = kset_create_and_add("attributes", NULL, &priv->fw_attr_dev->kobj);
-+	if (!priv->fw_attr_kset) {
-+		err = -ENOMEM;
-+		goto err_destroy_classdev;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++) {
-+		err = sysfs_create_group(&priv->fw_attr_kset->kobj, cd01_attr_groups[i].attr_group);
-+		if (err)
-+			goto err_remove_groups;
-+
-+		cd01_attr_groups[i].tunable_attr->dev = &priv->wdev->dev;
-+	}
-+	return 0;
-+
-+err_remove_groups:
-+	while (i--)
-+		sysfs_remove_group(&priv->fw_attr_kset->kobj, cd01_attr_groups[i].attr_group);
-+
-+	kset_unregister(priv->fw_attr_kset);
-+
-+err_destroy_classdev:
-+	device_unregister(priv->fw_attr_dev);
-+
-+err_free_ida:
-+	ida_free(&lwmi_om_ida, priv->ida_id);
-+	return err;
-+}
-+
-+/**
-+ * lwmi_om_fw_attr_remove() - Unregister all capability data attribute groups
-+ * @priv: the lenovo-wmi-other driver data.
-+ */
-+static void lwmi_om_fw_attr_remove(struct lwmi_om_priv *priv)
-+{
-+	for (unsigned int i = 0; i < ARRAY_SIZE(cd01_attr_groups) - 1; i++)
-+		sysfs_remove_group(&priv->fw_attr_kset->kobj, cd01_attr_groups[i].attr_group);
-+
-+	kset_unregister(priv->fw_attr_kset);
-+	device_unregister(priv->fw_attr_dev);
-+}
-+
-+/**
-+ * lwmi_om_master_bind() - Bind all components of the other mode driver
-+ * @dev: The lenovo-wmi-other driver basic device.
-+ *
-+ * Call component_bind_all to bind the lenovo-wmi-capdata01 driver to the
-+ * lenovo-wmi-other master driver. On success, assign the capability data 01
-+ * list pointer to the driver data struct for later access. This pointer
-+ * is only valid while the capdata01 interface exists. Finally, register all
-+ * firmware attribute groups.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+static int lwmi_om_master_bind(struct device *dev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+	struct cd01_list *tmp_list;
-+	int ret;
-+
-+	ret = component_bind_all(dev, &tmp_list);
-+	if (ret)
-+		return ret;
-+
-+	priv->cd01_list = tmp_list;
-+
-+	if (!priv->cd01_list)
-+		return -ENODEV;
-+
-+	return lwmi_om_fw_attr_add(priv);
-+}
-+
-+/**
-+ * lwmi_om_master_unbind() - Unbind all components of the other mode driver
-+ * @dev: The lenovo-wmi-other driver basic device
-+ *
-+ * Unregister all capability data attribute groups. Then call
-+ * component_unbind_all to unbind the lenovo-wmi-capdata01 driver from the
-+ * lenovo-wmi-other master driver. Finally, free the IDA for this device.
-+ */
-+static void lwmi_om_master_unbind(struct device *dev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(dev);
-+
-+	lwmi_om_fw_attr_remove(priv);
-+	component_unbind_all(dev, NULL);
-+}
-+
-+static const struct component_master_ops lwmi_om_master_ops = {
-+	.bind = lwmi_om_master_bind,
-+	.unbind = lwmi_om_master_unbind,
-+};
-+
-+static int lwmi_other_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct component_match *master_match = NULL;
-+	struct lwmi_om_priv *priv;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->wdev = wdev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	component_match_add(&wdev->dev, &master_match, lwmi_cd01_match, NULL);
-+	if (IS_ERR(master_match))
-+		return PTR_ERR(master_match);
-+
-+	return component_master_add_with_match(&wdev->dev, &lwmi_om_master_ops,
-+					       master_match);
-+}
-+
-+static void lwmi_other_remove(struct wmi_device *wdev)
-+{
-+	struct lwmi_om_priv *priv = dev_get_drvdata(&wdev->dev);
-+
-+	component_master_del(&wdev->dev, &lwmi_om_master_ops);
-+	ida_free(&lwmi_om_ida, priv->ida_id);
-+}
-+
-+static const struct wmi_device_id lwmi_other_id_table[] = {
-+	{ LENOVO_OTHER_MODE_GUID, NULL },
-+	{}
-+};
-+
-+static struct wmi_driver lwmi_other_driver = {
-+	.driver = {
-+		.name = "lenovo_wmi_other",
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = lwmi_other_id_table,
-+	.probe = lwmi_other_probe,
-+	.remove = lwmi_other_remove,
-+	.no_singleton = true,
-+};
-+
-+module_wmi_driver(lwmi_other_driver);
-+
-+MODULE_IMPORT_NS("LENOVO_WMI_CD01");
-+MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
-+MODULE_DEVICE_TABLE(wmi, lwmi_other_id_table);
-+MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Other Mode WMI Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/lenovo-wmi-other.h b/drivers/platform/x86/lenovo-wmi-other.h
-new file mode 100644
-index 000000000000..8ebf5602bb99
---- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-other.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+
-+/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
-+
-+#ifndef _LENOVO_WMI_OTHER_H_
-+#define _LENOVO_WMI_OTHER_H_
-+
-+struct device;
-+struct notifier_block;
-+
-+int lwmi_om_register_notifier(struct notifier_block *nb);
-+int lwmi_om_unregister_notifier(struct notifier_block *nb);
-+int devm_lwmi_om_register_notifier(struct device *dev,
-+				   struct notifier_block *nb);
-+
-+#endif /* !_LENOVO_WMI_OTHER_H_ */
--- 
-2.49.0
+Thanks,
+Pratap
+
+> Thanks,
+> Armin Wolf
+> 
+>>
+>>
+>>>> +             return;
+>>>> +     }
+>>>> +
+>>>> +     guard(mutex)(&ov05c10->lock);
+>>>
+>>> You need to guard the check of ov05c10->i2c_dev too since another
+>>> thread might already have assigned i2c_dev
+>>> after you checked it. In this case you would leak the first value
+>>> assigned to i2c_dev.
+>>>
+>>> Please move the guard above the check.
+>>>
+>> thanks, will move guard above ov05c10->i2c_dev check.
+>>
+>>>> +
+>>>> +     i2c_dev = i2c_new_client_device(adap, info);
+>>>> +     if (IS_ERR(i2c_dev)) {
+>>>> +             dev_err(&adap->dev, "error %pe registering isp
+>>>> i2c_client\n", i2c_dev);
+>>>> +             return;
+>>>> +     }
+>>>> +     ov05c10->i2c_dev = i2c_dev;
+>>>> +}
+>>>> +
+>>>> +static int isp_i2c_bus_notify(struct notifier_block *nb,
+>>>> +                           unsigned long action, void *data)
+>>>> +{
+>>>> +     struct amdisp_platform *ov05c10 = container_of(nb, struct
+>>>> amdisp_platform, i2c_nb);
+>>>> +     struct device *dev = data;
+>>>> +     struct i2c_client *client;
+>>>> +     struct i2c_adapter *adap;
+>>>> +
+>>>> +     switch (action) {
+>>>> +     case BUS_NOTIFY_ADD_DEVICE:
+>>>> +             adap = i2c_verify_adapter(dev);
+>>>> +             if (!adap)
+>>>> +                     break;
+>>>> +             if (is_isp_i2c_adapter(adap))
+>>>> +                     instantiate_isp_i2c_client(ov05c10, adap);
+>>>> +             break;
+>>>> +     case BUS_NOTIFY_REMOVED_DEVICE:
+>>>> +             client = i2c_verify_client(dev);
+>>>> +             if (!client)
+>>>> +                     break;
+>>>> +             if (ov05c10->i2c_dev == client) {
+>>>> +                     dev_dbg(&client->adapter->dev, "amdisp
+>>>> i2c_client removed\n");
+>>>> +                     ov05c10->i2c_dev = NULL;
+>>>
+>>> You need to guard that too, including the check.
+>>>
+>> thanks, will place guard before ov05c10->i2c_dev usage.
+>>
+>>>> +             }
+>>>> +             break;
+>>>> +     default:
+>>>> +             break;
+>>>> +     }
+>>>> +
+>>>> +     return NOTIFY_DONE;
+>>>> +}
+>>>> +
+>>>> +static struct amdisp_platform *prepare_amdisp_platform(struct
+>>>> device *dev)
+>>>> +{
+>>>> +     struct amdisp_platform *isp_ov05c10;
+>>>> +     int ret;
+>>>> +
+>>>> +     isp_ov05c10 = devm_kzalloc(dev, sizeof(*isp_ov05c10),
+>>>> GFP_KERNEL);
+>>>> +     if (!isp_ov05c10)
+>>>> +             return ERR_PTR(-ENOMEM);
+>>>> +
+>>>> +     mutex_init(&isp_ov05c10->lock);
+>>>
+>>> Please use devm_mutex_init().
+>>>
+>> thanks, will switch to devm_mutex_init() and remove the mutex_destroy
+>> calls.
+>>
+>> Thanks,
+>> Pratap
+>>
+>>> Thanks,
+>>> Armin Wolf
+>>>
+>>>> + isp_ov05c10->board_info.dev_name = "ov05c10";
+>>>> +     strscpy(isp_ov05c10->board_info.type, "ov05c10", I2C_NAME_SIZE);
+>>>> +     isp_ov05c10->board_info.addr = AMDISP_OV05C10_I2C_ADDR;
+>>>> +
+>>>> +     ret = software_node_register_node_group(ov05c10_nodes);
+>>>> +     if (ret) {
+>>>> +             mutex_destroy(&isp_ov05c10->lock);
+>>>> +             return ERR_PTR(ret);
+>>>> +     }
+>>>> +
+>>>> +     isp_ov05c10->board_info.swnode = ov05c10_nodes[0];
+>>>> +
+>>>> +     return isp_ov05c10;
+>>>> +}
+>>>> +
+>>>> +static int try_to_instantiate_i2c_client(struct device *dev, void
+>>>> *data)
+>>>> +{
+>>>> +     struct amdisp_platform *ov05c10 = (struct amdisp_platform *)data;
+>>>> +     struct i2c_adapter *adap = i2c_verify_adapter(dev);
+>>>> +
+>>>> +     if (!ov05c10 || !adap)
+>>>> +             return 0;
+>>>> +     if (!adap->owner)
+>>>> +             return 0;
+>>>> +
+>>>> +     if (is_isp_i2c_adapter(adap))
+>>>> +             instantiate_isp_i2c_client(ov05c10, adap);
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int amd_isp_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +     struct amdisp_platform *ov05c10;
+>>>> +     int ret;
+>>>> +
+>>>> +     ov05c10 = prepare_amdisp_platform(&pdev->dev);
+>>>> +     if (IS_ERR(ov05c10))
+>>>> +             return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
+>>>> +                                  "failed to prepare AMD ISP
+>>>> platform fwnode\n");
+>>>> +
+>>>> +     ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
+>>>> +     ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
+>>>> +     if (ret)
+>>>> +             goto error_unregister_sw_node;
+>>>> +
+>>>> +     /* check if adapter is already registered and create i2c
+>>>> client instance */
+>>>> +     i2c_for_each_dev((void *)ov05c10, try_to_instantiate_i2c_client);
+>>>> +
+>>>> +     platform_set_drvdata(pdev, ov05c10);
+>>>> +     return 0;
+>>>> +
+>>>> +error_unregister_sw_node:
+>>>> +     software_node_unregister_node_group(ov05c10_nodes);
+>>>> +     mutex_destroy(&ov05c10->lock);
+>>>> +     return ret;
+>>>> +}
+>>>> +
+>>>> +static void amd_isp_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +     struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
+>>>> +
+>>>> +     bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
+>>>> +     i2c_unregister_device(ov05c10->i2c_dev);
+>>>> +     software_node_unregister_node_group(ov05c10_nodes);
+>>>> +     mutex_destroy(&ov05c10->lock);
+>>>> +}
+>>>> +
+>>>> +static struct platform_driver amd_isp_platform_driver = {
+>>>> +     .driver = {
+>>>> +             .name                   = AMD_ISP_PLAT_DRV_NAME,
+>>>> +             .acpi_match_table       = amdisp_sensor_ids,
+>>>> +     },
+>>>> +     .probe  = amd_isp_probe,
+>>>> +     .remove = amd_isp_remove,
+>>>> +};
+>>>> +
+>>>> +module_platform_driver(amd_isp_platform_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
+>>>> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
+>>>> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
+>>>> +MODULE_LICENSE("GPL");
+>>
 
