@@ -1,253 +1,269 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021091.outbound.protection.outlook.com [52.101.129.91])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2072.outbound.protection.outlook.com [40.107.100.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE02F367;
-	Sat,  3 May 2025 14:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA434367;
+	Sat,  3 May 2025 14:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.72
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746283004; cv=fail; b=Yfw9IdMaswelTDKVCEutZJm03diGWosQGlBGooyge1y0Gh7V27EsFi7CeVugiT4P+dPL8Ns79BmoM7QmN8G/1MxbqeDTFaQBg+5IbvrjefKB2y5h3vom0ikh3yd3JJA0dCveJa+TLmYK9RTBreqoFk/UnTM/SCkY/D7IMaDExl4=
+	t=1746283092; cv=fail; b=sC36lU63rDAXad5Ffw0OJDkDgwxdTflq0OkYGTZrOjtcgfWH59Qa3bZskm80M8wgciQGpBZPdlKeUOIPexmnyb37q7DY4PQVt4FsvQzUoFkENNNFiH5ma/zqs3jhcA+9LczJSyto7EYcz97PHLKqW4dynrhZ1Y0Xh2u8JVdZIUI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746283004; c=relaxed/simple;
-	bh=bdX9uZ4aBDPfRJd+Cq1cUO7FGQBMIW229qH3WmqYKIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SVkG5OO/c5L8or6DegsLZvtxwIlkg2aMh7OPw9aFuf6HQnRE4rBCXxbf6B5uUD2YOK15eGTGwwEghlDz998+DWcvNynwnuseo4l7+MCeVcrHP/tqwslXVRjBR4jtPt4Yvs8xD3WczZzAkitQ1tnOzF8hKOQecf0/yM4SaHjJ29c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+	s=arc-20240116; t=1746283092; c=relaxed/simple;
+	bh=l6GKToBiFamiVpJ3TL/rLTkersWTMRQegr9fTOxDEnM=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=HcYubI8MFJqGaL0xedYTcMrbRrFMFUhga+3BUbRIq0NtcwkSPtAW7bbTmFllNLBVGtTdLLD849WIbUdeoZlCmm1QNBw6YyERU31Rm9IYJr3bAZI+o/JpKqAQ13CrtqQErtcDFNXoK2k1RDE9aTWspHRmZxWmvrOdbmVe1y01sfE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VY/VvnVG; arc=fail smtp.client-ip=40.107.100.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VY/VvnVG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y1Jn99GY0Z5vvhVeb4HxfhTNbfpiusJVqQbUddqrd39qCvE0stR3HCja8n1dW9AiXn1sxnuSZGhbrpXdfriH2dm+ULg/gQVvxw6AD8MNnw+Mh2VsQcmIexwA5U2sqwihkxoy/JP50FzaUkt8FNgUiPeXrx5HzP1NM2P1qs7Hsej8uUZsQ1lx4CZX/J7bKWw0neXErLb5Zdn7Vak6YUpUqSSvWiAI23Bo2zTB58uZiQU1m9SwCuwLGeMmbE//VltrtzgLYmhz8mIztjhpqWOYPOUdLI9IG9YAr7fK8kQJUVzmL4Kppxl4kg5MB/aEigavjnbyVBWSEMZ6kZqL/7HS9Q==
+ b=St8lgrQN0Eyl1slrh6e664XniVM/35i/VZY5m+yzJTKNLjYHnZWWZ5pG3BXQTLSqTpaFqyE4eAhjy1xSWaXh1CNVIwtKUUVYecRRXcxncFLR/SRl40pFtFF7wbYpCtPVN1debcgTWJsD2t4QpKL1xJTN8gV4OA94TdKagYGNgtbRvgSAeDD++HK/fGqu+PlJh5x5XaLeKFvFIGLkZN8iHEILr33V+bnMiaV9+b0XXQjnl0c5hMjV0vsTbsVi6W8b440XIbJXpl1P+mOB0siisMqBXtjj5CiAiz3EqQEondcEfU01wSUzv2vdcPjCaOMJ/FOYQU6YTnfx4tO/pDDRCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j3dEtCBjQChu7SeoI4xxG8dNuxDLgmO92LQ3qPIljcg=;
- b=INaHg8x5lLa/zd0YswRLYBAeSufTVOuZeY+JrOYu+vjBqOy1pCzLDt/clN7Xmw20juyUBrilDh5sR0mjsfcTuB6Jo5Iz2NEIDeMol4M7fSC96SlukgRYPZzhtB2156v2zweokDRjL1CwZQ6XMJ6WQrRJIDzqbB/xhhjdCZ8gM2yNXPq/f2UmE2wSPDBrKabl3kBlrxLU/u/ycUIUA3iJLdN+XAkd9NzDnvKR92TMaS6d8LwPRizIVP03eZSmi6+wjRvFRZSiOdYS5y/486mvoefwdy9q3GJlEcpa1jTOYpGJns/7uTmAInX9Idchs0iSDTnIemoq79wrDFIOfcNRuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=grimberg.me smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYCP286CA0276.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:3c9::13)
- by TYZPR06MB5843.apcprd06.prod.outlook.com (2603:1096:400:285::5) with
+ bh=gmQGqE0do93SL801k9OaetlC1kMvhZl08GXDD+mW0Lo=;
+ b=xROB43UIgBPZLhugLjO2kTebzEyt1ywoTvRkOspxunvmfZdtGp4ng+ZZ2Eu/58BaT5SHXs3UJBA9pwsm0jbztdwSmkWQWReAJx2F/It1mITIz3GAMrDBxYkK8CcDWm+dzzl5s4JoP/5ezX/SSJr+7R/Ln8k+LzIXFmfS6T0OpcpzgqMLSXrsHxSSjr4KGewkbqXxlnlqcKlhpjJN/YtZBLPGDJII3FBpgv+USDA5rP/ck73V5lOY5t3MCo0g/S+TNxX2ksopURqF5ndl5JBEsfthB8SjiQKOzqh3JN41A9yXIf/7Y++nsiMIeHJKoJSNZ38SM0HGYkzlQc5it0UfAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmQGqE0do93SL801k9OaetlC1kMvhZl08GXDD+mW0Lo=;
+ b=VY/VvnVG4gpSVkAD45OkQ9mS95aJPxW/2h6nrnUQV9bZ4yHHbcsvdQlzPkcd3xM48CWLR1IvP027u/EmGieUSQVDqsIMYh7/xnDopO6SQplk5y2PH7ZBXUuBbAvMXx3Z8oWq8dJ0KkWbZR8VzV7mJ2i4fLc7M3iV6Djp+Rk9NSj6B9VSp6NKVf/KmH6LgPN9nmsqf3QjRuHEXwXgzupimFO+p3Y0voJGDcBXBxOvUS0Y2sBkR5dG1UNFDKiCXrnXwFTA9ReTIQ44xzidbWQy227sQQyn1Eat66jRfM3YMl8FQxzArZPgzmYlMtu7JTtUyWBypblLvl2p46ej4sZiZw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by IA1PR12MB8286.namprd12.prod.outlook.com (2603:10b6:208:3f8::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Sat, 3 May
- 2025 14:36:36 +0000
-Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
- (2603:1096:400:3c9:cafe::91) by TYCP286CA0276.outlook.office365.com
- (2603:1096:400:3c9::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.26 via Frontend Transport; Sat,
- 3 May 2025 14:36:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Sat, 3 May 2025 14:36:35 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 3313641604E5;
-	Sat,  3 May 2025 22:36:34 +0800 (CST)
-Message-ID: <8c590b78-6f54-4ae2-9263-3553b5e27527@cixtech.com>
-Date: Sat, 3 May 2025 22:36:30 +0800
+ 2025 14:38:07 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8699.022; Sat, 3 May 2025
+ 14:38:00 +0000
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 03 May 2025 23:37:56 +0900
+Message-Id: <D9MLOQC5G7XH.3GTUIRCCN8X70@nvidia.com>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v2 17/21] rust: num: Add an upward alignment helper for
+ usize
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Joel Fernandes" <joelagnelf@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
+ <corbet@lwn.net>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+ <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
+ <D9LEQ1U1PLO8.3N22GRY380ZM3@nvidia.com>
+ <d6962ea3-282d-437c-b3cf-ce701d514558@nvidia.com>
+ <D9M5K55GTN6S.1X827WU0Z50UM@nvidia.com>
+ <112d971f-20c8-4598-86c9-6822d9c24001@nvidia.com>
+In-Reply-To: <112d971f-20c8-4598-86c9-6822d9c24001@nvidia.com>
+X-ClientProxiedBy: TYCP286CA0322.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3b7::11) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
- suspend
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
- hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250502150027.GA818097@bhelgaas>
- <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
- <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
- <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
- <58e343d9-adf3-4853-9dec-df7c1892d6b2@cixtech.com>
- <onw47gzc6mda2unsew36b2cmp2et3ijrjqlmgpueeko5vucgph@wrkaiqlbo2fp>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <onw47gzc6mda2unsew36b2cmp2et3ijrjqlmgpueeko5vucgph@wrkaiqlbo2fp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|TYZPR06MB5843:EE_
-X-MS-Office365-Filtering-Correlation-Id: b666e743-01c4-4e7c-44d9-08dd8a4fe80c
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA1PR12MB8286:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b634c65-f55a-4f51-7517-08dd8a501a0a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+	BCL:0;ARA:13230040|366016|10070799003|1800799024|376014|7416014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y2o4V0I4T0ZnTG95NnRwS2dDU2pxRFgvYXJXVHZrWktRaEQwd1c5a3BYUS9J?=
- =?utf-8?B?d0FXQTR2WUwvc21DQlFobFRJNzI1NUlkcFNZU3FhOUJDb1YrVWFVVDY1azl1?=
- =?utf-8?B?SFNQcUNUTHBRSTB1STc5UDVaZ3NVUlltVG1jcVNiTTA3eGtaVnV5Tk51OUEv?=
- =?utf-8?B?bVVXNlA5S1pHaC9VZWRRVUVVeG03SWl0clVSaFlqekNvbUtvNXdCelNHOVdH?=
- =?utf-8?B?RDF4cEFzNU1vandDL01aUktnSmpaSEcrMXpOOTNVbkM5QXhHeGZmNHVBRW9J?=
- =?utf-8?B?T2dyNEpJUEMzTG9tWkUyZUJiY01BQkE4QjlPTjR2QjNQLzh6eWZseTliSGV1?=
- =?utf-8?B?ZHhyUWNrQmsxN1VJMnA0RnRDNGlHbnpWZHVBbHQ2Q2wrV0pxNHZudE0zMys1?=
- =?utf-8?B?S1VmRWxKa3BDbjZRR0NOSEhnbXdNMWR2alRZRkZUU08za3dDWVliYW9vUlRj?=
- =?utf-8?B?YUo4dFJwVC85MzBaNmpUaDVjeUVxK0dqemVTWVNTRXdrREdSK2JuK2pzU05G?=
- =?utf-8?B?MzVmeFFsYUdYWTBqMmdydjhITnY5T3NoTGFNMUdaSGh1MzV1YmRQNzNsNDdr?=
- =?utf-8?B?aTJiaVRXM09adm81UTQ1V3ROZE5kNW8vM3hMMDF1aGNGZTVSa282ZVF4cGto?=
- =?utf-8?B?dXdjVkxkNlFCNnYvT1NxalZSbjJJZ2g0M1ZOU3kveWY2WFl6ZFFqeDlrUXFo?=
- =?utf-8?B?V056WFlvQ1JBWmZkYXMxWW10TGRJRk9NNDVjbVB0dlJPZlVkYTduQWJQSjk4?=
- =?utf-8?B?SjdYc042SnFVYmJUQWtmZThFN0JiYi9qaFVhNHB6UnpWaFFLbFA1N1BoZjBm?=
- =?utf-8?B?UXpRd2diTEI0VGRpOXQxeVQ5amtrQktJTnZhbGI4R0F6d1FaWjVYWnFmSXFt?=
- =?utf-8?B?RUxZa2ZRUTYvNnhGa0N0WXRsWTdhZmxpR25VL2c3WE9GY3JXZ2x0dDRDeUxI?=
- =?utf-8?B?RmRnTzJMOFRjMDlnUUlucXdDQWNWTm9ZbUZER2lvQUJoQzRHclVBa0U5OXpE?=
- =?utf-8?B?OVcxTXhlOXZwV01LYWtxanIrRUFtcVJpWE9DekV6aUJqdDlPT25Ec1kyUVVi?=
- =?utf-8?B?bHh6c3g4MDJOTnI2QWNLY1Ard0s0UkpPMmhjT0pCaFJtb090MjlTRUJrV200?=
- =?utf-8?B?QUIzYkJNa2pIWWttb1lBVTQxajRDbEcweGFML0g4bS9mZTJWVXMyR010LzlF?=
- =?utf-8?B?N0RFWEpCRnVvdUtlaUNXdVAvTERDZUFqdXdxekltZ0VFbzJBamhENk9nb3NK?=
- =?utf-8?B?MlFTWnBHZE5WZlZXSnVKTWgxd1hJWXFwRWVZK0Y0M2RWQU1TYTYyVy8yaVUv?=
- =?utf-8?B?YW0vQ2oxVnhpdGpTWS9XWjh6QVdXNktPc21tVUpzZmxPWWV6NUdnRXF0RC9U?=
- =?utf-8?B?MHplUmlGSk0xdkJDRDB5V0RpWEZmMk9GY09JaHd3Yll6elV3VnBBWVNIVC9o?=
- =?utf-8?B?TFZLV0xXeWlJTjdhM0pNbnBWUW5XNk50Y01XSlNReUNIQ2hkSWQxOWYraVAz?=
- =?utf-8?B?b09zMjFMbUZKZlA3R2t6b2F6aUo4YVRTUFpwWEVXMUZteGVjMk9qQnovYmhB?=
- =?utf-8?B?cnZWZVRtMHFBUDhucnl3NHBFM29pSWY5QXB1REc1RHZ3YStncVVtWjFYaXV6?=
- =?utf-8?B?aFdFdEVORDdPaUpLSlZmaEJUeENDSmhORlVyUC9qMlZuSVhHT0xIS080UXV2?=
- =?utf-8?B?QUxCZTZ2R3NhTGJNZjZtRG4xMFIxb0RmZ1F6NmZwcmppWlFKSUprMkxuMEdY?=
- =?utf-8?B?bVpjZXVJTHN5ei81azB2dDRqd0ZxUHVMbm05Z1hCUGZhaDNSK20xTktnSndj?=
- =?utf-8?B?bW45UnMrbUJUU1BYS05jVU11MnJ0Zi95WUVuQjlwa2txdUlMblJNOW12S1VK?=
- =?utf-8?B?UkdwQ3g3NjVBMkRXODFEWElycUxIejBxdGxxeUpxOGszeXdETXRTWjZhdjZv?=
- =?utf-8?B?dzJnS1RYeFppRjBRK015RXRpVkVyc041ZHU1UTNVaWtGWnA1dDBKKy9qYWVS?=
- =?utf-8?B?bWJMaTJoaDNLT3duNnhXdjNNMXBmRlNFelVyNGdLTkNZQnVidFpmRlkwaHk1?=
- =?utf-8?Q?OScg+F?=
+	=?utf-8?B?UlhCVW5hUVF1T3FXbEJ4b2s2K2R0YzJuYUMwVGdieTR6bTRzVTI0VEd0TnRx?=
+ =?utf-8?B?Z1FYaUJQTWJZSFdWS0VZS25NemprYlVISnlHRzJwT3BaanJXcUJIejJkMjB1?=
+ =?utf-8?B?NCtXMmdLM1hnR2lMTHphTjAxYTNXSWh4ZWtjQkNZcU9aSHYxOTdaeCt2UmRC?=
+ =?utf-8?B?TERaQWZtc01nQllqZXp6Qkx0Qm12VFRpV2hScHVyVmJRNVZWeVpndDBVTWY3?=
+ =?utf-8?B?NU14dnYzN3MxZHVQbE5aWERPaER1aFhqVTk0TDdRbm04UUF2V2wyY0pWblcw?=
+ =?utf-8?B?bEpGSWFaaGZhRDF6aW9adEZlTzRYYUxWQm5samhoWkJXRE00ZmVyRko4MXpr?=
+ =?utf-8?B?N3N5RTFlcEtFK0xsUllVeklIRWsvZG8vK3hOVnlWejY5VzFsaXVCZmw4OEFr?=
+ =?utf-8?B?MmFncGlUWkpHcEVGNmFhQ3B6TGdhbzdNLzVDTUpFVkxCVytESUMvNlo3bFQx?=
+ =?utf-8?B?MEZhWHdtRXNBT2krRXJVbngyeXZDR0ladVdtTGQzSUQ2eFBPbmJZZ3BuNng4?=
+ =?utf-8?B?cGZKT3RDcmttVys3YXNsMlBibFFHaERsTFIwQ1BWZ0pwSTI0M3hlZ0tZSnpP?=
+ =?utf-8?B?eU9QMGF0RUlYckJvQjBSQW10Sm5rN3ppK24zSXVKWWtBUE9lbDVBTGt1UEJv?=
+ =?utf-8?B?QlozMzNHNXF5d2l6NEw0RGFzcFRFL1dYZ3puem5ZRWFGUDF1YzN2OUJVcTJy?=
+ =?utf-8?B?b2hpZHcwUkp1RUt4YzBxSGJzTWcvRVZpS2YwUTRvZEpoclFHSFZYbzVIMS9G?=
+ =?utf-8?B?WEsrVTdIVjhMYlZKcVE5Ny9ueTZIcmV2WGdMUkZYeE1YZUtRWENZVE9uUlR6?=
+ =?utf-8?B?aWxNUkNyRGtCV200L0pKSEEreFh1RmwxcmMrUWVIWlBScTdFTmtyRnpwa3o1?=
+ =?utf-8?B?MVdNeFVDbVN6R0R3Tk9Qb3d1eFZVa0VUdnUvYjQ4dlErT1BBdnBQUHdPOUM5?=
+ =?utf-8?B?V0tZRC9SaVBmdklhWTlYaTM3TXdjMjE3Q1dCTmRFVDhiTXZBbEU5M3Vxci9U?=
+ =?utf-8?B?cEVYUzFDNlVFM1pGaitXNUI4aXdaNUNpeU1ZSHBZTnVTaUJJNnhRWTFGZVQ1?=
+ =?utf-8?B?VnN6ZC94eFgyYlM4Nkx1S0xCMSs2UUZqQUJoeWY5TGMvSUZBL1ArWFpsc0VO?=
+ =?utf-8?B?Z1UwL1hyMCtvYThoSFQxdk1YTnptaUxlTk8zTTBGdVRPMXpoZk9UdFJneWgr?=
+ =?utf-8?B?Z0Z2QWYvVGVPMHY3emdaYTArZWlRUXp6N0pyZU54MUlvaUtMbHIwTVRzZlM4?=
+ =?utf-8?B?VytXazR3N3RtZlhFNUkrVE9FaGlzVXBXaDMxc1pETllHLzBZZjdWcHI5cm0y?=
+ =?utf-8?B?V01GQjhEUWVUU3dDdE9IWVREQVFNOUVjUzNnVS82V3daaGJobjd4MGZKRGdF?=
+ =?utf-8?B?QjgvZkxwVDFvUzJLZnZNcWFFVnArYkFtV3grQVdyMng3ajgwdk1DYjMyR2Uy?=
+ =?utf-8?B?ZkN4UXEwaE8zWDkxN3M4Y0RETUY5RUFjWTF0OFJxQkJaZm5LZ3dtUVZ6Q1E3?=
+ =?utf-8?B?cXNpQTBIWWtrN3drakFhbnJjV2t6YW5nNjNXQWdCNHNKYUJ4T2h1eEVnS1dY?=
+ =?utf-8?B?bHE4TkhhZENzaWhZbVpHNTZrWXdUcHNqSEdaakgzTHdyY0hORkNKKzdWeDNX?=
+ =?utf-8?B?bTZWWFpEYWFLL2VMVE5NTHk2WEduS3FEK3ZyNjJCV21lNlIzSHFRd0xWT1JK?=
+ =?utf-8?B?NmYxZmszK3I1TTE4N05DUGNPdzFhcHcvNnEyNkJGL1M1UmRyRWdIa0taTmE1?=
+ =?utf-8?B?RVBaRlptcFJOaWdFNjczbUx6eDV1U0dpekJuQ1JpeFVETVJhMzJab0xGRVUy?=
+ =?utf-8?B?V2FaYjFwNW5zQ0haaE8zeFZuZkNRZGdTTk0yeFlybEo2eHlnUzVoaStkUkdp?=
+ =?utf-8?B?THZsL0diTGkwOTVXeUQ3T003RlpEaU5OMWRrZFJISUNtTXJJQUEvOWZjWE4r?=
+ =?utf-8?B?YXJrQ2ZoZjltUStVWUhOMVJsUEllZ2dSa2o5RUxjcERKQ0huWFhVRnRTL0l6?=
+ =?utf-8?B?T0RpU1FoNDdBPT0=?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 14:36:35.1307
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T3E3SjIrbUM5d3IrMFMrajBtc2xtYnZudnRqcGlGZTF0N0hCMVNCZ1NmVjA5?=
+ =?utf-8?B?Tk1YZ09FRTcxdVJjSUR0dHhQemdyU0lhSkZrZmFkRG1heXhoczZvUUYvQk12?=
+ =?utf-8?B?bG5Ha21zOHk5UmxYc0hMUVJwZG4vY3BSNGplSkFKMXFuMTg0YUo5NElqRFM1?=
+ =?utf-8?B?MHZMaHpGRmo1UGtvbXEyVWk5LzFVUC9ranVnRHRSZk8rQncxaWFSSVgrakNa?=
+ =?utf-8?B?VVA0MDM4ZkpabngvV1dacjJnWmIrNzIwU0NLUTFwODNXd3VtWlp2VFNxM3lK?=
+ =?utf-8?B?RXFhR3phL2tMSWk3R0NZQ3NjN1hDVVA1KzAwaUNSSjdYdjBLYVVKSHlSay9q?=
+ =?utf-8?B?cDBIVjFLR0xwZmpndXc4RHMwY0ZOYjlwVFBLTE9IOXR3c1JjQmtkbHFPT2V3?=
+ =?utf-8?B?U05sNFAzVkhDQTNyRURzamI2UlBueTBRbHRGYUJxTjNjeEhNK20xR1BRSkhH?=
+ =?utf-8?B?aG8vbWpmWVJYbTcxUE5OKzQrSnZXYlZHNloyUUEzM3VTUGwybjZwVTRCZHhV?=
+ =?utf-8?B?Q0ltVlpwQVpqSmxLUWYvbXFmLzAvSUoyRis1L0R6MCtCRnpiTGJjaU8zM2Jr?=
+ =?utf-8?B?OUdSaGZKR1JuWVUyU2RZY2J6Y0Z2REU1bEUyb090OVBsMWpmdDJFdTh3cGRl?=
+ =?utf-8?B?dmg5aUhDN0RjSFRNaUxwK1BFYkpwcGdzUG1qY1NZMG5YLytYRzYxbFhNTzJW?=
+ =?utf-8?B?YzkyWHZsNkwzZUJ6S056MHR6VHBRc0VoWG5tcTgya0IrdndlV0VEdCs1VEti?=
+ =?utf-8?B?K3ZJbVFSNjJmMGE2RUxZV3ZuZ2JzZVA3QStneTE1TGxXRFNDYXJwR2xzN25y?=
+ =?utf-8?B?RUpsZmpIQlc1dlFheFE3ZEpNeUdnaE1WQXo3UXhEdERUaTdSZ2UzNW9MNEtT?=
+ =?utf-8?B?ZG5ZdWpHUTc2SjFXQng0MUR2SU8xa2pKSlQxUjFVdjI0ZmUxMkcweW1jUHdZ?=
+ =?utf-8?B?UmVwQ3dKWUZDaWl0LzU1UEhoUTZnTlhzclJtM0Q2S2ZnRmtCR3RGU2ZpNk9H?=
+ =?utf-8?B?RFdOTnJVaVMvM1lWTG8zbFZRejZzWmlVeUJnYUY0dWF3TVBTWC9HOHQ2Ynlp?=
+ =?utf-8?B?Y1c5SHp0cGg1cExIYlhmMmU2MWJRQnFValNNL0FQNHlwZTBDazRZSDRxK2RC?=
+ =?utf-8?B?T0kwcGYvZGVDUHQzd2FWMWJibERKVzhJQWZWS3lGTHZmOWl1dDdFWkpPQndl?=
+ =?utf-8?B?SjNmRzl3eDVqSTBIMWx2eURhc2xZc1ROWFhyLzI3c0RmYzJkOEtjYkZuQ0lm?=
+ =?utf-8?B?bE5YWUFDVkViVTFXNEtCSXlRZjZUWlEwQVNRZDUzY1Y0dldsS1FTZkJlajF0?=
+ =?utf-8?B?bHVBS01pajJ2MElaRlBBUGI5bDlnRjVlRFphUWFlU3RRZCtrVjJWOUlUZXhN?=
+ =?utf-8?B?bTFBOVpCN1hTMnRJdDYzRXJZdzdROWduUGs0cW1Pd3l4ZC9DbTdYM09iaCsw?=
+ =?utf-8?B?Z0grUFhRV0pqM3I5bnJsNWM0M2tITDFtMVRrajhseDA0M1FEeFZPNlVQeUdP?=
+ =?utf-8?B?aHQrOFNBUktyNE5OTVZsRDlidndhVjZNbXNaWW5tQ1VUODdieTRSMlY1ZVV5?=
+ =?utf-8?B?S3BxdmVMbkhkaHgya3ptUFYveCsxdzBDREpJU2kxUTdJZmJ0UmlJa01GU3Y5?=
+ =?utf-8?B?SE5xa3VVRVVVR3ZFYWZESzg4N0o2VFZWb3JjQ0owNURIcWw3TTBYQWN5R1d5?=
+ =?utf-8?B?bTRtZ1lhTDJqdDBSU3Z0UmZKbk1UeFpPMFJ6b3VIZlpkVmp5MitNczRKL1pQ?=
+ =?utf-8?B?RUtNYjdjdUp4Qnp0RG5qbkFlZW85aFVMWFBuVzlLMWk0RGpJcEhuMVhMZVFV?=
+ =?utf-8?B?Rk80TjdBZ1V5RnNNaTZJcDc3ekxjOVBvdkpDT2dFVHJMUHk4VUc0ZkZHdkF5?=
+ =?utf-8?B?Q1cvTndLN0dUSnFxY3FpTXNreGRUbFRrV1F6cy9pVjI1SnVSODBjNk9zTlAy?=
+ =?utf-8?B?RGYvRTFDNThJUzNucTNHUlNiTGhPT1l2V3JRYVlQTzEvUlBmK045TW52Y0RO?=
+ =?utf-8?B?S0diWDVEVnZIZ3N3TkRoK2xhMHJWYnJGc1VsOW80b2hXS1ZkbUdueVp0UzRi?=
+ =?utf-8?B?OHFVcjFnUnRVZUxWd3JsWFovWW1Obk95a0tabkxZYmJRQnFhWlVrWURHWkVY?=
+ =?utf-8?B?WUJ3VFhDQjdEWkVQQ0dDb0ZoQTdYVmE0SWE3bVlPOWFtdHoydmFFWFc1UmlL?=
+ =?utf-8?Q?TyF8nKh9j0LQyUSN80pm17EmaEFwfl2fFB5GpxkadJPT?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b634c65-f55a-4f51-7517-08dd8a501a0a
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 14:38:00.0017
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b666e743-01c4-4e7c-44d9-08dd8a4fe80c
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB84.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5843
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hmBg1tegRY1ediMyOhgS2AzTUqjI5qvu/z1nQBlFhQGIK+mU7DWoouhHKxITJPaqbwumaxN5avQoWIDI1smppQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8286
 
-
-
-On 2025/5/3 02:05, Manivannan Sadhasivam wrote:
-> EXTERNAL EMAIL
-> 
-> On Sat, May 03, 2025 at 12:20:52AM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/5/3 00:07, Hans Zhang wrote:
+On Sat May 3, 2025 at 12:02 PM JST, Joel Fernandes wrote:
+>
+>
+> On 5/2/2025 9:59 PM, Alexandre Courbot wrote:
+>>> pub trait AlignUp {
+>>>     fn align_up(self, alignment: Self) -> Self;
+>>> }
 >>>
+>>> macro_rules! align_up_impl {
+>>>     ($($t:ty),+) =3D> {
+>>>         $(
+>>>             impl AlignUp for $t {
+>>>                 fn align_up(self, alignment: Self) -> Self {
+>>>                     (self + alignment - 1) & !(alignment - 1)
+>>>                 }
+>>>             }
+>>>         )+
+>>>     }
+>>> }
 >>>
->>> On 2025/5/2 23:58, Manivannan Sadhasivam wrote:
->>>> EXTERNAL EMAIL
->>>>
->>>> On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
->>>>>
->>>>>
->>>>> On 2025/5/2 23:00, Bjorn Helgaas wrote:
->>>>>> EXTERNAL EMAIL
->>>>>>
->>>>>> On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
->>>>>>> From: Hans Zhang <hans.zhang@cixtech.com>
->>>>>>>
->>>>>>> When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
->>>>>>
->>>>>> CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
->>>>>> dynamically regardless of the config.
->>>>>>
->>>>>
->>>>> Dear Bjorn,
->>>>>
->>>>> Thank you very much for your reply.
->>>>>
->>>>> Yes. To reduce the power consumption of the SOC system, we have
->>>>> enabled ASPM
->>>>> L1 by default.
->>>>>
->>>>>>> NVMe controllers fail to release LPI MSI-X interrupts during system
->>>>>>> suspend, leading to a system hang. This occurs because the driver's
->>>>>>> existing power management path does not fully disable the device
->>>>>>> when ASPM is active.
->>>>>>
->>>>>> I have no idea what this has to do with ASPM L1.  I do see that
->>>>>> nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
->>>>>> janky and racy).  But this doesn't explain anything about what would
->>>>>> cause a system hang.
->>>>>
->>>>> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0:
->>>>> PM: calling
->>>>> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
->>>>> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
->>>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
->>>>> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
->>>>> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
->>>>> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
->>>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
->>>>> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
->>>>> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
->>>>> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
->>>>> pcie_phy_common_exit end
->>>>> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
->>>>> sky1_pcie_suspend_noirq
->>>>> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
->>>>> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
->>>>> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
->>>>> 7110000.system-controller:clock-controller: PM: calling
->>>>> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
->>>>> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
->>>>> 7110000.system-controller:clock-controller: PM:
->>>>> genpd_suspend_noirq+0x0/0x80
->>>>> returned 0 after 1 usecs
->>>>> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
->>>>>
->>>>>
->>>>> Hans: Before I added the printk for debugging, it hung here.
->>>>>
->>>>>
->>>>> I added the log output after debugging printk.
->>>>>
->>>>> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
->>>>> Our hardware is in STR(suspend to ram), and the controller and
->>>>> PHY will lose
->>>>> power.
->>>>>
->>>>> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
->>>>> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
->>>>> controller and PHY will be reinitialized. If suspend does not
->>>>> close the AXI
->>>>> and APB clock, and the AXI is reopened during the resume
->>>>> process, the APB
->>>>> clock will cause the reference count of the kernel API to accumulate
->>>>> continuously.
->>>>>
->>>>
->>>> So this is the actual issue (controller loosing power during system
->>>> suspend) and
->>>> everything else (ASPM, MSIX write) are all side effects of it.
->>>>
->>
->> Dear Mani,
->>
->> There are some things I don't understand here. Why doesn't the NVMe SSD
->> driver release the MSI/MSIx interrupt when ASPM is enabled? However, if ASPM
->> is not enabled, the MSI/MSIx interrupt will be released instead.
->>
-> 
-> You mean by calling pci_free_irq_vectors()? If so, the reason is that if ASPM is
-> unavailable, then the NVMe cannot be put into low power APST state during
-> suspend. So shutting down it is the only sane option to save power, with the
-> cost of increased resume latency. But if ASPM is available, then the driver
-> doesn't shut the NVMe as it relies on APST to keep the NVMe controller/memory in
-> low power mode.
-> 
+>>> align_up_impl!(usize, u8, u16, u32, u64, u128);
+>>>
+>>> Or, we can even combine the 2 approaches. Use macros for the "impl Alig=
+nable"
+>>> and use generics on the Alignable trait.
+>>>
+>>> macro_rules! impl_alignable {
+>>>     ($($t:ty),+) =3D> {
+>>>         $(
+>>>             impl Alignable for $t {}
+>>>         )+
+>>>     };
+>>> }
+>>>
+>>> impl_alignable!(usize, u8, u16, u32, u64, u128);
+>>>
+>>> pub trait AlignUp {
+>>>     fn align_up(self, alignment: Self) -> Self;
+>>> }
+>>>
+>>> impl<T> AlignUp for T
+>>> where
+>>>     T: Alignable,
+>>> {
+>>>     fn align_up(self, alignment: Self) -> Self {
+>>>         let one =3D T::from(1u8);
+>>>         (self + alignment - one) & !(alignment - one)
+>>>     }
+>>> }
+>>>
+>>> Thoughts?
+>> I think that's the correct way to do it and am fully on board with this
+>> approach.
+>>=20
+>> The only thing this doesn't solve is that it doesn't provide `const`
+>> functions. But maybe for that purpose we can use a single macro that
+>> nicely panics at build-time should an overflow occur.
+>
+> Great, thanks. I split the traits as follows and it is cleaner and works.=
+ I will
+> look into the build-time overflow check and the returning of Result chang=
+e on
+> Monday. Let me know if any objections.
 
-Dear Mani,
+Looking good IMHO, apart maybe from the names of the `BitOps` and
+`Unsigned` traits that are not super descriptive and don't need to be
+split for the moment anyway.
 
-Thank you for your explanation.
+Actually it may be a good idea to move this into its own patch/series so
+it gets more attention as this is starting to look like the `num` or
+`num_integer` crates and we might be well-advised to take more
+inspiration from them in order to avoid reinventing the wheel. It is
+basically asking the question "how do we want to extend the integer
+types in a useful way for the kernel", so it's actually pretty important
+that we get our answer right. :)
 
-Best regards,
-Hans
+To address our immediate needs of an `align_up`, it just occurred to me
+that we could simply use the `next_multiple_of` method, at least
+temporarily. It is implemented with a modulo and will therefore probably
+result in less efficient code than a version optimized for powers of
+two, but it will do the trick until we figure out how we want to extend
+the primitive types for the kernel, which is really what this patch is
+about - we will also need an `align_down` for instance, and I don't know
+of a standard library equivalent for it...
+
+> I added the #[inline] and hopefully that
+> gives similar benefits to const that you're seeking:
+
+A `const` version is still going to be needed, `#[inline]` encourages the
+compiler to try and inline the function, but AFAIK it doesn't allow use
+in const context.
