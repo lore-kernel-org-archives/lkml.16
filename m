@@ -1,117 +1,151 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F001624E9;
-	Sat,  3 May 2025 18:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7F87081C
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 18:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746298091; cv=none; b=IoaIa/Fb7XxQGU9RGysaEPMEVJ0uhevJwmvJU+1t1TVozyeahulvR3SPuYYgROxssMfQhLD6OqsWtgbYY0lTvOR4Um5DNsk61twdM4caPQfelOMVILVIfhwhkk0g3DKKhfZNT7301pib6Bnp3P5TCkajn+QYqqKffxJW0mNkA44=
+	t=1746298362; cv=none; b=R4zBZOnF4XnopEe3h3uz9Im9H5ch3wkV2Ewmrv1xUSiWsBEI8tNbdkbLbcDFtwPX4UlDZs3jlMFcNRJInS7GJfLqDM1XklOo5DE7plMndbRw5UyR+Q2Y+lkvCJ0+UNQH7QXqUTW6USjMRRB6nECYGfcJXL2J++UrI2jnIJTfGGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746298091; c=relaxed/simple;
-	bh=xlYQ163hDkhmgErY25mBm19wcr2Qj8fSb7MgLR0tv58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZVQLEcIoBJ+3ZDSM3tMG+Z+Jgjlwr82UBme99zpSL6Rt2bKS81yAAd0KS/C/kxJMXG69rOEe3MSDR9PJmVwk3nReMhKeCjUd+UkgEpChEr00POR78jJmhSy1q4FGVJibdL6AuEGyxPubSCV0j3fGJcf4uGDStlEIPAoUt0gWTco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d63Y/juU; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746298362; c=relaxed/simple;
+	bh=vq1V+e7vmAe9DRhMLKswG/UYbRE4x84iqvAItSwX2K4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=avQRRIc9lrKJqiJJ4anFHUpJdqrriddiGNVmlyPODx4SI+VkCspWk8ha5DOtuujfJMULvW4L7Gzz/BF6HTwSFAnhVwN/+f1VIDDH/xA4x8xeDIHJUaQ1ArjTyKsCJ3pV7i2sQchy5F5V4doyY3QCZyrqPAsVsX5OIeHYuRxVkBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=EJavWuzr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Aapabulk; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d63Y/juU"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b98acaadso3087059b3a.1;
-        Sat, 03 May 2025 11:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746298089; x=1746902889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sHcRbppvMSqwRwoxXB969N7KQ0/ugOZSO5ywUwJYXKs=;
-        b=d63Y/juUi9Cm9PtHd4aF3DLVg8uT2BXdiPt+PM5JM6bfc2QALSvpvAwA9lVfqytjiT
-         26eiMb6iJt+CureazS7PDvFU0FyW+kg2ui82bW7W0l+gseTCV0DHwbYYywJnlwNudx3e
-         NpCOVo6cclcMHtvp/qIkcuqqnesJidzUaHMfuZO35UALSYsyAlRE4nGPiGLxdiWJy+99
-         ehCsrzeFEIApCV+jBhE5TIxUJZ3fHOnAAGcsUbbsXh5D8idgtxmJH6jl3TjqOGvQVPzO
-         Tukk4JaOML1cXO80SfATrBHf3yrMbP6k1xANtG+vtIKb38OAFTMM4AMygQC90tTZRfCE
-         iFDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746298089; x=1746902889;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sHcRbppvMSqwRwoxXB969N7KQ0/ugOZSO5ywUwJYXKs=;
-        b=v7Ca7Ks/0fvaIyLDmcfbXg0ceh/1+RarYXkB58plrA9qfqy7w3xtlXJzdUprakJNCd
-         I2cqXq/yitW+UqfSbw6hK9/P79AXPirEatO1w+8YUOq+RIYgdLSO1F5/Xu6y0Nuqd8Wm
-         4hTf7WQamUWKPuX5p/QXBOzWYsbQZ2bXmWopUKBu8ERIT6wxqzKKk7alSFokVCerNv9K
-         gzNW7GDwiJF8+YI+rnk1yx5B+vUxss7QXHzGL+/FQQKnq1SmdbgpaejMv1xwaCwnODBi
-         QaJ3rlr+y2wMWa9z2EZenp8uJbADPEfnqVTSvNcf1H6mjozthsPNhrF0tEj9tkBU31Gt
-         j0JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV364Q+/WS6IuQBgCXbCXS4bSUhVIzcv/X0gTxvR5jf6c7iaPJ6wzIrnU5OqW8o4BvM1EIPvcmTuH9y@vger.kernel.org, AJvYcCVhZYSRB1eg+VVBPE2DgyKYYX5Cfsq0Sj7A9J6/vjWrDe1JmOUbttAqytwMk6AlTmLG9dAFmNIiSqXi@vger.kernel.org, AJvYcCWjuWD4SDItuywdMnO8sVyy16uu4CAyaMU+pLEb/aB0x1XIcatyaepsVeemBXhS2r7xiGwROQSQkaJjhxve@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws+GUUzphC74aZGRUQVU9h6nb67tppm74azkR4BefybJw6kQEt
-	u0iRNLi5K6MOpHFh2qxL0HzixewAm32oAYK54vhMJ8yhlf+3psMn2J0Mgw2rBMw=
-X-Gm-Gg: ASbGncsS/aTh+GVKcxFhvow5ZbeJIxHqK9jSwwpQqxXcOdTrJA4nYROkgbj6aiY6oFG
-	ZxZuYMdcQfWy8EH0MjdlfPkbVPELGhduG4Ka4H91s+AHfZ8zgZCBbrg1sU3zMjP09MNqwNT1QsL
-	7UWum2COEQrF9owi/XzJI9miBLtUQNqi9vlTSRDIK3G+orgZdmmRG0DeSKhiCCdKnxaVzYgFOWx
-	AATN5NLZPvR9gmdEGhxn55b2ksaDTZd3yTykSM6iLvAdCk2tywKKlHUTuZiJlZmIIjJXRArFvwv
-	OJsgueV5W8NcP35LjvqyVS0+QsGLHIoVaKfwtwntURk/JNUCEO4Szg7K1fwm7gU=
-X-Google-Smtp-Source: AGHT+IG2f1e9Py8jCTDXwkqqSY2yZJE6TllMJro+MRSjHOeE+mcN8PlGZPLKgZBKTD5cuy1QpjDSLQ==
-X-Received: by 2002:a05:6a00:8087:b0:73d:ff02:8d83 with SMTP id d2e1a72fcca58-7406729efa7mr5644475b3a.3.1746298089035;
-        Sat, 03 May 2025 11:48:09 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059065223sm3761921b3a.141.2025.05.03.11.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 11:48:08 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: conor@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	jic23@kernel.org,
-	krzk+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org,
-	rodrigo.gobbi.7@gmail.com,
-	~lkcamp/patches@lists.sr.ht
-Subject: Re: [PATCH v2] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
-Date: Sat,  3 May 2025 15:44:12 -0300
-Message-ID: <20250503184800.27026-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250430-folic-skittle-06b0ccbedf35@spud>
-References: <20250430-folic-skittle-06b0ccbedf35@spud>
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="EJavWuzr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Aapabulk"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 707CF2540115;
+	Sat,  3 May 2025 14:52:38 -0400 (EDT)
+Received: from phl-imap-15 ([10.202.2.104])
+  by phl-compute-06.internal (MEProxy); Sat, 03 May 2025 14:52:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1746298358;
+	 x=1746384758; bh=L7whafli7ccrgxtjjLt2LWxTdI/uTPEKZB5Tk4Ozj10=; b=
+	EJavWuzrdG2lF1+QcZXVqatf1Fn2BX8hkN8U4RKRlmsh1nXoBz4Qm7qzb42sWiq8
+	NPISbjGWj6Tdlqd5aLr7RVsZTs3Grhp8vI4b+P+o/2QQsy6WiC2vjux8OwCoHReJ
+	K7JoJBMdaHsrNn8HZ5Nrk58Vzjfy4PhjMDjohQrHaZjkonENHWBYXELA8msr8tPS
+	FrIE6uRz+lWgvR7+dae0TpVitPYDVbU0LJQttMOsxi+jWIOu6E3gwWy5K7DvRbNs
+	l5snGA1AmJFitdy8kGP+VCin8YQizi1zRH8PPzvMqlBKrkpx2+BRwzgGXSYWNTAd
+	LPrlBzA/0SwYVlU6+K7SeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746298358; x=
+	1746384758; bh=L7whafli7ccrgxtjjLt2LWxTdI/uTPEKZB5Tk4Ozj10=; b=A
+	apabulkrmj/lvhEaoqF9mnr01F5XTnmTyCnDgOn+NzF9j6kPEt+gx+fcvKASXliL
+	jDIKBDXOHtbnBihZuWnOsrWWtWGEWLuL2dSwje5fVcSCbz5w96e+c1SyvjU2/T1n
+	KPqXsFlzOiK6B+Zolc9ABkRWhrj1oJn+tkpOqMeLUu5XOrJ3TRX0/JmwbndGG2nm
+	QlCcg8KEbMM9E31uLp258zXzeG3eqX2HchUhoY45YQerwS7C4ZbWuaBKwlP1Cejg
+	Njs7GUAsFSJcUGon7pUQ2dvAwrhqDDAAtbpDHMc8nLgMwiW6gcX+7+3YHJdEBPYx
+	CgWaohr61jC0pxQSrG7PA==
+X-ME-Sender: <xms:9WUWaAZaOXjayHPRNj0rqnJtfsZ_r-iBLuLHX3xtfrzUqBWZ_2vsjg>
+    <xme:9WUWaLbUyjDmfOunX1Qiw1lPGYudpbDgIDBDI4b5D0LgYpAcBPfyfiuzQlOrwVYLK
+    6iqr6Z8_4E8bVzqkoc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeeiuddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpeflrghmvghsuceosgholhgurdiiohhnvgdvfeejfeesfhgrshhtmh
+    grihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfdtheejiefghefhjedvheduuddv
+    gefhveeiheduleevveehkeetiefgieeukeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegsohhlugdriihonhgvvdefjeefsehfrghsthhmrghi
+    lhdrtghomhdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopegrlhgvgidrhhhunhhgsegrmhgurdgtohhmpdhrtghpthhtoheprghlvgigrghn
+    uggvrhdruggvuhgthhgvrhesrghmugdrtghomhdprhgtphhtthhopegthhhrihhsthhirg
+    hnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehhrghrrhihrdifvghnthhl
+    rghnugesrghmugdrtghomhdprhgtphhtthhopehsuhhnphgvnhhgrdhlihesrghmugdrtg
+    homhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghi
+    rhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhquhgvihhrrgesihhgrg
+    hlihgrrdgtohhmpdhrtghpthhtohepshhkhhgrnheslhhinhhugihfohhunhgurghtihho
+    nhdrohhrgh
+X-ME-Proxy: <xmx:9WUWaK9toOQydufxLh0_u7f5mvc1v6hHdNQfj3hKCvyNtI_c_9Y6rA>
+    <xmx:9WUWaKpZEZ_iN5FaRixxsZ1j7aFCCIcwN1XP6aAiKm6CtcmNAhtRCg>
+    <xmx:9WUWaLqt7aHfKwI67c2gXfAtc6HWZ-I42oSs8Th0Abph73qpIii6Rw>
+    <xmx:9WUWaISwpnA_GQvFfTxPYImBFJrsCpqLnh-XvoIn75HvP-7cDFaS_g>
+    <xmx:9mUWaKFOW2N7x_Qp_Sv_orU37p5J0bKYC9mmDpOSxSUBQHX_qDwkxRZ1>
+Feedback-ID: ibd7e4881:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id F1B4978006B; Sat,  3 May 2025 14:52:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T48d424c97f2c2475
+Date: Sat, 03 May 2025 11:52:16 -0700
+From: James <bold.zone2373@fastmail.com>
+To: "Alex Hung" <alex.hung@amd.com>,
+ "Harry Wentland" <harry.wentland@amd.com>, sunpeng.li@amd.com,
+ "Rodrigo Siqueira" <siqueira@igalia.com>,
+ "Alex Deucher" <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ airlied@gmail.com, simona@ffwll.ch, "Shuah Khan" <skhan@linuxfoundation.org>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Message-Id: <e2119599-6641-4327-b3eb-d49c128e8513@app.fastmail.com>
+In-Reply-To: <83eae1ce-ead2-47c9-a636-755a5207a6be@amd.com>
+References: <20250501055701.2667-1-bold.zone2373@fastmail.com>
+ <83eae1ce-ead2-47c9-a636-755a5207a6be@amd.com>
+Subject: Re: [PATCH RESEND] drm/amd/display: adds kernel-doc comment for
+ dc_stream_remove_writeback()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-> Is 0 the default here or 1? "Single data conversion" sounds more like 1
-> sample than 0, and the default of 0 is below the minimum of 1. What's
-> going on there?
 
-Good point, after I`ve submitted the patch I was double checking it and noticed 
-that too. It`s stange because the public datasheet mentions "Programmable averaging of results 
-from 1 (No averaging) up to 128". Meanwhile, the spear_adc.c driver at probe
-stated the following:
+On Fri, May 2, 2025, at 3:25 PM, Alex Hung wrote:
+> Hi James,
+>
+> checkpatch reports the following warning and error
+>
+> WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit 
+> description?)
+> #18:
+> Adds a kernel-doc for externally linked dc_stream_remove_writeback() 
+> function.
+>
+> ERROR: trailing whitespace
+> #39: FILE: drivers/gpu/drm/amd/display/dc/core/dc_stream.c:561:
+> + * Return: returns true on success, false otherwise. $
+>
+> total: 1 errors, 1 warnings, 14 lines checked
+>
+>
+> On 4/30/25 23:56, James Flowers wrote:
+>> Adds a kernel-doc for externally linked dc_stream_remove_writeback() function.
+>> 
+>> Signed-off-by: James Flowers <bold.zone2373@fastmail.com>
+>> ---
+>>   drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>> 
+>> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+>> index 0478dd856d8c..060ee6c3fc2e 100644
+>> --- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+>> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+>> @@ -552,6 +552,14 @@ bool dc_stream_fc_disable_writeback(struct dc *dc,
+>>   	return true;
+>>   }
+>>   
+>> +/**
+>> + * dc_stream_remove_writeback() - Disables writeback and removes writeback info.
+>> + * @dc: Display core control structure.
+>> + * @stream: Display core stream state.
+>> + * @dwb_pipe_inst: Display writeback pipe.
+>> + *
+>> + * Return: returns true on success, false otherwise.
+>> + */
+>>   bool dc_stream_remove_writeback(struct dc *dc,
+>>   		struct dc_stream_state *stream,
+>>   		uint32_t dwb_pipe_inst)
 
-	/*
-	 * Optional avg_samples defaults to 0, resulting in single data
-	 * conversion
-	 */
-	device_property_read_u32(dev, "average-samples", &st->avg_samples);
-
-Since avg_samples is inside 
-
-	struct spear_adc_state *st;
-
-which is allocated with devm_iio_device_alloc() (which uses the kzalloc/zero filling the priv data):
-
-	indio_dev = devm_iio_device_alloc(dev, sizeof(struct spear_adc_state));
-	if (!indio_dev)
-		return dev_err_probe(dev, -ENOMEM,
-				     "failed allocating iio device\n");
-
-	st = iio_priv(indio_dev);
-
-...matches the driver comment meaning the default is actually "0", single data, but it does
-not match the public datasheet in my understanding. Since I don`t have access to a more
-detailed datasheet, I chose to describe "1" as a minimum value, but I agree it is weird.
-Maybe we could drop the minimum constraint in this case (go with default and max)?
-Tks and regards.
+Thank you Alex, and sorry about that. I will correct those issues and submit a new version.
