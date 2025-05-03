@@ -1,86 +1,94 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A1927EC73;
-	Sat,  3 May 2025 20:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FAD17BED0;
+	Sat,  3 May 2025 20:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746303961; cv=none; b=a84kMQDQwW8xoC4J7aF6l+kdpoYaEdxJ4dsjST+dBUkEL03G4rWNhbiOi09OiRjyGdeSOtapYXgcOeiy/ewZ5fhmtrSLwlixMWa6eBkePtd7LMmBfcSIB8qfiNA4OzyganK0MzWGp/xrbMdFh2tEusfDmCQ5tcX0ZMdECrxzqRU=
+	t=1746304120; cv=none; b=UAkewWWa8BE3VYXtMC8qfa3dyUe/xbqkVjduzDkNG2iTUD/fRTQTvNcWnUvt20N5WyWrByPB9SoKYubfdCZ9ShYJH81xmYqiWTT1cmWvOQ8K8GRiW8x/5NwG4+jFRERaFwCq23i2wOgHTln53U+wniOSokkuxlWav04BrAsw6T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746303961; c=relaxed/simple;
-	bh=owz8DP30aBL4Cb+/NhxKmJiyIbN++4jRBJBchTV0SQc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VwWNPyRxCxPH2QyoYVs1CkyAirtvmTh4qlNbxl9aOM3Ev9kmi8du9W06AZVCuHzpjnRQfZIE+IwFTTUwvFQj5Izgc6eK4yoImjxmfNRUeaPqm/ACqwLI3+tLMKCul/WfqJUjIfdLAehmmT84CgU3E5tPCieSVQt3eFrAdrRlxxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=N/Gvo6ce; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1746304120; c=relaxed/simple;
+	bh=9sXyHtfy2CGG1rNPSLIBNEw4neQ6gqlqo7AaRVn7gnM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rTTOdqk69dsFAh+dKVgaEOZ5PzAj4ywJq0HpvexQ3VgqkjnpUgpqg8lwMozdZbkpW3YFX4V4QVGZg23V5+Xw5mLEFv0tbxzKJTVHoZGenUvXQnKf+K8fXQm9BYVHEaVmXhXPkAZDlnsQSBmYllV9MwQXCu2BIpu0A1tthgfraqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=i+JJPNhi; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="N/Gvo6ce"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=lga6kFdr3u+n9jlLKuJOINjzsumkmfm93NFpKPSgd9c=; b=N/Gvo6ceZw8btkaMJCTek7akSv
-	plO7MojJVgzAQOYQo93lrI0fcdD4o8mC3pFuKk5pV/EDe0j8vTCF5Yimpobd+SoYvtBeY8PITABSz
-	HH1d85LjWxue3EvwgVjKjmxrEESsY0xPGsG2MlpRMdcO0Pt/SnHM3Cn8t5PjXsj6bUOvPPgsoCnqT
-	+8XaA5H3+XB3Y3X/74sOpL5CXljkD7DSJOiNN/LSB7MY7uU+Gz+XO/bmQPc19YxHGtXiKOJpFJNU0
-	K8NjotymPLswtJb89acLB21atO1XZl/LMaWdG+Hfm2a4Dn/LrzsTP5N+zF8jmvURK1FcUY8b489MK
-	iPQn5QWw==;
-Received: from i53875bbc.versanet.de ([83.135.91.188] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uBJQp-0001s2-E7; Sat, 03 May 2025 22:25:55 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 3/3] clk: rockchip: rk3036: mark ddrphy as critical
-Date: Sat,  3 May 2025 22:25:31 +0200
-Message-ID: <20250503202532.992033-4-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250503202532.992033-1-heiko@sntech.de>
-References: <20250503202532.992033-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="i+JJPNhi"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZqfMM1F5Xz9sF1;
+	Sat,  3 May 2025 22:21:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1746303695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mhQibUgvi4UXWwBalaujNOuytv932n/6dTzw2/JyC1U=;
+	b=i+JJPNhiEFMmRp/Soag9Mv1wTl44Gl2160CiGXDULMDJkAOr3BwU4FEBWFdShW0FxyH0+I
+	PqxYSfxQqn5hncWCKOQDz2G6rlyZH3cx29cOabefZfxjxF7GBY9DEKyElCwtabHIFdaLMy
+	aqhQh6wbuH59V9bFO88DhAtkAMbdD++a68btBCwrIeup7WgMjqZojvg1KYB5jK9ZJUa9Rd
+	LmdObPEkX2wxr9fe+grNGf+9kEzthcbwlmTxtbNicQ7f9tbtYq2FByfyFskwlrov8aY3XC
+	p4cvafyijX/rofLAm7Tn7VnS9Q2BM0EXOlvrcNo8TTijLWUnyp1ZIuriJUSoPg==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 03 May 2025 16:21:27 -0400
+Subject: [PATCH 1/2] crypto: hisilicon/qm - remove sizeof(char)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250503-hisilicon_qm-v1-1-d4ebc242bc8a@ethancedwards.com>
+References: <20250503-hisilicon_qm-v1-0-d4ebc242bc8a@ethancedwards.com>
+In-Reply-To: <20250503-hisilicon_qm-v1-0-d4ebc242bc8a@ethancedwards.com>
+To: Weili Qian <qianweili@huawei.com>, Zhou Wang <wangzhou1@hisilicon.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=775;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=9sXyHtfy2CGG1rNPSLIBNEw4neQ6gqlqo7AaRVn7gnM=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgprQTBEQUFvVzJEM0ZOM09UeCtZQnl5WmlBR
+ 2dXZXNlaDRQenZxM2pFQVExRDhxbXc3Z09QVW1EU3h3QmdEYmNSCkFvemV6ZC9UWW9oMUJBQVdD
+ Z0FkRmlFRS8yd2padUVwbUNDNS9VU0MyRDNGTjNPVHgrWUZBbWdXZXNjQUNna1EKMkQzRk4zT1R
+ 4K1pob2dFQXpyak5CTEFDbnc4Ui9kVTQwWVUrRElsZXVMbDIxU2RlMm5QZ3Z6Q0JSOTBBLzBlUA
+ p5ZENSWXRTOWFQcjhkb0lZd3N2bzdWeXB5aFJ3ekZLZ1J6RnpTd2dICj1vS3hBCi0tLS0tRU5EI
+ FBHUCBNRVNTQUdFLS0tLS0K
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4ZqfMM1F5Xz9sF1
 
-The ddrphy is supplied by the dpll, but due to the limited number of PLLs
-on the rk3036, the dpll also is used for other periperhals, like the GPU.
+`sizeof(char)` evaluates to 1. Remove the churn.
 
-So it happened, when the Lima driver turned off the gpu clock, this in
-turn also disabled the dpll and thus the ram.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- drivers/clk/rockchip/clk-rk3036.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/hisilicon/qm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/clk-rk3036.c
-index 41c71bb25171..df9330958c83 100644
---- a/drivers/clk/rockchip/clk-rk3036.c
-+++ b/drivers/clk/rockchip/clk-rk3036.c
-@@ -435,6 +435,7 @@ static const char *const rk3036_critical_clocks[] __initconst = {
- 	"hclk_peri",
- 	"pclk_peri",
- 	"pclk_ddrupctl",
-+	"ddrphy",
- };
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index d3f5d108b898bb5fa6ef901070e9e97b02afb29a..80d57f0dbf26e2902e01103b0a705234009161ee 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -862,7 +862,7 @@ int hisi_qm_set_algs(struct hisi_qm *qm, u64 alg_msk, const struct qm_dev_alg *d
+ 		return -EINVAL;
+ 	}
  
- static void __init rk3036_clk_init(struct device_node *np)
+-	algs = devm_kzalloc(dev, QM_DEV_ALG_MAX_LEN * sizeof(char), GFP_KERNEL);
++	algs = devm_kzalloc(dev, QM_DEV_ALG_MAX_LEN, GFP_KERNEL);
+ 	if (!algs)
+ 		return -ENOMEM;
+ 
+
 -- 
-2.47.2
+2.48.1
 
