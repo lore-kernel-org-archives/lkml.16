@@ -1,464 +1,155 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDFA2FB6;
-	Sat,  3 May 2025 00:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746231929; cv=fail; b=WXbbjFOeCbjCBxlGI7hdzCGzniiE5KDdj5f/OO+qsLpo9QtC+muMVmJOTIzfzp14seyPBYqZCe4rdDYfZ2IHZfW4hbs9X5sr+6Bz6Yyb2sKmWI3B5NFp7mBLwqn2fSaHvaSLL9aVbOkRBYeTEahoFiAg8DmrASFLR05XUU7JMzE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746231929; c=relaxed/simple;
-	bh=o3xCKii+Si8nKrWDSC7IpPU5XHibqtK47KPQho43pLk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s0XklciTZFg6CtRdqioW7Ujpenb58xd6rDCoPV1PoRPGChDApvSXPWZmbjGvrfSFUX1f1aS8jDg2/yvpf0p233U4XROdf9ygdRcyBTnrMtNm+tcpci8fP6B+9Orjhpq1acTVdWAI1UE32Z0M101ArmygMSsqVMaJfFm818ajIqE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3wqIOzh4; arc=fail smtp.client-ip=40.107.243.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1132B8834
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 00:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746232082; cv=none; b=LWqsAFntT7O4efohvpct38+96NCiULvkSdIjYq+KUTxDPBFFZeUUje778SyJIEEg9s75RsZeExuuS5o6RNRDrb51VNB5e1NP36I3rGhdSd3xb2SHDcKlTVmjxMpztEuqg6tPPddRFe/BS3gvqq129k/an6eQXIW43XmC9jby6bA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746232082; c=relaxed/simple;
+	bh=gQqpjFEGTESzcQc3cHLIM8wYkUkAS2w/iH2qcHSYAB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FIYkjXywFuqzYcuZ+G/DDZEQZhZtscENUEAeiB+gZWuBdU/HCxieSWJvw8CBx+ENWI/Is0wkoeCVO7eVeaWJ8iNcuxWIo4mX8c2e3O+zP3RkrlNmOmt85YknxP45Ee1i+Zq9/4DsbNoWSNH7oR6xsYlrifxUyjK+LNBUKDeZMEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DNghIuaS; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3wqIOzh4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aD8Lk1VfDFrYjjToxCGCiHRMUhCm381OR81VHsnqhYUUh/Y8FH12ylok0dKRcPdQHrXIKb2v7BxroyHi4fQhiUlskXlVz49cTcfmPiPeg95ph59MExxty/BTUSIlzisV8roq61TlyLXwB3FC8JRV347uT5A0IERmbRhdQJfe44gl6rBWart1N0p/pRaEJb7FjmZNc1NzXZ4CcsiK8LsWWRzOdMPXSiBgVoUJTWW+DqvlvxSorMtXeOQJ2LwCadSKURGhs/DfsC9TBof7fPveDePSqytJdoPXStikg2VbhveudVC7zSj/wkWCkNUNs8G3f7IzMDGrttMjdo2UhZ66Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NEuQull1lJbqoICbmq1TSXOYJjtM4q8ShE9F4xnOMXU=;
- b=r8lsOTcHLQanbJ8zEZjKbGBNVBRzuEguw4K0Q1jVsKsgiB6z+r+9XDs52VKFRhuPVqNxkG7C18Nj5QkfIYuAgK9WZowpsYE1ZRt83GNIYo/Pf4kp2hRYySr+8fc40iWnSEaOvi5apXZJPciniA4y0h0nNS57R+Gyj4ByugMqdfOxjnyg5c6iF/HVp7jlGICK7O/6r/i5qGuB2oRBlr2jO6ta8vO3kv3Y8Ca1h9pDtltV1dZ9K9YE9Tht60/xvkL76zwAFdOD9xZfBlqksfzvTHjjyZjWhne4TkaFa1MMaPitB9cHPvcKSsxn6DpbkBe7gkVz8SsCyYML41vV3quOIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmx.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NEuQull1lJbqoICbmq1TSXOYJjtM4q8ShE9F4xnOMXU=;
- b=3wqIOzh4zsKSKC2y4aQvq1GEKkJl744qeR96RtLMp0stOQVP/g6pIyb02EHdYcrMlCpafyki3yBF5D4CmD76ANs8EYrRye/BjKTzCMpZZP6Ky3VlSoeG9h01VpdDPLeTKnbtaYnBq/30cJbLCbsAkQUFm2q4xsMm3H0Atv+7nug=
-Received: from BLAPR05CA0032.namprd05.prod.outlook.com (2603:10b6:208:335::13)
- by SJ2PR12MB8112.namprd12.prod.outlook.com (2603:10b6:a03:4f8::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Sat, 3 May
- 2025 00:25:20 +0000
-Received: from BL6PEPF00020E66.namprd04.prod.outlook.com
- (2603:10b6:208:335:cafe::94) by BLAPR05CA0032.outlook.office365.com
- (2603:10b6:208:335::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.12 via Frontend Transport; Sat,
- 3 May 2025 00:25:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF00020E66.mail.protection.outlook.com (10.167.249.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Sat, 3 May 2025 00:25:19 +0000
-Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 2 May 2025 19:25:18 -0500
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <W_Armin@gmx.de>, <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>,
-	<mario.limonciello@amd.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<benjamin.chan@amd.com>, <bin.du@amd.com>, <gjorgji.rosikopulos@amd.com>,
-	<king.li@amd.com>, <dantony@amd.com>, Pratap Nirujogi
-	<pratap.nirujogi@amd.com>
-Subject: [PATCH v10] platform/x86: Add AMD ISP platform config for OV05C10
-Date: Fri, 2 May 2025 20:24:01 -0400
-Message-ID: <20250503002448.3753937-1-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DNghIuaS"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so277449366b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746232078; x=1746836878; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
+        b=DNghIuaS//ao7zg4E4bOUfZFfnmVv244bA8LHl0nMILlEc04NXNPtUhhD30uQObJIr
+         kJDLufVuQOxX0YFP242/TIJfA1UqgsCVdMIIvXgYdwJ2vAyizsSJihHzZCyiqmIgAswz
+         3Si5eyGU2mpGCkHkN6sBCqNOmb9IZz8HHi+mU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746232078; x=1746836878;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SaX79mBWYN1pFOTN8Dl1qaA/CePLGz8VEzgUO+DZmtI=;
+        b=UO9Yreuikof7VUAouNKSBxyBPFnJSDpeN0MpdSQ5cR26Ug3tUb2IqnEo3Coi1UFHRp
+         w79mu/M4ki+TTHs5ktTrgnGtUESyMojUBIVk1CCKZjo+7F63fiU2cnFD+xI4FodrBR6L
+         8QhFyZjss6n8DXcIz2obV2BlTRutoXopSV2giN0t6op3Ev8oJhoBlMv9dEtFxT1H6Cvh
+         121Syqh5+j1dr4+mY6/eWjmiJwheAZnVs32HMWhX/WvAJo9jiDFfo/apHFxbohrkIuNU
+         B7fWRLgE52aK/syNBgXtJ2faJftqNvUpTuT0YEnQVgezDoCwLIB4ZhQcdXxwpTShGOpr
+         TrsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHfXVbYADmto6MbTK1sSv8lwNTt20cku/7UNSxkvfANxrmY8CJvaqalfaxVbJWYc7ankk2swBHJGbxa1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG9LARXad81n/Srym0fbxM0vYsYHkUd2t6lLvi2LG0ZQc461AZ
+	WGH6UG2Q2VQvLWwwzoZ0pBO/g5Yz5ar6Kvu4uq15OwNohJh7EF8LJiA9QCd+2jTNtkVMtCsJsIV
+	YIIAcDg==
+X-Gm-Gg: ASbGncuQNq98g4blAS9ZpGKVGMTHX4gtK4h/XxgEdE5+ytJjdsX4ce5Z+4ZsxI4DhdK
+	WZyQU+n0fMZHHxNTT3WMeutaBFdW60cEYwJPImTTFJX3UehMfXln47XIwMV9B2+IIpCdVA7IXdC
+	N1jJFowQuse5mjxvLgeh+UT79YnLCvIJKKFudO94a7rdsAwE+UiHN/cGEVucIfZWN/BBq2l8WRi
+	W4lUFpDH8Zqvbkca+2DR+v469wijbwALhg12QLDr5/Q4hnMuaptTktKeHQePcWurTDLpjY3eEkj
+	MrRIUDENN6K/Qbyl6rw0FGKgrHP82HNI+A3jgkx+vFmJySAydw6a6E071d14Z3TDYg+QYU8Xt6J
+	Nt09EYs0JHjtMmh8=
+X-Google-Smtp-Source: AGHT+IEdWF/ywnU3RQsmVBpiflYDC/D2j1QWSQhW8c4q4R4TX12vXaHyBCPlOGR1w3C5tgcKTO/4RA==
+X-Received: by 2002:a17:907:9904:b0:ac6:f6e2:7703 with SMTP id a640c23a62f3a-ad17ad3aac1mr343941466b.8.1746232078119;
+        Fri, 02 May 2025 17:27:58 -0700 (PDT)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777c8bbesm1965316a12.22.2025.05.02.17.27.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 17:27:57 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso3844307a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 17:27:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX8skmjnSCTFAwi0VsNopcSACvVkkCb3YHi1n7NrpZxdvJ4e4gyOZyqinVsLm9ekxJUmw2naBNr9mn96Xo=@vger.kernel.org
+X-Received: by 2002:a05:6402:5193:b0:5f6:2758:149c with SMTP id
+ 4fb4d7f45d1cf-5fa78012829mr4374591a12.10.1746232076465; Fri, 02 May 2025
+ 17:27:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E66:EE_|SJ2PR12MB8112:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84c2c10b-ab63-4262-fdcb-08dd89d8fc2b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|30052699003|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iimoNXL7Hmg/pBHJjHWbmGn2NedjvxbDYjKfm7bMvMh4O4mvpUtvqr6DLhvT?=
- =?us-ascii?Q?YYqcO+wpH4X1uD5gDSsbW0swCvhzwasEQTLdBD5Ka86DLz6UAfMcUY6LblkR?=
- =?us-ascii?Q?U0ZP3efmnVynqX+LKHhHVRPaqqyeHSlM368ztesRGQhPksLlPLOqPfQ9E8ls?=
- =?us-ascii?Q?d25ntIoE5R2Z305jWGsOGAK/uoR41uP/1zLhy2riC3IUvPckxR/XSUW2auzb?=
- =?us-ascii?Q?ldFzQo9QjY8f3IAo8wBl8F6INvstKyJnDHawPJWlZfkhbQe7QwbSvphBxG5F?=
- =?us-ascii?Q?lcxiXUEpHyu0L/k0GLfex/ipkvl03XQocKRmZq7vo7/xYBSQLHOmQhkzw4ry?=
- =?us-ascii?Q?9yhfnjr8mc/Uhy0qGf+ksPhlXY6uyP6NOME71ePKv7NWfJ4WJq6RGf1z1Pi9?=
- =?us-ascii?Q?Xi8pbDWlhPVr1bvgP2HU6nbyL7aF4onyHIiu1ilKapF74CBAemth7OTlMyhv?=
- =?us-ascii?Q?uIRgKo5/asN+QQmt5f1AtuvrGvr/9aGgZ1fuX5ji0UPEjoi/6AE+ucKFjb79?=
- =?us-ascii?Q?De8IntNC4NBb2AvlGEBcrQi0+OuHjkiIubdDSTMNgeNEWiEVjxFwx/eSl9OV?=
- =?us-ascii?Q?k+2q6sdRNwBKO5nsJ9cs3Le5+8vxhS5VfMvt75H62E9zwDGfa1VKTQNDCyjc?=
- =?us-ascii?Q?O45vNFEbLDSoFAhCEo2HESkpmaTU9IhPrJmxWCh2wzXYTssc7F76g1PfPqem?=
- =?us-ascii?Q?8D/QEcn4Mfk0R7SV3eT2O5UbtqIPt5umNSvIow+Gip6amjdW9OoaDYSWRlw8?=
- =?us-ascii?Q?nRFXYbZZuDrBdkt7EF9zZJIVs0hnZaGMFrmC9mQesqEohpPoaFBUGNcCCRUs?=
- =?us-ascii?Q?PpdZBkm0lzsthPRlS+USllYTTVvPHUim3V6pfJ9nRPsrOjUnBiE4bHpMe0nC?=
- =?us-ascii?Q?0cjDG2M9Rk5HAYIQf2DBVxL0OJnEM37SOri67WdkXGDK0CdgclQrMagoMlAn?=
- =?us-ascii?Q?BvJi20rcr9I6LxBUqp+pKR/8oOfeEkq9cdh3bT4/8ZLjpbjwK66BD588ElJq?=
- =?us-ascii?Q?ywNrCs8+4EsV2K5NTsdEl4Cdj7gCRbHfYQuPSdXGlYs2u0Egoiq2qSrF7shN?=
- =?us-ascii?Q?Rc+2vMLSgHzM8+LvpOUBAlhHsA8dl+tTPd5391DOlzSDTbo/nI6HJ1cRuLsw?=
- =?us-ascii?Q?gXlz/AjtW8M/ir5NzxyepGJN6sbKJU3bck0JpfYKjeoZ+N/+VaSmS1xIcQ3v?=
- =?us-ascii?Q?/n0z6HVlv1iMVvqBBCyqSKUkGduWQ1MxFxZFpEZj1d5LTv7TrD/ptZxa8v/4?=
- =?us-ascii?Q?KSW2AL+xerFN5hhQtvFP2GJHkZDhxKvFP6BHvYa/II56OqC30ajifmsVgOMT?=
- =?us-ascii?Q?A2CJGC+GsRW4MB+UjvB2FMfGgF1yGZ+AJdbkMDQicjWfkl5yULIEd5Z7kp3i?=
- =?us-ascii?Q?jlW1f01dRkOb+X98fQKpY00ENlScriK6DcPhdS+MSxUsV+IwTqm1yrpvB41H?=
- =?us-ascii?Q?xkQNOhRNwCVohzSHzeOhZnsMBk5Ln0+1N11oF+0y24dFVcb6OtYTOTxHeZXo?=
- =?us-ascii?Q?wK8KjYOOzKOo2SsG0gZvKlqC4kDcJYs1ZSPu?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(30052699003)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2025 00:25:19.2697
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84c2c10b-ab63-4262-fdcb-08dd89d8fc2b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E66.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8112
+References: <20250502234818.1744432-1-dan.j.williams@intel.com>
+In-Reply-To: <20250502234818.1744432-1-dan.j.williams@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 2 May 2025 17:27:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
+X-Gm-Features: ATxdqUH-LQIXIc6u6p011Nom2TN3yeXoWHvmWULI7dubRZjGAyvNHQxUJyyztQA
+Message-ID: <CAHk-=wgRPDGvofj1PU=NemF6iFu308pFZ=w5P+sQyOMGd978fA@mail.gmail.com>
+Subject: Re: [RFC PATCH] cleanup: Introduce "acquire"/"drop" cleanup helpers
+ for interruptible locks
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: peterz@infradead.org, David Lechner <dlechner@baylibre.com>, 
+	"Fabio M. De Francesco" <fabio.maria.de.francesco@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-ISP device specific configuration is not available in ACPI. Add
-swnode graph to configure the missing device properties for the
-OV05C10 camera device supported on amdisp platform.
+"
 
-Add support to create i2c-client dynamically when amdisp i2c
-adapter is available.
+On Fri, 2 May 2025 at 16:48, Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> +       struct mutex *lock __drop(mutex_unlock) =
+> +               mutex_intr_acquire(&mds->poison.lock);
+> +       if (IS_ERR(lock))
+> +               return PTR_ERR(lock);
 
-Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
----
-Changes v9 -> v10:
+I do think you'd want to have some macro to make this less full of
+random boiler plate.
 
-* Remove i2c_board_info->addr check in instantiate_isp_i2c_client().
-* Update mutex protection regions as suggested in the review feedback.
-* Switch to devm_mutex_init() and skip mutex_destroy calls.
+I'd like to point out that when I said that thing you quote:
 
- drivers/platform/x86/amd/Kconfig    |  11 ++
- drivers/platform/x86/amd/Makefile   |   1 +
- drivers/platform/x86/amd/amd_isp4.c | 277 ++++++++++++++++++++++++++++
- 3 files changed, 289 insertions(+)
- create mode 100644 drivers/platform/x86/amd/amd_isp4.c
+    "You should aim for a nice
 
-diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-index c3e086ea64fc..152a68a470e8 100644
---- a/drivers/platform/x86/amd/Kconfig
-+++ b/drivers/platform/x86/amd/Kconfig
-@@ -32,3 +32,14 @@ config AMD_WBRF
- 
- 	  This mechanism will only be activated on platforms that advertise a
- 	  need for it.
-+
-+config AMD_ISP_PLATFORM
-+	tristate "AMD ISP4 platform driver"
-+	depends on I2C && X86_64 && ACPI
-+	help
-+	  Platform driver for AMD platforms containing image signal processor
-+	  gen 4. Provides camera sensor module board information to allow
-+	  sensor and V4L drivers to work properly.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called amd_isp4.
-diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-index c6c40bdcbded..b0e284b5d497 100644
---- a/drivers/platform/x86/amd/Makefile
-+++ b/drivers/platform/x86/amd/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
- obj-$(CONFIG_AMD_HSMP)		+= hsmp/
- obj-$(CONFIG_AMD_PMF)		+= pmf/
- obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-+obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
-diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-new file mode 100644
-index 000000000000..336ac3da2041
---- /dev/null
-+++ b/drivers/platform/x86/amd/amd_isp4.c
-@@ -0,0 +1,277 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * AMD ISP platform driver for sensor i2-client instantiation
-+ *
-+ * Copyright 2025 Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/units.h>
-+
-+#define AMDISP_OV05C10_I2C_ADDR		0x10
-+#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
-+#define AMDISP_OV05C10_HID		"OMNI5C10"
-+#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
-+#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
-+
-+/*
-+ * AMD ISP platform definition to configure the device properties
-+ * missing in the ACPI table.
-+ */
-+struct amdisp_platform {
-+	struct i2c_board_info board_info;
-+	struct notifier_block i2c_nb;
-+	struct i2c_client *i2c_dev;
-+	struct mutex lock; /* protects i2c client creation */
-+};
-+
-+/* Top-level OV05C10 camera node property table */
-+static const struct property_entry ov05c10_camera_props[] = {
-+	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-+	{ }
-+};
-+
-+/* Root AMD ISP OV05C10 camera node definition */
-+static const struct software_node camera_node = {
-+	.name = AMDISP_OV05C10_HID,
-+	.properties = ov05c10_camera_props,
-+};
-+
-+/*
-+ * AMD ISP OV05C10 Ports node definition. No properties defined for
-+ * ports node for OV05C10.
-+ */
-+static const struct software_node ports = {
-+	.name = "ports",
-+	.parent = &camera_node,
-+};
-+
-+/*
-+ * AMD ISP OV05C10 Port node definition. No properties defined for
-+ * port node for OV05C10.
-+ */
-+static const struct software_node port_node = {
-+	.name = "port@",
-+	.parent = &ports,
-+};
-+
-+/*
-+ * Remote endpoint AMD ISP node definition. No properties defined for
-+ * remote endpoint node for OV05C10.
-+ */
-+static const struct software_node remote_ep_isp_node = {
-+	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
-+};
-+
-+/*
-+ * Remote endpoint reference for isp node included in the
-+ * OV05C10 endpoint.
-+ */
-+static const struct software_node_ref_args ov05c10_refs[] = {
-+	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
-+};
-+
-+/* OV05C supports one single link frequency */
-+static const u64 ov05c10_link_freqs[] = {
-+	925 * HZ_PER_MHZ,
-+};
-+
-+/* OV05C supports only 2-lane configuration */
-+static const u32 ov05c10_data_lanes[] = {
-+	1,
-+	2,
-+};
-+
-+/* OV05C10 endpoint node properties table */
-+static const struct property_entry ov05c10_endpoint_props[] = {
-+	PROPERTY_ENTRY_U32("bus-type", 4),
-+	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
-+				     ARRAY_SIZE(ov05c10_data_lanes)),
-+	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
-+				     ARRAY_SIZE(ov05c10_link_freqs)),
-+	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
-+	{ }
-+};
-+
-+/* AMD ISP endpoint node definition */
-+static const struct software_node endpoint_node = {
-+	.name = "endpoint",
-+	.parent = &port_node,
-+	.properties = ov05c10_endpoint_props,
-+};
-+
-+/*
-+ * AMD ISP swnode graph uses 5 nodes and also its relationship is
-+ * fixed to align with the structure that v4l2 expects for successful
-+ * endpoint fwnode parsing.
-+ *
-+ * It is only the node property_entries that will vary for each platform
-+ * supporting different sensor modules.
-+ */
-+#define NUM_SW_NODES 5
-+
-+static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
-+	&camera_node,
-+	&ports,
-+	&port_node,
-+	&endpoint_node,
-+	&remote_ep_isp_node,
-+	NULL
-+};
-+
-+static const struct acpi_device_id amdisp_sensor_ids[] = {
-+	{ AMDISP_OV05C10_HID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-+
-+static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
-+{
-+	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-+}
-+
-+static void instantiate_isp_i2c_client(struct amdisp_platform *ov05c10, struct i2c_adapter *adap)
-+{
-+	struct i2c_board_info *info = &ov05c10->board_info;
-+	struct i2c_client *i2c_dev;
-+
-+	guard(mutex)(&ov05c10->lock);
-+
-+	if (ov05c10->i2c_dev)
-+		return;
-+
-+	i2c_dev = i2c_new_client_device(adap, info);
-+	if (IS_ERR(i2c_dev)) {
-+		dev_err(&adap->dev, "error %pe registering isp i2c_client\n", i2c_dev);
-+		return;
-+	}
-+	ov05c10->i2c_dev = i2c_dev;
-+}
-+
-+static int isp_i2c_bus_notify(struct notifier_block *nb,
-+			      unsigned long action, void *data)
-+{
-+	struct amdisp_platform *ov05c10 = container_of(nb, struct amdisp_platform, i2c_nb);
-+	struct device *dev = data;
-+	struct i2c_client *client;
-+	struct i2c_adapter *adap;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		adap = i2c_verify_adapter(dev);
-+		if (!adap)
-+			break;
-+		if (is_isp_i2c_adapter(adap))
-+			instantiate_isp_i2c_client(ov05c10, adap);
-+		break;
-+	case BUS_NOTIFY_REMOVED_DEVICE:
-+		client = i2c_verify_client(dev);
-+		if (!client)
-+			break;
-+
-+		scoped_guard(mutex, &ov05c10->lock) {
-+			if (ov05c10->i2c_dev == client) {
-+				dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
-+				ov05c10->i2c_dev = NULL;
-+			}
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct amdisp_platform *prepare_amdisp_platform(struct device *dev)
-+{
-+	struct amdisp_platform *isp_ov05c10;
-+	int ret;
-+
-+	isp_ov05c10 = devm_kzalloc(dev, sizeof(*isp_ov05c10), GFP_KERNEL);
-+	if (!isp_ov05c10)
-+		return ERR_PTR(-ENOMEM);
-+
-+	devm_mutex_init(dev, &isp_ov05c10->lock);
-+	isp_ov05c10->board_info.dev_name = "ov05c10";
-+	strscpy(isp_ov05c10->board_info.type, "ov05c10", I2C_NAME_SIZE);
-+	isp_ov05c10->board_info.addr = AMDISP_OV05C10_I2C_ADDR;
-+
-+	ret = software_node_register_node_group(ov05c10_nodes);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	isp_ov05c10->board_info.swnode = ov05c10_nodes[0];
-+
-+	return isp_ov05c10;
-+}
-+
-+static int try_to_instantiate_i2c_client(struct device *dev, void *data)
-+{
-+	struct amdisp_platform *ov05c10 = (struct amdisp_platform *)data;
-+	struct i2c_adapter *adap = i2c_verify_adapter(dev);
-+
-+	if (!ov05c10 || !adap)
-+		return 0;
-+	if (!adap->owner)
-+		return 0;
-+
-+	if (is_isp_i2c_adapter(adap))
-+		instantiate_isp_i2c_client(ov05c10, adap);
-+
-+	return 0;
-+}
-+
-+static int amd_isp_probe(struct platform_device *pdev)
-+{
-+	struct amdisp_platform *ov05c10;
-+	int ret;
-+
-+	ov05c10 = prepare_amdisp_platform(&pdev->dev);
-+	if (IS_ERR(ov05c10))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
-+				     "failed to prepare AMD ISP platform fwnode\n");
-+
-+	ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
-+	ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-+	if (ret)
-+		goto error_unregister_sw_node;
-+
-+	/* check if adapter is already registered and create i2c client instance */
-+	i2c_for_each_dev((void *)ov05c10, try_to_instantiate_i2c_client);
-+
-+	platform_set_drvdata(pdev, ov05c10);
-+	return 0;
-+
-+error_unregister_sw_node:
-+	software_node_unregister_node_group(ov05c10_nodes);
-+	return ret;
-+}
-+
-+static void amd_isp_remove(struct platform_device *pdev)
-+{
-+	struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
-+
-+	bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-+	i2c_unregister_device(ov05c10->i2c_dev);
-+	software_node_unregister_node_group(ov05c10_nodes);
-+}
-+
-+static struct platform_driver amd_isp_platform_driver = {
-+	.driver	= {
-+		.name			= AMD_ISP_PLAT_DRV_NAME,
-+		.acpi_match_table	= amdisp_sensor_ids,
-+	},
-+	.probe	= amd_isp_probe,
-+	.remove	= amd_isp_remove,
-+};
-+
-+module_platform_driver(amd_isp_platform_driver);
-+
-+MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-+MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-+MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+     struct rw_semaphore *struct rw_semaphore *exec_update_lock
+         __cleanup(release_exec_update_lock) = get_exec_update_lock(task);"
 
+that comment was fairly early in the whole cleanup.h process, and
+"cond_guard()" - which then turned out to not work very well - was
+actually a "let's try to clean that up" thing.
+
+And the real issues have been that people who wanted this actually had
+truly ugly code that they wanted to mindlessly try to rewrite to use
+cleanup. And in the process it actually just got worse.
+
+So I don't think you should take that early off-the-cuff remark of
+mine as some kind of solid advice.
+
+I don't know what the best solution is, but it's almost certainly not
+this "write out a lot of boiler plate".
+
+Now, the two things that made me suggest that was not that the code
+was pretty, but
+
+ (a) having an explicit cleanup syntax that matches the initial assignment
+
+     ie that "__drop(mutex_unlock)" pairs with mutex_intr_acquire()"
+
+and
+
+ (b) having those two things *together* in the same place
+
+where that (a) was to avoid having arbitrary crazy naming that made no
+sense ("__free()" of a lock that you didn't allocate, but that you
+took? No thank you), and (b) was to avoid having that situation where
+you first assign NULL just because you're going to do the locking
+elsewhere, and the lock release function is described in a totally
+different place from where we acquire it.
+
+So the goal of "cond_guard()" was to have those things together, but
+obviously it just then ended up being very messy.
+
+Your patch may end up fixing some of that failure of cond_guard(), but
+at the same time I note that your patch is horribly broken. Look at
+your change to drivers/cxl/core/mbox.c: you made it use
+
++       struct mutex *lock __drop(mutex_unlock) =
++               mutex_intr_acquire(&mds->poison.lock);
+
+but then you didn't remove the existing unlocking, so that function still has
+
+        mutex_unlock(&mds->poison.lock);
+
+at the end. So I think the patch shows that it's really easy to just
+mess up the conversion, and that this is certainly not a way to "fix"
+things.
+
+               Linus
