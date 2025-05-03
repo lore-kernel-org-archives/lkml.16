@@ -1,76 +1,82 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A421991CA;
-	Sat,  3 May 2025 05:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68B718EFD1
+	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 05:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746250415; cv=none; b=devGkU5An0ODFNtHkKn2LDtfdH3g1+sWUEVFY4lYvoxFp/lbdu2UpzI+1fyuk16p12OqYIUIaboPGMnRvgzv7gXlR3lhIRiG2bDI/2DY5ObMBMBFFtUx6WeNiP3xzAv+uzPeXKUdorgDiSODvEfYNmJvXVVKUGydO31Lp/pPII4=
+	t=1746250862; cv=none; b=NzNLgftncW7nYM9P/9uAF1cTpZCaMcMQETD2TxBWzI9Ww1wZuSMd5p01bJLhTF8WTMySXXE5zMFvb/xl5rSoJ4nFEp5VohiU2v8YE2qrHwXvHo7oTPYQwpxqyW0V9Odg88a8u+9goWw+fEI3lhH6WdK7KHVo1nA+/iLKS9FKdDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746250415; c=relaxed/simple;
-	bh=pnnwH9h6jCuQbO2HsVRJ6QZdDhPkUem1LVnM6G2azYs=;
+	s=arc-20240116; t=1746250862; c=relaxed/simple;
+	bh=XwDZf4eeNIxR6Etn6KW0cde7H9TfDfcPipMQlSc8YJM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dyFHXFQa1YqOy259P5CzMuL34MxvH5XSmdkYe26cnZ3WLUJxYJ0v/m6Ieos/kFV4kwXciy9+/wsSGb+mNA0sO147wU8nQc13g+HYi5yqIFX19g+vC6EO8Vf7hl1AAaKjmFQb4a/9vtOj3v0lxdvv0Ynrkdyen1/jvO+gDKZHtBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGiLcrhe; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=heTlfRoeqp/aFOuLv4DmuRJ61sVUqT3phR7gHqhOmgva0PynvDnybJ1bsb3ZTdcqwHfUX+N1YKQeU5/3skXsDCKVSwWDlmAkmwpPOyzpZoOduPsNeaZjVtglm63V8pa2t6NE0fw9/VxT56wX/SfoQBnPks3zuHb8pLc19cxdRaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QdcozqtV; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGiLcrhe"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af548cb1f83so2780468a12.3;
-        Fri, 02 May 2025 22:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746250413; x=1746855213; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rGVr7pzveIQVBJcdkyJ5vlZ9pdt4TQLzihESk8p7K20=;
-        b=XGiLcrhett2IOxw3rU25f42FschSAEPzEs8FW1xgI3e6iNbPeHbI+3YJypPjbvzxfe
-         jISo6QzybbmMGZ+Spsbc7+LQwxHEuZ8TTrwKQnIXkDk8hjNL0XxOAql+Om6Do4T0/+/a
-         6IrH7L9zf5LTerBJFrnlWbaWffIk8ZbIEhAxziQdAO/ZpA9adqwzwktmmMKSXWYpt2dh
-         KbNb8C43Lpsk92iWToOuDvcChUZsctAoCSSEdYm84D/17JATz/J7Gs6HfXtGFOBrjf5t
-         Z332xkz1P32bseBC/7ojqkIKzSjbdUlDRb7na7ivocjmFyOeIBJwhDDKCfy/2qQn+Oj4
-         yJAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746250413; x=1746855213;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rGVr7pzveIQVBJcdkyJ5vlZ9pdt4TQLzihESk8p7K20=;
-        b=KBfAwqYcbwDzNBVxDlBMKQAShDMewnZbgVofQmdTppyTYHZ7LlDgjRYTwcBJ5dA45c
-         bYLYLZTHttYyKSKC8Aog1WKxIg9zhXeUVKnv0Lr3Wq5AGprg50jAFlt2aQdgosM81XOw
-         equEEC2nHnyV3HXo3Oi66q6UN3PnRb/k0IUDsfFgB3/inBrqr5l2h6HagGjA+ILAHjKD
-         quF7dESoY2cCZx44nuAv0LxMsRTPVIWMfGT7WqHZZnkHLsWYAFue/5s7HUD57aOwVOP1
-         Ttn9GfZUpxpou6GYtG2br7tpMIWWEAX8i8tlgoymdTsAuAMTW+/Snq+gtBC8LCBD8F7a
-         UZ/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBiCkr3M8hoB6Yx8DgooUkWXAib4XeH/QM5U7J1nNwSq61pEEFDDB07yRHbvtbW1tQsuyICVR3pzp9R9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXkN20oMl90+5eQXir2snKB7YeBum/mR+cDyzOygEtPtoVzCWA
-	lYQoTBmA8nOoOtAxl9PswVDm8kuDnU+u0cqCeQxO5ypxEIl1CoKA
-X-Gm-Gg: ASbGncuUc6OWFQNX3GHY9T79gNalgFUlNKHSsvP0jzb+dQYjC4Ps9FDswSm/WlVDbei
-	ShFiNItb54bhLd7Q/yaQKd7YoSUkUB66IMXrma5iwzLN8cZgPU2+OzWnpxVI5zkEBWu3oEdjFsR
-	ustklV6Hw6A9CMjUrGbnimoHsrZzSsa4l9H17Xfdiw//IJFTzs18F2A9Z61OSuVaYaQaxIebYek
-	Db4wDE2InmCOz/XEI04GAYYEclISqaJQgngF2i9YcJfpjejLNnqw5h3yKFhJRPwpUEyG1NjJec5
-	oIIV1OR99SqGomGGk5I13HT1eWhv2RIHdNgVqfI7YpDr7M1ic3GBOk8wgD+n/kWPyN+4T5+f85J
-	mMZiScEKHxJ/R3GY=
-X-Google-Smtp-Source: AGHT+IFzpioxSF0MLPGkbM656c3DDcsrGVrt7fACDHLnvFWrBI30kRDVoDO6TTP4zQYg4OTZ6XXecA==
-X-Received: by 2002:a05:6a20:7807:b0:20e:4f4b:944a with SMTP id adf61e73a8af0-20e4f4b94ccmr1021921637.32.1746250412894;
-        Fri, 02 May 2025 22:33:32 -0700 (PDT)
-Received: from carrot.. (i223-218-150-204.s42.a014.ap.plala.or.jp. [223.218.150.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b5607csm1752418a12.23.2025.05.02.22.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 22:33:32 -0700 (PDT)
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-nilfs@vger.kernel.org,
-	syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com,
-	syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nilfs2: fix deadlock warnings caused by lock dependency in init_nilfs()
-Date: Sat,  3 May 2025 14:33:14 +0900
-Message-ID: <20250503053327.12294-1-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <68118a52.050a0220.39e3a1.0cab.GAE@google.com>
-References: <68118a52.050a0220.39e3a1.0cab.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QdcozqtV"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 543303JC007380;
+	Sat, 3 May 2025 05:40:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=YBuG9iHpO49vJs0ff
+	6cHvwnAQWzm8aA82ZPebpBqUp0=; b=QdcozqtVhkjka+TpNpxmWSFGkDPLw42r2
+	HM6peNtzfLnibKERYEyTsgbpOPmGNr/bkvuox1Qw4T/yKNrvzNMukD/rNV8yOtof
+	fOWs9LCOuR4/B6ZKfO8k67Ll9lkkvx578uuDj4EZzmflwSRArOPGT8+Bhze+hUbg
+	BYDJ02UYBvPsHVwdQUqeF2pPCXVkNU1PhUzZCXO0auXg78bWMVWP5wO7BH8s1PNL
+	YN43/AbF4Nb5Zm1aFSIN6HopscstB8PV927OlBbon3p3B+TeeEcEIl0vw3A796as
+	jNAzjpk+H0QlWxs1zRZq0QSUugDtrwsiA1BhEcsvDMQOtsh1LhIIA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46daty0abt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 05:40:39 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5435ecOn016737;
+	Sat, 3 May 2025 05:40:38 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46daty0abr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 05:40:38 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5431I55G024662;
+	Sat, 3 May 2025 05:40:37 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 469c1mms5m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 03 May 2025 05:40:37 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5435ea2036503828
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 3 May 2025 05:40:36 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2735320040;
+	Sat,  3 May 2025 05:40:36 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AA9302004F;
+	Sat,  3 May 2025 05:40:32 +0000 (GMT)
+Received: from li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com.com (unknown [9.124.222.98])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  3 May 2025 05:40:32 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v3 2/3] driver/base: remove register_mem_block_under_node_early()
+Date: Sat,  3 May 2025 11:10:13 +0530
+Message-ID: <871e79e4583fcf5f28ecbb37f28297098f1ac748.1746250339.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
+References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,72 +84,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=fKc53Yae c=1 sm=1 tr=0 ts=6815ac57 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=64vTnB0G6KJa_LJvZe8A:9
+X-Proofpoint-GUID: FVnB2AsHyshvjv0CBXGw5-inUP-IRfxE
+X-Proofpoint-ORIG-GUID: nv-RFAkYlDNglGJ2En-dlGUOLwH8xdec
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAzMDA0NSBTYWx0ZWRfX0ElWrtPn4Lai 0YrFCkOj9fVAad4nSnbWMe/9ClT8IERCy7IBiLMrvDpQXLnhp3NvR82Az+e9AuvN4a+QK+X7Tw3 sfNrpMqhqzMExB5IXk+sy/Ko09IMHUU91HMyBDgW6KXm9pvnrhGp0J+tae1LXkB8jMMUDbWbI6x
+ d7/u6DmRNsxIFabIM/FtQXZY3gBuElYWLF369GMzXuyoxPYjs7lqsB4ASBbOJXjt9szwL4WlPKp vaN3J414Dy5OnLOhxEzQL75VthxcHxRn5CpkbkNxuGYUIPdUFD64L8lBjHm6ZJtjRBXidehBM3D nAmWbgN4X7JIWAHO3bezYqVKFfCoQhIrrZXZhBreYeoZ00uf7Lk8fUceUPp7EO0EpxEAEBW9qox
+ 0ixCEdVyBoc1nbi3xLbO/zPEozxkAgqNNyuxl7YaIWcW/XS5hVVKWqwxeC30Gxyb2vLePaUJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-03_03,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505030045
 
-After commit c0e473a0d226 ("block: fix race between set_blocksize and
-read paths") was merged, set_blocksize() called by sb_set_blocksize()
-now locks the inode of the backing device file.  As a result of this
-change, syzbot started reporting deadlock warnings due to a circular
-dependency involving the semaphore "ns_sem" of the nilfs object, the
-inode lock of the backing device file, and the locks that this inode
-lock is transitively dependent on.
+The function register_mem_block_under_node_early() is no longer used,
+as register_memory_blocks_under_node_early() now handles memory block
+registration during early boot.
 
-This is caused by a new lock dependency added by the above change,
-since init_nilfs() calls sb_set_blocksize() in the lock section of
-"ns_sem".  However, these warnings are false positives because
-init_nilfs() is called in the early stage of the mount operation and
-the filesystem has not yet started.
+Removed register_mem_block_under_node_early() and get_nid_for_pfn(),
+the latter was only used by the former.
 
-The reason why "ns_sem" is locked in init_nilfs() was to avoid a race
-condition in nilfs_fill_super() caused by sharing a nilfs object among
-multiple filesystem instances (super block structures) in the early
-implementation.  However, nilfs objects and super block structures
-have long ago become one-to-one, and there is no longer any need to
-use the semaphore there.
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 
-So, fix this issue by removing the use of the semaphore "ns_sem" in
-init_nilfs().
-
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Reported-by: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=00f7f5b884b117ee6773
-Tested-by: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
-Reported-by: syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f30591e72bfc24d4715b
-Tested-by: syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com
-Fixes: c0e473a0d226 ("block: fix race between set_blocksize and read paths")
 ---
-Hi Andrew, please apply this as a regression fix.
+v2->v3
 
-This resolves some deadlock warnings reported by syzbot since a change
-in 6.15-rc4.
+Removed temporary variable(fun) and passing
+register_mem_block_under_node_hotplug directly to walk_memory_blocks.
 
-Thanks,
-Ryusuke Konishi
+v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+---
+ drivers/base/node.c | 58 +--------------------------------------------
+ 1 file changed, 1 insertion(+), 57 deletions(-)
 
- fs/nilfs2/the_nilfs.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/fs/nilfs2/the_nilfs.c b/fs/nilfs2/the_nilfs.c
-index cb01ea81724d..d0bcf744c553 100644
---- a/fs/nilfs2/the_nilfs.c
-+++ b/fs/nilfs2/the_nilfs.c
-@@ -705,8 +705,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
- 	int blocksize;
- 	int err;
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 0f8a4645b26c..948392b477ea 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -748,15 +748,6 @@ int unregister_cpu_under_node(unsigned int cpu, unsigned int nid)
+ }
  
--	down_write(&nilfs->ns_sem);
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-static int __ref get_nid_for_pfn(unsigned long pfn)
+-{
+-#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+-	if (system_state < SYSTEM_RUNNING)
+-		return early_pfn_to_nid(pfn);
+-#endif
+-	return pfn_to_nid(pfn);
+-}
 -
- 	blocksize = sb_min_blocksize(sb, NILFS_MIN_BLOCK_SIZE);
- 	if (!blocksize) {
- 		nilfs_err(sb, "unable to set blocksize");
-@@ -779,7 +777,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
- 	set_nilfs_init(nilfs);
- 	err = 0;
-  out:
--	up_write(&nilfs->ns_sem);
- 	return err;
+ static void do_register_memory_block_under_node(int nid,
+ 						struct memory_block *mem_blk,
+ 						enum meminit_context context)
+@@ -783,46 +774,6 @@ static void do_register_memory_block_under_node(int nid,
+ 				    ret);
+ }
  
-  failed_sbh:
+-/* register memory section under specified node if it spans that node */
+-static int register_mem_block_under_node_early(struct memory_block *mem_blk,
+-					       void *arg)
+-{
+-	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
+-	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
+-	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
+-	int nid = *(int *)arg;
+-	unsigned long pfn;
+-
+-	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
+-		int page_nid;
+-
+-		/*
+-		 * memory block could have several absent sections from start.
+-		 * skip pfn range from absent section
+-		 */
+-		if (!pfn_in_present_section(pfn)) {
+-			pfn = round_down(pfn + PAGES_PER_SECTION,
+-					 PAGES_PER_SECTION) - 1;
+-			continue;
+-		}
+-
+-		/*
+-		 * We need to check if page belongs to nid only at the boot
+-		 * case because node's ranges can be interleaved.
+-		 */
+-		page_nid = get_nid_for_pfn(pfn);
+-		if (page_nid < 0)
+-			continue;
+-		if (page_nid != nid)
+-			continue;
+-
+-		do_register_memory_block_under_node(nid, mem_blk, MEMINIT_EARLY);
+-		return 0;
+-	}
+-	/* mem section does not span the specified node */
+-	return 0;
+-}
+-
+ /*
+  * During hotplug we know that all pages in the memory block belong to the same
+  * node.
+@@ -892,15 +843,8 @@ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+ 				       unsigned long end_pfn,
+ 				       enum meminit_context context)
+ {
+-	walk_memory_blocks_func_t func;
+-
+-	if (context == MEMINIT_HOTPLUG)
+-		func = register_mem_block_under_node_hotplug;
+-	else
+-		func = register_mem_block_under_node_early;
+-
+ 	walk_memory_blocks(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn - start_pfn),
+-			   (void *)&nid, func);
++			   (void *)&nid, register_mem_block_under_node_hotplug);
+ 	return;
+ }
+ #endif /* CONFIG_MEMORY_HOTPLUG */
 -- 
-2.43.0
+2.48.1
 
