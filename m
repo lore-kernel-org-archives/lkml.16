@@ -1,106 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FFB1A704B;
-	Sat,  3 May 2025 16:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37B6156236;
+	Sat,  3 May 2025 16:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746288104; cv=none; b=CRZHnLN9/6uJOyWyhQC4otoYVub9hhHj9vvkykEVc3eAvM+Q048xYgl2I5huXr++sqEUCasBwdoVjPsX0X08iKvXT0SbcvoSoClBY9mZz+NmnSsG5h+yl1oONGYHZvFLv9ERiH2Sq2FkkdGXD/0105S8bK5Vkr17C7VRTX1udBQ=
+	t=1746288584; cv=none; b=QUduvDMQenOMpzv8d7eRc7+xlrZOM3B5AndH4sREt5jgbp8wsfL1F34APN5cjXMDRvWlL2Ahmq+3pPxFCqUVqHUBocNt0fyogQXUMTPC1sTcxbkSXMmsBog0KCxD+DXR9L6lpoQnKR3kxwU5Fq/NWZsE9q9WL1k/RuaL2hVrHwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746288104; c=relaxed/simple;
-	bh=T3xhUt0kg/A3i3GrfehzEXjZkOb3WIjWQfFzVpGNbJY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gJI+UxKkOPm3JC/yeq1CXGHLibsNvfZL37VhkKQ0BS9+yisnjpzzBe8yY3JF2kH89pgzcD68bSiXj0yujoW/1dbi4LLU93YT1DOgXU35z9OBXRANP8nIDN2HAEe8YS6BH5DJuIK9Z/JEcX0uVW4rnW+Z4UWLP3QWhQdGwjslkZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEk5bTkT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746288584; c=relaxed/simple;
+	bh=jrq4vPTyneDMCKioU8U1Yk7Vo+EMEjGhQXFLs/D/VTs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QmwJv6mOVMzK2xxgI7pwyZTY07rewmEcx6z+x00+MBEYz+H1zTg2fx+VO3ykn5wH/1T36xguZ1zBmUe9Dx4RPYDSUEkfkOfxfIYRWNN7hTgwwQVMOhyOa17y4BaGLjwY31xvjPJzYvIS34skTcKCJ3WrWwVpj3WRDi3f0YVui28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ljhpZSAH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEk5bTkT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B1EC4AF0B;
-	Sat,  3 May 2025 16:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746288104;
-	bh=T3xhUt0kg/A3i3GrfehzEXjZkOb3WIjWQfFzVpGNbJY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UEk5bTkTn+Y0ZmB62xIHEGGKmsjExMw0cGKB4xehquY32KIGuw9H0xVJmSffP+pSK
-	 OcGMchWg0ORDIhSaGeg2SIk8+9n5dfmSpaUido0qp3fKGkG102pAX1dMeAeYnsElKL
-	 PUH33MwLkNG3vHwu9LiY11Bwr9pO19mXXpaWyRYLLCnS9x7Cg7JhWJfJBnUFNj5PDp
-	 J9zJTlcQoJ8FtvcHl4g9GT8rsM9gVOwRfqbEaZ65We4U8nDmxpl7SbR89tdpGKRJr/
-	 DD/H9Z35eGcy7JPLwlu0FCmEP8W/uo+y939Obf5smli7z8+XB0A5TJqmOk0deVIUAL
-	 LGGXiu9ngw44g==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db1bc464dso26531951fa.0;
-        Sat, 03 May 2025 09:01:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUe5JFk8yQ8uT/YOZ0yq3ek7GpwZ6Wd56E2xbHlNMpYp0d+W/GMAWRM8UIVkM8XRlXMP1v5Jtmjhiq54IY=@vger.kernel.org, AJvYcCXQBVUDXAT5446QvmwiAeXozaINsRFqpz4XsiCOejqh91wIudYHEQv2ya0nCQV3Eg5Yspqw65MRbLsATcuywkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq0bPIAYHWdshAXs61rHEy1QDYk/8DT18lef4Iw8SYwpNJk3j3
-	Md2iIbuXx+FQlM1/LNSF/De/twacA//EDFM2Qsm3pgwAUsaNCOXSit+5/zF8sEmlAaVRDl45aom
-	tklo5sEgcGvbQXQvCf/Eelq1VErg=
-X-Google-Smtp-Source: AGHT+IE1k2njXlrJVwx5wy0BaMqq8VrYSRX6eObRLAgRA0UXd8FU1sIFugB+B0oEBM4JwiTmry+C9yKYFVlh2fsn1qk=
-X-Received: by 2002:a05:651c:19a5:b0:30b:efa3:b105 with SMTP id
- 38308e7fff4ca-321db694cdamr9994841fa.19.1746288102837; Sat, 03 May 2025
- 09:01:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ljhpZSAH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746288574;
+	bh=jrq4vPTyneDMCKioU8U1Yk7Vo+EMEjGhQXFLs/D/VTs=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ljhpZSAH6dYvmut0LqTm5qrtzlSefwMJ8U07C1aGLlSv7xnBo/UFnQa7iURJbE4OE
+	 ODt5lZzbrezinGOLquWQ6Q4Cpxvfi6SWvEj/P1g1mlIH7lWdR76gKttln81jckRzHY
+	 kBrxwTrYfdBj25xW7cbH3JXugCLdhr42ZM7iAvYTy3b+yOjvnRSmSrHUGUI8tXWGQA
+	 GHVPIGHqN6adawaAbTbtoJUYomh+BcoQj96HMnDs8L9kJDBQ50t9aIEV5Yq499X5XN
+	 CP/lhjlgJ5Oel439sMhQ0jlzpJ4z7Jv17PtD9rV7RXN9rBy9RRnq6rwCbmIBRrBKo3
+	 Ay41LYFap9Bfg==
+Received: from [IPv6:2606:6d00:15:ec4::5ac] (unknown [IPv6:2606:6d00:15:ec4::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F3C5717E03BF;
+	Sat,  3 May 2025 18:09:31 +0200 (CEST)
+Message-ID: <1b204ed7bc63373f52973b96af68e64e24be8cde.camel@collabora.com>
+Subject: Re: [PATCH v3 13/23] media: iris: Send V4L2_BUF_FLAG_ERROR for
+ buffers with 0 filled length
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>, Vikash Garodia	
+ <quic_vgarodia@quicinc.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Mauro Carvalho Chehab	 <mchehab@kernel.org>, Stefan Schmidt
+ <stefan.schmidt@linaro.org>, Hans Verkuil	 <hverkuil@xs4all.nl>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio	 <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov	
+ <dmitry.baryshkov@oss.qualcomm.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, 	linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, 
+	20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org, 
+	20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+Date: Sat, 03 May 2025 12:09:30 -0400
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-13-552158a10a7d@quicinc.com>
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+	 <20250502-qcom-iris-hevc-vp9-v3-13-552158a10a7d@quicinc.com>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426030815.1310875-1-rdunlap@infradead.org>
-In-Reply-To: <20250426030815.1310875-1-rdunlap@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 4 May 2025 01:01:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASww7Zyeg7G0R9US-_MWtFmBF-P5JiwZkgGBBrfoivi5A@mail.gmail.com>
-X-Gm-Features: ATxdqUFVz1PuN6NjNtYZqjGYBrlw_r1_IMNCejsbhZmx44ZvOo_z9HHNtUCST4I
-Message-ID: <CAK7LNASww7Zyeg7G0R9US-_MWtFmBF-P5JiwZkgGBBrfoivi5A@mail.gmail.com>
-Subject: Re: [PATCH] usr/include: openrisc: don't HDRTEST bpf_perf_event.h
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	linux-openrisc@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 26, 2025 at 12:08=E2=80=AFPM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
->
-> Since openrisc does not support PERF_EVENTS, omit the HDRTEST of
-> bpf_perf_event.h for arch/openrisc/.
->
-> Fixes a build error:
-> usr/include/linux/bpf_perf_event.h:14:28: error: field 'regs' has incompl=
-ete type
+Hi Dikshita,
 
+Le vendredi 02 mai 2025 à 00:43 +0530, Dikshita Agarwal a écrit :
+> Firmware sends buffers with 0 filled length which needs to be dropped,
+> to achieve the same, add V4L2_BUF_FLAG_ERROR to such buffers.
+> Also make sure:
+> - These 0 length buffers are not returned as result of flush.
+> - Its not a buffer with LAST flag enabled which will also have 0 filled
+>   length.
 
+This message is quite vague, is this about capture or output buffers ?
+If its output buffers that don't produce capture, I don't see why they
+have to be flagged as errors, or why the payload size matter. Then, if
+its about assigned capture buffers that did not get used in the end, you
+should put them back in the queue instead of returning them to user
+space.
 
-Where can I get openrisc compiler that enables CONFIG_CC_CAN_LINK?
+Returning a capture buffers to userspace should only be used if a frame
+could not be produced. That imply copying the cookie timestamp from the
+src buffers into the capture buffer. Please make sure you don't endup
+returning fake erorrs to userspace, which may lead to some frame
+metadata being dropped erroneously.
 
+Nicolas
 
-
-
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> Cc: Stafford Horne <shorne@gmail.com>
-> Cc: linux-openrisc@vger.kernel.org
-> Cc: linux-kbuild@vger.kernel.org
+> 
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 > ---
->  usr/include/Makefile |    4 ++++
->  1 file changed, 4 insertions(+)
->
-> --- linux-next-20250424.orig/usr/include/Makefile
-> +++ linux-next-20250424/usr/include/Makefile
-> @@ -59,6 +59,10 @@ ifeq ($(SRCARCH),arc)
->  no-header-test +=3D linux/bpf_perf_event.h
->  endif
->
-> +ifeq ($(SRCARCH),openrisc)
-> +no-header-test +=3D linux/bpf_perf_event.h
-> +endif
+>  drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> index 4488540d1d41..3bb326843a7b 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> @@ -378,6 +378,12 @@ static int iris_hfi_gen2_handle_output_buffer(struct iris_inst *inst,
+>  
+>  	buf->flags = iris_hfi_gen2_get_driver_buffer_flags(inst, hfi_buffer->flags);
+>  
+> +	if (!buf->data_size && inst->state == IRIS_INST_STREAMING &&
+> +	    !(hfi_buffer->flags & HFI_BUF_FW_FLAG_LAST) &&
+> +	    !(inst->sub_state & IRIS_INST_SUB_DRC)) {
+> +		buf->flags |= V4L2_BUF_FLAG_ERROR;
+> +	}
 > +
->  ifeq ($(SRCARCH),powerpc)
->  no-header-test +=3D linux/bpf_perf_event.h
->  endif
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+>  	return 0;
+>  }
+>  
