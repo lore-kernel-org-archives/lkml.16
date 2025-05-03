@@ -1,95 +1,91 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34C31D5CC6
-	for <linux-kernel@vger.kernel.org>; Sat,  3 May 2025 11:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE69B1EB189;
+	Sat,  3 May 2025 11:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746271371; cv=none; b=YVhvx3J5vN+YZNqcrDBWayysnhJ+9NAoCJlBya447W/Rsi/7Irf0Ifzy3JGa11MZ5pAjh1LNF956pKvC6eZjZ5MYvdzwoXlAXdh4ANR6KRk0Kdld20VSZfBvaGGcH3+GXtn1pXpGCD++Elxwd7DF9UhaWb9u40rQlrBql1JtsFQ=
+	t=1746271372; cv=none; b=EkJO1fr9bDHAghXMhOmEIgfg2v8FeVGKgbrS4c4ZHIGDGGz/n4cLmWtYSte7KzI+6r8WLSW8GiG6mv4BJ8mc1zuoLFxkbwG5QCj2VcnGbuKH/rfvlc65UYYiS6QemJbqQzyANcdbaqD3akQKGVCjtELbrmP80DsQ5zxMVDzvXO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746271371; c=relaxed/simple;
-	bh=MeS3BLQPepU6Q5YKScG9gT9nw9PiCD2PnoRhSbQjNs4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QPG6clA7y65/HEybyglvtZEGYfaGIEiX/s/UqhDY2qB+NMmTkLUT5YWosQNFlj3T32cQuaXVl3tLuXc0K5E24da7obq2NgTBwMjiS0QLMZdlYdZl20mdoIf7xGjKyzPXj+xFV3Trw8zWscGaDk+1sv5HQrclml+3OGnjbvHsqUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=glzAlW7N; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1746271372; c=relaxed/simple;
+	bh=6njSZpjLFFK801EujEb3cuL3VrsBnFkcO396PYwdH7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g+uA3sRZw1hm2iy3tgOWspVS44O0evoPE8IE+yCE6l4JTp3kiBDDrjhs1ttYjSayVzaz1PCwIkf++G0kpAMnvfA7SQ/3JvVQBY87o346PFi9AYu/7uvpfF771kV7Bb6pHfjUXMQ/fjvuhT70zUg0xfxef962gKbaCGC4qHOd9xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7WpISdG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="glzAlW7N"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso18421795e9.3
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 04:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746271368; x=1746876168; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=g10XSPgHLOdjLV91DDilUhysjPUWEuAqpKjpDemrB7k=;
-        b=glzAlW7NHWyr49WqiAhvhO3VqMpVJQYaVg5CPx2W2zUookzkguCR6nwPNi8tcbEfyU
-         2BRZ013v2e4VY3pv8qsVem461TT6HbWZPnYuAuL9PAp3XCfM2XIPfIkfvKD2NGmgOpjk
-         ecXt1Whi0UtK4IdyMQwviq8ynBn8lXjymJmA78ZHK8cHTE6b09fBdU0fuC5HQnnb8AKo
-         QBNmzvJXeSOpSIeD7UnwOBvEaEMSX5KYo7ovq3ssLKsCUzsd5Fw6DmoYXybnOHC02y+5
-         RqyzvLfwoKwQ+ZhfE5tsSCgWaGxb6ZVcdvStE6ri25fARgNJqCGM3uDWFfMVjeRweFct
-         v6BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746271368; x=1746876168;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g10XSPgHLOdjLV91DDilUhysjPUWEuAqpKjpDemrB7k=;
-        b=MouR9eCWsNUKsXZSVXGsGubHi+nx90VjXu6YKje+CyrsUkrAVd97+efephLvEV9/DV
-         ctQv2YGSZ0RF6P57pz3UHvNL2Eo03xE4vDSHjWoy9uLIOqWENPq1YzH8g3h0/CtYIHM5
-         IJVUvc05+QlSpRH9wRDT7y1Q9S/Aay7HfSwukaxba+qkhxsoqTYR+BjozOBaalz8CHhM
-         YdF6a3bdVZz3mog9n6wX8oFYhrSLRpWPz1iTpqt1vA664GACil1hC0K3QSmE7RUpo08y
-         jnYJmFb0P7UKQFXuVV+V5U2EIx5uo7Md6sA1xyLUQJVjqJeCn/MXUfxHIKD72FYOos2f
-         u7Zw==
-X-Gm-Message-State: AOJu0YwPqG5nnDMlmDvkOZdwAcz7YYC3jVeGQ1ca0/gytjtNoIZdLMDD
-	+3TCIcncxkRY7bpgHsaxxHgg2Nfv7xMFUQqqCO5K7d+oPcy9kX/RF49mHkU6zYwq48IbyQ==
-X-Google-Smtp-Source: AGHT+IGS6gc41WjV6YPvRsSPQdPyW4NetHk6qUna9dd3u1qrw83UJK08+9UNNoppy2euDQxSVhPngjde
-X-Received: from wmbds22.prod.google.com ([2002:a05:600c:6296:b0:440:58dd:3795])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:45d1:b0:440:6a37:be30
- with SMTP id 5b1f17b1804b1-441c48ce8d8mr8110115e9.16.1746271368179; Sat, 03
- May 2025 04:22:48 -0700 (PDT)
-Date: Sat,  3 May 2025 13:21:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7WpISdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0DFC4AF09;
+	Sat,  3 May 2025 11:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746271371;
+	bh=6njSZpjLFFK801EujEb3cuL3VrsBnFkcO396PYwdH7w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m7WpISdGGO3sg0pkZySqZVxhQXOrOO9sPlkZ9W5OhO0eUNb0quPvXWkiK0vca30C4
+	 ZRnYFSOa2Wkz0dwE4z6Fjs3+G6MnlmmFd0qpxz4TTnKfBslQkMezvu8eFYWRwpE5lu
+	 e5+AeZ3FIO5J2ejNLWWWITtCFNFxiF8JNABEJenWMHmJm04pcgjGRb5+2DGhMOt0d5
+	 gvDo6p+v9mum5Bk8GcMv1YAjfOJkh0SC2760HjyaVHDVm5Woa1F6ML+R1uSM14SHsi
+	 A+8taaKnDq1hWiNWgBof3ltLwLjqzUyegfdAAPgSHP4HlnhTvhdl/hU6iWV5wAwh6x
+	 jalm5zxtdKmuA==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54998f865b8so2988413e87.3;
+        Sat, 03 May 2025 04:22:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKkN3BvOvXUZZFeTAclUWrYJ97neEi68BZQn801UAWVVhP+h6aHGoxUAdRZBm+wVGNL5O1B4Os@vger.kernel.org, AJvYcCUefbBY9EeA26wEYjl4w8NI/F2w0xeK9XRk8BybO96d1626X184FFdVS22uP73yoE7NwWreQ5pQLjPTuN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2vV46z7klbwBno+PBQMbkRrIvV//lrxG8smXZ0wq+2JDj47ks
+	E+utuXZefg7LemhGYEmlabJ9MrDvcpe4OmQIQRvpGNRC4RIJrlv568qe95VEZGF1HU+XIzKEvLD
+	iSVcuDWHTN/lnk4pBl/g8TyqSDL4=
+X-Google-Smtp-Source: AGHT+IG/LZhJuYwd6BT5g/YapcupnN/sQf19+E1GsW+tcerWCF3qKkEN4dkhge9FjiQ1f4Ybup6+9GqTT5D7d0ujND0=
+X-Received: by 2002:a05:6512:108e:b0:549:8f4a:6baa with SMTP id
+ 2adb3069b0e04-54eb24390c2mr671056e87.27.1746271369757; Sat, 03 May 2025
+ 04:22:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=843; i=ardb@kernel.org;
- h=from:subject; bh=ubkPW3t5PeWznwLH2AP8mn83R+MI2lE8Zn0E3117kbQ=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUP0j9MBQ5VoV94LcyxvV/w88bfPnGvT/Naf27+0Nu62m
- pur8Yuxo5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEzkzyRGhhnOXaEhYVd3MH5l
- XDOnbl4h903768vOGdplr2CxfvW9Vojhr3yC8pf/V/o2BbP1n137b5+LSfHN3J393y/l5Aqvuy4 YxgQA
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250503112137.1962910-5-ardb+git@google.com>
-Subject: [PATCH 0/3] arm64/boot: Forbid the use of BSS symbols in startup code
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, 
-	mark.rutland@arm.com, Ard Biesheuvel <ardb@kernel.org>, Yeoreum Yun <yeoreum.yun@arm.com>
+MIME-Version: 1.0
+References: <20250502145755.3751405-1-yeoreum.yun@arm.com> <CAMj1kXEoYcS6YPU0mBdvijDRK6ZVB7mPYZsCVpz7sYotabrxtQ@mail.gmail.com>
+ <aBUHlGvZuI2O0bbs@arm.com> <aBULdGn+klwp8CEu@e129823.arm.com> <aBXqi4XpCsN3otHe@arm.com>
+In-Reply-To: <aBXqi4XpCsN3otHe@arm.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 3 May 2025 13:22:37 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHL5_2TM1ZTaPEgGm9uU7xvFpRxxarKpOTr=YVvj+72cQ@mail.gmail.com>
+X-Gm-Features: ATxdqUG1fvw_z6UhDYuaA_GkP9ybtJKQQ9wqgeSGK9OYj_TYO1ZfClLHhMe7z3g
+Message-ID: <CAMj1kXHL5_2TM1ZTaPEgGm9uU7xvFpRxxarKpOTr=YVvj+72cQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64/cpufeature: annotate arm64_use_ng_mappings with
+ ro_after_init to prevent wrong idmap generation
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>, will@kernel.org, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com, 
+	broonie@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	frederic@kernel.org, joey.gouly@arm.com, james.morse@arm.com, 
+	hardevsinh.palaniya@siliconsignals.io, shameerali.kolothum.thodi@huawei.com, 
+	ryan.roberts@arm.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Sat, 3 May 2025 at 12:06, Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Fri, May 02, 2025 at 07:14:12PM +0100, Yeoreum Yun wrote:
+> > > On Fri, May 02, 2025 at 06:41:33PM +0200, Ard Biesheuvel wrote:
+> > > > Making arm64_use_ng_mappings __ro_after_init seems like a useful
+> > > > change by itself, so I am not objecting to that. But we don't solve it
+> > > > more fundamentally, please at least add a big fat comment why it is
+> > > > important that the variable remains there.
+> > >
+> > > Maybe something like the section reference checker we use for __init -
+> > > verify that the early C code does not refer anything in the BSS section.
+> >
+> > Maybe but it would be better to be checked at compile time (I don't
+> > know it's possible) otherwise, early C code writer should check
+> > mandatroy by calling is_kernel_bss_data() (not exist) for data it refers.
+>
+> This would be compile time (or rather final link time). See
+> scripts/mod/modpost.c (the sectioncheck[] array) on how we check if, for
+> example, a .text section references a .init one. We could move the whole
+> pi code to its own section (e.g. .init.nommu.*) and add modpost checks
+> for references to the bss or other sections.
+>
 
-Move any variables accessed or assigned by the startup code out of BSS,
-and into .data, so that we can forbid the use of BSS variables
-altogether, by ASSERT()'ing in the linker script that each symbol made
-available to the startup code lives before __bss_start in the linker
-map.
+We can take care of this locally in image-vars.h, where each variable
+used by the startup code is made available to it explicitly.
 
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-
-Ard Biesheuvel (3):
-  arm64/boot: Move init_pgdir[] into __pi_ namespace
-  arm64/boot: Move global CPU override variables out of BSS
-  arm64/boot: Disallow BSS exports to startup code
-
- arch/arm64/include/asm/pgtable.h |  2 -
- arch/arm64/kernel/cpufeature.c   | 22 +++----
- arch/arm64/kernel/image-vars.h   | 68 ++++++++++----------
- arch/arm64/kernel/pi/pi.h        |  1 +
- arch/arm64/kernel/vmlinux.lds.S  |  6 +-
- 5 files changed, 51 insertions(+), 48 deletions(-)
-
--- 
-2.49.0.906.g1f30a19c02-goog
-
+Sending out a separate series shortly.
