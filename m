@@ -1,92 +1,304 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8462D25776;
-	Sun,  4 May 2025 17:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C971F4187;
+	Sun,  4 May 2025 17:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746380331; cv=none; b=NcutaDaYm1dt/3Stuiuz6WnuGng3EJnZmaqolEQOVIpWJhcdssyWR9mW6T2P5Lv6FplDvVw3+RN3G1yfXMwZxIfezKx7GsWeWbbtYShjgvieez2rfHNMtB1WWVkDaNGdePMcIktBKeiVNcccuMnrxupanpe8oOgKNm8AUx0c1vw=
+	t=1746380530; cv=none; b=YTm/y3DalCh/Ua2N2/tlbDctSww/1GAw1gl0EbRngPtRoNm9Q/b6Q5iNbjKQosvcPmhWgMTDPbUFnp8YlgAIJcqE6tGlQ8oXfOWMqXbeP8jpiBeuRuXHjnfx+96F6rgi+2aiFERkCRQRBEF8U3NDbOdWtdk4DTcziDmyWD0FGPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746380331; c=relaxed/simple;
-	bh=xZMoxyD1M6hO1rjE/H9RTuK9a0wHG4M1f4p3TCszldo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VRtGo9nj+1I7KD1UfM6WAQeh9B1NA1wyj4uDdHrJtUc2Sebw2OLFluyIegw8LV7bFtMhQjkfD1y4ARDb+ywGMNkHEFe14RucgqPQQ0dYSZOYdd/H3cZs+0xYG2pRxXEr1XUlCwaVQMwZ988N+rlfydoMpPRvkIopuWrdkMvjhkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZrBYJ12J4z9tk2;
-	Sun,  4 May 2025 19:32:04 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v4 2/9] rust: device: Enable accessing the FwNode of a Device
-Date: Sun,  4 May 2025 19:31:47 +0200
-Message-ID: <20250504173154.488519-3-remo@buenzli.dev>
-In-Reply-To: <20250504173154.488519-1-remo@buenzli.dev>
-References: <20250504173154.488519-1-remo@buenzli.dev>
+	s=arc-20240116; t=1746380530; c=relaxed/simple;
+	bh=4pOunVr8/3fLXQgqGT1pXD4fEAguAC9IvJ+qcjqsR+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GdP4zMIhe4xCEWRx7kaiY0vaw/iRRnBB9X0VpJwUlRuZiqjCTW6+1kKD4Y6Pf1/HTXemBrEfI+zVS5+NonoODASwtAZ3SPwjucBYkYtvLX615jRWDXIpcQHYmoIusSpr0NQmtAbsfFsFT/aq5HaxTL6zUmQpaD4AkQKQnBIk/4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nLZ2hLaN; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLZ2hLaN"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfed67e08so35805221fa.2;
+        Sun, 04 May 2025 10:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746380527; x=1746985327; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cbxWuEGnrX3oYqiG6styFnyanMknLABwZdYxFlWP+28=;
+        b=nLZ2hLaNc0tlCoYSgJV9j9iLNBAqBXCAsR8nrQNursQJYgTYFa8qBgPEbtOt6uwZvZ
+         aWGDnbezsw5DFxQ8zoLLTUMm5368MCT2H3dgXl4QNWHoJGurf4g+LJwfzdkp9o8t+Mac
+         crqPBCZnH6udVP1Yazvfd5H8+ebnGBn/Sx69Wv/VkVx49X6x4qFUyDpd5tma8Y5hMsgu
+         RQt4dgOQlBwx+hKE2pk5Heb10xwwFfVCNkqxdkQnTh8VN9wXqDNPqGLAuWNOin814tGK
+         46bDygmosAwe5Q31e5vV75B4Ex8i4z7VOvb5F0rqUKzCW/9Dt36pJ0zjqB7fopzvscOt
+         Cy4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746380527; x=1746985327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cbxWuEGnrX3oYqiG6styFnyanMknLABwZdYxFlWP+28=;
+        b=my9Zosd8kErQygUzAzAE2PZ4tIryza7n7jEq+7VdHpoKNT3mokx57uuB1AVdtqWbYq
+         1Kl9ma74KP1iw1muDiLDn5P9S1c/3lrwaH1VJXAC788IcRb9lvyAIODwEuwvwDmzQbJD
+         ZOMOA0u+IVQj9Nz6ioEfAsz6szSqoawohcxzOMAsfliMfESI3p6yT1oaXEkc/gNBW8Iv
+         ISJ7+y7KMWX6kJAucJXZF5qIn9EmwB1yE/vtOMXkID5SvLXTE8kyEAzT414dGSdXSYnP
+         +8g6PrZZJn5eAqcKQ3Whz6pINTeE9/SVoY3JpMZHl70a6RYhpEafItbZeOBBfIMGU4WY
+         57fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrqQ5f+4ZhVbHkaPIU+Suc9j0I2pY+QDANpZX5IHt+k/sizUN1SPUNN02qui30uKkpE5YM2Nyx1Hc22NtkgHc=@vger.kernel.org, AJvYcCX30ivOTI3vjk4ZE2CTHTiaLOeQSMTD7B4Ko3eJJ+YGq17yeLv8y4qdBc8330OhnbaAsjSMARXPfM8Kw+hH0CIG@vger.kernel.org, AJvYcCXo5mBS3+P5FqvWxXHcaQxTk1dWPfMCMssjV3qn0V5BkEItPKsJPDPbvOuO4mvwZiABS0oF3tNx8Xd+Yv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD5Z8ok2gyhUp6c/PYkgBcWVgG/vA7ZvgSAa8ITBonFBydYxKF
+	gY9o3H4/9aVCMAdK3qu0r7orbJ9N/JVUKccNRgdZ3u5+ODGVVIxPgRSXF58WXozve+TXG06VReo
+	jUfMAVdc6vxOK4cWSf/xjzYthGBo=
+X-Gm-Gg: ASbGnctwPn1A7x3kPpqtJmOG5LWVNlEZzptVLjZmHiPfAoxMtsmOflHz5UzoUknGHth
+	GHv+0GNgbhi2Dp5ETkRIylXd28pUJO/28RAP+wp0FUqcehgs8tMK7njfj0CAzbXOIk+xSnDnC4D
+	W3zXksaFiAOVgUEqw0dToPEVsAK5hpWWFOrZOOCKNldYXD27bgSFR7zrM=
+X-Google-Smtp-Source: AGHT+IEX2MgLBv1W9wDyAPXhemuUaSDB46sI5pVSf7YiajkbFnm1iRcA2zYgYDx0nutSeqLiuGNKVMOgwbgmHJhywZI=
+X-Received: by 2002:a05:651c:1470:b0:30c:5c6:91e0 with SMTP id
+ 38308e7fff4ca-32348656ab7mr14289281fa.2.1746380526576; Sun, 04 May 2025
+ 10:42:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-2-ojeda@kernel.org>
+In-Reply-To: <20250502215133.1923676-2-ojeda@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 4 May 2025 13:41:30 -0400
+X-Gm-Features: ATxdqUFBpKKDyITWcWdzh3LClwcDwVExiKBe2tO-Z1m160TXpjfIFUJFdYXPoTQ
+Message-ID: <CAJ-ks9kARZT5TMrfXvAqmGdsMD+EgdaY061tyhm_n4oerFLOfA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] rust: kunit: support KUnit-mapped `assert!` macros in `#[test]`s
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The FwNode is an abstraction over the C struct fwnode_handle. It will be
-used to access all device properties.
+On Fri, May 2, 2025 at 5:53=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
+e:
+>
+> The KUnit `#[test]` support that landed recently is very basic and does
+> not map the `assert*!` macros into KUnit like the doctests do, so they
+> panic at the moment.
+>
+> Thus implement the custom mapping in a similar way to doctests, reusing
+> the infrastructure there.
+>
+> In Rust 1.88.0, the `file()` method in `Span` may be stable [1]. However,
+> it was changed recently (from `SourceFile`), so we need to do something
+> different in previous versions. Thus create a helper for it and use it
+> to get the path.
+>
+> With this, a failing test suite like:
+>
+>     #[kunit_tests(my_test_suite)]
+>     mod tests {
+>         use super::*;
+>
+>         #[test]
+>         fn my_first_test() {
+>             assert_eq!(42, 43);
+>         }
+>
+>         #[test]
+>         fn my_second_test() {
+>             assert!(42 >=3D 43);
+>         }
+>     }
+>
+> will properly map back to KUnit, printing something like:
+>
+>     [    1.924325]     KTAP version 1
+>     [    1.924421]     # Subtest: my_test_suite
+>     [    1.924506]     # speed: normal
+>     [    1.924525]     1..2
+>     [    1.926385]     # my_first_test: ASSERTION FAILED at rust/kernel/l=
+ib.rs:251
+>     [    1.926385]     Expected 42 =3D=3D 43 to be true, but is false
+>     [    1.928026]     # my_first_test.speed: normal
+>     [    1.928075]     not ok 1 my_first_test
+>     [    1.928723]     # my_second_test: ASSERTION FAILED at rust/kernel/=
+lib.rs:256
+>     [    1.928723]     Expected 42 >=3D 43 to be true, but is false
+>     [    1.929834]     # my_second_test.speed: normal
+>     [    1.929868]     not ok 2 my_second_test
+>     [    1.930032] # my_test_suite: pass:0 fail:2 skip:0 total:2
+>     [    1.930153] # Totals: pass:0 fail:2 skip:0 total
+>
+> Link: https://github.com/rust-lang/rust/pull/140514 [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> ---
+>  init/Kconfig           |  3 +++
+>  rust/Makefile          |  3 ++-
+>  rust/kernel/kunit.rs   |  1 -
+>  rust/macros/helpers.rs | 16 ++++++++++++++++
+>  rust/macros/kunit.rs   | 28 +++++++++++++++++++++++++++-
+>  rust/macros/lib.rs     |  4 ++++
+>  6 files changed, 52 insertions(+), 3 deletions(-)
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 63f5974b9fa6..5f442c64c47b 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -140,6 +140,9 @@ config LD_CAN_USE_KEEP_IN_OVERLAY
+>  config RUSTC_HAS_COERCE_POINTEE
+>         def_bool RUSTC_VERSION >=3D 108400
+>
+> +config RUSTC_HAS_SPAN_FILE
+> +       def_bool RUSTC_VERSION >=3D 108800
+> +
+>  config PAHOLE_VERSION
+>         int
+>         default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+> diff --git a/rust/Makefile b/rust/Makefile
+> index 3aca903a7d08..075b38a24997 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -402,7 +402,8 @@ quiet_cmd_rustc_procmacro =3D $(RUSTC_OR_CLIPPY_QUIET=
+) P $@
+>                 -Clink-args=3D'$(call escsq,$(KBUILD_PROCMACROLDFLAGS))' =
+\
+>                 --emit=3Ddep-info=3D$(depfile) --emit=3Dlink=3D$@ --exter=
+n proc_macro \
+>                 --crate-type proc-macro \
+> -               --crate-name $(patsubst lib%.$(libmacros_extension),%,$(n=
+otdir $@)) $<
+> +               --crate-name $(patsubst lib%.$(libmacros_extension),%,$(n=
+otdir $@)) \
+> +               @$(objtree)/include/generated/rustc_cfg $<
+>
+>  # Procedural macros can only be used with the `rustc` that compiled it.
+>  $(obj)/$(libmacros_name): $(src)/macros/lib.rs FORCE
+> diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+> index 1604fb6a5b1b..2659895d4c5d 100644
+> --- a/rust/kernel/kunit.rs
+> +++ b/rust/kernel/kunit.rs
+> @@ -323,7 +323,6 @@ mod tests {
+>
+>      #[test]
+>      fn rust_test_kunit_example_test() {
+> -        #![expect(clippy::eq_op)]
 
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- rust/kernel/device/mod.rs | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+How come this vanished?
 
-diff --git a/rust/kernel/device/mod.rs b/rust/kernel/device/mod.rs
-index d8619d4485fb4..b4b7056eb80f8 100644
---- a/rust/kernel/device/mod.rs
-+++ b/rust/kernel/device/mod.rs
-@@ -186,6 +186,21 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
-         };
-     }
- 
-+    /// Obtain the [`FwNode`](property::FwNode) corresponding to the device.
-+    pub fn fwnode(&self) -> Option<&property::FwNode> {
-+        // SAFETY: `self` is valid.
-+        let fwnode_handle = unsafe { bindings::__dev_fwnode(self.as_raw()) };
-+        if fwnode_handle.is_null() {
-+            return None;
-+        }
-+        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&self`. We
-+        // return a reference instead of an `ARef<FwNode>` because `dev_fwnode()`
-+        // doesn't increment the refcount. It is safe to cast from a
-+        // `struct fwnode_handle*` to a `*const FwNode` because `FwNode` is
-+        // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
-+        Some(unsafe { &*fwnode_handle.cast() })
-+    }
-+
-     /// Checks if property is present or not.
-     pub fn property_present(&self, name: &CStr) -> bool {
-         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
--- 
-2.49.0
+>          assert_eq!(1 + 1, 2);
+>      }
+>
+> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+> index a3ee27e29a6f..57c3b0f0c194 100644
+> --- a/rust/macros/helpers.rs
+> +++ b/rust/macros/helpers.rs
+> @@ -86,3 +86,19 @@ pub(crate) fn function_name(input: TokenStream) -> Opt=
+ion<Ident> {
+>      }
+>      None
+>  }
+> +
+> +pub(crate) fn file() -> String {
+> +    #[cfg(not(CONFIG_RUSTC_HAS_SPAN_FILE))]
+> +    {
+> +        proc_macro::Span::call_site()
+> +            .source_file()
+> +            .path()
+> +            .to_string_lossy()
+> +            .into_owned()
+> +    }
+> +
+> +    #[cfg(CONFIG_RUSTC_HAS_SPAN_FILE)]
+> +    {
+> +        proc_macro::Span::call_site().file()
+> +    }
+> +}
+> diff --git a/rust/macros/kunit.rs b/rust/macros/kunit.rs
+> index 4f553ecf40c0..eb4f2afdbe43 100644
+> --- a/rust/macros/kunit.rs
+> +++ b/rust/macros/kunit.rs
+> @@ -101,6 +101,8 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: Toke=
+nStream) -> TokenStream {
+>      // ```
+>      let mut kunit_macros =3D "".to_owned();
+>      let mut test_cases =3D "".to_owned();
+> +    let mut assert_macros =3D "".to_owned();
 
+nit: why not String::new() for all these?
+
+> +    let path =3D crate::helpers::file();
+>      for test in &tests {
+>          let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapper_{}", t=
+est);
+>          let kunit_wrapper =3D format!(
+> @@ -114,6 +116,27 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: Tok=
+enStream) -> TokenStream {
+>              test, kunit_wrapper_fn_name
+>          )
+>          .unwrap();
+> +        writeln!(
+> +            assert_macros,
+> +            r#"
+> +/// Overrides the usual [`assert!`] macro with one that calls KUnit inst=
+ead.
+> +#[allow(unused)]
+> +macro_rules! assert {{
+> +    ($cond:expr $(,)?) =3D> {{{{
+> +        kernel::kunit_assert!("{test}", "{path}", 0, $cond);
+> +    }}}}
+> +}}
+> +
+> +/// Overrides the usual [`assert_eq!`] macro with one that calls KUnit i=
+nstead.
+> +#[allow(unused)]
+> +macro_rules! assert_eq {{
+> +    ($left:expr, $right:expr $(,)?) =3D> {{{{
+> +        kernel::kunit_assert_eq!("{test}", "{path}", 0, $left, $right);
+> +    }}}}
+> +}}
+> +        "#
+> +        )
+> +        .unwrap();
+>      }
+>
+>      writeln!(kunit_macros).unwrap();
+> @@ -152,7 +175,10 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: Tok=
+enStream) -> TokenStream {
+>          }
+>      }
+>
+> -    let mut new_body =3D TokenStream::from_iter(new_body);
+> +    let body =3D new_body;
+> +    let mut new_body =3D TokenStream::new();
+> +    new_body.extend::<TokenStream>(assert_macros.parse().unwrap());
+> +    new_body.extend(body);
+
+Could we do this (pushing `assert_macros`) before the block above to
+avoid this body/new_body name juggling?
+
+>      new_body.extend::<TokenStream>(kunit_macros.parse().unwrap());
+>
+>      tokens.push(TokenTree::Group(Group::new(Delimiter::Brace, new_body))=
+);
+> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> index 9acaa68c974e..8bd7906276be 100644
+> --- a/rust/macros/lib.rs
+> +++ b/rust/macros/lib.rs
+> @@ -6,6 +6,10 @@
+>  // and thus add a dependency on `include/config/RUSTC_VERSION_TEXT`, whi=
+ch is
+>  // touched by Kconfig when the version string from the compiler changes.
+>
+> +// TODO: check that when Rust 1.88.0 is released, this would be enough:
+> +// #![cfg_attr(not(CONFIG_RUSTC_HAS_SPAN_FILE), feature(proc_macro_span)=
+)]
+> +#![feature(proc_macro_span)]
+> +
+>  #[macro_use]
+>  mod quote;
+>  mod concat_idents;
+> --
+> 2.49.0
+>
+>
