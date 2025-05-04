@@ -1,90 +1,115 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFB9A29;
-	Sun,  4 May 2025 11:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA43EA29
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746357816; cv=none; b=scWrqvdvxRg80TiuE1cOInfec7HXPOtaNNZh0jO97RCt9xYGQ1CLYvl1T+7inrHBI0YWW96EpATx425BM4QvjilJwGtuWVoC9y4WHr6fHF3w5UOlUhW6Ow7+p/uRoLJBSvxJEwgFe8tz2B4ASFvsgv0qW8PB8Du9ClPYScFv69I=
+	t=1746357885; cv=none; b=tTNkZ/uhEfUUPYVW91PC5fpcXMD+4H6NkDi++nsHPXcp0jw5GPmbCDv5iaCz2QpI52nqN+5HUqECXFBo408m2oMh1Tm2u0IMnX4phyg5fKcu4aME8xZdakk8Ig75cixPuplUy3RSVlqct92NUwaHPTpWfG/Ta30uyY9CseL1KUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746357816; c=relaxed/simple;
-	bh=WpIr8GKgvtxyOEB1BvYudVvyTK1mg+FzKhOiCtz/vik=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Nl0wBZZS2BzbMlkqCjCI2WyGbGUg3S+rm1NYQ6cKk0lUklP37odBXwHw817QhlYNrdeNO/IxuVd2h7fN1kZeYOudcRgzpKJ0FQWltZA+rXOnRq7Rsh4lKN5aN1IhRxPIAuQmolxURgRScRUWWAzgVEow5/1TVokXNHIU3e6/XHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zf7Fdp65; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746357885; c=relaxed/simple;
+	bh=dB+eSdk5bmJLofe21KHiRL9lm/wFp6a0skcb5cnR6rU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KUP1u2tpeUogaxhMIN0ERcWNEEy1k0+LoVzQh0CPc73sG9YeuQqB4D8H2xQZOuSWvQ0IzqZVMg25roHZe7aNue3LdE1Biu3Fk5fg+GkoQbd/eKkENyAs7s/rUDVJyiZTvC5f2tlReORZtpq6Y5kPXiI1qfa+MS2pzWbnelRzcqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=afOhK/bt; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf7Fdp65"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a823036so32970515e9.0;
-        Sun, 04 May 2025 04:23:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="afOhK/bt"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso32137485e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 04:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746357813; x=1746962613; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zV8BrMTkzQFkPZ+3Fj6/O6YK38B+dAgJMFffx23ECvU=;
-        b=Zf7Fdp65Bcl7+cARFKuwl3gTm42W7hWOdPORCKTQdYbvo/PjRqQrIhguWoBihP4zsX
-         YiP3rrFudAUq+js6J3wHZdvFnf+w+j/ogTD9H0n+GDnFn7OE5TZrAFViZCK/Kq1gWU67
-         fzxvf1J5JyqreDWkLKd/ixs5kFwZMD/bYi4kV+Kb/TjTs34gecDms/dHiIGzId/1aqIp
-         ebGuS+eWKlR7aIcXHfQwPCyAT6vFhVheLpXaCMkvmJrmM0/L8rUt3CmkRn5si9Jcm5bn
-         tjxe3lVytDUOJjC5Lilavm+rXHdzZjRE03JIg1WCUkDRK2OvOtbEecoGrEw58toSN7Se
-         EdSg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746357881; x=1746962681; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCvX4uJY7+qc0Sa1nCHPGxvQLNSrnb7aHcxG3bQRQw8=;
+        b=afOhK/bt9WYNcxRQ81bpkpz3FhoaVFXsFrnqMkOndLgbxFonqwK1MfBziOR9LltpsG
+         LckHJcH66eXE6jfEZ88Qe4wjZbQE5f40nGTzaLUvqRJoSeSBaAYQBy4D+Z/b6yEF8cGc
+         kAdCaM9YjYQpznlRefu6LR82LkHkGA7Oj5JxqIzpmfh10ZPl1fdV6ZvqZ6Jn0bwGT4Gj
+         zIneHE4TqwoWtlAAvkoNAyyeCnun9PKfRJh2YmglNURbj25HyHVoj1U6zaZBlP3Mp5Hd
+         dRXW3R0Yl57EUMEkSzcIxjcNOFkm2qgX30CQCMwksfHbVKOaG7K23se8D6rwRbE/3C+3
+         HRpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746357813; x=1746962613;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zV8BrMTkzQFkPZ+3Fj6/O6YK38B+dAgJMFffx23ECvU=;
-        b=gM21eUfTd5HpBNcAfIhO/D7kv0SIhmuaj/Xr42J+n5t5XuyPQ62eNMRy9wXtFV1UUY
-         yKmw3oA9lJGNJDyr9LVb8eKqDaiw2iWX40XUgcfCGlyFYn1vmNbdwKgu2VFMEdMm4RfV
-         S7zu19Xy2VaCa5oawU9FJLI0hBGLu/Ks0EpHbtEaJyouSchau/vJDbNtQxHNougX/eSD
-         Y9AMtiq2j22BJZ63DK98k7dVNnPW4HWzpHJHrK9F7d7X/7dKQm3lweL9u57nHiB7Hkwf
-         hRWLBnxMW/lxD6PVOyfbHocB2WmL0GFwEMUCc8oos1TJK1G6u8B23v3wDFoR43xR41KR
-         j8Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhoHQKY4/j+m2I3PZ7RqPwwQZEv4cuk9KPJlr9eDmsiDKM6GwVmgxOMqvW7P0cFuYu9KsL3GlW4dzmZfY=@vger.kernel.org, AJvYcCXarcyerWUiuv7t6fsgkPRvvJcrxukrsoizJMNvAnrUZ/OZm4jEFipNxoIMtrBWTKV5DpOJh7uKoRhM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/YUJb2CxZkH2Piu/RLLh1xgT0Ath3Wk86Vo1ULtGFMMnjv6hQ
-	qyXehW8zsyuRNOQH8dzrjNamybQhD282jwOjV7z4H7msFQ0WBO4z
-X-Gm-Gg: ASbGncsra5hBspbCFJklbQcU5UIP+47xtBtvf7h6ftpVhGFAP3lWDPhz6Nc4QHPLdWQ
-	TuiMTfK003WKm9fle1Lt/v58Nq7M6rU67LM3l4iLictxPLj840uW+taxvgjjsS4AaDFlr1Wb0A4
-	FWkCuBo/icEqwgvwwC62sM+6u66TVKeoww2nctPFQgvYeiyvuFtcQ00jgXwJS7SCFNEjPPu4Nd7
-	vFJQHn0c6GfpelYVANCv/CVL6pRybidbqZObmcaHhWBW89Tv6QmQewYJ4f2nY9Hf6isbG/itlC9
-	s9mDfQ1lbMRsEuSODggEl5REAhc7Zbww1Ajqlj5VGg==
-X-Google-Smtp-Source: AGHT+IGYsFl3VJuIKwcSGexluz2hUMdp2LZdMlhpAn/whLRKwiXkBw5rxLWOPeRKFmWeJpA2mQqpeQ==
-X-Received: by 2002:a05:600c:a401:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-441c7a306e5mr13926885e9.21.1746357812492;
-        Sun, 04 May 2025 04:23:32 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-441ad813a64sm149278145e9.0.2025.05.04.04.23.31
+        d=1e100.net; s=20230601; t=1746357881; x=1746962681;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rCvX4uJY7+qc0Sa1nCHPGxvQLNSrnb7aHcxG3bQRQw8=;
+        b=idbrH/jw8IKpB6r2J/1rb6dbqoLfF9EttRdWQccc/hMsFUCB/oIt9BXmzZVyf8yWuw
+         zKQ00+dI4r+NB4f8hEOF4YO5YqPz2DFqtuFso+sXC2sldsgUe48tTtbnHgPfRtH070fQ
+         v3WxNG511eN+B7UdE0/cK8351FQraDwtG8JgeZCKICivjYKN+OQ0GzeGbD/1JaJdOamE
+         Kk8LXgziL2ltxSU32h3dDzurKYqI0jf88pIm1JHnu37tsJupeL2rYogSnsdqq4+rdNfb
+         9+0OIsrx1Wq6gMJof8mqDwbMZ0rb1YPCMhDpuRufnq7a66PPa+cIpvuY7VbnV3e/XeFN
+         V/Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIBGL/zKdFSNrSfWFyXhqs9xfRCLYjrp+zCICo4gJhgskqamxYQFmSgHFnLCkfdOoyaG9eH2hN8ABB1/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnWSAngJ9053VIMxH6w7QBoxP/GPbGV9Qrh9dOHontziXfOlwD
+	lYd1153I+FbXPOrAr4ndS2QUhB2PqsXLQOSkhV82YjrNu9mLKbhmIFXVYm08Y+k=
+X-Gm-Gg: ASbGnctqO4Zic82w17laDqF4nhG3lyXZmvlmYeo5AG4qCzbjgjWgmwbqw2rMPe51uW4
+	pWJsv2Mzd6temtJhBtQX1pUJM/XrfvegnYWltK7CVQ6i0sqDJiP/864dxLshQM6JfMuVZMxc5f2
+	M18SFYVDiqcMGqcfac/9T0H/EKCcWnBr9I+LybeopA33ke3oNetB/uKX0EzdSzAEJTGqsY7PhIf
+	10KSxjLYoK5ON/w+ZAgsz3fwFIIB/e7x10rwbb2z66uAb3s9rMljo7HgxuDrqd4PcjM0zd4yP3o
+	pUvsHmql3BngRNoX33qTsAh+yX9CQ2SwS+8JukP0kYJj
+X-Google-Smtp-Source: AGHT+IF/nTjowgFTpX4DBmNA53Y4LVnmPuQntazuU/vu02j6XLWVnIjjuNgsMm6A3VC25/HRU1jVEA==
+X-Received: by 2002:a05:600c:4e88:b0:441:b19c:96fe with SMTP id 5b1f17b1804b1-441c48bdfe5mr30770245e9.10.1746357880705;
+        Sun, 04 May 2025 04:24:40 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:e0a:e50:3860:9356:7b97:9d4d:d944])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad784asm144447685e9.7.2025.05.04.04.24.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 04:23:31 -0700 (PDT)
-Date: Sun, 4 May 2025 13:23:29 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: ldewangan@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, linux-spi@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [regression] jetson-tk1: spi do not probe anymore
-Message-ID: <aBdOMUhuUqbZm9w1@Red>
+        Sun, 04 May 2025 04:24:40 -0700 (PDT)
+From: Guillaume La Roque <glaroque@baylibre.com>
+Date: Sun, 04 May 2025 13:24:39 +0200
+Subject: [PATCH] arm64: Kconfig.platforms: remove useless select for
+ ARCH_K3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250504-kconfig-v1-1-ab0216f4fa98@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAHZOF2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUwMT3ezk/Ly0zHRdM4s0Q2PLtKQ0Y2NzJaDqgqLUtMwKsEnRsbW1AH7
+ Au9tZAAAA
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Nishanth Menon <nm@ti.com>
+Cc: Andrew Davis <afd@ti.com>, vishalm@ti.com, linux-omap@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Guillaume La Roque <glaroque@baylibre.com>
+X-Mailer: b4 0.14.1
 
-Hello
+After patch done on TI_MESSAGE_MANAGER[1] and TI_SCI_PROTOCOL[2] driver
+select on ARCH_K3 are not needed anymore.
 
-On my jetson-tk1, SPI do not probe anymore:
-[    1.330681] spi spi1.0: Invalid delay unit 2, should be SPI_DELAY_UNIT_SCK
-[    1.335185] spi-tegra114 7000da00.spi: can't setup spi1.0, status -22
-[    1.341643] spi_master spi1: spi_device register error /spi@7000da00/flash@0
-[    1.348637] spi_master spi1: Failed to create SPI device for /spi@7000da00/flash@0
-I tested 6.14.7
-The SPI probed perfectly in 4.17.14
+Remove it and give possibility to enable this driver in modules.
 
-I tried to debug a bit, and the driver requires units to be SPI_DELAY_UNIT_SCK, but it seems there is no way to set it.
-Removing the "return -EINVAL" in tegra_spi_set_hw_cs_timing() lead to a successfull probe and the flash device appear.
-But I agree, it is not a correct fix:)
+[1] https://lore.kernel.org/all/20180828005311.8529-1-nm@ti.com/
+[2] https://lore.kernel.org/all/20250220-ti-firmware-v2-1-ff26883c6ce9@baylibre.com/
 
-Since only the test made it fail, I think the driver is bad since commit 810593668468 ("spi: tegra114: change format for `spi_set_cs_timing()` function")
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+---
+ arch/arm64/Kconfig.platforms | 2 --
+ 1 file changed, 2 deletions(-)
 
-Regards
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8b76821f190f..5b63a42c4dff 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -138,8 +138,6 @@ config ARCH_K3
+ 	select PM_GENERIC_DOMAINS if PM
+ 	select MAILBOX
+ 	select SOC_TI
+-	select TI_MESSAGE_MANAGER
+-	select TI_SCI_PROTOCOL
+ 	select TI_K3_SOCINFO
+ 	help
+ 	  This enables support for Texas Instruments' K3 multicore SoC
+
+---
+base-commit: e8ab83e34bdc458b5cd77f201e4ed04807978fb1
+change-id: 20250504-kconfig-68f139fbf337
+
+Best regards,
+-- 
+Guillaume La Roque <glaroque@baylibre.com>
+
