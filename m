@@ -1,114 +1,181 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCF310E9
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 13:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B6A10E9;
+	Sun,  4 May 2025 13:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746366647; cv=none; b=s9Vnt6N9AIbzu3Y95/ypoO2I6gHTD/JNL2Y7vdbAmjvjH+RqgNVKn8U8xPdGjNXsG1Me/TwZoUk9wZwkMGYi1gs3orm0Bup7makjZGUA7ZI81+VnNRrU6kUKtuqfqlJQkthrKISl67/bNP/noc/K+5+U1HiSrscyIr7u2sndztM=
+	t=1746366663; cv=none; b=q64Eca1JNZ50Aj6tspFymaNwcKqkbFhiQaplbLblLLrl6cmcYoIcZkMXShsRJB3ldLb0afrmT421XRGg7UVTZiwFLd3oAkVkFLZCb8yflZCzXbjHclT5TwjBo7R5GGJd7HlombtzJX30G8orPHKU/ORfOE9uQsEF3UG/CpJSWFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746366647; c=relaxed/simple;
-	bh=Esu7uoANV9CFGiL9FIg/9JrPWLL4imdX/uOgpNs+CZw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Omvd0TqkVwaCl8ISSVepE3fAxfUTSlX/DBiSM/4HO8kelzpw4c677X6t0fMq0kn0jN8N1ILeNLpqDay7ZQfYpHwc1HrOW59TNZSjDSl0nJXNilOmgUmIiaxfRVNOXKYUTx65FB2L6Yw+4crZvLH3sxwmV1mU7cgxeiJj/VhG8A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KLtF/tqY; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746366663; c=relaxed/simple;
+	bh=Am8R653w6DFmXINiQmvUHC3B7/bLaoTrUH1Ub6/uprQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=acnjS60K6fhdG6sT2nOs3B2r0wEcs6vTQ5LW/Vd11PsHVYYu35qk+eyamUtAlYjL8y5ohMmj/K5LbtgBOOW6PPiHEwtAAmSmZURSjcgIVniTtbh6pdxlJOwVtGTAILYI/v4JJlX/VyWUxZ7gXNsMVgCGi7+YGLkAzGIrTCdKxes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWM6Sp2s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KLtF/tqY"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so3716005e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 06:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746366644; x=1746971444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+WxkHYKUkzW4ER/6Z9ItH8b6boPBxhsY28VmZL6mAc=;
-        b=KLtF/tqYlJIVYbLC0juVwC+cLVHSKWLNhElb7Qmq5wU/EcCK9AHa1chBbHAAjLr7AI
-         zvX1FMI1nHXHCl8APTKYNITkQ+wfRZd5PlcZYtFPBLfbwNIdRuLaTCuLusXU8Ff0OV4z
-         McYX42riCG3U3IUW+E5dcKa0PWE1VG972O0eVnY2zH9R5seUQmUaLmVjZkTPdv08U2f0
-         NcdhmeNadxNc8OR7VZbQdx5fgZafYABtqPrnv9wGorO1yeyjyg4puDxaFw59iCnamt4V
-         D63D5Bg+CMyUm4r2XbylR79jYevWBAk4coMgqvubBjCNV2sKiHOPwsaE9cU7dEC9xqR3
-         MUUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746366644; x=1746971444;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z+WxkHYKUkzW4ER/6Z9ItH8b6boPBxhsY28VmZL6mAc=;
-        b=LQCzp7crO7r7iP/UnEA6CGwrAl0TRpHfs9vdcKo1GAKt5NGl+LsFyMxzGkeMAxyF6W
-         4QwM4QywJqiC736bsk7XOgZF3TO+uCSjaGw8gBpKejKz1ll73zB+aoEtVxaRCRWpzoKq
-         E0Ot0GqWCTVH8LthZQAmECwqoHDI3eFOp3JDsU5+uHCaZF/NP+4Qb/OeBhj6YndDxBWo
-         zU1YFwYjhy0Nc7FUs9jb6jL8kZLjP3DEw5JnVIvn9Ve0Xfh6H/Q6xhp0Svu7Dc5xazv0
-         OHgBaTYBoNO3mwfz7lSh1mdii3Ei0vRYrE2epQ+WjtKi2bTSlcjnX8AuUCy6cE9Ut/b8
-         SinQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Edp8Eyd2viuf1NiGxH+5wQoMnNTJ0naWEthT6PfvEI1kFdXijddoJVMfXvECFm8wyHojauLJKqjxT0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVVQBS3H6NfaQbozbBpi/rYGni68lsx+wwd00iYjPuZIrY9QH6
-	oOy5vDYB/GDIMLMiOLRhJSEy2VGttjJKMXz/dQlf8P7z026GIorcfej9rTuvcf4=
-X-Gm-Gg: ASbGncvay0lgNZqQ+dDeZxLUgFPrT3POsVTiTjYh6RAFvWaNUtNCmOvMdddlMVhH7/7
-	tud+TpLu/Gj3o2bSr2ZGx8lXumYEahDcS8WyFpsS3vF0gqL/ZhLyxakyClEXVHssUvpTl9k+FaZ
-	/YFx2JkxDUbDIkPmff2XrjqwtdRPqc9O9YYyIFKIzAVD7eJivl2lndO3Hk61gpVKWgqVVoRFmpZ
-	YphQTyWNk7lVnvQaG6+NYukVqJ68mSamPNueyS3H9603zArjzFzwX7MdnWVVbHUudxoTP+bAfIz
-	nwtKcZhQpwWIldeTKNnjDiUE/WMGVMw6DwuM7aF8TNafk+6IBnp0FCaZJ24=
-X-Google-Smtp-Source: AGHT+IEYCOZ+iY0a8P6rTepTPbdUWPxKR+5HMLJYKNnujHoa+RcUI4iTDfxw5wNiB9aCsPGWAf+6xg==
-X-Received: by 2002:a5d:64ef:0:b0:3a0:86f3:451f with SMTP id ffacd0b85a97d-3a099af1f69mr2481210f8f.12.1746366643823;
-        Sun, 04 May 2025 06:50:43 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7bbesm7343717f8f.49.2025.05.04.06.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 06:50:43 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250428-upstream_ospi_v6-v11-0-1548736fd9d2@foss.st.com>
-References: <20250428-upstream_ospi_v6-v11-0-1548736fd9d2@foss.st.com>
-Subject: Re: [PATCH v11 0/3] Add STM32MP25 SPI NOR support
-Message-Id: <174636664232.45285.4829080141383638928.b4-ty@linaro.org>
-Date: Sun, 04 May 2025 15:50:42 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWM6Sp2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A71FCC4CEE7;
+	Sun,  4 May 2025 13:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746366662;
+	bh=Am8R653w6DFmXINiQmvUHC3B7/bLaoTrUH1Ub6/uprQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZWM6Sp2sKubNQ44E5wVp1LjLSAtKt/eE5xUiz01P+OeI5DBNku8Bf/a3TmuZqjxm4
+	 4CK4hanLqM7ISKRo1/rE6RdCULE0VcADfzjz7XLxE0++NKJ/yZ/ND54DzGlWsFZurE
+	 LFItX+2yj/vt/33GH9z/USA+S4jP17gxMoXOMmaExmwJiScZYw1lRqXazTaXJLzsDj
+	 at//zfctQb0qXOakjRoByKwD3CwAMOpc8JCxEENqmD327nLl7hjqJXDQsQ4ISaiVr+
+	 brADojzqBck/vCUyIhS1/SHwpV2VnmzWjycdOdcEKnUTAg0VPQIdEhWzytgXFTSucW
+	 2rG/3chJh2x9Q==
+Date: Sun, 4 May 2025 15:50:57 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT PATCH v2 03/23] x86/boot: Drop global variables keeping
+ track of LA57 state
+Message-ID: <aBdwwR52hI37bW9a@gmail.com>
+References: <20250504095230.2932860-25-ardb+git@google.com>
+ <20250504095230.2932860-28-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250504095230.2932860-28-ardb+git@google.com>
 
 
-On Mon, 28 Apr 2025 10:58:29 +0200, Patrice Chotard wrote:
-> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics.
+* Ard Biesheuvel <ardb+git@google.com> wrote:
+
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> On STM32MP25 SoCs family, an Octo Memory Manager block manages the muxing,
-> the memory area split, the chip select override and the time constraint
-> between its 2 Octo SPI children.
+> On x86_64, the core kernel is entered in long mode, which implies that
+> paging is enabled. This means that the CR4.LA57 control bit is
+> guaranteed to be in sync with the number of paging levels used by the
+> kernel, and there is no need to store this in a variable.
 > 
-> Due to these depedencies, this series adds support for:
->   - Octo Memory Manager driver.
->   - Octo SPI driver.
->   - yaml schema for Octo Memory Manager and Octo SPI drivers.
+> There is also no need to use variables for storing the calculations of
+> pgdir_shift and ptrs_per_p4d, as they are easily determined on the fly.
 > 
-> [...]
+> This removes the need for two different sources of truth (i.e., early
+> and late) for determining whether 5-level paging is in use: CR4.LA57
+> always reflects the actual state, and never changes from the point of
+> view of the 64-bit core kernel. It also removes the need for exposing
+> the associated variables to the startup code. The only potential concern
+> is the cost of CR4 accesses, which can be mitigated using alternatives
+> patching based on feature detection.
+> 
+> Note that even the decompressor does not manipulate any page tables
+> before updating CR4.LA57, so it can also avoid the associated global
+> variables entirely. However, as it does not implement alternatives
+> patching, the associated ELF sections need to be discarded.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/boot/compressed/misc.h         |  4 --
+>  arch/x86/boot/compressed/pgtable_64.c   | 12 ------
+>  arch/x86/boot/compressed/vmlinux.lds.S  |  1 +
+>  arch/x86/boot/startup/map_kernel.c      | 12 +-----
+>  arch/x86/boot/startup/sme.c             |  9 ----
+>  arch/x86/include/asm/pgtable_64_types.h | 43 ++++++++++----------
+>  arch/x86/kernel/cpu/common.c            |  2 -
+>  arch/x86/kernel/head64.c                | 11 -----
+>  arch/x86/mm/kasan_init_64.c             |  3 --
+>  9 files changed, 24 insertions(+), 73 deletions(-)
 
-Applied, thanks!
+So this patch breaks the build & creates header dependency hell on 
+x86-64 allnoconfig:
 
-[1/3] dt-bindings: memory-controllers: Add STM32 Octo Memory Manager controller
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/43eb1b288072641b7de8f5d5c15bde69e6e8589a
-[2/3] memory: Add STM32 Octo Memory Manager driver
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/daee9b249992a88cb64fb6a67eeb333d359c6242
-[3/3] MAINTAINERS: add entry for STM32 OCTO MEMORY MANAGER driver
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/ab455b75de7351a0277be3261af180e326b74605
+ starship:~/tip> m kernel/pid.o 
+   DESCEND objtool
+   CC      arch/x86/kernel/asm-offsets.s
+   INSTALL libsubcmd_headers
+ In file included from ./arch/x86/include/asm/pgtable_64_types.h:5,
+                 from ./arch/x86/include/asm/pgtable_types.h:283,
+                 from ./arch/x86/include/asm/processor.h:21,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:59,
+                 from ./include/linux/thread_info.h:60,
+                 from ./include/linux/spinlock.h:60,
+                 from ./include/linux/swait.h:7,
+                 from ./include/linux/completion.h:12,
+                 from ./include/linux/crypto.h:15,
+                 from arch/x86/kernel/asm-offsets.c:9:
+ ./arch/x86/include/asm/sparsemem.h:29:34: warning: "pgtable_l5_enabled" is not defined, evaluates to 0 [-Wundef]
+    29 | # define MAX_PHYSMEM_BITS       (pgtable_l5_enabled() ? 52 : 46)
+       |                                  ^~~~~~~~~~~~~~~~~~
+ ./include/linux/page-flags-layout.h:31:26: note: in expansion of macro ‘MAX_PHYSMEM_BITS’
+    31 | #define SECTIONS_SHIFT  (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Plus I'm not sure I'm happy about this kind of complexity getting 
+embedded deep within low level MM primitives:
 
+  static __always_inline __pure bool pgtable_l5_enabled(void)
+  {
+	unsigned long r;
+	bool ret;
+
+	if (!IS_ENABLED(CONFIG_X86_5LEVEL))
+		return false;
+
+	asm(ALTERNATIVE_TERNARY(
+		 "movq %%cr4, %[reg] \n\t btl %[la57], %k[reg]" CC_SET(c),
+		 %P[feat], "stc", "clc")
+		 : [reg] "=&r" (r), CC_OUT(c) (ret)
+		 : [feat] "i"  (X86_FEATURE_LA57),
+		   [la57] "i"  (X86_CR4_LA57_BIT)
+		 : "cc");
+
+	return ret;
+  }
+
+it's basically everywhere:
+
+	arch/x86/include/asm/page_64_types.h:#define __VIRTUAL_MASK_SHIFT	(pgtable_l5_enabled() ? 56 : 47)
+	arch/x86/include/asm/paravirt.h:	if (pgtable_l5_enabled())						\
+	arch/x86/include/asm/paravirt.h:	if (pgtable_l5_enabled())					\
+	arch/x86/include/asm/pgalloc.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgalloc.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgalloc.h:	if (pgtable_l5_enabled())
+	arch/x86/include/asm/pgtable.h:#define pgd_clear(pgd)			(pgtable_l5_enabled() ? native_pgd_clear(pgd) : 0)
+	arch/x86/include/asm/pgtable.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgtable.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgtable.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgtable.h:	if (!pgtable_l5_enabled())
+	arch/x86/include/asm/pgtable_32_types.h:#define pgtable_l5_enabled() 0
+	arch/x86/include/asm/pgtable_64.h:	return !pgtable_l5_enabled();
+	arch/x86/include/asm/pgtable_64.h:	if (pgtable_l5_enabled() ||
+	arch/x86/include/asm/pgtable_64_types.h:static __always_inline __pure bool pgtable_l5_enabled(void)
+	arch/x86/include/asm/pgtable_64_types.h:#define PGDIR_SHIFT	(pgtable_l5_enabled() ? 48 : 39)
+	arch/x86/include/asm/pgtable_64_types.h:#define PTRS_PER_P4D		(pgtable_l5_enabled() ? 512 : 1)
+	arch/x86/include/asm/pgtable_64_types.h:# define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
+	arch/x86/include/asm/sparsemem.h:# define MAX_PHYSMEM_BITS	(pgtable_l5_enabled() ? 52 : 46)
+
+Inlined approximately a gazillion times. (449 times on x86 defconfig. 
+Yes, I just counted it.)
+
+And it's not even worth it, as it generates horrendous code:
+
+   154:   0f 20 e0                mov    %cr4,%rax
+   157:   0f ba e0 0c             bt     $0xc,%eax
+
+... while CR4 access might be faster these days, it's certainly not as 
+fast as simple percpu access. Plus it clobbers a register (RAX in the 
+example above), which is unnecessary for a flag test.
+
+Cannot pgtable_l5_enabled() be a single, simple percpu flag or so?
+
+And yes, this creates another layer for these values - but thus 
+decouples low level MM from detection & implementation complexities, 
+which is a plus ...
+
+Thanks,
+
+	Ingo
