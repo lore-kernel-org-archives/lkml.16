@@ -1,113 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BAE153800
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 10:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61863597E;
+	Sun,  4 May 2025 10:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746353174; cv=none; b=VrrwvM3ZG7PNRSco5h+V6fC8oE0LKXGJhdEYMUYJracVGyo+CCgeTjxJcOnZoNacY8pAqBn0blt7a0QzHHggrprcNxEhYLpI138wXoGpMya2/e8YkWfki/gJN/xzK/tw4pQrOkgzE3giLPr/HiXhaAK07aCR9PFfd7QsHP26E9M=
+	t=1746353974; cv=none; b=t7x01Ms8YI0CGhB4qB3Nl4lg1sib4GVk7S5TU/xFdHvOm3TgqSWon6qM0+aQ5cAJ47DcUj83ys6ULIVaOIT00hbaYoMUQa64ZVh0O96Z5op2M8sJX6ErXSuSfCg1lma5uur5adJy+qM1AnT8gS6foKyu6wVfQEEBai/Upb3duws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746353174; c=relaxed/simple;
-	bh=JL3XkAj7vKDP2Rhw1aBkOgJ/hiKDV5Cf8RNnHw8tbNQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hYLaxzh5VbyI0pYQSa0pGn1MJ9BsrtfFHWrHbkdxTEKH1SR4N97FCSFCIk294TQJlYHkxxmJWGK9b9e/o51DMoPl76GpQ6tLxkjQR7AOfRMKyZ/w0MJeuGP/B0OAh+Gxb8rG/cj6bU+NRKuGQiOgSGQu2u/aRXFYFjbFXWUIycg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gn1WoT53; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746353974; c=relaxed/simple;
+	bh=/zphhyt/wytwwQ3L2MfF1xGmJccBco5+XhvPcJrJ6Bw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D2ZAVWy4eRbZoYUZHMD6XhYW5mXID/Ze9o88Zo9qnc8xursqEgctdAM6tGLQ1KLkEigFHQNzD9KrgNXWbaj3zHy1Ix+S/X3+AZCe8bCD4mrPVRgMdkPtkZ++Fz9KNoFGAJV9zYwh7toyfSRGtlIgNwNl77x8NPrgxz92stKAnHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0mu5Qtn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WDUKrNAp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gn1WoT53"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746353170;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0mu5Qtn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WDUKrNAp"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746353970;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NvJ7vLDIHj6O9i5UsnQ+ux6Ts9JtSmkul70topMATbY=;
-	b=Gn1WoT53nRlL3VKozR6rytgeloTR708ZH1oa0N1UcvS1JUk1/Z97kxqT7FA2V8GYnKSfh8
-	i4ehWlImwyXuZdLrkXQ7dmAv08Ex5jo0s0qQ56VDdd/yiNHQE7M1U635XRsE5CNDrWSgtA
-	BXC1nYEgoP4f6fH/dk70vKjsL0NGQs0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-GHA9sYqyOzed-hwZy9XjIg-1; Sun,
- 04 May 2025 06:06:07 -0400
-X-MC-Unique: GHA9sYqyOzed-hwZy9XjIg-1
-X-Mimecast-MFC-AGG-ID: GHA9sYqyOzed-hwZy9XjIg_1746353166
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A94591800263;
-	Sun,  4 May 2025 10:06:05 +0000 (UTC)
-Received: from [10.22.80.45] (unknown [10.22.80.45])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8114E1800352;
-	Sun,  4 May 2025 10:06:03 +0000 (UTC)
-Date: Sun, 4 May 2025 12:05:58 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-cc: agk@redhat.com, snitzer@kernel.org, dm-devel@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, martin.petersen@oracle.com
-Subject: Re: [PATCH] dm-table: Set BLK_FEAT_ATOMIC_WRITES for target queue
- limits
-In-Reply-To: <20250502143933.1320061-1-john.g.garry@oracle.com>
-Message-ID: <57c7b277-4afd-cc22-d1aa-90ad2d9d23ea@redhat.com>
-References: <20250502143933.1320061-1-john.g.garry@oracle.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jfl7SNXUW9QYMi5IdJsuAK6+WDbLVdSs2AEZKeOH8eo=;
+	b=G0mu5QtnRB2C2Jr/mXDF6LW+tpTJ5RyHja/nqS6uGtlSLT43QUkBsbkYd7TcQN+G9wFLgr
+	WIK/tu6GTUDjMPizI5qndS8zUro5Mr6xSNpUWlIubE+Dj3Fp0RmulFvuiHkQZsDKsVMLEK
+	l+DX19+gay6Fb9NmQfJwG7GhkRM1U0oDdgF966qgc0tQDJFJHulsSISYmbv+fYlacai0tP
+	LfYnO5BY/8K3DAxdJDgoSsHrpyJ7DySuCFD6Qz7JyoUdGkpPxKElVCJjXWDwiwoiqUqwGZ
+	3yLheynP3GDV+PQsoHMOA7ja2ndz34GJB0nOSZd76QgTIx0zAsnfA6urcHhluw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746353970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jfl7SNXUW9QYMi5IdJsuAK6+WDbLVdSs2AEZKeOH8eo=;
+	b=WDUKrNApCeBn1j43PZF1WmP+DXkiGtG31xxSQxqtGVor3nXAXAjSjqxTmtewjBjrjS/WC2
+	g+xugQG1ONBsOBDQ==
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL
+Date: Sun,  4 May 2025 12:19:20 +0200
+Message-Id: <20250504101920.3393053-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+When userspace does PR_SET_TAGGED_ADDR_CTRL, but Supm extension is not
+available, the kernel crashes:
 
-I applied the patch, thanks.
+Oops - illegal instruction [#1]
+    [snip]
+epc : set_tagged_addr_ctrl+0x112/0x15a
+ ra : set_tagged_addr_ctrl+0x74/0x15a
+epc : ffffffff80011ace ra : ffffffff80011a30 sp : ffffffc60039be10
+    [snip]
+status: 0000000200000120 badaddr: 0000000010a79073 cause: 0000000000000002
+    set_tagged_addr_ctrl+0x112/0x15a
+    __riscv_sys_prctl+0x352/0x73c
+    do_trap_ecall_u+0x17c/0x20c
+    andle_exception+0x150/0x15c
 
-Mikulas
+Fix it by checking if Supm is available.
 
+Fixes: 09d6775f503b ("riscv: Add support for userspace pointer masking")
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/riscv/kernel/process.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-On Fri, 2 May 2025, John Garry wrote:
-
-> Feature flag BLK_FEAT_ATOMIC_WRITES is not being properly set for the
-> target queue limits, and this means that atomic writes are not being
-> enabled for any dm personalities.
-> 
-> When calling dm_set_device_limits() -> blk_stack_limits() ->
-> ... -> blk_stack_atomic_writes_limits(), the bottom device limits
-> (which corresponds to intermediate target queue limits) does not have
-> BLK_FEAT_ATOMIC_WRITES set, and so atomic writes can never be enabled.
-> 
-> Typically such a flag would be inherited from the stacked device in
-> dm_set_device_limits() -> blk_stack_limits() via BLK_FEAT_INHERIT_MASK,
-> but BLK_FEAT_ATOMIC_WRITES is not inherited as it's preferred to manually
-> enable on a per-personality basis.
-> 
-> Set BLK_FEAT_ATOMIC_WRITES manually for the intermediate target queue
-> limits from the stacked device to get atomic writes working.
-> 
-> Fixes: 3194e36488e2 ("dm-table: atomic writes support")
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> 
-> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-> index 9e175c5e0634..b35e48fed641 100644
-> --- a/drivers/md/dm-table.c
-> +++ b/drivers/md/dm-table.c
-> @@ -431,6 +431,12 @@ static int dm_set_device_limits(struct dm_target *ti, struct dm_dev *dev,
->  		return 0;
->  	}
->  
-> +	/*
-> +	 * BLK_FEAT_ATOMIC_WRITES is not inherited from the bottom device in
-> +	 * blk_stack_limits(), so do it manually.
-> +	 */
-> +	limits->features |= (q->limits.features & BLK_FEAT_ATOMIC_WRITES);
-> +
->  	if (blk_stack_limits(limits, &q->limits,
->  			get_start_sect(bdev) + start) < 0)
->  		DMWARN("%s: adding target device %pg caused an alignment inconsistency: "
-> -- 
-> 2.31.1
-> 
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 7c244de77180..3db2c0c07acd 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -275,6 +275,9 @@ long set_tagged_addr_ctrl(struct task_struct *task, uns=
+igned long arg)
+ 	unsigned long pmm;
+ 	u8 pmlen;
+=20
++	if (!riscv_has_extension_unlikely(RISCV_ISA_EXT_SUPM))
++		return -EINVAL;
++
+ 	if (is_compat_thread(ti))
+ 		return -EINVAL;
+=20
+--=20
+2.39.5
 
