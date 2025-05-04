@@ -1,81 +1,200 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C98A19DF48;
-	Sun,  4 May 2025 09:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB7816F0FE
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746352346; cv=none; b=IZ+p6ucU03e2m7leQE2MZI4ktMSaU8gTRX9iPJV4iEGNuJj+M+n/26xq/DdC25wTyGsMS1arpSu+VgewwNq6ac8sbVSfxhkaU3s9kbnmGoAu0bn9b5YIX4plqdA6JOWsC7QJ3qdnrQo6+egP1LXOjTZGNYyLJPbdw7AoTNhnpPk=
+	t=1746352387; cv=none; b=InwSGRcvz3UrrjlbZzEFejC7FoyXbdCeicFN+CEHJuv2Q2LOPUX4fUP9T6oPJ57L6uGCI2bSzefGwzfFnGOdNE2VsiSExKEUlrOsSx4Y1eVq0x/fUe5tgygputKicp+JUS64qqS1QpHjpAbbK902VBDERSRtw1MhKI+4nQ1OuBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746352346; c=relaxed/simple;
-	bh=Nze/SA9bYUHiBqOk4wcv/+05FhwIreXwokqHCkJ0EB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ua5vMoqZIksnRIvkmiQ3V/ItHf9eBgRklOS36i0BPr2HlZHM6aEgHdcrCxbLZI71zuxqgYDhnCOgxMmwGq7fGVGDFex79wY/pvxh001aGSXIXM4VpiwWOMaDmT7IytiuLjP73lSbgJG0AR7uP0FiYlGBM4I+Amuk8lH93/fD644=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Hn0T5Py7; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746352387; c=relaxed/simple;
+	bh=UXRAHnrW6o1Hrp9nY+SdVgPlslZXfTGylV7XaZlZmQg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nu1PBjubr+mzwpWfseGoUzwmZBO979d8IAAdAF1ApBhrn87XwZZg4nFlAv+LshUVH7P/FAXfTI8L26quD/eIjJQ9v0Df0BVeZCBFRHzLwkImh3XfbrimHMpPh55sFHITjpns4ZbnAhtPzpMwXBSmvSWHMJRKSKk8ud6Mj94Q8aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pQ9hQhvU; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Hn0T5Py7"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A5BA340E0173;
-	Sun,  4 May 2025 09:52:21 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZtFx5EtG6rfo; Sun,  4 May 2025 09:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746352338; bh=Cm20TX7ygDvmsM4levbHO9jiUOJ71+S+/h1MXQi3RaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hn0T5Py7vS32ScDM8L1WzrM1qKSM1yXd2cIKLZBIa69wALuKjNEQks57yCAmUinkE
-	 2hk9TQaMRGlkPgC8Ie9cXdTgp2AWmISB/LPX3T5xSdlWd53byAgSYfVRwpovgDWlR1
-	 LMW0Cg/qvnT3O4aBilu9N3XbzhAoGFDrl9vaN1xZYOi7Ee1GgkLgoHt6NluJ6e6eQ+
-	 Z1S2yjWI7j4NC32YrDdJzidJfLbkP9e+7VU9DkxOFbakCBklLFiOPPJyN4+m3P+lfO
-	 a54FqQ47DG4cr0E8pLgJn+oWVDKW2QV3QJ2OSTINmIJI+D1bUpbPYwgf482ViMf1eK
-	 n7mPXoO9gp/++4iEsnlMuRqC1tGlVKSE43mOZW7bBZ6s0PVXnK5yIgWuoMiW+jNBRK
-	 MXbTcgdSy+GSVDPyo9yMHz0gFhLmizowctXVLlaGns3meoezMfVQt8jKHW53rAIXne
-	 mEsTu16azrChJUwHhodzyV1Wt60svgFhrbWl4w04qsyPs5a4DR2MkJNtIrEuEU+Tyn
-	 p8D55sBFkH5efaZL3deh8ZeIT/5l1IthZw+OQ1K7T/Ww0y2qgIxGB/cOmGACuM5XHH
-	 itYgV2wI1tnggTeX/VzD7l9v+UWEEETszga7kioFVRM+F3C0WUybSVCI6ZxmMORsmZ
-	 EF8yWov39jcKtPBO084jdwyA=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A24A40E0196;
-	Sun,  4 May 2025 09:52:12 +0000 (UTC)
-Date: Sun, 4 May 2025 11:52:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>, x86@kernel.org
-Subject: Re: [PATCH] x86/CPU/AMD: Clean up the last-reset printing code a bit
-Message-ID: <20250504095212.GBaBc4zOxcAKQ26cbn@fat_crate.local>
-References: <20250422234830.2840784-6-superm1@kernel.org>
- <174617858494.22196.5727323411231361285.tip-bot2@tip-bot2>
- <aBcLJxjTQGa1-r5S@gmail.com>
- <aBcRXYkJlfySzBEx@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pQ9hQhvU"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-391315098b2so982550f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746352384; x=1746957184; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tgjYGmqJERA16GUSQyNl5d/TCxFdDCj9qH5HlRk6i3s=;
+        b=pQ9hQhvUW4v9Og0qlq3hctczxdD/V/6ezNfxncZ89jmQZurCK43aZBXQ8JDRTryiET
+         heO0RDt3TCZxbVXlECSKnFFF3bxmqhb8FoIt31Dt+YVHw8aLXDQYV6VbUBTkjd9nh7L4
+         cfi9H+E04RArs8V10ylkQZOiCcZBZ/Jo/B7O0Y9dyMbay5kVAcdNOF/ak2xPp29fnEZu
+         I3K2MkTMI2VAkAE98MDMlQxZpkiclEE4E5UGB7jlnmUREA4uAdKLtyft+V4a6BA003up
+         pElzLJHw+0RImWyNkZvnDLngTKwdrYKNyG5acrHhbaNpC2HSfNwFvT9I29Zp65RN9w7+
+         G0pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746352384; x=1746957184;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tgjYGmqJERA16GUSQyNl5d/TCxFdDCj9qH5HlRk6i3s=;
+        b=J9dJQ6CFS4fxD4f/TunfoX+w/8Hgif9tl5nhLRsvutx02ivDj15bKsvuKd10IPldY2
+         xOrDcKN78oII755WJXWDZ46cKn82x6ngcGvME2Vj28DDcFVTmF9xDxrwwQC8VUFvgmiu
+         YZglbdkOXTO+aPzh4h6dRCcIxEXuAe5oajN4t7V/xXCkr0fHJduR2IpPag2JpTfG1LvM
+         7MyuQcn+etdXoDFdAje29zryhQqgIyNU8EXjJVjA4jJZHmfx0wuJvI4vcweYVr9/xMSu
+         MOnD/I0zkZqMdI5a2Sh4/K/Pl6TsRYkpvJvgy5WAZt/6ftNyObmX8b4H65UOdnu82IL1
+         3oVw==
+X-Gm-Message-State: AOJu0Yy6hbBjv1vxKYgRJlx0vjQa6RsiE2QpQexNawSj/KSOZnKzDhNg
+	14Y/M6CrxBYUSsyanfChPk1nK40ifuhmuBeyWpIPabL0T2Fjg42tUQFq7R4biptMqDitkJuevC4
+	e9EK/JF2VK+Cd/SZaC9/DhwerDQe/S7LG7Rv5lJ1MLIopyhPUaliCLqAyNnrDBh2RmbGN7V/3Y9
+	7tLMc7x5xZxeDWZk4wZlPIQMNuwxdySg==
+X-Google-Smtp-Source: AGHT+IEpJosi85FQJ/nHfqkdlZQgieG1drSYGfXL59uYsmeFMxvQ6gG5cmC9kEPdRbsX4/WBIOplsZs2
+X-Received: from wrbaz15.prod.google.com ([2002:adf:e18f:0:b0:39e:e563:b90a])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2506:b0:39c:1f19:f0c3
+ with SMTP id ffacd0b85a97d-3a09fdbbb18mr2670134f8f.46.1746352384424; Sun, 04
+ May 2025 02:53:04 -0700 (PDT)
+Date: Sun,  4 May 2025 11:52:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aBcRXYkJlfySzBEx@gmail.com>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6293; i=ardb@kernel.org;
+ h=from:subject; bh=/UH2pkR9KgWDh14J48RhsK2IpL+B5SgKPXbJ8BbF+g4=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4p7dae41MXuDd9pdu6fMUBTxzmde3j7JWx/WRL26+
+ v7539+eHaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAiwgUMf8X/zC1hfTrbm/VG
+ 0Jk1LL5Oe9tnB3wWnfM5ePblPtNlrVcZGW7+/blBt5B3GveEIy15X11Un867t+GQ3tnKtM/WK8/ 1r+YHAA==
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <20250504095230.2932860-25-ardb+git@google.com>
+Subject: [RFT PATCH v2 00/23] x86: strict separation of startup code
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 04, 2025 at 09:03:57AM +0200, Ingo Molnar wrote:
-> Patch attached to clean this all up.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Ack, just merge it into Mario's original patch.
+This RFT series implements a strict separation between startup code and
+ordinary code, where startup code is built in a way that tolerates being
+invoked from the initial 1:1 mapping of memory.
 
-Thx.
+The existsing approach of emitting this code into .head.text and
+checking for absolute relocations in that section is not 100% safe, and
+produces diagnostics that are sometimes difficult to interpret.
 
+Instead, rely on symbol prefixes, similar to how this is implemented for
+the EFI stub and for the startup code in the arm64 port. This ensures
+that startup code can only call other startup code, unless a special
+symbol alias is emitted that exposes a non-startup routine to the
+startup code.
+
+This is somewhat intrusive, as there are many data objects that are
+referenced both by startup code and by ordinary code, and an alias needs
+to be emitted for each of those. If startup code references anything
+that has not been made available to it explicitly, a build time link
+error will occur.
+
+This ultimately allows the .head.text section to be dropped entirely, as
+it no longer has a special significance. Instead, code that only
+executes at boot is emitted into .init.text as it should.
+
+Change since RFC/v1:
+- Include a major disentanglement/refactor of the SEV-SNP startup code,
+  so that only code that really needs to run from the 1:1 mapping is
+  included in the startup/ code
+
+- Incorporate some early notes from Ingo
+
+Build tested defconfig and allmodconfig
+
+!!! Boot tested on non-SEV guest ONLY !!!!
+
+Again, I will need to lean on Tom to determine whether this breaks
+SEV-SNP guest boot. As I mentioned before, I am still waiting for
+SEV-SNP capable hardware to be delivered.
+
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+
+Ard Biesheuvel (23):
+  x86/boot: Move early_setup_gdt() back into head64.c
+  x86/boot: Disregard __supported_pte_mask in __startup_64()
+  x86/boot: Drop global variables keeping track of LA57 state
+  x86/sev: Make sev_snp_enabled() a static function
+  x86/sev: Move instruction decoder into separate source file
+  x86/sev: Disentangle #VC handling code from startup code
+  x86/sev: Separate MSR and GHCB based snp_cpuid() via a callback
+  x86/sev: Fall back to early page state change code only during boot
+  x86/sev: Move GHCB page based HV communication out of startup code
+  x86/sev: Use boot SVSM CA for all startup and init code
+  x86/boot: Drop redundant RMPADJUST in SEV SVSM presence check
+  x86/sev: Unify SEV-SNP hypervisor feature check
+  x86/linkage: Add SYM_PIC_ALIAS() macro helper to emit symbol aliases
+  x86/boot: Add a bunch of PIC aliases
+  x86/boot: Provide __pti_set_user_pgtbl() to startup code
+  x86/sev: Provide PIC aliases for SEV related data objects
+  x86/sev: Move __sev_[get|put]_ghcb() into separate noinstr object
+  x86/sev: Export startup routines for ordinary use
+  x86/boot: Created a confined code area for startup code
+  x86/boot: Move startup code out of __head section
+  x86/boot: Disallow absolute symbol references in startup code
+  x86/boot: Revert "Reject absolute references in .head.text"
+  x86/boot: Get rid of the .head.text section
+
+ arch/x86/boot/compressed/Makefile              |    6 +-
+ arch/x86/boot/compressed/misc.h                |   12 +-
+ arch/x86/boot/compressed/pgtable_64.c          |   12 -
+ arch/x86/boot/compressed/sev-handle-vc.c       |  134 +++
+ arch/x86/boot/compressed/sev.c                 |  210 +---
+ arch/x86/boot/compressed/sev.h                 |   21 +-
+ arch/x86/boot/compressed/vmlinux.lds.S         |    1 +
+ arch/x86/boot/startup/Makefile                 |   21 +
+ arch/x86/boot/startup/exports.h                |   14 +
+ arch/x86/boot/startup/gdt_idt.c                |   17 +-
+ arch/x86/boot/startup/map_kernel.c             |   18 +-
+ arch/x86/boot/startup/sev-shared.c             |  804 +-------------
+ arch/x86/boot/startup/sev-startup.c            | 1169 +-------------------
+ arch/x86/boot/startup/sme.c                    |   45 +-
+ arch/x86/coco/core.c                           |    2 +
+ arch/x86/coco/sev/Makefile                     |    6 +-
+ arch/x86/coco/sev/core.c                       |  189 +++-
+ arch/x86/coco/sev/{sev-nmi.c => sev-noinstr.c} |   74 ++
+ arch/x86/coco/sev/vc-handle.c                  | 1060 ++++++++++++++++++
+ arch/x86/coco/sev/vc-shared.c                  |  614 ++++++++++
+ arch/x86/include/asm/init.h                    |    6 -
+ arch/x86/include/asm/linkage.h                 |   10 +
+ arch/x86/include/asm/pgtable_64_types.h        |   43 +-
+ arch/x86/include/asm/setup.h                   |    2 +
+ arch/x86/include/asm/sev-internal.h            |   30 +-
+ arch/x86/include/asm/sev.h                     |   78 ++
+ arch/x86/kernel/cpu/common.c                   |    3 +-
+ arch/x86/kernel/head64.c                       |   27 +-
+ arch/x86/kernel/head_32.S                      |    2 +-
+ arch/x86/kernel/head_64.S                      |   18 +-
+ arch/x86/kernel/setup.c                        |    1 +
+ arch/x86/kernel/vmlinux.lds.S                  |   11 +-
+ arch/x86/lib/memcpy_64.S                       |    1 +
+ arch/x86/lib/memset_64.S                       |    1 +
+ arch/x86/lib/retpoline.S                       |    2 +
+ arch/x86/mm/kasan_init_64.c                    |    3 -
+ arch/x86/mm/mem_encrypt_amd.c                  |    2 +
+ arch/x86/mm/mem_encrypt_boot.S                 |    6 +-
+ arch/x86/mm/pgtable.c                          |    1 +
+ arch/x86/platform/pvh/head.S                   |    2 +-
+ arch/x86/tools/relocs.c                        |    8 +-
+ tools/objtool/arch/x86/decode.c                |    6 +-
+ 42 files changed, 2367 insertions(+), 2325 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/sev-handle-vc.c
+ create mode 100644 arch/x86/boot/startup/exports.h
+ rename arch/x86/coco/sev/{sev-nmi.c => sev-noinstr.c} (61%)
+ create mode 100644 arch/x86/coco/sev/vc-handle.c
+ create mode 100644 arch/x86/coco/sev/vc-shared.c
+
+
+base-commit: 18ea89eae404d119ced26d80ac3e62255ce15409
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0.906.g1f30a19c02-goog
 
-https://people.kernel.org/tglx/notes-about-netiquette
