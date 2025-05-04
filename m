@@ -1,127 +1,125 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B380817BD3;
-	Sun,  4 May 2025 06:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971B041A8F
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 06:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746340111; cv=none; b=dgsrniK0Jyh/3CfhL7y8d01PUMomett8w34Lowy5sxejmFpqoCHO8zMvyFMIW25ggqtZEvykjp/k6/lkIG+MNY8GXlulyRAvMEuCg3f5Z7uZSBgM5xwh5nqgwwe9bTJYZkHskLA1azVtTYSJcGGQupKJPpQmTprnQt9aC2QpJls=
+	t=1746340599; cv=none; b=sf+evZdeQk/mIptHIjtsq5cW5GdESxkvBKnmhRCGbZ4VNE+8+R3hBeexCmAPEumMFGofPZ5NG0D2hzEKAm9EuvgHQjULIc2OmGe+bEdyC7EKGo4Tw9LaCFjMbWqk2Vo5khf0QA/Pm98gvEa1jJMMwuOSjYQud9dt3px1t+30jLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746340111; c=relaxed/simple;
-	bh=JH7UWl0QPjoLu0FdEYSBj0ChSPIozh3YaMARZWs2Gyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q/rdCKo1sSpPN8jLU/DKL17HKi4+3fINXNcMz82kQQ19PAvwdkIKEiaOCgOS889sUCaVUtoFaT7+fvvTtNxM1uCg9084ZLExTN7duGbb4/CWEDWfrmJsLB0UV9nMehEeM5/P0ryk1y/GLFLxO8wu2t9Zm3W9XhBp4+qlDG6Bgqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=MgE7mYBf; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1746340599; c=relaxed/simple;
+	bh=tOPjQ/cSKRGlSUrmXhAksC/DTHfM0mDazsryZyMgWuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eG7c5ar5SqQBdkbLOZm9FViIweYCLAjOgPK4i+l9xgR4WaNjrUBlMvLgzXLfPgMmmirakfvxdMKac+lZNmQCoDHOwXDx93pe2MikbSjKWoYLcrH6enIXXkj9vLU/NKa4er9dg9U6B+Yq8axWR3WvxHyGpYItqvx+iPXGLAVlgGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=QMpSLQkL; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="MgE7mYBf"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9C58C102EBA58;
-	Sun,  4 May 2025 08:28:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746340100; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=rCgrVpFe4biw8hf/ZoueDjqGBEEPT9+1gxH8yMqDfrI=;
-	b=MgE7mYBfXN/HyW3DXX1gurVkn01PGNgPV3q7o0L+9PRlNWoioSE9c6kaq2ZrqXIAPjdDgI
-	ONrqX8sYjiREnJHNYF0XKTSgW48osfwDUHKGGigLh3ByV6gUlX3WDHhRaNL9/0t/uJFGc9
-	f4ahN/RJd72PKhp8T4/7o+dqVrm7S1+Inh96VoMAZ80yCs+r8KxQRhdoxyEPA2z1Qowo4U
-	z2ULxr3K0WOZB44kliZKG41EccEypr8FoznyhCm128qryxuGu+JwdH7mjWkgmX3vCEhyRk
-	eDWwJFj7edmMDpl+Z7ZlxTGe9cRJrRxesac92ErNRHW47zCX6GFC1O81tWmhBQ==
-Date: Sun, 4 May 2025 08:28:11 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [net-next v10 4/7] net: mtip: The L2 switch driver for imx287
-Message-ID: <20250504082811.4893afaa@wsk>
-In-Reply-To: <20250502071328.069d0933@kernel.org>
-References: <20250502074447.2153837-1-lukma@denx.de>
-	<20250502074447.2153837-5-lukma@denx.de>
-	<20250502071328.069d0933@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="QMpSLQkL"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acb2faa9f55so439111466b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 23:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1746340595; x=1746945395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JHaTiwJI4/sfwpLaaPdwgVUdtAp+UY67EwcfFEyOC2Q=;
+        b=QMpSLQkLS7LHXSJTfzPz2TETAUYVPR8nk4lIIowQI8te3RyF+gPlORU/DKeKnCJnHG
+         clwMeWZEKJRsIHiafGgPgSrh4+JrjHoQqmzU77tRdeLHfk5SSLFQ/sBHMVteJCo3UWz4
+         2sKWz7GHzU+n6ZaXM0qgGnL+3FqxlAqDKCoybbH/ycNIxVlUdatf5G6T0lDQbEzILlHn
+         Nd/NE3YUllbeDkNPPbzt15AJ9ZN3OZ1EDA1Fe+sfLS8QceD0jVd7NmjeZetTY8kOikUF
+         Lnh1Nu5hsRJ4nc82pMcG2TvqxYrhG/R0JJeaOLLjLgX5OpV5cBVz9+6Gk8AwXC7jwJ23
+         UoZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746340595; x=1746945395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JHaTiwJI4/sfwpLaaPdwgVUdtAp+UY67EwcfFEyOC2Q=;
+        b=aab43hA3ijg5ngP3ZDUwRA+u724q+EYAmEjmz/SgGtXrqDuLyzU8GCtcj2mlXjldhq
+         FyloFHJQunjGtOYbfiD0jyoQkTTmISOzoufohZMTZgl0Leup/uLbGOKMsxwPuQV7CRLp
+         i/GqAbHWqUr0Aaz3wuggjUxAOEADS30q3Y16vKlGTa3nOZxqG5iijNozQZnbuIBk7uaR
+         OMCx/onQ39gsm9Zl34JUidU//lNgj7/yKoC/wMGNU83hMGAQSzxQPX4Lf2xOVsR8Dc3n
+         KUHlXD9OhOljsYlqgoNMtvbOKtcZy0U0/hWASOG93E0Oi2XPTjDSVJbq0x9SWipFakI9
+         WU4A==
+X-Forwarded-Encrypted: i=1; AJvYcCV/sEvrpKa2fMHwwiqFX++96bbGd2fISWaoIMd7tJwaf/CEKutwLTNqel0SplOr7wvv6cRfgyCGA4EhT3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ+SMHY9gVcZxwmt5gBf1yOcFc5IKo2LY/Sw8HZWJSCnR2GyYk
+	YJA2b00i4NYUYHyvpzIg2fYuR2gURxN1LbhvWAOAgh/pt776SlpKq4Xqspu+Az8ZZIGMqca+Xdz
+	8ExMbZP2S8PXIyUpDTYm67s03AVCkmv4UaGu3Bg==
+X-Gm-Gg: ASbGnctkR2eW8H7xpG+aBCbBn3D3QUoaS1d+0Ilt68/Q2mHmgA+psB59DFfHdz1poFe
+	3819BHwWxgsmHTf0QPdIeQvtwG4tzsHwFD470paOFoOc12d9dMwKv146OJFyjRTZ+jMuC9g+Heg
+	z92CiMtzbkYT/Uev5Mt+AWe+2LGN4bjf6dQ05ITCPrBmfHucsJzJA=
+X-Google-Smtp-Source: AGHT+IEi9QI+iA/byljfNuvcUrhqdYq3BATKLzJM1rOkfGhccriVUv2+GXPzdWpc9xcFfaAADYuI5Vqi1Nltr6fxqlY=
+X-Received: by 2002:a17:907:60cf:b0:ac4:169:3664 with SMTP id
+ a640c23a62f3a-ad1a49ff001mr271572666b.33.1746340594757; Sat, 03 May 2025
+ 23:36:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/6QmTqwgtdiqccoc742SZ04r";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
-
---Sig_/6QmTqwgtdiqccoc742SZ04r
-Content-Type: text/plain; charset=US-ASCII
+References: <20250502103905.3995477-1-max.kellermann@ionos.com> <20250503194706.d9e775fe8b24ad357cc6db89@linux-foundation.org>
+In-Reply-To: <20250503194706.d9e775fe8b24ad357cc6db89@linux-foundation.org>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Sun, 4 May 2025 08:36:23 +0200
+X-Gm-Features: ATxdqUELZLmeKzwME6pgBX0qe7w_KLlRNg2LFSpyezlG7ky2d2SYp611oocw1SY
+Message-ID: <CAKPOu+_zurvzehn+Wp=gbQxafHP9jBEPM4NcrDzb6Kd2C0MmaA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kernel/watchdog: add /sys/kernel/{hard,soft}lockup_count
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: song@kernel.org, joel.granados@kernel.org, dianders@chromium.org, 
+	cminyard@mvista.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jakub,
+On Sun, May 4, 2025 at 4:47=E2=80=AFAM Andrew Morton <akpm@linux-foundation=
+.org> wrote:
+> Documenation/, please?
 
-> On Fri,  2 May 2025 09:44:44 +0200 Lukasz Majewski wrote:
-> > This patch series provides support for More Than IP L2 switch
-> > embedded in the imx287 SoC.
-> >=20
-> > This is a two port switch (placed between uDMA[01] and MAC-NET[01]),
-> > which can be used for offloading the network traffic.
-> >=20
-> > It can be used interchangeably with current FEC driver - to be more
-> > specific: one can use either of it, depending on the requirements.
-> >=20
-> > The biggest difference is the usage of DMA - when FEC is used,
-> > separate DMAs are available for each ENET-MAC block.
-> > However, with switch enabled - only the DMA0 is used to
-> > send/receive data to/form switch (and then switch sends them to
-> > respecitive ports).
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch> =20
->=20
-> Now that basic build is green the series has advanced to full testing,
-> where coccicheck says:
->=20
-> drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c:1961:1-6: WARNING:
-> invalid free of devm_ allocated data
-> drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c:1237:16-19: ERROR:
-> bus is NULL but dereferenced.
+Do you mean Documentation/ABI/testing/ ? (like
+Documentation/ABI/testing/sysfs-kernel-oops_count)
+I'll add that; I was confused by the directory name "testing" and
+didn't expect to find actual documentation there.
 
-I'm sorry for not checking the code with coccinelle.
+> >  Having this is useful for monitoring tools.
+>
+> Useful how?  Use cases?  Examples?
 
-I do have already used sparse and checkpatch.
+To detect whether the machine is healthy. If the kernel has
+experienced a soft lockup, it's probably due to a kernel bug, and I'd
+like to detect that quickly and easily. There is currently no way to
+detect that, other than parsing dmesg. Or observing indirect effects:
+such as certain tasks not responding, but then I need to observe all
+tasks. I'd rather be able to detect the primary cause easily - just
+like some people decided that they want to observe an oops and a
+warning counter.
 
-I will fix those errors.
+We always run the latest stable kernel on our production servers, and
+this has brought great sorrow for the last year (I think the big netfs
+drama began in 6.9 or so when the pgpriv2 refactoring began). There
+have been numerous netfs/NFS/Ceph regressions, we had just as many
+production outages, and the maintainers wouldn't respond to my bug
+reports, so I had to figure it all out myself.
+The latest regression that quickly took down our servers was a
+"stable" backport of a performance optimization for epoll in 6.14.4,
+leading to soft lockups in ep_poll(), see
+https://lore.kernel.org/lkml/20250429185827.3564438-1-max.kellermann@ionos.=
+com/
+- but we observed it only after everything had already fallen apart.
+Since our main process has switched from epoll to io_uring, only
+second-order processes were falling apart. Had we had a soft lockup
+counter, we could have noticed it earlier.
 
-Best regards,
+> A proposal to permanently extend Linux's userspace API requires better
+> justification than an unsubstantiated assertion, surely?
 
-Lukasz Majewski
+The commits that added warn_count/oops_count literally only said "is a
+fairly interesting signal". See commits 9db89b411170 ("exit: Expose
+"oops_count" to sysfs") and 8b05aa263361 ("panic: Expose "warn_count"
+to sysfs"). That's quite an unsubstantiated assertion, too, isn't it?
 
---
+I agree with you, but I thought the point for a soft lockup counter
+was trivial enough to see, and I didn't think you needed more
+justification than the other counters.
 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/6QmTqwgtdiqccoc742SZ04r
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmgXCPwACgkQAR8vZIA0
-zr03AwgAkMNG0YrgvTM3iFWNDJ6IgUY1d14CkUU8GCex+FMbAMEEJeXx/+nws0ZR
-9sxsteMOv8I8iImMD1EIgBHdT8YjQKy9afBmzf5t8E9XOeE92W/e4Dc8w5CziCyN
-TV4akdUhoaTkhv3s7whhUAEOBvrZ7aHn9uqYzw5AybFcSArlLmmNS4MqWaGK0ATz
-tkfp14hOhxRKzMY87sqfTZYw+1DKMwnIn8mStHL8rHFnidLrt6LlAqWYrPw4wocp
-Ne/ziIpwkNfLjGtJM29tAB97HI4l4aZ5th6kcZACU+pTgRgY24wLDtXtk8UhY2a5
-+EqG6B5zHuTWSNnZiUalr89fo0JhzA==
-=HuJH
------END PGP SIGNATURE-----
-
---Sig_/6QmTqwgtdiqccoc742SZ04r--
+Max
