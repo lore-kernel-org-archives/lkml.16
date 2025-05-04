@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042D319DF62
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E0D1A238D
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746352389; cv=none; b=P8dncO3cdnFMAovlrcHtuN3qKeofsrrvxO5N4Lfy6U+gLr6Ha49rkg0LJdvrOIBvoP8rUY639H06c6LpACNdsRf7kSHsZUiIanrnGoOY/6g6ZHVkz51vW7Mb2h7Hzxj6tLuyH4AKHIWvk1FjTlWmAFz5HjTEkK4qgWaEHy2g9xo=
+	t=1746352391; cv=none; b=LS9s0+dQ6Qbryjei5LvxMLLi6XQWU0ufxAxSIgs0WmaD3aVHV8nTvDpnZ/V4HSE+ie7QdB9QXwdYa2GGjKMIRE42mjBAEfMHNLC92e2oSsUK5Lqk+qabaM5s8o7448nTS/ZoC18ag5eMiYk5LOyjiviOtBEK99rGuwB9R8IK2T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746352389; c=relaxed/simple;
-	bh=+FyIvsPsWVXVLkDD32Yax8szrjhp6N3YAfdKHzYClww=;
+	s=arc-20240116; t=1746352391; c=relaxed/simple;
+	bh=B6sTwDf85H/ZctTlQ1ykGUokg6cZvuiTzJxYdCOSrZI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ixX83UEBUM1HMH4TeYeqMb0bXM4WfIyODGtOf8rAdN5coPsHTOYBMX5HUnmGmG/JkccdVHqBHk3XXhMIL1b8ofQoML6R/DRrNHY7UTcd+iS4fy6pI8voRTVQ8+ciN24AgoCKYosxzBRcnUjKnlNqjKqEW03lVNurRM6LslwMOb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0d611bLO; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=N9BcenBaZq2/jotlS6USv7Pv+ry3kX5kDhZuZb71PxxdtOn9Uwx9lOiAmWneapYpNXMxXxszZ8m+96QTnw8pAuLuFMa7pgmZmzR7LQldrDZQ43RXHsTvpSxj7LvitKwLtEBaQykfZMcZTcz8WdHHM7jtfECqKhMlxLVnzn33RJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zAgdVJaY; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0d611bLO"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so26044645e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zAgdVJaY"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so17998915e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746352386; x=1746957186; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746352388; x=1746957188; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=edyQoTvfRG8x1DOua7oEfmK1XYQ+Ovhdt7C5cZkBAXA=;
-        b=0d611bLOwIGwb+rkyLn67HBGwaRaCShLUW/TxHloM0So4v4VlG+ux+8D2HtSDwTfxH
-         8hxvQ0j6f5itAy2CwDnlE6SPNPDvx5X8g86FZBwwdkzipRsn9CLTGHyg96rAj6DkbhRa
-         Ye9sdOlajN0XjTe4Di/BStTjJyoiUkVcqFy55fHMKs386Rx715aR8rMM66GeKP1thx86
-         KVYdkUL3+3G4MqcuoG8PYTiNRBYuVeTXE1k0HQtSdWQS94WNh1z3VJ5Wal90Pl7r9h3A
-         g1E9nkZM9y92rQe7Z5rIUOaMC2PUXhVNrImVNorCmmh93OYy25x88vO12SdbutRo6uyo
-         UbrQ==
+        bh=leD0sWlnnaxAT1Wn0YgrpxxEYNPNg7KvvRTlnX38LAQ=;
+        b=zAgdVJaYBsiJ7+jYP+IE7vDRB52TVAAsmyt1n/jrqjD3Z1OdaIx9WOBcjqwunliVaz
+         p60bfA+s2H1xwEUV9H9PfgXkJoKKHMK+ojlZKOH8qMwU5csC5HT3s1hqqauBPsvxk5cI
+         nUQSWvSduDtiRxcXoIJnWO1iAXGAT4dhcTkcqGcWAWtCYCKR5ArOCDzbvZgW3G1guFXi
+         GJW6KHSY1m9/voBZ5Q6UCDF40UzQHX6cs3bEyD10nyMcTwlh/soVlqJHTp4UVG0vKCCr
+         NhDvjTo+ppAyEEXGwsJ0Tvc70E1gUMZDn+2KO6PKKzWAhBcRD2FdcEE0CZJyw1S2fW96
+         T7sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746352386; x=1746957186;
+        d=1e100.net; s=20230601; t=1746352388; x=1746957188;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=edyQoTvfRG8x1DOua7oEfmK1XYQ+Ovhdt7C5cZkBAXA=;
-        b=VpkuJ6In+nYe8gHQAYSSFdyxHsBEHnZp+bBnjIDjLaL8g87+fyHTlNwn5Ly7zzYMkB
-         /JUywgcxclCyBbTw9/kafFnu/th6XwzOPXWKAivfG4uX1bY9y+lPy1hQqvsohMdaSqjc
-         0PbuxL1FxrMWAn8YnvejnWAEarUKRp1NGpa8kwJy4tqXsBgHBAYWb0JS8i0fEwq8w5k7
-         d3MjATM7UQFdGG1pkj6kw/iQiR474LsrkYxBVLL5aK30CCzPTe/KPys1ukXt3HsYPIZ3
-         B4tMoqWZicesY2em77vm8M6LgxbTz0Z0SvoEZ3qXu5IrUO/OU6PZfrAoc/1b/UuPlO7D
-         oQlg==
-X-Gm-Message-State: AOJu0Yz8ejybn0He+RWjSr2bKuz8DhiPKrvKKJePRNVlXI0IFWHMX9lO
-	UwdsE6Hju9uDeKLpV7Ikp/5fiH7LR20XHpoGu2QkVEmAdOQ1NG5p5sEkAKe8L0dpC0BWQpoD/OZ
-	u+n/XnLN8KLQBJz/rfDwUA+JsSrulMFPWZfwN+e/iiRtR8fhmUSMM1qGhbV5QDrBXQ8DNMYAYts
-	i1af7WKA4oDhRqHjycJG1y7ItlUKjUig==
-X-Google-Smtp-Source: AGHT+IGUfyOfLV6G6UR2fsX+wLERnuEA+YabEo3i5wYRA1IwhxBQ8DRNG3LYswYRLLnc5hLaEzfYvnCv
-X-Received: from wmbbi7.prod.google.com ([2002:a05:600c:3d87:b0:441:b3f0:c46])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5027:b0:441:b698:3431
- with SMTP id 5b1f17b1804b1-441c4948315mr24664205e9.28.1746352386480; Sun, 04
- May 2025 02:53:06 -0700 (PDT)
-Date: Sun,  4 May 2025 11:52:31 +0200
+        bh=leD0sWlnnaxAT1Wn0YgrpxxEYNPNg7KvvRTlnX38LAQ=;
+        b=j+1WLbRmZoz6Ulv0rTGazrkccvKVO2/xZ8qhggufnLOidLZIRBqZ/cnzAiySmAQSdo
+         RbHTtYbLBMooJkCYFdCej7QePaz39V2EhScW5p/munKTUCQNVnl9In69iCvQg4PnsneP
+         2u80JKTyknTaCeDCDY73UFRiVCCz7neVCItF3WEOn97FmR4TmY6GLvWAHRCy/IxmFGiC
+         Cxxgbc+pi0+1ysuGDb/TT+fHcdtcpIrALhk7VXqDQnXz4IIChpMqlrdZMOh9gZcvz5e5
+         wSeyy9LdlXGdS3u0fDSa2ZQgbAnIfAmIm4tduRPi9nv9uNnVROZ/BvJ322YqOzImqtNT
+         08+g==
+X-Gm-Message-State: AOJu0YzqUBK6rFymG2bgs2ISyyIfjGumt+14VWoiftH07VXogYjs5922
+	NxICq1UU9BR3DVNrYVOLM4dv7NctltSIOxGo2cSA+oNiu32AOZew1v6I7ZtZ2BoRHzs7IIu0FRl
+	17VFJ07z4ewpfDuLQxfdkQKJ5UteClOl0qdDHIMVlbDm9/17BHZyZQDylzO3ivrEcmpAdf4lT8E
+	PeS2vhzuTAdH8uE2wGAU79Sj75ahB7og==
+X-Google-Smtp-Source: AGHT+IEIOlvldtuHxJz4e50DXzMC/TAHLewwMAK9tSa45s8h2YcmOMMcQXUSx2JQi3bFtMgzVaLzExtP
+X-Received: from wmsp15.prod.google.com ([2002:a05:600c:1d8f:b0:43d:56fa:9b95])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8219:b0:43d:79:ae1b
+ with SMTP id 5b1f17b1804b1-441c1ce8e34mr45570345e9.14.1746352388517; Sun, 04
+ May 2025 02:53:08 -0700 (PDT)
+Date: Sun,  4 May 2025 11:52:32 +0200
 In-Reply-To: <20250504095230.2932860-25-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250504095230.2932860-25-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2866; i=ardb@kernel.org;
- h=from:subject; bh=RC+wmdw3k8C0pDFZiD1ezLCeDtzkHNknaU3PXMx+JFM=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4sH3NckcFxmUDsnu3X5/w/TPj30UpGdFM3gEvDD+2
- HZQkf12RykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZjIKhVGhv4XX1anOf22nWb5
- JvE6285joe1FHdwnymx9LiX/9lh2JI7hv6+I3Ean3bMyV3IVdv6Z5G00jzPYmqln412xPu3XbaY fOQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=961; i=ardb@kernel.org;
+ h=from:subject; bh=VJ8S2Ug4P5Tq9blQL5XdMARbZUBntSDKvggXQxjCtFA=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4uGGD/IBp66qpE5yN9Kd315tUz0n/ZYo75vWjUGSM
+ zTzHwR0lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIkEtTAy9HkEfkw5q5b5L3j1
+ xKdrL0sdD/l23WnzW/XYpzc3sYgaGTP8j728eKopz+rLEbPn18n4ubKXWW6cziMSH3J17Zn6ufO vsgEA
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250504095230.2932860-26-ardb+git@google.com>
-Subject: [RFT PATCH v2 01/23] x86/boot: Move early_setup_gdt() back into head64.c
+Message-ID: <20250504095230.2932860-27-ardb+git@google.com>
+Subject: [RFT PATCH v2 02/23] x86/boot: Disregard __supported_pte_mask in __startup_64()
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
@@ -77,86 +77,29 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Move early_setup_gdt() out of the startup code that is callable from the
-1:1 mapping - this is not needed, and instead, it is better to expose
-the helper that does reside in __head directly. This reduces the amount
-of code that needs special checks for 1:1 execution suitability. In
-particular, it avoids dealing with the GHCB page (and its physical
-address) in startup code, which runs from the 1:1 mapping, making
-physical to virtual translations ambiguous.
+__supported_pte_mask is statically initialized to U64_MAX and never
+assigned until long after the startup code executes that creates the
+initial page tables. So applying the mask is unnecessary, and can be
+avoided.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/startup/gdt_idt.c | 15 +--------------
- arch/x86/include/asm/setup.h    |  1 +
- arch/x86/kernel/head64.c        | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ arch/x86/boot/startup/map_kernel.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/x86/boot/startup/gdt_idt.c b/arch/x86/boot/startup/gdt_idt.c
-index 7e34d0b426b1..a3112a69b06a 100644
---- a/arch/x86/boot/startup/gdt_idt.c
-+++ b/arch/x86/boot/startup/gdt_idt.c
-@@ -24,7 +24,7 @@
- static gate_desc bringup_idt_table[NUM_EXCEPTION_VECTORS] __page_aligned_data;
+diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
+index 0eac3f17dbd3..099ae2559336 100644
+--- a/arch/x86/boot/startup/map_kernel.c
++++ b/arch/x86/boot/startup/map_kernel.c
+@@ -179,8 +179,6 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
+ 	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
  
- /* This may run while still in the direct mapping */
--static void __head startup_64_load_idt(void *vc_handler)
-+void __head startup_64_load_idt(void *vc_handler)
- {
- 	struct desc_ptr desc = {
- 		.address = (unsigned long)rip_rel_ptr(bringup_idt_table),
-@@ -43,19 +43,6 @@ static void __head startup_64_load_idt(void *vc_handler)
- 	native_load_idt(&desc);
- }
+ 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
+-	/* Filter out unsupported __PAGE_KERNEL_* bits: */
+-	pmd_entry &= __supported_pte_mask;
+ 	pmd_entry += sme_get_me_mask();
+ 	pmd_entry +=  physaddr;
  
--/* This is used when running on kernel addresses */
--void early_setup_idt(void)
--{
--	void *handler = NULL;
--
--	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
--		setup_ghcb();
--		handler = vc_boot_ghcb;
--	}
--
--	startup_64_load_idt(handler);
--}
--
- /*
-  * Setup boot CPU state needed before kernel switches to virtual addresses.
-  */
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index ad9212df0ec0..6324f4c6c545 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -52,6 +52,7 @@ extern void reserve_standard_io_resources(void);
- extern void i386_reserve_resources(void);
- extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
- extern void startup_64_setup_gdt_idt(void);
-+extern void startup_64_load_idt(void *vc_handler);
- extern void early_setup_idt(void);
- extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
- 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 6b68a206fa7f..29226f3ac064 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -303,3 +303,15 @@ void __init __noreturn x86_64_start_reservations(char *real_mode_data)
- 
- 	start_kernel();
- }
-+
-+void early_setup_idt(void)
-+{
-+	void *handler = NULL;
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-+		setup_ghcb();
-+		handler = vc_boot_ghcb;
-+	}
-+
-+	startup_64_load_idt(handler);
-+}
 -- 
 2.49.0.906.g1f30a19c02-goog
 
