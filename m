@@ -1,60 +1,62 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F128213FEE;
-	Sun,  4 May 2025 10:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D841A8F6E;
+	Sun,  4 May 2025 10:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746355581; cv=none; b=lRTW+N2/FScgKulZ6+hL+5IGjhxiAvMuBBFPDk7W4r9kUcpS8RPtJOVFNFvD9FLZ5Bgar8e6XKclD3nPGYWJfSuBhQTZDiiTnSvkc93cM8jixBsmh4BUdJ+9NQUKlS2+BokM1X0LTWZLiL77Dp+vf73Urbd6AE86UtkgkcstK1E=
+	t=1746355584; cv=none; b=mFF/KKgMpBwVK2yCH0CKJuZJPjH5I1LSSVBspm38/Q/qNonpqjz7TD6+UECQt9ydSC57pqUm7m4jJY1t7k5eBCZTqIrSzIFMeJWrKO4hr2hmUSe6pQt+7MSrEo9pG8103mOP2xtwBPH+HI3yNs7Nx4p2Z7LmQurI3lrA+MN4TOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746355581; c=relaxed/simple;
-	bh=Qwx6fv/GqSvqJlTQbWvsEhU47PrbM1JGclCAdgShXfo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ablJ5xGCcyVRPh7VEoAH8aMP09dnXF3YrKpcV+ayQPrcLN1VUAmwPEowHlUFO44jmXtr65saf3UQzIJt3sNwn9JbDtLHgCGE0gVT0gWptJdH3cX1zu1M3tsZi+iCtwao/KxakGIxuC0vdVGqWsbEqYwh8JWPwByNmA5ihmidIc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gnlH+jqC; arc=none smtp.client-ip=209.85.160.169
+	s=arc-20240116; t=1746355584; c=relaxed/simple;
+	bh=IOUbTpGZZeI+nBZmuxYvdduSXGQt/jXYcXqsGvwMSC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p5kGDpY4L8z6CBfxp+5JwWRiBJp4Gpwh98OwoVtETMM/c7LCQ2PZlyksTz/hgBwryBCfa95cZ7zNn5jKh/qcnRZG7YcApZKWBsAb6PIzCSWRWCG7Owy1LYz7+WOO4vQtfsbBCGW981AJ6dmz6spR4DfobU8RY6GqPdhZV1TNino=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OrEbh+w5; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gnlH+jqC"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47698757053so52616781cf.0;
-        Sun, 04 May 2025 03:46:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrEbh+w5"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5a88b34a6so378660985a.3;
+        Sun, 04 May 2025 03:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746355578; x=1746960378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nq+V10Dns5XsDfB+eto5dT40TdHnbLnPhgKmmJjTtqo=;
-        b=gnlH+jqCX/gNGIzp3LtXQ60EwyHL8PFaqw+ktvvnUilJb61Z5wmY+YBYnMyaL8r/vp
-         kQy47DkKb/15thGA+cbtnEs0JFMNEnXx1yfAortjN6arBDTnsIrakCaoyeHzNbVj7Rne
-         Q+Tcnd4sLLPOowM4wmLzok7SYkYlTJJX1VvvRPgmwMoReDl9ju437dEuCTesooccVPMj
-         k0PGViaaDXgUnAkhU+R+VayjXHuYvYQ6P/GcOTeDdjCC4UMNwlWjUlTIpRlque99A3ix
-         7hJ2f0vZtykthMEFE+ZO9thPcBVP12dwpaCnZlpU2H74eTmapWmmKjIJW8J/DQjVbE1P
-         gJRg==
+        d=gmail.com; s=20230601; t=1746355581; x=1746960381; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c0dBNsRLfozNYsO2JqfQXy110W8bkOtUjtTaQB8elP4=;
+        b=OrEbh+w52pG1/XxxiddiUAe1YN1y2JBoEGMuLuqDns7b8HpWQkOOjiuTlJxM8Yp+xg
+         b15vGaP/gDMfyDTUPstNttzjLPzTXcNJyPARWoUyBG2ARWhdtaCl5syKWEQouj9S3I+6
+         pzunP5OQclamgK4UoxYgCcDaa4QGpTtnNVWtLyAyCeqUmrpxeM1er9cGe1X1+U58ozXl
+         a0DtMmQ6wSctKRgb2PoNFDRvL25HxYtXzXN1DmwpSCOtf4V1vNW30vmqL5ExUDKJg41h
+         4hk5Uf1/NJEbcVKMFbyb76bCWQbITXWRe9SDIxOIeMlK+WdF0D3MeJpvCb2qc8zrAV6n
+         vsSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746355578; x=1746960378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nq+V10Dns5XsDfB+eto5dT40TdHnbLnPhgKmmJjTtqo=;
-        b=kJSh3aiUqiVbA2T03hIILMmeGJJlY7GzqDxSMvop7Wdw4a9eLquzOxnvEzwlmbvYB1
-         FP+VSh/YlheSPv75LNFlP12PFybb5PVp1grvoxVo/vG3CAYT9gQ2MNsTX+q0lr6A2YOn
-         ixssCSTHT3psL2AhQhVzrHX+oMjGURq5R4xZ4eHCXdfcLJl6urRccFB4V1AriDRzP/Wp
-         BcfubCc1UCTpY/2dMJ8MGD7wLqXYnw8uK469oHS+DqA5lc0IioDV7dDTFHU1m34+ZRu7
-         NztpsNxJXekO9DaKqoYzAXZXwVD9oTgX3pvEzjnsaWZvp6vrku6QWEPt+CA9P9BRjTgg
-         4bVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIx82K37KHP+ZzRubvU1sN104KrT7amjFGcTNItQnLjvnHoJPCCkLkQLNb55ZoFZ7LHgrCRtn4oDVu@vger.kernel.org, AJvYcCUy5Yjt+QPS/KrCAyGAuPa2Jv5SPYnALFXGqEfaNk+PQVlxtdJJiP8QnP/U8Ky59Qpo+AJ+lgYydzYJ4fpp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnxUSLX0uf/Qgtb/0LneC/ofFhpzsYDIS8AoQdb6NsSsYGt22J
-	8HSDlN0NabvDwBS35VX1ArLiaXWQdHRUwHUOTbtGDiBnrwVei8CI
-X-Gm-Gg: ASbGncvNch+2v1yyWhBgsSuCjgBd/DMUT2EvmE7zw392NjMhUMRa+JrdPqBuPPXepAp
-	k2GwAoUHTP/W14EEiOEv0zCI82yTxaZdKiyEDp0tmWbprn2gGj+h+HwoPlGEGRvpK4z6n+0+hg4
-	4fTRGfD17rK6vj0D1wSJyzIohS68ErkYXoxikbIHHMVUW8ulBlWuxD0NjFeOB7WrzKjJlpZXGaq
-	474+/Hd+qDQbK3YMKUjel/d/RFdPlbKuFpEwZPH4fcY60GGt+ylDvate/gSRih/Ufclk8n+Je72
-	oLvU5OIjNzyiHUNj
-X-Google-Smtp-Source: AGHT+IElXOJ8VLrJgB2ldI5hP8eRxH52DW4UdnhojjCazX+wPJrTxe+0SKD3E9HjgZkTHUgG8JE3eg==
-X-Received: by 2002:a05:622a:1a29:b0:48a:d979:9a38 with SMTP id d75a77b69052e-48dff3e17a6mr55044671cf.2.1746355577750;
-        Sun, 04 May 2025 03:46:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746355581; x=1746960381;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c0dBNsRLfozNYsO2JqfQXy110W8bkOtUjtTaQB8elP4=;
+        b=escShxgqmxEgDuy/YC/G5yuwFFqNfpazqhWyoaXML53IjNhlEJ+5BpkOoG7FO/hj4z
+         97FmZDtkC+K2s3LERCtBKNzj8HN73wkewwksyyAE9U/UBjYSBhVGPyTwdG7+JJg3bHZU
+         Ykbv31BUUBQ19Q1gw9ZWH28nOoHXEXObxoUgGoDGRhgRNiPV67eS8tbcodHyFrbjdiVm
+         L8d0QlN5qXNZxgWdAO5RsfD2hASYC5dLO07PWF2Ytszds+4LsEJ7PQ5A3xZtPnChDri9
+         cWvHJ+zmYncV9eqJPu6Ak5caylbx7RFdYk8+XBYVriRK2sgejXjAyHmQ3pq7VkP1VQW+
+         8jhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUE48Gqiz+zrO96UcfdZRu2eb4/qt/LEcc/BXjqBPZn4o/zuV2QBpbyYYIaTXntmCejmOFaimDZ8VB4EGG/@vger.kernel.org, AJvYcCUccJauDUtg9aWMElJ1n3t5hLMSdfapLKLz1KHyEhQUpPjy7bVMjGjIiL8DyteY60SphuLR5Yc5Heyn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk+4A5W0NcPeS18G0z2c/Ao+RCKgX/fDEPXfyGkxm6KNhk0kLG
+	B+pNv7twq2TyPULHeNdwbNqZJiTJYrrXFfdBUcZCcjKqJllzyQ82
+X-Gm-Gg: ASbGnctRoWyA01JKpF4winS38WSb91AFgBlhBY0HxcELv1wQZLIO8da4PYIml/4vRXb
+	fLfX18Avij7LhIsxfJ3z2AwYWDazjBQW3AagXLJzakIDuvmqZMkLi+p9eZO9MOkd0ghX56LcFpA
+	kO9nYpeTiP8+bGodDbZrq6Af74kL/9DYt/ls6diwkOBAaBggbAfOeKk8t+mDpMmVf+3CdwKbdXh
+	CTcYw2Qj0OWMY9lDUrHKHcOaAN0xqK4Jtk16z7w8n/by0mnJUklxuzEijH2xiEP1dgkyE5eiB0O
+	Aw09YudbB2QL3j9P
+X-Google-Smtp-Source: AGHT+IGYfcJI1KOo4mnYSm2aZ/wO68fNQbksb1q2N85JkbNZoHHGaOY6wCLzQBxd67wnG1djUIGKBQ==
+X-Received: by 2002:a05:620a:2a10:b0:7c5:99f9:6ada with SMTP id af79cd13be357-7cae3b0a53cmr471104785a.50.1746355580956;
+        Sun, 04 May 2025 03:46:20 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-48b98d10309sm42842181cf.79.2025.05.04.03.46.15
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad23b5f46sm429527585a.20.2025.05.04.03.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 03:46:16 -0700 (PDT)
+        Sun, 04 May 2025 03:46:20 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -77,10 +79,12 @@ Cc: linux-clk@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v2 0/3] riscv: sophgo: cv18xx: dts rework, part 2
-Date: Sun,  4 May 2025 18:45:49 +0800
-Message-ID: <20250504104553.1447819-1-inochiama@gmail.com>
+Subject: [PATCH v2 1/3] dt-bindings: clock: sophgo: Use precise compatible for CV1800 series SoC
+Date: Sun,  4 May 2025 18:45:50 +0800
+Message-ID: <20250504104553.1447819-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250504104553.1447819-1-inochiama@gmail.com>
+References: <20250504104553.1447819-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,38 +93,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The part 2 of dts rework replaces precise compatible for existed clock device
-with old wildcard one.
+As previous binding uses a wildcard compatible for existed clock device
+of CV1800 series SoC, it is not suitable for existed requirement. The
+only exception is sophgo,sg2000-clk, it does match a real device, so
+keep it as is.
 
-Changed from v1:
-- https://lore.kernel.org/all/20250430020932.307198-1-inochiama@gmail.com/
-1. patch 1: reused sophgo,sg2000-clk for sg2002.
-2. patch 1: mention sg2002 refer to a real device, not a wildcard one in
-            commit message.
-3. patch 2: fix wrong data for sophgo,cv1812h-clk.
-4. patch 2: remove compatible sophgo,sg2002-clk.
-5. patch 3: adapt the change of patch 1,2.
+Add new precise compatible for existed clock devices of CV1800 series
+SoCs and make old wildcard compatible deprecated.
 
-Inochi Amaoto (3):
-  dt-bindings: clock: sophgo: Use precise compatible for CV1800 series
-    SoC
-  clk: sophgo: Add support for newly added precise compatible
-  riscv: dts: sophgo: switch precise compatible for existed clock device
-    for CV18XX
-
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
  .../bindings/clock/sophgo,cv1800-clk.yaml        | 16 ++++++++++++----
- arch/riscv/boot/dts/sophgo/cv1800b.dtsi          |  2 +-
- arch/riscv/boot/dts/sophgo/cv1812h.dtsi          |  2 +-
- arch/riscv/boot/dts/sophgo/sg2002.dtsi           |  2 +-
- drivers/clk/sophgo/clk-cv1800.c                  |  2 ++
- 5 files changed, 17 insertions(+), 7 deletions(-)
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-prerequisite-patch-id: 94fb3d26e017cf839b4dcb4bf85624614a94b9ac
-prerequisite-patch-id: 8f4a8bdead0e4e3d6904adbc0fd150b7dffefc85
-prerequisite-patch-id: b30e850690903c3ddc3d8bb77a99e97934dc9dde
-prerequisite-patch-id: 6e1117694a53a0059b145ad4751ec204cae0db35
---
+diff --git a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
+index 59ef41adb539..379ce3e9e391 100644
+--- a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
++++ b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
+@@ -11,10 +11,18 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - sophgo,cv1800-clk
+-      - sophgo,cv1810-clk
+-      - sophgo,sg2000-clk
++    oneOf:
++      - enum:
++          - sophgo,cv1800b-clk
++          - sophgo,cv1812h-clk
++          - sophgo,sg2000-clk
++      - items:
++          - const: sophgo,sg2002-clk
++          - const: sophgo,sg2000-clk
++      - const: sophgo,cv1800-clk
++        deprecated: true
++      - const: sophgo,cv1810-clk
++        deprecated: true
+ 
+   reg:
+     maxItems: 1
+-- 
 2.49.0
 
