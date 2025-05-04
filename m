@@ -1,409 +1,229 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0574925771;
-	Sun,  4 May 2025 00:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF0B4C6E
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 01:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746319492; cv=none; b=s7X1BxgZJlw+Wj3LIiYBzvWLnfjQ1GdbwYzVoXJG5AkTq2hnrxpX1M/v2GIRRx23mObZwGLgy4nP4csxyKW/YruCLGjiOgXHI3bgiyJikVyAiWQeuRT0seng0lYvjokodJtw2nmtE4txH46aAFQ5dUY2YZp1bqnQgm4RweNaOVA=
+	t=1746320486; cv=none; b=DkYbkmTwF4JABqggcjrau53xNPlRAowudsMNy4R2sr8liv3IjOnbdpHFbhdLPfy+ZI3+C+XCdieVR65STbK+cHBuxad/DFGqTqo4u/a5t25BDbDwd2EYcMEg7ImIbiNvC46jD7o2nbteZlHHwlNGgpJCgfB6Q1c1Rm/XjE6cW1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746319492; c=relaxed/simple;
-	bh=yUYPRZNceFGQgxL2ceNChKMjrehxlJP8oyZRPIWJJTU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oR6Mejy6fvf12NERxhttjHlYQdiinJCi6ZJtfjqhhYMXb/c3i1zSgGyAEwNk8pRIcQQTQizvcqX+Ga9A9DwGk3ezuBttTvuUyvR8Us38hl+PgHzR4HiFOY3XcFjyE6bivKquyA5A3h8YGVg8QnnqWv9vOfHWSkRun5JPhqmreys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fb18gqjp; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fb18gqjp"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4774d68c670so57656221cf.0;
-        Sat, 03 May 2025 17:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746319490; x=1746924290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=glUJtReybeSU9UMmM2aC3jiSRkxCBYujyIZYYLRpM4Q=;
-        b=Fb18gqjpXArOb8vvgaG7cB4h9Yu6V+i2HSRTeXuFDklk2XcMYmS8MsIAMLC5Wajnbw
-         Jglwxo3OmVoNMe8ysREaqVObaKssSZGO9AEUF1L9tCCerVrEo4YjV6XQqQEEQbjUH3IE
-         iTRF309VSLP7Fj1AaoOu1pFErqutYsk54MSQOy2frvu/qTPDg5ngKyGX3Rw2PVCe2AY8
-         UlS2EdfXFxz5TV47J74dTfro2GcNWlu764oA5SZwNT9b4pnxMnPgGYGwCSp1Q3qBMFJB
-         1QSKiwbJJlITyDjAZb/8Bi2VY5rThPoIAouJK1VScM39wb8FmylOx9Ko4L9jNIVvtJU6
-         8i3w==
+	s=arc-20240116; t=1746320486; c=relaxed/simple;
+	bh=oeCQB39N8fOAMxemgxg+huVFO6hkGntCEKSrwXU048Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=m9PnK0UD1ms4vByfCEppWiMaB2guSaP3nVktUIX3k/pQu9pVK3sZ5s0J9PI4b47Pf9ti0pcabkpdQz1W/aRju8yd52/xoNdeLdwVFUscqdHd0FJeX7zotNTfXDlCZNmXnvlnOElO6rAFe7ELNDJzNtVks45WdSwzOUjEU6bKQHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d90ba11afcso38549295ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 18:01:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746319490; x=1746924290;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=glUJtReybeSU9UMmM2aC3jiSRkxCBYujyIZYYLRpM4Q=;
-        b=UBoQHMkcJC3guR07llrzTYmux5hAQGhZtm+vlojlBdjjihNMXiHXCAJwtj5ZEGdo2Q
-         YNTcsjj5K0NsryfV7sY594A2WMIRrGSAazj3HsLQIGjtuUH7stwTvp07fEgtkDB+yqIW
-         +tLJRKLrktDKc5tnUM9PQtT/MIUZ2kvr8sXrXMLZeAIg0MS/y1Q5mjvnKoM9yRQc3ri2
-         t1Q06NEluoyqm8X7lTisD2ADKigyt+NSj2O97DNEsVatENqN3YMUIShcFK1sJ3Pp8JUq
-         guCturssg9BwKudRP1aM9Z2r6zj1+gSj5lec/a2BLVrrN+w0ehHInrrbAjT8Z0Su2a0r
-         cMhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPodas8k4hiOm4rWmP7t+vp0863qiVU62aFFFTgA06SEZdMW1twH3F421mnc+x7hxGKvsPAArPUXEw7Ikr@vger.kernel.org, AJvYcCXjKFzWe1t12YnxyXoQb1foyx+5zAEfJfKOl+sAlo4X0wf7zZnceF4SkUepHEU2Sue0Hx+3icRdpM/B@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkeho41RS4WZl9up4qxjqaaom09RucRJdzD0rlftndwZwtN3FK
-	zpVt4tqvLot0hIO2bWa2a1FqAqzYEHiQ5xBJK3hvsEE2CccBwjTV
-X-Gm-Gg: ASbGnctF4NtZ+5SZ266hF91n6ig5+DXBdQoXLexvZ+4Sc6UCInmnvEZUhetUP035g76
-	6B4Q38XLHs+jqQzDNJu0gmRzMxuC3hY/IELPFodgzA+LmT2QZvzwHNpgot2wmIsPX9T1e1ejHmO
-	2XXWWplX7VO6sqHxDUGIez5lsEKqNuyMrvT6eIInYtTJbuSTAEk1hhcpbba3r2aug8DUQJBkHcD
-	NBPAPuklTpjdCkVIThkQ8lp9trxYTVLY6VNbuBjS4ACEYkz8Ub1/uNx0iGGkLS/PaTV4pBn2Io4
-	g+A0JiuhPPoxhFvQ
-X-Google-Smtp-Source: AGHT+IH7/DZ/pctM9PXgMnRa9IZ+/9tnpxbAJ1vWO6J4mbNoekyJ4ajeyrdsTwYwdx6Y6MlNlT03GA==
-X-Received: by 2002:ac8:7dc2:0:b0:47a:eade:95eb with SMTP id d75a77b69052e-48e00f625abmr24684061cf.40.1746319489727;
-        Sat, 03 May 2025 17:44:49 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-48b966d8b7csm39551881cf.27.2025.05.03.17.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 17:44:49 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Niklas Cassel <cassel@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Shradha Todi <shradha.t@samsung.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v3 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
-Date: Sun,  4 May 2025 08:44:19 +0800
-Message-ID: <20250504004420.202685-3-inochiama@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250504004420.202685-1-inochiama@gmail.com>
-References: <20250504004420.202685-1-inochiama@gmail.com>
+        d=1e100.net; s=20230601; t=1746320483; x=1746925283;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BatQMzc5eV4sLNunN0Byj31bwCnKYdqOtq8jpvR/hhw=;
+        b=ozzb03q2Rc8Cr0JwClgFAV4BiUXfy98uB21Znd33BAB6wDCAYJKjy/owNiQmOiNeml
+         81Co9ik8528pfYdEeaZopSllMjCCNBSkH+2L/WVPG7NJ7xfsuZ7xBH1N2t2l4k/HXltG
+         t4zUNJny7rSkXYpClJ1SokwIwcUDigudWj7fHWODfiiCYJ+U78BXW7zClw92myp62qjy
+         QDAsEdkdWLVi8rtmJafw8C9ube0Kni5BM9bGRkI+vzwyhHY5wzDbdtbvByyw2DxFibSi
+         4CbqPL9BVMbDbVNQSJ3rCUUTeYmIS2v9cHCs8XkVseMvziHiSB0ao8vwsVnFnyKHj69Y
+         UZeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX6K4CB1Pp5vYTdJmDA2WG5vO3RsyhAUYLQFDhanN8iK376JjLCAao1OqGh5et3hDE48U6Zg+XKqzH0vo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ZENL4Xo7v0ntIw7sA2SVtT3ciBYSXBbX6Ih/5lxslpdk9R+Q
+	7iXPGCmp024gLF6Z4RLqbRhEcDkFeIexFToEmEikMgsy8vM+i35DdhXW6XuMPNei+hcowWkVGPV
+	oDhtesSreLtSFggYolJTHAVW8JZ6BL+Mha6ZhGAJFdqVcg7YqEiQXnGI=
+X-Google-Smtp-Source: AGHT+IHaPjgmv7OW9BKREv7uvmhIYnuWSefNJG1ULaqbJS+kDkcs2poemL3FD9DVbHAp23AZlbk2uge2i0p2pbKz40yEgYLg7c7w
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:b4d:b0:3d5:7f32:8d24 with SMTP id
+ e9e14a558f8ab-3da5b31ebcemr25646845ab.15.1746320483275; Sat, 03 May 2025
+ 18:01:23 -0700 (PDT)
+Date: Sat, 03 May 2025 18:01:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6816bc63.a70a0220.254cdc.002b.GAE@google.com>
+Subject: [syzbot] [kernel?] upstream test error: KASAN: slab-use-after-free
+ Write in binder_add_device (3)
+From: syzbot <syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com>
+To: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
+	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
+	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
+	syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for DesignWare-based PCIe controller in SG2044 SoC.
+Hello,
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    29281a76709c Merge tag 'kvmarm-fixes-6.14-2' into kvmarm-m..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git fuzzme
+console output: https://syzkaller.appspot.com/x/log.txt?x=14951774580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=22c3bbf92fcca116
+dashboard link: https://syzkaller.appspot.com/bug?extid=57ff869c12cb6d89393d
+compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f7-1~exp1~20250415203523.103), Debian LLD 20.1.3
+userspace arch: arm64
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-29281a76.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a94df683c08e/vmlinux-29281a76.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/18ac847cc37c/Image-29281a76.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in hlist_add_head include/linux/list.h:1026 [inline]
+BUG: KASAN: slab-use-after-free in binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
+Write of size 8 at addr b7f0000014f4e208 by task syz-executor/3305
+Pointer tag: [b7], memory tag: [a6]
+
+CPU: 0 UID: 0 PID: 3305 Comm: syz-executor Not tainted 6.14.0-rc2-syzkaller-g29281a76709c #0
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+ __dump_stack+0x30/0x40 lib/dump_stack.c:94
+ dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
+ print_address_description+0xac/0x290 mm/kasan/report.c:378
+ print_report+0x84/0xa0 mm/kasan/report.c:489
+ kasan_report+0xb0/0x110 mm/kasan/report.c:602
+ kasan_tag_mismatch+0x28/0x3c mm/kasan/sw_tags.c:175
+ __hwasan_tag_mismatch+0x30/0x60 arch/arm64/lib/kasan_sw_tags.S:55
+ hlist_add_head include/linux/list.h:1026 [inline]
+ binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
+ binderfs_binder_device_create+0xbfc/0xc28 drivers/android/binderfs.c:210
+ binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
+ vfs_get_super fs/super.c:1280 [inline]
+ get_tree_nodev+0xdc/0x1cc fs/super.c:1299
+ binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
+ vfs_get_tree+0xc4/0x3cc fs/super.c:1814
+ do_new_mount+0x2a0/0x988 fs/namespace.c:3560
+ path_mount+0x650/0x101c fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount fs/namespace.c:4088 [inline]
+ __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+Allocated by task 3297:
+ kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
+ save_stack_info+0x30/0x138 mm/kasan/tags.c:106
+ kasan_save_alloc_info+0x14/0x20 mm/kasan/tags.c:142
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x8c/0x90 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __kmalloc_cache_noprof+0x2a0/0x404 mm/slub.c:4325
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ binderfs_binder_device_create+0x1ac/0xc28 drivers/android/binderfs.c:147
+ binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
+ vfs_get_super fs/super.c:1280 [inline]
+ get_tree_nodev+0xdc/0x1cc fs/super.c:1299
+ binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
+ vfs_get_tree+0xc4/0x3cc fs/super.c:1814
+ do_new_mount+0x2a0/0x988 fs/namespace.c:3560
+ path_mount+0x650/0x101c fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount fs/namespace.c:4088 [inline]
+ __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+Freed by task 3297:
+ kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
+ save_stack_info+0x30/0x138 mm/kasan/tags.c:106
+ kasan_save_free_info+0x18/0x24 mm/kasan/tags.c:147
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x64/0x68 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x148/0x44c mm/slub.c:4757
+ binderfs_evict_inode+0x1e8/0x2b8 drivers/android/binderfs.c:278
+ evict+0x4d4/0xbe8 fs/inode.c:796
+ iput_final fs/inode.c:1946 [inline]
+ iput+0x928/0x9e0 fs/inode.c:1972
+ dentry_unlink_inode+0x624/0x660 fs/dcache.c:440
+ __dentry_kill+0x224/0x808 fs/dcache.c:643
+ shrink_kill+0xd4/0x2cc fs/dcache.c:1088
+ shrink_dentry_list+0x420/0x970 fs/dcache.c:1115
+ shrink_dcache_parent+0x80/0x200 fs/dcache.c:-1
+ do_one_tree+0x2c/0x148 fs/dcache.c:1578
+ shrink_dcache_for_umount+0xb0/0x198 fs/dcache.c:1595
+ generic_shutdown_super+0x84/0x424 fs/super.c:620
+ kill_anon_super fs/super.c:1237 [inline]
+ kill_litter_super+0xa4/0xdc fs/super.c:1247
+ binderfs_kill_super+0x50/0xcc drivers/android/binderfs.c:791
+ deactivate_locked_super+0xf0/0x17c fs/super.c:473
+ deactivate_super+0xf4/0x104 fs/super.c:506
+ cleanup_mnt+0x3fc/0x484 fs/namespace.c:1413
+ __cleanup_mnt+0x20/0x30 fs/namespace.c:1420
+ task_work_run+0x1bc/0x254 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0x740/0x23b0 kernel/exit.c:938
+ do_group_exit+0x1d4/0x2ac kernel/exit.c:1087
+ get_signal+0x1440/0x1554 kernel/signal.c:3036
+ do_signal+0x23c/0x3ecc arch/arm64/kernel/signal.c:1658
+ do_notify_resume+0x78/0x27c arch/arm64/kernel/entry-common.c:148
+ exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+ exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+ el0_svc+0xb0/0x134 arch/arm64/kernel/entry-common.c:745
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+
+The buggy address belongs to the object at fff0000014f4e200
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 8 bytes inside of
+ 272-byte region [fff0000014f4e200, fff0000014f4e310)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x54f4e
+anon flags: 0x1ffc00000000000(node=0|zone=0|lastcpupid=0x7ff|kasantag=0x0)
+page_type: f5(slab)
+raw: 01ffc00000000000 7ef000000c801900 0000000000000000 0000000000000001
+raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ fff0000014f4e000: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
+ fff0000014f4e100: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
+>fff0000014f4e200: a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6
+                   ^
+ fff0000014f4e300: a6 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+ fff0000014f4e400: 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35
+==================================================================
+
+
 ---
- drivers/pci/controller/dwc/Kconfig          |  10 +
- drivers/pci/controller/dwc/Makefile         |   1 +
- drivers/pci/controller/dwc/pcie-dw-sophgo.c | 258 ++++++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-dw-sophgo.c
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index d9f0386396ed..b5b53e5a4cbf 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -402,6 +402,16 @@ config PCIE_UNIPHIER_EP
- 	  Say Y here if you want PCIe endpoint controller support on
- 	  UniPhier SoCs. This driver supports Pro5 SoC.
- 
-+config PCIE_SOPHGO_DW
-+	bool "Sophgo DesignWare PCIe controller"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	depends on PCI_MSI
-+	depends on OF
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  Sophgo SoC.
-+
- config PCIE_SPEAR13XX
- 	bool "STMicroelectronics SPEAr PCIe controller"
- 	depends on ARCH_SPEAR13XX || COMPILE_TEST
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 908cb7f345db..510abb4e04c4 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_ROCKCHIP_DW) += pcie-dw-rockchip.o
-+obj-$(CONFIG_PCIE_SOPHGO_DW) += pcie-dw-sophgo.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-sophgo.c b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-new file mode 100644
-index 000000000000..89b22b3ac8d6
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sophgo DesignWare based PCIe host controller driver
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+
-+#include "pcie-designware.h"
-+
-+#define to_sophgo_pcie(x)		dev_get_drvdata((x)->dev)
-+
-+#define PCIE_INT_SIGNAL			0xc48
-+#define PCIE_INT_EN			0xca0
-+
-+#define PCIE_INT_SIGNAL_INTX		GENMASK(8, 5)
-+
-+#define PCIE_INT_EN_INTX		GENMASK(4, 1)
-+#define PCIE_INT_EN_INT_MSI		BIT(5)
-+
-+struct sophgo_pcie {
-+	struct dw_pcie		pci;
-+	void __iomem		*app_base;
-+	struct clk_bulk_data	*clks;
-+	unsigned int		clk_cnt;
-+	struct irq_domain	*irq_domain;
-+};
-+
-+static int sophgo_pcie_readl_app(struct sophgo_pcie *sophgo, u32 reg)
-+{
-+	return readl_relaxed(sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_writel_app(struct sophgo_pcie *sophgo, u32 val, u32 reg)
-+{
-+	writel_relaxed(val, sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_intx_handler(struct irq_desc *desc)
-+{
-+	struct dw_pcie_rp *pp = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long hwirq, reg;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	reg = sophgo_pcie_readl_app(sophgo, PCIE_INT_SIGNAL);
-+	reg = FIELD_GET(PCIE_INT_SIGNAL_INTX, reg);
-+
-+	for_each_set_bit(hwirq, &reg, PCI_NUM_INTX)
-+		generic_handle_domain_irq(sophgo->irq_domain, hwirq);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void sophgo_intx_irq_mask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val &= ~FIELD_PREP(PCIE_INT_EN_INTX, BIT(d->hwirq));
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static void sophgo_intx_irq_unmask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= FIELD_PREP(PCIE_INT_EN_INTX, BIT(d->hwirq));
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static struct irq_chip sophgo_intx_irq_chip = {
-+	.name			= "INTx",
-+	.irq_mask		= sophgo_intx_irq_mask,
-+	.irq_unmask		= sophgo_intx_irq_unmask,
-+};
-+
-+static int sophgo_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-+				irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &sophgo_intx_irq_chip, handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = sophgo_pcie_intx_map,
-+};
-+
-+static int sophgo_pcie_init_irq_domain(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	struct device *dev = sophgo->pci.dev;
-+	struct fwnode_handle *intc;
-+	int irq;
-+
-+	intc = device_get_named_child_node(dev, "interrupt-controller");
-+	if (!intc) {
-+		dev_err(dev, "missing child interrupt-controller node\n");
-+		return -ENODEV;
-+	}
-+
-+	irq = fwnode_irq_get(intc, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "failed to get INTx irq number\n");
-+		fwnode_handle_put(intc);
-+		return irq;
-+	}
-+
-+	sophgo->irq_domain = irq_domain_create_linear(intc, PCI_NUM_INTX,
-+						      &intx_domain_ops, pp);
-+	fwnode_handle_put(intc);
-+	if (!sophgo->irq_domain) {
-+		dev_err(dev, "failed to get a INTx irq domain\n");
-+		return -EINVAL;
-+	}
-+
-+	return irq;
-+}
-+
-+static void sophgo_pcie_msi_enable(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= PCIE_INT_EN_INT_MSI;
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+}
-+
-+static int sophgo_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	int irq;
-+
-+	irq = sophgo_pcie_init_irq_domain(pp);
-+	if (irq < 0)
-+		return irq;
-+
-+	irq_set_chained_handler_and_data(irq, sophgo_pcie_intx_handler,
-+					 pp);
-+
-+	sophgo_pcie_msi_enable(pp);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops sophgo_pcie_host_ops = {
-+	.init = sophgo_pcie_host_init,
-+};
-+
-+static int sophgo_pcie_clk_init(struct sophgo_pcie *sophgo)
-+{
-+	struct device *dev = sophgo->pci.dev;
-+	int ret;
-+
-+	ret = devm_clk_bulk_get_all_enabled(dev, &sophgo->clks);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to get clocks\n");
-+
-+	sophgo->clk_cnt = ret;
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_resource_get(struct platform_device *pdev,
-+				    struct sophgo_pcie *sophgo)
-+{
-+	sophgo->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-+	if (IS_ERR(sophgo->app_base))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(sophgo->app_base),
-+				     "failed to map app registers\n");
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_configure_rc(struct sophgo_pcie *sophgo)
-+{
-+	struct dw_pcie_rp *pp;
-+
-+	pp = &sophgo->pci.pp;
-+	pp->ops = &sophgo_pcie_host_ops;
-+
-+	return dw_pcie_host_init(pp);
-+}
-+
-+static int sophgo_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sophgo_pcie *sophgo;
-+	int ret;
-+
-+	sophgo = devm_kzalloc(dev, sizeof(*sophgo), GFP_KERNEL);
-+	if (!sophgo)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, sophgo);
-+
-+	sophgo->pci.dev = dev;
-+
-+	ret = sophgo_pcie_resource_get(pdev, sophgo);
-+	if (ret)
-+		return ret;
-+
-+	ret = sophgo_pcie_clk_init(sophgo);
-+	if (ret)
-+		return ret;
-+
-+	return sophgo_pcie_configure_rc(sophgo);
-+}
-+
-+static const struct of_device_id sophgo_pcie_of_match[] = {
-+	{ .compatible = "sophgo,sg2044-pcie" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sophgo_pcie_of_match);
-+
-+static struct platform_driver sophgo_pcie_driver = {
-+	.driver = {
-+		.name = "sophgo-dw-pcie",
-+		.of_match_table = sophgo_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = sophgo_pcie_probe,
-+};
-+builtin_platform_driver(sophgo_pcie_driver);
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
