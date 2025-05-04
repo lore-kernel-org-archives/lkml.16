@@ -1,202 +1,185 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F3C367;
-	Sun,  4 May 2025 23:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6B524A057
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 23:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746399980; cv=none; b=rHwMm0I0kM9gS4ntaS/p5JAV4Zs4XKhy6zsuPsGN22Fd/7ueqhxetjJ7ek4j1NGMJQCu1qlTOmTmFaNdNE5+URE0GafVsPoiNVQdQb1jhc0LlCjhEZUZem9/TybpHsJO81zWOjnWJykmjBdr8QPJGxpthQTRvgJbzgTiiVpDMF8=
+	t=1746401156; cv=none; b=VzsKDzvzpifo1CA4xqhY5f5G1CDMVc3zniHq1PTn8WwvhDf649ML/8zYsatdPk7XBX0HpAr+kB0JHW9QHiVwwnI4X/Uocr/n5wrFsddlGtKMlUEk7oXgk8e3b4DNIq6+MMGAOFzH72RcoKuxES73UQDqJIGRAGhKD5cnpq7+Ujo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746399980; c=relaxed/simple;
-	bh=lyb7GoplRmJsmVTNL+2R2hg5BaAEG29fLECJ8gmEECY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EpPHmMTeZZHa1Br0yQXC7WLE1yAdj5zSayoBb+RaUDRcgOc2+eHzOV4VpOwJ2uvgN7k4SK1vEC9TcaU7h6qHX0ExPOFdXRSFyqp3k7L0FimeOWEp67Yfuo/ayywLqxt2HY2UuUbTGGWkj6mX/eDHhw+EO3eZ709A0thJgsPXV7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eYlfj4x5; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746401156; c=relaxed/simple;
+	bh=YQlrNPWfAd0hPo2CWDN8tgD2UZHZogK0tWHcMMD3DmU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PObjFHwdhoiqcdz9RVM1LdNTVr6hQjH4AWfuTQo+PY0IxHDEyI4HYpTgpALRoSe7a5/ihBwbj/RU1ip9voKaaECbq3IblAhcMTGH/RRUMdstf5X6kXxMNXhI5lPaxONaMHS9YccTDUKbT7iLGEs4xFZR6Rzwvi6C0T6vDYeOLUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iqp7GXVB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYlfj4x5"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5f720c717so577963085a.0;
-        Sun, 04 May 2025 16:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746399975; x=1747004775; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WG5Q7M6LXC8ceUGjLsv7jt8ZOhJNoErjR02gyORXoXA=;
-        b=eYlfj4x5fBCINZCR17cG5i1LwCxXhJfEPX9BZL/eOQH2hQUh9at0zZCkHi8Nfe1naO
-         w8SFanw3ESERV9YDusHY9IsihtO+Tuvv+PjTXu52dUqCJZxxQK9hQe26phPQU6koKud5
-         z9jJEhiyjuF0J1MGCgSWIMb+FCCZQrAGn6ZZDM3yNSdrXbfrv52T/zI9/ImYMQ7LO1Lj
-         Z9uyHcj/3KlCOewVlkfkx+RgLZ3pfkIQGCWmL3v7BZDr+kfOOi026wB8WJeWFT1ApD95
-         FQCJpLSNbdAYCXEpRAILVqFWrmVHm0vyebe823L8/7xwft29Zrwi3MYkfS70HOUiaVJq
-         b4Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746399975; x=1747004775;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WG5Q7M6LXC8ceUGjLsv7jt8ZOhJNoErjR02gyORXoXA=;
-        b=K4ey3119JcZnYEBeVH/IS/fn3rlCuTPJbzPr1KidFJF1mo5h0cuWY4UEDnSzYFofvr
-         DupTd4phtekUX76loOr/pN/VdWPDa39EDFsyxPZT6swy39aZsB9H0+29ea/CAlZK5yMv
-         LTY/q3vJM3S+nCqfOMWONvOOJ9LwqeNvVr7ZP0iL6eRCoGy84Yt1PLnUXQdjiemAVVys
-         2YoHTOMZOioHNdrgbqKBKkvJFfOpbSqH4EDU8u5YFXujqAt4cUuyoOA3jRwKufAwH4zl
-         OIJw/DCQtLmlrL3kG+9/zuY2Sx0QhPrz6YIIB5P8dAlnZBM+tApZsX6XqseSd+N8hSRP
-         aaeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIpxearbpb13p1nrSnt6cEEDn2Ukj3xMARn0VA7xITPsWCEtscqssrcNdw2qdKA1cHFR9U99Ler3y6@vger.kernel.org, AJvYcCWXWCXjeSGEuGHP/BmF3RsCr8s8Q4BUZBx/sSG1GEYBH1td5cu7nDzzjIKSdCG42HaIrqnqew/L+fsVr3f9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9W+CpBKuEXdSx7D0oeB5Nw3jLHjYJOYAimWSZ+3zsO4sLqomw
-	1rbZ6fgceqImcO4wA6qmwpuv9e5Mf3S+VhFXDS6WRhs2ElXPUWJ/gGRh2Euw/gY=
-X-Gm-Gg: ASbGncuKNIGWR3kl/YuKgt233Spwy2rXG3rbXoS3eHAhLswPwgga/KSlE5vuc2cLsLg
-	6o66KOUjCVkyCkGWpqAPaoODmFtQWAn+QCGWJ3FBRvOU2vEnij5vA/o31uhxZFKW0qOEx2YDMtH
-	pv1jdYZsAkd9I4Ly+/P/6eu+14oSf8ANaDIxGbcHlq48Hojn5eHKUTBMhQ7HTEgIW4DwruZjAQn
-	tCVm/XOq4UFuvA8aiqU4uirA3k0CxTLdKwkaKnfjb+xE9t61MSWwQgLDz6+0YGIyGstcESt1jgk
-	PPUhzl5CfJi4EEGMpdbAtLKEpU5oQJvaDQHC8mMviSLLzJmeju15YxVpXntxAQ==
-X-Google-Smtp-Source: AGHT+IGXVOmqNZtnqI0MebY7SuNjt8ChHjXmPGL86trlt2xMX3O3Zn4OdIXuAF3VZCOaQ2cofukTSA==
-X-Received: by 2002:a05:620a:1995:b0:7b6:d273:9b4f with SMTP id af79cd13be357-7cad5745825mr1588016285a.11.1746399974646;
-        Sun, 04 May 2025 16:06:14 -0700 (PDT)
-Received: from [192.168.21.149] ([216.237.233.165])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23b530bsm490164385a.6.2025.05.04.16.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 16:06:14 -0700 (PDT)
-Message-ID: <547dab4c-a96d-4196-a092-ca409e2ca8c5@gmail.com>
-Date: Sun, 4 May 2025 19:06:13 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iqp7GXVB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D45C4CEFE
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 23:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746401155;
+	bh=YQlrNPWfAd0hPo2CWDN8tgD2UZHZogK0tWHcMMD3DmU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Iqp7GXVBeNYGYMVRk3GxDOEV1we/bQgWzUR7RZud2nNel2AgjcJnJCeWwsCWpAUrp
+	 cYc1IBvCXBQHWX7HubULJNSCBCPYT68r/pJytUI010hEISCZ83BOsZEi0iKxWvRWPy
+	 08lwQV2iBCiYHEQ6DOL/uc45kSTzJRZsbqvSYzTzj8luoGF+uw2HA2hg3dekUUEuwm
+	 Q6k6CwkTXtPg3LcTJnqAwsyiC3c9gOYM1mloK6HY3PK/a40bw0tkDT0J9HfrzKUBvU
+	 GbYcxcR+qdasKC2159pZ49bMVpXkoR+Figrfn1Q0dThXdPeMN9iW8vZx9xqw/pVbXQ
+	 ogWYH+by0hC4g==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso7269628a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 16:25:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXsR92pak6ebOJr78AEUnzd+BkU4lOdXR6AQ79b7XD6nmhVX4A31RVSUoEONoxBdcFz/f8A7qItpYR55q0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQEYRzXDhDDH7cI8IUKqKMgC979CXVy6ucEaWPt4BOqWT8om94
+	VzUn+qObHzprsT2AfuHjs2wBYtuyQ4h7cFj/P+dgkfSHQuvl5Ygi5xTBwUj8Ws+h+8BIFjh6ari
+	wU91uxG/aS/YsgpncPN3voGccsiIFfQnPJMAQ
+X-Google-Smtp-Source: AGHT+IFeHttEHnt6JGNYvUj0b4tgsDNrFFzyPvM3lBConO1ypZC65jr1D+YbzAXa36rr90WmrBbCyVZSkuAz1r58mbk=
+X-Received: by 2002:a05:6402:2312:b0:5fb:18f7:459b with SMTP id
+ 4fb4d7f45d1cf-5fb18f7473emr1026068a12.4.1746401153666; Sun, 04 May 2025
+ 16:25:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Add Luckfox Omni3576 Board
- support
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jonas Karlman <jonas@kwiboo.se>, heiko@sntech.de, robh@kernel.org,
- conor+dt@kernel.org, detlev.casanova@collabora.com,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250502205533.51744-1-inindev@gmail.com>
- <20250504102447.153551-1-inindev@gmail.com>
- <20250504102447.153551-4-inindev@gmail.com>
- <bb171ae2-c495-49a3-a7eb-a4b865e54199@kwiboo.se>
- <87892840-bdbf-43d4-bd93-cb98f5e1c672@lunn.ch>
- <b603e92f-8c1a-4aea-8bab-82a1f035c7fa@gmail.com>
- <b50c68bd-9b15-412a-ac00-1df25601edd9@lunn.ch>
-Content-Language: en-US
-From: John Clark <inindev@gmail.com>
-In-Reply-To: <b50c68bd-9b15-412a-ac00-1df25601edd9@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Mon, 5 May 2025 01:25:41 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+X-Gm-Features: ATxdqUF-4LjdLg3QP9aQurW4StUtszW6zEg3L7LcP4VsuTxu8r7YCkYGmWYmIdo
+Message-ID: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: Paul Moore <paul@paul-moore.com>
+Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
+	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
+	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
+	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
+	justinstitt@google.com, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
+	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
+	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
+	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
+	xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/4/25 7:01 PM, Andrew Lunn wrote:
-> On Sun, May 04, 2025 at 05:02:33PM -0400, John Clark wrote:
->> On 5/4/25 10:12 AM, Andrew Lunn wrote:
->>>>> +&gmac0 {
->>>>> +	clock_in_out = "output";
->>>>> +	phy-handle = <&rgmii_phy0>;
->>>>> +	phy-mode = "rgmii-rxid";
->>>>
->>>> See Andrew's remark on v1 of this patch.
->>>
->>> Hi John
->>>
->>> If you have questions, please ask. It is not a good idea to silently
->>> ignore reviewers comments. Either do something about it, ask
->>> questions, or politely argue why the reviewer is wrong, because
->>> sometimes we are.
->>>
->> Hi Andrew,
->> Thanks for your feedback and the link to the RGMII delays discussion. I
->> assumed you suggested switching to phy-mode = "rgmii-id" from rgmii-rxid.
->> The vendor’s downstream kernel uses rgmii-rxid with tx_delay = <0x20>, as
->> shown in my post. I tried rgmii-id and removed tx_delay, but the interface
->> failed to get a DHCP address. Reverting to rgmii-rxid with the delay
->> restored functionality. Any advice on correctly configuring rgmii-id or
->> adjusting delays for this board?
-> 
-> What PHY is it? Are you using the correct PHY driver for it, or
-> genphy?
- >
+On Sun, May 4, 2025 at 7:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> wro=
+te:
+>
+> On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrot=
+e:
+> >
+> > > This patch series introduces the Hornet LSM. The goal of Hornet is to=
+ provide
+> > > a signature verification mechanism for eBPF programs.
+> > >
+> >
+> > [...]
+> >
+> > >
+> > > References: [1]
+> > > https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov=
+@gmail.com/
+> > > [2]
+> > > https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=
+=3DcBzdEYbv_kg@mail.gmail.com/
+> > >
+> > > Change list: - v2 -> v3 - Remove any and all usage of proprietary bpf=
+ APIs
+> >
+> > BPF APIs are not proprietary, but you cannot implement BPF program sign=
+ing
+> > for BPF users without aligning with the BPF maintainers and the communi=
+ty.
+> > Signed programs are a UAPI and a key part of how developers experience =
+BPF
+> > and this is not how we would like signing to be experienced by BPF user=
+s.
+> >
+> > Some more feedback (which should be pretty obvious) but explicitly:
+> >
+> > * Hacks like if (current->pid =3D=3D 1) return 0; also break your threa=
+t model
+> >   about root being untrusted.
+>
+> Speaking with Blaise off-list when that change was discussed, I
+> believe the intent behind that Kconfig option was simply for
+> development/transition purposes, and not for any long term usage.  My
+> understanding is that this is why it was a separate build time
+> configuration and not something that could be toggled at runtime, e.g.
+> sysctl or similar.
+>
+> > * You also did not take the feedback into account:
+> >
+> >    new =3D map->ops->map_lookup_elem(map, &key);
+> >
+> >   This is not okay without having the BPF maintainers aligned, the same=
+ way as
 
-This fails:
+[...]
 
-&gmac0 {
-         clock_in_out = "output";
-         phy-handle = <&rgmii_phy0>;
-         phy-mode = "rgmii-id";
-         pinctrl-names = "default";
-         pinctrl-0 = <&eth0m0_miim
-                      &eth0m0_tx_bus2
-                      &eth0m0_rx_bus2
-                      &eth0m0_rgmii_clk
-                      &eth0m0_rgmii_bus
-                      &ethm0_clk0_25m_out>;
-         status = "okay";
-};
+>
+> From what I've seen in Blaise's efforts to implement BPF signature
+> validation in the upstream kernel he has been working in good faith
+> and has been trying to work with the greater BPF community at each
+> step along the way.  He attempted to learn from previously rejected
+> attempts with his first patchset, however, that too was rejected, but
+> with feedback on how he might proceed.  Blaise took that feedback and
+> implemented Hornet, traveling to LSFMMBPF to present his idea to the
+> BPF community, as well as the usual mailing list postings.  When there
+> was feedback that certain APIs would not be permitted, despite being
+> EXPORT_SYMBOL'd, Blaise made some adjustments and came back to the
+> lists with an updated version.  You are obviously free to object to
+> portions of Hornet, but I don't believe you can claim Blaise isn't
+> trying to work with the BPF community on this effort.
 
-&mdio0 {
-         rgmii_phy0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-ieee802.3-c22";
-                 reg = <0x0>;
-                 clocks = <&cru REFCLKO25M_GMAC0_OUT>;
-                 pinctrl-names = "default";
-                 pinctrl-0 = <&gmac0_rst>;
-                 reset-assert-us = <20000>;
-                 reset-deassert-us = <100000>;
-                 reset-gpios = <&gpio2 RK_PB3 GPIO_ACTIVE_LOW>;
-         };
-};
+Calling map->ops->map_lookup_elem wax objected to by Alexei.
+This feedback was not incorporated.
 
-&pinctrl {
-         gmac {
-                 gmac0_rst: gmac0-rst {
-                         rockchip,pins = <2 RK_PB3 RK_FUNC_GPIO 
-&pcfg_pull_none>;
-                 };
-         };
-};
+>
+> > So for this approach, it's a:
+> >
+> > Nacked-by: KP Singh <kpsingh@kernel.org>
+>
+> Noted.
+>
+> > Now if you really care about the use-case and want to work with the mai=
+ntainers
+> > and implement signing for the community, here's how we think it should =
+be done:
+> >
+> > * The core signing logic and the tooling stays in BPF, something that t=
+he users
+> >   are already using. No new tooling.
+>
+> I think we need a more detailed explanation of this approach on-list.
+> There has been a lot of vague guidance on BPF signature validation
+> from the BPF community which I believe has partly led us into the
+> situation we are in now.  If you are going to require yet another
+> approach, I think we all need to see a few paragraphs on-list
+> outlining the basic design.
+
+Definitely, happy to share design / code.
 
 
-This works:
 
-&gmac0 {
-         clock_in_out = "output";
-         phy-handle = <&rgmii_phy0>;
-         phy-mode = "rgmii-rxid";
-         pinctrl-names = "default";
-         pinctrl-0 = <&eth0m0_miim
-                      &eth0m0_tx_bus2
-                      &eth0m0_rx_bus2
-                      &eth0m0_rgmii_clk
-                      &eth0m0_rgmii_bus
-                      &ethm0_clk0_25m_out>;
-         tx_delay = <0x20>;
-         status = "okay";
-};
+- KP
 
-&mdio0 {
-         rgmii_phy0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-ieee802.3-c22";
-                 reg = <0x0>;
-                 clocks = <&cru REFCLKO25M_GMAC0_OUT>;
-                 pinctrl-names = "default";
-                 pinctrl-0 = <&gmac0_rst>;
-                 reset-assert-us = <20000>;
-                 reset-deassert-us = <100000>;
-                 reset-gpios = <&gpio2 RK_PB3 GPIO_ACTIVE_LOW>;
-         };
-};
-
-&pinctrl {
-         gmac {
-                 gmac0_rst: gmac0-rst {
-                         rockchip,pins = <2 RK_PB3 RK_FUNC_GPIO 
-&pcfg_pull_none>;
-                 };
-         };
-};
-
-> 
-> rk3576-rock-4d.dts and rk3576-armsom-sige5.dts show that it is
-> possible to use this SoC with the correct 'rgmii-id',
-> 
-> 	Andrew
+>
+> > * The policy decision on the effect of signing can be built into variou=
+s
+> >   existing LSMs. I don't think we need a new LSM for it.
+> > * A simple UAPI (emphasis on UAPI!) change to union bpf_attr in uapi/bp=
+f.h in
+> >   the BPF_PROG_LOAD command:
+> >
+> > __aligned_u64 signature;
+> > __u32 signature_size;
+>
+> --
+> paul-moore.com
