@@ -1,408 +1,427 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0674B5AE;
-	Sun,  4 May 2025 09:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6B19DF40;
+	Sun,  4 May 2025 09:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746351245; cv=none; b=RYYg6ewuPPyfVQTPcPPBLyXxAE/e8CDLJi/L7dqzHeGgZQRHvspyLKPCIX7muXEBOBXWNImFy8fdoMUJli67PYWNjbpgs+nLnc0RKbb6JcXsdHabTpXS8frkQILOItT4obBCWyBzMjpT/2IbCxT22Wk0QOndOirx5Oq7h7eWeB8=
+	t=1746351248; cv=none; b=KTETjlfEr/7fcCqsTxRSmukkvH/Qo8nHu+VssysJsK4Gqe8tqISofT07ORSFGNTjnBCgLSfN73E10Xggs1ZWbNV2FGX86wKdCxa6WowmGOsHKSF3F9PjCNByftITQPDTZYl8HBpzYDtQcjOMhq+dkLr8ay1Lhze+4ItXst6Q+Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746351245; c=relaxed/simple;
-	bh=N1ft1MCs11AqOF3ScLkba3Ks9VBNPAuD5bz4Yit63z0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQqi2a1xVlPyrN9i36/RjNgplnECDJMVAMxivjIK5NWz2pJSBCvX2DZfCOeFHpnmnWM1+AdyzoKVtuwmwK6dQ5DdaowWT+RAHGni6bCUcXWyMG0N3o8pLPnTGVWX+pa5bvGIJZ8ZBxk0+OyGRlhT6cYB2OAGaXSLO4O/p1JHWJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dIdjWZsp; arc=none smtp.client-ip=209.85.215.175
+	s=arc-20240116; t=1746351248; c=relaxed/simple;
+	bh=k8R97ouehfGNcufxuN/m42cFxSz9OEVj1PcN18HxyiU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KVc3HcV4wOPNUuNo7LHy+CWw+HD6VhCsMEWXZAg38h0GHT0YMy9cbL2t6f4vTS+jCQBEp5QmDekK5aZ6TCVKu8UkuTo/xpkI5/HWzNvJKeQCH5/0p+zmUtNJhwmitEJgiugQkotuWI3R101jWCT8MrmQBmKFILf8pCcfEHjZlU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AfX4Fhh5; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dIdjWZsp"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af91fc1fa90so3189708a12.0;
-        Sun, 04 May 2025 02:34:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfX4Fhh5"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso20007905e9.3;
+        Sun, 04 May 2025 02:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746351243; x=1746956043; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dZ5089g5fcxDtK8RW4HG6ld5BJ4Ih76RBmbnYmG1YBs=;
-        b=dIdjWZsp6A/xdVAEdB5NWB6LPCyWQbfiFmvZd49awdh0ISlaVj42WvNdDxIENm4Cof
-         0rovPs1RJ7ZVf8MQvGmog13/HrmE0ZBoK7NpAkMjh/ZDfKW2lp4ONv+UAClmfha9nOOQ
-         Rqy+IPqaeUqjoC1vP2IHxarwTiEwa4qK2UAFXQiFDohXjMpCEOq9OjsG7gJgWK2IKar/
-         ALfSD9Mw2aEoBEUJavV553RFUI3JHj2Os+yn+XQKBeId0+Yox5QQEJRtcYNqqI1YRg5g
-         nc5i8iw2JZeKtpw6GHNMG6GYxpvgXkP9Wp3y42TBF0WlyziRpT6Pykn0lTs/e3l138id
-         CBcg==
+        d=gmail.com; s=20230601; t=1746351244; x=1746956044; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ieqxuP1ZJjBSInFCifjwzLoCRQEmElLnyd63cEZ3uDw=;
+        b=AfX4Fhh5p4+odysDKDX6Q7WsIsKXHLfyb8cC9Oq3Qlw8vSeRI6spKW495wUOS051hL
+         G7l/684lP4RaENNtwRwjJ962gHa9+7QQu8wB91ETNeGP6Qpl/zcRlYpHsZLtPaaYrNRO
+         prc4pogD8nlw4zThGrIBEMfcZVZN3QeVNvqDPs25yyBgwTjLW1s1TIOWqr3F9mBcpEY1
+         EOJ32v3+bGCBxPb1vTLjdK2DwQ1ozW8q46kh3ZPBgt0Cp8PmyztMLxWSNXJqL0Bo7Ou6
+         Um6Ga2C0pj+c0Tr8YZ4YL76iTlJv4CRkPS7QwiMXlEJ/wXNLTKcOC2757l+AjpC1R1l3
+         An4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746351243; x=1746956043;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dZ5089g5fcxDtK8RW4HG6ld5BJ4Ih76RBmbnYmG1YBs=;
-        b=MYoUJGknMqDM9ef78jkoprn3JtekkX4MqNbtuPcw50XoXz6fk6nVSRNF9mGQ5OUMAu
-         AMqBmglWFk3h7A1ERNXR5nZPFVy41rkyilLn6IV9MNWykA9aJODZcZgouvX82PW9kbrV
-         MDeDJnUB4RRs1ZjBE5YzaSTMn3SGFqCBlBabsDnuM5p7Q1xVwZSLJ/WRNeDD2ndZUj2g
-         PT7ovO+hUMgugeNO21f6K8EcCtqt+ZCUdLe40kPY3LdR182vQ/qPzq3w06/uPCAs6OLT
-         UMCeTP3hkLdqV+ANA9Dn56p9OiRBQTNRHCz1Q/raBbgPErDRxU8Ec4agW7sx6gU14Vq6
-         rdtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUELOkeC+v0X2aQpECPa/IdopUiuJeD0V6xdSYpkFoerrvRsJKidSOA4x9+4dTMxrmASrulO3l1Eap+VqA@vger.kernel.org, AJvYcCVpsUmzGuDQXXzjWXfOQUEFoy1pq/K10NydnsPuLxBSgtwUXnwqHT3D7lhs6Sacu91gIqo/gmkaDiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkTicnhkxpn6d1D4XHQ0zrJ3Er/urSXvLzXFm6zKQGF0o3h13I
-	auXFa9iZn1BZqpJ8+qGRLzx9xvHW0VWP3Z/RnauQbgTXsG+Mqh+Q
-X-Gm-Gg: ASbGncssdZWls/c4eou4C1dgqara0Ee/tPBeSi4ke0Xp47nEtbRs4XiT2Cbu2HCcYYW
-	K9XShem6iv+i+yqJz1iLuCX/sIKeSjxv70e8Pvn5TEkOC0Aq311P2kF+veMArn5p9GASrsSaO4x
-	nWuCPYQy49diNwu+XqcHSUFn0IPDNc5o4Z2hI98T2UttqqxU6/QWkjsKVT5cP5qEBEbUcrlPRBe
-	9WTvgOcsbts0HRSBTapQMh0qXHRFZzduTltvjmEjpW1DLngmrFcSLqIcwd6LYsHH06SD+YP43O+
-	CCLG/qycPhNkjn7YQTVmf1SfaiT3iE9+a24J3Qw8cnRIVb3c6NMB
-X-Google-Smtp-Source: AGHT+IEyoioyuSNbzsVqWaizBJYUUeem0i8MooKEc8VNT6CrCZ+ApzlxcSj0Cio63XjsOz73XKsmgg==
-X-Received: by 2002:a17:90a:ac16:b0:30a:5b12:db16 with SMTP id 98e67ed59e1d1-30a5b12db68mr5990474a91.1.1746351242903;
-        Sun, 04 May 2025 02:34:02 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.249.218])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3471f005sm9165905a91.5.2025.05.04.02.34.00
+        d=1e100.net; s=20230601; t=1746351244; x=1746956044;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ieqxuP1ZJjBSInFCifjwzLoCRQEmElLnyd63cEZ3uDw=;
+        b=vxkrPljlaEqVoBEczKH82mtvIEnJZdREOYUVoLgbmfiN4BhIPTLhkTHZMkNHodGVVY
+         qdjS+reBMzY9DID9Gs3kpgVnJmaXsB2KDp4UrV7v1vBXjGl+llitwo8bWWx98wxuwp8d
+         Eonue2Y48n2RY5Xp2o5keQN+39QIJLKKsUoEZgkfrOUlOkfgcQwcOcl//KYvVrfuvGfL
+         XQqh8i3FkXIlz/pJN/++NzxfGLeKAs5D67pdaMIeU08jJq/wHNtt4LM56R3qHeqX6lcu
+         DxdkfbXFyoTd8Tv+jsw1HVYEJUUucyW756i7QjrvdBaMAGES3tQCYNFGbZfrSmCZsUJ5
+         ad+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXAL+gKmSYHCgEGlhFgTthEscqwKsSsNQ+T86P9QFK9EQrpE+7wi0GUVT0tZ2q+DlbkCqRXMMu1hvKr@vger.kernel.org, AJvYcCXrIh8XbIcwvJRZdq2UVv7z+eIx+L03GSFQKq6Gf6+kVpfrJ+9q7P1KyAR+WabJD0kLBvwSjJLoHrAVJmrA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+YoIRBpdAB4PcvVTA2o+jfvSh26czS4ixMFfXcJ0Vb1pAG3CN
+	DYh+nq/2nSi9ziFyLXP0npu3N0GcV/BYHD3gHA//rEOQ75eiMtqZKPOAzDuF
+X-Gm-Gg: ASbGncsu6LVX8+OQ2MxBKJrEKwSozaXBVbYK+hz3enWrkErq0N1bHy8OHOYoQo3q2of
+	eZgfrswGGn1IxI7Lxj1RWnfoyGnFxTWebAffsGdeVPZzTgp1J5OtRHm/nF4FqK9GaGc/puIH2tz
+	nTRUykKvYkEOBpE6DuwnI6ebq9c1h6/mp27/ATjtC7Weq7rxJCd+PCE4yRrNk3XJF0NDP5+kHz4
+	iCzBXzitkWPPmWPtRLgRok/i60LjDTrOP48nU+UfFzhNImQanWLso1l5hmZfs51mU4JFte7ME1c
+	EVYOkifQzs9vB6x5k/riOaEouM1cnHpxCeYkmLvsE13CBzsLzAFK4faaeI9Wt44kzLW1SKO7Q/p
+	QDXVs5X2cb/gWf3g=
+X-Google-Smtp-Source: AGHT+IEAoNuoYho02jDkMUn7diMG4X9eRCzN9RupCD/B4q1VUbAFst1+pP82WALa6n1WS6UryvUdnw==
+X-Received: by 2002:a05:6000:2489:b0:390:eacd:7009 with SMTP id ffacd0b85a97d-3a09fdbb87cmr2238947f8f.42.1746351244295;
+        Sun, 04 May 2025 02:34:04 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc4f8sm99060625e9.1.2025.05.04.02.34.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 02:34:02 -0700 (PDT)
-From: Jesung Yang <y.j3ms.n@gmail.com>
-To: corbet@lwn.net
-Cc: workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jesung Yang <y.j3ms.n@gmail.com>
-Subject: [PATCH] docs: align with scripts/syscall.tbl migration
-Date: Sun,  4 May 2025 18:33:51 +0900
-Message-ID: <20250504093351.2134552-1-y.j3ms.n@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Sun, 04 May 2025 02:34:03 -0700 (PDT)
+Message-ID: <5e08f5a5acdaa438eb4e5dcb04e2086108c06da3.camel@gmail.com>
+Subject: Re: [PATCH v2 3/5] iio: adc: ad7606: add offset and phase
+ calibration support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Date: Sun, 04 May 2025 09:34:27 +0100
+In-Reply-To: <c3e7ea15ea5c3ce14cdd4d99ffa98631e7ce2677.camel@gmail.com>
+References: 
+	<20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
+	 <20250502-wip-bl-ad7606-calibration-v2-3-174bd0af081b@baylibre.com>
+	 <c3e7ea15ea5c3ce14cdd4d99ffa98631e7ce2677.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Update the documentation to reflect the migration of the following
-architectures to the centralized syscall table format:
+On Sun, 2025-05-04 at 09:30 +0100, Nuno S=C3=A1 wrote:
+> On Fri, 2025-05-02 at 15:27 +0200, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> >=20
+> > Add support for offset and phase calibration, only for
+> > devices that support software mode, that are:
+> >=20
+> > ad7606b
+> > ad7606c-16
+> > ad7606c-18
+> >=20
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > ---
+>=20
+> With the the proper type for the DT properties:
+>=20
 
-  arc, arm64, csky, hexagon, loongarch, nios2, openrisc, riscv
+Disregard this... Feel free to add the tag. The comment is for other patch!
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-As of commit 3db80c999debbad ("riscv: convert to generic syscall table"),
-these architectures no longer rely on include/uapi/asm-generic/unistd.h.
-Instead, syscall table headers (syscall_table_{32,64}.h) are generated by
-scripts/syscalltbl.sh based on entries in scripts/syscall.tbl, with ABIs
-specified in arch/*/kernel/Makefile.syscalls.
 
-For the convenience of developers working with older kernel versions, the
-original documentation is fully retained, with new sections added to
-cover the scripts/syscall.tbl approach.
-
-Verified with `make htmldocs`.
-
-Signed-off-by: Jesung Yang <y.j3ms.n@gmail.com>
-Link: https://lore.kernel.org/lkml/20240704143611.2979589-1-arnd@kernel.org
----
-
-I have tested all the listed architectures except hexagon and nios2.
-
-Hexagon was skipped because no system-level emulator appears to be
-available.
-
-For nios2, QEMU removed support for both user and system emulation as of
-version 9.1. With older versions (9.0.4 and 5.2.0), the kernel appears to
-boot but gets stuck alternating between `get_cycles` and `__const_udelay`
-during execution. Additionally, I could not find sufficient documentation
-to enable runtime testing for nios2.
-
-Any guidance on how to proceed with testing for hexagon or nios2 would be
-appreciated.
-
-Testing Summary:
-
-- Linux kernel: 6.15.0-rc4-next-20250501
-- System call number: 468
-- System call name: xyzzy
-- System call implementation:
-    SYSCALL_DEFINE1(xyzzy, u64, d)
-    {
-    	printk("Hi, SYSCALL_DEFINE1\n");
-    	return d;
-    }
-
-    COMPAT_SYSCALL_DEFINE2(xyzzy, compat_arg_u64_dual(d))
-    {
-    	printk("Hi, COMPAT_SYSCALL_DEFINE2\n");
-    	return compat_arg_u64_glue(d);
-    }
-- Test userspace program:
-    #include <unistd.h>
-    int main(void) {
-        long r = syscall(468, 17, 39);
-        return 0;
-    }
-
-Each architecture was tested using the following steps:
-  - Add the following entry to scripts/syscall.tbl:
-      468	common	xyzzy			sys_xyzzy		compat_sys_xyzzy
-  - Compile the kernel with the new syscall implementation
-  - Verify that arch/*/include/generated/uapi/asm/unistd_*.h contains:
-      #define __NR_xyzzy 468
-  - Verify that arch/*/include/generated/asm/syscall_table_*.h contains:
-      __SYSCALL_WITH_COMPAT(468, sys_xyzzy, compat_sys_xyzzy)
-  - Boot the kernel under QEMU
-  - Invoke sys_xyzzy() using the test program
-
-Detailed Results:
-
-1. arc
-  - Kernel config: haps_hs_defconfig
-  - QEMU target: qemu-system-arc -M virt -cpu archs
-    - Src: https://github.com/foss-for-synopsys-dwc-arc-processors/qemu
-    - Commit hash: 76e0fa9053b4184a29c9077959d484047eefe521
-    - Version: 7.0.0
-  - Result:
-    - The following files were correctly generated
-      - arch/arc/include/generated/asm/syscall_table_32.h
-      - arch/arc/include/generated/uapi/asm/unistd_32.h
-    - The system call was successfully invoked with output:
-        "Hi, SYSCALL_DEFINE1\n"
-    - The above output is expected due to a macro override in
-      arch/arc/kernel/sys.c:
-        #define __SYSCALL_WITH_COMPAT(nr, native, compat) \
-                __SYSCALL(nr, native)
-  - Notes:
-    - Modified arch/arc/Makefile:
-        - tune-mcpu-def-$(CONFIG_ISA_ARCV2)	:= -mcpu=hs38
-        + tune-mcpu-def-$(CONFIG_ISA_ARCV2)	:= -mcpu=archs
-
-2. arm64
-  - Kernel config: defconfig
-  - QEMU target: qemu-system-aarch64 -M virt -cpu cortex-a53
-    - Src: https://github.com/qemu/qemu
-    - Commit hash: a17976b04f2117e1bab64358f873b36fe4561520
-    - Version: 9.0.4
-  - Result:
-    - The following files were correctly generated
-      - arch/arm64/include/generated/asm/syscall_table_32.h
-      - arch/arm64/include/generated/asm/syscall_table_64.h
-      - arch/arm64/include/generated/asm/unistd_32.h
-      - arch/arm64/include/generated/asm/unistd_compat_32.h
-        - contains #define __NR_compat32_xyzzy 468
-      - arch/arm64/include/generated/uapi/asm/unistd_64.h
-    - 32-bit userspace process successfully invoked the system call with
-      output:
-        "Hi, COMPAT_SYSCALL_DEFINE2\n"
-    - 64-bit userspace process successfully invoked the system call with
-      output:
-        "Hi, SYSCALL_DEFINE1\n"
-
-3. csky
-  - Kernel config: defconfig
-  - QEMU target: qemu-system-cskyv2 -M virt -cpu ck807
-    - Src: https://github.com/XUANTIE-RV/qemu/tree/xuantie-qemu-9.0
-    - Commit hash: e0ace167effcd36d1f82c7ccb4522b3126011479
-    - Version: 8.2.94
-  - Result:
-    - The following files were correctly generated
-      - arch/csky/include/generated/asm/syscall_table_32.h
-      - arch/csky/include/generated/uapi/asm/unistd_32.h
-    - The system call was successfully invoked with output:
-        "Hi, SYSCALL_DEFINE1\n"
-    - The above output is expected due to a macro override in
-      arch/csky/kernel/syscall_table.c:
-        #define __SYSCALL_WITH_COMPAT(nr, native, compat) \
-                __SYSCALL(nr, native)
-
-4. hexagon
-  - Kernel config: defconfig
-  - QEMU target: N/A
-  - Result:
-    - The following files were correctly generated
-      - arch/hexagon/include/generated/asm/syscall_table_32.h
-      - arch/hexagon/include/generated/uapi/asm/unistd_32.h
-
-5. loongarch
-  - Kernel config: loongson3_defconfig
-  - QEMU target: qemu-system-loongarch64 -machine virt -cpu la464
-    - Src: https://github.com/qemu/qemu
-    - Commit hash: a17976b04f2117e1bab64358f873b36fe4561520
-    - Version: 9.0.4
-  - Result:
-    - The following files were correctly generated
-      - arch/loongarch/include/generated/asm/syscall_table_64.h
-      - arch/loongarch/include/generated/uapi/asm/unistd_64.h
-    - The system call was successfully invoked with output:
-        "Hi, SYSCALL_DEFINE1\n"
-    - The above output is expected due to a macro override in
-      arch/loongarch/kernel/syscall.c:
-        #define __SYSCALL_WITH_COMPAT(nr, native, compat) \
-                __SYSCALL(nr, native)
-
-6. nios2
-  - Kernel config: 10m50_defconfig
-  - QEMU target: qemu-system-nios2 -machine 10m50-ghrd
-    - Src: https://github.com/qemu/qemu
-    - Commit hash (9.0.4): a17976b04f2117e1bab64358f873b36fe4561520
-    - Commit hash (5.2.0): 553032db17440f8de011390e5a1cfddd13751b0b
-    - Version: 9.0.4, 5.2.0
-  - Result:
-    - The following files were correctly generated
-      - arch/nios2/include/generated/asm/syscall_table_32.h
-      - arch/nios2/include/generated/uapi/asm/unistd_32.h
-
-7. openrisc
-  - Kernel config: virt_defconfig
-  - QEMU target: qemu-system-or1k -machine virt -cpu or1200
-    - Src: https://github.com/qemu/qemu
-    - Commit hash: a17976b04f2117e1bab64358f873b36fe4561520
-    - Version: 9.0.4
-  - Result:
-    - The following files were correctly generated
-      - arch/openrisc/include/generated/asm/syscall_table_32.h
-      - arch/openrisc/include/generated/uapi/asm/unistd_32.h
-    - The system call was successfully invoked with output:
-        "Hi, SYSCALL_DEFINE1\n"
-    - The above output is expected due to a macro override in
-      arch/openrisc/kernel/sys_call_table.c:
-        #define __SYSCALL_WITH_COMPAT(nr, native, compat) \
-                __SYSCALL(nr, native)
-
-8. riscv (32-bit)
-  - Kernel config: defconfig + 32-bit.config
-  - QEMU target: qemu-system-riscv32 -M virt -cpu rv32
-    - Src: https://github.com/qemu/qemu
-    - Commit hash: a17976b04f2117e1bab64358f873b36fe4561520
-    - Version: 9.0.4
-  - Result:
-    - The following files were correctly generated
-      - arch/riscv/include/generated/asm/syscall_table_32.h
-      - arch/riscv/include/generated/uapi/asm/unistd_32.h
-    - The system call was successfully invoked with output:
-        "Hi, SYSCALL_DEFINE1\n"
-    - The above output is expected due to a macro override in
-      arch/riscv/kernel/syscall_table.c:
-        #define __SYSCALL_WITH_COMPAT(nr, native, compat) \
-                __SYSCALL(nr, native)
-
-9. riscv (64-bit)
-  - Kernel config: defconfig + 64-bit.config
-  - QEMU target: qemu-system-riscv64 -M virt -cpu rv64
-    - Src: https://github.com/qemu/qemu
-    - Commit hash: a17976b04f2117e1bab64358f873b36fe4561520
-    - Version: 9.0.4
-  - Result:
-    - The following files were correctly generated
-      - arch/riscv/include/generated/asm/syscall_table_32.h
-      - arch/riscv/include/generated/asm/syscall_table_64.h
-      - arch/riscv/include/generated/uapi/asm/unistd_32.h
-      - arch/riscv/include/generated/uapi/asm/unistd_64.h
-    - 32-bit userspace process successfully invoked the system call with
-      output:
-        "Hi, COMPAT_SYSCALL_DEFINE2\n"
-    - 64-bit userspace process successfully invoked the system call with
-      output:
-        "Hi, SYSCALL_DEFINE1\n"
-
- Documentation/process/adding-syscalls.rst | 84 +++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
-
-diff --git a/Documentation/process/adding-syscalls.rst b/Documentation/process/adding-syscalls.rst
-index 906c47f1a9e5..fc0b0bbcd34d 100644
---- a/Documentation/process/adding-syscalls.rst
-+++ b/Documentation/process/adding-syscalls.rst
-@@ -248,6 +248,52 @@ To summarize, you need a commit that includes:
-  - fallback stub in ``kernel/sys_ni.c``
- 
- 
-+.. _syscall_generic_6_11:
-+
-+Since 6.11
-+~~~~~~~~~~
-+
-+Starting with kernel version 6.11, general system call implementation for the
-+following architectures no longer requires modifications to
-+``include/uapi/asm-generic/unistd.h``:
-+
-+ - arc
-+ - arm64
-+ - csky
-+ - hexagon
-+ - loongarch
-+ - nios2
-+ - openrisc
-+ - riscv
-+
-+Instead, you need to update ``scripts/syscall.tbl`` and, if applicable, adjust
-+``arch/*/kernel/Makefile.syscalls``.
-+
-+As ``scripts/syscall.tbl`` serves as a common syscall table across multiple
-+architectures, a new entry is required in this table::
-+
-+    468   common   xyzzy     sys_xyzzy
-+
-+Note that adding an entry to ``scripts/syscall.tbl`` with the "common" ABI
-+also affects all architectures that share this table. For more limited or
-+architecture-specific changes, consider using an architecture-specific ABI or
-+defining a new one.
-+
-+If a new ABI, say ``xyz``, is introduced, the corresponding updates should be
-+made to ``arch/*/kernel/Makefile.syscalls`` as well::
-+
-+    syscall_abis_{32,64} += xyz (...)
-+
-+To summarize, you need a commit that includes:
-+
-+ - ``CONFIG`` option for the new function, normally in ``init/Kconfig``
-+ - ``SYSCALL_DEFINEn(xyzzy, ...)`` for the entry point
-+ - corresponding prototype in ``include/linux/syscalls.h``
-+ - new entry in ``scripts/syscall.tbl``
-+ - (if needed) Makefile updates in ``arch/*/kernel/Makefile.syscalls``
-+ - fallback stub in ``kernel/sys_ni.c``
-+
-+
- x86 System Call Implementation
- ------------------------------
- 
-@@ -353,6 +399,41 @@ To summarize, you need:
-    ``include/uapi/asm-generic/unistd.h``
- 
- 
-+Since 6.11
-+~~~~~~~~~~
-+
-+This applies to all the architectures listed in :ref:`Since 6.11<syscall_generic_6_11>`
-+under "Generic System Call Implementation", except arm64. See
-+:ref:`Compatibility System Calls (arm64)<compat_arm64>` for more information.
-+
-+You need to extend the entry in ``scripts/syscall.tbl`` with an extra column
-+to indicate that a 32-bit userspace program running on a 64-bit kernel should
-+hit the compat entry point::
-+
-+    468   common     xyzzy     sys_xyzzy    compat_sys_xyzzy
-+
-+To summarize, you need:
-+
-+ - ``COMPAT_SYSCALL_DEFINEn(xyzzy, ...)`` for the compat entry point
-+ - corresponding prototype in ``include/linux/compat.h``
-+ - modification of the entry in ``scripts/syscall.tbl`` to include an extra
-+   "compat" column
-+ - (if needed) 32-bit mapping struct in ``include/linux/compat.h``
-+
-+
-+.. _compat_arm64:
-+
-+Compatibility System Calls (arm64)
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+On arm64, there is a dedicated syscall table for compatibility system calls
-+targeting 32-bit (AArch32) userspace: ``arch/arm64/tools/syscall_32.tbl``.
-+You need to add an additional line to this table specifying the compat
-+entry point::
-+
-+    468   common     xyzzy     sys_xyzzy    compat_sys_xyzzy
-+
-+
- Compatibility System Calls (x86)
- --------------------------------
- 
-@@ -575,3 +656,6 @@ References and Sources
-  - Recommendation from Linus Torvalds that x32 system calls should prefer
-    compatibility with 64-bit versions rather than 32-bit versions:
-    https://lore.kernel.org/r/CA+55aFxfmwfB7jbbrXxa=K7VBYPfAvmu3XOkGrLbB1UFjX1+Ew@mail.gmail.com
-+ - Patch series revising system call table infrastructure to use
-+   scripts/syscall.tbl across multiple architectures:
-+   https://lore.kernel.org/lkml/20240704143611.2979589-1-arnd@kernel.org
--- 
-2.43.0
+>=20
+> > =C2=A0drivers/iio/adc/ad7606.c | 160 ++++++++++++++++++++++++++++++++++=
++++++++++++++
+> > =C2=A0drivers/iio/adc/ad7606.h |=C2=A0=C2=A0 9 +++
+> > =C2=A02 files changed, 169 insertions(+)
+> >=20
+> > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> > index
+> > ad5e6b5e1d5d2edc7f8ac7ed9a8a4e6e43827b85..139d8b3f9bb39dd631a71c7053900=
+5d719fb5b7
+> > b
+> > 100644
+> > --- a/drivers/iio/adc/ad7606.c
+> > +++ b/drivers/iio/adc/ad7606.c
+> > @@ -95,6 +95,22 @@ static const unsigned int ad7616_oversampling_avail[=
+8] =3D {
+> > =C2=A0	1, 2, 4, 8, 16, 32, 64, 128,
+> > =C2=A0};
+> > =C2=A0
+> > +static const int ad7606_calib_offset_avail[3] =3D {
+> > +	-128, 1, 127,
+> > +};
+> > +
+> > +static const int ad7606c_18bit_calib_offset_avail[3] =3D {
+> > +	-512, 4, 508,
+> > +};
+> > +
+> > +static const int ad7606b_calib_phase_avail[][2] =3D {
+> > +	{ 0, 0 }, { 0, 1250 }, { 0, 318750 },
+> > +};
+> > +
+> > +static const int ad7606c_calib_phase_avail[][2] =3D {
+> > +	{ 0, 0 }, { 0, 1000 }, { 0, 255000 },
+> > +};
+> > +
+> > =C2=A0static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_d=
+ev,
+> > =C2=A0					=C2=A0 struct iio_chan_spec *chan);
+> > =C2=A0static int ad7606c_16bit_chan_scale_setup(struct iio_dev *indio_d=
+ev,
+> > @@ -164,6 +180,8 @@ const struct ad7606_chip_info ad7606b_info =3D {
+> > =C2=A0	.scale_setup_cb =3D ad7606_16bit_chan_scale_setup,
+> > =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> > =C2=A0	.offload_storagebits =3D 32,
+> > +	.calib_offset_avail =3D ad7606_calib_offset_avail,
+> > +	.calib_phase_avail =3D ad7606b_calib_phase_avail,
+> > =C2=A0};
+> > =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606b_info, "IIO_AD7606");
+> > =C2=A0
+> > @@ -177,6 +195,8 @@ const struct ad7606_chip_info ad7606c_16_info =3D {
+> > =C2=A0	.scale_setup_cb =3D ad7606c_16bit_chan_scale_setup,
+> > =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> > =C2=A0	.offload_storagebits =3D 32,
+> > +	.calib_offset_avail =3D ad7606_calib_offset_avail,
+> > +	.calib_phase_avail =3D ad7606c_calib_phase_avail,
+> > =C2=A0};
+> > =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606c_16_info, "IIO_AD7606");
+> > =C2=A0
+> > @@ -226,6 +246,8 @@ const struct ad7606_chip_info ad7606c_18_info =3D {
+> > =C2=A0	.scale_setup_cb =3D ad7606c_18bit_chan_scale_setup,
+> > =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
+> > =C2=A0	.offload_storagebits =3D 32,
+> > +	.calib_offset_avail =3D ad7606c_18bit_calib_offset_avail,
+> > +	.calib_phase_avail =3D ad7606c_calib_phase_avail,
+> > =C2=A0};
+> > =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606c_18_info, "IIO_AD7606");
+> > =C2=A0
+> > @@ -683,6 +705,40 @@ static int ad7606_scan_direct(struct iio_dev *indi=
+o_dev,
+> > unsigned int ch,
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > =C2=A0
+> > +static int ad7606_get_calib_offset(struct ad7606_state *st, int ch, in=
+t *val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret =3D st->bops->reg_read(st, AD7606_CALIB_OFFSET(ch));
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	*val =3D st->chip_info->calib_offset_avail[0] +
+> > +		ret * st->chip_info->calib_offset_avail[1];
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ad7606_get_calib_phase(struct ad7606_state *st, int ch, int=
+ *val,
+> > +				=C2=A0 int *val2)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret =3D st->bops->reg_read(st, AD7606_CALIB_PHASE(ch));
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	*val =3D 0;
+> > +
+> > +	/*
+> > +	 * ad7606b: phase delay from 0 to 318.75 =CE=BCs in steps of 1.25 =CE=
+=BCs.
+> > +	 * ad7606c-16/18: phase delay from 0 =C2=B5s to 255 =C2=B5s in steps =
+of 1 =C2=B5s.
+> > +	 */
+> > +	*val2 =3D ret * st->chip_info->calib_phase_avail[1][1];
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > =C2=A0static int ad7606_read_raw(struct iio_dev *indio_dev,
+> > =C2=A0			=C2=A0=C2=A0 struct iio_chan_spec const *chan,
+> > =C2=A0			=C2=A0=C2=A0 int *val,
+> > @@ -717,6 +773,22 @@ static int ad7606_read_raw(struct iio_dev *indio_d=
+ev,
+> > =C2=A0		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+> > =C2=A0		*val =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
+> > cnvst_pwm_state.period);
+> > =C2=A0		return IIO_VAL_INT;
+> > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > +		if (!iio_device_claim_direct(indio_dev))
+> > +			return -EBUSY;
+> > +		ret =3D ad7606_get_calib_offset(st, chan->scan_index, val);
+> > +		iio_device_release_direct(indio_dev);
+> > +		if (ret)
+> > +			return ret;
+> > +		return IIO_VAL_INT;
+> > +	case IIO_CHAN_INFO_CALIBCONV_DELAY:
+> > +		if (!iio_device_claim_direct(indio_dev))
+> > +			return -EBUSY;
+> > +		ret =3D ad7606_get_calib_phase(st, chan->scan_index, val, val2);
+> > +		iio_device_release_direct(indio_dev);
+> > +		if (ret)
+> > +			return ret;
+> > +		return IIO_VAL_INT_PLUS_NANO;
+> > =C2=A0	}
+> > =C2=A0	return -EINVAL;
+> > =C2=A0}
+> > @@ -767,6 +839,64 @@ static int ad7606_write_os_hw(struct iio_dev *indi=
+o_dev, int
+> > val)
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > +static int ad7606_set_calib_offset(struct ad7606_state *st, int ch, in=
+t val)
+> > +{
+> > +	int start_val, step_val, stop_val;
+> > +
+> > +	start_val =3D st->chip_info->calib_offset_avail[0];
+> > +	step_val =3D st->chip_info->calib_offset_avail[1];
+> > +	stop_val =3D st->chip_info->calib_offset_avail[2];
+> > +
+> > +	if (val < start_val || val > stop_val)
+> > +		return -EINVAL;
+> > +
+> > +	val -=3D start_val;
+> > +	val /=3D step_val;
+> > +
+> > +	return st->bops->reg_write(st, AD7606_CALIB_OFFSET(ch), val);
+> > +}
+> > +
+> > +static int ad7606_set_calib_phase(struct ad7606_state *st, int ch, int=
+ val,
+> > +				=C2=A0 int val2)
+> > +{
+> > +	int wreg, start_ns, step_ns, stop_ns;
+> > +
+> > +	if (val !=3D 0)
+> > +		return -EINVAL;
+> > +
+> > +	start_ns =3D st->chip_info->calib_phase_avail[0][1];
+> > +	step_ns =3D st->chip_info->calib_phase_avail[1][1];
+> > +	stop_ns =3D st->chip_info->calib_phase_avail[2][1];
+> > +
+> > +	/*
+> > +	 * ad7606b: phase dielay from 0 to 318.75 =CE=BCs in steps of 1.25 =
+=CE=BCs.
+> > +	 * ad7606c-16/18: phase delay from 0 =C2=B5s to 255 =C2=B5s in steps =
+of 1 =C2=B5s.
+> > +	 */
+> > +	if (val2 < start_ns || val2 > stop_ns)
+> > +			return -EINVAL;
+> > +
+> > +	wreg =3D val2 / step_ns;
+> > +
+> > +	return st->bops->reg_write(st, AD7606_CALIB_PHASE(ch), wreg);
+> > +}
+> > +
+> > +static int ad7606_write_raw_get_fmt(struct iio_dev *indio_dev,
+> > +				=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, long info)
+> > +{
+> > +	switch (info) {
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		return IIO_VAL_INT_PLUS_MICRO;
+> > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > +		return IIO_VAL_INT;
+> > +	case IIO_CHAN_INFO_CALIBCONV_DELAY:
+> > +		return IIO_VAL_INT_PLUS_NANO;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > =C2=A0static int ad7606_write_raw(struct iio_dev *indio_dev,
+> > =C2=A0			=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan,
+> > =C2=A0			=C2=A0=C2=A0=C2=A0 int val,
+> > @@ -820,6 +950,18 @@ static int ad7606_write_raw(struct iio_dev *indio_=
+dev,
+> > =C2=A0		if (val < 0 && val2 !=3D 0)
+> > =C2=A0			return -EINVAL;
+> > =C2=A0		return ad7606_set_sampling_freq(st, val);
+> > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > +		if (!iio_device_claim_direct(indio_dev))
+> > +			return -EBUSY;
+> > +		ret =3D ad7606_set_calib_offset(st, chan->scan_index, val);
+> > +		iio_device_release_direct(indio_dev);
+> > +		return ret;
+> > +	case IIO_CHAN_INFO_CALIBCONV_DELAY:
+> > +		if (!iio_device_claim_direct(indio_dev))
+> > +			return -EBUSY;
+> > +		ret =3D ad7606_set_calib_phase(st, chan->scan_index, val, val2);
+> > +		iio_device_release_direct(indio_dev);
+> > +		return ret;
+> > =C2=A0	default:
+> > =C2=A0		return -EINVAL;
+> > =C2=A0	}
+> > @@ -998,6 +1140,14 @@ static int ad7606_read_avail(struct iio_dev *indi=
+o_dev,
+> > =C2=A0		*type =3D IIO_VAL_INT_PLUS_MICRO;
+> > =C2=A0
+> > =C2=A0		return IIO_AVAIL_LIST;
+> > +	case IIO_CHAN_INFO_CALIBBIAS:
+> > +		*vals =3D st->chip_info->calib_offset_avail;
+> > +		*type =3D IIO_VAL_INT;
+> > +		return IIO_AVAIL_RANGE;
+> > +	case IIO_CHAN_INFO_CALIBCONV_DELAY:
+> > +		*vals =3D (const int *)st->chip_info->calib_phase_avail;
+> > +		*type =3D IIO_VAL_INT_PLUS_NANO;
+> > +		return IIO_AVAIL_RANGE;
+> > =C2=A0	}
+> > =C2=A0	return -EINVAL;
+> > =C2=A0}
+> > @@ -1060,6 +1210,7 @@ static const struct iio_info ad7606_info_sw_mode =
+=3D {
+> > =C2=A0	.read_raw =3D &ad7606_read_raw,
+> > =C2=A0	.write_raw =3D &ad7606_write_raw,
+> > =C2=A0	.read_avail =3D &ad7606_read_avail,
+> > +	.write_raw_get_fmt =3D ad7606_write_raw_get_fmt,
+> > =C2=A0	.debugfs_reg_access =3D &ad7606_reg_access,
+> > =C2=A0	.validate_trigger =3D &ad7606_validate_trigger,
+> > =C2=A0	.update_scan_mode =3D &ad7606_update_scan_mode,
+> > @@ -1252,6 +1403,15 @@ static int ad7606_probe_channels(struct iio_dev
+> > *indio_dev)
+> > =C2=A0			chan->info_mask_separate_available |=3D
+> > =C2=A0				BIT(IIO_CHAN_INFO_SCALE);
+> > =C2=A0
+> > +			if (st->chip_info->calib_offset_avail) {
+> > +				chan->info_mask_separate |=3D
+> > +					BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> > +					BIT(IIO_CHAN_INFO_CALIBCONV_DELAY);
+> > +				chan->info_mask_separate_available |=3D
+> > +					BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> > +					BIT(IIO_CHAN_INFO_CALIBCONV_DELAY);
+> > +			}
+> > +
+> > =C2=A0			/*
+> > =C2=A0			 * All chips with software mode support oversampling,
+> > =C2=A0			 * so we skip the oversampling_available check. And the
+> > diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> > index
+> > 89d49551eaf515bab9706c12bff056dfcb707b67..4c39de36154ffb80dfbb01bb4f812=
+826bdc5596
+> > 7
+> > 100644
+> > --- a/drivers/iio/adc/ad7606.h
+> > +++ b/drivers/iio/adc/ad7606.h
+> > @@ -40,6 +40,11 @@
+> > =C2=A0#define AD7606_RANGE_CH_ADDR(ch)	(0x03 + ((ch) >> 1))
+> > =C2=A0#define AD7606_OS_MODE			0x08
+> > =C2=A0
+> > +#define AD7606_CALIB_GAIN(ch)		(0x09 + (ch))
+> > +#define AD7606_CALIB_GAIN_MASK		GENMASK(5, 0)
+> > +#define AD7606_CALIB_OFFSET(ch)		(0x11 + (ch))
+> > +#define AD7606_CALIB_PHASE(ch)		(0x19 + (ch))
+> > +
+> > =C2=A0struct ad7606_state;
+> > =C2=A0
+> > =C2=A0typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
+> > @@ -61,6 +66,8 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *i=
+ndio_dev);
+> > =C2=A0 * @init_delay_ms:	required delay in milliseconds for initializat=
+ion
+> > =C2=A0 *			after a restart
+> > =C2=A0 * @offload_storagebits: storage bits used by the offload hw impl=
+ementation
+> > + * @calib_offset_avail: pointer to offset calibration range/limits arr=
+ay
+> > + * @calib_phase_avail:=C2=A0 pointer to phase calibration range/limits=
+ array
+> > =C2=A0 */
+> > =C2=A0struct ad7606_chip_info {
+> > =C2=A0	unsigned int			max_samplerate;
+> > @@ -74,6 +81,8 @@ struct ad7606_chip_info {
+> > =C2=A0	bool				os_req_reset;
+> > =C2=A0	unsigned long			init_delay_ms;
+> > =C2=A0	u8				offload_storagebits;
+> > +	const int			*calib_offset_avail;
+> > +	const int			(*calib_phase_avail)[2];
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0/**
+> >=20
+>=20
 
