@@ -1,372 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE66FA32;
-	Sun,  4 May 2025 18:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F92119F489;
+	Sun,  4 May 2025 18:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746384037; cv=none; b=HNAJ2eCAEtE/PB04Q93CmsHmC/y/j39D1joWc37DtSA0ba9AMFiogzfj//klrqMMHQOa5mYrzsWQCwSEX6PFNCktqUjDctX1LwG6VZM+rYvQ2IDQMzL12jEGkGf307YJhAzSb9/LFdWXNqnppPDcZx5BLyCI2El0vufCsNr22mI=
+	t=1746384084; cv=none; b=GZDXGdESposLfvwHp+OHhwxfk+0Epd2/43K9N1WGZV6/u0+fci3zp7sAk+Y7NBnOSV/pS8gxbnH6ukfzW2Id2b9Stf1YqPwi21xE4sMzAuntDEsMvCseVxr7e7Do+fStp2axVhskRH/rWF52biaPDFvWbzwoIFQJRd9S1b7LjyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746384037; c=relaxed/simple;
-	bh=Seioen4hZGFUwedgCHaEoeWWRh1MD0ol2ItWiQfG+xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fOz1A1Bf7ubNGHkW0P0f4H5Yfhrx5Q+PI9TzOl2F8uPr6XvvKHLkWs0/v1q6gcTMl/1oa/dNb2GYkC1lC15sHOSRT7nKHE1W+w2bFpZfIYTuTcqALY4umtNBgP0XQdfJb38dB2CCCCx6A9DYD87ZHoAkvCRrtjkvA3dhqo5STiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NiZROIiz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746384084; c=relaxed/simple;
+	bh=LCuS5NoxIHqW7U/55a3sx8jUo05O82HlTJ+VcahI7u4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pSv7ip7SZOphV/taNdoeH26+niCseX9gtYK8easLDWt2zxuajqmb5pfWvLmKHTAQldgztsOQ8EKzQYGfFT/xWk09MxdVltNK5/Mv+CfhJQnsxjEmH1nqOcAHS0sjLIokgAebqu9mwErqCCTTCtMRu+/gSAQh+yqIOxsBytcgfB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkIRcbI7; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NiZROIiz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE069C4CEE7;
-	Sun,  4 May 2025 18:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746384037;
-	bh=Seioen4hZGFUwedgCHaEoeWWRh1MD0ol2ItWiQfG+xc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NiZROIizVe3sCQCXhixpf7QbdLfO47IM0H42fnbIvT/DnN7fkTsAY1drregfkJFwY
-	 TgM5+YIPESgK2Fmk+zFdMWJcdVubGkqoyXtUjrf3FrTC/zBMg71PnLvbw6drhPxGQ5
-	 7Ezbb6M3whWN20ZYq57PpLJ/G9A2lZBuQ2yuH9C840Xpd8saTm15oY4PJ/dd+v77Fg
-	 OP/S/CokPFrDXsAaqmUac0MrOrJqJCIA4T2WnQSEiCbv6Hr2jS4Y9cYcB19c+gVxJz
-	 7bpw9KTAYsTp4/I4pApCBS+yGD4fUEC0I35upMbJjKjkK8ozoommNYG6nEwIdmhTqD
-	 OAU3QwuGTmT1w==
-Date: Sun, 4 May 2025 19:40:30 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: =?UTF-8?B?VMOzdGggSsOhbm9z?= via B4 Relay
- <devnull+gomba007.gmail.com@kernel.org>
-Cc: gomba007@gmail.com, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: chemical: Add driver for SEN0322
-Message-ID: <20250504194030.4efe60db@jic23-huawei>
-In-Reply-To: <20250428-iio-chemical-sen0322-v1-2-9b18363ffe42@gmail.com>
-References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
-	<20250428-iio-chemical-sen0322-v1-2-9b18363ffe42@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkIRcbI7"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acb5ec407b1so634465966b.1;
+        Sun, 04 May 2025 11:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746384079; x=1746988879; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4FoJU6gJaDGitgWGlVAW43BYakx3dl8orcQipQm/HMY=;
+        b=OkIRcbI7aqvgnyoBHILvpdOyxLRd8v43v66NSTGKk/wtWxxLqupm+N54t5eYqYlF2X
+         yN4f9z32XkhRY7h6ZZQ3ui+Fylu3DEw1+SnxapLL2301KmkFEFAitnIWer9Qf+8Gb0F5
+         eh2YwfSA98E2FeGXDM5nLsRmH164pXdld5qPSGeg5QLQpnGTKb6II1MO0/SXJ7WRU5t9
+         mUV4jMSF8T+s+pbHvTjRvTCMjrz2HWlgDkA3nXb38mQ2swXvhQIe22Ch8lg8BOBlIXPu
+         0TMLbCQFDeVVRl7uoZuwiUEGacxtPOxY/T4a1MMY+xR5q58ynuCYgNmvxrtDqA2lxIIN
+         fiwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746384079; x=1746988879;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4FoJU6gJaDGitgWGlVAW43BYakx3dl8orcQipQm/HMY=;
+        b=j1zzcGYcnuEX8UrTLj/wCrxOFoZtOHRnHmLvAHDZ7/PNZysWg2oE+vQ0wkcDA2eT2d
+         svTXzRcPkcAZwR1OyYpK5k/8n7URTyK75/GUPI8oBNIrpWuqAlTD1obIzTjNZtxH61tB
+         Gx706gELbN7f4TndrFM9ivp1WWH2HRkRhpRQ5qaUA/odHzHNpQyCszLnmy1BmyQX0vMy
+         SOGgKlcIKMuXDoWbSdDmiZH5omhbAtVo77o0wwrGBFGxyj5cQ2HtLafOpbMhOoLizKmr
+         9Be8M06iwiztInenyu4hQuSP2lmefwHOzDHCeeE98Bf9x3wU7lrbeyF6EVUib7HF+x8d
+         vMCg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/eBy7HCBUWqqYCWPu01lNpVBjN/oEZfTwt4W5mJi539OWbPkNfLMuSxPObOCv5GbOn0QLoyuGvH2b4YU1@vger.kernel.org, AJvYcCVAJ8PGdQBJJbWIF7IFSuWl0jCT0tqvHk+FxtRwxq+PnwvEl08lmZhhb59QSGpufuXQI/+/mWTFAvNYlw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPZvUpmyOJaCQHs0J/axOD03SFV3JOrr7/lKz5qu1vHRKCM80Q
+	AkYTxTAvNBjKTUiYu9mvzst6X+pC9GsQ7VUefKCGWuHmlnHjZlH6
+X-Gm-Gg: ASbGncsqEODXFveeGb4kDCx94vyCvv7QETpLPa2P+5rrsI1LvTTutKqTesCBLiWeXyt
+	/hlGNgiUbJ1lPRBCfpS7D0b/I16eSzcxHHneb4DhBHYVqgWol1nsfMZqg7/atxPlmTPxxF2m9sU
+	yBUAkZ5b3q7DgwrQU5F91SxpSmFuviZ84wIC484sLnvq9MZA++CMjvWrevi3Uir0hraMmexn+aq
+	0O5rXDubf1igArJJ+8J1x0m0G61tFHSvH5hUfk2Owp3BWzcE/I3XumkZgPK9AmTjf7QnuvLobqP
+	QM8iZQVyuQO4FvJbDGKN5EHvaHM1iZQ8hbfjdtpxlkO3Ywmo4KVUZ9/L08WzCWe9DcAZj4i5mBf
+	pooA6BYJmrBlvxQVxI093HLoNDzo=
+X-Google-Smtp-Source: AGHT+IGcVy2BmP9mdTZ/08ewUk+k9GqfugKPdeUvqNO+PamBR4KorE6NmevFhG419TK3CNg6KkNXJA==
+X-Received: by 2002:a17:907:970b:b0:aca:d5a1:c324 with SMTP id a640c23a62f3a-ad1a45bead1mr390805666b.0.1746384079008;
+        Sun, 04 May 2025 11:41:19 -0700 (PDT)
+Received: from localhost.localdomain (host-82-56-126-113.retail.telecomitalia.it. [82.56.126.113])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c02b8sm354556766b.118.2025.05.04.11.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 11:41:18 -0700 (PDT)
+From: Luca Carlon <carlon.luca@gmail.com>
+To: w_armin@gmx.de
+Cc: carlon.luca@gmail.com,
+	jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lucas.demarchi@intel.com
+Subject: Re: Suspend/resume failing due to SPD5118
+Date: Sun,  4 May 2025 20:41:17 +0200
+Message-ID: <20250504184117.4795-1-carlon.luca@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
+References: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 28 Apr 2025 12:50:14 +0200
-T=C3=B3th J=C3=A1nos via B4 Relay <devnull+gomba007.gmail.com@kernel.org> w=
-rote:
+> Please you load the i2c-dev module (sudo modprobe i2c-dev) and share the results of the following commands:
+> 
+> 	sudo i2cdump 1 0x50
+> 	sudo i2cdump 1 0x51
+> 
+> This should return the register contents of the spd5118 devices. Please make sure that the spd5118 driver
+> as been blacklisted and unloaded before executing those commands.
 
-> From: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
->=20
-> Add support for the DFRobot SEN0322 oxygen sensor.
->=20
-> Datasheet:
-> 	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
->=20
-> To instantiate (assuming device is connected to I2C-2):
-> 	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
->=20
-> To read the oxygen concentration (assuming device is iio:device0):
-> 	cat /sys/bus/iio/devices/iio:device0/in_concentration_input
->=20
-> Signed-off-by: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
+Hello,
 
-Hi T=C3=B3th
+I followed what you asked:
 
-Nice little driver.  Main questions are around the userspace ABI and why
-we have both _RAW and _PROCESSED reported. There are few reasons we
-let drivers do that and I don't see what reason applies here.
+# lsmod | grep spd
+# modprobe i2c-dev
+# lsmod | grep i2c
+i2c_algo_bit           24576  2 xe,i915
+i2c_i801               40960  0
+i2c_smbus              20480  1 i2c_i801
+i2c_mux                16384  1 i2c_i801
+i2c_hid_acpi           12288  0
+i2c_hid                45056  1 i2c_hid_acpi
+i2c_dev                28672  0
+# i2cdump 1 0x50
+No size specified (using byte-data access)
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-1, address 0x50, mode byte
+Continue? [Y/n]  
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+10: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+20: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+30: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+40: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+50: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+60: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+70: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+80: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+90: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+a0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+b0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+c0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+d0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+e0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+f0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+# i2cdump 1 0x51
+No size specified (using byte-data access)
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-1, address 0x51, mode byte
+Continue? [Y/n] 
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+10: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+20: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+30: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+40: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+50: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+60: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+70: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+80: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+90: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+a0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+b0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+c0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+d0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+e0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+f0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
 
-Mostly it just confuses userspace by providing multiple ways to read the
-same thing.
+> Could you also please tell us the name of the RAM sticks you are using?
 
-Jonathan
+Of course. I have two 32GB modules. One was provided with the machine and it
+would be difficult for me to reach that physically. The other one is simple
+to reach and I installed it myself: it is marketed as Crucial CL46 - CT32G56C46S5.
+This is what I can get from dmidecode:
 
-> diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen032=
-2.c
-> new file mode 100644
-> index 000000000000..5f1f4528401e
-> --- /dev/null
-> +++ b/drivers/iio/chemical/sen0322.c
-> @@ -0,0 +1,238 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for the DFRobot SEN0322 oxygen sensor.
-> + *
-> + * Datasheet:
-> + *	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
-> + *
-> + * Possible I2C slave addresses:
-> + *	0x70
-> + *	0x71
-> + *	0x72
-> + *	0x73
-> + *
-> + * Copyright (C) 2025 T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/math64.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +
-> +#define DRIVER_NAME "sen0322"
-> +
-> +#define SEN0322_REG_DATA	0x03
-> +#define SEN0322_REG_COEFF	0x0A
-> +
-> +#define FIXED_FRAC_BITS		18
-> +#define FIXED_INT(x)		((fixed_t)((x) << FIXED_FRAC_BITS))
-> +
-> +typedef u32 fixed_t;
-> +
-> +struct sen0322 {
-> +	struct i2c_client	*client;
-What do you need client for after probe?
+Handle 0x0002, DMI type 17, 92 bytes
+Memory Device
+        Array Handle: 0x0001
+        Error Information Handle: Not Provided
+        Total Width: 64 bits
+        Data Width: 64 bits
+        Size: 32 GB
+        Form Factor: SODIMM
+        Set: None
+        Locator: Controller0-ChannelA/B-DIMM0
+        Bank Locator: BANK 0/1
+        Type: DDR5
+        Type Detail: Synchronous
+        Speed: 5600 MT/s
+        Manufacturer: Micron Technology
+        Serial Number: E97A5953
+        Asset Tag: None
+        Part Number: CT32G56C46S5.C16D   
+        Rank: 2
+        Configured Memory Speed: 3600 MT/s
+        Minimum Voltage: Unknown
+        Maximum Voltage: Unknown
+        Configured Voltage: 1.1 V
+        Memory Technology: DRAM
+        Memory Operating Mode Capability: Volatile memory
+        Firmware Version: Not Specified
+        Module Manufacturer ID: Bank 1, Hex 0x2C
+        Module Product ID: Unknown
+        Memory Subsystem Controller Manufacturer ID: Unknown
+        Memory Subsystem Controller Product ID: Unknown
+        Non-Volatile Size: None
+        Volatile Size: 32 GB
+        Cache Size: None
+        Logical Size: None
 
-There is a function to get the struct device from the regmap.
+Handle 0x0003, DMI type 17, 92 bytes
+Memory Device
+        Array Handle: 0x0001
+        Error Information Handle: Not Provided
+        Total Width: 64 bits
+        Data Width: 64 bits
+        Size: 32 GB
+        Form Factor: SODIMM
+        Set: None
+        Locator: Controller0-ChannelA/B-DIMM1
+        Bank Locator: BANK 0/1
+        Type: DDR5
+        Type Detail: Synchronous
+        Speed: 5600 MT/s
+        Manufacturer: SK Hynix
+        Serial Number: 2C3B11DE
+        Asset Tag: None
+        Part Number: HMCG88AGBSA095N     
+        Rank: 2
+        Configured Memory Speed: 3600 MT/s
+        Minimum Voltage: Unknown
+        Maximum Voltage: Unknown
+        Configured Voltage: 1.1 V
+        Memory Technology: DRAM
+        Memory Operating Mode Capability: Volatile memory
+        Firmware Version: Not Specified
+        Module Manufacturer ID: Bank 1, Hex 0xAD
+        Module Product ID: Unknown
+        Memory Subsystem Controller Manufacturer ID: Unknown
+        Memory Subsystem Controller Product ID: Unknown
+        Non-Volatile Size: None
+        Volatile Size: 32 GB
+        Cache Size: None
+        Logical Size: None
 
-> +	struct regmap		*regmap;
-> +	fixed_t			coeff;
-> +};
-> +
-> +static fixed_t fixed_mul(fixed_t a, fixed_t b)
-> +{
-> +	u64 tmp;
-> +
-> +	tmp =3D (u64)a * (u64)b;
-> +	tmp =3D (tmp >> FIXED_FRAC_BITS) + ((tmp >> FIXED_FRAC_BITS) & 1);
+When I was told that the problem may lie in the i2c bus, I started to search elsewhere
+and this thread came up: https://bugzilla.kernel.org/show_bug.cgi?id=213345. I
+therefore provided in that thread some more info I collected.
 
-These need some comments.  It's moderately fiddly fixed point maths
-and there are many ways to do that.
-
-> +
-> +	if (tmp > U32_MAX)
-> +		return (fixed_t)U32_MAX;
-> +	else
-> +		return (fixed_t)tmp;
-> +}
-> +
-> +static fixed_t fixed_div(fixed_t a, fixed_t b)
-> +{
-> +	u64 tmp;
-> +
-> +	tmp =3D (uint64_t)a << FIXED_FRAC_BITS;
-> +	tmp +=3D (b >> 1);
-> +
-> +	return (fixed_t)(div_u64(tmp, b));
-> +}
-> +
-> +static int sen0322_read_coeff(struct sen0322 *sen0322)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(sen0322->regmap, SEN0322_REG_COEFF, &val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (val)
-> +		sen0322->coeff =3D fixed_div(FIXED_INT(val), FIXED_INT(1000));
-> +	else
-> +		sen0322->coeff =3D fixed_div(FIXED_INT(209), FIXED_INT(1200));
-
-This second one is just a number. Why not just put the constant here?
-
-> +
-> +	dev_dbg(&sen0322->client->dev, "coeff: %08X\n", sen0322->coeff);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sen0322_read_data(struct sen0322 *sen0322)
-> +{
-> +	u8 data[4] =3D { 0 };
-> +	int ret;
-> +
-> +	ret =3D regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data, 3);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret =3D data[0] * 100 +  data[1] * 10 + data[2];
-> +
-> +	dev_dbg(&sen0322->client->dev, "raw data: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sen0322_read_prep_data(struct sen0322 *sen0322)
-> +{
-> +	fixed_t val;
-> +	int ret;
-> +
-> +	if (!sen0322->coeff) {
-> +		ret =3D sen0322_read_coeff(sen0322);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	ret =3D sen0322_read_data(sen0322);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	val =3D fixed_mul(sen0322->coeff, FIXED_INT(ret));
-Superficially looks like you could compute a correct _SCALE and
-make this maths a userspace problem?
-
-> +
-> +	dev_dbg(&sen0322->client->dev, "prep data: %08X\n", val);
-> +
-> +	return val >> FIXED_FRAC_BITS;
-> +}
-> +
-> +static int sen0322_read_raw(struct iio_dev *iio_dev,
-> +			    const struct iio_chan_spec *chan,
-> +			    int *val, int *val2, long mask)
-> +{
-> +	struct sen0322 *sen0322 =3D iio_priv(iio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		switch (chan->type) {
-> +		case IIO_CONCENTRATION:
-
-You need a strong reason to provide both _RAW and _PROCESSED.
-What was your thinking here?=20
-
-As a general rule, if the conversion is linear, then we provide
-_RAW and _SCALE. If it's non linear then _PROCESSED.
-
-The _RAW + _SCALE thing is for 2 reasons.
-1 - userspace is better at maths as it has floating point easily
-    available.
-2 - if we ever add buffered capture then _RAW tends to be of a defined
-    number of bits whereas processed is more complex.
-
-> +			ret =3D sen0322_read_data(sen0322);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			*val =3D ret;
-> +			return IIO_VAL_INT;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	case IIO_CHAN_INFO_PROCESSED:
-> +		switch (chan->type) {
-> +		case IIO_CONCENTRATION:
-> +			ret =3D sen0322_read_prep_data(sen0322);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			*val =3D ret;
-> +			return IIO_VAL_INT;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->type) {
-> +		case IIO_CONCENTRATION:
-> +			*val =3D 1;
-> +			*val2 =3D 100;
-
-Given above you use the coeff in the calculation of processed
-I don't understand what this scale is indicating.
-Scale only applies to _RAW channels.
-
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-> +static const struct iio_chan_spec sen0322_channels[] =3D {
-> +	{
-> +		.type =3D IIO_CONCENTRATION,
-> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_PROCESSED) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +	},
-> +};
-This doesn't need to be an array. Can just use one structure
-and pass the address plus an explicit 1 for the number of channels
-below.   Quite a few drivers do it like this though and I don't mind
-much.
-
-> +
-> +static int sen0322_probe(struct i2c_client *client)
-> +{
-> +	struct sen0322 *sen0322;
-> +	struct iio_dev *iio_dev;
-> +
-> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-> +		return -ENODEV;
-> +
-> +	iio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*sen0322));
-> +	if (!iio_dev)
-> +		return -ENOMEM;
-> +
-> +	sen0322 =3D iio_priv(iio_dev);
-> +	sen0322->client =3D client;
-> +	sen0322->coeff =3D 0;
-> +
-> +	sen0322->regmap =3D devm_regmap_init_i2c(client, &sen0322_regmap_conf);
-> +	if (IS_ERR(sen0322->regmap))
-> +		return PTR_ERR(sen0322->regmap);
-> +
-> +	i2c_set_clientdata(client, sen0322);
-
-I don't immediately see where this is used. If it's not then drop setting i=
-t.
-
-> +
-> +	iio_dev->info =3D &sen0322_info;
-> +	iio_dev->name =3D DRIVER_NAME;
-
-As below. I'd rather see the name here as a string.
-
-> +	iio_dev->channels =3D sen0322_channels;
-> +	iio_dev->num_channels =3D ARRAY_SIZE(sen0322_channels);
-> +	iio_dev->modes =3D INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(&client->dev, iio_dev);
-> +}
-> +
-> +static const struct of_device_id sen0322_of_match[] =3D {
-> +	{ .compatible =3D "dfrobot,sen0322" },
-> +	{ /* sentinel */ }
-
-No real need for the comment.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, sen0322_of_match);
-> +
-> +static struct i2c_driver sen0322_driver =3D {
-> +	.driver =3D {
-
-> +		.name =3D DRIVER_NAME,
-I'd rather see the string directly here.  There is no reason
-why the iio_dev->name above would always match this so in general
-it is easier to just see the strings in each place rather than
-under a define.
-
-> +		.of_match_table =3D sen0322_of_match,
-> +	},
-> +	.probe =3D sen0322_probe,
-> +};
-> +module_i2c_driver(sen0322_driver);
-> +
-> +MODULE_AUTHOR("T=C3=B3th J=C3=A1nos <gomba007@gmail.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("SEN0322 oxygen sensor driver");
->=20
-
+Please let me know if I did something wrong.
+Thank you.
+Luca Carlon
