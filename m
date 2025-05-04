@@ -1,115 +1,116 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943F1DED42;
-	Sun,  4 May 2025 20:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB25C1EA73
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 20:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746389961; cv=none; b=UmryOoTne5nw1jfdImfM4fW8hpDM/xgxJsQ2kOuj6HBe/OdJ+S6w8w/2V6rJL3QZtmxV9nF39isUtmTWqjsFBDrWsTlOgKACINlHD35sDH3qCHdUcAmTfoKv1fy9j1RtSnk/Ar6I62w80nn2Gdg2rAuON0hZgvSZgWaJ33gxcKU=
+	t=1746391256; cv=none; b=W40pEyhWg485kEXIHkCPn/2HCGWSP0CXMMtLw2+F2GzEDlbtROO6eXqd4ZjZ7yWEo8aOV8IR7wk8eykhiBoUUAlaStLT+wnVpDRuMNN2hR6n/rhKRotWY3akCOvq59X+Wdj7hjDkMBNmvXd87CJm9O5pUiybGI35Igh+TQxmflA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746389961; c=relaxed/simple;
-	bh=kWouH9PcHn1yDE6oVME8ha/Tnp5GTGTxgWeh4wVEHCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaUNUFxtCAN592y8MmxLPdTtUD6WoFKZXKCe0nO4BU9PUel5zKGwlKVFs22hXxilcu0a57TFBX35bdXhH1xTXeI5boVKr3jjiKCugcg/78kekX4Zqg4m+uilIGZNVTJn0wT5dQ9gRN4MRZRU/rOfXdlcTFW/Jp9K0OOnu61lpEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLE6C/nu; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1746391256; c=relaxed/simple;
+	bh=J8RF/lsUF5GcLk8L8uqeVEbhBkocOk2PKLD50TKSmnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vk3/j9I+gsPPYE1CXMYTeoloxKMEZom4jOP6X1wllnM/ZLBpz9D/9WIf1dEfQSJiG6zi/7jPKTdHTjH7WltN2fqcD7qoq1B3m1h64qWnIGMtmtHt8HpBCkXAj6q1/2YtPLOlr5jdL/vyIRqtFeModWUaHxIGzKzDaElSqHW4O8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L38y3IGL; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLE6C/nu"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso920667b3a.0;
-        Sun, 04 May 2025 13:19:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L38y3IGL"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f05acc13so54281816d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 13:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746389959; x=1746994759; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UvegomJiMh6nIQI/2J4Ao0uKJD2zSYoWW1qFQAs5Yg=;
-        b=ZLE6C/nuGxEesrvb+tRjV9caO4+r+wCxv25dmc9DJ6Syjtl8gnsFq7eXZXXwl6Yk8J
-         DA62ySssVw+UrIYHsTnqE2ezldav7Gi2bERRr4fLC4xNd+w0DuihmsR5fJmPtXmNMCgG
-         N6PrNoQbIe2Q2mhLHhYsxCo4hNvADQBzJlkdbcgF0ztpN8Gm49a5SYYLwA2sZs4RmooN
-         a7iL9AVK2uh064dgXy4VPPDuEGoPI52WPcGYsKZEc/fnroK6guuHyHlmbT/A9b/B6szh
-         qHjHm7qm+2ijrudBamNK1j15jzkmETPc1YUDqTYe/0V3xR7x9LGd8n+3AS83131Gyoso
-         De6g==
+        d=gmail.com; s=20230601; t=1746391253; x=1746996053; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C0s2dBLBP6hSN1djmfjptMhw6J9xUsy7meqkws5R5+0=;
+        b=L38y3IGL6HIWuqSGFCe2tzyd5V0hoh0R/Ma2/cPHTNuMZ1ovlb82UQfsOAsvIbfKKW
+         pkX5NWfPIxgethrjF5wpNT+ZfHWN6foIcoRWy3sdI/2KZCOlWz88yl8HyScyWyNhG3z7
+         K/HJxz8VAQ1HzSqVS8wtzu9SCpb273uBW3lBHPvuk/UcpXMdlmLomFZ73eIaW/BTqiNS
+         E84gjn/0AM8jcjFZIJ0t6cMxWYhO4G03lhgXj0lcNaykn0w9bwxj8Jz1aCpP4JFLGKTs
+         8RJVodBzSLnEJWDgRgfaXi0+r0n24ccS6scm92Cpkefc7dfZJNY9DJUWiwRhDp0YjmYK
+         6t1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746389959; x=1746994759;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UvegomJiMh6nIQI/2J4Ao0uKJD2zSYoWW1qFQAs5Yg=;
-        b=RQk83kqtxPHmxzB/PZ9omCR0ohrkdPmGgunwyNnmv0omTHsyNrIswmfpiBiS5Qya5O
-         2G3D/VlTGsiZdz8Qj5ntQ6Qsx74gVV2S5DQj9m+gXCjBNcEHzL4M0+gWQOTfhmmZtjZ6
-         WfKkY6IIj9RXanVsqTWgLRsAJiuOAkG+vLaqcln5A0O0OF0A/DLOofGB0L4hjloD7KbE
-         //tx8+Y/rXkxGOo7ZzWAkkOFVBI7ZY1HDEm+fMiH8xQMEj8Dp5OrMy/xkB13xUHG6Uow
-         JbsM0NedvmktfKONaM73sYmo95uRvt0MSmFIPdoe/JSinVj4Am1gWL/KiGkjA2pNan4K
-         pVPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNUpTjp8ZftkwdSwLltaBVYU6GWxqCNmWEd/lry1QxpKg/JMGOS0+fxDLSEH7mFlO8apzwmcDV@vger.kernel.org, AJvYcCWsnYmFJyl6JC+Ap6uSH3WDXgzBI3M/thT1ggRX6pVYH9b3D6L84GP5UJLHxYYe2CIr4u1oitCg3RSD1fs=@vger.kernel.org, AJvYcCXQa5YaVvzmjBdvNJ8Pad+lolwy3AGZPrNoXd5klkgzNlSVavtmHJtcNNaeEOI3M76EFhB7ipkoTcxIU8aFZUnd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4u36kFSs2szty8uKH/P40iaqCyjW/2zRNn67FzxuPFTZt1MV9
-	utLLYhO/UOVnGBeUk4VJK8UtBdMgQ2pK2tOeBO7fvW112Hf7y69M
-X-Gm-Gg: ASbGncuWeyCfRxI8UfTRmV8RVP7dLDWfxG/ypIPVz1jb/Ze8sa0NNmRf0Vw+ZdYHE5r
-	l9CREvINfFSBdUplKl6lmjERmm2ua02RZlAuBHI1m3sHqsUf8GG/x1eFRZ0HPluYENoV1cqn0Sv
-	viwl7Je7KlpdaLkb+hXzEciOkyCQHHyO9yeWxaUb1znsDN+qYClqmsxVI+DFA9hLY+W63aBojS7
-	kAknxq+Y8O07h29DFHH1VDKZANsDb1ZJSAGWQZ/7QvFEQ4YfMMNQULF8PVkWDQcr1WVwtU9Fd8w
-	wmDs9tkSxpasIY4BiGZQusw+mCINCNMR6pvVdjNxSgc=
-X-Google-Smtp-Source: AGHT+IHjm56528yNjjRibNiMtXVYmxhFuk9RepbfihANhB0sy0XIXdsZY6QgN882IXegmTERmbZiTw==
-X-Received: by 2002:a05:6a00:ab0d:b0:73f:e8c:1aac with SMTP id d2e1a72fcca58-7406f08a579mr6611979b3a.2.1746389958935;
-        Sun, 04 May 2025 13:19:18 -0700 (PDT)
-Received: from localhost ([66.205.136.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a47esm5246607b3a.29.2025.05.04.13.19.17
+        d=1e100.net; s=20230601; t=1746391253; x=1746996053;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C0s2dBLBP6hSN1djmfjptMhw6J9xUsy7meqkws5R5+0=;
+        b=S+PFuNp6cVDxyzvuX2/+0VXdJm6vbfkysiwxlGTfyVtiQPKF03An01fAdWWXO0h4It
+         wpnkaSluFH+3KOGzllIPU0CfuqYSYea989uqLv9liABOMUcaoRmVztIPMtWh+tHgw12H
+         sYebrxUd7sKCtI8szzeBry1euTM5IRy8wTNmXpiw97jmyLjaYnssl/hMkdTaIGu/UKi4
+         AR+5W7PbS6Wpa7UTH/MP1DO/R2Lp11ADoG2x4Hct/54NrfscyGSs8xBAwzY1VixyhLwF
+         ORXyosNtxjoJECDN4EY4LKTmi07Szd3lb7XwMx7wrqt6AM4enmojR+c8No9b9j3ifzvX
+         jZeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUToovlDEBHospPAiYPHC0s/rEPB2HuZmHmKP9q45du3RmWifHyqA5SVrunjmIflrjcU5F5cxq2ju1ZQDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyfphDk8V69gg1ZAQjgN6kK+cJTLMV/NmW9Qp3l8nFTASbh+H7
+	zOBfQ1kn0SDqzq8rjJ5OCECftVZhT2YKUeW5DSgZda0U4jeUttxk
+X-Gm-Gg: ASbGnctEfcAxrvxysoTZs+e5jvCjTpya+PTDIofp/g4phOGPD8mgh+G5wcyWvdJp1bL
+	FZJNpOuKFSng6Iu3sbYXCW5oa7UOl2NKhv1C7+yYSfwi5Jcy6X7JYRzB/kmLdEFbvTRPNm0f2to
+	r4FSwNfY7O+IqQ95kcMt8VKZI3EoWXPsaijXm5ETyjes51fENco8Fv0TJcWDM/7fiD42BlwDN0D
+	dJ05aemxxZMJgvqIsIOe2Jkw2bsmPxi8CIMdi2E0RaTyd/SlJozB2YmoHJBiDC4d3CF374pRU38
+	KqRVpP07wMB6JhcrMVOzdZyfw9Ne+39QdkIzZVyBw5Trom37/27/Zqk52lVWpjjo+bzn8u+LY58
+	/AVwhEOCp6TKEDMSA6amdDLO/7w==
+X-Google-Smtp-Source: AGHT+IGrOMfHKYgMEG4u4xcEOLbbr0nQ/l6siJ0vTPu109XdvaGVgGXlx8qArEX5wngHMwMb6/CfWw==
+X-Received: by 2002:ad4:4eaa:0:b0:6f2:c79b:ef9b with SMTP id 6a1803df08f44-6f528c62179mr78754496d6.16.1746391253437;
+        Sun, 04 May 2025 13:40:53 -0700 (PDT)
+Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c3892sm46286516d6.34.2025.05.04.13.40.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 13:19:18 -0700 (PDT)
-Date: Sun, 4 May 2025 13:19:16 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1 1/2] ktls, sockmap: Fix missing uncharge
- operation
-Message-ID: <aBfLxMus8jgK7JgU@pop-os.localdomain>
-References: <20250425060015.6968-1-jiayuan.chen@linux.dev>
- <20250425060015.6968-2-jiayuan.chen@linux.dev>
+        Sun, 04 May 2025 13:40:52 -0700 (PDT)
+From: Adam Ford <aford173@gmail.com>
+To: linux-phy@lists.infradead.org
+Cc: dominique.martinet@atmark-techno.com,
+	frieder.schrempf@kontron.de,
+	u.kleine-koenig@baylibre.com,
+	aford@beaonembedded.com,
+	Adam Ford <aford173@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] phy: freescale: fsl-samsung-hdmi: Rename phy_clk_round_rate
+Date: Sun,  4 May 2025 15:40:40 -0500
+Message-ID: <20250504204043.418924-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425060015.6968-2-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 01:59:57PM +0800, Jiayuan Chen wrote:
-> When we specify apply_bytes, we divide the msg into multiple segments,
-> each with a length of 'send', and every time we send this part of the data
-> using tcp_bpf_sendmsg_redir(), we use sk_msg_return_zero() to uncharge the
-> memory of the specified 'send' size.
-> 
-> However, if the first segment of data fails to send, for example, the
-> peer's buffer is full, we need to release all of the msg. When releasing
-> the msg, we haven't uncharged the memory of the subsequent segments.
-> 
-> This modification does not make significant logical changes, but only
-> fills in the missing uncharge places.
-> 
-> This issue has existed all along, until it was exposed after we added the
-> apply test in test_sockmap:
-> commit 3448ad23b34e ("selftests/bpf: Add apply_bytes test to test_txmsg_redir_wait_sndmem in test_sockmap")
-> 
-> Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+phy_clk_round_rate sounds like a generic helper function.  In
+reality, it is unique to the phy-fsl-samsung-hdmi. Rename
+phy_clk_round_rate to fsl_samsung_hdmi_phy_clk_round_rate.
+No functional change intended.
 
-Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Thanks!
+diff --git a/drivers/phy/freescale/phy-fsl-samsung-hdmi.c b/drivers/phy/freescale/phy-fsl-samsung-hdmi.c
+index 10fbe8dee116..40f33e5ac6f5 100644
+--- a/drivers/phy/freescale/phy-fsl-samsung-hdmi.c
++++ b/drivers/phy/freescale/phy-fsl-samsung-hdmi.c
+@@ -531,8 +531,8 @@ static u32 fsl_samsung_hdmi_phy_get_closest_rate(unsigned long rate,
+ 	return frac_div_clk;
+ }
+ 
+-static long phy_clk_round_rate(struct clk_hw *hw,
+-			       unsigned long rate, unsigned long *parent_rate)
++static long fsl_samsung_hdmi_phy_clk_round_rate(struct clk_hw *hw,
++						unsigned long rate, unsigned long *parent_rate)
+ {
+ 	const struct phy_config *fract_div_phy;
+ 	u32 int_div_clk;
+@@ -616,7 +616,7 @@ static int phy_clk_set_rate(struct clk_hw *hw,
+ 
+ static const struct clk_ops phy_clk_ops = {
+ 	.recalc_rate = phy_clk_recalc_rate,
+-	.round_rate = phy_clk_round_rate,
++	.round_rate = fsl_samsung_hdmi_phy_clk_round_rate,
+ 	.set_rate = phy_clk_set_rate,
+ };
+ 
+-- 
+2.48.1
+
