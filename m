@@ -1,148 +1,121 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAB013D2B2;
-	Sun,  4 May 2025 08:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0882470838;
+	Sun,  4 May 2025 08:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746346007; cv=none; b=itrV/Fr7ShlwwASd2ocJVT+5S6CobnU8FzJtvXO0gubGzAdfbDJeuiRFuPi20azeiUbDsb1AzmMpeEMGOJv6f8UK9edRoNcqDyMgxXYzvakNbKfm9V6qp5OqKUo4WPIiP7qaop69xdkuUZuQD8/4Ji5/qVyA0dA9ZMuF0dSfDbw=
+	t=1746346103; cv=none; b=iq0Q4JQVHXT1aVSd0zISS6jcEdUP0SyinxyseNVHuCxAh5UinTF53FynhUwRYLtJr5VUmzoTyGmoOH+VqbvF9z+Ya559z1T7a5EZkkb477ugSRvaWgC+9pcOxiEkYwoF5hFY8WHYnfHjJ4b9fc5AlC9UcELmyNyRKtONcZDXI4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746346007; c=relaxed/simple;
-	bh=v3TBtvRHxNnnQsRJag0G+mt7Yvuj38HjU1Je9jzecDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uCeLCR75PMmND3be+eXSKHIUT4RwDsKHoIJSNLl+Y3n0bdo/97VLuBr9Z0K0CmW5WBbdFB+7c9tT5xR9rMiBgAQBaSDHVVMnELmUnE5ZkT84qkLk9N4r0pu95oWXPXiBK4CxWbe9bOHbrXbXbqIsMZGyfJWzbwgVh+xOYsAsyDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=o0DISX7Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vSM7xYur; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
+	s=arc-20240116; t=1746346103; c=relaxed/simple;
+	bh=w7yqJQzhtrCr7oJzbIyngnZxO005T0pYH5OnmXj4nE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OIMvwN2RAibt4zH/r6pQnIdOoytZdTY6e77vaBAJq+3RlLfQn6/NsE8ndoDsEIxdLWp6JdW/ZVXglF6yU9LLsgURwDPO5QZsa93ExmZ/w96SnKATKl7saSuZGHU6+ZgllLb3LJLoZo3Wl7zVg7djpEVKznILNcTX7iKaIl3Hzks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=CBTccOj3; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="o0DISX7Q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vSM7xYur"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 882E813801DB;
-	Sun,  4 May 2025 04:06:43 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Sun, 04 May 2025 04:06:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746346003;
-	 x=1746432403; bh=2R7ZbsROVfjg8V+iBU7mCl9Pjmaj2oVs4ld+SIepebE=; b=
-	o0DISX7QCvsyoazU5+WtMhHzbT5mmTph8NyDOL1d2ooChvXZDjtLHnwJ7BQi6+rf
-	2K/9mHIhjszzqwITcmgmoB/KLWPxIXCioLDyx0p4w7ChSmRogI7YONPMcrZvcHcn
-	2WizZQjIpUERFhqKVvMhVOpHbk6iLp5bckPpukjPbjkKwti5rRkW/N0BJw0AfPtc
-	GTsxms5cr74ieh1dKIHcEn/+nrno3IxL2n1GSRb9pgRwzBddYEdb8WZOerQc+jFt
-	PBpuzR9wm+jHIbJqpQga67zOmobg44cy9n4kJjAG/TREmXnbh3abAuMhlpjx4w3s
-	9hfr91vwCGZYdKxFWkYzJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746346003; x=
-	1746432403; bh=2R7ZbsROVfjg8V+iBU7mCl9Pjmaj2oVs4ld+SIepebE=; b=v
-	SM7xYurhoY4Lc+SXuAIwY9/1oietA5vn1NlpIC/j/DqlH4S15+d1W2cM2q1FTjtM
-	kkbioQ7kdNoTHcym33L9vFpReutX9czOZXV4N5SSYRWl5w43y2O7hcozsP0iPv5f
-	eoXt65YXdIlvu7XBhMPe4JbyzRtA5TScA0+Gc7Wmh+/RnZxYB4O3vqnSt5GQ+qf9
-	pc2SNsy0jtSVzZbsEyLHpySGa9gSeNRpPTEN2cQGdSvhX38J34flTOSAdHlcXcYs
-	LQQ8zvhebFwe6FqbDPZzFZs+5IOaVUCysVEPOtVUsUUQ86G7a5SrvMUpOO0qj7YD
-	/pWQibSB87ysI8FtfINow==
-X-ME-Sender: <xms:EiAXaEvbbmIsRFsxbI_oxDNX3AGSjpPqDsAdvFWjRHr76CjATs1-1A>
-    <xme:EiAXaBfdUv3CLQ3LX50vTozR10-ysFaM09VgTGDTRt7pAxgXVjSBkRDsh2jfTlUii
-    yTwqP87MVldYbx8_U4>
-X-ME-Received: <xmr:EiAXaPwkfwkTTGr4OtXxOeTS5R4jDrh6pG3VcSvdFThOWpFBiw4cgF95Gonsi6jsQW7KEyd_CGyXtnCyThYjmz0DfLYzQMk0zw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeejieekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
-    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
-    rghtthgvrhhnpeetlefgudfhhfeviedtueeuudduteffkefhffevgfetffeiveeugfdute
-    fhheekudenucffohhmrghinheplhhinhhugihtvhdrohhrghenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluh
-    hnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopedu
-    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhgsuhhlfigrhhhnsehrvgguhh
-    grthdrtghomhdprhgtphhtthhopegurghvihgusehigihithdrtgiipdhrtghpthhtohep
-    shgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoh
-    ephhhvvghrkhhuihhlseigshegrghllhdrnhhlpdhrtghpthhtoheplhhinhhugidqmhgv
-    ughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrh
-    gvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtghhvghhrggssehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskh
-    hisehlihhnrghrohdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghr
-    thesihguvggrshhonhgsohgrrhgurdgtohhm
-X-ME-Proxy: <xmx:EiAXaHOTkCtvvUYaiDjJeiBKJPeLadUPz1yzuJ1KV9Mek4BjQS1VTg>
-    <xmx:EiAXaE_eT1XefDSOBC5dfUkY8w5kqbUP4B0mnVEDrYviIORhMoqdKQ>
-    <xmx:EiAXaPU9dwik6xmmdEgYPFYNOaogMXZBcVeIEcZ5XYzUG3a6jKUuAQ>
-    <xmx:EiAXaNcQ6cIuvMkebTe-oKrqZ1UVST4cBhOr2KYQl7e5UXysrHxTxw>
-    <xmx:EyAXaIpxtUK6fQRvS5-qzj3xmzd1BuRNd3LlKVTh6EGH3UHK0d36n8-_>
-Feedback-ID: i80c9496c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 4 May 2025 04:06:41 -0400 (EDT)
-Date: Sun, 4 May 2025 10:06:39 +0200
-From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: David Heidelberg <david@ixit.cz>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust file entry in OMNIVISION OV7670
- SENSOR DRIVER
-Message-ID: <20250504080639.GD2696136@ragnatech.se>
-References: <20250504033502.37809-1-lukas.bulwahn@redhat.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="CBTccOj3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=mLP3R30hC3fxPu/ombNn8VmQhzKUIdMsoZzomOMeaIc=; b=CBTccOj3ebdyLaZrgxA4aknmOw
+	R6+83tJkR8QqIMcWoSaVIyPPMKofb3EaUPoOji0nKrPwRLE2rgXm8S2iSRbv69b0GZ7tKNEYxUbSP
+	i+bhJg4/g34NytT+GrHHArCTRAw4EP9lojtdyd0O0/+FH7geg7vhuGVKMqRVYP96wrQfq9rz0LWVz
+	UQHalGbPRXHW2ftKJkVtEGXRWMdDId3JgPzboiK8ZpNcTAYcTyKgksZ2tScxbtx0CLXX+nDlW5rbq
+	nd3+3aLAdbMOT7zjKdSgf8ZiL6/bAmQ8Wd4Gd7UFVtOR9xBOwCnOtJsQhnD1KuGA6ZYYEza1IRhzO
+	PO6pKR5w==;
+Received: from i53875bbc.versanet.de ([83.135.91.188] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uBUOQ-0006Ou-II; Sun, 04 May 2025 10:08:10 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: John Clark <inindev@gmail.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ detlev.casanova@collabora.com, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, John Clark <inindev@gmail.com>,
+ sebastian.reichel@collabora.com
+Subject:
+ Re: [PATCH v1 0/3] Add Luckfox Omni3576 Carrier Board support for RK3576
+Date: Sun, 04 May 2025 10:08:09 +0200
+Message-ID: <3352030.oiGErgHkdL@diego>
+In-Reply-To: <7462454.lOV4Wx5bFT@workhorse>
+References:
+ <20250502205533.51744-1-inindev@gmail.com> <7462454.lOV4Wx5bFT@workhorse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250504033502.37809-1-lukas.bulwahn@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Lukas,
+Hi,
 
-Thanks for noticing this.
+Am Sonntag, 4. Mai 2025, 01:39:56 Mitteleurop=C3=A4ische Sommerzeit schrieb=
+ Nicolas Frattaroli:
+> On Friday, 2 May 2025 22:55:30 Central European Summer Time John Clark wr=
+ote:
+> > Disabled features:
+> > - eMMC: Not populated on the tested board; believed to be functional bu=
+t disabled.
+> > - HDMI: Disabled due to mainline driver maturity issues (basic 1080p ou=
+tput works; audio and 4K untested).
+>=20
+> that's not a good reason to disable the node, in my eyes. HDMI 2.0 4K out=
+put=20
+> should work AFAIK, HDMI audio will land with the already posted SAI audio=
+=20
+> controller patch set. Is there any specific issue like an SoC lock-up you=
+ ran=20
+> into that is keeping you from enabling it? If so, please do let the maili=
+ng list=20
+> know.
 
-On 2025-05-04 05:35:02 +0200, Lukas Bulwahn wrote:
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-> 
-> Commit 59b24c0047a2 ("media: dt-bindings: media: i2c: align filenames
-> format with standard") renames the files in
-> Documentation/devicetree/bindings/media/i2c/, but misses to adjust the file
-> entry in OMNIVISION OV7670 SENSOR DRIVER.
-> 
-> Adjust the file entry after this renaming.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Also a more general point, Devicetree is supposed to describe the hardware
+and both emmc and hdmi do work on a hw-level and have reviewed bindings,
+so the node can be enabled and also any functionality improvement should
+just affect the kernel driver-side.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+And in my testing on the rk3576 firefly, I also got a working 3440x1440
+on my display. So not a full 4k, but nearly there :-) .
 
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7b78a98d1f42..78872ebb1aac 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18163,7 +18163,7 @@ OMNIVISION OV7670 SENSOR DRIVER
->  L:	linux-media@vger.kernel.org
->  S:	Orphan
->  T:	git git://linuxtv.org/media.git
-> -F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov7670.txt
->  F:	drivers/media/i2c/ov7670.c
->  
->  OMNIVISION OV772x SENSOR DRIVER
-> -- 
-> 2.49.0
-> 
 
--- 
-Kind Regards,
-Niklas Söderlund
+> - RK3576 USB Type-C OTG stuff: the USB 2 PHY driver needed some changes t=
+o make
+>   this work. I've yet to send out v2 that reworks the way we detect a typ=
+e-C
+>   port, but that part of the code is already done. I was basically just l=
+etting
+>   it stew on my local machine for a bit longer to see if I can figure out=
+ why
+>   superspeed only works in one cable orientation,
+
+That is probably the same issue, I have on rk3588, the type-c phy not
+changing its settings and waiting for the dwc3 to re-start, which it never
+does.
+
+See [0], [1] ... but importantly Ond=C5=99ej Jirman's response on why my ap=
+proach
+is probably wrong [2].
+
+At this time, I don't know when I get around to look at that again, so
+if someone wants to give it a try, feel free to :-)
+
+
+Heiko
+
+
+[0] https://lore.kernel.org/r/20250225184519.3586926-1-heiko@sntech.de
+[1] https://lore.kernel.org/r/20250226103810.3746018-1-heiko@sntech.de
+[2] https://lore.kernel.org/r/h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdw=
+qlos3@m4och2fcdm7s
+
+
+
