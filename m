@@ -1,106 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659D617BD9;
-	Sun,  4 May 2025 22:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B88017BD9
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 22:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746398251; cv=none; b=N6NjU5DLIepMZTEnTG7F/mtaKSNeGUDNUjtGbbLCvfPJSxWT6FVsY5ThDNKkXkSX2LsSGiGkiiIZTdNDcHKJVmuvwzJ9OvyUjgV5ZSscwMZscowypu+juyHFdpHaEypcqI71MlNxUv6FjZX42olAgWiQ7wG9KuLHd9WECdeITms=
+	t=1746398401; cv=none; b=nyugwT94iMKNoxTA6vUqDBsHmricfPOqN2C+vLjRp+2rUU27GyR0aVH3mWS0LvGF/Ob7s32Km7hzCx5+Kaj4kNMehWtkSkKvhdM0PjjIP3K+yS8xrkJkNecMFLhHXJwS0FNa7tXW5R1Xl0D6W65XGjGGifXfE1/XxUGvosvvCvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746398251; c=relaxed/simple;
-	bh=G1SlpzCwnmgV4IcukddE7QYZRJnQcXDYrxSysqSlBoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ym6gx4gZtY7+CKtaOPsCYdSDtLJzaPRkM9ccZMq6CvKqHiHvXnAO6Si6P2AMqQutaW2c+3jbtPG+Ymge5OEUU/kRoFHD3UL5Br7+JnubapVMv6l7Zi9P8/YHmp2S/KX5Y4tCfl2PKQLRSgRb1iOTPOOO2U9YVMivFv+NS2QLng8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVxDgeiG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746398401; c=relaxed/simple;
+	bh=iae+viHuHAofaYHXT/mUKl9EP69TeDqZb0n1wjv17N4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TBoiQ/e95iuPTJw7qI8elV5EtyRlutg+HD1s0Ow0ZkjcORKd5z6867/Qy30nknQswIIRdxPC9nFNvGmXKRlDPdLXvGIHyBLlqQVM39ZHeLkzzJvyzDtpKA+SGYIIRqX3jYGmjNcFXyaLZgjsr0ISyZo0dUGVP7PI32UyWtirJMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WnUKZHmi; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVxDgeiG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB09C4CEE7;
-	Sun,  4 May 2025 22:37:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746398250;
-	bh=G1SlpzCwnmgV4IcukddE7QYZRJnQcXDYrxSysqSlBoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVxDgeiGj+3HNKmlrqz9Ca7e/FIYSBNGoddTZxCNe3KGiCoG9vX9x0KMlZdQ/sOO4
-	 dz9eTcDJzKz3RAW5l/JF9ZrHRIcaswjqIS5cv3vboUPBoyBg0d1XCy8qgo31IlJw2c
-	 ozKUu6ldYcpsQ7dGPp/I1CcHvwrPKeSMH2rb5O3pRWaHS0jsMa0oyaUllnarIcwvBf
-	 SOwaCPMbajlHmaei4KeCatzM/kR7vCntm5OkgBZEvKC2ua9xQbkZYGINTyWmvtrXPA
-	 DO9pCKbAKpNfEYsh8fCQyWC9iDZLZrs/ixafEVpVJq4OPuBhzYa/WMTjR4P0ND0hPT
-	 KVlg2U6VsZ2eg==
-Date: Mon, 5 May 2025 07:37:26 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: ldewangan@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [regression] jetson-tk1: spi do not probe anymore
-Message-ID: <aBfsJpId0Jrcz228@finisterre.sirena.org.uk>
-References: <aBdOMUhuUqbZm9w1@Red>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WnUKZHmi"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso4314414a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 15:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746398396; x=1747003196; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0jCFGnCLIyudINJOqIdc4k35gvhxT2Qn0l46owtsuJg=;
+        b=WnUKZHmiHY3IMcawcxME3AqdObM8/Sk4rGS260QLAvBGHAkkwQq4Kwl30UcUeZfpBM
+         COAViEda+ZWrMPHLij2fy9sjXZAFsSjqEKS6akYNwhWGO6K7UOitbt+yleSxRT5AR9Rg
+         XvjOHqwYNNADa7JA1XX1r9JCh3XBcgLSMeE9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746398396; x=1747003196;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0jCFGnCLIyudINJOqIdc4k35gvhxT2Qn0l46owtsuJg=;
+        b=i/rTao3dQ2oeSB7/y/08sKD9dqHfrvYJ/YeVxEpAz2h7I4ojdC3MU9F4B5Xg9rjmCb
+         KZzI+DC0uaz2USL5jTFxarMmFQwpiVBOmhg+fAHjNAN94zuI+8gxFKYLzNUxEf61S4ae
+         OwDa94EW50IUzXTQICIf6j6d0d9f5Vyvpqd7TEIgr6Rq2VP3nb25YQD9hGXKu0gievqw
+         OpyH16xvDT5hbspTGvMZoMu83ZxfltGO0FJGk/xoHzAJ8y/ZqR83uhRgctXnrElfKzvk
+         RrETAw3cBuUjGmt7zK0AS+d2NY2TUctoiQXDnwHaqJ2w+5REx811GOiW393wL9JdEDmu
+         a8pg==
+X-Gm-Message-State: AOJu0Yzh/DGLDcPUB33Mfcz311VCYDOzIpjzhrbVFHs8xI9tp3WzPeMD
+	kYiXOxLAbJTlZuXluwxE/FMuSzj8WhkRXZUYClueuJnq+8W3A4M1kJIkqJSs6AtjJoJrR0qScuh
+	QvUE=
+X-Gm-Gg: ASbGncv8LiO0l2bicA2pes7U2NRt4TWimaTo5Vtau/YsgD81lxnoymUAeMbfcykY8Wt
+	BExBlmTknQvuyqQ/VyhXOmuF4ToomvIw/AYAyHecCT6axUviy7qXRAKna8W7qFBCEik5xvwqsLQ
+	E80vT7b2x7hNnxBW5ybGP3rclpWT8BbV0I1P5RgmqbNfJWtC0Ffi/mU1sMaLo6crBDonMWUbyRc
+	ELAnoUNV/UEg812P0sip+Q3baMunZhUNCwEfzZqKumm80KIsfF9BLTVeMxiq+t4Ipj0p3G5faFl
+	4EiIhgu3Q/GNvpdSbleDZytUDNslbgtbfEk2o+H5kq63BZm5sEt35Oq+tVgtuzXHf7Kftmjv8r/
+	TLCKZRXtCwCgatio=
+X-Google-Smtp-Source: AGHT+IFoH1tCyuzQfoOzvbktuwgq2jcDLtVdWjUj7Oqjp/pnvM0IgoCV++b31o/PcPUlTDthwtwVKw==
+X-Received: by 2002:a05:6402:40cb:b0:5e7:8e5e:4467 with SMTP id 4fb4d7f45d1cf-5fa7327256amr9791565a12.3.1746398396171;
+        Sun, 04 May 2025 15:39:56 -0700 (PDT)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7775ca27sm4516153a12.5.2025.05.04.15.39.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 May 2025 15:39:55 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb1eso6227145a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 15:39:55 -0700 (PDT)
+X-Received: by 2002:a05:6402:26d6:b0:5f8:478c:6255 with SMTP id
+ 4fb4d7f45d1cf-5fa73272500mr10110093a12.2.1746398394706; Sun, 04 May 2025
+ 15:39:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="P27ERyOYMeKAF9Ow"
-Content-Disposition: inline
-In-Reply-To: <aBdOMUhuUqbZm9w1@Red>
-X-Cookie: Well begun is half done.
+References: <CAHk-=wgjwfsyPf3SfjrPhAMJqN6brBpajQ3F9qp_TatwOs56YQ@mail.gmail.com>
+ <20716a80-2559-4d7b-b38c-65c402f22d87@googlemail.com>
+In-Reply-To: <20716a80-2559-4d7b-b38c-65c402f22d87@googlemail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 4 May 2025 15:39:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whkuHZbj4LaMfSh3YJm-fma_JRNASXko_gc8cd3SiVWeg@mail.gmail.com>
+X-Gm-Features: ATxdqUE3mpQyo7O_lYNSUwihTWDH6PB3ux9m4xpabgGQBdoXnzRjfIYoNHBeinI
+Message-ID: <CAHk-=whkuHZbj4LaMfSh3YJm-fma_JRNASXko_gc8cd3SiVWeg@mail.gmail.com>
+Subject: Re: Linux 6.15-rc5
+To: Peter Schneider <pschneider1968@googlemail.com>, 
+	Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, helpdesk@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Sun, 4 May 2025 at 15:15, Peter Schneider
+<pschneider1968@googlemail.com> wrote:
+>
+> It seems like you forgot to push the tag?! Or could it be a sync error between the various
+> geolocated mirrors again?
 
---P27ERyOYMeKAF9Ow
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No need to blame the mirroring, it was just me forgetting to push it out.
 
-On Sun, May 04, 2025 at 01:23:29PM +0200, Corentin Labbe wrote:
-
-> On my jetson-tk1, SPI do not probe anymore:
-> [    1.330681] spi spi1.0: Invalid delay unit 2, should be SPI_DELAY_UNIT=
-_SCK
-> [    1.335185] spi-tegra114 7000da00.spi: can't setup spi1.0, status -22
-> [    1.341643] spi_master spi1: spi_device register error /spi@7000da00/f=
-lash@0
-> [    1.348637] spi_master spi1: Failed to create SPI device for /spi@7000=
-da00/flash@0
-> I tested 6.14.7
-> The SPI probed perfectly in 4.17.14
-
-That's a pretty big jump in versions...
-
-> I tried to debug a bit, and the driver requires units to be SPI_DELAY_UNI=
-T_SCK, but it seems there is no way to set it.
-> Removing the "return -EINVAL" in tegra_spi_set_hw_cs_timing() lead to a s=
-uccessfull probe and the flash device appear.
-> But I agree, it is not a correct fix:)
->=20
-> Since only the test made it fail, I think the driver is bad since commit =
-810593668468 ("spi: tegra114: change format for `spi_set_cs_timing()` funct=
-ion")
-
-Adding Alexandru who wrote that commit.  Assuming the delays came from
-DT (I'm not actually finding them, I didn't look too hard though) and
-are therefore in units of wall clock time I think we need to add a
-conversion helper for the units which the driver can use to convert to
-whatever units it actually wants to use, we do need to accept units of
-wall clock time given the generic binding there.  That gets a bit
-annoying if the bus speed changes, though that's quite infrequent in
-practice.
-
---P27ERyOYMeKAF9Ow
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgX7CAACgkQJNaLcl1U
-h9DnJwf+P8CFXkQ4BTKfGUCnkS6AW4SJFtkq1DIrRnzzg6JdNTrcbApRbC9cF8ms
-OpPqbzVwYImrz8wIitxScfrgHf6UMGhwT2by7B2hZ/HvxUmUZBCo+0hcsOzE5uOs
-ahI2/SdLvylujDWSzBofLKdTPdSQlKuj0wbbQ95mhqBAAs5VqTdv8QXELmPCV4L4
-8isyBjE7q0fyDJmWbYlyzDEnsJrwtNDrId4qUaj4OJCmekdmgRTnpXDUze6w4g6p
-olLSD1NRBfvA6GEIgVmwE0MvaCnjxtLtDflitbOR4bVEoOJ+FPB4vhWk13NRt2e7
-0+MKrWi9zCQuNp1Qz1mbAkKCDDbpOQ==
-=yLfy
------END PGP SIGNATURE-----
-
---P27ERyOYMeKAF9Ow--
+           Linus
