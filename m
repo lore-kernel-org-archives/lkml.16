@@ -1,184 +1,168 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0381EFFB9;
-	Sun,  4 May 2025 17:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379961; cv=pass; b=jbyiNLYp9LJrTMlbaLC4DrVp6Xlgi+UfSlDaMzQlZVPVm6GXpFv7iYmRBZQtqMYSTV8Bh4IDi5egfUHDhfET3F3XGEtTyLpgmwrcZmjZbYQy6lcBM0JJB4UH19TAesXbwN+2uyylrpgEgwiFXlU2lXt7CvPWLg0tFfnK7cUKglg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379961; c=relaxed/simple;
-	bh=lZrcURQp3hFYZcQF2RUCCJd01uEC7fp2q7+yTxbCikA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iNOzEF6BMHyoMhgTqww0YXRcbokLCQPtiPmiahMkeHUMFEwl8CMiBa9ejgP5JVseQIvAG2CZ837ZKShJYN4rg7Q53sGNmOmP7m9nRbSenpczbNO2ajLA62KUjVBPNPgjtBZ0FPYtwEgH3KXPNlVrv2VF54MHFJxzuSOCziRE3Fw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=R5JY5B7b; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=tB698JQP; arc=pass smtp.client-ip=81.169.146.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E5421CC5A;
+	Sun,  4 May 2025 17:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746380024; cv=none; b=FXEmYL5SbEG6DrO+qeVKaXtQnKBcz4Ea37pccDlhlXd2TmUwJUqDUcY+I2ER8o4PRHn8kZe2vYGVDwK9tBBdz5Nc3X0ay7ukYZkDJnSWTPSVJ6p9ZAhBCZzzof8wk9i71zS6IooEUjtzLeJC951Ms+4H6/Tkxc0NjcBwrOMupRI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746380024; c=relaxed/simple;
+	bh=giT+sq5DATQNvD7PW1F1+M8kPXf80IBcWPokvEGeD4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vz+EyD9pwJ2gCDXwcwrfDyvqLE7Ofqdybt0Jf4vgmVdarMxuxE8J8v+Me6OH+M+9F0Bwoe/GjnsiOinTT+OrtqBj6+spHZ/BqWlLbPqCalVm4rCuu6AxjD/9vt4CYZ8cvm9vwEDZOkU9ijxS/DmjGYJmcn5jqkVr6Z9CdbDLWmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQMbq8Wa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="R5JY5B7b";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="tB698JQP"
-ARC-Seal: i=1; a=rsa-sha256; t=1746379772; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Oucz0ipkaTUbNAfBp5SWb7N71WU7PZuGfAzAcPtESLCkjD45ykAtlTFzmMt9a2eXXj
-    Gxb+Y1svZpGez81lNS3vaceC0TDZ+IKEtpdTXJ+qGFcbkdbIe3fXIt/pN1uvJhqc6wHP
-    MeAx6rAtO3Pszcon8Eki8nu2l5DUJelh+K4y1+75XaXgszXpe1K/EO3yCnrMn21xsT3C
-    l2JSUggOvg5YzRCERBev3bhiaBldQYfPQb86yf3TTIF/awCjE1lD3dxKbDJq4rAeswxS
-    Lsttnpq8gEbIXnDUBMKGMqakQPVpFmz5eYg3PZH5OSIJImN0ZPLkVJ5gPgwwCUlMQu2h
-    orBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379772;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=4gn5mtjL0evEuszrzHHSPLmxmhO1acntVa5VhV3cvOU=;
-    b=oVziW4m8En44zetcHo1wlDpT9AfK+E0zzcKImsBFseiVwcxTnUrgqo9+TzVuANbVT8
-    BoY2+VNbdrtZhPcuUAp33kjov4Y9gnvCtBFfbQMMlQ1XvWg5sCIUnFB0dBSrOjDLoltv
-    YuHgOrk62jA0y59kNFG0chCQeKB/6f7IixyKHekytul/p/hDWzlUt0SIExfzPNcsFtBt
-    8ygm+HN0nxppLigAt7Oa7cS6urPb0x5DC9V5M320zGz3FleRZovif+xwbev0vAPCm+Lq
-    Na+fWhVmIZv8a3zf8v7f0a4rzKrtPNG2QWcVtrLxL0NbbIP5+OunqhcSAEvaa/K5JlzO
-    0CPw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379772;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=4gn5mtjL0evEuszrzHHSPLmxmhO1acntVa5VhV3cvOU=;
-    b=R5JY5B7bpguq5kw3AQc8zsUPqYDtw8kQ50q4zu5Y1H1SDSU1EmOXdpEWX8U22ROPN7
-    Gc7QEeOBuzE1yXGxpPrF6yknROjqXRNfuUTgDt/wOy1aDfx45pm56z4weMSLRREjOOLn
-    qIDfGImQBfeoOPpDpFlj8NH33SOyPlKIHLTfr5bAdk2D1vWUj00r8HM84aPObH8QUsML
-    75AkNaVePTFmJF9G0WjgNeIdiMox5z0rOE70dbmN1uojtT+oPg39vUuWt28+AFzqP581
-    qElio1PyuRVrCbCTdTr/YdCNdp5DIB1vH+CxUupdTV3N4EZxJmjNzT440yB4pu4EtGOW
-    KQrw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746379772;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=4gn5mtjL0evEuszrzHHSPLmxmhO1acntVa5VhV3cvOU=;
-    b=tB698JQPgvc5UhJjEThUrdW5/xRFUbxR04N8CHuD/MGyBIcQ8qjl6g5pujtHk6/R/W
-    Og0O69Qr2FSVlZyoWSDw==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b35144HTWz9H
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 4 May 2025 19:29:32 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1uBd9e-0004Nc-10;
-	Sun, 04 May 2025 19:29:30 +0200
-Received: (nullmailer pid 243250 invoked by uid 502);
-	Sun, 04 May 2025 17:29:30 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next v7 2/6] net: phy: realtek: Clean up RTL821x ExtPage access
-Date: Sun,  4 May 2025 19:29:12 +0200
-Message-Id: <20250504172916.243185-3-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250504172916.243185-1-michael@fossekall.de>
-References: <20250504172916.243185-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQMbq8Wa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029E5C4CEE7;
+	Sun,  4 May 2025 17:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746380024;
+	bh=giT+sq5DATQNvD7PW1F1+M8kPXf80IBcWPokvEGeD4o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BQMbq8Was3Sh/yrO1ZIB151kWubLfn3ZfwX6JRSYYEF0j+TzVqanC2YeI3tMy4nhl
+	 jo5U2kp1Fcx3RoI+++HkkEFdlJh79ODm25uwnsTJfTlYtg47utrnJGeVr4dO+IK6LH
+	 kxmoV4r2Gu1qRqYDU0xgoBmF8fEjnInZMrjWioyEUKvBxNXshmlyfp3XV+jYYZ3w5z
+	 GzqAmSvMWeViypCjR9vVvgIhJJMJXmveAU19FtY+RpmuXzZZPDfqDTQgpQ4bBUqKE7
+	 /yTv8Vr2MYg/TWjXL2iPX9xy20QzDX1sVwnRxfjpMRxmfUQkNJmoHyGsWo+ozQ72A6
+	 K3KwQufOuLZsg==
+Message-ID: <82c62623-97b4-4d57-8e18-97750b402aa1@kernel.org>
+Date: Sun, 4 May 2025 19:33:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Peter De Schrijver <pdeschrijver@nvidia.com>,
+ Prashant Gaikwad <pgaikwad@nvidia.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-pm@vger.kernel.org
+References: <20250321095556.91425-1-clamor95@gmail.com>
+ <20250321095556.91425-3-clamor95@gmail.com>
+ <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
+ <CAPVz0n2580WLJmqeH-mJGrTQUpADt32qw7pJzuqRuwrpojc5vA@mail.gmail.com>
+ <bd60283a-500a-4ed4-bb8b-c019d33f94cf@kernel.org>
+ <CAPVz0n0Ty3QAg_9rSvV7c7EBGDigHtTAOAfkRFBcTR9fziEvQQ@mail.gmail.com>
+ <aa8bdf4f-feb9-4355-b629-a5d7c6a43d25@kernel.org>
+ <CAPVz0n1y4oF9MJkOJ+XTyDDe2u6mOXHsnAaJfLSM6tpcWTW7BQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAPVz0n1y4oF9MJkOJ+XTyDDe2u6mOXHsnAaJfLSM6tpcWTW7BQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
 
-Factor out RTL8211E extension page access code to
-rtl821x_modify_ext_page() and clean up rtl8211e_config_init()
+On 04/05/2025 19:30, Svyatoslav Ryhel wrote:
+> нд, 4 трав. 2025 р. о 20:11 Krzysztof Kozlowski <krzk@kernel.org> пише:
+>>
+>> On 04/05/2025 18:25, Svyatoslav Ryhel wrote:
+>>> нд, 4 трав. 2025 р. о 19:23 Krzysztof Kozlowski <krzk@kernel.org> пише:
+>>>>
+>>>> On 03/05/2025 10:54, Svyatoslav Ryhel wrote:
+>>>>>>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+>>>>>>> +/*
+>>>>>>> + * This header provides Tegra114-specific constants for binding
+>>>>>>> + * nvidia,tegra114-car.
+>>>>>>> + */
+>>>>>>> +
+>>>>>>> +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
+>>>>>>> +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
+>>>>>>> +
+>>>>>>> +#define TEGRA114_RESET(x)            (5 * 32 + (x))
+>>>>>>
+>>>>>>
+>>>>>> Does not look like a binding, but some sort of register. Binding IDs
+>>>>>> start from 0 (or 1) and are incremented by 1.
+>>>>>>
+>>>>>
+>>>>> Hello there!
+>>>>> This file add same logic for Tegra114 as Tegra124 currently
+>>>>> implements, check here
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/dt-bindings/reset/tegra124-car.h?h=v6.14.5
+>>>>>
+>>>>> I did not re-use Tegra124 value, though it is same, to avoid confusion
+>>>>> in main Tegra114 device tree.
+>>>>
+>>>> What confusion? Why would anyone be interested in comparing numbers thus
+>>>> getting confused by different number? These are abstract IDs.
+>>>>
+>>>
+>>> By using TEGRA124_RESET in Tegra114 device tree
+>>
+>> Why would you use define from other SoC... and how is it related to my
+>> comment in the first place?
+>>
+> 
+> You did not even bother to check link that I have provided, did you?
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
----
- drivers/net/phy/realtek/realtek_main.c | 38 ++++++++++++++++----------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+I did. I clicked it, looked the same as here. Does not help.
 
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index a6d21dfb1073..0f005a449719 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -26,7 +26,9 @@
- #define RTL821x_INSR				0x13
- 
- #define RTL821x_EXT_PAGE_SELECT			0x1e
-+
- #define RTL821x_PAGE_SELECT			0x1f
-+#define RTL821x_SET_EXT_PAGE			0x07
- 
- #define RTL8211F_PHYCR1				0x18
- #define RTL8211F_PHYCR2				0x19
-@@ -69,9 +71,12 @@
- #define RTL8211F_ALDPS_ENABLE			BIT(2)
- #define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
- 
-+#define RTL8211E_RGMII_EXT_PAGE			0xa4
-+#define RTL8211E_RGMII_DELAY			0x1c
- #define RTL8211E_CTRL_DELAY			BIT(13)
- #define RTL8211E_TX_DELAY			BIT(12)
- #define RTL8211E_RX_DELAY			BIT(11)
-+#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
- 
- #define RTL8201F_ISR				0x1e
- #define RTL8201F_ISR_ANERR			BIT(15)
-@@ -151,6 +156,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
- 	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
- }
- 
-+static int rtl821x_modify_ext_page(struct phy_device *phydev, u16 ext_page,
-+				   u32 regnum, u16 mask, u16 set)
-+{
-+	int oldpage, ret = 0;
-+
-+	oldpage = phy_select_page(phydev, RTL821x_SET_EXT_PAGE);
-+	if (oldpage >= 0) {
-+		ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, ext_page);
-+		if (ret == 0)
-+			ret = __phy_modify(phydev, regnum, mask, set);
-+	}
-+
-+	return phy_restore_page(phydev, oldpage, ret);
-+}
-+
- static int rtl821x_probe(struct phy_device *phydev)
- {
- 	struct device *dev = &phydev->mdio.dev;
-@@ -670,7 +690,6 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
- 
- static int rtl8211e_config_init(struct phy_device *phydev)
- {
--	int ret = 0, oldpage;
- 	u16 val;
- 
- 	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
-@@ -700,20 +719,9 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	 * 12 = RX Delay, 11 = TX Delay
- 	 * 10:0 = Test && debug settings reserved by realtek
- 	 */
--	oldpage = phy_select_page(phydev, 0x7);
--	if (oldpage < 0)
--		goto err_restore_page;
--
--	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
--	if (ret)
--		goto err_restore_page;
--
--	ret = __phy_modify(phydev, 0x1c, RTL8211E_CTRL_DELAY
--			   | RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			   val);
--
--err_restore_page:
--	return phy_restore_page(phydev, oldpage, ret);
-+	return rtl821x_modify_ext_page(phydev, RTL8211E_RGMII_EXT_PAGE,
-+				       RTL8211E_RGMII_DELAY,
-+				       RTL8211E_DELAY_MASK, val);
- }
- 
- static int rtl8211b_suspend(struct phy_device *phydev)
--- 
-2.39.5
+> 
+> You cut the actual device tree compatible definition,
+> TEGRA114_RESET(x) is a macro used further to define device tree
+> compatibles.
 
+There are no further users...
+
+> 
+> Like this:
+> 
+> #define TEGRA114_RST_DFLL_DVCO         TEGRA114_RESET(0)
+
+and still my comment stands. Bindings start from 0 or 1.
+
+
+Best regards,
+Krzysztof
