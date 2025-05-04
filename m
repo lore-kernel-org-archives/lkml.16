@@ -1,134 +1,166 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9E7154425
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 15:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6286D6DCE1;
+	Sun,  4 May 2025 15:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746374262; cv=none; b=Qus3zLWeh0B2cQ+e21iSwlx3vo+K4Y3JPDrBaAmC6BXEN/9nGEUOryXL16ZArfx6/pBp7p0ONZ23o2x4nJ4wwFwmdZBCukr7Y506mjFOj2rzSk6xZwYzwpgJnBDWlnwE/cLnZvu1Jw/uvJ3vCazd/eKahT9joD0Ak1CJX+jZoic=
+	t=1746374302; cv=none; b=M+z3rbeCOh5smo5obHmDRSeiJXWGynNvLajX+fLu29wLieyIeal80pl/+jPcoWbowiTbiJqKVM2Ct0Qgw4CvvX4k2WiK8XlKvwBSp2OspN0IpfNbvOx29bTIV8oeJtGThqIDPR/RYaXPswAZwqqIgJz+f50n6GbdN3q08NkIDKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746374262; c=relaxed/simple;
-	bh=Dgx1jva6DzN5ZiPWjqZBOROZ41hVkAHSccmbGgta4qI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nt3IDPEHdyvlWLnSOXU6uPlEAMPcCsMNIzCBVp75KBCeBGOelMoHHd1Tu5URC6ZkR0LqJHuhjqrkNSgU/M1qIOsWyQAoJltbY3nLpp4Cof1FBgpx40UeL9s1SfQz7Qg0gSOwmLl3WYaHbwXqebml+u4oNshoqrQu6BtAOb6p7AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Muhs0tLx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746374302; c=relaxed/simple;
+	bh=WWCYEIB9zYprxa3yELeoLPPp0AFrhs3qp9Zjhr0d8Qs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TFdtVr+MH/nNLdwk+83TH2Ab08WTgs8nlassl9y7cLL6i9F9mZLtZfSw7QCnb+ms1AiVqX3X8I45WvbCiWhT1x5rT6WgWXFkA+/ra8mK6zc32SHhKsSoJ/aPgELjHPk6G94nPG6cIcm4mkTFQ5MwGodpm2yTVEtDizBdf4toiEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MnPvGWaX; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Muhs0tLx"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544FI6nR022383
-	for <linux-kernel@vger.kernel.org>; Sun, 4 May 2025 15:57:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=+NBQddzgvDX+iZ2tGFQkPQN/
-	CB+FVzuOwSU6o3vai0k=; b=Muhs0tLxv4F0GjAsHtYTZwiV0aE1Ojbcs+DMkUy9
-	aXJ4pj5l/4i+4GO4tSC02XrC5zsZeRwwSr4vthbo0cIwk5IO3dSxp4FOzJs8Prji
-	3i6UxhQDSPKiOQBziC4yFtXe/NZghgLC2CJZHLEMarbctkn4NErxbhOGugXfHfAd
-	GyMSa1mygawfFIs9ziSjaQ8oM9Q6HIzkTODSEM28B2uH3+lUxmA3MZBIcwc6BMbL
-	TbTmS/lbB29to/muzTgyjjPEN081PnKqQRawsfQL4EHSnuHfTuIvyEAHHJzuS5rD
-	gGPddG8+z7dq8tW4mg3C4LQrtzQMbmBUdNw1mCwy2l/8Fg==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9a24h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 15:57:40 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-47ae87b5182so77140711cf.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 08:57:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746374256; x=1746979056;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnPvGWaX"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso33677881fa.2;
+        Sun, 04 May 2025 08:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746374295; x=1746979095; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+NBQddzgvDX+iZ2tGFQkPQN/CB+FVzuOwSU6o3vai0k=;
-        b=alwx+YOIL8SkbhDeATcSvzs017R4MCkjjTwvbx3VEEzPCGvFAwEJjOnQhZp1l98f4b
-         ExApYpSzz6Q/su1CT4aEsIQlPV3QTyS7qF8iCjqb1UJYKJwBGRH9o7AfsgBr/R7XSLAg
-         HETZY88PPOaqhN57koDuyQ9WNfxAWe36utMbhHZl6jR3xWFSHQb4oKnOWfYGjxCq4kDX
-         QcmuEBKh1dX/4y6ePJWIkpsf2iXMg1T/xqtCfvvPpytkKpR1R5rRC4rpNfBJnqisSvku
-         xSuRnNUZ8abZQOQl/7Q35uV2Qce1pr1xZabzZRDKu+nG91EU6nJlu+Ksg53jS+fRbmyW
-         ZiGw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/Ygr+XQbWEbJutFGtB3CUfsOeJegb7zsRTwZNu+ZKODtwMqN9C9BnHBbLclFbZKDvsjDn5dUFxWHfLyI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFnjdJ86sTZbqxdO4eWCAVIsGCBMcpT3Z9KdfzEQhYmhZcIyXL
-	cdpVI8xXhVPN12BLcJ7ug4G3I4E3Ie4SZevx/Jwbcebo2ubXpd0dpG59CYPchR0tk0wEnJxRCAp
-	C05sleuaznUtLCZhLtyqGx882ULo52hxhvkaiYRqYJXVPSR2wJ8kW5wMQlAKprg0=
-X-Gm-Gg: ASbGncvQwMb7gz+ffyJAnbX+n1zZxJ3drSrdQgVB2598jFGbJYpvrz/rPi0Aoc00W/U
-	kuZaPrI9Us3n7uXqCaMCrrtBfneGTeKUzWDOhZRyewO8T9bEkp/bKXKl59Y4Bvvnox4fno7uuPN
-	UtBZ2/ntYkcv7T2rForPbtfp2VWz2DRPsbHnROk45uvIANCWET8n7DJbBjNcmf4Gx5QuLPr1Dcb
-	nOrc/COZfMxIHY23GYU6yVJ44eGmK3wkoA0FVFI8ztAhSz4OJNDPRRdGhVFNxcKWHxcO8CRcTg6
-	Lv9StM1SLYRSnmbB/kE0v+/KX2ddyjaBTLDS7Xs7fGPEv6IWvvNrUMpE5+XCZztNQLBY91Vu27Y
-	=
-X-Received: by 2002:a05:622a:348:b0:477:1ee2:1260 with SMTP id d75a77b69052e-48dff3e17ebmr59557801cf.1.1746374256688;
-        Sun, 04 May 2025 08:57:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4apz9O7p8cmIJktiBqV/ploX2tWp4mathpyShsF97cdRuhrFPCVNENtImRJjdMdTGiCcezw==
-X-Received: by 2002:a05:622a:348:b0:477:1ee2:1260 with SMTP id d75a77b69052e-48dff3e17ebmr59557571cf.1.1746374256352;
-        Sun, 04 May 2025 08:57:36 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202ad908aesm12406461fa.96.2025.05.04.08.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 08:57:35 -0700 (PDT)
-Date: Sun, 4 May 2025 18:57:33 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        bvanassche@acm.org, andersson@kernel.org, neil.armstrong@linaro.org,
-        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
-        quic_cang@quicinc.com, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V4 08/11] phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
-Message-ID: <vliufhbeztmvgoddhxsla5p4vmr75wmqf6iqlnqe7pnp3bobqi@thrwl33u22yi>
-References: <20250503162440.2954-1-quic_nitirawa@quicinc.com>
- <20250503162440.2954-9-quic_nitirawa@quicinc.com>
+        bh=RIWH3m2WE4KaDS8UGcLXeNGE3VEBJQFj52/VeAoTQDM=;
+        b=MnPvGWaXCZrcviF90AALPuYKwFd5noBD3wO2DQV5ToLzFsO7bNgr/zaqmpibzit6lG
+         vyzuW4eCknmwAGZbOmdZ854H9xpPwYsxhwH9MVW0AjzBEHUtIMRc33oNY4YB76N0WETT
+         tyXNmb4MnBuBIdiwoD0HQQ3bIsFdTF7Z5zlNolrqcQhjCcPfbz0yB8pHPMQ9870qe4ju
+         7kwnUYT+/QE0d0h5DK++cz760tPtexxKuc0/Gr5QIYt10M9BHv8ik/vWBYOImfixKUqY
+         j14hZwTjQ9LdsAFo6ZLuALUWrWg1b//fpKZTMq5/DLHWgigGOIVGkaaq9S1jf8s1LEwN
+         XVtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746374295; x=1746979095;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RIWH3m2WE4KaDS8UGcLXeNGE3VEBJQFj52/VeAoTQDM=;
+        b=Yfy2xI9EMRsVR4zyo14PP3JoWkePogJjniJ3jk/z+UeI9L3LpEACfwxN+No8Lq86Hx
+         0pUaG42VIFghniGvWj1DxDAzgB8iD63xjRDjHgbvaz+vOZ04lFUzgKIOQNFfu1WrE6Wn
+         6D0dkH0zNqq3hyAKN46BIM5QI4/9VVHISouxdpqhaXu0uZZlIKuvkCgMWxN1L1cOmCmM
+         LyZvWXvYeOpXGRpbzZLaBaR7+vpkKhuMIcjxihiCAvvIXWKlTKTTH4w0r+O8Ktyj07HD
+         TrEZA3pPK+SpEo0JVGJjdxFS0EvYQrbiZ51TV76ULpko2xHMmc0O9XFFwHF5yExbmRas
+         PbXg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4yD/8cclnkf2XIO37t/V5gvOR1EZYplSm2+JuhCRnEmJuHbZXuvxw2WCB6BsPovJu81hUj/CuNSTzmDc=@vger.kernel.org, AJvYcCVcu5Rn9dj8ZgRfzkFK7EFpIbSf4Ndr1nizEdgfgVrmi1yaT2JBP43mYkXOvZPX5eiPLMUt5kFnS0V1610=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZysD4GdDrw66PTDJePZSkKzYPVSratUxqTJRrK8KetA7iFMjN
+	F3OdmO+EHU5TNsrhcyN9uHtX4/La/4KI4FyuacPrEQzkkomFi81ryeTBiS/kzLSRsbe2GAwWr5f
+	HlU8PykQBSWcDsLtnQ8TiN0iMEeI=
+X-Gm-Gg: ASbGncu2sBGDPF4PatOm92OOP9qAuyuZ+loQ+9Firpzkl25Ul0/8RKxkGf9WlUv50oJ
+	lP0T2lQgMXhBrXVoTa57at3w4efZgh7BXLI/fVK/gnJKNkwUq9K/8hXSjfx8AfI2yxSb01Bj8Ed
+	EJMKojMiC+mFi/r/QJEZaZq0c=
+X-Google-Smtp-Source: AGHT+IFIVdlJx1L+YMMDDvVF2nPApQH4fruTq0NkAqAThKcG6rl1ZbBWunV7iiMUBHDzpI8kHXiZkO17duwQqfiQtZo=
+X-Received: by 2002:a2e:b8c6:0:b0:30b:a187:44ad with SMTP id
+ 38308e7fff4ca-32351f2235amr11021551fa.26.1746374295075; Sun, 04 May 2025
+ 08:58:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250503162440.2954-9-quic_nitirawa@quicinc.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDE1MCBTYWx0ZWRfX7iCMHK26gOfa
- yLTNRVAVe3m1ovqTYL6Z1VHDFWztgPIBtG29OnPwewIgpC5S86hthfS9CIdEJAkG/20Ijj/3m6H
- LjbvnZiJOLdp4pgcLVNCX7GS/21UIaUi0St7nrJNhaG1VdUIHbNYf6Vh4c0hdoXlCRc3XCuityh
- 9bMz1vXZZbbKP+edZSMNrfdeKeFOHpFO4FNeH+gT9fR2YA5LfmtD0ICeeF7Vlu/cg5XGCmgeI4l
- MZFUsbkOHVtluLZorwpIRvJit2vVb6EWPRz7Uw/W4ASGTC8Jagj6knPtOqX/gdB6lzcab0pthfK
- mpq6q4JRWJj5ZZMTSa3UKdtoZnVGs5NP6mhMvAi8gB9PAbulFigOZZRBvkMwMQaPB0kMOfiZXqE
- Yj6E+3Bt3xbQKdRmUVL9QmQpgBmHA5tVfRzm1oC3AB97i52gTeAzI6M5EU3LZWyqC2N8PDYR
-X-Proofpoint-ORIG-GUID: IrJ5ERLzdZWPTQo-GpsvHbLJ3LCNL45L
-X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=68178e74 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=1ySLA9CudziWiy2AdkMA:9
- a=CjuIK1q_8ugA:10 a=uxP6HrT_eTzRwkO_Te1X:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: IrJ5ERLzdZWPTQo-GpsvHbLJ3LCNL45L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-04_06,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
- malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
- mlxlogscore=675 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505040150
+References: <20250430-tegra210-emc-dt-v1-1-99896fa69341@gmail.com> <0dcf786f-d93a-4526-bdc6-e11d59347f98@kernel.org>
+In-Reply-To: <0dcf786f-d93a-4526-bdc6-e11d59347f98@kernel.org>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Sun, 4 May 2025 10:58:03 -0500
+X-Gm-Features: ATxdqUHNyaFXkzqzEh0u3EIUTcEOAhfiFb1OFb-nO6Ipx33Di2UOaKs6_6U1oTY
+Message-ID: <CALHNRZ_oxOO_iekbKvN=5mJrR+UEh5jjkZ56UHGTaEAcs-BE3Q@mail.gmail.com>
+Subject: Re: [PATCH] memory: tegra210-emc: Support Device Tree EMC Tables
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 03, 2025 at 09:54:37PM +0530, Nitin Rawat wrote:
-> In qmp_ufs_power_off, the PHY is already powered down by asserting
-> QPHY_PCS_POWER_DOWN_CONTROL. Therefore, additional phy_reset and
-> stopping SerDes are unnecessary. Also this approach does not
-> align with the phy HW programming guide.
-> 
-> Thus, refactor qmp_ufs_power_off to remove the phy_reset and stop
-> SerDes calls to simplify the code and ensure alignment with the PHY
-> HW programming guide.
-> 
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
+On Sun, May 4, 2025 at 8:38=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 30/04/2025 19:52, Aaron Kling via B4 Relay wrote:
+> > +#undef EMC_READ_PROP
+> > +#undef EMC_READ_STRING
+> > +#undef EMC_READ_PROP_ARRAY
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +#define NOMINAL_COMPATIBLE "nvidia,tegra21-emc-table"
+> > +#define DERATED_COMPATIBLE "nvidia,tegra21-emc-table-derated"
+>
+> No, you cannot add undocumented compatibles. Missing bindings.
+>
+> > +static int tegra210_emc_load_timings_from_dt(struct tegra210_emc *emc,
+> > +                                          struct device_node *node)
+> > +{
+> > +     struct tegra210_emc_timing *timing;
+> > +     unsigned int num_nominal =3D 0, num_derated =3D 0;
+> > +     int err;
+> > +
+> > +     emc->num_timings =3D 0;
+> > +     for_each_child_of_node_scoped(node, child) {
+> > +             if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
+> > +                     emc->num_timings++;
+> > +             else if (of_device_is_compatible(child, DERATED_COMPATIBL=
+E))
+> > +                     num_derated++;
+> > +     }
+> > +
+> > +     if (!emc->num_timings || (num_derated && (emc->num_timings !=3D n=
+um_derated)))
+> > +             return -EINVAL;
+> > +
+> > +     emc->nominal =3D devm_kcalloc(emc->dev, emc->num_timings, sizeof(=
+*timing),
+> > +                                 GFP_KERNEL);
+> > +     if (!emc->nominal)
+> > +             return -ENOMEM;
+> > +
+> > +     if (num_derated) {
+> > +             num_derated =3D 0;
+> > +             emc->derated =3D devm_kcalloc(emc->dev, emc->num_timings,=
+ sizeof(*timing),
+> > +                                         GFP_KERNEL);
+> > +             if (!emc->derated)
+> > +                     return -ENOMEM;
+> > +     }
+> > +
+> > +     for_each_child_of_node_scoped(node, child) {
+> > +             if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
+> > +                     timing =3D &emc->nominal[num_nominal++];
+> > +             else if (of_device_is_compatible(child, DERATED_COMPATIBL=
+E))
+> > +                     timing =3D &emc->derated[num_derated++];
+> > +             else
+> > +                     continue;
+> > +
+> > +             err =3D load_one_timing_from_dt(emc, timing, child);
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tegra210_emc_parse_dt(struct tegra210_emc *emc)
+> > +{
+> > +     struct device_node *node, *np =3D emc->dev->of_node;
+> > +     int ram_code, ret =3D 0;
+> > +
+> > +     if (!np) {
+> > +             dev_err(emc->dev, "Unable to find emc node\n");
+> > +             return -ENODEV;
+> > +     }
+> > +
+> > +     if (of_find_property(np, "nvidia,use-ram-code", NULL)) {
+>
+> I cannot find the bindings for this. Where is your DTS? Was it tested?
+>
+> It seems nothing here is documented.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+The relevant nodes are filled in by the bootloader. I had hoped that
+the early stage bootloader would be able to copy that into the
+mainline dt without needing to prime said mainline dt, but that's not
+working as hoped. I'll send a v2 with dt bindings and the first usage
+of it in p2371-2180.
 
--- 
-With best wishes
-Dmitry
+Sincerely,
+Aaron
