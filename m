@@ -1,111 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D018479;
-	Sun,  4 May 2025 09:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DF1F948;
+	Sun,  4 May 2025 09:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746350484; cv=none; b=oWpodp4rKlifkNv+mf/BvNJ91HG309LZb1gRO6jjTxO6dZq+EzdGRbzCdHhZRBQfGMx9g+84H47qWBVfuDL+7ccBcCIdkUshBB4B22JeQ5C3mBdLrPNTIiCSkUEKeIErAU1HjgsBNG0zygFpcc62HJn0KsOlFnP61Yh1Cc3Fx+8=
+	t=1746350612; cv=none; b=AgPjk7Ptzx0pklCuUgWVDUmOBw6IeK2brBorvCAZcbXcfuiWpMRE4mn4cVJ1Tkta8Me/Ammxavb7KfKnHh50OeXVZXLHEIP8uG5b7gGYl2jMlTRyAxM+oMdFDtSegTq94Ko72uR74OyBrviFustAGQz2IMqj9K7JW6lIFQNcHBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746350484; c=relaxed/simple;
-	bh=ax8+aRdxPyEaO+MlNJoulX1KawP6Rs1aBWyJrGcNdL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jkgjQV6JvCrKiJ8zA/F7SLtiHWKbzFtm41Ds/ktmv9G0J7YyQjxMtrBIKQ3vuWqMcoX5oV28/WcZ4w/XixBY7GPR0CTgXDvPuEEtJ3o9vbLf3xrCxUtQMBrsbVDJI6i0AreG33paj0yxYCh9aVWNSBzVpV+LIY+DZBRn0oBESNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+QS6DPY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746350612; c=relaxed/simple;
+	bh=D8CmpEX+akOScouJwEkOSdOqEGc4J0EbIcSdXI6sou8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=bFfV+WStGnu+ywYQkcNZhJ5pAyklijwQlHR7x6hPfxWpfdBxNkOpvpLmQccxOVP4L2u2Ykuw4uX/33DgBQEmOE+f8VqhVp5mid2+qCUNCBZ68yXdmX60X+ojXwxcbV0+jQwUeXWyUtwQsyazyqgpPJMJElhS1ka1q8GfgfJhQd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQb5AV22; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+QS6DPY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B48C4CEE7;
-	Sun,  4 May 2025 09:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746350483;
-	bh=ax8+aRdxPyEaO+MlNJoulX1KawP6Rs1aBWyJrGcNdL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i+QS6DPY9q4fhLxirBHWrjszL2aPuk5iebh+Hj9bxIeszCWrtxnwRvbcrGsmvznX3
-	 4kkFRyl+tREe3pUrNNsQmCU3zaTOwzw2wfKgHXe5b2pXlUTqHPSUsqAl7cPU3WGMxT
-	 Qn9mKC4U4+q0YnPLAbth71mQdTCAu2kGlUwqxcE5OaWjUaiC0hih1QmzeQLNl5PpUe
-	 bQhXPfrpFaPOTJEoPfRul+hdI/eT4ooYFWB4BpdngZeVM/6eZxTAsz4WkvBO3EXMlv
-	 vqoKoUT0E/qdxT7d66pSTZpqPKCWoz+WXH59pV1ZKnbAPykVhjx9JYlutXWmk4HgVm
-	 1pI9LATlp6LHw==
-Date: Sun, 4 May 2025 11:21:18 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, bp@alien8.de, thomas.lendacky@amd.com,
-	hpa@zytor.com, michael.roth@amd.com, nikunj@amd.com,
-	seanjc@google.com, ardb@kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH v4] x86/sev: Fix making shared pages private during kdump
-Message-ID: <aBcxjsdC4tsIgIf2@gmail.com>
-References: <20250502212143.578866-1-Ashish.Kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQb5AV22"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22423adf751so40778655ad.2;
+        Sun, 04 May 2025 02:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746350611; x=1746955411; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=v4vvIIMUjGPWvlpk7tTHWDKYFTzP4XJtC/Wv6x1ii98=;
+        b=MQb5AV22qe6YgOhzZvCr0ThBEIObVnayDxBWPKTT3kd35xoC8SvKdD2/ZkBGSACLOe
+         7ZZ18YrWRZjnfNRiDjExt5w1mYnL797eS085+6uTK9jV/ANhhFyLOVp5Xm+zseZLOVko
+         3FvAjGGGz3SqGFuQ8wmodc8sFL9t+UqJdnrgjg/CeN0TgohNjV1Fef/2pEeye60NT362
+         YM1ek6xikqa1YjFmuKii7E33Eh2IlV4wt0s+gSI2jv4uMBdUCJoquGwoL7tEaky+9UUo
+         jqaBDmeUFXr5KO9N4lSlwRMMtm/AmhVXcqNRYBokaY5KaTvygJPyR0jw2NqiTK8Vl52k
+         dEdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746350611; x=1746955411;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v4vvIIMUjGPWvlpk7tTHWDKYFTzP4XJtC/Wv6x1ii98=;
+        b=K//HyqxmwoQNg4XHn/EFqAUoyZGvytvY98xg/5OZ0+OxPejlsWh6Smav+5sOLKStrQ
+         YrL+waoGdi+JI8gy8N1YZGcT4hyHMq5xMGfz07iImBonsqpf1/J+4AoO9AOHV/IFExMd
+         1oNpiUBiibSbluLPuaeBWprcthsuUq7fHdCI4JZn3+j26YdF1CyfUQW9APNTJ4gjai1A
+         R16a+e/wQ3pfmBWftNAc2nAUKvTXGszr8G37/Hy87StYJhogA8tclFkWnGHp+bDKiWQp
+         nqDcHGM2XIluBsDtsnR2ZDjXfNVqFS5/ha+SaANnm6ZurUtGGBdaf3wY/Yr/zYNQQhPa
+         dpbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWcs7gneMd1QxkOqj6LuMY+hHYmKYOX09/+VUqv8QAPFesKCCMJDyFtuVvrLc8SRqienv4DkP6Vz5UvQ==@vger.kernel.org, AJvYcCWJDeL8mZm/XqWYlLlOvy9yWKq+CdHy+/dJSonNtLqSDDjokoHH+xH1R/czSEOod+tg6ScesRq7b0AYD+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ5mZRx1/509UsKic2Pz1zMLqsuePTFSvx666m9B+obmC+6Tkl
+	Tp3rWQD3w+7B9HPQ9+lBu38tkwemklMPNOuKYQTpX2Lu0IMoVbId
+X-Gm-Gg: ASbGncvF6GeCwleaOp/O3MzNKfGO0WBMAFM+v9ZOWMMx3enOPlZsC0LAABKwn2hLNRZ
+	32+a1LywYKVyJQqKge0PhLD/mJDuCp9q4n5Vg9vzxGDm6TxqO6HtEw0DRngKbhUDJ31jLVbmRuf
+	Hd+aw8p7siHWhUSZEqMECnzbDYZNwOOwvtFWz3/qP1gegZb9dNQ8XiPyVSx2h2MDENTKq+MCbfU
+	Q1SE7aUVc85oL+0CMzA5VbTWFiTwXYuPeI3FuT30LxYzK2MJEZ8NxrIFW4Rc3AtYxt2rwwT9HXd
+	EslHCKKnCqHHUVd9Uo4Oj1F5BKcNdGzm8Fcs8/ORqoGAsuoFuPBfAjl5N5h+p1FYGx0D3cLIYiI
+	MjyVelOsiHoNlhW3a
+X-Google-Smtp-Source: AGHT+IENnOKUUkHFH+TnWk3OHl36odvv4VMQ80wl5aHy+VyKS+N0Ak00/T7Y7LEMELxqaTm9O4ju1g==
+X-Received: by 2002:a17:903:234e:b0:224:26fd:82e5 with SMTP id d9443c01a7336-22e1038ea74mr140776695ad.48.1746350610579;
+        Sun, 04 May 2025 02:23:30 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fc85sm35017215ad.110.2025.05.04.02.23.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 May 2025 02:23:30 -0700 (PDT)
+Message-ID: <7e7d944b-b211-458a-8a03-b9b7b5f3dcde@gmail.com>
+Date: Sun, 4 May 2025 18:23:27 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502212143.578866-1-Ashish.Kalra@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH for-next v2 0/2] RDMA/rxe: Prefetching pages with explicit
+ ODP
+To: Zhu Yanjun <yanjun.zhu@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+References: <20250503134224.4867-1-dskmtsd@gmail.com>
+ <526be00d-98e6-45fb-a5d3-eb26fd7a88d0@linux.dev>
+Content-Language: en-US
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+In-Reply-To: <526be00d-98e6-45fb-a5d3-eb26fd7a88d0@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 2025/05/04 2:08, Zhu Yanjun wrote:
+> 在 2025/5/3 15:42, Daisuke Matsuda 写道:
+>> There is ibv_advise_mr(3) that can be used by applications to optimize
+>> memory access. This series enables the feature on rxe driver, which has
+>> already been available in mlx5.
+>>
+>> There is a tiny change on the rdma-core util.
+>> cf. https://github.com/linux-rdma/rdma-core/pull/1605
+> 
+> Hi, Daisuke
+> 
+> Thanks a lot for your efforts to this patch series. It is very nice. With this patch series, we can make prefetch for ODP MRs of RXE.
+> 
+> I read through this patch series. And it seems fine with me.^_^
+> 
+> IIRC, you have added ODP testcases in rdma-core. To verify this prefetch work well for ODP MRs, can you add this synchronous/asynchronous prefetch to the ODP testcases in rdma-core?
+> 
+> Thus, we can verify this patch series. And in the future, we can use these testcases to confirm this prefetch feature work well.
+> 
+> To now, it seems that no tool can verify this prefetch feature.
 
-* Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+Hi, Thank you for taking a look!
 
->  
-> -			if (addr <= ghcb && ghcb <= addr + size) {
-> +			/* Handle the case of a huge page containing the GHCB page */
-> +			if (addr <= ghcb && ghcb < addr + size) {
->  				skipped_addr = true;
->  				break;
->  			}
-> @@ -1131,9 +1132,8 @@ static void shutdown_all_aps(void)
->  void snp_kexec_finish(void)
->  {
->  	struct sev_es_runtime_data *data;
-> +	unsigned long size, mask, ghcb;
->  	unsigned int level, cpu;
-> -	unsigned long size;
-> -	struct ghcb *ghcb;
+There are already relevant testcases implemented in ./tests/test_odp.py:
+  - test_odp_sync_prefetch_rc_traffic
+  - test_odp_async_prefetch_rc_traffic
+  - test_odp_prefetch_sync_no_page_fault_rc_traffic
+  - test_odp_prefetch_async_no_page_fault_rc_traffic
+On my node (x86-64/linux-6.15.0-rc1+), this series can pass all these tests.
 
-So this patch just morphs the type of 'ghcb' from a typed pointer to 
-unsigned long, while most 'ghcb' uses in coco/ are typed pointers?
-
-That's just sloppy and fragile. Please just keep 'ghcb' a typed 
-pointer, and introduce *another* variable for the virtual address to 
-the hugepage.
-
->  	pte_t *pte;
->  
->  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-> @@ -1157,11 +1157,14 @@ void snp_kexec_finish(void)
->  
->  	for_each_possible_cpu(cpu) {
->  		data = per_cpu(runtime_data, cpu);
-> -		ghcb = &data->ghcb_page;
-> -		pte = lookup_address((unsigned long)ghcb, &level);
-> +		ghcb = (unsigned long)&data->ghcb_page;
-
-If 'ghcb' has the proper type then this ugly forced type-cast goes 
-away.
-
-> +		pte = lookup_address(ghcb, &level);
->  		size = page_level_size(level);
-> +		mask = page_level_mask(level);
-> +		/* Handle the case of a huge page containing the GHCB page */
-> +		ghcb &= mask;
-
-This too calls for using a separate variable for this, because after 
-this masking 'ghcb' is very much *not* the location of a GHCB page 
-anymore...
-
->  		set_pte_enc(pte, level, (void *)ghcb);
-> -		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
-> +		snp_set_memory_private(ghcb, (size / PAGE_SIZE));
-
-Do we know whether this is safe? Could the huge page around the GHCB 
-page contain anything else? What is the structure of this memory area, 
-is it all dedicated to the GHCB, or could it contain random other data?
+Other than that, this feature is required by librpma as far as I know.
+Though it is not maintained anymore, perhaps this could also be used for testing.
+cf. https://github.com/pmem/rpma
 
 Thanks,
+Daisuke
 
-	Ingo
+> 
+> Thanks a lot.
+> Zhu Yanjun
+> 
+>>
+>> Daisuke Matsuda (2):
+>>    RDMA/rxe: Implement synchronous prefetch for ODP MRs
+>>    RDMA/rxe: Enable asynchronous prefetch for ODP MRs
+>>
+>>   drivers/infiniband/sw/rxe/rxe.c     |   7 ++
+>>   drivers/infiniband/sw/rxe/rxe_loc.h |  10 ++
+>>   drivers/infiniband/sw/rxe/rxe_odp.c | 165 ++++++++++++++++++++++++++++
+>>   3 files changed, 182 insertions(+)
+>>
+> 
+
