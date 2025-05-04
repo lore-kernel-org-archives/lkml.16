@@ -1,90 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4524219EED2;
-	Sun,  4 May 2025 09:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20B019E967
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746352299; cv=none; b=aH8iNnWzt36znixb2Oltyl0La2w8Omy7GG4Sy+Oth2ffuLR3dZTaruI5OO5wxgqcd2Dpz9u1L0dAW594cZLsZZCGswZSfHFMBiKnBynydzuCR/0AA/D7xkL4mj1PuXZCTLiJwzyim4vp7ofqrdNMcG70NxexSxVBDeNUqaqPgWU=
+	t=1746352326; cv=none; b=lqRYL2jbs4jcwVXjODSa2SogRn4Y6bpA0gpvqYpwtSjd0LXyNmNmYG5TqKgW26mXY5CUmZH3AwuY3sHKYoKv+0CGs8+WLZosxxzSfIXVqFIvlSqj+/4ykKLJj8AhTbS7iKelKGtLZ8ZNpschf9A9XtWX6YGPu9GShUMYbVOOefs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746352299; c=relaxed/simple;
-	bh=muQRDpDkvQ3yr7wM6RRqm9LFsCCKkEzqPpd6l/TYDwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IbemeLq9R7x5Jo1CbRPmCA4xUqUfgt6ba5lvgZHQpsthGL0eHw8BKvOjDir4lLL2sJb5zj8IkJI78+Tp1lhj+9J7sRcvU++lzzTA9HD0Iejr+QYS2zzPGAfz3dvKk1n7DbrcIK6ahxI1mZWz16wE2+Xv0Cvfl18yFwPhkKmNkWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzo9TFLF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzo9TFLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26524C4CEE9;
-	Sun,  4 May 2025 09:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746352298;
-	bh=muQRDpDkvQ3yr7wM6RRqm9LFsCCKkEzqPpd6l/TYDwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mzo9TFLFWxqIRdkMawjsHqpMv2Dnksm4QDpBBlVSpx6RuhhjMi4nZ1N4or4OSZhh1
-	 fP/d9pA2Ic8Co6Ox7cqc1ufmi2igiIJDuKthJmoZ7/KXRKfoS8D8P35cheGHxzt/LF
-	 7fJUnomSWCbs+t5PHzLeQM2htkTo0xc49WL+EfzBR9QT81EYH0IA1x4ype1yE3rEWb
-	 V+QnxXGjHj6jTTIacL33DuLEv/STEwPpRQyn1mwVfSpCYg7BKgDGvV19qZs5D1CXB4
-	 hqaL48a3iMkcZDJuLNApvZSfGbdWAfVSHXQlywyjZdh+6Qwb6Hhu3rI2W9Fy1LtXLq
-	 5q8qNGss+vYcw==
-Date: Sun, 4 May 2025 11:51:04 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [tip:timers/urgent 3/3] llvm-readelf: warning:
- 'arch/riscv/kernel/vdso/hwprobe.o': bitcode files are not supported
-Message-ID: <aBc4iLZoH1cFzM96@gmail.com>
-References: <aBb6nudVcs+cqRyZ@rli9-mobl>
- <20250504113922-5cc48741-0c27-4384-a77f-c088050bc747@linutronix.de>
+	s=arc-20240116; t=1746352326; c=relaxed/simple;
+	bh=u3ZllCEErUzXM10HEe/yG0/k1hIxUJeRwUILm7bFe6g=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=m0BCCLSnA3cCAosxpf9Nx6Dm9ruQ4fPTTYoGfXT89I5v5GPHYFoT5e25LyDYffH3Kg7gtaG299Hm4JNmLvdzUrO0GDWyG97RD3ZnYDKIrSNCXijVPq2ZGBJqAFHbMdWqbYSzishTIIl0vN/CRCHK1ZT1QIGmXZ85VYsF4jEAIbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d43541a706so29789045ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:52:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746352324; x=1746957124;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOqB0ylLnisnS82w2E9eqZPt6lMbQjhiPur1Ic1Rq3Q=;
+        b=WMorFEZyXcpQVsb6hBBouGISBK0tSxPCqPbNjgrX9/cX4BPQu4umQhEUr+KTNJ+9xM
+         bykakDN66SyRxZzaxvYsELnRRw5Y0oQUtDIAPFEB2chVnjrDLCeg0M2nxhpng4uCbaUI
+         ZARc7vJ7vegcShaPlaIfJ4XLQwCNtwgmdtR/0b82Z8SDmJdVpVhvYx9uPuROYI4jdWBs
+         IGecxt3rizSUUQxsV+phoEQPT5C55t3jYeAC2dRn4bEsLZrYW1wH7chOBfMQtfI+edMK
+         Rgge3K0rRHC2YQMO5F+P2bia1/+gQjJoLa/WpC+RdkWyMWBwgea9oeOO4kFFB+7iBec9
+         rP6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvuyTVKPqOBu1vh96If9zNd4XUnzJxL5QjFfqLKTR7wct9ITfuSyVcL4FmXYShY2CD0GLugvBp0/8ZioU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIz+hVxvvxvpvjfVrZ6yH2K2nKlzC/ZsvMjfjB5jYYrhPBXCqi
+	K/h8ntoQH6ZYlBIvJzxOBMjTH/RQwVjWQBjhJjRNjyOCVGjXera1Tn7jd7FgbY6LOi6Koxdfr3n
+	bSFWdcuqpGuf+qpWQPDgWzS5DD/TxlHNEFxn4f8NlM1PCrYakPRnpZoY=
+X-Google-Smtp-Source: AGHT+IEgwdAkhvFU8+ZwR1aaoOoFlKOilkqvB6dUsIJVl883e58EoTxNMDwQLKpYrPh6rhIqv3SrF33drLa9mDdl2mjxUSVH08Dv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250504113922-5cc48741-0c27-4384-a77f-c088050bc747@linutronix.de>
+X-Received: by 2002:a05:6e02:2147:b0:3d6:cbed:3305 with SMTP id
+ e9e14a558f8ab-3da5b27501cmr27271795ab.10.1746352323999; Sun, 04 May 2025
+ 02:52:03 -0700 (PDT)
+Date: Sun, 04 May 2025 02:52:03 -0700
+In-Reply-To: <000000000000820e380606161640@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681738c3.050a0220.11da1b.002e.GAE@google.com>
+Subject: Re: [syzbot] [hfs?] [mm?] KASAN: slab-out-of-bounds Read in generic_perform_write
+From: syzbot <syzbot+4a2376bc62e59406c414@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, almaz.alexandrovich@paragon-software.com, 
+	dvyukov@google.com, eadavis@sina.com, hughd@google.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com, 
+	tintinm2017@gmail.com, twuufnxlz@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
+syzbot suspects this issue was fixed by commit:
 
-* Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de> wrote:
+commit b432163ebd15a0fb74051949cb61456d6c55ccbd
+Author: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Date:   Thu Jan 30 14:03:41 2025 +0000
 
-> Hi Ingo,
-> 
-> On Sun, May 04, 2025 at 01:26:54PM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/urgent
-> > head:   7aeb1538be5df3efa1d799e5428ac3a0ae802293
-> > commit: 7aeb1538be5df3efa1d799e5428ac3a0ae802293 [3/3] vdso: Reject absolute relocations during build
-> > :::::: branch date: 4 hours ago
-> > :::::: commit date: 4 hours ago
-> > config: riscv-randconfig-001-20250503 (https://download.01.org/0day-ci/archive/20250503/202505030636.3ExDB8O2-lkp@intel.com/config)
-> > compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250503/202505030636.3ExDB8O2-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/r/202505030636.3ExDB8O2-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> > >> llvm-readelf: warning: 'arch/riscv/kernel/vdso/hwprobe.o': bitcode files are not supported
-> > --
-> > >> llvm-readelf: warning: 'arch/riscv/kernel/vdso/hwprobe.o': bitcode files are not supported
-> 
-> Could you drop "vdso: Reject absolute relocations during build" from the "urgent"
-> branch for now? It is not necessary for the actual bugfix.
+    fs/ntfs3: Update inode->i_mapping->a_ops on compression state
 
-Done.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=115c5b68580000
+start commit:   fc033cf25e61 Linux 6.13-rc5
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ba7cde9482d6bb6
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a2376bc62e59406c414
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1654aac4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ff26df980000
 
-> I have an idea on how to fix the issue found by 0day but those 
-> patches can then go through the normal process.
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Thanks!
+#syz fix: fs/ntfs3: Update inode->i_mapping->a_ops on compression state
 
-I'd still prefer to delay the other timers/urgent fixes to be on the 
-safe side and send them in a day or two, but it's up to Thomas.
-
-	Ingo
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
