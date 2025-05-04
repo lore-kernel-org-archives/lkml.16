@@ -1,212 +1,224 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB0C1FDA6A;
-	Sun,  4 May 2025 17:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746380138; cv=pass; b=UXzdp08JDRXC+V7GE9e7M0NM0kSHN6H/V2J0hoDfmHk12EOqeX0GBUndzz61Ylyz+ckVaOW29ZPmCWkZwEfZB1cHpDLSTSnC67uJC8xQVwa+kPxSbutXS4wEJXmfvINtxKwkiSdruTDEcDhGIMBGpVKGb188EDFd1jFo9Yfwr7g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746380138; c=relaxed/simple;
-	bh=STrK0dUvieUlDqNzFLtU0MIwRwcJdX2k7ODG2/WDDpM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jIaLrbY4Rn1dhYKbjJ8iYgN6/5A0exZPIlAsaNbvAFNaAnsfUnWNVB90hy+NrKKVHDPtVBCrs8uM+6YNJZPaqajT4YgRiNf+mucecOKwaouYV01Bum8B2fN6+5fOSqaZah9N/F8+h847571mhPAvmZF6XYTXIFixnzyW+1IbmTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=G6D4A68x; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=voEqFNAG; arc=pass smtp.client-ip=85.215.255.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A3E2163B9
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746380186; cv=none; b=HUo63MZD9RyhBJB+Z1rcgOAFn0+RsXd5wcMTaSQP2CzkFtje9T/H1zX6yaAsoxPYgiDnBYo05tFPJ4NPn7lN6u1hCEBcZJO67tRuR1hGOrqWEgstAPyZ2cXqhWfuid65vtq2I5HBosNDReOXaJioGsRAcpCpo2+v5eYAUdgGOik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746380186; c=relaxed/simple;
+	bh=PKto6XWHPw3qkf98Cr2fpVFSXZupXtz55RQHLXKhy38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g7fbdRmz1zlu3Ch3DNbFrdITpBMkvk9XpYuEbwX2+2GpP8oIW2T4rjPu/wpFdTnyqkD3f+ZbMscnCeat2bJ4FoaETlFAacSIhyWTKvf7dnbQH9/7NxF7d/Vd25rPVXEgEP4s9F76jJIYk9FqIwFgnlrCy5napFjmYC38rzdp5GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ORf2pr9z; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="G6D4A68x";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="voEqFNAG"
-ARC-Seal: i=1; a=rsa-sha256; t=1746379773; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Q6H3ym13n9VQ5z9+qlzO0onLytXqxgXKOxbMLPeoCgUdAPucRweeb4Il5TSzq47uk4
-    rl304SN7Vin0lq36UCk5MYiJKd1R5R8gbIh1CcIHRIxrMOxQYSGTzDzHJq4yLLgar6Vb
-    WzZY3okh0sm+Sq+iHRi8UnR8AfKrd32EnJ8fXY6J5C0+ZoMzCimltOklcna6yI3iqOsG
-    LyL/OWm9T62mz0DzjkioZ30lkzPbOG072cvKx/Y/9IeSor6SrTM5lQDks5dhRy7VHD3x
-    /RZAxb9u1Qqkx1rzhKBm3FdlNf2vXObUkttjLCWX44NsiBVox+mKHEz37i3TFP8QTLBj
-    tKUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379773;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
-    b=GFwXXrxk0F8wb9b3SN3D7MgDWqVQpMB+6mWMfmo9nEcDKBngjD8PymccN1+kKi2rCf
-    vJx+a4sS+oppYxoVK0XIeXj/jdZs2M9e7oqa5thGh+uNRHd4uPkvhIWg6f7MGjxGTHva
-    Ly5zlil60ApFp+imD/Kxkhhkk9/fIRRwAcxvb9TRaBqqkf2d3lbpkzwTzYf1/0ryPm6J
-    WnasVeZjexw4acjtUb/ikVa/gW4qdJv5i5GhFZHxCktYqDF384h96idz8r0E4d1idKcr
-    jkjxB+nsvf8c+bki8t2z1oeiDVlLrdy4DeDFBnB2UHyKSvw3zS3r5ytTEMZdI+FKbFEq
-    oPdQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379773;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
-    b=G6D4A68xi/cgBuTqyUQl1d004B++1Wc6Do5vDDM5oIWjizFK/ZuIx6wt2b/4nXhd7V
-    fIi9Dd1lqvBrbhLMK1Flcct5sBRt8AFuyupHixejzGGVpX/ETTgkC/yWvo6SKIE8ICKu
-    ZzRp/0BtrlZfjKechX4OCI9upHDat4re1bRJ/wNLQhOkEbBp+VowWGPHaOheGU6gpsUc
-    zYc1jlPcBmJkNYecqym6uck4RrGwJw1ZT5HZRUpFNDuOct1DuOHBAXempOnxEa8CBdCb
-    MzxQhHalMnMWemz+gN0KGV9O1pPSJ7ne021fqkF+vEASBgQV2q8wLAFdVZZeAJ7fRc6+
-    Jkzg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746379773;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
-    b=voEqFNAG0YmToV145Ik0f8S39WkQMNKCnf96ORJ1YrgbbS7x0OUiGP0vtUiHQ5h6U9
-    +1+bollSVGgC86h7kyCA==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b35144HTXz9J
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 4 May 2025 19:29:33 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1uBd9f-0004OJ-27;
-	Sun, 04 May 2025 19:29:31 +0200
-Received: (nullmailer pid 243278 invoked by uid 502);
-	Sun, 04 May 2025 17:29:31 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next v7 4/6] net: phy: realtek: Group RTL82* macro definitions
-Date: Sun,  4 May 2025 19:29:14 +0200
-Message-Id: <20250504172916.243185-5-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250504172916.243185-1-michael@fossekall.de>
-References: <20250504172916.243185-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ORf2pr9z"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6feab7c5f96so30915787b3.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1746380183; x=1746984983; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HXXRsHPoH/0YETZ7MLRenRDro5Q1bAftLTE63l4umNc=;
+        b=ORf2pr9z2IlpLqvfRPOJsECvEX72Cb2asbZtYacel0smJqsUf7LVbqb0rOaIJnAEml
+         XLpYDJx2ClultkAYkiZyZM7BzungNJ5o2IH2C4gN6WRDobrzW9ssL1HX3GKVHDBfx5Nk
+         pvl8cSyXY9B+P6/qVhmbQQQDv31Z7OTtXrFnKydyvWqMy8TlCi5mQ9RDE/8NuXWGLwnt
+         9YjUJ3aLjq7GoHAhIfCjySa5mkH6Qo6YcolDJiYhKu1oTkZp1Qe3IJVjXYEWavnhJpT6
+         TS6mdbUfkHtTVIgXQw5W/UwXSAF5glE7IJKYeC1iARhTj3rGQgbqYuBymaT7c7JqF/Rw
+         JxPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746380183; x=1746984983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HXXRsHPoH/0YETZ7MLRenRDro5Q1bAftLTE63l4umNc=;
+        b=DXzsz+XpSP3lyVPjh2ocJk2MULc2tGv34BSSkcqyYFq+2slsksMKN7bnEii3g1YHqJ
+         Ijhm2kIEdDf8Gq8/tMbEZ2rY8KjdDnG4dZK3P9bD0OBOrkDIQpSjDrHBDlvBe+iqOIZ4
+         ldIEE2AIGtWyrr/AfSJJECZn6e4yxMlJbIGytdCZNch0zq4MzPMxEgis7JrimqNw3jV3
+         AxrS3cj5DqwXgzJHZto5wwdN88DXAfFp8DQFyUYifH7/u57mkvMRAew0ZYik5zJwP37Q
+         /J43P69YaMuZHUttehr8OG2S5BAmnCWAzCwEYnNJklHAOwSABMefSqJWkJARSQliNFPZ
+         FSbA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2NjIzMk13SQ49q/kW+7dLNOoQFVO7G9tXQHomIEQvvEwiYsan3OI1bkU56bO3nYlv2pSocJPoHZ8wjJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yydb3yYr2NWuHNvpNbn5SYmzrUOutGNC2keNSNBtjUDWHdxWStZ
+	MnE+K7IPrt2tgNJ9QFMErf9MlAOYp9FrYaSAjpSDTh/MMNjpUIYJ/m1qByLy5Js9TwLGCl2crPg
+	JUfLzry2wJP460YTRvQ4OTJtrVVPskxbSL10m
+X-Gm-Gg: ASbGncuO5CN7Z1EzFKYH7yXIMGMYdigZlvzHeL+vLB8Q3c9ENeUC+B2yEyF8sE9vvhV
+	mfc6a2x/iLrluArrQWSmXlihanNndjV8odvm+BaVj3XdJQaw5g94MfoQ2k7JJM4tj8+mgEpe0SY
+	ORdZ9NSVKaFgMpyzYwcOqn1A==
+X-Google-Smtp-Source: AGHT+IGH4iM2kOBwjguhM2tjRQ5NOwlV2cMNEshm7rCu9worhB26SxpY/yE7dTp6irnVpWrLXhT6tFSernyBUKKlH2U=
+X-Received: by 2002:a05:690c:6385:b0:6ef:69b2:eac with SMTP id
+ 00721157ae682-708eaecbe4cmr56763087b3.4.1746380182785; Sun, 04 May 2025
+ 10:36:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com> <20250502210034.284051-1-kpsingh@kernel.org>
+In-Reply-To: <20250502210034.284051-1-kpsingh@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sun, 4 May 2025 13:36:12 -0400
+X-Gm-Features: ATxdqUG6G28ftr2F4dYbjsrK10lOxkoYxSdmHmsU_Sm_2J3in-8hzdqOgV_xvXY
+Message-ID: <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: KP Singh <kpsingh@kernel.org>
+Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
+	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
+	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
+	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
+	justinstitt@google.com, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
+	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
+	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
+	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
+	xiyou.wangcong@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Group macro definitions by PHY in lexicographic order. Within each PHY
-block, definitions are order by page number and then register number.
+On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrote:
+>
+> > This patch series introduces the Hornet LSM. The goal of Hornet is to p=
+rovide
+> > a signature verification mechanism for eBPF programs.
+> >
+>
+> [...]
+>
+> >
+> > References: [1]
+> > https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@g=
+mail.com/
+> > [2]
+> > https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=3Dc=
+BzdEYbv_kg@mail.gmail.com/
+> >
+> > Change list: - v2 -> v3 - Remove any and all usage of proprietary bpf A=
+PIs
+>
+> BPF APIs are not proprietary, but you cannot implement BPF program signin=
+g
+> for BPF users without aligning with the BPF maintainers and the community=
+.
+> Signed programs are a UAPI and a key part of how developers experience BP=
+F
+> and this is not how we would like signing to be experienced by BPF users.
+>
+> Some more feedback (which should be pretty obvious) but explicitly:
+>
+> * Hacks like if (current->pid =3D=3D 1) return 0; also break your threat =
+model
+>   about root being untrusted.
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
----
- drivers/net/phy/realtek/realtek_main.c | 72 +++++++++++++-------------
- 1 file changed, 37 insertions(+), 35 deletions(-)
+Speaking with Blaise off-list when that change was discussed, I
+believe the intent behind that Kconfig option was simply for
+development/transition purposes, and not for any long term usage.  My
+understanding is that this is why it was a separate build time
+configuration and not something that could be toggled at runtime, e.g.
+sysctl or similar.
 
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index ca6d2903b1c9..e01b13a9b5c3 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -18,6 +18,16 @@
- 
- #include "realtek.h"
- 
-+#define RTL8201F_IER				0x13
-+
-+#define RTL8201F_ISR				0x1e
-+#define RTL8201F_ISR_ANERR			BIT(15)
-+#define RTL8201F_ISR_DUPLEX			BIT(13)
-+#define RTL8201F_ISR_LINK			BIT(11)
-+#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
-+						 RTL8201F_ISR_DUPLEX | \
-+						 RTL8201F_ISR_LINK)
-+
- #define RTL821x_INER				0x12
- #define RTL8211B_INER_INIT			0x6400
- #define RTL8211E_INER_LINK_STATUS		BIT(10)
-@@ -30,9 +40,21 @@
- #define RTL821x_PAGE_SELECT			0x1f
- #define RTL821x_SET_EXT_PAGE			0x07
- 
-+/* RTL8211E extension page 164/0xa4 */
-+#define RTL8211E_RGMII_EXT_PAGE			0xa4
-+#define RTL8211E_RGMII_DELAY			0x1c
-+#define RTL8211E_CTRL_DELAY			BIT(13)
-+#define RTL8211E_TX_DELAY			BIT(12)
-+#define RTL8211E_RX_DELAY			BIT(11)
-+#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
-+
- /* RTL8211F PHY configuration */
- #define RTL8211F_PHYCR_PAGE			0xa43
- #define RTL8211F_PHYCR1				0x18
-+#define RTL8211F_ALDPS_PLL_OFF			BIT(1)
-+#define RTL8211F_ALDPS_ENABLE			BIT(2)
-+#define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
-+
- #define RTL8211F_PHYCR2				0x19
- #define RTL8211F_CLKOUT_EN			BIT(0)
- #define RTL8211F_PHYCR2_PHY_EEE_ENABLE		BIT(5)
-@@ -40,24 +62,6 @@
- #define RTL8211F_INSR_PAGE			0xa43
- #define RTL8211F_INSR				0x1d
- 
--/* RTL8211F WOL interrupt configuration */
--#define RTL8211F_INTBCR_PAGE			0xd40
--#define RTL8211F_INTBCR				0x16
--#define RTL8211F_INTBCR_INTB_PMEB		BIT(5)
--
--/* RTL8211F WOL settings */
--#define RTL8211F_WOL_SETTINGS_PAGE		0xd8a
--#define RTL8211F_WOL_SETTINGS_EVENTS		16
--#define RTL8211F_WOL_EVENT_MAGIC		BIT(12)
--#define RTL8211F_WOL_SETTINGS_STATUS		17
--#define RTL8211F_WOL_STATUS_RESET		(BIT(15) | 0x1fff)
--
--/* RTL8211F Unique phyiscal and multicast address (WOL) */
--#define RTL8211F_PHYSICAL_ADDR_PAGE		0xd8c
--#define RTL8211F_PHYSICAL_ADDR_WORD0		16
--#define RTL8211F_PHYSICAL_ADDR_WORD1		17
--#define RTL8211F_PHYSICAL_ADDR_WORD2		18
--
- /* RTL8211F LED configuration */
- #define RTL8211F_LEDCR_PAGE			0xd04
- #define RTL8211F_LEDCR				0x10
-@@ -78,25 +82,23 @@
- #define RTL8211F_RXCR				0x15
- #define RTL8211F_RX_DELAY			BIT(3)
- 
--#define RTL8211F_ALDPS_PLL_OFF			BIT(1)
--#define RTL8211F_ALDPS_ENABLE			BIT(2)
--#define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
-+/* RTL8211F WOL interrupt configuration */
-+#define RTL8211F_INTBCR_PAGE			0xd40
-+#define RTL8211F_INTBCR				0x16
-+#define RTL8211F_INTBCR_INTB_PMEB		BIT(5)
- 
--#define RTL8211E_RGMII_EXT_PAGE			0xa4
--#define RTL8211E_RGMII_DELAY			0x1c
--#define RTL8211E_CTRL_DELAY			BIT(13)
--#define RTL8211E_TX_DELAY			BIT(12)
--#define RTL8211E_RX_DELAY			BIT(11)
--#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
-+/* RTL8211F WOL settings */
-+#define RTL8211F_WOL_SETTINGS_PAGE		0xd8a
-+#define RTL8211F_WOL_SETTINGS_EVENTS		16
-+#define RTL8211F_WOL_EVENT_MAGIC		BIT(12)
-+#define RTL8211F_WOL_SETTINGS_STATUS		17
-+#define RTL8211F_WOL_STATUS_RESET		(BIT(15) | 0x1fff)
- 
--#define RTL8201F_ISR				0x1e
--#define RTL8201F_ISR_ANERR			BIT(15)
--#define RTL8201F_ISR_DUPLEX			BIT(13)
--#define RTL8201F_ISR_LINK			BIT(11)
--#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
--						 RTL8201F_ISR_DUPLEX | \
--						 RTL8201F_ISR_LINK)
--#define RTL8201F_IER				0x13
-+/* RTL8211F Unique phyiscal and multicast address (WOL) */
-+#define RTL8211F_PHYSICAL_ADDR_PAGE		0xd8c
-+#define RTL8211F_PHYSICAL_ADDR_WORD0		16
-+#define RTL8211F_PHYSICAL_ADDR_WORD1		17
-+#define RTL8211F_PHYSICAL_ADDR_WORD2		18
- 
- #define RTL822X_VND1_SERDES_OPTION			0x697a
- #define RTL822X_VND1_SERDES_OPTION_MODE_MASK		GENMASK(5, 0)
--- 
-2.39.5
+> * You also did not take the feedback into account:
+>
+>    new =3D map->ops->map_lookup_elem(map, &key);
+>
+>   This is not okay without having the BPF maintainers aligned, the same w=
+ay as
+>
+>   https://patchwork.kernel.org/project/netdevbpf/patch/20240629084331.380=
+7368-4-kpsingh@kernel.org/#25928981
+>
+>   was not okay. Let's not have double standards.
 
+From my perspective these two patches are not the same.  Even on a
+quick inspection we notice two significant differences.  First, Hornet
+reads data (BPF maps) passed from userspace to determine if loading
+the associated BPF program should be allowed to load; whereas the
+patch you reference above had the BPF LSM directly modifying the very
+core of the LSM framework state, the LSM hook data.  Secondly, we can
+see multiple cases under net/ where map_lookup_elem() is either called
+or takes things a step further and provides an alternate
+implementation outside of the BPF subsystem, Hornet's use of
+map_lookup_elem() doesn't appear to be a significant shift in how the
+API is used; whereas the patch you reference attempted to do something
+no other LSM has ever been allowed to do as it could jeopardize other
+LSMs.  However, let us not forget perhaps the biggest difference
+between Hornet and patchset you mentioned; the LSM community worked
+with you and ultimately merged your static call patchset, I even had
+to argue *on*your*behalf* against Tetsuo Handa to get your patchset
+into Linus' tree.
+
+I'm sorry you are upset that a portion of your original design for the
+static call patchset didn't make it into Linus' tree, but ultimately
+the vast majority of your original design *did* make it into Linus
+tree, and the process to get there involved the LSM community working
+with you in good faith, including arguing along side of you to support
+your patchset against a dissenting LSM.
+
+This might also be a good time to remind others who don't follow LSM
+development of a couple other things that we've done recently in LSM
+land to make things easier, or better, for BPF and/or the BPF LSM.
+Perhaps the most important was the work to resolve a number of issues
+with the LSM hook default values, solving some immediate issues and
+preventing similar problems from occurring in the future; this was a
+significant improvement and helped pave the way for greater
+flexibility around where the BPF LSM could be inserted into the LSM
+ordering.  There was also the work around inspecting and normalizing a
+number of LSM hooks to make it easier for the BPF verifier to verify
+BPF LSM callbacks; granted we were not able to normalize every single
+LSM hook, but we did improve on a number of them and the BPF verifier
+was able to take advantage of those improvements.
+
+From what I've seen in Blaise's efforts to implement BPF signature
+validation in the upstream kernel he has been working in good faith
+and has been trying to work with the greater BPF community at each
+step along the way.  He attempted to learn from previously rejected
+attempts with his first patchset, however, that too was rejected, but
+with feedback on how he might proceed.  Blaise took that feedback and
+implemented Hornet, traveling to LSFMMBPF to present his idea to the
+BPF community, as well as the usual mailing list postings.  When there
+was feedback that certain APIs would not be permitted, despite being
+EXPORT_SYMBOL'd, Blaise made some adjustments and came back to the
+lists with an updated version.  You are obviously free to object to
+portions of Hornet, but I don't believe you can claim Blaise isn't
+trying to work with the BPF community on this effort.
+
+> So for this approach, it's a:
+>
+> Nacked-by: KP Singh <kpsingh@kernel.org>
+
+Noted.
+
+> Now if you really care about the use-case and want to work with the maint=
+ainers
+> and implement signing for the community, here's how we think it should be=
+ done:
+>
+> * The core signing logic and the tooling stays in BPF, something that the=
+ users
+>   are already using. No new tooling.
+
+I think we need a more detailed explanation of this approach on-list.
+There has been a lot of vague guidance on BPF signature validation
+from the BPF community which I believe has partly led us into the
+situation we are in now.  If you are going to require yet another
+approach, I think we all need to see a few paragraphs on-list
+outlining the basic design.
+
+> * The policy decision on the effect of signing can be built into various
+>   existing LSMs. I don't think we need a new LSM for it.
+> * A simple UAPI (emphasis on UAPI!) change to union bpf_attr in uapi/bpf.=
+h in
+>   the BPF_PROG_LOAD command:
+>
+> __aligned_u64 signature;
+> __u32 signature_size;
+
+--=20
+paul-moore.com
