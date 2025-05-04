@@ -1,163 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4123F156236;
-	Sun,  4 May 2025 14:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07D312A177
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 14:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746369981; cv=none; b=uoj4wLaoQykRMOu4V15J4cSAQrcUTc+KuK/5obqaTD+indSqKQoeVx704T5LugvJ4TgzcfjytMqGk47+v8DH5m6XYd5ilTwgtmcv+WSyGWIYJ2JnaCxhafLoy53nc0HtEbdG4cYQdwFidPtluCso9r4hL/c4q2aD48yFRfVSWTE=
+	t=1746370127; cv=none; b=RNg5Hu9Gw+HbLOD2yHoewb4cTFPB2RDYhaPbpyRXsXu7BMDAWZdr2mR6J2YfjnmhEdtrHqjXgxVz7WjCScD2k340GqIsKfALbf5DkumtpkeB0wvjufRuPbgYmsbkvACgyIqWXwFm3GS+CqDtxnX4ju/p32Vr9ufs8jLTNXjvBwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746369981; c=relaxed/simple;
-	bh=jZBlBNeG0/mHQ+QgGAH5vsgIrTir1T/Bnr1xuJJPAIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VyDg+RiDnwP47P8u2elhdAYmfiHSpa+Vjndt7IwCOsSLyFxZNA7ah1K1CjSacza7Qxim4XDet/qjhwt0gtLXVeuIKoKp8huVL2YQx88v9yb1ya4tKEtikL1+5H/XLZwKeHRJsRNfXLWoJv9sb5PIJrBneBcwgSOe7iC44gBcjoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1AVPPOf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746370127; c=relaxed/simple;
+	bh=MS/B8ZUUNnsg7IJuWoWCIHTMuL7RXXREXTteuwgvw64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K76HBBx7qM7JxWBzC8cqQ2zEtZXMjXLff3/CA+c2Ak85Elfa3TRoBfzpq5TcrXXCT1knU3FegtADAXDnjrUjcvdDuArj9JBrV/AoRqclPhtrcVrkf4sJh1DMTOD+sOzghR1lvd1wNyBw6mt6D1n89dbg46uCw1uDfppYulDiBoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ku6FPO7R; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1AVPPOf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2750C4AF09;
-	Sun,  4 May 2025 14:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746369980;
-	bh=jZBlBNeG0/mHQ+QgGAH5vsgIrTir1T/Bnr1xuJJPAIU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=G1AVPPOfUWeEgJ5G9RoIKMJoq6FbGTrMhZlqumhlPOsEZXEcQE5J6+tEXdWK6+HOR
-	 Hth7N0hEth9qBuSIfp2Inw0KAgvtPUO8Racdh6GmGReMXtWoUy+gAjJQbN/AjywR38
-	 Z+cc84vf6/T9u3ASfej5I9Zz/ZGA+MLgS6X/Wr9DfJcuwXDb8K7hFwShEhfZfdFozt
-	 SuE4+z0K/DDUhycTi3tEZlDmw11HogQQhPTjBJSbfhUlUiouYFEr4Eb03aFLG4fgAv
-	 eGGq/n5+7BzMtl8P8O+uyH0O9Qx/llf4W3ss9VwuTlPNyO7hE3IxiJ2HKBbz2hm+X7
-	 XuySAxSCcRj9A==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-310447fe59aso37801871fa.0;
-        Sun, 04 May 2025 07:46:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/+UXxeAr7ZNyM4oY6fKmoh/IG6cw6T9WRnp6UDWqITQwWJhipATgyphzsLklBxi9VS14FSCJBCck=@vger.kernel.org, AJvYcCXL6ud5d+94szIZuKpU3eGYC/jwGDRvT5g6GUfbU1nPZ7GBnSDva0N+f/31/JVsjK9n7jsckEMjTFux0wYI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu7fvPxI+Sg9BoBcCLeAUDFQ0UT7xuS540QG26lXG5C+JgX7Qx
-	vaW//cSFfnTOuzuAPMwNSUZPmUNbKO65tMUtvqRvVkEZVOTKuKguyM6JpQgQ/3acTJcvhSrC5XD
-	fdVCNB996o35pwj/7w/wu5X42N5M=
-X-Google-Smtp-Source: AGHT+IFQ0GNGxYcTERl0iNqFl//nU6LLWvE0n+blf0OXml1HSUcgxBuJ1Mtk35jEnItW8z1qB6bvGZA/uQcmxvbtaUk=
-X-Received: by 2002:a2e:a99d:0:b0:309:17:750d with SMTP id 38308e7fff4ca-32351f2329amr12382271fa.27.1746369978984;
- Sun, 04 May 2025 07:46:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ku6FPO7R"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544AX2Mf028978
+	for <linux-kernel@vger.kernel.org>; Sun, 4 May 2025 14:48:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Nz9orLHhAFXVJJfjTniAzAzW
+	Ii/GRqSx8BItJUY++IQ=; b=Ku6FPO7RFhyfiyxPf8xse/PunAF+dhK3Bw7BU2qH
+	E9U2DF7x2rHuXvwiOVu151e3cym1E6o463zLJmpioMI0m8u3bIzPus7AIutDKPFm
+	hRC4h/OELUts5plSb+jVK/kkM5DB6omkA/n3KKXLMJINo8wbN5Regc10CLiuT7Y8
+	NSwyuOrs0HskYS3huRDJ5U2VMrw4dMvSWiyw6ZofQps9pPs3zfbBPXTdmBlxkblJ
+	C/OpSyiRRPLuw2z+oJLM47xfsj38Km7fOPzemt1y0Z1vrWOYnean7Sexv0FZcOht
+	lq22PTCugNf+/YaDayl9V2af6jyeLV5XQ+q6yLRRFGYFLQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dd3n1x7v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 14:48:37 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5f876bfe0so637484385a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 07:48:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746370117; x=1746974917;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nz9orLHhAFXVJJfjTniAzAzWIi/GRqSx8BItJUY++IQ=;
+        b=H88mao8x4x+88hIGBKE3VC3b7EFMAGOq9WhOoxqBfGAClPMtqHUYF6VQB7s5Clv0Hm
+         Mg1GDGm5AQmFZtIdqjRveMVf8Ci3j6+24R5b+iE3tIjrKTdpjmPM77XJ+yK0VnfV0qBC
+         WbLm1LRpAetdMh17zCqxfk1EEVSqjZZpRdhwQcS4UsVgDgcpUReJs8KE0tHbLM+sk+nb
+         OLy+/iNyIOseVSm04+FJrVvQssFcKWaABFvw6GPVWNopEyVaijti797cxeTBVw/4SOGb
+         nbSMpZZVU4R2J/s9VSJdDJlrI4LW/r6sMLSNIj/Wnux8kNbTwurcw1V7NCc2uYby11Wm
+         bkHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVtix7taK+3p9XbR1lTHe1n0C6JJQesfTMsub0EzW1b0dHICkv5Vn1HR4N/GeGyWzwT73kCSZwMzhHBRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpECf65/0F8xtzrqFraeXOh7wh3Xv0Jnw/PUZu4/8kLQ+E8kMG
+	2AhpWd5SzAXu+WJi0Uef+v/Nfmb/YOQljcHqL+mrQWua0HxpyLyw6e+f8ycme/mm6Yh8ICMVe6C
+	pmw9v+L3pemi3CloqDjFw3ZG6m1DsNw0qaX7xg5AL5XZUoFcMSrq6FQrbC55on0Y=
+X-Gm-Gg: ASbGncvDXelt+Dn7PAmaIW2ufxa7cX1WB4EiVluvnpMrl1YU5DlLr2CsIQOpKfMWuow
+	iVDNgGStFM753VXSC0idCbFVdVtX4fuRGQhPiS2pFJREL99dhU6OFLEjRJfBqNS8lCt84wCEfjI
+	LJHikD/AkmPhjnZVPJsIUGgRIKu2gPGqrJdk46lqOuwX/BRj9m9ofwGSRLNKXWah4YtgTSXFLEE
+	uGO59V74RLe5LLO5E1J8/B07GWF/z8kcAqEliaLQE142fzBcRDbPEdk1bafWhvC+SINGtGiK1qo
+	2EaxV90VYKRDovwoYZlttuvYHHjlRs/vzt0TEv6rXa9WpuQFQi8tb5Zo9l7Urzg6205TIgWLw3w
+	=
+X-Received: by 2002:a05:620a:2b91:b0:7c5:5edb:f4d5 with SMTP id af79cd13be357-7cadfd6deacmr738566685a.2.1746370116868;
+        Sun, 04 May 2025 07:48:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3Dgpdh6IEqM0qU7DKjeXny5wWp5zIHm1UOfoTiG8Z9nNyeCEmHvi/8i4uuwqAFPEvneWPzQ==
+X-Received: by 2002:a05:620a:2b91:b0:7c5:5edb:f4d5 with SMTP id af79cd13be357-7cadfd6deacmr738563885a.2.1746370116555;
+        Sun, 04 May 2025 07:48:36 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202b18e4aesm13074681fa.113.2025.05.04.07.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 07:48:35 -0700 (PDT)
+Date: Sun, 4 May 2025 17:48:33 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Alexey Minnekhanov <alexeymin@postmarketos.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>, Dang Huynh <danct12@riseup.net>,
+        Alexey Minnekhanov <alexey.min@gmail.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm630: Add modem metadata mem
+Message-ID: <lapjaf4edsuvnw22khjiuzhtiwrxfyiijcwj6piw5n5yby5ik3@r2jvfgvx2gqt>
+References: <20250504115120.1432282-1-alexeymin@postmarketos.org>
+ <20250504115120.1432282-2-alexeymin@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com>
- <20250504095230.2932860-28-ardb+git@google.com> <aBdwwR52hI37bW9a@gmail.com>
-In-Reply-To: <aBdwwR52hI37bW9a@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 4 May 2025 16:46:07 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFuJRsdWxL70S9Hisgye0dci7KOxrSzcLGnFFuUvjk2Mg@mail.gmail.com>
-X-Gm-Features: ATxdqUGuABP17IzeYnONKtKuRFk9-f2xoFDLsWd2x74DapltIa_EZiNF28qLl38
-Message-ID: <CAMj1kXFuJRsdWxL70S9Hisgye0dci7KOxrSzcLGnFFuUvjk2Mg@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 03/23] x86/boot: Drop global variables keeping
- track of LA57 state
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250504115120.1432282-2-alexeymin@postmarketos.org>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDEzNyBTYWx0ZWRfX2zZ9QbfIS0O2
+ 8bNKY3UuFg6ar6a5xgVVPk+771+nbPatPRxiSDoZr9eBu7IhmYq+ouEbAIF4i+cmnF4XjlpDjIq
+ a4LFp4y7VN8vAohc/PARa16KqmFuT8G1HSC59j1uq/Mxh5iUBrndEyHLOG/Srzxbz/r+dkn8K2W
+ y/VGewAFTzPTIl/A2Iqk6azPk4bLyhnBH/+qJ9jL8wMfkFHs4Q4WzeWsiiL9UjHO0VsNYs6eXH6
+ hDsSo0K2FdvoyIZ32GlC/uY+vzfJL/SbdLahZjyAC9rEyWxdoeJJvhD2Jr3p4LXYwAGTsvv/PlS
+ QeiCduEeoomO1gCy518godNQk8RQX+tysHJsjSM7Be1qT0mQL4GJH9u46pIW4d/JKWOGu1CiND5
+ pSnYvz8w8CajrcrTBNQ4uUHTh40njRo2bPTI/2+IVtiAhKrw+bq7ZfqtL/sRQIGPoRucA0ah
+X-Proofpoint-GUID: _tDLX6DqJQ4NUWUHYlF1UBr5KjHMuAyO
+X-Proofpoint-ORIG-GUID: _tDLX6DqJQ4NUWUHYlF1UBr5KjHMuAyO
+X-Authority-Analysis: v=2.4 cv=UNDdHDfy c=1 sm=1 tr=0 ts=68177e45 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=Gbw9aFdXAAAA:8 a=fVfY8HrZJKPJkriw-6cA:9
+ a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=9vIz8raoGPyDa4jBFAYH:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-04_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=673 adultscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505040137
 
-On Sun, 4 May 2025 at 15:51, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ard Biesheuvel <ardb+git@google.com> wrote:
->
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > On x86_64, the core kernel is entered in long mode, which implies that
-> > paging is enabled. This means that the CR4.LA57 control bit is
-> > guaranteed to be in sync with the number of paging levels used by the
-> > kernel, and there is no need to store this in a variable.
-> >
-> > There is also no need to use variables for storing the calculations of
-> > pgdir_shift and ptrs_per_p4d, as they are easily determined on the fly.
-> >
-> > This removes the need for two different sources of truth (i.e., early
-> > and late) for determining whether 5-level paging is in use: CR4.LA57
-> > always reflects the actual state, and never changes from the point of
-> > view of the 64-bit core kernel. It also removes the need for exposing
-> > the associated variables to the startup code. The only potential concern
-> > is the cost of CR4 accesses, which can be mitigated using alternatives
-> > patching based on feature detection.
-> >
-> > Note that even the decompressor does not manipulate any page tables
-> > before updating CR4.LA57, so it can also avoid the associated global
-> > variables entirely. However, as it does not implement alternatives
-> > patching, the associated ELF sections need to be discarded.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/boot/compressed/misc.h         |  4 --
-> >  arch/x86/boot/compressed/pgtable_64.c   | 12 ------
-> >  arch/x86/boot/compressed/vmlinux.lds.S  |  1 +
-> >  arch/x86/boot/startup/map_kernel.c      | 12 +-----
-> >  arch/x86/boot/startup/sme.c             |  9 ----
-> >  arch/x86/include/asm/pgtable_64_types.h | 43 ++++++++++----------
-> >  arch/x86/kernel/cpu/common.c            |  2 -
-> >  arch/x86/kernel/head64.c                | 11 -----
-> >  arch/x86/mm/kasan_init_64.c             |  3 --
-> >  9 files changed, 24 insertions(+), 73 deletions(-)
->
-> So this patch breaks the build & creates header dependency hell on
-> x86-64 allnoconfig:
->
+On Sun, May 04, 2025 at 02:51:18PM +0300, Alexey Minnekhanov wrote:
+> Similarly to MSM8998, add and use modem metadata memory region.
+> This does not seemingly affect device functionality. But it fixes
+> DTBs check warning:
+> 
+>  remoteproc@4080000: memory-region: [[45], [46]] is too short
 
-Ugh
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-...
-> Plus I'm not sure I'm happy about this kind of complexity getting
-> embedded deep within low level MM primitives:
->
->   static __always_inline __pure bool pgtable_l5_enabled(void)
->   {
->         unsigned long r;
->         bool ret;
->
->         if (!IS_ENABLED(CONFIG_X86_5LEVEL))
->                 return false;
->
->         asm(ALTERNATIVE_TERNARY(
->                  "movq %%cr4, %[reg] \n\t btl %[la57], %k[reg]" CC_SET(c),
->                  %P[feat], "stc", "clc")
->                  : [reg] "=&r" (r), CC_OUT(c) (ret)
->                  : [feat] "i"  (X86_FEATURE_LA57),
->                    [la57] "i"  (X86_CR4_LA57_BIT)
->                  : "cc");
->
->         return ret;
->   }
->
-...
->
-> Inlined approximately a gazillion times. (449 times on x86 defconfig.
-> Yes, I just counted it.)
->
-> And it's not even worth it, as it generates horrendous code:
->
->    154:   0f 20 e0                mov    %cr4,%rax
->    157:   0f ba e0 0c             bt     $0xc,%eax
->
-> ... while CR4 access might be faster these days, it's certainly not as
-> fast as simple percpu access. Plus it clobbers a register (RAX in the
-> example above), which is unnecessary for a flag test.
->
+> 
+> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm630.dtsi | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> index 2d3820536ddf4..8b1a45a4e56ed 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> @@ -509,6 +509,12 @@ zap_shader_region: gpu@fed00000 {
+>  			reg = <0x0 0xfed00000 0x0 0xa00000>;
+>  			no-map;
+>  		};
+> +
+> +		mdata_mem: mpss-metadata {
+> +			alloc-ranges = <0x0 0xa0000000 0x0 0x20000000>;
+> +			size = <0x0 0x4000>;
+> +			no-map;
+> +		};
+>  	};
+>  
+>  	smem: smem {
+> @@ -1056,7 +1062,7 @@ remoteproc_mss: remoteproc@4080000 {
+>  					<&rpmpd SDM660_VDDMX>;
+>  			power-domain-names = "cx", "mx";
+>  
+> -			memory-region = <&mba_region>, <&mpss_region>;
+> +			memory-region = <&mba_region>, <&mpss_region>, <&mdata_mem>;
+>  
+>  			status = "disabled";
+>  
+> -- 
+> 2.49.0
+> 
 
-It's an alternative, so this will be patched into stc or clc. But it
-will still clobber a register.
-
-> Cannot pgtable_l5_enabled() be a single, simple percpu flag or so?
->
-
-We can just drop this patch, and I'll work around it by adding another
-couple of SYM_PIC_ALIAS()es for these variables.
-
-> And yes, this creates another layer for these values - but thus
-> decouples low level MM from detection & implementation complexities,
-> which is a plus ...
->
-
-If you prefer to retain the early vs late distinction, where the late
-one is more efficient, we could replace the early variant with the CR4
-access. But frankly, if we go down that road, I'd prefer to just share
-these early variables with the startup code.
+-- 
+With best wishes
+Dmitry
