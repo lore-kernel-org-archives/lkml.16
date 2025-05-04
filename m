@@ -1,115 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED7C13DDBD;
-	Sun,  4 May 2025 08:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E1841C7F;
+	Sun,  4 May 2025 08:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746348524; cv=none; b=m4lXPzA8xe3uNYfupvr7vcu1YCZCMC/QV2nNTpnlRQHjdrXuKdOCLQMCQCPea1gbND/1xrLn3NykcxLkxo3xYRksuV+ir1SmB4YZ3Lno1om7AD4Qtxb8/ZTgnSbEznMwBABsn3lCmzZX27vu8rEwKs7brR6ytp0NJHngsApXrvQ=
+	t=1746348867; cv=none; b=LKrlKr3WFRiaB3hVFvagq5n3YJblLvMr6PbN02QVkkxhtvCnH2Rp6VvKPzCbrf1xtQQNLl20GBPn1cQpS3u1QqbaHypQiPBIgV6pjP6DAXc9ETWiZc58+32htd3A1rKV84iK+iaZsiI9jKa3rszttHJHU9BOKsibrr/onNX/UUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746348524; c=relaxed/simple;
-	bh=JZnWQGowh57Pzg9HavZUu3m/YDhZr6puyroHAF+qYsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FY60gKbpC8hV7UlFoMVdH9AKW36FSJl9e0FrjBUEojb2Iu2Va/cH6CT9NiJkYepjI3CGlW9wT62uGSX7VX+xsniOSElpjITYN+nB6kEN1Fvt5sbNxQwoeXgYgVE8LVz603dZmle0jvNug7YtBcAb3dAPu37OYL7R/l6WOQkFETo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOePsVyX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746348867; c=relaxed/simple;
+	bh=FaPHSfpeS/VKfTQ96ytnifgQJRelrXudnTNIfRrmk10=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=lKpDWf3Xwn8vhN2fqH/i0cEnrF1xgyTOGc0kT9Zq4WA+R4LxDAAbakemcOmBCJER0Sqqi2QFFI2lBvVT+W+b22P+z0dmePallL/kpSKNpAjNrI5ytf0z41aVO5yM3kLxYzH7/gCLOlPpzYqTmH32YgfdS+eBXTEJK81O/L0FPyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AFbBFJAa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xDCg5uSI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOePsVyX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2508BC4CEE7;
-	Sun,  4 May 2025 08:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746348524;
-	bh=JZnWQGowh57Pzg9HavZUu3m/YDhZr6puyroHAF+qYsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MOePsVyXlzuLdbd0rGpHeNWxjX5ri0AsdfTvz+uGRQe+ADVhQlWXhxrb67vk1JwNW
-	 N0HNWV3vB4wodd76143nzT192m4D1VtOMgiQIV+RvQ1IFFQ1yM3/GDSU9oRH1QC4W1
-	 yw9DKbvbMS24yFGX83ee5LW0TZTP3KMQprvMoMztxznaASGSS63kzyet+cv8bd7mfn
-	 EYEhj035ttXiI2eNZRv6//ppRYbMXIav40ue+UXzdBVBGDWg8TFDMGdk0UWZIhaD0l
-	 6T2+3Aw78EmXCIhkm2RmRg4BVN6t6vjBAol4sXdCMjZ/zCUZKiWHgFr3HB8rzLYjUf
-	 2OdjieecBEQVg==
-Received: by pali.im (Postfix)
-	id 02937731; Sun,  4 May 2025 10:48:40 +0200 (CEST)
-Date: Sun, 4 May 2025 10:48:40 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] nfs: Fix mounting NFS3 AUTH_NULL exports
-Message-ID: <20250504084840.4n47y4zhqjqsk6bu@pali>
-References: <20240912130220.17032-1-pali@kernel.org>
- <20241222164018.id3ul7ucaxsrdkyq@pali>
- <20250418180313.h4jxi2rfxsmroumf@pali>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AFbBFJAa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xDCg5uSI"
+Date: Sun, 04 May 2025 08:54:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746348863;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=76mCQ80O10NdR7Wus0DBp50aRGpQKOSRwjtzOp2n3UI=;
+	b=AFbBFJAaQkSgnGlNJlleAcEW200UtSzoc7erAoErsfzUIFrNKXu4YsApVHB9C+U20/i9bF
+	PP3+1JHlx0uyvTUtSZWwiDhrf3jJnEyyunMWv9UJD2maYqa8CV0ccERlOvVtWj99lw/YBV
+	Il7rQw5L5DosOmD9PDu4dFBbSWDRjyhkex84nw2eM4URE4ZdFDSuMQc0+TgFZLBw5rP66h
+	DvmIlWpF6gcDLOyLb9qnl3AGu8wdvH9Nvalfqjg/9wFW+Y2nQygNBP9WFFF/XVNZiMmCY+
+	X2gcVuDjB+ymNpj4mITg+eB8FDo67fkbvRAC/mQ2To/pbR5jQv6WQlVDWns77A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746348863;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=76mCQ80O10NdR7Wus0DBp50aRGpQKOSRwjtzOp2n3UI=;
+	b=xDCg5uSIQRs85T+tQCed491ayAwL8ELtYpCijpwQZa5sujn29qo424Qd7C15xTPyzMB2Xz
+	BUmWNwqOhSS15dBA==
+From: "tip-bot2 for Oleg Nesterov" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Shift fpregs_assert_state_consistent() from
+ arch_exit_work() to its caller
+Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+ "Chang S . Bae" <chang.seok.bae@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@amacapital.net>, Brian Gerst <brgerst@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250503143902.GA9012@redhat.com>
+References: <20250503143902.GA9012@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250418180313.h4jxi2rfxsmroumf@pali>
-User-Agent: NeoMutt/20180716
+Message-ID: <174634885768.22196.8535762687259029868.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-PING?
+The following commit has been merged into the x86/fpu branch of tip:
 
-On Friday 18 April 2025 20:03:13 Pali Rohár wrote:
-> PING?
-> 
-> On Sunday 22 December 2024 17:40:18 Pali Rohár wrote:
-> > PING? If there is no objection, could you include series into -next?
-> > 
-> > On Thursday 12 September 2024 15:02:15 Pali Rohár wrote:
-> > > Linux NFS3 kernel client currently has broken support for NFS3
-> > > AUTH_NULL-only exports and also broken mount option -o sec=none
-> > > (which explicitly specifies that mount should use AUTH_NULL).
-> > > 
-> > > For AUTH_NULL-only server exports, Linux NFS3 kernel client mounts such
-> > > export with AUTH_UNIX authentication which results in unusable mount
-> > > point (any operation on it fails with error because server rejects
-> > > AUTH_UNIX authentication).
-> > > 
-> > > Half of the problem is with MNTv3 servers, as some of them (e.g. Linux
-> > > one) never announce AUTH_NULL authentication for any export. Linux MNTv3
-> > > server does not announce it even when the export has the only AUTH_NULL
-> > > auth method allowed, instead it announce AUTH_UNIX (even when AUTH_UNIX
-> > > is disabled for that export in Linux NFS3 knfsd server). So MNTv3 server
-> > > for AUTH_NONE-only exports instruct Linux NFS3 kernel client to use
-> > > AUTH_UNIX and then NFS3 server refuse access to files with AUTH_UNIX.
-> > > 
-> > > Main problem on the client side is that mount option -o sec=none for
-> > > NFS3 client is not processed and Linux NFS kernel client always skips
-> > > AUTH_NULL (even when server announce it, and also even when user
-> > > specifies -o sec=none on mount command line).
-> > > 
-> > > This patch series address these issues in NFS3 client code.
-> > > 
-> > > Add a workaround for buggy MNTv3 servers which do not announce AUTH_NULL,
-> > > by trying AUTH_NULL authentication as an absolutely last chance when
-> > > everything else fails. And honors user choice of AUTH_NULL if user
-> > > explicitly specified -o sec=none as mount option.
-> > > 
-> > > AUTH_NULL authentication is useful for read-only exports, including
-> > > public exports. As authentication for these types of exports do not have
-> > > to be required.
-> > > 
-> > > Patch series was tested with AUTH_NULL-only, AUTH_UNIX-only and combined
-> > > AUTH_NULL+AUTH_UNIX exports from Linux knfsd NFS3 server + default Linux
-> > > MNTv3 userspace server. And also tested with exports from modified MNTv3
-> > > server to properly return AUTH_NULL support in response list.
-> > > 
-> > > Patch series is based on the latest upstream tag v6.11-rc7.
-> > > 
-> > > Pali Rohár (5):
-> > >   nfs: Fix support for NFS3 mount with -o sec=none from Linux MNTv3
-> > >     server
-> > >   nfs: Propagate AUTH_NULL/AUTH_UNIX PATHCONF NFS3ERR_ACCESS failures
-> > >   nfs: Try to use AUTH_NULL for NFS3 mount when no -o sec was given
-> > >   nfs: Fix -o sec=none output in /proc/mounts
-> > >   nfs: Remove duplicate debug message 'using auth flavor'
-> > > 
-> > >  fs/nfs/client.c | 14 ++++++++++-
-> > >  fs/nfs/super.c  | 64 +++++++++++++++++++++++++++++++++++++++----------
-> > >  2 files changed, 65 insertions(+), 13 deletions(-)
-> > > 
-> > > -- 
-> > > 2.20.1
-> > > 
+Commit-ID:     46c158e3ad0fc633007802c338c409c188ec0a12
+Gitweb:        https://git.kernel.org/tip/46c158e3ad0fc633007802c338c409c188ec0a12
+Author:        Oleg Nesterov <oleg@redhat.com>
+AuthorDate:    Sat, 03 May 2025 16:39:02 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 04 May 2025 10:29:25 +02:00
+
+x86/fpu: Shift fpregs_assert_state_consistent() from arch_exit_work() to its caller
+
+If CONFIG_X86_DEBUG_FPU=Y, arch_exit_to_user_mode_prepare() calls
+arch_exit_work() even if ti_work == 0. There only reason is that we
+want to call fpregs_assert_state_consistent() if TIF_NEED_FPU_LOAD
+is not set.
+
+This looks confusing. arch_exit_to_user_mode_prepare() can just call
+fpregs_assert_state_consistent() unconditionally, it depends on
+CONFIG_X86_DEBUG_FPU and checks TIF_NEED_FPU_LOAD itself.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Chang S . Bae <chang.seok.bae@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250503143902.GA9012@redhat.com
+---
+ arch/x86/include/asm/entry-common.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
+index 77d2055..d535a97 100644
+--- a/arch/x86/include/asm/entry-common.h
++++ b/arch/x86/include/asm/entry-common.h
+@@ -53,7 +53,6 @@ static inline void arch_exit_work(unsigned long ti_work)
+ 	if (unlikely(ti_work & _TIF_IO_BITMAP))
+ 		tss_update_io_bitmap();
+ 
+-	fpregs_assert_state_consistent();
+ 	if (unlikely(ti_work & _TIF_NEED_FPU_LOAD))
+ 		switch_fpu_return();
+ }
+@@ -61,7 +60,9 @@ static inline void arch_exit_work(unsigned long ti_work)
+ static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
+ 						  unsigned long ti_work)
+ {
+-	if (IS_ENABLED(CONFIG_X86_DEBUG_FPU) || unlikely(ti_work))
++	fpregs_assert_state_consistent();
++
++	if (unlikely(ti_work))
+ 		arch_exit_work(ti_work);
+ 
+ 	fred_update_rsp0();
