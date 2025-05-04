@@ -1,118 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732B5219FC;
-	Sun,  4 May 2025 17:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA48219FC
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746381159; cv=none; b=SWYTePw7VdYOaynkO2Y03ILnB2PbcMRWSUGbd1xmVdw6X7dWGYfmOQuN/Tc+90zln8T8PmfQtJ/aswrScKK2b96GXkaDTraX2+DGKdV+qJJlaVy0a0gyt3YN+lIN0nP2B5Gui4VABveKRU6I5oOjOW/ovbe5Aef8sP7+alNhLT0=
+	t=1746381208; cv=none; b=sCLeiSRAoXrxrlwKq2NdYMBQlejoW9kbzU84r5GG0ICnyYUWYO1hxl+rNN9zXLcvkU5Nw7BqfwnDEXQS3L80JL5GilrFBDvD0S1CvkpnbRkc0ir9cmylmfALsoaZckQvOr/AfsZpkcbrN7LOwdxA2Gzu9/h71B2iLm4mCi7+nBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746381159; c=relaxed/simple;
-	bh=KVbMyxqiuLtPF9OWd3fBw1AXSmKBz1vO2GNBZ8w6BH8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AR9Zy4YrGZ0W8WOe968szLYUf5YkWT2XtSHwFWdhyPGGfWEuQ11J+sW49e5uwMXCDhdcQ3S7O4bUFYrn+UvZDhWX90MvyUZpdQPKNEVEk7S/RFyMjom8OfqbrqFBGxUKFeyT49p/Sn70tT18DpCvpTEi4QTSez9bENncSVEfFMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rM8JCvwX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rM8JCvwX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABCEC4CEE7;
-	Sun,  4 May 2025 17:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746381158;
-	bh=KVbMyxqiuLtPF9OWd3fBw1AXSmKBz1vO2GNBZ8w6BH8=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=rM8JCvwXFsxj9Gcml1aYare2SjWpOAvkGf6611aEx4NodS49Z64DOHXA1JbZLfXT6
-	 8Z+pE6iRh8PhGkiizmrZz6emI6wk5tMQlLP1t8J+hWZ46Z3xDmSwJG30liXx78yvbX
-	 Q7Pfpj2XY92rCx0YhdhdOo8EzVscLogRw83HwNn8EV8qPGappLlG4/VsztKOWV3aec
-	 EEMo4mtfUIsxqq1Hv9Ar/zFSuPyNdv+Dh1sj0fW/7mLTHQAU483t91BadnhGYvjTBY
-	 0lSgxYRI5a5lheDh/aHdTI70F+XurSzJiZgQPfAB0QZuK2a6q951DA/mqaYWewaSsW
-	 KzAkQXFjfA5oA==
-Message-ID: <c2ace0e9-6565-44c3-84eb-555707f84509@kernel.org>
-Date: Sun, 4 May 2025 19:52:34 +0200
+	s=arc-20240116; t=1746381208; c=relaxed/simple;
+	bh=r64Mac+FeayfMBUVl/9NlvickW/czh4/eidkYab5Kzs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=M2VCfExY2+AASR7kzPkGeZOb0zgLt++BtxqTfSlm9ByBiM/iWUvnKwRxijE95ftBZoV08TH28oZzj9kyJpSxjGJVvPfS+PIjkKW0CawShUkmUXorsuJlkQSlHyhBRu/eCqsC06MBS79hrPpRejBr0u7wkrF+MFTpuPLKmKtrTBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d43541a706so31789035ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:53:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746381205; x=1746986005;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tt95TFb3UPk7KVN0ENKNrXAObhmLVTcX1Pr2I8L7yG4=;
+        b=rw1o2iEZ6W6OAszwcdjU+nzgQsOQXEXRiy4GQcYtkK0yyRIg55vH7BTuXnHFLjpgGZ
+         kMtwZ463H/l4gqdL4P7iRwjkHo6yTfcszQlGbrHGVFvPzD+t5ISqoqEAtCZofLmwR0o0
+         1dV97ht8AdaHzBMfb2DIh8fmTVUO9S+Y/FvIxaodkEmbsV2zbOdnPZbeg81RqjvIFdaF
+         Kb37A54yWtLg65ME38AwPDQD6Jm0SnH7I3HOh5nJeG/gHsCs9ePJkvctLKjHeUkbz3oD
+         BLDI2+PgGw08T8fz4TBk8/VLo5ccdWMNvds3Bs+jdrNi9qs4A1zbrExzTqTYwmQo87Fj
+         kaYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4zC6XvMWr56Qtpz1ag0Ot0gg97nmh42MMLp4ui61tvyZCvq7PTl92vX7nBRKS+tR5C/ocVPqBjcaWFo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEHw0c9bn9XXaIUr67padBKlOIQwUtvKGDslGWTwJD2c2RAFKV
+	V+ZHHSq/WeLHiqZzG3Qd6IbIv9VkDER0KFl53vPF5xFYJwt7lVZ6HdJpQ+mk65/CzObSALTzeAL
+	KevtPVk920k50coycoG5fHT+yZ7xBJBxy/Pm1KroYy4T9XOeGCN1UHZ8=
+X-Google-Smtp-Source: AGHT+IFUjlDOTHHIkCBYv7BDNcpHz8PL8V2d3IjLZh8hKyS9J+KwomP37jCBy3I0JlLxTeU4NKWeuynkJ2e4kdihEhLYQdE/7i85
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] of: of_cpu_phandle_to_id to support SMT threads
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-Cc: devicetree@vger.kernel.org, robh@kernel.org, jonathan.cameron@huawei.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linuxarm@huawei.com, mark.rutland@arm.com,
- shameerali.kolothum.thodi@huawei.com
-References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
- <20250502161300.1411-7-alireza.sanaee@huawei.com>
- <20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250504-acoustic-skink-of-greatness-1e90ac@kuoka>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3703:b0:3d5:8937:f419 with SMTP id
+ e9e14a558f8ab-3da5b2a5dc5mr38902915ab.13.1746381205554; Sun, 04 May 2025
+ 10:53:25 -0700 (PDT)
+Date: Sun, 04 May 2025 10:53:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6817a995.050a0220.11da1b.0034.GAE@google.com>
+Subject: [syzbot] [afs?] WARNING in delete_node (3)
+From: syzbot <syzbot+cc97c0c6ad58aaa2c578@syzkaller.appspotmail.com>
+To: dhowells@redhat.com, linux-afs@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, marc.dionne@auristor.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/05/2025 19:51, Krzysztof Kozlowski wrote:
->> In the CPU map, there are two cases that only one occurs at at time.
->>     1) "cpu" = <phandle>
->>     2) "cpus" = <phandle> <index>
->>
->> The first case addresses non-SMTs and the second case addresses SMTs
->> that the variable must be cpu(s) with an index where we later look up
->> the reg array with that.
->>
->>     core0 {
->>       thread0 {
->>         cpus = <&cpu0 0>;
-> 
-> Not so sure, dtschema says only one item is allowed in the phandle and I
-> do not see here binding change.
-> 
-> Although this wasn't even sent to me, so I'll just ignore your patchset.
+Hello,
 
-Ah, there was no binding in the patchset, so that's why I did not get
-it. Makes sense now, but question about missing binding change stays.
+syzbot found the following issue on:
 
-Best regards,
-Krzysztof
+HEAD commit:    b6ea1680d0ac Merge tag 'v6.15-p6' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13a6502f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=541aa584278da96c
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc97c0c6ad58aaa2c578
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0902cf82898c/disk-b6ea1680.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/8d8189dce486/vmlinux-b6ea1680.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0976c5dd0feb/bzImage-b6ea1680.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cc97c0c6ad58aaa2c578@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 23 at lib/radix-tree.c:572 delete_node+0x223/0x8d0 lib/radix-tree.c:572
+Modules linked in:
+CPU: 1 UID: 0 PID: 23 Comm: ksoftirqd/1 Not tainted 6.15.0-rc4-syzkaller-00042-gb6ea1680d0ac #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+RIP: 0010:delete_node+0x223/0x8d0 lib/radix-tree.c:572
+Code: 5f 3a f6 41 bc 01 00 00 00 e8 a9 72 53 f6 44 89 e0 48 83 c4 28 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc e8 8e 72 53 f6 90 <0f> 0b 90 e8 85 72 53 f6 48 c7 c6 80 a8 67 8b 4c 89 e7 e8 56 5f 3a
+RSP: 0018:ffffc900001d7ac8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff88807ea0d118 RCX: ffffffff8b67bde3
+RDX: ffff88801daec880 RSI: ffffffff8b67be72 RDI: ffff88807ea0d160
+RBP: ffff88805c383440 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000004 R11: 0000000000000000 R12: ffff88805c383458
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000004000004
+FS:  0000000000000000(0000) GS:ffff888124ae2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2ec05ff8 CR3: 0000000060b5a000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __radix_tree_delete+0x193/0x3d0 lib/radix-tree.c:1379
+ radix_tree_delete_item+0xea/0x230 lib/radix-tree.c:1430
+ afs_cell_destroy+0x1db/0x310 fs/afs/cell.c:522
+ rcu_do_batch kernel/rcu/tree.c:2568 [inline]
+ rcu_core+0x799/0x14e0 kernel/rcu/tree.c:2824
+ handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
+ run_ksoftirqd kernel/softirq.c:968 [inline]
+ run_ksoftirqd+0x3a/0x60 kernel/softirq.c:960
+ smpboot_thread_fn+0x3f4/0xae0 kernel/smpboot.c:164
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
