@@ -1,32 +1,34 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3931B07AE
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8531B3F3D
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746359518; cv=none; b=agPvF4eJR6ILbDGHXgdNxdm8o+hLlbdZNbFNGxjC/sK/LFznn/xXZcPqIJnuV3c4ciStOTa57zhY64LJb71d28SSyA/Mi7aB0L17AYedwos42As+VgepX6/ZrfkQ4ciCxoNUakaWri5Wfvs/kNRy3zwVheJdiMzqnZkQixrkksA=
+	t=1746359521; cv=none; b=PZEova53gfEHU2PrYjAbMgsxmqtGyM6wSioUfTZBK9D0TScri2K0lI5SErtUCQ9PqUQ+faBYY4ndA5fVI8hMofVhesmvnobSBZQxKAg6y+dk428lCA+00FI2GnJ427wlxDxRc5w3+owU1yyIJEl4H7IdIKsB954BvfwVRHWY/Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746359518; c=relaxed/simple;
-	bh=u0804QVAGmcXwjwp3po7cxMRu0aamQ6heTTl2p+MiD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pXXAiOdqqbYfSCMt5yl1E6yzGeg4o2O/HOzaZWKQDW3U7QtKgFAegl+fkLD6clPVowG64Jw9o3IMBf6fgDnO2ePkCGHtmq4DdrdjfbCFk3eo5LSGDsJAGftkn+OcSBqWwg8LvG8Ns/wiJhdSBxUTgXCZiJlc4sTnSJFdZkvc4is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=eUa9UHmI; arc=none smtp.client-ip=91.218.175.182
+	s=arc-20240116; t=1746359521; c=relaxed/simple;
+	bh=bOvRiIygzE0+Fg2nNN0/XwHOfMzhoSwoLpxUJMB84O0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H9K86Kk62aspdrqu83Waxvfl2WloJWOwaxcPnRxxqtErYAWXeglRB+YrBX8IcydF8MVddCoZ95X/p9Gx8IYpH1+N3ALAetwbJ0VUuQg0Jn8pWVesyZ7Pc4EvOB0zvWbJI29CPp5w45VP5FWjX/5u+NilGfCIBU6kv20O+PyipiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=YYK0qPwg; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="eUa9UHmI"
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="YYK0qPwg"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-	s=key1; t=1746359504;
+	s=key1; t=1746359518;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dsCLlaxW5Ry4SD7QVSXb//q8OL/Z72WZhoaVT84ZE4k=;
-	b=eUa9UHmIq83v7LNGquwIZmYWyWTBNotgrbliZPrYVrW0Fm3t+b6RCl8cGZEMoMEkTFIy/w
-	s7VoldfLoHK4Fq9UkhyygMeF3wgbO6FDPFhEcrIkwSbyyftKw/Qp8cwJlktI0Ae3r8F1pJ
-	PVBQMmQkOag9PM8ygVCBWbYICQFLqrTC/WGWoYQHHqA5tUOT5WEVzfXkxQ27cOq3WQVEcl
-	c7uo80hOd1bo/LaKKsz/VsB0x0wtzyaA6wpADLyymNTD7RifpY0l+IKzjcQdk0F5aXYaPM
-	fQsjmqH+EvnNqgqcMOvEUzRx/j7mtnohmJMpcP4z6q/7jJiC/amWzoOmZ++/Kw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oUtG6/HQyiWXydDfn2ZhXjq3VKEFyoNl3hSf5snvTgQ=;
+	b=YYK0qPwgJOJStOhtWOoYbsxGrVw8V/BAaoqNViHzdqODJV/Y7j+p+1iu2NIelao0r5AD40
+	7OBNaY6cSdJBR0v8N6Jtz3HLPu0yJtVHYRfdkWsAMjvqQit6flPKwzjbH6nJ6UoNZst2Kw
+	MKxzYzNYPmfzUlpjDa3l3QDNPu3Aitr9DX+xCVDa0xwyMa9WO2bw4Bykt7kBhPifgXMEL7
+	ir+Dyk9qItOEGvlbRpv6jvFjm5oGtnHw5kXzChMWjxCYUBSsAj+cexPHTb3uj8fTEl4ITE
+	MAuRNuFfQL8CG31FU2FBf46/+Z2IwMaY0Q63brDal2lH309VBb9ulWVF+12XmQ==
 From: Alexey Minnekhanov <alexeymin@postmarketos.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>,
@@ -42,9 +44,11 @@ Cc: Dang Huynh <danct12@riseup.net>,
 	linux-kernel@vger.kernel.org,
 	~postmarketos/upstreaming@lists.sr.ht,
 	Alexey Minnekhanov <alexeymin@postmarketos.org>
-Subject: [PATCH 0/3] Elminate all DTBs check warnings for SDM630/660 boards
-Date: Sun,  4 May 2025 14:51:17 +0300
-Message-ID: <20250504115120.1432282-1-alexeymin@postmarketos.org>
+Subject: [PATCH 2/3] arm64: dts: qcom: sdm660-lavender: Add missing USB phy supply
+Date: Sun,  4 May 2025 14:51:19 +0300
+Message-ID: <20250504115120.1432282-3-alexeymin@postmarketos.org>
+In-Reply-To: <20250504115120.1432282-1-alexeymin@postmarketos.org>
+References: <20250504115120.1432282-1-alexeymin@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,41 +58,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Run the following:
+Fixes the following dtbs check error:
 
- make -j1  CHECK_DTBS=y 'qcom/sdm630-*.dtb' \
-         'qcom/sdm636-*.dtb' 'qcom/sdm660-*.dtb' \
-         'qcom/sda660-*.dtb'
+ phy@c012000: 'vdda-pll-supply' is a required property
 
-Before:
-
- Observe multiple warning about memory-region is too short,
- one about 'vdda-pll-supply' is a required property, two
- about 'clocks' is a dependency of 'clock-names'. Fix them all!
-
-After:
-
- SCHEMA  Documentation/devicetree/bindings/processed-schema.json
- DTC [C] arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sdm636-sony-xperia-ganges-mermaid.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dtb
- DTC [C] arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb
-
-No errors, no warnings.
-
-Alexey Minnekhanov (3):
-  arm64: dts: qcom: sdm630: Add modem metadata mem
-  arm64: dts: qcom: sdm660-lavender: Add missing USB phy supply
-  arm64: dts: qcom: sda660-ifc6560: Fix dt-validate warning
-
- arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dts | 2 ++
- arch/arm64/boot/dts/qcom/sdm630.dtsi                | 8 +++++++-
+Fixes: e5d3e752b050e ("arm64: dts: qcom: sdm660-xiaomi-lavender: Add USB")
+Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+---
  arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts b/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
+index 0b4d71c14a772..a9926ad6c6f9f 100644
+--- a/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
++++ b/arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts
+@@ -107,6 +107,7 @@ &qusb2phy0 {
+ 	status = "okay";
+ 
+ 	vdd-supply = <&vreg_l1b_0p925>;
++	vdda-pll-supply = <&vreg_l10a_1p8>;
+ 	vdda-phy-dpdm-supply = <&vreg_l7b_3p125>;
+ };
+ 
 -- 
 2.49.0
 
