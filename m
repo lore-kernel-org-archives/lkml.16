@@ -1,63 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6698238D54;
-	Sat,  3 May 2025 23:56:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0CA32;
+	Sun,  4 May 2025 00:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746316584; cv=none; b=IH9aQ57xzk6gzwkfIJN/Rz/FoU9qpSpgextgBf29beDCRNtHCZxx4nDy18WRRRXavqKcTAaosJ448vqat6rzb5fahsO/GkPU6aLUn5C3luf4Fnz/qCN8PrAkk8tygVYHCtel+r/HxKZOs7QUlQB9NMt6Gby2IAnXjhCT0R1fGuQ=
+	t=1746317004; cv=none; b=hlt/X8Y9EpBKizanOunHrfiUMBuZM0R9LYQLx70uhF0sY0p6Qq/dDoFkBIiqJCeL4JF0pHhs6cQ7IzNw868/v0tTnH1dEyLNAKd9/8H8lygnNa/hQAwgagFOsABbuYx8JFvdTb1bMrHS9n0UtXEjnhJRFdn7nxHZQYbBMgOVBM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746316584; c=relaxed/simple;
-	bh=WR30OQEd7TUzZlyS8tpcaJGyIKqL4+BBLT74IdUGvFc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EOMqJO1lmjdLurYd7ZOE9Uzx7QyRFs811ZqoILoRXjieZiKhj+izEmlDOvUL3vBFtCMhLVb1BFPbYf1yeffFg3RWuCK5LMvJ8r2qVR0tSUtxjdkZU9l/BIPzkzlo592mPt7uenccvwvd2dtrrpxFoilJ3eQJSQs4FPIhr5RCRDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqlcqpqD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746317004; c=relaxed/simple;
+	bh=Mno4SLcszCX6FGKxxppDC/J9CWohXjwvG7MA1LQb/14=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lj7nvQ4WapmNkdNL6ipvvGI96JcX0KVUghthHGEsLnbA28D44Ycnx5K0RtzDeEW6mEYxmih/FMzrvp5GdPkjnT8/Q/UflI1Iz+IVeQu4c0xNEZrW9HsOFO1KhW4sDVwrw6pZO5uvrOL5dGBpXfo7Y2rkJhwN7GAhdQeHgk55i8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/Ha57fX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqlcqpqD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B812EC4CEEE;
-	Sat,  3 May 2025 23:56:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/Ha57fX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4439C4CEE3;
+	Sun,  4 May 2025 00:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746316583;
-	bh=WR30OQEd7TUzZlyS8tpcaJGyIKqL4+BBLT74IdUGvFc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=BqlcqpqDwQrfkskexBEOXfIII7r7aao+Xz18UpidZY/UnKzo6QXQ2DyHFZbJGBc9B
-	 HCEKYMtvkNtNXFAisu6s11IvxeAK4SWsZVD9SYzDurkNu5LeSTE5yGYThIYy4d6iGq
-	 o0EFO4etjgbgYmw3tGmfGsQx8efVQsfpsCguX37PIYeo5c/NdM5mMTcvUV8EVRuo+E
-	 Ht2VaQ24vgj6VAwuqByz3/HobSw+kRfj7vbQh3Ob+8AyMgFgAD9rZqvVy8D0eGbWmf
-	 9i5mehifk8aJ5SerJbTxR9+95gTYnv3/0i3NS3L6/ltmY/Disxx1Jvfl4IdgCgHMil
-	 5/g/6S718oONw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C37380DBE9;
-	Sat,  3 May 2025 23:57:03 +0000 (UTC)
-Subject: Re: [PULL REQUEST] i2c-for-6.15-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aBZwsuhgpgETHQOO@shikoro>
-References: <aBZwsuhgpgETHQOO@shikoro>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aBZwsuhgpgETHQOO@shikoro>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc5
-X-PR-Tracked-Commit-Id: 8e17493ea2d1c9f72e5e31160f75f8be56f79ffb
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cbdd17b239fdee51eac87aa332a2793a22392e3c
-Message-Id: <174631662185.3942549.14152596635222428651.pr-tracker-bot@kernel.org>
-Date: Sat, 03 May 2025 23:57:01 +0000
-To: Wolfram Sang <wsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
+	s=k20201202; t=1746317004;
+	bh=Mno4SLcszCX6FGKxxppDC/J9CWohXjwvG7MA1LQb/14=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=k/Ha57fXypMH8X92xBkrS25DfVd/YvnkdLdhgwMxftUNgYmSNjTp8OnjIZNkkUAHn
+	 7VXIsqqKp51qXaFgiPcwLMicbg5jEDSxO5xZbMEBsjOfg/fKHfdjMxHcfhB0EDl+xc
+	 6siILwsAZB4QA4pqsB5aSVGUcMX2lFHV23xcU8J4t4PHFxDBEwJqHKrqWwN4e5LE+q
+	 tbc+Xy1X2FR9SNcxDf60I+v4482cSxrdPuje63vtYwsycsJOm+H7PoU7zmZJzc2t70
+	 jfyo0CGBss2czmmv/o1cL+cq6x5OT2pROFdCXB+gWZg3dsaKNt9y/mM2ME0D/0dIVJ
+	 cATUZdCYqCXbg==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, aaro.koskinen@iki.fi, andreas@kemnade.info, 
+ khilman@baylibre.com, rogerq@kernel.org, tony@atomide.com, 
+ linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Cc: m-leonard@ti.com, praneeth@ti.com
+In-Reply-To: <20250425205736.76433-1-s-ramamoorthy@ti.com>
+References: <20250425205736.76433-1-s-ramamoorthy@ti.com>
+Subject: Re: [PATCH v7 0/4] Add TI TPS65214 & TPS65215 Regulator Support
+Message-Id: <174631700028.4095183.1037286484966079333.b4-ty@kernel.org>
+Date: Sun, 04 May 2025 09:03:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-The pull request you sent on Sat, 3 May 2025 21:38:26 +0200:
+On Fri, 25 Apr 2025 15:57:32 -0500, Shree Ramamoorthy wrote:
+> Rebase patch series for 6.16 cycle. The related MFD series was integrated
+> in mainline during 6.15 cycle [0].
+> 
+> TPS65214 and TPS65215 are Power Management Integrated Circuits (PMICs) that
+> have significant register map overlap with TPS65219 and each other. The
+> series introduces the 2 new PMICs and restructures the existing driver to
+> support multiple devices.
+> 
+> [...]
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.15-rc5
+Applied to
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cbdd17b239fdee51eac87aa332a2793a22392e3c
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Thank you!
+Thanks!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+[1/4] regulator: tps65219: Update struct names
+      commit: 8c04144e156b49980a786e80c855e41f6c71685c
+[2/4] regulator: tps65219: Add support for TPS65215 regulator resources
+      commit: 3f2e457efdad5af4164f155bd7ac902258a9b1ce
+[3/4] regulator: tps65219: Add support for TPS65215 Regulator IRQs
+      commit: 38c9f98db20a649a1f8454f507608b6aef0c9297
+[4/4] regulator: tps65219: Add TI TPS65214 Regulator Support
+      commit: f1471bc435afa31c8c0c58551922830dc8f4b06b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
