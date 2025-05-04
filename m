@@ -1,83 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD3B290F;
-	Sun,  4 May 2025 19:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A800137E;
+	Sun,  4 May 2025 19:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746387274; cv=none; b=JOcyLHlnd4njGgUSDsIhpYYc54N5Lkq1sWN9p3fC0voiC74K9+uVjXNtKt0L+2yj7BwyrcxFX9pqSmCLThgys3UaXJmVQ96XDAR5ZfI4lGpTFQFpTg6uPcq3rdypEmMMxuOk2kQr9InGlE6ODoesdRb+ikbcdgsIv2LA3ijQO8k=
+	t=1746387711; cv=none; b=GgFCFnwsvfBJjcURnArQ64B8O1igCz8F8Nf2O3ic+mFf2mULdk0geDaZyNZu7sIy9d8XgfcmOnajNyjRGMJGU+xr4gI8pSL3gT/9ndoiTFo7O4yWv6UWASbOzjBM7oqMaqG3XXFJVKDVWNo/9cyjAF+QsI+vOMg8TyLVvLYkBYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746387274; c=relaxed/simple;
-	bh=DV+C+ocx0IPJCvSxnWssBbag9ANT94rIE0gCr6WbnAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PEHpZ1//FixQXin6F7gpXfSinZw/0W4VALdmBNdHNutWdBSrAi+h1NPKumahf07y9+5t0ltZYokDPoZCU9j7QqgKxyzYPWd90oIS0tXxkQOk/rKtuY1u2y+irTNDrPRMVMlR0UYy6b1Xz4KyzrHYZPvtotqCFmzJrH75QGaoDgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAleEZJt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746387711; c=relaxed/simple;
+	bh=K3F5/KIWAaKbb2R/xf5gjoXGRiWhe+uHcyjSlqkLfLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iZVPdCgG8qXzVRbecn9s10cveJANcH1+yOsQAMU0VsQ+7yHMlAH6LcThPiko0OV5OHqfjrJ6XVg7GBb7nPFPxvpovQr7A9JXdH0SSq09utJ5iIvUIzJvoyxQZ3pdX/plt+ktJF7UNBdvwUVPtrbqWkZKzbKAOVvFiAmSMUZ2Dt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgEln8NV; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAleEZJt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F90C4CEE7;
-	Sun,  4 May 2025 19:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746387273;
-	bh=DV+C+ocx0IPJCvSxnWssBbag9ANT94rIE0gCr6WbnAM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QAleEZJt7jjqi+DLreJ362YU+9neFfpA9iBnA4l9SFXekbegBGesA7bDEqRHpXyZZ
-	 WDzvtzyeNy9bzI9li2Isp+6BZ/KgiL7lrjdkNq6IDll3B0vK+5rgK5/L8ampQwjxqF
-	 xcfmFAFRD1lEJSSsaSTn8rm+IBpvzjGIeqq5B9bjwt5ntA0wz9rD60SSBFE5uWWWCS
-	 B2eLedm9VvYPDOqznYos4vMI0Vsd+HNEQ2/mks77J0PNmI2jX9HNi0/WY24UdsaabK
-	 EDNiezzuMo+x9zZCMnHKSE0zMO2AfLfJVUH/ouqrbT4dZx9+L7k9/NAW30xA6AWcih
-	 ZddmLa9OmEUuQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf-tools fixes for v6.15-rc5
-Date: Sun,  4 May 2025 12:34:28 -0700
-Message-ID: <20250504193428.1295124-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgEln8NV"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so378095a91.2;
+        Sun, 04 May 2025 12:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746387709; x=1746992509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o12aVVyH9kV52ftq4bnSHwH56vkgugSHnAWeFrIO11c=;
+        b=HgEln8NVDEBXsa7EydEPsttJmMKOG84W022SyMqjJxGt9oqtJKohVD5+CLHudv7VY1
+         8kbjXfXCd5DcfYoOFEPDk7h6SfLWJCedK+EZR58X5toIqmImeY0+SeUGfRR6LC9aeGVE
+         gwHJkijO+Q7/NLSBZMLpb7gppRLP5rs3oEW6J7pfE6SIewaplMWnhDi+Gna56w4kIQWo
+         gujiZAKaY8sVXi41YdzU82IV+mRQRy+Mx27UKOwcHqUTCA+lA8Gks1xHvW+YUJ7wMuV8
+         CQhwtUMyDq1HI0/AOqlMSpwYFGr+1WVqvGImBRmH/KH0HwDx7eC2Cn/6EzhnbasIBMEA
+         uJZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746387709; x=1746992509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o12aVVyH9kV52ftq4bnSHwH56vkgugSHnAWeFrIO11c=;
+        b=jg2nG9vBZOmZlZzJhwcoEyjCScfqlCY0RL/YyMEfJdzc7c+/WcD+cVsQqQtC5bN3GO
+         pN+3oRLoWQvthGFHfcUFbJKoN95cWiWMewuNpiWgVNSKVOiYAcfjBG03mnaP67DCiHlg
+         AmGZW9zrQsqFuO+6hrBMof3u/r1ArjxdRpRRfl3gLZLWc/YpPxtSmcQDOT4LamAWwq16
+         usSBCyk6kO7R+4Sxx8ubFUzHN/k5ES5v350KFysPDTtpK9zZBEUJR7MLMYnzkDfUmDZa
+         qSDbEWayDoX35ijEMEFhf8hSB/EV7O+TcQ/TTtvtC4Pfek1PrPqs/zAZHUT/8miw8iea
+         F4hA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAW4ADfR+bniOcUHaFtSa9TLmPdzAFh5xKGN8ZXGiR5Konumz58C77eaCi//AFuNaoyJ5X87NsPSDBlEJcVn8=@vger.kernel.org, AJvYcCXw25y6fGqHieqSGURg26z9cwqKltVo/a8OXxCT2Vsaef8hpzxJceog63uQqHV72dn5bcO506qZbZ42mp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzllbV0myDRHs61gJrGgiaRx9vK9uEw/ft75P/A57DmEGJ2Im1o
+	NXZStxO0CXg/GS19NHUcvRLce1dxdo1us43mtlCGnJ+XdaBNXzXiBez9lRuC5Kmv5bfW7/zm4P6
+	Evak+IzeRJ6IX3LwOqdJK+p4g7mU=
+X-Gm-Gg: ASbGncvrTZnn7FNCkLRE7hLOP3FatwWjqmlFzCQJf85ER/2AmLAfZK5AXniCqm2x11J
+	ZK+pnUQtMZA1ffXg/6ljDky/KkivgnXYlTPfVvCOym2R+doRqdGSHmQm1xEjtum2+PtvBDC+2+C
+	MkdfC2r1DNJXJuw/cMNatWE3E028jGjNci
+X-Google-Smtp-Source: AGHT+IFqnhPLc7BpuUyxCTgZ6K4J4HM1398y0FUsixh0asR5rKXBVFePHUSy8tVngDrGd69+yBMwNbumyyFje7gECu8=
+X-Received: by 2002:a17:90b:1652:b0:2fe:b972:a2c3 with SMTP id
+ 98e67ed59e1d1-30a4e42fabdmr5782880a91.0.1746387709543; Sun, 04 May 2025
+ 12:41:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250504165612.86459-1-contact@antoniohickey.com> <20250504165612.86459-2-contact@antoniohickey.com>
+In-Reply-To: <20250504165612.86459-2-contact@antoniohickey.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 4 May 2025 21:41:36 +0200
+X-Gm-Features: ATxdqUGqZfuaKFhtmR3Uuslno3VkapNdyHJ-MZ3SAnQPBK-5NKEE2Cs0yd4AaZc
+Message-ID: <CANiq72mvu54B=U+YCUmbFctj_wXgF5zjeE-BB-vHVnAP+3mPcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] rust: kernel: create `overflow_assert!`
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Sun, May 4, 2025 at 6:56=E2=80=AFPM Antonio Hickey <contact@antoniohicke=
+y.com> wrote:
+>
+> +/// Overflow assert (i.e. runtime bound check).
 
-Please consider pulling the following changes in perf tools for v6.15.
+Probably this paragraph can be removed, since we have the explanation
+below, i.e. the first line/title is enough.
 
-Thanks,
-Namhyung
+> +        core::assert!($x <=3D $y, "overflow assertion failed: {} > {}", =
+$x, $y);
 
+Interesting!
 
-The following changes since commit 9c32cda43eb78f78c73aee4aa344b777714e259b:
+I was thinking of just allowing any expression here. I can see the
+value in printing the values, but it makes it a bit harder to remember
+the comparison and is less flexible -- I can imagine we will have
+other operators being used, or even things that are not tested via an
+operator.
 
-  Linux 6.15-rc3 (2025-04-20 13:43:47 -0700)
+Perhaps we could have two macros, one for the "any expression" and
+another for the `_le` case, like the normal assert has the `_eq`
+version. Though we probably want to see the use cases first before
+deciding on particular variants, so I would just go for the general
+one first only.
 
-are available in the Git repository at:
+Speaking of use cases -- could you please add a sample second patch
+with this macro being used somewhere? e.g. see the linked email in the
+issue (it does not necessarily need to be a "real patch" that applies
+to existing code, although that would be nice).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.15-2025-05-04
+Also, please fully qualify the path (`::core`) since we are in a macro.
 
-for you to fetch changes up to 8988c4b91945173a6b5505764915d470f0238fdc:
+> +macro_rules! assert_no_overflow {
 
-  perf tools: Fix in-source libperf build (2025-04-29 12:32:31 -0700)
+Shouldn't this be the same name? Does it work?
 
-----------------------------------------------------------------
-perf tools fixes for v6.15-rc5
+By the way, would it be possible to have the `cfg` attribute inside
+the macro, so that we share the docs and so on? i.e. to make the
+conditional compilation as local as possible even here :)
 
-Just a couple of build fixes on ARM64.
+i.e. as it is currently done, we can have mistake like not sharing the
+"signature", and the generated docs will not have the actual docs of
+the macro if it is disabled.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+We could also consider using the `cfg!` macro to force it to be always
+valid code -- not sure about whether we want that in all cases though.
+The standard library does that, though, so perhaps we should do the
+same for consistency. If someone really wants to skip it, they can
+always do it on the caller side.
 
-----------------------------------------------------------------
-James Clark (2):
-      perf tools: Fix arm64 build by generating unistd_64.h
-      perf tools: Fix in-source libperf build
+Thanks for the patch!
 
- tools/lib/perf/Makefile    | 14 ++++++++++++--
- tools/perf/Makefile.config |  1 +
- 2 files changed, 13 insertions(+), 2 deletions(-)
+Cheers,
+Miguel
