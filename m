@@ -1,84 +1,90 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB51F3FC0
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 16:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7161F4606
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 16:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746375238; cv=none; b=EBahccduC5EvQMg+0qLAUvMahWtOZ4qWF1yHeXUh7hTKX3hcgcRzcezWVfcEW9tjZw87y4fl94VYBpmjmmn7ShVANANLGm12AUmljpp/IJ2xZgZeR8x0PEi6xv84tefpuySX/pnOnZfmwg4TSVsFHwhMxNRTwU6ThYn9YRhOp/k=
+	t=1746375239; cv=none; b=RZxzaIyWIXSN/stwtukLww7n10wtSIL85g5YDq/hRFJrUiTAHsZ/UR0GifoXiEAuYvGPgeDf3Ke2Vxdqh5N8SlsxtyQg8mH/1sMKAEbW+ZxOwoAGyHK+QXSNCPcJZv0ny8EO915bUixiGVSVF01NgyLYwowh9ApfQM2jQ/9j+vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746375238; c=relaxed/simple;
-	bh=LiiIOXZeFcrFR5Wr0strWiFYZsNp/GL21CWg7UxWNPg=;
+	s=arc-20240116; t=1746375239; c=relaxed/simple;
+	bh=GoymrrvT+xbHk1nFXIyGwohvSJZVfRO2gKNmW6FLqjE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L4WOTXGBBINVCJpVAv6uJs6n//q1F3JEvazwdXslA7n735ErW418DNf2a/L9rHUUE0I9zQjunHWVRBau2MMix46E+hwy9BC0QPw71W2jXH4pNQvZTNGexM4s3dd6UWC8RSKgL/wLpXwR9RNS2/ET3RDgezCSByT/hv19uTmZc0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N6XVvHgG; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=ChrWQwy5B4PA7iMuf4W2sEOg+oPdNMCtOVlSrd8XZL8QtMF0ZQsGAHvbwxJ9RD1i+ligZAYwLJRrbQ4KOIr/wNLMRK4ZDPamSsvr47ac2T4zbrB/HTYAMPceJCAZsFNyURWJJvXg6fxjW8OUND9l+r2j2nARUdHS58gvXi4F/Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HnA4f4aq; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N6XVvHgG"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HnA4f4aq"
 Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544DPAc3029374
-	for <linux-kernel@vger.kernel.org>; Sun, 4 May 2025 16:13:56 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544DtZFJ017822
+	for <linux-kernel@vger.kernel.org>; Sun, 4 May 2025 16:13:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YpRdgnHDvP7D1x0JNflI0yCjzYKAnzgn37H44xlpJs4=; b=N6XVvHgGqVq3Z7nF
-	Dp/qgyhEEixJjIPcyfF/FVcF3tF8iAb0lPBL4wN7eUcHf/9BPKZmPls3EXW7Ow8+
-	DmXSjGiJXrvY8HkXyCLb4uXat8Jqaf88jwMilaK7aKcT/qH583+aO4h5U9h/R2Ra
-	Drb0QYDMSb4YjcrUn93uJLVkpE8RoiEc3ow7FMXxFPkPeBckF2VmDi+V85hvuyiO
-	fhqs4fRsyrVjmnCPB2GlLA8HnKzqAhFN3ZjfnhDeeI0G2Gl/WrgJ+EbgJ9uxoJh1
-	r5Ys0wic3+ERFACI7yTsdSPwaUfOztpsF9r8KQRf7iehupnxHC5CaFLSp9o59ELu
-	zARDPQ==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dcakj343-1
+	cfdsQNjtgTXSpICV+XJjH/jK4YQyRmRdmbdXbvMbr6I=; b=HnA4f4aqSTGjwKOb
+	Dm7vLbj/46k2CAS2BXIF3QnAySBj1MkUoq9Ke52uq3Djd6NYKVmKZ7UYy04UFyb/
+	wnIYMx3iMQBCVUk0AuiEQoZkDDtiROZEbyH5xE0sdCFXouASd+UtRVlwto8PY5er
+	w8lBtFCDM9B4YvW1NrZWPsIL6RcJy0JfmlC1J96JqF4+8vFsG9l4aVxwK/qm9lLf
+	qZuBiP+fQfa2l34JmPWLUI38drmgh5FWAMtZKB2/OZPKbFB9uBIjyqYcUCLzWW6/
+	acMx69grj90RVvygiKE4BgKTa94LveXtrYIu2+L7EwZUzMLhbazoLLdoKN285IJy
+	Up1cIg==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dcakj346-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 16:13:55 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4853364ad97so46945621cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 09:13:55 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 16:13:57 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c77aff78so337554185a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 09:13:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746375234; x=1746980034;
+        d=1e100.net; s=20230601; t=1746375236; x=1746980036;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YpRdgnHDvP7D1x0JNflI0yCjzYKAnzgn37H44xlpJs4=;
-        b=oVlGugU327AML2Ze5VZHu5QF5KvWuXI7lJYMlbCxQax6+p6GD4qmC6MTLdKGXquxxY
-         mZU/Afz43y1TiivxuBLrwtf5So+1S7kJmB78c4C5cE112uWIgVMBbfqDEPEuu4oLutKF
-         D8eHcEMIpC+UBVS9FERVuaqs165QbCHGo0X1SV6pbSUlFOKw7bh9U+5wOu5SXlbPQOdK
-         oRedm9vqobwdwsQXh7n9RVn5CiZQ+1a6jLBEeFnVUUw+TE34ACEKln56/RKI0EB8tPov
-         yDLt817qbZUUhcXGShTzASiNYx4e8atBgqZNVS8+IomuLu0zg8zCnkskwiXzUZkAPOmI
-         ACaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdCyoDD4RCWKb2vZVwX/VkQwezrQxBSBcd5dx5pOuCDEk6dBS1z/KzGqp579IWFLQN52mohgpG89ncnqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDiEVIMLSOf6QP0IytLf/oQYiovJSizypKgaK4Mqk3p8Phnhna
-	5RWdcax6kaQV8cmNxqBTxrlO/pb7VhvCreeIktg29PLdOKMrfycXCbMQ4fM0wCSXSRhDXQyjt38
-	8diGb0SyE55y78LVueZ5R8PsMR2KXc7OOLdJ6PEExgKvJNuQ4282Vng2Mwk+z/rA=
-X-Gm-Gg: ASbGnctN/w8ksnZHOgSYltEje3F8dc64IDRFNLrxWRt+6A1POcAqVQyKAKsSx5+PQXt
-	pqTHe4JJ65j4bq/j7yxRNmY1yCINSXw/2oIdioVg/6vBeFZJgszD2k44kekWAZZlPT+QZ7wUWH/
-	xazygeEQtaw+l92xHRYK3sWzMLgkccAcmIKhcWDMtAH614gZOIp3Owh1p+MDxquYj2dGhG0Rk4q
-	aIysgTi82/fP+QyL2Ums4Bn3wkpFk6KEuNEp6XPqhQVHsqXmH5QhXQThdpIixpyBc1wj4IOJndC
-	srL5OALdQWGCq/r7oKJNYTpAuDRjQ2PpCc+FTxMc74wOrmf9YaPeyBM1vMMla93A3xiV507TXEJ
-	FTQh1QqvLyumHsERwuUYqJoG0
-X-Received: by 2002:ac8:7f0d:0:b0:476:a895:7e82 with SMTP id d75a77b69052e-48e01552584mr75446021cf.50.1746375234625;
-        Sun, 04 May 2025 09:13:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhEOxFwHYPaRivE5KuBUUSrIQdtLUQdGkwtMO2jrXIxKo/JL2oOjaGV22aEcp+VehZmah9tA==
-X-Received: by 2002:ac8:7f0d:0:b0:476:a895:7e82 with SMTP id d75a77b69052e-48e01552584mr75445631cf.50.1746375234338;
-        Sun, 04 May 2025 09:13:54 -0700 (PDT)
+        bh=cfdsQNjtgTXSpICV+XJjH/jK4YQyRmRdmbdXbvMbr6I=;
+        b=w22wYVXKG4ur75HjdPOHMHlZobTEisN86avLRK4Bdc0VXArPNlKdf3ay12sY6Kp/lA
+         2+fFOltDSeFdEXIahXKka9UBxhytAnNSyI81CxBBu4BA0qN6ofGWcZbjTz2A7UbwzAyJ
+         WK2BBzhrPiGpFbnew50QVaUa7xilWeO+7y0ZYhvPbhSpMQFzlzuc09/yl4zFz1wUPZJa
+         ITCpUUHS3OgWoiRSAobb86gq2Ic3GpbpCszc2q/XEM/UjZBkf48xkZBCKZLnPGYwnHKD
+         q3K/85RHX278XKJ4cEwlP1FFS8E7LQPKsj1u8V/odNUPjO9mjEXeF1Ke3VrHwhEIbanS
+         kE2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWfG7Ud9vPvX09tfGpNMnv3m/VeMRbEu9ulHswa9M0mh4eEUiS1rvqminJ3eU1Nug2M593g/1eMoQQIH9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRWqohLwtKXjvfAliC+XE70n4ryIY4mvdF+IHP5p84JXreUs9e
+	sDW1RsEzoQUXvLfxaRCwdWh90V2qvTBpHLm83T+TS8WR9W2Hf52bBSW8pILSNZvwQyIJuLTn5UD
+	Z+KCrCSZyodpedPdqAjYsrSfo1SH4KXnaEOqV36rN+WRSL2pisz6ibt1eXQe3eWc=
+X-Gm-Gg: ASbGnctVEGaJRVoW97AerKV0QTTG69zx5dvyZ3FyTFt5O3xrmT/ii8LGeFkRDqZNWS2
+	HXqWq1mODeqYet4Evl/lLDIQ+PKmRdctoZ3otOB0uJu0V1lUDzohKuqakR0gYtY1x9a5pE3poYh
+	dyW8mylOnxaPBPC/rI68qDd3vKqV7ILbNPumYvyT4YknEa3TM5ynVX/uHg3ivKIYTTOrlBzCOjF
+	LTGikhtbQBrITSg6IYGQFU0mhNUF4s1tv8xLl9+h3kbldqssZMFGaE30iVSpV3d1K3/ZYZ1UqZ2
+	GvZmFJ2m03Uq1lKBl9GdqPsEFtnRTzFFIfjmFTsWrJj+V2DTRHjZPkgTJvY73IkmhQx0CYxmyFN
+	N8mlXaPTHtDvTdsFLgq9rJfHO
+X-Received: by 2002:a05:620a:3949:b0:7c5:6140:734f with SMTP id af79cd13be357-7cae3a926c1mr607135885a.18.1746375236080;
+        Sun, 04 May 2025 09:13:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IESd4V/tl84ujiy+ueBS1wdjRHJiBAwRJzy9189FWkkAARUTf7JATItoLt9gDMWQyef3WGC8Q==
+X-Received: by 2002:a05:620a:3949:b0:7c5:6140:734f with SMTP id af79cd13be357-7cae3a926c1mr607133085a.18.1746375235745;
+        Sun, 04 May 2025 09:13:55 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee937sm1335231e87.142.2025.05.04.09.13.51
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee937sm1335231e87.142.2025.05.04.09.13.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 09:13:53 -0700 (PDT)
+        Sun, 04 May 2025 09:13:54 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: robdclark@gmail.com, sean@poorly.run, konradybcio@kernel.org,
-        quic_abhinavk@quicinc.com, lumag@kernel.org,
-        marijn.suijten@somainline.org, airlied@gmail.com, simona@ffwll.ch,
-        Chen Ni <nichen@iscas.ac.cn>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: Convert comma to semicolon
-Date: Sun,  4 May 2025 19:13:30 +0300
-Message-Id: <174637445763.1385605.2171270817711925653.b4-ty@oss.qualcomm.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: robdclark@gmail.com, sean@poorly.run, marijn.suijten@somainline.org,
+        andersson@kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        krzk+dt@kernel.org, konradybcio@kernel.org, conor+dt@kernel.org,
+        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: Re: [PATCH v5 00/11] Add DSI display support for SA8775P target
+Date: Sun,  4 May 2025 19:13:31 +0300
+Message-Id: <174637445757.1385605.6744814496349716759.b4-ty@oss.qualcomm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250410025221.3358387-1-nichen@iscas.ac.cn>
-References: <20250410025221.3358387-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
+References: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,47 +93,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDE1MiBTYWx0ZWRfX4fAyucT8FK5w
- daLNIYlbeS5foqr2Yn4Ti1gPJdC4y+Pgo/pVDMBRRGekosdZrMwlUTVdTvSjxMB8Llzq9jkEmsm
- 3+ySwfa9zfrInZ7aaZRc0zTdnRP1+5VFFEcP6Q2OE445iUaFYXIMfR8U7Xyn+/Z9uBcXskIcm/8
- kni1ud8Py9rf15Q8CnsJ9keTriqY48aW9KIx7O/WfaPCgekQiHZLoIAsO0CNvEW3yihUs1zdbLZ
- q8yDnoR8imZp/w2ceYTCu0ESy8O0WvV8zVnJQVbSz57tAlw3ep3q2m1z45JaJZSQhDHekgQyOQv
- mI78zTL+th3comwuAHfPEk1AeUlnW+5UtBd6JPAa8tLJHA86VBAauCrPz4FlZgnPaMCZb4O79Sl
- OydILsX7TT5khKB4EMIKHH31HldEyWxAUtXaM9cY98utj87OFcZEz+bafXMwXLJ6G17NBCwE
-X-Proofpoint-ORIG-GUID: 19e5HhldHADXIrLqhBkIMXBMo3CCMXCv
-X-Authority-Analysis: v=2.4 cv=JtvxrN4C c=1 sm=1 tr=0 ts=68179243 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8 a=sNhlO-HqowW9r6Pg40gA:9
- a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=Vxmtnl_E_bksehYqCbjh:22
-X-Proofpoint-GUID: 19e5HhldHADXIrLqhBkIMXBMo3CCMXCv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDE1MiBTYWx0ZWRfX4lxFiHrf8WmG
+ HBYo/mXSDtnfM0wR1CCxaw2UW3SV1Hh4h5stA6NZDCR1KZur3BKpoTxj+0hCvWBDngctbXJG17c
+ gbwdeZfOf11YeeohqMBkjmsYVc8QH7q+yAUQ9te+ySndl3NxKSOSZLoiM2iReiqVBNAUuA1Zf6Y
+ zDoEgLPthjJm+BTlGVJDN/bws5n4Q7xB3SH40unnxWmyTTUlAMvZgcVb+psctSTZatr2p2yQX2n
+ +Jz+zO/FZ2OkhkjNoTTN+s96J8LlYSHbh+rAM79CPUQ6CE5Ypz5YGnW2jlJ427xCoBfpKdAZMOW
+ R3KjIf8AHorY0rlV0IkNQz9i2xZImjcssMf00U0/ankHtkvJZpbJhjadbXATKdhMGG60usCWWw3
+ OzD8Zon5VPwJVpS7XVaL+/+Ihp+k7XnacXTLhT66AAVE6I3BhpDWu92go9lhQJ+ymfbhTpF8
+X-Proofpoint-ORIG-GUID: HM3mVOIfpNj23PNiMz52XKRMKweW7UF5
+X-Authority-Analysis: v=2.4 cv=JtvxrN4C c=1 sm=1 tr=0 ts=68179245 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=EUspDBNiAAAA:8 a=rcLBrfNTdlfi3Zk1C0sA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-GUID: HM3mVOIfpNj23PNiMz52XKRMKweW7UF5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-04_06,2025-04-30_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  adultscore=0 impostorscore=0 bulkscore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 mlxlogscore=798 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 mlxlogscore=889 clxscore=1015
  malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
  authcc= route=outbound adjust=0 reason=mlx scancount=1
  engine=8.19.0-2504070000 definitions=main-2505040152
 
 
-On Thu, 10 Apr 2025 10:52:21 +0800, Chen Ni wrote:
-> Replace comma between expressions with semicolons.
+On Thu, 24 Apr 2025 11:54:20 +0530, Ayushi Makhija wrote:
+> This series enables the support for DSI to DP bridge ports
+> (labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
 > 
-> Using a ',' in place of a ';' can have unintended side effects.
-> Although that is not the case here, it is seems best to use ';'
-> unless ',' is intended.
+> SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
+> The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
 > 
-> Found by inspection.
-> No functional change intended.
-> Compile tested only.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] drm/msm: Convert comma to semicolon
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/5db5401c2455
+[01/11] dt-bindings: display: msm-dsi-phy-7nm: document the SA8775P DSI PHY
+        https://gitlab.freedesktop.org/lumag/msm/-/commit/850e13b65e3c
+[02/11] dt-bindings: msm: dsi-controller-main: document the SA8775P DSI CTRL
+        https://gitlab.freedesktop.org/lumag/msm/-/commit/2a0195b94cbc
+[03/11] dt-bindings: display: msm: document DSI controller and phy on SA8775P
+        https://gitlab.freedesktop.org/lumag/msm/-/commit/a6f2524f4d5e
+[04/11] drm/msm/dsi: add DSI PHY configuration on SA8775P
+        https://gitlab.freedesktop.org/lumag/msm/-/commit/d3979192fac5
+[05/11] drm/msm/dsi: add DSI support for SA8775P
+        https://gitlab.freedesktop.org/lumag/msm/-/commit/249a965c3759
 
 Best regards,
 -- 
