@@ -1,89 +1,132 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291CC189916;
-	Sun,  4 May 2025 21:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF3018DB26
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 21:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746392852; cv=none; b=sWxE4cA9pGQWuJ8a7LJhnBtZC/Xp/82VoGoWO6uQI8sYvVteQWankFS8hNwYnf6xOIZKfIAHwmJk9dMMpGDWP7onslBUUwaFqZg6L7AR5ZaOCvuNP8Z8bGIvy7qlp62/ll6lMx18upCAN3DhAK8J3rjb4AOv0RaDBpERfl5623M=
+	t=1746392962; cv=none; b=eyymm2AxrLfbEwgm2PwY09qdBwLyMYtyiudxmyIZn2t8eE/05HOJKU5vESukyCSnzu4a92HqaTPsixLmcaZTwYtnk0uQHABajjRUnaCUMhIt9UqreHABfW3++Rw+Ft/npMJ3MPIEwEHtqsYtledlXXUOCBuDi/bh93rWtuh6Z94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746392852; c=relaxed/simple;
-	bh=AUnzwvptOByim/ucOYr6TfZ9ss3/DQ7PxM0faURq4oo=;
+	s=arc-20240116; t=1746392962; c=relaxed/simple;
+	bh=pK9Bus4Z9zx/fdSF8HACqmAhURV3KB4inS0yqj4aJz4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ch+ByVM+nNC7kRwtA7GcdsTJDpWvIDyePBjTU2BcA1YeFyh94WL5yL0fbTV7MIzeZBcP0KQSG4wnvaynIQry/NOLzISL/w5M1AdIgCExr0/YE1PiWatNBooSqJ4uT/DAXLs2c7VaMw2+LbyfgQOTiDmxECG6Y73F0/g+/fQXXpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=af7vzxCZ; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=fAG2aLikwqt+nEzaYaJhKxj1205nvkcTZgbrX/+rGIhyhWxiv+FtFFCjkLaF8BHhD3ZyqQK3aMWPbeyNQ/a3RlAUuWZ0hKJUK7349vmNTFe8e0sf1Nd9LWcY25J4OifCgHmTZ++lLdNbo2bakNhpsiuFzN5uDr5OjGmPw9zpSyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=UarbodrF; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="af7vzxCZ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2240b4de12bso61192105ad.2;
-        Sun, 04 May 2025 14:07:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UarbodrF"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224171d6826so55102555ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 14:09:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746392850; x=1746997650; darn=vger.kernel.org;
+        d=googlemail.com; s=20230601; t=1746392960; x=1746997760; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AUnzwvptOByim/ucOYr6TfZ9ss3/DQ7PxM0faURq4oo=;
-        b=af7vzxCZWX86fWAJgCKZPXMMI+lpCl3cMjP2ePptHfvzKAHftK2LGlfSC20VQZPPRL
-         Hkam64KKfD8q5SsafHzRScdM9G7dfU8UBds8BR+v58WpKk4QHpgdVhGEDZzf1W/4D2Ls
-         WmPpN8Hwd5uJjO/kiyk49Ny359iJ2OvE7RAYm7WUENv3XByMBtOtYYZNJaGlGLAKQPy2
-         AscTc4jHfUi4Svv2CT2k55J8E/hklsS9fHochbC71H2pYguaSLcIq/PaVboSgNOzjrjC
-         yEhY3DiyCbM1s5c4J6BOldmA74XffI3MeN8MKIbUVFszDyxZ3YSTtWRnB+lSWl2oW5LQ
-         0bOg==
+        bh=QfT+Zxg3Ps41McBcdx2w4OJm7zncfc7X1rPsHGcw0z0=;
+        b=UarbodrFQVeyWHil15iD1puHo7AOVxOZZkoQQPms0elI5fCnnN5ZerhHvBdDVNEkb5
+         VC5VufQlfR3V5pgeehFzuFPINRtL1nCkDiZPvUFrOGSCMKLT1xJfDs/oPS7nP0NrKQKh
+         FOnveVgNrNzGMKtc7hvEMyiQIGwjJ81yGZL+k4UZm+/NvN0y0MMk/4q3frA+7M+naFTb
+         7qaFOqr99NppWyGac0tc+okgY7G+/B+6IwWpzaekOUn1YDbKyH6yIqBPLPX73cDqXhkn
+         EE6yfT7E4s5akMvHO8naf1zRI/t4MNStia8E2JzTF7g8J0GPzZS2bXnsEIXdpkFCd1tT
+         ++Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746392850; x=1746997650;
+        d=1e100.net; s=20230601; t=1746392960; x=1746997760;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AUnzwvptOByim/ucOYr6TfZ9ss3/DQ7PxM0faURq4oo=;
-        b=ZHpya9ZhRKM5RUB14I+73D7/bktJ7AzwdmoagpnCxFHvHb4FkQPZRoLRftEEFodDhq
-         eZnn1DJhKw1KbyyM0Hf8jYp3z1itbkss9uMRROslfO4uH1Tc+hhPsHKrBtniMgmBY5NP
-         DEGRm+6uCjEkO0J5aA3++bus6cqq3iWmdDRkA3U66qgWDm5NRwXuErSYu826i8AS1Czr
-         Ap4JB4OIdvyfqnur+5hdsoPDCvKWoGwWls14arpLYvQVwAF8AMpjmdqNUDOK8ebhsjSM
-         vKF2VBLP/MYMVIAoejO9bv7t4kW7oprJsqwsviIhrX3pSJeMalVLmutVHqoTMOQ3pLZC
-         00sg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUjoRn/DVfBwimU+TrSQE8NY2ubKHWRws+ddjXCz1OKqpGFrW0gnnWVt2AOFh6sko8m7GsOxqb@vger.kernel.org, AJvYcCX1SB/HPFz8th3SRZXvz1PhM0EcjQNMocvptszqI5WSlN7gMj4xYIIbqVrHYdhMK5iTLZitXxnjTXKZ@vger.kernel.org, AJvYcCXMZjvGtvQX0aVqZzAD02EbYokNTMg6IP64whuqkGW23Csz0+Y1z70vaOueQjeoG3d4mLezLp6yDUf2q1pj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTgKpIK8ENPomISBwuDbOWCGWobLKOmW2Eh1sVrbrxT+cH9iqu
-	qhvlOxfMgmAN1SRHIUyZ9eMBrZDUPxArY87hGSiGi8SNyxqGz5tpG1DrSGI5Ku9wPdS6HfgMif8
-	66TNqknJFcUGjmGiMfl6UJ/r+CFW+rC5y
-X-Gm-Gg: ASbGncvXqja0CNXbr8o0Erc/ca9OsQGdKk5NONzLPW5AFsBTGQW2ANQRGIwVzpgXi+1
-	Gmak3tNNFlUOMgtDeTCe4X8woYpqApwedL4nfUK1GrlimIJdjiiVT819mkZhVR50lYvxgZ0qaJx
-	oVt/gKCMq7pMb/smDSxMNMwDiAiUvmhsZ1I6zuKvynyewaidL80EAf5qw=
-X-Google-Smtp-Source: AGHT+IE4yCRULV8L0X001s3hseepDxE2pMX59fNpwmKQdirlnzPxqBjXHGsiaArFgHU3ITvCieH+XPwI6UqVlx0sRJ4=
-X-Received: by 2002:a17:903:11c8:b0:223:f9a4:3fb6 with SMTP id
- d9443c01a7336-22e1e8c3ee0mr62089055ad.11.1746392850175; Sun, 04 May 2025
- 14:07:30 -0700 (PDT)
+        bh=QfT+Zxg3Ps41McBcdx2w4OJm7zncfc7X1rPsHGcw0z0=;
+        b=ssQAJQkZVHs2diSFdLwGVm2RMJ59O4uRyfmpcmHwuDkiAMKgHBrqj98HRDIhe2ybYH
+         BI5NwbDQtQTiPsAT+WMldxAzUFs0O5QK0Bt9RT8Vp4llyxQYpQszGl2TmResXmxjHhJJ
+         PtM1ZfyF8ycFAZLUX0y1sLYAqmQqOvxrOUKYc1o7hWHvfRp5cI0do0dNr67MROdQYHv4
+         cdJY+qafCeksPNWSfzzs2G+CS0NE2y06QHF13AGS/wKVQMf70aLnPRXKlmHA+ikPrmWp
+         7IHryznVVRN1PXlxIQhBkP3aLUJxhMHJgK7VdD3h8EPfYF+e7PT2OrXLemZwt3Sy2ZU1
+         aAUA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLycbWCeWaSSSK02byxUTfU29nzgwYKyZDg65hAhtmcqzri6j4kZReZVuP6nmPoFjF+9WwsvTbKjNaaVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkF2tcwFotYRAQ7D/W4r+AZsH5aRK2YVCDekeUUSQRtlPNr4cB
+	fkkPcKzFZe46F3Yhcz9QhsvEoijlKcyK+H2DhD3ZQCSHBugJB8Ne2VktfzWOdBdKihS56dYBMRB
+	/idJ+ve/nWWUiXnNdt6hI30oJqf8=
+X-Gm-Gg: ASbGncsGLlF0BFQWi55PBTrt5oZCkwRMreX22+7OfRKLJYTpWQz1183HQou4jYV4BO2
+	1AeWXIrHUFqqQ0yupcfQPHCTBBo0Zczh4bjJZyMslZ/gUGG9mOHpUA56yf6lijVDYA1k8EvNaHR
+	JmlYxS4O7j+05U7oi5Xcdun1ant5+GjJXeAt781kzfF5UByTNUN/NN1tA=
+X-Google-Smtp-Source: AGHT+IEyQ8Cn4QAYZf+y84T7uCSwNBjwsnr+WPyy9pwHvrfCp2EP9RKPuRWxICK3yBH7elJzirFItrsmdm3FGbNjikM=
+X-Received: by 2002:a17:902:f541:b0:224:c46:d166 with SMTP id
+ d9443c01a7336-22e1ea96542mr80783075ad.40.1746392960457; Sun, 04 May 2025
+ 14:09:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503084443.3704866-1-christianshewitt@gmail.com>
-In-Reply-To: <20250503084443.3704866-1-christianshewitt@gmail.com>
+References: <20250409214422.1751825-1-martin.blumenstingl@googlemail.com>
+ <001d01dbaa48$ead66d10$c0834730$@martijnvandeventer.nl> <CAFBinCDtMG1qKM9aax7RBpN+dw7c5MVOoTrX+PzXF1QQBOg_Lg@mail.gmail.com>
+ <09b7c34d-82c7-40fc-bb51-38d0fd925d38@linaro.org> <7c7b3e81-bc46-417b-a3f4-2d48f2d3638d@linaro.org>
+In-Reply-To: <7c7b3e81-bc46-417b-a3f4-2d48f2d3638d@linaro.org>
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Sun, 4 May 2025 23:07:18 +0200
-X-Gm-Features: ATxdqUG9_zNauUndvpj8bS3vMeW4x8DGoy38X_LVK07lpYOYelvTZu9YHJNhxnA
-Message-ID: <CAFBinCCcGk9dRUp8yj740OMcgcck2iWe_cN-J0jOt5M74+zBgA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: amlogic: dreambox: fix missing clkc_audio node
-To: Christian Hewitt <christianshewitt@gmail.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Emanuel Strobel <emanuel.strobel@yahoo.com>
+Date: Sun, 4 May 2025 23:09:09 +0200
+X-Gm-Features: ATxdqUFTzdLXr8lgfVVRwynOfAK5_xWM8dvz6TKO1bT-XzLgIOntX4SmbjH_alg
+Message-ID: <CAFBinCDxhx6siM0woQCJwr2J_SJNJq9gKYm2qLu8W=bN4DWj8Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/meson: fix resource cleanup in meson_drv_bind_master()
+ on error
+To: neil.armstrong@linaro.org, linux@martijnvandeventer.nl
+Cc: linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	jbrunet@baylibre.com, Furkan Kardame <f.kardame@manjaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 3, 2025 at 10:44=E2=80=AFAM Christian Hewitt
-<christianshewitt@gmail.com> wrote:
+On Tue, Apr 22, 2025 at 9:23=E2=80=AFAM Neil Armstrong
+<neil.armstrong@linaro.org> wrote:
 >
-> Add the clkc_audio node to fix audio support on Dreambox One/Two.
+> On 22/04/2025 09:04, neil.armstrong@linaro.org wrote:
+> > On 19/04/2025 23:32, Martin Blumenstingl wrote:
+> >> Hi Martijn, Hi Neil,
+> >>
+> >> On Thu, Apr 10, 2025 at 8:46=E2=80=AFPM <linux@martijnvandeventer.nl> =
+wrote:
+> >>>
+> >>> Hi Martin,
+> >>>
+> >>> Thank you for the patch.
+> >>>
+> >>> I encountered this issue some time ago as well and had a possible fix=
+ in my tree (see
+> >>> below).
+> >>> My apologies for not upstreaming it earlier.
+> >> No worries, we're all busy with both, offline and online life ;-)
+> >>
+> >>> While my fix is not as symmetric as yours=E2=80=94I like symmetry=E2=
+=80=94it is somewhat simpler. It
+> >>> did make the assumption that only  calling component_unbind_all() was=
+ at fault and the the rest of the
+> >>> code was correct. Therefore, calling one of the following functions:
+> >>> meson_encoder_dsi_remove()
+> >>> meson_encoder_hdmi_remove()
+> >>> meson_encoder_cvbs_remove()
+> >>> in case their counterpart was not called, should not result in any is=
+sues.
+> >>>
+> >>> I just verified, and, as far as I understand, all of these functions =
+do a check to confirm
+> >>> whether the encoder was initialized before proceeding with cleanup.
+> >> Yep, that seems to be the case right now.
+> >> Neil, would you like Martijn's more simple approach with a Fixes tag
+> >> and backport that?
+> >> Then I'd send my patch as a small cleanup which doesn't have to be
+> >> backported. Otherwise I'd spin a v2 with a fix for the issue that
+> >> Martijn found (and including Anand's Reviewed/Tested-by)?
+> >
+> > Please send a follow-up, I'll apply this one today.
+> >
 >
-> Fixes: 83a6f4c62cb1 ("arm64: dts: meson: add initial support for Dreambox=
- One/Two")
-> CC: <stable@vger.kernel.org>
-> Suggested-by: Emanuel Strobel <emanuel.strobel@yahoo.com>
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Yeah finally please split this in two:
+> - patch 1 that can be backported
+Martijn, I still haven't found the time to send a small patch that can
+be easily backported.
+If you want to submit your version of the patch: please go ahead!
+Otherwise I'll need to find some time next week.
+
+
+Best regards,
+Martin
