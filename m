@@ -1,118 +1,79 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F69215F306
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 06:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7B44C7C
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 06:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746339286; cv=none; b=L/YSb8MJoWXskMop+uN7XzGumF8rNC4LdKRoVc5chXB16xICCk01TVoli9dL1c93E53trSjkxIUdcDKLS33Wdr/lh4ipWG9uAXtJMT9o8yUgvZC33q+fNQtJmc/YFPwg7ESnwe3lSOkdtnoMh7iSboFWJ4PnfTBmVfXbugSymW0=
+	t=1746339392; cv=none; b=O1mU3joGzXqFnoZTau72hdcxcQToTsKuadoWpmXWCLrkkHyhGr8jUb+gY5IkytnSb/YCvfmlbkxrLy/05uMoBqS+CkVuSY8HuApEEKyd/DFMhStUVOjEbG8iVSJIlTy2meFVYZ9Cgsh/Hd0sN7PshQ7ehFb9PGKIVFFSbBP3Ywo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746339286; c=relaxed/simple;
-	bh=dj2UV7mBEC83Fb8EOblKnyL32VtjiPyeco4gmRDzMXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7aszwGvEREurkBKZIkpGPZj7b1x/uXUFezl5pOTwbcNNoyQUqbRJr7G/d5mGUlEEimwcy8ki1XL+/5iFlJekVGzHWZEB6TA+cbIMRtTpOIE2GP+IfWqyRpP8ZpSjwbM4C+uB6slA8z7/9NoWZoYBps+oUjGGOWgx9u2E0Q3tU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gHodoMuP; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746339392; c=relaxed/simple;
+	bh=k1l3lNy8QfCozdRuWnbxpupvL+fhq9WSJ9NvFXGxJq8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IXGwYh8Bd75vmaSj1aSgxEDwjnVCJ+RPDqyhMSgpu6TJJBAJS4Dxrhi9va1ACSJAmWQqt5Hv28oPiMHxqkfaSuXMVMGtwwXBKnUZnSoR9Zy9Esp4DraYaKuugXBtyDkYz/bFRHrD65/nSVQ30qXfr7+A4+27ZuLfrWLRZtEF33M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2k9SvRWB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gHodoMuP"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso3444435b3a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 23:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746339284; x=1746944084; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yGfljSQR72vHh57GoTeFdSyY80nTlVjhqTzRQ79L/6Q=;
-        b=gHodoMuPNT2UNrgtTGqPv3FtHgZrEFPeoVokKpzwAhUwyU1NMSl9H7fH/kJh8sLeVL
-         4iU3e2BDdvYkCDakWUYI/GqsWRYz+TNHM+yjHoFoXr4oGU4Ywy8wUs2JpGjgajG1Q59Y
-         tqqCxA+KL4tJD+enb1wwHF+ZW4W4eb1969yz4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746339284; x=1746944084;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGfljSQR72vHh57GoTeFdSyY80nTlVjhqTzRQ79L/6Q=;
-        b=lOw9gEfPseDm8bOs7OjEaASUpLzRKrcMiwnk/P5jSv4J7g5uXJaUw+qwwSmDBCmsZ+
-         45P5dH2Sim62uAITkBFHl5RBiDwxC9NZKQedpdCzyoE/gho0l+tvmCA13zFTwIGic2ee
-         6YGet+qRM+Dy0Rhx5N0UsHWHFyfANlJ0g3l2Wn21/imQ90GFOYibk7wayjUaoE9vdXpm
-         XBhFvyzuECol7mNfXw/7KNZ97933tqMJCYOYoBmNDydstRyXY4tziHNq+Jx0ev1tdwT7
-         h2yTq/+uPfVSeb8OIkE6rr5Svynfvp0V09aTSc9bdE6rIPI/AQTe/hT3IuEVPjDjydz1
-         /mZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkTaSzq1fzg+W9ON/cE3eoR7DZeZF31SPW6Rda1WS0IAyJbKxuxM9sZ5nWK3FZji41t1uUN2NcqFM7hwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYuJAKUyp/91VEocG8sYTsigrnKKpnXeSQTuKw+JA3yhvKjC2S
-	z9N8g+oSp2mEF7uHlchWBuwNQHyY6Nd7X3lhUrpLtEOXrJjvwvYwNnZFqDNEHg==
-X-Gm-Gg: ASbGnctsA/CcoSWRk44o/FS3TrvdYmeNO/SaqLUlN4AqGB2EBn4ZNOaMV6PlSKrBrf9
-	AM4cFBxBbFyX1dvwI2Nk2VeD2wavJSqziib0ds4XmjH0lkVKCHzzRTlUxsz+rnyPpGpkddUQZtF
-	klUSUT1iNlh5OXDehmDz2EIj0ZQY3OTyu4mxhX8txh38dvsDG7Ht2pMvSyFf7TnRpmR7n+02aBu
-	cROtHw6QjQqYIVJp/b1p2lAB0po4YHB4vdtx1KooimOVAjzdfpHwO8tZBJbbrRQe6/+QwsNc28F
-	M1IAVjMvD7Eiss9EyJQEFaeEPYdTCJya584W1/21hrjdeK7SRNI44Yw=
-X-Google-Smtp-Source: AGHT+IGl7KbXZvMm0c66oxwHKMUOs8ZckceHWFdHUpbWEDwsDlxH6Nfx8kQ90vTv/tmxvpXm7sjnaw==
-X-Received: by 2002:a05:6a21:1645:b0:20d:df67:4921 with SMTP id adf61e73a8af0-20e9620566amr3801614637.4.1746339284299;
-        Sat, 03 May 2025 23:14:44 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c979:b45c:9e0c:bf77])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3920074sm3355820a12.11.2025.05.03.23.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 23:14:43 -0700 (PDT)
-Date: Sun, 4 May 2025 15:14:38 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>, 
-	Igor Belousov <igor.b@beldev.am>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <q52ddqgi42mgknla4y6i5l65nj57qck6vuuruwcm6lpez7bxmp@3luv4iwjppa6>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
- <fddf0457275576c890d16921465cf473@beldev.am>
- <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
- <myejh7ow3qwbcptyn2d2nz6td67x2noztu4bxihs5jtqw7s4pk@j2wff5ztuu6a>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2k9SvRWB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FFCEC4CEE7;
+	Sun,  4 May 2025 06:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746339391;
+	bh=k1l3lNy8QfCozdRuWnbxpupvL+fhq9WSJ9NvFXGxJq8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=2k9SvRWBbM2BRHMN7c8f+QuhIb1OAA0knaO4TxcwABmvf6l42VkPoqxX5v/8NhBwo
+	 eBQULqcTmlmvmBITdkzaVfpNhnT/T3V6KfzlEF6iSZ3SxRc5aLg27m9NuVllwQun4O
+	 rJom5HkumeSbtOpG+Xqq3r2JxeeOgU5rp+31yHX0=
+Date: Sat, 3 May 2025 23:16:31 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon
+ Yoo <42.hyeyoo@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v3 0/3] Implement numa node notifier
+Message-Id: <20250503231631.7d8191e51e1d11569b529826@linux-foundation.org>
+In-Reply-To: <aBb-yDDJLObXF8P5@localhost.localdomain>
+References: <20250502083624.49849-1-osalvador@suse.de>
+	<20250503200334.3f912eeb7ca484bca4eec7fd@linux-foundation.org>
+	<aBb-yDDJLObXF8P5@localhost.localdomain>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <myejh7ow3qwbcptyn2d2nz6td67x2noztu4bxihs5jtqw7s4pk@j2wff5ztuu6a>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On (25/05/04 14:02), Sergey Senozhatsky wrote:
-> On (25/05/03 20:46), Vitaly Wool wrote:
-> > > Right, and it looks like this:
-> > > 
-> > > [  762.499278]  bug_handler+0x0/0xa8
-> > > [  762.499433]  die_kernel_fault+0x1c4/0x36c
-> > > [  762.499616]  fault_from_pkey+0x0/0x98
-> > > [  762.499784]  do_translation_fault+0x3c/0x94
-> > > [  762.499969]  do_mem_abort+0x44/0x94
-> > > [  762.500140]  el1_abort+0x40/0x64
-> > > [  762.500306]  el1h_64_sync_handler+0xa4/0x120
-> > > [  762.500502]  el1h_64_sync+0x6c/0x70
-> > > [  762.500718]  __pi_memcpy_generic+0x1e4/0x22c (P)
-> > > [  762.500931]  zs_zpool_obj_write+0x10/0x1c
-> > > [  762.501117]  zpool_obj_write+0x18/0x24
-> > > [  762.501305]  zswap_store+0x490/0x7c4
-> > > [  762.501474]  swap_writepage+0x260/0x448
-> > > [  762.501654]  pageout+0x148/0x340
-> > > [  762.501816]  shrink_folio_list+0xa7c/0xf34
-> > > [  762.502008]  shrink_lruvec+0x6fc/0xbd0
-> > > [  762.502189]  shrink_node+0x52c/0x960
-> > > [  762.502359]  balance_pgdat+0x344/0x738
-> > > [  762.502537]  kswapd+0x210/0x37c
-> > > [  762.502691]  kthread+0x12c/0x204
-> > > [  762.502920]  ret_from_fork+0x10/0x20
-> > 
-> > In fact we don’t know if zsmalloc is actually supposed to work with
-> > 16K pages.
+On Sun, 4 May 2025 07:44:40 +0200 Oscar Salvador <osalvador@suse.de> wrote:
+
+> On Sat, May 03, 2025 at 08:03:34PM -0700, Andrew Morton wrote:
+> > Why is this a problem?  Is there some bug?  Are these notifications so
+> > frequent that there are significant inefficiencies here?
 > 
-> Hmm I think it is supposed to work, can't think of a reason why it
-> shouldn't.
+> hi Andrew,
+> 
+> There is no bug, it is just suboptimal.
+> 
+> That the numa node state changes were tied to the memory notifier was
+> something hacky and that have us bugged for a while now.
+> Were mean to tidy that up but just never got around it.
+> 
+> Actually, first time I brought that up was when I reviewed the first implementation
+> of memory demotion (~ca 3-4 years ago now?).
+> 
+> With the addition of yet another consumer (auto-weitght mempolicy) that was only
+> interested in get notified on numa node changes, it became more clear that we
+> really want to split those up.
 
-I'm able to repro, I think.  Will try to take a look later today/tonight.
-Thank you for the report.
+OK, please add to the [0/N].
 
-// Feel free to send a patch if you have a fix already.
+> > Further down-thread, Gregory tells us that Dan's patch "seems to fix
+> > the underlying problem", but nobody (including Dan) told us about any
+> > "problem" at all.
+> 
+> That is related to auto-weight mempolicy patches, not to this one.
+> I _think_ Gregory means that I take it in as part of the series.
+
+Ah, I'm glad to have company in my confusion ;)
