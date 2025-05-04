@@ -1,310 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CB214F70
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5DB41AAC;
+	Sun,  4 May 2025 11:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746356962; cv=none; b=pca2garoVYWDKu4xgtofILWSnmTLlSZNaeyfJHu2mGifONaCI7GRbCSzaG6eKVi1SAx/H0bDpYNWajnE7tucP7wHrmxAwTcKHyaQpjBo+NOAdD9wy5MnOPucF/eWMCte15Gm79Tib9ymf6dbq92pcLN6VMQTsju7M4pkQbMZnyM=
+	t=1746357361; cv=none; b=GsP+plL6Om8u/a4bcVXYr4kP/6yeGr02K7vibAq+SAM5K8DUA2UqFkA5JLt73qDhQNp3ttLz1D8u9NVrWLAWDhdjMYHMVvD1spSxkX+aPHMrkwXypsUrhrWagBbMeu5L09qNtQTx8YNxbqTjJzKUx4PjKbEnFFm5LM6r96JiwTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746356962; c=relaxed/simple;
-	bh=cy53ThJnkCDaMJgQ055ps47ch/XTPqto9UYPXZizdlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o9ku4vzuVBspaEAjwr6ZBB3z1XoWFgLnGjES6j30sSCg0mnSR/Jjl9CGVZaHxudd6/HT/4QRWmkCEEeMjr70VLzq0eTR/IBr1ALn+0nAlJbR2F6ybZlFjMXfNbUvgF6L7hIbCK1/OR7dHvmf4Yi9vXk49hNsxPfbsXE4ZldCrGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPte1lAn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746357361; c=relaxed/simple;
+	bh=hWx8872nRG2owf+dWaC+w6SN4/npRrVZ/8Ejukj8DZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LzSc/yKtgGfiNZmlaOgrZ+mHY4Py7Kc0Z2jLVufxWxRnZuMiORA6XF6Es5Sc6FjpMn+v8GAtwHmFvzPAHRV5JgiyBxWoLB82+UzTm+SiIqDD2rpInJJJbsdGBN9aQJItrEqI6ObpXRK7qOOb/prKm5wWihvbPJs4A+KM1w0k/xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WvrASp2z; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPte1lAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E15BC4CEE7;
-	Sun,  4 May 2025 11:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746356961;
-	bh=cy53ThJnkCDaMJgQ055ps47ch/XTPqto9UYPXZizdlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mPte1lAnS27cxeIYbvOKvsumsxykBguHsByHWGdh7XJ7hVSZVEa+UNLMLwQMUnGHE
-	 Jv1LJD26++VA4p13BHrz6Vmqdy/qzaI0twmxYBG3o09G9UQJkNAw8dTJp+qKByfKET
-	 q2fa9D5tb1Y/tfkrX/VR+MhntHzL+rwdXQi4/u7MCrJwymHPfwMnTxyza0DN41vM8L
-	 shN2rThh8q4gKy/og9l3n6+rZ0zd4ehfYBHJuNym5J7halY4t+T9XTvQt5vWJuFLyj
-	 Bkn8GXCkVfXWTur2HG4W2GQcnVLsOHobjPhHCfVevcCZtT3pjquT88h3P2Vld9Qdmg
-	 wysPSn0YFC2AQ==
-Date: Sun, 4 May 2025 14:09:12 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration
- to reduce boot time
-Message-ID: <aBdK2EIMYYRmmEwA@kernel.org>
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvrASp2z"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so41133745ad.2;
+        Sun, 04 May 2025 04:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746357359; x=1746962159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oQcB8pOIo7fPfcqU8UCrjsrQ9eSJMuMR7jwg4emfdt4=;
+        b=WvrASp2z+iiTuew3eUlv1bzp2rtoEhOTyEGpZ23jWEtJdBaVui8y0pk/EdGEyVC4B4
+         1x762Njy58t9L7ehHJKFATV71+cU8E8NzhO0q166C9tgen8CRgdN4M3VPRJgMiILiIit
+         K/cd0PR/Z6GsxLDlYCWnoeSSoy3kKtStCJqMwXShrl5M/Fvt+/MeF3tY1mfoeyFZUPBj
+         Iq3XFqJyWMx6F8lHwUEJPLpzWIFBSuqJuuDmTBHAlMxDSBFRbuUOY/m5CYVauhG3OIlP
+         AREsuXePwn3n6J7qA36nKknlxWR9U3+ptGAk82U/05Bj+2CslI8WXAZW0hENvxQec+mP
+         7+qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746357359; x=1746962159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oQcB8pOIo7fPfcqU8UCrjsrQ9eSJMuMR7jwg4emfdt4=;
+        b=cE9DS4YPWI8EPJqrXIgb5LV217ZDa5VOZOSS4k1JBK8BKi8u47lYaZ6bJg4pnFUNVq
+         mio5LBmylLE+hX0ziRVGBIJ0xh/WyjYuZvvrRkt0YtvkMzuolT+J5bCNKdA/tIct5hqT
+         +ojvvGot9/poqP3KkiKSVUhSYamy4djH/gevJOirR8ffEuo9QcXa/42TifJPTvnNscbP
+         adRIn8btERatPTetqdyN75L0qLLG9XY2bmRtwyWPz/sdHUkdyIsbNZ0R3tnNTIgoDn+s
+         RA9g9SbozHGO3vs2DPhggwvUIZ2ddMbqAZQW8Zduh91c/iVFdxHSGH0emdBfPUojtGxW
+         MWpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHecJvlj9zWc6ct0UytPcItsf6KPihwqbaZ/MXMdUDViIps+dU0Nz8xMhgwbuuzqF7JK+v8RyyYiCO8gE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEYl3a7K985Nu4dLH4bb4CiwRP0X2oJ14GGR04q+/1mGgDJ91F
+	gbi4+jBZw70lYHlRccDDijkYKdQmG3diH+DmkBwctH0N5ru34+4Xwekp/3cgLxCLZsEtsdTUHRY
+	o+VJhIflBAABI0AFnkdrYGA2OGT0=
+X-Gm-Gg: ASbGncto9i55sDiiNRU43lVNxM/Qy883iYze3A4S5pQB06Uvb8BanOWoBsgMBVrSD/6
+	V4EVxqAmj4gLUrmvyx9QbGMaCTrp+fYvq8G2UdeIn8sf+eMBq0R4Wp1X8R66EFaMq5Zgmais+ZL
+	wwgzNb5naeCnqaufGMktl+iDI=
+X-Google-Smtp-Source: AGHT+IFwJ0bVq8qmQb1iICzTrvm99FhNoBMEQBMsIKFiztk4YpS9zDgTuqJJKxrDcV00P8Ffyh/QQhNDPV0iOg8NBEM=
+X-Received: by 2002:a17:902:d508:b0:223:5e6a:57ab with SMTP id
+ d9443c01a7336-22e103570bemr128940815ad.39.1746357359027; Sun, 04 May 2025
+ 04:15:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
+References: <20250503190044.32511-1-gye976@gmail.com>
+In-Reply-To: <20250503190044.32511-1-gye976@gmail.com>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Sun, 4 May 2025 20:15:48 +0900
+X-Gm-Features: ATxdqUGR_pnAy0VjpWxihzW6bSNaMuLqZmFSSkzOW6eu420sbs8DXYWWADSAFoo
+Message-ID: <CAKbEznvW8vFs2fuzhWb8o-yt4UjTt2Su9wJR-jCX7A41M_kDVw@mail.gmail.com>
+Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
+ top half
+To: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 03, 2025 at 11:10:12AM +0530, Donet Tom wrote:
-> During node device initialization, `memory blocks` are registered under
-> each NUMA node. The `memory blocks` to be registered are identified using
-> the node’s start and end PFNs, which are obtained from the node's pg_data
-> 
-> However, not all PFNs within this range necessarily belong to the same
-> node—some may belong to other nodes. Additionally, due to the
-> discontiguous nature of physical memory, certain sections within a
-> `memory block` may be absent.
-> 
-> As a result, `memory blocks` that fall between a node’s start and end
-> PFNs may span across multiple nodes, and some sections within those blocks
-> may be missing. `Memory blocks` have a fixed size, which is architecture
-> dependent.
-> 
-> Due to these considerations, the memory block registration is currently
-> performed as follows:
-> 
-> for_each_online_node(nid):
->     start_pfn = pgdat->node_start_pfn;
->     end_pfn = pgdat->node_start_pfn + node_spanned_pages;
->     for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
->         mem_blk = memory_block_id(pfn_to_section_nr(pfn));
->         pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
->         pfn_mb_end = pfn_start + memory_block_pfns - 1
->         for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
->             if (get_nid_for_pfn(pfn) != nid):
->                 continue;
->             else
->                 do_register_memory_block_under_node(nid, mem_blk,
->                                                         MEMINIT_EARLY);
-> 
-> Here, we derive the start and end PFNs from the node's pg_data, then
-> determine the memory blocks that may belong to the node. For each
-> `memory block` in this range, we inspect all PFNs it contains and check
-> their associated NUMA node ID. If a PFN within the block matches the
-> current node, the memory block is registered under that node.
-> 
-> If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
-> a binary search in the `memblock regions` to determine the NUMA node ID
-> for a given PFN. If it is not enabled, the node ID is retrieved directly
-> from the struct page.
-> 
-> On large systems, this process can become time-consuming, especially since
-> we iterate over each `memory block` and all PFNs within it until a match is
-> found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
-> overhead of the binary search increases the execution time significantly,
-> potentially leading to soft lockups during boot.
-> 
-> In this patch, we iterate over `memblock region` to identify the
-> `memory blocks` that belong to the current NUMA node. `memblock regions`
-> are contiguous memory ranges, each associated with a single NUMA node, and
-> they do not span across multiple nodes.
-> 
-> for_each_online_node(nid):
->   for_each_memory_region(r): // r => region
->     if (r->nid != nid):
->       continue;
->     else
->       for_each_memory_block_between(r->base, r->base + r->size - 1):
->         do_register_memory_block_under_node(nid, mem_blk, MEMINIT_EARLY);
-> 
-> We iterate over all `memblock regions` and identify those that belong to
-> the current NUMA node. For each `memblock region` associated with the
-> current node, we calculate the start and end `memory blocks` based on the
-> region's start and end PFNs. We then register all `memory blocks` within
-> that range under the current node.
-> 
-> Test Results on My system with 32TB RAM
-> =======================================
-> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 1min 16.528s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 17.236s (kernel) - 78% Improvement
-> 
-> 2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
-> 
-> Without this patch
-> ------------------
-> Startup finished in 28.320s (kernel)
-> 
-> With this patch
-> ---------------
-> Startup finished in 15.621s (kernel) - 46% Improvement
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-> 
-> ---
-> v2 -> v3
-> 
-> Fixed indentation issues, made `start_block_id` and `end_block_id` constants,
-> and moved variable declarations to the places where they are needed.
-> 
-> v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
-> v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
-> ---
->  drivers/base/memory.c  |  4 ++--
->  drivers/base/node.c    | 38 ++++++++++++++++++++++++++++++++++++++
->  include/linux/memory.h |  2 ++
->  include/linux/node.h   | 11 +++++------
->  4 files changed, 47 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 19469e7f88c2..7f1d266ae593 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -60,7 +60,7 @@ static inline unsigned long pfn_to_block_id(unsigned long pfn)
->  	return memory_block_id(pfn_to_section_nr(pfn));
->  }
->  
-> -static inline unsigned long phys_to_block_id(unsigned long phys)
-> +unsigned long phys_to_block_id(unsigned long phys)
->  {
->  	return pfn_to_block_id(PFN_DOWN(phys));
->  }
-> @@ -632,7 +632,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
->   *
->   * Called under device_hotplug_lock.
->   */
-> -static struct memory_block *find_memory_block_by_id(unsigned long block_id)
-> +struct memory_block *find_memory_block_by_id(unsigned long block_id)
->  {
->  	struct memory_block *mem;
->  
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index cd13ef287011..0f8a4645b26c 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -20,6 +20,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/swap.h>
->  #include <linux/slab.h>
-> +#include <linux/memblock.h>
->  
->  static const struct bus_type node_subsys = {
->  	.name = "node",
-> @@ -850,6 +851,43 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
->  }
->  
-> +/*
-> + * register_memory_blocks_under_node_early : Register the memory
-> + *		  blocks under the current node.
-> + * @nid : Current node under registration
-> + *
-> + * This function iterates over all memblock regions and identifies the regions
-> + * that belong to the current node. For each region which belongs to current
-> + * node, it calculates the start and end memory blocks based on the region's
-> + * start and end PFNs. It then registers all memory blocks within that range
-> + * under the current node.
-> + */
-> +void register_memory_blocks_under_node_early(int nid)
+On Sun, May 4, 2025 at 4:00=E2=80=AFAM Gyeyoung Baek <gye976@gmail.com> wro=
+te:
+>
+
 > +{
-> +	struct memblock_region *r;
+> +       struct iio_poll_func *pf =3D indio_dev->pollfunc;
+
+Sorry, it should be `indio_dev->pollfunc_event` instead of
+`indio_dev->pollfunc`. Please ignore this patch.
+
 > +
-> +	for_each_mem_region(r) {
-> +		if (r->nid != nid)
-> +			continue;
+> +       /* Only iio timestamp grabbing is allowed. */
+> +       if (pf->h && pf->h !=3D iio_pollfunc_store_time)
+> +               return -EINVAL;
 > +
-> +		const unsigned long start_block_id = phys_to_block_id(r->base);
-> +		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
-> +		unsigned long block_id;
-> +
-> +		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
-> +			struct memory_block *mem;
-> +
-> +			mem = find_memory_block_by_id(block_id);
-> +			if (!mem)
-> +				continue;
-> +
-> +			do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
-> +			put_device(&mem->dev);
-> +		}
-> +
-> +	}
+> +       return 0;
 > +}
-> +
->  void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
->  				       unsigned long end_pfn,
->  				       enum meminit_context context)
-> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index 12daa6ec7d09..cb8579226536 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -171,6 +171,8 @@ struct memory_group *memory_group_find_by_id(int mgid);
->  typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
->  int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
->  			       struct memory_group *excluded, void *arg);
-> +unsigned long phys_to_block_id(unsigned long phys);
-> +struct memory_block *find_memory_block_by_id(unsigned long block_id);
->  #define hotplug_memory_notifier(fn, pri) ({		\
->  	static __meminitdata struct notifier_block fn##_mem_nb =\
->  		{ .notifier_call = fn, .priority = pri };\
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 2b7517892230..93beefe8f179 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -114,12 +114,16 @@ extern struct node *node_devices[];
->  void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
->  				       unsigned long end_pfn,
->  				       enum meminit_context context);
-> +void register_memory_blocks_under_node_early(int nid);
->  #else
->  static inline void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
->  						     unsigned long end_pfn,
->  						     enum meminit_context context)
->  {
->  }
-> +static inline void register_memory_blocks_under_node_early(int nid)
-> +{
-> +}
->  #endif
->  
->  extern void unregister_node(struct node *node);
-> @@ -134,15 +138,10 @@ static inline int register_one_node(int nid)
->  	int error = 0;
->  
->  	if (node_online(nid)) {
-> -		struct pglist_data *pgdat = NODE_DATA(nid);
-> -		unsigned long start_pfn = pgdat->node_start_pfn;
-> -		unsigned long end_pfn = start_pfn + pgdat->node_spanned_pages;
-> -
->  		error = __register_one_node(nid);
->  		if (error)
->  			return error;
-> -		register_memory_blocks_under_node(nid, start_pfn, end_pfn,
-> -						  MEMINIT_EARLY);
-> +		register_memory_blocks_under_node_early(nid);
-
-Does not that change mean that when register_one_node() is called from
-memory hotplug it will always try to iterate memblock regions?
-This would be a problem on architectures that don't keep memblock around
-after boot.
-
-I thought that the for_each_mem_region() loop should be in node_dev_init()
-when we know for sure that memblock is available.
-
->  	}
->  
->  	return error;
-> -- 
-> 2.48.1
-> 
-
--- 
-Sincerely yours,
-Mike.
