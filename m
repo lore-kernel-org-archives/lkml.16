@@ -1,72 +1,43 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF9919755B;
-	Sun,  4 May 2025 09:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D018479;
+	Sun,  4 May 2025 09:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746350448; cv=none; b=IZpdopDGqyoCuHBG6eYK4rm5RVYyTiW956SCPveLqsIsiVzJhTRDInU/5GU8rR7nr8095jfCkAYp9+dJ1G4PU7BP4O3nZgJYvr2EyyKTNVKBKoPwpLWrB+ADyx/SVmphQtzwwspwFQljMcV3g1RaTrdBZ6Ta4yfz9t6gOL/T7oU=
+	t=1746350484; cv=none; b=oWpodp4rKlifkNv+mf/BvNJ91HG309LZb1gRO6jjTxO6dZq+EzdGRbzCdHhZRBQfGMx9g+84H47qWBVfuDL+7ccBcCIdkUshBB4B22JeQ5C3mBdLrPNTIiCSkUEKeIErAU1HjgsBNG0zygFpcc62HJn0KsOlFnP61Yh1Cc3Fx+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746350448; c=relaxed/simple;
-	bh=bnmIFV/6kiqd/zQ6ubVlJyRXXWhtIoH0Du5Iluybayw=;
+	s=arc-20240116; t=1746350484; c=relaxed/simple;
+	bh=ax8+aRdxPyEaO+MlNJoulX1KawP6Rs1aBWyJrGcNdL0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOdzUC4V+Gs72NKzXRwXwzODkOTeX//GxTyQB09lAibaj6Ml0GxCXo4GFM72C9/nMeQqKdHW97AlWIqTxhaBPlOPLodZ66aQQQfFx3LX1wsCtSuRVdE6wZqIE4aoMgtc+hufBXf1+WF95aUl3sBaSE35tlj1BCwnXykZjBc+FuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VxeqwEtM; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkgjQV6JvCrKiJ8zA/F7SLtiHWKbzFtm41Ds/ktmv9G0J7YyQjxMtrBIKQ3vuWqMcoX5oV28/WcZ4w/XixBY7GPR0CTgXDvPuEEtJ3o9vbLf3xrCxUtQMBrsbVDJI6i0AreG33paj0yxYCh9aVWNSBzVpV+LIY+DZBRn0oBESNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+QS6DPY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VxeqwEtM"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7396f13b750so4272846b3a.1;
-        Sun, 04 May 2025 02:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746350446; x=1746955246; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=97kcTk43dhqp/d864yYFR+fImDIpALIoeTA0RgzUeqU=;
-        b=VxeqwEtMxDwIlYB1/+GQ60jpApq3FRaO4LIxJR7tL9oOHc1DbtzojzJybdn0hifc8g
-         oS989k0+un5EALgQ7bvohSQOfkqE92xcfP/OzfD/xCjPFFsgyoqXqC9WTnjg1L3CeqsQ
-         pHBa77mrAzg/+qh30YwuHBW1UHzhsRMFaSXvOlarGtATlU6OenGk6n5VUIlKn0hm+rxg
-         k8VjY4KrfdIhURzuWihU7AzTRJvQFFJvOqkisP5gU8ewuJnI6sjzfXoVN5Ou6mEZtfFe
-         ck3aLiw0+IQMU5ljPjsMNhJx0AukfMcrL/DDE5pMB6Dhgj3BDvuaLS+cJOHvgVXjzYwc
-         GSrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746350446; x=1746955246;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=97kcTk43dhqp/d864yYFR+fImDIpALIoeTA0RgzUeqU=;
-        b=Y0UUZNphtfH1ju0uhD7elgZaf6R7OWe+EOE7VsjFk04vpwnt6+DLJ5s3ctPwRcmn1w
-         SygDKP46hMRDM3kR0PvEmmUZJHAn5lDQoPZ8h32CliSTB/vwp1WZ6+qypDgtJwlUPhJe
-         RzeuK4H8upmgW2TlWrNV7/D9UbBROEbjYhP9H3muZrzay7FRl820sJxjTdzKj6+B/5ox
-         shvUgnKbYQhqyXun/6NG0iS5+Fee+HfzHXHULCXW98DOzo3+9jikvDtyVst3NU6R7YRt
-         aOMYpfdvPEssFV71WPuPrJQlsfF5wBT2uA8nkxUkGsxrBtAdg8H+HczGlFbvN7Y3TUYh
-         fK1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU6LSFI1kvck48Nul9ngsP9J7UPipVvRlr9yXegmglO4uwFVXi8jxwmKdAz3UnoaW5L1bMd+b2OF5E=@vger.kernel.org, AJvYcCVd2xwfk3fATlRaJ8o3nGUTshk5I101wGObKhR2epw7er5x00L8TD0jj6/6+qcjN8okDee6OaHYN5U6eu8=@vger.kernel.org, AJvYcCWBEWBqPQjAdHYACWvAmG1mDIeK1ZHRtSptHF5fUMmLqp/mymJk2VMZPH4K1TI0X6Cseud24e85r+Fr8bZX@vger.kernel.org
-X-Gm-Message-State: AOJu0YymFsXIA7SRLi8IV/8GVYVIiAvfmOQc/7vjhHah+olq5PzakPeN
-	CpxPqP/aE9dpI3JeTpMBQgsQep/V3A+BGv41yjfCK6CwHCPOJvAG
-X-Gm-Gg: ASbGncuoL5qDL2zfmArdep3oKT6tO7MMgO66NhZPTIGP6diSl11tACYBOk7dlCharLb
-	4aRDamcoUA3DLoT847QzcopzMUMQ6nnZ0UUhRLtkJAgpTEMwXVByvR83a29y09qFGyrVjGx2Rod
-	8R/p18whljwKnRRwJYJZeknNUWfhauVEyo2WzFDRiUcswCn2naYisHjjf/bJ6wXCu2eN+CxzrkI
-	3LXGEFiDXZuLRFIu8CxzKyMDIDi9JKj2Nj1RBjuj+06SyiXz7d1JoNuKzl50PpI0SOn8SEOas/u
-	2tMb5GWVcVSXNEeHaIbMQ/mA+7s/agpYYd9Vh3R9b6qJdioDid/Kuw==
-X-Google-Smtp-Source: AGHT+IFN4aggQ6z9vekN2j5O+RJwx4rkH48qO/oKOQG3MBhx99Yp02pln7uAS+pyXLqSs8olpPVImA==
-X-Received: by 2002:a05:6a00:f90:b0:736:eb7e:df39 with SMTP id d2e1a72fcca58-74067443866mr7628909b3a.24.1746350446388;
-        Sun, 04 May 2025 02:20:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021e07sm4560702b3a.113.2025.05.04.02.20.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 02:20:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 4 May 2025 02:20:44 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: pkarc <ivanchojara@gmail.com>, Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (ausus-ec-sensors) add MAXIMUS VI HERO.
-Message-ID: <3c3e1ed0-403b-47bf-81b4-4e85192c1ddd@roeck-us.net>
-References: <20250503230020.1005801-1-eugene.shalygin@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+QS6DPY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B48C4CEE7;
+	Sun,  4 May 2025 09:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746350483;
+	bh=ax8+aRdxPyEaO+MlNJoulX1KawP6Rs1aBWyJrGcNdL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i+QS6DPY9q4fhLxirBHWrjszL2aPuk5iebh+Hj9bxIeszCWrtxnwRvbcrGsmvznX3
+	 4kkFRyl+tREe3pUrNNsQmCU3zaTOwzw2wfKgHXe5b2pXlUTqHPSUsqAl7cPU3WGMxT
+	 Qn9mKC4U4+q0YnPLAbth71mQdTCAu2kGlUwqxcE5OaWjUaiC0hih1QmzeQLNl5PpUe
+	 bQhXPfrpFaPOTJEoPfRul+hdI/eT4ooYFWB4BpdngZeVM/6eZxTAsz4WkvBO3EXMlv
+	 vqoKoUT0E/qdxT7d66pSTZpqPKCWoz+WXH59pV1ZKnbAPykVhjx9JYlutXWmk4HgVm
+	 1pI9LATlp6LHw==
+Date: Sun, 4 May 2025 11:21:18 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, bp@alien8.de, thomas.lendacky@amd.com,
+	hpa@zytor.com, michael.roth@amd.com, nikunj@amd.com,
+	seanjc@google.com, ardb@kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH v4] x86/sev: Fix making shared pages private during kdump
+Message-ID: <aBcxjsdC4tsIgIf2@gmail.com>
+References: <20250502212143.578866-1-Ashish.Kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,17 +46,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503230020.1005801-1-eugene.shalygin@gmail.com>
+In-Reply-To: <20250502212143.578866-1-Ashish.Kalra@amd.com>
 
-On Sun, May 04, 2025 at 01:00:06AM +0200, Eugene Shalygin wrote:
-> From: pkarc <ivanchojara@gmail.com>
-> 
-> Add support for MAXIMUS VI HERO.
-> 
-> Signed-off-by: pkarc <ivanchojara@gmail.com>
-> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
 
-Applied.
+* Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+
+>  
+> -			if (addr <= ghcb && ghcb <= addr + size) {
+> +			/* Handle the case of a huge page containing the GHCB page */
+> +			if (addr <= ghcb && ghcb < addr + size) {
+>  				skipped_addr = true;
+>  				break;
+>  			}
+> @@ -1131,9 +1132,8 @@ static void shutdown_all_aps(void)
+>  void snp_kexec_finish(void)
+>  {
+>  	struct sev_es_runtime_data *data;
+> +	unsigned long size, mask, ghcb;
+>  	unsigned int level, cpu;
+> -	unsigned long size;
+> -	struct ghcb *ghcb;
+
+So this patch just morphs the type of 'ghcb' from a typed pointer to 
+unsigned long, while most 'ghcb' uses in coco/ are typed pointers?
+
+That's just sloppy and fragile. Please just keep 'ghcb' a typed 
+pointer, and introduce *another* variable for the virtual address to 
+the hugepage.
+
+>  	pte_t *pte;
+>  
+>  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+> @@ -1157,11 +1157,14 @@ void snp_kexec_finish(void)
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		data = per_cpu(runtime_data, cpu);
+> -		ghcb = &data->ghcb_page;
+> -		pte = lookup_address((unsigned long)ghcb, &level);
+> +		ghcb = (unsigned long)&data->ghcb_page;
+
+If 'ghcb' has the proper type then this ugly forced type-cast goes 
+away.
+
+> +		pte = lookup_address(ghcb, &level);
+>  		size = page_level_size(level);
+> +		mask = page_level_mask(level);
+> +		/* Handle the case of a huge page containing the GHCB page */
+> +		ghcb &= mask;
+
+This too calls for using a separate variable for this, because after 
+this masking 'ghcb' is very much *not* the location of a GHCB page 
+anymore...
+
+>  		set_pte_enc(pte, level, (void *)ghcb);
+> -		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
+> +		snp_set_memory_private(ghcb, (size / PAGE_SIZE));
+
+Do we know whether this is safe? Could the huge page around the GHCB 
+page contain anything else? What is the structure of this memory area, 
+is it all dedicated to the GHCB, or could it contain random other data?
 
 Thanks,
-Guenter
+
+	Ingo
