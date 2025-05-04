@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B26134CF;
-	Sun,  4 May 2025 13:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C61CA32;
+	Sun,  4 May 2025 13:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746366037; cv=none; b=cPo+upI4OQwtgxhR8mISeaBbjN74fkI0FeVeOrDqnntrBbE5ttvUWkZjaSl5qmlo4k2F+7yDU8NHq0tzLVKy1u5uoV+MsB7HAvkA4clRjP4xz2Fu6KWchk0P5VTeKE8rgycIdYOwa2lzdJgKe+GclsIPw4Vms7os3h2EdX3tL7Q=
+	t=1746366149; cv=none; b=U6MUpbzYvuhEZIIoNrsjd8zCgtx/IcgwgZl3sXft/UtlkjJVCC8kAreMC7dc/6KNXiVUrgROn3G4dx497YJumzdIhzFJZm7JZGRlfcgF3lKRkJfYY16NYgEggot2t+yhzmH0MaPyDDWGiyAH9xxxVLrYUqh7wDwEXoFnpFg66hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746366037; c=relaxed/simple;
-	bh=dJnUiR5cNsLfSQ1Zv/Y9/lkRQtOf+Fcf9zsiIdzVeic=;
+	s=arc-20240116; t=1746366149; c=relaxed/simple;
+	bh=EMK/6xmQIcvv2VW+k/kKz7387ntE3glyvmCjdd/cTcE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EzOFGRTZsKaXMko1SkhakID3g7W7LZMl4mDQfk+p98//QlSkAndx6BwzFuML6fCNubNQ/rGruWZvO8u9lVFZifizEffyMN/DUPV8ml1knKoRDOlUo6pk/oKkv4sjbBAUFeymv4XiHuSQyMiMH3ckIfF2gk+sLbXKCkMVfQzlon8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3EKaEIo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cbPsgLq76hzvfPvjSFY9tK2qWhSEKg80nkc2u1tYn/9X701G01b+BHN/sy+L0vtgLlsA5B8HG8uRIIIGOgDdneCEthVxraup/D1X0KoFi8wzGgxlhzy9UYu0DCnoGKUSqOg9/x0/t7Nn44zK2UOd59iDrxaAHvdnB6ENUW58GNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hD9w529L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3EKaEIo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62319C4CEE7;
-	Sun,  4 May 2025 13:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hD9w529L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8850C4CEE7;
+	Sun,  4 May 2025 13:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746366037;
-	bh=dJnUiR5cNsLfSQ1Zv/Y9/lkRQtOf+Fcf9zsiIdzVeic=;
+	s=k20201202; t=1746366148;
+	bh=EMK/6xmQIcvv2VW+k/kKz7387ntE3glyvmCjdd/cTcE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H3EKaEIo8kU+67i0Qh3t/GtoHfnzFXaz4fcsGFTFbz/gV1gvbmNyfUzX4nG9BwKS1
-	 PiTRC8d8hy2f7g92FmOp+cusFYMU67tplM/99CAprHhbtSfZLsLYeIHxMoYJyo6yro
-	 QqQJHE3BtkZzfU9XANezLLITtvC90W/yGAlGSxqBgcMcmUQW/xxoNeOOWF3j34Ify2
-	 2A/c/GqtdUVnlBaeZBp+kqYkGhrssxOyY9t8/r+0e6yz3tZIGOBslbgzVHmSBa4CUY
-	 Y9AVJHAXMdjMVy102O7w3PR0T/vZ+yCk4BGIsHwKh268+EGje8zxkLwO9nTUE9j0Ge
-	 hn/v/dRu4o5rg==
-Message-ID: <9f01a9a4-89b2-4bfc-97cd-827be989ef16@kernel.org>
-Date: Sun, 4 May 2025 15:40:32 +0200
+	b=hD9w529LF7g0Iy9+MAsiTXXNqH/W0/em4qm0THlCqruYq3CFS0moqg9XscHtK1ALj
+	 SIeMlJ6uUFbYm7nJnWEChFkRROJmmeiJPuTQTtYMPKfHs4j4p7fjy7Kaotwkz48Xyt
+	 9oSBqD1I8+1bPPMnJ7up2oj9r46GAQESU4KAfN2dFcYP3ymM/B4jfIHTLgfM46Yy/D
+	 GXQXG8fRrEkFo2IABkSbtJJwFn8RuDaMirmdpI+AzZG/KfQKHLv9XpJzXWF6OBH3qn
+	 jjnHMyKPZK6yCOwCYDYtcxft3OBAY2THzqA5sg7RV6J0S8k3iutFoxDwV7eZSTpSrC
+	 k2GiFvb2lIsGw==
+Message-ID: <c448ce68-16e9-41b7-a69d-e28c1043f8ae@kernel.org>
+Date: Sun, 4 May 2025 15:42:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/2] memory: mtk-smi: mt8188: Add SMI reset and clamp
- for MT8188
+Subject: Re: [PATCH v7 1/2] dt-bindings: memory: mediatek: Add SMI reset and
+ clamp for MT8188
 To: Friday Yang <friday.yang@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
  Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
  Matthias Brugger <matthias.bgg@gmail.com>,
@@ -46,7 +46,7 @@ Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Project_Global_Chrome_Upstream_Group@mediatek.com
 References: <20250430094545.23932-1-friday.yang@mediatek.com>
- <20250430094545.23932-3-friday.yang@mediatek.com>
+ <20250430094545.23932-2-friday.yang@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,37 +92,44 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250430094545.23932-3-friday.yang@mediatek.com>
+In-Reply-To: <20250430094545.23932-2-friday.yang@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/04/2025 11:45, Friday Yang wrote:
 > From: "Friday Yang" <friday.yang@mediatek.com>
 > 
-> To prevent handling glitch signals during MTCMOS on/off transitions,
-> SMI requires clamp and reset operations. Parse the reset settings for
-> SMI LARBs and the clamp settings for the SMI Sub-Common. Register
-> genpd callback for the SMI LARBs located in image, camera and IPE
-> subsystems, and apply reset and clamp operations within the callback.
+> Add 'resets' and 'reset-names' properties for SMI LARBs to support
+> SMI reset operations.
+> On the MediaTek platform, some SMI LARBs are directly connected to
+> the SMI Common, while others are connected to the SMI Sub-Common,
+> which in turn is connected to the SMI Common. The hardware block
+> diagram can be described as follows.
+> 
+>              SMI-Common(Smart Multimedia Interface Common)
+>                  |
+>          +----------------+------------------+
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>          |                |                  |
+>        larb0       SMI-Sub-Common0     SMI-Sub-Common1
+>                    |      |     |      |             |
+>                   larb1  larb2 larb3  larb7       larb9
 > 
 > Signed-off-by: Friday Yang <friday.yang@mediatek.com>
 > Tested-by: Friday Yang <friday.yang@mediatek.com>
 
-How is this possible? Are you claiming that none of other authors test
-their patches? How testing would be not implied by authorship?
+That's not possible. Otherwise explain me how do you test bindings (and
+using static checkers is not testing).
+
 
 > Reviewed-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Acked-by: Rob Herring <robh@kernel.org>
 
-Changelog says that v7 has only following changes:
+Where? Provide lore link. That's a v7 so I expect all your work to be
+done public.
 
-  - Remove the 'devm_pm_runtime_enable' change.
-
-While v6 had no such tags.
-
-No clue what happened here, but looks like mess with the tags and really
-incomplete changelog.
 
 Best regards,
 Krzysztof
