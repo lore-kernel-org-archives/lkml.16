@@ -1,83 +1,285 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ADC17A310
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6DD71747
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746343573; cv=none; b=bwES2LCCLdwv2WocOzEjiA1VURmsmkq8AVeceORnPBDCGGM4oIoDFYSMZTTIXR11cNwhAWqUFiJSJNECiXuw6kd4yn1c6ZeFo6en0hcSLePP4tNSSruU0vYg6kVdBIG/RfFJUmTg8jVIpDYynL8Zh5wQMdGpV2m7bi8RoEDLd4c=
+	t=1746343884; cv=none; b=f8whfsgr1Dp3wycIOYmAeiCQeIkklpdiKGxPuIA3ELiE+luZeJp83GCOFTFPtKuogiVnl/CBD4tST9xH9UsAelCqeqpHPPDMjh38z9FnWo8KMNLNGbJFdyAdLmBA5khO2mV8W17LaxRX3ccf1djCFsyGLjt8L/FKWWIJVMLq7dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746343573; c=relaxed/simple;
-	bh=GTUS1HI9ySUJwYit1T9pAQENHqL74DU8KC5U1s95QAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rfK4/EgWh2IYE9tbCo3PM/z8FzibjMOMC052x6pN8AiSCdwWXCCB7lJdxlxyGKFoAfXrz+au3mg9PSG3OJ24isg8I99pojTDvCwfgASIwB9jwkanUGnDq+ZDo9+kmI8GMwVeRjxzsJ/4y2B0h/Qyp6KMNuookB0OwrOJiwsFt+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ec0OB3eL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746343884; c=relaxed/simple;
+	bh=JWDtpRod2Z9PKMefeVVPToDcaqeH/10vIrh8VbCfXZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cpjj1DNuCDB/vKwST+jYHQkZxwmy5G6j4redOT8TCYShd6mbl2UVbTzWomDCrVw6JdlVEiDamJPEP/qT/brrgQVMGILg+UtB/b2Pmgr6aOWRA33kOPgsmC+8ZvQvuvKNllWybKnQ9FbHta8L/3vawly0PSIkbErRXOmzEkFL9HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ap3u+CB4; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec0OB3eL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17752C4CEE7;
-	Sun,  4 May 2025 07:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746343572;
-	bh=GTUS1HI9ySUJwYit1T9pAQENHqL74DU8KC5U1s95QAg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Ec0OB3eLR5HGgAWGnog0bl4A3V8JGzKID2hymJcjDcAsMfhk6blKPopYlXkNbtxF5
-	 ZYzvy+XrhyQeaW2Jnp8u96kRsSYS2Rg7XZ8p+7P8xobpIwMDSPCR+APaAMJVxtCNnB
-	 T+GYn16KDJp1NidmaX10E9D9WCwI9+n0p9d1QMkxYAfcKlc6xYkZPvblADJx+b1tTW
-	 DY/OLawo9mrmX2m+s4F5g0A3pXURaYZPLZ1wFxY8UP9WBvqswevA4n21mTfBRz+bqz
-	 Dt30lj6lOBv/i/GReV0FPRPEubbll71ypPz78fAlssK7yX4v0ba5o2jjVI0zX7P2YH
-	 7BpX2lsLaGXYQ==
-Date: Sun, 4 May 2025 09:26:08 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: [GIT PULL] timer subsystem fixes
-Message-ID: <aBcWkIOBqkKG8lH-@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ap3u+CB4"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736b0c68092so3067734b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 00:31:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746343882; x=1746948682; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mES14wxkp6ypGEG4ZwVtSZbRNaiaOpn+45mdrvWbng4=;
+        b=Ap3u+CB4cIxafjJX6CcKUUih+Ov4TlHbio79i+iO7gO7tJ0g/nmfTcA+h6MaNBRPAe
+         wW/k1gkWR9QX72gOgqRFnUvGr5Dm7PMHsa2gEoJioR0xL7GteYLtmw2Z26VLoC0Rd3Fu
+         pmOCjkVkaHQWbnsgHDsk5te33qlaN4odY/VRly8uQAhtX75gyepfjnPMiVD6n6SHwgtf
+         y+rlgsksFqrlG/75BrmjARA6L2LHfkYTCyDlnJipwUeK57YlqiSjUn1aoAExupQiyqGa
+         VtOWoqfbfRoy2iB5T0BgLOzgROfphBRysSvhdHRGRBQ7kaB/JDEP5+G3TUvcipxQfMs4
+         kEiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746343882; x=1746948682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mES14wxkp6ypGEG4ZwVtSZbRNaiaOpn+45mdrvWbng4=;
+        b=C3aOfuvlTW7kC7I8djzGNgcVT3cO011E3eV0QhOP6MDZZiJPm/rUKHEzFg0oa5WZLg
+         P1OldsGwQdg93sK5mIKZf5w9iJNAryFjf6AqgaY1nkqZi+K3Flww6E4Zj10pEHJeE2oS
+         x+hSVJ+yffkEukO+FYO16EXMukCHF+iKTMWEdtnn6zJiFbZw0b5ztqv6h0NETO9gDHLv
+         2Pdies5xlFU04qZlChJIXuFWKykvZlQnwrNmpfsnX23/klGWp2fQmhHcI/feSM2qjjX4
+         s5X5Pa+itvs6q2wr9TsYEbMBOK8KfGx4GmUPat2sq7iUTm+TGeD/xQR6uxM5XiBUIKVL
+         cbGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhJueTndLJU1HzIY/WokFeB1xNLaJM78TI77RZIORtVG/jdoNgWKnpXz1Y6gfoYjfD+z2wxxScLmHw+/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu/arWWaFM5PqIEkTSysJh+85kOewrvEKrXaK1SUXcAlWu0ibT
+	l+mhQlj30M7p7DU/n65K3IPeWSfrYRa2h4rhackXyYIaOYEwQQlRMpw4r/X2M9W8q0rP1+GhIzH
+	6qW8nLl/TOD2z31BqEN5GTqNRgvGF5SdOcsZW
+X-Gm-Gg: ASbGncvonyFdh73yWcWKQThW355xy8heqe9dUvdK1WUqqeT5xFHgP0j42LE6ILitL2V
+	lPFcxFIUbQU/ZTuunLIdHLBnZixXNEf3KyNMGIiCnqLDz59+tXtWk/cTx84qsBppBqZeC0+Hchy
+	v2endwRfIJXPrFmRISJxsOJqHGYIkZjqFQL/SSLkdE/FJZbe2wiR5yCf8=
+X-Google-Smtp-Source: AGHT+IE49HHyBFHYK5Ma1n8ibWWY2Z71d0A2lP+Fp0QQ776R4UV8U6urHAdmxipgUMex/CJPIT+oono35QA4cLxBqe8=
+X-Received: by 2002:a17:90a:d883:b0:2f8:34df:5652 with SMTP id
+ 98e67ed59e1d1-30a4e5c6367mr11726430a91.21.1746343881762; Sun, 04 May 2025
+ 00:31:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <6816bc63.a70a0220.254cdc.002b.GAE@google.com>
+In-Reply-To: <6816bc63.a70a0220.254cdc.002b.GAE@google.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Sun, 4 May 2025 09:31:10 +0200
+X-Gm-Features: ATxdqUGDaM8z6UJHm0uFbbjG2MkMwaVs9nw2jxDHgq0qPylbLW5EBC7za5BI-K0
+Message-ID: <CANp29Y4-+Xipt+0wwR+7KWg=c+tbLEM+E8PgvijFiT4cpODbaA@mail.gmail.com>
+Subject: Re: [syzbot] [kernel?] upstream test error: KASAN:
+ slab-use-after-free Write in binder_add_device (3)
+To: syzbot <syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com>
+Cc: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
+	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
+	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
+	syzkaller-bugs@googlegroups.com, tkjos@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+This was found on an outdated tree. Please ignore.
 
-Please pull the latest timers/urgent Git tree from:
+#syz invalid
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-04
-
-   # HEAD: 7aeb1538be5df3efa1d799e5428ac3a0ae802293 vdso: Reject absolute relocations during build
-
-Misc fixes:
-
- - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
-
- - Work around and reject absolute relocations into vDSO code that
-   GCC erroneously emits in certain arm64 build environments
-
- Thanks,
-
-	Ingo
-
------------------->
-Thomas Gleixner (1):
-      timekeeping: Prevent coarse clocks going backwards
-
-Thomas Weiﬂschuh (2):
-      arm64: vdso: Work around invalid absolute relocations from GCC
-      vdso: Reject absolute relocations during build
-
-
- arch/arm64/include/asm/vdso/gettimeofday.h | 13 ++++++++
- include/linux/timekeeper_internal.h        |  8 +++--
- kernel/time/timekeeping.c                  | 50 +++++++++++++++++++++++++-----
- kernel/time/vsyscall.c                     |  4 +--
- lib/vdso/Makefile.include                  |  6 ++++
- 5 files changed, 68 insertions(+), 13 deletions(-)
+On Sun, May 4, 2025 at 3:01=E2=80=AFAM syzbot
+<syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    29281a76709c Merge tag 'kvmarm-fixes-6.14-2' into kvmarm-=
+m..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvma=
+rm.git fuzzme
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1495177458000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D22c3bbf92fcca=
+116
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D57ff869c12cb6d8=
+9393d
+> compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f=
+7-1~exp1~20250415203523.103), Debian LLD 20.1.3
+> userspace arch: arm64
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/3=
+84ffdcca292/non_bootable_disk-29281a76.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/a94df683c08e/vmlinu=
+x-29281a76.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/18ac847cc37c/I=
+mage-29281a76.gz.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> BUG: KASAN: slab-use-after-free in hlist_add_head include/linux/list.h:10=
+26 [inline]
+> BUG: KASAN: slab-use-after-free in binder_add_device+0xf4/0xf8 drivers/an=
+droid/binder.c:6932
+> Write of size 8 at addr b7f0000014f4e208 by task syz-executor/3305
+> Pointer tag: [b7], memory tag: [a6]
+>
+> CPU: 0 UID: 0 PID: 3305 Comm: syz-executor Not tainted 6.14.0-rc2-syzkall=
+er-g29281a76709c #0
+> Hardware name: linux,dummy-virt (DT)
+> Call trace:
+>  show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+>  __dump_stack+0x30/0x40 lib/dump_stack.c:94
+>  dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
+>  print_address_description+0xac/0x290 mm/kasan/report.c:378
+>  print_report+0x84/0xa0 mm/kasan/report.c:489
+>  kasan_report+0xb0/0x110 mm/kasan/report.c:602
+>  kasan_tag_mismatch+0x28/0x3c mm/kasan/sw_tags.c:175
+>  __hwasan_tag_mismatch+0x30/0x60 arch/arm64/lib/kasan_sw_tags.S:55
+>  hlist_add_head include/linux/list.h:1026 [inline]
+>  binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
+>  binderfs_binder_device_create+0xbfc/0xc28 drivers/android/binderfs.c:210
+>  binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
+>  vfs_get_super fs/super.c:1280 [inline]
+>  get_tree_nodev+0xdc/0x1cc fs/super.c:1299
+>  binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
+>  vfs_get_tree+0xc4/0x3cc fs/super.c:1814
+>  do_new_mount+0x2a0/0x988 fs/namespace.c:3560
+>  path_mount+0x650/0x101c fs/namespace.c:3887
+>  do_mount fs/namespace.c:3900 [inline]
+>  __do_sys_mount fs/namespace.c:4111 [inline]
+>  __se_sys_mount fs/namespace.c:4088 [inline]
+>  __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+>  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+>
+> Allocated by task 3297:
+>  kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
+>  save_stack_info+0x30/0x138 mm/kasan/tags.c:106
+>  kasan_save_alloc_info+0x14/0x20 mm/kasan/tags.c:142
+>  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+>  __kasan_kmalloc+0x8c/0x90 mm/kasan/common.c:394
+>  kasan_kmalloc include/linux/kasan.h:260 [inline]
+>  __kmalloc_cache_noprof+0x2a0/0x404 mm/slub.c:4325
+>  kmalloc_noprof include/linux/slab.h:901 [inline]
+>  kzalloc_noprof include/linux/slab.h:1037 [inline]
+>  binderfs_binder_device_create+0x1ac/0xc28 drivers/android/binderfs.c:147
+>  binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
+>  vfs_get_super fs/super.c:1280 [inline]
+>  get_tree_nodev+0xdc/0x1cc fs/super.c:1299
+>  binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
+>  vfs_get_tree+0xc4/0x3cc fs/super.c:1814
+>  do_new_mount+0x2a0/0x988 fs/namespace.c:3560
+>  path_mount+0x650/0x101c fs/namespace.c:3887
+>  do_mount fs/namespace.c:3900 [inline]
+>  __do_sys_mount fs/namespace.c:4111 [inline]
+>  __se_sys_mount fs/namespace.c:4088 [inline]
+>  __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
+>  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+>
+> Freed by task 3297:
+>  kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
+>  save_stack_info+0x30/0x138 mm/kasan/tags.c:106
+>  kasan_save_free_info+0x18/0x24 mm/kasan/tags.c:147
+>  poison_slab_object mm/kasan/common.c:247 [inline]
+>  __kasan_slab_free+0x64/0x68 mm/kasan/common.c:264
+>  kasan_slab_free include/linux/kasan.h:233 [inline]
+>  slab_free_hook mm/slub.c:2353 [inline]
+>  slab_free mm/slub.c:4609 [inline]
+>  kfree+0x148/0x44c mm/slub.c:4757
+>  binderfs_evict_inode+0x1e8/0x2b8 drivers/android/binderfs.c:278
+>  evict+0x4d4/0xbe8 fs/inode.c:796
+>  iput_final fs/inode.c:1946 [inline]
+>  iput+0x928/0x9e0 fs/inode.c:1972
+>  dentry_unlink_inode+0x624/0x660 fs/dcache.c:440
+>  __dentry_kill+0x224/0x808 fs/dcache.c:643
+>  shrink_kill+0xd4/0x2cc fs/dcache.c:1088
+>  shrink_dentry_list+0x420/0x970 fs/dcache.c:1115
+>  shrink_dcache_parent+0x80/0x200 fs/dcache.c:-1
+>  do_one_tree+0x2c/0x148 fs/dcache.c:1578
+>  shrink_dcache_for_umount+0xb0/0x198 fs/dcache.c:1595
+>  generic_shutdown_super+0x84/0x424 fs/super.c:620
+>  kill_anon_super fs/super.c:1237 [inline]
+>  kill_litter_super+0xa4/0xdc fs/super.c:1247
+>  binderfs_kill_super+0x50/0xcc drivers/android/binderfs.c:791
+>  deactivate_locked_super+0xf0/0x17c fs/super.c:473
+>  deactivate_super+0xf4/0x104 fs/super.c:506
+>  cleanup_mnt+0x3fc/0x484 fs/namespace.c:1413
+>  __cleanup_mnt+0x20/0x30 fs/namespace.c:1420
+>  task_work_run+0x1bc/0x254 kernel/task_work.c:227
+>  exit_task_work include/linux/task_work.h:40 [inline]
+>  do_exit+0x740/0x23b0 kernel/exit.c:938
+>  do_group_exit+0x1d4/0x2ac kernel/exit.c:1087
+>  get_signal+0x1440/0x1554 kernel/signal.c:3036
+>  do_signal+0x23c/0x3ecc arch/arm64/kernel/signal.c:1658
+>  do_notify_resume+0x78/0x27c arch/arm64/kernel/entry-common.c:148
+>  exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+>  exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+>  el0_svc+0xb0/0x134 arch/arm64/kernel/entry-common.c:745
+>  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+>
+> The buggy address belongs to the object at fff0000014f4e200
+>  which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 8 bytes inside of
+>  272-byte region [fff0000014f4e200, fff0000014f4e310)
+>
+> The buggy address belongs to the physical page:
+> page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x54f4=
+e
+> anon flags: 0x1ffc00000000000(node=3D0|zone=3D0|lastcpupid=3D0x7ff|kasant=
+ag=3D0x0)
+> page_type: f5(slab)
+> raw: 01ffc00000000000 7ef000000c801900 0000000000000000 0000000000000001
+> raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  fff0000014f4e000: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
+>  fff0000014f4e100: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
+> >fff0000014f4e200: a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6
+>                    ^
+>  fff0000014f4e300: a6 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+>  fff0000014f4e400: 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
+-bugs/6816bc63.a70a0220.254cdc.002b.GAE%40google.com.
