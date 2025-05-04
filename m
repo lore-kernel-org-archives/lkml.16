@@ -1,84 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463831E5B91;
-	Sun,  4 May 2025 17:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7752DA32;
+	Sun,  4 May 2025 17:17:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746378702; cv=none; b=bcz3p5AhhTWNDur1MhUNecopfdkCFYLrQJX72A/MDD+sB76i+fBIlXdnrvwxb2u2cC/Cu2ya9Ox4BEzvSfU369TR6ebMHmWNgdsvlZO5IMCldjmTHnnZR32IlJvMndIQOcSRwdJqcTP89EstYEKBnQT/mawssb6XXpttAJGtICg=
+	t=1746379064; cv=none; b=jRSF86voA/RtW/pMl+QStVyXKSb0D09OCD9JYRWR6FYmGRsFoC9VvkhaMSpo8w0JzW9ngmfyxOENgTpi0Yb+tJogjvRxZMifXD529lIFokyfVxvLO4HS9Bd6QEfQNZpruIfvMRHRrQC1L3QYuJKcmwcd6kooqujkKcaV4cyaGF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746378702; c=relaxed/simple;
-	bh=ibjUWSAUfLwtzvf59Yp/2FVYayCZFaq7BJh4eClGZfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ORshypNi1JiYHKNt67mc+KOke9mlFlDXRjGI4KMGjuHBnzAZ+HER9D96P64fZedG0nY1DdssJos/AOhuZQFJJ9pIQwrinc/TCguPBWuh+TCBb/OWCyjON275ytmg3LMynZisqe5chOMEtjaUe2lNuVOH8wJq1f04uY8taSUd7tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abDBGjyN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746379064; c=relaxed/simple;
+	bh=sgZPr4WYxTx1WRbDhzcd65kmX61osl9mq2JXEYcEsog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gZoROkx4qbL8sQnDaI9h3hEPVMx0diwHfA00CaRbIulDU2xxoJTZzGUx+3xyfrc3oA/q/QmvDYN8oSS0rv4beD14fbKqBh8O5V7ANB43XQT+GhwYhp0LcjBgws2ITFLtu63vi02uXLri6gXPY954PzhJSsDpgZ74ulcSZR2l7X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzF3+2p3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abDBGjyN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E78C4CEE7;
-	Sun,  4 May 2025 17:11:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzF3+2p3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46160C4CEE7;
+	Sun,  4 May 2025 17:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746378700;
-	bh=ibjUWSAUfLwtzvf59Yp/2FVYayCZFaq7BJh4eClGZfM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=abDBGjyN5T4tpU1olHuoyuwtx+zkEO0UOo+9Qy6xxmadqY2GHPvW8dmkUpqefkFik
-	 2Gg8uo2UFBpkE2oEfOryW1i/E/TqYhhnglLnQomJl7FwYoEZ4stQ/WI2szHOR8qf5Q
-	 pS/XG/PpZwKRMBWtXJAWxFLBEkyScmvJs7S6JALH9kBm3dj5+W+3NB0aQW67FgAVmC
-	 NZW4B6fX65Ot6V3uh55XfojDrJF93AhjugU8Rd+8HD9y4dbiYUpCQMtBdi9hJslBMG
-	 rtjOgEKzzRQiIZikqrYkHolfuqCjrO2f3wFVNYoEOu2taDEZBBmJkgB8bVKN+xDK9E
-	 C3OWOj+3aSWhg==
-Date: Sun, 4 May 2025 18:11:31 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kim Seer Paller <kimseer.paller@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <20250504181131.3fc515ca@jic23-huawei>
-In-Reply-To: <CAHp75VeY_vjS=Ca4L34UMjVyDvG6iLdrW_c-owKWBLK-3Lg0BA@mail.gmail.com>
-References: <20250429-togreg-v7-0-0af9c543b545@analog.com>
-	<20250429-togreg-v7-3-0af9c543b545@analog.com>
-	<CAHp75VeY_vjS=Ca4L34UMjVyDvG6iLdrW_c-owKWBLK-3Lg0BA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746379063;
+	bh=sgZPr4WYxTx1WRbDhzcd65kmX61osl9mq2JXEYcEsog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dzF3+2p3eM3+omSGCAO7tZReKg6vjRCGswmnoxWGXTC/q5W2lcEluacgfpdd5iRMH
+	 OewZZbLQN5+QEWBcF8J8/cD3KWnPuwEWucdvKt16OxN6UCSUbdiVa8yA54KcAwBVlq
+	 xdI0HGV5zQlkIX9OZ1F1/g/WECT0Yi8MHbvNNhDR7lLIALFmC329HbRUL+ycHmLMd5
+	 +e6ONxUb4zt4nW7VZpGEzKXj89ID8X59HKsLGEera0PjD1GPbxtYJirBJaXeeVLdst
+	 zMJ6XwdetaI6PhIsBbI0qac0GVouwurbVohTf5XCwsXtqQzDFX8uUjwrfZ5jADp9No
+	 tnUVmHYWeIavA==
+Date: Sun, 4 May 2025 19:17:41 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: T Pratham <t-pratham@ti.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamlesh Gurudasani <kamlesh@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Praneeth Bajjuri <praneeth@ti.com>, Manorit Chawdhry <m-chawdhry@ti.com>, 
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: crypto: Add binding for TI DTHE V2
+Message-ID: <20250504-tangible-courageous-robin-3e31d1@kuoka>
+References: <20250502121253.456974-2-t-pratham@ti.com>
+ <20250502121253.456974-3-t-pratham@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250502121253.456974-3-t-pratham@ti.com>
 
-On Wed, 30 Apr 2025 01:18:58 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Fri, May 02, 2025 at 05:21:16PM GMT, T Pratham wrote:
+> Add DT binding for Texas Instruments DTHE V2 crypto accelerator.
+> 
+> DTHE V2 is introduced as a part of TI AM62L SoC and can currently be
+> only found in it.
+> 
+> Signed-off-by: T Pratham <t-pratham@ti.com>
+> ---
+>  .../devicetree/bindings/crypto/ti,dthev2.yaml | 55 +++++++++++++++++++
 
-> On Tue, Apr 29, 2025 at 5:20=E2=80=AFAM Kim Seer Paller
-> <kimseer.paller@analog.com> wrote:
-> >
-> > The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
-> > low-power, 16-bit, buffered voltage output DACs with software-
-> > programmable gain controls, providing full-scale output spans of 2.5V or
-> > 5V for reference voltages of 2.5V. These devices operate from a single
-> > 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
-> > variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disa=
-bled
-> > by default.
-> >
-> > Support for monitoring internal die temperature, output voltages, and
-> > current of a selected channel via the MUXOUT pin using an external ADC
-> > is currently not implemented. =20
->=20
-> LGTM,
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
->=20
+Filename: nothing improved.
 
-Series applied and pushed out as testing for 0-day to take a first
-poke at it.
+>  MAINTAINERS                                   |  6 ++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml b/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+> new file mode 100644
+> index 000000000000..68ed9923eebb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/ti,dthev2.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/crypto/ti,dthev2.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: K3 SoC DTHE V2 crypto module
+> +
+> +maintainers:
+> +  - T Pratham <t-pratham@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,am62l-dthev2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: AES Engine RX DMA Channel
+> +      - description: AES Engine TX DMA Channel
+> +      - description: SHA Engine TX DMA Channel
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: tx1
+> +      - const: tx2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dmas
+> +  - dma-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    cbass_main {
 
-Thanks,
+soc or whatever is reasonable, but follow DTS coding style.
 
-Jonathan
+I already asked to match coding style, although about wrapping :/
+
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        crypto@40800000 {
+> +          compatible = "ti,am62l-dthev2";
+> +          reg = <0x00 0x40800000 0x00 0x10000>;
+> +
+> +          dmas = <&main_bcdma 0 0 0x4700 0>,
+> +                <&main_bcdma 0 0 0xc701 0>,
+> +                <&main_bcdma 0 0 0xc700 0>;
+
+Looks misaligned, again, see DTS coding style
+
+> +          dma-names = "rx", "tx1", "tx2";
+> +        };
+
+Best regards,
+Krzysztof
+
