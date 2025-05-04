@@ -1,144 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDCA1DF254;
-	Sun,  4 May 2025 17:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463831E5B91;
+	Sun,  4 May 2025 17:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746378691; cv=none; b=gje9SCyHJ7BImP/xQl+vXsF7lrlnILOjyqd8b0IypyJDQgOIvNOoBKQTHJ2UmXfmkg2KgTLPOKI5npuWr8pOpplSyFQI0h1Mf7N0OcHk+utb8C1Kpen+CL3a4Py0yw42L+9e9WZpD6WLEH6BfavCp+SqLcrTgD8heBuXuEBgtyk=
+	t=1746378702; cv=none; b=bcz3p5AhhTWNDur1MhUNecopfdkCFYLrQJX72A/MDD+sB76i+fBIlXdnrvwxb2u2cC/Cu2ya9Ox4BEzvSfU369TR6ebMHmWNgdsvlZO5IMCldjmTHnnZR32IlJvMndIQOcSRwdJqcTP89EstYEKBnQT/mawssb6XXpttAJGtICg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746378691; c=relaxed/simple;
-	bh=M0WxNP8OwafpQ0r2jjKNUK8lGvWzBWA1V4ZFu164P5g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=arOAl+uJyuNcrtb0zJJXHMSb5nAOfxHlfI4guK79f/LR/k7+I6tYyoaZOIP8OMrFvCett4ScZagWX28ym5kOrXBxCTP6eHSoHlBUwHEk6kIhj2bkMrkb5Ywt3aWfmEsewy7YnCSYTNW5AxdzR55S6+p2conaa4jhmBLgug8EUvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5v0dv6G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746378702; c=relaxed/simple;
+	bh=ibjUWSAUfLwtzvf59Yp/2FVYayCZFaq7BJh4eClGZfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ORshypNi1JiYHKNt67mc+KOke9mlFlDXRjGI4KMGjuHBnzAZ+HER9D96P64fZedG0nY1DdssJos/AOhuZQFJJ9pIQwrinc/TCguPBWuh+TCBb/OWCyjON275ytmg3LMynZisqe5chOMEtjaUe2lNuVOH8wJq1f04uY8taSUd7tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abDBGjyN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5v0dv6G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5766FC4CEE7;
-	Sun,  4 May 2025 17:11:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abDBGjyN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E78C4CEE7;
+	Sun,  4 May 2025 17:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746378690;
-	bh=M0WxNP8OwafpQ0r2jjKNUK8lGvWzBWA1V4ZFu164P5g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e5v0dv6Gj/m8T87ptaAkdGeHlClYhrzntJVQ1ZeoCqbhpdBmjaponB2niGfa3YQka
-	 oqqShzUiNP1aKEMstgyukBBR2Xf+lSqt4NENs8LwamWttthkxg7fgz4bwpNsOl/fVs
-	 YYLNxeNvO2N2RE4iA/5HDkos0Z2zVvrTma1r84DWinkcYZhnJaqRQ1sub+lDA0EbKs
-	 +M4CQcb6IIpfEFuljuOYmeIfkUg1HxPOaO8VtohJ964QCXOvzaTl1d73VivEyPBlEc
-	 28seEI57R43653zzSlBJS3JgwHD/o/j4rrv27TYXnd+aywLCWizBMUd6toDUM0nLH0
-	 6gbv0z6PhU9AA==
-Message-ID: <aa8bdf4f-feb9-4355-b629-a5d7c6a43d25@kernel.org>
-Date: Sun, 4 May 2025 19:11:25 +0200
+	s=k20201202; t=1746378700;
+	bh=ibjUWSAUfLwtzvf59Yp/2FVYayCZFaq7BJh4eClGZfM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=abDBGjyN5T4tpU1olHuoyuwtx+zkEO0UOo+9Qy6xxmadqY2GHPvW8dmkUpqefkFik
+	 2Gg8uo2UFBpkE2oEfOryW1i/E/TqYhhnglLnQomJl7FwYoEZ4stQ/WI2szHOR8qf5Q
+	 pS/XG/PpZwKRMBWtXJAWxFLBEkyScmvJs7S6JALH9kBm3dj5+W+3NB0aQW67FgAVmC
+	 NZW4B6fX65Ot6V3uh55XfojDrJF93AhjugU8Rd+8HD9y4dbiYUpCQMtBdi9hJslBMG
+	 rtjOgEKzzRQiIZikqrYkHolfuqCjrO2f3wFVNYoEOu2taDEZBBmJkgB8bVKN+xDK9E
+	 C3OWOj+3aSWhg==
+Date: Sun, 4 May 2025 18:11:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Kim Seer Paller <kimseer.paller@analog.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+Message-ID: <20250504181131.3fc515ca@jic23-huawei>
+In-Reply-To: <CAHp75VeY_vjS=Ca4L34UMjVyDvG6iLdrW_c-owKWBLK-3Lg0BA@mail.gmail.com>
+References: <20250429-togreg-v7-0-0af9c543b545@analog.com>
+	<20250429-togreg-v7-3-0af9c543b545@analog.com>
+	<CAHp75VeY_vjS=Ca4L34UMjVyDvG6iLdrW_c-owKWBLK-3Lg0BA@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Peter De Schrijver <pdeschrijver@nvidia.com>,
- Prashant Gaikwad <pgaikwad@nvidia.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250321095556.91425-1-clamor95@gmail.com>
- <20250321095556.91425-3-clamor95@gmail.com>
- <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
- <CAPVz0n2580WLJmqeH-mJGrTQUpADt32qw7pJzuqRuwrpojc5vA@mail.gmail.com>
- <bd60283a-500a-4ed4-bb8b-c019d33f94cf@kernel.org>
- <CAPVz0n0Ty3QAg_9rSvV7c7EBGDigHtTAOAfkRFBcTR9fziEvQQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAPVz0n0Ty3QAg_9rSvV7c7EBGDigHtTAOAfkRFBcTR9fziEvQQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-On 04/05/2025 18:25, Svyatoslav Ryhel wrote:
-> нд, 4 трав. 2025 р. о 19:23 Krzysztof Kozlowski <krzk@kernel.org> пише:
->>
->> On 03/05/2025 10:54, Svyatoslav Ryhel wrote:
->>>>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
->>>>> +/*
->>>>> + * This header provides Tegra114-specific constants for binding
->>>>> + * nvidia,tegra114-car.
->>>>> + */
->>>>> +
->>>>> +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
->>>>> +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
->>>>> +
->>>>> +#define TEGRA114_RESET(x)            (5 * 32 + (x))
->>>>
->>>>
->>>> Does not look like a binding, but some sort of register. Binding IDs
->>>> start from 0 (or 1) and are incremented by 1.
->>>>
->>>
->>> Hello there!
->>> This file add same logic for Tegra114 as Tegra124 currently
->>> implements, check here
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/include/dt-bindings/reset/tegra124-car.h?h=v6.14.5
->>>
->>> I did not re-use Tegra124 value, though it is same, to avoid confusion
->>> in main Tegra114 device tree.
->>
->> What confusion? Why would anyone be interested in comparing numbers thus
->> getting confused by different number? These are abstract IDs.
->>
-> 
-> By using TEGRA124_RESET in Tegra114 device tree
+On Wed, 30 Apr 2025 01:18:58 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Why would you use define from other SoC... and how is it related to my
-comment in the first place?
+> On Tue, Apr 29, 2025 at 5:20=E2=80=AFAM Kim Seer Paller
+> <kimseer.paller@analog.com> wrote:
+> >
+> > The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> > low-power, 16-bit, buffered voltage output DACs with software-
+> > programmable gain controls, providing full-scale output spans of 2.5V or
+> > 5V for reference voltages of 2.5V. These devices operate from a single
+> > 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> > variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disa=
+bled
+> > by default.
+> >
+> > Support for monitoring internal die temperature, output voltages, and
+> > current of a selected channel via the MUXOUT pin using an external ADC
+> > is currently not implemented. =20
+>=20
+> LGTM,
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+>=20
 
+Series applied and pushed out as testing for 0-day to take a first
+poke at it.
 
-Best regards,
-Krzysztof
+Thanks,
+
+Jonathan
