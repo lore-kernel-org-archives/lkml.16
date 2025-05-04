@@ -1,76 +1,78 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA4671747
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 03:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B08971747
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 03:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746328905; cv=none; b=OgghCyNMdKseML5/7Nh+V2X10oLJJlOUCO704BdQmNIsdfaxzAtZ6lWuXzrx/5s+uMXI+Z/yoIb0ve3lLG5evC5nzxhMRKXZFt+hbfpwQet0Sg9KodVjJtb+ELFh8n+5Kou8PieHz9UvjC7eMdOjOiVyhqS35sTh3nO5uT0LOzA=
+	t=1746328944; cv=none; b=JHF033uQevQrMyoZvIAYBHxI0vjw3EDCd0uIZhCvJfgEByrZN9Gts4HkQzXfa7FDN5t5NnOUzGNqNd8ThQ1eanAr5hW7CG7GzIwMltGEEpSs0WjD0nelGc8Zk2zA7UxmTiXNVOsprPhJ7T+GCD9vpS/eakZfU/5hB+c9nYYTw58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746328905; c=relaxed/simple;
-	bh=vfmddom9UWhMJinSMKSvacl/K4Hsb/WHAtyWkyJNV5k=;
+	s=arc-20240116; t=1746328944; c=relaxed/simple;
+	bh=6m6nr1NWIiaVA3yLG5B7xln8rW+EjR8RPYRpKxxv90E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PTyY92xMIcPR8a/WSdFEi1dEj5O6xCS6g2vvmR6NVHg4shMmEnpyAqPs08QKCng1rW4bIstTLid1NYT6f/fpsx1c9wV6M/L+bGrNBaGV25YU5akYvqqPEXXsEPknrsauiZzTkQkZ49BEgQ0LGJcZJ1g6NU+zrltKzGN6HGu97ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RSr6sJG6; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version:Content-Type; b=SzrbtWL8KpwQ86NXkOAlZLgACZzzJGfTEzYLAbeYQGuYWka/UXXVJs/2FL+FUJumdaKVWRV4FHkHeW1JckdcoJgGz9F7wEBWg545jqnaHil6ArWXQiZlVdnWBtrJnKCtKLx8e4Ao5TFPgAf7nXy4lnB/CJL61mX7Li2U3NMGliI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MVDliMjV; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RSr6sJG6"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 543Mo4b1016826;
-	Sun, 4 May 2025 03:21:29 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MVDliMjV"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5442tbWj003043;
+	Sun, 4 May 2025 03:22:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=S2F+RY
-	d9wZDLevjGHWb1UYjtqmlYocp8Z2jBhNR8qi4=; b=RSr6sJG6b5rPQiAamMVvOC
-	3xFlKNU34L82dLp2BgDK1q0vOqTFiItipms11omCRPsdegJsdu6J1Ps7dNZyRfhQ
-	q/rGoKbFu1stYpLlzeQ3KdAxVcKszHnCYQNyTePB4kHWQ1IvP7u1cS7zFXY053Ot
-	r7fi5AIxFolkw/JTNbigWUeu6LEQeQxKKJ+T1DhYO0wDDEooH8bzP750T0W1XNcP
-	q8l4m2l6Rjs8Dzg0QB/54t0EZj64mKu64vdJyw/Qr06TELNHOPtr3cTgrjMrfc7y
-	w8j91KIEhBORiKlH7HbKVro9HuWME6ghs3FTRK8ZISjTMjLcwP2uTXYKNbKzwm1g
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2IJwWI
+	cC2GXJ5qxdlZFd8bCuUrclbR4sO/f9KLtfXmw=; b=MVDliMjVlcWkREdfyVr92w
+	eOZfaQZ3uYd01YmfcTbsMAs+aaFUkxwE6JGOZCIQNhgecBqZAN9DyBPaoNWeZTTp
+	s9/Js5zR4ET8Y2GtGKzaJl2QWoP3h79qEJC8XU1/NOxUqt4we4CHL5owV4enE/oP
+	c2N19ytAKUwHOSMGfGkqxwNgi6UehvqHKnD+rZnYqWrJyZF2v6iBk1DgAoJd4GW7
+	qdCDXV0woFrPvh4wSfZAHsOmb3nnJqzBu3V41NfjBqsZe3RltamWgfqdoLFoWTRY
+	Qvon3tzUpMmI6/ooVZX8/WXE63glpYCX1gl7nvQ2PHbiI8z+J9YR6ap3vFF8eXNg
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46du9v8n35-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46dw400dky-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 04 May 2025 03:21:29 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5443LSJn017670;
-	Sun, 4 May 2025 03:21:28 GMT
+	Sun, 04 May 2025 03:22:05 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5443M4Bv017249;
+	Sun, 4 May 2025 03:22:05 GMT
 Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46du9v8n33-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46dw400dkw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 04 May 2025 03:21:28 +0000 (GMT)
+	Sun, 04 May 2025 03:22:04 +0000 (GMT)
 Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5441rRk4032235;
-	Sun, 4 May 2025 03:21:27 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxym87xj-1
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5441rO2f032018;
+	Sun, 4 May 2025 03:22:04 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxym880g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 04 May 2025 03:21:27 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5443LNVA39911716
+	Sun, 04 May 2025 03:22:04 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5443M2HB42402056
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 4 May 2025 03:21:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C1DA120049;
-	Sun,  4 May 2025 03:21:23 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0957020040;
-	Sun,  4 May 2025 03:21:19 +0000 (GMT)
+	Sun, 4 May 2025 03:22:02 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2CBC520043;
+	Sun,  4 May 2025 03:22:02 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F23C920040;
+	Sun,  4 May 2025 03:21:57 +0000 (GMT)
 Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.99.78])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun,  4 May 2025 03:21:18 +0000 (GMT)
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  4 May 2025 03:21:57 +0000 (GMT)
 From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen@kernel.org, Gautam Menghani <gautam@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        vaibhav@linux.ibm.com
-Subject: Re: [PATCH] powerpc/pseries/msi: Avoid reading PCI device registers in reduced power states
-Date: Sun,  4 May 2025 08:51:15 +0530
-Message-ID: <174632869188.233894.4873397095169337027.b4-ty@linux.ibm.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: do not build ppc_save_regs.o always
+Date: Sun,  4 May 2025 08:51:55 +0530
+Message-ID: <174632869189.233894.17327433330282160163.b4-ty@linux.ibm.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250305090237.294633-1-gautam@linux.ibm.com>
-References: <20250305090237.294633-1-gautam@linux.ibm.com>
+In-Reply-To: <20250417105305.397128-1-jirislaby@kernel.org>
+References: <20250417105305.397128-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,40 +82,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UXduKJ87RUAHaiXd4d5RIheWz6baHltk
-X-Authority-Analysis: v=2.4 cv=XNowSRhE c=1 sm=1 tr=0 ts=6816dd39 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=JkMHheumRQZugVL5IKsA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=zZCYzV9kfG8A:10
-X-Proofpoint-ORIG-GUID: eYBLSUlFqBKrrKHPfKDuO9UwkmZSFCdR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDAyNyBTYWx0ZWRfXxIB3Q70r1KLZ EA+zvKPK4Cppmf05Ugltp9eZamhHBtrxtWHPFFYccyfNQMI06c7PE3aUgEejtSG0ohEBppwMI0j NifSHS81vhiggPuU8plQE91PEdEofDJFTE0zxi6F26139E08HJCc5eiAncolCd9rdlXN0e/Z3jo
- joOImOE0Xr4LrCcnexW1+LO+P0wvDd7OUJGHbHg3cSDNRAVgJxgUgdh0E/FPJuquKYZvpKcGxkM Ayoj+gsqC53RGilvkGtNczgLLEGuyK6DCeo5OD02jvBfBE5EqIlXAtarfMUiy8XLun39B6QX/IM cFvXNxSpSAiT1YVOeazMN0/DIlDHgTGphSYm60dBQVgFKSZhJup82E4aLiR07oRw+e/I5dAetPQ
- n7ZZa1MdTQi1wM7aUlVfZ0ksMFNnSfYKGWn+VmsVbHIEkLffXMMGQCS0PLG2oXPgkgEXTbbn
+X-Authority-Analysis: v=2.4 cv=KefSsRYD c=1 sm=1 tr=0 ts=6816dd5d cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=Jr149zEfbG_pFFu6KToA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: GjWhigNnAKvimmrFS6NGyOzkmK0i_KQd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDAyMyBTYWx0ZWRfX8aCT9ijyTpKN AO2Zcq7f50ZmjGf0WpoMPWc3jMhLDzeutdUjXO+G8k7T3oOEJNLMvnzmA+r6EK4ijsNxKQwVwgE AdPaWOCC5zqdXdcnsbKpj/Zo5MqScVUCweAaYPCFP8Pumve0LYiv4Jq+zsUuhhqWswK9A5UHPuS
+ 3deTIFHroPDG0dFnbCnYMHTUckMx2H8wRbzaSyKiw9p6DzqrVKrC9lRL6erMeCtkD96eByfZTX3 esL/3Z2CgFfmLBmodjg6/tZs1/A/IFeoYLulCKwJYSQpyDU5D5IGlucAKRv7ah1JRJNiJSqa+7t mYk2NSOGliqthkciUKfD8MJGMGKNG+ZkVAst+T/XdamYCiynfQ0+iqjTsbuIXmb5iwfYGpApb+q
+ 0ydxaG8REq6EsYlzekQ/mI/RzYajXcyN1kalvUMDFbe/pB+4x9qfA/GR/zknoyoHwSM9QB4i
+X-Proofpoint-GUID: hssWibf1N6YpkbyXrTvKaLw4tElQwzld
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-04_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 phishscore=0 mlxlogscore=559 suspectscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=474
+ adultscore=0 clxscore=1011 lowpriorityscore=0 phishscore=0 spamscore=0
  bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505040027
+ definitions=main-2505040023
 
-On Wed, 05 Mar 2025 14:32:36 +0530, Gautam Menghani wrote:
-> When a system is being suspended to RAM, the PCI devices are also
-> suspended and the PPC code ends up calling pseries_msi_compose_msg() and
-> this triggers the BUG_ON() in __pci_read_msi_msg() because the device at
-> this point is in reduced power state. In reduced power state, the memory
-> mapped registers of the PCI device are not accessible.
+On Thu, 17 Apr 2025 12:53:05 +0200, Jiri Slaby (SUSE) wrote:
+> The Fixes commit below tried to add CONFIG_PPC_BOOK3S to one of the
+> conditions to enable the build of ppc_save_regs.o. But it failed to do
+> so, in fact. The commit omitted to add a dollar sign.
 > 
-> To replicate the bug:
-> 1. Make sure deep sleep is selected
-> 	# cat /sys/power/mem_sleep
-> 	s2idle [deep]
+> Therefore, ppc_save_regs.o is built always these days (as
+> "(CONFIG_PPC_BOOK3S)" is never an empty string).
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/pseries/msi: Avoid reading PCI device registers in reduced power states
-      https://git.kernel.org/powerpc/c/9cc0eafd28c7faef300822992bb08d79cab2a36c
+[1/1] powerpc: do not build ppc_save_regs.o always
+      https://git.kernel.org/powerpc/c/497b7794aef03d525a5be05ae78dd7137c6861a5
 
 Thanks
