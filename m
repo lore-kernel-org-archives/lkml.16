@@ -1,114 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033DB10E9
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 06:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB14130A7D;
+	Sun,  4 May 2025 06:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746341698; cv=none; b=SJwv92TXMp65T6WOoPKLil9WJ0RuEPEWgpLwcj1N4faxN9PyXeyxACYfGU6rZJ7hzD0C1vzn3Jw1wVXGxeTJDA27tkvN4RjZqVhA8Ap+3VlIAS12NBSS3cXMdRaOnALkyVyc0J/Pi7QT2DGkj4vRQSnqls3ykTP42kKR3l9gWh0=
+	t=1746341883; cv=none; b=AVGZVVQzQvP4gk7x/gmg+7lH07qPqcVcVDonO+M1S3ajoVRQOTse9U7YjzEmVevIanT4AL6lPe788viMlDfGtVflXMnmugWpC288gp9DQ5HSkIO8eww93TV/fsQk0nkbIB21s7dS850jukoLN/2HMX2b1/eunVUp2+R4Si3JfN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746341698; c=relaxed/simple;
-	bh=cla7xa5IZZ7NgrUJLuC3yodpqpbPV05UzSPBqUEIHRc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WjrW3m3OM6+qULthm1qO5hVHTnme0CCAZo6yYtByZkUBNp1L6P51hD6ZC0oRTBAQqP2E0lvOAgIAD/uFTJL2Rg5yBFByReTtUZVTaMDx608szowJkMEtnmJskngmoO/FSNc0i/Rh1lXCTZZmm0BLPU4NaU5gT1t7PXX4IieM25s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=rLtvYf2Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746341883; c=relaxed/simple;
+	bh=hnu4Nc3S6VKLMCxUIJhllk0RF2PfPOO1fXOC6zmH3wo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=IJCoHO5pmSGWHNgw7IbF68GksPbpJLPfxnH8svlAZWi5RDXAUM/NfGppezhQ6TQ6AXt1Nhxfb3Mz22q+nyxHg36osPbOC1qqycaEwLXasZqEfgnqyb+2UgX2o3wWXPODYgl+epUKiULngiuc72e63dPK/Ls2p+V6/rLxG6xY0/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pLSq9mD2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zK3u6gBv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="rLtvYf2Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B03AC4CEE7;
-	Sun,  4 May 2025 06:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746341697;
-	bh=cla7xa5IZZ7NgrUJLuC3yodpqpbPV05UzSPBqUEIHRc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rLtvYf2ZEh6WghhS9OUqnaFRkAMGgDbhB3XQb3D0zCEJgLlDPISv+Q5q9SJFYuXYU
-	 fjz0KMpL5S0s/QMO0Zy3anQjmvsaRGMPQXrDkiQ4QtawjFmAJ0I4xKjeQwqRSOwlRz
-	 k4zVhA5kcWIqQsI58jDE5AGCUsI5f33G6qRJOLEo=
-Date: Sat, 3 May 2025 23:54:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: song@kernel.org, joel.granados@kernel.org, dianders@chromium.org,
- cminyard@mvista.com, linux-kernel@vger.kernel.org, Kees Cook
- <kees@kernel.org>
-Subject: Re: [PATCH 1/2] kernel/watchdog: add
- /sys/kernel/{hard,soft}lockup_count
-Message-Id: <20250503235456.5d1c79bf716ddb2106a7127b@linux-foundation.org>
-In-Reply-To: <CAKPOu+_zurvzehn+Wp=gbQxafHP9jBEPM4NcrDzb6Kd2C0MmaA@mail.gmail.com>
-References: <20250502103905.3995477-1-max.kellermann@ionos.com>
-	<20250503194706.d9e775fe8b24ad357cc6db89@linux-foundation.org>
-	<CAKPOu+_zurvzehn+Wp=gbQxafHP9jBEPM4NcrDzb6Kd2C0MmaA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pLSq9mD2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zK3u6gBv"
+Date: Sun, 04 May 2025 06:57:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746341873;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qV9q6fKEQc/wdLQCvNRakX9Kvw3ZigCKFVWwmbfRUJ0=;
+	b=pLSq9mD21uX4/ihTsuYpYcvYioHfO9JYedSbdFiIQ17DFNsaZezZQGqvNvke+DPV7+Sy8t
+	c9I1EH4d3xft8jhMhzzt8+ztrFJIguzLzy/xtjD/lwMkkgbtHhzvf+IHwVSHVvNrWwoEgb
+	eFyLBmTWT5uGupr98ntMNcNGxXERsNsu0kKh77UwTSmigmSEhm9BrWrGfEtKVH9BPh6IH5
+	1jybwRUHuWA3K1w8i/2jnz5vB+bQaVIEWXo4iuKHczh4qf4gZ526P4hkaw9kFEa0tyjhOS
+	h5W+Q76YK8YlDg1eQaJ2ESWssWWEA0Ci1V0HLKOLyPgHSYn4REEJy4NgUwaeOA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746341873;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qV9q6fKEQc/wdLQCvNRakX9Kvw3ZigCKFVWwmbfRUJ0=;
+	b=zK3u6gBv6c6L/7fdkBW+tUtVEnM729ecCJELCe8HcoDZGuQgIgdN54ZgW1eCdZ8Hpk+Tgc
+	IS2FQ4beX6x06xDw==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/boot/sev: Support memory acceptance in the EFI
+ stub under SVSM
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>,  <stable@vger.kernel.org>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>, linux-efi@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250428174322.2780170-2-ardb+git@google.com>
+References: <20250428174322.2780170-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Message-ID: <174634186772.22196.3588344121951287997.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Sun, 4 May 2025 08:36:23 +0200 Max Kellermann <max.kellermann@ionos.com> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> On Sun, May 4, 2025 at 4:47 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > Documenation/, please?
-> 
-> Do you mean Documentation/ABI/testing/ ? (like
-> Documentation/ABI/testing/sysfs-kernel-oops_count)
-> I'll add that; I was confused by the directory name "testing" and
-> didn't expect to find actual documentation there.
+Commit-ID:     8ed12ab1319b2d8e4a529504777aacacf71371e4
+Gitweb:        https://git.kernel.org/tip/8ed12ab1319b2d8e4a529504777aacacf71371e4
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Mon, 28 Apr 2025 19:43:22 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 04 May 2025 08:20:27 +02:00
 
-I find it helpful to grep around for similar things:
+x86/boot/sev: Support memory acceptance in the EFI stub under SVSM
 
-hp2:/usr/src/25> egrep -rl "hung_task_detect_count|warn_count|oops_count" Documentation                    
-Documentation/ABI/testing/sysfs-kernel-warn_count
-Documentation/ABI/testing/sysfs-kernel-oops_count
-Documentation/admin-guide/sysctl/kernel.rst
+Commit:
 
-I'm not sure that we've been very complete/consistent in these things. 
-If you have time, please check that we've covered these things
-appropriately.
+  d54d610243a4 ("x86/boot/sev: Avoid shared GHCB page for early memory acceptance")
 
+provided a fix for SEV-SNP memory acceptance from the EFI stub when
+running at VMPL #0. However, that fix was insufficient for SVSM SEV-SNP
+guests running at VMPL >0, as those rely on a SVSM calling area, which
+is a shared buffer whose address is programmed into a SEV-SNP MSR, and
+the SEV init code that sets up this calling area executes much later
+during the boot.
 
-> > >  Having this is useful for monitoring tools.
-> >
-> > Useful how?  Use cases?  Examples?
-> 
-> To detect whether the machine is healthy. If the kernel has
-> experienced a soft lockup, it's probably due to a kernel bug, and I'd
-> like to detect that quickly and easily. There is currently no way to
-> detect that, other than parsing dmesg. Or observing indirect effects:
-> such as certain tasks not responding, but then I need to observe all
-> tasks. I'd rather be able to detect the primary cause easily - just
-> like some people decided that they want to observe an oops and a
-> warning counter.
-> 
-> We always run the latest stable kernel on our production servers, and
-> this has brought great sorrow for the last year (I think the big netfs
-> drama began in 6.9 or so when the pgpriv2 refactoring began). There
-> have been numerous netfs/NFS/Ceph regressions, we had just as many
-> production outages, and the maintainers wouldn't respond to my bug
-> reports, so I had to figure it all out myself.
-> The latest regression that quickly took down our servers was a
-> "stable" backport of a performance optimization for epoll in 6.14.4,
-> leading to soft lockups in ep_poll(), see
-> https://lore.kernel.org/lkml/20250429185827.3564438-1-max.kellermann@ionos.com/
-> - but we observed it only after everything had already fallen apart.
-> Since our main process has switched from epoll to io_uring, only
-> second-order processes were falling apart. Had we had a soft lockup
-> counter, we could have noticed it earlier.
+Given that booting via the EFI stub at VMPL >0 implies that the firmware
+has configured this calling area already, reuse it for performing memory
+acceptance in the EFI stub.
 
-That's all great stuff, thanks.  Please include it in the [0/N]?
+Fixes: fcd042e86422 ("x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0")
+Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
+Co-developed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lore.kernel.org/r/20250428174322.2780170-2-ardb+git@google.com
+---
+ arch/x86/boot/compressed/mem.c |  5 +----
+ arch/x86/boot/compressed/sev.c | 40 +++++++++++++++++++++++++++++++++-
+ arch/x86/boot/compressed/sev.h |  2 ++-
+ 3 files changed, 43 insertions(+), 4 deletions(-)
 
-> > A proposal to permanently extend Linux's userspace API requires better
-> > justification than an unsubstantiated assertion, surely?
-> 
-> The commits that added warn_count/oops_count literally only said "is a
-> fairly interesting signal". See commits 9db89b411170 ("exit: Expose
-> "oops_count" to sysfs") and 8b05aa263361 ("panic: Expose "warn_count"
-> to sysfs"). That's quite an unsubstantiated assertion, too, isn't it?
-> 
-> I agree with you, but I thought the point for a soft lockup counter
-> was trivial enough to see, and I didn't think you needed more
-> justification than the other counters.
-
-um, well, Kees, sorry, that wasn't a world class effort.
-
+diff --git a/arch/x86/boot/compressed/mem.c b/arch/x86/boot/compressed/mem.c
+index f676156..0e9f84a 100644
+--- a/arch/x86/boot/compressed/mem.c
++++ b/arch/x86/boot/compressed/mem.c
+@@ -34,14 +34,11 @@ static bool early_is_tdx_guest(void)
+ 
+ void arch_accept_memory(phys_addr_t start, phys_addr_t end)
+ {
+-	static bool sevsnp;
+-
+ 	/* Platform-specific memory-acceptance call goes here */
+ 	if (early_is_tdx_guest()) {
+ 		if (!tdx_accept_memory(start, end))
+ 			panic("TDX: Failed to accept memory\n");
+-	} else if (sevsnp || (sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED)) {
+-		sevsnp = true;
++	} else if (early_is_sevsnp_guest()) {
+ 		snp_accept_memory(start, end);
+ 	} else {
+ 		error("Cannot accept memory: unknown platform\n");
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 89ba168..0003e44 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -645,3 +645,43 @@ void sev_prep_identity_maps(unsigned long top_level_pgt)
+ 
+ 	sev_verify_cbit(top_level_pgt);
+ }
++
++bool early_is_sevsnp_guest(void)
++{
++	static bool sevsnp;
++
++	if (sevsnp)
++		return true;
++
++	if (!(sev_get_status() & MSR_AMD64_SEV_SNP_ENABLED))
++		return false;
++
++	sevsnp = true;
++
++	if (!snp_vmpl) {
++		unsigned int eax, ebx, ecx, edx;
++
++		/*
++		 * CPUID Fn8000_001F_EAX[28] - SVSM support
++		 */
++		eax = 0x8000001f;
++		ecx = 0;
++		native_cpuid(&eax, &ebx, &ecx, &edx);
++		if (eax & BIT(28)) {
++			struct msr m;
++
++			/* Obtain the address of the calling area to use */
++			boot_rdmsr(MSR_SVSM_CAA, &m);
++			boot_svsm_caa = (void *)m.q;
++			boot_svsm_caa_pa = m.q;
++
++			/*
++			 * The real VMPL level cannot be discovered, but the
++			 * memory acceptance routines make no use of that so
++			 * any non-zero value suffices here.
++			 */
++			snp_vmpl = U8_MAX;
++		}
++	}
++	return true;
++}
+diff --git a/arch/x86/boot/compressed/sev.h b/arch/x86/boot/compressed/sev.h
+index 4e463f3..d390038 100644
+--- a/arch/x86/boot/compressed/sev.h
++++ b/arch/x86/boot/compressed/sev.h
+@@ -13,12 +13,14 @@
+ bool sev_snp_enabled(void);
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
+ u64 sev_get_status(void);
++bool early_is_sevsnp_guest(void);
+ 
+ #else
+ 
+ static inline bool sev_snp_enabled(void) { return false; }
+ static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
+ static inline u64 sev_get_status(void) { return 0; }
++static inline bool early_is_sevsnp_guest(void) { return false; }
+ 
+ #endif
+ 
