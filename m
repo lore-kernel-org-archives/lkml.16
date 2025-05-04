@@ -1,118 +1,285 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF271C3C1F;
-	Sun,  4 May 2025 17:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379783; cv=pass; b=YI9WLsoLO+/lNEqXPHaKHdYWXvo9a+jvP2AQDTsya9eFJXQnH9Z69j6GPxx2t55rnqYRxOs2xCJmkcFXcrwQ6kE+kT2YDcL5xi0MIaKyhAFyjiJWF/C/19jufVHHBGpbIPiTYpQ0ItKHdpgvFzUtUI8L0uWOC11fCf+RngQqXz0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379783; c=relaxed/simple;
-	bh=iiWVSV6sW0SWminu5ahkgLdCng4caKv9C0p1VmJ6ZcQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PqpKOp8rAuai56yLdbFqfW5xo9afOE4o9UazcZTkwlVKv5gH1GETpt4eneHpJRa6xr8afHd49SsxbPcGeY1u5OsaIDrUhMIPJ5rrA1kpAjonOR29oUOmo/Sg4sFsSYQhu85P+FQGdsWqL+MML1QXzb6EmszgMx6ZEAgC1MqY0dY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=tgjHuHyu; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=jgcSltq1; arc=pass smtp.client-ip=85.215.255.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130841E5B88;
+	Sun,  4 May 2025 17:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746379802; cv=none; b=VGlAVYWcYR3ril6OIKunPkeNoohc05b2euO+pNeI6UAI+g6zyVvBjyc/tNvYutEHND2FEevE1b3LI4MCNfvdMYDZ/ljUGIy3p6hxi+y0S2VHceWJJvUYIBs+AZbGymDgZY9Qlb2kOzOo2DXc1GtJoJiLro1Ojr/wEnCHb9io36o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746379802; c=relaxed/simple;
+	bh=UPZ/v/zVDaKn23W0QWjzgIyPsVG8PE2v13VVOn3wiUU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FZepjZVQcCZeE7009jr1WGLQQfrGC58+/ss1jVR9iR+f/HiMUVOv8Ydb92mcbjs3SGUcmorBvYnhq+W590htmNrWq+8U/vLzyVCYWZLyw/WQkZ7u0zIgt3QatKbkGZr21eSiq1eq6gjmgQJ2UmkUJmL4x6V2IhxlCBUPEUIWXbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DU9CJ0ap; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="tgjHuHyu";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="jgcSltq1"
-ARC-Seal: i=1; a=rsa-sha256; t=1746379771; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=OsLJl5nV4sx/BoP8JbmOruR17ksw78JlUZiEeUutKd8Fd4r+6Q7bBcy7rvLkuFozSM
-    qxY8clZWyr39UTbRlzb2sSYoccVDOmeJH711KJ2dxs/uL7jiqmdGhfG7UG2h+pDR5faB
-    WPYCWCBQGbFFt6HFB5kUfTuXi5nuum0MVE5OKPhtgEeSHiOGyMS0AUojv6hZkFWouVeQ
-    cPVchJWymmmnLqYhaeM/lKtkF6H9WUN8uMxg6uR1IybfKQD/hv8h8/SDc/A6aHoZ20uy
-    tTA/QgdwzFtzX4EswXIZJ764mqtqJgBJcMznVZ8Lv+Yrg0h/aOM6o5doj36PjVlAGYES
-    mkwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379771;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=XkoLn80Jc16pwM/vsx0xD/qYQJ6XVi2TIpKrdAA3k1Q=;
-    b=r8s7+SY2+6a67R1QeBLDBxtueYVA7/QcwgybUxTXUC840em8UuejzrKoqFZKA5Yl2W
-    Puo1JeQBx+FNbAclVSHgc7zZCzLrReP4aDj0BgYjCLpH42v+pKd8QbttX/DiBJUsMkDD
-    pRRDwnJ8AfwMBGyzbyAR0D4/3cNCf4CsJQWkNdHVZSErEPHTj/nzOl/nwsIToKg+uT4p
-    pMqYJFgvcbh5rYUEHrvBSBFAe4dIzjwh+tp7dwUI7UlHvG9kGhmMIWytW1lH994/3qqq
-    7fw/VYSETbXRoSJED+SUMQSu/lFEieIJ6ly7Zvsh9rq4vhNVu0i/CyisjE2hDX6RnevT
-    x50g==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379771;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=XkoLn80Jc16pwM/vsx0xD/qYQJ6XVi2TIpKrdAA3k1Q=;
-    b=tgjHuHyunFHAUOv1e6q/v1rE2eh3dv5V1WQm9ShySg0ZkfHFfD7M4kcJiTJyrH/ai5
-    /aj2YsWy8+dIr6Pm/ccfI3g7HtlF9cLE6IYJ/On/8ssg1TDdB1UhDa8rC+lRC6ELl2Uw
-    9dXS3xLU8lzQbuA9ir2PVGTJJ7/P8QTzNyVN30ORsztXd4aq8Tti85lev9/b5SzFxsds
-    Rlwl2/qovUNClz5GqqbY8jT3cnPRTtvos1HZ0YspP/cG0a9lNPi6M1C6doqs4UsYLdvU
-    b2syKW3kM8onhOgtM1aqF8uO0KJnD1fbxXIjds0dSwA/Zop7nMGPJAuNoQf/LPaO9+C6
-    Pvzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746379771;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=XkoLn80Jc16pwM/vsx0xD/qYQJ6XVi2TIpKrdAA3k1Q=;
-    b=jgcSltq1eR91LsxvKyA7yzfrAAsYk4o5isLSA/9mIztfrb6Jd1+wxZtxc+v+N455TB
-    cJHlC8BFP9V2rTTrESBA==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b35144HTVz9G
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 4 May 2025 19:29:31 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1uBd9d-0004NU-2K;
-	Sun, 04 May 2025 19:29:29 +0200
-Received: (nullmailer pid 243236 invoked by uid 502);
-	Sun, 04 May 2025 17:29:29 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next v7 1/6] net: phy: realtek: remove unsed RTL821x_PHYSR* macros
-Date: Sun,  4 May 2025 19:29:11 +0200
-Message-Id: <20250504172916.243185-2-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250504172916.243185-1-michael@fossekall.de>
-References: <20250504172916.243185-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DU9CJ0ap"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b1095625dso4408912e87.0;
+        Sun, 04 May 2025 10:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746379797; x=1746984597; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DqaANv92m4hTYV8OL5ZcTItvvIMVs56xMsm33zu7CQg=;
+        b=DU9CJ0apLB36qxn0wy6sqBdyRxhXhlGSjwjSsiRhTM4c21TF9FF6UI5uX43YTDrzi0
+         MDOoPu4MpS7hqsgD808RiLVGshfTzSMY54Jf1b0TDlqG5gK2dh+Y+pWBxAQIslz6g3hM
+         QvYzikunhPs1RviUpWxA4B7v6DWev/Fx4kZZ70yE10VHlzZIFGcZBcEktOew41dDj1RD
+         17jZNbqrx2/nqme/icwKsmmtXMYoNc8KtmD32amWRSAM2Fnh618v4qaLKvDnZS7iD3PM
+         kJzrgYF1MYqFi+OLqiE0/WhsdYxMKgLYisaUI0s/K1XgJIORKj5K9I6R1Kjv53X6lDBl
+         4aAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746379797; x=1746984597;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DqaANv92m4hTYV8OL5ZcTItvvIMVs56xMsm33zu7CQg=;
+        b=hmS4Q9o2/q+FDN6bH2hCZp0ASGnguDZnUKkOZ22UBrjjak4MrxEaf6XJDTcrHM2LNb
+         fCETdBfHsWXLmAWHCutF4Vb032GmfnjLnDDHDal//iOvOPqNrPAL0sP9Nb/nWvAeEpRJ
+         4JIfpeuMnrC9rzkI4hJnwmKdYVUl2mjmXcAjYPlwhDxG0J6dqMoXO5LYcPXJVh1akyLr
+         r2+Nw+9X564ADeZEnUVt0FWQJ9HP8RkS230lc83KB+z9lzc8pdipdQL6UYVTVwbng9Ay
+         xL48ur18hVufsTOFXbLpaBAWu9OjFnJzFRzUfKJoNde8uJncIa/Mlrhx3ROSGcvc05qh
+         0FRw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1JR0KBqrcXswUt6gVisGL2eObEb4vL5XQB6WJb81erBSmKbE6Njdd9DzcKZtUDqRtw326Kmh0CsAwhGaY6uim@vger.kernel.org, AJvYcCV1y10PMqwVaJ2OdD0y+6dtg7M39xTF1mZ1aeHZ6BaYkbqeM9iKciRAFnHHkx2P391s4DAxBcwWQ0aBxRA=@vger.kernel.org, AJvYcCVVa3ck/Q6zeY6epsMXOXhZt/7vxfv6OhawPt6YUNtY2U9NyV0VlNm3qOMR+7KL818XYJKM9unWsFWxvOKzz2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnwbg+aamOS3ADj5+7SXNh2DrORYVd4WBrqZjljBq8VmODbq/C
+	lHQtRXmVSwUODoW9oCk7GNs+OWxh5q4OZ7DEH2YrBOgW2gYbokB06JVofTfiIyxT5X5yrSgB4df
+	Ybg4IkihgxL+NgZVD4nr6ntqBX94=
+X-Gm-Gg: ASbGnctfZkiz/MYquHvTlwNYRGng6qNyg5Oj9i9ZRit2+3Aq9onDJFUp/uQJ3mNNqQ8
+	onbLM7ZdXzqJeCZB8aJLy0sz1gh01zf35lrYmrw5bj9wJoMTlAsDZStCXZzqwBlns2p9p/XbRto
+	yrDFdivAhhy6uvX4yLyu2UeB3z7M7gac0R+YFDjSsDXvkRXNCjP1w6HKE=
+X-Google-Smtp-Source: AGHT+IHFwQGId/qg0kBW+KYdkOs+J3tWLMwK0WAbCd1RELh3Re9uudfVzggOVnYlLipmaOIsCQoGNE89jzqxeW1+l7o=
+X-Received: by 2002:a05:651c:b25:b0:30c:719:1145 with SMTP id
+ 38308e7fff4ca-320c44e62d7mr27278341fa.17.1746379796945; Sun, 04 May 2025
+ 10:29:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-6-ojeda@kernel.org>
+In-Reply-To: <20250502215133.1923676-6-ojeda@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 4 May 2025 13:29:19 -0400
+X-Gm-Features: ATxdqUHy3xw0YS_UixKAyjECkzgBxuNPadNnJTHr2K-h1SUeIdIon-i0DKnWu9Y
+Message-ID: <CAJ-ks9n7u3WkYmJCVc18c_cKod6DaB7KrA7NXbOuD3E3TYbvpQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] rust: str: take advantage of the `-> Result` support
+ in KUnit `#[test]`'s
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-These macros have there since the first revision but were never used, so
-let's just remove them.
+On Fri, May 2, 2025 at 5:54=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
+e:
+>
+> Since now we have support for returning `-> Result`s, we can convert some
+> of these tests to use the feature, and serve as a first user for it too.
+>
+> Thus convert them.
+>
+> This, in turn, simplifies them a fair bit.
+>
+> We keep the actual assertions we want to make as explicit ones with
+> `assert*!`s.
+>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
----
- drivers/net/phy/realtek/realtek_main.c | 4 ----
- 1 file changed, 4 deletions(-)
+Alice pointed this out in another thread but: one of the downsides of
+returning Result is that in the event of failure the line number where
+the error occurred is no longer contained in the test output. I'm =F0=9F=91=
+=8E
+on this change for that reason.
 
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index 05c4f4d394a5..a6d21dfb1073 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -18,10 +18,6 @@
- 
- #include "realtek.h"
- 
--#define RTL821x_PHYSR				0x11
--#define RTL821x_PHYSR_DUPLEX			BIT(13)
--#define RTL821x_PHYSR_SPEED			GENMASK(15, 14)
--
- #define RTL821x_INER				0x12
- #define RTL8211B_INER_INIT			0x6400
- #define RTL8211E_INER_LINK_STATUS		BIT(10)
--- 
-2.39.5
+> ---
+>  rust/kernel/str.rs | 68 ++++++++++++++++++++--------------------------
+>  1 file changed, 30 insertions(+), 38 deletions(-)
+>
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index cf2caa2db168..8dcfb11013f2 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -576,25 +576,9 @@ macro_rules! c_str {
+>  mod tests {
+>      use super::*;
+>
+> -    struct String(CString);
+> -
+> -    impl String {
+> -        fn from_fmt(args: fmt::Arguments<'_>) -> Self {
+> -            String(CString::try_from_fmt(args).unwrap())
+> -        }
+> -    }
+> -
+> -    impl Deref for String {
+> -        type Target =3D str;
+> -
+> -        fn deref(&self) -> &str {
+> -            self.0.to_str().unwrap()
+> -        }
+> -    }
 
+These changes don't depend on returning `Result` from the tests
+AFAICT. Can they be in a separate patch?
+
+> -
+>      macro_rules! format {
+>          ($($f:tt)*) =3D> ({
+> -            &*String::from_fmt(kernel::fmt!($($f)*))
+> +            CString::try_from_fmt(kernel::fmt!($($f)*))?.to_str()?
+>          })
+>      }
+>
+> @@ -613,66 +597,72 @@ macro_rules! format {
+>          \\xf0\\xf1\\xf2\\xf3\\xf4\\xf5\\xf6\\xf7\\xf8\\xf9\\xfa\\xfb\\xf=
+c\\xfd\\xfe\\xff";
+>
+>      #[test]
+> -    fn test_cstr_to_str() {
+> +    fn test_cstr_to_str() -> Result {
+>          let good_bytes =3D b"\xf0\x9f\xa6\x80\0";
+> -        let checked_cstr =3D CStr::from_bytes_with_nul(good_bytes).unwra=
+p();
+> -        let checked_str =3D checked_cstr.to_str().unwrap();
+> +        let checked_cstr =3D CStr::from_bytes_with_nul(good_bytes)?;
+> +        let checked_str =3D checked_cstr.to_str()?;
+>          assert_eq!(checked_str, "=F0=9F=A6=80");
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_cstr_to_str_invalid_utf8() {
+> +    fn test_cstr_to_str_invalid_utf8() -> Result {
+>          let bad_bytes =3D b"\xc3\x28\0";
+> -        let checked_cstr =3D CStr::from_bytes_with_nul(bad_bytes).unwrap=
+();
+> +        let checked_cstr =3D CStr::from_bytes_with_nul(bad_bytes)?;
+>          assert!(checked_cstr.to_str().is_err());
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_cstr_as_str_unchecked() {
+> +    fn test_cstr_as_str_unchecked() -> Result {
+>          let good_bytes =3D b"\xf0\x9f\x90\xA7\0";
+> -        let checked_cstr =3D CStr::from_bytes_with_nul(good_bytes).unwra=
+p();
+> +        let checked_cstr =3D CStr::from_bytes_with_nul(good_bytes)?;
+>          // SAFETY: The contents come from a string literal which contain=
+s valid UTF-8.
+>          let unchecked_str =3D unsafe { checked_cstr.as_str_unchecked() }=
+;
+>          assert_eq!(unchecked_str, "=F0=9F=90=A7");
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_cstr_display() {
+> -        let hello_world =3D CStr::from_bytes_with_nul(b"hello, world!\0"=
+).unwrap();
+> +    fn test_cstr_display() -> Result {
+> +        let hello_world =3D CStr::from_bytes_with_nul(b"hello, world!\0"=
+)?;
+>          assert_eq!(format!("{}", hello_world), "hello, world!");
+> -        let non_printables =3D CStr::from_bytes_with_nul(b"\x01\x09\x0a\=
+0").unwrap();
+> +        let non_printables =3D CStr::from_bytes_with_nul(b"\x01\x09\x0a\=
+0")?;
+>          assert_eq!(format!("{}", non_printables), "\\x01\\x09\\x0a");
+> -        let non_ascii =3D CStr::from_bytes_with_nul(b"d\xe9j\xe0 vu\0").=
+unwrap();
+> +        let non_ascii =3D CStr::from_bytes_with_nul(b"d\xe9j\xe0 vu\0")?=
+;
+>          assert_eq!(format!("{}", non_ascii), "d\\xe9j\\xe0 vu");
+> -        let good_bytes =3D CStr::from_bytes_with_nul(b"\xf0\x9f\xa6\x80\=
+0").unwrap();
+> +        let good_bytes =3D CStr::from_bytes_with_nul(b"\xf0\x9f\xa6\x80\=
+0")?;
+>          assert_eq!(format!("{}", good_bytes), "\\xf0\\x9f\\xa6\\x80");
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_cstr_display_all_bytes() {
+> +    fn test_cstr_display_all_bytes() -> Result {
+>          let mut bytes: [u8; 256] =3D [0; 256];
+>          // fill `bytes` with [1..=3D255] + [0]
+>          for i in u8::MIN..=3Du8::MAX {
+>              bytes[i as usize] =3D i.wrapping_add(1);
+>          }
+> -        let cstr =3D CStr::from_bytes_with_nul(&bytes).unwrap();
+> +        let cstr =3D CStr::from_bytes_with_nul(&bytes)?;
+>          assert_eq!(format!("{}", cstr), ALL_ASCII_CHARS);
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_cstr_debug() {
+> -        let hello_world =3D CStr::from_bytes_with_nul(b"hello, world!\0"=
+).unwrap();
+> +    fn test_cstr_debug() -> Result {
+> +        let hello_world =3D CStr::from_bytes_with_nul(b"hello, world!\0"=
+)?;
+>          assert_eq!(format!("{:?}", hello_world), "\"hello, world!\"");
+> -        let non_printables =3D CStr::from_bytes_with_nul(b"\x01\x09\x0a\=
+0").unwrap();
+> +        let non_printables =3D CStr::from_bytes_with_nul(b"\x01\x09\x0a\=
+0")?;
+>          assert_eq!(format!("{:?}", non_printables), "\"\\x01\\x09\\x0a\"=
+");
+> -        let non_ascii =3D CStr::from_bytes_with_nul(b"d\xe9j\xe0 vu\0").=
+unwrap();
+> +        let non_ascii =3D CStr::from_bytes_with_nul(b"d\xe9j\xe0 vu\0")?=
+;
+>          assert_eq!(format!("{:?}", non_ascii), "\"d\\xe9j\\xe0 vu\"");
+> -        let good_bytes =3D CStr::from_bytes_with_nul(b"\xf0\x9f\xa6\x80\=
+0").unwrap();
+> +        let good_bytes =3D CStr::from_bytes_with_nul(b"\xf0\x9f\xa6\x80\=
+0")?;
+>          assert_eq!(format!("{:?}", good_bytes), "\"\\xf0\\x9f\\xa6\\x80\=
+"");
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_bstr_display() {
+> +    fn test_bstr_display() -> Result {
+>          let hello_world =3D BStr::from_bytes(b"hello, world!");
+>          assert_eq!(format!("{}", hello_world), "hello, world!");
+>          let escapes =3D BStr::from_bytes(b"_\t_\n_\r_\\_\'_\"_");
+> @@ -683,10 +673,11 @@ fn test_bstr_display() {
+>          assert_eq!(format!("{}", non_ascii), "d\\xe9j\\xe0 vu");
+>          let good_bytes =3D BStr::from_bytes(b"\xf0\x9f\xa6\x80");
+>          assert_eq!(format!("{}", good_bytes), "\\xf0\\x9f\\xa6\\x80");
+> +        Ok(())
+>      }
+>
+>      #[test]
+> -    fn test_bstr_debug() {
+> +    fn test_bstr_debug() -> Result {
+>          let hello_world =3D BStr::from_bytes(b"hello, world!");
+>          assert_eq!(format!("{:?}", hello_world), "\"hello, world!\"");
+>          let escapes =3D BStr::from_bytes(b"_\t_\n_\r_\\_\'_\"_");
+> @@ -697,6 +688,7 @@ fn test_bstr_debug() {
+>          assert_eq!(format!("{:?}", non_ascii), "\"d\\xe9j\\xe0 vu\"");
+>          let good_bytes =3D BStr::from_bytes(b"\xf0\x9f\xa6\x80");
+>          assert_eq!(format!("{:?}", good_bytes), "\"\\xf0\\x9f\\xa6\\x80\=
+"");
+> +        Ok(())
+>      }
+>  }
+>
+> --
+> 2.49.0
+>
+>
