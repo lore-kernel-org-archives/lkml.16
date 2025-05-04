@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9721F3BB5
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926B31F3BA3
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746352433; cv=none; b=CS5brSCLL6tM3AyS0teAhDDAmSwgCp02xX/WcK5ChcYA346gzHLX4QfdTpo2JZIAVhr3a3VlWUW/ZIIB1UhnwfiJyEi4vNKgJRM1eO7I7d/6YOhfPayiaoFt6CcH0Q4NV+3tzssC/6f9j1Le2drD1w/RxsSWfkGt9nkwsA6zSB4=
+	t=1746352435; cv=none; b=jJKnZzQa/EWF2dwJRZKSpEX60ZPsgoNInEuOVrtfagNk+yL2t9L92f18lkcWjAK/ZPWbHIkdBzQ3oOfPzsL4kgJhd7OrSzcr8N1ZItZIrU7dGqgiOOMgUI4s+Uib73Pz3IkGVLXmWq1d8ROdF1LF6VWgZ37O8RMiAelzB13HdgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746352433; c=relaxed/simple;
-	bh=wuHAfmatSUs0eQGLjdRIUylP9w5pVwSp6jih2u1d2Nc=;
+	s=arc-20240116; t=1746352435; c=relaxed/simple;
+	bh=C6gzvknBtFypmZWra6mOhD5B9I5YTmOiy1ngK8W8VIA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=boyN8sKZcksAdS3vYbAssoWg1OGaobXNCyvoPArX5NibHjH2j8pRztJfcwyJhyjzYtuT0sR6DvX5IME1tBd+1lJejTRaAXhRPa8SyrUAhnHbYmoOmIWg2ekmP/EOrRX3vKy8hfHeQ+i0fZYA5KEslda/GtseJTk+oboKF00jRNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q4Pt2ZI0; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=e1IbWD+kpT2aEmvEBK43AIkgYsPmkbVmKc3BMvgyk6GHsU7rBZPM9aoBCA6RkVg3UIqC9kSCM8yGcuHD8wKIUpq6ceiwcu80/Pc3s8RzLnQlPDaxl6ideHOtSy7RzY2YH/kgzJN+4BiTou3RBB6oe44Zq5Zo/xto/O6ygDUk7YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pnHGt8mq; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4Pt2ZI0"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so14046695e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnHGt8mq"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43f251dc364so19247685e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746352430; x=1746957230; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746352432; x=1746957232; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BngAQLfFrYEWXhjcTmuThO4xgzttYUC9luJvEjHMWdQ=;
-        b=q4Pt2ZI0VWKKVj3cSxoegX4K7yR1vgrwHtcGEnIEOZ3W24aa/rrGjZXyDBYJjeQZnz
-         XjHDGoT7n+yR398RT5ib/aKuEWglOcqE2U0eYqOi7pjLbOERGrPD1b8nVt5/pb6T4e42
-         fGrttmcy9OVDVXJmkGFLeVdnq50Fr78IHUyM7REfEyzN7MNrfzCQLCbXZUv6HJvXpQhP
-         XDqKtoelu4GqqryQqwPq9ES70zfIz6Vkuxo58BbNGv/qa+rdeP6psNrOw5jAhgl7Lt4J
-         CrGXsy59vO+AVxoqpi2ZzJ7dKcNNPnXh3htn9KCfSmAGr2YpXWSkypilVfmIyKwrZb+7
-         ZDog==
+        bh=lC4kTjWNtYVJtNr/R34O8MumjOtUSCO/boDQXdKZavw=;
+        b=pnHGt8mqiuF+GMqLCoQhhPgIaOlJo3iwzdQ3DI+jOcmt9vFeK+wL4nmgq4B28DqPqL
+         dfzu3epn+rmr++Xzp1iYGnZWO2A1KN4bvWB5GeuGE0VsQJZD+jN0hPZWJHhzSg922k+Q
+         nhKgVwiLBBnEv+WBCyvCDD/1eTJJetUyHOI7UjW7XhxiLu3MIA5T4TeOIZsa9CC+MeIZ
+         462zrWDY06o8XspYTwbA/iiqjbvZ94faR2L++BsFHDDlPCO6VoFdm5V/l+1ReNUG9MnL
+         k9y39SItd74ylX2A8aqF+hiDr8Pa61m+7vxe/CZgb52TwuB7f2qi+kXa+jO78WbV0B5f
+         XS/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746352430; x=1746957230;
+        d=1e100.net; s=20230601; t=1746352432; x=1746957232;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BngAQLfFrYEWXhjcTmuThO4xgzttYUC9luJvEjHMWdQ=;
-        b=I71dEpEH0kOh074rkrip9UTI6amkprrOU/OiJ9/rBEkrPaAatPuFNFTcdnbKZSSq1/
-         909jNhmmXO7UGE1ErcezvUsn+YTZYToaKZejtsvJdMKaGl+wjJI/WhbHoG+VWpIpmIXe
-         /CEZZqs+0y65MGB9duCYmVbayGA84r20G7AXPru2p6ICbRqzUCK1Nd01bAq9mWhd5HHZ
-         T2G6vj31t99y+sTJLushG+zmKV7kbbD7ehVaBFwjNhlQQZc3MEpT1evT7vxKyqMsLzh4
-         NL0wrbOlqYRttdPx4fWEMZRUCyV74/VpKpvTM5cFhRpKq/oMefFIh6vSNFwoSpE3cSPV
-         MALQ==
-X-Gm-Message-State: AOJu0YzmUHWtapYIPcIv3O4YjJ+biBPFlqSra1cU1x+ATqMo3i1RYF15
-	FDPoN4R2fFaVR3dgpnT8YwrJHuf9Kzz19uHv43WQy36b6lQ69jCRc9l90BSUf0kyzBDTTbMiF1L
-	NheQTGb5P+/qVeQudBEd6DmIt/ufeGktBs7vBfuafeGRmCI8MuMHyfG+wwoHSQxCeATOd0jHf4r
-	J3Bo1QC2BFyQUn2wkW3w4k8rjBuSYZCw==
-X-Google-Smtp-Source: AGHT+IHMOiV5Mdn5v77/gifWvnDjJAZiAxp/513QM5JcQVs+myLHjDeNQH95LNNEsbP9E0pI95c69lwy
-X-Received: from wmbbi15.prod.google.com ([2002:a05:600c:3d8f:b0:43b:bf16:d6be])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5246:b0:43c:ec4c:25b4
- with SMTP id 5b1f17b1804b1-441bbec23e8mr88386825e9.10.1746352430181; Sun, 04
- May 2025 02:53:50 -0700 (PDT)
-Date: Sun,  4 May 2025 11:52:52 +0200
+        bh=lC4kTjWNtYVJtNr/R34O8MumjOtUSCO/boDQXdKZavw=;
+        b=Qp+cmDHWBd5xUqCy9CRooaRSb2vajXusyhy1ftXKD6C1LK5IYvp2+b8svsokhK5XS/
+         ehCMshFvBHeNdU7arK1cI8OTr22VIxjwHFXQXjDQNfrDYvXs3XgBJ1zrPgABAS6Y8hn3
+         n/HvM69aMRl0eOVYeAahjVLAyDXMsw5ROdW9+zXEYxTJDxSfeJXcWCLT4c8ho/abGMgH
+         BF1fE+cYTuyO1FxMwALvWKqlJlWZVTRvmBm1T7aNi804MUjqFRze+x88Z9ZsGCO9IDd6
+         OhOWxBX2ULSTZr6ksAGHP7MbaXNNthuP5bXlECqkZwHk0hKzpNawmwL6ZMVzvGj67Wfz
+         92Cw==
+X-Gm-Message-State: AOJu0YzR7PGoCPCknMzsQQWqSlLEVJ/YrcgOBM813Jjht3VCGxV6ZZzD
+	SUAu4KN/7OcmPgubqCUAQ+2wfDjVpMM0gAIxp//V/ODGeZeBgdqhkPQh3gPmvcSqXh8Liv/pg9v
+	w0SkiTc+KrEgR1bHE89MdJcckDlBY1DIQ3STyGioDr7UQr8QmYYMVu75KnNRakTefq3/tKlZtDf
+	9p5g073Vtefwn5uy6lBBQ9urK5yyWyWQ==
+X-Google-Smtp-Source: AGHT+IEmLbsKySGDhi+UwQYPdC4xgeVngLAICWAnBPmQkT2h+F73uzVvKde7aylFSfpCInOSZFE5iYR3
+X-Received: from wmbjh5.prod.google.com ([2002:a05:600c:a085:b0:43b:c450:ea70])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8711:b0:43d:47b7:b32d
+ with SMTP id 5b1f17b1804b1-441c4919fb3mr23588375e9.25.1746352432075; Sun, 04
+ May 2025 02:53:52 -0700 (PDT)
+Date: Sun,  4 May 2025 11:52:53 +0200
 In-Reply-To: <20250504095230.2932860-25-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,14 +59,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250504095230.2932860-25-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1438; i=ardb@kernel.org;
- h=from:subject; bh=SfyGJVp/cmZ3yoM/3fyJKQWjWHpwNBvXWOMO7V8FZ4I=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4vfX/MYf5f1zwwzKZ2wNCdpqLG86K/P1QdbQNdfVj
- j6zefy3o5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAEyk3JXhv3/GviO9DDaO89Yc
- za93yHo0S/d7aVCOr1rJasXgqWKrpzIyPJh+5g3Tl11p3FZGRQkctopygW+aDr0Uf3ok7kSB66E qNgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=737; i=ardb@kernel.org;
+ h=from:subject; bh=zbymTFtFVf98uj8Itu8GL+XtbjDBIM1MUB1YpDi01GQ=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4o9J9pr5v31sQhY7Xrs6r2nfuyWPri+dwcCjtsW5b
+ kmdOndMRykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZjItumMDP23rh9evG3K30dz
+ u2Qy193e2NR6a3/IR5mGV76N//dd8W9gZGg4XCoufDDz/3Wmlbzbni2s0n4rcPeOgw/3n5hfdV+ WbGQHAA==
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250504095230.2932860-47-ardb+git@google.com>
-Subject: [RFT PATCH v2 22/23] x86/boot: Revert "Reject absolute references in .head.text"
+Message-ID: <20250504095230.2932860-48-ardb+git@google.com>
+Subject: [RFT PATCH v2 23/23] x86/boot: Get rid of the .head.text section
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
@@ -77,46 +77,30 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-This reverts commit faf0ed487415f76fe4acf7980ce360901f5e1698.
-
-The startup code is checked directly for the absence of absolute symbol
-references, so checking the .head.text section in the relocs tool is no
-longer needed.
+The .head.text section is now empty, so it can be dropped from the
+linker script.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/tools/relocs.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index 5778bc498415..e5a2b9a912d1 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -740,10 +740,10 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
- static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 		      const char *symname)
- {
--	int headtext = !strcmp(sec_name(sec->shdr.sh_info), ".head.text");
- 	unsigned r_type = ELF64_R_TYPE(rel->r_info);
- 	ElfW(Addr) offset = rel->r_offset;
- 	int shn_abs = (sym->st_shndx == SHN_ABS) && !is_reloc(S_REL, symname);
-+
- 	if (sym->st_shndx == SHN_UNDEF)
- 		return 0;
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 4aaa1693b262..af8bc4a6f6c3 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -160,11 +160,6 @@ SECTIONS
  
-@@ -783,12 +783,6 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 			break;
- 		}
+ 	} :text = 0xcccccccc
  
--		if (headtext) {
--			die("Absolute reference to symbol '%s' not permitted in .head.text\n",
--			    symname);
--			break;
--		}
+-	/* bootstrapping code */
+-	.head.text : AT(ADDR(.head.text) - LOAD_OFFSET) {
+-		HEAD_TEXT
+-	} :text = 0xcccccccc
 -
- 		/*
- 		 * Relocation offsets for 64 bit kernels are output
- 		 * as 32 bits and sign extended back to 64 bits when
+ 	/* End of text section, which should occupy whole number of pages */
+ 	_etext = .;
+ 	. = ALIGN(PAGE_SIZE);
 -- 
 2.49.0.906.g1f30a19c02-goog
 
