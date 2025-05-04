@@ -1,217 +1,180 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B46C20DF4;
-	Sun,  4 May 2025 01:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379DE376;
+	Sun,  4 May 2025 01:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746323159; cv=none; b=WPVDq9VbEAP54dV/BYzEaNvNTzhYe76Rj9DCIw9pPNKiBKAdOARG7Pzk1Y/5tHJ2kHZrigWN3uxHFHmdncOLIF+OuPZ1+CPQe9Gw24Q+pHL204OMSocP/fGcxEfebik1HvWS6kNvicwV4E3T2LBqW/Gj2DVsnbX6HpS3dIZ0GHU=
+	t=1746323403; cv=none; b=dkyvXTCMRB1chR6VnBZXMgE6NcvlDmbymMFdLK1HH8xCzASqfJLinhmPFle5KpfDBZWC3y3nIJfTWCyA6GpzZEYUuTXG8EuESG4Gz+Q/38kLnm+nM5z4EQuOoA4s4wUCPvjG7rCF2plPmuvJLGme9QvmMiuI1iqsh6uM994vM14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746323159; c=relaxed/simple;
-	bh=lCtX5gDrKX/LLpQICcWlytfAboCij27A2i/XbIp9ZLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qvWp5luZ6NRPNg6an/w/ST4zUomQGsT8+xrN+6ZgtmGT/Hu828hFgXMnwpt+vBy8C5bEQCPx1RhcWIqAzTWZJTAatTqbHsto0PBjGUaAkxGBag0B+o8ucSO3zH3rUoEasLWK3MLq5sA1u8DPMtmPZUDg0OlRojYf9dK38Zy1JRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AmBS2dXI; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746323403; c=relaxed/simple;
+	bh=vJ7x5qZ/okXi9QBe6OEnR8AkTiQVxRdodOX57RzU8CQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qrIQHMcrfQOQMI8GVPtwBlANf1F7fZHWnx1FkxhfbWLr3IATjw9tlc41JHx19EWILoag4oUxeoVK64w/3cSgVOkoY/i7LrMQLX8G165Glv9hfLmJCZsjbP3RiySN0NofjH9taMy2c6ppYHAHscqIXLTV/6uzHMOB1JhhK1sguag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NxbWIqRo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmBS2dXI"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c461a45f8so28924761fa.1;
-        Sat, 03 May 2025 18:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746323155; x=1746927955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B7lnzCOHIwkizy9wWqNhagK46sAvR2JhHgjOg7AFEkU=;
-        b=AmBS2dXIh8/ENUA1drDwC8FwRBRhgHCuknaWz+aQOwbwEYUPPWPrJknc9RTHqwuhJz
-         40RRxjXGlBOKCzc+O7q2ZF5jNf91M5TDTFu1kjNYiXGAQOYUPxApjO83E2HRHNsr5M9h
-         5L/9bOmqC6sJLEbToMUiRIYYIqbLC9Vct3F41eoIbqdA3eDGd/cm7SnbVUHrBgd87WLb
-         4GwNrtbB7nNaJ52+U659T1nQyhG0TA6OdbR81N2pKDr/PbTLr6I6RRqxbJaLWF42avWc
-         0GZY7SyKpjzb9fSi/po+wN0HBxY3ETijmXklo27U8FicnaFkrJOv+2vCAEDqKuIP4+m6
-         78vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746323155; x=1746927955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B7lnzCOHIwkizy9wWqNhagK46sAvR2JhHgjOg7AFEkU=;
-        b=nBrrmTazOl7Os2VfA5rwxUmGvy61HIjCffiV88Hy2Si4qyQWJU9vYr2ydZ/ZOlNegs
-         30Fw0fmuyRuT3L6q1xE9W/OQYYmNV4V6FYXo3TU+oJJYlIAMVyl8nkHPPmGkPZoBx8yW
-         31BGc/IJxFY8zebcGGuxyna3AMkBPsoPQi9MI/A4axBBybvnwWez3dMa7nOWpcsdkEAp
-         n9PyrIqUZ5fVReCJelqOStY5epgDDWtmbIZEBVAJXvi2Sct2hm/SsfDBSvpKV06RMQXr
-         WO0/KXF4a28AFqC7c+Z0GzYhwnbcsl4qSBcsjIu/ZiGqnKVPMLIk6iZ6Jlf3gIxCsA1k
-         2ntw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbHHRGZCKhTue/nrJIWPt+z4kvmB4VYexlFSeFNE32lPM5GUGMo+5GPbtWI2NENiQNr8Vd/pP0/eUSAPO/@vger.kernel.org, AJvYcCWQ8tqCWrXRukphYlJUH8nIFZBnI/ahouhTtIEWaThD63C5kP61nxQC6Y5/NgW/dOVkRcbqZIHv3fQ+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYvR0uOhHSQ3B6UP6mQC4+NOPhQay6VYBnNcF5atOkT0V1Omnk
-	jn7yG6HA98cdQQtWgf6Pji8YSFz0O0xMZ/0/FI6AZQE8LidQ4aAaGNQ9EJFovB5P9SMV0vNeGLI
-	hN3rlb/KtZ5oKl9DgwE5QuYfEvnc=
-X-Gm-Gg: ASbGncvTE/ndlzXfmys5UafhfZ0wnSsK7zdtTtKkSWCHEY855JJxy+vNykYp7EpYbzi
-	sncHqI7hHWQwTMFzuuClkddpBi7Uu4zU7QhXYz2tM/Ged3pLXJ1iRgQF/Hn22xElVC81ipx+Usq
-	ubO5B64nJNYwuYNThFTZxcyAU=
-X-Google-Smtp-Source: AGHT+IG4qF3iVI5uWcYBZcuo9Y/YT1JDNmGSRnwvpFqRu8CNxzzYJpMUSlIaKXPHHmx3mvmbXuVDMwt5Pq6PShRcZVQ=
-X-Received: by 2002:a2e:be0d:0:b0:30d:e104:b67c with SMTP id
- 38308e7fff4ca-32352607341mr6769451fa.39.1746323155173; Sat, 03 May 2025
- 18:45:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NxbWIqRo"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 543NqsF5019806;
+	Sun, 4 May 2025 01:49:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6KVRFSAWLIXbdvuRxTxb422SHvQxn5IlW1SWnqJ5N04=; b=NxbWIqRowa+oE7dd
+	6KbeYBHsOqrLjen9Zexp+iL1uyuD3KGxl9LMx3UYAuYeWMlaEXSZDKHyJNNZi4Vz
+	XHlgMPtWcacJi8OrpjpJAJlRXfbPT1+nfGZuLxA1nv+OWnd+jSKLNHbDNUdfSkX9
+	TxXmfXtLh7KeFovIDh5VA3n8a/hLfVuVhCjNO8pOq3MG6ZfO5CYQc1b69AFpw7fR
+	IQeJSHBpzciiXvSOs/Jw2aBfBYAEFRPjye7JHLkAH8PqPFx/FChndZKAT9IFR9+W
+	9riT8XNRcH84Zldl5rsmffa9xmZVQ7Yc1nx90uyTEW/aqDrTLVeJXXjGzfDKpukp
+	JtjyxQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbc59b62-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 04 May 2025 01:49:53 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5441nqlX031372
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 4 May 2025 01:49:53 GMT
+Received: from [10.253.79.250] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 3 May 2025
+ 18:49:49 -0700
+Message-ID: <8f11c588-aba8-4550-9066-c6bdda0416d1@quicinc.com>
+Date: Sun, 4 May 2025 09:49:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503234030.130605-1-linux@treblig.org>
-In-Reply-To: <20250503234030.130605-1-linux@treblig.org>
-From: Steve French <smfrench@gmail.com>
-Date: Sat, 3 May 2025 20:45:43 -0500
-X-Gm-Features: ATxdqUEAZB9i7S5uPsM1MexTMN1OssUOvRay6NTBCvtlxfTs81yFYFIHOqDPCAE
-Message-ID: <CAH2r5mtCa3W1t_RBwPQDoHKb14JHydmP3CdmjoF5BNfkTn5ing@mail.gmail.com>
-Subject: Re: [PATCH] smb: client: Remove an unused function and variable
-To: linux@treblig.org
-Cc: sfrench@samba.org, pc@manguebit.com, ronniesahlberg@gmail.com, 
-	sprasad@microsoft.com, tom@talpey.com, bharathsm@microsoft.com, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: clock: qcom: Add CMN PLL support for
+ IPQ5018 SoC
+To: <george.moussalem@outlook.com>, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
+ <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
+Content-Language: en-US
+From: Jie Luo <quic_luoj@quicinc.com>
+In-Reply-To: <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5dPE0gK7V1J6Fl0RJIc9HPzt403kkICJ
+X-Authority-Analysis: v=2.4 cv=O7Y5vA9W c=1 sm=1 tr=0 ts=6816c7c1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8
+ a=8uU5PDXsy-7Xv9xxr94A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 5dPE0gK7V1J6Fl0RJIc9HPzt403kkICJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDAxNSBTYWx0ZWRfX/Y5n6lCQg8XT
+ VVEtmDk1cyXa8r94sCKSEWW9DQt/AJ106f43p3STZEGtJ4jL8//mkZovoPYGbPShI6d6uh8U24h
+ cl7ZdSk6Zwl7loAEVBzgZmFmBKQ5QGu57UDviz2O18cledn/p8tj8KNwkQzwcO9Usr8ZvwxtkuY
+ pBL+qJ21zunY5fraXNui6umMM7Feb+sTozPF6ltR9b+y4jZqG1AYQVI7UzPSvVh0Y7rpT49P+Jb
+ k37CCi21Gr+roxC1HfVZ+xJopi653QhBRL9OjvR5ZJD/oBSECHsg6XYoEQ2vdiOs+24vTPsOb4o
+ 2UY00bpVuhB1osHnekjKyaX4wobuyJjokt8sBP27ZgNzihNUDyHC2BDf9PzSv/zOKvTY2kNc84O
+ nl4mi2ZvCi368lNJEHtG7SxwTOlQ7G45/8d7UtlwwtfihOTAcqf2iMxEMQfkdBJ7qdGoKnpo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-04_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1011 priorityscore=1501 adultscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505040015
 
-This looks fine as something for 6.16-rc next month.
 
-On Sat, May 3, 2025 at 6:40=E2=80=AFPM <linux@treblig.org> wrote:
->
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->
-> SMB2_QFS_info() has been unused since 2018's
-> commit 730928c8f4be ("cifs: update smb2_queryfs() to use compounding")
->
-> sign_CIFS_PDUs has been unused since 2009's
-> commit 2edd6c5b0517 ("[CIFS] NTLMSSP support moving into new file, old de=
-ad
-> code removed")
->
-> Remove them.
->
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+
+On 5/2/2025 6:15 PM, George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
+> 
+> The CMN PLL block in the IPQ5018 SoC takes 96 MHZ as the reference
+> input clock. Its output clocks are the XO (24Mhz), sleep (32Khz), and
+> ethernet (50Mhz) clocks.
+> 
+> Unlike IPQ9574, the CMN PLL to the ethernet block needs to be enabled
+> first in IPQ5018. Hence, add optional phandle to TCSR register space
+> and offset to do so.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 > ---
->  fs/smb/client/cifsfs.c    |  1 -
->  fs/smb/client/smb2pdu.c   | 65 ---------------------------------------
->  fs/smb/client/smb2proto.h |  3 --
->  3 files changed, 69 deletions(-)
->
-> diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
-> index a08c42363ffc..d192a19bd761 100644
-> --- a/fs/smb/client/cifsfs.c
-> +++ b/fs/smb/client/cifsfs.c
-> @@ -70,7 +70,6 @@ bool require_gcm_256; /* false by default */
->  bool enable_negotiate_signing; /* false by default */
->  unsigned int global_secflags =3D CIFSSEC_DEF;
->  /* unsigned int ntlmv2_support =3D 0; */
-> -unsigned int sign_CIFS_PDUs =3D 1;
->
->  /*
->   * Global transaction id (XID) information
-> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-> index c4d52bebd37d..eef971509589 100644
-> --- a/fs/smb/client/smb2pdu.c
-> +++ b/fs/smb/client/smb2pdu.c
-> @@ -5919,71 +5919,6 @@ SMB311_posix_qfs_info(const unsigned int xid, stru=
-ct cifs_tcon *tcon,
->         return rc;
->  }
->
-> -int
-> -SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
-> -             u64 persistent_fid, u64 volatile_fid, struct kstatfs *fsdat=
-a)
-> -{
-> -       struct smb_rqst rqst;
-> -       struct smb2_query_info_rsp *rsp =3D NULL;
-> -       struct kvec iov;
-> -       struct kvec rsp_iov;
-> -       int rc =3D 0;
-> -       int resp_buftype;
-> -       struct cifs_ses *ses =3D tcon->ses;
-> -       struct TCP_Server_Info *server;
-> -       struct smb2_fs_full_size_info *info =3D NULL;
-> -       int flags =3D 0;
-> -       int retries =3D 0, cur_sleep =3D 1;
+>   .../devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml  | 11 ++++++++---
+>   include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h         | 16 ++++++++++++++++
+>   2 files changed, 24 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> index cb6e09f4247f4b25105b25f4ae746c0b3ef47616..25006d65d30e20ef8e1f43537bcf3dca65bae73d 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+> @@ -24,12 +24,10 @@ description:
+>   properties:
+>     compatible:
+>       enum:
+> +      - qcom,ipq5018-cmn-pll
+>         - qcom,ipq5424-cmn-pll
+>         - qcom,ipq9574-cmn-pll
+>   
+> -  reg:
+> -    maxItems: 1
 > -
-> -replay_again:
-> -       /* reinitialize for possible replay */
-> -       flags =3D 0;
-> -       server =3D cifs_pick_channel(ses);
-> -
-> -       rc =3D build_qfs_info_req(&iov, tcon, server,
-> -                               FS_FULL_SIZE_INFORMATION,
-> -                               sizeof(struct smb2_fs_full_size_info),
-> -                               persistent_fid, volatile_fid);
-> -       if (rc)
-> -               return rc;
-> -
-> -       if (smb3_encryption_required(tcon))
-> -               flags |=3D CIFS_TRANSFORM_REQ;
-> -
-> -       memset(&rqst, 0, sizeof(struct smb_rqst));
-> -       rqst.rq_iov =3D &iov;
-> -       rqst.rq_nvec =3D 1;
-> -
-> -       if (retries)
-> -               smb2_set_replay(server, &rqst);
-> -
-> -       rc =3D cifs_send_recv(xid, ses, server,
-> -                           &rqst, &resp_buftype, flags, &rsp_iov);
-> -       free_qfs_info_req(&iov);
-> -       if (rc) {
-> -               cifs_stats_fail_inc(tcon, SMB2_QUERY_INFO_HE);
-> -               goto qfsinf_exit;
-> -       }
-> -       rsp =3D (struct smb2_query_info_rsp *)rsp_iov.iov_base;
-> -
-> -       info =3D (struct smb2_fs_full_size_info *)(
-> -               le16_to_cpu(rsp->OutputBufferOffset) + (char *)rsp);
-> -       rc =3D smb2_validate_iov(le16_to_cpu(rsp->OutputBufferOffset),
-> -                              le32_to_cpu(rsp->OutputBufferLength), &rsp=
-_iov,
-> -                              sizeof(struct smb2_fs_full_size_info));
-> -       if (!rc)
-> -               smb2_copy_fs_info_to_kstatfs(info, fsdata);
-> -
-> -qfsinf_exit:
-> -       free_rsp_buf(resp_buftype, rsp_iov.iov_base);
-> -
-> -       if (is_replayable_error(rc) &&
-> -           smb2_should_replay(tcon, &retries, &cur_sleep))
-> -               goto replay_again;
-> -
-> -       return rc;
-> -}
-> -
->  int
->  SMB2_QFS_attr(const unsigned int xid, struct cifs_tcon *tcon,
->               u64 persistent_fid, u64 volatile_fid, int level)
-> diff --git a/fs/smb/client/smb2proto.h b/fs/smb/client/smb2proto.h
-> index 4662c7e2d259..035aa1624053 100644
-> --- a/fs/smb/client/smb2proto.h
-> +++ b/fs/smb/client/smb2proto.h
-> @@ -259,9 +259,6 @@ extern int smb2_handle_cancelled_close(struct cifs_tc=
-on *tcon,
->                                        __u64 volatile_fid);
->  extern int smb2_handle_cancelled_mid(struct mid_q_entry *mid, struct TCP=
-_Server_Info *server);
->  void smb2_cancelled_close_fid(struct work_struct *work);
-> -extern int SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
-> -                        u64 persistent_file_id, u64 volatile_file_id,
-> -                        struct kstatfs *FSData);
->  extern int SMB311_posix_qfs_info(const unsigned int xid, struct cifs_tco=
-n *tcon,
->                          u64 persistent_file_id, u64 volatile_file_id,
->                          struct kstatfs *FSData);
-> --
-> 2.49.0
->
->
 
+The property 'reg' should not be removed.
 
---=20
-Thanks,
+>     clocks:
+>       items:
+>         - description: The reference clock. The supported clock rates include
+> @@ -50,6 +48,13 @@ properties:
+>     "#clock-cells":
+>       const: 1
+>   
+> +  qcom,cmn-pll-eth-enable:
+> +    description: Register in TCSR to enable CMN PLL to ethernet
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +        - description: phandle of TCSR syscon
+> +        - description: offset of TCSR register to enable CMN PLL to ethernet
+> +
 
-Steve
+This TCSR should not be a part of CMN PLL, it is the LDO controller for
+the internal GEPHY in IPQ5018 SoC, which can be moved to a part of GEPHY
+device.
+
+>   required:
+>     - compatible
+>     - reg
+> diff --git a/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h b/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..586d1c9b33b374331bef413f543c526212c18494
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_QCOM_IPQ5018_CMN_PLL_H
+> +#define _DT_BINDINGS_CLK_QCOM_IPQ5018_CMN_PLL_H
+> +
+> +/* CMN PLL core clock. */
+> +#define IPQ5018_CMN_PLL_CLK			0
+> +
+> +/* The output clocks from CMN PLL of IPQ5018. */
+> +#define IPQ5018_XO_24MHZ_CLK			1
+> +#define IPQ5018_SLEEP_32KHZ_CLK			2
+> +#define IPQ5018_ETH_50MHZ_CLK			3
+> +#endif
+> 
+
