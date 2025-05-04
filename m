@@ -1,93 +1,90 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5DB41AAC;
-	Sun,  4 May 2025 11:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFB9A29;
+	Sun,  4 May 2025 11:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746357361; cv=none; b=GsP+plL6Om8u/a4bcVXYr4kP/6yeGr02K7vibAq+SAM5K8DUA2UqFkA5JLt73qDhQNp3ttLz1D8u9NVrWLAWDhdjMYHMVvD1spSxkX+aPHMrkwXypsUrhrWagBbMeu5L09qNtQTx8YNxbqTjJzKUx4PjKbEnFFm5LM6r96JiwTM=
+	t=1746357816; cv=none; b=scWrqvdvxRg80TiuE1cOInfec7HXPOtaNNZh0jO97RCt9xYGQ1CLYvl1T+7inrHBI0YWW96EpATx425BM4QvjilJwGtuWVoC9y4WHr6fHF3w5UOlUhW6Ow7+p/uRoLJBSvxJEwgFe8tz2B4ASFvsgv0qW8PB8Du9ClPYScFv69I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746357361; c=relaxed/simple;
-	bh=hWx8872nRG2owf+dWaC+w6SN4/npRrVZ/8Ejukj8DZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LzSc/yKtgGfiNZmlaOgrZ+mHY4Py7Kc0Z2jLVufxWxRnZuMiORA6XF6Es5Sc6FjpMn+v8GAtwHmFvzPAHRV5JgiyBxWoLB82+UzTm+SiIqDD2rpInJJJbsdGBN9aQJItrEqI6ObpXRK7qOOb/prKm5wWihvbPJs4A+KM1w0k/xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WvrASp2z; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1746357816; c=relaxed/simple;
+	bh=WpIr8GKgvtxyOEB1BvYudVvyTK1mg+FzKhOiCtz/vik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Nl0wBZZS2BzbMlkqCjCI2WyGbGUg3S+rm1NYQ6cKk0lUklP37odBXwHw817QhlYNrdeNO/IxuVd2h7fN1kZeYOudcRgzpKJ0FQWltZA+rXOnRq7Rsh4lKN5aN1IhRxPIAuQmolxURgRScRUWWAzgVEow5/1TVokXNHIU3e6/XHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zf7Fdp65; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvrASp2z"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so41133745ad.2;
-        Sun, 04 May 2025 04:15:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zf7Fdp65"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a823036so32970515e9.0;
+        Sun, 04 May 2025 04:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746357359; x=1746962159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQcB8pOIo7fPfcqU8UCrjsrQ9eSJMuMR7jwg4emfdt4=;
-        b=WvrASp2z+iiTuew3eUlv1bzp2rtoEhOTyEGpZ23jWEtJdBaVui8y0pk/EdGEyVC4B4
-         1x762Njy58t9L7ehHJKFATV71+cU8E8NzhO0q166C9tgen8CRgdN4M3VPRJgMiILiIit
-         K/cd0PR/Z6GsxLDlYCWnoeSSoy3kKtStCJqMwXShrl5M/Fvt+/MeF3tY1mfoeyFZUPBj
-         Iq3XFqJyWMx6F8lHwUEJPLpzWIFBSuqJuuDmTBHAlMxDSBFRbuUOY/m5CYVauhG3OIlP
-         AREsuXePwn3n6J7qA36nKknlxWR9U3+ptGAk82U/05Bj+2CslI8WXAZW0hENvxQec+mP
-         7+qg==
+        d=gmail.com; s=20230601; t=1746357813; x=1746962613; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zV8BrMTkzQFkPZ+3Fj6/O6YK38B+dAgJMFffx23ECvU=;
+        b=Zf7Fdp65Bcl7+cARFKuwl3gTm42W7hWOdPORCKTQdYbvo/PjRqQrIhguWoBihP4zsX
+         YiP3rrFudAUq+js6J3wHZdvFnf+w+j/ogTD9H0n+GDnFn7OE5TZrAFViZCK/Kq1gWU67
+         fzxvf1J5JyqreDWkLKd/ixs5kFwZMD/bYi4kV+Kb/TjTs34gecDms/dHiIGzId/1aqIp
+         ebGuS+eWKlR7aIcXHfQwPCyAT6vFhVheLpXaCMkvmJrmM0/L8rUt3CmkRn5si9Jcm5bn
+         tjxe3lVytDUOJjC5Lilavm+rXHdzZjRE03JIg1WCUkDRK2OvOtbEecoGrEw58toSN7Se
+         EdSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746357359; x=1746962159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQcB8pOIo7fPfcqU8UCrjsrQ9eSJMuMR7jwg4emfdt4=;
-        b=cE9DS4YPWI8EPJqrXIgb5LV217ZDa5VOZOSS4k1JBK8BKi8u47lYaZ6bJg4pnFUNVq
-         mio5LBmylLE+hX0ziRVGBIJ0xh/WyjYuZvvrRkt0YtvkMzuolT+J5bCNKdA/tIct5hqT
-         +ojvvGot9/poqP3KkiKSVUhSYamy4djH/gevJOirR8ffEuo9QcXa/42TifJPTvnNscbP
-         adRIn8btERatPTetqdyN75L0qLLG9XY2bmRtwyWPz/sdHUkdyIsbNZ0R3tnNTIgoDn+s
-         RA9g9SbozHGO3vs2DPhggwvUIZ2ddMbqAZQW8Zduh91c/iVFdxHSGH0emdBfPUojtGxW
-         MWpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHecJvlj9zWc6ct0UytPcItsf6KPihwqbaZ/MXMdUDViIps+dU0Nz8xMhgwbuuzqF7JK+v8RyyYiCO8gE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEYl3a7K985Nu4dLH4bb4CiwRP0X2oJ14GGR04q+/1mGgDJ91F
-	gbi4+jBZw70lYHlRccDDijkYKdQmG3diH+DmkBwctH0N5ru34+4Xwekp/3cgLxCLZsEtsdTUHRY
-	o+VJhIflBAABI0AFnkdrYGA2OGT0=
-X-Gm-Gg: ASbGncto9i55sDiiNRU43lVNxM/Qy883iYze3A4S5pQB06Uvb8BanOWoBsgMBVrSD/6
-	V4EVxqAmj4gLUrmvyx9QbGMaCTrp+fYvq8G2UdeIn8sf+eMBq0R4Wp1X8R66EFaMq5Zgmais+ZL
-	wwgzNb5naeCnqaufGMktl+iDI=
-X-Google-Smtp-Source: AGHT+IFwJ0bVq8qmQb1iICzTrvm99FhNoBMEQBMsIKFiztk4YpS9zDgTuqJJKxrDcV00P8Ffyh/QQhNDPV0iOg8NBEM=
-X-Received: by 2002:a17:902:d508:b0:223:5e6a:57ab with SMTP id
- d9443c01a7336-22e103570bemr128940815ad.39.1746357359027; Sun, 04 May 2025
- 04:15:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746357813; x=1746962613;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zV8BrMTkzQFkPZ+3Fj6/O6YK38B+dAgJMFffx23ECvU=;
+        b=gM21eUfTd5HpBNcAfIhO/D7kv0SIhmuaj/Xr42J+n5t5XuyPQ62eNMRy9wXtFV1UUY
+         yKmw3oA9lJGNJDyr9LVb8eKqDaiw2iWX40XUgcfCGlyFYn1vmNbdwKgu2VFMEdMm4RfV
+         S7zu19Xy2VaCa5oawU9FJLI0hBGLu/Ks0EpHbtEaJyouSchau/vJDbNtQxHNougX/eSD
+         Y9AMtiq2j22BJZ63DK98k7dVNnPW4HWzpHJHrK9F7d7X/7dKQm3lweL9u57nHiB7Hkwf
+         hRWLBnxMW/lxD6PVOyfbHocB2WmL0GFwEMUCc8oos1TJK1G6u8B23v3wDFoR43xR41KR
+         j8Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhoHQKY4/j+m2I3PZ7RqPwwQZEv4cuk9KPJlr9eDmsiDKM6GwVmgxOMqvW7P0cFuYu9KsL3GlW4dzmZfY=@vger.kernel.org, AJvYcCXarcyerWUiuv7t6fsgkPRvvJcrxukrsoizJMNvAnrUZ/OZm4jEFipNxoIMtrBWTKV5DpOJh7uKoRhM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/YUJb2CxZkH2Piu/RLLh1xgT0Ath3Wk86Vo1ULtGFMMnjv6hQ
+	qyXehW8zsyuRNOQH8dzrjNamybQhD282jwOjV7z4H7msFQ0WBO4z
+X-Gm-Gg: ASbGncsra5hBspbCFJklbQcU5UIP+47xtBtvf7h6ftpVhGFAP3lWDPhz6Nc4QHPLdWQ
+	TuiMTfK003WKm9fle1Lt/v58Nq7M6rU67LM3l4iLictxPLj840uW+taxvgjjsS4AaDFlr1Wb0A4
+	FWkCuBo/icEqwgvwwC62sM+6u66TVKeoww2nctPFQgvYeiyvuFtcQ00jgXwJS7SCFNEjPPu4Nd7
+	vFJQHn0c6GfpelYVANCv/CVL6pRybidbqZObmcaHhWBW89Tv6QmQewYJ4f2nY9Hf6isbG/itlC9
+	s9mDfQ1lbMRsEuSODggEl5REAhc7Zbww1Ajqlj5VGg==
+X-Google-Smtp-Source: AGHT+IGYsFl3VJuIKwcSGexluz2hUMdp2LZdMlhpAn/whLRKwiXkBw5rxLWOPeRKFmWeJpA2mQqpeQ==
+X-Received: by 2002:a05:600c:a401:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-441c7a306e5mr13926885e9.21.1746357812492;
+        Sun, 04 May 2025 04:23:32 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-441ad813a64sm149278145e9.0.2025.05.04.04.23.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 04:23:31 -0700 (PDT)
+Date: Sun, 4 May 2025 13:23:29 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: ldewangan@nvidia.com, broonie@kernel.org, thierry.reding@gmail.com,
+	jonathanh@nvidia.com, linux-spi@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [regression] jetson-tk1: spi do not probe anymore
+Message-ID: <aBdOMUhuUqbZm9w1@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503190044.32511-1-gye976@gmail.com>
-In-Reply-To: <20250503190044.32511-1-gye976@gmail.com>
-From: Gyeyoung Baek <gye976@gmail.com>
-Date: Sun, 4 May 2025 20:15:48 +0900
-X-Gm-Features: ATxdqUGR_pnAy0VjpWxihzW6bSNaMuLqZmFSSkzOW6eu420sbs8DXYWWADSAFoo
-Message-ID: <CAKbEznvW8vFs2fuzhWb8o-yt4UjTt2Su9wJR-jCX7A41M_kDVw@mail.gmail.com>
-Subject: Re: [PATCH] iio: trigger: Add validation to reject devices requiring
- top half
-To: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sun, May 4, 2025 at 4:00=E2=80=AFAM Gyeyoung Baek <gye976@gmail.com> wro=
-te:
->
+Hello
 
-> +{
-> +       struct iio_poll_func *pf =3D indio_dev->pollfunc;
+On my jetson-tk1, SPI do not probe anymore:
+[    1.330681] spi spi1.0: Invalid delay unit 2, should be SPI_DELAY_UNIT_SCK
+[    1.335185] spi-tegra114 7000da00.spi: can't setup spi1.0, status -22
+[    1.341643] spi_master spi1: spi_device register error /spi@7000da00/flash@0
+[    1.348637] spi_master spi1: Failed to create SPI device for /spi@7000da00/flash@0
+I tested 6.14.7
+The SPI probed perfectly in 4.17.14
 
-Sorry, it should be `indio_dev->pollfunc_event` instead of
-`indio_dev->pollfunc`. Please ignore this patch.
+I tried to debug a bit, and the driver requires units to be SPI_DELAY_UNIT_SCK, but it seems there is no way to set it.
+Removing the "return -EINVAL" in tegra_spi_set_hw_cs_timing() lead to a successfull probe and the flash device appear.
+But I agree, it is not a correct fix:)
 
-> +
-> +       /* Only iio timestamp grabbing is allowed. */
-> +       if (pf->h && pf->h !=3D iio_pollfunc_store_time)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
+Since only the test made it fail, I think the driver is bad since commit 810593668468 ("spi: tegra114: change format for `spi_set_cs_timing()` function")
+
+Regards
