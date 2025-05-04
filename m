@@ -1,120 +1,185 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C97151990
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D8BE56A;
+	Sun,  4 May 2025 17:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379893; cv=none; b=C73kv9Rh+SXWJzRH2denrKPmSauzzkRm+O/n8r9AH+OVVaxItR3a7xbkIWCmzbQqj7RDbzaJzoCSYCzgWGvw7UG8GxunZvGuBaYmoe9iThOYNa6CIpsblFTP4LaGMYS1cCKhLXD2GElXofg2TSLGLULn0tsLxEcn+SCK32NFe2A=
+	t=1746379929; cv=none; b=i6WFaAT0PjoElPQ7U3FgCyBuxP7qYH0BuTqUZIeWx6kv/A3E9lNztqXaaS924hdw8cksBxU1XZcqL1Q/on8EvgCP5EzaM7tqUg90ALwfxCoYadknUpj3xSKOD2PYtJuNjn3Ikrfmov8tMbZg0QBCBTojZ9ZugHgt4Yly88lkM6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379893; c=relaxed/simple;
-	bh=zjop6nIWB4uVL6yKJrKgjDPqPPcu0nJJdJhElT/je1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RggVpER9KUf8OoQuhGd/5LQgA9wJs7fA7emWnvy/VBv2zGiYV6MLQKNjBeijdZl/sg7bR08yj7g9RHbJesphPLBHDY7Th9A0egxl/GpLku8FIp2bxK54eRzk+Jok03am9X4xG+L63ttcLDuqJdSIyu7N8orYQ43JqO3VRfQWZEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=COTE8MVw; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="COTE8MVw"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so4427075e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746379890; x=1746984690; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QSqS9H6qxHyvW/F/GXgRpqY+URlEU2x+Hmop2GCt6ds=;
-        b=COTE8MVwpNOU9Q17Z4d9Wzun8lBSY4TL/0RT6+JnYxfoNn9nSX8mfT85qN+DEZ4crV
-         7tUsa0+LBtIIsSYvxAp/oK1L8SYbwNaWLP7VfCwwglGEdvYj19RYeMxykAn/MROQKRFB
-         u0akLV2N6PgONYqRSGag5Vt411bNkp8Leg70RVZbJiZ4KAcJXsnc89wmhofX5M3O0NNW
-         sZozk9MDHs70LDDFjDJPhd1MjcEfCsE8VH80jlcZEO7M0RN9w9z2Yfyv5gbCSUtA3JXE
-         zLJXo5jCADWjM/hYa2tOXl9GQ5owsusOk5/CvhRTGr6oN6TIQM+0SpH1Su8bw/fgJtgx
-         bgVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746379890; x=1746984690;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QSqS9H6qxHyvW/F/GXgRpqY+URlEU2x+Hmop2GCt6ds=;
-        b=Pj0vk3+r/XeTQhvV7P6hKaQuCX3Mb48SE51Z0wfo+KbiuGsWRZkZl66/9l94a2HTFf
-         qYYcXvgaiGfu0CgzSGVwG+xcRrWpYC/VLtAyIE8wLK96uT1xD43jP3yoHqm+kOPDxMwq
-         WXafz4APjHOhvv8GRAQ0TW+TZO+r0R1TcflHWJ1r0N7yN1RdSUGanRQgifPGpXAUrw6N
-         a9IaObQnIHDIxN0m0hGZaEyCJiRdAmAIkMLfNeUiOs5zQNt1E8QUUDNnyaVdS84wx4ur
-         zNdgHe9zAo2y1oxCeB/8IG7q4Cq/bIPK0V69c24LdbHG78OBHTbDpJWCxxGbXitse6ku
-         KPJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmmhcZ95HbMxFcmlypd5JrqC3bEDmFGbeqGJ0bqGOaMCc2NChxswf9lF/PpJ+smfGeylS3z3AB9Wc/488=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWn+ucF7HKe9Ilieqyy0L7V8acUEs7Q1ah4qHbsxqDHTCIN+fb
-	9lz3B2EbPAYtrBJiTjHDb+P1KaBHxUhJV61EoJUHlfhpfKCXrv56Gkd7y6+4rsQ=
-X-Gm-Gg: ASbGnctoHdwNypRdY9jA5zXvJqMoHuWbypIRb8+B0yc7DewQkvvk6/CGkiR8E2VTwWu
-	UPP2NXyaUi+Fqz+lSKJ/VFRYG1wBwi36LVsPmE+2q0Rg8Qe+2hbRGlTMHJcyNcBCzYxc2sLGP+7
-	o2M3z5a9//3aD6AbG0MsCpa+ySrgX/q5tw3TLLbGVkqZsROtf2LNpbBwQBtSanGWaj+4SBW1XAW
-	LfRJ3xWwKgTQP9ld1ZymR+dEE1xROkNRBM3o1oBV7mNmE9ojwILVoYnIJBIolV6LQWgyyKp7Gfq
-	DnADF3aW9cl7+sC33EIyuRFeljGo/UTdND6Xq3qeb45gi3skuw==
-X-Google-Smtp-Source: AGHT+IHOn1C33h4VlZhSA2hrwB3EdDRROasCqArnPLUTsrl91Bd7lHnaXGin+vNNH31/XX5XoxYg+Q==
-X-Received: by 2002:a05:6000:186d:b0:3a0:831c:ce4e with SMTP id ffacd0b85a97d-3a099af240emr2533824f8f.12.1746379890061;
-        Sun, 04 May 2025 10:31:30 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28718sm153870855e9.36.2025.05.04.10.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 10:31:29 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Alexey Charkov <alchark@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] ARM: vt8500: Include vt8500 soc driver in maintainers entry
-Date: Sun,  4 May 2025 19:31:26 +0200
-Message-ID: <20250504173125.104419-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1746379929; c=relaxed/simple;
+	bh=sLIMOs86ZUevjJV9wr0yHTtB23Agmsn2XbSfNTjLy0M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=diVBioFbigOFo1Bz3mDhxUA511MGCtZFR/zOJQXbD01vlflvg0VUolXHU5cLJRy0e1kfi8sZUQecexffGXimf4jwQ40kGTFsPdRARLBGvB82WZpe/o/gwjA/J9/RmANFTO+UtOKLlWs5kap+JPe9x47Tz2wdScYM6HW+beLyfcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZrBYG0B4Qz9tTL;
+	Sun,  4 May 2025 19:32:02 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v4 1/9] rust: device: Create FwNode abstraction for accessing device properties
+Date: Sun,  4 May 2025 19:31:46 +0200
+Message-ID: <20250504173154.488519-2-remo@buenzli.dev>
+In-Reply-To: <20250504173154.488519-1-remo@buenzli.dev>
+References: <20250504173154.488519-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1098; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=zjop6nIWB4uVL6yKJrKgjDPqPPcu0nJJdJhElT/je1A=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoF6RtXfvbBMMBqxm4uZhWpKOyCm+cGjoZG3ZRh
- XlO4JNIOKSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBekbQAKCRDBN2bmhouD
- 1ydsD/4tdkzXab+tr2GAns5UEV0ccAjPwWS0Kr/dnkfsbciAjc8gqm0XVlRKeOiBff6gSuyhedr
- p0eedNgTGNu5uNzQa5Ti0sReD38FodcdelMAWQT7+35JEQwE7T+fIw7IN7Gct2oSnqcYnOPjLtq
- Asqwz/qRgKYSDJjjHkJPjKtflrYUIXizL5kreTeeBW48CG6Lbx5z2S3FdaQHReuQg93InB8g1Dp
- KgB7pFaqh/q8MByCEjNvz/7TZYSwl6ZGRM3DdGRQsebHJbD3JX6aP0Z3ZftBfP/N1KkEsOT/A5m
- yjaIXuAQG1AtYUMV5hv6mDwpSLRE5DpdLtAAEHXZirwsgDD1DBSfHUe2ObryMCSWo+tW7b8YKW0
- qRxw1E5NDCX7mFY9Af6xRDBHvjSqTSQfIZKuNcGnPCfXGxFwBW9Mz54Pfimi3skFJfuXg2ZSOvZ
- ePVUekg+PAfw7bxKfELbDX11+2px4g2uCgxxG43GHmtfnRonhLmXHJk8CqotRA2m6tnKp2vJ+Cu
- EMb84NvfcgTa3UV5aztetLlp91boxEtFPH79HV9Z605YxEWWw9b9ZrHcLIF67xlZw0OH5ESD1ko
- Evos1oCl1oc+YuyH36NTHSNZiNTi53Tn7ofIZX6Cx3zfMg0+IuDOJDxOHNMSaYBr1UnDtslnAie BKsiOuzpdW4HZdA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4ZrBYG0B4Qz9tTL
 
-Include the SoC hwinfo/soc information driver in VT8500 maintainers
-entry.
+Not all property-related APIs can be exposed directly on a device.
+For example, iterating over child nodes of a device will yield
+fwnode_handle. Thus, in order to access properties on these child nodes,
+the property access methods must be implemented on the abstraction over
+fwnode_handle.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS                              |  2 +-
+ rust/helpers/helpers.c                   |  1 +
+ rust/helpers/property.c                  |  8 ++++
+ rust/kernel/{device.rs => device/mod.rs} |  2 +
+ rust/kernel/device/property.rs           | 47 ++++++++++++++++++++++++
+ 5 files changed, 59 insertions(+), 1 deletion(-)
+ create mode 100644 rust/helpers/property.c
+ rename rust/kernel/{device.rs => device/mod.rs} (99%)
+ create mode 100644 rust/kernel/device/property.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6768aa56a311..6f6278f44c88 100644
+index 3cbf9ac0d83f6..8a47c0e10e58d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -3454,6 +3454,7 @@ M:	Alexey Charkov <alchark@gmail.com>
- M:	Krzysztof Kozlowski <krzk@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Odd Fixes
-+F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
- F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
- F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
- F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
-@@ -3464,6 +3465,7 @@ F:	drivers/i2c/busses/i2c-viai2c-wmt.c
- F:	drivers/mmc/host/wmt-sdmmc.c
- F:	drivers/pwm/pwm-vt8500.c
- F:	drivers/rtc/rtc-vt8500.c
-+F:	drivers/soc/vt8500/
- F:	drivers/tty/serial/vt8500_serial.c
- F:	drivers/video/fbdev/vt8500lcdfb.*
- F:	drivers/video/fbdev/wm8505fb*
+@@ -7247,7 +7247,7 @@ F:	include/linux/kobj*
+ F:	include/linux/property.h
+ F:	include/linux/sysfs.h
+ F:	lib/kobj*
+-F:	rust/kernel/device.rs
++F:	rust/kernel/device/
+ F:	rust/kernel/device_id.rs
+ F:	rust/kernel/devres.rs
+ F:	rust/kernel/driver.rs
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 1e7c84df72521..6aac840417648 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -25,6 +25,7 @@
+ #include "platform.c"
+ #include "pci.c"
+ #include "pid_namespace.c"
++#include "property.c"
+ #include "rbtree.c"
+ #include "rcu.c"
+ #include "refcount.c"
+diff --git a/rust/helpers/property.c b/rust/helpers/property.c
+new file mode 100644
+index 0000000000000..08f68e2dac4a9
+--- /dev/null
++++ b/rust/helpers/property.c
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/property.h>
++
++void rust_helper_fwnode_handle_put(struct fwnode_handle *fwnode)
++{
++	fwnode_handle_put(fwnode);
++}
+diff --git a/rust/kernel/device.rs b/rust/kernel/device/mod.rs
+similarity index 99%
+rename from rust/kernel/device.rs
+rename to rust/kernel/device/mod.rs
+index 0353c5552769c..d8619d4485fb4 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device/mod.rs
+@@ -14,6 +14,8 @@
+ #[cfg(CONFIG_PRINTK)]
+ use crate::c_str;
+ 
++pub mod property;
++
+ /// A reference-counted device.
+ ///
+ /// This structure represents the Rust abstraction for a C `struct device`. This implementation
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+new file mode 100644
+index 0000000000000..e75d55f5856cf
+--- /dev/null
++++ b/rust/kernel/device/property.rs
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Unified device property interface.
++//!
++//! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
++
++use core::ptr;
++
++use crate::{bindings, types::Opaque};
++
++/// A reference-counted fwnode_handle.
++///
++/// This structure represents the Rust abstraction for a
++/// C `struct fwnode_handle`. This implementation abstracts the usage of an
++/// already existing C `struct fwnode_handle` within Rust code that we get
++/// passed from the C side.
++///
++/// # Invariants
++///
++/// A `FwNode` instance represents a valid `struct fwnode_handle` created by the
++/// C portion of the kernel.
++///
++/// Instances of this type are always reference-counted, that is, a call to
++/// `fwnode_handle_get` ensures that the allocation remains valid at least until
++/// the matching call to `fwnode_handle_put`.
++#[repr(transparent)]
++pub struct FwNode(Opaque<bindings::fwnode_handle>);
++
++impl FwNode {
++    /// Obtain the raw `struct fwnode_handle *`.
++    pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
++        self.0.get()
++    }
++}
++
++// SAFETY: Instances of `FwNode` are always reference-counted.
++unsafe impl crate::types::AlwaysRefCounted for FwNode {
++    fn inc_ref(&self) {
++        // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
++        unsafe { bindings::fwnode_handle_get(self.as_raw()) };
++    }
++
++    unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
++        // SAFETY: The safety requirements guarantee that the refcount is non-zero.
++        unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
++    }
++}
 -- 
-2.45.2
+2.49.0
 
