@@ -1,140 +1,120 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0C1CD1F;
-	Sun,  4 May 2025 17:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C97151990
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379866; cv=none; b=ty/S2uSzVHv6ZdncKdMjRxN5USNKmHHUL5dRRDZWxv6ocTW5qfcAkLr3Ku0Oh6qBQUJ9JsVcsPwWqgazUYXY/BbhCnAqVa6Br2NOw0TvaMO0wVvsdJtsF7Osf2lAmvam2xKgGWLSXOLoq5059Q+oPuaz8ArAG6wDEmcpLTk6R3c=
+	t=1746379893; cv=none; b=C73kv9Rh+SXWJzRH2denrKPmSauzzkRm+O/n8r9AH+OVVaxItR3a7xbkIWCmzbQqj7RDbzaJzoCSYCzgWGvw7UG8GxunZvGuBaYmoe9iThOYNa6CIpsblFTP4LaGMYS1cCKhLXD2GElXofg2TSLGLULn0tsLxEcn+SCK32NFe2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379866; c=relaxed/simple;
-	bh=T3U/9FuOE2xtfOj0tUx2Kuhmdtf7tLVJexcbxbRimKI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bICt6TOxPGstHzucwF3Nq4IzSqrGjtVg7J3uRBzhiukgFkkbKAG1gWbovORFq5mxARuSbTluZgoL33qGlw9tkbNk12vBnQS8E+DNmcALVJsUv7qBkmXqq2O6mJJ74M5zSP2f9Ksf9E+aACS83PBh4JedKSxl0o1vjkf2yMxfLi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebDFf8w8; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746379893; c=relaxed/simple;
+	bh=zjop6nIWB4uVL6yKJrKgjDPqPPcu0nJJdJhElT/je1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RggVpER9KUf8OoQuhGd/5LQgA9wJs7fA7emWnvy/VBv2zGiYV6MLQKNjBeijdZl/sg7bR08yj7g9RHbJesphPLBHDY7Th9A0egxl/GpLku8FIp2bxK54eRzk+Jok03am9X4xG+L63ttcLDuqJdSIyu7N8orYQ43JqO3VRfQWZEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=COTE8MVw; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebDFf8w8"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so4467578e87.1;
-        Sun, 04 May 2025 10:31:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="COTE8MVw"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so4427075e9.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:31:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746379860; x=1746984660; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0MAjfptIMQwKjMkK2caSxzARquP7ADDmjnSLYI6Zjxw=;
-        b=ebDFf8w84ZEbzEyUGdsF/Usq4cLX1YaOgZbyKFHcICwdLObIv6XZDTVLBJkDPuaPyn
-         DihtA1w7sW6NXrvFehYDjZwU7di8vsAFVmVZEQoCRmebNF4JOKVMGBtqnQWAprhRbD3B
-         8zX8w7L8rVuEqx59EhscaaQDtG/jqYCJm3UAWnHQxFWjsUNVpeUhQQ7a0yt/RL6ho0yY
-         cWnjmIFruJmnuQXatmkXwH08Q2AZQSgDVW28g+PYfy7yEQNTLSaQm8uhuncX2JVn8N6u
-         0hqN9v6dwoPHTOwX0BXfu4bp+xU7OQCMId3vqehyZi8m2OCwFYF2dijnMGUM1PhI7cZH
-         4zkg==
+        d=linaro.org; s=google; t=1746379890; x=1746984690; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QSqS9H6qxHyvW/F/GXgRpqY+URlEU2x+Hmop2GCt6ds=;
+        b=COTE8MVwpNOU9Q17Z4d9Wzun8lBSY4TL/0RT6+JnYxfoNn9nSX8mfT85qN+DEZ4crV
+         7tUsa0+LBtIIsSYvxAp/oK1L8SYbwNaWLP7VfCwwglGEdvYj19RYeMxykAn/MROQKRFB
+         u0akLV2N6PgONYqRSGag5Vt411bNkp8Leg70RVZbJiZ4KAcJXsnc89wmhofX5M3O0NNW
+         sZozk9MDHs70LDDFjDJPhd1MjcEfCsE8VH80jlcZEO7M0RN9w9z2Yfyv5gbCSUtA3JXE
+         zLJXo5jCADWjM/hYa2tOXl9GQ5owsusOk5/CvhRTGr6oN6TIQM+0SpH1Su8bw/fgJtgx
+         bgVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746379860; x=1746984660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0MAjfptIMQwKjMkK2caSxzARquP7ADDmjnSLYI6Zjxw=;
-        b=lwRVV1Erv7nhVhB4jdmlT2VQJnxfq2YyQtcoY45vqzf8RrBPtdUJouT+WopBAhKHYp
-         LiGTSN2qhwubEubyQqKtuf3b2/tzEeHhkpplVZxxrdCucBitW1IK/zFFjKalQv1AUZil
-         LSVSzb123/G4WixgvDs3hR47NuC9P5nYHAnf5PrrZLL1/dDpy/oy4VRFI+LPcQOSDfys
-         mNATFMnFGSLXVTfS5KZm/tk66tUyEus9nO2WVc0gtREVJMdzrqd20fz4cny15d+MQDch
-         gCF1dhnM+sV0NfDGmIzXRrxRSedbrDHu3eleQgIWLjBUX3ZMixL8LVlyHrrs9ha+PWU4
-         HZZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUR4jhMUpOx/sVMmnXEsO3NZeepcbExtDJebgicFhwRKn7FhhhwGZCzwFdxDywF9Xi4Oq5c+hiB+2XPU7E=@vger.kernel.org, AJvYcCUy6lYf1JgrMo+v6YWPuHaIfrGhMV/8psYJIDa283gXFVVw7F7Xih5jKMhfu9ep2kemPWFHy229qwTXzO6jawzR@vger.kernel.org, AJvYcCXwG1RJrc088LKqKga++kvRjKZu9l7iB4hQhHV0pxhGtvdn9DLjemrF9eZp1sqndoMwuQHswz3lkOilfFyBFi8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznMknSVJHnF/6KLufUJGh4lzCDsn9M8RZVIT5NLUrLWNU84qMK
-	JDQeAVLyWAdBuVDzRUUtqzagM89gaSMgePH2zRBuCh8p0hZ/lSCCvLJcu1ErlL3JRWerm7mqnjn
-	jKo7a1I82OEiAeiZDfMwkWZNbDEo=
-X-Gm-Gg: ASbGncuGIJoPUrvQ1KBD/S4T9uWdkevd2QM3MvjQR5gzctJkpfOrVba7mkB7V+y8Qzn
-	WK2i3P1HqQcDoEa8QYKsJ9fm2JF10kOEiT6U86ZIShft/xnTg1jN9ODwT2Gpq7MlZZN6rW4Td+s
-	v7aE1xCZRin7ylMP4Z8WMl1+dvaCVGBH1UCCxa5aa3sJL+/XV9BKdHWGY=
-X-Google-Smtp-Source: AGHT+IGk67ZjNfI5JRZk1E9sIkaiWYoh/CFeHhNDrNSEmUPefy9/YpSuJCSkf4tQjbpLx1hp8nibAzsjUmqph/UNhtQ=
-X-Received: by 2002:a2e:be9c:0:b0:30d:e104:cb74 with SMTP id
- 38308e7fff4ca-320c5fd2023mr23540791fa.41.1746379859507; Sun, 04 May 2025
- 10:30:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746379890; x=1746984690;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QSqS9H6qxHyvW/F/GXgRpqY+URlEU2x+Hmop2GCt6ds=;
+        b=Pj0vk3+r/XeTQhvV7P6hKaQuCX3Mb48SE51Z0wfo+KbiuGsWRZkZl66/9l94a2HTFf
+         qYYcXvgaiGfu0CgzSGVwG+xcRrWpYC/VLtAyIE8wLK96uT1xD43jP3yoHqm+kOPDxMwq
+         WXafz4APjHOhvv8GRAQ0TW+TZO+r0R1TcflHWJ1r0N7yN1RdSUGanRQgifPGpXAUrw6N
+         a9IaObQnIHDIxN0m0hGZaEyCJiRdAmAIkMLfNeUiOs5zQNt1E8QUUDNnyaVdS84wx4ur
+         zNdgHe9zAo2y1oxCeB/8IG7q4Cq/bIPK0V69c24LdbHG78OBHTbDpJWCxxGbXitse6ku
+         KPJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmmhcZ95HbMxFcmlypd5JrqC3bEDmFGbeqGJ0bqGOaMCc2NChxswf9lF/PpJ+smfGeylS3z3AB9Wc/488=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWn+ucF7HKe9Ilieqyy0L7V8acUEs7Q1ah4qHbsxqDHTCIN+fb
+	9lz3B2EbPAYtrBJiTjHDb+P1KaBHxUhJV61EoJUHlfhpfKCXrv56Gkd7y6+4rsQ=
+X-Gm-Gg: ASbGnctoHdwNypRdY9jA5zXvJqMoHuWbypIRb8+B0yc7DewQkvvk6/CGkiR8E2VTwWu
+	UPP2NXyaUi+Fqz+lSKJ/VFRYG1wBwi36LVsPmE+2q0Rg8Qe+2hbRGlTMHJcyNcBCzYxc2sLGP+7
+	o2M3z5a9//3aD6AbG0MsCpa+ySrgX/q5tw3TLLbGVkqZsROtf2LNpbBwQBtSanGWaj+4SBW1XAW
+	LfRJ3xWwKgTQP9ld1ZymR+dEE1xROkNRBM3o1oBV7mNmE9ojwILVoYnIJBIolV6LQWgyyKp7Gfq
+	DnADF3aW9cl7+sC33EIyuRFeljGo/UTdND6Xq3qeb45gi3skuw==
+X-Google-Smtp-Source: AGHT+IHOn1C33h4VlZhSA2hrwB3EdDRROasCqArnPLUTsrl91Bd7lHnaXGin+vNNH31/XX5XoxYg+Q==
+X-Received: by 2002:a05:6000:186d:b0:3a0:831c:ce4e with SMTP id ffacd0b85a97d-3a099af240emr2533824f8f.12.1746379890061;
+        Sun, 04 May 2025 10:31:30 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28718sm153870855e9.36.2025.05.04.10.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 10:31:29 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Alexey Charkov <alchark@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ARM: vt8500: Include vt8500 soc driver in maintainers entry
+Date: Sun,  4 May 2025 19:31:26 +0200
+Message-ID: <20250504173125.104419-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-5-ojeda@kernel.org>
-In-Reply-To: <20250502215133.1923676-5-ojeda@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 4 May 2025 13:30:23 -0400
-X-Gm-Features: ATxdqUH6DCMZhtsVocCllU2SKUNfgzC5NnOkbEXIh3IhAUh31vvSHfK6t0f55C0
-Message-ID: <CAJ-ks9k=uxxumgEU84-54u8OxxJVBsUprGk7Ht31ndoumHB95w@mail.gmail.com>
-Subject: Re: [PATCH 4/7] rust: str: convert `rusttest` tests into KUnit
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1098; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=zjop6nIWB4uVL6yKJrKgjDPqPPcu0nJJdJhElT/je1A=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoF6RtXfvbBMMBqxm4uZhWpKOyCm+cGjoZG3ZRh
+ XlO4JNIOKSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBekbQAKCRDBN2bmhouD
+ 1ydsD/4tdkzXab+tr2GAns5UEV0ccAjPwWS0Kr/dnkfsbciAjc8gqm0XVlRKeOiBff6gSuyhedr
+ p0eedNgTGNu5uNzQa5Ti0sReD38FodcdelMAWQT7+35JEQwE7T+fIw7IN7Gct2oSnqcYnOPjLtq
+ Asqwz/qRgKYSDJjjHkJPjKtflrYUIXizL5kreTeeBW48CG6Lbx5z2S3FdaQHReuQg93InB8g1Dp
+ KgB7pFaqh/q8MByCEjNvz/7TZYSwl6ZGRM3DdGRQsebHJbD3JX6aP0Z3ZftBfP/N1KkEsOT/A5m
+ yjaIXuAQG1AtYUMV5hv6mDwpSLRE5DpdLtAAEHXZirwsgDD1DBSfHUe2ObryMCSWo+tW7b8YKW0
+ qRxw1E5NDCX7mFY9Af6xRDBHvjSqTSQfIZKuNcGnPCfXGxFwBW9Mz54Pfimi3skFJfuXg2ZSOvZ
+ ePVUekg+PAfw7bxKfELbDX11+2px4g2uCgxxG43GHmtfnRonhLmXHJk8CqotRA2m6tnKp2vJ+Cu
+ EMb84NvfcgTa3UV5aztetLlp91boxEtFPH79HV9Z605YxEWWw9b9ZrHcLIF67xlZw0OH5ESD1ko
+ Evos1oCl1oc+YuyH36NTHSNZiNTi53Tn7ofIZX6Cx3zfMg0+IuDOJDxOHNMSaYBr1UnDtslnAie BKsiOuzpdW4HZdA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 2, 2025 at 5:53=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
-e:
->
-> In general, we should aim to test as much as possible within the actual
-> kernel, and not in the build host.
+Include the SoC hwinfo/soc information driver in VT8500 maintainers
+entry.
 
-Is that true? The build host is often easier to work with. There's a
-number of host tests on the C side that exist precisely for this
-reason.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Thus convert these `rusttest` tests into KUnit tests.
->
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  rust/kernel/str.rs | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
->
-> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> index 878111cb77bc..cf2caa2db168 100644
-> --- a/rust/kernel/str.rs
-> +++ b/rust/kernel/str.rs
-> @@ -6,7 +6,7 @@
->  use core::fmt::{self, Write};
->  use core::ops::{self, Deref, DerefMut, Index};
->
-> -use crate::error::{code::*, Error};
-> +use crate::prelude::*;
->
->  /// Byte string without UTF-8 validity guarantee.
->  #[repr(transparent)]
-> @@ -572,8 +572,7 @@ macro_rules! c_str {
->      }};
->  }
->
-> -#[cfg(test)]
-> -#[expect(clippy::items_after_test_module)]
-> +#[kunit_tests(rust_kernel_str)]
->  mod tests {
->      use super::*;
->
-> @@ -622,11 +621,10 @@ fn test_cstr_to_str() {
->      }
->
->      #[test]
-> -    #[should_panic]
-> -    fn test_cstr_to_str_panic() {
-> +    fn test_cstr_to_str_invalid_utf8() {
->          let bad_bytes =3D b"\xc3\x28\0";
->          let checked_cstr =3D CStr::from_bytes_with_nul(bad_bytes).unwrap=
-();
-> -        checked_cstr.to_str().unwrap();
-> +        assert!(checked_cstr.to_str().is_err());
->      }
->
->      #[test]
-> --
-> 2.49.0
->
->
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6768aa56a311..6f6278f44c88 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3454,6 +3454,7 @@ M:	Alexey Charkov <alchark@gmail.com>
+ M:	Krzysztof Kozlowski <krzk@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Odd Fixes
++F:	Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+ F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
+ F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
+ F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+@@ -3464,6 +3465,7 @@ F:	drivers/i2c/busses/i2c-viai2c-wmt.c
+ F:	drivers/mmc/host/wmt-sdmmc.c
+ F:	drivers/pwm/pwm-vt8500.c
+ F:	drivers/rtc/rtc-vt8500.c
++F:	drivers/soc/vt8500/
+ F:	drivers/tty/serial/vt8500_serial.c
+ F:	drivers/video/fbdev/vt8500lcdfb.*
+ F:	drivers/video/fbdev/wm8505fb*
+-- 
+2.45.2
+
