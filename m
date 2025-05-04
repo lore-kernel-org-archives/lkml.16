@@ -1,455 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020093.outbound.protection.outlook.com [52.101.195.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB6414F70;
-	Sun,  4 May 2025 10:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746355154; cv=none; b=NrstLsjS5aLBu2i7t5JPHFwTvmZG9mDF/iycIoPaQFFzsIBRJ9R4sqZI23jTvplGu2mGKeON72iIOAaPU4x7sz0aYzynvO1KJ4zy3OTSEbtqerRMCSITIM1QSV7kg3akF0J93CFeLZhP7n7uGdjlBWHtbMktqi4U3jznBRB8wyA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746355154; c=relaxed/simple;
-	bh=GTEi23sovXjfk7ZSs/2mXXPsbuBZgDBj358bejUAMBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WmkhGvnICaVG3/jYLxQbg7pBXWS8CKJVOcN7F5XgaxdDfRnTtsF0COOPBJU2vEA5G6AHAnzB1tQ7jukLS8Ih4QzEIvLSfhlm8CCmb4P4Qf426fUZvUe69EY332I8xABQh3MKH7fwGLRndgHWWmRCdnY3IoEDmZ/g/1V3GoeNDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sztuBlgp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sztuBlgp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90E5C4CEE7;
-	Sun,  4 May 2025 10:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746355153;
-	bh=GTEi23sovXjfk7ZSs/2mXXPsbuBZgDBj358bejUAMBo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sztuBlgpN9fGR9CkcA08YmE0hdKn6Qh3IyW3pT4SWPouph64YNubeQWVr/KNjOZ7F
-	 xhqqtuTF43SdtmDrEHPrhMILvzOI3a2S3U3C8QYD0uns/rY8xcy6XWY6FKrMfuIWxm
-	 lQfQKlj4Qw+xjETUzRATiwP9qfm2BwAhMMVC5QMiIb3ypvmpwJXkQ57410f28fcKpx
-	 2XSd6G8KYqB6TMV7+xVlpPRT747eEncoG6b9pefhb9KLwwDH14gEYzl6lbyU2aRDAy
-	 m27Zmi9EIsSJgw5Quu0oGSOZmF/puKTa7HFdDu1hauzOrq/o/L+F+80CRfZfXoF72i
-	 sgS9H1ntGlKNA==
-Date: Sun, 4 May 2025 11:39:07 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v7 10/11] iio: accel: adxl345: add coupling detection
- for activity/inactivity
-Message-ID: <20250504113907.5030b02d@jic23-huawei>
-In-Reply-To: <CAFXKEHZ60bREfFmi33XSyrUNigyuQv+by4vh+uoUErni_UEcnw@mail.gmail.com>
-References: <20250421220641.105567-1-l.rubusch@gmail.com>
-	<20250421220641.105567-11-l.rubusch@gmail.com>
-	<20250427140032.3112f51b@jic23-huawei>
-	<CAFXKEHZ60bREfFmi33XSyrUNigyuQv+by4vh+uoUErni_UEcnw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8B41A3155;
+	Sun,  4 May 2025 10:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.93
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746355440; cv=fail; b=IxE+6PfvJrz0qtj89XWTHDB4eFI0zL4dk728t7qWUMOS1zs3QZg6G+6qqF9PLm7soRmD8rIicNzUrtOi/QlVtsASKnw0ZjIXw8B8s+arcnoanTfwKgoy+3OIEGERQZwF60fIZJMMDsYqvVTc6yLZF1kxNGpLXmtui6FbMtxV2GE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746355440; c=relaxed/simple;
+	bh=uiXGfSqThmmEWZkF/r9FAO18uE+r1ma8Y9MvxJHSoiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NDRrYasQmuNFAr2t3/zCvkSD9Lkzy99uFRcBVF4Q7zHSAHQmjxEqaJy4/eXUUD+AyhMoGx2AU8ohz9S/cmpstexLWq+9UuugFboihabVXyyGlhtiBdiODDUNoP12rAqDi+Lt2nfwh+OVcyFcsrGKdvKmooDqalxbpdCHAx15jMA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gOIz7rCaWVstNT5DMEgLXYHrmVpSH2ZCIBU5D24WpTn1sKzJqHfVF4LxEEIvJWylidgKGgqbWd3VqpWhs1ZFojxsdQuk3rZmBUrsuLPMeHOBDTah7kqI1uDmbZiiExmY+/lwzbkwZzGTeoUqhzLngjg7IDndrnAw8xQmlmdSZLGOuSg5e/c23XQCUHoxlISIftUUmtDU9jQUMwJ8ILNkr2DB9+5jb9vQiS6ipFDF6f42IWfX6ebrY7ZzIxFyqWsJvPMCmkiTFU5il/ObbRLBI0J+JCUsm4U9o+ymZ1yMA1YSofTJCcA5Cz0HHORjOCMiATd+NOBWEiyPcSc1yKOjow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jaqMHctHYffqH5RcpM1BZq0DAMAIJXXPAYHJCIQCRnY=;
+ b=buvkKOqANIkGlktFOMEEMJbfCrIjQ14UjXachE6MjjrQ/qvSM47AlEbHP2CAD6h+UyoVQsSBltXAM8UGdNJx/b8DW1KeubRw4O8mpRc+eoakB+kA2DuuESoN8FNDlHdbTRdc2Dd9kaFqM7QnIi3hr22+pboDN2ffXEX2VaymEsUsm/dvm7ggmaZii6DGifbT2AT9uCDlnT0N+8GkiBLS3E+aPq73xBGZplJqmGfD4edu/uFndRHXN8E39Fj9JzmAXGa6V61Jv6hLUMxro0iycNF7xDdPxTP1BqKc/m54+L8IK1JNhVfBgtRZ0FgZlAE8qSiLGsUG7T4i12460tWuiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:70::10)
+ by CWXP123MB5668.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:197::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.12; Sun, 4 May
+ 2025 10:43:53 +0000
+Received: from CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6]) by CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::5352:7866:8b0f:21f6%6]) with mapi id 15.20.8722.011; Sun, 4 May 2025
+ 10:43:53 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: namhyung@kernel.org
+Cc: arnaldo.melo@gmail.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	atomlin@atomlin.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] perf probe: Extend the quiet option
+Date: Sun,  4 May 2025 11:43:51 +0100
+Message-ID: <20250504104351.1549583-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.47.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO2P123CA0016.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:a6::28) To CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:70::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB3523:EE_|CWXP123MB5668:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba579e33-c4e8-46a8-35e4-08dd8af89036
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a2R6NlZwUjBOcTlJZTFtQzROL0FPeFBjOS9EZzBGajdXV2l2LytUM3RnT3kz?=
+ =?utf-8?B?R0xRZkdHWFNaUTQ1TzBQMFVVd3VDUDR5TC9UUDVJTVhVZkpzdzJUcmIxUlZ2?=
+ =?utf-8?B?UUtwSnNYb1J1WkxaRGNIa0NzMjU3emF5QmJYM1RrUWhxcHJnSkN6S3ZqOEY0?=
+ =?utf-8?B?WGVDMmNNS1ZGcTdERCt2eCtXMWUyMDZwSklEdllTNmE2SXFQZjhrT2ErRzZD?=
+ =?utf-8?B?MlQzempaWFp0dHlVVitHYndPRDhoUGYxYWhzSEhtY253bExsSnRxSW9McHdP?=
+ =?utf-8?B?WitMd3REcmxZdUF3bFlDQ0dmRGlwYXdvcThWK3BJZjNWTW9lMHg3bFhTTEtI?=
+ =?utf-8?B?SDF4QnVSLytCbzJBYmU1K2J2aGRuVUgrKzUrMDdJSEd0ZTQzTXZYM1Z6bTd6?=
+ =?utf-8?B?N2VmeFRMRzRQWGRocElrOHYyQkpqTE1FOFMzNDhvcXkyTnBnRElhLzFBYU42?=
+ =?utf-8?B?bGFIK1czbXQwMWJqMFJ5UVJ0cS9qWnhwTi9EL2VySDMwTEZuNXd3T3RpeURt?=
+ =?utf-8?B?M2JFODVreFlNUTRiWlhHUjM4a0RIOThZdmtFTkM2bm9aUFVFcnlMdXJtcXov?=
+ =?utf-8?B?TTNMSFFKcS9LbVZ6RjllUHFtZTB2SFlrY3A0TzlEb01UL0NmaGM1TXdGb1Bn?=
+ =?utf-8?B?dWptdHFBQ0lQOUVkamJoWDNmSHBjQ1h2R3k1NG1LWXhBRjJhV0p4MXJnVmI5?=
+ =?utf-8?B?K0c0bHpVOU5Rd2YyUWFZcXpLQUtJTGVzWkQyK1pWdzl3NzBVTEg5ck1tT0Ir?=
+ =?utf-8?B?OVpXREozNlA1REdCUVBvL1RCRXZBZjVING9xU2hjNE1PS0NqRUlZVEVRYTkv?=
+ =?utf-8?B?Rjc0VDUxczA5SFBBT0Z0L2JxeFU4aGY2OXo3UzZtQTJqak5ZQnQ0VGd3dVNh?=
+ =?utf-8?B?ZjgrMElXTHpjQ2d2ZTBmT2dpTE5MaGt4OExRYmZSNDV1UERpN0JTeW9VSXRV?=
+ =?utf-8?B?cnh6QVQ3UThZNC85M1ZwMjlGQnIxd1hvNm1YbzBET3BRMHdNNUIxcFJSMWpR?=
+ =?utf-8?B?ODIrLytPSGVXeUxCQ2g0cHdiZHlOZVlWS1ZPSHpIalZFMHAxVEFuNE91VjFs?=
+ =?utf-8?B?Vm1zbFZvUm84ZSt2K1lOZ3BjTnQ5ZHZxR3BTRXhpUm9acm95WEJVVVNGdUxw?=
+ =?utf-8?B?Y1p1WkRNWWs0VEZXZXZoYysvZk56R2tjdE1uN2hjaCtrdHJDd28zUkRLb2Zl?=
+ =?utf-8?B?ZU9JSy9PalBJZDFVM09QRG90MFZlRUliSS9Kb2c5R3hlSS9JL3BWOWZxZlIv?=
+ =?utf-8?B?eTJkWnNuaHlVOVBrY2FSTW1ZSW5ucUVpbHI3MlBXdys2MTRQNU5SRnkveWJT?=
+ =?utf-8?B?c29VWElORHBEKzRaN2RnV2ZwbkdxYjhPSG5pNWlFWGt2bVNVWnZJSUM5ZXB5?=
+ =?utf-8?B?L3gzN3R0ZmV2ZnphZ0FpRHNrUFNoQzIzQWJGNkFSeld4RFJBSWVpMnp4OFJI?=
+ =?utf-8?B?LzJGb3htMnY4ZXdZVDJaZzh5TlY3TVA2MjdmanJWc3ByZTZGYUZyaUt6SWF0?=
+ =?utf-8?B?NzNvZWg4T2trZmFOSHZjQkFiSUdWRGVyU1phRVNScWZRSmNNL20ybVYwaW13?=
+ =?utf-8?B?NlU2QTVkR0w2S2JIa21SRzN2TG1lNEVGRmNLcHhSY0ZkWFVsNFRQNjFERlNQ?=
+ =?utf-8?B?K0NRZFRlTGtSbkNLa3dvNDVCWkZBb3cxaWR4cngveXJTeldDOEhpVC9qMnht?=
+ =?utf-8?B?OWRHYnBKMWJVWXBWeUJOU0lMV3pQV2wrRWFXVHdkMzlnckl1S1h4RmFwTFdu?=
+ =?utf-8?B?K1cvOG1jNWhSNXBMbXE0dlY0UGtlcjRZM0RXaDl0c2pDMHdSbThaaVdObmI0?=
+ =?utf-8?B?SWh0ZDNGTTk0REFqMnEzOUFDQWYyUFVlRDVJWGRyRGhWUXB6cEJOZTZhdTVt?=
+ =?utf-8?B?OURVMVYrWmYzckRYSTl4VzAzMWcxR1k3WTFxdDVNS3YySldlZ1l4ZWZDR0RC?=
+ =?utf-8?Q?DIWhgEOTs2Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjlOUStIbk5tTWdHMTVnM3RjK0VRMUYxTjZXNDU3V1kwTzdOazBPdk5HbG9U?=
+ =?utf-8?B?NGxTVmpWSkFRT1ZoTittNmdzUzVVRnJNUGh5MmpXMzVVVmxuNjFEeTVIWFdQ?=
+ =?utf-8?B?NFBwUzUvRDduTWZCY0VrNXQ1a0trYVFCdjFpOWFNajUrdzFtS2p1MGhHWnho?=
+ =?utf-8?B?UVg5MG5aWmMrYjJMUndTd1NESldUR1hJbEZzdGtqREdMK1U4RzB4OU1GRWc0?=
+ =?utf-8?B?OE9ycDJST2ZMbzV1TkZyZHlqMytDZmtQUWQwM01GSjZ2MGl5Y0dEMml4MDZT?=
+ =?utf-8?B?cWN1aDQwUi9tTklHZ0M0cTdTUkplTEw5Tm5QNmdyUkt2bG9LRWFIRUlzL21F?=
+ =?utf-8?B?blNpQkYzaXlpRXQ4YlJQQzVVN3E0RGk1eW9QdElhZjA3MWhZM1RGN1NjTVdy?=
+ =?utf-8?B?NURheGs4SUpXTVY3STJEdjFZYUpRbWlHQ0ZKRTduM0Y0REhrNFJpc1lqR3RJ?=
+ =?utf-8?B?dDdJM0JCUDFUU0Y2M1FEMmExRzBHL2FpV3grNnd5VGtnWEhLUE5SSU5Xei9N?=
+ =?utf-8?B?bnM4d2h6YS9iTDJ2MGkrTWZqUXdOUFBMdmVRbkxDNE9vQ0JZZ1orU05pYkE1?=
+ =?utf-8?B?c2wveDc3ZUNUeWE3MEpqVDl3cGMxa2F2SkUvVkYyRXIySWo0cUJLVHRDWWg2?=
+ =?utf-8?B?NElHNnYwMjNvZUVzcXRwQjFKbFpxVVhaeFlYNHZROWNjcEphYTVwQmI4N2V4?=
+ =?utf-8?B?T0VKRmJQZUZGZlFpa3l3K2E5TnhvMXUrSzVvR2doK2dYMWE2N0JJVkc0TkNO?=
+ =?utf-8?B?Umt4YndVZzVMeWV0ekhFVmZ6WXRKSVgyMU9neUhGZEY2cVdQM0JhcCtaTkFL?=
+ =?utf-8?B?N0RpVmtHWk1iSVNCcXBHdHdjdHBzeForQnYzZ3NJQTd4Vlhpb2VaNk9CZUd6?=
+ =?utf-8?B?NktvTHNLbXhNNzZsaXJSMGpqd0NIOUIyOFd6RkZQUUpkMFF0d016M0szSkR4?=
+ =?utf-8?B?TTZCdUlGUnRFeG9PQUF5K1ZJLzlKLy96NjlPUVVreTIwU2V3QlBWSCs5U3ZK?=
+ =?utf-8?B?aE1sSXcxeU16a3pVeVgwNlFVbi9BM1ZNY2gvSE1vUW1pRDRad1g3eGk4b2R6?=
+ =?utf-8?B?UWlkTVI4aUIrQ3ZEK0xvc0FZcm9EcFNPV0hoUng3a05wV0ZLRnJnb2JTb0hN?=
+ =?utf-8?B?RGwzOHlkYngyWjV6a1ZoSDltS2cyTVp5QUd0dzJTMWxsTHpHRExkRFhMZzlG?=
+ =?utf-8?B?ZGVZYi9BSytYblFra3BhRzVhdWMyZDNXeitFY1ZuSHpuaUhxOFV5TXpnb3Vn?=
+ =?utf-8?B?cFZvejNpVkYvMWg1VldTTGRIVllPNnZ3WFRRZEcyMXIvTDA1cmM4ei96KzI3?=
+ =?utf-8?B?bmZQVUw2OTVUMHBuREphaURvUnJzTStnS25nbW5Jd05EQlNMSUFPSXQ3RHgw?=
+ =?utf-8?B?b0pBK2lTTHVQL1oxQ2JrVWgvbVUrUmhyL2h3bHJldlY2RkxtTm9GaEJrQ2hp?=
+ =?utf-8?B?YzRqRk1NZmlNb09jSzBhRGhOMGxFL3pDZGlpSzBUNS9KT0xQcTg0V0hSRG1P?=
+ =?utf-8?B?T2NrZEQ3b0RrUklQZU50YjZPaE9BeDFHTVJIZHNUZlNMWEdwb2NtTWxCUFJl?=
+ =?utf-8?B?a2wyUkphSmRwREJKNnNEOSt2dWc2MUxQV0N3azZ4dlJ3dSsxU2JncmsxcG1V?=
+ =?utf-8?B?QThadHY3alpLSnMxZEtOVjRrMmxnR1IzMzNMaGVEVXpqYlZRdm16Rk1hRXA5?=
+ =?utf-8?B?aU9MVElab2lUQ05IelduSXpkWUFpTmYydjhsbEZpTThTbEVqU29VWjU0aS9X?=
+ =?utf-8?B?MU14aXZPeW9lL015bXY3MDdRK3NXMExKQUlqdURQSmd2NldiQzlod2piaFlp?=
+ =?utf-8?B?b052ZU9KWC9mSXB0SWNTYnJldTRJMlZjSksrKytvMFoxUUdUVjVDVnREVTFW?=
+ =?utf-8?B?Mkl0eGdzelV3SHF1WmFEdFN3REV0VXplckF4VDZmRVJLSTNaeFJLblJIT3JY?=
+ =?utf-8?B?dUhWR0VSQmRKcFBDM2FJYW4vdm9HdkVRcWE3YWZJTmRwc1g2VUZuZEx3K0Ji?=
+ =?utf-8?B?WnZBTzhna056UFhDNC9IQnBzek5DRnJQV1dJcFZWMlJrRzB6UUpGSEptMjVa?=
+ =?utf-8?B?SmZ0U0R0Tm92Z0czdURab2NLUDd5N0FMTEtDRm4rQ2ppMUprcnJpUElldHdx?=
+ =?utf-8?Q?0TH2PsUetFWzj0UcAPNku58tN?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba579e33-c4e8-46a8-35e4-08dd8af89036
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB3523.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2025 10:43:53.5170
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tuqEvdzfFFspyWIv/fCj6PQM7R3sNlua8z+YYgIQ7sfD6ZhGD4BwuKMbPcCqQl+b56QVlPwMVc4xXu5ushrYaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP123MB5668
 
-On Thu, 1 May 2025 09:35:29 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+To provide a consistent and complete quiet mode, this patch expands the
+scope of the [-q|--quiet] option to suppress all informational messages,
+including those indicating successful event creation, in addition to the
+currently suppressed warnings and messages. For example:
 
-> On Sun, Apr 27, 2025 at 3:00=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Mon, 21 Apr 2025 22:06:40 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add coupling activity/inactivity detection by the AC/DC bit. This is =
-an
-> > > addititional enhancement for the detection of activity states and
-> > > completes the activity / inactivity feature of the ADXL345.
-> > >
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> >
-> > I've dragged the table from the earlier patch into this one that actual=
-ly uses it.
-> > However I'm a little unsure on exactly how we present this feature.
-> >
-> > So until those questions are resolved I've dropped the patch (you'll ne=
-ed
-> > to rebase on my testing branch and fix up missing table for v8).
-> >
-> > The bit that made me not apply this series (with some tweaks) was that
-> > I'd expect enabling AC events to be visible as disabling of DC ones.
-> > =20
->=20
-> There are no AC events, nor DC ones.
->=20
-> Think of AC- or DC-coupled detection as modes of operating the
-> ACTIVITY/INACTIVITY
-> detection. The events are ACTIVITY or INACTIVITY.=20
+    ❯ sudo ./perf probe --quiet --add proc_sys_open
+    ❯ echo $?
+    0
 
-That's where we differ. For generalizing an ABI we absolutely should
-not think of them as modes - that's an implementation detail only
+Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+---
+ tools/perf/builtin-probe.c    | 16 +++++++++++-----
+ tools/perf/util/probe-event.h |  1 +
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-> It has effect on how
-> the sensor detects
-> if it needs to trigger an (IN)/ACTIVITY event. DC is just going by the
-> configured thresholds,
-> where AC is supposed to apply some more elaborate way of declaring ACTIVI=
-TY or
-> INACTIVITY.
->=20
-> The fact that you imply on this means to me, at least I explained it
-> wrong, or need to clarify
-> better.
-
-Not at all (I think).  This is a question of datasheet representation vs
-what we are doing in the ABI.  Lets have a thought experiment.
-
-If the device had separate enables, thresholds and periods for
-DC activity, DC inactivity, AC activity and AC inactivity would you be
-thinking of them as modes of one event?  They would be separate event types
-that could be all enabled at the same time.
-
-Now step 2.  We have many sensors that have limited numbers of highly progr=
-ammable
-event detection engines (the adis IMUs for instance have only a few such en=
-gines
-but many types of events). For those we treat them as a fifo.  If you reque=
-st
-3 events and the device has 2 detectors you get the last two that were asked
-for.  We do this because we don't want a detector with 10s of modes with
-the parameter meaning changing for each one.  The ABI should look the same
-as independent detectors.  Some models are more complex and have more such
-engines, but the interface remains the same.
-
-So here we have a pair of less flexible engines that can support either
-AC or DC for inactivity/activity.  We should represent that the same
-way we represent the separate engines case.  Hence when you enable
-activity AC, our short (1 element) fifo means we disable activity DC.
-
-Which is why treating them as separate engines (with rules on which can
-be enabled at any time) is the right way to go.  IIRC correctly long
-ago we had various experiments with interfaces around this (including
-mode based ones) and ended up with this approach that looks like a
-whole bunch of event detectors with a mux that means we can only use
-a subset at a time.
-
-Jonathan
-
-
->=20
-> > Also, I just noticed you aren't pushing the new event types.
-> >
-> > These controls need to look like a separate event detector hardware blo=
-ck
-> > with it's own controls + its own event codes.  The fact only this or
-> > the DC version can be enabled at any time should only be exposed in the
-> > reported state, not apparent via what files we expose etc.  On some
-> > other device they may be independent hardware blocks.
-> >
-> > Note I'd also expect to see value controls for these new events. You may
-> > need to cache the values and update on event change if the meaning is
-> > very different.   That's because the expectation would be an event
-> > setup sequence from userspace is:
-> >
-> > 1) Set value of threshold
-> > 2) Enable event
-> >
-> > On a change of event (due to shared hardware) The value set may scramble
-> > the event already enabled.
-> >
-> > So write the values into a cache and update to the right one when chang=
-ing
-> > event.
-> > =20
->=20
-> Might be that I got you wrong here, but I assume the above does
-> actually not apply.
->=20
-> Best,
-> L
->=20
-> > > ---
-> > >  drivers/iio/accel/adxl345_core.c | 162 +++++++++++++++++++++++++++++=
-+-
-> > >  1 file changed, 159 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
-l345_core.c
-> > > index b25efcad069b..c07ad5774c8a 100644
-> > > --- a/drivers/iio/accel/adxl345_core.c
-> > > +++ b/drivers/iio/accel/adxl345_core.c
-> > > @@ -37,7 +37,9 @@
-> > >  #define ADXL345_REG_TAP_SUPPRESS_MSK BIT(3)
-> > >  #define ADXL345_REG_TAP_SUPPRESS     BIT(3)
-> > >  #define ADXL345_REG_ACT_AXIS_MSK     GENMASK(6, 4)
-> > > +#define ADXL345_REG_ACT_ACDC_MSK     BIT(7)
-> > >  #define ADXL345_REG_INACT_AXIS_MSK   GENMASK(2, 0)
-> > > +#define ADXL345_REG_INACT_ACDC_MSK   BIT(3)
-> > >  #define ADXL345_POWER_CTL_INACT_MSK  (ADXL345_POWER_CTL_AUTO_SLEEP |=
- ADXL345_POWER_CTL_LINK)
-> > >
-> > >  #define ADXL345_TAP_Z_EN             BIT(0)
-> > > @@ -91,6 +93,11 @@ static const unsigned int adxl345_act_thresh_reg[]=
- =3D {
-> > >       [ADXL345_INACTIVITY] =3D ADXL345_REG_THRESH_INACT,
-> > >  };
-> > >
-> > > +static const unsigned int adxl345_act_acdc_msk[] =3D {
-> > > +     [ADXL345_ACTIVITY] =3D ADXL345_REG_ACT_ACDC_MSK,
-> > > +     [ADXL345_INACTIVITY] =3D ADXL345_REG_INACT_ACDC_MSK,
-> > > +};
-> > > +
-> > >  enum adxl345_odr {
-> > >       ADXL345_ODR_0P10HZ =3D 0,
-> > >       ADXL345_ODR_0P20HZ,
-> > > @@ -204,6 +211,18 @@ static struct iio_event_spec adxl345_events[] =
-=3D {
-> > >                       BIT(IIO_EV_INFO_RESET_TIMEOUT) |
-> > >                       BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
-> > >       },
-> > > +     {
-> > > +             /* activity, activity - ac bit */ =20
-> > Comment says activity and inactivity but channel type wise this
-> > is just activity (as rising)
-> > =20
-> > > +             .type =3D IIO_EV_TYPE_MAG_REFERENCED,
-> > > +             .dir =3D IIO_EV_DIR_RISING,
-> > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE),
-> > > +     },
-> > > +     {
-> > > +             /* activity, inactivity - ac bit */ =20
-> >
-> > Likewise this seems to be inactivity.  Should this be in the x&y&z
-> > channel, not this one?
-> > =20
-> > > +             .type =3D IIO_EV_TYPE_MAG_REFERENCED,
-> > > +             .dir =3D IIO_EV_DIR_FALLING,
-> > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE),
-> > > +     },
-> > >  };
-> > >
-> > >  #define ADXL345_CHANNEL(index, reg, axis) {                         =
-         \
-> > > @@ -320,6 +339,69 @@ static int adxl345_set_measure_en(struct adxl345=
-_state *st, bool en)
-> > >
-> > >  /* act/inact */
-> > >
-> > > +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
-> > > +                                enum adxl345_activity_type type, boo=
-l *ac)
-> > > +{
-> > > +     unsigned int regval;
-> > > +     int ret;
-> > > +
-> > > +     ret =3D regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &re=
-gval);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (type =3D=3D ADXL345_ACTIVITY)
-> > > +             *ac =3D FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval);
-> > > +     else
-> > > +             *ac =3D FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regval);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int adxl345_set_act_inact_ac(struct adxl345_state *st,
-> > > +                                 enum adxl345_activity_type type, bo=
-ol ac)
-> > > +{
-> > > +     unsigned int act_inact_ac =3D ac ? 0xff : 0x00;
-> > > +
-> > > +     /*
-> > > +      * A setting of false selects dc-coupled operation, and a setti=
-ng of
-> > > +      * true enables ac-coupled operation. In dc-coupled operation, =
-the
-> > > +      * current acceleration magnitude is compared directly with
-> > > +      * ADXL345_REG_THRESH_ACT and ADXL345_REG_THRESH_INACT to deter=
-mine
-> > > +      * whether activity or inactivity is detected.
-> > > +      *
-> > > +      * In ac-coupled operation for activity detection, the accelera=
-tion
-> > > +      * value at the start of activity detection is taken as a refer=
-ence
-> > > +      * value. New samples of acceleration are then compared to this
-> > > +      * reference value, and if the magnitude of the difference exce=
-eds the
-> > > +      * ADXL345_REG_THRESH_ACT value, the device triggers an activity
-> > > +      * interrupt.
-> > > +      *
-> > > +      * Similarly, in ac-coupled operation for inactivity detection,=
- a
-> > > +      * reference value is used for comparison and is updated whenev=
-er the
-> > > +      * device exceeds the inactivity threshold. After the reference=
- value
-> > > +      * is selected, the device compares the magnitude of the differ=
-ence
-> > > +      * between the reference value and the current acceleration with
-> > > +      * ADXL345_REG_THRESH_INACT. If the difference is less than the=
- value in
-> > > +      * ADXL345_REG_THRESH_INACT for the time in ADXL345_REG_TIME_IN=
-ACT, the
-> > > +      * device is considered inactive and the inactivity interrupt is
-> > > +      * triggered. [quoted from p. 24, ADXL345 datasheet Rev. G]
-> > > +      *
-> > > +      * In a conclusion, the first acceleration snapshot sample whic=
-h hit the
-> > > +      * threshold in a particular direction is always taken as accel=
-eration
-> > > +      * reference value to that direction. Since for the hardware ac=
-tivity
-> > > +      * and inactivity depend on the x/y/z axis, so do ac and dc cou=
-pling.
-> > > +      * Note, this sw driver always enables or disables all three x/=
-y/z axis
-> > > +      * for detection via act_axis_ctrl and inact_axis_ctrl, respect=
-ively.
-> > > +      * Where in dc-coupling samples are compared against the thresh=
-olds, in
-> > > +      * ac-coupling measurement difference to the first acceleration
-> > > +      * reference value are compared against the threshold. So, ac-c=
-oupling
-> > > +      * allows for a bit more dynamic compensation depending on the =
-initial
-> > > +      * sample.
-> > > +      */
-> > > +     return regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT_CTR=
-L,
-> > > +                              adxl345_act_acdc_msk[type], act_inact_=
-ac);
-> > > +} =20
-> > =20
-> > >  static int adxl345_find_range(struct adxl345_state *st, int val, int=
- val2,
-> > > @@ -797,9 +886,51 @@ static int adxl345_find_range(struct adxl345_sta=
-te *st, int val, int val2,
-> > >
-> > >  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_=
-range range)
-> > >  {
-> > > -     return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-> > > +     unsigned int act_threshold, inact_threshold;
-> > > +     unsigned int range_old;
-> > > +     unsigned int regval;
-> > > +     int ret;
-> > > +
-> > > +     ret =3D regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regva=
-l);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +     range_old =3D FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
-> > > +
-> > > +     ret =3D regmap_read(st->regmap,
-> > > +                       adxl345_act_thresh_reg[ADXL345_ACTIVITY],
-> > > +                       &act_threshold);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     ret =3D regmap_read(st->regmap,
-> > > +                       adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-> > > +                       &inact_threshold);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     ret =3D regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
-> > >                                ADXL345_DATA_FORMAT_RANGE,
-> > >                                FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, =
-range));
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     act_threshold =3D act_threshold
-> > > +             * adxl345_range_factor_tbl[range_old]
-> > > +             / adxl345_range_factor_tbl[range];
-> > > +     act_threshold =3D min(255, max(1, inact_threshold));
-> > > + =20
-> > This is first use of the range table. So introduce that in this patch.
-> > =20
-> > > +     inact_threshold =3D inact_threshold
-> > > +             * adxl345_range_factor_tbl[range_old]
-> > > +             / adxl345_range_factor_tbl[range];
-> > > +     inact_threshold =3D min(255, max(1, inact_threshold));
-> > > +
-> > > +     ret =3D regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345=
-_ACTIVITY],
-> > > +                        act_threshold);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_=
-INACTIVITY],
-> > > +                        inact_threshold);
-> > >  }
-> > >
-> > >  static int adxl345_read_avail(struct iio_dev *indio_dev,
-> > > @@ -938,7 +1069,7 @@ static int adxl345_read_event_config(struct iio_=
-dev *indio_dev,
-> > >                                    enum iio_event_direction dir)
-> > >  {
-> > >       struct adxl345_state *st =3D iio_priv(indio_dev);
-> > > -     bool int_en;
-> > > +     bool int_en, act_ac, inact_ac;
-> > >       int ret;
-> > >
-> > >       switch (type) {
-> > > @@ -983,6 +1114,21 @@ static int adxl345_read_event_config(struct iio=
-_dev *indio_dev,
-> > >               if (ret)
-> > >                       return ret;
-> > >               return int_en;
-> > > +     case IIO_EV_TYPE_MAG_REFERENCED:
-> > > +             switch (dir) {
-> > > +             case IIO_EV_DIR_RISING:
-> > > +                     ret =3D adxl345_is_act_inact_ac(st, ADXL345_ACT=
-IVITY, &act_ac); =20
-> >
-> > Do we not need a check in the enabling of the DC events as well?  If we=
- have enabled
-> > AC the DC one should report disabled (and if we enable that again then =
-we should
-> > update this.
-> > =20
-> > > +                     if (ret)
-> > > +                             return ret;
-> > > +                     return act_ac;
-> > > +             case IIO_EV_DIR_FALLING:
-> > > +                     ret =3D adxl345_is_act_inact_ac(st, ADXL345_INA=
-CTIVITY, &inact_ac);
-> > > +                     if (ret)
-> > > +                             return ret;
-> > > +                     return inact_ac;
-> > > +             default:
-> > > +                     return -EINVAL;
-> > > +             }
-> > >       default:
-> > >               return -EINVAL;
-> > >       }
-> > > @@ -1019,6 +1165,16 @@ static int adxl345_write_event_config(struct i=
-io_dev *indio_dev,
-> > >               }
-> > >       case IIO_EV_TYPE_MAG:
-> > >               return adxl345_set_ff_en(st, state);
-> > > +     case IIO_EV_TYPE_MAG_REFERENCED:
-> > > +             switch (dir) {
-> > > +             case IIO_EV_DIR_RISING:
-> > > +                     return adxl345_set_act_inact_ac(st, ADXL345_ACT=
-IVITY, state); =20
-> >
-> > Similar to read path.  The DC events should be affected by this as well=
- as the AC ones.
-> > =20
-> > > +             case IIO_EV_DIR_FALLING:
-> > > +                     return adxl345_set_act_inact_ac(st, ADXL345_INA=
-CTIVITY, state);
-> > > +             default:
-> > > +                     return -EINVAL;
-> > > +             }
-> > > +
-> > >       default:
-> > >               return -EINVAL;
-> > >       } =20
-> > =20
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 69800e4d9530..aee756aad19d 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -391,7 +391,7 @@ static int perf_add_probe_events(struct perf_probe_event *pevs, int npevs)
+ 	}
+ 
+ 	/* Note that it is possible to skip all events because of blacklist */
+-	if (event) {
++	if (event && !probe_conf.quiet) {
+ #ifndef HAVE_LIBTRACEEVENT
+ 		pr_info("\nperf is not linked with libtraceevent, to use the new probe you can use tracefs:\n\n");
+ 		pr_info("\tcd /sys/kernel/tracing/\n");
+@@ -467,8 +467,11 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 
+ 	ret = probe_file__get_events(kfd, filter, klist);
+ 	if (ret == 0) {
+-		strlist__for_each_entry(ent, klist)
++		strlist__for_each_entry(ent, klist) {
++			if (probe_conf.quiet)
++				continue;
+ 			pr_info("Removed event: %s\n", ent->s);
++		}
+ 
+ 		ret = probe_file__del_strlist(kfd, klist);
+ 		if (ret < 0)
+@@ -478,8 +481,11 @@ static int perf_del_probe_events(struct strfilter *filter)
+ 
+ 	ret2 = probe_file__get_events(ufd, filter, ulist);
+ 	if (ret2 == 0) {
+-		strlist__for_each_entry(ent, ulist)
++		strlist__for_each_entry(ent, ulist) {
++			if (probe_conf.quiet)
++				continue;
+ 			pr_info("Removed event: %s\n", ent->s);
++		}
+ 
+ 		ret2 = probe_file__del_strlist(ufd, ulist);
+ 		if (ret2 < 0)
+@@ -531,7 +537,7 @@ __cmd_probe(int argc, const char **argv)
+ 	struct option options[] = {
+ 	OPT_INCR('v', "verbose", &verbose,
+ 		    "be more verbose (show parsed arguments, etc)"),
+-	OPT_BOOLEAN('q', "quiet", &quiet,
++	OPT_BOOLEAN('q', "quiet", &probe_conf.quiet,
+ 		    "be quiet (do not show any warnings or messages)"),
+ 	OPT_CALLBACK_DEFAULT('l', "list", NULL, "[GROUP:]EVENT",
+ 			     "list up probe events",
+@@ -631,7 +637,7 @@ __cmd_probe(int argc, const char **argv)
+ 	argc = parse_options(argc, argv, options, probe_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+ 
+-	if (quiet) {
++	if (probe_conf.quiet) {
+ 		if (verbose != 0) {
+ 			pr_err("  Error: -v and -q are exclusive.\n");
+ 			return -EINVAL;
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 71905ede0207..55771113791f 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -10,6 +10,7 @@ struct nsinfo;
+ 
+ /* Probe related configurations */
+ struct probe_conf {
++	bool	quiet;
+ 	bool	show_ext_vars;
+ 	bool	show_location_range;
+ 	bool	force_add;
+-- 
+2.47.1
 
