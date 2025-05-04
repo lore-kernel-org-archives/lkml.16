@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A2A1AA7A6
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E811A08AB
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746352398; cv=none; b=Zwztemy8G4JofaB4w+dJcfxP1i/br9Jvo19HkavuhXKrUkOwueF2No7lo8cLMh4WEGB0xq9OAZwtD+9dwd2opNoiHffpPYxtgCWIM4cZ+y1n28pVDFyAINvkQjcZVfkGb9lO9eP9Lv76f4UuEJvz7KZ8+hZaweV/lYgTegSLDjc=
+	t=1746352402; cv=none; b=ppkEcsG46FKr+Ypu1kBlH1rsD+MwrHbZyJjSxrfgvQvIqsiYYl9iwxzuZCEvw9W3W8YJgS5ytr+utjvmbPld+4BDIb0J/l7Kkaix+k2zNXeUPAqBBWMMZU67lRnhzz0NWTflzwAzo7lrYSTxhgZmD6Q7Ti5epmLOBy4xtbNuH90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746352398; c=relaxed/simple;
-	bh=8oU3sJmLLw7lhWsobG4CuwI5p2a/Vx6rsE7nZ4672nU=;
+	s=arc-20240116; t=1746352402; c=relaxed/simple;
+	bh=0XHRubWlvxhGoOPlMmYL4p0PTmPlw/mD7RVIaahL8sY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o3MU9zsXqy6ysA/G1Q1cNYTumdJ2PB4QmWqK1A458MJRSYH0OMP4OhC6p9mnpVGIry1BP974zy6xvxHMTFjrb664nperGCI/yu2rw0/pwDDPF9lmB8LMMjVGG0LbEHHLYq5BbcxO80YB9ag/qd5nQfXKBXuzCdHL4wQXJPc8pUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQ7zNLE1; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=QfHqhE7mvpSJZYA5AFPoNr8vt5Qg6pr445RLH6Rxvt7/DCk71YEWMJxrnJ6WoYdFRCnnZ+Q2MF3lQsuNVCJxfaKqB63ncTvem1LScyqx9ySufXS6dKOuzrDiLpTzdWfqVPHCs1yOgumQwB4QJRlr5wsZ+jaAn+x78DMmugPfOhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZZXwJrJH; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQ7zNLE1"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so26045105e9.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZZXwJrJH"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d01024089so22445295e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 02:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746352394; x=1746957194; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746352399; x=1746957199; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8k5UXPfAUt7lWY46f0DCoraoS5cNNXwyrCGcmYgyMZU=;
-        b=FQ7zNLE1FNH9iDCo2/cBXAYVjUsh6P0WDmIPG6L5yaeJ7RPzYSunSL5ajklvSkqm+a
-         CzAEuq3j1lhhiyU7OCGGziTqfcsaSbpCzwMRb0IUAaLuPeblLe3SBNrdN9XlZhLE2X3w
-         XVpZbiadoXqCjg3xOxhiDfpyaT/FN6QSJiYs93+G38iV+pQqY0mpTFSaK3QrAp8IxV8b
-         Ka0JGNWiTViPly73dGWS7J1xoE4rCiwhbayRlVAjlDgPSdNc6AYsf3mOKjX8qVhH1wvS
-         kjKg8e/t2bAkpb/xHy66FJzmkDo/MiScrVBwIFp/8HIweF+cvk+DWxhC43UPoDBqGgaE
-         QcXQ==
+        bh=3kJ+KMNddTv+kjQ55dJFzUMVOm9H3ODRuwtb5qBjuuQ=;
+        b=ZZXwJrJHjW3E2BMvr0YFJXDRQRVLjUc8AtKZq3Nxzu5MZo0XetbwZzEfkiRXt7y761
+         ESrXijpt/DeLW9/9GQCltJh2da+PqTrWvBouLjX4A9Z1MLC74D32q37gtEyqMczyFPci
+         5lIR6m9/dJpLdhDmifbZKMEg32JlEvhPiZTdrds6Q+Jm0ZflcZiwEmYGNibXhSfsYhWb
+         FUrKOArV6QDilsOznCNHJx9aYIrqVo8FW7iIRKWsp5Qnog4w+NlAgSF98UCdC8Y7JSK2
+         zHsaAX67op6rUjDF//csrWB4MZd5N9dBkVr5VVSl4HcEvwN1uTKu1HB67pP7nKjUeh4E
+         ixRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746352394; x=1746957194;
+        d=1e100.net; s=20230601; t=1746352399; x=1746957199;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8k5UXPfAUt7lWY46f0DCoraoS5cNNXwyrCGcmYgyMZU=;
-        b=HwKMr5PM2GtCED40TUHlA++syTuqhcGaSiBX0yCSofRUuDOAwcIy9YLI91XbXp9VvL
-         HzaNWVDaV/j3MzXDQkT9aBVLDBUKoFzkLrL2r4rOqKaGInIfVKJvxIIEACqs/t7NwUHN
-         X6dIe8zXGWqGgHjGUVwSm7wvuY33NONqf3BqQPXkYnD3D+gbwVtF2zs3ZNK38iVbTmCZ
-         hfKXwykKN/hguY7XBnXHtk1PQLhn4UmFJUARIdJmdw+m6uEizrOh7kY7jSI6pCsq59rb
-         lmW8ZVdpHNbgcZBDRk+ZaFOZM1kWBq7XCwlQWVeRpibunWmDkFfccOJS0E2hcBNKJBNW
-         z4SQ==
-X-Gm-Message-State: AOJu0YxoO2QUCAvRpu2TEkq0Mv11KL6bSVRY/GeNljg5Q9VemwNinRTD
-	frQol50//pqlAb8ulkT2wlyoxkodXQQy0QW29WtaH/AwOtslYoneDHrKvYhNuU/A65Nw5smvIGz
-	mCSeKCT/jomAmyIWuaoqiwEz1jfjElQVu4bwLCnC0jWs9Ooc/91B2NLyEU3iIXlERMt8xuNCjfI
-	KCfzrzYU/QA4LKDUJOLK5FfRyBGdbSVg==
-X-Google-Smtp-Source: AGHT+IHhtVzNEx2SNv42+ELTk1PY7qJSz7ugHEVU92NSyY7RvnJQpT9z9PBwulmS9Mhnm5dcqMazof68
-X-Received: from wmsp7.prod.google.com ([2002:a05:600c:1d87:b0:440:6128:9422])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:8708:b0:43d:83a:417d
- with SMTP id 5b1f17b1804b1-441c48bdfc4mr29016015e9.12.1746352394623; Sun, 04
- May 2025 02:53:14 -0700 (PDT)
-Date: Sun,  4 May 2025 11:52:35 +0200
+        bh=3kJ+KMNddTv+kjQ55dJFzUMVOm9H3ODRuwtb5qBjuuQ=;
+        b=i+Lf0FgGPwNbB9e/MOdb3bof1KRFJbDEnMgWf8GiWE9/PA/zJzP83BJR3b+J1sSEGl
+         KKkr5ce6v1cJqQUBZiFcqkthd2sUCpqQuljmyJrErZpQLUzgLnxUaCK1eAKmhvkWe1pf
+         eBM11yVRlipk5Hezl8AyoI7VrGVipM6Fcj1vGTqHlFr/jIWF57dBh3DRFU9iz2btBVT6
+         HpYmkOqW7rs7BdFXxAZJCK0lD8AMP0X91Sw6rA6hDTcgX8SD+77jUgiT9ICUhLOho6Dn
+         qeTwiER19DrTWOpgpPNx5nIoQdTN5pOitaU2B794raWRk+K+vE2wCQWmYXPNbz03A+75
+         8ZeQ==
+X-Gm-Message-State: AOJu0YyoI/NKKKNRBFZA70cmR+sqd4mugzOvYmfMeV1FzPXWWmOGiMEx
+	H7AGBr7IoTMjzSCYn1wdIbsZ1h/JnUgSdSIFweuDXrl5gquwgQeuaGTJ8XgtfzKHSpyd1mptb6W
+	RrvW6unq+3XwJ7SfSLuXAz5kxcn+AVecw9mM/BrzKZS/U0l7mPCVNfv8QypS1W++g0+VJLPsecZ
+	AkEHXOOTjGeQfBNFfOs7JHXTfweUiTpw==
+X-Google-Smtp-Source: AGHT+IEzXD80Qu7nqtQLSpTQz6noqKOtcFrzINt/dHyOuOPEcLbKdNREk9XewiF1CRE8vF7zu9fi4Br1
+X-Received: from wmsp15.prod.google.com ([2002:a05:600c:1d8f:b0:43d:56fa:9b95])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:c07:b0:43c:fe9f:ab90
+ with SMTP id 5b1f17b1804b1-441c4937630mr25859795e9.28.1746352398955; Sun, 04
+ May 2025 02:53:18 -0700 (PDT)
+Date: Sun,  4 May 2025 11:52:37 +0200
 In-Reply-To: <20250504095230.2932860-25-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250504095230.2932860-25-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6109; i=ardb@kernel.org;
- h=from:subject; bh=dIha7Dx3IwFCZV+ZQ2fqjImHHrNrFiQAc9XOg6z2oBc=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4qnokriZ4pN14t+8rvabY7PTx/HW/9BS5o0x3/7e+
- XVu/fZ5HaUsDGIcDLJiiiwCs/++23l6olSt8yxZmDmsTCBDGLg4BWAixy4xMuzaKH5m+Y9d3V/t
- 2UzXZL8+eF0pinH36bJn0clad9/pu95kZJgRWnkuL+REgrfQtsYzJY0etz4drlvUKxH6ie1n3W+ DbHYA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7268; i=ardb@kernel.org;
+ h=from:subject; bh=Zd4Hy2l6+2Xwx0i5ZHR0ISwcKyYHYyYNXAs7wzR0PHY=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUPc4sWDGrsSH3W+mysdvJcufZzdVGtYGau+JCJz+o71s
+ WdKZDk6SlkYxDgYZMUUWQRm/3238/REqVrnWbIwc1iZQIYwcHEKwETuf2X4Z8Kk/9rS2ZJ1akj7
+ yai+JlNP/Wfmy2Pr3orkbImtLEmxZWT4duht98lvxR/uJR+7nPOht3TrrX1Vfx+82irEm+VX+02 TEQA=
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250504095230.2932860-30-ardb+git@google.com>
-Subject: [RFT PATCH v2 05/23] x86/sev: Move instruction decoder into separate
- source file
+Message-ID: <20250504095230.2932860-32-ardb+git@google.com>
+Subject: [RFT PATCH v2 07/23] x86/sev: Separate MSR and GHCB based snp_cpuid()
+ via a callback
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-efi@vger.kernel.org, x86@kernel.org, 
@@ -78,200 +78,233 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-As a first step towards disentangling the SEV #VC handling code -which
-is shared between the decompressor and the core kernel- from the SEV
-startup code, move the decompressor's copy of the instruction decoder
-into a separate source file.
+There are two distinct callers of snp_cpuid(): one where the MSR
+protocol is always used, and one where the GHCB page based interface is
+always used.
 
-Code movement only - no functional change intended.
+The snp_cpuid() logic does not care about the distinction, which only
+matters at a lower level. But the fact that it supports both interfaces
+means that the GHCB page based logic is pulled into the early startup
+code where PA to VA conversions are problematic, given that it runs from
+the 1:1 mapping of memory.
+
+So keep snp_cpuid() itself in the startup code, but factor out the
+hypervisor calls via a callback, so that the GHCB page handling can be
+moved out.
+
+Code refactoring only - no functional change intended.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/Makefile        |  6 +--
- arch/x86/boot/compressed/misc.h          |  7 +++
- arch/x86/boot/compressed/sev-handle-vc.c | 51 ++++++++++++++++++++
- arch/x86/boot/compressed/sev.c           | 39 +--------------
- 4 files changed, 62 insertions(+), 41 deletions(-)
+ arch/x86/boot/startup/sev-shared.c | 58 ++++----------------
+ arch/x86/coco/sev/vc-shared.c      | 49 ++++++++++++++++-
+ arch/x86/include/asm/sev.h         |  3 +-
+ 3 files changed, 61 insertions(+), 49 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 0fcad7b7e007..f4f7b22d8113 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -44,10 +44,10 @@ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
- KBUILD_CFLAGS += $(call cc-option,-Wa$(comma)-mrelax-relocations=no)
- KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
- 
--# sev.c indirectly includes inat-table.h which is generated during
-+# sev-decode-insn.c indirectly includes inat-table.c which is generated during
- # compilation and stored in $(objtree). Add the directory to the includes so
- # that the compiler finds it even with out-of-tree builds (make O=/some/path).
--CFLAGS_sev.o += -I$(objtree)/arch/x86/lib/
-+CFLAGS_sev-handle-vc.o += -I$(objtree)/arch/x86/lib/
- 
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- 
-@@ -96,7 +96,7 @@ ifdef CONFIG_X86_64
- 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
--	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev.o
-+	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev.o $(obj)/sev-handle-vc.o
- endif
- 
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 450d27d0f449..ccd3f4257bcd 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -133,6 +133,9 @@ static inline void console_init(void)
- #endif
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-+struct es_em_ctxt;
-+struct insn;
-+
- void sev_enable(struct boot_params *bp);
- void snp_check_features(void);
- void sev_es_shutdown_ghcb(void);
-@@ -140,6 +143,10 @@ extern bool sev_es_check_ghcb_fault(unsigned long address);
- void snp_set_page_private(unsigned long paddr);
- void snp_set_page_shared(unsigned long paddr);
- void sev_prep_identity_maps(unsigned long top_level_pgt);
-+
-+enum es_result vc_decode_insn(struct es_em_ctxt *ctxt);
-+bool insn_has_rep_prefix(struct insn *insn);
-+void sev_insn_decode_init(void);
- #else
- static inline void sev_enable(struct boot_params *bp)
- {
-diff --git a/arch/x86/boot/compressed/sev-handle-vc.c b/arch/x86/boot/compressed/sev-handle-vc.c
-new file mode 100644
-index 000000000000..b1aa073b732c
---- /dev/null
-+++ b/arch/x86/boot/compressed/sev-handle-vc.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "misc.h"
-+
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <asm/insn.h>
-+#include <asm/pgtable_types.h>
-+#include <asm/ptrace.h>
-+#include <asm/sev.h>
-+
-+#define __BOOT_COMPRESSED
-+
-+/* Basic instruction decoding support needed */
-+#include "../../lib/inat.c"
-+#include "../../lib/insn.c"
-+
-+/*
-+ * Copy a version of this function here - insn-eval.c can't be used in
-+ * pre-decompression code.
-+ */
-+bool insn_has_rep_prefix(struct insn *insn)
-+{
-+	insn_byte_t p;
-+	int i;
-+
-+	insn_get_prefixes(insn);
-+
-+	for_each_insn_prefix(insn, i, p) {
-+		if (p == 0xf2 || p == 0xf3)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
-+{
-+	char buffer[MAX_INSN_SIZE];
-+	int ret;
-+
-+	memcpy(buffer, (unsigned char *)ctxt->regs->ip, MAX_INSN_SIZE);
-+
-+	ret = insn_decode(&ctxt->insn, buffer, MAX_INSN_SIZE, INSN_MODE_64);
-+	if (ret < 0)
-+		return ES_DECODE_FAILED;
-+
-+	return ES_OK;
-+}
-+
-+extern void sev_insn_decode_init(void) __alias(inat_init_tables);
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index bc52c0aa96d4..5cd029c4f36d 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -29,25 +29,6 @@
- static struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
- struct ghcb *boot_ghcb;
- 
--/*
-- * Copy a version of this function here - insn-eval.c can't be used in
-- * pre-decompression code.
-- */
--static bool insn_has_rep_prefix(struct insn *insn)
--{
--	insn_byte_t p;
--	int i;
--
--	insn_get_prefixes(insn);
--
--	for_each_insn_prefix(insn, i, p) {
--		if (p == 0xf2 || p == 0xf3)
--			return true;
--	}
--
--	return false;
--}
--
- /*
-  * Only a dummy for insn_get_seg_base() - Early boot-code is 64bit only and
-  * doesn't use segments.
-@@ -74,20 +55,6 @@ static inline void sev_es_wr_ghcb_msr(u64 val)
- 	boot_wrmsr(MSR_AMD64_SEV_ES_GHCB, &m);
+diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
+index 7a706db87b93..408e064a80d9 100644
+--- a/arch/x86/boot/startup/sev-shared.c
++++ b/arch/x86/boot/startup/sev-shared.c
+@@ -342,44 +342,7 @@ static int __sev_cpuid_hv_msr(struct cpuid_leaf *leaf)
+ 	return ret;
  }
  
--static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
+-static int __sev_cpuid_hv_ghcb(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
 -{
--	char buffer[MAX_INSN_SIZE];
+-	u32 cr4 = native_read_cr4();
 -	int ret;
 -
--	memcpy(buffer, (unsigned char *)ctxt->regs->ip, MAX_INSN_SIZE);
+-	ghcb_set_rax(ghcb, leaf->fn);
+-	ghcb_set_rcx(ghcb, leaf->subfn);
 -
--	ret = insn_decode(&ctxt->insn, buffer, MAX_INSN_SIZE, INSN_MODE_64);
--	if (ret < 0)
--		return ES_DECODE_FAILED;
+-	if (cr4 & X86_CR4_OSXSAVE)
+-		/* Safe to read xcr0 */
+-		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
+-	else
+-		/* xgetbv will cause #UD - use reset value for xcr0 */
+-		ghcb_set_xcr0(ghcb, 1);
+-
+-	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
+-	if (ret != ES_OK)
+-		return ret;
+-
+-	if (!(ghcb_rax_is_valid(ghcb) &&
+-	      ghcb_rbx_is_valid(ghcb) &&
+-	      ghcb_rcx_is_valid(ghcb) &&
+-	      ghcb_rdx_is_valid(ghcb)))
+-		return ES_VMM_ERROR;
+ 
+-	leaf->eax = ghcb->save.rax;
+-	leaf->ebx = ghcb->save.rbx;
+-	leaf->ecx = ghcb->save.rcx;
+-	leaf->edx = ghcb->save.rdx;
 -
 -	return ES_OK;
 -}
 -
- static enum es_result vc_write_mem(struct es_em_ctxt *ctxt,
- 				   void *dst, char *buf, size_t size)
+-static int sev_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+-{
+-	return ghcb ? __sev_cpuid_hv_ghcb(ghcb, ctxt, leaf)
+-		    : __sev_cpuid_hv_msr(leaf);
+-}
+ 
+ /*
+  * This may be called early while still running on the initial identity
+@@ -484,21 +447,21 @@ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+ 	return false;
+ }
+ 
+-static void snp_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
++static void snp_cpuid_hv_no_ghcb(void *ctx, struct cpuid_leaf *leaf)
  {
-@@ -122,10 +89,6 @@ static bool fault_in_kernel_space(unsigned long address)
+-	if (sev_cpuid_hv(ghcb, ctxt, leaf))
++	if (__sev_cpuid_hv_msr(leaf))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+ }
  
- #define __BOOT_COMPRESSED
+ static int __head
+-snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+-		      struct cpuid_leaf *leaf)
++snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
++		      void *ctx, struct cpuid_leaf *leaf)
+ {
+ 	struct cpuid_leaf leaf_hv = *leaf;
  
--/* Basic instruction decoding support needed */
--#include "../../lib/inat.c"
--#include "../../lib/insn.c"
--
- extern struct svsm_ca *boot_svsm_caa;
- extern u64 boot_svsm_caa_pa;
+ 	switch (leaf->fn) {
+ 	case 0x1:
+-		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
++		cpuid_hv(ctx, &leaf_hv);
  
-@@ -230,7 +193,7 @@ static bool early_setup_ghcb(void)
- 	boot_ghcb = &boot_ghcb_page;
+ 		/* initial APIC ID */
+ 		leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
+@@ -517,7 +480,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+ 		break;
+ 	case 0xB:
+ 		leaf_hv.subfn = 0;
+-		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
++		cpuid_hv(ctx, &leaf_hv);
  
- 	/* Initialize lookup tables for the instruction decoder */
--	inat_init_tables();
-+	sev_insn_decode_init();
+ 		/* extended APIC ID */
+ 		leaf->edx = leaf_hv.edx;
+@@ -565,7 +528,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+ 		}
+ 		break;
+ 	case 0x8000001E:
+-		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
++		cpuid_hv(ctx, &leaf_hv);
  
- 	/* SNP guest requires the GHCB GPA must be registered */
- 	if (sev_snp_enabled())
+ 		/* extended APIC ID */
+ 		leaf->eax = leaf_hv.eax;
+@@ -587,7 +550,8 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+  * should be treated as fatal by caller.
+  */
+ int __head
+-snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
++snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
++	  void *ctx, struct cpuid_leaf *leaf)
+ {
+ 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+ 
+@@ -621,7 +585,7 @@ snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+ 			return 0;
+ 	}
+ 
+-	return snp_cpuid_postprocess(ghcb, ctxt, leaf);
++	return snp_cpuid_postprocess(cpuid_hv, ctx, leaf);
+ }
+ 
+ /*
+@@ -648,7 +612,7 @@ void __head do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+ 	leaf.fn = fn;
+ 	leaf.subfn = subfn;
+ 
+-	ret = snp_cpuid(NULL, NULL, &leaf);
++	ret = snp_cpuid(snp_cpuid_hv_no_ghcb, NULL, &leaf);
+ 	if (!ret)
+ 		goto cpuid_done;
+ 
+diff --git a/arch/x86/coco/sev/vc-shared.c b/arch/x86/coco/sev/vc-shared.c
+index 2c0ab0fdc060..b4688f69102e 100644
+--- a/arch/x86/coco/sev/vc-shared.c
++++ b/arch/x86/coco/sev/vc-shared.c
+@@ -409,15 +409,62 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 	return ret;
+ }
+ 
++static int __sev_cpuid_hv_ghcb(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
++{
++	u32 cr4 = native_read_cr4();
++	int ret;
++
++	ghcb_set_rax(ghcb, leaf->fn);
++	ghcb_set_rcx(ghcb, leaf->subfn);
++
++	if (cr4 & X86_CR4_OSXSAVE)
++		/* Safe to read xcr0 */
++		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
++	else
++		/* xgetbv will cause #UD - use reset value for xcr0 */
++		ghcb_set_xcr0(ghcb, 1);
++
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (!(ghcb_rax_is_valid(ghcb) &&
++	      ghcb_rbx_is_valid(ghcb) &&
++	      ghcb_rcx_is_valid(ghcb) &&
++	      ghcb_rdx_is_valid(ghcb)))
++		return ES_VMM_ERROR;
++
++	leaf->eax = ghcb->save.rax;
++	leaf->ebx = ghcb->save.rbx;
++	leaf->ecx = ghcb->save.rcx;
++	leaf->edx = ghcb->save.rdx;
++
++	return ES_OK;
++}
++
++struct cpuid_ctx {
++	struct ghcb *ghcb;
++	struct es_em_ctxt *ctxt;
++};
++
++static void snp_cpuid_hv_ghcb(void *p, struct cpuid_leaf *leaf)
++{
++	struct cpuid_ctx *ctx = p;
++
++	if (__sev_cpuid_hv_ghcb(ctx->ghcb, ctx->ctxt, leaf))
++		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
++}
++
+ static int vc_handle_cpuid_snp(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ {
++	struct cpuid_ctx ctx = { ghcb, ctxt };
+ 	struct pt_regs *regs = ctxt->regs;
+ 	struct cpuid_leaf leaf;
+ 	int ret;
+ 
+ 	leaf.fn = regs->ax;
+ 	leaf.subfn = regs->cx;
+-	ret = snp_cpuid(ghcb, ctxt, &leaf);
++	ret = snp_cpuid(snp_cpuid_hv_ghcb, &ctx, &leaf);
+ 	if (!ret) {
+ 		regs->ax = leaf.eax;
+ 		regs->bx = leaf.ebx;
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 6158893786d6..f50a606be4f1 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -533,7 +533,8 @@ struct cpuid_leaf {
+ 	u32 edx;
+ };
+ 
+-int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf);
++int snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
++	      void *ctx, struct cpuid_leaf *leaf);
+ 
+ void __noreturn sev_es_terminate(unsigned int set, unsigned int reason);
+ enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
 -- 
 2.49.0.906.g1f30a19c02-goog
 
