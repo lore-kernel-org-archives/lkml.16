@@ -1,127 +1,110 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDC47DA7F
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 19:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DC97DA7F;
+	Sun,  4 May 2025 19:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746388117; cv=none; b=phfaZJEhc2o/Le5aQk9ep0TbHWI67bMdd8LJaDMs4mH5zHDJPoLOt7enHyUAP/0LOgxzznHhH0pI1YQiJc7oWkbLXP0IGlFZd4Zfsd4RfA4xPWVRyyTXp4yggzo7Wp52dvo35s3lnb1odghXBn7LgGwlISTNWZC4PiHZ6Mn5mJM=
+	t=1746388135; cv=none; b=vEPWwFpem0DnqMdRVRVTlgPIItdx2o3CYT1UWuAU+iIdf/JMrk+dSPFssTfs0zzMIhoWrUoFTXBIbOWn+b+M8yPKjn6v9cTT/YZF6Etpq7sHDCvtTa46+eYWZj1GRN7+N/Gy50VXmyoysnTK8X4KdXtR/JvMcyOXIRk5mUBJgPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746388117; c=relaxed/simple;
-	bh=pfrGjy9sFH027sd2QmcRJbL9tHEZjXpENoMYvP42MH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d7MuqIDWyd65dWQ9vXX9v9XalrnvatsUA+Sm6claF/BxvPBQqN3BBUe2f9zXmErIcYCvQ4OhltTMCRIGhIC3JGU0yKN3yiQhxN5kYMlS5yX7i1Wuto7Fkm+GU2q3a/H49ryGBP+3yGHVWfasaaFEQvJqkkcUfLJ2S6vNpQF3GNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Fh8sSb0L; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746388135; c=relaxed/simple;
+	bh=FvPgRUMczzLAAaBk5XQh+XedHjTT+Lr+OE7EJYY9KWo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KzcbnP9LCplo23y7kgacPyxaetwnDJAASAJERMcL/+nztW///XaA8BtOLg1Ijf7rDSLeZB7ctsDJGBUpxXIcIkC8QaLx9ijHYciY3fbwf0goS/ePGFajMTNy69IYTioyxnH4Tmy5NS/g2FWZf6FxY4+jRNNWJB8K5EWvCDJ9E4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqYOvSoX; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Fh8sSb0L"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7304efb4b3bso2215686a34.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 12:48:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqYOvSoX"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso260265a91.3;
+        Sun, 04 May 2025 12:48:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746388114; x=1746992914; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HnwuzSuusn2LX2ZHjCLJbOjOO8seDbLw7ar5XqNTwiA=;
-        b=Fh8sSb0LJbJ39shwZB3C0yk0F0+GpaaY9/z8mdPSt8KuiR2SxC/lCssB3Xbzod5AQz
-         6h40Vw3UCQmlftK7WNDxjIqZi9Ppq5QCIPf3TJR+E4B9QPpq8JEBxQJaWDXnGwRzSfdk
-         s1bhievPG80NBqmt61U7xh4z+azhNf38eAvryC5WeA5D2QdVW+9zc0uXoGVMg2Ug2bZD
-         jNU4gawnTV1vPVKuSYwpuXMY1ddzpyAuxxfwbIjrjfKCYcy8+hEVDZwYlQ4iIzTCi9VN
-         mP78/4BenX45/2s09P6HmG9ZfXxvrYepNAtTGJ7XwqFd7+rJb5K+uT/bQ0Ne+rXztz2Z
-         oriw==
+        d=gmail.com; s=20230601; t=1746388133; x=1746992933; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c+cY7XQg3tDKPiMDvoOhswXp7ViUq/mptPjLxPqNDPA=;
+        b=RqYOvSoXfr8U44B5u5PECcyaS1iscTCCSDm924ywQyGNexXBemDnLr0BjsyQStnny+
+         2r5o3TinJEAzBwp8t+4sSrI+0rBwDhNw2OwR6F8wm5tnkLT8X5qQrBRXfzT5cLUJmnR0
+         6L8y+Ob5UAfeJKqZDUYraGmV1QmQeoULBfn18O0mSeKA1lf848Pj4e5L8NoQe/Xaa0OR
+         y1DGtWFQ9jm9o5gTzAclLk/Y6KFo8k67DJnpezipepPeqZiNYQZS3gMEExPkHrWGZWxZ
+         aQJwL187/mtlgmbz7kIR95xM4V4F49uEV4Y6zOS2rl606ahDq2hyVpLn08WkhUJrCiaR
+         V6PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746388114; x=1746992914;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HnwuzSuusn2LX2ZHjCLJbOjOO8seDbLw7ar5XqNTwiA=;
-        b=sj502sFowF31bGnKgDM+agmnvZ+L0lVs1UKJCqVjvxa0EmS1Mwr/IrrqU+S4NgWwCZ
-         LEkPV5kKjTKznbrh/nBajmLj3kb68h/gGINUj6oOzJferODTOtt8v9VtLWfPb+s7agkw
-         /EyrkUEP2mfawlMMbu+gxCx4OA5jh1u9nJsOgmID5sTJKxjDVTxPdqSdSlY78Y63K8RZ
-         zJ0Rw6uWA3C8DB1QgDjqp8zGux9p5j1dUYMIH6/aNlU/SUl23AixrY/b7RWK4Mf580I0
-         vPCN9QmqqhldsNHdgleGzKyKyUuel/VEcco6Oq8eBxOiHqZ7yENVmjxKgzW3/TN2kQQv
-         cG0A==
-X-Forwarded-Encrypted: i=1; AJvYcCX41S/HoX84YlrZtj7+fpFi4Q2i5Z7exusaNskA0dCLDolteZPIx4DmjPr4/xovZeTlXrJvJdUDrf0gJYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlVfcDEU62r31vX1nQ++zAPMQox9+tS8q+emd/EFwROr4njYV4
-	zCm1Jt/QlWpVKa/TsG4xIW62SnvXOl9vtaa8t7cXFLVND8kpQc0l4UgqDkyd87Y=
-X-Gm-Gg: ASbGnct0KzgDIfDKKuyWRQK8xSAoNBmfU2ReHy3d9SkaAuyYyxU/rdBgnI25eLA4wGV
-	xt3DjIwJ6xErAcc+4BnSUuu6SX3RcNf0b5XVhb7onY7N2UJBeMEYip7xVHsxgttqALBmvvbVnJi
-	7PP/xRQ61E6UxZFY8Z8b6AFfvCGgK11HunMYixnNoexB1FqgNNXAJM5YLHP3TlZzhVbdJny5Bz4
-	cq2YWRwuhu2skyf5sVwez59Z52mZMbNklq+X0W6wF98OKFTax7BZnSOqfSgBmU48H5R4PuaDRnq
-	JsOyDBjGczt/+H3tglylsRdhqwdnyvXd8IVAoCOcpBexsfptFfX728kx8Itu/402FC4gn2rpiCM
-	wmyatG8Hh+QzkNlzCusaLcm7cXzIR
-X-Google-Smtp-Source: AGHT+IEeWwZDLnV2kLTz5RTYpnyvvvl/iHho8ndVq67XvjTpGS5bVf4ZbtzTB68KrAEY12RnhPnaRA==
-X-Received: by 2002:a05:6830:6c10:b0:72a:d54:a780 with SMTP id 46e09a7af769-731e564611bmr4217238a34.17.1746388114338;
-        Sun, 04 May 2025 12:48:34 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:2ddf:83b1:4b93:16c8? ([2600:8803:e7e4:1d00:2ddf:83b1:4b93:16c8])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-731d350943bsm1249459a34.61.2025.05.04.12.48.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 12:48:32 -0700 (PDT)
-Message-ID: <357c418f-7f00-416c-937e-f6fea1c0af96@baylibre.com>
-Date: Sun, 4 May 2025 14:48:32 -0500
+        d=1e100.net; s=20230601; t=1746388133; x=1746992933;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c+cY7XQg3tDKPiMDvoOhswXp7ViUq/mptPjLxPqNDPA=;
+        b=JGqnxVH5RSd86laasl0LTyICeg7O8aTDT8Z4G79A6/VXYpL8dM4zH4t1oMLozbHRmv
+         YKFyxMUVtZhaxuw+LY8yaVeJ3UUyHKOKbGPP5oMRQcs1fCG4RDtoeXoO8ovm4NJGdqVJ
+         ms/su6QGgngy446vLPvm439al/RxDNnMsZM9hC62zW0G7g4EYgLrSj9Yex0oqEv/TDnK
+         giXKWjXuYOk0jnRK1YzhbAYQ7rY4UwxxmvNFeorD4qYNor0josEzZOZxJyKUrWHYUW41
+         l97Y8YOHozmgezpTjrSBD0RCalbXaP6jeYT7z8ZMwnGVvaIwgJQUIzEnaKhAUuZMeXQ9
+         krMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVRUUjCED0SZ9u0xT1Yff/ikmUTtizhIMlJqnN0ySSfN5oKBtyC+iTFpiHZooINtnpiNpXEYbafIrWRL0V3eQ=@vger.kernel.org, AJvYcCUdtIcWCRhGgUj58tfSBw27p1O2d49OpilHzYuhmlzc36ZJbp8JyDeD+/oqI9DuPbxeWvhy/gCwcvgFIn0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0ulR23wGkM8/SSebliHwmva3phXw5rRvxYm7fE7sbcQIxXZ5r
+	EIUmDaIEybPzAy2wahVp65bnLXorwtquvgaPfIPSLQM6h+Qo8nZqnUXUPv4k4TdScylPffSWMyo
+	5FZu9yokEbK74RsndC/dau1KlPmU=
+X-Gm-Gg: ASbGncv9ma4AFCbzTGm+UD5vjDTFFge9ow8wXYeiFbW1m8QZxd7yN4WrsK8ROJSCcsl
+	qqe9NXZiSWtrdg0uTlIt+wI+lPPTWyE06WM2Q/yuYsLFbkNgjI+cMHO7t/pfe0y/d1T0vKdhNlC
+	Hchaqivkv45ve76Z8xeFxUuA==
+X-Google-Smtp-Source: AGHT+IE1j6/ezLvfedDCCne0gp2YqmZMNQu3kqwhw14dn4ROaKg5nt/x2AT0EwtApo83s3dt06lmDYSZuIw+sNjg6L0=
+X-Received: by 2002:a17:90b:350e:b0:306:b593:4551 with SMTP id
+ 98e67ed59e1d1-30a4e689b33mr5851896a91.6.1746388133336; Sun, 04 May 2025
+ 12:48:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] Documentation: ABI: IIO: add calibconv_delay
- documentation
-To: Jonathan Cameron <jic23@kernel.org>,
- Angelo Dureghello <adureghello@baylibre.com>
-Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
- <20250502-wip-bl-ad7606-calibration-v2-1-174bd0af081b@baylibre.com>
- <20250504161603.7d1027af@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250504161603.7d1027af@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250504-pr_info-newline-fix-v4-0-53467c401eb6@invicto.ai> <20250504-pr_info-newline-fix-v4-1-53467c401eb6@invicto.ai>
+In-Reply-To: <20250504-pr_info-newline-fix-v4-1-53467c401eb6@invicto.ai>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 4 May 2025 21:48:40 +0200
+X-Gm-Features: ATxdqUFOSgMJXohzmzeEQvROLK9NhXAwRAQgvrkMoye_kkagaKnd3gofNSqT9lc
+Message-ID: <CANiq72kAbB3vg60yfffviDRWgEkQsFWoLdjF2mSQszV3q-__tw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] rust: samples: add missing newline to pr_info!
+ calls in rust_print_main
+To: kurti@invicto.ai
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, 
+	Xiangfei Ding <dingxiangfei2009@gmail.com>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/4/25 10:16 AM, Jonathan Cameron wrote:
-> On Fri, 02 May 2025 15:26:58 +0200
-> Angelo Dureghello <adureghello@baylibre.com> wrote:
-> 
->> From: Angelo Dureghello <adureghello@baylibre.com>
->>
->> Add new IIO calibconv_delay documentation.
->>
->> The ad7606 implements a phase calibation feature, in nanoseconds.
->> Being this a time delay, using the conv_delay suffix.
-> I made a late reply to v1...
-> 
-> Key point being that, in the general sense this is only a calibration
-> thing if it is both writeable and we are using it for filter phase correction.
-> In more general terms it's just a conversion sampling time offset (and as you have
-> it here in seconds).  I'm keen we define this to incorporate more general
-> cases including extra read only info on sequencer timing - that can be useful
-> if we have something like 
->                  _____________
-> Input 0 --------|             |
-> Input 1 --------| 4 in, 2 out |-----  ADC0
-> Input 2 --------|  MUX        |
-> Input 3 --------|_____________|-----  ADC1
-> 
-> That is the ability to schedule more channels across a small number of
-> simultaneous sampling ADCs.  In these cases we've never had a way to
-> express what was done together.  Mostly there have been obvious
-> combinations (i.e. voltage and current at same time on a given wire for
-> power measurement), but it would still be nice to use your new interface
-> to allow us to describe what is running here (though probably not control
-> it as that would be hard to do!)
-> 
-I'm totally on board with making this more general than just calibration, but
-having worked on a couple of multiplexed simultaneous sampling ADCs like this,
-I'm scratching my head a bit trying to figure out how we would be able to know
-what the delay was between the conversions, at least in cases where we don't
-have a hardware conversion trigger based on a clock/pwm. Generally, it is as
-fast as the SPI bus can bang it out, but that isn't a fixed or predictable
-amount of time.
+On Sun, May 4, 2025 at 5:41=E2=80=AFPM Alban Kurti via B4 Relay
+<devnull+kurti.invicto.ai@kernel.org> wrote:
+>
+> From: Alban Kurti <kurti@invicto.ai>
+>
+> Fixes: f431c5c581fa ("samples: rust: print: Add sample code for Arc print=
+ing")
+> Reported-by: Miguel Ojeda <ojeda@kernel.org>
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1139
+> Signed-off-by: Alban Kurti <kurti@invicto.ai>
+
+Commit messages cannot be empty, even if they may be apparently
+trivial -- could you please describe the changes a bit? (i.e. "what"
+and "why").
+
+Also, I think you sent two patches with the exact same title -- I
+think you did it because the Fixes tag is different, which is good.
+However, you could mention the difference in the title and message?
+For instance:
+
+    rust: samples: rust_print_main: add missing newline in basic pr_info! c=
+alls
+    rust: samples: rust_print_main: add missing newline in Arc<dyn>
+pr_info! call
+
+Thanks for sending these fixes!
+
+Cheers,
+Miguel
