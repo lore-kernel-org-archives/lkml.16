@@ -1,145 +1,148 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD694B5AE;
-	Sun,  4 May 2025 07:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAB013D2B2;
+	Sun,  4 May 2025 08:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746345211; cv=none; b=Ca2KWkFZ6YLXmXAtcg5o4OCSHvq8VMJXK94VtLJnO1a2HogBjZlWs1lFE2LgewqlLcfeSHMgYT7dDvpKUK1mulfaoT8RSawR5JJCAUwG1tIYTgcRnCes/ExofSOSsoX3HEaV+zuS6OLhMkUwIJAc7FzFoUO2ijNK0772aXaqS34=
+	t=1746346007; cv=none; b=itrV/Fr7ShlwwASd2ocJVT+5S6CobnU8FzJtvXO0gubGzAdfbDJeuiRFuPi20azeiUbDsb1AzmMpeEMGOJv6f8UK9edRoNcqDyMgxXYzvakNbKfm9V6qp5OqKUo4WPIiP7qaop69xdkuUZuQD8/4Ji5/qVyA0dA9ZMuF0dSfDbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746345211; c=relaxed/simple;
-	bh=3mZkvsMVZ3TmoteIDSZkFVTfbQghz/+q0hCyVGCNds4=;
+	s=arc-20240116; t=1746346007; c=relaxed/simple;
+	bh=v3TBtvRHxNnnQsRJag0G+mt7Yvuj38HjU1Je9jzecDA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b6jYgj6uAOV2gB3xThG5SchUPAolWSP7hht4z/QW2/zwEjtl8yU7qpZw3mJ0rg/jy6GMW/4R1pNqAfRV63xNuKGUzAGEdt/hxAKd3LV3OupWUngsOb9bOtzPdcLHIitvJjF+Uleyi3DRsUnGryVs3nlLH+Rp5AhkID229Q35wUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=pGo++wuM; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCeLCR75PMmND3be+eXSKHIUT4RwDsKHoIJSNLl+Y3n0bdo/97VLuBr9Z0K0CmW5WBbdFB+7c9tT5xR9rMiBgAQBaSDHVVMnELmUnE5ZkT84qkLk9N4r0pu95oWXPXiBK4CxWbe9bOHbrXbXbqIsMZGyfJWzbwgVh+xOYsAsyDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=o0DISX7Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vSM7xYur; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="pGo++wuM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=5Pp7UXCRue9lL41cTrbfnqtJ1uqpTa0PBDfwUmhSThc=; b=pGo++wuMRrRfp8ysN6dc5BAzTj
-	bLzpsjxS+BHCWmMwkkugvd/eTC82KZ6hmVdPznwivqBhXPRaUXyWxpH4MIScd8UXgcT9CH/OWeUzN
-	rrqvWHuQuky8HQ2CgrHb+QZpyXVzKfV5pKHEc2/dPVDOUxHIeIK0ERM6hJFPsPIobk2vCS71cZTai
-	zMPEg8gb2obT6pYTTosf9lQIeVXQEHoSt4YD8H56wp88yDAPrBOSrkpFE0kbxAx/OH0Cj606VmF3C
-	1OAnnEsRlSYVqtWL25CvQl54JuIwmzq8i1v2Ahe5xxWG1ncvX26/VW+LjSlqN0BrosmgoQbA+XCXW
-	c0DpfMUg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uBU9X-003CUy-28;
-	Sun, 04 May 2025 15:52:48 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 04 May 2025 15:52:47 +0800
-Date: Sun, 4 May 2025 15:52:47 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [v2 PATCH] KEYS: Invert FINAL_PUT bit
-Message-ID: <aBccz2nJs5Asg6cN@gondor.apana.org.au>
-References: <aBb833yQFY5EpEFx@gondor.apana.org.au>
- <aBYqlBoSq4FwiDKD@kernel.org>
- <20250430152554.23646-1-jarkko@kernel.org>
- <1121543.1746310761@warthog.procyon.org.uk>
- <aBa2bZGnJ2kRJJpa@gondor.apana.org.au>
- <1131866.1746344653@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="o0DISX7Q";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vSM7xYur"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 882E813801DB;
+	Sun,  4 May 2025 04:06:43 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Sun, 04 May 2025 04:06:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746346003;
+	 x=1746432403; bh=2R7ZbsROVfjg8V+iBU7mCl9Pjmaj2oVs4ld+SIepebE=; b=
+	o0DISX7QCvsyoazU5+WtMhHzbT5mmTph8NyDOL1d2ooChvXZDjtLHnwJ7BQi6+rf
+	2K/9mHIhjszzqwITcmgmoB/KLWPxIXCioLDyx0p4w7ChSmRogI7YONPMcrZvcHcn
+	2WizZQjIpUERFhqKVvMhVOpHbk6iLp5bckPpukjPbjkKwti5rRkW/N0BJw0AfPtc
+	GTsxms5cr74ieh1dKIHcEn/+nrno3IxL2n1GSRb9pgRwzBddYEdb8WZOerQc+jFt
+	PBpuzR9wm+jHIbJqpQga67zOmobg44cy9n4kJjAG/TREmXnbh3abAuMhlpjx4w3s
+	9hfr91vwCGZYdKxFWkYzJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746346003; x=
+	1746432403; bh=2R7ZbsROVfjg8V+iBU7mCl9Pjmaj2oVs4ld+SIepebE=; b=v
+	SM7xYurhoY4Lc+SXuAIwY9/1oietA5vn1NlpIC/j/DqlH4S15+d1W2cM2q1FTjtM
+	kkbioQ7kdNoTHcym33L9vFpReutX9czOZXV4N5SSYRWl5w43y2O7hcozsP0iPv5f
+	eoXt65YXdIlvu7XBhMPe4JbyzRtA5TScA0+Gc7Wmh+/RnZxYB4O3vqnSt5GQ+qf9
+	pc2SNsy0jtSVzZbsEyLHpySGa9gSeNRpPTEN2cQGdSvhX38J34flTOSAdHlcXcYs
+	LQQ8zvhebFwe6FqbDPZzFZs+5IOaVUCysVEPOtVUsUUQ86G7a5SrvMUpOO0qj7YD
+	/pWQibSB87ysI8FtfINow==
+X-ME-Sender: <xms:EiAXaEvbbmIsRFsxbI_oxDNX3AGSjpPqDsAdvFWjRHr76CjATs1-1A>
+    <xme:EiAXaBfdUv3CLQ3LX50vTozR10-ysFaM09VgTGDTRt7pAxgXVjSBkRDsh2jfTlUii
+    yTwqP87MVldYbx8_U4>
+X-ME-Received: <xmr:EiAXaPwkfwkTTGr4OtXxOeTS5R4jDrh6pG3VcSvdFThOWpFBiw4cgF95Gonsi6jsQW7KEyd_CGyXtnCyThYjmz0DfLYzQMk0zw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeejieekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
+    rghtthgvrhhnpeetlefgudfhhfeviedtueeuudduteffkefhffevgfetffeiveeugfdute
+    fhheekudenucffohhmrghinheplhhinhhugihtvhdrohhrghenucevlhhushhtvghrufhi
+    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehnihhklhgrshdrshhouggvrhhluh
+    hnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvpdhnsggprhgtphhtthhopedu
+    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhgsuhhlfigrhhhnsehrvgguhh
+    grthdrtghomhdprhgtphhtthhopegurghvihgusehigihithdrtgiipdhrtghpthhtohep
+    shgrkhgrrhhirdgrihhluhhssehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoh
+    ephhhvvghrkhhuihhlseigshegrghllhdrnhhlpdhrtghpthhtoheplhhinhhugidqmhgv
+    ughirgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrh
+    gvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtghhvghhrggssehk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskh
+    hisehlihhnrghrohdrohhrghdprhgtphhtthhopehlrghurhgvnhhtrdhpihhntghhrghr
+    thesihguvggrshhonhgsohgrrhgurdgtohhm
+X-ME-Proxy: <xmx:EiAXaHOTkCtvvUYaiDjJeiBKJPeLadUPz1yzuJ1KV9Mek4BjQS1VTg>
+    <xmx:EiAXaE_eT1XefDSOBC5dfUkY8w5kqbUP4B0mnVEDrYviIORhMoqdKQ>
+    <xmx:EiAXaPU9dwik6xmmdEgYPFYNOaogMXZBcVeIEcZ5XYzUG3a6jKUuAQ>
+    <xmx:EiAXaNcQ6cIuvMkebTe-oKrqZ1UVST4cBhOr2KYQl7e5UXysrHxTxw>
+    <xmx:EyAXaIpxtUK6fQRvS5-qzj3xmzd1BuRNd3LlKVTh6EGH3UHK0d36n8-_>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 4 May 2025 04:06:41 -0400 (EDT)
+Date: Sun, 4 May 2025 10:06:39 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: David Heidelberg <david@ixit.cz>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in OMNIVISION OV7670
+ SENSOR DRIVER
+Message-ID: <20250504080639.GD2696136@ragnatech.se>
+References: <20250504033502.37809-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1131866.1746344653@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250504033502.37809-1-lukas.bulwahn@redhat.com>
 
-On Sun, May 04, 2025 at 08:44:13AM +0100, David Howells wrote:
+Hi Lukas,
+
+Thanks for noticing this.
+
+On 2025-05-04 05:35:02 +0200, Lukas Bulwahn wrote:
+> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 > 
-> You need __set_bit() or 1<<N.
+> Commit 59b24c0047a2 ("media: dt-bindings: media: i2c: align filenames
+> format with standard") renames the files in
+> Documentation/devicetree/bindings/media/i2c/, but misses to adjust the file
+> entry in OMNIVISION OV7670 SENSOR DRIVER.
+> 
+> Adjust the file entry after this renaming.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-Sorry, I'll fix that.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-> Also, don't really like the name, but that's just bikeshedding.  I think I'd
-> lean more to your initial suggestion of KEY_FLAG_ALIVE.
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7b78a98d1f42..78872ebb1aac 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18163,7 +18163,7 @@ OMNIVISION OV7670 SENSOR DRIVER
+>  L:	linux-media@vger.kernel.org
+>  S:	Orphan
+>  T:	git git://linuxtv.org/media.git
+> -F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/ovti,ov7670.txt
+>  F:	drivers/media/i2c/ov7670.c
+>  
+>  OMNIVISION OV772x SENSOR DRIVER
+> -- 
+> 2.49.0
+> 
 
-I was going to do that but there is already a flag called
-KEY_FLAG_DEAD and it would be very confusing since they mean
-completely diferent things.
-
-How about USER_ALIVE?
-
----8<---
-Invert the FINAL_PUT bit so that test_bit_acquire and clear_bit_unlock
-can be used instead of smp_mb.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/key.h b/include/linux/key.h
-index ba05de8579ec..aaab26d84d25 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -236,7 +236,7 @@ struct key {
- #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
- #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
- #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
--#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
-+#define KEY_FLAG_USER_ALIVE	10	/* set if final put has not happened on key yet */
- 
- 	/* the key type and key description string
- 	 * - the desc is used to match a key against search criteria
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index f27223ea4578..d00002054ada 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -218,8 +218,8 @@ static void key_garbage_collector(struct work_struct *work)
- 		key = rb_entry(cursor, struct key, serial_node);
- 		cursor = rb_next(cursor);
- 
--		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
--			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
-+		if (test_bit_acquire(KEY_FLAG_USER_ALIVE, &key->flags)) {
-+			/* Clobber key->user after final put seen. */
- 			goto found_unreferenced_key;
- 		}
- 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..fb78c3a0be76 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -298,6 +298,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
- 	key->restrict_link = restrict_link;
- 	key->last_used_at = ktime_get_real_seconds();
- 
-+	key->flags |= 1 << KEY_FLAG_USER_ALIVE;
- 	if (!(flags & KEY_ALLOC_NOT_IN_QUOTA))
- 		key->flags |= 1 << KEY_FLAG_IN_QUOTA;
- 	if (flags & KEY_ALLOC_BUILT_IN)
-@@ -658,8 +659,8 @@ void key_put(struct key *key)
- 				key->user->qnbytes -= key->quotalen;
- 				spin_unlock_irqrestore(&key->user->lock, flags);
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+			/* Mark key as safe for GC after key->user done. */
-+			clear_bit_unlock(KEY_FLAG_USER_ALIVE, &key->flags);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Kind Regards,
+Niklas Söderlund
