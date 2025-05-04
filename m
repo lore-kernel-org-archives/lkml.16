@@ -1,100 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2401FAA;
-	Sun,  4 May 2025 14:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8291B0420;
+	Sun,  4 May 2025 14:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746370536; cv=none; b=BMezJsYuoJbWbSPvxVbVTzlEsRIPXym01qK/RcgY35Ac+eNkH7aHiB/I/LzF1lG/sLmUZrYoFBWYtmNMuoXFRk2coBOR1TaDQWHKlNfNR9CoeZvP4klg6HVfvNKooSdsDWWXsAYbbCEoxoVQ0gnM7B2xF84sgNvyamOl+ZhihkM=
+	t=1746370552; cv=none; b=FOXfwbVdP1ge985lkYSnmt0hiiYDkqK1MoRFR98YpdrTmzJoFgrw/yECI8o6Mm67nIdcKT++0U9Y+IM1nCxe1d9giL8IkgA2rhRXg/t0e7K1QRneYYej7RKQYiFpKAVZJ5+DNkkP2kbW45FCU/5Pt7cTlhNwjXCiqsSW3PRhkUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746370536; c=relaxed/simple;
-	bh=86tEPUVuBzAhlwgRC09NxBCBvjUH0qEMop1gzGm9ycU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TJrIasnL60BLmTRiInG6swl/GtKlEFnayfSvYViR4bSkUN1zAYY/Ng5zhGPLWAMuNSmPggfVccqsIvE9Cp06x34fvs0r2qqxEWVhrYDeuoN/zBp0lunyVYMNMfRwM00/sAtHIB6+O1S5mxV5tYAeEs4o4a5Qji9g3pe/tlDfH3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8PW1jib; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746370552; c=relaxed/simple;
+	bh=vrj1OZWNkG66dZ01sAaU7OPbnkPuToJd3eMZlGtWN5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e3yxPELCwjW4EI8ZATUHGJGd328gh4d1/0gNv4LYUgUfkR/hU6M+KJ4y6Qy2IPfmYQkUZByBZ4JGTPIoOMH+sIje41gXB6VT60c1RacixGLYBidAFEcAV3B6d0Y4B2ZMnMxAWoknSPvQ4zyvLTHF7hI2Qs9ikKb7TLZem3ZpsWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYmW/Pv+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8PW1jib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13F0C4CEF1;
-	Sun,  4 May 2025 14:55:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYmW/Pv+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46500C4CEE7;
+	Sun,  4 May 2025 14:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746370536;
-	bh=86tEPUVuBzAhlwgRC09NxBCBvjUH0qEMop1gzGm9ycU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s8PW1jib9LCyi7dtyzdkJmCJ3ASrFlDO8Usv2UgBSJqDxQI5qh+2JmOAujFjZzYaS
-	 81owPGb3bA8+LTFUs4w5gA6E3mUgZD3u32TdG5e01MhtAapK+0dvxOzS+4L4oHtP1W
-	 jH/ssSkB/ICrue3beGVelrSJuBuRjBXqUANTCWT1gnkmXk1dreTbmiDveVo0bKmGWi
-	 AtbSHLRz/5Gt4chMopSNZ0UBGKYPT+qMYMAcKoCBL+SNj5Lx7JqOHj8e7ZjXVAgws4
-	 iVFJdBkOMUUJaMJbIKp3t5AVi+sBRUUAw8blADWKgyGD/DrBrBuw0PXZmN2mBVR1Vc
-	 ymG42LG96MmTw==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30ddad694c1so37647241fa.2;
-        Sun, 04 May 2025 07:55:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVjFZEGQ11mGZ2QXF1Iqxl/eGZbPnWpZPVgsxgM9Cej8J1eg46TMxhd2jrs36/fCuH84aI+fY04HtO7uU2/@vger.kernel.org, AJvYcCVpN7uG1wAf2T6mPovfxmn8JSQr1499rkTgSFuyPpfxW7bYX9apQ5RwIZNLfHntQg3WyMrTFdhRvsA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqunQPzxnYxttVhVKCpscOibeEJtgAvlb6cybdo8JN8rs0rlva
-	lpcTM9F7+0OJqZiaetRtvn5HPS74v7vFu2XX+blFLMR/fAAInvwbY8HOfmpaPoRAyuddHde2AcV
-	CkJnNEkom31ZEhWTlJMP+kJoy82A=
-X-Google-Smtp-Source: AGHT+IFh++Rv4or39k0AXKcHDCcHZNIeTFmq58+4Z8xvhl3jruf+MkCfuZeKSgebmpwceTaBeTHNkH2szWqPgOBcd0M=
-X-Received: by 2002:a2e:a582:0:b0:30b:ee44:b692 with SMTP id
- 38308e7fff4ca-32352606c21mr14838821fa.33.1746370534993; Sun, 04 May 2025
- 07:55:34 -0700 (PDT)
+	s=k20201202; t=1746370552;
+	bh=vrj1OZWNkG66dZ01sAaU7OPbnkPuToJd3eMZlGtWN5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kYmW/Pv+S1NISht7XdVEkKlYD10fOVRop2doU0a/MeY/QKjfn5Wgz5iBBMaRtcnej
+	 H2hOrL01uuj/LPz7RMn5k4A0omEP8qUYyABdCKxRemin3/+B1RrNREsZXI8Q0EHL8J
+	 gIxcvoTybZ1eMESzNWItXDzhI3forwVr22EmT7VUPIoXe4XDjcF6uxCluMtjqP8O3t
+	 NOsk64onSN3z8uBeov6JN7cWF7/bDOC0ZTbroxdlbzZa35gE2VeGlSecarBRpgM8KA
+	 pHYEzy0XiL5Z3vrgm5NMt/s5DIPgyV8N4wvuT5Q8NWcHtu55fM3QOBm/wBv0g/3sOk
+	 SRvRXlrGOJlBQ==
+Date: Sun, 4 May 2025 15:55:44 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Michael Hennerich 
+ <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= 
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7606: explicit timestamp alignment
+Message-ID: <20250504155544.60fe3464@jic23-huawei>
+In-Reply-To: <d7f00a8c9d4da6f780c1ec067be2702fa0e60ea1.camel@gmail.com>
+References: <20250428-iio-adc-ad7606-fix-buffer-alignment-v1-1-88dfc57e5df0@baylibre.com>
+	<d7f00a8c9d4da6f780c1ec067be2702fa0e60ea1.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com> <aBdz-4hJu0zp40mC@gmail.com>
-In-Reply-To: <aBdz-4hJu0zp40mC@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 4 May 2025 16:55:23 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE7Ctbsu+z2WST9s22NFvPVXoymPfidjJSXgdfvtWZVxg@mail.gmail.com>
-X-Gm-Features: ATxdqUFFO8-StVY_JgAC2gyAegFVo0AB59R3mJ0xgmMqdiUCkm7xG67ZISDP8Mo
-Message-ID: <CAMj1kXE7Ctbsu+z2WST9s22NFvPVXoymPfidjJSXgdfvtWZVxg@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 00/23] x86: strict separation of startup code
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 4 May 2025 at 16:04, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-...
->
-> So to move this forward I applied the following 7 patches to
-> tip:x86/boot:
->
->         x86/boot: Move early_setup_gdt() back into head64.c
->         x86/boot: Disregard __supported_pte_mask in __startup_64()
->         x86/sev: Make sev_snp_enabled() a static function
->         x86/sev: Move instruction decoder into separate source file
->         x86/linkage: Add SYM_PIC_ALIAS() macro helper to emit symbol aliases
->         x86/boot: Add a bunch of PIC aliases
->         x86/boot: Provide __pti_set_user_pgtbl() to startup code
->
-> Which are I believe independent of SEV testing.
->
+On Tue, 29 Apr 2025 14:01:54 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-Excellent.
+> On Mon, 2025-04-28 at 21:17 -0500, David Lechner wrote:
+> > Use struct with aligned_s64 timestamp to make timestamp alignment
+> > explicit. Technically, what we have works because for all known
+> > architectures, IIO_DMA_MINALIGN is a multiple of __alignof__(s64).
+> > But this way, we don't have to make people read the comments to know
+> > why there are extra elements in each buffer.
+> >=20
+> > --- =20
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for all the normal reasons.
 
-> I also merged in pending upstream fixes, including:
->
->    8ed12ab1319b ("x86/boot/sev: Support memory acceptance in the EFI stub under SVSM")
->
-> Which should make tip:x86/boot a good base for your series going
-> forward?
->
+Thanks,
 
-Yes, that helps a lot, thanks.
+Jonathan
 
-Please also consider the patch
+>=20
+> > =C2=A0drivers/iio/adc/ad7606.h | 13 ++++++++-----
+> > =C2=A01 file changed, 8 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
+> > index
+> > 89d49551eaf515bab9706c12bff056dfcb707b67..441e62c521bcbea69b4f70bb2d55f=
+65334d2
+> > 2276 100644
+> > --- a/drivers/iio/adc/ad7606.h
+> > +++ b/drivers/iio/adc/ad7606.h
+> > @@ -155,12 +155,15 @@ struct ad7606_state {
+> > =C2=A0	/*
+> > =C2=A0	 * DMA (thus cache coherency maintenance) may require the
+> > =C2=A0	 * transfer buffers to live in their own cache lines.
+> > -	 * 16 * 16-bit samples + 64-bit timestamp - for AD7616
+> > -	 * 8 * 32-bit samples + 64-bit timestamp - for AD7616C-18 (and
+> > similar)
+> > +	 * 16 * 16-bit samples for AD7616
+> > +	 * 8 * 32-bit samples for AD7616C-18 (and similar)
+> > =C2=A0	 */
+> > -	union {
+> > -		u16 buf16[20];
+> > -		u32 buf32[10];
+> > +	struct {
+> > +		union {
+> > +			u16 buf16[16];
+> > +			u32 buf32[8];
+> > +		};
+> > +		aligned_s64 timestamp;
+> > =C2=A0	} data __aligned(IIO_DMA_MINALIGN);
+> > =C2=A0	__be16				d16[2];
+> > =C2=A0};
+> >=20
+> > ---
+> > base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
+> > change-id: 20250428-iio-adc-ad7606-fix-buffer-alignment-9fcde71687dc
+> >=20
+> > Best regards, =20
 
-  x86/sev: Disentangle #VC handling code from startup code
-  11 files changed, 1694 insertions(+), 1643 deletions(-)
-
-It just moves code around, but it is rather large and is likely to
-cause merge conflicts if it lives out of tree for too long. The +/-
-delta is mostly down to the fact that a new file vc-handle.c is added
-which duplicates most of the #includes of the file that it was split
-off from.
