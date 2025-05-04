@@ -1,224 +1,171 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A3E2163B9
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F019641C7F
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746380186; cv=none; b=HUo63MZD9RyhBJB+Z1rcgOAFn0+RsXd5wcMTaSQP2CzkFtje9T/H1zX6yaAsoxPYgiDnBYo05tFPJ4NPn7lN6u1hCEBcZJO67tRuR1hGOrqWEgstAPyZ2cXqhWfuid65vtq2I5HBosNDReOXaJioGsRAcpCpo2+v5eYAUdgGOik=
+	t=1746380211; cv=none; b=jU2LYfgw9oXjmKa6gYfh7Nw4oaHzhASh6F+BTzacPZq37xhbOkZ8VpdQrxo0oJWdVHTvg13kqrdaCgcitXJaOAoLukxPFfaNOd1ckWQ+nwQhnPtNXJpCtx3NAMIeoiQ6OmzKp7GwamVDX/I0K1cuMaZyHGXfoa71gpK9xF2kuoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746380186; c=relaxed/simple;
-	bh=PKto6XWHPw3qkf98Cr2fpVFSXZupXtz55RQHLXKhy38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7fbdRmz1zlu3Ch3DNbFrdITpBMkvk9XpYuEbwX2+2GpP8oIW2T4rjPu/wpFdTnyqkD3f+ZbMscnCeat2bJ4FoaETlFAacSIhyWTKvf7dnbQH9/7NxF7d/Vd25rPVXEgEP4s9F76jJIYk9FqIwFgnlrCy5napFjmYC38rzdp5GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ORf2pr9z; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1746380211; c=relaxed/simple;
+	bh=qUJyY+Pm7fBiy5QRkFsCqC2J1jEL+LVs8n7x7xWbk3I=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=cuf9BNDR89/hoPNOeMG0nUi2OHhEynUgiYb0WH+PgCXmDswS1BRieeYp9cnCLHSsfXju6aKqHp18GiOtNpvV+7I9b8jyrgVIYE5L6iP01PwCo+S9yhhhCrZJxL23yZTpdWdUfQ3JBHcdzJmYWyV0awEgdtBnxX3AMrlRr02xxVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cggMjF1t; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ORf2pr9z"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6feab7c5f96so30915787b3.3
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cggMjF1t"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b166fa41bso4860854e87.0
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:36:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1746380183; x=1746984983; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXXRsHPoH/0YETZ7MLRenRDro5Q1bAftLTE63l4umNc=;
-        b=ORf2pr9z2IlpLqvfRPOJsECvEX72Cb2asbZtYacel0smJqsUf7LVbqb0rOaIJnAEml
-         XLpYDJx2ClultkAYkiZyZM7BzungNJ5o2IH2C4gN6WRDobrzW9ssL1HX3GKVHDBfx5Nk
-         pvl8cSyXY9B+P6/qVhmbQQQDv31Z7OTtXrFnKydyvWqMy8TlCi5mQ9RDE/8NuXWGLwnt
-         9YjUJ3aLjq7GoHAhIfCjySa5mkH6Qo6YcolDJiYhKu1oTkZp1Qe3IJVjXYEWavnhJpT6
-         TS6mdbUfkHtTVIgXQw5W/UwXSAF5glE7IJKYeC1iARhTj3rGQgbqYuBymaT7c7JqF/Rw
-         JxPA==
+        d=gmail.com; s=20230601; t=1746380208; x=1746985008; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i1R1HQ9HyFIN3dBGbHVb38mA80A5GKNDNA54pgzRhZM=;
+        b=cggMjF1tZ+WOwtBErGdUfXSQH47q92BWvz1nbiQbCC6i5OvkCKV1q+65P7t3cMB3gH
+         M16ARsa6u8Elo/TXi2SclMIPX0K+GU7NIA5i3GmeQ6hzLXHWwEr/ov0qJ/umKNkoituZ
+         qFDl1ALNIgMsiuJw/FQbGr9YM/tfj6J9j6FNuECEJ1eHv5b9ITF3ihY6/NrLvz5J+YF/
+         z8igpooeV9XwDl+SMXpRDRtyHcnB4s09XL5Y/yRQACdxv3ClbPcnLvWZT/L+Tgwl+w42
+         hHkuF7ydPP092343jKgDlnQZI4f3zoXJLqtbYB2gUzJ7h8qIeJAGOKza9Q6JlmokTZ9g
+         bDdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746380183; x=1746984983;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HXXRsHPoH/0YETZ7MLRenRDro5Q1bAftLTE63l4umNc=;
-        b=DXzsz+XpSP3lyVPjh2ocJk2MULc2tGv34BSSkcqyYFq+2slsksMKN7bnEii3g1YHqJ
-         Ijhm2kIEdDf8Gq8/tMbEZ2rY8KjdDnG4dZK3P9bD0OBOrkDIQpSjDrHBDlvBe+iqOIZ4
-         ldIEE2AIGtWyrr/AfSJJECZn6e4yxMlJbIGytdCZNch0zq4MzPMxEgis7JrimqNw3jV3
-         AxrS3cj5DqwXgzJHZto5wwdN88DXAfFp8DQFyUYifH7/u57mkvMRAew0ZYik5zJwP37Q
-         /J43P69YaMuZHUttehr8OG2S5BAmnCWAzCwEYnNJklHAOwSABMefSqJWkJARSQliNFPZ
-         FSbA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2NjIzMk13SQ49q/kW+7dLNOoQFVO7G9tXQHomIEQvvEwiYsan3OI1bkU56bO3nYlv2pSocJPoHZ8wjJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yydb3yYr2NWuHNvpNbn5SYmzrUOutGNC2keNSNBtjUDWHdxWStZ
-	MnE+K7IPrt2tgNJ9QFMErf9MlAOYp9FrYaSAjpSDTh/MMNjpUIYJ/m1qByLy5Js9TwLGCl2crPg
-	JUfLzry2wJP460YTRvQ4OTJtrVVPskxbSL10m
-X-Gm-Gg: ASbGncuO5CN7Z1EzFKYH7yXIMGMYdigZlvzHeL+vLB8Q3c9ENeUC+B2yEyF8sE9vvhV
-	mfc6a2x/iLrluArrQWSmXlihanNndjV8odvm+BaVj3XdJQaw5g94MfoQ2k7JJM4tj8+mgEpe0SY
-	ORdZ9NSVKaFgMpyzYwcOqn1A==
-X-Google-Smtp-Source: AGHT+IGH4iM2kOBwjguhM2tjRQ5NOwlV2cMNEshm7rCu9worhB26SxpY/yE7dTp6irnVpWrLXhT6tFSernyBUKKlH2U=
-X-Received: by 2002:a05:690c:6385:b0:6ef:69b2:eac with SMTP id
- 00721157ae682-708eaecbe4cmr56763087b3.4.1746380182785; Sun, 04 May 2025
- 10:36:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746380208; x=1746985008;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1R1HQ9HyFIN3dBGbHVb38mA80A5GKNDNA54pgzRhZM=;
+        b=TOBiRxQ3vZEhfBJdUuGZJ2nNldpp0uS1r/O15cqqi9B7OhFsQ8PprmYvXdZH0Jr4PI
+         TVgnocHG3aDCXtcUmlPyJcKbxIAZ+gx81PrA1pyMCYvvuLBs9ImhJ2yo/38KlZefstZG
+         JDMJJqwKsMXu9+oqNsuT2Me8Yl6PxKe/DMjO+moIgiX4wfIGl8WMuVrPe6hgxlim1CiK
+         NPrZ1lwRJIGolZjXhJpmQDaMHVLZmU1Rpgs5QY/4v2Kh4WYkMSjHmCXoDmn0aTw8yoqN
+         M3QtemgMktH57rU5wQJ09MH0wLQnyE2NtNH3czltYZyPJCMQxHyh+I+ekH3q0hDsXylX
+         la5w==
+X-Forwarded-Encrypted: i=1; AJvYcCU43GCHEXrLJBt8z7yiUe/qJkLGt3XekvuBkOpXcmyOEFixqVTwpbeDPKRHt3VJh/iEo794hEzLKyel7/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4yR6FG7ZbJbppQl5qyr4ps5KUAqEYmvfn0RyCs8BIJX+jwnm7
+	YSO4Aa9esVRaXFvHovPwxdDvL4fmx0zlGHpOksPxjxabljxZCRSaY1ch1kO8
+X-Gm-Gg: ASbGncveAXsy1AxrCWSOkhUtNcqcjfCTxh3t6E/sLX8Yv3/1sNBWlz+VrNOiEr7RPgp
+	yFLNnIpO3J6c2qniXz64KikBuSvLMYqj0iJSqCgvbGm5REZzbbNXZ0vLICLndAbore6ME6bhIGI
+	5pqksKoliy1RDh9ddBVz/4DKA8kHU6ebDiJrP5MWSlqfoj4no2VT7bFGMON8mdqNSc6EUaBQBnw
+	rliAtgZtueFAw6khgBB3H0mJt3pDUWg5x6ema03Qu7P3pXCvxNUq1IU2LrOuXlsxwUbNA/cWvjV
+	cbEm0fnbVuoKyJ46ZKN07ZgbWYnGoLh7AEf5QAcUyytKa6UtjsoKCtoEvBp1FT/PR8lPnmvJOgs
+	u5e0K66096InKXM+df7IXkHQoa1P2u4LkYt8il7bvkrauW5PF
+X-Google-Smtp-Source: AGHT+IH3noLLLf4F+GoZtIuspmu4BwJrKfT8mbj105wxtpW8D2nTlAaw23TrbFihdIH8g6fRjwO8cg==
+X-Received: by 2002:a05:6512:3e16:b0:54e:81c4:5b13 with SMTP id 2adb3069b0e04-54fa4fa59e7mr1084115e87.52.1746380207768;
+        Sun, 04 May 2025 10:36:47 -0700 (PDT)
+Received: from Lappari.v6.elisa-laajakaista.fi (nzckegfiondeujtqrpj-1.v6.elisa-laajakaista.fi. [2001:99a:20b9:a000:e830:2617:2988:d7c7])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54eac09a963sm1163647e87.24.2025.05.04.10.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 10:36:47 -0700 (PDT)
+Date: Sun, 4 May 2025 20:36:46 +0300
+From: Heikki Huttu <heissendo88@gmail.com>
+To: abbotti@mev.co.uk, hsweeten@visionengravers.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: comedi: drivers: adl_pci9118.c: Edit file so that
+ checkpatch.pl has 0 errors
+Message-ID: <aBelroMtikijLKuk@Lappari.v6.elisa-laajakaista.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com> <20250502210034.284051-1-kpsingh@kernel.org>
-In-Reply-To: <20250502210034.284051-1-kpsingh@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Sun, 4 May 2025 13:36:12 -0400
-X-Gm-Features: ATxdqUG6G28ftr2F4dYbjsrK10lOxkoYxSdmHmsU_Sm_2J3in-8hzdqOgV_xvXY
-Message-ID: <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: KP Singh <kpsingh@kernel.org>
-Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
-	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
-	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
-	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
-	justinstitt@google.com, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
-	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
-	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
-	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
-	xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrote:
->
-> > This patch series introduces the Hornet LSM. The goal of Hornet is to p=
-rovide
-> > a signature verification mechanism for eBPF programs.
-> >
->
-> [...]
->
-> >
-> > References: [1]
-> > https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@g=
-mail.com/
-> > [2]
-> > https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=3Dc=
-BzdEYbv_kg@mail.gmail.com/
-> >
-> > Change list: - v2 -> v3 - Remove any and all usage of proprietary bpf A=
-PIs
->
-> BPF APIs are not proprietary, but you cannot implement BPF program signin=
-g
-> for BPF users without aligning with the BPF maintainers and the community=
-.
-> Signed programs are a UAPI and a key part of how developers experience BP=
-F
-> and this is not how we would like signing to be experienced by BPF users.
->
-> Some more feedback (which should be pretty obvious) but explicitly:
->
-> * Hacks like if (current->pid =3D=3D 1) return 0; also break your threat =
-model
->   about root being untrusted.
+Change lines that checkpatch.pl throws errors about.
+Errors were about extra parenthesies and typos.
 
-Speaking with Blaise off-list when that change was discussed, I
-believe the intent behind that Kconfig option was simply for
-development/transition purposes, and not for any long term usage.  My
-understanding is that this is why it was a separate build time
-configuration and not something that could be toggled at runtime, e.g.
-sysctl or similar.
+Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
+---
+ drivers/comedi/drivers/adl_pci9118.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-> * You also did not take the feedback into account:
->
->    new =3D map->ops->map_lookup_elem(map, &key);
->
->   This is not okay without having the BPF maintainers aligned, the same w=
-ay as
->
->   https://patchwork.kernel.org/project/netdevbpf/patch/20240629084331.380=
-7368-4-kpsingh@kernel.org/#25928981
->
->   was not okay. Let's not have double standards.
+diff --git a/drivers/comedi/drivers/adl_pci9118.c b/drivers/comedi/drivers/adl_pci9118.c
+index a76e2666d583..691c8d6bb767 100644
+--- a/drivers/comedi/drivers/adl_pci9118.c
++++ b/drivers/comedi/drivers/adl_pci9118.c
+@@ -32,7 +32,7 @@
+  * ranges).
+  *
+  * There are some hardware limitations:
+- * a) You cann't use mixture of unipolar/bipoar ranges or differencial/single
++ * a) You can't use mixture of unipolar/bipolar ranges or differencial/single
+  *  ended inputs.
+  * b) DMA transfers must have the length aligned to two samples (32 bit),
+  *  so there is some problems if cmd->chanlist_len is odd. This driver tries
+@@ -227,7 +227,7 @@ struct pci9118_private {
+ 	struct pci9118_dmabuf dmabuf[2];
+ 	int softsshdelay;		/*
+ 					 * >0 use software S&H,
+-					 * numer is requested delay in ns
++					 * number is requested delay in ns
+ 					 */
+ 	unsigned char softsshsample;	/*
+ 					 * polarity of S&H signal
+@@ -946,8 +946,8 @@ static int pci9118_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
+ 	devpriv->ai_add_back = 0;
+ 	if (devpriv->master) {
+ 		devpriv->usedma = 1;
+-		if ((cmd->flags & CMDF_WAKE_EOS) &&
+-		    (cmd->scan_end_arg == 1)) {
++		if (cmd->flags & CMDF_WAKE_EOS &&
++		    cmd->scan_end_arg == 1) {
+ 			if (cmd->convert_src == TRIG_NOW)
+ 				devpriv->ai_add_back = 1;
+ 			if (cmd->convert_src == TRIG_TIMER) {
+@@ -958,9 +958,9 @@ static int pci9118_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
+ 					 */
+ 			}
+ 		}
+-		if ((cmd->flags & CMDF_WAKE_EOS) &&
+-		    (cmd->scan_end_arg & 1) &&
+-		    (cmd->scan_end_arg > 1)) {
++		if (cmd->flags & CMDF_WAKE_EOS &&
++		    cmd->scan_end_arg & 1 &&
++		    cmd->scan_end_arg > 1) {
+ 			if (cmd->scan_begin_src == TRIG_FOLLOW) {
+ 				devpriv->usedma = 0;
+ 				/*
+@@ -983,7 +983,7 @@ static int pci9118_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
+ 	 */
+ 	if (cmd->convert_src == TRIG_NOW && devpriv->softsshdelay) {
+ 		devpriv->ai_add_front = 2;
+-		if ((devpriv->usedma == 1) && (devpriv->ai_add_back == 1)) {
++		if (devpriv->usedma == 1 && devpriv->ai_add_back == 1) {
+ 							/* move it to front */
+ 			devpriv->ai_add_front++;
+ 			devpriv->ai_add_back = 0;
+@@ -1185,7 +1185,7 @@ static int pci9118_ai_cmdtest(struct comedi_device *dev,
+ 	    (!(cmd->convert_src & (TRIG_TIMER | TRIG_NOW))))
+ 		err |= -EINVAL;
+ 
+-	if ((cmd->scan_begin_src == TRIG_FOLLOW) &&
++	if (cmd->scan_begin_src == TRIG_FOLLOW &&
+ 	    (!(cmd->convert_src & (TRIG_TIMER | TRIG_EXT))))
+ 		err |= -EINVAL;
+ 
+@@ -1210,8 +1210,8 @@ static int pci9118_ai_cmdtest(struct comedi_device *dev,
+ 	if (cmd->scan_begin_src & (TRIG_FOLLOW | TRIG_EXT))
+ 		err |= comedi_check_trigger_arg_is(&cmd->scan_begin_arg, 0);
+ 
+-	if ((cmd->scan_begin_src == TRIG_TIMER) &&
+-	    (cmd->convert_src == TRIG_TIMER) && (cmd->scan_end_arg == 1)) {
++	if (cmd->scan_begin_src == TRIG_TIMER &&
++	    cmd->convert_src == TRIG_TIMER && cmd->scan_end_arg == 1) {
+ 		cmd->scan_begin_src = TRIG_FOLLOW;
+ 		cmd->convert_arg = cmd->scan_begin_arg;
+ 		cmd->scan_begin_arg = 0;
+@@ -1279,8 +1279,8 @@ static int pci9118_ai_cmdtest(struct comedi_device *dev,
+ 			} else {
+ 				arg = cmd->convert_arg * cmd->chanlist_len;
+ 			}
+-			err |= comedi_check_trigger_arg_min(
+-				&cmd->scan_begin_arg, arg);
++			err |= comedi_check_trigger_arg_min
++				(&cmd->scan_begin_arg, arg);
+ 		}
+ 	}
+ 
+-- 
+2.47.2
 
-From my perspective these two patches are not the same.  Even on a
-quick inspection we notice two significant differences.  First, Hornet
-reads data (BPF maps) passed from userspace to determine if loading
-the associated BPF program should be allowed to load; whereas the
-patch you reference above had the BPF LSM directly modifying the very
-core of the LSM framework state, the LSM hook data.  Secondly, we can
-see multiple cases under net/ where map_lookup_elem() is either called
-or takes things a step further and provides an alternate
-implementation outside of the BPF subsystem, Hornet's use of
-map_lookup_elem() doesn't appear to be a significant shift in how the
-API is used; whereas the patch you reference attempted to do something
-no other LSM has ever been allowed to do as it could jeopardize other
-LSMs.  However, let us not forget perhaps the biggest difference
-between Hornet and patchset you mentioned; the LSM community worked
-with you and ultimately merged your static call patchset, I even had
-to argue *on*your*behalf* against Tetsuo Handa to get your patchset
-into Linus' tree.
-
-I'm sorry you are upset that a portion of your original design for the
-static call patchset didn't make it into Linus' tree, but ultimately
-the vast majority of your original design *did* make it into Linus
-tree, and the process to get there involved the LSM community working
-with you in good faith, including arguing along side of you to support
-your patchset against a dissenting LSM.
-
-This might also be a good time to remind others who don't follow LSM
-development of a couple other things that we've done recently in LSM
-land to make things easier, or better, for BPF and/or the BPF LSM.
-Perhaps the most important was the work to resolve a number of issues
-with the LSM hook default values, solving some immediate issues and
-preventing similar problems from occurring in the future; this was a
-significant improvement and helped pave the way for greater
-flexibility around where the BPF LSM could be inserted into the LSM
-ordering.  There was also the work around inspecting and normalizing a
-number of LSM hooks to make it easier for the BPF verifier to verify
-BPF LSM callbacks; granted we were not able to normalize every single
-LSM hook, but we did improve on a number of them and the BPF verifier
-was able to take advantage of those improvements.
-
-From what I've seen in Blaise's efforts to implement BPF signature
-validation in the upstream kernel he has been working in good faith
-and has been trying to work with the greater BPF community at each
-step along the way.  He attempted to learn from previously rejected
-attempts with his first patchset, however, that too was rejected, but
-with feedback on how he might proceed.  Blaise took that feedback and
-implemented Hornet, traveling to LSFMMBPF to present his idea to the
-BPF community, as well as the usual mailing list postings.  When there
-was feedback that certain APIs would not be permitted, despite being
-EXPORT_SYMBOL'd, Blaise made some adjustments and came back to the
-lists with an updated version.  You are obviously free to object to
-portions of Hornet, but I don't believe you can claim Blaise isn't
-trying to work with the BPF community on this effort.
-
-> So for this approach, it's a:
->
-> Nacked-by: KP Singh <kpsingh@kernel.org>
-
-Noted.
-
-> Now if you really care about the use-case and want to work with the maint=
-ainers
-> and implement signing for the community, here's how we think it should be=
- done:
->
-> * The core signing logic and the tooling stays in BPF, something that the=
- users
->   are already using. No new tooling.
-
-I think we need a more detailed explanation of this approach on-list.
-There has been a lot of vague guidance on BPF signature validation
-from the BPF community which I believe has partly led us into the
-situation we are in now.  If you are going to require yet another
-approach, I think we all need to see a few paragraphs on-list
-outlining the basic design.
-
-> * The policy decision on the effect of signing can be built into various
->   existing LSMs. I don't think we need a new LSM for it.
-> * A simple UAPI (emphasis on UAPI!) change to union bpf_attr in uapi/bpf.=
-h in
->   the BPF_PROG_LOAD command:
->
-> __aligned_u64 signature;
-> __u32 signature_size;
-
---=20
-paul-moore.com
