@@ -1,132 +1,110 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98CB18DB18;
-	Sun,  4 May 2025 05:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA7B81E
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 05:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746334834; cv=none; b=ue1duRjAp1Rc4TZglIXaLhIa4YNVNkZgh4xtIj/Ao/nC6TSG8yoDnZZsK2rzUTB/g91/O4x80jKPV7ouWaY3eKf+XMw5NgDhz5GzStg4tKsQIKQH5RbQpphsM6bPQVgWiB6SsGwSuYzwimpws+slEQey4mGHh97zJ8BwA66UDSY=
+	t=1746334932; cv=none; b=QmC19bFj5OYifao59ubcYQv9UXJ2fqC8OPYMmrwFqqzgQySFI1bIHk23Br5Dwj6JfswRk4HlSm8AAntm03mqaYfg8tGGBqgtlX0ijYnKW9GEsU6b0OfOOu/3l4osXdeCb0S01dqlZhL8kAaGrcMEBbdhS8dbc8yXUakgb+Fv0J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746334834; c=relaxed/simple;
-	bh=BKYFylhCTXnSJ3PMuuaK85GfBtfvO9sTwbjzfzDc6KA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t2Mnd69DPokARNeyME0s+/i3aS15F7OlTaqnx0JeERLIiNy7GiF1WclYu4k7jYKu17N8lO7dxIz0QBqmhMqR/PB11EKB3xnvyt3/g0hDpSGp6pMzzEYspQNAsGGRQ3VUPL8p7wZ7fOMcGpisZcZXoCpjwiV53UlAz0urjrKij6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XdrBK9q6; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746334932; c=relaxed/simple;
+	bh=SjQbC+tJ1b9wyJhrfoqKFfLSq+4LmNwZoWUE4aFgnZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sCghhdNOLya8k6gcMEQDcdBbvsW4rEQQ2r65p53ss2u++Jng2NijV1ftVzJSn4I3V2N5KCLEl4ceWNSO0lyNTf2bc2a7Oj4f3Cy9x/TgntNftjJlieVP3ZXKPP2nl7mqYNkHa0QnE5w0roOgf0BIBZlnAeTzea6cQi7FZiwdU28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gfJGzLE5; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdrBK9q6"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c3e7b390so3881866b3a.2;
-        Sat, 03 May 2025 22:00:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gfJGzLE5"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224191d92e4so36113135ad.3
+        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 22:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746334832; x=1746939632; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BAtLYBrIM9/ajJYtasF5l8HBHfz0+HezoBSoeR9Mong=;
-        b=XdrBK9q6VDwJBJAhkAfomiqV/NOQsFF3arnGSZU+3iuvHXdRijpO8+0RjuWNzALT6A
-         eY31LsrDfhngA0dP6kYPbqSipRJZAUxHf6qAAKXfUHJqoLpoEv2MXK33ePzjG0Fatcd1
-         2mD2DaAlY2MKyARQTpwltqi28HMkxYgXktIaAdP/HkZ+Iq3C1LvKipvEJSmcHXZ9hAJC
-         LUfIdERg4uCpAIg2FEjYu0xHr+pgVsDuZhPgQeHXxahEmo6vwlqibIvDpK+5m7Si2XSl
-         yaSoYPZo+Bk/PpOEbuebeALC3vzinWgjDDweFSXpVhbXL/PTK8qQLJgt8/Kj9PZMLFEc
-         +Jcg==
+        d=chromium.org; s=google; t=1746334929; x=1746939729; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=M718Xskm0sWVI0pUnIsDLY4d+0edpdIXnzfYdblyOV8=;
+        b=gfJGzLE5GzsWbhcsbqUDaDigqlKfr436rJZfCjPxLzl8zmCuRNS/7DpO4jI1QXPC0x
+         4Li0SWeheU+V+Upft0oyNjuii672aglDb2KgHU3aGQBdh+BoRZGIHPtEOUomSkDZ3oLv
+         34iOsX5/s6E9pcpXuSSS+3PUhJBBsTh6N1exQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746334832; x=1746939632;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BAtLYBrIM9/ajJYtasF5l8HBHfz0+HezoBSoeR9Mong=;
-        b=brZQIDC47beNaJ88eN9t2Cci+vqbY6T0QFjCfTsnCvCm77e7oGDAi4tu+065YjrPaW
-         aEG+qfcIm1sjTGkcDsL3d3/Q/7j+n8sPefSz9CDzPVL4lyEXCFF6e4SduYlCXw25p4Sj
-         CP+S++lsKtabh1M/nmYyoIp8+wQUUaYm8kVaCMeE7UVyxIm7M3MUCh1XsgmiTwii9HrK
-         QDMkQrq5VWXeMSfhe6+69qf+MoGUMWwGz0Ry4rRdeHbnunoaepd9BjdPWGZwdlhH/mnI
-         zh4im41N75SXrT+fMLzRq4odbyxaApzMKF8RRN5h9lqTETl7R3P/EQ5oOwJNsn6lGFj6
-         pt2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXrN6FetYRWj/mp1V2q4n6ac7qr9Z/ATl9t9LFkxMLD40OHq7aFlqaC3QztWG0ihdwl+I08+QFlmfHC/SM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEoHjgyJt14DODcsqEGJg1PZGuZpCveYPXK5HlStXOEm1nFPfF
-	+sXdQi54LEK45YlCpHK/8GYiv/J51XVOopcmkVPi+kKWSSkRQKWKsFRIslFP
-X-Gm-Gg: ASbGnctioz1IHiHKdWxRCXPotXXoL/suXDrDfM+TfcvM9w2BRKbCjf/yjaO1VFg7vMs
-	WH8gAJ1mcK4p+izPgBBVRmh/YHwo3HCBIR4L1caEnfkxodWoFLhDFlhgMVfbXKE2qqZPfHJMPDw
-	4DYKRLR0HmWrF1sTT8PXxfZfEPyBukgLQiEaa3aUg6h7Hp3RRAnkU1DxNFDirV1wZp211Ri99PQ
-	AXoQb9SpE61TxaPk4hjMj640JRvLkGkPfnMk1pl4U/n5BYkVaI9hL05SFAc0/FxrdHncU6WQd4Z
-	0He+FckBYjimr/8nQzyK6dbrfYO8D/qnTZW987BE0Fb62maB8qrluAsInoluL4NulMHXa6te0bT
-	2N8nO7TQDoQ69xDN9nyptytqvyIK2
-X-Google-Smtp-Source: AGHT+IFdxQJB/suLSC5KY0vhzDnmqJVYahHZj/LCDVtudCFG+nUAOQBEjr7DDKNM+n+NKmrbYxKhcQ==
-X-Received: by 2002:a05:6a00:32cb:b0:736:450c:fa54 with SMTP id d2e1a72fcca58-7406f0adf7cmr3670436b3a.6.1746334831893;
-        Sat, 03 May 2025 22:00:31 -0700 (PDT)
-Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058db91dasm4225756b3a.44.2025.05.03.22.00.28
+        d=1e100.net; s=20230601; t=1746334929; x=1746939729;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M718Xskm0sWVI0pUnIsDLY4d+0edpdIXnzfYdblyOV8=;
+        b=nSY5IG5gdaneFLgl1bTNAYwLhwz9QF4z/Ee1hpfSyvbXRoxWhzTSN95ZM8IQdmtoB5
+         ieWCLS622seMaapODgM+P5AMyVwI6HOjoq0yAq4L0ZLFXK4H/DC4sVpwkxkPSFvwZhE/
+         fQl5z05aU3ArQC9HgqEPw0RvVQvFQSf/6PX6LeJlkvgK53Q6FtiQoBIBwXOgnlwLTJaY
+         JYZ6kjwJOICLXPTht1wRlPBj3+5ZuUWrjh2jYPMgRu6CcA6R6Jjar+nWX0c0gHC3g5BH
+         yjpybC3svWhk2YPvPBgnQAgMchKJPr/mk9Q24lcFe/1GuD+q8u3d7IZD1kU+IiZYInKx
+         je3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUUWHB1BTP7BnglEQ3sIKJ7e2X2iem1L1cVl2LZcYC0S6qP5AduLxeL8HL1vqjjivry9Z+kYRxVIN84458=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyJf6R3Zygp/nnDbR/Y1PUuSLRhabEHJ47VRQYl1tRSTODqbgY
+	oCS3ESIR2Hwc6qHlCoJ/5ARsFxWeL7YZr1GrL3bmqHIACLHJywpNk4R1oP3sIQ==
+X-Gm-Gg: ASbGnct9+PWWjGxmOzlNUpi0iXi4XOH7zPff5XwqN/GXic5ve15LGHxMjjL/FBAqQWj
+	yMHV17VI/rVQqzff5B9U/gGA13yqmrVxkwg96kRynGqqfMm9wNAosddBrCGeskgwqcvgCkjH7uv
+	oKjxNvMERECV5lOV5XEBBAwuD8LqMwDnek9FGZlTjgB0YST/IC1VQ8+arVo9fJ7981FtLFgv+ED
+	QrrWcOJbC6uBCg7xNecPWK6zXiq/ZZ/IWlGVo/EmCoryQXLInI/PI1sWyaFclwKoY4k5fn5MPmk
+	weQne/w19aL9k3UkHEJGatLD345J2eWu9itNEbTOBstkLsz0L28e+/M=
+X-Google-Smtp-Source: AGHT+IGlqN8rfwAt2/VAZkilZiOqbWeaE7VY4bQ9a2I2nd6xYSlC+8NMlo7AW9lAOmT7IRK18gg5Ug==
+X-Received: by 2002:a17:902:d2c5:b0:223:4e54:d2c8 with SMTP id d9443c01a7336-22e1e8e638dmr50826985ad.21.1746334928990;
+        Sat, 03 May 2025 22:02:08 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:c979:b45c:9e0c:bf77])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e079fsm32131525ad.4.2025.05.03.22.02.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 22:00:31 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: a.hindborg@kernel.org,
-	boqun.feng@gmail.com,
-	frederic@kernel.org,
-	lyude@redhat.com,
-	tglx@linutronix.de,
-	anna-maria@linutronix.de,
-	jstultz@google.com,
-	sboyd@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] rust: time: Remove Ktime in hrtimer
-Date: Sun,  4 May 2025 13:59:58 +0900
-Message-ID: <20250504045959.238068-6-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250504045959.238068-1-fujita.tomonori@gmail.com>
-References: <20250504045959.238068-1-fujita.tomonori@gmail.com>
+        Sat, 03 May 2025 22:02:08 -0700 (PDT)
+Date: Sun, 4 May 2025 14:02:04 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: Igor Belousov <igor.b@beldev.am>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <myejh7ow3qwbcptyn2d2nz6td67x2noztu4bxihs5jtqw7s4pk@j2wff5ztuu6a>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <fddf0457275576c890d16921465cf473@beldev.am>
+ <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
 
-Remove the use of `Ktime` from the hrtimer code, which was originally
-introduced as a temporary workaround. The hrtimer has now been fully
-converted to use the `Instant` and `Delta` types instead.
+On (25/05/03 20:46), Vitaly Wool wrote:
+> > Right, and it looks like this:
+> > 
+> > [  762.499278]  bug_handler+0x0/0xa8
+> > [  762.499433]  die_kernel_fault+0x1c4/0x36c
+> > [  762.499616]  fault_from_pkey+0x0/0x98
+> > [  762.499784]  do_translation_fault+0x3c/0x94
+> > [  762.499969]  do_mem_abort+0x44/0x94
+> > [  762.500140]  el1_abort+0x40/0x64
+> > [  762.500306]  el1h_64_sync_handler+0xa4/0x120
+> > [  762.500502]  el1h_64_sync+0x6c/0x70
+> > [  762.500718]  __pi_memcpy_generic+0x1e4/0x22c (P)
+> > [  762.500931]  zs_zpool_obj_write+0x10/0x1c
+> > [  762.501117]  zpool_obj_write+0x18/0x24
+> > [  762.501305]  zswap_store+0x490/0x7c4
+> > [  762.501474]  swap_writepage+0x260/0x448
+> > [  762.501654]  pageout+0x148/0x340
+> > [  762.501816]  shrink_folio_list+0xa7c/0xf34
+> > [  762.502008]  shrink_lruvec+0x6fc/0xbd0
+> > [  762.502189]  shrink_node+0x52c/0x960
+> > [  762.502359]  balance_pgdat+0x344/0x738
+> > [  762.502537]  kswapd+0x210/0x37c
+> > [  762.502691]  kthread+0x12c/0x204
+> > [  762.502920]  ret_from_fork+0x10/0x20
+> 
+> In fact we don’t know if zsmalloc is actually supposed to work with
+> 16K pages.
 
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/kernel/time/hrtimer.rs | 16 ----------------
- 1 file changed, 16 deletions(-)
-
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 3355ae6fe76d..e396c27e0e1a 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -72,22 +72,6 @@
- use core::marker::PhantomData;
- use pin_init::PinInit;
- 
--/// A Rust wrapper around a `ktime_t`.
--// NOTE: Ktime is going to be removed when hrtimer is converted to Instant/Delta.
--#[repr(transparent)]
--#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
--pub struct Ktime {
--    inner: bindings::ktime_t,
--}
--
--impl Ktime {
--    /// Returns the number of nanoseconds.
--    #[inline]
--    pub fn to_ns(self) -> i64 {
--        self.inner
--    }
--}
--
- /// A timer backed by a C `struct hrtimer`.
- ///
- /// # Invariants
--- 
-2.43.0
-
+Hmm I think it is supposed to work, can't think of a reason why it
+shouldn't.
