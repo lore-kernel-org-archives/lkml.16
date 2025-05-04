@@ -1,190 +1,173 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7685915A856
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 18:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746381845; cv=none; b=cHkabrvj7Jj7m9BveU6/Vq3I4MpdasunaeemWCO3jbNYA5Hr39Wb3HIvzCmyU5wJso2KLKUpeNddnZnUgNN3VziejzDVxVjWP11PPc5cmhmhDseVt0tNwNB6lIcXzlgylVnjqZ+iU+BqEObvgeI3+Vm21lK8lkFFyNhmkw3y2r4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746381845; c=relaxed/simple;
-	bh=UaJg/oXlVVlH71J/uE4jaOjBRLBjog8JAmqQVusyEe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mHbXJzdpE4K8oO2uaFatk12ldJAagsUis7w3GVIdYPHGsoQWx3iXuLpbwOglve9amSTjormL+E+iZoCR8s6EZQzpJQUhdZLvfd7t7n77jIkXQq83bR4QiHkECHvwo+JcKM/KNYNA+yhGk+WMI3kUSqhbh1eTgJylxsbBqDHYwvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OcMTUZxq; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856256DCE1;
+	Sun,  4 May 2025 18:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746382109; cv=fail; b=DoEiAlIKab7UaejI1HBOJTjqj0ElNQ92YPucyQUAhm/u0Tk+ANhTDKT4xCL8eZQFVtyRfeFs5FjTwHMcMOPp0/x7s4CHB5XryG2mwF7QTPOYMbrMWHM6lI4WQNxygFSgVfhmt9teHooXGlugzj1hQc629/0XL/A45FSk9DfeWaQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746382109; c=relaxed/simple;
+	bh=FJFZf9eGVYw4xRZwHsvh4DTfcOFXeVDg4TiDxjyxnEc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=q6aeWF9pIKOgdGQyPQOH5qw3REma2lNf1KYtwGfGzXeu1al6yymP+cYTRd1HLgbuDCWz1y8RFQotqSFmoSxckUU80tS3nMB+9FIcjMBM1qVBUcjcG5Zuk8HwWLMEewcLZPKL7ZI+Txx5aXqJnteVCHWgU0VoPQzgmVJIkVHmvhk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mzfYCnbI; arc=fail smtp.client-ip=40.107.243.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcMTUZxq"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so48389346d6.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 11:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746381842; x=1746986642; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dqgZux5FXC6jpQxX0/Cp/cnWbi59Ir5YhdhDnj9dPOY=;
-        b=OcMTUZxqD/TrQDXpXiFqwfRspXB3UXJCDaLe2lsOIAHKLU7EmtfXFEvYFapkGbFgdS
-         tABobKCMcAEXZL4wrdMQxfc/5KKWXwXPdn1oToFIBqjP+ipZGyEtBXY0p3eYfNwYUYSC
-         9JMETrEe//juLsHbiP8AsrUQLdILHKNZN/nDXDg4hUxQo5bVsjWO1vEzo1aYm7TMl4YN
-         XJQxk3OxyMoi022h59VSf6ykZuW3Gq8vwKBX/Gy7akg6jIIvjabLqweQ9HhQli36RMot
-         CnEddEsrXdtipiNtGOkZ3iVVXLlstUdl9RI67+2hpsh8TF9PAvcnlHdnsJvYPusPxIOb
-         LjGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746381842; x=1746986642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dqgZux5FXC6jpQxX0/Cp/cnWbi59Ir5YhdhDnj9dPOY=;
-        b=dW+X1Yhuqe1T7OmMhyrOtNPYiQ7bhWFzEkFr6Bq+4FhRlcp2l+K0M6chN5XU9QtyMc
-         psDGx+HdbHrSh6lEgq/IfIP6ljB39Xoxs6tnlLUfsSCFF7wcqTIZ6prp8i0Nmiu6fXJC
-         6DWLNVynIo6lcJxQ7TV+9n48pzsrzELFaPE24UoeiIpmEtuqjitv1iZ54uVqXHlH229Z
-         ZechjZo7g0oStdqXBVSTtKqXrsCNLgbu+ZIeJvNodoV0+7F0N6Kh5Ita4fxGRP47GnxC
-         EiLJeSxM3RXU20jszscxYqP3x9ZvguamKLKlPeJ3z7Qh5XntC9XUAMgAdVWbk7f5ytty
-         qN1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXylyitr75a39THJHUqbLGp0HgRibzWV8LZogt7FYn6OmIktmh84EfggVok2+ehhU+wuUL+HyjAP1MljCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhu0Dhf4hAofPdgB0LGf8xV677y94Xomrf6b7LbHdHdEAl739h
-	c4DBWOTj8ljeR8Y7vwMKyONh5s3g8q9RW9vsqoNxjYJ8cfXj85+b
-X-Gm-Gg: ASbGncsRh8JaXd4QTxCzp20wjo6KeOMk7MFvLCFx+lYLasQ5O/wM1DDxv+3dbbFwQ9M
-	7m4cZV12nnQ8RXqI5E1Q+jFHSE6Q1KxqvhFRTn00/WHIAY1mAv3PGAZk8Kp4lyFBPqWeLOjFOb1
-	li0kbahetgAvzKChrOHF43bcpjYngPJQBvcIScHY3zskXoApPyxNhzKPgP59fm1PJY8iiMS11qP
-	KjLRvYPrjFbg6PW+aRfd3wjc1NL5y41+Czl0Bw9aVwAkxMBPg7r3c50PzHo1erOMrpSNw+MUif5
-	i88d08Ni71a8qX9Itp5Ov0I7ZbPyPLAxpfrbacNt2vtrOWYDE/H56qbWs0GkRMuTt8Gtc7WnOBx
-	6Rgc3syrtjcaOXxi/I7TEw4X5MTS/Dbk=
-X-Google-Smtp-Source: AGHT+IGMbIfRMhQoUvejSfzgg6bUhqBP+nC6DutIcrnxW/NMzI78o/M+s9ndiWpbBRD1yBEtB23Wsw==
-X-Received: by 2002:a05:6214:21ac:b0:6f5:e2b:988a with SMTP id 6a1803df08f44-6f515490cd1mr153086706d6.13.1746381842157;
-        Sun, 04 May 2025 11:04:02 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f47e640sm44566776d6.95.2025.05.04.11.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 11:04:01 -0700 (PDT)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 630741200043;
-	Sun,  4 May 2025 14:04:01 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Sun, 04 May 2025 14:04:01 -0400
-X-ME-Sender: <xms:EawXaGCZosEoiSb4rn3l_8T9NFQQca8r3p4BGwrfCF6c7Cpx74a0IA>
-    <xme:EawXaAiqfXSWwse0NbRtjW4KiqFwY5ATVPgVA9vbzFNwDYGGtIwlBfI5-aY5moH_C
-    35WL-Yq5k0VzHBYaA>
-X-ME-Received: <xmr:EawXaJntBCcCl5IeaPmfpuEFNn7cEgyRS4yTl621oM8aE8bT0hSLjf16>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeekkeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepiedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhonhhgmhgrnhesrhgvughhrghtrdgtoh
-    hmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
-    ohepmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepfihilhhlrdguvggrtg
-    honhesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:EawXaEwMgAb_XiukbBs8vIRyGOIl_60fXlmBXotvoEm6CUFbVFl0Ug>
-    <xmx:EawXaLRI5UkbRGHM_EQNun2HsKeM0_gLRa1E4uWWjlZ_pgzo5AHaXQ>
-    <xmx:EawXaPZIyBQhKREiS5agwEIs5nl02k0GaM-awjMow7rcT8eocUTjRw>
-    <xmx:EawXaESmOdQdL-spz0sEgEowNTg9yFPXgIAq6ihkqJXX-CZ9C_oEtA>
-    <xmx:EawXaNCvTW8cm3NLqn2i-Cqhcc4-fv6469useSQKHtb-D9mWCLsitCNO>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 4 May 2025 14:04:00 -0400 (EDT)
-Date: Sun, 4 May 2025 11:04:00 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: Add # of dynamic keys stat to
- /proc/lockdep_stats
-Message-ID: <aBesEItGIeHf5v52@Mac.home>
-References: <20250425001155.775458-1-longman@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mzfYCnbI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MCIYpJcKOJ+oTyOBn/h5HxDvWlbfhVCep1/gUpj4MQ717nfUx2fulInautGHBTGTvmkT8WrhmM5YNrfDT8j9uQHx4cdYShKCx4vKzZmxjuPwa0JmesOoOAsgdc2ZSmC51zPk6xrYMpHvig5T48C2avzMZhfohJ7WGNxs8FA8XQ5fjRuWFSyoC9XQJa6eoffqW4S2m6KRplSfGlkZ5RwLEyL8jPP9gVk7bvgZGqAPUfO8tuSSolEKnHQQNZ6oic8q32LOqaLo9Z5ZKdxHzt0anJKRZPquGrg4H6Vnq7wvWEkafIuPisEe+cSaQkY3h1UVnUTvT34LzFw+5p98K7bM7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+1l1hh6xozOata6HtHNWygWruwzAeN2tPIb/oaT1nnA=;
+ b=LZU4yibP9PzOCIeXRVi7gBgzpcWqYSShg7bLgaGsgH93aV1gmWtG8+7sr6b2VadU4il7IMFJdw3j6EE6tZ+zkGc1FLCrktIzbccS9yr9Nk22CTNtRHmgrI8I+p/wZzMrxBD7XqQO+WjdHF9hoBtn1X/NEZpZi3LTfOJMZqHOqmZIRLyV8SjLFu8Jueo+JTp66xW6T8Wm7Faq9ymccjRQPoIdrVBlcfZm2/FYiH3bgpHrtEI6x6P4o9sOrE3efw7HdBPXW4ANADcaTItrXGBVwKC9F293CLA77FXIuEi31Eg9i+6Rt8zKUAKSpzOPUfC/jvOMRKwB0tViQSjWj/Em2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+1l1hh6xozOata6HtHNWygWruwzAeN2tPIb/oaT1nnA=;
+ b=mzfYCnbIfEE2BSZTkdKsDBrF99weaJ+UhN+qmojDxCLK4evT6ieCkaKkcOLXE0j+bIuece3mddZRwxvLwDE4KRbBKRr/kVzQcHcW4MarQjEb13oWDHIWZ1geJz+snD1tl41u8/xC5BRrNlZ7zHa4qio+ee/U9FSj71DgdnyDpaw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MW6PR12MB8899.namprd12.prod.outlook.com (2603:10b6:303:248::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Sun, 4 May
+ 2025 18:08:24 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.8699.022; Sun, 4 May 2025
+ 18:08:23 +0000
+Message-ID: <a3fc2553-6a2c-45d8-a514-bc9d43b1d525@amd.com>
+Date: Sun, 4 May 2025 13:08:23 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/CPU/AMD: Clean up the last-reset printing code a bit
+To: Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+ Yazen Ghannam <yazen.ghannam@amd.com>, x86@kernel.org
+References: <20250422234830.2840784-6-superm1@kernel.org>
+ <174617858494.22196.5727323411231361285.tip-bot2@tip-bot2>
+ <aBcLJxjTQGa1-r5S@gmail.com> <aBcRXYkJlfySzBEx@gmail.com>
+ <20250504095212.GBaBc4zOxcAKQ26cbn@fat_crate.local>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250504095212.GBaBc4zOxcAKQ26cbn@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0194.namprd04.prod.outlook.com
+ (2603:10b6:806:126::19) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425001155.775458-1-longman@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW6PR12MB8899:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff001e1f-8e87-4f1a-6c83-08dd8b36a8ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WUZBUkdsQTNNSEtCZXNhdDhGcWp0amdqOU10MlhtQ2NTQUNpWEM2UXZZTktr?=
+ =?utf-8?B?NUVBWjlSRitTcER6clk0dm1CQ2FsN0ZZd2hSR29vWmQ3Y1VGN245K0ErTlg1?=
+ =?utf-8?B?TitUUzBGK1h5My84aFBSeDUwMWYrTWREWi8wTGNzNFZUUjAyc1JiNEptQjl2?=
+ =?utf-8?B?Q05BNWxzTW11T1BlQ2VWSU9iTy82WER5d2Vmd2RtRStpSVRZRHVGbjlMRlpC?=
+ =?utf-8?B?Y1ZLdXNkdnJOaXhncEJyU3lWLzVYbXZGbFA4ZjlleEdwcjJYczBVblV0Vkx3?=
+ =?utf-8?B?Ym51NS9HckFKdE1jYjZ1bnUyd25EK3ZKU2l5MEVhOVNMVlMxcjVnQmxsTmdx?=
+ =?utf-8?B?eHBrZDdja0xOUmxKNFEvMEtIRElQVjZLMFNwYmV3Nk9kSkQ1Mm16b1RqbC9Z?=
+ =?utf-8?B?N0piVW51V25nblA0TXpnbDdpd2lrdHJiNUxSUkx5aXVPeDVac2sreDJZZnFu?=
+ =?utf-8?B?dWQxTTZsTERFY3IxcE1aQmNxN21iSXZHWDNpVis2WWpYUXI1Rkprc2pVUk5C?=
+ =?utf-8?B?UU5uWXhrUUlla3Y3NFBhbkdSN24xeno2MkkyRTRhN3J5V0c0V3ZTY0pPTGgw?=
+ =?utf-8?B?SVFsSmVtb1R3RGpwYm1FNUl5MTJYbTNraWFTaGdncm95MXlFSjU0UDNiemtx?=
+ =?utf-8?B?azliSzlyTWFFUDExaCs3eE5UdnhkazZzYkRZVnRyQkJyZzJsOUwxb3MzNVBp?=
+ =?utf-8?B?WnFsNnBmdUh5TkU1WGNzVTVXb0dNcDlIYzNDWGhhVWYvdVRHeWlSSWdpT2V6?=
+ =?utf-8?B?bXdMSkFyNzljcm11b2tPRVp0cHRsNXBrV0xPaVExWHR1eHdLYWllZ3FxK0Ew?=
+ =?utf-8?B?cUg4RlJkZTk5YytIdG5FUENUSzhyamlFdUdjQk14OC9WR0FEeUxhaGJYNVEx?=
+ =?utf-8?B?UFFEejY1eDBudC9iekQzeXgrY2M3STFvNkp5TDR6eGx4VEVWTG4zMkZRV0M2?=
+ =?utf-8?B?ZWtWOXBSbDhKSDdYblJrcjB0Z1RqTjRmM0RiQXBpbDhSWk10K00wNkxySEJX?=
+ =?utf-8?B?cTAzVDZPcElva2NFYlYwSHJmTTJPRTVLZEhMaHFuQklLSnZvMlliUmVUREha?=
+ =?utf-8?B?MFNJbnRSUFRtOGJoMkRhcU9laWgrVUpLRmRSOU5xT2IrMFlmSm5UbXF6R1dp?=
+ =?utf-8?B?aU5xcVFDNDErR3J0Q3NnWEhnUTAwKzZhVFY3cTNBcWtPNnRaQ2VUVUZRd01Y?=
+ =?utf-8?B?VFh5aXpQUmNxdVZwRDZqOXg2MU00U2w1a2NUQ3g0NnQvbjNRZXVUSTh3NzlI?=
+ =?utf-8?B?TkFXcStSUnlNU1VXUTdieTJ1SkFIYitZdGRSWHlGb0NzeVRQV1JFM1lJb1hx?=
+ =?utf-8?B?enJXdGtpb1ZxWmtLOUxGUkJ1R3crUE9BVjlZTnY4UGFobGxxUVpsVVdmTmdq?=
+ =?utf-8?B?aTBSc0JCUmVEYVJRcXlobmtJSXVJa0JGNU5pcFo1TTF4c2dpMFB3SnhoNWRH?=
+ =?utf-8?B?RTN0RG45dzBqV21mRS9yTFBEYUpoeklKRTdab1NiU3dMMzJ4UDhzWFk5Vzcx?=
+ =?utf-8?B?TlpFeFFvMFZvNlYrMFZLZ3M1bDlmanZlNXQvSXhUODAzMGdUMXNDbjY5cDBU?=
+ =?utf-8?B?S0FtYVVoaTRidk9jOENpaEltR2E0UndSWEVGRVUvbG54WHJ6UnJSNlZmNHJV?=
+ =?utf-8?B?dGIydnhHSUs1bEQ4QTBiWXJVbXlQbmhHMHY4ai9IcjZyWmhrcWsxcUFYb1kz?=
+ =?utf-8?B?Z0EyN2RFenU2Szd5MUtVeTdVNTE2Si9XVjRzZWtaSGxnaVlXTEtObGJiRklw?=
+ =?utf-8?B?OEltSi8vcWIxZkdXMEpYM21Wdk9GWUNaaHQ3VXcwb2UxTlBDcTBLMlRyS3dG?=
+ =?utf-8?B?bDBrUzJkNXQrOUMxQkQ1QmYxNUdseVk2WkZ2VFptMWE3ZzdNdFZ4QzBQYjha?=
+ =?utf-8?B?OTFyNGErT05pNGJjeHhCOE81NFNDbHhUVUpOOXhwaXJUMEFXYkdOb2RycUF0?=
+ =?utf-8?Q?+btXELa/toI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?azhiTnFJWnlVL1ZORTlJMUVxOFY3bzFJeEdEU3BndDFkZGRLc2xMeThKQTJB?=
+ =?utf-8?B?QnNZUmt3a0FPRnlGVkdSUld0czJoUE9WM20vTmRSenA0Y290TVJWMnVQTExr?=
+ =?utf-8?B?TTQrNGxyWEMzYnJRTHZINFdhaUJCeFpnc0psYnBpc2FGOS9DRGZ2d0ZxMDhN?=
+ =?utf-8?B?YkFSSkd2V2NWZkpjKzVFWTJzSjdTQU1BVmlNL0pWUHFMU2R5YkkycmhxcUZE?=
+ =?utf-8?B?b2YrbG5hS2puQ2ZTY2UzNUVETHR2R0drTWpGT0FsdHZFdDV2cDJjd0R0dU9O?=
+ =?utf-8?B?SXlPZDZKMXhVMGJpeXNsTDFnYXJEUmRvVHNqSzRvamdxbUhOcUNkTHBSd3Z2?=
+ =?utf-8?B?dXV1M3U4U3RGY21WRUpIVmxkMmRVYWN5Nko3aFZHL2RWU3hVWkZUSXpSZnlT?=
+ =?utf-8?B?RVA0Y2ovcnhVcVcrWFNkbEwxOGUvaTVla1ByYXJRUmFTdTdrUTRiMUJReGtG?=
+ =?utf-8?B?QUlQMVJNQ2luZCs1c3FvVVZ2MkJteU9KY1F0dHBjMnRxbjdvY0xzSS9GdXVz?=
+ =?utf-8?B?MG9YNzM5TU9JOFVSSHY3eUZiY29YREJUd2ZZQXovZ0Z2Q3M1SDI5VEZNUWxk?=
+ =?utf-8?B?RXlnY3pLeHFucEVEWjRQdGZuUTVMTkZxOWhiR1lrSUxnQXFsK3ZHRE4yRHVF?=
+ =?utf-8?B?UnVtZGhEaUY2L3Bha2hvOUF1Q0VMSDlPQWV3RzgwOS9BeGJicHFCaW1EM0Rk?=
+ =?utf-8?B?ejFQM3U1SmZBQ1BoRFpRR3FJbFM2Q25WOEJTT3p2VHVudVFoejhPK1dVK2xX?=
+ =?utf-8?B?dy9GQk5MaDc3STFjTUNKMGlKTmVLQkpMcmJSTzN2RjI5bDREQ3lybmVqc016?=
+ =?utf-8?B?aWRCSUg2NGZ3S2kwTzVRZ1g4SFUyUjhIQXpNZUJjOVhBVlBXUVlWUS9QRDlo?=
+ =?utf-8?B?cmYyZGdJWkhjUXA0RzFCMzQxRlh1d3ZZM0ZUWnB4cVZRL0NtaldYQ3NLcmdD?=
+ =?utf-8?B?cjQ3WCt1d1J4Tmh3a3lEY2RFeDRTYzVDSFdVVjZiM2plcUxUNENCZVB2WG9v?=
+ =?utf-8?B?TEpmUXRpcFkrWC9va2RubVU1VVV6QTVvdU42U3BZanRMK003MmlQV1pieU9K?=
+ =?utf-8?B?MVFiU3ZNYlNMcGhEOWgrSHdaMlZjdFJIYWJLcTlmcW5BTkpTa2R1VmNqUUU1?=
+ =?utf-8?B?Rnk3Ym9PSGIramhPSXlwNElPejArZ3dadXYvZkErb2FJcEpGaWxKR3NKWHNM?=
+ =?utf-8?B?S3FjR0JTZmRnNEplYlh5bndtemlZbVZ3bFBOQ1dGd0htQ3BOL2YyMm5EcUNq?=
+ =?utf-8?B?cUFMbEdpZFcxU2JRRUYxcG9rMlBrZ2p5M3FLZ0t3c0d4RlVSSUVnVk9CY0Zh?=
+ =?utf-8?B?ZGdJVWQ3TmtLNDd4RGVkU3NQWWNYM3hKNzhRbGswMVg1ZVRDQ3VpVkIxMjhw?=
+ =?utf-8?B?em1KTHRIZU1ESy9PSFJJL1V1YS9sSjMvYVhxa0pJd0tZSTJSQXRKcTVCUlNE?=
+ =?utf-8?B?SEQ3UkE0L2ZiSEQyODB3M2hzTDhJNlJ2bVcySmt2UUhqVTlTeWF1a2RsVUNx?=
+ =?utf-8?B?QlR3WEwwcU42bXZ1NmpvVHV5bGFEbEhtY0RpUWZpRHU0Q1g1MEJDMm5adGN4?=
+ =?utf-8?B?c0dWcU5hVmlKUGRnOVRjNWdSRHJQT2xSUUExOVdNUEJldWY1RmUwekE0c0dM?=
+ =?utf-8?B?di9UaUVyYndqa0UvVjk2Qnl6OXRreHE4V280SDVScnhLZ01KKzl2V0JzTTRl?=
+ =?utf-8?B?ZkVPdTVPamE1UkN4WS9oN3o5ZDlJUmFQaXFDSFhoeUN6ei84MDRFejdnanRL?=
+ =?utf-8?B?cHdSdmkzQXBzcmRuSnFMc1FxeDNaV1pkd0lOdHFwRE8zNy9paFlYNXNqZ2tN?=
+ =?utf-8?B?bVNtTzBOeUExR05wUmpsTlRHYlNuVWI3OE5sTmJXS09aTDQzU1ArRWljU3lh?=
+ =?utf-8?B?VUg2eXBLRnV1SXhrVXcrM0RjUkcrOWxpMjZkNWhRZVZ4d3liUFJBYUZBeURK?=
+ =?utf-8?B?bytpYThLSTBVT0tUWkxGSVdwUjg0NXlVZDV3azN1dHIxTDhjbXQ5L0ZjNE56?=
+ =?utf-8?B?eThXcThwc2QvZHJTZDEwV3Z4ZUY4ZGhJWHN5UWI3MEt1dHhreU1hZE5TSnNp?=
+ =?utf-8?B?VldmSjNmalV4U200WnJTcmN3WlVFQ0xFOEZhejJCQ3UvdE1sUHZ3UXVhR09m?=
+ =?utf-8?Q?jWIc4hsAkFRw7l9CKvWktr2qi?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff001e1f-8e87-4f1a-6c83-08dd8b36a8ab
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2025 18:08:23.3342
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Bp/a6TryElaj2eoKSzEI9oSyaHfd532r/9tGTZDv0+YuZ55H0wAlnUmMxbA0z1rhWCNJ1EoDAb1k8i38E5kD8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8899
 
-On Thu, Apr 24, 2025 at 08:11:55PM -0400, Waiman Long wrote:
-> There have been recent reports about running out of lockdep keys
-> (MAX_LOCKDEP_KEYS too low!). One possible reason is that too many
-> dynamic keys have been registered. A possible culprit is the
-> lockdep_register_key() call in qdisc_alloc() of net/sched/sch_generic.c.
+On 5/4/2025 4:52 AM, Borislav Petkov wrote:
+> On Sun, May 04, 2025 at 09:03:57AM +0200, Ingo Molnar wrote:
+>> Patch attached to clean this all up.
 > 
-> Currently, there is no way to find out how many dynamic keys have been
-> registered. Add such a stat to the /proc/lockdep_stats to get better
-> clarity.
+> Ack, just merge it into Mario's original patch.
 > 
-> Signed-off-by: Waiman Long <longman@redhat.com>
+> Thx.
+> 
 
-Queued for 6.16.
+Yeah no concerns on my side to just squash it in.  If you keep it 
+separate though here's a tag:
 
-Regards,
-Boqun
-
-> ---
->  kernel/locking/lockdep.c           | 3 +++
->  kernel/locking/lockdep_internals.h | 1 +
->  kernel/locking/lockdep_proc.c      | 2 ++
->  3 files changed, 6 insertions(+)
-> 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 58d78a33ac65..aeedaaaa403c 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -219,6 +219,7 @@ static DECLARE_BITMAP(list_entries_in_use, MAX_LOCKDEP_ENTRIES);
->  static struct hlist_head lock_keys_hash[KEYHASH_SIZE];
->  unsigned long nr_lock_classes;
->  unsigned long nr_zapped_classes;
-> +unsigned long nr_dynamic_keys;
->  unsigned long max_lock_class_idx;
->  struct lock_class lock_classes[MAX_LOCKDEP_KEYS];
->  DECLARE_BITMAP(lock_classes_in_use, MAX_LOCKDEP_KEYS);
-> @@ -1238,6 +1239,7 @@ void lockdep_register_key(struct lock_class_key *key)
->  			goto out_unlock;
->  	}
->  	hlist_add_head_rcu(&key->hash_entry, hash_head);
-> +	nr_dynamic_keys++;
->  out_unlock:
->  	graph_unlock();
->  restore_irqs:
-> @@ -6606,6 +6608,7 @@ void lockdep_unregister_key(struct lock_class_key *key)
->  		pf = get_pending_free();
->  		__lockdep_free_key_range(pf, key, 1);
->  		need_callback = prepare_call_rcu_zapped(pf);
-> +		nr_dynamic_keys--;
->  	}
->  	lockdep_unlock();
->  	raw_local_irq_restore(flags);
-> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-> index 20f9ef58d3d0..82156caf77d1 100644
-> --- a/kernel/locking/lockdep_internals.h
-> +++ b/kernel/locking/lockdep_internals.h
-> @@ -138,6 +138,7 @@ extern unsigned long nr_lock_classes;
->  extern unsigned long nr_zapped_classes;
->  extern unsigned long nr_zapped_lock_chains;
->  extern unsigned long nr_list_entries;
-> +extern unsigned long nr_dynamic_keys;
->  long lockdep_next_lockchain(long i);
->  unsigned long lock_chain_count(void);
->  extern unsigned long nr_stack_trace_entries;
-> diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-> index 6db0f43fc4df..b52c07c4707c 100644
-> --- a/kernel/locking/lockdep_proc.c
-> +++ b/kernel/locking/lockdep_proc.c
-> @@ -286,6 +286,8 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
->  #endif
->  	seq_printf(m, " lock-classes:                  %11lu [max: %lu]\n",
->  			nr_lock_classes, MAX_LOCKDEP_KEYS);
-> +	seq_printf(m, " dynamic-keys:                  %11lu\n",
-> +			nr_dynamic_keys);
->  	seq_printf(m, " direct dependencies:           %11lu [max: %lu]\n",
->  			nr_list_entries, MAX_LOCKDEP_ENTRIES);
->  	seq_printf(m, " indirect dependencies:         %11lu\n",
-> -- 
-> 2.49.0
-> 
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
