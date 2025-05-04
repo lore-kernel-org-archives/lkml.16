@@ -1,81 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF0E43AA8
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7853D1AA1E8
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 11:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746358258; cv=none; b=OO2zA/cJq4rO6sxzAqDng/p2FPS36j1WSfQXJAHMqqhjooDWW7KNXEHvjiR0NB5AdEEPi5Iy7tcnWgOkNUqvVuPNs7qPnRoAuaggPLYx+TdMSSY//LNakPfhc6Sgr2yOWcG/iS+5WhPx6Q3R7Vx2qBdRIy2rti203odfzaHc0rI=
+	t=1746359514; cv=none; b=HVUPw5QfcAQ3tkpJyb3J0Fm2ANZUcji/TNoDX+t/QhmOfjTHiiXljzyXaekN6dkiuyJK16cUp8FD4eZ8qziTuQs+npOgsXSS4qHyahkU3zRDAw55PI/512Ibx9sjhKZR6uX85PGyKCr5tF3ExtqW0d2Idfa+mMxT/yhaHRH1dD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746358258; c=relaxed/simple;
-	bh=Ht81KqRFYdhj6o3Gw8ymvJM+JmwvnLJV/L0dXKOReK0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hmZeZ6p8vGULpGHnqkNU5VWcPpXH9W0kiSS4vn2bZnVMp6OQfL5M0PaKaik23FemWpkoKHirq8Ach/k6+MR70zAjEEz4VrWarSPF8lncrzIhNRlTOXV6i32YshPviWZan/zVohOBtL063Zt8uWEeFIkpNs3X7yNNqUeAc/TVfEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fhrs6DbA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746359514; c=relaxed/simple;
+	bh=ec3OM3Kdbx+cIeMn0G6xXZ2/2B48E1XHg7GD28jg4ic=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qgo3SHjHo2K/MBBBQTP9HJEhzsKCwwFjXPsAknGIe1nhzWW6Ycfhmgdx4p9/OjCR2IRWX42FjUDcT/JpkBiflX3TkBErtXtogt44emzC7oNajlXJ0npLYY29zkobm/uNOvKSpAxzvUXxGbjr2dP/RnNatuJP1emmHDexhiqctE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org; spf=pass smtp.mailfrom=postmarketos.org; dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b=g4cXB4qO; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=postmarketos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=postmarketos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fhrs6DbA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746358254;
+	dkim=pass (2048-bit key) header.d=postmarketos.org header.i=@postmarketos.org header.b="g4cXB4qO"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
+	s=key1; t=1746359510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EazkyjVOz4TwmCMWeSQ28sdm9rYVdcferzElC0nH0h8=;
-	b=Fhrs6DbAv8XuG/8iN0V6AM5wAmSHgM7u+AhUpRI8LuRwcgWfc3bUls6Pr4QeGdhZ2u+u6y
-	eYQ4v8gWAwJrWYJ19W/3VTFMyQHCI6pzD1C57SnNM3bAxvgTwg6T5xPVJduGIcWLfp0SoQ
-	2EtfpgSnH9fLt8IT2jBlr0nOPHhKSTo=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-459-MF_yTTSgMg6Urhq-ULfCDg-1; Sun,
- 04 May 2025 07:30:50 -0400
-X-MC-Unique: MF_yTTSgMg6Urhq-ULfCDg-1
-X-Mimecast-MFC-AGG-ID: MF_yTTSgMg6Urhq-ULfCDg_1746358249
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C13671956087;
-	Sun,  4 May 2025 11:30:48 +0000 (UTC)
-Received: from [10.22.80.45] (unknown [10.22.80.45])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 077EB195608D;
-	Sun,  4 May 2025 11:30:45 +0000 (UTC)
-Date: Sun, 4 May 2025 13:30:42 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Benjamin Marzinski <bmarzins@redhat.com>, 
-    Dan Carpenter <dan.carpenter@linaro.org>
-cc: Eric Biggers <ebiggers@kernel.org>, Satya Tangirala <satyat@google.com>, 
-    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
-    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dm: add missing unlock on in dm_keyslot_evict()
-In-Reply-To: <cad25513-31c4-5895-cfc0-b9c7dce4ce08@redhat.com>
-Message-ID: <fbc26327-d14d-f049-d62e-babaab0e9750@redhat.com>
-References: <aBHZ4puON8GNK0vw@stanley.mountain> <20250430165037.GA1958@sol.localdomain> <aBJgeV7pZ7Q47OCb@stanley.mountain> <cad25513-31c4-5895-cfc0-b9c7dce4ce08@redhat.com>
+	bh=c8BoJqr4TlJkVA67oKebDqGrsk1Uxh1QUJDUSIH1Ng8=;
+	b=g4cXB4qOLGIcoyOwXBuWU8Ccl5DTAJBB6iZ+2qqJk78ayOX+uyKDShEnwEzK28tusaDkUK
+	A/M0IJ3gFrQGtE3X/sZley/YPsV4DUz6CddMqQ4LVTMLtnCOxKq3dv8FXYJ8K60EkT0GWv
+	vYtdkZ+0tbs92YfoIHI77c5KmdLjzk9fpOlK9+9qhbxom9q4Rmi6JviD7b0nVI6cXf35YL
+	Xr8Z3p99aKjG1ztwR8cfFzFzeGwxo0DVdjXQcRtbFBZ8OOMj7qtmfBho0/koRsfSs0Mrjs
+	lsEMUPomtuyUx3r+TaNepD9Mtne2kF4nzHd3FeXDgyIvPuTH8agb5G7fwWh2xw==
+From: Alexey Minnekhanov <alexeymin@postmarketos.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Cc: Dang Huynh <danct12@riseup.net>,
+	Alexey Minnekhanov <alexey.min@gmail.com>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Alexey Minnekhanov <alexeymin@postmarketos.org>
+Subject: [PATCH 1/3] arm64: dts: qcom: sdm630: Add modem metadata mem
+Date: Sun,  4 May 2025 14:51:18 +0300
+Message-ID: <20250504115120.1432282-2-alexeymin@postmarketos.org>
+In-Reply-To: <20250504115120.1432282-1-alexeymin@postmarketos.org>
+References: <20250504115120.1432282-1-alexeymin@postmarketos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Similarly to MSM8998, add and use modem metadata memory region.
+This does not seemingly affect device functionality. But it fixes
+DTBs check warning:
 
+ remoteproc@4080000: memory-region: [[45], [46]] is too short
 
-On Wed, 30 Apr 2025, Mikulas Patocka wrote:
+Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
+---
+ arch/arm64/boot/dts/qcom/sdm630.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> Ben already tried to fix it in dm_blk_report_zones (see the linux-dm git, 
-> for-next branch) - but his fix is incorrect because the "if" condition for 
-> dm_get_live_table and dm_put_live_table differs. I'll update his patch to 
-> fix this mismatch.
-> 
-> Mikulas
-
-I fixed it in the Ben's patch "dm: fix dm_blk_report_zones". Ben, please 
-review it - it's the patch 37f53a2c60d03743e0eacf7a0c01c279776fef4e in the 
-linux-dm repository, for-next branch.
-
-Mikulas
+diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+index 2d3820536ddf4..8b1a45a4e56ed 100644
+--- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+@@ -509,6 +509,12 @@ zap_shader_region: gpu@fed00000 {
+ 			reg = <0x0 0xfed00000 0x0 0xa00000>;
+ 			no-map;
+ 		};
++
++		mdata_mem: mpss-metadata {
++			alloc-ranges = <0x0 0xa0000000 0x0 0x20000000>;
++			size = <0x0 0x4000>;
++			no-map;
++		};
+ 	};
+ 
+ 	smem: smem {
+@@ -1056,7 +1062,7 @@ remoteproc_mss: remoteproc@4080000 {
+ 					<&rpmpd SDM660_VDDMX>;
+ 			power-domain-names = "cx", "mx";
+ 
+-			memory-region = <&mba_region>, <&mpss_region>;
++			memory-region = <&mba_region>, <&mpss_region>, <&mdata_mem>;
+ 
+ 			status = "disabled";
+ 
+-- 
+2.49.0
 
