@@ -1,136 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB6D250C0E;
-	Sun,  4 May 2025 23:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A846F17A31D;
+	Sun,  4 May 2025 23:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746401546; cv=none; b=Y+iX0uLZeN9eC5vEDEmRFEKt0d1JjAAVYZSBM6634BeR24iwgTpptpwzphUek/cp0cuWJk8M0MWvLZjn1F+Px/Y/1726WF0tbrmMAGHBSam8y0iaEfCm72ZLEmPmjpWy/seZqjC2ahowV6oTrWX23xVt2Uqf1xHr+/PTmmASMO4=
+	t=1746401912; cv=none; b=D8a0p+JK6qa1Gn7esP1fY+5rbEU9cIz282ceej+BAtyGm/dkYUDsNt5thLLKa+rtNNW6/dcMkSdLQlc/PFs2vzH+EZvi3oXVheeK5GKSXIZ9gk/81aRGKceQvCcpwbaKrcD0Eu8WP2BqkfkKA8YvwU0oOXs9duafOYIFTfpO/ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746401546; c=relaxed/simple;
-	bh=74l8WQJx+JHUOxctsCLtwn1uQDcdHtUHH9jZWyzig0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X+ZVVa+FunPljAh0n7ipa+ky5y5kQd9t6zU27ZpJjP1mZc+dDYe3g70U9LcZXrqpBLturhk178aSMRApv+KcQMpgMMsJ3XwuKQfi+VyPFc3DRINAbihWFDCRDEXEe30QEoTHWKPNc3+Rc7xyOREe7nmvRaF8hv6O6O8ZNWBqBw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DF2E1BC0;
-	Sun,  4 May 2025 16:32:09 -0700 (PDT)
-Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51E533F58B;
-	Sun,  4 May 2025 16:32:18 -0700 (PDT)
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	thiago.bauermann@linaro.org,
-	broonie@kernel.org,
-	yury.khrustalev@arm.com,
-	kristina.martsenko@arm.com,
-	liaochang1@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v3 3/7] arm64: uaccess: Add additional userspace GCS accessors
-Date: Sun,  4 May 2025 18:31:59 -0500
-Message-ID: <20250504233203.616587-4-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250504233203.616587-1-jeremy.linton@arm.com>
-References: <20250504233203.616587-1-jeremy.linton@arm.com>
+	s=arc-20240116; t=1746401912; c=relaxed/simple;
+	bh=vrphGDl/y7/iEIu4rfgiaAktIP8GL7K1CsH2nW/CGlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DsWFBH0mVfK7PH9oLxqvzjuTtPw5YQ6bBcoYZ/aKnai3ipb94SaO5A2ccFznRORs2CerwDjvhzytPvKTzc0b2ccR5flS2oU16/GKmuCUlFxNR7BijcLSyIccYXGLEl4M/AsKQlDnFb1QA90J+NrYYXoLMCtgD59oaMmNn2NNp2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=j9GiojF+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j9GiojF+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746401902;
+	bh=u2i2BIqFit/Wwnzz8waPFlwa5pIfJgrzIQEOFxRXUZs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=j9GiojF+g5bPm5PCs8cI/yzbdsfAlHOkQdxR7w9IkBXAkj4EFf+2QphjJR/ZfI+r3
+	 UMG2Jnbvo9HAVR3r1y74GCTMCgfzxd70AFOhz6FFGcqZYuoEabYchOkb+Dl4qjUR7Z
+	 gojkdRYjpz2s2e2RP9aBLYrlCxdJ7dIHM9/1mn9/48Ve8AYauilZDhJ/EbONfdGzpW
+	 FIkeocDw4KQ/Uch+k7bOQsIg4+ikii/Q8RDxHQk383Kcgzx7WoUNKK2/n0ZpWSK9u/
+	 uFCw/01TRsUzSsd3+VNdlMbs1XP2o9C+kCyHUQ/riGfgtBxdLBSI4lSzPgkvKGYenr
+	 YUh/Gl79EaUQQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrLgy4FvQz4wnp;
+	Mon,  5 May 2025 09:38:22 +1000 (AEST)
+Date: Mon, 5 May 2025 09:37:59 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>
+Subject: linux-next: manual merge of the pci-current tree with Linus' tree
+Message-ID: <20250505093759.4b88323e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/OCSl5IDeyrjOmuU2yPMDlAR";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Uprobes need more advanced read, push, and pop userspace GCS
-functionality. Implement those features using the existing gcsstr()
-and copy_from_user().
+--Sig_/OCSl5IDeyrjOmuU2yPMDlAR
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Its important to note that GCS pages can be read by normal
-instructions, but the hardware validates that pages used by GCS
-specific operations, have a GCS privilege set. We aren't validating this
-in load_user_gcs because it requires stabilizing the VMA over the read
-which may fault.
+Hi all,
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
----
- arch/arm64/include/asm/uaccess.h | 42 ++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Today's linux-next merge of the pci-current tree got a conflict in:
 
-diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-index 5b91803201ef..34a8b2cc8935 100644
---- a/arch/arm64/include/asm/uaccess.h
-+++ b/arch/arm64/include/asm/uaccess.h
-@@ -20,6 +20,7 @@
- 
- #include <asm/asm-extable.h>
- #include <asm/cpufeature.h>
-+#include <asm/gcs.h>
- #include <asm/mmu.h>
- #include <asm/mte.h>
- #include <asm/ptrace.h>
-@@ -539,6 +540,47 @@ static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
- 	uaccess_ttbr0_disable();
- }
- 
-+static __always_inline unsigned long __must_check
-+copy_from_user(void *to, const void __user *from, unsigned long n);
-+
-+/*
-+ * Unlike put_user_gcs() above, the use of copy_from_user() may provide
-+ * an opening for non GCS pages to be used to source data. Therefore this
-+ * should only be used in contexts where that is acceptable.
-+ */
-+static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-+{
-+	unsigned long ret;
-+	u64 load = 0;
-+
-+	gcsb_dsync();
-+	ret = copy_from_user(&load, addr, sizeof(load));
-+	if (ret != 0)
-+		*err = ret;
-+	return load;
-+}
-+
-+static inline void push_user_gcs(unsigned long val, int *err)
-+{
-+	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-+
-+	gcspr -= sizeof(u64);
-+	put_user_gcs(val, (unsigned long __user *)gcspr, err);
-+	if (!*err)
-+		write_sysreg_s(gcspr, SYS_GCSPR_EL0);
-+}
-+
-+static inline u64 pop_user_gcs(int *err)
-+{
-+	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-+	u64 read_val;
-+
-+	read_val = load_user_gcs((unsigned long __user *)gcspr, err);
-+	if (!*err)
-+		write_sysreg_s(gcspr + sizeof(u64), SYS_GCSPR_EL0);
-+
-+	return read_val;
-+}
- 
- #endif /* CONFIG_ARM64_GCS */
- 
--- 
-2.49.0
+  MAINTAINERS
 
+between commit:
+
+  0747c136753e ("MAINTAINERS: Move Manivannan Sadhasivam as PCI Native host=
+ bridge and endpoint maintainer")
+
+from Linus' tree and commit:
+
+  69dcbfec5f02 ("MAINTAINERS: Update Krzysztof Wilczy=C5=84ski email addres=
+s")
+
+from the pci-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc MAINTAINERS
+index 51b64cabe308,ef64f4bd2de7..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -18763,8 -18632,8 +18763,8 @@@ F:	drivers/pci/controller/pci-xgene-msi
+ =20
+  PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS
+  M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
+- M:	Krzysztof Wilczy=C5=84ski <kw@linux.com>
++ M:	Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+ -R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  R:	Rob Herring <robh@kernel.org>
+  L:	linux-pci@vger.kernel.org
+  S:	Supported
+
+--Sig_/OCSl5IDeyrjOmuU2yPMDlAR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgX+lcACgkQAVBC80lX
+0GzM+gf/ZdM+LDjf5nwY5QKqApcerdAtZkMKRtomiuj2Fjglq+Z4JSX2Y8DbCwE/
+6+3/QvsXOOQMC5P1RhuRnEaE+TOEONmY3CnldOgGKB83LqhrcSPfDz6ONPN7sHya
+d8paVJu/6E0SB4cIP0kHlBMMV4zxRZHju/DU2pD4lqMACnuEyKN3rAMRmv0zRQLp
+Ui5zky9NvZi4PjDJxSbqabSs19xn7j11qcdPYpD7jEsr2CkLWbhnpDqe8cXe7gPa
+OVOsBQcZdcsjeajrHvAgCJpmLf+wu70HRsCxP9e8KleIl9N2gQg2EfAkwg9491vk
+l+1LZlAntp1ROa7MIbqN9lFwb04d4g==
+=R7ks
+-----END PGP SIGNATURE-----
+
+--Sig_/OCSl5IDeyrjOmuU2yPMDlAR--
