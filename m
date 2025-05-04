@@ -1,203 +1,174 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF20815C158;
-	Sun,  4 May 2025 18:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441AA1A83F4
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 18:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746384840; cv=none; b=V7IlzrljQ0XbupJppLFuzAdTLsWGfTLxtbZxOlRhvMMBAfQHBZCcIoXFFxdxkgWZe5tqBURpo5M4tyz20SHmbSaOrBdyBwqP9Xh/LmIfE9kw6bsGnPLVNZvnEDITrYrAswRw+o6aZRRAb1EMFgLhUD5hDEF2WAGbkasKT8JXH+Y=
+	t=1746384886; cv=none; b=tQNaqdJnZtnuKeftY3JgLlFyJeJ2fNVedjkO8Rgi8CPzmDFZTu+QgZz+NmMsD39JgGJ68MwtjMgpHAnrF7JcIS9/TeDgd61aCaPqRTRGnu2EkhlUdkcovaIA/bqfn/ZRPQ6HoNcVq1CMIV42/KbxV/Rfcua+BlmULsQ/bygxjQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746384840; c=relaxed/simple;
-	bh=2hIWaNmlaC37OtaVC5SI6mLrurBqLWEYrAaIZ5e7Zlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SFA0QeZUguL7akGxEUoMjOdi44ORp4Hd6TwbGA3f442gr6oSKjOAc9rjlz2pn5uVECXWUM0LEcz/NAB1P0+gt7N9qtJtpkf3FHIRK16UMpBDSUG3Gv37mhAuL/MwGRBkySoGJ5eczh8uDbhcM2ph7r/7rlyEN+KYkdo3b1XB0ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=QD8Ek0px; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1746384886; c=relaxed/simple;
+	bh=JEMaVjkx1LoMBN5m7YsK+6mQnob63u4EFgV3UGdIQdE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=hp+ZRac5QsIpuhln9PIu/DU2TDDMmu2K1wbsYlzqJGD6ePJycV39EypLhhN09O81LoTaC3lRnKiEcBvB72VIYkK4esOumiLBsAl87hTlkiZDiJtwooTaueEJ6ZU1BZF5vWNeCFB08TyHkWu57Osm8V8SU9CLoeWEJlGu9aSX+AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yhV8hH+7; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="QD8Ek0px"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1746384833; x=1746989633; i=deller@gmx.de;
-	bh=lkhJexVslb7DfYZh51jAM1kkx3NkgOI6Ka37f26gAuc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=QD8Ek0pxTNMJBJB+bR/q0muYt6TaHqhYH6JxOLdqco0X9U5GVg8EljchhQq/Y3j1
-	 yxrJcE9jOTqHLLWaUlovhy0tJ93RufhEhQBJlI1CTvgL3J9fftM4f0mxLn1ukpxG0
-	 65mD+tyhGOjvLhrEJi+XeOj2JJY0lbPaW2O3Mk4+e0lr/BEs3Y6u4v6HnEzxLHmxj
-	 Zd7OW+bCMZ9masXbiXn0FhTBzGgqaAibggjTh2iCKTdc6lvOjSczY0YlQnTqjYoYg
-	 /amDt2srMF2jN1JDnAN5QZNqWT3r8GiXy4LMDTg4Z9+t7SV41wV5lBX8B7wj+czas
-	 b3f52SpuqnX6DOZn/g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.181]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEUz4-1uHelX2nhS-006dqA; Sun, 04
- May 2025 20:53:53 +0200
-Message-ID: <4bf2981f-fbcd-46ff-8d35-9772b35263f3@gmx.de>
-Date: Sun, 4 May 2025 20:53:50 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yhV8hH+7"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ace333d5f7bso696809566b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 11:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746384880; x=1746989680; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3zyO3GAeHWNpUR/NK9tQ8bLVW/TIJbHJ26iQW6eAXwM=;
+        b=yhV8hH+74SwkT4AJLvU8PadwtAl3gwPy35g19nn4WwMN3B5VboTM6RkhJvMB5X0dPt
+         Nf1HeVuZckVCs0LPvmXeht00YxydTgQCl99J2a7ZcTkWze3iS+0eVtGx8P8OggOMzLYQ
+         oQa4Pb12+a5TUl361APqbKEviHbsSzXuOcIjlR6jdUCfmcgJT3IL6oM7aQ2S1z3Ibkwy
+         fjO5eyTjflMX2+Zysq2S933yKaijsbLXP23eymcLDMd1Inq+1kx68lDzJWvCn+l7bl59
+         UlsUktLtN/b1E4Lhn2O5YcPbYQX6PJMKXSIf38k69JdBeHrdLxPjVZWeLW84l/raMzaU
+         UjeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746384880; x=1746989680;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3zyO3GAeHWNpUR/NK9tQ8bLVW/TIJbHJ26iQW6eAXwM=;
+        b=snKhGJZU8uSXfmRvt60vHL+pwnZpHszEp53itq33TCKZrHFiDyq8zRIaEpG2fuOPwK
+         cO7ZyVmw6J9EnT0qDX7WzD2WyF0bYeUhVHEUIEg1tQzgp09tp5zEyvAxFjVW2GQlkHR6
+         cZvcGkt5x6ykvh89d6q6GK0aW7D8TNvPZbwORnud6rs9GxQKdMaxOO6o31QoZV0D2/dD
+         B+1INFokpsiafE09wmjvjG67/h+XwXo5sgaBfUHvG33B9VcSKUwCsS18VFHpRCzCbWYY
+         LlpQfVhK9EvIyG1wVI0tyFkGpsXC0bgNW+mPqrzI326exDc2BrzVzVJmVslrdtMH4r7A
+         Je6w==
+X-Forwarded-Encrypted: i=1; AJvYcCU9OxGaE1yWhgjLJO9W+hweXXEkf5oGaeRclqoW4gFOEGGVxUYTaGP337dNNONDgZ5/qHe1gKWlATXoRBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxD4wa+oPgFkpXXXBwdLVk7vj4jNP6zEWxzEjOY4yIvNC3DrlP
+	s3XV3Km3A+souq69hmUrKGEbD2OiEwwpswhRoOILUnNvjxAJba0jIiUQm8D47wY=
+X-Gm-Gg: ASbGncsVROTHSudBMPhXUcpqAW6Vm/Gyeu7fPv8J6krkpGKlso9enYlmLb2mJf0ERam
+	yScSzGff3elvfAL1PfDylsDPOUMqWQF++oW83XjG7qxnhxQO4pI5TaHBXoyreX6zlMsEWixIas1
+	kern7X6k9Xexxxpiwm34TVXApfdr5G2j3laep7jabU1GD86R1bfVgbNeYdo8MU2y0HIvVX8D18A
+	IJX6dhHHDUXPKz4r3aNS59loMbf8Q3nOH+qOznGjHURfwESNsV1AAWa3LSo7rWb/bGNq6hHcXgX
+	xnqCZlmUkyVgEHz1GWOYUebfmrGVB/mFxptEZRkrpFck6Q==
+X-Google-Smtp-Source: AGHT+IHrsNrppdqktQJ9HgmKg1AXRw1BSUbjPhnEPEnyxp85lpy5ahaJizVjarul/hB8wXh8acHITw==
+X-Received: by 2002:a17:906:6a19:b0:abf:19ac:771 with SMTP id a640c23a62f3a-ad1a48bc392mr453075266b.2.1746384879785;
+        Sun, 04 May 2025 11:54:39 -0700 (PDT)
+Received: from localhost ([2001:4090:a244:802a:8179:d45a:7862:147])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad1891f508asm359164166b.85.2025.05.04.11.54.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 11:54:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 25/41] parisc: Replace __ASSEMBLY__ with __ASSEMBLER__ in
- non-uapi headers
-To: Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- linux-parisc@vger.kernel.org
-References: <20250314071013.1575167-1-thuth@redhat.com>
- <20250314071013.1575167-26-thuth@redhat.com>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20250314071013.1575167-26-thuth@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=a2be36fb501c3dfa35a1012a0204bfd7cc7ee65d88753afd76602dbef972;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Sun, 04 May 2025 20:54:27 +0200
+Message-Id: <D9NLROGMM21Q.1IV5PFM7ATZU2@baylibre.com>
+Cc: <mkl@pengutronix.de>, <mailhol.vincent@wanadoo.fr>,
+ <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lukas@mwa.re>, <jan@mwa.re>
+Subject: Re: [PATCH v3] can: m_can: initialize spin lock on device probe
+From: "Markus Schneider-Pargmann" <msp@baylibre.com>
+To: "Antonios Salios" <antonios@mwa.re>, <rcsekar@samsung.com>
+X-Mailer: aerc 0.20.1
+References: <20250425111744.37604-2-antonios@mwa.re>
+In-Reply-To: <20250425111744.37604-2-antonios@mwa.re>
+
+--a2be36fb501c3dfa35a1012a0204bfd7cc7ee65d88753afd76602dbef972
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bdhbJqautSqLHbu+aJesTRxuyglGCjOnnMraEDXKiq+OLWfM0Ps
- 6D3nu4fcOufJGmNOOrUXWKFV9Ky97fYpcr6QNdChkVTnH+qTaAlMmaA2mc2GsrBXvwEEkoT
- g72HExB/10GS7HX78MEzwezeowN8pbGQLpflQDj/UOij2xvybCmkYTABRjjueSZw2q7nums
- oyS62+TayFbdWCjKVATKQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:36oS2efrMdk=;v8Yt0Rg23Ex8f29IaZn/0gkZlj5
- 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
+Content-Type: text/plain; charset=UTF-8
 
-On 3/14/25 08:09, Thomas Huth wrote:
-> While the GCC and Clang compilers already define __ASSEMBLER__
-> automatically when compiling assembly code, __ASSEMBLY__ is a
-> macro that only gets defined by the Makefiles in the kernel.
-> This can be very confusing when switching between userspace
-> and kernelspace coding, or when dealing with uapi headers that
-> rather should use __ASSEMBLER__ instead. So let's standardize on
-> the __ASSEMBLER__ macro that is provided by the compilers now.
->=20
-> This is mostly a completely mechanical patch (done with a simple
-> "sed -i" statement), except for some manual tweaks in the files
-> arch/parisc/include/asm/smp.h, arch/parisc/include/asm/signal.h,
-> arch/parisc/include/asm/thread_info.h and arch/parisc/include/asm/vdso.h
-> that had the macro spelled in a wrong way.
->=20
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-parisc@vger.kernel.org
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
+Hi,
+
+On Fri Apr 25, 2025 at 1:17 PM CEST, Antonios Salios wrote:
+> The spin lock tx_handling_spinlock in struct m_can_classdev is not being
+> initialized. This leads the following spinlock bad magic complaint from t=
+he
+> kernel, eg. when trying to send CAN frames with cansend from can-utils:
+>
+> [   10.631450] BUG: spinlock bad magic on CPU#0, cansend/95
+> [   10.631462]  lock: 0xff60000002ec1010, .magic: 00000000, .owner: <none=
+>/-1, .owner_cpu: 0
+> [   10.631479] CPU: 0 UID: 0 PID: 95 Comm: cansend Not tainted 6.15.0-rc3=
+-00032-ga79be02bba5c #5 NONE
+> [   10.631487] Hardware name: MachineWare SIM-V (DT)
+> [   10.631490] Call Trace:
+> [   10.631493] [<ffffffff800133e0>] dump_backtrace+0x1c/0x24
+> [   10.631503] [<ffffffff800022f2>] show_stack+0x28/0x34
+> [   10.631510] [<ffffffff8000de3e>] dump_stack_lvl+0x4a/0x68
+> [   10.631518] [<ffffffff8000de70>] dump_stack+0x14/0x1c
+> [   10.631526] [<ffffffff80003134>] spin_dump+0x62/0x6e
+> [   10.631534] [<ffffffff800883ba>] do_raw_spin_lock+0xd0/0x142
+> [   10.631542] [<ffffffff807a6fcc>] _raw_spin_lock_irqsave+0x20/0x2c
+> [   10.631554] [<ffffffff80536dba>] m_can_start_xmit+0x90/0x34a
+> [   10.631567] [<ffffffff806148b0>] dev_hard_start_xmit+0xa6/0xee
+> [   10.631577] [<ffffffff8065b730>] sch_direct_xmit+0x114/0x292
+> [   10.631586] [<ffffffff80614e2a>] __dev_queue_xmit+0x3b0/0xaa8
+> [   10.631596] [<ffffffff8073b8fa>] can_send+0xc6/0x242
+> [   10.631604] [<ffffffff8073d1c0>] raw_sendmsg+0x1a8/0x36c
+> [   10.631612] [<ffffffff805ebf06>] sock_write_iter+0x9a/0xee
+> [   10.631623] [<ffffffff801d06ea>] vfs_write+0x184/0x3a6
+> [   10.631633] [<ffffffff801d0a88>] ksys_write+0xa0/0xc0
+> [   10.631643] [<ffffffff801d0abc>] __riscv_sys_write+0x14/0x1c
+> [   10.631654] [<ffffffff8079ebf8>] do_trap_ecall_u+0x168/0x212
+> [   10.631662] [<ffffffff807a830a>] handle_exception+0x146/0x152
+>
+> Initializing the spin lock in m_can_class_allocate_dev solves that
+> problem.
+>
+> Fixes: 1fa80e23c150 ("can: m_can: Introduce a tx_fifo_in_flight counter")
+>
+> Signed-off-by: Antonios Salios <antonios@mwa.re>
+> Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+Thanks for finding and fixing this.
+
+Reviewed-by: Markus Schneider-Pargmann <msp@baylibre.com>
+
+Best
+Markus
+
 > ---
->   arch/parisc/include/asm/alternative.h    | 4 ++--
->   arch/parisc/include/asm/assembly.h       | 4 ++--
->   arch/parisc/include/asm/barrier.h        | 4 ++--
->   arch/parisc/include/asm/cache.h          | 4 ++--
->   arch/parisc/include/asm/current.h        | 4 ++--
->   arch/parisc/include/asm/dwarf.h          | 4 ++--
->   arch/parisc/include/asm/fixmap.h         | 4 ++--
->   arch/parisc/include/asm/ftrace.h         | 4 ++--
->   arch/parisc/include/asm/jump_label.h     | 4 ++--
->   arch/parisc/include/asm/kexec.h          | 4 ++--
->   arch/parisc/include/asm/kgdb.h           | 2 +-
->   arch/parisc/include/asm/linkage.h        | 4 ++--
->   arch/parisc/include/asm/page.h           | 6 +++---
->   arch/parisc/include/asm/pdc.h            | 4 ++--
->   arch/parisc/include/asm/pdcpat.h         | 4 ++--
->   arch/parisc/include/asm/pgtable.h        | 8 ++++----
->   arch/parisc/include/asm/prefetch.h       | 4 ++--
->   arch/parisc/include/asm/processor.h      | 8 ++++----
->   arch/parisc/include/asm/psw.h            | 4 ++--
->   arch/parisc/include/asm/signal.h         | 4 ++--
->   arch/parisc/include/asm/smp.h            | 4 ++--
->   arch/parisc/include/asm/spinlock_types.h | 4 ++--
->   arch/parisc/include/asm/thread_info.h    | 4 ++--
->   arch/parisc/include/asm/traps.h          | 2 +-
->   arch/parisc/include/asm/unistd.h         | 4 ++--
->   arch/parisc/include/asm/vdso.h           | 4 ++--
->   26 files changed, 55 insertions(+), 55 deletions(-)
+> Changes since v2:
+>  * Clarify bug in commit message
+>
+> Changes since v1:
+>  * Move spin_lock_init from device probe functions to classdev alloc func=
+tion
+>  * Add a fixes tag
+> ---
+>  drivers/net/can/m_can/m_can.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.=
+c
+> index 884a6352c..12e313998 100644
+> --- a/drivers/net/can/m_can/m_can.c
+> +++ b/drivers/net/can/m_can/m_can.c
+> @@ -2379,6 +2379,8 @@ struct m_can_classdev *m_can_class_allocate_dev(str=
+uct device *dev,
+>  	SET_NETDEV_DEV(net_dev, dev);
+> =20
+>  	m_can_of_parse_mram(class_dev, mram_config_vals);
+> +
+> +	spin_lock_init(&class_dev->tx_handling_spinlock);
+>  out:
+>  	return class_dev;
+>  }
 
-applied to the parisc git tree.
 
-Thanks!
-Helge
+--a2be36fb501c3dfa35a1012a0204bfd7cc7ee65d88753afd76602dbef972
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iIcEABYKAC8WIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCaBe34xEcbXNwQGJheWxp
+YnJlLmNvbQAKCRCFwVZpkBVKU89GAQDr3jtUGj6D1oEty/ukeBy81LKZK/2B/h9L
+59c4zdDlggD9G78Y8FCOVpLAFNjVySknxhREhi53v9mLu3NI3DYzBgs=
+=TsUr
+-----END PGP SIGNATURE-----
+
+--a2be36fb501c3dfa35a1012a0204bfd7cc7ee65d88753afd76602dbef972--
