@@ -1,66 +1,64 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FB317BB35;
-	Sun,  4 May 2025 04:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25B81E;
+	Sun,  4 May 2025 05:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746332698; cv=none; b=ES94kEpKecHSTyf2Srho9696t/0N1hWqC39EsrWZ4wxWAm+X4Pc7JEdhFoR1BhOMBDMKf6t1funfnQ441bLMRdNvnKzgGa2OEWOvg68P3ox5hgHBPVKGqC0mjcHVL5KOv+Y72e6ly7tBQDAyD1DU+cdNqDBMtaqI50UjDxN/ZgQ=
+	t=1746334813; cv=none; b=gUdAdzIsjFi7+/zzby+A2VCiDhaSXbOFurcs2oy8cUn80h50gFqsd8gDJBrbYdHyM5DvlZV6HpG6sQ2wAh+uR8O/SV3pEzYYV58aazSVHo27BjbGpu6G4Bcx8kY0vbtZ5o1q93AWVpfncQu3YdlJF0Sxo3Tp+Gl2JZhJzhgyMS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746332698; c=relaxed/simple;
-	bh=1sBK2RO1fUXRegO3hXO+fTjEo09ojRhQfVGN29ukGZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GMcTDDZaOgpCdfiY+IeNrOG23aMisQf79SVkLF897QrLw2NvGsezwl/s4y7fsnq/m2e37Ted/Jp7r+0UF3h53T5XLjPrFQXwCcM+ASZt3TIPRo/my+mXehorNmh+DhB2F3q3Q+KATNIvvk09YPloRqQdtiv14ThkbilGgTptWOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/KpjrK6; arc=none smtp.client-ip=209.85.215.169
+	s=arc-20240116; t=1746334813; c=relaxed/simple;
+	bh=QY+7yavVCHtLJMt0lDbNynox2WS6qpLllkdUvJMEt/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7yMjhkQkRSJz3fy9skBl4qT6/lW5H+YZOwRQXC5hQfBgV7D72LmPDTcp9txipPYXD4+/4ZbPGB1W2iui1Y7v68g4bmiqictfZRBFOvW1AZvHZS7YrbsrWS2yyu91fbF3RLCx1c+68qe5E4jIjLYmxJfwFlyqFb8d9uSAsQ2/44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iwnC4Heo; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/KpjrK6"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af908bb32fdso2978252a12.1;
-        Sat, 03 May 2025 21:24:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwnC4Heo"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so3131084b3a.1;
+        Sat, 03 May 2025 22:00:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746332696; x=1746937496; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+7Tna5veepmGz/9U/3f4p7MVzaMNOPpGUU1xoKU1Tno=;
-        b=F/KpjrK6VE4OxP258JuSk0TCqZckLmhOP3A66faIg6DPrCkbK69WHKx0M/wYFblE5a
-         HXUEMEE8Y5uPEy8MGanfZuxVeQgs9sTkqjsvtMqJMHlY8DSsLrqr8ERmaRWLrG91yfw1
-         fQAj/ke/eXlNq4MpU+QghSIQX/ogTen5PXcLVLfrUlJt01afI9qamh6PjSeyaWSGxJUi
-         jjxVvOP7E4iDY7lMAzdxKdAoViZQVaFI01E7O2ZWpiZTg/dR7ImwVRRAh78yc83YrWJk
-         WZSo6lifL8ibA2Eks0/yU6fIMUjUmWo8b4KgW5WMa6nKWR7G6TAiOzbQD0dM/XbYX2KK
-         uxlQ==
+        d=gmail.com; s=20230601; t=1746334811; x=1746939611; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=irH8Xym24L82fOWR8hhQ7rAUBy017/0lzmy7hdmSARU=;
+        b=iwnC4Heo8ssnFC2AX3e4GuD4b0w1iOkXhZ0txHdvj9oQ4B2erHBve+gf77uxo+ErMc
+         ZM0fo20r9D3c5Dz2Ih/geIK6Ad6vdzAOPvm4yr3NJE/JpslbzJyNxoh1T80A5Q2KU51f
+         D3vwumSJsmkqIuKqQCrNVo0Uv7vuCyFiMm+DRissXTRS7UplWzBWw9/PuDlF2d+BIJP5
+         PNzDz2mm0bKVgvbG+Ia+NUE9uBhgQlQSQsw2Y098wQTU302PUAtYlWSqFx9NMjfr0mdV
+         sxkE/UJPK6HDeaUgAY5Kh7ySoT8QmlxKq59OhgMyqU2FH8ltHAVIzHoKPk+IOdFb2VQd
+         Wqlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746332696; x=1746937496;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+7Tna5veepmGz/9U/3f4p7MVzaMNOPpGUU1xoKU1Tno=;
-        b=RrmWzIJdzoAvmTQk1pMoL+NwFYfimufJxzzIx0e92VLsM0Yv4+We+uycCM2ycLdaGa
-         a3CZs8AHzoE+5PXWH6lgrMAxyT44B84vLr0x0Qy7UpgTr2RHXMBnLZgOjPCFs/RvBiu6
-         C16Vifb8IhFKvXppyA8+HA3xAshUpmG73ypzwHKYjW2JDwT2lMgzW8SwEJx1cZciTcrK
-         yTvhlQvdPw+4c0GBOx/NxgWogRYuLI3DfN8lRsdtPWt2eA6Qgzj1DYvdsqNVmEf4RfLN
-         /i3R2KoLcMeLfem0YRAlgEuH3mkm71mz5I7d3RO/dYcj93Kg9dCsQPiZ5ke4xb4MjVmO
-         mhWw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3PMxMX/9N5iuGBOdAOZM+5C2mlSG6i8KKlebB8FGVmmtsFKP/twMrY+OX7o4gtnD0sr682340cGqE3zc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUxnEv9fDeO2kwHohnSAi8Qh2WppvI/kSy2dTMHtRuvrFL/yEO
-	e0Su3cfnrO6O7XxW2AeGsxHqp0kYAGw6mOe9qbrZHO6xzfYQW6ht0HVVxR7e
-X-Gm-Gg: ASbGnctFGvLOMlRPmwXr9c0JDetf7RGnmyVR8ha3ac8267Da2MnQ3mdZQn/00Mj91bO
-	1V+UoCl8x9YMNte2Tj8CHOAxWl8yhxlPV3nYhk0M/UA8NoH5MupE5G3oK8G/kSuLCBS2CEoG3s/
-	/oS1LhMpMGZUMMScEgGnJBWkCxCjfYptrMiuvHwW/Hwyo1yLrFeUBTtd/i7l7bYiSZtZxYv9TgW
-	noNvA3DvuX5HNHKCqjzqHIvtOu5MnjHyuK3R/5kBclmBk2RvGBsCruHEaTwW/MKs2boH7QZ4FNL
-	upprwrutk7zyLj7vqv9EXexKVAY+bYHkwNAU767kMf35c0Gz2kwphBg1RHOeyFB6NUcT2fBrtpG
-	j+9np9/nXsUeVkEpSuQ==
-X-Google-Smtp-Source: AGHT+IF+q32viBchNhIVP0ATOeLTCT175civYMi9xVnpHibFJtK/AnWe4JHRr6QKeFO/i3Yjiv/CXw==
-X-Received: by 2002:a17:902:f607:b0:221:751f:cfbe with SMTP id d9443c01a7336-22e100a19d8mr144016635ad.19.1746332696282;
-        Sat, 03 May 2025 21:24:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746334811; x=1746939611;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=irH8Xym24L82fOWR8hhQ7rAUBy017/0lzmy7hdmSARU=;
+        b=JdOIJusZjVu9NcY04AWlLEujHjiOy910M1IraWaNHOHrhpTN0wl+FtJcyl4rhduLsp
+         8v/x/EWhHEEumXTo/qNGo2RAHgAm4PCOtXOKcHL8bovrlnm1txAkXPo3YJMKelxIqnFr
+         wilpa2tSRs6bipIQmkOPjftInsjBYZc1+WSmUQOmBhZptlEPRMoRi9QIyn8GM1Wo6h9t
+         86UW/00Zyjj7Ho+12UZ4GId577Dg9DD5cRpnt1joshy1COYwTU8cvQQh5A5Q8Of01qgH
+         MMAOot3DerDDGOz01SzYiZ/KR6gHwBKbDqnUEFRnmJ9fHlY6fTeAd5V+sh8bDObNWyxA
+         2B1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUU6IvJ9rTDW9dLEvDpyHV0g2YrMBelg/RYQ0gWMPIS3+q0rl9yjQu1aehu03iq5LMyU1fv9ugyPbC3tWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybKRqeJXhMZ5521QyQF5Xe0G6ums+Nug9UVwDXeueA/uv37WGR
+	ueXMzcH2Ws92aUJiCRNBJRyPGkivwo85CG1BkwnG5eux+n0dLea0xm7GwtBl
+X-Gm-Gg: ASbGncsBtmezQx4Mpm2nQ0zvzxvaKVWcHuI1d52y+C3tMuO2SdXgDwh1RU+/YBLEVjb
+	/+xakFczEPiZtQcg5VmJNfCcrZprUynt75n6V2HzJpi7sd+5/KdaQIHnU8RinDPNESMOYiwbr1j
+	AYgTTeGPt2V86zJFYeKnonJVyR/LoQRpm3HRXYogEfdwvkilbq4SUVnFNxSe+UYONDNtVtdMFrV
+	vNIPOZ2DEsSQYBQ5DHcbSYyvLFt11QuVhHuxegpkMvZdxfjUVijlYyyu1R+t4SASWopvNZOOLFb
+	LnhKOGtn2jhTd9m3qSm3C5HAOpJsxAxebTDXsh9T2qFSIFBsfZ54RkmsWrN286Qk2bOFaaGBa1i
+	SrljlWZmfF2VJnwQTZA==
+X-Google-Smtp-Source: AGHT+IG1eGBInTddWgvKB8xXnEItLfXAXdf7lE+tTCbiXc5vGnAIRUS4w3kiTBP1RjIK3mLrRMXGTQ==
+X-Received: by 2002:a05:6a21:318b:b0:1f3:33bf:6640 with SMTP id adf61e73a8af0-20e9650f43bmr4585569637.18.1746334810834;
+        Sat, 03 May 2025 22:00:10 -0700 (PDT)
 Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fbc8sm31482185ad.142.2025.05.03.21.24.52
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058db91dasm4225756b3a.44.2025.05.03.22.00.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 21:24:55 -0700 (PDT)
+        Sat, 03 May 2025 22:00:10 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: rust-for-linux@vger.kernel.org
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+Cc: a.hindborg@kernel.org,
 	boqun.feng@gmail.com,
 	frederic@kernel.org,
 	lyude@redhat.com,
@@ -77,12 +75,10 @@ Cc: Andreas Hindborg <a.hindborg@kernel.org>,
 	tmgross@umich.edu,
 	dakr@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] rust: time: Add ktime_get() to ClockSource trait
-Date: Sun,  4 May 2025 13:24:35 +0900
-Message-ID: <20250504042436.237756-4-fujita.tomonori@gmail.com>
+Subject: [PATCH v1 0/5] rust: time: Convert hrtimer to use Instant and Delta
+Date: Sun,  4 May 2025 13:59:53 +0900
+Message-ID: <20250504045959.238068-1-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250504042436.237756-1-fujita.tomonori@gmail.com>
-References: <20250504042436.237756-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,136 +87,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the ktime_get() associated function to the ClockSource
-trait, allowing each clock source to specify how it retrieves the
-current time. This enables Instant::now() to be implemented
-generically using the type-level ClockSource abstraction.
+Convert hrtimer to use `Instant` and `Delta`; remove the use of
+`Ktime` from the hrtimer code, which was originally introduced as a
+temporary workaround.
 
-This change enhances the type safety and extensibility of timekeeping
-by statically associating time retrieval mechanisms with their
-respective clock types. It also reduces the reliance on hardcoded
-clock logic within Instant.
+hrtimer uses either an `Instant` or a `Delta` as its expiration value,
+depending on the mode specified at creation time. This patchset
+replaces `HrTimerMode` enum with a trait-based abstraction and
+associates each mode with either an `Instant` or a `Delta`. By
+leveraging Rust's type system, this change enables `HrTimer` to be
+statically associated with a specific `HrTimerMode`, the corresponding
+`Instant` or `Delta`, and a `ClockSource`.
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- rust/helpers/time.c | 16 ++++++++++++++++
- rust/kernel/time.rs | 32 ++++++++++++++++++++++++++++----
- 2 files changed, 44 insertions(+), 4 deletions(-)
+The `impl_has_hr_timer` macro is extended to allow specifying the
+`HrTimerMode`. In the following example, it guarantees that the
+`start()` method for `Foo` only accepts `Instant<Monotonic>`. Using a
+`Delta` or an `Instant` with a different clock source will result in a
+compile-time error:
 
-diff --git a/rust/helpers/time.c b/rust/helpers/time.c
-index 3d31473bce08..31208f1042a1 100644
---- a/rust/helpers/time.c
-+++ b/rust/helpers/time.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <linux/ktime.h>
-+#include <linux/timekeeping.h>
- 
- s64 rust_helper_ktime_to_us(const ktime_t kt)
- {
-@@ -11,3 +12,18 @@ s64 rust_helper_ktime_to_ms(const ktime_t kt)
- {
- 	return ktime_to_ms(kt);
- }
-+
-+ktime_t rust_helper_ktime_get_real(void)
-+{
-+	return ktime_get_with_offset(TK_OFFS_REAL);
-+}
-+
-+ktime_t rust_helper_ktime_get_boottime(void)
-+{
-+	return ktime_get_with_offset(TK_OFFS_BOOT);
-+}
-+
-+ktime_t rust_helper_ktime_get_clocktai(void)
-+{
-+	return ktime_get_with_offset(TK_OFFS_TAI);
-+}
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index 3bc76f75bfd0..1be5ecd814d3 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -63,6 +63,11 @@ pub trait ClockSource {
-     ///
-     /// This constant corresponds to the C side `clockid_t` value.
-     const ID: bindings::clockid_t;
-+
-+    /// Get the current time from the clock source.
-+    ///
-+    /// The function must return a value in the range from 0 to `KTIME_MAX`.
-+    fn ktime_get() -> bindings::ktime_t;
- }
- 
- /// A monotonically increasing clock.
-@@ -80,6 +85,11 @@ pub trait ClockSource {
- 
- impl ClockSource for Monotonic {
-     const ID: bindings::clockid_t = bindings::CLOCK_MONOTONIC as bindings::clockid_t;
-+
-+    fn ktime_get() -> bindings::ktime_t {
-+        // SAFETY: It is always safe to call `ktime_get()` outside of NMI context.
-+        unsafe { bindings::ktime_get() }
-+    }
- }
- 
- /// A settable system-wide clock that measures real (i.e., wall-clock) time.
-@@ -100,6 +110,11 @@ impl ClockSource for Monotonic {
- 
- impl ClockSource for RealTime {
-     const ID: bindings::clockid_t = bindings::CLOCK_REALTIME as bindings::clockid_t;
-+
-+    fn ktime_get() -> bindings::ktime_t {
-+        // SAFETY: It is always safe to call `ktime_get_real()` outside of NMI context.
-+        unsafe { bindings::ktime_get_real() }
-+    }
- }
- 
- /// A monotonic that ticks while system is suspended.
-@@ -113,6 +128,11 @@ impl ClockSource for RealTime {
- 
- impl ClockSource for BootTime {
-     const ID: bindings::clockid_t = bindings::CLOCK_BOOTTIME as bindings::clockid_t;
-+
-+    fn ktime_get() -> bindings::ktime_t {
-+        // SAFETY: It is always safe to call `ktime_get_boottime()` outside of NMI context.
-+        unsafe { bindings::ktime_get_boottime() }
-+    }
- }
- 
- /// International Atomic Time.
-@@ -130,6 +150,11 @@ impl ClockSource for BootTime {
- 
- impl ClockSource for Tai {
-     const ID: bindings::clockid_t = bindings::CLOCK_TAI as bindings::clockid_t;
-+
-+    fn ktime_get() -> bindings::ktime_t {
-+        // SAFETY: It is always safe to call `ktime_get_tai()` outside of NMI context.
-+        unsafe { bindings::ktime_get_clocktai() }
-+    }
- }
- 
- /// A specific point in time.
-@@ -153,14 +178,13 @@ fn clone(&self) -> Self {
- impl<C: ClockSource> Copy for Instant<C> {}
- 
- impl<C: ClockSource> Instant<C> {
--    /// Get the current time using `CLOCK_MONOTONIC`.
-+    /// Get the current time from the clock source.
-     #[inline]
-     pub fn now() -> Self {
--        // INVARIANT: The `ktime_get()` function returns a value in the range
-+        // INVARIANT: The `ClockSource::ktime_get()` function returns a value in the range
-         // from 0 to `KTIME_MAX`.
-         Self {
--            // SAFETY: It is always safe to call `ktime_get()` outside of NMI context.
--            inner: unsafe { bindings::ktime_get() },
-+            inner: C::ktime_get(),
-             _c: PhantomData,
-         }
-     }
+struct Foo {
+    #[pin]
+    timer: HrTimer<Self>,
+
+}
+
+impl_has_hr_timer! {
+    impl HasHrTimer<Self> for Foo {
+        mode = AbsoluteMode<Monotonic>,
+        self.timer
+    }
+}
+
+This design eliminates runtime mismatches between expires types and
+clock sources, and enables stronger type-level guarantees throughout
+hrtimer.
+
+This patchset can be applied on top of the typed clock sources patchset:
+
+https://lore.kernel.org/lkml/20250504042436.237756-1-fujita.tomonori@gmail.com/
+
+
+FUJITA Tomonori (5):
+  rust: time: Change Delta methods to take &self instead of self
+  rust: timer: Replace HrTimerMode enum with trait-based mode types
+  rust: time: Add HrTimerExpires trait
+  rust: time: Make HasHrTimer generic over HrTimerMode
+  rust: time: Remove Ktime in hrtimer
+
+ rust/kernel/time.rs                 |  15 +-
+ rust/kernel/time/hrtimer.rs         | 288 ++++++++++++++++++----------
+ rust/kernel/time/hrtimer/arc.rs     |   8 +-
+ rust/kernel/time/hrtimer/pin.rs     |   8 +-
+ rust/kernel/time/hrtimer/pin_mut.rs |   8 +-
+ rust/kernel/time/hrtimer/tbox.rs    |   8 +-
+ 6 files changed, 225 insertions(+), 110 deletions(-)
+
+
+base-commit: 7b33a2d9c12023a73b7ba105a3eed77c3527a94e
 -- 
 2.43.0
 
