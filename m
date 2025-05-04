@@ -1,211 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4CA1FDE39;
-	Sun,  4 May 2025 17:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60375247294;
+	Sun,  4 May 2025 18:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746381453; cv=none; b=J8OMoGE3MoUoi6HezTj5JHWmd65rXaOFmc7uUZh0m6T15Tvau0b9cCmmmZfIZGI2IPYDm9e+2cSpVTECCwGB410ZW9QIIsS71r64/D0BaH5N+rbw6HrznLm9awiw3bQwpiiuv2n9rg3+kaGhq0Eis7y06x4kIW8xnPZXv8CP0WU=
+	t=1746381604; cv=none; b=PwoB50CcO/IdN1KpvmSgrXEG28mXgJb6TBZI7QWVNY+RAkhUoqC1hxkcE3jZb5dpwScgRz/OjXyK7scxrWeOa1oh+Q3ajBkCXod8v+gpeT8+W8x/j6b2POxUIZw1GMLgxLXgVhBgrWye6FGlFj+yfP6VuAXHeFVcQzLzd0TYWjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746381453; c=relaxed/simple;
-	bh=AYJi3MszYKQEu2bQRpuTI0bPXe/bbOcOcx8CNFtW89w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KrzSl5Xl9E1F82iT09AME/ETern2DSE0vz6CxfGGbOo+PybkvzwBy6tfzhAZOAiveSbUAGGflGLA9IErHpbKqF/uXKQZWxrBXEi8wUkHQFKxztU5t+1tyNZ8nt5YsCkjTL1i0wyfRcPkNPY09shSU5cm1J8gSqRqHSJOjemWkWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6NiNpQn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746381604; c=relaxed/simple;
+	bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FwvLozYtjpxHgGEtxr5jue5tzlEgObxDpFTDRMvzX42wjnzYlFD4IeJFo12+q2BhRUFiyt8emicBWAfEnFbYLW0YCou9u1wmUQvd2a+8OQBdDnd2hgZE/TkY6GDHJrsYpwG+r3vs+lkkJ+r5ExmGrWUV69pWvExN2ByLGu/Y+aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzGHIERH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6NiNpQn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96E6C4CEE7;
-	Sun,  4 May 2025 17:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746381453;
-	bh=AYJi3MszYKQEu2bQRpuTI0bPXe/bbOcOcx8CNFtW89w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F6NiNpQnmYuFLky9beQly5JrXAnkvM+4pIlnw3b5l3GwWqsb4F5HT1k8lZF2OdDtI
-	 h8msmHMTdDwaciJgsgC0VE+W1WF4ialgmxMGk4YfsfOPRXp7gdT4pyPNWQZcsEj/wn
-	 ezV4sAt5ZkzSeWnCNpG3Pv8kEL7evQHnkUrZa7DJMLLvdMfXAZS86x8T+gDlewSEzf
-	 ecK5BZxMy4CarACxMHft6eC3g31xWixE6/eTWPWhTAYAfnexiARS3WzzmVsefv1ZAT
-	 AkiJSjOjefUAs9w0dfC3Jl/x57yDLE46/yN0yQXLnOEh5o0cWTfIybEKjvWOeqsN+v
-	 DP8o4ADcoBWNQ==
-Date: Sun, 4 May 2025 18:57:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
- <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
- <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
- <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>
-Subject: Re: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data
- capture
-Message-ID: <20250504185724.4700284f@jic23-huawei>
-In-Reply-To: <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
-References: <cover.1745841276.git.marcelo.schmitt@analog.com>
-	<db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzGHIERH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de10eso8601775ad.1;
+        Sun, 04 May 2025 11:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746381602; x=1746986402; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
+        b=LzGHIERHvxTUPEqr9cOS1GV66lxrw4fT0k1GgbGTgpOOhYIhA/M7mk96V2KdisJbpS
+         wYuUP8KY3FreWXCEGvYWJZBdHqHxl1JMOD9mBFJZ/xxeqs3uiF+FPKYfp6YuTXlg7eVx
+         3yWW5DdmmupBxrQKXoqhTwvS+2uHdC5VEjyHcqrKyAKy6RB5lIZl3FjZGRGenq9bYnV8
+         8aZYkD8bvagSbntyD91fwdOgLYAGM91Gp/H9elCLe84MEiqPeI5wC/oO2E50ydcVzvMa
+         50SRlol2Eo8uMxOCxpzBC5nyB10Frjl3lRra20nvh78lkeyYOmbHueqn8e6mLev5tYbR
+         HjMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746381602; x=1746986402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
+        b=YrOdBqh/khS3Zc8hxC3/jcIG8UeZyx9mCus0lo9D320yDrOxohmZCBFmm5yErnAdKe
+         klpOVxliCve+nHX7pH8OZT72Ev/+WHvxaucY25l0eWmFCB6XlaErgtOSxTf7Igqg3roM
+         Z+m8S4eboIQpwt2l84gqKRBwoGd0nXmR6iHJ/z+XjdeOEZaKmw00JSTgLdU9ytq/6j4p
+         XZKLB23I7r8GwyWgTY6BF84CJtaBzjt1IBKwRCYTQDxVDZMnbfEWVper8foAYocT0Zr/
+         9pUtWIYK2GlhTN1F0YUJaNEQhvcoC7R0opW2DVuRtZFRfK2leLQ4H+hisrjJevIfNsqC
+         daqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPZWScbgfCNmDTQFc2+dnVBEEUtbodtxleGK4qZuXV0KUSXEODHzyRFfU+GnauUu+SmFvbwmdhyWJnhvM42i8=@vger.kernel.org, AJvYcCVd+Yv/o0cexr/D0S6CFR34TplgF3GY2CRwco0P42595a751iNW4OIVXSCgbIO5LEELrOiCv9NbYSEmgO/aFS3y@vger.kernel.org, AJvYcCXuKbcKMv1asxdVSH1RHU8kGmjiOHtD23K+sTjg2G/pulo6aJ52LFU8POVXM7kXeq5izIY+eRI5LSZ++JM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCAb6Sa6p0B3ACTBV6G0OcWe6fN7TSINURKwUgSs6Zlgz/qfpq
+	QsNKUnEl99wnJYQjAuhMxcJXfr5nKVlEIqcRQZFC8xO3NSVbVEwjsfeUKGbjCqOHl67tdL/jhCg
+	cv4+dWJw2SW0kQtwQ8ZluMswUc6o=
+X-Gm-Gg: ASbGncv53TPcNx2YeGxu0ZVRAjKXdzqSL7Eg6i3oVNyHk8PM00P3I6vKdocEYoHkoOg
+	zM+y82TyrXkC8ND38fBTkVjtgeEUEmSQW8jYS04Sp08Se9Wo/BoliGUivknzoPf0PmF4AQsyLup
+	v9XId5xO80+2shIdcChWomlOFQQveNi10b
+X-Google-Smtp-Source: AGHT+IG10nTmSSofjOBje28dUf2+IMvpiGM28AIkNlFwzc+b2QjcTA+FDkybqQ1kasUk4HKenUIhjeB9Q2WKIKme63Y=
+X-Received: by 2002:a17:902:c947:b0:221:751f:dab9 with SMTP id
+ d9443c01a7336-22e103958e7mr62623825ad.14.1746381602442; Sun, 04 May 2025
+ 11:00:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-3-ojeda@kernel.org>
+ <CAJ-ks9=v8E_bV+oJ-bdm3KZW2dfrFdiCmeVLs+bgK8oVu6BCUA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=v8E_bV+oJ-bdm3KZW2dfrFdiCmeVLs+bgK8oVu6BCUA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 4 May 2025 19:59:50 +0200
+X-Gm-Features: ATxdqUFd9uspIO8JG7LjKJl3xaEnjAQIhi12ZtAgUBxbovS5zZvywxn5xVHJpf0
+Message-ID: <CANiq72=C1+2B221ecxM5Dy1rF8nEtR4ikgAA2nEh3M1=EkkXyg@mail.gmail.com>
+Subject: Re: [PATCH 2/7] rust: kunit: support checked `-> Result`s in KUnit `#[test]`s
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 28 Apr 2025 09:28:20 -0300
-Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
+On Sun, May 4, 2025 at 7:34=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> Why not restrict this to Result<(), E>?
 
-> Extend the AD4170 driver to allow buffered data capture in continuous read
-> mode. In continuous read mode, the chip skips the instruction phase and
-> outputs just ADC sample data, enabling faster sample rates to be reached.
-> The internal channel sequencer always starts sampling from channel 0 and
-> channel 0 must be enabled if more than one channel is selected for data
-> capture. The scan mask validation callback checks the aforementioned
-> condition is met.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-A few minor things spotted inline.
+I guess it is an option -- not sure if there may be a use case.
 
-Thanks,
+> Is it possible to include the error in the output?
 
-Jonathan
+I thought about giving some more context somehow and perhaps printing
+it "manually" in the log, possibly in a KUnit `# ...`. David can
+probably suggest the "proper" way.
 
-> ---
-> changes since v1
-> - Using bitmap_weight().
-> - rx_buf changed from __be32 to u8 array to better cope with new regmap config.
-> 
->  drivers/iio/adc/Kconfig  |   2 +
->  drivers/iio/adc/ad4170.c | 199 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 199 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index d5d0308da007..9b4787c127fc 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -75,6 +75,8 @@ config AD4170
->  	tristate "Analog Device AD4170 ADC Driver"
->  	depends on SPI
->  	select REGMAP_SPI
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
->  	help
->  	  Say yes here to build support for Analog Devices AD4170 SPI analog
->  	  to digital converters (ADC).
-> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-> index 4d0af15cb48d..5fcf1c023ac2 100644
-> --- a/drivers/iio/adc/ad4170.c
-> +++ b/drivers/iio/adc/ad4170.c
-> @@ -10,8 +10,12 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
-> +#include <linux/iio/buffer.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -54,6 +58,7 @@
->  #define AD4170_FILTER_FS_REG(x)				(0xC7 + 14 * (x))
->  #define AD4170_OFFSET_REG(x)				(0xCA + 14 * (x))
->  #define AD4170_GAIN_REG(x)				(0xCD + 14 * (x))
-> +#define AD4170_ADC_CTRL_CONT_READ_EXIT_REG		0x200 /* virtual reg */
->  
->  #define AD4170_REG_READ_MASK				BIT(14)
->  
-> @@ -221,6 +226,7 @@ static const unsigned int ad4170_reg_size[] = {
->  	[AD4170_OFFSET_REG(5) ... AD4170_GAIN_REG(5)] = 3,
->  	[AD4170_OFFSET_REG(6) ... AD4170_GAIN_REG(6)] = 3,
->  	[AD4170_OFFSET_REG(7) ... AD4170_GAIN_REG(7)] = 3,
-> +	[AD4170_ADC_CTRL_CONT_READ_EXIT_REG] = 0,
->  };
->  
->  enum ad4170_ref_buf {
-> @@ -347,12 +353,16 @@ struct ad4170_state {
->  	u32 int_pin_sel;
->  	int sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
->  	struct completion completion;
-> +	struct iio_trigger *trig;
-> +	struct spi_transfer xfer;
-> +	struct spi_message msg;
-> +	__be32 bounce_buffer[AD4170_MAX_CHANNELS];
->  	/*
->  	 * DMA (thus cache coherency maintenance) requires the transfer buffers
->  	 * to live in their own cache lines.
->  	 */
->  	u8 tx_buf[AD4170_SPI_MAX_XFER_LEN] __aligned(IIO_DMA_MINALIGN);
-> -	u8 rx_buf[AD4170_SPI_MAX_XFER_LEN];
-> +	u8 rx_buf[4];
+Thanks!
 
-Why this change?
-
->  };
-
-> +
-> +static int ad4170_buffer_postenable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4170_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret = ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_CONT);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * Enables continuous data register read.
-> +	 * This enables continuous read of the ADC Data register. The ADC must
-
-First two sentences seem to say the same thing.
-
-> +	 * be in a continuous conversion mode.
-> +	 */
-> +	return regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
-> +				  AD4170_ADC_CTRL_CONT_READ_MSK,
-> +				  FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
-> +					     AD4170_ADC_CTRL_CONT_READ_ENABLE));
-> +}
-> +
-> +static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4170_state *st = iio_priv(indio_dev);
-> +	int ret, i;
-> +
-> +	/*
-> +	 * Use a high register address (virtual register) to request a write of
-> +	 * 0xA5 to the ADC during the first 8 SCLKs of the ADC data read cycle,
-> +	 * thus exiting continuous read.
-> +	 */
-> +	ret = regmap_write(st->regmap, AD4170_ADC_CTRL_CONT_READ_EXIT_REG, 0);
-> +
-> +	ret = regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
-> +				 AD4170_ADC_CTRL_CONT_READ_MSK,
-> +				 FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
-> +					    AD4170_ADC_CTRL_CONT_READ_DISABLE));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =  ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_IDLE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The ADC sequences through all the enabled channels (see datasheet
-> +	 * page 95). That can lead to incorrect channel being read if a
-> +	 * single-shot read (or buffered read with different active_scan_mask)
-> +	 * is done after buffer disable. Disable all channels so only requested
-> +	 * channels will be read.
-> +	 */
-> +	for (i = 0; i < indio_dev->num_channels; i++) {
-> +		ret = ad4170_set_channel_enable(st, i, false);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return ret;
-
-return 0;  When we know we are in a good path we should make that clear.
-
-> +}
-
-
+Cheers,
+Miguel
