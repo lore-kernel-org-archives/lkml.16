@@ -1,98 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6363F185B73;
-	Sun,  4 May 2025 17:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379639; cv=none; b=DGXINgD8UqBT3ZUrPUQSfcydko9Xe759zMkhY0iVeK4FVpvhjt9cMidUm50RzBbWgNS68Ri1a2CwCcPhAI1NhN1FWtqyp3TlxL46p/0Re3fBkJypFIbJzEmSV4SLkAJPgOt7Wi2IUDIaLj6pRQ12mo9BtAvwUxNgEdAo9f+LtAI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379639; c=relaxed/simple;
-	bh=tSn3dJVZ+9ZNzeso5zb514vh1iRfO9z/dmDK28sIEGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YvHID++8QpSE7M99diTec0mNqxP3u/XyLJcdqNMFWUFF2zTR3JlTE4PiJP6B3zW7dpv4yOzyij7XQ9ZCbb6zc7+ChIL0l51waZR44XdZVc2oup5LtWGcpgnAEYS0UuP1SH0My4QKzYTYdx7XrqhSFAHKAWCHZr7XqLrZ0nEm0Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZ5K0Caj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1AD185B73;
+	Sun,  4 May 2025 17:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746379783; cv=pass; b=cQp/mb8cuEoB3UvQB4MF60Su3Vqfxxur3rPu1hHWbrUns+Sa4/ZfJBtRDZUNxQstuMxOumiNu8t6BdIrw6VvmJ/tMGYVlKuYznM9B5VWHSVNKwwuV349SuDR/OBang9cf04x+Tb4CBfkYyf0OYFfzxx5rDhvEzfZY7JZ32dHoTE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746379783; c=relaxed/simple;
+	bh=jJKDNzXtKBCS0HUyXjCv+SwHQOVAU8vhblrbianhQu4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Bxo54kfWcZK+VNW1HxfZq4WRq6XbX/2YekJlg49KxopGUdxW/MiwC3rrv4B7DbeGIeFbzvUWaXpCelVEMBH9sD6UZP5JA9Ogv7hH+K5hNNjLfXOiXd36PM0Eqcjg2cMTuEN7VReF5LppyXNTW/XKk3QcmO4DrgpH/iWysP3cAAU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=ItZyaiLj; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=ckH91us0; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZ5K0Caj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDA8C4CEE7;
-	Sun,  4 May 2025 17:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746379637;
-	bh=tSn3dJVZ+9ZNzeso5zb514vh1iRfO9z/dmDK28sIEGE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DZ5K0CajDZt0z4ChDLSRlif6B73xBfZThEuIOXgeiRypLOHV9E3x+qkN+rx+kLKMs
-	 XfSHGGa8ZNpPpBFdX/PC5aFTIF8TYsMLep5CwGh/IpS5RuVenZ3vjWgCI+twdLxb3g
-	 k6pEXR/0Myxq6fetAqfxZ8+/YutQwv4bZAhGWN0Ca+Xg67WhjmFj/UHSuyqxhAelO8
-	 U7lWRdSy5v/9wMGEHDKc5z3qoHShFHkdiJ0q9ty0noNXtNM2WWIlzmU0t9P3IjrukC
-	 91w2PJCQTLSqF5nCLzs7nydySMLopb7cfKvJ+IEOkBebhr1kmYMkzALaiH0cYE+qbi
-	 xB3vF8LyluiPA==
-Date: Sun, 4 May 2025 18:27:08 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lars@metafoo.de,
- Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com,
- andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Subject: Re: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data
- capture
-Message-ID: <20250504182708.42eff56f@jic23-huawei>
-In-Reply-To: <aBIoRc-gpBswohe-@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1745841276.git.marcelo.schmitt@analog.com>
-	<db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
-	<CAHp75Vc9CMqkkrEjgGEYPnmkb1R=u+RUvD3FAZ+7bFqi5aDzdw@mail.gmail.com>
-	<aBIoRc-gpBswohe-@debian-BULLSEYE-live-builder-AMD64>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="ItZyaiLj";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="ckH91us0"
+ARC-Seal: i=1; a=rsa-sha256; t=1746379771; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=DGmOqG/FY5zeZ7yo6/5dDagkBahmcdlEuSdeM7TERplkeeKbMBaG0kg8D8m5rZnSXr
+    gGou+hYs42q8ppqOE9x1wyWh0c+nNW3NI6l1XeK8lTThVs9d/wwKRCAGw8oLAftvVKMH
+    716SSFe91thou/Fs699cCi1ENOX2v/TybDHe/4NrQ8KxkBzRWYmKqBfsjBEHA0x4jyWb
+    0uHmkHZ3ufeVB9ttfcZcpZt54+19jyH7c0/amjN0mNSofZ9a4ZJ5AqfYfFJuXbMfHobl
+    IEhhKElTitf2a+mu8HtRtHAjeTvKQ9o87di1y3QNKwAwlr7jqtgWHhE6zjhku+zQxnpJ
+    Pa0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379771;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=W0SKc7oupxmOFLst8fPJxQqK9t+U/JRXtklMlKkdpRI=;
+    b=QCWW/eTlDA38ekFyp2Mf5WFLoLT65T+rwGgf7AAf17advbg10nW2D3Oq2H5xKGb4/i
+    GU+ooxXyYp4xt9z8Ara5dcz6gP0ZKli+UZnjUr8nwswFzih/gHccLkSkbuyXEabhFWvD
+    u3MKh5tk1L2BD/ZhT5s3QX9kNxo467Ebl3+MLqSTFcILJK6ibYCPvBiUjggevqCY3rKB
+    i3GB4ZWuag/wAcjH3oJwuc4lR/dt0XrDw5Yt+pnvdTAnC0m1w4Tht6spvBejGVA+7G93
+    0iJkFYqyz498r+mWFXoGaqzoYKDpYoiQg2pIJqIa6YOW6eMghAP6AQkKRkiKRaBDAkUk
+    80lQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379771;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=W0SKc7oupxmOFLst8fPJxQqK9t+U/JRXtklMlKkdpRI=;
+    b=ItZyaiLjnxJYAmN/5O8NQ31V0zSHJZNC2SwBL9YRDJVcAHN6EDAXgvQbXfdzL+HGj8
+    1aWbIxJh8eiak4bnpIrpjzsEIv9EMBMgo/225AViXjGFumHJFbBKneK4DJsZ79nVrMWT
+    oBHrd3HAxCXbdlaHVoAkCbCgdKsZgxGVJ1+TPqNHjd2Kq11HQox9KKuoO7IRUuEsLt0W
+    Jz1Tkc/5iaIU2BzNT07DLshn2FYGH2rzrafx3BQzYETf+carzZi71A8qeg054lLnVufh
+    0SifgYgXQ8plXFNH0B7YaylowhySPZ/nhuh22AMm22i63glOAAYJmev2S7d75gN84RCD
+    RyMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746379771;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=W0SKc7oupxmOFLst8fPJxQqK9t+U/JRXtklMlKkdpRI=;
+    b=ckH91us0GOj9uAFlVOkc3hMsdd6hh+0cweu9xn26nFfQdPTNPVMYNEGptI4e5ZCK/l
+    280HO0JG9qQg2MicqNBw==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b35144HTUz9F
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sun, 4 May 2025 19:29:30 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1uBd9d-0004NK-0a;
+	Sun, 04 May 2025 19:29:29 +0200
+Received: (nullmailer pid 243222 invoked by uid 502);
+	Sun, 04 May 2025 17:29:29 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next v7 0/6] net: phy: realtek: Add support for PHY LEDs
+Date: Sun,  4 May 2025 19:29:10 +0200
+Message-Id: <20250504172916.243185-1-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 30 Apr 2025 10:40:21 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+Changes in V7:
+- Remove some unused macros (patch 1)
+- Add more register defines for RTL8211F (patch 3)
+- Revise macro definition order once more (patch 4)
 
-> Hi Andy, thank you for your review.
-> 
-> ...
-> > > +static int ad4170_prepare_spi_message(struct ad4170_state *st)
-> > > +{
-> > > +       /*
-> > > +        * Continuous data register read is enabled on buffer postenable so
-> > > +        * no instruction phase is needed meaning we don't need to send the
-> > > +        * register address to read data. Transfer only needs the read buffer.
-> > > +        */
-> > > +       st->xfer.rx_buf = &st->rx_buf;
-> > > +       st->xfer.len = BITS_TO_BYTES(ad4170_channel_template.scan_type.realbits);  
-> > 
-> > This will give, e.g., 3 for the realbits == 24. Is this expected?  
-> 
-> Yes, in continuous read mode the ADC outputs just the conversion result bits
-> (24-bits) so a 3-byte length transfer is enough to get the conversion data for a
-> channel.
-> 
-> >   
-> ...
-> >   
-> > > +               return dev_err_probe(&st->spi->dev, ret,
-> > > +                                    "Failed to register trigger\n");  
-> > 
-> > One line?  
-> 
-> It goes up to 89 columns if make in one line. I know there are other places in
-> this driver where 80 columns are exceeded, but in this case it's easier to
-> avoid going beyond 80 columns without drying up the error message.
-> Anyway, I'll make it one line if it's confirmed to be the preferable way to have
-> it.
-In here there are what I think are multiple ways to get to the same ultimate
-device. (indio->dev.parent is used the line above).  Better perhaps to
-have one 'dev' that is appropriate for use in both places.
+Changes in V6:
+- fix macro definition order (patch 1)
+- introduce two more register defines (patch 2)
 
-> 
-> Thanks,
-> Marcelo
-> 
+Changes in V5:
+- Split cleanup patch and improve code formatting
+
+Changes in V4:
+- Change (!ret) to (ret == 0)
+- Replace set_bit() by __set_bit()
+
+Changes in V3:
+- move definition of rtl8211e_read_ext_page() to patch 2
+- Wrap overlong lines
+
+Changes in V2:
+- Designate to net-next
+- Add ExtPage access cleanup patch as suggested by Andrew Lunn
+
+Michael Klein (6):
+  net: phy: realtek: remove unsed RTL821x_PHYSR* macros
+  net: phy: realtek: Clean up RTL821x ExtPage access
+  net: phy: realtek: add RTL8211F register defines
+  net: phy: realtek: Group RTL82* macro definitions
+  net: phy: realtek: use __set_bit() in rtl8211f_led_hw_control_get()
+  net: phy: realtek: Add support for PHY LEDs on RTL8211E
+
+ drivers/net/phy/realtek/realtek_main.c | 269 ++++++++++++++++++-------
+ 1 file changed, 201 insertions(+), 68 deletions(-)
+
+-- 
+2.39.5
 
