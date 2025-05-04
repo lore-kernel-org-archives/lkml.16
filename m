@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F128F4
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:34:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A10C2DC774
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746344072; cv=none; b=sHPyBkg2tgpJ2Fsd0+k4Y+boo6nP3LBWCUsCmp07E2bSzezgfcPEdmYbwp7nWXNG3e0VduIG0Zw//UBG9q1MLKR9V4wxJ7f2603fZAyjUzUeAO6YgvhwlhAUoNehB/GUlaPj7Swz3a9WUEwwVYsHHez330Pb9SFVO64WYGZz8jg=
+	t=1746344171; cv=none; b=Lm5U3c5Ay7fPb2yFcW2Q9BxLdXnA3Eb0BkUDzrgdZb9X/yFzDWCAsvG7oyO6fCpwk5AgN71MIfmpjMdF18wRikb2BSl6gtXrSxlK+YYg4OQ8vCxsYKDeb0lNYPq4zYS3nyF3U705+9DUJQocZ/5lSsWr3AZRsK1JMKiJ7AEMVyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746344072; c=relaxed/simple;
-	bh=jaIsT2VqYOwGpto/ZI3VtUj4gXA6trfG0WUo22uYHBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k3grMEWop4lWoe965DuwZmTQjjPGK+YcwOnXDc3+fjPJ1RbSLU62ERClCWGWQwTK7gZRtB3FcvXCflA+g1sQguk5pb8FWnL+xlsYk8Nk7zx7Hjd2NfV/bm7IR9ZKQP4WYdYnSV1u1edn+YSW9sgKftwJYbUaesSEiQokmNR8V8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdCyYDj9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746344171; c=relaxed/simple;
+	bh=2sQhelXFUCuiNQ0ZKe6j2GlMLb3aqOX1Bkcw55+ojnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iP02KaEky54RUHWUePCqWwGJRtHGG0e5Fxr20J+dVNMpB8mO0ZQTng3iJYyvUZKbHAUOlCaw4ZegrRUBHM+vmrl3+bL24nB4/lrqG/0M++TOhj8lx33lDJmscDDHPn0xfz7u3vYMmG/x1T8hTVHWQr20qGcpowx9HfrssfG9M9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6HFGcG9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdCyYDj9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B47C4CEE7;
-	Sun,  4 May 2025 07:34:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6HFGcG9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F689C4CEE7;
+	Sun,  4 May 2025 07:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746344071;
-	bh=jaIsT2VqYOwGpto/ZI3VtUj4gXA6trfG0WUo22uYHBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QdCyYDj9Ykna8ut26PwxIeQ+oTfxHzhVmPD50lyJRXeCRWRn8lDDBWcabqoL0FISH
-	 BF1GHuLZYzmGZxB4g2f8yKKVClneikZ/cHbcl2qK0/Rw55mKgxcCup+tApSk2Hd+Nm
-	 VoPOpLIyYpx6cvhT9pWvAjjZ8YTqnWbmnciWRG1HuEMPefQhzV8TjWUN33e9jt/vBm
-	 Kd/A42RwUzt37Kj6rR0MQQeJxQbqqsT5iLu6miyMgpGv5OLahxWJ8xgMQbFy6VydlD
-	 10bXizqIbBHLRPpdKPFFpdog8T4ISDuI3EqU57RuoVpw5NuvgaxwP/WRaU8YMZLdhN
-	 RIQJ9hNMi5xFw==
-Date: Sun, 4 May 2025 09:34:27 +0200
+	s=k20201202; t=1746344171;
+	bh=2sQhelXFUCuiNQ0ZKe6j2GlMLb3aqOX1Bkcw55+ojnk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=l6HFGcG9AL05LcQ194KXkfgARow3c09wYoiOsK1PaM1CK2bz1RyQ9F2rtR/l1HWPm
+	 xc12ePm5yOmMYbu2WKwLAb6JgwdCLTJO3hw2+D51U8CJxd/16zYvTzSs2YSFHmp966
+	 GcJjQRmTVO/7quGFtmIw4n8AspkoGEf9OBWzMvPkXsCPg9B2ec3vUlH38qeyJufHmC
+	 5ejE0ku8MBKCgxJauOyaun47cCl0Pvl93y8khf4XSgwno75ND7MSeVPGsZhD/z4dtn
+	 Zxz1uchtBIWD1d0Q/tmMUi+gU3Ly0O2Pc5IYGBAmhBp497UHpGI3W1wPV8CZjumoOD
+	 z/g0mduQPw8yA==
+Date: Sun, 4 May 2025 09:36:06 +0200
 From: Ingo Molnar <mingo@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [GIT PULL] timer subsystem fixes
-Message-ID: <aBcYg0t9DIx_lh5W@gmail.com>
-References: <aBcWkIOBqkKG8lH-@gmail.com>
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [GIT PULL] x86 fix
+Message-ID: <aBcY5onhP-kyuJuz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,35 +45,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBcWkIOBqkKG8lH-@gmail.com>
 
+Linus,
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Please pull the latest x86/urgent Git tree from:
 
-> Linus,
-> 
-> Please pull the latest timers/urgent Git tree from:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-04
-> 
->    # HEAD: 7aeb1538be5df3efa1d799e5428ac3a0ae802293 vdso: Reject absolute relocations during build
-> 
-> Misc fixes:
-> 
->  - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
-> 
->  - Work around and reject absolute relocations into vDSO code that
->    GCC erroneously emits in certain arm64 build environments
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-05-04
 
-Please belay this pull request, just a minute after sending this out I 
-received this fresh build warnings report on a Risc-V randconfig build:
+   # HEAD: 8ed12ab1319b2d8e4a529504777aacacf71371e4 x86/boot/sev: Support memory acceptance in the EFI stub under SVSM
 
-   # Subject: [tip:timers/urgent 3/3] llvm-readelf: warning: 'arch/riscv/kernel/vdso/hwprobe.o': bitcode files are not supported
+Fix SEV-SNP memory acceptance from the EFI stub for guests
+running at VMPL >0.
 
-   https://lore.kernel.org/r/aBb6nudVcs+cqRyZ@rli9-mobl
-
-Sorry about that.
-
-Thanks,
+ Thanks,
 
 	Ingo
+
+------------------>
+Ard Biesheuvel (1):
+      x86/boot/sev: Support memory acceptance in the EFI stub under SVSM
+
+
+ arch/x86/boot/compressed/mem.c |  5 +----
+ arch/x86/boot/compressed/sev.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/boot/compressed/sev.h |  2 ++
+ 3 files changed, 43 insertions(+), 4 deletions(-)
