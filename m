@@ -1,210 +1,175 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B448E2DC799
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 15:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9292DC799;
+	Sun,  4 May 2025 15:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746370986; cv=none; b=F6PmXP2byKF8+e/ks24BqvouXiIc2FZQHDc+jQgxX9WnTrUtnIQEF6IaNDpDBXLdS7NjwK18/43xpSMfLjP6msL8Fa2l6tWuBsE3FLcw5B9ufw1JkpqwuAI8uGGj2YA6IVf9nvWClrVQfBcpA1mtk+JhIc8Stfp7TNuZ+xT5b9I=
+	t=1746371086; cv=none; b=iLRBfJLdMKCx21uLFy9FCZ9UWUqamT+58Z1oFGB8in7PQSSM3lE+5qpgcoJWcLdT5Rpgij9t3pB0K+k6GfhK2wEpOex5T7aQi/R1Ks+WBJuJ3QaXLtRWzmFnhxPpRbcwEVvskIJC0TDQToOXa49oOI37MmiIw9c5kPtc0C5kUuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746370986; c=relaxed/simple;
-	bh=N4cxeiFuZJq4ZkwPC0chJf/hRnNW/GZ4UmSHUGiYz/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CIKIzD7NVHzgQzwe0P2ypONGiJd9LAec1ii17BwvJUZyLEUHB03YRFZqonVCCl68xDx4GeIF3j6+NySH3YjtrJmFyIt6mnk1EacWFFtFZD8TBPPWrGj1jbmWf/JAFAYhY03cKxFOhy887B7ANyDcRyIm03JUuyMyrg/0kGS1kzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=a/1jX6U9; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1746371086; c=relaxed/simple;
+	bh=2EfXC6JzwMjtzR1Uhw+hjMRWBxN9P0Ufuf+HDxP31Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P6iICCq9jV1wqDlahNpqYx8/CCpMUXHUNHxuY/cZtuv+61VaP+sKyTPyc0YKROUxfQvP0y32HWdov9/CqMvrFpmji+6SZmIY/+gBQQXBCHRG2+T5uKmsmOvI+CrKpCqgPVnHYdhEZnIk+Yd263XHRQCCOfReuif+uQtvodpdjrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUUMNi6Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="a/1jX6U9"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-707d3c12574so28826497b3.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 08:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1746370983; x=1746975783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bFW+c/pzu01ksPogBDsF0yztuQICEpFi/6JnX1ys5aQ=;
-        b=a/1jX6U9Mk/1hp0jwVQ5K0EiUFfjEsjyng/VBVauQtE6aVEojFUxWONgfZRmQbUR0Y
-         76I01tdvkumZxzZVbP7XRxfuD7csuX+Ybc55U5/0xlfkKsszs+zvNErTFIUj2kB6xuEZ
-         fsi9Qpz1nvA5Kg3zB04N8tWXbyfyU4B4B7J7QhpWHrEjaoqF2XHhTV9qydcEn/J30TtS
-         kR43YqtmKU6cD5wZ87IAabT7muvhlQ/fX3taxpQ3EmV5ERlAiI1c/G1dTQkmIRDzoelA
-         +tbENm7Z0ITGIKWVITwy9sLtNdgAyvci8DEfUHYbMZRjPNoMwGFIkAHcbTbA2fzSLNIy
-         AwwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746370983; x=1746975783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bFW+c/pzu01ksPogBDsF0yztuQICEpFi/6JnX1ys5aQ=;
-        b=Cc0FCtbcUY468t4rJeR55vj6kdeP1mrznv3vjtv3kEj+cWd7DcD7cmMm+YhYSPvAGb
-         9JXQD96x4NYI4fPz31N4kDQ14J/KqJ0CsxUGb7vkDMOrDaDhuyF+4hyR37SsS7YUS2vC
-         wgWvUlknfIYHyyGYT3MDDIok8z53qzPrUQvpn4+MH81pk4V16KIONfUBASORZth6hJPi
-         8bFHNrbKa9CkKO7jtQMLBK8OOBPrqHfb/ySRlDbApqUDcOVADz8RvqKliaQM8Ii13t8P
-         DbU1CKJ2hm2dDV7Y4uf8kRX3TDBypNpcDjLMtOPCGVoLJ2JKOfCCwL+R9DExaGWf305p
-         wmiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUm2xeDbFN2IFa+q+GcJDxy5xfPxizbmIGbA/UjhJEFcXCiHD7+C5E/PKw5/L/L9iYrZfsEzVyZtsM4e7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrUIHSSY6EWw/OColt2fhqUhx821wqfA1aimqEeQ5fd7QGjGHS
-	Ung0asD6xadSihReTo4/fhKdKXJs6t3DjOzqKIsu1+sD4SzEbbUixMjherdUeu2cpFSEq/3KalU
-	0cFTDOG8FOwluvytxercNagiVLZq3gQIPPLNh
-X-Gm-Gg: ASbGncuTcRoRf1k1yRaps31vbAQAbY0i9JDfiquzRUMB4YDPoZQ6kJiEVMIDNqM/nLk
-	kV7rvYVY9VuUbGetC/sR1/QgAuzueeJP7owJG94/y4kdyl0ETwX0YKAIyo4VUudZ5uJjyLnl0Fp
-	A7Mwv/l1gejiYbAsaaLagz/g==
-X-Google-Smtp-Source: AGHT+IGh+tKAyMeigoarPIi+V1deYWycva3XdHdZPQu9YAQ/LoyQ/7QaDDfIn1SlXnCdq3yX/3xBVxLxcxwerl1v8k0=
-X-Received: by 2002:a05:690c:3682:b0:705:edab:f36d with SMTP id
- 00721157ae682-708bcf63de9mr169594707b3.16.1746370983565; Sun, 04 May 2025
- 08:03:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUUMNi6Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308F5C4CEE7;
+	Sun,  4 May 2025 15:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746371086;
+	bh=2EfXC6JzwMjtzR1Uhw+hjMRWBxN9P0Ufuf+HDxP31Rc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PUUMNi6Z3UyrhM47ffRfQX4WY5hLtx+2C9Ri1CeNCyvuCcQjTMwCozr7an9PS4/OY
+	 8CAuly4ACDcsZ2ww6fG4XSyE6ShUesWlckac8OicetDh6fViZIF+zYXiq6K8vpy9oE
+	 6A7G4yzTsIvZ+TIIuDZFpZgJbY9jBwEND1nbXCvs/IQOfY3tCLmv/AXhx8nPSnHGXZ
+	 on8XEZjwnTnMw4XZgtyd0/vi3NWDkn3NqUJBTLdu/t+g0NRSezojQHzQeMtnjwgUIa
+	 Z0+5sJhDu5SXfKQsV6GTEgOtDXvobIuwbrjr//dYilNZ5Ht4eOARjsgSXAaGOJy5KB
+	 iNerrcUcg4zGg==
+Date: Sun, 4 May 2025 16:04:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Angelo Dureghello <adureghello@baylibre.com>, Andy Shevchenko
+ <andy@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
+ documentation
+Message-ID: <20250504160437.33116d5a@jic23-huawei>
+In-Reply-To: <0c7e4efc-7c2a-46ac-b970-4134c386bc71@baylibre.com>
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+	<20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
+	<4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+	<070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+	<aBI3eUPirZEXpZgG@smile.fi.intel.com>
+	<896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
+	<7fe18625-3a25-40c8-bfb7-a7a22a3eccff@baylibre.com>
+	<jvhwdzmruov3je7qvsncn4naxg2cbbset27vr6tfjl3fumw7es@v3ho7m6iwaqp>
+	<0c7e4efc-7c2a-46ac-b970-4134c386bc71@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com> <20250502184421.1424368-2-bboscaccy@linux.microsoft.com>
-In-Reply-To: <20250502184421.1424368-2-bboscaccy@linux.microsoft.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Sun, 4 May 2025 11:02:52 -0400
-X-Gm-Features: ATxdqUF_SJM_Ksnl9ID37yfRWwOX1K9UN729WFbsKoyMwbuKaeF0TYKGFD4cZ_k
-Message-ID: <CAHC9VhQi2m19pJvUiTbzaNqh3omYGCVC43_G7H8EvZsPaOzevQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] security: Hornet LSM
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, llvm@lists.linux.dev, nkapron@google.com, 
-	teknoraver@meta.com, roberto.sassu@huawei.com, xiyou.wangcong@gmail.com, 
-	Tyler Hicks <code@tyhicks.com>, James Bottomley <James.Bottomley@hansenpartnership.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 2, 2025 at 2:44=E2=80=AFPM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
->
-> This adds the Hornet Linux Security Module which provides signature
-> verification of eBPF programs. This allows users to continue to
-> maintain an invariant that all code running inside of the kernel has
-> been signed.
->
-> The primary target for signature verification is light-skeleton based
-> eBPF programs which was introduced here:
-> https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gma=
-il.com/
->
-> eBPF programs, before loading, undergo a complex set of operations
-> which transform pseudo-values within the immediate operands of
-> instructions into concrete values based on the running
-> system. Typically, this is done by libbpf in
-> userspace. Light-skeletons were introduced in order to support
-> preloading of bpf programs and user-mode-drivers by removing the
-> dependency on libbpf and userspace-based operations.
->
-> Userpace modifications, which may change every time a program gets
-> loaded or runs on a slightly different kernel, break known signature
-> verification algorithms. A method is needed for passing unadulterated
-> binary buffers into the kernel in-order to use existing signature
-> verification algorithms. Light-skeleton loaders with their support of
-> only in-kernel relocations fit that constraint.
->
-> Hornet employs a signature verification scheme similar to that of
-> kernel modules. A signature is appended to the end of an
-> executable file. During an invocation of the BPF_PROG_LOAD subcommand,
-> a signature is extracted from the current task's executable file. That
-> signature is used to verify the integrity of the bpf instructions and
-> maps which were passed into the kernel. Additionally, Hornet
-> implicitly trusts any programs which were loaded from inside kernel
-> rather than userspace, which allows BPF_PRELOAD programs along with
-> outputs for BPF_SYSCALL programs to run.
->
-> The validation check consists of checking a PKCS#7 formatted signature
-> against a data buffer containing the raw instructions of an eBPF
-> program, followed by the initial values of any maps used by the
-> program. Maps are verified to be frozen before signature verification
-> checking to stop TOCTOU attacks.
->
-> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-> ---
->  Documentation/admin-guide/LSM/Hornet.rst |  65 ++++++
->  Documentation/admin-guide/LSM/index.rst  |   1 +
->  MAINTAINERS                              |   9 +
->  crypto/asymmetric_keys/pkcs7_verify.c    |  10 +
->  include/linux/kernel_read_file.h         |   1 +
->  include/linux/verification.h             |   1 +
->  include/uapi/linux/lsm.h                 |   1 +
->  security/Kconfig                         |   3 +-
->  security/Makefile                        |   1 +
->  security/hornet/Kconfig                  |  24 +++
->  security/hornet/Makefile                 |   4 +
->  security/hornet/hornet_lsm.c             | 250 +++++++++++++++++++++++
->  security/selinux/hooks.c                 |  12 +-
->  security/selinux/include/classmap.h      |   2 +-
->  14 files changed, 380 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/admin-guide/LSM/Hornet.rst
->  create mode 100644 security/hornet/Kconfig
->  create mode 100644 security/hornet/Makefile
->  create mode 100644 security/hornet/hornet_lsm.c
+On Thu, 1 May 2025 09:44:51 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-...
+> On 5/1/25 7:33 AM, Angelo Dureghello wrote:
+> > On 30.04.2025 10:04, David Lechner wrote: =20
+> >> On 4/30/25 9:56 AM, David Lechner wrote: =20
+> >>> On 4/30/25 9:45 AM, Andy Shevchenko wrote: =20
+> >>>> On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote: =20
+> >>>>> On 4/30/25 12:40 AM, Nuno S=C3=A1 wrote: =20
+> >>>>>> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote: =20
+> >>>>>>> From: Angelo Dureghello <adureghello@baylibre.com>
+> >>>>>>>
+> >>>>>>> Add new IIO calibphase_delay documentation.
+> >>>>>>>
+> >>>>>>> The delay suffix is added to specify that the phase, generally in
+> >>>>>>> radiants, is for this case (needed from ad7606) in nanoseconds. =
+=20
+> >>>>
+> >>>> ...
+> >>>> =20
+> >>>>>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_d=
+elay =20
+> >>>>>>
+> >>>>>> Not sure if I'm too convinced on the _delay suffix
+> >>>>>> =20
+> >>>>> Phase is measured in radians, not seconds, so it seems wrong to use=
+ it here.
+> >>>>>
+> >>>>> https://en.wikipedia.org/wiki/Phase_(waves)
+> >>>>>
+> >>>>> And the delay here is with respect to individual samples in a simul=
+taneous
+> >>>>> conversion without regard for a sampling frequency, so I don't see =
+how we could
+> >>>>> convert the time to radians in any meaningful way. =20
+> >>>>
+> >>>> And how this delay is aplicable to the phase in the hardware? Sounds=
+ to me that
+> >>>> HW has some meaningful way of such a conversion?
+> >>>> =20
+> >>>
+> >>> It is a calibration to account for a phase difference between two inp=
+ut signals.
+> >>> This is a simultaneous sampling ADC, so all channels normally sample =
+at exactly
+> >>> the same time. This phase delay calibration factor can introduce a sm=
+all delay
+> >>> on an individual channel so that it starts it's conversion some micro=
+seconds
+> >>> after the others.
+> >>>
+> >>> There is a nice diagram here:
+> >>>
+> >>> https://www.analog.com/media/en/technical-documentation/data-sheets/a=
+d7606c-18.pdf#%5B%7B%22num%22%3A113%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%2=
+2XYZ%22%7D%2C34%2C594%2C0%5D
+> >>>
+> >>> To convert the phase delay to a phase angle and back would require al=
+so knowing
+> >>> the frequency of the input voltage signals. =20
+> >>
+> >> Maybe calling it "conversion delay" would make more sense? Since the p=
+hase part
+> >> of it is really referring to the application rather than to what we ar=
+e actually
+> >> adjusting. =20
+> >=20
+> > Are there examples of a phase calibration in iio ? Becouse apply a radi=
+ans=20
+> > calibration seems complicated and maybe non approrpiate for non-periodi=
+c=20
+> > signals as often used in real world applications.
+> >=20
+> > So another viable idea could be to use a IIO_CHAN_INFO_CALIBDELAY inste=
+ad.
+> >=20
+> > Regards,
+> > angelo =20
+>=20
+> I was looking at the datasheet on another ADC that popped up on the maili=
+ng list
+> today. https://www.ti.com/product/ADS1262
+>=20
+> It has a "conversion delay" register that does basically the same thing. =
+So I'm
+> liking that name even more now. Just calling it "delay" seems a bit too v=
+ague.
+> We could make it IIO_CHAN_INFO_CALIBCONV_DELAY to try to keep it shorter.
 
-> +Configuration Options
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Hornet provides a kconfig knob
-> +CONFIG_SECURITY_HORNET_WHITELIST_PID_ONE.  Enabling this will allow
-> +bpf programs to be loaded from pid 1 without undergoing a signature
-> +verification check. This option is not recommened for production
-> +systems.
+This is wondering into a long term gap in IIO ABI.  Even if we ignore this =
+particular
+usecase, it could potentially be useful to indicate the timing offsets betw=
+een the
+sampling of specific channels.  In simultaneous sampling case we'd normally=
+ assume
+0 (subject to tweaks like this one) whereas in a sequencer type situation i=
+t can get
+complex.  IIRC there are sequencers that allow insertions of extra delays a=
+s well
+as the simpler ones where it is just dependent on the previous channel samp=
+ling times.
+What you have here is a relatively simple time delay control but I'd like
+to cover the full gamut of things we might see.
 
-...
+To me it's really not got much to do with calibration so I'd drop the calib=
+ bit.
+Define a baseline for all channels (which should probably be an arbitrary p=
+eriod
+after trigger as measuring trigger to first sample gets complicated in some=
+ devices.)
 
-> +config SECURITY_HORNET_WHITELIST_PID_ONE
-> +       bool "Whiltelist unsigned eBPF programs from PID 1"
-> +       depends on SECURITY_HORNET
-> +       default n
-> +       help
-> +         Selecting this will configure Hornet to allow eBPF loaded from =
-pid 1
-> +         to load without a verification check.
-> +         Further information can be found in
-> +         Documentation/admin-guide/LSM/Hornet.rst.
-> +
-> +         If you are unsure how to answer this question, answer N.
+Anyhow, I'll comment on v2 and point back at this.
 
-...
 
-> +static int hornet_bpf_prog_load(struct bpf_prog *prog, union bpf_attr *a=
-ttr,
-> +                               struct bpf_token *token, bool is_kernel)
-> +{
-> +       if (is_kernel)
-> +               return 0;
-> +#ifdef CONFIG_SECURITY_HORNET_WHITELIST_PID_ONE
-> +       if (current->pid =3D=3D 1)
-> +               return 0;
-> +#endif
-
-Two quick comments on the build-time conditional above.  First, unless
-there is some subtle reason why you only want the exception above to
-apply to a single thread in the init process, I would suggest using
-task_tgid_nr() instead of current->pid as I believe you want the init
-exception to apply to all threads running within the init process.
-Second, I think it would be helpful to rename the Kconfig knob to
-CONFIG_SECURITY_HORNET_PIDONE_TRANSITION, or similar, to help indicate
-that this is a transitional configuration option designed to make it
-easier for developers to move to a system with signed BPF programs
-without excessive warnings/errors from systemd in the beginning.  I
-would highlight the transitory intent of this Kconfig knob both in the
-Kconfig description as well as the Hornet.rst doc, a brief explanation
-of the drawback for enabling this long term or on "production" systems
-in the Hornet.rst section would also be a good idea.
-
---=20
-paul-moore.com
