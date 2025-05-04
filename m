@@ -1,41 +1,33 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB79BE46;
-	Sun,  4 May 2025 16:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB89BE46;
+	Sun,  4 May 2025 17:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746377986; cv=none; b=X8CXsp9f668OR60sM7X0AVQqVQ+srFTqA3sAh7GWAQ9SGCfnX1wvjpFXebwSilJubBUghE6SC2vWI3ZtWnQ5/3urj5wvdde1KpvuPIHmI6EdwBk+vGVesPh+64L3fHuhTCUNzSc+HUFjET/gfw8E1NO2rdWgDGtgOQO0DyZ2fug=
+	t=1746378080; cv=none; b=Q2n3UKGBu8mdUEg/9EYufkQtvD9aoPvZNwV78KDpjdAauOvZ0Z7KVy0arhBPlkyqW8y1uaP+5uFP4Fv5jNoBVd7Akd9OmjfnpidClBC5A0RsyP5bfmIwZBIr/h/P26j5H/YL302hfvYMme/ZBg4+RZ1earh8X/ZOnwOIpuiLB5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746377986; c=relaxed/simple;
-	bh=aSF3nFwPaiFyuTF0BU2N2hLX0xrN81msykKS7jpgkFU=;
+	s=arc-20240116; t=1746378080; c=relaxed/simple;
+	bh=BaPPJANucR/812RtKyZtISxhsCg/BNk42rLMW10I6hA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bt4dSzAduVcOU+z6KV+G/o36KySRW/2UiAjUoPCAz2/1BrLAs7HihxHblZ8n23oQI8QpIldbTPlE9Gp7aZ8Sthxbq+4aaY23WGHq+2HdLjP8qzzeLNU5A+xIud8EBp61KySAhw262Anu0GsuvewmNSvwuMI/pO96LOUAJOIMJy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YzyfbYbK; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=pBSXpghWH93fmVrE/WvCf0XT1+7pxkqi2LREXEPLsyNoYzsUkpGMTiuF/JeKQXC7/DvvaaBml4Ykhw7NxqqXvVZJTIUT5jF80A0MLlkI8dxDNQNh+XqscXZkJvZS1CpIaOK4DEVcMH4MoGZ4RkMrg4p9XhQOUjDeXcbUCyXCqeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAEcg+Ww; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YzyfbYbK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1746377982; x=1746982782; i=w_armin@gmx.de;
-	bh=kqeH+gbAVdLwtZNHkBz1OoS8RrOD0otkZxqyLCeTfzs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=YzyfbYbKaDVuqpYXR0bX9CQYuMVbicHs7kgVhQtF15H20yHosbv4glJKIwKiKN2t
-	 cxirhVRFsTRV70n7mX9jTwvq64hnXPwHRjK89w1JNqyfPuvra0t+iPrOEAPIRZ1HT
-	 rKfHK6vBMEPS0Agg3txkecW3SjZ3tnJWsicFBxiKwxS6euP5h2Bjs5g0uK9IJSxfw
-	 614rpLIimTvzOlJS0jNyvOYn9R9YJnN9c+xPmD8RNCij81CzIvCkmukpTz0DKPEy0
-	 8yc6DtFpAKh+cJqj/KYeU8DdXc7nPYbxDuCchsuRXSz7vzx8uo0gzPCL+Zm8Jns7T
-	 U4LA3jziBzOBcDkImA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Ml6qC-1uubTN41me-00aMny; Sun, 04
- May 2025 18:59:42 +0200
-Message-ID: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
-Date: Sun, 4 May 2025 18:59:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAEcg+Ww"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACAEFC4CEE7;
+	Sun,  4 May 2025 17:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746378077;
+	bh=BaPPJANucR/812RtKyZtISxhsCg/BNk42rLMW10I6hA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cAEcg+WwbNBEhPyJS1HOkM72ACHl4NXN5PjTsKiX2HF93LCbtUnxtvhUI13TuHmKB
+	 2EOuj/qU/WnK/GFFy89yBmRsHP1nzEVOzcEuF4LvL8MH4fxqvuf9JdrSR9ILhI0W0e
+	 /36t7wMfkHD8pNChqI8nvA9k3H5eZKCFEIe/fxUOnAlyK2AjqQh5s0kMB3i6Q8BOkw
+	 Ubw5tqI5gvPuP7SajT3bZDTLxJxX1yo54Iqphjflxp3tsHR98cGnmlQ9BQT/8hOQow
+	 QgE6w65WcfrkHGm1NH6OmbB5TCRb9Vv+Jrv4POZMlxsUCiXxifRVSfxvUrHRrmZ7PJ
+	 5Lmz9bFc3I5Nw==
+Message-ID: <fc3aee25-2d0f-4825-abbf-6631dbc64996@kernel.org>
+Date: Sun, 4 May 2025 19:01:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,164 +35,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Suspend/resume failing due to SPD5118
-To: Guenter Roeck <linux@roeck-us.net>, Luca Carlon <carlon.luca@gmail.com>
-Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, lucas.demarchi@intel.com
-References: <4e0827d4-137f-465c-8af6-41cc68ddaa8b@roeck-us.net>
- <20250503005828.6128-1-carlon.luca@gmail.com>
- <f1ef9677-2650-48e3-834a-fbe9e2830b04@roeck-us.net>
+Subject: Re: [PATCH v7 0/4] can: m_can: Add am62 wakeup support
+To: Marc Kleine-Budde <mkl@pengutronix.de>,
+ Markus Schneider-Pargmann <msp@baylibre.com>
+Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vishal Mahaveer <vishalm@ti.com>,
+ Kevin Hilman <khilman@baylibre.com>, Dhruva Gole <d-gole@ti.com>,
+ Sebin Francis <sebin.francis@ti.com>, Kendall Willis <k-willis@ti.com>,
+ Akashdeep Kaur <a-kaur@ti.com>, Simon Horman <horms@kernel.org>,
+ Vincent MAILHOL <mailhol.vincent@wanadoo.fr>, linux-can@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com>
+ <20250503-petite-echidna-from-hyperborea-cfd7fc-mkl@pengutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <f1ef9677-2650-48e3-834a-fbe9e2830b04@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RqmtiPxl3j4B7+y72PFRCpFoO/uI0QCvdzjVnf+HAvNnLHBdcEH
- p87Mqq67QyvAw6k1pTUyAYheFiRJLCjF0gcCbS3PRmT8+KssfCXE78PhibhNHRTNMfHnmK/
- PMXop/jdGeCbg4kuiFX7/f5Md1pYGKIZM2i+LenlnrTyI6h6kSXzLjB3666yKOlk+6K93OM
- dQYXmr0W9A35oxN74xJpA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:f+1ImPVzKqs=;K4d0KnkWlPW1PNBvpDqegB+vjjc
- 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
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250503-petite-echidna-from-hyperborea-cfd7fc-mkl@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am 03.05.25 um 03:40 schrieb Guenter Roeck:
+On 03/05/2025 16:03, Marc Kleine-Budde wrote:
+> On 21.04.2025 10:10:36, Markus Schneider-Pargmann wrote:
+> 
+> [...]
+> 
+>> Devicetree Bindings
+>> -------------------
+>> The wakeup-source property is used with references to
+>> system-idle-states. This depends on the dt-schema pull request that adds
+>> bindings for system-idle-states and updates the binding for wakeup-source:
+>>   https://github.com/devicetree-org/dt-schema/pull/150
+> 
+> How can we get an Ack for patch 1 by the DT people?
 
-> On 5/2/25 17:58, Luca Carlon wrote:
->>> =C2=A0From the context it looks like the "sensors" command was never=
-=20
->>> executed. To get
->>> another data point, it would help if you could load the driver, run=20
->>> the "sensors"
->>> command, and then try to hibernate.
->>
->> Hello,
->>
->> yes, I did not have the sensors command installed.
->>
->> I removed SPD5118 from the blacklist and I rebooted the system. This=20
->> is what the
->> "sensors" command is reporting after the boot:
->>
->> spd5118-i2c-1-50
->> Adapter: SMBus I801 adapter at efa0
->> ERROR: Can't get value of subfeature temp1_lcrit_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_min_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_max_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_crit_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_min: Can't read
->> ERROR: Can't get value of subfeature temp1_max: Can't read
->> ERROR: Can't get value of subfeature temp1_lcrit: Can't read
->> ERROR: Can't get value of subfeature temp1_crit: Can't read
->> temp1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 N/A=C2=A0 (low=C2=A0 =3D=C2=A0 +0.0=C2=B0C, high =3D=C2=A0 +0.0=C2=B0C=
-)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (cri=
-t low =3D=C2=A0 +0.0=C2=B0C, crit =3D=C2=A0 +0.0=C2=B0C)
->>
->> [...]
->>
->> spd5118-i2c-1-51
->> Adapter: SMBus I801 adapter at efa0
->> ERROR: Can't get value of subfeature temp1_lcrit_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_min_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_max_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_crit_alarm: Can't read
->> ERROR: Can't get value of subfeature temp1_min: Can't read
->> ERROR: Can't get value of subfeature temp1_max: Can't read
->> ERROR: Can't get value of subfeature temp1_lcrit: Can't read
->> ERROR: Can't get value of subfeature temp1_crit: Can't read
->> temp1:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 N/A=C2=A0 (low=C2=A0 =3D=C2=A0 +0.0=C2=B0C, high =3D=C2=A0 +0.0=C2=B0C=
-)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (cri=
-t low =3D=C2=A0 +0.0=C2=B0C, crit =3D=C2=A0 +0.0=C2=B0C)
->>
->
-> That means there is a problem with the I2C controller, and you'll have t=
-o
-> black-list the driver. I don't have a better solution, sorry.
->
-> Guenter
+No ack, because it waits on dtschema changes. I commented there some
+time ago but there was no response from the author.
 
-I do not thing that the i2c controller is at fault here. It seems that whe=
-n loading the spd5118 driver
-for the first time everything works until some point where the spd5118 dev=
-ice stops responding to i2c
-requests.
-
-Please you load the i2c-dev module (sudo modprobe i2c-dev) and share the r=
-esults of the following commands:
-
-	sudo i2cdump 1 0x50
-	sudo i2cdump 1 0x51
-
-This should return the register contents of the spd5118 devices. Please ma=
-ke sure that the spd5118 driver
-as been blacklisted and unloaded before executing those commands.
-
-I suspect that somehow the spd5118 driver confuses the spd5118 devices, ca=
-using them to lock up.
-
-Could you also please tell us the name of the RAM sticks you are using?
-
-Thanks,
-Armin Wolf
-
->
->> I then tried to hibernate. Hibernation failed and the output of the=20
->> "sensors"
->> command did not change.
->>
->> I also tried to rmmod spd5118 and modprobe it. The output of the sensor=
-s
->> command does not show spd5118 anymore.
->>
->> Hope I did what you asked properly.
->> Thanks for your answer.
->>
->> Luca Carlon
->
->
+Best regards,
+Krzysztof
