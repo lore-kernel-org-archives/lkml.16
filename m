@@ -1,141 +1,217 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B014A4C83
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 01:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B46C20DF4;
+	Sun,  4 May 2025 01:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746323046; cv=none; b=ckYCMHirx8DS79i3EKnQtSUrhPAdbMvhxifD16zU/WYliILwo40bcSZReX6haivbc3ObbGC4FtKGmwdk5GaqlPi67AXR1+i8IeN4PJ9C3mhnEQHjnI6fW5Sie0J0xuvJUN3YcH1PZ+5AkYRPyHoosILTlCjIvEn7Imun58aSJBA=
+	t=1746323159; cv=none; b=WPVDq9VbEAP54dV/BYzEaNvNTzhYe76Rj9DCIw9pPNKiBKAdOARG7Pzk1Y/5tHJ2kHZrigWN3uxHFHmdncOLIF+OuPZ1+CPQe9Gw24Q+pHL204OMSocP/fGcxEfebik1HvWS6kNvicwV4E3T2LBqW/Gj2DVsnbX6HpS3dIZ0GHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746323046; c=relaxed/simple;
-	bh=q0370ddK63HwIKcCK8oZ8nHzQVHiD3Dh6HyTZ36exLs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=T2h9Ctsp62q1qkMUlBQfBBjOHCIV+HKkeZ7q545fEtDpfL/3zZ/XvitVwxda+WwUMampnnBNCzC0oXvNTRkJdySL4RFFW1ptqglBMGz7rxah1r2IRG7R/DQZSn8YWJjvQTtVuTmdjLIvVJpJOQNvmT6eM6WbmLjdCwzIOj4yuaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85dad56a6cbso565069139f.3
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 18:44:04 -0700 (PDT)
+	s=arc-20240116; t=1746323159; c=relaxed/simple;
+	bh=lCtX5gDrKX/LLpQICcWlytfAboCij27A2i/XbIp9ZLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qvWp5luZ6NRPNg6an/w/ST4zUomQGsT8+xrN+6ZgtmGT/Hu828hFgXMnwpt+vBy8C5bEQCPx1RhcWIqAzTWZJTAatTqbHsto0PBjGUaAkxGBag0B+o8ucSO3zH3rUoEasLWK3MLq5sA1u8DPMtmPZUDg0OlRojYf9dK38Zy1JRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AmBS2dXI; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AmBS2dXI"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c461a45f8so28924761fa.1;
+        Sat, 03 May 2025 18:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746323155; x=1746927955; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B7lnzCOHIwkizy9wWqNhagK46sAvR2JhHgjOg7AFEkU=;
+        b=AmBS2dXIh8/ENUA1drDwC8FwRBRhgHCuknaWz+aQOwbwEYUPPWPrJknc9RTHqwuhJz
+         40RRxjXGlBOKCzc+O7q2ZF5jNf91M5TDTFu1kjNYiXGAQOYUPxApjO83E2HRHNsr5M9h
+         5L/9bOmqC6sJLEbToMUiRIYYIqbLC9Vct3F41eoIbqdA3eDGd/cm7SnbVUHrBgd87WLb
+         4GwNrtbB7nNaJ52+U659T1nQyhG0TA6OdbR81N2pKDr/PbTLr6I6RRqxbJaLWF42avWc
+         0GZY7SyKpjzb9fSi/po+wN0HBxY3ETijmXklo27U8FicnaFkrJOv+2vCAEDqKuIP4+m6
+         78vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746323044; x=1746927844;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GtTZHT7L3v8DUg6KqZuy809MkwIklfHr0nIwn0T1Sgw=;
-        b=dlX7RphruN/QZR4HdDNSPomHw8dOplgqHzsuqnweauaJsd0mAvivz2rVSSdE1RQc/a
-         73BgovMbt2zfbfeGaYselBNC3QdqQrAyS5DTXFKe4exd6FIN0Z8rHLZU23jB51Ef8slY
-         /1cHjgR7mRsX2oPxL8tNX2HRyzGva4xBGil3p3E+bQ95MCUvf8JayIPGzRN/pZEanSKV
-         qq3F7zJfxqNFoT8Y6x9oy0cGBrpaFJ0KIhnSRmtHS9ROzAW/uQtGKb+T9wUlW8vhADon
-         oy5AHxB4zgjD6p1fCAtwL25VlbU685I42a5F9NV4DdKz6P5cF/YyD88LHawxslYfimGV
-         PK5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmn00Y1+o9uRwasLUpCzaM4j4GHE7HZnp+Peaurc3pP4VjDgkpUUK6WVQAdcTdIj9A61C09sh0rYRlWAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR1ATo6h17TmatJ44nC5TBkToX+NiRAismx2KvQw/hTJBjSVHL
-	bGw/4UBXr2jLWd3JB1ntwZfHsuqBbZO8cZAtU2y36G884zItmPRb67yBzal0YJl6x/jmIUjULxb
-	4/lWvq5wt/9Gei0WVmg5JOA2E4W+V+D1XuLsfO+qitCKLquODFPY+Hl0=
-X-Google-Smtp-Source: AGHT+IHbGvfw4819epX+Ipg9zhDw+P4HLbQG+2IfHP7bCUaMF5aGVp0zyESA9ePSiuXwb33NBFDNIVqZhCka2lkuf8fgwSab+deq
+        d=1e100.net; s=20230601; t=1746323155; x=1746927955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B7lnzCOHIwkizy9wWqNhagK46sAvR2JhHgjOg7AFEkU=;
+        b=nBrrmTazOl7Os2VfA5rwxUmGvy61HIjCffiV88Hy2Si4qyQWJU9vYr2ydZ/ZOlNegs
+         30Fw0fmuyRuT3L6q1xE9W/OQYYmNV4V6FYXo3TU+oJJYlIAMVyl8nkHPPmGkPZoBx8yW
+         31BGc/IJxFY8zebcGGuxyna3AMkBPsoPQi9MI/A4axBBybvnwWez3dMa7nOWpcsdkEAp
+         n9PyrIqUZ5fVReCJelqOStY5epgDDWtmbIZEBVAJXvi2Sct2hm/SsfDBSvpKV06RMQXr
+         WO0/KXF4a28AFqC7c+Z0GzYhwnbcsl4qSBcsjIu/ZiGqnKVPMLIk6iZ6Jlf3gIxCsA1k
+         2ntw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbHHRGZCKhTue/nrJIWPt+z4kvmB4VYexlFSeFNE32lPM5GUGMo+5GPbtWI2NENiQNr8Vd/pP0/eUSAPO/@vger.kernel.org, AJvYcCWQ8tqCWrXRukphYlJUH8nIFZBnI/ahouhTtIEWaThD63C5kP61nxQC6Y5/NgW/dOVkRcbqZIHv3fQ+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYvR0uOhHSQ3B6UP6mQC4+NOPhQay6VYBnNcF5atOkT0V1Omnk
+	jn7yG6HA98cdQQtWgf6Pji8YSFz0O0xMZ/0/FI6AZQE8LidQ4aAaGNQ9EJFovB5P9SMV0vNeGLI
+	hN3rlb/KtZ5oKl9DgwE5QuYfEvnc=
+X-Gm-Gg: ASbGncvTE/ndlzXfmys5UafhfZ0wnSsK7zdtTtKkSWCHEY855JJxy+vNykYp7EpYbzi
+	sncHqI7hHWQwTMFzuuClkddpBi7Uu4zU7QhXYz2tM/Ged3pLXJ1iRgQF/Hn22xElVC81ipx+Usq
+	ubO5B64nJNYwuYNThFTZxcyAU=
+X-Google-Smtp-Source: AGHT+IG4qF3iVI5uWcYBZcuo9Y/YT1JDNmGSRnwvpFqRu8CNxzzYJpMUSlIaKXPHHmx3mvmbXuVDMwt5Pq6PShRcZVQ=
+X-Received: by 2002:a2e:be0d:0:b0:30d:e104:b67c with SMTP id
+ 38308e7fff4ca-32352607341mr6769451fa.39.1746323155173; Sat, 03 May 2025
+ 18:45:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18c6:b0:3d9:3adb:e589 with SMTP id
- e9e14a558f8ab-3da56903330mr42934555ab.4.1746323043866; Sat, 03 May 2025
- 18:44:03 -0700 (PDT)
-Date: Sat, 03 May 2025 18:44:03 -0700
-In-Reply-To: <20250503231531.1578-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6816c663.050a0220.11da1b.0020.GAE@google.com>
-Subject: Re: [syzbot] [usb?] INFO: task hung in dvb_usb_i2c_exit
-From: syzbot <syzbot+0dcc341ee61fc9e4032f@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20250503234030.130605-1-linux@treblig.org>
+In-Reply-To: <20250503234030.130605-1-linux@treblig.org>
+From: Steve French <smfrench@gmail.com>
+Date: Sat, 3 May 2025 20:45:43 -0500
+X-Gm-Features: ATxdqUEAZB9i7S5uPsM1MexTMN1OssUOvRay6NTBCvtlxfTs81yFYFIHOqDPCAE
+Message-ID: <CAH2r5mtCa3W1t_RBwPQDoHKb14JHydmP3CdmjoF5BNfkTn5ing@mail.gmail.com>
+Subject: Re: [PATCH] smb: client: Remove an unused function and variable
+To: linux@treblig.org
+Cc: sfrench@samba.org, pc@manguebit.com, ronniesahlberg@gmail.com, 
+	sprasad@microsoft.com, tom@talpey.com, bharathsm@microsoft.com, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+This looks fine as something for 6.16-rc next month.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-general protection fault in module_put
+On Sat, May 3, 2025 at 6:40=E2=80=AFPM <linux@treblig.org> wrote:
+>
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>
+> SMB2_QFS_info() has been unused since 2018's
+> commit 730928c8f4be ("cifs: update smb2_queryfs() to use compounding")
+>
+> sign_CIFS_PDUs has been unused since 2009's
+> commit 2edd6c5b0517 ("[CIFS] NTLMSSP support moving into new file, old de=
+ad
+> code removed")
+>
+> Remove them.
+>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  fs/smb/client/cifsfs.c    |  1 -
+>  fs/smb/client/smb2pdu.c   | 65 ---------------------------------------
+>  fs/smb/client/smb2proto.h |  3 --
+>  3 files changed, 69 deletions(-)
+>
+> diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+> index a08c42363ffc..d192a19bd761 100644
+> --- a/fs/smb/client/cifsfs.c
+> +++ b/fs/smb/client/cifsfs.c
+> @@ -70,7 +70,6 @@ bool require_gcm_256; /* false by default */
+>  bool enable_negotiate_signing; /* false by default */
+>  unsigned int global_secflags =3D CIFSSEC_DEF;
+>  /* unsigned int ntlmv2_support =3D 0; */
+> -unsigned int sign_CIFS_PDUs =3D 1;
+>
+>  /*
+>   * Global transaction id (XID) information
+> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+> index c4d52bebd37d..eef971509589 100644
+> --- a/fs/smb/client/smb2pdu.c
+> +++ b/fs/smb/client/smb2pdu.c
+> @@ -5919,71 +5919,6 @@ SMB311_posix_qfs_info(const unsigned int xid, stru=
+ct cifs_tcon *tcon,
+>         return rc;
+>  }
+>
+> -int
+> -SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
+> -             u64 persistent_fid, u64 volatile_fid, struct kstatfs *fsdat=
+a)
+> -{
+> -       struct smb_rqst rqst;
+> -       struct smb2_query_info_rsp *rsp =3D NULL;
+> -       struct kvec iov;
+> -       struct kvec rsp_iov;
+> -       int rc =3D 0;
+> -       int resp_buftype;
+> -       struct cifs_ses *ses =3D tcon->ses;
+> -       struct TCP_Server_Info *server;
+> -       struct smb2_fs_full_size_info *info =3D NULL;
+> -       int flags =3D 0;
+> -       int retries =3D 0, cur_sleep =3D 1;
+> -
+> -replay_again:
+> -       /* reinitialize for possible replay */
+> -       flags =3D 0;
+> -       server =3D cifs_pick_channel(ses);
+> -
+> -       rc =3D build_qfs_info_req(&iov, tcon, server,
+> -                               FS_FULL_SIZE_INFORMATION,
+> -                               sizeof(struct smb2_fs_full_size_info),
+> -                               persistent_fid, volatile_fid);
+> -       if (rc)
+> -               return rc;
+> -
+> -       if (smb3_encryption_required(tcon))
+> -               flags |=3D CIFS_TRANSFORM_REQ;
+> -
+> -       memset(&rqst, 0, sizeof(struct smb_rqst));
+> -       rqst.rq_iov =3D &iov;
+> -       rqst.rq_nvec =3D 1;
+> -
+> -       if (retries)
+> -               smb2_set_replay(server, &rqst);
+> -
+> -       rc =3D cifs_send_recv(xid, ses, server,
+> -                           &rqst, &resp_buftype, flags, &rsp_iov);
+> -       free_qfs_info_req(&iov);
+> -       if (rc) {
+> -               cifs_stats_fail_inc(tcon, SMB2_QUERY_INFO_HE);
+> -               goto qfsinf_exit;
+> -       }
+> -       rsp =3D (struct smb2_query_info_rsp *)rsp_iov.iov_base;
+> -
+> -       info =3D (struct smb2_fs_full_size_info *)(
+> -               le16_to_cpu(rsp->OutputBufferOffset) + (char *)rsp);
+> -       rc =3D smb2_validate_iov(le16_to_cpu(rsp->OutputBufferOffset),
+> -                              le32_to_cpu(rsp->OutputBufferLength), &rsp=
+_iov,
+> -                              sizeof(struct smb2_fs_full_size_info));
+> -       if (!rc)
+> -               smb2_copy_fs_info_to_kstatfs(info, fsdata);
+> -
+> -qfsinf_exit:
+> -       free_rsp_buf(resp_buftype, rsp_iov.iov_base);
+> -
+> -       if (is_replayable_error(rc) &&
+> -           smb2_should_replay(tcon, &retries, &cur_sleep))
+> -               goto replay_again;
+> -
+> -       return rc;
+> -}
+> -
+>  int
+>  SMB2_QFS_attr(const unsigned int xid, struct cifs_tcon *tcon,
+>               u64 persistent_fid, u64 volatile_fid, int level)
+> diff --git a/fs/smb/client/smb2proto.h b/fs/smb/client/smb2proto.h
+> index 4662c7e2d259..035aa1624053 100644
+> --- a/fs/smb/client/smb2proto.h
+> +++ b/fs/smb/client/smb2proto.h
+> @@ -259,9 +259,6 @@ extern int smb2_handle_cancelled_close(struct cifs_tc=
+on *tcon,
+>                                        __u64 volatile_fid);
+>  extern int smb2_handle_cancelled_mid(struct mid_q_entry *mid, struct TCP=
+_Server_Info *server);
+>  void smb2_cancelled_close_fid(struct work_struct *work);
+> -extern int SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
+> -                        u64 persistent_file_id, u64 volatile_file_id,
+> -                        struct kstatfs *FSData);
+>  extern int SMB311_posix_qfs_info(const unsigned int xid, struct cifs_tco=
+n *tcon,
+>                          u64 persistent_file_id, u64 volatile_file_id,
+>                          struct kstatfs *FSData);
+> --
+> 2.49.0
+>
+>
 
-Oops: general protection fault, probably for non-canonical address 0xfbd59c00000000bd: 0000 [#1] SMP KASAN NOPTI
-KASAN: maybe wild-memory-access in range [0xdead0000000005e8-0xdead0000000005ef]
-CPU: 0 UID: 0 PID: 6827 Comm: syz.3.19 Not tainted 6.15.0-rc4-syzkaller-00296-ge8ab83e34bdc-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-RIP: 0010:arch_atomic_read arch/x86/include/asm/atomic.h:23 [inline]
-RIP: 0010:raw_atomic_read include/linux/atomic/atomic-arch-fallback.h:457 [inline]
-RIP: 0010:raw_atomic_dec_if_positive include/linux/atomic/atomic-arch-fallback.h:2554 [inline]
-RIP: 0010:atomic_dec_if_positive include/linux/atomic/atomic-instrumented.h:1594 [inline]
-RIP: 0010:module_put.part.0+0x2c/0x1a0 kernel/module/main.c:874
-Code: be 04 00 00 00 55 48 89 fd 53 48 8d 9f e8 04 00 00 48 89 df e8 45 85 7b 00 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 14 02 48 89 d8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 37
-RSP: 0018:ffffc900030afda0 EFLAGS: 00010a06
 
-RAX: dffffc0000000000 RBX: dead0000000005e8 RCX: 0000000000000000
-RDX: 1bd5a000000000bd RSI: 0000000000000004 RDI: ffffc900030afd48
-RBP: dead000000000100 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888029df6758
-R13: ffff888029f8cfe0 R14: ffffffff87b61660 R15: ffff888029f8cfe0
-FS:  0000555565b2c500(0000) GS:ffff8881249e2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2fd5ffff CR3: 000000006149d000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- i2c_put_adapter drivers/i2c/i2c-core-base.c:2624 [inline]
- i2c_put_adapter+0x36/0x60 drivers/i2c/i2c-core-base.c:2619
- i2cdev_release+0x53/0xa0 drivers/i2c/i2c-dev.c:632
- __fput+0x3ff/0xb70 fs/file_table.c:465
- task_work_run+0x14d/0x240 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6f3678e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcf1eb9828 EFLAGS: 00000246
- ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 00007f6f369b7ba0 RCX: 00007f6f3678e969
-RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
-RBP: 00007f6f369b7ba0 R08: 0000000000000000 R09: 00000003f1eb9b1f
-R10: 000000000003fdc8 R11: 0000000000000246 R12: 000000000001e11e
-R13: 00007ffcf1eb9920 R14: ffffffffffffffff R15: 00007ffcf1eb9940
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	be 04 00 00 00       	mov    $0x4,%esi
-   5:	55                   	push   %rbp
-   6:	48 89 fd             	mov    %rdi,%rbp
-   9:	53                   	push   %rbx
-   a:	48 8d 9f e8 04 00 00 	lea    0x4e8(%rdi),%rbx
-  11:	48 89 df             	mov    %rbx,%rdi
-  14:	e8 45 85 7b 00       	call   0x7b855e
-  19:	48 89 da             	mov    %rbx,%rdx
-  1c:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  23:	fc ff df
-  26:	48 c1 ea 03          	shr    $0x3,%rdx
-* 2a:	0f b6 14 02          	movzbl (%rdx,%rax,1),%edx <-- trapping instruction
-  2e:	48 89 d8             	mov    %rbx,%rax
-  31:	83 e0 07             	and    $0x7,%eax
-  34:	83 c0 03             	add    $0x3,%eax
-  37:	38 d0                	cmp    %dl,%al
-  39:	7c 08                	jl     0x43
-  3b:	84 d2                	test   %dl,%dl
-  3d:	0f                   	.byte 0xf
-  3e:	85 37                	test   %esi,(%rdi)
+--=20
+Thanks,
 
-
-Tested on:
-
-commit:         e8ab83e3 Merge tag 'arm64-fixes' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=126310f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ca17f2d2ba38f7a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=0dcc341ee61fc9e4032f
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1002d774580000
-
+Steve
