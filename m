@@ -1,62 +1,62 @@
 Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D841A8F6E;
-	Sun,  4 May 2025 10:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC71AD3E0;
+	Sun,  4 May 2025 10:46:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746355584; cv=none; b=mFF/KKgMpBwVK2yCH0CKJuZJPjH5I1LSSVBspm38/Q/qNonpqjz7TD6+UECQt9ydSC57pqUm7m4jJY1t7k5eBCZTqIrSzIFMeJWrKO4hr2hmUSe6pQt+7MSrEo9pG8103mOP2xtwBPH+HI3yNs7Nx4p2Z7LmQurI3lrA+MN4TOw=
+	t=1746355587; cv=none; b=G8l8ZUpsYyYZBhelQiQoQtPk+/56v5FqWL7ux+QjGPp29gf8/5934hS7fd7wibh6dij/7ICQm/FUDgMy27ssUZ2ON6oW/iTgoWkyvy30+mp/mFnoANNrfBRZS+KgmZ7rJwrwM2OA/iIpgzLuxB49KkIx2vKaZkhWo/5y/CeyldA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746355584; c=relaxed/simple;
-	bh=IOUbTpGZZeI+nBZmuxYvdduSXGQt/jXYcXqsGvwMSC8=;
+	s=arc-20240116; t=1746355587; c=relaxed/simple;
+	bh=KPHrhHOyAQI630w7PvZZOGe3oBE60celgGMAIXnCCGI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p5kGDpY4L8z6CBfxp+5JwWRiBJp4Gpwh98OwoVtETMM/c7LCQ2PZlyksTz/hgBwryBCfa95cZ7zNn5jKh/qcnRZG7YcApZKWBsAb6PIzCSWRWCG7Owy1LYz7+WOO4vQtfsbBCGW981AJ6dmz6spR4DfobU8RY6GqPdhZV1TNino=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OrEbh+w5; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=Co1U97Dk6eJfnQc/OCWTHoDB9vNSSWzCecGxCgQv95q2o8LdLtjqPClw7ihILjbNPsk+smcFXQBpSH8YbDKHQmYBvu6nCFXHQ1XdywPDlD5YZjplU6UlCOgdTg5VDGzJ1WYtXcJqv4LM028ca1kJbka8O3/mFPY+OfFOJBqqoDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngHrqwSK; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrEbh+w5"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5a88b34a6so378660985a.3;
-        Sun, 04 May 2025 03:46:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngHrqwSK"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5a88b34a6so378663685a.3;
+        Sun, 04 May 2025 03:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746355581; x=1746960381; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746355585; x=1746960385; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c0dBNsRLfozNYsO2JqfQXy110W8bkOtUjtTaQB8elP4=;
-        b=OrEbh+w52pG1/XxxiddiUAe1YN1y2JBoEGMuLuqDns7b8HpWQkOOjiuTlJxM8Yp+xg
-         b15vGaP/gDMfyDTUPstNttzjLPzTXcNJyPARWoUyBG2ARWhdtaCl5syKWEQouj9S3I+6
-         pzunP5OQclamgK4UoxYgCcDaa4QGpTtnNVWtLyAyCeqUmrpxeM1er9cGe1X1+U58ozXl
-         a0DtMmQ6wSctKRgb2PoNFDRvL25HxYtXzXN1DmwpSCOtf4V1vNW30vmqL5ExUDKJg41h
-         4hk5Uf1/NJEbcVKMFbyb76bCWQbITXWRe9SDIxOIeMlK+WdF0D3MeJpvCb2qc8zrAV6n
-         vsSQ==
+        bh=luBGFn+jIcsRlGss1jEDVQja+DxK9mYI/muh+oug9tE=;
+        b=ngHrqwSKakAE1BkWnZKL40tS4JQUUjURu6/IMCibjwySnlLTISZcI99cYGG9XhIV0S
+         Z50xBfvSc8yf3e5wI0g9QMPb3mjowNeYdw7XEA2d3mPMn/TR1shuiTuWBWUweYjMP9A6
+         cyeX5OGJh2cK55xW18BLOrXwDnkrdgo8/zoFVyWD96qeIpof/OSPVrR+yE/93SIXGq+Q
+         6Y8wEA1bXkSJsXJigRJB5sQuM5vHw2e8a0hGFcqunRTdcxGMrbx1ktHheIxAOZqNSxCd
+         QqtnnVi7pCBwXp8rur4cdUr+r3ZxxyG/k3DeRNc0vZ6HHAnqclKGsgLGJvzSNMZeck1e
+         0CUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746355581; x=1746960381;
+        d=1e100.net; s=20230601; t=1746355585; x=1746960385;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c0dBNsRLfozNYsO2JqfQXy110W8bkOtUjtTaQB8elP4=;
-        b=escShxgqmxEgDuy/YC/G5yuwFFqNfpazqhWyoaXML53IjNhlEJ+5BpkOoG7FO/hj4z
-         97FmZDtkC+K2s3LERCtBKNzj8HN73wkewwksyyAE9U/UBjYSBhVGPyTwdG7+JJg3bHZU
-         Ykbv31BUUBQ19Q1gw9ZWH28nOoHXEXObxoUgGoDGRhgRNiPV67eS8tbcodHyFrbjdiVm
-         L8d0QlN5qXNZxgWdAO5RsfD2hASYC5dLO07PWF2Ytszds+4LsEJ7PQ5A3xZtPnChDri9
-         cWvHJ+zmYncV9eqJPu6Ak5caylbx7RFdYk8+XBYVriRK2sgejXjAyHmQ3pq7VkP1VQW+
-         8jhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUE48Gqiz+zrO96UcfdZRu2eb4/qt/LEcc/BXjqBPZn4o/zuV2QBpbyYYIaTXntmCejmOFaimDZ8VB4EGG/@vger.kernel.org, AJvYcCUccJauDUtg9aWMElJ1n3t5hLMSdfapLKLz1KHyEhQUpPjy7bVMjGjIiL8DyteY60SphuLR5Yc5Heyn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk+4A5W0NcPeS18G0z2c/Ao+RCKgX/fDEPXfyGkxm6KNhk0kLG
-	B+pNv7twq2TyPULHeNdwbNqZJiTJYrrXFfdBUcZCcjKqJllzyQ82
-X-Gm-Gg: ASbGnctRoWyA01JKpF4winS38WSb91AFgBlhBY0HxcELv1wQZLIO8da4PYIml/4vRXb
-	fLfX18Avij7LhIsxfJ3z2AwYWDazjBQW3AagXLJzakIDuvmqZMkLi+p9eZO9MOkd0ghX56LcFpA
-	kO9nYpeTiP8+bGodDbZrq6Af74kL/9DYt/ls6diwkOBAaBggbAfOeKk8t+mDpMmVf+3CdwKbdXh
-	CTcYw2Qj0OWMY9lDUrHKHcOaAN0xqK4Jtk16z7w8n/by0mnJUklxuzEijH2xiEP1dgkyE5eiB0O
-	Aw09YudbB2QL3j9P
-X-Google-Smtp-Source: AGHT+IGYfcJI1KOo4mnYSm2aZ/wO68fNQbksb1q2N85JkbNZoHHGaOY6wCLzQBxd67wnG1djUIGKBQ==
-X-Received: by 2002:a05:620a:2a10:b0:7c5:99f9:6ada with SMTP id af79cd13be357-7cae3b0a53cmr471104785a.50.1746355580956;
-        Sun, 04 May 2025 03:46:20 -0700 (PDT)
+        bh=luBGFn+jIcsRlGss1jEDVQja+DxK9mYI/muh+oug9tE=;
+        b=Di+kQx2sNBw/gWk+XaNXt+yqtvs7AbW661hmFBRXdo5UeP7NAM5SX1mRPhYOkpcvM/
+         va4WB5aL5ij0r1j/yzlaOpqfmgQVxDH1Ch9XLR7Vx2PBlgplPx3bfG3LZRu9N50WEiF1
+         Pu6pl7l4Gaub+OrPsvOniEQrRS6vzPNtSf7rErGeKzcmMn4uZ9ktoWGJcWmrm0WcOwex
+         t/ZMga+a0Vo76J7gm9oePaqvr9RqPmsRnpldOv9QFbcHL3fvNYSsJhM/ml4UpXU3Tvmu
+         pTmzyb08X7Jd0FpXMTldRiht0HRo8pTlDJf6HLuQPrH0N3vMWnZbPZ+6sAy7ZXPck0MX
+         d0kA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkZcou2F1ye4IWh2wUTizU1JoekXLm7qN/2dQGNnP0xuZkpuR7vxr6aGSD8Iuq/85G/XIZhk92d7OFW5tK@vger.kernel.org, AJvYcCVzO8EDo61mZ4rgmg73I5Ur0v9tVdOvHQTPeMokRs5yww4T7edmO5Q6bFPtlJoAbgpGCMEGt8C1byHt@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbinA1f5qTXSwYrZ8sVCzOTUOsjKgUSnvdRN9FTn5XwoPzP5sa
+	ApO9pnaQhyMYyfHZOt5CDCcXAnb8074cHusWsRXKuUKoYMLIpkZ6
+X-Gm-Gg: ASbGncsP6kRaBRcHzHlu+uyM8fG89CQ1k4D2ShSah40QaSpaCVzus8WQiIOADwDM7/6
+	ZbJGskJCAzeReuPcD02mIIFjfc8RRJqYAOdnlRiVxX9pC43rtSS1wCD+XRKW+iQ0Bt2+e5HTKFZ
+	CNk46fh9QNcLpoLM5+2LJexpXvQBplZwq3mhPpQsNw6GGs6F3UIRHVXFbUZvz+iGC7y/lwy2dRx
+	qjUrRMjicRJb2jxiW1EAEbNrqnPwSaqgCWPscfI+YR+2glUiFjdigMJU2pwScWt08xVz+qvMlyQ
+	w9nbM/Hi0ssIN/ZM
+X-Google-Smtp-Source: AGHT+IHc6JO110pytp4DT/Eq6cAK4dWSNom4k7fdULVNjvMMCHikTESlyYH63sW1mFS6wQgaea6AJw==
+X-Received: by 2002:a05:620a:1aa8:b0:7c5:5670:bd6f with SMTP id af79cd13be357-7cae3b0a352mr510352385a.53.1746355585056;
+        Sun, 04 May 2025 03:46:25 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad23b5f46sm429527585a.20.2025.05.04.03.46.19
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad242b587sm429752385a.77.2025.05.04.03.46.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 03:46:20 -0700 (PDT)
+        Sun, 04 May 2025 03:46:24 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -79,9 +79,9 @@ Cc: linux-clk@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v2 1/3] dt-bindings: clock: sophgo: Use precise compatible for CV1800 series SoC
-Date: Sun,  4 May 2025 18:45:50 +0800
-Message-ID: <20250504104553.1447819-2-inochiama@gmail.com>
+Subject: [PATCH v2 2/3] clk: sophgo: Add support for newly added precise compatible
+Date: Sun,  4 May 2025 18:45:51 +0800
+Message-ID: <20250504104553.1447819-3-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250504104553.1447819-1-inochiama@gmail.com>
 References: <20250504104553.1447819-1-inochiama@gmail.com>
@@ -93,46 +93,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As previous binding uses a wildcard compatible for existed clock device
-of CV1800 series SoC, it is not suitable for existed requirement. The
-only exception is sophgo,sg2000-clk, it does match a real device, so
-keep it as is.
-
-Add new precise compatible for existed clock devices of CV1800 series
-SoCs and make old wildcard compatible deprecated.
+Add of device id definition for newly added precise compatible.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 ---
- .../bindings/clock/sophgo,cv1800-clk.yaml        | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/clk/sophgo/clk-cv1800.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-index 59ef41adb539..379ce3e9e391 100644
---- a/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-+++ b/Documentation/devicetree/bindings/clock/sophgo,cv1800-clk.yaml
-@@ -11,10 +11,18 @@ maintainers:
+diff --git a/drivers/clk/sophgo/clk-cv1800.c b/drivers/clk/sophgo/clk-cv1800.c
+index e0c4dc347579..a4116ac1adcb 100644
+--- a/drivers/clk/sophgo/clk-cv1800.c
++++ b/drivers/clk/sophgo/clk-cv1800.c
+@@ -1519,7 +1519,9 @@ static int cv1800_clk_probe(struct platform_device *pdev)
  
- properties:
-   compatible:
--    enum:
--      - sophgo,cv1800-clk
--      - sophgo,cv1810-clk
--      - sophgo,sg2000-clk
-+    oneOf:
-+      - enum:
-+          - sophgo,cv1800b-clk
-+          - sophgo,cv1812h-clk
-+          - sophgo,sg2000-clk
-+      - items:
-+          - const: sophgo,sg2002-clk
-+          - const: sophgo,sg2000-clk
-+      - const: sophgo,cv1800-clk
-+        deprecated: true
-+      - const: sophgo,cv1810-clk
-+        deprecated: true
- 
-   reg:
-     maxItems: 1
+ static const struct of_device_id cv1800_clk_ids[] = {
+ 	{ .compatible = "sophgo,cv1800-clk", .data = &cv1800_desc },
++	{ .compatible = "sophgo,cv1800b-clk", .data = &cv1800_desc },
+ 	{ .compatible = "sophgo,cv1810-clk", .data = &cv1810_desc },
++	{ .compatible = "sophgo,cv1812h-clk", .data = &cv1810_desc },
+ 	{ .compatible = "sophgo,sg2000-clk", .data = &sg2000_desc },
+ 	{ }
+ };
 -- 
 2.49.0
 
