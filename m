@@ -1,185 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6B524A057
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 23:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4F217578;
+	Sun,  4 May 2025 23:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746401156; cv=none; b=VzsKDzvzpifo1CA4xqhY5f5G1CDMVc3zniHq1PTn8WwvhDf649ML/8zYsatdPk7XBX0HpAr+kB0JHW9QHiVwwnI4X/Uocr/n5wrFsddlGtKMlUEk7oXgk8e3b4DNIq6+MMGAOFzH72RcoKuxES73UQDqJIGRAGhKD5cnpq7+Ujo=
+	t=1746401495; cv=none; b=OMxJ8Pqt2dyWF2gT8knw91m86I6Jfy7v4OI0ikEnF2objCERecAU5d7q2OwfbmoE3201JrjE9pOhf1NIZ7FDkfkDU2m0e4vkfYlsPpI6+qYp51PYGddFuzdaY6evTBs3nvA+KjzNBSJQ8/y35nGdWPT2U1JoWJErZGZw1Ilj23c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746401156; c=relaxed/simple;
-	bh=YQlrNPWfAd0hPo2CWDN8tgD2UZHZogK0tWHcMMD3DmU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PObjFHwdhoiqcdz9RVM1LdNTVr6hQjH4AWfuTQo+PY0IxHDEyI4HYpTgpALRoSe7a5/ihBwbj/RU1ip9voKaaECbq3IblAhcMTGH/RRUMdstf5X6kXxMNXhI5lPaxONaMHS9YccTDUKbT7iLGEs4xFZR6Rzwvi6C0T6vDYeOLUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iqp7GXVB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746401495; c=relaxed/simple;
+	bh=5GtgY/EnvKFlpJ2uw99+BwLzQQ0PZUdXBdDqLf4Xn+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n5BuPBM9lom2QoFv6fVy+/dncWGCbMrr7BDLlg0ijS7kQ3eu6Mm1IW5SrfLzoIldFpfbfAYa20Vbu4vLRQrCG6c8AXABh/iuXX1tAg2heOxyXpWGSXpRZ8vQJ5Lv3eRwBgDvzW7QeG20xJjVD8T77L4suG3VCkpHLWu/tm//wps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+Yu98hD; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iqp7GXVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D45C4CEFE
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 23:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746401155;
-	bh=YQlrNPWfAd0hPo2CWDN8tgD2UZHZogK0tWHcMMD3DmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Iqp7GXVBeNYGYMVRk3GxDOEV1we/bQgWzUR7RZud2nNel2AgjcJnJCeWwsCWpAUrp
-	 cYc1IBvCXBQHWX7HubULJNSCBCPYT68r/pJytUI010hEISCZ83BOsZEi0iKxWvRWPy
-	 08lwQV2iBCiYHEQ6DOL/uc45kSTzJRZsbqvSYzTzj8luoGF+uw2HA2hg3dekUUEuwm
-	 Q6k6CwkTXtPg3LcTJnqAwsyiC3c9gOYM1mloK6HY3PK/a40bw0tkDT0J9HfrzKUBvU
-	 GbYcxcR+qdasKC2159pZ49bMVpXkoR+Figrfn1Q0dThXdPeMN9iW8vZx9xqw/pVbXQ
-	 ogWYH+by0hC4g==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso7269628a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 16:25:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXsR92pak6ebOJr78AEUnzd+BkU4lOdXR6AQ79b7XD6nmhVX4A31RVSUoEONoxBdcFz/f8A7qItpYR55q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQEYRzXDhDDH7cI8IUKqKMgC979CXVy6ucEaWPt4BOqWT8om94
-	VzUn+qObHzprsT2AfuHjs2wBYtuyQ4h7cFj/P+dgkfSHQuvl5Ygi5xTBwUj8Ws+h+8BIFjh6ari
-	wU91uxG/aS/YsgpncPN3voGccsiIFfQnPJMAQ
-X-Google-Smtp-Source: AGHT+IFeHttEHnt6JGNYvUj0b4tgsDNrFFzyPvM3lBConO1ypZC65jr1D+YbzAXa36rr90WmrBbCyVZSkuAz1r58mbk=
-X-Received: by 2002:a05:6402:2312:b0:5fb:18f7:459b with SMTP id
- 4fb4d7f45d1cf-5fb18f7473emr1026068a12.4.1746401153666; Sun, 04 May 2025
- 16:25:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+Yu98hD"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3035858c687so2787743a91.2;
+        Sun, 04 May 2025 16:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746401493; x=1747006293; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1k0adX3nlVCzUCfyT6I0QyXQncvcxoU5bJZ8Verleyc=;
+        b=Y+Yu98hDfjRKFOxvotDG3BZUEHWBq8HAf/SDuOUeUtaUo8nfO5wFI3JCi18nlbBBzz
+         CtagM9F0xdh+VvpV5bJx3tg3hxEda6qk17DOxC1bZNjIP37ni61QluRsXGKXXBbX1aod
+         IVqnCpgBtxsdM1v+w/PxUE/l82brnP+/mgzXT/+9HqzSAvKEE5gmnBQ+3DuxwaDvXwG6
+         abE6qiBO2HuFVORodysYtD3dNf1vo9L0mtGNDPFNcm3bGPm/re/tZf/E7P7yp2Ib3tRV
+         jwgivp7VIkYC8f7n+sWIWWVNwox3ohxsjBkkH07A41KsjSOKqy4JHO6kWnH6w2Mw84lC
+         A3gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746401493; x=1747006293;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1k0adX3nlVCzUCfyT6I0QyXQncvcxoU5bJZ8Verleyc=;
+        b=SWML8KSYSGeieVjRI/WCyRuZwMSakHjV3qOu3HDRtee9f4oBQmNRKPJakmHzmSZyV4
+         uelyg12A96nejVQGIRWh0B/OVoG0HkZObmSp3/eRSxWHGhmuhizCOKpMPwAsbiO7VsGG
+         3n1bVYeHMFO0G14TMVRUiYu0snMDHqwjJaVngTd0bqo4eoF3qZ1KnW1K88zlDL0O7R08
+         duOJolN41dRicgybU89S/jqjTmOAI2av8ju5Go/T70h5REujfVaBTAPLN1Cs1Uv2IGXZ
+         5SJ6HCHh9G2SV6KiRGh1S6yrmbZ/+S1Fgz2341p3JBF33EqhsfRQ4ke1EhQJjbsi7O+Y
+         tM2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWDIDjgggwazOiKrM4gchGR/IcbsY4VSm0bb5NkYnvxUSjkJtDeCeD2Qj8iMsvAY6ThEJN8lMfgThBPNjRU@vger.kernel.org, AJvYcCXgTLdZPuc5WNGc2vKrmtq88zy4lLNzwLU89jJCR1WRawYDRTLl6sSAoMSkxy2JRMX+72YxCQyl8w4nvg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMACP+c5h9bq42dZvcWb7UGNCNxlGMAbGZFTmsf7JqKBnkFT4L
+	JJqshoTizUSiHZjGK14iJpgTzBbI3I3tG9QpcSNVeavmhOR1TdmN9AypsA==
+X-Gm-Gg: ASbGncsLjpkioTM7K0Zi3K4qw3HwPiFzgMr78opsqKGwDS1Byk8LGzFJGzLUFg5VDHf
+	t9kdzGb6G4nzTjRf4iBFmIOB2wncHd4PJT/dtL5n3FyTsxCYaIvnq3mnsEwaQIV6oiVrTFhoA9F
+	lxD0J2xPzBXPuibtpG2fO8w99QHAXiM7zroDYB3Zf+ocBWjRprrgLUmEOgicfYMhVbJFSUKObL8
+	e3opXIuRBneWMnG8vlofCekhta0vs34Y2IPPRJawcNabpmWRfDTk7pw5H7PKk/G3WwQqCDMG+Gn
+	iOiLfPCpWWDs6ea1/qT3UnNYXSIyrJqoFE2UACcYJVEOcYcNpDHIAURhJB5cfLKnjl/+lY+oyYz
+	hsKgQ7TzFiX0ZLpelGG78MLe5
+X-Google-Smtp-Source: AGHT+IHupJUM8SOyCsiTuXxkKu54Du+BzTghrqHsFNOu1cXqgRHmByJ7iSMj/852ykYP5BWtp/TPjA==
+X-Received: by 2002:a17:90a:da85:b0:2ff:6488:e01c with SMTP id 98e67ed59e1d1-30a61a6f82cmr6957662a91.29.1746401493140;
+        Sun, 04 May 2025 16:31:33 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522a3d0sm42392965ad.199.2025.05.04.16.31.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 May 2025 16:31:32 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <310fe3a3-e585-46e0-aae7-3e4d41af1f53@roeck-us.net>
+Date: Sun, 4 May 2025 16:31:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Mon, 5 May 2025 01:25:41 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
-X-Gm-Features: ATxdqUF-4LjdLg3QP9aQurW4StUtszW6zEg3L7LcP4VsuTxu8r7YCkYGmWYmIdo
-Message-ID: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: Paul Moore <paul@paul-moore.com>
-Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
-	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
-	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
-	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
-	justinstitt@google.com, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
-	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
-	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
-	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
-	xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Suspend/resume failing due to SPD5118
+To: Luca Carlon <carlon.luca@gmail.com>, w_armin@gmx.de
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lucas.demarchi@intel.com
+References: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
+ <20250504184117.4795-1-carlon.luca@gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250504184117.4795-1-carlon.luca@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 4, 2025 at 7:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> wro=
-te:
->
-> On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrot=
-e:
-> >
-> > > This patch series introduces the Hornet LSM. The goal of Hornet is to=
- provide
-> > > a signature verification mechanism for eBPF programs.
-> > >
-> >
-> > [...]
-> >
-> > >
-> > > References: [1]
-> > > https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov=
-@gmail.com/
-> > > [2]
-> > > https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=
-=3DcBzdEYbv_kg@mail.gmail.com/
-> > >
-> > > Change list: - v2 -> v3 - Remove any and all usage of proprietary bpf=
- APIs
-> >
-> > BPF APIs are not proprietary, but you cannot implement BPF program sign=
-ing
-> > for BPF users without aligning with the BPF maintainers and the communi=
-ty.
-> > Signed programs are a UAPI and a key part of how developers experience =
-BPF
-> > and this is not how we would like signing to be experienced by BPF user=
-s.
-> >
-> > Some more feedback (which should be pretty obvious) but explicitly:
-> >
-> > * Hacks like if (current->pid =3D=3D 1) return 0; also break your threa=
-t model
-> >   about root being untrusted.
->
-> Speaking with Blaise off-list when that change was discussed, I
-> believe the intent behind that Kconfig option was simply for
-> development/transition purposes, and not for any long term usage.  My
-> understanding is that this is why it was a separate build time
-> configuration and not something that could be toggled at runtime, e.g.
-> sysctl or similar.
->
-> > * You also did not take the feedback into account:
-> >
-> >    new =3D map->ops->map_lookup_elem(map, &key);
-> >
-> >   This is not okay without having the BPF maintainers aligned, the same=
- way as
+On 5/4/25 11:41, Luca Carlon wrote:
+...
+> When I was told that the problem may lie in the i2c bus, I started to search elsewhere
+> and this thread came up: https://bugzilla.kernel.org/show_bug.cgi?id=213345. I
+> therefore provided in that thread some more info I collected.
+> 
 
-[...]
+ From there:
 
->
-> From what I've seen in Blaise's efforts to implement BPF signature
-> validation in the upstream kernel he has been working in good faith
-> and has been trying to work with the greater BPF community at each
-> step along the way.  He attempted to learn from previously rejected
-> attempts with his first patchset, however, that too was rejected, but
-> with feedback on how he might proceed.  Blaise took that feedback and
-> implemented Hornet, traveling to LSFMMBPF to present his idea to the
-> BPF community, as well as the usual mailing list postings.  When there
-> was feedback that certain APIs would not be permitted, despite being
-> EXPORT_SYMBOL'd, Blaise made some adjustments and came back to the
-> lists with an updated version.  You are obviously free to object to
-> portions of Hornet, but I don't believe you can claim Blaise isn't
-> trying to work with the BPF community on this effort.
+[    5.416572] i801_smbus 0000:00:1f.4: SPD Write Disable is set
 
-Calling map->ops->map_lookup_elem wax objected to by Alexei.
-This feedback was not incorporated.
+I think you are out of luck. The above is incompatible with spd5118 devices;
+See [1] for details. I don't immediately see why that would cause the i2c bus
+to lock up, but even if it didn't lock up the bus I don't see a means to get
+this to work.
 
->
-> > So for this approach, it's a:
-> >
-> > Nacked-by: KP Singh <kpsingh@kernel.org>
->
-> Noted.
->
-> > Now if you really care about the use-case and want to work with the mai=
-ntainers
-> > and implement signing for the community, here's how we think it should =
-be done:
-> >
-> > * The core signing logic and the tooling stays in BPF, something that t=
-he users
-> >   are already using. No new tooling.
->
-> I think we need a more detailed explanation of this approach on-list.
-> There has been a lot of vague guidance on BPF signature validation
-> from the BPF community which I believe has partly led us into the
-> situation we are in now.  If you are going to require yet another
-> approach, I think we all need to see a few paragraphs on-list
-> outlining the basic design.
+It is still puzzling that reading the i2c data using i2cdump fails. The spd5118
+driver should not even probe if that is the case. Maybe Armin has an idea.
 
-Definitely, happy to share design / code.
+Guenter
 
+---
+[1] https://lore.kernel.org/linux-i2c/20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com/
 
-
-- KP
-
->
-> > * The policy decision on the effect of signing can be built into variou=
-s
-> >   existing LSMs. I don't think we need a new LSM for it.
-> > * A simple UAPI (emphasis on UAPI!) change to union bpf_attr in uapi/bp=
-f.h in
-> >   the BPF_PROG_LOAD command:
-> >
-> > __aligned_u64 signature;
-> > __u32 signature_size;
->
-> --
-> paul-moore.com
