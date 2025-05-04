@@ -1,83 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE90B14A4E7
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 04:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B60D3C1F;
+	Sun,  4 May 2025 04:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746331854; cv=none; b=IZWYxXdVK+MHUBh4yzRjZtikaP83OeHNbfsTFRhtcm/PJws6pNXLTXnLi8CeoUSN1YSULANaHjmfvlBnaiXsGCZI5/wLiaxT2IMuIe0M5+1o46RKOr0jSjEZUN6XsX+q+OwtbPPLyQxolq6rQiu1XxRDSX6oPelI907xZ9xEUjA=
+	t=1746332686; cv=none; b=Jpl8rgHXKDullSx5B3LE+i3X2nntaK0B+HPRigObezReA3DD/DbP3DYaxkPhBog6cz2kaCK3iOvvKsH/qU5/L7VpY+h9vX9sCAfWKwAjcZfMu86SHF3IOQ5N1naC5PsQ11V3JvK05M7qzX6jXGHtxBpf/S0e6zhywcn5GzNe2qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746331854; c=relaxed/simple;
-	bh=58y1wlPA8jRdV6kOneRQ3qISahx75Mn9ln9rC7q2WlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=He0VI8Cyj7c5QvAZdG2FW/F2klFJvZGSfdyQ4WP6AGpehaoqZoHckglnfvDXg+n8+TA7ZEUBWsN2AnCcHjuyugxoj0rUzx6UWqXvaLsEQtlXyz+tEg2hvDiW/kxF+7HnEr4Eu2TatBiyqk2npKB25xuPbkf5r+QB4kjDzAk02HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XONysR+v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746332686; c=relaxed/simple;
+	bh=0y3breFb4vE1bxctwmXBiM8xh2KA7P7oCIfoDMCEn3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nhVQ1DNGo3aGw8RMibDKW0zqUf49R311u/GLxH5IBTBuiRf8zotGsDdkHxkzjVOG7YZni2ZC+sFwZQere5X8z4RNFRle9aP9Eh4W1dD1VNfqR9EicYfw9c3ITwTJRfKIXv6GpNns0v/l7FZz9ZJuyCoxDA45U3Memzw80ilTPp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGLpRwQI; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XONysR+v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746331850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pXg0ERkF8XHkKLcRr4bURjizOpgCnyyQy1hmk10qVvs=;
-	b=XONysR+v3TIAgxCzCjDvAMatNCK1MhpEZdPEZqiQWGfReSZaUSwO/24nzRQjuWbvqZCdyp
-	N3Q6xwQ3IIgNuaswyK13LqZUWJkrQ0uw6o5lQHMmawxhc/6Om6VyM5ppV+11RPIFtlvHIS
-	5bxETxriOB3fbcILdAol0Km9lbIi6WE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-kB7dUlazP2SGiPXFaptBag-1; Sun, 04 May 2025 00:10:49 -0400
-X-MC-Unique: kB7dUlazP2SGiPXFaptBag-1
-X-Mimecast-MFC-AGG-ID: kB7dUlazP2SGiPXFaptBag_1746331848
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf446681cso18851875e9.1
-        for <linux-kernel@vger.kernel.org>; Sat, 03 May 2025 21:10:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGLpRwQI"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af52a624283so2931340a12.0;
+        Sat, 03 May 2025 21:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746332684; x=1746937484; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hE3MGps1Pn9q+pVBqv4IQq3bCdItrSB89VcIOdLpsHI=;
+        b=AGLpRwQImcNXFbirq/arpUoi+qdRqKouuksvEsmRHJM000yKesDn/QQ0HS1PqRqXg2
+         400BhmxeKBtCSzmNuXKgSYZG0Gte1NJDBMz76N71PP+Nlt4TicHuCXzcecu8dAGWLFSO
+         dRAomqShU+nPuNhpcL/Wmi44bYn8i5HuUr05GXiZJoWlPVPc7HEozEGljD++9fSqR1FN
+         2hoxaP1PZQRhALrsicepS3GA9yIf0s0Lv5nIS0do/Sy43feFy0+uXUudPvMfQaN6x2dE
+         265UCrlfIYF1IIYgxSogShxIb3eV302I4vIE/P+SMyuw7+syGpj0+lRFLclsAmX7FYbO
+         9QBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746331848; x=1746936648;
+        d=1e100.net; s=20230601; t=1746332684; x=1746937484;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pXg0ERkF8XHkKLcRr4bURjizOpgCnyyQy1hmk10qVvs=;
-        b=RfxBhhxhl7wBYhvCB+pApGi2kiJG6ibmgEIhabcADGzRa3/v+C0lzqITY9IU+7nqoj
-         PfbvUMmJXishvlI6b012GvrJbaKvS3IVzInQ2JUpYbpUSNK4v/5WlLkUMt+esjanqWCL
-         m2NlcVjWtgLr/LcKYbgtyogyAn1Kg+X3qbjUIs1C65TznWh46eea7zi2fDlljCGgrZJK
-         yCpKyNrXYCcgbWTagxjriRLAANWv+DhMLhYEgXiwkc7l1THwUMKavK5N9YWzH0TVfnPI
-         smSv0k5SJLsbCo7qxgupoNdH77QtgKnjMtP7fNWo2U5F0DAlgaXo/AjVemH+r4rWUJJB
-         Vfvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZEpWAG2kg5Pkhgu8SdAn4geyT5wCP9phVUvnzpXHqPjh82OP/M378Z3bVGC+K7F/Lsn3kkw6A63O732A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxffRBH0fwzp57sTYVW6mz7dwF9WhZNA8eVzRqqIlzv+Ql+69RE
-	pIMLePja1/FouXB+5xKUKbp7hSDuS5iuSDvIwy4qjEub8DE12pjcs7dsdai2+bCiBgUf3Hvf+LE
-	f7gNvelFaX/gNd1Eewhe5/HuSiben/oQBI6/V3jNsxzjd1prdxs1ZLQTL1eQw4g==
-X-Gm-Gg: ASbGncukg5nHrM5sbiBEkFOPZUw8FjyKBN9oJMi8XTlScK/TqWjNMyD7bygRI90ekzL
-	9PGlBw7eSpauJBTpf6r8oVUqywXnNwn7zMF5nJDl7mDTPvrrebJqxPOw1qfByvKB7eNWlirh54f
-	J4ArKUqrMgDBZhCipKpPBp7a2NNECifMHJ/jcBJPJDAmb/2LGnUQVJr114Cb6gEUlYHAXRDBTeG
-	YfPc3Wwri9PPSZ0ui462yRRFaC/g9wGtOpTm7rQEukCoCQ1IjZtOxou/0GplZYEN2KSzn4UQ7qF
-	lAQmcEtpXA2BSs4uyqbIwp2bMd23R0pSNE9jlTZjM0O6dC3BntsKPRsYjQ==
-X-Received: by 2002:a05:600c:8283:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-441c4948691mr19622015e9.28.1746331848171;
-        Sat, 03 May 2025 21:10:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+L9gMdreyvyzyLlq3oHQYPX/FO9Npa9JrKoYnNFTKf5gqLqTcPTA+0B3G8oMkDtOUnSc9ZQ==
-X-Received: by 2002:a05:600c:8283:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-441c4948691mr19621955e9.28.1746331847872;
-        Sat, 03 May 2025 21:10:47 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2af306bsm138229675e9.21.2025.05.03.21.10.45
+        bh=hE3MGps1Pn9q+pVBqv4IQq3bCdItrSB89VcIOdLpsHI=;
+        b=UYzBKxcwnQBak7t6enQG58lCwn5JZBQHyQdMWhOuBydXP1iDekEhRrvbO1vZ+ei/bD
+         TPds4djGqK5+1/lyi/wMuuxKvnJhOhzYN/C0ivBMpE8SvdhXzzr1BDk9rtRoWtdCeY3n
+         CxbMS727HpLv0YC5AY2wFgtyJkkWug9GFUubGM0rHLiaQxSAhU5GgXWDduSNSfOcqeF4
+         /02+e3aJXPSy5Mr1JQQ+QO/HKjFEmY8s8ndeIkbqtBG+jnQYrnTgejYsUeLQw0E20EkP
+         abiRv8Aw21wzxeqZQOjMPfyCw7uAIHzsxlvVf09LaxujV4ExowH2zd/oawJsXP3WneEm
+         N3rw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeMTav1BcMuZZHrMrPhGGBKQELsQ8BWnVYQWb5mMFTv2uS7eCFLgH2/MLgtqNvheQErbd+YPNkiJxDqWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEHEj+KllQ3T8I5iU16SVhsM5JdwbGCv4aJEAvYfEU+GYLnwkU
+	3ijgTrISRWLxRYmDJzhwwotIxRy1T8gSNVe9nPrr93MQSpZTaZguCZ3jC4Kt
+X-Gm-Gg: ASbGncv/k4j3umWAqmnCCGKOYsnRO0SqQWcPg9UTbqhu9oeBAsbZ4yE+KyJyCGTo4Ra
+	BJz3PM8aeDmgzaBovZjzvmCN0Zm+t5ZybdMWURyJYTRdLYuQ/8UVSyF+/JhlUzmz3ENN+24yirI
+	xABZE+qeI9j9K7VI1Zo3oKIYtp8ZM+FXg2r+82KJug35Xc0gU2autUjSVWZRs1LUyvARjbVi6AR
+	nAQHc1kXjFdhYxSckIbym4G7C/K+WCdEBhAM5a9irwp5M6eVsC7/oqDzdQWap1D9MC+1UjQhEqV
+	orALQtAtrcTwa0KQU8YeFYwuYZlxj3Y5FKiVdE7CpySvo8OavzTfuDGTkT/+DKy1EajtdH7BhVb
+	5wbvNKJvAdRgeas+3BA==
+X-Google-Smtp-Source: AGHT+IH6qPPbtdYxTPkL+pUNLjGn5YYfaPjngTMWB7/9YETcrxB1Dcycw9j9n1dAMv1f9dI9YLjScQ==
+X-Received: by 2002:a17:902:db06:b0:215:a56f:1e50 with SMTP id d9443c01a7336-22e100505d0mr129130625ad.8.1746332683931;
+        Sat, 03 May 2025 21:24:43 -0700 (PDT)
+Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fbc8sm31482185ad.142.2025.05.03.21.24.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 May 2025 21:10:46 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Lee Jones <lee@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-input@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: rectify file entry in ADP5585 driver section
-Date: Sun,  4 May 2025 06:10:40 +0200
-Message-ID: <20250504041040.40421-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        Sat, 03 May 2025 21:24:43 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: a.hindborg@kernel.org,
+	boqun.feng@gmail.com,
+	frederic@kernel.org,
+	lyude@redhat.com,
+	tglx@linutronix.de,
+	anna-maria@linutronix.de,
+	jstultz@google.com,
+	sboyd@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] rust: time: Introduce typed clock sources and generalize Instant
+Date: Sun,  4 May 2025 13:24:32 +0900
+Message-ID: <20250504042436.237756-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,34 +87,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+This patch series introduces a type-safe abstraction over clock
+sources. The goal is to remove the need for runtime clock selection
+(via ClockId) and instead leverage Rust's type system to statically
+associate the Instant type with a specific clock.
 
-Commit a53fc67a1e21 ("Input: adp5585: Add Analog Devices ADP5585/89
-support") adds the file drivers/input/keyboard/adp5585-keys.c, but then
-refers with a file entry to the non-existing file
-drivers/input/adp5585-keys.c in the MAINTAINERS section ADP5585 GPIO
-EXPANDER, PWM AND KEYPAD CONTROLLER DRIVER.
+This approach enables compile-time enforcement of clock correctness
+across the APIs of Instant type.
 
-Make this file entry refer to the intended file.
+This patchset can be applied on top of the division fix for 32-bit
+architectures:
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/lkml/20250502004524.230553-1-fujita.tomonori@gmail.com/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b21363fdbf4d..1401209d06df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -550,7 +550,7 @@ L:	linux-pwm@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
- F:	drivers/gpio/gpio-adp5585.c
--F:	drivers/input/adp5585-keys.c
-+F:	drivers/input/keyboard/adp5585-keys.c
- F:	drivers/mfd/adp5585.c
- F:	drivers/pwm/pwm-adp5585.c
- F:	include/linux/mfd/adp5585.h
+Most of the changes to the hrtimer code that were included in v1 have
+been removed, as it does not use `Instant` yet. I plan to convert
+hrtimer to use `Instant` and `Delta` in a separate patchset.
+
+v2:
+- removed most of changes to hrtimer code 
+v1: https://lore.kernel.org/rust-for-linux/20250413105629.162349-1-fujita.tomonori@gmail.com/
+
+FUJITA Tomonori (3):
+  rust: time: Replace ClockId enum with ClockSource trait
+  rust: time: Make Instant generic over ClockSource
+  rust: time: Add ktime_get() to ClockSource trait
+
+ rust/helpers/time.c         |  16 +++
+ rust/kernel/time.rs         | 201 ++++++++++++++++++++++--------------
+ rust/kernel/time/hrtimer.rs |   6 +-
+ 3 files changed, 145 insertions(+), 78 deletions(-)
+
+
+base-commit: adf04b7cc66574ec2a43b540046975dbe73e0382
 -- 
-2.49.0
+2.43.0
 
