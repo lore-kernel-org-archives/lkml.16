@@ -1,90 +1,92 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934691A23B1;
-	Sun,  4 May 2025 15:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5551FAA;
+	Sun,  4 May 2025 15:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746373472; cv=none; b=gU3549DM6fiQgMVHuSLhKr8xgLvkrC8o/jbVVriXD8+d190lkVGRXc8MvH0cageXUPkbB5pxGbcHNqRishfoWCQe86e/NWnjlv0vO906V9Fs0rPaWOGzhvaQ7vDlTlOzeHw9+ippjKQPrL6iTbbJ6BRCQpEdw6BFp1WRxH5wU4I=
+	t=1746373621; cv=none; b=rH2yY0fhI/LG1C9HfuVQgQQ21LxJEQSmvucc1u5TTizus1GP7igAogatZKO/vJyxxmApYn6M7mvbJEhhcXZO669Tjo1NXDBXjB+7dIWVBTA98YQlPh525Y/d7IDBNLt+O0RQR9Z/HTqgVNa382/Lo9zjWUf2s6AbSUNsn7OS4bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746373472; c=relaxed/simple;
-	bh=2XXDdPRHzLVwXzTES3eVASsN/SiaDfbjCVCtAAcX52I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G95pMR0nFQI6GwWqaTjVzkxbS4bsAfam7kkRLx87W0GgpMa6fYnu+EM0zie02GY9V/UFRxwevbrsgJiBN1tkDClu4swayEOFSru5gpj5km+ZtyZyzrY6nMQl0wTfu3LjFCGvIgeJC72yA4WVxPxA4RxB9nBy2cF0y1NzLwOJaRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d/ttsc9l; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746373621; c=relaxed/simple;
+	bh=eg438LQYInqo9y9/Eti33rySAFBXRXmJbYUQgtWCs0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jgR/wd+caqG2QE/cfJtngg4sPK4UlF3ld8oYfJU++JNOEJC03xZQy6dEE60WoI5BHxGuwf12wJGv1MhZWXL0iREOl3YQmFxYPCb64F/qCf0IJbNtIUDcLmpSavbv/H8vE233ZeLXIqSCmNgPVDa+95xHJ5d11EMmanlLMTw1Hgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFbsmnFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d/ttsc9l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=iZJH3
-	2h/nY81Ou36LPNReN8OUgsRTOeKJQp89h9i674=; b=d/ttsc9lYiDA8NMzyl89q
-	ySKoYflxeMqwgisxmNc/BVipBDxkrGD49MIigHPfvkhcYcRqidjIzTlqfziKFDTi
-	hWRKK60ylDV7sFwDoTu42gawnEq5mvCA8pLnGI8DG2bYlJa2wo708vtVp+s2tszI
-	7tfColQKtOGeE6Uoi17mG0=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAXIWtAixdo8td6Eg--.52915S2;
-	Sun, 04 May 2025 23:44:01 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: mahesh@linux.ibm.com,
-	bhelgaas@google.com
-Cc: oohall@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI/AER: Use pci_clear_and_set_config_dword() to simplify mask updates
-Date: Sun,  4 May 2025 23:43:53 +0800
-Message-Id: <20250504154353.180844-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFbsmnFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5908C4CEE7;
+	Sun,  4 May 2025 15:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746373620;
+	bh=eg438LQYInqo9y9/Eti33rySAFBXRXmJbYUQgtWCs0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gFbsmnFXqB/zNRPAC4/USD3No37/d31n3jIhyUrZl1uaZL4rPhRiMhau+tkJ0ryx9
+	 5PJKG3UvnIjUZ7Zq3HgjU/QPaUwrjfPOHp23zcqKso6amW2OkkAKqhL6vAqfGqO4Z6
+	 qxLMgkUdg/nW/U46nUuC7IIWpSu32lf8t3KnGXjNtCGjmsvWlUD5nHwnMfX8dRbUPx
+	 gQf15QdnlsPQbD/elmUgyvoESRY6tcWYPXjNHVp2EqQQnmb+E0cReCgfnr5RRIDMQ2
+	 yiHTm9ns3fg+kGyClV6O0GjHmkD0+1ZiusGmg2FzgjOXwIRluHA7+xQZPgPPRL4nHY
+	 H1J69SuM773jQ==
+Date: Sun, 4 May 2025 16:46:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Sean Nyekjaer <sean@geanix.com>, Marcelo Schmitt
+ <marcelo.schmitt1@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] iio: accel: fxls8962af: Fix temperature
+ calculation
+Message-ID: <20250504164654.1ecf7215@jic23-huawei>
+In-Reply-To: <CAHp75VehpQdxFDXE8L0TeaOxHBTHNorOZ95rL48kQAiViAJ_zg@mail.gmail.com>
+References: <20250502-fxls-v2-0-e1af65f1aa6c@geanix.com>
+	<20250502-fxls-v2-1-e1af65f1aa6c@geanix.com>
+	<CAHp75VehpQdxFDXE8L0TeaOxHBTHNorOZ95rL48kQAiViAJ_zg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXIWtAixdo8td6Eg--.52915S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr1fCw1xCr4fGw4UWrWrAFb_yoW8GFyxpF
-	W3AFy5Gr48Jr1YvrWDXayktFn8Gas7t3y8KrW3Gas3ZF43ZFZrtryavr1UJ345tFZ0qr45
-	Xw1rKa18XF45taUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zt-e58UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwVDo2gXf9nrMQAAsp
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Replace the manual read-modify-write sequences in
-pci_aer_unmask_internal_errors()with pci_clear_and_set_config_dword().
-This function performs the read/write operations atomically and reduces
-code duplication.
+On Fri, 2 May 2025 17:19:44 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/pcie/aer.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+> On Fri, May 2, 2025 at 9:15=E2=80=AFAM Sean Nyekjaer <sean@geanix.com> wr=
+ote:
+> >
+> > According to spec temperature should be returned in milli degrees Celsi=
+us.
+> > Add in_temp_scale to calculate from Celsius to milli Celsius. =20
+>=20
+> ...
+>=20
+> > +/* Raw temp channel scale */
+> > +#define FXLS8962AF_TEMP_SCALE                  1000 =20
+>=20
+> Wouldn't constants from units.h be helpful here?
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index a1cf8c7ef628..20d2d7419fa4 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -953,15 +953,12 @@ static bool find_source_device(struct pci_dev *parent,
- static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
- {
- 	int aer = dev->aer_cap;
--	u32 mask;
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
--	mask &= ~PCI_ERR_UNC_INTN;
--	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
-+				       PCI_ERR_UNC_INTN, 0);
- 
--	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
--	mask &= ~PCI_ERR_COR_INTERNAL;
--	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-+	pci_clear_and_set_config_dword(dev, aer + PCI_ERR_COR_MASK,
-+				       PCI_ERR_COR_INTERNAL, 0);
- }
- 
- static bool is_cxl_mem_dev(struct pci_dev *dev)
+Whilst you are just continuing local style, I'm not sure
+these defines really bring much at all given the TEMP_SCALE
+one for instance is only used in one place which is
+explicitly getting the temperature scale.  It's not a magic
+number that needs a define. It's a number that means it's own
+value :)
 
-base-commit: ca91b9500108d4cf083a635c2e11c884d5dd20ea
--- 
-2.25.1
+Using MILLI there would be a nice bit of self documentation
+though.
+>=20
+> >  #define FXLS8962AF_AUTO_SUSPEND_DELAY_MS       2000 =20
+>=20
+> (2 * MSEC_PER_SEC)
+>=20
+> This gives immediately that we want 2 seconds of delay.
+>=20
+True but not part of this patch so that would be a nice
+little follow up.  Possibly dropping this define in favour
+of using that inline.
+
+Jonathan
+
 
