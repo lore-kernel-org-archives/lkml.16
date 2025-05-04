@@ -1,126 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39B1A32;
-	Sun,  4 May 2025 17:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85571A32;
+	Sun,  4 May 2025 17:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379198; cv=none; b=gX/2137HVSvtgymQlm6LUcaLvp9K0gP/1jCjt5pRurWB175PurmNRccxLsEvQZ2RVstwrujs3A3B0URn3lZQAHKTqZ3L/W26k05GwjeaOgXcv9XFqZWtEfGvW5O7dYVjVEAu/EALBhLISuBLxNlmYefk2L9+32X4Yk6ZwkyGVLY=
+	t=1746379247; cv=none; b=Pd2x1Ym3dezd9gYLTPZtfIkM+OOAMakFlLblrc0gbmHybjqhESKsjLBELvvE6gNGduK5EH2UWUL2LYewLMI5ENMcz+ys0xO6FQy7FO0wnTuigJ0/KRVHjnZD/aX+hGBXTxyacOtRmeLkgK4i76RsI7PPa+2bMpU2vlRto6WMFeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379198; c=relaxed/simple;
-	bh=mKnCL3nkz9cAe/1hO2OMMOkEX7QBuY79blrz+JeIxDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vo+ajhxKvqYHwRs/QcnxpeG9+Z1f1LiKAtjSL7qmp650vWnoGR5hsIePGLXAHxmxXOJV4TPD6tZXkxWp27dfyPa44pujnaF+7fkLUvnrZ7z+uZZKYVfdkU0W05ao6KOW1cTM+y4IyXgOmjoBJpCtPn6pKIWL5ena/MdVWA1m7+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=souD9f6l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746379247; c=relaxed/simple;
+	bh=Slh3CPtxZdQkCpRtkRRBiUTgSiG+PRKZ7lTazFXIyxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pIx0i0INr63ngRKkRKHGKjlsBZXDGipXI0nYC6HZPg7GykZqrWziti0/KjwbnHL/89TjtnUdRc/vy97oOnaNqgcmuPdB/mOQlaBx3z/j6SxMb7vM+kNshBnblweJTiDm70vEhcSOAolMhx6OLezaXwRY+E55E40lOp1FbtgWmYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=MSbc6MFd; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="souD9f6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDAD8C4CEE7;
-	Sun,  4 May 2025 17:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746379196;
-	bh=mKnCL3nkz9cAe/1hO2OMMOkEX7QBuY79blrz+JeIxDk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=souD9f6lM63BfiHjGDLPXIvli20Vk0PCV8MDmApa4OsTEoJUUZI2LBa8m45CIGmZW
-	 /+IUAYwS9hcWCpa8yJjdm/yaUfQDhRgLSIzfeiBbEcYTLfsW/Znwae+BUz6MCLzrRi
-	 BcBUDPLazHW4IlY1ax0fOa98vl3FvNEvhvpbTa3cSfWCEBLMnVkWfbcMJTCiADphlV
-	 jS+Oy2rS8BEgrOeFKjgjAtbxAYb3ysOmnp9uLsDUwg0MmcWaFQofKuTbA1gxJ2ie/U
-	 feAHs94CYKR55RV2lxJA6YZuE+EcJ7ClJvkK7ZNpty23fis2Wqx/tzDFcmMkkEYPl7
-	 MUPKnSym1veew==
-Date: Sun, 4 May 2025 18:19:47 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Eugen
- Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/7] iio: adc: ad4695: use u16 for buffer elements
-Message-ID: <20250504181947.17072724@jic23-huawei>
-In-Reply-To: <48336225-0e43-46b5-bfc0-34ca8e6a4399@baylibre.com>
-References: <20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com>
-	<20250428-iio-introduce-iio_declare_buffer_with_ts-v4-2-6f7f6126f1cb@baylibre.com>
-	<48336225-0e43-46b5-bfc0-34ca8e6a4399@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="MSbc6MFd"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZrBJ50zbCzlgqTw;
+	Sun,  4 May 2025 17:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1746379235; x=1748971236; bh=Slh3CPtxZdQkCpRtkRRBiUTg
+	SiG+PRKZ7lTazFXIyxs=; b=MSbc6MFdbmGU1BAmGBCAzUSSmesgSRKoHjcKbzq2
+	EyodiLWTgLEfdlMB2iTw6Xm4cRmKAjmxbu2A7ZKwV/FA+rCD/etIN/UYZXCOT1Eg
+	k+EKrQmIkUbbf0uMdmvy3g7wVmTNuYHGVu78ms35YxDo8NhZdThMfZNVO0agQwdd
+	k5XCt2LLI13aX9b9m9DB7LSF0ITT2LH1Pc0vutxaP0nPOkM5J4SrEAVHhbBhv73o
+	vdNSGoF5q0d3rFbJFZeNDbzEKF1qSpBeyqhbSI6buWjvx4wWqcMHxEZJTjOOYp3p
+	bLjz8inKSBoICyu6fjrfes8K71AxfbiiNhKdgiQEvNO0Gw==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id A6pFCqPjChMx; Sun,  4 May 2025 17:20:35 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZrBHy43L3zlgqTt;
+	Sun,  4 May 2025 17:20:28 +0000 (UTC)
+Message-ID: <ffea92dc-1e9d-4281-bdc2-04f391840ccd@acm.org>
+Date: Sun, 4 May 2025 10:20:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: rnbd: add .release to rnbd_dev_ktype
+To: Jinpu Wang <jinpu.wang@ionos.com>, Salah Triki <salah.triki@gmail.com>
+Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <aA5Rzse_xM5JWjgg@pc>
+ <CAMGffEnT+C2xSNXuEFzGm9Yh_f=sRVrPsFO=tSasLMWciqKPhw@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CAMGffEnT+C2xSNXuEFzGm9Yh_f=sRVrPsFO=tSasLMWciqKPhw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 28 Apr 2025 16:33:21 -0400
-Trevor Gamblin <tgamblin@baylibre.com> wrote:
+On 4/28/25 2:58 AM, Jinpu Wang wrote:
+> Nacked.
 
-> On 2025-04-28 16:23, David Lechner wrote:
-> > Change the type of the buffer elements to u16 since we currently only
-> > support 16-bit word size. The code was originally written to also allow
-> > for 32-bit word size when oversampling is enabled, but so far,
-> > oversampling is only implemented when using SPI offload and therefore
-> > doesn't use this buffer.
-> >
-> > AD4695_MAX_CHANNEL_SIZE macro is dropped since it no longer adds any
-> > value.
-> >
-> > AD4695_MAX_CHANNELS + 2 is changed to AD4695_MAX_CHANNELS + 1 because
-> > previously we were overallocating. AD4695_MAX_CHANNELS is the number of
-> > of voltage channels and + 1 is for the temperature channel.
-> >
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>  
-> Reviewed-by: Trevor Gamblin <tgamblin@baylibre.com>
-Mostly because there are two many patches for me to keep track of
-at the moment I'm going to apply the ones in here that stand on their own
-without the macro and your v5 with that size thing can be a smaller series :)
+Instead of NAK-ing this patch, please rework the rnbd driver such that
+rnbd_dev_ktype has a .release method and the driver keeps working fine.
 
-Applied this one.
-
-Thanks,
-
-Jonathan
-
-> > ---
-> >   drivers/iio/adc/ad4695.c | 9 +++------
-> >   1 file changed, 3 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/ad4695.c b/drivers/iio/adc/ad4695.c
-> > index 68c6625db0d75f4cade7cb029e94191118dbcaa0..0c633d43e480d5404074e9fa35f1d330b448f0a2 100644
-> > --- a/drivers/iio/adc/ad4695.c
-> > +++ b/drivers/iio/adc/ad4695.c
-> > @@ -106,8 +106,6 @@
-> >   
-> >   /* Max number of voltage input channels. */
-> >   #define AD4695_MAX_CHANNELS		16
-> > -/* Max size of 1 raw sample in bytes. */
-> > -#define AD4695_MAX_CHANNEL_SIZE		2
-> >   
-> >   enum ad4695_in_pair {
-> >   	AD4695_IN_PAIR_REFGND,
-> > @@ -162,8 +160,8 @@ struct ad4695_state {
-> >   	struct spi_transfer buf_read_xfer[AD4695_MAX_CHANNELS * 2 + 3];
-> >   	struct spi_message buf_read_msg;
-> >   	/* Raw conversion data received. */
-> > -	u8 buf[ALIGN((AD4695_MAX_CHANNELS + 2) * AD4695_MAX_CHANNEL_SIZE,
-> > -		     sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
-> > +	u16 buf[ALIGN((AD4695_MAX_CHANNELS + 1) * sizeof(u16),
-> > +		      sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
-> >   	u16 raw_data;
-> >   	/* Commands to send for single conversion. */
-> >   	u16 cnv_cmd;
-> > @@ -660,9 +658,8 @@ static int ad4695_buffer_preenable(struct iio_dev *indio_dev)
-> >   	iio_for_each_active_channel(indio_dev, bit) {
-> >   		xfer = &st->buf_read_xfer[num_xfer];
-> >   		xfer->bits_per_word = 16;
-> > -		xfer->rx_buf = &st->buf[rx_buf_offset];
-> > +		xfer->rx_buf = &st->buf[rx_buf_offset++];
-> >   		xfer->len = 2;
-> > -		rx_buf_offset += xfer->len;
-> >   
-> >   		if (bit == temp_chan_bit) {
-> >   			temp_en = 1;
-> >  
-> 
-
+Bart.
