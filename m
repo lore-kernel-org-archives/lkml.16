@@ -1,425 +1,163 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009761F153A;
-	Sun,  4 May 2025 14:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4123F156236;
+	Sun,  4 May 2025 14:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746369956; cv=none; b=kj4THu9GYNiOcCm8FMc60IKvbaiHxc1cfVtECA/uHKgaj87mLX5uaxbi2nhvFIEwZHRDHV6CAy+YakbnL/LZCuqQ+tuVQV5V9C3tOwTv2Z6e2Kv8ZXnGCIfXpiGeDSeZCG9O7YUFKKk9i4AnWsJ/IuUiL2MPmy2ZqXzhf4DWX4U=
+	t=1746369981; cv=none; b=uoj4wLaoQykRMOu4V15J4cSAQrcUTc+KuK/5obqaTD+indSqKQoeVx704T5LugvJ4TgzcfjytMqGk47+v8DH5m6XYd5ilTwgtmcv+WSyGWIYJ2JnaCxhafLoy53nc0HtEbdG4cYQdwFidPtluCso9r4hL/c4q2aD48yFRfVSWTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746369956; c=relaxed/simple;
-	bh=419pGHS6E3Wy9OaZ5aQdZp14d/QKmc0lbbOW28DgCzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ra7qUo05OPiFDC6s43Q2VBrCNmYgOrBp2llYdf94cmHFbbf/QOC8XuYmEqCRlvHgXHHtCGJq6Jgv7YP4xujDhlz7e1GXrTyea4QH/kZHV3G5sIHr4QZ1zBiwOIvwRt3ZFuc3/FLqFzSAT6V2QHAsHgsHA+1NociWWq733hbcSL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgFFoU5T; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746369981; c=relaxed/simple;
+	bh=jZBlBNeG0/mHQ+QgGAH5vsgIrTir1T/Bnr1xuJJPAIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VyDg+RiDnwP47P8u2elhdAYmfiHSpa+Vjndt7IwCOsSLyFxZNA7ah1K1CjSacza7Qxim4XDet/qjhwt0gtLXVeuIKoKp8huVL2YQx88v9yb1ya4tKEtikL1+5H/XLZwKeHRJsRNfXLWoJv9sb5PIJrBneBcwgSOe7iC44gBcjoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1AVPPOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgFFoU5T"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso8533474a12.1;
-        Sun, 04 May 2025 07:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746369952; x=1746974752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=olWmtpJVJyP5ihquepeKVhUKSgcRCRnX8hMSMQjAVm0=;
-        b=GgFFoU5Tk6g9hGfdzmdDLkxE5Ui7xE+QYI/tzCuEsy6ZmFY1jI6DmXjcBr9HZmM340
-         XZ9Slr1ULHEdRqoI5mafvAWdSNWm+snWws/5gNOBiRAZ5kw1hH+6B2yR8ECnmebQlepx
-         Wlau0mQZrMA9e1ZHjI1E+Jt/ThUnNVtqm/HudacM5CEKaVm9jee6jtZfhsMd2cY0FSPL
-         c/VT1jOKHDCy12l9xR92NnPBnx4Z1qBUcjx8gG/HGFfZ15GkysLkq3pYrFruZKGSbeGw
-         4ueOfuImZbnynZm5UPuZsrG0tOZnRowzpOjnnF8t8bg8+vCoZLRzntI8xNFfamwDp3KS
-         zatA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746369952; x=1746974752;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=olWmtpJVJyP5ihquepeKVhUKSgcRCRnX8hMSMQjAVm0=;
-        b=UMtN7qk+dNpam44QrDvi7dv7DFSJVrKX3aWv3JFq9f0n9GhqiYqcdjGu698Kv13gFu
-         eSzQ6M7gsmHqT1gyZz7kFkBBiF6LFH5h6O+rjmSWyl1dGGJMqFug73gx9+DTiLC4Wd/3
-         ASd01fBfKQqq+ZT/optSV/05NNwWAA3pmwARWQpXkrekB4/RryatDUn+0K6wDRmW78Qp
-         9nT5Ibl2HBW3LyzFwQ1uNuLqwvi9a6OyL6vN2EmkOJrek/0oq/79yR8qJ7tZBeag0U6N
-         WnxP9+okYgG7TW1VFC8PqH8Sengiyw8ZEibioWmoY2GcQv9hcsXwhemDBW7Us7dvp5bX
-         M8Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWIHJqLa7dJy+EQJjzsnCP/m8CYuvFXzy+0xOZU6ELEodU4Fvf12u25ImBLRrs3ADUFZxzlvJNTQ8BzgMa@vger.kernel.org, AJvYcCUml/bYXosRNCj1TaOV6obnDObhJdKfcRUwi57+1IRzeFcH6Ym/WwMoYNCLL/qo8XwVh14xET5Op8/jbZ5sB7m/i6Q=@vger.kernel.org, AJvYcCWyQmlw2jR3MlwHcztrjZXcEefdMthkxZeFwiN4iUI9+wd098PMhbVfF9/b4hz5EIMtji3wFm2lSW2X@vger.kernel.org, AJvYcCXeMjAMyJAb99Cvj6U8n5PjpPWoE13ONd7H/90m0tuOytjiSQlym+5PWMLdY2a3ZTbTQPDeJ+1pAGGgNFh6oA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY2Erak+1jjqLdyIkehsjMY+wjeawnSz+vcEBCwLg87QMnatnQ
-	6asm2Q5tlAmNwZJIKinjx/eY32dAXNUjoGR+dSyaBb7+eyXETOez5JGFXQ==
-X-Gm-Gg: ASbGnctGzeeSSks/Kb5cIhQ8ntuDPkeuKN2YHb7xKXgPLKQmb6U0Ln/WmJA0feINA8T
-	SA1tyD+23G++JKn+6eiJPbRzKU8IEYsuARm4iaHKc/ryNTpHlkVbLhMNbVS0GgrNI9JSQngqnVM
-	759c7TYonOD7zmeTvwUIpPwhALwGDLs8aDZAo+eO1pDZUG7iiZJtbdoZ00vR+3Y1/eUlOy6qGWS
-	GGLUUf+iOPaDcLVxl1T6GhkXng7mZ5LC3lZ3Q1OCvzWfcnOAVK7dyJkib1VWyF5OMHjEkJ6TFb6
-	REd+GlUrOgU9K0Wpgx4xluLC8SQKbfZT44ffD1NrEnXcbQ937iSf2kw116SK39+PrlLo4FfAIWh
-	YGY+czsWEaavbC1DI
-X-Google-Smtp-Source: AGHT+IEewLKEcMRJPlELXPyihjMHkdm1I8PMilAI27xxkLbRXIeAtZFm6BFezmKY/8inmTCaZPdqHA==
-X-Received: by 2002:a05:6402:234f:b0:5f8:f0ed:ffc5 with SMTP id 4fb4d7f45d1cf-5fa7336da3dmr7794715a12.12.1746369951931;
-        Sun, 04 May 2025 07:45:51 -0700 (PDT)
-Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5faecf59d31sm1147258a12.77.2025.05.04.07.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 07:45:51 -0700 (PDT)
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-phy@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 10/10] phy: exynos5-usbdrd: support Exynos USBDRD 3.2 4nm controller
-Date: Sun,  4 May 2025 17:45:27 +0300
-Message-ID: <20250504144527.1723980-11-ivo.ivanov.ivanov1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250504144527.1723980-1-ivo.ivanov.ivanov1@gmail.com>
-References: <20250504144527.1723980-1-ivo.ivanov.ivanov1@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1AVPPOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2750C4AF09;
+	Sun,  4 May 2025 14:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746369980;
+	bh=jZBlBNeG0/mHQ+QgGAH5vsgIrTir1T/Bnr1xuJJPAIU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=G1AVPPOfUWeEgJ5G9RoIKMJoq6FbGTrMhZlqumhlPOsEZXEcQE5J6+tEXdWK6+HOR
+	 Hth7N0hEth9qBuSIfp2Inw0KAgvtPUO8Racdh6GmGReMXtWoUy+gAjJQbN/AjywR38
+	 Z+cc84vf6/T9u3ASfej5I9Zz/ZGA+MLgS6X/Wr9DfJcuwXDb8K7hFwShEhfZfdFozt
+	 SuE4+z0K/DDUhycTi3tEZlDmw11HogQQhPTjBJSbfhUlUiouYFEr4Eb03aFLG4fgAv
+	 eGGq/n5+7BzMtl8P8O+uyH0O9Qx/llf4W3ss9VwuTlPNyO7hE3IxiJ2HKBbz2hm+X7
+	 XuySAxSCcRj9A==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-310447fe59aso37801871fa.0;
+        Sun, 04 May 2025 07:46:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX/+UXxeAr7ZNyM4oY6fKmoh/IG6cw6T9WRnp6UDWqITQwWJhipATgyphzsLklBxi9VS14FSCJBCck=@vger.kernel.org, AJvYcCXL6ud5d+94szIZuKpU3eGYC/jwGDRvT5g6GUfbU1nPZ7GBnSDva0N+f/31/JVsjK9n7jsckEMjTFux0wYI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu7fvPxI+Sg9BoBcCLeAUDFQ0UT7xuS540QG26lXG5C+JgX7Qx
+	vaW//cSFfnTOuzuAPMwNSUZPmUNbKO65tMUtvqRvVkEZVOTKuKguyM6JpQgQ/3acTJcvhSrC5XD
+	fdVCNB996o35pwj/7w/wu5X42N5M=
+X-Google-Smtp-Source: AGHT+IFQ0GNGxYcTERl0iNqFl//nU6LLWvE0n+blf0OXml1HSUcgxBuJ1Mtk35jEnItW8z1qB6bvGZA/uQcmxvbtaUk=
+X-Received: by 2002:a2e:a99d:0:b0:309:17:750d with SMTP id 38308e7fff4ca-32351f2329amr12382271fa.27.1746369978984;
+ Sun, 04 May 2025 07:46:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250504095230.2932860-25-ardb+git@google.com>
+ <20250504095230.2932860-28-ardb+git@google.com> <aBdwwR52hI37bW9a@gmail.com>
+In-Reply-To: <aBdwwR52hI37bW9a@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 4 May 2025 16:46:07 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFuJRsdWxL70S9Hisgye0dci7KOxrSzcLGnFFuUvjk2Mg@mail.gmail.com>
+X-Gm-Features: ATxdqUGuABP17IzeYnONKtKuRFk9-f2xoFDLsWd2x74DapltIa_EZiNF28qLl38
+Message-ID: <CAMj1kXFuJRsdWxL70S9Hisgye0dci7KOxrSzcLGnFFuUvjk2Mg@mail.gmail.com>
+Subject: Re: [RFT PATCH v2 03/23] x86/boot: Drop global variables keeping
+ track of LA57 state
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for the Exynos USB 3.2 DRD 4nm controller. It's used in
-recent 4nm SoCs like Exynos2200 and Exynos2400.
+On Sun, 4 May 2025 at 15:51, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ard Biesheuvel <ardb+git@google.com> wrote:
+>
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > On x86_64, the core kernel is entered in long mode, which implies that
+> > paging is enabled. This means that the CR4.LA57 control bit is
+> > guaranteed to be in sync with the number of paging levels used by the
+> > kernel, and there is no need to store this in a variable.
+> >
+> > There is also no need to use variables for storing the calculations of
+> > pgdir_shift and ptrs_per_p4d, as they are easily determined on the fly.
+> >
+> > This removes the need for two different sources of truth (i.e., early
+> > and late) for determining whether 5-level paging is in use: CR4.LA57
+> > always reflects the actual state, and never changes from the point of
+> > view of the 64-bit core kernel. It also removes the need for exposing
+> > the associated variables to the startup code. The only potential concern
+> > is the cost of CR4 accesses, which can be mitigated using alternatives
+> > patching based on feature detection.
+> >
+> > Note that even the decompressor does not manipulate any page tables
+> > before updating CR4.LA57, so it can also avoid the associated global
+> > variables entirely. However, as it does not implement alternatives
+> > patching, the associated ELF sections need to be discarded.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/boot/compressed/misc.h         |  4 --
+> >  arch/x86/boot/compressed/pgtable_64.c   | 12 ------
+> >  arch/x86/boot/compressed/vmlinux.lds.S  |  1 +
+> >  arch/x86/boot/startup/map_kernel.c      | 12 +-----
+> >  arch/x86/boot/startup/sme.c             |  9 ----
+> >  arch/x86/include/asm/pgtable_64_types.h | 43 ++++++++++----------
+> >  arch/x86/kernel/cpu/common.c            |  2 -
+> >  arch/x86/kernel/head64.c                | 11 -----
+> >  arch/x86/mm/kasan_init_64.c             |  3 --
+> >  9 files changed, 24 insertions(+), 73 deletions(-)
+>
+> So this patch breaks the build & creates header dependency hell on
+> x86-64 allnoconfig:
+>
 
-This device consists of 3 underlying and independent phys: SEC link
-control phy, Synopsys eUSB 2.0 and Synopsys USBDP/SS combophy. Unlike
-older device designs, where the internal phy blocks were all IP of
-Samsung, Synopsys phys are present. This means that the link controller
-is now mapped differently to account for missing bits and registers.
-The Synopsys phys also have separate register bases.
+Ugh
 
-As there are non-SEC PHYs present now, it doesn't make much sense to
-implement them in this driver. They are expected to be configured
-by external drivers, so pass phandles to them. USBDRD3.2 link controller
-set up is still required beforehand.
+...
+> Plus I'm not sure I'm happy about this kind of complexity getting
+> embedded deep within low level MM primitives:
+>
+>   static __always_inline __pure bool pgtable_l5_enabled(void)
+>   {
+>         unsigned long r;
+>         bool ret;
+>
+>         if (!IS_ENABLED(CONFIG_X86_5LEVEL))
+>                 return false;
+>
+>         asm(ALTERNATIVE_TERNARY(
+>                  "movq %%cr4, %[reg] \n\t btl %[la57], %k[reg]" CC_SET(c),
+>                  %P[feat], "stc", "clc")
+>                  : [reg] "=&r" (r), CC_OUT(c) (ret)
+>                  : [feat] "i"  (X86_FEATURE_LA57),
+>                    [la57] "i"  (X86_CR4_LA57_BIT)
+>                  : "cc");
+>
+>         return ret;
+>   }
+>
+...
+>
+> Inlined approximately a gazillion times. (449 times on x86 defconfig.
+> Yes, I just counted it.)
+>
+> And it's not even worth it, as it generates horrendous code:
+>
+>    154:   0f 20 e0                mov    %cr4,%rax
+>    157:   0f ba e0 0c             bt     $0xc,%eax
+>
+> ... while CR4 access might be faster these days, it's certainly not as
+> fast as simple percpu access. Plus it clobbers a register (RAX in the
+> example above), which is unnecessary for a flag test.
+>
 
-This commit adds the necessary changes for USB HS to work. USB SS and
-DisplayPort are out of scope in this commit and will be introduced
-in the future.
+It's an alternative, so this will be patched into stc or clc. But it
+will still clobber a register.
 
-Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c    | 227 ++++++++++++++++++--
- include/linux/soc/samsung/exynos-regs-pmu.h |   3 +
- 2 files changed, 215 insertions(+), 15 deletions(-)
+> Cannot pgtable_l5_enabled() be a single, simple percpu flag or so?
+>
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 817fddee0..f9a657642 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -36,6 +36,21 @@
- #define EXYNOS5_FSEL_26MHZ		0x6
- #define EXYNOS5_FSEL_50MHZ		0x7
- 
-+/* USB 3.2 DRD 4nm PHY link controller registers */
-+#define EXYNOS2200_DRD_CLKRST			0x0c
-+#define EXYNOS2200_CLKRST_LINK_PCLK_SEL		BIT(1)
-+
-+#define EXYNOS2200_DRD_UTMI			0x10
-+#define EXYNOS2200_UTMI_FORCE_VBUSVALID		BIT(1)
-+#define EXYNOS2200_UTMI_FORCE_BVALID		BIT(0)
-+
-+#define EXYNOS2200_DRD_HSP_MISC			0x114
-+#define HSP_MISC_SET_REQ_IN2			BIT(4)
-+#define HSP_MISC_RES_TUNE			GENMASK(1, 0)
-+#define RES_TUNE_PHY1_PHY2			0x1
-+#define RES_TUNE_PHY1				0x2
-+#define RES_TUNE_PHY2				0x3
-+
- /* Exynos5: USB 3.0 DRD PHY registers */
- #define EXYNOS5_DRD_LINKSYSTEM			0x04
- #define LINKSYSTEM_XHCI_VERSION_CONTROL		BIT(27)
-@@ -389,6 +404,7 @@ struct exynos5_usbdrd_phy_drvdata {
-  * @clks: clocks for register access
-  * @core_clks: core clocks for phy (ref, pipe3, utmi+, ITP, etc. as required)
-  * @drv_data: pointer to SoC level driver data structure
-+ * @hs_phy: pointer to non-Samsung IP high-speed phy controller
-  * @phy_mutex: mutex protecting phy_init/exit & TCPC callbacks
-  * @phys: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
-  *	    instances each with its 'phy' and 'phy_cfg'.
-@@ -406,6 +422,7 @@ struct exynos5_usbdrd_phy {
- 	struct clk_bulk_data *clks;
- 	struct clk_bulk_data *core_clks;
- 	const struct exynos5_usbdrd_phy_drvdata *drv_data;
-+	struct phy *hs_phy;
- 	struct mutex phy_mutex;
- 	struct phy_usb_instance {
- 		struct phy *phy;
-@@ -1075,6 +1092,149 @@ static const struct phy_ops exynos5_usbdrd_phy_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+static void exynos2200_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
-+{
-+	/* Configure non-Samsung IP PHY, responsible for UTMI */
-+	phy_init(phy_drd->hs_phy);
-+}
-+
-+static void exynos2200_usbdrd_link_init(struct exynos5_usbdrd_phy *phy_drd)
-+{
-+	void __iomem *regs_base = phy_drd->reg_phy;
-+	u32 reg;
-+
-+	/*
-+	 * Disable HWACG (hardware auto clock gating control). This will force
-+	 * QACTIVE signal in Q-Channel interface to HIGH level, to make sure
-+	 * the PHY clock is not gated by the hardware.
-+	 */
-+	reg = readl(regs_base + EXYNOS850_DRD_LINKCTRL);
-+	reg |= LINKCTRL_FORCE_QACT;
-+	writel(reg, regs_base + EXYNOS850_DRD_LINKCTRL);
-+
-+	/* De-assert link reset */
-+	reg = readl(regs_base + EXYNOS2200_DRD_CLKRST);
-+	reg &= ~CLKRST_LINK_SW_RST;
-+	writel(reg, regs_base + EXYNOS2200_DRD_CLKRST);
-+
-+	/* Set link VBUS Valid */
-+	reg = readl(regs_base + EXYNOS2200_DRD_UTMI);
-+	reg |= EXYNOS2200_UTMI_FORCE_BVALID | EXYNOS2200_UTMI_FORCE_VBUSVALID;
-+	writel(reg, regs_base + EXYNOS2200_DRD_UTMI);
-+}
-+
-+static void
-+exynos2200_usbdrd_link_attach_detach_pipe3_phy(struct phy_usb_instance *inst)
-+{
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	void __iomem *regs_base = phy_drd->reg_phy;
-+	u32 reg;
-+
-+	reg = readl(regs_base + EXYNOS850_DRD_LINKCTRL);
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI) {
-+		/* force pipe3 signal for link */
-+		reg &= ~LINKCTRL_FORCE_PHYSTATUS;
-+		reg |= LINKCTRL_FORCE_PIPE_EN | LINKCTRL_FORCE_RXELECIDLE;
-+	} else {
-+		/* disable forcing pipe interface */
-+		reg &= ~LINKCTRL_FORCE_PIPE_EN;
-+	}
-+	writel(reg, regs_base + EXYNOS850_DRD_LINKCTRL);
-+
-+	reg = readl(regs_base + EXYNOS2200_DRD_HSP_MISC);
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI) {
-+		/* calibrate only eUSB phy */
-+		reg |= FIELD_PREP(HSP_MISC_RES_TUNE, RES_TUNE_PHY1);
-+		reg |= HSP_MISC_SET_REQ_IN2;
-+	} else {
-+		/* calibrate for dual phy */
-+		reg |= FIELD_PREP(HSP_MISC_RES_TUNE, RES_TUNE_PHY1_PHY2);
-+		reg &= ~HSP_MISC_SET_REQ_IN2;
-+	}
-+	writel(reg, regs_base + EXYNOS2200_DRD_HSP_MISC);
-+
-+	reg = readl(regs_base + EXYNOS2200_DRD_CLKRST);
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
-+		reg &= ~EXYNOS2200_CLKRST_LINK_PCLK_SEL;
-+	else
-+		reg |= EXYNOS2200_CLKRST_LINK_PCLK_SEL;
-+
-+	writel(reg, regs_base + EXYNOS2200_DRD_CLKRST);
-+}
-+
-+static int exynos2200_usbdrd_phy_init(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	int ret;
-+
-+	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI) {
-+		/* Power-on PHY ... */
-+		ret = regulator_bulk_enable(phy_drd->drv_data->n_regulators,
-+					    phy_drd->regulators);
-+		if (ret) {
-+			dev_err(phy_drd->dev,
-+				"Failed to enable PHY regulator(s)\n");
-+			return ret;
-+		}
-+	}
-+	/*
-+	 * ... and ungate power via PMU. Without this here, we get an SError
-+	 * trying to access PMA registers
-+	 */
-+	exynos5_usbdrd_phy_isol(inst, false);
-+
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-+	if (ret)
-+		return ret;
-+
-+	/* Set up the link controller */
-+	exynos2200_usbdrd_link_init(phy_drd);
-+
-+	/* UTMI or PIPE3 link preparation */
-+	exynos2200_usbdrd_link_attach_detach_pipe3_phy(inst);
-+
-+	/* UTMI or PIPE3 specific init */
-+	inst->phy_cfg->phy_init(phy_drd);
-+
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-+
-+	return 0;
-+}
-+
-+static int exynos2200_usbdrd_phy_exit(struct phy *phy)
-+{
-+	struct phy_usb_instance *inst = phy_get_drvdata(phy);
-+	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
-+	void __iomem *regs_base = phy_drd->reg_phy;
-+	u32 reg;
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
-+	if (ret)
-+		return ret;
-+
-+	reg = readl(regs_base + EXYNOS2200_DRD_UTMI);
-+	reg &= ~(EXYNOS2200_UTMI_FORCE_BVALID | EXYNOS2200_UTMI_FORCE_VBUSVALID);
-+	writel(reg, regs_base + EXYNOS2200_DRD_UTMI);
-+
-+	reg = readl(regs_base + EXYNOS2200_DRD_CLKRST);
-+	reg |= CLKRST_LINK_SW_RST;
-+	writel(reg, regs_base + EXYNOS2200_DRD_CLKRST);
-+
-+	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
-+
-+	exynos5_usbdrd_phy_isol(inst, true);
-+	return regulator_bulk_disable(phy_drd->drv_data->n_regulators,
-+				      phy_drd->regulators);
-+}
-+
-+static const struct phy_ops exynos2200_usbdrd_phy_ops = {
-+	.init		= exynos2200_usbdrd_phy_init,
-+	.exit		= exynos2200_usbdrd_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
- static void
- exynos5_usbdrd_usb_v3p1_pipe_override(struct exynos5_usbdrd_phy *phy_drd)
- {
-@@ -1384,27 +1544,37 @@ static int exynos5_usbdrd_phy_clk_handle(struct exynos5_usbdrd_phy *phy_drd)
- 		return dev_err_probe(phy_drd->dev, ret,
- 				     "failed to get phy core clock(s)\n");
- 
--	ref_clk = NULL;
--	for (int i = 0; i < phy_drd->drv_data->n_core_clks; ++i) {
--		if (!strcmp(phy_drd->core_clks[i].id, "ref")) {
--			ref_clk = phy_drd->core_clks[i].clk;
--			break;
-+	if (phy_drd->drv_data->n_core_clks) {
-+		ref_clk = NULL;
-+		for (int i = 0; i < phy_drd->drv_data->n_core_clks; ++i) {
-+			if (!strcmp(phy_drd->core_clks[i].id, "ref")) {
-+				ref_clk = phy_drd->core_clks[i].clk;
-+				break;
-+			}
- 		}
--	}
--	if (!ref_clk)
--		return dev_err_probe(phy_drd->dev, -ENODEV,
--				     "failed to find phy reference clock\n");
-+		if (!ref_clk)
-+			return dev_err_probe(phy_drd->dev, -ENODEV,
-+					     "failed to find phy reference clock\n");
- 
--	ref_rate = clk_get_rate(ref_clk);
--	ret = exynos5_rate_to_clk(ref_rate, &phy_drd->extrefclk);
--	if (ret)
--		return dev_err_probe(phy_drd->dev, ret,
--				     "clock rate (%ld) not supported\n",
--				     ref_rate);
-+		ref_rate = clk_get_rate(ref_clk);
-+		ret = exynos5_rate_to_clk(ref_rate, &phy_drd->extrefclk);
-+		if (ret)
-+			return dev_err_probe(phy_drd->dev, ret,
-+					     "clock rate (%ld) not supported\n",
-+					     ref_rate);
-+	}
- 
- 	return 0;
- }
- 
-+static const struct exynos5_usbdrd_phy_config phy_cfg_exynos2200[] = {
-+	{
-+		.id		= EXYNOS5_DRDPHY_UTMI,
-+		.phy_isol	= exynos5_usbdrd_phy_isol,
-+		.phy_init	= exynos2200_usbdrd_utmi_init,
-+	},
-+};
-+
- static int exynos5_usbdrd_orien_sw_set(struct typec_switch_dev *sw,
- 				       enum typec_orientation orientation)
- {
-@@ -1525,6 +1695,19 @@ static const char * const exynos5_regulator_names[] = {
- 	"vbus", "vbus-boost",
- };
- 
-+static const struct exynos5_usbdrd_phy_drvdata exynos2200_usb32drd_phy = {
-+	.phy_cfg		= phy_cfg_exynos2200,
-+	.phy_ops		= &exynos2200_usbdrd_phy_ops,
-+	.pmu_offset_usbdrd0_phy	= EXYNOS2200_PHY_CTRL_USB20,
-+	.clk_names		= exynos5_clk_names,
-+	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-+	/* clocks and regulators are specific to the underlying PHY blocks */
-+	.core_clk_names		= NULL,
-+	.n_core_clks		= 0,
-+	.regulator_names	= NULL,
-+	.n_regulators		= 0,
-+};
-+
- static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
- 	.phy_cfg		= phy_cfg_exynos5,
- 	.phy_ops		= &exynos5_usbdrd_phy_ops,
-@@ -1769,6 +1952,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
- 	{
- 		.compatible = "google,gs101-usb31drd-phy",
- 		.data = &gs101_usbd31rd_phy
-+	}, {
-+		.compatible = "samsung,exynos2200-usb32drd-phy",
-+		.data = &exynos2200_usb32drd_phy,
- 	}, {
- 		.compatible = "samsung,exynos5250-usbdrd-phy",
- 		.data = &exynos5250_usbdrd_phy
-@@ -1841,6 +2027,17 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
- 			return PTR_ERR(phy_drd->reg_phy);
- 	}
- 
-+	/*
-+	 * USB32DRD 4nm controller implements Synopsys eUSB2.0 PHY
-+	 * and Synopsys SS/USBDP COMBOPHY, managed by external code.
-+	 */
-+	if (of_property_present(dev->of_node, "phy-names")) {
-+		phy_drd->hs_phy = devm_of_phy_get(dev, dev->of_node, "hs");
-+		if (IS_ERR(phy_drd->hs_phy))
-+			return dev_err_probe(dev, PTR_ERR(phy_drd->hs_phy),
-+					     "failed to get hs_phy\n");
-+	}
-+
- 	ret = exynos5_usbdrd_phy_clk_handle(phy_drd);
- 	if (ret)
- 		return ret;
-diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
-index ce1a3790d..b77187ba5 100644
---- a/include/linux/soc/samsung/exynos-regs-pmu.h
-+++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-@@ -185,6 +185,9 @@
- /* Only for S5Pv210 */
- #define S5PV210_EINT_WAKEUP_MASK	0xC004
- 
-+/* Only for Exynos2200 */
-+#define EXYNOS2200_PHY_CTRL_USB20	0x72C
-+
- /* Only for Exynos4210 */
- #define S5P_CMU_CLKSTOP_LCD1_LOWPWR	0x1154
- #define S5P_CMU_RESET_LCD1_LOWPWR	0x1174
--- 
-2.43.0
+We can just drop this patch, and I'll work around it by adding another
+couple of SYM_PIC_ALIAS()es for these variables.
 
+> And yes, this creates another layer for these values - but thus
+> decouples low level MM from detection & implementation complexities,
+> which is a plus ...
+>
+
+If you prefer to retain the early vs late distinction, where the late
+one is more efficient, we could replace the early variant with the CR4
+access. But frankly, if we go down that road, I'd prefer to just share
+these early variables with the startup code.
