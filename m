@@ -1,88 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEEF2260C;
-	Sun,  4 May 2025 18:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82772260C;
+	Sun,  4 May 2025 18:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746383231; cv=none; b=Q+L5UhhtCa3jd4Au7tya1B8khFt66kFpuqzZW7pCAi0eupm8DiFTqof2wjiWw9vajAVA6Rq15FRdiGCJg2X08G4pR24PpxhHEuF62Nykj2PyCHOcnlCF0xYTaoxSFgHvaH3oPRtnjsaS43b6csdsCtTA4mDf+0TSekFPvghN/0A=
+	t=1746383320; cv=none; b=H/9mBVyn2N8TbQM7WIQy+uzFJaYSVN97BZS8m4DR3B29BXv3hrRv5OsB9aSdVc36mEiS7ggNExDCcPGMqNU+T+nVYPA06OhTJPTSKVpfySp7CIGftXLKdnSabmXxumqrwu+OQSg3oFSrMU9cJYoDF1fHyLahy6+ZTqUhxMfVsx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746383231; c=relaxed/simple;
-	bh=GU63tQ4FgCaQDz7W9nU3sPlWrl+5HI0/rUO8dPLyU28=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FDh1WJH2CkRAF/ZBfBsm6RhB1W9ZBuG5YUxTOZOXjRM6Xaoz5MVzJtCeK5etDSLxC14rfKdH9dWcCEr+EnNvbxZtc9axUSte3rjV5Iyj4Xww05hk0LDgE30/GxvTm8IIhWp+k0/bktbsgjWJFP/NOiHWwZegtMBfL++iL8MqRXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbczJnAe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746383320; c=relaxed/simple;
+	bh=BIeAtAmNY2HmAC4pfdofUHiWDpOKu8mzigM6HzNEzFo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZU7xK/s34t/9NvIhcX7Bbof2hQbELX3Djrmk5u0YVEIM+EXO4/C9y3PyNXV3TCmM1K/xeUhmdZL5wCosaMPjUCQdHlCtvYg+9F/awlwWYoKqMHmNtvt32NRHgXkpTqtubP4iBPH6ouB2f7G7J8h0NaygwceODGnPXiOuyCVIW4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KD6oVOaY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbczJnAe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7DCC4CEE7;
-	Sun,  4 May 2025 18:27:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KD6oVOaY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 796FEC4CEE7;
+	Sun,  4 May 2025 18:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746383230;
-	bh=GU63tQ4FgCaQDz7W9nU3sPlWrl+5HI0/rUO8dPLyU28=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NbczJnAe6M7TWs76X1WrxewB1xh+VhUKiBfXTK0K3hgQ2AvHEWT+adyS7pPOc0dma
-	 i/6aDUILJ6XinZE6+I1S24WHNP32TfrmsjMKqx7cvFYGP/Q3rDJTPt13IirvKC1hS0
-	 ENbiTKrXkAAaDsChNBO0ekvyzaFBCoYPfJgvlOCMeG1C43tnL2RMZMQanBx1OKSAPE
-	 KXu0iXN7QX1fAzEqZcNcJPWqhS5Je6TDVOYWjrpB7BXg2Zu4uLD0jBWSIvpCar+Uqv
-	 2QDdJGmqpDSDmThaPRODBWh5ObZW263d/ZRE47kTktKw0DEtxCiHadufw12LR3/x52
-	 8nkAbQYsMqBTg==
-Date: Sun, 4 May 2025 19:27:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: =?UTF-8?B?VMOzdGggSsOhbm9z?= <gomba007@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: Document SEN0322
-Message-ID: <20250504192701.6ceb9daf@jic23-huawei>
-In-Reply-To: <uju5lntp3hzibbrw6ej53xhgvkkpjory74l5et2jspwocuj2xr@bbterxtg3ba7>
-References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
-	<20250428-iio-chemical-sen0322-v1-1-9b18363ffe42@gmail.com>
-	<9463c3b0-ce67-4c67-a8e9-91b4ffd09a58@kernel.org>
-	<uju5lntp3hzibbrw6ej53xhgvkkpjory74l5et2jspwocuj2xr@bbterxtg3ba7>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746383320;
+	bh=BIeAtAmNY2HmAC4pfdofUHiWDpOKu8mzigM6HzNEzFo=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=KD6oVOaYYMYWvKheiXyOZk9M8Y9srgfr1xKoXizDfnBI7LlhsjhZgeqiIPZZ3/LL8
+	 KZgHF9EaCOAUZgkygo/Bsg5aTSCNs7jYigtXMeQt7PmYxc+4t0Cot5RW97cR3xIeOe
+	 Ns0AnbVNCw74Rmnzefv+rwBaSdr21RjhXhb3kAzrcFpJcVABZRpHpo6cBlEb+X7iMY
+	 jl0MLdTqVTSBrtJ8KSdj//7N6juusyqbr3qndlmT2f9qccEW5n1IK955eqh3eXqSbT
+	 xTIBu889j6aYqYdC6uvCIlB5AB0FrhI+Y69FjEKWvxxt3oe/VRWtvt5gm00Lo0n4yD
+	 U0I1WzY9GdOFg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68523C369DC;
+	Sun,  4 May 2025 18:28:40 +0000 (UTC)
+From: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
+Subject: [PATCH v3 0/2] tracing: fix race when creating trace probe log
+ error message
+Date: Sun, 04 May 2025 20:27:51 +0200
+Message-Id: <20250504-fix-trace-probe-log-race-v3-0-9e99fec7eddc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKexF2gC/33NwQrCMAyA4VcZPRtp44rTk+8hHro0boVtHe0oy
+ ti72w1EL3oqf0i+ziJycBzFuZhF4OSi80OOw64Q1JqhYXA2t0CJWpYo4e4eMAVDDGPwNUPnG9i
+ SqDrZivW9Vlrk8zFw3t3o6y136+Lkw3P7Kal1+kbxN5oUKLB4xMqWSIbqS9Mb1+3J92JFE34gL
+ f9BCBK0UkykNObnG1qW5QXIPi82CQEAAA==
+X-Change-ID: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Paul Cacheux <paulcacheux@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746383319; l=1945;
+ i=paulcacheux@gmail.com; s=20250422; h=from:subject:message-id;
+ bh=BIeAtAmNY2HmAC4pfdofUHiWDpOKu8mzigM6HzNEzFo=;
+ b=xGxrPxvCphgAewDOXLHC8XN7I8v1vK7/vyUTeb9HpH5EMpsKRzLIhG6xiTsmujyg6xBBQPu1w
+ a3NjLOFgooyCAkeADwReTtAI8DNscn4hm02jRhxdBxZSzmhbEB0L+h1
+X-Developer-Key: i=paulcacheux@gmail.com; a=ed25519;
+ pk=8UguSecyECHKHp0YLS7hTEDob0ctFMr3ygBTeAmrFHs=
+X-Endpoint-Received: by B4 Relay for paulcacheux@gmail.com/20250422 with
+ auth_id=386
+X-Original-From: Paul Cacheux <paulcacheux@gmail.com>
+Reply-To: paulcacheux@gmail.com
 
-On Mon, 28 Apr 2025 16:45:32 +0200
-T=C3=B3th J=C3=A1nos <gomba007@gmail.com> wrote:
+Hello,
 
-> Hi!
->=20
-> > No other properties like supplies or configuration? If so, this could go
-> > to trivial-devices. =20
->=20
-> I don't think so, I'll add it as a trivial-device then.
+As reported in [1] a race exists in the shared trace probe log
+used to build error messages. This can cause kernel crashes
+when building the actual error message, but the race happens
+even for non-error tracefs uses, it's just not visible.
 
-vcc-supply?
+Reproducer first reported that is still crashing:
 
-It is very common to see later boards have controllable supplies
-(or someone to enable that on an existing board for power saving) so
-good and trivial to support just turning the supply on when we probe
-the driver and off when we remove it.
+  # 'p4' is invalid command which make kernel run into trace_probe_log_err()
+  cd /sys/kernel/debug/tracing
+  while true; do
+    echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
+    echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
+    echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
+  done;
 
+The original email suggested to use a mutex or to allocate the
+trace_probe_log on the stack. This patch implements a simpler
+solution suggest during the review of the v1 where we only protect
+access to the shared trace_probe_log with a mutex. This will prevent
+any crash from happening.
 
->=20
-> > > +      sen0322@73 { =20
-> >=20
-> > Node names should be generic. See also an explanation and list of
-> > examples (not exhaustive) in DT specification:
-> > https://devicetree-specification.readthedocs.io/en/latest/chapter2-devi=
-cetree-basics.html#generic-names-recommendation
-> >=20
-> > Choose something from above or similar devices. =20
->=20
-> Noted, thanks!
->=20
-> Best regards,
-> J=C3=A1nos
->=20
->=20
+[1] https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawei.com/T/
+
+Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
+---
+Changes in v3:
+- add some comment around the new mutex definition
+- Link to v2: https://lore.kernel.org/r/20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com
+
+Changes in v2:
+- change approach, and use the mutex based solution suggested during
+  review
+- Link to v1: https://lore.kernel.org/r/20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com
+
+---
+Paul Cacheux (2):
+      tracing: add missing trace_probe_log_clear for eprobes
+      tracing: protect trace_probe_log with mutex
+
+ kernel/trace/trace_eprobe.c |  3 +++
+ kernel/trace/trace_probe.c  | 13 +++++++++++++
+ 2 files changed, 16 insertions(+)
+---
+base-commit: 95d3481af6dc90fd7175a7643fd108cdcb808ce5
+change-id: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
+
+Best regards,
+-- 
+Paul Cacheux <paulcacheux@gmail.com>
+
 
