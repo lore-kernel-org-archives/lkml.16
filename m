@@ -1,93 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025581DEFC8;
-	Sun,  4 May 2025 16:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2AD4A29;
+	Sun,  4 May 2025 16:43:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746376935; cv=none; b=i102xsWRFT6+3ijGdtNtDOzHhxMoCN9hd+Jl63dEKl2e0/3SBWJTD70xDpQyGaMFs50r4KWcl9Tf27az0Xpt4UGPdZwysE1AolhT1yXY2s7C7xmulxq6BEmCM+e8CAxm8ZQaSQIdXL8tf7IVcLa13Tb8JdEXLMfHywU4cGAOn3A=
+	t=1746377013; cv=none; b=WcCn3nULb6IwM/Z3jPDFyd4Uzezs7pdG8b5wWOUTI9cE2pAxRloN73e0n1uZAIpgmrY+64CGI+sSmN0QqFdouFMvbl9oWVw8ZJeoWPskRL/aOzpScy21NyUVfO2niToXlXxb7qQFT2fOj5D9FNVHRjOK7xdAfeUQeJ2zibUnUPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746376935; c=relaxed/simple;
-	bh=+M5mmT0UHIqtM31POEFwoPqf8yaTarHCNYDnaixSjfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZG3q2FSkgF5uVbCQ5PRK2uUZC2FzGtRq1GGgVWMejvweX4xQf3eP3TSnKDjfXfdjCXfeCXfb2LDiRnDcLm26bJKqivTfjiXAO6OWAxdVnTMiGhBTv92UQpFaSPOLzTIaz33tHxrtw5Z59zVI2B5I1qUa4OCowTqQ881bq6X510A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=os9fQfoE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="os9fQfoE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD9EC4CEE7;
-	Sun,  4 May 2025 16:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746376934;
-	bh=+M5mmT0UHIqtM31POEFwoPqf8yaTarHCNYDnaixSjfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=os9fQfoE8F+obXtE5buent0qyDUUHXnYR5Ti8LJDJaWfc1+jmnkk6QuTZ+CkEcUVh
-	 WTrwSGw2aJMA7iNWadyheGJY19QUKoV6X0StwE+41jPr4zKZXj2wcPnqzWkzM4/eys
-	 GiZSe8mgJFe5U7oEadKrv6ThTLIB0CTZ1MBxkPf7lk3S2fcISTMv+qXoTEnN6dWyAz
-	 Vp7P0yQxCS46wkMayYJzgaZXva56yOay/bjlVBWAlctE32N3h+hhmTsGquOG+i5qhz
-	 oo++6IJrcuaEI4+FC8GrubTY4IedpaDXedwNgMkce1BfkaIla4sYsUdBjpYQoCV4c+
-	 URnXf6g5MkbOg==
-Date: Sun, 4 May 2025 19:42:09 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: keyrings@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] KEYS: Reduce smp_mb() calls in key_put()
-Message-ID: <aBeY4d3eC2aOthx-@kernel.org>
-References: <aBYqlBoSq4FwiDKD@kernel.org>
- <20250430152554.23646-1-jarkko@kernel.org>
- <1121543.1746310761@warthog.procyon.org.uk>
+	s=arc-20240116; t=1746377013; c=relaxed/simple;
+	bh=e834IqtPjBItAoaJcN1CA1A3N8UgbDL2QhASn2BFB9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cJvMYpW/nBVGkaQxwrWU0fbCL1yETSECRavRhvip8AfR4C8+JRzUB+ocGrycYFh3cyNEZfmq1ZaSoj52l6AJ6ux3HO+PrNVKsJoYlbAWKWKC9iTI7TFN2JCrxdOXlxb4Fg9qrlqtFKAegKHYykf8DU0xqma9OXft+iIy0FWPX+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB14C4CEE7;
+	Sun,  4 May 2025 16:43:31 +0000 (UTC)
+Date: Sun, 4 May 2025 12:43:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ingo Molnar <mingo@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>
+Subject: Re: [PATCH v7 01/17] unwind_user: Add user space unwinding API
+Message-ID: <20250504124330.6a62e7b5@batman.local.home>
+In-Reply-To: <aBczuIoPIV3kkCnu@gmail.com>
+References: <20250502164746.178864972@goodmis.org>
+	<20250502165007.549687075@goodmis.org>
+	<aBczuIoPIV3kkCnu@gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1121543.1746310761@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 03, 2025 at 11:19:21PM +0100, David Howells wrote:
-> Jarkko Sakkinen <jarkko@kernel.org> wrote:
+On Sun, 4 May 2025 11:30:32 +0200
+Ingo Molnar <mingo@kernel.org> wrote:
+
+> > +struct unwind_user_state {
+> > +	unsigned long ip;
+> > +	unsigned long sp;
+> > +	unsigned long fp;
+> > +	enum unwind_user_type type;
+> > +	bool done;
+> > +};  
 > 
-> > Oops, my bad (order swap), sorry. Should have been:
-> > 	
-> >  				spin_unlock_irqrestore(&key->user->lock, flags);
-> > 			} else {
-> > 				smp_mb(); /* key->user before FINAL_PUT set. */
-> >  			}
-> > 			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-> > 
-> > Should spin_lock()/unlock() be good enough or what good does smp_mb() do
-> > in that branch? Just checking if I'm missing something before sending
-> > fixed version.
-> 
-> spin_unlock() is semi-permeable, so stuff after it can leak into the inside of
-> it up as far as the spin_lock().  With your change, the garbage collector can
-> no longer guarantee that key_put() will have done with accessing key->user
-> when it sees KEY_FLAG_FINAL_PUT is set.
-> 
-> So, NAK on this patch, I think.  If you want a second opinion, I'd suggest
-> waving it in front of Paul McKenney.
+> Will any of these types be visible to tooling via ABIs?
 
-Fair enough.
+Not that I'm aware of. Josh can confirm. Josh?
 
-If I revisit this in a way or another,  I'll cc to him for comments but
-for this I'll buy what you said.
+With the exception of BTF (which exposes pretty much all structures), I
+believe this is completely internal for the generic code of the unwinder.
 
-> 
-> Possibly we only need smp_mb() in the IN_QUOTA branch in key_put().
-> 
-> David
-
-Thank you for the comments.
-
-BR, Jarkko
+-- Steve
