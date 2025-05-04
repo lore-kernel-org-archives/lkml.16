@@ -1,93 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889E17DA73;
-	Sun,  4 May 2025 15:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8392E1D79A5;
+	Sun,  4 May 2025 15:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746372128; cv=none; b=cVvI8rPt6OuD9YjGDCxmzER3QpM7Ha8x9RsBRHGCVD+KoPP++MeYgGFIq+qx6pVwZV60/LpSMv8oiv9m2vf2AyAkmsT+fHFsSgzqhANWy7ZqiS7KF0hhq+b9U1EIWjD3FtZ5kuf4McOuUtBEYYteY8y5qWdkBrwWM0Gx5iB2HZ4=
+	t=1746372142; cv=none; b=mgUxo/12qzD98h3guuyjEGQci66pOfV/DI3EW0WslwUozm9UVQbM3fj/1C+fHaqCEMBEHhni32cp5Nlx6ixvkHsQF7oi/inRVf66AufMG2MHPI0ppfyjzfP+96xZA8eQnub9bPCp+ihoEyeit/SLe2Tu9Cb9nuwPd7ZGYLpdbwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746372128; c=relaxed/simple;
-	bh=AEkzEBU3143KxzQbR7rAGVWLfe3ey5sdykehyg1ERvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oD9ud6hoXY1p774kl61vx4r4Azoa8b7Z+QCUFBBcWcIcnh4NWpEAu+T0Tfhd/ubPRO0w+Os/8Q2Kpuxj28xoT1G6lH3b87G4T4p9kEVElMmxyp9BaxLrGsbq5pZv3mwbGYMUWsLNZjedWIu1BvViG/JCUhTu70GvSZCcwBBe6gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8xOtQT+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746372142; c=relaxed/simple;
+	bh=fpvqb7kTlOOuUN70MgJgEf3UkSdSGeqD6Y1imEuSwAk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ogp5FzFvOAC1HM1PzjoCwVGdDv1RJh0pD45GIkFnrlzQsVd/JZ29blskf7Dk6qurQV1VRnsSLejgh0LkEznlRAQNjlOehGO0A5k9Ns6XFZc1gUBlkRmn7tTK1eEVqD+gxhYFG7GWhvTx+RP50+jNcjkebmadYqJVqaV2J8UxWd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l00nyxN3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8xOtQT+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6255CC4CEE7;
-	Sun,  4 May 2025 15:22:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l00nyxN3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8977C4CEE7;
+	Sun,  4 May 2025 15:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746372128;
-	bh=AEkzEBU3143KxzQbR7rAGVWLfe3ey5sdykehyg1ERvM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L8xOtQT+fGEkXaLF+zlgPeq9Otnh2cqJqICP2RVuVxfcXg95ddn6hQ/10K24/GTV9
-	 54f97J7rPdzT8YZLP5c8z3YTWf0n4UuMK27zn85nnfwdAtmNDy+e2oH2TLDdDgYZ5X
-	 FnfvUdqCq+7xEzhQr2TpKav11z1TxpAU2wlr0Q5a4CutSHFGumfWTkd4RQKHJp2tO3
-	 jc+NqhV9WADyBtcZPuNvbdxF26ruoF9aRtp3pWox7lm/RCp/5iCfHaZunb+b7SZnBm
-	 BBdjNl6Iiq6RK4AyV+JIVvSE7Hp5TNO9T/jKNhLl58tSWljmteHE2OvNBG9GRVuuNz
-	 qGF0H5NVmBfPQ==
-Date: Sun, 4 May 2025 16:21:58 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] iio: adc: ad7606: add offset and phase
- calibration support
-Message-ID: <20250504162158.7f89d76f@jic23-huawei>
-In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-3-174bd0af081b@baylibre.com>
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
-	<20250502-wip-bl-ad7606-calibration-v2-3-174bd0af081b@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746372141;
+	bh=fpvqb7kTlOOuUN70MgJgEf3UkSdSGeqD6Y1imEuSwAk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=l00nyxN3I68g47m4MMDzIBk7ZukQ7rlBiUqTzd98Ti/iT4P9ekm9CISazTH8z4LJy
+	 4BDScnvvPt/HkwXSbzTLKOh4jI8ayWWLWsUugfmmVkJEHgdxEDqFEZlEsNXz8aiZ2V
+	 P07KzTZ41XUbUfDt6JRK7pRwvTplhyZbwp2wcPmLEgX2Q2kGcB03Nea5KGPIRps8RS
+	 sBhGS8bo81wLI9DX5HJvtmqe8NRS+YkIXLHOYCERBOs6lDjC+GoI9i4YJsMKotRJQs
+	 WEcIxYgKgKBMqY5sB3PVo0klDyjXUs1bUbBnd+4U85NAeARUtfdzYxTJgmBn99I0XQ
+	 MSoyg/Z8aRkPQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 716EC3806659;
+	Sun,  4 May 2025 15:23:02 +0000 (UTC)
+Subject: Re: [GIT PULL] EDAC/urgent for v6.15-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250504102133.GAaBc_rTClPZmy75Rm@fat_crate.local>
+References: <20250504102133.GAaBc_rTClPZmy75Rm@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-edac.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250504102133.GAaBc_rTClPZmy75Rm@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.15_rc5
+X-PR-Tracked-Commit-Id: 6dbe3c5418c4368e824bff6ae4889257dd544892
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 081bc61f93123c3b3e446539377b3c7d8deb046f
+Message-Id: <174637218085.4049463.3882500317466037978.pr-tracker-bot@kernel.org>
+Date: Sun, 04 May 2025 15:23:00 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-edac <linux-edac@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 02 May 2025 15:27:00 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+The pull request you sent on Sun, 4 May 2025 12:21:33 +0200:
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add support for offset and phase calibration, only for
-> devices that support software mode, that are:
->=20
-> ad7606b
-> ad7606c-16
-> ad7606c-18
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.15_rc5
 
-One trivial typo.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/081bc61f93123c3b3e446539377b3c7d8deb046f
 
-> +static int ad7606_set_calib_phase(struct ad7606_state *st, int ch, int v=
-al,
-> +				  int val2)
-> +{
-> +	int wreg, start_ns, step_ns, stop_ns;
-> +
-> +	if (val !=3D 0)
-> +		return -EINVAL;
-> +
-> +	start_ns =3D st->chip_info->calib_phase_avail[0][1];
-> +	step_ns =3D st->chip_info->calib_phase_avail[1][1];
-> +	stop_ns =3D st->chip_info->calib_phase_avail[2][1];
-> +
-> +	/*
-> +	 * ad7606b: phase dielay from 0 to 318.75 =CE=BCs in steps of 1.25 =CE=
-=BCs.
+Thank you!
 
-Spell check. delay
-
-
-
-> +	 * ad7606c-16/18: phase delay from 0 =C2=B5s to 255 =C2=B5s in steps of=
- 1 =C2=B5s.
-> +	 */
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
