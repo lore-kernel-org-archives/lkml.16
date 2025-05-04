@@ -1,97 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76ED21422AB;
-	Sun,  4 May 2025 06:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E33115AF6
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 06:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746341106; cv=none; b=tHZsdAgW8sFkKt0Yj4KBDAMgHhnEP6WtY2w5Zznr3mYgfohidWA4ihNIJJ+19E9GngKE6QHmKVVcKD4QlfbjooTJ/Lg1JHtRAs7l9t4bAF+prBSSyyR0tu6Le42tJyud3VSo2N8V4CF9tjjraqmnD5KslfDf8ea9q6emlT1vKjk=
+	t=1746341167; cv=none; b=rs1F02mj4e8A3QHx/WA+bWO+LWFq7V5SMx6BjtF83SIfVV4c5l8AUXCHYotI1HFuyfhdhJgU36msZzezi2jQaK00ofGT2+hqlIR9RsL5R3QUk7FMECblORQCE1WiPDSxMw8NaIRGN7urxO7xGglHP0vUCL236V6afZe5/kh5XKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746341106; c=relaxed/simple;
-	bh=1oBKbQwBJWj3OeVDQwCXVDnc2NtLeTDeugomRQzFhLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0cp20pkKziKaWNVYqH+wGK7ewOwC8gPvL+iaKxFTb1t4AUMOP8i2DH0yESomsMCCEHFBYRD06n/pvHu9h6a55Ijp+op+fRf3xz/n4kanckr0t+OWS3bozJw5WFamgkzr5QnAykOScvI04ABem427bJyUPnwLiEVuo1mlZO/NqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkGswWua; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746341167; c=relaxed/simple;
+	bh=51T2H+nV5meAOaX2rZBwkpSKfRUq+Iq+o3fb3uLam0I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UUIeRU4USPEXNAZNINAYU8dTG9QYadHjT2Eo87bP5Ecu7r1F10zhLAEfwIeqrBG/ZH/MELBEWqSATbbwrNDepwlKvP0HObMfzOaMS3rPRRUOmJEAMoZYn17sRCkmKaC+lWCj+T9MRR3nGs5IDvAC4OiaUXi5RdOYzdGK9UXN3+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=sSm6QIs7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkGswWua"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73254C4CEE7;
-	Sun,  4 May 2025 06:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746341105;
-	bh=1oBKbQwBJWj3OeVDQwCXVDnc2NtLeTDeugomRQzFhLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rkGswWuasDnF0aLN26zHWKoVIh4hvaia8M660xt84WFMgU9ZuZ5wPCCEENzGzDOjX
-	 EaICxmx9mHyOQPlTnaX4COJNZ8vnmLqewhdC/rgcFBX5BvXeAM5EdinhwSN8iobjIu
-	 lIzqORhYDT0aNiNjGF1cR7umPfDA2toUdM1hBZKIE7hkjIsSQJuNxoBL8/3dy++mIn
-	 +gDaEfz7fsi4vgnjI4Wh6Pxe7Mbr1JIUFCxEYLsNV2Ydpy6ktQC9YFM5hK7ZGU36rq
-	 31Nz87uoEBh9A8SRJRmQ0pEAdHip4DDbRIZ99KoS32XOtxX6+NGYsRQ3ffk9WYIM/W
-	 Kfz0oO7qNvsRQ==
-Date: Sun, 4 May 2025 08:45:01 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
- Make task_struct::thread constant size)
-Message-ID: <aBcM7UXj8HQWZeHJ@gmail.com>
-References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="sSm6QIs7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439FDC4CEE7;
+	Sun,  4 May 2025 06:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746341167;
+	bh=51T2H+nV5meAOaX2rZBwkpSKfRUq+Iq+o3fb3uLam0I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sSm6QIs7UUo//Vxcje3XenbcCi8K+Bk9507Ht37AzXBePl9BkbNmB1OvxBuYw68OB
+	 Pjsz3aaG/49dZjGQDIUnqf3+Jz7Q71EnMTy4Oq9VQt1nrM3ujGw/IFpcbkkRXEpoGQ
+	 NB1u8Rr105CD0o1NGvGChLprqnRMyZRaaw00obR0=
+Date: Sat, 3 May 2025 23:46:05 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, Milan
+ Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, Daniel P .
+ =?ISO-8859-1?Q?Berrang=E9?= <berrange@redhat.com>, Kairui Song
+ <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, Baoquan He
+ <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen
+ <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Arnaud
+ Lefebvre <arnaud.lefebvre@clever-cloud.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>
+Subject: Re: [PATCH v9 6/8] Revert
+ "x86/mm: Remove unused __set_memory_prot()"
+Message-Id: <20250503234605.94d954b6ca70ea09c0aa8004@linux-foundation.org>
+In-Reply-To: <20250502011246.99238-7-coxu@redhat.com>
+References: <20250502011246.99238-1-coxu@redhat.com>
+	<20250502011246.99238-7-coxu@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Fri,  2 May 2025 09:12:40 +0800 Coiby Xu <coxu@redhat.com> wrote:
+
+> This reverts commit 693bbf2a50447353c6a47961e6a7240a823ace02 as kdump
+> LUKS support (CONFIG_CRASH_DM_CRYPT) depends on __set_memory_prot.
+> 
+
+x86_64 allmodconfig:
+
+In file included from drivers/gpu/drm/i915/gt/intel_ggtt.c:6:
+./arch/x86/include/asm/set_memory.h:40:57: error: unknown type name 'pgprot_t'
+   40 | int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+      |                                                         ^~~~~~~~
+
+I did this:
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: revert-x86-mm-remove-unused-__set_memory_prot-fix
+Date: Sat May  3 11:38:32 PM PDT 2025
 
-> On Mon, Apr 14, 2025 at 07:34:48AM -0000, tip-bot2 for Ingo Molnar wrote:
->
-> > The fpu_thread_struct_whitelist() quirk to hardened usercopy can be 
-> > removed, now that the FPU structure is not embedded in the task 
-> > struct anymore, which reduces text footprint a bit.
-> 
-> Well, hardened usercopy still doesn't like it on 32-bit, see splat below:
-> 
-> I did some debugging printks and here's what I see:
-> 
-> That's the loop in copy_uabi_to_xstate(), copying the first FPU state
-> - XFEATURE_FP - to the kernel buffer:
-> 
-> [    1.752756] copy_uabi_to_xstate: i: 0 dst: 0xcab11f40, offset: 0, size: 160, kbuf: 0x00000000, ubuf: 0xbfcbca80
-> [    1.754600] copy_from_buffer: dst: 0xcab11f40, src: 0xbfcbca80, size: 160
-> 
-> hardened wants to check it:
-> 
-> [    1.755823] __check_heap_object: ptr: 0xcab11f40, slap_address: 0xcab10000, size: 2944
-> [    1.757102] __check_heap_object: offset: 2112
-> 
-> and figures out it is in some weird offset 2112 from *task_struct* even
-> though:
-> 
-> [    1.750149] copy_uabi_to_xstate: sizeof(task_struct): 1984
-> 
-> btw, the buffer is big enough too:
-> 
-> [    1.749077] copy_uabi_to_xstate: sizeof(&fpstate->regs.xsave): 576
-> 
-> but then it decides to BUG because an overwrite attempt is being done on
-> task_struct which is bollocks now as struct fpu is not part of it anymore.
-> 
-> And this is where I'm all out of ideas so lemme CC folks.
+x86 set_memory.h needs pgtable_types.h for pgprot_t.  Obtain it via the
+higher-level pgtable.h.
 
-Thx for the report, mind sending the exact .config that fails for you?
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Coiby Xu <coxu@redhat.com>
+Cc: "Daniel P. Berrange" <berrange@redhat.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Jan Pazdziora <jpazdziora@redhat.com>
+Cc: Liu Pingfan <kernelfans@gmail.com>
+Cc: Milan Broz <gmazyland@gmail.com>
+Cc: Ondrej Kozina <okozina@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
 
-Thanks,
+ arch/x86/include/asm/set_memory.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-	Ingo
+--- a/arch/x86/include/asm/set_memory.h~revert-x86-mm-remove-unused-__set_memory_prot-fix
++++ a/arch/x86/include/asm/set_memory.h
+@@ -4,6 +4,7 @@
+ 
+ #include <asm/page.h>
+ #include <asm-generic/set_memory.h>
++#include <asm/pgtable.h>
+ 
+ #define set_memory_rox set_memory_rox
+ int set_memory_rox(unsigned long addr, int numpages);
+_
+
