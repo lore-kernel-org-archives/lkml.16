@@ -1,75 +1,75 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403E81DED4C
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900221E8847
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379535; cv=none; b=EzBJhvvRA5QFzDM4+b3sVlePy0NP7GJVQey8HyMYW0qnp4tyVKCN6eTbZJF1ZC0CNk4VCxzeS0bplT67iysO18GqPHRzgU411X+qLHVS5bRLZO2tOVn5uMqCNdoJltlwN35MW7JxNZixzb4ptpDkKS0Z7Gohhr/pNy1MAPMQKo4=
+	t=1746379536; cv=none; b=EBQ7wLKl3NNwhwWKgzVK4kZq0J3fyMioKW+HNURK3qwYCL7nDrxpezxiMf/RVNkUywUZz8r+16pYA0hBy9KyfjJtbUDuwvKycAbEyspDmqkY+5jm2ApnO1D3e06APkGi5XG6MtBsu1D5AQlFpfbuNLtR5aTMpPhU36qSX3LAP5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379535; c=relaxed/simple;
-	bh=fl5zCCVpEE2Zmqz4fRFa18I28mrrarwfyrO9Th1s7Mc=;
+	s=arc-20240116; t=1746379536; c=relaxed/simple;
+	bh=Ms63/2y0DA289uzZ9A2EmLRu7PgcSpq1Bh1Ff+1cH88=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=B8PgZphjoyZAyynoAoz5SA5yLZ5dboFz0JHS495xkSqLOkQIcfGBbpoc9Dhlwso3jxW/pFEBuK5afnQTmtl5TNvB82MFsFXEY9T0bk+fLs7wpC9BzOGkdPzCvSdv1U1zdU9iFwZr6gGpk80DIHQ2JDqE99BwdlKEJgvu1tHDzR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=czlK2TyK; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version:Content-Type; b=AORQDcZAnqJjgvuonNoj89tOd2yTPDOeKeR/TLIBZYaReXUDzc1oxSxztWHipej/vAeNDGthLyi+UsbD8e7ufFBCNkx35vRzayjpPIh6ngax087re5gg4ThO0Wq5A8CENLGCaedard4XHD6iQSebmLpsvby7pi/JNb6BaiP9wJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZUnf1tIG; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="czlK2TyK"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39127effa72so195392f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:25:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZUnf1tIG"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39123ad8a9fso191854f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 10:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746379531; x=1746984331; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746379533; x=1746984333; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nIetZtVvpEUX157Voy4D+ZB3t8P1w/c+ExnDxR/4ciA=;
-        b=czlK2TyKMbuZCT2cvCF8CPpvRAqbGYZWG1fhfNoY1LT/uKlbsYgdH2RU4W/uomJGxQ
-         rkS7SE7Dlywc+XWYYB0gVx2IpZ6G4DhCdLJ//3hB9V64a2agCuHTkcxXh4pQ8QYHichO
-         9AY19tsnaJazC2aroIg91CD7QD1O3yIX5xoiNa8ug8iKU0/1f13Ka7QJB5B13c/fYPYj
-         wIqi5+1SRZ7uGRG4ejKwk3jH/lrHhzlMu72tNGwE+Uk4yVqMcQQZyfhRPr12Tt36AT1h
-         v+dqmusfOX2RuLkpyMYDjh22SMYBIElqOnxMVNeT65aZeMT+PJbMlTlhF8KdJbc46/eo
-         7VdQ==
+        bh=IQ7tuwuM2LFYHZnclmNcrhhek280gEdNY36z2AcaptY=;
+        b=ZUnf1tIG1b2BbSq5Qu116N8p+1Uz8d1i9F0uyEfg8cWY2qwyOhq4n+QV9S3VEHOEXT
+         xCdhamLDR6TxW9s+JxxlvrH1CmrHarnM212s1g+efZIJAJ3NCjRIM7p2eFVxukay5j+M
+         Cs6iEalRHFK4zO+y9yrY3CLSLRBM8dHk4InIsrprVjoUSd7Vy66A0K5cgBagHASa1iC9
+         uMLxEMdZsaDjIH1KUS9YIj2azMNHSCR4iTTV07HvpkmhwNA8VoIiVIL4LYDfHr4jU5FP
+         W7XA6DBAeX7dkOwy57BoV64VrmZVnYg+pXL7ej2vFtlvxKLCoN63LSsOQZ9K7h/NSoJe
+         DqBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746379531; x=1746984331;
+        d=1e100.net; s=20230601; t=1746379533; x=1746984333;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nIetZtVvpEUX157Voy4D+ZB3t8P1w/c+ExnDxR/4ciA=;
-        b=vVZg6367ZEM6qVH2KsSP6Xxu9jiYeeQnLaBHBAdQMykuD0PE1YKZkP+u2YD0QraT+U
-         j8pe543KxJEhml0v8Zfy20FOGVj25IvgrdxoEWGxth1WbaeX095QibSQJcH4Imi1t9O7
-         Yozj4Y/0vN0NGKiIaujRPyT0FUggs1chhVfCEm551cEVUz1eU4yDivKG9afL5yOMzLBi
-         5X0blwu4dCVYlH7Nb2DXIiLmae7ivczRGeH4MOrd9w0OMAN+Pw9O4rB9cp1itkO6Q9iY
-         im45nfzm8QBGPp+nJdcRoAYMcdJVo5LfGw538btf+cWUeTHCPfHRa3u0I/MG0ROr0kXZ
-         rXwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdkdM0cSJIMbgn36/GYYAwf1VSgvp8E3fK/C3KIKs3DFhYsKzFeLxGqhNN1BPnSlj5Df63kp+ZU3VZZT4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdin8AkuYGfzCxxJVj85LPKae5VZlNCtuV0IhAvBCVPt1NZt/N
-	Ov2c2FM0jTJaEJPSE2TKPE5vfI1QTImspVNHjUie5ucSDtYZNzyDb859KzgxbH4=
-X-Gm-Gg: ASbGncu55g1vUI9Wv+WxSQeZSTLPqPX2VR+7OZ1w81AnOXTuLzsKcH0TWh6mpFSur47
-	WEL0SmHUo2C4ZP3h0VSKnTgyil3LcU8NZHBZZGwk09NESiYg0EOgmtjhtk+fGrQ3ka1w7yugj7G
-	IW1KwkwjH2LSdZ7rXcQbbVg65QOvbTbdRx2kV0Ir4GHQCyMH/+vKUUQU77bJHgx5ktgW8b388JA
-	n4MxrF8cV3BKf+V6E4R3iIke+R+zDYpW4DZcrs6I+p3bTS552ED1zPg+SNM0ziwaOPdUb8cbCz1
-	Eo+rcnbUTHHCwQBlBB3VfAqGXctNUoh3RHXrxIpknWG4UVeu4yZ0zR4Q/+w=
-X-Google-Smtp-Source: AGHT+IFYaZEBx5yqoumH/FiWwmOzxWN7aGOeGNL5Ypj10vpFzEjWkb0gKejuM1ERKGG9RC8IhnyXsA==
-X-Received: by 2002:a05:6000:250e:b0:3a0:99a4:e53f with SMTP id ffacd0b85a97d-3a099adff15mr2242281f8f.8.1746379531418;
-        Sun, 04 May 2025 10:25:31 -0700 (PDT)
+        bh=IQ7tuwuM2LFYHZnclmNcrhhek280gEdNY36z2AcaptY=;
+        b=qkSlTlJIH9SWIzCJv5f7/GPZsPMGlXqzEBJh3iJ0TEHh5t7svUdij1JQ3scyyb4BHA
+         aDSM6Q2A7PkTcWknZKdDBLTPt8dktuiz1uSbatqi0ruiv2EqNi4k6P+tw7nda4Wda52v
+         sEJaMCwK4fq/T/xOMw2vyRvgB7VdLQa+ViJ9wjKJyOMcSgP050EaUhGtzYhDvCuFKyGG
+         hN4zBP/kVcVlsQq2q+A3aY0LUCy0fBuad1pJGhQhx/SBf6UdgABKRqHyPXR8A6Xxvjal
+         PH14mMhRgPT2u2hByJSgYEE5MrTArzIT5DpPP4VLPQdpPqjIiHQWAL5SLBUU5NyiD9XS
+         BjwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIDSEqsXRgEESUrdlhxGgz4ZgmQ/hrAkyHYPXR9JzkNv5or5P0PhS4BqL/FN3hADa+NMhPUxlpwnJs+kU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwblD9Ne+6zGSVe4pO8Y7D5yMDOTRAtfvt28ujkomFeDh9CcK9
+	IZyYT7LUkWqmut1OFUAfcTUXinmfhoGFmkp8bVgX1AUbS33Q/GpwBu639HTkElE=
+X-Gm-Gg: ASbGnctf8BmLoSjb0slVcpB/pB04NXwydO/PrKOiUZKRoOpl83hreuNta5ZZ7pMXRFj
+	emN1vpDqMrB5iS+d4d3NfsnTo259bZaqrE/GTY/f/KpzhM3mzA+//S7vGeCorzR9SQXzM6x74X2
+	rKwXfVwFtS7b4DdNaj+3lFIoWxbBFlHSGmF8GDJUEs6AYC9ywUasjdiBtd0piTQS4aZlUFRI7Hq
+	xSzw9xsRyNZAKiNqWcdR2ZFrSdhuyAGZ50F+IJDZNMlE9jZo87UD3RvKH4Br1n+pZtfFRFKC7h0
+	deXH+aWNksYP8v8jzeYHM2+bhc3hVr8hYK//E2TIRYMkGiN9rgVg9/HvcdI=
+X-Google-Smtp-Source: AGHT+IGOU2D1HDiQWNlXLDQ7WFeRlkZ1+eYoBamEUGxGy1/DSVrQ46pnltTWn2EXYZd+XJi5rlymwA==
+X-Received: by 2002:a05:600c:1e1c:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-441bbf4af50mr34682955e9.9.1746379532792;
+        Sun, 04 May 2025 10:25:32 -0700 (PDT)
 Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0fe9dsm7896332f8f.71.2025.05.04.10.25.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0fe9dsm7896332f8f.71.2025.05.04.10.25.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 10:25:30 -0700 (PDT)
+        Sun, 04 May 2025 10:25:32 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
  Alexey Charkov <alchark@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250503-wmt-soc-driver-v3-2-2daa9056fa10@gmail.com>
+In-Reply-To: <20250503-wmt-soc-driver-v3-3-2daa9056fa10@gmail.com>
 References: <20250503-wmt-soc-driver-v3-0-2daa9056fa10@gmail.com>
- <20250503-wmt-soc-driver-v3-2-2daa9056fa10@gmail.com>
-Subject: Re: (subset) [PATCH v3 2/3] soc: Add VIA/WonderMedia SoC
- identification driver
-Message-Id: <174637953030.102764.839474842803768682.b4-ty@linaro.org>
-Date: Sun, 04 May 2025 19:25:30 +0200
+ <20250503-wmt-soc-driver-v3-3-2daa9056fa10@gmail.com>
+Subject: Re: (subset) [PATCH v3 3/3] ARM: dts: vt8500: add DT nodes for the
+ system config ID register
+Message-Id: <174637953156.102764.4565832687036270187.b4-ty@linaro.org>
+Date: Sun, 04 May 2025 19:25:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,22 +81,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
 
-On Sat, 03 May 2025 15:52:32 +0400, Alexey Charkov wrote:
-> Add a small SOC bus driver to parse the chip ID and revision made
-> available on VIA/WonderMedia SoCs via their system configuration
-> controller's SCC_ID register.
+On Sat, 03 May 2025 15:52:33 +0400, Alexey Charkov wrote:
+> Every VIA/WonderMedia SoC has a 32-bit chip ID register at the
+> MMIO address 0xd8120000. Add respective device tree nodes to let
+> the system code access it at runtime for the selection of appropriate
+> hardware quirks where needed.
 > 
-> This is intended to select appropriate sets of on-chip device quirks
-> at runtime, as it has been found that even within the same SoC
-> version there can be register-incompatible differences, such as
-> with the SDMMC controller on WM8505 rev. A0-A1 vs. rev. A2.
 > 
-> [...]
 
 Applied, thanks!
 
-[2/3] soc: Add VIA/WonderMedia SoC identification driver
-      https://git.kernel.org/krzk/linux-dt/c/6cd47734da4af93cefa1cb3d8370db57cb5616e8
+[3/3] ARM: dts: vt8500: add DT nodes for the system config ID register
+      https://git.kernel.org/krzk/linux-dt/c/a43a6092e33d6a5827114c797a2951c092851931
 
 Best regards,
 -- 
