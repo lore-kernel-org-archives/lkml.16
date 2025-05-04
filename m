@@ -1,77 +1,74 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F92119F489;
-	Sun,  4 May 2025 18:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545EF247281
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 18:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746384084; cv=none; b=GZDXGdESposLfvwHp+OHhwxfk+0Epd2/43K9N1WGZV6/u0+fci3zp7sAk+Y7NBnOSV/pS8gxbnH6ukfzW2Id2b9Stf1YqPwi21xE4sMzAuntDEsMvCseVxr7e7Do+fStp2axVhskRH/rWF52biaPDFvWbzwoIFQJRd9S1b7LjyY=
+	t=1746384241; cv=none; b=RNpWFbM/1ekAFKcQda2WMC8p5Gewzz4rbLXcECJ3Qe92lYM/BJqNPwpXZZqo2MWxnIg5rdIKWDZlhw1OH2PQljF0Xq3f5MEHMathBvRnkBGj10f1DqPzpa3dRGV6DDhZDT2BkF3U7pzS1jlqE/EkW/U3zXm750XfZIq5GPc/G8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746384084; c=relaxed/simple;
-	bh=LCuS5NoxIHqW7U/55a3sx8jUo05O82HlTJ+VcahI7u4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pSv7ip7SZOphV/taNdoeH26+niCseX9gtYK8easLDWt2zxuajqmb5pfWvLmKHTAQldgztsOQ8EKzQYGfFT/xWk09MxdVltNK5/Mv+CfhJQnsxjEmH1nqOcAHS0sjLIokgAebqu9mwErqCCTTCtMRu+/gSAQh+yqIOxsBytcgfB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkIRcbI7; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1746384241; c=relaxed/simple;
+	bh=YpSrDOpYHtj+P2PvVluA0luq+lo9U5gyhsK5wd8XNHI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oUbu8fjI8X7u6G7WIY40PC9l37SaweskuvyQcpnqbwJ8d8M43L5siFLj31k10Y4Y/xtdYtwXUVrxvVLLl0JwGzDdVYYgt2jhgUvoxZi7rrUmPBNagGliXGOplI3jBmrHEpoEFdoqTVF//8Y0jBjtt8eP/TuqdxH026kNp+EeqmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/Z6lSiG; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkIRcbI7"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acb5ec407b1so634465966b.1;
-        Sun, 04 May 2025 11:41:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/Z6lSiG"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso2175792f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 11:43:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746384079; x=1746988879; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4FoJU6gJaDGitgWGlVAW43BYakx3dl8orcQipQm/HMY=;
-        b=OkIRcbI7aqvgnyoBHILvpdOyxLRd8v43v66NSTGKk/wtWxxLqupm+N54t5eYqYlF2X
-         yN4f9z32XkhRY7h6ZZQ3ui+Fylu3DEw1+SnxapLL2301KmkFEFAitnIWer9Qf+8Gb0F5
-         eh2YwfSA98E2FeGXDM5nLsRmH164pXdld5qPSGeg5QLQpnGTKb6II1MO0/SXJ7WRU5t9
-         mUV4jMSF8T+s+pbHvTjRvTCMjrz2HWlgDkA3nXb38mQ2swXvhQIe22Ch8lg8BOBlIXPu
-         0TMLbCQFDeVVRl7uoZuwiUEGacxtPOxY/T4a1MMY+xR5q58ynuCYgNmvxrtDqA2lxIIN
-         fiwA==
+        d=gmail.com; s=20230601; t=1746384237; x=1746989037; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M474/Wo0FJEjA+4jtZ9z+sbS6P10qu7Y/mOGNdeqZRE=;
+        b=b/Z6lSiGcOQ226/zZ+CpTcUQqdhG2wVKA1RF9p2M0Y1UkcmW0plsKIwNMwB6FbneJA
+         GqKrk6UFvIBUicDaaCqRHQFj6pfOL2dQaCAvvdtUlygtFx2FzhGPjxAJ0yP+dnmTYgrF
+         LZrI06GZRq/QDPZfDiaZFd959YFThqO214aRJyFH9uq0Jb1sfWmfyTEegeva40x5mmkc
+         F32OgojdmDvZEdGj0TfR1DfMSU1hGLz6KcKMqvlPbXg9zcOVQzPxQGOtZt1fkNUTkWMe
+         0eNWnAaSuAAv9OLj/jh0N1TWk1XSt5M+F2XjbFLKv84sgmWXksp9NQ/lRB43ldsnyypC
+         QhbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746384079; x=1746988879;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4FoJU6gJaDGitgWGlVAW43BYakx3dl8orcQipQm/HMY=;
-        b=j1zzcGYcnuEX8UrTLj/wCrxOFoZtOHRnHmLvAHDZ7/PNZysWg2oE+vQ0wkcDA2eT2d
-         svTXzRcPkcAZwR1OyYpK5k/8n7URTyK75/GUPI8oBNIrpWuqAlTD1obIzTjNZtxH61tB
-         Gx706gELbN7f4TndrFM9ivp1WWH2HRkRhpRQ5qaUA/odHzHNpQyCszLnmy1BmyQX0vMy
-         SOGgKlcIKMuXDoWbSdDmiZH5omhbAtVo77o0wwrGBFGxyj5cQ2HtLafOpbMhOoLizKmr
-         9Be8M06iwiztInenyu4hQuSP2lmefwHOzDHCeeE98Bf9x3wU7lrbeyF6EVUib7HF+x8d
-         vMCg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/eBy7HCBUWqqYCWPu01lNpVBjN/oEZfTwt4W5mJi539OWbPkNfLMuSxPObOCv5GbOn0QLoyuGvH2b4YU1@vger.kernel.org, AJvYcCVAJ8PGdQBJJbWIF7IFSuWl0jCT0tqvHk+FxtRwxq+PnwvEl08lmZhhb59QSGpufuXQI/+/mWTFAvNYlw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPZvUpmyOJaCQHs0J/axOD03SFV3JOrr7/lKz5qu1vHRKCM80Q
-	AkYTxTAvNBjKTUiYu9mvzst6X+pC9GsQ7VUefKCGWuHmlnHjZlH6
-X-Gm-Gg: ASbGncsqEODXFveeGb4kDCx94vyCvv7QETpLPa2P+5rrsI1LvTTutKqTesCBLiWeXyt
-	/hlGNgiUbJ1lPRBCfpS7D0b/I16eSzcxHHneb4DhBHYVqgWol1nsfMZqg7/atxPlmTPxxF2m9sU
-	yBUAkZ5b3q7DgwrQU5F91SxpSmFuviZ84wIC484sLnvq9MZA++CMjvWrevi3Uir0hraMmexn+aq
-	0O5rXDubf1igArJJ+8J1x0m0G61tFHSvH5hUfk2Owp3BWzcE/I3XumkZgPK9AmTjf7QnuvLobqP
-	QM8iZQVyuQO4FvJbDGKN5EHvaHM1iZQ8hbfjdtpxlkO3Ywmo4KVUZ9/L08WzCWe9DcAZj4i5mBf
-	pooA6BYJmrBlvxQVxI093HLoNDzo=
-X-Google-Smtp-Source: AGHT+IGcVy2BmP9mdTZ/08ewUk+k9GqfugKPdeUvqNO+PamBR4KorE6NmevFhG419TK3CNg6KkNXJA==
-X-Received: by 2002:a17:907:970b:b0:aca:d5a1:c324 with SMTP id a640c23a62f3a-ad1a45bead1mr390805666b.0.1746384079008;
-        Sun, 04 May 2025 11:41:19 -0700 (PDT)
-Received: from localhost.localdomain (host-82-56-126-113.retail.telecomitalia.it. [82.56.126.113])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c02b8sm354556766b.118.2025.05.04.11.41.18
+        d=1e100.net; s=20230601; t=1746384237; x=1746989037;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M474/Wo0FJEjA+4jtZ9z+sbS6P10qu7Y/mOGNdeqZRE=;
+        b=LAlKE/noyLhnIcd7GD4cmebCjFxDRNVS+rje8iDNTCi889iETm1GWk2Ixva/cEKWNN
+         XwudvK7kQ9evx1OWRt3Dbrr4OaiSYcBUL1JY9RCuwnrle72DPoydwjbDx8pl3eJvjIiL
+         kZtasdVpf0YpElK0Ex22AA6hWooi/5sm1UbO2mkZyEf8ryz1PmezqrzM6z54JJGYZEAf
+         jE/0BoMy9UYvDFCsqUe8lZNGi/oPxhcq5qxIsuXbd9eQhS+YDgAxOcteWBLa2biRmBs7
+         0wIigxe1PriralhCBnGcVtVJJpTQb2qmj+u/vQXHtIibw7AQQIR+P+HBgyKJ0NPCakEs
+         XvuA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6xmWFpCJExij803AXhF8oR8omIWx+mOu+iDYFgvFXPcjiI4FePRxsgtSH+YG0dtId9iD6qOT1nXoPGFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNakMmHYJb31PSX9iWug2gCbRHAbtOxfFgdNgkvf0QSu6yuTmF
+	M7+NV6LBGe4Ued+yEu4N9Ueq0J5MHIN+oaIbTLtZy6YrVnCNhd6yh4DMLg==
+X-Gm-Gg: ASbGncvEFrt/ATinLdzowivSOQK5hE+t2Zl7gc5sLODwN2qn+ShPdGPhpjz8nB05Q1i
+	pN0pvjhw00QDV9ewRQp+/52zh7m6yiT26xdNYPn89dhYGNsiSOP0HzWVVSBylSy5FFC67+cCmj+
+	ilH5mA1SAZ9nqxuN7klCFhr5nVUW3ZlqhqPyNpMKzxb3WTCcfrm4CPPf1qTNAg9BM2UGUIdrCmg
+	rnggZEF/KVBbWfFSVqAK/ov0cFK1Um9sEfe9zoWm8xyp7BPoCK6Bs/Ymc47xmAZRSTF1dMGZdQa
+	N1E70tp2OnRnwnnHiVYwFEespr1VpLSqH0tiI+P51C+UXRajZQ==
+X-Google-Smtp-Source: AGHT+IFBn2prOpmIRBFD75swOrBg2FxPOApDFlpvmqqKbYLrpcR+QoUPHPZT+8pFnlm3E/o+w/DtLQ==
+X-Received: by 2002:a05:6000:178c:b0:39e:dce8:1c07 with SMTP id ffacd0b85a97d-3a099ae93b9mr7188330f8f.46.1746384237333;
+        Sun, 04 May 2025 11:43:57 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7afesm7914580f8f.47.2025.05.04.11.43.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 11:41:18 -0700 (PDT)
-From: Luca Carlon <carlon.luca@gmail.com>
-To: w_armin@gmx.de
-Cc: carlon.luca@gmail.com,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lucas.demarchi@intel.com
-Subject: Re: Suspend/resume failing due to SPD5118
-Date: Sun,  4 May 2025 20:41:17 +0200
-Message-ID: <20250504184117.4795-1-carlon.luca@gmail.com>
+        Sun, 04 May 2025 11:43:56 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH -tip] x86/asm: Use %a instead of %c(%%rip) in rip_rel_ptr()
+Date: Sun,  4 May 2025 20:43:23 +0200
+Message-ID: <20250504184342.125253-1-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
-References: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,154 +77,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> Please you load the i2c-dev module (sudo modprobe i2c-dev) and share the results of the following commands:
-> 
-> 	sudo i2cdump 1 0x50
-> 	sudo i2cdump 1 0x51
-> 
-> This should return the register contents of the spd5118 devices. Please make sure that the spd5118 driver
-> as been blacklisted and unloaded before executing those commands.
+The "a" asm operand modifier substitutes a memory reference, with the
+actual operand treated as address.  For x86_64, when a symbol is
+provided, the "a" modifier emits "sym(%rip)" instead of "sym".
 
-Hello,
+No functional changes intended.
 
-I followed what you asked:
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/include/asm/asm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-# lsmod | grep spd
-# modprobe i2c-dev
-# lsmod | grep i2c
-i2c_algo_bit           24576  2 xe,i915
-i2c_i801               40960  0
-i2c_smbus              20480  1 i2c_i801
-i2c_mux                16384  1 i2c_i801
-i2c_hid_acpi           12288  0
-i2c_hid                45056  1 i2c_hid_acpi
-i2c_dev                28672  0
-# i2cdump 1 0x50
-No size specified (using byte-data access)
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will probe file /dev/i2c-1, address 0x50, mode byte
-Continue? [Y/n]  
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
-00: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-10: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-20: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-30: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-40: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-50: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-60: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-70: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-80: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-90: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-a0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-b0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-c0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-d0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-e0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-f0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-# i2cdump 1 0x51
-No size specified (using byte-data access)
-WARNING! This program can confuse your I2C bus, cause data loss and worse!
-I will probe file /dev/i2c-1, address 0x51, mode byte
-Continue? [Y/n] 
-     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
-00: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-10: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-20: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-30: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-40: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-50: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-60: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-70: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-80: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-90: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-a0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-b0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-c0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-d0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-e0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
-f0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index f963848024a5..d7610b99b8d8 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -116,7 +116,7 @@
+ #ifndef __ASSEMBLER__
+ static __always_inline __pure void *rip_rel_ptr(void *p)
+ {
+-	asm("leaq %c1(%%rip), %0" : "=r"(p) : "i"(p));
++	asm("leaq %a1, %0" : "=r"(p) : "i"(p));
+ 
+ 	return p;
+ }
+-- 
+2.49.0
 
-> Could you also please tell us the name of the RAM sticks you are using?
-
-Of course. I have two 32GB modules. One was provided with the machine and it
-would be difficult for me to reach that physically. The other one is simple
-to reach and I installed it myself: it is marketed as Crucial CL46 - CT32G56C46S5.
-This is what I can get from dmidecode:
-
-Handle 0x0002, DMI type 17, 92 bytes
-Memory Device
-        Array Handle: 0x0001
-        Error Information Handle: Not Provided
-        Total Width: 64 bits
-        Data Width: 64 bits
-        Size: 32 GB
-        Form Factor: SODIMM
-        Set: None
-        Locator: Controller0-ChannelA/B-DIMM0
-        Bank Locator: BANK 0/1
-        Type: DDR5
-        Type Detail: Synchronous
-        Speed: 5600 MT/s
-        Manufacturer: Micron Technology
-        Serial Number: E97A5953
-        Asset Tag: None
-        Part Number: CT32G56C46S5.C16D   
-        Rank: 2
-        Configured Memory Speed: 3600 MT/s
-        Minimum Voltage: Unknown
-        Maximum Voltage: Unknown
-        Configured Voltage: 1.1 V
-        Memory Technology: DRAM
-        Memory Operating Mode Capability: Volatile memory
-        Firmware Version: Not Specified
-        Module Manufacturer ID: Bank 1, Hex 0x2C
-        Module Product ID: Unknown
-        Memory Subsystem Controller Manufacturer ID: Unknown
-        Memory Subsystem Controller Product ID: Unknown
-        Non-Volatile Size: None
-        Volatile Size: 32 GB
-        Cache Size: None
-        Logical Size: None
-
-Handle 0x0003, DMI type 17, 92 bytes
-Memory Device
-        Array Handle: 0x0001
-        Error Information Handle: Not Provided
-        Total Width: 64 bits
-        Data Width: 64 bits
-        Size: 32 GB
-        Form Factor: SODIMM
-        Set: None
-        Locator: Controller0-ChannelA/B-DIMM1
-        Bank Locator: BANK 0/1
-        Type: DDR5
-        Type Detail: Synchronous
-        Speed: 5600 MT/s
-        Manufacturer: SK Hynix
-        Serial Number: 2C3B11DE
-        Asset Tag: None
-        Part Number: HMCG88AGBSA095N     
-        Rank: 2
-        Configured Memory Speed: 3600 MT/s
-        Minimum Voltage: Unknown
-        Maximum Voltage: Unknown
-        Configured Voltage: 1.1 V
-        Memory Technology: DRAM
-        Memory Operating Mode Capability: Volatile memory
-        Firmware Version: Not Specified
-        Module Manufacturer ID: Bank 1, Hex 0xAD
-        Module Product ID: Unknown
-        Memory Subsystem Controller Manufacturer ID: Unknown
-        Memory Subsystem Controller Product ID: Unknown
-        Non-Volatile Size: None
-        Volatile Size: 32 GB
-        Cache Size: None
-        Logical Size: None
-
-When I was told that the problem may lie in the i2c bus, I started to search elsewhere
-and this thread came up: https://bugzilla.kernel.org/show_bug.cgi?id=213345. I
-therefore provided in that thread some more info I collected.
-
-Please let me know if I did something wrong.
-Thank you.
-Luca Carlon
