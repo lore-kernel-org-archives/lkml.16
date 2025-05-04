@@ -1,88 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341C012CD96
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ADC17A310
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746343041; cv=none; b=SQSM1dD7zBrH9I83ZQGlzavVREMgy3zFx6phbN+I46URDCLZ7cI8nXEF3brkh/fIn2aAgfOeY1kxzF/roTMzUI0hnoyLev0j5vObmGMRBzUFIcV8/IE0GvT9dr8pZuuJDoxvFV3gzmjJQIjsvgQTftwUT6v+hWiOTbAtN+ROYOY=
+	t=1746343573; cv=none; b=bwES2LCCLdwv2WocOzEjiA1VURmsmkq8AVeceORnPBDCGGM4oIoDFYSMZTTIXR11cNwhAWqUFiJSJNECiXuw6kd4yn1c6ZeFo6en0hcSLePP4tNSSruU0vYg6kVdBIG/RfFJUmTg8jVIpDYynL8Zh5wQMdGpV2m7bi8RoEDLd4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746343041; c=relaxed/simple;
-	bh=IfWSj28v/LZzHO8JdbzhzYzwEC6EYaY39ikj7t4t63I=;
+	s=arc-20240116; t=1746343573; c=relaxed/simple;
+	bh=GTUS1HI9ySUJwYit1T9pAQENHqL74DU8KC5U1s95QAg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HnN+PFVmK2pSEhxQll+HUoeq5zhfwZ5I4i5LnLDaDBJY5CEykQ4lKgVN7gLzmJ9gUCLbeZK6KkHvw4lmbNyGZ0xFKjGKyZwm1mlZwp0NUGQXvFg1oJwJTtLUVBQZeVeyCL2oHK1GxaxPGVoXkt4SKmTL1aoj/vxKY+BtPmSxbUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJRda/lc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=rfK4/EgWh2IYE9tbCo3PM/z8FzibjMOMC052x6pN8AiSCdwWXCCB7lJdxlxyGKFoAfXrz+au3mg9PSG3OJ24isg8I99pojTDvCwfgASIwB9jwkanUGnDq+ZDo9+kmI8GMwVeRjxzsJ/4y2B0h/Qyp6KMNuookB0OwrOJiwsFt+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ec0OB3eL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJRda/lc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FC3C4CEE7;
-	Sun,  4 May 2025 07:17:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ec0OB3eL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17752C4CEE7;
+	Sun,  4 May 2025 07:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746343040;
-	bh=IfWSj28v/LZzHO8JdbzhzYzwEC6EYaY39ikj7t4t63I=;
+	s=k20201202; t=1746343572;
+	bh=GTUS1HI9ySUJwYit1T9pAQENHqL74DU8KC5U1s95QAg=;
 	h=Date:From:To:Cc:Subject:From;
-	b=kJRda/lclcBsD9NuAWEzQkgFUiY+V1+vmVhWPLeYdTsTPQg3kF7L9fTufxM766nfa
-	 ccQepIGzjuKhQuBqfQ9kCxgCmnVKufASbf6YmdAc2QmTr8L/WxW/ZzYtJPR/JVKRtW
-	 V4xgAERmLGzwCXj3zLe3r8klG57Y+5m40fsQdKMriZo7NhOY0r2KCNZtoxqxFBzy8I
-	 igt9hz6cNovzKBdmWxjhm6sWDzcr8Ik7oVARAt9WXrbrJctkrVknjG7KL2NozIxotd
-	 8w8PDcrlbrr0LL8vTP6o1ivd421EuDlv7M08ClG6MNp5apPGdU9UuC4BRznsxeFmHH
-	 mVFv1tvMDR4ug==
-Date: Sun, 4 May 2025 09:17:16 +0200
+	b=Ec0OB3eLR5HGgAWGnog0bl4A3V8JGzKID2hymJcjDcAsMfhk6blKPopYlXkNbtxF5
+	 ZYzvy+XrhyQeaW2Jnp8u96kRsSYS2Rg7XZ8p+7P8xobpIwMDSPCR+APaAMJVxtCNnB
+	 T+GYn16KDJp1NidmaX10E9D9WCwI9+n0p9d1QMkxYAfcKlc6xYkZPvblADJx+b1tTW
+	 DY/OLawo9mrmX2m+s4F5g0A3pXURaYZPLZ1wFxY8UP9WBvqswevA4n21mTfBRz+bqz
+	 Dt30lj6lOBv/i/GReV0FPRPEubbll71ypPz78fAlssK7yX4v0ba5o2jjVI0zX7P2YH
+	 7BpX2lsLaGXYQ==
+Date: Sun, 4 May 2025 09:26:08 +0200
 From: Ingo Molnar <mingo@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [GIT PULL] perf events fixes
-Message-ID: <aBcUfPw98HOpq61B@gmail.com>
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: [GIT PULL] timer subsystem fixes
+Message-ID: <aBcWkIOBqkKG8lH-@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
 Linus,
 
-Please pull the latest perf/urgent Git tree from:
+Please pull the latest timers/urgent Git tree from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2025-05-04
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-04
 
-   # HEAD: 58f6217e5d0132a9f14e401e62796916aa055c1b perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest with vCPU's value.
+   # HEAD: 7aeb1538be5df3efa1d799e5428ac3a0ae802293 vdso: Reject absolute relocations during build
 
-Misc perf fixes:
+Misc fixes:
 
- - Require group events for branch counter groups and
-   PEBS counter snapshotting groups to be x86 events.
+ - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
 
- - Fix the handling of counter-snapshotting of non-precise
-   events, where counter values may move backwards a bit,
-   temporarily, confusing the code.
-
- - Restrict perf/KVM PEBS to guest-owned events.
+ - Work around and reject absolute relocations into vDSO code that
+   GCC erroneously emits in certain arm64 build environments
 
  Thanks,
 
 	Ingo
 
 ------------------>
-Kan Liang (3):
-      perf/x86/intel: Only check the group flag for X86 leader
-      perf/x86/intel: Check the X86 leader for pebs_counter_event_group
-      perf/x86/intel/ds: Fix counter backwards of non-precise events counters-snapshotting
+Thomas Gleixner (1):
+      timekeeping: Prevent coarse clocks going backwards
 
-Sean Christopherson (1):
-      perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest with vCPU's value.
+Thomas Weiﬂschuh (2):
+      arm64: vdso: Work around invalid absolute relocations from GCC
+      vdso: Reject absolute relocations during build
 
 
- arch/x86/events/core.c       |  2 +-
- arch/x86/events/intel/core.c |  2 +-
- arch/x86/events/intel/ds.c   | 21 +++++++++++++++++++--
- arch/x86/events/perf_event.h | 11 +++++++++--
- 4 files changed, 30 insertions(+), 6 deletions(-)
+ arch/arm64/include/asm/vdso/gettimeofday.h | 13 ++++++++
+ include/linux/timekeeper_internal.h        |  8 +++--
+ kernel/time/timekeeping.c                  | 50 +++++++++++++++++++++++++-----
+ kernel/time/vsyscall.c                     |  4 +--
+ lib/vdso/Makefile.include                  |  6 ++++
+ 5 files changed, 68 insertions(+), 13 deletions(-)
