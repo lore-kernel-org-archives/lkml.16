@@ -1,189 +1,212 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C1A221F08;
-	Sun,  4 May 2025 17:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746380049; cv=none; b=gZMXgJpcdbd3w8ZATwhd2/7hS8oQfrHaaSUGHbkSt6Hzx54KWQXjACG0IxHZNi1KhKkTPYXcm/+1d5Ll2OVRLbyY78LN9+h5czMcRLx9UExgxveOIqQ+YXRArFrYmmV0yowm/aqIiOJrn/MRKM1opshJf3Hsmc4JleGfVGM510g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746380049; c=relaxed/simple;
-	bh=TI+IAdyGi+IL8Xy71Y9qCmSdPrRxiWOpnXzL5ViZOC0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IwEqRguAmqoKxMnxiCnrtd++X+qvdomPUVYcc7CSAZRIGT4eN/4tDfJ8IXpOGmNKkdOfxQ2v9Xn0cMDoIX93E95KvXifjBx1qq6vMWmQ4RcerGYCauIGEWsmP/ZVPQ05Qyhjc4G8tvCE6vdsQNFSbkB0XcrE2/yAUx0DvOZQ0OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nD1e+VpE; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB0C1FDA6A;
+	Sun,  4 May 2025 17:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746380138; cv=pass; b=UXzdp08JDRXC+V7GE9e7M0NM0kSHN6H/V2J0hoDfmHk12EOqeX0GBUndzz61Ylyz+ckVaOW29ZPmCWkZwEfZB1cHpDLSTSnC67uJC8xQVwa+kPxSbutXS4wEJXmfvINtxKwkiSdruTDEcDhGIMBGpVKGb188EDFd1jFo9Yfwr7g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746380138; c=relaxed/simple;
+	bh=STrK0dUvieUlDqNzFLtU0MIwRwcJdX2k7ODG2/WDDpM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jIaLrbY4Rn1dhYKbjJ8iYgN6/5A0exZPIlAsaNbvAFNaAnsfUnWNVB90hy+NrKKVHDPtVBCrs8uM+6YNJZPaqajT4YgRiNf+mucecOKwaouYV01Bum8B2fN6+5fOSqaZah9N/F8+h847571mhPAvmZF6XYTXIFixnzyW+1IbmTA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=G6D4A68x; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=voEqFNAG; arc=pass smtp.client-ip=85.215.255.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nD1e+VpE"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-310447fe59aso38726441fa.0;
-        Sun, 04 May 2025 10:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746380045; x=1746984845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1fVaVItBBDC1ZD6iIEWvvKbSsgQoZnhQOhbzKdtWXs=;
-        b=nD1e+VpEZUzE0MrZm25UUIhHAJ3Ub2rtp6VxQpojZcZTpRYQTPL/EfsR6kdHEvrkcF
-         dK+0iFTjxxycl7RsDjE+rM3AXdbQWfpH/MFFPPjreF6p4GAkkqB6XIJdbK9+kFNsFlAd
-         1aXdf/kWLvIgHXuyDmpLyltTsa+i6X3X/rcyjzhAcTcvGTAiriRxdbqqBCspW5nIiGma
-         LSXJW5w89Wd0CNGkzwG78f+BHR315h1xmcV++t/LFB311fvxKQ7x4ee7AzXseWiwG5/B
-         e4b8akGl3FR7dWUxgzZdG99wQGdg19Ha34FGQA1RpjAGZwxYupfB7pxtWgEGpx6QhE43
-         4oBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746380045; x=1746984845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N1fVaVItBBDC1ZD6iIEWvvKbSsgQoZnhQOhbzKdtWXs=;
-        b=l3CGHQCho695tad4BgJz0wiuXUI3y0HfzLHatdnLIxJtYgdQruCZTkigviP8YfZZKg
-         wVUkDRPspQSEh6faQktRw33SF6ZNVrwDjmGtDsJPxa0edJuBVXCpTDuPVbJEgkjd6Pm0
-         gkixm7WaBjz/2bc060wY99jNz9wN4752vEbfRx+8sEAsqSmZ0U+ESbOsGJ5d9j9PW1f0
-         OUFuTYkJL25at7uya2mmH+XFMqx5DsrR+NqJCBAUQz1l9FQpwGVAr1E99f4l9NXCz1wV
-         qUX9DaFXm24N/0tnllJcNKkya14BmF4imrhk4Lp5gsBsMObaCfDRIi/0E9sc6TVmYzx9
-         y/GA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTq0Fv2mhdSod8Oy8oQPTAZhiVEDuN/rl/m8tmz3Niv1scqEUfLNZGp7zilWwAFl2at+97d7D5gnk4wdAWkEE=@vger.kernel.org, AJvYcCUZEkJCzstNF1AW+4i+nwGgH9Nf5/kyTyCmvID14gjQ2ZrNMyhQwK0Ai2F93ayIcXiPrUueyIiUrG0V83M=@vger.kernel.org, AJvYcCWxF/gPtsyW7vlkaob/6ei1WgMcqkL0o9ny/TM6ofuZmndcvxeytmy/OnQ/9iY0LdiTo0HuSWyy7c8VYKa1djh7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDPxYC27W9JhIrlNaH1L6NgGpAuel58d8A2HG6lJauy2240CZ9
-	oebtaMyPLBFk3Ih0JD3PjatuUIwxrBjPyCeVEK4GdApomsYWuqoAr+yB99tEDEuvhM+xahepuWT
-	Dk2TJYOfUetH3xuxTOKxf0LgQy/A=
-X-Gm-Gg: ASbGnctVWi+CKw4gqp/ERal4k0NbVdNZlxg1b59nkHnwO6B1MBwLmpjNoOk3wfLN0c5
-	bmvTakJ/BzluJHxVax69QgzdhA4QA7sZnLJpAPZdm4as/rxMghfe1ZtS20WzeuBgVkQnKhfQJRq
-	LBHotEmUuuLXdpRtLKpe5j245uUzn5rJcFDPW24pEWugTHxeZMbkDJkRg=
-X-Google-Smtp-Source: AGHT+IHjlg5r+GtZPby1N3y/lBB/JYkis+ONns+ydoYTgWyGUU7+7O4MuOnenH2xOKWDCtegS00Wd//KowDVF/l59is=
-X-Received: by 2002:a2e:be1b:0:b0:308:fbd5:9d2d with SMTP id
- 38308e7fff4ca-323525056damr11809611fa.37.1746380045047; Sun, 04 May 2025
- 10:34:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="G6D4A68x";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="voEqFNAG"
+ARC-Seal: i=1; a=rsa-sha256; t=1746379773; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Q6H3ym13n9VQ5z9+qlzO0onLytXqxgXKOxbMLPeoCgUdAPucRweeb4Il5TSzq47uk4
+    rl304SN7Vin0lq36UCk5MYiJKd1R5R8gbIh1CcIHRIxrMOxQYSGTzDzHJq4yLLgar6Vb
+    WzZY3okh0sm+Sq+iHRi8UnR8AfKrd32EnJ8fXY6J5C0+ZoMzCimltOklcna6yI3iqOsG
+    LyL/OWm9T62mz0DzjkioZ30lkzPbOG072cvKx/Y/9IeSor6SrTM5lQDks5dhRy7VHD3x
+    /RZAxb9u1Qqkx1rzhKBm3FdlNf2vXObUkttjLCWX44NsiBVox+mKHEz37i3TFP8QTLBj
+    tKUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379773;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
+    b=GFwXXrxk0F8wb9b3SN3D7MgDWqVQpMB+6mWMfmo9nEcDKBngjD8PymccN1+kKi2rCf
+    vJx+a4sS+oppYxoVK0XIeXj/jdZs2M9e7oqa5thGh+uNRHd4uPkvhIWg6f7MGjxGTHva
+    Ly5zlil60ApFp+imD/Kxkhhkk9/fIRRwAcxvb9TRaBqqkf2d3lbpkzwTzYf1/0ryPm6J
+    WnasVeZjexw4acjtUb/ikVa/gW4qdJv5i5GhFZHxCktYqDF384h96idz8r0E4d1idKcr
+    jkjxB+nsvf8c+bki8t2z1oeiDVlLrdy4DeDFBnB2UHyKSvw3zS3r5ytTEMZdI+FKbFEq
+    oPdQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746379773;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
+    b=G6D4A68xi/cgBuTqyUQl1d004B++1Wc6Do5vDDM5oIWjizFK/ZuIx6wt2b/4nXhd7V
+    fIi9Dd1lqvBrbhLMK1Flcct5sBRt8AFuyupHixejzGGVpX/ETTgkC/yWvo6SKIE8ICKu
+    ZzRp/0BtrlZfjKechX4OCI9upHDat4re1bRJ/wNLQhOkEbBp+VowWGPHaOheGU6gpsUc
+    zYc1jlPcBmJkNYecqym6uck4RrGwJw1ZT5HZRUpFNDuOct1DuOHBAXempOnxEa8CBdCb
+    MzxQhHalMnMWemz+gN0KGV9O1pPSJ7ne021fqkF+vEASBgQV2q8wLAFdVZZeAJ7fRc6+
+    Jkzg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746379773;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=F9rl3sGsvxYu9uIDxZf1Ei5eQdwD714ERFq5snEb+vE=;
+    b=voEqFNAG0YmToV145Ik0f8S39WkQMNKCnf96ORJ1YrgbbS7x0OUiGP0vtUiHQ5h6U9
+    +1+bollSVGgC86h7kyCA==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b35144HTXz9J
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sun, 4 May 2025 19:29:33 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1uBd9f-0004OJ-27;
+	Sun, 04 May 2025 19:29:31 +0200
+Received: (nullmailer pid 243278 invoked by uid 502);
+	Sun, 04 May 2025 17:29:31 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next v7 4/6] net: phy: realtek: Group RTL82* macro definitions
+Date: Sun,  4 May 2025 19:29:14 +0200
+Message-Id: <20250504172916.243185-5-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250504172916.243185-1-michael@fossekall.de>
+References: <20250504172916.243185-1-michael@fossekall.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-3-ojeda@kernel.org>
-In-Reply-To: <20250502215133.1923676-3-ojeda@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 4 May 2025 13:33:28 -0400
-X-Gm-Features: ATxdqUGeVFcwO9nOZqJQZmUYd49yvR_Ewg1ZcZNRyKblGfpu9Gz2cSxTrocB1zc
-Message-ID: <CAJ-ks9=v8E_bV+oJ-bdm3KZW2dfrFdiCmeVLs+bgK8oVu6BCUA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] rust: kunit: support checked `-> Result`s in KUnit `#[test]`s
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, May 2, 2025 at 5:53=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
-e:
->
-> Currently, return values of KUnit `#[test]` functions are ignored.
->
-> Thus introduce support for `-> Result` functions by checking their
-> returned values.
->
-> At the same time, require that test functions return `()` or `Result<T,
-> E>`, which should avoid mistakes, especially with non-`#[must_use]`
-> types. Other types can be supported in the future if needed.
+Group macro definitions by PHY in lexicographic order. Within each PHY
+block, definitions are order by page number and then register number.
 
-Why not restrict this to Result<(), E>?
+Signed-off-by: Michael Klein <michael@fossekall.de>
+---
+ drivers/net/phy/realtek/realtek_main.c | 72 +++++++++++++-------------
+ 1 file changed, 37 insertions(+), 35 deletions(-)
 
->
-> With this, a failing test like:
->
->     #[test]
->     fn my_test() -> Result {
->         f()?;
->         Ok(())
->     }
->
-> will output:
->
->     [    3.744214]     KTAP version 1
->     [    3.744287]     # Subtest: my_test_suite
->     [    3.744378]     # speed: normal
->     [    3.744399]     1..1
->     [    3.745817]     # my_test: ASSERTION FAILED at rust/kernel/lib.rs:=
-321
->     [    3.745817]     Expected is_test_result_ok(my_test()) to be true, =
-but is false
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index ca6d2903b1c9..e01b13a9b5c3 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -18,6 +18,16 @@
+ 
+ #include "realtek.h"
+ 
++#define RTL8201F_IER				0x13
++
++#define RTL8201F_ISR				0x1e
++#define RTL8201F_ISR_ANERR			BIT(15)
++#define RTL8201F_ISR_DUPLEX			BIT(13)
++#define RTL8201F_ISR_LINK			BIT(11)
++#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
++						 RTL8201F_ISR_DUPLEX | \
++						 RTL8201F_ISR_LINK)
++
+ #define RTL821x_INER				0x12
+ #define RTL8211B_INER_INIT			0x6400
+ #define RTL8211E_INER_LINK_STATUS		BIT(10)
+@@ -30,9 +40,21 @@
+ #define RTL821x_PAGE_SELECT			0x1f
+ #define RTL821x_SET_EXT_PAGE			0x07
+ 
++/* RTL8211E extension page 164/0xa4 */
++#define RTL8211E_RGMII_EXT_PAGE			0xa4
++#define RTL8211E_RGMII_DELAY			0x1c
++#define RTL8211E_CTRL_DELAY			BIT(13)
++#define RTL8211E_TX_DELAY			BIT(12)
++#define RTL8211E_RX_DELAY			BIT(11)
++#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
++
+ /* RTL8211F PHY configuration */
+ #define RTL8211F_PHYCR_PAGE			0xa43
+ #define RTL8211F_PHYCR1				0x18
++#define RTL8211F_ALDPS_PLL_OFF			BIT(1)
++#define RTL8211F_ALDPS_ENABLE			BIT(2)
++#define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
++
+ #define RTL8211F_PHYCR2				0x19
+ #define RTL8211F_CLKOUT_EN			BIT(0)
+ #define RTL8211F_PHYCR2_PHY_EEE_ENABLE		BIT(5)
+@@ -40,24 +62,6 @@
+ #define RTL8211F_INSR_PAGE			0xa43
+ #define RTL8211F_INSR				0x1d
+ 
+-/* RTL8211F WOL interrupt configuration */
+-#define RTL8211F_INTBCR_PAGE			0xd40
+-#define RTL8211F_INTBCR				0x16
+-#define RTL8211F_INTBCR_INTB_PMEB		BIT(5)
+-
+-/* RTL8211F WOL settings */
+-#define RTL8211F_WOL_SETTINGS_PAGE		0xd8a
+-#define RTL8211F_WOL_SETTINGS_EVENTS		16
+-#define RTL8211F_WOL_EVENT_MAGIC		BIT(12)
+-#define RTL8211F_WOL_SETTINGS_STATUS		17
+-#define RTL8211F_WOL_STATUS_RESET		(BIT(15) | 0x1fff)
+-
+-/* RTL8211F Unique phyiscal and multicast address (WOL) */
+-#define RTL8211F_PHYSICAL_ADDR_PAGE		0xd8c
+-#define RTL8211F_PHYSICAL_ADDR_WORD0		16
+-#define RTL8211F_PHYSICAL_ADDR_WORD1		17
+-#define RTL8211F_PHYSICAL_ADDR_WORD2		18
+-
+ /* RTL8211F LED configuration */
+ #define RTL8211F_LEDCR_PAGE			0xd04
+ #define RTL8211F_LEDCR				0x10
+@@ -78,25 +82,23 @@
+ #define RTL8211F_RXCR				0x15
+ #define RTL8211F_RX_DELAY			BIT(3)
+ 
+-#define RTL8211F_ALDPS_PLL_OFF			BIT(1)
+-#define RTL8211F_ALDPS_ENABLE			BIT(2)
+-#define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
++/* RTL8211F WOL interrupt configuration */
++#define RTL8211F_INTBCR_PAGE			0xd40
++#define RTL8211F_INTBCR				0x16
++#define RTL8211F_INTBCR_INTB_PMEB		BIT(5)
+ 
+-#define RTL8211E_RGMII_EXT_PAGE			0xa4
+-#define RTL8211E_RGMII_DELAY			0x1c
+-#define RTL8211E_CTRL_DELAY			BIT(13)
+-#define RTL8211E_TX_DELAY			BIT(12)
+-#define RTL8211E_RX_DELAY			BIT(11)
+-#define RTL8211E_DELAY_MASK			GENMASK(13, 11)
++/* RTL8211F WOL settings */
++#define RTL8211F_WOL_SETTINGS_PAGE		0xd8a
++#define RTL8211F_WOL_SETTINGS_EVENTS		16
++#define RTL8211F_WOL_EVENT_MAGIC		BIT(12)
++#define RTL8211F_WOL_SETTINGS_STATUS		17
++#define RTL8211F_WOL_STATUS_RESET		(BIT(15) | 0x1fff)
+ 
+-#define RTL8201F_ISR				0x1e
+-#define RTL8201F_ISR_ANERR			BIT(15)
+-#define RTL8201F_ISR_DUPLEX			BIT(13)
+-#define RTL8201F_ISR_LINK			BIT(11)
+-#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
+-						 RTL8201F_ISR_DUPLEX | \
+-						 RTL8201F_ISR_LINK)
+-#define RTL8201F_IER				0x13
++/* RTL8211F Unique phyiscal and multicast address (WOL) */
++#define RTL8211F_PHYSICAL_ADDR_PAGE		0xd8c
++#define RTL8211F_PHYSICAL_ADDR_WORD0		16
++#define RTL8211F_PHYSICAL_ADDR_WORD1		17
++#define RTL8211F_PHYSICAL_ADDR_WORD2		18
+ 
+ #define RTL822X_VND1_SERDES_OPTION			0x697a
+ #define RTL822X_VND1_SERDES_OPTION_MODE_MASK		GENMASK(5, 0)
+-- 
+2.39.5
 
-Is it possible to include the error in the output?
-
->     [    3.747152]     # my_test.speed: normal
->     [    3.747199]     not ok 1 my_test
->     [    3.747345] not ok 4 my_test_suite
->
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
->  rust/kernel/kunit.rs | 25 +++++++++++++++++++++++++
->  rust/macros/kunit.rs |  3 ++-
->  2 files changed, 27 insertions(+), 1 deletion(-)
->
-> diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
-> index 2659895d4c5d..f43e3ed460c2 100644
-> --- a/rust/kernel/kunit.rs
-> +++ b/rust/kernel/kunit.rs
-> @@ -164,6 +164,31 @@ macro_rules! kunit_assert_eq {
->      }};
->  }
->
-> +trait TestResult {
-> +    fn is_test_result_ok(&self) -> bool;
-> +}
-> +
-> +impl TestResult for () {
-> +    fn is_test_result_ok(&self) -> bool {
-> +        true
-> +    }
-> +}
-> +
-> +impl<T, E> TestResult for Result<T, E> {
-> +    fn is_test_result_ok(&self) -> bool {
-> +        self.is_ok()
-> +    }
-> +}
-> +
-> +/// Returns whether a test result is to be considered OK.
-> +///
-> +/// This will be `assert!`ed from the generated tests.
-> +#[doc(hidden)]
-> +#[expect(private_bounds)]
-> +pub fn is_test_result_ok(t: impl TestResult) -> bool {
-> +    t.is_test_result_ok()
-> +}
-> +
->  /// Represents an individual test case.
->  ///
->  /// The [`kunit_unsafe_test_suite!`] macro expects a NULL-terminated lis=
-t of valid test cases.
-> diff --git a/rust/macros/kunit.rs b/rust/macros/kunit.rs
-> index eb4f2afdbe43..9681775d160a 100644
-> --- a/rust/macros/kunit.rs
-> +++ b/rust/macros/kunit.rs
-> @@ -105,8 +105,9 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: Toke=
-nStream) -> TokenStream {
->      let path =3D crate::helpers::file();
->      for test in &tests {
->          let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapper_{}", t=
-est);
-> +        // An extra `use` is used here to reduce the length of the messa=
-ge.
->          let kunit_wrapper =3D format!(
-> -            "unsafe extern \"C\" fn {}(_test: *mut kernel::bindings::kun=
-it) {{ {}(); }}",
-> +            "unsafe extern \"C\" fn {}(_test: *mut kernel::bindings::kun=
-it) {{ use kernel::kunit::is_test_result_ok; assert!(is_test_result_ok({}()=
-)); }}",
->              kunit_wrapper_fn_name, test
->          );
->          writeln!(kunit_macros, "{kunit_wrapper}").unwrap();
-> --
-> 2.49.0
->
->
