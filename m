@@ -1,100 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61863597E;
-	Sun,  4 May 2025 10:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BEB3597E;
+	Sun,  4 May 2025 10:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746353974; cv=none; b=t7x01Ms8YI0CGhB4qB3Nl4lg1sib4GVk7S5TU/xFdHvOm3TgqSWon6qM0+aQ5cAJ47DcUj83ys6ULIVaOIT00hbaYoMUQa64ZVh0O96Z5op2M8sJX6ErXSuSfCg1lma5uur5adJy+qM1AnT8gS6foKyu6wVfQEEBai/Upb3duws=
+	t=1746354112; cv=none; b=ZxgjHu6oNC29+iOG8XqgEXyPPgpndV0nMqDFkHbHrclrMzO+GcaRkZ6SMb5EfFNjqlQibVPIEpetos5mmEgZiryMkFnZ5jKT9MZs9MfNO01QFIOgKazRhX67+pXrrBqmI3DQ3KmU+s/O2rTTXi+VI/YSV4F77N3k3PzTIk3i3+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746353974; c=relaxed/simple;
-	bh=/zphhyt/wytwwQ3L2MfF1xGmJccBco5+XhvPcJrJ6Bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D2ZAVWy4eRbZoYUZHMD6XhYW5mXID/Ze9o88Zo9qnc8xursqEgctdAM6tGLQ1KLkEigFHQNzD9KrgNXWbaj3zHy1Ix+S/X3+AZCe8bCD4mrPVRgMdkPtkZ++Fz9KNoFGAJV9zYwh7toyfSRGtlIgNwNl77x8NPrgxz92stKAnHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0mu5Qtn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WDUKrNAp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746354112; c=relaxed/simple;
+	bh=R0+kP0V9GqTcqrFB9+kBbmLscqAF4uAt/oWjzFf466U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XueAWdP6orj1LDIbAJ+emMA8phedeeAIpxr6lszScvG+cI0cKbSBSXzXpkAiobZ6IfmbbPFKPzmwCjE6Kwn2CrAwIsD5ZWEahwu1e9vY8SN9Nwml0scmff0Xv2hUHdH8H85xjsQ6cLzFCw4raaP9P4x5mzCtKNUjRud7KQaE8e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WREyH1if; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0mu5Qtn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WDUKrNAp"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746353970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jfl7SNXUW9QYMi5IdJsuAK6+WDbLVdSs2AEZKeOH8eo=;
-	b=G0mu5QtnRB2C2Jr/mXDF6LW+tpTJ5RyHja/nqS6uGtlSLT43QUkBsbkYd7TcQN+G9wFLgr
-	WIK/tu6GTUDjMPizI5qndS8zUro5Mr6xSNpUWlIubE+Dj3Fp0RmulFvuiHkQZsDKsVMLEK
-	l+DX19+gay6Fb9NmQfJwG7GhkRM1U0oDdgF966qgc0tQDJFJHulsSISYmbv+fYlacai0tP
-	LfYnO5BY/8K3DAxdJDgoSsHrpyJ7DySuCFD6Qz7JyoUdGkpPxKElVCJjXWDwiwoiqUqwGZ
-	3yLheynP3GDV+PQsoHMOA7ja2ndz34GJB0nOSZd76QgTIx0zAsnfA6urcHhluw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746353970;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jfl7SNXUW9QYMi5IdJsuAK6+WDbLVdSs2AEZKeOH8eo=;
-	b=WDUKrNApCeBn1j43PZF1WmP+DXkiGtG31xxSQxqtGVor3nXAXAjSjqxTmtewjBjrjS/WC2
-	g+xugQG1ONBsOBDQ==
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	stable@vger.kernel.org
-Subject: [PATCH] riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL
-Date: Sun,  4 May 2025 12:19:20 +0200
-Message-Id: <20250504101920.3393053-1-namcao@linutronix.de>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WREyH1if"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CF4BB40E0222;
+	Sun,  4 May 2025 10:21:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Gfzxt_oBFv7e; Sun,  4 May 2025 10:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746354103; bh=Oe8Jm9A1eez88U6KkWZnuM9occZIORvr9c2rcqvhIZ8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=WREyH1ifapTfvpFtzX0HD/Gx2fmf9SD4FLHo1+N2NPR42EXTjsIPs9AMqE6JHG9Gf
+	 K14fIRAjOCdlSYKcScGZ0dd6a35uebs9U8BO0GCRc8FmjUE7OknF89hZ3XuzeLbuSU
+	 tyYpQpbKwhixvwq78yLwxKZSINQwuauUaetgZNU/Jf0b+JZaoQ/uyXOvgn7KUC8FWS
+	 RpnRcJEToz8GfRERldKo7DT+6yLM4R+FclGYg+LEOL8Y5bpY0Omk61CRb7qkUBA7Qx
+	 /mmVKBoLs/lTYvJ1oda5wpVQTrcRgECM+N1XzcsVxJ0o8FdTqKafELs/41z+b/hOwk
+	 UTtk0gTtn/jfxZT0/M0dTb/PCmIyOr6qXM2ujAJ4Mc2ZkicrlYEYSB2kxSDM1Op2wW
+	 dzz5R9D4cxIMh8xUyiRYH1LBLoUbk6dPrAqzw2a0c12rtDjcR+dkl7FMlJyeMRodRG
+	 9HNxtQhsau3AILSHsRTgAdqM5SfRoAztgBJq11bVmUv5XZQ+XkBVjMatMkedaR3YK1
+	 3UHlhmr58zW+8UxVFjqKC+2fOzJgvSR//hZnn5n0PseLC0/9NgyhV9UDtOE+YISmLb
+	 /Hila9wHZMmdisIlPB0IMhZ7DFZRFUlMcByFAYUagydn9YCUD/tC8wtpi1jX8dat+i
+	 eoj0qERhWB3R2IXQMF1pzSLg=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BDE1340E015E;
+	Sun,  4 May 2025 10:21:40 +0000 (UTC)
+Date: Sun, 4 May 2025 12:21:33 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC/urgent for v6.15-rc5
+Message-ID: <20250504102133.GAaBc_rTClPZmy75Rm@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-When userspace does PR_SET_TAGGED_ADDR_CTRL, but Supm extension is not
-available, the kernel crashes:
+Hi Linus,
 
-Oops - illegal instruction [#1]
-    [snip]
-epc : set_tagged_addr_ctrl+0x112/0x15a
- ra : set_tagged_addr_ctrl+0x74/0x15a
-epc : ffffffff80011ace ra : ffffffff80011a30 sp : ffffffc60039be10
-    [snip]
-status: 0000000200000120 badaddr: 0000000010a79073 cause: 0000000000000002
-    set_tagged_addr_ctrl+0x112/0x15a
-    __riscv_sys_prctl+0x352/0x73c
-    do_trap_ecall_u+0x17c/0x20c
-    andle_exception+0x150/0x15c
+please pull two urgent fixes to the Altera EDAC driver for v6.15-rc5.
 
-Fix it by checking if Supm is available.
+Thx.
 
-Fixes: 09d6775f503b ("riscv: Add support for userspace pointer masking")
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Cc: stable@vger.kernel.org
 ---
- arch/riscv/kernel/process.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 7c244de77180..3db2c0c07acd 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -275,6 +275,9 @@ long set_tagged_addr_ctrl(struct task_struct *task, uns=
-igned long arg)
- 	unsigned long pmm;
- 	u8 pmlen;
-=20
-+	if (!riscv_has_extension_unlikely(RISCV_ISA_EXT_SUPM))
-+		return -EINVAL;
-+
- 	if (is_compat_thread(ti))
- 		return -EINVAL;
-=20
---=20
-2.39.5
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.15_rc5
+
+for you to fetch changes up to 6dbe3c5418c4368e824bff6ae4889257dd544892:
+
+  EDAC/altera: Set DDR and SDMMC interrupt mask before registration (2025-04-28 12:38:53 +0200)
+
+----------------------------------------------------------------
+- Test the correct structure member when handling correctable errors and
+  avoid spurious interrupts, in altera_edac
+
+----------------------------------------------------------------
+Niravkumar L Rabara (2):
+      EDAC/altera: Test the correct error reg offset
+      EDAC/altera: Set DDR and SDMMC interrupt mask before registration
+
+ drivers/edac/altera_edac.c | 9 +++++----
+ drivers/edac/altera_edac.h | 2 ++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
