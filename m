@@ -1,140 +1,140 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5391CD1F;
-	Sun,  4 May 2025 17:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0C1CD1F;
+	Sun,  4 May 2025 17:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746379834; cv=none; b=OiRsztuAnNk2X6rCvk8QJ12qR6uY7Ensx8lB9bako1g4xXLa+ZSIDKhkD9Y8Chsb8X/2FYWQmTaXJd5kXRp5eCenrxiv76V6l9PdZzn+GAa3pIOH5LrjD6HhiAdKqGNFdF9U65N2ttK2B/FpLDTbxIApOOoULIDrjrpz47FccJY=
+	t=1746379866; cv=none; b=ty/S2uSzVHv6ZdncKdMjRxN5USNKmHHUL5dRRDZWxv6ocTW5qfcAkLr3Ku0Oh6qBQUJ9JsVcsPwWqgazUYXY/BbhCnAqVa6Br2NOw0TvaMO0wVvsdJtsF7Osf2lAmvam2xKgGWLSXOLoq5059Q+oPuaz8ArAG6wDEmcpLTk6R3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746379834; c=relaxed/simple;
-	bh=qN94OWEW7oAU1BPWolOFwRzK3GlFBD5rwHjcYgDw3ks=;
+	s=arc-20240116; t=1746379866; c=relaxed/simple;
+	bh=T3U/9FuOE2xtfOj0tUx2Kuhmdtf7tLVJexcbxbRimKI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iBQ1AVNmJR74hq8WxyPRDsMSttYQlp+fDW7jM5mLAcQ8TqvDlz6jwSIcyAlTzKswXZNPlxQVlRbEGOEbRnXj7GO1eS/qP/8kuqp+1rFGDPKG2xkrSgWipoLP40oCT7F1H3EOHfs892IOt1abO5iFnuiy7CEKIvqvT3jXy3wOHTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IWyACLc3; arc=none smtp.client-ip=209.85.221.47
+	 To:Cc:Content-Type; b=bICt6TOxPGstHzucwF3Nq4IzSqrGjtVg7J3uRBzhiukgFkkbKAG1gWbovORFq5mxARuSbTluZgoL33qGlw9tkbNk12vBnQS8E+DNmcALVJsUv7qBkmXqq2O6mJJ74M5zSP2f9Ksf9E+aACS83PBh4JedKSxl0o1vjkf2yMxfLi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebDFf8w8; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IWyACLc3"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c14016868so4219925f8f.1;
-        Sun, 04 May 2025 10:30:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebDFf8w8"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so4467578e87.1;
+        Sun, 04 May 2025 10:31:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746379831; x=1746984631; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746379860; x=1746984660; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SXz9x4R6odLWtZ/1SlKRLZrfeZhkWvyXiyW0Kzx3a/o=;
-        b=IWyACLc3c/HXacmmscCtNGUCd4zVVV3v3TiSJ+ul5sJAsgjoGU+k9nZHQuyAHltlka
-         5jwSmO0fLUwji0PJNcj4u+CBxho0eYxMdAAmCZwnRddY+HCd4iPxQTshHOzf7ypJm4E+
-         uSgT9E6qHkFjenZgGQcpK63ramJu38soyAzqVYic3uTWWdCnbe1HrRHPPhU/PnCcdnRQ
-         OmbSQx75R/a5TTdFjmekwkseSdoAYIP0x1SVo94ZR1PUfZgYOn/wGFS4GBd/NkYyMOgs
-         2HlosKsH2kDsab1KEif7hNKgQD0xPL1vml9WgpdMAd7LwaTodp34PVOa5TGtjpyWh8Ml
-         +xYQ==
+        bh=0MAjfptIMQwKjMkK2caSxzARquP7ADDmjnSLYI6Zjxw=;
+        b=ebDFf8w84ZEbzEyUGdsF/Usq4cLX1YaOgZbyKFHcICwdLObIv6XZDTVLBJkDPuaPyn
+         DihtA1w7sW6NXrvFehYDjZwU7di8vsAFVmVZEQoCRmebNF4JOKVMGBtqnQWAprhRbD3B
+         8zX8w7L8rVuEqx59EhscaaQDtG/jqYCJm3UAWnHQxFWjsUNVpeUhQQ7a0yt/RL6ho0yY
+         cWnjmIFruJmnuQXatmkXwH08Q2AZQSgDVW28g+PYfy7yEQNTLSaQm8uhuncX2JVn8N6u
+         0hqN9v6dwoPHTOwX0BXfu4bp+xU7OQCMId3vqehyZi8m2OCwFYF2dijnMGUM1PhI7cZH
+         4zkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746379831; x=1746984631;
+        d=1e100.net; s=20230601; t=1746379860; x=1746984660;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SXz9x4R6odLWtZ/1SlKRLZrfeZhkWvyXiyW0Kzx3a/o=;
-        b=Ovs+8o59gsbB+FAbaH3XbXkVXTvvQky5HSnrzKqCgvctMz1E4L7m6xYK0ebxDW8sRW
-         MSaKkP9zcBr88pQtwJIjSwYeKvxr0N2KAkZzg3+kNcQeJnHG1pKuTtCUDqgN+OTIHsmg
-         qWe8U2qlnsVNCwHCtvxilK2V3l290IJ1w06fw9nmJcaVTLMxEgbcQuXZZkfxuTJHUH4q
-         csvn2aj6J6HTB95B3JxNFIUXNg8bbWd95/kuP3WeOUQjjfabNgRVlKQ7QukyHdHMnyye
-         x3V87MzSsKIt2s504brG8+hc4FjwjXFagmojVcRERWPXLOXQbjVRTkl7lJIuAAPn3nOZ
-         qbPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XyvFxxqkQ/k9uQsBr3VqhUWDx4bQ7AnpAgsxVxAEDrqqjUtX8CjBDKZ/RV3rSYH/iHp3k37Dv34=@vger.kernel.org, AJvYcCV0HN7V6dO5T092tytU33swWWSSKDlqKkYvApjZKEDNBBaYLWRZoGrCpkZADg3e/CTXbYn7XqyJ+ck=@vger.kernel.org, AJvYcCVO08WReJPYv4MGi1ch7/k2exdm4a7qsglNHeL6miHdnmW7aBKLu0e54e/SqddqPkNppj4/xbG7RP1798k=@vger.kernel.org, AJvYcCXx1Z+hrKl08GLOCzeai1GHA3mqbHFEZBtymLwgIW7vJuP6xaZ8jICT5QCpVSmqmGMVaDQj2nRex08fjghB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRLzCqJ4SCoss525t/fHUmIL7HXa/iZ6txy2lzRQh79LkOyRC8
-	lFWxJ2x+GRFhLikwwvCr3UBy8JNN6PWeVOzV3NL1MbVtiDaM5YVPJBY3RnnrMRoWZjnJUZt950n
-	BbcILZU9skMr5J03lRds1pi54ALI=
-X-Gm-Gg: ASbGncuYreZwjKqDthFut2NUhQyUeU58CqhJqMy1SpdcVDSPhiJcSn09XWTj0+dd6Ki
-	ZnRHxLe9YYJhUyLUNJVWtWEXJE4unhQg5YOg14/sPX5RmwpCxxax2sNZGomUu7zXgzE0GD7q6LZ
-	JWlFl61He0kYepwVWKyy1jfWg=
-X-Google-Smtp-Source: AGHT+IEgBmAQOSDRawFPRNPqlVa1uDHMOx4ibl03Op0ZZ4yWCk3RTWb5OgASZglrY/Ox52q9TBmhTHgkradNQZsOdbQ=
-X-Received: by 2002:a05:6000:4310:b0:39c:1257:cd40 with SMTP id
- ffacd0b85a97d-3a09fddfc6bmr2810912f8f.58.1746379830849; Sun, 04 May 2025
- 10:30:30 -0700 (PDT)
+        bh=0MAjfptIMQwKjMkK2caSxzARquP7ADDmjnSLYI6Zjxw=;
+        b=lwRVV1Erv7nhVhB4jdmlT2VQJnxfq2YyQtcoY45vqzf8RrBPtdUJouT+WopBAhKHYp
+         LiGTSN2qhwubEubyQqKtuf3b2/tzEeHhkpplVZxxrdCucBitW1IK/zFFjKalQv1AUZil
+         LSVSzb123/G4WixgvDs3hR47NuC9P5nYHAnf5PrrZLL1/dDpy/oy4VRFI+LPcQOSDfys
+         mNATFMnFGSLXVTfS5KZm/tk66tUyEus9nO2WVc0gtREVJMdzrqd20fz4cny15d+MQDch
+         gCF1dhnM+sV0NfDGmIzXRrxRSedbrDHu3eleQgIWLjBUX3ZMixL8LVlyHrrs9ha+PWU4
+         HZZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUR4jhMUpOx/sVMmnXEsO3NZeepcbExtDJebgicFhwRKn7FhhhwGZCzwFdxDywF9Xi4Oq5c+hiB+2XPU7E=@vger.kernel.org, AJvYcCUy6lYf1JgrMo+v6YWPuHaIfrGhMV/8psYJIDa283gXFVVw7F7Xih5jKMhfu9ep2kemPWFHy229qwTXzO6jawzR@vger.kernel.org, AJvYcCXwG1RJrc088LKqKga++kvRjKZu9l7iB4hQhHV0pxhGtvdn9DLjemrF9eZp1sqndoMwuQHswz3lkOilfFyBFi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznMknSVJHnF/6KLufUJGh4lzCDsn9M8RZVIT5NLUrLWNU84qMK
+	JDQeAVLyWAdBuVDzRUUtqzagM89gaSMgePH2zRBuCh8p0hZ/lSCCvLJcu1ErlL3JRWerm7mqnjn
+	jKo7a1I82OEiAeiZDfMwkWZNbDEo=
+X-Gm-Gg: ASbGncuGIJoPUrvQ1KBD/S4T9uWdkevd2QM3MvjQR5gzctJkpfOrVba7mkB7V+y8Qzn
+	WK2i3P1HqQcDoEa8QYKsJ9fm2JF10kOEiT6U86ZIShft/xnTg1jN9ODwT2Gpq7MlZZN6rW4Td+s
+	v7aE1xCZRin7ylMP4Z8WMl1+dvaCVGBH1UCCxa5aa3sJL+/XV9BKdHWGY=
+X-Google-Smtp-Source: AGHT+IGk67ZjNfI5JRZk1E9sIkaiWYoh/CFeHhNDrNSEmUPefy9/YpSuJCSkf4tQjbpLx1hp8nibAzsjUmqph/UNhtQ=
+X-Received: by 2002:a2e:be9c:0:b0:30d:e104:cb74 with SMTP id
+ 38308e7fff4ca-320c5fd2023mr23540791fa.41.1746379859507; Sun, 04 May 2025
+ 10:30:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321095556.91425-1-clamor95@gmail.com> <20250321095556.91425-3-clamor95@gmail.com>
- <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org> <CAPVz0n2580WLJmqeH-mJGrTQUpADt32qw7pJzuqRuwrpojc5vA@mail.gmail.com>
- <bd60283a-500a-4ed4-bb8b-c019d33f94cf@kernel.org> <CAPVz0n0Ty3QAg_9rSvV7c7EBGDigHtTAOAfkRFBcTR9fziEvQQ@mail.gmail.com>
- <aa8bdf4f-feb9-4355-b629-a5d7c6a43d25@kernel.org>
-In-Reply-To: <aa8bdf4f-feb9-4355-b629-a5d7c6a43d25@kernel.org>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Sun, 4 May 2025 20:30:19 +0300
-X-Gm-Features: ATxdqUG74o4E1VfxvQDlDPvQVG-IwU5jeZaPk-ZrrnvmG9CciPCvKQEnb-iGPH0
-Message-ID: <CAPVz0n1y4oF9MJkOJ+XTyDDe2u6mOXHsnAaJfLSM6tpcWTW7BQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-pm@vger.kernel.org
+References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-5-ojeda@kernel.org>
+In-Reply-To: <20250502215133.1923676-5-ojeda@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 4 May 2025 13:30:23 -0400
+X-Gm-Features: ATxdqUH6DCMZhtsVocCllU2SKUNfgzC5NnOkbEXIh3IhAUh31vvSHfK6t0f55C0
+Message-ID: <CAJ-ks9k=uxxumgEU84-54u8OxxJVBsUprGk7Ht31ndoumHB95w@mail.gmail.com>
+Subject: Re: [PATCH 4/7] rust: str: convert `rusttest` tests into KUnit
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-=D0=BD=D0=B4, 4 =D1=82=D1=80=D0=B0=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 20:11=
- Krzysztof Kozlowski <krzk@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+On Fri, May 2, 2025 at 5:53=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wrot=
+e:
 >
-> On 04/05/2025 18:25, Svyatoslav Ryhel wrote:
-> > =D0=BD=D0=B4, 4 =D1=82=D1=80=D0=B0=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 1=
-9:23 Krzysztof Kozlowski <krzk@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> >>
-> >> On 03/05/2025 10:54, Svyatoslav Ryhel wrote:
-> >>>>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> >>>>> +/*
-> >>>>> + * This header provides Tegra114-specific constants for binding
-> >>>>> + * nvidia,tegra114-car.
-> >>>>> + */
-> >>>>> +
-> >>>>> +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
-> >>>>> +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
-> >>>>> +
-> >>>>> +#define TEGRA114_RESET(x)            (5 * 32 + (x))
-> >>>>
-> >>>>
-> >>>> Does not look like a binding, but some sort of register. Binding IDs
-> >>>> start from 0 (or 1) and are incremented by 1.
-> >>>>
-> >>>
-> >>> Hello there!
-> >>> This file add same logic for Tegra114 as Tegra124 currently
-> >>> implements, check here
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree=
-/include/dt-bindings/reset/tegra124-car.h?h=3Dv6.14.5
-> >>>
-> >>> I did not re-use Tegra124 value, though it is same, to avoid confusio=
-n
-> >>> in main Tegra114 device tree.
-> >>
-> >> What confusion? Why would anyone be interested in comparing numbers th=
-us
-> >> getting confused by different number? These are abstract IDs.
-> >>
-> >
-> > By using TEGRA124_RESET in Tegra114 device tree
+> In general, we should aim to test as much as possible within the actual
+> kernel, and not in the build host.
+
+Is that true? The build host is often easier to work with. There's a
+number of host tests on the C side that exist precisely for this
+reason.
+
+> Thus convert these `rusttest` tests into KUnit tests.
 >
-> Why would you use define from other SoC... and how is it related to my
-> comment in the first place?
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> ---
+>  rust/kernel/str.rs | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 >
-
-You did not even bother to check link that I have provided, did you?
-
-You cut the actual device tree compatible definition,
-TEGRA114_RESET(x) is a macro used further to define device tree
-compatibles.
-
-Like this:
-
-#define TEGRA114_RST_DFLL_DVCO         TEGRA114_RESET(0)
-
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index 878111cb77bc..cf2caa2db168 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -6,7 +6,7 @@
+>  use core::fmt::{self, Write};
+>  use core::ops::{self, Deref, DerefMut, Index};
 >
-> Best regards,
-> Krzysztof
+> -use crate::error::{code::*, Error};
+> +use crate::prelude::*;
+>
+>  /// Byte string without UTF-8 validity guarantee.
+>  #[repr(transparent)]
+> @@ -572,8 +572,7 @@ macro_rules! c_str {
+>      }};
+>  }
+>
+> -#[cfg(test)]
+> -#[expect(clippy::items_after_test_module)]
+> +#[kunit_tests(rust_kernel_str)]
+>  mod tests {
+>      use super::*;
+>
+> @@ -622,11 +621,10 @@ fn test_cstr_to_str() {
+>      }
+>
+>      #[test]
+> -    #[should_panic]
+> -    fn test_cstr_to_str_panic() {
+> +    fn test_cstr_to_str_invalid_utf8() {
+>          let bad_bytes =3D b"\xc3\x28\0";
+>          let checked_cstr =3D CStr::from_bytes_with_nul(bad_bytes).unwrap=
+();
+> -        checked_cstr.to_str().unwrap();
+> +        assert!(checked_cstr.to_str().is_err());
+>      }
+>
+>      #[test]
+> --
+> 2.49.0
+>
+>
