@@ -1,99 +1,143 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60375247294;
-	Sun,  4 May 2025 18:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4740C3B1AB
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 18:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746381604; cv=none; b=PwoB50CcO/IdN1KpvmSgrXEG28mXgJb6TBZI7QWVNY+RAkhUoqC1hxkcE3jZb5dpwScgRz/OjXyK7scxrWeOa1oh+Q3ajBkCXod8v+gpeT8+W8x/j6b2POxUIZw1GMLgxLXgVhBgrWye6FGlFj+yfP6VuAXHeFVcQzLzd0TYWjs=
+	t=1746381815; cv=none; b=VC/KtDBQ5PeZUX8qReDBrkTsfonbdW/UgjSQgqVR6RMKQot6+hTV+fHOeMXuOeE2pUguH4vzNUciYCD8DPIqyubYGtx10Ar+37yDjCVaorOtwDUohcfnbhaJApGWnMOked3DaTdXDdFfXtc8lOgoxl6mSB0q558c8TopTH2J57c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746381604; c=relaxed/simple;
-	bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FwvLozYtjpxHgGEtxr5jue5tzlEgObxDpFTDRMvzX42wjnzYlFD4IeJFo12+q2BhRUFiyt8emicBWAfEnFbYLW0YCou9u1wmUQvd2a+8OQBdDnd2hgZE/TkY6GDHJrsYpwG+r3vs+lkkJ+r5ExmGrWUV69pWvExN2ByLGu/Y+aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzGHIERH; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1746381815; c=relaxed/simple;
+	bh=TbkLxED9de9s20tfReZehx2MnLKC3u9HoeM0l9Vp8Nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zt4fEH/mkQNACqXI8DjIipK460Og9oteMzIuPzUFSA8Wj4G1qFGdyYBkPY//qdXrgxbksKBCI9P+1nfAt1kwoBc5XbjLwdlKIePgwO4NCAfPB8wsTBEmZ07ckRxHVXfVihvD5Jhlf0VkVQPEQ/t3tCmXdHmAFcd0fP4WXAydKzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXDeS7+i; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzGHIERH"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de10eso8601775ad.1;
-        Sun, 04 May 2025 11:00:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXDeS7+i"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso38413976d6.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 11:03:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746381602; x=1746986402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746381813; x=1746986613; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
-        b=LzGHIERHvxTUPEqr9cOS1GV66lxrw4fT0k1GgbGTgpOOhYIhA/M7mk96V2KdisJbpS
-         wYuUP8KY3FreWXCEGvYWJZBdHqHxl1JMOD9mBFJZ/xxeqs3uiF+FPKYfp6YuTXlg7eVx
-         3yWW5DdmmupBxrQKXoqhTwvS+2uHdC5VEjyHcqrKyAKy6RB5lIZl3FjZGRGenq9bYnV8
-         8aZYkD8bvagSbntyD91fwdOgLYAGM91Gp/H9elCLe84MEiqPeI5wC/oO2E50ydcVzvMa
-         50SRlol2Eo8uMxOCxpzBC5nyB10Frjl3lRra20nvh78lkeyYOmbHueqn8e6mLev5tYbR
-         HjMw==
+        bh=qa/AXZlqs3cM/1OFJ7n6WiOymAxfPD1Bhf7EchirdoY=;
+        b=bXDeS7+iwancvH0X7Vebqfmd2IZ+AyFiSrzl0+3CJj/iKEjyq2ifjpqzgoith+Wtrn
+         f9J/yGqkI9KG+ls78HQUQ9xT8AE9ADBHPcw+NhW9+kp3LkJYDUD0sXX9A9sTMmaava/0
+         9kp3jyf+g4q4tPJt7jUOJGsQy1aDSs7of/VtL0JNa9g+qGyILov7/FRgLRMm0cYRy8hJ
+         JWaABcPycJP25OdjFLEUikyc367AmZ4MSfFpLRbnexuijiEiVDS4TA6k1CS00euagwl3
+         CV1MV9c6AsUBW1HiyNs+mgaDkDwoVu9i2njqxnS4ZAL232Rvum0TmuI8aCN8VeU/Es1F
+         8MJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746381602; x=1746986402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746381813; x=1746986613;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gMmz0xrFGblYrts2MVNPbSYkOBP0t20o7T0mZB/6a+I=;
-        b=YrOdBqh/khS3Zc8hxC3/jcIG8UeZyx9mCus0lo9D320yDrOxohmZCBFmm5yErnAdKe
-         klpOVxliCve+nHX7pH8OZT72Ev/+WHvxaucY25l0eWmFCB6XlaErgtOSxTf7Igqg3roM
-         Z+m8S4eboIQpwt2l84gqKRBwoGd0nXmR6iHJ/z+XjdeOEZaKmw00JSTgLdU9ytq/6j4p
-         XZKLB23I7r8GwyWgTY6BF84CJtaBzjt1IBKwRCYTQDxVDZMnbfEWVper8foAYocT0Zr/
-         9pUtWIYK2GlhTN1F0YUJaNEQhvcoC7R0opW2DVuRtZFRfK2leLQ4H+hisrjJevIfNsqC
-         daqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPZWScbgfCNmDTQFc2+dnVBEEUtbodtxleGK4qZuXV0KUSXEODHzyRFfU+GnauUu+SmFvbwmdhyWJnhvM42i8=@vger.kernel.org, AJvYcCVd+Yv/o0cexr/D0S6CFR34TplgF3GY2CRwco0P42595a751iNW4OIVXSCgbIO5LEELrOiCv9NbYSEmgO/aFS3y@vger.kernel.org, AJvYcCXuKbcKMv1asxdVSH1RHU8kGmjiOHtD23K+sTjg2G/pulo6aJ52LFU8POVXM7kXeq5izIY+eRI5LSZ++JM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCAb6Sa6p0B3ACTBV6G0OcWe6fN7TSINURKwUgSs6Zlgz/qfpq
-	QsNKUnEl99wnJYQjAuhMxcJXfr5nKVlEIqcRQZFC8xO3NSVbVEwjsfeUKGbjCqOHl67tdL/jhCg
-	cv4+dWJw2SW0kQtwQ8ZluMswUc6o=
-X-Gm-Gg: ASbGncv53TPcNx2YeGxu0ZVRAjKXdzqSL7Eg6i3oVNyHk8PM00P3I6vKdocEYoHkoOg
-	zM+y82TyrXkC8ND38fBTkVjtgeEUEmSQW8jYS04Sp08Se9Wo/BoliGUivknzoPf0PmF4AQsyLup
-	v9XId5xO80+2shIdcChWomlOFQQveNi10b
-X-Google-Smtp-Source: AGHT+IG10nTmSSofjOBje28dUf2+IMvpiGM28AIkNlFwzc+b2QjcTA+FDkybqQ1kasUk4HKenUIhjeB9Q2WKIKme63Y=
-X-Received: by 2002:a17:902:c947:b0:221:751f:dab9 with SMTP id
- d9443c01a7336-22e103958e7mr62623825ad.14.1746381602442; Sun, 04 May 2025
- 11:00:02 -0700 (PDT)
+        bh=qa/AXZlqs3cM/1OFJ7n6WiOymAxfPD1Bhf7EchirdoY=;
+        b=N2h9ijAxfmYZ6uxtjMLZFKR4ly60k17z3kZMQNkXM2+lTnA+NxMxN4xurqwKyNnLg1
+         sJN1QqQToB3pETydxZiuKCRA8/B4vtvvi+C4zu6svLKoX4R446yW177/8jheqTAz75zB
+         K2JX52egWbiXGxFWnRrf7lOdYDNipvVx7zFBKCzCr2I96vdqY36w5EudafGYAej+Xrv3
+         6tuv3iIB3ugKLSUTOaxGqf7flUr+K375+O6xO/oQWUYpV+BuIPBsR1dGxKfWwCaRFfPV
+         mP4L1R/lqDzsMKGtcGkd8W4+xOENw2Q+1nPOgRo6qhxfe6LrjSW22PY5dTu0oPATbyIu
+         5N8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUkQY1Vhdug1i5kBiHNShnEGM3v9iwSJCtpTYR4bf5D2gfsNrSZsUnIWjAXNEPHh6/NQNKvNGg3GEVLHPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx7Jn7hJH9OftauyT1r1rMcAu5tLeiMyTtCFJ2UMaR6MJQIV9m
+	t59EpswsTC9yaDVbto7Y2e1X80v34WJSmaWPaEqMd5XSGEFsWsIR
+X-Gm-Gg: ASbGncvLfI+YBjPAteVPvp378PY3qAStv6MfleaIbHkMxM9gBZTB44BSXihuGwn63pH
+	BpFPNjn5LsovF8sAuZzmkrLhkk9Rs2t33Gc3am3N10utUgoQusBI5APHkJrI/yeX7w7hzK95W02
+	KD28HqGkGdUMfrdtfqkFmBdZsLOneKSK6w/+V7nfpC+P4ynr/bzSc/n+hTdrZXl+cWhsBtClEbe
+	XE77LfhgJEHkQfFyExngAJmqY7XuYlnusQ5fSkJRZeW+/8zqWcchtgeN2Jb6IoHsrT5JRzY716d
+	UyjydK70xUkl9z8RfElPR9Emqa0yenJ1GqUe6DykgokDDszj5qlYWx42TD6MJdONnKFI9tEuC8B
+	Bg4gtrtgxWk1CJ39l8wgahd+JJ9e9r9Q=
+X-Google-Smtp-Source: AGHT+IFbAGtZ8KWkSe8DyZBIym6wQ4435AyPHDl1cN2hKFG8lBM+203U3xLFukU6vHPXovrvgpRqEQ==
+X-Received: by 2002:ad4:5de8:0:b0:6d8:a1fe:7293 with SMTP id 6a1803df08f44-6f528d18851mr79281796d6.42.1746381813091;
+        Sun, 04 May 2025 11:03:33 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3c32b5sm44759346d6.30.2025.05.04.11.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 11:03:32 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 1D6501200043;
+	Sun,  4 May 2025 14:03:32 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Sun, 04 May 2025 14:03:32 -0400
+X-ME-Sender: <xms:9KsXaKWuoX95F7FG7MMAvB1jvpT2H8JP3leQSdGSNmpb6N4uZo0oRA>
+    <xme:9KsXaGm20fhzsaaL9JdgiR7Xq9LiXNA9Jc0vMpuNxDzGJB8UxUzAoCiMW7kef9dg8
+    vD312Z4OKDnbZKy8Q>
+X-ME-Received: <xmr:9KsXaOZYWYkkRAI80O63EvPXogboW496HuQBrpbu5vO8auL_mylmND2d>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeekkeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepiedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhonhhgmhgrnhesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
+    ohepmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepfihilhhlrdguvggrtg
+    honhesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:9KsXaBXq1G0HITW0SfQ61WDMXjJJRdi-W7dXHHyeTEWKz-qOEU9VZg>
+    <xmx:9KsXaElNlkvVsVuFt5bNE0UnMMvQ7jxwuRUJCF1MTURvNied5kpcVQ>
+    <xmx:9KsXaGcaoUbAiVTUI_D_32tKlinDFeA843KlwSeh6cpIuOXhQcTwvw>
+    <xmx:9KsXaGFZ4usLVeR_Ht3K3lzUIFvdtox9D46ANNgnoucEgrzLuD_rKA>
+    <xmx:9KsXaCkBylfFosfDhOTcKc-ESogOYVoU-3e-oSvN-PfWj3nr8ZIWoA7c>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 4 May 2025 14:03:31 -0400 (EDT)
+Date: Sun, 4 May 2025 11:03:30 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/lockdep: Prevent abuse of lockdep subclass
+Message-ID: <aBer8jsN9T9r_bI0@Mac.home>
+References: <20250409143751.2010391-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-3-ojeda@kernel.org>
- <CAJ-ks9=v8E_bV+oJ-bdm3KZW2dfrFdiCmeVLs+bgK8oVu6BCUA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=v8E_bV+oJ-bdm3KZW2dfrFdiCmeVLs+bgK8oVu6BCUA@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 4 May 2025 19:59:50 +0200
-X-Gm-Features: ATxdqUFd9uspIO8JG7LjKJl3xaEnjAQIhi12ZtAgUBxbovS5zZvywxn5xVHJpf0
-Message-ID: <CANiq72=C1+2B221ecxM5Dy1rF8nEtR4ikgAA2nEh3M1=EkkXyg@mail.gmail.com>
-Subject: Re: [PATCH 2/7] rust: kunit: support checked `-> Result`s in KUnit `#[test]`s
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409143751.2010391-1-longman@redhat.com>
 
-On Sun, May 4, 2025 at 7:34=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> Why not restrict this to Result<(), E>?
+On Wed, Apr 09, 2025 at 10:37:51AM -0400, Waiman Long wrote:
+> As I have seen code trying to use a subclass value >=
+> MAX_LOCKDEP_SUBCLASSES (8), add a DEBUG_LOCKS_WARN_ON() statement to
+> notify the users that such a large value is not allowed.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-I guess it is an option -- not sure if there may be a use case.
+Queued for 6.16, thanks!
 
-> Is it possible to include the error in the output?
+Regards,
+Boqun
 
-I thought about giving some more context somehow and perhaps printing
-it "manually" in the log, possibly in a KUnit `# ...`. David can
-probably suggest the "proper" way.
-
-Thanks!
-
-Cheers,
-Miguel
+> ---
+>  kernel/locking/lockdep.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 58d78a33ac65..3fb79d8fecdf 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -5101,6 +5101,9 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+>  		lockevent_inc(lockdep_nocheck);
+>  	}
+>  
+> +	if (DEBUG_LOCKS_WARN_ON(subclass >= MAX_LOCKDEP_SUBCLASSES))
+> +		return 0;
+> +
+>  	if (subclass < NR_LOCKDEP_CACHING_CLASSES)
+>  		class = lock->class_cache[subclass];
+>  	/*
+> -- 
+> 2.48.1
+> 
