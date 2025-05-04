@@ -1,32 +1,32 @@
 Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8228A1DBB3A;
-	Sun,  4 May 2025 14:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82421E5B7C;
+	Sun,  4 May 2025 14:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746370579; cv=none; b=Q7rN6CKMHNnM1iT75hPFbRIXNxry8zDIbIGqJlFsQ7mvT9A6npFXpZTT11ej+v5CXiaI99sffIJ99pLo7ypwTdiZozckkKnXEzb+gRyyxkON05cN1ot17YzpBAkJCls8TU5k/PW7c/HUFV4dSmZcC7l4zqsfmLAUX4dgFISvhOc=
+	t=1746370581; cv=none; b=C11lVp0gOtJMBZdBof6wE7FhMo0eBBfXGble6x7Em+iU3WfALW3/i+06CNEoxAaN1jH/H7AMKRTlrdbHxMYRvIZQ/gBp3ky7QB8ij07Y8ido7LGa2Wg1YrdteXWwisgAA7Fh9FRZK0ekaI0toXJ2LVDXf4p77N7lD2X4tcwj23k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746370579; c=relaxed/simple;
-	bh=IEhVHte+ZMqRwWVGNvnmPK9CV6hVOKrVC8kHnTHjM9g=;
+	s=arc-20240116; t=1746370581; c=relaxed/simple;
+	bh=9Ktv+Wy+80eSO0+gfBsBP4HSTc3+9yZzaHGi2xYlvLs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jzn2xLWdQHVOfquhyjSMIgOU7OVxJwvHyWULSBvCjEXXt2l4DJ4uiQ9vajT2mYx8wGi5eIklakufo/Vook6ENsxXMHOYriyAaWAO7SZS9z9CgMiPPPCcEg437F5YjwnbItPf4dYDzbmp0vnRP/D3fD84XKon8roWwWNoRjAB7a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=NUXJDOXA; arc=none smtp.client-ip=89.58.32.78
+	 MIME-Version; b=CT0ogu+BFbTc0LEVXE1t/iHeWHbEXkhaNS5lY7fw7cHIfwiwDWvz2HbBZPEZWpRPzEZBwiJWU8WFNB0cVg/B3jwyMn/B8EMJft7QP/c63tYOgJZ/jqGmWgOvbZjLyuD2XOfQ0UOOHmt9rXIL6osZi6C8nfG5jziU5u5BAioInWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=GNCvkl6j; arc=none smtp.client-ip=89.58.32.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="NUXJDOXA"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DE2071048C2F0;
-	Sun,  4 May 2025 16:56:12 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="GNCvkl6j"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F41F5102EBA58;
+	Sun,  4 May 2025 16:56:16 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1746370574; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1746370578; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=EY8WkEa++D4FcPtma1iRVRiViDJa07MRpCTG6RNsAmU=;
-	b=NUXJDOXAwvS1usjXAIba7jZVy0dO9RNeTC56BXuQua1+GhDSa277SvefuuUqIOak9Ocv1A
-	SiMH/uLaA24LOWq2hvx1LWeBBtDGW0bMylaNr5R9g/zdv4ONTO6jFrcGF7omVpICXNIG8O
-	569w2IxLrziMolwlT1+lny1F42zISKInO3Idfi3VCuAKOUMM7FO1pGx+V3yOgQRaNYA0Dn
-	kLKOY9cX8Z6okXgb/tjSLTie39bHA1kgiQXp6ihWOI4msSECVQCeXUcdsngGVeXUPPRZa7
-	bPhGB9/a4WHpiqsbbSy216IryZcfWO1wnfNZUfR2AeVbwSh7pQTM+rFs1UM0vw==
+	bh=+lyAajSBY7/fVb3dDMCG61dCx1cN90xgLR+MTch63hw=;
+	b=GNCvkl6jrGCcgGPMP9M8SBGiO8/19jE/0CJzAJ+uAcuuWhGSEI4Y0GamOEwXBoMrUFHLxq
+	ovkuO3Pzl1qkpZYo+Ta1gWnmlJAHAv0dnsbO4FY8o5mUVw2lfVOjjqRPi6s9mePRxeg9q2
+	cs1cgCrU85MgEpfAugCvwaZWUAjYjy+cDJKy31PzR8WLJ0ajtA5uOO/YBb2CLqXdwxUQ6U
+	A5/PcIFUd/iI6UbX9VXP58FipN59QrQFQmxAwiAOdfPSYef9JthYiIxjuj+kd27N+t52xF
+	sVNUyd40MQtM4pnWLYnLVXcrxT++rb0Qx8SDqgyHSkDDjqZXpZnRLCpgr+FNsQ==
 From: Lukasz Majewski <lukma@denx.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	davem@davemloft.net,
@@ -48,11 +48,10 @@ Cc: Sascha Hauer <s.hauer@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [net-next v11 3/7] ARM: dts: nxp: mxs: Adjust XEA board's DTS to support L2 switch
-Date: Sun,  4 May 2025 16:55:34 +0200
-Message-Id: <20250504145538.3881294-4-lukma@denx.de>
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next v11 5/7] ARM: mxs_defconfig: Enable CONFIG_NFS_FSCACHE
+Date: Sun,  4 May 2025 16:55:36 +0200
+Message-Id: <20250504145538.3881294-6-lukma@denx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250504145538.3881294-1-lukma@denx.de>
 References: <20250504145538.3881294-1-lukma@denx.de>
@@ -65,31 +64,19 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The description is similar to the one used with the new CPSW driver.
+It is not possible to enable by user the CONFIG_NETFS_SUPPORT anymore and
+hence it depends on CONFIG_NFS_FSCACHE being enabled.
+
+This patch fixes potential performance regression for NFS on the mxs
+devices.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+Suggested-by: Stefan Wahren <wahrenst@gmx.net>
 
 ---
-Changes for v2:
-- Remove properties which are common for the imx28(7) SoC
-- Use mdio properties to perform L2 switch reset (avoid using
-  deprecated properties)
-
-Changes for v3:
-- Replace IRQ_TYPE_EDGE_FALLING with IRQ_TYPE_LEVEL_LOW
-- Update comment regarding PHY interrupts s/AND/OR/g
-
-Changes for v4:
-- Use GPIO_ACTIVE_LOW instead of 0 in 'reset-gpios'
-- Replace port@[12] with ethernet-port@[12]
-
-Changes for v5:
-- Add proper multiline comment for IRQs description
-
 Changes for v6:
-- None
+- New patch
 
 Changes for v7:
 - None
@@ -106,83 +93,30 @@ Changes for v10:
 Changes for v11:
 - None
 ---
- arch/arm/boot/dts/nxp/mxs/imx28-xea.dts | 56 +++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ arch/arm/configs/mxs_defconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-index 6c5e6856648a..69032b29d767 100644
---- a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-+++ b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
-@@ -5,6 +5,7 @@
-  */
- 
- /dts-v1/;
-+#include<dt-bindings/interrupt-controller/irq.h>
- #include "imx28-lwe.dtsi"
- 
- / {
-@@ -90,6 +91,61 @@ &reg_usb_5v {
- 	gpio = <&gpio0 2 0>;
- };
- 
-+&eth_switch {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
-+	phy-supply = <&reg_fec_3v3>;
-+	status = "okay";
-+
-+	ethernet-ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mtip_port1: ethernet-port@1 {
-+			reg = <1>;
-+			label = "lan0";
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			phy-mode = "rmii";
-+			phy-handle = <&ethphy0>;
-+		};
-+
-+		mtip_port2: ethernet-port@2 {
-+			reg = <2>;
-+			label = "lan1";
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			phy-mode = "rmii";
-+			phy-handle = <&ethphy1>;
-+		};
-+	};
-+
-+	mdio_sw: mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reset-gpios = <&gpio3 21 GPIO_ACTIVE_LOW>;
-+		reset-delay-us = <25000>;
-+		reset-post-delay-us = <10000>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			reg = <0>;
-+			smsc,disable-energy-detect;
-+			/*
-+			 * Both PHYs (i.e. 0,1) have the same, single GPIO,
-+			 * line to handle both, their interrupts (OR'ed)
-+			 */
-+			interrupt-parent = <&gpio4>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+			smsc,disable-energy-detect;
-+			interrupt-parent = <&gpio4>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		};
-+	};
-+};
-+
- &spi2_pins_a {
- 	fsl,pinmux-ids = <
- 		MX28_PAD_SSP2_SCK__SSP2_SCK
+diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
+index c76d66135abb..22f7639f61fe 100644
+--- a/arch/arm/configs/mxs_defconfig
++++ b/arch/arm/configs/mxs_defconfig
+@@ -138,8 +138,6 @@ CONFIG_PWM_MXS=y
+ CONFIG_NVMEM_MXS_OCOTP=y
+ CONFIG_EXT4_FS=y
+ # CONFIG_DNOTIFY is not set
+-CONFIG_NETFS_SUPPORT=m
+-CONFIG_FSCACHE=y
+ CONFIG_FSCACHE_STATS=y
+ CONFIG_CACHEFILES=m
+ CONFIG_VFAT_FS=y
+@@ -155,6 +153,7 @@ CONFIG_NFS_FS=y
+ CONFIG_NFS_V3_ACL=y
+ CONFIG_NFS_V4=y
+ CONFIG_ROOT_NFS=y
++CONFIG_NFS_FSCACHE=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_CODEPAGE_850=y
+ CONFIG_NLS_ISO8859_1=y
 -- 
 2.39.5
 
