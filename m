@@ -1,176 +1,99 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC60C19E7D1;
-	Sun,  4 May 2025 09:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D1129D19
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 09:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746350632; cv=none; b=hOxLRvm8YF7wWTo4AFAXFH2oCdlGbFZjCwN8DnzJUTaCPhyQSgnXrNzSMF4HmP39odKKYV8ff9UYPbrh/udMfGHpwlJGoexbiUK5XV8DJyPYNAb2+YWNU9O1xhgjbCVrOOEcvI55vF//W0rZWzFZFBhW9G8j7yPqgB6l3qmnqTs=
+	t=1746350764; cv=none; b=Qeqmi52UpfECqB+5XVRJhHt/XDN5/uDCta0DY2jOZ92YIEv5xyZ/aR4oYJu7ruHnFBj0RxwGzeRfTs0tk2A4yFEZ8HwD/TdAuijB9z/0PFK3rc8TAKSzDAhlfxxxM6QcxhMOscMsAQx7AnBgOim+OijYyId0enB8E2UFpoDZRCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746350632; c=relaxed/simple;
-	bh=BO6DxgXTRnZVb2SSLavVfZPIIK3dMJeUTCm7UYWcAtM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZxCIoff9YIUZTc72NIEWLJwxfWfGuyAO1jbspqIprUt/qAXMzc+v6qIMzoO/69eC0lTut3SpzwB1xfW9SPYk0uZdJEDJa4/4fMAYF6nA/Jy1Nd1GQX228PI2Q3PFrI6lqoSvNHcQCip98KW23oVOX7EaIIe9yYUGTwYZ9dksXiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZe/nXOL; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746350764; c=relaxed/simple;
+	bh=pvaiVm1SRiewSrbNvJopGE8et9l16ah5O/Zr2OmCb4E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QqZwXBcZrCqj3tdvo2DF0vMbFI0sOTO+nYfQKbhd18RsIQoZJfP9+VLhrXjxWYKvARjDI8cAtW56iq5z88z8vIGHEBUR2fU3ieyx8orGZ8pVpwchtPr75/dnvfCs3ZA8OO9lYHycqYAHKwa3saxOBSTALs0dzwtxUUxDdPfW7Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=N9Tmqr5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZe/nXOL"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5faaddb09feso1611844a12.2;
-        Sun, 04 May 2025 02:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746350629; x=1746955429; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ULlfDCNR8m/9pJtlgrHCEPaJVNLe3RFSja1Lf02MnM4=;
-        b=jZe/nXOLllzb7vy3aWilQ3lJfukrdw5fCFyvuUhkyDJxV7e3lVRNJ2IIRvTsq3+MAF
-         DlEKIm0WIAYhTjY8oRbumLXZOz1RJy8FTRDySCfO/L32uCh0dzsqOnoDSJ8D27cBhDci
-         y9ZhSogt6yLGH1DmGk+3pGbx8QZ2S3rQm+h+JExcv4KKEscdRERR3N5A1XCWf8u5tr3p
-         jCz9f/0C+XQtaqTxVWTb9SXnpI7Wa+TMPhH1THvsVechy01Eu4+pTShQLXDhdzBKovpA
-         Q4UaLjmiJ/d6ut6fO5U7dK4T6v4ZcfodyT9/MXFmBrqMFIcOPn1aHft/Fp2O9gLPj2Wk
-         nPPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746350629; x=1746955429;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ULlfDCNR8m/9pJtlgrHCEPaJVNLe3RFSja1Lf02MnM4=;
-        b=fmDsUSGyQMM5K68ebj2+4NjaXKe8dQKP1Ahi5W1RQdPmhYopGyLhp+JoHtfdN1MlvD
-         NydZeoLAEEInUOXK4N01wtWjh65MiOTingGdSU8Q/p/vnTxJcbu4rbqao/veC++Vgh+X
-         LnNXOZiCpEt7sUlSbLp+DprLUOHI/i2vLk1sQkE1/D8o9Tt5Ma8XY4bzaDnJhSp1vcQp
-         9QZevSkzx0CShMwFNxhpcEasOGG4FwyW+8VagADWkMcT9yq61H+0yt6oplyhyowJ1CPO
-         jR8nlzxdwIa+ygSy11YWgmdyOTehanG+NZM+ZggouZAWlfpVYFNuVz0gGJrjMF0Zs6pO
-         ow1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWJC3w/Cum1dgA1VUxybqdYOTWQd9uwwtkiIpq+/Gx4Qd70Va4BIs3bis/MP0wovkAuqo/HrA/T1aPNEJo=@vger.kernel.org, AJvYcCXkeg0X7kMZRojdx1rPPt9ZKLhZyv2gTd002lcn+LAIuSvmN4tKyD2mlnjBip7ura9NpbEud9182exBLEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH0VJlsLNT+OD9N6PnXR8Gs6aen53MCl4kHhtU5LhkhgewGYhD
-	3szxVft2TbnK/JP6UBTUyEc6hVNp+LxLJAo3yUzFBaRcZIQbihXA
-X-Gm-Gg: ASbGncvr/0/LfbdCjG2MKbhK3DxL7cEF0ZTp8T9Ndkv/LlReQQ1/TOLjd4ncE55z17X
-	L9i8rz8X/qn4H/v6BVj7TdhGzoLCfe/hYrcVNutSr8IBIPFEBD624OHw8fWZasPc21SI4PsENDh
-	NXiKlrMHsAoFynAIOk3MZ/IEznfVO+YDAme28WO0M9BBmlY9Q/yPKfz/8Dd1qB6/8TX+TYJEUIM
-	YTqFbBFGaUlSRjoKhPpJZ3uBerCZsmXYZn2Vrxy5gt4q1SoLZVqHsJUNcTYnQHOuLd83nyGl0xX
-	1TFS4XFmvVEQ1SEKv4AjDR7EDximDS7V
-X-Google-Smtp-Source: AGHT+IGKrc+4P+CCmQxGtEci8Piln9XhnppgGCzsKX971n/OxzWghBmZW4xn+ucKpFSOXGJQ0gP/3g==
-X-Received: by 2002:a17:907:6e94:b0:acb:ba01:4a4 with SMTP id a640c23a62f3a-ad1a48bcf72mr352875066b.3.1746350628696;
-        Sun, 04 May 2025 02:23:48 -0700 (PDT)
-Received: from xeon.. ([188.163.112.70])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a26bdsm306050266b.43.2025.05.04.02.23.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 02:23:48 -0700 (PDT)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] ARM: tegra124: complete HOST1X devices binding
-Date: Sun,  4 May 2025 12:23:24 +0300
-Message-ID: <20250504092324.10802-4-clamor95@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250504092324.10802-1-clamor95@gmail.com>
-References: <20250504092324.10802-1-clamor95@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="N9Tmqr5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5591AC4CEE7;
+	Sun,  4 May 2025 09:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1746350763;
+	bh=pvaiVm1SRiewSrbNvJopGE8et9l16ah5O/Zr2OmCb4E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=N9Tmqr5OGM31v/4ZVmNz3ZLREHpZ1p4hFuPFF4IosicfxJAIWyTlnrSyfxuK5mVU0
+	 zeWZ1zD4HEanmQMiHTHLseozpyzUBKHVjJ28C8tvzuDrdqPfM2+MO6J1k4GfKsAUpJ
+	 LTJeb+WgKOdcq5gnFdZEwbqYsoXbJ87uMhZP7cg8=
+Date: Sun, 4 May 2025 02:26:02 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, Nhat Pham
+ <nphamcs@gmail.com>, Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner
+ <hannes@cmpxchg.org>, Igor Belousov <igor.b@beldev.am>
+Subject: Re: [PATCH v4] mm: add zblock allocator
+Message-Id: <20250504022602.13fe05f43ceb273e96e5907b@linux-foundation.org>
+In-Reply-To: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add nodes for devices on the HOST1X bus: VI, ISP, ISPB, MSENC and TSEC.
+On Sat, 12 Apr 2025 17:42:07 +0200 Vitaly Wool <vitaly.wool@konsulko.se> wrote:
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> zblock is a special purpose allocator for storing compressed pages.
+> It stores integer number of same size objects per its block. These
+> blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
+> 
+> With zblock, it is possible to densely arrange objects of various sizes
+> resulting in low internal fragmentation. Also this allocator tries to
+> fill incomplete blocks instead of adding new ones, in many cases
+> providing a compression ratio comparable to zmalloc's.
+> 
+> zblock is also in most cases superior to zsmalloc with regard to
+> average performance and worst execution times, thus allowing for better
+> response time and real-time characteristics of the whole system.
+> 
+> High memory and page migration are currently not supported by zblock.
+> 
+
+My x86_64 allmodconfig build failed.
+
+  MODPOST Module.symvers
+ERROR: modpost: "try_alloc_pages_noprof" [mm/zblock.ko] undefined!
+
+I don't understand why this wasn't encountered earlier.
+
+
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: mm-add-zblock-allocator-fix-2
+Date: Sun May  4 02:13:54 AM PDT 2025
+
+export try_alloc_pages_noprof() to modules for CONFIG_ZBLOCK=m
+
+Cc: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: Igor Belousov <igor.b@beldev.am>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Nhat Pham <nphamcs@gmail.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: David Hildenbrand <david@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/arm/boot/dts/nvidia/tegra124.dtsi | 65 ++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
 
-diff --git a/arch/arm/boot/dts/nvidia/tegra124.dtsi b/arch/arm/boot/dts/nvidia/tegra124.dtsi
-index ec4f0e346b2b..ad7813da8aec 100644
---- a/arch/arm/boot/dts/nvidia/tegra124.dtsi
-+++ b/arch/arm/boot/dts/nvidia/tegra124.dtsi
-@@ -103,6 +103,45 @@ host1x@50000000 {
- 
- 		ranges = <0 0x54000000 0 0x54000000 0 0x01000000>;
- 
-+		vi@54080000 {
-+			compatible = "nvidia,tegra124-vi";
-+			reg = <0x0 0x54080000 0x0 0x00040000>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA124_CLK_VI>;
-+			resets = <&tegra_car 20>;
-+			reset-names = "vi";
-+
-+			iommus = <&mc TEGRA_SWGROUP_VI>;
-+
-+			status = "disabled";
-+		};
-+
-+		isp@54600000 {
-+			compatible = "nvidia,tegra124-isp";
-+			reg = <0x0 0x54600000 0x0 0x00040000>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA124_CLK_ISP>;
-+			resets = <&tegra_car TEGRA124_CLK_ISP>;
-+			reset-names = "isp";
-+
-+			iommus = <&mc TEGRA_SWGROUP_ISP2>;
-+
-+			status = "disabled";
-+		};
-+
-+		isp@54680000 {
-+			compatible = "nvidia,tegra124-isp";
-+			reg = <0x0 0x54680000 0x0 0x00040000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA124_CLK_ISPB>;
-+			resets = <&tegra_car TEGRA124_CLK_ISPB>;
-+			reset-names = "isp";
-+
-+			iommus = <&mc TEGRA_SWGROUP_ISP2B>;
-+
-+			status = "disabled";
-+		};
-+
- 		dc@54200000 {
- 			compatible = "nvidia,tegra124-dc";
- 			reg = <0x0 0x54200000 0x0 0x00040000>;
-@@ -209,6 +248,32 @@ dsib: dsi@54400000 {
- 			#size-cells = <0>;
- 		};
- 
-+		msenc@544c0000 {
-+			compatible = "nvidia,tegra124-msenc";
-+			reg = <0x0 0x544c0000 0x0 0x00040000>;
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA124_CLK_MSENC>;
-+			resets = <&tegra_car TEGRA124_CLK_MSENC>;
-+			reset-names = "mpe";
-+
-+			iommus = <&mc TEGRA_SWGROUP_MSENC>;
-+
-+			status = "disabled";
-+		};
-+
-+		tsec@54500000 {
-+			compatible = "nvidia,tegra124-tsec";
-+			reg = <0x0 0x54500000 0x0 0x00040000>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA124_CLK_TSEC>;
-+			resets = <&tegra_car TEGRA124_CLK_TSEC>;
-+			reset-names = "tsec";
-+
-+			iommus = <&mc TEGRA_SWGROUP_TSEC>;
-+
-+			status = "disabled";
-+		};
-+
- 		sor@54540000 {
- 			compatible = "nvidia,tegra124-sor";
- 			reg = <0x0 0x54540000 0x0 0x00040000>;
--- 
-2.48.1
+ mm/page_alloc.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/mm/page_alloc.c~a
++++ a/mm/page_alloc.c
+@@ -7470,3 +7470,4 @@ struct page *try_alloc_pages_noprof(int
+ 	kmsan_alloc_page(page, order, alloc_gfp);
+ 	return page;
+ }
++EXPORT_SYMBOL_GPL(try_alloc_pages_noprof);
+_
 
