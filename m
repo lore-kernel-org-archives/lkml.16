@@ -1,62 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25975DF42
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 20:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943F1DED42;
+	Sun,  4 May 2025 20:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746389026; cv=none; b=naJc0KbiyLu9Z7BMh1hsdaguknvjlEDapA8ukXcgra0f/IhzLVKYpfpFcle8Lh+l4NNg4XlYCrTF4eFvL/qTWJMVBN6bGuv0+CwO9kBVcm8gCh/Ua3FSKm1I4k0cwFUfANQqNQYa7D5Ghnca7JTHrfTjkvWL1mh6o1shUq8pFi8=
+	t=1746389961; cv=none; b=UmryOoTne5nw1jfdImfM4fW8hpDM/xgxJsQ2kOuj6HBe/OdJ+S6w8w/2V6rJL3QZtmxV9nF39isUtmTWqjsFBDrWsTlOgKACINlHD35sDH3qCHdUcAmTfoKv1fy9j1RtSnk/Ar6I62w80nn2Gdg2rAuON0hZgvSZgWaJ33gxcKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746389026; c=relaxed/simple;
-	bh=RgY9iTnys8P2ONbSAUPVIwDSToabWfIAOIn4nf0Nidg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pND5YMhQWVcxXvQWY1vAV4o1lJ/JzHsZ08t/JC2nq7pjLnGNKiY+dSx4wku3V9cIxHfbFni4Oj4NBAJQNxPV9z64uKO5Egc2caPAEGZwp2fsQWv1Vacxr53QwhKnhOluhaQlzDww1ooC4/vVJadqHJd9c7/K6Mw7qwVA/r/cjcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cS1/z+8h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746389961; c=relaxed/simple;
+	bh=kWouH9PcHn1yDE6oVME8ha/Tnp5GTGTxgWeh4wVEHCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaUNUFxtCAN592y8MmxLPdTtUD6WoFKZXKCe0nO4BU9PUel5zKGwlKVFs22hXxilcu0a57TFBX35bdXhH1xTXeI5boVKr3jjiKCugcg/78kekX4Zqg4m+uilIGZNVTJn0wT5dQ9gRN4MRZRU/rOfXdlcTFW/Jp9K0OOnu61lpEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLE6C/nu; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cS1/z+8h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056E9C4CEE7;
-	Sun,  4 May 2025 20:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746389024;
-	bh=RgY9iTnys8P2ONbSAUPVIwDSToabWfIAOIn4nf0Nidg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cS1/z+8hINR+cERlxh+9AyNz2o6fcUahozwFEZysvn13eJcv9PYHfHH8pQe3uY4WZ
-	 vy4LSZMxoyB7kFqfbkMMqzGRwa37Sfe3zEl3/AycWczgIcVHoBORFHkc9rtOCPo8q1
-	 YeA+KT+35xHJAcBwrYqYyjviFnydIpXCPYFkT+FQ=
-Date: Sun, 4 May 2025 13:03:43 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
- Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, rafael@kernel.org, Danilo
- Krummrich <dakr@kernel.org>, Ritesh Harjani <ritesh.list@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Alison Schofield
- <alison.schofield@intel.com>, Yury Norov <yury.norov@gmail.com>, Dave Jiang
- <dave.jiang@intel.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration
- to reduce boot time
-Message-Id: <20250504130343.d1e7f73040daf053a171a99f@linux-foundation.org>
-In-Reply-To: <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
-	<aBdK2EIMYYRmmEwA@kernel.org>
-	<a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLE6C/nu"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-74068f95d9fso920667b3a.0;
+        Sun, 04 May 2025 13:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746389959; x=1746994759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2UvegomJiMh6nIQI/2J4Ao0uKJD2zSYoWW1qFQAs5Yg=;
+        b=ZLE6C/nuGxEesrvb+tRjV9caO4+r+wCxv25dmc9DJ6Syjtl8gnsFq7eXZXXwl6Yk8J
+         DA62ySssVw+UrIYHsTnqE2ezldav7Gi2bERRr4fLC4xNd+w0DuihmsR5fJmPtXmNMCgG
+         N6PrNoQbIe2Q2mhLHhYsxCo4hNvADQBzJlkdbcgF0ztpN8Gm49a5SYYLwA2sZs4RmooN
+         a7iL9AVK2uh064dgXy4VPPDuEGoPI52WPcGYsKZEc/fnroK6guuHyHlmbT/A9b/B6szh
+         qHjHm7qm+2ijrudBamNK1j15jzkmETPc1YUDqTYe/0V3xR7x9LGd8n+3AS83131Gyoso
+         De6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746389959; x=1746994759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2UvegomJiMh6nIQI/2J4Ao0uKJD2zSYoWW1qFQAs5Yg=;
+        b=RQk83kqtxPHmxzB/PZ9omCR0ohrkdPmGgunwyNnmv0omTHsyNrIswmfpiBiS5Qya5O
+         2G3D/VlTGsiZdz8Qj5ntQ6Qsx74gVV2S5DQj9m+gXCjBNcEHzL4M0+gWQOTfhmmZtjZ6
+         WfKkY6IIj9RXanVsqTWgLRsAJiuOAkG+vLaqcln5A0O0OF0A/DLOofGB0L4hjloD7KbE
+         //tx8+Y/rXkxGOo7ZzWAkkOFVBI7ZY1HDEm+fMiH8xQMEj8Dp5OrMy/xkB13xUHG6Uow
+         JbsM0NedvmktfKONaM73sYmo95uRvt0MSmFIPdoe/JSinVj4Am1gWL/KiGkjA2pNan4K
+         pVPg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNUpTjp8ZftkwdSwLltaBVYU6GWxqCNmWEd/lry1QxpKg/JMGOS0+fxDLSEH7mFlO8apzwmcDV@vger.kernel.org, AJvYcCWsnYmFJyl6JC+Ap6uSH3WDXgzBI3M/thT1ggRX6pVYH9b3D6L84GP5UJLHxYYe2CIr4u1oitCg3RSD1fs=@vger.kernel.org, AJvYcCXQa5YaVvzmjBdvNJ8Pad+lolwy3AGZPrNoXd5klkgzNlSVavtmHJtcNNaeEOI3M76EFhB7ipkoTcxIU8aFZUnd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4u36kFSs2szty8uKH/P40iaqCyjW/2zRNn67FzxuPFTZt1MV9
+	utLLYhO/UOVnGBeUk4VJK8UtBdMgQ2pK2tOeBO7fvW112Hf7y69M
+X-Gm-Gg: ASbGncuWeyCfRxI8UfTRmV8RVP7dLDWfxG/ypIPVz1jb/Ze8sa0NNmRf0Vw+ZdYHE5r
+	l9CREvINfFSBdUplKl6lmjERmm2ua02RZlAuBHI1m3sHqsUf8GG/x1eFRZ0HPluYENoV1cqn0Sv
+	viwl7Je7KlpdaLkb+hXzEciOkyCQHHyO9yeWxaUb1znsDN+qYClqmsxVI+DFA9hLY+W63aBojS7
+	kAknxq+Y8O07h29DFHH1VDKZANsDb1ZJSAGWQZ/7QvFEQ4YfMMNQULF8PVkWDQcr1WVwtU9Fd8w
+	wmDs9tkSxpasIY4BiGZQusw+mCINCNMR6pvVdjNxSgc=
+X-Google-Smtp-Source: AGHT+IHjm56528yNjjRibNiMtXVYmxhFuk9RepbfihANhB0sy0XIXdsZY6QgN882IXegmTERmbZiTw==
+X-Received: by 2002:a05:6a00:ab0d:b0:73f:e8c:1aac with SMTP id d2e1a72fcca58-7406f08a579mr6611979b3a.2.1746389958935;
+        Sun, 04 May 2025 13:19:18 -0700 (PDT)
+Received: from localhost ([66.205.136.11])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a47esm5246607b3a.29.2025.05.04.13.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 13:19:18 -0700 (PDT)
+Date: Sun, 4 May 2025 13:19:16 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, mrpre@163.com, Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 1/2] ktls, sockmap: Fix missing uncharge
+ operation
+Message-ID: <aBfLxMus8jgK7JgU@pop-os.localdomain>
+References: <20250425060015.6968-1-jiayuan.chen@linux.dev>
+ <20250425060015.6968-2-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425060015.6968-2-jiayuan.chen@linux.dev>
 
-On Sun, 4 May 2025 22:04:08 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
+On Fri, Apr 25, 2025 at 01:59:57PM +0800, Jiayuan Chen wrote:
+> When we specify apply_bytes, we divide the msg into multiple segments,
+> each with a length of 'send', and every time we send this part of the data
+> using tcp_bpf_sendmsg_redir(), we use sk_msg_return_zero() to uncharge the
+> memory of the specified 'send' size.
+> 
+> However, if the first segment of data fails to send, for example, the
+> peer's buffer is full, we need to release all of the msg. When releasing
+> the msg, we haven't uncharged the memory of the subsequent segments.
+> 
+> This modification does not make significant logical changes, but only
+> fills in the missing uncharge places.
+> 
+> This issue has existed all along, until it was exposed after we added the
+> apply test in test_sockmap:
+> commit 3448ad23b34e ("selftests/bpf: Add apply_bytes test to test_txmsg_redir_wait_sndmem in test_sockmap")
+> 
+> Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-> If this configuration is disabled, the current patchset would not function
-> correctly, and node device initialization could fail during the hotplug path.
+Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
 
-I'll remove the mm.git copy of this patchset.
-
-Probably Mike will be taking the series anyway - I grabbed it because
-this was unclear to me.
-
+Thanks!
