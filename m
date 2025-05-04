@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264A85695;
-	Sun,  4 May 2025 13:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B26134CF;
+	Sun,  4 May 2025 13:40:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746365882; cv=none; b=bXr4UtLpHGHkKPUrj4lg2Pz5rjnE/YCKz7BvYJzG4pPp0GtL40hrBt3Hez39Yh53t0GgTV1WPfq6YXjv/CgsUTnYZcPTE5R5MJV9kUNA6fUhYq/Bkar+XfO5IotDVz4snaGYeGT9oHvgy2veAvpiygZLruPVFHaxrrki/NBNY8o=
+	t=1746366037; cv=none; b=cPo+upI4OQwtgxhR8mISeaBbjN74fkI0FeVeOrDqnntrBbE5ttvUWkZjaSl5qmlo4k2F+7yDU8NHq0tzLVKy1u5uoV+MsB7HAvkA4clRjP4xz2Fu6KWchk0P5VTeKE8rgycIdYOwa2lzdJgKe+GclsIPw4Vms7os3h2EdX3tL7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746365882; c=relaxed/simple;
-	bh=TKviVJjXWZywKKGT0eWF4OOA/jY5DJYyKQaraAnPVrE=;
+	s=arc-20240116; t=1746366037; c=relaxed/simple;
+	bh=dJnUiR5cNsLfSQ1Zv/Y9/lkRQtOf+Fcf9zsiIdzVeic=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IYvp4ZSxEXzPJFLOkDJgeZaso7tNGqHITZ5QrouEUNFjqgsJ2vclyRrrs4k35UFj/OzySpCOTx5Vyy3NYqLudEVHW+aWy8YtuSHZjkw6VM+iKub54lqebhrQkieK1DMqKb7a9VenclvQ3BOAE4g/UDIag+k+v6iB+D04IiS9z+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ekp8CYmA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EzOFGRTZsKaXMko1SkhakID3g7W7LZMl4mDQfk+p98//QlSkAndx6BwzFuML6fCNubNQ/rGruWZvO8u9lVFZifizEffyMN/DUPV8ml1knKoRDOlUo6pk/oKkv4sjbBAUFeymv4XiHuSQyMiMH3ckIfF2gk+sLbXKCkMVfQzlon8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3EKaEIo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ekp8CYmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A80AC4CEE7;
-	Sun,  4 May 2025 13:38:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3EKaEIo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62319C4CEE7;
+	Sun,  4 May 2025 13:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746365881;
-	bh=TKviVJjXWZywKKGT0eWF4OOA/jY5DJYyKQaraAnPVrE=;
+	s=k20201202; t=1746366037;
+	bh=dJnUiR5cNsLfSQ1Zv/Y9/lkRQtOf+Fcf9zsiIdzVeic=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ekp8CYmArOY5y7h/PYShCXjxWo91+3/1XFQho11J2OivXI9tGjsEN4UvZ6FfD1Gir
-	 XOEc+YykRuub0IlDu3FsbgfayCsqsAckP4ZzX3ZRaKe7dqGXmedmzEkyK1JcSMpxdY
-	 /8PtmRYgs5BJ9jFeTT26DrOa64I8hDRCAH1lP0MCVljx6u83XaycwCNCCuwySzKF1k
-	 ujAyY1tX5nQmELZAMW2NT0OcVIQ5014TdJuma60nKrwmZGAWZDC9IY+ZpYcx4gnYbO
-	 L7oCzfxliNIC+veMf42rxFlRpUr0Q42LcyF3KVttXqDGs2zku/yynPUu0gFxgguOfL
-	 bp6OTGE/7k5Pw==
-Message-ID: <0dcf786f-d93a-4526-bdc6-e11d59347f98@kernel.org>
-Date: Sun, 4 May 2025 15:37:58 +0200
+	b=H3EKaEIo8kU+67i0Qh3t/GtoHfnzFXaz4fcsGFTFbz/gV1gvbmNyfUzX4nG9BwKS1
+	 PiTRC8d8hy2f7g92FmOp+cusFYMU67tplM/99CAprHhbtSfZLsLYeIHxMoYJyo6yro
+	 QqQJHE3BtkZzfU9XANezLLITtvC90W/yGAlGSxqBgcMcmUQW/xxoNeOOWF3j34Ify2
+	 2A/c/GqtdUVnlBaeZBp+kqYkGhrssxOyY9t8/r+0e6yz3tZIGOBslbgzVHmSBa4CUY
+	 Y9AVJHAXMdjMVy102O7w3PR0T/vZ+yCk4BGIsHwKh268+EGje8zxkLwO9nTUE9j0Ge
+	 hn/v/dRu4o5rg==
+Message-ID: <9f01a9a4-89b2-4bfc-97cd-827be989ef16@kernel.org>
+Date: Sun, 4 May 2025 15:40:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,11 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memory: tegra210-emc: Support Device Tree EMC Tables
-To: webgeek1234@gmail.com, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20250430-tegra210-emc-dt-v1-1-99896fa69341@gmail.com>
+Subject: Re: [PATCH v7 2/2] memory: mtk-smi: mt8188: Add SMI reset and clamp
+ for MT8188
+To: Friday Yang <friday.yang@mediatek.com>, Yong Wu <yong.wu@mediatek.com>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20250430094545.23932-1-friday.yang@mediatek.com>
+ <20250430094545.23932-3-friday.yang@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -85,85 +92,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250430-tegra210-emc-dt-v1-1-99896fa69341@gmail.com>
+In-Reply-To: <20250430094545.23932-3-friday.yang@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/04/2025 19:52, Aaron Kling via B4 Relay wrote:
-> +#undef EMC_READ_PROP
-> +#undef EMC_READ_STRING
-> +#undef EMC_READ_PROP_ARRAY
-> +
-> +	return 0;
-> +}
-> +
-> +#define NOMINAL_COMPATIBLE "nvidia,tegra21-emc-table"
-> +#define DERATED_COMPATIBLE "nvidia,tegra21-emc-table-derated"
+On 30/04/2025 11:45, Friday Yang wrote:
+> From: "Friday Yang" <friday.yang@mediatek.com>
+> 
+> To prevent handling glitch signals during MTCMOS on/off transitions,
+> SMI requires clamp and reset operations. Parse the reset settings for
+> SMI LARBs and the clamp settings for the SMI Sub-Common. Register
+> genpd callback for the SMI LARBs located in image, camera and IPE
+> subsystems, and apply reset and clamp operations within the callback.
+> 
+> Signed-off-by: Friday Yang <friday.yang@mediatek.com>
+> Tested-by: Friday Yang <friday.yang@mediatek.com>
 
-No, you cannot add undocumented compatibles. Missing bindings.
+How is this possible? Are you claiming that none of other authors test
+their patches? How testing would be not implied by authorship?
 
-> +static int tegra210_emc_load_timings_from_dt(struct tegra210_emc *emc,
-> +					     struct device_node *node)
-> +{
-> +	struct tegra210_emc_timing *timing;
-> +	unsigned int num_nominal = 0, num_derated = 0;
-> +	int err;
-> +
-> +	emc->num_timings = 0;
-> +	for_each_child_of_node_scoped(node, child) {
-> +		if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
-> +			emc->num_timings++;
-> +		else if (of_device_is_compatible(child, DERATED_COMPATIBLE))
-> +			num_derated++;
-> +	}
-> +
-> +	if (!emc->num_timings || (num_derated && (emc->num_timings != num_derated)))
-> +		return -EINVAL;
-> +
-> +	emc->nominal = devm_kcalloc(emc->dev, emc->num_timings, sizeof(*timing),
-> +				    GFP_KERNEL);
-> +	if (!emc->nominal)
-> +		return -ENOMEM;
-> +
-> +	if (num_derated) {
-> +		num_derated = 0;
-> +		emc->derated = devm_kcalloc(emc->dev, emc->num_timings, sizeof(*timing),
-> +					    GFP_KERNEL);
-> +		if (!emc->derated)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	for_each_child_of_node_scoped(node, child) {
-> +		if (of_device_is_compatible(child, NOMINAL_COMPATIBLE))
-> +			timing = &emc->nominal[num_nominal++];
-> +		else if (of_device_is_compatible(child, DERATED_COMPATIBLE))
-> +			timing = &emc->derated[num_derated++];
-> +		else
-> +			continue;
-> +
-> +		err = load_one_timing_from_dt(emc, timing, child);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra210_emc_parse_dt(struct tegra210_emc *emc)
-> +{
-> +	struct device_node *node, *np = emc->dev->of_node;
-> +	int ram_code, ret = 0;
-> +
-> +	if (!np) {
-> +		dev_err(emc->dev, "Unable to find emc node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_find_property(np, "nvidia,use-ram-code", NULL)) {
+> Reviewed-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I cannot find the bindings for this. Where is your DTS? Was it tested?
+Changelog says that v7 has only following changes:
 
-It seems nothing here is documented.
+  - Remove the 'devm_pm_runtime_enable' change.
+
+While v6 had no such tags.
+
+No clue what happened here, but looks like mess with the tags and really
+incomplete changelog.
 
 Best regards,
 Krzysztof
