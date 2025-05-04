@@ -1,285 +1,142 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6DD71747
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DEC28F4;
+	Sun,  4 May 2025 07:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746343884; cv=none; b=f8whfsgr1Dp3wycIOYmAeiCQeIkklpdiKGxPuIA3ELiE+luZeJp83GCOFTFPtKuogiVnl/CBD4tST9xH9UsAelCqeqpHPPDMjh38z9FnWo8KMNLNGbJFdyAdLmBA5khO2mV8W17LaxRX3ccf1djCFsyGLjt8L/FKWWIJVMLq7dA=
+	t=1746343987; cv=none; b=FAoMO94Lfv7OUnylEBbVa94veMCgklOcFkjuoRoKYyS3xJ0FeD6boYgDGt5bGpdn//usevJ4asZOfLN/CX3O1PhV75l8zajBpP8/DjjB0A9CAnipYHU76SGQuzEFWjDBRjGHQDeZgu2/xeCcuYycfcx3/jLEEjlM06CYHKrcuAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746343884; c=relaxed/simple;
-	bh=JWDtpRod2Z9PKMefeVVPToDcaqeH/10vIrh8VbCfXZw=;
+	s=arc-20240116; t=1746343987; c=relaxed/simple;
+	bh=gdrZ9xZiSUdvqtaCcWoVCHNWwWD7lz2mYEbitFGulZs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cpjj1DNuCDB/vKwST+jYHQkZxwmy5G6j4redOT8TCYShd6mbl2UVbTzWomDCrVw6JdlVEiDamJPEP/qT/brrgQVMGILg+UtB/b2Pmgr6aOWRA33kOPgsmC+8ZvQvuvKNllWybKnQ9FbHta8L/3vawly0PSIkbErRXOmzEkFL9HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ap3u+CB4; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=K7+VC0aNqgzXhHaalH0j9vY6+022vjQ0f3U/RxD5S17iFwMkvNd+yTHEs9crWGiB+jfM9yvQbbKb9xTTY3D4H8OrECH69InIhx7E1+Ll/6JM/4P5p6mlx7rZgBjxCZnurM3viAeYUplnH1Ep94lcFygnaFyd6CT8smHobdu3r9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=grCc3sB2; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ap3u+CB4"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736b0c68092so3067734b3a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 00:31:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grCc3sB2"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a071so34554131fa.1;
+        Sun, 04 May 2025 00:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746343882; x=1746948682; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746343984; x=1746948784; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mES14wxkp6ypGEG4ZwVtSZbRNaiaOpn+45mdrvWbng4=;
-        b=Ap3u+CB4cIxafjJX6CcKUUih+Ov4TlHbio79i+iO7gO7tJ0g/nmfTcA+h6MaNBRPAe
-         wW/k1gkWR9QX72gOgqRFnUvGr5Dm7PMHsa2gEoJioR0xL7GteYLtmw2Z26VLoC0Rd3Fu
-         pmOCjkVkaHQWbnsgHDsk5te33qlaN4odY/VRly8uQAhtX75gyepfjnPMiVD6n6SHwgtf
-         y+rlgsksFqrlG/75BrmjARA6L2LHfkYTCyDlnJipwUeK57YlqiSjUn1aoAExupQiyqGa
-         VtOWoqfbfRoy2iB5T0BgLOzgROfphBRysSvhdHRGRBQ7kaB/JDEP5+G3TUvcipxQfMs4
-         kEiQ==
+        bh=eYiayAZSUyOm+8KV8iySpwRx7cWI85tBux/RcLlm+hY=;
+        b=grCc3sB2Pqc3RUiRF5H0uk8qHHkWAt7PYI1zZdhSI6ce+V0PPaSs1CZG3b2S4xz3g+
+         XQVVEuOTv2nlVvSIqgRDLwuCuKmzGpY5AhDc4XLrMC6My7ZXt6GqhajtVv08K1CmBxM4
+         kvIj/cmUAEK/LRZEqrucR6NLmdwLEANmLYBp0MmYe9c0VAMxXpRdreqcNDmFLIqZDvEx
+         Qumm2ophd6L0VzTF0SA5JDRPw0GvGYsX7Up5HWknSMMngQnNpDDbiYt8V6b2FkNr94r+
+         cOawWgbc5v+gzOqYNwAMxkzai8QlJtoCda6mjE/n8T5X0zs2zTYrwiQud+jGxsm0SKvO
+         HM4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746343882; x=1746948682;
+        d=1e100.net; s=20230601; t=1746343984; x=1746948784;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mES14wxkp6ypGEG4ZwVtSZbRNaiaOpn+45mdrvWbng4=;
-        b=C3aOfuvlTW7kC7I8djzGNgcVT3cO011E3eV0QhOP6MDZZiJPm/rUKHEzFg0oa5WZLg
-         P1OldsGwQdg93sK5mIKZf5w9iJNAryFjf6AqgaY1nkqZi+K3Flww6E4Zj10pEHJeE2oS
-         x+hSVJ+yffkEukO+FYO16EXMukCHF+iKTMWEdtnn6zJiFbZw0b5ztqv6h0NETO9gDHLv
-         2Pdies5xlFU04qZlChJIXuFWKykvZlQnwrNmpfsnX23/klGWp2fQmhHcI/feSM2qjjX4
-         s5X5Pa+itvs6q2wr9TsYEbMBOK8KfGx4GmUPat2sq7iUTm+TGeD/xQR6uxM5XiBUIKVL
-         cbGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhJueTndLJU1HzIY/WokFeB1xNLaJM78TI77RZIORtVG/jdoNgWKnpXz1Y6gfoYjfD+z2wxxScLmHw+/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu/arWWaFM5PqIEkTSysJh+85kOewrvEKrXaK1SUXcAlWu0ibT
-	l+mhQlj30M7p7DU/n65K3IPeWSfrYRa2h4rhackXyYIaOYEwQQlRMpw4r/X2M9W8q0rP1+GhIzH
-	6qW8nLl/TOD2z31BqEN5GTqNRgvGF5SdOcsZW
-X-Gm-Gg: ASbGncvonyFdh73yWcWKQThW355xy8heqe9dUvdK1WUqqeT5xFHgP0j42LE6ILitL2V
-	lPFcxFIUbQU/ZTuunLIdHLBnZixXNEf3KyNMGIiCnqLDz59+tXtWk/cTx84qsBppBqZeC0+Hchy
-	v2endwRfIJXPrFmRISJxsOJqHGYIkZjqFQL/SSLkdE/FJZbe2wiR5yCf8=
-X-Google-Smtp-Source: AGHT+IE49HHyBFHYK5Ma1n8ibWWY2Z71d0A2lP+Fp0QQ776R4UV8U6urHAdmxipgUMex/CJPIT+oono35QA4cLxBqe8=
-X-Received: by 2002:a17:90a:d883:b0:2f8:34df:5652 with SMTP id
- 98e67ed59e1d1-30a4e5c6367mr11726430a91.21.1746343881762; Sun, 04 May 2025
- 00:31:21 -0700 (PDT)
+        bh=eYiayAZSUyOm+8KV8iySpwRx7cWI85tBux/RcLlm+hY=;
+        b=qyR2XCBQoh6TEwOU2Pk8p0Qd+MzZzF88SfK7mQgILHqhhAagd3mV5Ey0v7vAS6DdsS
+         pyCtYevcF4V8Lbc0Fpbd3Bu+vDQkGPTdoxa5tZMoK+2R+Yz98eowfUs4vq2edfas5oqR
+         pexdDiQG8dFNSZ6AbkMuILjnYjREwQig11F5dwboIbOyccVd66ZTdm34vS84Kw9CY78n
+         tf8JunP2tyZXgTS/8AAJVVnOUicXRJr4CjyNeTcyEHEiakUOUZA5PdH0y9E8Vc1XAQiL
+         Evvs/7uwmTdH22wOAhQ+3kYcRmbtAW83IO9Z14cz6iQ6MulE3npfQ8k4dXV2PdKNmfPq
+         uX+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUXTb1ybn28g0Z9SXSWErqTztjAjXeDHRyzLJ6JMdDZOrdMA1m3Wfh4dVHY00lt1kCzlfa9iT0TySSvJzrj@vger.kernel.org, AJvYcCV5AYLmAkX1WB7uYerLcu+43XF37MX+mdzRN02fKQi7BUjSG2k+/Zv6r2xGKIdkWKhPs3a5mtiX95E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9kGkp6H4YSxDiuUx/5LR+xyYKx92xIH3/+IkxjkNoqL8xWLcI
+	0k4Mepv7yxIX4TBOcU6Mh8x0vnZbZIJnQ3GdZ7L1xFuDBmcdZXI37Eb4UyFwKwARWEt3mX9+xay
+	z+bVGHvSREjRC9E7MojaOkhygOGs=
+X-Gm-Gg: ASbGncs3BeVGa7h3bhmcRKnK9vlthE+v7t1rbcNWDRSXCBpRdl1NDWiU4BQwvGFtmi5
+	bdaH8kj9+bLac/mzJoI0c7cpe42ZbrOpQXJ4Br3IOAbGmCSnpvTylBq3Ir9ENNTe3w/TVLouU6Z
+	+3r3lor082M/klRihP55Q6rA==
+X-Google-Smtp-Source: AGHT+IFoSqJnnXGmXvA0S9Lpu8fzifjVDHFLr+eAGZAqz2XZdFs9ClMvGoiTXrkOW+xXZqlAqa6L+NW2Mp0wbc1Y3M8=
+X-Received: by 2002:a05:651c:1601:b0:30c:3099:13d0 with SMTP id
+ 38308e7fff4ca-32348f5f9f8mr9314401fa.21.1746343983560; Sun, 04 May 2025
+ 00:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6816bc63.a70a0220.254cdc.002b.GAE@google.com>
-In-Reply-To: <6816bc63.a70a0220.254cdc.002b.GAE@google.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Sun, 4 May 2025 09:31:10 +0200
-X-Gm-Features: ATxdqUGDaM8z6UJHm0uFbbjG2MkMwaVs9nw2jxDHgq0qPylbLW5EBC7za5BI-K0
-Message-ID: <CANp29Y4-+Xipt+0wwR+7KWg=c+tbLEM+E8PgvijFiT4cpODbaA@mail.gmail.com>
-Subject: Re: [syzbot] [kernel?] upstream test error: KASAN:
- slab-use-after-free Write in binder_add_device (3)
-To: syzbot <syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com>
-Cc: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
-	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
-	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
-	syzkaller-bugs@googlegroups.com, tkjos@android.com
+References: <20250418141253.2601348-8-ardb+git@google.com> <20250418141253.2601348-14-ardb+git@google.com>
+ <f465a1b3-c28b-7bfe-7c18-e3fad41842aa@gmail.com> <CAMj1kXH=nXgymC8XGO0cxRXJS=N2GY1fCvegSBG4_+mS2-cc4Q@mail.gmail.com>
+In-Reply-To: <CAMj1kXH=nXgymC8XGO0cxRXJS=N2GY1fCvegSBG4_+mS2-cc4Q@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 4 May 2025 09:33:04 +0200
+X-Gm-Features: ATxdqUH9bkMSwuk8Z5NEpFtrAaMVMTJZTjZNc92XY0TDxWXQrYOLxywe0urF7o0
+Message-ID: <CAFULd4b3uHB+tvTXroDP-MLgpBHtGxMZgxCp3FVpN7bx=Ov+7w@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] x86/asm: Retire RIP_REL_REF()
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-This was found on an outdated tree. Please ignore.
+On Fri, Apr 18, 2025 at 5:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
+ote:
+>
+> On Fri, 18 Apr 2025 at 17:51, Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> >
+> >
+> > On 18. 04. 25 16:13, Ard Biesheuvel wrote:
+> > > From: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > Now that all users have been moved into startup/ where PIC codegen is
+> > > used, RIP_REL_REF() is no longer needed. Remove it.
+> > >
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > ---
+> > >   arch/x86/include/asm/asm.h | 5 -----
+> > >   1 file changed, 5 deletions(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+> > > index a9f07799e337..eef0771512de 100644
+> > > --- a/arch/x86/include/asm/asm.h
+> > > +++ b/arch/x86/include/asm/asm.h
+> > > @@ -120,11 +120,6 @@ static __always_inline __pure void *rip_rel_ptr(=
+void *p)
+> > >
+> > >       return p;
+> > >   }
+> > > -#ifndef __pic__
+> > > -#define RIP_REL_REF(var)     (*(typeof(&(var)))rip_rel_ptr(&(var)))
+> > > -#else
+> > > -#define RIP_REL_REF(var)     (var)
+> > > -#endif
+> > >   #endif
+> >
+> > You can also remove rip_rel_ptr() with the whole "#ifndef __ASSEMBLER__=
+"
+> > part.
+> >
+>
+> No, rip_rel_ptr() needs to be kept, unfortunately.
 
-#syz invalid
+Indeed, I scanned the source before your patch, where rip_rel_ptr()
+was used exclusively via RIP_REL_REF.
 
-On Sun, May 4, 2025 at 3:01=E2=80=AFAM syzbot
-<syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    29281a76709c Merge tag 'kvmarm-fixes-6.14-2' into kvmarm-=
-m..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvma=
-rm.git fuzzme
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1495177458000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D22c3bbf92fcca=
-116
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D57ff869c12cb6d8=
-9393d
-> compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f=
-7-1~exp1~20250415203523.103), Debian LLD 20.1.3
-> userspace arch: arm64
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/3=
-84ffdcca292/non_bootable_disk-29281a76.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/a94df683c08e/vmlinu=
-x-29281a76.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/18ac847cc37c/I=
-mage-29281a76.gz.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+57ff869c12cb6d89393d@syzkaller.appspotmail.com
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: KASAN: slab-use-after-free in hlist_add_head include/linux/list.h:10=
-26 [inline]
-> BUG: KASAN: slab-use-after-free in binder_add_device+0xf4/0xf8 drivers/an=
-droid/binder.c:6932
-> Write of size 8 at addr b7f0000014f4e208 by task syz-executor/3305
-> Pointer tag: [b7], memory tag: [a6]
->
-> CPU: 0 UID: 0 PID: 3305 Comm: syz-executor Not tainted 6.14.0-rc2-syzkall=
-er-g29281a76709c #0
-> Hardware name: linux,dummy-virt (DT)
-> Call trace:
->  show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
->  __dump_stack+0x30/0x40 lib/dump_stack.c:94
->  dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
->  print_address_description+0xac/0x290 mm/kasan/report.c:378
->  print_report+0x84/0xa0 mm/kasan/report.c:489
->  kasan_report+0xb0/0x110 mm/kasan/report.c:602
->  kasan_tag_mismatch+0x28/0x3c mm/kasan/sw_tags.c:175
->  __hwasan_tag_mismatch+0x30/0x60 arch/arm64/lib/kasan_sw_tags.S:55
->  hlist_add_head include/linux/list.h:1026 [inline]
->  binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
->  binderfs_binder_device_create+0xbfc/0xc28 drivers/android/binderfs.c:210
->  binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
->  vfs_get_super fs/super.c:1280 [inline]
->  get_tree_nodev+0xdc/0x1cc fs/super.c:1299
->  binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
->  vfs_get_tree+0xc4/0x3cc fs/super.c:1814
->  do_new_mount+0x2a0/0x988 fs/namespace.c:3560
->  path_mount+0x650/0x101c fs/namespace.c:3887
->  do_mount fs/namespace.c:3900 [inline]
->  __do_sys_mount fs/namespace.c:4111 [inline]
->  __se_sys_mount fs/namespace.c:4088 [inline]
->  __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
->  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
->  invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
->  el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
->  do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
->  el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
->  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
->  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
->
-> Allocated by task 3297:
->  kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
->  save_stack_info+0x30/0x138 mm/kasan/tags.c:106
->  kasan_save_alloc_info+0x14/0x20 mm/kasan/tags.c:142
->  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
->  __kasan_kmalloc+0x8c/0x90 mm/kasan/common.c:394
->  kasan_kmalloc include/linux/kasan.h:260 [inline]
->  __kmalloc_cache_noprof+0x2a0/0x404 mm/slub.c:4325
->  kmalloc_noprof include/linux/slab.h:901 [inline]
->  kzalloc_noprof include/linux/slab.h:1037 [inline]
->  binderfs_binder_device_create+0x1ac/0xc28 drivers/android/binderfs.c:147
->  binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
->  vfs_get_super fs/super.c:1280 [inline]
->  get_tree_nodev+0xdc/0x1cc fs/super.c:1299
->  binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
->  vfs_get_tree+0xc4/0x3cc fs/super.c:1814
->  do_new_mount+0x2a0/0x988 fs/namespace.c:3560
->  path_mount+0x650/0x101c fs/namespace.c:3887
->  do_mount fs/namespace.c:3900 [inline]
->  __do_sys_mount fs/namespace.c:4111 [inline]
->  __se_sys_mount fs/namespace.c:4088 [inline]
->  __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
->  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
->  invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
->  el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
->  do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
->  el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
->  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
->  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
->
-> Freed by task 3297:
->  kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
->  save_stack_info+0x30/0x138 mm/kasan/tags.c:106
->  kasan_save_free_info+0x18/0x24 mm/kasan/tags.c:147
->  poison_slab_object mm/kasan/common.c:247 [inline]
->  __kasan_slab_free+0x64/0x68 mm/kasan/common.c:264
->  kasan_slab_free include/linux/kasan.h:233 [inline]
->  slab_free_hook mm/slub.c:2353 [inline]
->  slab_free mm/slub.c:4609 [inline]
->  kfree+0x148/0x44c mm/slub.c:4757
->  binderfs_evict_inode+0x1e8/0x2b8 drivers/android/binderfs.c:278
->  evict+0x4d4/0xbe8 fs/inode.c:796
->  iput_final fs/inode.c:1946 [inline]
->  iput+0x928/0x9e0 fs/inode.c:1972
->  dentry_unlink_inode+0x624/0x660 fs/dcache.c:440
->  __dentry_kill+0x224/0x808 fs/dcache.c:643
->  shrink_kill+0xd4/0x2cc fs/dcache.c:1088
->  shrink_dentry_list+0x420/0x970 fs/dcache.c:1115
->  shrink_dcache_parent+0x80/0x200 fs/dcache.c:-1
->  do_one_tree+0x2c/0x148 fs/dcache.c:1578
->  shrink_dcache_for_umount+0xb0/0x198 fs/dcache.c:1595
->  generic_shutdown_super+0x84/0x424 fs/super.c:620
->  kill_anon_super fs/super.c:1237 [inline]
->  kill_litter_super+0xa4/0xdc fs/super.c:1247
->  binderfs_kill_super+0x50/0xcc drivers/android/binderfs.c:791
->  deactivate_locked_super+0xf0/0x17c fs/super.c:473
->  deactivate_super+0xf4/0x104 fs/super.c:506
->  cleanup_mnt+0x3fc/0x484 fs/namespace.c:1413
->  __cleanup_mnt+0x20/0x30 fs/namespace.c:1420
->  task_work_run+0x1bc/0x254 kernel/task_work.c:227
->  exit_task_work include/linux/task_work.h:40 [inline]
->  do_exit+0x740/0x23b0 kernel/exit.c:938
->  do_group_exit+0x1d4/0x2ac kernel/exit.c:1087
->  get_signal+0x1440/0x1554 kernel/signal.c:3036
->  do_signal+0x23c/0x3ecc arch/arm64/kernel/signal.c:1658
->  do_notify_resume+0x78/0x27c arch/arm64/kernel/entry-common.c:148
->  exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
->  exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
->  el0_svc+0xb0/0x134 arch/arm64/kernel/entry-common.c:745
->  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
->  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
->
-> The buggy address belongs to the object at fff0000014f4e200
->  which belongs to the cache kmalloc-512 of size 512
-> The buggy address is located 8 bytes inside of
->  272-byte region [fff0000014f4e200, fff0000014f4e310)
->
-> The buggy address belongs to the physical page:
-> page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x54f4=
-e
-> anon flags: 0x1ffc00000000000(node=3D0|zone=3D0|lastcpupid=3D0x7ff|kasant=
-ag=3D0x0)
-> page_type: f5(slab)
-> raw: 01ffc00000000000 7ef000000c801900 0000000000000000 0000000000000001
-> raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->  fff0000014f4e000: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
->  fff0000014f4e100: 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29 29
-> >fff0000014f4e200: a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6 a6
->                    ^
->  fff0000014f4e300: a6 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->  fff0000014f4e400: 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35 35
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
--bugs/6816bc63.a70a0220.254cdc.002b.GAE%40google.com.
+On a related note,
+
+asm("leaq %c1(%%rip), %0" : "=3Dr"(p) : "i"(p));
+
+the above asm can use %a1 generic operand modifier instead of
+"%c1(%%rip)" [1], similar to d689863c1a60b9 [2], which also explains
+the modifier:
+
+--q--
+The "a" asm operand modifier substitutes a memory reference, with the
+actual operand treated as address. For x86_64, when a symbol is
+provided, the "a" modifier emits "sym(%rip)" instead of "sym",
+enabling shorter %rip-relative addressing.
+--/q--
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Generic-Operand-Mo=
+difiers
+[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/=
+arch/x86/include/asm?id=3Dd689863c1a60b9936b47a34fa5c3330de374f4fc
+
+Uros.
