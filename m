@@ -1,83 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B41B14A82;
-	Sun,  4 May 2025 15:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764551FAA;
+	Sun,  4 May 2025 15:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746373751; cv=none; b=R/OPFEFX0S+UC5B6Y1fgS1Lc5fsQCGZ2MD7SKRvGwQLhpDDwQZ0BngltZnC0ZysH3iemaTQH23ksyB7VO0cI3DmiZ6oL7ky0AEDJnh/mFEAH3MrM1LjPYBNWjtM6J/7QnZESA26cxWkRDVGHO18Bx7w2dIS693PTjNxR7COibNY=
+	t=1746373975; cv=none; b=TxshVrDZkjDt0F7H6X2JlUtU4+SlEc/NNN0q3EHcTRzbiiFPTF4uku+qvtm4S+c227vGwqIOdL5jrM+qAs99FlHoynrluPd7Tq2TcqYID7NMTHf5CGPKGOhasc0zWWnv9p8KlOPE9N2rMOTgr4dgJyadY6hiNobGCoTqr9x9p38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746373751; c=relaxed/simple;
-	bh=k/No9hzdA98pPC4TTn/gupUgQ9kiIcx6rpf26CHoipc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UcEnYUy/uIara1V6R/HT5w5DqJTkfFos0MXYUikgOqiV7tMu8WE7dDIpDhY4Zzk7r0vcWzLgwnGZx8QM4crD95Hjq/Tr78c9+TsnaLIxbgqJL/nheN4eQlUYRteVC+UZXfjt3XWBPEKq6qt3tBCq42zN6GZtH6S6I0uylVQOJO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAtNS0yb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746373975; c=relaxed/simple;
+	bh=Nr+98QCKfG9RcvRk037BNO4BhAGoAauB9eqV37LdXzc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OdjdHgV1sLDiG+cXAIXkLv8Mdq5nb3tqmJLxinNtucCrl1ajQ2t/xLs0E681QM3znry03dQ/uKNyNw2eLlTlMMmJgtUnGKumMt17dGBdE83x3t/Z9cyWqqpEA3JnZUqlMPlbCVet5qWXbO75TFfCoLNNA/S1SEzKYU4BFxoORnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b+mMqpaZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAtNS0yb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C518C4CEE7;
-	Sun,  4 May 2025 15:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746373749;
-	bh=k/No9hzdA98pPC4TTn/gupUgQ9kiIcx6rpf26CHoipc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CAtNS0ybXrn/1EsY6+k9DeGLA3XiueD9n6R2BASQdMgLfD4/zlInQTeBEEg0mc4Xm
-	 RsJXrJz7jUj27Rxm1n0NlRAzkJAJbnKNOxBc+cANYs6ck79ERlh+PNp6rAinMQX7AU
-	 ei5gKbrBc2o++JyX5wA6pX4FppsLJzSAatYu/z7NQqw1LP//gtQwdRhHAFXk43FuJT
-	 YM2zucPVoB7MLsvphpE9PNyEB3owLlvMSmxGoWCwptwlXLpm8z8b+3TORAVuby5j5G
-	 GcdGC87mCjQ+FQedz8M0BA3QQ2NDHoOs5othqY6AztNCZYvqXuGjZRg/5wOQNrnXLs
-	 yRgsVsyoBnVUw==
-Date: Sun, 4 May 2025 16:49:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Sean Nyekjaer <sean@geanix.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: accel: fxls8962af: Fix sign temperature
- scan element
-Message-ID: <20250504164902.69901e8a@jic23-huawei>
-In-Reply-To: <aBYgtRyJQXGWDgHl@debian-BULLSEYE-live-builder-AMD64>
-References: <20250502-fxls-v2-0-e1af65f1aa6c@geanix.com>
-	<20250502-fxls-v2-2-e1af65f1aa6c@geanix.com>
-	<aBYgtRyJQXGWDgHl@debian-BULLSEYE-live-builder-AMD64>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b+mMqpaZ"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544Dvmkh004007;
+	Sun, 4 May 2025 15:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PxM5qAc4i2t1cELMsRgZ4ARF3VXsOBsolVV2fKTHGTA=; b=b+mMqpaZM2VGWfLd
+	NfQAy/awp7w8VwmKarDbr01gTeTdgSsmGB6pgsWOVE+Mw6m2IiTRtIWo3+nTJg8l
+	2tfK5Ogyf41CoL4lPaFsvjbJ2O5ZgvbFyYjsYb9kq3HNm01fdAdY3xtAs6Yk0rT5
+	32k4K9C4tCJxs8J15QYIXnTEXtNbaW/OyH67wj5vY8TuiozT9hvUYYCrbLhV1neg
+	6KznLyEV5FFoBJ/2DsmZZkkAe9FS7jsii4niWGPCFUNUcXMt8uoM/IvSz3fuZiM6
+	eSeJYN2qjduJ5Hx/df/nN93smXnNze59YiNoXyLyGzz9bZDjtLohA9CU/rhF+1jv
+	z91SOw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9ep28yt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 04 May 2025 15:52:16 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 544FqEaw027076
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 4 May 2025 15:52:14 GMT
+Received: from [10.216.6.110] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 4 May 2025
+ 08:52:09 -0700
+Message-ID: <2191c270-f4fc-47e4-8bb7-ba6329332ef3@quicinc.com>
+Date: Sun, 4 May 2025 21:22:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 06/11] phy: qcom-qmp-ufs: Rename qmp_ufs_power_off
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <andersson@kernel.org>,
+        <neil.armstrong@linaro.org>, <konrad.dybcio@oss.qualcomm.com>,
+        <quic_rdwivedi@quicinc.com>, <quic_cang@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+References: <20250503162440.2954-1-quic_nitirawa@quicinc.com>
+ <20250503162440.2954-7-quic_nitirawa@quicinc.com>
+ <prbe2guxzsea6aqonf32m44zp6oa3vzdf5ieazcontv4fmx3d3@2r4tu5nr2k4x>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <prbe2guxzsea6aqonf32m44zp6oa3vzdf5ieazcontv4fmx3d3@2r4tu5nr2k4x>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOUG00ZC c=1 sm=1 tr=0 ts=68178d30 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=BD_dlTH9QecSOJyhnTYA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: X-mPH5i0BPBrDl8qo5GNohd7ktvKAmfU
+X-Proofpoint-GUID: X-mPH5i0BPBrDl8qo5GNohd7ktvKAmfU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDE0OCBTYWx0ZWRfX8ULTAhtuh5ZY
+ +T1mtoxOwieood7ImrHPuSEFVnHWbV047LoAtSIQRtbH11zVchE8Td9a8AB0foG4Gcudzb82qtF
+ 967bY44DCI9d+6yjteqZHxYE+d6kOSjYVaB8+7fnM5Z+uVTD+qne0WNWwxup9+QQzt/AGrT7vit
+ H+TTm2+fO8jt+tgQHyR/GfnJBmrwOsvJk/E00Xbl9aiHz72Dz/eZOAU+G1v4h4TWW4+zR8nPAOq
+ m+Bz3Z0wuzemTYB1PcwWyxsgRTvBbRbPLVEZ+txMag+Qm2RBgijriTvQiFXumn5HF4F730s5XWo
+ nORkQ2Pu4fy1ERhNTj0nEIU07nOVNWC3B5VGYBRVM5lfSyE2VzAWiAm7D2zJaLLviNx+poP6/oC
+ jfoMOV932vH5u+aODhDX2iN4DH5rpb4VyuDF3l80fSV0Y3WMxhzXmNyt1HloDCU410sQe9Lr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-04_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 impostorscore=0 spamscore=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505040148
 
-On Sat, 3 May 2025 10:57:09 -0300
-Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> On 05/02, Sean Nyekjaer wrote:
-> > TEMP_OUT register contains the 8-bit, 2's complement temperature value.
-> > Let's mark the temperature scan element signed.
-> > 
-> > Fixes: a3e0b51884ee ("iio: accel: add support for FXLS8962AF/FXLS8964AF accelerometers")
-> > Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Sean Nyekjaer <sean@geanix.com>  
+
+On 5/4/2025 9:07 PM, Dmitry Baryshkov wrote:
+> On Sat, May 03, 2025 at 09:54:35PM +0530, Nitin Rawat wrote:
+>> Rename qmp_ufs_disable to qmp_ufs_power_off to better represent its
+>> functionality. Additionally, move the qmp_ufs_exit() call inside
+>> qmp_ufs_power_off to preserve the functionality of .power_off.
+>>
+>> There is no functional change.
+>>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 30 +++++++++----------------
+>>   1 file changed, 11 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> index 94095393148c..c501223fc5f9 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> @@ -1835,6 +1835,15 @@ static int qmp_ufs_phy_calibrate(struct phy *phy)
+>>   	return 0;
+>>   }
+>>
+>> +static int qmp_ufs_exit(struct phy *phy)
+>> +{
+>> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>> +
+>> +	qmp_ufs_com_exit(qmp);
 > 
-> Sort of nitpinking but I think the commit description could be more assertive.
+> Just inline it, unless you have any other plans.
 
-Agreed.  I might have just tweaked it to
-"Mark the temperature element signed."  + some of what Marcelo has below.
-but given Andy's request on patch 1 means you are probably doing a v3, please
-tidy this up as well.
+Hi Dmitry,
 
-Thanks and good catches on both of them!
+I have inlined qcom_ufs_com_exit in patch #7 of the same series. I 
+separated it into a different patch to keep each patch simpler.
 
-Jonathan
+Could you please review patch #7 and share your thoughts.
 
-> The main idea is that we want to make the scan element signed because the
-> data read from the TEMP_OUT register is in two's complement format and not
-> having the scan element marked as a signed number may cause it to be mishandled
-> and miss displayed. Nevertheless, I do think the patch is good so
+[PATCH V4 07/11] phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and Inline 
+qmp_ufs_com_exit().
+
+
+Regards,
+Nitin
+
+
 > 
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int qmp_ufs_power_off(struct phy *phy)
+>>   {
+>>   	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>> @@ -1851,28 +1860,11 @@ static int qmp_ufs_power_off(struct phy *phy)
+>>   	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+>>   			SW_PWRDN);
+>>
+>> -	return 0;
+>> -}
+>> -
+>> -static int qmp_ufs_exit(struct phy *phy)
+>> -{
+>> -	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>> -
+>> -	qmp_ufs_com_exit(qmp);
+>> +	qmp_ufs_exit(phy);
+>>
+>>   	return 0;
+>>   }
+>>
+>> -static int qmp_ufs_disable(struct phy *phy)
+>> -{
+>> -	int ret;
+>> -
+>> -	ret = qmp_ufs_power_off(phy);
+>> -	if (ret)
+>> -		return ret;
+>> -	return qmp_ufs_exit(phy);
+>> -}
+>> -
+>>   static int qmp_ufs_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+>>   {
+>>   	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>> @@ -1921,7 +1913,7 @@ static int qmp_ufs_phy_init(struct phy *phy)
+>>   static const struct phy_ops qcom_qmp_ufs_phy_ops = {
+>>   	.init		= qmp_ufs_phy_init,
+>>   	.power_on	= qmp_ufs_power_on,
+>> -	.power_off	= qmp_ufs_disable,
+>> +	.power_off	= qmp_ufs_power_off,
+>>   	.calibrate	= qmp_ufs_phy_calibrate,
+>>   	.set_mode	= qmp_ufs_set_mode,
+>>   	.owner		= THIS_MODULE,
+>> --
+>> 2.48.1
+>>
 > 
 
