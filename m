@@ -1,120 +1,211 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3AD1EB5C9
-	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 17:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4CA1FDE39;
+	Sun,  4 May 2025 17:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746381420; cv=none; b=MAnmhewV6e4eCSgW0ncTG1fGaxK17mzdDZ/nwAUlPcA1x7lAXx7LVKB42lrbjdsYR0fDCYhU4RXdpf+7ZHj1Y0Y14ktX8b4BzEv9bBLwE83ciQM4rDgnUyTQbN6l4a1rmSD6S5+LBN5Gb0cVP31pdFmImVsN0+hl+p+1DDqgfeg=
+	t=1746381453; cv=none; b=J8OMoGE3MoUoi6HezTj5JHWmd65rXaOFmc7uUZh0m6T15Tvau0b9cCmmmZfIZGI2IPYDm9e+2cSpVTECCwGB410ZW9QIIsS71r64/D0BaH5N+rbw6HrznLm9awiw3bQwpiiuv2n9rg3+kaGhq0Eis7y06x4kIW8xnPZXv8CP0WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746381420; c=relaxed/simple;
-	bh=J+5W1i7tI4MKm1/n+7tRc/58wyZXquyd1jaLBZuEn4Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K5W6wyf+2JnnPKCmUx13A/W5/SBgUh8o44+tA9KTgLk+RcrkdRIcVjjbjnOnjemBYQtgJwVogVZ3c2r9TgOS+Yb44axHrpGIzRQ6Qc672v+t3pZ+Yk70k9XQbeAfBtwJcj4+qCrTbUgvDvdgKbKijwbpEX66Knys7qmSGLipKno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V16x4dDz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746381453; c=relaxed/simple;
+	bh=AYJi3MszYKQEu2bQRpuTI0bPXe/bbOcOcx8CNFtW89w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KrzSl5Xl9E1F82iT09AME/ETern2DSE0vz6CxfGGbOo+PybkvzwBy6tfzhAZOAiveSbUAGGflGLA9IErHpbKqF/uXKQZWxrBXEi8wUkHQFKxztU5t+1tyNZ8nt5YsCkjTL1i0wyfRcPkNPY09shSU5cm1J8gSqRqHSJOjemWkWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6NiNpQn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V16x4dDz"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 87996C4CEE7;
-	Sun,  4 May 2025 17:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6NiNpQn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96E6C4CEE7;
+	Sun,  4 May 2025 17:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746381419;
-	bh=J+5W1i7tI4MKm1/n+7tRc/58wyZXquyd1jaLBZuEn4Q=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=V16x4dDzPGl+AILQOKL+i3WLTvu+2z9IW6s6kh+2ElMcBXGMpBG0VNlK+ZJALhu6r
-	 DdGY2tF+ZG3HpkAf2UjkHlgY3qjpU9NRu8gqgG7KNLBW5KUL9s4r21XKQ5dVAEgKKD
-	 CUyc34UhEYwT0kC8CuuqTAx2ZZdoc5Pcc6uLuxCKs8CtM23nKPHejcWq8Nhn3SjMyH
-	 Wf/mBuwbtwup3LThIsmECGn7n2SBa+CBfrQC40T38UV+E/DgicISPud1Eyod1tO1pz
-	 D2rJAlCUya1MznKcmmn30MVwYJK0Uk+jnTl6Ozcgo6ibhSk19tf8RZBJeksiwPY2or
-	 8tqCh1x+E2nZQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747F0C369DC;
-	Sun,  4 May 2025 17:56:59 +0000 (UTC)
-From: Mark Dietzer via B4 Relay <devnull+git.doridian.net@kernel.org>
-Date: Sun, 04 May 2025 10:54:52 -0700
-Subject: [PATCH] Add GPD Pocket 2 04/17/2020 BIOS to drm_orientation_quirks
+	s=k20201202; t=1746381453;
+	bh=AYJi3MszYKQEu2bQRpuTI0bPXe/bbOcOcx8CNFtW89w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F6NiNpQnmYuFLky9beQly5JrXAnkvM+4pIlnw3b5l3GwWqsb4F5HT1k8lZF2OdDtI
+	 h8msmHMTdDwaciJgsgC0VE+W1WF4ialgmxMGk4YfsfOPRXp7gdT4pyPNWQZcsEj/wn
+	 ezV4sAt5ZkzSeWnCNpG3Pv8kEL7evQHnkUrZa7DJMLLvdMfXAZS86x8T+gDlewSEzf
+	 ecK5BZxMy4CarACxMHft6eC3g31xWixE6/eTWPWhTAYAfnexiARS3WzzmVsefv1ZAT
+	 AkiJSjOjefUAs9w0dfC3Jl/x57yDLE46/yN0yQXLnOEh5o0cWTfIybEKjvWOeqsN+v
+	 DP8o4ADcoBWNQ==
+Date: Sun, 4 May 2025 18:57:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <lars@metafoo.de>,
+ <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v2 3/7] iio: adc: ad4170: Add support for buffered data
+ capture
+Message-ID: <20250504185724.4700284f@jic23-huawei>
+In-Reply-To: <db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
+References: <cover.1745841276.git.marcelo.schmitt@analog.com>
+	<db98c6cc188b501d914293268b67b0bdf26a4a46.1745841276.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250504-gpd_pocket2_biosver-v1-1-7e2506ea723f@doridian.net>
-X-B4-Tracking: v=1; b=H4sIAOupF2gC/x3MQQqAIBBA0avErBNs0IKuEhFlow1BikYE4t2Tl
- m/xf4ZEkSnB2GSI9HBif1V0bQPmWC9HgvdqQIlaaqmEC/sSvDnpxmVjnx6Kou/REio5aG2hliG
- S5fe/TnMpH9GxRTtlAAAA
-X-Change-ID: 20250504-gpd_pocket2_biosver-662fe240755f
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Mark Dietzer <git@doridian.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746381419; l=1794;
- i=git@doridian.net; s=20250228; h=from:subject:message-id;
- bh=qciSeWWt/KY5XJWHB5Z6wuF+QWqEbYgWc54AWkioEmA=;
- b=4FpyCa8WlZkfO2LABvQC2VkZUqoA4A8W4lNk+VU7GoRvA7U974YvF3Ogua5cDTtwOdxChU6IY
- BtL8JQrhZjtAUxg8xOS45hL/Qsrq7HHO+TUmPrznJ0d0i1QhL6aIPMa
-X-Developer-Key: i=git@doridian.net; a=ed25519;
- pk=XY9bZ7EBhoLNoRt6zd2/vutpAXC3tsX6OytpZHjbUsQ=
-X-Endpoint-Received: by B4 Relay for git@doridian.net/20250228 with
- auth_id=353
-X-Original-From: Mark Dietzer <git@doridian.net>
-Reply-To: git@doridian.net
 
-From: Mark Dietzer <git@doridian.net>
+On Mon, 28 Apr 2025 09:28:20 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Add missing BIOS version to drm_orientation_quirks for the
-GPD Pocket 2
+> Extend the AD4170 driver to allow buffered data capture in continuous read
+> mode. In continuous read mode, the chip skips the instruction phase and
+> outputs just ADC sample data, enabling faster sample rates to be reached.
+> The internal channel sequencer always starts sampling from channel 0 and
+> channel 0 must be enabled if more than one channel is selected for data
+> capture. The scan mask validation callback checks the aforementioned
+> condition is met.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+A few minor things spotted inline.
 
----
-This seems to be the latest available offical BIOS for this machine.
-I can no longer find it hosted by GPD themselves, but did find it
-at least archived (on archive.org) here:
-https://archive.org/download/gpd-pocket-2-drivers-and-os/driver-and-bios/
+Thanks,
 
-Testing and confirmed working on my own GPD Pocket 2.
+Jonathan
 
-Below is the output of "dmideocde", specifically the BIOS section
+> ---
+> changes since v1
+> - Using bitmap_weight().
+> - rx_buf changed from __be32 to u8 array to better cope with new regmap config.
+> 
+>  drivers/iio/adc/Kconfig  |   2 +
+>  drivers/iio/adc/ad4170.c | 199 ++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 199 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index d5d0308da007..9b4787c127fc 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -75,6 +75,8 @@ config AD4170
+>  	tristate "Analog Device AD4170 ADC Driver"
+>  	depends on SPI
+>  	select REGMAP_SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+>  	help
+>  	  Say yes here to build support for Analog Devices AD4170 SPI analog
+>  	  to digital converters (ADC).
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> index 4d0af15cb48d..5fcf1c023ac2 100644
+> --- a/drivers/iio/adc/ad4170.c
+> +++ b/drivers/iio/adc/ad4170.c
+> @@ -10,8 +10,12 @@
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+> +#include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/kernel.h>
+> @@ -54,6 +58,7 @@
+>  #define AD4170_FILTER_FS_REG(x)				(0xC7 + 14 * (x))
+>  #define AD4170_OFFSET_REG(x)				(0xCA + 14 * (x))
+>  #define AD4170_GAIN_REG(x)				(0xCD + 14 * (x))
+> +#define AD4170_ADC_CTRL_CONT_READ_EXIT_REG		0x200 /* virtual reg */
+>  
+>  #define AD4170_REG_READ_MASK				BIT(14)
+>  
+> @@ -221,6 +226,7 @@ static const unsigned int ad4170_reg_size[] = {
+>  	[AD4170_OFFSET_REG(5) ... AD4170_GAIN_REG(5)] = 3,
+>  	[AD4170_OFFSET_REG(6) ... AD4170_GAIN_REG(6)] = 3,
+>  	[AD4170_OFFSET_REG(7) ... AD4170_GAIN_REG(7)] = 3,
+> +	[AD4170_ADC_CTRL_CONT_READ_EXIT_REG] = 0,
+>  };
+>  
+>  enum ad4170_ref_buf {
+> @@ -347,12 +353,16 @@ struct ad4170_state {
+>  	u32 int_pin_sel;
+>  	int sps_tbl[ARRAY_SIZE(ad4170_filt_names)][AD4170_MAX_FS_TBL_SIZE][2];
+>  	struct completion completion;
+> +	struct iio_trigger *trig;
+> +	struct spi_transfer xfer;
+> +	struct spi_message msg;
+> +	__be32 bounce_buffer[AD4170_MAX_CHANNELS];
+>  	/*
+>  	 * DMA (thus cache coherency maintenance) requires the transfer buffers
+>  	 * to live in their own cache lines.
+>  	 */
+>  	u8 tx_buf[AD4170_SPI_MAX_XFER_LEN] __aligned(IIO_DMA_MINALIGN);
+> -	u8 rx_buf[AD4170_SPI_MAX_XFER_LEN];
+> +	u8 rx_buf[4];
 
-Handle 0x0000, DMI type 0, 24 bytes
-BIOS Information
-        Vendor: American Megatrends Inc.
-        Version: 0.27
-        Release Date: 04/17/2020
-        Address: 0xF0000
-        Runtime Size: 64 kB
-        ROM Size: 16 MB
-        Characteristics:
-                [left out for clarity]
-        BIOS Revision: 0.27
-        Firmware Revision: 0.18
+Why this change?
 
-Signed-off-by: Mark Dietzer <git@doridian.net>
----
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  };
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index c554ad8f246b65a1d20237d6d52c699c8afd2329..a90ada0c7adf4f25bc58c335d1920ccd5e690a71 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -58,7 +58,7 @@ static const struct drm_dmi_panel_orientation_data gpd_pocket2 = {
- 	.width = 1200,
- 	.height = 1920,
- 	.bios_dates = (const char * const []){ "06/28/2018", "08/28/2018",
--		"12/07/2018", NULL },
-+		"12/07/2018", "04/17/2020", NULL },
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
- 
+> +
+> +static int ad4170_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4170_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_CONT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Enables continuous data register read.
+> +	 * This enables continuous read of the ADC Data register. The ADC must
 
----
-base-commit: 593bde4ca9b1991e81ccf98b0baf8499cab6cab9
-change-id: 20250504-gpd_pocket2_biosver-662fe240755f
+First two sentences seem to say the same thing.
 
-Best regards,
--- 
-Mark Dietzer <git@doridian.net>
+> +	 * be in a continuous conversion mode.
+> +	 */
+> +	return regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
+> +				  AD4170_ADC_CTRL_CONT_READ_MSK,
+> +				  FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
+> +					     AD4170_ADC_CTRL_CONT_READ_ENABLE));
+> +}
+> +
+> +static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4170_state *st = iio_priv(indio_dev);
+> +	int ret, i;
+> +
+> +	/*
+> +	 * Use a high register address (virtual register) to request a write of
+> +	 * 0xA5 to the ADC during the first 8 SCLKs of the ADC data read cycle,
+> +	 * thus exiting continuous read.
+> +	 */
+> +	ret = regmap_write(st->regmap, AD4170_ADC_CTRL_CONT_READ_EXIT_REG, 0);
+> +
+> +	ret = regmap_update_bits(st->regmap, AD4170_ADC_CTRL_REG,
+> +				 AD4170_ADC_CTRL_CONT_READ_MSK,
+> +				 FIELD_PREP(AD4170_ADC_CTRL_CONT_READ_MSK,
+> +					    AD4170_ADC_CTRL_CONT_READ_DISABLE));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =  ad4170_set_mode(st, AD4170_ADC_CTRL_MODE_IDLE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The ADC sequences through all the enabled channels (see datasheet
+> +	 * page 95). That can lead to incorrect channel being read if a
+> +	 * single-shot read (or buffered read with different active_scan_mask)
+> +	 * is done after buffer disable. Disable all channels so only requested
+> +	 * channels will be read.
+> +	 */
+> +	for (i = 0; i < indio_dev->num_channels; i++) {
+> +		ret = ad4170_set_channel_enable(st, i, false);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return ret;
+
+return 0;  When we know we are in a good path we should make that clear.
+
+> +}
 
 
