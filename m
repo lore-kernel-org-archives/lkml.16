@@ -1,150 +1,134 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF32DA923;
-	Sun,  4 May 2025 10:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4ED1A2391;
+	Sun,  4 May 2025 10:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746354277; cv=none; b=rzR4FBansk0TLtWO4l3uFy7uvbEiIXUJuWTp+8D43eyWMam6UO4CFUDirL5IplXj0Y5kMZtw9CpZzOLazwcB2EXKfta9YbQXyTHdbVXhA0Asxy5a95Gpy+XowNMOkMw/XlD7FzmGX1yZUZAToWyIC7nrHD/1AMD9y1mhz7hE5d4=
+	t=1746354301; cv=none; b=k9Quol1SeqVfP3pL5+Da1WuAR/uRFI3BpRPhg6odHc6tTXIbK2Bf2zDxDbAc1s9bajfgQM9Lq/LCkqqlMDgvREWTJw8W1fqmPcJZCDvLdfwU8lmONHkqvC8KZizioZ6TLJSxv2jFlARjWFQjlx76a6aZq22ndve/s9uLrU6swWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746354277; c=relaxed/simple;
-	bh=Y6s+YCa9iFiGT4eVBBAezJ3E3VgNlItLt0N+jj37zow=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=cWVOGb2KROYlM5SVB4IF+6v1A7RJ+pG/jqRXxcm76CiPXNTfSiDfgR06b9N9cmpzoUAXRh563EFR+qTLeKYHUts4Zwfz2VID5LwCAEl5pcC8HtUp0mzdYjUcX6uwkWAHCljvWtLnqyEB+HnrEjgVHKn1AGyTIg4fywzcwjsP+SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id 0C2B9103765;
-	Sun, 04 May 2025 12:24:26 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id B1C5C60187F0A;
-	Sun, 04 May 2025 12:24:25 +0200 (CEST)
-Subject: Re: [PATCH] bpftool: build bpf bits with -std=gnu11
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Quentin Monnet <qmo@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250502085710.3980-1-holger@applied-asynchrony.com>
- <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org>
- <913f66a8-6745-0e30-b5b8-96d23bf05b90@applied-asynchrony.com>
- <CAADnVQLpyNiyghWLMq5AxkBgZX4J9VfX5j4ToNh6UsrQ=4yndg@mail.gmail.com>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <2a8208af-bc4b-f1bd-af0b-f5db485ed1f0@applied-asynchrony.com>
-Date: Sun, 4 May 2025 12:24:25 +0200
+	s=arc-20240116; t=1746354301; c=relaxed/simple;
+	bh=4xgR/nLOxR+neQ8HFSvyc0xNkPTaq4iZpZPllJ5W1N0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iBdrLpjpdfds6S3vsMacT2RkdkZnr/wdmCaxK6INQVaf8sKT3f5nRi/4ptrA/UUhx1o9p3sHtQC6JzHNZaznWynsoAg/xdly0RtttqngOL6cHP+Jh4+vu3QHY3+m0p7bWE398vPg/CTQec1KYxDtcBl1BudRvYKU4Ar9Am+f84Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0Zdle94; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Zdle94"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c560c55bc1so422503085a.1;
+        Sun, 04 May 2025 03:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746354298; x=1746959098; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PQ7S6mvnJWIgkvAn2u3X6CatMHsWA3MJFpJ2pyOLwk=;
+        b=T0Zdle94y9Hi5Oh7n6oaFexQtXaxSHObOFPJ9GtvAukR3QT97k594PE6t7hic4n7sg
+         0Tk+hFW+f/HIkbKDN9YoNKCnzkqcrjZ5N+LMnnzfjkoZOtFJeF4+HqAVe1AM5PzZxoWG
+         IKYC7l/MeAXQ/PMgIbcH/HmPyU8m1AfNzDAnuQpZHZjI2uW/CbiTwsKpu/LcoCG1udLg
+         CiUECpzZhrS67ltiGW6bvgtsvHbyqRGPsbsKRv22MEc5hEMutcEauDosaHvGYkCLBIgy
+         NrZO+L9y8u3HwPVtqc6ypdBtWzsU9r1g/BlmRnW6K7wbEFVvFMWw/tnQCJxsXCUmse97
+         XX5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746354298; x=1746959098;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1PQ7S6mvnJWIgkvAn2u3X6CatMHsWA3MJFpJ2pyOLwk=;
+        b=c8oXT+1pByJ3CeOCJR0eK0z/7rMwb4cO6Pl4oAKA1S+Urd3Iw6llx8isP52U2eo+9q
+         0dSD1ScgZLetjOyyGqiJuYLIeJ2JyJRas9ossMFD/7Moc4zxP1by5kn3CCqHYIP8cc7X
+         +IGjhaBP5mrt1reQ/i44txPSdgUZscgtX+fNow5c5xTMhJCEwSv/TrMM+p/lu2ympcCM
+         UrRpfz8skV2sUSYrc05g78uluOUanhz+Do2vPKgjjjvpRIAlISx+pIoBV3AD5DfLMnPV
+         /9RZnZb+bgsFw7GxlHwdKT4kopJyyT51q5z0nbPzolrim6N4xxRdb1o+3B+Jzr0t05az
+         IFZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Ckzqz6wUwNDGF1GjVny7McBrxEyA8TONf5eo8uMSMrGFvs+sclaOtw2GPW+6Nzbk7boHdjkOGxjPNexh@vger.kernel.org, AJvYcCWi2VDykP4QQCSUV+0S7pBF92EQc6ENj/wEj1Lk3bN7ACyhqWyI0JlH+fksD7ryiqumrv0497H7USFe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKcrGutaj/1IpKYa3QE16gf64a/4jOVQjcH7P8CLHtYbhEqO+g
+	Zm93oSn34AsaL20HWehV/wXUkkvOJ/JZePNMsrZM/EoKP81dPaho
+X-Gm-Gg: ASbGnctP30YOEsbXwm28vjvhtNpLByy+U5c6i+BKWhdbCCd7Oyegm3NlgS1flocLf2r
+	/OzYlFwW2AiSYQM07CxpzRCpehoLU6F8hg2fKsR8RhdtCMkN0k+kRrgdzEVhoW6zV9DIikhA2by
+	FZKlHQxnFg15V1MSw46mREt/FVlTCiv/V/euuqHXn+JCJXno8rO01/3gOdIy0kvLyeeWArNq2Qj
+	2+JZVUeNK2drSQLt8yw5egiBjsXL7hT6QTTkcCQJjR21rnBOugDHlOc7mNsPc/yYhs4zZWcnZk6
+	SRp8KakgMdWhrZ1SAbyyEfHzH/E8Nfipvqx7+aSxj/pDOSYdjlDj
+X-Google-Smtp-Source: AGHT+IEKTdMWS+jgcgAMuh3WRdpxZw08Q315wtPX2pV7WRyc1kxWG/qYE8O2gr4jHmjNND3M/QRc1Q==
+X-Received: by 2002:a05:620a:4014:b0:7c9:4c25:9eb7 with SMTP id af79cd13be357-7cad5b3867amr1038889385a.23.1746354298396;
+        Sun, 04 May 2025 03:24:58 -0700 (PDT)
+Received: from localhost.localdomain ([216.237.233.165])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23c48d6sm429222285a.32.2025.05.04.03.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 03:24:57 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.frattaroli@collabora.com,
+	detlev.casanova@collabora.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	inindev@gmail.com
+Subject: [PATCH v2 0/3] Add Luckfox Omni3576 Carrier Board support for RK3576
+Date: Sun,  4 May 2025 06:24:44 -0400
+Message-Id: <20250504102447.153551-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250502205533.51744-1-inindev@gmail.com>
+References: <20250502205533.51744-1-inindev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQLpyNiyghWLMq5AxkBgZX4J9VfX5j4ToNh6UsrQ=4yndg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 
-On 2025-05-03 04:36, Alexei Starovoitov wrote:
-> On Fri, May 2, 2025 at 2:53 AM Holger Hoffstätte
-> <holger@applied-asynchrony.com> wrote:
->>
->> On 2025-05-02 11:26, Quentin Monnet wrote:
->>> On 02/05/2025 09:57, Holger Hoffstätte wrote:
->>>> A gcc-15-based bpf toolchain defaults to C23 and fails to compile various
->>>> kernel headers due to their use of a custom 'bool' type.
->>>> Explicitly using -std=gnu11 works with both clang and bpf-toolchain.
->>>>
->>>> Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
->>>
->>> Thanks! I tested that it still works with clang.
->>>
->>> Acked-by: Quentin Monnet <qmo@kernel.org>
->>
->> Thanks!
->>
->>> I didn't manage to compile with gcc, though. I tried with gcc 15.1.1 but
->>> option '--target=bpf' is apparently unrecognised by the gcc version on
->>> my setup.
->>>
->>> Out of curiosity, how did you build using gcc for the skeleton? Was it
->>> enough to run "CLANG=gcc make"? Does it pass the clang-bpf-co-re build
->>> probe successfully?
->>
->> I'm on Gentoo where we have a gcc-14/15 based "bpf-toolchain" package,
->> which is just gcc configured & packaged for the bpf target.
->> Our bpftool package can be built with clang (default) or without, in
->> which case it depend on the bpf-toolchain. The idea is to gradually
->> allow bpf/xdp tooling to build/run without requiring clang.
->>
->> The --target definition is conditional and removed when not using clang:
->> https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/bpftool/bpftool-7.5.0.ebuild?id=bf70fbf7b0dc97fbc97af579954ea81a8df36113#n94
->>
->> The bug for building with the new gcc-15 based toolchain where this
->> patch originated is here: https://bugs.gentoo.org/955156
-> 
-> So you're fixing this build error:
-> 
-> bpf-unknown-none-gcc \
->          -I. \
->          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-v7.5.0-sources/include/uapi/
-> \
->          -I/var/tmp/portage/dev-util/bpftool-7.5.0/work/bpftool-libbpf-v7.5.0-sources/src/bootstrap/libbpf/include
-> \
->          -g -O2 -Wall -fno-stack-protector \
->           -c skeleton/profiler.bpf.c -o profiler.bpf.o
-> In file included from skeleton/profiler.bpf.c:3:
-> ./vmlinux.h:5: warning: ignoring '#pragma clang attribute' [-Wunknown-pragmas]
->      5 | #pragma clang attribute push
-> (__attribute__((preserve_access_index)), apply_to = record)
-> ./vmlinux.h:9845:9: error: cannot use keyword 'false' as enumeration constant
->   9845 |         false = 0,
->        |         ^~~~~
-> ./vmlinux.h:9845:9: note: 'false' is a keyword with '-std=c23' onwards
-> ./vmlinux.h:31137:15: error: 'bool' cannot be defined via 'typedef'
-> 31137 | typedef _Bool bool;
->        |               ^~~~
-> 
-> with -std=gnu11 flag and
+This series adds device tree support for the Luckfox Omni3576 Carrier Board
+with Core3576 Module, based on the Rockchip RK3576 SoC, enabling essential
+functionality for booting Linux and basic connectivity. v1 was posted at:
+https://lore.kernel.org/linux-rockchip/20250502205533.51744-1-inindev@gmail.com
 
-Yes, correct. This is the same as all over the kernel or the bpf tests
-for handling C23. I fully understand that this particular patch is only
-one piece of the puzzle.
+Tested features (on Linux 6.15-rc4):
+ - UART: Serial console operational
+ - SD card: Mounts and reads/writes successfully
+ - PCIe: NVMe SSD detected, mounted, and fully functional
+ - Ethernet 0: Functional with RGMII PHY
+ - USB 2.0: Host ports
+ - RTC: Timekeeping and wake-up tested
+ - LED: Heartbeat trigger works
+ - eMMC: Enabled, not populated on tested board
 
-> ignoring an important warning ?
+The series includes the following patches:
+ 1. dt-bindings: vendor-prefixes: Add Luckfox vendor prefix
+ 2. dt-bindings: arm: rockchip: Add luckfox,omni3576 binding
+ 3. arm64: dts: rockchip: Add Luckfox Omni3576 Board support
 
-Nobody is (or was) ignoring the warning - it was under discussion when
-I posted the patch. After reaching out to Oracle to verify, we have now
-added the BPF_NO_PRESERVE_ACCESS_INDEX define when building with gcc-bpf;
-this resolves the warning, just like in the bpf self-tests.
+The new DTS is covered by the existing ROCKCHIP ARCHITECTURE entry in MAINTAINERS.
 
-You are right that such an addition to the in-kernel bpftool build is
-still missing. If you have a suggestion on how best to do that via the
-existing Makefile I'm all ears.
+I am aware of ongoing RK3576 upstreaming efforts (e.g., by Collabora) and
+welcome feedback or collaboration to align with mainline driver development.
 
-As for the remaining warnings - we are also very aware of the ongoing
-upstream work to support btf_type_tag:
-https://gcc.gnu.org/pipermail/gcc-patches/2025-April/682340.html.
+Changes in v2:
+ - Enabled HDMI node per feedback from Heiko and Nicolas; untested due to
+   upstream driver issues
+ - Enabled Ethernet 1 node per Heiko's DT philosophy; untested due to
+   suspected PHY driver or configuration issues
+ - Clarified eMMC remains enabled but unpopulated on tested board, per Heiko
 
-> End result: partially functional bpftool,
-> and users will have no idea why some features of bpftool are not working.
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+John Clark (3):
+  dt-bindings: vendor-prefixes: Add luckfox prefix
+  dt-bindings: arm: rockchip: Add Luckfox Omni3576 board
+  arm64: dts: rockchip: Add Luckfox Omni3576 Board support
 
-First of all this is never shipped to any users; using gcc-bpf requires
-active opt-in by developers or users, and now also warns that such a setup
-may result in unexpected bugs due to ongoing work in both Linux and bpftool.
-Like I said before, by default everyone builds with clang and that is also
-true for our distributed binaries.
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3576-luckfox-omni3576.dts  | 779 ++++++++++++++++++
+ 4 files changed, 787 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
 
-If you think adding the -std=gnu11 bit is inappropriate at this time then
-just ignore this patch for now. Sooner or later the bpftool build will have
-to be adapted with BPF_CFLAGS (liek in the selftests) and hopefuilly an
-abstracted BPF_CC so that we no longer have to pretend to be clang when
-using gcc.
+-- 
+2.39.5
 
-cheers
-Holger
