@@ -1,142 +1,80 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DEC28F4;
-	Sun,  4 May 2025 07:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F128F4
+	for <linux-kernel@vger.kernel.org>; Sun,  4 May 2025 07:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746343987; cv=none; b=FAoMO94Lfv7OUnylEBbVa94veMCgklOcFkjuoRoKYyS3xJ0FeD6boYgDGt5bGpdn//usevJ4asZOfLN/CX3O1PhV75l8zajBpP8/DjjB0A9CAnipYHU76SGQuzEFWjDBRjGHQDeZgu2/xeCcuYycfcx3/jLEEjlM06CYHKrcuAQ=
+	t=1746344072; cv=none; b=sHPyBkg2tgpJ2Fsd0+k4Y+boo6nP3LBWCUsCmp07E2bSzezgfcPEdmYbwp7nWXNG3e0VduIG0Zw//UBG9q1MLKR9V4wxJ7f2603fZAyjUzUeAO6YgvhwlhAUoNehB/GUlaPj7Swz3a9WUEwwVYsHHez330Pb9SFVO64WYGZz8jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746343987; c=relaxed/simple;
-	bh=gdrZ9xZiSUdvqtaCcWoVCHNWwWD7lz2mYEbitFGulZs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K7+VC0aNqgzXhHaalH0j9vY6+022vjQ0f3U/RxD5S17iFwMkvNd+yTHEs9crWGiB+jfM9yvQbbKb9xTTY3D4H8OrECH69InIhx7E1+Ll/6JM/4P5p6mlx7rZgBjxCZnurM3viAeYUplnH1Ep94lcFygnaFyd6CT8smHobdu3r9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=grCc3sB2; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746344072; c=relaxed/simple;
+	bh=jaIsT2VqYOwGpto/ZI3VtUj4gXA6trfG0WUo22uYHBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3grMEWop4lWoe965DuwZmTQjjPGK+YcwOnXDc3+fjPJ1RbSLU62ERClCWGWQwTK7gZRtB3FcvXCflA+g1sQguk5pb8FWnL+xlsYk8Nk7zx7Hjd2NfV/bm7IR9ZKQP4WYdYnSV1u1edn+YSW9sgKftwJYbUaesSEiQokmNR8V8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdCyYDj9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grCc3sB2"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a071so34554131fa.1;
-        Sun, 04 May 2025 00:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746343984; x=1746948784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eYiayAZSUyOm+8KV8iySpwRx7cWI85tBux/RcLlm+hY=;
-        b=grCc3sB2Pqc3RUiRF5H0uk8qHHkWAt7PYI1zZdhSI6ce+V0PPaSs1CZG3b2S4xz3g+
-         XQVVEuOTv2nlVvSIqgRDLwuCuKmzGpY5AhDc4XLrMC6My7ZXt6GqhajtVv08K1CmBxM4
-         kvIj/cmUAEK/LRZEqrucR6NLmdwLEANmLYBp0MmYe9c0VAMxXpRdreqcNDmFLIqZDvEx
-         Qumm2ophd6L0VzTF0SA5JDRPw0GvGYsX7Up5HWknSMMngQnNpDDbiYt8V6b2FkNr94r+
-         cOawWgbc5v+gzOqYNwAMxkzai8QlJtoCda6mjE/n8T5X0zs2zTYrwiQud+jGxsm0SKvO
-         HM4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746343984; x=1746948784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eYiayAZSUyOm+8KV8iySpwRx7cWI85tBux/RcLlm+hY=;
-        b=qyR2XCBQoh6TEwOU2Pk8p0Qd+MzZzF88SfK7mQgILHqhhAagd3mV5Ey0v7vAS6DdsS
-         pyCtYevcF4V8Lbc0Fpbd3Bu+vDQkGPTdoxa5tZMoK+2R+Yz98eowfUs4vq2edfas5oqR
-         pexdDiQG8dFNSZ6AbkMuILjnYjREwQig11F5dwboIbOyccVd66ZTdm34vS84Kw9CY78n
-         tf8JunP2tyZXgTS/8AAJVVnOUicXRJr4CjyNeTcyEHEiakUOUZA5PdH0y9E8Vc1XAQiL
-         Evvs/7uwmTdH22wOAhQ+3kYcRmbtAW83IO9Z14cz6iQ6MulE3npfQ8k4dXV2PdKNmfPq
-         uX+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUXTb1ybn28g0Z9SXSWErqTztjAjXeDHRyzLJ6JMdDZOrdMA1m3Wfh4dVHY00lt1kCzlfa9iT0TySSvJzrj@vger.kernel.org, AJvYcCV5AYLmAkX1WB7uYerLcu+43XF37MX+mdzRN02fKQi7BUjSG2k+/Zv6r2xGKIdkWKhPs3a5mtiX95E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9kGkp6H4YSxDiuUx/5LR+xyYKx92xIH3/+IkxjkNoqL8xWLcI
-	0k4Mepv7yxIX4TBOcU6Mh8x0vnZbZIJnQ3GdZ7L1xFuDBmcdZXI37Eb4UyFwKwARWEt3mX9+xay
-	z+bVGHvSREjRC9E7MojaOkhygOGs=
-X-Gm-Gg: ASbGncs3BeVGa7h3bhmcRKnK9vlthE+v7t1rbcNWDRSXCBpRdl1NDWiU4BQwvGFtmi5
-	bdaH8kj9+bLac/mzJoI0c7cpe42ZbrOpQXJ4Br3IOAbGmCSnpvTylBq3Ir9ENNTe3w/TVLouU6Z
-	+3r3lor082M/klRihP55Q6rA==
-X-Google-Smtp-Source: AGHT+IFoSqJnnXGmXvA0S9Lpu8fzifjVDHFLr+eAGZAqz2XZdFs9ClMvGoiTXrkOW+xXZqlAqa6L+NW2Mp0wbc1Y3M8=
-X-Received: by 2002:a05:651c:1601:b0:30c:3099:13d0 with SMTP id
- 38308e7fff4ca-32348f5f9f8mr9314401fa.21.1746343983560; Sun, 04 May 2025
- 00:33:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdCyYDj9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B47C4CEE7;
+	Sun,  4 May 2025 07:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746344071;
+	bh=jaIsT2VqYOwGpto/ZI3VtUj4gXA6trfG0WUo22uYHBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QdCyYDj9Ykna8ut26PwxIeQ+oTfxHzhVmPD50lyJRXeCRWRn8lDDBWcabqoL0FISH
+	 BF1GHuLZYzmGZxB4g2f8yKKVClneikZ/cHbcl2qK0/Rw55mKgxcCup+tApSk2Hd+Nm
+	 VoPOpLIyYpx6cvhT9pWvAjjZ8YTqnWbmnciWRG1HuEMPefQhzV8TjWUN33e9jt/vBm
+	 Kd/A42RwUzt37Kj6rR0MQQeJxQbqqsT5iLu6miyMgpGv5OLahxWJ8xgMQbFy6VydlD
+	 10bXizqIbBHLRPpdKPFFpdog8T4ISDuI3EqU57RuoVpw5NuvgaxwP/WRaU8YMZLdhN
+	 RIQJ9hNMi5xFw==
+Date: Sun, 4 May 2025 09:34:27 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [GIT PULL] timer subsystem fixes
+Message-ID: <aBcYg0t9DIx_lh5W@gmail.com>
+References: <aBcWkIOBqkKG8lH-@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418141253.2601348-8-ardb+git@google.com> <20250418141253.2601348-14-ardb+git@google.com>
- <f465a1b3-c28b-7bfe-7c18-e3fad41842aa@gmail.com> <CAMj1kXH=nXgymC8XGO0cxRXJS=N2GY1fCvegSBG4_+mS2-cc4Q@mail.gmail.com>
-In-Reply-To: <CAMj1kXH=nXgymC8XGO0cxRXJS=N2GY1fCvegSBG4_+mS2-cc4Q@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 4 May 2025 09:33:04 +0200
-X-Gm-Features: ATxdqUH9bkMSwuk8Z5NEpFtrAaMVMTJZTjZNc92XY0TDxWXQrYOLxywe0urF7o0
-Message-ID: <CAFULd4b3uHB+tvTXroDP-MLgpBHtGxMZgxCp3FVpN7bx=Ov+7w@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] x86/asm: Retire RIP_REL_REF()
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBcWkIOBqkKG8lH-@gmail.com>
 
-On Fri, Apr 18, 2025 at 5:58=E2=80=AFPM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
->
-> On Fri, 18 Apr 2025 at 17:51, Uros Bizjak <ubizjak@gmail.com> wrote:
-> >
-> >
-> >
-> > On 18. 04. 25 16:13, Ard Biesheuvel wrote:
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > Now that all users have been moved into startup/ where PIC codegen is
-> > > used, RIP_REL_REF() is no longer needed. Remove it.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >   arch/x86/include/asm/asm.h | 5 -----
-> > >   1 file changed, 5 deletions(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-> > > index a9f07799e337..eef0771512de 100644
-> > > --- a/arch/x86/include/asm/asm.h
-> > > +++ b/arch/x86/include/asm/asm.h
-> > > @@ -120,11 +120,6 @@ static __always_inline __pure void *rip_rel_ptr(=
-void *p)
-> > >
-> > >       return p;
-> > >   }
-> > > -#ifndef __pic__
-> > > -#define RIP_REL_REF(var)     (*(typeof(&(var)))rip_rel_ptr(&(var)))
-> > > -#else
-> > > -#define RIP_REL_REF(var)     (var)
-> > > -#endif
-> > >   #endif
-> >
-> > You can also remove rip_rel_ptr() with the whole "#ifndef __ASSEMBLER__=
-"
-> > part.
-> >
->
-> No, rip_rel_ptr() needs to be kept, unfortunately.
 
-Indeed, I scanned the source before your patch, where rip_rel_ptr()
-was used exclusively via RIP_REL_REF.
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-On a related note,
+> Linus,
+> 
+> Please pull the latest timers/urgent Git tree from:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-05-04
+> 
+>    # HEAD: 7aeb1538be5df3efa1d799e5428ac3a0ae802293 vdso: Reject absolute relocations during build
+> 
+> Misc fixes:
+> 
+>  - Fix time keeping bugs in CLOCK_MONOTONIC_COARSE clocks
+> 
+>  - Work around and reject absolute relocations into vDSO code that
+>    GCC erroneously emits in certain arm64 build environments
 
-asm("leaq %c1(%%rip), %0" : "=3Dr"(p) : "i"(p));
+Please belay this pull request, just a minute after sending this out I 
+received this fresh build warnings report on a Risc-V randconfig build:
 
-the above asm can use %a1 generic operand modifier instead of
-"%c1(%%rip)" [1], similar to d689863c1a60b9 [2], which also explains
-the modifier:
+   # Subject: [tip:timers/urgent 3/3] llvm-readelf: warning: 'arch/riscv/kernel/vdso/hwprobe.o': bitcode files are not supported
 
---q--
-The "a" asm operand modifier substitutes a memory reference, with the
-actual operand treated as address. For x86_64, when a symbol is
-provided, the "a" modifier emits "sym(%rip)" instead of "sym",
-enabling shorter %rip-relative addressing.
---/q--
+   https://lore.kernel.org/r/aBb6nudVcs+cqRyZ@rli9-mobl
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Generic-Operand-Mo=
-difiers
-[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/=
-arch/x86/include/asm?id=3Dd689863c1a60b9936b47a34fa5c3330de374f4fc
+Sorry about that.
 
-Uros.
+Thanks,
+
+	Ingo
