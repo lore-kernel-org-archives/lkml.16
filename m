@@ -1,59 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BFF1D9A50;
-	Sun,  4 May 2025 16:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFBF7E0E4;
+	Sun,  4 May 2025 16:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746375307; cv=none; b=PAM84dKGH13ntOdjIbd+cUbz1+WZbtPq8NfxmWQh5K4JR8JVpR3f2HNHGnwNhsb1xwUzhgXPC5dN7dWRqguo1tA5pIkVrK9SKK79MWg8mH7nXtXiQVfH2mi75Lcx0zBRI9tPCnuh810+sSW1gDf/acBexDO2/Xihe1ZvwyqqbJU=
+	t=1746375384; cv=none; b=erdr8RoDuhGJ+OzqV55CVabcAumQ7lGYykXO/IMj9VxS+/5xusowagAjuacXBl+Ru4HSKilFeBPcvdStfnwJfqCCjMiOWErVmKfdySaENAsQibqQOsbzv+53n3MWG+cUrH4JSckF+z4ldGAe3IOSizTKv6ahS8u32sfOi5+hT0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746375307; c=relaxed/simple;
-	bh=tKJYnlBaANGFuI7HcwwK/OhmNXjmKApd+I7pw+gyVw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LvQqsiV71xyJZbmA/iMFmAfO1eqSdXCT+cvUfH/XtMF3l31Bo5QVvOzeT/ksNixGeGhS81faXU0nOqWFCvtoq42JrRZ4dvrf8fPbYN6ePNR0L3W/ItPOwWwpYVvti6keJEUxQgzniNbrZbB0ff/wvl2Lgpdgu1F0N8byMTYIwHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLyGErdI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746375384; c=relaxed/simple;
+	bh=0x5yBbRnynrGipESD6GFE4idLm4RDPGnoBDDY0BtZEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uae8mJ0AWx3cS0MYSxoNjvprb9k9j2rAgCssUAo5111ntB2CgtKayxBcxTlXZpcTwYnUW8PYzD+MrrYXA/+wLu1GjT274KKu5LcrruQNs8HTPrgAn5LIFl5EkyM1u9T5UJq8j2KMqJfUZnGmz5QWa69XF9HhB+vhn0BndLE1eLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sS6z8Gt9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLyGErdI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D416C4CEE7;
-	Sun,  4 May 2025 16:14:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sS6z8Gt9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0221C4CEE7;
+	Sun,  4 May 2025 16:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746375307;
-	bh=tKJYnlBaANGFuI7HcwwK/OhmNXjmKApd+I7pw+gyVw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dLyGErdI64iZ2qo0TDMyYP6l7LKLLJbCCPc5WJPeTwEE39FUp9SrvyrQgWzJA+oX0
-	 gJPCG2v1hryobjrhnPeHLJ+gmg2IIFcr3IG7FJykAm8LPjQxqkB6Pz5GUrCmi+yvx9
-	 YNt3oIsZhx6piJxkdNh798RYblbGyMKMKpTa7sOa8uVYLwcBvXzavmA0fGUj5rSC8W
-	 M2ZJK8YrNwzI2akrYFr0hlfJXsmNzZkLQZvV5q7bWp1jzMnG9XnZaAPKwCKpOMdFha
-	 K0IKOdzHggl005qU37SX3dsUEERtn/1zxqfzNQ8OX7gEEqVwQtF7nQCYaanNm/iL9Q
-	 chs9iUJ2KSp5Q==
-Date: Sun, 4 May 2025 18:14:55 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	kwilczynski@kernel.org, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	joelagnelf@nvidia.com, ttabi@nvidia.com, acourbot@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
-Cc: linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Devres optimization with bound devices
-Message-ID: <aBeSf__SNkd7goGv@polis>
-References: <20250428140137.468709-1-dakr@kernel.org>
+	s=k20201202; t=1746375384;
+	bh=0x5yBbRnynrGipESD6GFE4idLm4RDPGnoBDDY0BtZEM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sS6z8Gt9i7s0P5Kmpa4D5xTlt9KIQNeRxRLYtl0nYo4bIyJ0vGXKpwEQL5pG+bDLy
+	 6BYUzvwl1q/0Y5NigcVnEaovMvnP9OnsmVCX5EjHqxnNtBKBzBuVurKZJvQBByDeBu
+	 wLxECISvECmJ7nE1gzY4/2HBlrkLEJM9ZgLRKa9Y0n4jPVPfzOlvR6z61HKUukhbET
+	 PIQEB5gW0s+ugDcP64z1lM6frJUnJzlVZf5nMnAV+AnKGaYT88IenP/SqaCtxPqMkQ
+	 9QqLYn4wDXMtCNsm5osBrqEWSYeFgeENo9VzB8N+MwoeACFCMAU1JKxjU+Xx88zz1y
+	 WIfHp/RlX4nSQ==
+Message-ID: <ec294e4f-274a-45ae-ac10-464ae4ae6f66@kernel.org>
+Date: Sun, 4 May 2025 18:16:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 0/3] Add STM32MP25 SPI NOR support
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: christophe.kerello@foss.st.com, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250428-upstream_ospi_v6-v11-0-1548736fd9d2@foss.st.com>
+ <174636664232.45285.4829080141383638928.b4-ty@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <174636664232.45285.4829080141383638928.b4-ty@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 04:00:26PM +0200, Danilo Krummrich wrote:
-> This patch series implements a direct accessor for the data stored within
-> a Devres container for cases where we can prove that we own a reference
-> to a Device<Bound> (i.e. a bound device) of the same device that was used
-> to create the corresponding Devres container.
+On 04/05/2025 15:50, Krzysztof Kozlowski wrote:
+> 
+> On Mon, 28 Apr 2025 10:58:29 +0200, Patrice Chotard wrote:
+>> This series adds SPI NOR support for STM32MP25 SoCs from STMicroelectronics.
+>>
+>> On STM32MP25 SoCs family, an Octo Memory Manager block manages the muxing,
+>> the memory area split, the chip select override and the time constraint
+>> between its 2 Octo SPI children.
+>>
+>> Due to these depedencies, this series adds support for:
+>>   - Octo Memory Manager driver.
+>>   - Octo SPI driver.
+>>   - yaml schema for Octo Memory Manager and Octo SPI drivers.
+>>
+>> [...]
+> 
+> Applied, thanks!
+> 
+> [1/3] dt-bindings: memory-controllers: Add STM32 Octo Memory Manager controller
+>       https://git.kernel.org/krzk/linux-mem-ctrl/c/43eb1b288072641b7de8f5d5c15bde69e6e8589a
 
-Applied to nova-next, thanks!
+And dropped everything - it is full of warnings.
+
+Best regards,
+Krzysztof
