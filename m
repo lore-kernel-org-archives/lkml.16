@@ -1,327 +1,372 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6EC26F453;
-	Mon,  5 May 2025 16:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C14819341F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462918; cv=none; b=j9N1e70SkDDZBaVfP9u8mnk1f7tc4oqX/TwieJu0ZHgNeawMnVyjx91IiutvDTbvYND0LRrV28XmvyaCEPkE28dWTu7ya83LG12boum0BT4k22gctMhG2EYY9NK+ZoVfEuQ3whBTMoG5qHE1Cdpu5feT8KXywIlPMiCZO97iU6w=
+	t=1746462989; cv=none; b=YvC2KRzqxEMupQULmqsF2fZGtYKY8bj04ED2+JPgRPwGWSolxOzKXSrCf8oIS8rLt74LHHHWjuEkADzdwbZXYUX783COUmeA6lrJydjB+fs57mKk6qQDELMSR5tSCigWkC84R5Dip4BcrlWPE8D9COXcgMTcPaMzQiR3AXvvPEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462918; c=relaxed/simple;
-	bh=xE5ZwG6HJWOYW19Pk/RiVY/11HHeSqrSFUFmFbhKYUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uAQvC3wGAOz7ufkQuVrOKJUCorMF2Nmxi0oMb2nApSxRQ98p+6oscBbLYhSS9LgfzpB3W6L/CUrCzB5Px6L/3HLMGh2zZC/+cEVyn7pYIW+ROGkGP4dwsPmm2MJhtyJlGyNUVTOrsc16G2Pq7GdfFvVFHwcWQEcEvqKltY2T6Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V1LJaYpm; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746462989; c=relaxed/simple;
+	bh=o7vVkiBJQJMXF2PzZzzeJUMc39QxNNpzdP+v/EgFRvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/4Uhj4jEQ1g1UOJf9Y1opqfSpyPwR+y3WTZdlvftt/0HlcJ2DDt4td6ATHZeoOCFsW4UMmPd+Zq+Y0nQRdSd+JTISZNIoUjiU96FN50HyEZuz1WIAsyMKegmV8Aep49R7pj81pmOpYGpHbTEHWiU1VVkszlNrb6R8GLp/LEtB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MXxntend; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V1LJaYpm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=3+Dnk
-	gM+rDrq50pXijjpcrpwU3+yZR27K1MxMsabuPU=; b=V1LJaYpmG4JJI0M3CV7GI
-	aPM2dA0lYthBxyJ8p9jKvMU9l+uXZgodfmwzo/kgj4DCnoWZhpxmeW4Lp/KSdVKY
-	ZMzIG7yUSQDDugHKhO2+/jrja529ZmC/Wk0fu6ZIOIaFhg7BjXYYQY+HkpRgNRn/
-	eOAz+KAM32g7Q3mUyhrK8A=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDn+lmO6BhoumvGBw--.3540S5;
-	Tue, 06 May 2025 00:34:25 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	manivannan.sadhasivam@linaro.org,
-	ilpo.jarvinen@linux.intel.com,
-	kw@linux.com
-Cc: cassel@kernel.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v11 3/6] PCI: Refactor capability search into common macros
-Date: Tue,  6 May 2025 00:34:17 +0800
-Message-Id: <20250505163420.198012-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250505163420.198012-1-18255117159@163.com>
-References: <20250505163420.198012-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MXxntend"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so39519675e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746462984; x=1747067784; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=koqGT0gVjE9PGUxoG6q0TSOc5EHYN/CahOru8Ed0etM=;
+        b=MXxntendMVr5u4vTBzq8qJIfEIIl4PGojTk+vf2bq1EIVcPpkkPh1zlkGdxUnkCo1r
+         hNygff58XejWqBoER+qExFqb/yUJFAIZ5CvZ18pKupQJ2DbjUjD744C0OZcqoYGuJlN1
+         y+UglixgDX2Mxkc/et0hil8S07Yoe7wN8v5drTIzWlQf7QMYyzWGoGzJBVigo+/AuwqV
+         ggIkx61/CW9JAWeBfO1LEmPQQjrHOCLrW6DJyZTTaVJLBZSuv3mDcKRMw08vozZFDcJ8
+         2y9ZLTP7LgxRDyyOZxuAyavBHxsCt5IyceFwvPRDYPxdTKtuLPtX3wEOas8y2OnT8X2u
+         ZagQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746462984; x=1747067784;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=koqGT0gVjE9PGUxoG6q0TSOc5EHYN/CahOru8Ed0etM=;
+        b=W34A2t9XnZ6xxaPTg5B2CpNghnVnvZwjY3OHTo67BZei97hMYQaYl/jKE4CfheNL+5
+         /DdPRmzwSPEe6RXzPjOvV2Gll4URVULA7NdFpY0vJE1qktvBpDUJd17YQJsTTjcaMHsO
+         1BsDpQgto/noz2a3mp7ANa+uepIFwYq/M+xBuZ+hBgYNhrxrhEgVaI4gu9uZCD4Nhfst
+         lf51b+Lz9IawDE3tnsxXhL05De2ZMV8xSfSzPSheVwO3V7yXfzKIA3jCyPKT/0l22iOP
+         3IXF363v1aTpllV35KPko00GTXEo0qybliGblixkVmABNSH9nIqoxxBJn07DDa/nqH7t
+         p8Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsxH8LAT8VPAWm96uzCL0Phf/ZOYe6ff+FhiaVR4QBHJhof8u+L78Pjy2I5KF3uJp7gSbxti1/KUybGLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUyxgJzLrh3rD1uimWv3VzcdP9NUedID8jWWZTeWPxp/54n5Rg
+	r8qwmZh3vIjhs1CSGfjJlmOCkhJp/kojkK9/mz4v+Z2Qz0G53ykMYv5tCisOYkw=
+X-Gm-Gg: ASbGnctsrHgfDyTvIxkhtkAdx9SNE+53AC21jb1IClgPfTcYUHwLjY0CfTwFxrKzJPR
+	eKKU0HlLmvXHyZ5tHLgkS3971NeX/CPUQx2+G1fWNbIYgs4qZzJdJOO5sTi3/wFx75Nt/5Qq2l8
+	T7r1qtddZ5r6OExY/JWhGR5WUdCHuphcNsZ4Pzcz30W3tOSMHx4appFIMAw7TCpsluPpX2f74jK
+	P5r7caT81s44nJ03VPO3m26P5VXcwzU0HnCV7QAzpRtowOVsgKpUKgLYsBwdfdX92ZmiMftutxx
+	EFzozRpnASxVT7apTzlSHQzhU8f+muv+g+sk4xLV0XDsRs1Xz1pzpbKmHtcLpZTwLtbbfCT0lWp
+	yjI8/AG3IP4PZsA==
+X-Google-Smtp-Source: AGHT+IFchRoVKF/xsztzmfNA9fw/Ao/ExThSQoz71pUINx5xaDyoilrc0corCct8iZlxbPSgK6N83Q==
+X-Received: by 2002:a05:600c:3494:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-441c48aa314mr78001765e9.4.1746462984537;
+        Mon, 05 May 2025 09:36:24 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b23c5e14sm132222885e9.0.2025.05.05.09.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 09:36:23 -0700 (PDT)
+Date: Mon, 5 May 2025 18:36:22 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Caleb James DeLisle <cjd@cjdns.fr>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 2/7] clocksource/drivers: Add EcoNet Timer HPT driver
+Message-ID: <aBjpBpJAIP89oiit@mai.linaro.org>
+References: <20250430133433.22222-1-cjd@cjdns.fr>
+ <20250430133433.22222-3-cjd@cjdns.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDn+lmO6BhoumvGBw--.3540S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XrW7ZF1fZF1ftFyxZFWkWFg_yoW3AFW7pr
-	y3A3WayrW8J3W2qwsIva1UtF1a9an7Jay29rWxGwn8XFyqkas5trySy3WaqFy7KrZ7uF13
-	Xan0qFWrC3ZIyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRBpB9UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwhEo2gY3b-06wAAs5
+In-Reply-To: <20250430133433.22222-3-cjd@cjdns.fr>
 
-The PCI Capability search functionality is duplicated across the PCI core
-and several controller drivers. The core's current implementation requires
-fully initialized PCI device and bus structures, which prevents controller
-drivers from using it during early initialization phases before these
-structures are available.
+On Wed, Apr 30, 2025 at 01:34:28PM +0000, Caleb James DeLisle wrote:
+> Introduce a clocksource driver for the so-called high-precision timer (HPT)
+> in the EcoNet EN751221 MIPS SoC.
 
-Move the Capability search logic into a header-based macro that accepts a
-config space accessor function as an argument. This enables controller
-drivers to perform Capability discovery using their early access
-mechanisms prior to full device initialization while sharing the
-Capability search code.
+As a new driver, please document the timer (up - down ?, SPI/PPI, etc
+...) that will help to understand the code more easily, especially the
+reg_* functions (purposes?).
 
-Convert the existing PCI core Capability search implementation to use this
-new macro. Controller drivers can later use the same macros with their
-early access mechanisms while maintaining the existing protection against
-infinite loops through preserved TTL checks.
+> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+> ---
+>  drivers/clocksource/Kconfig                 |   8 +
+>  drivers/clocksource/Makefile                |   1 +
+>  drivers/clocksource/timer-econet-en751221.c | 216 ++++++++++++++++++++
+>  3 files changed, 225 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-econet-en751221.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 487c85259967..976afb0b2312 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -73,6 +73,14 @@ config DW_APB_TIMER_OF
+>  	select DW_APB_TIMER
+>  	select TIMER_OF
+>  
+> +config ECONET_EN751221_TIMER
+> +	bool "EcoNet EN751221 High Precision Timer" if COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	select CLKSRC_MMIO
+> +	select TIMER_OF
+> +	help
+> +	  Support for CPU timer found on EcoNet MIPS based SoCs.
+> +
+>  config FTTMR010_TIMER
+>  	bool "Faraday Technology timer driver" if COMPILE_TEST
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 43ef16a4efa6..d2998601eda5 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
+>  obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
+>  obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
+>  obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
+> +obj-$(CONFIG_ECONET_EN751221_TIMER)	+= timer-econet-en751221.o
+>  obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
+>  obj-$(CONFIG_OMAP_DM_SYSTIMER)	+= timer-ti-dm-systimer.o
+>  obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
+> diff --git a/drivers/clocksource/timer-econet-en751221.c b/drivers/clocksource/timer-econet-en751221.c
+> new file mode 100644
+> index 000000000000..9cfeead09377
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-econet-en751221.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Timer present on EcoNet EN75xx MIPS based SoCs.
+> + *
+> + * Copyright (C) 2025 by Caleb James DeLisle <cjd@cjdns.fr>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/clk.h>
+> +
+> +#define ECONET_BITS			32
+> +#define ECONET_MIN_DELTA		0x00001000
+> +#define ECONET_MAX_DELTA		GENMASK(ECONET_BITS - 2, 0)
+> +/* 34Kc hardware has 1 block and 1004Kc has 2. */
+> +#define ECONET_NUM_BLOCKS		DIV_ROUND_UP(NR_CPUS, 2)
+> +
+> +static struct {
+> +	void __iomem	*membase[ECONET_NUM_BLOCKS];
+> +	u32		freq_hz;
+> +} econet_timer __ro_after_init;
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, econet_timer_pcpu);
+> +
+> +/* Each memory block has 2 timers, the order of registers is:
+> + * CTL, CMR0, CNT0, CMR1, CNT1
+> + */
+> +static inline void __iomem *reg_ctl(u32 timer_n)
+> +{
+> +	return econet_timer.membase[timer_n >> 1];
+> +}
+> +
+> +static inline void __iomem *reg_compare(u32 timer_n)
+> +{
+> +	return econet_timer.membase[timer_n >> 1] + (timer_n & 1) * 0x08 + 0x04;
+> +}
+> +
+> +static inline void __iomem *reg_count(u32 timer_n)
+> +{
+> +	return econet_timer.membase[timer_n >> 1] + (timer_n & 1) * 0x08 + 0x08;
+> +}
+> +
+> +static inline u32 ctl_bit_enabled(u32 timer_n)
+> +{
+> +	return 1U << (timer_n & 1);
+> +}
+> +
+> +static inline u32 ctl_bit_pending(u32 timer_n)
+> +{
+> +	return 1U << ((timer_n & 1) + 16);
+> +}
+> +
+> +static bool cevt_is_pending(int cpu_id)
+> +{
+> +	return ioread32(reg_ctl(cpu_id)) & ctl_bit_pending(cpu_id);
+> +}
+> +
+> +static irqreturn_t cevt_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *dev = this_cpu_ptr(&econet_timer_pcpu);
+> +	int cpu = cpumask_first(dev->cpumask);
+> +
+> +	if (!cevt_is_pending(cpu)) {
+> +		pr_debug("%s IRQ %d on CPU %d is not pending\n", __func__, irq, cpu);
+> +		return IRQ_NONE;
+> +	}
 
-The ttl parameter was originally an additional safeguard to prevent
-infinite loops in corrupted config space.  However, the
-PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
-Removing redundant ttl handling simplifies the interface while maintaining
-the safety guarantee. This aligns with the macro's design intent of
-encapsulating TTL management.
+How this can happen ? Can this interrupt be shared ?
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v10:
-- Remove #include <uapi/linux/pci_regs.h>.
-- The patch commit message were modified.
+The system will account this as a spurious interrupt, the debug
+message is not needed.
 
-Changes since v9:
-- None
+> +	iowrite32(ioread32(reg_count(cpu)), reg_compare(cpu));
+> +	dev->event_handler(dev);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int cevt_set_next_event(ulong delta, struct clock_event_device *dev)
+> +{
+> +	u32 next;
+> +	int cpu;
+> +
+> +	cpu = cpumask_first(dev->cpumask);
+> +	next = ioread32(reg_count(cpu)) + delta;
+> +	iowrite32(next, reg_compare(cpu));
+> +
+> +	if ((s32)(next - ioread32(reg_count(cpu))) < ECONET_MIN_DELTA / 2)
+> +		return -ETIME;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cevt_init_cpu(uint cpu)
+> +{
+> +	struct clock_event_device *cd = &per_cpu(econet_timer_pcpu, cpu);
+> +	u32 reg;
+> +
+> +	pr_info("%s: Setting up clockevent for CPU %d\n", cd->name, cpu);
 
-Changes since v8:
-- The patch commit message were modified.
----
- drivers/pci/pci.c | 69 +++++---------------------------------
- drivers/pci/pci.h | 85 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 94 insertions(+), 60 deletions(-)
+That is more debug information
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 27d2adb18a30..271d922abdcc 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,7 +9,6 @@
-  */
- 
- #include <linux/acpi.h>
--#include <linux/align.h>
- #include <linux/kernel.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -425,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
- }
- 
- static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
--				  u8 pos, int cap, int *ttl)
-+				  u8 pos, int cap)
- {
--	u8 id;
--	u16 ent;
--
--	pci_bus_read_config_byte(bus, devfn, pos, &pos);
--
--	while ((*ttl)--) {
--		if (pos < PCI_STD_HEADER_SIZEOF)
--			break;
--		pos = ALIGN_DOWN(pos, 4);
--		pci_bus_read_config_word(bus, devfn, pos, &ent);
--
--		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
--		if (id == 0xff)
--			break;
--		if (id == cap)
--			return pos;
--		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
--	}
--	return 0;
-+	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
-+				     devfn);
- }
- 
- static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
- 			      u8 pos, int cap)
- {
--	int ttl = PCI_FIND_CAP_TTL;
--
--	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-+	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
- }
- 
- u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-@@ -554,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
-  */
- u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
- {
--	u32 header;
--	int ttl;
--	u16 pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
- 	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
- 		return 0;
- 
--	if (start)
--		pos = start;
--
--	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--		return 0;
--
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--			break;
--	}
--
--	return 0;
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
-+					    dev->bus, dev->devfn);
- }
- EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
- 
-@@ -649,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
- 
- static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- {
--	int rc, ttl = PCI_FIND_CAP_TTL;
-+	int rc;
- 	u8 cap, mask;
- 
- 	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-@@ -658,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 		mask = HT_5BIT_CAP_MASK;
- 
- 	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
--				      PCI_CAP_ID_HT, &ttl);
-+				      PCI_CAP_ID_HT);
- 	while (pos) {
- 		rc = pci_read_config_byte(dev, pos + 3, &cap);
- 		if (rc != PCIBIOS_SUCCESSFUL)
-@@ -669,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
- 
- 		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
- 					      pos + PCI_CAP_LIST_NEXT,
--					      PCI_CAP_ID_HT, &ttl);
-+					      PCI_CAP_ID_HT);
- 	}
- 
- 	return 0;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 5e1477d6e254..9d512d37301b 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -2,6 +2,7 @@
- #ifndef DRIVERS_PCI_H
- #define DRIVERS_PCI_H
- 
-+#include <linux/align.h>
- #include <linux/pci.h>
- 
- struct pcie_tlp_log;
-@@ -91,6 +92,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
- int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
- 			u32 *val);
- 
-+/* Standard Capability finder */
-+/**
-+ * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search
-+ * @cap: Capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Iterates through the capability list in PCI config space to find
-+ * the specified capability. Implements TTL (time-to-live) protection
-+ * against infinite loops.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-+({									\
-+	int __ttl = PCI_FIND_CAP_TTL;					\
-+	u8 __id, __found_pos = 0;					\
-+	u8 __pos = (start);						\
-+	u16 __ent;							\
-+									\
-+	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-+									\
-+	while (__ttl--) {						\
-+		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-+			break;						\
-+									\
-+		__pos = ALIGN_DOWN(__pos, 4);				\
-+		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-+									\
-+		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-+		if (__id == 0xff)					\
-+			break;						\
-+									\
-+		if (__id == (cap)) {					\
-+			__found_pos = __pos;				\
-+			break;						\
-+		}							\
-+									\
-+		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-+	}								\
-+	__found_pos;							\
-+})
-+
-+/* Extended Capability finder */
-+/**
-+ * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search (0 for initial search)
-+ * @cap: Extended capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Searches the extended capability space in PCI config registers
-+ * for the specified capability. Implements TTL protection against
-+ * infinite loops using a calculated maximum search count.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
-+({										\
-+	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
-+	u16 __found_pos = 0;							\
-+	int __ttl, __ret;							\
-+	u32 __header;								\
-+										\
-+	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
-+	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
-+		__ret = read_cfg(args, __pos, 4, &__header);			\
-+		if (__ret != PCIBIOS_SUCCESSFUL)				\
-+			break;							\
-+										\
-+		if (__header == 0)						\
-+			break;							\
-+										\
-+		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
-+			__found_pos = __pos;					\
-+			break;							\
-+		}								\
-+										\
-+		__pos = PCI_EXT_CAP_NEXT(__header);				\
-+	}									\
-+	__found_pos;								\
-+})
-+
- /* Functions internal to the PCI core code */
- 
- #ifdef CONFIG_DMI
+> +	reg = ioread32(reg_ctl(cpu)) | ctl_bit_enabled(cpu);
+> +	iowrite32(reg, reg_ctl(cpu));
+> +
+> +	enable_percpu_irq(cd->irq, IRQ_TYPE_NONE);
+> +
+> +	/* Do this last because it synchronously configures the timer */
+> +	clockevents_config_and_register(
+> +		cd, econet_timer.freq_hz,
+> +		ECONET_MIN_DELTA, ECONET_MAX_DELTA);
+> +
+> +	return 0;
+> +}
+> +
+> +static u64 notrace sched_clock_read(void)
+> +{
+> +	/* Always read from clock zero no matter the CPU */
+> +	return (u64)ioread32(reg_count(0));
+> +}
+> +
+> +/* Init */
+> +
+> +static void __init cevt_dev_init(uint cpu)
+> +{
+> +	iowrite32(0, reg_count(cpu));
+> +	iowrite32(U32_MAX, reg_compare(cpu));
+> +}
+> +
+> +static int __init cevt_init(struct device_node *np)
+> +{
+> +	int i, irq, ret;
+> +
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (irq <= 0) {
+> +		pr_err("%pOFn: irq_of_parse_and_map failed", np);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = request_percpu_irq(irq, cevt_interrupt, np->name, &econet_timer_pcpu);
+> +
+> +	if (ret < 0) {
+> +		pr_err("%pOFn: IRQ %d setup failed (%d)\n", np, irq, ret);
+> +		goto err_unmap_irq;
+> +	}
+> +
+> +	for_each_possible_cpu(i) {
+> +		struct clock_event_device *cd = &per_cpu(econet_timer_pcpu, i);
+> +
+> +		cd->rating		= 310,
+> +		cd->features		= CLOCK_EVT_FEAT_ONESHOT |
+> +					  CLOCK_EVT_FEAT_C3STOP |
+> +					  CLOCK_EVT_FEAT_PERCPU;
+> +		cd->set_next_event	= cevt_set_next_event;
+> +		cd->irq			= irq;
+> +		cd->cpumask		= cpumask_of(i);
+> +		cd->name		= np->name;
+> +
+> +		cevt_dev_init(i);
+> +	}
+> +
+> +	cpuhp_setup_state(CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+> +			  "clockevents/en75/timer:starting",
+> +			  cevt_init_cpu, NULL);
+
+cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, ... ) ?
+
+> +	return 0;
+> +
+> +err_unmap_irq:
+> +	irq_dispose_mapping(irq);
+> +	return ret;
+> +}
+> +
+> +static int __init timer_init(struct device_node *np)
+> +{
+> +	int num_blocks = DIV_ROUND_UP(num_possible_cpus(), 2);
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	clk = of_clk_get(np, 0);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("%pOFn: Failed to get CPU clock from DT %ld\n", np, PTR_ERR(clk));
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	econet_timer.freq_hz = clk_get_rate(clk);
+> +
+> +	for (int i = 0; i < num_blocks; i++) {
+> +		econet_timer.membase[i] = of_iomap(np, i);
+> +		if (!econet_timer.membase[i]) {
+> +			pr_err("%pOFn: failed to map register [%d]\n", np, i);
+> +			return -ENXIO;
+> +		}
+> +	}
+> +
+> +	/* For clocksource purposes always read clock zero, whatever the CPU */
+> +	ret = clocksource_mmio_init(reg_count(0), np->name,
+> +				    econet_timer.freq_hz, 301, ECONET_BITS,
+> +				    clocksource_mmio_readl_up);
+> +	if (ret) {
+> +		pr_err("%pOFn: clocksource_mmio_init failed: %d", np, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = cevt_init(np);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	sched_clock_register(sched_clock_read, ECONET_BITS,
+> +			     econet_timer.freq_hz);
+> +
+> +	pr_info("%pOFn: using %u.%03u MHz high precision timer\n", np,
+> +		econet_timer.freq_hz / 1000000,
+> +		(econet_timer.freq_hz / 1000) % 1000);
+> +
+> +	return 0;
+> +}
+> +
+> +TIMER_OF_DECLARE(econet_timer_hpt, "econet,en751221-timer", timer_init);
+> -- 
+> 2.39.5
+> 
+
 -- 
-2.25.1
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
