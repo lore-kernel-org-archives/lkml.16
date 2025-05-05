@@ -1,45 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432D23B0A3E;
-	Mon,  5 May 2025 23:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8995F28152F;
+	Mon,  5 May 2025 23:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487229; cv=none; b=vGdDCEbI1m5p04sCos22bPLVw5+o/t+AAN9rQQ4Mjh/Dw1JH19QpVDEAXUkupqWenAJF4noWmdtNsCQot/73iDfoQRL+sXIGxXsfA/1PzH58x3jfPrl2wEF5vxOjkbAC2skRla24M05ZaG1k4slTW5Hm6MxExcFlB0152DfBJhQ=
+	t=1746487236; cv=none; b=KK+zBGPTXdMQPpO2U50jYH0qL8X21Vm+tuuCLkOZmNcX1jjcYByXmFQqg83kNLqT14lMg+hM9H0hEWAMp3Gq7Gjn2eAcNM6SK0uLq5e/V9pj9R7Q0vQ+KVBSNB+CugpfLBWthoZL9m2EmVgzbMjfgx7xD9PlHIjAou1qwv4/ATQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487229; c=relaxed/simple;
-	bh=EN81QPux/HHw4XxXuGfxXKweBwKPWgbd+dJOfL4ZrXo=;
+	s=arc-20240116; t=1746487236; c=relaxed/simple;
+	bh=soJthwsN+YosZwR66SIykcW9KX61cEJE6gvPx3XH9m0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u/Fobp904dxCBZbBCQjW8WrCi2eNAeX8sScZUyf9vRYB7ONbuAsz9qiKr0z6afZCrzD5NVYFQCb9aJB13RPLSx1/N5epik50cWzLkvyAkkkuFTFXHAQ/wekkIexi/N0GG3HCF2SvZ3EBe/KsMZRDGk+sxKxXuGmfzTQVZIgZvP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fktVNGKm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m6xFZmXNEPKl/XuVu7k86tMI0w1wU+x2/zYyUWBaP+VirRYHTbWCcxhr+w06bT/rhwCXLmMgrF4m7KNOHjcbaVUb0c8c/JLfGlyaewSjx0z+/cTzrukePn3RGosigedq5bj0BtFpyDX6Cefp5s2O4zjBkWebbR5MiNtp/SPVyU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TS5Hw0j6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fktVNGKm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A63AFC4CEED;
-	Mon,  5 May 2025 23:20:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TS5Hw0j6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D350BC4CEF2;
+	Mon,  5 May 2025 23:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487227;
-	bh=EN81QPux/HHw4XxXuGfxXKweBwKPWgbd+dJOfL4ZrXo=;
+	s=k20201202; t=1746487236;
+	bh=soJthwsN+YosZwR66SIykcW9KX61cEJE6gvPx3XH9m0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fktVNGKm7NAbMT1TQQYfJekXuQCV9Cqq3LoqWIqBmfXC3t0aqyATOob8X73nB93/k
-	 gBH3MVyJAzN/ApNnMuI7XAk/W/jmfffJ0lQNwIbzrVm317CQ2xqaQdDt6GmK19MCmk
-	 L4euM0GxVQhdrY0TyRPhODhsL1ua+BvZf9pp2rZqGq9crTvUXzwe3YsifLV4bdXNeo
-	 TW+x/Slf2dDa6stpIHURKgsfXKChZxH6z1LHT/c7uraP4TURGD9Q+I3jMLWwxH8tOJ
-	 k1nWbiTOKZ7QfUSZvM9UGzbOINQo4FDV2UKwgBgp4P5Gpgb8Rkrp0dCsENCOh3tXvn
-	 JxFudQqF0wOew==
+	b=TS5Hw0j6wFEn/hc4urh8/6yCeq4cVV5OMkKphfzpoVMtkMW6JQXoQIW32Hgl5ISlJ
+	 4Bj+LhxchQDccFtR9OHeC2dI9wWS0XX2iHTUvhW6C9RHmcfSVoTY8GBfyRX0gg2GTh
+	 MpeYiER0b4yeX2PKqgUu1fF08Dw46ct7trqvjRgzHgjZaeV3hXv67nC4g0Xe8TPm6t
+	 a1+THxl5glr/qgs6vtDNMVMy21ZLLG+HhW9vcZpcf5rgIlOt12S6iD0ogstJNAOuAi
+	 94+7EqsduD882u4cJZ7GrqEa2kOz3n6geme5TsPwrLw6Nztp7nU4w3FWPrD0qLiReo
+	 GMwbH/JmlMAHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 066/114] cpuidle: menu: Avoid discarding useful information
-Date: Mon,  5 May 2025 19:17:29 -0400
-Message-Id: <20250505231817.2697367-66-sashal@kernel.org>
+	sathya.prakash@broadcom.com,
+	sreekanth.reddy@broadcom.com,
+	suganath-prabu.subramani@broadcom.com,
+	James.Bottomley@HansenPartnership.com,
+	MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 071/114] scsi: mpt3sas: Send a diag reset if target reset fails
+Date: Mon,  5 May 2025 19:17:34 -0400
+Message-Id: <20250505231817.2697367-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -54,63 +55,62 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-[ Upstream commit 85975daeaa4d6ec560bfcd354fc9c08ad7f38888 ]
+[ Upstream commit 5612d6d51ed2634a033c95de2edec7449409cbb9 ]
 
-When giving up on making a high-confidence prediction,
-get_typical_interval() always returns UINT_MAX which means that the
-next idle interval prediction will be based entirely on the time till
-the next timer.  However, the information represented by the most
-recent intervals may not be completely useless in those cases.
+When an IOCTL times out and driver issues a target reset, if firmware
+fails the task management elevate the recovery by issuing a diag reset to
+controller.
 
-Namely, the largest recent idle interval is an upper bound on the
-recently observed idle duration, so it is reasonable to assume that
-the next idle duration is unlikely to exceed it.  Moreover, this is
-still true after eliminating the suspected outliers if the sample
-set still under consideration is at least as large as 50% of the
-maximum sample set size.
-
-Accordingly, make get_typical_interval() return the current maximum
-recent interval value in that case instead of UINT_MAX.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Reviewed-by: Christian Loehle <christian.loehle@arm.com>
-Tested-by: Christian Loehle <christian.loehle@arm.com>
-Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-Link: https://patch.msgid.link/7770672.EvYhyI6sBW@rjwysocki.net
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Link: https://lore.kernel.org/r/1739410016-27503-5-git-send-email-shivasharan.srikanteshwara@broadcom.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpuidle/governors/menu.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
-index b0a7ad566081a..a95cc8f024fde 100644
---- a/drivers/cpuidle/governors/menu.c
-+++ b/drivers/cpuidle/governors/menu.c
-@@ -249,8 +249,19 @@ static unsigned int get_typical_interval(struct menu_device *data,
- 	 * This can deal with workloads that have long pauses interspersed
- 	 * with sporadic activity with a bunch of short pauses.
- 	 */
--	if ((divisor * 4) <= INTERVALS * 3)
-+	if (divisor * 4 <= INTERVALS * 3) {
-+		/*
-+		 * If there are sufficiently many data points still under
-+		 * consideration after the outliers have been eliminated,
-+		 * returning without a prediction would be a mistake because it
-+		 * is likely that the next interval will not exceed the current
-+		 * maximum, so return the latter in that case.
-+		 */
-+		if (divisor >= INTERVALS / 2)
-+			return max;
-+
- 		return UINT_MAX;
-+	}
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index edd26a2570fa8..8ce77fbe4e3fc 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -676,6 +676,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
+ 	size_t data_in_sz = 0;
+ 	long ret;
+ 	u16 device_handle = MPT3SAS_INVALID_DEVICE_HANDLE;
++	int tm_ret;
  
- 	thresh = max - 1;
- 	goto again;
+ 	issue_reset = 0;
+ 
+@@ -1107,18 +1108,25 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
+ 			if (pcie_device && (!ioc->tm_custom_handling) &&
+ 			    (!(mpt3sas_scsih_is_pcie_scsi_device(
+ 			    pcie_device->device_info))))
+-				mpt3sas_scsih_issue_locked_tm(ioc,
++				tm_ret = mpt3sas_scsih_issue_locked_tm(ioc,
+ 				  le16_to_cpu(mpi_request->FunctionDependent1),
+ 				  0, 0, 0,
+ 				  MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET, 0,
+ 				  0, pcie_device->reset_timeout,
+ 			MPI26_SCSITASKMGMT_MSGFLAGS_PROTOCOL_LVL_RST_PCIE);
+ 			else
+-				mpt3sas_scsih_issue_locked_tm(ioc,
++				tm_ret = mpt3sas_scsih_issue_locked_tm(ioc,
+ 				  le16_to_cpu(mpi_request->FunctionDependent1),
+ 				  0, 0, 0,
+ 				  MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET, 0,
+ 				  0, 30, MPI2_SCSITASKMGMT_MSGFLAGS_LINK_RESET);
++
++			if (tm_ret != SUCCESS) {
++				ioc_info(ioc,
++					 "target reset failed, issue hard reset: handle (0x%04x)\n",
++					 le16_to_cpu(mpi_request->FunctionDependent1));
++				mpt3sas_base_hard_reset_handler(ioc, FORCE_BIG_HAMMER);
++			}
+ 		} else
+ 			mpt3sas_base_hard_reset_handler(ioc, FORCE_BIG_HAMMER);
+ 	}
 -- 
 2.39.5
 
