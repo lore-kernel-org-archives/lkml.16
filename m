@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6452D113E;
-	Mon,  5 May 2025 22:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4922D9033;
+	Mon,  5 May 2025 22:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485481; cv=none; b=ZFVuDEn2H4Hf96jegDcu34z7kNRVrHGwQ8o3N5r0l8nQFvij7OrPVBnmM+cBGnUuvuBZK1YEVgUOmzIvmLWhiWEXQIdutMTF9s+Sy4ovffu7OJCkcuPnBOyBBbN+VdgBKnEY9hcEUAgXHdyqRTjX4nvqm6KGjL9Hpg05V35zeNk=
+	t=1746485507; cv=none; b=V+SO126Cir0on1FmP20aH6vuvXtdLbWeXFFS/5aXL/z3mB5kki3l3JRXAskBXpO8HGK4gmbCt9+23Gcu9Fx/cpBIvWFoqc0Qz204vBvU3aRazRSpnPAvn6rPViq5jfCAo04O1dcTYVYgKYJYyVVVhGD/e84JvQzEpc73RL+a36M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485481; c=relaxed/simple;
-	bh=EYtw+AqDkKNk3Q+svkTmH4GW2t5HIn0ZPOM17SE5M+I=;
+	s=arc-20240116; t=1746485507; c=relaxed/simple;
+	bh=hShYuml63OkOA2pzS1iBOosLFm/RL26Rsn3KpQO4mG0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dAvW52bpPylkcb3Z2z7NIrZtDp7p/idfTAKMOQY7V443etx9LimNO/aHGBt3n2RM/nNpKDul4pZLMY+jZ9mdHrJdU+4ufv6xnyf1fObUgSei+FBjt9AyXWRBx8Q8huSIuSXN9j5Vcr8KjtL+hTe+/cVZGzZxgOkzyo/YNqTNJ2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QB3eephT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cpiE0e2tVP/OGZMGbl8b/CklrIxWU5xkSgEnuf3NzCaIfDH4HGAWHqfJek45o+qteF72lLOZStySinvrarXgioSIpAmUXiL4a1pbaP916o5iN0lynBnLkUTIEe+2fHPjasUtrTicYOML1+5czAw9P5CKQBiyG03/nnDtm4Pmi3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKCXehr9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QB3eephT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5589C4CEED;
-	Mon,  5 May 2025 22:51:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKCXehr9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE0DC4CEED;
+	Mon,  5 May 2025 22:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485481;
-	bh=EYtw+AqDkKNk3Q+svkTmH4GW2t5HIn0ZPOM17SE5M+I=;
+	s=k20201202; t=1746485507;
+	bh=hShYuml63OkOA2pzS1iBOosLFm/RL26Rsn3KpQO4mG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QB3eephTGMUruI0WwtSsGzDNodf7ljwwdQParJO2bx9efWlHumfzIYLTlt2q+NqFx
-	 M+YbZf9CsQzmFv5z8S6lWg0jsOlVIyNeS8Nv3dT1DpMpkp6RjGTP6y6MQuyO938v2t
-	 eioluhzi5GP3NFMezqrlq875tjsBmJFzRTyL6fYnZFg18S5LZdO+SZzsxRj6huJsiA
-	 NmR//l53IH/pLnXehoNmusLn5ZLNxex9gly/KoyPR/UdOu81xqItm6qUyiVkuQMiHc
-	 xnN/Rj5ojXfnkgHMAmTeb6zyQHRN26EYJC+z9LHkUiSOEgGe8PEw2O/Dm4pqJhkThH
-	 De3a5eVrSAD3w==
+	b=OKCXehr9524mKSGMjtIr+jLPm6KPdr34fwgK3LqinyP7ZvACKhrDnnVt/ZfB1x/vW
+	 zLSuyWq6KHC6UHRe3T8jkmbj9ec1bI01M77UKjKSs+l0JJeWIIuBEmcV4CwmOeONDE
+	 KF5QMhPV9Uwi20xMAroT2K2DlSVu1/JH/619hM/yIhtvdHl+nYo71NGcA/J2dmmOmZ
+	 gNKvkhe0qcuKvQAOYZrAzEJW+BJGdNi+/YBQySJvimyiv7mIrb4up+N0SpB3deuUPt
+	 lSEO8CaPKbH4zG6CeiJexAx3/OC4cXALhD2qV92yWsZia/p5UOlY0E5Ar67qhZ8UND
+	 +nuDbV6PxVM3Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tejun Heo <tj@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.12 338/486] kernfs: Acquire kernfs_rwsem in kernfs_notify_workfn().
-Date: Mon,  5 May 2025 18:36:54 -0400
-Message-Id: <20250505223922.2682012-338-sashal@kernel.org>
+Cc: zihan zhou <15645113830zzh@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	juri.lelli@redhat.com
+Subject: [PATCH AUTOSEL 6.12 351/486] sched: Reduce the default slice to avoid tasks getting an extra tick
+Date: Mon,  5 May 2025 18:37:07 -0400
+Message-Id: <20250505223922.2682012-351-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,45 +52,78 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: zihan zhou <15645113830zzh@gmail.com>
 
-[ Upstream commit 400188ae361a9d9a72a47a6cedaf2d2efcc84aa8 ]
+[ Upstream commit 2ae891b826958b60919ea21c727f77bcd6ffcc2c ]
 
-kernfs_notify_workfn() dereferences kernfs_node::name and passes it
-later to fsnotify(). If the node is renamed then the previously observed
-name pointer becomes invalid.
+The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
+means that we have a default slice of:
 
-Acquire kernfs_root::kernfs_rwsem to block renames of the node.
+  0.75 for 1 cpu
+  1.50 up to 3 cpus
+  2.25 up to 7 cpus
+  3.00 for 8 cpus and above.
 
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lore.kernel.org/r/20250213145023.2820193-2-bigeasy@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+For HZ=250 and HZ=100, because of the tick accuracy, the runtime of
+tasks is far higher than their slice.
+
+For HZ=1000 with 8 cpus or more, the accuracy of tick is already
+satisfactory, but there is still an issue that tasks will get an extra
+tick because the tick often arrives a little faster than expected. In
+this case, the task can only wait until the next tick to consider that it
+has reached its deadline, and will run 1ms longer.
+
+vruntime + sysctl_sched_base_slice =     deadline
+        |-----------|-----------|-----------|-----------|
+             1ms          1ms         1ms         1ms
+                   ^           ^           ^           ^
+                 tick1       tick2       tick3       tick4(nearly 4ms)
+
+There are two reasons for tick error: clockevent precision and the
+CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING. with
+CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
+without it, because of clockevent precision, tick still often less than
+1ms.
+
+In order to make scheduling more precise, we changed 0.75 to 0.70,
+Using 0.70 instead of 0.75 should not change much for other configs
+and would fix this issue:
+
+  0.70 for 1 cpu
+  1.40 up to 3 cpus
+  2.10 up to 7 cpus
+  2.8 for 8 cpus and above.
+
+This does not guarantee that tasks can run the slice time accurately
+every time, but occasionally running an extra tick has little impact.
+
+Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20250208075322.13139-1-15645113830zzh@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/file.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
-index 8502ef68459b9..165d8e37976ba 100644
---- a/fs/kernfs/file.c
-+++ b/fs/kernfs/file.c
-@@ -911,6 +911,7 @@ static void kernfs_notify_workfn(struct work_struct *work)
- 	/* kick fsnotify */
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index ceb023629d48d..7a2c94e8f0b2c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -71,10 +71,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+ /*
+  * Minimal preemption granularity for CPU-bound tasks:
+  *
+- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
++ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
+  */
+-unsigned int sysctl_sched_base_slice			= 750000ULL;
+-static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
++unsigned int sysctl_sched_base_slice			= 700000ULL;
++static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
  
- 	down_read(&root->kernfs_supers_rwsem);
-+	down_read(&root->kernfs_rwsem);
- 	list_for_each_entry(info, &kernfs_root(kn)->supers, node) {
- 		struct kernfs_node *parent;
- 		struct inode *p_inode = NULL;
-@@ -947,6 +948,7 @@ static void kernfs_notify_workfn(struct work_struct *work)
- 		iput(inode);
- 	}
+ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
  
-+	up_read(&root->kernfs_rwsem);
- 	up_read(&root->kernfs_supers_rwsem);
- 	kernfs_put(kn);
- 	goto repeat;
 -- 
 2.39.5
 
