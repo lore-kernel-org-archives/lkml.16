@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A1B3B6BA9;
-	Mon,  5 May 2025 23:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C36F3B7AA3;
+	Mon,  5 May 2025 23:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487289; cv=none; b=T6yXqynttpAdSMToG2fVGJ+E99dfsq6NteAAZGxKvCBL9FA1Z7+ysREJPJcA/inuB9oJlFgHPHvztEBrN+vgYR2yV9oRT9LV3b1RCFqdQ8nh5xc03Q+BYBMTYtWfn7TPtw/CNTdvCIA72tXt6U92piz1anKH95TY5LAy0zap78o=
+	t=1746487299; cv=none; b=GUC7/EQRaqAy3UhfI7SP2EileULbpNTZl/pv+rNCc9N+mQu5EK6J2hlYdPvntlPBfZOQKbnhniknMpOU9xWCqfruwzF+uU6EP05iisqwm/TVgn4sqH9cjSN2GzTmPbA4BfCz2dg+VpkI89HWcso/G+UakIRzwpkBOD7U7qOe+Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487289; c=relaxed/simple;
-	bh=exo0FNcuycifgra2Zi8/YqIgsLEOyxRaW4qeLWbGcO0=;
+	s=arc-20240116; t=1746487299; c=relaxed/simple;
+	bh=+9wgd69+q8mhtvzBwj+DAjUx/KgGqujnSK1ZuuoQSbA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z8WEoiePCOL3F/BBDnSfsnsNiFTOdONbSsBh5uk7CaC2iIgnH9EsdHA23rWiexW77UJDgVt+gAQDW7Z7Z7vLoXqZ/pRqx6ak4q1cPFaZzW6ZFYtly/lpTDEc3Fa2VkgRqLJHK78LrrI1EM8zyZ0vIhQFuNIHYuWSQOBE0YAeSPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPww7dqz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DOXrrnbyxijyCCKeQP48OkX6LSZ7eGOXFEdb/DpScSjgITn2gECXvMiKdsdh6IjtG+/B1UnnQo8UbzgANaIi5mL5GhfDk+NBglNACFv3XqbibUY9w6JJzef3VRSLEmP8s3FCv5mze2xsbkjqRZCQHxV2ONrb10dDGFsZAuu47Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aloiVM0U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPww7dqz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6632C4CEED;
-	Mon,  5 May 2025 23:21:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aloiVM0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D947C4CEEE;
+	Mon,  5 May 2025 23:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487288;
-	bh=exo0FNcuycifgra2Zi8/YqIgsLEOyxRaW4qeLWbGcO0=;
+	s=k20201202; t=1746487298;
+	bh=+9wgd69+q8mhtvzBwj+DAjUx/KgGqujnSK1ZuuoQSbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mPww7dqzmkpVCSMtK5rPsMQgDTDdkypzpZKwMdHl24IyPVscTcso0L2KB0v8StJ+1
-	 oJSx3m0WYUgXQm1nOhuRHOPI7k+ID1X3hUz/0Nog3nqvDfL47PMX4DnAR64SuNS/x6
-	 PaDWp3f8B9oNoncGNHGG/8yK93/AOmnbJgU+JFlVh1VIyE4z2DeRS4ijzapPgQfDbM
-	 +g1VG5vl6RLLD2Jh1bzr4StDln+kBr77jpg2fbgot+Bud+ROETj4hWO5s5ei/1wSSj
-	 fpuBwvMJAayiEfmuAxrFNQs8roRUv54IiiIpvA2Qt6rNG3jTcjptia74Haa76LBCWw
-	 Xhohmhubj2S8A==
+	b=aloiVM0UhCsLIQ/sDGeZohYl5A66KEACoibFv2voD1uRxsurRCqbs6c8kgG8C86mq
+	 YBpfRWUfXDaERYkNg9hprXqlN1x8Jj2/2vNfDDcTjEy3vCJkG5976pkXroYMnqcNoY
+	 58R+mqvWnPBdIzeHEYgp6WFvu+8LJidlrxrXRJQm9mgOIv72Qk8EFJZilx4GuBn8Pi
+	 uyKs6GqayfjFKOb3tvDR0KXpJRf1j1rC84fa7gZlbZQpm+l70mPV+qESIgaLQ9wzv+
+	 9vjA0J6R1FdRzo9lTl1Hiz8cSI/4lk1WRfFLB54p6k0zncFOPh3HZFzxIzMrpASYNZ
+	 q95/x2VmnoGdg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: junan <junan76@163.com>,
+	Jiri Kosina <jkosina@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	menglong8.dong@gmail.com,
-	gnault@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 100/114] vxlan: Annotate FDB data races
-Date: Mon,  5 May 2025 19:18:03 -0400
-Message-Id: <20250505231817.2697367-100-sashal@kernel.org>
+	jikos@kernel.org,
+	bentiss@kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 106/114] HID: usbkbd: Fix the bit shift number for LED_KANA
+Date: Mon,  5 May 2025 19:18:09 -0400
+Message-Id: <20250505231817.2697367-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -58,142 +53,32 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: junan <junan76@163.com>
 
-[ Upstream commit f6205f8215f12a96518ac9469ff76294ae7bd612 ]
+[ Upstream commit d73a4bfa2881a6859b384b75a414c33d4898b055 ]
 
-The 'used' and 'updated' fields in the FDB entry structure can be
-accessed concurrently by multiple threads, leading to reports such as
-[1]. Can be reproduced using [2].
+Since "LED_KANA" was defined as "0x04", the shift number should be "4".
 
-Suppress these reports by annotating these accesses using
-READ_ONCE() / WRITE_ONCE().
-
-[1]
-BUG: KCSAN: data-race in vxlan_xmit / vxlan_xmit
-
-write to 0xffff942604d263a8 of 8 bytes by task 286 on cpu 0:
- vxlan_xmit+0xb29/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff942604d263a8 of 8 bytes by task 287 on cpu 2:
- vxlan_xmit+0xadf/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00000000fffbac6e -> 0x00000000fffbac6f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 2 UID: 0 PID: 287 Comm: mausezahn Not tainted 6.13.0-rc7-01544-gb4b270f11a02 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
-
-[2]
- #!/bin/bash
-
- set +H
- echo whitelist > /sys/kernel/debug/kcsan
- echo !vxlan_xmit > /sys/kernel/debug/kcsan
-
- ip link add name vx0 up type vxlan id 10010 dstport 4789 local 192.0.2.1
- bridge fdb add 00:11:22:33:44:55 dev vx0 self static dst 198.51.100.1
- taskset -c 0 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
- taskset -c 2 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
-
-Reviewed-by: Petr Machata <petrm@nvidia.com>
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/20250204145549.1216254-2-idosch@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: junan <junan76@163.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan/vxlan_core.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/hid/usbhid/usbkbd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index ec67d2eb05ecd..7d7aa7d768804 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -333,9 +333,9 @@ static int vxlan_fdb_info(struct sk_buff *skb, struct vxlan_dev *vxlan,
- 			be32_to_cpu(fdb->vni)))
- 		goto nla_put_failure;
+diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
+index d5b7a696a68c5..50c5b204bf04c 100644
+--- a/drivers/hid/usbhid/usbkbd.c
++++ b/drivers/hid/usbhid/usbkbd.c
+@@ -160,7 +160,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
+ 		return -1;
  
--	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
-+	ci.ndm_used	 = jiffies_to_clock_t(now - READ_ONCE(fdb->used));
- 	ci.ndm_confirmed = 0;
--	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
-+	ci.ndm_updated	 = jiffies_to_clock_t(now - READ_ONCE(fdb->updated));
- 	ci.ndm_refcnt	 = 0;
+ 	spin_lock_irqsave(&kbd->leds_lock, flags);
+-	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
++	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 4) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
+ 		       (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL,   dev->led) << 1) |
+ 		       (!!test_bit(LED_NUML,    dev->led));
  
- 	if (nla_put(skb, NDA_CACHEINFO, sizeof(ci), &ci))
-@@ -541,8 +541,8 @@ static struct vxlan_fdb *vxlan_find_mac(struct vxlan_dev *vxlan,
- 	struct vxlan_fdb *f;
- 
- 	f = __vxlan_find_mac(vxlan, mac, vni);
--	if (f && f->used != jiffies)
--		f->used = jiffies;
-+	if (f && READ_ONCE(f->used) != jiffies)
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	return f;
- }
-@@ -1072,12 +1072,12 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	    !(f->flags & NTF_VXLAN_ADDED_BY_USER)) {
- 		if (f->state != state) {
- 			f->state = state;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 		if (f->flags != fdb_flags) {
- 			f->flags = fdb_flags;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 	}
-@@ -1111,7 +1111,7 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	}
- 
- 	if (ndm_flags & NTF_USE)
--		f->used = jiffies;
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	if (notify) {
- 		if (rd == NULL)
-@@ -1524,7 +1524,7 @@ static bool vxlan_snoop(struct net_device *dev,
- 				    src_mac, &rdst->remote_ip.sa, &src_ip->sa);
- 
- 		rdst->remote_ip = *src_ip;
--		f->updated = jiffies;
-+		WRITE_ONCE(f->updated, jiffies);
- 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
- 	} else {
- 		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
-@@ -2999,7 +2999,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			if (f->flags & NTF_EXT_LEARNED)
- 				continue;
- 
--			timeout = f->used + vxlan->cfg.age_interval * HZ;
-+			timeout = READ_ONCE(f->used) + vxlan->cfg.age_interval * HZ;
- 			if (time_before_eq(timeout, jiffies)) {
- 				netdev_dbg(vxlan->dev,
- 					   "garbage collect %pM\n",
 -- 
 2.39.5
 
