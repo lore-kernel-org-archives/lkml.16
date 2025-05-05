@@ -1,192 +1,179 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF85204840
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746475716; cv=none; b=eLGdzfYHRAILNUk/FJMylFI3+gZP9z5diwYfJg/7jDIejhyHzGyqZ2heLKbxOHTqxBy71lnmV9T+7O4PQaDde9zz9EiggKD9d3CwrMz0FaXvJWm5wVQpGvsyultEl8YAXVXVDUqwchwpWrk5L7aO8yz+0uUBm0eUF2hfYykNgI4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746475716; c=relaxed/simple;
-	bh=1KzQAdzt6kozgctVLqMUI+0YIdwgkoZ9QgFaIIjRSbE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=M+letH0dSkqhZgaNUgbLoUa88jI4/QBvYDtDW7493B8u78EMFwrGsN5qNbi3wqi4RYudVKx5Rebq0MH25wriNjCoh+fPOw0Zl7yqDXGAl4bvkIJ5+P/zeJcCDgcloCgum3LtMB4d9UxCNPoZ2neXt4zUmK47EX9BPEHK/HWQRPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oZiZeZng; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0B625D539;
+	Mon,  5 May 2025 20:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746475719; cv=fail; b=mDA3d/9eTNBUYXptN4uUswwb+i98oiRcSeicQk3BqayICcZuK6g8xQ892jiX4quA34raCDZ0sLm31+PTODTVpQj1Icme8wGthOouaYDvFEYFX8XAyT+YBqfN4/7o33CDwi7qs7XSLqCR4fjzO6cneyTlPzvNAQsRhlNjnrOFQ2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746475719; c=relaxed/simple;
+	bh=W6476yyJ/96afJZKXoRbZ1cboZgfGLgHZyhr0mn8WYg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p4lcH9m5BfVFdQNAf1cf6yUyhYynAmHt2AtT9mb4/7/t82csDLtWgawCCa+YcxpFKVxH94w9wqFetCQXKzstnXuVenhs7BvlIhjoNgGwBDxlWxlnR+v2GZxgI5lyaIdqnHfjUviGeIKvMmUy/tNHu9p5U9jVW/bj53ly8YEe4Bk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cFEsnu4M; arc=fail smtp.client-ip=40.107.244.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZiZeZng"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224364f2492so44482615ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746475713; x=1747080513; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOuRgIeoWvJ+xJkqB+IUVGx6fHLCdoleXxRua1kYdv4=;
-        b=oZiZeZng1O6abYgkRBb2yDSOBu1crc8JUScQpT+ThWyZC+xSEeYZG1bskcHh4L7cdO
-         bVU6B1Aidy2gg0hwUhe57cYD5CP4pQ3bc2Gl7Il8mXNdQ/j+f5ffURb3+28znr1nARgA
-         7gXJM35dd3l7cB7QwthjC8IJuVmq1e3b9eW435xK6GFuSXK9etjRso1n3+PYq1YNZ+j4
-         3sEi1AJGBNEDV5PMElsxSQ6WM/SoEvfhnpKjuRdDcNvyNzc92p3L6PbINvU49VG20jdc
-         4mvbwu3ZnfKEmB1O0FDPXUJR2lze2adoHwy52xEqFhCYfOQiLZxvxalIn2t50R/We8nA
-         cL3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746475713; x=1747080513;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOuRgIeoWvJ+xJkqB+IUVGx6fHLCdoleXxRua1kYdv4=;
-        b=Kfx+uK5vjRoJZPpQbP0xBmmvulgGp3nN35kWD3kjeiHZUv/G6j6sc98N+F+yLJCdMH
-         YEnq1dyyHxyF9fpLND2hdy/uEm3z5Npslw5Wy7y7hyAesJ2DdovrUdf25FsiQZAPyxyE
-         ZtvvyfE6md2CmBGoWFaEnLt/GKoPTb//FL9d3K1SRCzIZM4kV++aJvYeYDipF1YNvwtE
-         jTv/EuF62IN2xdTPxiEYSsoFkV2IGjgkEMyRzY9sWXD1n7UOl6LQAryOTIBAFCa+VLL3
-         pZ18/I6VO6HsuGmXKy4j4aef6cBvlsa6I/pnNHlWYbCxpYAbGTSb9UsdsLrEa+ZOeDT2
-         G2Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCXieW/Bn150LczoMLakwDbHMuB0BrteJGicjDLoeszz4Zetz9FZFvGI7EksLYA2oOqrCO9k8JxSwmyMe3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqKJVWYevRX0ErCLwH3LuIN3ECjkipYprAxFJLCF7XOdG3zeV8
-	rAkgYcv2OUECVl8h0sbJ4j4Q7c7tcAsxRX5VaGmgsFxmhHVRe9fVgt5ehmlPJJamvsx1z4SEAv+
-	sTRG56DHZ4nOjfceb+A==
-X-Google-Smtp-Source: AGHT+IGAxfh3fReuw49sEBnCIqEgZnEB4d1Kz9/LHzQ3CYJt6UkvcZ+t0jrC2mykwUxbQTB6d5Dqd6LW9byg1ZNs
-X-Received: from plkp1.prod.google.com ([2002:a17:902:6b81:b0:220:ea57:34e3])
- (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:f648:b0:224:93e:b5d7 with SMTP id d9443c01a7336-22e32eff19bmr9877065ad.34.1746475713621;
- Mon, 05 May 2025 13:08:33 -0700 (PDT)
-Date: Mon,  5 May 2025 13:07:45 -0700
-In-Reply-To: <20250501225425.635167-15-changyuanl@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cFEsnu4M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V3syL2XRARNx3aB5xrM88PvLW3+43jIgr5A92THd9c28JCIxK/mCP3W6qPESSfjkbrm4u5Q74BgJxy0UXIQCbSjaleIn3dqMgjyNBpqeEthZNRxkN7ErLTYcsxEvfpTuReayx+bQCD6SlI+AX+3i9AeFpOHuhzfbbcZrUkoRD0RFvFIuDEUzxVfbGuA4ls1jpsTMcjyruXTtdGxLjbglYAWdVpN9R7vtXa5w0a31prLLmTWLZYo5m/VZmkEDZW/xsYnud5bT7v7L1tpRGI5plTguuEqR0Pzg5YDIkudnq4aoU8P/Qk0AGIicMyDgIESCMu9ztnaTYUJynsAzow6Wzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZJJoV9UUsoeZjNYBuBj8UVPNtIBVXFRgRqB9BC4wL+I=;
+ b=IwTY6lmfoJP12iyuPAJgYTu3yelC+nmn1ZUvjaGWVZjfn9xK7GqYeofxmXyGNh4iIW9WpeoUbMucBS/akxtFHBIbp7F3mS6oL9BbeYOmvO0f3vgoGYLEyPUUrFO4nmoywURuO1TtVY2aG5tHYLLUUqO1CcggCBPQfQn7Q0+Ejd+E5y05IuCitNovpUE0bDmCVxEqX32NcA4odIkomIHhWoIhmdMN3ECxDP2fJ01fDLGwOk/HAdxVQEH9n019gr7fOxoqKKdcw3H5FoeTlpHOCpa8sWj2KuRGnkaNh8QuleZhmMReOP1WNiujrMoioZKQ3iS7kwqPPrghPgrEaJKgTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZJJoV9UUsoeZjNYBuBj8UVPNtIBVXFRgRqB9BC4wL+I=;
+ b=cFEsnu4MTR5Cz65NYbybwcqNw3Ul8Tqqn8tWFCLSd9ZXhouaMaMT+dSqpstD2WibD354E2oPNmg0biS5pWJycE8lVElN8o2iFQ8C+//CPftUDxrPxgR/PEp1vevHVTYbs2TzASngRrgGMSYlU2xdn6+4/LjFz6Dmjrm3QScYNJD0W+3rg13i9KXs6QqnNMwWHGXqf6BThvXO6roAbU+LeAXgk4ze0Qr1oPa8l893c3Zgigo0Go/vidwAmJ5GfvEpbXz8kg6p8Jn9QDLeZtaq3jUJOgsq7qpIWpQPXdCKLJUuityOMrWqgIKpieHTUG0T3dmb07CztcwHSph33XLTWg==
+Received: from CH2PR15CA0027.namprd15.prod.outlook.com (2603:10b6:610:51::37)
+ by CH3PR12MB9148.namprd12.prod.outlook.com (2603:10b6:610:19d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Mon, 5 May
+ 2025 20:08:31 +0000
+Received: from CH2PEPF000000A0.namprd02.prod.outlook.com
+ (2603:10b6:610:51:cafe::e) by CH2PR15CA0027.outlook.office365.com
+ (2603:10b6:610:51::37) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.27 via Frontend Transport; Mon,
+ 5 May 2025 20:08:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH2PEPF000000A0.mail.protection.outlook.com (10.167.244.26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 20:08:31 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
+ 13:08:14 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
+ 2025 13:08:13 -0700
+Received: from nvidia.com (10.127.8.13) by mail.nvidia.com (10.129.68.10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 5 May 2025 13:07:44 -0700
+Date: Mon, 5 May 2025 13:07:34 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Baolu Lu <baolu.lu@linux.intel.com>, <kevin.tian@intel.com>,
+	<corbet@lwn.net>, <will@kernel.org>, <bagasdotme@gmail.com>,
+	<robin.murphy@arm.com>, <joro@8bytes.org>, <thierry.reding@gmail.com>,
+	<vdumpa@nvidia.com>, <jonathanh@nvidia.com>, <shuah@kernel.org>,
+	<jsnitsel@redhat.com>, <nathan@kernel.org>, <peterz@infradead.org>,
+	<yi.l.liu@intel.com>, <mshavit@google.com>, <praan@google.com>,
+	<zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 13/22] iommufd: Add mmap interface
+Message-ID: <aBkahmXQGxFC0Fdw@nvidia.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <7be26560c604b0cbc2fd218997b97a47e4ed11ff.1745646960.git.nicolinc@nvidia.com>
+ <c4d03b52-422e-41ab-845b-1d2eda7ca9e2@linux.intel.com>
+ <20250505165019.GM2260709@nvidia.com>
+ <aBjzf9PrYnwF5uZN@nvidia.com>
+ <20250505172813.GS2260709@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250501225425.635167-15-changyuanl@google.com>
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250505200745.1975264-1-changyuanl@google.com>
-Subject: Re: [PATCH v7 14/18] x86/boot: make sure KASLR does not step over KHO
- preserved memory
-From: Changyuan Lyu <changyuanl@google.com>
-To: changyuanl@google.com
-Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
-	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
-	catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
-	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
-	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
-	ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org, 
-	saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de, 
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250505172813.GS2260709@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF000000A0:EE_|CH3PR12MB9148:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d72e028-5bc3-4427-27b9-08dd8c109b91
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+qJ91BnoVrz/HUFEM8SsSTbVUkTyTnPxZlYavrAUtvMlflA33dKFexF7rIlS?=
+ =?us-ascii?Q?xqIC7KuaIc050VbqxfoiWQ2LgRaWCS7FLtGyh2N8U4Vu6Rfy32eLRPH4wR3S?=
+ =?us-ascii?Q?cav2IAceYnRhYxdYBm0hW/k8QzwidSmjEfY4bjWZbbFtmAq2Rd6ugYexdts5?=
+ =?us-ascii?Q?dbyjrSEi3hNnu8oHGJLECLnry2s6WM+E945AplMEACO8o3OmFW5Pm/W1DnYY?=
+ =?us-ascii?Q?N/YVB/ISCPcgF05iSQsk/6UR52nDM22UKgd8pawtjTIGYSDZ8TJ4NiAK5kWV?=
+ =?us-ascii?Q?0Gnicwy5GrmdnMrHSUwK46uaAvvB+v7ALpf8Sgy8Ii9j4GKDJpCHt6rZ+ZVR?=
+ =?us-ascii?Q?mkEAP720C5fGj4GCgcAzVSXYQmdeaLtmnDj+OfBtqe+buGZB2u5KdjjE0Oya?=
+ =?us-ascii?Q?SKJjkC4wGllPKkYouYk9Rmh1cNEk/h5umU/8S0OZweqDweNz0cdE/0e6b71F?=
+ =?us-ascii?Q?WJxXgOgoKoGNWmYBf1ewrc3bsM57IM3kTMTp5xchQR4Zdhu7QpelM/R/hy/6?=
+ =?us-ascii?Q?LSNIQYPkehvSfrLhil6/tm0njqQgae1QGYuE+hsBQGeAQWzMUfBOb7pLdAwW?=
+ =?us-ascii?Q?qfRLF1By4WjqDdUUjsMUwJm6c9+N3OTaADzBrsOK86bLGlwVIlc4lj2DmwK3?=
+ =?us-ascii?Q?YpMmZ1EXgJlP8AX+LF2SFvwpdBsLB3IecZ1zfykyi5EoRBoxuXbRTiHAcG/5?=
+ =?us-ascii?Q?Wd0hdw6ARrsIKEO/YUx+OHoH/5aBlqM0G8PkImh3SeOxibubHUE4h72tXIVR?=
+ =?us-ascii?Q?GMiS/27L7AE58gFS4mAbgPBgQPoiaun66zPWtmZP7BlJ6H0nrKzR61qJJ9bi?=
+ =?us-ascii?Q?R43iQyVsmWSAGo4HRKFt5mQysMKBUmu87pg65Ru0Qg36zBdAqtfQsLfwEj9e?=
+ =?us-ascii?Q?fIT4aYxmpAKDNGvMa6JVQdYUGHW4fMkNzCTPGwkKhunCIg3kyQthwUP+H1vn?=
+ =?us-ascii?Q?ThvWGzLLRenG4GnwnPgvifAsZFTCCSeFFwYRogUSp5cgI63703r+pJuJWEHU?=
+ =?us-ascii?Q?VpHTzaX5xAKleBN/A5rHa81WO78sguqcskUPBiM1acoksUHsM3Y0Y1bQL8RP?=
+ =?us-ascii?Q?NGhlpsvtUwY1UXcO45cS0Ci0U5Fss5ZxU7ZWaMycfv+LZux1PahqzMz+PvhN?=
+ =?us-ascii?Q?Ew2BS94aeWNWk4bE+phCSoxicVi5TFLGKduiZAfgRY2cFw6US1XyZhyzU2Pf?=
+ =?us-ascii?Q?E3POKFuTF66e0xM7NKTsTL/wwF+vqtLkArq/N2IUdS33wSY+nR3Flq1H4PMp?=
+ =?us-ascii?Q?ljmQrG/HXO258P7dYEJVVwIYwfKOlafzXkGvSAlcRPWxKycwmX+ZZaH6i18I?=
+ =?us-ascii?Q?ewpBNAqPFxBoUyVFAvlxdnSIpcd+LlJkpCdXebMNLVeYU9eD7uD0lcHSNR2B?=
+ =?us-ascii?Q?1YitqY6zJbb+2q1PdOQddwdfQqcv3GG1DtuqNunEWaN8y6baYsfKm8FfCMSx?=
+ =?us-ascii?Q?HCoUtR2J1gED+GbijMN9/50iBpmuzVcU7b0DLYuQDHwbaIW95thT8i3yrf3q?=
+ =?us-ascii?Q?cRuGu4mqI5UNCSAMPadiGeu+YK8CfJVxTsv9?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 20:08:31.2064
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d72e028-5bc3-4427-27b9-08dd8c109b91
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF000000A0.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9148
 
-Hi Andrew,
+On Mon, May 05, 2025 at 02:28:13PM -0300, Jason Gunthorpe wrote:
+> On Mon, May 05, 2025 at 10:21:03AM -0700, Nicolin Chen wrote:
+> > > > > +void iommufd_ctx_free_mmap(struct iommufd_ctx *ictx, unsigned long immap_id)
+> > > > > +{
+> > > > > +	kfree(mtree_erase(&ictx->mt_mmap, immap_id >> PAGE_SHIFT));
+> > > > 
+> > > > MMIO lifecycle question: what happens if a region is removed from the
+> > > > maple tree (and is therefore no longer mappable), but is still mapped
+> > > > and in use by userspace?
+> > > 
+> > > I think we should probably zap it and make any existing VMAs
+> > > SIGBUS... Otherwise it is hard to reason about from the kernel side
+> > 
+> > I added in v3 a pair of open/close op that would refcount the
+> > vIOMMU object (owner of the mmap region). This would EBUSY the
+> > vIOMMU destroy ioctl that would call this function.
+> 
+> That's no good, we can't have VMAs prevent cleaning up iommufd
 
-Based on Dave's feedback above, could you please take the following
-fix and squash it with "x86/boot: make sure KASLR does not step over
-KHO preserved memory" with the updated commit message in mm-unstable?
+Hmm, would you please elaborate why?
 
-Thank you very much!
+> objects, the right thing is to zap it with invalidate_mapping_range()
 
-Best,
-Changyuan
+Also, I can't find much info about invalidate_mapping_range(). Is
+it a user space call?
 
----- 8< ----
+I do see a few drivers defining a fault op in vm_operations_struct,
+where VM_FAULT_SIGBUS is returned when there is page backing up the
+VMAs. Is it what we need here?
 
-From 464b5750c55f978b47da242f50ec7dbcbac1948c Mon Sep 17 00:00:00 2001
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Mon, 5 May 2025 11:29:23 -0700
-Subject: [PATCH] fixup! x86/boot: make sure KASLR does not step over KHO
- preserved memory
-
-During kexec handover (KHO) memory contains data that should be
-preserved and this data would be consumed by kexec'ed kernel.
-
-To make sure that the preserved memory is not overwritten, KHO uses
-"scratch regions" to bootstrap kexec'ed kernel. These regions are
-guaranteed to not have any memory that KHO would preserve and are used as
-the only memory the kernel sees during the early boot.
-
-The scratch regions are passed in the setup_data by the first kernel with
-other KHO parameters. If the setup_data contains the KHO parameters, limit
-randomization to scratch areas only to make sure preserved memory won't get
-overwritten.
-
-Since all the pointers in setup_data are represented by u64, they require
-double casting (first to unsigned long and then to the actual pointer type)
-to compile on 32-bits. This looks goofy out of context, but it is
-unfortunately the way that this is handled across the tree. There are at
-least a dozen instances of casting like this.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Co-developed-by: Changyuan Lyu <changyuanl@google.com>
-Signed-off-by: Changyuan Lyu <changyuanl@google.com>
----
- arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 25de8c3e17cdb..3b0948ad449f9 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -764,25 +764,26 @@ static void process_e820_entries(unsigned long minimum,
-  * If KHO is active, only process its scratch areas to ensure we are not
-  * stepping onto preserved memory.
-  */
--#ifdef CONFIG_KEXEC_HANDOVER
- static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
- {
- 	struct kho_scratch *kho_scratch;
- 	struct setup_data *ptr;
-+	struct kho_data *kho;
- 	int i, nr_areas = 0;
-
--	ptr = (struct setup_data *)boot_params_ptr->hdr.setup_data;
-+	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-+		return false;
-+
-+	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
- 	while (ptr) {
- 		if (ptr->type == SETUP_KEXEC_KHO) {
--			struct kho_data *kho = (struct kho_data *)ptr->data;
--
--			kho_scratch = (void *)kho->scratch_addr;
-+			kho = (struct kho_data *)(unsigned long)ptr->data;
-+			kho_scratch = (void *)(unsigned long)kho->scratch_addr;
- 			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
--
- 			break;
- 		}
-
--		ptr = (struct setup_data *)ptr->next;
-+		ptr = (struct setup_data *)(unsigned long)ptr->next;
- 	}
-
- 	if (!nr_areas)
-@@ -801,13 +802,6 @@ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
-
- 	return true;
- }
--#else
--static inline bool process_kho_entries(unsigned long minimum,
--				       unsigned long image_size)
--{
--	return false;
--}
--#endif
-
- static unsigned long find_random_phys_addr(unsigned long minimum,
- 					   unsigned long image_size)
-@@ -824,6 +818,10 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
- 		return 0;
- 	}
-
-+	/*
-+	 * During kexec handover only process KHO scratch areas that are known
-+	 * not to contain any data that must be preserved.
-+	 */
- 	if (!process_kho_entries(minimum, image_size) &&
- 	    !process_efi_entries(minimum, image_size))
- 		process_e820_entries(minimum, image_size);
---
-2.49.0.967.g6a0df3ecc3-goog
+Thanks
+Nicolin
