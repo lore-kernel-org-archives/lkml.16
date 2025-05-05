@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F6625A2C6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B702425A349;
 	Mon,  5 May 2025 14:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457142; cv=none; b=nY0srCxiRyijWj8sYnOvHR+tybTeO5O6o7kYmnnuHdYxm0dW3HeFAvAN3HoGU7EWKg/K9B9jWXvBgDmxICkEj/nYWS5+s9OsimRBcyPblISTQp7WNh4t7Wi1DHFsjcXbt2QWlRn51NReA4O75/n/tMP+IyMM/P1xN+WVlB7cbCw=
+	t=1746457142; cv=none; b=ko+IXIzr4+d12PA3e+565+qyLa1t+i0S6SnX1q/MxuyHWrJuHkOTiF5ujEKatSQp2nUTlsqS8gJ8OrUU04HhNdM456N6uJ+31ejltcUdA+MjEcb0qu4c16TKcp3L59AVQHg43fE3DYvmxBx3557w0LGZg0Xpj75P3JY2bYEcaKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746457142; c=relaxed/simple;
-	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FUhGi+mspjMU1QKL4UNgnnEcaMuPhiO9i6reZ6D1F9MxwnkqT8hX83QkpVY/gC1ouI0hXfIoB0GQIKO9bzhQxTvC9klaYAldH61/OLiknukj7Hfu77jli0jCtm30sIdfIP/Zju80brHFkY0uVtl0Vi4OwQuXpNED6fECMwLiVso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0jbAMTA; arc=none smtp.client-ip=10.30.226.201
+	bh=HnQHwXod2wutRRoHv2wgXPVJV7pOW/ivP71cpImY1i4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a3i89ox2Askp0DFLRubJMC1g4dteZRTw8zRRnq13Jt03L6/12E69YLBzLq2NkfrpfbIPcX0My/OVMYf/oXOLQ7iyiJcbY2FrfERrtkixmp4SNHtOUPNdmyhvgmxr/xYRFLq1wlZbqYBuup5hD1MuyTBR6dyiWQ0n0Sy2iZCjays=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JWgIK4yx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0jbAMTA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5248FC4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JWgIK4yx"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 390E2C4CEE4;
 	Mon,  5 May 2025 14:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746457142;
-	bh=BTogwoPQhqDb5Lb0ED+JhY3WyEMYPQZBPF+4Xj5VUFY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=T0jbAMTAafVnbqu5lNX0d3PJPu+3V9Pq7QhyARDB2hXZUF4QMD+HMG2/XaKahG18H
-	 TN/zzXIw6eeBC3oIRHNSaWd8o12H21d6QdoGU/L9dLWFCFLyhsEH9x68wQT90EGJk+
-	 VqdYxfa1ion1xT5PtSW3ni9YtjGC//EC75m5OULisSTldKmNhi5+GeYdScS9PCC2nv
-	 SKV3GSCjkrEeFqVvWLPpHOMKDJxxKlghvLGLLgDGtv0yEn8diK1bXHB4bXdOLuPY8b
-	 Buy4elGz9deZTA/QqNx+c5xXmK7GnUnXmxhe9vlKTnxrsviy7BMHaJvXuLewAmhE/y
-	 zdANeKZQ7kzqw==
+	bh=HnQHwXod2wutRRoHv2wgXPVJV7pOW/ivP71cpImY1i4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=JWgIK4yxUiIf4OUkUjyWfN9849jDAgrjoyxOZdHfufrC5ezbUgnRoBzvqOG9TjWZP
+	 r2V+9IpvwLZtOhBLFxxk1CnbhgksOHzsdTbmFG61oXr1BjYp/f+I0MF+fygD/OkfiD
+	 4hywZ0RhLInyJ/R/2+pJIrv1NyP10AcSR335aMQiN8jFSQkfrxlhU5aXLJQ6AlS72P
+	 zaU0cGiJuo8hiT33kFdKAn8a3tCeg+sWH8MAesR81RWH8TiGDHeDFAKQmZqI1Thr2h
+	 v5TjeXa7T0MlPQwPSADz4nN/ju+QDtd28r8AatRCaiU74NTcVldEqXkLcl6TJC5U97
+	 ro3iHXaX0Ghkg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C54C3ABAA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FE3C3ABB0;
 	Mon,  5 May 2025 14:59:02 +0000 (UTC)
 From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 05 May 2025 09:58:59 -0500
-Subject: [PATCH v4 2/4] cpuidle: tegra: Export
- tegra_cpuidle_pcie_irqs_in_use
+Subject: [PATCH v4 0/4] PCI: tegra: Allow building as a module
+Date: Mon, 05 May 2025 09:58:57 -0500
+Message-Id: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pci-tegra-module-v4-2-088b552c4b1a@gmail.com>
-References: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
-In-Reply-To: <20250505-pci-tegra-module-v4-0-088b552c4b1a@gmail.com>
+X-B4-Tracking: v=1; b=H4sIADHSGGgC/23NTQ6CMBRG0a2Qjq3pLwVH7sM4KG2BJkBJi42Gs
+ HcLDiTK8L7knW8GwXhrArhkM/Am2mDdkIKdMqBaOTQGWp0aEEQ4opjCUVk4mcZL2Dv96AwUqtJ
+ YcSOQrEF6G72p7XMjb/fUrQ2T869tIeL1+sEYQf9YxBBBhSSuizTGmbw2vbTdWbkerFgke6A4A
+ MgKYCxZVWLCWP4L0C/AETkAaAI4zyUrBSVaoD2wLMsbQH+4AjIBAAA=
+X-Change-ID: 20250313-pci-tegra-module-7cbd1c5e70af
 To: Thomas Gleixner <tglx@linutronix.de>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
  =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
@@ -57,11 +58,11 @@ Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
  Aaron Kling <webgeek1234@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746457141; l=805;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746457141; l=1327;
  i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=VxJ9HgkNV4IxH20jYpaAA9e5Ei6kk4ytu1PVu0wpNxM=;
- b=6jgX9ffm9Nmwy2049q2VtY0GOGl6UakWcODkZmokzrC44xXM7rRJ/g1pFvXlwYX3lnDE4jSzD
- vrXe7XFvWvzBujbjcgwqmRtxD9oOk5dE+w6l0D0dAo6WvQ8a0Sj233V
+ bh=HnQHwXod2wutRRoHv2wgXPVJV7pOW/ivP71cpImY1i4=;
+ b=/3JyDtE7aHyipMrD8Ry8sTJ7wN5U14qjqgqGMloBCJNHtRtCyeXCnybsSN8Wx5CJfndayNX5H
+ WoU+oOZShmJDpcV2sYryLPabyII2xUyxKebLTZAkaEhGg1ILTVcemQu
 X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
  pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
 X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
@@ -69,30 +70,40 @@ X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
 X-Original-From: Aaron Kling <webgeek1234@gmail.com>
 Reply-To: webgeek1234@gmail.com
 
-From: Aaron Kling <webgeek1234@gmail.com>
-
-Add export for tegra_cpuidle_pcie_irqs_in_use() so that drivers like
-pci-tegra can be loaded as a module.
-
 Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- drivers/cpuidle/cpuidle-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v4:
+- Updated commit messages for patches 1 and 2, per review
+- Link to v3: https://lore.kernel.org/r/20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com
 
-diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
-index b203a93deac5f378572be90e22c73e7417adb99e..aca907a62bb5de4ee4c71c1900eacedd4b90bc0a 100644
---- a/drivers/cpuidle/cpuidle-tegra.c
-+++ b/drivers/cpuidle/cpuidle-tegra.c
-@@ -336,6 +336,7 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
- 	pr_info("disabling CC6 state, since PCIe IRQs are in use\n");
- 	tegra_cpuidle_disable_state(TEGRA_CC6);
- }
-+EXPORT_SYMBOL_GPL(tegra_cpuidle_pcie_irqs_in_use);
- 
- static void tegra_cpuidle_setup_tegra114_c7_state(void)
- {
+Changes in v3:
+- Add patch to drop remove callback, per request
+- Link to v2: https://lore.kernel.org/r/20250428-pci-tegra-module-v2-0-c11a4b912446@gmail.com
 
+Changes in v2:
+- Add patch to export tegra_cpuidle_pcie_irqs_in_use as required when
+  building pci-tegra as a module for arm
+- Drop module exit to prevent module unloading, as requested
+- Link to v1: https://lore.kernel.org/r/20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com
+
+---
+Aaron Kling (4):
+      irqdomain: Export irq_domain_free_irqs
+      cpuidle: tegra: Export tegra_cpuidle_pcie_irqs_in_use
+      PCI: tegra: Allow building as a module
+      PCI: tegra: Drop unused remove callback
+
+ drivers/cpuidle/cpuidle-tegra.c    |  1 +
+ drivers/pci/controller/Kconfig     |  2 +-
+ drivers/pci/controller/pci-tegra.c | 24 ++++++------------------
+ kernel/irq/irqdomain.c             |  1 +
+ 4 files changed, 9 insertions(+), 19 deletions(-)
+---
+base-commit: 18352e73612d60b81790d2437845276ae499b64a
+change-id: 20250313-pci-tegra-module-7cbd1c5e70af
+
+Best regards,
 -- 
-2.48.1
+Aaron Kling <webgeek1234@gmail.com>
 
 
