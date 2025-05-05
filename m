@@ -1,173 +1,237 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2051.outbound.protection.outlook.com [40.107.237.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93298262FE1;
-	Mon,  5 May 2025 15:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459951; cv=fail; b=OOEsP230JrnG8W12I1FL42Pb5jSmNz8IFu804+qpp/CajbWs58pvYm2ZG64avTDQ2Yc+T8CRglc/akeWuVai+ZyGMTcgy4EOCS5vVO54Rd8/hdzU5IKW4NJ0eSXzVgV+2Wxl+glVpDTs1wlwJvhBIskmXtpHJHvZPI+pGSwZ5to=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459951; c=relaxed/simple;
-	bh=cYbQadj9OIg6iho3ezP5ME9KdFkDRYYFVxPV0kxtWTo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhIUoex4nxpWwcQ6+rTxIhugtgRZEkR7FZzhc/U9bHWxspeSGIPJr2p6+/I08e9xmadNlDk/TOGBt0cZar+hLLOtk2zd1I5UyGm0gW0kdp9e1z5yiTyiXGKunOVXaLoBBvE8E5WcyKZ30ePcoV3uDWBjENo4aGDoxIbXxdKir+o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NFhV5wED; arc=fail smtp.client-ip=40.107.237.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4408625A2C6
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746459962; cv=none; b=fXClNipGlt191zt5DmqHZd+hbouWj6g8sNhd3wUHCwJ64X52lHjrp7yGsjl7TKt0wszvJx82qcgjvIi4N3eTSF5RlQBsOOexLssZPSkbjLaEz5fuGL3t1Joq2jxSCScXLKC9tweQQnf78NN+bNzPQSkzulb9fHV4S8EVEvxtKa0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746459962; c=relaxed/simple;
+	bh=0f2qjDbbqIAL5PQNMCUqI03B4OLHNGTDTBjgztxXLAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bTOC39U8gN3JvfQEKjfBaK2nCOhIG1rzh4E1SVgNG0b7cxGzuWNwZhI88EvH2ZT4JjzdR1ETPp2CKpIKTKMrxWO7UkqWiu6CgcDuz2jhVeCXYWCYz/O7PHJBw3GD/jB55qaBZ6pi1rbwAkTzTEXv9rgQnuDNsqi7DkDECLCWMEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UdZETYjy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NFhV5wED"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GhxqNZuWVhh1cxJFmymjLupM8NEfaFd44DE3kT4XzPnUEAESeHvVFGZLJYNCtg1pE5kAJX/QX+c7+CMzZRbvL/KI751eToMqBzVounMeHp/dDchVbS6nLaKDBBOp2hIX9//7qrWKw3mJtfIRMzliDH0bnBH1u4QFOxgoSEsI7uOCS9aDhoX1HA274P0Ce0eLg1p8mnqoVDxGgGM9G/sI/ngCa2YTmOiE+W2tU4xOMy+Q4IdrM2LSBGE0MW6QwZOoYDDDbNRbtQP2WzZXi4tsYfo5nYSAkbG7nzBQvxuR2OSl9SpaSgisTmhfXDPkIbVabCbYbuIjp57xUUhwqVF7YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J8knYBdiqwUGKef9IhJFe3M4fBHN1+n+/XysVyvBkmA=;
- b=SlGN/BriYVrz+K1VVmQXRVSNZu0xUW057ZdpvTMkRjtL5vg8Rk25xwOq9jqca0pLip4MNpPeKyzlnu4um1Ph4Z0LJgNzm37JI9/JqEZdnoXqVF72iFaoeH13rJRRFgyuPoz8uwQ3w9eS0SidHBCdERy9I5y/GzWj+i3oxKkevnN6hGSsKe6N/eRaNYrP1Jy3RWJ4f9LaOrg+8o4n76uH+g9lNGhZC4D9Z7+3LopfSn3u0pid4dTrI9gMmOKJEpnsuQ2mqiMHqBear/JJHWwRhtJY6pvIdL8uRBUxY2I2btppgqdhA+aHJ3/8FV/0C/AaoaEWWMt1NMYz8uxzGxUgQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J8knYBdiqwUGKef9IhJFe3M4fBHN1+n+/XysVyvBkmA=;
- b=NFhV5wEDWHFULqDeQILZmMYt+faapg9UJyVVp/KQPjGTqrVUWEmNLOK6G9xiJMJYea1MYjTB2cl3M4klBpf1yr2VTTy7oDzrwZ2QBOsGHpTpWDy4vqGkDgKeS4kKwJevjBx8knEM2zOZsloJzcqlhRayTfMdY97NEW51u26831xfj+Ua9gqsIDGMMqnIHM7y8ZjQtweIRQ1HMyQeQm6+IwhHtP3cD9dN59HcnjRJVHTq6NOzWrezZCSkDiJaB60inSDyZJqxrOEpv2mvT/cY5LLyWAfdsrQO6tAa9fR8fFb4vqkIltiD+sIzCdr2JOcLBGLd9dJaEtYOGDrlFddXOQ==
-Received: from SJ0PR05CA0121.namprd05.prod.outlook.com (2603:10b6:a03:33d::6)
- by DS7PR12MB8371.namprd12.prod.outlook.com (2603:10b6:8:e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Mon, 5 May
- 2025 15:45:43 +0000
-Received: from SJ5PEPF000001D3.namprd05.prod.outlook.com
- (2603:10b6:a03:33d:cafe::44) by SJ0PR05CA0121.outlook.office365.com
- (2603:10b6:a03:33d::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Mon,
- 5 May 2025 15:45:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ5PEPF000001D3.mail.protection.outlook.com (10.167.242.55) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 15:45:42 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
- 08:45:25 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by drhqmail201.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
- 2025 08:45:25 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
- 2025 08:45:17 -0700
-Received: from nvidia.com (10.127.8.13) by mail.nvidia.com (10.129.68.7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Mon, 5 May 2025 08:45:15 -0700
-Date: Mon, 5 May 2025 08:45:14 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Baolu Lu <baolu.lu@linux.intel.com>, <kevin.tian@intel.com>,
-	<corbet@lwn.net>, <will@kernel.org>, <bagasdotme@gmail.com>,
-	<robin.murphy@arm.com>, <joro@8bytes.org>, <thierry.reding@gmail.com>,
-	<vdumpa@nvidia.com>, <jonathanh@nvidia.com>, <shuah@kernel.org>,
-	<jsnitsel@redhat.com>, <nathan@kernel.org>, <peterz@infradead.org>,
-	<yi.l.liu@intel.com>, <mshavit@google.com>, <praan@google.com>,
-	<zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
-	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
-Subject: Re: [PATCH v2 09/22] iommufd/viommu: Introduce IOMMUFD_OBJ_VCMDQ and
- its related struct
-Message-ID: <aBjdCnNiqFy03Rg3@nvidia.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <8bab0069503fa21b48298ed2ffe29a06963f71f5.1745646960.git.nicolinc@nvidia.com>
- <28e513ec-4d8b-4967-a241-d6f63d533050@linux.intel.com>
- <aA/EoEFtbnL2+zAw@Asurada-Nvidia>
- <20250505150214.GI2260709@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UdZETYjy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746459959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DY9wfzWLHvGzz7EOz3I1aIg4uX4Xuuhs2YE5FIpj3Gs=;
+	b=UdZETYjy2rmJYUn7G+eTT7Ek0hlj++7AwDhPbya6zrodqWajs+JG2O9FTw9P4Uo1h3YCRj
+	vCidY73mGtj4AJ6lktLxY4S8+GiCIAKO2tLQxP0Xn/mGA6UOu0cdPPU3qyrEsFZl33aLQ3
+	wuw+1wwTvZI8Pdxmt54YwSYxr9ZfgEE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-u066N9eaMxON1vXISMlZYg-1; Mon,
+ 05 May 2025 11:45:55 -0400
+X-MC-Unique: u066N9eaMxON1vXISMlZYg-1
+X-Mimecast-MFC-AGG-ID: u066N9eaMxON1vXISMlZYg_1746459951
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 591A41956088;
+	Mon,  5 May 2025 15:45:50 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.44.34.28])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7FA8430001AB;
+	Mon,  5 May 2025 15:45:42 +0000 (UTC)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: x86@kernel.org,
+	linux-efi@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Peter Jones <pjones@redhat.com>,
+	Daniel Berrange <berrange@redhat.com>,
+	Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Luca Boccassi <bluca@debian.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] x86/efi: Implement support for embedding SBAT data for x86
+Date: Mon,  5 May 2025 17:45:23 +0200
+Message-ID: <20250505154523.231233-3-vkuznets@redhat.com>
+In-Reply-To: <20250505154523.231233-1-vkuznets@redhat.com>
+References: <20250505154523.231233-1-vkuznets@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250505150214.GI2260709@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D3:EE_|DS7PR12MB8371:EE_
-X-MS-Office365-Filtering-Correlation-Id: e1ea2419-656e-4c40-876c-08dd8bebe4c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kQHCPvFWbU17affNrpVDbvp0d6MDegiBVnyhNl5lvSo0i0BY6AfaCvudXQyN?=
- =?us-ascii?Q?RpzAjI4XOASBST87fUnxgA5fUPDhorUn34Vx8zAyofcNF/DI1LKYC7WtrPKs?=
- =?us-ascii?Q?GjI6u4FEEMzjE5Z+NUPtDjMekYLmOm4anf+5Gq/0eiI1jOytfJSxNw2KQ2B2?=
- =?us-ascii?Q?BZYkCHCQ2RSIh9VunnaITlNweVDgZXcX9uxCVdLLxnUal6eraTH+BixGiVXu?=
- =?us-ascii?Q?ga1zkY7lq1aOIu8kaYeZr7oDDgTDjA3tfonO0MKj5Xgc7CF52ryPnVQ7Ibb7?=
- =?us-ascii?Q?PwxCpxTcyCCxljLMx3QpGYm8+mQUKsb+r7ZCgF9Q0jc7vFo04cdbt0W/LHyJ?=
- =?us-ascii?Q?3R+n2UMr+mfOezOENF/av//HG16WM1je+YMEHEYkbGuqRq+Yx3pem9PeyNer?=
- =?us-ascii?Q?zSQ3jnAnbT1rRCm6V0VjLer+f0ps3ZYwgMyVFj31i1XfPRsrER/zkB/ybdhC?=
- =?us-ascii?Q?+u/jne/EYTcqd4txpn7+DqgKPGLDO3phxD6pqJVFUnJznxxX/vhex0ePKYAR?=
- =?us-ascii?Q?o3VPp/VnEx9iRuQc0PC3Aehs4wL9g/HJltNn0AGCRrMG0clVm4e2YW0G8Tt3?=
- =?us-ascii?Q?6YORtCIy594gYj+IPw4uIf3baCwJDu6Lw+UyNkF9DwaKQ7pBUX8HfqxwGXN/?=
- =?us-ascii?Q?7WVLss6Ef20YAODvHcsufROSiGJf03asPejHab8yVh2HmbRbeHRxX1wf0gyb?=
- =?us-ascii?Q?oy7xWkxYAkkXRqgv8TdEKjME4nehL/+TSF6ZHr8eMbbaex7+ZYgrwC+/cLgG?=
- =?us-ascii?Q?kChM0Y/6TGLDxg7kY4n3CseH/7rRNLtG6+I55tg5v3D4kagrso7dgY6RbQ5P?=
- =?us-ascii?Q?vKpl1Krz79jNvjPTV6d8p+YYoCy8BD2WMCTtLD8mOEkbmDuKDUaq55xqOkIg?=
- =?us-ascii?Q?PBYjuqrOZWwytb+G0Nf/5diGHmF1f5tYidRY9sjwcdQ1zQvIYEq8XrJ1ALwX?=
- =?us-ascii?Q?f+2JTJMcBDq3B5C4CLqmDkDtlvniTnzfVzaFawSC4wVuE0U6F3MwGuBmi2YH?=
- =?us-ascii?Q?RTqLyjaRkEuareEv46XTQoynYSN+vEVpxqx60DQdtM817mOecMzE/B6fNFJK?=
- =?us-ascii?Q?dUvcNm+TgxBlcb8U7bNk2J2Zl2+1gsnWnaRliurqdGbCIpEJup+OuNUiQfVz?=
- =?us-ascii?Q?iYjykPjtu3//06bq69XuXCa6qN5sbQByHnMkV8Zia8VZ2Czl2YSE4IuEjds0?=
- =?us-ascii?Q?A+QcV/wBLyKAvGxE2+bAH6PWJD2Da7iBufJPFtlVWAuyl78ScdXJcmqhkRdH?=
- =?us-ascii?Q?kVad/+HwB8ExiG9B8sJyFwg2LMhar4S1GIQQ4HLAV98zhkb3h3lIFJDROuzC?=
- =?us-ascii?Q?qEfBAXGKp5bnJQ8cP+fXX3phZFeVUevtRG4u1YR/mCKTfGEicnmJc05uzoGQ?=
- =?us-ascii?Q?sRDiIBybReipQcRMco4hxD3Z25HHoYDXksh8LIR+JsThmJvRP6/6TFsvDNCz?=
- =?us-ascii?Q?KtimWYvUhEPyH/gCAh2CF3PGtB/+1T0BDCiXFB3dZmjIekiFj6luFK36MKGm?=
- =?us-ascii?Q?oPmLQHsrEVsOPzAQij3g/lxR/lZl6LA2jTPS?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 15:45:42.7480
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1ea2419-656e-4c40-876c-08dd8bebe4c6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D3.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8371
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, May 05, 2025 at 12:02:14PM -0300, Jason Gunthorpe wrote:
-> On Mon, Apr 28, 2025 at 11:10:40AM -0700, Nicolin Chen wrote:
-> > > > +struct iommufd_vcmdq {
-> > > > +	struct iommufd_object obj;
-> > > > +	struct iommufd_ctx *ictx;
-> > > > +	struct iommufd_viommu *viommu;
-> > > > +	dma_addr_t addr;
-> > > 
-> > > It's better to add a comment to state that @addr is a guest physical
-> > > address. Or not?
-> > 
-> > Yea. Let's add one:
-> > 
-> > 	dma_addr_t addr; /* in guest physical address space */
-> 
-> If it is a guest physical in a nested page table it should technically
-> be u64 not dma_addr_t
+Similar to zboot architectures, implement support for embedding SBAT data
+for x86. Put '.sbat' section in between '.data' and '.text' as the former
+also covers '.bss' and '.pgtable' and thus must be the last one in the
+file.
 
-OK. Will change that in v4.
+Note, the obsolete CRC-32 checksum (see commit 9c54baab4401 ("x86/boot:
+Drop CRC-32 checksum and the build tool that generates it")) is gone and
+while it would've been possible to reserve the last 4 bytes in '.sbat'
+section too (like it's done today in '.data'), it seems to be a pointless
+exercise: SBAT makes zero sense without a signature on the EFI binary so
+'.sbat' won't be at the very end of the file anyway. Any tool which uses
+the last 4 bytes of the file as a checksum is broken with signed EFI
+binaries already.
 
-Thanks
-Nicolin
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/boot/Makefile                 |  2 +-
+ arch/x86/boot/compressed/Makefile      |  5 ++++
+ arch/x86/boot/compressed/sbat.S        |  7 ++++++
+ arch/x86/boot/compressed/vmlinux.lds.S |  8 +++++++
+ arch/x86/boot/header.S                 | 33 +++++++++++++++++++-------
+ drivers/firmware/efi/Kconfig           |  2 +-
+ 6 files changed, 46 insertions(+), 11 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/sbat.S
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 81f55da81967..5f7b52f0e7f5 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -71,7 +71,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
+ 
+ SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
+ 
+-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|z_.*\)$$/\#define ZO_\2 0x\1/p'
++sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [a-zA-Z] \(startup_32\|efi.._stub_entry\|efi\(32\)\?_pe_entry\|input_data\|kernel_info\|_end\|_ehead\|_text\|_e\?data\|_e\?sbat\|z_.*\)$$/\#define ZO_\2 0x\1/p'
+ 
+ quiet_cmd_zoffset = ZOFFSET $@
+       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index fdbce022db55..1441435869cc 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -106,6 +106,11 @@ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+ 
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++vmlinux-objs-$(CONFIG_EFI_SBAT) += $(obj)/sbat.o
++
++ifdef CONFIG_EFI_SBAT
++$(obj)/sbat.o: $(CONFIG_EFI_SBAT_FILE)
++endif
+ 
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+diff --git a/arch/x86/boot/compressed/sbat.S b/arch/x86/boot/compressed/sbat.S
+new file mode 100644
+index 000000000000..838f70a997dd
+--- /dev/null
++++ b/arch/x86/boot/compressed/sbat.S
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Embed SBAT data in the kernel.
++ */
++	.pushsection ".sbat", "a", @progbits
++	.incbin CONFIG_EFI_SBAT_FILE
++	.popsection
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 3b2bc61c9408..587ce3e7c504 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -43,6 +43,14 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
++#ifdef CONFIG_EFI_SBAT
++	.sbat : ALIGN(0x1000) {
++		_sbat = . ;
++		*(.sbat)
++		_esbat = ALIGN(0x1000);
++		. = _esbat;
++	}
++#endif
+ 	.data :	ALIGN(0x1000) {
+ 		_data = . ;
+ 		*(.data)
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index b5c79f43359b..91964818bf50 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -179,15 +179,17 @@ pecompat_fstart:
+ #else
+ 	.set	pecompat_fstart, setup_size
+ #endif
+-	.ascii	".text"
+-	.byte	0
+-	.byte	0
+-	.byte	0
+-	.long	ZO__data
+-	.long	setup_size
+-	.long	ZO__data			# Size of initialized data
+-						# on disk
+-	.long	setup_size
++	.ascii	".text\0\0\0"
++#ifdef CONFIG_EFI_SBAT
++	.long	ZO__sbat            		# VirtualSize
++	.long	setup_size			# VirtualAddress
++	.long	ZO__sbat			# SizeOfRawData
++#else
++	.long	ZO__data            		# VirtualSize
++	.long	setup_size			# VirtualAddress
++	.long	ZO__data			# SizeOfRawData
++#endif
++	.long	setup_size			# PointerToRawData
+ 	.long	0				# PointerToRelocations
+ 	.long	0				# PointerToLineNumbers
+ 	.word	0				# NumberOfRelocations
+@@ -196,6 +198,19 @@ pecompat_fstart:
+ 		IMAGE_SCN_MEM_READ		| \
+ 		IMAGE_SCN_MEM_EXECUTE		# Characteristics
+ 
++#ifdef CONFIG_EFI_SBAT
++	.ascii ".sbat\0\0\0"
++	.long   ZO__esbat - ZO__sbat            # VirtualSize
++	.long   setup_size + ZO__sbat           # VirtualAddress
++	.long   ZO__esbat - ZO__sbat            # SizeOfRawData
++	.long   setup_size + ZO__sbat           # PointerToRawData
++
++	.long	0, 0, 0
++	.long	IMAGE_SCN_CNT_INITIALIZED_DATA	| \
++		IMAGE_SCN_MEM_READ		| \
++		IMAGE_SCN_MEM_DISCARDABLE	# Characteristics
++#endif
++
+ 	.ascii	".data\0\0\0"
+ 	.long	ZO__end - ZO__data		# VirtualSize
+ 	.long	setup_size + ZO__data		# VirtualAddress
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index db8c5c03d3a2..16baa038d412 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -286,7 +286,7 @@ config EFI_SBAT
+ 
+ config EFI_SBAT_FILE
+ 	string "Embedded SBAT section file path"
+-	depends on EFI_ZBOOT
++	depends on EFI_ZBOOT || (EFI_STUB && X86)
+ 	help
+ 	  SBAT section provides a way to improve SecureBoot revocations of UEFI
+ 	  binaries by introducing a generation-based mechanism. With SBAT, older
+-- 
+2.49.0
+
