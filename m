@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AFC26B0BC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3913E26C397
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461663; cv=none; b=ljQMX+Hf/+8gbytV3d06kW+5kMaDu3fVt+t+Joy3h4p3ewjQ900AZn7H8LMkPQ+Jb5xK+7VpAB253Wmzb17wQOlWeA8b0WP/k4JkAjJ0sNyXsd+sBfTF4BC7NE3D8ZImcE8uDSYdwEHl0kiwJCVd/Jm5eTuykghWUr6gzrFD7w8=
+	t=1746461664; cv=none; b=X+UPQL6NNatqKpG5VwIlv5xnFTO37ngZ3jTuaGgBqIGs04lWtEPeNqOEuLEaJp2Cx7hcDRFmX+CT0LzPD27loCYHpHy9d4b1UMH1qK51m3xAagDBcFaSwS2noxXWUgEWxhuMIt2VL5nxXf3YWeFsck3PGZ2xhCzqwlFCxDDkHTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461663; c=relaxed/simple;
-	bh=WNmcRnW25SuTNW/fidnyuzaC0ufF7CU/QhzVlk6Eyk4=;
+	s=arc-20240116; t=1746461664; c=relaxed/simple;
+	bh=0xPFNmQ2aYdSjFcVuUL7sWXmakZUXXwCI8TdRZJDz9g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QWYqJeQgFTITREaXQnZEaghpzsWlruRc4zcXsfmoWzrIXcrzl8Qn6xGsyx/8zzVBXDEhcGQYD8fz4f1c1pye0o8PKlElidF2ftsym9TW45rgEWX+YZFFGwM6juONj+cmz9bOSrI+l59TN97YDJnL2sM7W4e1XeGoz1bhctHuRRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jiaqiyan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3GC/6Ew; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=W7VTH/g+cZN5+J4XkmU2Tv5X47ac/xV+BxEDpw6ih4jQw8Sb752ebfvWGaqM/bU3jyhjqpXaskbbCVB8ewGn+thf8ZA2xn3XkjsGMUZShEiR2UcRMtP8Zgjuc4/eQhZeqSfsJ4qc2KKIq43RpQJWcFKAQm9tbrc65WnBw5ajRDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jiaqiyan.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cc/uRD0N; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jiaqiyan.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3GC/6Ew"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22c35bafdbdso70207265ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:14:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cc/uRD0N"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22c31b55ac6so65506655ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:14:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746461660; x=1747066460; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746461663; x=1747066463; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ih0/JpStngeu2lOMQmMMElA7ojSkXNH4xy6u5tdpksc=;
-        b=y3GC/6EwVjLQsC9dtPwGfK31ngSOH8Y2h2UeLmZBn9r2UE375VLvVmiG0EBCmseboa
-         sCCpM/i9ylGQL6AHx+v1eevWwgUOzrafX+C5dprIS/3CO89MkccX79RBAX1/X0diBLef
-         luxSwCZKwYwJh2iHmIN2bk4s2A02SxhWk6o4cOjLy+vsJvR731lEkkhS9C8ePyC8W8Hg
-         +737TdUPDpMFcEITdumJ3UAs2roxubWZtsDJUK/FWFq1CdEKx+3YANN6A25F+e+eR5H2
-         G+Li3rXUxZYP0p2azMmWBnQbbeKWIcS15Pd7zhgK3CTPmbIl/ZBk5qQpltd6q/WCPBVF
-         nzwg==
+        bh=qoM9DcHdqZBj+rk9l05sHHopuoPZxH677juEX9RJpMg=;
+        b=Cc/uRD0NkHMrvPWyT0Y0tQDFxYje4u+lAlj51UllWvP+vb8F75TLhDZfMk/s9tqp7e
+         By63/13gFQ5NcWX7qRtzSQjeih5tCGR1c4iv2BjHSclUscQqkiqAuSwKsxd0IHNDsbN4
+         lJ9rEWZRh/3i2Z8c49kE1kkVvhByLqyf3sx4WUcRy4ipDV13h2nIem54t3B5v+pL2lTJ
+         YETibOULRG4lMzgU1+AZWkqKJztkgRlfKGqXeceMHAucShGOXji7IaI+ZjWesRpq+mRV
+         9m0qNeK9j2gO5EmLahmYFSfuVz6COBeV5t8a+2SDHuUFsRcf/qxHnR97MySv8E7pPpl7
+         59vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746461660; x=1747066460;
+        d=1e100.net; s=20230601; t=1746461663; x=1747066463;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ih0/JpStngeu2lOMQmMMElA7ojSkXNH4xy6u5tdpksc=;
-        b=oZpBE2Glz0I/INZOXp7+GpjmTGfmOYHUipvr1UlT5ERtI3vVAAtoJzdUUxf2cipdNa
-         bNPDFmPrJZd2e7UJiRgDYqvQEUBElxZPp2oiVlxr8p25QVFzw3wNi9N6wCIvJKGmVx04
-         qKbvh0MfNXpd3BtSOMzOEV+vF6EhMYQGYvIOvjqS3zgY/DSqEdJWf+auWaqP/ty285FD
-         lI20slyZ0ZGRRxP6zf/5Vm1z1AFziwFtLov8L6xoHSU0xIYnCsUha60BRBZG4NrpTGZC
-         V4GCtplV+FCpM3l2yIB12O+OU8Goo4z5kJS3q7yVht4GBcj8gy6u1y5etstGCOgvSU14
-         tS3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUm0BaORh/64qx3oP/9OicUBAeSYtZW9V+OT6QhmitBo1/ptG6vtNBDU+dldV9ryVHMx9FevEiTk1xATc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOxTCW05aIgtrxGfsewV53AP9Hz7o2b5yL8akiQIMrTW3+RfMH
-	MGPyuj96uaUeGvvriKZKtwaS4Xyv/OBTUM6qUDBN6rH700PcaHrBqF2akNcNs919/LO8VklYPZf
-	LfhSYWmoX5w==
-X-Google-Smtp-Source: AGHT+IEALx06q4ifLBOjCQ9ZZOZ/gQJWNi+Q92PHdvJDeENKCM2QDj0Em0rsjG/Q7RXdhODS4FzwytaIsf6wMQ==
-X-Received: from pfvo15.prod.google.com ([2002:a05:6a00:1b4f:b0:73d:b1c6:c137])
+        bh=qoM9DcHdqZBj+rk9l05sHHopuoPZxH677juEX9RJpMg=;
+        b=FMZkj6Cxou6lrUrS7rRwpfh4uWP10SvVey51Kw+sOLQ01/SFwS14KLBlTo9kEzhof3
+         4xGpYWx3q/IkG+h8bofiu/0bTmzgZ4wdTa4+VNU2m00iEVhlv1QtrAZPhY81eq5S5mnr
+         TLry40ucPiqywECPkF9UF1x4tSdkkK5PK4AsJGB7HR7BaxfNc3Mf3fcbeRnbYnGt4gKb
+         hV18wqgruaAvqAI3GHGesdv05ZP+WkBffc8u9UDyO4ApqP8Vu8u+d52cR2LDHZlMi5DR
+         9lpLkaF9aCPiDn8Yrmifg1GQ8S1tO9fmJ81RsudxfJZWZR635TcPbq4U+SeRjhxLgvz3
+         OD+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2gNExU3jhLzOa9OsvtOj4Lz13ARAT8eByuYtp05AMBzcg9vifaT9iKS+Zd8VJo+3O0LHt+lCM/DP/8/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv9krlARzXsS6Y+eWbwU3eutUTl76zWIOQEeBMlw8+1YJcxgae
+	/NsmFtgmC0v4gUM4DJ+CMSUVyx6Z3P7L95fz/JTlWsr4lPaACj6A1k6zAQzVTPjjCo/Iy/vfaqt
+	lviQDrQYSnQ==
+X-Google-Smtp-Source: AGHT+IFZMxB5zKbz0DCB224XcS28TLNRLHuTk3G5CmkpWtkGxQ7uQKT12C81gz2CRUWIcDMNDv5x3jsR5vZQHg==
+X-Received: from pfbdh13.prod.google.com ([2002:a05:6a00:478d:b0:739:485f:c33e])
  (user=jiaqiyan job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:f683:b0:224:f12:3734 with SMTP id d9443c01a7336-22e1ea87368mr99744415ad.30.1746461659950;
- Mon, 05 May 2025 09:14:19 -0700 (PDT)
-Date: Mon,  5 May 2025 16:14:09 +0000
+ 2002:a17:903:2383:b0:21f:52e:939e with SMTP id d9443c01a7336-22e18bc4033mr159804055ad.28.1746461662677;
+ Mon, 05 May 2025 09:14:22 -0700 (PDT)
+Date: Mon,  5 May 2025 16:14:11 +0000
 In-Reply-To: <20250505161412.1926643-1-jiaqiyan@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250505161412.1926643-1-jiaqiyan@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250505161412.1926643-4-jiaqiyan@google.com>
-Subject: [PATCH v1 3/6] KVM: arm64: Allow userspace to inject external
- instruction aborts
+Message-ID: <20250505161412.1926643-6-jiaqiyan@google.com>
+Subject: [PATCH v1 5/6] KVM: selftests: Test for KVM_CAP_INJECT_EXT_IABT
 From: Jiaqi Yan <jiaqiyan@google.com>
 To: maz@kernel.org, oliver.upton@linux.dev
 Cc: joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
@@ -73,33 +72,23 @@ Cc: joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
 	Jiaqi Yan <jiaqiyan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Raghavendra Rao Ananta <rananta@google.com>
-
-When KVM returns to userspace for KVM_EXIT_ARM_SEA, the userspace is
-encouraged to inject the abort into the guest via KVM_SET_VCPU_EVENTS.
-
-KVM_SET_VCPU_EVENTS currently only allows injecting external data aborts.
-However, the synchronous external abort that caused KVM_EXIT_ARM_SEA
-is possible to be an instruction abort. Userspace is already able to
-tell if an abort is due to data or instruction via kvm_run.arm_sea.esr,
-by checking its Exception Class value.
-
-Extend the KVM_SET_VCPU_EVENTS ioctl to allow injecting instruction
-abort into the guest.
+Test userspace can use KVM_SET_VCPU_EVENTS to inject an external
+instruction abort into guest. The test injects instruction abort at an
+arbitrary time without real SEA happening in the guest VCPU, so only
+certain ESR_EL1 value can be expected, but not the case for FAR_EL1.
 
 Signed-off-by: Jiaqi Yan <jiaqiyan@google.com>
-Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
 ---
- arch/arm64/include/uapi/asm/kvm.h |  3 ++-
- arch/arm64/kvm/arm.c              |  1 +
- arch/arm64/kvm/guest.c            | 13 ++++++++++---
- include/uapi/linux/kvm.h          |  1 +
- 4 files changed, 14 insertions(+), 4 deletions(-)
+ tools/arch/arm64/include/uapi/asm/kvm.h       |   3 +-
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../testing/selftests/kvm/arm64/inject_iabt.c | 100 ++++++++++++++++++
+ 3 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kvm/arm64/inject_iabt.c
 
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index ed5f3892674c7..643e8c4825451 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
+diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
+index af9d9acaf9975..d3a4530846311 100644
+--- a/tools/arch/arm64/include/uapi/asm/kvm.h
++++ b/tools/arch/arm64/include/uapi/asm/kvm.h
 @@ -184,8 +184,9 @@ struct kvm_vcpu_events {
  		__u8 serror_pending;
  		__u8 serror_has_esr;
@@ -111,70 +100,124 @@ index ed5f3892674c7..643e8c4825451 100644
  		__u64 serror_esr;
  	} exception;
  	__u32 reserved[12];
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 47544945fba45..dc2efb627f450 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -319,6 +319,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_ARM_IRQ_LINE_LAYOUT_2:
- 	case KVM_CAP_ARM_NISV_TO_USER:
- 	case KVM_CAP_ARM_INJECT_EXT_DABT:
-+	case KVM_CAP_ARM_INJECT_EXT_IABT:
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_VCPU_ATTRIBUTES:
- 	case KVM_CAP_PTP_KVM:
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 2196979a24a32..4917361ecf5cb 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -825,9 +825,9 @@ int __kvm_arm_vcpu_get_events(struct kvm_vcpu *vcpu,
- 		events->exception.serror_esr = vcpu_get_vsesr(vcpu);
- 
- 	/*
--	 * We never return a pending ext_dabt here because we deliver it to
--	 * the virtual CPU directly when setting the event and it's no longer
--	 * 'pending' at this point.
-+	 * We never return a pending ext_dabt or ext_iabt here because we
-+	 * deliver it to the virtual CPU directly when setting the event
-+	 * and it's no longer 'pending' at this point.
- 	 */
- 
- 	return 0;
-@@ -839,6 +839,7 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
- 	bool serror_pending = events->exception.serror_pending;
- 	bool has_esr = events->exception.serror_has_esr;
- 	bool ext_dabt_pending = events->exception.ext_dabt_pending;
-+	bool ext_iabt_pending = events->exception.ext_iabt_pending;
- 
- 	if (serror_pending && has_esr) {
- 		if (!cpus_have_final_cap(ARM64_HAS_RAS_EXTN))
-@@ -852,8 +853,14 @@ int __kvm_arm_vcpu_set_events(struct kvm_vcpu *vcpu,
- 		kvm_inject_vabt(vcpu);
- 	}
- 
-+	/* DABT and IABT cannot happen at the same time. */
-+	if (ext_dabt_pending && ext_iabt_pending)
-+		return -EINVAL;
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index 16d2e9f32619f..708fd126a36dd 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -148,6 +148,7 @@ TEST_GEN_PROGS_arm64 += arm64/aarch32_id_regs
+ TEST_GEN_PROGS_arm64 += arm64/arch_timer_edge_cases
+ TEST_GEN_PROGS_arm64 += arm64/debug-exceptions
+ TEST_GEN_PROGS_arm64 += arm64/hypercalls
++TEST_GEN_PROGS_arm64 += arm64/inject_iabt
+ TEST_GEN_PROGS_arm64 += arm64/mmio_abort
+ TEST_GEN_PROGS_arm64 += arm64/page_fault_test
+ TEST_GEN_PROGS_arm64 += arm64/psci_test
+diff --git a/tools/testing/selftests/kvm/arm64/inject_iabt.c b/tools/testing/selftests/kvm/arm64/inject_iabt.c
+new file mode 100644
+index 0000000000000..43b701e9143c2
+--- /dev/null
++++ b/tools/testing/selftests/kvm/arm64/inject_iabt.c
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * inject_iabt.c - Tests for injecting instruction aborts into guest.
++ */
 +
- 	if (ext_dabt_pending)
- 		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
-+	else if (ext_iabt_pending)
-+		kvm_inject_pabt(vcpu, kvm_vcpu_get_hfar(vcpu));
- 
- 	return 0;
- }
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 79dc4676ff74b..bcf2b95b79123 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -941,6 +941,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
- #define KVM_CAP_ARM_SEA_TO_USER 240
-+#define KVM_CAP_ARM_INJECT_EXT_IABT 241
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
++#include "processor.h"
++#include "test_util.h"
++
++static void expect_iabt_handler(struct ex_regs *regs)
++{
++	u64 esr = read_sysreg(esr_el1);
++
++	GUEST_PRINTF("Guest SEA esr_el1=%#lx\n", esr);
++	GUEST_ASSERT_EQ(ESR_ELx_EC(esr), ESR_ELx_EC_IABT_CUR);
++	GUEST_ASSERT_EQ(esr & ESR_ELx_FSC_TYPE, ESR_ELx_FSC_EXTABT);
++	/*
++	 * We inject IABT but there is no SEA in guest at all,
++	 * so guest should see FnV == 1, which is set by KVM.
++	 */
++	GUEST_ASSERT(esr & ESR_ELx_FnV);
++
++	GUEST_DONE();
++}
++
++static void guest_code(void)
++{
++	GUEST_FAIL("Guest should only run SEA handler");
++}
++
++static void vcpu_run_expect_done(struct kvm_vcpu *vcpu)
++{
++	struct ucall uc;
++	bool guest_done = false;
++
++	do {
++		vcpu_run(vcpu);
++		switch (get_ucall(vcpu, &uc)) {
++		case UCALL_ABORT:
++			REPORT_GUEST_ASSERT(uc);
++			break;
++		case UCALL_PRINTF:
++			ksft_print_msg("From guest: %s", uc.buffer);
++		case UCALL_DONE:
++			ksft_print_msg("Guest done gracefully!\n");
++			guest_done = true;
++			break;
++		default:
++			TEST_FAIL("Unexpected ucall: %lu", uc.cmd);
++	}
++	} while (!guest_done);
++}
++
++static void vcpu_inject_ext_iabt(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_events events = {};
++
++	events.exception.ext_iabt_pending = true;
++	vcpu_events_set(vcpu, &events);
++}
++
++static void vcpu_inject_invalid_abt(struct kvm_vcpu *vcpu)
++{
++	struct kvm_vcpu_events events = {};
++	int r;
++
++	events.exception.ext_iabt_pending = true;
++	events.exception.ext_dabt_pending = true;
++
++	ksft_print_msg("Injecting invalid external abort events\n");
++	r = __vcpu_ioctl(vcpu, KVM_SET_VCPU_EVENTS, &events);
++	TEST_ASSERT(r && errno == EINVAL,
++		    KVM_IOCTL_ERROR(KVM_SET_VCPU_EVENTS, r));
++}
++
++static void test_inject_iabt(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
++
++	vm_init_descriptor_tables(vm);
++	vcpu_init_descriptor_tables(vcpu);
++
++	vm_install_sync_handler(vm, VECTOR_SYNC_CURRENT,
++				ESR_ELx_EC_IABT_CUR, expect_iabt_handler);
++
++	vcpu_inject_invalid_abt(vcpu);
++
++	vcpu_inject_ext_iabt(vcpu);
++	vcpu_run_expect_done(vcpu);
++
++	kvm_vm_free(vm);
++}
++
++int main(void)
++{
++	test_inject_iabt();
++	return 0;
++}
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
