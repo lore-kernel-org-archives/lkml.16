@@ -1,80 +1,141 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936FB1F463E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAA015A8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440264; cv=none; b=OhF9c7euSUVE8/guRGHpJNAassRPh2AzOopwyCv2xc4w4sQy3MUwG8iOasSdPiyGoKRctF+cPYrWdkWO0VM4VM8373N5RhxDUyxOU7zInMTyRc5wsiAG7tZqBQlrYNhdXnpE9zzXaMrLfJ6qQR7jCWQENNu2+KRxreLU4jnFqUc=
+	t=1746440370; cv=none; b=ZAHOFTQb+mZf648PezTHhjzB2ptZcjHEJsDioKfNQi7SjL1C23IcPHkUNjZNNkjDHEbdJciNU9Icg8hHh3d3sk3lbXaAVdQX58adYI3cJbGe51Alqozv7wL21wKezd2yZUiycMtH383Iu3ftsZDX8ViBoj6EGDnko7tV17GJVsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440264; c=relaxed/simple;
-	bh=UTcS1pyxZ8q5WfNJRwyAPG8NzPU5Uk/M4PLi+Mr7kMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sKuDcehDySVofQfj7SI/LIcRUlhQyMVv4CTzT53iuYw/mF0P4FhqfraTO7G41iSrpS5ImJhWVuZCEmo582LUiVsoqxyAw8lFcxj8hSaChZF75mdy482vOQaP9ZuSbZqDMscuFP1yUidu+P0pQhsT1rZjPYshW7kcSc4jKR3HMcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BX9qGgF3; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746440370; c=relaxed/simple;
+	bh=fZRJRGBUfeoqYklT8YCLbziPfx9Gg5apvvccvcMpQRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tWFCagW9fvwTlSJWf6OcDJLarz3v5gzehWP8oMxvJPfQ3lo8y99Ty6dHHNpo3FqQG4SVhPp/ah4YlEY6fXrTzYnPf4AukhWUqsJNq1t6kRoI0Lp3Dlc1CFs1WGCX8z8js5UYwoRnehzyTzgcjwnkdWpuakq2J3SEPVFukwSHy6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BQnp8OwS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zg+FqbdN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BQnp8OwS; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zg+FqbdN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BX9qGgF3"
-Message-ID: <70240985-5f8f-42a9-b5a6-74fd6713f6f3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746440258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BQnp8OwS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zg+FqbdN";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BQnp8OwS";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zg+FqbdN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1A6822118D;
+	Mon,  5 May 2025 10:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746440367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aAAH34Bu2XqaO23TD7PI0jLXdYDNGFWelhpUofjwSyg=;
-	b=BX9qGgF3C3wvzMHiAPs1/hs9ptZ2kDP4gq9dIXbLeOXDNB79JghNEItoeK+HpOkoSvRES7
-	wWklgYS1KrTUfbp886az4kGS5KhgekOkzmn/ps7BXrvuu3T7yYIJTPyk6enHXT4maTf0Sc
-	pHoEX/uTq6NsgsCFpXkdhvsZdxE43ho=
-Date: Mon, 5 May 2025 12:03:23 +0200
+	bh=W+CuKktiQKfpbKb73Elr0/AnTcjJL/9A/w+U7OWH/LE=;
+	b=BQnp8OwSgqSWoHT+0nVfOx/Lle04WqFl9X9v2XzL0Qx63oU3NH3XL3QGLO5RBaKskvvJou
+	vOXI51ngPXU+jBuKRbbK14OdEmW0EbiKXUm+qbWM5QUjFpXvAmuHl8HM2j3tkoS7Wnx40I
+	/Rlh7vu7whyExnLyK3AwM7zbSRbXd5s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746440367;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+CuKktiQKfpbKb73Elr0/AnTcjJL/9A/w+U7OWH/LE=;
+	b=zg+FqbdN21/EnNl6Bd644y2UX3BPB0TFhpdc/929XHC2jQeEoHi5xU6b8PmPn9HmFOBIqx
+	yOFvhGBAgjrQWXAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=BQnp8OwS;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zg+FqbdN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746440367; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+CuKktiQKfpbKb73Elr0/AnTcjJL/9A/w+U7OWH/LE=;
+	b=BQnp8OwSgqSWoHT+0nVfOx/Lle04WqFl9X9v2XzL0Qx63oU3NH3XL3QGLO5RBaKskvvJou
+	vOXI51ngPXU+jBuKRbbK14OdEmW0EbiKXUm+qbWM5QUjFpXvAmuHl8HM2j3tkoS7Wnx40I
+	/Rlh7vu7whyExnLyK3AwM7zbSRbXd5s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746440367;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+CuKktiQKfpbKb73Elr0/AnTcjJL/9A/w+U7OWH/LE=;
+	b=zg+FqbdN21/EnNl6Bd644y2UX3BPB0TFhpdc/929XHC2jQeEoHi5xU6b8PmPn9HmFOBIqx
+	yOFvhGBAgjrQWXAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 08DEB13883;
+	Mon,  5 May 2025 10:19:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id F04nAq+QGGhjewAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 10:19:27 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 923C8A0670; Mon,  5 May 2025 12:19:26 +0200 (CEST)
+Date: Mon, 5 May 2025 12:19:26 +0200
+From: Jan Kara <jack@suse.cz>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Andrey Kriulin <kitotavrik.s@gmail.com>, 
+	Christian Brauner <brauner@kernel.org>, Andrey Kriulin <kitotavrik.media@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH] fs: minix: Fix handling of corrupted directories
+Message-ID: <tmrfgsrexyytlgxpsf3xus7w6tv3ake4ogo2b7ul7p6vn36cqv@nv4m6clasxjv>
+References: <20250502165059.63012-1-kitotavrik.media@gmail.com>
+ <aBUAbPum1d5dNrpG@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/2] Fix minor issue in SoundWire slave IRQ mapping
-To: Charles Keepax <ckeepax@opensource.cirrus.com>, vkoul@kernel.org
-Cc: yung-chuan.liao@linux.intel.com, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-References: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBUAbPum1d5dNrpG@casper.infradead.org>
+X-Rspamd-Queue-Id: 1A6822118D
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,toxicpanda.com,suse.de,suse.cz,vger.kernel.org,linuxtesting.org];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -2.51
+X-Spam-Flag: NO
 
-
-
-On 4/29/25 05:18, Charles Keepax wrote:
-> Currently there would be problems if multiple devices on the same bus
-> attempted to use SoundWire IRQ handling rather than the IRQ callback
-> mechanism. So far only cs42l43 uses this system so this hasn't caused
-> any problems.
+On Fri 02-05-25 18:27:08, Matthew Wilcox wrote:
+> On Fri, May 02, 2025 at 07:50:57PM +0300, Andrey Kriulin wrote:
+> > If the directory is corrupted and the number of nlinks is less than 2 
 > 
-> Thanks,
-> Charles
-> 
-> Changes since v1:
->   - Don't reuse the new IDA for the dev_num
->   - Expand the number of devices allowed on a bus to 16
-> 
-> Charles Keepax (2):
->    soundwire: bus: Simplify sdw_assign_device_num()
->    soundwire: bus: Add internal slave ID and use for IRQs
+> ... so should it be EIO or EFSCORRUPTED?
 
-LGTM,
+Well, EFSCORRUPTED is an internal define (to EUCLEAN) local to several
+filesystems. So we'd need to lift that define to a generic code first.
 
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-
-> 
->   drivers/soundwire/bus.c       | 31 ++++++++++++++-----------------
->   drivers/soundwire/bus_type.c  | 10 ++++++++++
->   drivers/soundwire/irq.c       |  6 +++---
->   include/linux/soundwire/sdw.h |  6 ++++++
->   4 files changed, 33 insertions(+), 20 deletions(-)
-> 
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
