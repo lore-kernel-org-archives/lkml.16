@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6E02D47DC;
-	Mon,  5 May 2025 22:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91012D4B40;
+	Mon,  5 May 2025 22:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485651; cv=none; b=d9HaBTozRow+c2p0FdUOYBWA91Oz0FYQ0BCs2eNhzAgM4dZgwDTa3r8kf21jM5G2GwiQJpPbxe0gHWVRbKrYnWluv5Ewg/qC8xmq80VJTg3qTlPJm2x706/H+7rXQ9DKa3wEUEf2WCY7vZwAAxq1Qk/n+2NXRNGmB0a0KkItYPk=
+	t=1746485654; cv=none; b=vF8b6jaQ17uIPzZH7aIAEPsCa47CCsC4gsUMf78aKWtA8IKI5/UeLEkRto6zuLqBbkDM8hviVqyGq4YeqiScK4impKsoWaT9KAk/UHn11iJi0DWv5qlHu75fqQw85CeX95D5u1eTDbisgYodKfmERI24hYSexxswa6lCiqbxy9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485651; c=relaxed/simple;
-	bh=+OVEmWAUrjVR74nytPnTi+1Xo0NceBN43J6bocpMQbQ=;
+	s=arc-20240116; t=1746485654; c=relaxed/simple;
+	bh=Y3NM0MCMk7+ECI9zSepJUk3C8iwhZLPPEjRgymiGBg4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jh22L99g/MBEfC/hauDG6EAzGKxP9oftXVv5gEzXfOSOE6iypKPZGUMczii2LuGPEPv41ryxXhJBIX/RpSMCyitcyw9SnNI+obpbf0JJgmNkskYhGlY8I7eMxOIN2x+suuz9NXsWKoHSudo44f0ebTuQjM2bxDcGpVAp/Sp4tv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNhhd0vj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GbDLVNLFS3L80kdUXrPijHAa6bloKes2rDWp9SZcRCsSMLS0rRbPfw9TLXt8XhnDpFo+D3iag3r6fImnHTNA/8gMNMxHGAvcZHylRbOSVUggXtMExvQQk7G1VxDGy4CmLFyxkW361+OmrXxSjxgfuQ4F2tQYV+wAlCV2kMcrNJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAc1wjV2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNhhd0vj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9851C4CEED;
-	Mon,  5 May 2025 22:54:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAc1wjV2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C87C4CEED;
+	Mon,  5 May 2025 22:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485651;
-	bh=+OVEmWAUrjVR74nytPnTi+1Xo0NceBN43J6bocpMQbQ=;
+	s=k20201202; t=1746485654;
+	bh=Y3NM0MCMk7+ECI9zSepJUk3C8iwhZLPPEjRgymiGBg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YNhhd0vjjhRI9jaTFcSMAJaq3hwUbzkngalchXTDbXlG81IWzk7xzlqLXxgVn9s3D
-	 vajXCV3YCYeD1AW+Nowl7/srA+gPdP1tc8gqsGlvx5DmJKGPtZwU6V5K0RMmJ1WdKD
-	 uzJ/VnLKVswhqkFcOllphX7kgarJGc0IraTTn9eJ3GV06IkzWWbYQ7W6JejYwL7vFJ
-	 L6/kyRrte9orO3/U9iXWsiVaeRMWR7O7wkN+V0Uve834FGzJFzwI2v/BV3F8bkXIMI
-	 28xXAHLOx4klszFOP0KAE2fq6YHLe47wlk1pHUAbB8jkQYw5I850JGGQ3VQj0aHtX8
-	 sXi6Pf+eKR3AA==
+	b=NAc1wjV25fzx265dx51qm6afU6Hnu90v+impB8MGyOshFExxZtDXHluj4dTA+FZwM
+	 xs1am1/x0vZpyUXsVmS7xKwwWEOxa7QMFXNDv91SmmOIWHP/AELTFoO1vE5rI1+IxT
+	 JmELJ9XVoKhxx3TGl8uyv5BBDZFR+lGlGLM1+YLENk+wFOj717i3nvoG176JbsblDD
+	 5kvxNuVWpaU1eVtCVCBGJIyMF4E/wW9nWW5aAOg3SIU0JAO0OE/uuwsffFVHS6/60H
+	 j3SKjGM9xpArJS9ULA7TB9K3ejtMKTfNwxo5xldMAUWjTgqAV6RN9rVyi2SLkR2vkv
+	 7YAhdRuFwC3TA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ching-Te Ku <ku920601@realtek.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 407/486] wifi: rtw89: coex: Assign value over than 0 to avoid firmware timer hang
-Date: Mon,  5 May 2025 18:38:03 -0400
-Message-Id: <20250505223922.2682012-407-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 410/486] wifi: rtw89: call power_on ahead before selecting firmware
+Date: Mon,  5 May 2025 18:38:06 -0400
+Message-Id: <20250505223922.2682012-410-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,39 +49,166 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ching-Te Ku <ku920601@realtek.com>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 2e4c4717b3f6f019c71af984564b6e4d0ae8d0bd ]
+[ Upstream commit d078f5857a00c06fa0ddee26d3cb722e938e1688 ]
 
-If the slot duration is 0, the firmware timer will trigger timer hang at
-the timer initializing state in a low rate due to hardware algorithm.
+Driver selects firmware by hardware version, which normally can be read
+from registers before selecting firmware. However, certain chips such as
+RTL8851B, it needs to read hardware version from efuse while doing
+power_on, but do power_on after selecting firmware in current flow.
 
-Signed-off-by: Ching-Te Ku <ku920601@realtek.com>
+To resolve this flow problem, move power_on out from
+rtw89_mac_partial_init(), and call rtw89_mac_pwr_on() separately at
+proper places to have expected flow.
+
 Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/20250205013233.10945-2-pkshih@realtek.com
+Link: https://patch.msgid.link/20250203072911.47313-2-pkshih@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw89/coex.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/realtek/rtw89/core.c | 23 +++++++++++-------
+ drivers/net/wireless/realtek/rtw89/mac.c  | 29 ++++++++++++++++-------
+ drivers/net/wireless/realtek/rtw89/mac.h  |  1 +
+ 3 files changed, 36 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw89/coex.c b/drivers/net/wireless/realtek/rtw89/coex.c
-index 8d54d71fcf539..5f878f086f7cf 100644
---- a/drivers/net/wireless/realtek/rtw89/coex.c
-+++ b/drivers/net/wireless/realtek/rtw89/coex.c
-@@ -89,10 +89,10 @@ static const struct rtw89_btc_fbtc_slot s_def[] = {
- 	[CXST_B4]	= __DEF_FBTC_SLOT(50,  0xe5555555, SLOT_MIX),
- 	[CXST_LK]	= __DEF_FBTC_SLOT(20,  0xea5a5a5a, SLOT_ISO),
- 	[CXST_BLK]	= __DEF_FBTC_SLOT(500, 0x55555555, SLOT_MIX),
--	[CXST_E2G]	= __DEF_FBTC_SLOT(0,   0xea5a5a5a, SLOT_MIX),
--	[CXST_E5G]	= __DEF_FBTC_SLOT(0,   0xffffffff, SLOT_ISO),
-+	[CXST_E2G]	= __DEF_FBTC_SLOT(5,   0xea5a5a5a, SLOT_MIX),
-+	[CXST_E5G]	= __DEF_FBTC_SLOT(5,   0xffffffff, SLOT_ISO),
- 	[CXST_EBT]	= __DEF_FBTC_SLOT(5,   0xe5555555, SLOT_MIX),
--	[CXST_ENULL]	= __DEF_FBTC_SLOT(0,   0xaaaaaaaa, SLOT_ISO),
-+	[CXST_ENULL]	= __DEF_FBTC_SLOT(5,   0xaaaaaaaa, SLOT_ISO),
- 	[CXST_WLK]	= __DEF_FBTC_SLOT(250, 0xea5a5a5a, SLOT_MIX),
- 	[CXST_W1FDD]	= __DEF_FBTC_SLOT(50,  0xffffffff, SLOT_ISO),
- 	[CXST_B1FDD]	= __DEF_FBTC_SLOT(50,  0xffffdfff, SLOT_ISO),
+diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wireless/realtek/rtw89/core.c
+index f82a26be6fa82..83b22bd0ce81a 100644
+--- a/drivers/net/wireless/realtek/rtw89/core.c
++++ b/drivers/net/wireless/realtek/rtw89/core.c
+@@ -4862,8 +4862,6 @@ static int rtw89_chip_efuse_info_setup(struct rtw89_dev *rtwdev)
+ 
+ 	rtw89_hci_mac_pre_deinit(rtwdev);
+ 
+-	rtw89_mac_pwr_off(rtwdev);
+-
+ 	return 0;
+ }
+ 
+@@ -4944,36 +4942,45 @@ int rtw89_chip_info_setup(struct rtw89_dev *rtwdev)
+ 
+ 	rtw89_read_chip_ver(rtwdev);
+ 
++	ret = rtw89_mac_pwr_on(rtwdev);
++	if (ret) {
++		rtw89_err(rtwdev, "failed to power on\n");
++		return ret;
++	}
++
+ 	ret = rtw89_wait_firmware_completion(rtwdev);
+ 	if (ret) {
+ 		rtw89_err(rtwdev, "failed to wait firmware completion\n");
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	ret = rtw89_fw_recognize(rtwdev);
+ 	if (ret) {
+ 		rtw89_err(rtwdev, "failed to recognize firmware\n");
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	ret = rtw89_chip_efuse_info_setup(rtwdev);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	ret = rtw89_fw_recognize_elements(rtwdev);
+ 	if (ret) {
+ 		rtw89_err(rtwdev, "failed to recognize firmware elements\n");
+-		return ret;
++		goto out;
+ 	}
+ 
+ 	ret = rtw89_chip_board_info_setup(rtwdev);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	rtw89_core_setup_rfe_parms(rtwdev);
+ 	rtwdev->ps_mode = rtw89_update_ps_mode(rtwdev);
+ 
+-	return 0;
++out:
++	rtw89_mac_pwr_off(rtwdev);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(rtw89_chip_info_setup);
+ 
+diff --git a/drivers/net/wireless/realtek/rtw89/mac.c b/drivers/net/wireless/realtek/rtw89/mac.c
+index 04e254bd6b17f..9b09d4b7dea59 100644
+--- a/drivers/net/wireless/realtek/rtw89/mac.c
++++ b/drivers/net/wireless/realtek/rtw89/mac.c
+@@ -1491,6 +1491,21 @@ static int rtw89_mac_power_switch(struct rtw89_dev *rtwdev, bool on)
+ #undef PWR_ACT
+ }
+ 
++int rtw89_mac_pwr_on(struct rtw89_dev *rtwdev)
++{
++	int ret;
++
++	ret = rtw89_mac_power_switch(rtwdev, true);
++	if (ret) {
++		rtw89_mac_power_switch(rtwdev, false);
++		ret = rtw89_mac_power_switch(rtwdev, true);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ void rtw89_mac_pwr_off(struct rtw89_dev *rtwdev)
+ {
+ 	rtw89_mac_power_switch(rtwdev, false);
+@@ -3918,14 +3933,6 @@ int rtw89_mac_partial_init(struct rtw89_dev *rtwdev, bool include_bb)
+ {
+ 	int ret;
+ 
+-	ret = rtw89_mac_power_switch(rtwdev, true);
+-	if (ret) {
+-		rtw89_mac_power_switch(rtwdev, false);
+-		ret = rtw89_mac_power_switch(rtwdev, true);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	rtw89_mac_ctrl_hci_dma_trx(rtwdev, true);
+ 
+ 	if (include_bb) {
+@@ -3958,6 +3965,10 @@ int rtw89_mac_init(struct rtw89_dev *rtwdev)
+ 	bool include_bb = !!chip->bbmcu_nr;
+ 	int ret;
+ 
++	ret = rtw89_mac_pwr_on(rtwdev);
++	if (ret)
++		return ret;
++
+ 	ret = rtw89_mac_partial_init(rtwdev, include_bb);
+ 	if (ret)
+ 		goto fail;
+@@ -3989,7 +4000,7 @@ int rtw89_mac_init(struct rtw89_dev *rtwdev)
+ 
+ 	return ret;
+ fail:
+-	rtw89_mac_power_switch(rtwdev, false);
++	rtw89_mac_pwr_off(rtwdev);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/net/wireless/realtek/rtw89/mac.h b/drivers/net/wireless/realtek/rtw89/mac.h
+index 5ba1133b79d64..7974849f41e25 100644
+--- a/drivers/net/wireless/realtek/rtw89/mac.h
++++ b/drivers/net/wireless/realtek/rtw89/mac.h
+@@ -1120,6 +1120,7 @@ rtw89_write32_port_set(struct rtw89_dev *rtwdev, struct rtw89_vif_link *rtwvif_l
+ 	rtw89_write32_set(rtwdev, reg, bit);
+ }
+ 
++int rtw89_mac_pwr_on(struct rtw89_dev *rtwdev);
+ void rtw89_mac_pwr_off(struct rtw89_dev *rtwdev);
+ int rtw89_mac_partial_init(struct rtw89_dev *rtwdev, bool include_bb);
+ int rtw89_mac_init(struct rtw89_dev *rtwdev);
 -- 
 2.39.5
 
