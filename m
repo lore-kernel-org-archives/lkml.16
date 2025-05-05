@@ -1,65 +1,66 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED47326B96B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11F1268C6B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462771; cv=none; b=NY7hUu3UDZn728cDPVHp8rxgdiC4r3q4w2wrcvnwcgWms1TzTQ3r5rqgC0OruWw2ZGsMZvFsz1+cDUHvAqGoxW/m85GK4l12EgsOIwkKwmD1r346RvwaXfhDPyLLeIFFX/ZB/k3Ga66KTcKkj9+laGOdROwvSUXh6vREOlQ1j1M=
+	t=1746462771; cv=none; b=O/Jbp3htrBTpxPdTki5L94IQUPCQsEqnG5FUMv0dUBClCspr8cBUDIyoNE0fT859qCppDi8I0QXUplP5bnTKB3Ju4MiVOiwhT2DiEK42zUUmWtRb9Qf+TJy56N3T54u2jmbNyL7ADtw53xS2Q+BEM6plilzWHyOLSbayjZubFXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746462771; c=relaxed/simple;
-	bh=htzNMPXlRVfXDBCUzoC72qPIY7Dbustt/aeF0u587HA=;
+	bh=eFnLQvdsVmKraQh8aq+xo4eSFo2W/BSjPzBiG7P/W9k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ncdrmLNeCuzM3uxfhVFul5xvfQr/a6NhvY5D4RbQNYyiSrhBKiCf4rqJHDl0otp/Eq4lprgGznCjoWvG0mjLnXdmvyoodw0bBCG/TdHBV52XCbJxSFeNf/UEAyeaPWCKhCftdS6ZA6cGQ8bCUNXLyeyrBZUIgKJxjuI7yHt3XUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=loPvF6DD; arc=none smtp.client-ip=209.85.167.176
+	 In-Reply-To:To:Cc; b=riBvUp12CIiPyvU6VWMdPRXeOJetiTruFYKVluUjv1G9+EgpdUdkpvolOH+aQw0tjv7qYF7wg1aZgJ3BDDaZFvNkEVcqdG57cOgKDkKgZPmDLgu9pPBSvE37on6i+HPXHUI4G26ckgeArGOAL6q3cCcDmh16MJkmtfI5OEZ4ftE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BWq9WfPJ; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="loPvF6DD"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3feb0db95e6so3053450b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:32:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BWq9WfPJ"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-401e77e5443so2876162b6e.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746462768; x=1747067568; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ml14j4CWVwjgejgx5bGL2isKAmgSSnndW82GfrPbAUk=;
-        b=loPvF6DDnO9/xm/Q1A+M3DX79qMT7SZrDWxkQguhqTbioBifu3vAgzMMz7vXeeGVEr
-         PC9qroyVKvabae5DjaCXDJCpxXYC9rxHDBbqX7RfgHIyNDM55p76rlRuzklBi4gfCAyN
-         lvgVKaTsActX24OrunZdZ6OrA3utKJvvx9SAvR+nGWZQY93oLnnFQObjWytfeNZcF9BA
-         I/RfnIOYvmheABYCD4Ox06udCpVbv//zjSYQ/vZAs4+Cehrh/tCt0q1Mn3J6OnUMGr1x
-         H7Wl08ouwJ6tkLC9lP3WUFhN4ih3UyyJD2pKWyw8C235Kn0YCgZWQECpkna2+NkhSLyF
-         j2/A==
+        bh=NoTdUTbEoyHl0+vrXiyaUVCxUuEGKzeZRmULGNvEl7M=;
+        b=BWq9WfPJVDrGRKTFgS6SvbjdZVaKZTMykdzdeqCq06NPAF0o90PPfmOvOjfgesDhQu
+         YtwIwpOHENxxTdmW3aJhWEzjrzCNxWN44Q1l1HNouWyipYZdVaR26ef+9oEDktoNEuN6
+         Cu2BT6yUHY0omY5jpkkh3863Og6R6JMfA5AtBb96YoS2PvBkpSKrvehasLkLDigR97BN
+         X8QBQix5z/f7uvWeS7jSxbKMCgNe3MnMJdfk2YcJnl5lodjxXZ5opBbU71GD0Qt230g4
+         +qyFIhyuSuQUA0fyNckRZAN3GFHPYZtkKcVCXYjNm6Az9BXLcdBlwNKbF7NhloGGjhVU
+         fwXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1746462768; x=1747067568;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ml14j4CWVwjgejgx5bGL2isKAmgSSnndW82GfrPbAUk=;
-        b=VKtfj4nJM0TikdlKwcm/cbga66XD3lCh2vdp8CVibVR8yLLyiJJiBI+52aRHAesHzV
-         CD9hpXugpGOw8h6juW+QhOiySaoRkIJqVQIRmY65oYTC8QZCqMUSTkdGuuHxXrvoPhgM
-         L6IqwrGEvts55Oon3CSuEapkNhvDtUTzCCjUfYn6ttBALhhHUgc7s+5iGAMheYKJbPuE
-         eSntfYCyJWleuAKzCHi6mVEyWsnTrOgdxuPMjiAMQ8KS9AtcdVCu/R1l/zHSkv+fTqJ5
-         mNRVApedbJpjvVzSzPueQaG1JcpRBjXFXLtqVAYfpFBBKeMdRGFOm9JwLnnLs/GLSjze
-         q6lg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFBfsaXPyfVDK9KRKwxuWRM8EGdjZRmnGbni+KezGB/iif5bxz+rdN7D+PZs5YJwliesAA/G2kQhjpq5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3fhsFEIeGRXnSsRf7CJ4sm/xzB7kwSiEjET4fAQ6za6+9U76q
-	8gFFEBr79/U7HRHs3D1uUDKA+PIsaFGgFeKehqdgBweYO39eq68/b7s316Kv0XU=
-X-Gm-Gg: ASbGncupsKA7EICbW6ZvmTPdSzwa6v/WbFhpnAYPyPC4SvUmVI0nItgLvoThfGo8DP5
-	Dx0Ch2sbseuv8nMv6xzfTzinhAkb+4MEPp+dTKNGY5NYWjx+omGq3GowGI5IyMu28csRqUKp0te
-	eBzwUDzFckLPqHOnnNwUy0dpfZviMY9EtbDormV1A2LZ7B1wMbrWrj+/2ql83WzNtH8D8oIE0YI
-	a4ShA02MDSyLbSMol9D0x4RIdYI1dUZRxs/CcgCn3l4W33/RMJSFpQ0YA0488JBegN0PoToAlS8
-	WHGp+KarVvp0u+9OKBbOp8OyIBqIOI34ClOHHr2EIRssFQ==
-X-Google-Smtp-Source: AGHT+IFqKHGasE/q3CxHFccgze4kDl9/B+uNOjperFB7eOc3YOSJklsXFoHknccNnTyE5kIJNN+cEw==
-X-Received: by 2002:a05:6808:f10:b0:401:e721:8b5f with SMTP id 5614622812f47-4035a548133mr4310632b6e.2.1746462767858;
-        Mon, 05 May 2025 09:32:47 -0700 (PDT)
+        bh=NoTdUTbEoyHl0+vrXiyaUVCxUuEGKzeZRmULGNvEl7M=;
+        b=OO8WjmKhT4YZxQ+YDUrtsJ3GEk0em5U4lJrJXOC8HDEsusEIVf4jVRtAPwCwW/V7ea
+         a5ZyfTWv9Ma/D9RoULdqpz6+AYxe0DdGK8BnRRQur0yf3cKMRE+P1177YXtQXg0zKXzA
+         4TmkQKioZuTgXz+KchH+A1eF4whC8DX9Uy/i9l7aTaU3q0SILClyA9/hjSKpex5G4etz
+         TckB2pr2I4nA/U3KL7iUWxy6gbYRAiSbOIfy7JlcGcU//KrJerGa05f6X3ooetWqhGnu
+         5AYFcQDOSSxjATvhQ1Fkfm+1yVkqnXw+D/ebjd1Snfd79s6Lqgi+cHpsXXytA2S/elXS
+         Y8Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjrGt+CefuJZWwfjAtFbU0Q4V/wQmVnHxqAwfZViaq07hw+PhlvaUgaQakO5Vyq97sPeec9BKJJuXPCZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4bdtlaXIB8q8hAkGBi2/ZVucbfsRZx5ejmqbw3w0INHCbMGrl
+	Fbb9iwwceosjpsQgwm+phOPY6lpJL3K3vJX9PFrGf7V4PlKH/8xe7eDaDNUnHlg=
+X-Gm-Gg: ASbGncsIOvuoL/93y1V0kxAibq+Y146HHn5/YRvZBi0YzZCJaaBbpgtv0ZXQAtHlaKG
+	stK4J+Y2CB6JHA/RpSYIGWR+vsORa0/2K5UjQdP6uUm+fQL07gIsshFoynK8ZGIeVLLIWnY0Di6
+	FS2+/BH8DTIpfN2zoFjXIQlduA2stuqzbMTmR9a/DDowSnMHlcCB5yvVWXOR/rpkt2+uRCxxadM
+	TSYU6jzokUdiTDlUdkYp/xeiSjb3Qi3/jA1K6s/LgaF2JAzluPeJ0NrtfuHIJPArkflT16/ydD2
+	9hV0Nlr8XNWecVK0V69SFTD7H8paYsN2WRQBMpCOUTFs5Q==
+X-Google-Smtp-Source: AGHT+IHi1BqJMwn2+ePu/bE4tm+OAhNfcyLxdr7TQkYJqCf+3YKLVqRO9ann0RXlkmT0oNmwsKWWAg==
+X-Received: by 2002:a05:6808:444c:b0:3fe:aecb:5c49 with SMTP id 5614622812f47-4035a584bcfmr6037754b6e.21.1746462768685;
+        Mon, 05 May 2025 09:32:48 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
         by smtp.gmail.com with ESMTPSA id 5614622812f47-4033dae68f7sm1971854b6e.26.2025.05.05.09.32.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 09:32:47 -0700 (PDT)
+        Mon, 05 May 2025 09:32:48 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 05 May 2025 11:31:47 -0500
-Subject: [PATCH v5 6/7] iio: accel: sca3300: use IIO_DECLARE_BUFFER_WITH_TS
+Date: Mon, 05 May 2025 11:31:48 -0500
+Subject: [PATCH v5 7/7] iio: adc: at91-sama5d2: use
+ IIO_DECLARE_BUFFER_WITH_TS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-6-814b72b1cae3@baylibre.com>
+Message-Id: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-7-814b72b1cae3@baylibre.com>
 References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
 In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>, 
@@ -83,15 +84,15 @@ To: Jonathan Cameron <jic23@kernel.org>,
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2980; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=htzNMPXlRVfXDBCUzoC72qPIY7Dbustt/aeF0u587HA=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoGOgaCStXP11tomR1UVCYdZrN8uLnoILCaVV4Z
- BeCxDvcs2WJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBjoGgAKCRDCzCAB/wGP
- wBf0CACDz7JX5f7i4xgLS2PbJoMxYM+RRs6unBD67Ezb/eqc2RApwNtQ3dsCjG6QkO6AuH25Cfu
- X1K9VzIkl5hWdyKAVX6JBT9mO4sFv+yMplB4ZxzxIUzF3Yv+VR4OsgjtSbxNUF5CFLLNFSnLKrV
- tqe5q9Op5uDxpH7GR74XoJBGLtIK1qqCXQAPxF5rAzm9JPVIgCvRjttmLxM1MuDUtBpT5/JyoSH
- Vs1mZwrLz5T86vOHRXArdldRfbFG+NDH9qCmtQzPErbVO/R7q+iccd4AC7Rm33SVGdQ/PILqux3
- y0FbJEDW7xYXrJV9pscAhM/3jHQmtYdNtMt19Fr94L88A3Vg
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1736; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=eFnLQvdsVmKraQh8aq+xo4eSFo2W/BSjPzBiG7P/W9k=;
+ b=owEBbAGT/pANAwAKAcLMIAH/AY/AAcsmYgBoGOghEdJgEI8ojT+f7QjlFDY6MQvZNWiXIAZEE
+ nX4deedFwCJATIEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBjoIQAKCRDCzCAB/wGP
+ wHgbB/ioLShqxO7D+Edwq5N6S/xksypDEeWYWgeqd58uDkS3sWFGok58Ummx8bHd+QSXm4fmNLt
+ 7RczIGWSscvNnlTnqXVve8vv0hxKCkoT0oskVJ2J9/6WdrjU69XMJRbOSZn2YcgGTgOQwaWHmHo
+ f4Xq9kbDYbkW+QWFtIJ40Ox7fqCK2Mv73rsCrsQeyc0riR7qbsCL2LO/PrZCzRxv08PNHrXvMY4
+ gflzTcE8HvZsw9KILWQRiL8HL1U+5ztA97fs7ofw6HmkxalS0rny0fPxaf+e+/j12vO/JaW7ka1
+ ROOR8pSMG+DyiD1+fL4zz5CkIQTdQqo6LpT/eXDllIwFABk=
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
@@ -101,74 +102,48 @@ read and understand.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
-This is an alternative to [1]. Also, this serves as a test to see if we
-can get a rule of thumb to decide how much is too much to put on the
-stack vs. needing to put the buffer in a static struct. SCA3300_SCAN_MAX
-is 7, so this add a bit over 64 bytes to the stack, make the stack now
-roughly double what it was before.
 
-[1]: https://lore.kernel.org/linux-iio/20250418-iio-prefer-aligned_s64-timestamp-v1-1-4c6080710516@baylibre.com/
+v5 changes:
+* Fixed missing space at end of comment.
+
+This is an alternative to [1].
+
+[1]: https://lore.kernel.org/linux-iio/20250418-iio-prefer-aligned_s64-timestamp-v1-2-4c6080710516@baylibre.com/
 ---
- drivers/iio/accel/sca3300.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ drivers/iio/adc/at91-sama5d2_adc.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iio/accel/sca3300.c b/drivers/iio/accel/sca3300.c
-index 1132bbaba75bcca525fac2f3e19f63546380fd4f..67416a406e2f43e4e417210410904d44c93111d2 100644
---- a/drivers/iio/accel/sca3300.c
-+++ b/drivers/iio/accel/sca3300.c
-@@ -58,15 +58,6 @@ enum sca3300_scan_indexes {
- 	SCA3300_SCAN_MAX
+diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+index 414610afcb2c4128a63cf76767803c32cb01ac5e..c3450246730e08cdacc975ed19f46044dc76848f 100644
+--- a/drivers/iio/adc/at91-sama5d2_adc.c
++++ b/drivers/iio/adc/at91-sama5d2_adc.c
+@@ -586,15 +586,6 @@ struct at91_adc_temp {
+ 	u16				saved_oversampling;
  };
  
 -/*
-- * Buffer size max case:
-- * Three accel channels, two bytes per channel.
-- * Temperature channel, two bytes.
-- * Three incli channels, two bytes per channel.
-- * Timestamp channel, eight bytes.
+- * Buffer size requirements:
+- * No channels * bytes_per_channel(2) + timestamp bytes (8)
+- * Divided by 2 because we need half words.
+- * We assume 32 channels for now, has to be increased if needed.
+- * Nobody minds a buffer being too big.
 - */
--#define SCA3300_MAX_BUFFER_SIZE (ALIGN(sizeof(s16) * SCA3300_SCAN_MAX, sizeof(s64)) + sizeof(s64))
+-#define AT91_BUFFER_MAX_HWORDS ((32 * 2 + 8) / 2)
 -
- #define SCA3300_ACCEL_CHANNEL(index, reg, axis) {			\
- 	.type = IIO_ACCEL,						\
- 	.address = reg,							\
-@@ -193,9 +184,6 @@ struct sca3300_chip_info {
-  * @spi: SPI device structure
-  * @lock: Data buffer lock
-  * @chip: Sensor chip specific information
-- * @buffer: Triggered buffer:
-- *          -SCA3300: 4 channel 16-bit data + 64-bit timestamp
-- *          -SCL3300: 7 channel 16-bit data + 64-bit timestamp
-  * @txbuf: Transmit buffer
-  * @rxbuf: Receive buffer
-  */
-@@ -203,7 +191,6 @@ struct sca3300_data {
- 	struct spi_device *spi;
- 	struct mutex lock;
- 	const struct sca3300_chip_info *chip;
--	u8 buffer[SCA3300_MAX_BUFFER_SIZE] __aligned(sizeof(s64));
- 	u8 txbuf[4] __aligned(IIO_DMA_MINALIGN);
- 	u8 rxbuf[4];
- };
-@@ -492,7 +479,7 @@ static irqreturn_t sca3300_trigger_handler(int irq, void *p)
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct sca3300_data *data = iio_priv(indio_dev);
- 	int bit, ret, val, i = 0;
--	s16 *channels = (s16 *)data->buffer;
-+	IIO_DECLARE_BUFFER_WITH_TS(s16, channels, SCA3300_SCAN_MAX);
- 
- 	iio_for_each_active_channel(indio_dev, bit) {
- 		ret = sca3300_read_reg(data, indio_dev->channels[bit].address, &val);
-@@ -505,8 +492,7 @@ static irqreturn_t sca3300_trigger_handler(int irq, void *p)
- 		channels[i++] = val;
- 	}
- 
--	iio_push_to_buffers_with_ts(indio_dev, data->buffer,
--				    sizeof(data->buffer),
-+	iio_push_to_buffers_with_ts(indio_dev, channels, sizeof(channels),
- 				    iio_get_time_ns(indio_dev));
- out:
- 	iio_trigger_notify_done(indio_dev->trig);
+ struct at91_adc_state {
+ 	void __iomem			*base;
+ 	int				irq;
+@@ -616,8 +607,8 @@ struct at91_adc_state {
+ 	struct at91_adc_temp		temp_st;
+ 	struct iio_dev			*indio_dev;
+ 	struct device			*dev;
+-	/* Ensure naturally aligned timestamp */
+-	u16				buffer[AT91_BUFFER_MAX_HWORDS] __aligned(8);
++	/* We assume 32 channels for now, has to be increased if needed. */
++	IIO_DECLARE_BUFFER_WITH_TS(u16, buffer, 32);
+ 	/*
+ 	 * lock to prevent concurrent 'single conversion' requests through
+ 	 * sysfs.
 
 -- 
 2.43.0
