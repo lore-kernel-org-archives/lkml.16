@@ -1,79 +1,84 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E17136E37;
-	Mon,  5 May 2025 07:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2648019995E;
+	Mon,  5 May 2025 07:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430293; cv=none; b=YSaL1qhAGiaNXWZN+9IjIAkKDm87L7A7uRlscw6cKoFGNYvQrr5EbT694Retke74eMb/eTdNpjYGKtqNqe063goydHtmkQAA2BGVvfDiLfm59aBYEiR7eixVyh16WZh57UxPeCIvuhNfQPwxpQwTKRHFpSeNe7TZ8sNm0hREtOk=
+	t=1746430394; cv=none; b=ZZJIKsau3Kx2zUqvUEBN+AZlc/8qcI/4iSZdmo1AL2/A/jU4NPMTrnO69Cv+F3O3O9kp2StQjZVlnmdSY6CLp5sF7Ce+K6IDz8oiEuypur1SfznnN/G3UtJYtPD24C0/v8ITWgN39/mPYxEmROXkmNpbDi+k7Y3WpdNo722u0LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746430293; c=relaxed/simple;
-	bh=Mia/6VlHw5H79UAsyq5sOlhQsmih26rtUgQ342pP3aA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1jnPB+fcUNIYK9Un3gUdK9ZnWf7nUqD3BmECeKyTQvRrgVM6ZC/R41RIk+/L7QwJU3U2fXsOhlxiYX12Rl7r+8E1e4piF7nb6cbuX8coWT439Q/QguzS6h68OweYqJPC0DOQpyjUwAaKoHJdscfq2RrKdYP85OcCU04FHVlq4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=VcDnuSoI; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1746430394; c=relaxed/simple;
+	bh=o9Ua9es+nDQSCTMlF2S5n70GzvrIm3GZj9ppMhDTiO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWu3mur00NrRfbx5l3ejOjVnIi0rEucBSBEZj58qkDwtRX8FO3yjv9MBextWEODpq2t/gO3bTpHg1THiDG8zzM224PTT5Pu1/WjINtWNo7/OoOejzZuYpAsBEKYLZu7I13n38dt7FQ6wApdT3I4mul/5qF+W4DpYflQWQq+4980=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=XSwnb6jG; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="VcDnuSoI"
-Received: from [10.6.0.9] (host-88-217-226-44.customer.m-online.net [88.217.226.44])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 913782FC0052;
-	Mon,  5 May 2025 09:23:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1746429830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=07oOkTCvQFL5GUAR5rE5mpJ+wpoj6c+pTk7+hEK1LDg=;
-	b=VcDnuSoIuWKV/CeeXL2natKA2xc8NaDrR5D9AD/uk068SL9cB+1x0uHznpmi9VRav1iyGB
-	qRUB5ZaqrUfY65WGya0+X9QaQCzpXRqbJwGKAnI6GhtQSAgKQCSbe+rwvCzXYUBvb83GqV
-	J+wcSMaFLEhtrPU1kmjslMk/CnxIK+w=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <a1000849-6744-4362-a998-1eaa80adbf86@tuxedocomputers.com>
-Date: Mon, 5 May 2025 09:23:49 +0200
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="XSwnb6jG"
+Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
+	by mail11.truemail.it (Postfix) with ESMTPA id 98E3E1F842;
+	Mon,  5 May 2025 09:33:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1746430381;
+	bh=/zksZ8p8UU1t+kGoN2N2Kk+JAb77n7Fw4YIg48JHLvo=; h=From:To:Subject;
+	b=XSwnb6jGDpr1y0ta615f3VPtth08iehvZCxcn5LdnaodpKe+HSAJ3/US6VskIKZMY
+	 1XYDDlYzIhgEUl9KthaarKKGUCgX+22Dnd0z07Py9D7cxW1Pg56W/QooSmwN7UldfL
+	 gu06tdtucnyd/hHvLKe8NbVBucRuLuJHNrE9r5+LaoA8Ficm9rLENY/f3yBLlahn/q
+	 0Utt/4sdkeexqCy1qnAbqkwMaDHcAPqsUhXSJ+g/Otgm6qCdZd3mdCVsYRxaT9btKu
+	 PyAbzMAg9Q+v09LgNmb5v+Nlnq6Y0beou9IC6xmEhQuzimXRTRgDOi9esSaK+qYkQN
+	 aPcBFyz2fSPvw==
+Date: Mon, 5 May 2025 09:32:55 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: "Ivan T. Ivanov" <iivanov@suse.de>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Jeff Chen <jeff.chen_1@nxp.com>,
+	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
+	Brian Norris <briannorris@chromium.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Subject: Re: [PATCH do not merge 0/4] wifi: mwifiex: add iw61x support
+Message-ID: <20250505073255.GA12817@francesco-nb>
+References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
+ <20250331065026.GA12444@francesco-nb>
+ <20250429125928.pw7k4raw52jyvyaj@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-To: Pavel Machek <pavel@ucw.cz>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, bentiss@kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250423153804.64395-1-wse@tuxedocomputers.com>
- <aAyWs6XJXc4g1lDb@duo.ucw.cz>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <aAyWs6XJXc4g1lDb@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429125928.pw7k4raw52jyvyaj@localhost.localdomain>
 
-Hi,
+On Tue, Apr 29, 2025 at 03:59:28PM +0300, Ivan T. Ivanov wrote:
+> On 03-31 08:50, Francesco Dolcini wrote:
+> > Message-ID: <20250331065026.GA12444@francesco-nb>
+> > On Wed, Mar 26, 2025 at 01:18:30PM +0100, Sascha Hauer wrote:
+> > > This series adds iw61x support to the mwifiex driver. It works for me,
+> > > but is not yet ready to be merged. Some people showed interest in it, so
+> > > I am sending it here.
 
-Am 26.04.25 um 10:17 schrieb Pavel Machek:
-> On Wed 2025-04-23 17:33:09, Werner Sembach wrote:
->> @Ilpos you can ignore my small question from my last e-mail. The spec file
->> of the firmware wants the struct to be zeroed (albeit it does also work if
->> not) so I implemented it like that.
-> You forgot to cc me.
->
-> Anyway, lets not do this. Kernel should have real interfaces, not
-> crazy tables to emulate Microsoft interface noone else uses.
+...
 
-The HID standard is not a "Microsoft interface noone else uses."
+> > > Not sure what these are about, I can't see these handled in the
+> > > downstream mwifiex driver as well. Could also be there is some parsing
+> > > error. Nevertheless the driver seems to work.
+> 
+> Yep, it is working. Thank you! I am testing this on FRDM-iMX93, which has
+> IW612 revision 1.0.
+> 
+> I have to use nxp/sd_w61x_v1.bin.se on this board and NULL firmware_sdiouart
+> because it seems that firmware return 1 as "strap" value, even if WiFi
+> is definitely connected over SDIO.
 
-Best regards,
+Wi-Fi is always connected over SDIO (for IW61x), the strapping is
+related to the interface used for BT. In the past it was common to have
+options for having BT over SDIO or UART or USB, but for IW61x it seems
+that UART is the only available option.
 
-Werner
+Francesco
 
->
-> NAK.
->
-> 									Pavel
