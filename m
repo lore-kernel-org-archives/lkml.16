@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E8A25D1E9;
-	Mon,  5 May 2025 14:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CDF1DDA14;
+	Mon,  5 May 2025 14:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456333; cv=none; b=O8WfWm6dvI8oddntKsRMaLhSy8Pn2j5+gzREdaAr9//negfQGzbKK1QyIYaDNzIJaMN9Qp9litaXnO61rYVy0nXugvzIqsYnaVWxGJ+tslHt90DV3197F6p49iF+aWJ8MKq9TtOf8fq7lx6WcRT0PCGDaRbiJTwXqbZBBi2du9Y=
+	t=1746456343; cv=none; b=SADdDKcMuwaSM+Vz/wvc8PWPZzibxoCBuRE2kluZ+wZR9G6pWEGSWp2ut4X20EciP5wMp2DyYxlyU7LCYqNMw75og8zhareE2pRb87Ecxfaro4LidLaWWH2j+zgdQ7C4EJhqlDUvuAa49RCjmdF4JfqfWF1lWqMFd5cGVEhk1ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456333; c=relaxed/simple;
-	bh=t0v/i5Jc3hHJnt3i5u4/GJb+kOvcKszCfq5u3iUIeaM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wk4wsKjlmkK33FaQQji41qp9GTFyRzrraNIAfoPSn7pTBstX1w/nCQl2tG92NFsrqJj05XabSO8CgYmU4u/POwiRN0dj9FvrPQWx+CnGSKwDVgyo/Iga/7k08DMIlvY/LVSyqF/TfzUNEgbuVA33JRuIhdpzyNox/WBAkYV/G9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uBU1dXGc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456343; c=relaxed/simple;
+	bh=nTjZ0sIEEzNWFnFw9GoOO2zCjbr9kWvhezjWb2fQsQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jnHbNnShZrHAqw0NSbvWsW5ZRJgyX0YheEyap65+K0Bb8tAzi0i6LBMk+tBdyVi0kL1o4HleVuT0Bn5dw7Sg1FJZnfw7QQq3iH6oVZfCxJ8dnGkM6YLW/XYk3783Ca5RQQ4YbSERPz+CwLxKrvSaMVIvM1YdtT+zdTFhKbTmo7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NggjGD2o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uBU1dXGc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C357CC4CEE4;
-	Mon,  5 May 2025 14:45:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NggjGD2o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A810C4CEE4;
+	Mon,  5 May 2025 14:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456333;
-	bh=t0v/i5Jc3hHJnt3i5u4/GJb+kOvcKszCfq5u3iUIeaM=;
+	s=k20201202; t=1746456342;
+	bh=nTjZ0sIEEzNWFnFw9GoOO2zCjbr9kWvhezjWb2fQsQk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=uBU1dXGcat6IcoBpr3VyFOGTAzGWG856zFOmLjU/aHDPOJkHphBV2gSAhtAfnoIJp
-	 vYw/yNiBGDbArB7hhguRvbMe1L/V5cLgcpwRsqN7MCiwMsT0phPNdnjbNiLl6MCqeJ
-	 PzJg4y0KTScw4AkIK0ceqIPzuoyIzQaOO1MuSCYB3AHmtrMWoJlXkJ1kQO1h2c9bu5
-	 A1+Fq0WoRo1bTj/VY4AHq+p9MHGvn9reQxs0Ul1gP7RqLw/3N259lXnoAa+10QXG4i
-	 UlQDTrZkuEmmCPt3FQJ8boK+YeqcVIUQCiMiRHJCIiKIHrJWuFc84Eqef6bWqNaR4B
-	 qqxpOfzqVx0nw==
+	b=NggjGD2o1o55xvCB7Hqw3n/us8MD3VdSfiGCiRKnCOLxqC0F+zjX2ZGTnm2y9Cu+0
+	 1HOBpSzFlmE+dZkdzGk2JKcdTbGtuV15SNxkaAV3UPZCAg1OJslLLaPY7lbrI97tCU
+	 iY1hIo3r1VdUObWZE22+AkLkwMdJMTM9V6njgV6tBzVZMU2/hNK+DkF21e/D0XVFVQ
+	 fEzmaJ0tdBdz8GOD4ltQkEZEYdcQI/43psCRxQ0ASzLRxQEOCAosu/c5n32LWGYT26
+	 P8MGSTNgYv+sESF3KzyZozxYFDS0kYCq/a9TC8UuUzRS5rf0e6vbea9/+EK9obQr9L
+	 xOjZM2H7zwXOg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+	Christian Ruppert <christian.ruppert@abilis.com>
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert marvell,cp110-icu to DT schema
-Date: Mon,  5 May 2025 09:45:23 -0500
-Message-ID: <20250505144524.1285795-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert abilis,tb10x-ictl to DT schema
+Date: Mon,  5 May 2025 09:45:33 -0500
+Message-ID: <20250505144534.1286092-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,243 +44,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell ICU interrupt controller to DT schema format.
-
-Add the missing addressing properties to read and translate child node
-addresses.
-
-Drop the legacy binding description and example.
+Convert the Abilis TB10x interrupt controller binding to schema format.
+It's a straight-forward conversion of the typical interrupt controller.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../marvell,cp110-icu.yaml                    |  98 +++++++++++++++
- .../interrupt-controller/marvell,icu.txt      | 112 ------------------
- 2 files changed, 98 insertions(+), 112 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,cp110-icu.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+ .../abilis,tb10x-ictl.txt                     | 37 -------------
+ .../abilis,tb10x-ictl.yaml                    | 54 +++++++++++++++++++
+ 2 files changed, 54 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,cp110-icu.yaml b/Documentation/devicetree/bindings/interrupt-controller/marvell,cp110-icu.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
+deleted file mode 100644
+index 5a4dd263fc12..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-TB10x Top Level Interrupt Controller
+-====================================
+-
+-The Abilis TB10x SOC contains a custom interrupt controller. It performs
+-one-to-one mapping of external interrupt sources to CPU interrupts and
+-provides support for reconfigurable trigger modes.
+-
+-Required properties
+--------------------
+-
+-- compatible: Should be "abilis,tb10x-ictl"
+-- reg: specifies physical base address and size of register range.
+-- interrupt-congroller: Identifies the node as an interrupt controller.
+-- #interrupt cells: Specifies the number of cells used to encode an interrupt
+-  source connected to this controller. The value shall be 2.
+-- interrupts: Specifies the list of interrupt lines which are handled by
+-  the interrupt controller in the parent controller's notation. Interrupts
+-  are mapped one-to-one to parent interrupts.
+-
+-Example
+--------
+-
+-intc: interrupt-controller {	/* Parent interrupt controller */
+-	interrupt-controller;
+-	#interrupt-cells = <1>;	/* For example below */
+-	/* ... */
+-};
+-
+-tb10x_ictl: pic@2000 {		/* TB10x interrupt controller */
+-	compatible = "abilis,tb10x-ictl";
+-	reg = <0x2000 0x20>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-	interrupt-parent = <&intc>;
+-	interrupts = <5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+-			20 21 22 23 24 25 26 27 28 29 30 31>;
+-};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.yaml b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.yaml
 new file mode 100644
-index 000000000000..9d4f06f45372
+index 000000000000..cd2c49670e7b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,cp110-icu.yaml
-@@ -0,0 +1,98 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.yaml
+@@ -0,0 +1,54 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/marvell,cp110-icu.yaml#
++$id: http://devicetree.org/schemas/interrupt-controller/abilis,tb10x-ictl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+maintainers:
-+  - Miquel Raynal <miquel.raynal@bootlin.com>
-+  - Thomas Petazzoni <thomas.petazzoni@bootlin.com>
++title: TB10x Top Level Interrupt Controller
 +
-+title: Marvell ICU Interrupt Controller
++maintainers:
++  - Christian Ruppert <christian.ruppert@abilis.com>
 +
 +description:
-+  The Marvell ICU (Interrupt Consolidation Unit) controller is responsible for
-+  collecting all wired-interrupt sources in the CP and communicating them to the
-+  GIC in the AP. The unit translates interrupt requests on input wires to MSG
-+  memory mapped transactions to the GIC. These messages access different GIC
-+  memory areas depending on their type (NSR, SR, SEI, REI, etc).
++  The Abilis TB10x SOC contains a custom interrupt controller. It performs
++  one-to-one mapping of external interrupt sources to CPU interrupts and
++  provides support for reconfigurable trigger modes.
 +
 +properties:
 +  compatible:
-+    const: marvell,cp110-icu
++    const: abilis,tb10x-ictl
 +
 +  reg:
 +    maxItems: 1
 +
-+  '#address-cells':
-+    const: 1
++  interrupt-controller: true
 +
-+  '#size-cells':
-+    const: 1
++  '#interrupt-cells':
++    const: 2
 +
-+  ranges: true
-+
-+patternProperties:
-+  "^interrupt-controller@":
-+    type: object
-+    description: Interrupt group child nodes
-+    additionalProperties: false
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - marvell,cp110-icu-nsr
-+          - marvell,cp110-icu-sr
-+          - marvell,cp110-icu-sei
-+          - marvell,cp110-icu-rei
-+
-+      reg:
-+        maxItems: 1
-+
-+      '#interrupt-cells':
-+        const: 2
-+
-+      interrupt-controller: true
-+
-+      msi-parent:
-+        maxItems: 1
-+        description: Phandle to the GICP controller
-+
-+    required:
-+      - compatible
-+      - reg
-+      - '#interrupt-cells'
-+      - interrupt-controller
-+      - msi-parent
++  interrupts:
++    description: A one-to-one mapping of external interrupt sources to parent
++      interrupts.
++    minItems: 1
++    maxItems: 32
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupt-controller
++  - '#interrupt-cells'
++  - interrupts
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    interrupt-controller@1e0000 {
-+        compatible = "marvell,cp110-icu";
-+        reg = <0x1e0000 0x440>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        interrupt-controller@10 {
-+                compatible = "marvell,cp110-icu-nsr";
-+                reg = <0x10 0x20>;
-+                #interrupt-cells = <2>;
-+                interrupt-controller;
-+                msi-parent = <&gicp>;
-+        };
-+
-+        interrupt-controller@50 {
-+                compatible = "marvell,cp110-icu-sei";
-+                reg = <0x50 0x10>;
-+                #interrupt-cells = <2>;
-+                interrupt-controller;
-+                msi-parent = <&sei>;
-+        };
++    interrupt-controller@2000 {
++        compatible = "abilis,tb10x-ictl";
++        reg = <0x2000 0x20>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        interrupts = <5>, <6>, <7>, <8>, <9>, <10>, <11>, <12>, <13>, <14>,
++                     <15>, <16>, <17>, <18>, <19>, <20>, <21>, <22>, <23>,
++                     <24>, <25>, <26>, <27>, <28>, <29>, <30>, <31>;
 +    };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-deleted file mode 100644
-index 1c94a57a661e..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-+++ /dev/null
-@@ -1,112 +0,0 @@
--Marvell ICU Interrupt Controller
----------------------------------
--
--The Marvell ICU (Interrupt Consolidation Unit) controller is
--responsible for collecting all wired-interrupt sources in the CP and
--communicating them to the GIC in the AP, the unit translates interrupt
--requests on input wires to MSG memory mapped transactions to the GIC.
--These messages will access a different GIC memory area depending on
--their type (NSR, SR, SEI, REI, etc).
--
--Required properties:
--
--- compatible: Should be "marvell,cp110-icu"
--
--- reg: Should contain ICU registers location and length.
--
--Subnodes: Each group of interrupt is declared as a subnode of the ICU,
--with their own compatible.
--
--Required properties for the icu_nsr/icu_sei subnodes:
--
--- compatible: Should be one of:
--              * "marvell,cp110-icu-nsr"
--	      * "marvell,cp110-icu-sr"
--	      * "marvell,cp110-icu-sei"
--	      * "marvell,cp110-icu-rei"
--
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. The value shall be 2.
--
--  The 1st cell is the index of the interrupt in the ICU unit.
--
--  The 2nd cell is the type of the interrupt. See arm,gic.txt for
--  details.
--
--- interrupt-controller: Identifies the node as an interrupt
--  controller.
--
--- msi-parent: Should point to the GICP controller, the GIC extension
--  that allows to trigger interrupts using MSG memory mapped
--  transactions.
--
--Note: each 'interrupts' property referring to any 'icu_xxx' node shall
--      have a different number within [0:206].
--
--Example:
--
--icu: interrupt-controller@1e0000 {
--	compatible = "marvell,cp110-icu";
--	reg = <0x1e0000 0x440>;
--
--	CP110_LABEL(icu_nsr): interrupt-controller@10 {
--		compatible = "marvell,cp110-icu-nsr";
--		reg = <0x10 0x20>;
--		#interrupt-cells = <2>;
--		interrupt-controller;
--		msi-parent = <&gicp>;
--	};
--
--	CP110_LABEL(icu_sei): interrupt-controller@50 {
--		compatible = "marvell,cp110-icu-sei";
--		reg = <0x50 0x10>;
--		#interrupt-cells = <2>;
--		interrupt-controller;
--		msi-parent = <&sei>;
--	};
--};
--
--node1 {
--	interrupt-parent = <&icu_nsr>;
--	interrupts = <106 IRQ_TYPE_LEVEL_HIGH>;
--};
--
--node2 {
--	interrupt-parent = <&icu_sei>;
--	interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
--};
--
--/* Would not work with the above nodes */
--node3 {
--	interrupt-parent = <&icu_nsr>;
--	interrupts = <107 IRQ_TYPE_LEVEL_HIGH>;
--};
--
--The legacy bindings were different in this way:
--
--- #interrupt-cells: The value was 3.
--	The 1st cell was the group type of the ICU interrupt. Possible
--	group types were:
--	ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
--	ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
--	ICU_GRP_SEI (0x4) : System error interrupt
--	ICU_GRP_REI (0x5) : RAM error interrupt
--	The 2nd cell was the index of the interrupt in the ICU unit.
--	The 3rd cell was the type of the interrupt. See arm,gic.txt for
--	details.
--
--Example:
--
--icu: interrupt-controller@1e0000 {
--	compatible = "marvell,cp110-icu";
--	reg = <0x1e0000 0x440>;
--
--	#interrupt-cells = <3>;
--	interrupt-controller;
--	msi-parent = <&gicp>;
--};
--
--node1 {
--	interrupt-parent = <&icu>;
--	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
--};
 -- 
 2.47.2
 
