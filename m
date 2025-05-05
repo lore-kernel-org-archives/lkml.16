@@ -1,143 +1,148 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9D11922FA;
-	Mon,  5 May 2025 10:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8932F33E4
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746442769; cv=none; b=dAoqkjHCJPF0yLoeDSVop+pv2HgstfhyyCixguujws/PVcd1QK/qZ2H/Onso3dx6XVSbgxrxPsk7HyD1qeRxyj3YWewO+qJNdaxqRtJBDQ97F30+8NSXwz6nnmBqaea+NeDaRFKiSMaUOZkbFLuFSRBUkxSEkI0iUtGxDNuiF28=
+	t=1746442828; cv=none; b=cg2KPN4mfyCkcR8oXSgWdeOAN3ezyStBGUUTsPgmJ8aegzBF7vUWQe480G3pB5zrq0VnIO903dkSQa5On0KpFv77T3eYllenN/G0d6fBp5u5+SJ7hHfkxBGwJzifHSbEKyPmfRd8Zuxv66Fm8JQyh2wD+SYEHrZ2FHF62t/o0mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746442769; c=relaxed/simple;
-	bh=J9KrXamGHyza0/Hx3OOj8gFfveIOH/IiN7QHVFOUOnk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FjQPrCBMPoiB92FUB8zM/SlE7krmRJL5kwoa3ivY5rVXg10sBTH8vjR/S+17D4AWi8bE324FT97AsUo9BdkGNTRklqGxizG5BwD8DrtqViySafG7uwLtZZmVVPhzvKp7uykGzKei+tM/xP1GHG1/YdLCT8pnmC6DN3YDcgpgsW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=maF+NlbW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746442828; c=relaxed/simple;
+	bh=bGplvSCQsaTAXR3bicm/4TgnBkJ/3j/c8VsVO7MaOUg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AKg8zeRYP0/vudx3kTMvFvrmXmj4MnxKlWl0nLWUsz6VeaEFA7uhNBx5mLcCABtz0HcDD9/M4ieTTzXUhAaSeVgaZqOVHie1UnvcmZoPRpW3tD73dUrHGjGRtWTX+XHUmJFVU7h5O4wKSiSH1M7jAMv1xvJbnuBslGrhcUdmXEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BViqOI88; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="maF+NlbW"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NLVAx032287;
-	Mon, 5 May 2025 10:59:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NMGMuOMP0NOStNdPXxMCsLdoVkdF+VlLfbEBaduUM3c=; b=maF+NlbWY9nk/Yew
-	ro6ddW/oBlEwYYu7iVQG1wXAtd+fefPu+TYPVrzsXbsKNDWEvQHb/ykSBmQpZMAz
-	6iI3+XOj5Cme5y1cKHv0EEGnfGqONJy325wqCbKJLXhSeGqxE78v8tt6e5BrEcVp
-	9+r92OFHhzKFbbFko37hcq8R+ToEI2llyLpF6lHD45spgEGCwwumoq3/1B+VtHLu
-	jcidX2dE80gLEyEXzZi12GqfAiwaDbOfLTrvLwDZ6UGbAONQS44mbOOsnqEaJprP
-	xRq/T55q67nmuxVr8ACjkGzry7ieWUNgqqVecpt8aM7YXoZG9QtoD5GuoG9sBNHZ
-	nHRhnA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9brj7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 10:59:18 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545AxHxZ002374
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 May 2025 10:59:17 GMT
-Received: from [10.218.44.178] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 03:59:12 -0700
-Message-ID: <246da659-2add-4ccf-b914-f737fb93f3f2@quicinc.com>
-Date: Mon, 5 May 2025 16:28:51 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BViqOI88"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746442825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gYZVyBXjALhKKXNyoTTAghH2Cljj5vQ2jFdSmpambSs=;
+	b=BViqOI8893trd4S8VcngoEqF7xOcHPbdme252v5uD5NSXhiOeUlu122+gkhnhN2vX5a7kw
+	7+5pWObDIn3qbovsNbiG4ii3Xsz4sHlv6Kn7Cevr2ubsDZ9ATTin9IAWlJLMH08bIDBThl
+	Uwzh4Oon9pmtMxtBG1R4/NtjI1jlaB0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-607-EyoeY_DQP3ae6eGdTM658A-1; Mon, 05 May 2025 07:00:23 -0400
+X-MC-Unique: EyoeY_DQP3ae6eGdTM658A-1
+X-Mimecast-MFC-AGG-ID: EyoeY_DQP3ae6eGdTM658A_1746442822
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913b2d355fso871378f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:00:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746442822; x=1747047622;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYZVyBXjALhKKXNyoTTAghH2Cljj5vQ2jFdSmpambSs=;
+        b=nGBdB1ogHKmA2dplJ96mnd2KnSux8PXUqsAviyUPky3CJb5E7i0Ga8Z+mj4phDniOQ
+         kH9oiGUMbHJPTuKn60YLSWxMyXi7ZAbMG0YHaDpFGMUKyIbMccuob8VRQbwltJnen672
+         L+XuRRxPsH6bNiEok7uA+u2rHe/RTkxba4V+AXcIshQfTQIJfadz/BPE+Q2imOvV88F/
+         pFHovlhrUS/vkFd15JhkzvByrQMiPTkZ893Vk/pRp+tAp0/mheh1V9lHyYOkXFbpI2fc
+         QTNHhS1xmC3cVRZ6cWkSw6WYlW+LUVKrb9S6XAyJijLf0tPKyAPMXIHMbMjEMs0DvuBB
+         EsLw==
+X-Gm-Message-State: AOJu0Yykd5iKja+Ayo7ZQuGzICSVe8ovEUk9OgBrHYcaoDcCTDXGBKey
+	pPXu0rMDbHuUgThLHeSLBQS1JWLW7vHBE/E/zrKlBlDF6jrWJIitm0vpoHIEAIdHA44ACr8TdZT
+	xAR5HkbAZIdijP3MnjvCbFSXnm31fCGNicVXBKkc86VlwPFOYFSpiXAzdDgtetg==
+X-Gm-Gg: ASbGncsXvDLpaKB/p2BmXQ076tpQWY4rTOkvm9W7sI/FEwzIfmLII3NmogLUuhYtp1c
+	ETWM2GqeDmxRS8Q92NXY3JxWDPWWL41H0ioDU/9Z5V/TZ/rH+UyE4gnX/2KCb/AxJrwGI7T/t+a
+	PEbQ/Wjbhci/ehMnHzTO8tnkVdV/bUupZR8jT7RPNO19+MaIFbJRWyyDrxn4lzfz/Vdj9el50n1
+	FHV/kjW9oh9g8WpQHQirkONqiWVaDeYFzYvPDXqO+vWjNCB7cgGOlbxeHJKVOVJX/654vR+a2IO
+	uon3miIR2tdfQcIHabUJJFw6W/POOHqNyJyo2jDZ5Q==
+X-Received: by 2002:a05:6000:178f:b0:39c:16a0:fee4 with SMTP id ffacd0b85a97d-3a09fd88901mr5903273f8f.27.1746442821963;
+        Mon, 05 May 2025 04:00:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGBxRsfJq3WL/X8i0OkbQ6itau/ggn7k4p8e3Vj8ihS5socMSRfYRyDLKwDFZM/ivQvZNUfA==
+X-Received: by 2002:a05:6000:178f:b0:39c:16a0:fee4 with SMTP id ffacd0b85a97d-3a09fd88901mr5903250f8f.27.1746442821629;
+        Mon, 05 May 2025 04:00:21 -0700 (PDT)
+Received: from localhost ([195.166.127.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7a55sm9913932f8f.45.2025.05.05.04.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 04:00:21 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Marcus Folkesson
+ <marcus.folkesson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, David
+ Lechner <david@lechnology.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm/sitronix: move tiny Sitronix drivers to their
+ own subdir
+In-Reply-To: <29c139fe-337d-4cd2-944b-8e26080a326f@suse.de>
+References: <20250503-sitronix-v2-1-5efbed896be2@gmail.com>
+ <27a5f519-de87-4fab-b465-bb89ae5b988b@suse.de>
+ <87r013wgoy.fsf@minerva.mail-host-address-is-not-set>
+ <29c139fe-337d-4cd2-944b-8e26080a326f@suse.de>
+Date: Mon, 05 May 2025 13:00:19 +0200
+Message-ID: <87o6w7wce4.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/11] firmware: qcom: scm: remove unused arguments to
- the shm_brige
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-        Jens Wiklander
-	<jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Apurupa Pattapu
-	<quic_apurupa@quicinc.com>,
-        Kees Cook <kees@kernel.org>,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-CC: <linux-arm-msm@vger.kernel.org>, <op-tee@lists.trustedfirmware.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-doc@vger.kernel.org>
-References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
- <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
-Content-Language: en-US
-From: Kuldeep Singh <quic_kuldsing@quicinc.com>
-In-Reply-To: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-6-6a143640a6cb@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEwNCBTYWx0ZWRfX5wp0kqaare0R
- +pntLJOWwO+utGzzTx42W3hgP9uuXtlrAdyezkvc7+TlcItOvMZgPYJcVg6ebpAEWjvxx5kA6aN
- jZGLBCAdT8wkakazGXs/leuWIRMfg7rCMFM+LLAxpUOwYMBQGNcxFhbhjEB95EfSQkLP22aKt6O
- wb1BS5uLR3ryeZT95EFrhfrzH4E3Mgk5WlKzF96Q0sigKTX+px1RRAQer4vDa+LUeKXlHgMxVYx
- b24B8+TSKL+dRcQUEB0lxjwUpwMLJOCTqfTpsxB7yiQnigbe62WCCwjiI3oxGV+xtVSIizoocfd
- Jmd9UDTCTG27ZHGKtGvwUXaMpqNPhP6MZSLBLsfiZImaQ8nYUzr5gMIbgvuhLKiENstzp9tq2DM
- 4fEJGGgtv44YP6G8KVKS0+PSCg5Afmohc1tHDmgvEF88uX1OTyXLYlSo0dp0HurZS+OnpRWw
-X-Proofpoint-ORIG-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
-X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=68189a06 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
- a=EUspDBNiAAAA:8 a=JvMDD0_PEK43moPAXCcA:9 a=QEXdDO2ut3YA:10
- a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: jDqxW_-Q_cnftiAtwzc2XbtlK_MxbWAN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1011
- malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050104
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
+> Hi Javier, Marcus
+>
+> Am 05.05.25 um 11:27 schrieb Javier Martinez Canillas:
+>> Thomas Zimmermann <tzimmermann@suse.de> writes:
+>>
+>> Hello Thomas,
+>>
+>>> Hi,
+>>>
+>>> there's one major issue here. You must not change the Kconfig symbols or
+>>> you'll break kernel updates for a lot of people. So those TINYDRM_* must
+>>> remain as is.
+>>>
+>> I disagree. The https://docs.kernel.org/admin-guide/abi.html document
+>> explictly states that Kconfig symbols are not an ABI, and userspace
+>> should not rely on these not changing over time.
+>
+> To summarize our discussion on irc [1]: changing the symbols is ok, but=20
+> we should make it compatible to ease the transition. To do so, the new=20
+> Kconfig file can still contain the old Kconfig symbol and the new one=20
+> defaults to it. Something like this:
+>
+> config TINYDRM_ST7586
+>  =C2=A0 tristate
+>  =C2=A0 default n
+>
+> config DRM_ST7586
+>  =C2=A0 tristate "bla bla"
+>  =C2=A0 ...
+>  =C2=A0 default TINYDRM_ST7586
+>
+> Doing 'make olddefconfig' or a similar make command sets the new symbol=20
+> from the pre-existing one. After a few releases the old symbol can be=20
+> removed.
+>
 
-On 4/29/2025 11:36 AM, Amirreza Zarrabi wrote:
-> shm_bridge create/delete functions always use the scm device.
-> There is no need to pass it as an argument.
-> 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+That makes sense to me, yes. I'm not against making the life of distro
+maintainers easier. We can then drop these transition symbols after a
+few kernel releases.
 
+> Best regards
+> Thomas
+>
+>
+> [1]=20
+> https://people.freedesktop.org/~cbrill/dri-log/?channel=3Ddri-devel&highl=
+ight_names=3D&date=3D2025-05-05&show_html=3Dtrue
+>
 
-There are 2 type of APIs exposed by tzmem driver for pool creation.
-devm_qcom_tzmem_pool_new and qcom_tzmem_pool_new.
+--=20
+Best regards,
 
-Device managed pool is created with devm_qcom_tzmem_pool_new but
-currently qcom_scm is using it's own dev to create/delete bridge which
-is problamatic here.
-
-https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1653
-
-If pool is device managed, same dev should be used in qcom_scm to
-create/delete bridge rather than using qcom_scm dev.
-The dev passed as an argument to function should be used instead of
-__scm->dev.
-https://elixir.bootlin.com/linux/v6.14.5/source/drivers/firmware/qcom/qcom_scm.c#L1634
-
-To summarize, I believe correct solution should be to pass corresponding
-dev to bridge create/delete APIs instead of always assuming to be
-qcom_scm dev for devm_qcom_tzmem_pool_new scenarios.
-For qcom_tzmem_pool_new, qcom_scm/qcom_tzmem_dev can be used.
-
-Bartosz/Amirreza, please share your thoughts as well.
-
--- 
-Regards
-Kuldeep
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
