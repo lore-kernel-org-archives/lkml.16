@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD02EEBDF;
-	Mon,  5 May 2025 23:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59CF2EFB8A;
+	Mon,  5 May 2025 23:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486653; cv=none; b=mPXahVnZ0Wy8qQ5s+heTwYUsxGN+351HywBzdYjTmoBZ91tfOaj8m8lG1LzdCp3ATmTUI31Hrut/umDoDN6ZoSSqfhUYqU3gmbkb5f6tfGfov6zvrEM7/CyOKWEoY13Um1TZfDO/3DOraQlS9ybadDQEF+CHpNEOTgTLm0gixcQ=
+	t=1746486658; cv=none; b=nSIutblhQD5ClW+RtEElqSzxbui2DOhqbds4ff1lMwUoX4AcLUjBfeZFFbCzhvpabEexZpQpNd0+D3dpTi39cLqQ9GbAVs7DbmXiFhCl37Mqn3QKsduGuI7XmAnW7zE4IlWmtB80TbsZcpImmlr9LCf0ud+h9NkKdjfGtCRGk4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486653; c=relaxed/simple;
-	bh=PU4jNoQiiCMMlPNi195U42PhPwRbOLeVT/AQap7ERog=;
+	s=arc-20240116; t=1746486658; c=relaxed/simple;
+	bh=dhyDtTy5Z6RWp/Mjf/6pkAtEPg5sjXajgUbTlAbaBXk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GqVP9tu5Og0c8QwKpxpohrQQmdC0YyTl2RaEK5/lrWpehdsMtEYuu9NJnecFnGqK8WMNruq7sTfjMNmxdKXqNcbxIXNSEbnPeuSNiRdPDpy5jeGMtXWPlRO/ozttlmuLN6Mu79pbYgAcC+9WwctNBtryAhtg1Hw98Ex5D+tQv6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1yTqKWw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Tp7ibErm/vDSB52o8Bthw1jZmhf2pLcoC4Mmhi3Vmdy7f7lqPR/5XWAIQx9fF6V/rddltiZLGsKCBQ/fBmpJTR8goZRRNcmXw4nUl3VP1IvSLkPRIE3mVgPr4IrPK7pXJNOJJCIp+m7CvCFzN99JH4S/QDbxnz6y1KEk/WdC70M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=in3GBxvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1yTqKWw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D267C4CEF2;
-	Mon,  5 May 2025 23:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="in3GBxvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0BCDC4CEEE;
+	Mon,  5 May 2025 23:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486652;
-	bh=PU4jNoQiiCMMlPNi195U42PhPwRbOLeVT/AQap7ERog=;
+	s=k20201202; t=1746486657;
+	bh=dhyDtTy5Z6RWp/Mjf/6pkAtEPg5sjXajgUbTlAbaBXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L1yTqKWwDIS6GbJL4jv6fd5WCr7D1q5fbFyZIT8GmhfLbicYiFF7/taQeBWd7EIMF
-	 emsDb3Z/AXqofH3gMiqXmOV7uQR+uyCMPr5JOYfVpUVktw8o8FQoIyeG7wX71Au/oF
-	 1LKpbKsU0moZ3ikDFs+UR/Xa+2nGZ238skAC85O9ivh/Pv3brJ4+wA1RVMH46s84U3
-	 VlV5fZr/DSiW+1OCEw6eIfwWqVvqO5USILsvgZQJiIOamQaygVcMfBGO+ZMa4/1gVj
-	 cZIL4otaWiTT4XDueJ5qPU3kwJyxmc334chmsfj3sgD35sQXenNUeSkenqt18E47Xw
-	 8MJCXSFR+VjMQ==
+	b=in3GBxvCSc4SOHi91Dy636hxzpCvEbpPLMM8BsZBTG9HtyUfQlZEgW6Drt48sD3UI
+	 I6P0mwqwChELAinjqiL+CMRORuqr5aBBJuvob/vhS9bWeBOHUKFL5LvM60W8YgH4TX
+	 4rBMSlOvyf6AN7Up9m5Aziy6F7sgI0tjFLz3CxTn3hBQrg2hP/a+CJSYEuR3KadGjQ
+	 M/SWFInRz/Yd6e898sCxit2w4J3B770R040ZF+oAJTBjYHmdrugeXwY49wi7Y7t8ao
+	 R3DLxmKLtgKhXK6ai7+zqQOuDxfIReXfIRMWgH7x22pq/rvqq/05qeFkfWBRohbCV6
+	 Nrd9P7XHoAsfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Tony Luck <tony.luck@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 137/212] wifi: rtw88: Fix rtw_init_ht_cap() for RTL8814AU
-Date: Mon,  5 May 2025 19:05:09 -0400
-Message-Id: <20250505230624.2692522-137-sashal@kernel.org>
+	bp@alien8.de,
+	linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 141/212] EDAC/ie31200: work around false positive build warning
+Date: Mon,  5 May 2025 19:05:13 -0400
+Message-Id: <20250505230624.2692522-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -50,57 +52,103 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c7eea1ba05ca5b0dbf77a27cf2e1e6e2fb3c0043 ]
+[ Upstream commit c29dfd661fe2f8d1b48c7f00590929c04b25bf40 ]
 
-Set the RX mask and the highest RX rate according to the number of
-spatial streams the chip can receive. For RTL8814AU that is 3.
+gcc-14 produces a bogus warning in some configurations:
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/4e786f50-ed1c-4387-8b28-e6ff00e35e81@gmail.com
+drivers/edac/ie31200_edac.c: In function 'ie31200_probe1.isra':
+drivers/edac/ie31200_edac.c:412:26: error: 'dimm_info' is used uninitialized [-Werror=uninitialized]
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+drivers/edac/ie31200_edac.c:412:26: note: 'dimm_info' declared here
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+
+I don't see any way the unintialized access could really happen here,
+but I can see why the compiler gets confused by the two loops.
+
+Instead, rework the two nested loops to only read the addr_decode
+registers and then keep only one instance of the dimm info structure.
+
+[Tony: Qiuxu pointed out that the "populate DIMM info" comment was left
+behind in the refactor and suggested moving it. I deleted the comment
+as unnecessry in front os a call to populate_dimm_info(). That seems
+pretty self-describing.]
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/all/20250122065031.1321015-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/edac/ie31200_edac.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 8a47cfb358b16..0a913cf6a615b 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1516,6 +1516,7 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- {
- 	const struct rtw_chip_info *chip = rtwdev->chip;
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
-+	int i;
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index 56be8ef40f376..e3635fba63b49 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -405,10 +405,9 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	int i, j, ret;
+ 	struct mem_ctl_info *mci = NULL;
+ 	struct edac_mc_layer layers[2];
+-	struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+ 	void __iomem *window;
+ 	struct ie31200_priv *priv;
+-	u32 addr_decode, mad_offset;
++	u32 addr_decode[IE31200_CHANNELS], mad_offset;
  
- 	ht_cap->ht_supported = true;
- 	ht_cap->cap = 0;
-@@ -1535,17 +1536,11 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- 	ht_cap->ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
- 	ht_cap->ampdu_density = chip->ampdu_density;
- 	ht_cap->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
--	if (efuse->hw_cap.nss > 1) {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0xFF;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(300);
--	} else {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0x00;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(150);
--	}
+ 	/*
+ 	 * Kaby Lake, Coffee Lake seem to work like Skylake. Please re-visit
+@@ -466,19 +465,10 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 		mad_offset = IE31200_MAD_DIMM_0_OFFSET;
+ 	}
+ 
+-	/* populate DIMM info */
+ 	for (i = 0; i < IE31200_CHANNELS; i++) {
+-		addr_decode = readl(window + mad_offset +
++		addr_decode[i] = readl(window + mad_offset +
+ 					(i * 4));
+-		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode);
+-		for (j = 0; j < IE31200_DIMMS_PER_CHANNEL; j++) {
+-			populate_dimm_info(&dimm_info[i][j], addr_decode, j,
+-					   skl);
+-			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
+-				 dimm_info[i][j].size,
+-				 dimm_info[i][j].dual_rank,
+-				 dimm_info[i][j].x16_width);
+-		}
++		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode[i]);
+ 	}
+ 
+ 	/*
+@@ -489,14 +479,22 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	 */
+ 	for (i = 0; i < IE31200_DIMMS_PER_CHANNEL; i++) {
+ 		for (j = 0; j < IE31200_CHANNELS; j++) {
++			struct dimm_data dimm_info;
+ 			struct dimm_info *dimm;
+ 			unsigned long nr_pages;
+ 
+-			nr_pages = IE31200_PAGES(dimm_info[j][i].size, skl);
++			populate_dimm_info(&dimm_info, addr_decode[j], i,
++					   skl);
++			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
++				 dimm_info.size,
++				 dimm_info.dual_rank,
++				 dimm_info.x16_width);
 +
-+	for (i = 0; i < efuse->hw_cap.nss; i++)
-+		ht_cap->mcs.rx_mask[i] = 0xFF;
-+	ht_cap->mcs.rx_mask[4] = 0x01;
-+	ht_cap->mcs.rx_highest = cpu_to_le16(150 * efuse->hw_cap.nss);
- }
++			nr_pages = IE31200_PAGES(dimm_info.size, skl);
+ 			if (nr_pages == 0)
+ 				continue;
  
- static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+-			if (dimm_info[j][i].dual_rank) {
++			if (dimm_info.dual_rank) {
+ 				nr_pages = nr_pages / 2;
+ 				dimm = edac_get_dimm(mci, (i * 2) + 1, j, 0);
+ 				dimm->nr_pages = nr_pages;
 -- 
 2.39.5
 
