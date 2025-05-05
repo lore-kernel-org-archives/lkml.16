@@ -1,476 +1,188 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172DF25D21A;
-	Mon,  5 May 2025 16:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1551487C3;
+	Mon,  5 May 2025 16:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461038; cv=none; b=JeY3Mpb2CPAs7ncpLHFPuxLhFHIqvL0BX6xQCKNoXovEnEegvOgnL1uGtLP2AoJQAhsQwoIjJeG6rnFaYG2Cih5WGizYNHjKuVKFpL4639rWGgoYog6SPWDERWFiWKNc/nQUFm34JYy8iFHfGEm2+5dOoDOpWArUd1lrC65q0Lw=
+	t=1746461063; cv=none; b=pT/OJG+YufCYR2oMq425wGQQAR4a9gR50ODx10Oyu/QgZJg74xYWuYm46UoHrLINcKq7qMpVeQQAgDnXRynDofU294CZtZk4ysCIcYMltxFX5ePdDz4K2YOsXvsPKaG9tgHOpzD48ezKF+dUrdGag8kEtWgnHHrhpjAVhnx+jFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461038; c=relaxed/simple;
-	bh=qBz3bawuzlenHpbqjj3H7ok1Chrb+oB/l7xvhAJvRVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWlkdZ/jnEmpU9g93uJq/SH0k9umeFWVfv3NldvnUEWqs910qYi3VBhh6QF2OkGZUKDRwyUMXhDebkuVlJuAMmIYdwfISJBwV7IK+kckSOOFFzG15MNvKsDh00x/1h5063ywjQdhazc/0AvGLwsu/PWovW7kE1Fq2+zxqJLK5ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=phy9QWlW; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1746461063; c=relaxed/simple;
+	bh=wjHjAl6gK0zoew3zDb5vbq6k2Lubi+YiIwuifw1qFE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHTI20aOS0K7agbPWnpTwLTDLJa8TMRrEHOeyM6EV7vNNlmimuJ5+6y4Sa2fiDYjDMhR/kiJwCPudPRMyxbjed8B4xL/h0qVzRNcqEYk8ZLD0UhQXUqliFBgU27lTL4Rwn4fhJ23bH02KTypfgAeCXkMtGssMaBnB2kxs5qpW6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AXDwvafm; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="phy9QWlW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1746461010; x=1747065810; i=wahrenst@gmx.net;
-	bh=nspZRGz/i/6mnAvkbCpGKriDSYA1aqeM4ht5VL78W/g=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=phy9QWlWuwq/tx6bwA0i1GMAYUNO2WZzQi7h0qAwSjfivZydcP0AVncAN0Io1cyB
-	 ix6MqmBZVF0oyBMw+B9qgmbakbEE5ileo8UiZDtnesw7D1mZsKPkWDEf4aZXluIkb
-	 GAnSeM/uoI/ebSn/u6C1HeUDoFNCcPbmK/x3MVMsNzamTD8SfzX5lk+N/tw7ROAxI
-	 AMjvNGdc9fhBuJcOGFF+iRCjoEjgWHTtsoEx9U8Wx2cOU5O5l0Pib+/1grT4dA02V
-	 R9Bnga2lCc597s1YKARgkekkm/wX62omX0/uEQZ5imMqtP7MRjLhF3sIp3arvlGBp
-	 z5M+jVGcalh0xjdFpQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.101] ([91.41.216.208]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRTNF-1uQUrf2bWH-00YXr7; Mon, 05
- May 2025 18:03:30 +0200
-Message-ID: <ee082ba2-d452-43a1-bb94-3c04c407ea31@gmx.net>
-Date: Mon, 5 May 2025 18:03:29 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AXDwvafm"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2F22B40E0196;
+	Mon,  5 May 2025 16:04:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id uvjKqAb2xMf3; Mon,  5 May 2025 16:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746461048; bh=eOdR04Av+2p2q0BfKNb9pAObXvs8afM3+NDxhb3Wysg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AXDwvafm5GhPNDRFMYfOCSTnnMUlXbQFulg9OyLgTHPKH+ObCQFNJ8Q2hLW7cAHSK
+	 bXmUxbotjcN98Y9G2Mb/AbtGY/tpUtNZbMr8irF66lf5LNEUQVGp8tmVfYlQqCF6EV
+	 CK676oGgxDIAW9Bq3v5iG9QJ+df9KdSn+1iLX4PY+faBVVqaDuPokPOhgaZxy2hajM
+	 UO6hu69XosxEj1quI4cKa+XMnrTOpYB5rHLxTgOXVpK1toomkz942650gLG6R6meTh
+	 y4xJafQyVwVaMLxmrxYRK+dMY4ei6VfvneCZ3C/3VoGhuIurhVfcCfC20gvq4gLUMI
+	 eXhpPyXZfgDw1/7NnHvb4U5Rzy+qhGON4YGtqNl8ikTaEdT1b7ctbifEuVrrVFSa48
+	 iDyznIZpiOITeQUJw2KqJXSEuEB78O5zrqHwFYZzy2mZJ9sYaN7UYkNu9LJ7ctJcsF
+	 3JtNJqrfM0C5Kv9uepA+3dU+ZE44CjqCOIxHdtQxajF//1BOVFfS8ZNjR3pqLJmBwF
+	 /lN98JDmcgxDB+0SBl1jKsV6G/vOMP5q7i9l/JG/aNf4vGbr9ETmont6EsVln4QZOi
+	 jNpfu2ccpMesGJxVmdsx2oytTDBQMainm9V8/ZLcgWpO+EfsXBYSZpG4d05jw6CAJT
+	 rJ+95viGb0/UNU0v958HWa9c=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 12E2840E0222;
+	Mon,  5 May 2025 16:03:52 +0000 (UTC)
+Date: Mon, 5 May 2025 18:03:46 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Len Brown <len.brown@intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, linux-efi@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [tip: x86/boot] x86/boot: Provide __pti_set_user_pgtbl() to
+ startup code
+Message-ID: <20250505160346.GJaBjhYp09sLZ5AyyJ@fat_crate.local>
+References: <20250504095230.2932860-40-ardb+git@google.com>
+ <174636840512.22196.14007684119604658714.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- brcm,bcm2835-armctrl-ic to DT schema
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- kernel-list@raspberrypi.com
-References: <20250505144618.1287539-1-robh@kernel.org>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250505144618.1287539-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:2E1LYcmiqquUyR1NW/BV5KhqR1ABN0uS4PVerjkQBC3ed0wVt+z
- W/C6vKZ47Z0rMYv116JM4B31zpfPoXJCHmezTReTWrw9ZLpdqYgMLjFGvPYcS6QjWvfabHv
- 7b+jYQStS69QR8BzFUBuiCRLKX7tsCJgXzXzyR48ho5fP2Xk6rhUmYZc4+QtKTYt//DlBNu
- bYEZB58UPFbzxLfws0Lhg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nHgtIr0AuXk=;HlbIA1vMwXYDA+1g1WVupQ1f+hP
- K5IFLfp12y8ikYrv6aTga2zKeuCtOb2FR54K7H6N5mcSSMrGX3AMESAoZz4IzP0G5fOb2TPb4
- kNk+tFYOGhMu/zJ9RKbpwg8zSgasJYmMnEE5+nwSF0UX+i6x//1KJIRhds4nytU5JTWEnz6Wj
- hxUw0Dp87sHs5AXzWC9ir5i1NtIsZN1QcNiuV2mdEHKTOHKssYNQvzv9Xp+nO0RqAcUrj0JC5
- smoEDXKT85v8JdrGW5zbOHcUf/TPM6iax420LVohGr7P+Bx5rZTbqLf1a44KlS7RAqyP/CHNm
- WSy24VJ+HqvsOiQGC9hb0Q0G8xlRQ805DUyuPb5tSd6EC0JFSJHGn4oWpgKMV3QjxddZ21Qqz
- fq8nuRbnhMM6/SKRMXkB/Q2bV97eHE/a8IJGFBQrbRyw09kvawb6wp3Q3yPtbdgU+eg1Wt/uN
- DxY/JodBo+kIRoWDyiYP1dGj2YdC0sOD5TJx1oJatj7EvNDhR0SHv2Zm+vpCYtWh2dyvzhu40
- nfVHfQVj7jEoJje/T2rUxA1ksAXSUL1FLt/2tHAMLTuaEoFsjPORX5Ru5yRcEDD1fDCCwlN+J
- 4SmH+1eeeVCj0oIUXEy7nKdeUNhS1ewG7N5GUHNhuNc/BU14IHEejhNspInW0gbLSTV6wmv35
- 4lEbb8PJu30vYWtMeVqmznh7xzn5akcz0Z3HgSfccoggEpXGYdtdqcSC4XLOGedmnS/Znlnd3
- fL91XA8bfnlV8jFnXHqpwEiYQLh4kJS9RlFuLvI2aAdoc4MpGVNHsPbY01Sl3kYKhZNuV7T90
- Y6P5zJp928G9UaQ4DLTLf3UeR3oNC0CxCfbGNy4zwCsLjWOWgMvN5WNwK6O1Vvt2WARGdG2I5
- 5qXjT8PEoRJxTM64zgbQjoKmfnHbIyMVXz55Gdky3y895gXYh6dD7kHv+D688dozi3UJzIH4V
- tzPW5C2pfFq5yyQmjpgraXYNw+Oap/QhXS6cQJ4cHrnasuFTVaPfBxDdo8HHvjcKx//R0uOTC
- ZMoLgcLSZSSxNmYLOJgrgZbi6VKSVSdVmtKPzkFpAhC69TUlnaYtEI2kEENo24bjORZYCwB+s
- WuM5BSwBp7m6hVeum0SWNcCpmCkcRTFwHRSwDbyA1zSTDb9ghHvIUSEwks/8OxDzy2hEImttC
- jEa+LVyDTsYLQkjpXzG64VLFh+4H58XmH8gDV0sFOfDd1dG2UAxk1nGlqcbKV8UotJNWxnILW
- 1NcVaS/7bQYPNPP3cw8ZNRtQA8JkmoLK75VfFd+n9xqdAegSsyPIGbqBj7BugoI1IWxfwTslM
- AEK5F+SvK/A+gayPSHrWat8Im2u9ldOpl0+Ld2Ym4l80tip6fvZxgr81/33dbNM4wfpRwePvC
- dPlzWU6M2TgQaaPkIxbIawjSvWAuwyiiA+22HvynjnE2qdpPGADAOeZPg/PlZ7N4s70U8XB/E
- 0HZ0H4z8b9/HnjmNVGkLU6P2Q1UR70cz/NQvlXiUhrXLhiRNWu7QPObd/3h+guaxSglgoQvG/
- KIqKbJBroa6R2Dsmtl95PVS8TYeCl4AwjrcK/wCQK4aGGGi/rGJ67Mcyno6hVfO5shbXG+tKW
- ZqXJdESGmkjq+GsQf66UYnxdvCsxPV04Fzwhjp3jabOqNDYzKbIXmSG43v5AFSvaZ2uGEdQon
- dkZsme7AOeCwadMRk6U4EcB+wKhI815vrEv0PLhn/kLSyUelQi4XFivv2xE5PIAPWjrH0wDuS
- XWSaZswaMAnWXTclCNKArwMVIjFiVUwUApJW/aT8ba3+8SFdC/EZCONUl9f6SXKX86RCj1jKo
- p+7qjVkJnWl+U9l4U8dzkATZO5mAf6yOq44dFF8OSqiWMhvHccI1JVAzgZdkoN4204dLT/lBp
- 6dgLwIlZmJbY8uNDE81UQUWxLXd/giabEiUif/Ul//0/YrPElmwnqqpJfUID1/ukO9HROpL6F
- /C7ib+gV2+L1PUom1NMiD8UeNQjv998xGw3VyBBtF5HtfCrdidgMeSI2sTukZDa1UQctzUrr4
- xpMrGTQycxrhOw+RykE0Hit9Ky5hS8yRthkelBi0ZFXjsCDNWD9VPuvNgr9elS6Roa9EZ13Lt
- CL+Gbdvp+khFP01/lINM9Znue4GlvtukCyqjrOOSOOb7+TiuIr8o8ZHVXJ/TaX7WCgvs1LzIk
- u/EdPumbRnnAApszvD5XyFpCM1ai0W1HRbbpEo9eYzg+SQJ0I8rNgDoguRkt0Jd30oQkxBzKy
- LVSTtl/nX8nC0JtHNvAmfxrUwB48KpL2RZW5T+p+No76o72resUwiXyCjLPH4THXFH9j5bdPI
- Z8L9VsKlW4MjjdLVhAHxJq+sxLueKP4K6Hr/btivf2aqs3jOS2cqNcZR7RZRD3j6m9gVGOHJh
- Y91ldf/4m5lsncd7wjyRnDQxDhvoZjZrhJUHlbyoEbXOjSqPCLA3Yrc0Cu74S2gCL6r4EPGO6
- iPVi0zyqn+RwuTGeUIls3gVDjLonm/0mOQ5rXg9w0Tetf8c8kSV9dN5N/OVOwoLUJdNMttG6d
- XJ/xWO/y+25iTd6+mc7TX2zpARlCsLdYB37E4znovttf0S1ry1urciHcArAPt+DDrmrKJI6gM
- NwG52fuGSOpJ81FJLxpiw3KsxyudO4OwYBloHnEk4Ycl/61ugATyCGTGHVrzMeV+hBDoEojYg
- sQuM+P7wV5yuUZf3mIc/1D9KvkymOzcFB2UVSahD6/DTgzl7Rd58VzLu3OJrX6Eq73brKGM9a
- mFmYy6plQvowd9Sp9M1/Y5NQRB0D4JLgRXJxW8Dfks9LZcV1VUZKWGTOQy2rPWRsHOlkPyTZa
- lDl+KibWWvLLasxwnO/7UmsZgsA32EfL2EpnHwMKDnsmI1ti/3be4Ih6H94Pybt5IQAkMnjuN
- KucSzxZRIPuu2WzmKFQ3stexTQQtTEE3GiiC+qYh8zcLeV+B+SOhr0iBBBfnZ0m0ShE0BRmEQ
- UEMSJpB9/gQnW3R7+XxTlYpwmxIhZi87azjX2PM8hXlHEwaSpoG9uGAOyqXkWOYbVzK8x9fRD
- bRCfFxqCCHaHCOdq7aCmfqlMlGmrh0Yye81Md3O4Hq2yqvxxeWySjCuL7R4LYxagUsOxYiJlw
- MwAJTeEE5sz10=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174636840512.22196.14007684119604658714.tip-bot2@tip-bot2>
 
-Hi Rob,
-
-Am 05.05.25 um 16:46 schrieb Rob Herring (Arm):
-> Convert the Broadcom BCM2835 ARMCTRL interrupt controller binding to
-> schema format. It's a straight-forward conversion of the typical
-> interrupt controller.
-i send a similiar patch on May 2nd:
-https://lore.kernel.org/linux-devicetree/20250502105213.39864-1-wahrenst@g=
-mx.net/
-
-I would prefer your version, but ...
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Sun, May 04, 2025 at 02:20:04PM -0000, tip-bot2 for Ard Biesheuvel wrote:
+> The following commit has been merged into the x86/boot branch of tip:
+> 
+> Commit-ID:     5297886f0cc45db5f4a804caf359e6e7874ee864
+> Gitweb:        https://git.kernel.org/tip/5297886f0cc45db5f4a804caf359e6e7874ee864
+> Author:        Ard Biesheuvel <ardb@kernel.org>
+> AuthorDate:    Sun, 04 May 2025 11:52:45 +02:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Sun, 04 May 2025 15:59:43 +02:00
+> 
+> x86/boot: Provide __pti_set_user_pgtbl() to startup code
+> 
+> The SME encryption startup code populates page tables using the ordinary
+> set_pXX() helpers, and in a PTI build, these will call out to
+> __pti_set_user_pgtbl() to manipulate the shadow copy of the page tables
+> for user space.
+> 
+> This is unneeded for the startup code, which only manipulates the
+> swapper page tables, and so this call could be avoided in this
+> particular case. So instead of exposing the ordinary
+> __pti_set_user_pgtblt() to the startup code after its gets confined into
+> its own symbol space, provide an alternative which just returns pgd,
+> which is always correct in the startup context.
+> 
+> Annotate it as __weak for now, this will be dropped in a subsequent
+> patch.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Kevin Loughlin <kevinloughlin@google.com>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: linux-efi@vger.kernel.org
+> Link: https://lore.kernel.org/r/20250504095230.2932860-40-ardb+git@google.com
 > ---
->   .../brcm,bcm2835-armctrl-ic.txt               | 131 --------------
->   .../brcm,bcm2835-armctrl-ic.yaml              | 161 ++++++++++++++++++
->   2 files changed, 161 insertions(+), 131 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/brcm,bcm2835-armctrl-ic.txt
->   create mode 100644 Documentation/devicetree/bindings/interrupt-control=
-ler/brcm,bcm2835-armctrl-ic.yaml
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm=
-,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-cont=
-roller/brcm,bcm2835-armctrl-ic.txt
-> deleted file mode 100644
-> index bdd173056f72..000000000000
-> --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm283=
-5-armctrl-ic.txt
-> +++ /dev/null
-> @@ -1,131 +0,0 @@
-> -BCM2835 Top-Level ("ARMCTRL") Interrupt Controller
-> -
-> -The BCM2835 contains a custom top-level interrupt controller, which sup=
-ports
-> -72 interrupt sources using a 2-level register scheme. The interrupt
-> -controller, or the HW block containing it, is referred to occasionally
-> -as "armctrl" in the SoC documentation, hence naming of this binding.
-> -
-> -The BCM2836 contains the same interrupt controller with the same
-> -interrupts, but the per-CPU interrupt controller is the root, and an
-> -interrupt there indicates that the ARMCTRL has an interrupt to handle.
-> -
-> -Required properties:
-> -
-> -- compatible : should be "brcm,bcm2835-armctrl-ic" or
-> -                 "brcm,bcm2836-armctrl-ic"
-> -- reg : Specifies base physical address and size of the registers.
-> -- interrupt-controller : Identifies the node as an interrupt controller
-> -- #interrupt-cells : Specifies the number of cells needed to encode an
-> -  interrupt source. The value shall be 2.
-> -
-> -  The 1st cell is the interrupt bank; 0 for interrupts in the "IRQ basi=
-c
-> -  pending" register, or 1/2 respectively for interrupts in the "IRQ pen=
-ding
-> -  1/2" register.
-> -
-> -  The 2nd cell contains the interrupt number within the bank. Valid val=
-ues
-> -  are 0..7 for bank 0, and 0..31 for bank 1.
-> -
-> -Additional required properties for brcm,bcm2836-armctrl-ic:
-> -- interrupts : Specifies the interrupt on the parent for this interrupt
-> -  controller to handle.
-> -
-> -The interrupt sources are as follows:
-> -
-> -Bank 0:
-> -0: ARM_TIMER
-> -1: ARM_MAILBOX
-> -2: ARM_DOORBELL_0
-> -3: ARM_DOORBELL_1
-> -4: VPU0_HALTED
-> -5: VPU1_HALTED
-> -6: ILLEGAL_TYPE0
-> -7: ILLEGAL_TYPE1
-> -
-> -Bank 1:
-> -0: TIMER0
-> -1: TIMER1
-> -2: TIMER2
-> -3: TIMER3
-> -4: CODEC0
-> -5: CODEC1
-> -6: CODEC2
-> -7: VC_JPEG
-> -8: ISP
-> -9: VC_USB
-> -10: VC_3D
-> -11: TRANSPOSER
-> -12: MULTICORESYNC0
-> -13: MULTICORESYNC1
-> -14: MULTICORESYNC2
-> -15: MULTICORESYNC3
-> -16: DMA0
-> -17: DMA1
-> -18: VC_DMA2
-> -19: VC_DMA3
-> -20: DMA4
-> -21: DMA5
-> -22: DMA6
-> -23: DMA7
-> -24: DMA8
-> -25: DMA9
-> -26: DMA10
-> -27: DMA11-14 - shared interrupt for DMA 11 to 14
-> -28: DMAALL - triggers on all dma interrupts (including channel 15)
-> -29: AUX
-> -30: ARM
-> -31: VPUDMA
-> -
-> -Bank 2:
-> -0: HOSTPORT
-> -1: VIDEOSCALER
-> -2: CCP2TX
-> -3: SDC
-> -4: DSI0
-> -5: AVE
-> -6: CAM0
-> -7: CAM1
-> -8: HDMI0
-> -9: HDMI1
-> -10: PIXELVALVE1
-> -11: I2CSPISLV
-> -12: DSI1
-> -13: PWA0
-> -14: PWA1
-> -15: CPR
-> -16: SMI
-> -17: GPIO0
-> -18: GPIO1
-> -19: GPIO2
-> -20: GPIO3
-> -21: VC_I2C
-> -22: VC_SPI
-> -23: VC_I2SPCM
-> -24: VC_SDIO
-> -25: VC_UART
-> -26: SLIMBUS
-> -27: VEC
-> -28: CPG
-> -29: RNG
-> -30: VC_ARASANSDIO
-> -31: AVSPMON
-> -
-> -Example:
-> -
-> -/* BCM2835, first level */
-> -intc: interrupt-controller {
-> -	compatible =3D "brcm,bcm2835-armctrl-ic";
-> -	reg =3D <0x7e00b200 0x200>;
-> -	interrupt-controller;
-> -	#interrupt-cells =3D <2>;
-> -};
-> -
-> -/* BCM2836, second level */
-> -intc: interrupt-controller {
-> -	compatible =3D "brcm,bcm2836-armctrl-ic";
-> -	reg =3D <0x7e00b200 0x200>;
-> -	interrupt-controller;
-> -	#interrupt-cells =3D <2>;
-> -
-> -	interrupt-parent =3D <&local_intc>;
-> -	interrupts =3D <8>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm=
-,bcm2835-armctrl-ic.yaml b/Documentation/devicetree/bindings/interrupt-con=
-troller/brcm,bcm2835-armctrl-ic.yaml
-> new file mode 100644
-> index 000000000000..4edc4c3ff6bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm283=
-5-armctrl-ic.yaml
-> @@ -0,0 +1,161 @@
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/brcm,bcm2835-ar=
-mctrl-ic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  arch/x86/boot/startup/sme.c |  9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+> index 5738b31..753cd20 100644
+> --- a/arch/x86/boot/startup/sme.c
+> +++ b/arch/x86/boot/startup/sme.c
+> @@ -564,3 +564,12 @@ void __head sme_enable(struct boot_params *bp)
+>  	cc_vendor	= CC_VENDOR_AMD;
+>  	cc_set_mask(me_mask);
+>  }
 > +
-> +title: BCM2835 ARMCTRL Interrupt Controller
-> +
-> +maintainers:
-> +  - Florian Fainelli <florian.fainelli@broadcom.com>
-I would suggest to add
+> +#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> +/* Local version for startup code, which never operates on user page tables */
+> +__weak
+> +pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
+> +{
+> +	return pgd;
+> +}
+> +#endif
 
-- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
-> +
-> +description: >
-> +  The BCM2835 contains a custom top-level interrupt controller, which s=
-upports
-> +  72 interrupt sources using a 2-level register scheme. The interrupt
-> +  controller, or the HW block containing it, is referred to occasionall=
-y as
-> +  "armctrl" in the SoC documentation, hence naming of this binding.
-> +
-> +  The BCM2836 contains the same interrupt controller with the same inte=
-rrupts,
-> +  but the per-CPU interrupt controller is the root, and an interrupt th=
-ere
-> +  indicates that the ARMCTRL has an interrupt to handle.
-> +
-> +  The interrupt sources are as follows:
-> +
-> +  Bank 0:
-> +    0: ARM_TIMER
-> +    1: ARM_MAILBOX
-> +    2: ARM_DOORBELL_0
-> +    3: ARM_DOORBELL_1
-> +    4: VPU0_HALTED
-> +    5: VPU1_HALTED
-> +    6: ILLEGAL_TYPE0
-> +    7: ILLEGAL_TYPE1
-> +
-> +  Bank 1:
-> +    0: TIMER0
-> +    1: TIMER1
-> +    2: TIMER2
-> +    3: TIMER3
-> +    4: CODEC0
-> +    5: CODEC1
-> +    6: CODEC2
-> +    7: VC_JPEG
-> +    8: ISP
-> +    9: VC_USB
-> +    10: VC_3D
-> +    11: TRANSPOSER
-> +    12: MULTICORESYNC0
-> +    13: MULTICORESYNC1
-> +    14: MULTICORESYNC2
-> +    15: MULTICORESYNC3
-> +    16: DMA0
-> +    17: DMA1
-> +    18: VC_DMA2
-> +    19: VC_DMA3
-> +    20: DMA4
-> +    21: DMA5
-> +    22: DMA6
-> +    23: DMA7
-> +    24: DMA8
-> +    25: DMA9
-> +    26: DMA10
-> +    27: DMA11-14 - shared interrupt for DMA 11 to 14
-> +    28: DMAALL - triggers on all dma interrupts (including channel 15)
-> +    29: AUX
-> +    30: ARM
-> +    31: VPUDMA
-> +
-> +  Bank 2:
-> +    0: HOSTPORT
-> +    1: VIDEOSCALER
-> +    2: CCP2TX
-> +    3: SDC
-> +    4: DSI0
-> +    5: AVE
-> +    6: CAM0
-> +    7: CAM1
-> +    8: HDMI0
-> +    9: HDMI1
-> +    10: PIXELVALVE1
-> +    11: I2CSPISLV
-> +    12: DSI1
-> +    13: PWA0
-> +    14: PWA1
-> +    15: CPR
-> +    16: SMI
-> +    17: GPIO0
-> +    18: GPIO1
-> +    19: GPIO2
-> +    20: GPIO3
-> +    21: VC_I2C
-> +    22: VC_SPI
-> +    23: VC_I2SPCM
-> +    24: VC_SDIO
-> +    25: VC_UART
-> +    26: SLIMBUS
-> +    27: VEC
-> +    28: CPG
-> +    29: RNG
-> +    30: VC_ARASANSDIO
-> +    31: AVSPMON
-> +
-Don't we need something like
+[    1.227968] smp: Brought up 1 node, 32 CPUs
+[    1.231576] smpboot: Total of 32 processors activated (191999.61 BogoMIPS)
+[    1.247644] ------------[ cut here ]------------
+[    1.248697] WARNING: CPU: 17 PID: 104 at kernel/jump_label.c:276 __static_key_slow_dec_cpuslocked+0x2a/0x80
+[    1.251592] Modules linked in:
+[    1.252370] CPU: 17 UID: 0 PID: 104 Comm: kworker/17:0 Not tainted 6.15.0-rc4+ #2 PREEMPT(voluntary) 
+[    1.253173] node 0 deferred pages initialised in 12ms
+[    1.254539] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
+[    1.257490] Workqueue: events unaccepted_cleanup_work
+[    1.258698] RIP: 0010:__static_key_slow_dec_cpuslocked+0x2a/0x80
+[    1.259574] Code: 0f 1f 44 00 00 53 48 89 fb e8 82 66 e5 ff 8b 03 85 c0 78 16 74 54 83 f8 01 74 11 8d 50 ff f0 0f b1 13 75 ec 5b e9 66 bf 8c 00 <0f> 0b 48 c7 c7 00 44 54 82 e8 a8 5f 8c 00 8b 03 83 f8 ff 74 33 85
+[    1.266446] Memory: 7574396K/8381588K available (13737K kernel code, 2487K rwdata, 6056K rodata, 3916K init, 3592K bss, 791248K reserved, 0K cma-reserved)
+[    1.263574] RSP: 0018:ffffc9000048fe40 EFLAGS: 00010286
+[    1.267573] RAX: 00000000ffffffff RBX: ffffffff82f10d00 RCX: 0000000000000000
+[    1.269388] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffffff82f10d00
+[    1.275578] RBP: ffff88827b7d4d98 R08: 8080808080808080 R09: ffff888100b59100
+[    1.277441] R10: ffff888100050cc0 R11: fefefefefefefeff R12: ffff88827326e300
+[    1.279574] R13: ffff888100bc1940 R14: ffff8881000e2405 R15: ffff8881000e2400
+[    1.281460] FS:  0000000000000000(0000) GS:ffff8882f0400000(0000) knlGS:0000000000000000
+[    1.281460] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.281460] CR2: 0000000000000000 CR3: 0008000002c22000 CR4: 00000000003506f0
+[    1.287576] Call Trace:
+[    1.288381]  <TASK>
+[    1.289015]  static_key_slow_dec+0x1f/0x40
+[    1.289980]  process_one_work+0x171/0x330
+[    1.290988]  worker_thread+0x247/0x390
+[    1.291576]  ? __pfx_worker_thread+0x10/0x10
+[    1.292773]  kthread+0x107/0x240
+[    1.293536]  ? __pfx_kthread+0x10/0x10
+[    1.295573]  ret_from_fork+0x30/0x50
+[    1.295575]  ? __pfx_kthread+0x10/0x10
+[    1.296580]  ret_from_fork_asm+0x1a/0x30
+[    1.297507]  </TASK>
+[    1.298085] ---[ end trace 0000000000000000 ]---
 
-allOf:
- =C2=A0 - $ref: /schemas/interrupt-controller.yaml#
+mingo simply doesn't want to listen and stop queueing untested patches.
 
-?
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm2835-armctrl-ic
-> +      - brcm,bcm2836-armctrl-ic
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +    description: >
-> +      The 1st cell is the interrupt bank; 0 for interrupts in the "IRQ =
-basic
-> +      pending" register, or 1/2 respectively for interrupts in the "IRQ=
- pending
-> +      1/2" register.
-> +
-> +      The 2nd cell contains the interrupt number within the bank. Valid=
- values
-> +      are 0..7 for bank 0, and 0..31 for bank 1.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: brcm,bcm2836-armctrl-ic
-> +    then:
-> +      required:
-> +        - interrupts
-> +    else:
-> +      properties:
-> +        interrupts: false
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller@7e00b200 {
-> +        compatible =3D "brcm,bcm2835-armctrl-ic";
-> +        reg =3D <0x7e00b200 0x200>;
-> +        interrupt-controller;
-> +        #interrupt-cells =3D <2>;
-> +    };
-> +  - |
-> +    interrupt-controller@7e00b200 {
-> +        compatible =3D "brcm,bcm2836-armctrl-ic";
-> +        reg =3D <0x7e00b200 0x200>;
-> +        interrupt-controller;
-> +        #interrupt-cells =3D <2>;
-> +        interrupts =3D <8>;
-> +    };
+So lemme whack this one.
 
+My SNP guest had CONFIG_MITIGATION_PAGE_TABLE_ISOLATION=y leading to the
+above.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
