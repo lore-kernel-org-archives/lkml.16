@@ -1,54 +1,54 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B4F313041
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C618831280C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746489107; cv=none; b=OoDQx3Ll0xc1rxtWzibVE35FEGa5s+YuzCMuxAE70qmUBQl6q0sC9/8HIA+0VEephi/y9Ux+NaNaKwfHDEm9xU3jopPx1YYQsV7Eg7vAlsVaT29kYtJQOHzO2S+kWeHcux7haARo+EzHTeRajvPCgZqe4pMZXshizp2NIFW8HQ4=
+	t=1746489102; cv=none; b=LX8jz5lVT5KPuC8FFe2X9KK+stzwyYkg609bSKYv95uiIlsWuvOxOokIVsj+omEdddHlDTPy7G25KiSWC66EIv5VA+9rgvln6lnhRYvBaF53fQSHwF1ABYlTsEOFa7W30Tca70Jx7whK/8r35FrsEHSqjNONJpVcaeFdnjEXnXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746489107; c=relaxed/simple;
-	bh=1Czlpu5Zw+onSfmWVzbc7ubzKt2PZFY4w+8ny+bUfx0=;
+	s=arc-20240116; t=1746489102; c=relaxed/simple;
+	bh=b3DJ+UN94pzhqaHjRVPoghHlS3Atsv9dVe93Z+66SE4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JKazhyScA8FNa+hY0JD9/pj2c0Ia7VCpluNeFo288iislzMyKZUem82NZA24QYW817q3agWzFXboi6jY5Q3cI6xML1Zqh5lvfl4xRi0T3Es1H3XtDa87KA/ayKFy97ZJXkZg2IdkWdbfCJTeZSUPXz1KK/CKdp8D0tLe+NAseac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VlWIUGxN; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=HYGXttqqSkGVcY1UByer22XFyRuy3wIVA+6gXeyFIUUKvC+pfew80xw5mGFdCxOuS3RCNG4n3FgG4vcTCZ/tIDqGllpbX0NnAKfqKXS7f3FwgKl0QarDMqCouNyMkk280suaIEpRYkUj48hY0FWLmQ3QdMdQ7EVlPd48BK93YYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UAlJc9IA; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mmaurer.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VlWIUGxN"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1f71ae2181so2632512a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 16:51:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UAlJc9IA"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a3c3014fcso3562880a91.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 16:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746489104; x=1747093904; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746489100; x=1747093900; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVFcCuEJ5alfPtNg/Xq1mbavgiLO3WAXess9THLNyv0=;
-        b=VlWIUGxNJn3tCOeuKj5hTbQ/wDNSomgHekXRUgLFRJnNiFAByZqBPkKhinYFdhH+q0
-         yjsWM0NheFRDECShWluFWi9mNkEd4IjIXupDWX23ErcEzdaw1YNJBtEQkBcA0bH1BFH4
-         7o3fN4b0UwYhOZr+EwD1liDOQD5YP+F9VmGxBALwcTVsRrfNX595vnGa4Lv+JIUzRY/K
-         eekhPkVbQ4becN56TBaeJsIUe/QAd5stOv6kicU0ArvTJ+0duSotwH+uDRggYTn107In
-         r5zx2fzqXuzpZG9SyZriVoU14IMETQEsdFwli7ZTiHK7RAbdPCRpxQJ+FOBe7+rAbxOh
-         PasA==
+        bh=AlgqJD04Sxt1Yk0QMv5WSqDKEhc0Gfx3sxjzNK9A41Q=;
+        b=UAlJc9IAKVeMkUhGGn6JnC4tRN/wY5ndC0gkp+5BljHcNcVyUa1yuRf3UjUE0C+5Cc
+         r/Yk4P0ST1zjmujSimvZ4fz8brf9DySUzTOjTMq49SmyJGofYl3LMF0K0s64qJZQ+Kxn
+         SCw/vimwbNydrTaqaVmriDGH1wgk1lwysjtOW0na62lmgeI02u44mQHfXVG0jPxF9bY3
+         nTCp+bPwbPXutc7QVSzdINs1F0JQ8EZEGllcD61qLasNSaLgAg0sA9mr8ONTs5Vs2EBt
+         pZwvAq89EcaZkoZ2rNIonFmzjJEQdkdl0D5b6tPj78r4k8J022A763Ma8LnXuYQjGAp9
+         uOUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746489104; x=1747093904;
+        d=1e100.net; s=20230601; t=1746489100; x=1747093900;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVFcCuEJ5alfPtNg/Xq1mbavgiLO3WAXess9THLNyv0=;
-        b=r5rHAbTd7hK9CP/keoDgYQYFxSEonFub01ezrFIaUS+IWzDQzKy16EOu1jXJ2xROcD
-         glfHagWRw3szLKzGWRSqN2XR2/WHIELGANndJYtRZb+rYUCS6yxvteSXqEoP46k+CJSM
-         KsVZBCXZzDIO0k9m/vCb3NHxPf4e3okRENqnUh/LmxZ27/eVAn/cYTGz7aHJ/FMQhM/z
-         3X4im8yTtGhpEFkCCq9xo8uNCDcAh976Wl7xGEcumdcJW5rJg2bQR387aeRjqMlMjNrW
-         mntgoqtXqgN+0fGrEUgPw1p0M0Tdpyt7YqnjZf+oZ87/98uLCeq6SleHLnlQ0LD/LwFu
-         n9/A==
-X-Gm-Message-State: AOJu0YxFaGqiVBJb/VjroRG2ApgGZV2Vq9R7L1ggX36NCIUGxIqc81/N
-	XkpDS9XHopS6EjYbmIpKatUEXj+ygG5VIlGVggSFh4GM8mftuWtkoT4DSVKjsWjFXCEVDmbqWmk
-	V00Npvg==
-X-Google-Smtp-Source: AGHT+IHhHeeJd9n5Zw7omC+WvKFKXAbgEziWfLrzNlmR3bEjX3KPOzvCbkNlX8p2OE6R7hdCj4z5Muub6Pbf
-X-Received: from plhz4.prod.google.com ([2002:a17:902:d9c4:b0:220:ecac:27e5])
- (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b2f:b0:223:54aa:6d15
- with SMTP id d9443c01a7336-22e1e8e5104mr161714215ad.12.1746489103754; Mon, 05
- May 2025 16:51:43 -0700 (PDT)
-Date: Mon, 05 May 2025 23:51:37 +0000
+        bh=AlgqJD04Sxt1Yk0QMv5WSqDKEhc0Gfx3sxjzNK9A41Q=;
+        b=ulWrJvWAQsT8YtdHef4cCo59PUKFg4YT5GWWFbVBLojQbgEae0pL+p2g04RXnMbBGC
+         jSxf6HCrLhi+YVIOr52I/o3L+nncycN8lf9qjkvj05LOXVAvsDcnmcHkIGaOi+DoPVdP
+         evGkA7ZnvtDQbrjdqPJAK3D0JXc4fwbtaq6nHu2iW5xfOIyWDGm+HqyGvcFUhizNtCt5
+         fjmQ22dvF13sZzKnDvWaCBO02aJSDQrOLaRP7LjXCVBQbIhYLQkrkYcBjxzw6IUUrO92
+         IHWKLtbDOuxnlAvdCzEr6tnVkxiUTXZZWCy5cA9Xg37K2m7PEB6QiGTlVVbaukXaSQzx
+         zKeA==
+X-Gm-Message-State: AOJu0Ywc3ONzi3q9CjR5GBpua+yiYbfc/zA1dl8hUDEhiGF136QsZXRx
+	WcBb6q2nvVomsNrIQeh+VtZaSNy8BTFyVWAU5teI0qQNqd/VnQhlCPqKy8XMjJvvg7Etf8g3+uX
+	ZBKPWzA==
+X-Google-Smtp-Source: AGHT+IFNZWb0O63dvnCCrz31HRZyMWLcWyX91j6SXGg7jk7gay8i0T8ORv64V7FMQ4A7/XzG2FlTbr1l8RpS
+X-Received: from pjbqo3.prod.google.com ([2002:a17:90b:3dc3:b0:2fe:800f:23a])
+ (user=mmaurer job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8d:b0:308:2b5b:d67f
+ with SMTP id 98e67ed59e1d1-30a7c080700mr2109668a91.9.1746489100052; Mon, 05
+ May 2025 16:51:40 -0700 (PDT)
+Date: Mon, 05 May 2025 23:51:35 +0000
 In-Reply-To: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,13 +58,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
 X-Developer-Key: i=mmaurer@google.com; a=ed25519; pk=2Ezhl7+fEjTOMVFpplDeak2AdQ8cjJieLRVJdNzrW+E=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746489094; l=5037;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746489094; l=6760;
  i=mmaurer@google.com; s=20250429; h=from:subject:message-id;
- bh=1Czlpu5Zw+onSfmWVzbc7ubzKt2PZFY4w+8ny+bUfx0=; b=9DsYGfqkB44bJMw3Jc4sY+S7ingNR9ptF+1HkrZeHUix3jk0G2P5GA9QBUYyyyjDavOZBXfmR
- AGRN2rlofWOBQmJTKyGAx+GTLBwAfRLzS/3v59G0OMxBu29TqPDGFEn
+ bh=b3DJ+UN94pzhqaHjRVPoghHlS3Atsv9dVe93Z+66SE4=; b=73rsMIciHfAM9y1l3JvrXYr88Qe0xLWFfHhawlgR6VZREJwnB4IW2YQkbZDQfGPQSQpSZkbRE
+ BWH1rPM3JzxAifs59J0L7rfeIOoI5MMkNJy4Ul/+eQdctvojq5FbuoG
 X-Mailer: b4 0.14.2
-Message-ID: <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
-Subject: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <20250505-debugfs-rust-v5-2-3e93ce7bb76e@google.com>
+Subject: [PATCH v5 2/4] rust: debugfs: Bind file creation for long-lived Display
 From: Matthew Maurer <mmaurer@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
@@ -77,128 +77,182 @@ Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
 	Matthew Maurer <mmaurer@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Provides an example of using the Rust DebugFS bindings.
+Allows creation of files for references that live forever and lack
+metadata through the `Display` implementation.
+
+The reference must live forever because we do not have a maximum
+lifetime for the file we are creating.
+
+The `Display` implementation is used because `seq_printf` needs to route
+through `%pA`, which in turn routes through Arguments. A more generic
+API is provided later in the series, implemented in terms of this one.
 
 Signed-off-by: Matthew Maurer <mmaurer@google.com>
 ---
- MAINTAINERS                  |  1 +
- samples/rust/Kconfig         | 11 ++++++++
- samples/rust/Makefile        |  1 +
- samples/rust/rust_debugfs.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 73 insertions(+)
+ rust/kernel/debugfs.rs | 132 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 132 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a3b835e427b083a4ddd690d9e7739851f0af47ae..426bcdac025134e20911de8e2cf5c9efb0591814 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7278,6 +7278,7 @@ F:	rust/kernel/devres.rs
- F:	rust/kernel/driver.rs
- F:	rust/kernel/faux.rs
- F:	rust/kernel/platform.rs
-+F:	samples/rust/rust_debugfs.rs
- F:	samples/rust/rust_driver_platform.rs
- F:	samples/rust/rust_driver_faux.rs
+diff --git a/rust/kernel/debugfs.rs b/rust/kernel/debugfs.rs
+index ed1aba6d700d064dbfd7e923dbcbf80b9acf5361..4a138717bd0fdb320033d07446a192c9f520a17b 100644
+--- a/rust/kernel/debugfs.rs
++++ b/rust/kernel/debugfs.rs
+@@ -6,6 +6,7 @@
+ //! C header: [`include/linux/debugfs.h`](srctree/include/linux/debugfs.h)
  
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 43cb72d72631bb2d6e06185e1d88778edff6ee13..6c42ed73f842cda26256039e6917bb443738d3f1 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -51,6 +51,17 @@ config SAMPLE_RUST_DMA
+ use crate::str::CStr;
++use core::fmt::Display;
+ use core::marker::PhantomData;
  
- 	  If unsure, say N.
+ /// Owning handle to a DebugFS entry.
+@@ -46,6 +47,19 @@ unsafe fn from_ptr(entry: *mut bindings::dentry) -> Self {
+         }
+     }
  
-+config SAMPLE_RUST_DEBUGFS
-+	tristate "DebugFS Test Driver"
-+	depends on DEBUG_FS
-+	help
-+	  This option builds the Rust DebugFS Test driver sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_debugfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_DRIVER_PCI
- 	tristate "PCI Driver"
- 	depends on PCI
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 6a466afd2a21eba84a3b7b2be29f25dce44e9053..b1fc4677ed53fcf7d0f5a3dbf322f65851bc1784 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -4,6 +4,7 @@ ccflags-y += -I$(src)				# needed for trace events
- obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
- obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
-+obj-$(CONFIG_SAMPLE_RUST_DEBUGFS)		+= rust_debugfs.o
- obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..a4b17c8241330b2f6caf8f17a5b2366138de6ced
---- /dev/null
-+++ b/samples/rust/rust_debugfs.rs
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2025 Google LLC.
-+
-+//! Sample DebugFS exporting module
-+
-+use core::mem::{forget, ManuallyDrop};
-+use core::sync::atomic::{AtomicU32, Ordering};
-+use kernel::c_str;
-+use kernel::debugfs::Dir;
-+use kernel::prelude::*;
-+
-+module! {
-+    type: RustDebugFs,
-+    name: "rust_debugfs",
-+    authors: ["Matthew Maurer"],
-+    description: "Rust DebugFS usage sample",
-+    license: "GPL",
-+}
-+
-+struct RustDebugFs {
-+    // As we only hold this for drop effect (to remove the directory) we have a leading underscore
-+    // to indicate to the compiler that we don't expect to use this field directly.
-+    _debugfs: Dir<'static>,
-+}
-+
-+static EXAMPLE: AtomicU32 = AtomicU32::new(8);
-+
-+impl kernel::Module for RustDebugFs {
-+    fn init(_this: &'static ThisModule) -> Result<Self> {
-+        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
-+        let debugfs = Dir::new(c_str!("sample_debugfs"));
-+
-+        {
-+            // Create a subdirectory, so "sample_debugfs/subdir" now exists.
-+            // We wrap it in `ManuallyDrop` so that the subdirectory is not automatically discarded
-+            // at the end of the scope - it will be cleaned up when `debugfs` is.
-+            let sub = ManuallyDrop::new(debugfs.subdir(c_str!("subdir")));
-+
-+            // Create a single file in the subdirectory called "example" that will read from the
-+            // `EXAMPLE` atomic variable.
-+            // We `forget` the result to avoid deleting the file at the end of the scope.
-+            forget(sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
-+                writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
-+            }));
-+            // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
++    /// Constructs a new DebugFS [`Entry`] from the underlying pointer.
++    ///
++    /// # Safety
++    ///
++    /// The pointer must either be an error code, `NULL`, or represent a transfer of ownership of a
++    /// live DebugFS directory.
++    #[cfg(not(CONFIG_DEBUG_FS))]
++    unsafe fn from_ptr(_entry: *mut bindings::dentry) -> Self {
++        Self {
++            _phantom: PhantomData,
 +        }
-+
-+        // Change the value in the variable displayed by the file. This is intended to demonstrate
-+        // that the module can continue to change the value used by the file.
-+        EXAMPLE.store(10, Ordering::Relaxed);
-+        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
-+
-+        // Save the root debugfs directory we created to our module object. It will be
-+        // automatically cleaned up when our module is unloaded because dropping the module object
-+        // will drop the `Dir` handle. The base directory, the subdirectory, and the file will all
-+        // continue to exist until the module is unloaded.
-+        Ok(Self { _debugfs: debugfs })
 +    }
++
+     #[cfg(not(CONFIG_DEBUG_FS))]
+     fn new() -> Self {
+         Self {
+@@ -124,6 +138,57 @@ pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b> {
+         Dir::create(name, Some(self))
+     }
+ 
++    /// Create a file in a DebugFS directory with the provided name, and contents from invoking
++    /// [`Display::fmt`] on the provided reference.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// # use kernel::c_str;
++    /// # use kernel::debugfs::Dir;
++    /// let dir = Dir::new(c_str!("my_debugfs_dir"));
++    /// dir.display_file(c_str!("foo"), &200);
++    /// // "my_debugfs_dir/foo" now contains the number 200.
++    /// ```
++    pub fn display_file<'b, T: Display + Sized>(
++        &'b self,
++        name: &CStr,
++        data: &'static T,
++    ) -> File<'b> {
++        // SAFETY:
++        // * `name` is a NUL-terminated C string, living across the call, by `CStr` invariant.
++        // * `parent` is a live `dentry` since we have a reference to it.
++        // * `vtable` is all stock `seq_file` implementations except for `open`.
++        //   `open`'s only requirement beyond what is provided to all open functions is that the
++        //   inode's data pointer must point to a `T` that will outlive it, which we know because
++        //   we have a static reference.
++        #[cfg(CONFIG_DEBUG_FS)]
++        let ptr = unsafe {
++            bindings::debugfs_create_file_full(
++                name.as_char_ptr(),
++                0o444,
++                self.0.as_ptr(),
++                data as *const _ as *mut _,
++                core::ptr::null(),
++                &<T as DisplayFile>::VTABLE,
++            )
++        };
++
++        #[cfg(not(CONFIG_DEBUG_FS))]
++        let ptr = {
++            // Mark parameters used
++            let (_, _) = (name, data);
++            crate::error::code::ENODEV.to_ptr()
++        };
++
++        // SAFETY: `debugfs_create_file_full` either returns an error code or a legal
++        // dentry pointer, and without `CONFIG_DEBUGFS` we return an error pointer, so
++        // `Entry::from_ptr` is safe to call here.
++        let entry = unsafe { Entry::from_ptr(ptr) };
++
++        File(entry)
++    }
++
+     /// Create a new directory in DebugFS at the root.
+     ///
+     /// # Examples
+@@ -137,3 +202,70 @@ pub fn new(name: &CStr) -> Self {
+         Dir::create(name, None)
+     }
+ }
++/// Handle to a DebugFS file.
++#[repr(transparent)]
++pub struct File<'a>(Entry<'a>);
++
++#[cfg(CONFIG_DEBUG_FS)]
++mod helpers {
++    use crate::seq_file::SeqFile;
++    use crate::seq_print;
++    use core::fmt::Display;
++
++    /// Implements `open` for `file_operations` via `single_open` to fill out a `seq_file`.
++    ///
++    /// # Safety
++    ///
++    /// * `inode`'s private pointer must point to a value of type `T` which will outlive the `inode`
++    ///   and will not be mutated during this call.
++    /// * `file` must point to a live, not-yet-initialized file object.
++    pub(crate) unsafe extern "C" fn display_open<T: Display>(
++        inode: *mut bindings::inode,
++        file: *mut bindings::file,
++    ) -> i32 {
++        // SAFETY:
++        // * `file` is acceptable by caller precondition.
++        // * `print_act` will be called on a `seq_file` with private data set to the third argument,
++        //   so we meet its safety requirements.
++        // * The `data` pointer passed in the third argument is a valid `T` pointer that outlives
++        //   this call by caller preconditions.
++        unsafe { bindings::single_open(file, Some(display_act::<T>), (*inode).i_private) }
++    }
++
++    /// Prints private data stashed in a seq_file to that seq file.
++    ///
++    /// # Safety
++    ///
++    /// `seq` must point to a live `seq_file` whose private data is a live pointer to a `T` which is
++    /// not being mutated.
++    pub(crate) unsafe extern "C" fn display_act<T: Display>(
++        seq: *mut bindings::seq_file,
++        _: *mut core::ffi::c_void,
++    ) -> i32 {
++        // SAFETY: By caller precondition, this pointer is live, points to a value of type `T`, and
++        // is not being mutated.
++        let data = unsafe { &*((*seq).private as *mut T) };
++        // SAFETY: By caller precondition, `seq_file` points to a live `seq_file`, so we can lift
++        // it.
++        let seq_file = unsafe { SeqFile::from_raw(seq) };
++        seq_print!(seq_file, "{}", data);
++        0
++    }
++
++    // Work around lack of generic const items.
++    pub(crate) trait DisplayFile: Display + Sized {
++        const VTABLE: bindings::file_operations = bindings::file_operations {
++            read: Some(bindings::seq_read),
++            llseek: Some(bindings::seq_lseek),
++            release: Some(bindings::single_release),
++            open: Some(display_open::<Self> as _),
++            // SAFETY: `file_operations` supports zeroes in all fields.
++            ..unsafe { core::mem::zeroed() }
++        };
++    }
++
++    impl<T: Display + Sized> DisplayFile for T {}
 +}
++
++#[cfg(CONFIG_DEBUG_FS)]
++use helpers::*;
 
 -- 
 2.49.0.967.g6a0df3ecc3-goog
