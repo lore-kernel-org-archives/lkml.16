@@ -1,100 +1,118 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2985214A66
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0728621505C;
+	Mon,  5 May 2025 11:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443675; cv=none; b=RYaLOCi4gblK375JQeqxXmv85kCCxXge+QHk3VdoFlLgRyR2Uetv6LrQisiwFbz9XMxK1R5wV7EdZLBOE5GHFcyI2B0dczpRmG9tdEBmBcLj1nC/ieq9D7MMW306SW8PEQcHX8GOtlMTv/1hhGPwpcK9uwIkdkxe/epCYAZOkh8=
+	t=1746443677; cv=none; b=QG6jqaOgUFRdGouYGyUa/d/+M6acHjGValZKnwBi4RIQyprUTKGFBJRTkt2kXS3F1tKatzJFsSakNjiuV7TP6dxx5RjE0hGeUkoX8LjEsyj59D4kmJdS/b+VfC8Ul8INdhmg5uGDzmi19T6YfzsRjTQ9ZTlDerPKLXS3FuTxHPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443675; c=relaxed/simple;
-	bh=31386Q9Xq2jWeka9KmylJqcLzw/rURQTCXcWBThQ81w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JS/7bZFIoJsfmEng0X7Eywz6bPuycJGGWkr6VNrWAsiZHNBaUgEOo8NcVWPrlTcjYkRXaI/FRUtmSWcoO7+aCQAc/qr9yqM/YcwwgIH9biLkuYyC85yT/GysP4hAs461Jwm9fXEq7DVQ7+nBbyt2QsSaG6XIZT+sS5Ai7jvxTyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=E1HRpI/Q; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746443677; c=relaxed/simple;
+	bh=rojmlNBBYZrLt7jghiEYSsqnznF4z3iX/lIAQtk2wM0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MU0Rp9QdfHHHI14XOhGMSZZRYsRPBAVuETbmR3woHNQKWMBp4zPv38hYvlKlzCJXXCejd29bu78R+3UzDO1td9YbvsPgi0HHFHZexcUrj/EnyI4tsdbZwZ1lfiEa0uh5D1DEdpCpD1IbRihO+LZ0VrfFhh06kIE4ZtHuIymKmCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SszgRe0z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="E1HRpI/Q"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so7912876a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746443672; x=1747048472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxyVQwu31n5AyE1lT6wRJweYjUVMbaBVub5F7yoYO6s=;
-        b=E1HRpI/QzoyanEhkyc+ohXrLx9SsQD1FhdoW39RYj1xBy3cawmS+WJdAdWwwJ9OMP2
-         wl8xz3cglszoj0I+3h4qOTzUp71n+Vq9xPLNweBAqQqeYR/kwZOhnm96uZknirQMHL2n
-         bIjgIAVGdYFK0wgefykp6vK5Kr72h8k09Bq5l1E9kUdYFjUnMrZ0oEFBQ9AUvSJTBLBj
-         sLbFksNyKFdAiZ6aqMIWOfk7LUKblxxZ/1BOatQImQncDU+ssmUyI5vnS2omA/G1Ws0G
-         Q8PjTa6/qej4Xoz9WvJrQuBNtrMCiz6c+RXY4omPndqiPT8yhRVuIRdew+epkViWp4L1
-         73qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746443672; x=1747048472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oxyVQwu31n5AyE1lT6wRJweYjUVMbaBVub5F7yoYO6s=;
-        b=Jdmtbupc2p4+Q0WDsfg+VakJ+JV3/vjMR34AyG/slaTdA7WpwPLcuxFmWSXcaUQbOj
-         LQeeVhxF5CUVd9l2PPEreJNzEG5EjN3WL01do8RzcpPuW6c0aAkJPEEAiFsR6aii8zU5
-         O4eBVhUWOeciUx0s45DhILh489/4OE8pV0Eyw7gelq2aFko6JgqfbpFaCXotJeg0ty/z
-         M2qkGTo/ag8jmFa0KR0J/XcwzIFLFFrLvoXxRreKRXQxLYrAGCfl+0MLRGYBkmUI7kDy
-         GT5MKqVN+vEbD2jyOKjt+L+2m5rLgQs5p72sWkoKm7p1C3YDhL7QLR5R7AHO92uSKcad
-         jQZg==
-X-Gm-Message-State: AOJu0Yz2Uv7xvCM72wkUYCbrXhY/7tESRnDmmE1JOg7GBqTLFFB7+p0B
-	sYNM/fGe9W/O8XPKY+6/k/QhNgj2a+jXxF+jYqdRDdAySUQPvYpsPklQ09qHn/cAU03IjwjZOVJ
-	s
-X-Gm-Gg: ASbGnctbBPRrCOB5HfuNKrRb0OONAkqEwmORB6N2fmzmTRFEia8qpbbNAGpR/V+sSOm
-	eYeC4ZUfFrcUQk+bwiTAf8PV4F+ONRQVWxiIrtuzQMNOliaIeJJLBVvrFMXDWH5xHUwD0/Hc52M
-	jZ3XVHFOIl+m4ErnOJjX7a0iQQwm2tbiFwgoJVm1yFjCdAVIil3At7xLR8wEDocURemz6Bk81OE
-	7nzkt/wP/RjyNfqpWhho0/pbuoFOLdc99dg4OFERYs7YYRM+adP3BsS7NAKtGo7we3fnvOrokSX
-	YFRR3YePIKwGJm0xczNxgOMNWRJOUgEtwtho+oPgkSvu/lyVYywKeHMcBqW/Pw==
-X-Google-Smtp-Source: AGHT+IEY8aqXbYBLDZiTilbQnt6X/mi2qWeyrxpS5qbbbq9HNaF4GXXdRcoD2qvHmt8Oju9+Mnx6yQ==
-X-Received: by 2002:a17:906:730e:b0:ac3:853e:4345 with SMTP id a640c23a62f3a-ad1a4a8da9amr527831266b.45.1746443671987;
-        Mon, 05 May 2025 04:14:31 -0700 (PDT)
-Received: from localhost.localdomain ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77755777sm5263348a12.6.2025.05.05.04.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 04:14:31 -0700 (PDT)
-Date: Mon, 5 May 2025 13:14:29 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v4 20/20] ratelimit: Drop redundant accesses to burst
-Message-ID: <aBidlTlYPSpi1mBd@localhost.localdomain>
-References: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
- <20250430010524.3614408-20-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SszgRe0z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E37C4CEF0;
+	Mon,  5 May 2025 11:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746443676;
+	bh=rojmlNBBYZrLt7jghiEYSsqnznF4z3iX/lIAQtk2wM0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SszgRe0zrZSr2t80U13WkrI0JWgmcYYPbL5sU/R1e12T+bsyZoiQJwHstcyZnQHcW
+	 U1uEsNSB4KI65GyeZY8BA2qPnkOnJPxxGLQnt7eP4nj/vX11Z29IIj7WxrBsRBRlW9
+	 ufIQR44FIMUcQkC4SYH9Wyel4BfguQPKM1PVMA8RLZKqZSzX46NPBf4ykUw9mGzcFE
+	 qXZTrJRxXXWC1mek7gtzRAQBbzuBSuLlkngKJrERJcAJq1C9GOKGHlW12MnZiySJeC
+	 DnfIoM7omU6HsKNhmoH4rr7SJoF1eWvFBw+oT1wOUZDwC8b2FIdzUNmIliBzpfMo3P
+	 KKb2CJVzTMY/Q==
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 05 May 2025 13:13:47 +0200
+Subject: [PATCH RFC v3 09/10] selftests/pidfd: add PIDFD_INFO_COREDUMP
+ infrastructure
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430010524.3614408-20-paulmck@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-work-coredump-socket-v3-9-e1832f0e1eae@kernel.org>
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+In-Reply-To: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+To: Eric Dumazet <edumazet@google.com>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, 
+ linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Daan De Meyer <daan.j.demeyer@gmail.com>, 
+ David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, 
+ Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>, 
+ Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Christian Brauner <brauner@kernel.org>, 
+ Alexander Mikhalitsyn <alexander@mihalicyn.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1355; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=rojmlNBBYZrLt7jghiEYSsqnznF4z3iX/lIAQtk2wM0=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRIzM1jZX8cxWGz6MGqA3KuJ68Hp73o0Ph5ojLo+qMi9
+ 2V+90RdO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbSPImRoUEq7PKWdrFwBpmz
+ +bu3rzh/+17O7C/lCa9+Bm+SXuFR+I7hr8gLe4PU+ry9f5ucXu1NOGTzdeOt/WFXv7Z+WLTD95n
+ pWkYA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-On Tue 2025-04-29 18:05:24, Paul E. McKenney wrote:
-> Now that there is the "burst <= 0" fastpath, for all later code, burst
-> must be strictly greater than zero.  Therefore, drop the redundant checks
-> of this local variable.
-> 
-> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
-> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Add PIDFD_INFO_COREDUMP infrastructure so we can use it in tests.
 
-Looks good to me:
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ tools/testing/selftests/pidfd/pidfd.h | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
+index 55bcf81a2b9a..6e812c3afca4 100644
+--- a/tools/testing/selftests/pidfd/pidfd.h
++++ b/tools/testing/selftests/pidfd/pidfd.h
+@@ -131,6 +131,26 @@
+ #define PIDFD_INFO_EXIT			(1UL << 3) /* Always returned if available, even if not requested */
+ #endif
+ 
++#ifndef PIDFD_INFO_COREDUMP
++#define PIDFD_INFO_COREDUMP		(1UL << 4)
++#endif
++
++#ifndef PIDFD_COREDUMPED
++#define PIDFD_COREDUMPED	(1U << 0) /* Did crash and... */
++#endif
++
++#ifndef PIDFD_COREDUMP_SKIP
++#define PIDFD_COREDUMP_SKIP	(1U << 1) /* coredumping generation was skipped. */
++#endif
++
++#ifndef PIDFD_COREDUMP_USER
++#define PIDFD_COREDUMP_USER	(1U << 2) /* coredump was done as the user. */
++#endif
++
++#ifndef PIDFD_COREDUMP_ROOT
++#define PIDFD_COREDUMP_ROOT	(1U << 3) /* coredump was done as root. */
++#endif
++
+ #ifndef PIDFD_THREAD
+ #define PIDFD_THREAD O_EXCL
+ #endif
+@@ -150,6 +170,8 @@ struct pidfd_info {
+ 	__u32 fsuid;
+ 	__u32 fsgid;
+ 	__s32 exit_code;
++	__u32 coredump_mask;
++	__u32 __spare1;
+ };
+ 
+ /*
 
-Best Regards,
-Petr
+-- 
+2.47.2
+
