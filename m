@@ -1,53 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93B437BE28;
-	Mon,  5 May 2025 22:59:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE3037644A;
+	Mon,  5 May 2025 22:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485973; cv=none; b=aSpwHIV6yNV3z7y/qMCEc6H4fsZU4vfSc7odKQllK4y8dDHpsO/JJ6W8pMPODs3vYEYSKMoXLISdGzjr8H4wqv3OYuD7gpKjicVW+1O4o+TjrvhrFZ2x2Y5XUjPnU43VzYkoARxZWEbIo6ac4DgcHSAXSDOHpsBDEFZPz1qwM9Q=
+	t=1746485988; cv=none; b=Xosf46ckpCvlLxYo1lNc9ZfQHWNmg/fBBx4r0RC39SdyscPj2Fy6jvM0JMk9U2vwjj/HrHFKrBGnunu74LkZumORCYwTwEsRLVu9ohEIdumzBd4TenZiZYqRxaVoaCFGwJ0Ny2JcHhOliER741K0POq/aiuLaIyxFFUGk3lFcfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485973; c=relaxed/simple;
-	bh=sggkn5Buws6iQxZ0z5gA8d/UmGBYOyuOaEJ/3vTAaBs=;
+	s=arc-20240116; t=1746485988; c=relaxed/simple;
+	bh=wRlgtUevqMElDfA1JrkyqCdvrsKyxqffpyjyC2gQpGs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EO2JrUqa6eub7Q/lFWrhBZdaEFN8zThW2F6eh0+GVAdTeELiF2anaAg+0ZokqaITkkzpEQ1By654GkubHduvNBCLneQ1Ggsm1WOO9MIbvB7fuUQDc44aEaLw1SQy3f9rx0xGzP47EkkXKEgFom/22Cc77rPxCGnLMaz/3CXrF3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4eGLx0z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jGtLp9W6XAmsSgk3z29IAXl+MFRVdUXjLHbb8qpdzyxCMxyo+e1AFTg5FX9TaNcoNdJQgO8cfOcMwKeX6zhSiBz9DMSv+JVoM7ByyIubQJ8NZAqMJSPwR5WzUrVWyls0N339F7VNloqFlICBENgjbIyCWcLH6vCOa4jiw4zRGZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEl/eZdO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4eGLx0z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7117C4CEE4;
-	Mon,  5 May 2025 22:59:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEl/eZdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BE0C4CEED;
+	Mon,  5 May 2025 22:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485972;
-	bh=sggkn5Buws6iQxZ0z5gA8d/UmGBYOyuOaEJ/3vTAaBs=;
+	s=k20201202; t=1746485987;
+	bh=wRlgtUevqMElDfA1JrkyqCdvrsKyxqffpyjyC2gQpGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c4eGLx0zUEZJqpsqlUH/hPm9GBaYAq7xOW4pAhjGwDQZWkUONoieiA4aoYDSYIAIm
-	 6/XD+xnnRlCBjcnxJxU7N9/JJ7Mzl5fHRhEdxBBoFZYhx+pdG/wP/tHfH2h+qPl2eK
-	 J9sNE/KHeKYVLJzHH/VYQIq3sBskyL4+A+HGzOIvOcokJrNcsjSEI/+2eszUU5Glzj
-	 23XfDIB5POCDJCzbnnTD0yWJQlJ4u4h93cSr+c70ui5JXlY7UYGmDwCUnLl/KiV9km
-	 Lz4+j8keZNJknJUdyGrf8Asoray+AxWIDV+UTcaK+xbzHQa43fFhxlxuiUHA9t6SUh
-	 Jc49okJTWEqCA==
+	b=pEl/eZdOch2KiUWW7Y0JkoNkYdPBHhfBV0h61jCipol8G40XdcJXAJi3xL9m+GmQc
+	 sdxd732/zH+pyjQWIrmIDXQN3zBYmtvvRQZ29LOj0I83S90Uj0aa4VHYbOSFei8IKz
+	 bMuhGUbHb9S3AhWeOb/ypf11Pk78ZwBH2oxdNc1eYJOFM4DdCQVu07jzrpE0Cme/0U
+	 e3JR+Ffcn3+1K9GtOhOlz73+9eq3uVbz8tUv2v1mr/ZserFHbSSzhy3niGhSWEl/cs
+	 xZNz1s8GKk3bvtpgxX2TTqsmtQlsVDO7SSxk5NIyXGXk4aHxiboJdr9wLAFEORCaCl
+	 BSlaAec4CCRUw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Charlene Liu <Charlene.Liu@amd.com>,
-	Ovidiu Bunea <ovidiu.bunea@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Alexey Klimov <alexey.klimov@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	alex.hung@amd.com,
-	chris.park@amd.com,
-	Jing.Zhou@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 093/294] drm/amd/display: remove minimum Dispclk and apply oem panel timing.
-Date: Mon,  5 May 2025 18:53:13 -0400
-Message-Id: <20250505225634.2688578-93-sashal@kernel.org>
+	srini@kernel.org,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 098/294] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
+Date: Mon,  5 May 2025 18:53:18 -0400
+Message-Id: <20250505225634.2688578-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -62,69 +56,46 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Charlene Liu <Charlene.Liu@amd.com>
+From: Alexey Klimov <alexey.klimov@linaro.org>
 
-[ Upstream commit 756e58e83e89d372b94269c0cde61fe55da76947 ]
+[ Upstream commit 89be3c15a58b2ccf31e969223c8ac93ca8932d81 ]
 
-[why & how]
-1. apply oem panel timing (not only on OLED)
-2. remove MIN_DPP_DISP_CLK request in driver.
+Setting format to s16le is required for compressed playback on compatible
+soundcards.
 
-This fix will apply for dcn31x but not
-sync with DML's output.
-
-Reviewed-by: Ovidiu Bunea <ovidiu.bunea@amd.com>
-Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
-Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+Link: https://patch.msgid.link/20250228161430.373961-1-alexey.klimov@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c | 2 --
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c | 2 --
- drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c    | 3 ++-
- 3 files changed, 2 insertions(+), 5 deletions(-)
+ sound/soc/qcom/sm8250.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-index ebeb969ee180b..327776eeb9f3e 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-@@ -194,8 +194,6 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
- 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
- 	if (new_clocks->dppclk_khz < MIN_DPP_DISP_CLK)
- 		new_clocks->dppclk_khz = MIN_DPP_DISP_CLK;
--	if (new_clocks->dispclk_khz < MIN_DPP_DISP_CLK)
--		new_clocks->dispclk_khz = MIN_DPP_DISP_CLK;
+diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
+index 88a7169336d61..580eb20b0771a 100644
+--- a/sound/soc/qcom/sm8250.c
++++ b/sound/soc/qcom/sm8250.c
+@@ -7,6 +7,7 @@
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+ #include <sound/pcm.h>
++#include <sound/pcm_params.h>
+ #include <linux/soundwire/sdw.h>
+ #include <sound/jack.h>
+ #include <linux/input-event-codes.h>
+@@ -39,9 +40,11 @@ static int sm8250_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+ 					SNDRV_PCM_HW_PARAM_RATE);
+ 	struct snd_interval *channels = hw_param_interval(params,
+ 					SNDRV_PCM_HW_PARAM_CHANNELS);
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
  
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-index 6f1785715dfb7..f95e5e767eb1a 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-@@ -201,8 +201,6 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
- 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
- 	if (new_clocks->dppclk_khz < 100000)
- 		new_clocks->dppclk_khz = 100000;
--	if (new_clocks->dispclk_khz < 100000)
--		new_clocks->dispclk_khz = 100000;
+ 	rate->min = rate->max = 48000;
+ 	channels->min = channels->max = 2;
++	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
  
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
-diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-index 7b5c1498941dd..d389eeb264a79 100644
---- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_hw_sequencer.c
-@@ -1066,7 +1066,8 @@ void dce110_edp_backlight_control(
- 			DC_LOG_DC("edp_receiver_ready_T9 skipped\n");
- 	}
- 
--	if (!enable && link->dpcd_sink_ext_caps.bits.oled) {
-+	if (!enable) {
-+		/*follow oem panel config's requirement*/
- 		pre_T11_delay += link->panel_config.pps.extra_pre_t11_ms;
- 		msleep(pre_T11_delay);
- 	}
+ 	return 0;
+ }
 -- 
 2.39.5
 
