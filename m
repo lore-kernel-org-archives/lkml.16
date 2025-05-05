@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14B33B17B3;
-	Mon,  5 May 2025 23:20:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432D23B0A3E;
+	Mon,  5 May 2025 23:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487238; cv=none; b=Lej0t2M/qe972td1ogtrfp7Xeh0YLC1X3hgqX95Kh0MpPO9aGiu9Nz/uo35O366+w+ksXZZwhW/P/bfgvybl0ZKC3Sf4Hz8vxe4pH0wFcPtCxWeBW0MF4SeVmaCFgZ+A8+vdV1I0er+Sik1NZgOIRHXTw/U10PFkWh0IJdM3pqE=
+	t=1746487229; cv=none; b=vGdDCEbI1m5p04sCos22bPLVw5+o/t+AAN9rQQ4Mjh/Dw1JH19QpVDEAXUkupqWenAJF4noWmdtNsCQot/73iDfoQRL+sXIGxXsfA/1PzH58x3jfPrl2wEF5vxOjkbAC2skRla24M05ZaG1k4slTW5Hm6MxExcFlB0152DfBJhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487238; c=relaxed/simple;
-	bh=tDPijMvbFsAcZE2DvqvsdCMfLeYudAhUOKql4UUWu34=;
+	s=arc-20240116; t=1746487229; c=relaxed/simple;
+	bh=EN81QPux/HHw4XxXuGfxXKweBwKPWgbd+dJOfL4ZrXo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eAT39qFQ0PRygJfwKR9yYkbIEPwmRBVig3+QMq7PQ+cnfcA35zPziZu7CjJgu3qLACJxe9bGAatDTiXsTzxol0I6F8GmCbmZ0jbfqshzd9yoexYWI6BmcQgYMvOsgLp0S85Dxg6ITgrquvps7cTvRIl7aBGODy2EI/f68mECLYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdtMqFhi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u/Fobp904dxCBZbBCQjW8WrCi2eNAeX8sScZUyf9vRYB7ONbuAsz9qiKr0z6afZCrzD5NVYFQCb9aJB13RPLSx1/N5epik50cWzLkvyAkkkuFTFXHAQ/wekkIexi/N0GG3HCF2SvZ3EBe/KsMZRDGk+sxKxXuGmfzTQVZIgZvP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fktVNGKm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdtMqFhi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0E7C4CEEE;
-	Mon,  5 May 2025 23:20:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fktVNGKm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A63AFC4CEED;
+	Mon,  5 May 2025 23:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487237;
-	bh=tDPijMvbFsAcZE2DvqvsdCMfLeYudAhUOKql4UUWu34=;
+	s=k20201202; t=1746487227;
+	bh=EN81QPux/HHw4XxXuGfxXKweBwKPWgbd+dJOfL4ZrXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OdtMqFhivneYdunhHn1Wwv7DMl0f73yAdTZBJQiEpqB4AWn54Mo+3ESh6H5l9O+cK
-	 vrPq2IQveUJo9yRWPjMd99F20YEAgpoQzBef0C4PdnsL88gc2HxbOYlqMyGl8R58Ya
-	 C8FYneZS8T7hDMxzgpo4bMg20Tta2B9GbYD8JxQ6XpyED0o1Ay8DgUjPS74Pqkmb7a
-	 vIBSNcPA85CrALStzV8kkEwKA4PVm37UqPpzr80mCNxcuMRRn8F2Hp+me1Y2B/ulaS
-	 I5K309cg70S1vo1kF9drq5BNUjABcDGVZAT8VG5IQR7l7UzZy0LCfHCknf1sEpSWEh
-	 LPEp3I0svBZHw==
+	b=fktVNGKm7NAbMT1TQQYfJekXuQCV9Cqq3LoqWIqBmfXC3t0aqyATOob8X73nB93/k
+	 gBH3MVyJAzN/ApNnMuI7XAk/W/jmfffJ0lQNwIbzrVm317CQ2xqaQdDt6GmK19MCmk
+	 L4euM0GxVQhdrY0TyRPhODhsL1ua+BvZf9pp2rZqGq9crTvUXzwe3YsifLV4bdXNeo
+	 TW+x/Slf2dDa6stpIHURKgsfXKChZxH6z1LHT/c7uraP4TURGD9Q+I3jMLWwxH8tOJ
+	 k1nWbiTOKZ7QfUSZvM9UGzbOINQo4FDV2UKwgBgp4P5Gpgb8Rkrp0dCsENCOh3tXvn
+	 JxFudQqF0wOew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 072/114] wifi: rtw88: Fix rtw_init_vht_cap() for RTL8814AU
-Date: Mon,  5 May 2025 19:17:35 -0400
-Message-Id: <20250505231817.2697367-72-sashal@kernel.org>
+	rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 066/114] cpuidle: menu: Avoid discarding useful information
+Date: Mon,  5 May 2025 19:17:29 -0400
+Message-Id: <20250505231817.2697367-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -50,66 +54,63 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 6be7544d19fcfcb729495e793bc6181f85bb8949 ]
+[ Upstream commit 85975daeaa4d6ec560bfcd354fc9c08ad7f38888 ]
 
-Set the MCS maps and the highest rates according to the number of
-spatial streams the chip has. For RTL8814AU that is 3.
+When giving up on making a high-confidence prediction,
+get_typical_interval() always returns UINT_MAX which means that the
+next idle interval prediction will be based entirely on the time till
+the next timer.  However, the information represented by the most
+recent intervals may not be completely useless in those cases.
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/e86aa009-b5bf-4b3a-8112-ea5e3cd49465@gmail.com
+Namely, the largest recent idle interval is an upper bound on the
+recently observed idle duration, so it is reasonable to assume that
+the next idle duration is unlikely to exceed it.  Moreover, this is
+still true after eliminating the suspected outliers if the sample
+set still under consideration is at least as large as 50% of the
+maximum sample set size.
+
+Accordingly, make get_typical_interval() return the current maximum
+recent interval value in that case instead of UINT_MAX.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+Tested-by: Christian Loehle <christian.loehle@arm.com>
+Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Link: https://patch.msgid.link/7770672.EvYhyI6sBW@rjwysocki.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ drivers/cpuidle/governors/menu.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 91eea38f62cd3..ea70b55150388 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1175,8 +1175,9 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
- 			     struct ieee80211_sta_vht_cap *vht_cap)
- {
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
--	u16 mcs_map;
-+	u16 mcs_map = 0;
- 	__le16 highest;
-+	int i;
- 
- 	if (efuse->hw_cap.ptcl != EFUSE_HW_CAP_IGNORE &&
- 	    efuse->hw_cap.ptcl != EFUSE_HW_CAP_PTCL_VHT)
-@@ -1199,21 +1200,15 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
- 	if (rtw_chip_has_rx_ldpc(rtwdev))
- 		vht_cap->cap |= IEEE80211_VHT_CAP_RXLDPC;
- 
--	mcs_map = IEEE80211_VHT_MCS_SUPPORT_0_9 << 0 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 4 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 6 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 8 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 10 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 12 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 14;
--	if (efuse->hw_cap.nss > 1) {
--		highest = cpu_to_le16(780);
--		mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << 2;
--	} else {
--		highest = cpu_to_le16(390);
--		mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << 2;
-+	for (i = 0; i < 8; i++) {
-+		if (i < efuse->hw_cap.nss)
-+			mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
-+		else
-+			mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
- 	}
- 
-+	highest = cpu_to_le16(390 * efuse->hw_cap.nss);
+diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
+index b0a7ad566081a..a95cc8f024fde 100644
+--- a/drivers/cpuidle/governors/menu.c
++++ b/drivers/cpuidle/governors/menu.c
+@@ -249,8 +249,19 @@ static unsigned int get_typical_interval(struct menu_device *data,
+ 	 * This can deal with workloads that have long pauses interspersed
+ 	 * with sporadic activity with a bunch of short pauses.
+ 	 */
+-	if ((divisor * 4) <= INTERVALS * 3)
++	if (divisor * 4 <= INTERVALS * 3) {
++		/*
++		 * If there are sufficiently many data points still under
++		 * consideration after the outliers have been eliminated,
++		 * returning without a prediction would be a mistake because it
++		 * is likely that the next interval will not exceed the current
++		 * maximum, so return the latter in that case.
++		 */
++		if (divisor >= INTERVALS / 2)
++			return max;
 +
- 	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
- 	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
- 	vht_cap->vht_mcs.rx_highest = highest;
+ 		return UINT_MAX;
++	}
+ 
+ 	thresh = max - 1;
+ 	goto again;
 -- 
 2.39.5
 
