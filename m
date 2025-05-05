@@ -1,124 +1,123 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4323.protonmail.ch (mail-4323.protonmail.ch [185.70.43.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC6826B95A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FBD1AA1C4;
+	Mon,  5 May 2025 19:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746472268; cv=none; b=kWsc0QAxyQObSnTSPxhHFJhDyvwCCUkfhEOwGAZH8Em9fvlCy7OYR8BgedcNjwmWmCIbhCwT0HasILmi7om8t7Qy+oOvVgn59gmZ0uv52AxWPR1LXaNvUxdHAnZvf6qcNhXPHkKu9geulFUBboNEiGEtZ6Zgj64vXD/Q4nWHETI=
+	t=1746472342; cv=none; b=QHoNPazmp7OLhl4YeWZF3e7HuPN6TMcT8IaWKUknw1eCfV67yo6KGvleL5vV3P8Td3PcnF67E2AW2Maw/1udw0mcFi9UzikjvypaPwb611sjqHXOTgwop4I//+nGU+LOPF1+9F1qUY8lS3/l9RlEoes41YKgyvR2oTwNLKouvJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746472268; c=relaxed/simple;
-	bh=pAknAznVkP3PWsitz4sVuSAnL0zOvo9smehn1BcwQ1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kznt4O7Mawp80bovyl60eAKPUHjfkgtVXjsoYeDY9dslDuoPTpFZultHDdiTAujRywV/ratUnPrUlcPifJ3ukNpNKdaRXvaDmDSOxC46MSItvkd2uIvXY+EGG5YM1roI3dqVlUZCPU9CdZVExPffaf28Et8Xpw/P0iP1TsCZiTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VCeLJmEz; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746472342; c=relaxed/simple;
+	bh=/OPNapK5a9EqWjgAwkaREoBGWHHOUEuMwasVwSdqBq0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F8E8AZ7adGfMTXEfJ0GgX93pJaRCKYWOOK+pnideSm/urY2e0M6aK99L2HRw6tgQPSQPPvRwqpUYVivvYAm6t8yCrMkoXvtWK3cF+74X+4vt9T219dUsAbcdYNS7e/jX/E0bc0wn6gDcZel6SrX0bmAa6JfCqDvuOWhhtEvc2xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=Xu+34Rkh; arc=none smtp.client-ip=185.70.43.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VCeLJmEz"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so2193a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746472265; x=1747077065; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pAknAznVkP3PWsitz4sVuSAnL0zOvo9smehn1BcwQ1c=;
-        b=VCeLJmEzjLMcoftheRs6vqqfe9m4EIvfehn/xh0U/kj0TlpbHlPyptrGmueT7EcCkw
-         65aIUkBufPiF+K2PSwh35Bcc595rwVJ4Oq6fC+201YWNIziFAVUFSonKLzuPdo6mQACH
-         fNydJkHYG6dQwijWrsxxTi2coNFv3twHpII/jHpW43avtS7DdoeVfcJpC5ifGmRAR7gm
-         oXYQsuSqihwG2fIw0r/ET05AYgNW2vdocSnoaQBno9WXK07vnBEQz+lM5lb68SN6k9RG
-         EqNFEKN6EUg1VVyK6FuXHS0xtQWR+ikPP4bFq5Ir3Y7DWy/ZsYp7IuTkBZxpcrwB+lrh
-         nmBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746472265; x=1747077065;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pAknAznVkP3PWsitz4sVuSAnL0zOvo9smehn1BcwQ1c=;
-        b=tRw1QVg0kXmmfwFdoACuWQH/7b0+AMzj7ghp9TonuPVfV+ngb64G37v8Uio21Y/KFY
-         QkAwlub7Tb2uo6GI8ZlpI82UJphaQWNXxsCPuxBSmvVKb/CwTKikbmnZRI5deUIVN9z+
-         0a/HjoN01RGqOFwGBcGe52Yfk9XLVm+s0Wyt7nSv0q3iooh7fCBL6HC1p7lnDc7hdUcg
-         7mOW9iltTkvD3RJvnnjs5zwwxjyrlODaV0LjGxinvI9/9rEyVuNqKyUhVi/g6u8KeFdv
-         ch2BTpBQ1WSyFrRrPv4xpKg8ko/hp0IQD+65n2+lelHc6rkDjJnpmUbABFvut6ANAyE6
-         XiOg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1/2PuajEP4SUKJ2bD5Q2Za3YG4XMuWCr0khum0y8CspDLuU64+e7SWTbJS1aN6grmwY4S8VRELlXmSqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/wu149O6Xo1xZ8t3onSNl4Od16I/sXmOuWPNf5wCPTGVLfaoI
-	jvd3Tnw3N37bog4BTELPYs0yUTFkdcRnoLg94er6UFLjDDHAIr6p9k8p3uCDdq357t5Gsj+mzPQ
-	6nA7YmvUlK/P8v5ihDftq64gbRh/wL5LwuAZW
-X-Gm-Gg: ASbGncui/n+2VKS9Soc+SxUyOTriimDdBKXqV864I/sfG/I8upWEXDCB8JqGtxnpM/9
-	DbREs/fs/EjT8DXSOw+jvNJwPn2rABukUYI2mlW8455Q2d7+ykChWis6sMggpSrV8LYn1EgiIli
-	D8l9rrFe42sOpSn1WkGM87K+/XADHniSRw9djJGD8ErayqdV4zrg==
-X-Google-Smtp-Source: AGHT+IGwZGxg96ElZslVmbfeSZeSCp6jF1H2BA5MmcSCrGlICW244/v/lyYSx0dACBSYjKs0D1e/Y5tW6omcN2BLXPI=
-X-Received: by 2002:a05:6402:c92:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-5fb6e6182eamr7154a12.7.1746472264493; Mon, 05 May 2025 12:11:04
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Xu+34Rkh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1746472330; x=1746731530;
+	bh=4yUp66nZbz1hUGe3Po3KsCfVeHTtvoxO0pMNffShCFk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=Xu+34RkhVDBgw8Eo0sGeuOr2sQb3l6N6v3IgPD3z5RnYu27/pAUARqxnvy0e7Mh7w
+	 XB5/YaeYwp/Vxsq/awUrgIou89ID9nXfiPkB5XbAonAiTf6FAaMNIagH4TExNnaGdX
+	 T1gpWRlAsgpf9F16PTpQ6ytxrwG15S6VddW+55v+INyWt7k1gAvMOu69dGqNaf1L9a
+	 aWks3kZYD2GPFgFo/uHlW8Ai+ak+MGV9Y9U/+9A4KcbNAtYbbFJORKtLu+T5wHaWDv
+	 p/f60Yd8t+FwnxB2yjg/mxEIZskCLynqBAMMisqI87y2G95QrOC565EapOWO6fCGSh
+	 6m5HCrGNqBaVA==
+Date: Mon, 05 May 2025 19:12:06 +0000
+To: Jonathan Cameron <jic23@kernel.org>
+From: Sean Nyekjaer <sean@geanix.com>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] iio: accel: fxls8962af: Fix temperature calculation
+Message-ID: <yvr7n54vmlzvzj3ro2fd5d6r2p6bkyynwmb374wifufixhnkl2@nmhzcge42d7m>
+In-Reply-To: <20250505175120.40076227@jic23-huawei>
+References: <20250505-fxls-v3-0-8c541bf0205c@geanix.com> <20250505-fxls-v3-1-8c541bf0205c@geanix.com> <20250505175120.40076227@jic23-huawei>
+Feedback-ID: 134068486:user:proton
+X-Pm-Message-ID: fee163ae75cc5880a1ca6f196d8c84df46f2b7bb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-dompteur-hinhalten-204b1e16bd02@brauner> <20250505184136.14852-1-kuniyu@amazon.com>
-In-Reply-To: <20250505184136.14852-1-kuniyu@amazon.com>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 5 May 2025 21:10:28 +0200
-X-Gm-Features: ATxdqUGIZsct8Z3NMZ5k4I15ZXbUNsHbBRTzP0WkqnCmU97QaFVoUgE4Cb_ED7A
-Message-ID: <CAG48ez35FN6ka4QtrNQ6aKEycQBOpJKy=VyhQDzKTwey+4KOMg@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping
- tasks to connect to coredump socket
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: brauner@kernel.org, alexander@mihalicyn.com, bluca@debian.org, 
-	daan.j.demeyer@gmail.com, davem@davemloft.net, david@readahead.eu, 
-	edumazet@google.com, horms@kernel.org, jack@suse.cz, kuba@kernel.org, 
-	lennart@poettering.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, me@yhndnzj.com, netdev@vger.kernel.org, 
-	oleg@redhat.com, pabeni@redhat.com, viro@zeniv.linux.org.uk, 
-	zbyszek@in.waw.pl
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 8:41=E2=80=AFPM Kuniyuki Iwashima <kuniyu@amazon.com=
-> wrote:
-> From: Christian Brauner <brauner@kernel.org>
-> Date: Mon, 5 May 2025 16:06:40 +0200
-> > On Mon, May 05, 2025 at 03:08:07PM +0200, Jann Horn wrote:
-> > > On Mon, May 5, 2025 at 1:14=E2=80=AFPM Christian Brauner <brauner@ker=
-nel.org> wrote:
-> > > > Make sure that only tasks that actually coredumped may connect to t=
-he
-> > > > coredump socket. This restriction may be loosened later in case
-> > > > userspace processes would like to use it to generate their own
-> > > > coredumps. Though it'd be wiser if userspace just exposed a separat=
-e
-> > > > socket for that.
-> > >
-> > > This implementation kinda feels a bit fragile to me... I wonder if we
-> > > could instead have a flag inside the af_unix client socket that says
-> > > "this is a special client socket for coredumping".
+On Mon, May 05, 2025 at 05:51:20PM +0100, Jonathan Cameron wrote:
+> On Mon, 05 May 2025 08:20:19 +0200
+> Sean Nyekjaer <sean@geanix.com> wrote:
+>=20
+> > According to spec temperature should be returned in milli degrees Celsi=
+us.
+> > Add in_temp_scale to calculate from Celsius to milli Celsius.
 > >
-> > Should be easily doable with a sock_flag().
->
-> This restriction should be applied by BPF LSM.
+> > Fixes: a3e0b51884ee ("iio: accel: add support for FXLS8962AF/FXLS8964AF=
+ accelerometers")
+> > Cc: stable@vger.kernel.org
+> > Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+> See below.
+>=20
+> > ---
+> >  drivers/iio/accel/fxls8962af-core.c | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/fxls8962af-core.c b/drivers/iio/accel/fx=
+ls8962af-core.c
+> > index bf1d3923a181798a1c884ee08b62d86ab5aed26f..27165a14a4802bdecd9a89c=
+38c6cda294088c5c8 100644
+> > --- a/drivers/iio/accel/fxls8962af-core.c
+> > +++ b/drivers/iio/accel/fxls8962af-core.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/types.h>
+> > +#include <linux/units.h>
+> >
+> >  #include <linux/iio/buffer.h>
+> >  #include <linux/iio/events.h>
+> > @@ -439,8 +440,16 @@ static int fxls8962af_read_raw(struct iio_dev *ind=
+io_dev,
+> >  =09=09*val =3D FXLS8962AF_TEMP_CENTER_VAL;
+> >  =09=09return IIO_VAL_INT;
+> >  =09case IIO_CHAN_INFO_SCALE:
+> > -=09=09*val =3D 0;
+> > -=09=09return fxls8962af_read_full_scale(data, val2);
+> > +=09=09switch (chan->type) {
+> > +=09=09case IIO_TEMP:
+> > +=09=09=09*val =3D 2 * MSEC_PER_SEC;
+>=20
+> For a temperature?   Andy was referring to that particular units.h
+> define for a the delay that happened to be below the code you were changi=
+ng
+> in v1 not this one!  Here we have MILLIDEGREE_PER_DEGREE defined.
+>=20
 
-I think we shouldn't allow random userspace processes to connect to
-the core dump handling service and provide bogus inputs; that
-unnecessarily increases the risk that a crafted coredump can be used
-to exploit a bug in the service. So I think it makes sense to enforce
-this restriction in the kernel.
+Oops, sorry :/ Will do a v4
 
-My understanding is that BPF LSM creates fairly tight coupling between
-userspace and the kernel implementation, and it is kind of unwieldy
-for userspace. (I imagine the "man 5 core" manpage would get a bit
-longer and describe more kernel implementation detail if you tried to
-show how to write a BPF LSM that is capable of detecting unix domain
-socket connections to a specific address that are not initiated by
-core dumping.) I would like to keep it possible to implement core
-userspace functionality in a best-practice way without needing eBPF.
+> > +=09=09=09return IIO_VAL_INT;
+> > +=09=09case IIO_ACCEL:
+> > +=09=09=09*val =3D 0;
+> > +=09=09=09return fxls8962af_read_full_scale(data, val2);
+> > +=09=09default:
+> > +=09=09=09return -EINVAL;
+> > +=09=09}
+> >  =09case IIO_CHAN_INFO_SAMP_FREQ:
+> >  =09=09return fxls8962af_read_samp_freq(data, val, val2);
+> >  =09default:
+> > @@ -736,6 +745,7 @@ static const struct iio_event_spec fxls8962af_event=
+[] =3D {
+> >  =09.type =3D IIO_TEMP, \
+> >  =09.address =3D FXLS8962AF_TEMP_OUT, \
+> >  =09.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) | \
+> > +=09=09=09      BIT(IIO_CHAN_INFO_SCALE) | \
+> >  =09=09=09      BIT(IIO_CHAN_INFO_OFFSET),\
+> >  =09.scan_index =3D -1, \
+> >  =09.scan_type =3D { \
+> >
+>=20
 
-> It's hard to loosen such a default restriction as someone might
-> argue that's unexpected and regression.
-
-If userspace wants to allow other processes to connect to the core
-dumping service, that's easy to implement - userspace can listen on a
-separate address that is not subject to these restrictions.
