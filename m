@@ -1,40 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131E12D47CD;
-	Mon,  5 May 2025 22:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4022D47D4;
+	Mon,  5 May 2025 22:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485641; cv=none; b=gkJQ16uLKlNjOMRfFq91sOE2l+7SJEvwfDpWCQwDk7IeijRtexbkwb0ELN71FV187MsFo0qhz4yKf6kxkYadPopcTNkCxWKx3g/uWdCyBF/SV9wt36rQZHvnt/wxTIArBSviNBeHPIRhp46Rg4KN9Brco2aNvKqHGVtqNRfBnWc=
+	t=1746485647; cv=none; b=QtaFD20fycSacrBEgAxrJClQt/3BoIuewQRFh9Xulhqq36BLsp4pLjToA1Zly3WYC6D9mPqEVzgy6CHMt99Fq2C06+4ih9x+HDjA6Hc7FNIRLZV7EgO7A0j82x+XRXPy3UB2YEYQVOeTxwff9sHcOCEBoMaZlYb7fCFtc92+BhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485641; c=relaxed/simple;
-	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	s=arc-20240116; t=1746485647; c=relaxed/simple;
+	bh=8a8lKG343Ye79VxVqSMDe+cPcdo5ypZNXs3TqFfTx5k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m5fWVpr9b/ME7ZwjpYgPAXsyYVC4yj6OlqO/Da8suzNL3caMdOLMJVRPqIGQqYTywfTIcdNCEt0CZtXQwO92/Tq+bXiISXUvoIjCkDPqzVXJJzCXaTmyst4KVBOJZoaSTiexxuJXArHCPqwdjcQtFN5lm6fNfY9VTcGk6FpwspA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGtDIoeh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EpYX4ZlkLXEBQGPXvFWj/+IJF93tjW9e7ZI1+cHi0fBmZ79o/K6D4vF1Cf5xI1yS9sug+z/OxOo0G7AVc9XvF5uM/G1/rsAEEBxzUbhkO3FoW8xoHIZVbyVR+lG7S31CqZCxsl7C8qKsjMX3aC1an7dD5Wf2TEsf/R4pP1gSUqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfUWDlLb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGtDIoeh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496FAC4CEED;
-	Mon,  5 May 2025 22:53:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfUWDlLb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF35C4CEEE;
+	Mon,  5 May 2025 22:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485639;
-	bh=+wZxgz632sHvnLOgr6eoUPj4ket6MHQdjGTN8+zbFzE=;
+	s=k20201202; t=1746485646;
+	bh=8a8lKG343Ye79VxVqSMDe+cPcdo5ypZNXs3TqFfTx5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fGtDIoehVn0264eGyISR/0K7vi68gTim5Dz8QBX00ajpppAhpgiDCyxpKs9VX3OnV
-	 XucYYZ6BQDjwekdF5W1rQn8DXRQPCE8RWTFb4/cCCNv66ikxqN9uygr3gQURrVk5Y6
-	 /X9Y/B4tggTtkNv2VWB+TxJtsA035QmA/KHvMf7332e3E2sMm6CECKwCJwfI00GFKW
-	 f8UPhxVtw1fcJVWBEkl21606AdJqg8yee2+df5cO16cyA4oanHKpM1tPmHU8jgB0WR
-	 b0XqBMrqS6M+v1tGlr+SjlERShzGQqTNsR/mipTqGgh18nKHFu6tP7/cnXeGqS58iz
-	 KkZAFYsrCurHw==
+	b=ZfUWDlLbqzUUAXLRZibib9bIFWtbKE9CKOD2zWMkwo+xMXx+YUqmyDLRZpTFE1VQY
+	 Bd4TCzDnkqeFgEvN0vxFZMRDeIewDQq8ltKWkCVXuRFi2ZD51Py5oe42qduqJspe+f
+	 EoS2NQwP5XJYBC2nP+q9kUIL8K8KxmPFmfS3GMq6kVRaqBMSiFrvm59zvGy2BD4g+R
+	 d5pdVZQPWevIK2DFJ/x7R71CAGe5/Y/nMDFUsA+3srCGSTjmthQ0tvM++G4kiIO+Ul
+	 T3b62ag/GXZAJNpysUSTV6K4ZZwZlJ9xxzO6hYv0LKQ118ii2yLrpi7TsZv1jaNy8t
+	 YplOQTPZE0Nhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
+Cc: Zhang Yi <yi.zhang@huawei.com>,
+	Jan Kara <jack@suse.cz>,
+	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	Theodore Ts'o <tytso@mit.edu>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 400/486] pstore: Change kmsg_bytes storage size to u32
-Date: Mon,  5 May 2025 18:37:56 -0400
-Message-Id: <20250505223922.2682012-400-sashal@kernel.org>
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 403/486] ext4: don't write back data before punch hole in nojournal mode
+Date: Mon,  5 May 2025 18:37:59 -0400
+Message-Id: <20250505223922.2682012-403-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -49,106 +53,69 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <kees@kernel.org>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-[ Upstream commit 5674609535bafa834ab014d90d9bbe8e89223a0b ]
+[ Upstream commit 43d0105e2c7523cc6b14cad65e2044e829c0a07a ]
 
-The types around kmsg_bytes were inconsistent. The global was unsigned
-long, the argument to pstore_set_kmsg_bytes() was int, and the filesystem
-option was u32. Given other internal limits, there's not much sense
-in making a single pstore record larger than INT_MAX and it can't be
-negative, so use u32 everywhere. Additionally, use READ/WRITE_ONCE and a
-local variable in pstore_dump() to avoid kmsg_bytes changing during a
-dump.
+There is no need to write back all data before punching a hole in
+non-journaled mode since it will be dropped soon after removing space.
+Therefore, the call to filemap_write_and_wait_range() can be eliminated.
+Besides, similar to ext4_zero_range(), we must address the case of
+partially punched folios when block size < page size. It is essential to
+remove writable userspace mappings to ensure that the folio can be
+faulted again during subsequent mmap write access.
 
-Link: https://lore.kernel.org/r/20250206191655.work.798-kees@kernel.org
-Signed-off-by: Kees Cook <kees@kernel.org>
+In journaled mode, we need to write dirty pages out before discarding
+page cache in case of crash before committing the freeing data
+transaction, which could expose old, stale data, even if synchronization
+has been performed.
+
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Link: https://patch.msgid.link/20241220011637.1157197-4-yi.zhang@huaweicloud.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/inode.c    |  2 +-
- fs/pstore/internal.h |  4 ++--
- fs/pstore/platform.c | 11 ++++++-----
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ fs/ext4/inode.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 56815799ce798..9de6b280c4f41 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -265,7 +265,7 @@ static void parse_options(char *options)
- static int pstore_show_options(struct seq_file *m, struct dentry *root)
- {
- 	if (kmsg_bytes != CONFIG_PSTORE_DEFAULT_KMSG_BYTES)
--		seq_printf(m, ",kmsg_bytes=%lu", kmsg_bytes);
-+		seq_printf(m, ",kmsg_bytes=%u", kmsg_bytes);
- 	return 0;
- }
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 487d9aec56c9d..819be57bb4ecf 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3933,17 +3933,6 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
  
-diff --git a/fs/pstore/internal.h b/fs/pstore/internal.h
-index 801d6c0b170c3..a0fc511969100 100644
---- a/fs/pstore/internal.h
-+++ b/fs/pstore/internal.h
-@@ -6,7 +6,7 @@
- #include <linux/time.h>
- #include <linux/pstore.h>
+ 	trace_ext4_punch_hole(inode, offset, length, 0);
  
--extern unsigned long kmsg_bytes;
-+extern unsigned int kmsg_bytes;
+-	/*
+-	 * Write out all dirty pages to avoid race conditions
+-	 * Then release them.
+-	 */
+-	if (mapping_tagged(mapping, PAGECACHE_TAG_DIRTY)) {
+-		ret = filemap_write_and_wait_range(mapping, offset,
+-						   offset + length - 1);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	inode_lock(inode);
  
- #ifdef CONFIG_PSTORE_FTRACE
- extern void pstore_register_ftrace(void);
-@@ -35,7 +35,7 @@ static inline void pstore_unregister_pmsg(void) {}
+ 	/* No need to punch hole beyond i_size */
+@@ -4005,8 +3994,11 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+ 		ret = ext4_update_disksize_before_punch(inode, offset, length);
+ 		if (ret)
+ 			goto out_dio;
+-		truncate_pagecache_range(inode, first_block_offset,
+-					 last_block_offset);
++
++		ret = ext4_truncate_page_cache_block_range(inode,
++				first_block_offset, last_block_offset + 1);
++		if (ret)
++			goto out_dio;
+ 	}
  
- extern struct pstore_info *psinfo;
- 
--extern void	pstore_set_kmsg_bytes(int);
-+extern void	pstore_set_kmsg_bytes(unsigned int bytes);
- extern void	pstore_get_records(int);
- extern void	pstore_get_backend_records(struct pstore_info *psi,
- 					   struct dentry *root, int quiet);
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index f56b066ab80ce..557cf9d40177f 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -92,8 +92,8 @@ module_param(compress, charp, 0444);
- MODULE_PARM_DESC(compress, "compression to use");
- 
- /* How much of the kernel log to snapshot */
--unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
--module_param(kmsg_bytes, ulong, 0444);
-+unsigned int kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
-+module_param(kmsg_bytes, uint, 0444);
- MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- 
- static void *compress_workspace;
-@@ -107,9 +107,9 @@ static void *compress_workspace;
- static char *big_oops_buf;
- static size_t max_compressed_size;
- 
--void pstore_set_kmsg_bytes(int bytes)
-+void pstore_set_kmsg_bytes(unsigned int bytes)
- {
--	kmsg_bytes = bytes;
-+	WRITE_ONCE(kmsg_bytes, bytes);
- }
- 
- /* Tag each group of saved records with a sequence number */
-@@ -278,6 +278,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 			struct kmsg_dump_detail *detail)
- {
- 	struct kmsg_dump_iter iter;
-+	unsigned int	remaining = READ_ONCE(kmsg_bytes);
- 	unsigned long	total = 0;
- 	const char	*why;
- 	unsigned int	part = 1;
-@@ -300,7 +301,7 @@ static void pstore_dump(struct kmsg_dumper *dumper,
- 	kmsg_dump_rewind(&iter);
- 
- 	oopscount++;
--	while (total < kmsg_bytes) {
-+	while (total < remaining) {
- 		char *dst;
- 		size_t dst_size;
- 		int header_size;
+ 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
 -- 
 2.39.5
 
