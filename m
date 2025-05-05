@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511BE2F0B95;
-	Mon,  5 May 2025 23:11:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E5A3899F2;
+	Mon,  5 May 2025 23:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486694; cv=none; b=pQ5Ivdk7W6AQLawgRIEMU6kBmrqix9hoS67LrUPvl0wyVryPakn/AM65TT31c8L5tjvBKIbKnpa+ngDDTG4jORcQPEz2xwnQ7y2ByJINC1wkslOC1aBGWN+YqinqAnuTA5tN5av/YgDkcfvhMZoik1mKu7lPXWORZ9sKbPPQzHo=
+	t=1746486702; cv=none; b=qR95v898vvSjyjtdCdEtuRbDQy2qpmKlYSuStgf6SewY6uqYh71+LErnW+2It1weTqjJIo0qwW3q/ygL5KDcOf4gFf9DOv6goBtMj8KuJa2ZgrKHOr20jefF83lCrDV4PfKPnZleXyN2zQChPIqA8LXfeGukfpGc9h8vWUz/euM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486694; c=relaxed/simple;
-	bh=pRU+ZlluUtiVBahzR3qY/4fwlWskxPfojj3aByJYiUU=;
+	s=arc-20240116; t=1746486702; c=relaxed/simple;
+	bh=l/fE66EQd0oDkDJxz9EZ4fSDv3180mfWuZEG3FfUzVg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jCan4MP8YmGqfGHELKb2jo+27/vAKnFoSoEE+Gf1GiNq2FJZVP4lqRt+tnOrdNjhe/g+GqUeh0GgO7Px93mVf84+fhvEsFQnr8Rz2xA/5jdVvBSLeuEtPELB+imBXbSGcUoSIyfeOaqdZsWG8n9ksfjzdB0y2HXsFMb8srsYHRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auQMDRXG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rp6pSAWLa5e/WSMdf/J3BucSk9FTsTquQ63Aa4A46fbN3aqdSmvlJxJmJxP1o2h7lC6CYIIv2rZYUkKjUjzmD9WRn2xqB3C5CfZYXuUniW9pZ+vQRKqyPEk4Hffx3UMQ9tY2lVMuOLtpaKD+lR0464KvWF4+lOWhRzkkQMpNr/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjRlpCqj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auQMDRXG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308F9C4CEF1;
-	Mon,  5 May 2025 23:11:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjRlpCqj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02BE4C4CEED;
+	Mon,  5 May 2025 23:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486694;
-	bh=pRU+ZlluUtiVBahzR3qY/4fwlWskxPfojj3aByJYiUU=;
+	s=k20201202; t=1746486701;
+	bh=l/fE66EQd0oDkDJxz9EZ4fSDv3180mfWuZEG3FfUzVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=auQMDRXGu/WZDzSxt1+KHmYMJjZORhZwAu8XQtw3gzMDEXXukBSeXaj0TcgBgqyCJ
-	 uIXh8QKh1ivay+lzauAKfwVnqUPeqqMROjUQC8u0XfBtObhe8G7C8F/KAJdoTqnmTd
-	 cw0Xj9FKCjvd2tl+SsB+8hoqeWsyw6ATU3xqyXvEb4KB24MzzjSZmYCPUq9QwAF1eP
-	 2Tdgduft+8D+ZIxSUlQCnewygcz82Pu1+THx1R8Qf0aEgBYjGES9jRMJWMcwYJXHa7
-	 9NTYB3mg7PlZ+a19btFrRGdKzGFGr0W0hwJeYKh/4m0kDL+fYBe4/AxJvmYekrIfRL
-	 q8FPAfCitrAqg==
+	b=hjRlpCqj9ECQ+2x8oXE6jNx80Mn8PJ+vcLHWy1guMlofiq+sl8a/qwguSAuniltzi
+	 ryrcYEak2APysIZ0XW4rKU1FoUPptCqLZw72srnLhfGyZ/bSNjq3Ge9oHZ1kJ0uKPt
+	 I8VgaDVfzLLB5m5xlf2Mgj9/mXbahbCceU83qoFbltNK6+hEKVtUMmthBplr93O9mo
+	 PsIyh6Phy2qo2lsyjzzMYPHcZQECIq0w/BOaNE07/6Fc9mWcUjDwBmK0mgI1mS0rVU
+	 6hLruVff1ooX40uuwz7VsmQqG3QXPEgsnAR1rcvrajI96F9B4XgrkXJXoO8lHlIEFF
+	 ycYhuTvw96moQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Valentin Caron <valentin.caron@foss.st.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 155/212] ASoC: ops: Enforce platform maximum on initial value
-Date: Mon,  5 May 2025 19:05:27 -0400
-Message-Id: <20250505230624.2692522-155-sashal@kernel.org>
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 160/212] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
+Date: Mon,  5 May 2025 19:05:32 -0400
+Message-Id: <20250505230624.2692522-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -48,76 +45,112 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Martin Povišer <povik+lin@cutebit.org>
+From: Valentin Caron <valentin.caron@foss.st.com>
 
-[ Upstream commit 783db6851c1821d8b983ffb12b99c279ff64f2ee ]
+[ Upstream commit c98868e816209e568c9d72023ba0bc1e4d96e611 ]
 
-Lower the volume if it is violating the platform maximum at its initial
-value (i.e. at the time of the 'snd_soc_limit_volume' call).
+Cross case in pinctrl framework make impossible to an hogged pin and
+another, not hogged, used within the same device-tree node. For example
+with this simplified device-tree :
 
-Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
-[Cherry picked from the Asahi kernel with fixups -- broonie]
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-volume-limit-v1-1-b98fcf4cdbad@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  &pinctrl {
+    pinctrl_pin_1: pinctrl-pin-1 {
+      pins = "dummy-pinctrl-pin";
+    };
+  };
+
+  &rtc {
+    pinctrl-names = "default"
+    pinctrl-0 = <&pinctrl_pin_1 &rtc_pin_1>
+
+    rtc_pin_1: rtc-pin-1 {
+      pins = "dummy-rtc-pin";
+    };
+  };
+
+"pinctrl_pin_1" configuration is never set. This produces this path in
+the code:
+
+  really_probe()
+    pinctrl_bind_pins()
+    | devm_pinctrl_get()
+    |   pinctrl_get()
+    |     create_pinctrl()
+    |       pinctrl_dt_to_map()
+    |         // Hog pin create an abort for all pins of the node
+    |         ret = dt_to_map_one_config()
+    |         | /* Do not defer probing of hogs (circular loop) */
+    |         | if (np_pctldev == p->dev->of_node)
+    |         |   return -ENODEV;
+    |         if (ret)
+    |           goto err
+    |
+    call_driver_probe()
+      stm32_rtc_probe()
+        pinctrl_enable()
+          pinctrl_claim_hogs()
+            create_pinctrl()
+              for_each_maps(maps_node, i, map)
+                // Not hog pin is skipped
+                if (pctldev && strcmp(dev_name(pctldev->dev),
+                                      map->ctrl_dev_name))
+                  continue;
+
+At the first call of create_pinctrl() the hogged pin produces an abort to
+avoid a defer of hogged pins. All other pin configurations are trashed.
+
+At the second call, create_pinctrl is now called with pctldev parameter to
+get hogs, but in this context only hogs are set. And other pins are
+skipped.
+
+To handle this, do not produce an abort in the first call of
+create_pinctrl(). Classic pin configuration will be set in
+pinctrl_bind_pins() context. And the hogged pin configuration will be set
+in pinctrl_claim_hogs() context.
+
+Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
+Link: https://lore.kernel.org/20250116170009.2075544-1-valentin.caron@foss.st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-ops.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ drivers/pinctrl/devicetree.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
-index b4cfc34d00ee6..eff1355cc3df0 100644
---- a/sound/soc/soc-ops.c
-+++ b/sound/soc/soc-ops.c
-@@ -638,6 +638,33 @@ int snd_soc_get_volsw_range(struct snd_kcontrol *kcontrol,
- }
- EXPORT_SYMBOL_GPL(snd_soc_get_volsw_range);
- 
-+static int snd_soc_clip_to_platform_max(struct snd_kcontrol *kctl)
-+{
-+	struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
-+	struct snd_ctl_elem_value uctl;
-+	int ret;
-+
-+	if (!mc->platform_max)
-+		return 0;
-+
-+	ret = kctl->get(kctl, &uctl);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (uctl.value.integer.value[0] > mc->platform_max)
-+		uctl.value.integer.value[0] = mc->platform_max;
-+
-+	if (snd_soc_volsw_is_stereo(mc) &&
-+	    uctl.value.integer.value[1] > mc->platform_max)
-+		uctl.value.integer.value[1] = mc->platform_max;
-+
-+	ret = kctl->put(kctl, &uctl);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /**
-  * snd_soc_limit_volume - Set new limit to an existing volume control.
-  *
-@@ -662,7 +689,7 @@ int snd_soc_limit_volume(struct snd_soc_card *card,
- 		struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
- 		if (max <= mc->max - mc->min) {
- 			mc->platform_max = max;
--			ret = 0;
-+			ret = snd_soc_clip_to_platform_max(kctl);
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 5ee746cb81f59..6520b88db1105 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -143,10 +143,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 		pctldev = get_pinctrl_dev_from_of_node(np_pctldev);
+ 		if (pctldev)
+ 			break;
+-		/* Do not defer probing of hogs (circular loop) */
++		/*
++		 * Do not defer probing of hogs (circular loop)
++		 *
++		 * Return 1 to let the caller catch the case.
++		 */
+ 		if (np_pctldev == p->dev->of_node) {
+ 			of_node_put(np_pctldev);
+-			return -ENODEV;
++			return 1;
  		}
  	}
- 	return ret;
+ 	of_node_put(np_pctldev);
+@@ -265,6 +269,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
+ 			ret = dt_to_map_one_config(p, pctldev, statename,
+ 						   np_config);
+ 			of_node_put(np_config);
++			if (ret == 1)
++				continue;
+ 			if (ret < 0)
+ 				goto err;
+ 		}
 -- 
 2.39.5
 
