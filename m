@@ -1,51 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477762C0332;
-	Mon,  5 May 2025 22:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA6B2D60FD;
+	Mon,  5 May 2025 22:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485348; cv=none; b=HCwLuCeDnGqOLEgfvCR7Bd8zzVfTH9d2hfU3rFnVF3TiurCDjBDK6fCTS+dxk81lJaAZtLnBWx1kxzquwYw3rdMzi6MJ7IKcNLz5/HFKmx5notx97cUuKJYsBsJGkXNtwJd7d8MDJB6abtbpaaEN8LoF2bvgKCmNrs2uGKsrBHo=
+	t=1746485357; cv=none; b=ndrH+TDQNHUDK6zPl8epGLABVCpJaYo9+9qAHTbaJJ5K826qaNXBf9lJaiCR9nk4onSs48Yef+EesdAU/eDilo7/FokIFSWhmXJCJFaHUfOL13VpgM8GtOOZ1IzTvT3HI6ryY/KtyNGawiMzE/CNKC1A8/Ovyn++S0PeUVIVRA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485348; c=relaxed/simple;
-	bh=79VEN30GCnvOMddOYIMHiDjP9ORCLa8fZg4wW316d2c=;
+	s=arc-20240116; t=1746485357; c=relaxed/simple;
+	bh=jA/n9HSlhB7PQUXusTx5SZz37B/RI+8M5PtPwdFqV4Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lw0bT47Kc5FDfuqpUja5ltKj7sRPoSoygrH8YbB7FCwjBFTN5r22YFfLGwpJEsvtMyItWr4EnzgT9Pf7pcb6ia8YCZdXQAVQ8Q7geCsERvHRERwEUo5uHKmIM+v2iFMIGoFZ0+Ed3+vw+2YdHsW1sXxmPJGG57cKFrQvhDaMrx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPVdlBW2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tbvhe4TlwJJI3JiLa4PmvmqupAlHk+YfhBuUYFGVbh2LRn6xPip5ANlb2vBzduzxo0zMp+nApVKMxv4ms46v2HDEQN5Moqu0paAkPCqxkusetTL9CGUVdIrPb26cpT1V+DFz5OW3OLICs4pkpa0EB1fb2+AcSF7InrG/pmcjCDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYEo+cyY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPVdlBW2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80643C4CEED;
-	Mon,  5 May 2025 22:49:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYEo+cyY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A577CC4CEEE;
+	Mon,  5 May 2025 22:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485348;
-	bh=79VEN30GCnvOMddOYIMHiDjP9ORCLa8fZg4wW316d2c=;
+	s=k20201202; t=1746485356;
+	bh=jA/n9HSlhB7PQUXusTx5SZz37B/RI+8M5PtPwdFqV4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tPVdlBW2NiEDGbcqBiVsrg6ENUVfKnAvSgePQVPNVYZ3B64XrZ+qnqO4tzdTVqiqJ
-	 9OTTweHbGA/z/XIHhhxakIa0iY6TTiIledbiy7R+JZmh2DBEsug3U5dSELqFEi2b4w
-	 HykLSinfW7vMJXGVL+QYTQoRFHdMBiWg22f+ToS+YePUHtPzqRJmqQwCx0RzviRM5X
-	 80AcT4t1QzsLGY6p+fyLlybEEOhij7EsijdqaJoncleQn/sed4vggxHTyShiyvqAt3
-	 sUq/ezSgAsfFPcs96nq3lA78sV/C8KnIX5KJktKjwTccNfOzDDU12uMfnPJwEwwmU9
-	 TQgv2k+D1basQ==
+	b=uYEo+cyYmdG+qF6jfXvZAXKakLRIjwFUpHiRb73k7F/ssYxrsF/8a9uZbTZrTsVzN
+	 AXMiFlcwLenx2r/xU0sCHmLl5UwWwm3HCzhU4DSis+U6dTnIciOVXNmWMNWAt5QpAp
+	 dij5UGW2Moj/EaPT4ZqOgHAzUjRABuCQnTol9N4Z8Kaqtc/8xPrXjcLpcRpQ5i4vGR
+	 Rl1/dHKM/9KGAuG5ljxjg5/yZU8aJhqUiunRcfDukP8TX7yrbfHO3LamkOq6SVpi0w
+	 bdS1qmehSNCdin3RkriTQfoVMaBGDUZ0QrDZ9KDswzy9tjZ4oWXy0UDK631pNMSBpW
+	 kb/q9DUBFr9Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jason Gunthorpe <jgg@nvidia.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	will@kernel.org,
-	shivamurthy.shastri@linutronix.de,
-	bhelgaas@google.com,
-	anna-maria@linutronix.de,
-	Jonathan.Cameron@huwei.com,
-	jgg@ziepe.ca,
-	marek.vasut+renesas@mailbox.org,
-	iommu@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 279/486] genirq/msi: Store the IOMMU IOVA directly in msi_desc instead of iommu_cookie
-Date: Mon,  5 May 2025 18:35:55 -0400
-Message-Id: <20250505223922.2682012-279-sashal@kernel.org>
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 284/486] wifi: rtw88: Fix rtw_init_vht_cap() for RTL8814AU
+Date: Mon,  5 May 2025 18:36:00 -0400
+Message-Id: <20250505223922.2682012-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -60,172 +50,66 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit 1f7df3a691740a7736bbc99dc4ed536120eb4746 ]
+[ Upstream commit 6be7544d19fcfcb729495e793bc6181f85bb8949 ]
 
-The IOMMU translation for MSI message addresses has been a 2-step process,
-separated in time:
+Set the MCS maps and the highest rates according to the number of
+spatial streams the chip has. For RTL8814AU that is 3.
 
- 1) iommu_dma_prepare_msi(): A cookie pointer containing the IOVA address
-    is stored in the MSI descriptor when an MSI interrupt is allocated.
-
- 2) iommu_dma_compose_msi_msg(): this cookie pointer is used to compute a
-    translated message address.
-
-This has an inherent lifetime problem for the pointer stored in the cookie
-that must remain valid between the two steps. However, there is no locking
-at the irq layer that helps protect the lifetime. Today, this works under
-the assumption that the iommu domain is not changed while MSI interrupts
-being programmed. This is true for normal DMA API users within the kernel,
-as the iommu domain is attached before the driver is probed and cannot be
-changed while a driver is attached.
-
-Classic VFIO type1 also prevented changing the iommu domain while VFIO was
-running as it does not support changing the "container" after starting up.
-
-However, iommufd has improved this so that the iommu domain can be changed
-during VFIO operation. This potentially allows userspace to directly race
-VFIO_DEVICE_ATTACH_IOMMUFD_PT (which calls iommu_attach_group()) and
-VFIO_DEVICE_SET_IRQS (which calls into iommu_dma_compose_msi_msg()).
-
-This potentially causes both the cookie pointer and the unlocked call to
-iommu_get_domain_for_dev() on the MSI translation path to become UAFs.
-
-Fix the MSI cookie UAF by removing the cookie pointer. The translated IOVA
-address is already known during iommu_dma_prepare_msi() and cannot change.
-Thus, it can simply be stored as an integer in the MSI descriptor.
-
-The other UAF related to iommu_get_domain_for_dev() will be addressed in
-patch "iommu: Make iommu_dma_prepare_msi() into a generic operation" by
-using the IOMMU group mutex.
-
-Link: https://patch.msgid.link/r/a4f2cd76b9dc1833ee6c1cf325cba57def22231c.1740014950.git.nicolinc@nvidia.com
-Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Link: https://patch.msgid.link/e86aa009-b5bf-4b3a-8112-ea5e3cd49465@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dma-iommu.c | 28 +++++++++++++---------------
- include/linux/msi.h       | 33 ++++++++++++---------------------
- 2 files changed, 25 insertions(+), 36 deletions(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 2a9fa0c8cc00f..0f0caf59023c7 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1815,7 +1815,7 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- 	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index bbdef38c7e341..2c81e4cae039e 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -1579,8 +1579,9 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+ 			     struct ieee80211_sta_vht_cap *vht_cap)
+ {
+ 	struct rtw_efuse *efuse = &rtwdev->efuse;
+-	u16 mcs_map;
++	u16 mcs_map = 0;
+ 	__le16 highest;
++	int i;
  
- 	if (!domain || !domain->iova_cookie) {
--		desc->iommu_cookie = NULL;
-+		msi_desc_set_iommu_msi_iova(desc, 0, 0);
- 		return 0;
+ 	if (efuse->hw_cap.ptcl != EFUSE_HW_CAP_IGNORE &&
+ 	    efuse->hw_cap.ptcl != EFUSE_HW_CAP_PTCL_VHT)
+@@ -1603,21 +1604,15 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+ 	if (rtw_chip_has_rx_ldpc(rtwdev))
+ 		vht_cap->cap |= IEEE80211_VHT_CAP_RXLDPC;
+ 
+-	mcs_map = IEEE80211_VHT_MCS_SUPPORT_0_9 << 0 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 4 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 6 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 8 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 10 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 12 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 14;
+-	if (efuse->hw_cap.nss > 1) {
+-		highest = cpu_to_le16(780);
+-		mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << 2;
+-	} else {
+-		highest = cpu_to_le16(390);
+-		mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << 2;
++	for (i = 0; i < 8; i++) {
++		if (i < efuse->hw_cap.nss)
++			mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
++		else
++			mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
  	}
  
-@@ -1827,11 +1827,12 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
- 	mutex_lock(&msi_prepare_lock);
- 	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
- 	mutex_unlock(&msi_prepare_lock);
--
--	msi_desc_set_iommu_cookie(desc, msi_page);
--
- 	if (!msi_page)
- 		return -ENOMEM;
++	highest = cpu_to_le16(390 * efuse->hw_cap.nss);
 +
-+	msi_desc_set_iommu_msi_iova(
-+		desc, msi_page->iova,
-+		ilog2(cookie_msi_granule(domain->iova_cookie)));
- 	return 0;
- }
- 
-@@ -1842,18 +1843,15 @@ int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
-  */
- void iommu_dma_compose_msi_msg(struct msi_desc *desc, struct msi_msg *msg)
- {
--	struct device *dev = msi_desc_to_dev(desc);
--	const struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
--	const struct iommu_dma_msi_page *msi_page;
-+#ifdef CONFIG_IRQ_MSI_IOMMU
-+	if (desc->iommu_msi_shift) {
-+		u64 msi_iova = desc->iommu_msi_iova << desc->iommu_msi_shift;
- 
--	msi_page = msi_desc_get_iommu_cookie(desc);
--
--	if (!domain || !domain->iova_cookie || WARN_ON(!msi_page))
--		return;
--
--	msg->address_hi = upper_32_bits(msi_page->iova);
--	msg->address_lo &= cookie_msi_granule(domain->iova_cookie) - 1;
--	msg->address_lo += lower_32_bits(msi_page->iova);
-+		msg->address_hi = upper_32_bits(msi_iova);
-+		msg->address_lo = lower_32_bits(msi_iova) |
-+				  (msg->address_lo & ((1 << desc->iommu_msi_shift) - 1));
-+	}
-+#endif
- }
- 
- static int iommu_dma_init(void)
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 59a421fc42bf0..63d0e51f7a801 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -165,6 +165,10 @@ struct msi_desc_data {
-  * @dev:	Pointer to the device which uses this descriptor
-  * @msg:	The last set MSI message cached for reuse
-  * @affinity:	Optional pointer to a cpu affinity mask for this descriptor
-+ * @iommu_msi_iova: Optional shifted IOVA from the IOMMU to override the msi_addr.
-+ *                  Only used if iommu_msi_shift != 0
-+ * @iommu_msi_shift: Indicates how many bits of the original address should be
-+ *                   preserved when using iommu_msi_iova.
-  * @sysfs_attr:	Pointer to sysfs device attribute
-  *
-  * @write_msi_msg:	Callback that may be called when the MSI message
-@@ -183,7 +187,8 @@ struct msi_desc {
- 	struct msi_msg			msg;
- 	struct irq_affinity_desc	*affinity;
- #ifdef CONFIG_IRQ_MSI_IOMMU
--	const void			*iommu_cookie;
-+	u64				iommu_msi_iova : 58;
-+	u64				iommu_msi_shift : 6;
- #endif
- #ifdef CONFIG_SYSFS
- 	struct device_attribute		*sysfs_attrs;
-@@ -284,28 +289,14 @@ struct msi_desc *msi_next_desc(struct device *dev, unsigned int domid,
- 
- #define msi_desc_to_dev(desc)		((desc)->dev)
- 
--#ifdef CONFIG_IRQ_MSI_IOMMU
--static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
--{
--	return desc->iommu_cookie;
--}
--
--static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
--					     const void *iommu_cookie)
--{
--	desc->iommu_cookie = iommu_cookie;
--}
--#else
--static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
-+static inline void msi_desc_set_iommu_msi_iova(struct msi_desc *desc, u64 msi_iova,
-+					       unsigned int msi_shift)
- {
--	return NULL;
--}
--
--static inline void msi_desc_set_iommu_cookie(struct msi_desc *desc,
--					     const void *iommu_cookie)
--{
--}
-+#ifdef CONFIG_IRQ_MSI_IOMMU
-+	desc->iommu_msi_iova = msi_iova >> msi_shift;
-+	desc->iommu_msi_shift = msi_shift;
- #endif
-+}
- 
- int msi_domain_insert_msi_desc(struct device *dev, unsigned int domid,
- 			       struct msi_desc *init_desc);
+ 	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
+ 	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
+ 	vht_cap->vht_mcs.rx_highest = highest;
 -- 
 2.39.5
 
