@@ -1,448 +1,136 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794B938DD8
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BB01E0DDC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746432514; cv=none; b=A0ohrPz+84X1Jqz6+k1pTDLEg8m4TOmIpMTkBLJvUJnxBDU8SIte76OTIQb6Lbo5ZRRSFwKZwYxV/0aBTuD+p7N+o3WdE+V24Bs1jeBsK4XRCwVV3ydYL0wnYHsQqCl8dGZR4QOQ0r17DfbEafR7CXckVs6A2CKOkVd78Yfto/A=
+	t=1746432538; cv=none; b=kuskC5+VqeNCrOnviycq3/0V+3CKqZ2Ec+Efil59IE343pfrM68xvIjQFS/94w/0jQvmyTTbETOFld64mhr3Vp08MrZMzlon45XZXSvOUB2xfD1C19Fhkfm/Y6PdxGvj/1kSGSpum8c3U0Ymdmlq8RNgLW5g7zUJ1WMH9v8F5fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746432514; c=relaxed/simple;
-	bh=+GdgUEMxmeeDP8lvtP9u3GQ+NjoMaSaT0I4LcsdVFgo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bwjUyU5qVzRwRpoF/UVQomRmw6VpR9hQm4zQv5ya7czar4UYZ/BQrVyBbQ5+bfoElzmwDvCf2aoA9mosm3HvB1TZ/6wdpZFpkW9URI8qfJDhhF48vQsTkqwvzjLiouVjvd2gGXSQUByYWaaFL/bza/2Kk0aHme+th6H/73UfQ0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p3g3sJAJ; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746432538; c=relaxed/simple;
+	bh=fpiegDdPN4vJSsUvTfFDScdpNUKB1Bs1LE0KbvzE0rk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teZH/LauV0gy+/qr8LhZJ9OkmeOx2Axnr02Bz7FNMdNwFlScJgEDGEFxRJyg0rKvgTVlJ195kRFOsmSLzikNJjxGAf+PrnuKMHC7h/mggvFQIPWG4+oLuz2cDHCIMf9fRlPgR7d9Pr+uAjXXc5ciayxy97k3rGo2N2KpwyJW62I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HVafOWoC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p3g3sJAJ"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30c2d427194so36227421fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:08:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HVafOWoC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so33567945e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:08:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746432510; x=1747037310; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DCXUgF3diTMwlvCqE1V/IN/tFAzJF2eih16ycTXQbeQ=;
-        b=p3g3sJAJnx/lwl4d+PBWPmzFF/rvp8wHoaZAAddMBFVL2H+722kU7hHFyC5bzkNkOS
-         PyYusM92EHabcTW+coLEbz9Bd9rAZtmX736bTlSgawJTI6LE0/i4mVutROGdMCFO8Sxo
-         GVP6tz3GKPUy3sbCjwJpiivKZ6KAo3NXxB7AHtLALslSI9ObqTfEkjNRGMfmz8VLjffL
-         CYwvxDIphflMYpx5tz5y09vCUplyXyNrLzm6rhdJudRErC6YWN3DHH8qfV9O1RNO3TV4
-         /gubSayNZH2Yeps6aDEqfoajfWTGfX+IkCrzmhGe216G2T+vWDeG8jyqrQpWfH9ljhZx
-         ItYg==
+        d=suse.com; s=google; t=1746432534; x=1747037334; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ih3NqDpNYxVnwTqQNjr/HduzzcPs128fQGA7XiiKKbU=;
+        b=HVafOWoC3/jTLo7x3AKPu38ObO0NpLhvPQlSV0JtoLhc9wxHQ+1W5I+dnDU4hkzZwV
+         mKPvK74grtYJdMwaYlCHhmMgnpVou62xl1TzmRrw+BuAd2mH+cUSFVnXenRuzLo4w9OU
+         c37Rt7N7RflYon88Jqmt+y2eYJ4YtlSUQpFVMTqpHpdjgiwfAMC8/62/VG7SCWs03mFO
+         rMAufkA5YrHuPP41kGT7uEZN8ZcXDcSxncQj/jWMS4VYXiAJKokIIHUGp7X9YpP4tyny
+         JI/ZEn7gV3l+GOLzusAGkHSxAP9vOU4/3ZeMrW5TQAqUxEZPzHGR0Oas9ym6yQw9I0ZN
+         Smtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746432510; x=1747037310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DCXUgF3diTMwlvCqE1V/IN/tFAzJF2eih16ycTXQbeQ=;
-        b=ZdxBfaEz9+IsO0JWt3ATMEMjd73++DGPhr+ZtonIDT+49uBsdSD6I/5RYr4kINND3D
-         P4xXPOKpuTxZycJUy5fN9+mVMLLMqIqR/snCcOm0cXr/htPPNt7wwjkJKvaLTpyfwul+
-         gBpSoKKh3KNPhGid1n7YrgQgRpkxNx7tFz1VlZYEcTu66ePP0WyJKAoRTB2OhX/y27iN
-         pJ00KCYTLEOPDgI1YtHr8SlK89HB1gLDmib1i4gFqYAMqFmKmiaSyr/o5rfuye0ET49X
-         Wk2Go+dhhXtSQOmNebvsjtGpnzd9qC5j0XYAEYQbQ0d4V84Jys/eutagnUv5R9/fCg5B
-         LxoA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlrOv07Grhl3BwbUZDFDn3kWlPoF4gm620MLvDGPHYVHQxlXZJwkvTFvXHye1aIhbPERhGsjUNOLUENQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTfj4+6hEHGfxgFa8ozniSMUk/ZLvNR+0eFa8BPjkfSm64y48D
-	mIeURmX5a7JJ48h7ludoLWF+81m+YqwmoEv8OZFKiUgpbgauiX01zWFrvo/X2WFR8RhdzWsvwPM
-	ayzDdLHnV1QIWEVjAL8vBqFwxtsN5+SF9Y+ko
-X-Gm-Gg: ASbGnct06r4JxTQ7jGXqjloRHnMSc/z6kjCYTafKCoTpz3HSvT/0+Fav2yCb3AUv03L
-	NxrBHBcao1bijZLNC7JL1PO08zvaBHYDFf+HeabXTB2UUAcBB9vL4KgEoPCoJ9kvptWGKbHhPj6
-	Ikh17qozSNfoyyK7CP0Hrk3KIEMi2F/h8UXcwEFMjn9iyVVt2pDQskZId8YA/AdTQL
-X-Google-Smtp-Source: AGHT+IGtSvPoXmi4pMqnGbTT/jKbyjaZIgtnVVAge1dhpVimzKfl7CZioKLTzAFmFqBr1PGTxyYlbNCGskxZkI5ELDw=
-X-Received: by 2002:a2e:b887:0:b0:30b:f274:d1e2 with SMTP id
- 38308e7fff4ca-320c3af0581mr34401481fa.1.1746432510182; Mon, 05 May 2025
- 01:08:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746432534; x=1747037334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ih3NqDpNYxVnwTqQNjr/HduzzcPs128fQGA7XiiKKbU=;
+        b=byJz6tdwPvVu4fZUsDE3cSGHzHwKMaKjJmIGoKY0tfZRSdhRx6dvPKIbs+isTJEuuf
+         KwkYgGFIbDfw17+lX8WrySKxVq2j4OGhlYWkM9v9MhOCNkry8ZBOWNkAZuApofdyDiUj
+         sCO3Q5IUQZo0jLQbThmmGyjQpZQyfnzlzb+GFzxDMdWIr4bF40BNQpuu8OOBRGqkOVIn
+         Pn9qzS7SX74si/UmtCZhnmFHbHNRU4r2Wx2R3c98eyUUUXBpIhABOxD7xqhVTBZG0Uuf
+         1zi0sFmR4YSRWKSji+VB+vZpPCdVuPXapMAWJEtdaI8/JTzAN5iTy5gXoC/1egT+4tGI
+         aJ3w==
+X-Gm-Message-State: AOJu0Yz9qzX7NgiLNXx1mlubqEptRnIGGbS4f4tKHC6fhrTtyRJrYmzI
+	4BMLVKY6YaM9+75yY68/DHgJpZyxbaLNbGwmuaDTUL6HW9pcBj0Aix5LnuNp5x/1ZSNMMHTx+EW
+	j
+X-Gm-Gg: ASbGncv6MRpAqxFxoM3RnEjO2sIgFkieb4PfO6+Akk12eOfItU3J5vgNVqgibW1T+za
+	4eljiLGCHfHXemsHeZNDulKbWISx0RT/cF5tdlEyO5ezW2IyDAU/xR4mWMv+4ZNgsnN/I7v6AAZ
+	Zb4RlFx+YPv/z3MSlnsZbmvyBqjy/z4g+CTFSf+hVJyDUJF1neeTpa5VEAvmg0tT4m3+pvAeLla
+	qIIlFJ8f/swEFUBMZ0OWqt/nQHrn1aEUwJlUZG1R9gf+uDaZ0SOd7+nmjHmNgHqgxyGFwGHgqwR
+	FmqO2ExPcRkn7bOOHXLpIJ7Cc5MT55VqCiMhT3mSsQ6WHomEU9k=
+X-Google-Smtp-Source: AGHT+IEurvdHsB2rKDl3Rsu/uufeIj/T+2DXVXCdsFmbDaGBcEViq6YlhktTwiTRJwVY7SSU0p4HUg==
+X-Received: by 2002:a05:600c:5124:b0:43c:fe15:41cb with SMTP id 5b1f17b1804b1-441c48c1d07mr44823985e9.15.1746432534171;
+        Mon, 05 May 2025 01:08:54 -0700 (PDT)
+Received: from localhost (109-81-80-21.rct.o2.cz. [109.81.80.21])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af4546sm172441785e9.22.2025.05.05.01.08.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 01:08:53 -0700 (PDT)
+Date: Mon, 5 May 2025 10:08:53 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org
+Subject: Re: [PATCH rfc 10/12] mm: introduce bpf_out_of_memory() bpf kfunc
+Message-ID: <aBhyFQje85fPhIiM@tiehlicka>
+References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
+ <20250428033617.3797686-11-roman.gushchin@linux.dev>
+ <aBC7_2Fv3NFuad4R@tiehlicka>
+ <aBFFNyGjDAekx58J@google.com>
+ <aBHQ69_rCqjnDaDl@tiehlicka>
+ <aBI5fh28P1Qgi2zZ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503003620.45072-1-namhyung@kernel.org>
-In-Reply-To: <20250503003620.45072-1-namhyung@kernel.org>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 5 May 2025 10:08:17 +0200
-X-Gm-Features: ATxdqUFutFekXtwYbXmiA644Z1bF2753cScz7VbHu8YLfvCkist93GjXquWD9LE
-Message-ID: <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBI5fh28P1Qgi2zZ@google.com>
 
-On Sat, 3 May 2025 at 02:36, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> When it profile a target process (and its children), it's
-> straight-forward to track parallelism using sched-switch info.  The
-> parallelism is kept in machine-level in this case.
->
-> But when it profile multiple processes like in the system-wide mode,
-> it might not be clear how to apply the (machine-level) parallelism to
-> different tasks.  That's why it disabled the latency profiling for
-> system-wide mode.
->
-> But it should be able to track parallelism in each process and it'd
-> useful to profile latency issues in multi-threaded programs.  So this
-> patch tries to enable it.
->
-> However using sched-switch info can be a problem since it may emit a lot
-> more data and more chances for losing data when perf cannot keep up with
-> it.
->
-> Instead, it can maintain the current process for each CPU when it sees
-> samples.
+On Wed 30-04-25 14:53:50, Roman Gushchin wrote:
+> On Wed, Apr 30, 2025 at 09:27:39AM +0200, Michal Hocko wrote:
+> > On Tue 29-04-25 21:31:35, Roman Gushchin wrote:
+> > > On Tue, Apr 29, 2025 at 01:46:07PM +0200, Michal Hocko wrote:
+> > > > On Mon 28-04-25 03:36:15, Roman Gushchin wrote:
+> > > > > Introduce bpf_out_of_memory() bpf kfunc, which allows to declare
+> > > > > an out of memory events and trigger the corresponding kernel OOM
+> > > > > handling mechanism.
+> > > > > 
+> > > > > It takes a trusted memcg pointer (or NULL for system-wide OOMs)
+> > > > > as an argument, as well as the page order.
+> > > > > 
+> > > > > Only one OOM can be declared and handled in the system at once,
+> > > > > so if the function is called in parallel to another OOM handling,
+> > > > > it bails out with -EBUSY.
+> > > > 
+> > > > This makes sense for the global OOM handler because concurrent handlers
+> > > > are cooperative. But is this really correct for memcg ooms which could
+> > > > happen for different hierarchies? Currently we do block on oom_lock in
+> > > > that case to make sure one oom doesn't starve others. Do we want the
+> > > > same behavior for custom OOM handlers?
+> > > 
+> > > It's a good point and I had similar thoughts when I was working on it.
+> > > But I think it's orthogonal to the customization of the oom handling.
+> > > Even for the existing oom killer it makes no sense to serialize memcg ooms
+> > > in independent memcg subtrees. But I'm worried about the dmesg reporting,
+> > > it can become really messy for 2+ concurrent OOMs.
+> > > 
+> > > Also, some memory can be shared, so one OOM can eliminate a need for another
+> > > OOM, even if they look independent.
+> > > 
+> > > So my conclusion here is to leave things as they are until we'll get signs
+> > > of real world problems with the (lack of) concurrency between ooms.
+> > 
+> > How do we learn about that happening though? I do not think we have any
+> > counters to watch to suspect that some oom handlers cannot run.
+> 
+> The bpf program which declares an OOM can handle this: e.g. retry, wait
+> and retry, etc. We can also try to mimick the existing behavior and wait
+> on oom_lock (potentially splitting it into multiple locks to support
+> concurrent ooms in various memcgs). Do you think it's preferable?
 
-Interesting.
+Yes, I would just provide different callbacks for global and memcg ooms
+and do the blockin for the latter. It will be consistent with the in
+kernel implementation (therefore less surprising behavior).
 
-Few questions:
-1. Do we always see a CPU sample when a CPU becomes idle? Otherwise we
-will think that the last thread runs on that CPU for arbitrary long,
-when it's actually not.
-2. If yes, can we also lose that "terminating" even when a CPU becomes
-idle? If yes, then it looks equivalent to missing a context switch
-event.
-3. Does this mode kick in even for non system-wide profiles (collected
-w/o context switch events)? If yes, do we properly understand when a
-thread stops running for such profiles? How do we do that? There won't
-be samples for idle/other tasks.
-
-
-
-> And the process updates parallelism so that it can calculate
-> the latency based on the value.  One more point to improve is to remove
-> the idle task from latency calculation.
->
-> Here's an example:
->
->   # perf record -a -- perf bench sched messaging
->
-> This basically forks each sender and receiver tasks for the run.
->
->   # perf report --latency -s comm --stdio
->   ...
->   #
->   #  Latency  Overhead  Command
->   # ........  ........  ...............
->   #
->       98.14%    95.97%  sched-messaging
->        0.78%     0.93%  gnome-shell
->        0.36%     0.34%  ptyxis
->        0.23%     0.23%  kworker/u112:0-
->        0.23%     0.44%  perf
->        0.08%     0.10%  KMS thread
->        0.05%     0.05%  rcu_preempt
->        0.05%     0.05%  kworker/u113:2-
->        ...
->
-> So the latency profile is similar to the overhead.  But when you run
-> with -t option to make it multi-threaded:
->
->   # perf record -a -- perf bench sched messaging -t
->
-> Then the latency profile result differs with the overhead.
->
->   # perf report --latency -s comm --stdio
->   ...
->   #
->   #  Latency  Overhead  Command
->   # ........  ........  ...............
->   #
->       58.94%    94.52%  sched-messaging
->       19.12%     1.22%  perf
->       12.13%     0.77%  ptyxis
->        4.07%     0.28%  gnome-shell
->        1.31%     0.08%  perf-exec
->        0.95%     0.06%  kworker/u113:2-
->        0.86%     0.05%  KMS thread
->        0.85%     0.05%  kworker/18:1-mm
->        ...
->
-> A side effect is that it will most likely show latency output column
-> for system-wide mode by default.
->
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-record.c | 16 ++---------
->  tools/perf/builtin-report.c | 56 +++++++++++++++++++++++++++++--------
->  tools/perf/util/event.c     | 48 ++++++++++++++++++++++++-------
->  tools/perf/util/machine.c   | 21 ++++++++++++++
->  tools/perf/util/machine.h   |  4 +++
->  tools/perf/util/thread.h    | 23 +++++++++++++++
->  6 files changed, 133 insertions(+), 35 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8898357325cf4132..67f746601ac05e4d 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -4062,19 +4062,9 @@ int cmd_record(int argc, const char **argv)
->         }
->
->         if (record.latency) {
-> -               /*
-> -                * There is no fundamental reason why latency profiling
-> -                * can't work for system-wide mode, but exact semantics
-> -                * and details are to be defined.
-> -                * See the following thread for details:
-> -                * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
-> -                */
-> -               if (record.opts.target.system_wide) {
-> -                       pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
-> -                       err = -EINVAL;
-> -                       goto out_opts;
-> -               }
-> -               record.opts.record_switch_events = true;
-> +               /* It can use sample->cpu to get process-level parallelism. */
-> +               if (!target__has_cpu(&record.opts.target))
-> +                       record.opts.record_switch_events = true;
->         }
->
->         if (rec->buildid_mmap) {
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index f0299c7ee0254a37..4294508b9df52d83 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1280,6 +1280,22 @@ static int process_attr(const struct perf_tool *tool __maybe_unused,
->         return 0;
->  }
->
-> +static bool is_latency_requested(void)
-> +{
-> +       if (symbol_conf.parallelism_list_str || symbol_conf.prefer_latency)
-> +               return true;
-> +
-> +       if (sort_order && (strstr(sort_order, "latency") ||
-> +                          strstr(sort_order, "parallelism")))
-> +               return true;
-> +
-> +       if (field_order && (strstr(field_order, "latency") ||
-> +                           strstr(field_order, "parallelism")))
-> +               return true;
-> +
-> +       return false;
-> +}
-> +
->  #define CALLCHAIN_BRANCH_SORT_ORDER    \
->         "srcline,symbol,dso,callchain_branch_predicted," \
->         "callchain_branch_abort,callchain_branch_cycles"
-> @@ -1735,18 +1751,10 @@ int cmd_report(int argc, const char **argv)
->         }
->
->         symbol_conf.enable_latency = true;
-> -       if (report.disable_order || !perf_session__has_switch_events(session)) {
-> -               if (symbol_conf.parallelism_list_str ||
-> -                       symbol_conf.prefer_latency ||
-> -                       (sort_order && (strstr(sort_order, "latency") ||
-> -                               strstr(sort_order, "parallelism"))) ||
-> -                       (field_order && (strstr(field_order, "latency") ||
-> -                               strstr(field_order, "parallelism")))) {
-> -                       if (report.disable_order)
-> -                               ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
-> -                       else
-> -                               ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
-> -                       return -1;
-> +       if (report.disable_order) {
-> +               if (is_latency_requested()) {
-> +                       ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
-> +                       goto error;
->                 }
->                 /*
->                  * If user did not ask for anything related to
-> @@ -1755,6 +1763,30 @@ int cmd_report(int argc, const char **argv)
->                 symbol_conf.enable_latency = false;
->         }
->
-> +       if (!perf_session__has_switch_events(session)) {
-> +               if (evlist__combined_sample_type(session->evlist) & PERF_SAMPLE_CPU) {
-> +                       struct machine *machine = &session->machines.host;
-> +
-> +                       /*
-> +                        * Maintain current process for each CPU to track
-> +                        * parallelism in process level.
-> +                        */
-> +                       ret = machine__create_current_table(machine);
-> +                       if (ret < 0)
-> +                               goto error;
-> +               } else if (is_latency_requested()) {
-> +                       ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
-> +                       goto error;
-> +               }
-> +               else {
-> +                       /*
-> +                        * If user did not ask for anything related to
-> +                        * latency/parallelism explicitly, just don't show it.
-> +                        */
-> +                       symbol_conf.enable_latency = false;
-> +               }
-> +       }
-> +
->         if (last_key != K_SWITCH_INPUT_DATA) {
->                 if (sort_order && strstr(sort_order, "ipc")) {
->                         parse_options_usage(report_usage, options, "s", 1);
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index c23b77f8f854ad21..6c2c9cd68e3afb5e 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -767,16 +767,44 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
->                         al->socket = env->cpu[al->cpu].socket_id;
->         }
->
-> -       /* Account for possible out-of-order switch events. */
-> -       al->parallelism = max(1, min(machine->parallelism, machine__nr_cpus_avail(machine)));
-> -       if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
-> -               al->filtered |= (1 << HIST_FILTER__PARALLELISM);
-> -       /*
-> -        * Multiply it by some const to avoid precision loss or dealing
-> -        * with floats. The multiplier does not matter otherwise since
-> -        * we only print it as percents.
-> -        */
-> -       al->latency = sample->period * 1000 / al->parallelism;
-> +       if (symbol_conf.enable_latency) {
-> +               if (machine->current && al->cpu >= 0) {
-> +                       struct thread *curr = machine->current[al->cpu];
-> +
-> +                       if (curr) {
-> +                               thread__dec_parallelism(curr);
-> +                               thread__put(curr);
-> +                       }
-> +
-> +                       curr = machine__findnew_thread(machine, sample->pid,
-> +                                                      sample->pid);
-> +                       if (curr) {
-> +                               machine->current[al->cpu] = curr;
-> +
-> +                               thread__inc_parallelism(curr);
-> +                               thread__get(curr);
-> +                       }
-> +
-> +                       al->parallelism = curr ? thread__parallelism(curr) : 1;
-> +               } else {
-> +                       /* Account for possible out-of-order switch events. */
-> +                       al->parallelism = max(1, min(machine->parallelism,
-> +                                                    machine__nr_cpus_avail(machine)));
-> +               }
-> +
-> +               if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
-> +                       al->filtered |= (1 << HIST_FILTER__PARALLELISM);
-> +               /*
-> +                * Multiply it by some const to avoid precision loss or dealing
-> +                * with floats. The multiplier does not matter otherwise since
-> +                * we only print it as percents.
-> +                */
-> +               al->latency = sample->period * 1000 / al->parallelism;
-> +
-> +               /* It won't be exciting to see idle threads in latency profile. */
-> +               if (sample->pid == 0)
-> +                       al->latency = 0;
-> +       }
->
->         if (al->map) {
->                 if (symbol_conf.dso_list &&
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2531b373f2cf7ca0..8c0e7d418a88f528 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -117,6 +117,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
->         }
->
->         machine->current_tid = NULL;
-> +       machine->current = NULL;
->         err = 0;
->
->  out:
-> @@ -183,6 +184,12 @@ void machine__exit(struct machine *machine)
->         zfree(&machine->current_tid);
->         zfree(&machine->kallsyms_filename);
->
-> +       if (machine->current) {
-> +               for (int i = 0; i < machine__nr_cpus_avail(machine); i++)
-> +                       thread__put(machine->current[i]);
-> +               zfree(&machine->current);
-> +       }
-> +
->         threads__exit(&machine->threads);
->  }
->
-> @@ -3271,3 +3278,17 @@ int machine__hit_all_dsos(struct machine *machine)
->  {
->         return dsos__hit_all(&machine->dsos);
->  }
-> +
-> +int machine__create_current_table(struct machine *machine)
-> +{
-> +       int nr = machine__nr_cpus_avail(machine);
-> +
-> +       if (nr == 0)
-> +               return -EINVAL;
-> +
-> +       machine->current = calloc(nr, sizeof(*machine->current));
-> +       if (machine->current == NULL)
-> +               return -ENOMEM;
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-> index b56abec84fed1e3f..13d23b14b25e51fc 100644
-> --- a/tools/perf/util/machine.h
-> +++ b/tools/perf/util/machine.h
-> @@ -64,6 +64,8 @@ struct machine {
->         };
->         struct machines   *machines;
->         bool              trampolines_mapped;
-> +       /* per-CPU current process for parallelism */
-> +       struct thread     **current;
->  };
->
->  /*
-> @@ -332,4 +334,6 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
->
->  int machine__hit_all_dsos(struct machine *machine);
->
-> +int machine__create_current_table(struct machine *machine);
-> +
->  #endif /* __PERF_MACHINE_H */
-> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> index cd574a896418ac94..5233436404408d10 100644
-> --- a/tools/perf/util/thread.h
-> +++ b/tools/perf/util/thread.h
-> @@ -39,6 +39,7 @@ DECLARE_RC_STRUCT(thread) {
->         pid_t                   ppid;
->         int                     cpu;
->         int                     guest_cpu; /* For QEMU thread */
-> +       int                     parallelism; /* Valid for group leaders */
->         refcount_t              refcnt;
->         /**
->          * @exited: Has the thread had an exit event. Such threads are usually
-> @@ -359,4 +360,26 @@ void thread__free_stitch_list(struct thread *thread);
->  void thread__resolve(struct thread *thread, struct addr_location *al,
->                      struct perf_sample *sample);
->
-> +static inline int thread__parallelism(const struct thread *thread)
-> +{
-> +       return RC_CHK_ACCESS(thread)->parallelism ? : 1;
-> +}
-> +
-> +static inline void thread__set_parallelism(struct thread *thread, int parallelism)
-> +{
-> +       RC_CHK_ACCESS(thread)->parallelism = parallelism;
-> +}
-> +
-> +static inline void thread__inc_parallelism(struct thread *thread)
-> +{
-> +       if (thread__pid(thread))
-> +               RC_CHK_ACCESS(thread)->parallelism++;
-> +}
-> +
-> +static inline void thread__dec_parallelism(struct thread *thread)
-> +{
-> +       if (thread__pid(thread) && RC_CHK_ACCESS(thread)->parallelism > 0)
-> +               RC_CHK_ACCESS(thread)->parallelism--;
-> +}
-> +
->  #endif /* __PERF_THREAD_H */
-> --
-> 2.49.0
->
+-- 
+Michal Hocko
+SUSE Labs
