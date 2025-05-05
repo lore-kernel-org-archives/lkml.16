@@ -1,134 +1,145 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832422F4F45
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088972F54A0;
+	Mon,  5 May 2025 23:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486962; cv=none; b=OoQa2fMKAjAamyu8rCvoNbka1F/ZQKqm8AkpCSpwCzacXD8MKEpw6+KprTAhEElz8RkQOU2rr56UQjqEI/YUzcyoXIochKYB5lIKanLraGvg8HU4h8oX4e5ooE8rCFaQj6Om/P9vjKJleTWh2KC8AlmVy9PvzXzuSculhopiymw=
+	t=1746486991; cv=none; b=fjMzGPHWmfMRux9xWRMD+cQKZumLDBmNNKaAKRiYqXI7aHOF0RB4m5VZnImn7m7LsnPukw1MXGG5Bgqs0JQtKLTi2Ec6xGpg0WYErEjiXsW12wj/Sg5xcPBclqCWR/wNitgTJYarq7LtTRgG8/hwPsZAz3KrjoljQnihiP+G9CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486962; c=relaxed/simple;
-	bh=krYNUMsEhGAKkDAx01YP/uXWwWJEANf6SSdqIrKdoA0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jWTkQSuFItuQFUkuyj+OCmAaoKY/ciZS74MGsvfMSJIP88Ecbt+b+96Q3lckfGkiKP2ECtoQFu7szm58ZnD2QFEC2ht594qHf9OVXQmbbiKSirjke0TFD084KDLlpMKQP4n4tznOVIXqJmZrp7q+vlJ9gAaoFuBseVOfa9gXQRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DTN+iyjK; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746486991; c=relaxed/simple;
+	bh=Wro6wrYMBIDyNeevBSnG8YYdFFgxh8of1XITTAZow+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QXVelmv5TQ/EIzUH1COujMjvAV0XvKnlVocm6kT/pHk4HmmNTm9nxFa1dhOgRb5hikOG2o4cesSYdoOx6yfsvp7mSHaQdJjpqYjHT7SBqNOmXhBNoO/Uo8l9lwQZT62ba2T2snGQKxjnfzMkRju0+aqUNnRcbV4zMRFHwLAVTZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n84f7Cc4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DTN+iyjK"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30a892f82b3so8262a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 16:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746486959; x=1747091759; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qBtLiqsQAZNornH5wgD7b3jJYD105S/GiDk49aEDwGg=;
-        b=DTN+iyjKej+zspc8uEMmAzxPt3aoXPTgJKSpIQrsMZ2UfMM+KT/o3I04ETTfGb8jmH
-         p3ATOsVKOs146zsOk6NwY9gdymDV7sDXzPLmwNTJGxJQJXOJRftrvj20ajCr3MCjSda+
-         J049BfrKJtPBgpdwOdO3dQtL9zovX7bKQlsok+tMqf03JKU93AM8e+zNt8ENnKWnHE7l
-         2IR3NRAmZcbbSzC+uiEHuWxDtRNuLGGnLoxB5BWb8AWerThLE7iPTLov4HjLVGFC/EqP
-         e6fMSrKXkLLCR/GK/kEPYpnSuEM68VzqolkofbnFCBA9/IGSN+mjswOAzeWFQbMbVvMC
-         h1BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746486959; x=1747091759;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qBtLiqsQAZNornH5wgD7b3jJYD105S/GiDk49aEDwGg=;
-        b=d2cVf+wHvpisAPpr0CvI9mw+JlT8EsAYk0Pyd1SeYCX++1cQuZla7wXbsrkiw+PXjx
-         X8JJpggLtkevqKl0q8cteCgnzDeEjWwhUtyeuyMbys0Mu/lZcGSU/XISqmG/4LoXbzU8
-         MzzoP3SqfutIxwKGjzP0vdYes6rxxh8dndD6zTa/cBLumkvuvb2RcgNELfU576icBtzw
-         M1mtSXv72oLgvkOXb3UozpSrrFN7g3g4G2QSsTXtszV6ujZI1mrSfZeXer+g3heHLKNn
-         VgFmk/Qepn4RMy5sADmJvm+AH3RpJekqgUmiSONtgzq0iRL7h/M6HMSKZWQYyQtMWjQY
-         +s0Q==
-X-Gm-Message-State: AOJu0YwIde4VQn8McoMFW8931FDZBrh8mqC9E0DHXjAhdFhrHFPDpZrD
-	7MUQb34N1fahJBlKWua6Vw1IeqmJtBT5OPoc7uzE7yuF/V05xfYjtKqmbujCMxzp2Hkf7HXl97a
-	YebfMm0j84X+dG4eXHiU2PYchabvRSPUEg+X84g==
-X-Gm-Gg: ASbGnctqW19m4XG6o/RGS3iJHQaxmAyGP6UHi9baTouDUR+YLJGN8n20mby0OsdRv+y
-	850Xg96b6IRAYk6/7W9MtvdeMP5exIDttLluuWj4t9sTZlSkxNbz1cqmRBkxbbjJmN6aKGFPO7H
-	EbjI4TuAUaN0MxHaieq5ax
-X-Google-Smtp-Source: AGHT+IGagPTPgVx/zK3NsPeBBD10ssAbHcDl4TLAybNA5eLO8eptE6YlSL4cJMULg3pPnx1zFjy8HZWl4F2Kr8E+HKM=
-X-Received: by 2002:a17:90b:3842:b0:2ff:4be6:c5e2 with SMTP id
- 98e67ed59e1d1-30a4e6aff6bmr7959705a91.7.1746486958763; Mon, 05 May 2025
- 16:15:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n84f7Cc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D945BC4CEE4;
+	Mon,  5 May 2025 23:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746486990;
+	bh=Wro6wrYMBIDyNeevBSnG8YYdFFgxh8of1XITTAZow+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=n84f7Cc4Nl0e62bqST4y+dn9+wDyCLCZiTH8RO9TMx6EP49LKUIf/mptJKp0M5r0J
+	 /VcHJAhofj9kGQI/kuRFwgTdbdo4MT0BVf+NVT9NmOqD4iwK1agTSMC2fhYtAPrlNE
+	 smQtqif+0rwG0oyZRbsfy0IIFlbAXCdz+Jx6KI3Ct7QwvQdARZK97DsKH7cSi1ByvB
+	 KcY/18hazwZvqAu6tJG0LmRfrqFes6hGjUBompW9r4je3C/6mWpKRKvpTzyjMyBhcG
+	 0nvQeKC13AOH6+Z2Coeu3Gl1nB3SPejsCM9KHtVE0vJ4ZHpGmssll/v1RHgOCkklzA
+	 /T7doo85EZrHA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Balbir Singh <balbirs@nvidia.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	x86@kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 094/153] x86/kaslr: Reduce KASLR entropy on most x86 systems
+Date: Mon,  5 May 2025 19:12:21 -0400
+Message-Id: <20250505231320.2695319-94-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
+References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-295-sashal@kernel.org>
-In-Reply-To: <20250505221419.2672473-295-sashal@kernel.org>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Mon, 5 May 2025 16:15:47 -0700
-X-Gm-Features: ATxdqUGHxmzJ-iTUgsy67bI6uusSMYHzrvElI7q_8rFZmVYMhnN19Tk8UkIP6Bo
-Message-ID: <CADUfDZqvwhL3Hz7_u+TsO5XrpeWX9dHtbehXUtwbJdyi_GXT_A@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.14 295/642] nvme: map uring_cmd data even if
- address is 0
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Xinyu Zhang <xizhang@purestorage.com>, Jens Axboe <axboe@kernel.dk>, 
-	Ming Lei <ming.lei@redhat.com>, Keith Busch <kbusch@kernel.org>, sagi@grimberg.me, 
-	linux-nvme@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.181
+Content-Transfer-Encoding: 8bit
 
-I wouldn't backport this change to any releases. It's a potential
-behavior change if a userspace application was submitting NVMe
-passthru commands with a NULL data pointer but nonzero data length and
-expecting the data buffer to be ignored. And supporting the data field
-set to 0 is only necessary for ublk zero-copy, which is introduced in
-6.15.
+From: Balbir Singh <balbirs@nvidia.com>
 
-Best,
-Caleb
+[ Upstream commit 7ffb791423c7c518269a9aad35039ef824a40adb ]
 
-On Mon, May 5, 2025 at 3:26=E2=80=AFPM Sasha Levin <sashal@kernel.org> wrot=
-e:
->
-> From: Xinyu Zhang <xizhang@purestorage.com>
->
-> [ Upstream commit 99fde895ff56ac2241e7b7b4566731d72f2fdaa7 ]
->
-> When using kernel registered bvec fixed buffers, the "address" is
-> actually the offset into the bvec rather than userspace address.
-> Therefore it can be 0.
->
-> We can skip checking whether the address is NULL before mapping
-> uring_cmd data. Bad userspace address will be handled properly later when
-> the user buffer is imported.
->
-> With this patch, we will be able to use the kernel registered bvec fixed
-> buffers in io_uring NVMe passthru with ublk zero-copy support.
->
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
-> Reviewed-by: Jens Axboe <axboe@kernel.dk>
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Xinyu Zhang <xizhang@purestorage.com>
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
-> Link: https://lore.kernel.org/r/20250227223916.143006-4-kbusch@meta.com
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/nvme/host/ioctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-> index fed6b29098ad3..11509ffd28fb5 100644
-> --- a/drivers/nvme/host/ioctl.c
-> +++ b/drivers/nvme/host/ioctl.c
-> @@ -514,7 +514,7 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, =
-struct nvme_ns *ns,
->                 return PTR_ERR(req);
->         req->timeout =3D d.timeout_ms ? msecs_to_jiffies(d.timeout_ms) : =
-0;
->
-> -       if (d.addr && d.data_len) {
-> +       if (d.data_len) {
->                 ret =3D nvme_map_user_request(req, d.addr,
->                         d.data_len, nvme_to_user_ptr(d.metadata),
->                         d.metadata_len, ioucmd, vec);
-> --
-> 2.39.5
->
+When CONFIG_PCI_P2PDMA=y (which is basically enabled on all
+large x86 distros), it maps the PFN's via a ZONE_DEVICE
+mapping using devm_memremap_pages(). The mapped virtual
+address range corresponds to the pci_resource_start()
+of the BAR address and size corresponding to the BAR length.
+
+When KASLR is enabled, the direct map range of the kernel is
+reduced to the size of physical memory plus additional padding.
+If the BAR address is beyond this limit, PCI peer to peer DMA
+mappings fail.
+
+Fix this by not shrinking the size of the direct map when
+CONFIG_PCI_P2PDMA=y.
+
+This reduces the total available entropy, but it's better than
+the current work around of having to disable KASLR completely.
+
+[ mingo: Clarified the changelog to point out the broad impact ... ]
+
+Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kees Cook <kees@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/Kconfig
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/lkml/20250206023201.1481957-1-balbirs@nvidia.com/
+Link: https://lore.kernel.org/r/20250206234234.1912585-1-balbirs@nvidia.com
+--
+ arch/x86/mm/kaslr.c | 10 ++++++++--
+ drivers/pci/Kconfig |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/mm/kaslr.c | 10 ++++++++--
+ drivers/pci/Kconfig |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 37db264866b64..2ef1951ce1fd6 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -96,8 +96,14 @@ void __init kernel_randomize_memory(void)
+ 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
+ 		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
+ 
+-	/* Adapt physical memory region size based on available memory */
+-	if (memory_tb < kaslr_regions[0].size_tb)
++	/*
++	 * Adapt physical memory region size based on available memory,
++	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
++	 * device BAR space assuming the direct map space is large enough
++	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
++	 * to the physical BAR address.
++	 */
++	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
+ 	/*
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 43e615aa12ffa..8ed3bf14f0ce5 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -176,6 +176,12 @@ config PCI_P2PDMA
+ 	  P2P DMA transactions must be between devices behind the same root
+ 	  port.
+ 
++	  Enabling this option will reduce the entropy of x86 KASLR memory
++	  regions. For example - on a 46 bit system, the entropy goes down
++	  from 16 bits to 15 bits. The actual reduction in entropy depends
++	  on the physical address bits, on processor features, kernel config
++	  (5 level page table) and physical memory present on the system.
++
+ 	  If unsure, say N.
+ 
+ config PCI_LABEL
+-- 
+2.39.5
+
