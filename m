@@ -1,96 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5E225A2AD;
-	Mon,  5 May 2025 14:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D721225A2AD
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456642; cv=none; b=BI4gBJFUivXvfuvqIw0/ewplt0S11KDHw2kHkqDGVOYRmUkzYh0ctbE4CQMG/lpKFtzTWfCCGybJJMyGlK0mXrwiA7ncrKJ+KTQXPysUyMyh2dunslAcsxLeU4lSgt9DNj4VC6IKaY4+rJJjfvzg/f/33UYDKt7OZqbLaLqqS5I=
+	t=1746456701; cv=none; b=MGT0ze6NG7kMWUN/rsfdh0RE2+OtSqWL65k+k5nk0KxkWpckf8ftxfjbzxYirpiubheG8PvQ0LUOEyTFTVFr05mzYRO2vLAVknQEjHX8dEFiWe4yd0KKDE5HCcOHaJPPcFf1DClyI21yDqNqu7eO1w99qoNJiAtN+r8uSgltFqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456642; c=relaxed/simple;
-	bh=1iFA4MrHsrJes5ZE1QowgIQFPmdZzmWGGqNxsUPFh4Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RoAiMtnhnDtOW2mu7fLWZ5q17mbrnakGpEcQBTlpMQg22mHsuSvK+qV3aEhpL8yhO3Glv/1WhumRZBYGXz03pykQ9/yOyroX0dthowPq7ZO5OjBgD2QWMWHbDXuJGFCnY8bUcen/H0es7C+ES0jZhnVqMqzFoBNKGf8vqj+j+JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0OzNpU0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456701; c=relaxed/simple;
+	bh=oCEK/gb2s7VE5NbnwBs9WgyzCdnoTtPR5Hot8Paa4uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d3noAHuonJ0CzJA2K9yk0KOoBcmqrnlbIs36kkMSgAIAlvxePDOHn0Bgu5Qz8WflRTaqA8MwexSHKOWLp5gfa4LtIBAjyy1V7SVyRLuJBRJo3jAEkv/R0eyw5niqjrGR1W4PyFOe4VCSxZ947koQMlwqbzsUvf6cPKv5Wv0F4j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FoAZ1axw; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0OzNpU0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30208C4CEEF;
-	Mon,  5 May 2025 14:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456642;
-	bh=1iFA4MrHsrJes5ZE1QowgIQFPmdZzmWGGqNxsUPFh4Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E0OzNpU0iKfYVt5HWeRDo6+O4e4UQCITUQJXznlokHfRbgJymNjpm/Z0+4AVVdcp2
-	 cdczsXAqz065uby7iJTlMg1B5WsAPus2lTCCnrxL1HSAF1sK9en1bXxkEPTt5O/YV+
-	 wDxCYWiM3hnB/Z0VFNGWT4DhEGbzBaoqwhEiPBcoqn3mczsKq+FaiX1aOBeZdpvUsS
-	 w6mQ59Abi2hTmXl30+jOVEsfnpm4cf8KtNVM+tzysArcj3mGiYw1gqr9/gu8lrN1Xi
-	 OXXUtFGptG7vymwr0D7Hj5JpsOX0RHr6arMGlaT7QioqYy7Mzgk89h43FKkXKar0Ys
-	 p8uO0FiR9GLcw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so5269922e87.2;
-        Mon, 05 May 2025 07:50:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVg0iVwr+L3OJqvONp/PaY7JqplvuqoDI2kXu2cDNnaJBCnf3HB8yrsAYm+++6EdVxdtMMZVEVSuq8=@vger.kernel.org, AJvYcCXl0tQ5bTEGI0bbeP1axLyPiNry4sQSAdaQRkvGrZDpJj4QD4tcI1N89+XSUfdnYTOscbBIBCVix5csrpTP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0JprMuHH7J45QHimSDL3Z/0FVeGk7mYhdwjcDz4rq/UMhYLtQ
-	mhEpf2jR7EhY7nenF0iXRZOjcRWchLklKpvXwf4rFw3ZNGeh6mtiGcJN7CpJgLcwMD+sH2yg4p7
-	er9p2GBgHjKxCkWwa51z9ahvoFiE=
-X-Google-Smtp-Source: AGHT+IHA8epAlrtM8E4rWqur3uZXdyDd6GYi5xUeSJt0bNVPoW0NjLJT4Tn0TVYxCU8fmQ2U99kuAmE5X7y/KAm3gDw=
-X-Received: by 2002:a05:6512:3d0d:b0:54a:cc25:dbe9 with SMTP id
- 2adb3069b0e04-54f9f8732c1mr1906019e87.26.1746456640515; Mon, 05 May 2025
- 07:50:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FoAZ1axw"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso3014367f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:51:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746456698; x=1747061498; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X5qEheQ78VUh9wA81z867KyoEw2DalbMlFj0qM+zfz0=;
+        b=FoAZ1axwKBrJFZ2uX6reeq49ulwtu5AJkVo98myV2slKOjoEYZzunrWfsZh7FyRBKI
+         F6sO6CNmAL8uuhXtwSBmzqW0HlFIwP/4FguixhE9pQHSw00SF487DsTL5OQSPkMk+gey
+         S3DlrmMdoO7CooSaSbNs8+oIzHnvvTl93HCcPkqfnRTmjWJR5d9WdsCINiC8xMYRSJRK
+         KaEKRkuS41eZ3Kr9Pte04J1UoK8yoaVWMRggqY+TE1gqmZQ4BQtMFo9A9LKoeilLWPvY
+         VFGStIEu8Davbcad4QglL38M+P7MV7YFmTHM7i4camyZCVN7WiiQKCeSsgVl9LZBR9u4
+         OQMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746456698; x=1747061498;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X5qEheQ78VUh9wA81z867KyoEw2DalbMlFj0qM+zfz0=;
+        b=OCsQfiVS7bvuQrtHdhhNcjd0efo7ksMVjdemEicKeJLVhxYKgnUayAaQJ2a3nQxS3p
+         F1hJB68I2koRitQEUfb7R2uv/khiEpCNJVC8O3PtpQZ76qVgsm4aoE+Ltq5FXbB7Ks97
+         /szWOz3bD+KXBk/pOwahDNXTCkMcbnW6qOjnMG/0c90vDaO1kZGcO3NPJZJBlShB2w/X
+         dvx78gkc66hz/CJFAjVMMFH60qyXH/wmwnAUHOqmvjTly4Y0a3HvFQyzfgIkc7XWD2BH
+         R1uzjpRIVAyRaDGOFcKnFuCFky3LQmHQhS+SFhMnz1/6ZVD8Swu/+j46GvcCHa4Vx6l0
+         jo1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVcZkexadKWkMqvn16znNd/EVf3hiUX5GP5aJ9bg8++FKvTJSxnAXqnkR0CsKShuygugXxl14/9/hQcwFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9Z6t8iJ4I4VtmCv3+wFfUcWnQPWjIIRw7AAVLYe6J6h3vWkCK
+	18FnwGjy36D0M9de64098wrPT8fMYKHK/uwGFjJVgAOjTs9szzcbTZO6z/F+3LU=
+X-Gm-Gg: ASbGncsYj2GtZUvvjBrkyTHth+j+k3PdM97Hj+5O97GaN6BAxIEf2hZ2i/B8iNN9PUB
+	jnPIGkosf0ClLiJ0tviGJlUXaPfy4AKZBEuJJM36jMeD6ql+LlL16tqiJtkIA0qK5CHiesVz7KD
+	kwPIqVlux4yOLBNdkMFeT5jGhwurhbcJOWJe/jnpRFGydm4bLXN0YXTNjfyFr/DJsMJv9R3fxHi
+	N7ZKi8+3uIVZ5TDoPtfhXehFnkP4ByHJaIBDXpTyFg9FEgQdsaAEPg39R2DCx6aR6mNNLtCWZmS
+	3LDoYYYSs8Aidv3VudGTe7mgURjWgEa4J4JMKLuwd4Vj6w==
+X-Google-Smtp-Source: AGHT+IEVyw/YGLqw4XgUqJUoi8KM9ui43BsDBRvgsDIU2uPCdWA10j2oTFbpLZc6LLbBVKhBuXsc7A==
+X-Received: by 2002:a5d:584c:0:b0:39c:e0e:b27a with SMTP id ffacd0b85a97d-3a09fd739d1mr4661103f8f.23.1746456698048;
+        Mon, 05 May 2025 07:51:38 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae7bbesm10434735f8f.49.2025.05.05.07.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 07:51:37 -0700 (PDT)
+Date: Mon, 5 May 2025 17:51:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Rakie Kim <rakie.kim@sk.com>, Harry Yoo <harry.yoo@oracle.com>,
+	honggyu.kim@sk.com
+Subject: Re: [PATCH v3 2/3] mm,memory_hotplug: Implement numa node notifier
+Message-ID: <aBjQdRZa0713T8hj@stanley.mountain>
+References: <20250502083624.49849-1-osalvador@suse.de>
+ <20250502083624.49849-3-osalvador@suse.de>
+ <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com>
- <20250504095230.2932860-30-ardb+git@google.com> <836eb6be-926b-dfb4-2c67-f55cba4a072b@amd.com>
-In-Reply-To: <836eb6be-926b-dfb4-2c67-f55cba4a072b@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 5 May 2025 16:50:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFPkaBGB9Pq715ChsKvaf1p5wpiL=0_FTvxjPKSwYUrGA@mail.gmail.com>
-X-Gm-Features: ATxdqUEwpo5Pi-eDpro09vMUkVsANuInoVN_OnAMg-vm_xlezfMzpBZwJNZdEIw
-Message-ID: <CAMj1kXFPkaBGB9Pq715ChsKvaf1p5wpiL=0_FTvxjPKSwYUrGA@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 05/23] x86/sev: Move instruction decoder into
- separate source file
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>, 
-	Ingo Molnar <mingo@kernel.org>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
 
-On Mon, 5 May 2025 at 16:48, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 5/4/25 04:52, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > As a first step towards disentangling the SEV #VC handling code -which
-> > is shared between the decompressor and the core kernel- from the SEV
-> > startup code, move the decompressor's copy of the instruction decoder
-> > into a separate source file.
-> >
-> > Code movement only - no functional change intended.
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/x86/boot/compressed/Makefile        |  6 +--
-> >  arch/x86/boot/compressed/misc.h          |  7 +++
-> >  arch/x86/boot/compressed/sev-handle-vc.c | 51 ++++++++++++++++++++
-> >  arch/x86/boot/compressed/sev.c           | 39 +--------------
-> >  4 files changed, 62 insertions(+), 41 deletions(-)
-> >
-> > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> > index 0fcad7b7e007..f4f7b22d8113 100644
-> > --- a/arch/x86/boot/compressed/Makefile
-> > +++ b/arch/x86/boot/compressed/Makefile
-> > @@ -44,10 +44,10 @@ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
-> >  KBUILD_CFLAGS += $(call cc-option,-Wa$(comma)-mrelax-relocations=no)
-> >  KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
-> >
-> > -# sev.c indirectly includes inat-table.h which is generated during
-> > +# sev-decode-insn.c indirectly includes inat-table.c which is generated during
->
-> did you mean sev-handle-vc.c ?
->
+On Fri, May 02, 2025 at 11:28:02AM -0400, Gregory Price wrote:
+> On Fri, May 02, 2025 at 10:36:23AM +0200, Oscar Salvador wrote:
+> > There are at least six consumers of hotplug_memory_notifier that what they
+> > really are interested in is whether any numa node changed its state, e.g: going
+> > from being memory aware to becoming memoryless and vice versa.
+> > 
+> > Implement a specific notifier for numa nodes when their state gets changed,
+> > and have those consumers that only care about numa node state changes use it.
+> > 
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> > Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >  
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index f43951668c41..b3ad63fb3a2b 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -3591,20 +3591,20 @@ static int wi_node_notifier(struct notifier_block *nb,
+> >  			       unsigned long action, void *data)
+> >  {
+> >  	int err;
+> > -	struct memory_notify *arg = data;
+> > +	struct node_notify *arg = data;
+> >  	int nid = arg->status_change_nid;
+> >  
+> >  	if (nid < 0)
+> >  		return NOTIFY_OK;
+> >  
+> >  	switch (action) {
+> > -	case MEM_ONLINE:
+> > +	case NODE_BECAME_MEM_AWARE:
+> >  		err = sysfs_wi_node_add(nid);
+> >  		if (err)
+> >  			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
+> >  			       nid, err);
+> >  		break;
+> 
+> May I suggest rolling this patch in with this change:
+> https://lore.kernel.org/linux-mm/aAij2oUCP1zmcoPv@stanley.mountain/
+> 
+> seems to fix the underlying problem, and returning an error now makes
+> sense given the change. 
+> 
+> +cc: Honggyu Kim, Dan Carpenter
+> 
 
-Ah yes - I renamed that at some point and forgot to update the comment.
+Oops.  I sent a v2 of that patch.  I imagine that Andrew will fold that
+patch into Rakie Kim's patch.
+
+https://lore.kernel.org/all/aBjL7Bwc0QBzgajK@stanley.mountain
+
+regards,
+dan carpenter
+
