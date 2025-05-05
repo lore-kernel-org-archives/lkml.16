@@ -1,86 +1,141 @@
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0712475C2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F4826B2B0;
+	Mon,  5 May 2025 17:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464612; cv=none; b=X0C8lKzZNMNUC7NCv6JIBI2ue3xXNT1UGS3yL4OtsLnOUvoyeBh1SWW4lFykyddbYzH+EKw0RujvFtzLA/lkw7dntHw0RXIJmjNZMMkAYQPJ0BLkjelXm0NASg4djsbNBW+h7J4JaWIV7CP79m9Q6QRUdl3uy8ty7ywOl/0NyyE=
+	t=1746464623; cv=none; b=XQtH34oV7gEN5LHh5tL//2eXY91NSXFeLiFBk2sh83m+iudNiXRt17psOKOMNaF3932T2OQSB2XFnWyfCbFAG+y6xLoS4KkCoixrd01OOhaqfYaLSKHf2+nzmz05fP2Ic+0YbA16j88a97lLtAdQgyxC0n/mrA19eAeVxtDkHP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464612; c=relaxed/simple;
-	bh=O8rOdQGd3Qx25ktSEiI9XBLByA8iYv7K7x8QfZ7aXm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mYQAW3uHYx4oF2tRNTjDLSOvhraT8bBOITsoWWOVG7xyO8FTteS3KRLT+cmgyPfOngYLdIOAwPyk4xjFrx4jbuALLGs+33kaljW6gzxGRbFrx4iwVjUzr1CqEg3muk5yvH0o+42C1rTajQDbUCbUcrkmtX2Qa/qvB6Qbom7UYS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=PJoNYaOk; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746464623; c=relaxed/simple;
+	bh=HrusCc9SBsT/pb7NKHxA3xrw80w8tMv119nD1CjzK+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EP1pD/ZUHeIv4cRsPd+D3SAieVGZNF5LzlYeAQ7Kg2tOdb74U7E2xIpp6x1DxTCCRqL6gIqxIlQkBljIK27n0OE6BYeJRvqB6Syh+VoNs0pmnYQ6gNA281jyEyfTvF4ACtsfz59vYT3DiTWIaOjKt02DnvdoYJ3XmzZ4Gyl+PYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvubux5p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="PJoNYaOk"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id BzCjukjVgnnhRBzCjuPOCm; Mon, 05 May 2025 19:02:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746464532;
-	bh=WvsrgFA+w+aYl14yXnX6A0AN1m8LCt/V06vhbcxA7PA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=PJoNYaOkJlHxJzmZEp3gtHI28+qoZi5Tq3TeIQ40ZwPWXEaX356XZ8oYAUGEaYMhJ
-	 tkRCRGTCTpupYCV1IzXiQXJHiM2eBWvNfiswKqHTfvtqoHeE88NKKJBI/XEo25v+3r
-	 l4PHmQwfILHx0sowK3JF4gjKp1vyjazmZAgy9UV/9ZAdcl3B98AbCUabPjgaN+L7F1
-	 fj20q8sS+UO/QoUGMyrzvJ/L4GZR3fkLB5FVtjHBFYTI8yYeW2EKCz86hXWZmlTwMj
-	 0tdefDRLb0PAt22IkqU2cMZ5qR0oMn60/NIpYK2JSTvylqSoiPWx8r0fGHroNIvzK7
-	 hiDST/WDKPf2Q==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 05 May 2025 19:02:12 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <fb94c25d-80af-41c5-a4b7-230dcd0f1d64@wanadoo.fr>
-Date: Mon, 5 May 2025 19:02:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvubux5p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BFDC4CEE4;
+	Mon,  5 May 2025 17:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746464620;
+	bh=HrusCc9SBsT/pb7NKHxA3xrw80w8tMv119nD1CjzK+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hvubux5pL2EOx+kHP1U90MusMRROW6uMVmzZrOMwGL1OkdOm+EGwA3NRRo/u96oqI
+	 lPW4AOB0NjOAv1hMaEV3MVkiW9fjyLqhnRpPClxqdYm3GSL/afBpH4faP7tHqN9+p4
+	 Kn6OafJCkdT0njX3PkrTQ+MGgX7NB/XjdoH91FqGxcvHkq9fd3FkxaGhESnpeEyIko
+	 NrgqUWZy9dB1bPvhpT/0+HbD4x3kYpsPj130Fid8tq/KZITK7l8nppMDqLeS3hptgV
+	 hUl0tZ8TPp2TXKsMr/Ljib2TsW9INPsmX4HTZV5jkrWqozhnAJvrfnxBJjw4mUR0iu
+	 VdNZ7So4f39VQ==
+Date: Mon, 5 May 2025 10:03:36 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Subject: Re: [PATCH v2 2/2] dm: pass through operations on wrapped inline
+ crypto keys
+Message-ID: <20250505170336.GA197153@sol>
+References: <20250501212320.8281-1-ebiggers@kernel.org>
+ <20250501212320.8281-3-ebiggers@kernel.org>
+ <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] locking/mutex: Mark devm_mutex_init() as __must_check
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
- Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
- Will Deacon <will@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20250505-must_check-devm_mutex_init-v5-1-92fa4b793c6e@weissschuh.net>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250505-must_check-devm_mutex_init-v5-1-92fa4b793c6e@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
 
-Le 05/05/2025 à 09:59, Thomas Weißschuh a écrit :
-> Even if it's not critical, the avoidance of checking the error code
-> from devm_mutex_init() call today diminishes the point of using the devm
-> variant of it. Tomorrow it may even leak something. Enforce all callers
-> checking the return value through the compiler.
+On Mon, May 05, 2025 at 06:15:01PM +0200, Mikulas Patocka wrote:
 > 
-> As devm_mutex_init() itself is a macro, it can not be annotated
-> directly. Annotate __devm_mutex_init() instead.
-> Unfortunately __must_check/warn_unused_result don't propagate through
-> statement expression. So move the statement expression into the argument
-> list of the call to __devm_mutex_init() through a helper macro.
 > 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> On Thu, 1 May 2025, Eric Biggers wrote:
+> 
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > Make the device-mapper layer pass through the derive_sw_secret,
+> > import_key, generate_key, and prepare_key blk-crypto operations when all
+> > underlying devices support hardware-wrapped inline crypto keys and are
+> > passing through inline crypto support.
+> > 
+> > Commit ebc4176551cd ("blk-crypto: add basic hardware-wrapped key
+> > support") already made BLK_CRYPTO_KEY_TYPE_HW_WRAPPED be passed through
+> > in the same way that the other crypto capabilities are.  But the wrapped
+> > key support also includes additional operations in blk_crypto_ll_ops,
+> > and the dm layer needs to implement those to pass them through.
+> > derive_sw_secret is needed by fscrypt, while the other operations are
+> > needed for the new blk-crypto ioctls to work on device-mapper devices
+> > and not just the raw partitions.
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> >  drivers/md/dm-table.c | 177 ++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 177 insertions(+)
+> > 
+> > diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> > index a937e1e12482e..0a71bedff81c5 100644
+> > --- a/drivers/md/dm-table.c
+> > +++ b/drivers/md/dm-table.c
+> > +
+> > +static int dm_exec_wrappedkey_op(struct blk_crypto_profile *profile,
+> > +				 struct dm_wrappedkey_op_args *args)
+> > +{
+> > +	struct mapped_device *md =
+> > +		container_of(profile, struct dm_crypto_profile, profile)->md;
+> > +	struct dm_target *ti;
+> > +	struct dm_table *t;
+> > +	int srcu_idx;
+> > +	int i;
+> > +
+> > +	args->err = -EOPNOTSUPP;
+> > +
+> > +	t = dm_get_live_table(md, &srcu_idx);
+> > +	if (!t)
+> > +		goto out;
+> > +
+> > +	/*
+> > +	 * blk-crypto currently has no support for multiple incompatible
+> > +	 * implementations of wrapped inline crypto keys on a single system.
+> > +	 * It was already checked earlier that support for wrapped keys was
+> > +	 * declared on all underlying devices.  Thus, all the underlying devices
+> > +	 * should support all wrapped key operations and they should behave
+> > +	 * identically, i.e. work with the same keys.  So, just executing the
+> > +	 * operation on the first device on which it works suffices for now.
+> > +	 */
+> > +	for (i = 0; i < t->num_targets; i++) {
+> > +		ti = dm_table_get_target(t, i);
+> > +		if (!ti->type->iterate_devices)
+> > +			continue;
+> > +		ti->type->iterate_devices(ti, dm_wrappedkey_op_callback, args);
+> > +		if (!args->err)
+> > +			break;
+> > +	}
+> 
+> I have a dumb question - if it doesn't matter through which block device 
+> do you set up the keys, why do you set them up through a block device at 
+> all?
+> 
+> What about making functions that set up the keys without taking block 
+> device as an argument, calling these functions directly and bypassing 
+> device mapper entirely?
 
-Hi,
+Userspace needs to direct the key setup operations, so we'd need a UAPI for it
+to do so.  We could add a custom syscall, or some hacked-up extension of
+add_key(), and add a custom registration mechanism to allow a single
+implementation of wrapped keys (e.g. from ufs-qcom) to register itself as the
+system's wrapped key provider which the syscall would then use.
 
-	git grep ^[^=]*devm_mutex_init
+But it seemed cleaner to instead use block device ioctls and take advantage of
+the existing blk-crypto-profile.  That already handles registering and
+unregistering the implementation, and it also already handles things like
+locking, and resuming the UFS controller if it's in suspend.
 
-returns:
-	 drivers/leds/leds-lp8860.c
+It also keeps the door open to supporting the case where different
+wrapped-key-capable block devices don't necessarily accept the same keys, even
+if that isn't the case currently.
 
-Based on -next, it would break.
-
-Should it be patched first?
-
-CJ
+- Eric
