@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F6029AAF4;
-	Mon,  5 May 2025 22:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5A8359DF4;
+	Mon,  5 May 2025 22:42:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485050; cv=none; b=O9TfjDZJbQ543fcWkmkdlgkdcWrhsN7tyPkZM9GqlaozaGhWMHCYE6fN4/O3+wHKVAf9YvFiM3Z43Avjr3AsLQAZGpP+dCTAXl3JvvqPZc2dgDvNnrXFF3Db4ZKfzCodEUaB5INmc2oGtccMqGzHL8abEWnA9GWAfNyPc7IQVpk=
+	t=1746484969; cv=none; b=hM16aItbwxNDcj0LocMUxa0sFI9tEnYoLVgzG/vNm1z4hvA2gEN8QOp163sSukkDtN7v5zo024Hnfkt04BGw6VNsJ/tQ8Jey8pHv0IHF0X3wevwzNj2Ta7IBGQ8bXX7fHS4D8TNIGwhFO606X3+YYwT224GOno1KWrruBmrOyGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485050; c=relaxed/simple;
-	bh=a3QzQ1hg2SV2WrVAJY6TwiYvWvPfuFP+s0Y2RBN2kPg=;
+	s=arc-20240116; t=1746484969; c=relaxed/simple;
+	bh=yVGBpTjBCfvZxXBpqe0Kw6YV/IDInWxub7cJTiGyZsc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fujrG/KftZN7pjUy+JVH5Vg31E4lSii+FvofzEe+5v62UgSMMHgtlwaLQLLt3KreXXXNiX6sSXKyWjvyepY7W68vo7UTCAh16aUKM+SJFAxzvW2R4Dz+bwD7C9sQDoW0KcimzfYKo+E0E29TR6vSAMfmm6+ndvQohVKYTu0vRTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdsrFeQM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N6wPmBHXoKrqa4YbvpMUCYuN9Rh7rB3aZg7iiFo6NMhATLsQSU5xIKBcx4C21r8UmSnE+4cDaVxHNpQtRqaj0Jgl7Z0ryq5tRRrOK3DxkW+lHUtU0KmU/HBzt4OxyDhEbZcmOliTXleWnQk44sko0cmcacXV7kIS2zM8Xv3GqZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZDp6su/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdsrFeQM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE06C4CEED;
-	Mon,  5 May 2025 22:44:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZDp6su/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BC1C4CEF1;
+	Mon,  5 May 2025 22:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485050;
-	bh=a3QzQ1hg2SV2WrVAJY6TwiYvWvPfuFP+s0Y2RBN2kPg=;
+	s=k20201202; t=1746484968;
+	bh=yVGBpTjBCfvZxXBpqe0Kw6YV/IDInWxub7cJTiGyZsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gdsrFeQMsBS7n06mhbbuoFfDCpWDo8rfH+dQr91NCtsrB9oQ0czLg4ORdu4gzIdUz
-	 cI6DdbwmjjAjLUb2TxlMLRs/tRMcbCj8xqgfMexuLXli5Mt/qnYIEI3P8zXdVZ/q6B
-	 pDHfc35HeGa9mAv+ft4MMgyK1rsdHyEIe8mJivk1Vo9xJpEKlgzM2d+fY1ol4Xh2Z2
-	 zdcm9NNPaOrAOnc3W5Poomr2dZxgDY5Nek5jm/nTyOMYKGqItUJlI/GQbUH8Ifvniq
-	 urskdsXvk14+I7P6GxQGeFu0EsMyYV2S8UoxOyiqZHZH2wX2LiFWyzfT0JIqVntzNU
-	 vW3cz23Mqntiw==
+	b=LZDp6su/4ct4WCWsOjkgjeB0vbVGP2oDZrC8E+TQn8rmj/Mggo4nzmgEQ26tJ3Csh
+	 IHdz5x2phMpXvKRBe5cBjrlydor8XpUEFW3nmpT082WRouqfTJvqfXByW2XcC/mx/L
+	 RwX6zGU/A6rKpXAz7S/9h0Al+pDv9vg8mGhilhhfIU6hQjoxg2EWZtCfD6hBwoem4Z
+	 /U891HtTW5IJE+XhdDCd+oYdOHvVC1MVe3953ABQ5pWbQkNvwzsoUKh7dpR4AB28b4
+	 J/5On5OPEgPASAv4kWp/UOqSmfZ5E7s4tS47SGGe1myI+tss2aoMDfqydRHpIk2PPX
+	 6FudB8Isp8gQA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
-	Mathias Nyman <mathias.nyman@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Mykyta Yatsenko <yatsenko@meta.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
 	Sasha Levin <sashal@kernel.org>,
-	mathias.nyman@intel.com,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 142/486] usb: xhci: Don't change the status of stalled TDs on failed Stop EP
-Date: Mon,  5 May 2025 18:33:38 -0400
-Message-Id: <20250505223922.2682012-142-sashal@kernel.org>
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 100/486] bpf: Return prog btf_id without capable check
+Date: Mon,  5 May 2025 18:32:56 -0400
+Message-Id: <20250505223922.2682012-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,66 +53,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Michal Pecio <michal.pecio@gmail.com>
+From: Mykyta Yatsenko <yatsenko@meta.com>
 
-[ Upstream commit dfc88357b6b6356dadea06b2c0bc8041f5e11720 ]
+[ Upstream commit 07651ccda9ff10a8ca427670cdd06ce2c8e4269c ]
 
-When the device stalls an endpoint, current TD is assigned -EPIPE
-status and Reset Endpoint is queued. If a Stop Endpoint is pending
-at the time, it will run before Reset Endpoint and fail due to the
-stall. Its handler will change TD's status to -EPROTO before Reset
-Endpoint handler runs and initiates giveback.
+Return prog's btf_id from bpf_prog_get_info_by_fd regardless of capable
+check. This patch enables scenario, when freplace program, running
+from user namespace, requires to query target prog's btf.
 
-Check if the stall has already been handled and don't try to do it
-again. Since xhci_handle_halted_endpoint() performs this check too,
-not overwriting td->status is the only difference.
-
-I haven't seen this case yet, but I have seen a related one where
-the xHC has already executed Reset Endpoint, EP Context state is
-now Stopped and EP_HALTED is set. If the xHC took a bit longer to
-execute Reset Endpoint, said case would become this one.
-
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20250311154551.4035726-3-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
+Link: https://lore.kernel.org/bpf/20250317174039.161275-3-mykyta.yatsenko5@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-ring.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 3e70e4f6bf083..fbc8419a54730 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1156,7 +1156,14 @@ static void xhci_handle_cmd_stop_ep(struct xhci_hcd *xhci, int slot_id,
- 	 */
- 		switch (GET_EP_CTX_STATE(ep_ctx)) {
- 		case EP_STATE_HALTED:
--			xhci_dbg(xhci, "Stop ep completion raced with stall, reset ep\n");
-+			xhci_dbg(xhci, "Stop ep completion raced with stall\n");
-+			/*
-+			 * If the halt happened before Stop Endpoint failed, its transfer event
-+			 * should have already been handled and Reset Endpoint should be pending.
-+			 */
-+			if (ep->ep_state & EP_HALTED)
-+				goto reset_done;
-+
- 			if (ep->ep_state & EP_HAS_STREAMS) {
- 				reset_type = EP_SOFT_RESET;
- 			} else {
-@@ -1167,8 +1174,11 @@ static void xhci_handle_cmd_stop_ep(struct xhci_hcd *xhci, int slot_id,
- 			}
- 			/* reset ep, reset handler cleans up cancelled tds */
- 			err = xhci_handle_halted_endpoint(xhci, ep, td, reset_type);
-+			xhci_dbg(xhci, "Stop ep completion resetting ep, status %d\n", err);
- 			if (err)
- 				break;
-+reset_done:
-+			/* Reset EP handler will clean up cancelled TDs */
- 			ep->ep_state &= ~EP_STOP_CMD_PENDING;
- 			return;
- 		case EP_STATE_STOPPED:
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 977c084577565..fc048d3c0e69f 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -4606,6 +4606,8 @@ static int bpf_prog_get_info_by_fd(struct file *file,
+ 	info.recursion_misses = stats.misses;
+ 
+ 	info.verified_insns = prog->aux->verified_insns;
++	if (prog->aux->btf)
++		info.btf_id = btf_obj_id(prog->aux->btf);
+ 
+ 	if (!bpf_capable()) {
+ 		info.jited_prog_len = 0;
+@@ -4752,8 +4754,6 @@ static int bpf_prog_get_info_by_fd(struct file *file,
+ 		}
+ 	}
+ 
+-	if (prog->aux->btf)
+-		info.btf_id = btf_obj_id(prog->aux->btf);
+ 	info.attach_btf_id = prog->aux->attach_btf_id;
+ 	if (attach_btf)
+ 		info.attach_btf_obj_id = btf_obj_id(attach_btf);
 -- 
 2.39.5
 
