@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E7029AAE3;
-	Mon,  5 May 2025 22:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCEF29AB00;
+	Mon,  5 May 2025 22:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485046; cv=none; b=JqRGCL0H97SCGcBMozQKVQn+pZ1Z7xrVPQaxJCUbj0NzghL9wwmXCrGX46HCOx+RafvTPQOj4Te3LpjNwzca7CZFNveuw77YTVhaw+fkI/V52v4+0k3OmicJeEcYFqs/YqV+o8No1fsltca1eDZGvd83Tmip/UBCG3RevlqjWb4=
+	t=1746485049; cv=none; b=RhwEEMUq4LlnBQWu3BGIf9xVh5pOzRMHELus0GtUt9coBsJ8DQsOVv7+FdXJqgHHImvsaygfcpGVar74frnoCixB1lYf/FXHVTMx1jkd4ce+QFmhXbtaYaBb0hESn6+c59BVdwAmRqDUkLqk9MYYwVzsFwima5L3bmhBWRf+EgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485046; c=relaxed/simple;
-	bh=WrYgjwgr/9o03S6ZhA/vJb4SpUBmDleEkeOL4Gp00bE=;
+	s=arc-20240116; t=1746485049; c=relaxed/simple;
+	bh=dKplsdO0QespV981ykJXLvjosiYEVvEB0Xth2m7bseA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YdEnmrFcF+QsL++BBbbo0xKMdWm/5HkYMehnjUkZLmNQbCoP26L4ezpz/9IMpZ9iCE4tbugfIwzbd1jBgf/5WV3KvQrSSSPBHJt/Jm1tc+nn7o+qw7SHCbJeRW1UQkHDUieTKW2KEhVuGndKRtvhHywY75LsUbvIZCJSAAAJmq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z47LkCg3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lOhbIb+NZNyRrr0E0WzpftL/scZ8fpEAXjF/0JcYjFXInIAyaukZR7PPuNDK6OxHKpOhqbZO6TVMqk1lMpnJLbOpsS8cafBBYhUZk03WY7Osce0hAYWaFCdyICu4PhQy8IGfqEziM9JldJEjy8TZn5baypGZhRdP8jeJZ9OUoqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrMEfmNN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z47LkCg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97291C4CEE4;
-	Mon,  5 May 2025 22:44:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrMEfmNN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5C2C4CEEF;
+	Mon,  5 May 2025 22:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485046;
-	bh=WrYgjwgr/9o03S6ZhA/vJb4SpUBmDleEkeOL4Gp00bE=;
+	s=k20201202; t=1746485049;
+	bh=dKplsdO0QespV981ykJXLvjosiYEVvEB0Xth2m7bseA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z47LkCg3mGGJr0YlDkA+MAxSntJrBJKjQB944CtOYrHB4bEirpsp2bMMysNPYXwS3
-	 kSlE2qqUwPXXNvdv21D3+xm9Y/4/SwFrK4AIlhYk6Qnk/rozEL58b1PiAJX/yry/Ur
-	 W5Fp02zV7FRUsl32bLgiFOyH0L+oO8EEu/QQtUyFTR0ul9BVzhT9i5v0IWhll2n/pj
-	 hVQA0fdyfQuL+A0LT4VGbdY10t0ZCYOTydAzu+On88RnG0AsmIj8b3MVYkPeD2lCZM
-	 XlTm/IU1UtlCLzDBA2hhF7iIk04TNZgGsrYM6gUnLUVLAUytRttABRD22Qa99kmefE
-	 FtCrEdLZlQhzw==
+	b=GrMEfmNNka0mpHR0//FDhRzVZhy6OIleRykiPRGMSGVd04/ecoHzGxpScr5YmthRZ
+	 RR+ql5cbaEeGAlMK/H8THl3mtDWW10gayE96U3PEQeabpDYq+FnhLc2SK38DnUiAVo
+	 EdI1KKIYEvKuAMvXvVzffe+u+IOsIiME9ES5m7IS4lod1Ym7q8DJZLRBzZt1yWPQ5R
+	 BYfXLeNb5Dvh54xJ2MGPN84b2SWkhK9FLOLGhkA8nVEm1nChItibweycECjRukeZiS
+	 TKjNTPUmyWFHScqhSyaTPf4OGWNO4Vg2qdOUlQY+sgKOi8D/dSCLcc3UkAHG83TGk3
+	 xlzmtQHikQCow==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Erick Shepherd <erick.shepherd@ni.com>,
+	Kyle Roeschley <kyle.roeschley@ni.com>,
+	Brad Mouring <brad.mouring@ni.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	yangyicong@hisilicon.com,
-	ioworker0@gmail.com
-Subject: [PATCH AUTOSEL 6.12 139/486] arm64/mm: Check PUD_TYPE_TABLE in pud_bad()
-Date: Mon,  5 May 2025 18:33:35 -0400
-Message-Id: <20250505223922.2682012-139-sashal@kernel.org>
+	linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 141/486] mmc: sdhci: Disable SD card clock before changing parameters
+Date: Mon,  5 May 2025 18:33:37 -0400
+Message-Id: <20250505223922.2682012-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,52 +48,55 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ryan Roberts <ryan.roberts@arm.com>
+From: Erick Shepherd <erick.shepherd@ni.com>
 
-[ Upstream commit bfb1d2b9021c21891427acc86eb848ccedeb274e ]
+[ Upstream commit fb3bbc46c94f261b6156ee863c1b06c84cf157dc ]
 
-pud_bad() is currently defined in terms of pud_table(). Although for some
-configs, pud_table() is hard-coded to true i.e. when using 64K base pages
-or when page table levels are less than 3.
+Per the SD Host Controller Simplified Specification v4.20 §3.2.3, change
+the SD card clock parameters only after first disabling the external card
+clock. Doing this fixes a spurious clock pulse on Baytrail and Apollo Lake
+SD controllers which otherwise breaks voltage switching with a specific
+Swissbit SD card.
 
-pud_bad() is intended to check that the pud is configured correctly. Hence
-let's open-code the same check that the full version of pud_table() uses
-into pud_bad(). Then it always performs the check regardless of the config.
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250221044227.1145393-7-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Kyle Roeschley <kyle.roeschley@ni.com>
+Signed-off-by: Brad Mouring <brad.mouring@ni.com>
+Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20250211214645.469279-1-erick.shepherd@ni.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 8ee56ae999c16..5ba8376735cb0 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -806,7 +806,8 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- 	pr_err("%s:%d: bad pmd %016llx.\n", __FILE__, __LINE__, pmd_val(e))
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 4b91c9e966357..8ae76300d157d 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2035,10 +2035,15 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
  
- #define pud_none(pud)		(!pud_val(pud))
--#define pud_bad(pud)		(!pud_table(pud))
-+#define pud_bad(pud)		((pud_val(pud) & PUD_TYPE_MASK) != \
-+				 PUD_TYPE_TABLE)
- #define pud_present(pud)	pte_present(pud_pte(pud))
- #ifndef __PAGETABLE_PMD_FOLDED
- #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
+ 	host->mmc->actual_clock = 0;
+ 
+-	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
++	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++	if (clk & SDHCI_CLOCK_CARD_EN)
++		sdhci_writew(host, clk & ~SDHCI_CLOCK_CARD_EN,
++			SDHCI_CLOCK_CONTROL);
+ 
+-	if (clock == 0)
++	if (clock == 0) {
++		sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
+ 		return;
++	}
+ 
+ 	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
+ 	sdhci_enable_clk(host, clk);
 -- 
 2.39.5
 
