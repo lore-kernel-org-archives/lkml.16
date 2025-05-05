@@ -1,45 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC9D2ED073;
-	Mon,  5 May 2025 23:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957752EC879;
+	Mon,  5 May 2025 23:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486513; cv=none; b=A7AcAhVqMERBi9tuiM4o4mUoJ4AGBCxl11H+et0Kczv2ctg08uXFZX4S1M7UMFrczQXyJAp6PHi92m147aq7wyDL9Jh9tWP4N6Ov4hTkO9j5LfQFHxHD/QeV2cAJSAUbVYze7xL0vslfV9wJOwmqZwZZJVn/ybT/AjVs6jPZBEo=
+	t=1746486461; cv=none; b=aI5gtRNw1lsAxBxZS6/f3jZSgQ6USrlWw1SPDwpkzccfkZ/5AlwrVFWdMoQly15ZIsEF6FI/y+Yv6OLTBv9Y6s4guq5Xy32bV6IuvZnA0edKBrUG4Ehs8CFBJvNuYNfGNhJBKXFN6bceMkryJ2/BM9fK9Gnm7H832/suDb2w5kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486513; c=relaxed/simple;
-	bh=Kfxjcfkvpwbdn4CXyIu65kr1S72kI7LkZeWuAYJgqF0=;
+	s=arc-20240116; t=1746486461; c=relaxed/simple;
+	bh=N8IwUxpIjGA+yNQjDHdf8PS3Q1MkIP6rgd8fc2Nu+b0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Or++XMzJUmG7SiEFgY00VNdaVDsp88r8ZLN6KZIWk/stZECB3qmDWjcKrAO13oBBMjHgOoB1NpuNXgh/HITxDbJLdiOgZrRRiPIxTZeyMenqR0OmipQGHtGPk0Sf/gRZo2zIvFeGxjJpTrybrpQIOnv5JCwDDEvVJfMKcAjpWZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgMEbSzG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XQoE29Iu7pKjFXcpmNqQrO15ovm/SDn1uLkMRurVY9rx5CCsSKB+HI6j69Cx/wyiP7wR77l4n3ZHs4RuWp8j1TLDVscg6bzhqv09X1WTZnmygcs0MojPKVZw6YfRlkaqAqcBM30uggPzO+hMcPBwv8Sf/0GRWC2NgwsJ/JZU6MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTPCFWtM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgMEbSzG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E585C4CEEF;
-	Mon,  5 May 2025 23:08:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTPCFWtM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BB4C4CEE4;
+	Mon,  5 May 2025 23:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486513;
-	bh=Kfxjcfkvpwbdn4CXyIu65kr1S72kI7LkZeWuAYJgqF0=;
+	s=k20201202; t=1746486460;
+	bh=N8IwUxpIjGA+yNQjDHdf8PS3Q1MkIP6rgd8fc2Nu+b0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JgMEbSzGs6vTHkLuS9lioKJE7q9zLrV5E17Y4QVERdDaXh93GJC0WkCNwSh/Ev4LP
-	 heDJmi4SKhJKaOlf/BLOssU3FbmJjkkB4PR37aQZJi/wqxAcK8r3hYUHr9E2+LdB55
-	 ABInUedUQpyKG5LwScB/UF0jdnSHGvp8xeD4zMNIFxwHmZxcwaaYbRXHaTpN2aBqlx
-	 3wbdneJ2RLTjzPa+UuXLSbRn0hb7QQlelKJFh43kvE+wkpYt5hQHjHUTlwYrDygpJt
-	 MaaY5xdAsRxxVPQUds4BEjJg8F+VMIO75BD+1v9ZgA0Ds3SxfJoMzAkqCENeLQKy/t
-	 P2jWmxsStowgQ==
+	b=ZTPCFWtM/oFKdhkMPEjzm+NHdEGajZYQ8g53H1bmIVRjdo60UDypHZp2yFhNDBF/7
+	 E/J7owqgB/FsXD5cVUczppRowg1NsN3Y7zzTEaMKsqbuIWUH3ZQoe4htnXZGi42QUe
+	 SWi/S9R3pCWgSaimnAlXiMZlmCm8b3F75u/tiITwaFnm2WNoUD66ZWE0Sb21dDO+jj
+	 7UTVZLY9eVf8iKO3EMgqGCJ9tv7dIGEPf+4kQ3D9kCSb9Wp855EX/AEpcL9CHKau6T
+	 3V3KfWo+4bN2wOLwfAELXJ4nXB5udWO7hllPPtmIK4pl427ht4lA3IN+t4UY96lDTR
+	 dEQ6o9HDaEfaA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kaustabh Chakraborty <kauschluss@disroot.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Jing Zhou <Jing.Zhou@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>,
+	Chris Park <chris.park@amd.com>,
+	Eric Yang <eric.yang@amd.com>,
+	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jh80.chung@samsung.com,
-	krzk@kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 069/212] mmc: dw_mmc: add exynos7870 DW MMC support
-Date: Mon,  5 May 2025 19:04:01 -0400
-Message-Id: <20250505230624.2692522-69-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	Charlene.Liu@amd.com,
+	ovidiu.bunea@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.1 041/212] drm/amd/display: Guard against setting dispclk low for dcn31x
+Date: Mon,  5 May 2025 19:03:33 -0400
+Message-Id: <20250505230624.2692522-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -54,172 +64,111 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
+From: Jing Zhou <Jing.Zhou@amd.com>
 
-[ Upstream commit 7cbe799ac10fd8be85af5e0615c4337f81e575f3 ]
+[ Upstream commit 9c2f4ae64bb6f6d83a54d88b9ee0f369cdbb9fa8 ]
 
-Add support for Exynos7870 DW MMC controllers, for both SMU and non-SMU
-variants. These controllers require a quirk to access 64-bit FIFO in 32-bit
-accesses (DW_MMC_QUIRK_FIFO64_32).
+[WHY]
+We should never apply a minimum dispclk value while in
+prepare_bandwidth or while displays are active. This is
+always an optimizaiton for when all displays are disabled.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-Link: https://lore.kernel.org/r/20250219-exynos7870-mmc-v2-3-b4255a3e39ed@disroot.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+[HOW]
+Defer dispclk optimization until safe_to_lower = true
+and display_count reaches 0.
+
+Since 0 has a special value in this logic (ie. no dispclk
+required) we also need adjust the logic that clamps it for
+the actual request to PMFW.
+
+Reviewed-by: Charlene Liu <charlene.liu@amd.com>
+Reviewed-by: Chris Park <chris.park@amd.com>
+Reviewed-by: Eric Yang <eric.yang@amd.com>
+Signed-off-by: Jing Zhou <Jing.Zhou@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/dw_mmc-exynos.c | 41 +++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ .../dc/clk_mgr/dcn315/dcn315_clk_mgr.c        | 20 +++++++++++--------
+ .../dc/clk_mgr/dcn316/dcn316_clk_mgr.c        | 13 +++++++++---
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-index 9f20ac524c8b8..2a5c3c822f6af 100644
---- a/drivers/mmc/host/dw_mmc-exynos.c
-+++ b/drivers/mmc/host/dw_mmc-exynos.c
-@@ -28,6 +28,8 @@ enum dw_mci_exynos_type {
- 	DW_MCI_TYPE_EXYNOS5420_SMU,
- 	DW_MCI_TYPE_EXYNOS7,
- 	DW_MCI_TYPE_EXYNOS7_SMU,
-+	DW_MCI_TYPE_EXYNOS7870,
-+	DW_MCI_TYPE_EXYNOS7870_SMU,
- 	DW_MCI_TYPE_ARTPEC8,
- };
- 
-@@ -70,6 +72,12 @@ static struct dw_mci_exynos_compatible {
- 	}, {
- 		.compatible	= "samsung,exynos7-dw-mshc-smu",
- 		.ctrl_type	= DW_MCI_TYPE_EXYNOS7_SMU,
-+	}, {
-+		.compatible	= "samsung,exynos7870-dw-mshc",
-+		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870,
-+	}, {
-+		.compatible	= "samsung,exynos7870-dw-mshc-smu",
-+		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870_SMU,
- 	}, {
- 		.compatible	= "axis,artpec8-dw-mshc",
- 		.ctrl_type	= DW_MCI_TYPE_ARTPEC8,
-@@ -86,6 +94,8 @@ static inline u8 dw_mci_exynos_get_ciu_div(struct dw_mci *host)
- 		return EXYNOS4210_FIXED_CIU_CLK_DIV;
- 	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
- 	else
-@@ -101,7 +111,8 @@ static void dw_mci_exynos_config_smu(struct dw_mci *host)
- 	 * set for non-ecryption mode at this time.
- 	 */
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS5420_SMU ||
--		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU) {
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
- 		mci_writel(host, MPSBEGIN0, 0);
- 		mci_writel(host, MPSEND0, SDMMC_ENDING_SEC_NR_MAX);
- 		mci_writel(host, MPSCTRL0, SDMMC_MPSCTRL_SECURE_WRITE_BIT |
-@@ -127,6 +138,12 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
- 				DQS_CTRL_GET_RD_DELAY(priv->saved_strobe_ctrl);
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+index 09eb1bc9aa030..9549f9c152291 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+@@ -116,7 +116,7 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
+ 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
+ 	struct dc *dc = clk_mgr_base->ctx->dc;
+-	int display_count;
++	int display_count = 0;
+ 	bool update_dppclk = false;
+ 	bool update_dispclk = false;
+ 	bool dpp_clock_lowered = false;
+@@ -192,15 +192,19 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		update_dppclk = true;
  	}
  
-+	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
-+		/* Quirk needed for certain Exynos SoCs */
-+		host->quirks |= DW_MMC_QUIRK_FIFO64_32;
-+	}
+-	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
+-		/* No need to apply the w/a if we haven't taken over from bios yet */
+-		if (clk_mgr_base->clks.dispclk_khz)
+-			dcn315_disable_otg_wa(clk_mgr_base, context, true);
++	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) &&
++	    (new_clocks->dispclk_khz > 0 || (safe_to_lower && display_count == 0))) {
++		int requested_dispclk_khz = new_clocks->dispclk_khz;
+ 
++		dcn315_disable_otg_wa(clk_mgr_base, context, true);
 +
- 	if (priv->ctrl_type == DW_MCI_TYPE_ARTPEC8) {
- 		/* Quirk needed for the ARTPEC-8 SoC */
- 		host->quirks |= DW_MMC_QUIRK_EXTENDED_TMOUT;
-@@ -144,6 +161,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
++		/* Clamp the requested clock to PMFW based on their limit. */
++		if (dc->debug.min_disp_clk_khz > 0 && requested_dispclk_khz < dc->debug.min_disp_clk_khz)
++			requested_dispclk_khz = dc->debug.min_disp_clk_khz;
++
++		dcn315_smu_set_dispclk(clk_mgr, requested_dispclk_khz);
+ 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
+-		dcn315_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
+-		if (clk_mgr_base->clks.dispclk_khz)
+-			dcn315_disable_otg_wa(clk_mgr_base, context, false);
++		dcn315_disable_otg_wa(clk_mgr_base, context, false);
  
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -153,6 +172,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
+ 		update_dispclk = true;
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+index 29d2003fb7129..afce15aa2ff10 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+@@ -153,7 +153,7 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
+ 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
+ 	struct dc *dc = clk_mgr_base->ctx->dc;
+-	int display_count;
++	int display_count = 0;
+ 	bool update_dppclk = false;
+ 	bool update_dispclk = false;
+ 	bool dpp_clock_lowered = false;
+@@ -226,11 +226,18 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		update_dppclk = true;
+ 	}
  
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -223,6 +244,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
+-	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
++	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) &&
++	    (new_clocks->dispclk_khz > 0 || (safe_to_lower && display_count == 0))) {
++		int requested_dispclk_khz = new_clocks->dispclk_khz;
++
+ 		dcn316_disable_otg_wa(clk_mgr_base, context, safe_to_lower, true);
  
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -231,6 +254,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
- 	if (clksel & SDMMC_CLKSEL_WAKEUP_INT) {
- 		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 			mci_writel(host, CLKSEL64, clksel);
- 		else
-@@ -410,6 +435,8 @@ static inline u8 dw_mci_exynos_get_clksmpl(struct dw_mci *host)
++		/* Clamp the requested clock to PMFW based on their limit. */
++		if (dc->debug.min_disp_clk_khz > 0 && requested_dispclk_khz < dc->debug.min_disp_clk_khz)
++			requested_dispclk_khz = dc->debug.min_disp_clk_khz;
++
++		dcn316_smu_set_dispclk(clk_mgr, requested_dispclk_khz);
+ 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
+-		dcn316_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
+ 		dcn316_disable_otg_wa(clk_mgr_base, context, safe_to_lower, false);
  
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		return SDMMC_CLKSEL_CCLK_SAMPLE(mci_readl(host, CLKSEL64));
- 	else
-@@ -423,6 +450,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -430,6 +459,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
- 	clksel = SDMMC_CLKSEL_UP_SAMPLE(clksel, sample);
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -444,6 +475,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -454,6 +487,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -633,6 +668,10 @@ static const struct of_device_id dw_mci_exynos_match[] = {
- 			.data = &exynos_drv_data, },
- 	{ .compatible = "samsung,exynos7-dw-mshc-smu",
- 			.data = &exynos_drv_data, },
-+	{ .compatible = "samsung,exynos7870-dw-mshc",
-+			.data = &exynos_drv_data, },
-+	{ .compatible = "samsung,exynos7870-dw-mshc-smu",
-+			.data = &exynos_drv_data, },
- 	{ .compatible = "axis,artpec8-dw-mshc",
- 			.data = &artpec_drv_data, },
- 	{},
+ 		update_dispclk = true;
 -- 
 2.39.5
 
