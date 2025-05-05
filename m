@@ -1,148 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393023B89E3;
-	Mon,  5 May 2025 23:21:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE02F37EA72;
+	Mon,  5 May 2025 23:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487309; cv=none; b=EK3XUeg9HQq+7s/uisb3wRs1i35r9jAdykriwb1Dy8mGsOEuKogHWqJO4l0kc/mQ0PZwFDHpx/asqLb7Rp8KutSPGgmbqNAtKMFZ3MoaRABsyf3zf0gY36udyGWrnTwlBv2vWgEowG2jfvBxDwMR5UsiOK4mdtoLpL9PkIEMUzs=
+	t=1746487317; cv=none; b=JmV+q33VyJJaMxjGPJBYgKZLFAwPmDykjOt5Vk3pELBqNQNl4g6hzcnwV2c/p5616bGen0rAge20viWMXfsh/rxjA/vzY7s8+JHi9fJxrbbGpqDy0eBdViwkcx15QG7eZXz9njOamTkQB1xW2Rurr60h6Tv0RseZttn4OMgT7kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487309; c=relaxed/simple;
-	bh=VL5H2FW0sIWc1ybX28SpZkjySUj9Zblq9JKHOzk4tWU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lyfatf3HfspQkJEBSqYND+FtsUl7Ycfzt96cI802xO2vYAycrAWUwfKbQJn+nruNl6EWhxqIYZhzWCDuq5fD1BsFjv4tx2Bs8bBl3b/T9PL0aVi6dARaMgmybYnATG5d9oizpw4qO/EyWaX2PKjIGCWnx2Eazb4GhB9HBpYt6iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5j1bCSz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746487317; c=relaxed/simple;
+	bh=D7yTrFE188wv1sO2UwjIZZtfQPAmYQjWziJlrOLJbv8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q2NgCI6kJOArkEqwuyGZ9BzGt8e7vKmQAPBz/EpFgXonZEwNQBxKkvoCfHmVUOOUlArOUrkTwcT1FlAPefyNZXCizS/jphWJU5iL0GroAgkYn76YvBPWSHHVEd4//fmBrMMhst2u5d8kLguNqE+47Y+bTKZnYbvRosTBwNcKLjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvAPqnuF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5j1bCSz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E36C4CEE4;
-	Mon,  5 May 2025 23:21:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvAPqnuF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DE31C4CEE4;
+	Mon,  5 May 2025 23:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487309;
-	bh=VL5H2FW0sIWc1ybX28SpZkjySUj9Zblq9JKHOzk4tWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O5j1bCSzZ1WVf/iAhsTjY54cCMBf3M++m4ffkTaDKbzY7TWPqp1GpH/wJS1hKVYN+
-	 K0dKi8oRpDDVdlISw/PSAwNIPOOt0Bjcvpal2+gbk9Rv/fuW3229QfhjnocTUqvSxw
-	 P22RplrUm+58ST0aIoYZz7ab8aOMfQmy2eQJWduOTA6PvoXJU+3TUNyLar1Su9TZHC
-	 1eEGxBMFHTk2a6ipXoyKgzu9VfxNKvYz8CM1/FV5lPEVlXiAE2s3IyBQUP/TvJXb3Z
-	 AoPlYQKzUpkK9qPqggC03KeCCWllkDkQg20W30NHO9tKr/qxqHQ8KOR+9b1tlxhfnS
-	 mNWSkTPzfHw9w==
+	s=k20201202; t=1746487316;
+	bh=D7yTrFE188wv1sO2UwjIZZtfQPAmYQjWziJlrOLJbv8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hvAPqnuFE2IaBSPX0HQH1FbKNmuDPHas5hitzGTv2jpFYTwkppVnA5oakg7/yLIIj
+	 vUqGoXTtkRZrwMxU0edC8VuyIuDkg0eftsOLE8MdaKFP9i8D5Hegu2fgYztflrADKF
+	 dkFbCR3IRhgSBpOWWNcCczPJehqIeWPCef9w+jc8D22bdrqJpx9Xr6g3dc6jDCLjXh
+	 Q5/JgJ0lvyXzjJJCevv2s/Nt2Ir1msiHo5LjDMv+Aq/sf+o0iqC3QSmL1Def/GhWoP
+	 dFNBMEbOrZvqXxGljfeNm8NK4T3neALNeAESY1dYYuTjREVSSPn1E0yT/uX6eVVPCw
+	 3GqXfkJ4t3ZUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Simona Vetter <simona.vetter@ffwll.ch>,
-	Pekka Paalanen <pekka.paalanen@collabora.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Clark <robdclark@gmail.com>,
-	Simon Ser <contact@emersion.fr>,
-	Manasi Navare <navaremanasi@google.com>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Simona Vetter <simona.vetter@intel.com>,
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.10 113/114] drm/atomic: clarify the rules around drm_atomic_state->allow_modeset
-Date: Mon,  5 May 2025 19:18:16 -0400
-Message-Id: <20250505231817.2697367-113-sashal@kernel.org>
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 01/79] kconfig: merge_config: use an empty file as initfile
+Date: Mon,  5 May 2025 19:20:33 -0400
+Message-Id: <20250505232151.2698893-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
-References: <20250505231817.2697367-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.237
+X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Simona Vetter <simona.vetter@ffwll.ch>
+From: Daniel Gomez <da.gomez@samsung.com>
 
-[ Upstream commit c5e3306a424b52e38ad2c28c7f3399fcd03e383d ]
+[ Upstream commit a26fe287eed112b4e21e854f173c8918a6a8596d ]
 
-msm is automagically upgrading normal commits to full modesets, and
-that's a big no-no:
+The scripts/kconfig/merge_config.sh script requires an existing
+$INITFILE (or the $1 argument) as a base file for merging Kconfig
+fragments. However, an empty $INITFILE can serve as an initial starting
+point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
+if -m is not used. This variable can point to any configuration file
+containing preset config symbols (the merged output) as stated in
+Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
+contain just the merge output requiring the user to run make (i.e.
+KCONFIG_ALLCONFIG=<$INITFILE> make <allnoconfig/alldefconfig> or make
+olddefconfig).
 
-- for one this results in full on->off->on transitions on all these
-  crtc, at least if you're using the usual helpers. Which seems to be
-  the case, and is breaking uapi
+Instead of failing when `$INITFILE` is missing, create an empty file and
+use it as the starting point for merges.
 
-- further even if the ctm change itself would not result in flicker,
-  this can hide modesets for other reasons. Which again breaks the
-  uapi
-
-v2: I forgot the case of adding unrelated crtc state. Add that case
-and link to the existing kerneldoc explainers. This has come up in an
-irc discussion with Manasi and Ville about intel's bigjoiner mode.
-Also cc everyone involved in the msm irc discussion, more people
-joined after I sent out v1.
-
-v3: Wording polish from Pekka and Thomas
-
-Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Pekka Paalanen <pekka.paalanen@collabora.com>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Simon Ser <contact@emersion.fr>
-Cc: Manasi Navare <navaremanasi@google.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Simona Vetter <simona.vetter@intel.com>
-Signed-off-by: Simona Vetter <simona.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250108172417.160831-1-simona.vetter@ffwll.ch
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/drm/drm_atomic.h | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ scripts/kconfig/merge_config.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-index d07c851d255b5..4a245d79ba6b4 100644
---- a/include/drm/drm_atomic.h
-+++ b/include/drm/drm_atomic.h
-@@ -332,8 +332,27 @@ struct drm_atomic_state {
- 	 *
- 	 * Allow full modeset. This is used by the ATOMIC IOCTL handler to
- 	 * implement the DRM_MODE_ATOMIC_ALLOW_MODESET flag. Drivers should
--	 * never consult this flag, instead looking at the output of
--	 * drm_atomic_crtc_needs_modeset().
-+	 * generally not consult this flag, but instead look at the output of
-+	 * drm_atomic_crtc_needs_modeset(). The detailed rules are:
-+	 *
-+	 * - Drivers must not consult @allow_modeset in the atomic commit path.
-+	 *   Use drm_atomic_crtc_needs_modeset() instead.
-+	 *
-+	 * - Drivers must consult @allow_modeset before adding unrelated struct
-+	 *   drm_crtc_state to this commit by calling
-+	 *   drm_atomic_get_crtc_state(). See also the warning in the
-+	 *   documentation for that function.
-+	 *
-+	 * - Drivers must never change this flag, it is under the exclusive
-+	 *   control of userspace.
-+	 *
-+	 * - Drivers may consult @allow_modeset in the atomic check path, if
-+	 *   they have the choice between an optimal hardware configuration
-+	 *   which requires a modeset, and a less optimal configuration which
-+	 *   can be committed without a modeset. An example would be suboptimal
-+	 *   scanout FIFO allocation resulting in increased idle power
-+	 *   consumption. This allows userspace to avoid flickering and delays
-+	 *   for the normal composition loop at reasonable cost.
- 	 */
- 	bool allow_modeset : 1;
- 	bool legacy_cursor_update : 1;
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index d7d5c58b8b6aa..557f37f481fdf 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -98,8 +98,8 @@ INITFILE=$1
+ shift;
+ 
+ if [ ! -r "$INITFILE" ]; then
+-	echo "The base file '$INITFILE' does not exist.  Exit." >&2
+-	exit 1
++	echo "The base file '$INITFILE' does not exist. Creating one..." >&2
++	touch "$INITFILE"
+ fi
+ 
+ MERGE_LIST=$*
 -- 
 2.39.5
 
