@@ -1,48 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F27F3BB681;
-	Mon,  5 May 2025 23:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7ED3BBDC4;
+	Mon,  5 May 2025 23:22:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487355; cv=none; b=rFZqYBIk407A7dg5V9DlSKDOkC/TYlXBp/OLcEgINJe1bI++WkLQPXZ6RPMwdDjquw8kB925y3O+T/0EPzlXhE3gsRvt7aYGO923QJjh9+1fwW9TgI/hKxR9mGwMDAawQyRUlJLKFExBWIAeo8q8/MZvtZvRzkx4q+vmCPj2TMQ=
+	t=1746487366; cv=none; b=e9ah/SMJHvror9SCT9ph6vTPRvnRCJJjMbGObuDHGQ/whgmYkwc93uXIYWW1qBVL7KQCX9fKoida6I4tnc/FWK3kZG3qxTSQzPtZhskZTD8XdPn50qY6twRTvRZPG+YnzOeOSg1o4bwthTnHEu7kM3408WE14/b64FT6M9hGvQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487355; c=relaxed/simple;
-	bh=33fKuR8xSXXrYYpGa+BSRpBI1AmNXITApsh+Wb6LxWI=;
+	s=arc-20240116; t=1746487366; c=relaxed/simple;
+	bh=dfOTnwW8EMM0rb/gURkfrAF+WWhNq1xDnrQSDySzLdI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HsSjveUZ32yspzLN5j2UN0xCxyjmsPqlwxsxPYayXcIn03XgBuUwamKcvn8yE3CS0CD87rxzUMu7EkM+VF4OZSMUzJab7N8fNhk2DXomtw4eE/I69KLXPjIqs9jYDeGlHIRhHnTWwqtvq9FDGwstA4dg3k2oTp3XIkM39IJTaI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWib3jlR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ArjaOYgSYN7i2iWD725b/TblcpCLg7tCRF5BNCGJo58FA51alIXMgTKJ/8YGqv4Ipy3xevR4BjZKXt+JnHwXI6nnvJCayupn1J5OhUyDHzsn5cEUMduCmE8DBUjwQUhSqw9w6nKadapkqv9BHReE2LRHwpBYtSRBp6jTjC0tCZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZ7itu3/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWib3jlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B68C4CEF2;
-	Mon,  5 May 2025 23:22:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZ7itu3/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3711C4CEED;
+	Mon,  5 May 2025 23:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487354;
-	bh=33fKuR8xSXXrYYpGa+BSRpBI1AmNXITApsh+Wb6LxWI=;
+	s=k20201202; t=1746487364;
+	bh=dfOTnwW8EMM0rb/gURkfrAF+WWhNq1xDnrQSDySzLdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CWib3jlRTj8QtOwbPvpLNmL+yBmN+XTpLkFZNCP9nBMn2V0vNdso5e65bM3wEacrR
-	 177ssZdoXLxDgXCtWuFrASIld4TFaRF9UmK8TRXj9otveIl1w5pE8dhvdXZLsGdvrG
-	 4Lr6Rp8yZZwxVo66uLCebUrf9c81ahlDz/dYWRgkHW9RnSbs221yCNcMHD0vrZc80/
-	 vsqhVNQXW5lin+WCHiaCYyV9UFGTlm16PuS057lLCuwcOOVO/t6yDBh4Iwt3keU/jz
-	 3B5YLSBJorixAS9pF9UwraDbO0in76792tRvNbjXMff+OjJA0GBYFlzGdC5TVq7KIQ
-	 usR2uXxV/hTJQ==
+	b=cZ7itu3/UglnyViyl70NwQstgAgva38MnrNykf1znd73/jIPzXkwvWgUDUQEXmEJE
+	 6zCsjRkHyug1BZsMHwn04T427Uao+Q96WgR8oPNZUXaeLzb3gur15h74LW0+1Fh//5
+	 Rl++vr7jeV+6fKfOr31MHtjh/pdRkyjZ1HN0t9XyOjZfwOViTKVitTis/t1eiOTCio
+	 ekJT5kNZJKqjRPqvwtMIdbS1ig/nhlf4EGB0JQWxqMeQ+6AdnV8sFI4HwSeaqNbaCq
+	 VjIj0X/hp8sRG4PCrut2gbe7eTgw4GLwQ0bltbXJtg8HXsZ2Iv46UY5kW/ADY7rV5p
+	 ZZds9lfJ505Gw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc: Markus Elfring <elfring@users.sourceforge.net>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	kadlec@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 25/79] netfilter: conntrack: Bound nf_conntrack sysctl writes
-Date: Mon,  5 May 2025 19:20:57 -0400
-Message-Id: <20250505232151.2698893-25-sashal@kernel.org>
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/79] media: c8sectpfe: Call of_node_put(i2c_bus) only once in c8sectpfe_probe()
+Date: Mon,  5 May 2025 19:21:03 -0400
+Message-Id: <20250505232151.2698893-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -57,83 +51,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit 8b6861390ffee6b8ed78b9395e3776c16fec6579 ]
+[ Upstream commit b773530a34df0687020520015057075f8b7b4ac4 ]
 
-nf_conntrack_max and nf_conntrack_expect_max sysctls were authorized to
-be written any negative value, which would then be stored in the
-unsigned int variables nf_conntrack_max and nf_ct_expect_max variables.
+An of_node_put(i2c_bus) call was immediately used after a pointer check
+for an of_find_i2c_adapter_by_node() call in this function implementation.
+Thus call such a function only once instead directly before the check.
 
-While the do_proc_dointvec_conv function is supposed to limit writing
-handled by proc_dointvec proc_handler to INT_MAX. Such a negative value
-being written in an unsigned int leads to a very high value, exceeding
-this limit.
+This issue was transformed by using the Coccinelle software.
 
-Moreover, the nf_conntrack_expect_max sysctl documentation specifies the
-minimum value is 1.
-
-The proc_handlers have thus been updated to proc_dointvec_minmax in
-order to specify the following write bounds :
-
-* Bound nf_conntrack_max sysctl writings between SYSCTL_ZERO
-  and SYSCTL_INT_MAX.
-
-* Bound nf_conntrack_expect_max sysctl writings between SYSCTL_ONE
-  and SYSCTL_INT_MAX as defined in the sysctl documentation.
-
-With this patch applied, sysctl writes outside the defined in the bound
-will thus lead to a write error :
-
-```
-sysctl -w net.netfilter.nf_conntrack_expect_max=-1
-sysctl: setting key "net.netfilter.nf_conntrack_expect_max": Invalid argument
-```
-
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_standalone.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
-index 1e3dbed9d7840..de330dffa0a28 100644
---- a/net/netfilter/nf_conntrack_standalone.c
-+++ b/net/netfilter/nf_conntrack_standalone.c
-@@ -608,7 +608,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.data		= &nf_conntrack_max,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_INT_MAX,
- 	},
- 	[NF_SYSCTL_CT_COUNT] = {
- 		.procname	= "nf_conntrack_count",
-@@ -647,7 +649,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
- 		.data		= &nf_ct_expect_max,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ONE,
-+		.extra2		= SYSCTL_INT_MAX,
- 	},
- 	[NF_SYSCTL_CT_ACCT] = {
- 		.procname	= "nf_conntrack_acct",
-@@ -926,7 +930,9 @@ static struct ctl_table nf_ct_netfilter_table[] = {
- 		.data		= &nf_conntrack_max,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_INT_MAX,
- 	},
- 	{ }
- };
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+index 69070b7068318..8229fbb88a8db 100644
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -813,13 +813,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
+ 		}
+ 		tsin->i2c_adapter =
+ 			of_find_i2c_adapter_by_node(i2c_bus);
++		of_node_put(i2c_bus);
+ 		if (!tsin->i2c_adapter) {
+ 			dev_err(&pdev->dev, "No i2c adapter found\n");
+-			of_node_put(i2c_bus);
+ 			ret = -ENODEV;
+ 			goto err_clk_disable;
+ 		}
+-		of_node_put(i2c_bus);
+ 
+ 		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
+ 
 -- 
 2.39.5
 
