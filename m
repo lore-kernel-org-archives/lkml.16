@@ -1,161 +1,365 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2046.outbound.protection.outlook.com [40.107.236.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FE525D538
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746458642; cv=none; b=fnzHx1+xuNGq/V1WXqcEYrTLDWcsdoALJPIb088oUJbJqCnHrS2Kwx2wxn0AhCprxCy2aTas3nqexsUkGTYjMPDVTwA9dgED6hP0zAppfTV/XCTIjOm5LvKa4kbXG+pIp85oKpN3nwvlJhL4dvg+ZDtByyIY8w7acG+6UhM75bg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746458642; c=relaxed/simple;
-	bh=0Hc+EQxJfioQ+A+gYtKFPWTxdD4hKYAgnVL1ELeokBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bCpG4i4X7ylKKRwijrkSdiKLmmGRReo1+7KRknCBufG50BF6TmsCqK/3PTLGvudqvMg18h2OMB1CbqAMUwyIIPHNBFQfxmnaW16azc2xT85W8ShstrLNSp//jpbvKzMoXr7a2zb2bSJWdGT/p6nBX7S8JkDFD7iFO69T7skitfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NYO3r7UJ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D9D1CD1F;
+	Mon,  5 May 2025 15:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746458714; cv=fail; b=YzKOHrwkDMrOWx+k+Lu4aG1h7Z8HX/E9Zm7xY0RPJGs2Bx8yd0cZytzn1p+ipdSqU5D5zqPHSNZtQeq+LTmqDA7Yy1t2zY4avPlyKFgVn9AeObncpgosLNlScv0nKGFi4pDx7Vz0wddOWimMbNlaocpoE/w3M6qBmjPGyvx1S/c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746458714; c=relaxed/simple;
+	bh=Xq8f2enfzQBst+ijRr6X3n5ggnfVK+0r1pcCIt2TbII=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=H8SrFicoWX2oNPH4bbIIvT/sen329N5qRKiLGRaFznfF0fwN49lZ2z9phjsvp9GJN6vEDATqvKkGiplvh+o4K59bi3zLQJKi6xfbUJRobmYIK5mJfA9/tAHvhlHJ2iFenKd/AaGMVHns32AaCoDQU2Ky4lNPJSg6bs6IWTpj1mw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WLWUFqpv; arc=fail smtp.client-ip=40.107.236.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NYO3r7UJ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2260c91576aso40538185ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746458635; x=1747063435; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=41acKNPFt0X3b8kDDLPn8SygbWrcPwUb5jtg+E40A3k=;
-        b=NYO3r7UJwq830BNe48tsKwAwa6tHZJfoJug9+q5GkaVx2IH5YMfDpZ9Cf9BHr4t65H
-         PyeZc3NrPtHfrnIN1gZyNDypUD8fB17BcVxPo6mUIM+oCRMfFmKsGxubBeSWB0Oqy+ZY
-         6aRlO8DW4c+WJLN27fBY9F+J2utg/2Fc1itMI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746458635; x=1747063435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=41acKNPFt0X3b8kDDLPn8SygbWrcPwUb5jtg+E40A3k=;
-        b=T1rM6DY4MeMMJjYpLeE+UuRWFvlHxECKCpvVK+WwL+3NXZ8BxD+9iLyEmhTGodp0Ql
-         Jt6fcJS2GyLYRNQ2hHBSkq2yzwm/pA/ejJuiQy8n1FWAYgVAAAgyu8sY/QKHBQwo2xTw
-         5Y00O3WBJiD+ofJlGxKXwUcXSmTcKV83Ghcuin+df+71ybZJtXK2VohcUs5kCRqTd+F0
-         ykwCezKriJq8USGKOzSguiVc/y61aunQFykcvufiY8PG0sSfdrnLamGWop142DBUAuJg
-         c5G/wjkcLBcDBf+jZ5ed3CBSYEDGov+MS8nRsKoU7iETDEiKTr+sehR71AUjAdvoX3vn
-         oZIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuVkHP8J7Uoy0XpKpjGXMUjuCjuxJF8XVA7kdXJHoonv+F2rGzbd+dPMlA7gM8I45CW3USFpljmll+8W0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyHIYj9rbjeytt/uyLvPJ0oxIUT+HYPLkcPZZr81BWApqKYADx
-	onpWdAm+3uWf+ZiSdiU6SUwsUo5OeAWaVZSNJhNGdGGGQ9QWhorLTUXSRVKBdS4wAdX8PRGcD34
-	=
-X-Gm-Gg: ASbGncvpxNkWyJ27fnKWol6ZFGBMcEQoL+2M41eXEIseuVWT/rRV2JXEZDVpymKCtdK
-	wj/oV478PErmip1I63voQNKiccuquQyxfvNotifUUkPcXwZmxA4T2rB92JOLxU72UZ3yPKpALQ5
-	Dev2YcJJiFAQLLKEI4LTtR/vfwlyYHjRygITApHsDHBndM9M6NExMZZN/dkv0hZOFPnwg9bu/RN
-	FpIFV0YFGBCLT8L0TMy2zstRAsHevrpZsryL9z+4dXY/GfliG2gl+GizDj6xxDOORKgYE2AlIS0
-	/1XePqHqJRbX2/6f7o0IxMyWMW+uM/QcO3Oe/4OXIUQJh8y0Cbdlnjby/vVCY7XSEY2FN+RPlS3
-	dkZAm
-X-Google-Smtp-Source: AGHT+IHHV+LPQ/eGyiQUI1JgYsrnmeRI+UpdHyrCw8rfKQqHavdbucf4Y/8eeign5ezDl64zB5JgUQ==
-X-Received: by 2002:a17:902:ce12:b0:224:2717:7992 with SMTP id d9443c01a7336-22e1eae4d3emr111947295ad.33.1746458635625;
-        Mon, 05 May 2025 08:23:55 -0700 (PDT)
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com. [209.85.216.42])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151ea213sm56336755ad.94.2025.05.05.08.23.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 08:23:53 -0700 (PDT)
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-308702998fbso4151672a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:23:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvxbtNZtb+2WmeGdohYLrwBEVGsmZJPlA56GErmdNzZKDaEIQjwe/JEyCA63oY/tHKx1i2lgIFp2zkWS8=@vger.kernel.org
-X-Received: by 2002:a17:90b:2692:b0:309:fac6:44f9 with SMTP id
- 98e67ed59e1d1-30a61a5de18mr11215640a91.31.1746458632939; Mon, 05 May 2025
- 08:23:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WLWUFqpv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DjwOYPlcFyRHKFO49Bgsmx03jL3gqrRhUolXXguISxmwf5nw4lmBH6ih1VNH2HivTf4OgsoU8WpPHZ/jwYTSH016yVSLQcbx4Ij1u6b5yC8PTMq0LBIzTDaAD2VCvC3ewXivaQuPt/a/JP0uV0JIvXNaJzE0Lu6z9PvTq1JSR8z2VdEAy9VuGdIEkBsnZqqOs83nukzHRbIdleeIDoAhuy3y5mzVMIM29Jjku1Lfa71wa/WtlVIVs2bIyHUixPDt00pKREh0JCFi0q7Xrp8c9jLugNzXscf3UAyzDdqzTLLTLuFMLGbDwEcSsHNik8cWdscmN+j7r90cg0kxwrChbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j4uyUFZAfHy/2u7tNlEh3d2HCnEnYNa71lFBCJgYKMs=;
+ b=GPW6U/vvmFNZwQTOY0ErNNo+KAWEn7cnhKdX8xDY7l8hetylJDQwiaOZiPi80oJOb/mj+1HlvU6vp+c9K8P/7Qh0ETrFmiUulx78mn7khQHJURG35I8hg56lyZ/GuMwCtk3CTzMLA4J5pBXKLPuPSEQcXkKPdh4HjV72tP99gp5CKABlbkv+wzkmZ7HqF8FEvh2MaCF7M991ek4cTYg84+bjCZEIYUkuPTamUfN7jEdMWJTTBTUUACl7vbbA7JeA6+tq6+rNtvAm4jHjQlCD4j7+mP9CBPnCc7G7VuUFo8Bb/huq4uZ5/+F8S0xC/gC642eq+5kbwiXntSPNrCSZ+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j4uyUFZAfHy/2u7tNlEh3d2HCnEnYNa71lFBCJgYKMs=;
+ b=WLWUFqpvNzxn24Gpg6KTO0VLk6GtodsiBfmQkhl5sAd3RLDrFIMhJW5GBCzQS0UE+TWyj8Du31Wc/bFBuZW9DZkedSpbQbNyVKFK6nGZ60PilDQ6K4018ex6l4mzDEgCR2ClintQeiCco9QvxzwY7SMxiSG927ndcc+EfnUdJOjCuaRwF8y92xnv4fgv8PLb+29fhVXYiFZVQk7XGAorYmjUxxhS1pzD6l6n7PNsHA6Jbx0tOEiCoT5p1dCAeWbUxRkz9E3esxbjimgYsHB5yksSMPQoSlzZtRbM2bAAF6ClPpMjpNW4Slq6ZXE0xTdXJCx0bzYqJf3VEM3mexfLwg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SJ1PR12MB6361.namprd12.prod.outlook.com (2603:10b6:a03:455::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
+ 2025 15:25:05 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.021; Mon, 5 May 2025
+ 15:25:05 +0000
+Message-ID: <ce197acc-8b66-4a6c-85aa-3318666d80d3@nvidia.com>
+Date: Mon, 5 May 2025 11:25:02 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 17/21] rust: num: Add an upward alignment helper for
+ usize
+To: Alexandre Courbot <acourbot@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+ Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+ <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
+ <D9LEQ1U1PLO8.3N22GRY380ZM3@nvidia.com>
+ <d6962ea3-282d-437c-b3cf-ce701d514558@nvidia.com>
+ <D9M5K55GTN6S.1X827WU0Z50UM@nvidia.com>
+ <112d971f-20c8-4598-86c9-6822d9c24001@nvidia.com>
+ <D9MLOQC5G7XH.3GTUIRCCN8X70@nvidia.com>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <D9MLOQC5G7XH.3GTUIRCCN8X70@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BLAPR03CA0114.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::29) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com> <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
-In-Reply-To: <20250503-pinctrl-msm-fix-v1-1-da9b7f6408f4@oss.qualcomm.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 5 May 2025 08:23:40 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VHhND2o_uAaGNe4RzmfbuO5bR6h2hYhs-cfsBzCfR=qg@mail.gmail.com>
-X-Gm-Features: ATxdqUEU--2tfIQF8wAYYjbyZfA85xc3-X-O-5P-ZKl511Bl7WUYcv0F-TnAYZ8
-Message-ID: <CAD=FV=VHhND2o_uAaGNe4RzmfbuO5bR6h2hYhs-cfsBzCfR=qg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pinctrl: qcom: don't crash on enabling GPIO HOG pins
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ1PR12MB6361:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34ab275e-907d-441b-9a68-08dd8be90341
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MDhMWWJVcGJIRndoUkVWUmhHL2NzQTJJVlRLUkVoUVVYMEhhakZpZmtOL1cx?=
+ =?utf-8?B?NExBTURsWlE3ZDBUbnhVaUs0ZlRRci9ybnI5akxLc3VmSys5N0liOHlucmQy?=
+ =?utf-8?B?b2Jzb05VL1JVaFR5UUFXZ1UzdW1oU0tTZ25CSzE1eHBXZTdUelQzcjQvY09q?=
+ =?utf-8?B?SHhsUHh4NkNCYXNxSHVCNlJoSzFIcTZndWVSeGJsbnhvd3lJSDd6bkxLTE44?=
+ =?utf-8?B?ekJJbnlSZTIxR01GMU9nL3Z4aU9HcE9xQmYzVnA5M1RRRG1PVmY4eW9RdG92?=
+ =?utf-8?B?TG95UXVlcjJrK3dmN3R3cmI4M2dYTWZ5aEs3SUgzRDJlMlg0V2d2OGcxSWtR?=
+ =?utf-8?B?UHFTQXYycnY4TmJyeEFXRVN5Q0dGNkhIUHJTUTlwUHg0cUFGb2lmL0p5c0pi?=
+ =?utf-8?B?U3B0bEEyaUx2Slg3dFlzRExaVnFiTVFESU44VVdpR0FHWE1ybys4OVZoMVdn?=
+ =?utf-8?B?MllpZVFlRnRWdWpUMXBNUTJoSkRBU1p1RG5kSHl4OS9EME1wQ0lQOGl2ejVn?=
+ =?utf-8?B?WS9uY1l1TFRtcmc4TnprRWlQK1l0WFdZZjVOd2JCTXJvUGZUZTZ5QjlFMXYx?=
+ =?utf-8?B?UEVpY2tyTVRiRHZMdHQ0NkFQcjZ4d05PUU11SFlERWU5SGJvZkNmRGVYNWRB?=
+ =?utf-8?B?ZGZhSW16cWF2OWFvYzBENVZYZzM3dkxiM3BVUEFYRW5iWEJEa2xaQ2IyYnJz?=
+ =?utf-8?B?dlBld2Y1bHFORjh6WEZGQzJldUtvRXVpVXVsTThEWHlLSWdFV1V0dHhJZUNo?=
+ =?utf-8?B?Mjg4M0JLaWR0MzZPaGFadnhDMXA5WFUzODJBWk9mQ0prT1VMUG1uMVpnNnhN?=
+ =?utf-8?B?R0dodVFCczhqZzVrbjBBY0ZlSkdPS1ZHOHN3Yk4rL3lZeGRuaXR1WThkRiti?=
+ =?utf-8?B?QWVOOUt3dnl5NmpVTGVjb29lRUdid1pzRElvSm5XWkplM0c3bjYyVUdDUXh6?=
+ =?utf-8?B?Nzc4TGQvMXh5MzNIR0Yza2h3OGQvQ0wwUS9SR3RVcU14ZnhObmhJQlFEVm0x?=
+ =?utf-8?B?Tm5HSzlhTG54UEpWZ04wQWpITE56OFJJRlhoeUh2c2Q1RHlLM2trenFJWkpD?=
+ =?utf-8?B?SjlmTDNDaFRGQ0JGYlZRSCtianJGaUpwM3BlTGxQUzd6U05MU2NPVXVrdU9H?=
+ =?utf-8?B?cm1CMDlBNVhPb1RZbmx4VGJxZEFHRGcxMGJJamF5VlZDbTN2blJyeTZJZ3lo?=
+ =?utf-8?B?OVNSL3R1VUNtNE51TEpibFRwNDEyL0NMSXcva2lYK2VIU08vTUU1cVBMb2xh?=
+ =?utf-8?B?djBQM2tGc0Q4VVE4dGlhTmdDK1l5R2VZYTZCakRDL24xRXd4VzRKdmNrNDBs?=
+ =?utf-8?B?WUc4ZGl3Z2lib0xFL2tCQ0JQdG81eFB4bmh2d01uVHVIcXc3YTIvRGo3S3VP?=
+ =?utf-8?B?TDNpZUZ3VDlyeUU5S0svejIybEdvaWJUc1FWaFV3eGJMSVFMWmZsV2dEYVZF?=
+ =?utf-8?B?WWVGRWdEWnNkVDdlOHRRZ3RYRFlFK1MzeHU4dlVxTVhEWWtpbUhENFA0Sk1r?=
+ =?utf-8?B?dlJtdVpJSjFBS1JFaS9oNW02WjBjTkduL1ViOTYrV0NDSjhuUWJjdm9ZN3Rj?=
+ =?utf-8?B?V2ZVNnFNVVFPdFNVanluY2FVcjlyNkt4V3lwOGY3S0N5REpDbjB2NUtLcUkw?=
+ =?utf-8?B?cGduWDBpaUtFbTRmL2RiVytCQUlBaTJjS1RNZy80enc4OXFwN0xacWszSUxq?=
+ =?utf-8?B?OHVGd3kvN1ZUazFDQVNXL29rSElDQmxad0RMYlI3SzN1UHduNUR5RWYrN3Vj?=
+ =?utf-8?B?MHZRNmNsMTMxN042czhDTTI2MWpIQXhkaTdQdVpob0pVSlZ0ZHFyQ3B2VlJN?=
+ =?utf-8?B?SThNM2FRT05Jc0dlK1NKdW5LUm14NGxnSWx4cCtpejVmbGxGbmRHMEFJRU10?=
+ =?utf-8?B?bmRyQmU3cDNkaGNGRzNadm4xcEU0aFltTlFadFYyZkdhWnNVU3I4QnJveGQv?=
+ =?utf-8?B?YXdqeGVxYThWVEdLTU4yK3lsVWJEc2QvclExYkFPOHNMUTBGci9hanFWMmE1?=
+ =?utf-8?B?V0h0NHFxRHhRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?akUwM3J1ZmRVemRBOWNYYTFZVUF1UkJKMVhSUGpuSkRDUEVpcTFjRmNrU2JF?=
+ =?utf-8?B?TG1QRW9nd3hsMHFYaGYyZXpBWGNCcE51VUhvWnEzcXhWRzlFa2JVaS84NGdN?=
+ =?utf-8?B?RkMwOU1YeFhYenJaY0pkcUg0Y0U0ZWx5c1lpMnFUT21WM2hvT0Q4azFsa3VL?=
+ =?utf-8?B?ejUxR09FcGFRQkZsV3ZNNk1DbUVqQkoxVU1uSnV4VDZuaUhXYmE1YVVoamFF?=
+ =?utf-8?B?V1ROVDVDaUV2OHdMOWRPSjNBejdGZkJWWks3b1JESE5rTzFFbG5pVkI2SHZB?=
+ =?utf-8?B?R0JlcDR1TUV2K3J3VTYrMTI5VWtJbnVUM2FMczJGZU9qa1JBWGZpWk1HamdS?=
+ =?utf-8?B?c29iNE9VcENiYVE3eER3L3BWTXR0Z0M3R3FoY3lHdFNKb3lLaUloeDRFYUp1?=
+ =?utf-8?B?Ny8xK0c1d1l5MmFqWnFnUmd1a1pBaU9heXAxVWN0eTBpcG5pOXNHS3gvOVBE?=
+ =?utf-8?B?Z051d0dOTVZXamFMWnBEOVI3ZkpYNGdrVjNENUg0TEZUWjYrTU4vWWplTmdV?=
+ =?utf-8?B?UTgydlAvMThqNmFmVmFzNDFoSVA1ai9mT0YrY0VWTnhyQVg4SHdEUGltdjlW?=
+ =?utf-8?B?cWNjNnFvaXl5enZ2NS9WM1p5c3AwdFdFZVJZdlM4NnpzT296TTFzSmhTdC9t?=
+ =?utf-8?B?WlN3TURTam8rMGN3Y041UDNtRFZLMVlvWHdGWi8xZDBWWlFMVFVSdURnU3Q0?=
+ =?utf-8?B?enlZRDdBQlNoWmtoZGxZZ0ZRemJXSmVTUnJYcmVTMXh5UjJhU3ZEQmhCWFAv?=
+ =?utf-8?B?dllUbksxd0daSEx3R2UwMi9SWS9vRmlOdDdpQnpiQlBlZXo5bkJmK3pacW1p?=
+ =?utf-8?B?YjZDMzRNUHpIZ2RRUGtRKzBtckRWMlFMRTVnYkV1R1Bkcks0dDQ2QytOQito?=
+ =?utf-8?B?ei8rNnlndm1XUmdTQkwvMTI0d3FncXBub2M4RW56cGhlSHI5OG03a0RiK0c5?=
+ =?utf-8?B?RUZJVlN2RXRYQlE4Mit1T2VCSXljMDBPdC9Ua2Y4aGxUdFBHZnF5VTNLbVBJ?=
+ =?utf-8?B?Y09TZHRWenExalhMeEJtS1F6dFhGSHJFMkkvMXdINkFjdGhZbjdjV2lpc3lI?=
+ =?utf-8?B?cllvVVdKWmlHOEc0RHdkaDRrZ3kyVG9lSmxEdVJFaFYxRFI0aDR0ZU1qNW5L?=
+ =?utf-8?B?a0I2dithWGFWN3BqYmtNMVdiT1NGa0tad3k3cWJ1enY0YWxFQm8wN2dDSE5Y?=
+ =?utf-8?B?bmVnN3ZEcDFLUTNJc0kzUUtVNzhtbTVHYUZiSWVOOXEyMWpKWmpLZ3doUzNL?=
+ =?utf-8?B?cWZxWXFIaHI2RzJYUlpJajlLcTFFQWp2RHB5eTkrbGY4WU5hM1MwUnNQL3oz?=
+ =?utf-8?B?ZVk0QU0zVmFkV015K2ZMam5aWG1RaGtlS2FHWlJwRTNDNzdkZWlUR2ExUDlV?=
+ =?utf-8?B?Ly9qV0hSQ0J4SjZmYUI4ZWZTYVJBaGhrMTgrdFN4RFpheVUraHE3a2tndUV3?=
+ =?utf-8?B?akZsSXNRWnUyUVV1S0lUY3BCRmd4T3ZCcjNqamloMCszZWxMcHJTQmhCaTJ3?=
+ =?utf-8?B?K2l0N0pJWE4yZjIxQkFpcVE5RW5ManY5MWVyRnEvUnJhWW1BL3VSUDA0bzdO?=
+ =?utf-8?B?N3NDQ3JLeXlOSjhRYXVZTWdIWnhsUU8xSXJoT2E1ZEp1WUE5ZVMxTFhtbVZV?=
+ =?utf-8?B?VUtKWnR6TysrdmZQclAyWmZCaFJqa2IyL2FPbmhzOWdzWEg0WkI1MmdVSkpD?=
+ =?utf-8?B?bnpFOXpNc0pOaXFOdFUyeWY5QXZMdzNrN1ZDeHdaOFdzN0x0dERjdkVTVmdP?=
+ =?utf-8?B?SElFTVRMRHhMWVpEbUxYT2o2WnppbC9rMWJ5UUptMWZadDBQQmVPMXYvb1cv?=
+ =?utf-8?B?QU5RSVhQNk5GNUhNdmJYZ2xiMXFhMWxrRDc3SHpPVCtzSmlHcVUwS2FiZEV1?=
+ =?utf-8?B?WmRpWDJaZDdRQ3JFWThlaU1MK0lmLzNKenc1MElrdk9VOTg1SG9kMGVpYjJV?=
+ =?utf-8?B?ZjhLNEpwL0Rtdm1UaFFJUkRBK0JLNU9wcDBqUjRDN1JGTmQ1bFcxcGdkb21V?=
+ =?utf-8?B?UXNXZFBrZXlMSHpGVGlqYkVXZ0lBK2xrSlJnclllMlIxQjJDcHZ5RzBteVlK?=
+ =?utf-8?B?cXhiam90RGlvOWlQbkFKUEYrL25FV2FHdG9TQ0Z0SXJrMEVLdERyQlpKQWJy?=
+ =?utf-8?Q?QC0DliJEUvJdqM0w9uJ+wqgyF?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34ab275e-907d-441b-9a68-08dd8be90341
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 15:25:05.6514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZR35woHs0+GTnAVEL61uhOw5+KvixpYy+EXAEg+UxmvVvPo6G+iv7aCBXHiwaNbMnoOYnlRWsAbcIZlVg6CNXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6361
 
-Hi,
+Hello, Alexandre,
 
-On Fri, May 2, 2025 at 10:32=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
->
-> On Qualcomm platforms if the board uses GPIO hogs msm_pinmux_request()
-> calls gpiochip_line_is_valid(). After commit 8015443e24e7 ("gpio: Hide
-> valid_mask from direct assignments") gpiochip_line_is_valid() uses
-> gc->gpiodev, which is NULL when GPIO hog pins are being processed.
-> Thus after this commit using GPIO hogs causes the following crash. In
-> order to fix this, verify that gpiochip->gpiodev is not NULL.
->
-> Note: it is not possible to reorder calls (e.g. by calling
-> msm_gpio_init() before pinctrl registration or by splitting
-> pinctrl_register() into _and_init() and pinctrl_enable() and calling the
-> latter function after msm_gpio_init()) because GPIO chip registration
-> would fail with EPROBE_DEFER if pinctrl is not enabled at the time of
-> registration.
->
-> pc : gpiochip_line_is_valid+0x4/0x28
-> lr : msm_pinmux_request+0x24/0x40
-> sp : ffff8000808eb870
-> x29: ffff8000808eb870 x28: 0000000000000000 x27: 0000000000000000
-> x26: 0000000000000000 x25: ffff726240f9d040 x24: 0000000000000000
-> x23: ffff7262438c0510 x22: 0000000000000080 x21: ffff726243ea7000
-> x20: ffffab13f2c4e698 x19: 0000000000000080 x18: 00000000ffffffff
-> x17: ffff726242ba6000 x16: 0000000000000100 x15: 0000000000000028
-> x14: 0000000000000000 x13: 0000000000002948 x12: 0000000000000003
-> x11: 0000000000000078 x10: 0000000000002948 x9 : ffffab13f50eb5e8
-> x8 : 0000000003ecb21b x7 : 000000000000002d x6 : 0000000000000b68
-> x5 : 0000007fffffffff x4 : ffffab13f52f84a8 x3 : ffff8000808eb804
-> x2 : ffffab13f1de8190 x1 : 0000000000000080 x0 : 0000000000000000
-> Call trace:
->  gpiochip_line_is_valid+0x4/0x28 (P)
->  pin_request+0x208/0x2c0
->  pinmux_enable_setting+0xa0/0x2e0
->  pinctrl_commit_state+0x150/0x26c
->  pinctrl_enable+0x6c/0x2a4
->  pinctrl_register+0x3c/0xb0
->  devm_pinctrl_register+0x58/0xa0
->  msm_pinctrl_probe+0x2a8/0x584
->  sdm845_pinctrl_probe+0x20/0x88
->  platform_probe+0x68/0xc0
->  really_probe+0xbc/0x298
->  __driver_probe_device+0x78/0x12c
->  driver_probe_device+0x3c/0x160
->  __device_attach_driver+0xb8/0x138
->  bus_for_each_drv+0x84/0xe0
->  __device_attach+0x9c/0x188
->  device_initial_probe+0x14/0x20
->  bus_probe_device+0xac/0xb0
->  deferred_probe_work_func+0x8c/0xc8
->  process_one_work+0x208/0x5e8
->  worker_thread+0x1b4/0x35c
->  kthread+0x144/0x220
->  ret_from_fork+0x10/0x20
-> Code: b5fffba0 17fffff2 9432ec27 f9400400 (f9428800)
->
-> Fixes: 8015443e24e7 ("gpio: Hide valid_mask from direct assignments")
-> Reported-by: Doug Anderson <dianders@chromium.org>
-> Closes: https://lore.kernel.org/r/CAD=3DFV=3DVg8_ZOLgLoC4WhFPzhVsxXFC19Nr=
-F38W6cW_W_3nFjbw@mail.gmail.com
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+On 5/3/2025 10:37 AM, Alexandre Courbot wrote:
+> On Sat May 3, 2025 at 12:02 PM JST, Joel Fernandes wrote:
+>>
+>>
+>> On 5/2/2025 9:59 PM, Alexandre Courbot wrote:
+>>>> pub trait AlignUp {
+>>>>     fn align_up(self, alignment: Self) -> Self;
+>>>> }
+>>>>
+>>>> macro_rules! align_up_impl {
+>>>>     ($($t:ty),+) => {
+>>>>         $(
+>>>>             impl AlignUp for $t {
+>>>>                 fn align_up(self, alignment: Self) -> Self {
+>>>>                     (self + alignment - 1) & !(alignment - 1)
+>>>>                 }
+>>>>             }
+>>>>         )+
+>>>>     }
+>>>> }
+>>>>
+>>>> align_up_impl!(usize, u8, u16, u32, u64, u128);
+>>>>
+>>>> Or, we can even combine the 2 approaches. Use macros for the "impl Alignable"
+>>>> and use generics on the Alignable trait.
+>>>>
+>>>> macro_rules! impl_alignable {
+>>>>     ($($t:ty),+) => {
+>>>>         $(
+>>>>             impl Alignable for $t {}
+>>>>         )+
+>>>>     };
+>>>> }
+>>>>
+>>>> impl_alignable!(usize, u8, u16, u32, u64, u128);
+>>>>
+>>>> pub trait AlignUp {
+>>>>     fn align_up(self, alignment: Self) -> Self;
+>>>> }
+>>>>
+>>>> impl<T> AlignUp for T
+>>>> where
+>>>>     T: Alignable,
+>>>> {
+>>>>     fn align_up(self, alignment: Self) -> Self {
+>>>>         let one = T::from(1u8);
+>>>>         (self + alignment - one) & !(alignment - one)
+>>>>     }
+>>>> }
+>>>>
+>>>> Thoughts?
+>>> I think that's the correct way to do it and am fully on board with this
+>>> approach.
+>>>
+>>> The only thing this doesn't solve is that it doesn't provide `const`
+>>> functions. But maybe for that purpose we can use a single macro that
+>>> nicely panics at build-time should an overflow occur.
+>>
+>> Great, thanks. I split the traits as follows and it is cleaner and works. I will
+>> look into the build-time overflow check and the returning of Result change on
+>> Monday. Let me know if any objections.
+> 
+> Looking good IMHO, apart maybe from the names of the `BitOps` and
+> `Unsigned` traits that are not super descriptive and don't need to be
+> split for the moment anyway.
 
-So I guess this is fine because nobody would specify a hog in their
-device tree that's an invalid GPIO?
+Sounds good, actually I already switched to keeping them in one trait
+"Unsigned". I agree that is cleaner (see below).
 
-In any case, this works for me. Thanks for the fix!
+> Actually it may be a good idea to move this into its own patch/series so
+> it gets more attention as this is starting to look like the `num` or
+> `num_integer` crates and we might be well-advised to take more
+> inspiration from them in order to avoid reinventing the wheel. It is
+> basically asking the question "how do we want to extend the integer
+> types in a useful way for the kernel", so it's actually pretty important
+> that we get our answer right. :)
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
+I am not sure if we want to split the series for a simple change like this,
+because then the whole series gets blocked? It may also be better to pair the
+user of the function with the function itself IMHO since the function is also
+quite small. I am also Ok with keeping the original patch in the series and
+extending on that in the future (with just usize) to not block the series.
+
+Regarding for the full blown num module, I looked over the weekend and its
+actually a bunch of modules working together, with dozens of numeric APIs, so I
+am not sure if we should pull everything or try to copy parts of it. The R4l
+guidelines have something to say here. A good approach IMO is to just do it
+incrementally, like I'm doing with this patch.
+
+I think defining a "Unsigned" trait does make sense, and then for future
+expansion, it can be expanded on in the new num module?
+
+> 
+> To address our immediate needs of an `align_up`, it just occurred to me
+> that we could simply use the `next_multiple_of` method, at least
+> temporarily. It is implemented with a modulo and will therefore probably
+> result in less efficient code than a version optimized for powers of
+> two, but it will do the trick until we figure out how we want to extend
+> the primitive types for the kernel, which is really what this patch is
+> about - we will also need an `align_down` for instance, and I don't know
+> of a standard library equivalent for it...
+
+Why do we want to trade off for "less efficient code"? :) I think that's worse
+than the original change (before this series) I had which had no function call
+at all, but hardcoded the expression at the call site. The suggestion is also
+less desirable than having a local helper in the vbios module itself. I am not
+much a fan of the idea "lets call this temporarily and have sub optimal code"
+when the alternative is to just do it in-place, in-module, or via a num module
+extension :)
+
+> 
+>> I added the #[inline] and hopefully that
+>> gives similar benefits to const that you're seeking:
+> 
+> A `const` version is still going to be needed, `#[inline]` encourages the
+> compiler to try and inline the function, but AFAIK it doesn't allow use
+> in const context.
+
+Right, so for the vbios use case there is no use of a const function. The only
+reason I added it is because there were other functions at the time which were
+used (by the now dropped timer module). I suggest let us add the const function
+once there is a user of it, I also don't know right how to do it. Like if I use
+generics for the const fn, I get this:
+
+const fn align_up_unsigned<T: Unsigned>(value: T, alignment: T) -> T {
+    let one = T::from(1u8);
+    (value + alignment - one) & !(alignment - one)
+}
+
+error[E0658]: cannot call conditionally-const method `<T as Add>::add` in
+constant functions
+
+I tried to do this with macros as well, but no luck. If you can share a macro, I
+can incorporate it into the patch.
+
+I can respin this patch again on conclusion of the discussion, but any guidance
+from rust-for-linux folks is also much appreciated. Below is currently the patch
+that I am considering so far (without the const function and Result changes).
+
+// num.rs
+//! Numerical and binary utilities for primitive types.
+
+/// A trait providing alignment operations for `usize`.
+use core::ops::{Add, BitAnd, BitOr, Not, Sub};
+
+/// Traits for unsigned integers
+pub trait Unsigned:
+    Copy
+    + BitAnd<Output = Self>
+    + BitOr<Output = Self>
+    + Not<Output = Self>
+    + Add<Output = Self>
+    + Sub<Output = Self>
+    + From<u8>
+{
+}
+
+macro_rules! unsigned_trait_impl {
+    ($($t:ty),+) => {
+        $(
+            impl Unsigned for $t {}
+        )+
+    };
+}
+unsigned_trait_impl!(usize, u8, u16, u32, u64, u128);
+
+/// Trait for unsigned integer alignment
+pub trait UnsignedAlign {
+    /// Implement upward power-of-2 alignment for unsigned ints
+    fn align_up(self, alignment: Self) -> Self;
+}
+
+impl<T> UnsignedAlign for T
+where
+    T: Unsigned,
+{
+    #[inline]
+    fn align_up(self, alignment: Self) -> Self {
+        let one = T::from(1u8);
+        (self + alignment - one) & !(alignment - one)
+    }
+}
+
+Thanks.
+
