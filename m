@@ -1,144 +1,165 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B716D1F7092;
-	Mon,  5 May 2025 09:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602B634CF5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437490; cv=none; b=fKknzUZmp2KHjQuhgb/HZgYnCADizCYYUBDvsFnnR0/L9ZyY5YSfkfbshLMpbnEJBrUbVeOQhDHfiz6Ybl1jqL7NEo0XtGDlDFTPDg9CD49beNdQvjk+Nb9FajkY3uOr1PPctPcr/f9lQEMB90m7jfpDazKoqdwESK0x/eYxN9E=
+	t=1746437630; cv=none; b=nd0GxRZ+Io3a/GFRJmJwMnRL96AgEGKFytDENlmIrAM6+78bxVgBHAOJE8iCo4ROkatJupoGPcOPr6wioWWbGG6DnzfaaFc/IxvQqQAwzAv6Pncd77gZ0AAkV3f7Nt5tOOOahKFaM0oWnMEkII5kKv22E5oHxKc17Sv2SS4rH4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437490; c=relaxed/simple;
-	bh=p4WIh1wAqpCSR0rgfzCPijEovBcj1rWbocb6ikbQ4b8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Lc+trPcqm/bLAl9nOo4w/HHyZfzZzk+Oh9g2bACvN49tn0PtwKnbMYOyfBxvghQQsIw5XR5yFzuZSH1aTLTgG91MBbDx637NU9F4aEqkdfb0/WRI2xmuHpTu4egQIU9tx1ZBnTSDD2QuVmXO0qSmYNnns1XtLbgmJk4bSQZJTKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nAZfVMdP; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746437630; c=relaxed/simple;
+	bh=E+Rkfl9thA//8dOfnT2wGrUmTCO2FAydSwC3bxJd9l0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XZCzZxMsVk1SwhEwpCOI0Zr9m+/XBZWa/gsxbUvobX5cUSDaIO0+cVFTL8pkikBQJfnVQ4hkZbARSPW+uU2p1Ty+/DNXgJ9OuyY8bP8CAnHl+edxVsNnUolchWXhikALdI9K3fxiEg0Vjq9hXZzklymYHBeqzDNVHnoF0y144Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kRFnuJrt; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nAZfVMdP"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5459VMts911528
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 May 2025 04:31:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746437482;
-	bh=Z+7IOhtAynV53adv2VyXbmQww1wwmw7X+Pxw7BRT5S8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=nAZfVMdPUF6aNCrqLA2peKTRXQGO8On9XjRWhX2xYpCgxPansS6nGlejQ1R1+n2Zs
-	 oX7o6Ywhv5Rdd7BehLR3qz3Afr16XDrI6XDrQnBfJ5gALNe43fHEw3/rPzi7v67ljY
-	 nRFYgZDW9SftUvVKGMxywRslmTMPHVUC2YEf6m7w=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5459VMfB012261
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 May 2025 04:31:22 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- May 2025 04:31:21 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 May 2025 04:31:21 -0500
-Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5459VHvq087600;
-	Mon, 5 May 2025 04:31:18 -0500
-Message-ID: <e7ddd359-bf19-4f6a-af32-43bcb5504ab1@ti.com>
-Date: Mon, 5 May 2025 15:01:17 +0530
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kRFnuJrt"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so4511738f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746437625; x=1747042425; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XJ06MsaCexaUo2LS8xihxLn4rYdIDADmV/TGsLW6+S8=;
+        b=kRFnuJrtXOs8urM1bmbJ8Glgv7TRZKyPbRS3KB6Km4Zo3wb9NpoNzAn4YDkw4J1psg
+         p+mfW0Y50fcS4uWiRaempd3C3WaNdLIvTkDgB/8A4r1hsOtuRrzSWn07AGOZ6WUABayS
+         ZcwD0TVITNMSjS2ayuFqNCCfMVMEvTn4IqcP6abcGp7bTTmCYp+99NUY9JJyvo88UMwT
+         65Y0zdt8e5ayd0PE0w1ywVo0EuqEZbGxFV39ElYin8PGql32k40ScYvuRpehOpKOFevl
+         ZKW+A4D6gEz06hp/DpmQOTiJJhHdWVAxvRxowwdNZJLLhtFByRYrEgFjJ8WiFuSKV86/
+         oTjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746437625; x=1747042425;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XJ06MsaCexaUo2LS8xihxLn4rYdIDADmV/TGsLW6+S8=;
+        b=UkZfgS0x1ngEvWrh4EhPHpOJZABl3WWQgfFtxvUJbyP2rfmXRKG+1BYPezvqjGsTmQ
+         GlWm3XrIoXwVsG0z7gThYI4zQSWCMFJ0cCGveW4WnKUbizjmSfK3sCywfahXt5smxJKC
+         rCs05kC57FMxOyLzBAJTG0CINnec+aBAVFaMMYS3kBXNV5hr6Zw4g+WiIHDTR1fgE3Xg
+         d4RQOpB6kjfekkPq4FWPck+RrA/DyBdCC6m+FOr+aarRJjJsDJXKK75EKCBhqPrW9iSN
+         1Bv8WgPPphOZ9KaKp0fxe0STiZsHTeXLU7+7lIMGPd10Rqn42oyJ51EByhhr6xBbJam1
+         Ryvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJXSrq0NgQJfTaWwwZgUpfJw4T3FdXuWiWC2/jUlFPpsxb39t5m+G7GZ5Yl8FyejJCH763UtCm7DNGy20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpASXPN+C2TYivT3NeidOqu5YWULFlAEgByXPhS/BC2yCB/DSF
+	uxTJXqCQBe0dnUcE1tJk8aaa/Rr6QHb+mciKNNZ5S8iKyJioIlzeIDPLZImN3aHwet555hop8Bn
+	a
+X-Gm-Gg: ASbGnct7bg+4ujsXt4wcn50xHflha8j7QgXG4zyKhnDmcEwHFyW0gWHTq9gqOCydQ+A
+	/jdyx9o7jZhxFhVMm9WrxOnY7FEIQ7O6JmpVewPPnIVKo9PR8WliQi0nSSpob2gvpBlI03lKtto
+	XCEXa+1oLlCDQfXUSrSQlVfQtzg6t27f0g+azT+bs0yHaERW8KM5ufjMPk0F566JAMe2jOkPw08
+	xG5J1V7bZR4/nUk/q4R5tiHA+zgs9YzbkMmNh+D/x01STIjcnx6wDLnKJnPLpORkZ13uaDRRNVp
+	tniY2eTugN1VFIb5AZIXNps/YRgJoQ2k9YxD7N8s
+X-Google-Smtp-Source: AGHT+IEQcue1k4XN/UkoNi+0KcZ4JWKSUMbu8bAHoWYr4298di89GdcuReHjmyRCjR7TkE27M3LKQA==
+X-Received: by 2002:a05:6000:2c9:b0:3a0:9f24:774f with SMTP id ffacd0b85a97d-3a09fdbf660mr4541275f8f.39.1746437625592;
+        Mon, 05 May 2025 02:33:45 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:c020:17e6:57d1:3a03])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae3356sm9664006f8f.29.2025.05.05.02.33.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:33:45 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>,  linux-clk@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] clk: add a clk_hw helpers to get the clock device
+ or device_node
+In-Reply-To: <20250417-clk-hw-get-helpers-v1-1-7743e509612a@baylibre.com>
+	(Jerome Brunet's message of "Thu, 17 Apr 2025 15:44:22 +0200")
+References: <20250417-clk-hw-get-helpers-v1-0-7743e509612a@baylibre.com>
+	<20250417-clk-hw-get-helpers-v1-1-7743e509612a@baylibre.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 05 May 2025 11:33:44 +0200
+Message-ID: <1jbjs7mmfb.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
-To: Nishanth Menon <nm@ti.com>
-CC: <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
-        <afd@ti.com>
-References: <20250502153915.734932-1-p-bhagat@ti.com>
- <20250502153915.734932-2-p-bhagat@ti.com>
- <20250502160541.azhzbnmghrkory7h@cleaver>
-Content-Language: en-US
-From: Paresh Bhagat <p-bhagat@ti.com>
-In-Reply-To: <20250502160541.azhzbnmghrkory7h@cleaver>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain
 
-Hi Nishanth,
+On Thu 17 Apr 2025 at 15:44, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-
-On 02/05/25 21:35, Nishanth Menon wrote:
-> On 21:09-20250502, Paresh Bhagat wrote:
->> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
->> targeted for applications needing high-performance Digital Signal
->> Processing. It is used in applications like automotive audio systems,
->> professional sound equipment, radar and radio for aerospace, sonar in
->> marine devices, and ultrasound in medical imaging. It also supports
->> precise signal analysis in test and measurement tools.
->>
->> Some highlights of AM62D2 SoC are:
->>
->> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster. Dual/Single
->>    core variants are provided in the same package to allow HW compatible
->>    designs.
->> * One Device manager Cortex-R5F for system power and resource management,
->>    and one Cortex-R5F for Functional Safety or general-purpose usage.
->> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
->>    single core C7x.
->> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
->>    which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
->>    and TDM Audio inputs and outputs.
->> * Integrated Giga-bit Ethernet switch supporting up to a total of two
->>    external ports with TSN capable to enable audio networking features such
->>    as, Ethernet Audio Video Bridging (eAVB) and Dante.
->> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
->>    controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
->>    peripherals.
->> * Dedicated Centralized Hardware Security Module with support for secure
->>    boot, debug security and crypto acceleration and trusted execution
->>    environment.
->> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
->> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
->>
->> This adds dt bindings for TI's AM62D2 family of devices.
->>
->> More details about the SoCs can be found in the Technical Reference Manual:
->> https://www.ti.com/lit/pdf/sprujd4
->>
->> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
-> Looking at the board patch in the series, this is am62p5 ? what is the
-> difference? If there is a difference, why is there no dtsi
-> file for am62d?
-AM62d2 SoC is similar to AM62a7 in terms of CPU cores, cache hierarchy 
-and other peripherals. 
-https://lore.kernel.org/linux-arm-kernel/20220901141328.899100-5-vigneshr@ti.com/
-Thus same dtsi file is being reused here.
+> Add helpers to get the device or device_node associated with clk_hw.
 >
->> ---
->>   Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
->> index a6d9fd0bcaba..bac821d63cf1 100644
->> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
->> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
->> @@ -31,6 +31,12 @@ properties:
->>             - const: phytec,am62a-phycore-som
->>             - const: ti,am62a7
->>   
->> +      - description: K3 AM62D2 SoC and Boards
->> +        items:
->> +          - enum:
->> +              - ti,am62d2-evm
->> +          - const: ti,am62d2
->> +
->>         - description: K3 AM62P5 SoC and Boards
->>           items:
->>             - enum:
->> -- 
->> 2.34.1
->>
+> This can be used by clock drivers to access various device related
+> functionality such as devres, dev_ prints, etc ...
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+
+Hello Stephen,
+
+If possible, could you take that change in so can move on with rework
+I'm trying do in amlogic clocks, while we refine the test part ? (if
+another round is needed for that)
+
+Cheers
+
+>  drivers/clk/clk.c            | 12 ++++++++++++
+>  include/linux/clk-provider.h | 26 ++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 0565c87656cf5c557d8259c71b5d2971a7ac87e8..b821b2cdb155331c85fafbd2fac8ab3703a08e4d 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -365,6 +365,18 @@ const char *clk_hw_get_name(const struct clk_hw *hw)
+>  }
+>  EXPORT_SYMBOL_GPL(clk_hw_get_name);
+>  
+> +struct device *clk_hw_get_dev(const struct clk_hw *hw)
+> +{
+> +	return hw->core->dev;
+> +}
+> +EXPORT_SYMBOL_GPL(clk_hw_get_dev);
+> +
+> +struct device_node *clk_hw_get_of_node(const struct clk_hw *hw)
+> +{
+> +	return hw->core->of_node;
+> +}
+> +EXPORT_SYMBOL_GPL(clk_hw_get_of_node);
+> +
+>  struct clk_hw *__clk_get_hw(struct clk *clk)
+>  {
+>  	return !clk ? NULL : clk->core->hw;
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 2e6e603b749342931c0d0693c3e72b62c000791b..630705a47129453c241f1b1755f2c2f2a7ed8f77 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -1360,6 +1360,32 @@ void clk_hw_unregister(struct clk_hw *hw);
+>  /* helper functions */
+>  const char *__clk_get_name(const struct clk *clk);
+>  const char *clk_hw_get_name(const struct clk_hw *hw);
+> +
+> +/**
+> + * clk_hw_get_dev() - get device from an hardware clock.
+> + * @hw: the clk_hw pointer to get the struct device from
+> + *
+> + * This is a helper to get the struct device associated with a hardware
+> + * clock. Some clock controllers, such as the one registered with
+> + * CLK_OF_DECLARE(), may have not provided a device pointer while
+> + * registering the clock.
+> + *
+> + * Return: the struct device associated with the clock, or NULL if there
+> + * is none.
+> + */
+> +struct device *clk_hw_get_dev(const struct clk_hw *hw);
+> +
+> +/**
+> + * clk_hw_get_of_node() - get device_node from a hardware clock.
+> + * @hw: the clk_hw pointer to get the struct device_node from
+> + *
+> + * This is a helper to get the struct device_node associated with a
+> + * hardware clock.
+> + *
+> + * Return: the struct device_node associated with the clock, or NULL
+> + * if there is none.
+> + */
+> +struct device_node *clk_hw_get_of_node(const struct clk_hw *hw);
+>  #ifdef CONFIG_COMMON_CLK
+>  struct clk_hw *__clk_get_hw(struct clk *clk);
+>  #else
+
+-- 
+Jerome
