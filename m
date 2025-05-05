@@ -1,157 +1,136 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4910325DD07;
-	Mon,  5 May 2025 16:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74982195811
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462742; cv=none; b=dkS0C3cyzaZrYGVb4wadGMkYP0zxjiA1HsbdInR2JiQo1+78ZzW9RnhzYPVzkFbOLp4jncfHY+gB3cok5lKM9hM16AboV9CXn4rNQJMhwgOWte5+XvN584T9jmy2ZKsEB2biZpcVxMVFXHblo+HrEI3ajGnvFyDUtJSG8VE/Uw4=
+	t=1746462765; cv=none; b=FYTtk4c6kAxxwVOD7h9XCpfTEDJ0pyGspYeVFqYymIvnLoy+Fy0WRg4i7jEW0WVd5SdUVERf2emu7iBh7BDzsM3E6GwA4WV8L9qOsPNcrEtyjeQxhj9/g49RrgqnmjnurL4rJvNO0JeA+EYyDK2kH/XitK3dCgda+WsdSwjjywI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462742; c=relaxed/simple;
-	bh=rHPz6NuSA+qCeZ3wK2DHYpBJr38HhjnJWTXlOhgKBQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cj4rTa+PBnfweAmSH+O6xgTHBkEaVVhGRqUUlo6b2c0bDUhWNCucrohGP6iA8ucvrwi4Sp5cyhxaQlFOhKqgzxQ2Y6JnXBKsfBrQS0pk6OS0wzCaIRCpTndH8OsdhIBepqWcAEUe9X+fx2/86UN4aAkRHgQXG//V4HESv7FGT/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZMDKKI6; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746462765; c=relaxed/simple;
+	bh=46OSuZf2dhljZm7iLcR4nEvANejbGAzfctNVEsdQaN8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GDmZFn5N2EvrRQwdOUJpHSx7VGu9ecM4CsniOZv0ol3WzLbQRiDKkySQ8G6Fe9xYaeN8TiidsKxCswm5vZu6yz/EY7dWMc3oYSAsxAlqQyg/zR/afPxsip7qseM7OGpcg9oJuRmGf0QQellG9V6Vp7hVeRMIpRFtkZhkDhqSSDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mie3ee7g; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZMDKKI6"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so5629782f8f.1;
-        Mon, 05 May 2025 09:32:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mie3ee7g"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-401c43671ecso2281014b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746462737; x=1747067537; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dr7ugZug3ihf08i6e6l/ueozld66CZifw7NvpZ1p32Q=;
-        b=jZMDKKI6I3rRGbDqPEP2SuU9ZZzC3AvStPYBRPxYF8uZZYV0vgJFllIWl6zDIqKxOb
-         34SEu1afyizhRTa8S3STclTI8szhUsuh0L4I2dI6od/Ii/0rZqxOPBgnC3be6svocrY2
-         ISTHC7GXCtWtFn2L9dSBOfrtvyq7PkihXzcHvJMCoJ+8Ge2HMFKNBXwEA+u0tSJ4GEm7
-         Uz0DGwZBZsTqKW4sfUnHXpWw8Dc4RQDo3K4VvvCTMe0y1M0I5ee/hxHWeXBGGMF2srUl
-         6CwASX8OlMCDajFhkTdQzKbSbGWUrCmQYPK1Xq1usIhTjsQYqD4BpH4vrm7h4K/oJbqK
-         MLZw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746462762; x=1747067562; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rJgqOXHKtLEYu5Dc95e8O+Sgs8ALpz+j191fEgS8hIA=;
+        b=mie3ee7g6bKMhnWx9Js2PDjSN+cRPyfAF1yFjA/QA7M6N45+SS7vz2/85E2kTRbgrE
+         2iicBKE7CYK9zGqlM0IeoTGcz231qHZhYpFxSV6Tc6WxMNugtePpqOrNQsP1QEBsCm69
+         a98THqAcv51/xL8c8ZUsyn8XOoyhaipjHjZ96JlIWGbDbcSsdx6LukJjGiIGZmZzQ3FX
+         0TgvaGa+UyVRxpzJzEixDlcSSJbBYurGOD9DbHeFo3IFbOMByUXY2DIdKOkG4P7EPErv
+         s3KsOhJgdSXpqsOzj6BJQyPYlzufF956Ybkmth8cnjzUrlFJcZEpqsJgfyFEj3rkzUeS
+         eugg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462737; x=1747067537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746462762; x=1747067562;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dr7ugZug3ihf08i6e6l/ueozld66CZifw7NvpZ1p32Q=;
-        b=CNauG53SF15KN10qbXiY8Q2iddYgYCghINuzT3qRKgKpYN/MR08j++hnfagyadNISI
-         SyhjbCRnGaAEozWUIbOS/3ULdI0U8TMIQZWhs76Yu5UXBBOGIYcRbg9dBkYbakbfFTWf
-         DOzVrGCAyRlfRRYCmeUHO//CB2OzDLUwOahfnhW8hfJn0bdIi3lNIiDGTNJfobcMjP5s
-         0uxg3XOhLgWATu1V/2mpf+j3MVabKESXm4O6U9/FaX1z15+F7pzImVI3xEpM5LQI7NZl
-         BB67Tx8hBIBqgexd+goVd+tNAf+tSOUdcn9Q2dCfthktoyD+dSJpjFi75Ln33mmqCZJ7
-         lxnA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/PHZ7iOMuxK7BPXS2tmYVdlZzmFF4F6Goa5KtDKLYi58xlxm2qsMFfneqBbFjQRGDEFfRixygHZeUFrS1H+K1@vger.kernel.org, AJvYcCXB+oC4/vE4ymvpvBRNu4daNsZbVIRP3W2nRQ7AvWKhXA40voNQZvmiyGqZZhtB4tUAF36UQBfEfMCI03pW@vger.kernel.org, AJvYcCXFdMnx8zbCuuIJCENtK8zeUa1G31FYgeWsTQtlVag3CURh2JFRmUnq21ljOSI6BtUEF6G602f86z4HTQ==@vger.kernel.org, AJvYcCXkZaedbcRqVv5S86H+gy017vykmBtsGJo07mKcoexmPie1+i5tMFib1kbsU+s9WLmkocs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzMvwbNZrpPTIbcndh39bfvMkW2Pvx54fq2oCEfZp2Wp2WW0oc
-	i2hhHxz9MW+TEBuGbqZKb922o8i04K9nfQah1XkyGOhQ6kWgOtVxsIbjBUK8p9brKzfyRmygHxm
-	zXuml4z10FaKKpT/PAxnSJqNZuZ0ZV5Wf
-X-Gm-Gg: ASbGncsKUejic8nAlc6PaYs7clkkQQHXjs3EvbbDy5Sit6BI7AIfSj6IHGo+zY+/YTN
-	FvEaoXebddqwcR9ZSgqZv/ywkI2iuFiGFoVJD/0buNZlNidSpTdKGSODvdjQYPElz24oWWXrrYq
-	otYtMttSj1rg4L/mopmA1idxNXhkqeEtjB94TyDw==
-X-Google-Smtp-Source: AGHT+IHG+22kFekEvDHWpvsN8mD4v3nfTdiuCWcNVqcQklTe7zBeo22V9ljBil0YQj/QiStewPcKfZM6TRliWc+Buds=
-X-Received: by 2002:a05:6000:186c:b0:39f:9f:a177 with SMTP id
- ffacd0b85a97d-3a09fd88c00mr5821159f8f.17.1746462737361; Mon, 05 May 2025
- 09:32:17 -0700 (PDT)
+        bh=rJgqOXHKtLEYu5Dc95e8O+Sgs8ALpz+j191fEgS8hIA=;
+        b=ox6MjsiaiJ43Jw9ya3gWQzmThS9BcX5wamotduzumxYoCHMeBeXyppoV/RrThP8NBb
+         /NA1WjlTn5EQF3/lhmnCc6nXDbxUiXfDkFFPHPEkiepgEH+fDqTdtZpMZGSzPSwMtcBD
+         k788TisUswKATLsI7vNvvgOqQVYNhlZaSwcF6vx+M9MEmEH5+svkMjMXKRSjMui3zcTZ
+         6w4MDGAVnY+eAvV5AxESOaboxqClmxVyjOkiszo8iyICjIlrrpcu9Ls6ESWs2quMrRMs
+         xikuTWV082XHfKpyVAJdVcA2XgXO0pK/v1nNR424QiTU0UXQgv4/XHDVG/56VfStbhr4
+         Wp9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUz73OGu9m3wIj+JVzxe1scH1Sxan85x5+u0iY74+CWurlY4bhZxqD6528Xv0v4oOFMa0yis4n1hVqChuw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSjb1nOxxsNCKmRnUva0VHY5BHF4jQE71/tn8nkig6e3okuYy2
+	rD1ZMv2l0F48DjEkhpunqpA1JJ4rBPk340iRrMsHTQ8e1n6n3UrxiDbwHktfG1c=
+X-Gm-Gg: ASbGnct8ZI4mH2RMprw+EG8RfbUEfAs/mplcuInuwH31pQVww5ciSxjZgC/QzN1wx/Q
+	pz71FWYKRA0S7xvKJLvhWp3Oy8g51DjVBhjnaPNgkwJd0pQUVdplO2Ecj+hCXjcHeugF0iXy6LG
+	DEm0zonLYRIhuFpGfOAKI3L9UIgfoquAxQ5iINP4Vw4t/ciTDM5NgmoLW2rh9wEMBPbIuEV5Aql
+	Cy4o7CXASNxWSqOq4dcnjCzx45cluDWngGI9uuta4EvjrYrlIp4KJw3M3NQZYl29N35V0+r8k5Q
+	JdISwt3onpZNSr1+E6n0qX55rqf1Kk4UTu2Mul3+eCvaCg==
+X-Google-Smtp-Source: AGHT+IGs/uio+N9GX6uoXBshi7EmIQjByvrsNNXX+NqolBl5ZTXdpZVjZB6aOujcazOYysdZc1C7fg==
+X-Received: by 2002:a05:6808:2e44:b0:3f3:d699:e1a8 with SMTP id 5614622812f47-4036889329dmr99556b6e.13.1746462762462;
+        Mon, 05 May 2025 09:32:42 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4033dae68f7sm1971854b6e.26.2025.05.05.09.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 09:32:42 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 05 May 2025 11:31:42 -0500
+Subject: [PATCH v5 1/7] iio: make IIO_DMA_MINALIGN minimum of 8 bytes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-vmlinux-mmap-v2-0-95c271434519@isovalent.com>
- <20250502-vmlinux-mmap-v2-1-95c271434519@isovalent.com> <CAADnVQ+dMwAFPO-ASojjYPxODpCKf_9FCLjUvn2HeHigL53JdQ@mail.gmail.com>
- <CAN+4W8jLdcJbVvQ_YaPVqP0EB6reFgt8S0AZh_w3K80tsJvX5Q@mail.gmail.com>
-In-Reply-To: <CAN+4W8jLdcJbVvQ_YaPVqP0EB6reFgt8S0AZh_w3K80tsJvX5Q@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 5 May 2025 09:32:06 -0700
-X-Gm-Features: ATxdqUHdbOI4X671d2W976joC2FuApB09BT2tB05NhCVoqOpSb3oMxuQtB7YCZY
-Message-ID: <CAADnVQ+F0pcP=ohfhE5x+8PZU5y7mKqRvtxBXOQVaKUtuUwGQQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/3] btf: allow mmap of vmlinux btf
-To: Lorenz Bauer <lmb@isovalent.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-1-814b72b1cae3@baylibre.com>
+References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Eugen Hristev <eugen.hristev@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1648; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=46OSuZf2dhljZm7iLcR4nEvANejbGAzfctNVEsdQaN8=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoGOf3wI8ZT4eFmRiGA5GwE6azCjTTRo1UWmFKt
+ qQemRE5B6eJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBjn9wAKCRDCzCAB/wGP
+ wH0mB/0emTwkt4s59h+lwHQxEogmsxeNHdHGwpxtKif1U4oSd5BIhv04bnXgOEzZHho6ORDkML5
+ T5Wx+rUcoPcfdZv4UINUOowft6FL8a2ZLzKxwV/cYf+93la/1Gj6fxP/tAmN4GRnTSQgtbKowYM
+ KarS+EJX/y+GonOePKZqncyxqtKtoV4DX+VPCOJ8FqK1PYW/3e4GBut/zPaLq4I+X+mG+oZZ8Mx
+ IVsCipaI9EJmcaP41FAXPSuw7BMqzbTfv6OPxBcNyWi+/5haxvZcJ75P8m7BHkrYJlZw9CFeO+Y
+ XR+bpiOEfvYEZQlo3vHnK3lt8YXx5RKltXnVVjyN9KBxGTnw
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Mon, May 5, 2025 at 7:37=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wro=
-te:
->
-> On Fri, May 2, 2025 at 6:15=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> > remap_pfn_range() should be avoided.
-> > See big comment in kernel/events/core.c in map_range().
-> >
-> > The following seems to work:
->
-> Thanks, this helped a lot.
->
-> > but this part is puzzling:
-> >         trailing =3D page_size - (btf_size % page_size) % page_size;
->
-> The intention is to calculate how many bytes of trailing zeroes to
-> expect while accounting for the case where btf_size % page_size =3D=3D 0.
+Add a condition to ensure that IIO_DMA_MINALIGN is at least 8 bytes.
+On some 32-bit architectures, IIO_DMA_MINALIGN is 4. In many cases,
+drivers are using this alignment for buffers that include a 64-bit
+timestamp that is used with iio_push_to_buffers_with_ts(), which expects
+the timestamp to be aligned to 8 bytes. To handle this, we can just make
+IIO_DMA_MINALIGN at least 8 bytes.
 
-Well, if it was:
-  trailing =3D page_size - (btf_size % page_size);
-then it would be clear.
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ include/linux/iio/iio.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Extra '% page_size' makes it odd.
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..7e1e3739328d103262071bd34ba5f6631163c122 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -775,8 +775,18 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
+  * to in turn include IIO_DMA_MINALIGN'd elements such as buffers which
+  * must not share  cachelines with the rest of the structure, thus making
+  * them safe for use with non-coherent DMA.
++ *
++ * A number of drivers also use this on buffers that include a 64-bit timestamp
++ * that is used with iio_push_to_buffer_with_ts(). Therefore, in the case where
++ * DMA alignment is not sufficient for proper timestamp alignment, we align to
++ * 8 bytes instead.
+  */
++#if ARCH_DMA_MINALIGN < sizeof(s64)
++#define IIO_DMA_MINALIGN sizeof(s64)
++#else
+ #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
++#endif
++
+ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+ 
+ /* The information at the returned address is guaranteed to be cacheline aligned */
 
-> I could replace this with a check
->
->     end =3D btf_size + (page_size - 1) / page_size * page_size;
+-- 
+2.43.0
 
-it's equivalent to end =3D btf_size;
-'(page_size - 1) / page_size' is always zero.
-
->     for (i =3D btf_size; i < end; i++) ...
->
-> Better?
->
-> In the meantime I've looked at allowing mmap of kmods. I'm not sure
-> it's worth the effort:
->
-> 1. Allocations of btf->data in btf_parse_module() would have to use
-> vmalloc_user() so that allocations are page aligned and zeroed
-> appropriately. This will be a bit more expensive on systems with large
-> pages and / or many small kmod BTFs.
-
-since we kvmemdup(BTF seciton) now anyway, making it vmalloc-ed
-isn't a big deal.
-
-> We could only allow mmap of BTF
-> >=3D PAGE_SIZE, at additional complexity.
-
-I wouldn't go this route. Too much special casing for user space.
-Unless you mean that 'if (btf_size < PAGE_SIZE) dont_vmalloc'
-will be the kernel internal decision that is invisible to user space
-and libbpf-like libraries would try to mmap first anyway and
-always fallback to reading ?
-
-> 2. We need to hold a refcount on struct btf for each mmapped kernel
-> module, so that btf->data doesn't get freed. Taking the refcount can
-> happen in the sysfs mmap handler, but dropping it is tricky. kernfs /
-> sysfs doesn't allow using vm_ops->close (see kernfs_fop_mmap). It
-> seems possible to use struct kernfs_ops->release(), but I don't
-> understand at all how that deals with multiple mmaps of the same file
-> in a single process. Also makes me wonder what happens when a process
-> mmaps the kmod BTF, the module is unloaded and then the process
-> attempts to access the mmap. My cursory understanding is that this
-> would raise a fault, which isn't great at all.
-
-that gets tricky indeed.
-
->
-> If nobody objects / has solutions I'll send a v3 of my original patch
-> with reviews addressed but without being able to mmap kmods.
-
-Makes sense to me.
-We can always follow up.
