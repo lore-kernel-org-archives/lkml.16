@@ -1,50 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B402BD03D;
-	Mon,  5 May 2025 22:41:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE307356E62;
+	Mon,  5 May 2025 22:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484896; cv=none; b=W4D/HdX53Ybd4AiEud3HYSFeaNAxAukOfw9MhkwKOR0PU1Q9XU41MZGdlvnexUxIV92i3aNjU98fs9nzIoYfE05t19R41cjO4yYu8jHoL31fobo9mmQFEZMLwdj0VbL/QQUJ//LFoCT/FSFo+pzzLOotr2oH8dK7sVWR9hX9b1E=
+	t=1746484904; cv=none; b=cunhrKgvk8XGuEaBa3a1DTfly09exiFZYPvRrOitrRypxN6kiDbPmMfVJ5t4o4vz17Az+ow2hoWKXihQmvau0d7fBdeiMPmlaXi5J+GuvzWwuUJ8u+uZx85P3tedFA7rWWnStoi4Sq9zU7WFLe4re3NhXVZTFZNpMM7KZ2/GWGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484896; c=relaxed/simple;
-	bh=MsfzYwsNlKmyBj46lG/HudGhcLZp4s/BlfAOyrpQhEM=;
+	s=arc-20240116; t=1746484904; c=relaxed/simple;
+	bh=rP2E7j9BQsnxmYSaw8OJ99Rw70hzDTlkL6FK8+TOsFc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BuYV+Qj/wNsw2OjAcFMALK0MSdDZmKoNkdM3ZT/uEGS3tzxNd0VnpML7TVlb4ily47vZMXpVWFnxjw79HUFutM0oiBRIpIuPRoTiCrQecnSH7l1lI1fp3AuWKsfLY0Wxl61+4ymRFeApMn4ms/aG34+NSbzkjD7MZHemf9DbhxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCdxXisJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=io8Y0Yuxe9Rv1x4Vwajs/9sRXcfON2eU4NPntELIr7smmD5CCDmD8BohOv0N/O5pE9iqx4xZybBYqKZhKt6pg78sv4f1l/IknXRf4YL1PluIjs/yQ3pjRMFkqCj+nyFWeVqC3Jqm3cuXDNCjLW0myMnD123PFdPaUrm2pzvcQmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUkNYY5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCdxXisJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092FEC4CEE4;
-	Mon,  5 May 2025 22:41:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUkNYY5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4221C4CEED;
+	Mon,  5 May 2025 22:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484894;
-	bh=MsfzYwsNlKmyBj46lG/HudGhcLZp4s/BlfAOyrpQhEM=;
+	s=k20201202; t=1746484903;
+	bh=rP2E7j9BQsnxmYSaw8OJ99Rw70hzDTlkL6FK8+TOsFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SCdxXisJ7g9BOxvsZb9TevcHtyKxtxoA8xyhrZ/NIHN41sfE7gGGkW7aM1pZHkSz1
-	 Ove8aHZRKhRwBt8kgxgNPQXm/Fc7zGkV4Yk5/w6m9jtCmSpdQzs1Ya0d47uFhymQ95
-	 74WALpJp9NLSUuTBrUAgyBesQHANnat6mlJuCbau2pF8d0nZyi70ZdxTrMn4h4ZChI
-	 8zoTJk1cOWJGt3fqoQzb3UcX3ZyyUnl2aLfRCUIE7ULCtaNjv7HwhUnXxmHqK6HSre
-	 9PU5XA8hO2Mzpz3WsmvzLfAi8hSZf/qb+x4K5HDhkHpsQ/KMp/AC5f6CV7HSPb9tPn
-	 9825V66p3Fhdw==
+	b=gUkNYY5MlAPdH+BpcBIC7uylUdIR+/AsBpJnK5XS8RyDYdGewuReXrgEyoIApc8aN
+	 Cv4GWS8gONGjDw3RHJBSIONtLw2aQAeX+VmXnhnmt7P9ju916gMr+ph6Jop/TvuqQC
+	 AmNfETLAW06b2BgnI1s9UsrR0OiabJaVpHCghOdmn71j5c9fVuTCTYR8zBW3tE0+OT
+	 wJobMsjDPfAkJHkaqUa/qoSkKUwKzp8JiUSyk31Xnpy6K9AqC6XPIa7tWXAji/pcP5
+	 /t3uKmsqzCM8mOw7DkeacGkURQs2phJ11kA93XhsIzGNQ68vrVCX+wvT6gXdEHP3sP
+	 ebluw3bV3Mtpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Quan Zhou <quan.zhou@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	sean.wang@mediatek.com,
-	mingyen.hsieh@mediatek.com,
-	deren.wu@mediatek.com,
-	linux-wireless@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 064/486] wifi: mt76: mt7925: fix fails to enter low power mode in suspend state
-Date: Mon,  5 May 2025 18:32:20 -0400
-Message-Id: <20250505223922.2682012-64-sashal@kernel.org>
+	luto@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Subject: [PATCH AUTOSEL 6.12 066/486] x86/stackprotector/64: Only export __ref_stack_chk_guard on CONFIG_SMP
+Date: Mon,  5 May 2025 18:32:22 -0400
+Message-Id: <20250505223922.2682012-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,46 +52,45 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Quan Zhou <quan.zhou@mediatek.com>
+From: Ingo Molnar <mingo@kernel.org>
 
-[ Upstream commit 2d5630b0c9466ac6549495828aa7dce7424a272a ]
+[ Upstream commit 91d5451d97ce35cbd510277fa3b7abf9caa4e34d ]
 
-The mt7925 sometimes fails to enter low power mode during suspend.
-This is caused by the chip firmware sending an additional ACK event
-to the host after processing the suspend command. Due to timing issues,
-this event may not reach the host, causing the chip to get stuck.
-To resolve this, the ACK flag in the suspend command is removed,
-as it is not needed in the MT7925 architecture. This prevents the
-firmware from sending the additional ACK event, ensuring the device
-can reliably enter low power mode during suspend.
+The __ref_stack_chk_guard symbol doesn't exist on UP:
 
-Signed-off-by: Quan Zhou <quan.zhou@mediatek.com>
-Link: https://patch.msgid.link/d056938144a3a0336c3a4e3cec6f271899f32bf7.1736775666.git.quan.zhou@mediatek.com
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  <stdin>:4:15: error: ‘__ref_stack_chk_guard’ undeclared here (not in a function)
+
+Fix the #ifdef around the entry.S export.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Link: https://lore.kernel.org/r/20250123190747.745588-8-brgerst@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/entry/entry.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-index 5b14bf434df36..2396e1795fe17 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-@@ -3287,6 +3287,9 @@ int mt7925_mcu_fill_message(struct mt76_dev *mdev, struct sk_buff *skb,
- 		else
- 			uni_txd->option = MCU_CMD_UNI_EXT_ACK;
- 
-+		if (cmd == MCU_UNI_CMD(HIF_CTRL))
-+			uni_txd->option &= ~MCU_CMD_ACK;
-+
- 		goto exit;
- 	}
- 
+diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
+index 58e3124ee2b42..5b96249734ada 100644
+--- a/arch/x86/entry/entry.S
++++ b/arch/x86/entry/entry.S
+@@ -63,7 +63,7 @@ THUNK warn_thunk_thunk, __warn_thunk
+  * entirely in the C code, and use an alias emitted by the linker script
+  * instead.
+  */
+-#ifdef CONFIG_STACKPROTECTOR
++#if defined(CONFIG_STACKPROTECTOR) && defined(CONFIG_SMP)
+ EXPORT_SYMBOL(__ref_stack_chk_guard);
+ #endif
+ #endif
 -- 
 2.39.5
 
