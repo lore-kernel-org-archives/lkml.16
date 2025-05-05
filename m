@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E392B3C088F;
-	Mon,  5 May 2025 23:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2163C10AC;
+	Mon,  5 May 2025 23:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487433; cv=none; b=UyzuYG8XUPAx6q/kJuJ3pUTaidfd+TPr45CRFwM/LXUrrIkRRMVBq31q3J07Gh1VBHUYaqOU9ZsxoQ8nDxR265oB+vTfDs83l7aSlqwgRz1J5HrTCj8t+3dtdx9wPJlWxF/Xzb7V1snzesGapMLDkbjPSbWqgLRgycd8TsMgBJU=
+	t=1746487437; cv=none; b=uzyYN50e0lwfopqY8OIwAXJ9fzNdCPByk9lHO1nuyaQ6QeAxWsbd+sLNlRfayKNEB+Qsqsv0tcx2/yhQIbDiusLxSOB2cdtw/Tq3ss0Z+e+4F86NJwGsyLg78L39WAV3ZSYH1+SKYimvukIeWnVNq1ytEuAjFKs2Js8xkuzQ+HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487433; c=relaxed/simple;
-	bh=VqAjdqFowdMxBwvZn1FNxrrbYAYPH2ZoKKabX/YN78c=;
+	s=arc-20240116; t=1746487437; c=relaxed/simple;
+	bh=gigUoykiJHFtsD94irfvEODoT3hgotgeNnEsbNFMLUc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p9wyGoqSCVM9xiRnFVvxXOHdflOoo/hXV9PczEPphtnBNTzyBSkM0x5qOdQzJ45jmM94gM4Dv5eZXQoiVLyETGrmK5QlpSkd1yhjpHHsRq16kVoEFHWnIhX0K1+IX5X+hVuBD9o8tU4gOfhQ3ELHJRGh0CpCRW6OCoOxbKZDmBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6LmhY75; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WfoMHvrNmiYJ/Tp7mDalWDLRalenA6IEsOVhrnS5xnpIayzQjYfv6wNfFomV9zNeBkOsXIoVp++3gy5Y22U3MeF/vKGK9AHQCL8Bsq94pOwP6k4dlym69gRDGj0tuh0EG1S0CyQJz6eaHWrQiXBq4bA6KDHrknpHcdltYXQlL8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYG/Heji; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6LmhY75"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81866C4CEEE;
-	Mon,  5 May 2025 23:23:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYG/Heji"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73203C4CEEE;
+	Mon,  5 May 2025 23:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487431;
-	bh=VqAjdqFowdMxBwvZn1FNxrrbYAYPH2ZoKKabX/YN78c=;
+	s=k20201202; t=1746487435;
+	bh=gigUoykiJHFtsD94irfvEODoT3hgotgeNnEsbNFMLUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D6LmhY75C9YditeDX/dEhKgDe1QNaLBnE/gCXqt5Q59itSHzCyL4fLRH5gaPvGwG7
-	 8MLPPdnn3bvmy+q1mdhHF8do+ARQ1tjRW5BzI1xhFpdM2Hbo+5yqoQzEP6rZQhpEik
-	 E1RkmX65OBH/qDchkEKIAM8jeXPrYjv2f3zNGRnjx3VgOG7HZyYMB9pN+5/CmxZ/uj
-	 8WuBXVcovu701ihhusD8QvLuAEd2sP/YKjxY37yLxJL1GzNFljWLlvv73hw03OaVta
-	 o1KkvhUdkhbpjffaypGroGnN7ARDNGedbdK3jvO3oTh2BQSM0WlnIIW9aOYNhuKrvO
-	 yGQGWIsRxSB9w==
+	b=CYG/Hejif72+wAhv+a3TR/uFr3hLoRXvq+0Ecxsz9KELDeGpCWpzYuGIssP9VJkSv
+	 rb4aGnnTkLRXLJpKOQ7YcgOfmPKyjSRbUP6zBEhy9tcZ/UGIhr1+sU9LbhFMnlBwSY
+	 ogXU2NKWLxLN63MSdAj3CJJF4OdycUD+biAs91ub/c8hD/kumjoQnCQYXbhk0ozQzq
+	 mWfVw1VSAJU6uKOVjXc6wXZ6epGZTSyONDJKaIT9f2j7Afoz3OS3T1WTcSP/XeYOto
+	 tpuNbvLQlBbOfYSMQpUjrZUP5lSaX73Bm6m+7C09CYhhSVHihufDi+nRXKNRa295av
+	 jFZA00cKo1eDQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Ankur Arora <ankur.a.arora@oracle.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 68/79] vxlan: Annotate FDB data races
-Date: Mon,  5 May 2025 19:21:40 -0400
-Message-Id: <20250505232151.2698893-68-sashal@kernel.org>
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 70/79] rcu: handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y
+Date: Mon,  5 May 2025 19:21:42 -0400
+Message-Id: <20250505232151.2698893-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -56,142 +57,61 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Ankur Arora <ankur.a.arora@oracle.com>
 
-[ Upstream commit f6205f8215f12a96518ac9469ff76294ae7bd612 ]
+[ Upstream commit 83b28cfe796464ebbde1cf7916c126da6d572685 ]
 
-The 'used' and 'updated' fields in the FDB entry structure can be
-accessed concurrently by multiple threads, leading to reports such as
-[1]. Can be reproduced using [2].
+With PREEMPT_RCU=n, cond_resched() provides urgently needed quiescent
+states for read-side critical sections via rcu_all_qs().
+One reason why this was needed: lacking preempt-count, the tick
+handler has no way of knowing whether it is executing in a
+read-side critical section or not.
 
-Suppress these reports by annotating these accesses using
-READ_ONCE() / WRITE_ONCE().
+With (PREEMPT_LAZY=y, PREEMPT_DYNAMIC=n), we get (PREEMPT_COUNT=y,
+PREEMPT_RCU=n). In this configuration cond_resched() is a stub and
+does not provide quiescent states via rcu_all_qs().
+(PREEMPT_RCU=y provides this information via rcu_read_unlock() and
+its nesting counter.)
 
-[1]
-BUG: KCSAN: data-race in vxlan_xmit / vxlan_xmit
+So, use the availability of preempt_count() to report quiescent states
+in rcu_flavor_sched_clock_irq().
 
-write to 0xffff942604d263a8 of 8 bytes by task 286 on cpu 0:
- vxlan_xmit+0xb29/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff942604d263a8 of 8 bytes by task 287 on cpu 2:
- vxlan_xmit+0xadf/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00000000fffbac6e -> 0x00000000fffbac6f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 2 UID: 0 PID: 287 Comm: mausezahn Not tainted 6.13.0-rc7-01544-gb4b270f11a02 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
-
-[2]
- #!/bin/bash
-
- set +H
- echo whitelist > /sys/kernel/debug/kcsan
- echo !vxlan_xmit > /sys/kernel/debug/kcsan
-
- ip link add name vx0 up type vxlan id 10010 dstport 4789 local 192.0.2.1
- bridge fdb add 00:11:22:33:44:55 dev vx0 self static dst 198.51.100.1
- taskset -c 0 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
- taskset -c 2 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
-
-Reviewed-by: Petr Machata <petrm@nvidia.com>
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/20250204145549.1216254-2-idosch@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/rcu/tree_plugin.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index ce11fb2b05561..7105ac37f341e 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -302,9 +302,9 @@ static int vxlan_fdb_info(struct sk_buff *skb, struct vxlan_dev *vxlan,
- 	    nla_put_u32(skb, NDA_IFINDEX, rdst->remote_ifindex))
- 		goto nla_put_failure;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 2c127d438fe0a..1d9f2831b54ea 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -902,13 +902,16 @@ static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp)
+  */
+ static void rcu_flavor_sched_clock_irq(int user)
+ {
+-	if (user || rcu_is_cpu_rrupt_from_idle()) {
++	if (user || rcu_is_cpu_rrupt_from_idle() ||
++	     (IS_ENABLED(CONFIG_PREEMPT_COUNT) &&
++	      (preempt_count() == HARDIRQ_OFFSET))) {
  
--	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
-+	ci.ndm_used	 = jiffies_to_clock_t(now - READ_ONCE(fdb->used));
- 	ci.ndm_confirmed = 0;
--	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
-+	ci.ndm_updated	 = jiffies_to_clock_t(now - READ_ONCE(fdb->updated));
- 	ci.ndm_refcnt	 = 0;
- 
- 	if (nla_put(skb, NDA_CACHEINFO, sizeof(ci), &ci))
-@@ -510,8 +510,8 @@ static struct vxlan_fdb *vxlan_find_mac(struct vxlan_dev *vxlan,
- 	struct vxlan_fdb *f;
- 
- 	f = __vxlan_find_mac(vxlan, mac, vni);
--	if (f && f->used != jiffies)
--		f->used = jiffies;
-+	if (f && READ_ONCE(f->used) != jiffies)
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	return f;
- }
-@@ -942,12 +942,12 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	    !(f->flags & NTF_VXLAN_ADDED_BY_USER)) {
- 		if (f->state != state) {
- 			f->state = state;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 		if (f->flags != fdb_flags) {
- 			f->flags = fdb_flags;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 	}
-@@ -974,7 +974,7 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	}
- 
- 	if (ndm_flags & NTF_USE)
--		f->used = jiffies;
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	if (notify) {
- 		if (rd == NULL)
-@@ -1351,7 +1351,7 @@ static bool vxlan_snoop(struct net_device *dev,
- 				    src_mac, &rdst->remote_ip.sa, &src_ip->sa);
- 
- 		rdst->remote_ip = *src_ip;
--		f->updated = jiffies;
-+		WRITE_ONCE(f->updated, jiffies);
- 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
- 	} else {
- 		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
-@@ -2748,7 +2748,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			if (f->flags & NTF_EXT_LEARNED)
- 				continue;
- 
--			timeout = f->used + vxlan->cfg.age_interval * HZ;
-+			timeout = READ_ONCE(f->used) + vxlan->cfg.age_interval * HZ;
- 			if (time_before_eq(timeout, jiffies)) {
- 				netdev_dbg(vxlan->dev,
- 					   "garbage collect %pM\n",
+ 		/*
+ 		 * Get here if this CPU took its interrupt from user
+-		 * mode or from the idle loop, and if this is not a
+-		 * nested interrupt.  In this case, the CPU is in
+-		 * a quiescent state, so note it.
++		 * mode, from the idle loop without this being a nested
++		 * interrupt, or while not holding the task preempt count
++		 * (with PREEMPT_COUNT=y). In this case, the CPU is in a
++		 * quiescent state, so note it.
+ 		 *
+ 		 * No memory barrier is required here because rcu_qs()
+ 		 * references only CPU-local variables that other CPUs
 -- 
 2.39.5
 
