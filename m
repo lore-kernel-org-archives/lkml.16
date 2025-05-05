@@ -1,178 +1,164 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF222566;
-	Mon,  5 May 2025 05:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8778D2566;
+	Mon,  5 May 2025 05:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746421318; cv=none; b=BQeMQHbRvX6XS5sN2rKIE/xXHFwdnQ/xEEpy/hZfKtCOjVzDf0UtZm5kzXuMV4DAW2HZsF+nfoTEMBY88rFzgpfCbWnFAVvx0MF9+vJBx1g02fQT1SY6anKtJZ3jNM/hTJpM87gR6zkLmjaP+5MMcHk4EByC9tdhWVVpCkjjFv0=
+	t=1746421584; cv=none; b=K2QNWte7y4CbR24MUrfhCgPmoGVZVNoL9Zouc7ufX2zKVQkEr8mT3RMSwMyqbtkxjEhQq3bE+L0eJBucry68v3e63jJmrgUW5UVuu+ne9srcPy/dZdms7rBXXrS75gpDayF6OkiKr+0pTKQ459b/g4KiLZyjX/Oyt330lRFwR+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746421318; c=relaxed/simple;
-	bh=4ViT3LXt0QH4SnxsFtW5d7x+CtJEfR+/rZCNUoi7YPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XGnb460noRNDy/bV5TN9k2I4I+x3qRwRz1eWIS6cOmB2MsBwyxOd0izaiyjp5b+e5uECgiF0BhxcjGpclfaSNWMDkugE4ZPyPnvr88+akCTtgsfFKgPudNsZSb6cOo3yeXSeBx4pb62HZm2lG3kAPQucxuOHLR3FSKQXUE8SHYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UPjWbMQs; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746421584; c=relaxed/simple;
+	bh=KpE9wjXlGQWl4XdN1XdPw8AuQidvNZejWAaHnQ1kP4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8OXVIz9bDtY65079MLQqEii1MAaFGmxrz3u8A9dkOCxUzHcGum7Nhgx51GwbuP8IQS42bBiXjqhyy0Ja75a0RKmskvfgLHhu0mCD5/FPqSZ6++QYHUddaNX6lATWs+u9nR0DlshmURt2/+M6S6+MjcvVTQXUkWl9gJ/7zsKhpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LRcw6R/Y; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPjWbMQs"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-549b116321aso5036748e87.3;
-        Sun, 04 May 2025 22:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746421314; x=1747026114; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tmpYbvBMI9AsI/UkcpVBkG0S1uIUBYKbf/+Nv3CsnRI=;
-        b=UPjWbMQsj2/EbaHdG6qv62Dybnbo1UIEt7bs9ZCku0i43qiGXzijIQoKhiHekMmip0
-         UQGBgae0l5N2rB6ZaFhUEQBCF3LR+dI7GzG3AsG9eqWaNlWcqU7RyoevnW4vz/x+cpPM
-         yp+/U7YpsF6EkSgKeG9bfNhuv+o5tW00+RJbTqsHnsiG9/iNxwlxg+J15yLE3Tq2lMsE
-         dwjOI14U8U1mKZAU4YNIk3k+Tg9uHrE03zl/pgBLrBqkLFYgyksiMdmCv+6GV5pNF+Mg
-         AszLwpn5oDe4akpSB52HhM3MPQPap1ZPXvzQO0hGV1JUctud/XszC7bC7AtvThvQrHLg
-         iQvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746421314; x=1747026114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tmpYbvBMI9AsI/UkcpVBkG0S1uIUBYKbf/+Nv3CsnRI=;
-        b=w7uXDSK8XyzgvvGacQ7Qs/WC07Mqb42e+1eiAZFtVcahzQ/QKqIIycU8CTWls4R/z1
-         TVhReYN0S8402lDg0/1WQybslM9QWXga3JmoS2722oOWEh8ZCeRqMIsZ8g8b8GtotC3X
-         QsP1xKHGohZjDUNclYv1J9NHOIkldd1WZ+SMT0pIRZUiVltsZCzfZgDbC7dQqtYbJsrT
-         rJ613AY2UJ9RDFEczqonekmpligT+SSyW3JUQoVBRvUT7ltqqm82IihC6CFZa/lCoUr9
-         igUFQnkc/tYjrfjRrtiiaTeXPE3vQAqvPSddOdH3Pl4Ad1lflVkbNQArALK2S7AG3Y0H
-         +0BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVY6A8vImXJ8M0My98570BHHh+TVGBwzD/9QfST/m9YKQkaYm1QHPhIzsHbM1E5M6wALeS9dzud33v7XA==@vger.kernel.org, AJvYcCXx+07Ikss6tiPqLy+w53QCrecDUKT9B5EJLwaGyYFZ+5hAXAs90KCFdvwVGWzL7Ee1h0PU3MZ2A1mvxpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM+P9zyk+IF8zBqiflmMX5NzNgu9CGSJgNm8nW7bGG/UHFIaDr
-	XimNW9V0vDVYHhGeu4kmqpBUHniWnPYYngQD7ncjDuAYGl81MSGp7e3mXrHXysdLg7OMQpubg/D
-	Yd48E3rDOtICefueGemOygcw5YzU=
-X-Gm-Gg: ASbGnctB8M2RmQGywNPv2R+9ZZmJIiC3fKexV4WWamfV9/kchqblgQXtYBe69SSyv5s
-	qHu/vHaItjc94ix5TzTO2p93kFFAZX5yTtp/zvMdHlksNTOP7r/1TFF12ycfZBjIr1y8o15rcBa
-	W8M5ifv26EKEdevx6gUTGzqA==
-X-Google-Smtp-Source: AGHT+IHrGdAczLy6DFk9G7cF7f/Wjb6YJKaCJYrDZu9gByYO98eCuaSMEJtEDxszy3sjSOxmj1HT1u2CQg8duiL2Yoc=
-X-Received: by 2002:a05:6512:3c9a:b0:549:39d8:51ef with SMTP id
- 2adb3069b0e04-54f9efb8264mr1208726e87.6.1746421313939; Sun, 04 May 2025
- 22:01:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LRcw6R/Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746421582; x=1777957582;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KpE9wjXlGQWl4XdN1XdPw8AuQidvNZejWAaHnQ1kP4E=;
+  b=LRcw6R/YvA5CoPm7b4b/2wdTU1Gi1fctaUurZLcEEKls6487oqW9Ss/M
+   UQcOPfieLyHjaAVZE1voqb8X16Hc3NDGFBNkG9YuXXHOe4G56oWCnEZmg
+   0LyY5H3EAxKD8d505ivLKNwvXFySlu2A2iS2+0+hkBt2Yrd6M9ACVMRU8
+   1VBVAHLtZeA05O8oISCTr3gLJi+5gaXGlN1u8SSyvFwG9gRqAd6G6bKCt
+   0UPUkzXY9hEuV5ZV1sp7lGY05Yu4OmAcEwG50hOpUjLUnST7UbvEVKVxd
+   GpVa3ehXIPxq8vkHz3OGWSE5Mk1DF/yKly3c4HXHszGTumj8lA8y7tGLo
+   g==;
+X-CSE-ConnectionGUID: NUozlbiWQxqNwTZ6Hlg4JA==
+X-CSE-MsgGUID: /RsP/XnIQJe+EG/Ey+b6dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="50667780"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="50667780"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2025 22:06:21 -0700
+X-CSE-ConnectionGUID: NFbsm+nURZuK2hYFbJXcNw==
+X-CSE-MsgGUID: cexH5n/4TGyvFPvJrkVySQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="135655373"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 04 May 2025 22:06:19 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uBo1v-0005ar-2S;
+	Mon, 05 May 2025 05:06:15 +0000
+Date: Mon, 5 May 2025 13:05:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
+ of setting per CPU disabled
+Message-ID: <202505051213.exaXF8qp-lkp@intel.com>
+References: <20250502205348.643055437@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430115926.6335-1-rand.sec96@gmail.com> <9028680b0d2b7c42d0e990bbdcd247d824e01153.camel@HansenPartnership.com>
-In-Reply-To: <9028680b0d2b7c42d0e990bbdcd247d824e01153.camel@HansenPartnership.com>
-From: Rand Deeb <rand.sec96@gmail.com>
-Date: Mon, 5 May 2025 08:00:00 +0300
-X-Gm-Features: ATxdqUE33cDra2cb2TPeDDpzcgpOt-sUHG0jdy6t6FDlIgtKanNZcP2zerypUIw
-Message-ID: <CAN8dotmt91Kqwrz7e4O71opGX7gK802-WwXOPV1GkQB-KmRHDw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: NCR5380: Prevent potential out-of-bounds read in spi_print_msg()
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Finn Thain <fthain@linux-m68k.org>, Michael Schmitz <schmitzmic@gmail.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, 
-	"open list:NCR 5380 SCSI DRIVERS" <linux-scsi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	deeb.rand@confident.ru, lvc-project@linuxtesting.org, 
-	voskresenski.stanislav@confident.ru
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502205348.643055437@goodmis.org>
 
-On Wed, Apr 30, 2025 at 3:59=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2025-04-30 at 14:59 +0300, Rand Deeb wrote:
-> > spi_print_msg() assumes that the input buffer is large enough to
-> > contain the full SCSI message, including extended messages which may
-> > access msg[2], msg[3], msg[7], and beyond based on message type.
->
-> That's true because it's a generic function designed to work for all
-> parallel card.  However, this card only a narrow non-HVD low frequency
-> one, so it only really speaks a tiny subset of this (in particular it
-> would never speak messages over 3 bytes).
+Hi Steven,
 
-Thank you for clarifying this. I wasn=E2=80=99t aware that the NCR5380 is s=
-o
-strictly limited in terms of message support.I assumed a more generic
-scenario when applying defensive checks, without considering the practical
-behavior of this specific hardware.
+kernel test robot noticed the following build warnings:
 
-> > NCR5380_reselect() currently allocates a 3-byte buffer for 'msg'
-> > and reads only a single byte from the SCSI bus before passing it to
-> > spi_print_msg(), which can result in a potential out-of-bounds read
-> > if the message is malformed or declares a longer length.
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.15-rc4 next-20250502]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-That makes sense. My initial assumption was that, even if unlikely, a
-malformed or non-compliant message could theoretically appear. But I now
-see that this isn=E2=80=99t realistic for these devices, and no evidence su=
-ggests
-this has ever occurred in the field.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-mmiotrace-Remove-reference-to-unused-per-CPU-data-pointer/20250503-050317
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250502205348.643055437%40goodmis.org
+patch subject: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead of setting per CPU disabled
+config: arc-randconfig-002-20250503 (https://download.01.org/0day-ci/archive/20250505/202505051213.exaXF8qp-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250505/202505051213.exaXF8qp-lkp@intel.com/reproduce)
 
-> The reselect protocol *requires* the next message to be an identify.
-> Since these cards and the devices they attack to are all decades old, I
-> think if they were going to behave like this we'd have seen it by now.
->
-> The bottom line is we don't add this type of thing to a device facing
-> interface unless there's evidence of an actual negotiation problem.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505051213.exaXF8qp-lkp@intel.com/
 
-Understood and I agree. Defensive programming without a known issue on
-hardware-level interfaces introduces unnecessary complexity.
+All warnings (new ones prefixed by >>):
 
-> You didn't test this, did you?  The above code instructs the card to
-> wait for 16 bytes on reselection and abort if they aren't found ...
+   kernel/trace/trace_kdb.c: In function 'kdb_ftdump':
+>> kernel/trace/trace_kdb.c:101:13: warning: unused variable 'cpu' [-Wunused-variable]
+     101 |         int cpu;
+         |             ^~~
 
-You=E2=80=99re absolutely right. I misjudged the effect of changing the rea=
-d length.
 
-Given this, I=E2=80=99ll drop the patch entirely, as there=E2=80=99s no act=
-ual problem to
-fix. The intent was only to silence static analysis tools, but I now
-realize this isn=E2=80=99t a valid justification for modifying a stable har=
-dware-
-facing path.
+vim +/cpu +101 kernel/trace/trace_kdb.c
 
-Thanks again for the review and your insights.
+955b61e5979847 Jason Wessel     2010-08-05   91  
+955b61e5979847 Jason Wessel     2010-08-05   92  /*
+955b61e5979847 Jason Wessel     2010-08-05   93   * kdb_ftdump - Dump the ftrace log buffer
+955b61e5979847 Jason Wessel     2010-08-05   94   */
+955b61e5979847 Jason Wessel     2010-08-05   95  static int kdb_ftdump(int argc, const char **argv)
+955b61e5979847 Jason Wessel     2010-08-05   96  {
+dbfe67334a1767 Douglas Anderson 2019-03-19   97  	int skip_entries = 0;
+19063c776fe745 Jason Wessel     2010-08-05   98  	long cpu_file;
+0c10cc2435115c Yuran Pereira    2024-10-28   99  	int err;
+03197fc02b3566 Douglas Anderson 2019-03-19  100  	int cnt;
+03197fc02b3566 Douglas Anderson 2019-03-19 @101  	int cpu;
+955b61e5979847 Jason Wessel     2010-08-05  102  
+19063c776fe745 Jason Wessel     2010-08-05  103  	if (argc > 2)
+955b61e5979847 Jason Wessel     2010-08-05  104  		return KDB_ARGCOUNT;
+955b61e5979847 Jason Wessel     2010-08-05  105  
+0c10cc2435115c Yuran Pereira    2024-10-28  106  	if (argc && kstrtoint(argv[1], 0, &skip_entries))
+0c10cc2435115c Yuran Pereira    2024-10-28  107  		return KDB_BADINT;
+955b61e5979847 Jason Wessel     2010-08-05  108  
+19063c776fe745 Jason Wessel     2010-08-05  109  	if (argc == 2) {
+0c10cc2435115c Yuran Pereira    2024-10-28  110  		err = kstrtol(argv[2], 0, &cpu_file);
+0c10cc2435115c Yuran Pereira    2024-10-28  111  		if (err || cpu_file >= NR_CPUS || cpu_file < 0 ||
+19063c776fe745 Jason Wessel     2010-08-05  112  		    !cpu_online(cpu_file))
+19063c776fe745 Jason Wessel     2010-08-05  113  			return KDB_BADINT;
+19063c776fe745 Jason Wessel     2010-08-05  114  	} else {
+ae3b5093ad6004 Steven Rostedt   2013-01-23  115  		cpu_file = RING_BUFFER_ALL_CPUS;
+19063c776fe745 Jason Wessel     2010-08-05  116  	}
+19063c776fe745 Jason Wessel     2010-08-05  117  
+955b61e5979847 Jason Wessel     2010-08-05  118  	kdb_trap_printk++;
+03197fc02b3566 Douglas Anderson 2019-03-19  119  
+03197fc02b3566 Douglas Anderson 2019-03-19  120  	trace_init_global_iter(&iter);
+03197fc02b3566 Douglas Anderson 2019-03-19  121  	iter.buffer_iter = buffer_iter;
+03197fc02b3566 Douglas Anderson 2019-03-19  122  
+6a4611f6bb763d Steven Rostedt   2025-05-02  123  	tracer_tracing_off(iter.tr);
+03197fc02b3566 Douglas Anderson 2019-03-19  124  
+03197fc02b3566 Douglas Anderson 2019-03-19  125  	/* A negative skip_entries means skip all but the last entries */
+03197fc02b3566 Douglas Anderson 2019-03-19  126  	if (skip_entries < 0) {
+03197fc02b3566 Douglas Anderson 2019-03-19  127  		if (cpu_file == RING_BUFFER_ALL_CPUS)
+03197fc02b3566 Douglas Anderson 2019-03-19  128  			cnt = trace_total_entries(NULL);
+03197fc02b3566 Douglas Anderson 2019-03-19  129  		else
+03197fc02b3566 Douglas Anderson 2019-03-19  130  			cnt = trace_total_entries_cpu(NULL, cpu_file);
+03197fc02b3566 Douglas Anderson 2019-03-19  131  		skip_entries = max(cnt + skip_entries, 0);
+03197fc02b3566 Douglas Anderson 2019-03-19  132  	}
+03197fc02b3566 Douglas Anderson 2019-03-19  133  
+dbfe67334a1767 Douglas Anderson 2019-03-19  134  	ftrace_dump_buf(skip_entries, cpu_file);
+03197fc02b3566 Douglas Anderson 2019-03-19  135  
+6a4611f6bb763d Steven Rostedt   2025-05-02  136  	tracer_tracing_on(iter.tr);
+03197fc02b3566 Douglas Anderson 2019-03-19  137  
+955b61e5979847 Jason Wessel     2010-08-05  138  	kdb_trap_printk--;
+955b61e5979847 Jason Wessel     2010-08-05  139  
+955b61e5979847 Jason Wessel     2010-08-05  140  	return 0;
+955b61e5979847 Jason Wessel     2010-08-05  141  }
+955b61e5979847 Jason Wessel     2010-08-05  142  
 
-Best regards,
-Rand Deeb
-
-On Wed, Apr 30, 2025 at 3:59=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2025-04-30 at 14:59 +0300, Rand Deeb wrote:
-> > spi_print_msg() assumes that the input buffer is large enough to
-> > contain the full SCSI message, including extended messages which may
-> > access msg[2], msg[3], msg[7], and beyond based on message type.
->
-> That's true because it's a generic function designed to work for all
-> parallel card.  However, this card only a narrow non-HVD low frequency
-> one, so it only really speaks a tiny subset of this (in particular it
-> would never speak messages over 3 bytes).
->
-> > NCR5380_reselect() currently allocates a 3-byte buffer for 'msg'
-> > and reads only a single byte from the SCSI bus before passing it to
-> > spi_print_msg(), which can result in a potential out-of-bounds read
-> > if the message is malformed or declares a longer length.
->
-> The reselect protocol *requires* the next message to be an identify.
-> Since these cards and the devices they attack to are all decades old, I
-> think if they were going to behave like this we'd have seen it by now.
->
-> The bottom line is we don't add this type of thing to a device facing
-> interface unless there's evidence of an actual negotiation problem.
->
-> [...]
-> > @@ -2084,7 +2084,7 @@ static void NCR5380_reselect(struct Scsi_Host
-> > *instance)
-> >       msg[0] =3D NCR5380_read(CURRENT_SCSI_DATA_REG);
-> >  #else
-> >       {
-> > -             int len =3D 1;
-> > +             int len =3D sizeof(msg);
->
-> You didn't test this, did you?  The above code instructs the card to
-> wait for 16 bytes on reselection and abort if they aren't found ...
-> i.e. every reselection now aborts because the device is only sending a
-> one byte message.
->
-> Regards,
->
-> James
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
