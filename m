@@ -1,162 +1,142 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84981255F24
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6795B2561AA;
+	Mon,  5 May 2025 13:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746452620; cv=none; b=prTDZ9JPKf5f0bfttM4gAD45/PQe34+JmE5eeDmR57z+A/IKl0t2LYVGaFKt+CLOnqUTuHKGQydurgh46V+dIN1BJJYAhYV8zfyMVf7v+SkqtArWqR1CrmN0hBD692qc1Ybf08F+DLnw/8Quz1PpM8y9lVlnKhefylm/KQgAR7Q=
+	t=1746452697; cv=none; b=QG8rAoTyR+jOLL0HFeV9hvOOM7amA+8Y4qYxJpIKclacpuHwooxwHfxPsBzcEYizHW3uebwVRPf2pGUQpASrdyzP17cqS7OXjQL+YQOQh0Q/hrARuWsESfOTunN4skTk22nwXyNV8YucD2atTokYwNusi1tpOZJ+yftudizP0nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746452620; c=relaxed/simple;
-	bh=0jKLIURpbm6ove+4lNS05PHziDGo3BSA3O2p8fPRl+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QWBfAM0bwsnLjGkrFrIf8JNcDQNwF9eTmHxMJ/B7L9FFrxYeDqXIP/hOlfDp19q+qVUiYl8YQlK64RBAIwAJmyEfZygxv0z+97p6h+AGvBXWwAF+jVJaTSP26KhoijVbibfl25Vc8mh0LWrgrBltGnOYit/vc7s3jCgVeHa9kJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NhAp3hao; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=etM7WbHd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NhAp3hao; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=etM7WbHd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746452697; c=relaxed/simple;
+	bh=tvXmTrMlbV/uyUl//wrOaAloL94MOBt9zGN5gBgIYs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbiVlB/ovZcq+zYe0ELsnNxx7uGiLP6YSVd0iSQ/FNGLbOc7RbyYJx/Q/CA/uFgwsvx1hFOziHxPoE8EbIRf2pvxQVnHdWZIeHOXHrh1S//2c3JftEQL13Ki9V3nvlwY0IwAes4y9plRMNK+3hPxdvdRw5HSR2b1nBRVVdJqAKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkvTsU8G; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NhAp3hao";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="etM7WbHd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NhAp3hao";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="etM7WbHd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 883341F79C;
-	Mon,  5 May 2025 13:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746452616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PP8n/I9c2HpK3CnIVwDPh7bDQ61AQFRol0vbEOVCU/E=;
-	b=NhAp3haovTppDhz1ZgJVSTRoq9Cx1hp63I6YHUypl1os/L9WzRoOatMCwIM9QNrCfoTiF1
-	D6xbCKtROUqWipKc4xhr1TKB7ZeIpa07CIyLWCnMXZxtdMwjmjVezIhNXGZGMV4QXen0CD
-	n1T8njYL8klQ7PgI4ndnQsQUMCIU+T0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746452616;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PP8n/I9c2HpK3CnIVwDPh7bDQ61AQFRol0vbEOVCU/E=;
-	b=etM7WbHd96MRE+tNykIDJQ856Bdm3saxpZz7SMYz8leDIjPSQNws6UHUcfag7XvP+F8jwd
-	3l7ewVIBtff5tYDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=NhAp3hao;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=etM7WbHd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746452616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PP8n/I9c2HpK3CnIVwDPh7bDQ61AQFRol0vbEOVCU/E=;
-	b=NhAp3haovTppDhz1ZgJVSTRoq9Cx1hp63I6YHUypl1os/L9WzRoOatMCwIM9QNrCfoTiF1
-	D6xbCKtROUqWipKc4xhr1TKB7ZeIpa07CIyLWCnMXZxtdMwjmjVezIhNXGZGMV4QXen0CD
-	n1T8njYL8klQ7PgI4ndnQsQUMCIU+T0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746452616;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PP8n/I9c2HpK3CnIVwDPh7bDQ61AQFRol0vbEOVCU/E=;
-	b=etM7WbHd96MRE+tNykIDJQ856Bdm3saxpZz7SMYz8leDIjPSQNws6UHUcfag7XvP+F8jwd
-	3l7ewVIBtff5tYDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7505413883;
-	Mon,  5 May 2025 13:43:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kji+GojAGGgBOQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 05 May 2025 13:43:36 +0000
-Message-ID: <c593b2c0-d5bc-49fa-b16d-a7f89c927c6e@suse.cz>
-Date: Mon, 5 May 2025 15:43:36 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkvTsU8G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746452696; x=1777988696;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tvXmTrMlbV/uyUl//wrOaAloL94MOBt9zGN5gBgIYs4=;
+  b=hkvTsU8GMfkN4Vi4LfDqBYoudNALrfd1G7P5m2vNanlbJmY4QDazIimK
+   kiHo8rD16lVo/IdHkWLI0mD3kqVTiHXJlGQlLsMKSxp10k0041iQzFmss
+   0bG+27U02qbMArowgm09xfeWqiGwpkEQlQn69MJX/WRLTHYiyLFLV8t+H
+   WZnaw64vPgNWCwBnlDCA0vEwYAOzG3iloZFdsric5T4tLGN2BSvfvDa9c
+   wX55WCeY5sP13ZbpI4TKtNnqXNecno9m5IX3mnwC+WRqa8gzov+EMHdYw
+   Tjk9v9xgPrWB3gzsy/3e8M9QJq43cy2huf/ysNZXgEkEIKahnQOa4fbjs
+   A==;
+X-CSE-ConnectionGUID: TnExC6r2T7OuiuCUKg7jTA==
+X-CSE-MsgGUID: 7FN84kZqSyODCr6yTiFcxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="59452994"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="59452994"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:44:55 -0700
+X-CSE-ConnectionGUID: VF7NT8weTueZ2L9N2tgJAg==
+X-CSE-MsgGUID: PKzhnYjiSreTpmlerRUWgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="140246991"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 05 May 2025 06:44:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uBw7h-0005lZ-22;
+	Mon, 05 May 2025 13:44:45 +0000
+Date: Mon, 5 May 2025 21:43:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Viken Dadhaniya <quic_vdadhani@quicinc.com>, andi.shyti@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.or,
+	andersson@kernel.org, konradybcio@kernel.org,
+	johan+linaro@kernel.org, dianders@chromium.org, agross@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, quic_msavaliy@quicinc.com,
+	quic_anupkulk@quicinc.com,
+	Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Subject: Re: [PATCH v4 2/5] soc: qcom: geni-se: Add support to load QUP SE
+ Firmware via Linux subsystem
+Message-ID: <202505052109.5N8caeeW-lkp@intel.com>
+References: <20250503111029.3583807-3-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] mm,slub: Do not special case N_NORMAL nodes for
- slab_nodes
-Content-Language: en-US
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rakie Kim <rakie.kim@sk.com>
-References: <20250502083624.49849-1-osalvador@suse.de>
- <20250502083624.49849-2-osalvador@suse.de>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250502083624.49849-2-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 883341F79C
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,gmail.com,huawei.com,sk.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.cz:dkim,suse.cz:mid,suse.cz:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250503111029.3583807-3-quic_vdadhani@quicinc.com>
 
-On 5/2/25 10:36, Oscar Salvador wrote:
-> Currently, slab_mem_going_going_callback() checks whether the node has
-> N_NORMAL memory in order to be set in slab_nodes.
-> While it is true that gettind rid of that enforcing would mean
-> ending up with movables nodes in slab_nodes, the memory waste that comes
-> with that is negligible.
-> 
-> So stop checking for status_change_nid_normal and just use status_change_nid
-> instead which works for both types of memory.
-> 
-> Also, once we allocate the kmem_cache_node cache  for the node in
+Hi Viken,
 
-					     ^ object? instance?
+kernel test robot noticed the following build errors:
 
-> slab_mem_online_callback(), we never deallocate it in
-> slab_mem_off_callback() when the node goes memoryless, so we can just
-> get rid of it.
-> 
-> The only side effect is that we will stop clearing the node from slab_nodes.
+[auto build test ERROR on andi-shyti/i2c/i2c-host]
+[also build test ERROR on tty/tty-testing tty/tty-next tty/tty-linus broonie-spi/for-next linus/master v6.15-rc5 next-20250505]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Technically, another effect is that also any newly created kmem caches after
- node hotremove will now allocate their kmem_cache_node for the node(s) that
-was hotremoved. But that should be even more negligible waste than from
-using N_MEMORY.
+url:    https://github.com/intel-lab-lkp/linux/commits/Viken-Dadhaniya/dt-bindings-qcom-se-common-Add-QUP-Peripheral-specific-properties-for-I2C-SPI-and-SERIAL-bus/20250503-191235
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
+patch link:    https://lore.kernel.org/r/20250503111029.3583807-3-quic_vdadhani%40quicinc.com
+patch subject: [PATCH v4 2/5] soc: qcom: geni-se: Add support to load QUP SE Firmware via Linux subsystem
+config: sparc64-randconfig-002-20250505 (https://download.01.org/0day-ci/archive/20250505/202505052109.5N8caeeW-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250505/202505052109.5N8caeeW-lkp@intel.com/reproduce)
 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505052109.5N8caeeW-lkp@intel.com/
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+All errors (new ones prefixed by >>):
 
+   In file included from drivers/tty/serial/qcom_geni_serial.c:18:
+   include/linux/soc/qcom/geni-se.h: In function 'geni_se_read_proto':
+>> include/linux/soc/qcom/geni-se.h:351:16: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+     351 |         return FIELD_GET(FW_REV_PROTOCOL_MSK, val);
+         |                ^~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/soc/qcom/qcom-geni-se.c:21:
+   include/linux/soc/qcom/geni-se.h: In function 'geni_se_read_proto':
+>> include/linux/soc/qcom/geni-se.h:351:16: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+     351 |         return FIELD_GET(FW_REV_PROTOCOL_MSK, val);
+         |                ^~~~~~~~~
+   drivers/soc/qcom/qcom-geni-se.c: In function 'geni_write_fw_revision':
+>> drivers/soc/qcom/qcom-geni-se.c:1042:21: error: implicit declaration of function 'FIELD_PREP' [-Werror=implicit-function-declaration]
+    1042 |         reg_value = FIELD_PREP(FW_REV_PROTOCOL_MSK, serial_protocol);
+         |                     ^~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/FIELD_GET +351 include/linux/soc/qcom/geni-se.h
+
+   338	
+   339	/**
+   340	 * geni_se_read_proto() - Read the protocol configured for a serial engine
+   341	 * @se:		Pointer to the concerned serial engine.
+   342	 *
+   343	 * Return: Protocol value as configured in the serial engine.
+   344	 */
+   345	static inline u32 geni_se_read_proto(struct geni_se *se)
+   346	{
+   347		u32 val;
+   348	
+   349		val = readl_relaxed(se->base + SE_GENI_FW_REVISION_RO);
+   350	
+ > 351		return FIELD_GET(FW_REV_PROTOCOL_MSK, val);
+   352	}
+   353	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
