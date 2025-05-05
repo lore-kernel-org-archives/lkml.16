@@ -1,107 +1,121 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306482D644F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F02A278E4C;
+	Mon,  5 May 2025 22:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485709; cv=none; b=vF6Q2j/ubwwYTKXPGamixHSgHH6aYgIXqIb2w3UEnD6hir1ONczam24M/n6VkpA69/rLXMBQySaqxLxVUo8yYMKFx6C+afeYnj8XfmoW+aNqe5A6fgTy6pR0FoajQkyphPFjRIYxsdb9aMW7mLyK7P/T50for7Mt8o/XmHUPOmw=
+	t=1746485708; cv=none; b=B1fk6U/k31VDP7IoW3HQDQ7DjDBX/1+ZpI1pHHp3FzTtDqh998LlpTyNFlaPlZDo+84VEtAXNktGNulLKw/MYvvCfkjylAMFKyxyNa0L6o4CkWoU28pN+yElYtEw5erMiS55iGFLlEInTPMle3Haw6VPJuEQPQM/Gtce97ydwgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485709; c=relaxed/simple;
-	bh=Mg2CXirr6UvTh7WdZZfM5Ugt9d72LzrmXthHN3w72ec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OORbrXCEDmRuAldr8iydwOgJQ86KoPe7v9/o35O62Xni92OvHIbJadPVZWSHstAXp7E4jlERTBENvgm77byB6bZs7Tc1A1DmQGyfo6Bzmx9zftRagyYqMqY9XfLi2dO9FdkWZgWQAzF90bT7q6WdJHd2gmXo0gvI/Qu9nCbeqHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=blIsO1yF; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1746485708; c=relaxed/simple;
+	bh=D0PUAo9KDwCLT06OfXozEdjyc4p5w+SxoL0+1i9fV8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mXCEV/komyKqIwkF4wJ/tFILcWQxkS0Bua9HLvDNpKACENtdXb3w/7guRwxA4Nlo/3pDZTPP6bTNzIhuUdZ9pM/FyiFJGjzpN6/bvOe1Zpsn0XhhpgqdD6qwLUeABkMz7E4L+3lOKSRKxK+wMQD9iXIbXmX4TA7k9JUIr49rqy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSN2Ml/w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="blIsO1yF"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d812103686so16021075ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746485706; x=1747090506; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Yv0MzPmtdmRQ2wegGs8YL88YA21hMeqRHBV5NTQWj3A=;
-        b=blIsO1yFR1IS5CrCYFZYFmR327mV7FkydBSGwie6Tjvt3b98gzF8pnEsl8F5Vguv7K
-         i/qgSoFkZU3KHommCYOvrE+AS0gItoRUfQdp8RltmPYg0cUFJOB8f6PDHs+U2u6I8aQC
-         RJDWdDyYKasyW2UzoO7dT//Szhq3mzOHcisv/1YvGgYf999lVrJmzd87M5oIbxvpCwDp
-         CZnyt2HjMo7V2jhgnICrsQJSgohO31XdfkCVzLL9fjV9tDOm6i/SX2Nueo4mwHR57Rtn
-         3AnezZ4eJCR6CnY4pYCFjk3tY7b/1cGQxiGL+uWEy9g0FMMsP4mb/189u7AoS/Uv6j5V
-         AEuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746485706; x=1747090506;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yv0MzPmtdmRQ2wegGs8YL88YA21hMeqRHBV5NTQWj3A=;
-        b=mDguj0KRchYUPjMAc7+S/yos2/CH2oNKj2mwEsHmPHHV8jWBuIEpKmvxEtIyqrrMME
-         dSPdbxmaejvqGsigzbgbxNUVwo5njWrOD5th25B56i1lQMisSc1n7b4zoL5qQE7UZvYS
-         pXLctkbWDtUj/Gik6ywlfnK55th/Cv8GnNcTHI57eKNJg1V42AqvOlnsFzwvtwnkSOHL
-         TNuswC8JTKidiL8cKXCNJMPp0vugwK8q3rTVUoRCpzbzmaW6nkWNxPUTK9I2mAL1dP+z
-         PXDiXY8oJWy3qDK3wXOqeyRW8E2J8ddlPbBNqTie0Hczi00ogThGRLds7XAW0prDYazt
-         D1Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIqCnbIUe+GtM3Wms01b5ajRIF9dcJlWERixTxA/nkYjUmW1XL4lwU4NyY9Zad2h32qOSlXHYr3/vruUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd7cusgyS3Gsuz4BEq6iT+Q8LrX9s4cDoz7qnrmKwfF8CKolGg
-	4Rh1qxm2gti3yBc4hh8n4RkCsaLiwzDsC9Ad3jq7r09Jmm0z1H/Fck+F5zPz5wU=
-X-Gm-Gg: ASbGncv/510hGB0cH27aUklRCP5c8HVjCMN3Zjy7WPzfyyo2dll6MwOiXwkupuBlFun
-	lfIgG5XSctKXRKZSguZIZlQqY+s0qlphEkI6p4BV/ShL0c2gaPrnr/aXtjCAuVKNPlhXnqWESnd
-	VIgi1fJ15Xtc7v12aWrmgcfcAUHAe5ajdY1qjZWeVUeph+ZgzYP2FR+N0pHFm4JzW0wMEjB+TnS
-	2OLCik4bu/Cjtjfw7wI/xtkktY2ihbj+ICNR3eHQEhDWufm8tSP3S9i8LAkBmQdBb2UH03TCQvp
-	cyhoZofzlT3Cz1+KyUtUJoiVMhhShHfvDDe7bA==
-X-Google-Smtp-Source: AGHT+IHD8ML20CAJxh1aMxoelraKxk40IzV2DcR6+Tf1u925PW2sSl5JHvnPoT+pcjPADCDtKFI1gg==
-X-Received: by 2002:a05:6e02:219c:b0:3d0:26a5:b2c with SMTP id e9e14a558f8ab-3da6cab0417mr15472125ab.8.1746485706305;
-        Mon, 05 May 2025 15:55:06 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d975f6dd89sm22445675ab.66.2025.05.05.15.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 15:55:05 -0700 (PDT)
-Message-ID: <818fd481-3925-43bf-af04-a10244a52d66@kernel.dk>
-Date: Mon, 5 May 2025 16:55:04 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSN2Ml/w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1428C4CEE4;
+	Mon,  5 May 2025 22:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746485707;
+	bh=D0PUAo9KDwCLT06OfXozEdjyc4p5w+SxoL0+1i9fV8U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DSN2Ml/wMQ0kyvqEU7hZln0KiuPEheHmGY8Fv1T4DAo0h4AKOWlJe64NpQJJn/FKX
+	 Z71Lr6NYlNgBeY4cG/eFRrhVlF4rRXwFopOfufowOBtUdW1l2VW7zkZ7KOqLjf2yyP
+	 gbdbRKRdaoWJb3NbxEalyVGP3Fxvoa9cnYzOpZD/v546ADzDL5CH0RgZg3v7QnlPS2
+	 naG+2/OyxZ9RewzHMbHQpovKtsXDfr/v4G5l95kzABDO7Kaxu5ilH0Rs/yTNNLfETY
+	 KiRt7CEHGQb3BXK8sF/jl06D3dARaaeWAdQMqMlnczhFzwA5k8K6dOHsGQwhcUj8lS
+	 xzFky99r30sHA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ankur Arora <ankur.a.arora@oracle.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Sasha Levin <sashal@kernel.org>,
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 435/486] rcu: handle unstable rdp in rcu_read_unlock_strict()
+Date: Mon,  5 May 2025 18:38:31 -0400
+Message-Id: <20250505223922.2682012-435-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] selftests: ublk: more misc fixes
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
- linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <aBkgLOxWLp74TShe@dev-ushankar.dev.purestorage.com>
- <aBkg0LW5YO6Osdnw@dev-ushankar.dev.purestorage.com>
- <3a6050b3-03f6-4c22-a2c3-33ab6a453376@kernel.dk>
- <aBlBdBl8uKCIVOPG@dev-ushankar.dev.purestorage.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aBlBdBl8uKCIVOPG@dev-ushankar.dev.purestorage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
-On 5/5/25 4:53 PM, Uday Shankar wrote:
-> On Mon, May 05, 2025 at 04:44:19PM -0600, Jens Axboe wrote:
->> On 5/5/25 2:34 PM, Uday Shankar wrote:
->>> On Mon, May 05, 2025 at 02:31:40PM -0600, Uday Shankar wrote:
->>>> Hi Jens,
->>>>
->>>> Can you take a look at Ming's comment on the first patch and merge the
->>>> set if things look good? I can rebase/repost it as needed.
->>>
->>> Bleh, sorry, I meant to send this as a reply to v2:
->>>
->>> https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com/
->>
->> Let's give Ming a chance to review v2, then I can get it queued up.
-> 
-> It looks like he has already reviewed all the patches in the set.
+From: Ankur Arora <ankur.a.arora@oracle.com>
 
-You're right, was looking at the other v2 that you posted today.
-Now queued up!
+[ Upstream commit fcf0e25ad4c8d14d2faab4d9a17040f31efce205 ]
 
+rcu_read_unlock_strict() can be called with preemption enabled
+which can make for an unstable rdp and a racy norm value.
+
+Fix this by dropping the preempt-count in __rcu_read_unlock()
+after the call to rcu_read_unlock_strict(), adjusting the
+preempt-count check appropriately.
+
+Suggested-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/rcupdate.h |  2 +-
+ kernel/rcu/tree_plugin.h | 11 ++++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index bd69ddc102fbc..0844ab3288519 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -95,9 +95,9 @@ static inline void __rcu_read_lock(void)
+ 
+ static inline void __rcu_read_unlock(void)
+ {
+-	preempt_enable();
+ 	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
+ 		rcu_read_unlock_strict();
++	preempt_enable();
+ }
+ 
+ static inline int rcu_preempt_depth(void)
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 75ba4d5788c0f..304e3405e6ec7 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -832,8 +832,17 @@ void rcu_read_unlock_strict(void)
+ {
+ 	struct rcu_data *rdp;
+ 
+-	if (irqs_disabled() || preempt_count() || !rcu_state.gp_kthread)
++	if (irqs_disabled() || in_atomic_preempt_off() || !rcu_state.gp_kthread)
+ 		return;
++
++	/*
++	 * rcu_report_qs_rdp() can only be invoked with a stable rdp and
++	 * from the local CPU.
++	 *
++	 * The in_atomic_preempt_off() check ensures that we come here holding
++	 * the last preempt_count (which will get dropped once we return to
++	 * __rcu_read_unlock().
++	 */
+ 	rdp = this_cpu_ptr(&rcu_data);
+ 	rdp->cpu_no_qs.b.norm = false;
+ 	rcu_report_qs_rdp(rdp);
 -- 
-Jens Axboe
+2.39.5
 
