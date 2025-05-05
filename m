@@ -1,40 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F59536BA57;
-	Mon,  5 May 2025 22:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF05336BA4B;
+	Mon,  5 May 2025 22:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485820; cv=none; b=CT1uGeXwpvDA5BSrFW9VG05ZyRMSHCu6BNEHwpBm91eSQncHC1l8Ais34NHu6ZJnysasYq3OkYgxqRknKJjPSm7+R2NDtCslDdrFRdx5lnn2f/SMm38zp+tf+aaEgwhF6UUgSewTKPtfSElzKx5OnpL+n3TqLjiwopvO/pktY7w=
+	t=1746485812; cv=none; b=eQJuWlR7xNUW1zzrB3AeDf4rzsL4CUWthVsMOvsRolyHUK9bAIeFloIDCprX5zXGWWnugnnDHqv2cZ/khWFYr0tR41JnyNU/B5zPCPx31IvlBnNMeS4Jo4WJBBfz3Sp3Bp0iCGJJMRMMw5RNfAIYiFab9yN2kFZ0RB/f6PyOvGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485820; c=relaxed/simple;
-	bh=Eu+imOLVi3odg/wSjq9w2olldKw2pM4nidzA1sAy6hc=;
+	s=arc-20240116; t=1746485812; c=relaxed/simple;
+	bh=qHENiOabmT77UFCXK7h2Oxu5/iLS0ySjclWVOhKY/ws=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ckMi5Df+FlFfXqNK7Cu3EJnQEleuslQ8ws8UZe/xUDYO+76BqAW/JWyhyOn2NP7BisAb8T3LRhLayy+EUOEhi5PRXW/KmU9WxMfl+p3dVuwOUZ2PmmrFlesB4VLIXKdDsoNpY/i7yQnE3/zZyCMLD8kFOOEGcjbRcbybXK/daIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epuufFxc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JD2vU+N9h0vWaMmNJH7LFz/Kn4eEyVgQ7vnFmXeuKIfuqWXvccywSkt3btv6EGwFUtMTS2RxKlBAXkl1r/CGdURF2tsp3RDfBMYTXPEzM5Hwx/HljwXXVVDby74YSlXgM3ZSnfDgjmbiHe4rfEjQuD0y2normFgH9cxBwXOTnzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdZ134uX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epuufFxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A166DC4CEE4;
-	Mon,  5 May 2025 22:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdZ134uX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAD0C4CEEF;
+	Mon,  5 May 2025 22:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485820;
-	bh=Eu+imOLVi3odg/wSjq9w2olldKw2pM4nidzA1sAy6hc=;
+	s=k20201202; t=1746485812;
+	bh=qHENiOabmT77UFCXK7h2Oxu5/iLS0ySjclWVOhKY/ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=epuufFxck13wAQOUkO5mRcvbad7xT8c+LfAUvsSrQAbVW+6n/xSGfeXDlX8xLR4uy
-	 oIS4pwiu8Oxls34U7FeUZRCrgOe2rzFppudkwg6i1fhfeTtIP0csDk34HVMZb1GD1D
-	 uG+l0Q1OygU7Mbp1miyCpVRKYICioP+STt3EbiG2kjBf/u+1yMwyImit3igntNAmGk
-	 Rh0GAAJaBqGzJleerYYFT9ysLl4fbGJj4dQYVMPul28DinIq4KTHVmFzCdVSO+XCr3
-	 qJ1UN1mfnfTZFOudcl2ElmVI9ilEmteVSWSDngTPslI6pGZgTUu2Us+RY2D/0VmpA7
-	 SM3xKa2sud0Uw==
+	b=cdZ134uXiFi0SbiEdQwK6kGVwm7pFES8bCzpe4aWkpNCYchsM7ZrGdIq2K3+sz5fR
+	 tPSd7hO+fw4Hgp/5nhxDXoJgT6vQ+357x3RZJd7HO1gZQ6jxs81gzSYLD/THY2j0IM
+	 veZEvEZoLyQ1+2nyiwYTvlh6IJHr9TPPl8v1hPH0f/pNbhafc7AjXRe2/L42j3/XQt
+	 1OWMk3SRNaJWN6uDmtK4GLNuZRZso3P3RAitE3L0+mZ+LY91uGvUXpWYm8RFiZQR5I
+	 h3Ahi/5S26o4sQTsoYsf9bohvm5HbRfi2Q8iA3uZqU5suJvUTWqgjpD8p25NMhniz9
+	 bpiYBQyTLWM+g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.6 015/294] mailbox: use error ret code of of_parse_phandle_with_args()
-Date: Mon,  5 May 2025 18:51:55 -0400
-Message-Id: <20250505225634.2688578-15-sashal@kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	chuck.lever@oracle.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 010/294] SUNRPC: Don't allow waiting for exiting tasks
+Date: Mon,  5 May 2025 18:51:50 -0400
+Message-Id: <20250505225634.2688578-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -49,43 +58,33 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 24fdd5074b205cfb0ef4cd0751a2d03031455929 ]
+[ Upstream commit 14e41b16e8cb677bb440dca2edba8b041646c742 ]
 
-In case of error, of_parse_phandle_with_args() returns -EINVAL when the
-passed index is negative, or -ENOENT when the index is for an empty
-phandle. The mailbox core overwrote the error return code with a less
-precise -ENODEV. Use the error returned code from
-of_parse_phandle_with_args().
+Once a task calls exit_signals() it can no longer be signalled. So do
+not allow it to do killable waits.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/mailbox.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/sunrpc/sched.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index ebff3baf30451..f13d705f7861a 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -415,11 +415,12 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index 9b45fbdc90cab..73bc39281ef5f 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -276,6 +276,8 @@ EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
  
- 	mutex_lock(&con_mutex);
- 
--	if (of_parse_phandle_with_args(dev->of_node, "mboxes",
--				       "#mbox-cells", index, &spec)) {
-+	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
-+					 index, &spec);
-+	if (ret) {
- 		dev_dbg(dev, "%s: can't parse \"mboxes\" property\n", __func__);
- 		mutex_unlock(&con_mutex);
--		return ERR_PTR(-ENODEV);
-+		return ERR_PTR(ret);
- 	}
- 
- 	chan = ERR_PTR(-EPROBE_DEFER);
+ static int rpc_wait_bit_killable(struct wait_bit_key *key, int mode)
+ {
++	if (unlikely(current->flags & PF_EXITING))
++		return -EINTR;
+ 	schedule();
+ 	if (signal_pending_state(mode, current))
+ 		return -ERESTARTSYS;
 -- 
 2.39.5
 
