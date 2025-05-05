@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24022F3A7E;
-	Mon,  5 May 2025 23:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9862F3A9A;
+	Mon,  5 May 2025 23:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486886; cv=none; b=sQdikaOPi2CwZX8Qn6shcynRdSzogsqUDQWm7vm+IwE7gCMOYRPcdrfCLpFq4olTsxYOXx/nunhjE7Zu+6kZ09HCdDshH09wFTdhWOrAFImfi3e5zN3fpDaRVZofYcFNHfF6oW4wclzHff6eiIAh0TToAqkAZEmhDoCH9pOylAI=
+	t=1746486892; cv=none; b=Crmg/AanZes9XVLXeJnMNlIcod0hhN80/8T4aa9mMXZPmjzGR8aSqe9yEm5I4EFkNWIPSrQG3bTRdEj1DBBDZQ78NHeY2I+pUghTz/GIZVYSMe5begfkGYPp2kORLWoh2fBrMRaUsYnovHS21PDTUzI/CUdTwYD/FsYoF6VDUuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486886; c=relaxed/simple;
-	bh=AaVyXzjXMB89c+N3cLGs6RLB1uFIyFBHLakI9cGBQ9U=;
+	s=arc-20240116; t=1746486892; c=relaxed/simple;
+	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qU1WJKRBe6Y5oCrZvPxEOvi/qxAw1Ilivcc7bFk2ybrqxz+WPChILvRwGxPnttx/Xdsx/rRF4kPOrWXiuVbeX6LbAxje7Vz4iGHd/OGxndwWuteb8OOy5Bi5d+F5Z68kAEKfHGlcqN8uwIgAg5kMIBmVIVsOMihqtg1nFNm+QKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVPTCFIQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ptvpmUpjK1pcVI2TNi4kHNNCO85OHDeqEAoJilZRqz0pFEj6w1z7/mBIPWQgaJV8pqEsvM/IUwtoENt0GHApDNRd9fU7zqTcgDy/yFc3rE+0rc92+BPDeu08hJGWfam98BFRaSc9VJ8VWA9RBa65t14jwP1Z+n892T9u4ceKBOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XP00LT1g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVPTCFIQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81328C4CEF1;
-	Mon,  5 May 2025 23:14:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XP00LT1g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9546CC4CEED;
+	Mon,  5 May 2025 23:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486885;
-	bh=AaVyXzjXMB89c+N3cLGs6RLB1uFIyFBHLakI9cGBQ9U=;
+	s=k20201202; t=1746486891;
+	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HVPTCFIQrJ2KaeujaUMNIqDB06WwR297YjQeAukSKLIIB0XXHltgVekrrbIuYIkaS
-	 Iw7F/hzIPdal+bOqI8rZPFjj1UYtPlXldDRD+YXSkDjzp6JFkKh7yz8XL7unJk8aHg
-	 pRJ/IZlwmsw0YjoUGreLdacF5mhZmOp+DibkeU+CR8gwIMruZUliEyuXBUQElcHp6/
-	 ndFkvVjUl9Jx67ZsFdXbK5gCebj/pcDDeekzp+9MNtd9BhHiPguw0nG2bJYdynNhAg
-	 m7eCONGMSz8nWVe7wmEk/jTmECVtcbjcjhUrft50KCU6wmPul7cPKQT8tXVqkhuh8Q
-	 rgIhGy8TAT9tg==
+	b=XP00LT1gnP2TGE4/Foqfv9K+b0DIuPThmCjZ5MJke8bu7Cs8KuIuzD5b51AreWmLT
+	 781E5Tvb039EZHPV6YSgP5T40yDYq1GFrLXjHeQOhGkUtyFKzItDJ/IOpXMxKKrktp
+	 3kmCSLx+A4gaSTSyijRCkoVsET2hCcl+d2u2ooyZSICI6dxDyXJy7mv1MRrz7jvpN6
+	 pFm3CrBmBaDwL/BhzksWgCMKTG7iaypqLIfxm/nZHliabq6/2DSnVfXFWBfCGN6Dfm
+	 AY1bpT4eVefbznMN3mRgcPqxiQ3py7QJGjI7cxMcOz/TVM7dJRVBKyFyvkn/oPUgle
+	 6gfeWz0BoQ1Vg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
-	Juergen Gross <jgross@suse.com>,
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	sstabellini@kernel.org,
-	xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.15 043/153] xen: Add support for XenServer 6.1 platform device
-Date: Mon,  5 May 2025 19:11:30 -0400
-Message-Id: <20250505231320.2695319-43-sashal@kernel.org>
+	anna-maria@linutronix.de,
+	frederic@kernel.org
+Subject: [PATCH AUTOSEL 5.15 047/153] timer_list: Don't use %pK through printk()
+Date: Mon,  5 May 2025 19:11:34 -0400
+Message-Id: <20250505231320.2695319-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -46,68 +46,66 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Frediano Ziglio <frediano.ziglio@cloud.com>
+From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-[ Upstream commit 2356f15caefc0cc63d9cc5122641754f76ef9b25 ]
+[ Upstream commit a52067c24ccf6ee4c85acffa0f155e9714f9adce ]
 
-On XenServer on Windows machine a platform device with ID 2 instead of
-1 is used.
+This reverts commit f590308536db ("timer debug: Hide kernel addresses via
+%pK in /proc/timer_list")
 
-This device is mainly identical to device 1 but due to some Windows
-update behaviour it was decided to use a device with a different ID.
+The timer list helper SEQ_printf() uses either the real seq_printf() for
+procfs output or vprintk() to print to the kernel log, when invoked from
+SysRq-q. It uses %pK for printing pointers.
 
-This causes compatibility issues with Linux which expects, if Xen
-is detected, to find a Xen platform device (5853:0001) otherwise code
-will crash due to some missing initialization (specifically grant
-tables). Specifically from dmesg
+In the past %pK was prefered over %p as it would not leak raw pointer
+values into the kernel log. Since commit ad67b74d2469 ("printk: hash
+addresses printed with %p") the regular %p has been improved to avoid this
+issue.
 
-    RIP: 0010:gnttab_expand+0x29/0x210
-    Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
-          41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
-          <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
-          44 39
-    RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
-    ...
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping looks in atomic contexts.
 
-The device 2 is presented by Xapi adding device specification to
-Qemu command line.
+Switch to the regular pointer formatting which is safer, easier to reason
+about and sufficient here.
 
-Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
-Acked-by: Juergen Gross <jgross@suse.com>
-Message-ID: <20250227145016.25350-1-frediano.ziglio@cloud.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+Link: https://lore.kernel.org/all/20250311-restricted-pointers-timer-v1-1-6626b91e54ab@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/platform-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/time/timer_list.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
-index 6ebd819338ecb..2c77cac5594ba 100644
---- a/drivers/xen/platform-pci.c
-+++ b/drivers/xen/platform-pci.c
-@@ -26,6 +26,8 @@
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index ed7d6ad694fba..20a5e6962b696 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -46,7 +46,7 @@ static void
+ print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
+ 	    int idx, u64 now)
+ {
+-	SEQ_printf(m, " #%d: <%pK>, %ps", idx, taddr, timer->function);
++	SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, timer->function);
+ 	SEQ_printf(m, ", S:%02x", timer->state);
+ 	SEQ_printf(m, "\n");
+ 	SEQ_printf(m, " # expires at %Lu-%Lu nsecs [in %Ld to %Ld nsecs]\n",
+@@ -98,7 +98,7 @@ print_active_timers(struct seq_file *m, struct hrtimer_clock_base *base,
+ static void
+ print_base(struct seq_file *m, struct hrtimer_clock_base *base, u64 now)
+ {
+-	SEQ_printf(m, "  .base:       %pK\n", base);
++	SEQ_printf(m, "  .base:       %p\n", base);
+ 	SEQ_printf(m, "  .index:      %d\n", base->index);
  
- #define DRV_NAME    "xen-platform-pci"
- 
-+#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
-+
- static unsigned long platform_mmio;
- static unsigned long platform_mmio_alloc;
- static unsigned long platform_mmiolen;
-@@ -174,6 +176,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
- static const struct pci_device_id platform_pci_tbl[] = {
- 	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-+	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
- 	{0,}
- };
- 
+ 	SEQ_printf(m, "  .resolution: %u nsecs\n", hrtimer_resolution);
 -- 
 2.39.5
 
