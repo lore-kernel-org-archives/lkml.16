@@ -1,87 +1,37 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7311C861D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CA01C861D;
+	Mon,  5 May 2025 07:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746431569; cv=none; b=YxnwWR5Pu/7soM8UNPHazKQJ6o9mHKewZx+CcD1BUIGu4TKKL++ExFzg/9UGB9IvHzl8eIx/7K+SKOmKqZtsLEEey7xi+lYtl1sQ4hnzuIRINGVGlRpO6H6rnET30ri4hV16Y1EHw0RQ7CwA2dnAxDpa6+I5bgBDtcC5pVfE3RQ=
+	t=1746431588; cv=none; b=oVy35bUuFzM2rVQM16ylj389tBrdI1QhZyrtQ+lD9ZcDtRTQkcZQmKIMhbJwNRcyQmpJMlH6e7lyKiMqnULuFlUTw6vJFfqEgSquVAKeS+pOTByGah1Ejy1u4+u3lb/2WRn2ut6Wi5PwWAtWBxawMzDO1i6jrkFImUdubTVMmCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746431569; c=relaxed/simple;
-	bh=ZjSUP8jmlrb5+uP1brciCf5mZMhZ6YlpFsc/7NT/y40=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gDiqJltEqTW1536q/L9WR5JuTO/PaxJIXDJTKSUjaDUmR0zSOvNW2Qq1oNDqBM/CVLl6hchefT4a51MFjk2bAKKXxHuZvmVHKm2asofSlnxyrFJ+/Z19yJA2OYBqEtKrYtdrKhZOLzdpnjE0xiA6/GCrEzd+lJYQgVOYTxp3ytU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fKbbQnjl; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746431588; c=relaxed/simple;
+	bh=HoVwgT0i6eQ5F0/UMVrAUgnAI8MgPO+NzAAD51dIqnU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=S93j33cSaZ5wJCHXueEiPnMHkGkJrS3wqLOMuM03ZciXuLg/VssJa/rueaF70XEp5HUaEG0iDXCi3fhldTMdWruoM7yfTtRafSqkrgYAQ54qWrhDkNir+xd1bZ3/3kXaTkz9Jn1aWgiLw6om/DWMLsu/83golZCclzbSXn/KNDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXMaXPJz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fKbbQnjl"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ace98258d4dso569628766b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746431566; x=1747036366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aMDm0qfjOuYWTzr0Xo2QLnRNDzdiZPn1MuFHomJVvBY=;
-        b=fKbbQnjlL/9lgskLhQ6P3tFgyTD8sCIVP94XAXZcyPkGNRCx0nuPf/HERTgo+Isnsn
-         kL5DxwRKFFzeH/r+/yJFLIA9h96kMvJ52P/wppzK7VCSgNM00LIGIu1jJyFhgkLLiSDF
-         sHcScJWM40IgsT0HDSBZXXYh8WtaDzqaCJX1uqVlrVKuq7E9SP0zTYUiJluKfVX3ypV+
-         4W7dGZaTvkp2TXfXvZ2EXD7An9ycCj5l4yX0maxC6mL4r5AFNBVUivOV0nD8VWwY7IU8
-         y/tTtMl5awCXF0rzHqnrklcGPOArkotqS0UmwwWAmUH2CrYMa4UvD5iKDeHwfPsIFx7Q
-         qRsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746431566; x=1747036366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aMDm0qfjOuYWTzr0Xo2QLnRNDzdiZPn1MuFHomJVvBY=;
-        b=XRY0Usyan/fR2BY4ARJaEsctsOQ68Otx/rAvBbVYG7OIflm1XvQerU/dcAifIKKaf+
-         GrTmG6O6rynY9tueWwikKNg7GN+ZeGP79JFiPloqPzb0nAKZKVrTAsxw0ug585ro8hOy
-         nSHlxR6SCvgZLDL1+lxC1kWoeFJ2X8SGPCzR/loSxjZ7/w71aDW3Qu/hT/CtQE84RhXH
-         gPz8SUCR6Fnt/VY9Ci84Wg06jTDezNKCpkvAFImFOGWRwTlyIuNILNZzyEPFNaBn23Ky
-         u3MYinfJh9B4iWzN566MzxBfHESgRdSrt4YwXJlizByHSkGRfRFMlEvNIKNLU8JI+Axb
-         REBA==
-X-Gm-Message-State: AOJu0Yzrs3TgGoiu2ghOBtk/PyiwMT5e2Gyfts1Czqg8HKodY/hfo/wm
-	X4r+y9owjlyTqXHTPolFLTl3b9IodBPe+6H1TPcmjvoSsLbguYIpCx/j466COlzBfHNni5eBTs7
-	Z
-X-Gm-Gg: ASbGncvvUmd28/BrUbGZ84duiixdG8Wvp3m7qDkKSOZKnGoJGyyNG9VM+b5zxGiGTos
-	3jK/UW1RDlZ9SIsEt80x8Jq+mP3JfICsR8wVLZsaUacT66ROo8V8kn5iX/KNu7rX8LR7e8/MXLc
-	ihUDFWJnfZ0mFUrLc6PGu04xzZL7DwdKJjhgWyWedQyWMbCtoJAZJPKZBZKSTobJYo6l+JRYxt8
-	aCmFRGYIqpmMRWHfQHmQ1mIpn0H6WWCeolyyDB0Wmu8t6p4qNDpCtDfAzy62JGBXp6TpYDpWreZ
-	iZBDkJD/3nhzLgzHS7UcPpmODA7DffNzJNgH2Hm69krJLbmEbw==
-X-Google-Smtp-Source: AGHT+IFKn1amEuiEsrKWv/SJZ/kZTwDtb/a8ekD/9m9gKUzOyHca4mZtzNEFzhzpC/nVZriKwygVQQ==
-X-Received: by 2002:a17:906:c08e:b0:aca:db46:f9a6 with SMTP id a640c23a62f3a-ad190858be1mr564437066b.59.1746431565639;
-        Mon, 05 May 2025 00:52:45 -0700 (PDT)
-Received: from hackbox.lan ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189540d94sm446544666b.182.2025.05.05.00.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 00:52:44 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-To: linux-kernel@vger.kernel.org,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	linux-amarula@amarulasolutions.com,
-	Abel Vesa <abelvesa@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org
-Subject: Re: (subset) [PATCH v12 00/19] Support spread spectrum clocking for i.MX8M PLLs
-Date: Mon,  5 May 2025 10:52:35 +0300
-Message-Id: <174643143452.2950397.16722215892279685541.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXMaXPJz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E60FC4CEE9;
+	Mon,  5 May 2025 07:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746431587;
+	bh=HoVwgT0i6eQ5F0/UMVrAUgnAI8MgPO+NzAAD51dIqnU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=WXMaXPJz25YYfeytdlV9ehWiLJg/fsbp4CPlYZGBOh9F3vIO1IciY9NkBbJKlS1VD
+	 lgRIyklbKfLAwdL0bzWWziqJcRteRZhS+LKVqgvEI55/jYBppQD8Z0LICnOiCQf46w
+	 k7Z1hz9RUGKEj00VwC2rTbulxmIZDep74stPQ8cr0Bq1BzqGNyNFn7N12/9FJjNZdY
+	 0yZDC8EGULw51bKKZ8u2fvmK53Jy9a1e3v709647BStBFKQzl7OPAPWJIrwAiHMoUN
+	 2fqOEaavsKydPz9UphLUFVlSch+w9P0tktZFuWdFyQoNXjRg9wpj2And2FWww5SUsB
+	 cAQWnXkgem5Iw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7C6C3ABB0;
+	Mon,  5 May 2025 07:53:07 +0000 (UTC)
+From: =?utf-8?q?T=C3=B3th_J=C3=A1nos_via_B4_Relay?= <devnull+gomba007.gmail.com@kernel.org>
+Subject: [PATCH v2 0/2] Add support for the DFRobot SEN0322 oxygen sensor
+Date: Mon, 05 May 2025 09:52:57 +0200
+Message-Id: <20250505-iio-chemical-sen0322-v2-0-217473983b42@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,45 +40,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFluGGgC/4WNTQ6CMBBGr0Jm7Zh2+BFdeQ/DgtYpTAItaQ3RE
+ O5u5QIu30u+922QOAonuBUbRF4lSfAZ6FSAHXs/MMozM5CiWlXUokhAO/Istp8wsVclEVrXOmM
+ MX+qqgTxdIjt5H9lHl3mU9Arxc7ys+mf/BFeNCq9Gt2VTOscV3Ye5l+lswwzdvu9fIFMUBbgAA
+ AA=
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746431586; l=1057;
+ i=gomba007@gmail.com; s=20230706; h=from:subject:message-id;
+ bh=HoVwgT0i6eQ5F0/UMVrAUgnAI8MgPO+NzAAD51dIqnU=;
+ b=XO542HNnKgid7hj9NoQ+7o+FzzeC5MmDo6ymU7S/zh5narQlm6FOtiUtWlvP7SwqEbdGKljGa
+ giu/oVLF0aDDmfU3ACwuNKlTSBu2+/vmVthiVtgXhDk6IVour77yTg5
+X-Developer-Key: i=gomba007@gmail.com; a=ed25519;
+ pk=iY9MjPCbud82ULS2PQJIq3QwjKyP/Sg730I6T2M8Y5U=
+X-Endpoint-Received: by B4 Relay for gomba007@gmail.com/20230706 with
+ auth_id=60
+X-Original-From: =?utf-8?q?T=C3=B3th_J=C3=A1nos?= <gomba007@gmail.com>
+Reply-To: gomba007@gmail.com
 
+This patchset adds a driver and the documentation for the
+DFRobot SEN0322 oxygen sensor.
 
-On Thu, 24 Apr 2025 08:21:30 +0200, Dario Binacchi wrote:
-> This version keeps the version v9 patches that can be merged and
-> removes the patches that will need to be modified in case Peng's
-> PR https://github.com/devicetree-org/dt-schema/pull/154 is accepted.
-> The idea is to speed up the merging of the patches in the series
-> that have already been reviewed and are not dependent on the
-> introduction of the assigned-clocks-sscs property, and postpone
-> the patches for spread spectrum to a future series once it becomes
-> clear what needs to be done.
-> 
-> [...]
+Signed-off-by: Tóth János <gomba007@gmail.com>
+---
+Changes in v2:
+- Add SEN0322 to trivial-devices.
+- Use _RAW and _SCALE instead of fixed-point math.
+- Refactor based on reviewer's suggestions.
+- Link to v1: https://lore.kernel.org/r/20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com
 
-Applied, thanks!
+---
+Tóth János (2):
+      dt-bindings: trivial-devices: Document SEN0322
+      iio: chemical: Add driver for SEN0322
 
-[01/19] dt-bindings: clock: imx8mm: add VIDEO_PLL clocks
-        commit: 20e5d201b5d8f830e702d7d183f6b1b246b78d8a
-[02/19] clk: imx8mm: rename video_pll1 to video_pll
-        commit: 26a33196b5b68cf199b6c4283a254aa92d2aaf4b
-[03/19] dt-bindings: clock: imx8mp: add VIDEO_PLL clocks
-        commit: 2d50415e2457c6f6621c2faa3b01b11150fb9c67
-[04/19] clk: imx8mp: rename video_pll1 to video_pll
-        commit: 21bb969f608cefd8d847cf6eb50a193d9f1fbb87
-[05/19] dt-bindings: clock: imx8m-anatop: add oscillators and PLLs
-        commit: 2ba124053687c933031a6dc5b2e16ceaca250934
-[10/19] clk: imx: add hw API imx_anatop_get_clk_hw
-        commit: 17e3c1a272d97e49b4f3fbfe1f1b889e120d2be8
-[11/19] clk: imx: add support for i.MX8MM anatop clock driver
-        commit: 3cbc38cf42ca42d2dc9a93c949e0381ff919df71
-[12/19] clk: imx: add support for i.MX8MN anatop clock driver
-        commit: 80badb1d7264e83b512475898e7459f464a009c9
-[13/19] clk: imx: add support for i.MX8MP anatop clock driver
-        commit: 4c82bbe8b5437c7f16b2891ce33210c0f1410597
-[14/19] clk: imx8mp: rename ccm_base to base
-        commit: 1a77907dbbecfbe5e6a1aec28afd49a1dc184b7a
-[16/19] dt-bindings: clock: imx8m-clock: add PLLs
-        commit: 6a55647af3334f1d935ece67de4a838a864b53fc
+ .../devicetree/bindings/trivial-devices.yaml       |   2 +
+ MAINTAINERS                                        |   6 +
+ drivers/iio/chemical/Kconfig                       |  10 ++
+ drivers/iio/chemical/Makefile                      |   1 +
+ drivers/iio/chemical/sen0322.c                     | 167 +++++++++++++++++++++
+ 5 files changed, 186 insertions(+)
+---
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+change-id: 20250428-iio-chemical-sen0322-cf8fbbbe7546
 
 Best regards,
 -- 
-Abel Vesa <abel.vesa@linaro.org>
+Tóth János <gomba007@gmail.com>
+
+
