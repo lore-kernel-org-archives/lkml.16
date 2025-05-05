@@ -1,171 +1,178 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C034125DCF0;
-	Mon,  5 May 2025 15:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AEF25C6E7;
+	Mon,  5 May 2025 15:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746458437; cv=none; b=SfOo9zjgPPxR3YbW0npFR6qCdMI7zIZwmrBN50ygtBz2i71qugRZYpx17OgwlMn+6ioPeZPDosnPUzsSdBr7ZoEh+uk55j1klEbWC4EH8hre3d6b6mdBDYQNrUCQaETuzhh/Odz5m1IskNI97I0sc83JMUJvYBuqnbdF/0o59/s=
+	t=1746458568; cv=none; b=P0riiX7jeL1nnKMtAERebsdyp/HgoPPaLR5/fuTT1Bb4b81MZEOXhQzVQgcQCn2+F4dZAJEwFTYNqx/weqm774Zy17PYlB8r7iuug/Ym9TccQ8QYZpPDuSwwsywod7LeKf7W14Tp8bgozQG87aPKenlDUmqjV/2m/tNRXNaFsNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746458437; c=relaxed/simple;
-	bh=D5Leh3G4aTBuCxDXyMcG1WOmnl8u7g/BYtrATwoG8R8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eWJHRh1IVvESHiAhiOZrnhlseamK9t+gYcXMplADbXENqm+mXnG6jAdlukSIy+7AD8GVK8XeLVmbkccrOiH3+y9L1cjYmEl87vv5LvNmsnGNy5QsQPAt1zPgmf7e2o5oYTGnFyM+akT45apqxm703/i80d4Ru//4vljr5rEcj8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IsYdCFfo; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746458568; c=relaxed/simple;
+	bh=VHk4TU9myRa7HfzrRfKD5NLgm23gbm1Xab5HBAQrBeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QiwH9cP+5uJamq3/bmSFZm799MMvUN2daq13kdyPJc3rN5fjcsYRNdTvZNI0dMqKs5V3mYAM8rgb8tdYzpCKYWD/4T7lYZ/nfVRYDHVLdGeAEtjMfwt5mbO0Hf+7vaA4Ru3OHzOOpfX5abXifGef8vzTDtjPC31KPetD23D3B2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ymcs8VBH; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IsYdCFfo"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 389214398E;
-	Mon,  5 May 2025 15:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746458432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u9TG3OmSzS8fUS1eTfStK5VQAKwBeZ4see00hs7EtDk=;
-	b=IsYdCFfoHd/qOi+gYYbWTZx9rAYgOwGSN0Eo0YXJnG9B/edlJPMStRCvc+FLKq4wqI/fPT
-	1o0tp81lbGpBiMxcF7EkxBNQLTJ4AW8TE1s3h+3Ao+ryG1FR1N7lvwzYWEpMgHLMK1rp98
-	XLYJTZyxXDkzfobqUvTulr2czf0EOlP64GFNT5AXkWvxB73odvQWCI/huAFffxIc01O/x+
-	jInLvozRhnoxnrD5dAmxc9jlW2nmyCQlvuE4hqgOHFPF/9cYlCwYazKn2p5pp5dpHdAi5j
-	SFvCWFSAfDRERL7wOxHamZgj6g3QGMXJO/fr/76NFpGY1qnmq1cAlxnaFpAo5A==
-Date: Mon, 5 May 2025 17:20:27 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
- devm_drm_bridge_alloc() API
-Message-ID: <20250505172027.25af7721@booty>
-In-Reply-To: <20250505-beneficial-fossa-of-weather-67c676@houat>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
-	<20250428-wild-condor-of-defiance-cadf60@houat>
-	<20250428172516.79058e22@booty>
-	<20250505-beneficial-fossa-of-weather-67c676@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ymcs8VBH"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545FMYoQ979537
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 10:22:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746458554;
+	bh=tq8VaHCFP3bqtzmIRyMTTtFhUUx3Cc7L3Y5GXWBtUJg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ymcs8VBH5F+OBNGDJxNpcba6cabkvorR+qPRgOm87tQcaK8Or3GE1gPbEu4lM+hPr
+	 KnuyB8xOSwurqHIr7JOgXVwI3PkeWJEHvjIcTGHPUeOHJVANAcQmEuXiQq5VksbEv+
+	 /iJCOZHSfJ1JCQdItviMbBbtxOrBLPxDdmBJ7DpQ=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545FMYqN011294
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 May 2025 10:22:34 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ May 2025 10:22:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 May 2025 10:22:34 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545FMXkw070284;
+	Mon, 5 May 2025 10:22:33 -0500
+Message-ID: <31d32966-05fe-4369-afda-3278822d8cb5@ti.com>
+Date: Mon, 5 May 2025 10:22:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedugeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefkedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
- hepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 03/11] arm64: dts: ti: k3-am62a-mcu: Add R5F remote
+ proc node
+To: "Mendez, Judith" <jm@ti.com>, Daniel Schultz <d.schultz@phytec.de>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Hari
+ Nagalla <hnagalla@ti.com>,
+        Beleswar Padhi <b-padhi@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>,
+        Devarsh Thakkar <devarsht@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250502220325.3230653-1-jm@ti.com>
+ <20250502220325.3230653-4-jm@ti.com>
+ <50039c49-a6c5-4f29-a35a-53b9af117fd8@phytec.de>
+ <6c5e786d-7581-492f-92fb-be92ecbecd87@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <6c5e786d-7581-492f-92fb-be92ecbecd87@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 5 May 2025 08:23:26 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
-
-> On Mon, Apr 28, 2025 at 05:25:16PM +0200, Luca Ceresoli wrote:
-> > Hi Maxime,
-> > 
-> > On Mon, 28 Apr 2025 13:39:23 +0200
-> > Maxime Ripard <mripard@kernel.org> wrote:
-> >   
-> > > On Thu, Apr 24, 2025 at 10:05:49PM +0200, Luca Ceresoli wrote:  
-> > > > This is the new API for allocating DRM bridges.
-> > > > 
-> > > > The devm lifetime management of this driver is peculiar. The underlying
-> > > > device for the panel_bridge is the panel, and the devm lifetime is tied the
-> > > > panel device (panel->dev). However the panel_bridge allocation is not
-> > > > performed by the panel driver, but rather by a separate entity (typically
-> > > > the previous bridge in the encoder chain).
-> > > > 
-> > > > Thus when that separate entoty is destroyed, the panel_bridge is not
-> > > > removed automatically by devm, so it is rather done explicitly by calling
-> > > > drm_panel_bridge_remove(). This is the function that does devm_kfree() the
-> > > > panel_bridge in current code, so update it as well to put the bridge
-> > > > reference instead.
-> > > > 
-> > > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>    
-> > > 
-> > > This looks fine, but we need a TODO entry to clean this up later on, and
-> > > a comment on devm_drm_put_bridge that this is inherently unsafe and
-> > > must not be used.  
-> > 
-> > Ah, I see, OK.
-> > 
-> > Quick draft:
-> > 
-> >  /**
-> >   * devm_drm_put_bridge - Release a bridge reference obtained via devm
-> >   * @dev: device that got the bridge via devm
-> >   * @bridge: pointer to a struct drm_bridge obtained via devm
-> >   *
-> >   * Same as drm_bridge_put() for bridge pointers obtained via devm functions
-> >   * such as devm_drm_bridge_alloc().
-> > + *
-> > + * This function is a temporary workaround and MUST NOT be used. Manual
-> > + * handling of bridge lifetime is inherently unsafe.
-> >   */  
+On 5/5/25 10:05 AM, Mendez, Judith wrote:
+> Hi Daniel,
 > 
-> That part looks good to me
+> On 5/5/2025 4:55 AM, Daniel Schultz wrote:
+>> Hi,
+>>
+>> I'm unable to load the latest TI firmware (98efd20ec71f8c1c8f909d34ab656731) with this patch.
+>>
+>> [    7.012889] remoteproc remoteproc1: 79000000.r5f is available
+>> [    7.032640] remoteproc remoteproc1: powering up 79000000.r5f
+>> [    7.038626] remoteproc remoteproc1: Booting fw image am62a-mcu- r5f0_0-fw, size 53140
+>> [    7.057209] remoteproc remoteproc1: bad phdr da 0x79100000 mem 0x47ea0
+
+So this looks like the firmware has sections in the SRAM region. That would be the
+issue here.
+
+>> [    7.064716] remoteproc remoteproc1: Failed to load program segments: -22
+>>
+>> I figured out that the mcu sram node disappeared in v5. Apparently adding it back manually doesn't solve this problem. Any idea what's wrong?
 > 
-> > and:
-> > 
-> > -	devm_kfree(panel_bridge->panel->dev, bridge);
-> > +       /* TODO remove this after reworking panel_bridge lifetime */
-> > +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
-> >  }
-> > 
-> > Does it look good enough?  
+> For am62ax, there should be several items changed with this v8
+> series in order for remoteproc to work with the TI default firmware:
 > 
-> That too, but I was talking about an entry in
-> https://www.kernel.org/doc/html/latest/gpu/todo.html
+> 1. memory carveouts were reduced to 15MB [0] & edge-ai memory
+> carveouts are not included here
 
-Ah, sure!
+This shouldn't be an issue, the default firmware doesn't
+use the extended carveouts.
 
-I queued this for v3, if you have better suggestions don't hesitate to
-let me know:
+> 2. mcu_sram1 node removed [2]
+> 
 
------8<-----
+So when you say you added back the SRAM node, did you also add the
+sram = <&mcu_ram>; in the core node?
 
-Remove devm_drm_put_bridge()
-----------------------------
+Andrew
 
-Due to how the panel bridge handles the drm_bridge object lifetime, special
-care must be taken to dispose of the drm_bridge object when the
-panel_bridge is removed. This is currently managed using
-devm_drm_put_bridge(), but that is an unsafe, temporary workaround. To fix
-that, the DRM panel lifetime needs to be reworked. After the rework is
-done, remove devm_drm_put_bridge() and the TODO in drm_panel_bridge_remove().
-
-Contact: Maxime Ripard <mripard@kernel.org>,
-         Luca Ceresoli <luca.ceresoli@bootlin.com>
-
-Level: Intermediate
-
------8<-----
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> If you want to catch up on the general direction for this series,
+> please refer to [3]. atm remoteproc can fail with the default FW,
+> but we are trying to move away from that firmware and this is the
+> first step in that direction.
+> 
+> [0] https://lore.kernel.org/linux-devicetree/0ab5c5ec-cde3-41f1-8adf-2419b31497c1@ti.com/
+> [1] https://lore.kernel.org/linux-devicetree/04e77daf-e775-44fa-82bf-8b6ebf73bcef@ti.com/
+> [2] https://lore.kernel.org/linux-devicetree/32358aa1-0c02-4f4d-9782-2d8376c0d9fc@ti.com/
+> [3] https://lore.kernel.org/linux-devicetree/e131298f-3713-482a-a740-ff89709270b4@ti.com/
+> 
+> ~ Judith
+> 
+>>
+>> On 5/3/25 00:03, Judith Mendez wrote:
+>>> From: Hari Nagalla <hnagalla@ti.com>
+>>>
+>>> AM62A SoCs have a single R5F core in the MCU voltage domain.
+>>> Add the R5FSS node with the child node for core0 in MCU voltage
+>>> domain .dtsi file.
+>>>
+>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>> Acked-by: Andrew Davis <afd@ti.com>
+>>> ---
+>>>   arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi | 25 ++++++++++++++++++++++++
+>>>   1 file changed, 25 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi b/arch/arm64/ boot/dts/ti/k3-am62a-mcu.dtsi
+>>> index 9ed9d703ff24..ee961ced7208 100644
+>>> --- a/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
+>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a-mcu.dtsi
+>>> @@ -174,4 +174,29 @@ mcu_mcan1: can@4e18000 {
+>>>           bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
+>>>           status = "disabled";
+>>>       };
+>>> +
+>>> +    mcu_r5fss0: r5fss@79000000 {
+>>> +        compatible = "ti,am62-r5fss";
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <1>;
+>>> +        ranges = <0x79000000 0x00 0x79000000 0x8000>,
+>>> +             <0x79020000 0x00 0x79020000 0x8000>;
+>>> +        power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
+>>> +        status = "disabled";
+>>> +
+>>> +        mcu_r5fss0_core0: r5f@79000000 {
+>>> +            compatible = "ti,am62-r5f";
+>>> +            reg = <0x79000000 0x00008000>,
+>>> +                  <0x79020000 0x00008000>;
+>>> +            reg-names = "atcm", "btcm";
+>>> +            resets = <&k3_reset 9 1>;
+>>> +            firmware-name = "am62a-mcu-r5f0_0-fw";
+>>> +            ti,atcm-enable = <0>;
+>>> +            ti,btcm-enable = <1>;
+>>> +            ti,loczrama = <0>;
+>>> +            ti,sci = <&dmsc>;
+>>> +            ti,sci-dev-id = <9>;
+>>> +            ti,sci-proc-ids = <0x03 0xff>;
+>>> +        };
+>>> +    };
+>>>   };
+> 
