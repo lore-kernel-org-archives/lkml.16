@@ -1,136 +1,133 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BB01E0DDC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746432538; cv=none; b=kuskC5+VqeNCrOnviycq3/0V+3CKqZ2Ec+Efil59IE343pfrM68xvIjQFS/94w/0jQvmyTTbETOFld64mhr3Vp08MrZMzlon45XZXSvOUB2xfD1C19Fhkfm/Y6PdxGvj/1kSGSpum8c3U0Ymdmlq8RNgLW5g7zUJ1WMH9v8F5fA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746432538; c=relaxed/simple;
-	bh=fpiegDdPN4vJSsUvTfFDScdpNUKB1Bs1LE0KbvzE0rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=teZH/LauV0gy+/qr8LhZJ9OkmeOx2Axnr02Bz7FNMdNwFlScJgEDGEFxRJyg0rKvgTVlJ195kRFOsmSLzikNJjxGAf+PrnuKMHC7h/mggvFQIPWG4+oLuz2cDHCIMf9fRlPgR7d9Pr+uAjXXc5ciayxy97k3rGo2N2KpwyJW62I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HVafOWoC; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EE71E1A3D;
+	Mon,  5 May 2025 08:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746432712; cv=pass; b=YLtwGgi1beyYxMN2NMBFwlkOjF1VCu/onkXd0dPLjlSDyuF5ybbN1VLRb4XLaiXNx3rPGRHNvgiUTjw7kIUaoqZgEq2TIpUmO143M2xBynDDQSH73oArEauPSDRH5Bo0hBuXs2JymKjLx1+Bupvn1rt7MmfCx/Xna8UcnXJWh6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746432712; c=relaxed/simple;
+	bh=OA85yZFxy3856og2lsEujte549QDWZUjZcGDxJwszGc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Q9AqmSjLkiUS2jIGDFESp82OdZmSrvbkayis3Fy95rPr//rYxdKYWnREEAXvs1UM/k1Jot1/8sb09Qpu6vEguEN0iKt4Q0LpY9H7avYu6iXu5MCWd2iloNzy3TuL8j1WdCTTQdRd36no/ewO28X92kiBXiy2HaFUF/XGmG06QaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=AVhsher3; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HVafOWoC"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so33567945e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746432534; x=1747037334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ih3NqDpNYxVnwTqQNjr/HduzzcPs128fQGA7XiiKKbU=;
-        b=HVafOWoC3/jTLo7x3AKPu38ObO0NpLhvPQlSV0JtoLhc9wxHQ+1W5I+dnDU4hkzZwV
-         mKPvK74grtYJdMwaYlCHhmMgnpVou62xl1TzmRrw+BuAd2mH+cUSFVnXenRuzLo4w9OU
-         c37Rt7N7RflYon88Jqmt+y2eYJ4YtlSUQpFVMTqpHpdjgiwfAMC8/62/VG7SCWs03mFO
-         rMAufkA5YrHuPP41kGT7uEZN8ZcXDcSxncQj/jWMS4VYXiAJKokIIHUGp7X9YpP4tyny
-         JI/ZEn7gV3l+GOLzusAGkHSxAP9vOU4/3ZeMrW5TQAqUxEZPzHGR0Oas9ym6yQw9I0ZN
-         Smtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746432534; x=1747037334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ih3NqDpNYxVnwTqQNjr/HduzzcPs128fQGA7XiiKKbU=;
-        b=byJz6tdwPvVu4fZUsDE3cSGHzHwKMaKjJmIGoKY0tfZRSdhRx6dvPKIbs+isTJEuuf
-         KwkYgGFIbDfw17+lX8WrySKxVq2j4OGhlYWkM9v9MhOCNkry8ZBOWNkAZuApofdyDiUj
-         sCO3Q5IUQZo0jLQbThmmGyjQpZQyfnzlzb+GFzxDMdWIr4bF40BNQpuu8OOBRGqkOVIn
-         Pn9qzS7SX74si/UmtCZhnmFHbHNRU4r2Wx2R3c98eyUUUXBpIhABOxD7xqhVTBZG0Uuf
-         1zi0sFmR4YSRWKSji+VB+vZpPCdVuPXapMAWJEtdaI8/JTzAN5iTy5gXoC/1egT+4tGI
-         aJ3w==
-X-Gm-Message-State: AOJu0Yz9qzX7NgiLNXx1mlubqEptRnIGGbS4f4tKHC6fhrTtyRJrYmzI
-	4BMLVKY6YaM9+75yY68/DHgJpZyxbaLNbGwmuaDTUL6HW9pcBj0Aix5LnuNp5x/1ZSNMMHTx+EW
-	j
-X-Gm-Gg: ASbGncv6MRpAqxFxoM3RnEjO2sIgFkieb4PfO6+Akk12eOfItU3J5vgNVqgibW1T+za
-	4eljiLGCHfHXemsHeZNDulKbWISx0RT/cF5tdlEyO5ezW2IyDAU/xR4mWMv+4ZNgsnN/I7v6AAZ
-	Zb4RlFx+YPv/z3MSlnsZbmvyBqjy/z4g+CTFSf+hVJyDUJF1neeTpa5VEAvmg0tT4m3+pvAeLla
-	qIIlFJ8f/swEFUBMZ0OWqt/nQHrn1aEUwJlUZG1R9gf+uDaZ0SOd7+nmjHmNgHqgxyGFwGHgqwR
-	FmqO2ExPcRkn7bOOHXLpIJ7Cc5MT55VqCiMhT3mSsQ6WHomEU9k=
-X-Google-Smtp-Source: AGHT+IEurvdHsB2rKDl3Rsu/uufeIj/T+2DXVXCdsFmbDaGBcEViq6YlhktTwiTRJwVY7SSU0p4HUg==
-X-Received: by 2002:a05:600c:5124:b0:43c:fe15:41cb with SMTP id 5b1f17b1804b1-441c48c1d07mr44823985e9.15.1746432534171;
-        Mon, 05 May 2025 01:08:54 -0700 (PDT)
-Received: from localhost (109-81-80-21.rct.o2.cz. [109.81.80.21])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af4546sm172441785e9.22.2025.05.05.01.08.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 01:08:53 -0700 (PDT)
-Date: Mon, 5 May 2025 10:08:53 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Suren Baghdasaryan <surenb@google.com>,
-	David Rientjes <rientjes@google.com>, Josh Don <joshdon@google.com>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, bpf@vger.kernel.org
-Subject: Re: [PATCH rfc 10/12] mm: introduce bpf_out_of_memory() bpf kfunc
-Message-ID: <aBhyFQje85fPhIiM@tiehlicka>
-References: <20250428033617.3797686-1-roman.gushchin@linux.dev>
- <20250428033617.3797686-11-roman.gushchin@linux.dev>
- <aBC7_2Fv3NFuad4R@tiehlicka>
- <aBFFNyGjDAekx58J@google.com>
- <aBHQ69_rCqjnDaDl@tiehlicka>
- <aBI5fh28P1Qgi2zZ@google.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="AVhsher3"
+ARC-Seal: i=1; a=rsa-sha256; t=1746432690; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=MLF8NapsauWx/jWEFAUDVSKKaVgiJMS7O27bOiTP34z4/kY/1Y/DTrq0We8cxR6mByfUhB019/sQQNObNPej3kXiy8E+cNM+WvqdBdwBn4UnODiwOMU76aE8ZqFiOMOpTCrp8eqaKJzN1TD0glPySlcfhxo0uu1dH2CEk2jhvhA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746432690; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=b+Gg3Mt50xwSUU5m3t61oAB6vI5/1zWYCb/caGSKW4c=; 
+	b=mljTnn9fGJrwzH0ffp16E0t2V1qrHGHQhQRg93D9j0dFGPTZy9NQojSFmtHL3rqvcphSWBgY3PtgIZ+WM4pwX4DYUGzo3aA4EXbxNMF19lym/K4opFOvbJgLBS+p5UuGIowb28guCM7oPgprAJk7g5utjbPEGO1Pq1gYfaTCCj8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746432690;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=b+Gg3Mt50xwSUU5m3t61oAB6vI5/1zWYCb/caGSKW4c=;
+	b=AVhsher3yyW72VmiAxLe2e1aGyFzNopPF5zAdnZWGSXnM6b/E6VyqX0optYsSjH7
+	fv5Qc1bVsbV+y9hLMldqxKb7bnpDR5aaBtf6Pl37ZZ193CSysG2mmYH30z/WDfOYK3i
+	8lmp5sDEAAvgLFamLoVcMJ+cghVnxEIAzxwsJBY0=
+Received: by mx.zohomail.com with SMTPS id 1746432688103381.6383686732846;
+	Mon, 5 May 2025 01:11:28 -0700 (PDT)
+Message-ID: <d2ce1fd8-cd84-4744-9847-2ac393bf99eb@collabora.com>
+Date: Mon, 5 May 2025 13:11:23 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBI5fh28P1Qgi2zZ@google.com>
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, kernel@collabora.com,
+ linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+ linux-kernel@vger.kernel.org, quic_bqiang@quicinc.com
+Subject: Re: [PATCH v5] wifi: ath11k: Fix memory reuse logic
+To: jeff.johnson@oss.qualcomm.com, Jeff Johnson <jjohnson@kernel.org>
+References: <20250428080242.466901-1-usama.anjum@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250428080242.466901-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Wed 30-04-25 14:53:50, Roman Gushchin wrote:
-> On Wed, Apr 30, 2025 at 09:27:39AM +0200, Michal Hocko wrote:
-> > On Tue 29-04-25 21:31:35, Roman Gushchin wrote:
-> > > On Tue, Apr 29, 2025 at 01:46:07PM +0200, Michal Hocko wrote:
-> > > > On Mon 28-04-25 03:36:15, Roman Gushchin wrote:
-> > > > > Introduce bpf_out_of_memory() bpf kfunc, which allows to declare
-> > > > > an out of memory events and trigger the corresponding kernel OOM
-> > > > > handling mechanism.
-> > > > > 
-> > > > > It takes a trusted memcg pointer (or NULL for system-wide OOMs)
-> > > > > as an argument, as well as the page order.
-> > > > > 
-> > > > > Only one OOM can be declared and handled in the system at once,
-> > > > > so if the function is called in parallel to another OOM handling,
-> > > > > it bails out with -EBUSY.
-> > > > 
-> > > > This makes sense for the global OOM handler because concurrent handlers
-> > > > are cooperative. But is this really correct for memcg ooms which could
-> > > > happen for different hierarchies? Currently we do block on oom_lock in
-> > > > that case to make sure one oom doesn't starve others. Do we want the
-> > > > same behavior for custom OOM handlers?
-> > > 
-> > > It's a good point and I had similar thoughts when I was working on it.
-> > > But I think it's orthogonal to the customization of the oom handling.
-> > > Even for the existing oom killer it makes no sense to serialize memcg ooms
-> > > in independent memcg subtrees. But I'm worried about the dmesg reporting,
-> > > it can become really messy for 2+ concurrent OOMs.
-> > > 
-> > > Also, some memory can be shared, so one OOM can eliminate a need for another
-> > > OOM, even if they look independent.
-> > > 
-> > > So my conclusion here is to leave things as they are until we'll get signs
-> > > of real world problems with the (lack of) concurrency between ooms.
-> > 
-> > How do we learn about that happening though? I do not think we have any
-> > counters to watch to suspect that some oom handlers cannot run.
+Reminder to pick this patch.
+
+On 4/28/25 1:02 PM, Muhammad Usama Anjum wrote:
+> Firmware requests 2 segments at first. The first segment is of 6799360
+> whose allocation fails due to dma remapping not available. The success
+> is returned to firmware. Then firmware asks for 22 smaller segments
+> instead of 2 big ones. Those get allocated successfully. At suspend/
+> hibernation time, these segments aren't freed as they will be reused
+> by firmware after resuming.
 > 
-> The bpf program which declares an OOM can handle this: e.g. retry, wait
-> and retry, etc. We can also try to mimick the existing behavior and wait
-> on oom_lock (potentially splitting it into multiple locks to support
-> concurrent ooms in various memcgs). Do you think it's preferable?
-
-Yes, I would just provide different callbacks for global and memcg ooms
-and do the blockin for the latter. It will be consistent with the in
-kernel implementation (therefore less surprising behavior).
+> After resuming, the firmware asks for the 2 segments again with the
+> first segment of 6799360 size. Since chunk->vaddr is not NULL, the
+> type and size are compared with the previous type and size to know if
+> it can be reused or not. Unfortunately, it is detected that it cannot
+> be reused and this first smaller segment is freed. Then we continue to
+> allocate 6799360 size memory which fails and ath11k_qmi_free_target_mem_chunk()
+> is called which frees the second smaller segment as well. Later success
+> is returned to firmware which asks for 22 smaller segments again. But
+> as we had freed 2 segments already, we'll allocate the first 2 new
+> smaller segments again and reuse the remaining 20. Hence 20 small
+> segments are being reused instead of 22.
+> 
+> Add skip logic when vaddr is set, but size/type don't match. Use the
+> same skip and success logic as used when dma_alloc_coherent() fails.
+> By skipping, the possibility of resume failure due to kernel failing to
+> allocate memory for QMI can be avoided.
+> 
+> 	kernel: ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B type 1)
+> 	ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
+> 
+> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> 
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+> Changes since v1:
+> - Update description
+> 
+> Changes since v2:
+> - Update description and title of patch
+> 
+> Changes since v3:
+> - Update description and title of patch
+> 
+> Changes since v4:
+> - Update title of the patch
+> ---
+>  drivers/net/wireless/ath/ath11k/qmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+> index 47b9d4126d3a9..2782f4723e413 100644
+> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+> @@ -1993,6 +1993,15 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
+>  			    chunk->prev_size == chunk->size)
+>  				continue;
+>  
+> +			if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
+> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
+> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
+> +					    chunk->size, chunk->type,
+> +					    chunk->prev_size, chunk->prev_type);
+> +				ab->qmi.target_mem_delayed = true;
+> +				return 0;
+> +			}
+> +
+>  			/* cannot reuse the existing chunk */
+>  			dma_free_coherent(ab->dev, chunk->prev_size,
+>  					  chunk->vaddr, chunk->paddr);
 
 -- 
-Michal Hocko
-SUSE Labs
+Regards,
+Usama
