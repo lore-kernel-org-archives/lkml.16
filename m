@@ -1,65 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9552701B1
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8284E2701A8;
+	Mon,  5 May 2025 14:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456507; cv=none; b=sirQTVMAgkz83+ylYkvu10Z+4YAYn+bLDQiQrcdsz0RDv8QMr1vjz+T4tQcfiNCcV+hvq0QZFg/W3jwnxhF2F1hPTTLmsIqejrv9BHrFkij0V7m1HCMsr1CZ5LeWFq1NTZ1d0/kEORFf+FUF9mMuT472h4vJroUyjvqp6BDaIqI=
+	t=1746456509; cv=none; b=pHS3l4LiREZchu7VT2QNJ/vK+D3LtHRbhUEBRfbBFkZwfevUjpXAe6KaUwUGIOtBV4nVjUpfzzkkjsejfND0rxV17EZ+4cWgvZed8IsII7XhaxeG/BnRSSyISeQ9zM6Et4pJ/2cwkLw0QEn7DRCnpxuBOnp+B8Lu4SDINQnnedY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456507; c=relaxed/simple;
-	bh=ddNygQOAIU8bWfPaIhPNv582SP0aau5pz5XcxK1GgTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DJjFBsg33VIinqni/gvHBYXfsIYWWVHcSwFZw32n3wyEgWE2vwoytotJh4tBFgDCqmYBTKqUsik7lQ4j1KLcGbNso/V0KSt7eFd0/V0tr2LRuSEUzuxHSBQ5yMq9cNlQvoALXQG9mZpZep2sSxdoCZT92mY3d4NPNJLTKBcnh1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3788C4CEE4;
-	Mon,  5 May 2025 14:48:25 +0000 (UTC)
-Date: Mon, 5 May 2025 10:48:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Prakash Sangappa <prakash.sangappa@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "mathieu.desnoyers@efficios.com"
- <mathieu.desnoyers@efficios.com>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>
-Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
-Message-ID: <20250505104830.36f22a4d@gandalf.local.home>
-In-Reply-To: <C3F85063-68B5-4C6D-B95F-27B72DBFA178@oracle.com>
-References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
-	<20250502015955.3146733-2-prakash.sangappa@oracle.com>
-	<20250502090529.GU4198@noisy.programming.kicks-ass.net>
-	<20250502090643.3809b6f5@batman.local.home>
-	<C3F85063-68B5-4C6D-B95F-27B72DBFA178@oracle.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746456509; c=relaxed/simple;
+	bh=iJBGHt/npzUxaGLYucbYNrOJhubSXQWs8CMQPcDC/gI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r9Dgp5bdgnRyePiwKb20jD7VPQPbfSVYXtqMDa8ZLVbIpjEgROjsUZXNdsvI6nzmG9CVicZUTELKXvdwvtNMrH6dVpvMdJ3OEP94tZxo+95TUufbs53l+fm1AR67xk/gF+6QcMo9TQO6X5QJB8DpXjPwzEwr3FnmSB8mSmB2gCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+xZogyr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+xZogyr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F79C4CEE4;
+	Mon,  5 May 2025 14:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746456509;
+	bh=iJBGHt/npzUxaGLYucbYNrOJhubSXQWs8CMQPcDC/gI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=o+xZogyr/LVx9m9JH7TLopjZetPVbrgnx3apooVzO0krXivZBYTaRxpvMEXQBBlpn
+	 oDWH0hu4+uzUqZdNn2guVbHE6ByQwJAbQxA2bLZkCgv+8V/GCh/Uq72MDWbna+8LXE
+	 h3QVio3/OaEppAZp5KRFSQz23lHpW7XgkQx+QA+m9kjBJ9oCGOgbWM9Sw3MuCPhjoF
+	 TAEgSIZZfepWcXoMh/YyfSTX7AUQ3hWn8KQ5CYvkqgWHNyQgQtgugkLkz3/JoL9+bS
+	 SeQ3MlGLbWuBraJjYICBR1tcsUeTuNMLnXXyZDVJcGchDpjLfx99/UXLJ7T4xYcXnn
+	 UIMvMpjO5YMWQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Vineet Gupta <vgupta@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert snps,arc700-intc to DT schema
+Date: Mon,  5 May 2025 09:48:25 -0500
+Message-ID: <20250505144826.1292329-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 5 May 2025 01:51:39 +0000
-Prakash Sangappa <prakash.sangappa@oracle.com> wrote:
+Convert the Arc Core interrupt controller binding to schema format. It's
+a straight-forward conversion of the typical interrupt controller.
 
-> > I countered that this "optimization" would only affect those that use
-> > the extended time slice and would not cause any issues with current
-> > applications that depend on its current semantics. =20
->=20
-> Still wouldn=E2=80=99t  that affect performance of the application using =
-the extended time slice optimization?
-> A sched_yield()  could end up in do_sched_yield(), if =E2=80=98shed_time_=
-delay' is not set as the thread had been rescheduled.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../interrupt-controller/snps,arc700-intc.txt | 24 -----------
+ .../snps,arc700-intc.yaml                     | 42 +++++++++++++++++++
+ 2 files changed, 42 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.yaml
 
-So I haven't taken a deeper look at your patches, but the patches I had,
-one bit was reserved to let the task know that it received an extended time
-slice it should reschedule as soon as possible. The task should only call
-the system call after releasing the critical section IFF the kernel
-extended its time slice.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
+deleted file mode 100644
+index 9a5d562435ea..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* ARC700 incore Interrupt Controller
+-
+-  The core interrupt controller provides 32 prioritised interrupts (2 levels)
+-  to ARC700 core.
+-
+-Properties:
+-
+-- compatible: "snps,arc700-intc"
+-- interrupt-controller: This is an interrupt controller.
+-- #interrupt-cells: Must be <1>.
+-
+-  Single Cell "interrupts" property of a device specifies the IRQ number
+-  between 0 to 31
+-
+-  intc accessed via the special ARC AUX register interface, hence "reg" property
+-  is not specified.
+-
+-Example:
+-
+-	intc: interrupt-controller {
+-		compatible = "snps,arc700-intc";
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.yaml
+new file mode 100644
+index 000000000000..000a734d997c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,arc700-intc.yaml
+@@ -0,0 +1,42 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/snps,arc700-intc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARC700 incore Interrupt Controller
++
++maintainers:
++  - Vineet Gupta <vgupta@kernel.org>
++
++description: >
++  The core interrupt controller provides 32 prioritized interrupts (2 levels)
++  to ARC700 core.
++
++  intc accessed via the special ARC AUX register interface, hence "reg" property
++  is not specified.
++
++properties:
++  compatible:
++    const: snps,arc700-intc
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    description: An interrupt number 0-31
++    const: 1
++
++required:
++  - compatible
++  - interrupt-controller
++  - '#interrupt-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller {
++        compatible = "snps,arc700-intc";
++        interrupt-controller;
++        #interrupt-cells = <1>;
++    };
+-- 
+2.47.2
 
-As it shouldn't have to do a system call if the kernel didn't extend it.
-Otherwise what's the purpose of this feature if it is always doing system
-calls after leaving the critical section.
-
--- Steve
