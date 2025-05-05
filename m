@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDB92DFA4D;
-	Mon,  5 May 2025 23:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8079E281359;
+	Mon,  5 May 2025 23:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486180; cv=none; b=HEvR7KuIwc1v1MZQYZiaZLuXu4fEqhKCTF5VpviaVLSI/OYXodlIJxh8QSjlcJGY4xv8JUNZZKGDJe9seATDHNCXFzAQxK/ydpyNFmR+Lk1S/fplJSKvMJsDCb416vGxbYJRM9uuj/TA2q3RYagUz5CPCFPXlpTSjrFvgAwLdK8=
+	t=1746486195; cv=none; b=CD2ACHdsGpbX87qeXFo8eykXsXeJ9254nFKCyoaEZzy263fNDjJ2oJNIzAivpRASxP03/v2GwwJa+FVkQeB1low0yGkjjfEGj/tLiGiChJqYLxMRbnBSJGyAjZJj6Izon07JVQH7nGn6SO8SXHGB3VZEAjL3K7+rLFrdu63v1A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486180; c=relaxed/simple;
-	bh=+BdJJ2xWjuR4qfYXG8rODyRJVYqVlhib4yqZHEzXxOI=;
+	s=arc-20240116; t=1746486195; c=relaxed/simple;
+	bh=cG9+6Z7Bog13sT6niqG2mYbzsvFckweOUilz1ChfGsY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o+6bjvIR6KznuA2gBLjWqRA6XtCZGPt64vVsaLkPieOsbD6Bre2O9ATRSdoLmACaQptJxfg73GP59SLwvCI07GBiBNtBXtAQTgWliFsDl+3ZYQc86WPnoh9y4lactoEds+4ykUN0NiGKS1XpELsu0d7eySym/+vrYX489pEpEPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcNAgj5o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t4U1+5dQ1Yj87a6V1ounBhh9MYU3EG3XtMQh1O0eLhYqtSSFEyP/+MrikGJse+6NjnHY1i1AMhwbVZqX5n32wA9Gnb97hm1uwF9DbJoNjWXavKAuo0UFituualsLhot8QGr5KVTKTOi33bx0tin5Gu3mTch6lK0dtGUAmMjGJfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eku9V9da; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcNAgj5o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1B4C4CEED;
-	Mon,  5 May 2025 23:02:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eku9V9da"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F1AC4CEED;
+	Mon,  5 May 2025 23:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486180;
-	bh=+BdJJ2xWjuR4qfYXG8rODyRJVYqVlhib4yqZHEzXxOI=;
+	s=k20201202; t=1746486194;
+	bh=cG9+6Z7Bog13sT6niqG2mYbzsvFckweOUilz1ChfGsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UcNAgj5o33WjZXQ5HbW32kVjgMWP/ObblbzLiUlJGo6S+052uLcEW9q1pLXEAiCHy
-	 HZnH6EGfKm4ZtXUBz4r6g+GWB6keEPLoExvFKrlpPp8a08J99A6v1Dvh86i9izzVhF
-	 AthpCWCgdqM/AEvWQGjwgotGI370vVX+nQxPHnFO2kqECyOh3UCokO491k48+qE3x1
-	 LiVW+kdw3LPv3y4pnxqAnU6Yd8gOL9fdUF4qEbqPNxvmwhyYjA+LvKZkh3J3q7jLO0
-	 Ga9UkHVLAE+1jL+IKgRQyuvXcXixMp5Wchr1ux83hFq4t54Dof3vr0CYoIoqy5hFKy
-	 XoiGTUgkOJVDQ==
+	b=Eku9V9dao6NMG5zyzaZGM7qBaIBi4MiGSQV2KzrJwbq6SF17AtLdZbuf+ksPXLDve
+	 zj2a3xu+kFFLNWVIhN6lia40qHM/Odxrg2EhwrWyitjlCcNeSadBasMToTUkXS3/Kn
+	 PVvOVQRrdMdHXfWoKrTrV5EW8cZ3urhDG5GqUZrkmUcsOvIszYTkA7sXaXrjLXeZpq
+	 d+/IAM1eWaVjMIKTGSpX09i/U0zUJXlZTQ8meMLLDmJWnO74hYNkO2VBV8CjTOixWl
+	 qcVtAIOp2rvAaqw5EfwIV/ssDyJ6C59ae+iImsCIA1rBm4tx8xxjurB53ZRjSkofBZ
+	 RLBmrL8JRr28w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
+Cc: Shahar Shitrit <shshitrit@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	u.kleine-koenig@baylibre.com,
-	linux-can@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 189/294] can: c_can: Use of_property_present() to test existence of DT property
-Date: Mon,  5 May 2025 18:54:49 -0400
-Message-Id: <20250505225634.2688578-189-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 197/294] net/mlx5: Apply rate-limiting to high temperature warning
+Date: Mon,  5 May 2025 18:54:57 -0400
+Message-Id: <20250505225634.2688578-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,35 +58,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Shahar Shitrit <shshitrit@nvidia.com>
 
-[ Upstream commit ab1bc2290fd8311d49b87c29f1eb123fcb581bee ]
+[ Upstream commit 9dd3d5d258aceb37bdf09c8b91fa448f58ea81f0 ]
 
-of_property_read_bool() should be used only on boolean properties.
+Wrap the high temperature warning in a temperature event with
+a call to net_ratelimit() to prevent flooding the kernel log
+with repeated warning messages when temperature exceeds the
+threshold multiple times within a short duration.
 
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Link: https://patch.msgid.link/20250212-syscon-phandle-args-can-v2-3-ac9a1253396b@linaro.org
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+Link: https://patch.msgid.link/20250213094641.226501-2-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/c_can/c_can_platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/events.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
-index 7f405bcf11c23..603680792f1ff 100644
---- a/drivers/net/can/c_can/c_can_platform.c
-+++ b/drivers/net/can/c_can/c_can_platform.c
-@@ -333,7 +333,7 @@ static int c_can_plat_probe(struct platform_device *pdev)
- 		/* Check if we need custom RAMINIT via syscon. Mostly for TI
- 		 * platforms. Only supported with DT boot.
- 		 */
--		if (np && of_property_read_bool(np, "syscon-raminit")) {
-+		if (np && of_property_present(np, "syscon-raminit")) {
- 			u32 id;
- 			struct c_can_raminit *raminit = &priv->raminit_sys;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/events.c b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+index 0f4763dab5d25..e7143d32b2211 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+@@ -169,9 +169,10 @@ static int temp_warn(struct notifier_block *nb, unsigned long type, void *data)
+ 	value_lsb &= 0x1;
+ 	value_msb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_msb);
  
+-	mlx5_core_warn(events->dev,
+-		       "High temperature on sensors with bit set %llx %llx",
+-		       value_msb, value_lsb);
++	if (net_ratelimit())
++		mlx5_core_warn(events->dev,
++			       "High temperature on sensors with bit set %llx %llx",
++			       value_msb, value_lsb);
+ 
+ 	return NOTIFY_OK;
+ }
 -- 
 2.39.5
 
