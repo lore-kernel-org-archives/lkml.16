@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB242EFB80;
-	Mon,  5 May 2025 23:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8EE2EFB8C;
+	Mon,  5 May 2025 23:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486656; cv=none; b=RbmJhxBMK9PkiJea1SG4L2l0UbIWcN0Xf++d1/52MJRZDV2xdVoA3s0DES0OLebTmTtuY0v7oIdsKWp7TtVOgvBYOKiWGHWorO3X08GFG7Ub/OfGdTQvvroQLoJS4MD+AWTS4CU+fT+if0WSdkv8Js13fvLQLPSBCNXsY6+5F08=
+	t=1746486661; cv=none; b=YyPNOOLEatY40K29vQ97n3U33DnHwC4MCxdRqDxsSPTenb6vkt/z07ZR+3258ge/Zzw1iYnGgxhgvJxiTlBxBow+1tQAFrZgoiMPzPlHtOVZGPKfG//OFyKxlG3v1mQG1dRS/C7JGXcin7xTPrbNKiiN3E7jh+qzWujVUtrrROY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486656; c=relaxed/simple;
-	bh=Pa7L28cijMi8iOzF4/ANZtkfnSuJCas+Gkv0hY5XP1Y=;
+	s=arc-20240116; t=1746486661; c=relaxed/simple;
+	bh=PvcQv3IFn7mpaCHcHeFH1JuyezztlM9bYk+8URrRkEc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PCZ88zA9jblEGGlOT128YG2UUnIM4kCJ9ehNrsCPD8qXXxiAd+8qN/SWWmgwp06zNtBetYOLI+BGqF7g8c1K0OMkZvjmZGh2kPULaoWf7qAeG6HEaH0SWAhpFEo/XQLKwlzUDoEcXoSvJouIPk21QzwUW/TlVJyInAlMV4Jh2iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMBNl+W+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X6KaindAAABBK6RJ7IEofcJjEA6e0GQjHbSBCpnqLgPR0EqxNUd9C7l3fCs66l/o07wO0A4XVF4zTaPNixCugfrxd7VIXSeHcbWXOEjbiSOPuSUorOIfDcAXxumBHmaQQ97ejytbvzkj4GIn0HwjncdJbkhHk2ZdwKCocBC4rhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqwIN+TR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMBNl+W+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516F3C4CEED;
-	Mon,  5 May 2025 23:10:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqwIN+TR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81625C4CEEE;
+	Mon,  5 May 2025 23:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486656;
-	bh=Pa7L28cijMi8iOzF4/ANZtkfnSuJCas+Gkv0hY5XP1Y=;
+	s=k20201202; t=1746486661;
+	bh=PvcQv3IFn7mpaCHcHeFH1JuyezztlM9bYk+8URrRkEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vMBNl+W+fTyfYuhJw/vjqaIvcgE99M1m363kh8tSrzF9r9yVTvM3OoIAAxRarvRyI
-	 JEwaZ+kZnrIyAxM6MBF2WKAo6vSJ+9JWm4fx2Gd/9ZghMFQ+perTLNNkVPH6dUKfk/
-	 7lBJcQEd6vlIaxtlFWp/digAobw7WW9HfPV+7jtyt/t2o6OLufOakw8HntRhoXYzWS
-	 iu9MN5mcWyHtZOiDqqBfs7OHuhJ0OZSxdgqvc32tmqrUl+t73HCRsKuwQbdWMftP7c
-	 ofepVELn1pzKhjNdO6U2SGDpmewh/7b91bYYBY/OfKh1ybomFlwUTrE6GCHrqBvFdN
-	 HtkPhOTbbLO1Q==
+	b=NqwIN+TRyOMDv8faX9F1GG8A7l5feOpiz3PSm4Am5iS2n9f4gHA2VIfd/6b6S1yEW
+	 hMyAURLaoq0fwreoeVjlXE11RbMF1g20wEbj0SVsUUrrFcX3GdzO8quDbhFtHvkn+N
+	 pfnzR0bSgkLEAyB8Hp5Kb7yd1zsPkIJ/xv+F6jhVGFT0p52hDOY6Klet4C+qQQEP3u
+	 YiVJn6BJjS8lUS6dAf7ktJ1eKmP0NSOCCisnAx2o/KUiPPNXiD16TmD5zq2iGjtavp
+	 bCuCHmjzIpS8GQp1VrQc45g11Lk8ob0GBkFenJefsMDuaqk74ixXwiMYguxya3xye+
+	 6XVrBMdGhA1UA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Frank Li <Frank.Li@nxp.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 140/212] net: pktgen: fix access outside of user given buffer in pktgen_thread_write()
-Date: Mon,  5 May 2025 19:05:12 -0400
-Message-Id: <20250505230624.2692522-140-sashal@kernel.org>
+	linux-i3c@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.1 143/212] i3c: master: svc: Flush FIFO before sending Dynamic Address Assignment(DAA)
+Date: Mon,  5 May 2025 19:05:15 -0400
+Message-Id: <20250505230624.2692522-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -54,47 +52,37 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Peter Seiderer <ps.report@gmx.net>
+From: Frank Li <Frank.Li@nxp.com>
 
-[ Upstream commit 425e64440ad0a2f03bdaf04be0ae53dededbaa77 ]
+[ Upstream commit a892ee4cf22a50e1d6988d0464a9a421f3e5db2f ]
 
-Honour the user given buffer size for the strn_len() calls (otherwise
-strn_len() will access memory outside of the user given buffer).
+Ensure the FIFO is empty before issuing the DAA command to prevent
+incorrect command data from being sent. Align with other data transfers,
+such as svc_i3c_master_start_xfer_locked(), which flushes the FIFO before
+sending a command.
 
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://patch.msgid.link/20250219084527.20488-8-ps.report@gmx.net
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Link: https://lore.kernel.org/r/20250129162250.3629189-1-Frank.Li@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/pktgen.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/i3c/master/svc-i3c-master.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 5917820f92c3d..a2838c15aa9da 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -1877,8 +1877,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	i = len;
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index cf0550c6e95f0..8cf3aa800d89d 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -833,6 +833,8 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
+ 	u32 reg;
+ 	int ret, i;
  
- 	/* Read variable name */
--
--	len = strn_len(&user_buffer[i], sizeof(name) - 1);
-+	max = min(sizeof(name) - 1, count - i);
-+	len = strn_len(&user_buffer[i], max);
- 	if (len < 0)
- 		return len;
- 
-@@ -1908,7 +1908,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	if (!strcmp(name, "add_device")) {
- 		char f[32];
- 		memset(f, 0, 32);
--		len = strn_len(&user_buffer[i], sizeof(f) - 1);
-+		max = min(sizeof(f) - 1, count - i);
-+		len = strn_len(&user_buffer[i], max);
- 		if (len < 0) {
- 			ret = len;
- 			goto out;
++	svc_i3c_master_flush_fifo(master);
++
+ 	while (true) {
+ 		/* Enter/proceed with DAA */
+ 		writel(SVC_I3C_MCTRL_REQUEST_PROC_DAA |
 -- 
 2.39.5
 
