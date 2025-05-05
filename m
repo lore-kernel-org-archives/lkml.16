@@ -1,105 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D46154F8C;
-	Mon,  5 May 2025 08:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746432972; cv=none; b=q6SUZ+iI2ENmIPYTxoi2E+iwRJ1ZMhTP9cs2Z7oObADdGUlTNR/qxosk50HcQtX/CqfamOt3pTi6fLT3lx8imG/0Rxnpj7OFr38Iat57k2t0iPcRWfmCyIvgcrDopp5e3tAKD6rGZgTt4qoc/gcnEljaK8i/utj1ePHoM/hvo98=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746432972; c=relaxed/simple;
-	bh=txRJFeqG/VxogXxBmY8Dh9KU8z1bJGtjegmmbsPgJSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ik+2QzzGdPoUTMGHksboCsoV/JjOT4yzZFbrOLDyeYyfT+8C+DO4GsCFIdwe4KzBVBsnajhrqkBFOujbtlGglaKM4lYNZb1zw3COhjC9XUS/PPuSFjmqZvpTovZipb9JrvEpCqExdPVmDAKm66kklQStQQjI7VDjn1QkAOT4Pg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYCKgsgG; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49E154F8C;
+	Mon,  5 May 2025 08:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746433074; cv=pass; b=iGj6c7x8we/Fe3HCkT9ERqW9xZcjT6DT4s49AfaaOi234yBWII0kl1qnxk4K8wKewkTXt4EGfxERiiWZZlxk6SJbP8CcR5xBlM60ZsBVHFsrSR43oK0lEA+yEuhi5I9LFLlcI+tl8BvqJuGNfW6dWWCdxVfMgYdbNIhlgCX+uJw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746433074; c=relaxed/simple;
+	bh=aU6q/hLEJlDYddLVp0qB4Sh64oToLbHo/SeZqiBvYGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnNflITdBipOffMRx92djdY4EC4DaH723nN3uMQ2YEAD1h9a95fPf8uPvtJ3yvL8qXpNU9SJLs9Xa/51JBmqXbKIj+8oIHWb3D4SV9thjswDNeicoURaqKQ+4HJCP1IPabcZBHOK5+qpdi/c/842Bqm4xlRDRWnLsCf/tG41xPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=PZ/cZx6C; arc=pass smtp.client-ip=195.140.195.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYCKgsgG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E897C4CEE4;
-	Mon,  5 May 2025 08:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746432970;
-	bh=txRJFeqG/VxogXxBmY8Dh9KU8z1bJGtjegmmbsPgJSQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hYCKgsgGoCEGWq050qTpv2dkN3TYZDTjoe9ktasYOCoJc7NU4/IxwjcYJ0ULxWp3D
-	 hsu8MX+qJS5GgwVT2J8yJOs9HpnVeukASdAzJKp0pEVZGLLNBpgS9nvtUuZO7Fl69w
-	 PKHxHMFgXZXw54IucfFd2XxaI9SIU2VtkGjDMXNKmDvwK/5P3zJ6SDDlJhgSF2OXG3
-	 aWQh90sIJtCLQnJ4ytp3FHR04zxq3Ldotdf0HpIcPAxJV+PZNf5LqRPLxuhjh39Osl
-	 vv/suhfAfn9/1f4mwar9m7gglJIOwa8TRhLV3Ycxp8yGj7jecxvgSgrfxy93lDwaLI
-	 5srDVbbwP20EA==
-Message-ID: <3d42e605-2526-4eb1-b222-6552629333ef@kernel.org>
-Date: Mon, 5 May 2025 10:16:06 +0200
+	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="PZ/cZx6C"
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by meesny.iki.fi (Postfix) with ESMTPSA id 4ZrZCJ2GRBzyVF;
+	Mon,  5 May 2025 11:17:48 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+	t=1746433069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gBIZnh1OkGTxH+f6ILMZeaWXA00dbZcm92xt+MSF/Hg=;
+	b=PZ/cZx6CNVwgJqzLEV/bvfwhFnS5bdsAAok/UyfDRMa8z4DkuON0BfzndK2145AxYL9q8b
+	mCgj928UqdAWlhA9xs9MvIFyi0w8aXc35PnHGhSVZ43JXiw1rGzzZvnax+Ozzv5fjI5Iyi
+	vsG7F+Ca/f60iyckUMFWbc7TomyMBos=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=meesny; t=1746433069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gBIZnh1OkGTxH+f6ILMZeaWXA00dbZcm92xt+MSF/Hg=;
+	b=pTPU53Tnq3UK9pG+wTqXxIiTOaRJYNI2G2/WhlGt2jrCOmTcmQAzXkcMaw5Vw0Ln1/UsQE
+	IDqZty8J1WU8bCdhJMb+vmQPqd0l4GTsF+fTHYpvzo1UBSmcjn9VauGrroTsAHBflTl4O6
+	1zinpdFXgpPeGX5k5aqfgIKoOcQ4g4Y=
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1746433069; a=rsa-sha256; cv=none;
+	b=bBQYIIb7onkNxkXyOHsj7kPAx+ETAwu2UdZq/lQU05169oNU7aevFQANrt6c6oupyJYyau
+	WPmLtUccmWmsSIxgBvEV7gdhrKteX6fg29qw0xIrUvNdo/0Pxel+7v/yfLXxt1LTuAKetQ
+	rzxNZ4FG6lkCDnvL/d7fTiyJTpC4z/k=
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 7ADA4634C93;
+	Mon,  5 May 2025 11:17:47 +0300 (EEST)
+Date: Mon, 5 May 2025 08:17:47 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub9x3: Remove unneeded
+ of_gpio_n_cells assignment
+Message-ID: <aBh0K2YGhgxk6ipv@valkosipuli.retiisi.eu>
+References: <20250331070200.3985562-1-andriy.shevchenko@linux.intel.com>
+ <c7fd0bd4-4fc8-43f0-b980-b49472e76445@ideasonboard.com>
+ <Z-5pwpoYEKKmtmPA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: trivial-devices: Document SEN0322
-To: gomba007@gmail.com, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250505-iio-chemical-sen0322-v2-0-217473983b42@gmail.com>
- <20250505-iio-chemical-sen0322-v2-1-217473983b42@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250505-iio-chemical-sen0322-v2-1-217473983b42@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-5pwpoYEKKmtmPA@smile.fi.intel.com>
 
-On 05/05/2025 09:52, Tóth János via B4 Relay wrote:
-> From: Tóth János <gomba007@gmail.com>
+Hi Andy, Tomi,
+
+On Thu, Apr 03, 2025 at 01:58:10PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 03, 2025 at 11:07:40AM +0300, Tomi Valkeinen wrote:
+> > On 31/03/2025 10:02, Andy Shevchenko wrote:
+> > > The default for of_gpio_n_cells is 2, no need to assign the same
+> > > in the user.
+> > 
+> > Where is this documented? I'm also having trouble finding the
+> > implementation.
 > 
-> Add documentation for the DFRobot SEN0322 oxygen sensor.
-> 
-> Signed-off-by: Tóth János <gomba007@gmail.com>
+> The idea was introduced back in 391c970c0dd1 ("of/gpio: add default of_xlate
+> function if device has a node pointer"). But now I realised that it was never
+> assumed that default is 2 for the cases when the ->of_xlate() explicitly
+> provided. So, this is wrong patch, thanks for the review!
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Does the same conclusion apply to the similar max96717 patch as well?
 
-Best regards,
-Krzysztof
+-- 
+Sakari Ailus
