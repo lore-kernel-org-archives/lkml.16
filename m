@@ -1,83 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9554425D8FA
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C229425DD11;
+	Mon,  5 May 2025 15:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460334; cv=none; b=j5Zui68sLEEiwj9NVAuSNaDDdLgMnkY+11w+Z0gd9lGnf0IFXfEYyB07i2YBih9tLEEBYlpcdmZHQNp6VRqVgsnfktH1993rJhU+Wq3+AORHyXslQz+q7J+pf9S3iDoTA7YVfocV2UWyfWxhgB8R4hpTwKM9wgS0qNibPgJo+dI=
+	t=1746460346; cv=none; b=fjtpuMOo7bp2sKJ+7NiJm31Eb3r0XkTds8cTfTzBw62lwCAWFf+aBrIwDUh/vlNVL6Tno/IR8zo4VH7RqdrOFb7R/u2aC+f6c/LhQi9TaAFmSWZ0LSNuZNWvgLE/nJmXC65go4Z7mQdyWJErXWoaBnYzAol67Vf/kawP9cz+rzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460334; c=relaxed/simple;
-	bh=oiOejJCbfqzwUZU106HHZyvHCL0wN8VY5YWpFmWMxNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A4fGrWYTK475M6YV6ZkwoMxL4FxXeVVIgOEZah6VP+ZZ2h8/uWy4pl5HKwkdMqqb4EO1+68CNCC0sFh5E1at3mN8/3o5BSUoLNKC/B9YXKGGhElqiRZVnwOklf8du51ENpNq0UM4pM3pqtIzAJCJNMItINS+QXsKY270sx87Iuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/zZQO3T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746460346; c=relaxed/simple;
+	bh=5IswUIf2LBjErYpwD2yUDrq5eOi5NpPLhaW5rPTk5JU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RolnHFa3YXH/r2ZY/067VVKqIj5EzW0n3lag0NAEqaDXQKh5WcRDeHZu14k2snOixcuGEioKe4FjNPolxmWqIjC7Fbg3zE1iSSRGYSEDqRWS1M98Rf8fBtL4ZqhmlpR7OJxKsgoK2VhSeLQ0DsnJS4KgS8qqaSChGlXr6kLxxgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3Hnfip5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/zZQO3T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EC0C4CEEE;
-	Mon,  5 May 2025 15:52:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3Hnfip5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DF7C4CEE4;
+	Mon,  5 May 2025 15:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746460334;
-	bh=oiOejJCbfqzwUZU106HHZyvHCL0wN8VY5YWpFmWMxNU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=M/zZQO3TNV4m4/RBZ9L38N1/YcTFkL0d4V05mQ0pudhM8voH3YyvD4PPpSXvlx6W8
-	 +JZfCuE9ukONxQS5zGK/mHHhAsZsxLYgz2CqylufuWUsaML+UdmlEXeY3G6/ouOZG9
-	 cgxT+Wa5uqzPztc36KN9rUc1LthyEgvkOCxu1HYcCmYqjWc6pOHvxToT37OZ+2+E21
-	 vuBHtrA9WS2vsyKzjH0u6boiJdT1ZW9tH6hN04TlnN305eDfFYRhBm7M6iiR9dySuC
-	 vaqpdbfhKZ5RSBC8ANbBaDAwvzGYr/oc8xgAVr8DPtTVhT5jB/w/D5rkRfVvKxq0QM
-	 8tEMT7+HMAWew==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A0630CE08DA; Mon,  5 May 2025 08:52:13 -0700 (PDT)
-Date: Mon, 5 May 2025 08:52:13 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH v4 0/20] ratelimit: Reduce ratelimit's false-positive
- misses
-Message-ID: <738b09ea-235a-4140-b8c7-67ab44c0bc9a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
- <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
- <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
- <aBijFf91NBzjy0kr@localhost.localdomain>
+	s=k20201202; t=1746460346;
+	bh=5IswUIf2LBjErYpwD2yUDrq5eOi5NpPLhaW5rPTk5JU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I3Hnfip5QXedMCdVb1k0iQ+REupHKsuTBuBL2EXKLo1lVarIVcP9vIFwmcbg4aurn
+	 IXHmN65gVh215nLZNlt5F6CsQjZpxWzyrOQpmE/l/AIlI+ezwlxtqIChdHmoAPYXsk
+	 oX3jUUFwnc5CoKLYXdyb8IlVu2QAuhz4WuUeLfiEzw3IbxJ0LWPEclP567v/O37edL
+	 0jd6l1bWWb/nvHFNMbEPDuUUuEB6K3G09GGMXbXfjTyl5OAxf/OSKqDh0/0Esl3kBB
+	 jtiuCLnrk5q9JIePmIU57De6tAczj2uKtqIj4O8AxMSmSBa2BYId3kqG6lbT8RI2B9
+	 34jhLgD0WGTbw==
+Date: Mon, 5 May 2025 16:52:15 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com, David
+ Lechner <dlechner@baylire.com>
+Subject: Re: [PATCH v6 07/11] iio: adc: ad7768-1: add multiple scan types to
+ support 16-bits mode
+Message-ID: <20250505165215.4dc4073b@jic23-huawei>
+In-Reply-To: <CAHp75VcUgwZWgaAX8XNrVLc8Rnn-xMAqFSKvh=+bQWNM50pyPA@mail.gmail.com>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+	<0a214d5dfacc3976db71af8a80f9dcf2887fe6cc.1745605382.git.Jonathan.Santos@analog.com>
+	<CAHp75VcUgwZWgaAX8XNrVLc8Rnn-xMAqFSKvh=+bQWNM50pyPA@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBijFf91NBzjy0kr@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 01:37:57PM +0200, Petr Mladek wrote:
-> On Tue 2025-04-29 18:05:00, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > This v4 series replaces open-coded uses of the ratelimit_state structure
-> > with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
-> > case with a flag, provides a ___ratelimit() trylock-failure fastpath to
-> > (almost) eliminate false-positive misses, simplifies the code, and adds
-> > a simple test.
-> > 
-> > The key point of this series is the reduction of false-positive misses.
-> > More could be done to avoid open-coded access to the ->interval and
-> > ->burst fields, and to tighten up checking of user input for these fields,
-> > but those are jobs for later patches.
-> 
-> JFYI, the whole series looks good to me.
+On Mon, 28 Apr 2025 09:55:44 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-I double-checked, and after I apply these two Reviewed-by's, each patch
-in the series will have either your Signed-off-by or your Reviewed-by,
-so thank you for your reviews and feedback!
+> On Mon, Apr 28, 2025 at 3:13=E2=80=AFAM Jonathan Santos
+> <Jonathan.Santos@analog.com> wrote:
+> >
+> > When the device is configured to decimation x8, only possible in the
+> > sinc5 filter, output data is reduced to 16-bits in order to support
+> > 1 MHz of sampling frequency due to clock limitation.
+> >
+> > Use multiple scan types feature to enable the driver to switch
+> > scan type in runtime, making possible to support both 24-bit and =20
+>=20
+> at runtime
+> making it possible
+>=20
+> > 16-bit resolution. =20
+>=20
+> ...
+>=20
+> > +       ret =3D spi_read(st->spi, &st->data.scan.chan,
+> > +                      BITS_TO_BYTES(scan_type->realbits));
+> >         if (ret < 0)
+> >                 goto out; =20
+>=20
+> Add a TODO to convert this to use a new helper from 163ddf1fea59.
 
-							Thanx, Paul
+Mostly because I couldn't immediately track this down in any tree
+I had locally..=20
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
+mit/?id=3D163ddf1fea59
+
+
+>=20
+
