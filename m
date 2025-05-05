@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABE337F956;
-	Mon,  5 May 2025 23:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C40137F947;
+	Mon,  5 May 2025 23:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487335; cv=none; b=SZtyc8jEJas37ZrlXNE7mci6TBZHPR2Gdivu50j8+VKgD+hF8FA7trcKq42bzB/mZXr6UAxHBsrbw4IDY1eyvs6w3ohIyK20rTQmTrn37uJrxDLf5cTP9+mBz+DhO7a8qkcX30vK1g4GBvbnABNcdV35FgH0tEqjA0sPjoAePxc=
+	t=1746487333; cv=none; b=sWl9NKPu8k7Lxl12y+ykof2OSAxn14DJzq/k6EckBkscFa6MCUBHlHJ81gHqBsZeu9K7Y4LtfeJITJ5q07rututhAAbhSIMmC1LWBZsQiNJ0aXICb2PywxnPPoLNqFX9i7vOEDdSXi8URkpOF5eIYuSI08JILfM9hzNQQpsC87A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487335; c=relaxed/simple;
-	bh=deWMExZlTsov2QDeAFquKoWOnR4Wsp9FplU2CGgtVOc=;
+	s=arc-20240116; t=1746487333; c=relaxed/simple;
+	bh=sPgo/UldMLcbvt6C1XwY2ohaBmrJBOqaeUI3P5ZcP5U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DDj3AVrguEkgzhdf721cHFusC2xQyWXyY4OZOSeCGGI1XoVXgDO/7rn4Cy29DYfSrjpH42mxg+Af+CHd7VQK+df6DmnbW94mJBAi0/leFStNtifncZEzIMcf5bZaxSsiPJ9LmXgC77EIMaESQhhKMpTagQV5uzVg3fAV5xj5zyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbVgAOcA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Mi25Hz16pBBqVvZuqoHWL4KGTqmk4pdtyy2REvFIqxhtyEUk2BSH3Q2N/aYrdpRNbqyupMiVFSb2kYS/eTqj5wGZ3seiLnNzUtUQqvU/xt9xThbtTLLC1M1Ub9BUhWnoE3FSachI3xyxqRheMaRhI8MnxCo9rhp1RjGQDnYoUko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBpVxkF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbVgAOcA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589D4C4CEF4;
-	Mon,  5 May 2025 23:22:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBpVxkF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9E4C4CEEE;
+	Mon,  5 May 2025 23:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487334;
-	bh=deWMExZlTsov2QDeAFquKoWOnR4Wsp9FplU2CGgtVOc=;
+	s=k20201202; t=1746487331;
+	bh=sPgo/UldMLcbvt6C1XwY2ohaBmrJBOqaeUI3P5ZcP5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WbVgAOcAUaQAX2BR0i2HcoRIxSIc4qUUkNCMrTHsNjDyZdx96fP5NN6QYRWAW1LlP
-	 7dAGqFO6hYdc+WDVsuduxzL01krqbEApftWWnh2delQxCzU14eYTkPkSiV98ABdtdR
-	 wPd2RDDVaCFZolp6UvGcNMJ/G55md1wXthhcGsybUY/EQ3fp6A3bLF6UNkm6nKX7RC
-	 aslYgQGJZKXLbirq8HVr5YFQfkTVF6hykon9wwX+/xGAhj/Nkz9S0dPb30HHIokSsA
-	 eRLCBOgojRfuaFq3p3oSECGrqfFMbO6MKhnGFqeEjUfkzpuV1BVrB+tyZBUIdOdFpI
-	 7tkMJYjp9T/JA==
+	b=rBpVxkF/0/s8NRRyS122AtBhf1UlmPYlRsEvgmL4hw/ZkGb8xtog8thF7GoX9qwD3
+	 O2R9yhZnd+ykUzM2PpV9mNtib/SY5tNNkr5UmgPMravMseqltWKNpi00wWRCAReMle
+	 cWXrc/A1OtJ2+c52S2nQvKkAaq2j+J9+W822l4r/JQxCBFXBMRJxWK2WEKpUCDu+2J
+	 xIw4Bh1KDRp5JhNITnDAhNbphem7/pB40aDSDUr4TSBwtgItYLGESHHpRgrBKRfy7R
+	 rolYVv1tByJSFyYPJtIyiqoovUg39+4l7dPBh1jNOkbzCjoomU7N6WVfwmS2l6kV/M
+	 UMPQiqsfe19Jg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Erick Shepherd <erick.shepherd@ni.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/79] mmc: host: Wait for Vdd to settle on card power off
-Date: Mon,  5 May 2025 19:20:44 -0400
-Message-Id: <20250505232151.2698893-12-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	snitzer@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/79] pNFS/flexfiles: Report ENETDOWN as a connection error
+Date: Mon,  5 May 2025 19:20:42 -0400
+Message-Id: <20250505232151.2698893-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -51,44 +56,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Erick Shepherd <erick.shepherd@ni.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 31e75ed964582257f59156ce6a42860e1ae4cc39 ]
+[ Upstream commit aa42add73ce9b9e3714723d385c254b75814e335 ]
 
-The SD spec version 6.0 section 6.4.1.5 requires that Vdd must be
-lowered to less than 0.5V for a minimum of 1 ms when powering off a
-card. Increase wait to 15 ms so that voltage has time to drain down
-to 0.5V and cards can power off correctly. Issues with voltage drain
-time were only observed on Apollo Lake and Bay Trail host controllers
-so this fix is limited to those devices.
+If the client should see an ENETDOWN when trying to connect to the data
+server, it might still be able to talk to the metadata server through
+another NIC. If so, report the error.
 
-Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20250314195021.1588090-1-erick.shepherd@ni.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Tested-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 390caef1bdabc..22978057b94a1 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -669,8 +669,12 @@ static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
- 
- 	sdhci_set_power(host, mode, vdd);
- 
--	if (mode == MMC_POWER_OFF)
-+	if (mode == MMC_POWER_OFF) {
-+		if (slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_APL_SD ||
-+		    slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_BYT_SD)
-+			usleep_range(15000, 17500);
- 		return;
-+	}
- 
- 	/*
- 	 * Bus power might not enable after D3 -> D0 transition due to the
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 1b88b78f40bea..3b4f93dcf3239 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1285,6 +1285,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 		case -ECONNRESET:
+ 		case -EHOSTDOWN:
+ 		case -EHOSTUNREACH:
++		case -ENETDOWN:
+ 		case -ENETUNREACH:
+ 		case -EADDRINUSE:
+ 		case -ENOBUFS:
 -- 
 2.39.5
 
