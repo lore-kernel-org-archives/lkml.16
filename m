@@ -1,125 +1,146 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5501F91C8
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8131DA60D;
+	Mon,  5 May 2025 12:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448995; cv=none; b=gwPvDcZHT5NYaaTvaJtkf+PC8I2N1r6Urnq1DEpn3fAKEOAT3AXrGCoFddywlFId612oy640Hfohf/czLXUHNL4SQTLfg56O4q2xqZdkMcBSOBxfvXdC9Pe24uobmuWslR0GaxIfgJFFlQQjxi+WlwHTejT6ZSurZZK1m0wEAQA=
+	t=1746449061; cv=none; b=HJr+/MxmrVxM9bFxWKB5ggUX8q3Z1t9oZt0oLpK/c7m0m0Tjw3mtYWhinPWsf59da1vkxj8z0xeGyuQJsFh60VvOc1yz8P+kjMOD5csdYgCbOhicKQujEFiQCTyqvb0VmZVS1ciRftI1bI29hoe/wI9tXiGZcT8D/DG1Dj1Ssr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448995; c=relaxed/simple;
-	bh=HYUXz0uTzbs4y12iQ7Hl8w+ODH8OZ50a2Wiu1UFClhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4FbmhWI2i5OJp2Fgn3PtR760fH6NZUTt+dDQnR1BjRZyk8kUXs4xceGxSk8P92PK0ijMUXTwaRsb0lG6KXGGBPRgPcOjMIsB0yKpgcJ22OCviFvZ+EV3Yt49uQaxVNswnniVs2FizAWYH2LK1CfiTtYe3XYEcURvS9jtJSM0/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8JneqtG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1746449061; c=relaxed/simple;
+	bh=AVoCeShxBb6FZXMPpMt8tJ9Ezoj2QImbnAyTkqsRjiE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sv4rtI7rAhh8VCuXacKoa3+bf7AK+LmUNfyUKxEJ6Syfx88yRDkUyyvV0EL5h0sOOgz15w2OJYFNGTcKq4PzRFDXO42Jk9qAFeNu0fM3p9tjVg8ZmC0sEiJdBkngND4svOzNxn7bAYwneyJ+3bHpgNZPmUSMAfQ7vHvp4kCmADw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8JneqtG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2295d78b433so40927885ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746448993; x=1747053793; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=itsdfpxgqr9T28YDfLuBCV4kCGXrZvdi4BFAEN1n0j4=;
-        b=d8JneqtGWk8KqfWzB5QXZvw1PXUqcQ//JGmqJbEn6Hbp3Q1oYN6jfKxFcC1ToKjf0Q
-         b5EhzC9qRYqMOaEZqvsiAElHcxJUN0T1qrmTXByygoWV4vMTAaFqu1zb3J1z/32nsq5F
-         6mNh0CZblkieXsR45zEvQzsKp8qyOtNNJESP3L6tdiiNAdgCahgAwbVRZMMoI/qr9dJ+
-         Wm2TUgrVh+MisrZlxO+/2CQqU0Pfq0fNBlsaARFIiCIsbUgu7JGDnBeLFVkEGo9JFq5m
-         v4OuJ+tkMUh4nbYi3YVaCu3HZ3MC5MIrxuv4arnYjneXC8rGAxFsrNAZ1+qGrrbPC/CQ
-         CJHA==
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4dad6cc2be0so1255934137.1;
+        Mon, 05 May 2025 05:44:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746448993; x=1747053793;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=itsdfpxgqr9T28YDfLuBCV4kCGXrZvdi4BFAEN1n0j4=;
-        b=KJxsNsCh9lIiIFjzufN5hMdq/P4dkLv8go9x57P/FW1+FglMX9NnarmW6TVuGS2a8H
-         kG0bDXK95hVEaUdQl1kmjuoza1aRJS/buZlRfS9paBzvjN+tRZYGERd4G0OIM295mRAS
-         o8/s6y7sGBrf/1ieyghOYwcBEDITvs2jz3pONaTI/9zTC0V6H6WxBqHuSjpvXB51989K
-         s93EhLHscDwmV9wSuprO4iHFEO1E8NA5eoKXNTJWOkXG90cp9RTjHrunzNPad/3Y5S3/
-         0pZs8JuuXwUS0DT7HvEJRGfbg3R5+/FthMHp/5PszvpPilbksDxDWa5aHSyspThuf3/9
-         t1zA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGlSL1BhERKg+hRF/AX9RMUD5NndkWHaqd2WIp81j3TdcLLuK81TY9FLsN++kmPGuwmhOSRWffqJkSFNs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUo8kisXWPsbVyxHpD/sKzvFDecZyAJkwPvmZKkQAzHGGhxlfm
-	YhbwauFucTOrIotH3eQAVd7LgUfa8iznuotDkypvVVyivBI/Mz7G
-X-Gm-Gg: ASbGnctlJWEAHyiwasryHSoZfv+OLT4byr+1F6UftVpWXVMcTEGhNC0ODE4izAxBla2
-	d71/cG3/VLM8orVLRMBwPwwPxc++AQQ0WYdT5mKv+ImUhPIn/JRwFVpfIiLc1AU9VGnhtz9qEG5
-	/UhDB8T66EYH2RmGHffxNQasfG7Q6J6Qc3KITDnSRk+i4pCDKAW5h8g0+3F/ZEuHLP5nipWHpf6
-	cECATCVtpov622p205+kcv39ANA0evXz8QGbALUBoFODACZSnk4P21ttXV3lBwqx1E1wa5nYepL
-	sDUi/iDJ9Td3qexKKOmk8gb+pHo/YC7pSnszxsnpdOFn07/9ftCjQQIOY9pnDxB18d4=
-X-Google-Smtp-Source: AGHT+IG2KkrrZuW4JZYAu2SgF1mIQ5x6uKuF20k8DiGK8/U7q4/P+FzZt88l6w+tkDWWksMwAnmVlg==
-X-Received: by 2002:a17:903:2f07:b0:21f:45d:21fb with SMTP id d9443c01a7336-22e1e8c1dcemr101041235ad.3.1746448992997;
-        Mon, 05 May 2025 05:43:12 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:bd19:74c5:b39c:cda])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e194aa391sm41645485ad.154.2025.05.05.05.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 05:43:12 -0700 (PDT)
-Date: Mon, 5 May 2025 20:43:06 +0800
-From: I Hsin Cheng <richard120310@gmail.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch, khilman@baylibre.com, jbrunet@baylibre.com,
-	dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH] drm/meson: Cast mode->clock to unsigned long long
-Message-ID: <aBiyWnKKGMpMYnJ1@vaxr-BM6660-BM6360>
-References: <20250429190724.330883-1-richard120310@gmail.com>
- <d5a8e781-6936-4c83-83d1-92daa2da8ca2@wanadoo.fr>
- <CAFBinCCL6OQrbQ_UY_nhnbodN2TquuKPk9unhp3YjpR5u=EXag@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1746449056; x=1747053856;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wHrq3YK4FJCt494t/A4Dk+lbDn5Gt4FqFjZ7+uK22e8=;
+        b=DahgN3KKsq4fIaNBjEjzkpDbf0BThLVNW9OhirCr+nMpoFx22D2HrvHEWw6RKLkHba
+         m5D3oKv56PTqYkiZKLc4E2X9T0hU/zaC3jUBGEdcNzy41U8jp89DMq/LeX/WJ76s4mDi
+         h/jxR0bEkJHJJn6KyGMLBgqcLkVq/DSWbzRnCKlrS/qP4MLhnzgV1W3hhcOuM9yIojko
+         VZiZMFmko2eGDA8PiNMBLI46ia8bip3/tw8+jxj2inswm2mrGo2qlz4MnHO4HcF40aZF
+         wiuj61SNxkzmM2HmTKW/nvGQpiMNIA+NIv8lSXELsCIyqI80h0D5zkldmeTP0C69U2aK
+         KnYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYLQjjhM7C13HGBUhTH+u7j8r2ZDSaalXkK/TPbMx5GgCB8Uus4lgFNyIxkNLPeU2efRPoMKlz23Wch4IpcpLM@vger.kernel.org, AJvYcCVRN8h53hwO18KCEUQ17M1dRGblrxCXqK7m4qB3nn3lE1yA4z0N0N5pDEgEM3cjXNe8FyAIzYlUuWARrg==@vger.kernel.org, AJvYcCVguIHUBnTvLdR3BM9kw/i5BE8gZcmhDVrJwcktFkVk3KREFFlwXdK/THk4ko3TgHHfWgr8on6NJKQYlh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgXD9tkEXnmQmIDlLmxeHnqSP74DlbLguaZJKliFPWJHi2xaoC
+	jz/6X52WLH1KvBVgSoiVN4k2/CNfKs/yN8cUdq1It3d0WDSnttFim6QJ4Yav
+X-Gm-Gg: ASbGnctDJpMB/WSjniQoyZAk4mmn0k3NqB7eeLqv3xo+TEQwXFRzwg5eQCSzYYznSO0
+	Z3/6n4tqzLrC1/B1In9ShbX63yV7SKV9EIUyEMmIsWimPyICLwM739P6qC655lS+cOMsPJucMDO
+	1K/OU38L+N7cqAVx3H6K40Yo+PsHOvyOVaHfdioaEeJeW1HjRo8SP7YSN6Q/S9+eRYa0oDUhL3A
+	BQMmFfcQMdSVXQpq99DdsEQgkPH4EyUgTuwWijGu8chsSfJrUuxZlHlOTTEW1qqIakqzL2GafNo
+	pJmGUa0lmcrLyv70VkjAoDswvHlf6UTfaQk1dT/uKML9EQbM42fD5eCqIIJdjbRmlrpzS4/CVvS
+	sqSOUTiGdhkXyZQ==
+X-Google-Smtp-Source: AGHT+IGboS1bVHejmTCvBG6IE1kVkc536EIJuZQgY1lyO4jTUwb9mKEWKLIJlCQlwLWLbgxZhuMzFQ==
+X-Received: by 2002:a05:6102:a9d:b0:4db:154b:cb3b with SMTP id ada2fe7eead31-4db154bd024mr1933564137.3.1746449055837;
+        Mon, 05 May 2025 05:44:15 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780afea1b7sm1284296241.7.2025.05.05.05.44.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 05:44:15 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86715793b1fso1070057241.0;
+        Mon, 05 May 2025 05:44:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUPbjrq/GnGzQcZf21WvR0j1Qhl3wIbLF1rlq8N8WqqQ+G8ZlLr+yqJEVCuQMME5UUOdeY/BTfrYRGkAQ==@vger.kernel.org, AJvYcCVliRWPaSjsFcLcuYI3/YAVherxunU/niYGC8g5vFm4PlpBaevDc2DXvFgAmx8IYaCokRIoKfdSDBThKyY=@vger.kernel.org, AJvYcCX2yva9YNZ3aFTwBO117MAasqWSTG/DEO1hTe1F0X+dcUj6B6FFiT5RSIXvqWPzDQoUAO279HOAxLm0XW1Bwlrd@vger.kernel.org
+X-Received: by 2002:a05:6102:5682:b0:4c1:91e0:d5d6 with SMTP id
+ ada2fe7eead31-4db14816e09mr2814859137.12.1746449055262; Mon, 05 May 2025
+ 05:44:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFBinCCL6OQrbQ_UY_nhnbodN2TquuKPk9unhp3YjpR5u=EXag@mail.gmail.com>
+References: <20250430-misc-test-fixup-v1-1-6f39ed6c733d@igalia.com>
+ <CAMuHMdUk4UqmZV9zyzRz3S6n6+6vRQOcFymR_5J1A=JxAXUsSw@mail.gmail.com> <aBirQvBkvKhnTLYR@quatroqueijos>
+In-Reply-To: <aBirQvBkvKhnTLYR@quatroqueijos>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 5 May 2025 14:44:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVBufNGQ03Mi2s5h2-kfxP1ULHc7w=dRuwEeqN_EFxbhQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFEkMyCrzw0cGxZkDrTrnU9Pfnoah9QGxyC2B2aIe6akE3f14AsVyuD-AM
+Message-ID: <CAMuHMdVBufNGQ03Mi2s5h2-kfxP1ULHc7w=dRuwEeqN_EFxbhQ@mail.gmail.com>
+Subject: Re: [PATCH] char: misc: make miscdevice unit test built-in only
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, kernel-dev@igalia.com, 
+	kernel test robot <lkp@intel.com>, David Gow <davidgow@google.com>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 04, 2025 at 11:06:06PM +0200, Martin Blumenstingl wrote:
-> On Tue, Apr 29, 2025 at 11:00 PM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
-> >
-> > Le 29/04/2025 à 21:07, I Hsin Cheng a écrit :
-> > > Coverity scan reported the usage of "mode->clock * 1000" may lead to
-> > > integer overflow. Cast the type of "mode->clock" to "unsigned long long"
-> > > when utilizing it to avoid potential integer overflow issue.
+Hi Thadeu,
+
+CC kunit
+
+On Mon, 5 May 2025 at 14:13, Thadeu Lima de Souza Cascardo
+<cascardo@igalia.com> wrote:
+> On Mon, May 05, 2025 at 09:21:15AM +0200, Geert Uytterhoeven wrote:
+> > On Wed, 30 Apr 2025 at 18:53, Thadeu Lima de Souza Cascardo
+> > <cascardo@igalia.com> wrote:
+> > > Since it uses __init symbols, it cannot be a module. Builds with
+> > > CONFIG_TEST_MISC_MINOR=m will fail with:
 > > >
-> > > Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1646759
-> > > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> > > ---
-> > >   drivers/gpu/drm/meson/meson_encoder_hdmi.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > ERROR: modpost: "init_mknod" [drivers/misc/misc_minor_kunit.ko] undefined!
+> > > ERROR: modpost: "init_unlink" [drivers/misc/misc_minor_kunit.ko] undefined!
 > > >
-> > > diff --git a/drivers/gpu/drm/meson/meson_encoder_hdmi.c b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-> > > index 7752d8ac85f0..fe3d3ff7c432 100644
-> > > --- a/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-> > > +++ b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-> > > @@ -75,7 +75,7 @@ static void meson_encoder_hdmi_set_vclk(struct meson_encoder_hdmi *encoder_hdmi,
-> > >       unsigned long long venc_freq;
-> > >       unsigned long long hdmi_freq;
+> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Closes: https://lore.kernel.org/linux-next/20250429155404.2b6fe5b1@canb.auug.org.au/
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202504160338.BjUL3Owb-lkp@intel.com/
+> > > Fixes: 45f0de4f8dc3 ("char: misc: add test cases")
+> > > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+> >
+> > Thanks for your patch, which is now commit 20acf4dd46e4c090 ("char:
+> > misc: make miscdevice unit test built-in only") in char-misc-next.
+> >
+> > > --- a/lib/Kconfig.debug
+> > > +++ b/lib/Kconfig.debug
+> > > @@ -2512,7 +2512,7 @@ config TEST_IDA
+> > >         tristate "Perform selftest on IDA functions"
 > > >
-> > > -     vclk_freq = mode->clock * 1000;
-> > > +     vclk_freq = (unsigned long long) mode->clock * 1000;
+> > >  config TEST_MISC_MINOR
+> > > -       tristate "miscdevice KUnit test" if !KUNIT_ALL_TESTS
+> > > +       bool "miscdevice KUnit test" if !KUNIT_ALL_TESTS
+> > >         depends on KUNIT
+> > >         default KUNIT_ALL_TESTS
 > >
-> > Hi,
+> > This means "default y" if KUNIT_ALL_TESTS=m, which is IMHO not
+> > what we want.
+>
+> The precedent for other kunit config options that are bool is that they use
+> "default KUNIT_ALL_TESTS".
+
+Seems like you are right.  Looks like none of the boolean ones can
+be enabled on m68k, which is where I run most of the tests, so I never
+noticed before :-(
+
+> It makes sense that if you choose to build all tests, you would not skip
+> the ones that cannot be built as a module.
+
+You can still enable the test manually if you want.
+But I think it should not be enabled by default when all other tests
+that can be modular are built as modules.  Unlike for modular tests,
+enabling builtin tests by default does impact the base kernel.
+
+> > Perhaps
 > >
-> > maybe, using 1000ULL instead would do the same, but would be less verbose?
-> Agreed, that would make the code more similar to drm_hdmi_compute_mode_clock().
-> The goal is to switch to drm_hdmi_compute_mode_clock() mid-term anyways.
+> >     default KUNIT_ALL_TESTS=y
+> >
+> > ?
 
-Hi,
+Gr{oetje,eeting}s,
 
-Thanks for your review and suggestions !
-I'll make the corresponding changes and send v2.
+                        Geert
 
-Best regards,
-I Hsin Cheng
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
