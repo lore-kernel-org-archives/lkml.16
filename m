@@ -1,57 +1,77 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FB9191F95;
-	Mon,  5 May 2025 14:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3DC192D6B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746454077; cv=none; b=MLkwpu935LsjnOcI7DtvGxm5oOot3ACo4Wn1hmsvUaG8BQlQJUMKl4ab16ChZpd5OTkNvPBhfRHgf156ZF7pEqjUmJenBP0HfSjBZxCKhfsCLdIrr648jnNux1uh0Q0vVbhSIsC1Qwu3qrV2YL7wt/orcNBsTuMeLx+CxA/P09Y=
+	t=1746454103; cv=none; b=ErJwGptTWw4qngiD9h9IAgUKwFj6Yugxdonc/bshkdwwNXiIECjevGFlEQkst3Ptmyu12EoxQKn1Mzgbsgv8sCjcJDmeIdglQlO8P4cfy4ciR2gv7DN19FSIy1JYVY9YAlbTZ/D2PQMWNmd4IdC/8JncrReDtBZHK96KVuj4I4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746454077; c=relaxed/simple;
-	bh=dBHOdSlk8wyfl9FGEHxh3KIZk4ZO6ZyyP8CPkgF7dZw=;
+	s=arc-20240116; t=1746454103; c=relaxed/simple;
+	bh=WVLUBgPTA4tf6st+3TFtwtbv1XdaJq07Pu6I4twsmL8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EwN7y5DPO0mzYDIs/XRNbWDK9ktxHib9lhFN4kmWjypbcMZH60886+k0uDnZBMlif2ek2352ExNZn2gXq4xqTL2ABtiOp3UR95RnyyNgmJ4cNGcjwUkcI6C2pmlWaNSd5L82gJikzarVxxfJpKhPK4EPjeCmpySJ8LhIRQkEnFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xux8umCH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0HtB6vEo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=swdSoul9SLKGJMtnqD15uqMljCylFahnlcb6nQvzCko0lurCYAAyQuz0/D3C6/znvAYRqcuKSXY2P+TeZ7weaiA7XfxXfAJkVwg20afNU8M7E9AfFItdQZN4bpVgeho/IgviSReqdNB6O6PD3ggWiXTPLPQXRfRCwfdnxFyLjoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=elcP5Ahh; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xux8umCH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0HtB6vEo"
-Date: Mon, 5 May 2025 16:07:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746454073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sfCgR2i3xQWyZtj2OVFWv7zFTAvlYA/MlxgvIP/UMus=;
-	b=xux8umCHuhw89QYs9Q9K9AvrO5pOJmnb5+Rl/q95FoWrrZkqRKCJsawTKTEp9hlOkPGm0T
-	FbzKYTXLE8EQ/CNsLyGeUM3Mww/bTTPP7zOCOtZ/iOw8SseNu6ahg/3BqExFQod8kIeMVD
-	WmmIgKPcbLHkK6eO+lqzCi2Tj+Zvk9haX6d5aj5lJOvpBfTICIlbrOcOui8dbUpNBYLPMH
-	72UostovynQTtUygJ7Kx+v3CVNZmIFKk8s+gzYL5xuSYbUKopwgglZwj7Ol54WHwaxfmjc
-	vXhaQCbHTH84BWXcsVrBcKdvgIMNscf4qIXybdaWHYab8TeDhLURa0hmOzaVbg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746454073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sfCgR2i3xQWyZtj2OVFWv7zFTAvlYA/MlxgvIP/UMus=;
-	b=0HtB6vEozKdHOywIgQO0tH7RpGKDvQNEs0cKKeuxOpOuoajNSXH6g63vDko5loRTal4XaN
-	E2OSCLL0zYwjz8BA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v3 12/32] selftests: harness: Stop using
- setjmp()/longjmp()
-Message-ID: <20250505160703-431086d8-76bd-4195-b2f6-06141e1cb6de@linutronix.de>
-References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
- <20250411-nolibc-kselftest-harness-v3-12-4d9c0295893f@linutronix.de>
- <aBiX9zbR7ehAxQjS@finisterre.sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="elcP5Ahh"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c597760323so470014685a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746454099; x=1747058899; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bnGazODhLi7rd2UydKCGPq4ZtmoQ/tiR6adwupAH7Gc=;
+        b=elcP5AhhNzFizaAatihbXrbsxuu+YuVMjzA2G90uzICHujyN/amIpQvff4vikufAaW
+         Vy0bn75cHBRWRmE08x+45yBPgOhbfgomUlTOsnOffxG+D9NKouVYxkzRMLfGc7iSUkTu
+         /PXFxcGhNXjP3psTvdMocTQscVkpGjZoNov6i0EdApA9+DfAeCcJo8jJ2IKiweGraDSC
+         1bAyTnN1rrc+otKORuLjKKCz1ZAHrx35BBIEEtGL5rCc1M9U03kKmYi4maP8rvgTXEVp
+         z/NImy/I5SvKVp4f3a/5iCTIW7ysJrqiReMT5fj0pHjZLMsdz7BkFmC3mAqgyjDSd7cJ
+         P+iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746454099; x=1747058899;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bnGazODhLi7rd2UydKCGPq4ZtmoQ/tiR6adwupAH7Gc=;
+        b=J1pe3N5eVfqHiu0YJuF1lHw22cYfZahsiGg6BwT2a1gckbtbosC+lPbADT+124rXyV
+         iW4rrcwT2D8vFv6PRBtE/G5QZM7sAXRW3naIaxWozAmmkXIu5Wl2e7xP/Bzf96pBvgvd
+         ZE1AwOiq6t/dyvpgs9S/JZNBvYJ0f75JsMwVaOV+EZSw6FVnkf6e9yOhkdhKFnt/zQTr
+         jpYM2ApLlS2jD3JdGkONMDJF2Ieq/w1AZ/hBHXEFSU5KITnX1yAFzqdNgBQibfBsus9B
+         6706C5juH9r5a0b856ZpjCt4Vv7ThvpXDITIXeGw4QZcKbmsKfRoao3Rys+I/sEMW9B4
+         9cbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0/cr7ML21CBFQy2+pw6XFkVjwst3sRi4OQUptKSOAbjg9intfRlI1PAMtuYeKG+UAs6C1vagD0Ypqa+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzir7h2GZ3/RpwuhBB4wEgfFtM2CjtgV/Or/b9dCL2Y7E5w23gw
+	3oFuZC9aqyRhrkOljRZApsEcEsprq4G0bsZkSwWpGRmPhindLNk5ILHJYMRhfqc=
+X-Gm-Gg: ASbGncvx1cTszUqWh/bsq7XDae2ZS0IwdNIdiZOccaVtWYlK7lK+TpSBjkJhjso+Z+K
+	EdL/lqRZHjp0/d/qKdC0kY9qst4gQP6TiCMWXSFkmKJSsc5C8rOEnuOK3u1SirbcEVADhN1W9WM
+	t08gLk9AXvLPSIDb4aA3005AqDifmSLELxxI2tMBH/keq/8N5+l9sDDJUXH1IBOhta0sgh3xdYy
+	mzyiYmY6u6NmIeI0GNeIhgUFBkifwAb5wB641nspJo4Tvag7j2CLKhgzlt4a6rWQVU0bx0i9zUV
+	lgNq87CenIq4mCP7hRRsRmrfbt3uVByuhCD+A3w=
+X-Google-Smtp-Source: AGHT+IHeGZrdp1BmAYeZy/2G2GcLxeZitgpMyMEE5I2+I6lyL3IzjrQUsSibdVhgFaIpP4YAkxLcgQ==
+X-Received: by 2002:a05:620a:2550:b0:7c5:4c6d:7f95 with SMTP id af79cd13be357-7cadfed81ffmr1174704785a.48.1746454094270;
+        Mon, 05 May 2025 07:08:14 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad23c3ebdsm567930685a.40.2025.05.05.07.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 07:08:13 -0700 (PDT)
+Date: Mon, 5 May 2025 10:08:12 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: Igor Belousov <igor.b@beldev.am>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	Nhat Pham <nphamcs@gmail.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
+Message-ID: <20250505140812.GA30814@cmpxchg.org>
+References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+ <fddf0457275576c890d16921465cf473@beldev.am>
+ <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,55 +81,75 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBiX9zbR7ehAxQjS@finisterre.sirena.org.uk>
+In-Reply-To: <83CB359A-955E-48B6-B0D9-DD4F2E1146D4@konsulko.se>
 
-Hi Mark,
-
-On Mon, May 05, 2025 at 07:50:31PM +0900, Mark Brown wrote:
-> On Fri, Apr 11, 2025 at 11:00:36AM +0200, Thomas Weißschuh wrote:
-> > Usage of longjmp() was added to ensure that teardown is always run in
-> > commit 63e6b2a42342 ("selftests/harness: Run TEARDOWN for ASSERT failures")
-> > However instead of calling longjmp() to the teardown handler it is easier to
-> > just call the teardown handler directly from __bail().
-> > Any potential duplicate teardown invocations are harmless as the actual
-> > handler will only ever be executed once since
-> > commit fff37bd32c76 ("selftests/harness: Fix fixture teardown").
+On Sat, May 03, 2025 at 08:46:07PM +0200, Vitaly Wool wrote:
 > 
-> I didn't fully verify (I'm on holiday right now) but it looks like this,
-> which is in -next as 8a37733a874f:
 > 
-> > @@ -757,7 +749,7 @@
-> >   */
-> >  #define OPTIONAL_HANDLER(_assert) \
-> >  	for (; _metadata->trigger; _metadata->trigger = \
-> > -			__bail(_assert, _metadata))
-> > +			__bail(_assert, _metadata, self, variant))
-> >  
-> >  #define is_signed_type(var)       (!!(((__typeof__(var))(-1)) < (__typeof__(var))1))
-> >  
+> > On May 2, 2025, at 10:07 AM, Igor Belousov <igor.b@beldev.am> wrote:
+> > 
+> > On 2025-05-02 12:01, Vitaly Wool wrote:
+> >> From: Igor Belousov <igor.b@beldev.am>
+> >> Use vmalloc for page allocations for zblock blocks to avoid extra
+> >> pressure on the memmory subsystem with multiple higher order
+> >> allocations.
+> >> While at it, introduce a module parameter to opportunistically
+> >> allocate pages of lower orders via try_page_alloc() for faster
+> >> allocations whenever possible.
+> >> Since vmalloc works fine with non-power of 2 numbers of pages,
+> >> rewrite the block size tables to use that opportunity.
+> >> Signed-off-by: Igor Belousov <igor.b@beldev.am>
+> >> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> >> ---
+> >> Tests run on qemu-arm64 (8 CPUs, 1.5G RAM, 4K pages):
+> >> 1. zblock
+> >> 43205.38user
+> >> 7320.53system
+> >> 2:12:04elapsed
+> >> zswpin 346127
+> >> zswpout 1642438
+> >> 2. zsmalloc
+> >> 47194.61user
+> >> 7978.48system
+> >> 2:25:03elapsed
+> >> zswpin 448031
+> >> zswpout 1810485
+> >> So zblock gives a nearly 10% advantage.
+> >> Please note that zsmalloc *crashes* on 16K page tests so I couldn't
+> >> compare performance in that case.
+> > 
+> > Right, and it looks like this:
+> > 
+> > [  762.499278]  bug_handler+0x0/0xa8
+> > [  762.499433]  die_kernel_fault+0x1c4/0x36c
+> > [  762.499616]  fault_from_pkey+0x0/0x98
+> > [  762.499784]  do_translation_fault+0x3c/0x94
+> > [  762.499969]  do_mem_abort+0x44/0x94
+> > [  762.500140]  el1_abort+0x40/0x64
+> > [  762.500306]  el1h_64_sync_handler+0xa4/0x120
+> > [  762.500502]  el1h_64_sync+0x6c/0x70
+> > [  762.500718]  __pi_memcpy_generic+0x1e4/0x22c (P)
+> > [  762.500931]  zs_zpool_obj_write+0x10/0x1c
+> > [  762.501117]  zpool_obj_write+0x18/0x24
+> > [  762.501305]  zswap_store+0x490/0x7c4
+> > [  762.501474]  swap_writepage+0x260/0x448
+> > [  762.501654]  pageout+0x148/0x340
+> > [  762.501816]  shrink_folio_list+0xa7c/0xf34
+> > [  762.502008]  shrink_lruvec+0x6fc/0xbd0
+> > [  762.502189]  shrink_node+0x52c/0x960
+> > [  762.502359]  balance_pgdat+0x344/0x738
+> > [  762.502537]  kswapd+0x210/0x37c
+> > [  762.502691]  kthread+0x12c/0x204
+> > [  762.502920]  ret_from_fork+0x10/0x20
 > 
-> breaks the build of several selftests when building for arm64:
+> In fact we don’t know if zsmalloc is actually supposed to work with
+> 16K pages. That’s the question to Sergey and Minchan. If it is
+> indeed supposed to handle 16K pages, I would suggest that you
+> submitted a full report with reproduction steps and/or provided a
+> fix if possible.
 
-Thanks for the report. These tests are doing funny things with the harness
-internals. I'll drop these patches from -next.
+I've been using zsmalloc with 16k pages just fine for ~a year,
+currently running it on 6.14.2-asahi. This machine sees a lot of
+memory pressure, too.
 
-> In file included from seccomp_bpf.c:56:
-> seccomp_bpf.c: In function ‘kill_thread_or_group’:
-> ../kselftest_harness.h:755:52: error: ‘self’ undeclared (first use in this function)
->   755 |                         __bail(_assert, _metadata, self, variant))
->       |                                                    ^~~~
-> ../kselftest_harness.h:803:14: note: in expansion of macro ‘OPTIONAL_HANDLER’
->   803 | } while (0); OPTIONAL_HANDLER(_assert)
->       |              ^~~~~~~~~~~~~~~~
-> ../kselftest_harness.h:516:9: note: in expansion of macro ‘__EXPECT’
->   516 |         __EXPECT(expected, #expected, seen, #seen, ==, 1)
->       |         ^~~~~~~~
-> seccomp_bpf.c:844:9: note: in expansion of macro ‘ASSERT_EQ’
->   844 |         ASSERT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
->       |         ^~~~~~~~~
-> 
-> Full build log at:
-> 
->     https://builds.sirena.org.uk/407f60a151df3c44397e5afc0111eb9b026c38d3/arm64/defconfig/build.log
-
-
+Could this be a more recent regression, maybe in the new obj_write()?
