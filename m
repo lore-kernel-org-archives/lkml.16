@@ -1,125 +1,253 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8E0249F9;
-	Mon,  5 May 2025 09:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCA2249F9;
+	Mon,  5 May 2025 09:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438367; cv=none; b=Qfu0sV+/gk7eYpQKjxfKBXCHUDwmm71xP5RrDCWoTrxQ1xCXpkram3YL/XDrNdaVBvX3PbUTQPbLALcplPDI4iB839wXFpd6mfeHI7oQo5ppiRE32Va++jyQ7Ehrq4OnB7cg6KDdG41DLgzrUxkSNdbwb6QQWHuVSoiaTNP4P0s=
+	t=1746438387; cv=none; b=OMSE/Es4NNE5yonPBH6PH+pacylI6FBEoylX3ykgoTEi+IWx+YnfeRPIcLdnMEMD1T6cZT4teQZoHyj/b+y053fNzbFsvs4n7gjpVMK/4iZrcr2xrPcI1SivahCh96bqin+TP2HgGj3AvBeMQ771m0aOiy+G6kodBQwdjOUReXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438367; c=relaxed/simple;
-	bh=sdAiG4Xu+teIQhNazYIzq3lSEb/hnxBhxZq8WKG9DxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sw73oLkmaxRgFMpttkv2RgMGbR+qzlXOda7YN6AiAgSBwXsjaukpHbLpVdFQxZYheQOfr2zRYoMEbosTEBfkXACYYdasiyFTCJdHgFBCXfMHRvlxCYQATCqKXRBKSVPGFiI2HqkuiU76yMqd4AJdVZljejBp+gXVj+RmZe+CUJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+pT1P5Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746438387; c=relaxed/simple;
+	bh=UIH5JSP4tb5O+YYw9nvsN/xpMiimsjcLY/Sq6JGo1rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=japCRHcsoaPQp4OAs2QWM4hqxC5TBQ3amvnBIijoyNsp6TsjJorjWPesSYXG9YxlypCtK2YqtjBVifuyLKF0zheRJtnqCQsIc4gYL2MedmacAyxUu95AO5FZkfObGUXaA5hw/8ZtcAZvH2OYF42NxAzjQwFVj7Gk+76dH46XWBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+mMqabc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+pT1P5Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE802C4CEE4;
-	Mon,  5 May 2025 09:46:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+mMqabc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68450C4CEF0;
+	Mon,  5 May 2025 09:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746438365;
-	bh=sdAiG4Xu+teIQhNazYIzq3lSEb/hnxBhxZq8WKG9DxA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E+pT1P5QGHVeJjAeZWh4cXhdHUPC0AR9rFtT38WUwuyS562FpulfdS3FrJEC+JG8V
-	 L2vrMgW65s/0GkigvNInA2Iv8XW6DIcOffCSZqSp0bmp54EebyIkpo8pFYZHdQZeoP
-	 Hih2mFjroZi6N0gYbQtja7bTX973DVSqzEnccx1+iqIxLWxPEn6WqFBw/Ha8sc8iFN
-	 XBqfnv4CIRbuqAPHDov/a8TA5dBnwkDROQH6eB50pPUYUg6FXQ8buVmuULmSNIuqDu
-	 +w/HUS0jGVw27hlHTsS2cl5sztfKjBQTtafqdp/NByDCw0AJFuxBQQakrz287LauxH
-	 QaRiKoEqHuLeg==
-Message-ID: <35662ebc-d975-4891-8cbb-1ba3c324f504@kernel.org>
-Date: Mon, 5 May 2025 11:46:00 +0200
+	s=k20201202; t=1746438386;
+	bh=UIH5JSP4tb5O+YYw9nvsN/xpMiimsjcLY/Sq6JGo1rU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d+mMqabcZPXEMSQ4l+2nRswkHIGh3AUbUehE72H9h1EAU9MjZZHCWV5IfaPmo/0FG
+	 Qbm+++Y5QTOF706JU0r2XV9crrx7BTB5NeO0rupYv2fmlVe82VIpGWZ9XQWvGaVWWO
+	 OjM+1KiaDsVr8VQ9seoQ0ZLMOGBFmiwZOOszHsjo2WVBYx0gvoA4XMLF9mszNrODlT
+	 RhbPnNgh5x+GNXsjDV09q4V+cV67iIumFcD4mlRKKjapZ9TVvRbBubSecLXqlUnE4r
+	 qv+BTv3uC0HEfVclSF29lUnBkvJLAlmu6r9p8vJ7sFbnNaqoemHRaKqc72B07wJfwV
+	 Vc0Rqzpam5HfQ==
+Date: Mon, 5 May 2025 11:46:20 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] modpost: Create modalias for builtin modules
+Message-ID: <aBiI7Iv2LtQJUWG4@example.org>
+References: <efd64a6f-d6e5-4790-96b6-0776cd3a7f5a@suse.com>
+ <20250505093830.25688-1-legion@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] dt-bindings: clock: qcom: Add missing bindings on
- gcc-sc8180x
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250430-sc8180x-camcc-support-v2-0-6bbb514f467c@quicinc.com>
- <20250430-sc8180x-camcc-support-v2-1-6bbb514f467c@quicinc.com>
- <20250502-singing-hypersonic-snail-bef73a@kuoka>
- <cbca1b2f-0608-4bd3-b1fb-7f338d347b5e@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <cbca1b2f-0608-4bd3-b1fb-7f338d347b5e@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505093830.25688-1-legion@kernel.org>
 
-On 05/05/2025 11:43, Satya Priya Kakitapalli wrote:
+On Mon, May 05, 2025 at 11:38:29AM +0200, Alexey Gladkov wrote:
+> For some modules, modalias is generated using the modpost utility and
+> the section is added to the module file.
 > 
-> On 5/2/2025 12:15 PM, Krzysztof Kozlowski wrote:
->> On Wed, Apr 30, 2025 at 04:08:55PM GMT, Satya Priya Kakitapalli wrote:
->>> Add all the missing clock bindings for gcc-sc8180x.
->>>
->>> Fixes: 0fadcdfdcf57 ("dt-bindings: clock: Add SC8180x GCC binding")
->>> Cc: stable@vger.kernel.org
->> What sort of bug is being fixed here? This needs to be clearly expressed
->> in commit msg - bug or observable issue.
+> When a module is added inside vmlinux, modpost does not generate
+> modalias for such modules and the information is lost.
 > 
+> As a result kmod (which uses modules.builtin.modinfo in userspace)
+> cannot determine that modalias is handled by a builtin kernel module.
 > 
-> The multi-media AHB clocks are needed to create HW dependency in the 
-> multimedia CC dt blocks and avoid any issues. They were not defined in 
-> the initial bindings.
+> $ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
+> pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
 > 
-> Sure, I'll add the details in the commit text.
+> $ modinfo xhci_pci
+> name:           xhci_pci
+> filename:       (builtin)
+> license:        GPL
+> file:           drivers/usb/host/xhci-pci
+> description:    xHCI PCI Host Controller Driver
+> 
+> Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
+> modpost if the module is built separately.
+> 
+> To fix this it is necessary to generate the same modalias for vmlinux as
+> for the individual modules. Fortunately '.vmlinux.export.o' is already
+> generated from which '.modinfo' can be extracted in the same way as for
+> vmlinux.o.
+> 
+> Signed-off-by: Alexey Gladkov <legion@kernel.org>
+> ---
+> 
+> v2: As Petr Pavlu suggested, I separated the builtin modules from the external
+>     modules. I've also added a search for duplicate modules.
+> 
+> ---
+>  include/linux/module.h   |  4 ----
+>  scripts/mod/file2alias.c |  5 +++++
+>  scripts/mod/modpost.c    | 35 +++++++++++++++++++++++++++--------
+>  scripts/mod/modpost.h    | 15 ++++++++++++++-
+>  4 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 7250b4a527ec..6225793ddcd4 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -257,14 +257,10 @@ extern void cleanup_module(void);
+>  	__PASTE(type,			\
+>  	__PASTE(__, name)))))))
+>  
+> -#ifdef MODULE
+>  /* Creates an alias so file2alias.c can find device table. */
+>  #define MODULE_DEVICE_TABLE(type, name)			\
+>  extern typeof(name) __mod_device_table(type, name)	\
+>    __attribute__ ((unused, alias(__stringify(name))))
+> -#else  /* !MODULE */
+> -#define MODULE_DEVICE_TABLE(type, name)
+> -#endif
+>  
+>  /* Version of form [<epoch>:]<version>[-<extra-version>].
+>   * Or for CVS/RCS ID version, everything but the number is stripped.
+> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> index dff1799a4c79..be221923f582 100644
+> --- a/scripts/mod/file2alias.c
+> +++ b/scripts/mod/file2alias.c
+> @@ -1509,6 +1509,11 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+>  	typelen = name - type;
+>  	name += strlen("__");
+>  
+> +	if (mod->is_vmlinux) {
+> +		mod = find_module(NULL, modname, modnamelen);
+> +		mod = mod ?: new_builtin_module(modname, modnamelen);
+> +	}
+> +
+>  	/* Handle all-NULL symbols allocated into .bss */
+>  	if (info->sechdrs[get_secindex(info, sym)].sh_type & SHT_NOBITS) {
+>  		zeros = calloc(1, sym->st_size);
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index be89921d60b6..db3c172d4528 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -168,22 +168,26 @@ char *get_line(char **stringp)
+>  	return orig;
+>  }
+>  
+> -/* A list of all modules we processed */
+> +/* A list of all modules (vmlinux or *.ko) we processed */
+>  LIST_HEAD(modules);
+>  
+> -static struct module *find_module(const char *filename, const char *modname)
+> +/* A list of all builtin modules we processed */
+> +LIST_HEAD(builtin_modules);
+> +
+> +struct module *find_module(const char *filename, const char *name, size_t namelen)
+>  {
+>  	struct module *mod;
+>  
+>  	list_for_each_entry(mod, &modules, list) {
+> -		if (!strcmp(mod->dump_file, filename) &&
+> -		    !strcmp(mod->name, modname))
+> +		if ((mod->dump_file && !strcmp(mod->dump_file, filename)) &&
+> +		    namelen != strlen(mod->name) &&
 
-I don't understand what is the bug here. You just described missing feature.
+Of course there has to be an '==' here. I'll fix it if this patch fits.
 
-Best regards,
-Krzysztof
+> +		    !strncmp(mod->name, name, namelen))
+>  			return mod;
+>  	}
+>  	return NULL;
+>  }
+>  
+> -static struct module *new_module(const char *name, size_t namelen)
+> +struct module *create_module(const char *name, size_t namelen, bool is_builtin)
+>  {
+>  	struct module *mod;
+>  
+> @@ -207,7 +211,10 @@ static struct module *new_module(const char *name, size_t namelen)
+>  	 */
+>  	mod->is_gpl_compatible = true;
+>  
+> -	list_add_tail(&mod->list, &modules);
+> +	if (is_builtin)
+> +		list_add_tail(&mod->list, &builtin_modules);
+> +	else
+> +		list_add_tail(&mod->list, &modules);
+>  
+>  	return mod;
+>  }
+> @@ -2021,11 +2028,23 @@ static void write_if_changed(struct buffer *b, const char *fname)
+>  static void write_vmlinux_export_c_file(struct module *mod)
+>  {
+>  	struct buffer buf = { };
+> +	struct module_alias *alias, *next;
+>  
+>  	buf_printf(&buf,
+> -		   "#include <linux/export-internal.h>\n");
+> +		   "#include <linux/export-internal.h>\n"
+> +		   "#include <linux/module.h>\n");
+>  
+>  	add_exported_symbols(&buf, mod);
+> +
+> +	list_for_each_entry(mod, &builtin_modules, list) {
+> +		list_for_each_entry_safe(alias, next, &mod->aliases, node) {
+> +			buf_printf(&buf, "MODULE_ALIAS_MODNAME(\"%s\", \"%s\");\n",
+> +					mod->name, alias->str);
+> +			list_del(&alias->node);
+> +			free(alias);
+> +		}
+> +	}
+> +
+>  	write_if_changed(&buf, ".vmlinux.export.c");
+>  	free(buf.p);
+>  }
+> @@ -2112,7 +2131,7 @@ static void read_dump(const char *fname)
+>  			continue;
+>  		}
+>  
+> -		mod = find_module(fname, modname);
+> +		mod = find_module(fname, modname, strlen(modname));
+>  		if (!mod) {
+>  			mod = new_module(modname, strlen(modname));
+>  			mod->dump_file = fname;
+> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+> index 9133e4c3803f..1d0dd4ee944a 100644
+> --- a/scripts/mod/modpost.h
+> +++ b/scripts/mod/modpost.h
+> @@ -107,7 +107,7 @@ struct module_alias {
+>  };
+>  
+>  /**
+> - * struct module - represent a module (vmlinux or *.ko)
+> + * struct module - represent a module (vmlinux, a builtin module, or *.ko)
+>   *
+>   * @dump_file: path to the .symvers file if loaded from a file
+>   * @aliases: list head for module_aliases
+> @@ -199,6 +199,19 @@ static inline bool is_valid_name(struct elf_info *elf, Elf_Sym *sym)
+>  	return !is_mapping_symbol(name);
+>  }
+>  
+> +struct module *find_module(const char *filename, const char *name, size_t namelen);
+> +struct module *create_module(const char *name, size_t namelen, bool is_builtin);
+> +
+> +static inline struct module *new_module(const char *name, size_t namelen)
+> +{
+> +	return create_module(name, namelen, false);
+> +}
+> +
+> +static inline struct module *new_builtin_module(const char *name, size_t namelen)
+> +{
+> +	return create_module(name, namelen, true);
+> +}
+> +
+>  /* symsearch.c */
+>  void symsearch_init(struct elf_info *elf);
+>  void symsearch_finish(struct elf_info *elf);
+> -- 
+> 2.49.0
+> 
+
+-- 
+Rgrds, legion
+
