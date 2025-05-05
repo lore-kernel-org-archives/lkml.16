@@ -1,344 +1,151 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BA11CFBC;
-	Mon,  5 May 2025 00:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B64118C02E;
+	Mon,  5 May 2025 00:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746404868; cv=none; b=gu53U52nC0UumpxA5Fxp8o06B3dcXPDh2WQlxUfgwaO0IuYBqdllAOY7Iyw+MRTkIWwoJ9aoNx6aDpKDpC1KInpbpl+eCxJyy6XcqIWMjJiFo1WnHQLrYnAIDhVygq22Im7G/ek7qA88Xw11aFyc8KTBZqXQsbC6ZRROJqBwTFw=
+	t=1746404890; cv=none; b=tvGQh0L9xbcRO9QgYazAgdYcTw217oqh1P3RxBqeU47cdrWvxgpMwke/ZC4DNj/99i+bqkbL9Uptk0nFZAZ4yAsevbgH7kU2E9MPZT13HIShCgcb8F4+DslNy9WMSroCvi+rk/hbzh2hmYv9SWVZgf10TfHYbft9WH55tShzjlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746404868; c=relaxed/simple;
-	bh=XVjPEkPR2pxA3EyM7tONUuJUxxkRNiLBUS53APT9ma0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DckSxFehvFBbojhXeXbfRfbmpZaCVHy2hMpv/YM6cBs20xn8R8zMhGVn3F/HKOlYcAdkk8QvWI1mQFLYVv3TpRJO2wVV9ZJ/BpJI0pQf6z0Q/cgJs8Jtuf6bFn+7ixXDNxLTRYhOjWyMShYQ3eKyivLSKMQ51popEYHW3+RPHUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=so0rEEOO; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746404890; c=relaxed/simple;
+	bh=43gFJ5Fa97xaAvKTcfonW16J7pZGJrnSHDvMCF0kVPQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XhANinXIlKchd2iDbBO7LyNOSW9NSS2VLwAtbiTAxsG9/8wi2p/rox4BfV7+Us+Q7GtsMPECojnOhqpqUrnJDJ7UHiYEqjSQRT7WmBhwfGorFW6NXFXaDiIVZpMU1qqw9NnXQroeqF+xR6HUtX/LCC0ijALR15TkbJRWk61btus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=poMkWxer; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="so0rEEOO"
-Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id 86FC82115DB1; Sun,  4 May 2025 17:27:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86FC82115DB1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746404860;
-	bh=uj9TV+Fit2MjFYnfyHuy93AVqKnF2ZIzsgpt7WCRbrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=so0rEEOOW7NfR7ObH5UONkayJYuYvfgKfeCxrVcjCEsXQxvFBf+aqdGbIqvrTiLlB
-	 l7BEPP3ESZ2h6FowE+MBbNmdn9ys1NLMS5FMcFvimJtQ86OGg9YwMVhG8Pnjiige91
-	 hhQqx2h9XoEhqO9iCNsejySny4r+hTndU3TqFDVk=
-From: Vijay Balakrishna <vijayb@linux.microsoft.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [PATCH 1/2] drivers/edac: Add L1 and L2 error detection for A53, A57 and A72
-Date: Sun,  4 May 2025 17:27:39 -0700
-Message-Id: <1746404860-27069-2-git-send-email-vijayb@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="poMkWxer"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1746404881; x=1747009681; i=w_armin@gmx.de;
+	bh=43gFJ5Fa97xaAvKTcfonW16J7pZGJrnSHDvMCF0kVPQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=poMkWxerht/HO7XoGZlXFps7kZiTmYI7cUoTBUwLPWe+y8zaq+YPo6RU7CyRvqRc
+	 jAPQDOG5F2xXohQWeaI2SM5F/+zS6zbV03ft+/oMaczcLv0Ay9OyS6BDncdW6srOI
+	 PJSYlKxyfojnQmIH+wLK9zf4Id1hct/kMkxkdC5LxygiWBTpGrGDwbGQQPrUIAtao
+	 AbuyudwQiob9W2z0RNB7JnQ85pubEYDrHWLWMuMY3HDwGwUsQh0/PNdoBNbs6oyxD
+	 yyV62LIrfAMzZVjOBLRJFPBxlWYqDiY1PQ1BcGjNsGXDqbCz8Ci4rrCbUv3CZmxwF
+	 G3dE0sNQXUIHN70Eig==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MvbFs-1v4NoF1hH4-00uZSp; Mon, 05
+ May 2025 02:28:01 +0200
+Message-ID: <6cbabcc6-a5e8-43d1-8398-1b272384841d@gmx.de>
+Date: Mon, 5 May 2025 02:27:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Suspend/resume failing due to SPD5118
+To: Guenter Roeck <linux@roeck-us.net>, Luca Carlon <carlon.luca@gmail.com>
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lucas.demarchi@intel.com
+References: <9625330e-e3e9-49ea-9979-653091dfbe16@gmx.de>
+ <20250504184117.4795-1-carlon.luca@gmail.com>
+ <310fe3a3-e585-46e0-aae7-3e4d41af1f53@roeck-us.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <310fe3a3-e585-46e0-aae7-3e4d41af1f53@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yOcn1uPogfJJl7+uL12LnnDKiz+FN3ca/Jrqefb5dZOLKd+Mrp8
+ 1rzKOgJtZbXxSTrxfiTLctzy8qc4w3z2JOHkIwa8cs0ozTntfCLQc2D5b6ifPodiyP/WJ3x
+ uRhMMxCI9wHFxiq6wO0dqT3JbeU3fKsS55m39CIocUevh61clRr8Z6emao6Um80YSzpUl3k
+ W8euxIBp2zQpVyb5wfRNg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:KrYgkjHguME=;IxYAPBEhOzhiEsFsKVVpJyXIiqx
+ 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
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+Am 05.05.25 um 01:31 schrieb Guenter Roeck:
 
-The Cortex A53, A57 and A72 cores have error detection capabilities for
-the L1/L2 Caches, this patch adds a driver for them. The selected errors
-to detect/report have compatible bit assignments concerning CPU/L2 memory
-error syndrome registers.
+> On 5/4/25 11:41, Luca Carlon wrote:
+> ...
+>> When I was told that the problem may lie in the i2c bus, I started to=
+=20
+>> search elsewhere
+>> and this thread came up:=20
+>> https://bugzilla.kernel.org/show_bug.cgi?id=3D213345. I
+>> therefore provided in that thread some more info I collected.
+>>
+>
+> From there:
+>
+> [=C2=A0=C2=A0=C2=A0 5.416572] i801_smbus 0000:00:1f.4: SPD Write Disable=
+ is set
+>
+> I think you are out of luck. The above is incompatible with spd5118=20
+> devices;
+> See [1] for details. I don't immediately see why that would cause the=20
+> i2c bus
+> to lock up, but even if it didn't lock up the bus I don't see a means=20
+> to get
+> this to work.
+>
+> It is still puzzling that reading the i2c data using i2cdump fails.=20
+> The spd5118
+> driver should not even probe if that is the case. Maybe Armin has an=20
+> idea.
+>
+> Guenter
 
-Unfortunately there is no robust way to inject errors into the caches,
-so this driver doesn't contain any code to actually test it. It has
-been tested though with code taken from an older version [1] of this
-driver.  For reasons stated in thread [1], the error injection code is
-not suitable for mainline, so it is removed from the driver.
+I have an idea, see the bugzilla post for details.
 
-[1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
+Thanks,
+Armin Wolf
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
----
- drivers/edac/Kconfig              |   9 ++
- drivers/edac/Makefile             |   1 +
- drivers/edac/cortex_arm64_l1_l2.c | 229 ++++++++++++++++++++++++++++++
- 3 files changed, 239 insertions(+)
- create mode 100644 drivers/edac/cortex_arm64_l1_l2.c
-
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 19ad3c3b675d..20c15a18437f 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -576,4 +576,13 @@ config EDAC_LOONGSON
- 	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
- 	  are compatible.
- 
-+config EDAC_CORTEX_ARM64_L1_L2
-+	tristate "ARM Cortex A72/A57/A53"
-+	depends on ARM64
-+	help
-+	  Support for L1/L2 cache error detection is provided for ARM Cortex
-+	  A72, A57, and A53 processors. The selected subset of errors is common
-+	  across these three MPCore processors, featuring compatible bit
-+	  assignments in their CPU/L2 memory error syndrome registers.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index a8f2d8f6c894..157062410e61 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
- obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_ARM64_L1_L2)	+= cortex_arm64_l1_l2.o
-diff --git a/drivers/edac/cortex_arm64_l1_l2.c b/drivers/edac/cortex_arm64_l1_l2.c
-new file mode 100644
-index 000000000000..ad411259debd
---- /dev/null
-+++ b/drivers/edac/cortex_arm64_l1_l2.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cortex A72, A57 and A53 EDAC L1 and L2 cache error detection
-+ *
-+ * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
-+ *
-+ * Based on Code from:
-+ * Copyright (c) 2018, NXP Semiconductor
-+ * Author: York Sun <york.sun@nxp.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/bitfield.h>
-+#include <asm/smp_plat.h>
-+
-+#include "edac_module.h"
-+
-+#define DRVNAME				"cortex-arm64-edac"
-+
-+#define CPUMERRSR_EL1_RAMID		GENMASK(30, 24)
-+
-+#define CPUMERRSR_EL1_VALID		BIT(31)
-+#define CPUMERRSR_EL1_FATAL		BIT(63)
-+
-+#define L1_I_TAG_RAM			0x00
-+#define L1_I_DATA_RAM			0x01
-+#define L1_D_TAG_RAM			0x08
-+#define L1_D_DATA_RAM			0x09
-+#define TLB_RAM				0x18
-+
-+#define L2MERRSR_EL1_CPUID_WAY	GENMASK(21, 18)
-+
-+#define L2MERRSR_EL1_VALID		BIT(31)
-+#define L2MERRSR_EL1_FATAL		BIT(63)
-+
-+struct merrsr {
-+	u64 cpumerr;
-+	u64 l2merr;
-+};
-+
-+#define MESSAGE_SIZE 64
-+
-+#define SYS_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-+#define SYS_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+
-+static struct cpumask compat_mask;
-+
-+static void report_errors(struct edac_device_ctl_info *edac_ctl, int cpu,
-+			  struct merrsr *merrsr)
-+{
-+	char msg[MESSAGE_SIZE];
-+	u64 cpumerr = merrsr->cpumerr;
-+	u64 l2merr = merrsr->l2merr;
-+
-+	if (cpumerr & CPUMERRSR_EL1_VALID) {
-+		const char *str;
-+		bool fatal = cpumerr & CPUMERRSR_EL1_FATAL;
-+
-+		switch (FIELD_GET(CPUMERRSR_EL1_RAMID, cpumerr)) {
-+		case L1_I_TAG_RAM:
-+			str = "L1-I Tag RAM";
-+			break;
-+		case L1_I_DATA_RAM:
-+			str = "L1-I Data RAM";
-+			break;
-+		case L1_D_TAG_RAM:
-+			str = "L1-D Tag RAM";
-+			break;
-+		case L1_D_DATA_RAM:
-+			str = "L1-D Data RAM";
-+			break;
-+		case TLB_RAM:
-+			str = "TLB RAM";
-+			break;
-+		default:
-+			str = "Unspecified";
-+			break;
-+		}
-+
-+		snprintf(msg, MESSAGE_SIZE, "%s %s error(s) on CPU %d",
-+			 str, fatal ? "fatal" : "correctable", cpu);
-+
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 0, msg);
-+	}
-+
-+	if (l2merr & L2MERRSR_EL1_VALID) {
-+		bool fatal = l2merr & L2MERRSR_EL1_FATAL;
-+
-+		snprintf(msg, MESSAGE_SIZE, "L2 %s error(s) on CPU %d CPUID/WAY 0x%lx",
-+			 fatal ? "fatal" : "correctable", cpu,
-+			 FIELD_GET(L2MERRSR_EL1_CPUID_WAY, l2merr));
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 1, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 1, msg);
-+	}
-+}
-+
-+static void read_errors(void *data)
-+{
-+	struct merrsr *merrsr = data;
-+
-+	merrsr->cpumerr = read_sysreg_s(SYS_CPUMERRSR_EL1);
-+	if (merrsr->cpumerr & CPUMERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_CPUMERRSR_EL1);
-+		isb();
-+	}
-+	merrsr->l2merr = read_sysreg_s(SYS_L2MERRSR_EL1);
-+	if (merrsr->l2merr & L2MERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_L2MERRSR_EL1);
-+		isb();
-+	}
-+}
-+
-+static void cortex_arm64_edac_check(struct edac_device_ctl_info *edac_ctl)
-+{
-+	struct merrsr merrsr;
-+	int cpu;
-+
-+	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-+		smp_call_function_single(cpu, read_errors, &merrsr, true);
-+		report_errors(edac_ctl, cpu, &merrsr);
-+	}
-+}
-+
-+static int cortex_arm64_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl;
-+	struct device *dev = &pdev->dev;
-+	int rc;
-+
-+	edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-+					      num_possible_cpus(), "L", 2, 1,
-+					      edac_device_alloc_index());
-+	if (!edac_ctl)
-+		return -ENOMEM;
-+
-+	edac_ctl->edac_check = cortex_arm64_edac_check;
-+	edac_ctl->dev = dev;
-+	edac_ctl->mod_name = dev_name(dev);
-+	edac_ctl->dev_name = dev_name(dev);
-+	edac_ctl->ctl_name = DRVNAME;
-+	dev_set_drvdata(dev, edac_ctl);
-+
-+	rc = edac_device_add_device(edac_ctl);
-+	if (rc)
-+		goto out_dev;
-+
-+	return 0;
-+
-+out_dev:
-+	edac_device_free_ctl_info(edac_ctl);
-+
-+	return rc;
-+}
-+
-+static void cortex_arm64_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-+
-+	edac_device_del_device(edac_ctl->dev);
-+	edac_device_free_ctl_info(edac_ctl);
-+}
-+
-+static const struct of_device_id cortex_arm64_edac_of_match[] = {
-+	{ .compatible = "arm,cortex-a53" },
-+	{ .compatible = "arm,cortex-a57" },
-+	{ .compatible = "arm,cortex-a72" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-+
-+static struct platform_driver cortex_arm64_edac_driver = {
-+	.probe = cortex_arm64_edac_probe,
-+	.remove = cortex_arm64_edac_remove,
-+	.driver = {
-+		.name = DRVNAME,
-+	},
-+};
-+
-+static int __init cortex_arm64_edac_driver_init(void)
-+{
-+	struct device_node *np;
-+	int cpu;
-+	struct platform_device *pdev;
-+	int err;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_get_cpu_node(cpu, NULL);
-+
-+		if (!np) {
-+			pr_warn("failed to find device node for cpu %d\n", cpu);
-+			continue;
-+		}
-+		if (!of_match_node(cortex_arm64_edac_of_match, np))
-+			continue;
-+		if (!of_property_read_bool(np, "edac-enabled"))
-+			continue;
-+		cpumask_set_cpu(cpu, &compat_mask);
-+		of_node_put(np);
-+	}
-+
-+	if (cpumask_empty(&compat_mask))
-+		return 0;
-+
-+	err = platform_driver_register(&cortex_arm64_edac_driver);
-+	if (err)
-+		return err;
-+
-+	pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		pr_err("failed to register cortex arm64 edac device\n");
-+		platform_driver_unregister(&cortex_arm64_edac_driver);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+device_initcall(cortex_arm64_edac_driver_init);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
-+MODULE_DESCRIPTION("Cortex A72, A57 and A53 L1 and L2 cache EDAC driver");
--- 
-2.49.0
-
+>
+> ---
+> [1]=20
+> https://lore.kernel.org/linux-i2c/20250430-for-upstream-i801-spd5118-no-=
+instantiate-v2-0-2f54d91ae2c7@canonical.com/
+>
+>
