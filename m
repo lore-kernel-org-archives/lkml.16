@@ -1,54 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CC82DBB3F;
-	Mon,  5 May 2025 23:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6693A389401;
+	Mon,  5 May 2025 23:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486748; cv=none; b=ed5WEAHidzBCcZNIHn+G3A4MCFFHpxMkt8t0D87jrHiKcsDcEykg5F/vVjcnMrsTAo3NPKS5F+rzLluYUKWyR6wY6HwutX7ViARSxs8iqKsudqVl0DCit0v2w8fVbu5Ruzrj8Frcjg7kFznf/zpvsNThy3iKVlJUcdiqpzK1yE4=
+	t=1746486753; cv=none; b=XTbGbxUquFUrOhdhxLFN0AdyJDSm0sunyZinmv+YODMPS9DAscU42dahgp2H1+3xfrJhCTNBpJP/MMVFOIdSZKYd0FUsUOZ6g7i9RViP9M1xWIz3Uh6khj2yQviThLZn+ymYmwutAuTzgo8yB9xds+OOgjyZEVddNAgYApVBLTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486748; c=relaxed/simple;
-	bh=VxwCcqEjjmFKkOmipPXouA+cBNnTqKLEv9WW2/LM5Tw=;
+	s=arc-20240116; t=1746486753; c=relaxed/simple;
+	bh=uk8MysGQEPaxlxxwg5K/J3eRbH1SAWnRT1OLiffH3GE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S8OfG0glXGfDDsg0S8mWEHXzAkNU3hT9CautzR483jrG/S5lBZiIpiWqkeNxRKdNWJGTzPOLkIxXFLW8qazVPY+CnmBqQImKCdP+YhJBwVtxk18Wfju5jZA8FaABSifhPmGeQUsvV5PqgwUYYNqhZCElnxi7/5wPC1yq14Sihb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=au1TIWu3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XNHK+SVUwyDcPZ2pYknFUCKU33HV+uYUysmb21IqCMB2dJviA9cvFay1aKBCqlwkpZeD8s4aKzMweKBOqwFb/5C2advWoL3zkkuAmNGwDL49yWDfBDPLC9LiFhfRelxQ7AyTwZIM0/nin9ARECbwNxBPWzz8NUExwi9zLV9ZOIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYuXc8n4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="au1TIWu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112BBC4CEEE;
-	Mon,  5 May 2025 23:12:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYuXc8n4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BDAC4CEED;
+	Mon,  5 May 2025 23:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486747;
-	bh=VxwCcqEjjmFKkOmipPXouA+cBNnTqKLEv9WW2/LM5Tw=;
+	s=k20201202; t=1746486752;
+	bh=uk8MysGQEPaxlxxwg5K/J3eRbH1SAWnRT1OLiffH3GE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=au1TIWu3SxQ/WeFpL0MbEVbSrAlKBtJciVmqGVVMrr43Mzx63MybgIf3amg6Yeiqc
-	 vykKxGWWoQF8V9mzA96E8iw0vMhk64ePRy2pEZh8AsxL/JIpzxsGuKWIT8wo3Y55UZ
-	 AVVZPbxRVm0Pc/1FEU/2JuOTCr8nxgwQzJ43b+8+3TMQSdBJvpXnxi2UWrnjg2gTJ6
-	 IpnsnRBUAmOU/PpeRBNC4NHb8kfBnGjsZMN2Xz4aB3xnBKrOY98feQyPQBGoa6Mz9k
-	 dGBPsSxHSOtNewT/4tbhft3rt91Sn/XDzVLTri8r/psW5ik5YyNOX6t//LvinblFQV
-	 COw5iXEBbq7Cw==
+	b=UYuXc8n4/3QQMNQQ+iRlfSLY/Ov3JTnrNiNm1ivg7CWtB8oHoPdf9WhZXHpo7y+Mv
+	 cvRqFAVH7JmeDobLQk6zcvb9iu+0uXX6o2wbbFtS3pXaVQtlPLy+pVAuev8/yQ1wpA
+	 vIgeJqY1h0F7BnjGWb4r42sJnyxq8ikDjCPAjORdlrBVXi0GRiuXLEwyrgIG2S3wQE
+	 oRyxzxrUMRqTS/fjfzYO4/vntvAOk7BKXvl8bCDudbTl14gT0h+hSy9p6/d5Oh/COG
+	 GPt5MCW7Wuf6GjGGMOsOsER4HcyH1qUD7PmnHh91j0JkOifk7cHtlVjESTx0IuxLIe
+	 GUEgFqFrKDNjg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	gregkh@linuxfoundation.org,
-	hayeswang@realtek.com,
-	dianders@chromium.org,
-	horms@kernel.org,
-	kory.maincent@bootlin.com,
-	gmazyland@gmail.com,
-	ste3ls@gmail.com,
-	phahn-oss@avm.de,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 181/212] r8152: add vendor/device ID pair for Dell Alienware AW1022z
-Date: Mon,  5 May 2025 19:05:53 -0400
-Message-Id: <20250505230624.2692522-181-sashal@kernel.org>
+	akpm@linux-foundation.org,
+	mhocko@suse.com,
+	mjguzik@gmail.com,
+	alexjlzheng@tencent.com,
+	pasha.tatashin@soleen.com
+Subject: [PATCH AUTOSEL 6.1 184/212] exit: change the release_task() paths to call flush_sigqueue() lockless
+Date: Mon,  5 May 2025 19:05:56 -0400
+Message-Id: <20250505230624.2692522-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -63,48 +55,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 848b09d53d923b4caee5491f57a5c5b22d81febc ]
+[ Upstream commit fb3bbcfe344e64a46574a638b051ffd78762c12d ]
 
-The Dell AW1022z is an RTL8156B based 2.5G Ethernet controller.
+A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
+and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
+disabled can trigger a hard lockup, see
+https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
 
-Add the vendor and product ID values to the driver. This makes Ethernet
-work with the adapter.
+Fortunately, after the recent posixtimer changes sys_timer_delete() paths
+no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
+the exiting task passes __exit_signal() lock_task_sighand() can't succeed
+and pid_task(tmr->it_pid) will return NULL.
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-Link: https://patch.msgid.link/20250206224033.980115-1-olek2@wp.pl
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This means that after __exit_signal(tsk) nobody can play with tsk->pending
+or (if group_dead) with tsk->signal->shared_pending, so release_task() can
+safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
+
+TODO:
+	- we can probably shift posix_cpu_timers_exit() as well
+	- do_sigaction() can hit the similar problem
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20250206152314.GA14620@redhat.com
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c   | 1 +
- include/linux/usb/r8152.h | 1 +
- 2 files changed, 2 insertions(+)
+ kernel/exit.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index 061a7a9afad04..c2b715541989b 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -9880,6 +9880,7 @@ static const struct usb_device_id rtl8152_table[] = {
- 	{ USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff) },
- 	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0601) },
- 	{ USB_DEVICE(VENDOR_ID_DLINK,   0xb301) },
-+	{ USB_DEVICE(VENDOR_ID_DELL,    0xb097) },
- 	{ USB_DEVICE(VENDOR_ID_ASUS,    0x1976) },
- 	{}
- };
-diff --git a/include/linux/usb/r8152.h b/include/linux/usb/r8152.h
-index 33a4c146dc19c..2ca60828f28bb 100644
---- a/include/linux/usb/r8152.h
-+++ b/include/linux/usb/r8152.h
-@@ -30,6 +30,7 @@
- #define VENDOR_ID_NVIDIA		0x0955
- #define VENDOR_ID_TPLINK		0x2357
- #define VENDOR_ID_DLINK			0x2001
-+#define VENDOR_ID_DELL			0x413c
- #define VENDOR_ID_ASUS			0x0b05
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 49e4792405008..3ed45df420d9b 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -198,20 +198,13 @@ static void __exit_signal(struct task_struct *tsk)
+ 	__unhash_process(tsk, group_dead);
+ 	write_sequnlock(&sig->stats_lock);
  
- #if IS_REACHABLE(CONFIG_USB_RTL8152)
+-	/*
+-	 * Do this under ->siglock, we can race with another thread
+-	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
+-	 */
+-	flush_sigqueue(&tsk->pending);
+ 	tsk->sighand = NULL;
+ 	spin_unlock(&sighand->siglock);
+ 
+ 	__cleanup_sighand(sighand);
+ 	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+-	if (group_dead) {
+-		flush_sigqueue(&sig->shared_pending);
++	if (group_dead)
+ 		tty_kref_put(tty);
+-	}
+ }
+ 
+ static void delayed_put_task_struct(struct rcu_head *rhp)
+@@ -281,6 +274,16 @@ void release_task(struct task_struct *p)
+ 	proc_flush_pid(thread_pid);
+ 	put_pid(thread_pid);
+ 	release_thread(p);
++	/*
++	 * This task was already removed from the process/thread/pid lists
++	 * and lock_task_sighand(p) can't succeed. Nobody else can touch
++	 * ->pending or, if group dead, signal->shared_pending. We can call
++	 * flush_sigqueue() lockless.
++	 */
++	flush_sigqueue(&p->pending);
++	if (thread_group_leader(p))
++		flush_sigqueue(&p->signal->shared_pending);
++
+ 	put_task_struct_rcu_user(p);
+ 
+ 	p = leader;
 -- 
 2.39.5
 
