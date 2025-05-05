@@ -1,146 +1,106 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1924D1F3FEC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE4141C63;
+	Mon,  5 May 2025 12:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449623; cv=none; b=t27+7baHMNxJ30gcqs1CCnXZP9JYRdOM9L8VEq4TtNWtwUXzcXy3ZhoetfN4lPQkqI7G0KXcIGuDCZ53HKx8zqf1Qh5NbDyP6VgSBmyMHsWQo9PWVkYQAJSN1y6Zzd2hlaNpbJtBq9cxJSYkrLowxy6kkeGSScMMYE58qMFkFdk=
+	t=1746449632; cv=none; b=TBESA/Rsd9d/8bCWF4TU+pWkuQ7tXuvsyHF5m9djob8P9/Z46e2FU0vgIG6TlX/FXWPhc0ENJZcYuplo3ZgAKvb5FFJGP7TqEmQv22X/vpXGVKzzbMNHyFANuVjM4OtBHQuKMEpfsK/9/A8rH8RpQsJH7AAKgO0dmfMlqj0Qgps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449623; c=relaxed/simple;
-	bh=e6yzW/ZN46CFaNCfL7PIyJJsT7+CNCnO+9OsbZN6mbw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gZGQmZZD4RpbSV0tTvomT9J4XiS4l/muetKLGl+jPjSoxtncUAqXYczvJr+4sXzIoPGHori97R8pETt7vWfPFWWdhz/C77i+sd1ul6cLgxWv6iC0ASdqH0XB1AMvT4BukoAk3vOIxXcWCWsMf1sQhy5JWygi67dsIU8GVoZUIks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvKB-0001yX-6r; Mon, 05 May 2025 14:53:35 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvKA-001ESr-2Q;
-	Mon, 05 May 2025 14:53:34 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvKA-000Jb9-27;
-	Mon, 05 May 2025 14:53:34 +0200
-Message-ID: <168c0dc2b1a9ebabbfd993e3a516dbf96d809f47.camel@pengutronix.de>
-Subject: Re: [PATCH v6 1/3] dt-bindings: reset: Add compatible for Amlogic
- A4/A5 Reset Controller
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Zelong
- Dong <zelong.dong@amlogic.com>, Conor Dooley <conor.dooley@microchip.com>,
- Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>,  Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Kevin Hilman
- <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
- kelvin.zhang@amlogic.com
-Date: Mon, 05 May 2025 14:53:34 +0200
-In-Reply-To: <5bb02494-e974-4d2f-a00f-417312b73bc1@linaro.org>
-References: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
-	 <20250411-a4-a5-reset-v6-1-89963278c686@amlogic.com>
-	 <5bb02494-e974-4d2f-a00f-417312b73bc1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1746449632; c=relaxed/simple;
+	bh=V8b3pEfvhaQlw67HmAf2CHOrUuSPji7iXtzlP2LMMmY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZDJi8j+h67MGVRADE98RfIp3T4myfdpvj5Ah1NK959+V5qFISyxmiptwvI/xubNMa4Wf2Ub/OR9KSThFByXxF+kt8tlIEIFshz7UvJZQ4X/pZPVBo0zAkdH/HkH4Rsh7chJjTAJLJy7gz1JqZ3YOdbfvLdJPYa8pD7b2Zug1SKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GXsQryc0; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GXsQryc0"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545CrUAs224792
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 07:53:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746449611;
+	bh=pN/hJ2/tR8aIxvF43AzkTdJbZKN49d7SnCAQeO3ZtQg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=GXsQryc0gX0twUQHUcGdrIE0WENDfK0kglBO5GJNoCUcQQTVvLFBrKGggKfNiHUNt
+	 zK6aJl5Wsek/yogbV7WR9joSBNd8/YRihig78uw+b7gR4syz91G8t7ixQd+uLIR971
+	 Fhfl+udKKl5Fdi2vFVbn/YlaaZznRtOOzTH65yho=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545CrUCE051150
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 May 2025 07:53:30 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ May 2025 07:53:30 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 May 2025 07:53:30 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545CrQBW013511;
+	Mon, 5 May 2025 07:53:27 -0500
+Message-ID: <5d2aa775-a374-419f-b800-e1db96986660@ti.com>
+Date: Mon, 5 May 2025 18:23:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1
+ on J721E
+To: Nishanth Menon <nm@ti.com>, Prasanth Babu Mantena <p-mantena@ti.com>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+References: <20250505112731.2515734-1-p-mantena@ti.com>
+ <20250505123832.shukji5gfx3erjdq@lustiness>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250505123832.shukji5gfx3erjdq@lustiness>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Neil,
+Hi Prasanth
 
-On Mo, 2025-05-05 at 14:30 +0200, Neil Armstrong wrote:
-> Hi Philipp,
->=20
-> On 11/04/2025 13:38, Kelvin Zhang via B4 Relay wrote:
-> > From: Zelong Dong <zelong.dong@amlogic.com>
-> >=20
-> > Add compatibles for Amlogic A4 and A5 reset controllers,
-> > which fall back to 'amlogic,meson-s4-reset'.
-> >=20
-> > Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Link: https://lore.kernel.org/r/20240918074211.8067-2-zelong.dong@amlog=
-ic.com
-> > Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
-> > ---
-> >   .../bindings/reset/amlogic,meson-reset.yaml        | 22 +++++++++++++=
-+--------
-> >   1 file changed, 14 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-rese=
-t.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
-> > index 695ef38a7bb346c92b4cf428e7615d45682c940a..150e95c0d9bed74c7045942=
-610a311114a257889 100644
-> > --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
-> > +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
-> > @@ -12,14 +12,20 @@ maintainers:
-> >  =20
-> >   properties:
-> >     compatible:
-> > -    enum:
-> > -      - amlogic,meson8b-reset # Reset Controller on Meson8b and compat=
-ible SoCs
-> > -      - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compat=
-ible SoCs
-> > -      - amlogic,meson-axg-reset # Reset Controller on AXG and compatib=
-le SoCs
-> > -      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible=
- SoCs
-> > -      - amlogic,meson-s4-reset # Reset Controller on S4 and compatible=
- SoCs
-> > -      - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
-> > -      - amlogic,t7-reset
-> > +    oneOf:
-> > +      - enum:
-> > +          - amlogic,meson8b-reset # Reset Controller on Meson8b and co=
-mpatible SoCs
-> > +          - amlogic,meson-gxbb-reset # Reset Controller on GXBB and co=
-mpatible SoCs
-> > +          - amlogic,meson-axg-reset # Reset Controller on AXG and comp=
-atible SoCs
-> > +          - amlogic,meson-a1-reset # Reset Controller on A1 and compat=
-ible SoCs
-> > +          - amlogic,meson-s4-reset # Reset Controller on S4 and compat=
-ible SoCs
-> > +          - amlogic,c3-reset # Reset Controller on C3 and compatible S=
-oCs
-> > +          - amlogic,t7-reset
-> > +      - items:
-> > +          - enum:
-> > +              - amlogic,a4-reset
-> > +              - amlogic,a5-reset
-> > +          - const: amlogic,meson-s4-reset
-> >  =20
-> >     reg:
-> >       maxItems: 1
-> >=20
->=20
-> Do you plan to take this change ?
+On 5/5/2025 6:08 PM, Nishanth Menon wrote:
+> On 16:57-20250505, Prasanth Babu Mantena wrote:
+>> J721E SoM has MT25QU512AB Serial NOR flash connected to
+>> OSPI1 controller. Enable ospi1 node in device tree.
+>>
+>> Signed-off-by: Prasanth Babu Mantena <p-mantena@ti.com>
+>> ---
+>> Test log : https://gist.github.com/PrasanthBabuMantena/9dda540dce88282117de7e0e945e24ca
+>>   arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> index e3d0ef6913b2..3112b351c052 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> @@ -571,6 +571,7 @@ &usb1 {
+>>   };
+>>   
+>>   &ospi1 {
+>> +	status = "okay";
+> Follow Documentation/devicetree/bindings/dts-coding-style.rst
+
+Also, please use Fixes tag
+
+Fixes: cb27354b38f3b ("arm64: dts: ti: k3-j721e: Add DT nodes for few 
+peripherials"
+
+
 >
-> It has been laying around on the list for a while now, I plan
-> to apply it in my amlogic/drivers tree at the end of the week.
-
-I thought you'd pick it up together with the dts patches [1].
-
-[1] https://lore.kernel.org/all/a5d9b775dd860d8f2bbf174300a2e3161b654035.ca=
-mel@pengutronix.de/
-
-
-regards
-Philipp
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
+>>   
+>> -- 
+>> 2.34.1
+>>
