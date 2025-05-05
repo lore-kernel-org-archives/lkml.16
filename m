@@ -1,129 +1,103 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3BCC2AF1B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7050C14AD0D
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746451013; cv=none; b=SI7XF62bBL0ZE8JBmfwuZPE0nnxADbDtJ6d7gRddU8+OkUx6kX903dCN2VnHqMIMXi1xqCPMGLoev9uZS6hmnFDzRxPNrSIHPaaC0NAJfM6GWoMXF0y3grd2dIRzgNHLSFt6+55+k8irJIXbPWZ2a2xdVhezWMrc+Z+icOxkKH8=
+	t=1746451123; cv=none; b=B/FDPP8sMIA60xB59sloprrT6DdgIyESfaKuLusDMikeLTYfQCHIQKuBjPySqPDL732f7t1kGSMJ9SMatvA0ldoDk3vRhjgJp4xyky0/DGIE8rwEoGoOHwRg3uasXAnJHp/wDOpc/hFSfFrixFOLAdjyy7+B28E2FSjfsRdnWfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746451013; c=relaxed/simple;
-	bh=hEg+WKVwi/0B1dVI0AvaCpEXJg82KJZJAJ11XdXcXT8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z8IxN/vxYmTNBl1Q3owOy84S+I5QVEtUvCQtXgT1GIeh3NaZoItFSGWcui1eQg9E9vd7xCGA1oxj+LNHuxcBpIRheDimIgnMBpsEOOsHpp7mtkg0uJBNkg46l0Wp3CBEzrWVjEFakuhDv2xCeyiz0jjZWm4IiJf/zXsTKR+72/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=N9VWdZKU; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=OUnLBeuI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746451123; c=relaxed/simple;
+	bh=hq6y8M6EMUE95Dd2vZYn2+Mi6Urpharf4PlwIoJvaRM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PZ2WL++d4ae5Mcf8vwm0BmrYuG3cWOp+qdTmb7GWUSd4v3LW4rilfAs58LCqZVHPpTgCZkvpHeOohKtU0D3GJPyx+BDc9sypPwGj9IfZGPqk7uUZvYCgDEBz5ge1P5IQMNmA9JW9Lxb7qqRj4iUKKLIGssyhh1UpQpEHrE05hjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KpG3C05u; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="N9VWdZKU";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="OUnLBeuI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EB5611F791;
-	Mon,  5 May 2025 13:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746451010; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7V9PDBh96s9T++F2TsLmR2Xsuc9lS5rGPMPHdNvE45Y=;
-	b=N9VWdZKUp5waaEwReVQDor1mwa/ZewVgFy0uwCckhPALBAFBpGqpcUJIOQ/iPQwlwwiuVd
-	8Ofe4vZVeFcIvrGhLLmf+y/2R+9qsCSDHpO4VF6GZ8hlkjVNiIlofaftYeXsE7vOJ337qm
-	fS8lxjzkhCHApAbZsr6iaSm1CyBp6lU=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=OUnLBeuI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1746451008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7V9PDBh96s9T++F2TsLmR2Xsuc9lS5rGPMPHdNvE45Y=;
-	b=OUnLBeuIp+m57fO4epo6IeyDojK6pLqBVkyJXMH3w5jBSR+h/gmc41CIp1NwiJH1eyUkch
-	D60wMuc7UsGdd6PbR1dgDH7CEqqrRJxDithb8s5+nkNoakE2Zps/HR/tIAPy+LwMbz2dgw
-	B6TGj55B59+EtMP3GXIz78ZdIVh6f5Q=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A897B1372E;
-	Mon,  5 May 2025 13:16:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eyqpJ0C6GGiRMAAAD6G6ig
-	(envelope-from <jgross@suse.com>); Mon, 05 May 2025 13:16:48 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/alternative: clean up asm/alternative.h
-Date: Mon,  5 May 2025 15:16:46 +0200
-Message-ID: <20250505131646.29288-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KpG3C05u"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d93c060279so16586675ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 06:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746451121; x=1747055921; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDW3WfwhykoOAaFUE5Qi/rfnM/P3zdLaSBKS4ekX9wk=;
+        b=KpG3C05uiRTi2prEQS6OHNrif4jSNpC2Dv1kUXAsJ3REE+52KzY1+pCvphjRn3Ias7
+         pauUCXJwEycdFQ9THBTaCQ8vG/45DZzABkVp9/45RR71aRSzc9d8Xddt9tCrAH073Nal
+         k2uE9gthZdaPBnm3mAjq3YzMa9HBW90gZiO+BgyoEacA8dpHrcMkRx1DZdzLpeq+9sIj
+         //k+Jx9+tmZKjeYRbHoExps0qy0jLM8Z4CHUm0i5CpiH5BoalDnAS9Gk6X0rTck++YXE
+         aNKRpTlETmEVhFuMchBjkd8FVLbmQIfNKn6/IvBgzt8qoiY9/HbpN9Bp+T8MEGC9dOJ/
+         SnvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746451121; x=1747055921;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xDW3WfwhykoOAaFUE5Qi/rfnM/P3zdLaSBKS4ekX9wk=;
+        b=NnvUMajZ5plOPttZMtbCABXWAFrRqC2RCVKe2tGQXW6palHywHTuiHk1pLVUzqQGCf
+         auw5WVXb0xb1mosQ7aa/N/+/bap0YZbQ7dV6ll+mZ6I9kfRJVsEmOwArjzDaMnKb+dQA
+         8pSBPbSi6hyaiBFjfex8u4drGbvBXIPGiqonv8IFBBribdF++QuM6XwqCjiO8coAIiyd
+         ZLG8GhNxf74yvK2XTijTOHqF0DEhEF8p+LIcGyMRebacqspUxXblBnqByNQIiIwzXy2I
+         gwKBu0NqYymSKnxt0mTSY6dHONblrCOx0TAfQYxGp/mKJAPnxuV0AybHxZv19xQVREjL
+         PX7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVdAgUeDHIprqhp+au6jv9a16EE767z/qBdZiO54mdyrukxsNCZ/vJc0+T8c4Y6fk+HfK/oxsQFQo1Ij+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySHmT9SeLhnLA4VtGhkk6K8lR96O7bsA7wcH+lF0MRT2fxsG54
+	TulAfyYsslupTuGEmHtod3MVi27ZmLdyd9J7u/VkjYr4QPCsOcocb1W1iC05Ma8=
+X-Gm-Gg: ASbGnctCon6I5XYXfZY6K23aGM4EQ6QJcQtTynd9NBOJsS4kwlvWtHTZAyXBXI7wEz0
+	HkOhJq5bz6uzl3LdkoS7fB2Em9siwQ1E42R0Yz885z6wTnNksJzt2P3IfvWmzSPWUT4e777AbI2
+	RdhC9Fj5xRhH4EcJ6F4lLMgM3H5sja/+OW/IhdZfLj/CDl0NITiM7XJvQqOAWpWlTWRuoElwm7R
+	ycU+55CXlmMhzQIwVGK6c1eZActMMyNiz4VGHrY4Acqto/fcaIWoKWnzEGpWI/02DlgqknqExC8
+	CrmL0XjHvwGe1tkZsD2MI15ClIDafwAa
+X-Google-Smtp-Source: AGHT+IGHA8W2N3EgWWsRLrOSopjkbfgMfdY6WCRlo8VJcrzPhskPG8sYepIh09oj8Q04oA9FNg+Dgw==
+X-Received: by 2002:a05:6e02:168a:b0:3d8:1d7c:e190 with SMTP id e9e14a558f8ab-3da5b271b75mr69872415ab.7.1746451121540;
+        Mon, 05 May 2025 06:18:41 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a945d03sm1742683173.71.2025.05.05.06.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 06:18:40 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: hch@infradead.org, Lizhi Xu <lizhi.xu@windriver.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ ming.lei@redhat.com, syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com, 
+ syzkaller-bugs@googlegroups.com
+In-Reply-To: <20250428143626.3318717-1-lizhi.xu@windriver.com>
+References: <aA-QB7Iu6u9PdgHg@infradead.org>
+ <20250428143626.3318717-1-lizhi.xu@windriver.com>
+Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
+Message-Id: <174645112067.1190812.13818039566132520088.b4-ty@kernel.dk>
+Date: Mon, 05 May 2025 07:18:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EB5611F791
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-Remove some unused macros in arch/x86/include/asm/alternative.h which
-could potentially result in weird build failures.
 
-Fixes: 1a6ade825079 ("x86/alternative: Convert the asm ALTERNATIVE_3() macro")
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/x86/include/asm/alternative.h | 5 -----
- 1 file changed, 5 deletions(-)
+On Mon, 28 Apr 2025 22:36:26 +0800, Lizhi Xu wrote:
+> Some file systems do not support read_iter/write_iter, such as selinuxfs
+> in this issue.
+> So before calling them, first confirm that the interface is supported and
+> then call it.
+> 
+> It is releavant in that vfs_iter_read/write have the check, and removal
+> of their used caused szybot to be able to hit this issue.
+> 
+> [...]
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 4a37a8bd87fd..8359ed0f2090 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -335,11 +335,6 @@ void nop_func(void);
- 	__ALTERNATIVE(\oldinstr, \newinstr, \ft_flags)
- .endm
- 
--#define old_len			141b-140b
--#define new_len1		144f-143f
--#define new_len2		145f-144f
--#define new_len3		146f-145f
--
- /*
-  * Same as ALTERNATIVE macro above but for two alternatives. If CPU
-  * has @feature1, it replaces @oldinstr with @newinstr1. If CPU has
+Applied, thanks!
+
+[1/1] loop: Add sanity check for read/write_iter
+      commit: f5c84eff634ba003326aa034c414e2a9dcb7c6a7
+
+Best regards,
 -- 
-2.43.0
+Jens Axboe
+
+
 
