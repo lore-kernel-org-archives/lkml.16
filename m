@@ -1,170 +1,140 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AEC2701A0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782AF2701B2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746472929; cv=none; b=k2RwGLPciOkXwa1/C7GZ3mJL9C6idXqbG4iZCibeQjOiLFxZhHppKeYI73F4V9rkuOVyin5wMxzaKoxwqSiQa8b7ifIdmsG8TvoEqThAKEajzOdVCmz2V4QeUoB6HAbVYwN8FMGJ66I8ndYGFMgDe93AzndkkO3o0c8JkHxA3R0=
+	t=1746472945; cv=none; b=t5zbX/nTEu2vddDqa4HmpZzPzLIEDzoaQ/EBsNW5oSV+32YEpFmj75CGkToqRZt13YpVX19EWfQ9aksv+X0+/GfF+DWf7xpye7m9q4Zlgip9zUFw1QfC0VT7U6eAuwNqH9/FG7pTj5smMnM2ADIfBon2zcc9pqDOTkn8UpT6sO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746472929; c=relaxed/simple;
-	bh=gYD/Kzs6oTsv+0ZH4aOAnzhos7PNt9I66XbHWq8bNHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ex4gtU5Mm3Tbl1O/4ZHuzpu+AFngwoqsomJ5S1TediYec21+csRxkWr2V0NK3mkNuoVd4LVoZOlMpDOA6x1Be8Jo+aNHzkltIgyWS52YMGBkB9tpTTH4TjjB27Xz48NzoU6bEfUM2D4uFq4/3lNJnrU4PwU4qAJf2pOfNDxG7IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PKjissC1; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746472945; c=relaxed/simple;
+	bh=b8jVCzrBHkCzVojeYYOfvuhVvRyjA4MpaGtmQH3nfjg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T/nXYlX3GhnTX4VkhYvUtqc5F2Guzmkp0QL9ZkCeuWOygI2yrm20sWxczGK0SMi4Dlw2/eZOCdqWgw4Y7ppTftpWLh0sPN1/lO9IJzIIk1SwuXwc0MtseCzppZT3/zoAgP6ezx8nS9y2Ob9ogchUo8gXJYxA1fQ9wd+wrFPCMn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=R1loUKwS; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PKjissC1"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2263428c8baso25195ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:22:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="R1loUKwS"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7302a769534so3118053a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746472926; x=1747077726; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=13EmT6a1TZnyupdlDEzlBX0OfGBAsXa0Pw9qfUJ6O8k=;
-        b=PKjissC1ASZ4Z423+/lTq3pVNF8JcFpAnJlQ0ZDptuCniIEzDk8TArLduucGcz+GuK
-         /Zb/tgBXkoM1M/ObO6sGId7VJfDmofAV5qmM1PAzlXw/DdTDAiVOVOS8+XwZHq9yYyTa
-         rTeJP8p9m2jVaTtgf/VdM4ynI/JoqDQS8TgTwMk5vwIaKparng0bPH6OL8h+0wUqSICP
-         XnIXslcW9uwQ/9sprUMD/2Ws4elqLUMmqtP7+SLN55l1wUaLn5TNgBbmT42bmapyV7nj
-         R0x0WFLzLPs8NvjwkGC8e6Adg4/kOnAoo/paiz4QxZQ+gBmxhUcn5p0HcOGDfHe1HUV2
-         VSfA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746472942; x=1747077742; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IC9I1ouZQXcrpOJepWtu/8yi6lKafLld926arzzYaWM=;
+        b=R1loUKwS8ZF7b8i0YbCUUYz2G7+NTj0pR7ILjLmW9iEGDhtYt/Puqio6poLdYqzNkd
+         rkj4mkYcfIk/5q332J6FVeIFgXH2F81E0g5Kn2xlXjAfqjDsOdIOTUt+mc+qH5x/tpJA
+         QJmfDknLE7pu4Jfblkoyvn27BHxy9VHPzVZEXhF9JAeViv/RiGYSjNPhkhLkRTIM5PAF
+         zj9XstC0AKZd7PthL7oxGX/+LeSL8gsZOfV2lmZPFWMhmhOwAF/A0QrUJ6lq3ySZ99BL
+         rH5MYlXWJjWLgg4ETOTOdsoKMIOaYnVcrburqA7RA2I21uzONvR806Lhd+9iAIVttuE1
+         9frg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746472926; x=1747077726;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=13EmT6a1TZnyupdlDEzlBX0OfGBAsXa0Pw9qfUJ6O8k=;
-        b=MNk+2JXwrMvqax85bhtfGJHmm/THFdjjFOVHb2bq/PsF2wptUKXL2k7qM++wh1jgRf
-         rqcIpaPD/6QqrLPk2zaMTpJ7UNQB3oR4a2nV6PmP1VeatcOaNtzyJyx0C5FqIA3NHI+p
-         Mn6M3+/7nkhb2DIuPphf/Cy/edM56CeehiVInpw8W/d/ibyCXRj79u+dpRZJTgiRgDBD
-         /NFPaffkGE6OxtAeUuoqcZxwYY93sCzZjsUANXaL2ceWHZ3aNZ72P/RoYQk1rgdb6Ayk
-         SyAgacuRk4lJAeCN2ROwKmptoF+jNwPdhihSyHoSY5XSNweqcF9Dsgxscq+aTygB9k/t
-         Oy4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUeJtUMXGElCt3frFQqz+WTyqpMPYjhFXNmaOCH3MDt4t+3zl8fei4cPxc6puqcu1hxLWlIw3Zl3Lawp8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIb4zpVhSjkWS4Ay4izTLMxejByx7YOYHfPnUujLQWZq/H5rxY
-	fkx47MTJnSVcbsVMT0K5SCJLSXdZ6jjoUNzd2jGCSwx5rhUAknioi9eDkSQwk0pWtgYkPZXuZer
-	2YTzrHBBrfE38selXDD3Dai3mxgL34Vbt6Hyp
-X-Gm-Gg: ASbGncu5MfONECLxiiaVc3IcHCbDImH1Xm3yfQzoL+uz2dWsvuapSH36RdbH6OtXBR0
-	zvS4c8c96x+kYwOMrD5oeEBnYnDPRhvkcTWVB0024pz+D90R3mtsoNeRhkb2Fx3UcNXU7gzRGG/
-	29qcMrbeXDCZzdRQBBgnWaifrfEO9qVRI66arYi2cqyGeXT84p9iLY
-X-Google-Smtp-Source: AGHT+IH+1FHQJvKJ+5gk0ObZr0RxyrgBMmy3GsQ5pvSVSaH+9ABf1o8pwmLf6DaYpLoD5CckC/+0XsPmpQDgIq/k6Hw=
-X-Received: by 2002:a17:903:46cd:b0:223:37ec:63be with SMTP id
- d9443c01a7336-22e34dee32bmr522795ad.4.1746472926072; Mon, 05 May 2025
- 12:22:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746472942; x=1747077742;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IC9I1ouZQXcrpOJepWtu/8yi6lKafLld926arzzYaWM=;
+        b=JWzSntMHTh9posuL8n6ym3rgPzUzU1jzB7U6s7QJleJ4FlZW0pllF9PveMpHjG4emO
+         HTONkewxjBiBCiIqj5Vs0pP/70QYNsVaiVkRph4lmL0BjcVLK3aZvvQtgTkURsHZ3BUx
+         INTXhvqzl2Hil3dCh5YiVDN9DqCbs83faG1lc+5gIV7UrOaJF6k7fFBIYQyTalThcWxh
+         pfqC/nVO1RWAWgq/XQc3O2SC1Z5Mb7YUdyj/JvQGHhSkkCyj6+DtKXrmncjujaprPI8X
+         b79Hd7LwNO++ITIXb+LUcY4uXUABoEzCnyJu6awLU3x4Z/TTkUG41sAOZhxXVUn7Rt9w
+         5XNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpVhwUnzPbV1+lPMPVllrTvAOG++YCQZFZ4W44gGQjcC+CqqWd1bh0Tzmvi601XKFVB3rWsSthJ5tZl2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCOke7lhjCTduHoe+aOXI59qyaumHhb67q1TTU671hMOZ+MRMz
+	IIpJNwCwPsoUJzAuNqto96OPsYUUyjW1TXcZkgFdpMKv1iQqK5fcJN363cG6Te0=
+X-Gm-Gg: ASbGnctzRpn8a/DyuWK9OQ90AMyuLCTGBShTJidvYJFA4DX1WJm3DLQ7uHmNQu7GnXR
+	MKzVRxqOHsxcnrwR+JEaRotJ2U+rWqbg31sUgIXlUQSnoLpIy07SiVSCH4hZ4krUm1Yc/gq+6ts
+	5LjH4iSmE840wYirVnzFxqeSgmChs4sGZXpebgA0kBdDQEvWgXrAy5M3FMWD1ey/XmdUwecDFlX
+	u4ZluaXlioY3XLkY2D+89o8CnMNxufs+5jtQNdR8HNnSTVQD4/mTJSmw8aax/szFbRX/gG94UOg
+	P7j6Fs5Hta6mRS/Hwhb8smUW8744UXj8Iym90Li0WYcbaL4LqjyNniMZ
+X-Google-Smtp-Source: AGHT+IEDACcIG4kMolmuo7eJItLJ080yCTif6KzqfNDd5tGS86L8dtRAmCZ67nxms6AE/Y34wftSUg==
+X-Received: by 2002:a05:6830:6e9a:b0:72b:7a29:d680 with SMTP id 46e09a7af769-73206dc1988mr119032a34.10.1746472942527;
+        Mon, 05 May 2025 12:22:22 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-731d34daaedsm1683415a34.51.2025.05.05.12.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 12:22:22 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH 00/14] iio: remove bits_per_word = 8 assignments
+Date: Mon, 05 May 2025 14:20:27 -0500
+Message-Id: <20250505-iio-remove-bits_per_word-8-v1-0-341f85fcfe11@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429032645.363766-1-almasrymina@google.com>
- <20250429032645.363766-5-almasrymina@google.com> <53433089-7beb-46cf-ae8a-6c58cd909e31@redhat.com>
- <CAHS8izMefrkHf9WXerrOY4Wo8U2KmxSVkgY+4JB+6iDuoCZ3WQ@mail.gmail.com> <8cdf120d-a0f0-4dcc-a8f9-cea967ce6e7b@redhat.com>
-In-Reply-To: <8cdf120d-a0f0-4dcc-a8f9-cea967ce6e7b@redhat.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 5 May 2025 12:21:51 -0700
-X-Gm-Features: ATxdqUF0TufrZ5sNnCdYBkqjbvffoKrpOyGeuWbNVRLX_hL4oSnD4IZmYehVOSg
-Message-ID: <CAHS8izOVV-NviR-Ty=hDdg29OCpJCQwW_K7B+mg1X=r3N7Lr7Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v13 4/9] net: devmem: Implement TX path
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Victor Nogueira <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHsPGWgC/x3MQQ5AMBBA0avIrE3SiiKuIiKqg1lQmQqSxt018
+ ldv8yMEEqYAbRZB6OLAfk/QeQbTOu4LIbtkKFRhVAqZPQpt/iK0fIbhIBluLw4bdLZRlSmtnnQ
+ NaXAIzfz8865/3w8RHjO4bAAAAA==
+X-Change-ID: 20250505-iio-remove-bits_per_word-8-db80654b1c17
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Esteban Blanc <eblanc@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, 
+ kernel@pengutronix.de, Song Qiang <songqiang1304521@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2040; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=b8jVCzrBHkCzVojeYYOfvuhVvRyjA4MpaGtmQH3nfjg=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoGQ+FYeJc4gmHpAO6+kBoSZ+9tobYym9XF39X1
+ tV8sK4WJVOJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBkPhQAKCRDCzCAB/wGP
+ wEEBB/9f6KGByVzSppJ7Fe5DC9SAuEtOUKAJfFRVknBa/bWywXbE+K1MHCzQrB7Uo43vX5jupno
+ MN8P58q3Iz66ZsgSjzdDNipQd0C39JtJvjdGyHaJhKUM/FeQL6ry5+wl1LU0cBHGoe/xRKW7xpA
+ 7eaE6KQJUWEtZOffOffaDdMnsiKZcayn0ztrMxzbTe3V7iTcQdBw5Fhutekv9+QirgmpOMAP/r2
+ eZcmRTXTHFqHMxgH8W3W3GS2C/3qHOvIYFqihIDcuxsdCZKhgn/o32bxf2O1jik+BnC0B1xsefU
+ oUyQvXNpN4TIIjD+z+CjEIhvhq3qLp6UPOIGCtUl7PQHFziZ
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Mon, May 5, 2025 at 12:42=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> On 5/2/25 9:20 PM, Mina Almasry wrote:
-> > On Fri, May 2, 2025 at 4:47=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> =
-wrote:
-> >>> @@ -1078,7 +1092,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct =
-msghdr *msg, size_t size)
-> >>>                               zc =3D MSG_ZEROCOPY;
-> >>>               } else if (sock_flag(sk, SOCK_ZEROCOPY)) {
-> >>>                       skb =3D tcp_write_queue_tail(sk);
-> >>> -                     uarg =3D msg_zerocopy_realloc(sk, size, skb_zco=
-py(skb));
-> >>> +                     uarg =3D msg_zerocopy_realloc(sk, size, skb_zco=
-py(skb),
-> >>> +                                                 sockc_valid && !!so=
-ckc.dmabuf_id);
-> >>
-> >> If sock_cmsg_send() failed and the user did not provide a dmabuf_id,
-> >> memory accounting will be incorrect.
-> >
-> > Forgive me but I don't see it. sockc_valid will be false, so
-> > msg_zerocopy_realloc will do the normal MSG_ZEROCOPY accounting. Then
-> > below whech check sockc_valid in place of where we did the
-> > sock_cmsg_send before, and goto err. I assume the goto err should undo
-> > the memory accounting in the new code as in the old code. Can you
-> > elaborate on the bug you see?
->
-> Uhm, I think I misread the condition used for msg_zerocopy_realloc()
-> last argument.
->
-> Re-reading it now it the problem I see is that if sock_cmsg_send() fails
-> after correctly setting 'dmabuf_id', msg_zerocopy_realloc() will account
-> the dmabuf memory, which looks unexpected.
->
+While grepping the IIO subsystem for drivers that set bits_per_word to
+unusual values to check for potential bugs, I found it to be a bit of a
+nuisance that 2/3s of the matches were setting it to the default value
+of 8. So here is a series removing the unnecessary assignments.
 
-This is my intention with the code, let me know if you think it's
-actually wrong. In this scenario, sockc_valid will be false, so
-msg_zerocopy_realloc() will account the dma-buf memory, then later if
-!sockc_valid, we goto out_err which will net_zcopy_put and finally
-unaccount the dmabuf memory. It is a bit weird indeed to account and
-unaccount the dmabuf memory in this edge case but AFAICT it's
-harmless? It also matches the scenario where the user uses
-MSG_ZEROCOPY with an invalid cmsg. In that case the zerocopy memory
-will be accounted in msg_zerocopy_realloc and unaccounted in
-net_zcopy_put in the error path as well.
+---
+David Lechner (14):
+      iio: adc: ad4030: remove bits_per_word = 8
+      iio: adc: ti-tsc2046: remove bits_per_word = 8
+      iio: chemical: bme680_spi: remove bits_per_word = 8
+      iio: dac: ad5761: remove bits_per_word = 8
+      iio: dac: ad5766: remove bits_per_word = 8
+      iio: dac: ad5791: remove bits_per_word = 8
+      iio: dac: ltc2688: remove bits_per_word = 8
+      iio: gyro: adxrs450: remove bits_per_word = 8
+      iio: imu: adis: remove bits_per_word = 8
+      iio: magnetometer: hmc5843_spi: remove bits_per_word = 8
+      iio: magnetometer: rm3100-spi: remove bits_per_word = 8
+      iio: pressure: bmp280-spi: remove bits_per_word = 8
+      iio: pressure: ms5611_spi: remove bits_per_word = 8
+      iio: pressure: zpa2326_spi: remove bits_per_word = 8
 
-Improving this edge case is possible but maybe complicates the code.
-Either the dmabuf id needs to be split up into its own parsing like
-you suggested earlier, or we need to record that the user is
-attempting to set a dmabuf id, but since the whole sock_cmsg_send
-failed we may not know what the user intended to do at all.
+ drivers/iio/adc/ad4030.c               | 4 ----
+ drivers/iio/adc/ti-tsc2046.c           | 1 -
+ drivers/iio/chemical/bme680_spi.c      | 8 --------
+ drivers/iio/dac/ad5761.c               | 2 --
+ drivers/iio/dac/ad5766.c               | 2 --
+ drivers/iio/dac/ad5791.c               | 2 --
+ drivers/iio/dac/ltc2688.c              | 2 --
+ drivers/iio/gyro/adxrs450.c            | 5 -----
+ drivers/iio/imu/adis.c                 | 9 ---------
+ drivers/iio/imu/adis_buffer.c          | 3 ---
+ drivers/iio/magnetometer/hmc5843_spi.c | 1 -
+ drivers/iio/magnetometer/rm3100-spi.c  | 1 -
+ drivers/iio/pressure/bmp280-spi.c      | 8 --------
+ drivers/iio/pressure/ms5611_spi.c      | 1 -
+ drivers/iio/pressure/zpa2326_spi.c     | 1 -
+ 15 files changed, 50 deletions(-)
+---
+base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
+change-id: 20250505-iio-remove-bits_per_word-8-db80654b1c17
 
-> Somewhat related, I don't see any change to the msg_zerocopy/ubuf
-> complete/cleanup path(s): what will happen to the devmem ubuf memory at
-> uarg->complete() time? It looks like it will go unexpectedly through
-> mm_unaccount_pinned_pages()???
->
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
 
-Right, this works without a change in the cleanup path needed. When
-the dmabuf id is provided, we skip calling mm_account_pinned_pages in
-msg_zerocopy_alloc and msg_zerocopy_realloc, so we skip setting
-uarg->mmp->user.
-
-mm_unaccount_pinned_pages does nothing if uarg->mmp->user is not set:
-
-void mm_unaccount_pinned_pages(struct mmpin *mmp)
-{
-  if (mmp->user) {
-     atomic_long_sub(mmp->num_pg, &mmp->user->locked_vm);
-     free_uid(mmp->user);
-   }
-}
-
-Although maybe a comment would explain why it works to improve clarity.
-
-
---=20
-Thanks,
-Mina
