@@ -1,375 +1,220 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazon11020101.outbound.protection.outlook.com [52.101.227.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DFD1BD9CE;
-	Mon,  5 May 2025 06:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6F9208CA;
+	Mon,  5 May 2025 06:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.227.101
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746426239; cv=fail; b=oYNC8lrJLT39nj/mkMBThUTPvl7h59le1VZFBthd+VBlCxs+qhbhWRq4tBfIhtdKB/y7JkG9KjC+pbwe11M6v5NCexxDU42fSg8nnjQDSztLUl6W9x1KIIQwEuTuDj5DKyYmg5gVZXG5m60uOB+b+DuhJnPf0PLoyBMraEYlNMM=
+	t=1746426637; cv=fail; b=bSRgQ5G03afV9+PbgaY5O5O9DGuHjzyTX4LNX8Y2jhFx8DySk7COxmWsipj0h7ZBRHxVVV66YWEob0RzsHcaQvCznf9DPBTEUm4lMghzbjgQWJzYAoopLscNfRqdJeouQDiQ6I1+g15JMKLcD+woyEVcx/gXjZPobqKT4xW/0PY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746426239; c=relaxed/simple;
-	bh=luiUgxEdz4DnaiGrxkzrpEcTsmfV2mVul7yaQsi5GSw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=p/dfulY7VuMri+XSMq8i6WSNYfKhh2i3Nh4SHk1TIWPz2A0giX4Z3gpuHVWB4q/ohhQ7W5m1+pdH7lHdbi/wRPzUuFPNa5qS01oU/iMOmtwC4lFpPxoKkMTRyRTgPQTMj2z4mOV/NNFSRuSWh9X43XqQbl57ucis14BTA2CHzaU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZtmZ/6jw; arc=fail smtp.client-ip=40.107.243.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZtmZ/6jw"
+	s=arc-20240116; t=1746426637; c=relaxed/simple;
+	bh=XU3l5fcjrGu5ZeF/pRFuNjOTaw9mSCwDGVq0onDuki8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UIEtBOBkk3X2BZshVpxOIpyhEnzfJVFQzKz0IurGNzuUvozT1TKo8RRVBBLJrl7xu9ywWByJ8jTOFdNo/FABYDlhbVTxphoDhLLulg1S89ip+Xyfeavpqdq4pm2WeRXNL7vO2GVrB4r6EDW81/hhifgE7EymTdk7E/PnWSWr1Xs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.227.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MrMPSouRUdphy58OwLNUTTevGCx4tyTYCc6L34dQRlGh/w85CeAFvwVFtAl7WARqC446gahFV68cH3dfyewKvWLSMSCxfgG8aRkbLFhwd5/fA0t+hPhHNwjoGx5DvGZTpos7B1b087afv0mSwdLx2ZyaF888KUDxsE3BiNPw076ASujguZoH1BJZPiJFhq3s0FXhQR5SDmDEbtXRwTkVI4SywahYYc7pcDQVT2oCPrOEhC/igpRozNIVYnimdbWv6EeaDEyZIKasZo5ZcK67JMvbRiAQchl72vhC1/9u2S0ieQplRPaQyCl09GWsrWoBgKxvCfsBSiFyVQsiTXzwRw==
+ b=V/AmEz5e2zBlNmiDd4TOoiu/8Y72QGymPL0Tgn009Yrao21Uh3i+unrbYh2mFJSl+33f3ua1vFcPftCw+2wc2QSuRUcO2bVqfebiMXJ82GR/M8ZTQ+O2HPNebTRz3bTWOdlXGi+cqawkcjOfgCm8k8XjKPoy5HRJtSXCT8GLkelnE1OizFjInEBBdDCa470A9oBNngGim3cMrioF+M/7CgB9GwL8LsdOuXuHBl/m4p0M26Y/CswicWrxJtk5y01sM292auYgH4KCD6iGH6VbcjrY766+qYt2Ly7/jaYHcfKHQCT5Phuo98WSKuFzX9RnP2MCpIYy63ujkZgnXAn0TA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pRMPnpZo8lTIk7SUL+rWcJGyDoYhwsGqOPAwqVsZ+uU=;
- b=r44qwc2g71VTSBQwzYQ05fKKC7XDd9rz5AexIGhr9tYmPG638YKbA6uTaWMsPSdI15s8J9L3IcjHrZi4AszjvA84XDi0nQNsPH3q4vmI2OfJSE+p/v80hZRF8rRcT0828jsVPJdzTQ6vJu6wL5xNMAptGfkqGq8fqqiwiUx4Gg3gZaSGOFp+q0iNrLRUnPQHQstIe96Irwa7izZO8wngu8ixzmxsuwsSTP7VQTGbIKEoK1pcQXame9iuK2tEzJjLZhWJUtBkrjUzts8xdLDSJZ5s8SGJqZpwpQSNIMt5H/2bJPkghllv1uW+jlN/G9HPjCT7vkAB5lfRQkoYZcAqrw==
+ bh=XU3l5fcjrGu5ZeF/pRFuNjOTaw9mSCwDGVq0onDuki8=;
+ b=afRcD5VEFtCa94+KsFfT2KoRZEMkH/ooPDzBsMya3E8LG9lmsaGzyA3JB1aWrdDzHNxnAIX/NNc8o1eufi/WWJCjRtRAFo9CnYRLgCalUN3eKR9+kF4ihWeZ/bKQR/nqrNcnzGyh6zeY2RskyZszbti2C4s8UIrgk+62gZ8dKV/0PpgcKav4P674geKNv1F1ahntpiAvUX/2mBFcLPvjW7EyezOxFOYYJSCiqOW5pAtCF/GWf3DgwTESKib4xtPs6GSKTaGju58rpK3O/xI+mnre6uhMcBeLuamL0umSSQ4uXUPQn+a7GhewSlS9wWBsIqw0vJuZJ1Gj08OoQaOfuw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pRMPnpZo8lTIk7SUL+rWcJGyDoYhwsGqOPAwqVsZ+uU=;
- b=ZtmZ/6jw7dGsH7Kw27qGCSMsEz+4mf/W8yJxXAjCeh9KP3JiCG1x6bbjfaVnwJRpMs3Uq9xGPid3Dw/XAfl/a1oFqNlwvqmeTQFz2Txhaf05/kQCtb8WBhm39vDRAP1Nsk7MVVGs9qYmWHTp+hnnuaVKs8TXjlhubJto0KDPPzL2tzPRRz8W8aQvIEAP935Yt5wPaXJ+n0HiZURhWersLT0wG1XmIUabbFGPmmMeKxRe/TEbpaOgHpTfh2RAgLZIrobkpfg+pfoi9naImIpjCWIUJ/g73ylexPt41ebxodqs/4/GQvY96oaXVB4EEYWt44vQu3UpQBp+ekceVI8oPg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
- MW4PR12MB6779.namprd12.prod.outlook.com (2603:10b6:303:20f::13) with
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by MA0P287MB0282.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b2::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
- 2025 06:23:52 +0000
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2%4]) with mapi id 15.20.8699.026; Mon, 5 May 2025
- 06:23:51 +0000
-Message-ID: <466e9d9a-d0f0-443b-93d5-58d0ba968480@nvidia.com>
-Date: Sun, 4 May 2025 23:23:50 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] ACPI/MRRM: Add /sys files to describe memory
- ranges
-To: Tony Luck <tony.luck@intel.com>, rafael@kernel.org
-Cc: lenb@kernel.org, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- patches@lists.linux.dev
-References: <20250429202412.380637-1-tony.luck@intel.com>
- <20250429202412.380637-4-tony.luck@intel.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Mon, 5 May
+ 2025 06:30:31 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f%2]) with mapi id 15.20.8699.024; Mon, 5 May 2025
+ 06:30:30 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+	<festevam@gmail.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing
+ SD card timeout
+Thread-Topic: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing
+ SD card timeout
+Thread-Index: AQHbvYLMU4ICpHKdFEyZG7H2oknCuLPDjH37
+Date: Mon, 5 May 2025 06:30:30 +0000
+Message-ID:
+ <PN3P287MB18294987F3FF8061245E62EC8B8E2@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
+In-Reply-To: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
+Accept-Language: en-US
 Content-Language: en-US
-From: Fenghua Yu <fenghuay@nvidia.com>
-In-Reply-To: <20250429202412.380637-4-tony.luck@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0202.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::27) To DM6PR12MB2667.namprd12.prod.outlook.com
- (2603:10b6:5:42::28)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1829:EE_|MA0P287MB0282:EE_
+x-ms-office365-filtering-correlation-id: 2e22b389-e309-42d0-18d8-08dd8b9e5554
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?Vr6CtNJqEX0ULZfqocqcrf5zSI7AlYw7HzQK3ffWcyLl8K0oKfw3aAJSyn?=
+ =?iso-8859-1?Q?qIXlxbO0Zd78qQ1s2X1LVKm/k3owcY4AEXrmqUTBvvVKdWk5tz5Jt7bi7p?=
+ =?iso-8859-1?Q?L8TiZPhuEQ5fHNYgZbFparWtRp8lTv9IQEBTuqUZzHwTvV5gzx8s3NdC4E?=
+ =?iso-8859-1?Q?hZik1EthZvW7OoAlS35y9tFcsUMFeP6KkCQlKEn9hxZ2LI+YYIC8KkiuxY?=
+ =?iso-8859-1?Q?iTHcSz+Xg4DZJucdw7m8Bu1M3oSNPsk7Gh2upWex07ZtMzJc+Vxs0kxNCS?=
+ =?iso-8859-1?Q?Jo3rc35dE00f7pCTixoNMK/0uJBlqG3vBEe84K5FV1ewuA1T4Q/RTy5wnI?=
+ =?iso-8859-1?Q?GNKoIVgWNAn6spQDP7pvPaM491diNIn8Wc/7Y0Ejx8dx0hbOJgYOOSBEKE?=
+ =?iso-8859-1?Q?4Yk8cH7xFM2FlzlBdv3bvU9AcZEb2bnkaGiTm7qvf0zQCd856bRc0Kb6DL?=
+ =?iso-8859-1?Q?7Y09BxqGhqZZizd8Jm1zMnMtoamwTaOdym9dFGoitu1+Np7aMSl2n30TAR?=
+ =?iso-8859-1?Q?cRnSDy1hUa0iubaXbZhhxhp4ehFhCWxB7nR8IqyjyNcg0+7VDugkRmqEsC?=
+ =?iso-8859-1?Q?0HpLtxPfoYwNiP12lC84h/+lDPETjmBKcR/7t5Ln2ko9+JvYI/FSYosih0?=
+ =?iso-8859-1?Q?acex346SevTFYs9wZqC2dA8VT4nB0V/QA9zKyS3MviDW6R/S7znopfni4E?=
+ =?iso-8859-1?Q?S1pFHjsnbT7G3tG2ypPrGcHkziGxP9QJjWdoNrj52TXZpS7Kr5BKncCQrx?=
+ =?iso-8859-1?Q?6OnjZF1uzASnmuFM5f10HnJQtwQBtZfLi1KGjsbYNwS7NHQlJAyxSYqwKN?=
+ =?iso-8859-1?Q?r2DH6QteXuh02YJ6YvJek848X1Gp6KpU3FH605H+N2EM6i51bsP+e3TZCs?=
+ =?iso-8859-1?Q?abt0KPpnnU3Ty15x2Qe45PxPhJmVxEUbtgORx6bq/KCqpWgxUlSR6Xpbx+?=
+ =?iso-8859-1?Q?4KNaTMPh7Wb2Aqaus9ixF7USarW5P4A8bskeEXU/ouNokbehUlGJH/A+B0?=
+ =?iso-8859-1?Q?jD9moa8vZekyOcfBBeJIvvdcpSIBCeB5GCOCO5Hbl0dq+1YX7dsw18i3Qb?=
+ =?iso-8859-1?Q?X/KmqlMTL4voyRxs5Ikl7Lz+VaI9uezjKhvjlvSLeLQ0ev/+o0x0F185ew?=
+ =?iso-8859-1?Q?A8DHg1lgYNB7mpHnm8yKdw2/RHMJd+5Md7xDOg6mFi8C2CrjQKoa2StBis?=
+ =?iso-8859-1?Q?kP6N6dfOsgADJrtbg+PUeD7Y4svOYvmbaBj2NIXZMR13mhKbGhUzzAjN3q?=
+ =?iso-8859-1?Q?A4Ngmf0Qv16Mk8pilCVM389vA/obkRDAjkXP7Z+Ii8f5rnGaNE9fveXCc1?=
+ =?iso-8859-1?Q?oPTWsD5DbhNhxa3phJw5H3QYGzqZEhioo10BEKsEG/8g3yMFKE4fGynE4w?=
+ =?iso-8859-1?Q?H1/7zHAJ6zytdRnKycVH1nHeeH7lTOJ0U1+Wfr89jyat1hhl52C19TzdX4?=
+ =?iso-8859-1?Q?51SbDiK0oZND9Sck7bNsCAo5pHHkHUpz2NOx0ZWtQGzrtCyd/dv3z2IGml?=
+ =?iso-8859-1?Q?7oswo2hg+Pv8lYNDRowxkbgX+7Y3YZJz/fB8CGSP/kYw=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?ONAXnKGaFADNDGsurnaYQ4PKd9avswa63egA7tSicNoV3/Ytt68gCjD78h?=
+ =?iso-8859-1?Q?FuB1xo8oHOR5NJNq4QjoQBh6vn4lkmts6rGqXkz4M74H9O9jWAOvP+snvc?=
+ =?iso-8859-1?Q?ahQGa2O+0fszaZkUeYnuAlY08PLXZNILOeUzPbLuEMOLLfIVtJpYfp6wKM?=
+ =?iso-8859-1?Q?9qLRIAWrK7Yv49loe4YGpJptjSsRR7BR1GXIdF+xhub6UpI7TMiyyt1VCl?=
+ =?iso-8859-1?Q?sLLuS4P4YL4w7SOL6YKDckLVYC/fXXB3VPkiMXBkl3YKr/tOiQXaj8N9Hv?=
+ =?iso-8859-1?Q?LF2T5XelCbCzxZjhtdLgqFSPxbOWBAeLBTcjDFMFXJ7TjxhUAKeuQzpQfm?=
+ =?iso-8859-1?Q?JXIStm1I2rPxUfog29IOljKZhAzmyykiztjVrw6Z1OI3ld6T/ylm09HJgS?=
+ =?iso-8859-1?Q?OYUkWphIZ6+r91JDAISFCr1oHZF6fLElpN5xJHwgBNMNhffUBaJDq3i2r5?=
+ =?iso-8859-1?Q?ub+P+XtQsZb1zIMlgyoCkkKU/rkLX+g7dG1pW55/lZmy2X0tFH4v1JnwhA?=
+ =?iso-8859-1?Q?zN7FrUZk9q6cdzjJgBRGlodeLViNndn8exGq2Ht+YbjesBZnUB1CY7A50H?=
+ =?iso-8859-1?Q?zgihXJ0okRZdo+u7mk90XXMX9TbToeWu0enI45J3Cqa+ZGgDjyzAlxyFbO?=
+ =?iso-8859-1?Q?31vUG8hqXtJCDxsM3Wc4fabbj2Ot5X3ddZFWDszZ9azVAoonLxyCIO7RCH?=
+ =?iso-8859-1?Q?v/eumaRs0196MeP1ka/JFPkJARP5ETwuyN8AABSXRVYvanLI4Hj805lCxH?=
+ =?iso-8859-1?Q?NxJ6QVx1vVZCzxfjHpxAd4PVth6/GBnyuS02LEvITPTL3nqwWxgXnxauOu?=
+ =?iso-8859-1?Q?J80bF/K5pPhBHWIT67kXzLZTIQRp/svY/kYVxptCxw0f1KEaXQtwJV/ICm?=
+ =?iso-8859-1?Q?OS7RM4DbF6uyNBewvlp5/dnRiWdRWWv0t5J+k6Swtui+0dPcJ4l80bIGDA?=
+ =?iso-8859-1?Q?GHSa925+0aqqNkYrgJlpw2n9baYggQtF4TOnpoMDiw4gzzcxAMV6eOrl7g?=
+ =?iso-8859-1?Q?6EL4G7osCS3rOfdvNvbtbg9TCAn60oogUqFGX6LGYg8VgTuA9nCS7NznE1?=
+ =?iso-8859-1?Q?7w7vlAcM9S6nSAiY1dAO5bZHkmbyV6xoMTkpMVSYj3WrIeP9aJpM+ilp8l?=
+ =?iso-8859-1?Q?IW2F/Nm+9jNJJDjDnSqbR0FQdP9UV+cegWjfOZUXHZEuU1ysPY97hLBiAS?=
+ =?iso-8859-1?Q?VIfNdt9Kuimf+YS1Ll47+jrvnZz8mgCNu5famfl5PFuAGDXr/XUShv2JgG?=
+ =?iso-8859-1?Q?wgQixkmusUypR8wJJFkzCR8IgMILmv5koAXKggaaoojS5NIpKeiO23gSdz?=
+ =?iso-8859-1?Q?o37mzZ4ofgRIkQ+xSW3YUQdNI/Q67gL5lKV0lAd9LlW0NrJ92lBoxSK5hM?=
+ =?iso-8859-1?Q?DjUockFwwTRnrKL/IgNionOrkhfMwQIRblNdWc/aENYsFu6oe925+pPwG8?=
+ =?iso-8859-1?Q?BZ2zUsbLaiF0jpDq/gj7Anh9bUR0eTiFU/Vx8F3TAu2ku4jyL8pMzxB2QV?=
+ =?iso-8859-1?Q?eio6bG7I4LvmumCoTqx5E7/NPSpdLDEznDxwcnuhdSRuY1ptZ6CT47yU8X?=
+ =?iso-8859-1?Q?Nh44YwmJzYbjorzYc/kK5rBTWnwAdIR2SvcFxwRgVsop1/dww3XzkvLXoD?=
+ =?iso-8859-1?Q?tZ0cnhREz1ciWjAsMoLKpVBpJmj/6v8rAEDsnlndjrr0HRY/8k3MCdnA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|MW4PR12MB6779:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3471b776-37d8-4d72-93ec-08dd8b9d6743
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TkJKU1ZITU8rMUIrR1NtT21uU1UwS3dxZk1rSlg0OEdVV1N6RjZpQjRZZEd4?=
- =?utf-8?B?bHJoQ29UeFE2S1FvckxPRDVWRFpGSzA2L2pPQ202d1B3Z2dGSjNHbUZuak8v?=
- =?utf-8?B?dzNGTWljR0RLMU9rYXNXaFo4Wkp6anNoRXM1WUtsNWdkakNLcUIveHBlRm5X?=
- =?utf-8?B?TXVuL1pYSk9tZG1mR2dIMlFEemt5bEFrU0IrZ01kRG1iSGJiS0xLV1RuYnJF?=
- =?utf-8?B?bVhqcjVaRGR3Wk1WYmpHU2pGUWFUREtodFZ6SHhhaWZGbURqV1p6UTNMZGlV?=
- =?utf-8?B?andJWVIrSUZCVXFuc2RFdFZWODJzQ3VYZk1OWm1pL2lZNFoza05wb3dJL2Rm?=
- =?utf-8?B?MndLM0RMTjZZcFVsTlU3ZTdFWmVDVEg5aHNobThXdS93cDNmZk9zU0pJSkg1?=
- =?utf-8?B?WXhWL1dSMGFISDF6VlE0VHo2SnBmb3RPbVNZeldTOWZ2ME0yQUFRLzFxSG9j?=
- =?utf-8?B?NnNWWC9vbFBrUXFGcGhHVzlnMzNncGp4NHNsRERsQ29VL1ZkcVhCN1o4Qm9s?=
- =?utf-8?B?aE5lWHlKNkl3Zm5tMUJPNVA1SzdRNGhGcXUxMGtIazhwVHV2S2RxdmR6U0Y1?=
- =?utf-8?B?T0t3UUtYWEpPV3pRSUp5KzZCamxOeVY3NVJkSWhXNDg4Z0IvU0pXMkxaRkRs?=
- =?utf-8?B?TkhQMTZ2R2xyLy9yWDRXWWhGNmtuY3FhSnMzeGhaVUtkWUdUZzRBa2g2Zk1V?=
- =?utf-8?B?VFBteFB5V1EwV3c3UDBiNWx4TDFnVkFQdmxKT013NXdKYzNSSjFIOGxvUmJq?=
- =?utf-8?B?aVpNVVhEL20vZEZJV2ZLU2tKbkNGcWRPdjNEUUdyYUd6dk9lSHJ3d3hiRzFO?=
- =?utf-8?B?OVZwU1FCcEo0VWdIcjNoOW5PYzhUSmEzclJYNU1YZmNYb2JhNC91ekhJRmM2?=
- =?utf-8?B?SmhFby9oRlV0VklzSzdhVm9CcWNHT3lsQWJYdGFBaFJIMnFsellrdmJIVUM2?=
- =?utf-8?B?R08zRVFxdXNHeXE4WWliZE5CMXlLeHZaRVpsMVN3aUZ4bGppQ1RPTnFqeW9z?=
- =?utf-8?B?MUNhb09Ja3F2bnJUbENHLzI0VHhRZStaZWJLM3grTWdxMHR3QTRBOEZabC9K?=
- =?utf-8?B?UXRweFJTTXNLdFo2Z3Y4SFZBUzdack92YUxLbklnQjRCL2VMSzVsdTd1MnBx?=
- =?utf-8?B?MndJclhIMlRGNkhYdWFwM3gzTDlPUnRkM21Ia2tKbFZxVGR3MDNSRWRaa285?=
- =?utf-8?B?cUNoeXNIVDJvSHowd205dEhmNXgxUWpiRkxtbG42MlFGa0pZamVNUHV6UG4w?=
- =?utf-8?B?SSsyU2E5RThIRjNwMHh0Y084TXlhTmlXOWVqZ2VDakJwTHpEMmlob3ZkM0RM?=
- =?utf-8?B?TmtHa0R4Vy9hZ3Z4T1dFS3k3cWFLeHJlWlpkbWUraTk0Q2Z5OHpDN1hqOURs?=
- =?utf-8?B?YStCMEdrdWVnR0p1cWgxZXBlR21EeE5OOEgvd0ZmM2Fpam0vdG5xMmRjRytN?=
- =?utf-8?B?TkRqL1RZV0R4MGM4YzhJejE1L1VlMzB4T2NpNXNPcmYrTzErOUVQblMxQ21K?=
- =?utf-8?B?d0VmbEhURUVjMlZwWm9CMnlUbUFHZVFVZ3p4bDl5YVplYlNxaVdnblhPSmEr?=
- =?utf-8?B?ZTBEZ2pNVFBMZ0k3OElPTm9ubW54Ujg3U3RLTGU4TjRRTkhocndhU0tNenpH?=
- =?utf-8?B?UWo1QVlLTlp1aVNQN3BCdWQ2N05saGVIenByUllCb3pyb1B6NFc4SHFJUk42?=
- =?utf-8?B?eDdROWV1clY5UXF1MFIwaHNqa2tOTGpnMm5lODg5cnlYQW9sTG8zTzRMbkFU?=
- =?utf-8?B?UTBVZXk5TkUwZHRBWnk5cDJZQWl4V1QyUEN4eE04dC92UGdjVGNrUmRoQ1Yr?=
- =?utf-8?B?NFRveFptYWMySVRrSWg0OXVvU3czaTA0NlJpZFpvVDVIOEhiRUp5ZmpBTHA2?=
- =?utf-8?B?ekg3ZDh4bFliQnRHK3ZSdlVmdzY1WTdPeDU0T3JxSzQwaTBaZDFXTElCa3VP?=
- =?utf-8?Q?wAcdaAOJF5w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RFo3WFZiZks0Q2paM29zNmMwOEppUFErZmcrMTJrWTdLMFI1WlltODNZaGRJ?=
- =?utf-8?B?RTFqSFg2YnpCN2M4NW1PNjNlRDhsRGdlRFBYNnlnQlVXR0w1VkhhcWxmNkpE?=
- =?utf-8?B?QnZVQzV1RGxtRUcxVURRbmRCcVhwUDRkYWt1Mk04U1g0RUM5RkJ5czhsRUw3?=
- =?utf-8?B?YWVvQ3Q5WHVNVFRDZ01MRS8veHdWV1hpTGZGMTZVWXZMUzh2NTFsNUdxeTh5?=
- =?utf-8?B?THZDUzFHNFFXWFdreW8zMks5S3o3WUhkQ1k0R3pwaW1adWljUmF4eTE2QW1G?=
- =?utf-8?B?Z3VKMG9JS0dxcFJtQllwTWVESTF4TnArUWdTSVliRUtYZGIyZGlYeDlKSVJp?=
- =?utf-8?B?RW41R0tNc2ZTSkNiR0QrYkJEc1ozN3d5a1VLTjd1bHY4a0M3OVVLYzhpNy8y?=
- =?utf-8?B?TDFNS3c2OXI2MzBKVnVxS0UvREFJWlNCeHF5bytURUJUem15clpMUWthK1V3?=
- =?utf-8?B?STZFWVFyMnMraFNVblJucVo3SUx1VnlEVGpnQjk0c2RXWHI0MXB2bytiWFA4?=
- =?utf-8?B?bkxIbGNYejd0dTZRNERwbVJFZ2RKUWtKTUovOXlVdjFUYzBxbkozb0Q0Sy9C?=
- =?utf-8?B?bkQzUW5jQ0w4QlBKSE9qY1J3NlFqQUZwT2FySk9aajRvbE9rUjRudzZZVTVW?=
- =?utf-8?B?bmt1V2lvOWxZSDY3ZHBTWUd3eVdtS2ZiNkt2ME1NcW5LbGcwY0VpQXFDV1Va?=
- =?utf-8?B?dlNZT2JSTzJZUXBKUE9MQ0U5OWtzRFJ5Z3B5Uk8zUmRSZDBkWVJHMUxUYWwy?=
- =?utf-8?B?dlUvUld1VnNqN0IyNkNjZ0hFRTZic1Flc0p0Ni9LTm92R3ZnTFZsWVBsUTJ4?=
- =?utf-8?B?LzVyUDhVOVBTSDh3SVJvZzBHRVRQdm82VHZaU3F3Znl2c1MvTVh3eDYyRVlU?=
- =?utf-8?B?UVFWN3hkNWtTYitFaEorNlN6L2s0STZhdi9qQlVpd2xCcDU2UzMycklxb2ZC?=
- =?utf-8?B?aWZuRk1QejVwcWc5OHpLQjN0TzJRanVaL09ENFhBeHpYaFgrUEtaa3ZXM0RG?=
- =?utf-8?B?VmlZVFFTd08va0tabm80V2hlcml5MllDRXltaGVWVThvZytRb2pPNVZ0THF6?=
- =?utf-8?B?YVNPazNsL0Q4MHhvbVlnenduNGR0ZkErL05QMHh2ZDUxZUprZlJYWWxqUnFi?=
- =?utf-8?B?ZFNhWlF6QUhUTXVQSnZwc1pJWUhyZTA2OVNKU2h4SDhsc2JLNDZsZkxYNEwx?=
- =?utf-8?B?WlNUNzcyYUpYdkZ2MHdFOXEvVDc4RkpCNWl0Wkl1NGZnSWlGMG5oVVhtaURw?=
- =?utf-8?B?NENHSnRQclJXL1ZJSWlva2VKd2Q4NmhRL3NyeHM4NER4K3AxTzVlSnFWNEp4?=
- =?utf-8?B?SjNXMDRLU2h0RU1Lck51aTV1MzJyTUY3dmo4NzlNWXdJSTRYMWx2WmZCVjI0?=
- =?utf-8?B?VVdXcmI4L29KQ1dlTWJhOVBnZGtzdThFSkhPTW5pREo1NVF4d2c5NkdXUFNj?=
- =?utf-8?B?aFJreUVlVk9yZTFMUVI4K2xmVHVLdnNELzJQMHltTGNITWxieExCbUVXTjZN?=
- =?utf-8?B?YlZDZHdrMWwxVGl0clhSd3dzZTNRU0xDVFBZQXpXbDVmTjhEMnRYYXlLZlBH?=
- =?utf-8?B?WXV5dUxWaFpjUHVBdFd3clN6bkdZdis1TzZnbTRFZGx5Mzk0ZTRrZllzdSty?=
- =?utf-8?B?Q1FYbHlRdi9zTFBhdVNSakl1YXJKcGZuK2hBUnlFWTFsbDkxcjh6R0t4a2dS?=
- =?utf-8?B?clpFakxFZzE1dUo0MDZUVjF0U2Z1Z0EyZCtzTnZ1amN0UThwditjNHBkUlVa?=
- =?utf-8?B?YjZpOG01YnlRUGQyb04xb3d6RlJXdldMQ0tjN0tabnNTQTdZRE1zU3JMUUNM?=
- =?utf-8?B?WFJzWmVSdTFqNnh3RTlsVGlkRGpTT2hJWUExL0JwOFRZOGZFaEJUYlBOSXdw?=
- =?utf-8?B?RTB2aGdZL0VSSFR1ZGE1MEErWkxkMy9XYWIwak5tcGRtdFJjZHdVdlVTWmtu?=
- =?utf-8?B?Z0oxMGdURkxQTnpGaXZZNjhxTlloRzJUeHlRTUVXbXJWdDcraGdRL204TENG?=
- =?utf-8?B?T2crVzdvMWJDMW9hOHJYaXdDM3BKcXZoQjA2dW5jWkhLY011UGlFbHNtblNj?=
- =?utf-8?B?Q3d4dG1SUDBCaXllUTdpdFdnMmgzNjFsSkUyeHY5bzIvVHlCWFpOMnRjU1dY?=
- =?utf-8?Q?Ad4jvdX5mB64vvQeKQwLprCWz?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3471b776-37d8-4d72-93ec-08dd8b9d6743
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-OriginatorOrg: siliconsignals.io
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 06:23:51.6972
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e22b389-e309-42d0-18d8-08dd8b9e5554
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2025 06:30:30.8930
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pbnNhfgi/tWShXJ8QqK4/7UZKreV7x4cPh09NXrsqyjX95zTQNhMfzc5cDqN0hRuJMxnpJ8jCXKGIuz1EVFuNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6779
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SkO9EqphVRQW5SEmWgHBXqJz7Jn0IzGQvV9ukzSdjRAJDIcOIRK28Y3KUq3TPKY+X/lXP7ixx967gVs8QmYjuKuy5QglID/QUy5WsO6+SfI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0282
 
-Hi, Tony,
-
-On 4/29/25 13:24, Tony Luck wrote:
-> Perf and resctrl users need an enumeration of which memory addresses
-> are bound to which "region" tag.
->
-> Parse the ACPI MRRM table and add /sys entries for each memory range
-> describing base address, length, NUMA node, and which region tags apply
-> for same-socket and cross-socket access.
->
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->   drivers/acpi/acpi_mrrm.c | 143 ++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 142 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/acpi_mrrm.c b/drivers/acpi/acpi_mrrm.c
-> index ab8022e58da5..f04645a0407f 100644
-> --- a/drivers/acpi/acpi_mrrm.c
-> +++ b/drivers/acpi/acpi_mrrm.c
-> @@ -3,12 +3,16 @@
->    * Copyright (c) 2025, Intel Corporation.
->    *
->    * Memory Range and Region Mapping (MRRM) structure
-> + *
-> + * Parse and report the platform's MRRM table in /sys.
->    */
->   
->   #define pr_fmt(fmt) "acpi/mrrm: " fmt
->   
->   #include <linux/acpi.h>
->   #include <linux/init.h>
-> +#include <linux/string.h>
-> +#include <linux/sysfs.h>
->   
->   static int max_mem_region = -ENOENT;
->   
-> @@ -18,25 +22,162 @@ int acpi_mrrm_max_mem_region(void)
->   	return max_mem_region;
->   }
->   
-> +struct mrrm_mem_range_entry {
-> +	u64 base;
-> +	u64 length;
-> +	int node;
-> +	u8  local_region_id;
-> +	u8  remote_region_id;
-> +};
-> +
-> +static struct mrrm_mem_range_entry *mrrm_mem_range_entry;
-> +static u32 mrrm_mem_entry_num;
-> +
-> +static int get_node_num(struct mrrm_mem_range_entry *e)
-> +{
-> +	unsigned int nid;
-> +
-> +	for_each_online_node(nid) {
-> +		for (int z = 0; z < MAX_NR_ZONES; z++) {
-> +			struct zone *zone = NODE_DATA(nid)->node_zones + z;
-> +
-> +			if (!populated_zone(zone))
-> +				continue;
-> +			if (zone_intersects(zone, PHYS_PFN(e->base), PHYS_PFN(e->length)))
-> +				return zone_to_nid(zone);
-> +		}
-> +	}
-> +
-> +	return -ENOENT;
-> +}
-> +
->   static __init int acpi_parse_mrrm(struct acpi_table_header *table)
->   {
-> +	struct acpi_mrrm_mem_range_entry *mre_entry;
->   	struct acpi_table_mrrm *mrrm;
-> +	void *mre, *mrrm_end;
-> +	int mre_count = 0;
->   
->   	mrrm = (struct acpi_table_mrrm *)table;
->   	if (!mrrm)
->   		return -ENODEV;
->   
-> +	if (mrrm->flags & ACPI_MRRM_FLAGS_REGION_ASSIGNMENT_OS)
-> +		return -EOPNOTSUPP;
-> +
-> +	mrrm_end = (void *)mrrm + mrrm->header.length - 1;
-> +	mre = (void *)mrrm + sizeof(struct acpi_table_mrrm);
-> +	while (mre < mrrm_end) {
-> +		mre_entry = mre;
-> +		mre_count++;
-> +		mre += mre_entry->header.length;
-> +	}
-> +	if (!mre_count) {
-> +		pr_info(FW_BUG "No ranges listed in MRRM table\n");
-> +	 	return -EINVAL;
-> +	}
-> +
-> +	mrrm_mem_range_entry = kmalloc_array(mre_count, sizeof(*mrrm_mem_range_entry),
-> +					     GFP_KERNEL | __GFP_ZERO);
-> +	if (!mrrm_mem_range_entry)
-> +		return -ENOMEM;
-> +
-> +	mre = (void *)mrrm + sizeof(struct acpi_table_mrrm);
-> +	while (mre < mrrm_end) {
-> +		struct mrrm_mem_range_entry *e;
-> +
-> +		mre_entry = mre;
-> +		e = mrrm_mem_range_entry + mrrm_mem_entry_num;
-> +
-> +		e->base = mre_entry->addr_base;
-> +		e->length = mre_entry->addr_len;
-> +		e->node = get_node_num(e);
-> +
-> +		if (mre_entry->region_id_flags & ACPI_MRRM_VALID_REGION_ID_FLAGS_LOCAL)
-> +			e->local_region_id = mre_entry->local_region_id;
-> +		else
-> +			e->local_region_id = -1;
-> +		if (mre_entry->region_id_flags & ACPI_MRRM_VALID_REGION_ID_FLAGS_REMOTE)
-> +			e->remote_region_id = mre_entry->remote_region_id;
-> +		else
-> +			e->remote_region_id = -1;
-> +
-> +		mrrm_mem_entry_num++;
-> +		mre += mre_entry->header.length;
-> +	}
-> +
->   	max_mem_region = mrrm->max_mem_region;
->   
->   	return 0;
->   }
->   
-> +#define RANGE_ATTR(name, fmt)						\
-> +static ssize_t name##_show(struct kobject *kobj,			\
-
-"name" is used as a macro parameter. But "name" is also used as a 
-variable mre->name in the macro. checkpatch complains this kind of usage.
-
-Maybe change the parameter "name" as something like "range_name" to 
-avoid the potential confusion?
-
-> +			  struct kobj_attribute *attr, char *buf)	\
-> +{									\
-> +	struct mrrm_mem_range_entry *mre;				\
-> +	const char *kname = kobject_name(kobj);				\
-> +	int n, ret;							\
-> +									\
-> +	ret = kstrtoint(kname + 5, 10, &n);				\
-> +	if (ret)							\
-> +		return ret;						\
-> +									\
-> +	mre = mrrm_mem_range_entry + n;					\
-> +									\
-> +	return sysfs_emit(buf, fmt, mre->name);				\
-> +}									\
-> +static struct kobj_attribute name##_attr = __ATTR_RO(name)
-> +
-> +RANGE_ATTR(base, "0x%llx\n");
-> +RANGE_ATTR(length, "0x%llx\n");
-> +RANGE_ATTR(node, "%d\n");
-> +RANGE_ATTR(local_region_id, "%d\n");
-> +RANGE_ATTR(remote_region_id, "%d\n");
-> +
-> +static struct attribute *memory_range_attrs[] = {
-> +	&base_attr.attr,
-> +	&length_attr.attr,
-> +	&node_attr.attr,
-> +	&local_region_id_attr.attr,
-> +	&remote_region_id_attr.attr,
-> +	NULL
-> +};
-> +
-> +ATTRIBUTE_GROUPS(memory_range);
-> +
-> +static __init int add_boot_memory_ranges(void)
-> +{
-> +	struct kobject *pkobj, *kobj;
-> +	int ret = -EINVAL;
-> +	char *name;
-> +
-> +	pkobj = kobject_create_and_add("memory_ranges", acpi_kobj);
-> +
-> +	for (int i = 0; i < mrrm_mem_entry_num; i++) {
-> +		name = kasprintf(GFP_KERNEL, "range%d", i);
-> +		if (!name)
-> +			break;
-> +
-> +		kobj = kobject_create_and_add(name, pkobj);
-> +
-> +		ret = sysfs_create_groups(kobj, memory_range_groups);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static __init int mrrm_init(void)
->   {
->   	int ret;
->   
->   	ret = acpi_table_parse(ACPI_SIG_MRRM, acpi_parse_mrrm);
->   
-This blank line seems redundant. Maybe remove it so that the "if (ret < 
-0)" sentence follows the "ret = ...." sentence immediately?
-> -	return ret;
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return add_boot_memory_ranges();
->   }
->   device_initcall(mrrm_init);
-
-Thanks.
-
--Fenghua
-
+Hi Himanshu,=0A=
+=0A=
+> Fix SD card timeout issue caused by LDO5 regulator getting disabled=0A=
+> after boot.=0A=
+>=0A=
+> The kernel log shows LDO5 being disabled, which leads to a timeout=0A=
+> on USDHC2:=0A=
+> [ =A0 33.760561] LDO5: disabling=0A=
+> [ =A0 81.119861] mmc1: Timeout waiting for hardware interrupt.=0A=
+>=0A=
+> To prevent this, set regulator-boot-on and regulator-always-on for=0A=
+> LDO5. Also add the vqmmc regulator to properly support 1.8V/3.3V=0A=
+> signaling for USDHC2 using a GPIO-controlled regulator.=0A=
+>=0A=
+> Fixes: 6c2a1f4f71258 ("arm64: dts: imx8mp-var-som-symphony: Add Variscite=
+ =0A=
+> Symphony board and VAR-SOM-MX8MP SoM")=0A=
+> Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>=0A=
+=0A=
+Acked-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
+=0A=
+Best Regards,=0A=
+Tarang =0A=
+=0A=
+> ---=0A=
+> =A0arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi | 12 +++++++++++-=0A=
+> =A01 file changed, 11 insertions(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi b/arch/arm=
+64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
+> index b2ac2583a592..b59da91fdd04 100644=0A=
+> --- a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
+> @@ -35,7 +35,6 @@ memory@40000000 {=0A=
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<0x1 0x00000000 0 0xc00000=
+00>;=0A=
+> =A0 =A0 =A0 =A0 =A0};=0A=
+> =A0=0A=
+> -=0A=
+> =A0 =A0 =A0 =A0 =A0reg_usdhc2_vmmc: regulator-usdhc2-vmmc {=0A=
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "regulator-fixed";=0A=
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0regulator-name =3D "VSD_3V3";=0A=
+> @@ -46,6 +45,16 @@ reg_usdhc2_vmmc: regulator-usdhc2-vmmc {=0A=
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0startup-delay-us =3D <100>;=0A=
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0off-on-delay-us =3D <12000>;=0A=
+> =A0 =A0 =A0 =A0 =A0};=0A=
+> +=0A=
+> + =A0 =A0 =A0 reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "regulator-gpio";=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-name =3D "VSD_VSEL";=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-min-microvolt =3D <1800000>;=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-max-microvolt =3D <3300000>;=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpio2 12 GPIO_ACTIVE_HIGH>;=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 states =3D <3300000 0x0 1800000 0x1>;=0A=
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 vin-supply =3D <&ldo5>;=0A=
+> + =A0 =A0 =A0 };=0A=
+> =A0};=0A=
+> =A0=0A=
+> =A0&A53_0 {=0A=
+> @@ -205,6 +214,7 @@ &usdhc2 {=0A=
+> =A0 =A0 =A0 =A0 =A0pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdh=
+c2_gpio>;=0A=
+> =A0 =A0 =A0 =A0 =A0cd-gpios =3D <&gpio1 14 GPIO_ACTIVE_LOW>;=0A=
+> =A0 =A0 =A0 =A0 =A0vmmc-supply =3D <&reg_usdhc2_vmmc>;=0A=
+> + =A0 =A0 =A0 vqmmc-supply =3D <&reg_usdhc2_vqmmc>;=0A=
+> =A0 =A0 =A0 =A0 =A0bus-width =3D <4>;=0A=
+> =A0 =A0 =A0 =A0 =A0status =3D "okay";=0A=
+> =A0};=0A=
+> --=0A=
+> 2.34.1=
