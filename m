@@ -1,123 +1,80 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AD728EC;
-	Mon,  5 May 2025 02:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186DBC2C9;
+	Mon,  5 May 2025 02:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746411074; cv=none; b=OPFWVfdHiaqEaev5VyusfS2AFV0eICYTJJhl5p4hDID4C8D5osdCQj6gQdfkB4+r2J+nmBg2aCqyqvnO4Ynw2pWV3pp2s2DuEfOL3902FrjoTWFq4TtONEzGovrSivivtx46+3WvrHDFTyHOR2ye0tfBUGFktbraNyZ6y44UgJk=
+	t=1746411674; cv=none; b=rkJhCf5h8cI83vv/mQ/jDko1tn2GCBG0OpYlQrmpdzoiSF2n6bcI9Obs6H/MV0id8vXWM2Gp+8L3ikASMddwiuYq7YcIYePKi1tMJCr+HwoA+qZH/0d8x7FkRU6JUQ2byFU0uXJOyquHhnBtQpE+D8beDonBDmGCK+tvNVME3J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746411074; c=relaxed/simple;
-	bh=kaVa0+0jmdVEQ9iQi0G7nb1ryjIAg58pD+onw5iRXO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JHQ5ovBFMfoeIRjb3dspRNUSopgrZjWYRILWNU3rGDk0NsBM9WkvO5ECT6H59RJYto/jaCpZrWfE8ACs66lB9udRyFOG+W9HDqywFCxyce8k0LiUgULxjKMH1EaOJPaM9hf1sulW9FqE1+R84bHXC5rjwBsXKahroGOF2pGvmzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jn5pkhgF; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746411674; c=relaxed/simple;
+	bh=Hs9uGhA2d6ZQuqVdnmtfV7sdzpnhGklyEq/S/uGIeEQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date; b=RTJr4PAOHxEJgadpdjhRUPB6sUmuXrZoKcgzYhRP1M8KBv1twgleWW9xsnyrP13r00u8vuB6m0YSchS1YwSXQrx4Tc0hVszvng7zWOl59/LkELqNk7jbZVu+6WAB9qm0csfMr5Zgk+kI2GY/ZG4Ag1+GILExH7GiCyVvfZ0EjJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=nTabwhIS; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jn5pkhgF"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e816aeca6so4883119e87.2;
-        Sun, 04 May 2025 19:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746411071; x=1747015871; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bui1DmvKzNelJxPJh4uEj6L44YLQiE/cbpdtnye8WZI=;
-        b=jn5pkhgFxOrbb9LSNgHTFO78SurnF/8kyp8W7fzIyCxANiRWGNi8PUY5uteB4h4+6b
-         8eInBHIav8eZkDRIH+a3UMF3zKDwCimL2Jp5oVb+/aazwDZIAol7/ZVxt+NxPt5ZynVP
-         hwniATtP7bb8LJ9UUe4naQcIfcHZ3sOyz1tHOiw3nRQbU3Lb2uS73e2uH/POJS2teiC6
-         3EoklCUo0TUk7gDs5GoYtuTV7/2tcFoTFzBXEG37Aib7gyV3mZsAjXpgdNctzQ+758Hr
-         0r5mfVOUDZvAsmEqSU4BWGlTZ0Z9APdCGhSuQ5OD4CwC5xcz9YCqf+SddMaEJThVZga3
-         vp2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746411071; x=1747015871;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bui1DmvKzNelJxPJh4uEj6L44YLQiE/cbpdtnye8WZI=;
-        b=aCxzVqW7ixsZEwolDJhDfVUwlcs6HsPPZKIHXIz8W71b0xumw/ZO6gq/T8VqnIqb/L
-         +13IrpFoOVny7LbZW3RKFh3AMk5NrG0Kiun+IfGcR35NQvE5RiJCwZKDwA+hhRxp+CAP
-         pF/Hu8ytsMPZIe0olZnY1fl1ihiAWzIoUZvVpLVqwYLFchC5iXDvJbsYX/XAUbbsGr2T
-         R3gc86cbe4bX7VC8Yw3jAy87SuxDvQLdoRCzlYEBn2qpwIT2az64gDi3fyDXcknvp1d8
-         staM6XXT7yHECmuUDgwIaaXvi1kcXq+sK1hZwT2Bh43db8Jab8yTER9JdPPoB9Z4arTZ
-         c7Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY+S/NVRsithlrayBv/uAFqvcQ0rm+S6lrQHCbss+ZbeG5jgGOC8Myz7lfT9GjW6bR7DuO9bpAZCXo@vger.kernel.org, AJvYcCVs4eHLfDF8NMB1t+9e1/eP7ntuijwNFiSrdQapp/nRZ1s0K3GDyh9POmJkMoHntQcfr8gODw29dcILdxA=@vger.kernel.org, AJvYcCWaeLssP+EViDVWNaced1fmJnhsxX+cFsYcUe2QfTYHBNy0KaMyfLLx+0NbnSPfa4ialX2Ljt555VFAJqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmkQz3bc8sSsqJigI4HWJ9keDlmVK7bK3mNTJrwzVmold9phWm
-	2iNn3uQVQljMUFCKfnKJMGWmtRNUoAYxWwDDq324hhjXerZsI0EhgDgcTdRoh0Jr4K/fx8w+/DP
-	5d+Gkk9YIWIDkTOav+rXcPGtVRbg=
-X-Gm-Gg: ASbGncso6weuyt1B2YUOA1/AclSPDZeSVJ2GEaXr0jUbpwtsH5iTlkLPFHaUusoe81Q
-	ZQf/CL8ArVTV3TzWwH7UP0vC7FJXy7evQGquW4+nBQUz2J6LGIBywd90WhP3AoChMqaCXsHTpBg
-	KvpXmejja6CCkmnwWVfCr3HA==
-X-Google-Smtp-Source: AGHT+IGddcgL980DNS0oAgQz0dnJ2Yu7+FSs56R3Jf4UGASK7x3+jZMSA8ZLQf2vFlTIhwuiy5S6rLmnNsJ9Opz51dw=
-X-Received: by 2002:a05:6512:2313:b0:54e:85c8:ab75 with SMTP id
- 2adb3069b0e04-54eb2466e9dmr1688591e87.44.1746411070773; Sun, 04 May 2025
- 19:11:10 -0700 (PDT)
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="nTabwhIS"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5452L6fS43443253, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1746411666; bh=Hs9uGhA2d6ZQuqVdnmtfV7sdzpnhGklyEq/S/uGIeEQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
+	 Content-Type:Message-ID:Date;
+	b=nTabwhISYPx+xo2YY6ECn53oFxxUMK0jSdybrR/yHdS3pA5qQtTQXx3PGQZVERgIR
+	 mOpQlMhhXUhZaxH1DPsRoIGPAH/Hgs/RPCWv+E/QTEn6Q4XgGJnAGxITvub3ZZg3mA
+	 vEMIlx1zYW5FGXXG02FwRC/Vx/LJqqkeo+iOA8HmOPGTD+7lKqKzd1bdMsyUYbLfoI
+	 sNF280NX32qQd1tQ6iqHdeTF87YqFdreoelBE1uZRWO0zC8zP5nIddPdPiUR9XltaN
+	 2kf0g0noDFlmBnUCcsygMkFfkMnp4mka5x4xAI7/TqJJ4cEtP8xEwHnnkY9fBhga7i
+	 +8DrJ1bk6KvCw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5452L6fS43443253
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 10:21:06 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 5 May 2025 10:21:06 +0800
+Received: from [127.0.1.1] (172.21.69.94) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 5 May
+ 2025 10:21:05 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: =?utf-8?q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
+        Ping-Ke Shih
+	<pkshih@realtek.com>
+CC: Ondrej Jirman <megi@xff.cz>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH rtw-next v3 1/2] wifi: rtw89: Convert rtw89_core_set_supported_band to use devm_*
+In-Reply-To: <20250429122916.1734879-2-megi@xff.cz>
+References: <20250429122916.1734879-1-megi@xff.cz> <20250429122916.1734879-2-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBdOMUhuUqbZm9w1@Red> <aBfsJpId0Jrcz228@finisterre.sirena.org.uk>
-In-Reply-To: <aBfsJpId0Jrcz228@finisterre.sirena.org.uk>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Sun, 4 May 2025 21:10:59 -0500
-X-Gm-Features: ATxdqUFenVAKyQ7kX30yHVtcs6y9neQX9nE2c70USztaOFqi9CiEakuDLUvon90
-Message-ID: <CALHNRZ-At4WmJXoNs_x0XD=bRTRsKMBm1qOQGkFcNOvFfVDaMw@mail.gmail.com>
-Subject: Re: [regression] jetson-tk1: spi do not probe anymore
-To: Mark Brown <broonie@kernel.org>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, ldewangan@nvidia.com, 
-	thierry.reding@gmail.com, jonathanh@nvidia.com, linux-spi@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Message-ID: <d2bcabad-9b35-4efd-8fd5-e004b7ab4a28@RTEXMBS04.realtek.com.tw>
+Date: Mon, 5 May 2025 10:21:05 +0800
+X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On Sun, May 4, 2025 at 5:37=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Sun, May 04, 2025 at 01:23:29PM +0200, Corentin Labbe wrote:
->
-> > On my jetson-tk1, SPI do not probe anymore:
-> > [    1.330681] spi spi1.0: Invalid delay unit 2, should be SPI_DELAY_UN=
-IT_SCK
-> > [    1.335185] spi-tegra114 7000da00.spi: can't setup spi1.0, status -2=
-2
-> > [    1.341643] spi_master spi1: spi_device register error /spi@7000da00=
-/flash@0
-> > [    1.348637] spi_master spi1: Failed to create SPI device for /spi@70=
-00da00/flash@0
-> > I tested 6.14.7
-> > The SPI probed perfectly in 4.17.14
->
-> That's a pretty big jump in versions...
->
-> > I tried to debug a bit, and the driver requires units to be SPI_DELAY_U=
-NIT_SCK, but it seems there is no way to set it.
-> > Removing the "return -EINVAL" in tegra_spi_set_hw_cs_timing() lead to a=
- successfull probe and the flash device appear.
-> > But I agree, it is not a correct fix:)
-> >
-> > Since only the test made it fail, I think the driver is bad since commi=
-t 810593668468 ("spi: tegra114: change format for `spi_set_cs_timing()` fun=
-ction")
->
-> Adding Alexandru who wrote that commit.  Assuming the delays came from
-> DT (I'm not actually finding them, I didn't look too hard though) and
-> are therefore in units of wall clock time I think we need to add a
-> conversion helper for the units which the driver can use to convert to
-> whatever units it actually wants to use, we do need to accept units of
-> wall clock time given the generic binding there.  That gets a bit
-> annoying if the bus speed changes, though that's quite infrequent in
-> practice.
+=?utf-8?q?Ond=C5=99ej_Jirman?= <megi@xff.cz> wrote:
 
-This should be fixed by a patch [0] which was recently picked up. I
-saw the same issue on a tegra 210 device and submitted that to fix it.
-Can you verify if it fixes this case too?
+> From: Ondrej Jirman <megi@xff.cz>
+> 
+> The code can be simplified by using device managed memory
+> allocations. Simplify it.
+> 
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-Sincerely,
-Aaron
+2 patch(es) applied to rtw-next branch of rtw.git, thanks.
 
-[0] https://lore.kernel.org/all/20250423-spi-tegra114-v1-1-2d608bcc12f9@gma=
-il.com/
+145df52a8671 wifi: rtw89: Convert rtw89_core_set_supported_band to use devm_*
+0ae36391c804 wifi: rtw89: Fix inadverent sharing of struct ieee80211_supported_band data
+
+---
+https://github.com/pkshih/rtw.git
+
