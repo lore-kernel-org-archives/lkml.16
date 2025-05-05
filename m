@@ -1,114 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEABE248897;
-	Mon,  5 May 2025 12:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903781FCFFC;
+	Mon,  5 May 2025 12:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746448690; cv=none; b=ieJk0/UspN9hD013uQIIyUjXWzJlcxGOXY5yvhcgVdNF7wqfSkocCxS+AwR/L4UMJqrjwMJckVuV0fFh7ZO86Y8Z+07vXGUhQYT4sS/ouhPvO0SQXX41csh7ocZvKOOtLaJ2li5/nPU3/PTiL8LOtRQCSaSPTG2FTomJVR6ha+I=
+	t=1746448721; cv=none; b=PHsATGip7E6IW+bD7F4gymOmV24VaRCnOzwLdobo4nDbtl1RJJOYu8riPGBIY6mFI3V83r4JGgxTLvN1jfzbORLcjSl+S47cfL7O872rosaQoB7qUKnrAk3Ld+WPqKyiM7O9QGNGPnN8+nsQdruhK9myYJsLN63xeNkXA129Tds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746448690; c=relaxed/simple;
-	bh=pNKt63DAopnZz3ckHH1rNHOQ37qCZEqQN5j2J8gBEfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ahvXR9XFIZ1KkMJ7R+Qs0tJgWc11m/Ydts1MzdAyt/1Nl85lQRfOff7LbM3kfFb749Rv1D0aOowfo94y3f92sfKfIpl1YRwPs4/9kshBXk1fiMoYRQwuHbwPtD4JzvkTiYqPJaGlDHFw79Um1zOrYIxZV7AlKAqFDYKLeNMKWwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H077gSzp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746448721; c=relaxed/simple;
+	bh=DjPWvL+pbNYwxMHfjVA7imMUqiVf1Nxpy8ibShvLkrU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i3PRLSjqVRqzLmQjoW61/D32Iz0C/m5eM/BfC2QGZSKWfEdrqEORQ1153qengYEdm4jSShpEa8CMwz2dDMubEH9Ish7Cg04On17LlUJAW2i/SH9JAbd8USGOaZvDPeoOpdKzOEPtoYSN/djpHCGJg+S2NuqSA9NVqCswMTf/ZCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Maj2dj09; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H077gSzp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE0EC4CEE4;
-	Mon,  5 May 2025 12:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746448690;
-	bh=pNKt63DAopnZz3ckHH1rNHOQ37qCZEqQN5j2J8gBEfs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=H077gSzpF+u0QZypF42hhWqjkg43DHzSf97qFTCF27gB6y5itOd83W1Cv/jaMo67/
-	 Q2D+fHsonUlCEuP/8jUvEwkgSSiyuH4d8JyOYamr7XbDasCsplbPXx79b4NC+wihRN
-	 li65eKU5FaRrOUNB9yk0cxYOy++PLMfW9e6qdKcDC3DMdcHI3hM7P8fBQpYUQV39t4
-	 XUBruGHkiTY08Ksi91crQLagdcbJXVARkq0MZyvrloiy5ixmf2Y/ij/qZ3/5zTBuT3
-	 MsVSxU72JAt4U1dSVlCESHOtd8ojdeyhj7eW7+gyk/Scz1gISXOwyVePJjzQSdhl4w
-	 2Mfqpio4brH7Q==
-Date: Mon, 5 May 2025 13:38:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nuno Sa
- <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] iio: dac: adi-axi-dac: fix for wrong bus read
-Message-ID: <20250505133801.372738d7@jic23-huawei>
-In-Reply-To: <zca24hgtpycx3l2knyqdt3eu7mfyulzxjphsypae2jzxjgvbsu@2kslj4tcihv4>
-References: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
-	<ac50109f06d7191549a91779028aca6d639998cc.camel@gmail.com>
-	<zca24hgtpycx3l2knyqdt3eu7mfyulzxjphsypae2jzxjgvbsu@2kslj4tcihv4>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Maj2dj09"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545CcXeP762189
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 07:38:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746448713;
+	bh=dz6qpzr4bWrGe4AO4WpYeTnOtWSVnS+tyHsG4borA2s=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Maj2dj09KHbCoTeBiPWG2KZsInEORj+RINL2szdtWGY1SFP59ODpTrNKBowwZ8XfW
+	 ZZWiyMLRDGnjC5eWRcU7uLBryOQLMIojhV1I7u7yxSbgElKKBDCADVe6Ha3FM7QLwA
+	 qNG7JL5Y0+rVw+OI1F+qs4WRwMaIMD8sPrEf1ACQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545CcX4X064815
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 May 2025 07:38:33 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ May 2025 07:38:32 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 May 2025 07:38:32 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545CcWWX066547;
+	Mon, 5 May 2025 07:38:32 -0500
+Date: Mon, 5 May 2025 07:38:32 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Prasanth Babu Mantena <p-mantena@ti.com>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board: Enable OSPI1
+ on J721E
+Message-ID: <20250505123832.shukji5gfx3erjdq@lustiness>
+References: <20250505112731.2515734-1-p-mantena@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250505112731.2515734-1-p-mantena@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 5 May 2025 13:33:16 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+On 16:57-20250505, Prasanth Babu Mantena wrote:
+> J721E SoM has MT25QU512AB Serial NOR flash connected to
+> OSPI1 controller. Enable ospi1 node in device tree.
+> 
+> Signed-off-by: Prasanth Babu Mantena <p-mantena@ti.com>
+> ---
+> Test log : https://gist.github.com/PrasanthBabuMantena/9dda540dce88282117de7e0e945e24ca
+>  arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+> index e3d0ef6913b2..3112b351c052 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+> @@ -571,6 +571,7 @@ &usb1 {
+>  };
+>  
+>  &ospi1 {
+> +	status = "okay";
 
-> Hi Jonathan,
->=20
-> asking info about this patch.
->=20
-> As explained, would not do anything else here, please let me know if it c=
-an
-> be accepted or how to proceed.
-I've queued up patch 1 as a fix.  Patch 2 will need to wait on that.
+Follow Documentation/devicetree/bindings/dts-coding-style.rst
 
->=20
-> Thanks a lot,
-> angelo
->=20
-> On 09.04.2025 14:57, Nuno S=C3=A1 wrote:
-> > On Wed, 2025-04-09 at 11:16 +0200, Angelo Dureghello wrote: =20
-> > > This patchset is intended to fix a random wrong chip ID read, or a
-> > > scratchpad test mismatch, tests done in the ad3552r-hs driver probe. =
-The=20
-> > > bus "read" operation must always check for busy flag before reading.
-> > >=20
-> > > First patch reorganizes a bit the busy-wait polling code, second patch
-> > > fixes the wrong bus read occurence.=20
-> > >=20
-> > > NOTE: due to ongoing changes in adi-axi-dac.c, this patch is intended=
- to be
-> > > applied after the linked "ramp generator" patch.
-> > >=20
-> > > Link:
-> > > https://lore.kernel.org/linux-iio/20250408-wip-bl-ad3552r-fixes-v4-0-=
-b33c0264bd78@baylibre.com
-> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > > --- =20
-> >=20
-> > LGTM,
-> >=20
-> > Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> >  =20
-> > > Changes in v2:
-> > > - invert patch order, fix first.
-> > > - Link to v1:
-> > > https://lore.kernel.org/r/20250408-ad3552r-fix-bus-read-v1-0-37add66a=
-eb08@baylibre.com
-> > >=20
-> > > ---
-> > > Angelo Dureghello (2):
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: adi-axi-dac: fix bus read
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: adi-axi-dac: use unique bus =
-free check
-> > >=20
-> > > =C2=A0drivers/iio/dac/adi-axi-dac.c | 40 +++++++++++++++++++++++++---=
-------------
-> > > =C2=A01 file changed, 25 insertions(+), 15 deletions(-)
-> > > ---
-> > > base-commit: 6fb85f14853ddde06d57030c753168402bf69cd9
-> > > change-id: 20250408-ad3552r-fix-bus-read-1522622fbd2b
-> > >=20
-> > > Best regards, =20
->=20
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
+>  
+> -- 
+> 2.34.1
+> 
 
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
