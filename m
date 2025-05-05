@@ -1,151 +1,135 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BFD156F45
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B8D227EBB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746480420; cv=none; b=VqMh7SSmIoh46AMMW5LFqndLdXvHqKbpeREi0OE0MHnH9uqggQeEd8KZM31+G9QiOWW4IguX7ao+s5+ya/x+nWScI+SLxHdFJXl1UlFh+y6IagSb4UvBWFKoop/aVzjAb2nlBs+5veZpWJeo6guxQ+yP7B2A5all1ASaf/z1aUc=
+	t=1746480511; cv=none; b=lPJZgN02w03R6DWmHqWSajzXdPPfcPMvbf0ObS4AKZ217Teg5nZNSq2394uUdIb3XzIcPVPGbSYbYJZILPXJSFSvebrQh3ZriFP5zatsqQNRbnLMj37kKMaoiysECpZrvrTWu4I0NdpbXqZ0+CpqM1uVKB0RkmgYFnyIcLvckZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746480420; c=relaxed/simple;
-	bh=8tIV1iyrJQBLcayr0q2mWHnEzttQRdpT4PvsD60taOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iWj4fDAHhFlOAw+15GeABcXUWpHewd95KPTeHVoRv+hdhM3dP8y1n0SDzu4Y9YuvoXPjLLZyS95OC8uMVxgt8cL2XvRU/lT9ldzySBjzZVsShDoHqFtKKxdVEnl/ZtBDDbwDTNb+Nr9a1R0AJ0HoPEuVfLl/bLdaP8/okfFjhe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Zg6B/WN4; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746480511; c=relaxed/simple;
+	bh=f1hYP84SUeIeWVw/aO7ZbaGocyQWnnY64RH/tbZs0VA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=U8vGdrCcrvnvFqWZFdqrP2vtTjHQfr5WYpESPusekxjRedt8b3NA3HXvAtGqTHM2zg+b06Nuxs/CfR+cW98wsMjhEMgVILdVbgS0ERx37rJfKR/h84YMZPqtjTX+660+7tuJlB0YwZip2a0mD6l70RYeMFePz/wSWI8/7pcY578=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=g40iMQg1; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Zg6B/WN4"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ace98258d4dso706894166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 14:26:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="g40iMQg1"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736aaeed234so4404461b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 14:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746480416; x=1747085216; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qXgSUq4mwPPXkiPTyjzaOpkSyMaUC7J+gL7QQfgAQ34=;
-        b=Zg6B/WN4vykSfusH3GUZwUay+pTZFEFhoKc9kFxN7015ROufcU7Cqyv7TIxcyaFGdV
-         oBsVWUdSnPCSvgzKVTwkHs0OnBgpdwOhyiQI064lJXckCh0kkNXQKnm9SruIjzu00RtQ
-         t6ubVnsZkum/yAGKIoIewjKgkh3mpFKJ1R3ys=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1746480508; x=1747085308; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=26hdnx+Qx/nkLZaujdf27gbYCjpgudGZl7RnEQteaII=;
+        b=g40iMQg1ZFuesIP1/B8Evx+4b3rzsfZ7sYHMNEncogXbdTBP5c29r5EUGIr283Kk0W
+         mw37q3tVxu1NV6cRnMR/5rHH6BJNEDyv7xV9Qn7yD3fji0eBow67EIdO5dCSH+OdH5zG
+         7ioRlPoVy8iSiOlFbSc1EFT2UE+BttLfoF54CChXr3gq30TtbFHFtTjEve0ke8ZLwHa3
+         j+iTafkF7Lrr5UfPXe5q7VHKTjBtaF3lBw7ulFBeMqlK7J3jhrCIUYwTGH36PNh7+F23
+         BHlYojmAnl0QxwEUM452mspfpOgywYbfJg3lzl/9MHr9Tm6/pliVDpvMxgqcBY71UAV3
+         S+yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746480416; x=1747085216;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746480508; x=1747085308;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qXgSUq4mwPPXkiPTyjzaOpkSyMaUC7J+gL7QQfgAQ34=;
-        b=t3Me9PbiEoc59zxBVtb3KO7oEL/UCY+5BhXINij4OK5LJbLsH3fIIRFxwgHM+asF4S
-         WI2B4WVZoZ13IeO8M0K/WRfq6A3Y94Vz79c0PZiLr3j1Qlyyzm/FxKtV1xL0Mc0R/+81
-         M420nn72bg3R+dXkMBBprxXIYd9L4zwCt8+Gf1JurDj5SWuR251TFavJRDTCWw/DyMeG
-         hmsaAoGtPNlIM/oxOcLbUP8UsfHdP/dATj2iezTAqlOhIkUnY7fRgRbYTZ0s1Tn3NU9B
-         TBXCAv7y6qcTEgh2nF1IDsw50b9MY0VZPpxPLwi/PuXsLL7WpkmdBxYAzNnzZiAF88rB
-         /pQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAwcJIuM7F5g6LNYVri3AweUMeJpEq8q6fVvQh87kyo1nn0RSF7YYYZF979k7QjZeqgvCY/I906Zt+ikE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHSZAstEstHW7Hv7Rv7ihmAEkMMO1QYno9cR9Ra70rUQfGhLmj
-	ETiIx9b+wmH/eUwSbw14XdwUkJRx/44yIE5lmoSDlM60fnYr2EoElJ2NE7eASggoyhT63RtJ8zn
-	ItM4=
-X-Gm-Gg: ASbGnctdyzpnwVeJNcWXBSoOl0Jfd63MbFDngRNicZVpggZ22W4tpxSY26jLwR0ren3
-	2n/1FXAV88H32yHSb4tv9DSovIcTvjgIcnsm7cJQoqhxhtWO4wrpj5TuRBfDUoxOcXWG4T2qtki
-	BggTPYFSQpox8tsEvZ3Se+MWpFE9IBQoaf4Kur2yE9S6AorX2lsbsqpDPmDpe+gxqAiPvxaS8lk
-	Og2wi25EgMfQSSJVyDUlJR9+mzLHSho8/ddtJ4efN4hlllwrPbaKdTd31+Dus7djfJOh8xHQLXJ
-	SFpK/HkWPg0RkFP4/BF0czurdwtzfqFwqKkMq4u5bhMaWhUyG7THAPK4atFf7rTXOL8/HKi8RUW
-	tNJGw+crPsBNeI3M=
-X-Google-Smtp-Source: AGHT+IGW3nUQ61EHoWRx47/Q+X3ad8kf3PBlobxEp6BgyQRfpYqrpGKa858qqapPzM8OsghVqDhUhw==
-X-Received: by 2002:a17:906:f587:b0:aca:d4f6:440d with SMTP id a640c23a62f3a-ad1d4536fc5mr55099966b.17.1746480416046;
-        Mon, 05 May 2025 14:26:56 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189509088sm558389166b.146.2025.05.05.14.26.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 14:26:54 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso3562695a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 14:26:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW61RdaJopWITKtTokRGOQJ04MePTw/x9UzL6pj7fnmkyyQQCI/Nr173wfO7mDFlJjtqOeuBFCe7maFzKI=@vger.kernel.org
-X-Received: by 2002:a05:6402:2755:b0:5fb:3ad3:cfb with SMTP id
- 4fb4d7f45d1cf-5fb70d52653mr415902a12.31.1746480412818; Mon, 05 May 2025
- 14:26:52 -0700 (PDT)
+        bh=26hdnx+Qx/nkLZaujdf27gbYCjpgudGZl7RnEQteaII=;
+        b=iBkz0RZEY0YbRVW0S+VxriIgKtqK75lqN31UP97lK0S/cYozeQ0kVmLX+HmaOqRRNb
+         LSLFql1Pfc9JZGzTNa7GC4vvB21R4KsRmxSUoTAIUMHdAaIVIg3Qah5snqECv8qZNc5g
+         brLk1GMv74G1yx+5nbGGkIcJR/K1piZVTY0u/e2exwvWAH6+L0Vt2sqyk51mhOic6PsJ
+         W+sbp6orW9TSxQMCZd9J2KuL+MbIGLpxB51LjCR7rjP7RAw/lMhyWeJjJOZcF200r2VR
+         qsuXnjWp0VegImJMdY3Hu7+udzhtG2Ko4YUOFwhJonO3juhHEKDR1A2fDeyB6hEOypOu
+         QAdQ==
+X-Gm-Message-State: AOJu0Yz5MtGaZngm2R+Zg9Q44zqeMQm+RXwG7cIFDrwRhwT49blDleCd
+	jiegBp4fCg1TdCad1/D19hzMBdgelV6wKIlbQgbg8vVn9AaRiNNJzErY1fzGxYEn4fRvAplm5Mh
+	5
+X-Gm-Gg: ASbGncv8Adx522qCUUHki/6BGs2skYKyiGBhCRYr4FGTKitNNBinGtzpZqa9gYrkbsL
+	i8cr9k0VW6kk/WUkzPwRKIuKHNum2X4ldZ2RFhdnOocHkaEA78VNsP1ffBDx2Q7N799PDAVtt4j
+	ePU52ar2hbLMSB+flDnkVfEQfye5SLMVusTd+4BJFKbqQBqpyDElKP8ibnngL/tNWv23BLc0z7Y
+	ILxNlQUKv85KCpDej9zgRN9qEIG/RfXtlS55vhwkT+wpeJRiNMA8+3LVrhSgYzL6ODPTefAySDG
+	g3Q24ffdd34FJb30PGCGJCcLx07UiKHEHItP7xx29VgxsagFSCbb/A==
+X-Google-Smtp-Source: AGHT+IHEMWsBZWNumu9i00+bT5zqJ+OBY6gmgedReBkU4n6QkDfOYR7NZTzbvbGaF1bdlf+ezbf61Q==
+X-Received: by 2002:a05:6a20:ce48:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-20e96ae5978mr12840533637.20.1746480508080;
+        Mon, 05 May 2025 14:28:28 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dedcc4sm7370367b3a.79.2025.05.05.14.28.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 14:28:27 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Date: Mon, 05 May 2025 14:27:38 -0700
+Subject: [PATCH] MAINTAINERS: Update Atish's email address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com>
- <20250504095230.2932860-28-ardb+git@google.com> <aBdwwR52hI37bW9a@gmail.com>
- <CAHk-=wiaEzS_7CBVTz3RYnDt5zJus_GsPtfSjojkqiiMU-vSHQ@mail.gmail.com> <aBkogDfWB14qkY4g@gmail.com>
-In-Reply-To: <aBkogDfWB14qkY4g@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 5 May 2025 14:26:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjVfjzxBeR9ypA6Y5dRbyKpZvQO8nsAPcFRAABW8QVzTw@mail.gmail.com>
-X-Gm-Features: ATxdqUHwQ7H4IdtWIpmw2YUesU-ykS1suBpDPxucG6m-nzzuBAUCBQodQRLW3FA
-Message-ID: <CAHk-=wjVfjzxBeR9ypA6Y5dRbyKpZvQO8nsAPcFRAABW8QVzTw@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 03/23] x86/boot: Drop global variables keeping
- track of LA57 state
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Borislav Petkov <bp@alien8.de>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-update_email_address-v1-1-1c24db506fdb@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAEktGWgC/x2MSwqAMBDFriKztlALfq8iUop96oA/OiqCeHeLZ
+ JVF8pAgMISa5KGAi4W3NUqWJtRPbh2h2Ecno02uI+rcvTtgsTierfM+QEQVval1VlclqpJiugc
+ MfP/btnvfD8uL+XRmAAAA
+X-Change-ID: 20250505-update_email_address-6c2901987e87
+To: Anup Patel <anup@brainfault.org>
+Cc: linux-kernel@vger.kernel.org, KVM General <kvm@vger.kernel.org>, 
+ kvm-riscv@lists.infradead.org, 
+ linux-riscv <linux-riscv@lists.infradead.org>, 
+ Atish Patra <atishp@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-On Mon, 5 May 2025 at 14:07, Ingo Molnar <mingo@kernel.org> wrote:
->
->  - MAX_PHYSMEM_BITS: (inlined 179 times)
->
->        arch/x86/include/asm/sparsemem.h:# define MAX_PHYSMEM_BITS       (pgtable_l5_enabled() ? 52 : 46)
->
->    This could be implemented via a precomputed, constant percpu value
->    (per_cpu__x86_MAX_PHYSMEM_BITS) of 52 vs. 46, eliminating not just
->    the CR4 access, but also a branch, at the cost of a percpu memory
->    access. (Which should still be a win on all microarchitectures IMO.)
+My personal upstream email account was previously based on gmail which
+has become difficult to manage upstream activities lately.
 
-This is literally why I did the "runtime-const" stuff. Exactly for
-simple constants that you don't want to load from percpu memory
-because it's just annoying.
+Update it to the more reliable linux.dev account.
 
-Now, we only have 64-bit constant values which is very wasteful, and
-we could just do a signed byte constant if we cared.
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+ .mailmap    | 3 ++-
+ MAINTAINERS | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-(We also have a "shift  32-bit value right by a constant amount",
-which actually does use a signed byte, but it's masked by 0x1f because
-that's how 32-bit shifts work).
+diff --git a/.mailmap b/.mailmap
+index 9afde79e1936..f7a81702309e 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -105,7 +105,8 @@ Arun Kumar Neelakantam <quic_aneela@quicinc.com> <aneela@codeaurora.org>
+ Ashok Raj Nagarajan <quic_arnagara@quicinc.com> <arnagara@codeaurora.org>
+ Ashwin Chaugule <quic_ashwinc@quicinc.com> <ashwinc@codeaurora.org>
+ Asutosh Das <quic_asutoshd@quicinc.com> <asutoshd@codeaurora.org>
+-Atish Patra <atishp@atishpatra.org> <atish.patra@wdc.com>
++Atish Patra <atish.patra@linux.dev> <atishp@atishpatra.org>
++Atish Patra <atish.patra@linux.dev> <atish.patra@wdc.com>
+ Avaneesh Kumar Dwivedi <quic_akdwived@quicinc.com> <akdwived@codeaurora.org>
+ Axel Dyks <xl@xlsigned.net>
+ Axel Lin <axel.lin@gmail.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5f8688630c01..cb8cd92a1ce8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13071,7 +13071,7 @@ F:	arch/powerpc/kvm/
+ 
+ KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
+ M:	Anup Patel <anup@brainfault.org>
+-R:	Atish Patra <atishp@atishpatra.org>
++R:	Atish Patra <atish.patra@linux.dev>
+ L:	kvm@vger.kernel.org
+ L:	kvm-riscv@lists.infradead.org
+ L:	linux-riscv@lists.infradead.org
+@@ -20878,7 +20878,7 @@ F:	arch/riscv/boot/dts/sifive/
+ F:	arch/riscv/boot/dts/starfive/
+ 
+ RISC-V PMU DRIVERS
+-M:	Atish Patra <atishp@atishpatra.org>
++M:	Atish Patra <atish.patra@linux.dev>
+ R:	Anup Patel <anup@brainfault.org>
+ L:	linux-riscv@lists.infradead.org
+ S:	Supported
 
-I doubt we care - I doubt any of this MAX_PHYSMEM_BITS use is actually
-performance-critical.
+---
+base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
+change-id: 20250505-update_email_address-6c2901987e87
+--
+Regards,
+Atish patra
 
-The runtime-const stuff would be trivial to use here if we really want to.
-
->  - PGDIR_SHIFT: (inlined 156 times)
-
-Several of those are actually of the form
-
-   #define PGDIR_SIZE      (1UL << PGDIR_SHIFT)
-
-so you artificially see PGDIR_SHIFT as the important part, even though
-it's often a different constant entirely that just gets generated
-using it.
-
->  - p4d_offset(): (inlined 60 times)
->    Here pgtable_l5_enabled() is used as a binary flag.
-
-static branch would probably work best, and as Ard says, just using
-cpu_feature_enabled() would just fix it..
-
->  - pgd_none(): (inlined 49 times)
->    Binary flag use as well, although the compiler might eliminate the
->    branch here and replace it with 'AND !native_pgd_val(pgd)'
-
-This could easily be done as runtime-const.
-
-But again, I doubt it's all that performance-critical.
-
->  - PTRS_PER_P4D: (inlined 46 times)
->    This too could be implemented via a precomputed constant percpu
->    value (per_cpu__x86_PTRS_PER_P4D), eliminating a branch,
->    or via an ALTERNATIVE() immediate constant.
-
-Again, we do have that, although the 64-bit constant is a bit wasteful.
-
-The reason runtime-const does a 64-bit constant is that the actual
-performance-critical cases were for big constants (TASK_SIZE) and for
-pointers (hash table pointers).
-
-           Linus
