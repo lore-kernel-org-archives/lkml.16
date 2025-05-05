@@ -1,123 +1,120 @@
-Received: from mail-4323.protonmail.ch (mail-4323.protonmail.ch [185.70.43.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FBD1AA1C4;
-	Mon,  5 May 2025 19:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B07426F444
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746472342; cv=none; b=QHoNPazmp7OLhl4YeWZF3e7HuPN6TMcT8IaWKUknw1eCfV67yo6KGvleL5vV3P8Td3PcnF67E2AW2Maw/1udw0mcFi9UzikjvypaPwb611sjqHXOTgwop4I//+nGU+LOPF1+9F1qUY8lS3/l9RlEoes41YKgyvR2oTwNLKouvJE=
+	t=1746472399; cv=none; b=K22TT7x4xwk3RFgpAcsBoPqX4jfMbcgveChlXKUbIhvQ8XmAE1FtdDzs3zTRpjpVhuF4BiLYdfMaNOFjhfXIVmRpC3PZ4EYrgO2jVuj3sV6/VQC4DuRBRl9S6cCdRFYvV2VCv7oK047/o5fjITxiwNEnNREeB0QSs719l9Sb6wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746472342; c=relaxed/simple;
-	bh=/OPNapK5a9EqWjgAwkaREoBGWHHOUEuMwasVwSdqBq0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F8E8AZ7adGfMTXEfJ0GgX93pJaRCKYWOOK+pnideSm/urY2e0M6aK99L2HRw6tgQPSQPPvRwqpUYVivvYAm6t8yCrMkoXvtWK3cF+74X+4vt9T219dUsAbcdYNS7e/jX/E0bc0wn6gDcZel6SrX0bmAa6JfCqDvuOWhhtEvc2xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=Xu+34Rkh; arc=none smtp.client-ip=185.70.43.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1746472399; c=relaxed/simple;
+	bh=HAR08SHskoeKoz/2PbQPFoZW0IvufpjYIUDh6fOQdZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d9nPd06NqVqQSbioaZCS+xIiD7TLcUh3FOtRRK2LuvNFYAgjLyCEuBI6dRNASD+Kf7bRD6lnnxHA5rK5ojHWRNLhAwxx992y5dKeL6J7Z3o8yuXEiGoSq0NZDdwTyzrQ/5ctw4cZT5KVdKyqxrGKto7H94LBu9AW/vtzCC4a6s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tlb+TahL; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Xu+34Rkh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1746472330; x=1746731530;
-	bh=4yUp66nZbz1hUGe3Po3KsCfVeHTtvoxO0pMNffShCFk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Xu+34RkhVDBgw8Eo0sGeuOr2sQb3l6N6v3IgPD3z5RnYu27/pAUARqxnvy0e7Mh7w
-	 XB5/YaeYwp/Vxsq/awUrgIou89ID9nXfiPkB5XbAonAiTf6FAaMNIagH4TExNnaGdX
-	 T1gpWRlAsgpf9F16PTpQ6ytxrwG15S6VddW+55v+INyWt7k1gAvMOu69dGqNaf1L9a
-	 aWks3kZYD2GPFgFo/uHlW8Ai+ak+MGV9Y9U/+9A4KcbNAtYbbFJORKtLu+T5wHaWDv
-	 p/f60Yd8t+FwnxB2yjg/mxEIZskCLynqBAMMisqI87y2G95QrOC565EapOWO6fCGSh
-	 6m5HCrGNqBaVA==
-Date: Mon, 05 May 2025 19:12:06 +0000
-To: Jonathan Cameron <jic23@kernel.org>
-From: Sean Nyekjaer <sean@geanix.com>
-Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] iio: accel: fxls8962af: Fix temperature calculation
-Message-ID: <yvr7n54vmlzvzj3ro2fd5d6r2p6bkyynwmb374wifufixhnkl2@nmhzcge42d7m>
-In-Reply-To: <20250505175120.40076227@jic23-huawei>
-References: <20250505-fxls-v3-0-8c541bf0205c@geanix.com> <20250505-fxls-v3-1-8c541bf0205c@geanix.com> <20250505175120.40076227@jic23-huawei>
-Feedback-ID: 134068486:user:proton
-X-Pm-Message-ID: fee163ae75cc5880a1ca6f196d8c84df46f2b7bb
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tlb+TahL"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39127effa72so286592f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 12:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746472394; x=1747077194; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IEjDuBdOsPYO+y+tIF/6nSzBmphEZRY1ZsgA0HOsHeU=;
+        b=Tlb+TahLcijOByYAK1khV/V9sy4rxyjkQ+mRgTffcEcDMxD/PA22uVqdZl8WICa5Lr
+         kBsij72Iz+jLnTcXnUaY2Xte3VxV8e9MQcog1XYdN+S4ablFZATgCUk0SqTFeFC6cbXe
+         2JPVZyqMdPMBrw25N5IOcxxoX7ziO9TvWcAMeBqcxho0U/UZ8RzddwqwlEuK5e/KdmZX
+         bBUV2UWsN7LoGGkv170Vg7rJooyenuqYgtHe5kHWQ5c6O/RaIJKbPTdwcrGoHjmn6m4E
+         vDQFT7LwyL18YTj0+MwTCu+a8wewErx/XAdaqEcLfXHqtESnE/y1Cu8ABqPu+i/IrI/v
+         qddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746472394; x=1747077194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IEjDuBdOsPYO+y+tIF/6nSzBmphEZRY1ZsgA0HOsHeU=;
+        b=KwpQzYAD2T41HPomhfchtvT7wPStHOTFcyXy20riJpTqc8mylE7EyvWjISWPk6ajUB
+         Wvr7GJwVkeg9ILeAXxQfmyH+6CT1VK9eH03aj8KbgJup5Dt7v3snYliifHbcGHB+72gv
+         +HaXE2sCIHafq1JNoftVly6BAXRts027klt0teC8wH+T2fKV9BhAGHVlgESO1YRcjRPc
+         hsAhI02B4uHNlWSyCmEHcvrvYjH4oBCdw8LSB/p+CurWG62z+SCDPdPbl2bBxkzD7tcs
+         gYvoUUbuGwOL8AvpAZOtjfF2ltGN5RtyPb3Ruer9uXpbXhm1xqptseetdA+HsOblMMv6
+         ZY7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUDurO9tHnE0Plzxc3nyXaJYXeaujb5AFDpfVDlRJAzsKOnA1mJGfddw0/aqIhaNzpwnS2NLSqjteCd5b0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/pKtc+0ScsOoTo4PmjQgQNG61ySOW64TEpxDU4Z3JhE42Pwuf
+	uvVYGbxxdWVg9vMgabfHNNX7fle8mdKyWW82HX/xjv8Q2MUEyB//LuUKBf5sJQY=
+X-Gm-Gg: ASbGncsh9vdHRTQsS3W22uHl3LvvwkkqUoiN4wZZqoem/yDVbsq1RZbYrotvUQcm/D3
+	eVYX4bMv5jzLj+A6osOEUWKgk7akEOXaLoq+rpmmBQbuqqjZcbpyzSAEOYcuhQvvU6X8UezMI2y
+	66L032/Mn+nvnqGKneBptWYljuKbcDoFsdur2HE9IY2ZQDlhJaeSuJghMs6ugQq5c1TfZFM8EGP
+	JqQyEHYA4tyCgklhgqs9T94OtbZEqFEGyjc54gWIenGn6Ch4SWbRpGmCGfhyeW/zelehZk13aT8
+	WdDieei7Ctc7u4g6LNh78Jk3O3TZVuc7XgSFoxHKKNVJo0XqiQ==
+X-Google-Smtp-Source: AGHT+IGnEwPXSGVfzEWgeXcfxl9O2WHXAoBamZsbcNfubSHzkp0c2F2nBnFlg8hKndBC84tAi6bDcQ==
+X-Received: by 2002:a05:6000:2485:b0:39c:30d9:48 with SMTP id ffacd0b85a97d-3a099adc58fmr4225096f8f.6.1746472394539;
+        Mon, 05 May 2025 12:13:14 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae32fesm11060549f8f.22.2025.05.05.12.13.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 12:13:13 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] ARM: broadcom: MAINTAINERS: Cover bcm2712 files
+Date: Mon,  5 May 2025 21:12:56 +0200
+Message-ID: <20250505191255.304500-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=725; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=HAR08SHskoeKoz/2PbQPFoZW0IvufpjYIUDh6fOQdZE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoGQ23mm8iJikWukyappwMPXe0hVtMEVeBU9p62
+ vIBhURgujaJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBkNtwAKCRDBN2bmhouD
+ 10RnEACTlcYV4pNmTNQR29gUDZjXOND+/zxx0JHufvywe1G1Gv1h3JzqN+wSkCOilaVN+aXonNf
+ hWgmrNzxMcJLAQVzR/CneUFSnsfjv4K3SyvBwoWJYDwNok6PWo11yOmHw2vm2egTK7uue1EDuTR
+ VpZ4lwY5MTvkvytbm1C/xFmF0GYgjNGQQLD2yv6aHCfoS6Q9JVDEbkO5FvXefLf2cI2/p5fsILD
+ df1pVrYBLj/TP7U/5atUwvls/2zfPU4rAn1PeRkdM7300ln1fYfLtHlsqB+5qsdEt9d8bS8bAvb
+ +CtPT883nuncsj2WC5z6njl0L8SsaG7HrnmCPb1tzlrMCAXeOV9lQ2MDdZ1vfOx8MjLKxFsgg7B
+ oNEzoiZKxrlL2n8ge0qcxBl2tXWbiS/e2FNMPWC0qPCUCXtmqa5A2WT/TiPNjpzEeOFKOBkmqQz
+ EmjuD0ZEU4sKXORvixLAzq4Ds1JiOc+NzwIcWIEVy/Fh29u0AVmkSWDxW9eBy77ZnFt7Gt4Ex+c
+ qrS/Fr8PnAYaXha6RTgs7cszdBenhGZ4aOp8WI6iZbfxHEtYtFNf0VFNWrFRnitTSUtsZ3+xbb9
+ QXZ9GH8jA/BlGXpLxnrmVTO6rixpljs3WL5p4PQ8+MkyJJnkv3DOLBBAR5RLlbbRFehnHkXDdMg gVd9M6KR9LQ1v9A==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 05:51:20PM +0100, Jonathan Cameron wrote:
-> On Mon, 05 May 2025 08:20:19 +0200
-> Sean Nyekjaer <sean@geanix.com> wrote:
->=20
-> > According to spec temperature should be returned in milli degrees Celsi=
-us.
-> > Add in_temp_scale to calculate from Celsius to milli Celsius.
-> >
-> > Fixes: a3e0b51884ee ("iio: accel: add support for FXLS8962AF/FXLS8964AF=
- accelerometers")
-> > Cc: stable@vger.kernel.org
-> > Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > Signed-off-by: Sean Nyekjaer <sean@geanix.com>
-> See below.
->=20
-> > ---
-> >  drivers/iio/accel/fxls8962af-core.c | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iio/accel/fxls8962af-core.c b/drivers/iio/accel/fx=
-ls8962af-core.c
-> > index bf1d3923a181798a1c884ee08b62d86ab5aed26f..27165a14a4802bdecd9a89c=
-38c6cda294088c5c8 100644
-> > --- a/drivers/iio/accel/fxls8962af-core.c
-> > +++ b/drivers/iio/accel/fxls8962af-core.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/types.h>
-> > +#include <linux/units.h>
-> >
-> >  #include <linux/iio/buffer.h>
-> >  #include <linux/iio/events.h>
-> > @@ -439,8 +440,16 @@ static int fxls8962af_read_raw(struct iio_dev *ind=
-io_dev,
-> >  =09=09*val =3D FXLS8962AF_TEMP_CENTER_VAL;
-> >  =09=09return IIO_VAL_INT;
-> >  =09case IIO_CHAN_INFO_SCALE:
-> > -=09=09*val =3D 0;
-> > -=09=09return fxls8962af_read_full_scale(data, val2);
-> > +=09=09switch (chan->type) {
-> > +=09=09case IIO_TEMP:
-> > +=09=09=09*val =3D 2 * MSEC_PER_SEC;
->=20
-> For a temperature?   Andy was referring to that particular units.h
-> define for a the delay that happened to be below the code you were changi=
-ng
-> in v1 not this one!  Here we have MILLIDEGREE_PER_DEGREE defined.
->=20
+Add bcm2712 files to existing BCM2711/BCM2835 entry, so the files will
+not feel abandoned.
 
-Oops, sorry :/ Will do a v4
+Reported-by: Rob Herring <robh@kernel.org>
+Closes: https://lore.kernel.org/all/CAL_JsqJi+8-WdYEyrGjb=cQXPEb07Lkcj90a32d38ChvYJAA-Q@mail.gmail.com/
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > +=09=09=09return IIO_VAL_INT;
-> > +=09=09case IIO_ACCEL:
-> > +=09=09=09*val =3D 0;
-> > +=09=09=09return fxls8962af_read_full_scale(data, val2);
-> > +=09=09default:
-> > +=09=09=09return -EINVAL;
-> > +=09=09}
-> >  =09case IIO_CHAN_INFO_SAMP_FREQ:
-> >  =09=09return fxls8962af_read_samp_freq(data, val, val2);
-> >  =09default:
-> > @@ -736,6 +745,7 @@ static const struct iio_event_spec fxls8962af_event=
-[] =3D {
-> >  =09.type =3D IIO_TEMP, \
-> >  =09.address =3D FXLS8962AF_TEMP_OUT, \
-> >  =09.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) | \
-> > +=09=09=09      BIT(IIO_CHAN_INFO_SCALE) | \
-> >  =09=09=09      BIT(IIO_CHAN_INFO_OFFSET),\
-> >  =09.scan_index =3D -1, \
-> >  =09.scan_type =3D { \
-> >
->=20
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6768aa56a311..74d2b84afeb2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4605,6 +4605,7 @@ F:	Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+ F:	drivers/pci/controller/pcie-brcmstb.c
+ F:	drivers/staging/vc04_services
+ N:	bcm2711
++N:	bcm2712
+ N:	bcm283*
+ N:	raspberrypi
+ 
+-- 
+2.45.2
 
