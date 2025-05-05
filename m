@@ -1,47 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2473B1C861D;
-	Mon,  5 May 2025 21:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350E7A32;
+	Mon,  5 May 2025 21:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746479671; cv=none; b=i5BCBNY0b7vzahwFrru/Gr0soKIzv2uNjUrf1RVV4z5z/TsbYObAmHdVaLnw67FZZ5mdQLlHKo7Jly2HIrbafKMg8KWF39xzOvD56iqr7pH3tVbeHbbMFItk0Y4O2Xn2maZuGizd/hNuE1RRw4BMPoxIrgGyoGUKR3t0A9k96is=
+	t=1746479737; cv=none; b=SvJ6qyvMfrwYnISANApnQVffnfbqoJM8cEjCjdsiWF2t6DZcX4+prhx4Cydm/RzjBgBw0CnGbNxWbA11NYxMgRsSvRQw4dB3qTDfwUJh+16dGyjAk608ifVnFqyWDs2TbHa+5tsRx0+F8KALFxAQZ6NwC9xanoC+8pKJKTM3XIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746479671; c=relaxed/simple;
-	bh=qS4T1MGud+iM/nNdmWWGGoUtuRQIzjgo2jsCErrjUQ0=;
+	s=arc-20240116; t=1746479737; c=relaxed/simple;
+	bh=bC2rt61Zb2ctmnWbeinCpK12Ybj4VVtOuX9hqkSsohc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mjJeovVGkCbhIj2Ms1GRRHiG0CTELdT8xTRiqMfZ9XBAOaZk5CsD0Q/sOvsQ+WmLhcDaWfv63TgXgZg51L+llupFP4a72s0Jtw4VDg9MzUiP+zTnjMHI77OBQ3K7XfpMSs+atRbq73lxI2y1kVgu7m5EqlyKnUuZZsS7cP1AMlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lshh8F54; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGfv3EygCiVpQKN1L2m8DSQOS6tVoAkB1VGeX5PWscmPXyiIERl+4IFpa5p1rBYL8AksXP31EwhNjlzZjZTwp2nQgUZ/8nTn//5b141uDRQmAAjvnt4ubKRGDsoL0zk5Ba1QZzaGns/l6Hc+S9C8kPj7nC4/0guJfB29RSVwpKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivLOxa1P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lshh8F54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15FF8C4CEE4;
-	Mon,  5 May 2025 21:14:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivLOxa1P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FDDC4CEE4;
+	Mon,  5 May 2025 21:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746479670;
-	bh=qS4T1MGud+iM/nNdmWWGGoUtuRQIzjgo2jsCErrjUQ0=;
+	s=k20201202; t=1746479736;
+	bh=bC2rt61Zb2ctmnWbeinCpK12Ybj4VVtOuX9hqkSsohc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lshh8F54s6ZKNLWxDHn+oaPmXhS1kqVBQb2eENyq7dHadOwbHxI6ximMpr1rOSQHf
-	 oft01/qPH+oQV0lWFp1Epm9J0fg4KgGzbJU3hBu2OZSJ6oHw2LYh7CiBkVwhsBXlwZ
-	 IEiDlGxr4AMLEdMnyD6h5EakXSDFVmkhZ3EElw4beoaf09uvkaeKj736fih2vrJUPk
-	 qDoX0+O4fYHJNld1R3YFBLYn279pZgQEIRrhXv6oZco739iy4p/VPCrCJYXpHqKrdA
-	 SzQgMzfGzBUSBaZJwt1rzXjG1UbZzsQZxB2kHTTQ4fHQ2pe86yW4VLp6OY/ETzXoIX
-	 emev4TC/rp2jg==
-Date: Mon, 5 May 2025 21:14:28 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Mikulas Patocka <mpatocka@redhat.com>
-Cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: Re: [PATCH v2 2/2] dm: pass through operations on wrapped inline
- crypto keys
-Message-ID: <20250505211428.GA10047@google.com>
-References: <20250501212320.8281-1-ebiggers@kernel.org>
- <20250501212320.8281-3-ebiggers@kernel.org>
- <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
- <20250505170336.GA197153@sol>
- <5ca7e728-96ed-4419-6689-f36081b7e2da@redhat.com>
+	b=ivLOxa1P5oj/FN5tqsml2Mta07iSEMct5uNhn5JZcVesqvpih6+/va9RzMFXhvLba
+	 380sHDSXmlsH9OP9xGSEuK691G5BsnE1cNYQiSEPRrGYTu1rIK99BlO171J5RacIOr
+	 41ooZzm7Viuvhnse9gVNn3RfC4JyPwn57DkI8eH5LTP10GaVBu4HAFRvdPJ4l9GLry
+	 7ZHUO+q0RlYkXyUTWotD/QjSLFDM+Qq+wH/Bj2ZK8VH3LrJBFJguPl3X2lXxsJ6lRD
+	 MsmCIuasfTWpkTW63Mfb1FN8h48g0jwHG6GVqkh5snX7LqvCH0D20ffbJR7cxLE7YG
+	 08MplxlBTK3sA==
+Date: Mon, 5 May 2025 23:15:33 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
+ list
+Message-ID: <y4awvwoqshcyvbdlu7ibg5t3vu4rnsthnb2srrug6qjcfw3mq4@5uzqb4tkox5o>
+References: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,66 +43,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ca7e728-96ed-4419-6689-f36081b7e2da@redhat.com>
+In-Reply-To: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
 
-On Mon, May 05, 2025 at 11:01:38PM +0200, Mikulas Patocka wrote:
+Hi Marcus,
+
+On Wed, Mar 26, 2025 at 03:39:47PM +0100, Marcus Folkesson wrote:
+> The driver do support I2C_M_IGNORE_NAK, so add
+> I2C_FUNC_PROTOCOL_MANGLING to the feature list.
 > 
-> 
-> On Mon, 5 May 2025, Eric Biggers wrote:
-> 
-> > On Mon, May 05, 2025 at 06:15:01PM +0200, Mikulas Patocka wrote:
-> > > 
-> > > I have a dumb question - if it doesn't matter through which block device 
-> > > do you set up the keys, why do you set them up through a block device at 
-> > > all?
-> > > 
-> > > What about making functions that set up the keys without taking block 
-> > > device as an argument, calling these functions directly and bypassing 
-> > > device mapper entirely?
-> > 
-> > Userspace needs to direct the key setup operations, so we'd need a UAPI for it
-> > to do so.  We could add a custom syscall, or some hacked-up extension of
-> > add_key(), and add a custom registration mechanism to allow a single
-> > implementation of wrapped keys (e.g. from ufs-qcom) to register itself as the
-> 
-> What happens if there are multiple ufs-qcom controllers? Is it 
-> unsupported?
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 
-They would accept the same wrapped keys, I think.  But that is theoretical,
-since multiple ufs-qcom hosts are currently unsupported for other reasons.
+merged to i2c/i2c-host.
 
-> > system's wrapped key provider which the syscall would then use.
-> > 
-> > But it seemed cleaner to instead use block device ioctls and take advantage of
-> > the existing blk-crypto-profile.  That already handles registering and
-> > unregistering the implementation, and it also already handles things like
-> > locking, and resuming the UFS controller if it's in suspend.
-> > 
-> > It also keeps the door open to supporting the case where different
-> > wrapped-key-capable block devices don't necessarily accept the same keys, even
-> > if that isn't the case currently.
-> > 
-> > - Eric
-> 
-> I think that using ioctl on block device is ok.
-> 
-> But I don't see why do you need to perform the ioctl on device mapper 
-> device and let device mapper select a random underlying device where the 
-> ioctl is forwarded? You can as well select a random physical disk in your 
-> userspace application and call the ioctl on it.
-
-We have to forward derive_sw_secret anyway, since that's invoked by the
-filesystem, not by the ioctls.
-
-The other operations are for the ioctls, but I don't see a reason to make things
-harder for userspace by forcing userspace to implement logic like:
-
-    if (is_dm(blkdev))
-        blkdev = underlying_device(blkdev)
-    ioctl(blkdev)
-
-The device-mapper block device has a blk-crypto profile that declares wrapped
-key support.  We should just make the ioctls work on that block device, so that
-upper layers don't need to care whether it's device-mapper or native.
-
-- Eric
+Thanks,
+Andi
