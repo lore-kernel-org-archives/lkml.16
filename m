@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C402D3FA4;
-	Mon,  5 May 2025 22:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9582D3F85;
+	Mon,  5 May 2025 22:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485610; cv=none; b=U0xel/oiwqv4IcZxFybvQPnj5lbvMa8efdoqeKtQgY604mZud6UiSsM5nHzCDJR68Ebb3/TU6C0H9z2/kPBf2WDiUvQSCZg1wezVb+jyg0XWcm01touNdWQ6dsbz1TnhkcadImVnUN3Q3ZhphcRrvL4LAJqDMQ1sxgr42eYUr9g=
+	t=1746485601; cv=none; b=RiVnbRDrqxVXDCDhG2re9bx85t414+zuROQN+5Ej1oo/8NN6OMdDL64siPSGB3In229W6tbmorjfE+4s9FVNYsnmHqpGKMuUPX2NLIS7jMdkX0HQqw4Sb5GChYYZX0hohR6ojEqwyMIp6oBNWSatf8YupJ8Zyf43l4u3VrxkhOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485610; c=relaxed/simple;
-	bh=NwxOv2q6DfqaXrAsMJRJxmZQFCAHvhBTNPd6AMInCLc=;
+	s=arc-20240116; t=1746485601; c=relaxed/simple;
+	bh=EmCvoM54o0Hc3u6jIcjuGXPnlYegD/VTwsBsxC1EqLw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b5K8R5mCdj2EDMNO2Zw2jrCBhLVSH4tZCK7Tu+8FxWkglWp4YcQsj6NHrVnSKJ+q/eL6rlub0HgU+53k+DEefIJDMbClUx6F/Ta0iQ9hUlfnS3Xzim3ufBaIyT3s93AOqxybFDMz6zCM7rwgkHZlGOFYG0dJEzn7kNX5qGXn5jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qM68aoWf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VSNs3ngD9n7wSAYBhhNz/l+XyW+YUhxdq6fANTm/4B6+rKEXVMBYsfxYq0h0KTYRdZI0pzwqwEFNNwUk7ZK+Xf6VZmmPcqTvSIU480Q0oVzugpo7dPgmqH95zfxl1mGUzdbTJ7TiCiZ+EgR5gLF1NszBM5ITFsuWkfshPQ116Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiQJvbqH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qM68aoWf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04471C4CEED;
-	Mon,  5 May 2025 22:53:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiQJvbqH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19AE9C4CEEF;
+	Mon,  5 May 2025 22:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485609;
-	bh=NwxOv2q6DfqaXrAsMJRJxmZQFCAHvhBTNPd6AMInCLc=;
+	s=k20201202; t=1746485600;
+	bh=EmCvoM54o0Hc3u6jIcjuGXPnlYegD/VTwsBsxC1EqLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qM68aoWfXFall08/PYKDUaM0Tec9FmcqHvYj2TzzYAfIACzROarlB/XoeOFftyfJP
-	 ybDBeU5cy52VnxG/kklG+EGlD6avQrM+Le8ml+ML8mt5SUgje1rlIY2IGj1BvJbdNZ
-	 U5NzftsQ167w2PXBZZEmyuiQjISDbAbjxQgVqaL1FYbowv0Qy6whELwHgYmMT61pXB
-	 t5AMuIzdsnmw6wbUPfn8AGwgxa0FAl4H9cl8W/Iocz4S3lcIhxne8lyuyuyAP77r4c
-	 UTv1OauFWPpXOrEN47XwSRCMUrWiaZ/RRE/liAfvf60h5nxS8xbTy4lugx5JmQ0xQ9
-	 nrQDGF2Wx6QrQ==
+	b=qiQJvbqH3Dvj9I2xQLU+T//pUTofWwhs0MVn5rHk1Syt+oVAH9uwdzOanIB9OcVI6
+	 M8Dbo/CN010tZyt+J4MsxjjPgi0UfKrLGQGnwHIpFx5Xv4/FasxfZKCFR1set9XioM
+	 FIzyhcuG3vDdcKebuP0UsHW/cYdY3JNVeA0KL2xIsvwN+jo8q1AeKvfMEN4TyC7SuW
+	 1xXUS6hIUziqDy8pfBreD4XMg5qTfc4jeVmx59DBo9Z8ttaT7tnFaz5SUYPgThVBSB
+	 1X01kIkJVTN/TLLCvdagSwduib3EVP4oNHXXrVktNW9D6yhiflVhDb7Be7zpNnwuXs
+	 zET021uPGPWHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Wahren <wahrenst@gmx.net>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+Cc: Alexei Lazar <alazar@nvidia.com>,
+	Dragos Tatulea <dtatulea@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mwen@igalia.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 384/486] drm/v3d: Add clock handling
-Date: Mon,  5 May 2025 18:37:40 -0400
-Message-Id: <20250505223922.2682012-384-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 380/486] net/mlx5: Extend Ethtool loopback selftest to support non-linear SKB
+Date: Mon,  5 May 2025 18:37:36 -0400
+Message-Id: <20250505223922.2682012-380-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,109 +53,44 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Alexei Lazar <alazar@nvidia.com>
 
-[ Upstream commit 4dd40b5f9c3d89b67af0dbe059cf4a51aac6bf06 ]
+[ Upstream commit 95b9606b15bb3ce1198d28d2393dd0e1f0a5f3e9 ]
 
-Since the initial commit 57692c94dcbe ("drm/v3d: Introduce a new DRM driver
-for Broadcom V3D V3.x+") the struct v3d_dev reserved a pointer for
-an optional V3D clock. But there wasn't any code, which fetched it.
-So add the missing clock handling before accessing any V3D registers.
+Current loopback test validation ignores non-linear SKB case in
+the SKB access, which can lead to failures in scenarios such as
+when HW GRO is enabled.
+Linearize the SKB so both cases will be handled.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
-Signed-off-by: Maíra Canal <mcanal@igalia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250201125046.33030-1-wahrenst@gmx.net
+Signed-off-by: Alexei Lazar <alazar@nvidia.com>
+Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Link: https://patch.msgid.link/20250209101716.112774-15-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/v3d/v3d_drv.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index d7ff1f5fa481f..7c17108da7d2d 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -286,11 +286,21 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
+index 1d60465cc2ca4..2f7a543feca62 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
+@@ -166,6 +166,9 @@ mlx5e_test_loopback_validate(struct sk_buff *skb,
+ 	struct udphdr *udph;
+ 	struct iphdr *iph;
  
-+	v3d->clk = devm_clk_get_optional(dev, NULL);
-+	if (IS_ERR(v3d->clk))
-+		return dev_err_probe(dev, PTR_ERR(v3d->clk), "Failed to get V3D clock\n");
++	if (skb_linearize(skb))
++		goto out;
 +
-+	ret = clk_prepare_enable(v3d->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Couldn't enable the V3D clock\n");
-+		return ret;
-+	}
-+
- 	mmu_debug = V3D_READ(V3D_MMU_DEBUG_INFO);
- 	mask = DMA_BIT_MASK(30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_PA_WIDTH));
- 	ret = dma_set_mask_and_coherent(dev, mask);
- 	if (ret)
--		return ret;
-+		goto clk_disable;
- 
- 	v3d->va_width = 30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_VA_WIDTH);
- 
-@@ -310,28 +320,29 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(v3d->reset);
- 
- 		if (ret == -EPROBE_DEFER)
--			return ret;
-+			goto clk_disable;
- 
- 		v3d->reset = NULL;
- 		ret = map_regs(v3d, &v3d->bridge_regs, "bridge");
- 		if (ret) {
- 			dev_err(dev,
- 				"Failed to get reset control or bridge regs\n");
--			return ret;
-+			goto clk_disable;
- 		}
- 	}
- 
- 	if (v3d->ver < 41) {
- 		ret = map_regs(v3d, &v3d->gca_regs, "gca");
- 		if (ret)
--			return ret;
-+			goto clk_disable;
- 	}
- 
- 	v3d->mmu_scratch = dma_alloc_wc(dev, 4096, &v3d->mmu_scratch_paddr,
- 					GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
- 	if (!v3d->mmu_scratch) {
- 		dev_err(dev, "Failed to allocate MMU scratch page\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto clk_disable;
- 	}
- 
- 	ret = v3d_gem_init(drm);
-@@ -360,6 +371,8 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	v3d_gem_destroy(drm);
- dma_free:
- 	dma_free_wc(dev, 4096, v3d->mmu_scratch, v3d->mmu_scratch_paddr);
-+clk_disable:
-+	clk_disable_unprepare(v3d->clk);
- 	return ret;
- }
- 
-@@ -377,6 +390,8 @@ static void v3d_platform_drm_remove(struct platform_device *pdev)
- 
- 	dma_free_wc(v3d->drm.dev, 4096, v3d->mmu_scratch,
- 		    v3d->mmu_scratch_paddr);
-+
-+	clk_disable_unprepare(v3d->clk);
- }
- 
- static struct platform_driver v3d_platform_driver = {
+ 	/* We are only going to peek, no need to clone the SKB */
+ 	if (MLX5E_TEST_PKT_SIZE - ETH_HLEN > skb_headlen(skb))
+ 		goto out;
 -- 
 2.39.5
 
