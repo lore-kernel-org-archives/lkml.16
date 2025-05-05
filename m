@@ -1,220 +1,94 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from forward203b.mail.yandex.net (forward203b.mail.yandex.net [178.154.239.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5066E1E7C24
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435531E7C24;
+	Mon,  5 May 2025 08:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433231; cv=none; b=XJTgBm4RAOLDEeeuis45frrH/3kOPYqHM4loJdGJjtf4rJ4QtT6vYfwkDL9qa60kLXCtRqnO2xy8Ws/uRNQ+XZCI/YKYI1vO0Kg1n/YRbupHCd9ctNyicdNwDKuca7zK8NdyFkTrT4z5/9MFKyuqLSGnRZ1j3zNlN6q+ju2KAEw=
+	t=1746433275; cv=none; b=XWvBMKfZh7sc4AkabpfhgvkKumNv7kADeIsQ3VI4Y06mmzet6EGaV8RoiXqzSWLS7cnn1E5uqD+eGxpdURq9px2GPsGFVdHCqeB4c4Q8wCA3MSGz5jQrhqC7QRgA5dITD/i6vBHfgyNGT7d/gdiaHhS0ZxKsoYWa+FDmfK2hpaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433231; c=relaxed/simple;
-	bh=2nld4hcGgo6X0z6GWVU9T2qu2SGGif3NrxrDhDm+P9w=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ejYRpcaM4WsGH4an9+AXeX5C8uppavO0iOxlf16UAEBrS8DoLu/C0XPcWuVJMOXioja1X77nIu4xYXfbZ5HWHEoPHfIULNajRb1NlKWQWNcO5EPv5Pq1mPwVtcOYwHlh9nI2V1dNP5LkPqUyhpdGRb/gb31vgh2uvbxZitKw5ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=pOHlkCF2; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746433275; c=relaxed/simple;
+	bh=Ubx4IIN/jFj2W5sWJUDmRo/Czw/KW+u7tWQC4o0VLwY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o/Ct77WSrQIKl10tor2Eat6HFEmXtNoHCteJXa1gutj7Hne/2e6kJDy+1Z25E4Ho9SSDe9pyWY/rhMpByWwOjVV4qCO3Ng3trr+USSQeaU1VAfJMWBviGGJs8NnxZBotH6g9v4/89PyEfX8lsPp+zxIdIwQwF8rlR5z+HM6ARNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=itb.spb.ru; spf=pass smtp.mailfrom=itb.spb.ru; dkim=pass (1024-bit key) header.d=itb.spb.ru header.i=@itb.spb.ru header.b=iov0e4Xg; arc=none smtp.client-ip=178.154.239.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=itb.spb.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itb.spb.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="pOHlkCF2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746433220; x=1746692420;
-	bh=PPmY1q+mDq92unxZt7p8cEaDwhs2YRbB62LoxxnlFpE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=pOHlkCF2T1ravadpuvayGDQeSZ/x50ch5YmOm3ewP8GVMn2aegoZ5eQ/WmTsEGd6o
-	 VtySB0xnk+5XpQqit9qXlw8yxfbgxpay7ezwsHcrv+hSL1chyzvZEuhbPhFJJDLQZ4
-	 CEGgn4Yy5Gu4KNvSN1IcI90m/lNT2VQh4+PS6YI+xZnTtI1NP1MkJMel6/tmNHOXlN
-	 daR1dNrHA0AZwjetkfqbrlD9EW3mFaS2b1WJlGCu+sqfGp9wafe31MR8s+Z7Htew3Z
-	 URtcBKqp+u9YK2/xY/tYAka7XJ/YyIwKbg0ib0xpAowPqcfUt2Yl/61QBmJkdgK63j
-	 NgzSGvQNVWEQQ==
-Date: Mon, 05 May 2025 08:20:16 +0000
-To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
-From: fossben@pm.me
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "niks@kernel.org" <niks@kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
-Message-ID: <Q8fBN4506NOX9rrFspv9q0xuQRlE1YcHDbwfRUlXy7if-Lv-kGyIXPrNN2kOMoWENMYCfTmOhAhnSCs4gtUvpzEf0O_JZ_BV__V3B_A7iU8=@pm.me>
-In-Reply-To: <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
-References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com> <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org> <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
-Feedback-ID: 134317997:user:proton
-X-Pm-Message-ID: fef2514a1a9fdd3fff94770a5f82dde0aa08ad69
+	dkim=pass (1024-bit key) header.d=itb.spb.ru header.i=@itb.spb.ru header.b="iov0e4Xg"
+Received: from forward100b.mail.yandex.net (forward100b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d100])
+	by forward203b.mail.yandex.net (Yandex) with ESMTPS id F048A63213;
+	Mon,  5 May 2025 11:14:26 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:2e20:0:640:2132:0])
+	by forward100b.mail.yandex.net (Yandex) with ESMTPS id 5338F60B29;
+	Mon,  5 May 2025 11:14:18 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id xDW2KY8LZqM0-B44wJ027;
+	Mon, 05 May 2025 11:14:17 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itb.spb.ru; s=mail;
+	t=1746432857; bh=HuQQ0othjGHwBJR53YINjZq8Dpvlg0YbKAb0yWqBg2c=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=iov0e4Xg6B+R6tH1qs104OemT08iTHa6qu1rWMFZwuSe6F7FLA6t5MEA2UHnny8Dt
+	 YCUIlKypQUD2wrty3CmL3SL7k0KI7wYOe68zzs3679vsGMsGNfmgS02JXsnqc132yQ
+	 fCCZRNEqJltC5cGpQyRmLF4cpdQx2ouK2kR9wsC0=
+Authentication-Results: mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net; dkim=pass header.i=@itb.spb.ru
+From: Ivan Stepchenko <sid@itb.spb.ru>
+To: Lee Jones <lee@kernel.org>
+Cc: Ivan Stepchenko <sid@itb.spb.ru>,
+	Pavel Machek <pavel@kernel.org>,
+	David Lechner <david@lechnology.com>,
+	Jacek Anaszewski <j.anaszewski@samsung.com>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] leds: uleds: fix unchecked copy_to_user() in uleds_read()
+Date: Mon,  5 May 2025 11:13:42 +0300
+Message-Id: <20250505081342.3855-1-sid@itb.spb.ru>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Monday, May 5th, 2025 at 12:48 AM, Mingyen Hsieh <Mingyen.Hsieh@mediatek=
-.com> wrote:
+The copy_to_user() is annotated with __must_check, indicating that
+its return value must be checked by the caller. Currently, uleds_read()
+ignores it. If the userspace buffer is invalid and copy_to_user() fails,
+the userspace application may assume it has received fresh data, while
+in fact copying has failed. This can leave applications out of sync
+with the actual device state.
 
-> On Sun, 2025-05-04 at 00:39 +0200, Niklas Schnelle wrote:
-> >=20
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >=20
-> >=20
-> > On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=
-=E8=AB=BA) wrote:
-> > > On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me=C2=A0wrote:
-> > > >=20
-> > > > External email : Please do not click links or open attachments
-> > > > until
-> > > > you have verified the sender or the content.
-> > > >=20
-> > > >=20
-> > > > Hello all,
-> > > >=20
-> > > > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed
-> > > > that
-> > > > I could no longer ping *.local addresses provided by Avahi. In
-> > > > addition, I also noticed that I was not able to get a DHCP IPv6
-> > > > address from my router, no matter how many times I rebooted the
-> > > > router or reconnected with NetworkManager.
-> > > >=20
-> > > > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses
-> > > > immediately.
-> > > > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
-> > > > address will stay there for a while before disappearing later,
-> > > > possibly because the DHCP lease expired? I am not sure exactly
-> > > > when
-> > > > it stops working.
-> > > >=20
-> > > > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
-> > > > offending commit that causes mDNS to fail:
-> > > >=20
-> > > > commit 80007d3f92fd018d0a052a706400e976b36e3c87
-> > > > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> > > > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *=
-sta_cmd
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 =
-upstream.
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO =
-firmware.
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabli=
-ng MLO when
-> > > > the
-> > > > firmware supports it")
-> > > >=20
-> > > > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++----=
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: e381322b0190 ("leds: Introduce userspace LED class driver")
+Signed-off-by: Ivan Stepchenko <sid@itb.spb.ru>
 ---
-> > > > ----
-> > > > --------------------------------------------
-> > > > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
-> > > >=20
-> > > > I do not know if this same commit is also causing the IPv6 issues
-> > > > as
-> > > > testing that requires quite a bit of time to reproduce. What I do
-> > > > know with certainty as of this moment is that it definitely
-> > > > breaks in
-> > > > kernel 6.14.3.
-> > > >=20
-> > > > I've attached my hardware info as well as dmesg logs from the
-> > > > last
-> > > > working kernel from the bisect and 6.14.4 which exhibits the
-> > > > issue.
-> > > > Please let me know if there's any other info you need.
-> > > >=20
-> > > > Thanks!
-> > > > Benjamin Xiao
-> > >=20
-> > > Hi,
-> > >=20
-> > > Thanks for reporting this issue, we will aim into this.
-> > >=20
-> > > Can you provide me with your testing steps?
-> > >=20
-> > > Best Regards,
-> > > Yen.
-> > >=20
-> >=20
-> > Hi Yan,
-> >=20
-> > I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
-> > mt7925e WiFI module. My setup is just a home router with native IPv6
-> > both for my uplink and in the LAN. The problems with IPv6 can already
-> > be seen just in the LAN for example by checking which IP was used for
-> > SSH, in my setup it should always be IPv6 but falls back to IPv4 in
-> > the
-> > broken state.
-> >=20
-> > As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
-> > mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4.
-> > This
-> > fully restores IPv6 for me. Also note I'm running this with the
-> > mt7925
-> > firmware version 20250425073330 from linux-firmware's master branch
-> > as
-> > I had some dropped connections with earlier firmware.
-> >=20
-> > So it definitely looks like that commit also broke IPv6 and not just
-> > mDNS. Note that if if I use DHCPv6 instead of router advertisements,
-> > on
-> > the latest firmware, but without the revert, I get a global IPv6
-> > address added to the interface but then native IPv6 addresses are
-> > still
-> > uncreachable. With the offending patch reverted my SSH session to an
-> > IPv6 only host works fine and is stable. Also I'd be willing to test
-> > a
-> > proper fix as I rely on IPv6 heavily due to having to use CGNAT for
-> > IPv4 but not for IPv6.
-> >=20
-> >=20
-> > Thanks,
-> > Niklas
->=20
-> Hi Benjamin & Niklas,
->=20
-> Can you help to try this patch? I can get IPv6 address through this
-> patch.
->=20
-> If it can work at your environment as well, i will upstream it and add
-> test tag with you.
->=20
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> index a42b584634ab..fd756f0d18f8 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-> @@ -2183,14 +2183,14 @@ mt7925_mcu_sta_cmd(struct mt76_phy *phy,
->                         mt7925_mcu_sta_mld_tlv(skb, info->vif, info-
-> >link_sta->sta);
->                         mt7925_mcu_sta_eht_mld_tlv(skb, info->vif,
-> info->link_sta->sta);
->                 }
-> -
-> -               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
-> >link_sta);
->         }
->=20
->         if (!info->enable) {
->                 mt7925_mcu_sta_remove_tlv(skb);
->                 mt76_connac_mcu_add_tlv(skb, STA_REC_MLD_OFF,
->                                         sizeof(struct tlv));
-> +       } else {
-> +               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
-> >link_sta);
->         }
->=20
->         return mt76_mcu_skb_send_msg(dev, skb, info->cmd, true);
->=20
->=20
-> Thanks~
-> Yen.
+ drivers/leds/uleds.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Hi Yen,
+diff --git a/drivers/leds/uleds.c b/drivers/leds/uleds.c
+index 374a841f18c3..41bfce43136c 100644
+--- a/drivers/leds/uleds.c
++++ b/drivers/leds/uleds.c
+@@ -147,10 +147,13 @@ static ssize_t uleds_read(struct file *file, char __user *buffer, size_t count,
+ 		} else if (!udev->new_data && (file->f_flags & O_NONBLOCK)) {
+ 			retval = -EAGAIN;
+ 		} else if (udev->new_data) {
+-			retval = copy_to_user(buffer, &udev->brightness,
+-					      sizeof(udev->brightness));
+-			udev->new_data = false;
+-			retval = sizeof(udev->brightness);
++			if (copy_to_user(buffer, &udev->brightness,
++					 sizeof(udev->brightness))) {
++				retval = -EFAULT;
++			} else {
++				udev->new_data = false;
++				retval = sizeof(udev->brightness);
++			}
+ 		}
+ 
+ 		mutex_unlock(&udev->mutex);
+-- 
+2.39.5
 
-I manually applied the changes on top of 6.14.5 and mDNS seems to work alon=
-g with IPv6! I will do more testing for the rest of the day to see if the i=
-ssue is completely fixed but so far looks good at least for the 5 minutes I=
-'ve been testing it.
-
-Thanks for the fix,
-Ben
