@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BA72C2FB5;
-	Mon,  5 May 2025 22:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2C4298CC2;
+	Mon,  5 May 2025 22:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485117; cv=none; b=Der2wrlexbgEP6wLfRgNXCpuW/hqDSE8h3VzbkZ+Uhdp5slDjlQIIufPx1knkE2nbuM7JXcCSRQECubKjf8vl0PKfBO7ZEVevIEinPVlZ2Cko2L3YXrfhQo7HazQ13qbHyY/osyx52YikR+mV5JUiXfIG53ea/sa82JM3XjbeJU=
+	t=1746485133; cv=none; b=GMO+EhvZFO3FGnc6Ebp5wglyk6Nsm/S6TDKeyk/FkAoLkPpAAjh+CJReC4qm2wEZJLXJFID4nh8UZO15Xlcb1nxL5ZOk2fTHBskyCcK2pfo8vl4QeibseCkELVlhkSUUIj+V1uvma96gv1aNkz0sWRMOAjJ6LDlQ1K90CYEIDwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485117; c=relaxed/simple;
-	bh=DOMQdMoulpJm9HfsDdMRhCyd63nj7nNC6JWstqRzidA=;
+	s=arc-20240116; t=1746485133; c=relaxed/simple;
+	bh=xcTwYq2bMsivseQDA5CYNGoPJpwC7m1P/ITeFcI4upU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BJJV6qGGFTbpLB0OA9ObyOfHsna7zfp6KT5vjZfLWvnDP/39CrpkDU7sHBNVz26UWc9NvPUFQFzg7lfiS1iPZuxqQtYsCrJ8xCWJ5dYhE/+fx8h5mvhSL36Hw/8cA3eTkoK9XpiT2Oco1S8NiUyhDSXce2XWQxDkpoXs2PR/mMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aK2Ic1vN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GPTxPP8nOpVVQvAcajBJcXC3Fxc1MJP0kFvgZtPn6fHUg00n69qFAsQMhATA1b2ir1vc8xasDSMltI02bSwyrCLlAgZJ7Jc33ZYOmP+kSrUR71Te7kgaMYYCm126ZA/aV/i1PdAmjYvh+dKLTQJQXAy4wbIV7pj9jOSKtgzjDJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kALxn6md; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aK2Ic1vN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCF1C4CEED;
-	Mon,  5 May 2025 22:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kALxn6md"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DCDEC4CEE4;
+	Mon,  5 May 2025 22:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485116;
-	bh=DOMQdMoulpJm9HfsDdMRhCyd63nj7nNC6JWstqRzidA=;
+	s=k20201202; t=1746485132;
+	bh=xcTwYq2bMsivseQDA5CYNGoPJpwC7m1P/ITeFcI4upU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aK2Ic1vNNjWtvcjtmzBgPbSJquof7aqREgw22q1bMsAFcI8nQSVvIqcuxixPFDrLI
-	 p+dGlB+7j3T9hcYYaAeE1vNnsWqj1y971IIZQUlWktTnsO3df2hUtPUrcWTCpN2X2o
-	 egm5u0j2m5R1lTD5WiQ+da3PBOMua9hTLQP7kHFbvBhNwZ9ghJJfdQnOWfDspE2je4
-	 0mOZ9y1+vHAtT7me39A9rV2DHJ4840IVr2KQaMCVK8/lDaxbOyYPtRC9WTWcODRTZh
-	 DzmgzTa/nHRIpolv18SgbnOL1s0Px+SavT0+S5Fb1nDhbDEGUFIelzHSEZeGTrAMaX
-	 Bc6ooZsy3LR4A==
+	b=kALxn6mdFGJBlgvMAQyB9Y+2tNQ1ssqZy5gvhqHC22hvmTDPlRhVLO6mvzWPX9F7A
+	 sBge1JsRMLbNyUZ6AKePVauGy084UZKZjssSEVNze2xyxq80GOts1ZIUjTW2zJCrzS
+	 D4dZrq03FY3wRqFwSWvuRt65c7ym7yI7qfqp4KBT4h4yFxfvmOOZaVOXne4LodAeVD
+	 f10KGehQ6VgToD86730D3Gna666mYtxnwJNEkUjbT71mjn4JB05xPx2vgo8IKip/1b
+	 OpWg/E9ctGSLcS2KBOxDrXMQKlryN1qKMjtX4nSuzSNWL+0CnlXPx1s0xAqUUzrtnO
+	 ++xm2bIn/wl1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
+	Thierry Reding <treding@nvidia.com>,
 	Sasha Levin <sashal@kernel.org>,
-	kw@linux.com,
-	gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 170/486] misc: pci_endpoint_test: Give disabled BARs a distinct error code
-Date: Mon,  5 May 2025 18:34:06 -0400
-Message-Id: <20250505223922.2682012-170-sashal@kernel.org>
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	tmn505@gmail.com,
+	devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 176/486] arm64: tegra: p2597: Fix gpio for vdd-1v8-dis regulator
+Date: Mon,  5 May 2025 18:34:12 -0400
+Message-Id: <20250505223922.2682012-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -48,67 +52,40 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Niklas Cassel <cassel@kernel.org>
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
 
-[ Upstream commit 7e80bbef1d697dbce7a39cfad0df770880fe3f29 ]
+[ Upstream commit f34621f31e3be81456c903287f7e4c0609829e29 ]
 
-The current code returns -ENOMEM if test->bar[barno] is NULL.
+According to the board schematics the enable pin of this regulator is
+connected to gpio line #9 of the first instance of the TCA9539
+GPIO expander, so adjust it.
 
-There can be two reasons why test->bar[barno] is NULL:
-
-  1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
-  2) The BAR was skipped, because it is disabled by the endpoint.
-
-Many PCI endpoint controller drivers will disable all BARs in their
-init function. A disabled BAR will have a size of 0.
-
-A PCI endpoint function driver will be able to enable any BAR that
-is not marked as BAR_RESERVED (which means that the BAR should not
-be touched by the EPF driver).
-
-Thus, perform check if the size is 0, before checking if
-test->bar[barno] is NULL, such that we can return different errors.
-
-This will allow the selftests to return SKIP instead of FAIL for
-disabled BARs.
-
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20250123120147.3603409-3-cassel@kernel.org
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-[kwilczynski: commit log]
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Link: https://lore.kernel.org/r/20250224-diogo-gpio_exp-v1-1-80fb84ac48c6@tecnico.ulisboa.pt
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index e22afb420d099..f05256b7c2084 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -287,11 +287,13 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 	void *read_buf __free(kfree) = NULL;
- 	struct pci_dev *pdev = test->pdev;
- 
-+	bar_size = pci_resource_len(pdev, barno);
-+	if (!bar_size)
-+		return -ENODATA;
-+
- 	if (!test->bar[barno])
- 		return false;
- 
--	bar_size = pci_resource_len(pdev, barno);
--
- 	if (barno == test->test_reg_bar)
- 		bar_size = 0x4;
- 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+index 63b94a04308e8..38d49d612c0c1 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+@@ -1686,7 +1686,7 @@ vdd_1v8_dis: regulator-vdd-1v8-dis {
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 		regulator-always-on;
+-		gpio = <&exp1 14 GPIO_ACTIVE_HIGH>;
++		gpio = <&exp1 9 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
+ 		vin-supply = <&vdd_1v8>;
+ 	};
 -- 
 2.39.5
 
