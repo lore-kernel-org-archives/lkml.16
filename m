@@ -1,285 +1,222 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ADF1F5402
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746439610; cv=none; b=et7/kWsoFQnLt9nLiRRughYlhSMaHmpuvmGjk4a/Scc4/gpT+vVIMGuw7nwkis5IiFn+6zvhIT3MM6VYiQ54MaVv5LX9yMliN6W1QxPizWF9xT7T9RuYgNWyuYVp+G84A7zT96CHkUxVK2iztbHm7gcZ7LQTsARukYJtU6axQM4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746439610; c=relaxed/simple;
-	bh=nlKuLgwyphuIzI6gkbuywQ4Yc9EOdbzVgtg7McxUqKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCi8HtoS+GWbEjtiBu+eZiPxJrTjncTGfaiFWVnoQ38nyWrj1cJiuFjFtbSv1Odw8Cg1qw6fkHPGmVCOHcvVOZkPCf4wk0bFvr0tLf1F9k+31iWG/xHJEkP3STES7h1UxJszpDcxoiaJEe2nqb3GCLuPX+a2O5rQUvOmB7BozUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CFY+Bo+D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NyrGr7IM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CFY+Bo+D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NyrGr7IM; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A1217736;
+	Mon,  5 May 2025 10:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746439739; cv=fail; b=Lwl3CZN5gcgbLSUguyaxDTWTJAcbMSMV5A5T+dwZJ/8OvoyhAcAMAEE5pmMjVYuwK0f52pSJzMU2JFOb9qSNIg04dpx/7S/W/AJRWBMqUoZLLGaDrCH1z87ZkZQMev+7Av3LZqIg6WHyaJBqb6/NFLTj9f/N9cKEmVmDQHeJbRM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746439739; c=relaxed/simple;
+	bh=lUHK5asVCmMK1Y8/wpihXLnPW81G9bpDQArx/a7lSHk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=B1YOmuW1b1NeiYRZ68aJHYl67C94LRgEGTqZsMeNENmdtu8f6zgRO99nvrGiVP7lUonSL3IZT8HcPNC0Lfe+InV/z5Q9/IItcoeAA+Sdb1aLMQZn5LAv+2bX02JErhc4A+F+Jc83Nk+zxM5uEe8W317f7wNtXe2CSDTDOxRMTwc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYh3853P; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CFY+Bo+D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NyrGr7IM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CFY+Bo+D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NyrGr7IM"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A616421282;
-	Mon,  5 May 2025 10:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746439606; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uHrYEe/BCPIKsghK9cJ2gEqy5Nqd9eQ4C+mGF/QN4A=;
-	b=CFY+Bo+DtYwUuRgBGl5AmLhRSuPGKPQIAQynukOPOCqzVtgYDAeQ4gsGHvWB40vrQLZ1zS
-	joSg0B0ocmFM0tyX8U1z6G8YuN2iuO5RqPn4OkxGMEtzpTGFrp83K5mKDPCS9w3OLyFkIV
-	OokPgUlPg9wkcdAbSF+agNyYk1v1aNY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746439606;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uHrYEe/BCPIKsghK9cJ2gEqy5Nqd9eQ4C+mGF/QN4A=;
-	b=NyrGr7IMNGQ01PenLUsQ9R4tyXomoJxqrWT7MBSfOe2jqiijjmBvmsTisSeLYQYmw4WEr7
-	UX+/PSAfcFLja/DA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=CFY+Bo+D;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=NyrGr7IM
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746439606; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uHrYEe/BCPIKsghK9cJ2gEqy5Nqd9eQ4C+mGF/QN4A=;
-	b=CFY+Bo+DtYwUuRgBGl5AmLhRSuPGKPQIAQynukOPOCqzVtgYDAeQ4gsGHvWB40vrQLZ1zS
-	joSg0B0ocmFM0tyX8U1z6G8YuN2iuO5RqPn4OkxGMEtzpTGFrp83K5mKDPCS9w3OLyFkIV
-	OokPgUlPg9wkcdAbSF+agNyYk1v1aNY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746439606;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uHrYEe/BCPIKsghK9cJ2gEqy5Nqd9eQ4C+mGF/QN4A=;
-	b=NyrGr7IMNGQ01PenLUsQ9R4tyXomoJxqrWT7MBSfOe2jqiijjmBvmsTisSeLYQYmw4WEr7
-	UX+/PSAfcFLja/DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92F1713883;
-	Mon,  5 May 2025 10:06:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YyWGI7aNGGi4dwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 10:06:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3F95DA0670; Mon,  5 May 2025 12:06:46 +0200 (CEST)
-Date: Mon, 5 May 2025 12:06:46 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 5/5] mm/filemap: Allow arch to request folio size
- for exec memory
-Message-ID: <b2xibk62rakzb3ln7i4evdtqrkd75xboj5y4vfqf2fyt3y7g5a@5x7qqsjpanxd>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-6-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYh3853P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746439737; x=1777975737;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=lUHK5asVCmMK1Y8/wpihXLnPW81G9bpDQArx/a7lSHk=;
+  b=KYh3853PhV6lrpV/8Nqr5oXSrFXm4pJA3srAkTKD9UqHWz8l76wkttiE
+   NijdrVVMfTd7a/BYzbr0y7dgoJvsYmPfWy4sv0kdwxZpPFh0L304ytaks
+   P9nJyAQjn4Dhm9MRglsl7gNQlDw0hIOFzEGZjEyWq849NIYnGlQYGis7O
+   hJ/7cqKVmjVRMZKrFKApjNTknDsPUXXSG/D3F/cM4a9yacVLfdz7eojIz
+   bPqdoV8Mc04Q3U6mkz0Jv9aCuR72Of84yIDmC3LGyGhPvCt6OKyLQ9kQS
+   zMB0UG7bT5XCSY03T8dTykheQVYy7aAL6/ls8/oIPBKLmFnU5TMR8tK5B
+   Q==;
+X-CSE-ConnectionGUID: nOg1ywQ2R+KikA/pVqVh7w==
+X-CSE-MsgGUID: stZuLcHpRom10H3UxF6RAg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="58702032"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="58702032"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 03:08:56 -0700
+X-CSE-ConnectionGUID: xByZx317TJOMw9z8iCH85A==
+X-CSE-MsgGUID: ma6Ad35wRqm+jFbwTf7pVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="136188825"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 03:08:54 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 5 May 2025 03:08:53 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 5 May 2025 03:08:53 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 5 May 2025 03:08:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=so5uEWTOE3CwG8guVOuPbkPNPoVbhfDrKKpVojuzM4EqJCdind5txFvu36RgVUG0tFiR+3QxYJWo3iHFbRwdVm/nyL2EsxF6NRGtqCLO9CYVuT/wLgy76rmURvpL/kB+jxF5oxtwkI+tRpo4rMuoMIU+yFP9eBOOpqB//QX6iRbtSkknQXcATeakPAYXvhFzjSFWzer4VXa4UPYCRf3NVBWu2aOOEPhesp3PAujs/D8KkmDBHsEaGKJdu1NaHPq8uZUOrjcBmSLZbA80YWOMX/p6dEooERrIKZ3+3r8C9U0DIjvzHTrEoODLZacjKBXJUW7CRbs05mFvyTkjGtNXMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lUHK5asVCmMK1Y8/wpihXLnPW81G9bpDQArx/a7lSHk=;
+ b=q7wE/8cmb+jlNVLIUIMrJTvilXVjSvMZ73z9RP0ksr4fKB6NtHJcd6B1fBMbO2221HNJ++SjGZlVTERg7S9j3l2j7DgNvWEn1pUvJPBqj4GSbZteTdF2flwCv90TJzuuCilZQVaI30hHNSvCo4JzfjufYwcgrncIj+GMovuvpnCYnelrrRF3qEMaTdcL2f+e7LT0E2M9udAkmE+pNEBn8STlUG68qiyL0iq5/ZAPr+54UVD0nJ7nispKuXhvuy1eh3bXN3deNlvHXStaJl+dcnjojkjPWROz1lUSgWe0muSlE8EGOz7rymUWfLZLu90XbI6DEtOF94U7ov6W0JGEig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM6PR11MB4442.namprd11.prod.outlook.com (2603:10b6:5:1d9::23)
+ by PH7PR11MB8011.namprd11.prod.outlook.com (2603:10b6:510:24a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Mon, 5 May
+ 2025 10:08:50 +0000
+Received: from DM6PR11MB4442.namprd11.prod.outlook.com
+ ([fe80::b4a2:9649:ebb:84f9]) by DM6PR11MB4442.namprd11.prod.outlook.com
+ ([fe80::b4a2:9649:ebb:84f9%4]) with mapi id 15.20.8699.022; Mon, 5 May 2025
+ 10:08:50 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>
+CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [RFC, PATCH 01/12] x86/virt/tdx: Allocate page bitmap for Dynamic
+ PAMT
+Thread-Topic: [RFC, PATCH 01/12] x86/virt/tdx: Allocate page bitmap for
+ Dynamic PAMT
+Thread-Index: AQHbu2NVXPZivQq+BEGwfZ+MMLlhLrPD1JwA
+Date: Mon, 5 May 2025 10:08:50 +0000
+Message-ID: <d831a4cf92fc2e514384989a9c35b07c4bc1f546.camel@intel.com>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+	 <20250502130828.4071412-2-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250502130828.4071412-2-kirill.shutemov@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR11MB4442:EE_|PH7PR11MB8011:EE_
+x-ms-office365-filtering-correlation-id: 1505b22f-0e5e-45ce-d167-08dd8bbcd57a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?Nk1TcFBRU0toaEVJR01JaTVlOFJCbGMwY1RTT1EwY2RpNzdZcGFwTFBzZ2xH?=
+ =?utf-8?B?d20yS0FZYnpuc0dVUlZNanRVcDVWUFc0VW96aW5LRzVkNnUvZ0dQRFgyQmxU?=
+ =?utf-8?B?d0tsa1pMVFh1VUIxOWYrY3lZS3g4b3RERXZIUDhvdStMSGF4NmxLQXdGRTdJ?=
+ =?utf-8?B?WHQva29GUVpnc05TK1h3Zy80bW81eE15bjNuVWwvQ3lCQnJETlVCNjNuRVVw?=
+ =?utf-8?B?a3lDVlhNUzNQcERzaVBBWk5LdGVBRnBOT1k4SlMrSFgvRHN1cGhEYm0vNXM1?=
+ =?utf-8?B?MFl1OHR5c0pBdFRVSWkvQWYvL0tVZlFNbHdOQ0hxWnVSWXc5elRlVUpEclJG?=
+ =?utf-8?B?Ky9USlFaVmowOGZINWZLOUMwaVp6VmRPblkwRFNQUTVFQ2pNU2QxYWFiSHA4?=
+ =?utf-8?B?T0craEI0eDB0dVJkdzFLR0dDcy9QcXlpVFpLV1lBVWM5ZktnRnBkNDVqWjNL?=
+ =?utf-8?B?WUlocnBwMFIyOUt5T0JUVlIrTWdkaTJpOGVxQlZ6Y01qNk85Z3h0OENIbkNw?=
+ =?utf-8?B?a0NyYzZsTGgxZnlhazhsK2VYOGhQb2dDQjJpSnRiSThScDhWdE5TRHY5TGpa?=
+ =?utf-8?B?WU13S05zcHpFV0VaSXp1YSthaGdQYUhkaWNEREJkakUzMnUwanpMQTVpQTk3?=
+ =?utf-8?B?c2dHa0ZnazhEbmpPeEo1MmVweVhMSW1iWXFxTllzTjFwbCt4czRNeWIvWm13?=
+ =?utf-8?B?WUc4Z0FWVG03UTQrRDgwajgvYnZ6a3RhZk1LbE1rRGgwNE8wT3hoSzloUjlZ?=
+ =?utf-8?B?RW1DNWxXKzJaMFFGQU1GWFo4SUR3dCtsOEFpVWU5QXkxcEdROVdmSkZhU2xa?=
+ =?utf-8?B?R1VSdEFiSERyL2VaeXhJd2JFa01UdWdBNkY2UkVpNnUzbm4vbjdaRDVZUWtM?=
+ =?utf-8?B?S25nK1RUaEF2d0lKUlNWVXlLZ0YrSFBNeXZsNy94L3c2WEQ3TlM5ZWp4R3ZR?=
+ =?utf-8?B?MHVicENmejlQcmV0NjBlVDdabkRoSVcyRUxsTjdJdzdnS0hraFBuZGY2d3FJ?=
+ =?utf-8?B?YVZHMUVqdUZNalZBbUNkallxMDVZQXlyT1JqdENNSHY2bE1IYzdJa2NjdXYw?=
+ =?utf-8?B?WFpvU0xMNmxJMHA0b0FZWXhqUmVLdWVVa21RdjJBelgvQVdBM1hTNTJoVS8y?=
+ =?utf-8?B?d1BVa1h0SlpPVWpISGdiTXNoTEpXVmRkZG9ucW9xbUxUbUtkY004TGl6aFZN?=
+ =?utf-8?B?UVVIREI4MUdvWTQ3SDZTbzd5R09nSTVSUEQzc3RuamRxdWMyL24rNUNtOUFW?=
+ =?utf-8?B?WWxuazd2YUVYLzdGcmU5L1hnWjVTR01hV1pVYUd3emN5NmVCMmZ6Y010RE1q?=
+ =?utf-8?B?cWdoWHlNdUhaOHBHaG1RZTEzc0M3OHVla2NMQXNkTzNiZCtvVjZ1Nm16QUkx?=
+ =?utf-8?B?RC83UjZiMk5URGN6SzRtMm53R3VpMHJoSVBYc2JsQ3NwaTh6aXE4akRBeERx?=
+ =?utf-8?B?TzBXRnlub3p6WlNnd05wUHd0Z3QzZ1VESjU0MlRtRHlreGlybzM4T09jT04r?=
+ =?utf-8?B?UXdNRy9BVjJpYnBodGxPL1hadDIyWWZRN1MySnZJdFRzSHVwS1orazJ0UzZG?=
+ =?utf-8?B?Q2pBNUF4S2FjcXBCRGR2b1V5WFN4R2JNUVVDR3Y2WWxuaUpVbXJFUDhmMFln?=
+ =?utf-8?B?cjFYMjdjY3RjL3ZDWDRQd3NOeHozd1poRGdRa2dSYk9YOUxIQ0pGT3Ntemtw?=
+ =?utf-8?B?QzVXbTViWjBUby9MamZvYVpISVVuL1o3Z0pBaUZyZEdLeEl3d0J1dzN0S2Vy?=
+ =?utf-8?B?Qy8vZE9mRXErWHBVMDg0T3V6dnJGYk1Tc2lwR3lMVmtsY1ZhOFJ2RkRLeTRQ?=
+ =?utf-8?B?L1pSWFlRekplVXE5VlR1aGs2S2txQU0zbzE1SGVnWk83YURCSjFZY2tBczFV?=
+ =?utf-8?B?dUVGWU9OcDdqYmRYbURUUnRSMldHbWRZK2hjMjEvK2JWV0QySDBCUDBjQUp0?=
+ =?utf-8?B?ZnVUYndQWFZWd1pNUjUyVWM2U2FDbVVEbmhNVVA1blVYejJyY3oremJlRzRT?=
+ =?utf-8?B?c2tud0JseXFnPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4442.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QS9QR2dvYlJkZGxXalkxc1NoblJrTmtySmR4N0NKWG5CUXphRWNKRmNySHNI?=
+ =?utf-8?B?eDM3MEZXUnY5OTN6Q3E4aUdUTnk0QnQrM0JFZ0tZbFUwdFhaSmpZNVcrcXdI?=
+ =?utf-8?B?TUkvT0pSMFNTV3pwTmJlYUNyUHdqNitaUytYQWpEalBnNDRpVDg4eFlGancy?=
+ =?utf-8?B?KzNoa2x0cENoaHFuaDZwWnliaW04UWVVdmVubmdFd0FjbmpnOFdHYjg0dEo4?=
+ =?utf-8?B?WnkyekYvZ0cvbFQ1N3U2bHNwTytWU2RJWWRBbzJyUEhCcEtsRllVdjBlTjNC?=
+ =?utf-8?B?eTFiMVNIQnhwSkVZTkZhaXdFRG5JM2tmTGJrN2FodUhwL0ZSRjdhWkdtemlS?=
+ =?utf-8?B?Q3YwTkZxWjZvM0g4a2pWWW9qWm5OSGtkNWd2QTdaSVlDbkRsaHlrWWFFWkIx?=
+ =?utf-8?B?NDVTSm1WZzQzUDJ4V0c3dDRmdk1sMU9CNHlqUnVrcWgvei9hOU1sOTBUdi9F?=
+ =?utf-8?B?L0pqNDZIeWFZRnBZUDZRM0NXbW4xUWNpOXhqZEVZSlpqcSt6Y2VDZXZGY3RE?=
+ =?utf-8?B?QUphc1g3bklMVVByVm1XSC9ETDJuZ1h6aU9nWjN3N2pXK3N3cXJUS3JNY0Q3?=
+ =?utf-8?B?MW1BRHF2aGE2K3ozNUVqWExKSzZFYStvYWthN2ZEa2N6MXZ2VkYzeXRyZys4?=
+ =?utf-8?B?QzhwS0d6N1huQXpjVkJDZEV6bjZ3MjU4ZFExOFA4TmpnQmg3UExoTG1KM1Jk?=
+ =?utf-8?B?OTBjOFJpS2pmVzlBV3BpKzZYUDYxT3dzR2tMczR1VHVNTk5JSENjQURqcjdp?=
+ =?utf-8?B?Y2NMVHdXeURFaXJNbDQrTTY1YU9sNlY5RFNLWittWWVuUXplbUVKbXc3ZFI4?=
+ =?utf-8?B?VEdCY3NFdHdPeG8vL2s1a2V0eGkybTAwYjQ0cCszeVlZbHJ6RnBuU2V0OURT?=
+ =?utf-8?B?WTlxeDF0NEJ3UXVIZ09FMitoanI4Qk5iU3Znb01ES3pONTkyU0pPK1NOaStG?=
+ =?utf-8?B?UytFUEM1bU9ueldIWC94bjBveWMvbkE4Q3gveVFMMitMUlN5Y1FaVmxNOUIv?=
+ =?utf-8?B?cVhYaWU4Z2tQcE1kbVN2UW5CRnhLbGtZQjZVREcraVpGTFZLZXhoai8rTnk1?=
+ =?utf-8?B?aFVQc3VBR1E4Y2R2WTlaeUhGMTBYYUYvQ0VhTzdGSFB0Nmg3aCtpUG5IeVFv?=
+ =?utf-8?B?ak1aWGRJWHphd0xHV3hXcHZQaUxFNEM0RkpYRU4yallQeXJaclVhejlXYTU4?=
+ =?utf-8?B?SlJodjRDdGNva3A4bmJPVCs5b0NqVE5BYkhRSFQyZHJOczhCTFBkTzBpTjl1?=
+ =?utf-8?B?bm43dW5IU09JdDFjOWt3eTdjVzhFb0I4UWxLNEFYZDJldnZYVHRTWjczeXlN?=
+ =?utf-8?B?Q3Nyb0JUV3V3Rit2VWtTWlJvSHpmeWYycnQzOHBROUtCQVh2K0pFUGh6L2wx?=
+ =?utf-8?B?WTRjYXN4Qk8xbG5iNm5TY0JscWlIQVh2RWVwbnNDZUFHRjVOcVhWM1hiWlow?=
+ =?utf-8?B?b2R5N1c3WGZHZGlzSktNaTc3REx6cklVUld0cXRHOUR0NEdKSHExNU5xcHRt?=
+ =?utf-8?B?TlJaYTlYTFBMVk1PcXJ4amdBWEI2NkxyZ2NINFBVMzlFQmp0Z3Mva3hqd3dn?=
+ =?utf-8?B?dytSWW9ueksza1RnYSs2MldxT004ZW4rV29hcnFVQkNXQ3VpVk5xTjdYLzI0?=
+ =?utf-8?B?T2daa1E4dHJvejNLTFRHQW1qaG9qTWoweW1NTGY4WDRJcER0Y09sOE9HM0Ew?=
+ =?utf-8?B?VzcyalpOSUlHYTY1T0VzbG1Ia0tqRXFHWU9mVld2QzJPelNjRFFTMzFONWtY?=
+ =?utf-8?B?ck1QdnVIRWxGenhhODNqdE11b0dBcWhLekM1blhzVU9vVmJ4RlJoTXFWT201?=
+ =?utf-8?B?bVF6cWZPb1ovaWhobitKQm11bVh0dGc3RXYwN094NDI1b3dVMzd3R01ZbUk5?=
+ =?utf-8?B?TklHZVh6Y0g0Zmo4UndNSU1SUThWeVdiWXhER2NWVDBiUGlMM202bFVRQ1Yz?=
+ =?utf-8?B?ZVZTTSs1Ni9qN0xlRjh0TThuNzlDOCtKVytoMkt0blBIcFVXWVdSV25PY1J5?=
+ =?utf-8?B?VVR3QmpHUEVQY1BCTG1nT1BQRll4S1JpaG5nYjVjNlNIckp4aGdhbTdKT210?=
+ =?utf-8?B?WFJDREgzdWZadk1NMEJmaVJvdlRIZy8xek04UlJMdllHQ2EzZDBxZndGN2My?=
+ =?utf-8?Q?P+ROdiLO7QzTcPkJvsykgmMf8?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3AE305EEF42B7645AED676441F0E1032@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430145920.3748738-6-ryan.roberts@arm.com>
-X-Rspamd-Queue-Id: A616421282
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4442.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1505b22f-0e5e-45ce-d167-08dd8bbcd57a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2025 10:08:50.7868
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zvsl1A5bySoynGs63dJFvFtw5RKhk/ETvUvXte68npnxEWi0QmgRS0j9veJFxVAaodogfUTanwYl2G3RAhquJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8011
+X-OriginatorOrg: intel.com
 
-On Wed 30-04-25 15:59:18, Ryan Roberts wrote:
-> Change the readahead config so that if it is being requested for an
-> executable mapping, do a synchronous read into a set of folios with an
-> arch-specified order and in a naturally aligned manner. We no longer
-> center the read on the faulting page but simply align it down to the
-> previous natural boundary. Additionally, we don't bother with an
-> asynchronous part.
-> 
-> On arm64 if memory is physically contiguous and naturally aligned to the
-> "contpte" size, we can use contpte mappings, which improves utilization
-> of the TLB. When paired with the "multi-size THP" feature, this works
-> well to reduce dTLB pressure. However iTLB pressure is still high due to
-> executable mappings having a low likelihood of being in the required
-> folio size and mapping alignment, even when the filesystem supports
-> readahead into large folios (e.g. XFS).
-> 
-> The reason for the low likelihood is that the current readahead
-> algorithm starts with an order-0 folio and increases the folio order by
-> 2 every time the readahead mark is hit. But most executable memory tends
-> to be accessed randomly and so the readahead mark is rarely hit and most
-> executable folios remain order-0.
-> 
-> So let's special-case the read(ahead) logic for executable mappings. The
-> trade-off is performance improvement (due to more efficient storage of
-> the translations in iTLB) vs potential for making reclaim more difficult
-> (due to the folios being larger so if a part of the folio is hot the
-> whole thing is considered hot). But executable memory is a small portion
-> of the overall system memory so I doubt this will even register from a
-> reclaim perspective.
-> 
-> I've chosen 64K folio size for arm64 which benefits both the 4K and 16K
-> base page size configs. Crucially the same amount of data is still read
-> (usually 128K) so I'm not expecting any read amplification issues. I
-> don't anticipate any write amplification because text is always RO.
-> 
-> Note that the text region of an ELF file could be populated into the
-> page cache for other reasons than taking a fault in a mmapped area. The
-> most common case is due to the loader read()ing the header which can be
-> shared with the beginning of text. So some text will still remain in
-> small folios, but this simple, best effort change provides good
-> performance improvements as is.
-> 
-> Confine this special-case approach to the bounds of the VMA. This
-> prevents wasting memory for any padding that might exist in the file
-> between sections. Previously the padding would have been contained in
-> order-0 folios and would be easy to reclaim. But now it would be part of
-> a larger folio so more difficult to reclaim. Solve this by simply not
-> reading it into memory in the first place.
-> 
-> Benchmarking
-> ============
-> TODO: NUMBERS ARE FOR V3 OF SERIES. NEED TO RERUN FOR THIS VERSION.
-> 
-> The below shows nginx and redis benchmarks on Ampere Altra arm64 system.
-> 
-> First, confirmation that this patch causes more text to be contained in
-> 64K folios:
-> 
-> | File-backed folios     |   system boot   |      nginx      |      redis      |
-> | by size as percentage  |-----------------|-----------------|-----------------|
-> | of all mapped text mem | before |  after | before |  after | before |  after |
-> |========================|========|========|========|========|========|========|
-> | base-page-4kB          |    26% |     9% |    27% |     6% |    21% |     5% |
-> | thp-aligned-8kB        |     4% |     2% |     3% |     0% |     4% |     1% |
-> | thp-aligned-16kB       |    57% |    21% |    57% |     6% |    54% |    10% |
-> | thp-aligned-32kB       |     4% |     1% |     4% |     1% |     3% |     1% |
-> | thp-aligned-64kB       |     7% |    65% |     8% |    85% |     9% |    72% |
-> | thp-aligned-2048kB     |     0% |     0% |     0% |     0% |     7% |     8% |
-> | thp-unaligned-16kB     |     1% |     1% |     1% |     1% |     1% |     1% |
-> | thp-unaligned-32kB     |     0% |     0% |     0% |     0% |     0% |     0% |
-> | thp-unaligned-64kB     |     0% |     0% |     0% |     1% |     0% |     1% |
-> | thp-partial            |     1% |     1% |     0% |     0% |     1% |     1% |
-> |------------------------|--------|--------|--------|--------|--------|--------|
-> | cont-aligned-64kB      |     7% |    65% |     8% |    85% |    16% |    80% |
-> 
-> The above shows that for both workloads (each isolated with cgroups) as
-> well as the general system state after boot, the amount of text backed
-> by 4K and 16K folios reduces and the amount backed by 64K folios
-> increases significantly. And the amount of text that is contpte-mapped
-> significantly increases (see last row).
-> 
-> And this is reflected in performance improvement:
-> 
-> | Benchmark                                     |          Improvement |
-> +===============================================+======================+
-> | pts/nginx (200 connections)                   |                8.96% |
-> | pts/nginx (1000 connections)                  |                6.80% |
-> +-----------------------------------------------+----------------------+
-> | pts/redis (LPOP, 50 connections)              |                5.07% |
-> | pts/redis (LPUSH, 50 connections)             |                3.68% |
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-
-Looks good to me. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index e61f374068d4..37fe4a55c00d 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3252,14 +3252,40 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	if (mmap_miss > MMAP_LOTSAMISS)
->  		return fpin;
->  
-> -	/*
-> -	 * mmap read-around
-> -	 */
->  	fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-> -	ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
-> -	ra->size = ra->ra_pages;
-> -	ra->async_size = ra->ra_pages / 4;
-> -	ra->order = 0;
-> +	if (vm_flags & VM_EXEC) {
-> +		/*
-> +		 * Allow arch to request a preferred minimum folio order for
-> +		 * executable memory. This can often be beneficial to
-> +		 * performance if (e.g.) arm64 can contpte-map the folio.
-> +		 * Executable memory rarely benefits from readahead, due to its
-> +		 * random access nature, so set async_size to 0.
-> +		 *
-> +		 * Limit to the boundaries of the VMA to avoid reading in any
-> +		 * pad that might exist between sections, which would be a waste
-> +		 * of memory.
-> +		 */
-> +		struct vm_area_struct *vma = vmf->vma;
-> +		unsigned long start = vma->vm_pgoff;
-> +		unsigned long end = start + ((vma->vm_end - vma->vm_start) >> PAGE_SHIFT);
-> +		unsigned long ra_end;
-> +
-> +		ra->order = exec_folio_order();
-> +		ra->start = round_down(vmf->pgoff, 1UL << ra->order);
-> +		ra->start = max(ra->start, start);
-> +		ra_end = round_up(ra->start + ra->ra_pages, 1UL << ra->order);
-> +		ra_end = min(ra_end, end);
-> +		ra->size = ra_end - ra->start;
-> +		ra->async_size = 0;
-> +	} else {
-> +		/*
-> +		 * mmap read-around
-> +		 */
-> +		ra->start = max_t(long, 0, vmf->pgoff - ra->ra_pages / 2);
-> +		ra->size = ra->ra_pages;
-> +		ra->async_size = ra->ra_pages / 4;
-> +		ra->order = 0;
-> +	}
->  	ractl._index = ra->start;
->  	page_cache_ra_order(&ractl, ra);
->  	return fpin;
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+T24gRnJpLCAyMDI1LTA1LTAyIGF0IDE2OjA4ICswMzAwLCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3Jv
+dGU6DQo+IC0tLSBhL2FyY2gveDg2L3ZpcnQvdm14L3RkeC90ZHhfZ2xvYmFsX21ldGFkYXRhLmMN
+Cj4gKysrIGIvYXJjaC94ODYvdmlydC92bXgvdGR4L3RkeF9nbG9iYWxfbWV0YWRhdGEuYw0KPiBA
+QCAtMzMsNiArMzMsOSBAQCBzdGF0aWMgaW50IGdldF90ZHhfc3lzX2luZm9fdGRtcihzdHJ1Y3Qg
+dGR4X3N5c19pbmZvX3RkbXIgKnN5c2luZm9fdGRtcikNCj4gwqAJCXN5c2luZm9fdGRtci0+cGFt
+dF8ybV9lbnRyeV9zaXplID0gdmFsOw0KPiDCoAlpZiAoIXJldCAmJiAhKHJldCA9IHJlYWRfc3lz
+X21ldGFkYXRhX2ZpZWxkKDB4OTEwMDAwMDEwMDAwMDAxMiwgJnZhbCkpKQ0KPiDCoAkJc3lzaW5m
+b190ZG1yLT5wYW10XzFnX2VudHJ5X3NpemUgPSB2YWw7DQo+ICsJaWYgKCFyZXQgJiYgdGR4X3N1
+cHBvcnRzX2R5bmFtaWNfcGFtdCgmdGR4X3N5c2luZm8pICYmDQo+ICsJwqDCoMKgICEocmV0ID0g
+cmVhZF9zeXNfbWV0YWRhdGFfZmllbGQoMHg5MTAwMDAwMTAwMDAwMDEzLCAmdmFsKSkpDQo+ICsJ
+CXN5c2luZm9fdGRtci0+cGFtdF9wYWdlX2JpdG1hcF9lbnRyeV9iaXRzID0gdmFsOw0KPiDCoA0K
+DQpDdXJyZW50bHkgdGhlIGdsb2JhbCBtZXRhZGF0YSByZWFkaW5nIGNvZGUgaXMgYXV0by1nZW5l
+cmF0ZWQgYnkgc2NyaXB0LCB3aGljaCBpcw0Kbm90IGluIHVwc3RyZWFtIHlldC4gIEl0IGRvZXNu
+J3Qgc3VwcG9ydCBnZW5lcmF0aW5nIGNvZGUgdG8gc3VwcG9ydCByZWFkaW5nIHNvbWUNCmZpZWxk
+ICJlbnVtZXJhdGVkIGJ5IiBzb21lIFREWCBmZWF0dXJlIGVpdGhlci4NCg0KSSdsbCB0cnkgdG8g
+dXBzdHJlYW0gdGhlIHNjcmlwdCBhbmQgYWRkIGFsc28gdGhlICJlbnVtZXJhdGVkIGJ5IiBzdXBw
+b3J0IGluIHRoZQ0Kc2NyaXB0LiANCg==
