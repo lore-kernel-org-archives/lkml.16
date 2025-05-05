@@ -1,132 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7489513AF2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ED127467A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746482613; cv=none; b=LAyCZ+00mbkOaN338u0wX3lrme/Lqbb3aLp5m6q5+353Ee9+J23CfVchkBC2o7xOPOXJDCzjDIhUwXB8v0LkjNFIG5mThzGzRYVV9FYi2dGUq6oz6S09uViA4QsApwKf7mjOcBWHFhVXdKFaDKe9363/EnqWh5R/dHMNmdSziPQ=
+	t=1746482653; cv=none; b=U35XGHlWORkMenbgW3NfrH2scflnoxW3EfEwObuZ9625TJI7lXzDmTbN3x4ZBtLBRQ7S8dHtQVVLZVxx9CCB8QR2k0g7CdfvtMX0NlqplXuVbvxAcVrqD4agB4iuAMQV8RXCYjYqiU3a5KnQrAJqycDN9gDYU5sxqhlgDmdLZSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746482613; c=relaxed/simple;
-	bh=LiuxTPu0KyN+dFzDqmlY6HziRv4Sm5L8NJ0NSvp2MBA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=G78qZDIllxc0NBOhbBUQ53P+jhqOX2R1yp+lDOUdZklSuVj1b06IR2EoPNvESunqN5r8xj6f1cWsanhHRC8Et6uVS3LB62mtNBg65c18LqLnd+kCuMaHGPN0cAy9O3TDPKhcC2lAzl493Pa16YxRrUKyBqfF2Sk7rvcegPHvt4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CQgZ1G9Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746482653; c=relaxed/simple;
+	bh=PpdmoR8nEkrIKtA42MWXyNQ6DvUv1NTQJUJQQ+3vaZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iEpxtDWfj6dlasQnXhH3ywIWJcOyTFf1LFuvoYOGumvXrvu+ioycCV2Hsr/PbpB6szxzMf2wr83jjGGgqseKbkUt3RNLs+OWia+VtRbdToQ3zcN+QDi4hed1+S+k2nXlXF8yN/SoTLnaotU0w+sR6V77l1fOomDtz7NR1N/KvMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=us4AIZLQ; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CQgZ1G9Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C81C4CEED;
-	Mon,  5 May 2025 22:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1746482611;
-	bh=LiuxTPu0KyN+dFzDqmlY6HziRv4Sm5L8NJ0NSvp2MBA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CQgZ1G9Y/fWXG0L/lcYaZvELd9ZMFv5hwC7/WgtE3cXGh7BZQTyq9+WGO0RZqbOWZ
-	 cJhTbqbbGAMEytO1JLDrKBUm8XpHqEPerJ2L2OzZB2PclyojsfNjzxTixwdVsGe0tU
-	 W01GH3041jjPS9NnQca+eklydUZ5MwPj8irE2TLY=
-Date: Mon, 5 May 2025 15:03:30 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: nifan.cxl@gmail.com
-Cc: muchun.song@linux.dev, willy@infradead.org, osalvador@suse.de,
- mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
- david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, Fan Ni
- <fan.ni@samsung.com>
-Subject: Re: [PATCH v4 4/4] mm/hugetlb: Convert use of struct page to folio
- in __unmap_hugepage_range()
-Message-Id: <20250505150330.58874d0435095421a30e8c30@linux-foundation.org>
-In-Reply-To: <20250505182345.506888-6-nifan.cxl@gmail.com>
-References: <20250505182345.506888-2-nifan.cxl@gmail.com>
-	<20250505182345.506888-6-nifan.cxl@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="us4AIZLQ"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3105ef2a071so51031511fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746482650; x=1747087450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PpdmoR8nEkrIKtA42MWXyNQ6DvUv1NTQJUJQQ+3vaZI=;
+        b=us4AIZLQIE3Bps1t0B5O27A8EgKK8gRfkBa01nrOqZkA5mGkw+TrdYeA0PlfETqw71
+         S2p9O+2c2U/wYKtTBeZKzLyKK7efoNuXJyaUAE3bwoZiI1uJjfyVQnrx3OfM+aFcmOqz
+         dVrgxK6gSx0gLavKYhAT/bHG3LLWMSRiCPd3RZs+5+k425kkbTHySEWpUibMNhp4vuPa
+         zDqC/GI2/by5tHgjVfyn0NnysJMFDBWq1+mzRz4hm8/fS30M3yCScZsv2CZysZdNp+PF
+         rRCLyaZsKvIRS7Oxi/pfBKYe50J2MsAOVKmJUW/3RrCRQJiVDDW1H+JG0mTLNtrRatME
+         Q2rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746482650; x=1747087450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PpdmoR8nEkrIKtA42MWXyNQ6DvUv1NTQJUJQQ+3vaZI=;
+        b=QlxyFLHglsKiNhhMKdoc/e7w7NOcWFtOTpo6s79VafxRIsbJkbASGYf7hxVkaMU2RR
+         rf1IOdSz9GDxJjndGq17lyV/wsMyaAHqK8532z/tGdjWi9GK7BiR/CdLRA21nJZy5k4I
+         qSQUXwo4IMTp0oxS6FnIFWVy5ZQddlr+2euTmbQdDarbZgWhCyRK8yK2dCooP1J/2Jig
+         shCrEbeIa8AcSngN0uRncK+ibk910VWWRWfPNS5JBm5p8nInSrHFzRizedcdCrzIP7dy
+         dU+r19XYD5p7vu0Z7wnMkXCfTjPkOojonE9HMImXvbC6NsTVFY4H5AUC/W5KQKmKRPX2
+         8eAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuuQejGmbQ2S/phADjpSRV9uBVLDMEYBxg3kQ22wkQY/yjh8Z3PI7IhnNU0kncFUeTbYkjr07w/h7zTJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwryLLTJ7MD7vv8EMfUqRUzIGZCY7IfSHqKeb58ZptL+iP2o+2P
+	Ll/gEUK4Tx1H0JCUbkmbmzYKScNtDLTDIeYrqLjk/WminYB4N1BmEb09PXWQHOtGnkS6Ok10z+a
+	xoXvwMRatDg1CAmNb2dVbt2jMiEZw7fzVaIXdSQ==
+X-Gm-Gg: ASbGnctLbMtlV6Az9pWEUQHJZrE5sbGyEaAndGI5KytSRdWBzICOumi7Aim/2uHPgIX
+	jDv4hQ7pqRtTd5x82i+a8PXeBAp2vA0nOw4tqFSFiWwh7PEkUVFQLHGDbGzXeqN29nbZ70tCUIR
+	BuYoiChvBbYXwqbnaXuViYvQ==
+X-Google-Smtp-Source: AGHT+IEHFxriErzJ6KWZ4Dnlp4ZP5W2Iyy0QEY/BgIwj3zLpxQz0U2At8oBYxwGceOg9dDWjzWeX9nJUKs0U3r9gdWc=
+X-Received: by 2002:a2e:ab1a:0:b0:310:85ba:115f with SMTP id
+ 38308e7fff4ca-32650ec80b8mr3872961fa.33.1746482649729; Mon, 05 May 2025
+ 15:04:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250505144558.1286889-1-robh@kernel.org>
+In-Reply-To: <20250505144558.1286889-1-robh@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 6 May 2025 00:03:58 +0200
+X-Gm-Features: ATxdqUE1cM-taJ4-SlbcCYbnOvbDEQV7s-gz28KDyeQW4mI3XtkOG49fIqlZFsM
+Message-ID: <CACRpkdZgB4sg1FtDK3QTzKKviPhoCZ8xwP92fV0WGhOBWyUMSQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
+ arm,versatile-fpga-irq to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon,  5 May 2025 11:22:44 -0700 nifan.cxl@gmail.com wrote:
+On Mon, May 5, 2025 at 4:46=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org> =
+wrote:
 
-> From: Fan Ni <fan.ni@samsung.com>
-> 
-> In __unmap_hugepage_range(), the "page" pointer always points to the
-> first page of a huge page, which guarantees there is a folio associating
-> with it.  Convert the "page" pointer to use folio.
-> 
-> ...
+> Convert the Arm Versatile FPGA interrupt controller binding to schema
+> format. It's a straight-forward conversion of the typical interrupt
+> controller.
 >
->  		 * Restore the reservation for anonymous page, otherwise the
-> @@ -5950,8 +5951,8 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
->  		 * reservation bit.
->  		 */
->  		if (!h->surplus_huge_pages && __vma_private_lock(vma) &&
-> -		    folio_test_anon(page_folio(page))) {
-> -			folio_set_hugetlb_restore_reserve(page_folio(page));
-> +		    folio_test_anon(folio)) {
-> +			folio_set_hugetlb_restore_reserve(folio);
->  			/* Reservation to be adjusted after the spin lock */
->  			adjust_reservation = true;
->  		}
-> @@ -5975,16 +5976,17 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
->  				 * count will not be incremented by free_huge_folio.
->  				 * Act as if we consumed the reservation.
->  				 */
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-I did not enjoy reading the above comment, so I did this to it.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The comment would be better if it described why we "Act as if we
-consumed the reservation.".  "why, not what".
-
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mm/hugetlb.c: __unmap_hugepage_range(): comment cleanup
-Date: Mon May  5 02:54:25 PM PDT 2025
-
-Wrap to 80 cols, fix a typo, use regular layout, parenthesize function
-identifiers, fix grammar and add braces.
-
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Fan Ni <fan.ni@samsung.com>
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Muchun Song <muchun.song@linux.dev>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Cc: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/hugetlb.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
---- a/mm/hugetlb.c~mm-hugetlbc-__unmap_hugepage_range-comment-cleanup
-+++ a/mm/hugetlb.c
-@@ -5969,16 +5969,19 @@ void __unmap_hugepage_range(struct mmu_g
- 		if (adjust_reservation) {
- 			int rc = vma_needs_reservation(h, vma, address);
- 
--			if (rc < 0)
--				/* Pressumably allocate_file_region_entries failed
--				 * to allocate a file_region struct. Clear
--				 * hugetlb_restore_reserve so that global reserve
--				 * count will not be incremented by free_huge_folio.
--				 * Act as if we consumed the reservation.
-+			if (rc < 0) {
-+				/*
-+				 * Presumably allocate_file_region_entries()
-+				 * failed to allocate a file_region struct.
-+				 * Clear hugetlb_restore_reserve so that the
-+				 * global reserve count will not be incremented
-+				 * by free_huge_folio().  Act as if we consumed
-+				 * the reservation.
- 				 */
- 				folio_clear_hugetlb_restore_reserve(folio);
--			else if (rc)
-+			} else if (rc) {
- 				vma_add_reservation(h, vma, address);
-+			}
- 		}
- 
- 		tlb_remove_page_size(tlb, folio_page(folio, 0),
-_
-
+Yours,
+Linus Walleij
