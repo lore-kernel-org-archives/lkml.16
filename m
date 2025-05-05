@@ -1,44 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3211029AAF5;
-	Mon,  5 May 2025 22:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF129B772;
+	Mon,  5 May 2025 22:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485076; cv=none; b=dTDZ7R+tIlZZCKuvoXFkwUp+Enf6l3xi3flOP2mVuoYou7E5iOEewFUuk04XTRTL1k79VCm2uTk+umuthR4P7cwPcKOxOolEVYjzBLMoNyaQA4Q8Qvh6ZEfCw6uDlkEr+JDV7dPyCGPBRM5pMF8gsD3DiN5UMrIrXldMHJCAzV4=
+	t=1746485084; cv=none; b=MWhTJoQFGrTk+nSXA3b2Hltl/Wxdpt3uX2hqbQ5kOlaIgVnm5HE7UIvNYytGnzGHy0aNt6O6I4SNb948PCDgR4Q1nC/VQy6FzSsrw1+Tlp8wQRxmkQGmJrAgcafYgjHaDzRbsTYiVa25wOGTg/3Ajab2MOdb5v7iLFkQzwHya6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485076; c=relaxed/simple;
-	bh=wOu7wKLs1vsRiMPFnLYhaedB4hJlgXEYCm1Jz72cGMc=;
+	s=arc-20240116; t=1746485084; c=relaxed/simple;
+	bh=r4owExykd1gb7SwgvHpNEzM1cVWmLdXMaFCUsw2L4bc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L3VyfqHH+pPCP7WNbejuERWG8PfIt3tt5WEfC/BxfNrKC/cd3BCqkrm+yxLG9Exv3k0bxv8/2IzC5UT974Rwm9zUL4HqsQZDp+8FfcxG+Qk38khs07wffbWxsX6Za4DBNLCK0RprGCJIXOY638bav0Wo5ad/C62XWIurh9p6SHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIRXy51k; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LLAgxDuhf8rT3BfwrdXktkWDmpUd+22b0E0AdtFpSEWwFJVqnaROG4SpIqgCGibrAYNZKxSzj8rFLL4PkKWHQVius5uRYhMQgd5I+zH6AgQOlkrPEO1QtoQXRcGH3qDNjU1Uu1GsIWy3s7JqnX4cC2/fjKAWu9uzACJClnpLtXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odUNH7Or; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIRXy51k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18695C4CEED;
-	Mon,  5 May 2025 22:44:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odUNH7Or"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD522C4CEE4;
+	Mon,  5 May 2025 22:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485076;
-	bh=wOu7wKLs1vsRiMPFnLYhaedB4hJlgXEYCm1Jz72cGMc=;
+	s=k20201202; t=1746485083;
+	bh=r4owExykd1gb7SwgvHpNEzM1cVWmLdXMaFCUsw2L4bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mIRXy51k2FBwLF0M+vHJZ1kJuK18Ui2PsETl+9T6vU/AJd9Ec2t8cUj5IHDb/KGaR
-	 Pco3l/OBztWihzHISkSHBx4e/xwKlUrZBali58gzgTMPZKrQla86jrazD2CxGLKmbR
-	 IClv0Q2/LvNeJ0CG2ZiRL1UVRPCsGlnfXowhy1Xn4mwg/mpFO9goHlxx+R7qKbVOM7
-	 ETKNY1m8T0MJ1F5B+xHlo+2TWEDJIG3QaPupLv6+SzFNSSpn5e0PoJpVc9NRamtAcR
-	 xCPSFqUHMV5Kp8BvBSFzvaZtUni7yrw5kGJe+l4RSBrfOPgh7a6+56f83TddobKXlI
-	 OC1M0sOyABGOw==
+	b=odUNH7OrAQUrM5AlY5our0p9JnfaV1CMJSMimooHN5wFegjTWETOGerYZ2L69A2Wj
+	 LuTjxaoGYdXlp3gEjQM7LviVWATWOCFJRD+uH280l5ett5PpyPztZsyftDGLagUh6d
+	 OGIgQOIRDQ5T7Z+c9glOXrkeGOhrf4JgL1kHaQtB1LyGVmzqYBt0kcUiyK/9uKmmLW
+	 AtjYrCtcRfYPfweHxG6HEs9K8USl+XGOzMajgQD9w/e4mNWGv1hzKx5gU9klko5sYP
+	 KqOl8eOKtAIcD1tkfUA8OpHtWvbNVxwjlY5L9Eo/akx8dtpRxKU3Keh/KaDOoh/K1Y
+	 3cZ2uBBn9FqaQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
-	Somashekhar Puttagangaiah <somashekhar.puttagangaiah@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Charlene Liu <Charlene.Liu@amd.com>,
+	Ovidiu Bunea <ovidiu.bunea@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 154/486] wifi: cfg80211: allow IR in 20 MHz configurations
-Date: Mon,  5 May 2025 18:33:50 -0400
-Message-Id: <20250505223922.2682012-154-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alex.hung@amd.com,
+	hamzamahfooz@linux.microsoft.com,
+	Jing.Zhou@amd.com,
+	alvin.lee2@amd.com,
+	jerry.zuo@amd.com,
+	Kaitlyn.Tse@amd.com,
+	ryanseto@amd.com,
+	martin.tsai@amd.com,
+	yi-lchen@amd.com,
+	tjakobi@math.uni-bielefeld.de,
+	Sungjoon.Kim@amd.com,
+	michael.strauss@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 156/486] drm/amd/display: remove minimum Dispclk and apply oem panel timing.
+Date: Mon,  5 May 2025 18:33:52 -0400
+Message-Id: <20250505223922.2682012-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,197 +71,69 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>
+From: Charlene Liu <Charlene.Liu@amd.com>
 
-[ Upstream commit cf4bd1608882792d4742e27a819493312904a680 ]
+[ Upstream commit 756e58e83e89d372b94269c0cde61fe55da76947 ]
 
-Some regulatory bodies doesn't allow IR (initiate radioation) on a
-specific subband, but allows it for channels with a bandwidth of 20 MHz.
-Add a channel flag that indicates that, and consider it in
-cfg80211_reg_check_beaconing.
+[why & how]
+1. apply oem panel timing (not only on OLED)
+2. remove MIN_DPP_DISP_CLK request in driver.
 
-While on it, fix the kernel doc of enum nl80211_reg_rule_flags and
-change it to use BIT().
+This fix will apply for dcn31x but not
+sync with DML's output.
 
-Signed-off-by: Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>
-Co-developed-by: Somashekhar Puttagangaiah <somashekhar.puttagangaiah@intel.com>
-Signed-off-by: Somashekhar Puttagangaiah <somashekhar.puttagangaiah@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250308225541.d3ab352a73ff.I8a8f79e1c9eb74936929463960ee2a324712fe51@changeid
-[fix typo]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Ovidiu Bunea <ovidiu.bunea@amd.com>
+Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/cfg80211.h       |  3 +++
- include/uapi/linux/nl80211.h | 52 ++++++++++++++++++++----------------
- net/wireless/chan.c          |  8 +++++-
- net/wireless/nl80211.c       |  4 +++
- net/wireless/reg.c           |  4 ++-
- 5 files changed, 46 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c | 2 --
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c | 2 --
+ drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c      | 3 ++-
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-index 941dc62f3027c..8a712ca73f2b0 100644
---- a/include/net/cfg80211.h
-+++ b/include/net/cfg80211.h
-@@ -127,6 +127,8 @@ struct wiphy;
-  *	even if it is otherwise disabled.
-  * @IEEE80211_CHAN_ALLOW_6GHZ_VLP_AP: Allow using this channel for AP operation
-  *	with very low power (VLP), even if otherwise set to NO_IR.
-+ * @IEEE80211_CHAN_ALLOW_20MHZ_ACTIVITY: Allow activity on a 20 MHz channel,
-+ *	even if otherwise set to NO_IR.
-  */
- enum ieee80211_channel_flags {
- 	IEEE80211_CHAN_DISABLED			= BIT(0),
-@@ -155,6 +157,7 @@ enum ieee80211_channel_flags {
- 	IEEE80211_CHAN_NO_6GHZ_AFC_CLIENT	= BIT(23),
- 	IEEE80211_CHAN_CAN_MONITOR		= BIT(24),
- 	IEEE80211_CHAN_ALLOW_6GHZ_VLP_AP	= BIT(25),
-+	IEEE80211_CHAN_ALLOW_20MHZ_ACTIVITY     = BIT(26),
- };
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+index 827b24b3442ad..e4d22f74f9869 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+@@ -194,8 +194,6 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
+ 	if (new_clocks->dppclk_khz < MIN_DPP_DISP_CLK)
+ 		new_clocks->dppclk_khz = MIN_DPP_DISP_CLK;
+-	if (new_clocks->dispclk_khz < MIN_DPP_DISP_CLK)
+-		new_clocks->dispclk_khz = MIN_DPP_DISP_CLK;
  
- #define IEEE80211_CHAN_NO_HT40 \
-diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
-index f97f5adc8d518..c2d7faf8d87fa 100644
---- a/include/uapi/linux/nl80211.h
-+++ b/include/uapi/linux/nl80211.h
-@@ -4294,6 +4294,8 @@ enum nl80211_wmm_rule {
-  *	otherwise completely disabled.
-  * @NL80211_FREQUENCY_ATTR_ALLOW_6GHZ_VLP_AP: This channel can be used for a
-  *	very low power (VLP) AP, despite being NO_IR.
-+ * @NL80211_FREQUENCY_ATTR_ALLOW_20MHZ_ACTIVITY: This channel can be active in
-+ *	20 MHz bandwidth, despite being NO_IR.
-  * @NL80211_FREQUENCY_ATTR_MAX: highest frequency attribute number
-  *	currently defined
-  * @__NL80211_FREQUENCY_ATTR_AFTER_LAST: internal use
-@@ -4338,6 +4340,7 @@ enum nl80211_frequency_attr {
- 	NL80211_FREQUENCY_ATTR_NO_6GHZ_AFC_CLIENT,
- 	NL80211_FREQUENCY_ATTR_CAN_MONITOR,
- 	NL80211_FREQUENCY_ATTR_ALLOW_6GHZ_VLP_AP,
-+	NL80211_FREQUENCY_ATTR_ALLOW_20MHZ_ACTIVITY,
+ 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
+ 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+index 37c39756fece4..49efea0c8fcff 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+@@ -201,8 +201,6 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
+ 	if (new_clocks->dppclk_khz < 100000)
+ 		new_clocks->dppclk_khz = 100000;
+-	if (new_clocks->dispclk_khz < 100000)
+-		new_clocks->dispclk_khz = 100000;
  
- 	/* keep last */
- 	__NL80211_FREQUENCY_ATTR_AFTER_LAST,
-@@ -4549,31 +4552,34 @@ enum nl80211_sched_scan_match_attr {
-  * @NL80211_RRF_NO_6GHZ_AFC_CLIENT: Client connection to AFC AP not allowed
-  * @NL80211_RRF_ALLOW_6GHZ_VLP_AP: Very low power (VLP) AP can be permitted
-  *	despite NO_IR configuration.
-+ * @NL80211_RRF_ALLOW_20MHZ_ACTIVITY: Allow activity in 20 MHz bandwidth,
-+ *	despite NO_IR configuration.
-  */
- enum nl80211_reg_rule_flags {
--	NL80211_RRF_NO_OFDM		= 1<<0,
--	NL80211_RRF_NO_CCK		= 1<<1,
--	NL80211_RRF_NO_INDOOR		= 1<<2,
--	NL80211_RRF_NO_OUTDOOR		= 1<<3,
--	NL80211_RRF_DFS			= 1<<4,
--	NL80211_RRF_PTP_ONLY		= 1<<5,
--	NL80211_RRF_PTMP_ONLY		= 1<<6,
--	NL80211_RRF_NO_IR		= 1<<7,
--	__NL80211_RRF_NO_IBSS		= 1<<8,
--	NL80211_RRF_AUTO_BW		= 1<<11,
--	NL80211_RRF_IR_CONCURRENT	= 1<<12,
--	NL80211_RRF_NO_HT40MINUS	= 1<<13,
--	NL80211_RRF_NO_HT40PLUS		= 1<<14,
--	NL80211_RRF_NO_80MHZ		= 1<<15,
--	NL80211_RRF_NO_160MHZ		= 1<<16,
--	NL80211_RRF_NO_HE		= 1<<17,
--	NL80211_RRF_NO_320MHZ		= 1<<18,
--	NL80211_RRF_NO_EHT		= 1<<19,
--	NL80211_RRF_PSD			= 1<<20,
--	NL80211_RRF_DFS_CONCURRENT	= 1<<21,
--	NL80211_RRF_NO_6GHZ_VLP_CLIENT	= 1<<22,
--	NL80211_RRF_NO_6GHZ_AFC_CLIENT	= 1<<23,
--	NL80211_RRF_ALLOW_6GHZ_VLP_AP	= 1<<24,
-+	NL80211_RRF_NO_OFDM                 = 1 << 0,
-+	NL80211_RRF_NO_CCK                  = 1 << 1,
-+	NL80211_RRF_NO_INDOOR               = 1 << 2,
-+	NL80211_RRF_NO_OUTDOOR              = 1 << 3,
-+	NL80211_RRF_DFS                     = 1 << 4,
-+	NL80211_RRF_PTP_ONLY                = 1 << 5,
-+	NL80211_RRF_PTMP_ONLY               = 1 << 6,
-+	NL80211_RRF_NO_IR                   = 1 << 7,
-+	__NL80211_RRF_NO_IBSS               = 1 << 8,
-+	NL80211_RRF_AUTO_BW                 = 1 << 11,
-+	NL80211_RRF_IR_CONCURRENT           = 1 << 12,
-+	NL80211_RRF_NO_HT40MINUS            = 1 << 13,
-+	NL80211_RRF_NO_HT40PLUS             = 1 << 14,
-+	NL80211_RRF_NO_80MHZ                = 1 << 15,
-+	NL80211_RRF_NO_160MHZ               = 1 << 16,
-+	NL80211_RRF_NO_HE                   = 1 << 17,
-+	NL80211_RRF_NO_320MHZ               = 1 << 18,
-+	NL80211_RRF_NO_EHT                  = 1 << 19,
-+	NL80211_RRF_PSD                     = 1 << 20,
-+	NL80211_RRF_DFS_CONCURRENT          = 1 << 21,
-+	NL80211_RRF_NO_6GHZ_VLP_CLIENT      = 1 << 22,
-+	NL80211_RRF_NO_6GHZ_AFC_CLIENT      = 1 << 23,
-+	NL80211_RRF_ALLOW_6GHZ_VLP_AP       = 1 << 24,
-+	NL80211_RRF_ALLOW_20MHZ_ACTIVITY    = 1 << 25,
- };
- 
- #define NL80211_RRF_PASSIVE_SCAN	NL80211_RRF_NO_IR
-diff --git a/net/wireless/chan.c b/net/wireless/chan.c
-index e579d7e1425fe..c4f3fefeb3544 100644
---- a/net/wireless/chan.c
-+++ b/net/wireless/chan.c
-@@ -6,7 +6,7 @@
-  *
-  * Copyright 2009	Johannes Berg <johannes@sipsolutions.net>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-- * Copyright 2018-2024	Intel Corporation
-+ * Copyright 2018-2025	Intel Corporation
-  */
- 
- #include <linux/export.h>
-@@ -1621,6 +1621,12 @@ bool cfg80211_reg_check_beaconing(struct wiphy *wiphy,
- 	if (cfg->reg_power == IEEE80211_REG_VLP_AP)
- 		permitting_flags |= IEEE80211_CHAN_ALLOW_6GHZ_VLP_AP;
- 
-+	if ((cfg->iftype == NL80211_IFTYPE_P2P_GO ||
-+	     cfg->iftype == NL80211_IFTYPE_AP) &&
-+	    (chandef->width == NL80211_CHAN_WIDTH_20_NOHT ||
-+	     chandef->width == NL80211_CHAN_WIDTH_20))
-+		permitting_flags |= IEEE80211_CHAN_ALLOW_20MHZ_ACTIVITY;
-+
- 	return _cfg80211_reg_can_beacon(wiphy, chandef, cfg->iftype,
- 					check_no_ir ? IEEE80211_CHAN_NO_IR : 0,
- 					permitting_flags);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index ecfceddce00fc..c778ffa1c8efd 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -1213,6 +1213,10 @@ static int nl80211_msg_put_channel(struct sk_buff *msg, struct wiphy *wiphy,
- 		if ((chan->flags & IEEE80211_CHAN_ALLOW_6GHZ_VLP_AP) &&
- 		    nla_put_flag(msg, NL80211_FREQUENCY_ATTR_ALLOW_6GHZ_VLP_AP))
- 			goto nla_put_failure;
-+		if ((chan->flags & IEEE80211_CHAN_ALLOW_20MHZ_ACTIVITY) &&
-+		    nla_put_flag(msg,
-+				 NL80211_FREQUENCY_ATTR_ALLOW_20MHZ_ACTIVITY))
-+			goto nla_put_failure;
+ 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
+ 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
+diff --git a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
+index 4fbed0298adfa..297f313794e49 100644
+--- a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
++++ b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
+@@ -1064,7 +1064,8 @@ void dce110_edp_backlight_control(
+ 			DC_LOG_DC("edp_receiver_ready_T9 skipped\n");
  	}
  
- 	if (nla_put_u32(msg, NL80211_FREQUENCY_ATTR_MAX_TX_POWER,
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 2b626078739c5..f6846eb0f4b84 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -5,7 +5,7 @@
-  * Copyright 2008-2011	Luis R. Rodriguez <mcgrof@qca.qualcomm.com>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-  * Copyright      2017  Intel Deutschland GmbH
-- * Copyright (C) 2018 - 2024 Intel Corporation
-+ * Copyright (C) 2018 - 2025 Intel Corporation
-  *
-  * Permission to use, copy, modify, and/or distribute this software for any
-  * purpose with or without fee is hereby granted, provided that the above
-@@ -1603,6 +1603,8 @@ static u32 map_regdom_flags(u32 rd_flags)
- 		channel_flags |= IEEE80211_CHAN_PSD;
- 	if (rd_flags & NL80211_RRF_ALLOW_6GHZ_VLP_AP)
- 		channel_flags |= IEEE80211_CHAN_ALLOW_6GHZ_VLP_AP;
-+	if (rd_flags & NL80211_RRF_ALLOW_20MHZ_ACTIVITY)
-+		channel_flags |= IEEE80211_CHAN_ALLOW_20MHZ_ACTIVITY;
- 	return channel_flags;
- }
- 
+-	if (!enable && link->dpcd_sink_ext_caps.bits.oled) {
++	if (!enable) {
++		/*follow oem panel config's requirement*/
+ 		pre_T11_delay += link->panel_config.pps.extra_pre_t11_ms;
+ 		msleep(pre_T11_delay);
+ 	}
 -- 
 2.39.5
 
