@@ -1,130 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DA91DE8B5
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEBF1DEFD6
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746431601; cv=none; b=ClFdn/UQjKh7uHSyf+Rjex3F+L39izrH1s1GBLPtNjkGxmUDhSKNHxLfKkA/ALJBO2HhLxeASeszg1agbbxKX+tnz1R7/1Jeqj9ZpGVEi7gInTvU1oxPLgtJZepTEfRuHvv5yfL35RuI4CO3/NfBi7nhYaZTXkMgi6KEdAF0dqw=
+	t=1746431604; cv=none; b=uwqXWlpkUo9Jb0QyCUMvPB+xz+7PcYA3uD7rFl3HdS/CWe5qKZn5B6mC2nKDxS0N4J05RRYd+m4oJe/gsGJ3ycBNBJdjmqEWc+RgOaArHr1NxI4F7He7dundeiwLRh/1McOhfc9tJFbJcS4ydAkg3mITiuCQPr70wpTgJ0Q/Dfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746431601; c=relaxed/simple;
-	bh=oCus7xWIklrFnQP8oc322gPIGxyJvrdIfB7ko5gsij8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d/mG5ZpsePH+t0PWk0kWcL/UcSQsrll1dsCh5m+64IxruU+NfhMtPG4GtjmN/pb3HU0zlbja7l5Q6MFjwisvppMzhiclimkT49uHW/PpCqMwSzQU3sOvY3ZGi4nyGQXusptSG4Q/5nnH5AMvPZIhMejA/BHmv8+vR+C4DRFp1N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQPqRr2e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746431604; c=relaxed/simple;
+	bh=gRg7lfOlYz579m1iZS9cUWyB3XKHigP4oiy0csgp2/U=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=I0a+nvfRzLkHJdXTFdVfLvOojFWVyGkbugdjf9dSjK0fZlUUObn9JVvPMGdZjO3WvrX/S/Fs4q7IOQ6m06ek2P1k0Lk8hEb87czYS+TjJwA9WvLorjcovHYp0wrtgE0t4dUjtQFAsP1VcVAjShqfSDqzj26Fhhke8SxMZlQDtJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vq8YvsHi; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQPqRr2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3BAAC4CEE4;
-	Mon,  5 May 2025 07:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746431601;
-	bh=oCus7xWIklrFnQP8oc322gPIGxyJvrdIfB7ko5gsij8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uQPqRr2ePG1wZNxpQSyhcSY/10SkN7w/4ybwSPA6oIjpYegvPo8OZ15M22Vm8IZXK
-	 QWTpLqFRCGPwMomDXZALJ1FW4U/65OjsGJrukiRcBx2FSlRMPE5bgj6m1iXM1qy0rs
-	 OgytwrDfyslbR/Hx0JvR97Q7IuJdnvVs3eL6vqe2/0FnEi22RxH3K0RuRzvcoQkigb
-	 9srKU6dAtxrkb8ubvMRCxfkgcujrMU8rQ6xt0MzyMIRkf6amiEb3rh9JR8K4ynYYDY
-	 f2cv2Ty8GZQbNMYYN/iOzCdi+8VZ6l69M1n8kp8SXg2kH5X3Qj+TYGUE1KDnEUm/M9
-	 7K8nQjkNUwlwQ==
-Date: Mon, 5 May 2025 10:53:09 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>, Donet Tom <donettom@linux.ibm.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration
- to reduce boot time
-Message-ID: <aBhuZWpZ7ltMuOe0@kernel.org>
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
- <aBdK2EIMYYRmmEwA@kernel.org>
- <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
- <188fbfba-afb4-4db7-bbba-7689a96be931@redhat.com>
- <aBhoqpC4Jy-c-74p@localhost.localdomain>
- <74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vq8YvsHi"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d0618746bso26510735e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746431601; x=1747036401; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KKwL95uiFtUkueF3DdQ6WhU1f60LmPCrAu3GykUzsdk=;
+        b=Vq8YvsHiwI/ugsNBN8XfxTBv7GWeA+2AnEolXF2yuXp0afrMgUkWg+e/LzY1rh0Nwh
+         ZbeZjPYrg7ODHe/nqc3+AfvKkhlPHa2YqGEs/UJZvRVm9V+b68DA5SeQUye6GdNJpqH/
+         X2oro3vfLiMbdjPn7EjgTvMKKDdthnlYT3vGrL+fHNKlkxsrYX1dYfw+7aae0mNyNq0o
+         QKsFkbCV6ppQmw2AXR3HZkLKElnYISrvAZCTOsz2iqmY176tGbNE+oj4ULAwfYo4z+6d
+         iM5ob/hSyDYI+tL1THINiGWCcq2z1WgYXW1+EaY0hYSaiOzW8Gg8jQB1BESt5aTXh//r
+         OShA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746431601; x=1747036401;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KKwL95uiFtUkueF3DdQ6WhU1f60LmPCrAu3GykUzsdk=;
+        b=R2jJRfYmoA3Po3BG58gKawM628pjyf7TiofEQGuqz6ziijwm8ef15riYOxgmK4Lwsr
+         yEHzeGXafWCVz2phH1KU5iRi7uh6VIeJlnaZPqQ5es7orlBmWcrD7XgASuLR/dc6UwNl
+         WvBoNuk+V5YL5hK4XnooY3u++eqx/59xHDweGTEQaLnLGa0KCNSN2PlNmJV8wcx01C78
+         eyWuRdxOKSKBQutmd4567kaIBbKHhZugoYkLI3q7kydVeii67TJWFKLGdz6/sFGh1a2K
+         FFlYP85wIYPyJsoz32+7lCw27+CCkelWy5T/IlnwFFSXjgBS5YS405fVjbEUZkELTP+u
+         +5HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWb8myZMJNLeXIrXWwYQ51hGJWlVTGdlsB5Pw67jZXSKmkPwfpakvKqk3TMvkk5mW6G/mdYa6jXhbnV1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyfgu8WPLaTLzcBgZ4k7HRqf4+jkBp9M9KWSjSTif9X0z41W9Sa
+	tJRAUqIAkAoeN6vws3JkEl+9hw9J3AIh36OBB9X6rurGSKyVM0v8dxYxgwrRKvs=
+X-Gm-Gg: ASbGnct0DDYNaHsX03/Nzjae+RDFImQ5zVv/7+eNZPJuYIY0wxd09X1AYc4KTJtbFC7
+	VUAp53PRMBZiXDgf7iW/IixRmQ8rhWcM+9ir3RTCEUMXMlhUyGPNBdjCmO88VQK8avoFmzMaFRA
+	gx2j5BHiNsym6S58QUeWJPnOtb2YYF9sHgL+HEB3s80UK0fx95aFa1m7UQ96xgAZJj9EHAAinkw
+	BvSnVuzDSamEF6BxxYKknLjpc49gyVaABnuU74uihtQ9zozLSvMzxs17SUayWTuFUHjxNK1TinB
+	tR8LKa+CtnwZoEaFxRO6yHAlsxUBx44gFPGXABOPrxpb/f0faeayJ0wxhQ9kcOl2J9gtKNKktbC
+	jRJQfqVRhMXluuAVpFw==
+X-Google-Smtp-Source: AGHT+IHDMdih+hEnzP3vOjnU/Xs6E/jsrRii74HrFx4JP91bn/qL1NEIKUfcBUgSehWSzE/wSbcuZA==
+X-Received: by 2002:a05:600d:3:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-441c5b51556mr31085155e9.8.1746431600756;
+        Mon, 05 May 2025 00:53:20 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3? ([2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3344sm9405993f8f.23.2025.05.05.00.53.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 00:53:20 -0700 (PDT)
+Message-ID: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
+Date: Mon, 5 May 2025 09:53:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] drm/panel: simple: Update timings for AUO G101EVN010
+To: Kevin Baker <kevinb@ventureresearch.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250428210726.3395279-1-kevinb@ventureresearch.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250428210726.3395279-1-kevinb@ventureresearch.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 09:38:43AM +0200, David Hildenbrand wrote:
-> On 05.05.25 09:28, Oscar Salvador wrote:
-> > On Mon, May 05, 2025 at 09:16:48AM +0200, David Hildenbrand wrote:
-> > > memory hotplug code never calls register_one_node(), unless I am missing
-> > > something.
-> > > 
-> > > During add_memory_resource(), we call __try_online_node(nid, false), meaning
-> > > we skip register_one_node().
-> > > 
-> > > The only caller of __try_online_node(nid, true) is try_online_node(), called
-> > > from CPU hotplug code, and I *guess* that is not required.
-> > 
-> > Well, I guess this is because we need to link the cpus to the node.
-> > register_one_node() has two jobs: 1) register cpus belonging to the node
-> > and 2) register memory-blocks belonging to the node (if any).
+On 28/04/2025 23:07, Kevin Baker wrote:
+> Switch to panel timings based on datasheet for the AUO G101EVN01.0
+> LVDS panel. Default timings were tested on the panel.
 > 
-> Ah, via __register_one_node() ...
-> 
-> I would assume that an offline node
-> 
-> (1) has no memory
-> (2) has no CPUs
-> 
-> When we *hotplug* either memory or CPUs, and we first online the node, there
-> is nothing to register. Because if there would be something, the node would
-> already be online.
-> 
-> In particular, try_offline_node() will only offline a node if
-> 
-> (A) No present pages: No pages are spanned anymore. This includes
->     offline memory blocks.
-> (B) No present CPUs.
-> 
-> But maybe there is some case that I am missing ...
+> Previous mode-based timings resulted in horizontal display shift.
 
-I actually hoped you and Oscar know how that stuff works :)
+Can you add a Fixes tag ?
 
-I tried to figure what is going on there and it all looks really convoluted.
+Thanks,
+Neil
 
-So, on boot we have 
-	cpu_up() ->
-		try_online_node() ->
- 			bails out because all nodes are online (at least on
-			x86 AFAIU, see 1ca75fa7f19d ("arch/x86/mm/numa: Do
-                        not initialize nodes twice"))
-	node_dev_init()i ->
-		register_one_node() ->
-			this one can use __register_one_node() and loop
-			over memblock regions.
-
-And for the hotplug/unplug path, it seems that
-register_memory_blocks_under_node(MEMINIT_EARLY) is superfluous, because if
-a node had memory it wouldn't get offlined, and if we are hotplugging an
-node with memory and cpus, memory hotplug anyway calls
-register_memory_blocks_under_node_hotplug().
-
-So, IMHO, register_one_node() should not call
-register_memory_blocks_under_node() at all, but again, I might have missed
-something :)
- 
-> -- 
-> Cheers,
 > 
-> David / dhildenb
+> Signed-off-by: Kevin Baker <kevinb@ventureresearch.com>
+> ---
+>   drivers/gpu/drm/panel/panel-simple.c | 25 +++++++++++++------------
+>   1 file changed, 13 insertions(+), 12 deletions(-)
 > 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index fb8a57afe687..1a3d7ccb328a 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -979,27 +979,28 @@ static const struct panel_desc auo_g070vvn01 = {
+>   	},
+>   };
+>   
+> -static const struct drm_display_mode auo_g101evn010_mode = {
+> -	.clock = 68930,
+> -	.hdisplay = 1280,
+> -	.hsync_start = 1280 + 82,
+> -	.hsync_end = 1280 + 82 + 2,
+> -	.htotal = 1280 + 82 + 2 + 84,
+> -	.vdisplay = 800,
+> -	.vsync_start = 800 + 8,
+> -	.vsync_end = 800 + 8 + 2,
+> -	.vtotal = 800 + 8 + 2 + 6,
+> +static const struct display_timing auo_g101evn010_timing = {
+> +	.pixelclock = { 64000000, 68930000, 85000000 },
+> +	.hactive = { 1280, 1280, 1280 },
+> +	.hfront_porch = { 8, 64, 256 },
+> +	.hback_porch = { 8, 64, 256 },
+> +	.hsync_len = { 40, 168, 767 },
+> +	.vactive = { 800, 800, 800 },
+> +	.vfront_porch = { 4, 8, 100 },
+> +	.vback_porch = { 4, 8, 100 },
+> +	.vsync_len = { 8, 16, 223 },
+>   };
+>   
+>   static const struct panel_desc auo_g101evn010 = {
+> -	.modes = &auo_g101evn010_mode,
+> -	.num_modes = 1,
+> +	.timings = &auo_g101evn010_timing,
+> +	.num_timings = 1,
+>   	.bpc = 6,
+>   	.size = {
+>   		.width = 216,
+>   		.height = 135,
+>   	},
+>   	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
+>   	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+>   };
+>   
 
--- 
-Sincerely yours,
-Mike.
