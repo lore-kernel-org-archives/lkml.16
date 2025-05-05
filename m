@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B312D3FB3;
-	Mon,  5 May 2025 22:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCD827FD61;
+	Mon,  5 May 2025 22:53:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485633; cv=none; b=Rgn9YjEOFh0tnOnvZOXK+ndFRkRIrT3DfjpFj0TzTA3VJ6qerqYN+hLsrId2QW/QdjojLyCBqOd5arXYpHP6U/QDkQESiFaWOCMZAOC6u0ElMyxuBnVhnSLK86BmK3zs7Cup/JNv2SBH32BzpzcrJWMmxulrI7gyJFd0mIQS+is=
+	t=1746485637; cv=none; b=a3vegrlQwhXg0qREf/u1Dx0uesSY5wP7YXD6qHPYy4gEz9IjSzSyHAzt3WWPguEtxmAffyFnsu26Yws1q1Y+VPGtsLgSs8XYUG/f91FabdsC6rCvWVkUrRLKp7HuEBTtLHngIRmUE+qkrsh/HgO908iNwdIQlLDOtyoJXAo0GVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485633; c=relaxed/simple;
-	bh=ZNm605BbCsX0wY0BVPpldjVAwPqymba/rreNsJDMUN0=;
+	s=arc-20240116; t=1746485637; c=relaxed/simple;
+	bh=efAAsusLpliVA+wnEyoY/khXhi125dU5XM0uCV+wq7k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R9WrFMtoL/LPjAmZe6bRo3vjYK5fbH7pHzfP6zX+W1JOXpk0AKfOp4VdXj7GnzPDniquqkm3e+nfg1LD4UaLaqh5THRC1rBiMPTTaldcAajCFRO1sqYG2IEsCUDZviaYgz1praAsFv1w3bktw7uROLi3orp/rSBJ7lSwxio0YrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OooEX8uU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lsLkCvrBK5XhQkJG/d6m28bYPiFbZjWp1SbTU6iT58l/oO3cha2DRupu1N6opw1wSYWv2V8AUSc3QVdCgH/MQHUNgLyl76YpIQtT9j+9l3FDt7GVJ/hkefDbZyz8CsrpYhvCNvu+swLmjbiUfKUvKNh7nE1oVnF54YP110p/az0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIyuUDhS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OooEX8uU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B8EAC4CEE4;
-	Mon,  5 May 2025 22:53:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIyuUDhS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAC29C4CEED;
+	Mon,  5 May 2025 22:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485632;
-	bh=ZNm605BbCsX0wY0BVPpldjVAwPqymba/rreNsJDMUN0=;
+	s=k20201202; t=1746485637;
+	bh=efAAsusLpliVA+wnEyoY/khXhi125dU5XM0uCV+wq7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OooEX8uUSEWwsVvCWTIEIPc5nvdt1VPdsC4+IVW759sQD1xxtVvDEeLc5SplmH878
-	 jADdqnV5eU+jNLZoHZC0TPDgQ6N8VXlre/SW5E8qilriUNjH0WjcjJy6QypyvI/8hM
-	 knDOFtkXRNwrF5erhrt05jvIQzv98i4AEzkMzeMPTPhDQ9q0PW7QjleVj59U8dP5xl
-	 /XmQUOjx40X8aotvt6tjWB+hZPKsyX9xIwm23fF9h/X76bon8rrQ2wg1H2yLI7actx
-	 kb7swmKrQxlATJlrNmfoJgBbx1VFBKLgLnTvEC7qP2JJR90FOg3OqatNqb9rBAUFQd
-	 EzHoj6xKu0z3Q==
+	b=oIyuUDhSj3em4n23ZvH7MiYj3rTXPHe6c4X4qpDE+1NLFknN8EvXipl1WQ7x8ZBSn
+	 s+aXLmlj2h/wUJPV/PKrVAWzqJfb3hJVXKadjUkZm+PhMECChZcAWIy1R8jil8LVCV
+	 1/Rlao2H/83aELRWRX/U5Zzc7igbhdeoS3dWq1RqAsZYzosClqn6UmKaP1XDZbkMP1
+	 QzRW7k1Nc/Krwp3ENcR1fqh/cOLBNa4+L6aXZS9A00OOSXVE0bpGBvAoemU0G4QdxW
+	 JOYmFHWy+Xmda9LDl+BLKUXv0oa5hnmliA+wcNzehDsIgIc8Ol9youiF+FR9FIL4zj
+	 Cc4xboespLC3g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mpe@ellerman.id.au,
-	kan.liang@linux.intel.com,
-	coltonlewis@google.com,
-	peterz@infradead.org,
-	rppt@kernel.org,
-	anjalik@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 6.12 396/486] arch/powerpc/perf: Check the instruction type before creating sample with perf_mem_data_src
-Date: Mon,  5 May 2025 18:37:52 -0400
-Message-Id: <20250505223922.2682012-396-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	gregkh@linuxfoundation.org,
+	hayeswang@realtek.com,
+	horms@kernel.org,
+	dianders@chromium.org,
+	phahn-oss@avm.de,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 398/486] r8152: add vendor/device ID pair for Dell Alienware AW1022z
+Date: Mon,  5 May 2025 18:37:54 -0400
+Message-Id: <20250505223922.2682012-398-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,134 +60,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
 
-[ Upstream commit 2ffb26afa64261139e608bf087a0c1fe24d76d4d ]
+[ Upstream commit 848b09d53d923b4caee5491f57a5c5b22d81febc ]
 
-perf mem report aborts as below sometimes (during some corner
-case) in powerpc:
+The Dell AW1022z is an RTL8156B based 2.5G Ethernet controller.
 
-   # ./perf mem report 1>out
-   *** stack smashing detected ***: terminated
-   Aborted (core dumped)
+Add the vendor and product ID values to the driver. This makes Ethernet
+work with the adapter.
 
-The backtrace is as below:
-   __pthread_kill_implementation ()
-   raise ()
-   abort ()
-   __libc_message
-   __fortify_fail
-   __stack_chk_fail
-   hist_entry.lvl_snprintf
-   __sort__hpp_entry
-   __hist_entry__snprintf
-   hists.fprintf
-   cmd_report
-   cmd_mem
-
-Snippet of code which triggers the issue
-from tools/perf/util/sort.c
-
-   static int hist_entry__lvl_snprintf(struct hist_entry *he, char *bf,
-                                    size_t size, unsigned int width)
-   {
-        char out[64];
-
-        perf_mem__lvl_scnprintf(out, sizeof(out), he->mem_info);
-        return repsep_snprintf(bf, size, "%-*s", width, out);
-   }
-
-The value of "out" is filled from perf_mem_data_src value.
-Debugging this further showed that for some corner cases, the
-value of "data_src" was pointing to wrong value. This resulted
-in bigger size of string and causing stack check fail.
-
-The perf mem data source values are captured in the sample via
-isa207_get_mem_data_src function. The initial check is to fetch
-the type of sampled instruction. If the type of instruction is
-not valid (not a load/store instruction), the function returns.
-
-Since 'commit e16fd7f2cb1a ("perf: Use sample_flags for data_src")',
-data_src field is not initialized by the perf_sample_data_init()
-function. If the PMU driver doesn't set the data_src value to zero if
-type is not valid, this will result in uninitailised value for data_src.
-The uninitailised value of data_src resulted in stack check fail
-followed by abort for "perf mem report".
-
-When requesting for data source information in the sample, the
-instruction type is expected to be load or store instruction.
-In ISA v3.0, due to hardware limitation, there are corner cases
-where the instruction type other than load or store is observed.
-In ISA v3.0 and before values "0" and "7" are considered reserved.
-In ISA v3.1, value "7" has been used to indicate "larx/stcx".
-Drop the sample if instruction type has reserved values for this
-field with a ISA version check. Initialize data_src to zero in
-isa207_get_mem_data_src if the instruction type is not load/store.
-
-Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-Link: https://patch.msgid.link/20250121131621.39054-1-atrajeev@linux.vnet.ibm.com
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+Link: https://patch.msgid.link/20250206224033.980115-1-olek2@wp.pl
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c   | 20 ++++++++++++++++++++
- arch/powerpc/perf/isa207-common.c |  4 +++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ drivers/net/usb/r8152.c   | 1 +
+ include/linux/usb/r8152.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 42867469752d7..33d726bb99e3d 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2222,6 +2222,10 @@ static struct pmu power_pmu = {
- #define PERF_SAMPLE_ADDR_TYPE  (PERF_SAMPLE_ADDR |		\
- 				PERF_SAMPLE_PHYS_ADDR |		\
- 				PERF_SAMPLE_DATA_PAGE_SIZE)
-+
-+#define SIER_TYPE_SHIFT	15
-+#define SIER_TYPE_MASK	(0x7ull << SIER_TYPE_SHIFT)
-+
- /*
-  * A counter has overflowed; update its count and record
-  * things if requested.  Note that interrupts are hard-disabled
-@@ -2290,6 +2294,22 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 	    is_kernel_addr(mfspr(SPRN_SIAR)))
- 		record = 0;
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 96fa3857d8e25..2cab046749a92 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -10085,6 +10085,7 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{ USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff) },
+ 	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0601) },
+ 	{ USB_DEVICE(VENDOR_ID_DLINK,   0xb301) },
++	{ USB_DEVICE(VENDOR_ID_DELL,    0xb097) },
+ 	{ USB_DEVICE(VENDOR_ID_ASUS,    0x1976) },
+ 	{}
+ };
+diff --git a/include/linux/usb/r8152.h b/include/linux/usb/r8152.h
+index 33a4c146dc19c..2ca60828f28bb 100644
+--- a/include/linux/usb/r8152.h
++++ b/include/linux/usb/r8152.h
+@@ -30,6 +30,7 @@
+ #define VENDOR_ID_NVIDIA		0x0955
+ #define VENDOR_ID_TPLINK		0x2357
+ #define VENDOR_ID_DLINK			0x2001
++#define VENDOR_ID_DELL			0x413c
+ #define VENDOR_ID_ASUS			0x0b05
  
-+	/*
-+	 * SIER[46-48] presents instruction type of the sampled instruction.
-+	 * In ISA v3.0 and before values "0" and "7" are considered reserved.
-+	 * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
-+	 * Drop the sample if "type" has reserved values for this field with a
-+	 * ISA version check.
-+	 */
-+	if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
-+			ppmu->get_mem_data_src) {
-+		val = (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
-+		if (val == 0 || (val == 7 && !cpu_has_feature(CPU_FTR_ARCH_31))) {
-+			record = 0;
-+			atomic64_inc(&event->lost_samples);
-+		}
-+	}
-+
- 	/*
- 	 * Finally record data if requested.
- 	 */
-diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-index 56301b2bc8ae8..031a2b63c171d 100644
---- a/arch/powerpc/perf/isa207-common.c
-+++ b/arch/powerpc/perf/isa207-common.c
-@@ -321,8 +321,10 @@ void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
- 
- 	sier = mfspr(SPRN_SIER);
- 	val = (sier & ISA207_SIER_TYPE_MASK) >> ISA207_SIER_TYPE_SHIFT;
--	if (val != 1 && val != 2 && !(val == 7 && cpu_has_feature(CPU_FTR_ARCH_31)))
-+	if (val != 1 && val != 2 && !(val == 7 && cpu_has_feature(CPU_FTR_ARCH_31))) {
-+		dsrc->val = 0;
- 		return;
-+	}
- 
- 	idx = (sier & ISA207_SIER_LDST_MASK) >> ISA207_SIER_LDST_SHIFT;
- 	sub_idx = (sier & ISA207_SIER_DATA_SRC_MASK) >> ISA207_SIER_DATA_SRC_SHIFT;
+ #if IS_REACHABLE(CONFIG_USB_RTL8152)
 -- 
 2.39.5
 
