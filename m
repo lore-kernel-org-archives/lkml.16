@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7D435963E;
-	Mon,  5 May 2025 22:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB32BDC34;
+	Mon,  5 May 2025 22:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484951; cv=none; b=uD2s+eBkqeNkPDwEWfp2zF8NI+QbhQpbOgIAi5A4UmUC3v3tAamvJV96URPkkWZw+nkjKvWyEtO06+DSupMucuL/5vn2ca8ooA9Lx7j6XosfjSflPCdrSAetmwo10sf7FZKnL4FcTXfo9zO2b5mZ/QFx0Hq6XUHk96IxY33+ONI=
+	t=1746484930; cv=none; b=MhH2siKhe2UkcmEYBtw8ctQajIELDkpWW6cWq5WXnADacWISx5VIv0l9BxWTuqF5B3SwDuD4xNuN6TWZFdEPqCDQyme56105rp13CEVS6cZUa2v5ev/krOEdC1Jt1lo8PlSRpWPSdrzEOFycufQm9KPDc5KXiQFG9ZG97PU7Hp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484951; c=relaxed/simple;
-	bh=HM5lWcaDvaU7UgyXxccRJE63+mXAVV9HFc/Qp4TbbIw=;
+	s=arc-20240116; t=1746484930; c=relaxed/simple;
+	bh=SQcrBdDgxw+dhMtgvd5xGs4Las/eqms4Rb/CtpJWtOk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MMGYNm46kYZ47nzyDf6eV1Bt3GaUlYtCs0d6qCEzIgeQQCAVYuv4XZLzwaX7QcoobwX0ESoPWMzCyihqImF9/KmYSY5N270xDuNh3aA62MQoVnGHuwg9Iok3OFC8+B3o+uLwvbsbOhw89lFFCJru0jVGpXZOIVEV2C9FJcCdleA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5djDOe2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ed3LPyRZ5okNtThMMabR7Kgh7/n4Q5rEampi11MT7zEMOMsDyhmbaaoPWSgGmSNWbU6gZ9UMVRFm0lNJfdEPsmmJ+mSN2cYigQK7cwKsIg5h6J7BvlO4m+ZXHlI8ji7Pm1VUbBvKgoaNCY2QEByXfEfP+OF9UIxbWFx8+RDC9OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1ynIDJ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5djDOe2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E3EC4CEED;
-	Mon,  5 May 2025 22:42:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1ynIDJ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772BDC4CEE4;
+	Mon,  5 May 2025 22:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484950;
-	bh=HM5lWcaDvaU7UgyXxccRJE63+mXAVV9HFc/Qp4TbbIw=;
+	s=k20201202; t=1746484929;
+	bh=SQcrBdDgxw+dhMtgvd5xGs4Las/eqms4Rb/CtpJWtOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u5djDOe2c02vtQ6KcFg8Jlf41RfIyJ7Bi1KysWph37SyvN5zomTiPI/lsF7bAD7FL
-	 5iCGVBNbCDYQp4yN8a0afp9EiW5vVKRIrlTcDmNnGGoqxfShd13Kj4neqILQNYNLBQ
-	 2/8Yw2r+RvOjta6ibaF/wZ7/OmwMocH2WCwNiZZ7BhmKWslwxwLPeoS04FXAVwGkuQ
-	 jtfQ9AlG9ZTsm0d5cR1MpcyL9cAuGO2yDrOtSorbhwNrKLvwvSPJCagA+qP7Jm6nO9
-	 KqmPxCAakNsZIjT6k2dXpEt2rRowTzM0s5VFX4oQ71VOpE8TalIMKblh5XM7r60Y7h
-	 819kBkQeKRFOQ==
+	b=a1ynIDJ0fZLWhcFm8j61z5fah6T/vPZ5AeETRcwtKk8RVyBqD5xKY8g6VyDlZ6zCA
+	 6c+j7GTTX4NDFc4uGTaB62n+Z2CYUFq7grMqQHP8ZxcRTb3Fm5/mW//cfzKSj3nXsn
+	 Nwr7ST5W/T8pRXpfdfo1ZWwQu6lYJES97FW67561swh+zZ2BScQi9gv+0hDPqkZ8K+
+	 UHJ8fafx3kFk2WTOG2lI8UgpvTKS5u3nX2d6OmnNVynVS3S1Lg5ltMtgPr5Ee+VGr1
+	 ryiaJo6NxAkSZ6Z8YeRC+gLJ/hCnd0B0iXnP3AbJn410snU8UfYH4UxuGUKf9Um4mJ
+	 atL4pG/nKEr8g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jeff Chen <jeff.chen_1@nxp.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Flora Cui <flora.cui@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	briannorris@chromium.org,
-	kvalo@kernel.org,
-	s.hauer@pengutronix.de,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 091/486] wifi: mwifiex: Fix HT40 bandwidth issue.
-Date: Mon,  5 May 2025 18:32:47 -0400
-Message-Id: <20250505223922.2682012-91-sashal@kernel.org>
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	sunil.khatri@amd.com,
+	Hawking.Zhang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 082/486] drm/amdgpu: release xcp_mgr on exit
+Date: Mon,  5 May 2025 18:32:38 -0400
+Message-Id: <20250505223922.2682012-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,45 +57,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jeff Chen <jeff.chen_1@nxp.com>
+From: Flora Cui <flora.cui@amd.com>
 
-[ Upstream commit 4fcfcbe457349267fe048524078e8970807c1a5b ]
+[ Upstream commit b5aaa82e2b12feaaa6958f7fa0917ddcc03c24ee ]
 
-This patch addresses an issue where, despite the AP supporting 40MHz
-bandwidth, the connection was limited to 20MHz. Without this fix,
-even if the access point supports 40MHz, the bandwidth after
-connection remains at 20MHz. This issue is not a regression.
+Free on driver cleanup.
 
-Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Link: https://patch.msgid.link/20250314094238.2097341-1-jeff.chen_1@nxp.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
+Signed-off-by: Flora Cui <flora.cui@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/11n.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
-index 66f0f5377ac18..738bafc3749b0 100644
---- a/drivers/net/wireless/marvell/mwifiex/11n.c
-+++ b/drivers/net/wireless/marvell/mwifiex/11n.c
-@@ -403,12 +403,14 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index ef0aa2dd33aa8..9cc7596688abd 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -4668,6 +4668,9 @@ void amdgpu_device_fini_sw(struct amdgpu_device *adev)
+ 	kfree(adev->fru_info);
+ 	adev->fru_info = NULL;
  
- 		if (sband->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40 &&
- 		    bss_desc->bcn_ht_oper->ht_param &
--		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY)
-+		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY) {
-+			chan_list->chan_scan_param[0].radio_type |=
-+				CHAN_BW_40MHZ << 2;
- 			SET_SECONDARYCHAN(chan_list->chan_scan_param[0].
- 					  radio_type,
- 					  (bss_desc->bcn_ht_oper->ht_param &
- 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
--
-+		}
- 		*buffer += struct_size(chan_list, chan_scan_param, 1);
- 		ret_len += struct_size(chan_list, chan_scan_param, 1);
- 	}
++	kfree(adev->xcp_mgr);
++	adev->xcp_mgr = NULL;
++
+ 	px = amdgpu_device_supports_px(adev_to_drm(adev));
+ 
+ 	if (px || (!dev_is_removable(&adev->pdev->dev) &&
 -- 
 2.39.5
 
