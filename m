@@ -1,150 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65210312827
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481A9290DB2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746489069; cv=none; b=CNGlJ4n8nS9UR4s+CcJK0f3iXLSBOfkGnIBZnX5/2YDRvYHzaGMYJnDh1nUxBqSjYkA/fLkXXNb/EuxNt9LwWpeVGsenmWLHcguWY1t1pmrIg/iJIvMuWC3mXsJ3siYUtJA9Ti9+hKTkQoT2Kqxb+3dKwrQ6lRjuB6Fuh60NxF0=
+	t=1746489207; cv=none; b=MigvoD7bDucyzx9B8qs3ydUSk5r+KH9vPYsBiknuCo64soM4c2JCstfli3Rybaf7c+8oidkittd9z7olqdIAqaRTL8ECfFza+ONrNyCrThSoTQzfnW/Pw3uinslqwykCKoJSrpBuLy1NFBLwZJOSk9Ml1EwtrY3lOTvTMriRPRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746489069; c=relaxed/simple;
-	bh=0DSF7dHmV17QwKXNCFzP0+mA7qcPG4gxTwIbAzLc++c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V3XGHNYjEiZpCTkOnQUa/xQs8TJpb3kiNS6ricBZEAgvGEcar8u4ISJ8N63yzaeE5aOGtvIWJGKd3SpxDHURG6ydRqJptmd4B3O+B34X/rAea2aGWoKCXfrxREyPswuCUfB0BseH7dQlCLq5LOt9o1izRNg/aWJQOvcIbpFL5nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ad+OBHlr; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ad+OBHlr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746489068; x=1778025068;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0DSF7dHmV17QwKXNCFzP0+mA7qcPG4gxTwIbAzLc++c=;
-  b=Ad+OBHlrXTzSfXW6E2CQKDKinCzWZDKtMKzMqGbVZAzqzNaun6SWPRjD
-   gCqsJejkY1C0+eJDvHdQFSzUOk1zbzpPqEo4Iz5VV2eA8WhjnHptoHPTm
-   1hnDPUDpWmyuGfENItSXcFnxdTrhf9nAids8lmzytIM3kyMPTwE4Tu8GV
-   Aos+5yFAMOIFwrA1YnZcpVnT/ZL2M5NIamYPzBGcqnmDaFhPOzbhY10WD
-   4PZ9HtUctPyaGT6YkJcUJXrHskzkUZI5OqsiCLvW4Wr0wYhQudIPyhGwG
-   R4Ka79XpVwfev8IVxaQWBj2lYTB0YV4Hro7X35OiewAUJSp4ilqatrn/3
-   Q==;
-X-CSE-ConnectionGUID: 5NyW45pPQLuGYdGZ4FcW7g==
-X-CSE-MsgGUID: XEfhBtocTPiEWxXujoh/gA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="51939052"
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="51939052"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 16:51:06 -0700
-X-CSE-ConnectionGUID: B9ereCXyRtKibr91GbHSFA==
-X-CSE-MsgGUID: nRDOwKmBSD+5Q8l7GbvmPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="172617724"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 05 May 2025 16:51:04 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uC5aO-00068L-2k;
-	Mon, 05 May 2025 23:51:00 +0000
-Date: Tue, 6 May 2025 07:50:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ard Biesheuvel <ardb+git@google.com>,
-	linux-arm-kernel@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-	Ard Biesheuvel <ardb@kernel.org>, Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: Re: [PATCH 1/3] arm64/boot: Move init_pgdir[] into __pi_ namespace
-Message-ID: <202505060740.OIkWGFVZ-lkp@intel.com>
-References: <20250503112137.1962910-6-ardb+git@google.com>
+	s=arc-20240116; t=1746489207; c=relaxed/simple;
+	bh=4szCwPKUAWPCALZNQCt1FT3sTgBhoRie1V8vTB4SGZo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=P1GKNbmk6Nk8z9qO0MiLgJTPTRIZ5vZFCuZ/R02spFngZc9Hhy5VbpDd0wXXPvYtPkq0LU0+QiQKahWbb09JctDoT5+fAYoMcyciJHs7cnOAokEjjvyi5dFsqJwDljtvB7vSg+Sy/uPSM0BiGDBXDK3IaF76Nnm1iIrgtCJ2fnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d44dc8a9b4so50470125ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 16:53:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746489203; x=1747094003;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lVvfQB2gd1o++AE5Iug9x1lhI2tv16s5HMfxraXsjOc=;
+        b=FQLh01XUAMqOlnNjJ7NmRS3J8iEt/LEfZEz0H5r7GIMkHYU6Hq8I+H99qCdyYAoTLL
+         R4nPBP1wKApJaIuceewOeLtys82gVqsB5rGoFh6/mVu27JeEucXKRTig1eXdBGWhRAcC
+         IQ24XKbW7xY+5S52ukKCRtcA686L1zZDE9CzX/noiGqikoBp8sl/QPvQxbxFJtBN6qsm
+         ErQdlKTJL5BrDGmvyU+tmC76PNBWL+8qnmvl8uHYoLLoTobjutBINRS0dpOGBW2tBfaf
+         2mea/DK2cs0lc782lKQTxGmFTf8uBaILvoY0OUPtX6VW4rEVAisbIjc4e+MgOtJkeYX1
+         /zhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVwZoVNTBEeiyjLI7zgzJMKNAplufT+RII/u5LAHgLiqPBkV7Az2lqlIAoNuj8zi4tEvUp9Jw/oz9qh4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjeMaPMBKbN27sAZxGiwQXXgDyodm/r+Km/tnpUPYY40der62V
+	5lLz75cBRrJYDFCVjS0T2oIJhmHw8+tjUOZLl1LOKbOyZRPqd+ggu8+5nuSThYQ8fZVWHym8qOB
+	wXppovW3BxJo4nw+XtrW5T3Li8wx//8+L0ifCEWEquZtscfPgLj7dPKE=
+X-Google-Smtp-Source: AGHT+IHFWRP2ubrDOHG2yQxffmplmBna/WWvzM/wBGg1xiw1HNcYYS4LHSGpsBSYKjmOrTiRUb30nVJ2Pn8USxw1fDGeQFGLso/O
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250503112137.1962910-6-ardb+git@google.com>
+X-Received: by 2002:a05:6e02:1a41:b0:3d8:7a02:a67b with SMTP id
+ e9e14a558f8ab-3da6cdd6201mr14788035ab.8.1746489203173; Mon, 05 May 2025
+ 16:53:23 -0700 (PDT)
+Date: Mon, 05 May 2025 16:53:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68194f73.050a0220.a19a9.0005.GAE@google.com>
+Subject: [syzbot] [ext4?] kernel BUG in ext4_mb_normalize_request
+From: syzbot <syzbot+7fc5cde5fbe19897a469@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ard,
+Hello,
 
-kernel test robot noticed the following build errors:
+syzbot found the following issue on:
 
-[auto build test ERROR on soc/for-next]
-[also build test ERROR on arm/for-next arm/fixes linus/master v6.15-rc5 next-20250505]
-[cannot apply to arm64/for-next/core kvmarm/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+HEAD commit:    4f79eaa2ceac kbuild: Properly disable -Wunterminated-strin..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=148b3774580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
+dashboard link: https://syzkaller.appspot.com/bug?extid=7fc5cde5fbe19897a469
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ard-Biesheuvel/arm64-boot-Move-init_pgdir-into-__pi_-namespace/20250503-192534
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
-patch link:    https://lore.kernel.org/r/20250503112137.1962910-6-ardb%2Bgit%40google.com
-patch subject: [PATCH 1/3] arm64/boot: Move init_pgdir[] into __pi_ namespace
-config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20250506/202505060740.OIkWGFVZ-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250506/202505060740.OIkWGFVZ-lkp@intel.com/reproduce)
+Unfortunately, I don't have any reproducer for this issue yet.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505060740.OIkWGFVZ-lkp@intel.com/
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/edbf5e3df590/disk-4f79eaa2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e9ed2fe174f6/vmlinux-4f79eaa2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c11b2a37db5c/bzImage-4f79eaa2.xz
 
-All errors (new ones prefixed by >>):
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7fc5cde5fbe19897a469@syzkaller.appspotmail.com
 
-   arch/arm64/kernel/pi/map_kernel.c: In function 'remap_idmap_for_lpa2':
->> arch/arm64/kernel/pi/map_kernel.c:191:37: error: 'init_pg_end' undeclared (first use in this function); did you mean 'init_pg_dir'?
-     191 |         memset(init_pg_dir, 0, (u64)init_pg_end - (u64)init_pg_dir);
-         |                                     ^~~~~~~~~~~
-         |                                     init_pg_dir
-   arch/arm64/kernel/pi/map_kernel.c:191:37: note: each undeclared identifier is reported only once for each function it appears in
-   arch/arm64/kernel/pi/map_kernel.c: In function 'early_map_kernel':
-   arch/arm64/kernel/pi/map_kernel.c:222:37: error: 'init_pg_end' undeclared (first use in this function); did you mean 'init_pg_dir'?
-     222 |         memset(__bss_start, 0, (u64)init_pg_end - (u64)__bss_start);
-         |                                     ^~~~~~~~~~~
-         |                                     init_pg_dir
+EXT4-fs: Ignoring removed nobh option
+EXT4-fs: Ignoring removed bh option
+EXT4-fs (loop9): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: writeback.
+EXT4-fs (loop9): start 0, size 131072, fe_logical 131136
+------------[ cut here ]------------
+kernel BUG at fs/ext4/mballoc.c:4555!
+Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 1 UID: 0 PID: 8509 Comm: syz.9.234 Not tainted 6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+RIP: 0010:ext4_mb_normalize_request+0x1cc9/0x1d00 fs/ext4/mballoc.c:4555
+Code: f5 ac ff 48 8b 44 24 38 48 8b 38 48 c7 c6 80 37 7e 8b 48 c7 c2 80 4d 7e 8b 48 8b 4c 24 28 4d 89 f0 49 89 d9 e8 38 a5 09 00 90 <0f> 0b e8 60 26 4d ff 90 0f 0b e8 58 26 4d ff 90 0f 0b e8 50 26 4d
+RSP: 0018:ffffc9000496ed40 EFLAGS: 00010246
+RAX: a8a732223c46f100 RBX: 0000000000020040 RCX: a8a732223c46f100
+RDX: ffffc9000dd70000 RSI: 0000000000023bd3 RDI: 0000000000023bd4
+RBP: 0000000000000000 R08: ffffc9000496e8e7 R09: 1ffff9200092dd1c
+R10: dffffc0000000000 R11: fffff5200092dd1d R12: ffffffff00020800
+R13: dffffc0000000000 R14: 0000000000020000 R15: 0000000000020000
+FS:  00007fec5d95a6c0(0000) GS:ffff888126200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9695f6e270 CR3: 00000000207e0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ext4_mb_new_blocks+0xc59/0x46a0 fs/ext4/mballoc.c:6208
+ ext4_ext_map_blocks+0x1618/0x67c0 fs/ext4/extents.c:4379
+ ext4_map_create_blocks fs/ext4/inode.c:520 [inline]
+ ext4_map_blocks+0x807/0x1740 fs/ext4/inode.c:706
+ _ext4_get_block+0x200/0x4c0 fs/ext4/inode.c:785
+ ext4_get_block_unwritten+0x2e/0x100 fs/ext4/inode.c:818
+ ext4_block_write_begin+0x543/0x1290 fs/ext4/inode.c:1067
+ ext4_write_begin+0x6f6/0x12c0 fs/ext4/ext4_jbd2.h:-1
+ ext4_da_write_begin+0x33a/0xa60 fs/ext4/inode.c:2932
+ generic_perform_write+0x2c4/0x910 mm/filemap.c:4103
+ ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:299
+ ext4_file_write_iter+0x298/0x1bc0 fs/ext4/file.c:-1
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x548/0xa90 fs/read_write.c:684
+ ksys_pwrite64 fs/read_write.c:791 [inline]
+ __do_sys_pwrite64 fs/read_write.c:799 [inline]
+ __se_sys_pwrite64 fs/read_write.c:796 [inline]
+ __x64_sys_pwrite64+0x193/0x220 fs/read_write.c:796
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fec5cb8e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fec5d95a038 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
+RAX: ffffffffffffffda RBX: 00007fec5cdb6080 RCX: 00007fec5cb8e969
+RDX: 00000000000155c2 RSI: 0000200000000140 RDI: 000000000000000a
+RBP: 00007fec5cc10ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000008000c64 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fec5cdb6080 R15: 00007fffed56a588
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:ext4_mb_normalize_request+0x1cc9/0x1d00 fs/ext4/mballoc.c:4555
+Code: f5 ac ff 48 8b 44 24 38 48 8b 38 48 c7 c6 80 37 7e 8b 48 c7 c2 80 4d 7e 8b 48 8b 4c 24 28 4d 89 f0 49 89 d9 e8 38 a5 09 00 90 <0f> 0b e8 60 26 4d ff 90 0f 0b e8 58 26 4d ff 90 0f 0b e8 50 26 4d
+RSP: 0018:ffffc9000496ed40 EFLAGS: 00010246
+RAX: a8a732223c46f100 RBX: 0000000000020040 RCX: a8a732223c46f100
+RDX: ffffc9000dd70000 RSI: 0000000000023bd3 RDI: 0000000000023bd4
+RBP: 0000000000000000 R08: ffffc9000496e8e7 R09: 1ffff9200092dd1c
+R10: dffffc0000000000 R11: fffff5200092dd1d R12: ffffffff00020800
+R13: dffffc0000000000 R14: 0000000000020000 R15: 0000000000020000
+FS:  00007fec5d95a6c0(0000) GS:ffff888126200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000562fcaf64131 CR3: 00000000207e0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-vim +191 arch/arm64/kernel/pi/map_kernel.c
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-9684ec186f8fad Ard Biesheuvel 2024-02-14  158  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  159  static void __init remap_idmap_for_lpa2(void)
-9684ec186f8fad Ard Biesheuvel 2024-02-14  160  {
-9684ec186f8fad Ard Biesheuvel 2024-02-14  161  	/* clear the bits that change meaning once LPA2 is turned on */
-9684ec186f8fad Ard Biesheuvel 2024-02-14  162  	pteval_t mask = PTE_SHARED;
-9684ec186f8fad Ard Biesheuvel 2024-02-14  163  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  164  	/*
-9684ec186f8fad Ard Biesheuvel 2024-02-14  165  	 * We have to clear bits [9:8] in all block or page descriptors in the
-9684ec186f8fad Ard Biesheuvel 2024-02-14  166  	 * initial ID map, as otherwise they will be (mis)interpreted as
-9684ec186f8fad Ard Biesheuvel 2024-02-14  167  	 * physical address bits once we flick the LPA2 switch (TCR.DS). Since
-9684ec186f8fad Ard Biesheuvel 2024-02-14  168  	 * we cannot manipulate live descriptors in that way without creating
-9684ec186f8fad Ard Biesheuvel 2024-02-14  169  	 * potential TLB conflicts, let's create another temporary ID map in a
-9684ec186f8fad Ard Biesheuvel 2024-02-14  170  	 * LPA2 compatible fashion, and update the initial ID map while running
-9684ec186f8fad Ard Biesheuvel 2024-02-14  171  	 * from that.
-9684ec186f8fad Ard Biesheuvel 2024-02-14  172  	 */
-9684ec186f8fad Ard Biesheuvel 2024-02-14  173  	create_init_idmap(init_pg_dir, mask);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  174  	dsb(ishst);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  175  	set_ttbr0_for_lpa2((u64)init_pg_dir);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  176  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  177  	/*
-9684ec186f8fad Ard Biesheuvel 2024-02-14  178  	 * Recreate the initial ID map with the same granularity as before.
-9684ec186f8fad Ard Biesheuvel 2024-02-14  179  	 * Don't bother with the FDT, we no longer need it after this.
-9684ec186f8fad Ard Biesheuvel 2024-02-14  180  	 */
-9684ec186f8fad Ard Biesheuvel 2024-02-14  181  	memset(init_idmap_pg_dir, 0,
-ecc54006f158ae Zenghui Yu     2024-06-21  182  	       (u64)init_idmap_pg_end - (u64)init_idmap_pg_dir);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  183  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  184  	create_init_idmap(init_idmap_pg_dir, mask);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  185  	dsb(ishst);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  186  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  187  	/* switch back to the updated initial ID map */
-9684ec186f8fad Ard Biesheuvel 2024-02-14  188  	set_ttbr0_for_lpa2((u64)init_idmap_pg_dir);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  189  
-9684ec186f8fad Ard Biesheuvel 2024-02-14  190  	/* wipe the temporary ID map from memory */
-9684ec186f8fad Ard Biesheuvel 2024-02-14 @191  	memset(init_pg_dir, 0, (u64)init_pg_end - (u64)init_pg_dir);
-9684ec186f8fad Ard Biesheuvel 2024-02-14  192  }
-9684ec186f8fad Ard Biesheuvel 2024-02-14  193  
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
