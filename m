@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753CE272E51;
-	Mon,  5 May 2025 23:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9310F2F7C3E;
+	Mon,  5 May 2025 23:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487168; cv=none; b=aXN7ga6rNJX5gv7axiBD+P5aG4z0qoAosqYSxYc9Kok5Sr7qge/Nv4wq+xAfv2k1kDfeCSTkoAvUuHr69eomQeknG3EDSbXynKMIw71hvwJYuix/j2Lj/eXSUuxDpx6ZK2HshQ9ULr0HnQ+FrpoZ4YKYhdmHwWlYggOxDg/vsEE=
+	t=1746487172; cv=none; b=HDZabMem71YAZPukYAPvoyHwjXGswkgvuGP+m7f+4kTplyy4xDLtjNkY2vvCE0ZTNcGF6uccCC4nUEun3DbBg4xCnh82dSKfcFQJCzSJ7DCPehIWRp+3kChXytPFBsUnHh6vzK6O4KamhlBz7VktoubQTT25atKQnb1Dllx9wgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487168; c=relaxed/simple;
-	bh=Wn/M93AwaZkmc/psVLwJu5hWcPDVyYQStzZWQ0sbA/Y=;
+	s=arc-20240116; t=1746487172; c=relaxed/simple;
+	bh=HvmLGFahVqihGC7medF1+sWUmE6L9s+IAxnR2+uIxZw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GJ561/a6yYEt/OxEOYK6vAPzkySujNH6czCOTecHPJAWgJRNn+iqzg/8ufr6mqFdbbNa9ojrViDUkg2xpeD40WHSIV5K04p8o89D64n5sguvBu0ZqKjjT57V0iQ794p4A0j2wMzA3r8LEd8G3RgNklYxMjOK/PnoYuDh0/tmxuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgdmIlaK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WqUqcSQaz/XR/QabkEBgEFn73oX3vtyfFTSHwBajUVoiLtSUYXIlBrGcDKAE1ZeNfq4kJ1sFLcmBP+khyWIYeMbPMoB1sBeYwuR+M59ngY2nkQ+RbQ76rRgemrnARa07cGF61HjhVzBBPYveYrd2Z4M5D5vuNtiAmdkHpCw+/EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNwXkr7j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgdmIlaK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E69BAC4CEEF;
-	Mon,  5 May 2025 23:19:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNwXkr7j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CF8C4CEE4;
+	Mon,  5 May 2025 23:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487167;
-	bh=Wn/M93AwaZkmc/psVLwJu5hWcPDVyYQStzZWQ0sbA/Y=;
+	s=k20201202; t=1746487172;
+	bh=HvmLGFahVqihGC7medF1+sWUmE6L9s+IAxnR2+uIxZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mgdmIlaK7A1guFpHzYBVEcv/kTcAMyUPWGY2kmYk1NpjhI1dHwC2UCfNwGmEinn2O
-	 pLn+3hgdXM+UHivkEcY1c5YNHyFxodfH2rl+kjd2Rm4RMjM5oGAoW5UUwZaubjQ4+p
-	 5RGiKAkPU3XRBIgyEtjp3TBuFAmB2O+ODNgTmkQRrJBkVdppbNQfhI6Qb+D4282UX0
-	 B+6/KDD+acbi5hZFEfqruEsgieQVCZJLp6sDXLUD2e32hddSBNAwR10TaPhS/QR9Up
-	 6T8zhCl1WlhZ+vipG3qZIWWfgtCrbaePvu/36r24IWVnA449N5IHM8JAztlxcXBXLb
-	 37ZCJO1Z1BLzA==
+	b=hNwXkr7jW1QYV5OLG25y1C2Vp77cH2fbzDmgD2Vh8n7qjpWnMUnaixokKFLwsKQz9
+	 HrMDtCfm/G5Zuvszu2c+bzSs/+oDacfSPKgS5l8i97TzgQNeknikZJ1IUo82YMfuKi
+	 ZIEPeXpZimIcthHbd1JwCeA5IJoOdBalCJIYf11+SV7ZEOEAA1sJbcU0HHBXsiV+G3
+	 Zv+VtSzRwjNEAL/1uJQ/se0nwvIETCsfo0jtR2AdArS+gdIrIEHsC8soeK/f6E+yGH
+	 YO6tA7kBYfgvqLcH6SMppQrSVZwuqionMLJsof86qNkMiT+HvEFNwLtII4wkXnwX1w
+	 wwGxM/HjKyUCQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	tmn505@gmail.com,
-	devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 037/114] arm64: tegra: p2597: Fix gpio for vdd-1v8-dis regulator
-Date: Mon,  5 May 2025 19:17:00 -0400
-Message-Id: <20250505231817.2697367-37-sashal@kernel.org>
+	linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 040/114] rtc: ds1307: stop disabling alarms on probe
+Date: Mon,  5 May 2025 19:17:03 -0400
+Message-Id: <20250505231817.2697367-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -57,35 +49,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit f34621f31e3be81456c903287f7e4c0609829e29 ]
+[ Upstream commit dcec12617ee61beed928e889607bf37e145bf86b ]
 
-According to the board schematics the enable pin of this regulator is
-connected to gpio line #9 of the first instance of the TCA9539
-GPIO expander, so adjust it.
+It is a bad practice to disable alarms on probe or remove as this will
+prevent alarms across reboots.
 
-Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Link: https://lore.kernel.org/r/20250224-diogo-gpio_exp-v1-1-80fb84ac48c6@tecnico.ulisboa.pt
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20250303223744.1135672-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-ds1307.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index a9caaf7c0d67e..c04772a9740ec 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1638,7 +1638,7 @@ vdd_1v8_dis: regulator@7 {
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 		regulator-always-on;
--		gpio = <&exp1 14 GPIO_ACTIVE_HIGH>;
-+		gpio = <&exp1 9 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 		vin-supply = <&vdd_1v8>;
- 	};
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 07a9cc91671b0..3a2401ce2ec9c 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -1864,10 +1864,8 @@ static int ds1307_probe(struct i2c_client *client,
+ 		 * For some variants, be sure alarms can trigger when we're
+ 		 * running on Vbackup (BBSQI/BBSQW)
+ 		 */
+-		if (want_irq || ds1307_can_wakeup_device) {
++		if (want_irq || ds1307_can_wakeup_device)
+ 			regs[0] |= DS1337_BIT_INTCN | chip->bbsqi_bit;
+-			regs[0] &= ~(DS1337_BIT_A2IE | DS1337_BIT_A1IE);
+-		}
+ 
+ 		regmap_write(ds1307->regmap, DS1337_REG_CONTROL,
+ 			     regs[0]);
 -- 
 2.39.5
 
