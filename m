@@ -1,125 +1,117 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0022B14AA9;
-	Mon,  5 May 2025 07:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732861C84B3;
+	Mon,  5 May 2025 07:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430756; cv=none; b=Fhz0mx9mbX/JVWG+zYWwndiE9v1PwtAcGq4XzyvJBhjBpCGul8YHI1X9HNK/bv0/ImkDbFpIz4NWBdXnpFe+JN7ia3VpmHRiPTWHcXlgyRiLbiBrBh92JcMlqYA9aS/Uk5mGDCjA6BAe1zJ+i8l+HHNnCKn6UoRDNQ58eXfk9zo=
+	t=1746430910; cv=none; b=clkPcK7IGPbnZrVd2WzSfE02lBQ09VutdprKEA/CaMrjDfvIVc3P6iA9yH+ewJnwl7HIgh3GvZyEywWzaZGUTIsnG9+pvVW1+RiFL7UW7i8/mdSfklbPcN1vJ5qVAdjg03fvSC1VoMDe9Y/oodKDRvbksMsLLb5T2tUxNZtQpjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746430756; c=relaxed/simple;
-	bh=1KP4mAI19Zk1amrAS0hjHJvbX0fHpJxaad8PMwQ5Vt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eam4PSpzMN/lR/v0TScB/EKxsqaA7WSawGVApc2tC4p+0/JqviLuM3kORHnqpgR4rYWA1ai0mHO7TdWOOhcRHM32M2ImeCymfiCXMWA9hUHYXJeQiOhHjY1hs/kWmrxjMbIUFsraF6D4wvGDgUileilDYm4QDlb/rpTyJV4c0Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=EM/VRuNJ; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746430910; c=relaxed/simple;
+	bh=JC/jgU3UR5/9534jhBIn+HQTy0KPk/toGTRlvD+/9tE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCqaCc70eWQV0/FkGqx1wsypbfIMGl9k/vz/D3DBDhw62YY8DKbUltDV5znTCmGgAEGELIhgghAxEk2To8Epv82WPWYvn1vUywfMTjpFLQHW8Lqei+GeFuxbixo5wHzRcpMNgiV5jbbp4WmX3qwPnV6HRKCV6fP5h5PHjlLcaxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8ctucPY; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="EM/VRuNJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746430751;
-	bh=1KP4mAI19Zk1amrAS0hjHJvbX0fHpJxaad8PMwQ5Vt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EM/VRuNJci79q1yA7wuBSWS9ZDqm4Wx7NzH8Rc2FLZPr+xNjcoK32pjLCqYyvRNR5
-	 KW0D50qLub6HetV59S05OXi8+ZPJA3iPNma+REXs4g9blO5r0aDlLxR5wOXL5m/Ieg
-	 J5Ds+Gb0P/RUsDBME4wNrvywsPVzcQU+Kalq5BJk=
-Date: Mon, 5 May 2025 09:39:10 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Naman Jain <namjain@linux.microsoft.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <2b57638f-82e3-4eec-a64d-fdde782f1ddb@t-8ch.de>
-References: <20250505160831.73e797b7@canb.auug.org.au>
- <20250505161215.58a03af0@canb.auug.org.au>
- <20250505171425.0d4169e2@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8ctucPY"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2260c91576aso35398105ad.3;
+        Mon, 05 May 2025 00:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746430909; x=1747035709; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oC+vJ+HSAMSlR0731A5m2XXqOUV43UDZ3yJDtyU2qCE=;
+        b=T8ctucPYDJS+DOGDrIsOOr9TSz+a1OxhttrxfVcyuudWz93DiSLgpACHK5fJXJ21Vu
+         CvGFuFhs3P7/LwQi1b+7PgmEzwyrs5zvp2XPgYec+DkDiC+M60qClYzkRICzy+nB9ofi
+         yj+r0eGG3mq+51jISQDHPWkrkVHICsroyi3BGYmyw3EQaCfycR1ErjRSXgxcYrocaCzc
+         wnz0Klq1ohButOkRgpJMea7r4W/4+ouwW4hKGXsDfcFDqvjjE1k2ZFQn22YonqV4HQ/q
+         uZGF9I89ANVdQpgGtSGyTVan8BDKSmdiYF+XSzE2BEXVfPpgeYMOyiWI+1NMjmEPNbtO
+         LqMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746430909; x=1747035709;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oC+vJ+HSAMSlR0731A5m2XXqOUV43UDZ3yJDtyU2qCE=;
+        b=BDdMjvTdAm7WK46F+FydTneZw3k6znqmv64WXi8VbdiGJXzlphTgopy0p/MrRaXH/e
+         EUDnT6jnZFeeaao/ym2kDOV8S+LpkL+aSNReGD1JQ06v6iZhgj9u3qc9SKjnHvFx22u5
+         89LXsHUCCbS0JAQbDBsNWBpfQtqfJIPI4atvwOWdGcIJGogxL4BlSWt3YG9AL/AmyMAb
+         rLeYXZbwmlPUYVz9XoUpFTgq9Iji7m8OiYn4bbspcePUcPJiZIOjx/M7IUB6hWTT7vdo
+         korETSH/OTkQS4foL+bo+ZMORfNXQxZDQspbgEsW57beqOb5cFs2EG7+FJ+FDCg32S21
+         cvPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGX05OzW5DGe8AzT1V8AARdJ1hYRg3Dd8ocZv7wNizHXd0NQJxKmlZTC772r0xL8tTEl8xtSv084aZHD8=@vger.kernel.org, AJvYcCUiq55X4J/+oKY2hVqLI3zmF0H2dkXCH9C3XR3bFn6a7e/OXKCkuPgaJjD9FIE01qLEa83mnARF0z8fLOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynRoL23ooZdr9JcIlWtV8svTf9VpINVCd2ZtmWPo4sRCSvVE/I
+	tTNa3g08TPAhhz+VPvI7Gi4G973DD3imka68YVDsDToKU+rFC+dT
+X-Gm-Gg: ASbGncsakJp2E8SFhBR2dUd/gLj2pO3cKRuFUu8CH5QjBle5lLw2aV0mY3HwQYt63zi
+	3DVraKl0ws7IWEnB/uWcWbJPC6QLdmFjY5tgw6YRkhIu7n1tbR/lXulcXawwV9oBFg2XOcbdUzt
+	nVTPYW9PUvhGv9jUj/5PIjFB7SnWVJePnwQ0eGGANqJW4LGJeuC/Jb7nENFgolb8nUtjXRFUQxj
+	SLYPZiq51+P5M6BVUcjADU9vypP0HpF3gYwOi9e5LhoZGz7+DtPElHjtndXXGU53Faf6kiujJHo
+	GcMwFCnWa8a9PCZlb3mC1jne8Fefi/FvyCSlMzw2qANWGWWKosZLBWbnxad+Rm58zLbi/8vpbrd
+	+lgmORg==
+X-Google-Smtp-Source: AGHT+IHSmGeVChQLM11qyGqhTzHbQsAmzuk7FMyhEFMHFQ76pdZoPfZwg0VbusiuWCKtBO5VmEngLQ==
+X-Received: by 2002:a17:902:db02:b0:223:60ce:2451 with SMTP id d9443c01a7336-22e1ea5aa04mr90724095ad.15.1746430908504;
+        Mon, 05 May 2025 00:41:48 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:9aa5:83db:32d2:9858])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e22c73e92sm24061725ad.15.2025.05.05.00.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 00:41:47 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: lgirdwood@gmail.com
+Cc: broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	pierre-louis.bossart@linux.dev,
+	yung-chuan.liao@linux.intel.com,
+	Vijendar.Mukunda@amd.com,
+	peter.ujfalusi@linux.intel.com,
+	peterz@infradead.org,
+	christophe.jaillet@wanadoo.fr,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] ASoC: intel/sdw_utils: Assign initial value in asoc_sdw_rt_amp_spk_rtd_init()
+Date: Mon,  5 May 2025 15:41:42 +0800
+Message-ID: <20250505074142.615408-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505171425.0d4169e2@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
-Hi Stephen,
+If strstr() for codec_dai->component->name_prefix doesn't find "-1" nor
+"-2", the value of ret will remain uninitialized. Initialized it with
+"-EINVAL" representing the component name prefix inside "rtd" is
+invalid.
 
-On 2025-05-05 17:14:25+1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Mon, 5 May 2025 16:12:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > On Mon, 5 May 2025 16:08:31 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > After merging the char-misc tree, today's linux-next build (x86_64
-> > > allmodconfig) failed like this:
-> > > 
-> > > drivers/hv/vmbus_drv.c:1893:22: error: initialization of 'const struct bin_attribute * const*' from incompatible pointer type 'struct bin_attribute **' [-Wincompatible-pointer-types]
-> > >  1893 |         .bin_attrs = vmbus_chan_bin_attrs,
-> > >       |                      ^~~~~~~~~~~~~~~~~~~~
-> > > drivers/hv/vmbus_drv.c:1893:22: note: (near initialization for 'vmbus_chan_group.<anonymous>.bin_attrs')
-> > > 
-> > > Caused by commit
-> > > 
-> > >   f31fe8165d36 ("uio_hv_generic: Fix sysfs creation path for ring buffer")
-> > > 
-> > > interacting with commit
-> > > 
-> > >   9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
-> > > 
-> > > from the driver-core tree.
-> > > 
-> > > I have applied the following merge fixup for today.  
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Mon, 5 May 2025 15:56:12 +1000
-> > Subject: [PATCH] uio_hv_generic: constify bin_attribute definitions
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/hv/vmbus_drv.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index e3d51a316316..857109bb99a0 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1815,7 +1815,7 @@ static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
-> >  	return channel->mmap_ring_buffer(channel, vma);
-> >  }
-> >  
-> > -static struct bin_attribute chan_attr_ring_buffer = {
-> > +static const struct bin_attribute chan_attr_ring_buffer = {
-> >  	.attr = {
-> >  		.name = "ring",
-> >  		.mode = 0600,
-> > @@ -1841,7 +1841,7 @@ static struct attribute *vmbus_chan_attrs[] = {
-> >  	NULL
-> >  };
-> >  
-> > -static struct bin_attribute *vmbus_chan_bin_attrs[] = {
-> > +static const struct bin_attribute *vmbus_chan_bin_attrs[] = {
+If "->name_prefix" is guaranteed to have either "-1" or "-2", we can
+remove the second strstr() because we know if "-1" is not in
+"->name_prefix", then "-2" is in there. It'll be a waste to do one more
+strstr() in that case.
 
-An additional "const" would be a bit better:
+Link: https://scan5.scan.coverity.com/#/project-view/36179/10063?selectedIssue=1627120
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ sound/soc/sdw_utils/soc_sdw_rt_amp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-+static const struct bin_attribute *const vmbus_chan_bin_attrs[] = {
+diff --git a/sound/soc/sdw_utils/soc_sdw_rt_amp.c b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
+index 0538c252ba69..83c2368170cb 100644
+--- a/sound/soc/sdw_utils/soc_sdw_rt_amp.c
++++ b/sound/soc/sdw_utils/soc_sdw_rt_amp.c
+@@ -190,7 +190,7 @@ int asoc_sdw_rt_amp_spk_rtd_init(struct snd_soc_pcm_runtime *rtd, struct snd_soc
+ 	const struct snd_soc_dapm_route *rt_amp_map;
+ 	char codec_name[CODEC_NAME_SIZE];
+ 	struct snd_soc_dai *codec_dai;
+-	int ret;
++	int ret = -EINVAL;
+ 	int i;
+ 
+ 	rt_amp_map = get_codec_name_and_route(dai, codec_name);
+-- 
+2.43.0
 
-Otherwise looks good in general.
-
-> >  	&chan_attr_ring_buffer,
-> >  	NULL
-> >  };
-> > -- 
-> > 2.47.2
-
-> It occurred to me that the above patch could be applied directly to the
-> char-misc tree if vmbus_chan_bin_attrs was assigned to .bin_attrs_new
-> instead of .bin_attrs (later in the file), right?
-
-Yes, that would also work. It will require adaption of the future patch
-removing .bin_attrs_new again, but that shouldn't be an issue.
-
-
-Thomas
