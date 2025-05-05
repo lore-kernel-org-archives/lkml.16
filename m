@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B744F37B334;
-	Mon,  5 May 2025 22:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBEE37B329;
+	Mon,  5 May 2025 22:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485952; cv=none; b=s4fW5KRnsvyaRKiaHOC3RwBRKGj8zsrvh5byQZ4Emr2W0Dhm1OwF6+cqqrM/D6dKT7TtQOQpz7nOCtK/+I2e9Qh5xkt3KCTLiC+6L+g6RbAd4qN48U5Pjt//LWuKqD5Ps3+zywB4gcK8B7mPrwc6Ac9sLDRi62wNI8XGogm7/KY=
+	t=1746485947; cv=none; b=jRgH2PU77CO4Ez4mepwYftBeizkHIFrfPBidXN4+/OPAfK+glmEfU7M82kwMJD3SVxyfc9jYj7MZePhMMbp6YfOffAvjqhh9NL0eSSm7R8A+QoDsiGW0ax/qaeGDU4O/MOKQ6HOwEh9je4HXwXyFUMzNko9N09N8BO9n81BsODM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485952; c=relaxed/simple;
-	bh=dS6QQO9Cqg/2YcT2b/EwzqYv1BU1w2n7lfxpqM83hrw=;
+	s=arc-20240116; t=1746485947; c=relaxed/simple;
+	bh=n9hhTDj40JpZ/5hfqIn73ebJDLsxbovJ/7hGyXWzv98=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nb345OV9GrpfmQ1U8GP1C+HZL3oZioHgpuHBeTMCjVA+CxQ95W0Fee8K02M0c6gvNzVt86ImhV2zkRYcLA7/1i1J4EENr2tELb6KExCe3Eu+xx1V40wJTi+7f+A/MUSHyX0OFBuWZgJ4TAQTK/QVw5GI2U9NkhgCJWn5WEBW670=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjZLj76y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E6IOXFzdsqvz+MQpFpyc/6q1M0QGzD++AeNt4B9+GAZG7PbZXZBwjAUp40Psl3FWsGGm9vj6/Hbp3FmrkMN934RIju6FznqmU2TZ7Rkk2CvsIZw86P+fwGN2+gXI26uu7tQLUT+ibjJG5wCEhIE/G3njUGooNb7Ozjp/HW7s1EE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIGHN36A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjZLj76y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA639C4CEEE;
-	Mon,  5 May 2025 22:59:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIGHN36A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414B4C4CEEF;
+	Mon,  5 May 2025 22:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485952;
-	bh=dS6QQO9Cqg/2YcT2b/EwzqYv1BU1w2n7lfxpqM83hrw=;
+	s=k20201202; t=1746485946;
+	bh=n9hhTDj40JpZ/5hfqIn73ebJDLsxbovJ/7hGyXWzv98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QjZLj76yyLkDASo3+gp+tdlgn0W1FofVdAvKmnFl8EFQZTf1vdJ91GEZZo5FwMnay
-	 IjeL1We5+4BVQjGzYs6qtn2XeVWPuSTtuWAEr//XK1qwcj4nDVJF3mAHkk0klPPK76
-	 98QtEZC4EFEwZW64qimrllLKaIe/apzbzZHxbbCyG7tHorg5isjCmIH/df3DqIaU6/
-	 klxfr7VHIW+95QbQF1YClXLv3qe51WIDl+UdeMN9AcuQvOeAVTfxpbEOW2NamzUGYT
-	 ljFetUgoviPLH4wIcBkxILupv0wc2zDe3hFH+vdARf9+8n2fooqrg2LidLlCdndfi8
-	 TZ6jIdbzautpA==
+	b=HIGHN36Ai/Iykp/fsGls38r+aIoW/4gOkMoJxMwFT0xIoTYfFwh1hUsxA8/PwAclw
+	 U2F4vSaiTyYrgIAvZHv2nyuV0t/uajUqXzqshkgtCSRBzIsmUTDsiT+GzKqS9p/4sE
+	 XVq9ugGXR9UVuUwv5IRmsJ98Ftqw9pxfa5BX4MQxlu66eHzaPJrOR/bHIMd8RKGOJE
+	 VL3BrYdWqKhBLeL7hCKtPiC+KMCQj1YKUzlnIMHNg4hCaKWqyfnzeVA4xtZFOkrHrB
+	 Dw2umkeJMo3nj3zgjR8rouwx8vdfajNeijeMQOIWog9qfzelpIgXufd98fkXOb4r+L
+	 vEdvyFiefZK0g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
+Cc: Eric Sandeen <sandeen@redhat.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	anna-maria@linutronix.de
-Subject: [PATCH AUTOSEL 6.6 082/294] posix-timers: Add cond_resched() to posix_timer_add() search loop
-Date: Mon,  5 May 2025 18:53:02 -0400
-Message-Id: <20250505225634.2688578-82-sashal@kernel.org>
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.6 078/294] f2fs: defer readonly check vs norecovery
+Date: Mon,  5 May 2025 18:52:58 -0400
+Message-Id: <20250505225634.2688578-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -51,39 +51,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Eric Dumazet <edumazet@google.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit 5f2909c6cd13564a07ae692a95457f52295c4f22 ]
+[ Upstream commit 9cca49875997a1a7e92800a828a62bacb0f577b9 ]
 
-With a large number of POSIX timers the search for a valid ID might cause a
-soft lockup on PREEMPT_NONE/VOLUNTARY kernels.
+Defer the readonly-vs-norecovery check until after option parsing is done
+so that option parsing does not require an active superblock for the test.
+Add a helpful message, while we're at it.
 
-Add cond_resched() to the loop to prevent that.
+(I think could be moved back into parsing after we switch to the new mount
+API if desired, as the fs context will have RO state available.)
 
-[ tglx: Split out from Eric's series ]
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/all/20250214135911.2037402-2-edumazet@google.com
-Link: https://lore.kernel.org/all/20250308155623.635612865@linutronix.de
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/posix-timers.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/super.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index b924f0f096fa4..7534069f60333 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -118,6 +118,7 @@ static int posix_timer_add(struct k_itimer *timer)
- 			return id;
- 		}
- 		spin_unlock(&hash_lock);
-+		cond_resched();
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 4cc87921aac3e..10e50bede8080 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -707,10 +707,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 			set_opt(sbi, DISABLE_ROLL_FORWARD);
+ 			break;
+ 		case Opt_norecovery:
+-			/* this option mounts f2fs with ro */
++			/* requires ro mount, checked in f2fs_default_check */
+ 			set_opt(sbi, NORECOVERY);
+-			if (!f2fs_readonly(sb))
+-				return -EINVAL;
+ 			break;
+ 		case Opt_discard:
+ 			if (!f2fs_hw_support_discard(sbi)) {
+@@ -1390,6 +1388,12 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 		f2fs_err(sbi, "Allow to mount readonly mode only");
+ 		return -EROFS;
  	}
- 	/* POSIX return code when no timer ID could be allocated */
- 	return -EAGAIN;
++
++	if (test_opt(sbi, NORECOVERY) && !f2fs_readonly(sbi->sb)) {
++		f2fs_err(sbi, "norecovery requires readonly mount");
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.39.5
 
