@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6401438097A;
-	Mon,  5 May 2025 23:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FAF3628D8;
+	Mon,  5 May 2025 23:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486015; cv=none; b=i7It+gqt3e3a3iYwEBbPM6kq2aTiUyV/WeFxGS/cpVtOYpwb1nqMnENuvrY4/pb/NRvb8C75v6HWwj2csoPiZfp22ra8QrosYmqT8TiGpma3SFxXWHNFBcEn7P4lCciQqqVEBJZkR5Kc/XymCezDoiZP3vShZTuY6qoA/31JutU=
+	t=1746486020; cv=none; b=Dsnn7vD8R8YTCN+NsaHeXq5h+s0R+V9r7JwPLUTHhsWf3NxRTs3KsGysd4ShSiF7NtH4iuk06YxwrpanLgB3w1Ng+rd8QAa6lwqcLoWr0Ucrz0HXCcV2rn240baJfobQb8zx2+9CTsC5dVdO5SvFx1oyD9Idi+LkgZa/puacNUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486015; c=relaxed/simple;
-	bh=o3KuwVmsFoNNM5uAAtIqemYd1E85pxI1xkOZlR7TRfE=;
+	s=arc-20240116; t=1746486020; c=relaxed/simple;
+	bh=w77OVwFOBIqkTQWSAcVJmtejwe6G3YJjUFKC8U+KbCg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZW+/8Egd3pzgNpSCBExXvclBxsYPuXRXyMyodjqemYpqaa56XKIChhnb9aUm42SSRzuqfC0p1Af37qhvlnsHzju826gdgpNLwhaqk8EHbBqesv9ueQ+Lw/CFaKDKemyCL3B4WcLP2azEONFCK7DwXxwoFlU7WjDsjGUiqDu0NTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZ0VWQgv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aZWszP5BNybiu71Gf70DKHr2iLDoWN1CtOUj67OSwcpMZ4CqfnFcDR/9/YIbz4JK9rr7KH8U/HQv+2GFNjOuk85NQdFAxwGf4d+KS+tE2mpfSQrDmz7Jw0sbY3279EAeSW8TVZynGT8lGHQOGc76JwyY08VqUXI7BQJQXE59ns4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2SVAg/N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZ0VWQgv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F566C4CEEF;
-	Mon,  5 May 2025 23:00:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2SVAg/N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3957C4CEE4;
+	Mon,  5 May 2025 23:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486013;
-	bh=o3KuwVmsFoNNM5uAAtIqemYd1E85pxI1xkOZlR7TRfE=;
+	s=k20201202; t=1746486018;
+	bh=w77OVwFOBIqkTQWSAcVJmtejwe6G3YJjUFKC8U+KbCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fZ0VWQgvDaIB8S6TruHcxXvwizvFBJruUQEzMlAP+X83C/s7ocNDEGSR+bIwRgiiK
-	 EHmd7sn7kfYqpVj0p1u1Nm7xin1/QA607/YSm6Eb46fvzM3KaMw6Vvry5acw72pnIQ
-	 pX4a1cepzCSTptKCuYMZ75nPq/c6GY90SdQlfLVsmVhRwCIev6DS4xvhR8OEYndMly
-	 qxWD8FJ9jvEt5LCioYKyMVW7QrbaX8wi8MHrkn9ZfT80KC/MHbIpFNsYEd4WHYHcEt
-	 W+Dt6VYpkWxibtCznV5Qis9HLLw5NmLA9yiBwNmlQttfQX5j0juhfJvdyj5kuTjoOS
-	 9iLNjh/xyqQew==
+	b=D2SVAg/NHbVvYZ/9hOsmJeFs1BuC7dgrFcemi4y0eeat2OEKVQ9q7VNM/M2F/ZHLW
+	 F/jlOgVMKMRSjTTKXnHtFgj6NGxGtnUVuSOtCtQyv0aHOAZR9Z4c0OD3ruEO5qygMY
+	 bksoYpZVzftZcSljh1C1nHMGVZCEtyTLFq/hr5pvQGsymwtDHxwS85z9khdrzrjJir
+	 N0BiVJ61q2WZVTCayj1G25rJx3WUwX9ttkFuc0m6YZtJVq8JDWJZevYdHV+sM3Zd+e
+	 S3ZSeL+Wd5RVSU7Sl7cLnY4hOHRb9YdGHWPWC3fiG/cCw7nidvrcu0NxozH8qHHXs7
+	 i/GhkEVTK/8Bg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
+Cc: Ming-Hung Tsai <mtsai@redhat.com>,
+	Mikulas Patocka <mpatocka@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	alex.aring@gmail.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 110/294] ieee802154: ca8210: Use proper setters and getters for bitwise types
-Date: Mon,  5 May 2025 18:53:30 -0400
-Message-Id: <20250505225634.2688578-110-sashal@kernel.org>
+	agk@redhat.com,
+	snitzer@kernel.org,
+	dm-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 113/294] dm cache: prevent BUG_ON by blocking retries on failed device resumes
+Date: Mon,  5 May 2025 18:53:33 -0400
+Message-Id: <20250505225634.2688578-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -59,75 +52,119 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Ming-Hung Tsai <mtsai@redhat.com>
 
-[ Upstream commit 169b2262205836a5d1213ff44dca2962276bece1 ]
+[ Upstream commit 5da692e2262b8f81993baa9592f57d12c2703dea ]
 
-Sparse complains that the driver doesn't respect the bitwise types:
+A cache device failing to resume due to mapping errors should not be
+retried, as the failure leaves a partially initialized policy object.
+Repeating the resume operation risks triggering BUG_ON when reloading
+cache mappings into the incomplete policy object.
 
-drivers/net/ieee802154/ca8210.c:1796:27: warning: incorrect type in assignment (different base types)
-drivers/net/ieee802154/ca8210.c:1796:27:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
-drivers/net/ieee802154/ca8210.c:1796:27:    got unsigned short [usertype]
-drivers/net/ieee802154/ca8210.c:1801:25: warning: incorrect type in assignment (different base types)
-drivers/net/ieee802154/ca8210.c:1801:25:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
-drivers/net/ieee802154/ca8210.c:1801:25:    got unsigned short [usertype]
-drivers/net/ieee802154/ca8210.c:1928:28: warning: incorrect type in argument 3 (different base types)
-drivers/net/ieee802154/ca8210.c:1928:28:    expected unsigned short [usertype] dst_pan_id
-drivers/net/ieee802154/ca8210.c:1928:28:    got restricted __le16 [addressable] [usertype] pan_id
+Reproduce steps:
 
-Use proper setters and getters for bitwise types.
+1. create a cache metadata consisting of 512 or more cache blocks,
+   with some mappings stored in the first array block of the mapping
+   array. Here we use cache_restore v1.0 to build the metadata.
 
-Note, in accordance with [1] the protocol is little endian.
+cat <<EOF >> cmeta.xml
+<superblock uuid="" block_size="128" nr_cache_blocks="512" \
+policy="smq" hint_width="4">
+  <mappings>
+    <mapping cache_block="0" origin_block="0" dirty="false"/>
+  </mappings>
+</superblock>
+EOF
+dmsetup create cmeta --table "0 8192 linear /dev/sdc 0"
+cache_restore -i cmeta.xml -o /dev/mapper/cmeta --metadata-version=2
+dmsetup remove cmeta
 
-Link: https://www.cascoda.com/wp-content/uploads/2018/11/CA-8210_datasheet_0418.pdf [1]
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/20250305105656.2133487-2-andriy.shevchenko@linux.intel.com
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+2. wipe the second array block of the mapping array to simulate
+   data degradations.
+
+mapping_root=$(dd if=/dev/sdc bs=1c count=8 skip=192 \
+2>/dev/null | hexdump -e '1/8 "%u\n"')
+ablock=$(dd if=/dev/sdc bs=1c count=8 skip=$((4096*mapping_root+2056)) \
+2>/dev/null | hexdump -e '1/8 "%u\n"')
+dd if=/dev/zero of=/dev/sdc bs=4k count=1 seek=$ablock
+
+3. try bringing up the cache device. The resume is expected to fail
+   due to the broken array block.
+
+dmsetup create cmeta --table "0 8192 linear /dev/sdc 0"
+dmsetup create cdata --table "0 65536 linear /dev/sdc 8192"
+dmsetup create corig --table "0 524288 linear /dev/sdc 262144"
+dmsetup create cache --notable
+dmsetup load cache --table "0 524288 cache /dev/mapper/cmeta \
+/dev/mapper/cdata /dev/mapper/corig 128 2 metadata2 writethrough smq 0"
+dmsetup resume cache
+
+4. try resuming the cache again. An unexpected BUG_ON is triggered
+   while loading cache mappings.
+
+dmsetup resume cache
+
+Kernel logs:
+
+(snip)
+------------[ cut here ]------------
+kernel BUG at drivers/md/dm-cache-policy-smq.c:752!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 332 Comm: dmsetup Not tainted 6.13.4 #3
+RIP: 0010:smq_load_mapping+0x3e5/0x570
+
+Fix by disallowing resume operations for devices that failed the
+initial attempt.
+
+Signed-off-by: Ming-Hung Tsai <mtsai@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/ca8210.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/md/dm-cache-target.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-index 0a0ad3d77557f..587643a371de3 100644
---- a/drivers/net/ieee802154/ca8210.c
-+++ b/drivers/net/ieee802154/ca8210.c
-@@ -1446,8 +1446,7 @@ static u8 mcps_data_request(
- 	command.pdata.data_req.src_addr_mode = src_addr_mode;
- 	command.pdata.data_req.dst.mode = dst_address_mode;
- 	if (dst_address_mode != MAC_MODE_NO_ADDR) {
--		command.pdata.data_req.dst.pan_id[0] = LS_BYTE(dst_pan_id);
--		command.pdata.data_req.dst.pan_id[1] = MS_BYTE(dst_pan_id);
-+		put_unaligned_le16(dst_pan_id, command.pdata.data_req.dst.pan_id);
- 		if (dst_address_mode == MAC_MODE_SHORT_ADDR) {
- 			command.pdata.data_req.dst.address[0] = LS_BYTE(
- 				dst_addr->short_address
-@@ -1795,12 +1794,12 @@ static int ca8210_skb_rx(
- 	}
- 	hdr.source.mode = data_ind[0];
- 	dev_dbg(&priv->spi->dev, "srcAddrMode: %#03x\n", hdr.source.mode);
--	hdr.source.pan_id = *(u16 *)&data_ind[1];
-+	hdr.source.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[1]));
- 	dev_dbg(&priv->spi->dev, "srcPanId: %#06x\n", hdr.source.pan_id);
- 	memcpy(&hdr.source.extended_addr, &data_ind[3], 8);
- 	hdr.dest.mode = data_ind[11];
- 	dev_dbg(&priv->spi->dev, "dstAddrMode: %#03x\n", hdr.dest.mode);
--	hdr.dest.pan_id = *(u16 *)&data_ind[12];
-+	hdr.dest.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[12]));
- 	dev_dbg(&priv->spi->dev, "dstPanId: %#06x\n", hdr.dest.pan_id);
- 	memcpy(&hdr.dest.extended_addr, &data_ind[14], 8);
+diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
+index c5851c9f7ec04..0d002d50329da 100644
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -2903,6 +2903,27 @@ static dm_cblock_t get_cache_dev_size(struct cache *cache)
+ 	return to_cblock(size);
+ }
  
-@@ -1927,7 +1926,7 @@ static int ca8210_skb_tx(
- 	status =  mcps_data_request(
- 		header.source.mode,
- 		header.dest.mode,
--		header.dest.pan_id,
-+		le16_to_cpu(header.dest.pan_id),
- 		(union macaddr *)&header.dest.extended_addr,
- 		skb->len - mac_len,
- 		&skb->data[mac_len],
++static bool can_resume(struct cache *cache)
++{
++	/*
++	 * Disallow retrying the resume operation for devices that failed the
++	 * first resume attempt, as the failure leaves the policy object partially
++	 * initialized. Retrying could trigger BUG_ON when loading cache mappings
++	 * into the incomplete policy object.
++	 */
++	if (cache->sized && !cache->loaded_mappings) {
++		if (get_cache_mode(cache) != CM_WRITE)
++			DMERR("%s: unable to resume a failed-loaded cache, please check metadata.",
++			      cache_device_name(cache));
++		else
++			DMERR("%s: unable to resume cache due to missing proper cache table reload",
++			      cache_device_name(cache));
++		return false;
++	}
++
++	return true;
++}
++
+ static bool can_resize(struct cache *cache, dm_cblock_t new_size)
+ {
+ 	if (from_cblock(new_size) > from_cblock(cache->cache_size)) {
+@@ -2951,6 +2972,9 @@ static int cache_preresume(struct dm_target *ti)
+ 	struct cache *cache = ti->private;
+ 	dm_cblock_t csize = get_cache_dev_size(cache);
+ 
++	if (!can_resume(cache))
++		return -EINVAL;
++
+ 	/*
+ 	 * Check to see if the cache has resized.
+ 	 */
 -- 
 2.39.5
 
