@@ -1,51 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DB73B0A1E;
-	Mon,  5 May 2025 23:20:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14B33B17B3;
+	Mon,  5 May 2025 23:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487227; cv=none; b=mzQ0cazOA5L/A8vNu4xHPzaHn7U6Sk2ZiezsouxjCo3gx/OGYFreLmq5ing/4ZvMiJEk1VpIWJRwJSSve66cKb2MXFmSX+AgNL9qIbB9Zb6n26TGZJs8iXCSWtwNdo0QQ3yKwTCaLrXb0v+YjLluI1J7HRfo+uCptL0FAWRZpMU=
+	t=1746487238; cv=none; b=Lej0t2M/qe972td1ogtrfp7Xeh0YLC1X3hgqX95Kh0MpPO9aGiu9Nz/uo35O366+w+ksXZZwhW/P/bfgvybl0ZKC3Sf4Hz8vxe4pH0wFcPtCxWeBW0MF4SeVmaCFgZ+A8+vdV1I0er+Sik1NZgOIRHXTw/U10PFkWh0IJdM3pqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487227; c=relaxed/simple;
-	bh=UR3ZzWgBuM3cgJUZ7hiSTMj6vFKzuxX55z2wfx4AVdc=;
+	s=arc-20240116; t=1746487238; c=relaxed/simple;
+	bh=tDPijMvbFsAcZE2DvqvsdCMfLeYudAhUOKql4UUWu34=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kMJ3jwjuxGysxkqIdgfjHXGW8JE/KM8VB5BVKPaZcJqIvnVJZ5baBSigxpaD2AtFR7JMUjFN6Qcj0EgAYbsBLICWRLdRS6+x6NZoIVsSQl8KNjkm2TPKSZq+YdiLjJFVDoc+k4/SrvLkPIGQBEKyx8pzd0vamvyM7Uy2OTbqQ/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbwHBl5x; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eAT39qFQ0PRygJfwKR9yYkbIEPwmRBVig3+QMq7PQ+cnfcA35zPziZu7CjJgu3qLACJxe9bGAatDTiXsTzxol0I6F8GmCbmZ0jbfqshzd9yoexYWI6BmcQgYMvOsgLp0S85Dxg6ITgrquvps7cTvRIl7aBGODy2EI/f68mECLYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdtMqFhi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbwHBl5x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D76D5C4CEE4;
-	Mon,  5 May 2025 23:20:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdtMqFhi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0E7C4CEEE;
+	Mon,  5 May 2025 23:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487225;
-	bh=UR3ZzWgBuM3cgJUZ7hiSTMj6vFKzuxX55z2wfx4AVdc=;
+	s=k20201202; t=1746487237;
+	bh=tDPijMvbFsAcZE2DvqvsdCMfLeYudAhUOKql4UUWu34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tbwHBl5xeUSySuqGwPMRXoD7alT5+XYYGqD/h7y5rxSMirBrKbDjGLt/+7frPTbVF
-	 vSezelvkw806dE0QeAMKAxEpt/2483wJBzEGKaCVH00HdAUhxmlZ4+phjLJOtVAMsk
-	 +PVMWoo8tOhIqa2vgSIIbzB4O9lL/SH+ZcPYu1GO6NNszaDveJlYvvajBYHo7TXx6b
-	 RlNteu9D6da9vb1SKVCLUWcZQ8LEmtB0mnG7BL6W44rQbYazLJxkV4SPcaATSeCejq
-	 AH2yBP+9trqVHyLQCL4Jv2aDUBGCVA6m+yBoIQb21vrqCMsMJ1G4ZRA9ubYzEPJ37J
-	 HUCPDrSM2jpzg==
+	b=OdtMqFhivneYdunhHn1Wwv7DMl0f73yAdTZBJQiEpqB4AWn54Mo+3ESh6H5l9O+cK
+	 vrPq2IQveUJo9yRWPjMd99F20YEAgpoQzBef0C4PdnsL88gc2HxbOYlqMyGl8R58Ya
+	 C8FYneZS8T7hDMxzgpo4bMg20Tta2B9GbYD8JxQ6XpyED0o1Ay8DgUjPS74Pqkmb7a
+	 vIBSNcPA85CrALStzV8kkEwKA4PVm37UqPpzr80mCNxcuMRRn8F2Hp+me1Y2B/ulaS
+	 I5K309cg70S1vo1kF9drq5BNUjABcDGVZAT8VG5IQR7l7UzZy0LCfHCknf1sEpSWEh
+	 LPEp3I0svBZHw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Waiman Long <longman@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	kai.huang@intel.com,
-	brgerst@gmail.com,
-	peterz@infradead.org,
-	pbonzini@redhat.com
-Subject: [PATCH AUTOSEL 5.10 065/114] x86/nmi: Add an emergency handler in nmi_desc & use it in nmi_shootdown_cpus()
-Date: Mon,  5 May 2025 19:17:28 -0400
-Message-Id: <20250505231817.2697367-65-sashal@kernel.org>
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 072/114] wifi: rtw88: Fix rtw_init_vht_cap() for RTL8814AU
+Date: Mon,  5 May 2025 19:17:35 -0400
+Message-Id: <20250505231817.2697367-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -60,170 +50,66 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Waiman Long <longman@redhat.com>
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
 
-[ Upstream commit fe37c699ae3eed6e02ee55fbf5cb9ceb7fcfd76c ]
+[ Upstream commit 6be7544d19fcfcb729495e793bc6181f85bb8949 ]
 
-Depending on the type of panics, it was found that the
-__register_nmi_handler() function can be called in NMI context from
-nmi_shootdown_cpus() leading to a lockdep splat:
+Set the MCS maps and the highest rates according to the number of
+spatial streams the chip has. For RTL8814AU that is 3.
 
-  WARNING: inconsistent lock state
-  inconsistent {INITIAL USE} -> {IN-NMI} usage.
-
-   lock(&nmi_desc[0].lock);
-   <Interrupt>
-     lock(&nmi_desc[0].lock);
-
-  Call Trace:
-    _raw_spin_lock_irqsave
-    __register_nmi_handler
-    nmi_shootdown_cpus
-    kdump_nmi_shootdown_cpus
-    native_machine_crash_shutdown
-    __crash_kexec
-
-In this particular case, the following panic message was printed before:
-
-  Kernel panic - not syncing: Fatal hardware error!
-
-This message seemed to be given out from __ghes_panic() running in
-NMI context.
-
-The __register_nmi_handler() function which takes the nmi_desc lock
-with irq disabled shouldn't be called from NMI context as this can
-lead to deadlock.
-
-The nmi_shootdown_cpus() function can only be invoked once. After the
-first invocation, all other CPUs should be stuck in the newly added
-crash_nmi_callback() and cannot respond to a second NMI.
-
-Fix it by adding a new emergency NMI handler to the nmi_desc
-structure and provide a new set_emergency_nmi_handler() helper to set
-crash_nmi_callback() in any context. The new emergency handler will
-preempt other handlers in the linked list. That will eliminate the need
-to take any lock and serve the panic in NMI use case.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20250206191844.131700-1-longman@redhat.com
+Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Link: https://patch.msgid.link/e86aa009-b5bf-4b3a-8112-ea5e3cd49465@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/nmi.h |  2 ++
- arch/x86/kernel/nmi.c      | 42 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/reboot.c   | 10 +++------
- 3 files changed, 47 insertions(+), 7 deletions(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 9d5d949e662e1..dfb483c8c98b6 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -59,6 +59,8 @@ int __register_nmi_handler(unsigned int, struct nmiaction *);
- 
- void unregister_nmi_handler(unsigned int, const char *);
- 
-+void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler);
-+
- void stop_nmi(void);
- void restart_nmi(void);
- void local_touch_nmi(void);
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index f2e53b20df7e3..09997eee7b6fe 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -38,8 +38,12 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/nmi.h>
- 
-+/*
-+ * An emergency handler can be set in any context including NMI
-+ */
- struct nmi_desc {
- 	raw_spinlock_t lock;
-+	nmi_handler_t emerg_handler;
- 	struct list_head head;
- };
- 
-@@ -121,9 +125,22 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 91eea38f62cd3..ea70b55150388 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -1175,8 +1175,9 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+ 			     struct ieee80211_sta_vht_cap *vht_cap)
  {
- 	struct nmi_desc *desc = nmi_to_desc(type);
-+	nmi_handler_t ehandler;
- 	struct nmiaction *a;
- 	int handled=0;
+ 	struct rtw_efuse *efuse = &rtwdev->efuse;
+-	u16 mcs_map;
++	u16 mcs_map = 0;
+ 	__le16 highest;
++	int i;
  
-+	/*
-+	 * Call the emergency handler, if set
-+	 *
-+	 * In the case of crash_nmi_callback() emergency handler, it will
-+	 * return in the case of the crashing CPU to enable it to complete
-+	 * other necessary crashing actions ASAP. Other handlers in the
-+	 * linked list won't need to be run.
-+	 */
-+	ehandler = desc->emerg_handler;
-+	if (ehandler)
-+		return ehandler(type, regs);
+ 	if (efuse->hw_cap.ptcl != EFUSE_HW_CAP_IGNORE &&
+ 	    efuse->hw_cap.ptcl != EFUSE_HW_CAP_PTCL_VHT)
+@@ -1199,21 +1200,15 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+ 	if (rtw_chip_has_rx_ldpc(rtwdev))
+ 		vht_cap->cap |= IEEE80211_VHT_CAP_RXLDPC;
+ 
+-	mcs_map = IEEE80211_VHT_MCS_SUPPORT_0_9 << 0 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 4 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 6 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 8 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 10 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 12 |
+-		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 14;
+-	if (efuse->hw_cap.nss > 1) {
+-		highest = cpu_to_le16(780);
+-		mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << 2;
+-	} else {
+-		highest = cpu_to_le16(390);
+-		mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << 2;
++	for (i = 0; i < 8; i++) {
++		if (i < efuse->hw_cap.nss)
++			mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
++		else
++			mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
+ 	}
+ 
++	highest = cpu_to_le16(390 * efuse->hw_cap.nss);
 +
- 	rcu_read_lock();
- 
- 	/*
-@@ -209,6 +226,31 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- }
- EXPORT_SYMBOL_GPL(unregister_nmi_handler);
- 
-+/**
-+ * set_emergency_nmi_handler - Set emergency handler
-+ * @type:    NMI type
-+ * @handler: the emergency handler to be stored
-+ *
-+ * Set an emergency NMI handler which, if set, will preempt all the other
-+ * handlers in the linked list. If a NULL handler is passed in, it will clear
-+ * it. It is expected that concurrent calls to this function will not happen
-+ * or the system is screwed beyond repair.
-+ */
-+void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler)
-+{
-+	struct nmi_desc *desc = nmi_to_desc(type);
-+
-+	if (WARN_ON_ONCE(desc->emerg_handler == handler))
-+		return;
-+	desc->emerg_handler = handler;
-+
-+	/*
-+	 * Ensure the emergency handler is visible to other CPUs before
-+	 * function return
-+	 */
-+	smp_wmb();
-+}
-+
- static void
- pci_serr_error(unsigned char reason, struct pt_regs *regs)
- {
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 4d8c0e2581500..a09060b9bd151 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -874,15 +874,11 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
- 	shootdown_callback = callback;
- 
- 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
--	/* Would it be better to replace the trap vector here? */
--	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
--				 NMI_FLAG_FIRST, "crash"))
--		return;		/* Return what? */
-+
- 	/*
--	 * Ensure the new callback function is set before sending
--	 * out the NMI
-+	 * Set emergency handler to preempt other handlers.
- 	 */
--	wmb();
-+	set_emergency_nmi_handler(NMI_LOCAL, crash_nmi_callback);
- 
- 	apic_send_IPI_allbutself(NMI_VECTOR);
- 
+ 	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
+ 	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
+ 	vht_cap->vht_mcs.rx_highest = highest;
 -- 
 2.39.5
 
