@@ -1,220 +1,212 @@
-Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazon11020101.outbound.protection.outlook.com [52.101.227.101])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6F9208CA;
-	Mon,  5 May 2025 06:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.227.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9DE208CA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746426637; cv=fail; b=bSRgQ5G03afV9+PbgaY5O5O9DGuHjzyTX4LNX8Y2jhFx8DySk7COxmWsipj0h7ZBRHxVVV66YWEob0RzsHcaQvCznf9DPBTEUm4lMghzbjgQWJzYAoopLscNfRqdJeouQDiQ6I1+g15JMKLcD+woyEVcx/gXjZPobqKT4xW/0PY=
+	t=1746426653; cv=fail; b=OmxhLgaGwFj6CAv3Yk4Y6fef1uXgZp1PGK9fZx4yE94xXwKse15dl8TKEnv8JC9rQo+rrJrsh8Az9AaBojew1ajGrC+LoL7AkdbHYztxqlPDgQORydxsGh9P+ICWre1pAJVPtiIfaBZ1geCPUP81uYtQwRdB593qNSNS+K0epTQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746426637; c=relaxed/simple;
-	bh=XU3l5fcjrGu5ZeF/pRFuNjOTaw9mSCwDGVq0onDuki8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UIEtBOBkk3X2BZshVpxOIpyhEnzfJVFQzKz0IurGNzuUvozT1TKo8RRVBBLJrl7xu9ywWByJ8jTOFdNo/FABYDlhbVTxphoDhLLulg1S89ip+Xyfeavpqdq4pm2WeRXNL7vO2GVrB4r6EDW81/hhifgE7EymTdk7E/PnWSWr1Xs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.227.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+	s=arc-20240116; t=1746426653; c=relaxed/simple;
+	bh=Ne+lhsmHy2cTcz2rI76oNhb6TxuwxS+uTm/N5LUfir4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HtTfBH8X0mYIsrUStE/8WH06feaOdBu7KMZITiG2Q4xykJLwMIEAQYPggxVAD4/NjovQ0JHoSwz3UNjGOa56tYIMOkOCWm+vYZFbIoyRZD12XA63Tds3Ge3IJ30WyG8nn+YFapsMkO0MOM8IXFjPkuEPvLrV5lYnMWsLv/z0TXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xOX88JDL; arc=fail smtp.client-ip=40.107.92.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xOX88JDL"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V/AmEz5e2zBlNmiDd4TOoiu/8Y72QGymPL0Tgn009Yrao21Uh3i+unrbYh2mFJSl+33f3ua1vFcPftCw+2wc2QSuRUcO2bVqfebiMXJ82GR/M8ZTQ+O2HPNebTRz3bTWOdlXGi+cqawkcjOfgCm8k8XjKPoy5HRJtSXCT8GLkelnE1OizFjInEBBdDCa470A9oBNngGim3cMrioF+M/7CgB9GwL8LsdOuXuHBl/m4p0M26Y/CswicWrxJtk5y01sM292auYgH4KCD6iGH6VbcjrY766+qYt2Ly7/jaYHcfKHQCT5Phuo98WSKuFzX9RnP2MCpIYy63ujkZgnXAn0TA==
+ b=j6FgKZ7oiIFOBhuUTKCJwK574BXYuFxoHsGfL4+JqBj30JCtzLa5EsWblJAu0wypmpM2ofuhN8oCCwV8QLLQWJJbapCOcgzPYj9zRnNDdqhJURRUnc0tyuVR7xq9HPxPuvsooKOSLDBRkD8UpiYUbmInIjFt90imAOmZ9PGTQ4XUUC9oWPWjyLtQ5UVC6qY/IFrS0M/2xIHZQJbI/GMoiceiTs+eUIrl0grSy5+2GhIOOHaE8N0oAOQ7vFog/rjSGNVXabh+7r4zHuIWyOKwxcT/Rm0CkHm5+CNr/E+r4hlxMCKPK15r9Q8DORd6DIk4Ujb4c4U0jdBWCc7x0QuBtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XU3l5fcjrGu5ZeF/pRFuNjOTaw9mSCwDGVq0onDuki8=;
- b=afRcD5VEFtCa94+KsFfT2KoRZEMkH/ooPDzBsMya3E8LG9lmsaGzyA3JB1aWrdDzHNxnAIX/NNc8o1eufi/WWJCjRtRAFo9CnYRLgCalUN3eKR9+kF4ihWeZ/bKQR/nqrNcnzGyh6zeY2RskyZszbti2C4s8UIrgk+62gZ8dKV/0PpgcKav4P674geKNv1F1ahntpiAvUX/2mBFcLPvjW7EyezOxFOYYJSCiqOW5pAtCF/GWf3DgwTESKib4xtPs6GSKTaGju58rpK3O/xI+mnre6uhMcBeLuamL0umSSQ4uXUPQn+a7GhewSlS9wWBsIqw0vJuZJ1Gj08OoQaOfuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
- by MA0P287MB0282.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b2::11) with
+ bh=KGNcU4dJiANoEl1Mxla6icwGkr0jMH6KoCykAzCVGvU=;
+ b=xQwLX2uqAiuoe6UMa5Ldjbo3EDsR3L7Fo9qL7tn82X0DArJ4QvpiXTffl4kXk1S0jz4EyfUVfzv8i3In18mvat1ch8Fd1y76qD7/C2dLYzPacPTadNppjaqr/XRCHBzhn7nPPX6ZQab2diAl0pxLSe5rzfqdW2DFPIDXBhDDVpVZQktOXRUxPsPVZBisJD6m6KndPSWpXfQJL/H7PYiAvoFAPkrGTFspD8BUCOVC96zvUNtATmY1supWRPY71Znj4hicz224Rmv/FgjlYF2tQm540k3Y3Gken8tB++w4cqEc0Mkw3KiuaPKD19Je0Ps6oKJxUrOjHfXhJecjbQlPMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KGNcU4dJiANoEl1Mxla6icwGkr0jMH6KoCykAzCVGvU=;
+ b=xOX88JDLSTvvdHjW5lHsXjIcSQUbvS3jtWBEIW/ZbN9Jj+2rco0dJ0L9uIZThxzF4+YB9rewbRlJS4VA96duz6K3JkzVqCF3+MVddNEEk/1+a9+Oi9L+wJNhwS8Z4aey7QgWeJBTk7M26oZaS+1AlUWqu7489E9Lln6QPaW2K+U=
+Received: from CYXPR03CA0079.namprd03.prod.outlook.com (2603:10b6:930:d3::22)
+ by SN7PR12MB7788.namprd12.prod.outlook.com (2603:10b6:806:345::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Mon, 5 May
- 2025 06:30:31 +0000
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f%2]) with mapi id 15.20.8699.024; Mon, 5 May 2025
- 06:30:30 +0000
-From: Tarang Raval <tarang.raval@siliconsignals.io>
-To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Mon, 5 May
+ 2025 06:30:47 +0000
+Received: from CY4PEPF0000E9D5.namprd05.prod.outlook.com
+ (2603:10b6:930:d3:cafe::61) by CYXPR03CA0079.outlook.office365.com
+ (2603:10b6:930:d3::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.30 via Frontend Transport; Mon,
+ 5 May 2025 06:30:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D5.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 06:30:46 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
+ 2025 01:30:45 -0500
+Received: from amd.com (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
+ Transport; Mon, 5 May 2025 01:30:43 -0500
+Date: Mon, 5 May 2025 06:30:37 +0000
+From: Ankit Soni <Ankit.Soni@amd.com>
+To: Vasant Hegde <vasant.hegde@amd.com>
+CC: <iommu@lists.linux.dev>, <suravee.suthikulpanit@amd.com>,
+	<joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
 	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing
- SD card timeout
-Thread-Topic: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing
- SD card timeout
-Thread-Index: AQHbvYLMU4ICpHKdFEyZG7H2oknCuLPDjH37
-Date: Mon, 5 May 2025 06:30:30 +0000
-Message-ID:
- <PN3P287MB18294987F3FF8061245E62EC8B8E2@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-References: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
-In-Reply-To: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN3P287MB1829:EE_|MA0P287MB0282:EE_
-x-ms-office365-filtering-correlation-id: 2e22b389-e309-42d0-18d8-08dd8b9e5554
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?Vr6CtNJqEX0ULZfqocqcrf5zSI7AlYw7HzQK3ffWcyLl8K0oKfw3aAJSyn?=
- =?iso-8859-1?Q?qIXlxbO0Zd78qQ1s2X1LVKm/k3owcY4AEXrmqUTBvvVKdWk5tz5Jt7bi7p?=
- =?iso-8859-1?Q?L8TiZPhuEQ5fHNYgZbFparWtRp8lTv9IQEBTuqUZzHwTvV5gzx8s3NdC4E?=
- =?iso-8859-1?Q?hZik1EthZvW7OoAlS35y9tFcsUMFeP6KkCQlKEn9hxZ2LI+YYIC8KkiuxY?=
- =?iso-8859-1?Q?iTHcSz+Xg4DZJucdw7m8Bu1M3oSNPsk7Gh2upWex07ZtMzJc+Vxs0kxNCS?=
- =?iso-8859-1?Q?Jo3rc35dE00f7pCTixoNMK/0uJBlqG3vBEe84K5FV1ewuA1T4Q/RTy5wnI?=
- =?iso-8859-1?Q?GNKoIVgWNAn6spQDP7pvPaM491diNIn8Wc/7Y0Ejx8dx0hbOJgYOOSBEKE?=
- =?iso-8859-1?Q?4Yk8cH7xFM2FlzlBdv3bvU9AcZEb2bnkaGiTm7qvf0zQCd856bRc0Kb6DL?=
- =?iso-8859-1?Q?7Y09BxqGhqZZizd8Jm1zMnMtoamwTaOdym9dFGoitu1+Np7aMSl2n30TAR?=
- =?iso-8859-1?Q?cRnSDy1hUa0iubaXbZhhxhp4ehFhCWxB7nR8IqyjyNcg0+7VDugkRmqEsC?=
- =?iso-8859-1?Q?0HpLtxPfoYwNiP12lC84h/+lDPETjmBKcR/7t5Ln2ko9+JvYI/FSYosih0?=
- =?iso-8859-1?Q?acex346SevTFYs9wZqC2dA8VT4nB0V/QA9zKyS3MviDW6R/S7znopfni4E?=
- =?iso-8859-1?Q?S1pFHjsnbT7G3tG2ypPrGcHkziGxP9QJjWdoNrj52TXZpS7Kr5BKncCQrx?=
- =?iso-8859-1?Q?6OnjZF1uzASnmuFM5f10HnJQtwQBtZfLi1KGjsbYNwS7NHQlJAyxSYqwKN?=
- =?iso-8859-1?Q?r2DH6QteXuh02YJ6YvJek848X1Gp6KpU3FH605H+N2EM6i51bsP+e3TZCs?=
- =?iso-8859-1?Q?abt0KPpnnU3Ty15x2Qe45PxPhJmVxEUbtgORx6bq/KCqpWgxUlSR6Xpbx+?=
- =?iso-8859-1?Q?4KNaTMPh7Wb2Aqaus9ixF7USarW5P4A8bskeEXU/ouNokbehUlGJH/A+B0?=
- =?iso-8859-1?Q?jD9moa8vZekyOcfBBeJIvvdcpSIBCeB5GCOCO5Hbl0dq+1YX7dsw18i3Qb?=
- =?iso-8859-1?Q?X/KmqlMTL4voyRxs5Ikl7Lz+VaI9uezjKhvjlvSLeLQ0ev/+o0x0F185ew?=
- =?iso-8859-1?Q?A8DHg1lgYNB7mpHnm8yKdw2/RHMJd+5Md7xDOg6mFi8C2CrjQKoa2StBis?=
- =?iso-8859-1?Q?kP6N6dfOsgADJrtbg+PUeD7Y4svOYvmbaBj2NIXZMR13mhKbGhUzzAjN3q?=
- =?iso-8859-1?Q?A4Ngmf0Qv16Mk8pilCVM389vA/obkRDAjkXP7Z+Ii8f5rnGaNE9fveXCc1?=
- =?iso-8859-1?Q?oPTWsD5DbhNhxa3phJw5H3QYGzqZEhioo10BEKsEG/8g3yMFKE4fGynE4w?=
- =?iso-8859-1?Q?H1/7zHAJ6zytdRnKycVH1nHeeH7lTOJ0U1+Wfr89jyat1hhl52C19TzdX4?=
- =?iso-8859-1?Q?51SbDiK0oZND9Sck7bNsCAo5pHHkHUpz2NOx0ZWtQGzrtCyd/dv3z2IGml?=
- =?iso-8859-1?Q?7oswo2hg+Pv8lYNDRowxkbgX+7Y3YZJz/fB8CGSP/kYw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?ONAXnKGaFADNDGsurnaYQ4PKd9avswa63egA7tSicNoV3/Ytt68gCjD78h?=
- =?iso-8859-1?Q?FuB1xo8oHOR5NJNq4QjoQBh6vn4lkmts6rGqXkz4M74H9O9jWAOvP+snvc?=
- =?iso-8859-1?Q?ahQGa2O+0fszaZkUeYnuAlY08PLXZNILOeUzPbLuEMOLLfIVtJpYfp6wKM?=
- =?iso-8859-1?Q?9qLRIAWrK7Yv49loe4YGpJptjSsRR7BR1GXIdF+xhub6UpI7TMiyyt1VCl?=
- =?iso-8859-1?Q?sLLuS4P4YL4w7SOL6YKDckLVYC/fXXB3VPkiMXBkl3YKr/tOiQXaj8N9Hv?=
- =?iso-8859-1?Q?LF2T5XelCbCzxZjhtdLgqFSPxbOWBAeLBTcjDFMFXJ7TjxhUAKeuQzpQfm?=
- =?iso-8859-1?Q?JXIStm1I2rPxUfog29IOljKZhAzmyykiztjVrw6Z1OI3ld6T/ylm09HJgS?=
- =?iso-8859-1?Q?OYUkWphIZ6+r91JDAISFCr1oHZF6fLElpN5xJHwgBNMNhffUBaJDq3i2r5?=
- =?iso-8859-1?Q?ub+P+XtQsZb1zIMlgyoCkkKU/rkLX+g7dG1pW55/lZmy2X0tFH4v1JnwhA?=
- =?iso-8859-1?Q?zN7FrUZk9q6cdzjJgBRGlodeLViNndn8exGq2Ht+YbjesBZnUB1CY7A50H?=
- =?iso-8859-1?Q?zgihXJ0okRZdo+u7mk90XXMX9TbToeWu0enI45J3Cqa+ZGgDjyzAlxyFbO?=
- =?iso-8859-1?Q?31vUG8hqXtJCDxsM3Wc4fabbj2Ot5X3ddZFWDszZ9azVAoonLxyCIO7RCH?=
- =?iso-8859-1?Q?v/eumaRs0196MeP1ka/JFPkJARP5ETwuyN8AABSXRVYvanLI4Hj805lCxH?=
- =?iso-8859-1?Q?NxJ6QVx1vVZCzxfjHpxAd4PVth6/GBnyuS02LEvITPTL3nqwWxgXnxauOu?=
- =?iso-8859-1?Q?J80bF/K5pPhBHWIT67kXzLZTIQRp/svY/kYVxptCxw0f1KEaXQtwJV/ICm?=
- =?iso-8859-1?Q?OS7RM4DbF6uyNBewvlp5/dnRiWdRWWv0t5J+k6Swtui+0dPcJ4l80bIGDA?=
- =?iso-8859-1?Q?GHSa925+0aqqNkYrgJlpw2n9baYggQtF4TOnpoMDiw4gzzcxAMV6eOrl7g?=
- =?iso-8859-1?Q?6EL4G7osCS3rOfdvNvbtbg9TCAn60oogUqFGX6LGYg8VgTuA9nCS7NznE1?=
- =?iso-8859-1?Q?7w7vlAcM9S6nSAiY1dAO5bZHkmbyV6xoMTkpMVSYj3WrIeP9aJpM+ilp8l?=
- =?iso-8859-1?Q?IW2F/Nm+9jNJJDjDnSqbR0FQdP9UV+cegWjfOZUXHZEuU1ysPY97hLBiAS?=
- =?iso-8859-1?Q?VIfNdt9Kuimf+YS1Ll47+jrvnZz8mgCNu5famfl5PFuAGDXr/XUShv2JgG?=
- =?iso-8859-1?Q?wgQixkmusUypR8wJJFkzCR8IgMILmv5koAXKggaaoojS5NIpKeiO23gSdz?=
- =?iso-8859-1?Q?o37mzZ4ofgRIkQ+xSW3YUQdNI/Q67gL5lKV0lAd9LlW0NrJ92lBoxSK5hM?=
- =?iso-8859-1?Q?DjUockFwwTRnrKL/IgNionOrkhfMwQIRblNdWc/aENYsFu6oe925+pPwG8?=
- =?iso-8859-1?Q?BZ2zUsbLaiF0jpDq/gj7Anh9bUR0eTiFU/Vx8F3TAu2ku4jyL8pMzxB2QV?=
- =?iso-8859-1?Q?eio6bG7I4LvmumCoTqx5E7/NPSpdLDEznDxwcnuhdSRuY1ptZ6CT47yU8X?=
- =?iso-8859-1?Q?Nh44YwmJzYbjorzYc/kK5rBTWnwAdIR2SvcFxwRgVsop1/dww3XzkvLXoD?=
- =?iso-8859-1?Q?tZ0cnhREz1ciWjAsMoLKpVBpJmj/6v8rAEDsnlndjrr0HRY/8k3MCdnA?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] iommu/amd: Add HATDis feature support
+Message-ID: <2metiyt55ptqbzr7usqeygqvdhm6o74pdh54m4s7urcsueuupw@2zqheecvxu3l>
+References: <cover.1745389415.git.Ankit.Soni@amd.com>
+ <6282a5c349812a311a67a8522dc5e4aabfe3ec3a.1745389415.git.Ankit.Soni@amd.com>
+ <193f5eee-18a9-4b13-a433-ed05f86f8e46@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e22b389-e309-42d0-18d8-08dd8b9e5554
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2025 06:30:30.8930
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <193f5eee-18a9-4b13-a433-ed05f86f8e46@amd.com>
+Received-SPF: None (SATLEXMB04.amd.com: Ankit.Soni@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D5:EE_|SN7PR12MB7788:EE_
+X-MS-Office365-Filtering-Correlation-Id: a11c4ba4-bebf-4d14-ba3c-08dd8b9e5ee9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?eMg9sjHAymDXS0HlmJFMUkALJIo4LEMPKVupeAUDY3UKkjTX3vIjQzKMEzwm?=
+ =?us-ascii?Q?leLJzGIvnjun0YmJNPFY95nfgCb7E1qX03hLL9dxUJ90w6LOms+tgm4keH1o?=
+ =?us-ascii?Q?obaMja5JdvXnqxHWMcG8mygFHwJjq1WaZhcXYF74EnOlQ/KLWEdgBGzjRj7u?=
+ =?us-ascii?Q?DcenmXnrA+QAa3ajBUYRAyPMfadtMUitC3XclsYLJM+UFkP5tsdIlkEMzOtk?=
+ =?us-ascii?Q?a7K0lmlxHr4NNHgmUUBwUlu2ZbB114pjt6OOLHGY15OA6bIJmcgjkZz95ieK?=
+ =?us-ascii?Q?/m8z7ueshZKiBkmn7b1REGt5iw6ZOtHbegxGjbqwj9kzT5K+dWUBpIaqI36k?=
+ =?us-ascii?Q?4pgTHDwFeOo6nDPo/+zfYzd5hmIrXJ17pk2WOtrFFlCXK1pQOrTRgtdXgL18?=
+ =?us-ascii?Q?5TuJzdavhWT5VFur22ogsF5tQHJqADoeHuAzqDkOtBoOuZpk7TRTu1526/vm?=
+ =?us-ascii?Q?fl6k978HXfPZ2PLCgB6RjYLcTRA4Ml9PH8KbRlHBlRwjc3CoqDIarEyJtYa3?=
+ =?us-ascii?Q?YL47kl2zSIMjAA2bXaVCdDsUT0amtAOloNaDRdBlz+BTyKHCN3D7SQl8ZpXM?=
+ =?us-ascii?Q?CFat4USJ8dzzW/yDLM81AtHLDb0pxPNjQ+f8MZJ8NC5UDt/wuiWidXcPqB7V?=
+ =?us-ascii?Q?cR3lAnIwvtiX9H+TW9Kg3GaYTWE92nVRx7nBwvonb3nEqIE649cY2NQitJyS?=
+ =?us-ascii?Q?sNksu5GvAyzaHj4l7lijWu+Gqbv+DljGo+a7POhLTIJ60ueiSAPwrqFGDJPR?=
+ =?us-ascii?Q?8fh/CHjzBUatXXMQfnE2kxfA1rpCv5zPDv4kjdy0KBRcaA5PZYf+KtZ2Ywf7?=
+ =?us-ascii?Q?XLDpVakGwp/S/RXASJ4C7r9bE8of/VUF007Br61az1JSppHj/cLaBfw24Iz6?=
+ =?us-ascii?Q?Q5houqctlb973n/OJBR+zIy0V+iWl2wrJY5/cbtIdAl9Ka1cNXDWpgNFmOqv?=
+ =?us-ascii?Q?Y/7Bo3yRoZIC9SWxwGEEBUHGDjKnCzvTcbOmlQOqtrqMGDlQRq2dx8CtjgGQ?=
+ =?us-ascii?Q?WhU3N7cheUFdvuN6o1KHImCf3f7461KZMabIKm4FUnDKt0SDQXEDY10LgJLT?=
+ =?us-ascii?Q?eTs92Ng+JR3FXhMO6KWhqg93bEXUFw4CFcvXKkWSV8eNZyvjX0SsOPYJi6s1?=
+ =?us-ascii?Q?L4b+IjaBpnUQRm3FShR+tyY8tNO7IP8eaQQdXP9WyhOJgdUQkJx8Y/GF4Rz1?=
+ =?us-ascii?Q?Dsumpk1h1m+kKaHwttnvIRq1qigjQxHiXv/AjecECTJCkHtBfUZvWCTCWj5t?=
+ =?us-ascii?Q?g58uE3oku1VjlS49Gt8QxYGEw+U+p8xpvbE+rAFOZRK2NG5tI3ZcdXwiiWnx?=
+ =?us-ascii?Q?oG75HPJD6REbJakLMfYYkX37qpZXO9TpqDK9cwkxoTWdL3Ehgz3G01CJ4u41?=
+ =?us-ascii?Q?YCDvVzmtcrTDGmZJxMKjM/ITzXWPk8VntBTcd1dz0oUqHW2qFUkxXOk12uv8?=
+ =?us-ascii?Q?S0EtK2StdiI+p0InwBBrb4Wi6OdIzr71ELSQ84M6kxepDZfiKCRAWTMGp8gZ?=
+ =?us-ascii?Q?CTvVy/6pIGIRge5Q5ouwVEMp3czM5R6Zz0Ds?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 06:30:46.8473
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SkO9EqphVRQW5SEmWgHBXqJz7Jn0IzGQvV9ukzSdjRAJDIcOIRK28Y3KUq3TPKY+X/lXP7ixx967gVs8QmYjuKuy5QglID/QUy5WsO6+SfI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0282
+X-MS-Exchange-CrossTenant-Network-Message-Id: a11c4ba4-bebf-4d14-ba3c-08dd8b9e5ee9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7788
 
-Hi Himanshu,=0A=
-=0A=
-> Fix SD card timeout issue caused by LDO5 regulator getting disabled=0A=
-> after boot.=0A=
->=0A=
-> The kernel log shows LDO5 being disabled, which leads to a timeout=0A=
-> on USDHC2:=0A=
-> [ =A0 33.760561] LDO5: disabling=0A=
-> [ =A0 81.119861] mmc1: Timeout waiting for hardware interrupt.=0A=
->=0A=
-> To prevent this, set regulator-boot-on and regulator-always-on for=0A=
-> LDO5. Also add the vqmmc regulator to properly support 1.8V/3.3V=0A=
-> signaling for USDHC2 using a GPIO-controlled regulator.=0A=
->=0A=
-> Fixes: 6c2a1f4f71258 ("arm64: dts: imx8mp-var-som-symphony: Add Variscite=
- =0A=
-> Symphony board and VAR-SOM-MX8MP SoM")=0A=
-> Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>=0A=
-=0A=
-Acked-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
-=0A=
-Best Regards,=0A=
-Tarang =0A=
-=0A=
-> ---=0A=
-> =A0arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi | 12 +++++++++++-=0A=
-> =A01 file changed, 11 insertions(+), 1 deletion(-)=0A=
->=0A=
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi b/arch/arm=
-64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
-> index b2ac2583a592..b59da91fdd04 100644=0A=
-> --- a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi=0A=
-> @@ -35,7 +35,6 @@ memory@40000000 {=0A=
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<0x1 0x00000000 0 0xc00000=
-00>;=0A=
-> =A0 =A0 =A0 =A0 =A0};=0A=
-> =A0=0A=
-> -=0A=
-> =A0 =A0 =A0 =A0 =A0reg_usdhc2_vmmc: regulator-usdhc2-vmmc {=0A=
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0compatible =3D "regulator-fixed";=0A=
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0regulator-name =3D "VSD_3V3";=0A=
-> @@ -46,6 +45,16 @@ reg_usdhc2_vmmc: regulator-usdhc2-vmmc {=0A=
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0startup-delay-us =3D <100>;=0A=
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0off-on-delay-us =3D <12000>;=0A=
-> =A0 =A0 =A0 =A0 =A0};=0A=
-> +=0A=
-> + =A0 =A0 =A0 reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "regulator-gpio";=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-name =3D "VSD_VSEL";=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-min-microvolt =3D <1800000>;=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 regulator-max-microvolt =3D <3300000>;=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpio2 12 GPIO_ACTIVE_HIGH>;=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 states =3D <3300000 0x0 1800000 0x1>;=0A=
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 vin-supply =3D <&ldo5>;=0A=
-> + =A0 =A0 =A0 };=0A=
-> =A0};=0A=
-> =A0=0A=
-> =A0&A53_0 {=0A=
-> @@ -205,6 +214,7 @@ &usdhc2 {=0A=
-> =A0 =A0 =A0 =A0 =A0pinctrl-2 =3D <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdh=
-c2_gpio>;=0A=
-> =A0 =A0 =A0 =A0 =A0cd-gpios =3D <&gpio1 14 GPIO_ACTIVE_LOW>;=0A=
-> =A0 =A0 =A0 =A0 =A0vmmc-supply =3D <&reg_usdhc2_vmmc>;=0A=
-> + =A0 =A0 =A0 vqmmc-supply =3D <&reg_usdhc2_vqmmc>;=0A=
-> =A0 =A0 =A0 =A0 =A0bus-width =3D <4>;=0A=
-> =A0 =A0 =A0 =A0 =A0status =3D "okay";=0A=
-> =A0};=0A=
-> --=0A=
-> 2.34.1=
+Hi,
+
+On Wed, Apr 30, 2025 at 05:05:02PM +0530, Vasant Hegde wrote:
+> Hi,
+> 
+> On 4/23/2025 12:20 PM, Ankit Soni wrote:
+> > --- a/drivers/iommu/amd/init.c
+> > +++ b/drivers/iommu/amd/init.c
+> > @@ -151,7 +151,7 @@ struct ivmd_header {
+> >  bool amd_iommu_dump;
+> >  bool amd_iommu_irq_remap __read_mostly;
+> >  
+> > -enum protection_domain_mode amd_iommu_pgtable = PD_MODE_V1;
+> > +enum protection_domain_mode amd_iommu_pgtable = PD_MODE_NONE;
+> 
+> 
+> Why not keep it as `PD_MODE_V1` (as its our default page table) so that we can
+> remove explict `PD_MODE_V1` assignment in below hunk?
+> 
+
+Yes it will remove `PD_MODE_V1` assignment hunk. But, Intension to keep
+PD_MODE_NONE is more clean code, where by default page table mode is NONE,
+and with proper checks and default/command line input, driver changes it.
+
+> >  /* Guest page table level */
+> >  int amd_iommu_gpt_level = PAGE_MODE_4_LEVEL;
+> >  
+> > @@ -168,6 +168,9 @@ static int amd_iommu_target_ivhd_type;
+> >  u64 amd_iommu_efr;
+> >  u64 amd_iommu_efr2;
+> >  
+> > +/* dma translation not supported*/
+> 
+> Host (v2) page table is not supported.
+> 
+
+I'll rephrase this.
+
+> > +bool amd_iommu_hatdis;
+> > +
+> >  /* SNP is enabled on the system? */
+> >  bool amd_iommu_snp_en;
+> >  EXPORT_SYMBOL(amd_iommu_snp_en);
+> > @@ -1798,6 +1801,11 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h,
+> >  		if (h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT))
+> >  			amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
+> >  
+> > +		if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
+> > +			pr_warn_once("Host Address Translation is not supported.\n");
+> > +			amd_iommu_hatdis = true;
+> > +		}
+> > +
+> >  		early_iommu_features_init(iommu, h);
+> >  
+> >  		break;
+> > @@ -2582,7 +2590,7 @@ static void init_device_table_dma(struct amd_iommu_pci_seg *pci_seg)
+> >  	u32 devid;
+> >  	struct dev_table_entry *dev_table = pci_seg->dev_table;
+> >  
+> > -	if (dev_table == NULL)
+> > +	if (!dev_table || amd_iommu_pgtable == PD_MODE_NONE)
+> >  		return;
+> >  
+> >  	for (devid = 0; devid <= pci_seg->last_bdf; ++devid) {
+> > @@ -3095,6 +3103,17 @@ static int __init early_amd_iommu_init(void)
+> >  		}
+> >  	}
+> >  
+> > +	if (amd_iommu_hatdis) {
+> 
+> I missed it in the internal review. This introduces ordering dependency (v2 page
+> table check should be done before this). IMO its worth to add an explicit
+> comment so that its clear.
+> 
+> -Vasant
+> 
+
+Sure, i'll move this below v2 page table check.
+
+-Ankit
