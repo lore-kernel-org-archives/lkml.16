@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63052F0BAB;
-	Mon,  5 May 2025 23:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6276A2F0B8E;
+	Mon,  5 May 2025 23:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486701; cv=none; b=aWV0xcrh0oileFwAkZyUzuLZcf6lY4AlXQlIzvS6ZtK7yocC6YR3dM1TG5S7c4j1LprkQvydIK1E+/HIOOgI8AoGqjq6EWbJZw/+F1uWc3NyQXEXQp92eQeYMFKmR9HK41hPDCqDUxxSdtBr9i51bEWnwOrfoRFVtnvNQvCjc0k=
+	t=1746486691; cv=none; b=k8S7GvOYlk9t8XnVw36l0VPqYzMLT6JbyaGCCBAMnMKXhPXYEDHs6m3+xtqP2h9gvn8SWwAHy/Je5btow9DVEBdFtv/4bHIVNdwInIZkZhLJUUPEEdUG8PQON7IWB7MpcpI2s+rbpkLqKE6AeYphikoejRGqFJxEHhoxxTyUDKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486701; c=relaxed/simple;
-	bh=YYkf7N+9se8fSBnNL5wvD1zpQJHCh0JM8wOX7SVt/no=;
+	s=arc-20240116; t=1746486691; c=relaxed/simple;
+	bh=FXBc3pVht+69N963hdV7zdEpN/uveRYU86rGwTS/SY4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ccNBBWUaqFbbiMR3SmIoIDwu9XvCVmRummdA0m3RPh8sza6WswNVN4SoDVFoA8hq30AJRqZ/Cped84iyYiIa6qDh3G+YySTf7wHpikEOSCI9JarUdv5eFTvJbsrWtCyDBBr9ZBC+1jLtRAEFBCoVwrbzIc8npfE30biuGLPgCf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7iG8brE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rbCt+f+47OfCCAJTfzcgO0gIILaT6DIVa7H1TlFYQoZcuj3X7ggl1KmA3ICqdtZRQkG5OpLjHi4EoKAKKZQb99XV0SYgvDWtvxFPKGHB8xSa8aFGsOWilVwhKrDnDhBrDJ8AiM41LpdkhUrY20xneRc6K9NWtPKDsIDkdsT+BiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXL8nF3Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7iG8brE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98136C4CEE4;
-	Mon,  5 May 2025 23:11:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXL8nF3Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E32C4CEEE;
+	Mon,  5 May 2025 23:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486700;
-	bh=YYkf7N+9se8fSBnNL5wvD1zpQJHCh0JM8wOX7SVt/no=;
+	s=k20201202; t=1746486690;
+	bh=FXBc3pVht+69N963hdV7zdEpN/uveRYU86rGwTS/SY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T7iG8brEwtHH27RXIP4286cHrajxO0pKz8J1osAQFgzztoko6laOrdogmmaqsr42f
-	 VuuANOEBJybz6Q/xCySmjx6dsnR0FKv9LLXhU3PHR1T44vJyEGYTnH5fxEbJhkJ2i1
-	 RkgpSu+AmlDP1XGJ18YPYTm5VhtelHA/xGvbPyFgNaQ26BqjruWuf/BRmCvm9BWAuB
-	 LsVaOJ7hHOnoHsz5Otkw92iHKuuCL1JM5f/VEjU5FXoIk7PTZkuDX+1CBs4+Io07Z5
-	 kdJDiiQmVd3Uowm2qecNiWecmrwyj/UKkBoB1q5C5aCQof5CNp/XIN7WoeQzZ/GvjM
-	 +GCRtGul2Up5A==
+	b=nXL8nF3YzqTXZjyNhUjPJv4xQgXz3buZWyrWF2ZAmnhqjATSDhD7Xt5g0Q9ll1kLM
+	 mRh2sZ8gpdYbLBnR4bfby/eq7/3WirE4LpWznPeWpzXxuWo6bOFrijQ+qBX18H2eux
+	 ox119swqTIKpmy/TI25D/MnFWJrenWpL7cSgNDg9BVxhJRHig2hpUzHmW7mdFAnyRo
+	 i2uOtLWBtHZ6qBhOhCaiQW3Moal5l5+xJFyX2pBf4qLTszYseCg1dG609R+lRL7j7+
+	 7lH+bJ1JBEWURwoEE6FrQAAbH5U35j7T55tGQuRHCH5BDT9c6ttUtzKeZgbWPdc12n
+	 6D4R5aF1bMyrg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Shahar Shitrit <shshitrit@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 159/212] ASoC: soc-dai: check return value at snd_soc_dai_set_tdm_slot()
-Date: Mon,  5 May 2025 19:05:31 -0400
-Message-Id: <20250505230624.2692522-159-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 153/212] net/mlx5: Modify LSB bitmask in temperature event to include only the first bit
+Date: Mon,  5 May 2025 19:05:25 -0400
+Message-Id: <20250505230624.2692522-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -53,52 +58,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Shahar Shitrit <shshitrit@nvidia.com>
 
-[ Upstream commit 7f1186a8d738661b941b298fd6d1d5725ed71428 ]
+[ Upstream commit 633f16d7e07c129a36b882c05379e01ce5bdb542 ]
 
-snd_soc_dai_set_tdm_slot() calls .xlate_tdm_slot_mask() or
-snd_soc_xlate_tdm_slot_mask(), but didn't check its return value.
-Let's check it.
+In the sensor_count field of the MTEWE register, bits 1-62 are
+supported only for unmanaged switches, not for NICs, and bit 63
+is reserved for internal use.
 
-This patch might break existing driver. In such case, let's makes
-each func to void instead of int.
+To prevent confusing output that may include set bits that are
+not relevant to NIC sensors, we update the bitmask to retain only
+the first bit, which corresponds to the sensor ASIC.
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://patch.msgid.link/87o6z7yk61.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
+Link: https://patch.msgid.link/20250213094641.226501-4-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dai.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/events.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
-index 49752af0e205d..ba38b6e6b2649 100644
---- a/sound/soc/soc-dai.c
-+++ b/sound/soc/soc-dai.c
-@@ -270,10 +270,11 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/events.c b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+index 9459e56ee90a6..68b92927c74e9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
+@@ -163,6 +163,10 @@ static int temp_warn(struct notifier_block *nb, unsigned long type, void *data)
+ 	u64 value_msb;
  
- 	if (dai->driver->ops &&
- 	    dai->driver->ops->xlate_tdm_slot_mask)
--		dai->driver->ops->xlate_tdm_slot_mask(slots,
--						      &tx_mask, &rx_mask);
-+		ret = dai->driver->ops->xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
- 	else
--		snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+		ret = snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+	if (ret)
-+		goto err;
+ 	value_lsb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_lsb);
++	/* bit 1-63 are not supported for NICs,
++	 * hence read only bit 0 (asic) from lsb.
++	 */
++	value_lsb &= 0x1;
+ 	value_msb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_msb);
  
- 	dai->tx_mask = tx_mask;
- 	dai->rx_mask = rx_mask;
-@@ -282,6 +283,7 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
- 	    dai->driver->ops->set_tdm_slot)
- 		ret = dai->driver->ops->set_tdm_slot(dai, tx_mask, rx_mask,
- 						      slots, slot_width);
-+err:
- 	return soc_dai_ret(dai, ret);
- }
- EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
+ 	mlx5_core_warn(events->dev,
 -- 
 2.39.5
 
