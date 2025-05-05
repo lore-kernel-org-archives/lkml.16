@@ -1,44 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2336F8B1;
-	Mon,  5 May 2025 22:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9853703B4;
+	Mon,  5 May 2025 22:58:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485886; cv=none; b=Ia/4c/E4p+E1rQrbVCaV+u3kqvSGlaPr9NDYnxySResu6wVCWNLrxCNjvCD0AFG4HAK/Vl5D+dVAtCMW2f8IWqD1bgIeipu6ubt4fi7FJJqWvjEBYgtAt+kF9BRO1DJXozGxU+dPTDjM01HPxB9GyMlCXJv9LYSF4Vti6qHoiAA=
+	t=1746485894; cv=none; b=IMIQTF75q8O2TjnuUM26VSejUceS7kVWu3LXCY6MIVdYnkV/8j6pw22IXlbtGVXLTa0hq0joAwdK7WkC7Q28Dq1fcFoU9qElA96dRpCqWlSl2DmEgdy4yz0xfLHV71EROhYbxuhUb96HT/eNVwwOEMViBw/zFkQvZnsgg+S/apQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485886; c=relaxed/simple;
-	bh=DivLNW8QLgSVQ/DHwoC5q+PLRKVJu8HuP91Nfa/Xd0g=;
+	s=arc-20240116; t=1746485894; c=relaxed/simple;
+	bh=j7/CYS3VLTNk26/IFzZOFaFw1rjfX5mJX1MXklRtPcQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oVzOBNHUTBmsja1pZJv7G/DrMsls8KaKRDzcR0Gbq4d2qyToA8csLzUmTz0ZahY1baSFvuFXf/wn8ONNWwZjQH5d/DWtUMeIJFF9hLd9vUgLKbZK0y94i80mB9EK3udgqOlk6Tl+DRLchUcGgFTv6JvURq9gq5MNUR9RitfVS4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1dwrPTJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cLfhH+kq5/YzF+2mp/J1Cfr0bTTNHU6jookfESbkTwEH3utAv7VxPVB7FiHhoL0kx1C7xs8dGZ2DotDO4fvGDK4ZW0W477tzfARe1DOOiIe6c1/Dipgxn3GPNxd3ctcS1PSzFhLjAyHpku/4Uw4QShQGpV2C7Nlf+5GfgBvNSS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9e8v6c8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1dwrPTJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FB4C4CEEE;
-	Mon,  5 May 2025 22:58:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9e8v6c8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE92C4CEED;
+	Mon,  5 May 2025 22:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485885;
-	bh=DivLNW8QLgSVQ/DHwoC5q+PLRKVJu8HuP91Nfa/Xd0g=;
+	s=k20201202; t=1746485893;
+	bh=j7/CYS3VLTNk26/IFzZOFaFw1rjfX5mJX1MXklRtPcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c1dwrPTJW/lHO4CsSJiNf+bcgF9Q9eypR1oDOpUpcsgb5VBBpa1rNuXpXAYEXh3BX
-	 1q6D9b/6cXb8wQiCRUMoijO163jXJ/HDbUBvV774U/okn+o05ls5Ocr00TB0459/kp
-	 h9S3GyyHwiyYlC3dBgkx4L/Fj1Kz/CtFfTvDAiMEHbSAWnXN2p4HScKpqeeCX7rvuP
-	 CzqxWB2qhTqGGfb3MS3EZQnZx8w29ht2arL1R422Bgf4PzwTmy3qiYQt501ScpterL
-	 gLTp0p0z7OQDZj97QXnKAWQygdkdv8vUNpPd/PusBSovFVlG9M5uwjjgIKQplL2Bg2
-	 ujj95/pWRGhKQ==
+	b=H9e8v6c8lZsxJ500EtBadpNtbw4a5NSuPZ6Zua6hYbn7Jbzc6npcUps2kd+tOWl8A
+	 0kDpPk6EOANyzjY6SjovOXDItedHD4ScYPW8G7qKsJSK3WbQuL8G4RvZ3AwP92kVin
+	 Bx4y+8PHGsJ56LQAUnHM4vCmfvjZJQhtHljVvh0HtW2iaxITdwln3gJ8122t0Iebqv
+	 LemgIcOTkeZ5crbAmc+Iva3ODn8AYF7apU+xtQRWvnmX0t6okSdxP4pn0lFa5wBwHF
+	 CRLuxjUAb7Q6opOIUUp2ij+HtJUMa5m66+pm0IzKvH2hIEYmvSIEbBvmY3kqCDaYI+
+	 NYnc7Gihgs+OQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
-	Qu Wenruo <wqu@suse.com>,
+Cc: Jing Zhou <Jing.Zhou@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>,
+	Chris Park <chris.park@amd.com>,
+	Eric Yang <eric.yang@amd.com>,
+	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 047/294] btrfs: fix non-empty delayed iputs list on unmount due to async workers
-Date: Mon,  5 May 2025 18:52:27 -0400
-Message-Id: <20250505225634.2688578-47-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	Charlene.Liu@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 051/294] drm/amd/display: Guard against setting dispclk low for dcn31x
+Date: Mon,  5 May 2025 18:52:31 -0400
+Message-Id: <20250505225634.2688578-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,82 +63,111 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Jing Zhou <Jing.Zhou@amd.com>
 
-[ Upstream commit cda76788f8b0f7de3171100e3164ec1ce702292e ]
+[ Upstream commit 9c2f4ae64bb6f6d83a54d88b9ee0f369cdbb9fa8 ]
 
-At close_ctree() after we have ran delayed iputs either explicitly through
-calling btrfs_run_delayed_iputs() or later during the call to
-btrfs_commit_super() or btrfs_error_commit_super(), we assert that the
-delayed iputs list is empty.
+[WHY]
+We should never apply a minimum dispclk value while in
+prepare_bandwidth or while displays are active. This is
+always an optimizaiton for when all displays are disabled.
 
-We have (another) race where this assertion might fail because we have
-queued an async write into the fs_info->workers workqueue. Here's how it
-happens:
+[HOW]
+Defer dispclk optimization until safe_to_lower = true
+and display_count reaches 0.
 
-1) We are submitting a data bio for an inode that is not the data
-   relocation inode, so we call btrfs_wq_submit_bio();
+Since 0 has a special value in this logic (ie. no dispclk
+required) we also need adjust the logic that clamps it for
+the actual request to PMFW.
 
-2) btrfs_wq_submit_bio() submits a work for the fs_info->workers queue
-   that will run run_one_async_done();
-
-3) We enter close_ctree(), flush several work queues except
-   fs_info->workers, explicitly run delayed iputs with a call to
-   btrfs_run_delayed_iputs() and then again shortly after by calling
-   btrfs_commit_super() or btrfs_error_commit_super(), which also run
-   delayed iputs;
-
-4) run_one_async_done() is executed in the work queue, and because there
-   was an IO error (bio->bi_status is not 0) it calls btrfs_bio_end_io(),
-   which drops the final reference on the associated ordered extent by
-   calling btrfs_put_ordered_extent() - and that adds a delayed iput for
-   the inode;
-
-5) At close_ctree() we find that after stopping the cleaner and
-   transaction kthreads the delayed iputs list is not empty, failing the
-   following assertion:
-
-      ASSERT(list_empty(&fs_info->delayed_iputs));
-
-Fix this by flushing the fs_info->workers workqueue before running delayed
-iputs at close_ctree().
-
-David reported this when running generic/648, which exercises IO error
-paths by using the DM error table.
-
-Reported-by: David Sterba <dsterba@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reviewed-by: Charlene Liu <charlene.liu@amd.com>
+Reviewed-by: Chris Park <chris.park@amd.com>
+Reviewed-by: Eric Yang <eric.yang@amd.com>
+Signed-off-by: Jing Zhou <Jing.Zhou@amd.com>
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../dc/clk_mgr/dcn315/dcn315_clk_mgr.c        | 20 +++++++++++--------
+ .../dc/clk_mgr/dcn316/dcn316_clk_mgr.c        | 13 +++++++++---
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 1e1650012606e..34a30d61b470c 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4341,6 +4341,19 @@ void __cold close_ctree(struct btrfs_fs_info *fs_info)
- 	 */
- 	btrfs_flush_workqueue(fs_info->delalloc_workers);
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+index d4d3f58a613f7..ebeb969ee180b 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
+@@ -130,7 +130,7 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
+ 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
+ 	struct dc *dc = clk_mgr_base->ctx->dc;
+-	int display_count;
++	int display_count = 0;
+ 	bool update_dppclk = false;
+ 	bool update_dispclk = false;
+ 	bool dpp_clock_lowered = false;
+@@ -204,15 +204,19 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		update_dppclk = true;
+ 	}
  
-+	/*
-+	 * We can have ordered extents getting their last reference dropped from
-+	 * the fs_info->workers queue because for async writes for data bios we
-+	 * queue a work for that queue, at btrfs_wq_submit_bio(), that runs
-+	 * run_one_async_done() which calls btrfs_bio_end_io() in case the bio
-+	 * has an error, and that later function can do the final
-+	 * btrfs_put_ordered_extent() on the ordered extent attached to the bio,
-+	 * which adds a delayed iput for the inode. So we must flush the queue
-+	 * so that we don't have delayed iputs after committing the current
-+	 * transaction below and stopping the cleaner and transaction kthreads.
-+	 */
-+	btrfs_flush_workqueue(fs_info->workers);
+-	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
+-		/* No need to apply the w/a if we haven't taken over from bios yet */
+-		if (clk_mgr_base->clks.dispclk_khz)
+-			dcn315_disable_otg_wa(clk_mgr_base, context, true);
++	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) &&
++	    (new_clocks->dispclk_khz > 0 || (safe_to_lower && display_count == 0))) {
++		int requested_dispclk_khz = new_clocks->dispclk_khz;
+ 
++		dcn315_disable_otg_wa(clk_mgr_base, context, true);
 +
- 	/*
- 	 * When finishing a compressed write bio we schedule a work queue item
- 	 * to finish an ordered extent - btrfs_finish_compressed_write_work()
++		/* Clamp the requested clock to PMFW based on their limit. */
++		if (dc->debug.min_disp_clk_khz > 0 && requested_dispclk_khz < dc->debug.min_disp_clk_khz)
++			requested_dispclk_khz = dc->debug.min_disp_clk_khz;
++
++		dcn315_smu_set_dispclk(clk_mgr, requested_dispclk_khz);
+ 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
+-		dcn315_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
+-		if (clk_mgr_base->clks.dispclk_khz)
+-			dcn315_disable_otg_wa(clk_mgr_base, context, false);
++		dcn315_disable_otg_wa(clk_mgr_base, context, false);
+ 
+ 		update_dispclk = true;
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+index a13ead3d21e31..6f1785715dfb7 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
+@@ -140,7 +140,7 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
+ 	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
+ 	struct dc_clocks *new_clocks = &context->bw_ctx.bw.dcn.clk;
+ 	struct dc *dc = clk_mgr_base->ctx->dc;
+-	int display_count;
++	int display_count = 0;
+ 	bool update_dppclk = false;
+ 	bool update_dispclk = false;
+ 	bool dpp_clock_lowered = false;
+@@ -211,11 +211,18 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		update_dppclk = true;
+ 	}
+ 
+-	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
++	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) &&
++	    (new_clocks->dispclk_khz > 0 || (safe_to_lower && display_count == 0))) {
++		int requested_dispclk_khz = new_clocks->dispclk_khz;
++
+ 		dcn316_disable_otg_wa(clk_mgr_base, context, safe_to_lower, true);
+ 
++		/* Clamp the requested clock to PMFW based on their limit. */
++		if (dc->debug.min_disp_clk_khz > 0 && requested_dispclk_khz < dc->debug.min_disp_clk_khz)
++			requested_dispclk_khz = dc->debug.min_disp_clk_khz;
++
++		dcn316_smu_set_dispclk(clk_mgr, requested_dispclk_khz);
+ 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
+-		dcn316_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
+ 		dcn316_disable_otg_wa(clk_mgr_base, context, safe_to_lower, false);
+ 
+ 		update_dispclk = true;
 -- 
 2.39.5
 
