@@ -1,51 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FA62D5D09;
-	Mon,  5 May 2025 22:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5AE2D5D14;
+	Mon,  5 May 2025 22:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485675; cv=none; b=h52JofGz3iG8U1rdtb0K0KrUHqc/JotpliRxEK1NVqKTkiE0aUee9F4GxYJ7F5e/PWrR4V76N5CqnKbVN3Xote4K5GuIcXqJjzpp0O3NP1IQH3Zmzh3HcHjlF9UpOYSlKkIRW5P13pEwolFx6+tmMCw/K0n798nyvMhLhKckso0=
+	t=1746485678; cv=none; b=OkshbliBTu7Yk6Csy+wFp2v77FMOKvp5IGFnlZFA04MUxTYzjthu3rTvNew7MZk8/4SlwzCPbB/cvbzHI/cq2GAuNNLlHLLEAOafPHITrR/QcdlFxo3qgxgq5PHs2/+mtCnwb2zXwlu7tc/PK1RTqv+MNf8IoupNpFYyRAMEcpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485675; c=relaxed/simple;
-	bh=OqbJTecH4RC60/dESl3z3Bljohguyg9o9AHFmeOnKMY=;
+	s=arc-20240116; t=1746485678; c=relaxed/simple;
+	bh=OLizhLH1GnI6+VepvsENhJMEKJeSmbGNRZoZnzB8f1Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dvc3OQkvxPa3Idpir9jCSgGEUV7LwAbcK1wqZ4J2/6Go9BQckXXxLV0GL2Z7BX7TTbMjWfFs8+2y5yHZkIknc3MY1Iw6kTNsOduLsh7bksw3/3Nt7YrumydmX5iSd05iSUzfn17LUFJqrjSf8CqUnNboDURPrTIV+Pebvn4jl7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPlbDE/y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OXs/0r5lWUSxDDBJEO7t1It2Jfc4N6oHGHcw53FIVKkU7tH4gKD59JZDJen/4hze5OAfiwnBBAhIr2GAe5maV5fvp6kByoGtqD197NRs+l1jQ4shIDnX5/vZRqSRYJxdx4nUtw3x50+vnKu+t6p5SbAAkMrsh2hughQSsipdOzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i77d85uN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPlbDE/y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD2F2C4CEE4;
-	Mon,  5 May 2025 22:54:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i77d85uN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D244C4CEEE;
+	Mon,  5 May 2025 22:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485674;
-	bh=OqbJTecH4RC60/dESl3z3Bljohguyg9o9AHFmeOnKMY=;
+	s=k20201202; t=1746485676;
+	bh=OLizhLH1GnI6+VepvsENhJMEKJeSmbGNRZoZnzB8f1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SPlbDE/y/LX++VC2mIhbaYZWJVu+xHNUwlNtGNF3Ldy2Ts38TZsyo2Bzo3GLoaILl
-	 nSyc4/ZSRMTcqlqnkIPF+K6aYajGywCgKdKz3HrXTJeivmjxDOn8Z50tpJ3mKA2S2w
-	 rwslGE8fLRXBEvokSN3RcukglILoxCZWBNUHLPNDsoG6V6BtqxqBJ+ZIVh8dsDNXtd
-	 pO7Xtp4P85L55UVsxzDTfPWXQAYZpxirCuEXDUVmpcP+l6syl3p+3ktCMXc+1+3vO5
-	 3hMvZZn/N28VypRoSshsnAf1IDz8tsCVCZN1gjGoDw4MJI0rs0ffD2zdhmwVovsTXo
-	 oSi6klaUloCeg==
+	b=i77d85uNxp5bn/QBN+XqUXSNimrMt/nlyjarAflPysKmy/CepRA0nNi5n9NGHNXmE
+	 vh9jlx4KDzlkJv7D3thekbURfsED9Na0nTplRQhfusTErdhtsIJBlt1Sdd76sDqJss
+	 EgzyEOLlHk2of0uE05rZsG/ZTnVINirJDShBhGETCJ5aA9Xq3YNs+PnC7eo9T+io1P
+	 awU4M5wgoCR74wnWP8oCeG0Fw4prQmH3UHsEuFEyy3s8Sy0s+kgnh2jPK3PQ8ALgMX
+	 FGzSI7CDnbpNmDj46r3XpG8bywVhj1KIlA6NHLcTLG2bubCAWYUN2Rn5gEfswPx8E0
+	 yFf/Ap99PvuYA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Duyck <alexanderduyck@meta.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
+Cc: Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	alexanderduyck@fb.com,
-	andrew+netdev@lunn.ch,
+	donald.hunter@gmail.com,
 	davem@davemloft.net,
 	edumazet@google.com,
-	jdamato@fastly.com,
-	mohsin.bashr@gmail.com,
-	vadim.fedorenko@linux.dev,
 	sdf@fomichev.me,
+	antonio@openvpn.net,
+	jstancek@redhat.com,
+	johannes.berg@intel.com,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 420/486] eth: fbnic: set IFF_UNICAST_FLT to avoid enabling promiscuous mode when adding unicast addrs
-Date: Mon,  5 May 2025 18:38:16 -0400
-Message-Id: <20250505223922.2682012-420-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 421/486] tools: ynl-gen: don't output external constants
+Date: Mon,  5 May 2025 18:38:17 -0400
+Message-Id: <20250505223922.2682012-421-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -60,70 +57,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Duyck <alexanderduyck@meta.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 09717c28b76c30b1dc8c261c855ffb2406abab2e ]
+[ Upstream commit 7e8b24e24ac46038e48c9a042e7d9b31855cbca5 ]
 
-I realized when we were adding unicast addresses we were enabling
-promiscuous mode. I did a bit of digging and realized we had overlooked
-setting the driver private flag to indicate we supported unicast filtering.
+A definition with a "header" property is an "external" definition
+for C code, as in it is defined already in another C header file.
+Other languages will need the exact value but C codegen should
+not recreate it. So don't output those definitions in the uAPI
+header.
 
-Example below shows the table with 00deadbeef01 as the main NIC address,
-and 5 additional addresses in the 00deadbeefX0 format.
-
-  # cat $dbgfs/mac_addr
-  Idx S TCAM Bitmap       Addr/Mask
-  ----------------------------------
-  00  0 00000000,00000000 000000000000
-                          000000000000
-  01  0 00000000,00000000 000000000000
-                          000000000000
-  02  0 00000000,00000000 000000000000
-                          000000000000
-  ...
-  24  0 00000000,00000000 000000000000
-                          000000000000
-  25  1 00100000,00000000 00deadbeef50
-                          000000000000
-  26  1 00100000,00000000 00deadbeef40
-                          000000000000
-  27  1 00100000,00000000 00deadbeef30
-                          000000000000
-  28  1 00100000,00000000 00deadbeef20
-                          000000000000
-  29  1 00100000,00000000 00deadbeef10
-                          000000000000
-  30  1 00100000,00000000 00deadbeef01
-                          000000000000
-  31  0 00000000,00000000 000000000000
-                          000000000000
-
-Before rule 31 would be active. With this change it correctly sticks
-to just the unicast filters.
-
-Signed-off-by: Alexander Duyck <alexanderduyck@meta.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://patch.msgid.link/20250204010038.1404268-2-kuba@kernel.org
+Link: https://patch.msgid.link/20250203215510.1288728-1-kuba@kernel.org
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/meta/fbnic/fbnic_netdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/net/ynl/ynl-gen-c.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_netdev.c b/drivers/net/ethernet/meta/fbnic/fbnic_netdev.c
-index a400616a24d41..79e94632533c8 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_netdev.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_netdev.c
-@@ -544,6 +544,8 @@ struct net_device *fbnic_netdev_alloc(struct fbnic_dev *fbd)
- 	fbnic_rss_key_fill(fbn->rss_key);
- 	fbnic_rss_init_en_mask(fbn);
+diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
+index 463f1394ab971..c78f1c1bca75c 100755
+--- a/tools/net/ynl/ynl-gen-c.py
++++ b/tools/net/ynl/ynl-gen-c.py
+@@ -2417,6 +2417,9 @@ def render_uapi(family, cw):
  
-+	netdev->priv_flags |= IFF_UNICAST_FLT;
+     defines = []
+     for const in family['definitions']:
++        if const.get('header'):
++            continue
 +
- 	netdev->features |=
- 		NETIF_F_RXHASH |
- 		NETIF_F_SG |
+         if const['type'] != 'const':
+             cw.writes_defines(defines)
+             defines = []
 -- 
 2.39.5
 
