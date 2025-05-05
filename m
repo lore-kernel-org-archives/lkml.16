@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5729AAFC;
-	Mon,  5 May 2025 22:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F6029AAF4;
+	Mon,  5 May 2025 22:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485048; cv=none; b=P9RGjptBSoZnhf/1LlbUWYmvhV1Mm+8oArjdJCd5OAB5fWd6U9LIU9mAQTDr8oyVfHpDSOAusaj5Y2lU1grkNS+lAZk1uUz9yD9zKO5Olto3akQz9bOw+MLt9uinQap+7KBWtgRckuPmQrAcPAzphJOf0oKHG1weVM4ZUlT1Qv8=
+	t=1746485050; cv=none; b=O9TfjDZJbQ543fcWkmkdlgkdcWrhsN7tyPkZM9GqlaozaGhWMHCYE6fN4/O3+wHKVAf9YvFiM3Z43Avjr3AsLQAZGpP+dCTAXl3JvvqPZc2dgDvNnrXFF3Db4ZKfzCodEUaB5INmc2oGtccMqGzHL8abEWnA9GWAfNyPc7IQVpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485048; c=relaxed/simple;
-	bh=D2YnTbuB7E/7Nw79ozILZQxHrhH5GxO5/l66638hjKY=;
+	s=arc-20240116; t=1746485050; c=relaxed/simple;
+	bh=a3QzQ1hg2SV2WrVAJY6TwiYvWvPfuFP+s0Y2RBN2kPg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IZYhVHwWwDKkRMGOPHvdswJSyWBCE1IBoIGHuzkrc6IZhLSRFOs8sbSTpKqKQ5sv0luszAb6QTfmK7ETfdvh/jgmL1h5yXfwkvPB3jTZvv1/RcuhnEnmb3faOhiggFEI6JsSs85TU4MjqG98lLMJHuR6oaS51XXGV3JSbYeDFQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGJ5OSwf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fujrG/KftZN7pjUy+JVH5Vg31E4lSii+FvofzEe+5v62UgSMMHgtlwaLQLLt3KreXXXNiX6sSXKyWjvyepY7W68vo7UTCAh16aUKM+SJFAxzvW2R4Dz+bwD7C9sQDoW0KcimzfYKo+E0E29TR6vSAMfmm6+ndvQohVKYTu0vRTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdsrFeQM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGJ5OSwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F658C4CEEE;
-	Mon,  5 May 2025 22:44:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdsrFeQM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE06C4CEED;
+	Mon,  5 May 2025 22:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485047;
-	bh=D2YnTbuB7E/7Nw79ozILZQxHrhH5GxO5/l66638hjKY=;
+	s=k20201202; t=1746485050;
+	bh=a3QzQ1hg2SV2WrVAJY6TwiYvWvPfuFP+s0Y2RBN2kPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sGJ5OSwf48eix9jZnX9P1AAHBENjW5cQQjekzMzN8odkMd3osHg81s0Aaxu3DeT0a
-	 Hu2jItaUWGIEUNXZw/bj5V6RiBhv06OmwkmPCQuu2cdK+DLmPo3vcPmOosSwGJvs12
-	 Q2Q1mbA8xl87tIMaptPPgfWEgPgdlApUA6iPrzF4yan/DyRNSdeGk/Ftp/etm6I1Fp
-	 jJEL6IbHelUP8tJj0YZrQDx2XsGB9WU0sFUb0QFu6qYIxPHL8G3lw8gzAZC6uJBXCp
-	 I6afga/T3WywoF2mqHD87gIbfPmtiGwQznCGhjw8rTxZazdY3hrqsCnx8DAVWqHmp9
-	 SPZZSaXbr8Uqw==
+	b=gdsrFeQMsBS7n06mhbbuoFfDCpWDo8rfH+dQr91NCtsrB9oQ0czLg4ORdu4gzIdUz
+	 cI6DdbwmjjAjLUb2TxlMLRs/tRMcbCj8xqgfMexuLXli5Mt/qnYIEI3P8zXdVZ/q6B
+	 pDHfc35HeGa9mAv+ft4MMgyK1rsdHyEIe8mJivk1Vo9xJpEKlgzM2d+fY1ol4Xh2Z2
+	 zdcm9NNPaOrAOnc3W5Poomr2dZxgDY5Nek5jm/nTyOMYKGqItUJlI/GQbUH8Ifvniq
+	 urskdsXvk14+I7P6GxQGeFu0EsMyYV2S8UoxOyiqZHZH2wX2LiFWyzfT0JIqVntzNU
+	 vW3cz23Mqntiw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kaustabh Chakraborty <kauschluss@disroot.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+	Mathias Nyman <mathias.nyman@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jh80.chung@samsung.com,
-	krzk@kernel.org,
-	linux-mmc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 140/486] mmc: dw_mmc: add exynos7870 DW MMC support
-Date: Mon,  5 May 2025 18:33:36 -0400
-Message-Id: <20250505223922.2682012-140-sashal@kernel.org>
+	mathias.nyman@intel.com,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 142/486] usb: xhci: Don't change the status of stalled TDs on failed Stop EP
+Date: Mon,  5 May 2025 18:33:38 -0400
+Message-Id: <20250505223922.2682012-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,172 +52,66 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
+From: Michal Pecio <michal.pecio@gmail.com>
 
-[ Upstream commit 7cbe799ac10fd8be85af5e0615c4337f81e575f3 ]
+[ Upstream commit dfc88357b6b6356dadea06b2c0bc8041f5e11720 ]
 
-Add support for Exynos7870 DW MMC controllers, for both SMU and non-SMU
-variants. These controllers require a quirk to access 64-bit FIFO in 32-bit
-accesses (DW_MMC_QUIRK_FIFO64_32).
+When the device stalls an endpoint, current TD is assigned -EPIPE
+status and Reset Endpoint is queued. If a Stop Endpoint is pending
+at the time, it will run before Reset Endpoint and fail due to the
+stall. Its handler will change TD's status to -EPROTO before Reset
+Endpoint handler runs and initiates giveback.
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-Link: https://lore.kernel.org/r/20250219-exynos7870-mmc-v2-3-b4255a3e39ed@disroot.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Check if the stall has already been handled and don't try to do it
+again. Since xhci_handle_halted_endpoint() performs this check too,
+not overwriting td->status is the only difference.
+
+I haven't seen this case yet, but I have seen a related one where
+the xHC has already executed Reset Endpoint, EP Context state is
+now Stopped and EP_HALTED is set. If the xHC took a bit longer to
+execute Reset Endpoint, said case would become this one.
+
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20250311154551.4035726-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/dw_mmc-exynos.c | 41 +++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-ring.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-index 6dc057718d2cb..89682f10e69f3 100644
---- a/drivers/mmc/host/dw_mmc-exynos.c
-+++ b/drivers/mmc/host/dw_mmc-exynos.c
-@@ -27,6 +27,8 @@ enum dw_mci_exynos_type {
- 	DW_MCI_TYPE_EXYNOS5420_SMU,
- 	DW_MCI_TYPE_EXYNOS7,
- 	DW_MCI_TYPE_EXYNOS7_SMU,
-+	DW_MCI_TYPE_EXYNOS7870,
-+	DW_MCI_TYPE_EXYNOS7870_SMU,
- 	DW_MCI_TYPE_ARTPEC8,
- };
- 
-@@ -69,6 +71,12 @@ static struct dw_mci_exynos_compatible {
- 	}, {
- 		.compatible	= "samsung,exynos7-dw-mshc-smu",
- 		.ctrl_type	= DW_MCI_TYPE_EXYNOS7_SMU,
-+	}, {
-+		.compatible	= "samsung,exynos7870-dw-mshc",
-+		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870,
-+	}, {
-+		.compatible	= "samsung,exynos7870-dw-mshc-smu",
-+		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870_SMU,
- 	}, {
- 		.compatible	= "axis,artpec8-dw-mshc",
- 		.ctrl_type	= DW_MCI_TYPE_ARTPEC8,
-@@ -85,6 +93,8 @@ static inline u8 dw_mci_exynos_get_ciu_div(struct dw_mci *host)
- 		return EXYNOS4210_FIXED_CIU_CLK_DIV;
- 	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
- 	else
-@@ -100,7 +110,8 @@ static void dw_mci_exynos_config_smu(struct dw_mci *host)
- 	 * set for non-ecryption mode at this time.
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 3e70e4f6bf083..fbc8419a54730 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1156,7 +1156,14 @@ static void xhci_handle_cmd_stop_ep(struct xhci_hcd *xhci, int slot_id,
  	 */
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS5420_SMU ||
--		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU) {
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
- 		mci_writel(host, MPSBEGIN0, 0);
- 		mci_writel(host, MPSEND0, SDMMC_ENDING_SEC_NR_MAX);
- 		mci_writel(host, MPSCTRL0, SDMMC_MPSCTRL_SECURE_WRITE_BIT |
-@@ -126,6 +137,12 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
- 				DQS_CTRL_GET_RD_DELAY(priv->saved_strobe_ctrl);
- 	}
- 
-+	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
-+		/* Quirk needed for certain Exynos SoCs */
-+		host->quirks |= DW_MMC_QUIRK_FIFO64_32;
-+	}
+ 		switch (GET_EP_CTX_STATE(ep_ctx)) {
+ 		case EP_STATE_HALTED:
+-			xhci_dbg(xhci, "Stop ep completion raced with stall, reset ep\n");
++			xhci_dbg(xhci, "Stop ep completion raced with stall\n");
++			/*
++			 * If the halt happened before Stop Endpoint failed, its transfer event
++			 * should have already been handled and Reset Endpoint should be pending.
++			 */
++			if (ep->ep_state & EP_HALTED)
++				goto reset_done;
 +
- 	if (priv->ctrl_type == DW_MCI_TYPE_ARTPEC8) {
- 		/* Quirk needed for the ARTPEC-8 SoC */
- 		host->quirks |= DW_MMC_QUIRK_EXTENDED_TMOUT;
-@@ -143,6 +160,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -152,6 +171,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -222,6 +243,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -230,6 +253,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
- 	if (clksel & SDMMC_CLKSEL_WAKEUP_INT) {
- 		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 			mci_writel(host, CLKSEL64, clksel);
- 		else
-@@ -409,6 +434,8 @@ static inline u8 dw_mci_exynos_get_clksmpl(struct dw_mci *host)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		return SDMMC_CLKSEL_CCLK_SAMPLE(mci_readl(host, CLKSEL64));
- 	else
-@@ -422,6 +449,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -429,6 +458,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
- 	clksel = SDMMC_CLKSEL_UP_SAMPLE(clksel, sample);
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -443,6 +474,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		clksel = mci_readl(host, CLKSEL64);
- 	else
-@@ -453,6 +486,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
- 
- 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
- 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
-+		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
- 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
- 		mci_writel(host, CLKSEL64, clksel);
- 	else
-@@ -632,6 +667,10 @@ static const struct of_device_id dw_mci_exynos_match[] = {
- 			.data = &exynos_drv_data, },
- 	{ .compatible = "samsung,exynos7-dw-mshc-smu",
- 			.data = &exynos_drv_data, },
-+	{ .compatible = "samsung,exynos7870-dw-mshc",
-+			.data = &exynos_drv_data, },
-+	{ .compatible = "samsung,exynos7870-dw-mshc-smu",
-+			.data = &exynos_drv_data, },
- 	{ .compatible = "axis,artpec8-dw-mshc",
- 			.data = &artpec_drv_data, },
- 	{},
+ 			if (ep->ep_state & EP_HAS_STREAMS) {
+ 				reset_type = EP_SOFT_RESET;
+ 			} else {
+@@ -1167,8 +1174,11 @@ static void xhci_handle_cmd_stop_ep(struct xhci_hcd *xhci, int slot_id,
+ 			}
+ 			/* reset ep, reset handler cleans up cancelled tds */
+ 			err = xhci_handle_halted_endpoint(xhci, ep, td, reset_type);
++			xhci_dbg(xhci, "Stop ep completion resetting ep, status %d\n", err);
+ 			if (err)
+ 				break;
++reset_done:
++			/* Reset EP handler will clean up cancelled TDs */
+ 			ep->ep_state &= ~EP_STOP_CMD_PENDING;
+ 			return;
+ 		case EP_STATE_STOPPED:
 -- 
 2.39.5
 
