@@ -1,47 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C6A385350;
-	Mon,  5 May 2025 23:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442902D0284;
+	Mon,  5 May 2025 23:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486037; cv=none; b=QL3GcVvCV+MPkhREQGWe86cQMudSURB+5147eq3zXeIO1OL4823624jPUrwf9CHbOsrIKlyPLzOAB3LhEEGfeSMmiwc0cfEzZrazU87jQ38RGNCbExc0Cv75KzEt3BevZRDkC+pcaeg5tq/Q3W5Ns/S/QwJOnjWyt23i5ezB9so=
+	t=1746486032; cv=none; b=UvOBRIrCmnwBoZOwaL0WPBUAhjgVW9eiYEWvLSesXCXW0Cwlhp5Re+PrRIIIJ0CM8bveroCEZIN3dLsDvm/ktdLx8obcp2nC1LigfMazEasZf/d7at25vFAeKtY7o644rqHKesoWYVcPzYM5BSCdd6sW2DVEC4gyt2vt//s2+h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486037; c=relaxed/simple;
-	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
+	s=arc-20240116; t=1746486032; c=relaxed/simple;
+	bh=0oolSqsZ1MAxsLhdbgfd9396bqGOYrEmyGV7kZGgazM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sLBNRJSDTmv8APw2vr//KMoKgXoL18Ve/FkoqEogt2vm/2JpM5dvG16zPoQ7CxwlHG7NE+ejT/l8Qam4SaM4WbD/9WSNTTm3JkBuxBdaewc6ZktyT5+dHmbLAqXp6CM262ae218Bys/Z8uyDrIWAedgVZwMqQQPUb9EagP4feoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qivaZwFv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hbGkEIBV0M9yBfxXp+Jv3+OVbtizK+HCGxttHZN5ECvKc/NxrbycRBlJB0rUc05rexYWC4wo2vzONeBMCjd6LDSwr3IWnn+yRYn8hbfSHxifF0lRilHsrnuMAwCi6cgvlbUKR4Ur5heqC0iuJC4VAQXigJGso0teHD1ru259tnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/8AmMjX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qivaZwFv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977E7C4CEF1;
-	Mon,  5 May 2025 23:00:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/8AmMjX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085A1C4CEE4;
+	Mon,  5 May 2025 23:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486035;
-	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
+	s=k20201202; t=1746486031;
+	bh=0oolSqsZ1MAxsLhdbgfd9396bqGOYrEmyGV7kZGgazM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qivaZwFvvQDlRLfHAvQZdD5vJSWe5FLRM4nqVCOAv2gBkMFU3up0MTH6uY2DWfhOz
-	 ipV/zqGE6oJgQ3wi+FC6CbV0ZMjyvA17WO8BMHFd/a0wjCC2Th9SGMvZ2HGwCFd3L+
-	 I9hzQ3mhOKm94SPidDErWKkTWD0wFnSFekkK3cyjWEjScfpIOSF+dU76IIGUBZzEGh
-	 IeAbKweFHPQzsX3lEkbKhwzkONdvwpGlyivdwBvHHLCI7ZgU1ldyc9Z9uTdWtw++ua
-	 TYCkEnYJE0E4ycVNix57V+oVeUJPLMzSgMCKaSdaKCfllTcWmGvdrzCiaRK4WlA5/4
-	 9Nu6TOzOz/7vw==
+	b=J/8AmMjXZJbbt33IFaYj72mIL5eZX2qVFW6SQKbuWFNU/m9kWKTMYy6gwo0/WikFT
+	 +iq7x7AEza0lt6IOP4l1VTiq9aFhgokGDF3sXgqyTieiG++nDbqjcF0NR5+Lv/Op6M
+	 dahyWObC+U5TPnjrk2X35vuBxB+rSoaX+A48zvbVOudo52Ki6r3PMGmKhQ8WELCkrb
+	 EyNyM2RrSZUa//tEB5iaTvPzbzKpiuNX2bahzKKq5AnS0kUd+B5s8Mrut/m4iIpOZw
+	 NiMfSwEiFHSUJ2uNp1AzmaTKzb/AKDhd4652susVJO4wuWUqwGZ0RIAlYKHLlfZCyh
+	 9mV4P3GKLf6Fg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Artur Weber <aweber.kernel@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: George Shen <george.shen@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Wayne Lin <wayne.lin@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	florian.fainelli@broadcom.com,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	dan.carpenter@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 121/294] pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
-Date: Mon,  5 May 2025 18:53:41 -0400
-Message-Id: <20250505225634.2688578-121-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	alex.hung@amd.com,
+	michael.strauss@amd.com,
+	roman.li@amd.com,
+	PeiChen.Huang@amd.com,
+	Ausef.Yousof@amd.com,
+	Cruise.Hung@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 119/294] drm/amd/display: Skip checking FRL_MODE bit for PCON BW determination
+Date: Mon,  5 May 2025 18:53:39 -0400
+Message-Id: <20250505225634.2688578-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -56,175 +65,68 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Artur Weber <aweber.kernel@gmail.com>
+From: George Shen <george.shen@amd.com>
 
-[ Upstream commit 07b5a2a13f4704c5eae3be7277ec54ffdba45f72 ]
+[ Upstream commit 0584bbcf0c53c133081100e4f4c9fe41e598d045 ]
 
-Replace uses of bare "unsigned" with "unsigned int" to fix checkpatch
-warnings. No functional change.
+[Why/How]
+Certain PCON will clear the FRL_MODE bit despite supporting the link BW
+indicated in the other bits.
 
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-Link: https://lore.kernel.org/20250303-bcm21664-pinctrl-v3-2-5f8b80e4ab51@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Thus, skip checking the FRL_MODE bit when interpreting the
+hdmi_encoded_link_bw struct.
+
+Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
+Signed-off-by: George Shen <george.shen@amd.com>
+Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 44 +++++++++++++-------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ .../dc/link/protocols/link_dp_capability.c    | 30 +++++++++----------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-index cf6efa9c0364a..a039b490cdb8e 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-@@ -72,7 +72,7 @@ static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
- struct bcm281xx_pin_function {
- 	const char *name;
- 	const char * const *groups;
--	const unsigned ngroups;
-+	const unsigned int ngroups;
- };
- 
- /*
-@@ -84,10 +84,10 @@ struct bcm281xx_pinctrl_data {
- 
- 	/* List of all pins */
- 	const struct pinctrl_pin_desc *pins;
--	const unsigned npins;
-+	const unsigned int npins;
- 
- 	const struct bcm281xx_pin_function *functions;
--	const unsigned nfunctions;
-+	const unsigned int nfunctions;
- 
- 	struct regmap *regmap;
- };
-@@ -941,7 +941,7 @@ static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
- };
- 
- static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
--						  unsigned pin)
-+						  unsigned int pin)
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+index 3d589072fe307..1e621eae9b7da 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+@@ -239,21 +239,21 @@ static uint32_t intersect_frl_link_bw_support(
  {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
+ 	uint32_t supported_bw_in_kbps = max_supported_frl_bw_in_kbps;
  
-@@ -985,7 +985,7 @@ static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+-	// HDMI_ENCODED_LINK_BW bits are only valid if HDMI Link Configuration bit is 1 (FRL mode)
+-	if (hdmi_encoded_link_bw.bits.FRL_MODE) {
+-		if (hdmi_encoded_link_bw.bits.BW_48Gbps)
+-			supported_bw_in_kbps = 48000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
+-			supported_bw_in_kbps = 40000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
+-			supported_bw_in_kbps = 32000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
+-			supported_bw_in_kbps = 24000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
+-			supported_bw_in_kbps = 18000000;
+-		else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
+-			supported_bw_in_kbps = 9000000;
+-	}
++	/* Skip checking FRL_MODE bit, as certain PCON will clear
++	 * it despite supporting the link BW indicated in the other bits.
++	 */
++	if (hdmi_encoded_link_bw.bits.BW_48Gbps)
++		supported_bw_in_kbps = 48000000;
++	else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
++		supported_bw_in_kbps = 40000000;
++	else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
++		supported_bw_in_kbps = 32000000;
++	else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
++		supported_bw_in_kbps = 24000000;
++	else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
++		supported_bw_in_kbps = 18000000;
++	else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
++		supported_bw_in_kbps = 9000000;
+ 
+ 	return supported_bw_in_kbps;
  }
- 
- static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
--						   unsigned group)
-+						   unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -993,9 +993,9 @@ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
--					   unsigned group,
-+					   unsigned int group,
- 					   const unsigned **pins,
--					   unsigned *num_pins)
-+					   unsigned int *num_pins)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1007,7 +1007,7 @@ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 
- static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
- 					  struct seq_file *s,
--					  unsigned offset)
-+					  unsigned int offset)
- {
- 	seq_printf(s, " %s", dev_name(pctldev->dev));
- }
-@@ -1029,7 +1029,7 @@ static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
- }
- 
- static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
--						 unsigned function)
-+						 unsigned int function)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1037,9 +1037,9 @@ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
--					   unsigned function,
-+					   unsigned int function,
- 					   const char * const **groups,
--					   unsigned * const num_groups)
-+					   unsigned int * const num_groups)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1050,8 +1050,8 @@ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
--			       unsigned function,
--			       unsigned group)
-+			       unsigned int function,
-+			       unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	const struct bcm281xx_pin_function *f = &pdata->functions[function];
-@@ -1082,7 +1082,7 @@ static const struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
- };
- 
- static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *config)
- {
- 	return -ENOTSUPP;
-@@ -1091,9 +1091,9 @@ static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1207,9 +1207,9 @@ static const u16 bcm281xx_pullup_map[] = {
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1277,9 +1277,9 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
--				    unsigned pin,
-+				    unsigned int pin,
- 				    unsigned long *configs,
--				    unsigned num_configs,
-+				    unsigned int num_configs,
- 				    u32 *val,
- 				    u32 *mask)
- {
-@@ -1321,9 +1321,9 @@ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *configs,
--					   unsigned num_configs)
-+					   unsigned int num_configs)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	enum bcm281xx_pin_type pin_type;
 -- 
 2.39.5
 
