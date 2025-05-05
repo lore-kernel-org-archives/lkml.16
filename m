@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391F2EC87E;
-	Mon,  5 May 2025 22:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467722820CF;
+	Mon,  5 May 2025 22:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483780; cv=none; b=t7bFxjdm4IG6WeiaU8HYmuI3kxLHu0vvOUFUeHBVt6YMPzriJzRPU6HVM4zIEVjSndSzMhElf/eDjSQSVvc+v12l9sdIVKYQrssCiNicC8zhhfJCXaLp7Hqawl1hgfz7DgRJHkFUlGhXiN8KYGAjybJ4L3k4NJA6sZmLd355DV4=
+	t=1746483787; cv=none; b=JbusdVdnd03CUqYSUEL7Klb9gB1K/MN4M6Vn9ZajPrEOcuDJ3+y9pDZYAvfsc42fAibV8KmQci34PmKy7InJIVri12mnM+opdH6OVk/t/yXQSjBkhB5mgVe6ZVv8XEAElxHCo+bA/g3LL+9tN3L+LKG6/1o/eyhldCAHoKtr8bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483780; c=relaxed/simple;
-	bh=/JP9CkKr1hl7Gb6uLBdRjMIuo5kAkP1G4k49v66SvGI=;
+	s=arc-20240116; t=1746483787; c=relaxed/simple;
+	bh=LLJphMoB/scWFhUMq04iybMYcAOBEZhyWhFBrETrC4o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TpVgoY//tdkB+AoFixBPfRHRAno2n5XNy5PlmdWl4gCAGUdK0+xU5p5kIjz0SVEraUHjxoG3trOfsvmVObt4qH5qJwvdYQ9cJGwm+dzqCKdtnzuTIEkOvbbHPa1rIzH2pdbPam7JHqH3hz6p2peL+IES6ue6PBIDfMDg7ThJwR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kumBR75k; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dI744nRkPY9bxZJ47i2TrUyoeMOYhPxPgCyyoxP1SKFKUVI2GmfZDnFwKnzjWI7Bz0f0BGMSyZvK1r9pLGRIFEENbVfWbU8hSAvvkccgzMFplwoIB5AH9h+EYjlvJeTzBsktuSSwC/RaXkbP140SlQm/5s2MuzlfUvmwdVuUBHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DllBo6ki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kumBR75k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D3CC4CEE4;
-	Mon,  5 May 2025 22:22:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DllBo6ki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A019FC4CEED;
+	Mon,  5 May 2025 22:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483779;
-	bh=/JP9CkKr1hl7Gb6uLBdRjMIuo5kAkP1G4k49v66SvGI=;
+	s=k20201202; t=1746483786;
+	bh=LLJphMoB/scWFhUMq04iybMYcAOBEZhyWhFBrETrC4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kumBR75kc3/jHWXDRycBwlOiyoHeGMbdJEJNVs7CuJMO2Fx8WFkG0cA2ogTknMcI8
-	 GkOZSr7dsBYMlA5tKV7jmt/V+8AK47J2XF8szmD2GTvmIwND1ZAGLvWoaFV3wHNrZm
-	 mvAD30coL3bXP/qIpdhlM9GgYtAU+PLKLlzGqygVhqZWfrcfTYeQxhfELD49wOquVF
-	 F6lrjM+W8ppD1k/lJN8IL2xekTvjRhyK0lt2kGNuqTSy1i3K5Hce+pclxXvgNB289M
-	 SZTVpjWp3ofgdI3icj3NdIMNKu3uYOfnbg0wQtQFIEkXJYk7LUfJXot32WaLd3IXEv
-	 JYryeM/8Vbddg==
+	b=DllBo6kieUN2UWIA/fvl6GXL0gsIEipbnrtIS/KTNgD9ygaRS3M4fw5VQwwHFS8iP
+	 JbH5XpgLd5/l3AOdsmXein94PbZurgp5QlxTM9Md4q/KZXr7z4LyqENgHYDTD1+Dv2
+	 3u/jmjDz3BhkM2uwgWGWBpfnWzBFErJCuiUuMrOI+n72ZOn5IKnrRad2fDNv8ybyhf
+	 7g4VcdGk+S3xketEgLC/7W/ym2I5kZM93IIOjCM8hp6XyS92pOaIAAJLLmX0FFt1OL
+	 vqkPojw3OWTQeUOZ1xzqt+6nv1o4NNyyv1Nu9WoCrDVbCzsCR/Xqjf7689Uw/xCCeF
+	 SzLF42vqb89AQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Sven Schwermer <sven@svenschwermer.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>,
-	kw@linux.com,
-	shuah@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 215/642] selftests: pci_endpoint: Skip disabled BARs
-Date: Mon,  5 May 2025 18:07:11 -0400
-Message-Id: <20250505221419.2672473-215-sashal@kernel.org>
+	davem@davemloft.net,
+	shawnguo@kernel.org,
+	linux-crypto@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.14 217/642] crypto: mxs-dcp - Only set OTP_KEY bit for OTP key
+Date: Mon,  5 May 2025 18:07:13 -0400
+Message-Id: <20250505221419.2672473-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -49,58 +49,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
 
-From: Niklas Cassel <cassel@kernel.org>
+From: Sven Schwermer <sven@svenschwermer.de>
 
-[ Upstream commit af1451b6738ec7cf91f2914f53845424959ec4ee ]
+[ Upstream commit caa9dbb76ff52ec848a57245062aaeaa07740adc ]
 
-Currently BARs that have been disabled by the endpoint controller driver
-will result in a test FAIL.
+While MXS_DCP_CONTROL0_OTP_KEY is set, the CRYPTO_KEY (DCP_PAES_KEY_OTP)
+is used even if the UNIQUE_KEY (DCP_PAES_KEY_UNIQUE) is selected. This
+is not clearly documented, but this implementation is consistent with
+NXP's downstream kernel fork and optee_os.
 
-Returning FAIL for a BAR that is disabled seems overly pessimistic.
-
-There are EPC that disables one or more BARs intentionally.
-
-One reason for this is that there are certain EPCs that are hardwired to
-expose internal PCIe controller registers over a certain BAR, so the EPC
-driver disables such a BAR, such that the host will not overwrite random
-registers during testing.
-
-Such a BAR will be disabled by the EPC driver's init function, and the
-BAR will be marked as BAR_RESERVED, such that it will be unavailable to
-endpoint function drivers.
-
-Let's return FAIL only for BARs that are actually enabled and failed the
-test, and let's return skip for BARs that are not even enabled.
-
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20250123120147.3603409-4-cassel@kernel.org
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Signed-off-by: Sven Schwermer <sven@svenschwermer.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/pci_endpoint/pci_endpoint_test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/mxs-dcp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index c267b822c1081..576c590b277b1 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -65,6 +65,8 @@ TEST_F(pci_ep_bar, BAR_TEST)
- 	int ret;
+diff --git a/drivers/crypto/mxs-dcp.c b/drivers/crypto/mxs-dcp.c
+index d94a26c3541a0..133ebc9982362 100644
+--- a/drivers/crypto/mxs-dcp.c
++++ b/drivers/crypto/mxs-dcp.c
+@@ -265,12 +265,12 @@ static int mxs_dcp_run_aes(struct dcp_async_ctx *actx,
+ 		    MXS_DCP_CONTROL0_INTERRUPT |
+ 		    MXS_DCP_CONTROL0_ENABLE_CIPHER;
  
- 	pci_ep_ioctl(PCITEST_BAR, variant->barno);
-+	if (ret == -ENODATA)
-+		SKIP(return, "BAR is disabled");
- 	EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", variant->barno);
- }
+-	if (key_referenced)
+-		/* Set OTP key bit to select the key via KEY_SELECT. */
+-		desc->control0 |= MXS_DCP_CONTROL0_OTP_KEY;
+-	else
++	if (!key_referenced)
+ 		/* Payload contains the key. */
+ 		desc->control0 |= MXS_DCP_CONTROL0_PAYLOAD_KEY;
++	else if (actx->key[0] == DCP_PAES_KEY_OTP)
++		/* Set OTP key bit to select the key via KEY_SELECT. */
++		desc->control0 |= MXS_DCP_CONTROL0_OTP_KEY;
  
+ 	if (rctx->enc)
+ 		desc->control0 |= MXS_DCP_CONTROL0_CIPHER_ENCRYPT;
 -- 
 2.39.5
 
