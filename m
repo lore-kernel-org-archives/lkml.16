@@ -1,104 +1,80 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster1-host7-snip4-5.eps.apple.com [57.103.64.28])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048C01FF7CD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936FB1F463E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440244; cv=none; b=FE4v/sdKj15IUqNCgPqC0VgxeIV+kSTewvAAhhOAdbB60dWE4RB8DiXD782l+eFMPqXeNkL7xzFTPkQFuWiSyscsBKDV3Aijj7b0sup72/ewDF0Y21PlWyb7rOxeHxTC+axfLmfR3vvypN1tzw4zmFEyPPM0/vJwL00Q16ZlJc4=
+	t=1746440264; cv=none; b=OhF9c7euSUVE8/guRGHpJNAassRPh2AzOopwyCv2xc4w4sQy3MUwG8iOasSdPiyGoKRctF+cPYrWdkWO0VM4VM8373N5RhxDUyxOU7zInMTyRc5wsiAG7tZqBQlrYNhdXnpE9zzXaMrLfJ6qQR7jCWQENNu2+KRxreLU4jnFqUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440244; c=relaxed/simple;
-	bh=GUGFiV9TE85rK6IJCno2tLTGn6CA49p2TSUwh7TGSUA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=r/UhHPkX0CYcILjpraVOcEQwnhxSVZDnP5E+uoofdBT4qcb6EuFrvYlklxwl5omkqyRX4/QKOqT90ZYlHZCVYt7iZB0ChGLt2yMkT6LlVkyYZ9euVAopk/mf3g8jqoLnm9EF4gCsMMWrZrTALuu+rF4XcVjXebL+0dyKa0i9hz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=pkX+gdLm; arc=none smtp.client-ip=57.103.64.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1746440264; c=relaxed/simple;
+	bh=UTcS1pyxZ8q5WfNJRwyAPG8NzPU5Uk/M4PLi+Mr7kMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sKuDcehDySVofQfj7SI/LIcRUlhQyMVv4CTzT53iuYw/mF0P4FhqfraTO7G41iSrpS5ImJhWVuZCEmo582LUiVsoqxyAw8lFcxj8hSaChZF75mdy482vOQaP9ZuSbZqDMscuFP1yUidu+P0pQhsT1rZjPYshW7kcSc4jKR3HMcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BX9qGgF3; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="pkX+gdLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=TpUqnDjaGq9gtGHHOd6VeHOE8qsCo3MZ6iZzx1E1rwk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=pkX+gdLmYCa9UXAzCbE4wSZrAWRiKwFVotAeE4fYEFmgdf5LaWnxAVRAgJEc+yaUL
-	 xEJaghCX2u19oIymLyIQXYbc0/Os0z7y7qoFyURYNKeKVAygDsGKKQ74qvEC52jcyo
-	 BY8dSrObbmQLMphzXeEjAOJlhFQzYtwrSfC4JrV6VT1NP7yyJWL0RPu4Nse2BxxhHQ
-	 G3k2HAtc0h1c/zj4j1XDw0UAoobVR5u+y0lu0ZQ3BrXAmV/acK1tjmft+BQNWQxcOG
-	 Y5PBs3sh/vJMw8T/ZfKckCX/fepP1C6vmb/BTeyUeN1NXRwZoaVCiEIRWxYZ7PBWAi
-	 7/y/p8blwU0dQ==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 79888180022B;
-	Mon,  5 May 2025 10:17:18 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 05 May 2025 18:17:04 +0800
-Subject: [PATCH] PM: wakeup: Add missing wakeup source attribute
- relax_count
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BX9qGgF3"
+Message-ID: <70240985-5f8f-42a9-b5a6-74fd6713f6f3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746440258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aAAH34Bu2XqaO23TD7PI0jLXdYDNGFWelhpUofjwSyg=;
+	b=BX9qGgF3C3wvzMHiAPs1/hs9ptZ2kDP4gq9dIXbLeOXDNB79JghNEItoeK+HpOkoSvRES7
+	wWklgYS1KrTUfbp886az4kGS5KhgekOkzmn/ps7BXrvuu3T7yYIJTPyk6enHXT4maTf0Sc
+	pHoEX/uTq6NsgsCFpXkdhvsZdxE43ho=
+Date: Mon, 5 May 2025 12:03:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH v2 0/2] Fix minor issue in SoundWire slave IRQ mapping
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, vkoul@kernel.org
+Cc: yung-chuan.liao@linux.intel.com, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+References: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <20250429101808.348462-1-ckeepax@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-add_power_attrs-v1-1-10bc3c73c320@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAB+QGGgC/x2MywqAIBAAfyX2nGDSA/qVCDFday8aq1QQ/nsSc
- 5rDzAsJmTDB3LzAeFGiGKp0bQP2MGFHQa46KKkGWRHGOX3GG1mbnDkJv03Wj5vrLSqo1cno6fm
- Py1rKB5l+RRthAAAA
-X-Change-ID: 20250505-add_power_attrs-fb7cf6bd4ce2
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: CNjtgK9LB8I1L7anSHyGRHuoN9xVDyl6
-X-Proofpoint-GUID: CNjtgK9LB8I1L7anSHyGRHuoN9xVDyl6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
- bulkscore=0 adultscore=0 malwarescore=0 phishscore=0 spamscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2505050098
+X-Migadu-Flow: FLOW_OUT
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-There is wakeup source attribute 'active_count', but its counterpart
-attribute 'relax_count' is missing.
 
-Add missing 'relax_count' for integrality.
+On 4/29/25 05:18, Charles Keepax wrote:
+> Currently there would be problems if multiple devices on the same bus
+> attempted to use SoundWire IRQ handling rather than the IRQ callback
+> mechanism. So far only cs42l43 uses this system so this hasn't caused
+> any problems.
+> 
+> Thanks,
+> Charles
+> 
+> Changes since v1:
+>   - Don't reuse the new IDA for the dev_num
+>   - Expand the number of devices allowed on a bus to 16
+> 
+> Charles Keepax (2):
+>    soundwire: bus: Simplify sdw_assign_device_num()
+>    soundwire: bus: Add internal slave ID and use for IRQs
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/base/power/wakeup_stats.c | 2 ++
- 1 file changed, 2 insertions(+)
+LGTM,
 
-diff --git a/drivers/base/power/wakeup_stats.c b/drivers/base/power/wakeup_stats.c
-index 6732ed2869f9f38a272faab0044b6eb3edc051f2..3ffd427248e8eebae3c05b5165bd4200a0668339 100644
---- a/drivers/base/power/wakeup_stats.c
-+++ b/drivers/base/power/wakeup_stats.c
-@@ -34,6 +34,7 @@ wakeup_attr(active_count);
- wakeup_attr(event_count);
- wakeup_attr(wakeup_count);
- wakeup_attr(expire_count);
-+wakeup_attr(relax_count);
- 
- static ssize_t active_time_ms_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-@@ -119,6 +120,7 @@ static struct attribute *wakeup_source_attrs[] = {
- 	&dev_attr_event_count.attr,
- 	&dev_attr_wakeup_count.attr,
- 	&dev_attr_expire_count.attr,
-+	&dev_attr_relax_count.attr,
- 	&dev_attr_active_time_ms.attr,
- 	&dev_attr_total_time_ms.attr,
- 	&dev_attr_max_time_ms.attr,
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
----
-base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-change-id: 20250505-add_power_attrs-fb7cf6bd4ce2
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+> 
+>   drivers/soundwire/bus.c       | 31 ++++++++++++++-----------------
+>   drivers/soundwire/bus_type.c  | 10 ++++++++++
+>   drivers/soundwire/irq.c       |  6 +++---
+>   include/linux/soundwire/sdw.h |  6 ++++++
+>   4 files changed, 33 insertions(+), 20 deletions(-)
+> 
 
