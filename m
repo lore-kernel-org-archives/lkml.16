@@ -1,98 +1,78 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79AA944
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 00:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A662B4C85;
+	Mon,  5 May 2025 00:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746405300; cv=none; b=lC5GdIxGBVsblF/nSJ0BiOHm/Q+visN8KE/uIubCQWhTQb6qIKK8cPvvMxVlwITormY2PotMCBuAgc9F+YvJDOhdJCXar3YI9RDIs6f5KvXjP23nvbJWRFyEww91zxWD5spSPY/+rB1C9etNc/EX7+kitpYfxVAG+OzOF7XHiQg=
+	t=1746405943; cv=none; b=h92c23f8fdVKoQsxJoYTGIM2Dyj3IpcSMXPnDRVwVQAO7OUww3CqKTwNS12cRPtXfApk22Mtw48PsgJQHK7xaKYzJmrGgV2/6KSnlAIaKJ6z2tcBh/QGxR5EfAME3o9qSXwQTZojlg84ReILAVzS3zLG5lF3UCRigH0chn60RI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746405300; c=relaxed/simple;
-	bh=0TLVV/DdHyVeodkhJ1xJBu6ZDaYznTlfQVvraT/RMrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jMA+f5WyJuj0UqbvJBmUv6oPUoMUi9YU2mW3ACPp79cM4EAhKAO0/K28EpPhFgeFIuZSlQKdp7PvkSKavOGuu3Kdd6FCmq+zn5rS/vJ5YMN/UldAysCOulcmqO3K0wqjOf3wNm/QlRxYZA0KvQDvXQAuslEoyC6QRrTymzVMr5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BX73fE7H; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746405943; c=relaxed/simple;
+	bh=H2ht8BrUhUzJulUNR7lvPEReS2+YIXHtV7+2xUF1TOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nu/NQZRMVzE/SCdoGODsl2IrY0YxUbkgZw93NFAae/TuxQCCO1l5YTkIHGEJ5CpUmJBQV/Z+9ynE4LKFpO1P5LfBsDcD66lMtgEZLjkYNMvOU5cyTqCuALMJrLh89cXek6IpCVDhTN/gTxbM21ZAda6k+IEwRzhrBP6T10LOat4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=MBM2GKrr; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BX73fE7H"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5242f137a1eso971042e0c.1
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 17:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746405298; x=1747010098; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2yzvBpvQ5FClEgzzVOyg0m9n1EEzwP3MVt2zNrnkOjg=;
-        b=BX73fE7Hk3cLEpmy1wT++hml6ms8a1PYWLQvtIVaER7qoUB1UlOS2qixomDgh3qtOz
-         rT5RuYwlN5+h4eI66o+XSzRwNTEGWmqIvMyUTAyvKq9xqi+1GQuP+4TKiOzT3Zccgdjb
-         MIQA6X3xAsu5sCtBpCxErmyobqufOrNC5tGxNlNENiE8T72rrOvw7+s7UtO4jrv2uSXJ
-         6A5MJFCIblJTCQi9rdB+XPJXhxqQYj/5fiQoHnd2telh7rBpqIE0qkkHQ9ZW3SXFGyCZ
-         bwHJ40LmzNxwuPRFxB39K0rx4v3Jd2VJGv2pcOCW0iVO0azgu1ivihbAwL8lY2qbPjmV
-         E0gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746405298; x=1747010098;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2yzvBpvQ5FClEgzzVOyg0m9n1EEzwP3MVt2zNrnkOjg=;
-        b=o8A5rhRzDnkMhh6CPUW/exlnH8c+6KVD8y420EMB1u/84/1XIOz58URLt5bNZOBmKL
-         7jDNj1ZjzcTnQHkFHsttoxRopSewiHSPrKCTVp97bD1F9WFc9UBdYWvxbcXBq5w4MngC
-         prSUY5ZIfi8l+e/WoQM1OQkn5XkM+2i2O+TRutICiNaIMExezYFcl7HcyOHCJQsygYvE
-         OGWCDJbJ3MtmiXI0XKM25Ma18GqopfSzTvtNXUAGbk/QnATlfx/+1c81VSBW2GlF9vGk
-         IuhGF2Sy0d//DmG3C5jmfEld6sKUvycX/oPKPDa6nGW6glce2aUxqcCylykxQoI2brMK
-         Jklg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4CWgec5b9/dn5d13afYcX9SRr/Re3cE4PnfEOQxQj9SWpEOwMAQaE8IQxtD+7x4mXAdyidOxbzdShMpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZIApZR3a5oGw2YA4OxEIBR5pYvg25IUrGalIWh0YuyCNbV5Dg
-	9uqD7ILFLGWsD3e3gnX3+UseCpXpnjr/ZhNNHClC13Wmeh26zUumquLai8NxdK0=
-X-Gm-Gg: ASbGncuVl0hJQhR0i63XE7F/NGZgqB1hxwx66gDWDqXNtwakvJi46mvrjfAGKJZvt5V
-	f/lwv/fW6AkOwCBa0YiOFvBcRDyDeTgqzS9EDj3oJexEuH35fKdjo0QKLq5H64BXiL7WZHR+Q4U
-	JGiV1ygBvBw9+x3XtX51Qta5sLqQLcw11uOSez9ZVv2sH/fnDRIzegif7kqStIHCZM4mAkBeZL2
-	5d99W7aS3zsanaMyoUdKTjU63/VO+UIScS9sVUAvR82R7x3AJVC2RDhhJp0l14o3sZuCnYYVhOl
-	sBSkdAsP5Bv9Krsg2RVmp2GdUMmQSX6IyM9WuhGtiUCjrcGUfw==
-X-Google-Smtp-Source: AGHT+IE29btOAXpqNMKgXzb1E7QwZ8/baNBK8qaBNoPfC42/xHVEu0e/kpCBAMumQaPLbx6dwwKd/g==
-X-Received: by 2002:a05:6122:4581:b0:526:1ddd:7603 with SMTP id 71dfb90a1353d-52b0665adc2mr1792130e0c.0.1746405297806;
-        Sun, 04 May 2025 17:34:57 -0700 (PDT)
-Received: from fourier ([2800:e6:4001:ff2c:1cf5:fa6f:d573:a274])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae403982fsm1347005e0c.25.2025.05.04.17.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 17:34:57 -0700 (PDT)
-Date: Sun, 4 May 2025 19:34:54 -0500
-From: Juan =?iso-8859-1?Q?Jos=E9?= Arboleda <soyjuanarbol@gmail.com>
-To: juri.lelli@redhat.com
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sched: Do not include "autogroup.h" header
-Message-ID: <aBgHrsyBsL4MdHU6@fourier>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MBM2GKrr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=cXkMREPrerlbxBVxNZbArKbfCj+6iod7wpO5/+wdJKk=; b=MBM2GKrr+QOB1sAWkh/fBxvQpC
+	LBWzS4CjJyLDB6w7AWvmEeZSxQZnvePXqHFmdGeF9h4tSBHkzyG4Dn0GZjhYufpe6b2iN/XCcthY6
+	vr2UNCHn3dFGYbQ5vUYHyHQIXuSs84LAg13mTYUh59mdloK4unoY/hd2MZrAeWf2hATw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uBjxb-00BYu4-UK; Mon, 05 May 2025 02:45:31 +0200
+Date: Mon, 5 May 2025 02:45:31 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: John Clark <inindev@gmail.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>, heiko@sntech.de, robh@kernel.org,
+	conor+dt@kernel.org, detlev.casanova@collabora.com,
+	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Add Luckfox Omni3576 Board
+ support
+Message-ID: <13407dae-4c73-48a9-846e-92f08449bc4d@lunn.ch>
+References: <20250502205533.51744-1-inindev@gmail.com>
+ <20250504102447.153551-1-inindev@gmail.com>
+ <20250504102447.153551-4-inindev@gmail.com>
+ <bb171ae2-c495-49a3-a7eb-a4b865e54199@kwiboo.se>
+ <87892840-bdbf-43d4-bd93-cb98f5e1c672@lunn.ch>
+ <b603e92f-8c1a-4aea-8bab-82a1f035c7fa@gmail.com>
+ <b50c68bd-9b15-412a-ac00-1df25601edd9@lunn.ch>
+ <46cbdabd-b0ed-4c9b-9f01-4d2d8eceac24@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <46cbdabd-b0ed-4c9b-9f01-4d2d8eceac24@gmail.com>
 
-Remove the unused inclusion of autogroup.h from fair.c.
+> > What PHY is it? Are you using the correct PHY driver for it, or
+> > genphy?
+> > 
+> MAE0621A-Q3C
+> http://www.maxio-tech.com/product/12928/12929/12930/12931.html
 
-Signed-off-by: Juan José Arboleda <soyjuanarbol@gmail.com>
----
- kernel/sched/fair.c | 1 -
- 1 file changed, 1 deletion(-)
+Mainline does not have a PHY driver for this. So nothing is
+controlling the delays in the PHY. So what you have above works by
+luck, and is likely to break once there is a PHY driver. So i suggest
+you drop the Ethernet nodes for the moment.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0fb9bf995a47..05ebbce650b7 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -56,7 +56,6 @@
- 
- #include "sched.h"
- #include "stats.h"
--#include "autogroup.h"
- 
- /*
-  * The initial- and re-scaling of tunables is configurable
--- 
-2.49.0
+There does appear to be a PHY driver here:
 
+https://github.com/CoreELEC/linux-amlogic/blob/5.15.153_202501/drivers/net/phy/maxio.c
+
+but it has a number of things wrong with it. You might want to search
+around and see if there are any cleaner versions around, or if anybody
+is working on upstreaming a driver for this PHY.
+
+	Andrew
