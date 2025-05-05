@@ -1,265 +1,175 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661FD15AF6
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811A2204096;
+	Mon,  5 May 2025 16:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461650; cv=none; b=n4xQI5QvG+GnOl2V11MKDtd3fdmb2oXzqXGJUpq8yQDakM7aaAwR2gDllmAlnBbBAWp7OCXngmR5P3n2LCEkgOtSf3a9Bg4c2NtKOzQRsEzWe9MXcoO7k+5mm65bUntL73Yy+er6jIJc86vkSmGOVOFN6RW+XmfWYjl3A+X+zhA=
+	t=1746461651; cv=none; b=PDQWDoikvYiPGAJIT4iHPNa2ibfmQrWXQWhLUcD8Pq8CwoFoKDhfcLjDYDW3OnzpN/0A5IKRfDllRZJENPQNaz95IT8CUvpQ43OUz/ZiOYjt21kDYeuS+LXoVu/AXOBkD7v5fZ7hcBatNooliB3PoW1g8wwHD6CE+4k1+RFLubM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461650; c=relaxed/simple;
-	bh=MCWhqFbULxo5xbY6Fq33psJuzUih8YIlnGyO9d5LIHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uj8og2ruwSmSRUxKIOuS3E9ZW/JpfT/GWpK3GLuPhrAT/vhH8GcqCMUpo5yF/CCvKDZMjN99YZXIljlEhW/4P2f4zi1AoiMKCeM5nIHyobhQfA0VZ96XfGFE5STbpw1KhvEhxrLQsaWgyu8xlfRy09JwuBI4b4lscWCdtqJbJOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oKHuvvPg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DtUluaRr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oKHuvvPg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DtUluaRr; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746461651; c=relaxed/simple;
+	bh=l0x7QpnKNM65NzV/IFWEVen7rZ6tmS8Ul5cZGDUB1Bk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iZEKYteL7PV+V2z3eq9ILFRwDcaNlVLtqexixQuQkfd80RbGnUCjfz6lzjUhiMiqSUB+qs4BJLO4lJqXeSeLTrr0LDVjRXKPiA5IjTZYeNHUyaSSqcKlm9nNXmrPhGQ8Huq6PU/P4N4UNlsozm0nM56MKEsYQF6cDnyGNFyrZ3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HR/jDw76; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oKHuvvPg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DtUluaRr";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oKHuvvPg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DtUluaRr"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6464C21995;
-	Mon,  5 May 2025 16:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746461646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HR/jDw76"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 27A6F438BD;
+	Mon,  5 May 2025 16:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746461641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OjHxQbu9HdAgaWrOliNNorCvOEEPBNiLd69xje/6Noc=;
-	b=oKHuvvPgCfHd6aphoHyFtSKX5wL8YXjEQyJmjX4DBH/8Uj/Eb7mNCdyaXpyJeTE0AIZm9u
-	Ja39d3mxkzXe1VxmKljl7MhtDC7jRMLxf39OPsypfK8L3c42zcjXIa5ZeP3PGQKy1i5Zbp
-	eoERvZ9O+v9eZWuzfTl9dqbdnEsDcXU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746461646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OjHxQbu9HdAgaWrOliNNorCvOEEPBNiLd69xje/6Noc=;
-	b=DtUluaRrH/+1PejaGWGLSaWkpIHyzVOaR40upM46+gr0w3nOWzPjgEhypyo74h/hRGjecQ
-	lstibh+yN+sP+qDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=oKHuvvPg;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=DtUluaRr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746461646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OjHxQbu9HdAgaWrOliNNorCvOEEPBNiLd69xje/6Noc=;
-	b=oKHuvvPgCfHd6aphoHyFtSKX5wL8YXjEQyJmjX4DBH/8Uj/Eb7mNCdyaXpyJeTE0AIZm9u
-	Ja39d3mxkzXe1VxmKljl7MhtDC7jRMLxf39OPsypfK8L3c42zcjXIa5ZeP3PGQKy1i5Zbp
-	eoERvZ9O+v9eZWuzfTl9dqbdnEsDcXU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746461646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OjHxQbu9HdAgaWrOliNNorCvOEEPBNiLd69xje/6Noc=;
-	b=DtUluaRrH/+1PejaGWGLSaWkpIHyzVOaR40upM46+gr0w3nOWzPjgEhypyo74h/hRGjecQ
-	lstibh+yN+sP+qDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44B3E13883;
-	Mon,  5 May 2025 16:14:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V7m+EM7jGGgqawAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 16:14:06 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E34D5A0948; Mon,  5 May 2025 18:14:05 +0200 (CEST)
-Date: Mon, 5 May 2025 18:14:05 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: David Hildenbrand <david@redhat.com>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-Message-ID: <dhn2icty267xinyxxhovnztj2pelcsterpwzodu3tippe55u42@iyz5ndffs2zh>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
- <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
- <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
- <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
- <12a74640-753a-4116-90f9-42ec0337f751@arm.com>
+	bh=Qm4w28GJG8W0gRihHu9MypRoYQ1YCK2AOK3Kul43uzI=;
+	b=HR/jDw76UgCXjwX7tG/FATDO9we+vkIPBzHSNZS3tm2WqP60Fm3rA0f2r8nfMPCgg4HWjr
+	K3rPNEufvi53Magy+ckxzsP9nSKc43qq0Obh4i6D//K7wAzM82CEc+oYKX3GQESr2D4wwq
+	B6oMkOjabXcY69q74IiWrNbaKouHb0gBHdMKqJBEimXEmpIGbWO1nPvoHcrEz5KDUYC6eh
+	h0TA0LPGXKvlYL8uhsNTEYxWUsmZww0rbukzIgGFoppN8MfIJStJZZFmmu+PaEDi0FXO0M
+	6RMXwHXKMbBFATqaVceopgrHymexsIYqfYC/FEJU+Y4kBHZwivEaorJYr5L03g==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH v4 9/9] i2c: atr: add passthrough flag
+Date: Mon, 05 May 2025 18:13:56 +0200
+Message-ID: <3034821.e9J7NaK4W3@fw-rgant>
+In-Reply-To: <20250428102516.933571-10-demonsingur@gmail.com>
+References:
+ <20250428102516.933571-1-demonsingur@gmail.com>
+ <20250428102516.933571-10-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <12a74640-753a-4116-90f9-42ec0337f751@arm.com>
-X-Rspamd-Queue-Id: 6464C21995
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	URIBL_BLOCKED(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: multipart/signed; boundary="nextPart3395128.aeNJFYEL58";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeipdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihess
+ ghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Mon 05-05-25 13:51:48, Ryan Roberts wrote:
-> On 05/05/2025 11:25, David Hildenbrand wrote:
-> > On 05.05.25 12:09, Jan Kara wrote:
-> >> On Mon 05-05-25 11:51:43, David Hildenbrand wrote:
-> >>> On 30.04.25 16:59, Ryan Roberts wrote:
-> >>>> page_cache_ra_order() takes a parameter called new_order, which is
-> >>>> intended to express the preferred order of the folios that will be
-> >>>> allocated for the readahead operation. Most callers indeed call this
-> >>>> with their preferred new order. But page_cache_async_ra() calls it with
-> >>>> the preferred order of the previous readahead request (actually the
-> >>>> order of the folio that had the readahead marker, which may be smaller
-> >>>> when alignment comes into play).
-> >>>>
-> >>>> And despite the parameter name, page_cache_ra_order() always treats it
-> >>>> at the old order, adding 2 to it on entry. As a result, a cold readahead
-> >>>> always starts with order-2 folios.
-> >>>>
-> >>>> Let's fix this behaviour by always passing in the *new* order.
-> >>>>
-> >>>> Worked example:
-> >>>>
-> >>>> Prior to the change, mmaping an 8MB file and touching each page
-> >>>> sequentially, resulted in the following, where we start with order-2
-> >>>> folios for the first 128K then ramp up to order-4 for the next 128K,
-> >>>> then get clamped to order-5 for the rest of the file because pa_pages is
-> >>>> limited to 128K:
-> >>>>
-> >>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> >>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
-> >>>> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
-> >>>> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
-> >>>> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
-> >>>> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
-> >>>> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
-> >>>> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
-> >>>> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
-> >>>> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
-> >>>> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
-> >>>> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
-> >>>> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
-> >>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> >>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> >>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
-> >>>
-> >>> Interesting, I would have thought we'd ramp up earlier.
-> >>>
-> >>>> ...
-> >>>>
-> >>>> After the change, the same operation results in the first 128K being
-> >>>> order-0, then we start ramping up to order-2, -4, and finally get
-> >>>> clamped at order-5:
-> >>>>
-> >>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
-> >>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
-> >>>> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
-> >>>> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
-> >>>> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
-> >>>> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
-> >>>> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
-> >>>> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
-> >>>> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
-> >>>> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
-> >>>> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
-> >>>> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
-> >>>> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
-> >>>> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
-> >>>> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
-> >>>> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
-> >>>> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
-> >>>> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
-> >>>> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
-> >>>> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
-> >>>> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
-> >>>> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
-> >>>> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
-> >>>> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
-> >>>> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
-> >>>> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
-> >>>> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
-> >>>> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
-> >>>> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
-> >>>> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
-> >>>> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
-> >>>> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
-> >>>> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
-> >>>> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
-> >>>> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
-> >>>> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
-> >>>> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
-> >>>> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
-> >>>> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
-> >>>> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
-> >>>> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
-> >>>> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
-> >>>> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
-> >>>> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
-> >>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
-> >>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
-> >>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
-> >>>> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
-> >>>
-> >>> Similar here, do you know why we don't ramp up earlier. Allocating that many
-> >>> order-0 + order-2 pages looks a bit suboptimal to me for a sequential read.
-> >>
-> >> Note that this is reading through mmap using the mmap readahead code. If
-> >> you use standard read(2), the readahead window starts small as well and
-> >> ramps us along with the desired order so we don't allocate that many small
-> >> order pages in that case.
+--nextPart3395128.aeNJFYEL58
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH v4 9/9] i2c: atr: add passthrough flag
+Date: Mon, 05 May 2025 18:13:56 +0200
+Message-ID: <3034821.e9J7NaK4W3@fw-rgant>
+In-Reply-To: <20250428102516.933571-10-demonsingur@gmail.com>
+MIME-Version: 1.0
+
+On Monday, 28 April 2025 12:25:14 CEST Cosmin Tanislav wrote:
+> Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
+> the child ATRs need to be forwarded as-is if the parent I2C ATR can
+> only do static mapping.
 > 
-> That does raise an interesting question though; why do we use a fixed size
-> window for mmap? It feels like we could start with a smaller window and ramp it
-> up as order ramps up too, capped to the end of the vma.
+> In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
+> address remapping hardware capabilities, but it is able to select which
+> GMSL link to talk to, allowing it to change the address of the
+> serializer.
 > 
-> Although perhaps that is an investigation for another day... My main motivation
-> here was to be consistent about what page_cache_ra_order()'s new_order means,
-> and to actually implement algorithm that was originally intended - start from 0
-> and ramp up +2 on each readahead marker.
+> The child ATRs need to have their alias pools defined in such a way to
+> prevent overlapping addresses between them, but there's no way around
+> this without orchestration between multiple ATR instances.
+> 
+> To allow for this use-case, add a flag that allows unmapped addresses
+> to be passed through, since they are already remapped by the child ATRs.
+> 
+> There's no case where an address that has not been remapped by the child
+> ATR will hit the parent ATR.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  drivers/i2c/i2c-atr.c   | 7 +++++--
+>  include/linux/i2c-atr.h | 2 ++
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
+> index 721dd680f2ac..eccb85c34609 100644
+> --- a/drivers/i2c/i2c-atr.c
+> +++ b/drivers/i2c/i2c-atr.c
+> @@ -394,6 +394,9 @@ static int i2c_atr_map_msgs(struct i2c_atr_chan *chan,
+> struct i2c_msg *msgs, c2a = i2c_atr_get_mapping_by_addr(chan,
+> msgs[i].addr);
+> 
+>  		if (!c2a) {
+> +			if (atr->flags & I2C_ATR_F_PASSTHROUGH)
+> +				continue;
+> +
+>  			dev_err(atr->dev, "client 0x%02x not mapped!\n",
+>  				msgs[i].addr);
+> 
+> @@ -486,13 +489,13 @@ static int i2c_atr_smbus_xfer(struct i2c_adapter
+> *adap, u16 addr,
+> 
+>  	c2a = i2c_atr_get_mapping_by_addr(chan, addr);
+> 
+> -	if (!c2a) {
+> +	if (!c2a && !(atr->flags & I2C_ATR_F_PASSTHROUGH)) {
+>  		dev_err(atr->dev, "client 0x%02x not mapped!\n", addr);
+>  		mutex_unlock(&chan->alias_pairs_lock);
+>  		return -ENXIO;
+>  	}
+> 
+> -	alias = c2a->alias;
+> +	alias = c2a ? c2a->alias : addr;
+> 
+>  	mutex_unlock(&chan->alias_pairs_lock);
+> 
+> diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
+> index 7c6a9627191d..f979b931ca05 100644
+> --- a/include/linux/i2c-atr.h
+> +++ b/include/linux/i2c-atr.h
+> @@ -22,9 +22,11 @@ struct i2c_atr;
+>   * enum i2c_atr_flags - Flags for an I2C ATR driver
+>   *
+>   * @I2C_ATR_F_STATIC: ATR does not support dynamic mapping, use static
+> mapping + * @I2C_ATR_F_PASSTHROUGH: Allow unmapped incoming addresses to
+> pass through */
+>  enum i2c_atr_flags {
+>  	I2C_ATR_F_STATIC = BIT(0),
+> +	I2C_ATR_F_PASSTHROUGH = BIT(1),
+>  };
+> 
+>  /**
 
-Well, in my opinion the whole mmap readahead logic would deserve some
-remodelling :) because a lot of decisions there are quite disputable for
-contemporary systems. But that's definitely for some other patchset...
+Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+--nextPart3395128.aeNJFYEL58
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgY48QACgkQ3R9U/FLj
+286Qhw//WK8qW0lMvyrTdm2J/jkXMz46h2If/bll0FOrDJlngudBZZXEIBq39IeS
+FeeHPoxZNyckkOYB8ZPVjmx06BGXv4sHmewjacmeAKTIZEDJL+p/2J8OwkJQUuHi
+y3aVX6dayMKr7g1kd1vBfSM7FEgaf4s84Qd/+5yfy/ZRGPF2WxLwQSaRZknjReqT
+Izoy5Hx1DR2FqfHYKg/xkjdNOOE/9hAkl27Bkv15onv7n5hAFKiPu589f91rgXYO
+xF3Aue/4iFFF0MflS1s2v6Qinkbk/5AUXgqzuDe13/noAcvnyF5/HhxTY/wXQnlG
+0qf3jojvSyfRdtJwj9o9CjrKqwiXdOxrLqEo/10kA3MgbS/NBBKEs8xlN2rDdZc1
+WfL9MpqPjWybVerUg3F1FEVUQP89ez8KhsxLcZuuhAHMzKlivc8Zd1Qk7ygthd4E
+Y3v8usC100iy2oKidQ+1sqi5dDHKP0IkuWnBzRC17u/2Ix7ym5YTGCIpn2eoeUrI
+z4Psqrt8m3TEj2tfabpAzKOSwgwjxQl+XcLfxMWJtLSukEz32AqhPclH9n8NBGBS
+zQn9PtXqOlCBzNjeHO39Rn3uX5O/WAGUYIT7I9b3Gwnc6L7NV7oB/Bef+ttYWnWP
+01B1LWu7UK+GvjtchB97rnhZ0xRMyoHJixy6Zvwej9F8ANeGjw8=
+=8dxA
+-----END PGP SIGNATURE-----
+
+--nextPart3395128.aeNJFYEL58--
+
+
+
