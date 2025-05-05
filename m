@@ -1,109 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C9C2BD5B4;
-	Mon,  5 May 2025 22:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D872BD91C;
+	Mon,  5 May 2025 22:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485203; cv=none; b=od9/JRjxZte4oCU7DlIQZ/z7a5r4qYnOHBIsWuuLNcxKplsGboWoUYrR3KaZqd05WWnjBOEZtnhT6MGho/0lho+Gg9jBRWHE2hkCxWhNk7SqVC65tPdA3VZuKYzGPbtSItQlVUtNsrQENYt1J2AlZ00ri1gP/VREubmgt0pwQfA=
+	t=1746485216; cv=none; b=p5aehRpWTKlcZgk6Ynosbqiajc5YgSeY6jBpAXE2ET/P03qjRh0fBHc2P1zSC/maTebQA4MZOaU6UdVspxvMDx6Rt0+Pu+iw8O8NRXr0bUN1WUQ4kZuM4KfcMRn9Rlj/THHsb6uIwFb9wt+woOcoDO2s2D/BteH1LUXRZMXP9rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485203; c=relaxed/simple;
-	bh=C8BUscfLIIEUfvzsO14+qAva3/lpPpQTzT0cD2qt8sc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bDuMpfBmNiCmf7MDN8mLj5u/UUuvsxDT+260C6uMfuNgqyphukIwNHm1D336rJ4ogax4kO/uUF/xWlHQqXIHyWE6KsT/0wF+kLQjkkM0XKk0X2OXU3Lmpc2gbMmq/7UKSKiFtQ3GuNdgbstzPMF67VEZU9wAcXmyKENSnu+v+MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4oxRSGS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485216; c=relaxed/simple;
+	bh=/IS8kiC5PDBV56uRbOcCm/cQDPQTsRPpKMG4+IvaPB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eBrS+eJS91VW2HjX442jQP5rGcXNMgAOXtQ2woki0CXa6WXhB/xum8E3e8pA0+VIkVu4T7V/R9ZRr5eL1raa4kIx6uyEfKYYqNRfZaDE5vQb35C1VoM0Uxb+vWpazELD8+KB3PjjkT+r7fV0wuIujNFWvG1AxI/GOPIu6WkrQTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8+7qA2V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4oxRSGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36161C4CEEE;
-	Mon,  5 May 2025 22:46:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8+7qA2V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA75C4CEEF;
+	Mon,  5 May 2025 22:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485201;
-	bh=C8BUscfLIIEUfvzsO14+qAva3/lpPpQTzT0cD2qt8sc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=a4oxRSGSlExtFAtplZWiA+qIDsvJOMZi8sLWjVYd05dpqAuINhxc1xH3A9IEvmXX/
-	 Bz9vJ22KduqkULFLZwQHrgoLR8HtIfZmdxyT9FX5ja5MfB7JFEqAhYR50AAOv3/8dg
-	 0mhikYnCbomldcIMgwlYLP1x3ON2xR1Hq+pEczHrGvoDCOAdt8oRXpkmv3badwJrek
-	 3df1R/1rrRJfOZatJOeLE4XlSQWttRk8vi/OXFNMK+U7unnFYixOXp8TNJwg4pz1QC
-	 jP7AJVaA3STliPfLtFhlmdiT5Jum6tJTDL/vGEZbYe5P1BuCzi5TYjr+LAgWJ8PZCB
-	 WgBOLCfGBs/ZQ==
-From: Mark Brown <broonie@kernel.org>
-To: alsa-devel@alsa-project.org, 
- Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Cc: Mario.Limonciello@amd.com, venkataprasad.potturu@amd.com, 
- Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- sound-open-firmware@alsa-project.org, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>
-In-Reply-To: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
-References: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
-Subject: Re: [PATCH 0/9] ASoC: SOF: amd: add soundwire IO support for
- ACP7.0 & ACP7.1 platforms
-Message-Id: <174648519686.4113425.12105826328467218171.b4-ty@kernel.org>
-Date: Tue, 06 May 2025 07:46:36 +0900
+	s=k20201202; t=1746485216;
+	bh=/IS8kiC5PDBV56uRbOcCm/cQDPQTsRPpKMG4+IvaPB8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=C8+7qA2VddmOA54s7Z5eOpVEvc8SjWaYPw+70irh7gs3OGc2QAN9YKmtbjg6X6jMu
+	 DajTtjV2HVeTIubObUS7nj1JaHQIudZ8RV8FAEOKbyy1w8A7m7jo0GberVzU/c/1YA
+	 deBkS/VCpQ7cMVDul3i0zpF0nm4ld0Mh7iJkuMP52YeNrkl7zr6BsutZU/JpqSVJxu
+	 sobmUrHeIUTeqhgfnfqJ6hlWJhULtPbm0IgCyBM5c+h24ngH322O5DzoLwyCptOWzc
+	 jIHs/X1xiiqRfmAO383SeA9rz3k5T91xGxP3zHo93Z/Zey6zfR0XZs7QfFkHvl1S5Z
+	 LiRIzIyCNkROA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	Joel Granados <joel.granados@kernel.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Sasha Levin <sashal@kernel.org>,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 215/486] scsi: logging: Fix scsi_logging_level bounds
+Date: Mon,  5 May 2025 18:34:51 -0400
+Message-Id: <20250505223922.2682012-215-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
-On Fri, 02 May 2025 21:12:39 +0530, Vijendar Mukunda wrote:
-> This patch series contains
-> - ACP sof stack improvements
-> - Add support for ACP7.1 platform.
-> - Soundwire IO support for ACP7.0 & ACP7.1 platforms
-> 
-> Link: https://github.com/thesofproject/linux/pull/5392
-> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> 
-> [...]
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-Applied to
+[ Upstream commit 2cef5b4472c602e6c5a119aca869d9d4050586f3 ]
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Bound scsi_logging_level sysctl writings between SYSCTL_ZERO and
+SYSCTL_INT_MAX.
 
-Thanks!
+The proc_handler has thus been updated to proc_dointvec_minmax.
 
-[1/9] ASoC: SOF: amd: remove else condition in resume sequence
-      commit: e46da64f333ede33adc3a1903821a73ed6c018a6
-[2/9] ASoC: SOF: amd: add missing acp descriptor field
-      commit: 7c2bad7b95db5b4b978853cd4dd042ae3ec83e63
-[3/9] ASoC: SOF: amd: add ACP7.1 platform support
-      commit: 451bd0e7b91c83f817b741557c9be0f133d3836d
-[4/9] ASoC: SOF: amd: update soundwire specific acp descriptor fields
-      commit: 8cc69ecbf195aaf90e8bd5f364ed10ec0bdecb5f
-[5/9] ASoC: SOF: amd: enable ACP_PME_EN register for ACP7.0 & ACP7.1 platforms
-      commit: cc489cced17b2e32170ee87a3b64aaa3c7c6fddb
-[6/9] ASoC: SOF: amd: refactor acp reset sequence
-      commit: 169c5e444bb9cd4ae770f54157a04fdd8569508a
-[7/9] ASoC: SOF: amd: enable soundwire host wake irq mask
-      commit: a536f3c51edb63900b3340978d38da3aabc1fb2f
-[8/9] ASoC: SOF: amd: add soundwire wake irq handling
-      commit: 1f41bf67bfe3721a4d4d36695302801cf70b5a70
-[9/9] ASoC: SOF: amd: add build support for soundwire
-      commit: e68074c63fded9468c513f65734ffb4c80dc2a6d
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+Link: https://lore.kernel.org/r/20250224095826.16458-5-nicolas.bouchinet@clip-os.org
+Reviewed-by: Joel Granados <joel.granados@kernel.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/scsi_sysctl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/scsi/scsi_sysctl.c b/drivers/scsi/scsi_sysctl.c
+index 093774d775346..daa160459c9b3 100644
+--- a/drivers/scsi/scsi_sysctl.c
++++ b/drivers/scsi/scsi_sysctl.c
+@@ -17,7 +17,9 @@ static struct ctl_table scsi_table[] = {
+ 	  .data		= &scsi_logging_level,
+ 	  .maxlen	= sizeof(scsi_logging_level),
+ 	  .mode		= 0644,
+-	  .proc_handler	= proc_dointvec },
++	  .proc_handler	= proc_dointvec_minmax,
++	  .extra1	= SYSCTL_ZERO,
++	  .extra2	= SYSCTL_INT_MAX },
+ };
+ 
+ static struct ctl_table_header *scsi_table_header;
+-- 
+2.39.5
 
