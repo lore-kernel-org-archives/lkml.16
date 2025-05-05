@@ -1,110 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C89D25A347
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DD82561D1
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457197; cv=none; b=O1soTG/8tDJm5/MdV27IIj0hyh9UjoQJWI25cSPv2vnUUeF+ZYioPYnv1fQtH2HO2QHKfEbmKDdncvsn8DILgTRyD1g5AbaGkcK2aI+JjrrANSkffvum6SZYTtOJ22KdS5aQTmxR/sE0ra8XKysuhI04v45kaSfHcLI6+yIhzS8=
+	t=1746457221; cv=none; b=JodSmqYUzvzEglE27Ec8W2qlfP0FgkXsvXQr+N+rtNy9mZMQO1OPzVJT3wfaxfsfRrKPf0UZ0FmRZJn4U1iAQoGD65XdFR2swLlnp50AWo/PGreLYtp1+f4yL9M+KnW/kIoPZJeWvoG2tzlpFbON0hHzp+/m+KD9boRrZuzaQeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457197; c=relaxed/simple;
-	bh=ojSubu3t1lk6zjl29ntq7mjUzC4Q27KY/SbonFIumtM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gijchuvdOp9TNnX5pcKrG4KFbdNQ56vOdEPypWyVBEwhydX4rYIeWuXwIiDO+9Gyg2i/TP2iFz93I07ECJUhzzCQWAV5xfsny0QuKwJUY5JIuKZuz9r6nh0WukQVAM57jlT2L0tGZFeCL1OnVYBiWuIL+zrA5LsOn7fi8/hU444=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ibCN2mqk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746457221; c=relaxed/simple;
+	bh=dBUWsePdK+43bgJYz1/M5xbcGgbXAn2tygzYhdejMy4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q4u/7RxAGhxWFKlS780jQ44K8uAQIQU7MR0LNdT6XOwfkSRlVYIabthWy98xHL/GXGuSGKD7/pT0Jn1ahg6ssRXqf9X7zNfHDo/5iUxVxYr++fGMesSOdwJ71STtfejMwlhC0A2BxpxyIOH3nSVueG0UmuAEY+QY2uDN29VcYkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gn07Fz2j; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ibCN2mqk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746457196; x=1777993196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ojSubu3t1lk6zjl29ntq7mjUzC4Q27KY/SbonFIumtM=;
-  b=ibCN2mqk7zc19QLMxOcrLKu5NMfsimh6KwosRT3yUK95N3t7EXOuZzyU
-   BhA3o0YINuZgBPo2plKQ/iOtbBlYKbUBruEZmjzRwlNcp635TcuxrKuPr
-   CwgWYL67+7uZmdbzl6ZBi3CXSqzjqwr8kAvr4cnL3ed3MWdnWnTzEt6py
-   0V3AhTbdlGJ5eR8TNCZoQVFMzubJOCw1LvAKE2Dbef6ITPIgJjShgiJVn
-   cjIxq6gSa9r4br9FkXgUik8HseeosgaCrG1jNoBr/w8t5LHPiwlgcB6QW
-   zCqFWBXj+dQMBUQyAB00m/hYAgxRgNKd+gb6l03GgB6Yo8BLdVx0LP6tk
-   Q==;
-X-CSE-ConnectionGUID: f4oM0OJXTFGZ4+v+a+eKXg==
-X-CSE-MsgGUID: /JS6wdtpTC6V4PrFzJBgJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="35689199"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="35689199"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 07:59:55 -0700
-X-CSE-ConnectionGUID: OZhGii6RSaqXoA8M3MQ2Wg==
-X-CSE-MsgGUID: iBcZZVjuT1O2I8ACzDdBDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="135012479"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 07:59:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uBxIK-000000035SB-2vpv;
-	Mon, 05 May 2025 17:59:48 +0300
-Date: Mon, 5 May 2025 17:59:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Ashish Kalra <ashish.kalra@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Denis Mukhin <dmukhin@ford.com>
-Subject: Re: [PATCH v1 0/6] x86/boot: Enable earlyprintk on MMIO (8-bit)
-Message-ID: <aBjSZA29o2zZYvGh@smile.fi.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
- <db19e81405d17e9eb9a3c1d4798220178e4f9373.camel@infradead.org>
- <aBjFtWDSuXVq9kW-@smile.fi.intel.com>
- <3c1bd53c8ee5fe0a6e281551dfe2089679e8e5eb.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gn07Fz2j"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso13857a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746457218; x=1747062018; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zgpaiR/N3ioL5/g7+EhtTfAMyKaTCNjdwR/daQulLIQ=;
+        b=Gn07Fz2jjfazVk65MmWu+w5DqmkOODuyVLsw73yFcLLbeiAKG8r5ChTXtLHsliRFFt
+         LgsM8yqx5rgRfY36evT06vDfzMO0Nu5uZs4avDUgsFAUt8LVUlHNy0KsNHg//uaaiCS1
+         V4H4FAmNcrRkanYFTfQki7SfuV4S/IMuSoZz1AIMhr2mPpqrKWgbCIvnb1PlSZ0bDMc9
+         feI8WYEUXf+4QYFqc/loRG4EDKhBvlsPHCFDfXiDrqNveljuxIQfBX8TX7rOkYnrW5TU
+         lg2L0zFW2wK/ZQ6NOVPOWnlpMekRDCueS85fb7SrUXa+XdSUSxc9Q/laIJJziaTJoEkr
+         fKdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746457218; x=1747062018;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zgpaiR/N3ioL5/g7+EhtTfAMyKaTCNjdwR/daQulLIQ=;
+        b=R2LAuwTYGwFWd6G8dcVJDzkag/SAAHh0eM4hrplqPfEpe+StnsF2IPIocWgTYGWbjb
+         U569/r+2qofxXAE90DIOMpE9DbkmqJw92QSdM4yoTkxVrmNSgtEZ4I09xDMCrunNpQHC
+         AdZehwAB50bARCe4VbgLFVWSgQb5zfyxTJ6Qgd8NpEX1ARDVkIe/58WvaINdxj9rc3CZ
+         0m0yRhjWkwiD0To6gbpSi+VIeNuMNtZz0yHvYSuuhuouGAV1TrUJ4Ho8bZRBUTY2unSU
+         JlCkEeZPch98bDzDCFQVeLFGFXU10CfqgHtjvIBm/c3FEmvOE4MHWYlD8egv23/d8mQf
+         Htug==
+X-Forwarded-Encrypted: i=1; AJvYcCVdsrWJnW7y6YY907A+/YQEV+1BNCUtBigu/Gutxv++Rppvnea9lTbvyYoZNjhPv1QFYIbbZC7D5nd+Mrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpEeGTqZFHCTyP1ZDGt1vbAFF2Rv53nTs4b0Ro0izq29Zlbv7g
+	c2BHWOoGb6bDmRJ9ajSPvKbEPX0/9T14xw77oCLzl5FG3qpmyxpaC8EU6ETwwLNcXGmquz4HbPT
+	joNeH8Vz6Gz+eSFnVTD3zhTrI0lFxDkYn4l1L
+X-Gm-Gg: ASbGnctMaVR5TDkw1w/iZd/5oYH7MO0anWdjM+Dbtj9GUkjUnOZyrdaSYQ3CX8fXBy1
+	+iqBqe8Fux36KB+e65UAJhn7KZEWP3T+rvCNCqZ6vqeO/s9r0tiRDeE1W0pbNf+tNQZsOIyzO29
+	/6V2lybAU+IsHDVp4jqO60yqFr4t4eW3V7ihbKigjpLvWEm2XAfg==
+X-Google-Smtp-Source: AGHT+IGBV00De7Bvs81up3DiMq5uNMuS1+NaIIw75xqG2AMJ/upMjP5p6RxIZZ1P7Y/Z/+u89lr0EL9heQCbZx6cvAY=
+X-Received: by 2002:a05:6402:1507:b0:5f8:7b57:e5c2 with SMTP id
+ 4fb4d7f45d1cf-5fb566852d6mr2204a12.4.1746457217325; Mon, 05 May 2025 08:00:17
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3c1bd53c8ee5fe0a6e281551dfe2089679e8e5eb.camel@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org> <20250505.aFia3choo1aw@digikod.net>
+In-Reply-To: <20250505.aFia3choo1aw@digikod.net>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 5 May 2025 16:59:41 +0200
+X-Gm-Features: ATxdqUEpQd4Wf6EVwtubs_kdKekg1DlIT59sXj-KbDJqdbZPlnBKsnyyATHMsFk
+Message-ID: <CAG48ez0Ti8y5GzZFhdf5cmZWH1XMmz0Q_3y8RCn6ca8UL-jrcA@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Christian Brauner <brauner@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 07:35:04AM -0700, David Woodhouse wrote:
-> On Mon, 2025-05-05 at 17:05 +0300, Andy Shevchenko wrote:
-> > On Fri, May 02, 2025 at 10:33:49AM -0700, David Woodhouse wrote:
-> > > On Fri, 2025-05-02 at 15:29 +0300, Andy Shevchenko wrote:
-> > > > Some of the platforms may have no legacy COM ports and only provide
-> > > > an MMIO accessible UART. Add support for such to earlyprintk for the
-> > > > boot phase of the kernel.
-> > > 
-> > > Shiny. I had to hack QEMU's PCI serial port to do unnatural things, in
-> > > order to test the mmio32 variant which was the only thing the
-> > > earlyprintk code used to support. But I *did* so, and it works with the
-> > > kexec debugging.
-> > > 
-> > > Can you add support for this mode to the kexec debugging too, please?
-> > 
-> > Do you mean to add MMIO 8-bit to kexec assembly code and other parts like you
-> > did in the below mentioned change?
-> > 
-> > I can try it at some point, but have no time right now for this.
-> > I would appreciate if you can give a try for this patch series
-> > functionality to see if it helps for the initial messages (as
-> > far as I understand you also want to have this in the second
-> > kernel, right?).
-> 
-> I'll see if I can find the time to take a look. Got a branch I can pull
-> your series from?
+On Mon, May 5, 2025 at 4:41=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digiko=
+d.net> wrote:
+> On Mon, May 05, 2025 at 01:13:38PM +0200, Christian Brauner wrote:
+> > Coredumping currently supports two modes:
+> >
+> > (1) Dumping directly into a file somewhere on the filesystem.
+> > (2) Dumping into a pipe connected to a usermode helper process
+> >     spawned as a child of the system_unbound_wq or kthreadd.
+> >
+> > For simplicity I'm mostly ignoring (1). There's probably still some
+> > users of (1) out there but processing coredumps in this way can be
+> > considered adventurous especially in the face of set*id binaries.
+> >
+> > The most common option should be (2) by now. It works by allowing
+> > userspace to put a string into /proc/sys/kernel/core_pattern like:
+> >
+> >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> >
+> > The "|" at the beginning indicates to the kernel that a pipe must be
+> > used. The path following the pipe indicator is a path to a binary that
+> > will be spawned as a usermode helper process. Any additional parameters
+> > pass information about the task that is generating the coredump to the
+> > binary that processes the coredump.
+> >
+> > In the example core_pattern shown above systemd-coredump is spawned as =
+a
+> > usermode helper. There's various conceptual consequences of this
+> > (non-exhaustive list):
+> >
+> > - systemd-coredump is spawned with file descriptor number 0 (stdin)
+> >   connected to the read-end of the pipe. All other file descriptors are
+> >   closed. That specifically includes 1 (stdout) and 2 (stderr). This ha=
+s
+> >   already caused bugs because userspace assumed that this cannot happen
+> >   (Whether or not this is a sane assumption is irrelevant.).
+> >
+> > - systemd-coredump will be spawned as a child of system_unbound_wq. So
+> >   it is not a child of any userspace process and specifically not a
+> >   child of PID 1. It cannot be waited upon and is in a weird hybrid
+> >   upcall which are difficult for userspace to control correctly.
+> >
+> > - systemd-coredump is spawned with full kernel privileges. This
+> >   necessitates all kinds of weird privilege dropping excercises in
+> >   userspace to make this safe.
+> >
+> > - A new usermode helper has to be spawned for each crashing process.
+> >
+> > This series adds a new mode:
+> >
+> > (3) Dumping into an abstract AF_UNIX socket.
+> >
+> > Userspace can set /proc/sys/kernel/core_pattern to:
+> >
+> >         @linuxafsk/coredump_socket
+> >
+> > The "@" at the beginning indicates to the kernel that the abstract
+> > AF_UNIX coredump socket will be used to process coredumps.
+> >
+> > The coredump socket uses the fixed address "linuxafsk/coredump.socket"
+> > for now.
+> >
+> > The coredump socket is located in the initial network namespace. To bin=
+d
+> > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
+> > user namespace. Listening and reading can happen from whatever
+> > unprivileged context is necessary to safely process coredumps.
+> >
+> > When a task coredumps it opens a client socket in the initial network
+> > namespace and connects to the coredump socket. For now only tasks that
+> > are acctually coredumping are allowed to connect to the initial coredum=
+p
+> > socket.
+>
+> I think we should avoid using abstract UNIX sockets, especially for new
+> interfaces, because it is hard to properly control such access.  Can we
+> create new dedicated AF_UNIX protocols instead?  One could be used by a
+> privileged process in the initial namespace to create a socket to
+> collect coredumps, and the other could be dedicatde to coredumped
+> proccesses.  Such (coredump collector) file descriptor or new (proxy)
+> socketpair ones could be passed to containers.
 
-Yeo, https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot-earlyprintk.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+I would agree with you if we were talking about designing a pure
+userspace thing; but I think the limits that Christian added on bind()
+and connect() to these special abstract names in this series
+effectively make it behave as if they were dedicated AF_UNIX
+protocols, and prevent things like random unprivileged userspace
+processes bind()ing to them.
