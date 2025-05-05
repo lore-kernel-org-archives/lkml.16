@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9585288537;
-	Mon,  5 May 2025 23:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70964397A66;
+	Mon,  5 May 2025 23:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486310; cv=none; b=FTfeRgC0dZVPtGpDx+aJdI1y7fr/KYQVhZ6v4p1JZ62l1cZPjhEQF5XT1oqLE/QTVnrjQdjkRggq4lk1eomxuno/eRvqNv0H3mNeCm8L+ocZgl0QHNzqeUWY7PZ4wogjtcsSMd1P5BOTvTZ6kVUqPYiuudvSXO3VqGe4djeADYI=
+	t=1746486421; cv=none; b=U8JpkpOYoYkYA0ufXEXR4/eor2lHO61pqNMoJAujsu72mW3LUCxDvmjrRfaGFkdOGfYosPalmm354UKeWGWzqzC949Sv/ErwthpGAU4+bNQlw6Unhdnwm/KxASBf/OD9KbRkKdfzjEUoofdaQQLgKgTekdT1yLy8Clx7veFVTas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486310; c=relaxed/simple;
-	bh=788CtGvCa95o+T3He2vlXoee2SK5ejxA/X5PkcOwfu8=;
+	s=arc-20240116; t=1746486421; c=relaxed/simple;
+	bh=5THHuus3fgTQAgvQ3+PYY+FACHau1WzENPOs6L9Xu+0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lSGDvE2/4ZL30wjH5AaYnS9rDMC8/w5F76MlJ6BEk/8HYaspYOwlBr2p2JWtK83NzHkE4Z+1xoVBwjRHj2NGhwH/CxUPrKxbEwEkLqU3bgkQyrG0fu+h2Q6du5tOEFbNumnEC5fqsEajpa73CuQ29t5z82dRSdqYkZB6IRZe+1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0WS3/ys; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AE0DuyqKSL06yq+si5T9aIC9eErqXyoQ8sikXhwCLzN9uwuVcjUdTUOurxEiPkviQami37knB77WS+iVuqbQTyJSaKEVfX9Ya7TWm5INnn6hkDkjm9npxl4rQVhFRNO7+/jrDtwPf3ig5sfbHRizOEv+kCLPZFrzUu1kKDsnHyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6S3gNis; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0WS3/ys"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C830CC4CEEF;
-	Mon,  5 May 2025 23:05:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6S3gNis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBBBC4AF5F;
+	Mon,  5 May 2025 23:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486309;
-	bh=788CtGvCa95o+T3He2vlXoee2SK5ejxA/X5PkcOwfu8=;
+	s=k20201202; t=1746486420;
+	bh=5THHuus3fgTQAgvQ3+PYY+FACHau1WzENPOs6L9Xu+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C0WS3/ysbKodO3R1sc4uMxjFHcQV9h8knO9Z0Tav3/tib9bU24pV71FLspJSVaiFl
-	 LgExayfYZeUlT1ESmEU1c7C4shRsB4lHF2tpZK4FJ01j5naZJm4RdtlYWpTrbzP1oI
-	 C+d4lZqacpfVLjhyWjvKFk+rBzXBRfp/Hly+HSF1RNJV3LGW/hD06qtEHQFX0hrI9R
-	 FMYFU6yychd2Eojy1ri1IID7LHEkpfAuNRxLA8y/2FwI7hzAUz972Jkd62E4Zn39Li
-	 XOLHKdKyqKzu2PufTKC9FP+ScXmAsXQNYD1GQIfRDOO6CV+Rd9UA0ff8umMaKxpRIz
-	 ERHyobJpUaMng==
+	b=Q6S3gNis+0JrsvRFMEOKbhJ00fjLRNVXuMFcJESMWS+kgRxzApLLq38IdZl/b/NFY
+	 nv+47mxXVdX6vpB9w1yzduewckZD+6d4gDL99WPZ7t08WVV8tVjk/SEv9Khl4NTTqs
+	 IgzyNCQWIVMrTzaT6bQA2m5iG4hJ1zkclvz2kyxNxtICbwSCgjL5rgWxYYap/UdLMi
+	 6UJWwCf+/7S90QVeRPzFUND4EdGdd/OoVUGRt/HUIApinGTK8deeFF+2sl8hBI7oad
+	 E1cES6O4Oc3TLTtWL4ronRKJjnUoPBZMJ8X9lBJHt7/EAykLoG3Sjk0eMP+ie/hD7F
+	 2J7baPHBNufYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Vatoropin <a.vatoropin@crpt.ru>,
-	Guenter Roeck <linux@roeck-us.net>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 252/294] hwmon: (xgene-hwmon) use appropriate type for the latency value
-Date: Mon,  5 May 2025 18:55:52 -0400
-Message-Id: <20250505225634.2688578-252-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 017/212] NFSv4: Treat ENETUNREACH errors as fatal for state recovery
+Date: Mon,  5 May 2025 19:03:09 -0400
+Message-Id: <20250505230624.2692522-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
-References: <20250505225634.2688578-1-sashal@kernel.org>
+In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
+References: <20250505230624.2692522-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,46 +50,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.89
+X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 8df0f002827e18632dcd986f7546c1abf1953a6f ]
+[ Upstream commit 0af5fb5ed3d2fd9e110c6112271f022b744a849a ]
 
-The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
-evaluated using 32-bit arithmetic.
+If a containerised process is killed and causes an ENETUNREACH or
+ENETDOWN error to be propagated to the state manager, then mark the
+nfs_client as being dead so that we don't loop in functions that are
+expecting recovery to succeed.
 
-Since a value of type 'u64' is used to store the eventual result,
-and this result is later sent to the function usecs_to_jiffies with
-input parameter unsigned int, the current data type is too wide to
-store the value of ctx->usecs_lat.
-
-Change the data type of "usecs_lat" to a more suitable (narrower) type.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
-Link: https://lore.kernel.org/r/20250204095400.95013-1-a.vatoropin@crpt.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/xgene-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4state.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index 207084d55044a..6768dbf390390 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -111,7 +111,7 @@ struct xgene_hwmon_dev {
- 
- 	phys_addr_t		comm_base_addr;
- 	void			*pcc_comm_addr;
--	u64			usecs_lat;
-+	unsigned int		usecs_lat;
- };
- 
- /*
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 48ea406604229..80a7c5bd7a476 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2737,7 +2737,15 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
+ 			" with error %d\n", section_sep, section,
+ 			clp->cl_hostname, -status);
+-	ssleep(1);
++	switch (status) {
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		nfs_mark_client_ready(clp, -EIO);
++		break;
++	default:
++		ssleep(1);
++		break;
++	}
+ out_drain:
+ 	memalloc_nofs_restore(memflags);
+ 	nfs4_end_drain_session(clp);
 -- 
 2.39.5
 
