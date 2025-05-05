@@ -1,115 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246EF2F22F0;
-	Mon,  5 May 2025 23:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A88402F275C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486788; cv=none; b=tHY/SnSi88REkAsKXHEtxpIw7kRS9X9oGfOXKUcli9Jv9zkrlYVdyqsRKCYU/txJ1UMsEcKqIhhvs7J+G8RUXawaUbQGvWihQJfL/PqavbbLAuCUoXt6ox244LS/VfewV71Dv5aCQCg9WLJyZrW3Iy3N6aZnmktaRHp5lse7YKo=
+	t=1746486799; cv=none; b=CBb1pENU0zSYDgxYKtWdPZ34d9VRi/GZCu0SJYAKHWaB1DYKcekwf7SZ73Ti5Ytw1zRWhjE85txfHzT6/ULEhB05kuw9M0ed2rhC2PPpLJBqgnzD/eJtANFEflTas3AEg6cCRR5tffRGWMF5Xc19pqD7EIWZ8J3TQ3xdoVEoYb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486788; c=relaxed/simple;
-	bh=vegssbJyrsi+fZjzXV+RAgD8CqwmmTwkBo3yFn/EQMg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qGBIYsAXgLqwHsorC56ZLc6ihQKG066otso9TgvkzfJjJE7AYzK3L4crbDXTOkfQki2HffdUfLxtz7DxOYne79YY4LWdlZ584D4iiHGscBUFoDc917NKm9OZeo06MBU/qcvHQGsjDLNc0093lBqcPVkkTuhp4qyuDNoSnn2kg3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwQnfhol; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwQnfhol"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3680BC4CEE4;
-	Mon,  5 May 2025 23:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486787;
-	bh=vegssbJyrsi+fZjzXV+RAgD8CqwmmTwkBo3yFn/EQMg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UwQnfholILq+wa8YLypRmq6j+tHokoSpDLwyBd6a94zLu1qjobe5KMBggrFJKey6b
-	 4Vx/FrR0xAxsC00rdqo9G2+iH2WJ9roHKS91rkSjH74UVx1Qvf2ISqY4autfMV9fQO
-	 6dp1fYvx4Tm1WDo5/cl3ApM6lZXNXLMMMbjPpI0q0SLQJxtPOl51x7CO9TI2uscaUv
-	 Xn3EM6TIRFWRIAMcPNozMFaFMaAn5omcCMb/9Oy+FxEcsMAMjWfbAMvQm20u4rk7+w
-	 rRsMLGitldf4P9vbZY94x4oSinyJNVvp/f/I8Grq6IdKG6iIWlm9McEPZP7qTqN1Fp
-	 Kd85QjE1u1caw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Soeren Moch <smoch@web.de>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Jes.Sorensen@gmail.com,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 204/212] wifi: rtl8xxxu: retry firmware download on error
-Date: Mon,  5 May 2025 19:06:16 -0400
-Message-Id: <20250505230624.2692522-204-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
-References: <20250505230624.2692522-1-sashal@kernel.org>
+	s=arc-20240116; t=1746486799; c=relaxed/simple;
+	bh=klT+e0G7GBgldQiw2Du9d6zSDr6XFN1S9BQ5CRt2ufc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=d7mHhWkijG4fhAvSsxabusjJMYEyiXEgLfH9SRNGkKxtiL9lj2VAkCe63aiEbAwj8O6CPkAS4u1VRm9nEiXf4WqJnriPYmKAmKk5t2wSWD0EwVTOBSII2SgfSBf+IsACsOqvdoOA5KeBkwKuzQhqwlM6S/2DBbc/vtT+V6zxHTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id C7D9E92009D; Tue,  6 May 2025 01:13:13 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id C3B6392009C;
+	Tue,  6 May 2025 00:13:13 +0100 (BST)
+Date: Tue, 6 May 2025 00:13:13 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev, 
+    linux-kernel@vger.kernel.org
+Subject: Re: Adding __popcountsi2 and __popcountdi2
+In-Reply-To: <CAHk-=wiQN=jqK9n-mUEAD1Q36t-6d589M_rAG568pLq2KysJ5w@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2505052357091.31828@angie.orcam.me.uk>
+References: <20250425003342.GA795313@ax162> <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com> <20250425021138.GA3800209@ax162> <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com> <alpine.DEB.2.21.2505051543470.31828@angie.orcam.me.uk>
+ <CAHk-=wiQN=jqK9n-mUEAD1Q36t-6d589M_rAG568pLq2KysJ5w@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.136
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-From: Soeren Moch <smoch@web.de>
+On Mon, 5 May 2025, Linus Torvalds wrote:
 
-[ Upstream commit 3d3e28feca7ac8c6cf2a390dbbe1f97e3feb7f36 ]
+> > > Once you have the overhead of a function call - and all the register
+> > > games etc that involves, you're almost certainly better off with the
+> > > simple unconditional bitwise games.
+> >
+> >  Unless optimising for size, which we do support.
+> 
+> I think you missed the part where I said
+> 
+>  "But if you want to do this, put the damn thing as an alias on the code
+>   that actually *does* the SW fallback in lib/hweight.c."
+> 
+> IOW, what I object to is being *stupid* and doing *two* function
+> calls. It sure as hell doesn't optimize for size.
 
-Occasionally there is an EPROTO error during firmware download.
-This error is converted to EAGAIN in the download function.
-But nobody tries again and so device probe fails.
+ Sure, I only commented on whether or not to have entry points defined in 
+the link for libcalls that GCC emits whenever it produces a `popcount' 
+operation it cannot find a machine description pattern for (IOW a machine 
+instruction or a favourable sequence of).
 
-Implement download retry to fix this.
+ They need to have specific names a per the subject and it's up to us to 
+implement them one way or another should we choose to; and as I say it 
+seems not unreasonable to me for GCC to emit these libcalls at least when 
+optimising for size.
 
-This error was observed (and fix tested) on a tbs2910 board [1]
-with an embedded RTL8188EU (0bda:8179) device behind a USB hub.
+ Traditionally we have chosen not to implement double-precision division 
+libcalls so as to trap expensive usage.  For `popcount' I have no opinion 
+offhand.
 
-[1] arch/arm/boot/dts/nxp/imx/imx6q-tbs2910.dts
-
-Signed-off-by: Soeren Moch <smoch@web.de>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/20250127194828.599379-1-smoch@web.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c   | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 9ccf8550a0679..cd22c756acc69 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -798,9 +798,10 @@ rtl8xxxu_writeN(struct rtl8xxxu_priv *priv, u16 addr, u8 *buf, u16 len)
- 	return len;
- 
- write_error:
--	dev_info(&udev->dev,
--		 "%s: Failed to write block at addr: %04x size: %04x\n",
--		 __func__, addr, blocksize);
-+	if (rtl8xxxu_debug & RTL8XXXU_DEBUG_REG_WRITE)
-+		dev_info(&udev->dev,
-+			 "%s: Failed to write block at addr: %04x size: %04x\n",
-+			 __func__, addr, blocksize);
- 	return -EAGAIN;
- }
- 
-@@ -3920,8 +3921,14 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
- 	 */
- 	rtl8xxxu_write16(priv, REG_TRXFF_BNDY + 2, fops->trxff_boundary);
- 
--	ret = rtl8xxxu_download_firmware(priv);
--	dev_dbg(dev, "%s: download_firmware %i\n", __func__, ret);
-+	for (int retry = 5; retry >= 0 ; retry--) {
-+		ret = rtl8xxxu_download_firmware(priv);
-+		dev_dbg(dev, "%s: download_firmware %i\n", __func__, ret);
-+		if (ret != -EAGAIN)
-+			break;
-+		if (retry)
-+			dev_dbg(dev, "%s: retry firmware download\n", __func__);
-+	}
- 	if (ret)
- 		goto exit;
- 	ret = rtl8xxxu_start_firmware(priv);
--- 
-2.39.5
-
+  Maciej
