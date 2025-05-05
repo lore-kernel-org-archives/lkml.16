@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EE535B948;
-	Mon,  5 May 2025 22:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E4E277815;
+	Mon,  5 May 2025 22:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485095; cv=none; b=o7xskNqJPmjahHh6AVa075niuQI5H6wU21EC+8MJbuemsfmBCfECLlgPO/sDQznJw+RkCgh0PvNsg9MoZv4JLcbykTkKYpZiI0615vTyV2BuzsMnsD1cPM1AcnF2sSEvZdbIZ3U+RSq8t2K4F4sEK1iA7Om2S6c8JLjfEw3LTys=
+	t=1746485104; cv=none; b=KgFwCoB/gGNyeca2nxW4qto8vvrLrrdupGYsZE/rbZI+w7pWpXUMk7lbgHRQ0VN4SpCBMgxmahC1Qv6wRThRAw02eqFscXrfQXIR/p7mL0uPS9m0tQ4ZJ+Y4Z52ZCO5TOrbDuT7jxy3X5RDkC83QeWaf0FbZh0kZJn6Dj0sTOFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485095; c=relaxed/simple;
-	bh=qTiixerpP4JVYjqht41+eGrpWIMH1nTcxBB/tX6CKfA=;
+	s=arc-20240116; t=1746485104; c=relaxed/simple;
+	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UrogC467hX1+eKSF3ICDXms3PfLilafyIe2gaXF71MBaLuXOTD9VFrAE4KSJjUmR8nJok/houPdZHombeYf1B22E24o4MC6PBNcAqPm7ox/2n9WUmhB9QPBTB0bc9Faz2PiQ3MaR12jwYdNSUGyf1752EuixDlQuOy1NiAFUak4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYiszbRU; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Kovgte84Gy/71bkB75cgfqbCdkdZ5V4TZk+NXaf34CNJ3yNh/V80WYEArTKTzoX/U2PSZwZwMW3hPCPStqwhmL0wzN2r/uAMQFUyWoI9TVX0V+Ve3M55ozGof5YW9fkbP0yfDZOyramIojQ8gQhLPFN8HqgGOBEZmzJWSpRs2TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKMAxRLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYiszbRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFE7C4CEE4;
-	Mon,  5 May 2025 22:44:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKMAxRLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD11C4CEE4;
+	Mon,  5 May 2025 22:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485095;
-	bh=qTiixerpP4JVYjqht41+eGrpWIMH1nTcxBB/tX6CKfA=;
+	s=k20201202; t=1746485104;
+	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SYiszbRUhN4ArhXLlUK495sA80kAxgeMhBvhd9O+B06vfsVyrRKqZ5E85r/KLx+fU
-	 RSkWPERFjhu8YowD+lKEVt35iGzqETauV/eCUyLPGG3ZMZCzp6EYklPzDcFVXKp5sO
-	 UIHOFaF/Ur5BDX66jYrFEz0w2LpLR0JyOL0vY4p1HLcYr3TYxEj/zIzfzH/XRHf7KV
-	 kHJoPEyEpGReGxABviOI1A5f1YKUeTzwNRvsHp8xygMGyCCRZjui06HTvi9z24HcNM
-	 obAb7TXf1mIw/r10gySXZ0nMCktkeNSY6nv0Yfqx6HHqDFuqKOzHaqyqgJJxoCOzE4
-	 aXNzWAxTIooKA==
+	b=iKMAxRLmRFST8T1BZQbJA/nnc4z/QUyEEkOLD6x7NK+b3SR+XCYcR2nuNLjFR2RUb
+	 hw+K8Wn/iLwP4mE2WBNvWGCOmYTmpgYI1nqXLP7RAUnKIsf5DxrBv9hee72kb+h4dy
+	 2/RNoHV3LPwBUDTLgSNEazbuwBU0xKdXCA8kFOv6s7dkJQ/q8ZiiSm5tZmz8ZDXZOm
+	 C3MXYfOudk50CAK7hVDJvSVXezSyYDmaFLT7U0ayVAxlRrq4lU+mYwG/8rRvYaHQMG
+	 PltmyXxmQd9GRhVincba4GbG5o8N30s+bk5pkGfPoKnIr1urvVium04eo04WK8wWKF
+	 NJmU9X48jCTWQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andreas Gruenbacher <agruenba@redhat.com>,
+Cc: Coly Li <colyli@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Jens Axboe <axboe@kernel.dk>,
 	Sasha Levin <sashal@kernel.org>,
-	gfs2@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 160/486] gfs2: Check for empty queue in run_queue
-Date: Mon,  5 May 2025 18:33:56 -0400
-Message-Id: <20250505223922.2682012-160-sashal@kernel.org>
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 163/486] badblocks: Fix a nonsense WARN_ON() which checks whether a u64 variable < 0
+Date: Mon,  5 May 2025 18:33:59 -0400
+Message-Id: <20250505223922.2682012-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -49,63 +52,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Coly Li <colyli@kernel.org>
 
-[ Upstream commit d838605fea6eabae3746a276fd448f6719eb3926 ]
+[ Upstream commit 7e76336e14de9a2b67af96012ddd46c5676cf340 ]
 
-In run_queue(), check if the queue of pending requests is empty instead
-of blindly assuming that it won't be.
+In _badblocks_check(), there are lines of code like this,
+1246         sectors -= len;
+[snipped]
+1251         WARN_ON(sectors < 0);
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+The WARN_ON() at line 1257 doesn't make sense because sectors is
+unsigned long long type and never to be <0.
+
+Fix it by checking directly checking whether sectors is less than len.
+
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Coly Li <colyli@kernel.org>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20250309160556.42854-1-colyli@kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ block/badblocks.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index a51fe42732c4c..4f1eca99786b6 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -843,12 +843,13 @@ static void run_queue(struct gfs2_glock *gl, const int nonblock)
- __releases(&gl->gl_lockref.lock)
- __acquires(&gl->gl_lockref.lock)
- {
--	struct gfs2_holder *gh = NULL;
-+	struct gfs2_holder *gh;
+diff --git a/block/badblocks.c b/block/badblocks.c
+index db4ec8b9b2a8c..a9709771a1015 100644
+--- a/block/badblocks.c
++++ b/block/badblocks.c
+@@ -1349,14 +1349,15 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 	len = sectors;
  
- 	if (test_bit(GLF_LOCK, &gl->gl_flags))
- 		return;
- 	set_bit(GLF_LOCK, &gl->gl_flags);
+ update_sectors:
++	/* This situation should never happen */
++	WARN_ON(sectors < len);
++
+ 	s += len;
+ 	sectors -= len;
  
-+	/* While a demote is in progress, the GLF_LOCK flag must be set. */
- 	GLOCK_BUG_ON(gl, test_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags));
+ 	if (sectors > 0)
+ 		goto re_check;
  
- 	if (test_bit(GLF_DEMOTE, &gl->gl_flags) &&
-@@ -860,18 +861,22 @@ __acquires(&gl->gl_lockref.lock)
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
-+		do_xmote(gl, NULL, gl->gl_target);
-+		return;
- 	} else {
- 		if (test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			gfs2_demote_wake(gl);
- 		if (do_promote(gl))
- 			goto out_unlock;
- 		gh = find_first_waiter(gl);
-+		if (!gh)
-+			goto out_unlock;
- 		gl->gl_target = gh->gh_state;
- 		if (!(gh->gh_flags & (LM_FLAG_TRY | LM_FLAG_TRY_1CB)))
- 			do_error(gl, 0); /* Fail queued try locks */
-+		do_xmote(gl, gh, gl->gl_target);
-+		return;
- 	}
--	do_xmote(gl, gh, gl->gl_target);
--	return;
- 
- out_sched:
- 	clear_bit(GLF_LOCK, &gl->gl_flags);
+-	WARN_ON(sectors < 0);
+-
+ 	if (unacked_badblocks > 0)
+ 		rv = -1;
+ 	else if (acked_badblocks > 0)
 -- 
 2.39.5
 
