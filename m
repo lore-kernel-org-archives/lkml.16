@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14352FB2BA;
-	Mon,  5 May 2025 23:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27959385402;
+	Mon,  5 May 2025 23:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487407; cv=none; b=ZOv+fciPE4tD7HBiXUTR8qGTNnf3NTr+mYpQ4+nYzTfS2LDRKOq3OjI6rI1jNY72YP88D8vP0wTYHANG2+bohWaW2u/raZQsl7dUQVsseXS1Dyt8nKPC4Ku0ED9Y9XduFJxrWokrNgvNL6a+gNawPd7ngyAgq61uYVHrmxmNYiI=
+	t=1746487424; cv=none; b=SBT0u/4CfB2v958HIcsxrFI7l0L181O8Tqq1RQbm0H97Sd36LgLQFWSWOhx0ugWzM5rdItbxlv2Gqz8knDjHA0AufNRifzYOL15QW1Uat8HqAW7STOEvN/Qafi4ypNaSA9UWlNfte4dH9b1Gl+aw2i5/MUx1azsag66MRnnEjPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487407; c=relaxed/simple;
-	bh=dyCX6F2jPhi6g0pJYPEwuDqcq3tMWkUoLJk0fI2gYWA=;
+	s=arc-20240116; t=1746487424; c=relaxed/simple;
+	bh=fzSzdTe7U8gOqg5CSe06w5il22KPV5S86Hppe8x/Dxg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PAaG0RD5HdtL/qkNXOJQn7IFw2g2TwqcwYUfD4qDzISSfoOkqPiAg/I1JPWakmHI67SGJX/RQ4LfwF2IKM/HrNcp1WUXnj9tacHlXv0CauwPR37dWxY9px3JGxqFWbCMsCHsW8zzTFZB4WmkUvXPOsFlC5u43fUhfdhHbgMWLWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFc3MNHJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MeKQq5H+RXhsS/XzzZ2asi5EIKbERoDe8BIh5PTcmzuugJGeNqmS1C99lvimqgs1UGSZLXeephV9vX6g23V0oLFwqjWcs8Ga65k3aAvbc6BoFAsmGClR4CrkT+Y41ZVmGaO4EOd7Uj0spTQaf2jdsefmd/HSG07idH8f+xOeng4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkEeVeLb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFc3MNHJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7ADC4CEED;
-	Mon,  5 May 2025 23:23:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkEeVeLb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB2DC4CEED;
+	Mon,  5 May 2025 23:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487405;
-	bh=dyCX6F2jPhi6g0pJYPEwuDqcq3tMWkUoLJk0fI2gYWA=;
+	s=k20201202; t=1746487423;
+	bh=fzSzdTe7U8gOqg5CSe06w5il22KPV5S86Hppe8x/Dxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tFc3MNHJf9nEyhtFXlJ9WwI9zJZ3tAavU4JDtZM3pWZBA5Te3MvN95rEVPeI39vwi
-	 OBIAe0guEl0McZA8Ehz2MGkACad078rJXLyszkv00UDT01qclDW4cmOT2LRbVCxr1c
-	 Z2Pkx2EOoKXdFf9OSrhEQEH/mxzpbqDU7BW4yAh708UJoS+mvvdo8sluEIfCQ5B33X
-	 hO0g7DY3xh3rHup33LKP/wXEKKmNF5gDEU2XXZg+ZsJY1nRc2DlGAJ17u8/xzNMolw
-	 ckCSDDzIop95c3Gk+QMtbv3iNw+ty54aqAYvHY8nRtTKRledavjm0M0cLHxv2Ys/8Q
-	 vXrZia38ypmGQ==
+	b=LkEeVeLbCEv6cqn8LznVLHO+DyUHm2hpurZeKAeOjGEONI2OBhawuP3E2OkVJY4nX
+	 JrRpFVxJo566W1hX4v7Ogwg1ib5cdpdOpE1j8qe3AfunkcHpBDgN3fOsj287FzLb9Y
+	 fBGHM6jw6Rtl2HoMF+tE5/bPPj8Ml+KHHZ7pDVFPdsrZZv+WKMv7XaFW/PhAk+M+PI
+	 7rb4WZJBnV2An3qZvjA5DGeFp70+wAoKTo8595WqHudueCXzaDW+Vkh60yyFnhJQoI
+	 n3dfoK0vxOHuAAZKqAk0/SLjbEweLiS9+vHroFii24A0l6f4i4pyMILbucR1ue2Len
+	 6jdfGHXeQqOVA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>,
-	Tony Luck <tony.luck@intel.com>,
+Cc: William Tu <witu@nvidia.com>,
+	Daniel Jurgens <danielj@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	bp@alien8.de,
-	linux-edac@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 52/79] EDAC/ie31200: work around false positive build warning
-Date: Mon,  5 May 2025 19:21:24 -0400
-Message-Id: <20250505232151.2698893-52-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 63/79] net/mlx5e: set the tx_queue_len for pfifo_fast
+Date: Mon,  5 May 2025 19:21:35 -0400
+Message-Id: <20250505232151.2698893-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -52,103 +59,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: William Tu <witu@nvidia.com>
 
-[ Upstream commit c29dfd661fe2f8d1b48c7f00590929c04b25bf40 ]
+[ Upstream commit a38cc5706fb9f7dc4ee3a443f61de13ce1e410ed ]
 
-gcc-14 produces a bogus warning in some configurations:
+By default, the mq netdev creates a pfifo_fast qdisc. On a
+system with 16 core, the pfifo_fast with 3 bands consumes
+16 * 3 * 8 (size of pointer) * 1024 (default tx queue len)
+= 393KB. The patch sets the tx qlen to representor default
+value, 128 (1<<MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE), which
+consumes 16 * 3 * 8 * 128 = 49KB, saving 344KB for each
+representor at ECPF.
 
-drivers/edac/ie31200_edac.c: In function 'ie31200_probe1.isra':
-drivers/edac/ie31200_edac.c:412:26: error: 'dimm_info' is used uninitialized [-Werror=uninitialized]
-  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
-      |                          ^~~~~~~~~
-drivers/edac/ie31200_edac.c:412:26: note: 'dimm_info' declared here
-  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
-      |                          ^~~~~~~~~
-
-I don't see any way the unintialized access could really happen here,
-but I can see why the compiler gets confused by the two loops.
-
-Instead, rework the two nested loops to only read the addr_decode
-registers and then keep only one instance of the dimm info structure.
-
-[Tony: Qiuxu pointed out that the "populate DIMM info" comment was left
-behind in the refactor and suggested moving it. I deleted the comment
-as unnecessry in front os a call to populate_dimm_info(). That seems
-pretty self-describing.]
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Jason Baron <jbaron@akamai.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/all/20250122065031.1321015-1-arnd@kernel.org
+Signed-off-by: William Tu <witu@nvidia.com>
+Reviewed-by: Daniel Jurgens <danielj@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Link: https://patch.msgid.link/20250209101716.112774-9-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/ie31200_edac.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index d3d9916b1ba3f..f865528728d75 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -398,10 +398,9 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
- 	int i, j, ret;
- 	struct mem_ctl_info *mci = NULL;
- 	struct edac_mc_layer layers[2];
--	struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
- 	void __iomem *window;
- 	struct ie31200_priv *priv;
--	u32 addr_decode, mad_offset;
-+	u32 addr_decode[IE31200_CHANNELS], mad_offset;
- 
- 	/*
- 	 * Kaby Lake, Coffee Lake seem to work like Skylake. Please re-visit
-@@ -459,19 +458,10 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
- 		mad_offset = IE31200_MAD_DIMM_0_OFFSET;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index a40fecfdb10ca..26a9d38d1e2a7 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1470,6 +1470,8 @@ static void mlx5e_build_rep_netdev(struct net_device *netdev)
  	}
  
--	/* populate DIMM info */
- 	for (i = 0; i < IE31200_CHANNELS; i++) {
--		addr_decode = readl(window + mad_offset +
-+		addr_decode[i] = readl(window + mad_offset +
- 					(i * 4));
--		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode);
--		for (j = 0; j < IE31200_DIMMS_PER_CHANNEL; j++) {
--			populate_dimm_info(&dimm_info[i][j], addr_decode, j,
--					   skl);
--			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
--				 dimm_info[i][j].size,
--				 dimm_info[i][j].dual_rank,
--				 dimm_info[i][j].x16_width);
--		}
-+		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode[i]);
- 	}
+ 	netdev->watchdog_timeo    = 15 * HZ;
++	if (mlx5_core_is_ecpf(mdev))
++		netdev->tx_queue_len = 1 << MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE;
  
- 	/*
-@@ -482,14 +472,22 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
- 	 */
- 	for (i = 0; i < IE31200_DIMMS_PER_CHANNEL; i++) {
- 		for (j = 0; j < IE31200_CHANNELS; j++) {
-+			struct dimm_data dimm_info;
- 			struct dimm_info *dimm;
- 			unsigned long nr_pages;
+ 	netdev->features       |= NETIF_F_NETNS_LOCAL;
  
--			nr_pages = IE31200_PAGES(dimm_info[j][i].size, skl);
-+			populate_dimm_info(&dimm_info, addr_decode[j], i,
-+					   skl);
-+			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
-+				 dimm_info.size,
-+				 dimm_info.dual_rank,
-+				 dimm_info.x16_width);
-+
-+			nr_pages = IE31200_PAGES(dimm_info.size, skl);
- 			if (nr_pages == 0)
- 				continue;
- 
--			if (dimm_info[j][i].dual_rank) {
-+			if (dimm_info.dual_rank) {
- 				nr_pages = nr_pages / 2;
- 				dimm = EDAC_DIMM_PTR(mci->layers, mci->dimms,
- 						     mci->n_layers, (i * 2) + 1,
 -- 
 2.39.5
 
