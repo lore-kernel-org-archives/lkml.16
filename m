@@ -1,42 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D09836BA5B;
-	Mon,  5 May 2025 22:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BB028032F;
+	Mon,  5 May 2025 22:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485819; cv=none; b=GYHig7J+/9eQOupQem6vPdV2eX5ymvMYdk2R0YNuf/oeEtYAvKo1H5DkpWkqRKNvVsosB9WkOyM90dVdauRTsnLAeOsd2l00aqlxr0ijLJIUuT7ZYoary5g14yLogkDRWiXtFmvdhakh939iY6jQGeGslwvC4quGl9vEq4Wjwxg=
+	t=1746485824; cv=none; b=GIUUOENVkGsMmkHSdRUxR92IKRwoZpQtrfnr9DpJxJy8TDX4wyMtJoaYVfdg+oD7JIQ3G1oxd7WQpPIsjy7BM7AbncllWhw/ZAq4ok6XeIabD+Kl+i5tTe9Pfapuf3BAwD2sqmAQWYdlOCbqgZFxASeYipgKgyDMmxXDttIcT3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485819; c=relaxed/simple;
-	bh=3NjjJic+KfXlHN5dzLwkv6OiL634PsPW6GB6dHVFi/Y=;
+	s=arc-20240116; t=1746485824; c=relaxed/simple;
+	bh=9DI2HHnmjUxdW4QLwVgpY8p3vKpqr9H6QE5nZNsdzMQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mw1I/rbwihIV6I2Tr89PcAST4WmHPs0lXyZWPgGOt5n2jkMGP6aU9VDpVh9CxEeSGRa7CqMyUuDLd3kHrwWDdehnxH+CTtgTd3bh+tTEwrBP911Sv/CRbII8UQ110Si3srDbZlSQo60j5oQMT3rJWAdIVFqKB2pG0FQ227UbCRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nn2oTv8Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RaOcIpHC+nbZjPBbHTxINeTXJ+DEHL/deAIQIMtoz984E3lKyA1KNZw5yUYGbuKl4AksCj4+2+wA6Zs6Gegma64nHQOPnrfWKqCDfmdJm+vOPliQoJuufag8RazUpmweVZg4al8GoRqWyE/JqwQ+OcMvh4o5yuFWwaXMhkD6Tos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViPDxfI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nn2oTv8Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3049DC4CEEF;
-	Mon,  5 May 2025 22:56:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViPDxfI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E971FC4CEE4;
+	Mon,  5 May 2025 22:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485818;
-	bh=3NjjJic+KfXlHN5dzLwkv6OiL634PsPW6GB6dHVFi/Y=;
+	s=k20201202; t=1746485824;
+	bh=9DI2HHnmjUxdW4QLwVgpY8p3vKpqr9H6QE5nZNsdzMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nn2oTv8ZN4fIfIyDACs+GCGThQctxrp6DNQqF6AZSbZSrxgEXUtGrFdO9DZSHjbcz
-	 gsPFfjcc6K2bWicZ8NAHOBiae113Cnwbc0fAz8aExsnJ//9dPVSFjrSS4RPW2fLNKo
-	 eRwKM8IkWkryMG8jrlR0pTXxRqW8urUEPSb6/yEYNf3QX+1ZgOWgkgV7liGfNsrydV
-	 HFxk77hkfzzU6/rwoA1KBJo62hd0sXOkEfmKMgNmrUbr1rPd3/DIOcmb4exSEH7F05
-	 rvhMU3IcEXhN7ieMaLFMJ5GU7KMb1ie2iw/IV646yLMbSsvAj4v+CI9Ff4zmn6PkE5
-	 2BEyfg+yWoN7Q==
+	b=HViPDxfI069hmYjymkGcnFDTKIb4MI/G86S5TtX8n6baTzyS9QTWOw3DzZ9r6pBYM
+	 ZewILBl8RC+GrZ3hyaM70qtTKqV5VLvuKtHug4Qa2gz+YlciYSTQ+dLGpqflJdT2dT
+	 Hxj0sO5FaCGRI8S1RLc4dHGmvFgRDffexdAoyIC/3mWC0/u07r00A0/GD3LOCc99It
+	 u/Pc3iXzC2U+Jqq/hKyrWpf3PEgPBpI6BumsjqB/25vOyir/pcFTu25DNLJjeYeUtd
+	 /ao36HULowz5n+eADWP+miCK/8yGpMGUVAoC3LWPnLYVYl0+PIwJp3wF5ly0/5TjlJ
+	 zS3T+HdKUa7hA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Diogo Ivo <diogo.ivo@siemens.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 013/294] ACPI: PNP: Add Intel OC Watchdog IDs to non-PNP device list
-Date: Mon,  5 May 2025 18:51:53 -0400
-Message-Id: <20250505225634.2688578-13-sashal@kernel.org>
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alexghiti@rivosinc.com,
+	namcao@linutronix.de,
+	bjorn@rivosinc.com,
+	vincenzo.frascino@arm.com,
+	stuart.menefy@codasip.com,
+	luxu.kernel@bytedance.com,
+	david@redhat.com,
+	akpm@linux-foundation.org,
+	libang.li@antgroup.com,
+	abrestic@rivosinc.com,
+	anshuman.khandual@arm.com,
+	yongxuan.wang@sifive.com,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 016/294] riscv: Allow NOMMU kernels to access all of RAM
+Date: Mon,  5 May 2025 18:51:56 -0400
+Message-Id: <20250505225634.2688578-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -51,43 +66,77 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Diogo Ivo <diogo.ivo@siemens.com>
+From: Samuel Holland <samuel.holland@sifive.com>
 
-[ Upstream commit f06777cf2bbc21dd8c71d6e3906934e56b4e18e4 ]
+[ Upstream commit 2c0391b29b27f315c1b4c29ffde66f50b29fab99 ]
 
-Intel Over-Clocking Watchdogs are described in ACPI tables by both the
-generic PNP0C02 _CID and their ACPI _HID. The presence of the _CID then
-causes the PNP scan handler to attach to the watchdog, preventing the
-actual watchdog driver from binding. Address this by adding the ACPI
-_HIDs to the list of non-PNP devices, so that the PNP scan handler is
-bypassed.
+NOMMU kernels currently cannot access memory below the kernel link
+address. Remove this restriction by setting PAGE_OFFSET to the actual
+start of RAM, as determined from the devicetree. The kernel link address
+must be a constant, so keep using CONFIG_PAGE_OFFSET for that purpose.
 
-Note that these watchdogs can be described by multiple _HIDs for what
-seems to be identical hardware. This commit is not a complete list of
-all the possible watchdog ACPI _HIDs.
-
-Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
-Link: https://patch.msgid.link/20250317-ivo-intel_oc_wdt-v3-2-32c396f4eefd@siemens.com
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+Reviewed-by: Jesse Taube <mr.bossman075@gmail.com>
+Link: https://lore.kernel.org/r/20241026171441.3047904-3-samuel.holland@sifive.com
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_pnp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/riscv/include/asm/page.h    | 12 ++++--------
+ arch/riscv/include/asm/pgtable.h |  2 +-
+ 2 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
-index 01abf26764b00..3f5a1840f5733 100644
---- a/drivers/acpi/acpi_pnp.c
-+++ b/drivers/acpi/acpi_pnp.c
-@@ -355,8 +355,10 @@ static bool acpi_pnp_match(const char *idstr, const struct acpi_device_id **matc
-  * device represented by it.
+diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+index 4d1f58848129e..dbb9d0d0f405e 100644
+--- a/arch/riscv/include/asm/page.h
++++ b/arch/riscv/include/asm/page.h
+@@ -26,12 +26,9 @@
+  * When not using MMU this corresponds to the first free page in
+  * physical memory (aligned on a page boundary).
   */
- static const struct acpi_device_id acpi_nonpnp_device_ids[] = {
-+	{"INT3F0D"},
- 	{"INTC1080"},
- 	{"INTC1081"},
-+	{"INTC1099"},
- 	{""},
- };
+-#ifdef CONFIG_64BIT
+ #ifdef CONFIG_MMU
++#ifdef CONFIG_64BIT
+ #define PAGE_OFFSET		kernel_map.page_offset
+-#else
+-#define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
+-#endif
+ /*
+  * By default, CONFIG_PAGE_OFFSET value corresponds to SV57 address space so
+  * define the PAGE_OFFSET value for SV48 and SV39.
+@@ -41,6 +38,9 @@
+ #else
+ #define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
+ #endif /* CONFIG_64BIT */
++#else
++#define PAGE_OFFSET		((unsigned long)phys_ram_base)
++#endif /* CONFIG_MMU */
+ 
+ #ifndef __ASSEMBLY__
+ 
+@@ -97,11 +97,7 @@ typedef struct page *pgtable_t;
+ #define MIN_MEMBLOCK_ADDR      0
+ #endif
+ 
+-#ifdef CONFIG_MMU
+ #define ARCH_PFN_OFFSET		(PFN_DOWN((unsigned long)phys_ram_base))
+-#else
+-#define ARCH_PFN_OFFSET		(PAGE_OFFSET >> PAGE_SHIFT)
+-#endif /* CONFIG_MMU */
+ 
+ struct kernel_mapping {
+ 	unsigned long page_offset;
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index f540b2625714d..332a6bf72b1d5 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -12,7 +12,7 @@
+ #include <asm/pgtable-bits.h>
+ 
+ #ifndef CONFIG_MMU
+-#define KERNEL_LINK_ADDR	PAGE_OFFSET
++#define KERNEL_LINK_ADDR	_AC(CONFIG_PAGE_OFFSET, UL)
+ #define KERN_VIRT_SIZE		(UL(-1))
+ #else
  
 -- 
 2.39.5
