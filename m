@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131521C861D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E8C26F444;
 	Mon,  5 May 2025 20:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477436; cv=none; b=cesplLLIADCTE2pd1vD7TaM6ZapqJlnXWc00mQhJyHOI85ogHpKT6AJW/rZVz6c0yM/8RYXdjO/qymv9ENb1SndFbMWsPQN2Ncqvxa6kmAJNsDeG4nbKcjrIkqo5GO1H9qv4K/wPtl7m3OmTbxjNOdWOh/pxsWng7hJzumq5cvw=
+	t=1746477436; cv=none; b=RGzgI4OHFNK/qQM2bvyqcPr4gmYebeR+QACsD8DxxDwcjm1CV4ip1wjhkKk9y9D3sEwQAigBD/2ljO5rkI0B7OZkkhyo6u7rM9YNJGgX41kfDCSfMeaREGkQ6E0vXff6X6E6oKFKJLe9Zld3dU/thVhsq7WVFm6CO9UZE4bQSsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746477436; c=relaxed/simple;
-	bh=Z5BG+wD+9VTRJdR/77ZQahKysplAfS/VV14lSAxIa00=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jsJyMVTIbX8SvH74uyZURiHQcvhL8hIcRqzj8n7cdqvP/NX0A53nNmppCKclQ3gUYwY0tsJ8CV8PhjFQfoDeKrgLWrVEVCm1I0tUK8JeZBqpI0RNFHo3wAAZUTeAqP1B+3vMLcc0Tne5Y9SwiR1GALfkw95urp6xCCUnuzqKOy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJFvafyw; arc=none smtp.client-ip=10.30.226.201
+	bh=zLJNQbTBpTtCkwbzaJ94Y+qs9Gluucy9HpN7NqXx5bM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GEw+N/SU5ZUzK3tkCwsa8gXf0jhvip2t5pw2VSBiG7l+MD5xgKPHayv09w6BQOUdrn6wkv6uVsUij1GQR3o8k6LEG5MpBzdKVNdykhHxNijPs3G3V7O+bNWKNEqgavsH1le3GYlWjtj1swclNwK2Hv7Nw0l3i934aocuVYCqsA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jc7XqS8d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJFvafyw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0EAC4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jc7XqS8d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9917C4CEED;
 	Mon,  5 May 2025 20:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746477435;
-	bh=Z5BG+wD+9VTRJdR/77ZQahKysplAfS/VV14lSAxIa00=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XJFvafywt0dfiB050ZvXaC/+mtz/AMzyMs3wp0XVcFsxFUtEalaDm+4EqLrgQb73a
-	 QrXQl7hWzMvgTCJ9oFYC00fdUS8zm4d9wuqXX7cPfFjDyy1jT8oSO7PcpHphBIemKn
-	 TDpL1XprefVfr1G7wresosbiDCKnIvpCd0JRZ9B839cKxPUOJ8TX+qW5VR7BxBYVgF
-	 DUVA/oXQKh3XOKXp7A1JBIRG8MPZ9HxPloF/D90nIQZNfUt8C0O2UwhtFH/1+WIKRk
-	 wiSG/6Cs4aKLI0mq6OHj/P2mkIwBJiZVQzZ1cIE2Dzf3DuuMVx9uy+CHCElBArb58G
-	 nWSgauvqOZJjg==
+	bh=zLJNQbTBpTtCkwbzaJ94Y+qs9Gluucy9HpN7NqXx5bM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jc7XqS8dS/NpJkiQO2+I+i3mG1b3NSqmWPHpIBjOPrlxUcj5fjqb3bTmsykH9huLS
+	 +zwG7qI8xqnbylr1qv/qOZuCJOcFAFrZawhEb77FIhWHYsSMuJWp312NrLV9c2471m
+	 8tcwY/85MEyAAvIcAAEiweMubtdWGxUjAhn882zXJoSsJ4qhLfEIbpMxFp81vbLuYv
+	 G3E9u9QIavNJfXMo8R4WSpM4AIszNIZNh5pMZ98SrAU/RUq5sIZg/HZ2/IbBG0P8g1
+	 /zb7Hii3XJ9sCiJihd+gSy2EqwQBMyEGqNkYYXpEcZG4jnXVVW7jwossHl3UVVAiJZ
+	 UYzkN1SJGC/Wg==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/7] Clean up the crypto testing options
-Date: Mon,  5 May 2025 13:33:38 -0700
-Message-ID: <20250505203345.802740-1-ebiggers@kernel.org>
+Subject: [PATCH v3 2/7] crypto: testmgr - remove panic_on_fail
+Date: Mon,  5 May 2025 13:33:40 -0700
+Message-ID: <20250505203345.802740-3-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250505203345.802740-1-ebiggers@kernel.org>
+References: <20250505203345.802740-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,100 +43,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series reworks the crypto testing kconfig options to fix some
-longstanding issues:
+From: Eric Biggers <ebiggers@google.com>
 
-- Replace the inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with a
-  regular option CONFIG_CRYPTO_SELFTESTS.
+The cryptomgr.panic_on_fail=1 kernel command-line parameter is not very
+useful now that the tests have been fixed to WARN on failure, since
+developers can just use panic_on_warn=1 instead.  There's no need for a
+special option just for the crypto self-tests.  Remove it.
 
-- Make CONFIG_CRYPTO_SELFTESTS enable the full set of tests by default,
-  removing CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/testmgr.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-- Automatically enable CONFIG_CRYPTO_MANAGER when needed for the tests.
-
-- Rename cryptomgr.noextratests to cryptomgr.noslowtests.
-
-- Remove cryptomgr.panic_on_fail, as panic_on_warn can be used instead.
-
-- Rename CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK.
-
-Changed in v3:
-  - Keep options in defconfigs.
-  - Make CRYPTO_SELFTESTS depend on DEBUG_KERNEL.
-
-Changed in v2:
-  - Moved selftest lines in lib/crypto/Makefile to appropriate places.
-  - Fixed a commit message.
-
-Eric Biggers (7):
-  crypto: tcrypt - rename CRYPTO_TEST to CRYPTO_BENCHMARK
-  crypto: testmgr - remove panic_on_fail
-  crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with
-    CRYPTO_SELFTESTS
-  crypto: testmgr - make it easier to enable the full set of tests
-  crypto: testmgr - rename noextratests to noslowtests
-  crypto: Kconfig - make CRYPTO_MANAGER a hidden symbol
-  crypto: testmgr - enable CRYPTO_MANAGER when CRYPTO_SELFTESTS
-
- arch/arm/configs/exynos_defconfig           |   2 +-
- arch/arm/configs/milbeaut_m10v_defconfig    |   3 +-
- arch/arm/configs/pxa_defconfig              |   3 +-
- arch/arm/configs/spitz_defconfig            |   2 +-
- arch/arm64/configs/defconfig                |   2 +-
- arch/loongarch/configs/loongson3_defconfig  |   2 +-
- arch/m68k/configs/amiga_defconfig           |   2 +-
- arch/m68k/configs/apollo_defconfig          |   2 +-
- arch/m68k/configs/atari_defconfig           |   2 +-
- arch/m68k/configs/bvme6000_defconfig        |   2 +-
- arch/m68k/configs/hp300_defconfig           |   2 +-
- arch/m68k/configs/mac_defconfig             |   2 +-
- arch/m68k/configs/multi_defconfig           |   2 +-
- arch/m68k/configs/mvme147_defconfig         |   2 +-
- arch/m68k/configs/mvme16x_defconfig         |   2 +-
- arch/m68k/configs/q40_defconfig             |   2 +-
- arch/m68k/configs/sun3_defconfig            |   2 +-
- arch/m68k/configs/sun3x_defconfig           |   2 +-
- arch/mips/configs/decstation_64_defconfig   |   1 -
- arch/mips/configs/decstation_defconfig      |   1 -
- arch/mips/configs/decstation_r4k_defconfig  |   1 -
- arch/mips/configs/gpr_defconfig             |   2 +-
- arch/mips/configs/ip28_defconfig            |   1 -
- arch/mips/configs/lemote2f_defconfig        |   2 +-
- arch/mips/configs/mtx1_defconfig            |   2 +-
- arch/mips/configs/rb532_defconfig           |   2 +-
- arch/parisc/configs/generic-32bit_defconfig |   2 +-
- arch/parisc/configs/generic-64bit_defconfig |   1 -
- arch/powerpc/configs/g5_defconfig           |   2 +-
- arch/powerpc/configs/powernv_defconfig      |   2 +-
- arch/powerpc/configs/ppc64_defconfig        |   2 +-
- arch/powerpc/configs/ppc64e_defconfig       |   2 +-
- arch/powerpc/configs/ppc6xx_defconfig       |   2 +-
- arch/s390/configs/debug_defconfig           |   4 +-
- arch/s390/configs/defconfig                 |   4 +-
- arch/sh/configs/migor_defconfig             |   1 -
- arch/sparc/configs/sparc64_defconfig        |   2 +-
- crypto/Kconfig                              |  45 ++++----
- crypto/Makefile                             |   2 +-
- crypto/algapi.c                             |   5 +-
- crypto/algboss.c                            |   2 +-
- crypto/api.c                                |   3 +-
- crypto/hkdf.c                               |   2 +-
- crypto/internal.h                           |   5 +-
- crypto/kdf_sp800108.c                       |   2 +-
- crypto/tcrypt.c                             |   8 +-
- crypto/tcrypt.h                             |   4 +-
- crypto/testmgr.c                            | 115 +++++---------------
- include/crypto/internal/simd.h              |   6 +-
- lib/crypto/Makefile                         |  11 +-
- lib/crypto/aescfb.c                         |   2 +-
- lib/crypto/aesgcm.c                         |   2 +-
- lib/crypto/blake2s.c                        |   2 +-
- lib/crypto/chacha20poly1305.c               |   2 +-
- lib/crypto/curve25519.c                     |   2 +-
- 55 files changed, 111 insertions(+), 183 deletions(-)
-
-
-base-commit: 64745a9ca890ed60d78162ec511e1983e1946d73
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index f100be516f52..1c71616ae2cf 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -43,13 +43,10 @@ MODULE_IMPORT_NS("CRYPTO_INTERNAL");
+ 
+ static bool notests;
+ module_param(notests, bool, 0644);
+ MODULE_PARM_DESC(notests, "disable crypto self-tests");
+ 
+-static bool panic_on_fail;
+-module_param(panic_on_fail, bool, 0444);
+-
+ #ifdef CONFIG_CRYPTO_MANAGER_EXTRA_TESTS
+ static bool noextratests;
+ module_param(noextratests, bool, 0644);
+ MODULE_PARM_DESC(noextratests, "disable expensive crypto self-tests");
+ 
+@@ -5852,15 +5849,14 @@ int alg_test(const char *driver, const char *alg, u32 type, u32 mask)
+ 		rc |= alg_test_descs[j].test(alg_test_descs + j, driver,
+ 					     type, mask);
+ 
+ test_done:
+ 	if (rc) {
+-		if (fips_enabled || panic_on_fail) {
++		if (fips_enabled) {
+ 			fips_fail_notify();
+-			panic("alg: self-tests for %s (%s) failed in %s mode!\n",
+-			      driver, alg,
+-			      fips_enabled ? "fips" : "panic_on_fail");
++			panic("alg: self-tests for %s (%s) failed in fips mode!\n",
++			      driver, alg);
+ 		}
+ 		pr_warn("alg: self-tests for %s using %s failed (rc=%d)",
+ 			alg, driver, rc);
+ 		WARN(rc != -ENOENT,
+ 		     "alg: self-tests for %s using %s failed (rc=%d)",
 -- 
 2.49.0
 
