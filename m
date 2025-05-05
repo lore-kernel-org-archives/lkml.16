@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7B738F182;
-	Mon,  5 May 2025 23:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9038F181;
+	Mon,  5 May 2025 23:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486126; cv=none; b=FV4ooqN1/f9/ecR2wJWPC699SaVhjtSHWtAb7PDcWyTh7QOcZJWnE44aNvDQ8bwOfJVx74C5o08qElKpG+HB61UkR+cGp8oem4+wW0bFYOO8jhDemYVSKTIH5UAT1AjPQ4dK6RfJeD7Rt+R/LA/bWU83LhDrdHu++6VBdO+KPfA=
+	t=1746486126; cv=none; b=urF/ts9pH+mKyRI0KgBtF6q9NIsr7M4VALrxxJMmBsfRTg55PpvGvQsvwmhlTdOjqlLlr/xMaAHTLSkCMFLVOOjwxE71Udb8EbEWN3uyannYB+MeM6We4RartQrHPBrR+qCTlObQZcGLYnUNDS3rZ6jgWZfZPFa45tNuFqUnOK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746486126; c=relaxed/simple;
-	bh=ZZUXIkOSS3hS2GknXyh0OcagJMVn6bqVb1rlYQfWut0=;
+	bh=2esapROkTMnruviUBIinUj5RrrZr0Z2HKA8ukgHv/V4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e7H79piIDDbvRSYLE7AaUoeyrkYdX5NjDIFU3UfYbWyjbzTnWm4lsq1YzfOhg5hCQAzEEvowiXhTbtOfh6u5GzeR/RCW34nZ8vdKKSJcW3g8sjhhbg+gFz7XJYxGcwByVeSJzdcViiYrqp81JnfnU4XzrlPwG+RA1popVyvJTv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeY061rg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QYWY795UoWF0TZ5j83Q7BvWtqX7VfPUzugFFnRErWrpaYxzZjG6GmZzlo2xnE5A35xtjgs0k5VZHL+RVvEWK/hCXUXN39L7FZJvXqII51QmgHZgc+9yzpyn8R9WUOO8+Mt3GStRPkaMU4xSzLgo2ilU5x3uKWbaVVC4+8bz6tic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eu+gRK7J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeY061rg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44A7C4CEF1;
-	Mon,  5 May 2025 23:02:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eu+gRK7J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A59DC4CEED;
+	Mon,  5 May 2025 23:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486125;
-	bh=ZZUXIkOSS3hS2GknXyh0OcagJMVn6bqVb1rlYQfWut0=;
+	s=k20201202; t=1746486124;
+	bh=2esapROkTMnruviUBIinUj5RrrZr0Z2HKA8ukgHv/V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FeY061rg9/17Q27YvTvw2WzTt3ycF2HxCqhupfheopEJyS02coRmcT6f5EgFEJXsd
-	 CXYF0G5YfxQVmcEq9b3d0aJVz9wa5BAY4geJbLbUdCikxC0Q52sVnB2IljFisrrOxp
-	 Kw0ON0yY04z5JxEHDpVNuIWFoRtgItOuQmNq8Fsm0zny8Nwu45hs6VYlw1EZLDcUPN
-	 NU3yXRbTxrsYXdOFxkDQLCzCRxzzbMfoWztxU7Pi+JIJM7BoX3zIYuSD89SZbqMq35
-	 ZJ6X19TFMFUEeX3LZ4tviqW6yPWoOPHsxynKEJBiSn9WiIRSCfSJ7sDhCp3/StOayQ
-	 hMT7FF95MxeQw==
+	b=Eu+gRK7J6Cw/CsQyyv4SGyRZYBAZYM8W7Qeyod9HQ57lU3gzFnRaTRCFeVMsBVErv
+	 iRoZpwYB8rgtYJzbnH99KDOaMmVKIA8kt6WrsmycO9ihiW+M0VmxJTa9EAlwiToyLL
+	 eGw6vB7bj20zi13Bh+XocfxWdaVumCD57/yUP08gsiuxiISoZQUdTQamGD1Dr7QSSv
+	 9XdmI0vQUKXPu8EtmvGr0Rn1vDmyeibl4JSKeawCYuoWel8toWambSj/Otzm7YFxw4
+	 1tgi/0BDNq1L7adVtBaxGtBctmoRA5Zr4mbdf9RV2ZlwPEH+/rvKYJUTq8pfwutLNH
+	 nxHivdkoadGfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nandakumar Edamana <nandakumar@nandakumar.co.in>,
-	Andrii Nakryiko <andrii@kernel.org>,
+Cc: Matthias Fend <matthias.fend@emfend.at>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 165/294] libbpf: Fix out-of-bound read
-Date: Mon,  5 May 2025 18:54:25 -0400
-Message-Id: <20250505225634.2688578-165-sashal@kernel.org>
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	tomi.valkeinen@ideasonboard.com,
+	ribalda@chromium.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 164/294] media: tc358746: improve calculation of the D-PHY timing registers
+Date: Mon,  5 May 2025 18:54:24 -0400
+Message-Id: <20250505225634.2688578-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,41 +55,78 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Nandakumar Edamana <nandakumar@nandakumar.co.in>
+From: Matthias Fend <matthias.fend@emfend.at>
 
-[ Upstream commit 236d3910117e9f97ebf75e511d8bcc950f1a4e5f ]
+[ Upstream commit 78d7265e2e1ce349e7f3c6a085f2b66d7b73f4ca ]
 
-In `set_kcfg_value_str`, an untrusted string is accessed with the assumption
-that it will be at least two characters long due to the presence of checks for
-opening and closing quotes. But the check for the closing quote
-(value[len - 1] != '"') misses the fact that it could be checking the opening
-quote itself in case of an invalid input that consists of just the opening
-quote.
+When calculating D-PHY registers, using data rates that are not multiples
+of 16 can lead to precision loss in division operations. This can result in
+register values that produce timing violations against the MIPI standard.
 
-This commit adds an explicit check to make sure the string is at least two
-characters long.
+An example:
+cfg->hs_clk_rate = 294MHz
+hf_clk = 18
 
-Signed-off-by: Nandakumar Edamana <nandakumar@nandakumar.co.in>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/bpf/20250221210110.3182084-1-nandakumar@nandakumar.co.in
+If the desired value in cfg->init is 100us, which is the minimum allowed
+value, then the LINEINITCNT register is calculated as 1799. But since the
+actual clock is 18.375MHz instead of 18MHz, this setting results in a time
+that is shorter than 100us and thus violates the standard. The correct
+value for LINEINITCNT would be 1837.
+
+Improve the precision of calculations by using Hz instead of MHz as unit.
+
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/tc358746.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 2fad178949efe..fa2abe56e845d 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1802,7 +1802,7 @@ static int set_kcfg_value_str(struct extern_desc *ext, char *ext_val,
- 	}
+diff --git a/drivers/media/i2c/tc358746.c b/drivers/media/i2c/tc358746.c
+index 566f5eaddd572..b12a6bd42102e 100644
+--- a/drivers/media/i2c/tc358746.c
++++ b/drivers/media/i2c/tc358746.c
+@@ -460,24 +460,20 @@ static int tc358746_apply_misc_config(struct tc358746 *tc358746)
+ 	return err;
+ }
  
- 	len = strlen(value);
--	if (value[len - 1] != '"') {
-+	if (len < 2 || value[len - 1] != '"') {
- 		pr_warn("extern (kcfg) '%s': invalid string config '%s'\n",
- 			ext->name, value);
- 		return -EINVAL;
+-/* Use MHz as base so the div needs no u64 */
+-static u32 tc358746_cfg_to_cnt(unsigned int cfg_val,
+-			       unsigned int clk_mhz,
+-			       unsigned int time_base)
++static u32 tc358746_cfg_to_cnt(unsigned long cfg_val, unsigned long clk_hz,
++			       unsigned long long time_base)
+ {
+-	return DIV_ROUND_UP(cfg_val * clk_mhz, time_base);
++	return div64_u64((u64)cfg_val * clk_hz + time_base - 1, time_base);
+ }
+ 
+-static u32 tc358746_ps_to_cnt(unsigned int cfg_val,
+-			      unsigned int clk_mhz)
++static u32 tc358746_ps_to_cnt(unsigned long cfg_val, unsigned long clk_hz)
+ {
+-	return tc358746_cfg_to_cnt(cfg_val, clk_mhz, USEC_PER_SEC);
++	return tc358746_cfg_to_cnt(cfg_val, clk_hz, PSEC_PER_SEC);
+ }
+ 
+-static u32 tc358746_us_to_cnt(unsigned int cfg_val,
+-			      unsigned int clk_mhz)
++static u32 tc358746_us_to_cnt(unsigned long cfg_val, unsigned long clk_hz)
+ {
+-	return tc358746_cfg_to_cnt(cfg_val, clk_mhz, 1);
++	return tc358746_cfg_to_cnt(cfg_val, clk_hz, USEC_PER_SEC);
+ }
+ 
+ static int tc358746_apply_dphy_config(struct tc358746 *tc358746)
+@@ -492,7 +488,6 @@ static int tc358746_apply_dphy_config(struct tc358746 *tc358746)
+ 
+ 	/* The hs_byte_clk is also called SYSCLK in the excel sheet */
+ 	hs_byte_clk = cfg->hs_clk_rate / 8;
+-	hs_byte_clk /= HZ_PER_MHZ;
+ 	hf_clk = hs_byte_clk / 2;
+ 
+ 	val = tc358746_us_to_cnt(cfg->init, hf_clk) - 1;
 -- 
 2.39.5
 
