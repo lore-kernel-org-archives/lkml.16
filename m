@@ -1,175 +1,100 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811A2204096;
-	Mon,  5 May 2025 16:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45527269820;
+	Mon,  5 May 2025 16:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461651; cv=none; b=PDQWDoikvYiPGAJIT4iHPNa2ibfmQrWXQWhLUcD8Pq8CwoFoKDhfcLjDYDW3OnzpN/0A5IKRfDllRZJENPQNaz95IT8CUvpQ43OUz/ZiOYjt21kDYeuS+LXoVu/AXOBkD7v5fZ7hcBatNooliB3PoW1g8wwHD6CE+4k1+RFLubM=
+	t=1746461653; cv=none; b=LtywZD2cqKUbUpke0Ruq3ldLbahQsyD22Alv1t8oqiFX5aADmu6ig2IEd+aMF4rzTWOKnRdogZCh6F6Y3HGpSlADFff4fuNzxKB7HFD7O2KTBYABbSPq5or+MPgaph7vF3K2qdYXGlwkQiCB/dQrzL9DfP7zYxHSfEMnmA5mdCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461651; c=relaxed/simple;
-	bh=l0x7QpnKNM65NzV/IFWEVen7rZ6tmS8Ul5cZGDUB1Bk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iZEKYteL7PV+V2z3eq9ILFRwDcaNlVLtqexixQuQkfd80RbGnUCjfz6lzjUhiMiqSUB+qs4BJLO4lJqXeSeLTrr0LDVjRXKPiA5IjTZYeNHUyaSSqcKlm9nNXmrPhGQ8Huq6PU/P4N4UNlsozm0nM56MKEsYQF6cDnyGNFyrZ3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HR/jDw76; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746461653; c=relaxed/simple;
+	bh=c2akGNl2Wk40azl4vCjlgOQQV6prinJ8u3YfroziW5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eisYy/oFk2p61kPc55AnGa3sB0W/6BRhVAFcENTwEX0/juvFuKwjF5xqtSERMny2jH9rm6Z0E9BQiRfsbZ4DGaxHvbUlRSgxQCBrg9C63va8TOfmjvMb/yjYKMjGo+wyUlUFRbrG0jE0wvl04oT1fuETJjz2WhyPFcrwBsey4vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFCfPJKV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HR/jDw76"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 27A6F438BD;
-	Mon,  5 May 2025 16:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746461641;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qm4w28GJG8W0gRihHu9MypRoYQ1YCK2AOK3Kul43uzI=;
-	b=HR/jDw76UgCXjwX7tG/FATDO9we+vkIPBzHSNZS3tm2WqP60Fm3rA0f2r8nfMPCgg4HWjr
-	K3rPNEufvi53Magy+ckxzsP9nSKc43qq0Obh4i6D//K7wAzM82CEc+oYKX3GQESr2D4wwq
-	B6oMkOjabXcY69q74IiWrNbaKouHb0gBHdMKqJBEimXEmpIGbWO1nPvoHcrEz5KDUYC6eh
-	h0TA0LPGXKvlYL8uhsNTEYxWUsmZww0rbukzIgGFoppN8MfIJStJZZFmmu+PaEDi0FXO0M
-	6RMXwHXKMbBFATqaVceopgrHymexsIYqfYC/FEJU+Y4kBHZwivEaorJYr5L03g==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- Cosmin Tanislav <demonsingur@gmail.com>
-Subject: Re: [PATCH v4 9/9] i2c: atr: add passthrough flag
-Date: Mon, 05 May 2025 18:13:56 +0200
-Message-ID: <3034821.e9J7NaK4W3@fw-rgant>
-In-Reply-To: <20250428102516.933571-10-demonsingur@gmail.com>
-References:
- <20250428102516.933571-1-demonsingur@gmail.com>
- <20250428102516.933571-10-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFCfPJKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C95C4CEEF;
+	Mon,  5 May 2025 16:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746461652;
+	bh=c2akGNl2Wk40azl4vCjlgOQQV6prinJ8u3YfroziW5s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hFCfPJKVaR69kaDC46ULPKdDKjFlPl/Yv7TkZcAsI7r2aOVMRjEdtoi8Ld1zEdbG5
+	 2hcNQPuBA/FmjxRz8jvgknrxxhyqG4CtUtgQqlmMU02vyVPLiuhKfZ+zq8T+NrfEYx
+	 FzYOqmUNYc1H80S0T43+LwpkuZwjMQKaJYPaNDkCcrDfK5mp1T1InvJLHlGPZ4khUY
+	 PAVWxRV1Qcc6H/WVD/JsYqX4te4yZTqf7LkAtb6ON5ad2htJ53Xo7PRl3vF0RhBXyt
+	 IZQR7JYSvrUaBoUPkRSko9ypmhiSPeRKtMZduA6w97mMtiIzU9K2HPomlk1C7IWtVG
+	 +sNi/lsHYfT6A==
+Date: Mon, 5 May 2025 17:14:06 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lars@metafoo.de,
+ Michael.Hennerich@analog.com, nuno.sa@analog.com,
+ marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH] iio: adc: ad4000: Avoid potential double data word read
+Message-ID: <20250505171406.5319a00e@jic23-huawei>
+In-Reply-To: <Z_9SZ_XgKfv4DliG@smile.fi.intel.com>
+References: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
+	<CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
+	<22858e4f-db8e-4c97-8551-a1934a9f2fe7@baylibre.com>
+	<CAHp75VdKpSnwfKO4GaJmVOs8kHASsZ4V9yNcZ7EF_GVoDNmrfw@mail.gmail.com>
+	<CAHp75VfuCkohVLUJKgcMrgad-fRk4aKx_Ki0gRxxhJP3qgvS1g@mail.gmail.com>
+	<Z_9SZ_XgKfv4DliG@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3395128.aeNJFYEL58";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvgeemkedtkedvmeehrgdtudemrgdtgegvmehfjeeiheemleehrgemughfkeeipdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihess
- ghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopehmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---nextPart3395128.aeNJFYEL58
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Subject: Re: [PATCH v4 9/9] i2c: atr: add passthrough flag
-Date: Mon, 05 May 2025 18:13:56 +0200
-Message-ID: <3034821.e9J7NaK4W3@fw-rgant>
-In-Reply-To: <20250428102516.933571-10-demonsingur@gmail.com>
-MIME-Version: 1.0
+On Wed, 16 Apr 2025 09:47:03 +0300
+Andy Shevchenko <andy@kernel.org> wrote:
 
-On Monday, 28 April 2025 12:25:14 CEST Cosmin Tanislav wrote:
-> Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
-> the child ATRs need to be forwarded as-is if the parent I2C ATR can
-> only do static mapping.
-> 
-> In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
-> address remapping hardware capabilities, but it is able to select which
-> GMSL link to talk to, allowing it to change the address of the
-> serializer.
-> 
-> The child ATRs need to have their alias pools defined in such a way to
-> prevent overlapping addresses between them, but there's no way around
-> this without orchestration between multiple ATR instances.
-> 
-> To allow for this use-case, add a flag that allows unmapped addresses
-> to be passed through, since they are already remapped by the child ATRs.
-> 
-> There's no case where an address that has not been remapped by the child
-> ATR will hit the parent ATR.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> ---
->  drivers/i2c/i2c-atr.c   | 7 +++++--
->  include/linux/i2c-atr.h | 2 ++
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-> index 721dd680f2ac..eccb85c34609 100644
-> --- a/drivers/i2c/i2c-atr.c
-> +++ b/drivers/i2c/i2c-atr.c
-> @@ -394,6 +394,9 @@ static int i2c_atr_map_msgs(struct i2c_atr_chan *chan,
-> struct i2c_msg *msgs, c2a = i2c_atr_get_mapping_by_addr(chan,
-> msgs[i].addr);
-> 
->  		if (!c2a) {
-> +			if (atr->flags & I2C_ATR_F_PASSTHROUGH)
-> +				continue;
-> +
->  			dev_err(atr->dev, "client 0x%02x not mapped!\n",
->  				msgs[i].addr);
-> 
-> @@ -486,13 +489,13 @@ static int i2c_atr_smbus_xfer(struct i2c_adapter
-> *adap, u16 addr,
-> 
->  	c2a = i2c_atr_get_mapping_by_addr(chan, addr);
-> 
-> -	if (!c2a) {
-> +	if (!c2a && !(atr->flags & I2C_ATR_F_PASSTHROUGH)) {
->  		dev_err(atr->dev, "client 0x%02x not mapped!\n", addr);
->  		mutex_unlock(&chan->alias_pairs_lock);
->  		return -ENXIO;
->  	}
-> 
-> -	alias = c2a->alias;
-> +	alias = c2a ? c2a->alias : addr;
-> 
->  	mutex_unlock(&chan->alias_pairs_lock);
-> 
-> diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-> index 7c6a9627191d..f979b931ca05 100644
-> --- a/include/linux/i2c-atr.h
-> +++ b/include/linux/i2c-atr.h
-> @@ -22,9 +22,11 @@ struct i2c_atr;
->   * enum i2c_atr_flags - Flags for an I2C ATR driver
->   *
->   * @I2C_ATR_F_STATIC: ATR does not support dynamic mapping, use static
-> mapping + * @I2C_ATR_F_PASSTHROUGH: Allow unmapped incoming addresses to
-> pass through */
->  enum i2c_atr_flags {
->  	I2C_ATR_F_STATIC = BIT(0),
-> +	I2C_ATR_F_PASSTHROUGH = BIT(1),
->  };
-> 
->  /**
+> On Wed, Apr 16, 2025 at 09:01:02AM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 16, 2025 at 8:59=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote: =20
+> > > On Wed, Apr 16, 2025 at 12:22=E2=80=AFAM David Lechner <dlechner@bayl=
+ibre.com> wrote: =20
+> > > > On 4/15/25 1:02 PM, Andy Shevchenko wrote: =20
+>=20
+> ...
+>=20
+> > > > It would have to be:
+> > > >
+> > > >         xfers[1].len =3D roundup_pow_of_two(BITS_TO_BYTES(chan->sca=
+n_type.realbits));
+> > > >
+> > > > But that gets too long for 1 line =20
+> > >
+> > > Actually there are a handful of drivers including SPI core that need
+> > > that helper already, I would prefer to have a helper defined in spi.h.
+> > >
+> > > , so I prefer what Marcelo wrote. =20
+> > > >
+> > > > Maybe an idea for another day:
+> > > >
+> > > > #define SPI_LEN_FOR_BITS(bits) roundup_pow_of_two(BITS_TO_BYTES(bit=
+s)) =20
+> > >
+> > > Right, but as static inline to have stricter types.
+> > > =20
+> > > > There are a couple of places in spi/ that could use this and several
+> > > > iio drivers. =20
+> >=20
+> > Or even wider, in bitops.h / bit*.h somewhere. Let me craft a patch. =20
+>=20
+> Just sent a mini-series, you are in Cc there.
+>=20
 
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
+I've picked this one up for now.  Assuming we'll cycle round to use the new
+helper once it's available in my upstream.
 
---nextPart3395128.aeNJFYEL58
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgY48QACgkQ3R9U/FLj
-286Qhw//WK8qW0lMvyrTdm2J/jkXMz46h2If/bll0FOrDJlngudBZZXEIBq39IeS
-FeeHPoxZNyckkOYB8ZPVjmx06BGXv4sHmewjacmeAKTIZEDJL+p/2J8OwkJQUuHi
-y3aVX6dayMKr7g1kd1vBfSM7FEgaf4s84Qd/+5yfy/ZRGPF2WxLwQSaRZknjReqT
-Izoy5Hx1DR2FqfHYKg/xkjdNOOE/9hAkl27Bkv15onv7n5hAFKiPu589f91rgXYO
-xF3Aue/4iFFF0MflS1s2v6Qinkbk/5AUXgqzuDe13/noAcvnyF5/HhxTY/wXQnlG
-0qf3jojvSyfRdtJwj9o9CjrKqwiXdOxrLqEo/10kA3MgbS/NBBKEs8xlN2rDdZc1
-WfL9MpqPjWybVerUg3F1FEVUQP89ez8KhsxLcZuuhAHMzKlivc8Zd1Qk7ygthd4E
-Y3v8usC100iy2oKidQ+1sqi5dDHKP0IkuWnBzRC17u/2Ix7ym5YTGCIpn2eoeUrI
-z4Psqrt8m3TEj2tfabpAzKOSwgwjxQl+XcLfxMWJtLSukEz32AqhPclH9n8NBGBS
-zQn9PtXqOlCBzNjeHO39Rn3uX5O/WAGUYIT7I9b3Gwnc6L7NV7oB/Bef+ttYWnWP
-01B1LWu7UK+GvjtchB97rnhZ0xRMyoHJixy6Zvwej9F8ANeGjw8=
-=8dxA
------END PGP SIGNATURE-----
-
---nextPart3395128.aeNJFYEL58--
-
-
-
+Jonathan
