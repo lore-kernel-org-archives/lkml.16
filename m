@@ -1,95 +1,139 @@
-Received: from mail-qv1-f97.google.com (mail-qv1-f97.google.com [209.85.219.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1361C861D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131521C861D;
+	Mon,  5 May 2025 20:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477267; cv=none; b=ARLeOZ9QqlWkhXLlkkX5rfOL2pgrJmN0AoM5BxVbLlCSTg/P+Lxx/JFzr2HzwmHFfu4IiXmgmywRyTB1uTdCnEBL4kSlW4yrlOidgtAg4KV1Giye4DOMvGSNHogBCS4DKCfYHA/CdDAgm2xmdNfVLyIxWKabzA6wGdtkdKrFTFI=
+	t=1746477436; cv=none; b=cesplLLIADCTE2pd1vD7TaM6ZapqJlnXWc00mQhJyHOI85ogHpKT6AJW/rZVz6c0yM/8RYXdjO/qymv9ENb1SndFbMWsPQN2Ncqvxa6kmAJNsDeG4nbKcjrIkqo5GO1H9qv4K/wPtl7m3OmTbxjNOdWOh/pxsWng7hJzumq5cvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477267; c=relaxed/simple;
-	bh=AQiFzZ+hioF3/4ec4StyGYUiDu4auMssToRPssmrwCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifobu1oww+YHHRp1YZoOvQr61d/Sh/uraJej4HE+Hra+iHxFNgZIVwhhpSZtLgq2otFc/qufpp9NYZUHDu4Vecn04E1N9tIYX7QBoyJI3g8qJOZRlr2rW+uIIpkqIu12fQ6R9bSKcJmBkV+az7E+hvVrooggF4Nb6F+38IsLRx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=RXfuiU2B; arc=none smtp.client-ip=209.85.219.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746477436; c=relaxed/simple;
+	bh=Z5BG+wD+9VTRJdR/77ZQahKysplAfS/VV14lSAxIa00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jsJyMVTIbX8SvH74uyZURiHQcvhL8hIcRqzj8n7cdqvP/NX0A53nNmppCKclQ3gUYwY0tsJ8CV8PhjFQfoDeKrgLWrVEVCm1I0tUK8JeZBqpI0RNFHo3wAAZUTeAqP1B+3vMLcc0Tne5Y9SwiR1GALfkw95urp6xCCUnuzqKOy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJFvafyw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="RXfuiU2B"
-Received: by mail-qv1-f97.google.com with SMTP id 6a1803df08f44-6f0c30a1cb6so36051916d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746477265; x=1747082065; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sjt5SetEQVeK+FSr50cmz95zo5QuMyYcarl0Ii5W2m4=;
-        b=RXfuiU2BCnC37wgciCr7iHmhUKd6bP4+1IFDfwyTw66vCVCCqbZEao0yy1xaZwthmI
-         27v6GVqW7vj1EJ8hFCc7gai1I5tWu881PtmUD7UkE7R8gHFLRXnaMWLkQMYvL/t+RmZE
-         J+ikBAmPthXN87sVI5JouelGD9TrrZO3r1l88CcNMFJ3mXS8hK3lF4ZarGaXys1n5tgQ
-         0a+JTX6Uqq3oAdaJk5yHY4hUJImQ9d2JNGc2fi0YqGNshlnNHu2KvkSnPkyX2bMPCDEN
-         +ie59/N60uz9kSKpCY9wrJxV2ZTUaXlL78P6pTIszkGfXil7KRw8wSiuj0Ivb4B9ZXpa
-         1bXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746477265; x=1747082065;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sjt5SetEQVeK+FSr50cmz95zo5QuMyYcarl0Ii5W2m4=;
-        b=F+qYnufr6/LFI4E2nd882xdTe8HnbY1kawgYdxIch0Cxejz2aD7snV55GzoUq6R/Tf
-         wGKPPDtWLJLtK7ojKJRlANMtlnwRaQbqcxuEm2Tsc0mZLzpBiioiaC5E0XOg/3b16Sob
-         IxMwXMyO/Ur6BovG4CF0PambiLzebOOvZQk3XcBMoUzeC+o/gRN+SUDoCKw1xJJdvQ4r
-         5HnfVY5NsyKdWtAS81JUATtz5gdqfoNrkFDqMkYLiG56Zm0awzkUF35ZSv8qfSizbexh
-         7KkddMX6XnKQqkiDPAl2FAZlPS022yWYBXZLsvI/SqPl1LBGi5ujWb+soWC+Sf7Mzkmh
-         fBXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbQbeKb/fT3fo58e72x1s3MZ5P4Mni005eoInbd8CdGZUwvKRXwCyP2UKXkrmACzi/Nx5/LPcW9p3RPTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycGSK8bXd8gxHk3gkfe90RuJixaBTQ8aqOkKFgnls6JpMVuurt
-	70ozdfNkmx9qrUWLAfM3oj7gtT9XVS8DHICKWAA1O+KkHs7Nkxl9KJljqfDcApvJODAqgiNUSRG
-	AGl32Xs3aEYI2Hyo/XfO/gZC0XWsTismZ
-X-Gm-Gg: ASbGnctX+QR6LN/a7SEUL17D94hF+BgFXMdqKyTSXTuyl6q/MtekXI5EdeUiJrBYXbI
-	0BcqAEL9Yl/y7MjgT1frH0/9g2Uy60h9XWNAiwQ2CVTrl7ur6Nx8T6QGPLO+TnIxicBjMErg/pE
-	BtE3mUhcuG4f3SInicMJgBweCTZvmuX6XIwCKK1RA4n92122rzo85DLxbJvVgAiVZLmUca8Lk3O
-	8lyB2uietsmLSc3HRdEDRN6EiR84oH9V6Mg0SBSuNHkCmcFRPY7l/4cIJzLnOKRxnxJWX0FnvmW
-	xHOQl5k/Rb4NLikTQRLUYxOydIOv4PmgyDzBra72LNUy6Q==
-X-Google-Smtp-Source: AGHT+IHDhruxKjn2niV28wBPJpKZJOMbtoa+Ime0L962AGQ61i+87oKEyyTGXvRQxnnGlsuLIRHOP/l8m+Wf
-X-Received: by 2002:ad4:5c8a:0:b0:6f2:c81f:9ef9 with SMTP id 6a1803df08f44-6f528cf8e94mr138201146d6.33.1746477265123;
-        Mon, 05 May 2025 13:34:25 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f50f3c3363sm22898456d6.27.2025.05.05.13.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 13:34:25 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5D95A3401B7;
-	Mon,  5 May 2025 14:34:24 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 52ACCE401BF; Mon,  5 May 2025 14:34:24 -0600 (MDT)
-Date: Mon, 5 May 2025 14:34:24 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] selftests: ublk: more misc fixes
-Message-ID: <aBkg0LW5YO6Osdnw@dev-ushankar.dev.purestorage.com>
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <aBkgLOxWLp74TShe@dev-ushankar.dev.purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJFvafyw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0EAC4CEE4;
+	Mon,  5 May 2025 20:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746477435;
+	bh=Z5BG+wD+9VTRJdR/77ZQahKysplAfS/VV14lSAxIa00=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XJFvafywt0dfiB050ZvXaC/+mtz/AMzyMs3wp0XVcFsxFUtEalaDm+4EqLrgQb73a
+	 QrXQl7hWzMvgTCJ9oFYC00fdUS8zm4d9wuqXX7cPfFjDyy1jT8oSO7PcpHphBIemKn
+	 TDpL1XprefVfr1G7wresosbiDCKnIvpCd0JRZ9B839cKxPUOJ8TX+qW5VR7BxBYVgF
+	 DUVA/oXQKh3XOKXp7A1JBIRG8MPZ9HxPloF/D90nIQZNfUt8C0O2UwhtFH/1+WIKRk
+	 wiSG/6Cs4aKLI0mq6OHj/P2mkIwBJiZVQzZ1cIE2Dzf3DuuMVx9uy+CHCElBArb58G
+	 nWSgauvqOZJjg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] Clean up the crypto testing options
+Date: Mon,  5 May 2025 13:33:38 -0700
+Message-ID: <20250505203345.802740-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBkgLOxWLp74TShe@dev-ushankar.dev.purestorage.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 02:31:40PM -0600, Uday Shankar wrote:
-> Hi Jens,
-> 
-> Can you take a look at Ming's comment on the first patch and merge the
-> set if things look good? I can rebase/repost it as needed.
+This series reworks the crypto testing kconfig options to fix some
+longstanding issues:
 
-Bleh, sorry, I meant to send this as a reply to v2:
+- Replace the inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS with a
+  regular option CONFIG_CRYPTO_SELFTESTS.
 
-https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com/
+- Make CONFIG_CRYPTO_SELFTESTS enable the full set of tests by default,
+  removing CONFIG_CRYPTO_MANAGER_EXTRA_TESTS.
+
+- Automatically enable CONFIG_CRYPTO_MANAGER when needed for the tests.
+
+- Rename cryptomgr.noextratests to cryptomgr.noslowtests.
+
+- Remove cryptomgr.panic_on_fail, as panic_on_warn can be used instead.
+
+- Rename CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK.
+
+Changed in v3:
+  - Keep options in defconfigs.
+  - Make CRYPTO_SELFTESTS depend on DEBUG_KERNEL.
+
+Changed in v2:
+  - Moved selftest lines in lib/crypto/Makefile to appropriate places.
+  - Fixed a commit message.
+
+Eric Biggers (7):
+  crypto: tcrypt - rename CRYPTO_TEST to CRYPTO_BENCHMARK
+  crypto: testmgr - remove panic_on_fail
+  crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with
+    CRYPTO_SELFTESTS
+  crypto: testmgr - make it easier to enable the full set of tests
+  crypto: testmgr - rename noextratests to noslowtests
+  crypto: Kconfig - make CRYPTO_MANAGER a hidden symbol
+  crypto: testmgr - enable CRYPTO_MANAGER when CRYPTO_SELFTESTS
+
+ arch/arm/configs/exynos_defconfig           |   2 +-
+ arch/arm/configs/milbeaut_m10v_defconfig    |   3 +-
+ arch/arm/configs/pxa_defconfig              |   3 +-
+ arch/arm/configs/spitz_defconfig            |   2 +-
+ arch/arm64/configs/defconfig                |   2 +-
+ arch/loongarch/configs/loongson3_defconfig  |   2 +-
+ arch/m68k/configs/amiga_defconfig           |   2 +-
+ arch/m68k/configs/apollo_defconfig          |   2 +-
+ arch/m68k/configs/atari_defconfig           |   2 +-
+ arch/m68k/configs/bvme6000_defconfig        |   2 +-
+ arch/m68k/configs/hp300_defconfig           |   2 +-
+ arch/m68k/configs/mac_defconfig             |   2 +-
+ arch/m68k/configs/multi_defconfig           |   2 +-
+ arch/m68k/configs/mvme147_defconfig         |   2 +-
+ arch/m68k/configs/mvme16x_defconfig         |   2 +-
+ arch/m68k/configs/q40_defconfig             |   2 +-
+ arch/m68k/configs/sun3_defconfig            |   2 +-
+ arch/m68k/configs/sun3x_defconfig           |   2 +-
+ arch/mips/configs/decstation_64_defconfig   |   1 -
+ arch/mips/configs/decstation_defconfig      |   1 -
+ arch/mips/configs/decstation_r4k_defconfig  |   1 -
+ arch/mips/configs/gpr_defconfig             |   2 +-
+ arch/mips/configs/ip28_defconfig            |   1 -
+ arch/mips/configs/lemote2f_defconfig        |   2 +-
+ arch/mips/configs/mtx1_defconfig            |   2 +-
+ arch/mips/configs/rb532_defconfig           |   2 +-
+ arch/parisc/configs/generic-32bit_defconfig |   2 +-
+ arch/parisc/configs/generic-64bit_defconfig |   1 -
+ arch/powerpc/configs/g5_defconfig           |   2 +-
+ arch/powerpc/configs/powernv_defconfig      |   2 +-
+ arch/powerpc/configs/ppc64_defconfig        |   2 +-
+ arch/powerpc/configs/ppc64e_defconfig       |   2 +-
+ arch/powerpc/configs/ppc6xx_defconfig       |   2 +-
+ arch/s390/configs/debug_defconfig           |   4 +-
+ arch/s390/configs/defconfig                 |   4 +-
+ arch/sh/configs/migor_defconfig             |   1 -
+ arch/sparc/configs/sparc64_defconfig        |   2 +-
+ crypto/Kconfig                              |  45 ++++----
+ crypto/Makefile                             |   2 +-
+ crypto/algapi.c                             |   5 +-
+ crypto/algboss.c                            |   2 +-
+ crypto/api.c                                |   3 +-
+ crypto/hkdf.c                               |   2 +-
+ crypto/internal.h                           |   5 +-
+ crypto/kdf_sp800108.c                       |   2 +-
+ crypto/tcrypt.c                             |   8 +-
+ crypto/tcrypt.h                             |   4 +-
+ crypto/testmgr.c                            | 115 +++++---------------
+ include/crypto/internal/simd.h              |   6 +-
+ lib/crypto/Makefile                         |  11 +-
+ lib/crypto/aescfb.c                         |   2 +-
+ lib/crypto/aesgcm.c                         |   2 +-
+ lib/crypto/blake2s.c                        |   2 +-
+ lib/crypto/chacha20poly1305.c               |   2 +-
+ lib/crypto/curve25519.c                     |   2 +-
+ 55 files changed, 111 insertions(+), 183 deletions(-)
+
+
+base-commit: 64745a9ca890ed60d78162ec511e1983e1946d73
+-- 
+2.49.0
 
