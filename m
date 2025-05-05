@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA029208B;
-	Mon,  5 May 2025 22:31:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF8C2920A9;
+	Mon,  5 May 2025 22:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484312; cv=none; b=m+fhxom6bFrcmtTQNs2c7cFBPViPv8VVojqTtk6dEbBbCgJpsmY3r2a/xocJgFBghwNRLzsjK+ZUSLdV0tThe/ngi9JeTObe/LXhJnBUbLQRXmCa8MhBgcXjAxFSW3kHwFUetBjN6PFYReM3Pu0H+MdBfdV4HqrvBRNBbKBkfaA=
+	t=1746484313; cv=none; b=QM9DEhiQTt6+QjsXggdCQypMziUUVwHSZoReFwCgL8zROnvGh5iQapiT4d0CKDYf7fM90X5+g/DCPoZBR4RIGZCinwOzeNvLbM/N0SkXEjfUe3fBo1Q6QX7wFrG49nDQd8GPIYDJ2ob4tUP3XNwZTqBHpoUn+03JOmzQBW0Kwss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484312; c=relaxed/simple;
-	bh=D0rMHEOc2MSLM4sPtOiGN51KjDm8Ew3MsYxv536bVZk=;
+	s=arc-20240116; t=1746484313; c=relaxed/simple;
+	bh=1kIsKvcpMKNVj+EGXm4QBSTOZ9ztqCSVR8Issyrytvs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NpU31hs7mYqehMKUFD1jlPOmi4zLAA7L6VYxgkdkx5k8/TBmbGTjLChfR59QgL1Jw24gQzMxs52rIYLQPXul17CxDxcCUA8afufMeYvRQLLupflHG3FzaNb5MRaD85MTNjc+sZvIYsWK04VTo2CbqHEYfF0jxY61/Bx52BWf5ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRM1hshj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HwNeRm06CO9zFWgyyxsC90ciun7Wa9LdoSMSoGYXaLhlxfNBPnbLv6S0+zE1Omq93NXZOInZ2rt1sDaR5qASDWs4K3M0aNPxcaZ4W4SpNIDbbOp0t+EOg0xXBPQcYC85X0jeNplXwTtOYplmrYVVVycD8Drs2r3/v0n/4Olh04g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCqDAWC2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRM1hshj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991D0C4CEE4;
-	Mon,  5 May 2025 22:31:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCqDAWC2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FF4C4CEE4;
+	Mon,  5 May 2025 22:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484311;
-	bh=D0rMHEOc2MSLM4sPtOiGN51KjDm8Ew3MsYxv536bVZk=;
+	s=k20201202; t=1746484313;
+	bh=1kIsKvcpMKNVj+EGXm4QBSTOZ9ztqCSVR8Issyrytvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RRM1hshjBLyP6IF/Qd8a7bgUnVZRssJ+Ml3hp1klDYs7EQCDvLRArcWQCT1hrmTfA
-	 nvDCvGJ7NFmX6kKyIoVGIGmCD9kGVwmU3AFIVG0BGQEqF9KBd0roGwwCQUmOjzpHM0
-	 7W5VuV/rruOiugwZNT912B7cOZvp42g1RCYqWDbHdOcRmU7RsiXJ/TDXKRfAU/vJqR
-	 Eps1iDpeUdWlNZtSfKT/WtfUh4234Se49veTmFrMYCoQd06oky2cPXSn7lBSiQ3G9j
-	 qcTQyQbk13rSrLdTxg9BDUS7ay9Ydyo1lIsyF2U/py6NaHYp9/i+EQJC1CC7HTuae8
-	 EyBjwr/At6cog==
+	b=fCqDAWC2on1zzmKLiQG1nR9BB75aTOu2+vyuaK2hu+f1oimOJ18h0O8LcxRIU2wl2
+	 183gWMczbu8Gi/wwyeVU85xK1CSdbW0F42TlupSRgtlB7tRG39CFv52goCuVcEpxiX
+	 T1cMLLTWmO+kzKabSbZMXQKuah39Tph8wuFursdzZs/Uq5+jDl3T1nnCWmNht/Visj
+	 ibUUOAAWuDAVKUD+a7Q6EavinrpzQtSPB+TnhVr4Yo3vsvlRtHEyjlnHMmvspL5atL
+	 iurFAchvNNNywM9E41IXcwiEenJhcrg7eOvdZwUxLMyufl+nJdNHuNjJRp7aJW/Us3
+	 AODAaQkL9QpJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jirislaby@kernel.org,
-	p.zabel@pengutronix.de,
-	wsa+renesas@sang-engineering.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	namcao@linutronix.de,
-	linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 447/642] serial: sh-sci: Update the suspend/resume support
-Date: Mon,  5 May 2025 18:11:03 -0400
-Message-Id: <20250505221419.2672473-447-sashal@kernel.org>
+	linus.walleij@linaro.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 448/642] pinctrl: renesas: rzg2l: Add suspend/resume support for pull up/down
+Date: Mon,  5 May 2025 18:11:04 -0400
+Message-Id: <20250505221419.2672473-448-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -58,160 +55,88 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-[ Upstream commit 22a6984c5b5df8eab864d7f3e8b94d5a554d31ab ]
+[ Upstream commit b2bd65fbb617353e3c46ba5206b3b030fa0f260c ]
 
-The Renesas RZ/G3S supports a power saving mode where power to most of the
-SoC components is turned off. When returning from this power saving mode,
-SoC components need to be re-configured.
-
-The SCIFs on the Renesas RZ/G3S need to be re-configured as well when
-returning from this power saving mode. The sh-sci code already configures
-the SCIF clocks, power domain and registers by calling uart_resume_port()
-in sci_resume(). On suspend path the SCIF UART ports are suspended
-accordingly (by calling uart_suspend_port() in sci_suspend()). The only
-missing setting is the reset signal. For this assert/de-assert the reset
-signal on driver suspend/resume.
-
-In case the no_console_suspend is specified by the user, the registers need
-to be saved on suspend path and restore on resume path. To do this the
-sci_console_save()/sci_console_restore() functions were added. There is no
-need to cache/restore the status or FIFO registers. Only the control
-registers. The registers that will be saved/restored on suspend/resume are
-specified by the struct sci_suspend_regs data structure.
+The Renesas RZ/G3S supports a power-saving mode where power to most of
+the SoC components is lost, including the PIN controller.  Save and
+restore the pull-up/pull-down register contents to ensure the
+functionality is preserved after a suspend/resume cycle.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20250207113313.545432-1-claudiu.beznea.uj@bp.renesas.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/20250205100116.2032765-1-claudiu.beznea.uj@bp.renesas.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/sh-sci.c | 71 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 69 insertions(+), 2 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 41f987632bce8..e0ead0147bfe0 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -104,6 +104,15 @@ struct plat_sci_reg {
- 	u8 offset, size;
- };
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index d1da7f53fc600..c72e250f4a154 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -318,6 +318,7 @@ struct rzg2l_pinctrl_pin_settings {
+  * @pmc: PMC registers cache
+  * @pfc: PFC registers cache
+  * @iolh: IOLH registers cache
++ * @pupd: PUPD registers cache
+  * @ien: IEN registers cache
+  * @sd_ch: SD_CH registers cache
+  * @eth_poc: ET_POC registers cache
+@@ -331,6 +332,7 @@ struct rzg2l_pinctrl_reg_cache {
+ 	u32	*pfc;
+ 	u32	*iolh[2];
+ 	u32	*ien[2];
++	u32	*pupd[2];
+ 	u8	sd_ch[2];
+ 	u8	eth_poc[2];
+ 	u8	eth_mode;
+@@ -2712,6 +2714,11 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
+ 		if (!cache->ien[i])
+ 			return -ENOMEM;
  
-+struct sci_suspend_regs {
-+	u16 scsmr;
-+	u16 scscr;
-+	u16 scfcr;
-+	u16 scsptr;
-+	u8 scbrr;
-+	u8 semr;
-+};
++		cache->pupd[i] = devm_kcalloc(pctrl->dev, nports, sizeof(*cache->pupd[i]),
++					      GFP_KERNEL);
++		if (!cache->pupd[i])
++			return -ENOMEM;
 +
- struct sci_port_params {
- 	const struct plat_sci_reg regs[SCIx_NR_REGS];
- 	unsigned int fifosize;
-@@ -134,6 +143,8 @@ struct sci_port {
- 	struct dma_chan			*chan_tx;
- 	struct dma_chan			*chan_rx;
+ 		/* Allocate dedicated cache. */
+ 		dedicated_cache->iolh[i] = devm_kcalloc(pctrl->dev, n_dedicated_pins,
+ 							sizeof(*dedicated_cache->iolh[i]),
+@@ -2955,7 +2962,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
  
-+	struct reset_control		*rstc;
-+
- #ifdef CONFIG_SERIAL_SH_SCI_DMA
- 	struct dma_chan			*chan_tx_saved;
- 	struct dma_chan			*chan_rx_saved;
-@@ -153,6 +164,7 @@ struct sci_port {
- 	int				rx_trigger;
- 	struct timer_list		rx_fifo_timer;
- 	int				rx_fifo_timeout;
-+	struct sci_suspend_regs		suspend_regs;
- 	u16				hscif_tot;
+ 	for (u32 port = 0; port < nports; port++) {
+-		bool has_iolh, has_ien;
++		bool has_iolh, has_ien, has_pupd;
+ 		u32 off, caps;
+ 		u8 pincnt;
+ 		u64 cfg;
+@@ -2967,6 +2974,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 		caps = FIELD_GET(PIN_CFG_MASK, cfg);
+ 		has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B | PIN_CFG_IOLH_C));
+ 		has_ien = !!(caps & PIN_CFG_IEN);
++		has_pupd = !!(caps & PIN_CFG_PUPD);
  
- 	bool has_rtscts;
-@@ -3374,6 +3386,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
- 	}
+ 		if (suspend)
+ 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PFC(off), cache->pfc[port]);
+@@ -2985,6 +2993,15 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 			}
+ 		}
  
- 	sp = &sci_ports[id];
-+	sp->rstc = rstc;
- 	*dev_id = id;
- 
- 	p->type = SCI_OF_TYPE(data);
-@@ -3546,13 +3559,57 @@ static int sci_probe(struct platform_device *dev)
- 	return 0;
- }
- 
-+static void sci_console_save(struct sci_port *s)
-+{
-+	struct sci_suspend_regs *regs = &s->suspend_regs;
-+	struct uart_port *port = &s->port;
-+
-+	if (sci_getreg(port, SCSMR)->size)
-+		regs->scsmr = sci_serial_in(port, SCSMR);
-+	if (sci_getreg(port, SCSCR)->size)
-+		regs->scscr = sci_serial_in(port, SCSCR);
-+	if (sci_getreg(port, SCFCR)->size)
-+		regs->scfcr = sci_serial_in(port, SCFCR);
-+	if (sci_getreg(port, SCSPTR)->size)
-+		regs->scsptr = sci_serial_in(port, SCSPTR);
-+	if (sci_getreg(port, SCBRR)->size)
-+		regs->scbrr = sci_serial_in(port, SCBRR);
-+	if (sci_getreg(port, SEMR)->size)
-+		regs->semr = sci_serial_in(port, SEMR);
-+}
-+
-+static void sci_console_restore(struct sci_port *s)
-+{
-+	struct sci_suspend_regs *regs = &s->suspend_regs;
-+	struct uart_port *port = &s->port;
-+
-+	if (sci_getreg(port, SCSMR)->size)
-+		sci_serial_out(port, SCSMR, regs->scsmr);
-+	if (sci_getreg(port, SCSCR)->size)
-+		sci_serial_out(port, SCSCR, regs->scscr);
-+	if (sci_getreg(port, SCFCR)->size)
-+		sci_serial_out(port, SCFCR, regs->scfcr);
-+	if (sci_getreg(port, SCSPTR)->size)
-+		sci_serial_out(port, SCSPTR, regs->scsptr);
-+	if (sci_getreg(port, SCBRR)->size)
-+		sci_serial_out(port, SCBRR, regs->scbrr);
-+	if (sci_getreg(port, SEMR)->size)
-+		sci_serial_out(port, SEMR, regs->semr);
-+}
-+
- static __maybe_unused int sci_suspend(struct device *dev)
- {
- 	struct sci_port *sport = dev_get_drvdata(dev);
- 
--	if (sport)
-+	if (sport) {
- 		uart_suspend_port(&sci_uart_driver, &sport->port);
- 
-+		if (!console_suspend_enabled && uart_console(&sport->port))
-+			sci_console_save(sport);
-+		else
-+			return reset_control_assert(sport->rstc);
-+	}
-+
- 	return 0;
- }
- 
-@@ -3560,8 +3617,18 @@ static __maybe_unused int sci_resume(struct device *dev)
- {
- 	struct sci_port *sport = dev_get_drvdata(dev);
- 
--	if (sport)
-+	if (sport) {
-+		if (!console_suspend_enabled && uart_console(&sport->port)) {
-+			sci_console_restore(sport);
-+		} else {
-+			int ret = reset_control_deassert(sport->rstc);
-+
-+			if (ret)
-+				return ret;
++		if (has_pupd) {
++			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off),
++						 cache->pupd[0][port]);
++			if (pincnt >= 4) {
++				RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off),
++							 cache->pupd[1][port]);
++			}
 +		}
 +
- 		uart_resume_port(&sci_uart_driver, &sport->port);
-+	}
+ 		RZG2L_PCTRL_REG_ACCESS16(suspend, pctrl->base + PM(off), cache->pm[port]);
+ 		RZG2L_PCTRL_REG_ACCESS8(suspend, pctrl->base + P(off), cache->p[port]);
  
- 	return 0;
- }
 -- 
 2.39.5
 
