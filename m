@@ -1,46 +1,47 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB8E176FB0;
-	Mon,  5 May 2025 22:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170C313AF2;
+	Mon,  5 May 2025 22:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746482960; cv=none; b=UDa1hL7bkLNAaahDTWGCOLme0Glc3bNLxbsIp8OiLROfk3AUxoRx07VReIMkG9jAu1iGDzUwnnIuF5ivFpNBtljOAt07755fwG3XoV/GlvTDMmmSuPOKMZBXGyqWjz/TzVtQRoBqKJuLaoPyuP6Xk5Sv30w5HRizq32+LAlHmak=
+	t=1746483184; cv=none; b=M8l1J34WuGV1NWXI2C8kKPJ5Vur2cth6fypfVmAtqypJnElwo+afZZYUWwrA1sw0PUJTW4JmDCBcqvkABP2fkdExkpZjx/45Fc2YcKJKtLP6B3JNmb0CfSoPisWCe8/8VQt193n8IOJg3EYVxI8RL+FMP/sw2t8fHziV2ISZVn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746482960; c=relaxed/simple;
-	bh=zznqT6mCmm+gXSIpm0j9JC6CWIA1LdtE8fnL3S7LF9k=;
+	s=arc-20240116; t=1746483184; c=relaxed/simple;
+	bh=wyVv8r87sFQD3h4JxZbcpjjhi07POlfuqfD61jwf/WE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPhHIK62Fjf8Edcee5lo6VOHk1Lrvlst2cdMfKOtERlR/BawH73w4bdd9PAIzxSZUKHO8uvSfBEyQJnK7grO6DXC2VKqrCymtb8qpvh60lYHFa2l7x8SioW403Q8LUXrqfWgfK4iZ4tgPaDvBrTX1nWEj5U9AkVyX/QAAGYpKvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HG05UBWD; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4/sVdu9SciKf7uJEk7JnhWb0LwQCBNUd5WgzZSIKbHwgpyMySmX4ZUCwaQt3WxMDdZAAeOtyT+KtU/lu21uKXlV1hchl931vTBVRE+Eb+9WA78x2mIJrohLwPqjEvRJMnRfjXUE31GyeEqGDmo4qQxMCHiJvT9enUbXENiZI0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZANMyNE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HG05UBWD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=GuSxxzSuHa3qwHDwpNoEIKmX6t685vUDFgKb5+SzDG4=; b=HG05UBWD4JG8yT4awIbWZArWTn
-	RSmYIy+d0Cv+HPGUag+ycLu7+M3//H5dtAN0hxGGAYeL1oM+5J9xE46TuzGZBOFJwzIZ580qf4JQ3
-	wPvGsfj4O7PMGKFLQRren8S8G1Xj2Hal7x2RoCstjvH0mlLBPH7BG/q2HSyPT7sK1AkY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uC3zq-00BdpY-LU; Tue, 06 May 2025 00:09:10 +0200
-Date: Tue, 6 May 2025 00:09:10 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Michael Klein <michael@fossekall.de>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next v7 4/6] net: phy: realtek: Group RTL82* macro
- definitions
-Message-ID: <8233e532-927d-4b8a-86aa-57c88c878790@lunn.ch>
-References: <20250504172916.243185-1-michael@fossekall.de>
- <20250504172916.243185-5-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZANMyNE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E369AC4CEE4;
+	Mon,  5 May 2025 22:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746483183;
+	bh=wyVv8r87sFQD3h4JxZbcpjjhi07POlfuqfD61jwf/WE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EZANMyNEI1oG7oG8Lbnk5GKx+kYRPd8c8oPqrO9lTzLaEamqD+IznbrSMUeVs9yuh
+	 nNDSW3vIph88Xbc0VVlZ0+dZLABQaupc/jqipV2tosqfK/66kDlNDI3L8P1vmD1leu
+	 jgNiYfmoJ0y/hApMjRcRod2/FCSIev2PLpY3PSXKg7tF+rysIVI5xIjzODARRUAjxk
+	 MV2CJSPY3T9VKAGWFAUNMU71o5yFphGWaiMP5mSTSItTQzQL0+S8IvYtCBhWVtzZdQ
+	 gzVL7qxqOFHr6qEmBRPF8zFnrcKtOmtlQA8U11VJ//lldEf80oTMQMKyRp6Q+OtnUm
+	 I2FGI/wEY8jIQ==
+Date: Tue, 6 May 2025 00:13:00 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
+	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jayesh Choudhary <j-choudhary@ti.com>
+Subject: Re: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
+Message-ID: <6nn2l75kkbkdu3wf3kta4mezno6cy4e3zzwzdc4cpmujjhr6lp@ct7w72zwbrhu>
+References: <20250415075230.16235-1-johan+linaro@kernel.org>
+ <vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
+ <aAIiJQVAUdWJFVy7@hovoldconsulting.com>
+ <hn3gsrizar6xbr4seclnb6xot4fo4ztryks4w7exvztsdzj4f6@jhobhujf3ezi>
+ <aBiMJ0z5q4K2xTGT@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,14 +50,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250504172916.243185-5-michael@fossekall.de>
+In-Reply-To: <aBiMJ0z5q4K2xTGT@hovoldconsulting.com>
 
-On Sun, May 04, 2025 at 07:29:14PM +0200, Michael Klein wrote:
-> Group macro definitions by PHY in lexicographic order. Within each PHY
-> block, definitions are order by page number and then register number.
+Hi Johan,
+
+On Mon, May 05, 2025 at 12:00:07PM +0200, Johan Hovold wrote:
+> On Tue, Apr 29, 2025 at 03:10:13PM +0200, Andi Shyti wrote:
+> > On Fri, Apr 18, 2025 at 11:57:57AM +0200, Johan Hovold wrote:
+> > > On Thu, Apr 17, 2025 at 11:41:51PM +0200, Andi Shyti wrote:
+> > > > On Tue, Apr 15, 2025 at 09:52:30AM +0200, Johan Hovold wrote:
+> > > > > Using of_property_read_bool() for non-boolean properties is deprecated
+> > > > > and results in a warning during runtime since commit c141ecc3cecd ("of:
+> > > > > Warn when of_property_read_bool() is used on non-boolean properties").
+> > > > > 
+> > > > > Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
+> > > > > Cc: Jayesh Choudhary <j-choudhary@ti.com>
+> > > > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > > > 
+> > > > Thanks for your patch! I'm going to drop the Fixes tag, as this
+> > > > isn't really a bug fix but rather a warning suppression during
+> > > > boot time.
+> > > 
+> > > Thanks, but I think you should have kept the Fixes tag and merged this
+> > > for 6.15 (i2c-host-fixes) since this is a new warning in 6.15-rc1 (and
+> > > that does warrant a Fixes tag). Perhaps I should have highlighted that
+> > > better.
+> > > 
+> > > If the offending patch had been posted or merged before such uses
+> > > started generating warnings in 6.14-rc1 then that would have been a
+> > > different matter.
+> > 
+> > I'm sorry, but as I understand it, the Fixes tag should be used
+> > only when an actual bug is being fixed. I've seen stable
+> > maintainers getting annoyed when it's used for non-bug issues.
 > 
-> Signed-off-by: Michael Klein <michael@fossekall.de>
+> You seem to confuse the Fixes tag with a CC stable tag. A Fixes tag is
+> used to indicate which commit introduced an issue, while the CC stable
+> tag is used to flag a commit for backporting (and the fact that autosel
+> tends to pick up patches with just a Fixes doesn't change this).
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+(the Cc tag for fixes is not mandatory, it's more a courtesy)
 
-    Andrew
+> It's perfectly fine to fix an issue and use a Fixes tag when doing so
+> even if the fix itself does not qualify for backporting (for whatever
+> reason).
+
+Oh yes, I forgot that patch was part of the 6.15 merge window. I
+will then move it to the -fixes and send it for this week's merge
+request.
+
+Thanks and sorry for the confusion,
+Andi
+
+> > The system works perfectly fine even with the warning printed.
+> > It might confuse CI systems, but that shouldn't really be our
+> > concern.
+> 
+> You should not knowingly be introducing new warnings. The Fixes tag I
+> added showed that this was an issue introduced in 6.15-rc1, and, unless
+> discovered really late in the cycle, it should be fixed before 6.15 is
+> out.
+> 
+> Johan
