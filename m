@@ -1,145 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C6B26B097;
-	Mon,  5 May 2025 18:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1F1B26E158
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470037; cv=none; b=fXHbdKDdKI5CNz1v1PL5aKHrqYyVeM1hfDZNgZAikVom7ovLc5ffWkGWTIcOmNVJBtWWWPxcf+BjU2pMgRQsQMQ6OjLLEjrwBtD5QpU3TdMdivoKtbb+78q1yLdVSTsaXLM0u2dR9WaKqajWFAZvLCxC5lqLwWnDwZr0l1FlqZI=
+	t=1746470119; cv=none; b=A2wjaF9ajOO12ZtH6fDJjKcpWNXm0QWAUe5Yl6TZ5kGnfTsKGYrzNrFyBLBONrjkUcLD6UU5JSJ11JTubZ21MS5i31HEduxbAgdhYhyEi4LsGHJAfteP3ybXMbffwjG97SUJKDdYLzlmmtyaX3Ixb61k60Xtz0ooGeoMJ43+E7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470037; c=relaxed/simple;
-	bh=5S8M/c10REYo4PgzbC8d4IT8+Lk4+t8C4D84ntmXYig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E88KG/iexXiOpYECGyN8S05AgK207aBZYXzblgx9Zhcz4q/yAoB00OQe0CEavcG0yslZJOZHxFWR9m4wu8gLtZA/Fmrnu1O+6+lVR8PinZ20ppmHZ9gdZxA/xeAWZxrA84PCW1Fc1F5OHEdJlj/uoscCgvqGZabSJpMl13aRhus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SoYI82O2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746470119; c=relaxed/simple;
+	bh=9tCowISUglEPJlE8qQkJJCrCOPbnB0yHBX3gw9lxLHs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ukLxsDzGNrvD2WwrXy4yHAMTKhJvpQMGg03mOxJk0I4YR7ANAh4DhS7xXxegC6Gp0rzzMbcOzzFjx+JHwrYGQxjMw7v9PAk+nmxTKICNAQq4n9t5gSXxaptU+KpTBMFSj/Ugq0QWC3XUIKbeJmtWsZcmG9Oa7YaXFVvzuLF0JKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=i3Zm9nav; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SoYI82O2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52CCC4CEE4;
-	Mon,  5 May 2025 18:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746470037;
-	bh=5S8M/c10REYo4PgzbC8d4IT8+Lk4+t8C4D84ntmXYig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SoYI82O2m/0NkHy3N0fDYrkgm4jlBTVenJoq4IKfWeLcfvsNnwVrpKnHUupKwt/nl
-	 3pQNcVC8/9H/16kDZFtWQt2miX73DaRlN5Osus4B8lZAvuRT6QU/89CqQJOSZzeveC
-	 9rOmzYMlRSLuZb2wAQYQL/JndyteJ41+qxP20NRhizh9M0lwsa/QjxA9j6HX5Jxkdd
-	 O1H1DJxEAZy+Cl0NSWuJfq4vujaxlj2IApj4o1O1E9JRETaH3hky1FaEuf0aLndNoa
-	 0sCJmd3SXWtabtXlmy/QPTI+qnvpze+Ugjc2BrkeORZUscI+0gje96xfp9nLxNT8Sa
-	 je5WDQ9cAuFHg==
-Date: Mon, 5 May 2025 13:33:55 -0500
-From: Rob Herring <robh@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] rust: device: Introduce PropertyGuard
-Message-ID: <20250505183355.GA1658159-robh@kernel.org>
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-6-remo@buenzli.dev>
- <5946174b-3178-462d-bb59-1e0d6c5f4dda@de.bosch.com>
- <D9O8WJ0RDNIA.4JYLWLYLBC2A@buenzli.dev>
- <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
- <D9OCJQ1HH5CM.2OHEAOF271GMC@buenzli.dev>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="i3Zm9nav"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=tfBon
+	y4XS8BLgrQQTD1o4zXF0qseVI+xZME9jPnR+dY=; b=i3Zm9navh4FziPqtvuKZY
+	L9RhStmBu3p1IJ7k0atz9m+KHM/Is2qtPltsDGsq4tpVcMWGRmmy4Gdszhi2ojSW
+	zHgM5uFEBop+FqiHdiIzTFeScLXG8odALg0QfPlxX+A9qG7ELw6AG35PWxb1aS0d
+	s+xlBaAFXFCNbdMdJ7Y+Dc=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgAX1wmwBBloCYuxBw--.47927S4;
+	Tue, 06 May 2025 02:34:39 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	surenb@google.com,
+	mhocko@suse.com,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [PATCH v2] mm/codetag: move tag retrieval back upfront in __free_pages()
+Date: Tue,  6 May 2025 02:34:23 +0800
+Message-Id: <20250505183423.33773-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
+References: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9OCJQ1HH5CM.2OHEAOF271GMC@buenzli.dev>
+X-CM-TRANSID:QCgvCgAX1wmwBBloCYuxBw--.47927S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxuF1kWw1kCryxGr1fJrWDurg_yoW5uw4UpF
+	Wjq3W8Ca98JFy5KFW0yw4q9r13Jws7taykAFW7K34rZF13tF40kFykJryavF18CFy8AFyv
+	9rsrKw4jkr1qq3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piGjg7UUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqAhEqmgY-iCqkwAAsZ
 
-On Mon, May 05, 2025 at 05:53:33PM +0200, Remo Senekowitsch wrote:
-> On Mon May 5, 2025 at 5:37 PM CEST, Rob Herring wrote:
-> > On Mon, May 5, 2025 at 8:02 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
-> >>
-> >> On Mon May 5, 2025 at 7:14 AM CEST, Dirk Behme wrote:
-> >> > On 04/05/2025 19:31, Remo Senekowitsch wrote:
-> >> >> This abstraction is a way to force users to specify whether a property
-> >> >> is supposed to be required or not. This allows us to move error
-> >> >> logging of missing required properties into core, preventing a lot of
-> >> >> boilerplate in drivers.
-> >> >>
-> >> >> It will be used by upcoming methods for reading device properties.
-> >> >>
-> >> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> >> >> ---
-> >> >>  rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++++
-> >> >>  1 file changed, 59 insertions(+)
-> >> >>
-> >> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> >> >> index 6ccc7947f9c31..59c61e2493831 100644
-> >> >> --- a/rust/kernel/device/property.rs
-> >> >> +++ b/rust/kernel/device/property.rs
-> >> >> @@ -123,3 +123,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-> >> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
-> >> >>      }
-> >> >>  }
-> >> >> +
-> >> >> +/// A helper for reading device properties.
-> >> >> +///
-> >> >> +/// Use [`Self::required_by`] if a missing property is considered a bug and
-> >> >> +/// [`Self::optional`] otherwise.
-> >> >> +///
-> >> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
-> >> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
-> >> >> +    /// The result of reading the property.
-> >> >> +    inner: Result<T>,
-> >> >> +    /// The fwnode of the property, used for logging in the "required" case.
-> >> >> +    fwnode: &'fwnode FwNode,
-> >> >> +    /// The name of the property, used for logging in the "required" case.
-> >> >> +    name: &'name CStr,
-> >> >> +}
-> >> >> +
-> >> >> +impl<T> PropertyGuard<'_, '_, T> {
-> >> >> +    /// Access the property, indicating it is required.
-> >> >> +    ///
-> >> >> +    /// If the property is not present, the error is automatically logged. If a
-> >> >> +    /// missing property is not an error, use [`Self::optional`] instead. The
-> >> >> +    /// device is required to associate the log with it.
-> >> >> +    pub fn required_by(self, dev: &super::Device) -> Result<T> {
-> >> >> +        if self.inner.is_err() {
-> >> >> +            dev_err!(
-> >> >> +                dev,
-> >> >> +                "{}: property '{}' is missing\n",
-> >> >> +                self.fwnode.display_path(),
-> >> >> +                self.name
-> >> >> +            );
-> >> >> +        }
-> >> >> +        self.inner
-> >> >> +    }
-> >> >
-> >> > Thinking about the .required_by(dev) I wonder if there will be cases
-> >> > where we do *not* have a device? I.e. where we really have a fwnode,
-> >> > only. And therefore can't pass a device. If we have such cases do we
-> >> > need to be able to pass e.g. Option(dev) and switch back to pr_err() in
-> >> > case of None?
-> >>
-> >> In that case, bringing back the previous .required() method seems
-> >> reasonable to me. But only if we definitely know such cases exist.
-> >
-> > They definitely exist. Any property in a child node of the device's
-> > node when the child itself is not another device for example.
-> 
-> I don't think that counts, because you do have a device in that
-> situation. The log should be assicated with that. So callers are
-> responsible to propagate a reference to the device to wherever the call
-> to .required_by(dev) is happening.
+Commit 51ff4d7486f0 ("mm: avoid extra mem_alloc_profiling_enabled()
+ checks") introduces a possible use-after-free scenario, when page
+is non-compound, page[0] could be released by other thread right
+after put_page_testzero failed in current thread, pgalloc_tag_sub_pages
+afterwards would manipulate an invalid page for accounting remaining
+pages:
 
-Ah, right. So it would just be cases that aren't a driver at all. That's 
-limited to the OF_DECLARE cases. I agree we can worry about those later.
+[timeline]   [thread1]                     [thread2]
+  |          alloc_page non-compound
+  V
+  |                                        get_page, rf counter inc
+  V
+  |          in ___free_pages
+  |          put_page_testzero fails
+  V
+  |                                        put_page, page released
+  V
+  |          in ___free_pages,
+  |          pgalloc_tag_sub_pages
+  |          manipulate an invalid page
+  V
 
-Rob
+Restore __free_pages() to its state before, retrieve alloc tag
+beforehand.
+
+Fixes: 51ff4d7486f0 ("mm: avoid extra mem_alloc_profiling_enabled() checks")
+Signed-off-by: David Wang <00107082@163.com>
+---
+ include/linux/pgalloc_tag.h |  7 +++++++
+ mm/page_alloc.c             | 15 ++++++---------
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
+index c74077977830..97eb4835568e 100644
+--- a/include/linux/pgalloc_tag.h
++++ b/include/linux/pgalloc_tag.h
+@@ -188,6 +188,13 @@ static inline struct alloc_tag *__pgalloc_tag_get(struct page *page)
+ 	return tag;
+ }
+ 
++static inline struct alloc_tag *pgalloc_tag_get(struct page *page)
++{
++	if (mem_alloc_profiling_enabled())
++		return __pgalloc_tag_get(page);
++	return NULL;
++}
++
+ void pgalloc_tag_split(struct folio *folio, int old_order, int new_order);
+ void pgalloc_tag_swap(struct folio *new, struct folio *old);
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 5669baf2a6fe..1b00e14a9780 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1151,14 +1151,9 @@ static inline void pgalloc_tag_sub(struct page *page, unsigned int nr)
+ 		__pgalloc_tag_sub(page, nr);
+ }
+ 
+-static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
++/* When tag is not NULL, assuming mem_alloc_profiling_enabled */
++static inline void pgalloc_tag_sub_pages(struct alloc_tag *tag, unsigned int nr)
+ {
+-	struct alloc_tag *tag;
+-
+-	if (!mem_alloc_profiling_enabled())
+-		return;
+-
+-	tag = __pgalloc_tag_get(page);
+ 	if (tag)
+ 		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
+ }
+@@ -1168,7 +1163,7 @@ static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
+ static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
+ 				   unsigned int nr) {}
+ static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
+-static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
++static inline void pgalloc_tag_sub_pages(struct alloc_tag *tag, unsigned int nr) {}
+ 
+ #endif /* CONFIG_MEM_ALLOC_PROFILING */
+ 
+@@ -5065,11 +5060,13 @@ static void ___free_pages(struct page *page, unsigned int order,
+ {
+ 	/* get PageHead before we drop reference */
+ 	int head = PageHead(page);
++	/* get alloc tag in case the page is released by others */
++	struct alloc_tag *tag = pgalloc_tag_get(page);
+ 
+ 	if (put_page_testzero(page))
+ 		__free_frozen_pages(page, order, fpi_flags);
+ 	else if (!head) {
+-		pgalloc_tag_sub_pages(page, (1 << order) - 1);
++		pgalloc_tag_sub_pages(tag, (1 << order) - 1);
+ 		while (order-- > 0)
+ 			__free_frozen_pages(page + (1 << order), order,
+ 					    fpi_flags);
+-- 
+2.39.2
+
