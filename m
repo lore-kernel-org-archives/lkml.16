@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA9A2D3F8B;
-	Mon,  5 May 2025 22:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADAC2D3FBB;
+	Mon,  5 May 2025 22:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485602; cv=none; b=jABEQwxW54uQ3j5ns/zWEsPWlrn7bFVdVxACU0qJ0iiihfTSP8i2gVSzgbyJ0EtX66jWINJB+qWKojY6v36wgrYlACFL/ji6kyLGwAlKXluNxZLi6goXzPs8sn8ZBMgk0VIKp4euzE1HGAX+mZm8kKhkPpgOZ/8IUC2fbQjubRw=
+	t=1746485617; cv=none; b=c/m6hFrNPl440e0ldxN3t53WsWptN2+fvyKqk4WkYE2b0QoPADTI5mm5sN7Q4N4d1to1MfCjRtpWJYua+x/yIYgR20PRl48opS2qUuHY0+qTkbLiPMIqCfVF/U5omtRpyhinK5kVcGvCC0+u15l+ze1EenN74xdSBBTyB3PcLYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485602; c=relaxed/simple;
-	bh=Lw0xIydd5l3xIY7apqPTJIZSYyZbyUWL+pbDRY5rBDA=;
+	s=arc-20240116; t=1746485617; c=relaxed/simple;
+	bh=sqCRRX5se34m6d3XsYR9wyca+/LOv0PL2t1VKF+e8lc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pGAKwwbWm0h9aztmefqgYIoWgbXSF7b+tIbKWIV/S5Zhp9H99x3YGk5fUkwk87wjTbdQA7skOrkei6EVaPpaA8mU71F9avjn7RFdLltlz9ucGZZiX3Ikb3yVih+9lJlIggU9L17JuNJnb0v4NiPntO5k6tE5QvpMPU8o31rrqAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXaqMOwW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s8XsdEATAREOMXA27NIMP6I98pFhNAaen+bnQRnru6cUbFyZlRsME/tUrwJlbGq/vuFBNWGoOltfJry95Cw+lCITRI1iUaIwp4gZfZ2sEsScqjkOjDyLYRDvs/Vsb8AwB6bdIap+gCbFzQ2Pa6K7Tl2qz/KCkgavTxxHEKmPqy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE8/7yPM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXaqMOwW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB558C4CEE4;
-	Mon,  5 May 2025 22:53:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE8/7yPM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F81EC4CEED;
+	Mon,  5 May 2025 22:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485602;
-	bh=Lw0xIydd5l3xIY7apqPTJIZSYyZbyUWL+pbDRY5rBDA=;
+	s=k20201202; t=1746485616;
+	bh=sqCRRX5se34m6d3XsYR9wyca+/LOv0PL2t1VKF+e8lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CXaqMOwWM/e5jNwy1AL45JB7NAJMHR9sUx36uF82e6588teKGKE2fRqHv3gp7bfoQ
-	 kySzdNlym7/1SPJA6azhDRwMmRyQ6iKu+mrCSmFzH7IW3LltJpcOrFz3LDrcSiM8nH
-	 rR0NQzbISjJnmxNM3kTRqTn3ZTwt/+RpMQy7aBnaL/NzTYNbnqZN3nVPQO3rExTq1W
-	 rAGMwn7T9QdvzJyKzOfGcFpPCLksrXtUP2sleFGQVk93ui4r4Q+IEpYRA5KPQk+PtO
-	 EsmMhvuIUzFEXeU0WCO1yLDyP9PJOAG4WRCi5TEKanBV7zCq43HXFaq6NKpBEhCWUc
-	 YZinB7zpLWstA==
+	b=YE8/7yPMByzoWkz7Rr+BvbcboPreaguHYqF9E7mCyO60dQjCyPiGlHAwPxDZ6ctc5
+	 frno309cxiXF15w9+sWg4l2QKtDVs6aCZQCxaa4UuJ1za5G4Oyw70hu0f0/JHu6EfK
+	 OFVonUAtEH0lrQfWXBD73Xoe1yRvnYRi1l6x9IfS3A3tKPUazDku+049QsGl6H4mB5
+	 7HNlAbzuTgkGpMG9A897t/ZZe/usnfRrI2TMVNkTRaqmlsqXAUX1XDcjdlrgfWVxmK
+	 GakfIiIWK/Nx1ErhAUvRB0jNQ+M0ekZlD0raVnTVK1N9xrR3Cakbk2Ka9oXtcJMW2t
+	 y9xFaaWC9b/KA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: William Tu <witu@nvidia.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 381/486] net/mlx5e: set the tx_queue_len for pfifo_fast
-Date: Mon,  5 May 2025 18:37:37 -0400
-Message-Id: <20250505223922.2682012-381-sashal@kernel.org>
+	eilon.rinat@intel.com,
+	emmanuel.grumbach@intel.com,
+	daniel.gabay@intel.com,
+	yedidya.ben.shimol@intel.com,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 388/486] wifi: iwlwifi: use correct IMR dump variable
+Date: Mon,  5 May 2025 18:37:44 -0400
+Message-Id: <20250505223922.2682012-388-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,42 +54,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: William Tu <witu@nvidia.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit a38cc5706fb9f7dc4ee3a443f61de13ce1e410ed ]
+[ Upstream commit 21e4d29ac0def546d57bacebe4a51cbed1209b03 ]
 
-By default, the mq netdev creates a pfifo_fast qdisc. On a
-system with 16 core, the pfifo_fast with 3 bands consumes
-16 * 3 * 8 (size of pointer) * 1024 (default tx queue len)
-= 393KB. The patch sets the tx qlen to representor default
-value, 128 (1<<MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE), which
-consumes 16 * 3 * 8 * 128 = 49KB, saving 344KB for each
-representor at ECPF.
+We shouldn't dump the reg_data here which dumps the last
+entry again, it should use the imr_reg_data.
 
-Signed-off-by: William Tu <witu@nvidia.com>
-Reviewed-by: Daniel Jurgens <danielj@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Link: https://patch.msgid.link/20250209101716.112774-9-tariqt@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Link: https://patch.msgid.link/20250205145347.3313b18667d1.Iaa9ab66b1d397912a573525e060d39ea01b29d19@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index 0657d10765357..fd1f460b7be65 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -885,6 +885,8 @@ static void mlx5e_build_rep_netdev(struct net_device *netdev,
- 	netdev->ethtool_ops = &mlx5e_rep_ethtool_ops;
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index 6594216f873c4..cd284767ff4ba 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+ /*
+- * Copyright (C) 2005-2014, 2018-2024 Intel Corporation
++ * Copyright (C) 2005-2014, 2018-2025 Intel Corporation
+  * Copyright (C) 2013-2015 Intel Mobile Communications GmbH
+  * Copyright (C) 2015-2017 Intel Deutschland GmbH
+  */
+@@ -2691,7 +2691,7 @@ static u32 iwl_dump_ini_trigger(struct iwl_fw_runtime *fwrt,
+ 	}
+ 	/* collect DRAM_IMR region in the last */
+ 	if (imr_reg_data.reg_tlv)
+-		size += iwl_dump_ini_mem(fwrt, list, &reg_data,
++		size += iwl_dump_ini_mem(fwrt, list, &imr_reg_data,
+ 					 &iwl_dump_ini_region_ops[IWL_FW_INI_REGION_DRAM_IMR]);
  
- 	netdev->watchdog_timeo    = 15 * HZ;
-+	if (mlx5_core_is_ecpf(mdev))
-+		netdev->tx_queue_len = 1 << MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE;
- 
- #if IS_ENABLED(CONFIG_MLX5_CLS_ACT)
- 	netdev->hw_features    |= NETIF_F_HW_TC;
+ 	if (size) {
 -- 
 2.39.5
 
