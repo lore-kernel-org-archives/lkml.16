@@ -1,171 +1,199 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A140D389433
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F394B38943A;
+	Mon,  5 May 2025 23:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486759; cv=none; b=IP3gs75WG0x7g5C0qauXIgSydy9K1muC2ZNd3Uu3JhMX/TpDTj/F2AzkHvoj9QHag/BgIAGURfrY1CZfc3QmzDUzSW90rz2shSFi2tCbR9wCOPneo+AONMOvIdd0ZPOmmAa6xFvRHupjMNE/akbQzjr0isjzHl7iHs/h6j4uymg=
+	t=1746486758; cv=none; b=NYm0N6LMPVPao9hUV2Hj0ER6QKUmSszIs7mYkOZg55R1thNRfzUOBWYiEnivejWG+w4RZJv1lmc0S64KLHsmN2fJGh080zwzgSLteH6iRamtWD3zHYtGo10zI+q6MgKquc87JJE/jEoLfuI1TyTIHHMhDMjcpO6gLtdItMJhNf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486759; c=relaxed/simple;
-	bh=lz2pThmn6jDvLYZjSPfyW+a4aysWXG3+csCcjZG7tNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SuNPsvEv+Gj9GuKd8HA0JEVZlZMocNdenXnzCtL2GAi8tEp7128AkELG39ynagmhuxQaVC8nm3zZCm8PAm/YFyvwjcRMLst01tgep4PVVmZwDJTlcuEdhq50QGnYKkyfPmqjBujCWBVdReiTva9OYpT2zOIaF1mzw5hLN5LzEFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=b9uGeWfK; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746486758; c=relaxed/simple;
+	bh=Lpsb/dOflHCkt6eipB9Vj1VHtPnMKoK6a5Sav2lGK/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XyLbCArSOftsYt9A5ffwJ9fFTQcVhSmQxWni0OnT8oWMgn2sxdL44RCbFTacZUA3/PPOSulPE8RB8T8t86BwqrC2/5Y6gM3P5vwOBTMt8KdfSMz89K4OpDJfBEk+ZS2lFytoXGnjNBr++ue+GZwzsckITpihDT6/jpCXktXXi5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmalkvYZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="b9uGeWfK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746486756;
- bh=l4rp0/SxPnRxOKd8Baxv0WdngnSWxD3d0vtqD/ab/C8=;
- b=b9uGeWfKjnsZ9AMtNmp37ot38v55DrMSsyrRybIymDGhTBdWhRYC84kEs/ekrVVuwvHLr6m3G
- 5anUcRKLdVDMd9Ueuo7a9w54TkpskOwjU75c6nkh+qs63fB9KOYv3u4xX4cGOtpHYVlIWNA6ppe
- v9BcA0wRRBcGC4yMgUDT/eY+i4IZ41IfRKjIZxthM9XCK0A+GphHIVE4f2YAwd9S42uYLocQcM3
- q9YjkTCZvqt9BO2GRC3gmH8E4VdLFtuLD0bxgDDc/yVGKshln9c1xm+VwxVL0YHyPQ5XRulu1/0
- uEvWsMx5ocn7fpRZEKMf/adX1unJXLseYx09XcpvifTQ==
-X-Forward-Email-ID: 681945da46c37f8647c22e2a
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <4e00a764-23df-4bd9-85d3-f32cb153a9b6@kwiboo.se>
-Date: Tue, 6 May 2025 01:12:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmalkvYZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDA3C4CEE4;
+	Mon,  5 May 2025 23:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746486757;
+	bh=Lpsb/dOflHCkt6eipB9Vj1VHtPnMKoK6a5Sav2lGK/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GmalkvYZU/xuCNnDBMfm4L6TRI7IGdx7L9GXGMLhu2RNk6SciKHW4j6p9X/KpQNmN
+	 LFIEFT8F/H433koXO5s5lSlnWSM2c7xiUdCp3S+cELuzZRiNHY2YSrAZfA2IcH5957
+	 80FWgz9NJPLlIizIFYLMgsu3+rSMtVAytYdAfS1vVNaCPqXEdty7rit41uHvlcXAVv
+	 ywMgrGNnpVZCJwDUZUwrE0aChoghJM6siPXWZKX+RnFSxYu2+QBYOfIgXsLINRKo38
+	 yzCfkxbtXCPH8ANhr1gyjFdri7WlFgxneqrB9TjFAg7OVCRyLOGtp+er0HyPfpS7/9
+	 XFjeznrINiduw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	menglong8.dong@gmail.com,
+	gnault@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 187/212] vxlan: Annotate FDB data races
+Date: Mon,  5 May 2025 19:05:59 -0400
+Message-Id: <20250505230624.2692522-187-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
+References: <20250505230624.2692522-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] arm64: dts: rockchip: Add pwm nodes for RK3528
-To: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>
-Cc: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250401120020.976343-1-amadeus@jmu.edu.cn>
- <20250401120020.976343-2-amadeus@jmu.edu.cn>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250401120020.976343-2-amadeus@jmu.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.136
+Content-Transfer-Encoding: 8bit
 
-On 2025-04-01 14:00, Chukun Pan wrote:
-> Add pwm nodes for RK3528. The PWM core on RK3528 is the same as
-> RK3328, but the driver does not support interrupts yet.
-> 
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+From: Ido Schimmel <idosch@nvidia.com>
 
-pwm0-pwm2 has been verified working on my rk3528 boards and remaining
-seem to be correct, I have also dropped my prior attempt of looking into
-multi-channel handling as mentioned in v2, so this is:
+[ Upstream commit f6205f8215f12a96518ac9469ff76294ae7bd612 ]
 
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+The 'used' and 'updated' fields in the FDB entry structure can be
+accessed concurrently by multiple threads, leading to reports such as
+[1]. Can be reproduced using [2].
 
-Regards,
-Jonas
+Suppress these reports by annotating these accesses using
+READ_ONCE() / WRITE_ONCE().
 
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 80 ++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index 35704d0be37a..47d4f63f11d3 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -465,6 +465,86 @@ uart7: serial@ffa28000 {
->  			status = "disabled";
->  		};
->  
-> +		pwm0: pwm@ffa90000 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa90000 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM0>, <&cru PCLK_PWM0>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm1: pwm@ffa90010 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa90010 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM0>, <&cru PCLK_PWM0>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm2: pwm@ffa90020 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa90020 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM0>, <&cru PCLK_PWM0>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm3: pwm@ffa90030 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa90030 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM0>, <&cru PCLK_PWM0>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm4: pwm@ffa98000 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa98000 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM1>, <&cru PCLK_PWM1>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm5: pwm@ffa98010 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa98010 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM1>, <&cru PCLK_PWM1>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm6: pwm@ffa98020 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa98020 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM1>, <&cru PCLK_PWM1>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm7: pwm@ffa98030 {
-> +			compatible = "rockchip,rk3528-pwm",
-> +				     "rockchip,rk3328-pwm";
-> +			reg = <0x0 0xffa98030 0x0 0x10>;
-> +			clocks = <&cru CLK_PWM1>, <&cru PCLK_PWM1>;
-> +			clock-names = "pwm", "pclk";
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
->  		saradc: adc@ffae0000 {
->  			compatible = "rockchip,rk3528-saradc";
->  			reg = <0x0 0xffae0000 0x0 0x10000>;
+[1]
+BUG: KCSAN: data-race in vxlan_xmit / vxlan_xmit
+
+write to 0xffff942604d263a8 of 8 bytes by task 286 on cpu 0:
+ vxlan_xmit+0xb29/0x2380
+ dev_hard_start_xmit+0x84/0x2f0
+ __dev_queue_xmit+0x45a/0x1650
+ packet_xmit+0x100/0x150
+ packet_sendmsg+0x2114/0x2ac0
+ __sys_sendto+0x318/0x330
+ __x64_sys_sendto+0x76/0x90
+ x64_sys_call+0x14e8/0x1c00
+ do_syscall_64+0x9e/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff942604d263a8 of 8 bytes by task 287 on cpu 2:
+ vxlan_xmit+0xadf/0x2380
+ dev_hard_start_xmit+0x84/0x2f0
+ __dev_queue_xmit+0x45a/0x1650
+ packet_xmit+0x100/0x150
+ packet_sendmsg+0x2114/0x2ac0
+ __sys_sendto+0x318/0x330
+ __x64_sys_sendto+0x76/0x90
+ x64_sys_call+0x14e8/0x1c00
+ do_syscall_64+0x9e/0x1a0
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x00000000fffbac6e -> 0x00000000fffbac6f
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 2 UID: 0 PID: 287 Comm: mausezahn Not tainted 6.13.0-rc7-01544-gb4b270f11a02 #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
+
+[2]
+ #!/bin/bash
+
+ set +H
+ echo whitelist > /sys/kernel/debug/kcsan
+ echo !vxlan_xmit > /sys/kernel/debug/kcsan
+
+ ip link add name vx0 up type vxlan id 10010 dstport 4789 local 192.0.2.1
+ bridge fdb add 00:11:22:33:44:55 dev vx0 self static dst 198.51.100.1
+ taskset -c 0 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
+ taskset -c 2 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
+
+Reviewed-by: Petr Machata <petrm@nvidia.com>
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+Link: https://patch.msgid.link/20250204145549.1216254-2-idosch@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/vxlan/vxlan_core.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
+index 0afd7eb976e6c..ef61eab81707c 100644
+--- a/drivers/net/vxlan/vxlan_core.c
++++ b/drivers/net/vxlan/vxlan_core.c
+@@ -274,9 +274,9 @@ static int vxlan_fdb_info(struct sk_buff *skb, struct vxlan_dev *vxlan,
+ 			be32_to_cpu(fdb->vni)))
+ 		goto nla_put_failure;
+ 
+-	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
++	ci.ndm_used	 = jiffies_to_clock_t(now - READ_ONCE(fdb->used));
+ 	ci.ndm_confirmed = 0;
+-	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
++	ci.ndm_updated	 = jiffies_to_clock_t(now - READ_ONCE(fdb->updated));
+ 	ci.ndm_refcnt	 = 0;
+ 
+ 	if (nla_put(skb, NDA_CACHEINFO, sizeof(ci), &ci))
+@@ -482,8 +482,8 @@ static struct vxlan_fdb *vxlan_find_mac(struct vxlan_dev *vxlan,
+ 	struct vxlan_fdb *f;
+ 
+ 	f = __vxlan_find_mac(vxlan, mac, vni);
+-	if (f && f->used != jiffies)
+-		f->used = jiffies;
++	if (f && READ_ONCE(f->used) != jiffies)
++		WRITE_ONCE(f->used, jiffies);
+ 
+ 	return f;
+ }
+@@ -1057,12 +1057,12 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
+ 	    !(f->flags & NTF_VXLAN_ADDED_BY_USER)) {
+ 		if (f->state != state) {
+ 			f->state = state;
+-			f->updated = jiffies;
++			WRITE_ONCE(f->updated, jiffies);
+ 			notify = 1;
+ 		}
+ 		if (f->flags != fdb_flags) {
+ 			f->flags = fdb_flags;
+-			f->updated = jiffies;
++			WRITE_ONCE(f->updated, jiffies);
+ 			notify = 1;
+ 		}
+ 	}
+@@ -1096,7 +1096,7 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
+ 	}
+ 
+ 	if (ndm_flags & NTF_USE)
+-		f->used = jiffies;
++		WRITE_ONCE(f->used, jiffies);
+ 
+ 	if (notify) {
+ 		if (rd == NULL)
+@@ -1525,7 +1525,7 @@ static bool vxlan_snoop(struct net_device *dev,
+ 				    src_mac, &rdst->remote_ip.sa, &src_ip->sa);
+ 
+ 		rdst->remote_ip = *src_ip;
+-		f->updated = jiffies;
++		WRITE_ONCE(f->updated, jiffies);
+ 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
+ 	} else {
+ 		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
+@@ -2936,7 +2936,7 @@ static void vxlan_cleanup(struct timer_list *t)
+ 			if (f->flags & NTF_EXT_LEARNED)
+ 				continue;
+ 
+-			timeout = f->used + vxlan->cfg.age_interval * HZ;
++			timeout = READ_ONCE(f->used) + vxlan->cfg.age_interval * HZ;
+ 			if (time_before_eq(timeout, jiffies)) {
+ 				netdev_dbg(vxlan->dev,
+ 					   "garbage collect %pM\n",
+-- 
+2.39.5
 
