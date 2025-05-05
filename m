@@ -1,141 +1,148 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9458025E457
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6644025A646;
+	Mon,  5 May 2025 14:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455105; cv=none; b=Hew6l+t2KpThb39gBcZMBx9qmxPve7dSI2VuJeruGld1G+Pma/PBThbbe1KiYz0kcGNHb6bHv7U4GvjmadXcs15JVOD7abu3NskOxAGTtKbxAjwQrAvCG5aoH43G2OPAmwgf5OBWXXtadTkPskD2U6u96kdce4jZpyTdzoMtjUs=
+	t=1746455167; cv=none; b=oGJgUYP7ubWItEnQYbDdj8d0Ed8x+Xdvg/9uXs0T7lkUT1+Y6iq/Y6ONgON84PTQbtwBk9yYwlPciIL0cQqQzGmT+GIcDXzTeZBpAy1N+g+sdqG51b8uTuceiluUo+kfMPudvjAYX05MzTyiXgH438699ewCXmQM39bxho7pwkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455105; c=relaxed/simple;
-	bh=t1yw/3IQY04ascExMYNkywVMbYb9sD04RFjXDUub5p0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sB+Svqzls7MRXphHRQMU1iJMhzn9yFSnjIY9DZp8k+H9I21j2ifBhiIyP71d6u/shiyo8W8GZRbPsntyKGYs6fi7dxkKsXJNws2uLDPTaLn7TajRM0CEFszuleSPhWAghPQWWRnjZqHIq3ck5zlAZp7i9YRD4ykCE8I3NfgN1Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lqOJlwZF; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746455167; c=relaxed/simple;
+	bh=ORf5T6DyIpU2ggmib2GrVIAMXQW+GcCXEhexCw0dD7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uw9mHwRzoJdHZrfmchoNIPB/VPKkM6qTW7s1X9k48V+n3gQ7lAfEVOXyHztl2bhVwcKsHF2ZydhoLjChpQAccP80q7B3WUiuJwO5iCYDE3UaPmhVvhiP9gGbAsy1SipeTxfAI1Coz3WpapfjNriQcCs5O1jt5rzETaPBRziZ7I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5xL6MAG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lqOJlwZF"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240b4de12bso71847905ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746455103; x=1747059903; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KJu9k3uxYD0x67A2WlM7JrSR4XKb1B7H+/wMYgcPKG4=;
-        b=lqOJlwZFB4pyJdaENDCtdFBlPFUBhccAA5O3mEykyE+6exnXMm9nsy8zGhjsZeksDX
-         mYZwk2zMLwSydKEM2koeXulFFpwW7Dp88UmfB9cqU8fruhDtURG5ayLBvtWN6FK/H+s5
-         mvZBuwkADtTJEtgLrsMfrDP/3dUleV6SzAQsy3br9mL8Fr++AZMqrFvVTm4Wfk4Pcd8X
-         Qv2oTVsdxEjj1odzrqZ8Oqov9M4mC8VoyVjh7IdI/4g3FXo9e4MDgRrHYZjDUHPsF5FT
-         YtB5KMO9WKgv0YoIWf2AA26ppXHB3qXL14/S+o/mauBPvD+g4tj5eRfJuWp6labvP0M0
-         MREw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746455103; x=1747059903;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KJu9k3uxYD0x67A2WlM7JrSR4XKb1B7H+/wMYgcPKG4=;
-        b=s4G72rU9FBQx2uHMnMNafPrcY52aR/KuOtgp/cqLxCgNUvQBSQLSutRn4084YYLBHB
-         sxljCew9vlTVv8rR1hCktAjXGnlTe86M5FgLh3SuBca6TnGokGd4i7Q/rEdAfFxkdWPH
-         5j38/42XhDSmTCC9BWGmJiGVWcNmMDWbkFjtggo9Qg7JFW8arE38dhKqV/wNQxDUJ+vk
-         j2h26EySMyJwERwtjZPctpX1+rdqLyaq+4xb87/cAGyhLkK/o0Ql2g1GnquCCYlL2cm1
-         pzmLBfeZEOMJMt5bduv4SoM0cU1BajLcPW+F+zWcE8e2Qy0rB2ZuI2HM/z3TN3i4uePt
-         O4aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUal057c/Ie+fqYl9hhq3naz/9e3zaQQPyyyPOapU7NNBTabYxKRoSXYCUmXN9poW7GBHk/S+JbVD6rOxU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgucWXtOA8YwJQWNVDGv623lKltl6cZQL9vuNcza9nk1oh7PI7
-	fmOOjJTzhOk6HQJPcwPlZujMGxbVp9OCDJGw3p25vubwRDDAxObHbhKr0hjoRQ==
-X-Gm-Gg: ASbGnctg2gvvT2CTxCNZdJC/6bagWIGVKOjizkj1VOGrooHBpIoG+06kOxrLlUSTdem
-	twMxTnW+8zhcnCyIW/rLNb6j9feqfJVv/ewesH03e+Ea1xL9DDAAUvt9yU6szyZxyz0yr/4Kt4L
-	/E2wJbiq0ZVj8l/ujUJFT1T/HDOQPtJkz/s2C5+I0BRcy6YtO+zLjs41NRchzeDqgcoavYLhGWE
-	gKPLKEBp/yApvMCWOXkQgAVfDHu2733hy3dZGDQ25sE7WDHvwqcpAyVr1bi2PM+GS86f8RT2mcp
-	PqWLf7+/ZPJtleruqEDGnbELE/kZHcgmOykp13iSMQYGtWPb1Fn8F63b6lcAB/qwgQ==
-X-Google-Smtp-Source: AGHT+IHi6sUziup5Imivht3p4tfdKqc+3GPIBmuTJE3Jz7QA5nq01wCiYdj4NgLJULo/fXuYkwcppA==
-X-Received: by 2002:a17:903:1107:b0:223:f928:4553 with SMTP id d9443c01a7336-22e1eaa6e3cmr115148915ad.44.1746455102947;
-        Mon, 05 May 2025 07:25:02 -0700 (PDT)
-Received: from [127.0.1.1] ([120.60.48.235])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522ef9bsm55387685ad.217.2025.05.05.07.25.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 07:25:02 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Mon, 05 May 2025 19:54:42 +0530
-Subject: [PATCH v4 4/4] PCI: qcom-ep: Mask PTM_UPDATING interrupt
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5xL6MAG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF975C4CEE4;
+	Mon,  5 May 2025 14:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746455165;
+	bh=ORf5T6DyIpU2ggmib2GrVIAMXQW+GcCXEhexCw0dD7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E5xL6MAGJA7Om9o5vIMnY5S4yM6ykW0pNMlqCtzCgD9wjwMH2YZmz8/mFqBXQScHc
+	 h8SVSjlVAv66C4AEpNIO3WMK/aArHq0A64BEnHPIkCZy5o5bCdTUUepzIeahZ4NOug
+	 w6u7PMwI5Pi+zuataeTVcktGi/CqfrrB3KLkJyo3epOIJY39tC8XEtFm3iqdRaRj+u
+	 HhWItV2pqPj5nNulhJMwkh2Ce8jacCz8tPE6CPghbM4vXTD+7zgew9de2Qe9GfbIQ3
+	 Ze/QmVx4yYpfUAVYHTcDw1GsjBDqQkA86bnhtFmK6uGwb7jJGnJ9PCdiimLcP60+eQ
+	 PLTVJ8kj6aK/w==
+Date: Mon, 5 May 2025 07:26:05 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v11 14/16] xfs: add xfs_calc_atomic_write_unit_max()
+Message-ID: <20250505142605.GI1035866@frogsfrogsfrogs>
+References: <20250504085923.1895402-1-john.g.garry@oracle.com>
+ <20250504085923.1895402-15-john.g.garry@oracle.com>
+ <20250505052534.GX25675@frogsfrogsfrogs>
+ <2a5688e8-88ef-4224-b757-af5adfca1be1@oracle.com>
+ <9d5d7037-6ed7-4c61-afec-8422d656de37@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-pcie-ptm-v4-4-02d26d51400b@linaro.org>
-References: <20250505-pcie-ptm-v4-0-02d26d51400b@linaro.org>
-In-Reply-To: <20250505-pcie-ptm-v4-0-02d26d51400b@linaro.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1764;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=t1yw/3IQY04ascExMYNkywVMbYb9sD04RFjXDUub5p0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBoGMov0gqEE7Kdc466OsqO1FiN0DTGyfPvqdn2m
- eVdjnTOicSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaBjKLwAKCRBVnxHm/pHO
- 9dpkB/wKb8ndaeMSQkmTCkcOVpoz3jJsGF8LuXs4yeyrPnDlww16eE499nmvu+4SiBNyL4SHr3j
- VMfK69x/QiEpne1DT1W9KjiPfN8Deb5gYYv9LFwhvrNwjkAr1nyv8HHHfTxsjfZ/7te0ernpcJb
- EuVh+5I/BreM1zaKazDTyLOPanx6E7qmZsdPgwoPiS/QBz5MunEzHhXP/N6NWhnI6V4lf5nsXHY
- ouqr6m+5m3JG9DPu54V2T/YwA5TP2c+X+dhd3xK7JNoqACJD5fwjFsFmT2wAiPwHJQfKiun2+7K
- mgldjpP1un+ujJTjpZjs0Pcj93z/jG6UaHvsNberfdccks45
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9d5d7037-6ed7-4c61-afec-8422d656de37@oracle.com>
 
-When PTM is enabled, PTM_UPDATING interrupt will be fired for each PTM
-context update, which will be once every 10ms in the case of auto context
-update. Since the interrupt is not strictly needed for making use of PTM,
-mask it to avoid the overhead of processing it.
+On Mon, May 05, 2025 at 09:02:31AM +0100, John Garry wrote:
+> On 05/05/2025 07:08, John Garry wrote:
+> > On 05/05/2025 06:25, Darrick J. Wong wrote:
+> > > Ok so I even attached the reply to the WRONG VERSION.  Something in
+> > > these changes cause xfs/289 to barf up this UBSAN warning, even on a
+> > > realtime + rtgroups volume:
+> 
+> Could this just be from another mount (of not a realtime + rtgroups xfs
+> instance)?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Quite possibly.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 46b1c6d19974a5161c8567ece85750c7b0a270b4..9270429501ae1fbff7ece155af7c735216b61e1d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -60,6 +60,7 @@
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_CFG			0x2c00
- #define PARF_INT_ALL_5_MASK			0x2dcc
-+#define PARF_INT_ALL_3_MASK			0x2e18
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_DOWN			BIT(1)
-@@ -132,6 +133,9 @@
- /* PARF_INT_ALL_5_MASK fields */
- #define PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR	BIT(0)
- 
-+/* PARF_INT_ALL_3_MASK fields */
-+#define PARF_INT_ALL_3_PTM_UPDATING		BIT(4)
-+
- /* ELBI registers */
- #define ELBI_SYS_STTS				0x08
- #define ELBI_CS2_ENABLE				0xa4
-@@ -497,6 +501,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_5_MASK);
- 	}
- 
-+	val = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+	val &= ~PARF_INT_ALL_3_PTM_UPDATING;
-+	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+
- 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to complete initialization: %d\n", ret);
+> > > 
+> > > [ 1160.539004] ------------[ cut here ]------------
+> > > [ 1160.540701] UBSAN: shift-out-of-bounds in /storage/home/djwong/
+> > > cdev/work/linux-djw/include/linux/log2.h:67:13
+> > > [ 1160.544597] shift exponent 4294967295 is too large for 64-bit
+> > > type 'long unsigned int'
+> > > [ 1160.547038] CPU: 3 UID: 0 PID: 288421 Comm: mount Not tainted
+> > > 6.15.0-rc5-djwx #rc5 PREEMPT(lazy)
+> > > 6f606c17703b80ffff7378e7041918eca24b3e68
+> > > [ 1160.547045] Hardware name: QEMU Standard PC (i440FX + PIIX,
+> > > 1996), BIOS 1.16.0-4.module+el8.8.0+21164+ed375313 04/01/2014
+> > > [ 1160.547047] Call Trace:
+> > > [ 1160.547049]  <TASK>
+> > > [ 1160.547051]  dump_stack_lvl+0x4f/0x60
+> > > [ 1160.547060]  __ubsan_handle_shift_out_of_bounds+0x1bc/0x380
+> > > [ 1160.547066]  xfs_set_max_atomic_write_opt.cold+0x22d/0x252 [xfs
+> > > 1f657532c3dee9b1d567597a31645929273d3283]
+> > > [ 1160.547249]  xfs_mountfs+0xa5c/0xb50 [xfs
+> > > 1f657532c3dee9b1d567597a31645929273d3283]
+> > > [ 1160.547434]  xfs_fs_fill_super+0x7eb/0xb30 [xfs
+> > > 1f657532c3dee9b1d567597a31645929273d3283]
+> > > [ 1160.547616]  ? xfs_open_devices+0x240/0x240 [xfs
+> > > 1f657532c3dee9b1d567597a31645929273d3283]
+> > > [ 1160.547797]  get_tree_bdev_flags+0x132/0x1d0
+> > > [ 1160.547801]  vfs_get_tree+0x17/0xa0
+> > > [ 1160.547803]  path_mount+0x720/0xa80
+> > > [ 1160.547807]  __x64_sys_mount+0x10c/0x140
+> > > [ 1160.547810]  do_syscall_64+0x47/0x100
+> > > [ 1160.547814]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> > > [ 1160.547817] RIP: 0033:0x7fde55d62e0a
+> > > [ 1160.547820] Code: 48 8b 0d f9 7f 0c 00 f7 d8 64 89 01 48 83 c8 ff
+> > > c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00
+> > > 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d c6 7f 0c 00 f7 d8 64
+> > > 89 01 48
+> > > [ 1160.547823] RSP: 002b:00007fff11920ce8 EFLAGS: 00000246 ORIG_RAX:
+> > > 00000000000000a5
+> > > [ 1160.547826] RAX: ffffffffffffffda RBX: 0000556a10cd1de0 RCX:
+> > > 00007fde55d62e0a
+> > > [ 1160.547828] RDX: 0000556a10cd2010 RSI: 0000556a10cd2090 RDI:
+> > > 0000556a10ce2590
+> > > [ 1160.547829] RBP: 0000000000000000 R08: 0000000000000000 R09:
+> > > 00007fff11920d50
+> > > [ 1160.547830] R10: 0000000000000000 R11: 0000000000000246 R12:
+> > > 0000556a10ce2590
+> > > [ 1160.547832] R13: 0000556a10cd2010 R14: 00007fde55eca264 R15:
+> > > 0000556a10cd1ef8
+> > > [ 1160.547834]  </TASK>
+> > > [ 1160.547835] ---[ end trace ]---
+> > > 
+> > > John, can you please figure this one out, seeing as it's 10:30pm on
+> > > Sunday night here?
+> 
+> 
+> I could recreate this.
+> 
+> > 
+> 
+> I think that we need this change:
+> 
+> @@ -715,6 +716,9 @@ static inline xfs_extlen_t
+> xfs_calc_rtgroup_awu_max(struct xfs_mount *mp)
+>  {
+>         struct xfs_groups       *rgs = &mp->m_groups[XG_TYPE_RTG];
+> 
+> +       if (rgs->blocks == 0)
+> +               return 0;
+>         if (mp->m_rtdev_targp && mp->m_rtdev_targp->bt_bdev_awu_min > 0)
+>                 return max_pow_of_two_factor(rgs->blocks);
+>         return rounddown_pow_of_two(rgs->blocks);
+> 
+> My xfs/289 problem goes away with this change.
 
--- 
-2.43.0
+Ok good.
 
+--D
+
+> 
+> > 
+> 
+> 
