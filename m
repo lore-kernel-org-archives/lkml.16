@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62A23984C2;
-	Mon,  5 May 2025 23:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD1F2ECFDC;
+	Mon,  5 May 2025 23:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486454; cv=none; b=WWd+x13MdF3GCPyEGY1PhtE4mOOyh7Egl4h8CKtlNnUXmfyhhpRq2cmptqXZ0tcDnErWOk15+pmWe9qXrsFBij36fFa1s00ec6RsA19tYGqamcyDwLCStiPyDTht1PDsVmfbiyKYA1Pa7tgJxcASfOy54uKheaF6LDElKLZosPc=
+	t=1746486494; cv=none; b=coZHvZJsTxVIGnRCoP3I87OFqG+/AHKsikploRrRXYw2pE4leejipgoMzqcyqfLjsDWnILMB+0qznd09bNlnMjuyTcSPMrHWzg4RM5/J2j/27SiAIZsSNO6yd+JSZhKw3sXJoaOAFsaqEeF2NH6WLX1m6dEPfFYVjjdEQvaTFi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486454; c=relaxed/simple;
-	bh=udTVttIycoEh733uozUt9/H6zWEntjHLcGGR0v5h8kI=;
+	s=arc-20240116; t=1746486494; c=relaxed/simple;
+	bh=1rX1VygvKUtt1fWJvrpYXGnj2mNZwGwmHDPfH9Do8c8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BRPogo07Pa+k3s0t7Au2YFvCmhMlf1VgnEu0qAAspdlo8RSb5ytb6tJY9TSI5Om+pKDBwGgf/jXcOTjwS17uwaVjdsIKcWVc1G6q3ws5NcpexrIKgonKjjliV/nf3/m0b7NGVJoHXt2r7oZQguLBP5+Ugvd8nNHxteXBHseS/h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4FNi8gb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qJi55SYnqKpyiK359Raf1HdAheD5Z1FdTUYSHwf+W4kiutGk8YdcSdLdll3r0Us7fbSP/5R+kcquegplMUXwma1HB6ZnC9mG7ryvwKJATG1XbGtVEzsFdlBUcU0QQ/UqUf41iVKbmrkUYVbzhvBCwRfzOHs75HxDMxtmxwxQ4ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvAO0jLb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4FNi8gb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94139C4CEEE;
-	Mon,  5 May 2025 23:07:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvAO0jLb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDACC4CEEF;
+	Mon,  5 May 2025 23:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486453;
-	bh=udTVttIycoEh733uozUt9/H6zWEntjHLcGGR0v5h8kI=;
+	s=k20201202; t=1746486492;
+	bh=1rX1VygvKUtt1fWJvrpYXGnj2mNZwGwmHDPfH9Do8c8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F4FNi8gba6bGbi2l6fzJpIAxrWCOpM9z0lMK90ppJg5Q7bb3Yy/10hMt9YbkvEj/F
-	 xlTAullxbV5GEzd8qrhgNO5fZwXj4oOm9M3bvpH9QU/liohb73UMhrZ0x20KJsXvR1
-	 suHMGBFFKK6yv40iTK8a2pWaQz5EN4zpaI3hkalQHuGj7qTc+ng6I+evZHpSjy05/b
-	 HuWx9yqkZ+P3llSNnBP5rZa8MJDNeZB7ZJzuNHi8PLu7yPwZX4J8WSd6WqL5inooEf
-	 zC3yIEunbIdzcRmfvtkni6ZmRk4y5lyMIxxSKHXSd04g977KMwF1cdaWgCt0JvNXzg
-	 4ptth7VbAjI6A==
+	b=TvAO0jLb25amMByUDLJDhIkH386Nh81qHTFycwZlLzWDph+K+odnbo2eli6r4KdBJ
+	 mEZvE9IksasZyRGZftOWx+PuJc32MH1HkVZG3SqD29IUjmsCPGRRbMfwPRSGIEJtG7
+	 Xdlg0/lIriFlofR+tz70c04WtMq2meSt0cIMJH8LwJNgeu0HPp786Nepwh+/Qjh98L
+	 m0V2k7N+7gkPBOf2F5dozeqJ1cFRkvDcsSuxy0IDC6r4u8y+iCB6wJY8wjH4KE5Oxm
+	 h8FaDwiMzn+PJj7QuyWl10bwcdsPiNg5AURa2PWYRktifweHhATlL1mYGWIzfO96l2
+	 6o7tsYLNlmJpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
+	Juergen Gross <jgross@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 038/212] btrfs: get zone unusable bytes while holding lock at btrfs_reclaim_bgs_work()
-Date: Mon,  5 May 2025 19:03:30 -0400
-Message-Id: <20250505230624.2692522-38-sashal@kernel.org>
+	sstabellini@kernel.org,
+	xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 6.1 059/212] xen: Add support for XenServer 6.1 platform device
+Date: Mon,  5 May 2025 19:03:51 -0400
+Message-Id: <20250505230624.2692522-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -53,65 +51,63 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Frediano Ziglio <frediano.ziglio@cloud.com>
 
-[ Upstream commit 1283b8c125a83bf7a7dbe90c33d3472b6d7bf612 ]
+[ Upstream commit 2356f15caefc0cc63d9cc5122641754f76ef9b25 ]
 
-At btrfs_reclaim_bgs_work(), we are grabbing a block group's zone unusable
-bytes while not under the protection of the block group's spinlock, so
-this can trigger race reports from KCSAN (or similar tools) since that
-field is typically updated while holding the lock, such as at
-__btrfs_add_free_space_zoned() for example.
+On XenServer on Windows machine a platform device with ID 2 instead of
+1 is used.
 
-Fix this by grabbing the zone unusable bytes while we are still in the
-critical section holding the block group's spinlock, which is right above
-where we are currently grabbing it.
+This device is mainly identical to device 1 but due to some Windows
+update behaviour it was decided to use a device with a different ID.
 
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This causes compatibility issues with Linux which expects, if Xen
+is detected, to find a Xen platform device (5853:0001) otherwise code
+will crash due to some missing initialization (specifically grant
+tables). Specifically from dmesg
+
+    RIP: 0010:gnttab_expand+0x29/0x210
+    Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
+          41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
+          <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
+          44 39
+    RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
+    ...
+
+The device 2 is presented by Xapi adding device specification to
+Qemu command line.
+
+Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
+Acked-by: Juergen Gross <jgross@suse.com>
+Message-ID: <20250227145016.25350-1-frediano.ziglio@cloud.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/xen/platform-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 0dcf7fecaf55b..91440ef79a26f 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1678,6 +1678,17 @@ void btrfs_reclaim_bgs_work(struct work_struct *work)
- 			up_write(&space_info->groups_sem);
- 			goto next;
- 		}
-+
-+		/*
-+		 * Cache the zone_unusable value before turning the block group
-+		 * to read only. As soon as the block group is read only it's
-+		 * zone_unusable value gets moved to the block group's read-only
-+		 * bytes and isn't available for calculations anymore. We also
-+		 * cache it before unlocking the block group, to prevent races
-+		 * (reports from KCSAN and such tools) with tasks updating it.
-+		 */
-+		zone_unusable = bg->zone_unusable;
-+
- 		spin_unlock(&bg->lock);
+diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+index 544d3f9010b92..1db82da56db62 100644
+--- a/drivers/xen/platform-pci.c
++++ b/drivers/xen/platform-pci.c
+@@ -26,6 +26,8 @@
  
- 		/*
-@@ -1693,13 +1704,6 @@ void btrfs_reclaim_bgs_work(struct work_struct *work)
- 			goto next;
- 		}
+ #define DRV_NAME    "xen-platform-pci"
  
--		/*
--		 * Cache the zone_unusable value before turning the block group
--		 * to read only. As soon as the blog group is read only it's
--		 * zone_unusable value gets moved to the block group's read-only
--		 * bytes and isn't available for calculations anymore.
--		 */
--		zone_unusable = bg->zone_unusable;
- 		ret = inc_block_group_ro(bg, 0);
- 		up_write(&space_info->groups_sem);
- 		if (ret < 0)
++#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
++
+ static unsigned long platform_mmio;
+ static unsigned long platform_mmio_alloc;
+ static unsigned long platform_mmiolen;
+@@ -174,6 +176,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
+ static const struct pci_device_id platform_pci_tbl[] = {
+ 	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
++	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+ 	{0,}
+ };
+ 
 -- 
 2.39.5
 
