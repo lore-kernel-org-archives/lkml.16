@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70964397A66;
-	Mon,  5 May 2025 23:07:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4452E62B0;
+	Mon,  5 May 2025 23:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486421; cv=none; b=U8JpkpOYoYkYA0ufXEXR4/eor2lHO61pqNMoJAujsu72mW3LUCxDvmjrRfaGFkdOGfYosPalmm354UKeWGWzqzC949Sv/ErwthpGAU4+bNQlw6Unhdnwm/KxASBf/OD9KbRkKdfzjEUoofdaQQLgKgTekdT1yLy8Clx7veFVTas=
+	t=1746486361; cv=none; b=Ea6WsxGKRh8/rFSHoP9CwVKOKCMC+99BtmpRvtSyyXzPJtmOqagTu7bcXEaOAVHT4MZom/nLKOMhCTZfCiRJ4jmJPLu9kfWOamgM8hPbrjIspxBxwnt42bSOwhJKT3Qs1hXb0IUkqjZC+R2+4CdSIOBNWKK9I9b9TuRWpRqPByw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486421; c=relaxed/simple;
-	bh=5THHuus3fgTQAgvQ3+PYY+FACHau1WzENPOs6L9Xu+0=;
+	s=arc-20240116; t=1746486361; c=relaxed/simple;
+	bh=/9BGlDgL7w9Q+zIZrKDXUM0AN8AxUkl6CWSvTa3RhDs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AE0DuyqKSL06yq+si5T9aIC9eErqXyoQ8sikXhwCLzN9uwuVcjUdTUOurxEiPkviQami37knB77WS+iVuqbQTyJSaKEVfX9Ya7TWm5INnn6hkDkjm9npxl4rQVhFRNO7+/jrDtwPf3ig5sfbHRizOEv+kCLPZFrzUu1kKDsnHyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6S3gNis; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UiV3UQoFACIsmwefR1m+BN20r15ZNT7+omySFxzY9yuFWY0/bmYNuufRnDFEtXknD20JcSm3hPqG8jOkMDontSaAOuCCJyrTGgNedplGpzguwhNcyeCk7shg2B8o6BE7iOYxxHywKUJ0ZYjj0Z+vAkx1LHH/vgC8x48l37VvCso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jbsv0nd6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6S3gNis"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBBBC4AF5F;
-	Mon,  5 May 2025 23:06:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jbsv0nd6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57D3C4CEED;
+	Mon,  5 May 2025 23:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486420;
-	bh=5THHuus3fgTQAgvQ3+PYY+FACHau1WzENPOs6L9Xu+0=;
+	s=k20201202; t=1746486361;
+	bh=/9BGlDgL7w9Q+zIZrKDXUM0AN8AxUkl6CWSvTa3RhDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q6S3gNis+0JrsvRFMEOKbhJ00fjLRNVXuMFcJESMWS+kgRxzApLLq38IdZl/b/NFY
-	 nv+47mxXVdX6vpB9w1yzduewckZD+6d4gDL99WPZ7t08WVV8tVjk/SEv9Khl4NTTqs
-	 IgzyNCQWIVMrTzaT6bQA2m5iG4hJ1zkclvz2kyxNxtICbwSCgjL5rgWxYYap/UdLMi
-	 6UJWwCf+/7S90QVeRPzFUND4EdGdd/OoVUGRt/HUIApinGTK8deeFF+2sl8hBI7oad
-	 E1cES6O4Oc3TLTtWL4ronRKJjnUoPBZMJ8X9lBJHt7/EAykLoG3Sjk0eMP+ie/hD7F
-	 2J7baPHBNufYQ==
+	b=Jbsv0nd6VnAtk/r6RJ1APjmGYxGGY/u9GcHY8LjXm9eWdiRUHSo/nNo2KLRt8zOTp
+	 XhHkws6zwVkIs218owj1DHKjyN7J1CJSgsn9/llC2+PHAL6dVwZu2FywnapW3o6mI1
+	 cNf0RiZ7+jbmJU3GurMdEVZjj2Y1bboq7UB6WEnDEV2/uF620XlTAXDcN4RE0z7/ET
+	 +C+Cy95beiwX/J0Nz7HOZXSzwLpTwvKM76cWVsM6VNueeLntHR3XDTJAF93sMJdBR8
+	 W9QyBFWiQ6C7JZ8YwSoisPeGthT68Fq4XyD2NpttWCExXlr+F5pwJtkXl3SCLR/zZ/
+	 +Z2ERovry9KOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
+Cc: Soeren Moch <smoch@web.de>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 017/212] NFSv4: Treat ENETUNREACH errors as fatal for state recovery
-Date: Mon,  5 May 2025 19:03:09 -0400
-Message-Id: <20250505230624.2692522-17-sashal@kernel.org>
+	Jes.Sorensen@gmail.com,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 281/294] wifi: rtl8xxxu: retry firmware download on error
+Date: Mon,  5 May 2025 18:56:21 -0400
+Message-Id: <20250505225634.2688578-281-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
-References: <20250505230624.2692522-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,47 +48,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.136
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Soeren Moch <smoch@web.de>
 
-[ Upstream commit 0af5fb5ed3d2fd9e110c6112271f022b744a849a ]
+[ Upstream commit 3d3e28feca7ac8c6cf2a390dbbe1f97e3feb7f36 ]
 
-If a containerised process is killed and causes an ENETUNREACH or
-ENETDOWN error to be propagated to the state manager, then mark the
-nfs_client as being dead so that we don't loop in functions that are
-expecting recovery to succeed.
+Occasionally there is an EPROTO error during firmware download.
+This error is converted to EAGAIN in the download function.
+But nobody tries again and so device probe fails.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Implement download retry to fix this.
+
+This error was observed (and fix tested) on a tbs2910 board [1]
+with an embedded RTL8188EU (0bda:8179) device behind a USB hub.
+
+[1] arch/arm/boot/dts/nxp/imx/imx6q-tbs2910.dts
+
+Signed-off-by: Soeren Moch <smoch@web.de>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Link: https://patch.msgid.link/20250127194828.599379-1-smoch@web.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4state.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c   | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 48ea406604229..80a7c5bd7a476 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2737,7 +2737,15 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
- 			" with error %d\n", section_sep, section,
- 			clp->cl_hostname, -status);
--	ssleep(1);
-+	switch (status) {
-+	case -ENETDOWN:
-+	case -ENETUNREACH:
-+		nfs_mark_client_ready(clp, -EIO);
-+		break;
-+	default:
-+		ssleep(1);
-+		break;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 6e47dde938909..05e77d2bda373 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -900,9 +900,10 @@ rtl8xxxu_writeN(struct rtl8xxxu_priv *priv, u16 addr, u8 *buf, u16 len)
+ 	return len;
+ 
+ write_error:
+-	dev_info(&udev->dev,
+-		 "%s: Failed to write block at addr: %04x size: %04x\n",
+-		 __func__, addr, blocksize);
++	if (rtl8xxxu_debug & RTL8XXXU_DEBUG_REG_WRITE)
++		dev_info(&udev->dev,
++			 "%s: Failed to write block at addr: %04x size: %04x\n",
++			 __func__, addr, blocksize);
+ 	return -EAGAIN;
+ }
+ 
+@@ -4073,8 +4074,14 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 	 */
+ 	rtl8xxxu_write16(priv, REG_TRXFF_BNDY + 2, fops->trxff_boundary);
+ 
+-	ret = rtl8xxxu_download_firmware(priv);
+-	dev_dbg(dev, "%s: download_firmware %i\n", __func__, ret);
++	for (int retry = 5; retry >= 0 ; retry--) {
++		ret = rtl8xxxu_download_firmware(priv);
++		dev_dbg(dev, "%s: download_firmware %i\n", __func__, ret);
++		if (ret != -EAGAIN)
++			break;
++		if (retry)
++			dev_dbg(dev, "%s: retry firmware download\n", __func__);
 +	}
- out_drain:
- 	memalloc_nofs_restore(memflags);
- 	nfs4_end_drain_session(clp);
+ 	if (ret)
+ 		goto exit;
+ 	ret = rtl8xxxu_start_firmware(priv);
 -- 
 2.39.5
 
