@@ -1,66 +1,114 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D204024E4AA
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B32D24E4AA;
+	Mon,  5 May 2025 15:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457509; cv=none; b=Fe2v45GK1lbhjlc/QrgbHJQguoCirBYIRZvBacygDDEUEAg1GNdraITjSd2t/1/JtK2k1NuZut23LsIRxjC6o6rz2RiSRXGAMFa8kcD08VHgDTC+vrQkiEa1z/a/h+u8C0IpILpXqSN+SjZ66LdxtZgB1Gky1RBL85dmAO9rEXI=
+	t=1746457516; cv=none; b=UJeUZfTKwnp3YIhjbtd50piOgAU898gzoFZBWwN5Zt0P4bub/Qbuutb8KOCSnekvhOplGV1luA3oGaxQA507Ef5BLXB7nDy3zFjW0OYm43M5iCavnczYoTuAiacP2StIx9ES2jVkChAd4ABJ5mPWcwF81u5Cqm4blE/k0z4GKig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457509; c=relaxed/simple;
-	bh=FV8Tejqc6V6+uOqyC0GpdhpV7MI/2Ee8pALjv1APlhw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Um5ImZDYZi2qMkt6pA48EvtLZQJe+lCikC6Gq1BHNlJ0uPN4gxTIom6DdzeT8Wv2tywOB2ERHDxngqW8CwVrfdnZ8lu/bGGSYiAVrhmDTQDmrE1ZZKoiB5kE3hOUKDd222RAptIQwi2QvqTzBFcHNmzjj+I3YYwBC/KNyoqYHsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 5014492009C; Mon,  5 May 2025 17:05:06 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 4904692009B;
-	Mon,  5 May 2025 16:05:06 +0100 (BST)
-Date: Mon, 5 May 2025 16:05:06 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: Adding __popcountsi2 and __popcountdi2
-In-Reply-To: <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2505051543470.31828@angie.orcam.me.uk>
-References: <20250425003342.GA795313@ax162> <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com> <20250425021138.GA3800209@ax162> <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1746457516; c=relaxed/simple;
+	bh=5r5Ft/C84qteRJtIQxi4mDS5zxg0pnHRDS6lzVg5xpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QqVJBMgXrKLgw9ptmliLQ2PpcOqQYoNVztFh1WgnaYkfvkQGCG1NKq++Fl0bJami6wU1etV6mM71r+W9Mj9Fl65EX5xFt0a8hxckAWnippksVgXmSkcdDg1SGM/UiJOGjA545iEaXO4U3pWuZyNY5sgeKgn3gwVfaDtj6f12PKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JOHEVnfE; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JOHEVnfE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746457515; x=1777993515;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5r5Ft/C84qteRJtIQxi4mDS5zxg0pnHRDS6lzVg5xpw=;
+  b=JOHEVnfExOEc9yNUcqEOrDm1xn7CvMTk4xmiI0hFdAWkNDjD+t3pwlAh
+   KFZ91OrUCSjA3J/+4RJNBYxD1pKjaYKFXxnQ4+X2KHi0gIwrLovg7YehQ
+   LizU8Yqs/3rhWPXvuwN6osR/n4DuW1Syj4E9W9F2ahYniKLNsUiiiiGPI
+   BGTMnUFGhkHuzTr2jBul/Bs5b6IUL4VUC3LAgAkHYfWqSv1V3IkBsYN/r
+   aYOdfrmZbv3DhvgE9O4JmgVgrRsj0Iy8p+yWAXzwyAjR2CyyKiurQZFvG
+   PsbCngfi60WOykW/VyTLJJvzrG1ktwtboZuW3t0SHA66L50VGLFxVeP9f
+   g==;
+X-CSE-ConnectionGUID: s+n3FSa5QYu3KDHLI3bN5Q==
+X-CSE-MsgGUID: 9CajUO9lRCWo3QukKZD9bg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="47333042"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="47333042"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:05:04 -0700
+X-CSE-ConnectionGUID: 7iQvoTw9QJaUQk0dLNvmzw==
+X-CSE-MsgGUID: Alh6lKy+RyWqXWE7NyIKBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="135255177"
+Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.111.34]) ([10.125.111.34])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 08:05:03 -0700
+Message-ID: <1f315645-4afd-49f1-b259-bac8911dd67a@intel.com>
+Date: Mon, 5 May 2025 08:05:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>, Moshe Shemesh <moshe@nvidia.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
+ <dan.j.williams@intel.com>, Keith Busch <kbusch@kernel.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 24 Apr 2025, Linus Torvalds wrote:
 
-> > I will test declaring __popcount{s,d}i2() as aliases of
-> > __sw_hweight{32,64}() to see what effect that has but I figured that
-> > calling the __arch_hweight variants was more correct because some
-> > architectures (at least RISC-V and x86 when I looked) use alternatives
-> > in that path to use hardware instructions and avoid the software path
-> > altogether. While there would still be the overhead from the function
-> > call, I figured not using the software fallback would at least soften
-> > that blow.
+
+On 5/5/25 4:54 AM, Ilpo Järvinen wrote:
+> The commit a4e772898f8b ("PCI: Add missing bridge lock to
+> pci_bus_lock()") made the lock function to call depend on
+> dev->subordinate but left pci_slot_unlock() unmodified creating locking
+> asymmetry compared with pci_slot_lock().
 > 
-> Once you have the overhead of a function call - and all the register
-> games etc that involves, you're almost certainly better off with the
-> simple unconditional bitwise games.
+> Because of the asymmetric lock handling, the same bridge device is
+> unlocked twice. First pci_bus_unlock() unlocks bus->self and then
+> pci_slot_unlock() will unconditionally unlock the same bridge device.
+> 
+> Move pci_dev_unlock() inside an else branch to match the logic in
+> pci_slot_lock().
+> 
+> Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: <stable@vger.kernel.org>
 
- Unless optimising for size, which we do support.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> 
+> v2:
+> - Improve changelog (Lukas)
+> - Added Cc stable
+> 
+>  drivers/pci/pci.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4d7c9f64ea24..26507aa906d7 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5542,7 +5542,8 @@ static void pci_slot_unlock(struct pci_slot *slot)
+>  			continue;
+>  		if (dev->subordinate)
+>  			pci_bus_unlock(dev->subordinate);
+> -		pci_dev_unlock(dev);
+> +		else
+> +			pci_dev_unlock(dev);
+>  	}
+>  }
+>  
+> 
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 
- Adding another function call to a non-leaf function is usually cheap on 
-RISC platforms as a stack frame must have been created already, so the 
-instructions required have taken their space anyway.  For a leaf function 
--- it depends, but in the cheapest case it's 5 instructions total: 2 pairs 
-to adjust SP both ways and to save/restore the link register respectively, 
-plus one for the actual call.  The result may still be smaller than an 
-open-coded variant.
-
- I have no opinion though on providing libgcc replacement functions to 
-satisfy libcalls for -Os builds.
-
-  Maciej
