@@ -1,146 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4941E32C6
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212A1ACEAC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446500; cv=none; b=OfEvHRil7kYHtxnweqnVwEhJ3FRm+Bi2rcyJ7zTNJ/ePwyH1yMwX2ZttNKX080uJt7RjnDL2YEFrQM/Y0KfwNpRlO0KYjdgEFB5k9lrYHxVnvvx1GZE3VW2f9GNsBxz3gclcGg/qqqgENXrI0yABmcDbOvwRdGM0wc6SIsWX1kQ=
+	t=1746446691; cv=none; b=VmBxvRvziG2Xsq6x1DaiHSGOxrDCHJj/iEIDnyLrlHQu5z2itlJB5LAl1PD4+8vZHi1SMY/JGdpD332sx2VJdlytpV4pEW4ml7PDPNbKnq4xIe1AcrY1P6KtqjXZtu570EiuNA1dDt6icR83dpNQaNCSGTxjdXexNj7/1vhh/LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446500; c=relaxed/simple;
-	bh=yKXMOm/860GCcP8OoAHCINoXDy4EwSWPW0EDzkxq178=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LQaEF/DaRCTWMBalV+0VkHBfh+yMrQIPViRzvmjjrbwm7DbYdTgxHhMMf+J6+x6ew6/Kas1v4gKPkZS4IL0c82Sf4lvAKA8totf46yv0H3K9L8rui3+tNOYKcatcHF7H5Qd5ugzY/cUUtHqewnxyD1cZhq5lzdkAcTq72BRtr4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blgC4oHI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blgC4oHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE17C4CEE9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:01:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746446500;
-	bh=yKXMOm/860GCcP8OoAHCINoXDy4EwSWPW0EDzkxq178=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=blgC4oHIW3wAP8A1QsMnVaof+kTjscjbnt5LtnKStIlkn1n3AMYE6CpRv2nZoLw0I
-	 cM8rLUPe+WUP2EUPzRYSFeKCCyqXfZ0QIph55SbTXsGgxYwQzgt7vH33V6lqG7C1A+
-	 tbhrVH32TUbCB2Nc+HFfTTDvEqRhYbYu3gGxMZVeWGCcBhuohjcuK44P3SP8eT2tmw
-	 ITi/rFVwohdPgEOnUrQFNROOmuOGuD8ayHxQbFFmSUhGyKiIf1izXUvVrTA2+nBUvH
-	 uFXyDeYvNxF1Z3qkaobTDSk31w5+S1AmtshN7z1TYj4peYHOSE0B+jBdcHIQP3v/60
-	 oTv+bNp5JaxHQ==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5499c5d9691so5080902e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:01:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWYKS7QtuOva/Zup9C7ipHceo2oxmbnNRFFCZP8rItBOA//j89wcMQuLHs2L5OILKuf87vbfgLV8UsUDAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxao3THflNX4MYNodn7HocahF0+oJjoLo/39N9f1eKWF+2UJqH0
-	q+puLWsEesq/3L3op0d271nRUOYVGo1F2sAU5RYiCpA+2x0SR9PyXSPJQdybUrSxtq+FNMXhr+K
-	YY8MIjSpz0Ym1O9X5vjPMQl0W8vo=
-X-Google-Smtp-Source: AGHT+IHNfl/k0nKX7HHii+yFbjen/cpwNpNeEkkE0EhxxcaZldi84IfCIcrHLIOQSGaQnm60lEF7YLNiGZxwP6wXMi8=
-X-Received: by 2002:a2e:bd0e:0:b0:30b:c569:4689 with SMTP id
- 38308e7fff4ca-32351f257d4mr22226601fa.27.1746446498310; Mon, 05 May 2025
- 05:01:38 -0700 (PDT)
+	s=arc-20240116; t=1746446691; c=relaxed/simple;
+	bh=0arvIUSifnZxahyQL3PgmRS+MaPEBBGATf2lplycaL4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YQnyJVibGl+EeqR4ER/OeTY6g1pE4g/VpNgpM4JK1n0+USGpNhc4+ZrWcUob5FfNUugoxAHWb+ify1qEpvxa4iS07LKeOwtOCutORtr24PIxvl/e135TzadiieE6nj0ApIcLPJxTYeraUHRnSBUw2MYevHlZzVBC5X88tzxhj2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
+Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
+ (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
+ 13:59:38 +0200
+Received: from lnxdevrm02.bk.prodrive.nl (10.1.1.121) by
+ EXCOP01.bk.prodrive.nl (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4
+ via Frontend Transport; Mon, 5 May 2025 13:59:38 +0200
+Received: from paugeu by lnxdevrm02.bk.prodrive.nl with local (Exim 4.96)
+	(envelope-from <paul.geurts@prodrive-technologies.com>)
+	id 1uBuTy-008B5T-0u;
+	Mon, 05 May 2025 13:59:38 +0200
+From: Paul Geurts <paul.geurts@prodrive-technologies.com>
+To: <lgirdwood@gmail.com>, <broonie@kernel.org>,
+	<frieder.schrempf@kontron.de>, <Frank.Li@nxp.com>, <marex@denx.de>,
+	<yibin.gong@nxp.com>, <joy.zou@nxp.com>, <linux-kernel@vger.kernel.org>
+CC: <martijn.de.gouw@prodrive-technologies.com>, Paul Geurts
+	<paul.geurts@prodrive-technologies.com>
+Subject: [PATCH] regulator: pca9450: Add restart handler
+Date: Mon, 5 May 2025 13:59:36 +0200
+Message-ID: <20250505115936.1946891-1-paul.geurts@prodrive-technologies.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504184342.125253-1-ubizjak@gmail.com> <dd4c1795-ee0f-4589-9430-d759e59d5b96@zytor.com>
- <CAMj1kXHLfa2OzT+mo8qFxp5NtLHxaxnO3+skt_we=QOTtPFUqw@mail.gmail.com>
- <79AB4DAE-18EE-4F3C-980F-46304C021EC1@zytor.com> <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
- <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
-In-Reply-To: <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 5 May 2025 14:01:26 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF68cZ1B-hf845x8bkYZJW1kn69QenVoHnrjAeFRrXbsw@mail.gmail.com>
-X-Gm-Features: ATxdqUE_1SqOu31UeqEZ9aqvciZPPMBGKf0BwUcXfuKE72VyHS3naqyuEkdV0UE
-Message-ID: <CAMj1kXF68cZ1B-hf845x8bkYZJW1kn69QenVoHnrjAeFRrXbsw@mail.gmail.com>
-Subject: Re: [PATCH -tip] x86/asm: Use %a instead of %c(%%rip) in rip_rel_ptr()
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, 5 May 2025 at 13:50, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> On May 5, 2025 3:42:46 AM PDT, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >On Mon, 5 May 2025 at 08:09, H. Peter Anvin <hpa@zytor.com> wrote:
-> >>
-> >> On May 4, 2025 10:48:19 PM PDT, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >> >On Mon, 5 May 2025 at 04:59, H. Peter Anvin <hpa@zytor.com> wrote:
-> >> >>
-> >> >> On 5/4/25 11:43, Uros Bizjak wrote:
-> >> >> > The "a" asm operand modifier substitutes a memory reference, with the
-> >> >> > actual operand treated as address.  For x86_64, when a symbol is
-> >> >> > provided, the "a" modifier emits "sym(%rip)" instead of "sym".
-> >> >> >
-> >> >
-> >> >Clang does not
-> >> >
-> >> >https://godbolt.org/z/5Y58T45f5
-> >> >
-> >> >> > No functional changes intended.
-> >> >> >
-> >> >
-> >> >NAK. There is a functional change with Clang, which does not emit
-> >> >%(rip), and this is the whole point of this thing.
-> >> >
-> >> >> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> >> >> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> >> >> > Cc: Ingo Molnar <mingo@kernel.org>
-> >> >> > Cc: Borislav Petkov <bp@alien8.de>
-> >> >> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >> >> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> >> >> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> >> >> > ---
-> >> >> >   arch/x86/include/asm/asm.h | 2 +-
-> >> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >> >> >
-> >> >> > diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-> >> >> > index f963848024a5..d7610b99b8d8 100644
-> >> >> > --- a/arch/x86/include/asm/asm.h
-> >> >> > +++ b/arch/x86/include/asm/asm.h
-> >> >> > @@ -116,7 +116,7 @@
-> >> >> >   #ifndef __ASSEMBLER__
-> >> >> >   static __always_inline __pure void *rip_rel_ptr(void *p)
-> >> >> >   {
-> >> >> > -     asm("leaq %c1(%%rip), %0" : "=r"(p) : "i"(p));
-> >> >> > +     asm("leaq %a1, %0" : "=r"(p) : "i"(p));
-> >> >> >
-> >> >> >       return p;
-> >> >> >   }
-> >> >>
-> >> >> Also, this function really should be __attribute_const__ rather than __pure.
-> >> >>
-> >> >
-> >> >No it should really not.
-> >> >
-> >> >rip_rel_ptr() will yield different results depending on whether it is
-> >> >called [by the same code] from the 1:1 mapping or the ordinary kernel
-> >> >virtual mapping of memory, and this is basically the entire reason we
-> >> >need it in the first place.
-> >> >
-> >> >Lying to the compiler about this is not a good idea imo.
-> >>
-> >> Goddamnit, another clang bug. Someone fix the damned thing, please...
-> >
-> >How is this a bug? The %a modifier is documented as producing a memory
-> >reference - the fact that GCC on x86_64 always emits a RIP-relative
-> >reference regardless of whether we are generating PIC code or not is
-> >an implementation detail, and not fundamental to yield correct code.
-> >
-> >Clang produces something that matches the constraints that we gave it
-> >- we cannot blame the tools for the mess of our own making where we
-> >call C code from alternative mappings of memory, while we lie to the
-> >compiler that the code is position dependent and non-relocatable.
->
-> It is documented to produce an (%rip) reference in the gcc documentation, and gcc is the reference for inline assembly.
->
+When restarting a CPU powered by the PCA9450 power management IC, it
+is beneficial to use the PCA9450 to power cycle the CPU and all its
+connected peripherals to start up in a known state. The PCA9450 features
+a cold start procedure initiated by an I2C command.
 
-Got a link? The one below documents it as a generic modifier, and does
-not mention rIP at all.
+Add a restart handler so that the PCA9450 is used to restart the CPU.
+The restart handler sends command 0x14 to the SW_RST register,
+initiating a cold reset (Power recycle all regulators except LDO1, LDO2
+and CLK_32K_OUT)
 
-https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Generic-Operand-Modifiers
+As the PCA9450 is a PMIC specific for the i.MX8M family CPU, the restart
+handler priority is set just slightly higher than imx2_wdt and the PSCI
+restart handler. This makes sure this restart handler takes precedence.
 
-> Furthermore, documentation is not reality. Code is.
+Signed-off-by: Paul Geurts <paul.geurts@prodrive-technologies.com>
+---
+ drivers/regulator/pca9450-regulator.c | 27 +++++++++++++++++++++++++++
+ include/linux/regulator/pca9450.h     |  5 +++++
+ 2 files changed, 32 insertions(+)
 
-Not sure I follow your point here. You claim Clang is buggy because
-GCC does not behave according to its own documentation?
+diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
+index a56f3ab754fa..14d19a6d6655 100644
+--- a/drivers/regulator/pca9450-regulator.c
++++ b/drivers/regulator/pca9450-regulator.c
+@@ -9,6 +9,7 @@
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
++#include <linux/reboot.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -33,6 +34,7 @@ struct pca9450 {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct gpio_desc *sd_vsel_gpio;
++	struct notifier_block restart_nb;
+ 	enum pca9450_chip_type type;
+ 	unsigned int rcnt;
+ 	int irq;
+@@ -965,6 +967,25 @@ static irqreturn_t pca9450_irq_handler(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int pca9450_i2c_restart_handler(struct notifier_block *nb,
++				unsigned long action, void *data)
++{
++	struct pca9450 *pca9450 = container_of(nb, struct pca9450, restart_nb);
++	struct i2c_client *i2c = container_of(pca9450->dev, struct i2c_client, dev);
++
++	dev_dbg(&i2c->dev, "Restarting device..\n");
++	if (i2c_smbus_write_byte_data(i2c, PCA9450_REG_SWRST, SW_RST_COMMAND) == 0) {
++		/* tRESTART is 250ms, so 300 should be enough to make sure it happened */
++		mdelay(300);
++		/* When we get here, the PMIC didn't power cycle for some reason. so warn.*/
++		dev_warn(&i2c->dev, "Device didn't respond to restart command\n");
++	} else {
++		dev_err(&i2c->dev, "Restart command failed\n");
++	}
++
++	return 0;
++}
++
+ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ {
+ 	enum pca9450_chip_type type = (unsigned int)(uintptr_t)
+@@ -1107,6 +1128,12 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ 	pca9450->sd_vsel_fixed_low =
+ 		of_property_read_bool(ldo5->dev.of_node, "nxp,sd-vsel-fixed-low");
+ 
++	pca9450->restart_nb.notifier_call = pca9450_i2c_restart_handler;
++	pca9450->restart_nb.priority = PCA9450_RESTART_HANDLER_PRIORITY;
++
++	if (register_restart_handler(&pca9450->restart_nb))
++		dev_warn(&i2c->dev, "Failed to register restart handler\n");
++
+ 	dev_info(&i2c->dev, "%s probed.\n",
+ 		type == PCA9450_TYPE_PCA9450A ? "pca9450a" :
+ 		(type == PCA9450_TYPE_PCA9451A ? "pca9451a" : "pca9450bc"));
+diff --git a/include/linux/regulator/pca9450.h b/include/linux/regulator/pca9450.h
+index b427b5873de1..85b4fecc10d8 100644
+--- a/include/linux/regulator/pca9450.h
++++ b/include/linux/regulator/pca9450.h
+@@ -35,6 +35,8 @@ enum {
+ 	PCA9450_DVS_LEVEL_MAX,
+ };
+ 
++#define PCA9450_RESTART_HANDLER_PRIORITY 130
++
+ #define PCA9450_BUCK1_VOLTAGE_NUM	0x80
+ #define PCA9450_BUCK2_VOLTAGE_NUM	0x80
+ #define PCA9450_BUCK3_VOLTAGE_NUM	0x80
+@@ -235,4 +237,7 @@ enum {
+ #define I2C_LT_ON_RUN			0x02
+ #define I2C_LT_FORCE_ENABLE		0x03
+ 
++/* PCA9450_REG_SW_RST command */
++#define SW_RST_COMMAND			0x14
++
+ #endif /* __LINUX_REG_PCA9450_H__ */
+-- 
+2.39.2
+
