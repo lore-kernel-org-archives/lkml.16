@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822E12D8DA9;
-	Mon,  5 May 2025 22:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CC536E0AD;
+	Mon,  5 May 2025 22:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485826; cv=none; b=GC1I2d5PdRembd2oy4YcB5GiU4iGzO8a2yQCJsVKwk66ye1F92LWGybdf+FrE3wEsOIMIwwjznLiE7kn7DW7lfj+tDm0zzqPGvn3Y9lIjy0jrdFUS4SerqhbwfrAxK4Ng1LUQXzxYS5bS4MIOma8McCpHwMefHX9/i/cwLBFeeg=
+	t=1746485851; cv=none; b=IC406cj2yBD1zwl33J/WJKEnsiT9VZg85gi/0Z3qmb8iUpwCZt+IejWNqb+InW0RqOmjbuShEliiWBy9sAcpIU025LPYfkFOf7FuojhUrzA/dFPZsUDLHKMyzWewYSXvz2BYmuaA1nk51NeqtNS3GlJvJkwwZ7dRZ8Ev3Wz8RGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485826; c=relaxed/simple;
-	bh=iZHQ+x/yJmF2kpb8qxJthxWQ4unr5cOMDIGLqJ6ibpQ=;
+	s=arc-20240116; t=1746485851; c=relaxed/simple;
+	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E7g+1iO/+n9D54NCmYS/KQfm0SanpOloNpsOOKYMhDAkgQB0IJ/GJShAJT2xOyt5yiOFxi5+mwgFeOvSuUxzPqGjY+K33s6QcE9+muke9sjL1inLHSctBG2qXc87YSYe9UTsIVyHf/6nqwkUXMHelcJ76fQTkhrctNqM4gC/2s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4sxJzDf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K8F73OwJWhXeEF2pMoLrHKobfQLgbq78el1jK+APLZW/3d4BTtMkqe54phZ4hz4QtMtGL8GPf+lXwtqOU4qviN7oocLZgqmvwFu6aWGN7k874gm5ZXQWAbmJLPYQ6EbJEo34f5a8SSUcvQIo6Sjsy6nzqDyERbQutIcY2IQURBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWJEJhs/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4sxJzDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8097FC4CEE4;
-	Mon,  5 May 2025 22:57:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWJEJhs/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271F7C4CEEF;
+	Mon,  5 May 2025 22:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485825;
-	bh=iZHQ+x/yJmF2kpb8qxJthxWQ4unr5cOMDIGLqJ6ibpQ=;
+	s=k20201202; t=1746485849;
+	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J4sxJzDfNnjbTdZS1gCvMq4bTf5jMNl+cGeC9i3luGeBcbNYG+wPLPUL5DFsm6mWT
-	 xXjJxAbd3bgvzh9QdEqFhlCbrLlQgx2yQ8U7kXY3trrEfSFuNr8z10TA4Oy+UNmrBy
-	 qd2Ry+RfOvse9gut2qDB72Q5XrNMg+Hcoz58oN+Fb18WlEU0Alni5vXEYXbNKGDIdc
-	 cdxWtqLXkEzut1nnnjz+caZ016bq1UmGylfI75OiltproB1eyx9be8ziEsl9/JkNBc
-	 qUdCkWu4ZSpok/9e4Hla5oObaomDj7oClSm//rfTL1dbT6qTHqp21yA5y42JAdtq3u
-	 4beTfvd/9hlAQ==
+	b=TWJEJhs/VPU5mnSIYe9AkX44I0dNNKoywHt1wENiRiUndQAT1EeGqWaayzIlbnmPl
+	 JPH6VKJ70SZCsocxb7IhJIfb9e1YrfnXOdcU7xb8oK61AorkLd0SPn5fkgolo3ysQ+
+	 5c20rEkhM5r5l1C7pnxBKTKwHAiRnXsRSnPoDQtv2Sy4voIm1/5fNr1Tz4azquG6/M
+	 RPqrIfl28oZtzQ11wH5Np84EcR0jFRymnnuF6PALRBySqhbiAqhO9EauGJ2k8HZdsc
+	 iKKs3xh5L1aG4EoUfNCxx8U9xxus2ii+LsAO4mDxRYJr75ANni+iZ43t2dec0HPtlV
+	 SLQgf4leim4/g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shixiong Ou <oushixiong@kylinos.cn>,
-	Helge Deller <deller@gmx.de>,
-	Sasha Levin <sashal@kernel.org>,
-	timur@kernel.org,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 017/294] fbdev: fsl-diu-fb: add missing device_remove_file()
-Date: Mon,  5 May 2025 18:51:57 -0400
-Message-Id: <20250505225634.2688578-17-sashal@kernel.org>
+Cc: Jing Su <jingsusu@didiglobal.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 028/294] dql: Fix dql->limit value when reset.
+Date: Mon,  5 May 2025 18:52:08 -0400
+Message-Id: <20250505225634.2688578-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,31 +49,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+From: Jing Su <jingsusu@didiglobal.com>
 
-[ Upstream commit 86d16cd12efa547ed43d16ba7a782c1251c80ea8 ]
+[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
 
-Call device_remove_file() when driver remove.
+Executing dql_reset after setting a non-zero value for limit_min can
+lead to an unreasonable situation where dql->limit is less than
+dql->limit_min.
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
-Signed-off-by: Helge Deller <deller@gmx.de>
+For instance, after setting
+/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
+an ifconfig down/up operation might cause the ethernet driver to call
+netdev_tx_reset_queue, which in turn invokes dql_reset.
+
+In this case, dql->limit is reset to 0 while dql->limit_min remains
+non-zero value, which is unexpected. The limit should always be
+greater than or equal to limit_min.
+
+Signed-off-by: Jing Su <jingsusu@didiglobal.com>
+Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/fsl-diu-fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/dynamic_queue_limits.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-index 0bced82fa4940..8cf1268a4e554 100644
---- a/drivers/video/fbdev/fsl-diu-fb.c
-+++ b/drivers/video/fbdev/fsl-diu-fb.c
-@@ -1827,6 +1827,7 @@ static void fsl_diu_remove(struct platform_device *pdev)
- 	int i;
- 
- 	data = dev_get_drvdata(&pdev->dev);
-+	device_remove_file(&pdev->dev, &data->dev_attr);
- 	disable_lcdc(&data->fsl_diu_info[0]);
- 
- 	free_irq(data->irq, data->diu_reg);
+diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
+index fde0aa2441480..a75a9ca46b594 100644
+--- a/lib/dynamic_queue_limits.c
++++ b/lib/dynamic_queue_limits.c
+@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
+ void dql_reset(struct dql *dql)
+ {
+ 	/* Reset all dynamic values */
+-	dql->limit = 0;
++	dql->limit = dql->min_limit;
+ 	dql->num_queued = 0;
+ 	dql->num_completed = 0;
+ 	dql->last_obj_cnt = 0;
 -- 
 2.39.5
 
