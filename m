@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EC93589DA;
-	Mon,  5 May 2025 22:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7D435963E;
+	Mon,  5 May 2025 22:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484946; cv=none; b=TdbDqifCfh1nETEpE98eynafnvrYl8zMepNrOXaKSLiJoyzxCnGiB4ijFozPGc3x1GVkLy88Yqk0Kp8PzeAuvj+jmHkl+wFEXdwom89baKm0pWENenKwp1ElTZyBLfJNbw+alLmzzeB6bhh6Y/H+UBNoSNd1PJ82Rd8sO+DoUFQ=
+	t=1746484951; cv=none; b=uD2s+eBkqeNkPDwEWfp2zF8NI+QbhQpbOgIAi5A4UmUC3v3tAamvJV96URPkkWZw+nkjKvWyEtO06+DSupMucuL/5vn2ca8ooA9Lx7j6XosfjSflPCdrSAetmwo10sf7FZKnL4FcTXfo9zO2b5mZ/QFx0Hq6XUHk96IxY33+ONI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484946; c=relaxed/simple;
-	bh=9weVegpYXoQ9xLpHIcIuPVDiPw1gpg0ij9gTTrw3cNE=;
+	s=arc-20240116; t=1746484951; c=relaxed/simple;
+	bh=HM5lWcaDvaU7UgyXxccRJE63+mXAVV9HFc/Qp4TbbIw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iKG0X12RePBYzAGeL9ss12OBWEQ0Ly9Obi/N0HPF4/R6o/goIEnIl6XwXPyZBSjSDEqkLVE6XfGbXLaRlvYtyZiJPav4Sl8fZ7TQcAbty2bzQrbRNCsGS8LJyZmwBI6AYsTVS+6EOrBOfFHl9r0TDSdiN9ZyacJJkIFyuu2L9P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0JIAJ6K; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MMGYNm46kYZ47nzyDf6eV1Bt3GaUlYtCs0d6qCEzIgeQQCAVYuv4XZLzwaX7QcoobwX0ESoPWMzCyihqImF9/KmYSY5N270xDuNh3aA62MQoVnGHuwg9Iok3OFC8+B3o+uLwvbsbOhw89lFFCJru0jVGpXZOIVEV2C9FJcCdleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5djDOe2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0JIAJ6K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E31A3C4CEE4;
-	Mon,  5 May 2025 22:42:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5djDOe2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E3EC4CEED;
+	Mon,  5 May 2025 22:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484945;
-	bh=9weVegpYXoQ9xLpHIcIuPVDiPw1gpg0ij9gTTrw3cNE=;
+	s=k20201202; t=1746484950;
+	bh=HM5lWcaDvaU7UgyXxccRJE63+mXAVV9HFc/Qp4TbbIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z0JIAJ6K2O/McaKT/B1QQHdMVTaQFecF5DCLtOfC+xz3q8G+U53zygMuH8g6QF5Wv
-	 nybzDppBBlX/EYPT4qofgS8MgKGXHoaWUM7jQZZuDDzjDDPRvaxZ8KjTlqCMfbhYBz
-	 tq9A12LreBMTIl8gyNz6PehNTAZENKEhAYpUSL2lAkJQiXBvObu0VwBy3DeDZAaaC7
-	 W9Ns1kXSCPd49ZajU7tqLBw8LpESXgQIjTFNlp8an0MYgmCPG1yWTcqssvnfPRZh2U
-	 cJv22t7zU1wtdU1SIgAEr8iyIM3EBOx6ajeltcVm/w9DD21Y+F5w4kvMS+XSOJj4de
-	 c90iDNzKP/s/w==
+	b=u5djDOe2c02vtQ6KcFg8Jlf41RfIyJ7Bi1KysWph37SyvN5zomTiPI/lsF7bAD7FL
+	 5iCGVBNbCDYQp4yN8a0afp9EiW5vVKRIrlTcDmNnGGoqxfShd13Kj4neqILQNYNLBQ
+	 2/8Yw2r+RvOjta6ibaF/wZ7/OmwMocH2WCwNiZZ7BhmKWslwxwLPeoS04FXAVwGkuQ
+	 jtfQ9AlG9ZTsm0d5cR1MpcyL9cAuGO2yDrOtSorbhwNrKLvwvSPJCagA+qP7Jm6nO9
+	 KqmPxCAakNsZIjT6k2dXpEt2rRowTzM0s5VFX4oQ71VOpE8TalIMKblh5XM7r60Y7h
+	 819kBkQeKRFOQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Benjamin Berg <benjamin@sipsolutions.net>,
+Cc: Jeff Chen <jeff.chen_1@nxp.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
 	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 089/486] um: Store full CSGSFS and SS register from mcontext
-Date: Mon,  5 May 2025 18:32:45 -0400
-Message-Id: <20250505223922.2682012-89-sashal@kernel.org>
+	briannorris@chromium.org,
+	kvalo@kernel.org,
+	s.hauer@pengutronix.de,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 091/486] wifi: mwifiex: Fix HT40 bandwidth issue.
+Date: Mon,  5 May 2025 18:32:47 -0400
+Message-Id: <20250505223922.2682012-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -58,38 +54,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Benjamin Berg <benjamin@sipsolutions.net>
+From: Jeff Chen <jeff.chen_1@nxp.com>
 
-[ Upstream commit cef721e0d53d2b64f2ba177c63a0dfdd7c0daf17 ]
+[ Upstream commit 4fcfcbe457349267fe048524078e8970807c1a5b ]
 
-Doing this allows using registers as retrieved from an mcontext to be
-pushed to a process using PTRACE_SETREGS.
+This patch addresses an issue where, despite the AP supporting 40MHz
+bandwidth, the connection was limited to 20MHz. Without this fix,
+even if the access point supports 40MHz, the bandwidth after
+connection remains at 20MHz. This issue is not a regression.
 
-It is not entirely clear to me why CSGSFS was masked. Doing so creates
-issues when using the mcontext as process state in seccomp and simply
-copying the register appears to work perfectly fine for ptrace.
-
-Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
-Link: https://patch.msgid.link/20250224181827.647129-2-benjamin@sipsolutions.net
+Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Link: https://patch.msgid.link/20250314094238.2097341-1-jeff.chen_1@nxp.com
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/um/os-Linux/mcontext.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/11n.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/um/os-Linux/mcontext.c b/arch/x86/um/os-Linux/mcontext.c
-index e80ab7d281177..1b0d95328b2c7 100644
---- a/arch/x86/um/os-Linux/mcontext.c
-+++ b/arch/x86/um/os-Linux/mcontext.c
-@@ -27,7 +27,6 @@ void get_regs_from_mc(struct uml_pt_regs *regs, mcontext_t *mc)
- 	COPY(RIP);
- 	COPY2(EFLAGS, EFL);
- 	COPY2(CS, CSGSFS);
--	regs->gp[CS / sizeof(unsigned long)] &= 0xffff;
--	regs->gp[CS / sizeof(unsigned long)] |= 3;
-+	regs->gp[SS / sizeof(unsigned long)] = mc->gregs[REG_CSGSFS] >> 48;
- #endif
- }
+diff --git a/drivers/net/wireless/marvell/mwifiex/11n.c b/drivers/net/wireless/marvell/mwifiex/11n.c
+index 66f0f5377ac18..738bafc3749b0 100644
+--- a/drivers/net/wireless/marvell/mwifiex/11n.c
++++ b/drivers/net/wireless/marvell/mwifiex/11n.c
+@@ -403,12 +403,14 @@ mwifiex_cmd_append_11n_tlv(struct mwifiex_private *priv,
+ 
+ 		if (sband->ht_cap.cap & IEEE80211_HT_CAP_SUP_WIDTH_20_40 &&
+ 		    bss_desc->bcn_ht_oper->ht_param &
+-		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY)
++		    IEEE80211_HT_PARAM_CHAN_WIDTH_ANY) {
++			chan_list->chan_scan_param[0].radio_type |=
++				CHAN_BW_40MHZ << 2;
+ 			SET_SECONDARYCHAN(chan_list->chan_scan_param[0].
+ 					  radio_type,
+ 					  (bss_desc->bcn_ht_oper->ht_param &
+ 					  IEEE80211_HT_PARAM_CHA_SEC_OFFSET));
+-
++		}
+ 		*buffer += struct_size(chan_list, chan_scan_param, 1);
+ 		ret_len += struct_size(chan_list, chan_scan_param, 1);
+ 	}
 -- 
 2.39.5
 
