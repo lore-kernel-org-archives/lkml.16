@@ -1,143 +1,103 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA3F1E52D;
-	Mon,  5 May 2025 20:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387E01DED5E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478467; cv=none; b=JioD4eYJahWlg9VtTHZK1U1oRgCcwhNEW1PAxNKDb0+RVXBWgGS56gM4gvEs/SBHiUfhxP9qvSSDaZHNPuH4m6ERZw1cTigZsXtQoFcbD/9q0yKM75Ijw1zs8ch3dd7hIYbU6AG9DiyuFBdDN3sUuqlMN5PDLl3NWgDI5uMuaa4=
+	t=1746478478; cv=none; b=Mszgp6yfqORgrKOBptFzzhj/IibDeHS/M21/xUJlAVLup46ojZSnn6gFBsrKspxDA6Zsmli5nMhi0wZ0ej8GqDd68wxxjABbwnrjdwfLlmNWNWu02PuvsB7gWX95J/kdMudmQDwDkcZL1SYAhiFfSQMfNVqizzIYR0kmOEcwajE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478467; c=relaxed/simple;
-	bh=3Z4HIPbhfROj3JRvNjx9nFFQ52DooU1tbemGhN/zXlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oSvlktm8A2XT3d5GU3P2qOH9+QURP2tqPHxy1JS1b+DdgN3paEl2RsfaJWmfWEEzN1hmQcSV51Y84LfZdJErNR4izBuRZ23/QfHU6lKwokPsTJioKjVNeuSX7VofISsgM2TO8Ie/5u+SVNaeU98iTK3dSS5sKFJmh/8y8DkBDLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=pJhvvEEu; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746478478; c=relaxed/simple;
+	bh=pfa+PYeg4WPVwVxgRN4mqVIVdS5dCfF6BR4NmCcohGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8iShCNQWW4MeKNR8q0++OPppsodN3GgOs1mtdLNfSobGF03TTkCG6YRLSpVkNPDWXwO7BgMo4ezkwsMovaTOG4jyu6xIGPF+p1YgNwJzIMh5hl/8gHDYf78WYMtVH38cuQyekXzX0JO5lVBMR9fZMrXXmDiiGrDl2Llut/vRLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HySrKJbO; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="pJhvvEEu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=DEH6IwGx6oEmmYF7UGfURivuNMF8wH1SDn/lmXt9meI=; b=pJhvvEEuTmQjioWB
-	kl1+nE5vArkBMnYw8P5P+MhfHYqJ7fz5SUpzNwJ+oZAlaZipF2QgdkL5tzRLf1buHtTNjaFFHhD83
-	Lwavl7gigVO/K6sQfbhhEYzdonl+6RwUZryizjyrZExbZ0F/avuN3jcasgbU33R8M5syZZxrE3rAN
-	87QEa7gG4h+HdNm2SAxmAiCl9E6C/To+dm5iZDtw6ewByrGBT7xNQhkbkRauV82SEKkSGvxwA0Yyz
-	g81/U4GEAEbWJIkxLbIp0+LaZQnQNHXR7kNDFm/hpj7XOmOmOdGcbN0PDsr5LpaWtmsfKqGlGFhGH
-	0rNW8OkwQBgplc+wbQ==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uC2pP-001WMn-2s;
-	Mon, 05 May 2025 20:54:19 +0000
-From: linux@treblig.org
-To: dennis.dalessandro@cornelisnetworks.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HySrKJbO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B302E40E0173;
+	Mon,  5 May 2025 20:54:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id su_X-5hhMmCg; Mon,  5 May 2025 20:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746478468; bh=NF9NxKE8++1cFpk51jh/WPMkv9XRVzQgo4qOw9yfOj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HySrKJbOVoSqEUY6UOwErCXwDMheKjL0vOUBNa9bQ5yNLJw1fkR4nQBz5w97FNSjq
+	 yLiCyl6Ydu6rnB9xv1bp70reSMddbZ1IodX3QJ1ZoVfduy+hZvBmW4j0AqoZBLJjK1
+	 NXFqlXaEnalLc4kMQpGzdrwZrIkWNEw8vlu2OD4HYUoult1DIZGb3d3AL17SvMeITP
+	 6sgWyQWeTfvMMmFDeQesOtmxeyMFRf5uLiND5hHutAC3Z9715ljTGCgOaOQRKQHtic
+	 E86W8vPhQ7/oafCEppXTYOcAmLFUSg5wxXXLl0+zqLcaK8uaQ3viYX04wawtlIXar5
+	 t4xxjxBXLko/0zUQwNXJvIvkOrOvz+qxHIx79PzZalpYYmWP4oeXvJBL7f6ekLcP0i
+	 hgejLlF566u00ot50dfqEn2Rtyxkuz3pnlJ9TUsPvaJVbbbooFanoCJjNVxiaPW86o
+	 SJRHweAftyLlo5phwRlGwYxkTAALlAI3fRTBlve+itPS1QViV7zkaC2kjWfUvQdadz
+	 32NoFzKugBAxN8CK647T1KXs4cpKzd//bOXNJnDW4XKm8XjFKzgpcWXzLO4nAMkd+7
+	 NLE97zLIQtzemP9SpHQKuuKDWPHQ44pm/yQHDy4n7nelDEvBXIliAw/MORBMpvPY1s
+	 /Mko/vBobHIjN5Kqu7MIhMI0=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 322EB40E01FA;
+	Mon,  5 May 2025 20:54:14 +0000 (UTC)
+Date: Mon, 5 May 2025 22:54:05 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] IB/hfi1: Remove unused sc_drop and sdma_all_idle
-Date: Mon,  5 May 2025 21:54:19 +0100
-Message-ID: <20250505205419.88131-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
+References: <20250425084216.3913608-1-mingo@kernel.org>
+ <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
+ <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
+ <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
+ <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Mon, May 05, 2025 at 12:57:40PM -0700, H. Peter Anvin wrote:
+> One thing that happened with i386 was that we found out that the only
+> remaining "users" were people dragging out an old machine to test if the
+> kernel still booted.
 
-sc_drop() and sdma_all_idle() were both added in 2015's
-commit 7724105686e7 ("IB/hfi1: add driver files")
+Follow this thread:
 
-but have remained unused.
+https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com
 
-Remove them.
+People booting latest kernel on 486 without CPUID support. 
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/infiniband/hw/hfi1/pio.c  | 10 ----------
- drivers/infiniband/hw/hfi1/pio.h  |  1 -
- drivers/infiniband/hw/hfi1/sdma.c | 18 ------------------
- drivers/infiniband/hw/hfi1/sdma.h |  1 -
- 4 files changed, 30 deletions(-)
+I can't find it in me to care for that old rust and yet I did it again. :-\
 
-diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
-index 5a91cbda4aee..764286da2ce8 100644
---- a/drivers/infiniband/hw/hfi1/pio.c
-+++ b/drivers/infiniband/hw/hfi1/pio.c
-@@ -1361,16 +1361,6 @@ void sc_flush(struct send_context *sc)
- 	sc_wait_for_packet_egress(sc, 1);
- }
- 
--/* drop all packets on the context, no waiting until they are sent */
--void sc_drop(struct send_context *sc)
--{
--	if (!sc)
--		return;
--
--	dd_dev_info(sc->dd, "%s: context %u(%u) - not implemented\n",
--		    __func__, sc->sw_index, sc->hw_context);
--}
--
- /*
-  * Start the software reaction to a context halt or SPC freeze:
-  *	- mark the context as halted or frozen
-diff --git a/drivers/infiniband/hw/hfi1/pio.h b/drivers/infiniband/hw/hfi1/pio.h
-index d07cc6ea7c63..ab0f9a3a8d12 100644
---- a/drivers/infiniband/hw/hfi1/pio.h
-+++ b/drivers/infiniband/hw/hfi1/pio.h
-@@ -246,7 +246,6 @@ void sc_disable(struct send_context *sc);
- int sc_restart(struct send_context *sc);
- void sc_return_credits(struct send_context *sc);
- void sc_flush(struct send_context *sc);
--void sc_drop(struct send_context *sc);
- void sc_stop(struct send_context *sc, int bit);
- struct pio_buf *sc_buffer_alloc(struct send_context *sc, u32 dw_len,
- 				pio_release_cb cb, void *arg);
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index 0d2b39b7c8b5..16a749d16ee9 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -1520,24 +1520,6 @@ void sdma_all_running(struct hfi1_devdata *dd)
- 	}
- }
- 
--/**
-- * sdma_all_idle() - called when the link goes down
-- * @dd: hfi1_devdata
-- *
-- * This routine moves all engines to the idle state.
-- */
--void sdma_all_idle(struct hfi1_devdata *dd)
--{
--	struct sdma_engine *sde;
--	unsigned int i;
--
--	/* idle all engines */
--	for (i = 0; i < dd->num_sdma; ++i) {
--		sde = &dd->per_sdma[i];
--		sdma_process_event(sde, sdma_event_e70_go_idle);
--	}
--}
--
- /**
-  * sdma_start() - called to kick off state processing for all engines
-  * @dd: hfi1_devdata
-diff --git a/drivers/infiniband/hw/hfi1/sdma.h b/drivers/infiniband/hw/hfi1/sdma.h
-index d77246b48434..91dfd5d0c419 100644
---- a/drivers/infiniband/hw/hfi1/sdma.h
-+++ b/drivers/infiniband/hw/hfi1/sdma.h
-@@ -373,7 +373,6 @@ void sdma_start(struct hfi1_devdata *dd);
- void sdma_exit(struct hfi1_devdata *dd);
- void sdma_clean(struct hfi1_devdata *dd, size_t num_engines);
- void sdma_all_running(struct hfi1_devdata *dd);
--void sdma_all_idle(struct hfi1_devdata *dd);
- void sdma_freeze_notify(struct hfi1_devdata *dd, int go_idle);
- void sdma_freeze(struct hfi1_devdata *dd);
- void sdma_unfreeze(struct hfi1_devdata *dd);
+So yeah, +1 for removing old code which ain't worth maintaining.
+
+There's stable and older kernels, those folks can use those and that's it.
+
+Thx.
+
 -- 
-2.49.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
