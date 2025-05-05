@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4513B5B5F;
-	Mon,  5 May 2025 23:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540403B63F4;
+	Mon,  5 May 2025 23:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487280; cv=none; b=AfuyG0w35HxKZx+m0havpYVQDjU5Mf3YavX5i5RAvVdW9ic2O1MqqvYQJTDL+iyofZEupHlmLkDcn/j1GlLJuwkj/vKHMkuRUcBNspLqBr3ySlukWcDqHnBAnnF/qO90S/wrOC3Gz/yAa0eB6fkU6A0CMkUEaJ42tqnEhJOSmDk=
+	t=1746487285; cv=none; b=K0xTIsHQap9jQ+lCkPCERTWj76UyPuVpPmHt5DJd2ZLdE8cBnF9EZjhbGs9rrPzcqvqPuONWug4jTDmiiz6DZQvsay50SykDfPgeQVGZEhXoi64GSyzfPkY+QzfgkeIaAPptvYvUR8ri1uvRwAaqWTXZmXTxSFtDor63yFUvdhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487280; c=relaxed/simple;
-	bh=Jx4qvGcPOrBYb8FpQiMhZO8yKo4tpF233BxSMQOtssM=;
+	s=arc-20240116; t=1746487285; c=relaxed/simple;
+	bh=B2r14mnB16WfIei0uxyEGEkNfzuObM3K9X5c2LPbKvQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=boaEv25iJKK2l6/HrwIGKdehD6BYwuR6+9F4eAnOwjFloD1vP9sSV8sr2rAI/DM6TabClcIzn+3wsb/tRGhF99uArXfNgEfcbX6ZG4Pl6Z+ioG7tyAQRgySpsie+4JWzOAKnwUZStPEy9jSDcT1+i87KVknatpFuWYSc9odlCbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=us2Fncd2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G2lEo3AHQ8wb/N2eIobI88Q3ZCIW6L2JK8OWcnvdIgInncMbjUM/P4gTFQA+DmMblQUDmC6FpVu4ZRkt7pqg+f/L514U5lkoBYpqV4BLV0fFnER5eoRwZlTVdivFWgkH0fJa1ZG5rSmgap6LS3L+aPkdIFElPN2EboW3tch7ZuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3KD1E9w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="us2Fncd2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D995C4CEE4;
-	Mon,  5 May 2025 23:21:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3KD1E9w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB76EC4CEF3;
+	Mon,  5 May 2025 23:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487280;
-	bh=Jx4qvGcPOrBYb8FpQiMhZO8yKo4tpF233BxSMQOtssM=;
+	s=k20201202; t=1746487284;
+	bh=B2r14mnB16WfIei0uxyEGEkNfzuObM3K9X5c2LPbKvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=us2Fncd2uist1oA+6eE5/KQDi8fWhWS9TAxwVp3Ss1oxaj5f6hhPJBUO4bvIJb9EM
-	 ca6uexe+FwjYnaXJZpQ77Fv525ORC47aLTIgLx94zxSKq01AXzUgCib1uzrHomLiiV
-	 6lZiQpKU0qPS4s1rFFo41nlazAcyI+KTF5bI9OleG+YcTUgune/HNluWmpfSQSEVbR
-	 2HZkt0N5g6KlXqjnhoHisrAnCNpo5WJ0O2TDwTFXgWRn7MTA4M1rnfNax2stcrYsaC
-	 Cx6TYdwHzfvnQm+ITqcuWqAPtigP7EdztWuIWub+gr0jeJwn0v0QqIpssPpCtCwP9k
-	 8h9liUA99zMBQ==
+	b=I3KD1E9w1a+73RcclXhX8WldabMAQ0OYfyKnCWvj05biuFP8kTrXObPdKaOZydMXn
+	 oE5yavn8PZZLb1aIiR4pKn4f0f007Hxwy5gM0czAMjbHYXUJJn3JJLDhjgxyPp4Oa/
+	 vEGbwM01HIohSC9xbjCptKkbXXAt3Xq1AYMW7q82CoHJJATL9KD2P/6QDPM8d/K/IU
+	 l92tKr6LkcdZYkuJ+dUDtsOuu03R9bpEwxh/bZ69P7CVlxgwmI/E7zBctqf4MQfSmV
+	 6gLAL3oL+wQ8SDQpz/vjEXrba3NUqZzcDlnRc2kxTp6vYMFE3U/lQ5eKzc2/1n0e48
+	 VIRwCyNxVz1jg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 096/114] ip: fib_rules: Fetch net from fib_rule in fib[46]_rule_configure().
-Date: Mon,  5 May 2025 19:17:59 -0400
-Message-Id: <20250505231817.2697367-96-sashal@kernel.org>
+	akpm@linux-foundation.org,
+	mhocko@suse.com,
+	mjguzik@gmail.com,
+	pasha.tatashin@soleen.com,
+	alexjlzheng@tencent.com
+Subject: [PATCH AUTOSEL 5.10 098/114] exit: change the release_task() paths to call flush_sigqueue() lockless
+Date: Mon,  5 May 2025 19:18:01 -0400
+Message-Id: <20250505231817.2697367-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -55,59 +55,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit 5a1ccffd30a08f5a2428cd5fbb3ab03e8eb6c66d ]
+[ Upstream commit fb3bbcfe344e64a46574a638b051ffd78762c12d ]
 
-The following patch will not set skb->sk from VRF path.
+A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
+and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
+disabled can trigger a hard lockup, see
+https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
 
-Let's fetch net from fib_rule->fr_net instead of sock_net(skb->sk)
-in fib[46]_rule_configure().
+Fortunately, after the recent posixtimer changes sys_timer_delete() paths
+no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
+the exiting task passes __exit_signal() lock_task_sighand() can't succeed
+and pid_task(tmr->it_pid) will return NULL.
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-Tested-by: Ido Schimmel <idosch@nvidia.com>
-Link: https://patch.msgid.link/20250207072502.87775-5-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This means that after __exit_signal(tsk) nobody can play with tsk->pending
+or (if group_dead) with tsk->signal->shared_pending, so release_task() can
+safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
+
+TODO:
+	- we can probably shift posix_cpu_timers_exit() as well
+	- do_sigaction() can hit the similar problem
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20250206152314.GA14620@redhat.com
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_rules.c  | 4 ++--
- net/ipv6/fib6_rules.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ kernel/exit.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv4/fib_rules.c b/net/ipv4/fib_rules.c
-index d279cb8ac1584..a270951386e19 100644
---- a/net/ipv4/fib_rules.c
-+++ b/net/ipv4/fib_rules.c
-@@ -226,9 +226,9 @@ static int fib4_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
- 			       struct nlattr **tb,
- 			       struct netlink_ext_ack *extack)
- {
--	struct net *net = sock_net(skb->sk);
-+	struct fib4_rule *rule4 = (struct fib4_rule *)rule;
-+	struct net *net = rule->fr_net;
- 	int err = -EINVAL;
--	struct fib4_rule *rule4 = (struct fib4_rule *) rule;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 05f682cfdd6a7..7eb1e9a1d601f 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -195,20 +195,13 @@ static void __exit_signal(struct task_struct *tsk)
+ 	__unhash_process(tsk, group_dead);
+ 	write_sequnlock(&sig->stats_lock);
  
- 	if (frh->tos & ~IPTOS_TOS_MASK) {
- 		NL_SET_ERR_MSG(extack, "Invalid tos");
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index cf9a44fb8243d..0d4e82744921f 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -353,9 +353,9 @@ static int fib6_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
- 			       struct nlattr **tb,
- 			       struct netlink_ext_ack *extack)
- {
-+	struct fib6_rule *rule6 = (struct fib6_rule *)rule;
-+	struct net *net = rule->fr_net;
- 	int err = -EINVAL;
--	struct net *net = sock_net(skb->sk);
--	struct fib6_rule *rule6 = (struct fib6_rule *) rule;
+-	/*
+-	 * Do this under ->siglock, we can race with another thread
+-	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
+-	 */
+-	flush_sigqueue(&tsk->pending);
+ 	tsk->sighand = NULL;
+ 	spin_unlock(&sighand->siglock);
  
- 	if (rule->action == FR_ACT_TO_TBL && !rule->l3mdev) {
- 		if (rule->table == RT6_TABLE_UNSPEC) {
+ 	__cleanup_sighand(sighand);
+ 	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+-	if (group_dead) {
+-		flush_sigqueue(&sig->shared_pending);
++	if (group_dead)
+ 		tty_kref_put(tty);
+-	}
+ }
+ 
+ static void delayed_put_task_struct(struct rcu_head *rhp)
+@@ -272,6 +265,16 @@ void release_task(struct task_struct *p)
+ 	proc_flush_pid(thread_pid);
+ 	put_pid(thread_pid);
+ 	release_thread(p);
++	/*
++	 * This task was already removed from the process/thread/pid lists
++	 * and lock_task_sighand(p) can't succeed. Nobody else can touch
++	 * ->pending or, if group dead, signal->shared_pending. We can call
++	 * flush_sigqueue() lockless.
++	 */
++	flush_sigqueue(&p->pending);
++	if (thread_group_leader(p))
++		flush_sigqueue(&p->signal->shared_pending);
++
+ 	put_task_struct_rcu_user(p);
+ 
+ 	p = leader;
 -- 
 2.39.5
 
