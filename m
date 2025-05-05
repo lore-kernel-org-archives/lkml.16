@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE7727875F;
-	Mon,  5 May 2025 22:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE5827874A;
+	Mon,  5 May 2025 22:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485755; cv=none; b=binN7cd19eiwpn0uNzSpI2baMWBBq+JIqlWIq2mAD9EOhZ2ZlCZA5KZfHJCeCFmeaqePyj0dtKtRZxYI703Xs4jw/FN7iGM4kdXI3R6JTZXaaVnZfVkriW0ElsCYqi2A7nikm9xjWs+gikLFuGMSL4o4e4hEtG5mfPo36rrGVgY=
+	t=1746485740; cv=none; b=gpkg/eBOBCvBJy+XeYFfjN0pm8zUw/MDD0rQDdIQAJoAEyK3OnuTeIeGQ4fGLs1rzqsMr9lw7TXov4DbTCo8eabSYXUEyijX+MmtVFA9m8qx68rOwo044YLyHncbfIFx5JjxlnfJ9yyFk1HUk0alRJ9uPZiH6qI5foMqeywr30Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485755; c=relaxed/simple;
-	bh=5fB5oUZhc39xpZeWHqD2PSF7T88HaYAVhdoLWGMnc+o=;
+	s=arc-20240116; t=1746485740; c=relaxed/simple;
+	bh=0lPb2S8NOP7UemPjX5NkJBUlfo60mQAsK16xdNfuBKU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fHO3f4JmyfcKup6x4IYuDHeNOJD1eSSeK9tJ+SWxAN/r5a/dHZjmBsbDDSjuMHtXouCXeoGiXd+tzXIuDdCt36oOJEevcUr7Fljn9dCmh7mjt3vnEfUBPd6Y5oKUf3BNzX48Io4EGnxw1tYCVe8/cTJHSjZgJHpeK9XaNZJq4j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXsVnXI5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U9LVvXW7J+Lofv8qerx8ZMkP0KWT7iIIVvkjdaP5tYfbV3zbuj2BvtQb0I00h8XWFjSeRjV9w9454k9eUf2Si4TEb66kCeeOQlV32M9GVk7g/kGfejRqjek/36F/km83FXwWH89DMxYmEMVr9xSQiBmTctmQg6OHeKX11LQg9LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uH3hqqwr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXsVnXI5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D9BC4CEEF;
-	Mon,  5 May 2025 22:55:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uH3hqqwr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2868DC4CEE4;
+	Mon,  5 May 2025 22:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485755;
-	bh=5fB5oUZhc39xpZeWHqD2PSF7T88HaYAVhdoLWGMnc+o=;
+	s=k20201202; t=1746485740;
+	bh=0lPb2S8NOP7UemPjX5NkJBUlfo60mQAsK16xdNfuBKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YXsVnXI5o4IFqsjdwS4r/attMndy/t2N3TsNTb5qAPJuA9bKXzMc3Xlk+T86jLttX
-	 kbHR30IQ40U2Ngt3WvcqUcXnY2ALxtKs1maD8lhN5Xg9z8wE7NeP+2GnkDQDSK24dq
-	 jGJEqow/ljq8leelk5RZOJNcflumZT/AtspJ7MtetNm9RAteQv+VRseDjSyXHHBNMu
-	 A9nGjsiHDlgg1MRF6I7szjQsE0ZHZF3U8TNXBFkb2r9vhrfPKH+VP0rzqiG3GorMZP
-	 ieAYDCLk4ulrIWwgAIXHlbSb54jRO4GSi4mFEZtxs+1himsSAr0cViyX87Bd1OToJe
-	 q5yXorpUYLEqg==
+	b=uH3hqqwrUIOjxQKMrvhfyUhpWfArdQm/1LsmvEJ7QK797TQpHGqgwuZVd8TWVS+Yl
+	 36JUPmL0BEwdz2MkzW4j+i2y0EX/ZJ5rGImJTpbYiJ/vGWwjCU9WTNEc7orGQxrYRC
+	 x3Lo2gRM4cT4Xjg1sSPb0qdtD9pnniABze9qTLSTKnQb+SPz5RuB6jbRwpBf6rperN
+	 hbbd7NAeKo4JBy/q7bfEvJc9IEt6KddtB0nCLyKJB46HKY+0S3LXBxiNMlZEW3lnGq
+	 LCDP5GJFWhUvkCq88Ek9JlZ/SQxs0N1lcBoevZAVfSe8LAs17lwWulky1vbbARdiMZ
+	 l/W2Qv3L8Ur0A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Isaac Scott <isaac.scott@ideasonboard.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com
-Subject: [PATCH AUTOSEL 6.12 466/486] regulator: ad5398: Add device tree support
-Date: Mon,  5 May 2025 18:39:02 -0400
-Message-Id: <20250505223922.2682012-466-sashal@kernel.org>
+	airlied@redhat.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 455/486] drm/ast: Find VBIOS mode from regular display size
+Date: Mon,  5 May 2025 18:38:51 -0400
+Message-Id: <20250505223922.2682012-455-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,61 +55,87 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Isaac Scott <isaac.scott@ideasonboard.com>
+From: Thomas Zimmermann <tzimmermann@suse.de>
 
-[ Upstream commit 5a6a461079decea452fdcae955bccecf92e07e97 ]
+[ Upstream commit c81202906b5cd56db403e95db3d29c9dfc8c74c1 ]
 
-Previously, the ad5398 driver used only platform_data, which is
-deprecated in favour of device tree. This caused the AD5398 to fail to
-probe as it could not load its init_data. If the AD5398 has a device
-tree node, pull the init_data from there using
-of_get_regulator_init_data.
+The ast driver looks up supplied display modes from an internal list of
+display modes supported by the VBIOS.
 
-Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Link: https://patch.msgid.link/20250128173143.959600-4-isaac.scott@ideasonboard.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Do not use the crtc_-prefixed display values from struct drm_display_mode
+for looking up the VBIOS mode. The fields contain raw values that the
+driver programs to hardware. They are affected by display settings like
+double-scan or interlace.
+
+Instead use the regular vdisplay and hdisplay fields for lookup. As the
+programmed values can now differ from the values used for lookup, set
+struct drm_display_mode.crtc_vdisplay and .crtc_hdisplay from the VBIOS
+mode.
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250131092257.115596-9-tzimmermann@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/ad5398.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/ast/ast_mode.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/ad5398.c b/drivers/regulator/ad5398.c
-index 40f7dba42b5ad..404cbe32711e7 100644
---- a/drivers/regulator/ad5398.c
-+++ b/drivers/regulator/ad5398.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
+diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
+index ed496fb32bf34..24ed1cd3caf17 100644
+--- a/drivers/gpu/drm/ast/ast_mode.c
++++ b/drivers/gpu/drm/ast/ast_mode.c
+@@ -131,7 +131,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		return false;
+ 	}
  
- #define AD5398_CURRENT_EN_MASK	0x8000
+-	switch (mode->crtc_hdisplay) {
++	switch (mode->hdisplay) {
+ 	case 640:
+ 		vbios_mode->enh_table = &res_640x480[refresh_rate_index];
+ 		break;
+@@ -145,7 +145,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1152x864[refresh_rate_index];
+ 		break;
+ 	case 1280:
+-		if (mode->crtc_vdisplay == 800)
++		if (mode->vdisplay == 800)
+ 			vbios_mode->enh_table = &res_1280x800[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1280x1024[refresh_rate_index];
+@@ -157,7 +157,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1440x900[refresh_rate_index];
+ 		break;
+ 	case 1600:
+-		if (mode->crtc_vdisplay == 900)
++		if (mode->vdisplay == 900)
+ 			vbios_mode->enh_table = &res_1600x900[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1600x1200[refresh_rate_index];
+@@ -166,7 +166,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 		vbios_mode->enh_table = &res_1680x1050[refresh_rate_index];
+ 		break;
+ 	case 1920:
+-		if (mode->crtc_vdisplay == 1080)
++		if (mode->vdisplay == 1080)
+ 			vbios_mode->enh_table = &res_1920x1080[refresh_rate_index];
+ 		else
+ 			vbios_mode->enh_table = &res_1920x1200[refresh_rate_index];
+@@ -210,6 +210,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 	hborder = (vbios_mode->enh_table->flags & HBorder) ? 8 : 0;
+ 	vborder = (vbios_mode->enh_table->flags & VBorder) ? 8 : 0;
  
-@@ -221,15 +222,20 @@ static int ad5398_probe(struct i2c_client *client)
- 	const struct ad5398_current_data_format *df =
- 			(struct ad5398_current_data_format *)id->driver_data;
++	adjusted_mode->crtc_hdisplay = vbios_mode->enh_table->hde;
+ 	adjusted_mode->crtc_htotal = vbios_mode->enh_table->ht;
+ 	adjusted_mode->crtc_hblank_start = vbios_mode->enh_table->hde + hborder;
+ 	adjusted_mode->crtc_hblank_end = vbios_mode->enh_table->ht - hborder;
+@@ -219,6 +220,7 @@ static bool ast_get_vbios_mode_info(const struct drm_format_info *format,
+ 					 vbios_mode->enh_table->hfp +
+ 					 vbios_mode->enh_table->hsync);
  
--	if (!init_data)
--		return -EINVAL;
--
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
- 	config.dev = &client->dev;
-+	if (client->dev.of_node)
-+		init_data = of_get_regulator_init_data(&client->dev,
-+						       client->dev.of_node,
-+						       &ad5398_reg);
-+	if (!init_data)
-+		return -EINVAL;
-+
- 	config.init_data = init_data;
-+	config.of_node = client->dev.of_node;
- 	config.driver_data = chip;
- 
- 	chip->client = client;
++	adjusted_mode->crtc_vdisplay = vbios_mode->enh_table->vde;
+ 	adjusted_mode->crtc_vtotal = vbios_mode->enh_table->vt;
+ 	adjusted_mode->crtc_vblank_start = vbios_mode->enh_table->vde + vborder;
+ 	adjusted_mode->crtc_vblank_end = vbios_mode->enh_table->vt - vborder;
 -- 
 2.39.5
 
