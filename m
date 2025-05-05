@@ -1,48 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD2B299A9D;
-	Mon,  5 May 2025 22:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E467F299AA2;
+	Mon,  5 May 2025 22:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485001; cv=none; b=Gt6D3/KPgkf4AaLsnKwplybaGGw8dPxv4RLD9zYvZRah2IewSwWnyRSDK/6oVJiCLWSDcGVuDm46aqfeU9pimQrd8hoIgXviT0qHVDFLXtI5jFRw4Tbj5NnP0SjWrdn8CrnZBL9mHdf6zJphNHC1cmD6nHO7hnEIi/fyZk+x12Y=
+	t=1746485002; cv=none; b=io80+uEjATtuJAP5o1Q+wqovHjL/W1wVQAxz+dVnOLbxniNAM0F9PLeQbGNiWN0wsKYVLHhx09qMaVxAiADDjax8JX/yRpy7I+2Ke/DKqN9p8AXda4F6UDV4Ku1By2Sj4x1uh4MW07R9d+qw2Uq6TwzazWMgbmFDVVW/3oJ4ZzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485001; c=relaxed/simple;
-	bh=/Yj5XCUNxIaUj4BvHUMPl9F1WanooW4vZ4XhupbUOzY=;
+	s=arc-20240116; t=1746485002; c=relaxed/simple;
+	bh=ay8e5jZYitraKytTGlIPwdEHkmewyYwRjos8ZAFOtVY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=avegkPpAtdamxgA0pNX0cGZ+xeLK2BONq9huT5Z0ChX21o7vsEk9l9QF9RZp8oIi73a3kMKPRFp899Mcfmoa+wkEo49FpZZd+pbZojbE4bxH4S8mlOw2vHMIc769iOVixnT0oMwPOM8JQrrmVvwxrcXZKotacpgZrdXw7y1y/kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/F/8arj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sk+Y87ceib/iXvw5P8IgCv5zaY2IvEmrB9dldzJGZLhRvUzDSYL+yxwHqY+rc6dg8VKchhHf1Cuatf8akikUcSqqeYD0BqvQ6P0orTZZni2HyFuDSKaWJrPaCdm4m6hlHNexCLFtQcnWTOkjITYet5sYAMiLMfjX4SZCD5TL+uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kt2mXu3S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/F/8arj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBBD7C4CEE4;
-	Mon,  5 May 2025 22:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kt2mXu3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EBFC4CEEE;
+	Mon,  5 May 2025 22:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485000;
-	bh=/Yj5XCUNxIaUj4BvHUMPl9F1WanooW4vZ4XhupbUOzY=;
+	s=k20201202; t=1746485001;
+	bh=ay8e5jZYitraKytTGlIPwdEHkmewyYwRjos8ZAFOtVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W/F/8arjlG34hfOIJ3fikKpX467zUhVWep527NWnYYOiGF9eu/WBDlqXt4jw63vKc
-	 FVKE/Z2M5Wx/SSW8jDABaZ3+uPC+Nh69lhkHv9prbWzpHHgVywo8YVwCoHJZ5EtIzb
-	 7M/IfT8pkMlKdDNSx3YmsnChTBKGp/CvXpiF3Rqt1+PkOTdDvm42PtRpYOYZ66dHZP
-	 wUOoJR+ZGAeWXpQ3FgDN7MNHPF28+ECGVGPCI/EXhTwicWvDKP4AftJjblKERb9vNG
-	 CAjO77/RPrCpMUSxsch1U8FX/tsX/T2ZR1ttmZBp36DjIIDCn1LTw57+krzO0RlF5/
-	 eK5KrEoOSkmQg==
+	b=Kt2mXu3SGuuElopaDqMPbV+0cBpNxtO29TwuHrN40wLNnyey/pP9gcr426UmCzPke
+	 Y2HyvhjrUehd9L8QuMz5cyWKizTYJo7K0gHVwgm6dP9Ird50jYTmQQTQJCUO2wOCrH
+	 ioO/yHESd1W7eUWaauoi7BPDHtL8YuG1NOfDYhFrtXkNyQiPFtWr7J/4b40zsM5XLC
+	 c8qstO4JwClHkYP22u72jgCMUEf2jxZNjTpsZjbA0grTQ+BPASfWVpxJSYbur2czju
+	 kD+5oRUg6y/Ir4Q9HKolVDYJxqUksjWQ+7xLtsiFhHZjYUw4QJpx47/6SGFU7m52Zi
+	 yKICZdL4lnBEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Prathamesh Shete <pshete@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Shree Ramamoorthy <s-ramamoorthy@ti.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	brgl@bgdev.pl,
-	dan.carpenter@linaro.org,
-	kunwu.chan@linux.dev,
-	peng.fan@nxp.com,
-	linux-gpio@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 118/486] pinctrl-tegra: Restore SFSEL bit when freeing pins
-Date: Mon,  5 May 2025 18:33:14 -0400
-Message-Id: <20250505223922.2682012-118-sashal@kernel.org>
+	aaro.koskinen@iki.fi,
+	andreas@kemnade.info,
+	khilman@baylibre.com,
+	rogerq@kernel.org,
+	tony@atomide.com,
+	linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 119/486] mfd: tps65219: Remove TPS65219_REG_TI_DEV_ID check
+Date: Mon,  5 May 2025 18:33:15 -0400
+Message-Id: <20250505223922.2682012-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,181 +55,56 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Prathamesh Shete <pshete@nvidia.com>
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
 
-[ Upstream commit c12bfa0fee65940b10ff5187349f76c6f6b1df9c ]
+[ Upstream commit 76b58d5111fdcffce615beb71520bc7a6f1742c9 ]
 
-Each pin can be configured as a Special Function IO (SFIO) or GPIO,
-where the SFIO enables the pin to operate in alternative modes such as
-I2C, SPI, etc.
+The chipid macro/variable and regmap_read function call is not needed
+because the TPS65219_REG_TI_DEV_ID register value is not a consistent value
+across TPS65219 PMIC config versions. Reading from the DEV_ID register
+without a consistent value to compare it to isn't useful. There isn't a
+way to verify the match data ID is the same ID read from the DEV_ID device
+register. 0xF0 isn't a DEV_ID value consistent across TPS65219 NVM
+configurations.
 
-The current implementation sets all the pins back to SFIO mode
-even if they were initially in GPIO mode. This can cause glitches
-on the pins when pinctrl_gpio_free() is called.
+For TPS65215, there is a consistent value in bits 5-0 of the DEV_ID
+register. However, there are other error checks in place within probe()
+that apply to both PMICs rather than keeping this isolated check for one
+PMIC.
 
-Avoid these undesired glitches by storing the pin's SFIO/GPIO
-state on GPIO request and restoring it on GPIO free.
-
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-Link: https://lore.kernel.org/20250305104939.15168-2-pshete@nvidia.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+Link: https://lore.kernel.org/r/20250206173725.386720-4-s-ramamoorthy@ti.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 59 +++++++++++++++++++++++----
- drivers/pinctrl/tegra/pinctrl-tegra.h |  6 +++
- 2 files changed, 57 insertions(+), 8 deletions(-)
+ drivers/mfd/tps65219.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 3b046450bd3ff..27823e4207347 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -278,8 +278,8 @@ static int tegra_pinctrl_set_mux(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
--static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *pctldev,
--					unsigned int offset)
-+static int tegra_pinctrl_get_group_index(struct pinctrl_dev *pctldev,
-+					 unsigned int offset)
+diff --git a/drivers/mfd/tps65219.c b/drivers/mfd/tps65219.c
+index 57ff5cb294a66..d3b77abec786e 100644
+--- a/drivers/mfd/tps65219.c
++++ b/drivers/mfd/tps65219.c
+@@ -228,7 +228,6 @@ static const struct regmap_irq_chip tps65219_irq_chip = {
+ static int tps65219_probe(struct i2c_client *client)
  {
- 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
- 	unsigned int group, num_pins, j;
-@@ -292,12 +292,35 @@ static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *
- 			continue;
- 		for (j = 0; j < num_pins; j++) {
- 			if (offset == pins[j])
--				return &pmx->soc->groups[group];
-+				return group;
- 		}
- 	}
+ 	struct tps65219 *tps;
+-	unsigned int chipid;
+ 	bool pwr_button;
+ 	int ret;
  
--	dev_err(pctldev->dev, "Pingroup not found for pin %u\n", offset);
--	return NULL;
-+	return -EINVAL;
-+}
-+
-+static const struct tegra_pingroup *tegra_pinctrl_get_group(struct pinctrl_dev *pctldev,
-+							    unsigned int offset,
-+							    int group_index)
-+{
-+	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
-+
-+	if (group_index < 0 || group_index > pmx->soc->ngroups)
-+		return NULL;
-+
-+	return &pmx->soc->groups[group_index];
-+}
-+
-+static struct tegra_pingroup_config *tegra_pinctrl_get_group_config(struct pinctrl_dev *pctldev,
-+								    unsigned int offset,
-+								    int group_index)
-+{
-+	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
-+
-+	if (group_index < 0)
-+		return NULL;
-+
-+	return &pmx->pingroup_configs[group_index];
- }
+@@ -253,12 +252,6 @@ static int tps65219_probe(struct i2c_client *client)
+ 	if (ret)
+ 		return ret;
  
- static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
-@@ -306,12 +329,15 @@ static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
- {
- 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
- 	const struct tegra_pingroup *group;
-+	struct tegra_pingroup_config *config;
-+	int group_index;
- 	u32 value;
- 
- 	if (!pmx->soc->sfsel_in_mux)
- 		return 0;
- 
--	group = tegra_pinctrl_get_group(pctldev, offset);
-+	group_index = tegra_pinctrl_get_group_index(pctldev, offset);
-+	group = tegra_pinctrl_get_group(pctldev, offset, group_index);
- 
- 	if (!group)
- 		return -EINVAL;
-@@ -319,7 +345,11 @@ static int tegra_pinctrl_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	if (group->mux_reg < 0 || group->sfsel_bit < 0)
- 		return -EINVAL;
- 
-+	config = tegra_pinctrl_get_group_config(pctldev, offset, group_index);
-+	if (!config)
-+		return -EINVAL;
- 	value = pmx_readl(pmx, group->mux_bank, group->mux_reg);
-+	config->is_sfsel = (value & BIT(group->sfsel_bit)) != 0;
- 	value &= ~BIT(group->sfsel_bit);
- 	pmx_writel(pmx, value, group->mux_bank, group->mux_reg);
- 
-@@ -332,12 +362,15 @@ static void tegra_pinctrl_gpio_disable_free(struct pinctrl_dev *pctldev,
- {
- 	struct tegra_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
- 	const struct tegra_pingroup *group;
-+	struct tegra_pingroup_config *config;
-+	int group_index;
- 	u32 value;
- 
- 	if (!pmx->soc->sfsel_in_mux)
- 		return;
- 
--	group = tegra_pinctrl_get_group(pctldev, offset);
-+	group_index = tegra_pinctrl_get_group_index(pctldev, offset);
-+	group = tegra_pinctrl_get_group(pctldev, offset, group_index);
- 
- 	if (!group)
- 		return;
-@@ -345,8 +378,12 @@ static void tegra_pinctrl_gpio_disable_free(struct pinctrl_dev *pctldev,
- 	if (group->mux_reg < 0 || group->sfsel_bit < 0)
- 		return;
- 
-+	config = tegra_pinctrl_get_group_config(pctldev, offset, group_index);
-+	if (!config)
-+		return;
- 	value = pmx_readl(pmx, group->mux_bank, group->mux_reg);
--	value |= BIT(group->sfsel_bit);
-+	if (config->is_sfsel)
-+		value |= BIT(group->sfsel_bit);
- 	pmx_writel(pmx, value, group->mux_bank, group->mux_reg);
- }
- 
-@@ -791,6 +828,12 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 	pmx->dev = &pdev->dev;
- 	pmx->soc = soc_data;
- 
-+	pmx->pingroup_configs = devm_kcalloc(&pdev->dev,
-+					     pmx->soc->ngroups, sizeof(*pmx->pingroup_configs),
-+					     GFP_KERNEL);
-+	if (!pmx->pingroup_configs)
-+		return -ENOMEM;
-+
- 	/*
- 	 * Each mux group will appear in 4 functions' list of groups.
- 	 * This over-allocates slightly, since not all groups are mux groups.
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-index b3289bdf727d8..b97136685f7a8 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-@@ -8,6 +8,10 @@
- #ifndef __PINMUX_TEGRA_H__
- #define __PINMUX_TEGRA_H__
- 
-+struct tegra_pingroup_config {
-+	bool is_sfsel;
-+};
-+
- struct tegra_pmx {
- 	struct device *dev;
- 	struct pinctrl_dev *pctl;
-@@ -21,6 +25,8 @@ struct tegra_pmx {
- 	int nbanks;
- 	void __iomem **regs;
- 	u32 *backup_regs;
-+	/* Array of size soc->ngroups */
-+	struct tegra_pingroup_config *pingroup_configs;
- };
- 
- enum tegra_pinconf_param {
+-	ret = regmap_read(tps->regmap, TPS65219_REG_TI_DEV_ID, &chipid);
+-	if (ret) {
+-		dev_err(tps->dev, "Failed to read device ID: %d\n", ret);
+-		return ret;
+-	}
+-
+ 	ret = devm_mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO,
+ 				   tps65219_cells, ARRAY_SIZE(tps65219_cells),
+ 				   NULL, 0, regmap_irq_get_domain(tps->irq_data));
 -- 
 2.39.5
 
