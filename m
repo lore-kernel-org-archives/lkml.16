@@ -1,145 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E3026A0FC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0712475C2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464595; cv=none; b=GbVHvblSXNsy9zv99CSE4OVtd9NS3jZUc1xJ/pwc8BewPVmW4+eSTYIWHCFZFpQLSiQmZDrJgD8GtUEYumMxv6fXsL+v1/NARVxY2k6owriuRmUb1DvbXe/J/bJKv4pPFGxmLdlwEKDbjE8awi7+/5UOE5IIzP//PPVLnak5Gdg=
+	t=1746464612; cv=none; b=X0C8lKzZNMNUC7NCv6JIBI2ue3xXNT1UGS3yL4OtsLnOUvoyeBh1SWW4lFykyddbYzH+EKw0RujvFtzLA/lkw7dntHw0RXIJmjNZMMkAYQPJ0BLkjelXm0NASg4djsbNBW+h7J4JaWIV7CP79m9Q6QRUdl3uy8ty7ywOl/0NyyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464595; c=relaxed/simple;
-	bh=/Qvmv8w9ZIfKNOh5CAiInqaoy1vMOODiIViYJFFLuZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rcps90WoMHdkJesCjzZCfhrJ8ZbS1FdcuyB+lqJpky8QfoyQ/k64yoi4TN1x0rWY4yr6P0FU03ndRzd3GKpCkNp7ozYPh9m5Z0cvh+GUR/kP4Pnr/EVitpJMJmsdqMPdzYSjB3gwdQSBIUGtfrRnugH5r8ETRtxgYOA/QMFBaCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GH43+Fy6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746464612; c=relaxed/simple;
+	bh=O8rOdQGd3Qx25ktSEiI9XBLByA8iYv7K7x8QfZ7aXm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYQAW3uHYx4oF2tRNTjDLSOvhraT8bBOITsoWWOVG7xyO8FTteS3KRLT+cmgyPfOngYLdIOAwPyk4xjFrx4jbuALLGs+33kaljW6gzxGRbFrx4iwVjUzr1CqEg3muk5yvH0o+42C1rTajQDbUCbUcrkmtX2Qa/qvB6Qbom7UYS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=PJoNYaOk; arc=none smtp.client-ip=80.12.242.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GH43+Fy6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746464592;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m9bIHoqbBA5SLNauZMvH1fqOzSiDFcEQEEJ1Jgigji4=;
-	b=GH43+Fy6e/BXAEknzyp7Hb85XTFyMgY59fuXBpLLYrx2ucwnX65epslQTtS8ddIGyt9lHd
-	9xCeFyhf2QmN+l8Cat5aBVGHYyvuFrrbMYQdMpPCqTwxd1G8VobKYpD1GsajRK/wZxZoFx
-	zcc9rCPIyziMkTTWYbG914V6HGJ8bsI=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-212-OshEhb6COy-DfENXyYMoWw-1; Mon, 05 May 2025 13:03:09 -0400
-X-MC-Unique: OshEhb6COy-DfENXyYMoWw-1
-X-Mimecast-MFC-AGG-ID: OshEhb6COy-DfENXyYMoWw_1746464588
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-736fff82264so3435450b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:03:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746464588; x=1747069388;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m9bIHoqbBA5SLNauZMvH1fqOzSiDFcEQEEJ1Jgigji4=;
-        b=AkbHSodom7BoOsip6gZC5rXZvcBajTn+fTBjZ4OSPmMNnhItYmuECkS6yYWlc0ymuq
-         2Dzi0aTOpjVWl7/7hS0xhux2wsJ/oVBOig9ugaOajUWKKzzk99Uhzo1oE1nVJjY4Hona
-         N2fPq9owRKp6fAhGgblOJ+/WdbDGN9OacYLVQRDrblS/1CnaCkb4ubm82mk/GEYImwNS
-         vU/gkdsBbQib6VcnhSnsP2nDno+R8qASRr72Ku4DEVIVD9Wifu07fCehQw5Q47nqKHi1
-         8MLXuJS6r+TxEyM+urNKCiLTNbXI+keeHAnn2Gf1gmFQiirwTGduIkAgjizJ+NMBQ8NM
-         YJTw==
-X-Gm-Message-State: AOJu0Yz6PAn6Ux0hZzfd6vDRPxgJ+KikgDUHQ4CHa/Z9J70Q1mhEOyKh
-	hxsY/qRcCbIhG5/deVTf061Hnj31+61gcLueRRF05j4LnUketGMUJ2cn8pm1GDxoaKt2ZC13rbB
-	TXaQh5nDFfn0pU3riUi5+J3mglu1Qh5UR56lKaca7IiSkrpDnAD57GZprg3Ms3w==
-X-Gm-Gg: ASbGncuSiEzcPvG+dC6IChQeMWeLzRjBLyS4MaW4bkGw2/F6fxvvfC+hSm4WTqCasyh
-	pVNWDEQKVCg8leSBzLWcPyL5vUs/xSKZcQFP+C/cppb/laXbK07jnsImyX85Q6G/a6EIWchyOiO
-	q/oHp72VBY874OR8iNOO5ol/Ykh3TcyfDgKp8FDs4b/KpfcLTgjSEnWtIH11FrO15x0OSP2xPq2
-	rIH3jCGwEjrl6R2mEQwICaUsahzCPvInsp1a5tc7H6YZbzT+zFD8siabwRscuiOvhKBATCEiaro
-	EIx09oCbgjkBNT1pKh9hmim7
-X-Received: by 2002:a05:6a00:a20:b0:728:f21b:ce4c with SMTP id d2e1a72fcca58-74090e44996mr379535b3a.5.1746464588197;
-        Mon, 05 May 2025 10:03:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvK3Ppi0BRws/Y5vzuFvx+uQJghZwFuILY/Vgby6wA386en8K1y8EzEX9SHUhWpLGMzv/CMA==
-X-Received: by 2002:a05:6a00:a20:b0:728:f21b:ce4c with SMTP id d2e1a72fcca58-74090e44996mr379499b3a.5.1746464587846;
-        Mon, 05 May 2025 10:03:07 -0700 (PDT)
-Received: from localhost.localdomain ([2804:1b3:a800:6188:b6d7:24aa:ba3f:6cc2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058df2a6csm7072213b3a.81.2025.05.05.10.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 10:03:07 -0700 (PDT)
-From: Leonardo Bras <leobras@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Leonardo Bras <leobras@redhat.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] local_lock: Minor improvements of local_trylock*() documentation
-Date: Mon,  5 May 2025 14:02:44 -0300
-Message-ID: <20250505170244.253170-1-leobras@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="PJoNYaOk"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id BzCjukjVgnnhRBzCjuPOCm; Mon, 05 May 2025 19:02:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1746464532;
+	bh=WvsrgFA+w+aYl14yXnX6A0AN1m8LCt/V06vhbcxA7PA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=PJoNYaOkJlHxJzmZEp3gtHI28+qoZi5Tq3TeIQ40ZwPWXEaX356XZ8oYAUGEaYMhJ
+	 tkRCRGTCTpupYCV1IzXiQXJHiM2eBWvNfiswKqHTfvtqoHeE88NKKJBI/XEo25v+3r
+	 l4PHmQwfILHx0sowK3JF4gjKp1vyjazmZAgy9UV/9ZAdcl3B98AbCUabPjgaN+L7F1
+	 fj20q8sS+UO/QoUGMyrzvJ/L4GZR3fkLB5FVtjHBFYTI8yYeW2EKCz86hXWZmlTwMj
+	 0tdefDRLb0PAt22IkqU2cMZ5qR0oMn60/NIpYK2JSTvylqSoiPWx8r0fGHroNIvzK7
+	 hiDST/WDKPf2Q==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 05 May 2025 19:02:12 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <fb94c25d-80af-41c5-a4b7-230dcd0f1d64@wanadoo.fr>
+Date: Mon, 5 May 2025 19:02:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] locking/mutex: Mark devm_mutex_init() as __must_check
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+ Will Deacon <will@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20250505-must_check-devm_mutex_init-v5-1-92fa4b793c6e@weissschuh.net>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250505-must_check-devm_mutex_init-v5-1-92fa4b793c6e@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Fix local_trylock_init() documentation, as it was mentioning the non-try
-helper instead, and use the opportunity to make clear the try_lock*() needs
-to receive a local_trylock_t variable as parameter.
+Le 05/05/2025 à 09:59, Thomas Weißschuh a écrit :
+> Even if it's not critical, the avoidance of checking the error code
+> from devm_mutex_init() call today diminishes the point of using the devm
+> variant of it. Tomorrow it may even leak something. Enforce all callers
+> checking the return value through the compiler.
+> 
+> As devm_mutex_init() itself is a macro, it can not be annotated
+> directly. Annotate __devm_mutex_init() instead.
+> Unfortunately __must_check/warn_unused_result don't propagate through
+> statement expression. So move the statement expression into the argument
+> list of the call to __devm_mutex_init() through a helper macro.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Leonardo Bras <leobras@redhat.com>
----
+Hi,
 
-Changes since RFC:
-- Replace try-enabled lock with local_trylock{,_t}
+	git grep ^[^=]*devm_mutex_init
 
- include/linux/local_lock.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+returns:
+	 drivers/leds/leds-lp8860.c
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4f8310b..58adaaf98dd74 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -45,38 +45,38 @@
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-  *			      interrupt flags
-  * @lock:	The lock variable
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
- 	__local_unlock_irqrestore(lock, flags)
- 
- /**
-- * local_lock_init - Runtime initialize a lock instance
-+ * local_trylock_init - Runtime initialize a local_trylock instance
-  */
- #define local_trylock_init(lock)	__local_trylock_init(lock)
- 
- /**
-  * local_trylock - Try to acquire a per CPU local lock
-- * @lock:	The lock variable
-+ * @lock:	The local_trylock_t variable
-  *
-  * The function can be used in any context such as NMI or HARDIRQ. Due to
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock(lock)		__local_trylock(lock)
- 
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
-  *			   interrupts if acquired
-- * @lock:	The lock variable
-+ * @lock:	The local_trylock_t variable
-  * @flags:	Storage for interrupt flags
-  *
-  * The function can be used in any context such as NMI or HARDIRQ. Due to
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
-  */
- #define local_trylock_irqsave(lock, flags)			\
- 	__local_trylock_irqsave(lock, flags)
- 
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
--- 
-2.49.0
+Based on -next, it would break.
 
+Should it be patched first?
+
+CJ
