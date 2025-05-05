@@ -1,46 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B1418FDD5;
-	Mon,  5 May 2025 15:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2EB1991DD;
+	Mon,  5 May 2025 15:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457640; cv=none; b=FfCu8+Pbj/6mAGbsyvTnGiysEDYou4L38zeuQQw+nMDWeVsAT0JyM22tj+qnTYkYNaYQHE7z0VcuamwAg067gPiOdOLRt/8jSvdYDXsnF0Ap+MXe7Qqhv9FCHpu2V8gyyS2DuJzBZCfJtMdTuoIcSmmZrObLrL3NxS5mf6J7Org=
+	t=1746457779; cv=none; b=R8p1En2OdSkdBkDODk2Kq60uckLCiqvc5hJEL0ck7Prwm/Hgqg9kW1jYawCm4Pq6q21aviYDYA0UENHU1LTRi5HWCwL+oVqdvNANjv5ddqx13BUc8C7KZRUG+w+I6WIiXOx0Pxuz+r4bx/+dDG4A2Ra48uwPy7ke6Fm08H7fUwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457640; c=relaxed/simple;
-	bh=y9FCfOiO6QLi981nCwCrqUJyWBizGqlQGrZqWfBXvRQ=;
+	s=arc-20240116; t=1746457779; c=relaxed/simple;
+	bh=TSUZKeCdQhdSNxarE2Jb8rQpBLaG9AFMMnYpT2x7Odo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OXBxHh0K9tzQL6uYb3XYMgq08YCSy7absVAkYOGsuFhGqw7+LYptmxK+1KI1RzuAGoQixLh9dNZ03qQlVy/yfzkJnNwjG+TA2LYWnfcwb4qai0alJNKgjxzPxksWzM1shpAzkn3VF14KRfk7X4w3uQOP9Ee5h8AHEBU4gA6HDVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhbgUloE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e/ANv+lemgp0uSTuwwWkzm1aH7X4RhOLnRmDEJSU2hMO0a/3cphtUTYN6Ngb/q961Bqfz98BZSmn2w1T5jrWkPRKdNFxfrj2f7L/3r6dpV+p59kzyQViMcaoizfRzcp9G+gsGQ5rf1TEgKYD8Tyb7fKfFDzUHd/jxqcinqLaAtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QgGNUXco; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhbgUloE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D485CC4CEE4;
-	Mon,  5 May 2025 15:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746457639;
-	bh=y9FCfOiO6QLi981nCwCrqUJyWBizGqlQGrZqWfBXvRQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fhbgUloE6MXGWnpPfjATb5fUD2rZ7xEquT8n+c9UsVxQWKFJRv0pEWonGvv6q1yLS
-	 b2UHF350eNcQ956uUCmVk2NQF0twhZNtI6VSwzuBIIwF3dCdJW8hv/3VID/DmOAppO
-	 j+vMLk67nobNXHr2TX5tthbNX90hgST4sr/Tvs/TkZYc9cojU/7nNpvKowBUWhH0HM
-	 3Vbr/8TWprqvutwbJn7xUO+xuALAX2HMlvCRD2DqC4ILQe5XUwARUi1N9VSPPToSKq
-	 EhMu9UrexY+w9ZvoiL16VGiloDRtWEZsqBNszcJgFWZjvcv0nRY9Jd8oc3Qt1ROt7v
-	 r3H5T47m/UH6g==
-Date: Mon, 5 May 2025 08:07:19 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: hch <hch@lst.de>
-Cc: Hans Holmberg <Hans.Holmberg@wdc.com>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	Dave Chinner <david@fromorbit.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/2] xfs: free the item in xfs_mru_cache_insert on
- failure
-Message-ID: <20250505150719.GZ25675@frogsfrogsfrogs>
-References: <20250430084117.9850-1-hans.holmberg@wdc.com>
- <20250430084117.9850-2-hans.holmberg@wdc.com>
- <20250502200646.GT25675@frogsfrogsfrogs>
- <20250505054549.GA21045@lst.de>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QgGNUXco"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kWu5GJ/61aSn6x94SwqhrcX8Db76+qXS9tFC+eWlWv8=; b=QgGNUXcooNpXGyc0ZCLQdGrbSK
+	VnLeqcKzMUrQdNCvQi/jczUba522CT8xjzYYxpU1Yz1b6xwI795L8tnXtNHIqxz7kKlD7gCjrpNB/
+	4c/7cLCXoanQNknxMOdfC8canG4ldWUK0MK8Fv+6c8FM+5UoFLzNA7/r7Gh+lb3l2BUc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uBxRW-00Bbh1-MR; Mon, 05 May 2025 17:09:18 +0200
+Date: Mon, 5 May 2025 17:09:18 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
+ marvell,orion-bridge-intc to DT schema
+Message-ID: <dd9795f1-872a-4f7f-b4df-52cee65151a7@lunn.ch>
+References: <20250505144743.1290672-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,29 +48,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505054549.GA21045@lst.de>
+In-Reply-To: <20250505144743.1290672-1-robh@kernel.org>
 
-On Mon, May 05, 2025 at 07:45:49AM +0200, hch wrote:
-> On Fri, May 02, 2025 at 01:06:46PM -0700, Darrick J. Wong wrote:
-> > >  	atomic_inc(&pag_group(args->pag)->xg_active_ref);
-> > >  	item->pag = args->pag;
-> > > -	error = xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
-> > > -	if (error)
-> > > -		goto out_free_item;
-> > > +	xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
-> > 
-> > Hmm, don't you still need to check for -ENOMEM returns?  Or if truly
-> > none of the callers care anymore, then can we get rid of the return
-> > value for xfs_mru_cache_insert?
-> 
-> Both for file streams and the zone association in the next patch the
-> mru cache is just a hint, so we ignore all errors (see the return 0
-> in the error handling boilerplate in the existing code).  But hardcoding
-> that assumption into the core mru cache helpers seems a bit weird.
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,orion-bridge-intc.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/marvell,orion-bridge-intc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell Orion SoC Bridge Interrupt Controller
+> +
+> +maintainers:
+> +  - Andrew Lunn <andrew@lunn.ch>
+> +  - Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-Ok then.  The comment change in this patch is a reasonable explanation
-for why the return value is/has always been ignored, so
+You should probably drop Sebastian. I've not heard from him in years.
 
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Apart from that:
 
---D
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
