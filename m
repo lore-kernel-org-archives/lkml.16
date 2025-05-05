@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122153B6B80;
-	Mon,  5 May 2025 23:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6623B5B59;
+	Mon,  5 May 2025 23:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487287; cv=none; b=WXNMLX8ao6evF1/m3C7bix9KxSWTW6xXgebKl8OVsE/mch0MyUht3PGqcwuufbLAJzvNPqFQhme2wdwWIepl/JRfivn65/J6qkU6YXEJ8SNPg5zySE4f0RH3qrVNM9noOxb55ou0+Xb3iC8u8yTslkxkwr8QNUtoeOQ5RjCoxSI=
+	t=1746487280; cv=none; b=oRmSKX5vCGDMq2Reb7O6VSixGNW1+ZihQNiYMomIv12KUSilZIHaqBEdFqJi2jNCntsRUZ2EalXWtzaxRWTDPcttdhNhBNCCGMfh1XEn/dzR8+gn+wCeru/51Cvzz7XgvIENT19zaFvBK/BskK6hFOiKpV9OZPUXdC27J9dn7Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487287; c=relaxed/simple;
-	bh=/5BcaKk29skcl6C0x/EXuNzv3BY6vyonckuttvX+NdA=;
+	s=arc-20240116; t=1746487280; c=relaxed/simple;
+	bh=V+QMDN4nBjakEPlDHbBLIwjxtAKx1PMWrpTzFFXt1k0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vf/JH/Vo3gIWGkQEijMwKtCBjnjn122MDS1L8IW4TmUT/lXSdL9I2foUUbK2rp6VG2ZJVV45MBfldD/N64Lu2Vq/fe8hebBskgOTAVgPbVTEMLii0c50gU74RK2v50bq519CjKOj8+ZVUxqYpddQIzWhsisyNP+yZypBWCWfbtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2WCVmeR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LICf9GWSWYD2KrETm8ywQVNvfdwtaCvoIcJqVQT+mBvzol0eXhX2c6Cfb0rQYtEF79JMGtnbTpPuDsrVCEOMMawUDRUHsduIbJKFTxZoOhuH5r/00noTnyG0WpyhbebimEjgnbdcR2mElanw5/JfxUF2j+v9u3KQ04QrE1d86DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvHlgstg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2WCVmeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8923EC4CEF9;
-	Mon,  5 May 2025 23:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvHlgstg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79243C4CEEE;
+	Mon,  5 May 2025 23:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487285;
-	bh=/5BcaKk29skcl6C0x/EXuNzv3BY6vyonckuttvX+NdA=;
+	s=k20201202; t=1746487279;
+	bh=V+QMDN4nBjakEPlDHbBLIwjxtAKx1PMWrpTzFFXt1k0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I2WCVmeRWSZ2nvXjXhQzfoKwhwKg1RNjIfw5MoenqTakzUjVVYxJIbeG8nvy7thmR
-	 MwsJJCpSj5V+3BAz6WPurfaRgsMA2siRl8lgODed4+4dUGWJVTj8hKL8hAXSzcLKVn
-	 hBw1FYGW4RTChMrV9Fauq6tIq4+co+yyZJBxL/INLj5TCAKLel24ikMsPK1ZgyZomX
-	 +QMmIq1euhjPXBmNNzjaH2iZ7nSjJ9/BiWPIvzdI3G9U9T3bhciJKiGE8O9I6Gco3Y
-	 GslLsn27aSN/Em5UWcmWolBYGm1hn6Fo7ncRvvHz85uOAovEpoQL1H+Qjd6dbO9otI
-	 UPdGk1Y8Ygt1A==
+	b=GvHlgstgOoUOPsFPWV5ZjLRKprmIkWx1ofY1jRlRVYwKg70hZs6MwkUxUt9OA3yUN
+	 eY58zDwRzA2yGS8LLWOBwho2b8lWhkit0icttfqkGjst4TaYGH6AYvO/pp9Cs8M1zt
+	 FhEe3SB5/MHxqz0lyAX5YgNI0092zRGARTCoWVDxyo9iX6tX0HxYX1Cwasd58K5LrH
+	 6zcc+cxI+WxlixnC8Jk7uF6SjJLiNoRvkOoGd+5SeISMTKMVdT5iN82Pz8Gb/INfut
+	 +vVXksP2sHDkPL4i54FNoE8zbHcJPmuZVwtr2PXwJE2JH1+Xf0YbbKlFyyNvACfrdZ
+	 DLKlyRKgMVhUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Vatoropin <a.vatoropin@crpt.ru>,
-	Guenter Roeck <linux@roeck-us.net>,
+Cc: William Tu <witu@nvidia.com>,
+	Bodong Wang <bodong@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 099/114] hwmon: (xgene-hwmon) use appropriate type for the latency value
-Date: Mon,  5 May 2025 19:18:02 -0400
-Message-Id: <20250505231817.2697367-99-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 095/114] net/mlx5e: reduce rep rxq depth to 256 for ECPF
+Date: Mon,  5 May 2025 19:17:58 -0400
+Message-Id: <20250505231817.2697367-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -51,43 +59,73 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+From: William Tu <witu@nvidia.com>
 
-[ Upstream commit 8df0f002827e18632dcd986f7546c1abf1953a6f ]
+[ Upstream commit b9cc8f9d700867aaa77aedddfea85e53d5e5d584 ]
 
-The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
-evaluated using 32-bit arithmetic.
+By experiments, a single queue representor netdev consumes kernel
+memory around 2.8MB, and 1.8MB out of the 2.8MB is due to page
+pool for the RXQ. Scaling to a thousand representors consumes 2.8GB,
+which becomes a memory pressure issue for embedded devices such as
+BlueField-2 16GB / BlueField-3 32GB memory.
 
-Since a value of type 'u64' is used to store the eventual result,
-and this result is later sent to the function usecs_to_jiffies with
-input parameter unsigned int, the current data type is too wide to
-store the value of ctx->usecs_lat.
+Since representor netdevs mostly handles miss traffic, and ideally,
+most of the traffic will be offloaded, reduce the default non-uplink
+rep netdev's RXQ default depth from 1024 to 256 if mdev is ecpf eswitch
+manager. This saves around 1MB of memory per regular RQ,
+(1024 - 256) * 2KB, allocated from page pool.
 
-Change the data type of "usecs_lat" to a more suitable (narrower) type.
+With rxq depth of 256, the netlink page pool tool reports
+$./tools/net/ynl/cli.py --spec Documentation/netlink/specs/netdev.yaml \
+	 --dump page-pool-get
+ {'id': 277,
+  'ifindex': 9,
+  'inflight': 128,
+  'inflight-mem': 786432,
+  'napi-id': 775}]
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+This is due to mtu 1500 + headroom consumes half pages, so 256 rxq
+entries consumes around 128 pages (thus create a page pool with
+size 128), shown above at inflight.
 
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
-Link: https://lore.kernel.org/r/20250204095400.95013-1-a.vatoropin@crpt.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Note that each netdev has multiple types of RQs, including
+Regular RQ, XSK, PTP, Drop, Trap RQ. Since non-uplink representor
+only supports regular rq, this patch only changes the regular RQ's
+default depth.
+
+Signed-off-by: William Tu <witu@nvidia.com>
+Reviewed-by: Bodong Wang <bodong@nvidia.com>
+Reviewed-by: Saeed Mahameed <saeedm@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Link: https://patch.msgid.link/20250209101716.112774-8-tariqt@nvidia.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/xgene-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index 559a73bab51e8..15889bcc85875 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -110,7 +110,7 @@ struct xgene_hwmon_dev {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index 8eb7288f820a4..2fb1fe9a8eee1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -53,6 +53,7 @@
+ #define MLX5E_REP_PARAMS_DEF_LOG_SQ_SIZE \
+         max(0x7, MLX5E_PARAMS_MINIMUM_LOG_SQ_SIZE)
+ #define MLX5E_REP_PARAMS_DEF_NUM_CHANNELS 1
++#define MLX5E_REP_PARAMS_DEF_LOG_RQ_SIZE 0x8
  
- 	phys_addr_t		comm_base_addr;
- 	void			*pcc_comm_addr;
--	u64			usecs_lat;
-+	unsigned int		usecs_lat;
- };
+ static const char mlx5e_rep_driver_name[] = "mlx5e_rep";
  
- /*
+@@ -702,6 +703,8 @@ static void mlx5e_build_rep_params(struct net_device *netdev)
+ 
+ 	/* RQ */
+ 	mlx5e_build_rq_params(mdev, params);
++	if (!mlx5e_is_uplink_rep(priv) && mlx5_core_is_ecpf(mdev))
++		params->log_rq_mtu_frames = MLX5E_REP_PARAMS_DEF_LOG_RQ_SIZE;
+ 
+ 	/* CQ moderation params */
+ 	params->rx_dim_enabled = MLX5_CAP_GEN(mdev, cq_moderation);
 -- 
 2.39.5
 
