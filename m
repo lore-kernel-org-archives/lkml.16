@@ -1,159 +1,176 @@
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2040.outbound.protection.outlook.com [40.107.243.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ACC25DD1E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459876; cv=none; b=WbjpT1nF6Jj8cIbm0aPzeBLh3ZBi0jNNkKctgIWaDS3ALHDioOisvZBJP7eFnzimFDLE66FHjL5lZ/bxH3TXIfQAR9wxOpsbXRh1jOg6nnZ7i13NJ58ae/MW5iekoR4/mRKfRxS1RtKU4LQrkIa5SOUTxKA9K5pVPMXyZq17KAc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459876; c=relaxed/simple;
-	bh=BsYMs8WnXsSN2AsX4JfQ2IaUBn2ookufJHLnCM/5lAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmrMvI5W24MKqqo1G0WrVfmVnO7qAcxvsanYiw5UEEy8MTB7SRCp0UeV0oh0VrhcrLelqGqYcdsT+GL4NDsY3LlA+hZsvYzakHT4WRTO1yms+n2vMs4JXZOmrE2dD+wiTDEv6mFWKYzrziPNMI8HcmiIz5ECS3c9VdfKplhR3wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AId87KmO; arc=none smtp.client-ip=185.125.25.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8847538DEC;
+	Mon,  5 May 2025 15:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746459895; cv=fail; b=OYKBeJr6pBQCvfKmTxsbZBg2lcIAoxTBvAFhydW+r/zQFDSkqsWVkR59mYpZQV+B9EO7n9nusJeMWcNzL3xke1YRK4PGq3YXTvcFguR/BIVTifY1sgjqmv3d/aR+I0jbqjWJu+ghNJSFHm5nG9n97nU+TlJz3PJOGApYIym+ics=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746459895; c=relaxed/simple;
+	bh=aJkwVQeSNL7Dqg7TjhDzEJl78Yzqoon2UWsM3K70EDU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NUJ2B22XWNSWsKKjmjQlItHbSCzvD7PE9OxYnuQd00vEc45D+aDsEzRw5SuRUkZ6sAaV/vvaDMhhizZLT23THOdj/nJ6H65kKWnN4+PkNDaYgxD2Jc8KqIqegeSmVVJ9baItoVBHLD4U0r2BcbOYD+8c03cUo94pxI6vPpKSQ2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rFFfgA0M; arc=fail smtp.client-ip=40.107.243.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AId87KmO"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zrlzk5cZtzVv4;
-	Mon,  5 May 2025 17:38:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1746459506;
-	bh=68OOBF5p1DncYHeXZUijCt379OyAlKkz3EBeF/6YpjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AId87KmOnan4eggIloma+UYO5IxpyYuiFVBZmwFB4HD5WvrGwY7lXHH0hZzZlkLah
-	 3KBIIJ6iwlL0zLtrr4zfE/4cc8B3XP+6Da/hyXk/j1l/eOzUqojSYfT3+GxuJEL/Qh
-	 19V4BhcmM9xUfB0QfAr4VMKyZtySYthU7MWgakp8=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zrlzh4wPJzgm4;
-	Mon,  5 May 2025 17:38:24 +0200 (CEST)
-Date: Mon, 5 May 2025 17:38:23 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	Jann Horn <jannh@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
-Message-ID: <20250505.oceziek1aiHu@digikod.net>
-References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
- <20250505.aFia3choo1aw@digikod.net>
- <20250505-unberechenbar-kosenamen-da3fb108080e@brauner>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rFFfgA0M"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m3m/XWbfq/qczEBHZjvsXLVxGGgwzCbAp8OCZo+OU12vxPXAk5xOhAGU3PNSOwH/1sOhQsiO9FGBsGIiTdpV0W0DqG8E/emuyr63EYQxWhzK4pXoCcXuWo0si7+0KxwhkhVrnaE5Yhwl09KzRXAtmMk7nj/zIZpp/IlE7wC6fw03PnkP9JyxSxvUU3s3CyZ02ORbqRuJNPMwWmuSEhtQ0Rkm5nFLv+dkftYQwEn6BsZ9RMEUZYk4sciznYnwil4Uywz+JlpaGcF4dEy2e1cZFGDn5cYernOKQ+SUA8bjLH3wSmdZaCNJKM/Z6Ghwln4VvDTeI5GiO6evWhesxul4FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZGjvbK8Bke3szgVnXQq7chsY7YnA5mhojeUUAmbsJFU=;
+ b=ih/nTI0DeDx0zOvgnPV53pHOcOMKuuuIakOng+1idM44ymIdCN0ZG/iGlRLU0wzcb9bbUqETxGn0wb81X/Mc0Sk7mFnwDDsovilCEPeHfXPlaFlOVx+ab0kLDdFarNXOlL24M1cqMkszfyu4PiStIv9u+ZA4CQRBQB3gtAv+AtwlAYEiKNazTqGSwrQPaY1BtDBwLojJv2sDIKEC1tG9PumVg8C5yKKG/gtGd8t4eC/TFBzKKhXs129E9UtV6eg7Bk5zeIkvNQFR0Hw/1EutRFHNXcrgxT+cR6QIbxQ8spcgP+dvhmbMzIpfnEeS1GxWaX6+jesPOcJ+X/1cOotd6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGjvbK8Bke3szgVnXQq7chsY7YnA5mhojeUUAmbsJFU=;
+ b=rFFfgA0Mu830MK3dZqjnYCekv9auQ7WH3RI82bgMJrD/h28E/hqQQmfgTkkZP7Wl/G2hoPEvHxpPq+L2D6mel+QmLq1EJBfEVQLD9Ck597e9mfv/qYGhK0phA3mhXFa8sKlBtlsiesaIsd0l73r1zbLpfG4wOzEy3Bdx9GzAdJY/OnnzI1fCedVRqvnLHZctbh4oWv+WsMMrs71bp7R+1nNHGUr6EfEX3798r7JL2SMIORPbXFiaDcshouWM+iQQ0YmZoXiaGNH6r65sRMpkNkGpjtY692sAl36wSPI0PJOJFZIF3C1q6unkj+vQjaKitd305H7VHalirKzHkrDw+w==
+Received: from SJ0PR13CA0129.namprd13.prod.outlook.com (2603:10b6:a03:2c6::14)
+ by IA1PR12MB8309.namprd12.prod.outlook.com (2603:10b6:208:3fe::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
+ 2025 15:44:45 +0000
+Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c6:cafe::94) by SJ0PR13CA0129.outlook.office365.com
+ (2603:10b6:a03:2c6::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18 via Frontend Transport; Mon,
+ 5 May 2025 15:44:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 15:44:44 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
+ 08:44:26 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by drhqmail203.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
+ 2025 08:44:26 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
+ 2025 08:44:25 -0700
+Received: from nvidia.com (10.127.8.13) by mail.nvidia.com (10.129.68.10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 5 May 2025 08:44:23 -0700
+Date: Mon, 5 May 2025 08:44:22 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Baolu Lu <baolu.lu@linux.intel.com>, <kevin.tian@intel.com>,
+	<corbet@lwn.net>, <will@kernel.org>, <bagasdotme@gmail.com>,
+	<robin.murphy@arm.com>, <joro@8bytes.org>, <thierry.reding@gmail.com>,
+	<vdumpa@nvidia.com>, <jonathanh@nvidia.com>, <shuah@kernel.org>,
+	<jsnitsel@redhat.com>, <nathan@kernel.org>, <peterz@infradead.org>,
+	<yi.l.liu@intel.com>, <mshavit@google.com>, <praan@google.com>,
+	<zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
+ iopt_unpin_pages helpers
+Message-ID: <aBjc1ny0Zs7K7gDX@nvidia.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
+ <376566b4-6c13-45ad-b1e5-8cfe2de437bc@linux.intel.com>
+ <aA+92fNNbDI3Qowk@Asurada-Nvidia>
+ <20250505150109.GH2260709@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250505-unberechenbar-kosenamen-da3fb108080e@brauner>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20250505150109.GH2260709@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|IA1PR12MB8309:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91620095-2ec4-4b1e-55bd-08dd8bebc242
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?q7uNH6fNf3nMao8L+3YxRRzgiHqDxkRKDOXdbs03jRLyMI8fpbw5w+TZPxp8?=
+ =?us-ascii?Q?DOJO/ka5EAW4iGWU5B+/ycuoRq913klydhrQfsnFrHKk8E4pSc34XD49pdBc?=
+ =?us-ascii?Q?jmUUqjaJ46ml//EKrpuhIpVslruSY5vQJLPur0nsAntlDnqhm/RfTmwYLo2j?=
+ =?us-ascii?Q?XgNOxOKpE+4LPC06YMsjKGL2rFS50OiKbnElwROmz9OjlrYzTjoRUmnK20nd?=
+ =?us-ascii?Q?OLxDI03UHE8bL+W51LKmNtVn0zFhvtNzw5QMimjKZfSt/YB5IIhmVZPYtFpJ?=
+ =?us-ascii?Q?BNmW/x3+BZ/Jy8QXC7KRXqzPIafv/q2Rq+nAfbkwg3VlDKmfSAo9G+WcP97T?=
+ =?us-ascii?Q?bz01l5mhuT5SZZBg6vW3ntTedXPmMpNPvQTFyjIkuGGwN3SFpQEXNqFfQEty?=
+ =?us-ascii?Q?vvboxW4UGvNxIpGRNAYwrqRaJcr+DpF/wCfZd3zPiDwGXKYVEUoO+DZmMeVF?=
+ =?us-ascii?Q?FhO29elT9DcxzJ7VeJbH85Gkc9I87QIU1anIXJpotbwF0EsbgOYG5JhiuEcX?=
+ =?us-ascii?Q?RglO4D0UxspcsJyYDAlJiCuow6d7UGndMwDKRAne7paVb4Is2b4FVz0HY+7+?=
+ =?us-ascii?Q?C48fmTJ8JARxo3BLDZvTc9rWRcMNgMLT3qtYNPTc7PpdmdqZIxzCmXB0fWCr?=
+ =?us-ascii?Q?ubMSD1qYnfJFvA+ew02Tz+YqMXqQmZ9+P/mg7aYMizmxuOmntbrk1hSCSPfh?=
+ =?us-ascii?Q?s3LcC1+VAiHad61x3CiU6/SMQUshCgDUZowmn75+xowabXquDU8sHrI98Q5G?=
+ =?us-ascii?Q?S3/sZRlDCb4fJihtH0Ii/7OcvYJ/b68ySNA/3WP2ftbpMiLCZPyHqsMrE5Lp?=
+ =?us-ascii?Q?MblS3NCYMPx4bMZTBCdplgzsl1YPa4RNosdrrZaFH8BJGzZNliGw/cCKu/G0?=
+ =?us-ascii?Q?bDkO1WglKq1bJuJ+USIo1KlhjMmyWGiyUnFUq6tj3OideWz8uBfg/VNnD36t?=
+ =?us-ascii?Q?opllgnG4A8bkIBzGVfspOLVc4p25xa0zaCvHPw6Rc/WyMhDQHZfkUFQakkGg?=
+ =?us-ascii?Q?U6y7obLZ/xL0ymEF9fgzC+3FZY0OCAqbHAQh7O1Hx/Luo25KeD3LItT/y3Qg?=
+ =?us-ascii?Q?zvExX33wOnP3JCrAd8Aihg+7/v7H0yqkeqLOXmGYn0o6bhBMhv37qV9U09Ra?=
+ =?us-ascii?Q?gY4RgpM5xn8h3Vrx7RQ4T/FHf9l3bx0YwlBF0aWvQZ5fXqJPOXIiY5s3B2vr?=
+ =?us-ascii?Q?alUJsRwciCnZvGy7kwFyIKOT+PomY0a1bNBzMwYjE1S56266YIg/3FApmrlO?=
+ =?us-ascii?Q?ROwTR6F4AEMttcl5ekLfBYds09RwOl7foSM5jh8bj4ZBj1D/zMclmwz16m7f?=
+ =?us-ascii?Q?MjFhNT5MfoX+HXKuSBNm3iBYbWhh+tHvs599BDswlJ5op1fqVRKBXoYF/vaX?=
+ =?us-ascii?Q?ZLMRvkMHCz7Cxs8Fqh6jfLe4T2kVOk5jFPMhC5CsxAdqNT8W2grge89xXuM4?=
+ =?us-ascii?Q?f0F2efmQqo16pog0K+SSilS/i5SuOGvW11W5gdjPFfvMmLRnGqvn0ONxcy5e?=
+ =?us-ascii?Q?6lhqZjeDHvgE+GfM35ctcuhsIJ8qmXC8H7Fb?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 15:44:44.8521
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91620095-2ec4-4b1e-55bd-08dd8bebc242
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D7.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8309
 
-On Mon, May 05, 2025 at 04:56:04PM +0200, Christian Brauner wrote:
-> On Mon, May 05, 2025 at 04:41:28PM +0200, Mickaël Salaün wrote:
-> > On Mon, May 05, 2025 at 01:13:38PM +0200, Christian Brauner wrote:
-> > > Coredumping currently supports two modes:
-> > > 
-> > > (1) Dumping directly into a file somewhere on the filesystem.
-> > > (2) Dumping into a pipe connected to a usermode helper process
-> > >     spawned as a child of the system_unbound_wq or kthreadd.
-> > > 
-> > > For simplicity I'm mostly ignoring (1). There's probably still some
-> > > users of (1) out there but processing coredumps in this way can be
-> > > considered adventurous especially in the face of set*id binaries.
-> > > 
-> > > The most common option should be (2) by now. It works by allowing
-> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
-> > > 
-> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> > > 
-> > > The "|" at the beginning indicates to the kernel that a pipe must be
-> > > used. The path following the pipe indicator is a path to a binary that
-> > > will be spawned as a usermode helper process. Any additional parameters
-> > > pass information about the task that is generating the coredump to the
-> > > binary that processes the coredump.
-> > > 
-> > > In the example core_pattern shown above systemd-coredump is spawned as a
-> > > usermode helper. There's various conceptual consequences of this
-> > > (non-exhaustive list):
-> > > 
-> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
-> > >   connected to the read-end of the pipe. All other file descriptors are
-> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
-> > >   already caused bugs because userspace assumed that this cannot happen
-> > >   (Whether or not this is a sane assumption is irrelevant.).
-> > > 
-> > > - systemd-coredump will be spawned as a child of system_unbound_wq. So
-> > >   it is not a child of any userspace process and specifically not a
-> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
-> > >   upcall which are difficult for userspace to control correctly.
-> > > 
-> > > - systemd-coredump is spawned with full kernel privileges. This
-> > >   necessitates all kinds of weird privilege dropping excercises in
-> > >   userspace to make this safe.
-> > > 
-> > > - A new usermode helper has to be spawned for each crashing process.
-> > > 
-> > > This series adds a new mode:
-> > > 
-> > > (3) Dumping into an abstract AF_UNIX socket.
-> > > 
-> > > Userspace can set /proc/sys/kernel/core_pattern to:
-> > > 
-> > >         @linuxafsk/coredump_socket
-> > > 
-> > > The "@" at the beginning indicates to the kernel that the abstract
-> > > AF_UNIX coredump socket will be used to process coredumps.
-> > > 
-> > > The coredump socket uses the fixed address "linuxafsk/coredump.socket"
-> > > for now.
-> > > 
-> > > The coredump socket is located in the initial network namespace. To bind
-> > > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
-> > > user namespace. Listening and reading can happen from whatever
-> > > unprivileged context is necessary to safely process coredumps.
-> > > 
-> > > When a task coredumps it opens a client socket in the initial network
-> > > namespace and connects to the coredump socket. For now only tasks that
-> > > are acctually coredumping are allowed to connect to the initial coredump
-> > > socket.
+On Mon, May 05, 2025 at 12:01:09PM -0300, Jason Gunthorpe wrote:
+> On Mon, Apr 28, 2025 at 10:41:45AM -0700, Nicolin Chen wrote:
+> > > I'm uncertain, but perhaps pr_warn_ratelimited() would be a better
+> > > alternative to WARN_ON() here? WARN_ON_ONCE() generates warning messages
+> > > with kernel call traces in the kernel messages, which might lead users
+> > > to believe that something serious has happened in the kernel.
 > > 
-> > I think we should avoid using abstract UNIX sockets, especially for new
+> > We already have similar practice, e.g. iommufd_hwpt_nested_alloc.
+> > 
+> > In my review, a WARN_ON/WARN_ON_ONCE means there is a kernel bug,
+> > which shouldn't occur in the first place and isn't something that
 > 
-> Abstract unix sockets are at the core of a modern Linux system. During
-> boot alone about 100 or so are created on a modern system when I counted
-> during testing. Sorry, but this is a no-show argument.
+> Right, so it should never happen from any ioctl path and syzkaller
+> should never trigger it based on system call randomization
+> 
+> Is that what this achieves?
 
-These kind of socket being used does not mean they should be used for
-new interfaces. :)
+The functions would be still used in the kernel path. So, I think
+we need to retain these warnings for that. But given that an ioctl
+could trigger a series of WARN_ONs, WARN_ON_ONCE is something that
+wouldn't bother user space a lot while it provides the kernel path
+enough info to debug.
 
-AFAIK, these socket types are currently only used for IPC, not between a
-kernel interface and user space.  This patch series changes this
-assumption.
-
-Security policies already in place can block abstract connections, and
-it might not be possible to differenciate between a kernel or user space
-peer with the current configuration.  Please Cc the LSM mailing list for
-such new interfaces.
-
-You cut and ignored most of my reply, which explained my reasoning and
-proposed an alternative:
-> > interfaces, because it is hard to properly control such access.  Can we
-> > create new dedicated AF_UNIX protocols instead?  One could be used by a
-> > privileged process in the initial namespace to create a socket to
-> > collect coredumps, and the other could be dedicatde to coredumped
-> > proccesses.  Such (coredump collector) file descriptor or new (proxy)
-> > socketpair ones could be passed to containers.
-
-Only one new "protocol" would be required though (because the client
-side is created by the kernel).  That would be a backward compatible
-change, and such socket type could easily be identified by other part of
-the kernel, including access control mechanisms.
+Thanks
+Nicolin
