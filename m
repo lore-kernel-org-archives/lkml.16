@@ -1,43 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29973B7A86;
-	Mon,  5 May 2025 23:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469AD3B813A;
+	Mon,  5 May 2025 23:21:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487298; cv=none; b=JeYh6aeLWn6skwCPumNnX8C+ySsmRuvWN+ulLqRl1y9WSfOeUA7Zcn+ATnnxC4vD05r9gGfET+5kC9lp8VC/oROY6QZ1MlPNL+jVzsub2ol4lI3xD7UPE7DJ8nkSq0yYCuyt4Vp//fkezPwCKygd2wflYhGbkA9JZgEmu97AxYE=
+	t=1746487304; cv=none; b=epUKtYPDlWRsm+rteDPV2an7EvRFUWWIkI09N/m9pdH+n9DRaCzgbHLH41Td32tCr7X/gDf58Bxue39VTFcZZbNJ/SLQsWjxGMZMcCn04NPLHPi1DemFbgkelk48gN/SdJnbplBZmkbLrOX7493LUvh+YqPasZNIl4L1cDOyjdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487298; c=relaxed/simple;
-	bh=ZS0H/Pcaru9kQOYIUbnHnCpP6uAIkgLnTaBeGPU1ibg=;
+	s=arc-20240116; t=1746487304; c=relaxed/simple;
+	bh=p0I0U5dP4JlKemWnWbWz6tunlWghl0QXhTgNYnJCC48=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MRkVvhLaAGl73znmE7sBiWZaIscIgQOtVrKLoJ1Xq7rhYdSyccZbD20G1TEo1EjLdJ/S8Kj9f8FcSBu9zdOPSK71QK7jyldiqeP75s/tDVGcfpcI41rmZ8xDwgbS4Wb3yZSeqv2P+5bhq//AkWHaboShDyT4CN1h21ckeUVGdp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQFgCL4p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s+3DFKApcgfZAGfRoj6OzH0Na6APU/IHOzICHBa0sSBd8I3OBoeqXzHlcoYuRLjUD0QA35cIf1GLbjDLhfIvc2WLBs4o/IhYqEVOQBgNAilXjEOi7AdzEREUArPNnZV/014jpYnNw4wz0EeJqLDNNiDfUaSMWnW2gx9L88RLrGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjCpHplA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQFgCL4p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF739C4CEED;
-	Mon,  5 May 2025 23:21:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjCpHplA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56A7C4CEE4;
+	Mon,  5 May 2025 23:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487296;
-	bh=ZS0H/Pcaru9kQOYIUbnHnCpP6uAIkgLnTaBeGPU1ibg=;
+	s=k20201202; t=1746487303;
+	bh=p0I0U5dP4JlKemWnWbWz6tunlWghl0QXhTgNYnJCC48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YQFgCL4pYu5PCuMeuK39df3EWbIbsJN1tuNlOq9Na13YZ7SDJPmG+2BM6HHBOS9Z9
-	 2pAEMQi9CvdhUySb5XoAsXGqZ8gVkNu0iKhYFIRCc/ubkv7D2PUyqpjjSRhHRWegno
-	 8FInnhyKiKpiK5yJBNK7tzg14aR3iIXanykAGyjBujU+skjsph/BJeOJZ1b1c5ui+Z
-	 wB97cbVt6TSLpszEOABOrfVUjEYeEOSFct/jf0XEnmW/17BIUPWRuT03cPvuHhRZcE
-	 qgLOdD08G6Inwu2rzb1Oxe/ETO4Tg7RkBQiLewB68P9dpaoeiXM4ZiCfPN8fHe6sd9
-	 xlb61l/+MQ86A==
+	b=rjCpHplAjSSoOlGVmdwDr9MQubJkJa2rPsN9Hc6I+VUveGTkYoRHQkt4O2fmhtvSh
+	 QUjBdmuX68C06bjWnO/kjIlfquBK+RXIQsZ0gcZlN9tuEPXQ1cmumw4DJ+nElE5EZq
+	 n9gcUYEOP4kFvV6zqwLvi8Eim6pVkQAKATzZHKa4O6xhjCEN1c4FMvzIGzwGXXhNFM
+	 B3jIct6VAPgg2Xu240op5NCYWQWwZKoWFv8GVBIQ4/6ch4NjOJHolQ8RtUHzQSEXfk
+	 hEGYFYdJ4QNnpr11YhK/X/qNJrICOgq2F7zQMYblXhlwElECo5ya3/0iUhVsZLMD0l
+	 kderuStW6oHog==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
-	John Meneghini <jmeneghi@redhat.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	James.Bottomley@HansenPartnership.com,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 105/114] scsi: st: Restore some drive settings after reset
-Date: Mon,  5 May 2025 19:18:08 -0400
-Message-Id: <20250505231817.2697367-105-sashal@kernel.org>
+	mingo@redhat.com,
+	acme@kernel.org,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 109/114] perf/amd/ibs: Fix perf_ibs_op.cnt_mask for CurCnt
+Date: Mon,  5 May 2025 19:18:12 -0400
+Message-Id: <20250505231817.2697367-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -47,113 +52,66 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+From: Ravi Bangoria <ravi.bangoria@amd.com>
 
-[ Upstream commit 7081dc75df79696d8322d01821c28e53416c932c ]
+[ Upstream commit 46dcf85566170d4528b842bf83ffc350d71771fa ]
 
-Some of the allowed operations put the tape into a known position to
-continue operation assuming only the tape position has changed.  But reset
-sets partition, density and block size to drive default values. These
-should be restored to the values before reset.
+IBS Op uses two counters: MaxCnt and CurCnt. MaxCnt is programmed with
+the desired sample period. IBS hw generates sample when CurCnt reaches
+to MaxCnt. The size of these counter used to be 20 bits but later they
+were extended to 27 bits. The 7 bit extension is indicated by CPUID
+Fn8000_001B_EAX[6 / OpCntExt].
 
-Normally the current block size and density are stored by the drive.  If
-the settings have been changed, the changed values have to be saved by the
-driver across reset.
+perf_ibs->cnt_mask variable contains bit masks for MaxCnt and CurCnt.
+But IBS driver does not set upper 7 bits of CurCnt in cnt_mask even
+when OpCntExt CPUID bit is set. Fix this.
 
-Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
-Link: https://lore.kernel.org/r/20250120194925.44432-2-Kai.Makisara@kolumbus.fi
-Reviewed-by: John Meneghini <jmeneghi@redhat.com>
-Tested-by: John Meneghini <jmeneghi@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+IBS driver uses cnt_mask[CurCnt] bits only while disabling an event.
+Fortunately, CurCnt bits are not read from MSR while re-enabling the
+event, instead MaxCnt is programmed with desired period and CurCnt is
+set to 0. Hence, we did not see any issues so far.
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/r/20250115054438.1021-5-ravi.bangoria@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/st.c | 24 +++++++++++++++++++++---
- drivers/scsi/st.h |  2 ++
- 2 files changed, 23 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/ibs.c         | 3 ++-
+ arch/x86/include/asm/perf_event.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-index 747e69abfcfce..23bbb062c2aaa 100644
---- a/drivers/scsi/st.c
-+++ b/drivers/scsi/st.c
-@@ -951,7 +951,6 @@ static void reset_state(struct scsi_tape *STp)
- 		STp->partition = find_partition(STp);
- 		if (STp->partition < 0)
- 			STp->partition = 0;
--		STp->new_partition = STp->partition;
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 354d52e17ef55..8525b7960787c 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -808,7 +808,8 @@ static __init int perf_event_ibs_init(void)
+ 	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
+ 		perf_ibs_op.max_period  |= IBS_OP_MAX_CNT_EXT_MASK;
+ 		perf_ibs_op.config_mask	|= IBS_OP_MAX_CNT_EXT_MASK;
+-		perf_ibs_op.cnt_mask    |= IBS_OP_MAX_CNT_EXT_MASK;
++		perf_ibs_op.cnt_mask    |= (IBS_OP_MAX_CNT_EXT_MASK |
++					    IBS_OP_CUR_CNT_EXT_MASK);
  	}
- }
- 
-@@ -2921,14 +2920,17 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
- 		if (cmd_in == MTSETDENSITY) {
- 			(STp->buffer)->b_data[4] = arg;
- 			STp->density_changed = 1;	/* At least we tried ;-) */
-+			STp->changed_density = arg;
- 		} else if (cmd_in == SET_DENS_AND_BLK)
- 			(STp->buffer)->b_data[4] = arg >> 24;
- 		else
- 			(STp->buffer)->b_data[4] = STp->density;
- 		if (cmd_in == MTSETBLK || cmd_in == SET_DENS_AND_BLK) {
- 			ltmp = arg & MT_ST_BLKSIZE_MASK;
--			if (cmd_in == MTSETBLK)
-+			if (cmd_in == MTSETBLK) {
- 				STp->blksize_changed = 1; /* At least we tried ;-) */
-+				STp->changed_blksize = arg;
-+			}
- 		} else
- 			ltmp = STp->block_size;
- 		(STp->buffer)->b_data[9] = (ltmp >> 16);
-@@ -3628,9 +3630,25 @@ static long st_ioctl_common(struct file *file, unsigned int cmd_in, void __user
- 				retval = (-EIO);
- 				goto out;
- 			}
--			reset_state(STp);
-+			reset_state(STp); /* Clears pos_unknown */
- 			/* remove this when the midlevel properly clears was_reset */
- 			STp->device->was_reset = 0;
-+
-+			/* Fix the device settings after reset, ignore errors */
-+			if (mtc.mt_op == MTREW || mtc.mt_op == MTSEEK ||
-+				mtc.mt_op == MTEOM) {
-+				if (STp->can_partitions) {
-+					/* STp->new_partition contains the
-+					 *  latest partition set
-+					 */
-+					STp->partition = 0;
-+					switch_partition(STp);
-+				}
-+				if (STp->density_changed)
-+					st_int_ioctl(STp, MTSETDENSITY, STp->changed_density);
-+				if (STp->blksize_changed)
-+					st_int_ioctl(STp, MTSETBLK, STp->changed_blksize);
-+			}
- 		}
  
- 		if (mtc.mt_op != MTNOP && mtc.mt_op != MTSETBLK &&
-diff --git a/drivers/scsi/st.h b/drivers/scsi/st.h
-index 95d2e7a7988de..c9947abb0a451 100644
---- a/drivers/scsi/st.h
-+++ b/drivers/scsi/st.h
-@@ -168,12 +168,14 @@ struct scsi_tape {
- 	unsigned char compression_changed;
- 	unsigned char drv_buffer;
- 	unsigned char density;
-+	unsigned char changed_density;
- 	unsigned char door_locked;
- 	unsigned char autorew_dev;   /* auto-rewind device */
- 	unsigned char rew_at_close;  /* rewind necessary at close */
- 	unsigned char inited;
- 	unsigned char cleaning_req;  /* cleaning requested? */
- 	int block_size;
-+	int changed_blksize;
- 	int min_block;
- 	int max_block;
- 	int recover_count;     /* From tape opening */
+ 	ret = perf_ibs_pmu_init(&perf_ibs_op, "ibs_op");
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index a4e4bbb7795d3..63fc0f50cd38c 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -402,6 +402,7 @@ struct pebs_xmm {
+  */
+ #define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
+ #define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
++#define IBS_OP_CUR_CNT_EXT_MASK	(0x7FULL<<52)
+ #define IBS_OP_CNT_CTL		(1ULL<<19)
+ #define IBS_OP_VAL		(1ULL<<18)
+ #define IBS_OP_ENABLE		(1ULL<<17)
 -- 
 2.39.5
 
