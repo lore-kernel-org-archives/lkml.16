@@ -1,51 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D48237A149;
-	Mon,  5 May 2025 23:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303CB2DEBA2;
+	Mon,  5 May 2025 23:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486108; cv=none; b=c4Er0FPU9dYM0OHhwoZ3BrJVwda+l/MJTYD6XdgiSLl+GKnJx1owH0nlin4Vpc0o6fsTdqP1kjVGhAwg/3YqgeD9ubyFbcfoqybL5HqB51fZdyzHMuf6x0yPYjQSZ56ic/X4bTiNd2Ec2nDp2wZAFFCtuB4z7pPPyqEzIeszCgY=
+	t=1746486139; cv=none; b=MxMD3HIoXD0aj5EVIAvDGs+Qd1pmg+3InE7M8ehvRkuF00hsd3kTk1i9ShJKi7zxfbqZAPPjMlHUYDxSP232AduhDprZqxEgbNmlo4xEtZr1gDFOVGumfApkIgUTzAVupVAGkVqVp1bknrk+DQPRvagZkutUvfdVt08P8IWs2uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486108; c=relaxed/simple;
-	bh=iSlVQTHxznhyZriy9klA7JYkiL+Pny2monEMr8EZjXg=;
+	s=arc-20240116; t=1746486139; c=relaxed/simple;
+	bh=4Rhj+XqsDVjOooL4g5+oDRfe5elpg/W4PBMdyfzXDGY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EvyLXHT/6bXtPDbaAGUhmYxtHnjyLJOzkdGVnuU+xAbDFzcakwO1rMgJ50BAlvlQwn4zbTxDf8fTTseFxU5fAEH/xiYXkqnz4UAWmFS+PES64DeYXI/2YbyBZgzNmxhPq1VGCODYTq1Tkwl0fZCnUol8FzGkj4IZwa3QDUe4Qm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJow+52F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LiVnYDxeWSL8MUpwPnAg290eqh0zE6EdFWeSGVVW5Dp5gvKVcxVKo01L/BKewwQ8iRuCl+MYf20/3pGmu4h050NbtAX9sby/dkGWsVxx8pFJlfvwCRXG49Rd5ArLaS8E0Q3fPkxXN8VCbTMGVq0flCDgDNbxN9rYqUkdlxWRfYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oK0QVsIc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJow+52F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA375C4CEED;
-	Mon,  5 May 2025 23:01:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oK0QVsIc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A5CBC4CEED;
+	Mon,  5 May 2025 23:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486107;
-	bh=iSlVQTHxznhyZriy9klA7JYkiL+Pny2monEMr8EZjXg=;
+	s=k20201202; t=1746486139;
+	bh=4Rhj+XqsDVjOooL4g5+oDRfe5elpg/W4PBMdyfzXDGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jJow+52Fr5D1kVhwWjO3soJgKKVuuLhdy9DeJEiWY4u8/pqwzIWsvXU6g4pNJClel
-	 1fBCwM99LhpB/IE53NRH5rALTvnHiG+KPH8XfgmjidvWmoqfrEBKwfngihkJ0p3pcE
-	 oWW6aGSKsGBA55Mdx7UZoWD6sY6uEts1Gmi28/PIOv17tIqwyYvy9nvR5T3Y1KIIZO
-	 268a9Hsl0IOi4lRQCwraJD1EzC+GI2QhAcXX/1pWL3rrScKEfCG1SIPuW7ZTYhkoSQ
-	 4aH+/pDqpsy4JFwGYofIO2ZxM7aOWNTS85wZZmN/5fgQz9ZfPyPER6QkwLznPfBhRi
-	 SuhiblCY5sPEQ==
+	b=oK0QVsIcT+OE3VCw3eHk4vf4yuiaTkAXv+DXzVlJEXSX6N/Ilyt7/RHxOfcD5O0yo
+	 IuJnqigZy/xbybnT9SkMz1F6EMRDJA6pxVrGgqB8HiOZxmn0BfQT6p0cB/tuwiHWhx
+	 ld3JFpq6d+NTdklfxdhcI/ZwS42MTBwghviy4IIir0srWeFGziZS8FslVw53HWGK8t
+	 LCJw1Okrlqy6Z2jvoU9/KRhiSTysrV3HfSVFi0ysUD2+lbt77v5ulaHR9MGB1TPwvn
+	 yRkbs9kkG9RXHApb3jLYC2NRvbi47GatYNEG4ieQnhGOqOeHMW1enhZhIjXMTdxenl
+	 e1OawMVzjf20w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Bibo Mao <maobibo@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	matthias.bgg@gmail.com,
-	Parker.Yang@mediatek.com,
-	yr.yang@mediatek.com,
-	krzysztof.kozlowski@linaro.org,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 157/294] ASoC: mediatek: mt8188: Treat DMIC_GAINx_CUR as non-volatile
-Date: Mon,  5 May 2025 18:54:17 -0400
-Message-Id: <20250505225634.2688578-157-sashal@kernel.org>
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 172/294] MIPS: Use arch specific syscall name match function
+Date: Mon,  5 May 2025 18:54:32 -0400
+Message-Id: <20250505225634.2688578-172-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -55,56 +48,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+From: Bibo Mao <maobibo@loongson.cn>
 
-[ Upstream commit 7d87bde21c73731ddaf15e572020f80999c38ee3 ]
+[ Upstream commit 756276ce78d5624dc814f9d99f7d16c8fd51076e ]
 
-The DMIC_GAINx_CUR registers contain the current (as in present) gain of
-each DMIC. During capture, this gain will ramp up until a target value
-is reached, and therefore the register is volatile since it is updated
-automatically by hardware.
+On MIPS system, most of the syscall function name begin with prefix
+sys_. Some syscalls are special such as clone/fork, function name of
+these begin with __sys_. Since scratch registers need be saved in
+stack when these system calls happens.
 
-However, after capture the register's value returns to the value that
-was written to it. So reading these registers returns the current gain,
-and writing configures the initial gain for every capture.
+With ftrace system call method, system call functions are declared with
+SYSCALL_DEFINEx, metadata of the system call symbol name begins with
+sys_. Here mips specific function arch_syscall_match_sym_name is used to
+compare function name between sys_call_table[] and metadata of syscall
+symbol.
 
->From an audio configuration perspective, reading the instantaneous gain
-is not really useful. Instead, reading back the initial gain that was
-configured is the desired behavior. For that reason, consider the
-DMIC_GAINx_CUR registers as non-volatile, so the regmap's cache can be
-used to retrieve the values, rather than requiring pm runtime resuming
-the device.
-
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://patch.msgid.link/20250225-genio700-dmic-v2-3-3076f5b50ef7@collabora.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/mediatek/mt8188/mt8188-afe-pcm.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/mips/include/asm/ftrace.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-index 11f30b183520f..4a304bffef8ba 100644
---- a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-@@ -2855,10 +2855,6 @@ static bool mt8188_is_volatile_reg(struct device *dev, unsigned int reg)
- 	case AFE_DMIC3_SRC_DEBUG_MON0:
- 	case AFE_DMIC3_UL_SRC_MON0:
- 	case AFE_DMIC3_UL_SRC_MON1:
--	case DMIC_GAIN1_CUR:
--	case DMIC_GAIN2_CUR:
--	case DMIC_GAIN3_CUR:
--	case DMIC_GAIN4_CUR:
- 	case ETDM_IN1_MONITOR:
- 	case ETDM_IN2_MONITOR:
- 	case ETDM_OUT1_MONITOR:
+diff --git a/arch/mips/include/asm/ftrace.h b/arch/mips/include/asm/ftrace.h
+index db497a8167da2..e3212f44446fa 100644
+--- a/arch/mips/include/asm/ftrace.h
++++ b/arch/mips/include/asm/ftrace.h
+@@ -87,4 +87,20 @@ struct dyn_arch_ftrace {
+ #endif /*  CONFIG_DYNAMIC_FTRACE */
+ #endif /* __ASSEMBLY__ */
+ #endif /* CONFIG_FUNCTION_TRACER */
++
++#ifdef CONFIG_FTRACE_SYSCALLS
++#ifndef __ASSEMBLY__
++/*
++ * Some syscall entry functions on mips start with "__sys_" (fork and clone,
++ * for instance). We should also match the sys_ variant with those.
++ */
++#define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
++static inline bool arch_syscall_match_sym_name(const char *sym,
++					       const char *name)
++{
++	return !strcmp(sym, name) ||
++		(!strncmp(sym, "__sys_", 6) && !strcmp(sym + 6, name + 4));
++}
++#endif /* __ASSEMBLY__ */
++#endif /* CONFIG_FTRACE_SYSCALLS */
+ #endif /* _ASM_MIPS_FTRACE_H */
 -- 
 2.39.5
 
