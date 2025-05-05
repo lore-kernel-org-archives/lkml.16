@@ -1,97 +1,79 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A21315574E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A75625CC5F;
+	Mon,  5 May 2025 15:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746458000; cv=none; b=IHGDN/kISSX06iNyeoRrioovRsD7d2fJ6L6cibXjcMcARN2JHTlyiN7RsimGXa0cBb3pLkZJ3oBnBuWqWbIy/pqm6oOHhMEPfHYAezW4haPIvQDte8onOp0nhFDGeLR9wGpaQdwdDEwT0DvneBF2Tgc+uuI7+ErXXQbC1WHt520=
+	t=1746458050; cv=none; b=UkZkRaRtTC4ypmjjzoytz10XC5k7ipe00LyKZkhaj0wvNpqNeNFyVQmdAEBpc+j3Kq3Po1DbdaYiebsOiZiCAHKH+IOCqXRfFy8FqhGewSDLv7ubyWoqcLEUmn5lkZ+19itOeKXO/kSpFbWZzg94kTbzvd7ng1yuuGRtxTd9BEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746458000; c=relaxed/simple;
-	bh=JkWMdKtf92P10Lv3EQVC5r+5qoPP30yGbZBfGC5uOi4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f1bUrcup3XfT6wsrLPgYL81ge8Y7qVHUoMYqsdgTQGYhJiDdENsZY6+Zcw5TyxW1+p4WGgsgaF5kujzFf7r39VPuGuC0le5HIFIBcTc1uIfaFRhczO3UAoV53psyrWFvI+YZ/nSugeGBTsyM2mDStI16aDqGZDSRAucuJC0rXik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FbAobK3q; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746458050; c=relaxed/simple;
+	bh=fOWCYB261CKY3DGII2XxD4+KR0IwD6lIj2iPQ/x+u2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tA83j0ChnrVBiqJbHerBmunmxFPKzpySVVy5z9CHUTjCagCsfD1DL5r2+a4WmjVLC4exciZ+bcEjEK9AKIsZPbyc/I/Cq5yyZFuluLheWlYNpSXGf/34O1nnXABwKLWoqfCNkqAjaf7+CXB+uTylIjhsYRIcgcJY85rzWk8xsgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soRzzs7g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FbAobK3q"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so3704185b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746457996; x=1747062796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JkWMdKtf92P10Lv3EQVC5r+5qoPP30yGbZBfGC5uOi4=;
-        b=FbAobK3q+AC+FqdaT+VGJj7/N1/2dv0T4EluFQynTHWLZ4eipNlh/Z50Hp1SiisPDv
-         1oiUblBmbIRYafpxWWZmJI0vBvLQuvcLIe+Us4hjNqv8ulpYgpHtj3Ar/0ke+qV9q2yr
-         /yvqnX/F4dlGj8P97RCpdxjXs98C4AmOae832xgSpoUlugnu6EGhAD7qiIckme8pncj+
-         IstuuYDbLPTFjYSl6+72wz2He2TAg4A4hvgXhUh//UPVLZxXPAI3pK6XMdw48m6GGnJ8
-         X+AVvyDfo0fmP8sGIIqa79GWyKwGNaCmEhuXmjXOtmPDtPhVFoEeXfQyoYvww4Z+UWn6
-         pQiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746457996; x=1747062796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JkWMdKtf92P10Lv3EQVC5r+5qoPP30yGbZBfGC5uOi4=;
-        b=OkTmrAkb8sjgs/JNnHCjrjcb8/2R/9GSXKEMymIKgkDYGeyqgPeOvhzGywB8OC/JAH
-         CETTxzic/kk6Y0CzVEGHvAGEoJmiHXTWtEdxN1mZc0/Xke7npa9bC2Q355YonCbkBSTL
-         e8dQgQOilM7iizMnSc4/08c7YoDJqfnM+QyrC+1PKGIhsVdHP3QiXzpDqYA3SIsu7L2f
-         N1ZJAGQ/PEdzZOmu1vI/kk0WOx91BX+rxhKoMrt4l0FW6yc7BL2cgfCYidj/OSEOpScy
-         5Y5lq9D1U/qKpu+t2deB5VjePjZIB+USSxP+RXfHivo352BOIn8qK2usvMulcMs90U/d
-         nmew==
-X-Forwarded-Encrypted: i=1; AJvYcCXbf30K2N4//E5/PvRh4ZQser9EQKxtbpmM+elavN4sYlbKgjDMQl97lEGlPtkM7bmNx6f2WJ62SBjcOA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY2rAZCqnyTJgdDBcVEm4zgE70sl5enuniSegD2R7fdZDkmdfa
-	wyAX+ERzoVsJkvQzXoCvP7j3I9zTwfR6nb3xc0RzlZd3FdHVBrbLSnyOgfrPWVuKZqDpXwRD+w8
-	H8esW7BzN1QcW27e6iYNfMebuZJgoIuQtZmxaeZRpAzwgaGSlNAxj
-X-Gm-Gg: ASbGncu5c0zvHpgha63inJprOSPYIUOARYbA5/Qs8S5PnFmQWwvM637Ur1eS0nIAD2W
-	4JRo4tqtkCXbvrJfbWwcr6y1PtCeLAcX9I7/jZ8Bk+j/bOfV2oaxXidwPKrMAO+BzMln+VnjeBl
-	7KGDjOKGhSE+O2OcoT2gs+OA==
-X-Google-Smtp-Source: AGHT+IEX+eK2HwraE/WERStR7Y4uH1ls3UErcCOKiV+sCb+p9IMOVpuegmVB+G0KUdV7lLI2Rky8yPhDUKbVe6dFbBc=
-X-Received: by 2002:a17:90b:4ec7:b0:2ee:c6c8:d89f with SMTP id
- 98e67ed59e1d1-30a5ae1ae18mr15753022a91.14.1746457996118; Mon, 05 May 2025
- 08:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soRzzs7g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC174C4CEE4;
+	Mon,  5 May 2025 15:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746458049;
+	bh=fOWCYB261CKY3DGII2XxD4+KR0IwD6lIj2iPQ/x+u2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=soRzzs7g9IvNtjxqENbCb3reytQbYdGYBCy3jeIiULTpPPD7idv8FZKgGe4cvFehl
+	 d1j8CwPvz5jrw88vd881eCTy704qPKs2EiuH6Pzo2DomYy2c1s5sy6EkYIjijbzvpy
+	 hXSsa/f6/7mqz2SD61ck0GIv4bAagyqhK3EKd6B7UtA/6Y+B0QdPb+B1cdFqi4Tvym
+	 p/DI9FkMMHml7NgIYSi4yIbwzjTFrGl3AQURQQAwdLY3aeSglM7ZC6d6JSe1A0841r
+	 lS6KniAEoXNBuPWTz30OFDyl2tOVsGMADvvmRu4E3O3jyxqWKxpF9N4MYskGVdAhGJ
+	 l/YWygzrz+f0g==
+Date: Mon, 5 May 2025 16:14:02 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7606: explicit timestamp alignment
+Message-ID: <20250505161402.48da1ba7@jic23-huawei>
+In-Reply-To: <efe160b5-5d91-4892-a0d6-ef73116fe071@baylibre.com>
+References: <20250428-iio-adc-ad7606-fix-buffer-alignment-v1-1-88dfc57e5df0@baylibre.com>
+	<d7f00a8c9d4da6f780c1ec067be2702fa0e60ea1.camel@gmail.com>
+	<20250504155544.60fe3464@jic23-huawei>
+	<efe160b5-5d91-4892-a0d6-ef73116fe071@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505141238.4179623-1-aik@amd.com> <20250505141238.4179623-3-aik@amd.com>
-In-Reply-To: <20250505141238.4179623-3-aik@amd.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Mon, 5 May 2025 08:13:03 -0700
-X-Gm-Features: ATxdqUH-K4bFkhaHamy3SYBKi0X94IdvgpCUWWYgAtqQQ1Oj1ReG4kZPbxuVcng
-Message-ID: <CAAH4kHb97oFRppJgFXHe_m24GYwsY6wW=mSpw692YX-urM6stQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] x86/sev: Allocate request in TSC_INFO_REQ on stack
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Michael Roth <michael.roth@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Liam Merwick <liam.merwick@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 7:13=E2=80=AFAM Alexey Kardashevskiy <aik@amd.com> w=
-rote:
->
-> Allocate a 88 byte request structure on stack and skip needless
-> kzalloc/kfree.
->
-> While at this, correct indent.
->
-> No functional change intended.
->
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+On Mon, 5 May 2025 08:57:29 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Reviewed-by: Dionna Glaze <dionnaglaze@google.com>
+> On 5/4/25 9:55 AM, Jonathan Cameron wrote:
+> > On Tue, 29 Apr 2025 14:01:54 +0100
+> > Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+> >  =20
+> >> On Mon, 2025-04-28 at 21:17 -0500, David Lechner wrote: =20
+> >>> Use struct with aligned_s64 timestamp to make timestamp alignment
+> >>> explicit. Technically, what we have works because for all known
+> >>> architectures, IIO_DMA_MINALIGN is a multiple of __alignof__(s64).
+> >>> But this way, we don't have to make people read the comments to know
+> >>> why there are extra elements in each buffer.
+> >>>
+> >>> ---   =20
+> >>
+> >> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com> =20
+> > Applied to the togreg branch of iio.git and pushed out as testing
+> > for all the normal reasons.
+> >  =20
+> Not sure how we all managed to this, but this is missing:
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>=20
 
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+Oops.=20
+Added.
