@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125CA28B7ED;
-	Mon,  5 May 2025 23:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8363E3BAF89;
+	Mon,  5 May 2025 23:22:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487339; cv=none; b=azj5CWt9C1k/j0sS4Q6UZ/2MfBvVH86DAILfNx8tFKObmefWDgsMKqQ3nGhBLRn1Xv8WzcG7pVtYEb0dxQsRg8ZIQRGXF5SOk/ll5Lb5p2rU/VXOxAuYXRwOIXljv1AdNuIQigwYneB0Lu0mWQ3UiO+eEeJNFVVvzSKdxv0pU34=
+	t=1746487348; cv=none; b=jlQSUcieflgTXNIa6w2R7EQTFHFTJKc6lKZYWvFMa8L/fINAWOd0GwYLo3Qf2zhVTRBDfiyN3GsZcEg5cmOZjl2NwUV0gCUy7RI9vZFbPVvFljbraRiuXbMiHdy9VL3AYJh09u/iuoodmVAK+7MGgI+FLHS/hIM7g/8vAuqvsjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487339; c=relaxed/simple;
-	bh=UUwk0fwNUMK4vYKeCf76foxPIDzIqqMebaWL0aejZsI=;
+	s=arc-20240116; t=1746487348; c=relaxed/simple;
+	bh=JFgqoAx4qm9ESF434DIhxonx7TZFPDGHqvsGOtFP3aQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fb/IULQtkaphyYQCqZ7BMUvLcxkDO6sFeHUOBEunZ1h15p4Q0JZjvSMqFVpNJ8H940zmbh40eAG9ht25hQN9lukm8q5udY8+sUKlsFMOBkI2c50pJJi7T+3ZTCbi+MVab0D3+1cFuWyyzrBWo4i9txsPh200OxwE97xfLobWrmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJGYPYmY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ROUO6KZ/COM8Dmtf0acRy4XUBoel0X0omtbWcsNxO/5EQoVz1A4dZBM0uWBvXUNw/JfiWWA1bHIMKV9shPjNHjBVv4CD6zQSDzIa/WU6+gMkY9uWYbBHtUJDhq1+nGlMmpsbPR3PHWwf3lfjwE4ymuYIlTtRjJLCKuidv9jSiGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVR2luCa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJGYPYmY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDB2C4CEEE;
-	Mon,  5 May 2025 23:22:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVR2luCa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E46C4CEE4;
+	Mon,  5 May 2025 23:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487337;
-	bh=UUwk0fwNUMK4vYKeCf76foxPIDzIqqMebaWL0aejZsI=;
+	s=k20201202; t=1746487348;
+	bh=JFgqoAx4qm9ESF434DIhxonx7TZFPDGHqvsGOtFP3aQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GJGYPYmYZpKfK/aWgjk5HmibFxEz/+VXnz85uwZxm2VTVZj/seZdt1gDMI5+dIpEm
-	 CZ7Umyrit/JVWD5RR442zoDX/uHEaJp/2fDWSw41YUEdaU+pOV5UZQTL2QF731ywW8
-	 /Y2yy+0Zyr6B1qSbIRd1VwV5bVY2ZnxT79/0+KsVbqqvGR6FJd1kfNCFUhSbQo5Is/
-	 AEvHZEFp07iyBfxJuuW1WOtKf4dtFw7fi0HE2m+AU8Ux8u6zNqjTHlStf0NUS0X/yC
-	 ycBNjRyVaJIjSANhvedTrrKx4MWRajEZJCF7k7iOw02Zt+5p7J1zqdbM8S1W0AzPlG
-	 HtYtPbEgF2Wxg==
+	b=RVR2luCagItNzMv69VRDzGdayxIKwio3Kicy1SSSt1bDnzHcwjAbUqyvYpTNszYKx
+	 is0WBfTOioB4AIjX4gYOrDGTFbmI232RUPq0i5S32DXRwYPR1SCBy80ZYthiHL3dTw
+	 Sxbi7SK0MhBKiuCXFjgeKILG65Ows7hzdc1flxHAUw7BXWdm9y2yUKee1o+I8Xd2Wk
+	 KlD4x6qEUUugzgVvOXvfMuiLDlYoMmVW3F9bU2sVnJaLHj1+HdT7cxeI5U0ZeNrKVE
+	 UI3DezJJfL66fAV9QYylo1/kmc+bft49jiydHLWr0k5Rir1VH6A0bVjKL4W8nGT98l
+	 HcKuabPWO04RQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
-	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/79] btrfs: send: return -ENAMETOOLONG when attempting a path that is too long
-Date: Mon,  5 May 2025 19:20:47 -0400
-Message-Id: <20250505232151.2698893-15-sashal@kernel.org>
+Cc: Seyediman Seyedarab <imandevel@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 21/79] kbuild: fix argument parsing in scripts/config
+Date: Mon,  5 May 2025 19:20:53 -0400
+Message-Id: <20250505232151.2698893-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -52,43 +49,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Seyediman Seyedarab <imandevel@gmail.com>
 
-[ Upstream commit a77749b3e21813566cea050bbb3414ae74562eba ]
+[ Upstream commit f757f6011c92b5a01db742c39149bed9e526478f ]
 
-When attempting to build a too long path we are currently returning
--ENOMEM, which is very odd and misleading. So update fs_path_ensure_buf()
-to return -ENAMETOOLONG instead. Also, while at it, move the WARN_ON()
-into the if statement's expression, as it makes it clear what is being
-tested and also has the effect of adding 'unlikely' to the statement,
-which allows the compiler to generate better code as this condition is
-never expected to happen.
+The script previously assumed --file was always the first argument,
+which caused issues when it appeared later. This patch updates the
+parsing logic to scan all arguments to find --file, sets the config
+file correctly, and resets the argument list with the remaining
+commands.
 
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+It also fixes --refresh to respect --file by passing KCONFIG_CONFIG=$FN
+to make oldconfig.
+
+Signed-off-by: Seyediman Seyedarab <imandevel@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/send.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ scripts/config | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/fs/btrfs/send.c b/fs/btrfs/send.c
-index e1063ef3dece5..b0933d9525939 100644
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -397,10 +397,8 @@ static int fs_path_ensure_buf(struct fs_path *p, int len)
- 	if (p->buf_len >= len)
- 		return 0;
+diff --git a/scripts/config b/scripts/config
+index 8c8d7c3d7accc..330bef88fd5ef 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -32,6 +32,7 @@ commands:
+                              Disable option directly after other option
+ 	--module-after|-M beforeopt option
+                              Turn option into module directly after other option
++	--refresh            Refresh the config using old settings
  
--	if (len > PATH_MAX) {
--		WARN_ON(1);
--		return -ENOMEM;
--	}
-+	if (WARN_ON(len > PATH_MAX))
-+		return -ENAMETOOLONG;
+ 	commands can be repeated multiple times
  
- 	path_len = p->end - p->start;
- 	old_buf_len = p->buf_len;
+@@ -124,16 +125,22 @@ undef_var() {
+ 	txt_delete "^# $name is not set" "$FN"
+ }
+ 
+-if [ "$1" = "--file" ]; then
+-	FN="$2"
+-	if [ "$FN" = "" ] ; then
+-		usage
++FN=.config
++CMDS=()
++while [[ $# -gt 0 ]]; do
++	if [ "$1" = "--file" ]; then
++		if [ "$2" = "" ]; then
++			usage
++		fi
++		FN="$2"
++		shift 2
++	else
++		CMDS+=("$1")
++		shift
+ 	fi
+-	shift 2
+-else
+-	FN=.config
+-fi
++done
+ 
++set -- "${CMDS[@]}"
+ if [ "$1" = "" ] ; then
+ 	usage
+ fi
+@@ -217,9 +224,8 @@ while [ "$1" != "" ] ; do
+ 		set_var "${CONFIG_}$B" "${CONFIG_}$B=m" "${CONFIG_}$A"
+ 		;;
+ 
+-	# undocumented because it ignores --file (fixme)
+ 	--refresh)
+-		yes "" | make oldconfig
++		yes "" | make oldconfig KCONFIG_CONFIG=$FN
+ 		;;
+ 
+ 	*)
 -- 
 2.39.5
 
