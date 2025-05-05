@@ -1,103 +1,189 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7050C14AD0D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BFD846C;
+	Mon,  5 May 2025 13:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746451123; cv=none; b=B/FDPP8sMIA60xB59sloprrT6DdgIyESfaKuLusDMikeLTYfQCHIQKuBjPySqPDL732f7t1kGSMJ9SMatvA0ldoDk3vRhjgJp4xyky0/DGIE8rwEoGoOHwRg3uasXAnJHp/wDOpc/hFSfFrixFOLAdjyy7+B28E2FSjfsRdnWfI=
+	t=1746451268; cv=none; b=TONPYBTCaijRHofoedVHsRKxBAm+9PRLChdfufayAR/lzn7tyhLlOQUC+kk4zbr0E5Pw+zOh3wAIpEUkdU8YWa0xud8zPcTfTDWsvStYGvWUd9ypoQ6c3HONHJCbJSnSr+uKL6EHRdH2Mylg3Y5moHD1K7IxnXuP2R5ujbNdb/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746451123; c=relaxed/simple;
-	bh=hq6y8M6EMUE95Dd2vZYn2+Mi6Urpharf4PlwIoJvaRM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PZ2WL++d4ae5Mcf8vwm0BmrYuG3cWOp+qdTmb7GWUSd4v3LW4rilfAs58LCqZVHPpTgCZkvpHeOohKtU0D3GJPyx+BDc9sypPwGj9IfZGPqk7uUZvYCgDEBz5ge1P5IQMNmA9JW9Lxb7qqRj4iUKKLIGssyhh1UpQpEHrE05hjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KpG3C05u; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1746451268; c=relaxed/simple;
+	bh=ZGaIAChcWBsrNYMQPa6bkuXH0JoWvSBNPtU0khdL8D8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FIQfEitECpkYYGv9MYJL4u+wzcqzlheRX0wCLpnx53CnWqyr1E/sj4xSU46NRff60vHMapc8d0mVN5bxfczbtr5TNUHRtKXEb/bww/zByEHYI0YOxUca8YtAhgD6ROY/UvN8eMsiYsE2pvRmmBEfJeb3c/Hu10gBqttemE9dmdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7XN04HQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KpG3C05u"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d93c060279so16586675ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 06:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746451121; x=1747055921; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xDW3WfwhykoOAaFUE5Qi/rfnM/P3zdLaSBKS4ekX9wk=;
-        b=KpG3C05uiRTi2prEQS6OHNrif4jSNpC2Dv1kUXAsJ3REE+52KzY1+pCvphjRn3Ias7
-         pauUCXJwEycdFQ9THBTaCQ8vG/45DZzABkVp9/45RR71aRSzc9d8Xddt9tCrAH073Nal
-         k2uE9gthZdaPBnm3mAjq3YzMa9HBW90gZiO+BgyoEacA8dpHrcMkRx1DZdzLpeq+9sIj
-         //k+Jx9+tmZKjeYRbHoExps0qy0jLM8Z4CHUm0i5CpiH5BoalDnAS9Gk6X0rTck++YXE
-         aNKRpTlETmEVhFuMchBjkd8FVLbmQIfNKn6/IvBgzt8qoiY9/HbpN9Bp+T8MEGC9dOJ/
-         SnvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746451121; x=1747055921;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xDW3WfwhykoOAaFUE5Qi/rfnM/P3zdLaSBKS4ekX9wk=;
-        b=NnvUMajZ5plOPttZMtbCABXWAFrRqC2RCVKe2tGQXW6palHywHTuiHk1pLVUzqQGCf
-         auw5WVXb0xb1mosQ7aa/N/+/bap0YZbQ7dV6ll+mZ6I9kfRJVsEmOwArjzDaMnKb+dQA
-         8pSBPbSi6hyaiBFjfex8u4drGbvBXIPGiqonv8IFBBribdF++QuM6XwqCjiO8coAIiyd
-         ZLG8GhNxf74yvK2XTijTOHqF0DEhEF8p+LIcGyMRebacqspUxXblBnqByNQIiIwzXy2I
-         gwKBu0NqYymSKnxt0mTSY6dHONblrCOx0TAfQYxGp/mKJAPnxuV0AybHxZv19xQVREjL
-         PX7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVdAgUeDHIprqhp+au6jv9a16EE767z/qBdZiO54mdyrukxsNCZ/vJc0+T8c4Y6fk+HfK/oxsQFQo1Ij+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySHmT9SeLhnLA4VtGhkk6K8lR96O7bsA7wcH+lF0MRT2fxsG54
-	TulAfyYsslupTuGEmHtod3MVi27ZmLdyd9J7u/VkjYr4QPCsOcocb1W1iC05Ma8=
-X-Gm-Gg: ASbGnctCon6I5XYXfZY6K23aGM4EQ6QJcQtTynd9NBOJsS4kwlvWtHTZAyXBXI7wEz0
-	HkOhJq5bz6uzl3LdkoS7fB2Em9siwQ1E42R0Yz885z6wTnNksJzt2P3IfvWmzSPWUT4e777AbI2
-	RdhC9Fj5xRhH4EcJ6F4lLMgM3H5sja/+OW/IhdZfLj/CDl0NITiM7XJvQqOAWpWlTWRuoElwm7R
-	ycU+55CXlmMhzQIwVGK6c1eZActMMyNiz4VGHrY4Acqto/fcaIWoKWnzEGpWI/02DlgqknqExC8
-	CrmL0XjHvwGe1tkZsD2MI15ClIDafwAa
-X-Google-Smtp-Source: AGHT+IGHA8W2N3EgWWsRLrOSopjkbfgMfdY6WCRlo8VJcrzPhskPG8sYepIh09oj8Q04oA9FNg+Dgw==
-X-Received: by 2002:a05:6e02:168a:b0:3d8:1d7c:e190 with SMTP id e9e14a558f8ab-3da5b271b75mr69872415ab.7.1746451121540;
-        Mon, 05 May 2025 06:18:41 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88a945d03sm1742683173.71.2025.05.05.06.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 06:18:40 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: hch@infradead.org, Lizhi Xu <lizhi.xu@windriver.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- ming.lei@redhat.com, syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com, 
- syzkaller-bugs@googlegroups.com
-In-Reply-To: <20250428143626.3318717-1-lizhi.xu@windriver.com>
-References: <aA-QB7Iu6u9PdgHg@infradead.org>
- <20250428143626.3318717-1-lizhi.xu@windriver.com>
-Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
-Message-Id: <174645112067.1190812.13818039566132520088.b4-ty@kernel.dk>
-Date: Mon, 05 May 2025 07:18:40 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7XN04HQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC47C4CEF1;
+	Mon,  5 May 2025 13:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746451267;
+	bh=ZGaIAChcWBsrNYMQPa6bkuXH0JoWvSBNPtU0khdL8D8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A7XN04HQ3rANmKTX7oQFW2nVpdHn/4KqIZ0NQy+FpQqoLhh9wjk9HtPN2e5Ila1x9
+	 YqHnB+94XCl+QnyPnJmRYLSlNB0P+xVy5PgHj3SOEghusbheyW5zctZ2E8mWJVwXPw
+	 +Weq+C/tRAiOI3pE5k/N6W25tC5XFzB3VuPDX6hHmSgWSF/J5g2ZueX1UFYFhvgiXq
+	 ATdwFthnSYjkoPOhSmoNEc6cMb05691ihg1hCPKmERkXERXZg9HNytAKkB25IMixR4
+	 VHMGkkq6vhi1+JwsryNmJTFlGk+jTUvAtNTP8GlVnlre2yZzk8dJgaB1pcm43EW02P
+	 deGG5IaTOFJ4Q==
+Date: Mon, 5 May 2025 14:21:00 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] iio: imu: bmi270: add step counter watermark event
+Message-ID: <20250505142100.2a182402@jic23-huawei>
+In-Reply-To: <yudy5vbwblqzkx34pgekqi3noyctaxo77n2lb6mqidb4veqadm@534j4towopou>
+References: <20250424-bmi270-events-v1-0-a6c722673e5f@gmail.com>
+	<20250424-bmi270-events-v1-2-a6c722673e5f@gmail.com>
+	<20250426144739.31b8bd36@jic23-huawei>
+	<yudy5vbwblqzkx34pgekqi3noyctaxo77n2lb6mqidb4veqadm@534j4towopou>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
 
+On Sat, 26 Apr 2025 21:57:21 -0300
+Gustavo Silva <gustavograzs@gmail.com> wrote:
 
-On Mon, 28 Apr 2025 22:36:26 +0800, Lizhi Xu wrote:
-> Some file systems do not support read_iter/write_iter, such as selinuxfs
-> in this issue.
-> So before calling them, first confirm that the interface is supported and
-> then call it.
+> On Sat, Apr 26, 2025 at 02:47:39PM +0100, Jonathan Cameron wrote:
+> > On Thu, 24 Apr 2025 21:14:51 -0300
+> > Gustavo Silva <gustavograzs@gmail.com> wrote:
+> >   
+> > > Add support for generating events when the step counter reaches the
+> > > configurable watermark.
+> > > 
+> > > Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>  
+> > 
+> > Main thing in here is I think the event type isn't the right one.
+> >  
 > 
-> It is releavant in that vfs_iter_read/write have the check, and removal
-> of their used caused szybot to be able to hit this issue.
+> Hi Jonathan,
 > 
-> [...]
+> Thanks for the review.
+> I think the answers to your questions in this patch come down to me
+> trying to keep this driver consistency with the bmi323 driver, since
+> the two devices are very similar.
+> However I have no objections to change the event type if you think it
+> is appropriate.
 
-Applied, thanks!
+Yeah. From the discussion with Lothar, it's clear we have some inconsistency
+on these event types :(  Anyhow, I may well be wrong - see below.
 
-[1/1] loop: Add sanity check for read/write_iter
-      commit: f5c84eff634ba003326aa034c414e2a9dcb7c6a7
+> 
+> > > @@ -119,6 +128,7 @@ struct bmi270_data {
+> > >  	 /* Protect device's private data from concurrent access */
+> > >  	struct mutex mutex;
+> > >  	int steps_enabled;
+> > > +	unsigned int feature_events;  
+> > 
+> > Why do we need this rather than just checking the register?
+> >   
+> Not really needed, I just tried to keep it similar to the bmi323 driver.
 
-Best regards,
--- 
-Jens Axboe
+Generally I'd prefer drives to use regmap caching to get benefits of caching everything
+appropriate rather than use their own local caches.
 
 
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static int bmi270_set_scale(struct bmi270_data *data, int chan_type, int uscale)
+> > >  {
+> > >  	int i;
+> > > @@ -539,19 +585,32 @@ static irqreturn_t bmi270_irq_thread_handler(int irq, void *private)
+> > >  {
+> > >  	struct iio_dev *indio_dev = private;
+> > >  	struct bmi270_data *data = iio_priv(indio_dev);
+> > > -	unsigned int status;
+> > > +	unsigned int status0, status1;
+> > > +	s64 timestamp = iio_get_time_ns(indio_dev);
+> > >  	int ret;
+> > >  
+> > >  	scoped_guard(mutex, &data->mutex) {
+> > > +		ret = regmap_read(data->regmap, BMI270_INT_STATUS_0_REG,
+> > > +				  &status0);
+> > > +		if (ret)
+> > > +			return IRQ_NONE;
+> > > +
+> > >  		ret = regmap_read(data->regmap, BMI270_INT_STATUS_1_REG,
+> > > -				  &status);
+> > > +				  &status1);
+> > >  		if (ret)
+> > >  			return IRQ_NONE;
+> > >  	}
+> > >  
+> > > -	if (FIELD_GET(BMI270_INT_STATUS_1_ACC_GYR_DRDY_MSK, status))
+> > > +	if (FIELD_GET(BMI270_INT_STATUS_1_ACC_GYR_DRDY_MSK, status1))
+> > >  		iio_trigger_poll_nested(data->trig);
+> > >  
+> > > +	if (FIELD_GET(BMI270_INT_STATUS_0_STEP_CNT_MSK, status0))
+> > > +		iio_push_event(indio_dev, IIO_MOD_EVENT_CODE(IIO_STEPS, 0,
+> > > +							     IIO_NO_MOD,  
+> > why use IIO_MOD_EVENT_CODE() if not modified?
+> >   
+> My bad, I blindly followed what is implemented in the bmi323 driver.
+> I'll fix it in v2.
+
+It's not wrong as such, just that we have a more specific macro for this case.
+> 
+> > > +							     IIO_EV_TYPE_CHANGE,
+> > > +							     IIO_EV_DIR_NONE),  
+> > As below. This looks like a rising threshold event.
+> > 
+> > Change tends to be for things like activity detection (walking/standing etc)
+
+I got this wrong.  Forgot about how this ABI was defined until reading it earlier
+today for the discussion with Lothar!
+
+> >    
+> Using rising threshold event is fine by me, but then shouldn't we
+> update the bmi323 driver as well?
+
+If it is an event that occurs every step?  In that case CHANGE is correct.
+If it is an event on a particular threshold of steps being passed.  I.e.
+1000 steps, then a threshold is appropriate.   Vs every 1000 steps
+in which case change is appropriate.  Seems from below comment it is
+every N so this is fine as is. 
+
+> 
+> > > +			       timestamp);
+> > > +
+> > >  	return IRQ_HANDLED;
+> > >  }
+> > >  
+> > > @@ -761,10 +820,111 @@ static int bmi270_read_avail(struct iio_dev *indio_dev,
+> > >  	}
+> > >  }
+> > >
+> > > +
+> > > +static const struct iio_event_spec bmi270_step_wtrmrk_event = {
+> > > +	.type = IIO_EV_TYPE_CHANGE,  
+> > 
+> > Change would be a per step event.
+> > IIUC this is a rising threshold.
+> >  
+> Yeah, if the watermark level is configured to N steps, an event is
+> generated every time the step counter counts N steps.
+
+This is fine then as change.  My mistake!
+
+Jonathan
+
+
+
+> 
+> > > +	.dir = IIO_EV_DIR_NONE,
+> > > +	.mask_shared_by_type = BIT(IIO_EV_INFO_ENABLE) |
+> > > +			       BIT(IIO_EV_INFO_VALUE),
+> > > +};  
+> > 
+> >   
 
