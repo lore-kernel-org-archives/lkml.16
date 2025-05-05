@@ -1,111 +1,116 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FFD17B50F;
-	Mon,  5 May 2025 13:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906012561A8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450770; cv=none; b=IjOpl7I5AcZJXmVogQGmX4H4E78NdHbJnAyO3eSZBuY8Epsj7llsx+TaqtUtfhicrP+qndrxbqRaR1LdkU7tRS9YwGKSn4/6ruqrV90iblsmKgp853TZAr9c/zDg2PDmgVWG6ee0mDLMooCquyVlpQ6AWMZE4LA9p8AOxAy681M=
+	t=1746450779; cv=none; b=qon/kxzJ9QZPrZQH3qcx0veY3Cdxersf7Wjr/dyzOi3JmxqcmTxZ0enILfyPnDwtEPsaouMwt2q+JpssXtTqk7xGEJieDTG0K7FRbCWF6qMeg1sKFY+53f7b0Kkl0tWiFEYgHw1w2/tTmbVAZrU5dP2JUcbJas4ffdQAWDCqme0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450770; c=relaxed/simple;
-	bh=wIoatFFvgsMP1WuaOD5gtDxP4rLHaGa3DDS0HmTezAE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTfHwzqG5o/2bWTGoHnK88GX9vaist2sjYde7U2mPmdHUSMzklEwDo6je0hJae124lSFEYQ5+LacW4PWl5cDhX0ki4qNqn7xx2nV3kS/qexQ19qt1kDSNDE4rOJGpt9FfgDHVxuOIKodJG7sFVSDrEbPQbqaOOHN+RLUs042mNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QD7GM8TY; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QD7GM8TY"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545DCU4O946261
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 May 2025 08:12:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746450751;
-	bh=yTfL/fvg5uCjNorELIHZpGNdVVCrNhFU0chckRh1dYo=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=QD7GM8TYI+aQOACJZ30G/WxcP6GgDD7+w7/oPCOh86Zgy813HxmhMEYpqqBBzOb6m
-	 svK3oHoG4S8lKZvG8DOocDIryJidEhr5NUeVQ1EPv7/IB1YJUN0XOPuwO8/W36MQpU
-	 uOWVStRJzfsuj0j2yj8pVtkxk7gSu0+5rFD9Sjuk=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545DCUGs045176
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 May 2025 08:12:30 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- May 2025 08:12:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 May 2025 08:12:30 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545DCUnP108695;
-	Mon, 5 May 2025 08:12:30 -0500
-Date: Mon, 5 May 2025 08:12:30 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Daniel Schultz <d.schultz@phytec.de>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-am62a: Set Critical Temp. to 105C
-Message-ID: <20250505131230.3ydwgftnqbbmrt5u@opulently>
-References: <20250502142606.2840508-1-d.schultz@phytec.de>
- <20250502142606.2840508-2-d.schultz@phytec.de>
- <20250502144934.t6hjiwp2f64ovb34@deeply>
- <9964aeaa-0169-4596-a33d-c56bdb6edae3@phytec.de>
+	s=arc-20240116; t=1746450779; c=relaxed/simple;
+	bh=a47lUOyTilUaWEtfz6Pw6vX43fkt2saGX2+NfHjH/kA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HnANrHQ2a8OLFWIl5X0tT4xI9Dr4IpQsZXcXjCNCGAcJxrR316IzLpB34IujjXrw/MUfQlh/ERsgZgLFvMV076VxXO6GIcdc3fAWu8IxahJhYl9mDIXkHkgjvYTLIFCe7fn6WvWGgfm/l9GAMMRTqsRpzdV+U3VJJeQ1r4+mcxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvcr-0006PX-1O; Mon, 05 May 2025 15:12:53 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvcq-001EYf-0D;
+	Mon, 05 May 2025 15:12:52 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvcp-000Jxu-3C;
+	Mon, 05 May 2025 15:12:52 +0200
+Message-ID: <3685c6351d8b940abe70ccf22d783e71ced6f6da.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] spi: stm32-ospi: Make usage of
+ reset_control_acquire/release() API
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Patrice Chotard <patrice.chotard@foss.st.com>, Mark Brown
+ <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Date: Mon, 05 May 2025 15:12:51 +0200
+In-Reply-To: <20250411-b4-upstream_ospi_reset_update-v2-2-4de7f5dd2a91@foss.st.com>
+References: 
+	<20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com>
+	 <20250411-b4-upstream_ospi_reset_update-v2-2-4de7f5dd2a91@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9964aeaa-0169-4596-a33d-c56bdb6edae3@phytec.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 21:11-20250502, Daniel Schultz wrote:
-> 
-> On 5/2/25 16:49, Nishanth Menon wrote:
-> > On 07:26-20250502, Daniel Schultz wrote:
-> > > The AM62Ax SoC supports two temperature ranges:
-> > > * A: -40 to 105C - Extended Industrial
-> > > * I: -40 to 125C - Automotive
-> > > 
-> > > By default, use the lower limit (105 °C) so that any AM62A running
-> > > in Extended Industrial mode will shut down safely before overheating.
-> > > 
-> > > If the bootloader detects an Automotive-grade device, it should
-> > > override this and raise the critical trip point to 125 °C.
-> > > 
-> > > Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-> > > ---
-> > >   arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi | 6 +++---
-> > >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-> > > index 39ff9118b6c4..40dcb9bab965 100644
-> > > --- a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-> > > +++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-> > Why not create a separate header for industrial grade and rename this as
-> > automotive grade and let the board file pick the right grade used on the
-> > board?
-> 
-> Mostly because I copied this from 10e7bfd8114c207ac and with the most recent
-> temperature fixups in U-Boot, we also have the missing bootloader logic.
-> 
-> I would also prefer an out-of-the-box solution for that.
+Hi Patrice,
 
-Personally, I am not in favor of depending on U-boot (there are other
-bootloaders as well in the ecosystem) monkeying with dt nodes.
+On Fr, 2025-04-11 at 14:41 +0200, Patrice Chotard wrote:
+> As ospi reset is consumed by both OMM and OSPI drivers, use the reset
+> acquire/release mechanism which ensure exclusive reset usage.
+>=20
+> This avoid to call reset_control_get/put() in OMM driver each time
+> we need to reset OSPI children and guarantee the reset line stays
+> deasserted.
+>=20
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> ---
+>  drivers/spi/spi-stm32-ospi.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+> index d002b9c16714684e4e4623f9255a7f2660c46fd1..ef840f377459891b559be6d6c=
+0435408fb58a1e9 100644
+> --- a/drivers/spi/spi-stm32-ospi.c
+> +++ b/drivers/spi/spi-stm32-ospi.c
+> @@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_d=
+evice *pdev)
+>  		return ret;
+>  	}
+> =20
+> -	ospi->rstc =3D devm_reset_control_array_get_exclusive(dev);
+> +	ospi->rstc =3D devm_reset_control_array_get_exclusive_released(dev);
+>  	if (IS_ERR(ospi->rstc))
+>  		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
+>  				     "Can't get reset\n");
+> @@ -936,11 +936,14 @@ static int stm32_ospi_probe(struct platform_device =
+*pdev)
+>  	if (ret < 0)
+>  		goto err_pm_enable;
+> =20
+> -	if (ospi->rstc) {
+> -		reset_control_assert(ospi->rstc);
+> -		udelay(2);
+> -		reset_control_deassert(ospi->rstc);
+> -	}
+> +	ret =3D reset_control_acquire(ospi->rstc);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
+> +
+> +	reset_control_assert(ospi->rstc);
+> +	udelay(2);
+> +	reset_control_deassert(ospi->rstc);
+> +	reset_control_release(ospi->rstc);
 
-I suggest renaming the dtsi and introducing a industrial dtsi. And
-depending on the samples used by the board, use the correct dtsi.
+Could you keep the reset control (mostly) acquired from probe() to
+remove()? The reset control would have to be released/acquired in OSPI
+suspend/resume so that OMM can temporarily acquire control during OMM
+resume.
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+regards
+Philipp
