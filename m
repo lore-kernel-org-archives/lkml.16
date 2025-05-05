@@ -1,79 +1,149 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE2122617F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17F31F7910
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446887; cv=none; b=jYgbS8mFQ6UvNNiVcArsYST9MpgZuMMN+FvthhjJVtZM0ATmaPNdZY8ECApahSCmjQsJJVwnuM81LjJ6l4kZYPeW2BHzbiQEKa0af2pT3G5nrvJ4HUkkZJ2Iy+nAaF2MEmR6ppanPeIW0SsRKggBjtz7BX4iJYIi8o5z3gaxRcU=
+	t=1746447027; cv=none; b=qeYY2/B5yxUYlyNTZBOeG5JJX9UC+Kw3zQk4bwpXLyViNdlSL+katZmwOUGUrsjb7Rayt7B1ZKc5nDKC6I9U5y+5sRBAs4aZ83Pxi+Bxq11iCvU9BpDeoM1ACpq1m/17ZYofcHDveVyt6YGmn1/o4hqskzUO6k/PnPqZ/VQREDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446887; c=relaxed/simple;
-	bh=DHwp8aDOJDlgugg90sJmF2XyZAUiP69pwzhuX3CPzYM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=E9bdPU0Q6YV+sRsbAuMT4P7u/PxCrL2v14VcZnKBYSKdI2nz50A8eOmBwcrBgnNl8BmMYSBgbKVWKENRySn0oqWjZQdWDsnD1ga0hJJvBdzaJsOdrV2IKnNfE/9zQct3SXFSTgTLe4r8xq/R9SlfEDPjXtaWt5giTyRq4V/m1Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d96514f29aso54196395ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:08:06 -0700 (PDT)
+	s=arc-20240116; t=1746447027; c=relaxed/simple;
+	bh=oP9fIyi/ZJxItCF/dI1oyp5m8Q0CLdAn/YIPFOSqRMY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJWKIVU1V2IYVvivY6gRwWNvGyKgG01L0GrLr9qYzi+EltTqqAImPpfqJB+Pe84oJgJxDU67rf48eaNPSIWYN1/zj86TDQbHGwtk5U195EXJvqkkKGekagW7/3+3bBR2iEnWoRzl8ElF5TkZYiiFLpQ9JiD0Kyq40Alclt68ons=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OejpTdsh; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OejpTdsh"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c7f876b320so4152348fac.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746447024; x=1747051824; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xf1P+9z9XiJdCaUpuTBjGVfwsl02CsdlqTVjlTuR+ug=;
+        b=OejpTdshwnQA5CzKzb0f4ie9nxW1nTGSECcCU1k76XuQkmELEwYrJG7jLFMLNnV3c4
+         M+Xou+OsUlAAfiaokCvf14qgZ+5zu1pxapeyXOIATDK3IJIm5Npko6ihxy3VkUdBT4GG
+         8iICQwITJkflPYf/pqTLhlZYCIHNZJUQUUov7CyfNFTUl/1DcLtPBy0ptPt2KrE+IxWe
+         9WEnFfltHKpWmKyKI5XqMPMoLu4K4Bh9vQI5sgQlxO0FMdIahZUV9klaKvzNw7xJxOSM
+         de1YcD1oJlEsibHSpNfcv+dqcrzo7BZWcRb7O4jSWW1O9c0ix/jQd0sztALzIQ4/GG5O
+         O4RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746446885; x=1747051685;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vOyl3MaiaAtE/UsGWO9Ub0FNoaYpMHqSsINHLLvPVuY=;
-        b=gM3eEDhLdh4EW7+SmjmHyNMgXUzq83ia/M8syO9u19IrCZ4CNMieapBKLHGGk6sPVl
-         wWiuOObiVvy0jnAjqQlb6JDhLPbS+eZAKHg/cS96yUgm23bA07X4iqf+QD4ipOExBku5
-         B5h7WiPlRt4YVMPG1bGLiBqSRcdXz2AGE5WbSUkJw82z1lelXPOimIpdV4IlzWQrU4HC
-         jHu9542X81dwL7MOO5dUkul4B03HA1mfUyhp0iFMDW5J1gg066uXmsKQVonRNMLo6ccw
-         YFEAS4ViDit5ucQV9nDIdpFVu+SRfQb/Gmu24zQJOTTaRsSSNRnLMP08eBo2DffrCMHI
-         j7Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgOj8JFywy29GH0bxH6KVIHo7ryD9wjVPNJb7pGCx748Em92XLAwnhx73z49d8D1HaDWXGu7jVGTkwGoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBI98QmnKSgbcM/9h4xmF4cTK3QZxRNSm1R9793vcBaUNNEL1k
-	C0RBmMhvZbbIuPgVT0FQqo+H2CEJGmt5HNXQ2Eu6fUyGHl16+viUupkrI47EWdpBUsnxE/D66+9
-	je7p9mPqUuhg6kM8YZ5IvX9xIOUCbSOscfaxxsl8yGlGDvrSAQnm1SoU=
-X-Google-Smtp-Source: AGHT+IHAK8haRRYfwkU6RoGcf8J9F0Vip/rN+oMOWgFiAju7v68UvjjYKW45uWvGfQWIfTnuIyKVyDOwQ3f/Q4nUcONsd26bsijG
+        d=1e100.net; s=20230601; t=1746447024; x=1747051824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xf1P+9z9XiJdCaUpuTBjGVfwsl02CsdlqTVjlTuR+ug=;
+        b=Z6ha44igmdam7ID5PA1IGrJgNzUb0eA78It4zg9FmItgyYq5wepfKnZNk+DPMMa0wy
+         cPF5+0yNm7kd36sBOvECyUJOd1wyz4vhEVUntQpBBn1mM1PYwjiB/pWAn2E6O/dJetTW
+         1zJ2Bn+xxMIP6PZQEKd+IcMYnH7N4KF1DfSoZNz6+zdvqjU5T3evG7CNnRxoQoWh/eVS
+         qzAH8APzspDMZ7E93tdIXU/T7H56N243Y9HCbMtDkjkbV4qFiliL0pHCIqSIzWojEoj3
+         BkwDgZBgpWlmp6PYRlUIf5lemLJ60KIiJg8on8Aw0kvc2bJeTWTvUJaAllIcH3P06ITt
+         0Cwg==
+X-Gm-Message-State: AOJu0YyHhdf206DcJN0TKjcKRVM34LBqOwiFShFaq17XJribhnOQK8VA
+	YDhiC8I8+UK/Fa2VSK/QoqgG5+ujWs8giuLeMjiXSmjpipp4k74XuTJcRE9FHMo13MInPJFGYHF
+	9iRil4X8u9LKXSef/SLFMo+dxPwCf2wNGd9Qw/A==
+X-Gm-Gg: ASbGnctgWGdiIt05fBAhnx5jEfl//qGqkWvl0FC3X6feFDXqqLfChHX5k/oPK9Xvscr
+	K8suXh7taSoOaovGBc3yEFBt968X26BlVdvCH7qTaEeIdqgopasaRzKqYe+l5ImbJE42foXMpLv
+	1U3nr7R4TDcMcj7pgXRlKfQJk=
+X-Google-Smtp-Source: AGHT+IGrfUH9MPAdQwNS2twFxhlagwaLPCfCXznz+rgBdFwPjZ3ioiuEo3A9Gk0YdclatuJ1Za+bseaIMHaboEvs7gU=
+X-Received: by 2002:a05:6870:7196:b0:2d5:230f:b352 with SMTP id
+ 586e51a60fabf-2dae8619680mr3755206fac.27.1746447023762; Mon, 05 May 2025
+ 05:10:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:5a5:b0:3d2:af0b:6e2a with SMTP id
- e9e14a558f8ab-3d970ad6a68mr132698725ab.5.1746446885382; Mon, 05 May 2025
- 05:08:05 -0700 (PDT)
-Date: Mon, 05 May 2025 05:08:05 -0700
-In-Reply-To: <681732c5.050a0220.11da1b.002d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6818aa25.a70a0220.254cdc.004f.GAE@google.com>
-Subject: Re: [syzbot] [net?] BUG: sleeping function called from invalid
- context in pcpu_alloc_noprof
-From: syzbot <syzbot+bcc12d6799364500fbec@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
+References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
+ <20250502100049.1746335-2-jens.wiklander@linaro.org> <6236d3cb-fbf2-4a41-a84a-276aa8079b9a@arm.com>
+In-Reply-To: <6236d3cb-fbf2-4a41-a84a-276aa8079b9a@arm.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Mon, 5 May 2025 14:10:11 +0200
+X-Gm-Features: ATxdqUFEAD2cD1D5jQOZdhIhdxiPr-7TKi7md7xZJRysmAHd6QQOFGSu_VWfcD0
+Message-ID: <CAHUa44EhdHZofZHRWQ8SJUn4OcAuMwzxxdfjhLQuXQXx4KEaUA@mail.gmail.com>
+Subject: Re: [PATCH v8 01/14] tee: tee_device_alloc(): copy dma_mask from
+ parent device
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has bisected this issue to:
+Hi,
 
-commit 169fd62799e8acabbfb4760799be11138ced949c
-Author: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Fri Apr 18 00:03:56 2025 +0000
+On Fri, May 2, 2025 at 3:36=E2=80=AFPM Robin Murphy <robin.murphy@arm.com> =
+wrote:
+>
+> On 02/05/2025 10:59 am, Jens Wiklander wrote:
+> > If a parent device is supplied to tee_device_alloc(), copy the dma_mask
+> > field into the new device. This avoids future warnings when mapping a
+> > DMA-buf for the device.
+>
+> That also sounds dodgy. If the parent device is the hardware device
+> physically performing the DMA, then that is the device which should be
+> passed to the DMA API. Trying to copy random bits of one device's
+> configuration to another device and hoping it will work is not robust -
+> not only is DMA-relevant information all over the place, including in
+> archdata and/or bus/IOMMU driver-private data, but it can also opens up
+> a whole can of subtle lifecycle issues...
 
-    ipv6: Get rid of RTNL for SIOCADDRT and RTM_NEWROUTE.
+We have a reference to the parent device until the teedev goes away.
+The dma_maks needed by tee_shm_register_fd() in
+https://lore.kernel.org/lkml/20250502100049.1746335-9-jens.wiklander@linaro=
+.org/
+to be able to extract the PA from a DMA-buf allocated from another DMA
+heap. We can drop this patch and support for unrelated DMA heaps in
+tee_shm_register_fd() without losing critical features from the patch
+set if we can't handle dma_mask in this way.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=169578d4580000
-start commit:   836b313a14a3 ipv4: Honor "ignore_routes_with_linkdown" sys..
-git tree:       net-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=159578d4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=119578d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=734b5f968169d82b
-dashboard link: https://syzkaller.appspot.com/bug?extid=bcc12d6799364500fbec
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=147be0f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127be0f4580000
+>
+> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > Reviewed-by: Sumit Garg <sumit.garg@kernel.org>
+> > ---
+> >   drivers/tee/tee_core.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> > index d113679b1e2d..685afcaa3ea1 100644
+> > --- a/drivers/tee/tee_core.c
+> > +++ b/drivers/tee/tee_core.c
+> > @@ -922,6 +922,8 @@ struct tee_device *tee_device_alloc(const struct te=
+e_desc *teedesc,
+> >       teedev->dev.class =3D &tee_class;
+> >       teedev->dev.release =3D tee_release_device;
+> >       teedev->dev.parent =3D dev;
+> > +     if (dev)
+> > +             teedev->dev.dma_mask =3D dev->dma_mask;
+>
+> ...for instance, I don't see any obvious guarantee that "dev" can't go
+> away during the lifetime of "teedev" and leave this pointer dangling.
 
-Reported-by: syzbot+bcc12d6799364500fbec@syzkaller.appspotmail.com
-Fixes: 169fd62799e8 ("ipv6: Get rid of RTNL for SIOCADDRT and RTM_NEWROUTE.")
+A successful call to tee_device_alloc() must be followed by a call to
+tee_device_register() or tee_device_unregister(). The former calls
+cdev_device_add(), which results in a call to device_add() and an
+increased reference to teedev->dev.parent, "dev" in question.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+Jens
+
+>
+> Thanks,
+> Robin.
+>
+> >
+> >       teedev->dev.devt =3D MKDEV(MAJOR(tee_devt), teedev->id);
+> >
