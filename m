@@ -1,242 +1,129 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B163247AD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EEE93280A2;
+	Mon,  5 May 2025 22:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484486; cv=none; b=uCzA8C87UzHMnipWKDRTrG0np73IGvIam55zS5P0a96AEkRWwoA2lH5VBJtUQ0smKEKEI3yPKvdJpmFWAzAC4dAtaOdY0xrXGt/uDDGiVciWapTIH2qKPFdkFj56F3prJAZxfOmvRDBxtZ9oWSDp5i5iTQoxMMuDLdTKUCs3WNE=
+	t=1746484487; cv=none; b=qCeVU7yF57BohQfBkFcdxEZLFLmxbXZehDxC/6LA/6A7uFqojN4RMYwMmyIaES1QyiO6pPpggsZjBpWPFwSGz42Fu8LuXcS53GzTYiiDeyZKmS9gA0TOetXDYN/JVX9/xO7C2icmDy8MA5iElTKriLIx/a3joE+QYOWXJmJU7+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484486; c=relaxed/simple;
-	bh=7lXxkCUDjU68lKio/dxiQKRh3tGjp/pOmiVpK1S5RDU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hCqSA8BLIEl74Fup4QXkYHRtz9X7+3u7j6vrnpL60e1jWNwBJ0MXWKHJRGkJmcbP3WeoMaOSymMd0pe9/yAsgBg2LRoWNb54fAZEKZFipKTm+0JWQ11TLDiGr794FnIu4AsCddfKuQv29LS1jK1OQWUh0UsA6FwP2tuvBqlz5R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W4BTivZ+; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
+	s=arc-20240116; t=1746484487; c=relaxed/simple;
+	bh=HHPlxbkjj8uKoAUKROxb6hyWNeK7YJF8UJPFP1hVd98=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UhraimxO7jbyGTicBFsLoqVz864lCzoAeCqUZEE0HYHc4nY799YuDYBkmWxrU0e88u51EtIffl0zNN0ziPENCvD0BKdV+kjj02RxP7rEDniD2brhM00lYEydTlgNdVr3HyDrVA/rzganLE3F3cv+6EhULUAVCvMPFqh2px6HrPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fknkrSOe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W4BTivZ+"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7370e73f690so5633129b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746484483; x=1747089283; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcCv7hpJFXCgQNPjvIpQD0jIr1c2DrHVr6zfyF1t5G8=;
-        b=W4BTivZ+DpiKjwu310v891H55PBGU9+cpC6xjJsHIGtSM/WE+OQuzjdptAjgeim8dk
-         6PpByAgyTOg7bqQzJylVcJaZPZWShF9MvWupC64XTN/Lx/y0HcPaeJ+I+xQSdnAPP9mZ
-         WVza4eHpOkVeiGEIt1tPkmjRBdakFJO59pTANp1eKyfZEUZPnD9Y5R6NkcuGtnVuxnY9
-         tSP4u7q5/Qie1R43BR9UtbegwpPqStOK5luU/+hlGlsKzYTzXUU+tOo/em3Ihx7boS8/
-         23xeDV0DLMYqTv+cL2W1Mk0hPhTXG87SxQUoQ14nGW3pJrMjcZK7HmYo7eEpcL7ZWQ2L
-         YptA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746484483; x=1747089283;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcCv7hpJFXCgQNPjvIpQD0jIr1c2DrHVr6zfyF1t5G8=;
-        b=PcV/3MEC32aa3amx38B9BNeeXbmB3grR4cWgYOHsKpKBJcR4j0Uf0M8rzJmA8Se4Ur
-         OdMHvgdq7Y75z5wL3nbkE4Lb+bFXU2gb1Xd6SJ/Rz3xxlXluUggHJwfMivzrUSk6YfiX
-         bJEeTPeYgGmPX5K06DIGaQsLJEcY15FlwNSe6ux4ou9ocBRGVxLZaB2kHZApPSuoB7hL
-         4yHMoe49xCzaJgv+Hh7KKmkUB27IsWLpKZqk4vThs7SS4oZHCyo6E/l3XXu93xstaDgI
-         /TyYx8DMPGJS/syUOfsgJJYyZgS5/FP03+OXj50Yhco10LNxzSeavptaMC7wFNis/JcL
-         GSyw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5QFgiP918yatx+HVI5S7+HdWbYSk0+d5mTKA/XRsyS2F6mUhxYHPINveirOQoxlzrwPEPL4HBd3BZoUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh6fta1Oi+18OarboxqK3hfD5PEe1A6NkKQ4DBGp+jvEDA4Wt4
-	tmCmEjrkD+2i/NEzH72YSPbYTmhbgb5sZbhTrBGBV/YtPVR1NHxA/QdF9pDx86khxScZwz3zAwt
-	0GswVeMwONd5yEHi2VhwWUzLj9Q==
-X-Google-Smtp-Source: AGHT+IHNzFURwBesMY2NJiCBx+5mmsp7b+O42UgI3ZoXcQ+zCwjPh8MzPQ3QOywW7NIAJbYKP3/lXbLkj6ZlWCWXibo=
-X-Received: from pfoc21.prod.google.com ([2002:aa7:8815:0:b0:739:45ba:a49a])
- (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:c88f:b0:1ee:d8c8:4b7f with SMTP id adf61e73a8af0-2118259786cmr1133213637.25.1746484483566;
- Mon, 05 May 2025 15:34:43 -0700 (PDT)
-Date: Mon,  5 May 2025 22:34:39 +0000
-In-Reply-To: <20250505223437.3722164-4-samitolvanen@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fknkrSOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3BFC4CEED;
+	Mon,  5 May 2025 22:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746484487;
+	bh=HHPlxbkjj8uKoAUKROxb6hyWNeK7YJF8UJPFP1hVd98=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fknkrSOeisnTxuJQsVVmml84GP4EyxhgRbwc/pNXM9dGIe3sQc90PSEN7ftmTaAE6
+	 b52gRXeltP/8KQhcrHdlBCO92TwwdTsDFwbNAuFPIyqFo585l77e18/DKBvvXJSmQz
+	 gxL6ARpbHbChasRXWzRDMLaFmTFkfQ//ATZNRCf8l1LU3yuqBTLrUvm5sHv0YWO5g/
+	 pmh4A0NGqug20SQwofrYmg5p0rH8T9MNb6Y6AihBh3Wmjp0aU+52Ind6QlAEHRhx+n
+	 7KXBIi/IKaYbQ1ZlsihxIF8+aKuephrcdBVLE/ma/IFBPdCVJWJN8ECUnBpGQ4VoWD
+	 ccuOmv86KprtA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+	Nicolas Escande <nico.escande@gmail.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.14 495/642] wifi: ath12k: use arvif instead of link_conf in ath12k_mac_set_key()
+Date: Mon,  5 May 2025 18:11:51 -0400
+Message-Id: <20250505221419.2672473-495-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250505223437.3722164-4-samitolvanen@google.com>
-X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5250; i=samitolvanen@google.com;
- h=from:subject; bh=wKRcArm3I8YdLV7xUagIsjaFHkOg54K0GIqYgszVZFg=;
- b=owGbwMvMwCEWxa662nLh8irG02pJDBmSNv9K1st1fkzpOPgpqm9HvJ6izx0fP3eZM7ddDm3ff
- pbr0IuOjlIWBjEOBlkxRZaWr6u37v7ulPrqc5EEzBxWJpAhDFycAjCR9YoM/2u/Vn5ymMXkPVEj
- Y5nFhVMNq0JCk3uyGX6cbNw8aYnmg2hGhm0vH91YYKerum/zl3o2sWSho2YmT7/NTtTW4F61YrZ RHQMA
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250505223437.3722164-5-samitolvanen@google.com>
-Subject: [PATCH bpf-next v9 1/2] cfi: add C CFI type macro
-From: Sami Tolvanen <samitolvanen@google.com>
-To: bpf@vger.kernel.org, Puranjay Mohan <puranjay@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Maxwell Bland <mbland@motorola.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Dao Huang <huangdao1@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 
-Currently x86 and riscv open-code 4 instances of the same logic to
-define a u32 variable with the KCFI typeid of a given function.
+[ Upstream commit 00e4dc11695d48322780812b503314682659e98b ]
 
-Replace the duplicate logic with a common macro.
+Currently, in ath12k_mac_set_key(), if sta is not present, the address is
+retrieved from link_conf's bssid or addr member, depending on the interface
+type.
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Co-developed-by: Maxwell Bland <mbland@motorola.com>
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
-Co-developed-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Dao Huang <huangdao1@oppo.com>
+When operating as an ML station and during shutdown, link_conf will not be
+available. This can result in the following error:
+
+ath12k_pci 0004:01:00.0: unable to access bss link conf in set key for vif AA:BB:CC:DD:EE:FF link 1
+
+The primary purpose of accessing link_conf is to obtain the address for
+finding the peer. However, since arvif is always valid in this call, it can
+be used instead.
+
+Add change to use arvif instead of link_conf.
+
+A subsequent change will expose this issue but since tear down will give
+error, this is included first.
+
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1.97421.5 # Nicolas Escande
+
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Tested-by: Nicolas Escande <nico.escande@gmail.com>
+Link: https://patch.msgid.link/20250204-unlink_link_arvif_from_chanctx-v2-5-764fb5973c1a@oss.qualcomm.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/cfi.c       | 35 +++--------------------------------
- arch/x86/kernel/alternative.c | 31 +++----------------------------
- include/linux/cfi_types.h     | 23 +++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 60 deletions(-)
+ drivers/net/wireless/ath/ath12k/mac.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/arch/riscv/kernel/cfi.c b/arch/riscv/kernel/cfi.c
-index 64bdd3e1ab8c..e7aec5f36dd5 100644
---- a/arch/riscv/kernel/cfi.c
-+++ b/arch/riscv/kernel/cfi.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2023 Google LLC
-  */
-+#include <linux/cfi_types.h>
- #include <linux/cfi.h>
- #include <asm/insn.h>
- 
-@@ -82,41 +83,11 @@ struct bpf_insn;
- /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
- extern unsigned int __bpf_prog_runX(const void *ctx,
- 				    const struct bpf_insn *insn);
--
--/*
-- * Force a reference to the external symbol so the compiler generates
-- * __kcfi_typid.
-- */
--__ADDRESSABLE(__bpf_prog_runX);
--
--/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_hash,@object				\n"
--"	.globl	cfi_bpf_hash					\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_hash:							\n"
--"	.word	__kcfi_typeid___bpf_prog_runX			\n"
--"	.size	cfi_bpf_hash, 4					\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
- 
- /* Must match bpf_callback_t */
- extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
--
--__ADDRESSABLE(__bpf_callback_fn);
--
--/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_subprog_hash,@object			\n"
--"	.globl	cfi_bpf_subprog_hash				\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_subprog_hash:						\n"
--"	.word	__kcfi_typeid___bpf_callback_fn			\n"
--"	.size	cfi_bpf_subprog_hash, 4				\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
- 
- u32 cfi_get_func_hash(void *func)
+diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
+index 9123ffab55b52..95ad9fefbdfcd 100644
+--- a/drivers/net/wireless/ath/ath12k/mac.c
++++ b/drivers/net/wireless/ath/ath12k/mac.c
+@@ -4534,9 +4534,6 @@ static int ath12k_mac_set_key(struct ath12k *ar, enum set_key_cmd cmd,
+ 			      struct ath12k_link_sta *arsta,
+ 			      struct ieee80211_key_conf *key)
  {
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index bf82c6f7d690..a5147fcd8397 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #define pr_fmt(fmt) "SMP alternatives: " fmt
+-	struct ath12k_vif *ahvif = arvif->ahvif;
+-	struct ieee80211_vif *vif = ath12k_ahvif_to_vif(ahvif);
+-	struct ieee80211_bss_conf *link_conf;
+ 	struct ieee80211_sta *sta = NULL;
+ 	struct ath12k_base *ab = ar->ab;
+ 	struct ath12k_peer *peer;
+@@ -4553,19 +4550,10 @@ static int ath12k_mac_set_key(struct ath12k *ar, enum set_key_cmd cmd,
+ 	if (test_bit(ATH12K_FLAG_HW_CRYPTO_DISABLED, &ab->dev_flags))
+ 		return 1;
  
-+#include <linux/cfi_types.h>
- #include <linux/module.h>
- #include <linux/sched.h>
- #include <linux/perf_event.h>
-@@ -947,37 +948,11 @@ struct bpf_insn;
- /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
- extern unsigned int __bpf_prog_runX(const void *ctx,
- 				    const struct bpf_insn *insn);
+-	link_conf = ath12k_mac_get_link_bss_conf(arvif);
+-	if (!link_conf) {
+-		ath12k_warn(ab, "unable to access bss link conf in set key for vif %pM link %u\n",
+-			    vif->addr, arvif->link_id);
+-		return -ENOLINK;
+-	}
 -
--KCFI_REFERENCE(__bpf_prog_runX);
--
--/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_hash,@object				\n"
--"	.globl	cfi_bpf_hash					\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_hash:							\n"
--"	.long	__kcfi_typeid___bpf_prog_runX			\n"
--"	.size	cfi_bpf_hash, 4					\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+ 	if (sta)
+ 		peer_addr = arsta->addr;
+-	else if (ahvif->vdev_type == WMI_VDEV_TYPE_STA)
+-		peer_addr = link_conf->bssid;
+ 	else
+-		peer_addr = link_conf->addr;
++		peer_addr = arvif->bssid;
  
- /* Must match bpf_callback_t */
- extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
--
--KCFI_REFERENCE(__bpf_callback_fn);
--
--/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_subprog_hash,@object			\n"
--"	.globl	cfi_bpf_subprog_hash				\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_subprog_hash:						\n"
--"	.long	__kcfi_typeid___bpf_callback_fn			\n"
--"	.size	cfi_bpf_subprog_hash, 4				\n"
--"	.popsection						\n"
--);
-+DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+ 	key->hw_key_idx = key->keyidx;
  
- u32 cfi_get_func_hash(void *func)
- {
-diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
-index 6b8713675765..209c8a16ac4e 100644
---- a/include/linux/cfi_types.h
-+++ b/include/linux/cfi_types.h
-@@ -41,5 +41,28 @@
- 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
- #endif
- 
-+#else /* __ASSEMBLY__ */
-+
-+#ifdef CONFIG_CFI_CLANG
-+#define DEFINE_CFI_TYPE(name, func)						\
-+	/*									\
-+	 * Force a reference to the function so the compiler generates		\
-+	 * __kcfi_typeid_<func>.						\
-+	 */									\
-+	__ADDRESSABLE(func);							\
-+	/* u32 name = __kcfi_typeid_<func> */					\
-+	extern u32 name;							\
-+	asm (									\
-+	"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"	\
-+	"	.type	" #name ",@object				\n"	\
-+	"	.globl	" #name "					\n"	\
-+	"	.p2align	2, 0x0					\n"	\
-+	#name ":							\n"	\
-+	"	.4byte	__kcfi_typeid_" #func "				\n"	\
-+	"	.size	" #name ", 4					\n"	\
-+	"	.popsection						\n"	\
-+	);
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_CFI_TYPES_H */
 -- 
-2.49.0.967.g6a0df3ecc3-goog
+2.39.5
 
