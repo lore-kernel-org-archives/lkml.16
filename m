@@ -1,129 +1,171 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB67C1DE3DF
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1A61A4F0A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746439228; cv=none; b=C1my5fqXtkGokjdIlgEzv68QKXQuwEfcIdhjc8C38Nx4JOT1Fq8pnQS4fNHNavNSluTQaBowyMVKvbt2wQYA7yKoTfS5aSgfG0R55MG4AJHxFNSid91TXjwkO9jOXipdevishGGnawLkXeLzCUOMoqJuCrPOK1AeFcHgoHCXTkY=
+	t=1746439356; cv=none; b=hhm53JvImML6EbLHj5WxfEp122i8QRVxoWeJ+IpkV1znfXLHt0cJzpO978Dm5o8Z0RrGTMfQwcxIc2e+z5Yk1197V2PJio0xEBsvA3QCUErOGAq61b2hlaP6iS0JJU9p0CBseQ8ii4epkgrDyGcaTuw2gBsN3ieGVBED6820bjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746439228; c=relaxed/simple;
-	bh=Km+TINB0CWZALLBWBc4SAkK6bvOGzq+9JbzdiYWHnJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N786V8hEy7/wrP1O16T59SeiLD41r5loBHq++jHY8JjcE5MeYXzXv2Q4zRS9BV5EnxC15MuQtrKYxoUV8jL1XvM/hcfuBp9Pmz1GmFHfpwSLwJVoalkr7jHL+2QjdHbBizV+7e5KJwqRm8cvk75DTrra9bb5lKz87DyBsnWesSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xwXSHwK4; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746439356; c=relaxed/simple;
+	bh=mxThnLi8OPPkVYNsFzOw8l6BCiHqLnhHqhkWRug5/jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THJze2Kt2G+7YNiHMuPpUQ/EemI24YBPObc9Ofes5Mjq2HBpk/N8HIRGH3+oK7v2PgMIx/9L7VofI/x0ZWlgBN0BtiSMH53mjV3CvGZKSMc2YLHOhorv5sUkC9nfs0KwTyOHxLGoQvB2uGD0wDUcuPAkFSzFYb9S4BEmK3D/aeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pr5Ovneq; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xwXSHwK4"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6065796762fso975469eaf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746439226; x=1747044026; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qUO+n2qCCkVBKkF0xc34yA7zFKP1PRXVjAuF6gNjM7w=;
-        b=xwXSHwK48G55FvSM1aSJu9ewd6VXQMmIjzn0MWaGFz0p37zpKtfRfB9IkrxmQHrnXe
-         WJR2hQG0tZjkn68ZtsEaivcbVire5zRTBmkHnWEtyU6hdqxqipJ8ii+TRpMOd6KISsOd
-         19YxWHtn2IbgGy2tC4/JlO/En1mG5fUh6ESMfaZHozeVeyrlcXANLQPYvYDeSzVFqN1y
-         mdrJ9w5FPq5AQ0G9AcDRLklxVqAUP7PrUVeKxhBaWpvfSrEhpY+PLRhrESgR4E80rAPr
-         h9WNpr0IM6hgrKbdEPUiYS1A4ztWsbofxVBh/+37IK9gpCzs70ZBilZrpm+al0dwqfYs
-         DThA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pr5Ovneq"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544LquJZ024445
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 10:02:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=/9fYSq5DweCt0c/mKdUYu4zF
+	2w/AfXBHNdWtUjJsnQE=; b=Pr5Ovneqtq/III50Kuv4i44I4PfmNM4qEPTCqgeW
+	2MZSh/b5Mjc5oNqAzl10w9BJwm9CzrB/vf6fUEdCtZwD6RDJM1kyoLkcOVg8DdPJ
+	O4oftrZklUGUjpBPguK9FBGPc824v543r30vi7PsGTamSJUsFpW04UDxIWO2CXoU
+	CdcK8tWfAY8j5DHQsxxSihY10/MHpK8ylhfZcFDcrQ3maKfeIhxS6DUijW7EfmWX
+	tAkWpT7Gxs2JzY2DkB6Maz3l92h1VIdbS7m11lMJ3hHXevr6hco7cKPEyT7uGtDh
+	6cVgc3qHOSq5KITO2YSPaF5lWc7cZYZZUG1R0fvh1tfwmg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46da55ur6t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:02:33 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c793d573b2so114376585a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:02:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746439226; x=1747044026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qUO+n2qCCkVBKkF0xc34yA7zFKP1PRXVjAuF6gNjM7w=;
-        b=r9r1irMEjB3fK7cTnmU7F+1H6NYLnivsT3u2QDfNG2ZD2VI7fcz5Ee1KIZ0rtRnNpd
-         3RwH1aL4d0w6tQCTpwBAdjVQdvPwRouf5xhp2y5Y87r+zsZEksXqe5oKRyy1PInMIrfS
-         +YXmKrFTisxghG0fsJOp/yN5uQSFwLyI9c/hRz6qGZrsCRp84HG+ilt+FJeaU2WKl3Va
-         /TG07IYR04TAO5wMZYSUvFw5sGpiEsE3XlwepqEBQOQyT1JBj+HHDk4tv2RDG2q3UZkn
-         Kp/TWC05H/c0Q+yndMiTvodYtr+Gtd0/1UgE0x/Z3waqjF72bbVamZYHBWVkRBnUhJEF
-         ShaQ==
-X-Gm-Message-State: AOJu0YzqWXnubX1xDgP3UIg5gnqMFt4gbEBLfOaspdrQkLZRuCsoOSEl
-	1ldrSgvmG4dxEAC0AJJq2DsEk7EIKjXFIunoZT9eCBAVs7STPBf6lBEuBQf4XJvdgVDPSPLcpIC
-	qwUtv3XzXbxE9E90rzKlIjunqYzohAx0XYzDd+A==
-X-Gm-Gg: ASbGncvup7pNikW1wyU6js98RV0s3UXZl1qYjiUcs7UWr9i0cPauPrqqWpKEdlgy931
-	vvm5bpbayCNgZdo8Qw0SRSnzKtedF5CJ7w9V05+igrMefvnS+RsVbMK/I303aEJbftPJL2Nqmyf
-	KKABjhSWVp2ZAIQuyq/bHBQCc=
-X-Google-Smtp-Source: AGHT+IEfTkbjK5JWEDIXSUVf0w92h26obU5oYSgxTn7TbvfY+I0Zkozng+KfK0iBSmGp52i/r+Q8MQct9dxWARB5Up4=
-X-Received: by 2002:a05:6870:972c:b0:2d5:230f:b34d with SMTP id
- 586e51a60fabf-2dae82cc070mr3868126fac.1.1746439225695; Mon, 05 May 2025
- 03:00:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746439352; x=1747044152;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/9fYSq5DweCt0c/mKdUYu4zF2w/AfXBHNdWtUjJsnQE=;
+        b=qFLzXFGg21brJ+uJLfWdY2/sawTsP/9q0L15hLr+ZMax5SfTwvtRq1PznlXeXgAaZa
+         EXnqRmAE3I5E5f8APk/4NHgsnmKp7b7R8ZEHSOq2GntoNmiOsm0y9ST2ddg8rQ/hii5y
+         u1xGoWMdAfO1yQwfmxzOHh4raeJhAJgeBcshqT42OpPD2tqrYXuJg4E7BvdWo3LvIeCv
+         h4YXmvzZ1WFBzlfKhASK1cKeCOu8pPysRq/YbBzF/O4tEdY9i/V4dUATd+hSV0vpSUcJ
+         mGW1DkKsPAEWg+bXhf2PcMhXf/2qhHLZOryYDKM7owgayp6lOSQWb6vOT9PUX0myGhp9
+         yJqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGHANKKP5RN5uIZanLiZxDmlMYoEr0xJa7Esb1W9TIxFSgeyGiLtUEFndSoP9j4deNYSVmZR/jabx3iVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGoX4rMEtj8LIaRpfHC33Jwr+nF0iGXC8h6uXLUCEkHswahbnD
+	1Cg0I4HNvG2D7lu6HnWr5hnNhFUTU8F154TTWfwa5mAW3J9BssahuaUj3hA1y9FA4wlT8Hp61Tc
+	qxdHoUjAsfWReQKQBgvz4BX0EOJwqGxTNaJ+tp39KHGbc66aC6wRUhxTPRcEvtx4=
+X-Gm-Gg: ASbGncv+ko/2IvZbwwqY0YdgmItNhnvNmxZWIZbkpDsHfSRHi1JxXcsLwfhWNnw8ECK
+	2Cvz4rumRaUelZ1W/kvhG6FgobHA9kLu5co8bNxHwU+rYjEctF03sMp4XjNiApgtz3doEfFSqgS
+	qL12uaAwDK5DMw0szdwFXfHbJ8onKtyfpr6ky1vU5+575l/xohJ/aQHt/XWAbqyxNSO0WNB8Nqd
+	wdDvFQ5JVglfmE/6cssv1R13ABhXwlLmonXMSyNT4japYR8+y27dgJ1qg0SqThIEKJm4D6WQ2yK
+	WU4En2z5p2/Zbtqzr3fouKTFpSEr9Vtew283JIvXh28CgNMFvuNrI7coQCKaaKvhdfi0KvnvZ/I
+	=
+X-Received: by 2002:a05:620a:271a:b0:7c8:e67b:8076 with SMTP id af79cd13be357-7cadfed7d3amr1246674785a.50.1746439352360;
+        Mon, 05 May 2025 03:02:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHqWph76clESWo+RRt5n+cffHDapDxsmW2FMxzwgdEB/oc5DR9lfIjFKZY2YWluhdW3xKhUNA==
+X-Received: by 2002:a05:620a:271a:b0:7c8:e67b:8076 with SMTP id af79cd13be357-7cadfed7d3amr1246669085a.50.1746439351979;
+        Mon, 05 May 2025 03:02:31 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202b18e4aesm16561471fa.113.2025.05.05.03.02.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 03:02:31 -0700 (PDT)
+Date: Mon, 5 May 2025 13:02:29 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v6 07/11] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+Message-ID: <grwlmrgi5cfv3jtuki57ug7gsqykpwdf2to2l7di6glfxtb7vz@6id6cpfkrbuh>
+References: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
+ <20250505094245.2660750-3-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502100049.1746335-1-jens.wiklander@linaro.org>
- <20250502100049.1746335-11-jens.wiklander@linaro.org> <43e85d6a-ef99-4d61-910e-1d62814fd9ed@arm.com>
-In-Reply-To: <43e85d6a-ef99-4d61-910e-1d62814fd9ed@arm.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Mon, 5 May 2025 12:00:12 +0200
-X-Gm-Features: ATxdqUFPin2MFa6t0S3tPjOQfIF3WcjTWu_QNb2z1h_FFrZyFMNu2bu0GEdtH9Y
-Message-ID: <CAHUa44GC-HRUNGkta-EfMD00VzPBvqcVqU4Zj7kvW8CPnahdMg@mail.gmail.com>
-Subject: Re: [PATCH v8 10/14] dma-contiguous: export dma_contiguous_default_area
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505094245.2660750-3-quic_amakhija@quicinc.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA5NCBTYWx0ZWRfXyC4hqx5FA7Cb
+ dbrVdE68U/g273srWmTbmFERzALwi1G6XTcioXWt+eiGPfu4udJN3BqJuQdaFS0GvLC16zu6ii9
+ 0ISuU5Iszl2OdtuceUk9DHCZ92XNctWkxwTkdnGgfoNzcE/bl91DGZNeFNxQ48ZsaFFCtVydXxN
+ KEsClNtDCa48UeUp/Or3N0d9qXyT4W229xqDS4SDzImCyj97HDbQRqzb49iLSbIM5SORxaFjE+u
+ q4MpRgiU8p/ORaCkYrYVgDtmUMmYQAEL566Irp41ZTCb87FndiAFGEznCosLO/pSXEE/kTVnHie
+ oP1eYGH2NgDNqH9Q3whSKX8fg7MUq2jjydymW/YwXgQQEWcG7Kdi+TlMFtGtnlBACOotXxfrc9s
+ uULJMpGJhyAqeqAe0P96vbVr/GZhZAnvNopl6AfVrdm7p3sG8w0W1X/uXX8UD7TVbeiGee2a
+X-Authority-Analysis: v=2.4 cv=M9RNKzws c=1 sm=1 tr=0 ts=68188cb9 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=NFKUjzz3svuqp3DBVBsA:9
+ a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qvcnzScJOdZ1jtw4OzsisoDv38knZXcl
+X-Proofpoint-ORIG-GUID: qvcnzScJOdZ1jtw4OzsisoDv38knZXcl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ mlxscore=0 bulkscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505050094
 
-Hi,
+On Mon, May 05, 2025 at 03:12:41PM +0530, Ayushi Makhija wrote:
+> Add anx7625 DSI to DP bridge device nodes.
+> 
+> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 183 +++++++++++++++++++++
+>  1 file changed, 183 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> index 175f8b1e3b2d..de14f3ea8835 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+> @@ -28,6 +28,15 @@ chosen {
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	vph_pwr: vph-pwr-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vph_pwr";
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
 
-On Fri, May 2, 2025 at 3:11=E2=80=AFPM Robin Murphy <robin.murphy@arm.com> =
-wrote:
->
-> On 02/05/2025 10:59 am, Jens Wiklander wrote:
-> > Export the global variable dma_contiguous_default_area so
-> > dev_get_cma_area() can be called a module.
->
-> What dma_map_ops implementation is in a module? Without any other
-> context, I can't help thinking this smells of something sketchy.
+12 V, if my eyes don't deceive me.
 
-I see that you found the rest of the patch set
-https://lore.kernel.org/lkml/20250502100049.1746335-1-jens.wiklander@linaro=
-.org/
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
 
-Thanks,
-Jens
+[...]
 
+> +
+> +			bridge@58 {
+> +				compatible = "analogix,anx7625";
+> +				reg = <0x58>;
+> +				interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
+> +				enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
+> +				reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
+> +				vdd10-supply = <&vph_pwr>;
+> +				vdd18-supply = <&vph_pwr>;
+> +				vdd33-supply = <&vph_pwr>;
 
->
-> Thanks,
-> Robin.
->
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: iommu@lists.linux.dev
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-> >   kernel/dma/contiguous.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> > index 8df0dfaaca18..eb361794a9c5 100644
-> > --- a/kernel/dma/contiguous.c
-> > +++ b/kernel/dma/contiguous.c
-> > @@ -53,6 +53,7 @@
-> >   #endif
-> >
-> >   struct cma *dma_contiguous_default_area;
-> > +EXPORT_SYMBOL(dma_contiguous_default_area);
-> >
-> >   /*
-> >    * Default global CMA area size can be defined in kernel's .config.
+Here you are saying that 1.0V, 1.8V and 3.3V pins are powered on by 12V
+supply. I wonder how the board doesn't trigger all fire alarms in the
+building.
+
+> +
+
+-- 
+With best wishes
+Dmitry
