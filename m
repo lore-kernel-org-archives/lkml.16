@@ -1,186 +1,157 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20D626A09B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4910325DD07;
+	Mon,  5 May 2025 16:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462733; cv=none; b=ZFXVhcMrDnMU5XycAd2o94WVVBMTQAiRn5zOu/1wh78nDGLEufmRHGF/eVa1FjHjyYRm8iCxcUWPXKvIC65SWc26aH9y9eLxH6N6kSVE3/WU9syZXB1N3KjqahHPiJIaRcXTsEE8qaNDULprjSij44YE4WQTKEisKIZApxAS3Vc=
+	t=1746462742; cv=none; b=dkS0C3cyzaZrYGVb4wadGMkYP0zxjiA1HsbdInR2JiQo1+78ZzW9RnhzYPVzkFbOLp4jncfHY+gB3cok5lKM9hM16AboV9CXn4rNQJMhwgOWte5+XvN584T9jmy2ZKsEB2biZpcVxMVFXHblo+HrEI3ajGnvFyDUtJSG8VE/Uw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462733; c=relaxed/simple;
-	bh=DkPpoBt74SjFWeUZC95U53ExQun4rww9gKxUAp7ZYhE=;
+	s=arc-20240116; t=1746462742; c=relaxed/simple;
+	bh=rHPz6NuSA+qCeZ3wK2DHYpBJr38HhjnJWTXlOhgKBQc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JTsCcj7+ensDX+pYd0AdAD32wvwqltVLy7QKIboE2uNPqmcnrs4yevBAdu6pCHPnmaUFVvaDhPUHxLQfPVFel56HMDTfhO4/An4bepBbOjeSncorUXqPfylyuhdRIY+vruu49+HhHeOdaI8rFf3GNvQMi4tdZJ1oduQgPIKt41Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0M7zN51w; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Cj4rTa+PBnfweAmSH+O6xgTHBkEaVVhGRqUUlo6b2c0bDUhWNCucrohGP6iA8ucvrwi4Sp5cyhxaQlFOhKqgzxQ2Y6JnXBKsfBrQS0pk6OS0wzCaIRCpTndH8OsdhIBepqWcAEUe9X+fx2/86UN4aAkRHgQXG//V4HESv7FGT/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZMDKKI6; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0M7zN51w"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso15240a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:32:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZMDKKI6"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so5629782f8f.1;
+        Mon, 05 May 2025 09:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746462730; x=1747067530; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746462737; x=1747067537; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7T9Ols4DW4eW4aN8meND0YtNL587B+ybi/UpAh4RJEQ=;
-        b=0M7zN51wBOgSItuMwjEYu8LOCmCJLZjdz+v25ihxs0FasC9aI69f1Sa0wDx8/yD2W8
-         WsXWjzBAUGcgkK/IO0Qu+2Qd4XuXNNYR+pyBLUKW4g62hYwt+Uv19Ky8SgE/obugS/vd
-         GbyhmMXq+W/oW/bGd1TK1UA9uZ62jJz4eQfU5xYn7SlEhxI24ewFyKbq+CDyVKw19c42
-         ABaZBSj/f0y6mr0WOH/AAonazJW/C5ioBgZNMmq9usWvOKcBe9u1nz7VIgf12echAFdw
-         /ySwh2mmJr27Si0gwAe9kfxzbN5AhvhaQewtfwBlYoKrrK2CrP5MphTrWwT3zF+eYXy0
-         8f7A==
+        bh=Dr7ugZug3ihf08i6e6l/ueozld66CZifw7NvpZ1p32Q=;
+        b=jZMDKKI6I3rRGbDqPEP2SuU9ZZzC3AvStPYBRPxYF8uZZYV0vgJFllIWl6zDIqKxOb
+         34SEu1afyizhRTa8S3STclTI8szhUsuh0L4I2dI6od/Ii/0rZqxOPBgnC3be6svocrY2
+         ISTHC7GXCtWtFn2L9dSBOfrtvyq7PkihXzcHvJMCoJ+8Ge2HMFKNBXwEA+u0tSJ4GEm7
+         Uz0DGwZBZsTqKW4sfUnHXpWw8Dc4RQDo3K4VvvCTMe0y1M0I5ee/hxHWeXBGGMF2srUl
+         6CwASX8OlMCDajFhkTdQzKbSbGWUrCmQYPK1Xq1usIhTjsQYqD4BpH4vrm7h4K/oJbqK
+         MLZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462730; x=1747067530;
+        d=1e100.net; s=20230601; t=1746462737; x=1747067537;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7T9Ols4DW4eW4aN8meND0YtNL587B+ybi/UpAh4RJEQ=;
-        b=YpQu0ld6jpMpf8oxuBYIZy0M8/blYUBuRUxG1364OvLE1bkoTr8nRlmgumOSSKQmEZ
-         UAZb55hHJyMtY0CiN7JC5PhkHt8z+zPLtd/gO5e+OLqU5SdXPRzckNBR2f27O78WaQ0p
-         PiFhodKSmhdERW5TdCKanIj7w12Otm8MrjiWuLFlSisYU+vFNYg9ren33rIENuM+ZFuB
-         zOgeaFN1g+9G/O+d2pD5T92Kg63UsIt+dl+MsW9KQAHFz4oGNe/XCyLjx+v0uwcyj+LN
-         nEyG39wJEwWku0L7gJIaG2KJ13VzM4+8Ejm3dgVrke7mKoJ/Pk5FsVp/PpxE0tjQ+gMq
-         sibg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTWhmdL0Q3fWAC+bCiwC9IQuoIaYNvBM3ThWivMijqZkPCm6pCM5IdA4rA2fPUmx7IjYJQ+NkOoqMdnkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzt1UjHXJt+0X+LbTP0N1eM+otx4d55ep/qFadKCEKEAXq84Sq
-	FXULyD+f1cm/5/N8S1twDuUT+Ry0nDNEpVI73KcmRtB7KLq3RwwgyKmETSxFXc0t8261JnclctN
-	a+VWzO95YBLuMnGV8xVbZKwghZk+zzYcKoyw0
-X-Gm-Gg: ASbGncsQFLykYJWYFNDsyviWiMRqx/FuMoesRlA095XiB1q6P3mfY/PkFMwkT1iNHtA
-	fsANm0A79/L6L4noyqOk3uVbHNwgzrAA0Nysao9KAXVF335iPyO+MrpTb2sPWr+P7+D8d1ENASC
-	4XcKsKCSKvWvCEMrTIl4EjOnAC4zabjXJee4L4OdIr6y/4K5yG8Wvj
-X-Google-Smtp-Source: AGHT+IGmi9XaUl5b0+gZoSz/p4ANioO2Cu2F05VMTxY26xAz5DhlDBbBm023aac/UsHSKXCX1Lm7Y85IjTBp5cgT1mg=
-X-Received: by 2002:a05:6402:1a47:b0:5fb:1ccd:5434 with SMTP id
- 4fb4d7f45d1cf-5fb566836f0mr16984a12.3.1746462730021; Mon, 05 May 2025
- 09:32:10 -0700 (PDT)
+        bh=Dr7ugZug3ihf08i6e6l/ueozld66CZifw7NvpZ1p32Q=;
+        b=CNauG53SF15KN10qbXiY8Q2iddYgYCghINuzT3qRKgKpYN/MR08j++hnfagyadNISI
+         SyhjbCRnGaAEozWUIbOS/3ULdI0U8TMIQZWhs76Yu5UXBBOGIYcRbg9dBkYbakbfFTWf
+         DOzVrGCAyRlfRRYCmeUHO//CB2OzDLUwOahfnhW8hfJn0bdIi3lNIiDGTNJfobcMjP5s
+         0uxg3XOhLgWATu1V/2mpf+j3MVabKESXm4O6U9/FaX1z15+F7pzImVI3xEpM5LQI7NZl
+         BB67Tx8hBIBqgexd+goVd+tNAf+tSOUdcn9Q2dCfthktoyD+dSJpjFi75Ln33mmqCZJ7
+         lxnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/PHZ7iOMuxK7BPXS2tmYVdlZzmFF4F6Goa5KtDKLYi58xlxm2qsMFfneqBbFjQRGDEFfRixygHZeUFrS1H+K1@vger.kernel.org, AJvYcCXB+oC4/vE4ymvpvBRNu4daNsZbVIRP3W2nRQ7AvWKhXA40voNQZvmiyGqZZhtB4tUAF36UQBfEfMCI03pW@vger.kernel.org, AJvYcCXFdMnx8zbCuuIJCENtK8zeUa1G31FYgeWsTQtlVag3CURh2JFRmUnq21ljOSI6BtUEF6G602f86z4HTQ==@vger.kernel.org, AJvYcCXkZaedbcRqVv5S86H+gy017vykmBtsGJo07mKcoexmPie1+i5tMFib1kbsU+s9WLmkocs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzMvwbNZrpPTIbcndh39bfvMkW2Pvx54fq2oCEfZp2Wp2WW0oc
+	i2hhHxz9MW+TEBuGbqZKb922o8i04K9nfQah1XkyGOhQ6kWgOtVxsIbjBUK8p9brKzfyRmygHxm
+	zXuml4z10FaKKpT/PAxnSJqNZuZ0ZV5Wf
+X-Gm-Gg: ASbGncsKUejic8nAlc6PaYs7clkkQQHXjs3EvbbDy5Sit6BI7AIfSj6IHGo+zY+/YTN
+	FvEaoXebddqwcR9ZSgqZv/ywkI2iuFiGFoVJD/0buNZlNidSpTdKGSODvdjQYPElz24oWWXrrYq
+	otYtMttSj1rg4L/mopmA1idxNXhkqeEtjB94TyDw==
+X-Google-Smtp-Source: AGHT+IHG+22kFekEvDHWpvsN8mD4v3nfTdiuCWcNVqcQklTe7zBeo22V9ljBil0YQj/QiStewPcKfZM6TRliWc+Buds=
+X-Received: by 2002:a05:6000:186c:b0:39f:9f:a177 with SMTP id
+ ffacd0b85a97d-3a09fd88c00mr5821159f8f.17.1746462737361; Mon, 05 May 2025
+ 09:32:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com>
- <20250502-debugfs-rust-v4-1-788a9c6c2e77@google.com> <aBYNyqTRlpGAJVuB@polis>
- <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com> <2025050510-landmark-probing-17f8@gregkh>
-In-Reply-To: <2025050510-landmark-probing-17f8@gregkh>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Mon, 5 May 2025 09:31:58 -0700
-X-Gm-Features: ATxdqUFh-RygYbnEjcRolDZ5tMIEqgDCvk5kjNYis8qa6gptZEj-427jqHWKguo
-Message-ID: <CAGSQo02BWp0sMB0+KhaszincYWiL1XDJYyaUJgQ1L-bsO0Eazw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] rust: debugfs: Bind DebugFS directory creation
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
+References: <20250502-vmlinux-mmap-v2-0-95c271434519@isovalent.com>
+ <20250502-vmlinux-mmap-v2-1-95c271434519@isovalent.com> <CAADnVQ+dMwAFPO-ASojjYPxODpCKf_9FCLjUvn2HeHigL53JdQ@mail.gmail.com>
+ <CAN+4W8jLdcJbVvQ_YaPVqP0EB6reFgt8S0AZh_w3K80tsJvX5Q@mail.gmail.com>
+In-Reply-To: <CAN+4W8jLdcJbVvQ_YaPVqP0EB6reFgt8S0AZh_w3K80tsJvX5Q@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 5 May 2025 09:32:06 -0700
+X-Gm-Features: ATxdqUHdbOI4X671d2W976joC2FuApB09BT2tB05NhCVoqOpSb3oMxuQtB7YCZY
+Message-ID: <CAADnVQ+F0pcP=ohfhE5x+8PZU5y7mKqRvtxBXOQVaKUtuUwGQQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/3] btf: allow mmap of vmlinux btf
+To: Lorenz Bauer <lmb@isovalent.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 9:29=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Mon, May 5, 2025 at 7:37=E2=80=AFAM Lorenz Bauer <lmb@isovalent.com> wro=
+te:
 >
-> On Mon, May 05, 2025 at 09:21:51AM -0700, Matthew Maurer wrote:
-> > On Sat, May 3, 2025 at 5:36=E2=80=AFAM Danilo Krummrich <dakr@kernel.or=
-g> wrote:
-> > >
-> > > On Fri, May 02, 2025 at 07:49:30PM +0000, Matthew Maurer wrote:
-> > > > +/// Owning handle to a DebugFS directory.
-> > > > +///
-> > > > +/// This directory will be cleaned up when it goes out of scope.
-> > > > +///
-> > > > +/// # Invariants
-> > > > +///
-> > > > +/// The wrapped pointer will always be `NULL`, an error, or an own=
-ed DebugFS `dentry`.
-> > > > +#[repr(transparent)]
-> > > > +pub struct Dir<'a, const KEEP: bool =3D false> {
-> > >
-> > > Why did you move to a const generic, rather than a new type? What's t=
-he
-> > > advantage? AFAICS, it just makes it less obvious to see from the type=
- itself how
-> > > it will behave. Reading Dir<true> doesn't make it obvious what it doe=
-s.
-> > >
-> > > While I prefer a new type over the const generic, I'm fine with it. B=
-ut I think
-> > > we should use something more descriptive than a bool. Please see
-> > > device::DeviceContext for reference.
+> On Fri, May 2, 2025 at 6:15=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> > remap_pfn_range() should be avoided.
+> > See big comment in kernel/events/core.c in map_range().
 > >
-> > I'm fine with a new type or a using a more descriptive const generic -
-> > I did the const-generic to avoid the need to make one variant the
-> > derefee, which can sometimes complicate structure. I'll default to a
-> > more descriptive const-generic.
-> >
-> > >
-> > > > +    /// Create a DebugFS subdirectory.
-> > > > +    ///
-> > > > +    /// This returns a [`Dir<'_, true>`], which will not be automa=
-tically cleaned up when it
-> > > > +    /// leaves scope.
-> > > > +    /// To convert this to a handle governing the lifetime of the =
-directory, use [`Dir::owning`].
-> > > > +    ///
-> > > > +    /// Regardless of conversion, subdirectory handles cannot outl=
-ive the directory handle they
-> > > > +    /// were created from.
-> > > > +    ///
-> > > > +    /// # Examples
-> > > > +    ///
-> > > > +    /// ```
-> > > > +    /// # use kernel::c_str;
-> > > > +    /// # use kernel::debugfs::Dir;
-> > > > +    /// let parent =3D Dir::new(c_str!("parent"));
-> > > > +    /// let child =3D parent.subdir(c_str!("child"));
-> > > > +    /// ```
-> > > > +    pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b, true> {
-> > > > +        Dir::create(name, Some(self))
-> > > > +    }
-> > >
-> > > The default should be that the directory is removed when the Dir inst=
-ance is
-> > > dropped.
-> > >
-> > > The common case (which people expect) is that an object is cleaned up=
- on drop().
-> >
-> > In general for Rust, I agree with you. For this particular case, I
-> > have a strong disagreement - take a look at calls to
-> > `debugfs_create_dir` in existing C code - new code chooses to discard
-> > subdirectory handles when done and rely on the recursive remove of the
-> > root directory to clean up subdirectories. If you and Greg K-H both
-> > agree that I should make them drop by default, I'll switch it, but I
-> > think this is me following the subsystem maintainer's intentions here.
+> > The following seems to work:
 >
-> I'm ok with the directory being cleaned up when it goes out of scope.
-> That makes way more sense overall, and will prevent leaks and other
-> messes.
-
-OK, I'll switch to defaulting to cleanups.
-
+> Thanks, this helped a lot.
 >
-> For the C api, what I really don't like is when we were returning a
-> dentry to the caller, as then they had to manage it.  Ideally I didn't
-> want them to have to manage anything, hence the "lookup_and_remove"
-> function I added, all that was needed to remember is the name of the
-> directory, which the driver almost always already knew.
+> > but this part is puzzling:
+> >         trailing =3D page_size - (btf_size % page_size) % page_size;
+>
+> The intention is to calculate how many bytes of trailing zeroes to
+> expect while accounting for the case where btf_size % page_size =3D=3D 0.
 
-Yeah, `lookup_and_remove` actually kind of complicates things for the
-Rust model if we ever bind it, as it can be used to invalidate the
-object we're holding in a way that has no lifetime constraints.
+Well, if it was:
+  trailing =3D page_size - (btf_size % page_size);
+then it would be clear.
+
+Extra '% page_size' makes it odd.
+
+> I could replace this with a check
+>
+>     end =3D btf_size + (page_size - 1) / page_size * page_size;
+
+it's equivalent to end =3D btf_size;
+'(page_size - 1) / page_size' is always zero.
+
+>     for (i =3D btf_size; i < end; i++) ...
+>
+> Better?
+>
+> In the meantime I've looked at allowing mmap of kmods. I'm not sure
+> it's worth the effort:
+>
+> 1. Allocations of btf->data in btf_parse_module() would have to use
+> vmalloc_user() so that allocations are page aligned and zeroed
+> appropriately. This will be a bit more expensive on systems with large
+> pages and / or many small kmod BTFs.
+
+since we kvmemdup(BTF seciton) now anyway, making it vmalloc-ed
+isn't a big deal.
+
+> We could only allow mmap of BTF
+> >=3D PAGE_SIZE, at additional complexity.
+
+I wouldn't go this route. Too much special casing for user space.
+Unless you mean that 'if (btf_size < PAGE_SIZE) dont_vmalloc'
+will be the kernel internal decision that is invisible to user space
+and libbpf-like libraries would try to mmap first anyway and
+always fallback to reading ?
+
+> 2. We need to hold a refcount on struct btf for each mmapped kernel
+> module, so that btf->data doesn't get freed. Taking the refcount can
+> happen in the sysfs mmap handler, but dropping it is tricky. kernfs /
+> sysfs doesn't allow using vm_ops->close (see kernfs_fop_mmap). It
+> seems possible to use struct kernfs_ops->release(), but I don't
+> understand at all how that deals with multiple mmaps of the same file
+> in a single process. Also makes me wonder what happens when a process
+> mmaps the kmod BTF, the module is unloaded and then the process
+> attempts to access the mmap. My cursory understanding is that this
+> would raise a fault, which isn't great at all.
+
+that gets tricky indeed.
 
 >
-> With Rust it's simpler, you can save off a reference and when it goes
-> away, it gets cleaned up.  You don't have access to the raw dentry,
-> which takes away my original objection, and if debugfs is not enabled,
-> there's no additional storage requirements.
->
-> So let's keep it simple here, and rely on lifetime rules when we can.
->
-> thanks,
->
-> greg k-h
+> If nobody objects / has solutions I'll send a v3 of my original patch
+> with reviews addressed but without being able to mmap kmods.
+
+Makes sense to me.
+We can always follow up.
