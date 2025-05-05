@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5E436BA48;
-	Mon,  5 May 2025 22:56:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D09836BA5B;
+	Mon,  5 May 2025 22:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485810; cv=none; b=OrS3TujZez4w/LiU/IQumibwB3cPvx0G71cp8Y1OYlKtJa1mukCeF8NzYc3PGQmskxNi4fTh1q/we3j3MN/Gmelfg2S7qBIs2L4i7YbD5aaHmWKdF+18lVU2rxkA8k9bmuMcgCikjup8qD1x03o49lwa1L0nbPFroaM+3OtQpB8=
+	t=1746485819; cv=none; b=GYHig7J+/9eQOupQem6vPdV2eX5ymvMYdk2R0YNuf/oeEtYAvKo1H5DkpWkqRKNvVsosB9WkOyM90dVdauRTsnLAeOsd2l00aqlxr0ijLJIUuT7ZYoary5g14yLogkDRWiXtFmvdhakh939iY6jQGeGslwvC4quGl9vEq4Wjwxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485810; c=relaxed/simple;
-	bh=rJay/oJJUMa8EqnZmKzuAmbpI8yhSQh3uQ6nHFUshbI=;
+	s=arc-20240116; t=1746485819; c=relaxed/simple;
+	bh=3NjjJic+KfXlHN5dzLwkv6OiL634PsPW6GB6dHVFi/Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kJ2wMJC32+PtUNScWN2EclA9PzYVNp9j5EAg1yUuv9WMbSjsV3cZLkEb5bdjr3Z0HLEyBWxEe9AgoCD7T705z3hvw+2NrNFyJXPomweZKGD6hV0tWGeEyjFMVvzWxv9Q4fR3iFXerOT3BRlNwxY+LNEj2smPRAamC9e9t6WLgXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5R8puKA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mw1I/rbwihIV6I2Tr89PcAST4WmHPs0lXyZWPgGOt5n2jkMGP6aU9VDpVh9CxEeSGRa7CqMyUuDLd3kHrwWDdehnxH+CTtgTd3bh+tTEwrBP911Sv/CRbII8UQ110Si3srDbZlSQo60j5oQMT3rJWAdIVFqKB2pG0FQ227UbCRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nn2oTv8Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5R8puKA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738E1C4CEE4;
-	Mon,  5 May 2025 22:56:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nn2oTv8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3049DC4CEEF;
+	Mon,  5 May 2025 22:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485810;
-	bh=rJay/oJJUMa8EqnZmKzuAmbpI8yhSQh3uQ6nHFUshbI=;
+	s=k20201202; t=1746485818;
+	bh=3NjjJic+KfXlHN5dzLwkv6OiL634PsPW6GB6dHVFi/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l5R8puKAM6fTaImyjfs+PInxlSBDV7eFYgEB+8OwDGsUXFdOJvFY6LAuMzsi9XYn8
-	 LaQrbz/TbXCeS+MZxUIXqq4ScL4zifb8uwYVAtm1GdOir/uCXoGTY2QDRjNoo2NV6F
-	 zk9POlDxunjsq7xjVWkSyTvdOoPgfTtfwvVKgP8wbvIbDG3ViGlIPNXlikmXLSx6pF
-	 xzjKUDlQQeJd+RUHYWzwCnOn4pkgn9qZsSJMQIdh/fwXWl5k/XHLWFgc3YK4OnAc0S
-	 iHUhHgZdOZ2mXI32OGBu93fUETaKQLLM7uHGqGckL03S/9DCESf5oM8lW5iPQNsvhl
-	 IhsEJ8VYF93GQ==
+	b=nn2oTv8ZN4fIfIyDACs+GCGThQctxrp6DNQqF6AZSbZSrxgEXUtGrFdO9DZSHjbcz
+	 gsPFfjcc6K2bWicZ8NAHOBiae113Cnwbc0fAz8aExsnJ//9dPVSFjrSS4RPW2fLNKo
+	 eRwKM8IkWkryMG8jrlR0pTXxRqW8urUEPSb6/yEYNf3QX+1ZgOWgkgV7liGfNsrydV
+	 HFxk77hkfzzU6/rwoA1KBJo62hd0sXOkEfmKMgNmrUbr1rPd3/DIOcmb4exSEH7F05
+	 rvhMU3IcEXhN7ieMaLFMJ5GU7KMb1ie2iw/IV646yLMbSsvAj4v+CI9Ff4zmn6PkE5
+	 2BEyfg+yWoN7Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Jeff Layton <jlayton@kernel.org>,
+Cc: Diogo Ivo <diogo.ivo@siemens.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 009/294] NFS: Don't allow waiting for exiting tasks
-Date: Mon,  5 May 2025 18:51:49 -0400
-Message-Id: <20250505225634.2688578-9-sashal@kernel.org>
+	rafael@kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 013/294] ACPI: PNP: Add Intel OC Watchdog IDs to non-PNP device list
+Date: Mon,  5 May 2025 18:51:53 -0400
+Message-Id: <20250505225634.2688578-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,106 +51,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Diogo Ivo <diogo.ivo@siemens.com>
 
-[ Upstream commit 8d3ca331026a7f9700d3747eed59a67b8f828cdc ]
+[ Upstream commit f06777cf2bbc21dd8c71d6e3906934e56b4e18e4 ]
 
-Once a task calls exit_signals() it can no longer be signalled. So do
-not allow it to do killable waits.
+Intel Over-Clocking Watchdogs are described in ACPI tables by both the
+generic PNP0C02 _CID and their ACPI _HID. The presence of the _CID then
+causes the PNP scan handler to attach to the watchdog, preventing the
+actual watchdog driver from binding. Address this by adding the ACPI
+_HIDs to the list of non-PNP devices, so that the PNP scan handler is
+bypassed.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Note that these watchdogs can be described by multiple _HIDs for what
+seems to be identical hardware. This commit is not a complete list of
+all the possible watchdog ACPI _HIDs.
+
+Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+Link: https://patch.msgid.link/20250317-ivo-intel_oc_wdt-v3-2-32c396f4eefd@siemens.com
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c    | 2 ++
- fs/nfs/internal.h | 5 +++++
- fs/nfs/nfs3proc.c | 2 +-
- fs/nfs/nfs4proc.c | 9 +++++++--
- 4 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_pnp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 56bbf59bda3cf..06230baaa554e 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -74,6 +74,8 @@ nfs_fattr_to_ino_t(struct nfs_fattr *fattr)
+diff --git a/drivers/acpi/acpi_pnp.c b/drivers/acpi/acpi_pnp.c
+index 01abf26764b00..3f5a1840f5733 100644
+--- a/drivers/acpi/acpi_pnp.c
++++ b/drivers/acpi/acpi_pnp.c
+@@ -355,8 +355,10 @@ static bool acpi_pnp_match(const char *idstr, const struct acpi_device_id **matc
+  * device represented by it.
+  */
+ static const struct acpi_device_id acpi_nonpnp_device_ids[] = {
++	{"INT3F0D"},
+ 	{"INTC1080"},
+ 	{"INTC1081"},
++	{"INTC1099"},
+ 	{""},
+ };
  
- int nfs_wait_bit_killable(struct wait_bit_key *key, int mode)
- {
-+	if (unlikely(nfs_current_task_exiting()))
-+		return -EINTR;
- 	schedule();
- 	if (signal_pending_state(mode, current))
- 		return -ERESTARTSYS;
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index ca49d999159eb..c29ad2e1d4163 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -865,6 +865,11 @@ static inline u32 nfs_stateid_hash(const nfs4_stateid *stateid)
- 				NFS4_STATEID_OTHER_SIZE);
- }
- 
-+static inline bool nfs_current_task_exiting(void)
-+{
-+	return (current->flags & PF_EXITING) != 0;
-+}
-+
- static inline bool nfs_error_is_fatal(int err)
- {
- 	switch (err) {
-diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-index 4bf208a0a8e99..715753f41fb07 100644
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -39,7 +39,7 @@ nfs3_rpc_wrapper(struct rpc_clnt *clnt, struct rpc_message *msg, int flags)
- 		__set_current_state(TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
- 		schedule_timeout(NFS_JUKEBOX_RETRY_TIME);
- 		res = -ERESTARTSYS;
--	} while (!fatal_signal_pending(current));
-+	} while (!fatal_signal_pending(current) && !nfs_current_task_exiting());
- 	return res;
- }
- 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 4b12e45f57539..f8b9dc8d7dead 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -422,6 +422,8 @@ static int nfs4_delay_killable(long *timeout)
- {
- 	might_sleep();
- 
-+	if (unlikely(nfs_current_task_exiting()))
-+		return -EINTR;
- 	__set_current_state(TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
- 	schedule_timeout(nfs4_update_delay(timeout));
- 	if (!__fatal_signal_pending(current))
-@@ -433,6 +435,8 @@ static int nfs4_delay_interruptible(long *timeout)
- {
- 	might_sleep();
- 
-+	if (unlikely(nfs_current_task_exiting()))
-+		return -EINTR;
- 	__set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE_UNSAFE);
- 	schedule_timeout(nfs4_update_delay(timeout));
- 	if (!signal_pending(current))
-@@ -1712,7 +1716,8 @@ static void nfs_set_open_stateid_locked(struct nfs4_state *state,
- 		rcu_read_unlock();
- 		trace_nfs4_open_stateid_update_wait(state->inode, stateid, 0);
- 
--		if (!fatal_signal_pending(current)) {
-+		if (!fatal_signal_pending(current) &&
-+		    !nfs_current_task_exiting()) {
- 			if (schedule_timeout(5*HZ) == 0)
- 				status = -EAGAIN;
- 			else
-@@ -3494,7 +3499,7 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stateid *dst,
- 		write_sequnlock(&state->seqlock);
- 		trace_nfs4_close_stateid_update_wait(state->inode, dst, 0);
- 
--		if (fatal_signal_pending(current))
-+		if (fatal_signal_pending(current) || nfs_current_task_exiting())
- 			status = -EINTR;
- 		else
- 			if (schedule_timeout(5*HZ) != 0)
 -- 
 2.39.5
 
