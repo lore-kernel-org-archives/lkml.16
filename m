@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C4F239E65;
-	Mon,  5 May 2025 23:05:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAB8239E72;
+	Mon,  5 May 2025 23:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486347; cv=none; b=NDw19Wrmw2LTshQHqogMdOSJ2MpUt7DIDioNl2NtZ1dq0Pp6XXqcJj3+iTdWgLtRT+zpJIIHz9DZGivmOqo3JcOmWl0g1oer8wOuycHH+5yDzQ4u5Amdjd4Xz8Gp4tAJUoLzdOndZwEWhT3xhnXVqmbsIdZmFdgrJNcdL18Nx1g=
+	t=1746486356; cv=none; b=PrtkXC0xUZJLubUa+rHpw+AW5qT9qAMi4Z62Hg8QtPyWA8tNTAzEBbSwW9/LwBsNNilx2a921caY3dVaLxJvxZIwtOfKMyLkUWi5A2TCwzi3SHqHOinIj2PZY1MN6AHP1OftxVIrAH53f3jBmVnM0CSEq2TDxoulVK1hxcCjNDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486347; c=relaxed/simple;
-	bh=REwDMsG0gYftbnPiYH3na179/GzS77pzCJ82Mrmea/o=;
+	s=arc-20240116; t=1746486356; c=relaxed/simple;
+	bh=o3fek8CovNQudAwcjM9tbEogmSdp5XotgQ0/JnUDR4A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TQCGFGyX6M0MM/w/1QOv66ct7yx4dtwkOWgYxlcEdrVU2IFc3JqEu4Zay13qT0KVR/roOFSMJjn82O48NPDBDb/z3yz7U9ZqtRktfNxyj1BduEQS78MiP/YHcfa+gb+FnEGDfOgZD4SlcfF5aaHUu0/Lsob0t+2fkhB8BaC6mFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akO0J9CB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RrqVApm5AZvpDEmSVxEyZrOCZxG+MCIPikxj9sl1n9RcbAdu0L+O4RWRu23yP0ypzGr0sFWtNFEC1C6PFiRNZa7Hf3IXMJRqHWBhDuXy47K7vZBSdaE+aINR77SOYPsHnoskkYk1VBPjsR/1K+0D0vaiq1+yHaOccY2wSj0uEYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgOXEa+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akO0J9CB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C68C4CEF1;
-	Mon,  5 May 2025 23:05:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgOXEa+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69A4C4CEED;
+	Mon,  5 May 2025 23:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486346;
-	bh=REwDMsG0gYftbnPiYH3na179/GzS77pzCJ82Mrmea/o=;
+	s=k20201202; t=1746486356;
+	bh=o3fek8CovNQudAwcjM9tbEogmSdp5XotgQ0/JnUDR4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=akO0J9CBlOTyigepToDwNIHqyrEmPKzAEqXD+W+gA2C5M1i/0z5eB0w0ZuAh/meol
-	 rHh79rjf8xolKvx/4yeIJMpWLXardVob1iHEfALfH5cx3dZmQDDGqL1rH1kJ2zLCp2
-	 lItP7UaPy3zxHxnn3gDrBfyqwv6tGnj7lJ/hfB2bvayY0zMm3gGYSlHMAZgY0KJx+r
-	 sVyhD/pDHTgSKcCE/JR5+uxmeEmxxOQsZMQVYp0RpbTEXk4cmEg7JLgORueeiiSYWV
-	 zsvzeY7tM6tHoSmYULS1nDgEU4nWDaWMPr/o/f8s1tROScTdjJ9yP7pai95kttEBd8
-	 ahWHxSgv9V5eQ==
+	b=lgOXEa+c4TNh/fcZw1DM0dmgRYqCHfwahA1DSZ78WqKMdq7GQgeyaD7xfpUgvpzwU
+	 aAgObJJ+Uel3iokgXE2vR7hDzmL2a9eJPyDGedszhJFmo9VAxXmjWTyabaN+bmw45+
+	 uTUztDRpy0iKNkTHdri45RaaPpMPQ+kQ+c3M/brfwdo2FLdEja12VG+yogJrYgoWq0
+	 0DjSv7czb1lHoxYXUTMC1qxAGRQqMTbLAv8HkfUUS9i+N8cbD4VZ83kQxMR+TXKRSi
+	 V/Kc+GipyY5eJGytIkWMURZ0a7nAXEgKS6vMgcgbi4BVmE3yPiosB4yU0Y+x73r4uv
+	 RwrrTOSVos9Qg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: junan <junan76@163.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	Peng Fan <peng.fan@nxp.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 272/294] HID: usbkbd: Fix the bit shift number for LED_KANA
-Date: Mon,  5 May 2025 18:56:12 -0400
-Message-Id: <20250505225634.2688578-272-sashal@kernel.org>
+	arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 278/294] firmware: arm_scmi: Relax duplicate name constraint across protocol ids
+Date: Mon,  5 May 2025 18:56:18 -0400
+Message-Id: <20250505225634.2688578-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,32 +52,73 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: junan <junan76@163.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit d73a4bfa2881a6859b384b75a414c33d4898b055 ]
+[ Upstream commit 21ee965267bcbdd733be0f35344fa0f0226d7861 ]
 
-Since "LED_KANA" was defined as "0x04", the shift number should be "4".
+Currently in scmi_protocol_device_request(), no duplicate scmi device
+name is allowed across any protocol. However scmi_dev_match_id() first
+matches the protocol id and then the name. So, there is no strict
+requirement to keep this scmi device name unique across all the protocols.
 
-Signed-off-by: junan <junan76@163.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Relax the constraint on the duplicate name across the protocols and
+inhibit only within the same protocol id.
+
+Message-Id: <20250131141822.514342-1-sudeep.holla@arm.com>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/usbkbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/arm_scmi/bus.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-index c439ed2f16dbc..af6bc76dbf649 100644
---- a/drivers/hid/usbhid/usbkbd.c
-+++ b/drivers/hid/usbhid/usbkbd.c
-@@ -160,7 +160,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
- 		return -1;
+diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
+index dcf774d3edfe4..0d61f84691d85 100644
+--- a/drivers/firmware/arm_scmi/bus.c
++++ b/drivers/firmware/arm_scmi/bus.c
+@@ -42,7 +42,7 @@ static atomic_t scmi_syspower_registered = ATOMIC_INIT(0);
+  * This helper let an SCMI driver request specific devices identified by the
+  * @id_table to be created for each active SCMI instance.
+  *
+- * The requested device name MUST NOT be already existent for any protocol;
++ * The requested device name MUST NOT be already existent for this protocol;
+  * at first the freshly requested @id_table is annotated in the IDR table
+  * @scmi_requested_devices and then the requested device is advertised to any
+  * registered party via the @scmi_requested_devices_nh notification chain.
+@@ -52,7 +52,6 @@ static atomic_t scmi_syspower_registered = ATOMIC_INIT(0);
+ static int scmi_protocol_device_request(const struct scmi_device_id *id_table)
+ {
+ 	int ret = 0;
+-	unsigned int id = 0;
+ 	struct list_head *head, *phead = NULL;
+ 	struct scmi_requested_dev *rdev;
  
- 	spin_lock_irqsave(&kbd->leds_lock, flags);
--	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
-+	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 4) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
- 		       (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL,   dev->led) << 1) |
- 		       (!!test_bit(LED_NUML,    dev->led));
+@@ -67,19 +66,13 @@ static int scmi_protocol_device_request(const struct scmi_device_id *id_table)
+ 	}
  
+ 	/*
+-	 * Search for the matching protocol rdev list and then search
+-	 * of any existent equally named device...fails if any duplicate found.
++	 * Find the matching protocol rdev list and then search of any
++	 * existent equally named device...fails if any duplicate found.
+ 	 */
+ 	mutex_lock(&scmi_requested_devices_mtx);
+-	idr_for_each_entry(&scmi_requested_devices, head, id) {
+-		if (!phead) {
+-			/* A list found registered in the IDR is never empty */
+-			rdev = list_first_entry(head, struct scmi_requested_dev,
+-						node);
+-			if (rdev->id_table->protocol_id ==
+-			    id_table->protocol_id)
+-				phead = head;
+-		}
++	phead = idr_find(&scmi_requested_devices, id_table->protocol_id);
++	if (phead) {
++		head = phead;
+ 		list_for_each_entry(rdev, head, node) {
+ 			if (!strcmp(rdev->id_table->name, id_table->name)) {
+ 				pr_err("Ignoring duplicate request [%d] %s\n",
 -- 
 2.39.5
 
