@@ -1,49 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F4F2F665D;
-	Mon,  5 May 2025 23:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9367D3ABCED;
+	Mon,  5 May 2025 23:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487097; cv=none; b=Fq4Xbcrfp8nXWycXoe+HBid0nfSGq3yGJzWfw4cVmriv75n8kt4cOwy7Yz8jbxx3CLIIOd4JEHtKrxWYv+AvpQvUXfzSLzbLEVphqkLzpVm7NWmWCC9Pp8dluy5BiE4LdJHmgdy9WLlMNNzhOSw35sAjd7j30xbKodk/mdofpfI=
+	t=1746487133; cv=none; b=mWd+tt4KXwsLfLgxOM9XiFkkCnP5PNJiGfwhPEir9RELGAIZSbVxOt1hHvMksetka0d8u3QZhw2PnlSZI2rjnLE706IoXvWVhUl11ys2P6TKAdbz914uq7MxxYzFJ+gvAzygYpR0rJal90COfesDSk5+4o6zntfSBiTOuNcI4XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487097; c=relaxed/simple;
-	bh=O1AXRcVzO+bLHxqo7eor34N1+WCsiJkmsH6UzahIF4U=;
+	s=arc-20240116; t=1746487133; c=relaxed/simple;
+	bh=nIX6dAu7nHokct7Zpqf++O3ihvA03NDTXHAFE7Cw9OE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GnCANHm5AMwznVv3cgkxhBTETcoVqqWPelC6tG7wuiRKUlEG8Ch95MoR7vRY0zkhPG8Gq+X1ngnmoilj0UQkuy346+BwMwCrhAjbZLw/16Ch0uLiQPYV/3hlFU3cYb/VIyq1A3g0fShB6H9uN5mJyM2jvPBZdWYHOGOfJe97wks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKwxxp1y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Lbp6+gzwk+rsw6hVFYUV5kNJn/2wz33Y8get74A2c8cikDm51go1Xdq6cKsD0GZjEHzSYm6NTZHFzjoyOCFO7myrQXRAKMMvUhOZPEaNhKD8WDMrE7IgWq7SHpFBTKjpQMVSwwBv1Gg5RSAneZ8MvVWxKFrk3iCyOYh2wHzAXV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tqyvnmex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKwxxp1y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1982C4CEEF;
-	Mon,  5 May 2025 23:18:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tqyvnmex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03B4C4CEED;
+	Mon,  5 May 2025 23:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487096;
-	bh=O1AXRcVzO+bLHxqo7eor34N1+WCsiJkmsH6UzahIF4U=;
+	s=k20201202; t=1746487133;
+	bh=nIX6dAu7nHokct7Zpqf++O3ihvA03NDTXHAFE7Cw9OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cKwxxp1yY8IcZPlFo31HKzPDwC5ykz/cUZ/Av/cMXPYL+86DyAWa8q/ioe1FqaoQ+
-	 NcGul8NTpG+Hm6bd49cktHQNPQp6oFrSoJhCL5O0kMGE1rIIY33mszWmdA/22iOrYV
-	 v76HuHH6XLTPYF08s+u0FpIDneCN2buVErQWFb8rYDgvi/s0+YqGSzBTUvul9Z3nki
-	 jzVF1BKIYLumAsWqMMU85vp8Ry/KBYBDWaJout0cHcFPMq0yfH2Uq2CZQsLZ04WU6C
-	 NyLgD6S1MLTgxSe5EsmyZqfFlhroGwR8T0GF4YkvSMr6k6Y4jKe24v6/8T8inIDIpa
-	 L4eIwO6CFg3xQ==
+	b=Tqyvnmex8g7oJanCw2CdyTSEqei2pnQqxOFykV7JDUIU9iMG3VssJL0LXRv4ardqL
+	 WGuk+D4Wz+MBSioyWSp6xApVpdXdY9XuBDBMdLx01nbryFC3YsJzzHWJ/vCro/XP4c
+	 xLs0cuCk9K/E4mF2yzkn1hMTxxIuNSS0wdZKpCwS6jAsa67CAf5k7ogiZGjZyeawPm
+	 9i82iaq04uXuKmiaRDacslO84v3kU6jHsXNDw3haAS4lG+qnJdtoYBo3JUIP3Um0JJ
+	 zZ045ZYzf76cPQELQb6Ocj3MC1PQZIb5fkoOHwdpkRwy2fzW68JX+rDvrJrPQJG7VN
+	 ilVfkLp5CMsag==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Erick Shepherd <erick.shepherd@ni.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.15 153/153] drm: Add valid clones check
-Date: Mon,  5 May 2025 19:13:20 -0400
-Message-Id: <20250505231320.2695319-153-sashal@kernel.org>
+	linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 016/114] mmc: host: Wait for Vdd to settle on card power off
+Date: Mon,  5 May 2025 19:16:39 -0400
+Message-Id: <20250505231817.2697367-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
+References: <20250505231817.2697367-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,71 +48,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
+From: Erick Shepherd <erick.shepherd@ni.com>
 
-[ Upstream commit 41b4b11da02157c7474caf41d56baae0e941d01a ]
+[ Upstream commit 31e75ed964582257f59156ce6a42860e1ae4cc39 ]
 
-Check that all encoders attached to a given CRTC are valid
-possible_clones of each other.
+The SD spec version 6.0 section 6.4.1.5 requires that Vdd must be
+lowered to less than 0.5V for a minimum of 1 ms when powering off a
+card. Increase wait to 15 ms so that voltage has time to drain down
+to 0.5V and cards can power off correctly. Issues with voltage drain
+time were only observed on Apollo Lake and Bay Trail host controllers
+so this fix is limited to those devices.
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20241216-concurrent-wb-v4-3-fe220297a7f0@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20250314195021.1588090-1-erick.shepherd@ni.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/mmc/host/sdhci-pci-core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index bd01d925769db..db3c58013c00d 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -563,6 +563,30 @@ mode_valid(struct drm_atomic_state *state)
- 	return 0;
- }
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+index 67d9dd2165ec7..3769595693531 100644
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -666,8 +666,12 @@ static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
  
-+static int drm_atomic_check_valid_clones(struct drm_atomic_state *state,
-+					 struct drm_crtc *crtc)
-+{
-+	struct drm_encoder *drm_enc;
-+	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state,
-+									  crtc);
-+
-+	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask) {
-+		if (!drm_enc->possible_clones) {
-+			DRM_DEBUG("enc%d possible_clones is 0\n", drm_enc->base.id);
-+			continue;
-+		}
-+
-+		if ((crtc_state->encoder_mask & drm_enc->possible_clones) !=
-+		    crtc_state->encoder_mask) {
-+			DRM_DEBUG("crtc%d failed valid clone check for mask 0x%x\n",
-+				  crtc->base.id, crtc_state->encoder_mask);
-+			return -EINVAL;
-+		}
+ 	sdhci_set_power(host, mode, vdd);
+ 
+-	if (mode == MMC_POWER_OFF)
++	if (mode == MMC_POWER_OFF) {
++		if (slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_APL_SD ||
++		    slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_BYT_SD)
++			usleep_range(15000, 17500);
+ 		return;
 +	}
-+
-+	return 0;
-+}
-+
- /**
-  * drm_atomic_helper_check_modeset - validate state object for modeset changes
-  * @dev: DRM device
-@@ -729,6 +753,10 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
- 		ret = drm_atomic_add_affected_planes(state, crtc);
- 		if (ret != 0)
- 			return ret;
-+
-+		ret = drm_atomic_check_valid_clones(state, crtc);
-+		if (ret != 0)
-+			return ret;
- 	}
  
  	/*
+ 	 * Bus power might not enable after D3 -> D0 transition due to the
 -- 
 2.39.5
 
