@@ -1,121 +1,111 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5903D41C63
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FFD17B50F;
+	Mon,  5 May 2025 13:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450695; cv=none; b=QpLuBXgvwc+PTlTIA6kF4gB3n0WShAFPlyrJToDLeL0v9jiJ8bwXFTyRhpEPconEE2z6xaaqwy3PhVVuf3UelEnvAocitPslhaDIhWtTPOb5lpX4V5js0wpbvwU5SqVqMgdQqm0JI+chR8BCF9WspEDEMhhixONOc/4CuPpeCag=
+	t=1746450770; cv=none; b=IjOpl7I5AcZJXmVogQGmX4H4E78NdHbJnAyO3eSZBuY8Epsj7llsx+TaqtUtfhicrP+qndrxbqRaR1LdkU7tRS9YwGKSn4/6ruqrV90iblsmKgp853TZAr9c/zDg2PDmgVWG6ee0mDLMooCquyVlpQ6AWMZE4LA9p8AOxAy681M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450695; c=relaxed/simple;
-	bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kcOThbOci+KcQwFDfsdVD5QhlK9LG4fjS2lRJiNWPB4rGMDv1CrddKI5C1XyIUQtlyLUAZIirjbRJTj2ydexv3huq3IsWtVH7HP9OtDIVbUdRlA9OQiK+iZ3U+F6NL20C/XX2vqeyyfnWsH0x7ca7CBn8Sbea0wsDYLY6gIvdRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o3+TJmUK; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746450770; c=relaxed/simple;
+	bh=wIoatFFvgsMP1WuaOD5gtDxP4rLHaGa3DDS0HmTezAE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTfHwzqG5o/2bWTGoHnK88GX9vaist2sjYde7U2mPmdHUSMzklEwDo6je0hJae124lSFEYQ5+LacW4PWl5cDhX0ki4qNqn7xx2nV3kS/qexQ19qt1kDSNDE4rOJGpt9FfgDHVxuOIKodJG7sFVSDrEbPQbqaOOHN+RLUs042mNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QD7GM8TY; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3+TJmUK"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7329792c6eso3661255276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 06:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746450692; x=1747055492; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
-        b=o3+TJmUK2jdet8ttnQU40NHRGUZcDvpoyfjUp253YsixuedCmxIIycFKuXU0rXj1pv
-         7lI1tXMUE0gTmrFtHVZSfTrXWYMAxo8r/MLoAxT4kk5TpzMEQd094U//2SvlFG7xv4dh
-         3gVA7+avpFHbNiW/okyQRFy5V4YB5OZTnxQjWdBwKkjSfcza3ggU2/e5hs97HYRLdiv7
-         L2MOfmyYHvccBCspjVSJGoxAsefHujHxIC8k9mhzVhhkXYs8mQivE6YDdUFeyE1/CEtP
-         ykV7kdNht4hu19kOF2PxtfS3VJxu09qe+s2KeCuAp/yMS6uYD91f0C/bBnODuNVN3Tf8
-         gd2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746450692; x=1747055492;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
-        b=fgC1mu25Hb+b9H5pL0nX23FcffxcZisC2euRrJzDcYBuQBcsGSLdYJ++YFmRUan/UI
-         K9+WTW3Hd9Ng88uyjOMd7+r7KTvdjLcGzayTSnGlgI9zGxDZ42Hi45IizX3HWCWyuZYA
-         qIfnBxXiJWp2iudiKC7mKMU4c3OY1wbOuLJGCyIhvTXozEjleHL4OLHnL8qNHC/cMrmN
-         LIMegbWViv4n/tLhHVlhwt5VHa1tz2lVPU04/5FU7pTIrXJZGYQNOqBHk6woTfccRIBK
-         /qRVMVCX0KgXbj0wBCU1JOpyl28WUaDgfBye8r2o6IymKxk4eYkoPEp5E4epVb8ctgJ/
-         t5fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKVoyNc4evstGWe3Nh73KexqPTM4C2p6ZSqjwq+28kE1VXwNq1XegP9XWyMzMSKDyI8ZeTEC/CuvehQ1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsydwzLT+eXAL596UsURUQzoFbitvYuHqmsZbZ4+SGJLhV8nYB
-	RmXomJl+j408ddP2tyXbQOTYpsNg2EleqXtZEP2miLHJgXaaUnEHnkKr+nwFIZ+0tMp9BhJ7qfZ
-	Q31/1biwK+IYKH4GX3D0ZnBnffTGaX01ICbrd3w==
-X-Gm-Gg: ASbGncu8pQjJLVZzQKzIeUYi8uRejpp3Hh6IkkBtx2Wu/vbr+rbcqJb4ahHAtLSCobT
-	eoDo8nKDqHqM0ZmshoqKg1MBecV31qIdR+ktMyIgCuTU65YRnaE8F5IuXEVTiLUsbhwabRJfFut
-	LTv5D0jUnJ6XUAd+G+1WeU9yY=
-X-Google-Smtp-Source: AGHT+IHYbF2WPZAiZQJkMemTDe0eA/WNRrjqs4w7sc6I3JE6Dj46TaOld9R59l3cTHEPKEvrfbHdG2JW0rfdFv4Rzlg=
-X-Received: by 2002:a05:6902:70a:b0:e72:d449:72ed with SMTP id
- 3f1490d57ef6-e757d2eb6fbmr8387246276.24.1746450692302; Mon, 05 May 2025
- 06:11:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QD7GM8TY"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545DCU4O946261
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 08:12:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746450751;
+	bh=yTfL/fvg5uCjNorELIHZpGNdVVCrNhFU0chckRh1dYo=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=QD7GM8TYI+aQOACJZ30G/WxcP6GgDD7+w7/oPCOh86Zgy813HxmhMEYpqqBBzOb6m
+	 svK3oHoG4S8lKZvG8DOocDIryJidEhr5NUeVQ1EPv7/IB1YJUN0XOPuwO8/W36MQpU
+	 uOWVStRJzfsuj0j2yj8pVtkxk7gSu0+5rFD9Sjuk=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545DCUGs045176
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 May 2025 08:12:30 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ May 2025 08:12:30 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 May 2025 08:12:30 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545DCUnP108695;
+	Mon, 5 May 2025 08:12:30 -0500
+Date: Mon, 5 May 2025 08:12:30 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Daniel Schultz <d.schultz@phytec.de>
+CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
+Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-am62a: Set Critical Temp. to 105C
+Message-ID: <20250505131230.3ydwgftnqbbmrt5u@opulently>
+References: <20250502142606.2840508-1-d.schultz@phytec.de>
+ <20250502142606.2840508-2-d.schultz@phytec.de>
+ <20250502144934.t6hjiwp2f64ovb34@deeply>
+ <9964aeaa-0169-4596-a33d-c56bdb6edae3@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310102229.381887-1-o.rempel@pengutronix.de>
- <CAPDyKFrC56BBJk=YAPWCCNYNqFAoY74_yH0ZXfNQEiDhaA2xJg@mail.gmail.com> <aBiztawScUfcLELt@pengutronix.de>
-In-Reply-To: <aBiztawScUfcLELt@pengutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 5 May 2025 15:10:56 +0200
-X-Gm-Features: ATxdqUGopRIyAG9fE6pCiDkLofZQUawSDV9qKybdHFgAD5Qsbz0IQB0_BYNYZ5E
-Message-ID: <CAPDyKFoVacuOQV0dH733BnhSXGQ7-c3M_u5=+AonGAXAYLsU3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] mmc: handle undervoltage events and prevent eMMC corruption
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>, 
-	Christian Loehle <christian.loehle@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Avri Altman <Avri.Altman@sandisk.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9964aeaa-0169-4596-a33d-c56bdb6edae3@phytec.de>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 5 May 2025 at 14:48, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
-> Hi Ulf,
->
-> Sorry for very late replay,
->
-> On Thu, Mar 20, 2025 at 03:36:32PM +0100, Ulf Hansson wrote:
-> > Hi Oleksij,
-> >
-> > On Mon, 10 Mar 2025 at 11:22, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> > >
-> > > changes v4:
-> > > - drop HPI and SDHCI related patches
-> > >
-> > > This patch set introduces a framework for handling undervoltage events
-> > > in the MMC subsystem. The goal is to improve system reliability by
-> > > ensuring graceful handling of power fluctuations that could otherwise
-> > > lead to metadata corruption, potentially rendering the eMMC chip
-> > > unusable or causing significant data loss.
-> >
-> > Thanks for posting this! I will spend some time reviewing this next
-> > week and let you know my comments then.
-> >
-> > However, I just wanted to let you know that I just posted a series [1]
-> > (forgot to cc you, sorry), which also reworks the way _mmc_suspend()
-> > understands what scenario it should be running. I am guessing that
-> > re-work is simplifying for your $subject series too. Maybe you would
-> > like to have a look?
->
-> Ah, very nice. The integration of undervoltage support is easier now.
->
-> I rebased by match on top of mmc/next branch and do some testing
-> tomorrow. If you have no other comments I'll send updated patches after
-> testing.
+On 21:11-20250502, Daniel Schultz wrote:
+> 
+> On 5/2/25 16:49, Nishanth Menon wrote:
+> > On 07:26-20250502, Daniel Schultz wrote:
+> > > The AM62Ax SoC supports two temperature ranges:
+> > > * A: -40 to 105C - Extended Industrial
+> > > * I: -40 to 125C - Automotive
+> > > 
+> > > By default, use the lower limit (105 °C) so that any AM62A running
+> > > in Extended Industrial mode will shut down safely before overheating.
+> > > 
+> > > If the bootloader detects an Automotive-grade device, it should
+> > > override this and raise the critical trip point to 125 °C.
+> > > 
+> > > Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> > > ---
+> > >   arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
+> > > index 39ff9118b6c4..40dcb9bab965 100644
+> > > --- a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
+> > > +++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
+> > Why not create a separate header for industrial grade and rename this as
+> > automotive grade and let the board file pick the right grade used on the
+> > board?
+> 
+> Mostly because I copied this from 10e7bfd8114c207ac and with the most recent
+> temperature fixups in U-Boot, we also have the missing bootloader logic.
+> 
+> I would also prefer an out-of-the-box solution for that.
 
-That's great! I have started to review the series in more detail, but
-feel free to post a new version, I can look at that instead.
+Personally, I am not in favor of depending on U-boot (there are other
+bootloaders as well in the ecosystem) monkeying with dt nodes.
 
->
-> By the way, are you on embedded recipes this year?
+I suggest renaming the dtsi and introducing a industrial dtsi. And
+depending on the samples used by the board, use the correct dtsi.
 
-Unfortunately not. Linaro Connect in Lisbon clashes with these dates.
-
-Kind regards
-Uffe
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
