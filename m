@@ -1,59 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350E7A32;
-	Mon,  5 May 2025 21:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071DA247DEA;
+	Mon,  5 May 2025 21:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746479737; cv=none; b=SvJ6qyvMfrwYnISANApnQVffnfbqoJM8cEjCjdsiWF2t6DZcX4+prhx4Cydm/RzjBgBw0CnGbNxWbA11NYxMgRsSvRQw4dB3qTDfwUJh+16dGyjAk608ifVnFqyWDs2TbHa+5tsRx0+F8KALFxAQZ6NwC9xanoC+8pKJKTM3XIg=
+	t=1746479738; cv=none; b=Ff9oe8Z6czU7l7brXv5yyQCjJXWeqr9e7YmrDn7Sv3oy6oY9wu/AbBpKztBRw5ZoNv5CQczgwN0vrEyDLrSba3IKzSOHRiRJFan9AGzt1WvMy5ManGU/eJ1QdLUBbZ2gjmyufDaJHpl3xDfSUzB96uGs736Ep2ca0P0895Ox/oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746479737; c=relaxed/simple;
-	bh=bC2rt61Zb2ctmnWbeinCpK12Ybj4VVtOuX9hqkSsohc=;
+	s=arc-20240116; t=1746479738; c=relaxed/simple;
+	bh=xdjmzuLq+SMnhJMs0RqB8PEpdL3mvHuKR3yY5bpucYU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kGfv3EygCiVpQKN1L2m8DSQOS6tVoAkB1VGeX5PWscmPXyiIERl+4IFpa5p1rBYL8AksXP31EwhNjlzZjZTwp2nQgUZ/8nTn//5b141uDRQmAAjvnt4ubKRGDsoL0zk5Ba1QZzaGns/l6Hc+S9C8kPj7nC4/0guJfB29RSVwpKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ivLOxa1P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7x7XRVZRVVAobGQbNrgjFL+bOpctF/hF65GOS8ipAxT5ksytsqqDOOfqusoqJ5VAKkIlyhjnXZQ+Y6UZMxcJyXQFqsmVfWWXPvVsJ4a494TsHphlKVS1FNdBfVvsmQY1oZfnuw6wSw1cikMSO7/U07DNEimTjVDTKPNkFdTDtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIp4Rua3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ivLOxa1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FDDC4CEE4;
-	Mon,  5 May 2025 21:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIp4Rua3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D524C4CEE4;
+	Mon,  5 May 2025 21:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746479736;
-	bh=bC2rt61Zb2ctmnWbeinCpK12Ybj4VVtOuX9hqkSsohc=;
+	s=k20201202; t=1746479737;
+	bh=xdjmzuLq+SMnhJMs0RqB8PEpdL3mvHuKR3yY5bpucYU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ivLOxa1P5oj/FN5tqsml2Mta07iSEMct5uNhn5JZcVesqvpih6+/va9RzMFXhvLba
-	 380sHDSXmlsH9OP9xGSEuK691G5BsnE1cNYQiSEPRrGYTu1rIK99BlO171J5RacIOr
-	 41ooZzm7Viuvhnse9gVNn3RfC4JyPwn57DkI8eH5LTP10GaVBu4HAFRvdPJ4l9GLry
-	 7ZHUO+q0RlYkXyUTWotD/QjSLFDM+Qq+wH/Bj2ZK8VH3LrJBFJguPl3X2lXxsJ6lRD
-	 MsmCIuasfTWpkTW63Mfb1FN8h48g0jwHG6GVqkh5snX7LqvCH0D20ffbJR7cxLE7YG
-	 08MplxlBTK3sA==
-Date: Mon, 5 May 2025 23:15:33 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
- list
-Message-ID: <y4awvwoqshcyvbdlu7ibg5t3vu4rnsthnb2srrug6qjcfw3mq4@5uzqb4tkox5o>
-References: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+	b=ZIp4Rua3OfqGZldIQ109NcemQu18wIdSy+ZQAFi3e/4zgqYiKglpXbxXe3S1vsZg8
+	 U9vDTPrpfVLBoDD/QCNPh1sv1ZWM1zHmG03EJnz9kzF8Ksu4fbrdMHlKKFxAkEPq5m
+	 IrXgFWEzWmMCY2AzKhzaovrh5CdgOg7k7aiXk228aTAdsjAW7Kv7MeDQlc/U/7fe6B
+	 k7cCEamsp9TZANyWUCWPbjVZ+oF0zbeTA4CoTn1z+3bE+3vteTY7vjQ/UcpmMGuxwu
+	 Kzb0zeFKwZRRtAfMh3zkk7XithPlnHT/yc1YW5F04vz/Q2TbEvKzgzUYXcCefMadk8
+	 3pBBvBHTOrWbw==
+Date: Mon, 5 May 2025 11:15:36 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Subject: Re: [PATCH] kernel/cgroup/pids: add "pids.forks" counter
+Message-ID: <aBkqeM0DoXUHHdgq@slm.duckdns.org>
+References: <20250502121930.4008251-1-max.kellermann@ionos.com>
+ <bbublxzpnqrzjq5rmmbp772w2darjoahlewqky7caanaknglbx@6wuy5nidsnu3>
+ <CAKPOu+_8cbUk=8d41GQGOvUrmG9OuaNVuSQrksDcUQMyFc4tiA@mail.gmail.com>
+ <aBUQ7EzmeWYCyLwB@slm.duckdns.org>
+ <CAKPOu+_Dk7rLgc+5YbMd4xpcjz74XKnR1jkgaTxu81EvE-q1-g@mail.gmail.com>
+ <aBjn8epxUXDOomiu@slm.duckdns.org>
+ <CAKPOu+-DoznsDeAn+AvyPkKyUW33ouLCv18QAO_0_42yXSk-3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKPOu+-DoznsDeAn+AvyPkKyUW33ouLCv18QAO_0_42yXSk-3w@mail.gmail.com>
 
-Hi Marcus,
-
-On Wed, Mar 26, 2025 at 03:39:47PM +0100, Marcus Folkesson wrote:
-> The driver do support I2C_M_IGNORE_NAK, so add
-> I2C_FUNC_PROTOCOL_MANGLING to the feature list.
+On Mon, May 05, 2025 at 09:52:59PM +0200, Max Kellermann wrote:
+> On Mon, May 5, 2025 at 6:31 PM Tejun Heo <tj@kernel.org> wrote:
+> > Oh, it's not specific to the cpu controller. The cpu part is just special.
+> > Please see e.g. how blkcg or memcg uses rstat.
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> Ah right. I have started implementing it that way, but it turns my
+> simple 20 line patch into a 300 line monster. I still doubt this is
 
-merged to i2c/i2c-host.
+Hmm... let's see what the patch is like but I don't see why it'd be
+monstrously complicated.
 
-Thanks,
-Andi
+> worth the complexity, but if that's what you'll merge, fine!
+
+Your 20 lines don't implement hierarhical behavior and will likely show up
+in profiles at least in benchmarks on large multi socket machines
+(especially if you try to make it hierarchical in a "simple" way).
+
+Thanks.
+
+-- 
+tejun
