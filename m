@@ -1,122 +1,91 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+Received: from mail-106112.protonmail.ch (mail-106112.protonmail.ch [79.135.106.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEC619ABAB
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC3F1624C5;
+	Mon,  5 May 2025 19:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746472724; cv=none; b=CzblBHaBvKm6zWQ8gJdYynRjb4dSLJTa/cXHEHudwDpLBRNrbHKEtsW6SzrICzmhBJyJf4eq7jW/JCwe9y2+U1BUTti9JK0iFpoq7of9Kc2AVBegZ0NyMaAb3q1Wi/bzkhp4GyJEGhyKCzAuD4Are8pYu7IDw4iVVv8gLZJ5jMM=
+	t=1746472820; cv=none; b=aL63pfTNbV5CDXx/1+yF2mZkO+gVHfeytnp8/npdEt4N9m3hk/tfrzvgNOfQtaIMTEjBEip9tCFCyQ2Vpky1nsV1VWBBgMqMaklahHzgdrz8X5lT3lmcu0XHAImXEgF9Th73f7e1kwki1qLI4XAPhAdsNBNrvQvvhh6GrW7yHp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746472724; c=relaxed/simple;
-	bh=ZnMLoIwBY5W0VmYP3BtBid7BiKKI5FktyERR4l9YxoI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=iwc/kjWIhm4eY052Y9XPqCXwmKjg8+omw9fSUrwxYzDX3KCGJ3RIHy9Xbg72PBGuy58PsfDFOQHUdgZLzQFB9QmQCrQnjs1U+nHQN0yj+6p50KhZ2tSq7VtShSpuuRwNVJlRRuCH5Bcz0SxdPxKa7uaK2iAfxnPGxRcZH34DD+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XSJJhgLn; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746472820; c=relaxed/simple;
+	bh=hC6crYyF77cykBd4JSHA1fPVMSH0fhlHiDFeSZQbXec=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ImbltbNg2YibKlYqBbU5TETAFYXjQMVM7SxqJ8fPN5KwRUc8zkjC5kcdoBp24L0+UjkhsfrYiVM96BxNkA7r5kfBNIF9UzSzmRmwRMfTEz3WLI8SgKr5DufChVRFo+pGleBRYTVMIccTcSF08cWHmQt6jlQeF/kwxjFFotew/VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=bxj4lsxj; arc=none smtp.client-ip=79.135.106.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XSJJhgLn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=ZnMLoIwBY5W0VmYP3BtBid7BiKKI5FktyERR4l9YxoI=; b=X
-	SJJhgLnCE6O9789Unbc1sjB5C+4Mh0Z67lcAzUY8RQzYlfuMWrkvoyUcCe+pcdGg
-	HPVxpTa4fZd1+zm0hlDuo2d4pvOwxLiqgsXoPb2EBBHcMGC3i6jIa48Z3I/F5dlE
-	1GVnR70qROgyTckuNh8sy+i0ksIA43HOiKdoWEV5Hc=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-132 (Coremail) ; Tue, 6 May 2025 03:17:55 +0800 (CST)
-Date: Tue, 6 May 2025 03:17:55 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: akpm@linux-foundation.org, vbabka@suse.cz, surenb@google.com,
-	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
-	ziy@nvidia.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re:[PATCH v2] mm/codetag: move tag retrieval back upfront in
- __free_pages()
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250505183423.33773-1-00107082@163.com>
-References: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
- <20250505183423.33773-1-00107082@163.com>
-X-NTES-SC: AL_Qu2fBPicvU4s4yidbOkXn0oTju85XMCzuv8j3YJeN500myXEwhAvZ25sE2TU0fmICiSmoQmUVSpe0+5WRa57fYk6gBy1S+/UxJDXG91QVryX
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="bxj4lsxj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1746472814; x=1746732014;
+	bh=6EsJW6Qm/StXGBZEGhNHvMHoG3NUrgaJ0lB7XuysflA=;
+	h=From:Subject:Date:Message-Id:To:Cc:From:To:Cc:Date:Subject:
+	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector:List-Unsubscribe:
+	 List-Unsubscribe-Post;
+	b=bxj4lsxjrMBixPMqX+JIAjgpEVQIsxQ4PSk0pDTSXE+45GguO9z5zWPfr2nB6l6eR
+	 9GrcAyrDBW+J/8EMhOJqo4JeBnoUd5vP8Ym+BJK8FsbMI+atQKOp8uQQ/MOaD6PYl9
+	 Oa9FrQpl+LcC6WlUta+oGNTLzGJUatvb8hx9t+4arrNahMW496fR6IfoPI72DgpBWX
+	 UlF9g6HYIVeKZVHdZgVsr/IfCKdSqvi2Gisv2lLtuOe2Gk/148Po4bZwBOelxcDwzL
+	 MauFfTD8m6THLnSHjxBa61HVfNcT7RwJ3pjfh7xbofdaQzPo45GJ1WBAMJ2/vPYKgf
+	 V+udwypJEDhpg==
+X-Pm-Submission-Id: 4ZrrvX1kWvz44y
+From: Sean Nyekjaer <sean@geanix.com>
+Subject: [PATCH v4 0/2] iio: accel: fxls8962af: Fix temperature readings
+Date: Mon, 05 May 2025 21:20:06 +0200
+Message-Id: <20250505-fxls-v4-0-a38652e21738@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <14556e7b.3c3e.196a1e22a1b.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hCgvCgD3v_zkDhloaN+nAA--.13938W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBdEqmgZB8UtNwACs6
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGYPGWgC/2XMQQ7CIBCF4as0rMUM0KHqynsYF0iHlkRbA4bUN
+ L27tOmi6o5H5vtHFil4iuxUjCxQ8tH3XR7lrmC2NV1D3Nd5MwkSAUFwN9wjV1CRU7WuQSPLp89
+ Azg9L5nLNu/Xx1Yf3Uk1i/v0JJMHzC0vQwkAFx+O5IdP5YW/7B5sLSW6VXJXkwEkYp9EJY7T9U
+ 2qrcFUqq4PFUtwcSMBvNU3TB8NILXYFAQAA
+X-Change-ID: 20250501-fxls-307ef3d6d065
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Marcelo Schmitt <marcelo.schmitt1@gmail.com>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sean Nyekjaer <sean@geanix.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-U29ycnksIEkgbWFkZSBhIG1pc3Rha2UsIHBnYWxsb2NfdGFnX2dldCBzaG91bGQgaGF2ZSBhIGR1
-bW15IGRlZmluaXRpb24gCndoZW4gQ09ORklHX01FTV9BTExPQ19QUk9GSUxJTkcgbm90IGRlZmlu
-ZWQsIHdpbGwgc2VuZCBhbm90aGVyIHBhdGNoLgoKCkF0IDIwMjUtMDUtMDYgMDI6MzQ6MjMsICJE
-YXZpZCBXYW5nIiA8MDAxMDcwODJAMTYzLmNvbT4gd3JvdGU6Cj5Db21taXQgNTFmZjRkNzQ4NmYw
-ICgibW06IGF2b2lkIGV4dHJhIG1lbV9hbGxvY19wcm9maWxpbmdfZW5hYmxlZCgpCj4gY2hlY2tz
-IikgaW50cm9kdWNlcyBhIHBvc3NpYmxlIHVzZS1hZnRlci1mcmVlIHNjZW5hcmlvLCB3aGVuIHBh
-Z2UKPmlzIG5vbi1jb21wb3VuZCwgcGFnZVswXSBjb3VsZCBiZSByZWxlYXNlZCBieSBvdGhlciB0
-aHJlYWQgcmlnaHQKPmFmdGVyIHB1dF9wYWdlX3Rlc3R6ZXJvIGZhaWxlZCBpbiBjdXJyZW50IHRo
-cmVhZCwgcGdhbGxvY190YWdfc3ViX3BhZ2VzCj5hZnRlcndhcmRzIHdvdWxkIG1hbmlwdWxhdGUg
-YW4gaW52YWxpZCBwYWdlIGZvciBhY2NvdW50aW5nIHJlbWFpbmluZwo+cGFnZXM6Cj4KPlt0aW1l
-bGluZV0gICBbdGhyZWFkMV0gICAgICAgICAgICAgICAgICAgICBbdGhyZWFkMl0KPiAgfCAgICAg
-ICAgICBhbGxvY19wYWdlIG5vbi1jb21wb3VuZAo+ICBWCj4gIHwgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgZ2V0X3BhZ2UsIHJmIGNvdW50ZXIgaW5jCj4gIFYKPiAgfCAg
-ICAgICAgICBpbiBfX19mcmVlX3BhZ2VzCj4gIHwgICAgICAgICAgcHV0X3BhZ2VfdGVzdHplcm8g
-ZmFpbHMKPiAgVgo+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHB1
-dF9wYWdlLCBwYWdlIHJlbGVhc2VkCj4gIFYKPiAgfCAgICAgICAgICBpbiBfX19mcmVlX3BhZ2Vz
-LAo+ICB8ICAgICAgICAgIHBnYWxsb2NfdGFnX3N1Yl9wYWdlcwo+ICB8ICAgICAgICAgIG1hbmlw
-dWxhdGUgYW4gaW52YWxpZCBwYWdlCj4gIFYKPgo+UmVzdG9yZSBfX2ZyZWVfcGFnZXMoKSB0byBp
-dHMgc3RhdGUgYmVmb3JlLCByZXRyaWV2ZSBhbGxvYyB0YWcKPmJlZm9yZWhhbmQuCj4KPkZpeGVz
-OiA1MWZmNGQ3NDg2ZjAgKCJtbTogYXZvaWQgZXh0cmEgbWVtX2FsbG9jX3Byb2ZpbGluZ19lbmFi
-bGVkKCkgY2hlY2tzIikKPlNpZ25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAwMTA3MDgyQDE2My5j
-b20+Cj4tLS0KPiBpbmNsdWRlL2xpbnV4L3BnYWxsb2NfdGFnLmggfCAgNyArKysrKysrCj4gbW0v
-cGFnZV9hbGxvYy5jICAgICAgICAgICAgIHwgMTUgKysrKysrLS0tLS0tLS0tCj4gMiBmaWxlcyBj
-aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQo+Cj5kaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5oIGIvaW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5o
-Cj5pbmRleCBjNzQwNzc5Nzc4MzAuLjk3ZWI0ODM1NTY4ZSAxMDA2NDQKPi0tLSBhL2luY2x1ZGUv
-bGludXgvcGdhbGxvY190YWcuaAo+KysrIGIvaW5jbHVkZS9saW51eC9wZ2FsbG9jX3RhZy5oCj5A
-QCAtMTg4LDYgKzE4OCwxMyBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWcgKl9fcGdh
-bGxvY190YWdfZ2V0KHN0cnVjdCBwYWdlICpwYWdlKQo+IAlyZXR1cm4gdGFnOwo+IH0KPiAKPitz
-dGF0aWMgaW5saW5lIHN0cnVjdCBhbGxvY190YWcgKnBnYWxsb2NfdGFnX2dldChzdHJ1Y3QgcGFn
-ZSAqcGFnZSkKPit7Cj4rCWlmIChtZW1fYWxsb2NfcHJvZmlsaW5nX2VuYWJsZWQoKSkKPisJCXJl
-dHVybiBfX3BnYWxsb2NfdGFnX2dldChwYWdlKTsKPisJcmV0dXJuIE5VTEw7Cj4rfQo+Kwo+IHZv
-aWQgcGdhbGxvY190YWdfc3BsaXQoc3RydWN0IGZvbGlvICpmb2xpbywgaW50IG9sZF9vcmRlciwg
-aW50IG5ld19vcmRlcik7Cj4gdm9pZCBwZ2FsbG9jX3RhZ19zd2FwKHN0cnVjdCBmb2xpbyAqbmV3
-LCBzdHJ1Y3QgZm9saW8gKm9sZCk7Cj4gCj5kaWZmIC0tZ2l0IGEvbW0vcGFnZV9hbGxvYy5jIGIv
-bW0vcGFnZV9hbGxvYy5jCj5pbmRleCA1NjY5YmFmMmE2ZmUuLjFiMDBlMTRhOTc4MCAxMDA2NDQK
-Pi0tLSBhL21tL3BhZ2VfYWxsb2MuYwo+KysrIGIvbW0vcGFnZV9hbGxvYy5jCj5AQCAtMTE1MSwx
-NCArMTE1MSw5IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBwZ2FsbG9jX3RhZ19zdWIoc3RydWN0IHBh
-Z2UgKnBhZ2UsIHVuc2lnbmVkIGludCBucikKPiAJCV9fcGdhbGxvY190YWdfc3ViKHBhZ2UsIG5y
-KTsKPiB9Cj4gCj4tc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX3N1Yl9wYWdlcyhzdHJ1
-Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG5yKQo+Ky8qIFdoZW4gdGFnIGlzIG5vdCBOVUxM
-LCBhc3N1bWluZyBtZW1fYWxsb2NfcHJvZmlsaW5nX2VuYWJsZWQgKi8KPitzdGF0aWMgaW5saW5l
-IHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBhbGxvY190YWcgKnRhZywgdW5zaWdu
-ZWQgaW50IG5yKQo+IHsKPi0Jc3RydWN0IGFsbG9jX3RhZyAqdGFnOwo+LQo+LQlpZiAoIW1lbV9h
-bGxvY19wcm9maWxpbmdfZW5hYmxlZCgpKQo+LQkJcmV0dXJuOwo+LQo+LQl0YWcgPSBfX3BnYWxs
-b2NfdGFnX2dldChwYWdlKTsKPiAJaWYgKHRhZykKPiAJCXRoaXNfY3B1X3N1Yih0YWctPmNvdW50
-ZXJzLT5ieXRlcywgUEFHRV9TSVpFICogbnIpOwo+IH0KPkBAIC0xMTY4LDcgKzExNjMsNyBAQCBz
-dGF0aWMgaW5saW5lIHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBwYWdlICpwYWdl
-LCB1bnNpZ25lZCBpbnQgbnIpCj4gc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX2FkZChz
-dHJ1Y3QgcGFnZSAqcGFnZSwgc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrLAo+IAkJCQkgICB1bnNp
-Z25lZCBpbnQgbnIpIHt9Cj4gc3RhdGljIGlubGluZSB2b2lkIHBnYWxsb2NfdGFnX3N1YihzdHJ1
-Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG5yKSB7fQo+LXN0YXRpYyBpbmxpbmUgdm9pZCBw
-Z2FsbG9jX3RhZ19zdWJfcGFnZXMoc3RydWN0IHBhZ2UgKnBhZ2UsIHVuc2lnbmVkIGludCBucikg
-e30KPitzdGF0aWMgaW5saW5lIHZvaWQgcGdhbGxvY190YWdfc3ViX3BhZ2VzKHN0cnVjdCBhbGxv
-Y190YWcgKnRhZywgdW5zaWduZWQgaW50IG5yKSB7fQo+IAo+ICNlbmRpZiAvKiBDT05GSUdfTUVN
-X0FMTE9DX1BST0ZJTElORyAqLwo+IAo+QEAgLTUwNjUsMTEgKzUwNjAsMTMgQEAgc3RhdGljIHZv
-aWQgX19fZnJlZV9wYWdlcyhzdHJ1Y3QgcGFnZSAqcGFnZSwgdW5zaWduZWQgaW50IG9yZGVyLAo+
-IHsKPiAJLyogZ2V0IFBhZ2VIZWFkIGJlZm9yZSB3ZSBkcm9wIHJlZmVyZW5jZSAqLwo+IAlpbnQg
-aGVhZCA9IFBhZ2VIZWFkKHBhZ2UpOwo+KwkvKiBnZXQgYWxsb2MgdGFnIGluIGNhc2UgdGhlIHBh
-Z2UgaXMgcmVsZWFzZWQgYnkgb3RoZXJzICovCj4rCXN0cnVjdCBhbGxvY190YWcgKnRhZyA9IHBn
-YWxsb2NfdGFnX2dldChwYWdlKTsKPiAKPiAJaWYgKHB1dF9wYWdlX3Rlc3R6ZXJvKHBhZ2UpKQo+
-IAkJX19mcmVlX2Zyb3plbl9wYWdlcyhwYWdlLCBvcmRlciwgZnBpX2ZsYWdzKTsKPiAJZWxzZSBp
-ZiAoIWhlYWQpIHsKPi0JCXBnYWxsb2NfdGFnX3N1Yl9wYWdlcyhwYWdlLCAoMSA8PCBvcmRlcikg
-LSAxKTsKPisJCXBnYWxsb2NfdGFnX3N1Yl9wYWdlcyh0YWcsICgxIDw8IG9yZGVyKSAtIDEpOwo+
-IAkJd2hpbGUgKG9yZGVyLS0gPiAwKQo+IAkJCV9fZnJlZV9mcm96ZW5fcGFnZXMocGFnZSArICgx
-IDw8IG9yZGVyKSwgb3JkZXIsCj4gCQkJCQkgICAgZnBpX2ZsYWdzKTsKPi0tIAo+Mi4zOS4yCg==
+Add the correct scale to get temperature in mili degree Celcius.
+Add sign component to temperature scan element.
+
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+---
+Changes in v4:
+- Blindly Copy/Pasted  Andy's comment. Use the correct MILLIDEGREE_PER_DEGREE
+- Link to v3: https://lore.kernel.org/r/20250505-fxls-v3-0-8c541bf0205c@geanix.com
+
+Changes in v3:
+- Dropping define infavor of inline scale value
+- Added using constants from units.h
+- Tweaked commit msg to make it more assertive
+- Link to v2: https://lore.kernel.org/r/20250502-fxls-v2-0-e1af65f1aa6c@geanix.com
+
+Changes in v2:
+- Correct offset is applied before scaling component 
+- Added sign component to temperature scan element
+- Link to v1: https://lore.kernel.org/r/20250501-fxls-v1-1-f54061a07099@geanix.com
+
+---
+Sean Nyekjaer (2):
+      iio: accel: fxls8962af: Fix temperature calculation
+      iio: accel: fxls8962af: Fix temperature scan element sign
+
+ drivers/iio/accel/fxls8962af-core.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+---
+base-commit: 609bc31eca06c7408e6860d8b46311ebe45c1fef
+change-id: 20250501-fxls-307ef3d6d065
+
+Best regards,
+-- 
+Sean Nyekjaer <sean@geanix.com>
 
