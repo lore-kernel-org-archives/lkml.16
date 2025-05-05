@@ -1,41 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E9C2D4B6E;
-	Mon,  5 May 2025 22:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049AB2D5D0F;
+	Mon,  5 May 2025 22:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485666; cv=none; b=TtAUXMX3KJ2U2kHMQih9RA1HPqoqRBT0amNDXlaqYq46hRItkRdOx9mI9dD+50igTdVZd6cVJfot+XJAykCP9i9hwIHmBqtOntgvxDhsYHRT8152cLmWs1zJQaKxkxMfRGyOGDfYK6F9uTHoAZ5rMRRAUnaB2c53PfiCW5KdmUk=
+	t=1746485679; cv=none; b=EJnZEN1Yzn7XE0OoA+Y02S1M0TL/DSV4iRjNjFqJCKfDf9cEeeriChbbBTx2jvE2bn6qpK8Jl5EmcEOV5Cva6Fuu/LsTsjIeponQusW60PEovDvZRGDM9Ki33dfCvQPP61kinRyCjlAuBwVzRj2vNvK4OXlZS4bgN4FgamSY2bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485666; c=relaxed/simple;
-	bh=IyFIML+rboKGpxA24Mrd1ILEPJI5G2tbJCi/JtGhixo=;
+	s=arc-20240116; t=1746485679; c=relaxed/simple;
+	bh=l7jAxZOds+YpMtYaq2uWqkMKqPeBNVC/HpOgeEy1IPc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OAtYv7ao0+Eex406zoGgv6qykGqrGx3W9nAes4hLBT/abaNELF2sGxvAyRtv/x8IAnA17dusnsbBQjUBc/0cBuPnjXhY8s2x2ir0Kv3uiYj5kTobUgsAuUGuaboEI2eQ1NDzUsQMiwcW2CJLCGXc1E/zdKv8pLPosKxo15/9Yjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2EfpZD0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HEDsK4u7tkj4lLw4UlbaLfzzfrHYm3jGc4TokFp4DImXbKlFsK6zOVHV8Fv6Knzipx9I16ZyC0G9aVcQhEb26MHBQfvM6+kfrqOvhRyOXr8ko99J8eWQGT//oqS9u3MSMBeN3NF9Wep2IhbDf5MKQF+uwN5ISudHKRZo7JDNgeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nde6B3e6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2EfpZD0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364B1C4CEEE;
-	Mon,  5 May 2025 22:54:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nde6B3e6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0FFC4CEED;
+	Mon,  5 May 2025 22:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485664;
-	bh=IyFIML+rboKGpxA24Mrd1ILEPJI5G2tbJCi/JtGhixo=;
+	s=k20201202; t=1746485678;
+	bh=l7jAxZOds+YpMtYaq2uWqkMKqPeBNVC/HpOgeEy1IPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W2EfpZD0h22amkk5TtUzGkME5SNQCkOpN22Wtgc5WlUyPStWch/wWcR0sLrdmI/AE
-	 MpRhhuVsvk8wsJqJWoE0kBBdbZcXBrfxn9sYiub9VqPhQXWJW9HD+kM51QDKcprE0R
-	 l0qG551bOS1Z8ZfB83uPWgUFZesg+NjIt6BFLMNwMh4Gx8OYCl9isCVaHrhjHyDokY
-	 uf4u2ua0vbQ0LHqxgzLdS2ZL2TWOnL4tUASyYhcNSLGGIW3osVCjYKIANb7Ng0kvf4
-	 A56D7UIvTMpbiob16LZ4c4llFTuygdX6wA+6Cg+PZLQIyGwL1r3X4Wv03+myHyRkmt
-	 I8z+okh2DaimQ==
+	b=Nde6B3e6jruh96jvrtCtNyWi4oJ2qbf5/7INFNVqs/83jI4OqZdbNzykiCLYtRBhE
+	 yyhHe9/EF1OGLspWYbbgYETwWzjRxrLxQZlGBdyAs0sZ+pQ0SB0BTcnV40KjxYFnFi
+	 9xUyQdOobscA4QzOiH7WO/7n6hJb6S/0DkN+ULMZqx5jgmwqcGowdpiy4ytD58FyWo
+	 gydkosQzkmm7hI0aYWZjGi1/N8UjSaYk+5MheiklzoFPMJK9Pevoxm+oIT4339LU7o
+	 bNc3A55xz7wMsJczdb1m5+WQBx2nxpsdwPbMiDUKDb9ABEQ6i5xbs04PB4r6+MK0iB
+	 q3IQ/vocE7fNg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
+Cc: Carolina Jubran <cjubran@nvidia.com>,
+	Yael Chemla <ychemla@nvidia.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.12 416/486] f2fs: introduce f2fs_base_attr for global sysfs entries
-Date: Mon,  5 May 2025 18:38:12 -0400
-Message-Id: <20250505223922.2682012-416-sashal@kernel.org>
+	saeedm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 422/486] net/mlx5e: Avoid WARN_ON when configuring MQPRIO with HTB offload enabled
+Date: Mon,  5 May 2025 18:38:18 -0400
+Message-Id: <20250505223922.2682012-422-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,153 +60,46 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Carolina Jubran <cjubran@nvidia.com>
 
-[ Upstream commit 21925ede449e038ed6f9efdfe0e79f15bddc34bc ]
+[ Upstream commit 689805dcc474c2accb5cffbbcea1c06ee4a54570 ]
 
-In /sys/fs/f2fs/features, there's no f2fs_sb_info, so let's avoid to get
-the pointer.
+When attempting to enable MQPRIO while HTB offload is already
+configured, the driver currently returns `-EINVAL` and triggers a
+`WARN_ON`, leading to an unnecessary call trace.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Update the code to handle this case more gracefully by returning
+`-EOPNOTSUPP` instead, while also providing a helpful user message.
+
+Signed-off-by: Carolina Jubran <cjubran@nvidia.com>
+Reviewed-by: Yael Chemla <ychemla@nvidia.com>
+Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 74 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 52 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index d9a44f03e558b..7df638f901a1f 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -61,6 +61,12 @@ struct f2fs_attr {
- 	int id;
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 15ec9750d4be0..36a2c935267b0 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3759,8 +3759,11 @@ static int mlx5e_setup_tc_mqprio(struct mlx5e_priv *priv,
+ 	/* MQPRIO is another toplevel qdisc that can't be attached
+ 	 * simultaneously with the offloaded HTB.
+ 	 */
+-	if (WARN_ON(mlx5e_selq_is_htb_enabled(&priv->selq)))
+-		return -EINVAL;
++	if (mlx5e_selq_is_htb_enabled(&priv->selq)) {
++		NL_SET_ERR_MSG_MOD(mqprio->extack,
++				   "MQPRIO cannot be configured when HTB offload is enabled.");
++		return -EOPNOTSUPP;
++	}
  
-+struct f2fs_base_attr {
-+	struct attribute attr;
-+	ssize_t (*show)(struct f2fs_base_attr *a, char *buf);
-+	ssize_t (*store)(struct f2fs_base_attr *a, const char *buf, size_t len);
-+};
-+
- static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
- 			     struct f2fs_sb_info *sbi, char *buf);
- 
-@@ -864,6 +870,25 @@ static void f2fs_sb_release(struct kobject *kobj)
- 	complete(&sbi->s_kobj_unregister);
- }
- 
-+static ssize_t f2fs_base_attr_show(struct kobject *kobj,
-+				struct attribute *attr, char *buf)
-+{
-+	struct f2fs_base_attr *a = container_of(attr,
-+				struct f2fs_base_attr, attr);
-+
-+	return a->show ? a->show(a, buf) : 0;
-+}
-+
-+static ssize_t f2fs_base_attr_store(struct kobject *kobj,
-+				struct attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	struct f2fs_base_attr *a = container_of(attr,
-+				struct f2fs_base_attr, attr);
-+
-+	return a->store ? a->store(a, buf, len) : 0;
-+}
-+
- /*
-  * Note that there are three feature list entries:
-  * 1) /sys/fs/f2fs/features
-@@ -882,14 +907,13 @@ static void f2fs_sb_release(struct kobject *kobj)
-  *     please add new on-disk feature in this list only.
-  *     - ref. F2FS_SB_FEATURE_RO_ATTR()
-  */
--static ssize_t f2fs_feature_show(struct f2fs_attr *a,
--		struct f2fs_sb_info *sbi, char *buf)
-+static ssize_t f2fs_feature_show(struct f2fs_base_attr *a, char *buf)
- {
- 	return sysfs_emit(buf, "supported\n");
- }
- 
- #define F2FS_FEATURE_RO_ATTR(_name)				\
--static struct f2fs_attr f2fs_attr_##_name = {			\
-+static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
- 	.attr = {.name = __stringify(_name), .mode = 0444 },	\
- 	.show	= f2fs_feature_show,				\
- }
-@@ -1258,37 +1282,38 @@ static struct attribute *f2fs_attrs[] = {
- };
- ATTRIBUTE_GROUPS(f2fs);
- 
-+#define BASE_ATTR_LIST(name) (&f2fs_base_attr_##name.attr)
- static struct attribute *f2fs_feat_attrs[] = {
- #ifdef CONFIG_FS_ENCRYPTION
--	ATTR_LIST(encryption),
--	ATTR_LIST(test_dummy_encryption_v2),
-+	BASE_ATTR_LIST(encryption),
-+	BASE_ATTR_LIST(test_dummy_encryption_v2),
- #if IS_ENABLED(CONFIG_UNICODE)
--	ATTR_LIST(encrypted_casefold),
-+	BASE_ATTR_LIST(encrypted_casefold),
- #endif
- #endif /* CONFIG_FS_ENCRYPTION */
- #ifdef CONFIG_BLK_DEV_ZONED
--	ATTR_LIST(block_zoned),
-+	BASE_ATTR_LIST(block_zoned),
- #endif
--	ATTR_LIST(atomic_write),
--	ATTR_LIST(extra_attr),
--	ATTR_LIST(project_quota),
--	ATTR_LIST(inode_checksum),
--	ATTR_LIST(flexible_inline_xattr),
--	ATTR_LIST(quota_ino),
--	ATTR_LIST(inode_crtime),
--	ATTR_LIST(lost_found),
-+	BASE_ATTR_LIST(atomic_write),
-+	BASE_ATTR_LIST(extra_attr),
-+	BASE_ATTR_LIST(project_quota),
-+	BASE_ATTR_LIST(inode_checksum),
-+	BASE_ATTR_LIST(flexible_inline_xattr),
-+	BASE_ATTR_LIST(quota_ino),
-+	BASE_ATTR_LIST(inode_crtime),
-+	BASE_ATTR_LIST(lost_found),
- #ifdef CONFIG_FS_VERITY
--	ATTR_LIST(verity),
-+	BASE_ATTR_LIST(verity),
- #endif
--	ATTR_LIST(sb_checksum),
-+	BASE_ATTR_LIST(sb_checksum),
- #if IS_ENABLED(CONFIG_UNICODE)
--	ATTR_LIST(casefold),
-+	BASE_ATTR_LIST(casefold),
- #endif
--	ATTR_LIST(readonly),
-+	BASE_ATTR_LIST(readonly),
- #ifdef CONFIG_F2FS_FS_COMPRESSION
--	ATTR_LIST(compression),
-+	BASE_ATTR_LIST(compression),
- #endif
--	ATTR_LIST(pin_file),
-+	BASE_ATTR_LIST(pin_file),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(f2fs_feat);
-@@ -1362,9 +1387,14 @@ static struct kset f2fs_kset = {
- 	.kobj	= {.ktype = &f2fs_ktype},
- };
- 
-+static const struct sysfs_ops f2fs_feat_attr_ops = {
-+	.show	= f2fs_base_attr_show,
-+	.store	= f2fs_base_attr_store,
-+};
-+
- static const struct kobj_type f2fs_feat_ktype = {
- 	.default_groups = f2fs_feat_groups,
--	.sysfs_ops	= &f2fs_attr_ops,
-+	.sysfs_ops	= &f2fs_feat_attr_ops,
- };
- 
- static struct kobject f2fs_feat = {
+ 	switch (mqprio->mode) {
+ 	case TC_MQPRIO_MODE_DCB:
 -- 
 2.39.5
 
