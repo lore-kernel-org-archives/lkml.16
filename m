@@ -1,49 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B2D2F153C;
-	Mon,  5 May 2025 23:12:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6F12F152F;
+	Mon,  5 May 2025 23:12:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486732; cv=none; b=dbzC9G6p0p03bmAqNb32Aixjm/G/nKo949aqbzIt6Rgh6j6KTWd+z6hYhhDgaMB/NMS6tX1KnpzxJjccY4x44nJ51Yf8uJbcdIZculJ8rGlAV6S28CRCp08ED/uUPAk1RIy1jUcUOM6iGbBrbH0HPWNdZts3ryv4lO0N4VORdyg=
+	t=1746486731; cv=none; b=QNupMP0dqAnMPju0OiLEEnqbeQ1NHiwUyz9sXtAJ+eErO82rF2mX4CsVqGYKTl/tBEI45IYraaBoUzMiR5rd3bsFolK8qxqTn+/cSAle3ucNFMCDJWg+JBD6kSjgmuVl0W/WWp2DvnEnqtAgkT2NL/njQsq13rjD431IhXpH5Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486732; c=relaxed/simple;
-	bh=rNRQtODZcnpVBIPGRz8IF6cUXjg8GEwei8Nmbe8MrKE=;
+	s=arc-20240116; t=1746486731; c=relaxed/simple;
+	bh=vh9+QMtTfFQtALxE6B+h1YKZ4lOs8NdgSXIifjjRR1M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d5HuUZgyJsPyNNGUIXxUpBi2uRObxXwoSr1t+UzYtZHVxiP7J1IyALkJFCOkYq1am9WFbSVTuABPFp+4FKpi8jZ5ZjYq8kfBN/uGTHCmTvoY4cEkSTR2tfPrr0hr/ohgKMIfqCrA7Pq73GspyRuq9udtexgk2FHnGlNDiuQWIZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ur4Hk6/B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=R4RjL4giiXBu7rbWN8yvJ2oTlTSFt7HCDXzZUsmEH+ooKzUWfW6fsvH4rHqt/m6NpmgZ7Gud1prI6sl8zcI21Dqx9+5iDuGUB9lzE4yMU8VCiJmuhX66LF6w7kXqMrRpL3mOMEk1ai/KH/iQfG/ZpK3f5SxheIT+LI0uusNyTVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hj/9Wlgj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ur4Hk6/B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17979C4CEEF;
-	Mon,  5 May 2025 23:12:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hj/9Wlgj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA57C4CEE4;
+	Mon,  5 May 2025 23:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486732;
-	bh=rNRQtODZcnpVBIPGRz8IF6cUXjg8GEwei8Nmbe8MrKE=;
+	s=k20201202; t=1746486730;
+	bh=vh9+QMtTfFQtALxE6B+h1YKZ4lOs8NdgSXIifjjRR1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ur4Hk6/BOJDIgymgvsjD/tBMJiCRkO9aIqYEoamWCGAxo6FA96TESPV5Jbc51NQ6w
-	 XPqgUl44nC3T1TD7az2Yf2iQHUnZauTvydNgaG1y9AAs4g6DFXh2555+j5Bp5wn6lE
-	 uECx24g90FzQcTvgsV20mW0tsuk6wWhlsESIKMLh5BLgQpbOl0SYRiiTncnVR/uHOE
-	 Cm7Fss1KEDAzZnRPII/06KofAzjrdsWb7K+BX/xkm7ggpBbPr0XccPHbrxWs9IRva2
-	 08pI8+YlhypK7hVheGrXbsugb66da4d/qNuErILPKxFBTMYsghQYvwX2rlOqjLjoQB
-	 Np2u8KQRA77Pw==
+	b=Hj/9WlgjyTtro4PPwEfP4yrfGBMIk5OCVwvr6Cq9hdb8FJk7IkGLv2V4gJFS0qotm
+	 4zbThTrKQUm12Hwj9CqYOEVqO0TyeaZwv0XP2FerSNUcrU2YPUkJtL6JkgVxblZ+88
+	 a6EoeT3L584EpT6nj1XSw+m3iDM5XAortKXkviRVLWtcQ8hqCYLr31j0WvNfW0UlS1
+	 z+FriybuLLX37AfFUzphL82BlclFLLbcd61LCaAQVa/C7NemyRes8gdBwp31fX3yq+
+	 on7VYWXa4vhZYZ3G6Z2YC4C9m69GSxfEgJeKHZnsW77qfH2c0/GDTvRdv+u6nSXAcp
+	 LYEny9IgKsN0Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexei Lazar <alazar@nvidia.com>,
-	Dragos Tatulea <dtatulea@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 174/212] net/mlx5: Extend Ethtool loopback selftest to support non-linear SKB
-Date: Mon,  5 May 2025 19:05:46 -0400
-Message-Id: <20250505230624.2692522-174-sashal@kernel.org>
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	mario.limonciello@amd.com,
+	alex.hung@amd.com,
+	chiahsuan.chung@amd.com,
+	sunil.khatri@amd.com,
+	aurabindo.pillai@amd.com,
+	Yilin.Chen@amd.com,
+	mwen@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.1 173/212] drm/amd/display/dm: drop hw_support check in amdgpu_dm_i2c_xfer()
+Date: Mon,  5 May 2025 19:05:45 -0400
+Message-Id: <20250505230624.2692522-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -58,39 +62,32 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Alexei Lazar <alazar@nvidia.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 95b9606b15bb3ce1198d28d2393dd0e1f0a5f3e9 ]
+[ Upstream commit 33da70bd1e115d7d73f45fb1c09f5ecc448f3f13 ]
 
-Current loopback test validation ignores non-linear SKB case in
-the SKB access, which can lead to failures in scenarios such as
-when HW GRO is enabled.
-Linearize the SKB so both cases will be handled.
+DC supports SW i2c as well.  Drop the check.
 
-Signed-off-by: Alexei Lazar <alazar@nvidia.com>
-Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Link: https://patch.msgid.link/20250209101716.112774-15-tariqt@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-index 08a75654f5f18..c170503b3aace 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-@@ -165,6 +165,9 @@ mlx5e_test_loopback_validate(struct sk_buff *skb,
- 	struct udphdr *udph;
- 	struct iphdr *iph;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 7dee02e8ba6fa..4666bbd5483f0 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -7281,7 +7281,7 @@ static int amdgpu_dm_i2c_xfer(struct i2c_adapter *i2c_adap,
+ 	int i;
+ 	int result = -EIO;
  
-+	if (skb_linearize(skb))
-+		goto out;
-+
- 	/* We are only going to peek, no need to clone the SKB */
- 	if (MLX5E_TEST_PKT_SIZE - ETH_HLEN > skb_headlen(skb))
- 		goto out;
+-	if (!ddc_service->ddc_pin || !ddc_service->ddc_pin->hw_info.hw_supported)
++	if (!ddc_service->ddc_pin)
+ 		return result;
+ 
+ 	cmd.payloads = kcalloc(num, sizeof(struct i2c_payload), GFP_KERNEL);
 -- 
 2.39.5
 
