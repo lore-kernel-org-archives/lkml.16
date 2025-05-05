@@ -1,413 +1,125 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0EF1FF61E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CD72BAF8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440952; cv=none; b=BVr+OBI30n9850COgLCE8OYjZWfpKYAg+p4RspkNzaUCqT3/kkxwzBZ8QioalOw4tBDtveEZ2ho49StZk6MAVMjJZ9byozJqgMgXJuEjQOrWT5EDSAmD7896UVJdkB0tt7nZCe/veRq5vU5Rq6hwsC+fDWBBuslVuMhlmss3dDI=
+	t=1746441098; cv=none; b=TUgxyOw0ng0MiGduWcDtmXL5LiFzXA+qVM9i5CYORT5OWF4yv7oIpubZLGQsDCbVzZveswi/bwxK+PDZKzBOE6B3SeFxTVOiKtCtOTFjNvyXeS2QZOqvODBPQ+IBpIvEdhFj1+3UDkCzIYL/DI1xX3hyj4cFP0mnKtE3rOerYaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440952; c=relaxed/simple;
-	bh=lVKJxfzyZlhxJPGHPbA6XTPBlMLKkyYZEHmX+IIRK0k=;
+	s=arc-20240116; t=1746441098; c=relaxed/simple;
+	bh=njyseWzQaB7f+oeJ+nI/1Ty+ZQUMTDQhQmChzcJr4R4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KRDvPbR/bgbV201t7q82HLRG2PDCdVQdP4ie/r1/hDO2ZEgeD4/4Zj1le5JIpWCvRC+KwxYK1wUVZxAXxU4GmK7qto//QFSi/tpN+64iZQCpWPRAVXzYB76mkPyro03O/D984N2aJCNCWFzxF9yyBxkEoIQnBDzqBJImDk7kcZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dwHyN0b7; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=rUVbm4ZmWXP1oEleiKy6fPmUvXRTGPneLlsNtEn4mFnXiL1kSHFTAjFG3/2OHnytHURxh3YhMKCe60glzOsOmNXz+xYpvO0bDWkDDdcu94INJy9V2W0XqYDYltGMWKxP26LGy6CZj7Mm1K6JAwsyyet6bnP9F3TK9S0oeFT3hNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m5dWGIaA; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dwHyN0b7"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so7437937a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:29:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m5dWGIaA"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b07d607dc83so3407455a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746440947; x=1747045747; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h9NJPEPNcCHElqCsFKkOD/zhCMdaqJ93x2wt89oLANA=;
-        b=dwHyN0b7UOcKOzRofwbYJf4d9FxlVhb5deu7k20CaYzD86msqUEx+csDyDQ+Zfk29X
-         VGHarFOLz189ZunTSUJX/QRW486snsDWGFBZyrg3aA/5RT+SMnVxmt+Ix0x40xGzVe3I
-         qTRycdjJEi+XHbwrl9igHs5LhkRPJTtc7zuetjwzO4UkAHkUniYBjJhgFFI3I39/ATS1
-         hQsMxDQp/E/moK5PYpZi2MlS4un4tMGwCl18V4CZs9mrcQePtHVlypLL2B3dClUsNJr+
-         r5brlVJXjdOGrP2e4/cdKsj/X0G7Lu71iiNY5FW+3KOO8RmEUf6SjeN43Ksdyf2qYXPl
-         DYjQ==
+        d=gmail.com; s=20230601; t=1746441096; x=1747045896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5XUpQWufJgs2kKIw18HiC9UXi+ywi6blxUGeIGBekrE=;
+        b=m5dWGIaAG/DUicTo+sAR8MzphJwpvEndGqyHkDWCgOR6SnYFPMmAngT4cLACWdQwOX
+         MCJq0XlM/y/QlF6ciRy/JUHaaTi0N2MwQRv6HtpWHSGxJD+h65jy504MFdC1eVjovIjF
+         Wfan2EwP/7GL9rN1dKG2VVPO3HkE02kM4uFFmfzfCHrBxqKQkk7HPf5Dw1pES1bUg3R1
+         RIxpFm6v4OLWAf45RtYyongMZWSluVwBx/In1t4xkRTx4+WS85FyzsN+2A41mftjAfzL
+         xfYM7MHmG5P/hV9YRiWGcp7IofvVsd3zqrfUKos+EgTDJw9nOiUKjBPRHSHwlNbQ8hBF
+         1U/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746440947; x=1747045747;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h9NJPEPNcCHElqCsFKkOD/zhCMdaqJ93x2wt89oLANA=;
-        b=iLmrHGwOZ/i2yZnf9i+yAyhugnaNsYrzVIsBEeLT/SktOeR5hlPNGOQHvvcXTdlhZ8
-         OeKtzpbfGR2dEfUEG0NZyyTW/IW3zZqF64tS3K+cTZfGKTyfGSjIcSPW4N62M2iob6Cn
-         Lm3S2DRXQyhzqe1AJwgQ/7e74xX7G7RRVvtZaKZfOgRPkGd34NKawGaRzsTg7emkz1/9
-         kNREmtVJLCMwEJPLau02zvP5uGEvAoqcT0/FweQ2qkncakiz336HN3jcHCPvbUmZkxFl
-         uL9daxonlNGEGOGyTLsx+SALafIrN/SFJGDI4jhNrmlHCOQCKNBPrdNm4EFJ53BYDdde
-         LG2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVxUvUcC73ci/cSJjXSCgs4mXrfmeWcp7F0KXCqHCpG0Pdp+J74Ze9ItCZslshKzYwfMcDwTeiWpl6e3kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKulPOSz5h8tJvTPDwr9UeW0xSenwHYyspNXzXT1T8ETAq0rnj
-	HGxTDkxIVv6Sj96TmYW+jkUSgXrLwfaJrttiAOmxEgm7aKDIgZkbsunvZdbhS7JpA4riIhpnLmd
-	6asSGOrBAsqwfxsL3bxZgJvbohmdeBNAyXnUiKg==
-X-Gm-Gg: ASbGncvK8gQoFcxViJo6MayM+cNmRQux0v4fF4NHJSBOriob2q3IdP+kc68M/dMs9Gt
-	jUZi0N7V8nMLltzprVYnME3LGgqQ3oAWv8qGsfwTT486xEBIIxcGIqkdxDxu+AGJ0dzhvkFKUTp
-	31iMxeqpgj1OR4bYyIIaHDY0Sv4eWxVfo4964tIrv18+zdVZ9q8h0=
-X-Google-Smtp-Source: AGHT+IFGLdOA0wjrKNVNr+OgSY/m0KfnXY3uoRWhdic9itp5AdsIBqgTTOv/2WI6gBetK79o3lt6ttFowKiy6rytszo=
-X-Received: by 2002:a05:6402:1d4e:b0:5dc:7725:a0c7 with SMTP id
- 4fb4d7f45d1cf-5fab056dde8mr5734455a12.3.1746440946940; Mon, 05 May 2025
- 03:29:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746441096; x=1747045896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5XUpQWufJgs2kKIw18HiC9UXi+ywi6blxUGeIGBekrE=;
+        b=OjuL0GZEldiJ80es61WuR1YngXEPWeMpK/j4HgEH+xcRmXqkPUXWBjzQHUdILoBgQc
+         WjnWFoFOY4lj5xAyJnq8k/Kjv6D8zRM7tH+lpSSLk9HmuEOsOp8cwOPsul3chFdApg9K
+         kYwbnuWhH6KOB7mu3Ecl9opnedbjLeODm24PfdqByLtCzf+pjycde3f0FlArQwPrCMOK
+         iRxGKYiEpMwCh89FcVYpw3ZniCI6ehOeiccDUvvSQrMR6tx4yIFg6RFzZS2rpkUcB45y
+         b1Y+XtjAKM2j01e+demyZEvIm5RR3+qCqnsYuIMw4q9YcKhE1zY/ZSnqRy5WXxvi2R2Q
+         nH8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUjWHvcVhS+qJ3L/H7ncz8P33s/AaN+2LHRv6gaIyp9baqvy28HxsfZ4bflFuT2ZkQqdG7rK0B4n4UY574=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydavsNvUdHqawUeLdNGMDfRCdORM+ozx2p+LrYI6K5Y/35rUTZ
+	JvVMUF4vYWVcpnh+pre98jpvGx6ZuyWDlbfOwHFc3uWfXFG5GbbnJibVCs3dzwUIO4esYAVPC/D
+	UCTU4uv82cx3BbzCDyhAHPvkuDrk=
+X-Gm-Gg: ASbGncttatXcoqlSzFs+fBDbiuNpJZVD3jdGGEuTGvlcDt6frXaqqxI8ykeHqYOGD+O
+	3tiiaN0l6NMfF0XCBAxZtuth/efNOpPN1P560onalM9exP9SZNpAvIXRp6cvUaOuEWmvva6ZfGW
+	yk0L8K6rxQ9f2QjmX+Nl/CTQ==
+X-Google-Smtp-Source: AGHT+IEYlPo2xwoK9jTR3CithZ5yBxrXrdxirztT2/i6xi/HWoODXSwNegDQZi0mDmE9cngDoeuiIrPsTJdQSDWsPK0=
+X-Received: by 2002:a17:90b:548c:b0:2ee:ee5e:42fb with SMTP id
+ 98e67ed59e1d1-30a6198d16cmr10340838a91.13.1746441096338; Mon, 05 May 2025
+ 03:31:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
-In-Reply-To: <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 5 May 2025 12:28:55 +0200
-X-Gm-Features: ATxdqUFW1mE6ZQzU1S1KsW8u-ZfkAndPfLeziZRRMlNmnLJodq2VykFlzWKjRZQ
-Message-ID: <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Valentin Schneider <vschneid@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250310-8ulp_hdmi-v1-1-a2f231e31987@atmark-techno.com>
+ <v57uy3gddzcoeg3refyv7h6j3ypx23mobctybt27xzdyqy6bgb@atzdlqlytz3c>
+ <Z861gsaGY6bGSisf@atmark-techno.com> <b2qwqacogz5vzfekhk5276owld6isgewu5a2iw3roag3lbtsgm@67vqf54c5tdh>
+ <CAHCN7x+q-K067u6o=+E9ybREi_jopwhMTyMN=JKfCS4r6K=HWA@mail.gmail.com> <7wmuggeoslylq266u2bhunz5vcbbwaux4jv7glytxn6yer2nyr@7s3cfixtlau4>
+In-Reply-To: <7wmuggeoslylq266u2bhunz5vcbbwaux4jv7glytxn6yer2nyr@7s3cfixtlau4>
+From: Adam Ford <aford173@gmail.com>
+Date: Mon, 5 May 2025 05:31:24 -0500
+X-Gm-Features: ATxdqUHfUWoPkX7ywp5TdexqQkSq6Rqa-aZ0I--IAftxx0IXeyn79h1aP8dyKxk
+Message-ID: <CAHCN7xLcQPvZp_fJu-1gj4H47vb64k9dw1efqe_yQQ73LQwF6w@mail.gmail.com>
+Subject: Re: [PATCH] phy: freescale: fsl-samsung-hdmi: return closest rate
+ instead LUT
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Dominique Martinet <dominique.martinet@atmark-techno.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Frieder Schrempf <frieder.schrempf@kontron.de>, 
+	Marco Felsch <m.felsch@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, 
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Makoto Sato <makoto.sato@atmark-techno.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 30 Apr 2025 at 11:13, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+On Mon, May 5, 2025 at 2:55=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
 >
-> (+ more scheduler folks)
+> Hello Adam,
 >
-> tl;dr
+> On Sun, May 04, 2025 at 03:44:26PM -0500, Adam Ford wrote:
+> > On Mon, Mar 10, 2025 at 11:12=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@baylibre.com> wrote:
+> > >
+> > > Hello Dominique,
+> > >
+> > > On Mon, Mar 10, 2025 at 06:48:50PM +0900, Dominique Martinet wrote:
+> > > > [...] and I'm sure there are other improvements that could be made =
+at
+> > > > the edges.
+> > >
+> > > One thing that irritated me is the function names. `phy_clk_round_rat=
+e`
+> > > sounds too generic. `fsl_samsung_hdmi_phy_clk_round_rate` is long, bu=
+t
+> > > I'd say would be a better match.
+> > Uwe,
+> >
+> > I just sent a patch to rename round_rate and set rate functions to be
+> > more explicit.  I also tried to refactor the driver as you requested
+> > by simplifying the code, but I didn't have time to integrate my
+> > fractional-divder code yet.
+> >
+> > I will be traveling for most of May, so I won't be able to revisit
+> > this again until after May 24.  Hopefully the patches I submitted meet
+> > your satisfaction,
 >
-> JB has a workload that hates aggressive migration on the 2nd Generation
-> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
-> C2C latency.
->
-> Based on JB's observation so far, reverting commit 16b0a7a1a0af
-> ("sched/fair: Ensure tasks spreading in LLC during LB") and commit
-> c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-> condition") helps the workload. Both those commits allow aggressive
-> migrations for work conservation except it also increased cache
-> misses which slows the workload quite a bit.
+> I don't feel authoritative for that driver, so please do stuff to please
+> the phy maintainers and consider my comments as suggestion from the side
+> line.
 
-commit 16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC
-during LB") eases the spread of task inside a LLC so It's not obvious
-for me how it would increase "a lot of CPU migrations go out of CCX,
-then L3 miss,". On the other hand, it will spread task in SMT and in
-LLC which can prevent running at highest freq on some system but I
-don't know if it's relevant for this SoC.
+I thought you had a good idea, and your suggestion made sense.
+Getting that kind of feedback makes me a better programmer.
 
-commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-condition") makes newly idle migration happen more often which can
-then do migrate tasks across LLC. But then It's more about why
-enabling newly idle load balance out of LLC if it is so costly.
+adam
 
 >
-> "relax_domain_level" helps but cannot be set at runtime and I couldn't
-> think of any stable / debug interfaces that JB hasn't tried out
-> already that can help this workload.
->
-> There is a patch towards the end to set "relax_domain_level" at
-> runtime but given cpusets got away with this when transitioning to
-> cgroup-v2, I don't know what the sentiments are around its usage.
-> Any input / feedback is greatly appreciated.
->
-> On 4/28/2025 1:13 PM, Jean-Baptiste Roquefere wrote:
-> > Hello Prateek,
-> >
-> > thank's for your reponse.
-> >
-> >
-> >> Looking at the commit logs, it looks like these commits do solve other
-> >> problems around load balancing and might not be trivial to revert
-> >> without evaluating the damages.
-> >
-> > it's definitely not a productizable workaround !
-> >
-> >> The processor you are running on, the AME EPYC 7702P based on the Zen2
-> >> architecture contains 4 cores / 8 threads per CCX (LLC domain) which is
-> >> perhaps why reducing the thread count to below this limit is helping
-> >> your workload.
-> >>
-> >> What we suspect is that when running the workload, the threads that
-> >> regularly sleep trigger a newidle balancing which causes them to move
-> >> to another CCX leading to higher number of L3 misses.
-> >>
-> >> To confirm this, would it be possible to run the workload with the
-> >> not-yet-upstream perf sched stats [1] tool and share the result from
-> >> perf sched stats diff for the data from v6.12.17 and v6.12.17 + patch
-> >> to rule out any other second order effect.
-> >>
-> >> [1]
-> >> https://lore.kernel.org/all/20250311120230.61774-1-swapnil.sapkal@amd.com/
-> >
-> > I had to patch tools/perf/util/session.c : static int
-> > open_file_read(struct perf_data *data) due to "failed to open perf.data:
-> > File exists" (looked more like a compiler issue than a tool/perf issue)
-> >
-> > $ ./perf sched stats diff perf.data.6.12.17 perf.data.6.12.17patched >
-> > perf.diff (see perf.diff attached)
->
-> Thank you for all the information Jean. I'll highlight the interesting
-> bits (at least the bits that stood out to me)
->
-> (left is mainline, right is mainline with the two commits mentioned by
->   JB reverted)
->
-> total runtime by tasks on this processor (in jiffies)            : 123927676874,108531911002  |   -12.42% |
-> total waittime by tasks on this processor (in jiffies)           :  34729211241, 27076295778  |   -22.04% |  (    28.02%,     24.95% )
-> total timeslices run on this cpu                                 :       501606,      489799  |    -2.35% |
->
-> Since "total runtime" is lower on the right, it means that the CPUs
-> were not as well utilized with the commits reverted however the
-> reduction in the "total waittime" suggests things are running faster
-> and on overage there are 0.28 waiting tasks on mainline compared to
-> 0.24 with the commits reverted.
->
-> ---------------------------------------- <Category newidle - SMT> ----------------------------------------
-> load_balance() count on cpu newly idle                           :      331664,      31153  |   -90.61% |  $        0.15,        1.55 $
-> load_balance() failed to find busier group on cpu newly idle     :      300234,      28470  |   -90.52% |  $        0.16,        1.70 $
-> *load_balance() success count on cpu newly idle                  :       28386,       1544  |   -94.56% |
-> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.00,       1.01  |     0.46% |
-> ---------------------------------------- <Category newidle - MC > ----------------------------------------
-> load_balance() count on cpu newly idle                           :      258017,      29345  |   -88.63% |  $        0.19,        1.65 $
-> load_balance() failed to find busier group on cpu newly idle     :      131096,      16081  |   -87.73% |  $        0.37,        3.01 $
-> *load_balance() success count on cpu newly idle                  :       23286,       2181  |   -90.63% |
-> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.03,       1.01  |    -1.23% |
-> ---------------------------------------- <Category newidle - PKG> ----------------------------------------
-> load_balance() count on cpu newly idle                           :      124013,      27086  |   -78.16% |  $        0.39,        1.78 $
-> load_balance() failed to find busier group on cpu newly idle     :       11812,       3063  |   -74.07% |  $        4.09,       15.78 $
-> *load_balance() success count on cpu newly idle                  :       13892,       4739  |   -65.89% |
-> *avg task pulled per successful lb attempt (cpu newly idle)      :        1.07,       1.10  |     3.32% |
-> ----------------------------------------------------------------------------------------------------------
->
-> Most migrations are from newidle balancing which seems to move task
-> across cores ( > 50% of time) and the LLC too (~8% of the times).
->
-> >
-> >> Assuming you control these deployments, would it possible to run
-> >> the workload on a kernel running with "relax_domain_level=2" kernel
-> >> cmdline that restricts newidle balance to only within the CCX. As a
-> >> side effect, it also limits  task wakeups to the same LLC domain but
-> >> I would still like to know if this makes a difference to the
-> >> workload you are running.
-> > On vanilla 6.12.17 it gives the IPC we expected:
->
-> Thank you JB for trying out this experiment. I'm not very sure what
-> the views are on "relax_domain_level" and I'm hoping the other
-> scheduler folks will chime in here - Is it a debug knob? Can it
-> be used in production?
->
-> I know it had additional uses with cpuset in cgroup-v1 but was not
-> adopted in v2 - are there any nasty historic reasons for this?
->
-> >
-> > +--------------------+--------------------------+-----------------------+
-> > |                    | relax_domain_level unset | relax_domain_level=2  |
-> > +--------------------+--------------------------+-----------------------+
-> > | Threads            |  210                     | 210                  |
-> > | Utilization (%)    |  65,86                   | 52,01                |
-> > | CPU effective freq |  1 622,93                |  1 294,12             |
-> > | IPC                |  1,14                    | 1,42                 |
-> > | L2 access (pti)    |  34,36                   | 38,18                |
-> > | L2 miss   (pti)    |  7,34                    | 7,78                 |
-> > | L3 miss   (abs)    |  39 711 971 741          |  33 929 609 924       |
-> > | Mem (GB/s)         |  70,68                   | 49,10                |
-> > | Context switches   |  109 281 524             |  107 896 729          |
-> > +--------------------+--------------------------+-----------------------+
-> >
-> > Kind regards,
-> >
-> > JB
->
-> JB asked if there is any way to toggle "relax_domain_level" at runtime
-> on mainline and I couldn't find any easy way other than using cpusets
-> with cgroup-v1 which is probably harder to deploy at scale than the
-> pinning strategy that JB mentioned originally.
->
-> I currently cannot think of any stable interface that exists currently
-> to allow sticky behavior and mitigate aggressive migration for work
-> conservation - JB did try almost everything available that he
-> summarized in his original report.
->
-> Could something like below be a stop-gap band-aid to remedy such the
-> case of workloads that don't mind temporary imbalance in favor of
-> cache hotness?
->
-> ---
-> From: K Prateek Nayak <kprateek.nayak@amd.com>
-> Subject: [RFC PATCH] sched/debug: Allow overriding "relax_domain_level" at runtime
->
-> Jean-Baptiste noted that Ateme's workload experiences poor IPC on a 2nd
-> Generation EPYC system and narrowed down the major culprits to commit
-> 16b0a7a1a0af ("sched/fair: Ensure tasks spreading in LLC during LB") and
-> commit c5b0a7eefc70 ("sched/fair: Remove sysctl_sched_migration_cost
-> condition") both of which enable more aggressive migrations in favor of
-> work conservation.
->
-> The larger C2C latency on the platform coupled with a smaller L3 size of
-> 4C/8T makes downside of aggressive balance very prominent. Looking at
-> the perf sched stats report from JB [1], when the two commits are
-> reverted, despite the "total runtime" seeing a dip of 11% showing a
-> better load distribution on mainline, the "total waittime" dips by 22%
-> showing despite the imbalance, the workload runs faster and this
-> improvement can be co-related to the higher IPC and the reduced L3
-> misses in data shared by JB. Most of the migration during load
-> balancing can be attributed to newidle balance.
->
-> JB confirmed that using "relax_domain_level=2" in kernel cmdline helps
-> this particular workload by restricting the scope of wakeups and
-> migrations during newidle balancing however "relax_domain_level" works
-> on topology levels before degeneration and setting the level before
-> inspecting the topology might not be trivial at boot time.
->
-> Furthermore, a runtime knob that can help quickly narrow down any changes
-> in workload behavior to aggressive migrations during load balancing can
-> be helpful during debugs.
->
-> Introduce "relax_domain_level" in sched debugfs and allow overriding the
-> knob at runtime.
->
->    # cat /sys/kernel/debug/sched/relax_domain_level
->    -1
->
->    # echo Y > /sys/kernel/debug/sched/verbose
->    # cat /sys/kernel/debug/sched/domains/cpu0/domain*/flags
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_CPUCAPACITY SD_SHARE_LLC SD_PREFER_SIBLING
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_LLC SD_PREFER_SIBLING
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SERIALIZE SD_OVERLAP SD_NUMA
->
-> To restrict newidle balance to only within the LLC, "relax_domain_level"
-> can be set to level 3 (SMT, CLUSTER, *MC* , PKG, NUMA)
->
->    # echo 3 > /sys/kernel/debug/sched/relax_domain_level
->    # cat /sys/kernel/debug/sched/domains/cpu0/domain*/flags
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_CPUCAPACITY SD_SHARE_LLC SD_PREFER_SIBLING
->    SD_BALANCE_NEWIDLE SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SHARE_LLC SD_PREFER_SIBLING
->    SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_PREFER_SIBLING
->    SD_BALANCE_EXEC SD_BALANCE_FORK SD_WAKE_AFFINE SD_SERIALIZE SD_OVERLAP SD_NUMA
->
-> "relax_domain_level" forgives short term imbalances. Longer term
-> imbalances will be eventually caught by the periodic load balancer and
-> the system will reach a state of balance, only slightly later.
->
-> Link: https://lore.kernel.org/all/996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com/ [1]
-> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
-> ---
->   include/linux/sched/topology.h |  6 ++--
->   kernel/sched/debug.c           | 52 ++++++++++++++++++++++++++++++++++
->   kernel/sched/topology.c        |  2 +-
->   3 files changed, 57 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> index 198bb5cc1774..5f59bdc1d5b1 100644
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -65,8 +65,10 @@ struct sched_domain_attr {
->         int relax_domain_level;
->   };
->
-> -#define SD_ATTR_INIT   (struct sched_domain_attr) {    \
-> -       .relax_domain_level = -1,                       \
-> +extern int default_relax_domain_level;
-> +
-> +#define SD_ATTR_INIT   (struct sched_domain_attr) {            \
-> +       .relax_domain_level = default_relax_domain_level,       \
->   }
->
->   extern int sched_domain_level_max;
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index 557246880a7e..cc6944b35535 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -214,6 +214,57 @@ static const struct file_operations sched_scaling_fops = {
->         .release        = single_release,
->   };
->
-> +DEFINE_MUTEX(relax_domain_mutex);
-> +
-> +static ssize_t sched_relax_domain_write(struct file *filp,
-> +                                       const char __user *ubuf,
-> +                                       size_t cnt, loff_t *ppos)
-> +{
-> +       int relax_domain_level;
-> +       char buf[16];
-> +
-> +       if (cnt > 15)
-> +               cnt = 15;
-> +
-> +       if (copy_from_user(&buf, ubuf, cnt))
-> +               return -EFAULT;
-> +       buf[cnt] = '\0';
-> +
-> +       if (kstrtoint(buf, 10, &relax_domain_level))
-> +               return -EINVAL;
-> +
-> +       if (relax_domain_level < -1 || relax_domain_level > sched_domain_level_max + 1)
-> +               return -EINVAL;
-> +
-> +       guard(mutex)(&relax_domain_mutex);
-> +
-> +       if (relax_domain_level != default_relax_domain_level) {
-> +               default_relax_domain_level = relax_domain_level;
-> +               rebuild_sched_domains();
-> +       }
-> +
-> +       *ppos += cnt;
-> +       return cnt;
-> +}
-> +static int sched_relax_domain_show(struct seq_file *m, void *v)
-> +{
-> +       seq_printf(m, "%d\n", default_relax_domain_level);
-> +       return 0;
-> +}
-> +
-> +static int sched_relax_domain_open(struct inode *inode, struct file *filp)
-> +{
-> +       return single_open(filp, sched_relax_domain_show, NULL);
-> +}
-> +
-> +static const struct file_operations sched_relax_domain_fops = {
-> +       .open           = sched_relax_domain_open,
-> +       .write          = sched_relax_domain_write,
-> +       .read           = seq_read,
-> +       .llseek         = seq_lseek,
-> +       .release        = single_release,
-> +};
-> +
->   #endif /* SMP */
->
->   #ifdef CONFIG_PREEMPT_DYNAMIC
-> @@ -516,6 +567,7 @@ static __init int sched_init_debug(void)
->         debugfs_create_file("tunable_scaling", 0644, debugfs_sched, NULL, &sched_scaling_fops);
->         debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
->         debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
-> +       debugfs_create_file("relax_domain_level", 0644, debugfs_sched, NULL, &sched_relax_domain_fops);
->
->         sched_domains_mutex_lock();
->         update_sched_domain_debugfs();
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index a2a38e1b6f18..eb5c8a9cd904 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -1513,7 +1513,7 @@ static void asym_cpu_capacity_scan(void)
->    * Non-inlined to reduce accumulated stack pressure in build_sched_domains()
->    */
->
-> -static int default_relax_domain_level = -1;
-> +int default_relax_domain_level = -1;
->   int sched_domain_level_max;
->
->   static int __init setup_relax_domain_level(char *str)
-> --
->
-> Thanks and Regards,
-> Prateek
->
+> Best regards
+> Uwe
