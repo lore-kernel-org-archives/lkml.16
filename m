@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4422280CCE;
-	Mon,  5 May 2025 23:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C372ED085;
+	Mon,  5 May 2025 23:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486555; cv=none; b=Y9PMKjjP13buBs5SQ6ycJT01SLGzTV9oe1zNfrwxriVap1E5Bnw6p07o+LAcstbzZ/ekz0PLgTJ5NG5Hg+2CXXzdKbp0zrrjvotd+u93UacQyEfEeJOZbXJkWjlfz6u6SHZxNLCywTAXDEInB8RWYLFEPQrysobDip9O9lsqhm8=
+	t=1746486557; cv=none; b=cNDlgznWCDJ8v/d/hUZYqrOfHGHfT4ORd+KRWQ0F21g23NxGTTORAWFe6hmot6Ggp7Vs81H5ZLO850U0Q66XIlRgrPCpC3+5UW4wrCenSqYvaUmVnk6lXwmXkjjH5kXzu5JsyDbcKy7yXebJ79L5yABvGovGSKWfXyJvfG1nW78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486555; c=relaxed/simple;
-	bh=VLmPVKRTDLh7bBgAVXDRQ5oH+GsZgA6fXTxvCcWcfz8=;
+	s=arc-20240116; t=1746486557; c=relaxed/simple;
+	bh=M57+MGIitVlZ7L9cTp3dvP1dnfas3v/3MLvR3vJ6H/c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hamiWJmsyuiNLi5/hmjce0zqfK1sCzG34cwGH1ADxn3sCGYOQZgpeoJwg/lTvWPsRy3IhXGMFlATPDCV0dezpI+235fgCl7GclRiPqKJ3d1FkjXA5r1h0bw/uPvv7TdEShcvYIBT/ZD+sUOL1K19MOwchymgxoqxexAHxrWgo3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bELJILS/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NEFM3QgMioD2LPrVdhB62LEhga0R5cxl5eBFRck5tSdTVu26NUT6okfDmkEYtg+50cWWFknYdPwwXt7BbigKie9aULKIJf8CiHERfLSYy6NknhWu+g9QMQJKT+8Qvy57HIoCgaEl04hGIqbAsLdK5IBKqPTcWDWt1adxpSEZdiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMrHudWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bELJILS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5874C4CEF1;
-	Mon,  5 May 2025 23:09:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMrHudWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CC2C4CEEF;
+	Mon,  5 May 2025 23:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486555;
-	bh=VLmPVKRTDLh7bBgAVXDRQ5oH+GsZgA6fXTxvCcWcfz8=;
+	s=k20201202; t=1746486557;
+	bh=M57+MGIitVlZ7L9cTp3dvP1dnfas3v/3MLvR3vJ6H/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bELJILS/z5T5f3ZiqUE1zD8FLrKx24x4PwGYLjWLFI/fGuyMezzYOVLvGue0oB1lt
-	 /tGKkt6rbyJ003aWxC30EYLybJTiYZbku5R04HyknJr81WdBquppnoBlKfWFqB7saA
-	 cDbzCEkKhARBjg+OBq/LkV7Z/Auy1HNbacPk18Qm+L5itpiw7MIqZEJ3m0+GNPvtM6
-	 tVwzwCsnUrOXhvi8Bd7dEhWwYf6mO/2Q+LkwdV4GRrSMVR3P8GX8F62K5n/euhFRMs
-	 f1CpOddvfuCr/YrzYk2Thrr5vuxDfQojZdktaXVgbSY8mKdjn2z3oNlqnHv1Gx0W0d
-	 elUVXE4+mQvpg==
+	b=NMrHudWygExBWmv6CFxQA2cR34+ZrxyOt1+m+c4AZ0NYFeOQFe7Hj6IS8RoDI2sR6
+	 TYH+EtQSnjJtn4wV3iC++N3en86r7GzbwZdIjmxYmxK0pMby5OTkr2LqKnbrr+L8Ew
+	 yScyTMJHLYC0CbXiW2d9KAg7mjTl7y5174SCVg9BIDp7j5hYhcJ4D5b8SbQ1UsoybI
+	 jBot2Y6Sth067esdBfpvhOcTnZzwNHwRkZYgHGBa81lpgS/AG+1/PodEa+YeVGSnRt
+	 dWmxxFQK3vQF2dbpE3mkJEV9BEeY23HmcLPJP0VVuAGMazgzQKV2Hcqrmw1z1qz5Eu
+	 yynhJyGvZeFVw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 6.1 089/212] orangefs: Do not truncate file size
-Date: Mon,  5 May 2025 19:04:21 -0400
-Message-Id: <20250505230624.2692522-89-sashal@kernel.org>
+	linux@armlinux.org.uk,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 090/212] net: phylink: use pl->link_interface in phylink_expects_phy()
+Date: Mon,  5 May 2025 19:04:22 -0400
+Message-Id: <20250505230624.2692522-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -51,48 +57,57 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
 
-[ Upstream commit 062e8093592fb866b8e016641a8b27feb6ac509d ]
+[ Upstream commit b63263555eaafbf9ab1a82f2020bbee872d83759 ]
 
-'len' is used to store the result of i_size_read(), so making 'len'
-a size_t results in truncation to 4GiB on 32-bit systems.
+The phylink_expects_phy() function allows MAC drivers to check if they are
+expecting a PHY to attach. The checking condition in phylink_expects_phy()
+aims to achieve the same result as the checking condition in
+phylink_attach_phy().
 
-Signed-off-by: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Link: https://lore.kernel.org/r/20250305204734.1475264-2-willy@infradead.org
-Tested-by: Mike Marshall <hubcap@omnibond.com>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+However, the checking condition in phylink_expects_phy() uses
+pl->link_config.interface, while phylink_attach_phy() uses
+pl->link_interface.
+
+Initially, both pl->link_interface and pl->link_config.interface are set
+to SGMII, and pl->cfg_link_an_mode is set to MLO_AN_INBAND.
+
+When the interface switches from SGMII to 2500BASE-X,
+pl->link_config.interface is updated by phylink_major_config().
+At this point, pl->cfg_link_an_mode remains MLO_AN_INBAND, and
+pl->link_config.interface is set to 2500BASE-X.
+Subsequently, when the STMMAC interface is taken down
+administratively and brought back up, it is blocked by
+phylink_expects_phy().
+
+Since phylink_expects_phy() and phylink_attach_phy() aim to achieve the
+same result, phylink_expects_phy() should check pl->link_interface,
+which never changes, instead of pl->link_config.interface, which is
+updated by phylink_major_config().
+
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Link: https://patch.msgid.link/20250227121522.1802832-2-yong.liang.choong@linux.intel.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/inode.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/phy/phylink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index b3bbb5a5787ac..cc81ff6ac735e 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -23,9 +23,9 @@ static int orangefs_writepage_locked(struct page *page,
- 	struct orangefs_write_range *wr = NULL;
- 	struct iov_iter iter;
- 	struct bio_vec bv;
--	size_t len, wlen;
-+	size_t wlen;
- 	ssize_t ret;
--	loff_t off;
-+	loff_t len, off;
- 
- 	set_page_writeback(page);
- 
-@@ -94,8 +94,7 @@ static int orangefs_writepages_work(struct orangefs_writepages *ow,
- 	struct orangefs_write_range *wrp, wr;
- 	struct iov_iter iter;
- 	ssize_t ret;
--	size_t len;
--	loff_t off;
-+	loff_t len, off;
- 	int i;
- 
- 	len = i_size_read(inode);
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index fc58e4afb38dd..3069a7df25d3f 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -1566,7 +1566,7 @@ bool phylink_expects_phy(struct phylink *pl)
+ {
+ 	if (pl->cfg_link_an_mode == MLO_AN_FIXED ||
+ 	    (pl->cfg_link_an_mode == MLO_AN_INBAND &&
+-	     phy_interface_mode_is_8023z(pl->link_config.interface)))
++	     phy_interface_mode_is_8023z(pl->link_interface)))
+ 		return false;
+ 	return true;
+ }
 -- 
 2.39.5
 
