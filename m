@@ -1,99 +1,100 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBB31F540F;
-	Mon,  5 May 2025 15:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DBA16F8E5;
+	Mon,  5 May 2025 15:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460081; cv=none; b=bkPwprtWveC8BRLd7i+eg3iGCf1L9sO4dQy/ThaUsLcRN3R3zkLpkW51MMLrXi9Zvc/vAE+zHHxD6amWE3n6TS7HDmMLLulpx1e98TMgP0T+DcjU6J0wf/4amv4jNafpy2Wuvp6DEr1ecHDTZQBpd/PFrQ5Wbkxi63LfHsy8cHM=
+	t=1746460125; cv=none; b=h+56HmCkV1Zhq7vhU+YPB6sVDkFUd18xSANyIXh0kCRVGW5WP4ptuxFmnbanTiWptPHAhJuyU7WkITKCaexQsR1LTuUOgD1ILq6tuxQw4JvEue+4jOQHrWz4/cw385YT+wCjBQCAR4mxltsywS7k6YqnRAscW/4N6iF3NtVgUgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460081; c=relaxed/simple;
-	bh=eeAdHTJm6FSrjCZKlfIOq8+Vn3n8V2I6OFBiLTT5iKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FTbP9Xyfk87R1yx94T/FPTVrUgm0U5802EhltetkiRvaBRgR6FMkSKQ07AhQo/8k97MLLfQf3j0XFTSTP2eR6i61t71tYFAysbSJDvz6LA5nKwTxy6hNzHM+T9SnDl4hEu8brSlj5VP4vyEMFH1XJ/ZQviUJg5btMRKSq/BzvPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T2A/yTdc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T2A/yTdc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AD57140E01FA;
-	Mon,  5 May 2025 15:47:55 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YEE7AJJhfvNQ; Mon,  5 May 2025 15:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746460071; bh=Uoj54ZHamcLCff/Dsy1RSXhTMNk3UMUXjW5gx1XCL/c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T2A/yTdcAkpsXv56oFoV4TxKUcjztflUlTqG7JatgyVomIj57BznaXSKAM7cy0yAY
-	 17aK3s6HfwmPA0VRaZTR3myWr5sN2hIInJpJpMRA7LsX8L64ls/KPCSAIuyQU166HB
-	 7bv20nmAnDJ4HX9Ux9AV18/CqYAtoCT6Dgsqfhr9KtSdmB1OAGvxJkoCKrxY8ZdMdK
-	 HGlKitBNbH+edAVPiJS0OP+aS2aflUHid1RJZ212bfBsD/wVaLGl/meW5z1Ynp/SLm
-	 BvN+gE+R86rxANyykpVZPGUjpaU0xxHbK1w9fzPj8TJfPC8a6J0G2pHXaCR+suDWF/
-	 4TLX9WbYle0cq7D4yHHE9qayMgvE8uT7KVbbA6yof7adk6N4xApBwLfVfckHjOWudV
-	 kuATfFcS2mONV+dwaPk4IBT9FDSmSPy8HjRKat25Bx50yORxLnqdsvDvAFXLE6ha1d
-	 vEDRtmjYv2unFy7rqHf+LvQNiwQrjcJLzFo6NAa3YRNROOSR4kizFDXX0Ta4GsqUIH
-	 ksQ7lkg/TeSzQJ4GENEVLD/kdt/hH7kb/dt+1x7VL3cPhY1e0nh3Y2s3yYdh9xR4GL
-	 6NV0IojZMWmTgzcFr2JllYdd6KLZmfEYDdlSeO4mZ7m4Ovm64bcRJ2WvAC8aaFVNUA
-	 bJmwxPUdqjQBHdNvLYe0y8wg=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7248040E0196;
-	Mon,  5 May 2025 15:47:38 +0000 (UTC)
-Date: Mon, 5 May 2025 17:47:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Patrick Bellasi <derkling@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Patrick Bellasi <derkling@matbug.net>,
-	Brendan Jackman <jackmanb@google.com>,
-	Michael Larabel <Michael@michaellarabel.com>
-Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
-Message-ID: <20250505154732.GIaBjdlKe_vA9U7gmb@fat_crate.local>
-References: <Z7OUZhyPHNtZvwGJ@Asmaa.>
- <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local>
- <f16941c6a33969a373a0a92733631dc578585c93@linux.dev>
- <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local>
- <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local>
- <aBKzPyqNTwogNLln@google.com>
- <20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local>
- <aBOnzNCngyS_pQIW@google.com>
- <20250505152533.GHaBjYbcQCKqxh-Hzt@fat_crate.local>
- <LV3PR12MB9265E790428699931E58BE8D948E2@LV3PR12MB9265.namprd12.prod.outlook.com>
+	s=arc-20240116; t=1746460125; c=relaxed/simple;
+	bh=oa0sGywS0FB63vtTpXv9wl4jmko7S3Wb/y/cC9raBzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jOiKBCD2+p3n5Bqmk/X0jlPae9iJYPLVJHWsRhyuhdOqAem8sPyrAt4VH1gcJMn3p5/uVClGSR3ET4e08KWp7m7LaQsDeMSGcWKEgIDpkOYKh/UpMXDDwVhTTewWjWDm6fJRwaNTH7pCVmxiINV3hf4fdMQqRr2dBk0UN38zQE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3202C4CEE4;
+	Mon,  5 May 2025 15:48:43 +0000 (UTC)
+Date: Mon, 5 May 2025 11:48:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jason Wessel
+ <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, Douglas
+ Anderson <dianders@chromium.org>
+Subject: [PATCH v2] tracing: kdb: Use tracer_tracing_on/off() instead of
+ setting per CPU disabled
+Message-ID: <20250505114849.1a9237d5@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB9265E790428699931E58BE8D948E2@LV3PR12MB9265.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 03:40:20PM +0000, Kaplan, David wrote:
-> Almost.  My thought was that kvm_run could do something like:
-> 
-> If (!this_cpu_read(bp_spec_reduce_is_set)) {
->    wrmsrl to set BP_SEC_REDUCE
->    this_cpu_write(bp_spec_reduce_is_set, 1)
-> }
+From: Steven Rostedt <rostedt@goodmis.org>
 
-That's what I meant too. :-)
+The per CPU "disabled" value was the original way to disable tracing when
+the tracing subsystem was first created. Today, the ring buffer
+infrastructure has its own way to disable tracing. In fact, things have
+changed so much since 2008 that many things ignore the disable flag.
 
+The kdb_ftdump() function iterates over all the current tracing CPUs and
+increments the "disabled" counter before doing the dump, and decrements it
+afterward.
+
+As the disabled flag can be ignored, doing this today is not reliable.
+Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
+disable and then enabled the entire ring buffer in one go!
+
+Cc: Jason Wessel <jason.wessel@windriver.com>
+Cc: Daniel Thompson <danielt@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/20250502205348.643055437@goodmis.org
+
+- Remove unused "int cpu;" (kernel test robot)
+
+ kernel/trace/trace_kdb.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 1e72d20b3c2f..79f11f7e52df 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -98,7 +98,6 @@ static int kdb_ftdump(int argc, const char **argv)
+ 	long cpu_file;
+ 	int err;
+ 	int cnt;
+-	int cpu;
+ 
+ 	if (argc > 2)
+ 		return KDB_ARGCOUNT;
+@@ -120,9 +119,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 	trace_init_global_iter(&iter);
+ 	iter.buffer_iter = buffer_iter;
+ 
+-	for_each_tracing_cpu(cpu) {
+-		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
+-	}
++	tracer_tracing_off(iter.tr);
+ 
+ 	/* A negative skip_entries means skip all but the last entries */
+ 	if (skip_entries < 0) {
+@@ -135,9 +132,7 @@ static int kdb_ftdump(int argc, const char **argv)
+ 
+ 	ftrace_dump_buf(skip_entries, cpu_file);
+ 
+-	for_each_tracing_cpu(cpu) {
+-		atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
+-	}
++	tracer_tracing_on(iter.tr);
+ 
+ 	kdb_trap_printk--;
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.47.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
