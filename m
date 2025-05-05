@@ -1,120 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125B4230D35;
-	Mon,  5 May 2025 12:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A27243968;
+	Mon,  5 May 2025 12:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447352; cv=none; b=cYNa44233cHxFnbb1KB7GFhs9KQ6EVUHe3zJMj0Xfz7Q/fYbCXzyXZiY8a3zZnLkUtiYfaSQi/gcFUKSZbZj6ZueZMeuzrCSN9XrX9QMyWp/3FG4VWjvCDh9EQQg7vBw4VuYEykO74ntLRkUxBaXAVVwa2I0H4urqw7biL3r3gk=
+	t=1746447410; cv=none; b=k6e9snNO6r9wgAbuTLs7W+C78A8nkAkZ82HihYr/31UDlJ9XUUTnWP8NweyumBm87FNSVQzJyMljZpRxS8oqYvQC0lyRYrqAjv0Wr541jX90SIa5L6hhSOebAQku51tbtz7aEoXuZ4R8uaOYmk18i1ziqAWNBySrLCEcHFjHBzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447352; c=relaxed/simple;
-	bh=8HcZtQz1mapFyWoKYVTxOoPRxBF6cFTSSmO5hGEgwm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nHabDTxc1/tYu4jnLU3F9tjuZAXIHdVg367vStneke5A6Ky4GfKBeC0q8NdpGUdPfEFQuKAI2HJKcjpN8IEWUU+9cA7Hp1oyUTMAh/Dl0gaiDebpP2w0vgDXMQvmXqujRwIlTne1IYLaMQnm9IMaIRyJflTgjPedVXL4v+Ron9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUZZn/BC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746447410; c=relaxed/simple;
+	bh=LH5lzqhn0XVPlG2tjftzOFQkvXI+EFqjBSKAvNxSXbI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H0U+Mg46AdegjDt/M85D6611mKoDyJJbzFrytftJNiXd/fnD3lw4qmByPjMjsTtRgxLEOEdfPwyeqeZUAtc+GuQKSWvEvQ+1NyzAYOE49k9yVcRk/Zmy/n48pIK6Ji3elVvbwDB6vMiKKPn4KWLhJQ4xMLxbI+g/7bb7Akq9Xfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=NrLbJX3N; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUZZn/BC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D187AC4CEE4;
-	Mon,  5 May 2025 12:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746447351;
-	bh=8HcZtQz1mapFyWoKYVTxOoPRxBF6cFTSSmO5hGEgwm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qUZZn/BCagIKPJ3HpU8S1QJtkEhQblDG/Cz6F+DyqGUhWr160HM0Drk7zRivbxzEE
-	 BQv97MjSsBHOUq8t7tk/IYCDbtjzG6r4NvTUGMRWpHtkJlNx18oIPR+rO+OTPPo5px
-	 wUNplKFuZ9Ib/4hkybtOLJcB/FniSsMzoGUVToNJ69IPnx9md1nmD7DR2TFX6Xlb+3
-	 HCoizfD+ZmdIyth0dyDwZ066fczAXb8ij/qPlgYwDR2EEEVHKaMm9+WfrOXexbdAUz
-	 vBZg5tROHQMT3c1Q1q2k7dEZMzVCBczLp1cTtyAYTI8/rY1KDLZfyd1TXh4sgUkfZs
-	 HR7jB4vPCrfWw==
-Date: Mon, 5 May 2025 13:15:44 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, David
- Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Beniamin Bia
- <beniamin.bia@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iio: adc: ad7606: fix serial register access
-Message-ID: <20250505131544.0a7477a2@jic23-huawei>
-In-Reply-To: <o3jxdmchpmn5edbeznqecslkw4tnrdei4qqnb66oyyqeizavmg@5uke2kr4hte7>
-References: <20250418-wip-bl-ad7606-fix-reg-access-v3-1-d5eeb440c738@baylibre.com>
-	<o3jxdmchpmn5edbeznqecslkw4tnrdei4qqnb66oyyqeizavmg@5uke2kr4hte7>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NrLbJX3N"
+X-UUID: cdcd905429aa11f0813e4fe1310efc19-20250505
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=eL43ZRVkWexsT4kpS9dOgpQeOnjph5zzqnvNig+2Iqg=;
+	b=NrLbJX3NihPi3eNkb8ClfkrtWWJm3R5WTIk0mZ8rSb3362mJeP7xeR0x+Mjk3uDC8jue07gcRzj2EVr2HuhRLyRvxghJcssfmA12jZ5iWmTokID4GxH9sQDhHqAZ3XEqLvrldmh8+ocI1p66Vtr8oJqVGy1KtJsZwPLdUNoxNUg=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:843a5f4c-772a-44bd-9d8d-dd05f2312a92,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:6112ec7f-99e0-42db-8543-075f2c30d73f,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: cdcd905429aa11f0813e4fe1310efc19-20250505
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <sirius.wang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1932931428; Mon, 05 May 2025 20:16:42 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Mon, 5 May 2025 20:16:40 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 5 May 2025 20:16:40 +0800
+From: Sirius Wang <sirius.wang@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@mediatek.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<wenst@chromium.org>, Sirius Wang <sirius.wang@mediatek.com>
+Subject: [PATCH 0/2] Add mt8189 dts evaluation board and Mafefile
+Date: Mon, 5 May 2025 20:15:44 +0800
+Message-ID: <20250505121627.3944728-1-sirius.wang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Mon, 5 May 2025 13:35:06 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+MT8189 is a SoC based on 64bit ARMv8 architecture. It contains 6 CA55
+and 2 CA78 cores. MT8189 share many HW IP with MT8188 series.
 
-> Hi Jonathan,
-> 
-> any news on this patch ? I would need it to proceed on other new ad7606
-> features, 
-> 
-Oops. I applied this and marked it as such in patchwork but didn't
-reply to the mail. Sorry!  It was in the pull request Greg took last week
-for fixes but hasn't quite made it to upstream yet.  
+We add basic chip support for MediaTek MT8189 on evaluation board.
 
-Just list it as a dependency in cover letter for new feature patches.
+In this series, we also add dt-bindings document definition for MT8189.
 
-Jonathan
+Sirius Wang (2):
+  WIP: dt-bindings: arm: Add compatible for MediaTek MT8189
+  WIP: arm64: dts: mt8189: Add mt8189 dts evaluation board and Mafefile
 
-> Thanks a lot,
-> angelo
-> 
-> On 18.04.2025 20:37, Angelo Dureghello wrote:
-> > From: Angelo Dureghello <adureghello@baylibre.com>
-> > 
-> > Fix register read/write routine as per datasheet.
-> > 
-> > When reading multiple consecutive registers, only the first one is read
-> > properly. This is due to missing chip select deassert and assert again
-> > between first and second 16bit transfer, as shown in the datasheet
-> > AD7606C-16, rev 0, figure 110.
-> > 
-> > Fixes: f2a22e1e172f ("iio: adc: ad7606: Add support for software mode for ad7616")
-> > Reviewed-by: David Lechner <dlechner@baylibre.com>
-> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > ---
-> > Changes in v3:
-> > - fix typo in commit descritpion.
-> > - Link to v2: https://lore.kernel.org/r/20250418-wip-bl-ad7606-fix-reg-access-v2-1-8b1ade67e185@baylibre.com
-> > 
-> > Changes in v2:
-> > - improve bug description.
-> > - Link to v1: https://lore.kernel.org/r/20250417-wip-bl-ad7606-fix-reg-access-v1-1-0ce341f3cfc3@baylibre.com
-> > ---
-> >  drivers/iio/adc/ad7606_spi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
-> > index 997be483ebb93293481b922e13ece4edb47e940a..bd05357a542cf7234d5bb6b718829d6b720262cd 100644
-> > --- a/drivers/iio/adc/ad7606_spi.c
-> > +++ b/drivers/iio/adc/ad7606_spi.c
-> > @@ -103,7 +103,7 @@ static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
-> >  		{
-> >  			.tx_buf = &st->d16[0],
-> >  			.len = 2,
-> > -			.cs_change = 0,
-> > +			.cs_change = 1,
-> >  		}, {
-> >  			.rx_buf = &st->d16[1],
-> >  			.len = 2,
-> > 
-> > ---
-> > base-commit: 8dc6b228d746b1a900bed28568defb2266fa4c43
-> > change-id: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
-> > 
-> > Best regards,
-> > -- 
-> > Angelo Dureghello <adureghello@baylibre.com>
-> >   
-> 
+ .../devicetree/bindings/arm/mediatek.yaml     |   4 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ arch/arm64/boot/dts/mediatek/mt8189-evb.dts   |  20 +
+ arch/arm64/boot/dts/mediatek/mt8189.dtsi      | 441 ++++++++++++++++++
+ 4 files changed, 466 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
+
+-- 
+2.45.2
 
