@@ -1,91 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40381146D53;
-	Mon,  5 May 2025 12:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A436A2512E1;
+	Mon,  5 May 2025 12:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449851; cv=none; b=nD27o5tamtct9O23Gmz4EIN0pjXo5bM4r8BX5PFMiAmVCk35xTgxP48Npr0LZtz3HJWqzrJRh71imPLzJhLJbctj3KrYPcgZYGeBRmoC9zIrYxp8Vvzwj3F1q0WkVHG1qEhMfjzRxrjzGIlrTd73YJPGkrakuRD1V16kQZGk6fU=
+	t=1746449875; cv=none; b=c+JlG3ZlKRHBYrFCm/NmltQnWpLWdHh++DxFhpBQkeuV4krmbBqk2OTv4VK+1nMco/YYz2R4mvZ6trR51Y9DjsyTJXlhTntZuvk068/8rho4Xf+HQ/7dynyANSj27Y8D9+iDmLEJ9cjopNbIdHmUOaoMsRSXyr0O/vqiYbsyoHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449851; c=relaxed/simple;
-	bh=BfQINhywxNEE/d5oF5VRqStlHY1hf0YQW1XNyzwHuEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tve+tjY4M5S2Hzth2RJWxMrQujPGE8hxSp8E/5pzNH9DhOdZmLo59CAFwjhxwuz8XF/5fDYFu3DZVCnRh5oreneYxghDadZO634l74HfNu66g0jeCc2rVSBQYH98qjRNAAV3uRey2ADkDDcKb6H+QSvj35hYC6PtBhOMMxH7LtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB/Z3aLi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746449875; c=relaxed/simple;
+	bh=tNZclWA2J7U2VOsCGrssqELF1la8cxXpR8L6S3NP+Pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRJ3ZOLpOdplnzzzNmzscRKn7ElV63mmxZTnfzTpnKwy6+aOZoyzkg2TMM3kOoxJnNDCGOjaki+yK5q7IV0i3rJnhDHSsR29/wbD05+wNFurXFKRpcY7uSDwfb/Kia+93njteoBqhP6PF5vKM/TfzBDGc9toxm0EROFwMlL3qKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCNi+fcM; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB/Z3aLi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A898AC4CEE4;
-	Mon,  5 May 2025 12:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746449850;
-	bh=BfQINhywxNEE/d5oF5VRqStlHY1hf0YQW1XNyzwHuEw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=sB/Z3aLigpGFgkEpfi8dQumwgTOe+fKctjKH2ddW+R3j0VDdxZ9VI4CPsckzLr4Np
-	 /vwvRD+ha6oxh5IZYnpy/PfbWOZ15lC0b+hR0iQSFgrPH/tNQfcA/Rmk6hmdBvAAU1
-	 OUD8eqhiZyY//VRjtjx4EBNdj2xn0/BX4fItQqTLO6zhebzDNt7nkVUgRgW0t7o8Pw
-	 2kPGSOl3qehc6SAdcgO7H21TKgNy3HcGH3PlW0wTy1Ntew66LALpj2q8I8dNWFFFak
-	 Q9LwSor0IZTzp6LlXHKanMYfhx3Hy/DfcmcfpJ9wxjOAkG7UcwOQX4nuifVdWf7+/Z
-	 B443zfC+hFtIQ==
-Date: Mon, 5 May 2025 13:57:21 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Kent Gustavsson <kent@minoris.se>, Lars-Peter Clausen <lars@metafoo.de>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Kent Gustavsson
- <nedo80@gmail.com>, devicetree@vger.kernel.org, Lukas Rauber
- <lukas.rauber@janitza.de>
-Subject: Re: [PATCH v2 0/3] MCP3911 fixes
-Message-ID: <20250505135721.1ef655d7@jic23-huawei>
-In-Reply-To: <20250428-mcp3911-fixes-v2-0-406e39330c3d@gmail.com>
-References: <20250428-mcp3911-fixes-v2-0-406e39330c3d@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCNi+fcM"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso2559642f8f.1;
+        Mon, 05 May 2025 05:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746449872; x=1747054672; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmqXEI3DS2Oyvr/XlJzwxBhkuvi+mSDYFQAfHhsgBsA=;
+        b=DCNi+fcMmJF3ARl1M9mwoEERuPWpqp9rImZiv2ajdcu7Axz4Ub0ZNhr1f7q0I4d25D
+         R59Y2tFndh9RnpQKD+78UF7MkPVOPPTX0tEea743SoeKpi+bdI2G/EvkxdL+52KLBxcH
+         5pIO7GG60Mra3ex717bQbZwet9gxZJG4h8spktgnKYKnNyfmfdMdINGph+JqjYo6iTMr
+         Yh6ur6sz8Qiw4MBC4z8bciNSTuRnrSdtELRYlJ5ugN9Lhy7MjWzjFFFgkTqyeAVWgnrp
+         E0XWNacPKteHkbtSiC1hBr15tmiPeCr2+aYFmiKPOos9r4YAm0yTqWt1Gm5Cn7US/eVF
+         vXRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746449872; x=1747054672;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TmqXEI3DS2Oyvr/XlJzwxBhkuvi+mSDYFQAfHhsgBsA=;
+        b=Ei1EtLUVjXItBaFWvylPvbf6qCdIzw8o0HfQG2pzxpheK5GG2bFpHIMP2RDHwA28d/
+         7IXvetqLzlm/V8cSucKs/hTSgol7t8ogepRuJeOFJX3ehaElHa+0+snQ8bOiE4FIGMum
+         sxJCw/D2RCtG9MB/msfLX+ysHIbh0FdhfcqKqqIXG5RBHyXTkYNZiuhpNc/LMlMALLIy
+         IxzD0OWQMPkmDPI2Zrq/tMlFp28kgHRqO4LQMVpP65z2iWDqIUSLhpJcn9QqqKDO1Wa+
+         hLpTgaEiuDwJFoRI3w/oWA52IMg3wUihwdvMIjk72FVvVj3R8LdIZDGznAdpTvbmhy0R
+         IX7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUeyywSUtJM7MIRb+Djx87vH6pD/ab48XxfRikkd3xGECLl1vLp7ELOwP6PhQyHLwsZ5TAAthQVCrHW@vger.kernel.org, AJvYcCUkrjoiQPJ7nJ9g+BCCWaiOCX3XNAFkdhfdAqEsTkOjriYWVgw+tZCvh9XoOpSQ+6KROH5mRyaIA2Hu@vger.kernel.org, AJvYcCXHsWAFjrSJVXs92FUVYF5YM/MRI7TDf4exHgzG2GlbRK27B7mmZdeYpbm+wH6r/EO9rgWe5aYz2NIgAomE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhdvE1JjGt8Pszij4Rvc9HfwPqSl4DSp9Fn+EVwOG9ZXzkIZuK
+	ijItaMh3S3rw9fRFI2B3TjlHcoMAHVtA8bMal45Qfig1FbHP1EbwHOJjmQ==
+X-Gm-Gg: ASbGncstg4AL51KZ90OXNUb/QzxntG1zYFoEPg5jR7SBEQATvCfV1N/ctYk0VY/Cs/s
+	9al6RPfyswDETd2TgsbZAqUPdg1HWw6eFovhEQG01872zN5pv28jPiGsTyFWM63TkJ+mlC1vwOf
+	mvnoCq+nqZHxPjfVNVVSPdfkNztn4W7jo+YedyYRzkre8WHESezwWw659xeQQ2Bnuxlf+MBh4PN
+	YdAp3DzC+BJd8S/m4rUGphNC9UQx+b3PvhWZSeJHMMqEFK10zovvKlEdjoWd7XyyMIsb9w4SjXQ
+	E0KWcCNjAUc6cOOG2QczfjpFDEgVcx+DD8Fukb2X7pjifWkhLQ==
+X-Google-Smtp-Source: AGHT+IE4PdwHdIyEYMhBzntFJvcH88zMSO3ezA+eNhKiKoINHtHn8t+U8Y+RuHAeG/+/lX2B2nZgIA==
+X-Received: by 2002:a05:6000:2204:b0:3a0:8536:1261 with SMTP id ffacd0b85a97d-3a094034dd8mr12903052f8f.8.1746449871679;
+        Mon, 05 May 2025 05:57:51 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:608:9e00:1ebe:eb51:3a97:3b47])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b1702dsm10159875f8f.88.2025.05.05.05.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 05:57:51 -0700 (PDT)
+Date: Mon, 5 May 2025 14:57:49 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe@legfed1, Kleine-K@legfed1
+Cc: dimitri.fedrau@liebherr.com, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v9 0/2] pwm: add support for NXPs high-side switch
+ MC33XS2410
+Message-ID: <20250505125749.GA12411@legfed1>
+References: <20250407-mc33xs2410-v9-0-57adcb56a6e4@liebherr.com>
+ <cz5tzcmkpkoi7f6g64opcoq5mclahyom4aqafpjxmhisjidize@uw4uq3pmxou4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cz5tzcmkpkoi7f6g64opcoq5mclahyom4aqafpjxmhisjidize@uw4uq3pmxou4>
 
-On Mon, 28 Apr 2025 08:54:10 +0200
-Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
+Hi Uwe,
 
-> This series contain two fixes for the MCP3911 driver:
-> - Add support for reset signal
-> - Fix wrong mapping for the coversion result registers
+On Fri, May 02, 2025 at 06:47:49PM +0200, Uwe Kleine-K??nig wrote:
+> Hallo Dimitri,
 > 
-> The register map for the conversion result registers of the MCP3911
-> differs from the other variants so make sure we read from the right
-> register by introducing device-dependent .read_raw() callbacks.
-Applied to the togreg branch of iio.git and initially pushed out as testing
-for 0-day to take a look.
-
-Thanks,
-
-Jonathan
-
+> On Mon, Apr 07, 2025 at 01:21:50PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> > The MC33XS2410 is a four channel high-side switch. Featuring advanced
+> > monitoring and control function, the device is operational from 3.0 V to
+> > 60 V. The device is controlled by SPI port for configuration.
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
-> Changes in v2:
-> - Fix review comments from Andy Shevchenko (Thanks Andy!)
-> - Link to v1: https://lore.kernel.org/r/20250423-mcp3911-fixes-v1-0-5bd0b68ec481@gmail.com
+> Applied to
 > 
-> ---
-> Marcus Folkesson (3):
->       iio: adc: mcp3911: fix device dependent mappings for conversion result registers
->       dt-bindings: iio: adc: mcp3911: add reset-gpios
->       iio: adc: mcp3911: add reset management
+> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
 > 
->  .../bindings/iio/adc/microchip,mcp3911.yaml        |  5 ++
->  drivers/iio/adc/mcp3911.c                          | 58 ++++++++++++++++++++--
->  2 files changed, 58 insertions(+), 5 deletions(-)
-> ---
-> base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
-> change-id: 20250423-mcp3911-fixes-ef3b2145577d
+> as v6.16-rc1 material. Thanks for your contribution!
 > 
-> Best regards,
+> Best regards
+> Uwe
 
+thanks for reviewing and helping me. It took quite a long time but I
+think it was worth it. When comparing to the first series, the code
+quality improved a lot with your help, besides fixing some bugs.
+
+Best regards,
+Dimitri Fedrau
