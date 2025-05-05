@@ -1,40 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BA53A6FB2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98A43CDBAF;
+	Mon,  5 May 2025 23:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487704; cv=none; b=Y6TcvAybDsRQy3cu/T1+Ac5a1dBcKWfoREcfnB2Dyrt1Ptsbn2dAHYwjF6YZYXF/kw4R29oK1ky5diY8zxE1ygIe9kU1ZO7a6eSkc33rEa+tZ5cg2aVy1baeT4ROfGyU79qPNaym1sjWttZLVmedfdzBwVe4e6sKvNBmeD+InIA=
+	t=1746487711; cv=none; b=RsCi02EJIe+yCsHQd0SHrn7qr0H/t7aZCwuh5k5lUW6F3VVyHCijaREIA7u/CVHcb1ZEXj1iicSv+uTGcVWFXi9E5aecOQs4GTd4gNZBT17a+595I69heJbyH5FhfxH20pelWBJq3ghs0ovmFF6ZgOHXYNlZFB/JD+xbvDGsWmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487704; c=relaxed/simple;
-	bh=qF/Trttt4tQz61wSSpWUhxFb98lleOeI0ZyR+ik0pWs=;
+	s=arc-20240116; t=1746487711; c=relaxed/simple;
+	bh=PMkULKPnL76CVvnkINCH5UAgOKKcrPy7sySizplK0s0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAKINN2vzUuLPNXqmpX3C48X1k45f5sDINtPVzwBFkvPH1VtZA7d7i6cAMfmjqNbDIGj3Jf5LNpe9D7Zvaeoc5tCa0kdC/k3wWI15ajVxujy6V1HcsuAl3qEetupKqwfPhKQ2RB+2NARk8CBE6+iKhxSHZHDBmkcZLF6DMSUUTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjhiiwUU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uS2bCOWmjZB/2rfTG7S4zj2GTQ0zK0S459O4UHGoLew+kRx05OCSIS6oyAoQzc8fkdVDECctCUHYpSuqdTfCs1z+c49ii0Jg/jmfA1et6fIKPW5sdodeDABDMpiZrVN7bh/dYb6HtSH3hVXQIAB25ATNm8tbx/MB33vdSn9fNow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hnajkUdd; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjhiiwUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 683EBC4CEED;
-	Mon,  5 May 2025 23:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487703;
-	bh=qF/Trttt4tQz61wSSpWUhxFb98lleOeI0ZyR+ik0pWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fjhiiwUUDYMgwhKt1Cj+n4UdYSVj2EuH5U9MlQnGM9U7s9gPg3NFAcMEdrLqtuj0H
-	 40JD6sBLzmVsGAm0hyWxD9ggZ4t1IA3n2gb2uzpxJjKJ9jHFd5N/7x8rMDfS+HudDs
-	 j7lrUXdrzIpftJGRk2WR9LtWpKhBLAzaLBsjwr+sYiolw0hkPDqR34HYW+ZBltIqPK
-	 dFKzDpOboFfRLY1xVAE6oxGKpLxz5DxmdbAh3SiNpV/+qF9u0DHEilfpi/sJZBPJMr
-	 cJ315jlV0Y5n5p5avUyVbelrBKvDu6SGqZOgH/dLBfbFz0t2FeXS/3dkklx6QIi4mw
-	 kK+0A5Gm9aGEA==
-Date: Mon, 5 May 2025 13:28:22 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Chengming Zhou <zhouchengming@bytedance.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, Chen Ridong <chenridong@huawei.com>
-Subject: Re: [PATCH] kernfs: Relax constraint in draining guard
-Message-ID: <aBlJlqfAlayxfMc7@slm.duckdns.org>
-References: <20250505121201.879823-1-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hnajkUdd"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e09f57ed4so46818975ad.0;
+        Mon, 05 May 2025 16:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746487709; x=1747092509; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=W1pGqOV8L2Fodxq/7yWgm0zy6CYYnoDl0wucj9k6D38=;
+        b=hnajkUddzsj6dYNcd4pt5ueaB5MbH3EukaOEGgQ1SDqW22L5532ZUAKXsPCurQHJAg
+         nkCVgv4kVYylmyThmWZ6jqLcouaDwQPssA4VGob3nCRMJcvejxpISUg7FHVG8D0OD7om
+         R0BpBUhbs6ADlR64ofrgTBKeIdemgoM7wf5RTEhMzrV5M0PjnN+nqtMtFN6moHOYxmgO
+         TWveNPRZzhpBAgbGTku2PX7fkEYULzlJQQYt9ahC+0nuvne17Ave4VmrYu41PxYgNzVG
+         j/X21k1uXIe8cwOJHsqJkWjBkMbvKU/d7HZ4gwXR9eOewmgYUuDxhGL+vXyhs6f2Gehc
+         KJ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746487709; x=1747092509;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W1pGqOV8L2Fodxq/7yWgm0zy6CYYnoDl0wucj9k6D38=;
+        b=bFeV+5UZob2MtQbd9O2GMz1Kiv8+ijmSLe6te1G/3W1xr4spATDIoMHGroz73ovOmp
+         iyFrQSiw9hJpgPnm5yTtm4+UJmmNqxzppEDy/hzEbj3/uJdoxjW/MWwiz8GOURP4usZx
+         d7hlX6UjZlPu0ULJVMzkgGu6bcnqkF5A2Bqu2dK/Qt3ZNX5ZGxK4bMGfXhbo2GB4/ED0
+         AKZmauNBcD5dFAXEZIk86OhgASdUSSPXG1dEhoALlurTQ5GAKqJzRMvBFB/3RDmFu3S5
+         64B6CPfjYqqU0VWg7cTMKdwvJdoDUp9u+1h7+VRJXireUD+zHuAPNkMH0n4I9WvcQK6S
+         /DzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLJ0J31Th6ck1qyYGwXh9BCcz1da/pUhy3gGHz/5o/nhyv0a6DCHMLs6q6PiyGa0KXbAEvx6uKFvImxo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi2E0YoKWeusL0pMTvxX4SATZ8wIH89/Og7qBswRQdv7XhK7ZC
+	/grJaWgsW5AZtHoRyEyHdjBIGqugOwwoLgISAh7OAQeUPgynaA8T
+X-Gm-Gg: ASbGncvk8g6rhn4e4MdLDKAWxDYKju435VG+wwklV6xCvzRliZemWjm4Q113R2KDXwd
+	tlgPDngywwgOayPqQgq/u7wwBXyysEJjPChBUsZl672XHUOKBEXTvcUwIRouk+BOgL9oalozhbz
+	yh372aFhixrgfKrfOsKxM9BeRaJF1Bh0asjVP714QyLh1AS+I1auwYzz43P40UxuK6DG5GAwio3
+	QteVg4S6SvMtJXuxNKZ9vRS1GMT8I/jWH9XjA1HNXyZLiHyDsFm06BMCSoHrzd0Bccz1oDHCM/L
+	YP+SI436MiCGWI9c406NaWKBRJ8jjIV6vXqb+jQZ/g==
+X-Google-Smtp-Source: AGHT+IFGokMjjGy4Haio3D+bRbk8pboJV1fYH0ZWDSzBfFtwtHLYyuwsNNl9mbIHbiNFpuGz45m9tg==
+X-Received: by 2002:a17:902:e78e:b0:216:271d:e06c with SMTP id d9443c01a7336-22e31f7e2a8mr11895075ad.4.1746487708847;
+        Mon, 05 May 2025 16:28:28 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:6c50:1878:74d0:c0be])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522f1d7sm61047475ad.222.2025.05.05.16.28.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 16:28:28 -0700 (PDT)
+Date: Mon, 5 May 2025 16:28:26 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Hanno =?utf-8?B?QsO2Y2s=?= <hanno@hboeck.de>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	david@ixit.cz
+Subject: Re: linux/rmi4 driver: "BUG: kernel NULL pointer dereference" when
+ accessing update_fw_status or bootloader_id
+Message-ID: <47raihg6bjitnwsqbl3uja4vfnwggunyjjzxdr5ppzicvwain2@ggaoaotuxd76>
+References: <20250430213816.7527e190@hboeck.de>
+ <u7x6ckgtetuvgxaalqcxwsv25xvvcjdcehpsysbvxjqygzjokz@bwogeb2ne2cw>
+ <20250501095049.156c5d8d@hboeck.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,46 +77,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250505121201.879823-1-mkoutny@suse.com>
+In-Reply-To: <20250501095049.156c5d8d@hboeck.de>
 
-On Mon, May 05, 2025 at 02:12:00PM +0200, Michal Koutný wrote:
-> The active reference lifecycle provides the break/unbreak mechanism but
-> the active reference is not truly active after unbreak -- callers don't
-> use it afterwards but it's important for proper pairing of kn->active
-> counting. Assuming this mechanism is in place, the WARN check in
-> kernfs_should_drain_open_files() is too sensitive -- it may transiently
-> catch those (rightful) callers between
-> kernfs_unbreak_active_protection() and kernfs_put_active() as found out by Chen
-> Ridong:
+On Thu, May 01, 2025 at 09:50:49AM +0200, Hanno Böck wrote:
+> On Wed, 30 Apr 2025 20:03:11 -0700
+> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 > 
-> 	kernfs_remove_by_name_ns	kernfs_get_active // active=1
-> 	__kernfs_remove					  // active=0x80000002
-> 	kernfs_drain			...
-> 	wait_event
-> 	//waiting (active == 0x80000001)
-> 					kernfs_break_active_protection
-> 					// active = 0x80000001
-> 	// continue
-> 					kernfs_unbreak_active_protection
-> 					// active = 0x80000002
-> 	...
-> 	kernfs_should_drain_open_files
-> 	// warning occurs
-> 					kernfs_put_active
+> > Do you have anything earlier in your dmesg referencing "F34" by
+> > chance?
 > 
-> To avoid the false positives (mind panic_on_warn) remove the check altogether.
-> (This is meant as quick fix, I think active reference break/unbreak may be
-> simplified with larger rework.)
+> Probably this?
 > 
-> Fixes: bdb2fd7fc56e1 ("kernfs: Skip kernfs_drain_open_files() more aggressively")
-> Link: https://lore.kernel.org/r/kmmrseckjctb4gxcx2rdminrjnq2b4ipf7562nvfd432ld5v5m@2byj5eedkb2o/
-> 
-> Cc: Chen Ridong <chenridong@huawei.com>
-> Signed-off-by: Michal Koutný <mkoutny@suse.com>
+> [    3.297406] hub 2-1.2:1.0: 4 ports detected
+> [    3.324410] rmi4_f34 rmi4-00.fn34: rmi_f34v7_probe: Unrecognized bootloader v) 16 (\x10)(
+> [    3.326641] rmi4_f34 rmi4-00.fn34: probe with driver rmi4_f34 failed with error -22
+> [    3.350673] rmi4_f01 rmi4-00.fn01: found RMI device, manufacturer:
+> Synaptics, product: TM3288-011, fw id: 2812761
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Yes, thank you. As I expected, if F34 does not finish initialization for
+some reason we are leaving the device in a bad state. I CCed you on a
+patch that ties to plug the most glaring hole (but more work is needed
+in that area).
 
 Thanks.
 
 -- 
-tejun
+Dmitry
