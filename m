@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A292F403B;
-	Mon,  5 May 2025 23:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F5E380967;
+	Mon,  5 May 2025 23:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486937; cv=none; b=SjH75k1Ku6/ZF1kfbgfShi/hYqHFUsthmvqYHDy6eE9M8X29r1Mpb0htchMbZsvsz4t1vEXwk4DX8WMHdcmw04ZG1UyDXXUNHrJ22QO9VwL40WuoDXEnAkiAMuuI/JhiVtlkcv/8g+kCiDJbyDweYcp491v/pOUoSmH/LE4Nsys=
+	t=1746486907; cv=none; b=LXICbEptgbhVsg28iE5LorENe+xuzGEzwdiIgl8H98fmf3jVFCbWYLUeQBdKPSY5S5Stg+WH3yqA8RY2B3soNdX0aB/B0Cq3PHDL226obJ+G4BZW+ruKF/8AVuTryzucSpEdoQ/Wdwta0pv8c9dbboZImFkYWflafMEAA1RWjEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486937; c=relaxed/simple;
-	bh=ihBVsNe3hOAKRyABiXwkaKHBcF+xResa8FbS7vJpuro=;
+	s=arc-20240116; t=1746486907; c=relaxed/simple;
+	bh=rvPRKy3rLzjg/YgOXJYy8BWkFpMnDeKRfn99mCLAJWw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nDqU4BAgtIwfnIK1g8yN9H1Mx1GlXD03LEGtBT0mo9XTJgvRJCdaCCRPnMiJqlsXzwh2zoU3Dc1f1GX4uAcfdifzngCAoG0C2K0qunO/E98HavujseQBw9Z1UKYbXPkVomciSoqzcPSlUd3bDSu2KUjjzFa5vIYs1a5yYINWKvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btd3FOjV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UM/l8YSIA9+SDDaNKWXj3TK1e2zH83qHo7QPXYLPVQ6G/bKVbHp/D/SPG8mow51xtAaKrQbIO+BaCLbqyY5QVsAtsxbJaGYvDShqbnA/Stb1bMzFAfTunpbEdKOhYKhbL0v3OdcosBdXGAn9gbwRpCKWFiPNS4kOr1iMG2z3Isc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV+WtDM9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btd3FOjV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60FB4C4CEEE;
-	Mon,  5 May 2025 23:15:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV+WtDM9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34A3C4CEE4;
+	Mon,  5 May 2025 23:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486936;
-	bh=ihBVsNe3hOAKRyABiXwkaKHBcF+xResa8FbS7vJpuro=;
+	s=k20201202; t=1746486906;
+	bh=rvPRKy3rLzjg/YgOXJYy8BWkFpMnDeKRfn99mCLAJWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=btd3FOjVazLopjWR7yAHiw7nG/v75gfmngzEvGymhfahYB4YNcIew35pL0J80rJjY
-	 zYtwgEV8CNgFgsSVhN4jSwsC9XO1rY2e5lHKnvIr01zdxYnXPQm/a3QGvQpovcYPtr
-	 SDCp8DeU9GYJ/axSOotrqYp81YVsObYpzB7Kbmb9NocoiaiqVcHln6ka2Li7UwMQ2S
-	 wSdpimcvSYcKoXyPpd2+9WhNs6wG3gGIOetZlx55ChKISAa2VCIb61dXtMDM/0D2Rj
-	 8+oYd9nh4dVo+5c07yB3xSNLgpHhGaBEiXtynPMVySI4QvAzDd1iKdYIQFQaVIEqim
-	 FeZd+fDSGuVRg==
+	b=WV+WtDM9V6nYJh1LjKQGc48UCnvSeLwbrZSbRZO0VHZfAAkph0uYjzkaA5CErmAR7
+	 eCFu6MBDFxpMsRqEy7Buh35pQChEyvOpzTFBpJhLJRJ30SYOKAOqH5NBqyKc4ZPAkF
+	 O4FHfxEUCgDCrA8HiqEuNJPaaSRl0GbCbJ59xSM8WZemOzOge920VHEeoU/Z5tIUSl
+	 l4WWagR0YMT+uxC8kqRZb3a5a3F/NZ1DhiZFJZj/UDmh+qJICD0DzPNrkCywFxDHRu
+	 JRyQnfe+4HDPexKTnnulT7DnXmTehJFo4qnFGkOBap/TGCxNvbQ+xsKk7FO4QzkWr+
+	 2TGtvJOs8pt3g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Artur Weber <aweber.kernel@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
+Cc: Alexey Klimov <alexey.klimov@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	florian.fainelli@broadcom.com,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	dan.carpenter@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 068/153] pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
-Date: Mon,  5 May 2025 19:11:55 -0400
-Message-Id: <20250505231320.2695319-68-sashal@kernel.org>
+	srini@kernel.org,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 053/153] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
+Date: Mon,  5 May 2025 19:11:40 -0400
+Message-Id: <20250505231320.2695319-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -56,175 +56,46 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Artur Weber <aweber.kernel@gmail.com>
+From: Alexey Klimov <alexey.klimov@linaro.org>
 
-[ Upstream commit 07b5a2a13f4704c5eae3be7277ec54ffdba45f72 ]
+[ Upstream commit 89be3c15a58b2ccf31e969223c8ac93ca8932d81 ]
 
-Replace uses of bare "unsigned" with "unsigned int" to fix checkpatch
-warnings. No functional change.
+Setting format to s16le is required for compressed playback on compatible
+soundcards.
 
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-Link: https://lore.kernel.org/20250303-bcm21664-pinctrl-v3-2-5f8b80e4ab51@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+Link: https://patch.msgid.link/20250228161430.373961-1-alexey.klimov@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 44 +++++++++++++-------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ sound/soc/qcom/sm8250.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-index fbfddcc39d5cc..6ab3481ba902a 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-@@ -79,7 +79,7 @@ static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
- struct bcm281xx_pin_function {
- 	const char *name;
- 	const char * const *groups;
--	const unsigned ngroups;
-+	const unsigned int ngroups;
- };
+diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
+index a38a741ace379..34a6349754fb0 100644
+--- a/sound/soc/qcom/sm8250.c
++++ b/sound/soc/qcom/sm8250.c
+@@ -7,6 +7,7 @@
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+ #include <sound/pcm.h>
++#include <sound/pcm_params.h>
+ #include <linux/soundwire/sdw.h>
+ #include "qdsp6/q6afe.h"
+ #include "common.h"
+@@ -27,9 +28,11 @@ static int sm8250_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+ 					SNDRV_PCM_HW_PARAM_RATE);
+ 	struct snd_interval *channels = hw_param_interval(params,
+ 					SNDRV_PCM_HW_PARAM_CHANNELS);
++	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
  
- /*
-@@ -91,10 +91,10 @@ struct bcm281xx_pinctrl_data {
+ 	rate->min = rate->max = 48000;
+ 	channels->min = channels->max = 2;
++	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
  
- 	/* List of all pins */
- 	const struct pinctrl_pin_desc *pins;
--	const unsigned npins;
-+	const unsigned int npins;
- 
- 	const struct bcm281xx_pin_function *functions;
--	const unsigned nfunctions;
-+	const unsigned int nfunctions;
- 
- 	struct regmap *regmap;
- };
-@@ -948,7 +948,7 @@ static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
- };
- 
- static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
--						  unsigned pin)
-+						  unsigned int pin)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -992,7 +992,7 @@ static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
+ 	return 0;
  }
- 
- static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
--						   unsigned group)
-+						   unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1000,9 +1000,9 @@ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
--					   unsigned group,
-+					   unsigned int group,
- 					   const unsigned **pins,
--					   unsigned *num_pins)
-+					   unsigned int *num_pins)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1014,7 +1014,7 @@ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 
- static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
- 					  struct seq_file *s,
--					  unsigned offset)
-+					  unsigned int offset)
- {
- 	seq_printf(s, " %s", dev_name(pctldev->dev));
- }
-@@ -1036,7 +1036,7 @@ static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
- }
- 
- static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
--						 unsigned function)
-+						 unsigned int function)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1044,9 +1044,9 @@ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
--					   unsigned function,
-+					   unsigned int function,
- 					   const char * const **groups,
--					   unsigned * const num_groups)
-+					   unsigned int * const num_groups)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1057,8 +1057,8 @@ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
--			       unsigned function,
--			       unsigned group)
-+			       unsigned int function,
-+			       unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	const struct bcm281xx_pin_function *f = &pdata->functions[function];
-@@ -1089,7 +1089,7 @@ static const struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
- };
- 
- static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *config)
- {
- 	return -ENOTSUPP;
-@@ -1098,9 +1098,9 @@ static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1214,9 +1214,9 @@ static const u16 bcm281xx_pullup_map[] = {
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1284,9 +1284,9 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
--				    unsigned pin,
-+				    unsigned int pin,
- 				    unsigned long *configs,
--				    unsigned num_configs,
-+				    unsigned int num_configs,
- 				    u32 *val,
- 				    u32 *mask)
- {
-@@ -1328,9 +1328,9 @@ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *configs,
--					   unsigned num_configs)
-+					   unsigned int num_configs)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	enum bcm281xx_pin_type pin_type;
 -- 
 2.39.5
 
