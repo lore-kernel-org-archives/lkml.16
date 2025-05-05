@@ -1,149 +1,154 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFEE1C549F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB081DF733;
+	Mon,  5 May 2025 08:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746431921; cv=none; b=oPlYNv091hUkwp/s1Rs/7zLd4G6W3wYzVAtxc8PrKbkazr8HPczPhkXU2uIxPoD+ezmzFi0UZihSg7tx8mnOw4edMoVYyLYoBFH9InonJ0R2leof/AClN23XlbNXBEYAsjTFO/6eVZflg2hroFwGQWJcjZWdMzqeYZnlO5REqiY=
+	t=1746432007; cv=none; b=bW/H0X0lSSRD5pd4sqrHUXAGFpDAntvFwkt+KnljIKAZ3eLyPhSw+GmIf/kNo985CIH+Gpxbp80dzBJfDhmJlAVAlF0TotrRXlR7HgWAWNTal/WqAxG2Co/INCo37Cs5utKIyRBZuwkIiGCG9OL+eWy/oqvB0MnOx5/V/M2Zf8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746431921; c=relaxed/simple;
-	bh=AmHa3ycc004iyFGHsYYX4kIfuniFqTXHQQYbVxzJKf8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=RPxU/1EDyVeLWOR2K5oOuN4VhbmUt/lb3woRX8rla6IDxaRppomR/pYezIbsvSQ89Vopn48ngIEkc1YtNwk1mtYXFR+eNkzKOdeMjjPn6NG9fKbPR1D4etGUrLXSWb3l93Ut2urE09f2tLq3kGyo15VsWFnffTwB1gPTkfTeSeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tgbMITn2; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746432007; c=relaxed/simple;
+	bh=yDPy55Cf9Zyk4amT2UFhvK6TEYzPakN4rmyC6eHpXpY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NObYbh237zZmdm9cwbz7KqTpTe8P8vzL2P3047XLYNA6UfQmAbw6vZ55T3zUIlcAyhNQguXVW2LS3bxJNpmhhrJcl4UQM2oIJ99/GZiMKYJ9NDniYJnzzVEfY/Y5+YKaK1lubpmuZYZ6cpvZhfk8VL7wgu4nZxN5EvqQHQl9F34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=cK9noqLn; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tgbMITn2"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5fafcdac19aso1148658a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746431917; x=1747036717; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8qy8x2VM4E33zP+Ul3MQgzUGob/DpDmmEpO6CEf26s=;
-        b=tgbMITn2/f2ETTwPFrP93IMlFsLd90+CvfPcVD1QLAFKoBoEeqNFZ15dGAjijEGpya
-         +LmSoF87/BIqjb1f4D+D+/RDVQSG1I4fV3uVktjbqQEb+3Y4xsvjfsewYoOSYYSnDp0m
-         g3Nsy45eP6ZlpWfsY1rLF+0rmzXBcQNTQhvn8TX0dEOOhOjsRz7INF3y2DRzdbyt6ftd
-         FD14xM0bO2yOFSHhzksOuMMTUhl7KOufLk6b1lWIunZq8Iw4Wgm367VkcmJ17+EJNtJo
-         MdwlsIk/Tkp9DDoY6dOVevLFMUcdNtCI+O4/H5ikLHX0d+eIaDE+q1PSWtKXOJjLZfpy
-         GJyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746431917; x=1747036717;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c8qy8x2VM4E33zP+Ul3MQgzUGob/DpDmmEpO6CEf26s=;
-        b=KYP8ac267tgpsPqGVaU58MoWfwSqPfYS/qBvNvEz9YaXjSihOkavpre2+U/hvJ7XjC
-         MQJzALgI0eZph93m9RrMgZChGNAqysP+DrL7X4BrPCoUMhu+0eCqRaQ9VeAlbCX/6HfK
-         y86pa8qpzO6cHpYTGwzJOEaEbzktW086UrLLTRjiRk0NdJlaFB6yau0AFeUDUtFNT76j
-         CCOwYzv1vWwXr9hLbuWdpmW8HOVCwNtfQGIG+BoqMoYuKRrYZQa+WGTDObdxz2aZlNe4
-         xnndQ8aWtjdHECAts//T19PrBjxnTbKcJckhddxOInziKVGsq1JR1xtCmgREAyixI36G
-         A5cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTl/6HX56LtNHj5w/6N1phQXH30pW6h6I45KkSft/eIsWDLpiv4vvc1MqqPjLK5k66dK5j6b7ZVWAyX78=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPfSmyP6jv+Z84yf8dOlc+7VsTRcptXBoJ1q6m2P/rAPmKbXbS
-	XQ3/PMev4i2yoK23YTBvYAbsyWU853ZjH2Dx19xygeoi4JzWvErECKGf+/rlY6o=
-X-Gm-Gg: ASbGncs2V7mkdwPNnyPt6MMgpuW2HtzNTGxdrq0hpVDPFeEdHfkMoHLScAw2S68WYmd
-	EMFdacS0ybtyJ7RRVP3VRHxgAjk27OnPQnmLcNn9yq5AmAJDFfvJ05AwB/78hizDKC72wiUh7Dn
-	d6xQ+N/HZdwk1r7AYdQn/Ttd4EkBXUCpEnONuEUv3BtHyxeotl4XOF1lKGWZ6sm1Ijc3xaPFp+X
-	w2S68SxWnQ9V9JSvxTiHsJR1pCGKU/NU5SBBY9L0eaXKu0TysidX/M1t1tBDYmBzB4IbxMh5xpj
-	hWpiXLMn0Yh3OtPz2Ipy97q0qlMyo6GUN1Now99DdbcEKWISpXOIXagkf3Sg2BEcWTanzgtxy4E
-	hOuO7cs+uNw==
-X-Google-Smtp-Source: AGHT+IFZHl2dy4J+tovJB10LLReM42ovfZPhO257ZgiPrn9c3pUOWsbvfuKWtuAGkwm+2riUzR0qbw==
-X-Received: by 2002:a05:6402:35c8:b0:5f8:e07c:7746 with SMTP id 4fb4d7f45d1cf-5fab04bfa83mr4760665a12.0.1746431917138;
-        Mon, 05 May 2025 00:58:37 -0700 (PDT)
-Received: from localhost (dynamic-176-003-040-035.176.3.pool.telefonica.de. [176.3.40.35])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5fa77b8fbadsm5148712a12.50.2025.05.05.00.58.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 00:58:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="cK9noqLn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=FWcMhUUAD341x1j4p0TzxNBabdUQcp6F1O3NT2s7Z9I=; b=cK9noqLnLdYH8B5aHwnOVCr3N8
+	aFx1PhEY/AeDmgx30074nqdwSaV2O3JlovBwN6qZ/ncicaMyCEmmS5VH5ez+VuFKd6PT0O1dadn2r
+	wSLeCT/LpfhW2+tGGAd1OHXe6ZHyqa/nGbiRAfRLHCReM+BqRN7kELFx9302k1TmN7zG74MGAjvQS
+	fTQElveeg8b8N6vHKjQVnWT6esJW1+jbbFhJiNuPJfxizo4WtlSeFARU7XnwbnNBrZ7HXJbQArCez
+	rVvQHu/zsoCp0KQ0De/EW7oY711Av6tuCj9lf5vm3d9s6HYfNWrpdq+WpN9MUeeC+mTEiWxp/EEzO
+	zNzibs3g==;
+Received: from [89.212.21.243] (port=58904 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1uBpsB-00BenA-24;
+	Mon, 05 May 2025 09:04:18 +0200
+Message-ID: <282a7e41-97f8-4fd4-9f03-29f70acc4df2@norik.com>
+Date: Mon, 5 May 2025 09:04:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=8941660c9a8c947b1652ed122688064937432aafddb64f2deaaf508477a9;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Mon, 05 May 2025 09:58:23 +0200
-Message-Id: <D9O2FWGG83V6.L6IQOPRGZL68@baylibre.com>
-Cc: <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/3] can: rockchip_canfd: m_can_class_unregister: fix
- order of unregistration calls
-From: "Markus Schneider-Pargmann" <msp@baylibre.com>
-To: "Marc Kleine-Budde" <mkl@pengutronix.de>, "Manivannan Sadhasivam"
- <manivannan.sadhasivam@linaro.org>, "Thomas Kopp"
- <thomas.kopp@microchip.com>, "Vincent Mailhol"
- <mailhol.vincent@wanadoo.fr>, <kernel@pengutronix.de>, "Heiko Stuebner"
- <heiko@sntech.de>, "Chandrasekar Ramakrishnan" <rcsekar@samsung.com>
-X-Mailer: aerc 0.20.1
-References: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
- <20250502-can-rx-offload-del-v1-2-59a9b131589d@pengutronix.de>
-In-Reply-To: <20250502-can-rx-offload-del-v1-2-59a9b131589d@pengutronix.de>
-
---8941660c9a8c947b1652ed122688064937432aafddb64f2deaaf508477a9
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Upstream] [PATCH 2/2] arm64: dts: freescale: Add PHYTEC
+ phyBOARD-Nash-i.MX93 support
+To: Wadim Egorov <w.egorov@phytec.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ upstream@lists.phytec.de
+References: <20250425064107.174548-1-primoz.fiser@norik.com>
+ <20250425064107.174548-2-primoz.fiser@norik.com>
+ <000c1117-81d1-4a74-9d36-f83a2b0fedd3@phytec.de>
+Content-Language: en-US
+From: Primoz Fiser <primoz.fiser@norik.com>
+Autocrypt: addr=primoz.fiser@norik.com; keydata=
+ xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
+ JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
+ ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
+ gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
+ jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
+ 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
+ TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
+ AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
+Organization: Norik systems d.o.o.
+In-Reply-To: <000c1117-81d1-4a74-9d36-f83a2b0fedd3@phytec.de>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Fri May 2, 2025 at 4:13 PM CEST, Marc Kleine-Budde wrote:
-> If a driver is removed, the driver framework invokes the driver's
-> remove callback. A CAN driver's remove function calls
-> unregister_candev(), which calls net_device_ops::ndo_stop further down
-> in the call stack for interfaces which are in the "up" state.
->
-> The removal of the module causes the a warning, as
-                                   ^^^
-Minor typo here.
+Hi Wadim,
 
-Otherwise this looks good to me.
+On 28. 04. 25 16:31, Wadim Egorov wrote:
+> Hi Primoz,
+> 
+> a few of the node references you are adding are out of alphabetical order.
 
-Reviewed-by: Markus Schneider-Pargmann
+Only &mdio node is out of alphabetical order.
 
-> can_rx_offload_del() deletes the NAPI, while it is still active,
-> because the interface is still up.
->
-> To fix the warning, first unregister the network interface, which
-> calls net_device_ops::ndo_stop, which disables the NAPI, and then call
-> can_rx_offload_del().
->
-> Fixes: ff60bfbaf67f ("can: rockchip_canfd: add driver for Rockchip CAN-FD=
- controller")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> ---
->  drivers/net/can/rockchip/rockchip_canfd-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net=
-/can/rockchip/rockchip_canfd-core.c
-> index 7107a37da36c..c3fb3176ce42 100644
-> --- a/drivers/net/can/rockchip/rockchip_canfd-core.c
-> +++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
-> @@ -937,8 +937,8 @@ static void rkcanfd_remove(struct platform_device *pd=
-ev)
->  	struct rkcanfd_priv *priv =3D platform_get_drvdata(pdev);
->  	struct net_device *ndev =3D priv->ndev;
-> =20
-> -	can_rx_offload_del(&priv->offload);
->  	rkcanfd_unregister(priv);
-> +	can_rx_offload_del(&priv->offload);
->  	free_candev(ndev);
->  }
-> =20
+But this is done by choice to keep it together with &eqos node since
+both nodes are related to the 2nd Ethernet interface (&ethphy2) and thus
+kept logically with each other.
 
+We did the same for phyBOARD-Segin-i.MX93.
 
---8941660c9a8c947b1652ed122688064937432aafddb64f2deaaf508477a9
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Am 25.04.25 um 09:41 schrieb Primoz Fiser:
+>> Add initial support for PHYTEC phyBOARD-Nash-i.MX93 board [1] based on
+>> the PHYTEC phyCORE-i.MX93 SoM (System-on-Module) [2].
+>>
+>> Supported board features:
+>>   * ADC
+>>   * CAN
+>>   * Ethernet 2x
+>>   * EEPROM
+>>   * eMMC
+>>   * Heartbeat LED
+>>   * RTC
+> 
+> eMMC and Hearbeat LED are not board features but SoM features.
 
------BEGIN PGP SIGNATURE-----
+That's true.
 
-iIcEABYKAC8WIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCaBhvoREcbXNwQGJheWxp
-YnJlLmNvbQAKCRCFwVZpkBVKU4zTAP0Yer+WBSFojQ6DiWBCD/1wd9ENW9dsLm7J
-ZLeShRvCOAEAgIm8MmcoLnCEO11f0Kg+X9mgAKtZb7OpE86RubTnags=
-=jybR
------END PGP SIGNATURE-----
+I will remove those from the list in v2 and only list carrier-board
+features.
 
---8941660c9a8c947b1652ed122688064937432aafddb64f2deaaf508477a9--
+BR,
+Primoz
+
+> 
+>>   * RS-232/RS-485
+>>   * SD-card
+>>   * TPM 2.0
+>>   * USB
+>>
+>> For more details see the product pages for the development kit and the
+>> SoM:
+>>
+>> [1] https://www.phytec.eu/en/produkte/development-kits/phyboard-nash/
+>> [2]
+>> https://www.phytec.eu/en/produkte/system-on-modules/phycore-imx-91-93/
+>>
+>> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+> 
+> With that changed,
+> 
+> Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
+> 
+
+-- 
+Primoz Fiser
+phone: +386-41-390-545
+email: primoz.fiser@norik.com
+--
+Norik systems d.o.o.
+Your embedded software partner
+Slovenia, EU
+phone: +386-41-540-545
+email: info@norik.com
