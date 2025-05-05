@@ -1,44 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CE32EE440;
-	Mon,  5 May 2025 23:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262032EE18A;
+	Mon,  5 May 2025 23:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486559; cv=none; b=dKG+mG2Xu6iBDbZnsBrNqne+5X/fM8zUHRuYcIENStgkaz7dtfCYBW1b+D8NRCbgx27H2fegd7CQQP9/3OgIsQ++0dFql93zI7WPlykIiDBMkaXxj8oXUrvAMQCJXUrOTUvm1m97O3t54HY7VnpPD6KcFOf0MiJCTAOw3bstscg=
+	t=1746486549; cv=none; b=QFdeec/Hf2WnX3JrMuhs6/8459l98G6Qxyok8yr8Ge+ZkhgVDmV9wKpXCly29b7MnG731Zpgxt9rTNZ9WwLopw5UJhfu63HESXaO1pQSn8Yz+8fj7OH3xQqjAoxzTs47OHIpmf5hkFtL23jwJ2qO5l10kdBxypfEpdp8EDsVsMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486559; c=relaxed/simple;
-	bh=vkDdRU4n+OAc9RKppHhVM/OwDNSbhzXZhLSzwQCs6Cs=;
+	s=arc-20240116; t=1746486549; c=relaxed/simple;
+	bh=deF9WFnhs+HXATmzRfNY6gqbFNY+7J57nQE35vZzB/M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A0nH6NXlrqZgQKFn9cE+mX1xbBUMvPFsZuMGFQ3eJxYK78rKRnFM6NOavkSIf87GCvejPJYaK1kkIDpCk90SgbVMnDCCDYmnXqhuyFJW2Cfiqb4ldu0ePqItsPXtYu7ErShxpI657d8VsZ5nIt1KWVpM9K5QOpgt/2nA7yyRB50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRBITqjf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GkMhDbJZCdqFtGeiMkud0aRmgVcIIj0yr7g+Ct1XT2SrUooNmCxFcZgYLlU/kqslkUM8u0HiCms6a94MiyE2yhLnVm9QJ7EzcsXcGb5I0+Pb8Kr+Ku4CKACvTL+IZsNjED52THdqKm+uNlDZT3TMBFQHSZ/amd+fW6FHrdy1jCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qz/uFum1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRBITqjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5750C4CEE4;
-	Mon,  5 May 2025 23:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qz/uFum1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 663B6C4CEF1;
+	Mon,  5 May 2025 23:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486559;
-	bh=vkDdRU4n+OAc9RKppHhVM/OwDNSbhzXZhLSzwQCs6Cs=;
+	s=k20201202; t=1746486548;
+	bh=deF9WFnhs+HXATmzRfNY6gqbFNY+7J57nQE35vZzB/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XRBITqjf3KzlrE3EFGNxirEIkwfc2lwC4J7fkOxWi9RjI1xJHSdcHmzKmvmOfwHWp
-	 7lHXkF0SHm+nPdYOGNBUxvR8w1c0DnZqzXex937oPB14puJMb513fNf6Bz0ISYsvvm
-	 KcRW/Q056DhdrpWEobbsyhqgbQu7U6Jq/8BYdYVb7P1Dr1li/o/UPzb3g0P6Qy1bbv
-	 8pUx6O3FEs4L6RMcL3387R7x7Wiabl7fhAuIZuABEwllqGenWQVmThJ2uYUBkSM/YL
-	 AYIl3vbnLSMRtGptKBXKe3IWBHirev5LKXyOq2zl755h0tchTVKjGj1krFOYxVHtpm
-	 UZnWt4i4TW5Zg==
+	b=Qz/uFum11BLY5ePIF03u9dtt1MTnlB7BqxHRVRcgAiOv31lN25em4BzdJyD3fT4wH
+	 s9wqUTQ95ueA2SPUpV/h748jOQdE2cOTeAWCo1FNSq/yBkot2hWZFYbQavJxAMylyl
+	 hCkqpiaXxhLrRnFfn9OVRRKrHktHmHfLCbJcOYmcBH8JsW3XayMg0IiYDydu68YkjC
+	 UDhkqXK8xUgZ0OqI+KwI7nwlb19PoVDxtP+AN4ISUlFKdd2EFCcr5zFwlsF831ryHd
+	 yd73U/mN/I44S/n4sDsRSfRkdsaU+h3xA1b2uLfmaFEB/ZfeK2Gi/VSeoHyLR5mRxd
+	 hGO5mqasOsZng==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
-	Luca Weiss <luca@lucaweiss.eu>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mathieu.poirier@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 091/212] remoteproc: qcom_wcnss: Handle platforms with only single power domain
-Date: Mon,  5 May 2025 19:04:23 -0400
-Message-Id: <20250505230624.2692522-91-sashal@kernel.org>
+	linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 084/212] rtc: ds1307: stop disabling alarms on probe
+Date: Mon,  5 May 2025 19:04:16 -0400
+Message-Id: <20250505230624.2692522-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -48,113 +44,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 65991ea8a6d1e68effdc01d95ebe39f1653f7b71 ]
+[ Upstream commit dcec12617ee61beed928e889607bf37e145bf86b ]
 
-Both MSM8974 and MSM8226 have only CX as power domain with MX & PX being
-handled as regulators. Handle this case by reodering pd_names to have CX
-first, and handling that the driver core will already attach a single
-power domain internally.
+It is a bad practice to disable alarms on probe or remove as this will
+prevent alarms across reboots.
 
-Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
-[luca: minor changes]
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
-Link: https://lore.kernel.org/r/20250206-wcnss-singlepd-v2-2-9a53ee953dee@lucaweiss.eu
-[bjorn: Added missing braces to else after multi-statement if]
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Link: https://lore.kernel.org/r/20250303223744.1135672-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_wcnss.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-ds1307.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-index 68f37296b1516..ce61e0e7cbeb8 100644
---- a/drivers/remoteproc/qcom_wcnss.c
-+++ b/drivers/remoteproc/qcom_wcnss.c
-@@ -117,10 +117,10 @@ static const struct wcnss_data pronto_v1_data = {
- 	.pmu_offset = 0x1004,
- 	.spare_offset = 0x1088,
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index d51565bcc1896..b7f8b3f9b0595 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -1802,10 +1802,8 @@ static int ds1307_probe(struct i2c_client *client,
+ 		 * For some variants, be sure alarms can trigger when we're
+ 		 * running on Vbackup (BBSQI/BBSQW)
+ 		 */
+-		if (want_irq || ds1307_can_wakeup_device) {
++		if (want_irq || ds1307_can_wakeup_device)
+ 			regs[0] |= DS1337_BIT_INTCN | chip->bbsqi_bit;
+-			regs[0] &= ~(DS1337_BIT_A2IE | DS1337_BIT_A1IE);
+-		}
  
--	.pd_names = { "mx", "cx" },
-+	.pd_names = { "cx", "mx" },
- 	.vregs = (struct wcnss_vreg_info[]) {
--		{ "vddmx", 950000, 1150000, 0 },
- 		{ "vddcx", .super_turbo = true},
-+		{ "vddmx", 950000, 1150000, 0 },
- 		{ "vddpx", 1800000, 1800000, 0 },
- 	},
- 	.num_pd_vregs = 2,
-@@ -131,10 +131,10 @@ static const struct wcnss_data pronto_v2_data = {
- 	.pmu_offset = 0x1004,
- 	.spare_offset = 0x1088,
- 
--	.pd_names = { "mx", "cx" },
-+	.pd_names = { "cx", "mx" },
- 	.vregs = (struct wcnss_vreg_info[]) {
--		{ "vddmx", 1287500, 1287500, 0 },
- 		{ "vddcx", .super_turbo = true },
-+		{ "vddmx", 1287500, 1287500, 0 },
- 		{ "vddpx", 1800000, 1800000, 0 },
- 	},
- 	.num_pd_vregs = 2,
-@@ -386,8 +386,17 @@ static irqreturn_t wcnss_stop_ack_interrupt(int irq, void *dev)
- static int wcnss_init_pds(struct qcom_wcnss *wcnss,
- 			  const char * const pd_names[WCNSS_MAX_PDS])
- {
-+	struct device *dev = wcnss->dev;
- 	int i, ret;
- 
-+	/* Handle single power domain */
-+	if (dev->pm_domain) {
-+		wcnss->pds[0] = dev;
-+		wcnss->num_pds = 1;
-+		pm_runtime_enable(dev);
-+		return 0;
-+	}
-+
- 	for (i = 0; i < WCNSS_MAX_PDS; i++) {
- 		if (!pd_names[i])
- 			break;
-@@ -407,8 +416,15 @@ static int wcnss_init_pds(struct qcom_wcnss *wcnss,
- 
- static void wcnss_release_pds(struct qcom_wcnss *wcnss)
- {
-+	struct device *dev = wcnss->dev;
- 	int i;
- 
-+	/* Handle single power domain */
-+	if (wcnss->num_pds == 1 && dev->pm_domain) {
-+		pm_runtime_disable(dev);
-+		return;
-+	}
-+
- 	for (i = 0; i < wcnss->num_pds; i++)
- 		dev_pm_domain_detach(wcnss->pds[i], false);
- }
-@@ -426,10 +442,13 @@ static int wcnss_init_regulators(struct qcom_wcnss *wcnss,
- 	 * the regulators for the power domains. For old device trees we need to
- 	 * reserve extra space to manage them through the regulator interface.
- 	 */
--	if (wcnss->num_pds)
--		info += num_pd_vregs;
--	else
-+	if (wcnss->num_pds) {
-+		info += wcnss->num_pds;
-+		/* Handle single power domain case */
-+		num_vregs += num_pd_vregs - wcnss->num_pds;
-+	} else {
- 		num_vregs += num_pd_vregs;
-+	}
- 
- 	bulk = devm_kcalloc(wcnss->dev,
- 			    num_vregs, sizeof(struct regulator_bulk_data),
+ 		regmap_write(ds1307->regmap, DS1337_REG_CONTROL,
+ 			     regs[0]);
 -- 
 2.39.5
 
