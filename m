@@ -1,193 +1,153 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2139.outbound.protection.outlook.com [40.107.103.139])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED271F4639
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746452479; cv=fail; b=o7NISx5FYgaYmfj6SEZmyAZ/2AcxzsCD5y9/GFHUagAQh8ddmlEKuHxp753pE9V1ev4Q0T0tPPkzex91TFtGjdHaZXYy8oM/MCg9es9lRRX+VrhDxqj3U/YkNEJA+CxGGOAOTKZnO6t+8mWqUUQZEWqu5W9DrAbqRLS8jZAogDo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746452479; c=relaxed/simple;
-	bh=d6TQ2VrTdcwLgi9ukSiStZ1ME66Y3z7WvGO0l6QyURs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ipNrber7eQcsD9xxmEfI2HULHsyegDCVi8HnCW5NVj1WsNoJ9yrjrL4kgihQgEn4IOxETyivhcnTT7il1XcvlyqwbA0jf0gk5J0cUYO7TiQkRs/ouH0HYAcCxnU15yOro14rx1ckM85UJDIkQB8M041yWeO4Eyhd4c+CVcGb3Zg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=r9CRdDQy; arc=fail smtp.client-ip=40.107.103.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7EF14AD0D;
+	Mon,  5 May 2025 13:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746452593; cv=none; b=sJ+/NjShgYbXFidsjXLtnJlmlK0b0/DRWKW4N3c0Ar1tN8luhmD82tAQkxYzamnwbx1PCI5JQTn+vdlMzL9vCmVvhIYfQFPa5tmpUncNnqjRPydrBrIXAfdiOxQ2YratTp/+NTZDNMF6fkBEUPc7MXH2xfQOEP8W43hW1iYeJBU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746452593; c=relaxed/simple;
+	bh=j9EtIF3DNCp8ZxnjSRW19YefWedN6WL0LXivajHm2dM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=L36OP12iZ7Bz23Rh+ciPNPqrrnmaGH6rLJclaAl01v3trxSHxHPSgDJxwJIedJIBR/TYmC4FbbemONZIK2NH9AKQ0/sfg3VRJGjiuSOuJisl7jUruyH1DxuFrbKWYW6jKMVPjvw/xYGCHLBUfZN/k3UzEZOxSpWt2RLIMxAWnlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J5pZasxA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="r9CRdDQy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UADnXQAdoI9M+GKoikPrX5Ys/n0jDSaR+VofH2TAcazSsQiSH738rnykG60cwIzkzjlgs/cIFa+nGuv6O4yq7rYfR4q11HBq0jbf6Z5Rb6GFItCod5Y39h/FWVQ1Fk3OnXqd/7VBoHlin0hOhtcPqba+TC49Gszm/qFwylnZ9JXMz2nToRzK8/LRsgEo5EAVU8JDdJEy+f5f18DEh4VFzwiR0IPUBwOgCtfUetOFZub6dUvEXXdEl2a8wZhc07fxyGoxltEpF3w482GtV43b52KvWsr99wqfvYnrzeysU3h9iBx2ngLSnPTzuRT34KqSqDkTsRD6VkQmUIJiYLx6AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l4f4mxVI2QKqEjk2PEPf+TDvdXYGzxRS3IwhNm6SFug=;
- b=d2C7MhgVVUztJs6BKRO7c/VbRfbULl3c0KqPX8FpUjOppjapWZsbrYsmyQ9lRJbPRBZ7saZEGbad0f1yYbnzAd/nFIh/hK3stYpS9iblSzNvjpvEiB8/CmbCx6v4pRieouK3vP4GUjdch1ThlPSw8gLLAuYvQWOGlPNUrIXHYclG9gypvXtOCLPEP/DH+TZjA3jb9/KyU3HYZjwANR9a1YBecDRyFMyzFZKTbY7DP/PyO9EDd1oPK6DusvFV0NSM2UKifwOmQl0xtlEztsJuAeZUdHqu55CE60sFtK905GuCspwmsfcdIZNi4uLchtKMTY9YJPeZ37QMDRyzjwvSyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
- dkim=pass header.d=phytec.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l4f4mxVI2QKqEjk2PEPf+TDvdXYGzxRS3IwhNm6SFug=;
- b=r9CRdDQyAvYfx4ytTtCvTf8+9z9+GtwUoUyp1Yb4XDCggpnG1nqZnC1oAtp3U0D8Epqrkn97crD6IEc7QmSWNZszknmgq58pb64c7ZOCLgBBq8YXQO5SimZP7reQxEUUakcjrW7Dv1jc8mUaafMZB6umf6ndLD3QTXVY9inO+tpLb2k3d/SHFe9eUSIwHckj9q3qEjFpiUrgQyf4uFvsapbZnLBEJn69XRmDJXiSExM/lxrnnpb4DyxnzhUrLk4eE9lkQH/E6AidA03IRC2AyQf2LWs3cJLZXiEbSXIV5tZCMYA5YA/3ipAidx5DWpys2qwMA6m/9xH9RPARfUw/BQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.de;
-Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM (2603:10a6:800:248::6)
- by DB3P195MB2229.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:437::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Mon, 5 May
- 2025 13:41:11 +0000
-Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- ([fe80::24f:8371:2871:5981]) by VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- ([fe80::24f:8371:2871:5981%4]) with mapi id 15.20.8699.019; Mon, 5 May 2025
- 13:41:11 +0000
-Message-ID: <ac9ba45c-4545-46bf-a908-54133520e34d@phytec.de>
-Date: Mon, 5 May 2025 15:40:59 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Upstream] [PATCH] arm64: defconfig: Enable BANG BANG Thermal
- Governor
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Garrett Giordano <ggiordano@phytec.com>, catalin.marinas@arm.com,
- will@kernel.org, quic_bjorande@quicinc.com, geert+renesas@glider.be,
- dmitry.baryshkov@linaro.org, shawnguo@kernel.org, neil.armstrong@linaro.org,
- alexander.stein@ew.tq-group.com, biju.das.jz@bp.renesas.com,
- javier.carrasco@wolfvision.net, elinor.montmasson@savoirfairelinux.com,
- linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-References: <20250113185607.2210352-1-ggiordano@phytec.com>
- <f40e97a2-41f4-430b-b3f4-815587201191@phytec.de>
- <ab0ab264-4fd2-4826-8a89-eaa55c462183@linaro.org>
-Content-Language: en-US
-From: Daniel Schultz <d.schultz@phytec.de>
-In-Reply-To: <ab0ab264-4fd2-4826-8a89-eaa55c462183@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4P222CA0008.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::13) To VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:800:248::6)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J5pZasxA"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545CoqqP003653;
+	Mon, 5 May 2025 13:43:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Bf/zDnpOG+HFmTINg8VWD7poiFb3F++3waIwiqLyUl4=; b=J5pZasxAz4a3Y9Jb
+	/2TMSOAtV+bLWMbxS+jLEiimH3pMCndJlkkiY9g4ZG4RYfVLr9Vhsw32T3IMUrMj
+	tQaeRmSlIM6xYTwPQXq3ahmAQbHBRGKXo+yLurRj/uma4MoUZj0A0/ZRUiY9EqSd
+	8Zt5T8VcR6Eq6Pg8woCDxO/jltG6oorjYo1uysWRDBWaG2849QxZqdfZn9LRyr48
+	B47i11Pcr6Cz786Eh0Rv9QHijcIs9DqAgtRrKe930TDX4A8muXg4RBqr8xq/EYrA
+	0kh8H74PYg/bS+rTwumfRDswepwpoYVnGIHKpDUYinXx26tPt3TTFj9kmo5eAaFl
+	yC11ag==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46da3rv984-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 13:43:07 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545Dh60u001189
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 5 May 2025 13:43:06 GMT
+Received: from [10.216.4.22] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
+ 06:43:00 -0700
+Message-ID: <d96eb6b7-5b48-446c-8b33-ba282d896e85@quicinc.com>
+Date: Mon, 5 May 2025 19:12:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI0P195MB2484:EE_|DB3P195MB2229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f3e0cc1-9490-4c8e-aa7b-08dd8bda7f3f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|10070799003|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VHFaVzBnQzJVRVhhT3Z5Q3dVZWN4YWRwU0R0UndjQ25DeHFpTTFOMlVKTEJP?=
- =?utf-8?B?Z1ErWGdMOWpTbVg2Rmovc2pIcnFTNXZTUmEzNUkrb0dIbUlDVEh3SkZrMEZD?=
- =?utf-8?B?aGFqTHd2UmZlVmFWaHdzdVBQVUN4QVVjUklMK0RaNi9RYzZhcUQzTGlEcE9S?=
- =?utf-8?B?ckVlKzRhbklDdjYvMkoyYlVINWpFQW83dFQ5WVppNXNrOUx5d0FpODFTQWlL?=
- =?utf-8?B?YngzMjcxRDJWM1FJTHJjaDgyYWVJOVJabFZkd3BoZ2N6MVhEc0VTMEZXUEJO?=
- =?utf-8?B?ZXVTZU56WEF4YjVHams0dndZb3VHWUk1Y3h6V1crQjVqL0RWajI2bGh0V1E0?=
- =?utf-8?B?eXhuRkh2QXN2bWJYN0t5M1htRi9vTFFxTkxYMXlnYVlzc012bmZJTmZSc29j?=
- =?utf-8?B?dDhLSXI2TlBaRC8wdTJTaTBOMFlzZkpGYVlXSDdIeDN1WldIWnVXVTJ0RHRY?=
- =?utf-8?B?dEhWS1VpK1gyMDdYelloVnY4NElNVUgwZDFlYmtYeTJ5dkxBOWpFcnhuRkY0?=
- =?utf-8?B?Mk85bk5OeUVXeGF3UDFrNXZtZUhsSmhWQmNCek50WllVWnRzWHAvK2FBT3FO?=
- =?utf-8?B?dzQ0Ky9uOTVjZk1NcVpiaVBNUld0QzRmU25BRjBpMVVSN2ozK1J4Y2FsNEJI?=
- =?utf-8?B?UXNGOE9Na1FEdG5HT1NSNDJFM1BXUEFTUGQwL1ZqYTZFeGx5MzRXemFtNXVV?=
- =?utf-8?B?VmRPbXN6MWNMUEZOOFRyWTUyNnlJbEFQMk03Nktmd1FHa0ZNL0pNS3I4ZWRW?=
- =?utf-8?B?R2poY0NNUjBYZ2JJeGVxdEZhaUVLNnJZNXp4YWQwRDZrTFExNjFUUDl2eHJM?=
- =?utf-8?B?aVFuM3JKWGFlTk9PQU5ZNTBzOXQ5ZlZFZktIUGY1OW1kcVVEMEdSdk16UDdy?=
- =?utf-8?B?QmhncERGYytNeW45YjdpZWxxdkJyd2tLcmVWcXhVeXExQnBURE1EWGc1dXc2?=
- =?utf-8?B?Y01HR2VsTWxyVFRtZ1NGdTlqOWovZ2FRcWswQjJUS1crMUNnc0Y5WVExaVpl?=
- =?utf-8?B?THBlVUZNUG0vQ1ZCOUhkTWdmTEZqZytsRGxYRXVXOEJSa2M0TGpPSlJDUXV1?=
- =?utf-8?B?SkE0UE12RC9KdkNOdlB0V092Z282YzRHcytZdnJMRk9rN0lmYXB6dFBTZGtx?=
- =?utf-8?B?dWlmcFhTdmMxOEtUd2laUmpiZW0zM3ozSjQwVDA3YnhORFV5MUVPK29RV1NJ?=
- =?utf-8?B?eWdNL3JjdCszY1paSWx0OTkrMWJtQmhFaVBCTmFlR0hrNElTZWE2czlhZU9q?=
- =?utf-8?B?by9GbFlGazRQN01ReXZhQVc3WGFPTk5MRmRVTUw5MG1pdDRxNVpCOUNvRkZS?=
- =?utf-8?B?eEdYZ2RLb0hCNnhHc3Y2dkxTbjlVWEZqdGVZSDEwMEw1V01HM0xGODE5OUJk?=
- =?utf-8?B?T0pkMTFzSDVab2FMM09KaTNiUnBHU3BZeTh5YzZWejlKaTlhUHhiQ3NTUkNy?=
- =?utf-8?B?RjdjeE5uTmo3L0pLSkNEN29ZRmNrZGk0bXFkUEMrODA4RjgzQko2blBjVStQ?=
- =?utf-8?B?a2tXdnNXbGlWZGcvZThrK0NiQ0FiZ0VuKzFGb2Q1aXJFcUE4aEdaOWJJRnNn?=
- =?utf-8?B?bUU5NEUzUm96eG9RK09qcmhDSWg3U2FPRW5GcjJHczZoNkdlM2s5OFhmbUlC?=
- =?utf-8?B?ZVJueWVpcWgxbEl0b01WQUVkbUd2NlRCVmw1bGVPZXJiVlNpc2t5ajgzMlgz?=
- =?utf-8?B?bGphbU02UFhQUk9Xc0w4Rm5mRzZCZy8vcmp3K0Iybmh5TXdORllJaFd6S1hl?=
- =?utf-8?B?VHoxUVpMWW1rQldXZ01mRDJxZkRkb2tteTV3cnRXQnZPZlVpRFV0eVlEaGlm?=
- =?utf-8?B?SUNTY2pCMFZkUXp3WlBoWXB2L1JyMWd0bjZMQ3I0WWYxZTJoTWlaWmU0ekpt?=
- =?utf-8?B?NjU3Y3JGaVNsWC9Gbm9WSEszalRoenBJNjlydzRDUGw0V01lZWhRT1d4Vlor?=
- =?utf-8?B?d0lnS2V1Y0Y2VG0yRW05Y2VyUmVacFZoWnBtSEU4YnhKQm1BYzVwRS9ZMTlJ?=
- =?utf-8?B?dFlxMWdndFNBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0P195MB2484.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(10070799003)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VUNDN2xhTFhPS1JjNE12d0c0U0pKNk94Y3hLajJMMGhOWWN3Y212ck1CelU4?=
- =?utf-8?B?ZHhNeTJqWWRXYWRONzRlb3pOcVA1ZTJzK2lJY05TTEdQc1JSWk9mQWN3NUNp?=
- =?utf-8?B?cTZnN0UvT3MzUm95WXpENUpRc0lGd3BweStjSWFaUEJKNFoyYlNOS0pzWlpn?=
- =?utf-8?B?NUkzVzJ0cm9icjA5Vm9UV1RLeER2TUlEMEFOTGV3Q1VPajA2ekRvZzRvVTBR?=
- =?utf-8?B?VG04Y3A2VTRESnQzV1J1dXBSbnJUTG5rUnBDUFpnYU5QakcyNjVvMkxQS1ds?=
- =?utf-8?B?Uy9VaWZVdk1BUUQyS0dISzAyaktzeFQ2L0VPU2FFMmptZEdiM3BEWU5EcEh4?=
- =?utf-8?B?L25MWDN4dU1hdnlsdEphcVNIVDh5K1c4Wk1yYzVxYUgzOSthTWxSbVhFZDdT?=
- =?utf-8?B?ODlzS0xtbjBzSWRRZm5Jemd1Q0pvV2JGM2xhRUVkbVlaQWpzbG90dHhjMUx3?=
- =?utf-8?B?bGFYTDRGTEdqajFhdzY4UFpWVFkrQmdsQTZmaEZYc1F5UU9vNFR2WHJGUUR6?=
- =?utf-8?B?S3F4bzd1ZGFaeDVISXlFK3BoVDlVejVGT05STW9JVmNISERzT01YSFQ5eUpi?=
- =?utf-8?B?MEMrK2ovNUFTMjRoYWpjTXNKaVZPeE01R3ZYemQwazlvZnM2WUVudFBQcmlv?=
- =?utf-8?B?VVBOU3VwTkV3dEdUOGNCTDhqc1VGQjlkaW9Sc3FIMm8zdE9SS0U0N0hUYnkw?=
- =?utf-8?B?M0d6cTFOQzFvbGh6SmwxTDdtZXNjY1g2SGx4S0wxZm4xelpOZ09lUFBsWWhY?=
- =?utf-8?B?QnhDbXdSMkxHbDJwMlgrY05yUkJMYUlRMXNaNzUraWMyc2RsWWwvbHBBZ1pv?=
- =?utf-8?B?OUYzWm5VeWY2WCtJUlljNThkZHdnRU5FU04xWG1GMnBLRGNSaE5obXhrcWhC?=
- =?utf-8?B?MHo5THdwOEdWSVN4aDh5RCtsTk8wNVJVQTBuQzZja3FxendkRGFObGJlTG55?=
- =?utf-8?B?TW5ZVEJ3dW9YTzdzSXNYRERCWjkrSS9WOE9VanRCSzVpMHJUR1EyaXd2dVdk?=
- =?utf-8?B?V2RndVd1MkJyODBBTlJhVDNoMGtveEIwUWxQRmx5YmpmQkxzd2NzVHpYbFF3?=
- =?utf-8?B?SzRBMDlib2JxRStVY1JOb0VlTGl1d2FOVnJiYXRxaWlpeWEyT055NXdkM1JZ?=
- =?utf-8?B?V0JvZGhUTjN3WjlCNXB1bno2WUtaUUhzWDdIc2NOem5VL1dydjdWWmNpaEhl?=
- =?utf-8?B?NzhDaFU3RHJuazZKSHJoa2liUHlMUzA0U3NHZTIrOG1yNGNLOFZ1cE5MTk4y?=
- =?utf-8?B?eHl0UTBQZlZRQXpkVUlvTVZnQnVtWnhKNDhrQ2xwVnlBR2NVdWV4SEtyM1Zx?=
- =?utf-8?B?V1I3Vno1OFNqdTJlbG1iSzl1MW0xNnNqQ1hvdXQ3a2tZOVFKLzQzTWZqK3M0?=
- =?utf-8?B?UmZqcHdRNWJ4Nk1JUDk4ZVFwY21sZlZ5UlVzQUdKS1FDK2s4U3IyU0MrTzdr?=
- =?utf-8?B?MkQzRzZ1VlZoWDdQUHd1WWVnR2hSNC9EdkhFdEVISVRIUVRJd09DSzhRRDM3?=
- =?utf-8?B?blRGR1ZNYmdOSlFSLzVBOW5GZ2F4NzZpVkZFbWRETEdNWVJuUHBTTFIvOHZ1?=
- =?utf-8?B?d0JXV2MrUnRJd3QvdFhKRkNYU0ZqWW9hdG5hRmRVMktUMHJpbVNYK2xlVUR2?=
- =?utf-8?B?RWtkRmdITmVIRG5qbFphMjZOV1lsQm5BTmpHWDlkVVBlZ0lmNTBwbWVaSmdz?=
- =?utf-8?B?YkdQRW9mbnl6dGl3b2lVeG0rbkpDMjMvd3ptL2FoQTBRLzNuMnJSOGdNZHl1?=
- =?utf-8?B?cXNGSlFkOEl3a3hvbUVCU09TZHFhWk5wV2ZIem4ycXVEQVFpMHU2dnIrTnVY?=
- =?utf-8?B?bGFBTlp2L1R6c04zQlV2L2ZoQ0RiUHpBWTVpU284SDdmWmxSUmZudTZmTzJu?=
- =?utf-8?B?VkZ2bmVEQUpmeHNkSjJaWG5acVpjdTZUcndkYkRLNmVJYm5MQ1Blb29qOXZu?=
- =?utf-8?B?M1pyTWhUUHp3amxTU1IxZHdVczRPNVYyQVU4ellWeGY5K0IwNTBJQlcya0tX?=
- =?utf-8?B?RTMxUStsZGhyV0k1R1duRzN5bG9mSFZJbk5tT2hUOVZGaVV0UnJSbGlyeHVn?=
- =?utf-8?B?TmlIWnREVWdJeTlpc21jVDdDTUdKZFdLQVorVWpHZ1VxOHN4RlFIK29QcXVC?=
- =?utf-8?B?bG9oNkloK0J5TCtac2VzQUJJaVNBdzk2WnBxbHQ1cUduekpkQUdyTEVjQ2c0?=
- =?utf-8?Q?XpGhutFOlf93yu9itWfGMbnIh/GHuH38hXkmSXExF86o?=
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f3e0cc1-9490-4c8e-aa7b-08dd8bda7f3f
-X-MS-Exchange-CrossTenant-AuthSource: VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 13:41:11.4327
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ltfopPV9mp6f1xYXfg+hWEUs6LnukYfgkGDSRG3eMHAsKzt59IoNIcW/oi4zGD9W5W8BTKzmkvZn3sX/uCySkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3P195MB2229
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/8] dt-bindings: serial: describe SA8255p
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <psodagud@quicinc.com>, <djaggi@quicinc.com>,
+        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>,
+        <quic_arandive@quicinc.com>, <quic_mnaresh@quicinc.com>,
+        <quic_shazhuss@quicinc.com>, Nikunj Kela
+	<quic_nkela@quicinc.com>
+References: <20250502171417.28856-1-quic_ptalari@quicinc.com>
+ <20250502171417.28856-2-quic_ptalari@quicinc.com>
+ <20250504-hilarious-ultra-grebe-d67e7d@kuoka>
+ <6f97510c-eb6c-4f3b-b219-aa8d895b060b@quicinc.com>
+ <20250505-ostrich-of-impossible-conversion-a0f8ac@kuoka>
+ <4ebe065e-9686-4e35-bb00-a9e816fb8926@quicinc.com>
+ <1de5c0b7-7761-4d0c-bced-7e26150e995f@kernel.org>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <1de5c0b7-7761-4d0c-bced-7e26150e995f@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: NPGNapmLDEWlOg6YzH2mEgvgiHkt266l
+X-Authority-Analysis: v=2.4 cv=cpWbk04i c=1 sm=1 tr=0 ts=6818c06b cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=5_evsBJ8IHIMuaj2uzsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: NPGNapmLDEWlOg6YzH2mEgvgiHkt266l
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEzMiBTYWx0ZWRfX5xOpg0V5xhIZ
+ Rv4fHfVpJAYQObP57jO7jAWk4OyCVOVrqGvpqt8oopBQwGTGftHjX5tpSFsjYnOby8iR/3eG1Jc
+ gd01XuLu6lcIrvfgrr75uV8hAXYMt1uLdNBE/IgN9bRqox2mC8ylrXflwmzjQhFViV7Cf1dJllo
+ CFkz1g/hqfGytJDe4kFCW5NNESO890WyiAmfkVe9j1UeVDycjc3T7m6SSsBYYgJ1SOuu1fRJ+mS
+ ZOMkoXCJ2BYmmbgkPpNtpMmAa4vCV9KO0XEjTFNZkdfwXs2r1cl9UnIsKBbV8Y+m1e5mAFbXg0H
+ lv17WjBdjlOWmxToHmPh3SFQAmkCXloy2B/4pgIh3CUB0CWkRJeQUkdj9kJfL3luv9DadKfeagv
+ 2NeEtJ8xLGEaDENy/gJd17KvfiLxFp7NH8YlWoBJWNSrP0Hq32U/titRnxWVnyHa/8pMrhp5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_06,2025-05-05_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=831
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050132
 
+Hi Krzysztof
 
-On 5/5/25 10:33, Krzysztof Kozlowski wrote:
-> On 05/05/2025 10:18, Daniel Schultz wrote:
->> Hey,
+On 5/5/2025 3:29 PM, Krzysztof Kozlowski wrote:
+> On 05/05/2025 08:51, Praveen Talari wrote:
+>>>>>> +    serial@990000 {
+>>>>>> +        compatible = "qcom,sa8255p-geni-uart";
+>>>>>> +        reg = <0x990000 0x4000>;
+>>>>>> +        interrupts = <GIC_SPI 531 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> Why isn't here wakeup interrupt? Commit msg also does not help me to
+>>>>> understand why number of interrupts varies.
+>>>> Currently we are not using wake-irq because it is optional for our current
+>>>> implementation.
+>>> Great explanation. I asked why is it optional, answer because it is
+>>> optional.
+>> sorry.
+>>> What does it mean optional? This is part of the SoC, so how given one,
+>>> fixed SoC can have it routed or not routed in the same time?
+>> the serial driver doesn't enter runtime suspend mode until the port is
+>> closed.
 >>
->> can someone please take a look at this patch? I can also re-send in case
->> it doesn't apply anymore. Thanks!
->
-> Sounds like a product thingy, so I do not see much need to enable it in
-> the defconfig.
-I'm okay with that. We can handle that downstream but wasn't sure if 
-this config would be accepted.
->
-> BTW, the more people you CC, the bigger chance no one will fell
-> responsible. You Cc-eed ~7 persons not related to your subsystem.
+>> therefore, there is no need for a wake IRQ when the driver is in an
+>> active state
+> You described current Linux driver, so if we change Linux driver or we
+> try for example FreeBSD, then bindings are different?
 
-Ah, yes that makes sense. Thank you for the hint!
+Currently, the driver includes code to register the device's wakeup 
+capability
 
-- Daniel
+but it lacks the necessary handler code for wakeup IRQ. According to the 
+serial driver,
+
+the wake IRQ is meant to wake up the device but the device remains 
+active because
+
+the serial driver does not enter runtime suspend mode until the port 
+closed.
+
+So it is better to exclude the wake IRQ until the appropriate code is added.
 
 >
+> Again, explain how SoC can have this interrupt not routed.
 >
 > Best regards,
 > Krzysztof
