@@ -1,41 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C533754E0;
-	Mon,  5 May 2025 22:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD037C739;
+	Mon,  5 May 2025 22:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485967; cv=none; b=uGehfI/JEueaIf9wdAcz2lMmUhDJ3sosfzVgP0Jds41Za4QFoolcfvxyFriT+BOWaQsTK/WMTIXt7UvNfYkZ2th4+F7Q4Gi5wNFk4nyKzO9H7RImBLUXpdV/yLKfA41Oqoi6jqvyGW4XYweiRuk0khh1AwjuaN3c8am1lD7Gmh4=
+	t=1746485980; cv=none; b=ll9kr26kV/7/dv4XXLEdnwHhYDgWtuoHWWrOppHJV6p9cNHlrHHq3u4CnbkuTXWFkqCzROZDebzlTZ9C53pFHBNgDmPuxqsa7aOAfG6GnkdBmCrdQ8cx1/GQhxAaCdo1ceFWan5Dhzp7Lb9xP2gf0MVofYPO8H7bpMmBd+kH4bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485967; c=relaxed/simple;
-	bh=AwKY7oXgqPqSl/Pf80/MryRt7cNgeNG1SotOFCH02rM=;
+	s=arc-20240116; t=1746485980; c=relaxed/simple;
+	bh=TghLYy3tw75un8ZZnDmu4bdbeNos3GdnefPwQ3e2oz0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J9/Xat9zVyKQF9mhPMzH/pQ9iY6rP27VTXFpnKCAexxTmC2YZdnmV7pKz42p/9ZTg7cBvzw5FQLtmwQCk2DYYTuwvqiJ2C5SMC9BG9SnkdNd9Eebi50THu+Gy0ZQHAiudhFyEMVsBwluGU2dQLddV+hBi/rTk/oxHyyb232153s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2EXyoBz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GUYirekb4pHjziOz72n9dkiH4n+M3GJ7sBmq8q2tbRUqVXHaBQMFw0PWbq+HgTyDccb0Z2ed32K9QvGgynjPoT7RebbuBWKTe5lbSC4atUr7NyVzWfEm46d4bdbIr9+nUL3EhlGXvGQr1oZbTqY8cU6S7B1GaCSD7KO0G/dXmRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=akuCe4FU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2EXyoBz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F84C4CEE4;
-	Mon,  5 May 2025 22:59:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akuCe4FU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBAEC4CEEF;
+	Mon,  5 May 2025 22:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485966;
-	bh=AwKY7oXgqPqSl/Pf80/MryRt7cNgeNG1SotOFCH02rM=;
+	s=k20201202; t=1746485979;
+	bh=TghLYy3tw75un8ZZnDmu4bdbeNos3GdnefPwQ3e2oz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N2EXyoBzXn0GuJTnLt7H6pR8YsCVFNs4Fp+BuL1y68DZO1UbPHH49dcsBVn4+aXPe
-	 qAEeYhV88o50rL/8DuyMGTpYz85Yz8jHq3oiPNenK/VlqN2syHxT2YLmruCeNNaGlv
-	 kPFqzPmYwCEy+64st+e6fnkHKuMi9TLetoBFGl7rsnxUufgMKf6TcDkt4/cnIaUNPT
-	 fcyVqFc8gMDLaUmW98IHBbq3d018zd5Yk3gVWHueI273csr9C7fN0WafSCgE3ZnTLp
-	 AYhOhk6+NHC509r2nuPzUjI7GuRw/kUUVEulPpwPmEe22FDnhKZ8LxVIP/kN+ym5OD
-	 Y9SBnZuGvLt7Q==
+	b=akuCe4FUYlB+C5oqvT7rFmfxfsIoHokPyrM16jRUmP/KiM1VlrThz8FVtCEhLlGkD
+	 KWFQ6KVe82ithGGRzmalFtNVT4dR35MFJFtSNNg6i49oWf5XEVnoXgc8/Aj62EMbsL
+	 z81B3+/93llw8nJSsFJ0XscKxAVBu2bmK0F8maBck7BTyTL4xZwFOm81jV1vHtS+DW
+	 PoYJ3S2MqmUSWYAMZKPN4hZiMKYUI1R7EhC+jCActmI+TdqB9au5B7DlJ5O/Ls5+vA
+	 uLrLLqu6j3ZCFX/ZatR39y+7mRftxBYTRzS8w8A6xiDzN0BYqbcnrsESB4iSjtXcZu
+	 LJXxAolgz2Hgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: Leon Huang <Leon.Huang1@amd.com>,
+	Robin Chen <robin.chen@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 091/294] wifi: iwlwifi: fix debug actions order
-Date: Mon,  5 May 2025 18:53:11 -0400
-Message-Id: <20250505225634.2688578-91-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	wenjing.liu@amd.com,
+	Kaitlyn.Tse@amd.com,
+	anthony.koo@amd.com,
+	jerry.zuo@amd.com,
+	joshua.aberback@amd.com,
+	jack.chang@amd.com,
+	muyuan.yang@amd.com,
+	Sungjoon.Kim@amd.com,
+	michael.strauss@amd.com,
+	xi.liu@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 095/294] drm/amd/display: Fix incorrect DPCD configs while Replay/PSR switch
+Date: Mon,  5 May 2025 18:53:15 -0400
+Message-Id: <20250505225634.2688578-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -50,72 +69,78 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Leon Huang <Leon.Huang1@amd.com>
 
-[ Upstream commit eb29b4ffafb20281624dcd2cbb768d6f30edf600 ]
+[ Upstream commit 0d9cabc8f591ea1cd97c071b853b75b155c13259 ]
 
-The order of actions taken for debug was implemented incorrectly.
-Now we implemented the dump split and do the FW reset only in the
-middle of the dump (rather than the FW killing itself on error.)
-As a result, some of the actions taken when applying the config
-will now crash the device, so we need to fix the order.
+[Why]
+When switching between PSR/Replay,
+the DPCD config of previous mode is not cleared,
+resulting in unexpected behavior in TCON.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250308231427.6de7fa8e63ed.I40632c48e2a67a8aca05def572a934b88ce7934b@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[How]
+Initialize the DPCD in setup function
+
+Reviewed-by: Robin Chen <robin.chen@amd.com>
+Signed-off-by: Leon Huang <Leon.Huang1@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../link/protocols/link_edp_panel_control.c   | 25 ++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-index a97ed7cbe4d14..d588e4cd808d8 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /*
-- * Copyright (C) 2018-2024 Intel Corporation
-+ * Copyright (C) 2018-2025 Intel Corporation
-  */
- #include <linux/firmware.h>
- #include "iwl-drv.h"
-@@ -1382,15 +1382,15 @@ void _iwl_dbg_tlv_time_point(struct iwl_fw_runtime *fwrt,
- 	switch (tp_id) {
- 	case IWL_FW_INI_TIME_POINT_EARLY:
- 		iwl_dbg_tlv_init_cfg(fwrt);
--		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		iwl_dbg_tlv_update_drams(fwrt);
- 		iwl_dbg_tlv_tp_trigger(fwrt, sync, trig_list, tp_data, NULL);
-+		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		break;
- 	case IWL_FW_INI_TIME_POINT_AFTER_ALIVE:
- 		iwl_dbg_tlv_apply_buffers(fwrt);
- 		iwl_dbg_tlv_send_hcmds(fwrt, hcmd_list);
--		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		iwl_dbg_tlv_tp_trigger(fwrt, sync, trig_list, tp_data, NULL);
-+		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		break;
- 	case IWL_FW_INI_TIME_POINT_PERIODIC:
- 		iwl_dbg_tlv_set_periodic_trigs(fwrt);
-@@ -1400,14 +1400,14 @@ void _iwl_dbg_tlv_time_point(struct iwl_fw_runtime *fwrt,
- 	case IWL_FW_INI_TIME_POINT_MISSED_BEACONS:
- 	case IWL_FW_INI_TIME_POINT_FW_DHC_NOTIFICATION:
- 		iwl_dbg_tlv_send_hcmds(fwrt, hcmd_list);
--		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		iwl_dbg_tlv_tp_trigger(fwrt, sync, trig_list, tp_data,
- 				       iwl_dbg_tlv_check_fw_pkt);
-+		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		break;
- 	default:
- 		iwl_dbg_tlv_send_hcmds(fwrt, hcmd_list);
--		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		iwl_dbg_tlv_tp_trigger(fwrt, sync, trig_list, tp_data, NULL);
-+		iwl_dbg_tlv_apply_config(fwrt, conf_list);
- 		break;
- 	}
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
+index 13104d000b9e0..d4d92da153ece 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
+@@ -662,6 +662,18 @@ bool edp_setup_psr(struct dc_link *link,
+ 	if (!link)
+ 		return false;
+ 
++	//Clear PSR cfg
++	memset(&psr_configuration, 0, sizeof(psr_configuration));
++	dm_helpers_dp_write_dpcd(
++		link->ctx,
++		link,
++		DP_PSR_EN_CFG,
++		&psr_configuration.raw,
++		sizeof(psr_configuration.raw));
++
++	if (link->psr_settings.psr_version == DC_PSR_VERSION_UNSUPPORTED)
++		return false;
++
+ 	dc = link->ctx->dc;
+ 	dmcu = dc->res_pool->dmcu;
+ 	psr = dc->res_pool->psr;
+@@ -672,9 +684,6 @@ bool edp_setup_psr(struct dc_link *link,
+ 	if (!dc_get_edp_link_panel_inst(dc, link, &panel_inst))
+ 		return false;
+ 
+-
+-	memset(&psr_configuration, 0, sizeof(psr_configuration));
+-
+ 	psr_configuration.bits.ENABLE                    = 1;
+ 	psr_configuration.bits.CRC_VERIFICATION          = 1;
+ 	psr_configuration.bits.FRAME_CAPTURE_INDICATION  =
+@@ -938,6 +947,16 @@ bool edp_setup_replay(struct dc_link *link, const struct dc_stream_state *stream
+ 	if (!link)
+ 		return false;
+ 
++	//Clear Replay config
++	dm_helpers_dp_write_dpcd(link->ctx, link,
++		DP_SINK_PR_ENABLE_AND_CONFIGURATION,
++		(uint8_t *)&(replay_config.raw), sizeof(uint8_t));
++
++	if (!(link->replay_settings.config.replay_supported))
++		return false;
++
++	link->replay_settings.config.replay_error_status.raw = 0;
++
+ 	dc = link->ctx->dc;
+ 
+ 	replay = dc->res_pool->replay;
 -- 
 2.39.5
 
