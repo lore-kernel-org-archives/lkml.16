@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2EA2D1116;
-	Mon,  5 May 2025 22:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681C62D1126;
+	Mon,  5 May 2025 22:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485462; cv=none; b=ONYSDZv3CEF6qDJmS+VioZvERImCKAPx0GJ6iTtSm3Xv56oiK8tQ+csUdMgfxRzcWtKXVICcgkl5fn32DOmFCv74p46AEi5Rpn0aPsRnmX/BOLnIh/fW+8lgCZOMRhwEmilVswTs/Nd1gen8JHQ15o/ty6g/OjEyQgYYl1mfY/4=
+	t=1746485466; cv=none; b=sISLdkQQUvJIQbTlJajOr/6Yc8CKE9YJEgFyKZLIM32mx6jB60L7xnaqfj3XUkyEOLn9fsrP4UHBYfh9f8z9n1nN0KBZeGEdFpl6otwx7hSswuNcWPaaU1gDdZsg/3ThHgWHM4GEaJG54HZ7WH2Si8WP8XypflyC4xhZbgtDYTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485462; c=relaxed/simple;
-	bh=Z9LX6s23ZuIXyzShDrnweBPy3s35tSG0fmfwXhPvyag=;
+	s=arc-20240116; t=1746485466; c=relaxed/simple;
+	bh=z+fMMvtWpwcVSNZK80WDtwzO/qfwNQN/M5Kp/sFKa8Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yahj5VNUndiSUonYU3BoOoxKpAVhPb8jMCYcJRQyMfxlsFFJKOYdXuCOpI4mPV+C7A98ymjIJ/j3oRpz1FKhBm8hb7x31tUhXotzl9xHKHrKeJfA1gMBp2ah2tW8uOzu1O96St0grpWqawDu6VzO3SnI/7d89qWSkYJLlDj5pVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKySiQYZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tQKtdevbzUWq4lgKJOAroYMndMq3MyvGGVlod1suptJn28xjq2tVeLubYIAETh9zRCje4Exo/uPs4sYqtLVa2gegDiGI6gz00ezx7MLYCqHR2Xv0Bn6uY9mQrz0WVT4IW3xDe0SPoF3f6OlqNcYbQew/ggBXcoYWHLy8WR/0SXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jccztEwd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKySiQYZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20982C4CEEF;
-	Mon,  5 May 2025 22:51:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jccztEwd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEEFC4CEEF;
+	Mon,  5 May 2025 22:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485460;
-	bh=Z9LX6s23ZuIXyzShDrnweBPy3s35tSG0fmfwXhPvyag=;
+	s=k20201202; t=1746485466;
+	bh=z+fMMvtWpwcVSNZK80WDtwzO/qfwNQN/M5Kp/sFKa8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EKySiQYZxcB3offOww41/agfyooS+ED8J3qnkljU4ffY+u2WpZ5QZud+VuUr9QmwT
-	 ssal1PrBIG1EYx/WbswjJYDNeedm3iNUcZuPWinxBKxyEl22kDKLKyw5U1X/JSi3IO
-	 O5mIlvbZHMKCYSgRsJh0zI/xGRnqLGkc31cNif5Q4I/DPx9DbUBiBbCPlxynonzmxC
-	 UHmd/XDcqRnDg0Q09NUQ/L23tQQTYOUw+ohUdC1euHdvlBjFS3ujbClT2UGtsgJqf6
-	 RFpPDytPJ9bsK4qKAv8yhsDQXGmK3QFvg9x1f01jfDm0qJ9MetI0hmS9VJuqLU8ds2
-	 Jv6jkqxyMLP0g==
+	b=jccztEwdHBN6vTAIockukC1wYv8biWzSe084L3lWYQ3S9KDxqXjv1le4Ib2VhheA4
+	 PneEke1l42NFut9I03OIVgddKgnciAUmOakBGkG6SC5+mxZrOf9Q+Uv880I6mVAAtQ
+	 Uitwc8CFtwum0GDaEojU3I7XJI78oMaklOt7Hj/IGf19WE1MnR3QmHqps3+I6HLKPT
+	 sCPjFcK6GZDCf+0cNxXXXyD8lTf05gG+oTmHHXMc1RmY+1g1QWAfKYN8V4ujzkhYTU
+	 x6yd55OrvXFDjZkUrZKCxWQHmMQMJsCtXBt05+lKCwnemALYXNFc2YQ3VQeFHrH0Oj
+	 YBYX/WH6idPYQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Hector Martin <marcan@marcan.st>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 324/486] firmware: arm_ffa: Handle the presence of host partition in the partition info
-Date: Mon,  5 May 2025 18:36:40 -0400
-Message-Id: <20250505223922.2682012-324-sashal@kernel.org>
+	shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 327/486] ASoC: tas2764: Add reg defaults for TAS2764_INT_CLK_CFG
+Date: Mon,  5 May 2025 18:36:43 -0400
+Message-Id: <20250505223922.2682012-327-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,43 +56,31 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit 2f622a8b0722d332a2a149794a3add47bc9bdcf3 ]
+[ Upstream commit d64c4c3d1c578f98d70db1c5e2535b47adce9d07 ]
 
-Currently it is assumed that the firmware doesn't present the host
-partition in the list of partitions presented as part of the response
-to PARTITION_INFO_GET from the firmware. However, there are few
-platforms that prefer to present the same in the list of partitions.
-It is not manadatory but not restricted as well.
-
-So handle the same by making sure to check the presence of the host
-VM ID in the XArray partition information maintained/managed in the
-driver before attempting to add it.
-
-Tested-by: Viresh Kumar <viresh.kumar@linaro.org>
-Message-Id: <20250217-ffa_updates-v3-7-bd1d9de615e7@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-4-dbab892a69b5@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_ffa/driver.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/tas2764.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-index e8efa6cfd58cd..52e1cbaab856d 100644
---- a/drivers/firmware/arm_ffa/driver.c
-+++ b/drivers/firmware/arm_ffa/driver.c
-@@ -1448,6 +1448,10 @@ static int ffa_setup_partitions(void)
+diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
+index 58315eab492a1..bc0a73fc7ab41 100644
+--- a/sound/soc/codecs/tas2764.c
++++ b/sound/soc/codecs/tas2764.c
+@@ -634,6 +634,7 @@ static const struct reg_default tas2764_reg_defaults[] = {
+ 	{ TAS2764_TDM_CFG2, 0x0a },
+ 	{ TAS2764_TDM_CFG3, 0x10 },
+ 	{ TAS2764_TDM_CFG5, 0x42 },
++	{ TAS2764_INT_CLK_CFG, 0x19 },
+ };
  
- 	kfree(pbuf);
- 
-+	/* Check if the host is already added as part of partition info */
-+	if (xa_load(&drv_info->partition_info, drv_info->vm_id))
-+		return 0;
-+
- 	/* Allocate for the host */
- 	info = kzalloc(sizeof(*info), GFP_KERNEL);
- 	if (!info) {
+ static const struct regmap_range_cfg tas2764_regmap_ranges[] = {
 -- 
 2.39.5
 
