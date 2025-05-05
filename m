@@ -1,297 +1,253 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E44EAC7
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B996C13AF2;
+	Mon,  5 May 2025 16:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746463122; cv=none; b=pUHZs1uiR2wpS98DNDvIxaFXgBjfdFb4tLBxFc9EuAZwYCtt9Boecp2rT3J6x1QY/FjudEsB3X7xJjbHeJLhrsfgg2DjEGfgm8hB4kGasyH8GP0fx64wATqdKZXiRqoMBMNmqUmupvACbPCyqI21xFMWfRktWUkHtRGnBYRwE38=
+	t=1746463180; cv=none; b=hTyvoTAYL3aihW6bvotrTYJFCWbC+4XI5m7I7HC/tNhfN1lprwtrxsdybJrJMA85XV8ej4FMFbWeD+RzDDBJ+zB7Qm1/a1muE/2OcdQEXQjle198W7sDAfAHNRdspZV7w55r9iPNB13kwmwpjuEi9TC90FD6t/an6uy6F2afSm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746463122; c=relaxed/simple;
-	bh=GeoqyUZ96ZhiA4JfLEQL3jDROUwM0rclHT0XNphb5Gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gSOooyhFM+h1d+JA1PW9tUfzrxLXQOopju75VKdrqsgjFxOC8sGa6bTLimacgSk/03+siSGajCO51rcr/SIhrXLp8ZcCo3vklNCsCVv+M2cNrKF433hK3pYQxHJMQqGMj+xHsO+1wZDez2j7yFW1xkYHXpxr6yXGn/50H4BPmhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HAgz60rR; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746463180; c=relaxed/simple;
+	bh=5TkvbWijlJPTKwJLH5IndsreaI2ziH2edXKHQRQsc18=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=L5f7GHWNk/7n71OGKQh8xJW5eYDNI60TmGwQI5TJSLNJ7IKh6dgT3helZT7XMzEBfiNmbHyCMNAL/tLkfNvYKCAAJlu8JlbW+vqlYUhXPLVc2lb2VD8QitCyFqMZb1zcTGUT0vCMZ/+rIVu06AUvw/55LhS8ikG+oo66I0R5PLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8ptWYaK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HAgz60rR"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-48b7747f881so555381cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746463119; x=1747067919; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e8cGfqMPxInbFVttVOXD20cN2ryppIoxJ2ihtNYujm8=;
-        b=HAgz60rReJj+O96uR9Ae/uyjdiYC30LHKP39xrUunt/f9pDJLZidsyI365/6dzYhnn
-         yRyDf5RGWMsiuwAhdh+OBZ96uWXrAwsLc/oen42vyWas8iRryJqyl1Vura4aO4cQP8Ax
-         9u+R2WioKr1LRa5fv5j6fRYSdsnrRcC4R3yv2JZA5fWETxrV3M0Zy72pn0S2Ml0OnjOv
-         f8c/7oFFGxu2z08AvnaMTvFSUru7mGeCDCLhHPIM8gfsns68Cpp8Lfz3Hy2ReiP+uXsQ
-         ON6Z+IXRP6vIOoNYUM4OMB5nrEeM1J5+blfH4XVTf3AjbZq7z7So/HTma/BvYQpR7flF
-         UAmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746463119; x=1747067919;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e8cGfqMPxInbFVttVOXD20cN2ryppIoxJ2ihtNYujm8=;
-        b=JNIWJaluOWMuQ5eHGfW92Cw8kdmHfgrIm98mpzVqI1EwKAU+2LlUF2KQkXaTZv3t1P
-         JBrjcz0NHjA9rQz+jvVlwa0nFej0+M0BxBTuznEhuf+aYStqFYl1ydVRdXQYCU7gYe9K
-         i/n7bdcrfe8fwUBs5t4EmPlqr2fZrcegPKzaCeD6k+1TsV8MJiwNLhllo51Xa0bbsALX
-         TV3taW9KsDPoaz+Z0NYJ8O7M029fwdhjOZ/8bUrn/swIslWCV42TBia3jpNEjZYhDIsc
-         7J/2pN4kGo+NYqGmzM5YELyrUIDK0WRM87m3Bz0haYWnBtCci0R8Uj0a1JqnjeOM4git
-         S8dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/EFDXtbCNJSNmS62aVh/+pa4PW783Gwz1TJ6hEWxTs5E6yAfqnksIOskHcUTJJ+tpgl9+Hax2I2yqu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk8d96DEDSIX5bEh3mBHkzCJU+AateWI5VHvpDL9GZCjWDdV+Y
-	uGalw7g6LhDFlm6jMu0b1u7HDIYaStoydJhPStwsGGazmbR4qFJKD/2+PDNu2vq5r6pSWSzZv8B
-	Ujit4IJD6fhlr29a7zavzKhE1IE7V6zy1WA/k
-X-Gm-Gg: ASbGnctidO+6ZgOl3tgtNH+kg/gDa4HtYakEWobUI/hiJzGVfAwwLW5Z00lEwo3IHLq
-	pbaink9tB+4j9mUlLcjA5xqDBlpv1KKJGBWvhAZZ4nENgczdASwFaPmN8QapWyEKCup1hWhnh+a
-	hPsxoKgtOiBrD2nXJ6zqzi
-X-Google-Smtp-Source: AGHT+IFWiSPtprBCFhUiQJ87HBkeklAt1J+ZsCn+rVHWym0jK4XLeniq9xKP5/CRbfUkWSCmfruKW7KYmB/qC+RSHJY=
-X-Received: by 2002:a05:622a:15d1:b0:486:a185:3136 with SMTP id
- d75a77b69052e-490cc658b8bmr651011cf.14.1746463118837; Mon, 05 May 2025
- 09:38:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8ptWYaK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94891C4CEE4;
+	Mon,  5 May 2025 16:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746463180;
+	bh=5TkvbWijlJPTKwJLH5IndsreaI2ziH2edXKHQRQsc18=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=b8ptWYaK8Uil7cckLaOfHjIBJEFkX/UV75ynNY/C3dnjoWsdOsme27SlAqqBAoWmA
+	 O73zqHNHQgqd894EOIY9omcxDZGLBzo+ZBIlHM7RLJg1ddXta0M1hBssPoOYVF/MRj
+	 ukgKWiZ1YFvMTt4r3BryWYk0WVWYQRHUkmhGJn4FeRb/+4JCVgkmvXWXeMr3R2wnfA
+	 bs1GQlRu37Y+c2RQPgCPTU7CMtVHL4wNyVYNHWKxN4/vQtmG+2zkqqpo9KEziCW6YD
+	 Y69FLFe1xaSvj/gVjXeT0CAx0pxTVpfzcYSs57QGFvChUistmMe4r6yt7SaqyKBmP2
+	 KMMzswmjz4Lxw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: liwei song <liwei.song.lsong@gmail.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,  RichardWeinberger
+ <richard@nod.at>,  VigneshRaghavendra <vigneshr@ti.com>,  TudorAmbarus
+ <tudor.ambarus@linaro.org>,  PratyushYadav <pratyush@kernel.org>,
+  MichaelWalle <mwalle@kernel.org>,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-spi@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: core: add sync between read/write and unbind
+ device
+In-Reply-To: <CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc2ZFDqA@mail.gmail.com>
+References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
+	<20250331161542.3040005-1-liwei.song.lsong@gmail.com>
+	<87jz73v1th.fsf@bootlin.com>
+	<CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc2ZFDqA@mail.gmail.com>
+Date: Mon, 05 May 2025 16:39:37 +0000
+Message-ID: <mafs0bjs73tbq.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
- <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
- <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com>
- <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
- <CAJuCfpG+YjyVE-6TaAQEjwc0iixqN8Epf25jo2awtL=gqY=afA@mail.gmail.com>
- <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com> <20250505-wachen-konform-3fe08f1b3214@brauner>
-In-Reply-To: <20250505-wachen-konform-3fe08f1b3214@brauner>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 5 May 2025 09:38:27 -0700
-X-Gm-Features: ATxdqUExh_T1r-sy8rTeLU-t84R_-ihK_Dse0jJQ6kQZSv2WSV8VGLRmcYSeIkA
-Message-ID: <CAJuCfpHYYGa4R11xJwZACNeXDxVroh-gUxHepdc2FfmgP_qBaA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jann Horn <jannh@google.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
-	vbabka@suse.cz, peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 6:50=E2=80=AFAM Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> On Tue, Apr 29, 2025 at 08:54:58PM +0200, Jann Horn wrote:
-> > On Tue, Apr 29, 2025 at 8:04=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > > On Tue, Apr 29, 2025 at 10:21=E2=80=AFAM Jann Horn <jannh@google.com>=
- wrote:
-> > > >
-> > > > Hi!
-> > > >
-> > > > (I just noticed that I incorrectly assumed that VMAs use kfree_rcu
-> > > > (not SLAB_TYPESAFE_BY_RCU) when I wrote my review of this, somehow =
-I
-> > > > forgot all about that...)
-> > >
-> > > Does this fact affect your previous comments? Just want to make sure
-> > > I'm not missing something...
-> >
-> > When I suggested using "WRITE_ONCE(vma->vm_file, NULL)" when tearing
-> > down a VMA, and using get_file_rcu() for the lockless lookup, I did
-> > not realize that you could actually also race with all the other
-> > places that set ->vm_file, like __mmap_new_file_vma() and so on; and I
-> > did not think about whether any of those code paths might leave a VMA
-> > with a dangling ->vm_file pointer.
-> >
-> > I guess maybe that means you really do need to do the lookup from the
-> > copied data, as you did in your patch; and that might require calling
-> > get_file_active() on the copied ->vm_file pointer (instead of
-> > get_file_rcu()), even though I think that is not really how
-> > get_file_active() is supposed to be used (it's supposed to be used
-> > when you know the original file hasn't been freed yet). Really what
->
-> I think it's fine for get_file_active() to be used in this way. That
-> ->vm_file pointer usage should get a fat comment above it explaining how
-> what you're doing is safe.
++Cc Mark and linux-spi@
 
-Got it. Will use it in my next version. Thanks!
+On Wed, Apr 30 2025, liwei song wrote:
 
+> Hi Miqu=C3=A8l,
 >
-> > you'd want for that is basically a raw __get_file_rcu(), but that is
-> > static and I think Christian wouldn't want to expose more of these
-> > internals outside VFS...
+> On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Miquel Raynal <miquel.raynal@boot=
+lin.com> wrote:
+>>
+>> Hello Liwei,
+>>
+>> On 01/04/2025 at 00:15:20 +08, Liwei Song <liwei.song.lsong@gmail.com> w=
+rote:
+>>
+>> > When unbind mtd device or qspi controller with a high frequency
+>> > reading to /dev/mtd0 device, there will be Calltrace as below:
+>> >
+>> > $ while true; do cat /dev/mtd0 >/dev/null; done &
+>> > $ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
+>> >
+>> > Internal error: synchronous external abort: 0000000096000210 [#1] PREE=
+MPT SMP
+>> > Modules linked in:
+>> > CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard=
++ #1
+>> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+>> > pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
+>> > lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
+>> > Call trace:
+>> >  cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
+>> >  cqspi_exec_mem_op+0x8bc/0xe40
+>> >  spi_mem_exec_op+0x3e0/0x478
+>> >  spi_mem_no_dirmap_read+0xa8/0xc8
+>> >  spi_mem_dirmap_read+0xdc/0x150
+>> >  spi_nor_read_data+0x120/0x198
+>> >  spi_nor_read+0xf0/0x280
+>> >  mtd_read_oob_std+0x80/0x98
+>> >  mtd_read_oob+0x9c/0x168
+>> >  mtd_read+0x6c/0xd8
+>> >  mtdchar_read+0xdc/0x288
+>> >  vfs_read+0xc8/0x2f8
+>> >  ksys_read+0x70/0x110
+>> >  __arm64_sys_read+0x24/0x38
+>> >  invoke_syscall+0x5c/0x130
+>> >  el0_svc_common.constprop.0+0x48/0xf8
+>> >  do_el0_svc+0x28/0x40
+>> >  el0_svc+0x30/0xd0
+>> >  el0t_64_sync_handler+0x144/0x168
+>> >  el0t_64_sync+0x198/0x1a0
+>> > Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
+>> > ---[ end trace 0000000000000000 ]---
+>> >
+>> > Or:
+>> > $ while true; do cat /dev/mtd0 >/dev/null; done &
+>> > $ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
+>> >
+>> > Unable to handle kernel paging request at virtual address 000000000000=
+12e8
+>> > Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+>> > Modules linked in:
+>> > CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard=
++ #1
+>> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+>> > pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+>> > pc : spi_mem_exec_op+0x3e8/0x478
+>> > lr : spi_mem_exec_op+0x3e0/0x478
+>> > Call trace:
+>> >  spi_mem_exec_op+0x3e8/0x478 (P)
+>> >  spi_mem_no_dirmap_read+0xa8/0xc8
+>> >  spi_mem_dirmap_read+0xdc/0x150
+>> >  spi_nor_read_data+0x120/0x198
+>> >  spi_nor_read+0xf0/0x280
+>> >  mtd_read_oob_std+0x80/0x98
+>> >  mtd_read_oob+0x9c/0x168
+>> >  mtd_read+0x6c/0xd8
+>> >  mtdchar_read+0xdc/0x288
+>> >  vfs_read+0xc8/0x2f8
+>> >  ksys_read+0x70/0x110
+>> >  __arm64_sys_read+0x24/0x38
+>> >  invoke_syscall+0x5c/0x130
+>> >  el0_svc_common.constprop.0+0x48/0xf8
+>> >  do_el0_svc+0x28/0x40
+>> >  el0_svc+0x30/0xd0
+>> >  el0t_64_sync_handler+0x144/0x168
+>> >  el0t_64_sync+0x198/0x1a0
+>> > Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
+>> > ---[ end trace 0000000000000000 ]---
+>> >
+>> > when unbind is running, the memory allocated to qspi controller and
+>> > mtd device is freed during unbinding, but open/close and reading device
+>> > are still running, if the reading process get read lock and start
+>> > excuting, there will be above illegal memory access. This issue also
+>> > can be repruduced on many other platforms like ls1046 and nxpimx8 which
+>> > have qspi flash.
+>> >
+>> > In this patch, register a spi bus notifier which will be called before
+>> > unbind process freeing device memory, add a new member mtd_event_remove
+>> > to block mtd open/read, then waiting for the running task to be finish=
+ed,
+>> > after that, memory is safe to be free.
+>> >
+>> > Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
+>> > ---
+>> >
+>> > Hi Maintainer,
+>> >
+>> > This is an improved patch compared with the original one:
+>> > (https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.3=
+699535-1-liwei.song.lsong@gmail.com/),
+>> > This v2 patch move notifier to spi-nor to avoid crash other types of f=
+lash.
+>> > now this patch only aim at fixing nor-flash "bind/unbind while reading=
+" calltrace,
+>> > but for other types of flash like nand also have this issue.
+>>
+>> While I agree with the observation and also the conclusion of adding
+>> some kind of notifier, I'd like to understand the rationale behind
+>> choosing to fix only spi-nor in v2? If any spi memory registered in the
+[...]
+>> > +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
+>> > +                                 unsigned long event, void *data)
+>> > +{
+>> > +     struct device *dev =3D data;
+>> > +     struct spi_device *spi;
+>> > +     struct spi_mem *mem;
+>> > +     struct spi_nor *nor;
+>> > +
+>> > +     if (!of_match_device(spi_nor_of_table, dev))
+>> > +             return 0;
+>> > +
+>> > +     switch (event) {
+>> > +     case BUS_NOTIFY_DEL_DEVICE:
+>> > +     case BUS_NOTIFY_UNBIND_DRIVER:
+>> > +             spi =3D to_spi_device(dev);
+>> > +             mem =3D spi_get_drvdata(spi);
+>> > +             if (!mem)
+>> > +                     return NOTIFY_DONE;
+>> > +             nor =3D spi_mem_get_drvdata(mem);
+>> > +
+>> > +             mutex_lock(&nor->lock);
+>> > +             nor->mtd.mtd_event_remove =3D true;
+>> > +             mutex_unlock(&nor->lock);
+>> > +             msleep(300);
+>>
+>> What is this sleep for?
 >
-> Yeah, no. I don't want that to be usable outside of that file.
+> The sleep is to wait the process which already got the lock and
+> running in reading
+> routine can be finished before memory is released, show in below scenario:
 >
-> > (In that case, all the stuff below about get_file_rcu() would be moot.)
-> >
-> > Or you could pepper WRITE_ONCE() over all the places that write
-> > ->vm_file, and ensure that ->vm_file is always NULLed before its
-> > reference is dropped... but that seems a bit more ugly to me.
-> >
-> > > > On Tue, Apr 29, 2025 at 7:09=E2=80=AFPM Suren Baghdasaryan <surenb@=
-google.com> wrote:
-> > > > > On Tue, Apr 29, 2025 at 8:40=E2=80=AFAM Jann Horn <jannh@google.c=
-om> wrote:
-> > > > > > On Fri, Apr 18, 2025 at 7:50=E2=80=AFPM Suren Baghdasaryan <sur=
-enb@google.com> wrote:
-> > > > > > > With maple_tree supporting vma tree traversal under RCU and v=
-ma and
-> > > > > > > its important members being RCU-safe, /proc/pid/maps can be r=
-ead under
-> > > > > > > RCU and without the need to read-lock mmap_lock. However vma =
-content
-> > > > > > > can change from under us, therefore we make a copy of the vma=
- and we
-> > > > > > > pin pointer fields used when generating the output (currently=
- only
-> > > > > > > vm_file and anon_name). Afterwards we check for concurrent ad=
-dress
-> > > > > > > space modifications, wait for them to end and retry. While we=
- take
-> > > > > > > the mmap_lock for reading during such contention, we do that =
-momentarily
-> > > > > > > only to record new mm_wr_seq counter. This change is designed=
- to reduce
-> > > > > > > mmap_lock contention and prevent a process reading /proc/pid/=
-maps files
-> > > > > > > (often a low priority task, such as monitoring/data collectio=
-n services)
-> > > > > > > from blocking address space updates.
-> > > > > > [...]
-> > > > > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > > > > > > index b9e4fbbdf6e6..f9d50a61167c 100644
-> > > > > > > --- a/fs/proc/task_mmu.c
-> > > > > > > +++ b/fs/proc/task_mmu.c
-> > > > > > [...]
-> > > > > > > +/*
-> > > > > > > + * Take VMA snapshot and pin vm_file and anon_name as they a=
-re used by
-> > > > > > > + * show_map_vma.
-> > > > > > > + */
-> > > > > > > +static int get_vma_snapshot(struct proc_maps_private *priv, =
-struct vm_area_struct *vma)
-> > > > > > > +{
-> > > > > > > +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> > > > > > > +       int ret =3D -EAGAIN;
-> > > > > > > +
-> > > > > > > +       memcpy(copy, vma, sizeof(*vma));
-> > > > > > > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> > > > > > > +               goto out;
-> > > > > >
-> > > > > > I think this uses get_file_rcu() in a different way than intend=
-ed.
-> > > > > >
-> > > > > > As I understand it, get_file_rcu() is supposed to be called on =
-a
-> > > > > > pointer which always points to a file with a non-zero refcount =
-(except
-> > > > > > when it is NULL). That's why it takes a file** instead of a fil=
-e* - if
-> > > > > > it observes a zero refcount, it assumes that the pointer must h=
-ave
-> > > > > > been updated in the meantime, and retries. Calling get_file_rcu=
-() on a
-> > > > > > pointer that points to a file with zero refcount, which I think=
- can
-> > > > > > happen with this patch, will cause an endless loop.
-> > > > > > (Just as background: For other usecases, get_file_rcu() is supp=
-osed to
-> > > > > > still behave nicely and not spuriously return NULL when the fil=
-e* is
-> > > > > > concurrently updated to point to another file*; that's what tha=
-t loop
-> > > > > > is for.)
-> > > > >
-> > > > > Ah, I see. I wasn't aware of this subtlety. I think this is fixab=
-le by
-> > > > > checking the return value of get_file_rcu() and retrying speculat=
-ion
-> > > > > if it changed.
-> > > >
-> > > > I think you could probably still end up looping endlessly in get_fi=
-le_rcu().
-> >
-> > (Just to be clear: What I meant here is that get_file_rcu() loops
-> > *internally*; get_file_rcu() is not guaranteed to ever return if the
-> > pointed-to file has a zero refcount.)
-> >
-> > > By "retrying speculation" I meant it in the sense of
-> > > get_vma_snapshot() retry when it takes the mmap_read_lock and then
-> > > does mmap_lock_speculate_try_begin to restart speculation. I'm also
-> > > thinking about Liam's concern of guaranteeing forward progress for th=
-e
-> > > reader. Thinking maybe I should not drop mmap_read_lock immediately o=
-n
-> > > contention but generate some output (one vma or one page worth of
-> > > vmas) before dropping mmap_read_lock and proceeding with speculation.
-> >
-> > Hm, yeah, I guess you need that for forward progress...
-> >
-> > > > > > (If my understanding is correct, maybe we should document that =
-more
-> > > > > > explicitly...)
-> > > > >
-> > > > > Good point. I'll add comments for get_file_rcu() as a separate pa=
-tch.
-> > > > >
-> > > > > >
-> > > > > > Also, I think you are introducing an implicit assumption that
-> > > > > > remove_vma() does not NULL out the ->vm_file pointer (because t=
-hat
-> > > > > > could cause tearing and could theoretically lead to a torn poin=
-ter
-> > > > > > being accessed here).
-> > > > > >
-> > > > > > One alternative might be to change the paths that drop referenc=
-es to
-> > > > > > vma->vm_file (search for vma_close to find them) such that they=
- first
-> > > > > > NULL out ->vm_file with a WRITE_ONCE() and do the fput() after =
-that,
-> > > > > > maybe with a new helper like this:
-> > > > > >
-> > > > > > static void vma_fput(struct vm_area_struct *vma)
-> > > > > > {
-> > > > > >   struct file *file =3D vma->vm_file;
-> > > > > >
-> > > > > >   if (file) {
-> > > > > >     WRITE_ONCE(vma->vm_file, NULL);
-> > > > > >     fput(file);
-> > > > > >   }
-> > > > > > }
-> > > > > >
-> > > > > > Then on the lockless lookup path you could use get_file_rcu() o=
-n the
-> > > > > > ->vm_file pointer _of the original VMA_, and store the returned=
- file*
-> > > > > > into copy->vm_file.
-> > > > >
-> > > > > Ack. Except for storing the return value of get_file_rcu(). I thi=
-nk
-> > > > > once we detect that  get_file_rcu() returns a different file we s=
-hould
-> > > > > bail out and retry. The change in file is an indication that the =
-vma
-> > > > > got changed from under us, so whatever we have is stale.
-> > > >
-> > > > What does "different file" mean here - what file* would you compare
-> > > > the returned one against?
-> > >
-> > > Inside get_vma_snapshot() I would pass the original vma->vm_file to
-> > > get_file_rcu() and check if it returns the same value. If the value
-> > > got changed we jump to  /* Address space got modified, vma might be
-> > > stale. Re-lock and retry. */ section. That should work, right?
-> >
-> > Where do you get an "original vma->vm_file" from?
-> >
-> > To be clear, get_file_rcu(p) returns one of the values that *p had
-> > while get_file_rcu(p) is running.
+> without sleep:
+> --------------------------------------------------------------------
+> mtd.mtd_event_remove =3D false;
+>                                                             reading start;
+> mtd.mtd_event_remove =3D true;
+> release memory
+>                                                             reading end;
+> --------------------------------------------------------------------
+>
+> with sleep:
+> -------------------------------------------------------------------
+> mtd.mtd_event_remove =3D false;
+>                                                            reading start;
+> mtd.mtd_event_remove =3D true;
+> sleep() start
+>                                                            reading end;
+> sleep() end
+> release memory
+> -------------------------------------------------------------------
+
+This is not how we should manage lifetimes. Adding arbitrary sleeps to
+hope races go away is flaky and will break in strange ways that would be
+impossible to debug. For example, what if a read happens to take longer
+than 300ms? Instead, we should have a way to properly manage the
+lifetimes and sequence operations.
+
+I always thought that by the time spi_unregister_controller() returns,
+there are no longer any in-flight operations so freeing stuff after it
+would be safe. Seems not to be the case.
+
+After a quick look, seems like all SPI MEM devices are doing similar
+things in their remove callbacks, so I think they are affected by the
+same race. For example, nxp_fspi_remove() unmaps its AHB area, so in
+flight SPI MEM operations would fail. Similarly, spi-stm32 will release
+its DMA channels, and so on with others.
+
+I suspect that this notifier thing is not the proper way to manage the
+lifetimes here and there should be something better. We need a way for
+the driver to make sure the underlying MTD device is no longer active
+before it frees its memory.
+
+Mark/SPI folks, what do you think is the proper way of doing this?
+
+[...]
+
+--=20
+Regards,
+Pratyush Yadav
