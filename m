@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7DE264A8E;
-	Mon,  5 May 2025 14:48:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52671264A9F;
+	Mon,  5 May 2025 14:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456513; cv=none; b=BBdEKmjJIIVR7vjNg8coebuMw1qBg98ITO4kg3PmlqWHbtQvo0CQAjYYCK/6+669IV9FgaM5zGNq/efrULiEWn+wtjL+Hb3WILfMSOiAZqcGN00TJTwcHa8AkSj4PjQwLD/J7+3eRnKsZ5792vfKo7JGkKp5A/+KVOpfNcgJw1Y=
+	t=1746456517; cv=none; b=TtLfZtHiVSXLGq/H2WJXl9xw2nlItnmMZXqxNqzpFI44anWHJ/4foaSuf/bZs/bIfCxRMavbtg9b4RMoBnqB0PHighOM0GVCzu75qJ8nGlVkgwlntloA5tjbLaZe56WYCYLJUDHHf1aEddG+u00YDeLbUnHIKffgkJfcyuaRtCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456513; c=relaxed/simple;
-	bh=OqbGJoUOj8Ika39G6fy9AeTSyJC3yzUd2A6RtIZgu40=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qtig+8U20a12uQHAizdBpsC6xs9ZQMGGJRdqA/nhIrDbyEnF3+EB2ECZIt/S7r0S+XV+A/iYpfywiGXQkNMczGyjxy3Gq6vrehjejn19b9Z5GlRsScH5+ZhoDOOb0kYSTFtl6V3vXf4JIgQvpnATwPWihSnnRuMsaNm1mahRnDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYxfZQi6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456517; c=relaxed/simple;
+	bh=jwgiKD3OjmybRDzCH8qb24nrslZzM56UFE7WhCbENJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gH0hhEKuvnY7A7yzm8ZzhX1olgVROxLJLM7d0dZtkYKBnX9C9yoZ0/zrUab1AWSLnAYB8d0sBgD0IzKYhtNr7yw4w4+wZXz9qnHj5vg1+sApagMvzgNUZ3bCqJGLtBuC6WDRQCOTNCjSqXn78UddOU37w6ebfL+xBvB3UmbGZAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+oqEuFG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYxfZQi6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D466FC4CEE4;
-	Mon,  5 May 2025 14:48:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+oqEuFG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4F1C4CEE4;
+	Mon,  5 May 2025 14:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456513;
-	bh=OqbGJoUOj8Ika39G6fy9AeTSyJC3yzUd2A6RtIZgu40=;
+	s=k20201202; t=1746456516;
+	bh=jwgiKD3OjmybRDzCH8qb24nrslZzM56UFE7WhCbENJU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=SYxfZQi6KH8f2bQ/bF/PWoWGfiW0hASqLeP2mxUSo0g44HvXCn7692ctYZYrwdv9a
-	 FtNzkKrj5RJ+9+49nuCUPv9RB8LCRdMP7Tej/jLhA12y5N0QdHeJTnq0QA8ok2QZ5d
-	 NnYrPhwEf9XwnbTds3ADqYGsUs7ESuHHzJXuJFiez8cF597tuOxFuXUyKujA322ofJ
-	 viDWTL4HOjiA7zg8Irqiac65yQigAQwGRuq5d7ijngWUPzlIaGT0IWNVbmEN+9JGh4
-	 o8eC1Zzexnv5GlY7Y5I7dwC+0Xm4eYVj1xS8EbUaNLOgDWzzJ2T4kXDcFJRr3aDC2t
-	 d6HMspywzN/ug==
+	b=r+oqEuFGgWY8szdwj9GOSBUVlBEyrXYk5IpjC5rKH28xwiSoyle1GD1fXALVc2WCZ
+	 1gC6BFzQRS29UQm2b03/RoM4UQ9qm5gt68LT2aYqPHRiwV+9Y0h/0HjMFvTLcVxRva
+	 VfjmVkBSHq7/DKgb2T7yH2Het3GEglaBGc2roSHtv/gltQSgUJpsCjfB7H/lK4bZ3G
+	 UyanHFlZVVd3+sifol3UVKfJmdFxAlsd/vAvJv4WveKGhiNpWt0YiR+c23iCbrQO5Y
+	 hwVuk8H735rAhHLHsA15d1jgqoaiQkQPg1D02bruHo8XTbWKzbzdJi0Wzi2VBMTMyD
+	 ySRzzPh+nmEJA==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Vineet Gupta <vgupta@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -33,9 +33,9 @@ To: Vineet Gupta <vgupta@kernel.org>,
 Cc: linux-snps-arc@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert snps,archs-idu-intc to DT schema
-Date: Mon,  5 May 2025 09:48:29 -0500
-Message-ID: <20250505144830.1292495-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert snps,archs-intc to DT schema
+Date: Mon,  5 May 2025 09:48:33 -0500
+Message-ID: <20250505144834.1292666-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,123 +45,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the ARC-HS Interrupt Distribution Unit interrupt controller
-binding to schema format. It's a straight-forward conversion of the
-typical interrupt controller.
+Convert the ARC-HS incore interrupt controller binding to schema format.
+It's a straight-forward conversion of the typical interrupt controller.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../snps,archs-idu-intc.txt                   | 46 ------------------
- .../snps,archs-idu-intc.yaml                  | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.yaml
+ .../interrupt-controller/snps,archs-intc.txt  | 22 ---------
+ .../interrupt-controller/snps,archs-intc.yaml | 48 +++++++++++++++++++
+ 2 files changed, 48 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
 deleted file mode 100644
-index a5c1db95b3ec..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+index 69f326d6a5ad..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
 +++ /dev/null
-@@ -1,46 +0,0 @@
--* ARC-HS Interrupt Distribution Unit
--
--  This optional 2nd level interrupt controller can be used in SMP configurations
--  for dynamic IRQ routing, load balancing of common/external IRQs towards core
--  intc.
+@@ -1,22 +0,0 @@
+-* ARC-HS incore Interrupt Controller (Provided by cores implementing ARCv2 ISA)
 -
 -Properties:
 -
--- compatible: "snps,archs-idu-intc"
+-- compatible: "snps,archs-intc"
 -- interrupt-controller: This is an interrupt controller.
--- #interrupt-cells: Must be <1> or <2>.
+-- #interrupt-cells: Must be <1>.
 -
--  Value of the first cell specifies the "common" IRQ from peripheral to IDU.
--  Number N of the particular interrupt line of IDU corresponds to the line N+24
--  of the core interrupt controller.
+-  Single Cell "interrupts" property of a device specifies the IRQ number
+-  between 16 to 256
 -
--  The (optional) second cell specifies any of the following flags:
--    - bits[3:0] trigger type and level flags
--        1 = low-to-high edge triggered
--        2 = NOT SUPPORTED (high-to-low edge triggered)
--        4 = active high level-sensitive <<< DEFAULT
--        8 = NOT SUPPORTED (active low level-sensitive)
--  When no second cell is specified, the interrupt is assumed to be level
--  sensitive.
--
--  The interrupt controller is accessed via the special ARC AUX register
--  interface, hence "reg" property is not specified.
+-  intc accessed via the special ARC AUX register interface, hence "reg" property
+-  is not specified.
 -
 -Example:
--	core_intc: core-interrupt-controller {
+-
+-	intc: interrupt-controller {
 -		compatible = "snps,archs-intc";
 -		interrupt-controller;
 -		#interrupt-cells = <1>;
+-		interrupts = <16 17 18 19 20 21 22 23 24 25>;
 -	};
--
--	idu_intc: idu-interrupt-controller {
--		compatible = "snps,archs-idu-intc";
--		interrupt-controller;
--		interrupt-parent = <&core_intc>;
--		#interrupt-cells = <1>;
--	};
--
--	some_device: serial@c0fc1000 {
--		interrupt-parent = <&idu_intc>;
--		interrupts = <0>;	/* upstream idu IRQ #24 */
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
 new file mode 100644
-index 000000000000..286a964f23e1
+index 000000000000..9d248ef7fe3d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
 @@ -0,0 +1,48 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/snps,archs-idu-intc.yaml#
++$id: http://devicetree.org/schemas/interrupt-controller/snps,archs-intc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARC-HS Interrupt Distribution Unit
++title: ARC-HS incore Interrupt Controller
 +
 +maintainers:
 +  - Vineet Gupta <vgupta@kernel.org>
 +
-+description: >
-+  ARC-HS Interrupt Distribution Unit is an optional 2nd level interrupt
-+  controller which can be used in SMP configurations for dynamic IRQ routing,
-+  load balancing of common/external IRQs towards core intc.
-+
-+  The interrupt controller is accessed via the special ARC AUX register
-+  interface, hence "reg" property is not specified.
++description:
++  ARC-HS incore Interrupt Controller provided by cores implementing ARCv2 ISA.
++  intc accessed via the special ARC AUX register interface, hence "reg" property
++  is not specified.
 +
 +properties:
 +  compatible:
-+    const: snps,archs-idu-intc
++    const: snps,archs-intc
 +
 +  interrupt-controller: true
 +
 +  '#interrupt-cells':
-+    description: |
-+      Number of interrupt specifier cells:
-+        - 1: only a common IRQ is specified.
-+        - 2: a second cell encodes trigger type and level flags:
-+            1 = low-to-high edge triggered
-+            4 = active high level-sensitive (default)
-+    enum: [1, 2]
++    const: 1
++
++  interrupts:
++    description: List of IRQ numbers between 16 and 256
++    items:
++      items:
++        - minimum: 16
++          maximum: 256
 +
 +required:
 +  - compatible
 +  - interrupt-controller
 +  - '#interrupt-cells'
++  - interrupts
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
 +    interrupt-controller {
-+        compatible = "snps,archs-idu-intc";
++        compatible = "snps,archs-intc";
 +        interrupt-controller;
 +        #interrupt-cells = <1>;
++        interrupts = <16>, <17>, <18>, <19>, <20>, <21>, <22>, <23>, <24>, <25>;
 +    };
 -- 
 2.47.2
