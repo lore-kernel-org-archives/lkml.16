@@ -1,122 +1,160 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC5633E4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113971B4139;
+	Mon,  5 May 2025 11:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443187; cv=none; b=I7F2xxmZPj0YH7KUh2xqP1oXZYVuW1ixG9q2oFKRQ3YilsGbhdcdTydTrFoRRbeHbvB42vVwbsXP0C5KCQAxqTaQUZd68R1s9PAXOgPNu6AXV+5ufL7Sbln1P3J/BoV8XzlMeK8It1uSLpWnItPYbM0RFWp3CY3D9ilexqebPgY=
+	t=1746443235; cv=none; b=qtYrETC40rU8hAl1yHDonVdpyPP5ZD+hLKkLkWJGaq3dZdG64ecxPV2Vj6OjTjnQn9I1TtPMEUmX1nWLPPL/IXBinPqG5rC45UsWqQsCjgZZMbkinB4ZjUhU27gyKfzLkW7eXSn0ZBGDCGY5D0EJR4+HtO75AjjoNbV6vXW+xvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443187; c=relaxed/simple;
-	bh=Q4MC9uq8B+HOG9jJjlKqzOktfsd+j+Nz19mK29UPkWs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VnjEjmmYNPHRzy88EcRTm94bzmMNeoa20GHnCuNmdVm6CJHfGtwMspGO6qbBtaVqR/3awIRwVfM55fxk9L3X2iWS8C5DXhM5LiG/m2rJWoLDCDqJTAKOdwpyQCehA0b12doy0xTvdBYqeqiwZPgbFsooGaU1o8zxOb/6eaUHs0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1uBteO-0001cs-FA; Mon, 05 May 2025 13:06:20 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1uBteN-001DWw-1y;
-	Mon, 05 May 2025 13:06:19 +0200
-Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
-	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1uBteN-003kn5-1m;
-	Mon, 05 May 2025 13:06:19 +0200
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Date: Mon, 05 May 2025 13:06:16 +0200
-Subject: [PATCH] usb: typec: tcpm: detect orientation in debug acc mode
+	s=arc-20240116; t=1746443235; c=relaxed/simple;
+	bh=rO5eZh+9eYwMMDNioF2j933ze88msy7mSao8PLdGod4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZswEZYkLGuGD9T4o8p7BWLnTvoOid3ds2HkgrNoBIJv4SlQ7qo0KyMjp7s9WgXXSF5JxSx3fE2rto+DG/zpYy8+hWfxinDs/3cObzhYHZ5buZLrrfVWVce4cOLt/hbBWANlYgcMXanSuH88buBE6GV/+lF7jFAfxEnlo0JAra6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EOb3oUa1; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EOb3oUa1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 433D443233;
+	Mon,  5 May 2025 11:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746443223;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4MhGsI2EbyH3hc3EXge2Ok/O3ysmCRWNeiIpRKl0bo4=;
+	b=EOb3oUa1DKhQxgB28CR2wdYNZDkW5kb7zZ+egfQDcKeyUiJ+3s5hrBQEK32Laci8oYNbEM
+	OF/6FJ81JC9ER9MCDPfm3DJKwHYwXvm9BFTaPpPRJkeu41eU3spHBce9bmliA0oBhYQ4ze
+	AGnzKk/cFNK4Y5+5A5JlPp1NRYHjQhQRsnA5X075tHVNLg6fzWimigCoP/wbk9BZGNPFyy
+	25st1+P47zeaWIOGIRg2XJ8un3lPPyWU24XEhUwgjQ6SYDxjHrCI4cq3aTiRtC60imY1yW
+	ST70x6y44sWQ/Lz+O1QYqD7FEKTW135y6myH23veuat+2D3xlhpkPgCUnizCfQ==
+Date: Mon, 5 May 2025 13:06:48 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Inki Dae <inki.dae@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Alim
+ Akhtar <alim.akhtar@samsung.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Louis Chauvet
+ <louis.chauvet@bootlin.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com, Adam Ford <aford173@gmail.com>,
+ Adrien Grassein <adrien.grassein@gmail.com>, Aleksandr Mishin
+ <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung
+ <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>, Christoph
+ Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
+ <cristian.ciocaltea@collabora.com>, Detlev Casanova
+ <detlev.casanova@collabora.com>, Dharma Balasubiramani
+ <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
+ Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
+ Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
+ Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying
+ <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
+ <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
+ <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
+ Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
+ <mordan@ispras.ru>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
+ <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue
+ <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Dmitry
+ Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, "Rob Herring (Arm)"
+ <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>, Pin-yen Lin
+ <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia
+ <a-bhatia1@ti.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian
+ Ray <ian.ray@ge.com>, Martyn Welch <martyn.welch@collabora.co.uk>, Peter
+ Senna Tschudin <peter.senna@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Herve Codina <herve.codina@bootlin.com>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Bjorn Andersson
+ <quic_bjorande@quicinc.com>, Marijn Suijten
+ <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>, Helge Deller <deller@gmx.de>, Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>,
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre
+ <yannick.fertre@foss.st.com>, =?UTF-8?B?TWHDrXJh?= Canal
+ <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Alain Volmat
+ <alain.volmat@foss.st.com>, Raphael Gallais-Pou <rgallaispou@gmail.com>,
+ Michal Simek <michal.simek@amd.com>
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250505130648.22ec8716@booty>
+In-Reply-To: <20250430-arrogant-marmoset-of-justice-92ced3@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+	<174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+	<832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
+	<20250430-arrogant-marmoset-of-justice-92ced3@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-tcpm-v1-1-e6142985a012@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAKebGGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDINQtSS7I1TUxTDJJSjRPTTRITVYCKi0oSk3LrAAbEx1bWwsAanKAq1Y
- AAAA=
-To: Badhri Jagan Sridharan <badhri@google.com>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Grzeschik <m.grzeschik@pengutronix.de>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1738;
- i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
- bh=Q4MC9uq8B+HOG9jJjlKqzOktfsd+j+Nz19mK29UPkWs=;
- b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBoGJurf/Bm1AeGCfK/4gcWTUkox7i0e7RFUTXJY
- NF4t2rwXWSJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCaBibqwAKCRC/aVhE+XH0
- q3LUD/wOgYaJUr6vvJ3EVLNLGjBw9+6kNeNTxYBdCJzKTNpHKJzK3j7sXDllN5BNkgTZibqz7Dx
- EGRxe2c/uf+BIkUs/yxP1yCunbtJSE2FRITDHYsIxB/4Kg3hIDT0tO8IFXWwumefU1fpC8wHepP
- s0aw30Fm7fuoH4wQAk7mDbNMl1EQbIiY6H73XppBkrquCovTeybrz+Mb0HDGyIi3WzS1Dvjf9Wy
- 9wkU53CeIARKElORvc770IHhgvmCGkywck+Q93xIJf3Rx+oqfAUfyWCNNgPZg6O/ARcu6yWdISp
- WFBpkYs2EAwb3YJADPXucMDbsTIJzWjE9O16xcfakt5g7IUvet7VxHfzEAfrx8DeNoJg8v0qedN
- 6Yb35l/J1SAmTN3YLRuJEohCsc0q5/eTKOGY2V1Dbarugju+x+scddaYvL6rMdYY6PiOzqeG5Q+
- 20XhX1uPvM9P70oCYPzJAP62sB/v9pJIoirwjCi9W4mP5pdt7PGkB9p5H4EaC7oS6GgbVrFkm7x
- UGhCyPaGm9tAEqDvMcFmXzh0QFqxpcdQSs/aKH1jjr2A5sduLjzjDsxtHE9hrYEM1x5xCXPHa6r
- aNKyeBXu9oDNpakaU5NgCIGhr7T8IfWvSmwT0TaeR8rBC+K6iok2GPut+Ed31/VaCzQ0QrWYK12
- mpFgn5y2np4oCRg==
-X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
- fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedtleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdeljeejuddvudetffdtudelfedugfduledtueffuedufefgudegkeegtdeihedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutdelpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehinhhkihdru
+ ggrvgesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehkhihunhhgmhhinhdrphgrrhhksehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepshiftdefuddvrdhkihhmsehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-For the debug accessory case, the orientation can be detected by reading
-the cc resistor values. The will be TYPEC_CC_RP_DEF and TYPEC_CC_RP_1_5
-in sink mode and TYPEC_CC_RA TYPEC_CC_RD in src mode.
+Inki, Kyungmin, Seung-Woo, Alim,
 
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
----
- drivers/usb/typec/tcpm/tcpm.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+On Wed, 30 Apr 2025 10:08:14 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 784fa23102f90..478e9c80fc8c2 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -611,6 +611,12 @@ static const char * const pd_rev[] = {
- #define tcpm_port_is_sink(port) \
- 	(tcpm_cc_is_sink((port)->cc1) || tcpm_cc_is_sink((port)->cc2))
- 
-+#define tcpm_port_is_debug_pol_cc1(port) \
-+	((tcpm_port_is_sink(port) && \
-+	 (port->cc2 == TYPEC_CC_RP_DEF && port->cc1 == TYPEC_CC_RP_1_5)) || \
-+	 (!tcpm_port_is_sink(port) && \
-+	 (port->cc2 == TYPEC_CC_RA && port->cc1 == TYPEC_CC_RD)))
-+
- #define tcpm_cc_is_source(cc) ((cc) == TYPEC_CC_RD)
- #define tcpm_cc_is_audio(cc) ((cc) == TYPEC_CC_RA)
- #define tcpm_cc_is_open(cc) ((cc) == TYPEC_CC_OPEN)
-@@ -4569,8 +4575,11 @@ static int tcpm_acc_attach(struct tcpm_port *port)
- 	if (tcpm_port_is_audio(port))
- 		state = TYPEC_MODE_AUDIO;
- 
--	if (tcpm_port_is_debug(port))
-+	if (tcpm_port_is_debug(port)) {
-+		port->polarity = tcpm_port_is_debug_pol_cc1(port) ?
-+					TYPEC_POLARITY_CC1 : TYPEC_POLARITY_CC2;
- 		state = TYPEC_MODE_DEBUG;
-+	}
- 
- 	ret = tcpm_set_roles(port, true, state, role, data);
- 	if (ret < 0)
+> Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
+> following patch, and it going through drm-misc?
+> 
+> https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
+> 
+> If not, we'll revert.
 
----
-base-commit: 588d032e9e566997db3213dee145dbe3bda297b6
-change-id: 20250505-tcpm-41b4ba7ea0ec
+Did you have a chance to have a look at the patch mentioned by Maxime?
+
+It was applied to drm-misc-next by mistake. Not your mistake of course,
+but now it's there so if you don't reply anything it will have to be
+reverted, and then sent again to go through all the review process to
+be hopefully re-applied in the future.
+
+If you agree with keeping it in drm-misc-next, that would be less noise
+for everybody.
+
+I'm going to send v3 very soon, so it would be good to decide what to
+do before that.
 
 Best regards,
--- 
-Michael Grzeschik <m.grzeschik@pengutronix.de>
+Luca
 
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
