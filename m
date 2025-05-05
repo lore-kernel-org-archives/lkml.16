@@ -1,90 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626D835C910;
-	Mon,  5 May 2025 22:47:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52FA2BE10A;
+	Mon,  5 May 2025 22:47:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485230; cv=none; b=qrAf7e7w05XUFOuKnNqQZs0GMk/XhVhExI9ilJ/aHIN3YmsLz8RjPaXsJ6SkfWoWPjuuKrdGMzAfgZcK3N9oBUjc0+xlCQWLaFpFR14zC2Aa9MvU1kZvTgwktRJHm5TBFFIznrIecUzT/Z5+qco2OKA7F7g5zt64m6JX+bgOCMI=
+	t=1746485243; cv=none; b=TwbdCju+HfZq+jlM2U+qb72tdsajtP/QJhn/K94ZByFRmn9qs7dsgPdPdE+48VbRki0zbJHDr6Mu0BqZL8syJd6GK+UeacG9OaLP2nGrT7dxw1Jay1lP0CyeowgtNGOy2XNgmS/8pbV9U5hIKQvDs6TtmOeB8kJYzg6CndDwHeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485230; c=relaxed/simple;
-	bh=YLu4pxyHP47HRCKaOwpN72EW9TWh8HCR+iIjXybySzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q2UbCI56EB6z8Oh8SpTVQ2OQKT1iiyO3krV8midbYHXCWZmiuvCumb0lMO1gwHK9/H86Awho30KdtH53lLIgscT5w4d7mATcGZ6Ytqcje2DFHIB4wjeg3ZrMv5L1BEv3VEe8m4I9uKxPTB/ha6VOgUNrUVuxp/TJe1hwV29du/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOShjDGR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485243; c=relaxed/simple;
+	bh=ob0vvT2R1TZYXplndaOjW3twfOQy1RYATc7niEKvVFY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=V3MBXSQKpnUg57acYuI0PXWZ67eBKYj2Zxi4RAjyLPQjjn9s17EQhXii1ucuCvSttcMLFfHiGCXcYn8PtmHDc17v6WkJIJcaHcBj4yklp4itUNH4YYheKQQHGTU984AXQm0nSnX+o63ZlUSQfjmC4uKJl0aZngmYuhbf+fpoKFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nc5oHZjr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOShjDGR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56C7C4CEED;
-	Mon,  5 May 2025 22:47:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nc5oHZjr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BE6C4CEEE;
+	Mon,  5 May 2025 22:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485229;
-	bh=YLu4pxyHP47HRCKaOwpN72EW9TWh8HCR+iIjXybySzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OOShjDGRnfE8o/91wmsBrKmtFQdMxMFC/GUfhOlcHi/xwbJ8Isl/ioATIMbLZhECg
-	 rYBkCdIgOfOM7j77zkQjy3jKGCamEsRznXT71r1QY+qnnxmaYDECZfmSH4ybn7gKiZ
-	 TR7oOz8x997I5CjE41cEuVwPmaFNdojdVU32SnfRH0SjVyoTUjb4z6ZrV9GICdHoCL
-	 +BgpSDtHmKASFQmLHqL+HIt30TtD+Jt78x9VGotq4mapXNoMurxABxAuGCWvPjtGDj
-	 0cM7ctnYAQKTdDW/a7gIq2LqGonBX8qEu30/RTWGjtsUTP7ZXfuKrGjmUhhUyWMfmP
-	 9NN5SJ+I7jrTw==
-Date: Tue, 6 May 2025 07:47:04 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, perex@perex.cz,
-	tiwai@suse.com, lgirdwood@gmail.com, lumag@kernel.org,
-	christianshewitt@gmail.com, kuninori.morimoto.gx@renesas.com,
-	herve.codina@bootlin.com, jonas@kwiboo.se,
-	krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.14 601/642] ASoC: hdmi-codec: allow to refine
- formats actually supported
-Message-ID: <aBk_6Dh4twLESMv_@finisterre.sirena.org.uk>
-References: <20250505221419.2672473-1-sashal@kernel.org>
- <20250505221419.2672473-601-sashal@kernel.org>
+	s=k20201202; t=1746485242;
+	bh=ob0vvT2R1TZYXplndaOjW3twfOQy1RYATc7niEKvVFY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nc5oHZjr6V5lg/J9TipRDP8ftjZNB17madeqkKEh4wi4sBg2mqyXjuhb94Ro/Nnwi
+	 gsQwiBxm4xGzwtI8Ns2cPiW2LwogGaJ6m/nBsggtG/MKGWtXwAsfsFwJ78D5Zhree8
+	 0MvA1Fyn9MIRGP7pdH7oMCZtMaSin6vdDElOSm3uiYYWy/qWmDqGDmacx1++COLz+z
+	 u2+3032UJMGqh00FNkvyxR8lzkmnbXfpOkKLSTSU07zdFFlFYukemSOkDmsMizX836
+	 z8Gj4FbgBj9c70C1MAIhlB8apfKCyDEgzWjtRDp3dkRGj6Brh6GopKnUC/CG8r2WZk
+	 yvzE3vO+0gp5Q==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Vinith Kumar R <quic_vinithku@quicinc.com>,
+	Tamizh Chelvam Raja <quic_tamizhr@quicinc.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 231/486] wifi: ath12k: Report proper tx completion status to mac80211
+Date: Mon,  5 May 2025 18:35:07 -0400
+Message-Id: <20250505223922.2682012-231-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oSWZcH3l9DGtTCj4"
-Content-Disposition: inline
-In-Reply-To: <20250505221419.2672473-601-sashal@kernel.org>
-X-Cookie: Well begun is half done.
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
+From: Vinith Kumar R <quic_vinithku@quicinc.com>
 
---oSWZcH3l9DGtTCj4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit d2d9c9b8de725e1006d3aa3d18678a732f5d3584 ]
 
-On Mon, May 05, 2025 at 06:13:37PM -0400, Sasha Levin wrote:
-> From: Olivier Moysan <olivier.moysan@foss.st.com>
->=20
-> [ Upstream commit 038f79638e0676359e44c5db458d52994f9b5ac1 ]
->=20
-> Currently the hdmi-codec driver registers all the formats that are
-> allowed on the I2S bus. Add i2s_formats field to codec data, to allow
-> the hdmi codec client to refine the list of the audio I2S formats
-> actually supported.
+Currently Tx completion for few exception packets are received from
+firmware and the tx status updated to mac80211. The tx status values of
+HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP and HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL
+are considered as tx failure and reported as tx failure to mac80211.
+But these failure status is due to internal firmware tx drop and these
+packets were not tried to transmit in the air.
+In case of mesh this invalid tx status report might trigger mpath broken
+issue due to increase in mpath fail average.
+So do not report these tx status as tx failure instead free the skb
+by calling ieee80211_free_txskb(), and that will be accounted as dropped
+frame.
 
-This is clearly a new feature which won't do anything without further
-work in the drivers.
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
 
---oSWZcH3l9DGtTCj4
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Vinith Kumar R <quic_vinithku@quicinc.com>
+Signed-off-by: Tamizh Chelvam Raja <quic_tamizhr@quicinc.com>
+Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Link: https://patch.msgid.link/20241122173432.2064858-1-quic_tamizhr@quicinc.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath12k/dp_tx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/net/wireless/ath/ath12k/dp_tx.c b/drivers/net/wireless/ath/ath12k/dp_tx.c
+index 44406e0b4a342..ad21fbfbcbe22 100644
+--- a/drivers/net/wireless/ath/ath12k/dp_tx.c
++++ b/drivers/net/wireless/ath/ath12k/dp_tx.c
+@@ -557,13 +557,13 @@ ath12k_dp_tx_process_htt_tx_complete(struct ath12k_base *ab,
+ 
+ 	switch (wbm_status) {
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_OK:
+-	case HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP:
+-	case HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL:
+ 		ts.acked = (wbm_status == HAL_WBM_REL_HTT_TX_COMP_STATUS_OK);
+ 		ts.ack_rssi = le32_get_bits(status_desc->info2,
+ 					    HTT_TX_WBM_COMP_INFO2_ACK_RSSI);
+ 		ath12k_dp_tx_htt_tx_complete_buf(ab, msdu, tx_ring, &ts);
+ 		break;
++	case HAL_WBM_REL_HTT_TX_COMP_STATUS_DROP:
++	case HAL_WBM_REL_HTT_TX_COMP_STATUS_TTL:
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_REINJ:
+ 	case HAL_WBM_REL_HTT_TX_COMP_STATUS_INSPECT:
+ 		ath12k_dp_tx_free_txbuf(ab, msdu, mac_id, tx_ring);
+-- 
+2.39.5
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgZP+cACgkQJNaLcl1U
-h9DQFwf/byg4WXd0ZV2QRRrWIw79W7S7/zdyXLkI88YkBixPtQ4S/wr6rqxXejyc
-6kytbz+1MDKxXCnrKDemLVgHB31GW6osbSjFbHBxtzMUAc3ZFDDCmXbBST9BEvt9
-4S9eo+DzaBbNdB7O5Md1CLep8a7LFna2WXB5YNMafk9ylE4c4cRLu9PGrOtva9Zv
-+8M8/obb4zU0fYgAXNtfAKEXQLCQnWoe43WxCoUpwdFZI5YXVeOSDJTuxrLjqLnR
-WcphGe6LiKrx3Pf0hhcbKRZr3FFlELeBSD8Yy5Plg8OQwk0Lqp5OfYKY/P7v+M/i
-aB4ZO1iyC6erfUJG73p6TTRh/NaxMw==
-=MH23
------END PGP SIGNATURE-----
-
---oSWZcH3l9DGtTCj4--
