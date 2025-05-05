@@ -1,186 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F1C3278E1;
-	Mon,  5 May 2025 22:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B163247AD
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484485; cv=none; b=S1xWfCqARCnpMKh3Tq+6cLjzGT2LjWgWuFDCxPdoXZnKoSj2rp4QH74D4leTlRQJhYxLJrYYg2hy+OA7+V8+QP2Rdy8dc44EJrH5n18nHhhmE0nZyslY1v8tc47EIGg5NcJaaimURFS0Ufl62E9MiIHb9Ui5yIQ6fBH9g76ggF8=
+	t=1746484486; cv=none; b=uCzA8C87UzHMnipWKDRTrG0np73IGvIam55zS5P0a96AEkRWwoA2lH5VBJtUQ0smKEKEI3yPKvdJpmFWAzAC4dAtaOdY0xrXGt/uDDGiVciWapTIH2qKPFdkFj56F3prJAZxfOmvRDBxtZ9oWSDp5i5iTQoxMMuDLdTKUCs3WNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484485; c=relaxed/simple;
-	bh=28MycwQojl4yf0AI0YpWwlRGwTopcRDThnxfc93eX6Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q9rbJRiSzHsstG6XUNUlEaHgVYXBB+7o0+LmPb7cgaSB7+2ugLQWfnR8kiJwF3ldeR+tmEMB6c9BZlaJaiq37pKoZEMWPRL2Q7SQJIRglV+nmy7e7+ACYgeTWx1qUtav/ZQS3ZXkJxVTcTlqOcSlbdvMrxhB/jzwKOhf2abvRoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcKUtw7D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746484486; c=relaxed/simple;
+	bh=7lXxkCUDjU68lKio/dxiQKRh3tGjp/pOmiVpK1S5RDU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hCqSA8BLIEl74Fup4QXkYHRtz9X7+3u7j6vrnpL60e1jWNwBJ0MXWKHJRGkJmcbP3WeoMaOSymMd0pe9/yAsgBg2LRoWNb54fAZEKZFipKTm+0JWQ11TLDiGr794FnIu4AsCddfKuQv29LS1jK1OQWUh0UsA6FwP2tuvBqlz5R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W4BTivZ+; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcKUtw7D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D868C4CEF3;
-	Mon,  5 May 2025 22:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484485;
-	bh=28MycwQojl4yf0AI0YpWwlRGwTopcRDThnxfc93eX6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rcKUtw7Dh1L6U3jReQ0KXYCuSxuX9pqRjTF68Qd9XQQ2iZFUlq6wrKw+m6GYYFK1s
-	 fJlvmr5zU3oop+W12JdE3D3J9TZX2LABGoGeVoukhj1ant3Gsuq7Bsu4ZIlZizr++v
-	 eO7A8RSaGgt3MiVkUyKFtR3nHCsllB1LZss6KHgg/6pVt3sA/Ik2vPe51HGJO5Hgrh
-	 1FxMXBHWcTcWIlKSKU9P6gAwzyZJJPQ9BYbBzHNQGGGLmoew13orzUOA6qFFar6BFJ
-	 htfBhIH22/6z+qZkrdg47O6KhKDFNg4Vs/LmsYg0A7xmcjYjDKk3wtIomIt7cVhWSN
-	 yaeJEldgwuWuQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Aaradhana Sahu <quic_aarasahu@quicinc.com>,
-	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 494/642] wifi: ath12k: Enable MLO setup ready and teardown commands for single split-phy device
-Date: Mon,  5 May 2025 18:11:50 -0400
-Message-Id: <20250505221419.2672473-494-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W4BTivZ+"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7370e73f690so5633129b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746484483; x=1747089283; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lcCv7hpJFXCgQNPjvIpQD0jIr1c2DrHVr6zfyF1t5G8=;
+        b=W4BTivZ+DpiKjwu310v891H55PBGU9+cpC6xjJsHIGtSM/WE+OQuzjdptAjgeim8dk
+         6PpByAgyTOg7bqQzJylVcJaZPZWShF9MvWupC64XTN/Lx/y0HcPaeJ+I+xQSdnAPP9mZ
+         WVza4eHpOkVeiGEIt1tPkmjRBdakFJO59pTANp1eKyfZEUZPnD9Y5R6NkcuGtnVuxnY9
+         tSP4u7q5/Qie1R43BR9UtbegwpPqStOK5luU/+hlGlsKzYTzXUU+tOo/em3Ihx7boS8/
+         23xeDV0DLMYqTv+cL2W1Mk0hPhTXG87SxQUoQ14nGW3pJrMjcZK7HmYo7eEpcL7ZWQ2L
+         YptA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746484483; x=1747089283;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lcCv7hpJFXCgQNPjvIpQD0jIr1c2DrHVr6zfyF1t5G8=;
+        b=PcV/3MEC32aa3amx38B9BNeeXbmB3grR4cWgYOHsKpKBJcR4j0Uf0M8rzJmA8Se4Ur
+         OdMHvgdq7Y75z5wL3nbkE4Lb+bFXU2gb1Xd6SJ/Rz3xxlXluUggHJwfMivzrUSk6YfiX
+         bJEeTPeYgGmPX5K06DIGaQsLJEcY15FlwNSe6ux4ou9ocBRGVxLZaB2kHZApPSuoB7hL
+         4yHMoe49xCzaJgv+Hh7KKmkUB27IsWLpKZqk4vThs7SS4oZHCyo6E/l3XXu93xstaDgI
+         /TyYx8DMPGJS/syUOfsgJJYyZgS5/FP03+OXj50Yhco10LNxzSeavptaMC7wFNis/JcL
+         GSyw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5QFgiP918yatx+HVI5S7+HdWbYSk0+d5mTKA/XRsyS2F6mUhxYHPINveirOQoxlzrwPEPL4HBd3BZoUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh6fta1Oi+18OarboxqK3hfD5PEe1A6NkKQ4DBGp+jvEDA4Wt4
+	tmCmEjrkD+2i/NEzH72YSPbYTmhbgb5sZbhTrBGBV/YtPVR1NHxA/QdF9pDx86khxScZwz3zAwt
+	0GswVeMwONd5yEHi2VhwWUzLj9Q==
+X-Google-Smtp-Source: AGHT+IHNzFURwBesMY2NJiCBx+5mmsp7b+O42UgI3ZoXcQ+zCwjPh8MzPQ3QOywW7NIAJbYKP3/lXbLkj6ZlWCWXibo=
+X-Received: from pfoc21.prod.google.com ([2002:aa7:8815:0:b0:739:45ba:a49a])
+ (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:c88f:b0:1ee:d8c8:4b7f with SMTP id adf61e73a8af0-2118259786cmr1133213637.25.1746484483566;
+ Mon, 05 May 2025 15:34:43 -0700 (PDT)
+Date: Mon,  5 May 2025 22:34:39 +0000
+In-Reply-To: <20250505223437.3722164-4-samitolvanen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250505223437.3722164-4-samitolvanen@google.com>
+X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5250; i=samitolvanen@google.com;
+ h=from:subject; bh=wKRcArm3I8YdLV7xUagIsjaFHkOg54K0GIqYgszVZFg=;
+ b=owGbwMvMwCEWxa662nLh8irG02pJDBmSNv9K1st1fkzpOPgpqm9HvJ6izx0fP3eZM7ddDm3ff
+ pbr0IuOjlIWBjEOBlkxRZaWr6u37v7ulPrqc5EEzBxWJpAhDFycAjCR9YoM/2u/Vn5ymMXkPVEj
+ Y5nFhVMNq0JCk3uyGX6cbNw8aYnmg2hGhm0vH91YYKerum/zl3o2sWSho2YmT7/NTtTW4F61YrZ RHQMA
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250505223437.3722164-5-samitolvanen@google.com>
+Subject: [PATCH bpf-next v9 1/2] cfi: add C CFI type macro
+From: Sami Tolvanen <samitolvanen@google.com>
+To: bpf@vger.kernel.org, Puranjay Mohan <puranjay@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Maxwell Bland <mbland@motorola.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Dao Huang <huangdao1@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Aaradhana Sahu <quic_aarasahu@quicinc.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 5cec2d86c7f4242fb30a696d8e6fd48109bf3e8f ]
+Currently x86 and riscv open-code 4 instances of the same logic to
+define a u32 variable with the KCFI typeid of a given function.
 
-When multi-link operation(MLO) is enabled through follow-up patches in
-the single split-phy device, the firmware expects hardware links
-(hw_links) information from the driver.
+Replace the duplicate logic with a common macro.
 
-If driver does not send WMI multi-link setup and ready command to the
-firmware during MLO setup for single split-phy device, the firmware will
-be unaware of the hw_links component of the multi-link operation. This may
-lead to firmware assert during multi-link association.
-
-Therefore, enable WMI setup, ready and teardown commands for single
-split-phy PCI device.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Signed-off-by: Aaradhana Sahu <quic_aarasahu@quicinc.com>
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-Link: https://patch.msgid.link/20250207050327.360987-2-quic_aarasahu@quicinc.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Co-developed-by: Maxwell Bland <mbland@motorola.com>
+Signed-off-by: Maxwell Bland <mbland@motorola.com>
+Co-developed-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Tested-by: Dao Huang <huangdao1@oppo.com>
 ---
- drivers/net/wireless/ath/ath12k/core.c | 33 +++++++++++++++++++++++++-
- drivers/net/wireless/ath/ath12k/core.h |  1 +
- drivers/net/wireless/ath/ath12k/mac.c  |  9 +++++++
- 3 files changed, 42 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/cfi.c       | 35 +++--------------------------------
+ arch/x86/kernel/alternative.c | 31 +++----------------------------
+ include/linux/cfi_types.h     | 23 +++++++++++++++++++++++
+ 3 files changed, 29 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
-index 212cd935e60a0..ffd173ff7b08c 100644
---- a/drivers/net/wireless/ath/ath12k/core.c
-+++ b/drivers/net/wireless/ath/ath12k/core.c
-@@ -887,10 +887,41 @@ static void ath12k_core_hw_group_stop(struct ath12k_hw_group *ag)
- 	ath12k_mac_destroy(ag);
- }
+diff --git a/arch/riscv/kernel/cfi.c b/arch/riscv/kernel/cfi.c
+index 64bdd3e1ab8c..e7aec5f36dd5 100644
+--- a/arch/riscv/kernel/cfi.c
++++ b/arch/riscv/kernel/cfi.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (C) 2023 Google LLC
+  */
++#include <linux/cfi_types.h>
+ #include <linux/cfi.h>
+ #include <asm/insn.h>
  
-+u8 ath12k_get_num_partner_link(struct ath12k *ar)
-+{
-+	struct ath12k_base *partner_ab, *ab = ar->ab;
-+	struct ath12k_hw_group *ag = ab->ag;
-+	struct ath12k_pdev *pdev;
-+	u8 num_link = 0;
-+	int i, j;
-+
-+	lockdep_assert_held(&ag->mutex);
-+
-+	for (i = 0; i < ag->num_devices; i++) {
-+		partner_ab = ag->ab[i];
-+
-+		for (j = 0; j < partner_ab->num_radios; j++) {
-+			pdev = &partner_ab->pdevs[j];
-+
-+			/* Avoid the self link */
-+			if (ar == pdev->ar)
-+				continue;
-+
-+			num_link++;
-+		}
-+	}
-+
-+	return num_link;
-+}
-+
- static int __ath12k_mac_mlo_ready(struct ath12k *ar)
+@@ -82,41 +83,11 @@ struct bpf_insn;
+ /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
+ extern unsigned int __bpf_prog_runX(const void *ctx,
+ 				    const struct bpf_insn *insn);
+-
+-/*
+- * Force a reference to the external symbol so the compiler generates
+- * __kcfi_typid.
+- */
+-__ADDRESSABLE(__bpf_prog_runX);
+-
+-/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_hash,@object				\n"
+-"	.globl	cfi_bpf_hash					\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_hash:							\n"
+-"	.word	__kcfi_typeid___bpf_prog_runX			\n"
+-"	.size	cfi_bpf_hash, 4					\n"
+-"	.popsection						\n"
+-);
++DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+ 
+ /* Must match bpf_callback_t */
+ extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
+-
+-__ADDRESSABLE(__bpf_callback_fn);
+-
+-/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_subprog_hash,@object			\n"
+-"	.globl	cfi_bpf_subprog_hash				\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_subprog_hash:						\n"
+-"	.word	__kcfi_typeid___bpf_callback_fn			\n"
+-"	.size	cfi_bpf_subprog_hash, 4				\n"
+-"	.popsection						\n"
+-);
++DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+ 
+ u32 cfi_get_func_hash(void *func)
  {
-+	u8 num_link = ath12k_get_num_partner_link(ar);
- 	int ret;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index bf82c6f7d690..a5147fcd8397 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #define pr_fmt(fmt) "SMP alternatives: " fmt
  
-+	if (num_link == 0)
-+		return 0;
-+
- 	ret = ath12k_wmi_mlo_ready(ar);
- 	if (ret) {
- 		ath12k_err(ar->ab, "MLO ready failed for pdev %d: %d\n",
-@@ -932,7 +963,7 @@ static int ath12k_core_mlo_setup(struct ath12k_hw_group *ag)
++#include <linux/cfi_types.h>
+ #include <linux/module.h>
+ #include <linux/sched.h>
+ #include <linux/perf_event.h>
+@@ -947,37 +948,11 @@ struct bpf_insn;
+ /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
+ extern unsigned int __bpf_prog_runX(const void *ctx,
+ 				    const struct bpf_insn *insn);
+-
+-KCFI_REFERENCE(__bpf_prog_runX);
+-
+-/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_hash,@object				\n"
+-"	.globl	cfi_bpf_hash					\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_hash:							\n"
+-"	.long	__kcfi_typeid___bpf_prog_runX			\n"
+-"	.size	cfi_bpf_hash, 4					\n"
+-"	.popsection						\n"
+-);
++DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
+ 
+ /* Must match bpf_callback_t */
+ extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
+-
+-KCFI_REFERENCE(__bpf_callback_fn);
+-
+-/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
+-asm (
+-"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
+-"	.type	cfi_bpf_subprog_hash,@object			\n"
+-"	.globl	cfi_bpf_subprog_hash				\n"
+-"	.p2align	2, 0x0					\n"
+-"cfi_bpf_subprog_hash:						\n"
+-"	.long	__kcfi_typeid___bpf_callback_fn			\n"
+-"	.size	cfi_bpf_subprog_hash, 4				\n"
+-"	.popsection						\n"
+-);
++DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
+ 
+ u32 cfi_get_func_hash(void *func)
  {
- 	int ret, i;
+diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
+index 6b8713675765..209c8a16ac4e 100644
+--- a/include/linux/cfi_types.h
++++ b/include/linux/cfi_types.h
+@@ -41,5 +41,28 @@
+ 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
+ #endif
  
--	if (!ag->mlo_capable || ag->num_devices == 1)
-+	if (!ag->mlo_capable)
- 		return 0;
- 
- 	ret = ath12k_mac_mlo_setup(ag);
-diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
-index ee595794a7aee..6325ac493f82c 100644
---- a/drivers/net/wireless/ath/ath12k/core.h
-+++ b/drivers/net/wireless/ath/ath12k/core.h
-@@ -1084,6 +1084,7 @@ int ath12k_core_resume(struct ath12k_base *ab);
- int ath12k_core_suspend(struct ath12k_base *ab);
- int ath12k_core_suspend_late(struct ath12k_base *ab);
- void ath12k_core_hw_group_unassign(struct ath12k_base *ab);
-+u8 ath12k_get_num_partner_link(struct ath12k *ar);
- 
- const struct firmware *ath12k_core_firmware_request(struct ath12k_base *ab,
- 						    const char *filename);
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 9c3e66dbe0c3b..9123ffab55b52 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -11140,6 +11140,9 @@ static int __ath12k_mac_mlo_setup(struct ath12k *ar)
- 		}
- 	}
- 
-+	if (num_link == 0)
-+		return 0;
++#else /* __ASSEMBLY__ */
 +
- 	mlo.group_id = cpu_to_le32(ag->id);
- 	mlo.partner_link_id = partner_link_id;
- 	mlo.num_partner_links = num_link;
-@@ -11169,10 +11172,16 @@ static int __ath12k_mac_mlo_teardown(struct ath12k *ar)
- {
- 	struct ath12k_base *ab = ar->ab;
- 	int ret;
-+	u8 num_link;
- 
- 	if (test_bit(ATH12K_FLAG_RECOVERY, &ab->dev_flags))
- 		return 0;
- 
-+	num_link = ath12k_get_num_partner_link(ar);
++#ifdef CONFIG_CFI_CLANG
++#define DEFINE_CFI_TYPE(name, func)						\
++	/*									\
++	 * Force a reference to the function so the compiler generates		\
++	 * __kcfi_typeid_<func>.						\
++	 */									\
++	__ADDRESSABLE(func);							\
++	/* u32 name = __kcfi_typeid_<func> */					\
++	extern u32 name;							\
++	asm (									\
++	"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"	\
++	"	.type	" #name ",@object				\n"	\
++	"	.globl	" #name "					\n"	\
++	"	.p2align	2, 0x0					\n"	\
++	#name ":							\n"	\
++	"	.4byte	__kcfi_typeid_" #func "				\n"	\
++	"	.size	" #name ", 4					\n"	\
++	"	.popsection						\n"	\
++	);
++#endif
 +
-+	if (num_link == 0)
-+		return 0;
-+
- 	ret = ath12k_wmi_mlo_teardown(ar);
- 	if (ret) {
- 		ath12k_warn(ab, "failed to send MLO teardown WMI command for pdev %d: %d\n",
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_CFI_TYPES_H */
 -- 
-2.39.5
+2.49.0.967.g6a0df3ecc3-goog
 
