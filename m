@@ -1,212 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC71865E3;
-	Mon,  5 May 2025 16:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FE4268C6B;
+	Mon,  5 May 2025 16:26:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462394; cv=none; b=BessoZ/BaMylpORTeYmNEtxK5n5D3SOysSzaS3KIsIeJTFLrWgN8PSWtVDLAkYi5h/GNWVP2kB4jjI0piog3H1LLcs4P2uqUohVWeet2lHExrRmSGdTXaTSY1EamT5swSf03/oJLMaOths3SNOQiMHFu5xUVfJV1uQWhQjnDiLs=
+	t=1746462399; cv=none; b=Z7XhNW/ESaw5IvH0mDVSMCRAEgjCPhfADo6s1FR/BTfh4+aamyLGz76uXv0mbezlSudEvlE2Qr4aoyhKFc1JeO43zSjmiab5+fE9D2Wf4RaOngtlA+Xjr06i0E6RG3uV/1Zs3aD6Jc6vGhNvQh6UN3zv7pdZXwCwFHNlyf91+dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462394; c=relaxed/simple;
-	bh=GtIIzxDECq7kLae9jREw4F50qmrqIijGoHyorGzxYbw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A3/oRqZagRTQIKkA0bD0ZfdZAjVg2X9mf31Croq19TB1FT6dwbrpAgFnPWGUBoQeaZgHt0mSLdBe/tsTXuK1x5MJ7p0q5W8IZC6xtUwS0ZHnHWvQoMs5OhyA8KB9h9E7PKUKf8Bn1ZpB3t32IkUiW1kOHcPCHzPuJ6Tvm3c0gLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9p6gnBk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746462399; c=relaxed/simple;
+	bh=7EWkjNZqORDuh00BaGAtBZ8Z9eEoHrJNgufwJtmAgHo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=C7E390+yhIKzaoZJGkoR5zawytjbkVVpo5KhCOn2Rw2tVr0Js4bX/dWYvz4tHhKpsqhyJoAmLGXmzI8Bhpr625RbzOX5gU38E/ULvVi4hG0JANIkRtRZWCbWUEhgskv+SNlUCa0Vzl3ySgO3pX0QgK6vnHLSoAXNtNak//xyAMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkMwFPOM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9p6gnBk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00960C4CEE4;
-	Mon,  5 May 2025 16:26:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkMwFPOM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5562C4CEE4;
+	Mon,  5 May 2025 16:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746462394;
-	bh=GtIIzxDECq7kLae9jREw4F50qmrqIijGoHyorGzxYbw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J9p6gnBkEFKu7t4zhvSfi4T0OXWty2q9dBQYJ/RXZhU0TPeDoaVsC4xsdpt5aSelq
-	 ELWVFNnyxXwb55qoWMwf5QdhhakNFQTmqJ0KQhLT8izzTFiwVGhDt9B+OC71K0auqg
-	 WmCdwkNeywxp4arN/C/tLjX3O47QwvRl6ytpgY6c25QPu4Yc4K45U7+WhOKWWs82OO
-	 qFrtfWGXSIS/xX5wCz9tzCshlvtEKdiSS31a6WBkgxg19+JNgYkWwUytZHWFV/fb0K
-	 8oYx/ZlFi4QbhHtq2LwepFh376O30+h42b1aHnhYad+wEBtyisJwnULsx3x+q/5DZo
-	 Eju87o1Mv+VrQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uByeF-00Bmmj-O3;
-	Mon, 05 May 2025 17:26:31 +0100
-Date: Mon, 05 May 2025 17:26:31 +0100
-Message-ID: <86jz6vgh1k.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Sebastian Ott <sebott@redhat.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Quentin Perret <qperret@google.com>,
-	Fuad Tabba <tabba@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: LM regression: fce886a60207 KVM: arm64: Plumb the pKVM MMU in KVM
-In-Reply-To: <7863e387-0b91-fac5-9925-e461ae7b30cd@redhat.com>
-References: <3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com>
-	<86msbrguka.wl-maz@kernel.org>
-	<e1117e68-ef05-9de2-d018-685bb7d86bb5@redhat.com>
-	<86ldrbgl2x.wl-maz@kernel.org>
-	<7863e387-0b91-fac5-9925-e461ae7b30cd@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1746462398;
+	bh=7EWkjNZqORDuh00BaGAtBZ8Z9eEoHrJNgufwJtmAgHo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mkMwFPOMGHy2yPXWNP2N8qMGjq5u86yYdRs34jlQsx7NzImbApiTvV364JefFJDM/
+	 kIonsGsps6Bgvh66CuGXLorW7vhJHpJJ+KVei09gNYY1BZuE4JQaA63OlXXSTeTPPO
+	 8YQm5okCBRAHu1Ygw6GI4K2osO9P4OyN+vLPNXNG2SfQxNXp4/SEi6uFPkcKyfdl5Y
+	 wLYrdAj0QiQVhSC9mmbzVGTsSTzevR8mAIIlui5hs9LSb/9vcYlwHuZbpirWtBE2Jc
+	 PfrYq3wgvFSEmrOx6t0YzSyQlrc/LoBLRBB+YQvNmcrOTUl8RR4UOWJTaW4Qk1PJmk
+	 LMXAdFiNdeyXg==
+From: Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH net-next v2 0/9] net: ethernet: ti: am65-cpsw: add network
+ flow classification support
+Date: Mon, 05 May 2025 19:26:30 +0300
+Message-Id: <20250505-am65-cpsw-rx-class-v2-0-5359ea025144@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sebott@redhat.com, oliver.upton@linux.dev, qperret@google.com, tabba@google.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALbmGGgC/22NQQ6CMBBFr2Jm7ZihSg2uvIdhUegAjVjIDEEM4
+ e42uHX58vLfX0FZAivcDisIz0HDEBOY4wHqzsWWMfjEYMjkdKYc3cvmWI/6Rlmw7p0qWmuJbOO
+ qwntIw1G4CcsefUDkCSMvE5TJdEGnQT7725zt/hfOin/hOUNCUzWePV0vBfH9yRK5Pw3SQrlt2
+ xcktMa+vwAAAA==
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
+Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3406; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=7EWkjNZqORDuh00BaGAtBZ8Z9eEoHrJNgufwJtmAgHo=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBoGOa6/XierbiFdsMm+5FAvoZm/hNU9EL+54M96
+ q4tZnA63c2JAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCaBjmugAKCRDSWmvTvnYw
+ kzywEADO4LGU1jAn4j7kr7/fyix3iZTpJ7RavRdX5o/jSxotSFpLNCaZnDTRelWFnIMWy9kC0SQ
+ xwWSCBQo7tvFKwdIv47ewW9J6K9aP50urI3XcgJy5gXb/+J2mN9rnADzLu9Fa+vGhH8q5VeG+nd
+ PcbG64lMPUne0Sm7HqwcLFaW6bs0yFMibEZJxSgmQWNOp5oMq8tBfr/7XdfjD2azeJZyR0A7ZfV
+ B4Rrqs40BqsQKycyLpWfBn5i1hPL9CTWj7OnaFC+JNz7x47rOAQEYDUJLGWdZmXThvU9i5K2B4D
+ 3/PCgZwrQS04NyQkbG0r8FZIk0GukiGI/MHBA8ei+dUP6hkhAniqog7j+Bf6t9WGNhDzwQz/iL6
+ 3cf/f0K5gI3nFQHz37GZT8jVjE9ifBwZ45GQNprRKSNlQ/bGxGRNWDeRKs91nRElJZCJcNrnP0R
+ lKl0QXdL9B418Aps95cntS3TOJdC8X0E2y1DF+BXY4qszeFzlCIV2dQeaZ/m1niuFi/8g1qoWH8
+ h8JpgnlQEEvAUBZB1i5yteIMJjbSI/wjzDP7n6U8L+eg5F1perycm6wkPzna5ahN/xE8cRs25Ap
+ cNFmPD0+633dj9xikTp+9vJIvulfosl7HhSwO0vuRcfua/GMMY1brh7qXVhZFoiaHlS32l2u9C4
+ sABUzrgGmZeE7RA==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
-On Mon, 05 May 2025 17:05:08 +0100,
-Sebastian Ott <sebott@redhat.com> wrote:
-> 
-> On Mon, 5 May 2025, Marc Zyngier wrote:
-> > On Mon, 05 May 2025 15:01:24 +0100,
-> > Sebastian Ott <sebott@redhat.com> wrote:
-> >> 
-> >> On Mon, 5 May 2025, Marc Zyngier wrote:
-> >>> On Mon, 05 May 2025 11:52:00 +0100,
-> >>> Sebastian Ott <sebott@redhat.com> wrote:
-> >>>> Doing back and forth migrations currently fails on arm after a couple iterations.
-> >>>> During the failing migration KVM_RUN exits via guest_abort and returns -ENOMEM.
-> >>>> I can reliably reproduce this by migrating between 2 qemu instances on an ampere
-> >>>> altra machine. This fails after < 5 iterations. In this case qemu would spit out
-> >>>> smth like this (other than that - nothing in the logs):
-> >>>> 
-> >>>> error: kvm run failed Cannot allocate memory
-> >>>>  PC=0000aaaae7d48590 X00=0000aaaae80a2e00 X01=0000aaaae7ea2fc0
-> >>>> X02=0000000001d3a5d0 X03=0000aaaae7eace8c X04=000000003b9aca00
-> >>>> X05=000000000000004a X06=000000000000004a X07=0000000028000000
-> >>>> X08=0000000000001d70 X09=0000000000000018 X10=000144b7d0000000
-> >>>> X11=00ffffffffffffff X12=000000008378f367 X13=0000aaab1a202d70
-> >>>> X14=0000000000000000 X15=0000000000000000 X16=0000ffffa2e2f7a8
-> >>>> X17=0000ffffa2541f20 X18=000000000000a000 X19=84bfda6288cf2dd6
-> >>>> X20=0000aaab1a1f1ce0 X21=000000007fffffff X22=0000ffffc5431788
-> >>>> X23=0000aaab1a17db60 X24=0000ffffc5431770 X25=0000000100000000
-> >>>> X26=0000004100000000 X27=0000000000000001 X28=0000aaab1a1f1c20
-> >>>> X29=0000ffffc54316d0 X30=0000aaaae7f8cd24  SP=0000ffffc5431650
-> >>>> PSTATE=20001000 --C- EL0t
-> >>>> 
-> >>>> Guest and host are otherwise idle, kvm is in normal VHE mode.
-> >>>> 
-> >>>> Git bisect points to (fce886a60207 "KVM: arm64: Plumb the pKVM MMU in KVM")
-> >>>> I also double checked that by reverting this commit on top of 6.14.
-> >>> 
-> >>> Thanks for find the triggering commit. Can you further identify *what*
-> >>> causes the -ENOMEM? The only new -ENOMEM in that patch is the one
-> >>> added to topup_hyp_memcache(), which shouldn't be called.
-> >> 
-> >> The kvm_pgtable_stage2_map() call in user_mem_abort() returns -ENOMEM
-> >> because the memcache pointer was not initialized!
-> >> 
-> >> It looks like smth like this without other conditions could do the trick:
-> >> 
-> >> if (!is_protected_kvm_enabled())
-> >> 	memcache = &vcpu->arch.mmu_page_cache;
-> >> else
-> >> 	memcache = &vcpu->arch.pkvm_memcache;
-> >> 
-> >> (I'll try this now)
-> > 
-> > Right, we end-up with an uninitialised memcache variable. Why isn't
-> > the compiler screaming?
-> 
-> Yea. Also I was under the impression that these kind of warnings tend to
-> over indicate..
+Adds support for -N/--config-nfc ethtool command for
+configuring RX classfiers.
 
-Quite. The obvious conclusion is that compilers are crap. Oh well.
+Currently only raw Ethernet (flow-type ether) matching is added
+based on source/destination addresses and VLAN Priority (PCP).
 
-> 
-> > I think you can indeed simply hoist the init of memcache very early
-> > on, which should solve hopefully solve the issue.
-> 
-> It solves the issue for me. Please note that in this case topup cache is
-> not called - I hope that this is not an issue (but it was also the case
-> before commit fce886a60207).
+The ALE policer engine is used to perform the matching and routing to
+a specific RX channel.
 
-Indeed, and that's how I expect it to fail. We're also pretty lucky
-that we get a NULL instead of some random pointer...
+Test cases:
 
-> From c594bbf9c3c4186594b798734ea9b1779be3b584 Mon Sep 17 00:00:00 2001
-> From: Sebastian Ott <sebott@redhat.com>
-> Date: Mon, 5 May 2025 11:09:58 -0400
-> Subject: [PATCH] KVM: arm64: Fix uninitialized memcache pointer in user_mem_abort()
-> 
-> Commit fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM") made the
-> initialization of the local memcache variable in user_mem_abort()
-> conditional, leaving a codepath where it is used uninitialized via
-> kvm_pgtable_stage2_map().
-> 
-> This can lead to migration failures where KVM_RUN exits with -ENOMEM.
+Increase number of RX channels to 8
+ip link set end1 down
+ip link set end0 down
+ethtool -L end0 rx 8
 
-Not only. It can fail on any path that requires a stage-2 allocation
-without transition via a permission fault or logging. It is actually
-pretty amazing that it fails so rarely...
+1) Ether source address test
+	ethtool -N end0 flow-type ether src xx:yy:zz:aa:bb:cc action 5
 
-> Fix this by making sure that memcache is always valid.
-> 
-> Fixes: fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM")
-> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+  Traffic from that address should route to channel 5
 
-+ Cc: stable@vger.kernel.org
+2) Ether destination address test
+	ethtool -N eth0 flow-type ether dst yy:zz:aa:bb:cc:dd action 4
 
-> ---
->  arch/arm64/kvm/mmu.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index 754f2fe0cc67..6c3c658c5f29 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -1501,6 +1501,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		return -EFAULT;
->  	}
-> 
-> +	if (!is_protected_kvm_enabled())
-> +		memcache = &vcpu->arch.mmu_page_cache;
-> +	else
-> +		memcache = &vcpu->arch.pkvm_memcache;
-> +
->  	/*
->  	 * Permission faults just need to update the existing leaf entry,
->  	 * and so normally don't require allocations from the memcache. The
-> @@ -1511,10 +1516,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		int min_pages = kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu);
-> 
->  		if (!is_protected_kvm_enabled()) {
-> -			memcache = &vcpu->arch.mmu_page_cache;
->  			ret = kvm_mmu_topup_memory_cache(memcache, min_pages);
->  		} else {
-> -			memcache = &vcpu->arch.pkvm_memcache;
+  Traffic to that address should route to channel 4
 
-Feel free to drop the {}s that are now superfluous.
+3) Drop test
+	ethtool -N end0 flow-type ether src xx:yy:zz:aa:bb:cc action -1
 
->  			ret = topup_hyp_memcache(memcache, min_pages);
->  		}
->  		if (ret)
-> 
+  Traffic from that address should be dropped
 
-With the above addressed:
+4) VLAN PCP test
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+on Remote create VLAN with ID 5 and all traffic mapping to required priority to test. e.g. 7
+	sudo ip link add link eno1 name eno1.5 type vlan id 5 egress-qos-map 0:7 1:7 2:7 3:7 4:7 5:7 6:7 7:7
+	sudo ifconfig eno1.5 192.168.10.1
 
-Please post it as a standalone patch so that Oliver can add it to the
-next batch of fixes for 6.15.
+on DUT create VLAN with id 5
+	ip link add link end0 name end0.5 type vlan id 5
+	ifconfig end0.5 192.168.10.5
 
-Thanks,
+VLAN pcp 7 vid 5 route to RX channel 6
+	ethtool -N end0 flow-type ether vlan 0xe005 action 6
 
-	M.
+  Traffic from that VLAN with PCP 7 should route to channel 6
 
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+---
+Changes in v2:
+- Error out if VLAN_ID > 0 as VLAN ID based flow routing still doesn't
+   seem to work. Drop commented out code.
+- Limit lines to 80 characters whereever possible.
+- Change struct am65_cpsw_rxnfc_rule.location from int to unsigned int.
+- Add information about order of rules evaluation and multiple matches
+   in commit log.
+- Link to v1: https://lore.kernel.org/r/20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org
+
+---
+Roger Quadros (9):
+      net: ethernet: ti: cpsw_ale: Update Policer fields for more ALE size/ports
+      net: ethernet: ti: cpsw_ale: return ALE index in cpsw_ale_add_vlan()
+      net: ethernet: ti: cpsw_ale: return ALE index in cpsw_ale_vlan_add_modify()
+      net: ethernet: ti: cpsw_ale: return ALE index in cpsw_ale_add_ucast()
+      net: ethernet: ti: cpsw_ale: add cpsw_ale_policer_reset_entry()
+      net: ethernet: ti: cpsw_ale: add cpsw_ale_policer_set/clr_entry()
+      net: ethernet: ti: cpsw_ale: add policer save restore for PM sleep
+      net: ethernet: ti: am65-cpsw: add network flow classification support
+      net: ethernet: ti: am65-cpsw: remove cpsw_ale_classifier_setup_default()
+
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c   | 355 ++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      |  32 ++-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  16 ++
+ drivers/net/ethernet/ti/am65-cpsw-switchdev.c |   6 +-
+ drivers/net/ethernet/ti/cpsw.c                |   4 +-
+ drivers/net/ethernet/ti/cpsw_ale.c            | 214 ++++++++++------
+ drivers/net/ethernet/ti/cpsw_ale.h            |  37 ++-
+ drivers/net/ethernet/ti/cpsw_new.c            |   4 +-
+ drivers/net/ethernet/ti/cpsw_switchdev.c      |   6 +-
+ 9 files changed, 581 insertions(+), 93 deletions(-)
+---
+base-commit: 836b313a14a316290886dcc2ce7e78bf5ecc8658
+change-id: 20250305-am65-cpsw-rx-class-666006fab9dd
+
+Best regards,
 -- 
-Without deviation from the norm, progress is not possible.
+Roger Quadros <rogerq@kernel.org>
+
