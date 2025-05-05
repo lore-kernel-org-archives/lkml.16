@@ -1,49 +1,67 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B13C182;
-	Mon,  5 May 2025 04:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E0419DF48
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 04:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746417688; cv=none; b=fC40SErB1VOdjt9FLwGFu5ciX+PwIT0kxE0PlNdM70OyUTLf/WrpqxNB1GMnkdvIfo7+ff6FM6L3FjJNBNrQMXNEk0UdnqEJGLdIqPBh4V1QszDYjdy9Bzi1pEhJtiDjPEuYyghDgrkug9Zq98utcapEvxH2mmXbdxTfRclMNhw=
+	t=1746417790; cv=none; b=aTjydXwd7qWQHkeyz+g87JYx2OQDKepD3gD32ygb7Ens9lQwondZHnfIB+bH10/9PvqXyzbhDOnHvaTSUA5Z3KTo69o1On+hfeqSrPlp3qH9Fw69h5uFADASaCnBWxlmP+f1hXWTo2ooGfvrE2wfpRb4FlBPmpmvqwvXbO6XSDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746417688; c=relaxed/simple;
-	bh=1a425qsFOjl1/H5i5opXLgFZye2zLKSDqZefyCMpOHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fG0CNPCh2a2nfll7WBTWD6aWNgJBMBJfbVogGKb63GRe4XL4NtTMuwEz7yeSlWHNYHnXJ5efNx1Ko6qLSMvSYRjcFk95VBSnMlJrTAPNrS8EraRM1a7njQn5ujzzg03tNoYcY3nlpscibksfHZ0PIIMvdYMLG+vaQiCXcPo8mvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jaYlpGPA; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746417790; c=relaxed/simple;
+	bh=+pljUp0rNnuvNTOde+uzOR+7150vJrAtAMDHRKaqg+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N9SmxJJptsPx40rufV+3dl89kJd/Y7GjtXdi7lw6mwPBsLjxpoiYXqeMm/sw3ZgtsaJATEerpGomz9tWNze54uoJBrMtAL6OCor8b6eH3IopfxEqU+vlqhtF2EHgMQFhgtfDqHrBhWQDSKU9NjTySw9Do9Wwe/ePcxCNq0Gufec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CAQXVsOg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jaYlpGPA"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 545415Dr123988
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 4 May 2025 23:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746417665;
-	bh=2tG/hP70MpeKfFLue11e+68DdSS5RzRgjC80Ey3Fa/c=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=jaYlpGPAuOxR8C/9rEOiTi1QbHdb9FJUUFhjMLX8nJbUjh/MSva5WABvqHVTlf5Hf
-	 mNRP9A0Rx4GMHFpuO7kIXlLikv20NtMoNIW6hQeyznFSABaGn+UEBm4m0PovrMQMbK
-	 YtCc7yaP/d8B9Oiaj7mEcGOXc4EHawb8qX5iQ7UY=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 545415or017932
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 4 May 2025 23:01:05 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 4
- May 2025 23:01:04 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 4 May 2025 23:01:04 -0500
-Received: from [10.249.140.90] ([10.249.140.90])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 545410RA127426;
-	Sun, 4 May 2025 23:01:01 -0500
-Message-ID: <4bddfa36-7cdb-4e74-b356-8ec4d7fb55aa@ti.com>
-Date: Mon, 5 May 2025 09:30:59 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CAQXVsOg"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544L3qtQ030478;
+	Mon, 5 May 2025 04:02:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=CozjIK
+	xbf8eHl86evTFP43PyS7GDovRxQk/b/4pkDiA=; b=CAQXVsOgkbSON0sKW5cWYD
+	komiMGmwrdZxuiaqtwk9hshZxoMgZxmCjM8Pdom/eXstawB6gCnCuv6hPHC1g20Q
+	zWAk+8IaNKnufJoajflGSm4jCRbQn0/DDOXjARkyUeJ4BKJCeUVGvi39ApzIO5xr
+	0xGq0Pw9FrdyjnZKIIVUQo+dKwgTsH+gol0TvofSqueWInjzaYhV16gLpcjL/H5E
+	b2nHVpsqazu3kuiVqoYyPP3RL/Ogz8IgD2eQHchMPF9fdvIfpLTnIlpdWbkHjGCU
+	E8bLyiDUjAsWv7WAtR5s7g2IJl/Xc7AyOMQoIWtzKN18R1u68xTSaMRgTwBlGWlw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46eftkgyu8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 04:02:41 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54541feH017048;
+	Mon, 5 May 2025 04:02:40 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46eftkgyu6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 04:02:40 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5453M6bw002729;
+	Mon, 5 May 2025 04:02:39 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxfnmgr2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 04:02:39 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54542Z1o34210410
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 04:02:35 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45D7220040;
+	Mon,  5 May 2025 04:02:35 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BDDD220043;
+	Mon,  5 May 2025 04:02:32 +0000 (GMT)
+Received: from [9.109.215.252] (unknown [9.109.215.252])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  5 May 2025 04:02:32 +0000 (GMT)
+Message-ID: <77b4129d-f975-495b-a837-4393bc0d515e@linux.ibm.com>
+Date: Mon, 5 May 2025 09:32:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,153 +69,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am62-main: Add PRUSS-M node
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-References: <20250430144343.972234-1-jm@ti.com>
+Subject: Re: [PATCH v2 6/6] powerpc: sysdev: use lock guard for mutex
+To: Srikar Dronamraju <srikar@linux.ibm.com>
+Cc: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, mpe@ellerman.id.au, peterz@infradead.org,
+        fbarrat@linux.ibm.com, ajd@linux.ibm.com, mahesh@linux.ibm.com,
+        oohall@gmail.com, hbathini@linux.ibm.com, dhowells@redhat.com,
+        haren@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20250314114502.2083434-1-sshegde@linux.ibm.com>
+ <20250314114502.2083434-7-sshegde@linux.ibm.com>
+ <aBIhMiNTpu6t8Hej@linux.ibm.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
 Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250430144343.972234-1-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <aBIhMiNTpu6t8Hej@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDAzMyBTYWx0ZWRfX8wPVefHHLq5/ G4jx+eC3sxdDH4Zd2mVMcqZKTwUfrVOyAZ/KM21EBbrmDtEtDWXLvgGXRVbv7QAc3ESoMWnSG4j BePS61p46Zv8k26c5a+76uB0CxsLMa3dfeRZQTgEt3tUCvFHkN9P9JD7eyslXAicra+fvyAJlIl
+ PcrwRRjKcDa+uHWhP7HpueYq6VjnaI5FQyFIYvkxjqk4ZzHokDIOjw3/n/vP1dl86IDK9YdZc52 N2cqKOm6KP9OSz3rOXGwMXy2sL+BeWc20MBedvZmRsmYf8bIbmUhut+OVa0st5WCWUxHGKdyUaN xFex1MzUsyfq0n8GnwyGz0qGGVxKuUI7b2BuF4QVCt1SQoh70SKWPxzpj9DXczVM+rc0q16jIrc
+ epdsKhDwVC7G9gRiMIA57U6O5qq0cBu96Cm7Jbnza7gCzMiiy2qKbJEx2MGxNL5r6KvRVVTU
+X-Proofpoint-GUID: CvdJ1bNgkQN9oHq0EXTDlr_-DyKp2gFD
+X-Authority-Analysis: v=2.4 cv=Q7vS452a c=1 sm=1 tr=0 ts=68183861 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=VnNF1IyMAAAA:8 a=hxR3HYdLQCKF7G9SLD8A:9
+ a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-ORIG-GUID: A3lRK_A8S7woU98tJosiXyNIIWeChrJY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_02,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050033
 
-Hi Judith,
 
-On 4/30/2025 8:13 PM, Judith Mendez wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
+
+
+
+
+
+
+Hi
+
+
+
+
+
+On 4/30/25 18:40, Srikar Dronamraju wrote:
+> * Shrikanth Hegde <sshegde@linux.ibm.com> [2025-03-14 17:15:02]:
 >
-> Add the DT node for the PRUSS-M processor subsystem that is present
-> on the K3 AM62x SoCs. The K3 AM62x family of SoC has one PRUSS-M
-> instance and it has two Programmable Real-Time Units (PRU0 and PRU1).
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> [ Judith: Fix pruss_iclk id for pruss_coreclk_mux ]
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
-> Changelog:
-> - drop internal tags
-> - rebase against ti-k3-dts-next
-> - fix header
 
+Hi Srikar.
 
-Reviewed-by: Beleswar Padhi <b-padhi@ti.com>
+>> use guard(mutex) for scope based resource management of mutex
+>> This would make the code simpler and easier to maintain.
+>>
+>> More details on lock guards can be found at
+>> https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
+>>
+>> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>> ---
+>>   arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c | 8 +-------
+>>   1 file changed, 1 insertion(+), 7 deletions(-)
+>>
+>> diff --git a/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c b/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
+>> index ce6c739c51e5..bbfc7c39b957 100644
+>> --- a/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
+>> +++ b/arch/powerpc/sysdev/fsl_mpic_timer_wakeup.c
+>> @@ -75,7 +75,7 @@ static ssize_t fsl_timer_wakeup_store(struct device *dev,
+>>   	if (kstrtoll(buf, 0, &interval))
+>>   		return -EINVAL;
+>>   
+>> -	mutex_lock(&sysfs_lock);
+>> +	guard(mutex)(&sysfs_lock);
+>>   
+>>   	if (fsl_wakeup->timer) {
+>>   		disable_irq_wake(fsl_wakeup->timer->irq);
+>> @@ -84,14 +84,12 @@ static ssize_t fsl_timer_wakeup_store(struct device *dev,
+>>   	}
+>>   
+>>   	if (!interval) {
+>> -		mutex_unlock(&sysfs_lock);
+>>   		return count;
+>>   	}
+> 
+> Nit: Here and the next change, due to the current change, there is no need
+> for curly braces.
 
-Thanks,
-Beleswar
+Ok. will fix it next version.
 
->
-> Link to v1:
-> https://lore.kernel.org/linux-devicetree/20250108222048.818835-1-jm@ti.com/
-> ---
->   arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 90 ++++++++++++++++++++++++
->   1 file changed, 90 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> index 7d355aa73ea2..ee53e663b5bd 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
-> @@ -1079,6 +1079,96 @@ dphy0: phy@30110000 {
->   		status = "disabled";
->   	};
->   
-> +	pruss: pruss@30040000 {
-> +		compatible = "ti,am625-pruss";
-> +		reg = <0x00 0x30040000 0x00 0x80000>;
-> +		power-domains = <&k3_pds 81 TI_SCI_PD_EXCLUSIVE>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x00 0x30040000 0x80000>;
-> +
-> +		pruss_mem: memories@0 {
-> +			reg = <0x0 0x2000>,
-> +			      <0x2000 0x2000>,
-> +			      <0x10000 0x10000>;
-> +			reg-names = "dram0", "dram1", "shrdram2";
-> +		};
-> +
-> +		pruss_cfg: cfg@26000 {
-> +			compatible = "ti,pruss-cfg", "syscon";
-> +			reg = <0x26000 0x200>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x26000 0x2000>;
-> +
-> +			clocks {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				pruss_coreclk_mux: coreclk-mux@3c {
-> +					reg = <0x3c>;
-> +					#clock-cells = <0>;
-> +					clocks = <&k3_clks 81 0>,  /* pruss_core_clk */
-> +						 <&k3_clks 81 14>; /* pruss_iclk */
-> +					assigned-clocks = <&pruss_coreclk_mux>;
-> +					assigned-clock-parents = <&k3_clks 81 14>;
-> +				};
-> +
-> +				pruss_iepclk_mux: iepclk-mux@30 {
-> +					reg = <0x30>;
-> +					#clock-cells = <0>;
-> +					clocks = <&k3_clks 81 3>,	/* pruss_iep_clk */
-> +						 <&pruss_coreclk_mux>;	/* pruss_coreclk_mux */
-> +					assigned-clocks = <&pruss_iepclk_mux>;
-> +					assigned-clock-parents = <&pruss_coreclk_mux>;
-> +				};
-> +			};
-> +		};
-> +
-> +		pruss_intc: interrupt-controller@20000 {
-> +			compatible = "ti,pruss-intc";
-> +			reg = <0x20000 0x2000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "host_intr0", "host_intr1",
-> +					  "host_intr2", "host_intr3",
-> +					  "host_intr4", "host_intr5",
-> +					  "host_intr6", "host_intr7";
-> +		};
-> +
-> +		pru0: pru@34000 {
-> +			compatible = "ti,am625-pru";
-> +			reg = <0x34000 0x3000>,
-> +			      <0x22000 0x100>,
-> +			      <0x22400 0x100>;
-> +			reg-names = "iram", "control", "debug";
-> +			firmware-name = "am62x-pru0-fw";
-> +			interrupt-parent = <&pruss_intc>;
-> +			interrupts = <16 2 2>;
-> +			interrupt-names = "vring";
-> +		};
-> +
-> +		pru1: pru@38000 {
-> +			compatible = "ti,am625-pru";
-> +			reg = <0x38000 0x3000>,
-> +			      <0x24000 0x100>,
-> +			      <0x24400 0x100>;
-> +			reg-names = "iram", "control", "debug";
-> +			firmware-name = "am62x-pru1-fw";
-> +			interrupt-parent = <&pruss_intc>;
-> +			interrupts = <18 3 3>;
-> +			interrupt-names = "vring";
-> +		};
-> +	};
-> +
->   	gpmc0: memory-controller@3b000000 {
->   		compatible = "ti,am64-gpmc";
->   		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+> 
+> Other than this nit looks good to me.
+> 
+> Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
+
+Thanks for the reviews.
+
+> 
+
