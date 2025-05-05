@@ -1,62 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF129B772;
-	Mon,  5 May 2025 22:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EE535B948;
+	Mon,  5 May 2025 22:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485084; cv=none; b=MWhTJoQFGrTk+nSXA3b2Hltl/Wxdpt3uX2hqbQ5kOlaIgVnm5HE7UIvNYytGnzGHy0aNt6O6I4SNb948PCDgR4Q1nC/VQy6FzSsrw1+Tlp8wQRxmkQGmJrAgcafYgjHaDzRbsTYiVa25wOGTg/3Ajab2MOdb5v7iLFkQzwHya6s=
+	t=1746485095; cv=none; b=o7xskNqJPmjahHh6AVa075niuQI5H6wU21EC+8MJbuemsfmBCfECLlgPO/sDQznJw+RkCgh0PvNsg9MoZv4JLcbykTkKYpZiI0615vTyV2BuzsMnsD1cPM1AcnF2sSEvZdbIZ3U+RSq8t2K4F4sEK1iA7Om2S6c8JLjfEw3LTys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485084; c=relaxed/simple;
-	bh=r4owExykd1gb7SwgvHpNEzM1cVWmLdXMaFCUsw2L4bc=;
+	s=arc-20240116; t=1746485095; c=relaxed/simple;
+	bh=qTiixerpP4JVYjqht41+eGrpWIMH1nTcxBB/tX6CKfA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LLAgxDuhf8rT3BfwrdXktkWDmpUd+22b0E0AdtFpSEWwFJVqnaROG4SpIqgCGibrAYNZKxSzj8rFLL4PkKWHQVius5uRYhMQgd5I+zH6AgQOlkrPEO1QtoQXRcGH3qDNjU1Uu1GsIWy3s7JqnX4cC2/fjKAWu9uzACJClnpLtXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odUNH7Or; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UrogC467hX1+eKSF3ICDXms3PfLilafyIe2gaXF71MBaLuXOTD9VFrAE4KSJjUmR8nJok/houPdZHombeYf1B22E24o4MC6PBNcAqPm7ox/2n9WUmhB9QPBTB0bc9Faz2PiQ3MaR12jwYdNSUGyf1752EuixDlQuOy1NiAFUak4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYiszbRU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odUNH7Or"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD522C4CEE4;
-	Mon,  5 May 2025 22:44:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYiszbRU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFE7C4CEE4;
+	Mon,  5 May 2025 22:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485083;
-	bh=r4owExykd1gb7SwgvHpNEzM1cVWmLdXMaFCUsw2L4bc=;
+	s=k20201202; t=1746485095;
+	bh=qTiixerpP4JVYjqht41+eGrpWIMH1nTcxBB/tX6CKfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=odUNH7OrAQUrM5AlY5our0p9JnfaV1CMJSMimooHN5wFegjTWETOGerYZ2L69A2Wj
-	 LuTjxaoGYdXlp3gEjQM7LviVWATWOCFJRD+uH280l5ett5PpyPztZsyftDGLagUh6d
-	 OGIgQOIRDQ5T7Z+c9glOXrkeGOhrf4JgL1kHaQtB1LyGVmzqYBt0kcUiyK/9uKmmLW
-	 AtjYrCtcRfYPfweHxG6HEs9K8USl+XGOzMajgQD9w/e4mNWGv1hzKx5gU9klko5sYP
-	 KqOl8eOKtAIcD1tkfUA8OpHtWvbNVxwjlY5L9Eo/akx8dtpRxKU3Keh/KaDOoh/K1Y
-	 3cZ2uBBn9FqaQ==
+	b=SYiszbRUhN4ArhXLlUK495sA80kAxgeMhBvhd9O+B06vfsVyrRKqZ5E85r/KLx+fU
+	 RSkWPERFjhu8YowD+lKEVt35iGzqETauV/eCUyLPGG3ZMZCzp6EYklPzDcFVXKp5sO
+	 UIHOFaF/Ur5BDX66jYrFEz0w2LpLR0JyOL0vY4p1HLcYr3TYxEj/zIzfzH/XRHf7KV
+	 kHJoPEyEpGReGxABviOI1A5f1YKUeTzwNRvsHp8xygMGyCCRZjui06HTvi9z24HcNM
+	 obAb7TXf1mIw/r10gySXZ0nMCktkeNSY6nv0Yfqx6HHqDFuqKOzHaqyqgJJxoCOzE4
+	 aXNzWAxTIooKA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Charlene Liu <Charlene.Liu@amd.com>,
-	Ovidiu Bunea <ovidiu.bunea@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Andreas Gruenbacher <agruenba@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	alex.hung@amd.com,
-	hamzamahfooz@linux.microsoft.com,
-	Jing.Zhou@amd.com,
-	alvin.lee2@amd.com,
-	jerry.zuo@amd.com,
-	Kaitlyn.Tse@amd.com,
-	ryanseto@amd.com,
-	martin.tsai@amd.com,
-	yi-lchen@amd.com,
-	tjakobi@math.uni-bielefeld.de,
-	Sungjoon.Kim@amd.com,
-	michael.strauss@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 156/486] drm/amd/display: remove minimum Dispclk and apply oem panel timing.
-Date: Mon,  5 May 2025 18:33:52 -0400
-Message-Id: <20250505223922.2682012-156-sashal@kernel.org>
+	gfs2@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 160/486] gfs2: Check for empty queue in run_queue
+Date: Mon,  5 May 2025 18:33:56 -0400
+Message-Id: <20250505223922.2682012-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -71,69 +49,63 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Charlene Liu <Charlene.Liu@amd.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 756e58e83e89d372b94269c0cde61fe55da76947 ]
+[ Upstream commit d838605fea6eabae3746a276fd448f6719eb3926 ]
 
-[why & how]
-1. apply oem panel timing (not only on OLED)
-2. remove MIN_DPP_DISP_CLK request in driver.
+In run_queue(), check if the queue of pending requests is empty instead
+of blindly assuming that it won't be.
 
-This fix will apply for dcn31x but not
-sync with DML's output.
-
-Reviewed-by: Ovidiu Bunea <ovidiu.bunea@amd.com>
-Signed-off-by: Charlene Liu <Charlene.Liu@amd.com>
-Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c | 2 --
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c | 2 --
- drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c      | 3 ++-
- 3 files changed, 2 insertions(+), 5 deletions(-)
+ fs/gfs2/glock.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-index 827b24b3442ad..e4d22f74f9869 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn315/dcn315_clk_mgr.c
-@@ -194,8 +194,6 @@ static void dcn315_update_clocks(struct clk_mgr *clk_mgr_base,
- 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
- 	if (new_clocks->dppclk_khz < MIN_DPP_DISP_CLK)
- 		new_clocks->dppclk_khz = MIN_DPP_DISP_CLK;
--	if (new_clocks->dispclk_khz < MIN_DPP_DISP_CLK)
--		new_clocks->dispclk_khz = MIN_DPP_DISP_CLK;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index a51fe42732c4c..4f1eca99786b6 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -843,12 +843,13 @@ static void run_queue(struct gfs2_glock *gl, const int nonblock)
+ __releases(&gl->gl_lockref.lock)
+ __acquires(&gl->gl_lockref.lock)
+ {
+-	struct gfs2_holder *gh = NULL;
++	struct gfs2_holder *gh;
  
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-index 37c39756fece4..49efea0c8fcff 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn316/dcn316_clk_mgr.c
-@@ -201,8 +201,6 @@ static void dcn316_update_clocks(struct clk_mgr *clk_mgr_base,
- 	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
- 	if (new_clocks->dppclk_khz < 100000)
- 		new_clocks->dppclk_khz = 100000;
--	if (new_clocks->dispclk_khz < 100000)
--		new_clocks->dispclk_khz = 100000;
+ 	if (test_bit(GLF_LOCK, &gl->gl_flags))
+ 		return;
+ 	set_bit(GLF_LOCK, &gl->gl_flags);
  
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
-diff --git a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-index 4fbed0298adfa..297f313794e49 100644
---- a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-@@ -1064,7 +1064,8 @@ void dce110_edp_backlight_control(
- 			DC_LOG_DC("edp_receiver_ready_T9 skipped\n");
++	/* While a demote is in progress, the GLF_LOCK flag must be set. */
+ 	GLOCK_BUG_ON(gl, test_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags));
+ 
+ 	if (test_bit(GLF_DEMOTE, &gl->gl_flags) &&
+@@ -860,18 +861,22 @@ __acquires(&gl->gl_lockref.lock)
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
++		do_xmote(gl, NULL, gl->gl_target);
++		return;
+ 	} else {
+ 		if (test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			gfs2_demote_wake(gl);
+ 		if (do_promote(gl))
+ 			goto out_unlock;
+ 		gh = find_first_waiter(gl);
++		if (!gh)
++			goto out_unlock;
+ 		gl->gl_target = gh->gh_state;
+ 		if (!(gh->gh_flags & (LM_FLAG_TRY | LM_FLAG_TRY_1CB)))
+ 			do_error(gl, 0); /* Fail queued try locks */
++		do_xmote(gl, gh, gl->gl_target);
++		return;
  	}
+-	do_xmote(gl, gh, gl->gl_target);
+-	return;
  
--	if (!enable && link->dpcd_sink_ext_caps.bits.oled) {
-+	if (!enable) {
-+		/*follow oem panel config's requirement*/
- 		pre_T11_delay += link->panel_config.pps.extra_pre_t11_ms;
- 		msleep(pre_T11_delay);
- 	}
+ out_sched:
+ 	clear_bit(GLF_LOCK, &gl->gl_flags);
 -- 
 2.39.5
 
