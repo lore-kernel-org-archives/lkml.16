@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B14737AACB;
-	Mon,  5 May 2025 23:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B4528152D;
+	Mon,  5 May 2025 23:05:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486292; cv=none; b=hrOqvzFtZ7VZTF2P8kV+rlMSCt69kN6vE/rL/1M9HyOI78nc+f/QAP2mYQYEf64N6zlSb+bXlSDNJha5Uutns8cGEpcfWi84PPIyg0Ss6kmPzm0QJS4V7/DPsG/rI9ntWujbrXCeEe0P5M+bHlRRF7Kz3WXQj+q7s3oyZINnV5c=
+	t=1746486300; cv=none; b=cucn9cSk9+86ykXEZ1CyLU1+Uf4rDkFHDoIFQFrGpgelu46K5T76qsBb1uZH/2OvshWSZpnRxlliiFJiz0rFFVMLhI9NyR2w7/xj2Rp/Qq6I8TK8Z0+jqDg00uqMRsXKO+QRWrMzxlOTTqZklCHLqE6g/nAZfwoEWT6ncXVks9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486292; c=relaxed/simple;
-	bh=nGuTksRyk8SNbNMoyJtl3SqnGwxC7KZdWOb2kpuzg3U=;
+	s=arc-20240116; t=1746486300; c=relaxed/simple;
+	bh=mEdk8wNwFMaBiA/xZ4GWQaf/cVHfpSJsFqr1MvmX5U8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=abUzbO3I4U+6HmlikblDMw8SNOHJAtz3NOH3fkIvxXqziy4bXj/8CZFHAv30+0xbj8Vl+I8ciSF36fWqSZbfZl5EJ4Vd9IPpvn5EycIKu5A76ttdfX3GPjoUQLl0tfW54IYoi6RGRXry0yO5zjoSrSpFwVfA7jyvN6AH6RNJjsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfhAuRdg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DeYDNNlU4WfofpuSJK0fjUGQl99eRqu1fpfNXi6zGZ8US9nohSVbBsDgkuYWTMdTtNhJaNyxfyurI3Ucx5CdJeSuHbwdrz7v0bZeXo841AekZyyg1B24Lkw1iottLTa4kXCzW76CAShs1cApsYJtLFAj6yJJlo6TG4Pr3Yt/Qs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLy9c0Xf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfhAuRdg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CE9C4CEE4;
-	Mon,  5 May 2025 23:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLy9c0Xf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B227CC4CEEF;
+	Mon,  5 May 2025 23:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486291;
-	bh=nGuTksRyk8SNbNMoyJtl3SqnGwxC7KZdWOb2kpuzg3U=;
+	s=k20201202; t=1746486300;
+	bh=mEdk8wNwFMaBiA/xZ4GWQaf/cVHfpSJsFqr1MvmX5U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pfhAuRdglhQP8RZqR0zM6N/duDTsacGGGaOd29n00wdpN+wnYekYFvm4uAnz3Tdb+
-	 Hxr2s6SjEAONwqglW7bHuI9sfrFE85HTaDt2sirckox0eRGihVT1//FdWjbptwuKAK
-	 3zOQFAaQp852iBGozXqhGW8l2NzM9FMsFH2IJLrU38fWTo5VdAuX7AQ/lvonAQcSUU
-	 QOQhu9/lQ8cT4HmFizqoZZjNKkWfS06LSOkchCCZR64mkQtAWEbpCbYv574MSi5X2B
-	 Z0VCwzZc7dBUMcN8zs6DKZQj/hMcY/hyThqnoZL3m7+z5oEkby7vQ19Ru8EzMNg17X
-	 d2Iw2dBB5v/vw==
+	b=eLy9c0Xfxe1ySbGjGK3cYnHEXZmEF/B1xnwdZhnQH97i5rEIM/rkrxJXjSqgoTVrv
+	 K1LLv6z2tm2TzWDCsa0nUKwOHPXYgs6Uv5iwRzrmmd48c1UDtnM4J5ZpHldXqIB+4K
+	 WRhxSU/kyke5BX8uTkq2cYLyfKV5hNll0Ng1pYO/dpg6y/Pb+Y5J3VwH1zl1ndUOwQ
+	 kmMZs+C6nPsXaFgLaEpRD90IpBSUSOA/qR+hOQ0Fx4tY33uh/Xxzd5cVm4Air1sUt6
+	 fzgCX3KM/zbeynu6Tq0ttwA4pv1QqXth6deI9eUJ/Kt02P7vtKRr017MUmXKcz4v4K
+	 Y6L0Uwiyk+gsw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
+Cc: Zhang Yi <yi.zhang@huawei.com>,
+	Jan Kara <jack@suse.cz>,
+	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	Theodore Ts'o <tytso@mit.edu>,
 	Sasha Levin <sashal@kernel.org>,
-	mpe@ellerman.id.au,
-	kan.liang@linux.intel.com,
-	peterz@infradead.org,
-	arnd@arndb.de,
-	rppt@kernel.org,
-	anjalik@linux.ibm.com,
-	coltonlewis@google.com,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 6.6 241/294] arch/powerpc/perf: Check the instruction type before creating sample with perf_mem_data_src
-Date: Mon,  5 May 2025 18:55:41 -0400
-Message-Id: <20250505225634.2688578-241-sashal@kernel.org>
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 246/294] ext4: don't write back data before punch hole in nojournal mode
+Date: Mon,  5 May 2025 18:55:46 -0400
+Message-Id: <20250505225634.2688578-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -58,134 +53,69 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: Zhang Yi <yi.zhang@huawei.com>
 
-[ Upstream commit 2ffb26afa64261139e608bf087a0c1fe24d76d4d ]
+[ Upstream commit 43d0105e2c7523cc6b14cad65e2044e829c0a07a ]
 
-perf mem report aborts as below sometimes (during some corner
-case) in powerpc:
+There is no need to write back all data before punching a hole in
+non-journaled mode since it will be dropped soon after removing space.
+Therefore, the call to filemap_write_and_wait_range() can be eliminated.
+Besides, similar to ext4_zero_range(), we must address the case of
+partially punched folios when block size < page size. It is essential to
+remove writable userspace mappings to ensure that the folio can be
+faulted again during subsequent mmap write access.
 
-   # ./perf mem report 1>out
-   *** stack smashing detected ***: terminated
-   Aborted (core dumped)
+In journaled mode, we need to write dirty pages out before discarding
+page cache in case of crash before committing the freeing data
+transaction, which could expose old, stale data, even if synchronization
+has been performed.
 
-The backtrace is as below:
-   __pthread_kill_implementation ()
-   raise ()
-   abort ()
-   __libc_message
-   __fortify_fail
-   __stack_chk_fail
-   hist_entry.lvl_snprintf
-   __sort__hpp_entry
-   __hist_entry__snprintf
-   hists.fprintf
-   cmd_report
-   cmd_mem
-
-Snippet of code which triggers the issue
-from tools/perf/util/sort.c
-
-   static int hist_entry__lvl_snprintf(struct hist_entry *he, char *bf,
-                                    size_t size, unsigned int width)
-   {
-        char out[64];
-
-        perf_mem__lvl_scnprintf(out, sizeof(out), he->mem_info);
-        return repsep_snprintf(bf, size, "%-*s", width, out);
-   }
-
-The value of "out" is filled from perf_mem_data_src value.
-Debugging this further showed that for some corner cases, the
-value of "data_src" was pointing to wrong value. This resulted
-in bigger size of string and causing stack check fail.
-
-The perf mem data source values are captured in the sample via
-isa207_get_mem_data_src function. The initial check is to fetch
-the type of sampled instruction. If the type of instruction is
-not valid (not a load/store instruction), the function returns.
-
-Since 'commit e16fd7f2cb1a ("perf: Use sample_flags for data_src")',
-data_src field is not initialized by the perf_sample_data_init()
-function. If the PMU driver doesn't set the data_src value to zero if
-type is not valid, this will result in uninitailised value for data_src.
-The uninitailised value of data_src resulted in stack check fail
-followed by abort for "perf mem report".
-
-When requesting for data source information in the sample, the
-instruction type is expected to be load or store instruction.
-In ISA v3.0, due to hardware limitation, there are corner cases
-where the instruction type other than load or store is observed.
-In ISA v3.0 and before values "0" and "7" are considered reserved.
-In ISA v3.1, value "7" has been used to indicate "larx/stcx".
-Drop the sample if instruction type has reserved values for this
-field with a ISA version check. Initialize data_src to zero in
-isa207_get_mem_data_src if the instruction type is not load/store.
-
-Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-Link: https://patch.msgid.link/20250121131621.39054-1-atrajeev@linux.vnet.ibm.com
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Link: https://patch.msgid.link/20241220011637.1157197-4-yi.zhang@huaweicloud.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c   | 20 ++++++++++++++++++++
- arch/powerpc/perf/isa207-common.c |  4 +++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 10b946e9c6e75..4bb84dc4393fc 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2229,6 +2229,10 @@ static struct pmu power_pmu = {
- #define PERF_SAMPLE_ADDR_TYPE  (PERF_SAMPLE_ADDR |		\
- 				PERF_SAMPLE_PHYS_ADDR |		\
- 				PERF_SAMPLE_DATA_PAGE_SIZE)
-+
-+#define SIER_TYPE_SHIFT	15
-+#define SIER_TYPE_MASK	(0x7ull << SIER_TYPE_SHIFT)
-+
- /*
-  * A counter has overflowed; update its count and record
-  * things if requested.  Note that interrupts are hard-disabled
-@@ -2297,6 +2301,22 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
- 	    is_kernel_addr(mfspr(SPRN_SIAR)))
- 		record = 0;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index d3d28e6587202..456f686136fc5 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3946,17 +3946,6 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
  
-+	/*
-+	 * SIER[46-48] presents instruction type of the sampled instruction.
-+	 * In ISA v3.0 and before values "0" and "7" are considered reserved.
-+	 * In ISA v3.1, value "7" has been used to indicate "larx/stcx".
-+	 * Drop the sample if "type" has reserved values for this field with a
-+	 * ISA version check.
-+	 */
-+	if (event->attr.sample_type & PERF_SAMPLE_DATA_SRC &&
-+			ppmu->get_mem_data_src) {
-+		val = (regs->dar & SIER_TYPE_MASK) >> SIER_TYPE_SHIFT;
-+		if (val == 0 || (val == 7 && !cpu_has_feature(CPU_FTR_ARCH_31))) {
-+			record = 0;
-+			atomic64_inc(&event->lost_samples);
-+		}
-+	}
+ 	trace_ext4_punch_hole(inode, offset, length, 0);
+ 
+-	/*
+-	 * Write out all dirty pages to avoid race conditions
+-	 * Then release them.
+-	 */
+-	if (mapping_tagged(mapping, PAGECACHE_TAG_DIRTY)) {
+-		ret = filemap_write_and_wait_range(mapping, offset,
+-						   offset + length - 1);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	inode_lock(inode);
+ 
+ 	/* No need to punch hole beyond i_size */
+@@ -4018,8 +4007,11 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+ 		ret = ext4_update_disksize_before_punch(inode, offset, length);
+ 		if (ret)
+ 			goto out_dio;
+-		truncate_pagecache_range(inode, first_block_offset,
+-					 last_block_offset);
 +
- 	/*
- 	 * Finally record data if requested.
- 	 */
-diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-index 56301b2bc8ae8..031a2b63c171d 100644
---- a/arch/powerpc/perf/isa207-common.c
-+++ b/arch/powerpc/perf/isa207-common.c
-@@ -321,8 +321,10 @@ void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
++		ret = ext4_truncate_page_cache_block_range(inode,
++				first_block_offset, last_block_offset + 1);
++		if (ret)
++			goto out_dio;
+ 	}
  
- 	sier = mfspr(SPRN_SIER);
- 	val = (sier & ISA207_SIER_TYPE_MASK) >> ISA207_SIER_TYPE_SHIFT;
--	if (val != 1 && val != 2 && !(val == 7 && cpu_has_feature(CPU_FTR_ARCH_31)))
-+	if (val != 1 && val != 2 && !(val == 7 && cpu_has_feature(CPU_FTR_ARCH_31))) {
-+		dsrc->val = 0;
- 		return;
-+	}
- 
- 	idx = (sier & ISA207_SIER_LDST_MASK) >> ISA207_SIER_LDST_SHIFT;
- 	sub_idx = (sier & ISA207_SIER_DATA_SRC_MASK) >> ISA207_SIER_DATA_SRC_SHIFT;
+ 	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
 -- 
 2.39.5
 
