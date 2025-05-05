@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6963AC5BB;
-	Mon,  5 May 2025 23:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA332F7C34;
+	Mon,  5 May 2025 23:19:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487147; cv=none; b=VFocgKyjd/dil+ZVb5z8dqlamvzOR4YUfheYDcBhr6H9ts/59AGrYDIxcE5EEBsw7NIM2k/Qb+9HgqGwBoMhN6iylv1WFyN5VSNCdRnARlpYK+vaC4h3Im3F4IXO+cwHqSvmFlPg+QEifwqegY0eAIRZLBVpCzxnuVyvFugDAKk=
+	t=1746487170; cv=none; b=qTaLiGM50L6DaYnrAjX5WvYqnze7I18Yw6Ue7ImZdOt2JCn2bq2f+PsptYyOcMx4MUppk6dKUYLmmXO5TPfvTLCW1NcjSdFVewiiQW5LJmFiTD7NMr0nTBYSxB6hHnyJKAG46NXmF3OG264jt71qnhwhy0m+wHiDtxatUSeqHDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487147; c=relaxed/simple;
-	bh=BTt9wdCdkMMxv2z5W4YZDt3b0Jb03I2bFhWiEi/7tfw=;
+	s=arc-20240116; t=1746487170; c=relaxed/simple;
+	bh=7GP6ZKiKPbgAQFMXfpN5Irld7+9/L3EwltMzGZmJATs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uONO5Hkcw1pQAvW2geP7DVsMT1deDK+UjAWRdGsMP2OvISWosg+PO2xN8Kk/Eh7lkwC1s0z7s5yscguIRzQ3cT4TOkTXyNmNshIx9plCsVvhsZhecCAQ2lEo6oSaRtPdcxHTeouNtbXGfkEyxyca6aTPBnSp5gneGDqsXpY6vB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPxL7RU3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=goA5903OptTL8BAGRrLr8jWNh5SipDxkN3T8Z51jpPm+DC6uH8XEAxvtQXoYGUbKJ33TT+4uZoongLDA5HVlfI28uAfiCnLAeYtH9No21L6pwDbuidXdXaaTGG5y+0GjqLPX/S+r/rpSxtVbOtit9V7MJtTeWBC1rerecnzn5hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvB8I8OH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPxL7RU3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492B8C4CEE4;
-	Mon,  5 May 2025 23:19:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvB8I8OH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BD2C4CEE4;
+	Mon,  5 May 2025 23:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487147;
-	bh=BTt9wdCdkMMxv2z5W4YZDt3b0Jb03I2bFhWiEi/7tfw=;
+	s=k20201202; t=1746487169;
+	bh=7GP6ZKiKPbgAQFMXfpN5Irld7+9/L3EwltMzGZmJATs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EPxL7RU3NqoCtVt36CsCXf1cpshlTzH2az69GCsyPldH4SOSucTQLnSHqEvs716Ds
-	 HggeZ3jJxn0a9t1hpP8H72q5QqiqeycPADLiwJdm2oboiV9KKBYJp4nE9/falYtutj
-	 DtAoKueIVpalYDcIHlef3wVsb6+SNpN6X/th/npmFsPuzwzCMhSYEiP1O4jDLy+siB
-	 5UVUmE5lmXmuK/peyI/cmh4fNogD9cyRtD5F9shr0PJxyMu8gQ0k2efOIzQC+9XWXO
-	 /Nc6pgjCVWJ+E6/LbBc1m2QinX23A1XQLQg9kLVMBItnasMKwhL7Q6yoes7yqqI8cd
-	 Sa/g5w6eTeTgA==
+	b=RvB8I8OHPzavoq+ckuO06bMqKNBOQjBccDhBnJslMZe/moapYV8k0HY5cHhdCV5Ot
+	 sIn6TD1rdzvZOWje8hwu1RKwZ0ARB3Uojh7Xm2Ld3Of4cc15mFlvLTY5h75au5zYo+
+	 Tf1s+K8l2lohiKre6xKlvKUI6r0rHtItheNz2MJNs+NTln3lnOMq+9KR0HYMikiRke
+	 Wqzy15BLKsQzhqCu0J7oOfKN9lJQgWdggysrefhH97jt/dOPAECNNlFFdWngJCgE00
+	 1GgzOhwJlFq2t3zFpaO903eSCOfzikCcxsGclmb7atgR1WUs4WgVsHXD/J/BrP50MM
+	 b8t1hDs1eKcfQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Serge Hallyn <serge@hallyn.com>,
-	Jan Kara <jack@suse.cz>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: Andreas Schwab <schwab@linux-m68k.org>,
+	Rob Herring <robh@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 024/114] ext4: reorder capability check last
-Date: Mon,  5 May 2025 19:16:47 -0400
-Message-Id: <20250505231817.2697367-24-sashal@kernel.org>
+	mpe@ellerman.id.au,
+	sourabhjain@linux.ibm.com,
+	mahesh@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.10 038/114] powerpc/prom_init: Fixup missing #size-cells on PowerBook6,7
+Date: Mon,  5 May 2025 19:17:01 -0400
+Message-Id: <20250505231817.2697367-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -48,56 +49,47 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Christian Göttsche <cgzones@googlemail.com>
+From: Andreas Schwab <schwab@linux-m68k.org>
 
-[ Upstream commit 1b419c889c0767a5b66d0a6c566cae491f1cb0f7 ]
+[ Upstream commit 7e67ef889c9ab7246547db73d524459f47403a77 ]
 
-capable() calls refer to enabled LSMs whether to permit or deny the
-request.  This is relevant in connection with SELinux, where a
-capability check results in a policy decision and by default a denial
-message on insufficient permission is issued.
-It can lead to three undesired cases:
-  1. A denial message is generated, even in case the operation was an
-     unprivileged one and thus the syscall succeeded, creating noise.
-  2. To avoid the noise from 1. the policy writer adds a rule to ignore
-     those denial messages, hiding future syscalls, where the task
-     performs an actual privileged operation, leading to hidden limited
-     functionality of that task.
-  3. To avoid the noise from 1. the policy writer adds a rule to permit
-     the task the requested capability, while it does not need it,
-     violating the principle of least privilege.
+Similar to the PowerMac3,1, the PowerBook6,7 is missing the #size-cells
+property on the i2s node.
 
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://patch.msgid.link/20250302160657.127253-2-cgoettsche@seltendoof.de
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Depends-on: commit 045b14ca5c36 ("of: WARN on deprecated #address-cells/#size-cells handling")
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+[maddy: added "commit" work in depends-on to avoid checkpatch error]
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Link: https://patch.msgid.link/875xmizl6a.fsf@igel.home
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/balloc.c | 4 ++--
+ arch/powerpc/kernel/prom_init.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index bdbf130416c73..be267cd9dea75 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -637,8 +637,8 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
- 	/* Hm, nope.  Are (enough) root reserved clusters available? */
- 	if (uid_eq(sbi->s_resuid, current_fsuid()) ||
- 	    (!gid_eq(sbi->s_resgid, GLOBAL_ROOT_GID) && in_group_p(sbi->s_resgid)) ||
--	    capable(CAP_SYS_RESOURCE) ||
--	    (flags & EXT4_MB_USE_ROOT_BLOCKS)) {
-+	    (flags & EXT4_MB_USE_ROOT_BLOCKS) ||
-+	    capable(CAP_SYS_RESOURCE)) {
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 9a753c4dafab6..b29135dd73342 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -2944,11 +2944,11 @@ static void __init fixup_device_tree_pmac(void)
+ 	char type[8];
+ 	phandle node;
  
- 		if (free_clusters >= (nclusters + dirty_clusters +
- 				      resv_clusters))
+-	// Some pmacs are missing #size-cells on escc nodes
++	// Some pmacs are missing #size-cells on escc or i2s nodes
+ 	for (node = 0; prom_next_node(&node); ) {
+ 		type[0] = '\0';
+ 		prom_getprop(node, "device_type", type, sizeof(type));
+-		if (prom_strcmp(type, "escc"))
++		if (prom_strcmp(type, "escc") && prom_strcmp(type, "i2s"))
+ 			continue;
+ 
+ 		if (prom_getproplen(node, "#size-cells") != PROM_ERROR)
 -- 
 2.39.5
 
