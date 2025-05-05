@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0698A20AF87
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C32820C02A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443410; cv=none; b=VdboGKwExDdyJV2cHmj2PiKGA0bs7RZpi/KpjSDGr2lT2Z7nArDYHQ6XNFfJ/2RMOt46vFtKL8Sc4IeEZ3+4yTtuRwta3t2kGuMQDNydsdzFBQWFW0At9V6lcgKMWv/rh0wZZnNNXai3RYq8d0ORmAVin0O82JurqyD4cCvPWD0=
+	t=1746443413; cv=none; b=MuTKdqJ9yVvV0v4JMkhdpI3hr8DXt3tud3oGdsHDnbgojQOZildHE1Q2R0VL7OW31dR23Oh10k4sxWaMSm6Bl/cKLVYtN01ugG7E92vBY4f1v6GiPkToS+2xbmjarB5Iv4kV035Jryij1lIbkyN/Byhch/Y2m4oJ+Trovz95R/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443410; c=relaxed/simple;
-	bh=n16jQOi/Rv/VysZ+tnvcUnyGBHA4GQKdR3n6dwxGyEQ=;
+	s=arc-20240116; t=1746443413; c=relaxed/simple;
+	bh=MA5YI8z/iGWOl3p8sOB/lvDqAGhCyqXI6W1Vls0V+d8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rtrkibBLL/xejG/GhrIDSLkNq0+KEbQNa5+YruyA097UxLhfJqlV+IejJhU0KldQ9DYxBX/lC0lAbXPcz8qeg3R/9oPTsPOCYJZyiIqmAfngm2yDmGgIKCczqqf4DmSkKqKcHuMqID6YkyfU2zfPw2uZ1d9jzsVk1vTBdqJeBGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZhRbUSD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MRBmvfUxqbY0On+cnlKRSq2vrvTUl1DsfFRB7wPFQ7kojInet219CeL0vBH0BGCst2YVylCDaHrhyft9bAhBThvupBo22CoTb/n9JZOAezj0/WQ9q0gTdDjqPzT2JxtFOciD5koq+83TD+mlT0YUorg5/8QWs45+Wek3g3Qh59U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/p0pL+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZhRbUSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E85C4CEE4;
-	Mon,  5 May 2025 11:10:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/p0pL+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB005C4CEE9;
+	Mon,  5 May 2025 11:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746443409;
-	bh=n16jQOi/Rv/VysZ+tnvcUnyGBHA4GQKdR3n6dwxGyEQ=;
+	s=k20201202; t=1746443412;
+	bh=MA5YI8z/iGWOl3p8sOB/lvDqAGhCyqXI6W1Vls0V+d8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cZhRbUSDCapbMEuKxBcUT8iuwPNQRHnEuL9z98OuDSnbEVUkytxXkSv7UKrR3wgW7
-	 Wbxvux52qPr/49eUO2XGW1RTRQaUEvq6ILhmMR9pj1YjYjBt1LLt18XItxBkD9oXpR
-	 iqjQOw8j5+aQlSMKbGST3kSb8JwlTg1SScUpqXPJByxTV5q+GwcyadMu/Uqxz83CQ5
-	 uxojEpexnoNR6FpcVwOjmyWbpGTExZmkjBn7rTNtUgFX2Lt1ijyIwo5YG/3nonqTBz
-	 2pfsNnPA7mDYCgNIpaH30E5PAvCg7+8RpOKJywj67U9L6INKLSfSgSYy0Q3yKfAPTa
-	 NZLOak73+8tuQ==
+	b=P/p0pL+ct1/MYMYIGogvSZv3dl9rLoMu2U+OzpBAtHnkJdmjjYGoeTc3kYvsofRTd
+	 YZUFDwQ6uIO5Xo1JXbYgaN3CrT4JvMwcochUYK09vH9NGrGBu4SXkaYxYyO2cxNXnp
+	 ErBQx369CZlh1IZuNQGlG6lcyUrBRF6kW8jy000Vq8mcII+qdnvYXiZESNjJy+0hpM
+	 6lB8Oj3xfqIn5ljZS+1shCwmJkL5kb3MnEO2x9pXdQKLOQB8TBO3uy1iItvrivadg8
+	 U9OqVVZvnf8sci28mJ1SPpASuWRkNBlYebFaF5CVpA/Eml3fhzw1yv90aY35zg3i7H
+	 30Mjt7jezdtxQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: "H . Peter Anvin" <hpa@zytor.com>,
@@ -39,9 +39,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	David Woodhouse <dwmw@amazon.co.uk>,
 	Masahiro Yamada <yamada.masahiro@socionext.com>,
 	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 06/15] x86/tools: insn_decoder_test.c: Emit standard build success messages
-Date: Mon,  5 May 2025 13:09:37 +0200
-Message-ID: <20250505110946.1095363-7-mingo@kernel.org>
+Subject: [PATCH 07/15] x86/tools: insn_sanity.c: Emit standard build success messages
+Date: Mon,  5 May 2025 13:09:38 +0200
+Message-ID: <20250505110946.1095363-8-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250505110946.1095363-1-mingo@kernel.org>
 References: <20250505110946.1095363-1-mingo@kernel.org>
@@ -55,11 +55,11 @@ Content-Transfer-Encoding: 8bit
 
 The standard 'success' output of insn_decoder_test spams build logs with:
 
-  arch/x86/tools/insn_decoder_test: success: Decoded and checked 8258521 instructions
+  arch/x86/tools/insn_sanity: Success: decoded and checked 1000000 random instructions with 0 errors (seed:0x2e263877)
 
-Prefix the message with the standard '  ' (two spaces) used by kbuild to denote
-regular build messages, making it easier for tools to filter out
-warnings and errors.
+Prefix the message with the standard '  ' (two spaces) used by kbuild
+to denote regular build messages, making it easier for tools to
+filter out warnings and errors.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -70,22 +70,25 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 ---
- arch/x86/tools/insn_decoder_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/tools/insn_sanity.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decoder_test.c
-index 08cd913cbd4e..8bf15c4aefa9 100644
---- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -167,7 +167,7 @@ int main(int argc, char **argv)
- 		pr_warn("Decoded and checked %d instructions with %d "
- 			"failures\n", insns, warnings);
- 	else
--		fprintf(stdout, "%s: success: Decoded and checked %d"
-+		fprintf(stdout, "  %s: success: Decoded and checked %d"
- 			" instructions\n", prog, insns);
- 	return 0;
- }
+diff --git a/arch/x86/tools/insn_sanity.c b/arch/x86/tools/insn_sanity.c
+index 213f35f94feb..e743f0ea01ee 100644
+--- a/arch/x86/tools/insn_sanity.c
++++ b/arch/x86/tools/insn_sanity.c
+@@ -253,9 +253,9 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	fprintf((errors) ? stderr : stdout,
+-		"%s: %s: decoded and checked %d %s instructions with %d errors (seed:0x%x)\n",
++		"  %s: %s: Decoded and checked %d %s instructions with %d errors (seed:0x%x)\n",
+ 		prog,
+-		(errors) ? "Failure" : "Success",
++		(errors) ? "failure" : "success",
+ 		insns,
+ 		(input_file) ? "given" : "random",
+ 		errors,
 -- 
 2.45.2
 
