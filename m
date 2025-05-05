@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E7125D546;
-	Mon,  5 May 2025 14:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD625D90D;
+	Mon,  5 May 2025 14:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456251; cv=none; b=GNjma1v3+jiWCRTG+huN/j+8hIcgWlrKuoRqi5ogFWKXMyjLedBhiVG4Q7ynrLQ83jxL/rIt27PkdKMqoD9rd4SKgOUqYUZLOpm7SrsPcxewIdfn6wIoCVOywYSvH80U+/KHIjShmtCJNPcL77T3bvV6UqLY6ogFq78p3ESp/Rw=
+	t=1746456252; cv=none; b=AnEfKVsjW9sEwNHR24baRbUpdON6OJaH9m5YBI4B+LzDz4669jxfPtxL4yeDskRy3VE2FbexKbdT74/t2v4rvk7qr/pr8i3tSjWTtAkwllgVXbohSy3nFHQNd4SeppxBskr8tMyxP+d59i4BFGT1dV++71QDuOcoGbkxbi7WdIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456251; c=relaxed/simple;
-	bh=MHUgGt1nhsM9ZnWIPLv79iXt4OuzDKXXjKrP4H9Te88=;
+	s=arc-20240116; t=1746456252; c=relaxed/simple;
+	bh=vkzC9zv68KsWIrMeAfc6iXVzA8iO3cgRRySvwrwTtVI=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=erWg2lCeE/qLOHjB6EtfFHnZ+t8Bjie4EbnYGEDYMO/5Ajj5bqX7O7Q2Arc2dGVFE+RTugPvB/TTFXnT+b7iRFUKqtArr4VcUms8d4tYDWKCZAf6uDze8uYYFWFeiJlE1WMf0Sz7gIvnzN7dZ/PHWOV34xeBRcvDbV3U9OoxbTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsdTpeWj; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=s/seTd2YUOxJchkMk4IRukIv3k9ixGjLsQHqEEN3ZkOmZwWEYagt1AaVSqrQ8rULnz3hnRUkHGWRmzzOLqdB9zOb/xbRwMcg09fnk4wMauk6sYo0pLk8Pc+nwgn3Be+Y9bNv5pRd/MzPGfZPen2hvSrmklfQTRMMHBw7kATrq6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJBFrTr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsdTpeWj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B871C4CEEE;
-	Mon,  5 May 2025 14:44:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJBFrTr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F22C4CEF0;
+	Mon,  5 May 2025 14:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456250;
-	bh=MHUgGt1nhsM9ZnWIPLv79iXt4OuzDKXXjKrP4H9Te88=;
+	s=k20201202; t=1746456251;
+	bh=vkzC9zv68KsWIrMeAfc6iXVzA8iO3cgRRySvwrwTtVI=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=NsdTpeWjRmMQtp6tHqzYk+nT6BZS2qpPKZfhXnkTK5pX/64nAoXk1wCTO5HKltF6B
-	 wqjvQaWizl7Q/q39dmZHo7j2jPYCq5U/n48PQ5TgdicXhRUYvT9dJjJACDRm0obadp
-	 r09HrfuwbvNeJiXkW2dxgTbGwAZljUIBAcWxldJk+WlZiFl/hAui9M9+Dsd328RSEB
-	 AXmjfw76T38THEsx93IGTr0FNNHWR8wvkrXWcLPoaCK4BibMKd2o0omUINW83nJn82
-	 E7kVq8quo28Gokl6h/4ZkFg/YTiyhJVqoJWImPlSBRiI0Utn+/hAig+Gi4Gqd4yNHJ
-	 Bg3k2WLQVQWPQ==
-Date: Mon, 05 May 2025 09:44:09 -0500
+	b=AJBFrTr8gRuydAYqiTXhh0btD+lTuqY2jzFE3q1LbzL+Kff56DrNpOwwjBJXJZebl
+	 OFsbjEIhFh0Rwqumqr+6lKj3l8ggzeY7mC8pziOk+hLvibCM6ya40ueCcpjQYBbT+B
+	 sFbdPeXh945g/Ema75fQGhpi6S1xN1mFFik1PK+9R4sHnF8jzZznStJqYH72yRfbMZ
+	 mvrBXfl1BNVl/HG8sePzywo8sFBtR0xNqwY5T9X2+9YlSrMpqYQTng5O6DnKrJz7uu
+	 2LBpJsaJnsUuwdAvJBfqRzx+TGV/zZrHrf9XUgGNQGZvlDIAaRou/QcyAKHZV3dvvZ
+	 2PhUqqpgJfn9A==
+Date: Mon, 05 May 2025 09:44:10 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,89 +36,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <20250504145907.1728721-1-ivo.ivanov.ivanov1@gmail.com>
-References: <20250504145907.1728721-1-ivo.ivanov.ivanov1@gmail.com>
-Message-Id: <174645594263.1246703.7109407640870369437.robh@kernel.org>
-Subject: Re: [PATCH v4 0/4] arm64: dts: exynos: add initial support for
- Samsung Galaxy S22+
+Cc: linux-kernel@vger.kernel.org, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sean Wang <sean.wang@mediatek.com>, linux-mediatek@lists.infradead.org, 
+ Matthias Brugger <matthias.bgg@gmail.com>, wenst@chromium.org, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+To: Sirius Wang <sirius.wang@mediatek.com>
+In-Reply-To: <20250505121627.3944728-1-sirius.wang@mediatek.com>
+References: <20250505121627.3944728-1-sirius.wang@mediatek.com>
+Message-Id: <174645594319.1246809.14814085003624998764.robh@kernel.org>
+Subject: Re: [PATCH 0/2] Add mt8189 dts evaluation board and Mafefile
 
 
-On Sun, 04 May 2025 17:59:03 +0300, Ivaylo Ivanov wrote:
-> Hey folks,
+On Mon, 05 May 2025 20:15:44 +0800, Sirius Wang wrote:
+> MT8189 is a SoC based on 64bit ARMv8 architecture. It contains 6 CA55
+> and 2 CA78 cores. MT8189 share many HW IP with MT8188 series.
 > 
-> This patchset adds device tree files for Exynos 2200 and Samsung
-> Galaxy S22+.
+> We add basic chip support for MediaTek MT8189 on evaluation board.
 > 
-> [1] is a dependancy on the aforementioned series for the usb phy drivers
-> and bindings.
+> In this series, we also add dt-bindings document definition for MT8189.
 > 
-> Exynos 2200 SoC is an ARMv8 mobile SoC found in the Samsung Galaxy S22
-> (r0s), S22+ (g0s), S22 Ultra (b0s) Add minimal support for that SoC,
-> including psci, pmu, chipid, architecture timer and mct, pinctrl,
-> clocks and usb.
+> Sirius Wang (2):
+>   WIP: dt-bindings: arm: Add compatible for MediaTek MT8189
+>   WIP: arm64: dts: mt8189: Add mt8189 dts evaluation board and Mafefile
 > 
-> The devices using this SoC suffer from an issue caused by the stock
-> Samsung bootloader, as it doesn't configure CNTFRQ_EL0. Hence it's
-> needed to hardcode the adequate frequency in the timer node,
-> otherwise the kernel panics.
-> 
-> Another issue is that cpu2 and cpu3 fail to come up consistently, which
-> leads to a hang later in the boot process. As A510 cores are clustered
-> by two, it makes sense for both of these cpus to fail if there is a
-> power issue. Disable them until the problem is figured out.
-> 
-> Samsung Galaxy S22+ (SM-S906B), codenamed g0s, is a mobile phone from
-> 2022. It features 8GB RAM, 128/256GB UFS 3.1, Exynos 2200 SoC and a
-> 1080x2340 Dynamic AMOLED display.
-> 
-> Further platform support will be added over time.
-> 
-> Best regards,
-> Ivaylo
-> 
-> Changes in v4:
-> - account for compatible changes in usb phy patches
-> - use status fail instead of deleting cpu nodes
-> - add a-b tag in the 1/4 patch
-> 
-> Changes in v3:
-> - account for the usbdrd changes in the exynos2200 soc dtsi
-> - drop usbcon driver from the MAINTAINERS patch
-> 
-> Changes in v2:
-> - mention the board codename in the first patch's commit message
-> - make all reg values hex in device trees
-> - reorder usb_con above usb_dwc3
-> - drop regulators for usb_con
-> - remodel usb_con_phy to take usb_hsphy phandle
-> - include MAINTAINERS patch in this patchset
-> 
-> [1] https://lore.kernel.org/all/20250504144527.1723980-1-ivo.ivanov.ivanov1@gmail.com/
-> 
-> Ivaylo Ivanov (4):
->   dt-bindings: arm: samsung: document g0s board binding
->   arm64: dts: exynos: add initial support for exynos2200 SoC
->   arm64: dts: exynos: add initial support for Samsung Galaxy S22+
->   MAINTAINERS: add entry for Samsung Exynos2200 SoC
-> 
->  .../bindings/arm/samsung/samsung-boards.yaml  |    6 +
->  MAINTAINERS                                   |   10 +
->  arch/arm64/boot/dts/exynos/Makefile           |    1 +
->  arch/arm64/boot/dts/exynos/exynos2200-g0s.dts |  169 ++
->  .../boot/dts/exynos/exynos2200-pinctrl.dtsi   | 1765 +++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos2200.dtsi    |  561 ++++++
->  6 files changed, 2512 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos2200-g0s.dts
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos2200-pinctrl.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos2200.dtsi
+>  .../devicetree/bindings/arm/mediatek.yaml     |   4 +
+>  arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+>  arch/arm64/boot/dts/mediatek/mt8189-evb.dts   |  20 +
+>  arch/arm64/boot/dts/mediatek/mt8189.dtsi      | 441 ++++++++++++++++++
+>  4 files changed, 466 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
 > 
 > --
-> 2.43.0
+> 2.45.2
 > 
 > 
 > 
@@ -140,16 +93,21 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/v6.15-rc4-309-g2696c4a950d5 (best guess, 2/3 blobs matched)
+ Base: tags/next-20250505 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250504145907.1728721-1-ivo.ivanov.ivanov1@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250505121627.3944728-1-sirius.wang@mediatek.com:
 
-arch/arm64/boot/dts/exynos/exynos2200-g0s.dtb: /soc/phy@10aa0000: failed to match any schema with compatible: ['samsung,exynos2200-usb32drd-phy']
-arch/arm64/boot/dts/exynos/exynos2200-g0s.dtb: /soc/phy@10ab0000: failed to match any schema with compatible: ['samsung,exynos2200-eusb2-phy']
-arch/arm64/boot/dts/exynos/exynos2200-g0s.dtb: /soc/usb@10b00000: failed to match any schema with compatible: ['samsung,exynos2200-dwusb3']
+arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: / (mediatek,mt8189-evb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 1073741824, 0, 3221225472]]}
+	from schema $id: http://devicetree.org/schemas/root-node.yaml#
+arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: idle-states: 'clusteroff-b', 'clusteroff-l', 'clusteroff-m', 'cpuoff-b', 'cpuoff-l', 'cpuoff-m', 'mcusysoff-b', 'mcusysoff-l', 'mcusysoff-m', 's2idle', 'system-vcore' do not match any of the regexes: '^(cpu|cluster)-', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
+arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: idle-states: entry-method:0: 'psci' was expected
+	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
+arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: serial@11001000 (mediatek,mt6577-uart): Unevaluated properties are not allowed ('uart-line' was unexpected)
+	from schema $id: http://devicetree.org/schemas/serial/mediatek,uart.yaml#
 
 
 
