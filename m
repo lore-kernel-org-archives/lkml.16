@@ -1,41 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF6C3B17CA;
-	Mon,  5 May 2025 23:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154773B11FB;
+	Mon,  5 May 2025 23:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487240; cv=none; b=ttjWcL11CuQMW++IhR3geibiTK5kTkbwChyZIFJniIuKshMDSNkqknnnGtmjnreiKOTIlIZyLQQLlf13OAulTgk8jb8Aw0csxyiKmYD4mKYiaMzsG5sgF0Rp0nh3wiO+eMDahHMhtWafVfqoXAsYVbaBnGa77ieQ9IcILIrsOa4=
+	t=1746487236; cv=none; b=sKimFDvZDzr0ELNUY7qk1bZmYCGqmBNVI6J1Zqg+guT8IRnIPmn2nsjXc21I3anLGeW1lzf/PcpIy1pu8dTy7QgBryeXbRW7hMcToL65yNc17IQ/fcCdirv/2diuCWvO+YnVx/5ZgQfwaYqZQk5dFcrrO8SbHLx4Ko6/LKgjBo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487240; c=relaxed/simple;
-	bh=8/2AyThXosF/blNITHY7k3P1F1YQ8ACUqwtAjIg64Bo=;
+	s=arc-20240116; t=1746487236; c=relaxed/simple;
+	bh=D2onoH0eioFutunK8t49CfkAwg7YCy58FHYrZHRgwp0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EtvKYOnoea/ue1BC9HMtkoaQuPc5sT70WQcyPARdpL8z8jWtX42bhdNIxu0yjfX/fhp7LbkrF9+uoX1qFbPr4Xosm82D67wRrvDT5WFwH9atjih+rxvTH+MtSyX34O2FZKaLRJP6D07xMzv4TrdYOH3dWgCqufmNvMmG3mYoIck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwk71nnY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=IMF/+qx2AQo12tQ+mAXiKY7vj6dMgpSR7o3X+Foc8maWlsRiNt/nPzrxwe8qYUlJyQD6Ba0ihzTYA+qO12paYmrLNI7/KrwCO0HakPNlDfS3idIh3foD7W7l4KMgVMA/al+Dixv9ebOvarJz0OhOq0UNHA35BM0sBWOs72REjBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxuTRzMv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwk71nnY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91BDAC4CEF1;
-	Mon,  5 May 2025 23:20:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxuTRzMv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B40C4CEEF;
+	Mon,  5 May 2025 23:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487238;
-	bh=8/2AyThXosF/blNITHY7k3P1F1YQ8ACUqwtAjIg64Bo=;
+	s=k20201202; t=1746487234;
+	bh=D2onoH0eioFutunK8t49CfkAwg7YCy58FHYrZHRgwp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qwk71nnYLln18kiKD50rjceDJv/Uz8G+WQE+Cals8+NhYw9vE8v4s5mj2rzk3MHPH
-	 DMhliNbqtJT8BgxarkT6T639uNonVNTzF8ut04519/Li980FimZzCWSV3OogNtD6yC
-	 PjvcTfD8RXfkD4eUhScToFjciNP0m8mglBDtjkVC+rUzV7WR9iAiJo2N8zXSwOW7zq
-	 hxBoSccASAsYRVm9YPuTUewX1wo+9pLAPtwlMR1Xpf8iyd8GBfP9UIO9rEJun7Ri5y
-	 TOR2LMm/iuLtuDSmvIYxrLDgJIv9MiwsmqzxEuOUa7czlWEJaVCjOk8k0IYv/IAGfJ
-	 QMe9syFA5dVEg==
+	b=VxuTRzMvoiAJDY2SKTCpWhDifhJovH+lHZmYHqX8IXpvVtAN/l3YhGJaNcnsn8SUW
+	 o0OJbq9Br7iEI5SNj5hT1tM+j9A1x2I8h2psoDhPyZrgFr/cp1sQhiAJuqDSFbNn1o
+	 +uTB3kruLlIfphN/OjnIs5s90vgO4NJhaBn2KOLsGkVUUc/+4s8/8uZfmdkXLs+FQT
+	 4rtHIv8jw5tazKyl1SZVt1X8AgWfDPsGF1AE6aNgGbpaJ9CeJwmLRQDOVYxlhWuDAd
+	 EMIFq0CAaJnmNdWQ1+WPAdGwu5NhMxYPJqIniVOnV5XYJMoXh/MOhkOJEg5chtZ+IO
+	 wX9+toOHxEB9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Paul Burton <paulburton@kernel.org>,
+	Chao-ying Fu <cfu@wavecomp.com>,
+	Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>,
+	Aleksandar Rikalo <arikalo@gmail.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 073/114] wifi: rtw88: Fix rtw_init_ht_cap() for RTL8814AU
-Date: Mon,  5 May 2025 19:17:36 -0400
-Message-Id: <20250505231817.2697367-73-sashal@kernel.org>
+	tglx@linutronix.de,
+	linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 070/114] clocksource: mips-gic-timer: Enable counter when CPUs start
+Date: Mon,  5 May 2025 19:17:33 -0400
+Message-Id: <20250505231817.2697367-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -45,62 +53,69 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: Paul Burton <paulburton@kernel.org>
 
-[ Upstream commit c7eea1ba05ca5b0dbf77a27cf2e1e6e2fb3c0043 ]
+[ Upstream commit 3128b0a2e0cf6e07aa78e5f8cf7dd9cd59dc8174 ]
 
-Set the RX mask and the highest RX rate according to the number of
-spatial streams the chip can receive. For RTL8814AU that is 3.
+In multi-cluster MIPS I6500 systems there is a GIC in each cluster,
+each with its own counter. When a cluster powers up the counter will
+be stopped, with the COUNTSTOP bit set in the GIC_CONFIG register.
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/4e786f50-ed1c-4387-8b28-e6ff00e35e81@gmail.com
+In single cluster systems, it has been fine to clear COUNTSTOP once
+in gic_clocksource_of_init() to start the counter. In multi-cluster
+systems, this will only have started the counter in the boot cluster,
+and any CPUs in other clusters will find their counter stopped which
+will break the GIC clock_event_device.
+
+Resolve this by having CPUs clear the COUNTSTOP bit when they come
+online, using the existing gic_starting_cpu() CPU hotplug callback. This
+will allow CPUs in secondary clusters to ensure that the cluster's GIC
+counter is running as expected.
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Signed-off-by: Chao-ying Fu <cfu@wavecomp.com>
+Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
+Signed-off-by: Aleksandar Rikalo <arikalo@gmail.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/clocksource/mips-gic-timer.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index ea70b55150388..ab302e2ce9a2e 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1141,6 +1141,7 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- 			    struct ieee80211_sta_ht_cap *ht_cap)
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index be4175f415ba5..1946691f6b322 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -119,6 +119,9 @@ static void gic_update_frequency(void *data)
+ 
+ static int gic_starting_cpu(unsigned int cpu)
  {
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
-+	int i;
- 
- 	ht_cap->ht_supported = true;
- 	ht_cap->cap = 0;
-@@ -1158,17 +1159,11 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- 	ht_cap->ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
- 	ht_cap->ampdu_density = IEEE80211_HT_MPDU_DENSITY_16;
- 	ht_cap->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
--	if (efuse->hw_cap.nss > 1) {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0xFF;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(300);
--	} else {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0x00;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(150);
--	}
++	/* Ensure the GIC counter is running */
++	clear_gic_config(GIC_CONFIG_COUNTSTOP);
 +
-+	for (i = 0; i < efuse->hw_cap.nss; i++)
-+		ht_cap->mcs.rx_mask[i] = 0xFF;
-+	ht_cap->mcs.rx_mask[4] = 0x01;
-+	ht_cap->mcs.rx_highest = cpu_to_le16(150 * efuse->hw_cap.nss);
+ 	gic_clockevent_cpu_init(cpu, this_cpu_ptr(&gic_clockevent_device));
+ 	return 0;
  }
+@@ -253,9 +256,6 @@ static int __init gic_clocksource_of_init(struct device_node *node)
+ 			pr_warn("Unable to register clock notifier\n");
+ 	}
  
- static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+-	/* And finally start the counter */
+-	clear_gic_config(GIC_CONFIG_COUNTSTOP);
+-
+ 	/*
+ 	 * It's safe to use the MIPS GIC timer as a sched clock source only if
+ 	 * its ticks are stable, which is true on either the platforms with
 -- 
 2.39.5
 
