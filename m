@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5AE2D5D14;
-	Mon,  5 May 2025 22:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD882D818F;
+	Mon,  5 May 2025 22:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485678; cv=none; b=OkshbliBTu7Yk6Csy+wFp2v77FMOKvp5IGFnlZFA04MUxTYzjthu3rTvNew7MZk8/4SlwzCPbB/cvbzHI/cq2GAuNNLlHLLEAOafPHITrR/QcdlFxo3qgxgq5PHs2/+mtCnwb2zXwlu7tc/PK1RTqv+MNf8IoupNpFYyRAMEcpc=
+	t=1746485764; cv=none; b=oKRzOtpX4GJ9jzgNDrv6q4QoVP+uOz0uHk7hDEya0X0T9If9STNhsh1k2KuflBMD9PScuG8le8AS9ZNYP+DQERAP/uxbNVLBR6JjsJTp+dFU+u8YWmvRlqWIYHYZcWXO4HfRW5JXbfAmzJJy+9Wuq/9yu6Ew3zEBkGLhjXB2S5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485678; c=relaxed/simple;
-	bh=OLizhLH1GnI6+VepvsENhJMEKJeSmbGNRZoZnzB8f1Y=;
+	s=arc-20240116; t=1746485764; c=relaxed/simple;
+	bh=TsQGUHxbunuYlL+5yeNWrYVRKxT6Qrp6Bdsbu5dSO3g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OXs/0r5lWUSxDDBJEO7t1It2Jfc4N6oHGHcw53FIVKkU7tH4gKD59JZDJen/4hze5OAfiwnBBAhIr2GAe5maV5fvp6kByoGtqD197NRs+l1jQ4shIDnX5/vZRqSRYJxdx4nUtw3x50+vnKu+t6p5SbAAkMrsh2hughQSsipdOzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i77d85uN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l3WVT+HxJG9x19Rzek9XL98JH+/PeFdlnyKCOv+ucrz7pTPGx6c8iaHfyoS3M5DPGICoTRYHf4htQL1S6gO4dR39zP4WQygwL33KrpZKtXh1M9kqN6wRXOnRSlKLVTizkwV1a+qaUVm0hP4ZheO/wricnW7WxT+7ecQo1/eK/xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3uo+kFe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i77d85uN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D244C4CEEE;
-	Mon,  5 May 2025 22:54:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3uo+kFe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B04C4CEE4;
+	Mon,  5 May 2025 22:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485676;
-	bh=OLizhLH1GnI6+VepvsENhJMEKJeSmbGNRZoZnzB8f1Y=;
+	s=k20201202; t=1746485763;
+	bh=TsQGUHxbunuYlL+5yeNWrYVRKxT6Qrp6Bdsbu5dSO3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i77d85uNxp5bn/QBN+XqUXSNimrMt/nlyjarAflPysKmy/CepRA0nNi5n9NGHNXmE
-	 vh9jlx4KDzlkJv7D3thekbURfsED9Na0nTplRQhfusTErdhtsIJBlt1Sdd76sDqJss
-	 EgzyEOLlHk2of0uE05rZsG/ZTnVINirJDShBhGETCJ5aA9Xq3YNs+PnC7eo9T+io1P
-	 awU4M5wgoCR74wnWP8oCeG0Fw4prQmH3UHsEuFEyy3s8Sy0s+kgnh2jPK3PQ8ALgMX
-	 FGzSI7CDnbpNmDj46r3XpG8bywVhj1KIlA6NHLcTLG2bubCAWYUN2Rn5gEfswPx8E0
-	 yFf/Ap99PvuYA==
+	b=f3uo+kFepgFiHXPI60VL/BsSSxSb+GaLhjnC0ctlyw/RyZfxjXcgMCpdpYGFPgcq+
+	 luvr7jfiaWLzVc4g3o5Xj76Tclqmx51Xe2kuipg0lFxo/GueSI6HGeFxefqDKA3xP7
+	 mGdPynbliGZd5rM+BYcmKEjhtBfPUWDgHNU+4ZFXn8Pdrpf8U0rAG2f7oaUUxHcpWo
+	 CBcxND9PBsK1y4q9uhvWVIKxIdU5cJv30qEOuKqoxwwVrMVQRKYKB2hF1bPksSJRdT
+	 pg/Vaw47nNY3HHFsMnTD/khU0RthNEDrS3LnHEgq6g8CV//7GqhfwRByHc5+gQ0fmm
+	 dTKUAj1qlE30A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: P Praneesh <quic_ppranees@quicinc.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	donald.hunter@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	sdf@fomichev.me,
-	antonio@openvpn.net,
-	jstancek@redhat.com,
-	johannes.berg@intel.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 421/486] tools: ynl-gen: don't output external constants
-Date: Mon,  5 May 2025 18:38:17 -0400
-Message-Id: <20250505223922.2682012-421-sashal@kernel.org>
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 472/486] wifi: ath12k: Fix end offset bit definition in monitor ring descriptor
+Date: Mon,  5 May 2025 18:39:08 -0400
+Message-Id: <20250505223922.2682012-472-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,38 +52,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: P Praneesh <quic_ppranees@quicinc.com>
 
-[ Upstream commit 7e8b24e24ac46038e48c9a042e7d9b31855cbca5 ]
+[ Upstream commit 6788a666000d600bd8f2e9f991cad9cc805e7f01 ]
 
-A definition with a "header" property is an "external" definition
-for C code, as in it is defined already in another C header file.
-Other languages will need the exact value but C codegen should
-not recreate it. So don't output those definitions in the uAPI
-header.
+End offset for the monitor destination ring descriptor is defined as
+16 bits, while the firmware definition specifies only 12 bits.
+The remaining bits (bit 12 to bit 15) are reserved and may contain
+junk values, leading to invalid information retrieval. Fix this issue
+by updating the correct genmask values.
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://patch.msgid.link/20250203215510.1288728-1-kuba@kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
+Link: https://patch.msgid.link/20241223060132.3506372-8-quic_ppranees@quicinc.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/net/ynl/ynl-gen-c.py | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath12k/hal_desc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
-index 463f1394ab971..c78f1c1bca75c 100755
---- a/tools/net/ynl/ynl-gen-c.py
-+++ b/tools/net/ynl/ynl-gen-c.py
-@@ -2417,6 +2417,9 @@ def render_uapi(family, cw):
+diff --git a/drivers/net/wireless/ath/ath12k/hal_desc.h b/drivers/net/wireless/ath/ath12k/hal_desc.h
+index 739f73370015e..4f745cfd7d8e7 100644
+--- a/drivers/net/wireless/ath/ath12k/hal_desc.h
++++ b/drivers/net/wireless/ath/ath12k/hal_desc.h
+@@ -2966,7 +2966,7 @@ struct hal_mon_buf_ring {
  
-     defines = []
-     for const in family['definitions']:
-+        if const.get('header'):
-+            continue
-+
-         if const['type'] != 'const':
-             cw.writes_defines(defines)
-             defines = []
+ #define HAL_MON_DEST_COOKIE_BUF_ID      GENMASK(17, 0)
+ 
+-#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(15, 0)
++#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(11, 0)
+ #define HAL_MON_DEST_INFO0_FLUSH_DETECTED	BIT(16)
+ #define HAL_MON_DEST_INFO0_END_OF_PPDU		BIT(17)
+ #define HAL_MON_DEST_INFO0_INITIATOR		BIT(18)
 -- 
 2.39.5
 
