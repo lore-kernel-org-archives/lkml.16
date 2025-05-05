@@ -1,178 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E994A3118C0;
-	Mon,  5 May 2025 22:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084833118DD;
+	Mon,  5 May 2025 22:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484216; cv=none; b=r5ERj4SXH0svutTItE665B3YM+8gmmjej4ISTurGG6tePyvbIFvT15CjUf0kxg+ibjgYUkG+v4LJy25Lr4H04Kv7f1DxqzvtfM3NeMYREXPr7DMmS4Mw2l3BOBVHpQ8HsPlzGTMUxH1SrdNU9NHhJPtVkk0Wihmlg43ifkVpFNs=
+	t=1746484217; cv=none; b=u9CwHAtSiN2u/vtn7/4P0vA3m20kX3mg2pJhF49hubmyQlJ1taAjqZ0/QY4onOB1jvLXwXFvN61+fOXgqhrkkSVB4YZFq/0qhCJgh4EyUdth7X6h79lAe40gku9jc70sDVyaSRYfNhZeKbFLlJTv1JTks6kvuhXLD388WS6i6bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484216; c=relaxed/simple;
-	bh=9qXvlUsAJLM2JuLUNLn+K6XTiEko4XoIWC3CCLaHQR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nMlcbzy3LDpx4toZxFul2Sy/wOCJJI2NyzE4+ARisQ11LQU6KpjSOgp6yz0ul56Bzk/vVHcnVZZgxXuot0oAFfgEXw+fgenPFcBir252LMMKCKOoaAgu6uCs53yCPgYyh0xdITnBwHXVvOMwDrhJZN3VUDF8OkdbcTRpd5BEVFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXUM1PS5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746484217; c=relaxed/simple;
+	bh=0SqSalVLNIGV7ZGEkllDtan/2CZ5yqAgZD7fPjaulCI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iie1tbWO+ObnSuOqVu1+BkvOsVu8GmD8s2dDQlj+xBP68/tpFZ84OHDnF5nEYtjDRERyFrrAu9+e/m7k37969cQzrsHH0lfuYPo0uUSMc+yZLHvQBF5LcN5WA9z/YeiFdcRXD2JZAiSle1/HgUUIdT+jL6KlVAXqY9Mp7vtHdAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqyQhuD8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXUM1PS5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E0DC4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqyQhuD8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E2CEC4CEE4;
 	Mon,  5 May 2025 22:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484215;
-	bh=9qXvlUsAJLM2JuLUNLn+K6XTiEko4XoIWC3CCLaHQR8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aXUM1PS5HF9bG+EaAn2zvWZVWUBV2lf34iAan7GYQuTBFiqWTuB3VO+FbKCMwAFE0
-	 P6q5KdfwEWfe4LJ5e0xzmKW3JEFSQnv7dl6zyURuBMA+HE7fQ9TuO9irLnM9Za5aIo
-	 /HXPKFfzU1IXFEokU8SdCTiLVzrIq9Huv7tNP50Oqtc9BBrwOVfNbJ4FLaUuM26suw
-	 qile430YgK30Z7/hys0FHdq69cUlE6iDPmcRqn6CyiPrFZo2iDiqLfySQCe43e+AkC
-	 4l3eqOF9TLkSufod1REeVVDC9DLH+unvXFCQhrwKQc1c3/hP774jmnVv7zALvuLDQJ
-	 U6+y45joO9QIQ==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54ea69e9352so5907195e87.2;
-        Mon, 05 May 2025 15:30:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBZO0M6Mhn7eq6gWEWJPo02jbzS7HJHOWIhT8AjUNAn9svWQ/4TUJExFtdsl82lqJQzfaG+5FQsYBo5SL7@vger.kernel.org, AJvYcCXFRMh+7rcYVx/PDuqG/07i2QUbZgt4/NezdRy8DazYmB0B9GpuUedH2EqwJ3JRvLs99VreU7VQuag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNE9zxGv0IF62yy5OuFSo8tQsmDC9xOf77GYwgYjXMwx/q4WPr
-	EBVoB1Nh4v/41LKc3/HyLZWVYXy+ehXHWLbtkTmyi0OOAcr8dQ5p83ix87MWg0/D3wk6gq5tjQb
-	4NuxilIK5vqKlcfx5Fh6rAKOiGpM=
-X-Google-Smtp-Source: AGHT+IHmUbL2/ov6H1GmIFr2hOfzScbIZJsVItptWBu8Dn7Q7ZYyumZH90rkmXsU/NbpevsPt590MOW4vMNYn/3zbm8=
-X-Received: by 2002:a05:6512:4024:b0:545:2b68:936e with SMTP id
- 2adb3069b0e04-54fb4a13ee1mr199593e87.25.1746484214124; Mon, 05 May 2025
- 15:30:14 -0700 (PDT)
+	s=k20201202; t=1746484216;
+	bh=0SqSalVLNIGV7ZGEkllDtan/2CZ5yqAgZD7fPjaulCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IqyQhuD8MmBuM3bt8GlSiHB9oharCb3ejbevYIWd+5G5Bw+RJk28oon3WbJRTSRkB
+	 9MIESsKDWkGC9B07XY8nC8RSvCbO7Bti+FdmxQ9tfVmJOa3X1WmgK2nqV4YsDwNZYF
+	 tUDaXyfCNbHIt217pLQKGGcXxyPfnzeayfXUJbUey/sP7A0LzzyANW4ffGnADzs73z
+	 b5Uzr4sndhXCC+8sjSz49FbXsdgCuFQL+b4uYmyg2DFwjTiIOfVQ19rPCDGQvSLyuc
+	 uKxsbvqkcUTSCbeUhULRSrDDHJKJyFWKAbnut2VFxxpIrjdDSOO7sBZRZ+w+Ko//yi
+	 mAA1JKE7UnLLw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	shawnguo@kernel.org,
+	shengjiu.wang@nxp.com,
+	joe@pf.is.s.u-tokyo.ac.jp,
+	peng.fan@nxp.com,
+	m.felsch@pengutronix.de,
+	krzysztof.kozlowski@linaro.org,
+	dario.binacchi@amarulasolutions.com,
+	linux-pm@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.14 392/642] pmdomain: imx: gpcv2: use proper helper for property detection
+Date: Mon,  5 May 2025 18:10:08 -0400
+Message-Id: <20250505221419.2672473-392-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504095230.2932860-25-ardb+git@google.com>
- <20250504095230.2932860-28-ardb+git@google.com> <aBdwwR52hI37bW9a@gmail.com>
- <CAHk-=wiaEzS_7CBVTz3RYnDt5zJus_GsPtfSjojkqiiMU-vSHQ@mail.gmail.com>
- <aBkogDfWB14qkY4g@gmail.com> <aBksqEEAq5t9UEmf@gmail.com>
-In-Reply-To: <aBksqEEAq5t9UEmf@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 6 May 2025 00:30:02 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG4s8szNfyxksvOkyyCgpqH6Bm_eZ+4jvvLgQ78199Zeg@mail.gmail.com>
-X-Gm-Features: ATxdqUFUodl0U9Cixemlu_wxaalpIlA0ppHs15tfYEWj9VqVVaEEGnYo3HJaN9g
-Message-ID: <CAMj1kXG4s8szNfyxksvOkyyCgpqH6Bm_eZ+4jvvLgQ78199Zeg@mail.gmail.com>
-Subject: Re: [RFT PATCH v2 03/23] x86/boot: Drop global variables keeping
- track of LA57 state
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>, Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-On Mon, 5 May 2025 at 23:25, Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
-> > Anyway, with these limitations in mind, we can see that the top 5
-> > usecases cover about 80% of all uses:
-> >
-> >  - MAX_PHYSMEM_BITS: (inlined 179 times)
-> >
-> >        arch/x86/include/asm/sparsemem.h:# define MAX_PHYSMEM_BITS     (pgtable_l5_enabled() ? 52 : 46)
-> >
-> >    This could be implemented via a precomputed, constant percpu value
-> >    (per_cpu__x86_MAX_PHYSMEM_BITS) of 52 vs. 46, eliminating not just
-> >    the CR4 access, but also a branch, at the cost of a percpu memory
-> >    access. (Which should still be a win on all microarchitectures IMO.)
-> >
-> >    Alternatively, since this value is a semi-constant of 52 vs. 46, we
-> >    could also, I suspect, ALTERNATIVES-patch MAX_PHYSMEM_BITS in as an
-> >    immediate constant value? Any reason this shouldn't work:
-> >
-> >      static inline unsigned int __MAX_PHYSMEM_BITS(void)
-> >      {
-> >               unsigned int bits;
-> >
-> >               asm_inline (ALTERNATIVE("movl $46, %0", "movl $52, %0", X86_FEATURE_LA57) :"=g" (bits));
-> >
-> >               return bits;
-> >      }
-> >      #define MAX_PHYSMEM_BITS __MAX_PHYSMEM_BITS()
-> >
-> >    ... or something like that? This would result in the best code
-> >    generation IMO, by far. (It would even make use of the
-> >    zero-extension property of a 32-bit MOVL, further compressing the
-> >    opcode to only 5 bytes or so.)
-> >
-> >    We'd even create a secondary helper macro for this, something like:
-> >
-> >       #define ALTERNATIVES_CONST_U32(__val1, __val2, __feature)       \
-> >       ({                                                              \
-> >               u32 __val;                                              \
-> >                                                                       \
-> >               asm_inline (ALTERNATIVE("movl $" #__val1 ", %0", "movl $" __val2 ", %0", __feature) :"=g" (__val)); \
-> >                                                                       \
-> >               __val;                                                  \
-> >       })
-> >
-> >       ...
-> >
-> >       #define MAX_PHYSMEM_BITS ALTERNATIVE_CONST_U32(46, 52, X86_FEATURE_LA57)
-> >
-> >    (Or so. Totally untested.)
->
-> BTW., I keep comparing it to the CR4 access, which is a bit unfair,
-> since that's only one out of the 3 variants of ALTERNATIVE_TERNARY():
->
-> static __always_inline __pure bool pgtable_l5_enabled(void)
-> {
->         unsigned long r;
->         bool ret;
->
->         if (!IS_ENABLED(CONFIG_X86_5LEVEL))
->                 return false;
->
->         asm(ALTERNATIVE_TERNARY(
->                  "movq %%cr4, %[reg] \n\t btl %[la57], %k[reg]" CC_SET(c),
->                  %P[feat], "stc", "clc")
->                  : [reg] "=&r" (r), CC_OUT(c) (ret)
->                  : [feat] "i"  (X86_FEATURE_LA57),
->                    [la57] "i"  (X86_CR4_LA57_BIT)
->                  : "cc");
->
->         return ret;
-> }
->
-> The STC and CLC variants will probably be the more common outcomes on
-> modern CPUs.
->
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-The CR4 access is only used before alternatives patching; after that,
-either the STC or the CLC is patched in.
+[ Upstream commit 6568cb40e73163fa25e2779f7234b169b2e1a32e ]
 
-> But I still think the ALTERNATIVE_CONST_U32() approach I outline above
-> generates superior code for the binary-values cases, which covers 3 out
-> of the top 5 uses of pgtable_l5_enabled().
->
-> For non-constant branching uses of pgtable_l5_enabled() I suspect the
-> STC/CLC approach above is pretty good, although the 'cc' constraint
-> will clobber all flags I suspect, while ALTERNATIVE_CONST_U32()
-> doesn't? Ie. with ALTERNATIVE_CONST_U32() we just load the resulting
-> constant into a register, with no additional branches and with flags
-> undisturbed.
->
-> Also, is STC/CLC always just as fast as the testing of an immediate (or
-> a static branch), on CPUs we care about?
->
+Starting with commit c141ecc3cecd7 ("of: Warn when of_property_read_bool()
+is used on non-boolean properties"), probing the gpcv2 device on i.MX8M
+SoCs leads to warnings when LOCKDEP is enabled.
 
-The reasoning behind using the C flag rather than asm goto is
-precisely the fact that in many cases, pgtable_l5_enabled() is not
-used for control flow but for picking between constants, and this
-approach permits the compiler [in theory] to resolve it without a
-branch. But I didn't inspect the resulting codegen, and just patching
-in a MOV immediate is obviously more efficient than that.
+Fix this by checking property presence with of_property_present as
+intended.
 
-I could just use asm goto here, and implement something similar to
-cpu_feature_enabled(), but in a way that removes the need for
-USE_EARLY_PGTABLE_L5. Then, we could get rid of the
-__pgtable_l5_enabled variable in a separate patch, and base it on a
-test of CR4.LA57 in the early init path.
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Link: https://lore.kernel.org/r/20250218-gpcv2-of-property-present-v1-1-3bb1a9789654@pengutronix.de
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pmdomain/imx/gpcv2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Then, any optimizations related to constants defined in terms of
-(pgtable_l5_enabled() ? foo : bar) could be layered on top of that.
-Having runtime constants is the obvious choice, although I'm skeptical
-whether it's worth the hassle. I also haven't yet looked into what it
-would entail to share these runtime constants with the startup code.
+diff --git a/drivers/pmdomain/imx/gpcv2.c b/drivers/pmdomain/imx/gpcv2.c
+index 958d34d4821b1..105fcaf13a34c 100644
+--- a/drivers/pmdomain/imx/gpcv2.c
++++ b/drivers/pmdomain/imx/gpcv2.c
+@@ -1361,7 +1361,7 @@ static int imx_pgc_domain_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (IS_ENABLED(CONFIG_LOCKDEP) &&
+-	    of_property_read_bool(domain->dev->of_node, "power-domains"))
++	    of_property_present(domain->dev->of_node, "power-domains"))
+ 		lockdep_set_subclass(&domain->genpd.mlock, 1);
+ 
+ 	ret = of_genpd_add_provider_simple(domain->dev->of_node,
+-- 
+2.39.5
+
