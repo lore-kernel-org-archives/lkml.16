@@ -1,222 +1,154 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1D31F8908
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE2C17B50F;
+	Mon,  5 May 2025 09:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437978; cv=none; b=ukBbunpVlToLdHWMfkpJmMZHKFXsDbf2YaY4F23jEdw7RWhYvbyyjtIS6Isanmm3y3BRmmXhrTkzOvg8OlFA9p0YeRrTYgQ7MATz76ugtn82BNfDwWVRoo45gJy31hp+GXJEX0J6f2e4jSOlJOlufbgQIGWzCR0Z2mP4CfFYYVM=
+	t=1746438193; cv=none; b=LtCXMiIw65ZJJwbF215N6nrcnz6X/qn0XTiloRhwHojcJoe+Cgt4pfy835x8F6dfMZq63dxaqQYS/ugEyEfuuk3ucAFMIqDozPOSQCE0fUv2JiK6r9eLJDdPZr5NMhMp8nWR0OeRqj1+TuhkKej4XALnXzFFqJ09GSv1T1nGvOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437978; c=relaxed/simple;
-	bh=G97nd481/AY7ntHMhk/l9VaXH4yN/Jzgx0eacE8MhHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKt6sAUFkjJ9apDMyCS9tgk75EgYQE7eDHYygYdniM7NePbNnCKzHOZXMZl/lB50mfW9F2jZ9DAZ8LjT9gbyRksOvoJniEnnMUD1h0gThS1CX3YvZK/pzw064XaSeDmCUKTolYgPqJ0N8dY5zKRfUHc9SyasLIlWGBVsplsWaRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UlvdWb8Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VHrN2V5R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UlvdWb8Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VHrN2V5R; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746438193; c=relaxed/simple;
+	bh=nq7ezjzZh/JUN1aSnOtK1J7kk2G9xhXdGQjLrz0lVYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=N9NtDhnFG9f7MKnSUBjxpElcPP6kv9eE7ILkDgk9Sa+GjOm8ZT/VUj47iBnFes6iJvtrKcq+AaHVozEOSGxjIh3czHVqIl2pfwwALLX+6OO1CIt0DzIPGvGm3na2FwjnjDVTe+zQrSsG74qbXHQTLmV8gHESmN7C3/IDfFG3J48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VEDrzv9S; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UlvdWb8Q";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VHrN2V5R";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UlvdWb8Q";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VHrN2V5R"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 17D521F79C;
-	Mon,  5 May 2025 09:39:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746437974; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vaNrb/5c3V76o6V9zjsgk79UN9zVm2u3ncLxvNGeBmc=;
-	b=UlvdWb8QxfFPO/QFvWjPi5DxvFtJC6ExpXtw4Neg9GRMEt3z2Oi1JdmfuGl2wTFNmIm4yN
-	BOL6PzFyp8WDAiDjpu6L+TFYSIMVQuEf5cSBBTdeRCWWjrZB2cTtpXT6uxYaFjpbVT+U5n
-	QCcn9H0ezQ4I96N8RgL/fcJrK4O3k/E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746437974;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vaNrb/5c3V76o6V9zjsgk79UN9zVm2u3ncLxvNGeBmc=;
-	b=VHrN2V5RshMhLLo18Ovmd2V0Keagzi8yziEEoNNRaSOo5t77ydo+jiyPnhpe1/mLYzbe34
-	KFZS+A5i/D3ZsNDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UlvdWb8Q;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VHrN2V5R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746437974; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vaNrb/5c3V76o6V9zjsgk79UN9zVm2u3ncLxvNGeBmc=;
-	b=UlvdWb8QxfFPO/QFvWjPi5DxvFtJC6ExpXtw4Neg9GRMEt3z2Oi1JdmfuGl2wTFNmIm4yN
-	BOL6PzFyp8WDAiDjpu6L+TFYSIMVQuEf5cSBBTdeRCWWjrZB2cTtpXT6uxYaFjpbVT+U5n
-	QCcn9H0ezQ4I96N8RgL/fcJrK4O3k/E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746437974;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vaNrb/5c3V76o6V9zjsgk79UN9zVm2u3ncLxvNGeBmc=;
-	b=VHrN2V5RshMhLLo18Ovmd2V0Keagzi8yziEEoNNRaSOo5t77ydo+jiyPnhpe1/mLYzbe34
-	KFZS+A5i/D3ZsNDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C97713883;
-	Mon,  5 May 2025 09:39:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fb0RA1aHGGiwbwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 09:39:34 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A5D0AA082A; Mon,  5 May 2025 11:39:25 +0200 (CEST)
-Date: Mon, 5 May 2025 11:39:25 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 3/5] mm/readahead: Make space in struct
- file_ra_state
-Message-ID: <eexjhch7oes6fljmo3zl3mfqst34uudtc62cclkzqihvpjzszt@g5ngpaatleif>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-4-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VEDrzv9S"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5451P1R2007478;
+	Mon, 5 May 2025 09:42:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=w9wc5Wg0EqJ
+	6gaT+U9svwLFe1TGsiH4UbeCk8j4ooIY=; b=VEDrzv9S4TYOkNy9zOsPcsWUB5J
+	e1sgGM9l8j1mk7Am1QztlOR8fCElVH/JOSRE8gfZ2wyBfx05tCL8MCgsi+KOCzip
+	4ErdSJ+iPT0rolh1aWXb8HsBfwnHuUe6vHBFpm0fo+zKdClKDVaBn5+nwubGYLBw
+	ryx7LvpZk/7vcYUkdrTXxfsyDhaKVG1/2qr8tX9K9JKMao9w8XCWN3CjUCe1JNR6
+	X6H2oMTaiXSYr9KLPebHIdSLVhU4L0ZPEdW4mFe+qDNxdY0hR1lK5JMBGR7N3rUM
+	I+ezDsp91uhTtU85uwlJRzNV8jPx6LKeo/US6WKdkeE2wfuw1OGN9Qb1EMQ==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbh7bn6f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 09:42:52 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 5459gnI4012603;
+	Mon, 5 May 2025 09:42:49 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46dc7m5jtk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 09:42:49 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5459gm2e012567;
+	Mon, 5 May 2025 09:42:48 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 5459gmBh012565
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 09:42:48 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id BEA21596; Mon,  5 May 2025 15:12:47 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: [PATCH v6 08/11] drm/bridge: anx7625: enable HPD interrupts
+Date: Mon,  5 May 2025 15:12:42 +0530
+Message-Id: <20250505094245.2660750-4-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
+References: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430145920.3748738-4-ryan.roberts@arm.com>
-X-Rspamd-Queue-Id: 17D521F79C
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,arm.com:email,suse.cz:dkim,suse.cz:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=fMY53Yae c=1 sm=1 tr=0 ts=6818881c cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=vM26emnricbxrc0035IA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: RTh_yHdwjdBBAxOQbQc9RRWP6XrTssFX
+X-Proofpoint-ORIG-GUID: RTh_yHdwjdBBAxOQbQc9RRWP6XrTssFX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA5MiBTYWx0ZWRfX2aVKgCs1P3G5
+ 7R11YDK5Dh6gML1g6kGpPEBznGIQ3xFP31lhHBNXtDJ/HQuSwrO61JWyiOKe77XaUI7FIT+rXug
+ wmdE87w0YMyZo/wbD89HCW+rn6rA7qgpDAP/ouYUWrq5XvEYW2eyjyEJA2CyBx1CqrfbSMHpLuf
+ VduztMnjbzukS77AZw9nd7Kswb1OnGUVXkwiRXBdnxbrk8eUbBSc3vDX6ABX1ProoTNKI1x4Hh4
+ p8GfdZ8fMYnPNeXelCTu8ilmNgE2L749xDAqlXYoEwuewttXQ7ChR0hdb1RBFC23vGdz5Si4idI
+ vY9d0inLTeZWu0MBscND1/Fn9/eKF0bnTBGKd3TagsY8DzAKmfKQdO8WxdSxtsBWZQQ1ZQYGPoi
+ XqiaJWRRWwTfgdwrJUFRjU+PKkDUdig6IqcAmlSeLQUtNdi1EAuwRLBREYHUXX45RGPMlSEc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 mlxscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505050092
 
-On Wed 30-04-25 15:59:16, Ryan Roberts wrote:
-> We need to be able to store the preferred folio order associated with a
-> readahead request in the struct file_ra_state so that we can more
-> accurately increase the order across subsequent readahead requests. But
-> struct file_ra_state is per-struct file, so we don't really want to
-> increase it's size.
-> 
-> mmap_miss is currently 32 bits but it is only counted up to 10 *
-> MMAP_LOTSAMISS, which is currently defined as 1000. So 16 bits should be
-> plenty. Redefine it to unsigned short, making room for order as unsigned
-> short in follow up commit.
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+When the device enters the suspend state, it prevents
+HPD interrupts from occurring. To address this, implement
+.hpd_enable() and .hpd_disable() callbacks functions of
+the drm_bridge.
 
-Sure. Feel free to add:
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/fs.h |  2 +-
->  mm/filemap.c       | 11 ++++++-----
->  2 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 016b0fe1536e..44362bef0010 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1042,7 +1042,7 @@ struct file_ra_state {
->  	unsigned int size;
->  	unsigned int async_size;
->  	unsigned int ra_pages;
-> -	unsigned int mmap_miss;
-> +	unsigned short mmap_miss;
->  	loff_t prev_pos;
->  };
->  
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 7b90cbeb4a1a..fa129ecfd80f 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3207,7 +3207,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
->  	DEFINE_READAHEAD(ractl, file, ra, mapping, vmf->pgoff);
->  	struct file *fpin = NULL;
->  	unsigned long vm_flags = vmf->vma->vm_flags;
-> -	unsigned int mmap_miss;
-> +	unsigned short mmap_miss;
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  	/* Use the readahead code, even if readahead is disabled */
-> @@ -3275,7 +3275,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
->  	struct file_ra_state *ra = &file->f_ra;
->  	DEFINE_READAHEAD(ractl, file, ra, file->f_mapping, vmf->pgoff);
->  	struct file *fpin = NULL;
-> -	unsigned int mmap_miss;
-> +	unsigned short mmap_miss;
->  
->  	/* If we don't want any read-ahead, don't bother */
->  	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
-> @@ -3595,7 +3595,7 @@ static struct folio *next_uptodate_folio(struct xa_state *xas,
->  static vm_fault_t filemap_map_folio_range(struct vm_fault *vmf,
->  			struct folio *folio, unsigned long start,
->  			unsigned long addr, unsigned int nr_pages,
-> -			unsigned long *rss, unsigned int *mmap_miss)
-> +			unsigned long *rss, unsigned short *mmap_miss)
->  {
->  	vm_fault_t ret = 0;
->  	struct page *page = folio_page(folio, start);
-> @@ -3657,7 +3657,7 @@ static vm_fault_t filemap_map_folio_range(struct vm_fault *vmf,
->  
->  static vm_fault_t filemap_map_order0_folio(struct vm_fault *vmf,
->  		struct folio *folio, unsigned long addr,
-> -		unsigned long *rss, unsigned int *mmap_miss)
-> +		unsigned long *rss, unsigned short *mmap_miss)
->  {
->  	vm_fault_t ret = 0;
->  	struct page *page = &folio->page;
-> @@ -3699,7 +3699,8 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
->  	struct folio *folio;
->  	vm_fault_t ret = 0;
->  	unsigned long rss = 0;
-> -	unsigned int nr_pages = 0, mmap_miss = 0, mmap_miss_saved, folio_type;
-> +	unsigned int nr_pages = 0, folio_type;
-> +	unsigned short mmap_miss = 0, mmap_miss_saved;
->  
->  	rcu_read_lock();
->  	folio = next_uptodate_folio(&xas, mapping, end_pgoff);
-> -- 
-> 2.43.0
-> 
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+index 0b97b66de577..99ef3f27ae42 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.c
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -2474,6 +2474,22 @@ static const struct drm_edid *anx7625_bridge_edid_read(struct drm_bridge *bridge
+ 	return anx7625_edid_read(ctx);
+ }
+ 
++static void anx7625_bridge_hpd_enable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
++	struct device *dev = ctx->dev;
++
++	pm_runtime_get_sync(dev);
++}
++
++static void anx7625_bridge_hpd_disable(struct drm_bridge *bridge)
++{
++	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
++	struct device *dev = ctx->dev;
++
++	pm_runtime_put_sync(dev);
++}
++
+ static const struct drm_bridge_funcs anx7625_bridge_funcs = {
+ 	.attach = anx7625_bridge_attach,
+ 	.detach = anx7625_bridge_detach,
+@@ -2487,6 +2503,8 @@ static const struct drm_bridge_funcs anx7625_bridge_funcs = {
+ 	.atomic_reset = drm_atomic_helper_bridge_reset,
+ 	.detect = anx7625_bridge_detect,
+ 	.edid_read = anx7625_bridge_edid_read,
++	.hpd_enable = anx7625_bridge_hpd_enable,
++	.hpd_disable = anx7625_bridge_hpd_disable,
+ };
+ 
+ static int anx7625_register_i2c_dummy_clients(struct anx7625_data *ctx,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
