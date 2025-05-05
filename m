@@ -1,139 +1,139 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68209268FF9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267C19D09C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746461692; cv=none; b=ryFODMEGN8Baa3vLJ/uhVDF8Z1zmlGMVlafXnpAa7SQonU391FEFev1ReQ9NlYN+FHxo0mBznJLptEfC+iKDGlm958EwRiVFmAZNMYJZ/pPp7mqZ9bVD3t/uy/qtVYjk743XDY8l1xkqfRQln1JB1J7Gb+PpPARd6+REv/yMpQg=
+	t=1746461716; cv=none; b=IdV3d14VIZOdfRvVOPV7WkydXZOjIfO5faTTOkKaQfMZ40wIqjq3U0HD6VCIEdvRPU4tvQPKX+TZgGoMvD3ww97n4Zz+ZMOVUhP0sipVEW8BqjL1+pBCNN4+muhOPjehBSPQHXn6P6F/EzekcBogkylkOvWz2+8s/AUgOdf1xDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746461692; c=relaxed/simple;
-	bh=uLrzbdahsUmod1H0JDtWBWqN4XVQU2rX5062gbNEroo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WgptEq6eJeCVPwNQYEdppx8ka9S3lr3I6jEe0lOB5QdfaOk5PwiJLa2biG6x4yJK0f42zcHwVRUQ367nRHvPMOkwuOgVNN6h+lf2rKTBvU1Ib/6aoYnnynaoX5qgd/8l4HMGvP/Pk83gUxZ4moawJxaHzDcJPDx6Y61rzMpEvPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=As9c624a; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746461716; c=relaxed/simple;
+	bh=CaA+z1nrMs0DavxR/2ZuXbQ6DU5WdWeh1f05OF2DxvY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ab9R77cl2r2uVR60rRrDi4ub8bsl6vajw71BxuT5Ho2oXykIKHy66PPrwoNFrj5hHVC5S6VCENmwZeDrTmttSMGj/Z4QZrVaq4lO7qtvMzjovDGa3DYk4ZhFzvlnJR7K57DAHhJQTpjczmaZdIbx6kHVsYZQhlJ7vp2EfnXxg3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HaYDNELv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="As9c624a"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c3e7b390so5338774b3a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746461689; x=1747066489; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SWvry4KDZapMEnULakjmTiQHQSX4k/taW1KwMUhJXLA=;
-        b=As9c624aaiMVAKB+VJ4z90aQeuIRSig7YQw6b2NSQ1m+SxpqVnzrzd8tkvAlY0tXEd
-         2Lxo9X1X255L2SvYRrsbuRTKZyOjWFoLuBcfFArQKhXwhU5dTOF4Jk/Zwi9U/eZQpxBn
-         9Gnwf9zhrL/ot9XyIRUkQpJ5p1d6ecqPhaYONVWUoXr81S6wOB5+AX7C5SWWnwIYhs0z
-         V5JyEhexCWicPVKm/vC4Kay72Ubo9AoqKm4J6YF2yyt7rKHApAccXhHd6W5AJif9Gcn1
-         RcplOuXeiSYRMDDD7fsRDnY8MNKHTGhthQkgQWNlqt1ZTq+KGtPLuRNBkyWQTdLb3jSm
-         wq9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746461689; x=1747066489;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SWvry4KDZapMEnULakjmTiQHQSX4k/taW1KwMUhJXLA=;
-        b=mpCxeahfLQWbrt93oyqXLKgxZC6+dVze3W1wsk61yFBhsn00Pq39qCgS1DET4YkvgD
-         oXijpPoNM3Rcy5ab6tC5chkSX82GMvVzzYhd21Gq+Hk2ZViR0zomWn/eLSQUKZuK8VD2
-         YkDq4oYc9+lQC3iEFrL3SAphfikf/u2bJnFQaqmQMVwZtcSBHqyMGIGGewCbINdbJrNN
-         6GR3n5vRdOQ1OPp+36lxf1ZiYMw91PZQHxWB7bMXn+j3Ki5nglO1J1d2/kwPFY8FNjCT
-         p0iy+UJoBMHdCpwGznzsugFk+HF9II7dELESC55e/gnHxHKGK4IeVRemkhmUPsYqqHSB
-         VUSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8cM6kMM9fAi9IekhSStERW4rK+ZJPKy1Hm5COHT/3cCctN55iA5niQ+4R0Ki/ZAGamQoYfHUPq86AIKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvIJJ1QTSHA5KnK9QMxMSgSN/rokDYyhpXAB/3CXMnsXBp3ENN
-	q2APVyBlW3qVQTriIG9R30A2PYPCyml0X5M7DpKSnyw4HsmFdnVwwNoXREzQyg==
-X-Gm-Gg: ASbGncucSLA0/rnRF6dxdF1rKT+IwXNyxLRdbAvCXPq4eB0srKy3h7tgfMdrmalWGIR
-	evAfpOozFSJpbGX7FRpJPhZx/EA2FhuuzTk4Nw/hLsi/02UtDO7AVhi1h9zk9PleIZlz0HIhQTe
-	ZI8bFVx7pMhBu5X0ddAZrlHrRGUihVQUzIfX3dVWOFcpJovuPhe6pSvX1MJX9ha8MPeyvh7N0IY
-	E74z1Yxtge/GVMBG864vNPzKLlzKlg5o5yKtFbkevsVlCm0QfeuUn727ISGj60wbZxJOa1P0Mfi
-	6nwexrUuoS0XRQz8OTjPJ1zh3uzfwLAZgOj/BMMo019rg1SNiRU=
-X-Google-Smtp-Source: AGHT+IGDlihVIhUXhK0fIymH88F2X8FV0rkQuFidNrc3Roi5FkXvbM1MtssO/KpT/pJrJT2EqnO02g==
-X-Received: by 2002:a05:6a00:9095:b0:732:5164:3cc with SMTP id d2e1a72fcca58-7406f17ac90mr10027660b3a.19.1746461688655;
-        Mon, 05 May 2025 09:14:48 -0700 (PDT)
-Received: from thinkpad ([120.60.48.235])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740590a1c09sm6964138b3a.168.2025.05.05.09.14.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 09:14:48 -0700 (PDT)
-Date: Mon, 5 May 2025 21:44:38 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, Lukas Wunner <lukas@wunner.de>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, wilfred.mallawa@wdc.com
-Subject: Re: [PATCH v3 5/5] PCI: qcom: Add support for resetting the slot due
- to link down event
-Message-ID: <tflie6ncttih5jxn5xg3zvktidqv5jaqsnsuryy56qfq7pghxd@ippj4lhsdqme>
-References: <20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org>
- <20250417-pcie-reset-slot-v3-5-59a10811c962@linaro.org>
- <aBjTpglI5_P2Q3Aa@ryzen>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HaYDNELv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746461713;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/6VP/PCYn7O63eQP+Ejrt/yjLZYTj6N/r7MclnN4sWY=;
+	b=HaYDNELv8JyQPPsObFgWvWo4/gab/JkpuZmfTgZdGDQeoU8p2EPT67frUvQUs9s9pcmGT0
+	Et5p/mhU1M1bRiE7o15f9ZbFZoS4CfwaW3xP8fbzuPgaeNjVI5Mb9TlvuAxoHhJ2KPfq5N
+	+Jd/IZGKZBGFUHtixdikRaUJ/b1V3Tg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-82-UVoktGEhOA-W6M_znVdbbw-1; Mon,
+ 05 May 2025 12:15:11 -0400
+X-MC-Unique: UVoktGEhOA-W6M_znVdbbw-1
+X-Mimecast-MFC-AGG-ID: UVoktGEhOA-W6M_znVdbbw_1746461709
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7C76A1800263;
+	Mon,  5 May 2025 16:15:09 +0000 (UTC)
+Received: from [10.22.80.45] (unknown [10.22.80.45])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C15FB18001DA;
+	Mon,  5 May 2025 16:15:06 +0000 (UTC)
+Date: Mon, 5 May 2025 18:15:01 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Eric Biggers <ebiggers@kernel.org>
+cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>, 
+    Mike Snitzer <snitzer@kernel.org>, linux-block@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, 
+    Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Subject: Re: [PATCH v2 2/2] dm: pass through operations on wrapped inline
+ crypto keys
+In-Reply-To: <20250501212320.8281-3-ebiggers@kernel.org>
+Message-ID: <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com>
+References: <20250501212320.8281-1-ebiggers@kernel.org> <20250501212320.8281-3-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBjTpglI5_P2Q3Aa@ryzen>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Mon, May 05, 2025 at 05:05:10PM +0200, Niklas Cassel wrote:
-> Hello Mani,
-> 
-> On Thu, Apr 17, 2025 at 10:46:31PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > @@ -1571,6 +1652,9 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
-> >  		pci_unlock_rescan_remove();
-> >  
-> >  		qcom_pcie_icc_opp_update(pcie);
-> > +	} else if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
-> > +		dev_dbg(dev, "Received Link down event\n");
-> > +		pci_host_handle_link_down(pp->bridge);
-> >  	} else {
-> >  		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
-> >  			      status);
-> 
-> From debugging an unrelated problem, I noticed that dw-rockchip can
-> sometimes have both "link up" bit and "hot reset or link down" bit set
-> at the same time, when reading the status register.
-> 
 
-That's a good catch. It is quite possible that both fields could be set at once,
-so 'if..else' is indeed a bad idea.
 
-> Perhaps the link went down very quickly and then was established again
-> by the time the threaded IRQ handler gets to run.
-> 
-> Your code seems to do an if + else if.
-> 
-> Without knowing how the events work for your platforms, I would guess
-> that it should also be possible to have multiple events set.
-> 
+On Thu, 1 May 2025, Eric Biggers wrote:
 
-I agree.
-
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> In you code, if both LINK UP and hot reset/link down are set,
-> I would assume that you driver will not do the right thing.
+> Make the device-mapper layer pass through the derive_sw_secret,
+> import_key, generate_key, and prepare_key blk-crypto operations when all
+> underlying devices support hardware-wrapped inline crypto keys and are
+> passing through inline crypto support.
 > 
-> Perhaps you want to swap the order? So that link down is handled first,
-> and then link up is handled. (If you convert to "if + if "instead of
-> "if + else if" that is.)
+> Commit ebc4176551cd ("blk-crypto: add basic hardware-wrapped key
+> support") already made BLK_CRYPTO_KEY_TYPE_HW_WRAPPED be passed through
+> in the same way that the other crypto capabilities are.  But the wrapped
+> key support also includes additional operations in blk_crypto_ll_ops,
+> and the dm layer needs to implement those to pass them through.
+> derive_sw_secret is needed by fscrypt, while the other operations are
+> needed for the new blk-crypto ioctls to work on device-mapper devices
+> and not just the raw partitions.
 > 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  drivers/md/dm-table.c | 177 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 177 insertions(+)
+> 
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index a937e1e12482e..0a71bedff81c5 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> +
+> +static int dm_exec_wrappedkey_op(struct blk_crypto_profile *profile,
+> +				 struct dm_wrappedkey_op_args *args)
+> +{
+> +	struct mapped_device *md =
+> +		container_of(profile, struct dm_crypto_profile, profile)->md;
+> +	struct dm_target *ti;
+> +	struct dm_table *t;
+> +	int srcu_idx;
+> +	int i;
+> +
+> +	args->err = -EOPNOTSUPP;
+> +
+> +	t = dm_get_live_table(md, &srcu_idx);
+> +	if (!t)
+> +		goto out;
+> +
+> +	/*
+> +	 * blk-crypto currently has no support for multiple incompatible
+> +	 * implementations of wrapped inline crypto keys on a single system.
+> +	 * It was already checked earlier that support for wrapped keys was
+> +	 * declared on all underlying devices.  Thus, all the underlying devices
+> +	 * should support all wrapped key operations and they should behave
+> +	 * identically, i.e. work with the same keys.  So, just executing the
+> +	 * operation on the first device on which it works suffices for now.
+> +	 */
+> +	for (i = 0; i < t->num_targets; i++) {
+> +		ti = dm_table_get_target(t, i);
+> +		if (!ti->type->iterate_devices)
+> +			continue;
+> +		ti->type->iterate_devices(ti, dm_wrappedkey_op_callback, args);
+> +		if (!args->err)
+> +			break;
+> +	}
 
-Makes sense. I'll incorporate this change in v5, thanks!
+I have a dumb question - if it doesn't matter through which block device 
+do you set up the keys, why do you set them up through a block device at 
+all?
 
-- Mani
+What about making functions that set up the keys without taking block 
+device as an argument, calling these functions directly and bypassing 
+device mapper entirely?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Mikulas
+
