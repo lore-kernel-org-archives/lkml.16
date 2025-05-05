@@ -1,49 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFAF2989AD;
-	Mon,  5 May 2025 22:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7986827D78A;
+	Mon,  5 May 2025 22:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484909; cv=none; b=DAnegFud5vOgx45ZtvLsmH2RDiadvnrEOefY/bIEa4pCOYqqptrwJ2ZdmFADb1mbiW21wdR16xJv8hMDAFn06sNX+nvRpxJ8QvJaUwflZggNMpFw8mfmR7x6D6X9rkv57oHgETd6EqSxvUmgE2Afgje9EE2MvXdhewJcalPYUoA=
+	t=1746484912; cv=none; b=UnjjObl324S/YeIi51A5vRMVPMHKhubxJejk/pihT77uRxky+VC+QPsSB3pwauq3oDpiA5RflZbYd8kx+W84KKkAqcoGonkDUpE0WGwKLBUz6reQDfSChB6MMgIBLI1fp7nQx9LSYpJ385GV9obv3eN47kV28q355+JzCKnTeeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484909; c=relaxed/simple;
-	bh=bHyz8c5tpBcqMqkz5kIdDIq0oeqPCdzWTDQUhNkqZGE=;
+	s=arc-20240116; t=1746484912; c=relaxed/simple;
+	bh=qwYCagQop5BpTjSn3yF121cknD/oRVQ9uIR8lwKt7tc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tYPrd5BbvKwxqOTzlJq8IYEg6drgGM7mDmMokgDe7iZqNEIrqQwWrd5U1jQDeIyjHz3RIaJonZKKP/vHOdI8HA9f7WWgpBSuva2ylg72+TJpaF+bF9S6AcK/ORaLcPwomDY8V0j8mWyjbozDxC6BfuPNAYV7G50dIveFdckj9uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joXavFqo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hanhQhiLzq+mU24JVqxOSECvjZnuBre+sqo6ICamWGDZZkWfaPNGaz0gQvYHimxp8701Rw+WuaYWix0nmbnwxiSZ0x/wwKGLJMOQKfeoS7ovns22/YeUGV07NOKdUe3Hz4QKW1nePnXnTC6SHXeEA8VRXvfVpu8T8XAOWpER0Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnCs/ZAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joXavFqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD561C4CEEE;
-	Mon,  5 May 2025 22:41:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnCs/ZAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE50C4CEEF;
+	Mon,  5 May 2025 22:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484909;
-	bh=bHyz8c5tpBcqMqkz5kIdDIq0oeqPCdzWTDQUhNkqZGE=;
+	s=k20201202; t=1746484911;
+	bh=qwYCagQop5BpTjSn3yF121cknD/oRVQ9uIR8lwKt7tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=joXavFqo/hmo2bDXI4o7T09XGkPpf+mbqeIrfgwkh5VjgnTjfJeVQYKqGBUPAC0sm
-	 vAymu44zg5eUAARoFdPgw5jNGo/sTYvlJ8wAsDnGv6dhJZtZsuoPQGRhti8rpYCia7
-	 FTmJkN8M226OqxJwwgJZsjvF88ufzhM0XcpFfRQx1nbp7HDifxCYQjHx+rnRGu1UdN
-	 IoR64k0N2tVP+N9LhmZdxf2cxoJ9U4LJT50nsJeMJ8D2lBsZcEfjnOpI/2oRyJQ8Vv
-	 LLbdcvQZQm6DKE8SB7Giq5IYVBRx+WBWlKRVzdbqBra+H5scuSywxnVdeZ8sZKqkUJ
-	 i1hGEl8zHTkeA==
+	b=KnCs/ZAVLVNtqy0/bbjiUEdxOmSkbsCRyQOgly99EGkbq9glQZiuGEnxfGa4Co5rZ
+	 ca2Md5FCUxmqmgkuHOnsvmmZfRA5es2kECkdtpCRLt9C3zAxgeTuPjDEsGtVLn5ACe
+	 NqaiF+L4QwMCvl2SnwpIOVvDvCqbHpkjfgAXJQ3ypPkpI6cqNe2jGv1ayftreJBasE
+	 4sVkfO+Jt9B2J2x+5+THjYhHb8aWMSUB6hw9eebmOcn1yGXoaOZbaHZ50HXr8YNb+2
+	 kJ8arJSxlwCsuWm2ZizKMQEFq4rYfe5QIKsIh8UJvPrVKyFFjBlVDaO0GXiFVWwsnm
+	 BxCF+CO9oU4sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Philip Redkin <me@rarity.fan>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Rik van Riel <riel@surriel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
+Cc: Vitalii Mordan <mordan@ispras.ru>,
+	Andi Shyti <andi.shyti@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	x86@kernel.org
-Subject: [PATCH AUTOSEL 6.12 069/486] x86/mm: Check return value from memblock_phys_alloc_range()
-Date: Mon,  5 May 2025 18:32:25 -0400
-Message-Id: <20250505223922.2682012-69-sashal@kernel.org>
+	linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 071/486] i2c: pxa: fix call balance of i2c->clk handling routines
+Date: Mon,  5 May 2025 18:32:27 -0400
+Message-Id: <20250505223922.2682012-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -58,51 +50,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Philip Redkin <me@rarity.fan>
+From: Vitalii Mordan <mordan@ispras.ru>
 
-[ Upstream commit 631ca8909fd5c62b9fda9edda93924311a78a9c4 ]
+[ Upstream commit be7113d2e2a6f20cbee99c98d261a1fd6fd7b549 ]
 
-At least with CONFIG_PHYSICAL_START=0x100000, if there is < 4 MiB of
-contiguous free memory available at this point, the kernel will crash
-and burn because memblock_phys_alloc_range() returns 0 on failure,
-which leads memblock_phys_free() to throw the first 4 MiB of physical
-memory to the wolves.
+If the clock i2c->clk was not enabled in i2c_pxa_probe(), it should not be
+disabled in any path.
 
-At a minimum it should fail gracefully with a meaningful diagnostic,
-but in fact everything seems to work fine without the weird reserve
-allocation.
+Found by Linux Verification Center (linuxtesting.org) with Klever.
 
-Signed-off-by: Philip Redkin <me@rarity.fan>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/94b3e98f-96a7-3560-1f76-349eb95ccf7f@rarity.fan
+Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
+Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
+Link: https://lore.kernel.org/r/20250212172803.1422136-1-mordan@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/init.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-pxa.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 101725c149c42..9cbc1e6057d3c 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -645,8 +645,13 @@ static void __init memory_map_top_down(unsigned long map_start,
- 	 */
- 	addr = memblock_phys_alloc_range(PMD_SIZE, PMD_SIZE, map_start,
- 					 map_end);
--	memblock_phys_free(addr, PMD_SIZE);
--	real_end = addr + PMD_SIZE;
-+	if (!addr) {
-+		pr_warn("Failed to release memory for alloc_low_pages()");
-+		real_end = max(map_start, ALIGN_DOWN(map_end, PMD_SIZE));
-+	} else {
-+		memblock_phys_free(addr, PMD_SIZE);
-+		real_end = addr + PMD_SIZE;
-+	}
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 4d76e71cdd4be..afc1a8171f59e 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -1503,7 +1503,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+ 				i2c->adap.name);
+ 	}
  
- 	/* step_size need to be small so pgt_buf from BRK could cover it */
- 	step_size = PMD_SIZE;
+-	clk_prepare_enable(i2c->clk);
++	ret = clk_prepare_enable(i2c->clk);
++	if (ret)
++		return dev_err_probe(&dev->dev, ret,
++				     "failed to enable clock\n");
+ 
+ 	if (i2c->use_pio) {
+ 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
 -- 
 2.39.5
 
