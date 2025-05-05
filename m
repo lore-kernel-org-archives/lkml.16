@@ -1,84 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7C11A2C25;
-	Mon,  5 May 2025 13:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030D2258CDC;
+	Mon,  5 May 2025 13:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746451428; cv=none; b=qb7lU8/+nsfx73tWVJOgo6dl9F/+HyZqwPPwdnxrUebSxoAwKAuOlsB6YMo8EKFz8gZN3VB2ybqHGFS2LB9cZXQMMrgnyf8t/f8bJ9sy9RrIg4cr7pFR3WN5wrbzqSzDSuSS7VK+vNWvhHeTn3Dq5v5ndDAY9gTDQWPB4RUO8fc=
+	t=1746451436; cv=none; b=hd84qW2qTaCh+uL6/e/zgZGXAK72ycw9SQINHqI6ICrGJ/FtqV718Fe8/G8YYxdTHhjTIRvlVUP1Pp+LpP+/gl4uG6eq4b1SPvdJTWBRUksZIvTtCysa9mJ5031FYkkM5J/s0o6UHpC/bgNI/GqqruebQoRt9s5lwQPMO5U+Tgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746451428; c=relaxed/simple;
-	bh=VKT3aBfYoXH1u6KUim8JNWjyDbLB3L+/vn7uNu6+8DA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h+bnHVFP0PxW4AGpXTpnIZLMVSeOPXZjftVkoBLXElEscvmtSK8ViA7aNKJZwmkZj71jbw8N/WNXWRTvLkYqLjRQZcP+DVAEflRNAD+AdyB1wMza4I4eJxc9NUHwjzzYDN1i/MsdOlpuaVA9Raxm+kxoTqrBm3MOWCKqogvDaoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TXyG+U58; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746451436; c=relaxed/simple;
+	bh=QbkkmaHyuZnAj+y3SRqnQ7lx5DMjnVPYMxS1NGgHdQs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=m81VEVSD/+p2tgS8gPPYkvYnsbWTUl7TbISHyKZCmLMVDOVdCzRoDPZCMtLVV/Zx6iQWrfUHg1G0gQ4O6ttmFOQIR6lfIMZn6JtSxQ4dcIkKjh9dtqMMNniF8/oZvuPU/i9UIXVIEi9SXNcRIyOnArFITtN2lyzEcSzTCipHRl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LKvNofME; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TXyG+U58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0F5C4CEE4;
-	Mon,  5 May 2025 13:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746451427;
-	bh=VKT3aBfYoXH1u6KUim8JNWjyDbLB3L+/vn7uNu6+8DA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TXyG+U58O2CzMBN8byeno/h7NEDMZkyU/O7G2qCRIuNeyoGG04UAWC72Rwy0SM9DD
-	 4U3fpKoRNHA/IvP9jPiZZyyPjp5Eqd0cxzhzkVM+rulF/qsgM+N9WXX5sVnS5Y9mLW
-	 JHf4YwJGtRiM3PHNtOdWbxPAM8KSry9g2GfKF2azEp0DpkjPKZ61ur/sdc4IKEXpCw
-	 U9rfpYQiNunxn1nCH9ma7c5TiOooGRHqy5aVg7bmnWOoOKnpCQRpjN+jBFXSLur9vX
-	 Mz1xHVtsYB8vB8F+nxwD8FDH61kV2pRPk6fPWZ3Zhzh/sB7N5638CKHIYKG4MsSzj5
-	 JXkCa8gMamBhA==
-Date: Mon, 5 May 2025 14:23:40 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: =?UTF-8?B?VMOzdGggSsOhbm9z?= <gomba007@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: chemical: Document SEN0322
-Message-ID: <20250505142340.3c74eb23@jic23-huawei>
-In-Reply-To: <vz5ndf6mojowehi5b6cz6ljsknnatxg6iomghndbt2ffdld3iu@nywmhejv6oge>
-References: <20250428-iio-chemical-sen0322-v1-0-9b18363ffe42@gmail.com>
-	<20250428-iio-chemical-sen0322-v1-1-9b18363ffe42@gmail.com>
-	<9463c3b0-ce67-4c67-a8e9-91b4ffd09a58@kernel.org>
-	<uju5lntp3hzibbrw6ej53xhgvkkpjory74l5et2jspwocuj2xr@bbterxtg3ba7>
-	<20250504192701.6ceb9daf@jic23-huawei>
-	<vz5ndf6mojowehi5b6cz6ljsknnatxg6iomghndbt2ffdld3iu@nywmhejv6oge>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LKvNofME"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746451432;
+	bh=QbkkmaHyuZnAj+y3SRqnQ7lx5DMjnVPYMxS1NGgHdQs=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LKvNofMEwOWJfNjV8DSgo3WC7lqIRzc+emoZdyzefyZvjBPQs7q8EfbnQ4xsS26tY
+	 rfYPeEMTYjDyV786Bfgmp4DoPpoutZP73w1DaZHxMQUNf8awO7oz4Q4N2ytYm3qLme
+	 7ezsdHGfYjuC+/xD83kH38J4JJhtNCiyqgMeeXWbjnWyoIQVNqbkxwMSS9IUvySuL3
+	 J49viIy3cBJEvpa5HE91d5dFVqronQyeBGDSt9sCfQ92R974VUQOzD7/LTMmFP1fuj
+	 uGjlohK3cM6h5aEX+yiJVEyfzFu8DnGaCb6l9G5bNTbXe0ghvfsiAXK13j/xiDP1bG
+	 WP9aKbXs3HKqA==
+Received: from apertis-1.home (2a01cb0892F2D600C8f85CF092d4aF51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0CCDF17E02BE;
+	Mon,  5 May 2025 15:23:51 +0200 (CEST)
+From: Julien Massot <julien.massot@collabora.com>
+Subject: [PATCH 0/4] mt8395/mt6359: Fix several dtb-check errors
+Date: Mon, 05 May 2025 15:23:36 +0200
+Message-Id: <20250505-mt8395-dtb-errors-v1-0-9c4714dcdcdb@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANi7GGgC/x2MuwqAMAwAf0UyG2hrxeqviIOPVDPYSioiiP9uk
+ ZtuuHsgkTAl6IoHhC5OHEMWXRYwb2NYCXnJDkaZWmVwP13V1ricE5JIlITK2cb7WRtvLeTuEPJ
+ 8/89+eN8PmWY0omMAAAA=
+X-Change-ID: 20250505-mt8395-dtb-errors-0847ffc12f44
+To: kernel@collabora.com, Sen Chu <sen.chu@mediatek.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>, 
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
+ Hui Liu <hui.liu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, 
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Tinghan Shen <tinghan.shen@mediatek.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, iommu@lists.linux.dev, 
+ Julien Massot <julien.massot@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Mon, 5 May 2025 08:32:02 +0200
-T=C3=B3th J=C3=A1nos <gomba007@gmail.com> wrote:
+Hi,
+This patch series addresses several dtb-check errors reported for the mt8395-genio-1200-evk.dtb and mt8395-radxa-nio-12l.dtb device trees.
 
-> Hi!
->=20
-> > > > No other properties like supplies or configuration? If so, this cou=
-ld go
-> > > > to trivial-devices.   =20
-> > >=20
-> > > I don't think so, I'll add it as a trivial-device then. =20
-> >=20
-> > vcc-supply? =20
->=20
-> It has no switchable VCC supply.
+The fixes include:
+- Adding the missing #sound-dai-cells property in the mt6397 binding.
+- Allowing up to 5 interrupts in the MediaTek IOMMU binding to support MT8395 properly.
+- Defining the required compatible property in the regulators node of the mt6359.dtsi.
+- Renaming the rtc node to match expected schema naming.
 
-Your board may have no switchable vcc-supply. In general someone else's
-board with this part in use may well have a switchable vcc-supply.
-Ideally the DT binding should support that and the driver should just
-turn it on at probe.  A stub / fake regulator will be provided by
-the regulator core so there is no need for special handling of boards
-that don't have switchable vcc-supply - they will just work.
+Signed-off-by: Julien Massot <julien.massot@collabora.com>
+---
+Julien Massot (4):
+      dt-bindings: mfd: mediatek: mt6397: Add #sound-dai-cells property
+      dt-bindings: iommu: mediatek: mt8195 Accept up to 5 interrupts
+      arm64: dts: mt6359: Add missing 'compatible' property to regulators node
+      arm64: dts: mt6359: Rename RTC node to match binding expectations
 
-Jonathan
+ Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml | 3 ++-
+ Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml  | 3 +++
+ arch/arm64/boot/dts/mediatek/mt6359.dtsi                    | 4 +++-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+---
+base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+change-id: 20250505-mt8395-dtb-errors-0847ffc12f44
 
->=20
-> Regards,
-> J=C3=A1nos
->=20
+Best regards,
+-- 
+Julien Massot <julien.massot@collabora.com>
 
