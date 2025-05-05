@@ -1,49 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9509428315E;
-	Mon,  5 May 2025 22:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D92C1098;
+	Mon,  5 May 2025 22:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485445; cv=none; b=ledNDXJS2BTkCObIBHGESXR9W8lApm6il2D9KZ++wQZlQtqHA/jzNe0BemNRRRByUxTRhLYx68owEHEe5UGmGQBoOOV6GEKuao8ukQscVsETmZhFNpfBkg0T9LWRgXj/p0NCzOy/BwuYbAjL0BKILjKEyJTTlXqWTrfCjqCL9bk=
+	t=1746485369; cv=none; b=s7T2BlJ4GEcgFiuFfvVbPLaoV2+UU8j+J8iDxQv6CP0/C0EWzaghHaFc23rIYmXb18l7N/GzevC73oV5UkKFsqcygaBYa69Jto9FdBnA3KJg4l+zMM82ykKraMDU7ROcJJUGF/QuYl0+U+eVWUvH4UXfapw4CsuogmVsO9zcoXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485445; c=relaxed/simple;
-	bh=BX5rgudpUKVVHJ+0FspUeWY8sH6ulpjR5qiZU5xbyqI=;
+	s=arc-20240116; t=1746485369; c=relaxed/simple;
+	bh=dhyDtTy5Z6RWp/Mjf/6pkAtEPg5sjXajgUbTlAbaBXk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jrn6mFa9z3+O0PZaPaIZYvxSEliNcNbIuTxgHkI5ThsZZum4l+jBMbz+NggoESBxSbztARoeBcXQcfLMnyn6OvLqfX0hmglbeXvoGZOVrHsKqq4SjtTLS+h122hdUp6pN9vb92zTACwjY+EI/bhIOZa27GX8wiDdvMZtrclreqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUKBKrVr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pdWliOu52A3KJP9WAvgXbaMHScgM8qW2HYjQ1lXm3XMlIhNKanuyPNp7DsfMEVABUUYjRJRdr30ZtkA72mbz7iH6nIQCC6xXYGWOFr7mOP/upQrZsymVekF8tlnsgAceEbBE6X49Qjw48VU8HcREyUyN2oFp08pGpPsWkSOnsv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qohPKt0g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUKBKrVr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BEADC4CEE4;
-	Mon,  5 May 2025 22:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qohPKt0g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00E5C4CEE4;
+	Mon,  5 May 2025 22:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485445;
-	bh=BX5rgudpUKVVHJ+0FspUeWY8sH6ulpjR5qiZU5xbyqI=;
+	s=k20201202; t=1746485367;
+	bh=dhyDtTy5Z6RWp/Mjf/6pkAtEPg5sjXajgUbTlAbaBXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QUKBKrVr3kWuVgOYCY7H/H2EMpgZsAh3I6F/5+RF+b4NRJjdgC4w9CYIv0GC7qOll
-	 MUrNG0otM3Z7oSMGNOL9fpMJ7hoMoVml4xOwxEwiAv+ArG+/DQp+Xe5IoQ6Dbp9CvD
-	 yg/mfQhicNb0vE5MrhiIug6sW5flsO6a9/xwvMyCcH4d8mIQQ1yGhInfRsOt3R+9Jd
-	 T8kS1odpXoSGs6Qi83v556/w4lpA7ftehKBHw4Sc26+YgVOki8OGZgfvAl9XlavMQc
-	 aJYYkHwl8POcvPF3knFsLLR1bT5ryB0naJxeyO90AFhitslzEW7bkT/wMAyj5J41WQ
-	 3J9S88+3zg+0Q==
+	b=qohPKt0gb2HMeYcBZ/HFO2zDGdm/azoyprc6O/tDeYC+J1B6Aanvhp8oDBZymeFof
+	 ue6GMMFJ/imo8H/3N112IbUm5rlkrcBelJQDhLsflWh8nCca7h2/eDAnjxr4GO5zNw
+	 YKyaH7wTkQLmY0JlfBkrpDbbKxnFzwDzwz3ctKD/yFJjEOZWNg+Ah6ufyYr+Zgx42g
+	 DadpYn/WGMSTDSo/bGz5DDHh9dYiP8p6XIEJJ6MirO/ji8YAB0b8sJyEd75Spk3CkC
+	 ZONDsbzcdtorvWO5kCJy+V3SUVoSBmQHCbAaFjvUwmMVpby0sj6hHmT5/XMMDdI7l4
+	 rTnp8GTk1lbTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Machata <petrm@nvidia.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Tony Luck <tony.luck@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	menglong8.dong@gmail.com,
-	gnault@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 315/486] vxlan: Join / leave MC group after remote changes
-Date: Mon,  5 May 2025 18:36:31 -0400
-Message-Id: <20250505223922.2682012-315-sashal@kernel.org>
+	bp@alien8.de,
+	linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 293/486] EDAC/ie31200: work around false positive build warning
+Date: Mon,  5 May 2025 18:36:09 -0400
+Message-Id: <20250505223922.2682012-293-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -58,111 +52,103 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Petr Machata <petrm@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d42d543368343c0449a4e433b5f02e063a86209c ]
+[ Upstream commit c29dfd661fe2f8d1b48c7f00590929c04b25bf40 ]
 
-When a vxlan netdevice is brought up, if its default remote is a multicast
-address, the device joins the indicated group.
+gcc-14 produces a bogus warning in some configurations:
 
-Therefore when the multicast remote address changes, the device should
-leave the current group and subscribe to the new one. Similarly when the
-interface used for endpoint communication is changed in a situation when
-multicast remote is configured. This is currently not done.
+drivers/edac/ie31200_edac.c: In function 'ie31200_probe1.isra':
+drivers/edac/ie31200_edac.c:412:26: error: 'dimm_info' is used uninitialized [-Werror=uninitialized]
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+drivers/edac/ie31200_edac.c:412:26: note: 'dimm_info' declared here
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
 
-Both vxlan_igmp_join() and vxlan_igmp_leave() can however fail. So it is
-possible that with such fix, the netdevice will end up in an inconsistent
-situation where the old group is not joined anymore, but joining the new
-group fails. Should we join the new group first, and leave the old one
-second, we might end up in the opposite situation, where both groups are
-joined. Undoing any of this during rollback is going to be similarly
-problematic.
+I don't see any way the unintialized access could really happen here,
+but I can see why the compiler gets confused by the two loops.
 
-One solution would be to just forbid the change when the netdevice is up.
-However in vnifilter mode, changing the group address is allowed, and these
-problems are simply ignored (see vxlan_vni_update_group()):
+Instead, rework the two nested loops to only read the addr_decode
+registers and then keep only one instance of the dimm info structure.
 
- # ip link add name br up type bridge vlan_filtering 1
- # ip link add vx1 up master br type vxlan external vnifilter local 192.0.2.1 dev lo dstport 4789
- # bridge vni add dev vx1 vni 200 group 224.0.0.1
- # tcpdump -i lo &
- # bridge vni add dev vx1 vni 200 group 224.0.0.2
- 18:55:46.523438 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
- 18:55:46.943447 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
- # bridge vni
- dev               vni                group/remote
- vx1               200                224.0.0.2
+[Tony: Qiuxu pointed out that the "populate DIMM info" comment was left
+behind in the refactor and suggested moving it. I deleted the comment
+as unnecessry in front os a call to populate_dimm_info(). That seems
+pretty self-describing.]
 
-Having two different modes of operation for conceptually the same interface
-is silly, so in this patch, just do what the vnifilter code does and deal
-with the errors by crossing fingers real hard.
-
-The vnifilter code leaves old before joining new, and in case of join /
-leave failures does not roll back the configuration changes that have
-already been applied, but bails out of joining if it could not leave. Do
-the same here: leave before join, apply changes unconditionally and do not
-attempt to join if we couldn't leave.
-
-Signed-off-by: Petr Machata <petrm@nvidia.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/all/20250122065031.1321015-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan/vxlan_core.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/edac/ie31200_edac.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 5e7cdd1b806fb..01f66760e1328 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -4340,6 +4340,7 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 			    struct netlink_ext_ack *extack)
- {
- 	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	bool rem_ip_changed, change_igmp;
- 	struct net_device *lowerdev;
- 	struct vxlan_config conf;
- 	struct vxlan_rdst *dst;
-@@ -4363,8 +4364,13 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 	if (err)
- 		return err;
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index 56be8ef40f376..e3635fba63b49 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -405,10 +405,9 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	int i, j, ret;
+ 	struct mem_ctl_info *mci = NULL;
+ 	struct edac_mc_layer layers[2];
+-	struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+ 	void __iomem *window;
+ 	struct ie31200_priv *priv;
+-	u32 addr_decode, mad_offset;
++	u32 addr_decode[IE31200_CHANNELS], mad_offset;
  
-+	rem_ip_changed = !vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip);
-+	change_igmp = vxlan->dev->flags & IFF_UP &&
-+		      (rem_ip_changed ||
-+		       dst->remote_ifindex != conf.remote_ifindex);
-+
- 	/* handle default dst entry */
--	if (!vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip)) {
-+	if (rem_ip_changed) {
- 		u32 hash_index = fdb_head_index(vxlan, all_zeros_mac, conf.vni);
- 
- 		spin_lock_bh(&vxlan->hash_lock[hash_index]);
-@@ -4408,6 +4414,9 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 		}
+ 	/*
+ 	 * Kaby Lake, Coffee Lake seem to work like Skylake. Please re-visit
+@@ -466,19 +465,10 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 		mad_offset = IE31200_MAD_DIMM_0_OFFSET;
  	}
  
-+	if (change_igmp && vxlan_addr_multicast(&dst->remote_ip))
-+		err = vxlan_multicast_leave(vxlan);
-+
- 	if (conf.age_interval != vxlan->cfg.age_interval)
- 		mod_timer(&vxlan->age_timer, jiffies);
+-	/* populate DIMM info */
+ 	for (i = 0; i < IE31200_CHANNELS; i++) {
+-		addr_decode = readl(window + mad_offset +
++		addr_decode[i] = readl(window + mad_offset +
+ 					(i * 4));
+-		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode);
+-		for (j = 0; j < IE31200_DIMMS_PER_CHANNEL; j++) {
+-			populate_dimm_info(&dimm_info[i][j], addr_decode, j,
+-					   skl);
+-			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
+-				 dimm_info[i][j].size,
+-				 dimm_info[i][j].dual_rank,
+-				 dimm_info[i][j].x16_width);
+-		}
++		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode[i]);
+ 	}
  
-@@ -4415,7 +4424,12 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 	if (lowerdev && lowerdev != dst->remote_dev)
- 		dst->remote_dev = lowerdev;
- 	vxlan_config_apply(dev, &conf, lowerdev, vxlan->net, true);
--	return 0;
-+
-+	if (!err && change_igmp &&
-+	    vxlan_addr_multicast(&dst->remote_ip))
-+		err = vxlan_multicast_join(vxlan);
-+
-+	return err;
- }
+ 	/*
+@@ -489,14 +479,22 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	 */
+ 	for (i = 0; i < IE31200_DIMMS_PER_CHANNEL; i++) {
+ 		for (j = 0; j < IE31200_CHANNELS; j++) {
++			struct dimm_data dimm_info;
+ 			struct dimm_info *dimm;
+ 			unsigned long nr_pages;
  
- static void vxlan_dellink(struct net_device *dev, struct list_head *head)
+-			nr_pages = IE31200_PAGES(dimm_info[j][i].size, skl);
++			populate_dimm_info(&dimm_info, addr_decode[j], i,
++					   skl);
++			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
++				 dimm_info.size,
++				 dimm_info.dual_rank,
++				 dimm_info.x16_width);
++
++			nr_pages = IE31200_PAGES(dimm_info.size, skl);
+ 			if (nr_pages == 0)
+ 				continue;
+ 
+-			if (dimm_info[j][i].dual_rank) {
++			if (dimm_info.dual_rank) {
+ 				nr_pages = nr_pages / 2;
+ 				dimm = edac_get_dimm(mci, (i * 2) + 1, j, 0);
+ 				dimm->nr_pages = nr_pages;
 -- 
 2.39.5
 
