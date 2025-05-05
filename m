@@ -1,40 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9822F3657;
-	Mon,  5 May 2025 23:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98D32F3A8E;
+	Mon,  5 May 2025 23:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486881; cv=none; b=mPU78G79Pk7V0MX4/Qqyuo/GYKwKs1Hi6Les/LCVI5dTfeUA7TPpIdgS/E5GXqSDzivVtbydbC/IroGifeno03qAnFRv42dBOrFEHnkwrRqi5Q64Y50iIKCek1p83e9+TZ2LKUtrvScM1FndQOr8ja6jb0Eyq8dA1BMl4UkEOMM=
+	t=1746486893; cv=none; b=IbbWKS6qCjoklZflWKdcKPhuy5GSt1AmclodG1s//d2026vWISdkazQZgXspJJnAP7nXCRCnJ+IqD0rs9q+PEfHcm4jTN4YWlrWOTdX5FJakpJ/xh4P2l+T/dLCsifp75eJB2ddDELEz4L3INvpmFylyAqhUHoGCRMQH3YdtiEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486881; c=relaxed/simple;
-	bh=PnKYlJycEJNsBqUYVwar69zrMIukgXwAyTqvk8IyVXo=;
+	s=arc-20240116; t=1746486893; c=relaxed/simple;
+	bh=k7U5ZkxStIoJ2OWerJ26c5Smu0n+lwx1QJs5hxu2pMw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i8JtoWZOk8DOucHQQDc6CrRxt0fedKxLuJ3eNsg0/vaXj6nHsJMZJMoEFTdgyJ/CsHl6Wh+FBSofpEs1MLViAf4jmEh1vifF22n2NqO0PjedX8solT3ZdAUC4vNZ+/T91pt4vDoM3ub3bQYgyHRHdoOlb6XxaiegXOKgwwtvzxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/bMhvMy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=P+Ipl2+LZXb6bH7V0sIYwkl8qBVqpmo5fTSGzuNq3cyzTOhnRZcm2oFPP1cA+VaRj8ckaHH3+OOj5+V7uwowHycdqH3G4XNj63B8Wdq7Ng3wXSZV9DP0P9DJsS44CwAqznj8tJuGnmIsVB6PTgJEsQnvcp5h+U8k5VPnH6g+kmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kK2k9FLT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/bMhvMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20316C4CEE4;
-	Mon,  5 May 2025 23:14:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kK2k9FLT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44A7C4CEE4;
+	Mon,  5 May 2025 23:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486880;
-	bh=PnKYlJycEJNsBqUYVwar69zrMIukgXwAyTqvk8IyVXo=;
+	s=k20201202; t=1746486893;
+	bh=k7U5ZkxStIoJ2OWerJ26c5Smu0n+lwx1QJs5hxu2pMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b/bMhvMysFeUubTxLJ5XTph2toqEfBGTK2TKWT3sbWNQWH9k0m8NQ/jcluxyVu2yd
-	 YWmWnvq7eAcntoIiTpMQtUNtKzvyP5RDU+Hc92etv1Ouz/JlGZCFM5L4bexHwXw8sa
-	 VHjeBCO8oSuRYq/tr53J6XsqfrPDDsAjZbtUOpgjr0ZTfoQY1BQ/CSu5D8VsQ5DSiL
-	 j1ABVbKWSA0SXfZ7V+6lEDwEb5P3bukgCOOncH5s4PFbPuWAcSoY5nJr2xwEODtFGo
-	 4p34eExMPvxvQbXgITpFWxulpPCZwgi5pJzNDXUWjZgv5pm0Al50fXgO+CvRNaB6DR
-	 oQdD2Ql46Af6w==
+	b=kK2k9FLTxsNu2Rrx6XwooisGfWpTcO3pXFZSfSe9Zj4CSxwUSnfYmX4MCDNyMf9no
+	 IDvjQUevSBVe1wDv+qwNJ2cY19EirBMCJxyO83XvqtTFRUol+12FatHPJ59XhqL3a3
+	 XNjRVvqPsTqDHwG99lTK0I/mNleohAHGoROUsNlcDWK4tKmfEWu2n/EBEEw9ShjJWd
+	 sNr0UYSGHfJxTqaPEnYXI6CFprUJlumeCkHrqEe0OVSqzO9TRJYYSIL81/hX7sM82X
+	 sFMlihL5yexdvmBeO1+IBHsoKeFxLKbPC5quHsxaU4m0Ic8kNmuZI6cG4Lvszh5LEV
+	 IvzqiGkO/p2Ew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Seyediman Seyedarab <imandevel@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.15 040/153] kbuild: fix argument parsing in scripts/config
-Date: Mon,  5 May 2025 19:11:27 -0400
-Message-Id: <20250505231320.2695319-40-sashal@kernel.org>
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Sasha Levin <sashal@kernel.org>,
+	kadlec@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 048/153] netfilter: conntrack: Bound nf_conntrack sysctl writes
+Date: Mon,  5 May 2025 19:11:35 -0400
+Message-Id: <20250505231320.2695319-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -49,80 +57,83 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Seyediman Seyedarab <imandevel@gmail.com>
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-[ Upstream commit f757f6011c92b5a01db742c39149bed9e526478f ]
+[ Upstream commit 8b6861390ffee6b8ed78b9395e3776c16fec6579 ]
 
-The script previously assumed --file was always the first argument,
-which caused issues when it appeared later. This patch updates the
-parsing logic to scan all arguments to find --file, sets the config
-file correctly, and resets the argument list with the remaining
-commands.
+nf_conntrack_max and nf_conntrack_expect_max sysctls were authorized to
+be written any negative value, which would then be stored in the
+unsigned int variables nf_conntrack_max and nf_ct_expect_max variables.
 
-It also fixes --refresh to respect --file by passing KCONFIG_CONFIG=$FN
-to make oldconfig.
+While the do_proc_dointvec_conv function is supposed to limit writing
+handled by proc_dointvec proc_handler to INT_MAX. Such a negative value
+being written in an unsigned int leads to a very high value, exceeding
+this limit.
 
-Signed-off-by: Seyediman Seyedarab <imandevel@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Moreover, the nf_conntrack_expect_max sysctl documentation specifies the
+minimum value is 1.
+
+The proc_handlers have thus been updated to proc_dointvec_minmax in
+order to specify the following write bounds :
+
+* Bound nf_conntrack_max sysctl writings between SYSCTL_ZERO
+  and SYSCTL_INT_MAX.
+
+* Bound nf_conntrack_expect_max sysctl writings between SYSCTL_ONE
+  and SYSCTL_INT_MAX as defined in the sysctl documentation.
+
+With this patch applied, sysctl writes outside the defined in the bound
+will thus lead to a write error :
+
+```
+sysctl -w net.netfilter.nf_conntrack_expect_max=-1
+sysctl: setting key "net.netfilter.nf_conntrack_expect_max": Invalid argument
+```
+
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/config | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ net/netfilter/nf_conntrack_standalone.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/config b/scripts/config
-index ff88e2faefd35..ea475c07de283 100755
---- a/scripts/config
-+++ b/scripts/config
-@@ -32,6 +32,7 @@ commands:
-                              Disable option directly after other option
- 	--module-after|-M beforeopt option
-                              Turn option into module directly after other option
-+	--refresh            Refresh the config using old settings
- 
- 	commands can be repeated multiple times
- 
-@@ -124,16 +125,22 @@ undef_var() {
- 	txt_delete "^# $name is not set" "$FN"
- }
- 
--if [ "$1" = "--file" ]; then
--	FN="$2"
--	if [ "$FN" = "" ] ; then
--		usage
-+FN=.config
-+CMDS=()
-+while [[ $# -gt 0 ]]; do
-+	if [ "$1" = "--file" ]; then
-+		if [ "$2" = "" ]; then
-+			usage
-+		fi
-+		FN="$2"
-+		shift 2
-+	else
-+		CMDS+=("$1")
-+		shift
- 	fi
--	shift 2
--else
--	FN=.config
--fi
-+done
- 
-+set -- "${CMDS[@]}"
- if [ "$1" = "" ] ; then
- 	usage
- fi
-@@ -217,9 +224,8 @@ while [ "$1" != "" ] ; do
- 		set_var "${CONFIG_}$B" "${CONFIG_}$B=m" "${CONFIG_}$A"
- 		;;
- 
--	# undocumented because it ignores --file (fixme)
- 	--refresh)
--		yes "" | make oldconfig
-+		yes "" | make oldconfig KCONFIG_CONFIG=$FN
- 		;;
- 
- 	*)
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 7515705583bcf..770590041c549 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -629,7 +629,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	[NF_SYSCTL_CT_COUNT] = {
+ 		.procname	= "nf_conntrack_count",
+@@ -665,7 +667,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &nf_ct_expect_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ONE,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	[NF_SYSCTL_CT_ACCT] = {
+ 		.procname	= "nf_conntrack_acct",
+@@ -976,7 +980,9 @@ static struct ctl_table nf_ct_netfilter_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	{ }
+ };
 -- 
 2.39.5
 
