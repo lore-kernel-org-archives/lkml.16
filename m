@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A2E258CD7;
-	Mon,  5 May 2025 23:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F62F7C5B;
+	Mon,  5 May 2025 23:19:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487183; cv=none; b=dHPivz1ZCn6vNRzf0f42efLsoDJjEfuTqhuYP/ySIZfIjJT4z4QCL1+RALMTRMyeSa9PbdKa2J/Uf1eYnRo5HF5DAjxkHGNv4X8wxq72iASYWNqE69XYyfbYLfS/5FrZ2xV7ywhuKnnouDomDoIqEB93Q96hXwAS6PR6Yy7tK+E=
+	t=1746487178; cv=none; b=ccX8Nt+vSJP3GnDx9HqBteoH4yy2s2AwIg3Q4rpVDKfBBjRFbPzG5jGl2sFacgZ58as80L4O5dKbURdsjrI+e4SnHW9orDt9wodctRTGXB4qQmdeF7IEUifUonhjBlcOCGjHd+992TC9CH0WG+xjAWlyC94YuXV755KaXASubRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487183; c=relaxed/simple;
-	bh=IAzJGTfTulF1JxeTI5O0x8ljpx/EV1p4ipR4EZ3Kisc=;
+	s=arc-20240116; t=1746487178; c=relaxed/simple;
+	bh=quJUHlrNvh6BDlXRUEyzXmngo9dhRmrwthDK3udwpDE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XjaO26yAcQ3v69xv0cwLjX3aKpdU+1oj0ubcRYI+rrtOBgJ8YMuKpNHTNsRBVNhKkMVXhbUNDWJ3/WHiOl3Il8wjnAMSei7eRBbXNTYx26BQ+ypynqz0jG/Azipd7rKFzm5jiLnTbAyYqxsTjAHe8BimNgXrTAQZloJPDLIdLgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBVXtjSv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iikSTEVTlIy4tWS5+MEimvATaNfibs1Mhq3bpG6ISiiI48tg7CFvQ4qlJ/o8HkqgLXrQA8mjRuDfpREkt6a2yb/aNE1JoECT/rj5qivEEE5hSAWVHxXNr3bga+0+5+xLTkPFNIBhprGdldvUf9YNaS8yNAuqyh/2r0UbiKQO8wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TZiLTBL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBVXtjSv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4289C4CEE4;
-	Mon,  5 May 2025 23:19:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TZiLTBL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56763C4CEE4;
+	Mon,  5 May 2025 23:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487183;
-	bh=IAzJGTfTulF1JxeTI5O0x8ljpx/EV1p4ipR4EZ3Kisc=;
+	s=k20201202; t=1746487178;
+	bh=quJUHlrNvh6BDlXRUEyzXmngo9dhRmrwthDK3udwpDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CBVXtjSvix4+PfVt+7JadpUVzwKhveV8tq4LGsjggpHud358fxN5PByjz59iaQ07l
-	 7ao9jGC9j9PEmJdojv3vBB7mG7ZZVnaszMSqqw72+w/Bi97SyhKLoBGXwn+EdMedkT
-	 b34eXtnDNW5Z9lnn54ru/OxU+tINE+lggCN9KFrC4WYfCJjW4PNHD5zKQEh77Kp+on
-	 CtRIlTURYTdiBcW5n5zWbrUlvWYqzaLiLBiU91Dyhpoj1ttp8WYsNtEfSJMPNyS8vB
-	 5cUAPMRCFcnLTuYc1M6bij/duGgwR4JkBNZfTtrAWhq+bMQUtHMi5+P4sDrhjX8EJh
-	 AKzTtWZtbzAsQ==
+	b=TZiLTBL+DevRdyKwhDBiA3n53db4qCVZDwQQnG18NDpEMMkNXigNfcsJp2UyHlNJr
+	 ycaonNp7MXC2WFkMlaC3rOA8SEPlapprJRXOlSEm50SpU9i1ZASA1T4++xypYPyLiP
+	 pyFXCRJyJFX2mE5qx3oFYsYnOYXWJ17WHpavn3xG56/lk2lIXEDBh3DWp+eq73DyGd
+	 qw1duWXExSB7poSom1gg9WBYQvm7mCzVEtk2KRXiabxlIBpgcWAnJidkaqIVrPTxmv
+	 dJW3AdP+E+5v5+YCxmiiFH1R1iaP/gAzD+XmGQSP6hHu5yqXExZ/uJnDVvLnSrh+8N
+	 MGKyHvtrL8g6w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Victor Lu <victorchengchi.lu@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Markus Elfring <elfring@users.sourceforge.net>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	tao.zhou1@amd.com,
-	Hawking.Zhang@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.10 046/114] drm/amdgpu: Do not program AGP BAR regs under SRIOV in gfxhub_v1_0.c
-Date: Mon,  5 May 2025 19:17:09 -0400
-Message-Id: <20250505231817.2697367-46-sashal@kernel.org>
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 043/114] media: c8sectpfe: Call of_node_put(i2c_bus) only once in c8sectpfe_probe()
+Date: Mon,  5 May 2025 19:17:06 -0400
+Message-Id: <20250505231817.2697367-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -56,43 +51,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Victor Lu <victorchengchi.lu@amd.com>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit 057fef20b8401110a7bc1c2fe9d804a8a0bf0d24 ]
+[ Upstream commit b773530a34df0687020520015057075f8b7b4ac4 ]
 
-SRIOV VF does not have write access to AGP BAR regs.
-Skip the writes to avoid a dmesg warning.
+An of_node_put(i2c_bus) call was immediately used after a pointer check
+for an of_find_i2c_adapter_by_node() call in this function implementation.
+Thus call such a function only once instead directly before the check.
 
-Signed-off-by: Victor Lu <victorchengchi.lu@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c b/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
-index fad887a668866..7949a87b03a84 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
-@@ -70,12 +70,12 @@ static void gfxhub_v1_0_init_system_aperture_regs(struct amdgpu_device *adev)
- {
- 	uint64_t value;
+diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+index b7e0ec265b70c..6e3b3643a2cdb 100644
+--- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
++++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
+@@ -811,13 +811,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
+ 		}
+ 		tsin->i2c_adapter =
+ 			of_find_i2c_adapter_by_node(i2c_bus);
++		of_node_put(i2c_bus);
+ 		if (!tsin->i2c_adapter) {
+ 			dev_err(&pdev->dev, "No i2c adapter found\n");
+-			of_node_put(i2c_bus);
+ 			ret = -ENODEV;
+ 			goto err_clk_disable;
+ 		}
+-		of_node_put(i2c_bus);
  
--	/* Program the AGP BAR */
--	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BASE, 0);
--	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BOT, adev->gmc.agp_start >> 24);
--	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_TOP, adev->gmc.agp_end >> 24);
--
- 	if (!amdgpu_sriov_vf(adev) || adev->asic_type <= CHIP_VEGA10) {
-+		/* Program the AGP BAR */
-+		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BASE, 0);
-+		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BOT, adev->gmc.agp_start >> 24);
-+		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_TOP, adev->gmc.agp_end >> 24);
-+
- 		/* Program the system aperture low logical page number. */
- 		WREG32_SOC15_RLC(GC, 0, mmMC_VM_SYSTEM_APERTURE_LOW_ADDR,
- 			min(adev->gmc.fb_start, adev->gmc.agp_start) >> 18);
+ 		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
+ 
 -- 
 2.39.5
 
