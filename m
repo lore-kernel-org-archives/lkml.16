@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9367D3ABCED;
-	Mon,  5 May 2025 23:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C13D3AAC9B;
+	Mon,  5 May 2025 23:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487133; cv=none; b=mWd+tt4KXwsLfLgxOM9XiFkkCnP5PNJiGfwhPEir9RELGAIZSbVxOt1hHvMksetka0d8u3QZhw2PnlSZI2rjnLE706IoXvWVhUl11ys2P6TKAdbz914uq7MxxYzFJ+gvAzygYpR0rJal90COfesDSk5+4o6zntfSBiTOuNcI4XE=
+	t=1746487121; cv=none; b=sG2uofVXC6yc/xi23nubqrUhMkNyzwkuyTHMYqFL0fjYFyi/K1jg8/OUSmSVOoSYxnNHeE/VR+EDZWRomISwvnxZOJScSatK69SC8T64IKFgSj10u5jJAxUODguCX6YX5B7FXxITT6vh5eMCfdjCN6+3Dcl6tIXoPeN7N7UPcqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487133; c=relaxed/simple;
-	bh=nIX6dAu7nHokct7Zpqf++O3ihvA03NDTXHAFE7Cw9OE=;
+	s=arc-20240116; t=1746487121; c=relaxed/simple;
+	bh=Z0ttmRYVVdxOD0UDIR1vXxrkZblPfNce2r7moqOmxgw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lbp6+gzwk+rsw6hVFYUV5kNJn/2wz33Y8get74A2c8cikDm51go1Xdq6cKsD0GZjEHzSYm6NTZHFzjoyOCFO7myrQXRAKMMvUhOZPEaNhKD8WDMrE7IgWq7SHpFBTKjpQMVSwwBv1Gg5RSAneZ8MvVWxKFrk3iCyOYh2wHzAXV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tqyvnmex; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dpfM4Cc1vJBFTlywcrQNJiJMOTFPWXVFovGZ8QUtH79tAI7X6Ul7R29w5ahA388u+nEh7/OllOsGQ1nZugbJuyYL0Rwd+MhoYHQ69cOv5ALJ50BRWEGObq31Bg91LFiLaiZp0bAJU6zWc6haJNXPG02krbJ1yQEAkssuUVgdQAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KHsvez8f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tqyvnmex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03B4C4CEED;
-	Mon,  5 May 2025 23:18:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KHsvez8f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E63DC4CEEE;
+	Mon,  5 May 2025 23:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487133;
-	bh=nIX6dAu7nHokct7Zpqf++O3ihvA03NDTXHAFE7Cw9OE=;
+	s=k20201202; t=1746487119;
+	bh=Z0ttmRYVVdxOD0UDIR1vXxrkZblPfNce2r7moqOmxgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tqyvnmex8g7oJanCw2CdyTSEqei2pnQqxOFykV7JDUIU9iMG3VssJL0LXRv4ardqL
-	 WGuk+D4Wz+MBSioyWSp6xApVpdXdY9XuBDBMdLx01nbryFC3YsJzzHWJ/vCro/XP4c
-	 xLs0cuCk9K/E4mF2yzkn1hMTxxIuNSS0wdZKpCwS6jAsa67CAf5k7ogiZGjZyeawPm
-	 9i82iaq04uXuKmiaRDacslO84v3kU6jHsXNDw3haAS4lG+qnJdtoYBo3JUIP3Um0JJ
-	 zZ045ZYzf76cPQELQb6Ocj3MC1PQZIb5fkoOHwdpkRwy2fzW68JX+rDvrJrPQJG7VN
-	 ilVfkLp5CMsag==
+	b=KHsvez8fy9aXjUDjH4N1L3stkUclTwkk4SOux8JsMyJ+jcTANzXxacpGgLP2KNTYi
+	 4WA11sdc4Y7Sl8yaA7xtthbgqYSxopbssUbo+isdh0d9+oyhdokD/lAnvmmSdyb76R
+	 P3N4CUxWYlM6hd/VURPz3sJ7q+UZ66JZMe/R2w4toJ/vpw3m8iF1SjTwTTwsjc21+I
+	 UvVhj0MA9oKhLKn/3QDyQYWVYE5/ClGGinXJ6uUFMAPbtIFfjwiBNskFFuMw9fd+l+
+	 p+Fy9dO6KpIExNyx/vmONxk76JB/m6ltqL70hY6oVp+T/EPkZx+NX0SSNZA3uWa49V
+	 qoHyZYbR+sLsw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Erick Shepherd <erick.shepherd@ni.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 016/114] mmc: host: Wait for Vdd to settle on card power off
-Date: Mon,  5 May 2025 19:16:39 -0400
-Message-Id: <20250505231817.2697367-16-sashal@kernel.org>
+	chuck.lever@oracle.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 008/114] SUNRPC: rpc_clnt_set_transport() must not change the autobind setting
+Date: Mon,  5 May 2025 19:16:31 -0400
+Message-Id: <20250505231817.2697367-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -51,44 +59,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Erick Shepherd <erick.shepherd@ni.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 31e75ed964582257f59156ce6a42860e1ae4cc39 ]
+[ Upstream commit bf9be373b830a3e48117da5d89bb6145a575f880 ]
 
-The SD spec version 6.0 section 6.4.1.5 requires that Vdd must be
-lowered to less than 0.5V for a minimum of 1 ms when powering off a
-card. Increase wait to 15 ms so that voltage has time to drain down
-to 0.5V and cards can power off correctly. Issues with voltage drain
-time were only observed on Apollo Lake and Bay Trail host controllers
-so this fix is limited to those devices.
+The autobind setting was supposed to be determined in rpc_create(),
+since commit c2866763b402 ("SUNRPC: use sockaddr + size when creating
+remote transport endpoints").
 
-Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20250314195021.1588090-1-erick.shepherd@ni.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-pci-core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/sunrpc/clnt.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-index 67d9dd2165ec7..3769595693531 100644
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -666,8 +666,12 @@ static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 7ec5b0bc48ebf..0a4b4870c4d99 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -273,9 +273,6 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct rpc_clnt *clnt,
+ 	old = rcu_dereference_protected(clnt->cl_xprt,
+ 			lockdep_is_held(&clnt->cl_lock));
  
- 	sdhci_set_power(host, mode, vdd);
- 
--	if (mode == MMC_POWER_OFF)
-+	if (mode == MMC_POWER_OFF) {
-+		if (slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_APL_SD ||
-+		    slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_BYT_SD)
-+			usleep_range(15000, 17500);
- 		return;
-+	}
- 
- 	/*
- 	 * Bus power might not enable after D3 -> D0 transition due to the
+-	if (!xprt_bound(xprt))
+-		clnt->cl_autobind = 1;
+-
+ 	clnt->cl_timeout = timeout;
+ 	rcu_assign_pointer(clnt->cl_xprt, xprt);
+ 	spin_unlock(&clnt->cl_lock);
 -- 
 2.39.5
 
