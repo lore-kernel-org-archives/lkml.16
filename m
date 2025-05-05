@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF36D3745BA;
-	Mon,  5 May 2025 23:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30904239E98;
+	Mon,  5 May 2025 23:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486368; cv=none; b=RxcfTj/Zy392IwD+2UVNNq3/5yUwUfH6cVPCCrZgupfdMX4ji/Z5aTWVqutaWEkne5WjVAqlhLoZNiX8B3LbaQhd9wrjuERMtvHI9805Ndr1EofzFRxU2kQ1myPLwe4+7t1H8I+jIEmL5jOV0w2BIV3sofQjc9k00hZQtcmkyJg=
+	t=1746486365; cv=none; b=OWIU+kpg+FgF4+Ca99csgsTp8Tt3eXmn4XsmYr8JNbrtC3xtzPS5bU7h9bbul63xlazlkG6eFWw47aop5zO7itKVsNAyS2q2oFk35AI9V6PVQdkb+czZJwJVQDoTXtpHduyHIxIre4aRFm/7SdmvdBg+qmTPTJmfb1Ggb3aoO1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486368; c=relaxed/simple;
-	bh=1KuU1cq5++A1+lXLHU5Be7SugZDxVeCdiTW24JTYsk0=;
+	s=arc-20240116; t=1746486365; c=relaxed/simple;
+	bh=y/59NUCT+emsbMk77W79CZDerhVRoMowu5usETn5qbM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IAIKOU2h0lrQHqyzYM72Rwt83hPNziLLWEO6ceWP05OYi5sN5IPEm3XcawtXseax779KQiMw3rG7kVpzMzYuuxw6pTD7m/Fqsgn6Pc0sIoLwxyjDrVuV9dXaZQI6KEEbFBecnOqmnXHjYmYYdALANXpaA77yu3nsCdbLvluycH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8Xsg/JF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SWJcNVD5nUBxgcEtgtqhajYQAVVT36JHi7TOwsSiII5N3ZdaMKqrRpxO0qpbSVXMZYaDgxnfhdX/IZ9SIdDVraen1cARO/maz49kdUn/y6c88fgZa2moeXnimPIRm8NcQBhFD79wpT722p1c+evYfCUGJ97F6exCaS/68XStIjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGQJAx8m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8Xsg/JF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A337CC4CEED;
-	Mon,  5 May 2025 23:06:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGQJAx8m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF5CC4CEEE;
+	Mon,  5 May 2025 23:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486367;
-	bh=1KuU1cq5++A1+lXLHU5Be7SugZDxVeCdiTW24JTYsk0=;
+	s=k20201202; t=1746486365;
+	bh=y/59NUCT+emsbMk77W79CZDerhVRoMowu5usETn5qbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u8Xsg/JFdMIXbCId0ovt0fK5hngFM3y94siw5Jj43q9GTDsUgVV3aAWHUlySDthim
-	 6KqvsO0V+yTuDDOJC1Yx3hv813JM0tRn/fVfTECpf3MnHT0kDiCm3QjxS41UMOitIw
-	 FovB8o3p09UTKt21ux27cYXbI0uMmrzP9c6EkD2BvWrl/5MiuDYdKSjbr9rqIotFQL
-	 7w6zS//+CCzT/mSHH65leURC47n9xhUG/LH3O8k9Nqd54F0hgn3daqQtjemh1MbbZ+
-	 oy/EjdqoW/T8G6uUyVoan3KW7kc/WAE8E5SeJtZwFYLTemrFc3oYK66hHh8n+oqptD
-	 iVQBcjjt32iBQ==
+	b=fGQJAx8m6coigvNBBgslF8/B8BFm6JEa9bz6M4NyxrAXVfa0+bbCdRhdg3Y/rapHk
+	 g1XjbqH8ZYeYkcVQ286TsvphYfKZw+f49H8RjbCohh6uJSnEUprzbP8UIjQ5mfVpSi
+	 JcYus8G1WIacYEUFNDujx3YrWEM6Cl6iW61S48Oc189OIe/sO7qCvjLrNHX1noupQ5
+	 KhLynoez8y64dV8hRXx8CkwWFFP/VNO3v5bUvBufwrIJBHCKN04MOcuZx58bKPF6na
+	 YHLc1maVGrYbSNE1Snq2DUrJOSdfXj+G76VJ+S6IYIhZUZQFkUdXuYLoaZ3t1qdhnG
+	 FpHDZQQ1XqYTA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nicolas Escande <nico.escande@gmail.com>,
-	Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+Cc: Sean Anderson <sean.anderson@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 286/294] wifi: ath12k: fix ath12k_hal_tx_cmd_ext_desc_setup() info1 override
-Date: Mon,  5 May 2025 18:56:26 -0400
-Message-Id: <20250505225634.2688578-286-sashal@kernel.org>
+	michal.simek@amd.com,
+	linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 284/294] spi: zynqmp-gqspi: Always acknowledge interrupts
+Date: Mon,  5 May 2025 18:56:24 -0400
+Message-Id: <20250505225634.2688578-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,39 +52,70 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Nicolas Escande <nico.escande@gmail.com>
+From: Sean Anderson <sean.anderson@linux.dev>
 
-[ Upstream commit df11edfba49e5fb69f4c9e7cb76082b89c417f78 ]
+[ Upstream commit 89785306453ce6d949e783f6936821a0b7649ee2 ]
 
-Since inception there is an obvious typo laying around in
-ath12k_hal_tx_cmd_ext_desc_setup(). Instead of initializing + adding
-flags to tcl_ext_cmd->info1, we initialize + override. This will be needed
-in the future to make broadcast frames work with ethernet encapsulation.
+RXEMPTY can cause an IRQ, even though we may not do anything about it
+(such as if we are waiting for more received data). We must still handle
+these IRQs because we can tell they were caused by the device.
 
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-
-Signed-off-by: Nicolas Escande <nico.escande@gmail.com>
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-Link: https://patch.msgid.link/20250127071306.1454699-1-nico.escande@gmail.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Link: https://patch.msgid.link/20250116224130.2684544-6-sean.anderson@linux.dev
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath12k/dp_tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-zynqmp-gqspi.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath12k/dp_tx.c b/drivers/net/wireless/ath/ath12k/dp_tx.c
-index 25a9d4c4fae76..474e0d4d406ea 100644
---- a/drivers/net/wireless/ath/ath12k/dp_tx.c
-+++ b/drivers/net/wireless/ath/ath12k/dp_tx.c
-@@ -118,7 +118,7 @@ static void ath12k_hal_tx_cmd_ext_desc_setup(struct ath12k_base *ab, void *cmd,
- 			       le32_encode_bits(ti->data_len,
- 						HAL_TX_MSDU_EXT_INFO1_BUF_LEN);
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index 3503e6c0a5c98..b5deb4fe3b832 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -799,7 +799,6 @@ static void zynqmp_process_dma_irq(struct zynqmp_qspi *xqspi)
+ static irqreturn_t zynqmp_qspi_irq(int irq, void *dev_id)
+ {
+ 	struct zynqmp_qspi *xqspi = (struct zynqmp_qspi *)dev_id;
+-	irqreturn_t ret = IRQ_NONE;
+ 	u32 status, mask, dma_status = 0;
  
--	tcl_ext_cmd->info1 = le32_encode_bits(1, HAL_TX_MSDU_EXT_INFO1_EXTN_OVERRIDE) |
-+	tcl_ext_cmd->info1 |= le32_encode_bits(1, HAL_TX_MSDU_EXT_INFO1_EXTN_OVERRIDE) |
- 				le32_encode_bits(ti->encap_type,
- 						 HAL_TX_MSDU_EXT_INFO1_ENCAP_TYPE) |
- 				le32_encode_bits(ti->encrypt_type,
+ 	status = zynqmp_gqspi_read(xqspi, GQSPI_ISR_OFST);
+@@ -814,27 +813,24 @@ static irqreturn_t zynqmp_qspi_irq(int irq, void *dev_id)
+ 				   dma_status);
+ 	}
+ 
+-	if (mask & GQSPI_ISR_TXNOT_FULL_MASK) {
++	if (!mask && !dma_status)
++		return IRQ_NONE;
++
++	if (mask & GQSPI_ISR_TXNOT_FULL_MASK)
+ 		zynqmp_qspi_filltxfifo(xqspi, GQSPI_TX_FIFO_FILL);
+-		ret = IRQ_HANDLED;
+-	}
+ 
+-	if (dma_status & GQSPI_QSPIDMA_DST_I_STS_DONE_MASK) {
++	if (dma_status & GQSPI_QSPIDMA_DST_I_STS_DONE_MASK)
+ 		zynqmp_process_dma_irq(xqspi);
+-		ret = IRQ_HANDLED;
+-	} else if (!(mask & GQSPI_IER_RXEMPTY_MASK) &&
+-			(mask & GQSPI_IER_GENFIFOEMPTY_MASK)) {
++	else if (!(mask & GQSPI_IER_RXEMPTY_MASK) &&
++			(mask & GQSPI_IER_GENFIFOEMPTY_MASK))
+ 		zynqmp_qspi_readrxfifo(xqspi, GQSPI_RX_FIFO_FILL);
+-		ret = IRQ_HANDLED;
+-	}
+ 
+ 	if (xqspi->bytes_to_receive == 0 && xqspi->bytes_to_transfer == 0 &&
+ 	    ((status & GQSPI_IRQ_MASK) == GQSPI_IRQ_MASK)) {
+ 		zynqmp_gqspi_write(xqspi, GQSPI_IDR_OFST, GQSPI_ISR_IDR_MASK);
+ 		complete(&xqspi->data_completion);
+-		ret = IRQ_HANDLED;
+ 	}
+-	return ret;
++	return IRQ_HANDLED;
+ }
+ 
+ /**
 -- 
 2.39.5
 
