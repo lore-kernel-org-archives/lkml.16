@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A1D381E95;
-	Mon,  5 May 2025 23:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ABB381EB9;
+	Mon,  5 May 2025 23:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486023; cv=none; b=Kp+uM5TxthQ+PqCr5nILVZ3nvGstSlQSg+fKSSIPba3QCDJi2YYU/7ua6Lb+qNjeM28sj47KwhFoXkd1C4gSkfrDGWiCGVmqSgS4qBis6THfFRpUIN21F7cOhiPQn8ksjSQxZ0le5zXqrk4HnpgvvATc7ERvBm6LLgrhTZBjbec=
+	t=1746486026; cv=none; b=r0a6OV6Wr1uYeyLPjoUlLMOs5XW+IsyW7wZh1brQm0gY7KpkFIOARX3F9Z2Wg8jPRI+CHGE1gFTlljmSR9xBSIf1sXCl4NgDoFzBwYu0XGvfEAKR2wYtDfTm5M64JcWnMvdjlIlqFTK8TpX2zUep5iCtnqGaMaYvOPD07xdBBTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486023; c=relaxed/simple;
-	bh=ZchkXoDyD7r8OEYD1u42HjJUEz45xF48xeTC4e2IYxo=;
+	s=arc-20240116; t=1746486026; c=relaxed/simple;
+	bh=iVcHR6MNU2Ms51/2agHFm39aFyCxn2z/dB4SZocitH4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A/yXYb7lG7QvwQsuGMPtB0p7pLVOEhifZkyYE6yNH8BbeLmcDfLZqsZnUsnk45TaDLkicsAporSdwaL/5Ryk3uyzYsXxIJOUQc8KoLMw/kwinSuIW4wKZ8/2nE87/gNdUIhBmey2/TSqsk+kyQUfHTDih+AsUMXT9WaXkw6iHn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1U912O0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HIHDLY78EgcF4bsRIK9ALCe9IOdRt3K9RCNqYbNel6Xhq5iTB6wdL4I+6Ys9V2XFJoC1g2XnUC384Jj2ezQCEtfAE75YpuYqtlEw/K55TRGq9oCy08K/lmgiREU/hb2c/JzS/EeRdRPnIRNOdOcGFiXXoFI4RhMn3XIjG9jmAL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMkdAe0Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1U912O0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E0EC4CEED;
-	Mon,  5 May 2025 23:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMkdAe0Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3BEC4CEED;
+	Mon,  5 May 2025 23:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486022;
-	bh=ZchkXoDyD7r8OEYD1u42HjJUEz45xF48xeTC4e2IYxo=;
+	s=k20201202; t=1746486025;
+	bh=iVcHR6MNU2Ms51/2agHFm39aFyCxn2z/dB4SZocitH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n1U912O05HaJXatmkLPBFgNMpwPNbNeAhOzB0etgjrtR307hY2v2quGHAViILiKYX
-	 RpSPrqjnPHgkGA8Gb04rwFyZVcZuesI0W5nVkqAbH8P6AZGznl7CR6x/hx9dBGCU4A
-	 VLvXN37DwzspZ5dTTtIHteIPCjByKCPxoMKiwflgC8txMaaFvhOhuWobpo6GizcQ4l
-	 2gJSoC2xUiuqUFhLk/W9nAWC3MHFpI49yanIC4JZadJkyILTdpIXUi3KvkChfS4/63
-	 Hb99yrzvw+hB3v2wiE2pttxI/njipAzxvocEAb8mk7aQVy/XScHT/R3/FlLazEPx3N
-	 TU50fjZ8pnF4g==
+	b=ZMkdAe0QyhLA+NadSVdrVr6Gl9FTRi/TQTuQb8/ZGP5lrNS85ahAWCBE3IyoTjidR
+	 cwRRMhPnRG2/mqRbcAPjCcBQargrzJTULHQLwUmZtB4KOzXznrc7EzFTvSsfZ9FaUF
+	 YeVVh01cgtDczSuxqmypzx+4NRjfRWiKXYNvOmZ8ZPu9zuqy0dCdcJ2kvr544OZMis
+	 NHjSWAa+9yU/Qgx8rf5SHHI5F9N6WQDEHqG1sYV6FpfjsJ7uiru70vEg6r+lOuPBeJ
+	 /DmIVL52Q1C/dVgwGrzIwzt913CqE6m3M6V9Py+bNAUjfV7H+AX5VrjWNnwGmyZFdX
+	 c7KCXh+qA+wqA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+Cc: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
+	Luca Weiss <luca@lucaweiss.eu>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	sumit.semwal@linaro.org,
-	dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 6.6 115/294] drm/gem: Test for imported GEM buffers with helper
-Date: Mon,  5 May 2025 18:53:35 -0400
-Message-Id: <20250505225634.2688578-115-sashal@kernel.org>
+	mathieu.poirier@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 117/294] remoteproc: qcom_wcnss: Handle platforms with only single power domain
+Date: Mon,  5 May 2025 18:53:37 -0400
+Message-Id: <20250505225634.2688578-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -59,83 +54,107 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Zimmermann <tzimmermann@suse.de>
+From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
 
-[ Upstream commit b57aa47d39e94dc47403a745e2024664e544078c ]
+[ Upstream commit 65991ea8a6d1e68effdc01d95ebe39f1653f7b71 ]
 
-Add drm_gem_is_imported() that tests if a GEM object's buffer has
-been imported. Update the GEM code accordingly.
+Both MSM8974 and MSM8226 have only CX as power domain with MX & PX being
+handled as regulators. Handle this case by reodering pd_names to have CX
+first, and handling that the driver core will already attach a single
+power domain internally.
 
-GEM code usually tests for imports if import_attach has been set
-in struct drm_gem_object. But attaching a dma-buf on import requires
-a DMA-capable importer device, which is not the case for many serial
-busses like USB or I2C. The new helper tests if a GEM object's dma-buf
-has been created from the GEM object.
-
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Anusha Srivatsa <asrivats@redhat.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250226172457.217725-2-tzimmermann@suse.de
+Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+[luca: minor changes]
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+Link: https://lore.kernel.org/r/20250206-wcnss-singlepd-v2-2-9a53ee953dee@lucaweiss.eu
+[bjorn: Added missing braces to else after multi-statement if]
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_gem.c |  4 ++--
- include/drm/drm_gem.h     | 14 ++++++++++++++
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/remoteproc/qcom_wcnss.c | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 44a948b80ee14..deb93f78ce344 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -322,7 +322,7 @@ int drm_gem_dumb_map_offset(struct drm_file *file, struct drm_device *dev,
- 		return -ENOENT;
+diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
+index 90de22c81da97..153260b4e2eb4 100644
+--- a/drivers/remoteproc/qcom_wcnss.c
++++ b/drivers/remoteproc/qcom_wcnss.c
+@@ -117,10 +117,10 @@ static const struct wcnss_data pronto_v1_data = {
+ 	.pmu_offset = 0x1004,
+ 	.spare_offset = 0x1088,
  
- 	/* Don't allow imported objects to be mapped */
--	if (obj->import_attach) {
-+	if (drm_gem_is_imported(obj)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1155,7 +1155,7 @@ void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
- 			  drm_vma_node_start(&obj->vma_node));
- 	drm_printf_indent(p, indent, "size=%zu\n", obj->size);
- 	drm_printf_indent(p, indent, "imported=%s\n",
--			  str_yes_no(obj->import_attach));
-+			  str_yes_no(drm_gem_is_imported(obj)));
+-	.pd_names = { "mx", "cx" },
++	.pd_names = { "cx", "mx" },
+ 	.vregs = (struct wcnss_vreg_info[]) {
+-		{ "vddmx", 950000, 1150000, 0 },
+ 		{ "vddcx", .super_turbo = true},
++		{ "vddmx", 950000, 1150000, 0 },
+ 		{ "vddpx", 1800000, 1800000, 0 },
+ 	},
+ 	.num_pd_vregs = 2,
+@@ -131,10 +131,10 @@ static const struct wcnss_data pronto_v2_data = {
+ 	.pmu_offset = 0x1004,
+ 	.spare_offset = 0x1088,
  
- 	if (obj->funcs->print_info)
- 		obj->funcs->print_info(p, indent, obj);
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 7c2ec139c464a..fbfccb96dd17b 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -35,6 +35,7 @@
-  */
+-	.pd_names = { "mx", "cx" },
++	.pd_names = { "cx", "mx" },
+ 	.vregs = (struct wcnss_vreg_info[]) {
+-		{ "vddmx", 1287500, 1287500, 0 },
+ 		{ "vddcx", .super_turbo = true },
++		{ "vddmx", 1287500, 1287500, 0 },
+ 		{ "vddpx", 1800000, 1800000, 0 },
+ 	},
+ 	.num_pd_vregs = 2,
+@@ -397,8 +397,17 @@ static irqreturn_t wcnss_stop_ack_interrupt(int irq, void *dev)
+ static int wcnss_init_pds(struct qcom_wcnss *wcnss,
+ 			  const char * const pd_names[WCNSS_MAX_PDS])
+ {
++	struct device *dev = wcnss->dev;
+ 	int i, ret;
  
- #include <linux/kref.h>
-+#include <linux/dma-buf.h>
- #include <linux/dma-resv.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
-@@ -557,6 +558,19 @@ static inline bool drm_gem_object_is_shared_for_memory_stats(struct drm_gem_obje
- 	return (obj->handle_count > 1) || obj->dma_buf;
- }
- 
-+/**
-+ * drm_gem_is_imported() - Tests if GEM object's buffer has been imported
-+ * @obj: the GEM object
-+ *
-+ * Returns:
-+ * True if the GEM object's buffer has been imported, false otherwise
-+ */
-+static inline bool drm_gem_is_imported(const struct drm_gem_object *obj)
-+{
-+	/* The dma-buf's priv field points to the original GEM object. */
-+	return obj->dma_buf && (obj->dma_buf->priv != obj);
-+}
++	/* Handle single power domain */
++	if (dev->pm_domain) {
++		wcnss->pds[0] = dev;
++		wcnss->num_pds = 1;
++		pm_runtime_enable(dev);
++		return 0;
++	}
 +
- #ifdef CONFIG_LOCKDEP
- /**
-  * drm_gem_gpuva_set_lock() - Set the lock protecting accesses to the gpuva list.
+ 	for (i = 0; i < WCNSS_MAX_PDS; i++) {
+ 		if (!pd_names[i])
+ 			break;
+@@ -418,8 +427,15 @@ static int wcnss_init_pds(struct qcom_wcnss *wcnss,
+ 
+ static void wcnss_release_pds(struct qcom_wcnss *wcnss)
+ {
++	struct device *dev = wcnss->dev;
+ 	int i;
+ 
++	/* Handle single power domain */
++	if (wcnss->num_pds == 1 && dev->pm_domain) {
++		pm_runtime_disable(dev);
++		return;
++	}
++
+ 	for (i = 0; i < wcnss->num_pds; i++)
+ 		dev_pm_domain_detach(wcnss->pds[i], false);
+ }
+@@ -437,10 +453,13 @@ static int wcnss_init_regulators(struct qcom_wcnss *wcnss,
+ 	 * the regulators for the power domains. For old device trees we need to
+ 	 * reserve extra space to manage them through the regulator interface.
+ 	 */
+-	if (wcnss->num_pds)
+-		info += num_pd_vregs;
+-	else
++	if (wcnss->num_pds) {
++		info += wcnss->num_pds;
++		/* Handle single power domain case */
++		num_vregs += num_pd_vregs - wcnss->num_pds;
++	} else {
+ 		num_vregs += num_pd_vregs;
++	}
+ 
+ 	bulk = devm_kcalloc(wcnss->dev,
+ 			    num_vregs, sizeof(struct regulator_bulk_data),
 -- 
 2.39.5
 
