@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F3A2D7AE1;
-	Mon,  5 May 2025 22:55:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6BD280316;
+	Mon,  5 May 2025 22:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485726; cv=none; b=YXGtvadLoUd/UvNvxxJktTExp4mnidN9sA4IViwXMYzxTtgG8M4qGbOrEwnFOifHtF7xKwjK56ysXj1Bbc5mVb+AQ1X3P28p+pL35D9ijQ2w4aklwFkHG87utceQooJR+S3dVIOV545nPDI0xBNTP304H86hfn1hOJsxfw8x6qA=
+	t=1746485731; cv=none; b=qcncmeFkVMXJbZWnD9kFyACFjHRcrb/sTi22INp36U2EQ4jgeAR3QLI3arbJ4YrK9+/d7o2/bmDWCLDG8zwSYcexLTGybE8IkfKU4HujuhIKQwW4ubjz4CtAg5+8FqDVzzFnm/IIeInkTuhZdk+8yiiFpBli9xZ5bMGEv0z/dBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485726; c=relaxed/simple;
-	bh=REwDMsG0gYftbnPiYH3na179/GzS77pzCJ82Mrmea/o=;
+	s=arc-20240116; t=1746485731; c=relaxed/simple;
+	bh=dre8okAa5Q0bcUAIP51uDJhSuiCVcGjq/ec+y9xLIKk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O+KOA9MIaIx0Eb32bC9IpqmLRBdJOj1+2EZRM9SCYtdm7rbfirQFr3fYMqNcnNwlhP5o3kpO45aHu3S31UfpEBWQOp/Pa6jIWlj1mIX9xUGMOifHvwqwMyaOxVBJA46+bYKpUDqY3TPiwWgT7rpYqq/Ps12ZsT1YO2n4ncoc0K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ep9NsH4f; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iuuDGeV5qy5DDiWz6mIt6I46DgrR22mUewRKhs1qQTbEGQn/zJ7LDfxGPqZC6mK/LMyZkRIG3Ij0pLwy5KZS7KqxlmfouREP7HQ9uWFCrb19K0dpD2dvyU2QN3Fu1lHPobx4/YNdiV0TnszTg60RmXVO/YsQewoQNKrmJ9PTeiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpbV4wj5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ep9NsH4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F4DC4CEEF;
-	Mon,  5 May 2025 22:55:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpbV4wj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36241C4CEEE;
+	Mon,  5 May 2025 22:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485725;
-	bh=REwDMsG0gYftbnPiYH3na179/GzS77pzCJ82Mrmea/o=;
+	s=k20201202; t=1746485729;
+	bh=dre8okAa5Q0bcUAIP51uDJhSuiCVcGjq/ec+y9xLIKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ep9NsH4feZI811iIcbezodjEhvQfjCsc5ZON3y4gK3RRnZx3+yW0D/9UdzNleWTN5
-	 h2MsuFxCW7FBw4+MKWtaA8USNzo1ERDocWLqKRgZtO3QzFYRcCsFb8baj83s1qwupT
-	 U8MzZZQ0mMOjUMytl/lF8hEvOeLOc5yj2lFpxShVaOecqBrkJ5ebtRPFeF1oufUofl
-	 tEgPKx6i0bLpvwtgI1lLzVsFmLojpiMNLctVPoLLTJTRRXLB2ajPFbQYF9oggMzfQk
-	 1jq1m+//xDv6in6APRcyFncYyVqa9UFzvzdxxlr7+6Hab3gCnMrNiJEAbOTfd5Wehy
-	 saOGb80+zPKVg==
+	b=mpbV4wj5V5662be2m5SnBsFBv98AP3vhnUHXksewnqiKhAva36hu0wulv10VOoJjA
+	 9HvjkmghWgnsdKL+T9ViPgu4zMicN1+ML76x4kXe9EOfhFfefBvRl46MaevZs+3kqf
+	 kCECKnSZ2mr9SVyNbWid4WC4Ee7UbZSTQoXb2XkRb86DsxoDz9pMolsCiYv6AhkskN
+	 EZigF7+af8Uy6IXnLr9Cnm5IdwkdXNcHe7o5TCGaRUX7YZbZnBTaAH7xmy9Iasb9z/
+	 IihYCMWKOLATintpbaf9AINX71vuEcfFKrg5j72LPU6dvkFI90N+iNLMLZa2HXce7l
+	 aZuv/Wne/GULQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: junan <junan76@163.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 446/486] HID: usbkbd: Fix the bit shift number for LED_KANA
-Date: Mon,  5 May 2025 18:38:42 -0400
-Message-Id: <20250505223922.2682012-446-sashal@kernel.org>
+	shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 448/486] ASoC: codecs: pcm3168a: Allow for 24-bit in provider mode
+Date: Mon,  5 May 2025 18:38:44 -0400
+Message-Id: <20250505223922.2682012-448-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,32 +56,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: junan <junan76@163.com>
+From: Cezary Rojewski <cezary.rojewski@intel.com>
 
-[ Upstream commit d73a4bfa2881a6859b384b75a414c33d4898b055 ]
+[ Upstream commit 7d92a38d67e5d937b64b20aa4fd14451ee1772f3 ]
 
-Since "LED_KANA" was defined as "0x04", the shift number should be "4".
+As per codec device specification, 24-bit is allowed in provider mode.
+Update the code to reflect that.
 
-Signed-off-by: junan <junan76@163.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Link: https://patch.msgid.link/20250203141051.2361323-4-cezary.rojewski@intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/usbkbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/pcm3168a.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-index c439ed2f16dbc..af6bc76dbf649 100644
---- a/drivers/hid/usbhid/usbkbd.c
-+++ b/drivers/hid/usbhid/usbkbd.c
-@@ -160,7 +160,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
- 		return -1;
- 
- 	spin_lock_irqsave(&kbd->leds_lock, flags);
--	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
-+	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 4) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
- 		       (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL,   dev->led) << 1) |
- 		       (!!test_bit(LED_NUML,    dev->led));
- 
+diff --git a/sound/soc/codecs/pcm3168a.c b/sound/soc/codecs/pcm3168a.c
+index fac0617ab95b6..6cbb8d0535b02 100644
+--- a/sound/soc/codecs/pcm3168a.c
++++ b/sound/soc/codecs/pcm3168a.c
+@@ -493,9 +493,9 @@ static int pcm3168a_hw_params(struct snd_pcm_substream *substream,
+ 		}
+ 		break;
+ 	case 24:
+-		if (provider_mode || (format == SND_SOC_DAIFMT_DSP_A) ||
+-		    		     (format == SND_SOC_DAIFMT_DSP_B)) {
+-			dev_err(component->dev, "24-bit slots not supported in provider mode, or consumer mode using DSP\n");
++		if (!provider_mode && ((format == SND_SOC_DAIFMT_DSP_A) ||
++				       (format == SND_SOC_DAIFMT_DSP_B))) {
++			dev_err(component->dev, "24-bit slots not supported in consumer mode using DSP\n");
+ 			return -EINVAL;
+ 		}
+ 		break;
 -- 
 2.39.5
 
