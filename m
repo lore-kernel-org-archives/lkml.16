@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6F629A3CF;
-	Mon,  5 May 2025 22:43:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF1C29953B;
+	Mon,  5 May 2025 22:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485026; cv=none; b=rVV9QWYwq1i+Mh4f+rWRW/FF4aeIo1r36HdUp4GTYCXYu40tePXgMIhxTOSfn/1aX5EwUEsM/rcBvPPvdyHTh5mVSgX+rbYmsUZSgrRTjbYTC0uoVCqAYKMuUOEIxg1nzTo+Yq/GghfyzoLhh8BdZQjSZ6kxOABPqYNF6U48J00=
+	t=1746484990; cv=none; b=hhsBmHCSVsGQ0FjKkUFQGipe4SEhmkZl3PwF6Ddgivc2DEf5As2TA4wbMKgF5iZV8RfULlaRXgWWYVJQFHD5Ynn+06dgXpts1UtM8MJX99Y9TdEXX0+w+hmUWmGv65p2DG/je+4m3GViGyfXPF/q1DOSb3SRPsXKBXugd6A4mU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485026; c=relaxed/simple;
-	bh=9yY8EsVHZzA7vgJG97Cqf+iaAANblz1FFdDbdEtZyXc=;
+	s=arc-20240116; t=1746484990; c=relaxed/simple;
+	bh=PnKYlJycEJNsBqUYVwar69zrMIukgXwAyTqvk8IyVXo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pAydHr2wUuUO07TfQWxIXizLI9hEFnBcruefynPTM8HiRXE0mnZOg2SG+ilmTiStc0DfAnBgPQV3MhGSKxY7buJypeHOKL7J1F3Xy91hVTohGN/ehpHgI6zoYwJ7NxHo3kLt/0wkKwX69R5VxwkfeSA6qOXMCeQNcmVzAXeQ5bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfh4KrAb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K4yIxpC+A3fzztAHXpx8hp6NzcGJyF/x7umj7CuKFtmCGSPouv/4uEYAHB9hTWkh8SZ8Du7UjwTGhvR6Q+Ldzg88ImkLBjPP3kLPg2iJDsCO8EQzh422sMiaoU9Qeli4wrnmksX2gij9b0W+LAo06NOOomOUx7g4PjIUD+rAQcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrMfkufh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfh4KrAb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15B7C4CEEF;
-	Mon,  5 May 2025 22:43:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrMfkufh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7933BC4CEE4;
+	Mon,  5 May 2025 22:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485025;
-	bh=9yY8EsVHZzA7vgJG97Cqf+iaAANblz1FFdDbdEtZyXc=;
+	s=k20201202; t=1746484989;
+	bh=PnKYlJycEJNsBqUYVwar69zrMIukgXwAyTqvk8IyVXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bfh4KrAb5oR4qbwD2elhAEtZIXWE7oFQ7Jkui05DkZkLDDsFGyaf0wXhBErIJ8W/E
-	 Jqe51ocfXbfEBIkPNv0SdrRzpc/cVMtl90Y4V6JPX/y1oatn/lz9hdtxYtTnEb2cHx
-	 fKNnlZYeH6FKOBGURiZYe2lbj34xiExQ19sh48KffOvdNBy9eoRQ0RLQhv6Ukgr877
-	 WEW9fn8odswJJCBQPQiUZME4fgUu7ZtFWYt3TJ3y3xw6CQTvgXscQyknpWa0Izk7B+
-	 cEpWAa2Wbl7d0ICMtL7W/MK5VAkp4dE5Ub2ctOwuaBlWzUwoJPHFg5geMXfRPj8MHY
-	 AVnudsDmvtuvg==
+	b=LrMfkufh0O1vDudYNidSViGehuzhaAjpzTZBzMzyaGBKs3tYeRJrYIlytNKGuJPq8
+	 DM8vhVs14hWQVGT2yWozptkShH/YMwAFP2uHWOazimrX2fv/Tefn/0CgJovLI924RE
+	 n5ZWH/Ip7Wwzw4O4QHjSZGbBZr2XGR9liMy2ONsBuakQsUY4gmLv0ME8Iojkx/PqRr
+	 ny3Lvpx1QrpARpyuTj1ZbBPPqQ9uuBwS7jCzlJ1Hd1yAsh+zztWeHgxKF/YM/7Vjc3
+	 XdwJwQ0u/lcKN7B3T0wgdOPDCmF494HBz4WGaY5/eC2yUBgBrTYp4ND04QhsRDkcRH
+	 0yhaW293hVXcQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	anna-maria@linutronix.de
-Subject: [PATCH AUTOSEL 6.12 130/486] posix-timers: Ensure that timer initialization is fully visible
-Date: Mon,  5 May 2025 18:33:26 -0400
-Message-Id: <20250505223922.2682012-130-sashal@kernel.org>
+Cc: Seyediman Seyedarab <imandevel@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 112/486] kbuild: fix argument parsing in scripts/config
+Date: Mon,  5 May 2025 18:33:08 -0400
+Message-Id: <20250505223922.2682012-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,82 +49,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Seyediman Seyedarab <imandevel@gmail.com>
 
-[ Upstream commit 2389c6efd3ad8edb3bcce0019b4edcc7d9c7de19 ]
+[ Upstream commit f757f6011c92b5a01db742c39149bed9e526478f ]
 
-Frederic pointed out that the memory operations to initialize the timer are
-not guaranteed to be visible, when __lock_timer() observes timer::it_signal
-valid under timer::it_lock:
+The script previously assumed --file was always the first argument,
+which caused issues when it appeared later. This patch updates the
+parsing logic to scan all arguments to find --file, sets the config
+file correctly, and resets the argument list with the remaining
+commands.
 
-  T0                                      T1
-  ---------                               -----------
-  do_timer_create()
-      // A
-      new_timer->.... = ....
-      spin_lock(current->sighand)
-      // B
-      WRITE_ONCE(new_timer->it_signal, current->signal)
-      spin_unlock(current->sighand)
-					sys_timer_*()
-					   t =  __lock_timer()
-						  spin_lock(&timr->it_lock)
-						  // observes B
-						  if (timr->it_signal == current->signal)
-						    return timr;
-			                   if (!t)
-					       return;
-					// Is not guaranteed to observe A
+It also fixes --refresh to respect --file by passing KCONFIG_CONFIG=$FN
+to make oldconfig.
 
-Protect the write of timer::it_signal, which makes the timer valid, with
-timer::it_lock as well. This guarantees that T1 must observe the
-initialization A completely, when it observes the valid signal pointer
-under timer::it_lock. sighand::siglock must still be taken to protect the
-signal::posix_timers list.
-
-Reported-by: Frederic Weisbecker <frederic@kernel.org>
-Suggested-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/all/20250308155623.507944489@linutronix.de
+Signed-off-by: Seyediman Seyedarab <imandevel@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/posix-timers.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ scripts/config | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 896ff735034ce..c5d9bfbb082b8 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -514,14 +514,21 @@ static int do_timer_create(clockid_t which_clock, struct sigevent *event,
- 	if (error)
- 		goto out;
+diff --git a/scripts/config b/scripts/config
+index ff88e2faefd35..ea475c07de283 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -32,6 +32,7 @@ commands:
+                              Disable option directly after other option
+ 	--module-after|-M beforeopt option
+                              Turn option into module directly after other option
++	--refresh            Refresh the config using old settings
  
--	spin_lock_irq(&current->sighand->siglock);
--	/* This makes the timer valid in the hash table */
--	WRITE_ONCE(new_timer->it_signal, current->signal);
--	hlist_add_head(&new_timer->list, &current->signal->posix_timers);
--	spin_unlock_irq(&current->sighand->siglock);
- 	/*
--	 * After unlocking sighand::siglock @new_timer is subject to
--	 * concurrent removal and cannot be touched anymore
-+	 * timer::it_lock ensures that __lock_timer() observes a fully
-+	 * initialized timer when it observes a valid timer::it_signal.
-+	 *
-+	 * sighand::siglock is required to protect signal::posix_timers.
-+	 */
-+	scoped_guard (spinlock_irq, &new_timer->it_lock) {
-+		guard(spinlock)(&current->sighand->siglock);
-+		/* This makes the timer valid in the hash table */
-+		WRITE_ONCE(new_timer->it_signal, current->signal);
-+		hlist_add_head(&new_timer->list, &current->signal->posix_timers);
-+	}
-+	/*
-+	 * After unlocking @new_timer is subject to concurrent removal and
-+	 * cannot be touched anymore
- 	 */
- 	return 0;
- out:
+ 	commands can be repeated multiple times
+ 
+@@ -124,16 +125,22 @@ undef_var() {
+ 	txt_delete "^# $name is not set" "$FN"
+ }
+ 
+-if [ "$1" = "--file" ]; then
+-	FN="$2"
+-	if [ "$FN" = "" ] ; then
+-		usage
++FN=.config
++CMDS=()
++while [[ $# -gt 0 ]]; do
++	if [ "$1" = "--file" ]; then
++		if [ "$2" = "" ]; then
++			usage
++		fi
++		FN="$2"
++		shift 2
++	else
++		CMDS+=("$1")
++		shift
+ 	fi
+-	shift 2
+-else
+-	FN=.config
+-fi
++done
+ 
++set -- "${CMDS[@]}"
+ if [ "$1" = "" ] ; then
+ 	usage
+ fi
+@@ -217,9 +224,8 @@ while [ "$1" != "" ] ; do
+ 		set_var "${CONFIG_}$B" "${CONFIG_}$B=m" "${CONFIG_}$A"
+ 		;;
+ 
+-	# undocumented because it ignores --file (fixme)
+ 	--refresh)
+-		yes "" | make oldconfig
++		yes "" | make oldconfig KCONFIG_CONFIG=$FN
+ 		;;
+ 
+ 	*)
 -- 
 2.39.5
 
