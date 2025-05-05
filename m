@@ -1,120 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0C2580F1;
-	Mon,  5 May 2025 18:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDBA1ACEDE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746468090; cv=none; b=foLqJ3V6ZOTGfE1nixygKrxxIW6pMqa9ty4w4lnQIMiMtNWJIPdTdTZRtq6gM/rtWJc3Gfaw/m8nR1VzqyuHSLrNC7xxfkwhyycwnKnVUR+wkk+HXYCsgCs/YEzCoBAsNQQ+/fLdHQ9ahKG1eXkOfec+bmakxbLapiOLxGCbjYA=
+	t=1746468185; cv=none; b=C9/MkD65+/X9y52YmhVmnfy8o9tQZS/ApH70xOVrOsIti3X3NXoLlngYgo/lReIPKM4lKeUsG+xTCOlivKhEhAO2jcXkUy2k8MXkSzgPuh74zmxJwKx3WU9eyLNjlWSuFMxKWruw4r5brCcer5+s+wE6sTl7ltkLlcvgDk5w4/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746468090; c=relaxed/simple;
-	bh=3MDlRXQE9cdOsif4zioLiCuqYDFy6zBFGDLRzxGLLCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VZ5dP322kO4fJk1/eXkYO0snm+KZIwIDoqg1yrn4l034po6bsKG9xcCTzqO358UX5/qPqq4S1t9V9bR0Sv/DSoh2XpU38el/TsDsKLqGv4X7+hu8e6htxmWl4N4GFz2B1fqUMA38iN5geDWtFcnezNnsZCNZy37GV6g/Um0AoQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g64+Z5rx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746468185; c=relaxed/simple;
+	bh=VqbdyGtdiOP9xZl1obfcHNm1EmOvQxZOMzc0kDtFx70=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kbIqObrY8zeZm73wKI+onlIEKtLs4s3kXB4xbnOqd0bGgJ9S4vwCI9xhNGacxt9TTbNWaylEm9q4OyFSK9NFWH0G3PesRl1jjH8pwUxmtXv/Ddv6xj3QBsDbzEpQdYyYsh4yuwwsLKnxFBmkhioBGL7cMsKH1nS2iWYJRkl0tXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LSpvN4Oa; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g64+Z5rx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C187CC4CEE4;
-	Mon,  5 May 2025 18:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746468089;
-	bh=3MDlRXQE9cdOsif4zioLiCuqYDFy6zBFGDLRzxGLLCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g64+Z5rx2YDTX/WfqHAUNh1Ms5hXAFmr7zL1TXlg8BLeOPD+mFNU2rou1i+w9jyau
-	 SZdBKlIaQ+bGais7za/Nzklb4AldtkLbgVewpEVTsVzXGhsbzF+cYLN3RJreRTBDv9
-	 hdS1NptRDyj/0FYoXfTUwI8XoNugoSfiqHR4Zip68SHGFEAp14L5/P+LY6r/0lLJlf
-	 Us2E/uFJuiNgroXBIYFR9i8KvlC6pPv8KQkeAl+A9OryRMbvcdLM5PzOlpeYFrdN+V
-	 k9jHuw288SH/OmDkD/QPSmMxkfpws0GuLYPk81HkE90wfKqC77bO/xoACpk2SxsSyG
-	 6/8eQ9RulIZkw==
-Date: Mon, 5 May 2025 18:01:27 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>, ardb@kernel.org, bp@alien8.de,
-	dave.hansen@linux.intel.com, decui@microsoft.com,
-	dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
-	imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com,
-	jgross@suse.com, justin.ernst@hpe.com, kprateek.nayak@amd.com,
-	kyle.meyer@hpe.com, kys@microsoft.com, lenb@kernel.org,
-	mingo@redhat.com, nikunj@amd.com, papaluri@amd.com,
-	perry.yuan@amd.com, peterz@infradead.org, rafael@kernel.org,
-	russ.anderson@hpe.com, steve.wahl@hpe.com, tglx@linutronix.de,
-	thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
-	tony.luck@intel.com, xin@zytor.com, yuehaibing@huawei.com,
-	linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
-	benhill@microsoft.com, bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
- wakeup AP callback
-Message-ID: <aBj895aOnhgsIiwO@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
-References: <20250430204720.108962-1-romank@linux.microsoft.com>
- <aBUByjvfjLsPU_5f@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
- <41778d44-19dc-4212-a981-d5a82eaf9577@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LSpvN4Oa"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-309e8dc1e21so4635052a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746468183; x=1747072983; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6fdHkz+qURvnP5/FWddFFQyfUC9zHcFbvyU+99/kk/A=;
+        b=LSpvN4OayvIjk3ppDnc82CgqS0m8pZKAwbm4MDzV8WsRpzneGs3whxr3/S+JyZVbP6
+         v9m6yC8e9i/ERJoo9RXRk0Mi1k0ku09uGkUolcYzCh2Vj5/sqqkPN52FPNwnYEMKqi15
+         2fPj3HRWJS7HM9VY6WHX7fXfU0WjqWvGhaLQnbYOkCrYsHIs7F1yjnGOpbOxfed43ZcT
+         WIbSmEBCXJRRojmWOask4Lg0Tz2MbIZ4vYK+cNRdzZOMsbGpwsHPx0vpVKv4gdrjtTA5
+         cYyclB9sQvnr6F1XjMs/EobzzldxbPm2nRwDMenNFji7CvtVsiqcBDulTdPJiCyyvU6O
+         VtQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746468183; x=1747072983;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6fdHkz+qURvnP5/FWddFFQyfUC9zHcFbvyU+99/kk/A=;
+        b=sx8KtR33wSN8mj51d4qNIzIonwUYkoJghrzIOQC8S2Qqv8bR7/Bopxn+Q86CIVpUVW
+         oCExDzrAWF+b9uMJijuuhzeHTFkeH4GP4HFlDjjeKxDOhemjnRaK1UXk6oCPd8y3FOD5
+         ZayOziywYyV95BIsRW86s8rXkInDK63u+qgz/jyVQ8AY+uCE/KdPJdQvqa4k4Qow8kdm
+         mSFc82bCu7FnOOZmOTLPzuwM9JUPxHYGTo6QKye6WBoo9xlpR2bqjv1Ylef2HA4/N7No
+         fLrvbuVNu/8USkvSMomdDVYMXd7+GmNxOCDrBy6wt8tMKHeeEMUQtVgSYZcGqiqn+yFL
+         N9gg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7q/BPwiDG73sAh8z5yaLqCOnXrP8yCY18YFZpuUyyiJl3dxh9gslU4TnBLMXY+Eqp/AoJKDWC5S7CaEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8uyHMpOXnvuhDVqY7H1v2gTp4lPs0B+bwtIcp9isKDHdd/xon
+	RqPOZ2pRD5xDB/DtD6894Yx2t5ZzilnWkc0o/WUHMZIZc+fQJ3u25vSmJQX3Uwx/nVi/tie8Cg+
+	Lqw==
+X-Google-Smtp-Source: AGHT+IGOOZOIsWiGySRvbESMZh0DpMg7q8RyhQryXMHIN6gDz6nOKsDfCvoZ2snN2VpuUQbAnCwg8f1EIco=
+X-Received: from pjbkl6.prod.google.com ([2002:a17:90b:4986:b0:2ef:8055:93d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5643:b0:2fa:6793:e860
+ with SMTP id 98e67ed59e1d1-30a7ba2404emr726549a91.0.1746468182837; Mon, 05
+ May 2025 11:03:02 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon,  5 May 2025 11:03:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41778d44-19dc-4212-a981-d5a82eaf9577@linux.microsoft.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250505180300.973137-1-seanjc@google.com>
+Subject: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM
+ count transitions
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Larabel <Michael@michaellarabel.com>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 05, 2025 at 10:22:47AM -0700, Roman Kisel wrote:
-> 
-> 
-> On 5/2/2025 10:32 AM, Wei Liu wrote:
-> > On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
-> 
-> [...]
-> 
-> > >   arch/x86/coco/sev/core.c           | 13 ++-----------
-> > >   arch/x86/hyperv/hv_vtl.c           | 12 ++----------
-> > >   arch/x86/hyperv/ivm.c              |  2 +-
-> > >   arch/x86/include/asm/apic.h        |  8 ++++----
-> > >   arch/x86/include/asm/mshyperv.h    |  5 +++--
-> > >   arch/x86/kernel/acpi/madt_wakeup.c |  2 +-
-> > >   arch/x86/kernel/apic/apic_noop.c   |  8 +++++++-
-> > >   arch/x86/kernel/apic/x2apic_uv_x.c |  2 +-
-> > >   arch/x86/kernel/smpboot.c          | 10 +++++-----
-> > 
-> > Since this is tagged as a hyperv-next patch, I'm happy to pick this up.
-> > 
-> 
-> Thank you very much, Wei!
-> 
-> > Some changes should be acked by x86 maintainers.
-> 
-> Tom and Thomas reviewed the patch, and the `scripts/get_maintainer.pl`
-> prints them as x86 maintainers. If I understand correctly what you're
-> saying, someone who sends patches from the x86 tree to Linus should add
-> Acked-by to the patch. Likely I should just wait until such person gets
-> to this patch.
-> 
-> If I'm misunderstanding, I'd appreciate a quick note to help me navigate
-> this :)
-> 
+Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
+only if KVM has at least one active VM.  Leaving the bit set at all times
+unfortunately degrades performance by a wee bit more than expected.
 
-$ ./scripts/get_maintainer.pl -f arch/x86/kernel
-Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:89/608=15%)
-Ingo Molnar <mingo@redhat.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:180/608=30%)
-Borislav Petkov <bp@alien8.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:245/608=40%)
-Dave Hansen <dave.hansen@linux.intel.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:70/608=12%)
-x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-"H. Peter Anvin" <hpa@zytor.com> (reviewer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Reinette Chatre <reinette.chatre@intel.com> (commit_signer:65/608=11%)
-Tony Luck <tony.luck@intel.com> (authored:31/608=5%)
-James Morse <james.morse@arm.com> (authored:31/608=5%)
-linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Use a dedicated spinlock and counter instead of hooking virtualization
+enablement, as changing the behavior of kvm.enable_virt_at_load based on
+SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
+result in performance issues for flows that are sensitive to VM creation
+latency.
 
-I'm looking for acks / reviews from Thomas, Ingo, Borislav, or Dave.
+Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
+performance on CPUs that aren't running VMs, e.g. if a setup is using
+housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
+blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
+without incurring a gross amount of complexity (see the Link for details
+on how ugly coordinating via IPIs gets).
 
-If Thomas had given an ack or a review before, you should've added that
-to the patch here.
+Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
+Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
+Reported-by: Michael Larabel <Michael@michaellarabel.com>
+Closes: https://www.phoronix.com/review/linux-615-amd-regression
+Cc: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
 
-You don't need to do that for this patch. Please point me to Thomas'
-reply to the previous version and I can add the missing tag to patch
-while I queue it.
+v2: Defer setting BP_SPEC_REDUCE until VMRUN is imminent, which in turn
+    allows for eliding the lock on 0<=>1 transitions as there is no race
+    with CPUs doing VMRUN before receiving the IPI to set the bit, and
+    having multiple tasks take the lock during svm_srso_vm_init() is a-ok.
 
-Thanks,
-Wei.
+v1: https://lore.kernel.org/all/20250502223456.887618-1-seanjc@google.com
+
+ arch/x86/kvm/svm/svm.c | 71 ++++++++++++++++++++++++++++++++++++++----
+ arch/x86/kvm/svm/svm.h |  2 ++
+ 2 files changed, 67 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index cc1c721ba067..15f7a0703c16 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
+ 	kvm_cpu_svm_disable();
+ 
+ 	amd_pmu_disable_virt();
+-
+-	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+-		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+ }
+ 
+ static int svm_enable_virtualization_cpu(void)
+@@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
+ 		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
+ 	}
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+-		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+-
+ 	return 0;
+ }
+ 
+@@ -1518,6 +1512,63 @@ static void svm_vcpu_free(struct kvm_vcpu *vcpu)
+ 	__free_pages(virt_to_page(svm->msrpm), get_order(MSRPM_SIZE));
+ }
+ 
++#ifdef CONFIG_CPU_MITIGATIONS
++static DEFINE_SPINLOCK(srso_lock);
++static atomic_t srso_nr_vms;
++
++static void svm_srso_clear_bp_spec_reduce(void *ign)
++{
++	struct svm_cpu_data *sd = this_cpu_ptr(&svm_data);
++
++	if (!sd->bp_spec_reduce_set)
++		return;
++
++	msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
++	sd->bp_spec_reduce_set = false;
++}
++
++static void svm_srso_vm_destroy(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
++		return;
++
++	if (atomic_dec_return(&srso_nr_vms))
++		return;
++
++	guard(spinlock)(&srso_lock);
++
++	/*
++	 * Verify a new VM didn't come along, acquire the lock, and increment
++	 * the count before this task acquired the lock.
++	 */
++	if (atomic_read(&srso_nr_vms))
++		return;
++
++	on_each_cpu(svm_srso_clear_bp_spec_reduce, NULL, 1);
++}
++
++static void svm_srso_vm_init(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
++		return;
++
++	/*
++	 * Acquire the lock on 0 => 1 transitions to ensure a potential 1 => 0
++	 * transition, i.e. destroying the last VM, is fully complete, e.g. so
++	 * that a delayed IPI doesn't clear BP_SPEC_REDUCE after a vCPU runs.
++	 */
++	if (atomic_inc_not_zero(&srso_nr_vms))
++		return;
++
++	guard(spinlock)(&srso_lock);
++
++	atomic_inc(&srso_nr_vms);
++}
++#else
++static void svm_srso_vm_init(void) { }
++static void svm_srso_vm_destroy(void) { }
++#endif
++
+ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -1550,6 +1601,11 @@ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	    (!boot_cpu_has(X86_FEATURE_V_TSC_AUX) || !sev_es_guest(vcpu->kvm)))
+ 		kvm_set_user_return_msr(tsc_aux_uret_slot, svm->tsc_aux, -1ull);
+ 
++	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE) &&
++	    !sd->bp_spec_reduce_set) {
++		sd->bp_spec_reduce_set = true;
++		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
++	}
+ 	svm->guest_state_loaded = true;
+ }
+ 
+@@ -5036,6 +5092,8 @@ static void svm_vm_destroy(struct kvm *kvm)
+ {
+ 	avic_vm_destroy(kvm);
+ 	sev_vm_destroy(kvm);
++
++	svm_srso_vm_destroy();
+ }
+ 
+ static int svm_vm_init(struct kvm *kvm)
+@@ -5061,6 +5119,7 @@ static int svm_vm_init(struct kvm *kvm)
+ 			return ret;
+ 	}
+ 
++	svm_srso_vm_init();
+ 	return 0;
+ }
+ 
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index d4490eaed55d..f16b068c4228 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -335,6 +335,8 @@ struct svm_cpu_data {
+ 	u32 next_asid;
+ 	u32 min_asid;
+ 
++	bool bp_spec_reduce_set;
++
+ 	struct vmcb *save_area;
+ 	unsigned long save_area_pa;
+ 
+
+base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+-- 
+2.49.0.967.g6a0df3ecc3-goog
+
