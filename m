@@ -1,92 +1,87 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF781170A37
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5D81DE3AF
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438783; cv=none; b=XvYa+qjZabYUyC7ZD1Xb8Y5WDS8Xo99Y1Te6oElgr0SK5ryleQOV84TV1tvlVgywEDr8UwhwIQ7R3viv6HQCyqT4yJFuE+8rffNjjsSc4JG+wExyMcXFGXj48vjkxQAAceBjgRMQTSUrNzQzh1b1vr3JOcRcdQP6IovyyyD/5HE=
+	t=1746438820; cv=none; b=dBOROhJlLzH3rtLJNgm7e1mgWLeroCNeKeuIQMa/TVtLr5XEzT0SEFbbTEQ7ubYVu1dpJnKopxu7W0BXFtH5H4rhTS5jY9QZSiSz+5a9Xkh5D76AhTNguS8fkQca1fSG1vIvGv+FI+XF3y4JPqINEzKYhFlJLbAwfYD8GuMXUsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438783; c=relaxed/simple;
-	bh=7IGzS+H+A2oF7/uxD2o3fmpAzjodB53pZyU4CAmfVkw=;
+	s=arc-20240116; t=1746438820; c=relaxed/simple;
+	bh=H9jMukHJdPSZlcGNf5Jwgc1yMCgTBWLycd8M56kK8Tk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7FyFHrK6OtsoWrNHut2+E2o4t35v9HRJ1axRQhX4OG/8wB5TcCLXqRdKYncE3g6hJoP9BBB0Pk4pkTsn5T5uLhPSaJ0RwBQxQjHjM9Ro5S+KpEUMIPfckTXVV74NjUNqrw03Vu62eeCmGP3YORexrjaagJt8gV4D1Ip2tt7db8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=o8okGg/+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4S5rgwGK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=o8okGg/+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4S5rgwGK; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=bP8QILvgBTWHfe/ZL506cNLfeoonI6D058E2VZXKmI1kr+YbiLMXtTencAtOcE72A1mL+kZoX8IxOIsfRIQkWbfXTyhR+DhZwheh2i5gIAiSs6gbdYTbqnwCmtReIuF9o9k9BRhNxpb4aa8NX8RJJEXG2/Eg+c2hJD9G8bBUf20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Wk/2+gmc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="o8okGg/+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4S5rgwGK";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="o8okGg/+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4S5rgwGK"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A797921284;
-	Mon,  5 May 2025 09:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746438779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utEcYmPzi75tBBr1KPTD9Ao4NpHZqIdSmjTjxwEplbw=;
-	b=o8okGg/+K3DCf5QTCTgixqzxYorI5hidAenUdxMQbnDCNtHUgy8r/ACuLvIGe1sb03HfZh
-	zC6Hw2zzPr4X9XIR328qCUUznNVDjD7O8hT7DYcmqR3lWoRvd0xuh6teQuLyIUgruYIJNJ
-	kA+bHdYTgLzzf2qVSDSodR20pNtGNNs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746438779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utEcYmPzi75tBBr1KPTD9Ao4NpHZqIdSmjTjxwEplbw=;
-	b=4S5rgwGKNxA3QOK7Vy+0cJvPP0kfdam9XhEFGYx3+SjKnw9GScOHiiVALf5mzxWRbLeSip
-	bU/JhR5mHqu/aJCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="o8okGg/+";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4S5rgwGK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746438779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utEcYmPzi75tBBr1KPTD9Ao4NpHZqIdSmjTjxwEplbw=;
-	b=o8okGg/+K3DCf5QTCTgixqzxYorI5hidAenUdxMQbnDCNtHUgy8r/ACuLvIGe1sb03HfZh
-	zC6Hw2zzPr4X9XIR328qCUUznNVDjD7O8hT7DYcmqR3lWoRvd0xuh6teQuLyIUgruYIJNJ
-	kA+bHdYTgLzzf2qVSDSodR20pNtGNNs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746438779;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=utEcYmPzi75tBBr1KPTD9Ao4NpHZqIdSmjTjxwEplbw=;
-	b=4S5rgwGKNxA3QOK7Vy+0cJvPP0kfdam9XhEFGYx3+SjKnw9GScOHiiVALf5mzxWRbLeSip
-	bU/JhR5mHqu/aJCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92FDF13883;
-	Mon,  5 May 2025 09:52:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9kzfI3uKGGjPcwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 09:52:59 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5668AA0670; Mon,  5 May 2025 11:52:55 +0200 (CEST)
-Date: Mon, 5 May 2025 11:52:55 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 4/5] mm/readahead: Store folio order in struct
- file_ra_state
-Message-ID: <hsh7gqrzzxmgihjnud6p6iqbysustua3rv7vkfgknz4vho4hhx@jvzfztjk4cc4>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-5-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Wk/2+gmc"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544MSStM011474
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 09:53:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=w7RU+ij51cnyT8d/3rqZU8Xc
+	2V1EFU/KaR2DDyIFqE4=; b=Wk/2+gmcV59wvQtbyQG63pVEADs5M2tNYSXLIEsU
+	AbcdbWyMK0k0LDqsPY3Bhdn6E0LNXz0kkbV/6qR1Eo5jgd8e1jk0GVdYQladusZR
+	9oD5shPxcP0YYLBUS4vw20sdAZCbw+FfxvYTHw7ajPNFIvLHlk0gaPm0/WwceSHI
+	wETRJfQ+dHgSshjqkUvqYUmvIjrdk9TAfXwWS0PSb9XyK6zsuJA7gD4OW02ckTin
+	L87ZGq40q1XKHC9C0ARkGGihkFYPUTBsM+5fR5FGyfeDKpeq6jLTXZA0Ep141jT3
+	Y21o6RcAP8mHe4tD/G4Npr/vf7X4C83aB17MB9iTzei7iQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dbwfkka5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:53:37 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caee988153so7035885a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:53:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746438816; x=1747043616;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w7RU+ij51cnyT8d/3rqZU8Xc2V1EFU/KaR2DDyIFqE4=;
+        b=DgnVRHYuapStYPgytjn0jH5gpgsG8MOvkZaNTnKH0XRVm92q783bACAUBnF9LUYKy/
+         34zPE9C58eyOBPAg6Cih3UF623/cbp0qQelKCOLKWf0gfz0qQ4/Xfn8QJx4AMBgtVzwF
+         NizQVMEcolTdySEFUdEmnzDdrBao5S1nOQscxBJdcPwOhlC+iRzQINm3Lp+EJfCDUqks
+         zJ1Pwemov/xwMvZbzGZ/fMPthStGFoKtGChYQV1nZ9y7cmG/tJo3hjcZhVMjHVgBOA4I
+         nPqJE3jc70LiNyTw7Qex7s7laDP0F+zBSvHG9DotFlEzoonRsDwXJWx1KMzCcN8OmWAj
+         tuDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkS9yvD5ecHEFFhg6n9tKOZGUIAjHJdMUCcKAl7YFz6TvmIGRZ3Tj/owhUN6djJlw0qrwu+8yApmW2kBY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSxfdIOEm0xqFY4QWZMY1sqqE26U4YD84PUpwD5B0tQuIQDgGj
+	9RzCACVkF/jEvU8EVvsD5Mll+qKo87mMhF4kZ0MvdI9ht91Q87K7WJcPgxo9jq5t2UvDl9b8m3+
+	X/DN+uY8Deyz3Ubts3qws5W200kWC73lJgeKkSpwfGmoeHyQAo7ZySCl6euVomPs=
+X-Gm-Gg: ASbGnctc3pRDVzJs8+Y5b44IMa4EmyV/meYVJ+cWGB/w32vDu5/EyPCfSndjKBEzB7S
+	MblfM48F+c3/zzeAJ4d2eFBOgJxJpo41W62cOYLGTm0CYbhBVJfpfdf6SeAb7UMrLVzfr9waogf
+	1oFklgY6PKznIuLbzfN3fXzOs/s1j55vLiKzixnY7RYiXW3DVeDUzsAAfJWH2FKwFirn8qFo4Wp
+	ErHvcc2wkhu7cvLsjPswUimyQeXsNRGzjhjxbpvzXEQ2lEFPqBlblQM77eVnebB5HwllcPKREn5
+	0eaBCsrwyAAi5KGheXLlYmxeWqvBjEJBiuAKpFcuVZm3OG0ycvdRq8RMFIUWSmZWBihbApMqcGo
+	=
+X-Received: by 2002:a05:620a:44ce:b0:7c5:3b4a:a61e with SMTP id af79cd13be357-7cad5b384a1mr1400069285a.24.1746438815912;
+        Mon, 05 May 2025 02:53:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH4nSiBTxb3IhP9Q2xiL9GQgS/oQXIljveihA1O1seCSBGBXnW2ydcuIUmZWFs6RCr82a58yQ==
+X-Received: by 2002:a05:620a:44ce:b0:7c5:3b4a:a61e with SMTP id af79cd13be357-7cad5b384a1mr1400067385a.24.1746438815544;
+        Mon, 05 May 2025 02:53:35 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c5594sm1641909e87.87.2025.05.05.02.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:53:34 -0700 (PDT)
+Date: Mon, 5 May 2025 12:53:32 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: Re: [PATCH v6 00/11] Add DSI display support for SA8775P target
+Message-ID: <gnmpt7evnmf2y7qu4o7pslg7cwhzxp274ky45drkgfxwpajbhs@bh4szrlfbnhr>
+References: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,154 +90,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250430145920.3748738-5-ryan.roberts@arm.com>
-X-Rspamd-Queue-Id: A797921284
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250505094245.2660750-1-quic_amakhija@quicinc.com>
+X-Proofpoint-ORIG-GUID: gJaZPWbugExxRMV210otlyfLriRi5kF8
+X-Proofpoint-GUID: gJaZPWbugExxRMV210otlyfLriRi5kF8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA5NCBTYWx0ZWRfXx3T+NnhiDOVr
+ Ft5orbK+GDrs3WqRnOQmJYp6jtGL8rnKGkM0NLw9kARzwQOx9H76aPR3hm9WuTlJKjw+mFKaQZF
+ XhgCuoLqjSZFU4soCU+RghiDWb2oid186H9fyVGjmzcEVfjaUgP5IButkJ6ODPS92uN/uKC9Hmr
+ 26fxfY3bmUS6iKN3f1wUjRr6NQKd9OHZoHkD/j8/UT69Q3X1BXEEBgTuAcPFsbZWZK8ooBrqYV8
+ u6tg1njKp2+REnz5i+GavX4Yk9uq2SqcocJVgMSteRomFZaoVjiOBeRYV7BpLJJOvFoxwccQOpR
+ refrlRuLX0Pu6whyCv2GqEUV1E8ncKYwtC9G8kdu1kewFLGRtcxqACOqJcaOSudbNZ3vsPdn50b
+ rN5j/ws/yTQXKghwd0/eXb1iFoXSGW3F1XpG+wHUqM5HaRTlTGkiw6LIMIQG331pIY4IuXUC
+X-Authority-Analysis: v=2.4 cv=AfqxH2XG c=1 sm=1 tr=0 ts=68188aa1 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=2aRMNYBirawqYizlNqkA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 phishscore=0 impostorscore=0
+ mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050094
 
-On Wed 30-04-25 15:59:17, Ryan Roberts wrote:
-> Previously the folio order of the previous readahead request was
-> inferred from the folio who's readahead marker was hit. But due to the
-> way we have to round to non-natural boundaries sometimes, this first
-> folio in the readahead block is often smaller than the preferred order
-> for that request. This means that for cases where the initial sync
-> readahead is poorly aligned, the folio order will ramp up much more
-> slowly.
+On Mon, May 05, 2025 at 03:12:39PM +0530, Ayushi Makhija wrote:
+> This series enables the support for DSI to DP bridge ports
+> (labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
 > 
-> So instead, let's store the order in struct file_ra_state so we are not
-> affected by any required alignment. We previously made enough room in
-> the struct for a 16 order field. This should be plenty big enough since
-> we are limited to MAX_PAGECACHE_ORDER anyway, which is certainly never
-> larger than ~20.
+> SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
+> The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
 > 
-> Since we now pass order in struct file_ra_state, page_cache_ra_order()
-> no longer needs it's new_order parameter, so let's remove that.
+> ---
+> This patch depends on following series:
+> https://lore.kernel.org/linux-arm-msm/20250127-dts-qcom-dsi-phy-clocks-v1-0-9d8ddbcb1c7f@linaro.org/
+> (ARM / arm64: dts: qcom: Use the header with DSI phy clock IDs)
 > 
-> Worked example:
-> 
-> Here we are touching pages 17-256 sequentially just as we did in the
-> previous commit, but now that we are remembering the preferred order
-> explicitly, we no longer have the slow ramp up problem. Note
-> specifically that we no longer have 2 rounds (2x ~128K) of order-2
-> folios:
-> 
-> TYPE    STARTOFFS     ENDOFFS        SIZE  STARTPG    ENDPG   NRPG  ORDER  RA
-> -----  ----------  ----------  ----------  -------  -------  -----  -----  --
-> HOLE   0x00000000  0x00001000        4096        0        1      1
-> FOLIO  0x00001000  0x00002000        4096        1        2      1      0
-> FOLIO  0x00002000  0x00003000        4096        2        3      1      0
-> FOLIO  0x00003000  0x00004000        4096        3        4      1      0
-> FOLIO  0x00004000  0x00005000        4096        4        5      1      0
-> FOLIO  0x00005000  0x00006000        4096        5        6      1      0
-> FOLIO  0x00006000  0x00007000        4096        6        7      1      0
-> FOLIO  0x00007000  0x00008000        4096        7        8      1      0
-> FOLIO  0x00008000  0x00009000        4096        8        9      1      0
-> FOLIO  0x00009000  0x0000a000        4096        9       10      1      0
-> FOLIO  0x0000a000  0x0000b000        4096       10       11      1      0
-> FOLIO  0x0000b000  0x0000c000        4096       11       12      1      0
-> FOLIO  0x0000c000  0x0000d000        4096       12       13      1      0
-> FOLIO  0x0000d000  0x0000e000        4096       13       14      1      0
-> FOLIO  0x0000e000  0x0000f000        4096       14       15      1      0
-> FOLIO  0x0000f000  0x00010000        4096       15       16      1      0
-> FOLIO  0x00010000  0x00011000        4096       16       17      1      0
-> FOLIO  0x00011000  0x00012000        4096       17       18      1      0
-> FOLIO  0x00012000  0x00013000        4096       18       19      1      0
-> FOLIO  0x00013000  0x00014000        4096       19       20      1      0
-> FOLIO  0x00014000  0x00015000        4096       20       21      1      0
-> FOLIO  0x00015000  0x00016000        4096       21       22      1      0
-> FOLIO  0x00016000  0x00017000        4096       22       23      1      0
-> FOLIO  0x00017000  0x00018000        4096       23       24      1      0
-> FOLIO  0x00018000  0x00019000        4096       24       25      1      0
-> FOLIO  0x00019000  0x0001a000        4096       25       26      1      0
-> FOLIO  0x0001a000  0x0001b000        4096       26       27      1      0
-> FOLIO  0x0001b000  0x0001c000        4096       27       28      1      0
-> FOLIO  0x0001c000  0x0001d000        4096       28       29      1      0
-> FOLIO  0x0001d000  0x0001e000        4096       29       30      1      0
-> FOLIO  0x0001e000  0x0001f000        4096       30       31      1      0
-> FOLIO  0x0001f000  0x00020000        4096       31       32      1      0
-> FOLIO  0x00020000  0x00021000        4096       32       33      1      0
-> FOLIO  0x00021000  0x00022000        4096       33       34      1      0
-> FOLIO  0x00022000  0x00024000        8192       34       36      2      1
-> FOLIO  0x00024000  0x00028000       16384       36       40      4      2
-> FOLIO  0x00028000  0x0002c000       16384       40       44      4      2
-> FOLIO  0x0002c000  0x00030000       16384       44       48      4      2
-> FOLIO  0x00030000  0x00034000       16384       48       52      4      2
-> FOLIO  0x00034000  0x00038000       16384       52       56      4      2
-> FOLIO  0x00038000  0x0003c000       16384       56       60      4      2
-> FOLIO  0x0003c000  0x00040000       16384       60       64      4      2
-> FOLIO  0x00040000  0x00050000       65536       64       80     16      4
-> FOLIO  0x00050000  0x00060000       65536       80       96     16      4
-> FOLIO  0x00060000  0x00080000      131072       96      128     32      5
-> FOLIO  0x00080000  0x000a0000      131072      128      160     32      5
-> FOLIO  0x000a0000  0x000c0000      131072      160      192     32      5
-> FOLIO  0x000c0000  0x000e0000      131072      192      224     32      5
-> FOLIO  0x000e0000  0x00100000      131072      224      256     32      5
-> FOLIO  0x00100000  0x00120000      131072      256      288     32      5
-> FOLIO  0x00120000  0x00140000      131072      288      320     32      5  Y
-> HOLE   0x00140000  0x00800000     7077888      320     2048   1728
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> Changes in v6: Fixed the review comments from konard.
+>     - Added the reference voltage in patch 7 for vph-pwr. [Konard]
+>     - Patches from 1 to 5 of version 5 of the series are accepted.
+>       So removed from here.
 
-...
+Now patchwork instances will treat your series as incomplete. There is
+no need to be that fancy. In future rebase on top of linux-next (you are
+using linux-next as a baseline, are you not?) and post remaining
+patches.
 
-> @@ -469,6 +469,7 @@ void page_cache_ra_order(struct readahead_control *ractl,
->  	int err = 0;
->  	gfp_t gfp = readahead_gfp_mask(mapping);
->  	unsigned int min_ra_size = max(4, mapping_min_folio_nrpages(mapping));
-> +	unsigned int new_order = ra->order;
->  
->  	/*
->  	 * Fallback when size < min_nrpages as each folio should be
-> @@ -483,6 +484,8 @@ void page_cache_ra_order(struct readahead_control *ractl,
->  	new_order = min_t(unsigned int, new_order, ilog2(ra->size));
->  	new_order = max(new_order, min_order);
->  
-> +	ra->order = new_order;
-> +
->  	/* See comment in page_cache_ra_unbounded() */
->  	nofs = memalloc_nofs_save();
->  	filemap_invalidate_lock_shared(mapping);
-> @@ -525,6 +528,7 @@ void page_cache_ra_order(struct readahead_control *ractl,
->  	 * ->readahead() may have updated readahead window size so we have to
->  	 * check there's still something to read.
->  	 */
-> +	ra->order = 0;
+Please don't repost anything now, I'll probably pick up anx7625 patches
+today.
 
-Hum, so you reset desired folio order if readahead hit some pre-existing
-pages in the page cache. Is this really desirable? Why not leave the
-desired order as it was for the next request?
+>     - Link to v5 : https://lore.kernel.org/all/20250424062431.2040692-1-quic_amakhija@quicinc.com/ 
+> 
+> Changes in v5: Fixed review comments from Dmitry
+>     - Added reset gpio for io_expander(tca9539) in patch 7. [Dmitry]
+>     - Updated the commit text of patch 10 for eDP configuration. [Dmitry]
+>     - Link to v4 : https://lore.kernel.org/all/20250417053909.1051416-1-amakhija@qti.qualcomm.com/
+> 
+> Changes in v4: Fixed review comments from Dmirty, Krzysztof and konard
+>     - Add only single compatible string in dsi ctrl pattern properties
+>       in patch 3. [Krzysztof/Dmitry]
+>     - Move the io_expander RESET and INTR pinctrls from i2c18 node to
+>       io_expander node in patch 7. [Dmitry]
+>     - Remove the gpio-hogs from io_expander node, as we are already
+>       configuring them under anx7625 bridge nodes. [Dmitry/Konard]
+>     - Updated the commit message based on hpd_enable() and
+>       hpd_disabled() recommendation in patch 8. [Dmitry]
+>     - Split the patch 9 of vesrion 3 into two separate patches. [Dmirty]
+>     - Updated the commit message and commit text in patch 9 and 
+>       patch 10.
+>     - Link to v3 : https://lore.kernel.org/all/20250404115539.1151201-1-quic_amakhija@quicinc.com/
+> 
+> Changes in v3: Fixed review comments from Dmitry and Krzysztof
+>     - Added qcom,sa8775p-dsi-ctrl compatible based on the set of clocks
+>       which are associated with it in patch 2. [Krzysztof]
+>     - Drop the blank line and add contains instead of items in pattern
+>       properties of dsi ctrl and phy in patch 3. [Krzysztof]
+>     - Updated the node name from anx7625@58 to bridge@58 for anx7625
+>       dsi-dp bridge in patch 7. [Dmitry/Krzysztof]
+>     - Updated endpoint label name for input output ports of analogix bridge chip in patch 7. 
+>     - Check the DP or eDP confiuration based on the aux node in patch 9. [Dmitry]
+>     - Link to v2 : https://lore.kernel.org/all/20250311122445.3597100-1-quic_amakhija@quicinc.com/
+> 
+> Changes in v2: Fixed review comments from Rob, konard, Dmitry and Krzysztof
+>     - Added additionalProperities in dsi and phy patternProperties in patch 3. [Rob's bot]
+>     - Updated example in qcom,sa8775p-mdss.yaml of patch 3:
+>         - Added port1 and port2 inside mdss0 ports.
+>         - Renamed dsi ports from mdss_dsi0_in to mdss0_dsi0_in and mdss_dsi1_in to mdss0_dsi1_in.
+>     - Updated the init load value for vdds supply of DSI PHY from
+>       150000uA to 48000uA as per chipset power grid in patch 4. [Dmitry]
+>     - Updated the init load value for vdda supply for DSI ctrl
+>       from 30100uA to 8300uA as per chipset power grid in patch 5.[Dmitry]
+>     - Rebase the series to use the header with DSI phy clock IDs to make code more
+>       readable in patch 6. [konard]
+>     - Added the interrupts-extended in patch 7. [konard]
+>     - Fixed the warning from DT checker against DT binding in patch 7. [Krzysztof]
+>     - Changed the connector node name from dsi0-connector to dp-dsi0-connector and dsi1-connector to dp-dsi1-connector
+>       respectively in patch 7. [Dmitry]
+>     - Added the vph_pwr for anx7625 vdda10, vdds18 and vdda33 supply to fix the warnings from DT checker in
+>       patch 7. [Rob's bot]
+>     - Addressed device tree comments in patch 7. [Konard]
+>     - Squash the DT patch 8 into DT patch 7. [Dmitry]
+>     - Added hpd_enable() and hpd_disable() bridge funcs in patch 9. [Dmitry]
+>     - Update hpd detection bridge op flags logic based on eDP connector in patch 10. [Dmitry]
+>     - Link to v1 : https://lore.kernel.org/linux-arm-msm/20250225121824.3869719-1-quic_amakhija@quicinc.com/
+> 
+> Ayushi Makhija (11):
+>   dt-bindings: display: msm-dsi-phy-7nm: document the SA8775P DSI PHY
+>   dt-bindings: msm: dsi-controller-main: document the SA8775P DSI CTRL
+>   dt-bindings: display: msm: document DSI controller and phy on SA8775P
+>   drm/msm/dsi: add DSI PHY configuration on SA8775P
+>   drm/msm/dsi: add DSI support for SA8775P
+>   arm64: dts: qcom: sa8775p: add Display Serial Interface device nodes
+>   arm64: dts: qcom: sa8775p-ride: add anx7625 DSI to DP bridge nodes
+>   drm/bridge: anx7625: enable HPD interrupts
+>   drm/bridge: anx7625: fix drm_bridge ops flags to support hot-plugging
+>   drm/bridge: anx7625: fix anx7625_sink_detect() to return correct hpd
+>     status
+>   drm/bridge: anx7625: change the gpiod_set_value API
+> 
+>  .../display/msm/dsi-controller-main.yaml      |   2 +
+>  .../bindings/display/msm/dsi-phy-7nm.yaml     |   1 +
+>  .../display/msm/qcom,sa8775p-mdss.yaml        | 181 ++++++++++++++++-
+>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi    | 183 +++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 186 +++++++++++++++++-
+>  drivers/gpu/drm/bridge/analogix/anx7625.c     |  34 +++-
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.c             |  18 ++
+>  drivers/gpu/drm/msm/dsi/dsi_cfg.h             |   1 +
+>  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         |   2 +
+>  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |   1 +
+>  drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c     |  27 +++
+>  11 files changed, 624 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
 
->  	if (ra->size > index - start)
->  		do_page_cache_ra(ractl, ra->size - (index - start),
->  				 ra->async_size);
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+With best wishes
+Dmitry
