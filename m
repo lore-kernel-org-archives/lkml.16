@@ -1,50 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F82359620;
-	Mon,  5 May 2025 22:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DAF359644;
+	Mon,  5 May 2025 22:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484948; cv=none; b=grN4YsZUbC1okOoXf+rI+uza2v02oWp7WcPDHcFw9eaPDBpzdeGOZHuhScFbw1nqxUw4y7ZTOsFJpROPzrd9WZA7RG6beFSr8O39FkaaJ6IFLkK7ITOwxRw0SsHS946vivDloIlsb69g0eLeOyEkk0cujBIOSwKAlO6BKuXD/8o=
+	t=1746484952; cv=none; b=l3HDls2+TuElIykp1AZhpuKIK1YDucBt/XKz1ps6pA7nfCcCdkYzOkIP1hXumPt7K3hBqKxGNBZItKHfNTJhIAxDkBQ79sPdRI3XPtiGNmmx2fCQkIActXngq7BnYvgVxUdNpEc24cWIshMwV19/+DS5h1J6zvIa0de61E1sqAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484948; c=relaxed/simple;
-	bh=kB3Of2TAfMWjq4ISnDkHwtPTUxxjDoqlJgVbF9jFa5c=;
+	s=arc-20240116; t=1746484952; c=relaxed/simple;
+	bh=fs/jH77eWpvtN/vaewmV7hxsfkW8lvX7xmdN+lFKZ9c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jt+NZz0Ah3pAbsLcoO2JCtKmfMuLx/LrBZkcgz1KCxqP/AOQuGtMBZFZL6md1Y1UW92HY8KYJJ1Xnu2zzlVDrq4NGotNRg1RZu0Di9enPQjB5fwrZvJmwo4bXNJsplEZHbFK3oj6T8HQtOr7EqDWPeaeWwPD9XKDF30EGZWvPds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEW8USIO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XYt+hnfukesFk7lyYpLNJ2jnRnyIPftmhNqfIkwGtXyQAiwnbwpbMtyo3aPNLch14vv+sfn+QiDlDO1EjThp5LtjJXay5+ErrhseY8CB1s+rI1J09e1Y5GEMXywmImisPPV5NU6JAWy2pyRdZtgGkepgo3sH0FzyiA6XsrzLVZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAlCFZoK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEW8USIO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58CA8C4CEED;
-	Mon,  5 May 2025 22:42:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAlCFZoK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B920C4CEEF;
+	Mon,  5 May 2025 22:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484947;
-	bh=kB3Of2TAfMWjq4ISnDkHwtPTUxxjDoqlJgVbF9jFa5c=;
+	s=k20201202; t=1746484952;
+	bh=fs/jH77eWpvtN/vaewmV7hxsfkW8lvX7xmdN+lFKZ9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tEW8USIOHYaxsOxllC0RCLxuGJfEibAjzNccldMpjj/NmOw73MX78T3IQom6QS8hh
-	 B3FFcKY6NThbXniWQt1p3pxTMqd4bgOs4gnjDYWbSlhFVtOqM1x5fAZLyIwzJGFKqZ
-	 d/wXcMCHvq2XnOo6pxpdT/a1+R6sx+/mb5/UjBDume4afUY14mmJpHfXgQmDNXvgU1
-	 yLyJ170yA93RwBGmjsCM6nGrXWgX9gosloq2FtQGiVM5aXu0CATjovcpHARgDo7T/f
-	 9+icDeIqu9EaX7sFXS/4XPd9w6ojbEYD8aFswcup6Bfmh1cGhS30AsMpkMTuYLEGm0
-	 ktUs+LRSHEzJw==
+	b=XAlCFZoK+qmMUrbgp0rMu8WD4hFUlWjNDaYP3mbExUKVOKW3S9H5361fqQB0RQE2X
+	 GR1fQW8l8twItiyrVCDzAuSj5XEQOM1gfoxodqgxgDrVdEpE/C6iq/T9FFKi4qGfZA
+	 D35JXWOVmSSE0EG1rhYqOLMkR+nOLP1YvKjmwZDx/JM/nkuK05Az0mEnql6cao9S1K
+	 aUI7a5F0XX0cytoK0JwMWIvBDs5x+gKEdbFsIi6Ijrbqsc81l3osLIFlpKMmwswc2m
+	 eykG9YMZiPi/yQqKO0HzDEBN6IT7SKmPWsVXjzJHz0rH4W6aBAqOF8AYn7RbFG43t1
+	 59CWQzgJvcqRQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: shantiprasad shettar <shantiprasad.shettar@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Michael Chan <michael.chan@broadcom.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	akpm@linux-foundation.org,
-	rppt@kernel.org,
-	dave.hansen@linux.intel.com,
-	richard.weiyang@gmail.com,
-	benjamin.berg@intel.com,
-	kevin.brodsky@arm.com,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 090/486] um: Update min_low_pfn to match changes in uml_reserved
-Date: Mon,  5 May 2025 18:32:46 -0400
-Message-Id: <20250505223922.2682012-90-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 092/486] bnxt_en: Query FW parameters when the CAPS_CHANGE bit is set
+Date: Mon,  5 May 2025 18:32:48 -0400
+Message-Id: <20250505223922.2682012-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,34 +58,55 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Tiwei Bie <tiwei.btw@antgroup.com>
+From: shantiprasad shettar <shantiprasad.shettar@broadcom.com>
 
-[ Upstream commit e82cf3051e6193f61e03898f8dba035199064d36 ]
+[ Upstream commit a6c81e32aeacbfd530d576fa401edd506ec966ef ]
 
-When uml_reserved is updated, min_low_pfn must also be updated
-accordingly. Otherwise, min_low_pfn will not accurately reflect
-the lowest available PFN.
+Newer FW can set the CAPS_CHANGE flag during ifup if some capabilities
+or configurations have changed.  For example, the CoS queue
+configurations may have changed.  Support this new flag by treating it
+almost like FW reset.  The driver will essentially rediscover all
+features and capabilities, reconfigure all backing store context memory,
+reset everything to default, and reserve all resources.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
-Link: https://patch.msgid.link/20250221041855.1156109-1-tiwei.btw@antgroup.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
+Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Signed-off-by: shantiprasad shettar <shantiprasad.shettar@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Link: https://patch.msgid.link/20250310183129.3154117-5-michael.chan@broadcom.com
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/kernel/mem.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
-index a5b4fe2ad9315..6ca9ea4a230bc 100644
---- a/arch/um/kernel/mem.c
-+++ b/arch/um/kernel/mem.c
-@@ -70,6 +70,7 @@ void __init mem_init(void)
- 	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
- 	memblock_free((void *)brk_end, uml_reserved - brk_end);
- 	uml_reserved = brk_end;
-+	min_low_pfn = PFN_UP(__pa(uml_reserved));
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 016dcfec8d496..63b674cae892c 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11776,6 +11776,7 @@ static int bnxt_hwrm_if_change(struct bnxt *bp, bool up)
+ 	struct hwrm_func_drv_if_change_input *req;
+ 	bool fw_reset = !bp->irq_tbl;
+ 	bool resc_reinit = false;
++	bool caps_change = false;
+ 	int rc, retry = 0;
+ 	u32 flags = 0;
  
- 	/* this will put all low memory onto the freelists */
- 	memblock_free_all();
+@@ -11831,8 +11832,11 @@ static int bnxt_hwrm_if_change(struct bnxt *bp, bool up)
+ 		set_bit(BNXT_STATE_ABORT_ERR, &bp->state);
+ 		return -ENODEV;
+ 	}
+-	if (resc_reinit || fw_reset) {
+-		if (fw_reset) {
++	if (flags & FUNC_DRV_IF_CHANGE_RESP_FLAGS_CAPS_CHANGE)
++		caps_change = true;
++
++	if (resc_reinit || fw_reset || caps_change) {
++		if (fw_reset || caps_change) {
+ 			set_bit(BNXT_STATE_FW_RESET_DET, &bp->state);
+ 			if (!test_bit(BNXT_STATE_IN_FW_RESET, &bp->state))
+ 				bnxt_ulp_irq_stop(bp);
 -- 
 2.39.5
 
