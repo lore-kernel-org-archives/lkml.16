@@ -1,75 +1,120 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF7722AE7F;
-	Mon,  5 May 2025 12:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125B4230D35;
+	Mon,  5 May 2025 12:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447323; cv=none; b=IsyDokTVT/IQQMVfnGznVm6F+7EcPDSsrJRDeDcyDDXplbxsCiCUJcTGOnk7sExlqtBy3xwTrefiA8eq/79Zg7Vaacia7kLR4huxNOVT4YV72nE70zqT6GatTcwrRhEYH88a0BRBomlov7Me02qmoYuCegpNnPZ1Ot5K1tMbi6I=
+	t=1746447352; cv=none; b=cYNa44233cHxFnbb1KB7GFhs9KQ6EVUHe3zJMj0Xfz7Q/fYbCXzyXZiY8a3zZnLkUtiYfaSQi/gcFUKSZbZj6ZueZMeuzrCSN9XrX9QMyWp/3FG4VWjvCDh9EQQg7vBw4VuYEykO74ntLRkUxBaXAVVwa2I0H4urqw7biL3r3gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447323; c=relaxed/simple;
-	bh=/ZxlZzMuIp9unqNcD0XajEpNxCAOmLzEQvkD+safKWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/XuxNGvSuyXFTqdi0B7sbBUCEiZocDStBsmRLehX2e0ys/R3FJHWvfu8tZ/mOZNYDlG1g5bDI2McVG1XownjOaKiRkX1uz5J4obFXSrF9eL6/OnxxA5A3Mqc2msbDQ6FgafPqVS/hKeyT74f7/VHt7vo/RNSuTWph1CFIHuDAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dq9gqMTM; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1746447352; c=relaxed/simple;
+	bh=8HcZtQz1mapFyWoKYVTxOoPRxBF6cFTSSmO5hGEgwm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nHabDTxc1/tYu4jnLU3F9tjuZAXIHdVg367vStneke5A6Ky4GfKBeC0q8NdpGUdPfEFQuKAI2HJKcjpN8IEWUU+9cA7Hp1oyUTMAh/Dl0gaiDebpP2w0vgDXMQvmXqujRwIlTne1IYLaMQnm9IMaIRyJflTgjPedVXL4v+Ron9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUZZn/BC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dq9gqMTM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=NbulvA1d2ndRK+1/mUS5QJdpNLrzeNCoxVF106IVpuA=; b=dq9gqMTMjXBY5G9paS6dfm7P92
-	SVXbVDW8brc1RsEIoIejCyXOIQdSjKv+i+i+8iOM2aW37Ua+MTzv7krWhHgTsklDHVhFpjPdrxcxZ
-	rKn1bkML3TsYPLwe6xQkgNejQBuUnmJuLF08oDTNnSDemhFR3QG0XgWfPR5nLW8N7Pz8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uBuiw-00BajR-Pd; Mon, 05 May 2025 14:15:06 +0200
-Date: Mon, 5 May 2025 14:15:06 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thangaraj Samynathan <thangaraj.s@microchip.com>
-Cc: netdev@vger.kernel.org, bryan.whitehead@microchip.com,
-	UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 net-next] net: lan743x: configure interrupt
-  moderation timers based on speed
-Message-ID: <e2d7079b-f2d3-443d-a0e5-cb4f7a85b1e6@lunn.ch>
-References: <20250505072943.123943-1-thangaraj.s@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUZZn/BC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D187AC4CEE4;
+	Mon,  5 May 2025 12:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746447351;
+	bh=8HcZtQz1mapFyWoKYVTxOoPRxBF6cFTSSmO5hGEgwm4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qUZZn/BCagIKPJ3HpU8S1QJtkEhQblDG/Cz6F+DyqGUhWr160HM0Drk7zRivbxzEE
+	 BQv97MjSsBHOUq8t7tk/IYCDbtjzG6r4NvTUGMRWpHtkJlNx18oIPR+rO+OTPPo5px
+	 wUNplKFuZ9Ib/4hkybtOLJcB/FniSsMzoGUVToNJ69IPnx9md1nmD7DR2TFX6Xlb+3
+	 HCoizfD+ZmdIyth0dyDwZ066fczAXb8ij/qPlgYwDR2EEEVHKaMm9+WfrOXexbdAUz
+	 vBZg5tROHQMT3c1Q1q2k7dEZMzVCBczLp1cTtyAYTI8/rY1KDLZfyd1TXh4sgUkfZs
+	 HR7jB4vPCrfWw==
+Date: Mon, 5 May 2025 13:15:44 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, David
+ Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Beniamin Bia
+ <beniamin.bia@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] iio: adc: ad7606: fix serial register access
+Message-ID: <20250505131544.0a7477a2@jic23-huawei>
+In-Reply-To: <o3jxdmchpmn5edbeznqecslkw4tnrdei4qqnb66oyyqeizavmg@5uke2kr4hte7>
+References: <20250418-wip-bl-ad7606-fix-reg-access-v3-1-d5eeb440c738@baylibre.com>
+	<o3jxdmchpmn5edbeznqecslkw4tnrdei4qqnb66oyyqeizavmg@5uke2kr4hte7>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505072943.123943-1-thangaraj.s@microchip.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 12:59:43PM +0530, Thangaraj Samynathan wrote:
-> Configures the interrupt moderation timer value to 64us for 2.5G,
-> 150us for 1G, 330us for 10/100M. Earlier this was 400us for all
-> speeds. This improvess UDP TX and Bidirectional performance to
-> 2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
-> experimenting with different values.
+On Mon, 5 May 2025 13:35:06 +0200
+Angelo Dureghello <adureghello@baylibre.com> wrote:
 
-It would be good to also implement:
+> Hi Jonathan,
+> 
+> any news on this patch ? I would need it to proceed on other new ad7606
+> features, 
+> 
+Oops. I applied this and marked it as such in patchwork but didn't
+reply to the mail. Sorry!  It was in the pull request Greg took last week
+for fixes but hasn't quite made it to upstream yet.  
 
-       ethtool -c|--show-coalesce devname
+Just list it as a dependency in cover letter for new feature patches.
 
-       ethtool -C|--coalesce devname [adaptive-rx on|off] [adaptive-tx on|off]
-              [rx-usecs N] [rx-frames N] [rx-usecs-irq N] [rx-frames-irq N]
-              [tx-usecs N] [tx-frames N] [tx-usecs-irq N] [tx-frames-irq N]
-              [stats-block-usecs N] [pkt-rate-low N] [rx-usecs-low N]
-              [rx-frames-low N] [tx-usecs-low N] [tx-frames-low N]
-              [pkt-rate-high N] [rx-usecs-high N] [rx-frames-high N]
-              [tx-usecs-high N] [tx-frames-high N] [sample-interval N]
-              [cqe-mode-rx on|off] [cqe-mode-tx on|off] [tx-aggr-max-bytes N]
-              [tx-aggr-max-frames N] [tx-aggr-time-usecs N]
+Jonathan
 
-so the user can configure it. Sometimes lower power is more important
-than high speed.
+> Thanks a lot,
+> angelo
+> 
+> On 18.04.2025 20:37, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > Fix register read/write routine as per datasheet.
+> > 
+> > When reading multiple consecutive registers, only the first one is read
+> > properly. This is due to missing chip select deassert and assert again
+> > between first and second 16bit transfer, as shown in the datasheet
+> > AD7606C-16, rev 0, figure 110.
+> > 
+> > Fixes: f2a22e1e172f ("iio: adc: ad7606: Add support for software mode for ad7616")
+> > Reviewed-by: David Lechner <dlechner@baylibre.com>
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > ---
+> > Changes in v3:
+> > - fix typo in commit descritpion.
+> > - Link to v2: https://lore.kernel.org/r/20250418-wip-bl-ad7606-fix-reg-access-v2-1-8b1ade67e185@baylibre.com
+> > 
+> > Changes in v2:
+> > - improve bug description.
+> > - Link to v1: https://lore.kernel.org/r/20250417-wip-bl-ad7606-fix-reg-access-v1-1-0ce341f3cfc3@baylibre.com
+> > ---
+> >  drivers/iio/adc/ad7606_spi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
+> > index 997be483ebb93293481b922e13ece4edb47e940a..bd05357a542cf7234d5bb6b718829d6b720262cd 100644
+> > --- a/drivers/iio/adc/ad7606_spi.c
+> > +++ b/drivers/iio/adc/ad7606_spi.c
+> > @@ -103,7 +103,7 @@ static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
+> >  		{
+> >  			.tx_buf = &st->d16[0],
+> >  			.len = 2,
+> > -			.cs_change = 0,
+> > +			.cs_change = 1,
+> >  		}, {
+> >  			.rx_buf = &st->d16[1],
+> >  			.len = 2,
+> > 
+> > ---
+> > base-commit: 8dc6b228d746b1a900bed28568defb2266fa4c43
+> > change-id: 20250417-wip-bl-ad7606-fix-reg-access-729c21478d1f
+> > 
+> > Best regards,
+> > -- 
+> > Angelo Dureghello <adureghello@baylibre.com>
+> >   
+> 
 
-	Andrew
