@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91012D4B40;
-	Mon,  5 May 2025 22:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED8A2D4B4B;
+	Mon,  5 May 2025 22:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485654; cv=none; b=vF8b6jaQ17uIPzZH7aIAEPsCa47CCsC4gsUMf78aKWtA8IKI5/UeLEkRto6zuLqBbkDM8hviVqyGq4YeqiScK4impKsoWaT9KAk/UHn11iJi0DWv5qlHu75fqQw85CeX95D5u1eTDbisgYodKfmERI24hYSexxswa6lCiqbxy9g=
+	t=1746485660; cv=none; b=SQHHCzwxy9rYQ6sB5koAyZ8L9cnFOWiRjsNKRTGi11in5Bo4EuVe/a/YH0VItI9/j4jebzvBtJN4+sA3APCFnNtaK6GFwYE3SFDqAk5wn9TLh/iFGwv51MmqVy47DwSfEK844h1Zg0rl9HIjqF/GS78r55eZuWSQy389COsk12w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485654; c=relaxed/simple;
-	bh=Y3NM0MCMk7+ECI9zSepJUk3C8iwhZLPPEjRgymiGBg4=;
+	s=arc-20240116; t=1746485660; c=relaxed/simple;
+	bh=jHDzHEFRlHiUhZM1Lgj5HAvwc0oS2yTjB+mbfilmv04=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GbDLVNLFS3L80kdUXrPijHAa6bloKes2rDWp9SZcRCsSMLS0rRbPfw9TLXt8XhnDpFo+D3iag3r6fImnHTNA/8gMNMxHGAvcZHylRbOSVUggXtMExvQQk7G1VxDGy4CmLFyxkW361+OmrXxSjxgfuQ4F2tQYV+wAlCV2kMcrNJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAc1wjV2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=b8+pnlh0HgE97Y6LRxf0BsbnidyxMXgdz6rrSevxjWzn4VUR/f/vYYwLZIj4bpluB1ECaUe/5oCle1h5FCOXCNs6L3fxP4lQTw4LhGsiE/PjJCix1x1W2FGrxdXYRiEjFJ3Wsk2B5iVjMZGpVPaaTsMFc6hVHlc04WH0QXhOUM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0qMflHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAc1wjV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C87C4CEED;
-	Mon,  5 May 2025 22:54:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0qMflHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D62AC4CEED;
+	Mon,  5 May 2025 22:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485654;
-	bh=Y3NM0MCMk7+ECI9zSepJUk3C8iwhZLPPEjRgymiGBg4=;
+	s=k20201202; t=1746485660;
+	bh=jHDzHEFRlHiUhZM1Lgj5HAvwc0oS2yTjB+mbfilmv04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NAc1wjV25fzx265dx51qm6afU6Hnu90v+impB8MGyOshFExxZtDXHluj4dTA+FZwM
-	 xs1am1/x0vZpyUXsVmS7xKwwWEOxa7QMFXNDv91SmmOIWHP/AELTFoO1vE5rI1+IxT
-	 JmELJ9XVoKhxx3TGl8uyv5BBDZFR+lGlGLM1+YLENk+wFOj717i3nvoG176JbsblDD
-	 5kvxNuVWpaU1eVtCVCBGJIyMF4E/wW9nWW5aAOg3SIU0JAO0OE/uuwsffFVHS6/60H
-	 j3SKjGM9xpArJS9ULA7TB9K3ejtMKTfNwxo5xldMAUWjTgqAV6RN9rVyi2SLkR2vkv
-	 7YAhdRuFwC3TA==
+	b=p0qMflHVmUy5f3v8iX6Zuy40DD9Oz1JLBLrIU7ecRLrf/NI/sgNI2iPflO9f9s/mW
+	 NqVJFAbp7s7vmP1ulEs0GhrO9EYQIuW00HdVyvUtnMSobQmB9Rdenvx9dTtJwQbMC7
+	 FTuEe5pD3h944HHgKfBwin7BAgIG53FS/8ASj3i9NjfJg25hWahcmBKrG97vmjkI9S
+	 0s9b+9V+4kfOHIXedlfGahIR1zIEFe/4S5bDh0utXKNXHOLH3E30YOggOBPy6+Spop
+	 ZpP3ST8SsDdiOc//4YiXJtPQT1JGuCpF4EjabD7joLeBrKRmN5s2+a2MVFzz09btKa
+	 QnPvOM3HXFyew==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Len Brown <len.brown@intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 410/486] wifi: rtw89: call power_on ahead before selecting firmware
-Date: Mon,  5 May 2025 18:38:06 -0400
-Message-Id: <20250505223922.2682012-410-sashal@kernel.org>
+	lenb@kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 413/486] tools/power turbostat: Clustered Uncore MHz counters should honor show/hide options
+Date: Mon,  5 May 2025 18:38:09 -0400
+Message-Id: <20250505223922.2682012-413-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -44,171 +46,84 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ping-Ke Shih <pkshih@realtek.com>
+From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit d078f5857a00c06fa0ddee26d3cb722e938e1688 ]
+[ Upstream commit 1c7c7388e6c31f46b26a884d80b45efbad8237b2 ]
 
-Driver selects firmware by hardware version, which normally can be read
-from registers before selecting firmware. However, certain chips such as
-RTL8851B, it needs to read hardware version from efuse while doing
-power_on, but do power_on after selecting firmware in current flow.
+The clustered uncore frequency counters, UMHz*.*
+should honor the --show and --hide options.
 
-To resolve this flow problem, move power_on out from
-rtw89_mac_partial_init(), and call rtw89_mac_pwr_on() separately at
-proper places to have expected flow.
+All non-specified counters should be implicityly hidden.
+But when --show was used, UMHz*.* showed up anyway:
 
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/20250203072911.47313-2-pkshih@realtek.com
+$ sudo turbostat -q -S --show Busy%
+Busy%  UMHz0.0  UMHz1.0  UMHz2.0  UMHz3.0  UMHz4.0
+
+Indeed, there was no string that can be used to explicitly
+show or hide clustered uncore counters.
+
+Even through they are dynamically probed and added,
+group the clustered UMHz*.* counters with the legacy
+built-in-counter "UncMHz" for show/hide.
+
+turbostat --show Busy%
+	does not show UMHz*.*.
+turbostat --show UncMHz
+	shows either UncMHz or UMHz*.*, if present
+turbostat --hide UncMHz
+	hides either UncMHz or UMHz*.*, if present
+
+Reported-by: Artem Bityutskiy <artem.bityutskiy@intel.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
+Tested-by: Artem Bityutskiy <artem.bityutskiy@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw89/core.c | 23 +++++++++++-------
- drivers/net/wireless/realtek/rtw89/mac.c  | 29 ++++++++++++++++-------
- drivers/net/wireless/realtek/rtw89/mac.h  |  1 +
- 3 files changed, 36 insertions(+), 17 deletions(-)
+ tools/power/x86/turbostat/turbostat.8 |  1 +
+ tools/power/x86/turbostat/turbostat.c | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wireless/realtek/rtw89/core.c
-index f82a26be6fa82..83b22bd0ce81a 100644
---- a/drivers/net/wireless/realtek/rtw89/core.c
-+++ b/drivers/net/wireless/realtek/rtw89/core.c
-@@ -4862,8 +4862,6 @@ static int rtw89_chip_efuse_info_setup(struct rtw89_dev *rtwdev)
+diff --git a/tools/power/x86/turbostat/turbostat.8 b/tools/power/x86/turbostat/turbostat.8
+index a3cf1d17163ae..e4b00e13302b3 100644
+--- a/tools/power/x86/turbostat/turbostat.8
++++ b/tools/power/x86/turbostat/turbostat.8
+@@ -199,6 +199,7 @@ The system configuration dump (if --quiet is not used) is followed by statistics
+ \fBUncMHz\fP per-package uncore MHz, instantaneous sample.
+ .PP
+ \fBUMHz1.0\fP per-package uncore MHz for domain=1 and fabric_cluster=0, instantaneous sample.  System summary is the average of all packages.
++For the "--show" and "--hide" options, use "UncMHz" to operate on all UMHz*.* as a group.
+ .SH TOO MUCH INFORMATION EXAMPLE
+ By default, turbostat dumps all possible information -- a system configuration header, followed by columns for all counters.
+ This is ideal for remote debugging, use the "--out" option to save everything to a text file, and get that file to the expert helping you debug.
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 77ef60980ee58..12424bf08551d 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -6445,7 +6445,18 @@ static void probe_intel_uncore_frequency_cluster(void)
+ 		sprintf(path, "%s/current_freq_khz", path_base);
+ 		sprintf(name_buf, "UMHz%d.%d", domain_id, cluster_id);
  
- 	rtw89_hci_mac_pre_deinit(rtwdev);
+-		add_counter(0, path, name_buf, 0, SCOPE_PACKAGE, COUNTER_K2M, FORMAT_AVERAGE, 0, package_id);
++		/*
++		 * Once add_couter() is called, that counter is always read
++		 * and reported -- So it is effectively (enabled & present).
++		 * Only call add_counter() here if legacy BIC_UNCORE_MHZ (UncMHz)
++		 * is (enabled).  Since we are in this routine, we
++		 * know we will not probe and set (present) the legacy counter.
++		 *
++		 * This allows "--show/--hide UncMHz" to be effective for
++		 * the clustered MHz counters, as a group.
++		 */
++		if BIC_IS_ENABLED(BIC_UNCORE_MHZ)
++			add_counter(0, path, name_buf, 0, SCOPE_PACKAGE, COUNTER_K2M, FORMAT_AVERAGE, 0, package_id);
  
--	rtw89_mac_pwr_off(rtwdev);
--
- 	return 0;
- }
- 
-@@ -4944,36 +4942,45 @@ int rtw89_chip_info_setup(struct rtw89_dev *rtwdev)
- 
- 	rtw89_read_chip_ver(rtwdev);
- 
-+	ret = rtw89_mac_pwr_on(rtwdev);
-+	if (ret) {
-+		rtw89_err(rtwdev, "failed to power on\n");
-+		return ret;
-+	}
-+
- 	ret = rtw89_wait_firmware_completion(rtwdev);
- 	if (ret) {
- 		rtw89_err(rtwdev, "failed to wait firmware completion\n");
--		return ret;
-+		goto out;
- 	}
- 
- 	ret = rtw89_fw_recognize(rtwdev);
- 	if (ret) {
- 		rtw89_err(rtwdev, "failed to recognize firmware\n");
--		return ret;
-+		goto out;
- 	}
- 
- 	ret = rtw89_chip_efuse_info_setup(rtwdev);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	ret = rtw89_fw_recognize_elements(rtwdev);
- 	if (ret) {
- 		rtw89_err(rtwdev, "failed to recognize firmware elements\n");
--		return ret;
-+		goto out;
- 	}
- 
- 	ret = rtw89_chip_board_info_setup(rtwdev);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	rtw89_core_setup_rfe_parms(rtwdev);
- 	rtwdev->ps_mode = rtw89_update_ps_mode(rtwdev);
- 
--	return 0;
-+out:
-+	rtw89_mac_pwr_off(rtwdev);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(rtw89_chip_info_setup);
- 
-diff --git a/drivers/net/wireless/realtek/rtw89/mac.c b/drivers/net/wireless/realtek/rtw89/mac.c
-index 04e254bd6b17f..9b09d4b7dea59 100644
---- a/drivers/net/wireless/realtek/rtw89/mac.c
-+++ b/drivers/net/wireless/realtek/rtw89/mac.c
-@@ -1491,6 +1491,21 @@ static int rtw89_mac_power_switch(struct rtw89_dev *rtwdev, bool on)
- #undef PWR_ACT
- }
- 
-+int rtw89_mac_pwr_on(struct rtw89_dev *rtwdev)
-+{
-+	int ret;
-+
-+	ret = rtw89_mac_power_switch(rtwdev, true);
-+	if (ret) {
-+		rtw89_mac_power_switch(rtwdev, false);
-+		ret = rtw89_mac_power_switch(rtwdev, true);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- void rtw89_mac_pwr_off(struct rtw89_dev *rtwdev)
- {
- 	rtw89_mac_power_switch(rtwdev, false);
-@@ -3918,14 +3933,6 @@ int rtw89_mac_partial_init(struct rtw89_dev *rtwdev, bool include_bb)
- {
- 	int ret;
- 
--	ret = rtw89_mac_power_switch(rtwdev, true);
--	if (ret) {
--		rtw89_mac_power_switch(rtwdev, false);
--		ret = rtw89_mac_power_switch(rtwdev, true);
--		if (ret)
--			return ret;
--	}
--
- 	rtw89_mac_ctrl_hci_dma_trx(rtwdev, true);
- 
- 	if (include_bb) {
-@@ -3958,6 +3965,10 @@ int rtw89_mac_init(struct rtw89_dev *rtwdev)
- 	bool include_bb = !!chip->bbmcu_nr;
- 	int ret;
- 
-+	ret = rtw89_mac_pwr_on(rtwdev);
-+	if (ret)
-+		return ret;
-+
- 	ret = rtw89_mac_partial_init(rtwdev, include_bb);
- 	if (ret)
- 		goto fail;
-@@ -3989,7 +4000,7 @@ int rtw89_mac_init(struct rtw89_dev *rtwdev)
- 
- 	return ret;
- fail:
--	rtw89_mac_power_switch(rtwdev, false);
-+	rtw89_mac_pwr_off(rtwdev);
- 
- 	return ret;
- }
-diff --git a/drivers/net/wireless/realtek/rtw89/mac.h b/drivers/net/wireless/realtek/rtw89/mac.h
-index 5ba1133b79d64..7974849f41e25 100644
---- a/drivers/net/wireless/realtek/rtw89/mac.h
-+++ b/drivers/net/wireless/realtek/rtw89/mac.h
-@@ -1120,6 +1120,7 @@ rtw89_write32_port_set(struct rtw89_dev *rtwdev, struct rtw89_vif_link *rtwvif_l
- 	rtw89_write32_set(rtwdev, reg, bit);
- }
- 
-+int rtw89_mac_pwr_on(struct rtw89_dev *rtwdev);
- void rtw89_mac_pwr_off(struct rtw89_dev *rtwdev);
- int rtw89_mac_partial_init(struct rtw89_dev *rtwdev, bool include_bb);
- int rtw89_mac_init(struct rtw89_dev *rtwdev);
+ 		if (quiet)
+ 			continue;
 -- 
 2.39.5
 
