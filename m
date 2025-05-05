@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1581AA7A6;
-	Mon,  5 May 2025 05:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C284194A67;
+	Mon,  5 May 2025 05:21:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746422437; cv=none; b=FqnAQyKgrPOaXnZMGjE1Z6V0l8w61sxnRNzigKEBKsPMiPMrWFS23AwAgVe+cqj7XOElFe3C1u72Xc9jJkHs+1pCRGx+f6DCt1MzszQazoJgT7hH1cSgVEI04osS2cQ6SgH48NBJlRGbz5G8F2RY8R+/qYHfZvj5P435VzESH9Y=
+	t=1746422471; cv=none; b=RCthrD17wwMeo8AKnPXZX0j2OSLN0g6rFxHmqnQ3bglOnLA9PwPZ++9IcmP8tbUkXm8zNHPramQyLq103SVFAZgCmnpfOh1+8+0ExhsRDQa2jWKZrpF86kkDLfCZO9QUwFBpRC2Zv0Dez2FCCfH+Qc2gkxzCyC8IJIUoadAlcw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746422437; c=relaxed/simple;
-	bh=Npt4xYeE5cAR7GRbHzsaDhd0uGoWV1B3qLG1zO+vHYQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l6D4bUM40JhuirzxZIokotx33s3xbs6DmuR6NsfDDHC+lok8B0/Q4+GgpjDwHiMyU9wFn6JkPQrb2nvSRey4+z0HzbRjRhWNSCesgMZg0Ztzb4tPCRnmhXKJf/mz0A0uW5ZFfrPeFedjE6n7yv2Q6OHd2uUA0QSkF/RR5Eh9G8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXvt8n4j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746422471; c=relaxed/simple;
+	bh=eFUNJz44umhXOHrb3M8tG09Hn9kgygwm89YtP0GIyOk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yg7HtM9KpJiqQt0m7WBfFRc45owDgs0cehD6j2CZVSS59ZVPMtZnb8GL0nEMsNT32avw6IUa4e7a6tZzhB6DDOpXXQ6e64SgGUOj/5PV/kPKCTdYah0L5Fvf9WzQbGJDqBMaEqVcHskf0a6JYD8K3HLT+PgJbK0Z1qoMC70XMzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5Kr3f55; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXvt8n4j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EDA4C4CEE4;
-	Mon,  5 May 2025 05:20:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5Kr3f55"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9358DC4CEE4;
+	Mon,  5 May 2025 05:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746422436;
-	bh=Npt4xYeE5cAR7GRbHzsaDhd0uGoWV1B3qLG1zO+vHYQ=;
+	s=k20201202; t=1746422471;
+	bh=eFUNJz44umhXOHrb3M8tG09Hn9kgygwm89YtP0GIyOk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=WXvt8n4j1KEzztv3WUglTfs56WruCL0SLlXOPM2TiVvfLtdcoWZkaE2ahW4kGNTsG
-	 PL3TOPqTtLsJkcRAVspyjDWUabzf8huRNAFd80MN/y/auREq9vnbjBc4cR1XMAWpou
-	 SQ0HP8qLnt79tXKe78L+kyYgR6sokyXzVh1m/39Zh6U2EXkVR+HGLDisXC/2dbfQpQ
-	 9EtbDBKS/N5qCzgsTxj52HOUsOoigasF8HxMHXHBBuY8V95fBkjciGJskDXDnrSr7p
-	 f8YtuR5oB1lICWnEn81PFTjS1c7vnQMTI8y4OS77mUT9Cfws7pxRkwr/NY3U+24HVo
-	 cHR9fHNXbDeow==
+	b=j5Kr3f5558Cu0uGP7jS1QGHwsAcFOt5cbr8JZHzqZq21yX1qU6YrdAJU/GWazYj4m
+	 PrGK6QZXEy3ZE+uW89sYOQruR6G+9IyPPwyigS3IXgx/98Cc2+Otpl3y1+zLO/bWHI
+	 exIiGxegMJaCQX6GXkIN1YUGy8eR6oFJoswGvXSh84uUCuysabLEhngAcUyBIHr2jl
+	 O3dxTQiRQeVIZe5GW6lBfEyJPO18wGHQQOSXB9wwlUkjoz8oWvOW4Ne8c2wYpE3nes
+	 24XB7cdY1kk9nhYBaG53d3LKuZubPEgAJRdVN8oR1p/tpwl5ECoMKDYMErd3c93TKq
+	 WqQc2KQQLhWXg==
 From: Arnd Bergmann <arnd@kernel.org>
 To: Mark Brown <broonie@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
 	Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alexandre Mergnat <amergnat@baylibre.com>,
+	Zoran Zhan <zoran.zhan@mediatek.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
 	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: usb-audio: qcom: fix USB_XHCI dependency
-Date: Mon,  5 May 2025 07:20:21 +0200
-Message-Id: <20250505052032.1811576-1-arnd@kernel.org>
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] ASoC: mediatek: mt8188-mt6359: select CONFIG_SND_SOC_MT6359_ACCDET
+Date: Mon,  5 May 2025 07:20:52 +0200
+Message-Id: <20250505052106.1811802-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -48,37 +54,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-SND_USB_AUDIO_QMI depends on USB_XHCI_SIDEBAND, but that is a bool symbol
-and allows it to be built-in even when XHCI itself is in a loadable module.
-That configuration causes a link failure:
+The driver support was added without selecting the codec, which leads to
+a link failure:
 
-arm-linux-gnueabi-ld: sound/usb/qcom/qc_audio_offload.o: in function `uaudio_event_ring_cleanup_free':
-qc_audio_offload.c:(.text+0x7dc): undefined reference to `xhci_sideband_remove_interrupter'
-arm-linux-gnueabi-ld: sound/usb/qcom/qc_audio_offload.o: in function `uaudio_endpoint_setup':
-qc_audio_offload.c:(.text+0xe88): undefined reference to `xhci_sideband_add_endpoint'
+aarch64-linux-ld: sound/soc/mediatek/mt8188/mt8188-mt6359.o: in function `mt8188_mt6359_init':
+mt8188-mt6359.c:(.text+0x19f0): undefined reference to `mt6359_accdet_enable_jack_detect'
 
-Add the extra dependency on USB_XHCI itself.
-
-Fixes: 326bbc348298 ("ALSA: usb-audio: qcom: Introduce QC USB SND offloading support")
+Fixes: f35d834d67ad ("ASoC: mediatek: mt8188-mt6359: Add accdet headset jack detect support")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/usb/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/mediatek/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/usb/Kconfig b/sound/usb/Kconfig
-index 6daa551738da..15bc212cb211 100644
---- a/sound/usb/Kconfig
-+++ b/sound/usb/Kconfig
-@@ -178,7 +178,8 @@ config SND_BCD2000
- 
- config SND_USB_AUDIO_QMI
- 	tristate "Qualcomm Audio Offload driver"
--	depends on QCOM_QMI_HELPERS && SND_USB_AUDIO && USB_XHCI_SIDEBAND && SND_SOC_USB
-+	depends on QCOM_QMI_HELPERS && SND_USB_AUDIO && SND_SOC_USB
-+	depends on USB_XHCI && USB_XHCI_SIDEBAND
- 	help
- 	  Say Y here to enable the Qualcomm USB audio offloading feature.
- 
+diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
+index 3033e2d3fe16..e148d4d94160 100644
+--- a/sound/soc/mediatek/Kconfig
++++ b/sound/soc/mediatek/Kconfig
+@@ -229,6 +229,7 @@ config SND_SOC_MT8188_MT6359
+ 	tristate "ASoC Audio driver for MT8188 with MT6359 and I2S codecs"
+ 	depends on SND_SOC_MT8188 && MTK_PMIC_WRAP
+ 	depends on I2C
++	select SND_SOC_MT6359_ACCDET
+ 	select SND_SOC_MT6359
+ 	select SND_SOC_HDMI_CODEC
+ 	select SND_SOC_DMIC
 -- 
 2.39.5
 
