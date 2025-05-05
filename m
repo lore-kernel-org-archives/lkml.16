@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCC3299512;
-	Mon,  5 May 2025 22:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59290299523;
+	Mon,  5 May 2025 22:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484957; cv=none; b=rtnOmTf4QYAC0vqC4Qt2pZTxWkxdZ9AdECHZvwibdU2ZI9DtSV7yBCJQoxz5V5YfHHuuENbly9iQ43JMdlGp6+OMt9qPZvpWUqjEo0aP2xIWm+CluP+jATPN3gKu+Y2vw2CO9ptptDu8DSf1vA4xFKv9e2CGVKrvd2kN0ynbB4k=
+	t=1746484960; cv=none; b=KUZCMHQEzaMz5hOJrsdPoZfH+BArkNYx5/cEpxYuKm0t5q7k4exYZ8S1kHQdJ2hpkPOvEGJy4JVg9RKt8u27TPFZYNV/LwUK01h1QsJhAbfGUTQ1dOQn5hZFE0b99xkMtelygq26QQ1BlWbr9DW8TL+b2UgNZJIHKj9NkDB3p8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484957; c=relaxed/simple;
-	bh=IFxjyUy9p939cgdSn8JtjShI/xj2DKazY5LneB9PH38=;
+	s=arc-20240116; t=1746484960; c=relaxed/simple;
+	bh=xZGMbGj6sBc3Sj/fGa8SASsuV+kyncDt16qSx4L3uFw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GdKiWHeiNXAwL2KHyp48rGKF2Y4eweoSFpk26QrSkfdjZx+IwhjbK7qqXUcGohIS/7YEAavPeTOxsvu8iyB59a25i08BdDLRSEGreHFWBl+lNBqflm1crf3gkHFESIterbmoFm2qDMm8SQCbuN2PwPS3Q92b4YEnVmoC1cxlrB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txlV3Jd4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ntwBcftv86Sf1j1WQBrT6pydes5A+5Dzgx0IORCwNm3whR2bMc8oBj31+PTA6vhPJnLXqXPWAVdSYjZJqY1cCIG4F7pLSpQ/Mpp131ZmtuWqDNSF92Mc9iX0WeSdYN0XNpS/6RWTMvjOYd2+Zw3tbrSr+Ye8FLfEk3FWYt5TZXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TD2gon2a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txlV3Jd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE14C4CEF1;
-	Mon,  5 May 2025 22:42:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TD2gon2a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C699C4CEED;
+	Mon,  5 May 2025 22:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484955;
-	bh=IFxjyUy9p939cgdSn8JtjShI/xj2DKazY5LneB9PH38=;
+	s=k20201202; t=1746484959;
+	bh=xZGMbGj6sBc3Sj/fGa8SASsuV+kyncDt16qSx4L3uFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=txlV3Jd4iSQqHQrncond5Z6YvFtiBAKjyYalXB1PDBLJbARVFALVUnSYKncqpXjPZ
-	 KfyUpnSpSZkjTKGXUR8ns/XEUBGOH7pNujay4R2yphANFXQ8gLw72Bh/uRQZhdJ8/X
-	 xW/z37V91eiktZ8U3h1Szet1MiiQ6ffGJKLITIKbjCy1qqV1AUzIMLapBTELHSU15Z
-	 1OSt+GfSHw7jF0TpNfql5pBWTQjtUvVcFDPgKU2RT6SEoY8GydRprLX9bn6VdesMKw
-	 eQNnmy+lCXeSbxxJyuiQrcnCKqGPrMQug+k+x42A8pnClOxyh//PWe4hNCR29QMi5L
-	 yzamakSwdPdLw==
+	b=TD2gon2aOBLy7I/n0urqB9x5WYns+YENc7NPly3LiMdwLB2UhBzq9J+CbCPi0a/Xz
+	 Wt0HhAvlRK4KbDjmw/NWjJzyRYAOU/i2PNpicHSWULhL3gasbRfuo9RE7PeFLY36HN
+	 x71kJ8EGq5aIF5PmLXDzCCQF7MbNC/PdgK4eulO/lm1d4cpeV8kXjFo0ZM/fmGQ07Z
+	 4z3ShE13KRN+iALfXkLjTDiEc08d0xG1ihGo3T9MR+GVEq4jYiEFob+e7QqlDu5CZc
+	 LuoyzH3XLAOH+mBmgROWfgU4aCvY7ISniNvMzPIpj3tgJnz1JFl3txh4I1D6MiHSTB
+	 LooJoIczjoBCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Serge Hallyn <serge@hallyn.com>,
-	Jan Kara <jack@suse.cz>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 094/486] ext4: reorder capability check last
-Date: Mon,  5 May 2025 18:32:50 -0400
-Message-Id: <20250505223922.2682012-94-sashal@kernel.org>
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 096/486] scsi: st: Tighten the page format heuristics with MODE SELECT
+Date: Mon,  5 May 2025 18:32:52 -0400
+Message-Id: <20250505223922.2682012-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,50 +52,42 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Christian Göttsche <cgzones@googlemail.com>
+From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
 
-[ Upstream commit 1b419c889c0767a5b66d0a6c566cae491f1cb0f7 ]
+[ Upstream commit 8db816c6f176321e42254badd5c1a8df8bfcfdb4 ]
 
-capable() calls refer to enabled LSMs whether to permit or deny the
-request.  This is relevant in connection with SELinux, where a
-capability check results in a policy decision and by default a denial
-message on insufficient permission is issued.
-It can lead to three undesired cases:
-  1. A denial message is generated, even in case the operation was an
-     unprivileged one and thus the syscall succeeded, creating noise.
-  2. To avoid the noise from 1. the policy writer adds a rule to ignore
-     those denial messages, hiding future syscalls, where the task
-     performs an actual privileged operation, leading to hidden limited
-     functionality of that task.
-  3. To avoid the noise from 1. the policy writer adds a rule to permit
-     the task the requested capability, while it does not need it,
-     violating the principle of least privilege.
+In the days when SCSI-2 was emerging, some drives did claim SCSI-2 but did
+not correctly implement it. The st driver first tries MODE SELECT with the
+page format bit set to set the block descriptor.  If not successful, the
+non-page format is tried.
 
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://patch.msgid.link/20250302160657.127253-2-cgoettsche@seltendoof.de
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+The test only tests the sense code and this triggers also from illegal
+parameter in the parameter list. The test is limited to "old" devices and
+made more strict to remove false alarms.
+
+Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+Link: https://lore.kernel.org/r/20250311112516.5548-4-Kai.Makisara@kolumbus.fi
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/balloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/st.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index 8042ad8738089..c48fd36b2d74c 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -649,8 +649,8 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
- 	/* Hm, nope.  Are (enough) root reserved clusters available? */
- 	if (uid_eq(sbi->s_resuid, current_fsuid()) ||
- 	    (!gid_eq(sbi->s_resgid, GLOBAL_ROOT_GID) && in_group_p(sbi->s_resgid)) ||
--	    capable(CAP_SYS_RESOURCE) ||
--	    (flags & EXT4_MB_USE_ROOT_BLOCKS)) {
-+	    (flags & EXT4_MB_USE_ROOT_BLOCKS) ||
-+	    capable(CAP_SYS_RESOURCE)) {
- 
- 		if (free_clusters >= (nclusters + dirty_clusters +
- 				      resv_clusters))
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index a17441635ff3a..1c0951168f646 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -3081,7 +3081,9 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
+ 			   cmd_in == MTSETDRVBUFFER ||
+ 			   cmd_in == SET_DENS_AND_BLK) {
+ 			if (cmdstatp->sense_hdr.sense_key == ILLEGAL_REQUEST &&
+-			    !(STp->use_pf & PF_TESTED)) {
++				cmdstatp->sense_hdr.asc == 0x24 &&
++				(STp->device)->scsi_level <= SCSI_2 &&
++				!(STp->use_pf & PF_TESTED)) {
+ 				/* Try the other possible state of Page Format if not
+ 				   already tried */
+ 				STp->use_pf = (STp->use_pf ^ USE_PF) | PF_TESTED;
 -- 
 2.39.5
 
