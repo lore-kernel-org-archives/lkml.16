@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED19636F892;
-	Mon,  5 May 2025 22:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9CA372650;
+	Mon,  5 May 2025 22:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485882; cv=none; b=Ltd1ob1V9cJPssIc/ciSAo4OvRQiXxv/5Yj8nsbGXKrD/x7SbBgvbYXq1RYDmUz075pLJV8QQk3pncLM8+CTgY08/f3GHy1MHoPEKfsqNhPGESZnf94jdPQYySTEQmuVP85wDypP4bc0GV5gz8aZSZTVtI4mrvkArx3FHmQCP40=
+	t=1746485912; cv=none; b=Ru5PTFszurPaESDDwNU3JLYF70Nb2DNn8mtpU/ZQ5lxP/kAeVAZ58hkOZ/IE9Xo+c4+IqiAuV32LsTiJbLiwnTnMkgBrjZ1FUioKT/g9aVzcdTD+xBQi/vZ0HlZ0wtu8czjqg5fR0wHdaTHXJXDnSJ0BQ4ng/jz0LMVov4Qc2Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485882; c=relaxed/simple;
-	bh=CUU4QOAPJanUXLuOG8RTWYDuLgsCmmqlxMBJRz+EHGQ=;
+	s=arc-20240116; t=1746485912; c=relaxed/simple;
+	bh=FVGpzuCNU8lsWl3ZvVKvbpTSb4GfqDllSSTYSn60rsE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l9WpDdBczjhNQ47bSIUnVKmv5atkNyDbWW5OWtet6WN6buN7yt0iQYPTlmAtq09Rxl2K8lhQDlbcQZGqS/tIvHcI1fM9Dj2YVBO63YA3HYS2FspeHRVv+oxNVWEwsIMRKdfFSlBnQg5RVAXHU6UhkQ+87XqCya+fMcDSS7XOX6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqgy1fir; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=m+EF34Ke22ER65xBWF9KL+MUF38w5Yrdkx3fTQLG3jH/3doabxswP3tIevsc0OORmG4C4Uz30FT1HVky7M5dR4UAFGGgiGerncVDNz9ezU0lIqZKeAW1Zbhj7xJoGmtvaNZyJtjAV+rQ3Ti/635AjTG99nhATZEhHVVVTRqZSf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXLfIguv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqgy1fir"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D163AC4CEE4;
-	Mon,  5 May 2025 22:57:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXLfIguv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B61C4CEE4;
+	Mon,  5 May 2025 22:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485880;
-	bh=CUU4QOAPJanUXLuOG8RTWYDuLgsCmmqlxMBJRz+EHGQ=;
+	s=k20201202; t=1746485911;
+	bh=FVGpzuCNU8lsWl3ZvVKvbpTSb4GfqDllSSTYSn60rsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gqgy1fir2PXdsgcKrjauF+hNcGrpc+qp0ritAn0WONBUCnAwz1QRH3nGQ5F0XXhu+
-	 BRWINgeqSbha4fW/Q4bp9TPeGApoKEFEvyeHR8be1UQLLEul5aoe9PARREQxSEL0F6
-	 Cnu/5GofghSQmJqm7sVo/Fu+iwdr8rDNo3fftGCaGEYZsDerf+28OeK/736qkT4X0F
-	 vh/lquIu+alZ1A0j6NBiIJvr10WmZOlR+gJXeu0vATPrEY0w+B3CjR7YtRZLOeO4A/
-	 /m2THwr2RiVi53h4GJ+9BYFYQDKUJKyEdX3IOPHt3WFLNyyHR5msi7xc+ZvCX2yp4N
-	 DsreGit3xiP7w==
+	b=lXLfIguvHdiLmRs18I3MlZDCptF0LndghHt85Z1s6kOTHKwtNlBOJfDwpU9hLjEyL
+	 P25HXI3GRXlAqYlwweazj8kcuXlwwx0AIPxVt/xmR11p0/eWXqB6I8CbEewfm4SlUs
+	 AMXY3qZdK/4ByiISaSq2zGFozHvoBYQlkB1Kf14rCe1OIzo7Xg09DYN26onuPPJWwB
+	 DvK6k6SJXgfsPpCtBfbag+iz3E40X0HFmXWPjDDfIZ/Whc2InqVPLDy/iYR50tFPcB
+	 v1yNPpJxee/BQuysQafQ/RB8YsFcIuf9P66aY1hYVzdV9YWQIC2RIdxInzxjxSa6fl
+	 tT54GCLbnuHEw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Boris Burkov <boris@bur.io>,
-	Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Kevin Tian <kevin.tian@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 044/294] btrfs: make btrfs_discard_workfn() block_group ref explicit
-Date: Mon,  5 May 2025 18:52:24 -0400
-Message-Id: <20250505225634.2688578-44-sashal@kernel.org>
+	Yunxiang.Li@amd.com,
+	avihaih@nvidia.com,
+	zhangdongdong@eswincomputing.com,
+	bhelgaas@google.com,
+	jgg@ziepe.ca,
+	yi.l.liu@intel.com,
+	pstanner@redhat.com,
+	linux@treblig.org,
+	pabeni@redhat.com,
+	kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 060/294] vfio/pci: Handle INTx IRQ_NOTCONNECTED
+Date: Mon,  5 May 2025 18:52:40 -0400
+Message-Id: <20250505225634.2688578-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,104 +59,82 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Boris Burkov <boris@bur.io>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 895c6721d310c036dcfebb5ab845822229fa35eb ]
+[ Upstream commit 860be250fc32de9cb24154bf21b4e36f40925707 ]
 
-Currently, the async discard machinery owns a ref to the block_group
-when the block_group is queued on a discard list. However, to handle
-races with discard cancellation and the discard workfn, we have a
-specific logic to detect that the block_group is *currently* running in
-the workfn, to protect the workfn's usage amidst cancellation.
+Some systems report INTx as not routed by setting pdev->irq to
+IRQ_NOTCONNECTED, resulting in a -ENOTCONN error when trying to
+setup eventfd signaling.  Include this in the set of conditions
+for which the PIN register is virtualized to zero.
 
-As far as I can tell, this doesn't have any overt bugs (though
-finish_discard_pass() and remove_from_discard_list() racing can have a
-surprising outcome for the caller of remove_from_discard_list() in that
-it is again added at the end).
+Additionally consolidate vfio_pci_get_irq_count() to use this
+virtualized value in reporting INTx support via ioctl and sanity
+checking ioctl paths since pdev->irq is re-used when the device
+is in MSI mode.
 
-But it is needlessly complicated to rely on locking and the nullity of
-discard_ctl->block_group. Simplify this significantly by just taking a
-refcount while we are in the workfn and unconditionally drop it in both
-the remove and workfn paths, regardless of if they race.
+The combination of these results in both the config space of the
+device and the ioctl interface behaving as if the device does not
+support INTx.
 
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Boris Burkov <boris@bur.io>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Link: https://lore.kernel.org/r/20250311230623.1264283-1-alex.williamson@redhat.com
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/discard.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c |  3 ++-
+ drivers/vfio/pci/vfio_pci_core.c   | 10 +---------
+ drivers/vfio/pci/vfio_pci_intrs.c  |  2 +-
+ 3 files changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/fs/btrfs/discard.c b/fs/btrfs/discard.c
-index 944a7340f6a44..3981c941f5b55 100644
---- a/fs/btrfs/discard.c
-+++ b/fs/btrfs/discard.c
-@@ -167,13 +167,7 @@ static bool remove_from_discard_list(struct btrfs_discard_ctl *discard_ctl,
- 	block_group->discard_eligible_time = 0;
- 	queued = !list_empty(&block_group->discard_list);
- 	list_del_init(&block_group->discard_list);
--	/*
--	 * If the block group is currently running in the discard workfn, we
--	 * don't want to deref it, since it's still being used by the workfn.
--	 * The workfn will notice this case and deref the block group when it is
--	 * finished.
--	 */
--	if (queued && !running)
-+	if (queued)
- 		btrfs_put_block_group(block_group);
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index a2ad4f7c716bf..d9eb8733a324b 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1813,7 +1813,8 @@ int vfio_config_init(struct vfio_pci_core_device *vdev)
+ 					cpu_to_le16(PCI_COMMAND_MEMORY);
+ 	}
  
- 	spin_unlock(&discard_ctl->lock);
-@@ -260,9 +254,10 @@ static struct btrfs_block_group *peek_discard_list(
- 			block_group->discard_cursor = block_group->start;
- 			block_group->discard_state = BTRFS_DISCARD_EXTENTS;
- 		}
--		discard_ctl->block_group = block_group;
- 	}
- 	if (block_group) {
-+		btrfs_get_block_group(block_group);
-+		discard_ctl->block_group = block_group;
- 		*discard_state = block_group->discard_state;
- 		*discard_index = block_group->discard_index;
- 	}
-@@ -493,9 +488,20 @@ static void btrfs_discard_workfn(struct work_struct *work)
+-	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
++	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx ||
++	    vdev->pdev->irq == IRQ_NOTCONNECTED)
+ 		vconfig[PCI_INTERRUPT_PIN] = 0;
  
- 	block_group = peek_discard_list(discard_ctl, &discard_state,
- 					&discard_index, now);
--	if (!block_group || !btrfs_run_discard_work(discard_ctl))
-+	if (!block_group)
- 		return;
-+	if (!btrfs_run_discard_work(discard_ctl)) {
-+		spin_lock(&discard_ctl->lock);
-+		btrfs_put_block_group(block_group);
-+		discard_ctl->block_group = NULL;
-+		spin_unlock(&discard_ctl->lock);
-+		return;
-+	}
- 	if (now < block_group->discard_eligible_time) {
-+		spin_lock(&discard_ctl->lock);
-+		btrfs_put_block_group(block_group);
-+		discard_ctl->block_group = NULL;
-+		spin_unlock(&discard_ctl->lock);
- 		btrfs_discard_schedule_work(discard_ctl, false);
- 		return;
- 	}
-@@ -547,15 +553,7 @@ static void btrfs_discard_workfn(struct work_struct *work)
- 	spin_lock(&discard_ctl->lock);
- 	discard_ctl->prev_discard = trimmed;
- 	discard_ctl->prev_discard_time = now;
--	/*
--	 * If the block group was removed from the discard list while it was
--	 * running in this workfn, then we didn't deref it, since this function
--	 * still owned that reference. But we set the discard_ctl->block_group
--	 * back to NULL, so we can use that condition to know that now we need
--	 * to deref the block_group.
--	 */
--	if (discard_ctl->block_group == NULL)
--		btrfs_put_block_group(block_group);
-+	btrfs_put_block_group(block_group);
- 	discard_ctl->block_group = NULL;
- 	__btrfs_discard_schedule_work(discard_ctl, now, false);
- 	spin_unlock(&discard_ctl->lock);
+ 	ret = vfio_cap_init(vdev);
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index a8f259bc2f4d0..fa168b4342395 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -731,15 +731,7 @@ EXPORT_SYMBOL_GPL(vfio_pci_core_finish_enable);
+ static int vfio_pci_get_irq_count(struct vfio_pci_core_device *vdev, int irq_type)
+ {
+ 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
+-		u8 pin;
+-
+-		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
+-		    vdev->nointx || vdev->pdev->is_virtfn)
+-			return 0;
+-
+-		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+-
+-		return pin ? 1 : 0;
++		return vdev->vconfig[PCI_INTERRUPT_PIN] ? 1 : 0;
+ 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
+ 		u8 pos;
+ 		u16 flags;
+diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+index 620134041b488..c4322faca2bd5 100644
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -269,7 +269,7 @@ static int vfio_intx_enable(struct vfio_pci_core_device *vdev,
+ 	if (!is_irq_none(vdev))
+ 		return -EINVAL;
+ 
+-	if (!pdev->irq)
++	if (!pdev->irq || pdev->irq == IRQ_NOTCONNECTED)
+ 		return -ENODEV;
+ 
+ 	name = kasprintf(GFP_KERNEL_ACCOUNT, "vfio-intx(%s)", pci_name(pdev));
 -- 
 2.39.5
 
