@@ -1,239 +1,261 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDBA1ACEDE
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595D834CF5;
+	Mon,  5 May 2025 18:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746468185; cv=none; b=C9/MkD65+/X9y52YmhVmnfy8o9tQZS/ApH70xOVrOsIti3X3NXoLlngYgo/lReIPKM4lKeUsG+xTCOlivKhEhAO2jcXkUy2k8MXkSzgPuh74zmxJwKx3WU9eyLNjlWSuFMxKWruw4r5brCcer5+s+wE6sTl7ltkLlcvgDk5w4/4=
+	t=1746468211; cv=none; b=HatYF4e1is0aq2NFSLU2nWKt6MZWMXaG3U0nB0MywggzjANBp47SBLjvQ8uoKgbiYPBqxvkuLzKOs6xEluPddGkuHPJ4ZYJZyTRnsLIzXUGWT0vDvhP+n18pUXKXyyGJsNAs3DlvZLUgDIxSCXmsW+L+6tf3tr9PhRBtIX/a5Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746468185; c=relaxed/simple;
-	bh=VqbdyGtdiOP9xZl1obfcHNm1EmOvQxZOMzc0kDtFx70=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kbIqObrY8zeZm73wKI+onlIEKtLs4s3kXB4xbnOqd0bGgJ9S4vwCI9xhNGacxt9TTbNWaylEm9q4OyFSK9NFWH0G3PesRl1jjH8pwUxmtXv/Ddv6xj3QBsDbzEpQdYyYsh4yuwwsLKnxFBmkhioBGL7cMsKH1nS2iWYJRkl0tXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LSpvN4Oa; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746468211; c=relaxed/simple;
+	bh=LDjkdwIxXFL8YYvCMFDHn+XOhuYLpfnrJwHRsgUIH0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tuZCU8LvEy3lGdi0dtYfbTJlkZgDnMVA38TrlyhZc/rAm/aQH76EgKqw+NXr2mtgKkYla3MSnh0qZMOEsEsAFWJcOEdMrUOrtg38+EtyGir1rIgG2qgjTq7Q5pfxW/8o1ZZYsdhE5jCmlKRIhWggLQdf4aFsdPg/qTyism6D4fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pYZ93YyZ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LSpvN4Oa"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-309e8dc1e21so4635052a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746468183; x=1747072983; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6fdHkz+qURvnP5/FWddFFQyfUC9zHcFbvyU+99/kk/A=;
-        b=LSpvN4OayvIjk3ppDnc82CgqS0m8pZKAwbm4MDzV8WsRpzneGs3whxr3/S+JyZVbP6
-         v9m6yC8e9i/ERJoo9RXRk0Mi1k0ku09uGkUolcYzCh2Vj5/sqqkPN52FPNwnYEMKqi15
-         2fPj3HRWJS7HM9VY6WHX7fXfU0WjqWvGhaLQnbYOkCrYsHIs7F1yjnGOpbOxfed43ZcT
-         WIbSmEBCXJRRojmWOask4Lg0Tz2MbIZ4vYK+cNRdzZOMsbGpwsHPx0vpVKv4gdrjtTA5
-         cYyclB9sQvnr6F1XjMs/EobzzldxbPm2nRwDMenNFji7CvtVsiqcBDulTdPJiCyyvU6O
-         VtQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746468183; x=1747072983;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6fdHkz+qURvnP5/FWddFFQyfUC9zHcFbvyU+99/kk/A=;
-        b=sx8KtR33wSN8mj51d4qNIzIonwUYkoJghrzIOQC8S2Qqv8bR7/Bopxn+Q86CIVpUVW
-         oCExDzrAWF+b9uMJijuuhzeHTFkeH4GP4HFlDjjeKxDOhemjnRaK1UXk6oCPd8y3FOD5
-         ZayOziywYyV95BIsRW86s8rXkInDK63u+qgz/jyVQ8AY+uCE/KdPJdQvqa4k4Qow8kdm
-         mSFc82bCu7FnOOZmOTLPzuwM9JUPxHYGTo6QKye6WBoo9xlpR2bqjv1Ylef2HA4/N7No
-         fLrvbuVNu/8USkvSMomdDVYMXd7+GmNxOCDrBy6wt8tMKHeeEMUQtVgSYZcGqiqn+yFL
-         N9gg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7q/BPwiDG73sAh8z5yaLqCOnXrP8yCY18YFZpuUyyiJl3dxh9gslU4TnBLMXY+Eqp/AoJKDWC5S7CaEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8uyHMpOXnvuhDVqY7H1v2gTp4lPs0B+bwtIcp9isKDHdd/xon
-	RqPOZ2pRD5xDB/DtD6894Yx2t5ZzilnWkc0o/WUHMZIZc+fQJ3u25vSmJQX3Uwx/nVi/tie8Cg+
-	Lqw==
-X-Google-Smtp-Source: AGHT+IGOOZOIsWiGySRvbESMZh0DpMg7q8RyhQryXMHIN6gDz6nOKsDfCvoZ2snN2VpuUQbAnCwg8f1EIco=
-X-Received: from pjbkl6.prod.google.com ([2002:a17:90b:4986:b0:2ef:8055:93d9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5643:b0:2fa:6793:e860
- with SMTP id 98e67ed59e1d1-30a7ba2404emr726549a91.0.1746468182837; Mon, 05
- May 2025 11:03:02 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon,  5 May 2025 11:03:00 -0700
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pYZ93YyZ"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A27936DE;
+	Mon,  5 May 2025 20:03:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746468196;
+	bh=LDjkdwIxXFL8YYvCMFDHn+XOhuYLpfnrJwHRsgUIH0w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pYZ93YyZ/A/fi/KdbL8DgwAH5FerehQ3VmeFsVSsMT8XN6IR5RxnOIKJRTLrY9+UV
+	 pV/LeoJnpJK5h6mNyfp5H+u++83laI+EADKKJPEinfshOKIMd4sGQu3TU0ECY8So2w
+	 rM2qsmZdf6UAaplR9wJNjFbp66M1TThCGyLScbAk=
+Message-ID: <de4cacee-56ad-4700-b329-7853abc77ea5@ideasonboard.com>
+Date: Mon, 5 May 2025 21:03:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250505180300.973137-1-seanjc@google.com>
-Subject: [PATCH v2] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM
- count transitions
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Larabel <Michael@michaellarabel.com>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] drm/bridge: cdns-dsi: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Vitor Soares <vitor.soares@toradex.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+ Jayesh Choudhary <j-choudhary@ti.com>, stable@vger.kernel.org,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+References: <20250428094048.1459620-1-ivitro@gmail.com>
+ <fbde0659-78f3-46e4-98cf-d832f765a18b@ideasonboard.com>
+ <ec35d40dcd06ddbcfc0409ffa01aaee22c601716.camel@gmail.com>
+ <a1cf67da-a0cb-46c5-b22b-10ecca8ab383@ideasonboard.com>
+ <33ff9db89056a683e393de09c41d7c98bdbc045e.camel@gmail.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <33ff9db89056a683e393de09c41d7c98bdbc045e.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-only if KVM has at least one active VM.  Leaving the bit set at all times
-unfortunately degrades performance by a wee bit more than expected.
+Hi,
 
-Use a dedicated spinlock and counter instead of hooking virtualization
-enablement, as changing the behavior of kvm.enable_virt_at_load based on
-SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-result in performance issues for flows that are sensitive to VM creation
-latency.
+On 05/05/2025 20:47, Vitor Soares wrote:
+> On Mon, 2025-05-05 at 18:30 +0300, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> On 05/05/2025 17:45, Vitor Soares wrote:
+>>> On Tue, 2025-04-29 at 09:32 +0300, Tomi Valkeinen wrote:
+>>>> Hi,
+>>>>
+>>>> On 28/04/2025 12:40, Vitor Soares wrote:
+>>>>> From: Vitor Soares <vitor.soares@toradex.com>
+>>>>>
+>>>>> The deprecated UNIVERSAL_DEV_PM_OPS() macro uses the provided callbacks
+>>>>> for both runtime PM and system sleep. This causes the DSI clocks to be
+>>>>> disabled twice: once during runtime suspend and again during system
+>>>>> suspend, resulting in a WARN message from the clock framework when
+>>>>> attempting to disable already-disabled clocks.
+>>>>>
+>>>>> [   84.384540] clk:231:5 already disabled
+>>>>> [   84.388314] WARNING: CPU: 2 PID: 531 at /drivers/clk/clk.c:1181
+>>>>> clk_core_disable+0xa4/0xac
+>>>>> ...
+>>>>> [   84.579183] Call trace:
+>>>>> [   84.581624]  clk_core_disable+0xa4/0xac
+>>>>> [   84.585457]  clk_disable+0x30/0x4c
+>>>>> [   84.588857]  cdns_dsi_suspend+0x20/0x58 [cdns_dsi]
+>>>>> [   84.593651]  pm_generic_suspend+0x2c/0x44
+>>>>> [   84.597661]  ti_sci_pd_suspend+0xbc/0x15c
+>>>>> [   84.601670]  dpm_run_callback+0x8c/0x14c
+>>>>> [   84.605588]  __device_suspend+0x1a0/0x56c
+>>>>> [   84.609594]  dpm_suspend+0x17c/0x21c
+>>>>> [   84.613165]  dpm_suspend_start+0xa0/0xa8
+>>>>> [   84.617083]  suspend_devices_and_enter+0x12c/0x634
+>>>>> [   84.621872]  pm_suspend+0x1fc/0x368
+>>>>>
+>>>>> To address this issue, replace UNIVERSAL_DEV_PM_OPS() with
+>>>>> DEFINE_RUNTIME_DEV_PM_OPS(), which avoids redundant suspend/resume calls
+>>>>> by checking if the device is already runtime suspended.
+>>>>>
+>>>>> Cc: <stable@vger.kernel.org> # 6.1.x
+>>>>> Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+>>>>> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
+>>>>> ---
+>>>>>     drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 10 +++++-----
+>>>>>     1 file changed, 5 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>>> b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>>> index b022dd6e6b6e..62179e55e032 100644
+>>>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+>>>>> @@ -1258,7 +1258,7 @@ static const struct mipi_dsi_host_ops cdns_dsi_ops
+>>>>> = {
+>>>>>           .transfer = cdns_dsi_transfer,
+>>>>>     };
+>>>>>     
+>>>>> -static int __maybe_unused cdns_dsi_resume(struct device *dev)
+>>>>> +static int cdns_dsi_resume(struct device *dev)
+>>>>>     {
+>>>>>           struct cdns_dsi *dsi = dev_get_drvdata(dev);
+>>>>>     
+>>>>> @@ -1269,7 +1269,7 @@ static int __maybe_unused cdns_dsi_resume(struct
+>>>>> device *dev)
+>>>>>           return 0;
+>>>>>     }
+>>>>>     
+>>>>> -static int __maybe_unused cdns_dsi_suspend(struct device *dev)
+>>>>> +static int cdns_dsi_suspend(struct device *dev)
+>>>>>     {
+>>>>>           struct cdns_dsi *dsi = dev_get_drvdata(dev);
+>>>>>     
+>>>>> @@ -1279,8 +1279,8 @@ static int __maybe_unused cdns_dsi_suspend(struct
+>>>>> device *dev)
+>>>>>           return 0;
+>>>>>     }
+>>>>>     
+>>>>> -static UNIVERSAL_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend,
+>>>>> cdns_dsi_resume,
+>>>>> -                           NULL);
+>>>>> +static DEFINE_RUNTIME_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend,
+>>>>> +                                cdns_dsi_resume, NULL);
+>>>>
+>>>> I'm not sure if this, or the UNIVERSAL_DEV_PM_OPS, is right here. When
+>>>> the system is suspended, the bridge drivers will get a call to the
+>>>> *_disable() hook, which then disables the device. If the bridge driver
+>>>> would additionally do something in its system suspend hook, it would
+>>>> conflict with normal disable path.
+>>>>
+>>>> I think bridges/panels should only deal with runtime PM.
+>>>>
+>>>>     Tomi
+>>>>
+>>>
+>>> In the proposed change, we make use of pm_runtime_force_suspend() during
+>>> system-wide suspend. If the device is already suspended, this call is a
+>>> no-op and disables runtime PM to prevent spurious wakeups during the
+>>> suspend period. Otherwise, it triggers the device’s runtime_suspend()
+>>> callback.
+>>>
+>>> I briefly reviewed other bridge drivers, and those that implement runtime
+>>> PM appear to follow a similar approach, relying solely on runtime PM
+>>> callbacks and using pm_runtime_force_suspend()/resume() to handle
+>>> system-wide transitions.
+>>
+>> Yes, I see such a solution in some of the bridge and panel drivers. I'm
+>> probably missing something here, as I don't think it's correct.
+>>
+>> Why do we need to set the system suspend/resume hooks? What is the
+>> scenario where those will be called, and the
+>> pm_runtime_force_suspend()/resume() do something that's not already done
+>> via the normal DRM pipeline enable/disable?
+>>
+>>    Tomi
+>>
+> 
+> I'm not a DRM expert, but my understanding is that there might be edge cases
+> where the system suspend sequence occurs without the DRM core properly disabling
+> the bridge — for example, due to a bug or if the bridge is not bound to an
+> active pipeline. In such cases, having suspend/resume callbacks ensures that the
+> device is still properly suspended and resumed.
+> 
+> Additionally, pm_runtime_force_suspend() disables runtime PM for the device
+> during system suspend, preventing unintended wakeups (e.g., via IRQs, delayed
+> work, or sysfs access) until pm_runtime_force_resume() is invoked.
+> 
+>  From my perspective, the use of pm_runtime_force_suspend() and
+> pm_runtime_force_resume() serves as a safety mechanism to guarantee a well-
+> defined and race-free state during system suspend.
 
-Defer setting BP_SPEC_REDUCE until VMRUN is imminent to avoid impacting
-performance on CPUs that aren't running VMs, e.g. if a setup is using
-housekeeping CPUs.  Setting BP_SPEC_REDUCE in task context, i.e. without
-blasting IPIs to all CPUs, also helps avoid serializing 1<=>N transitions
-without incurring a gross amount of complexity (see the Link for details
-on how ugly coordinating via IPIs gets).
+But then we must be sure that the suspend sequence is just right.
 
-Link: https://lore.kernel.org/all/aBOnzNCngyS_pQIW@google.com
-Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
-Reported-by: Michael Larabel <Michael@michaellarabel.com>
-Closes: https://www.phoronix.com/review/linux-615-amd-regression
-Cc: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
+At least in tidss's case, tidss_drv.c has tidss_suspend() which calls 
+drm_mode_config_helper_suspend(), which, if I recall right, will then 
+disable the pipeline. This must happen before the bridge's system 
+suspend call, otherwise the bridge might go to suspend while the 
+pipeline is still running, which might cause errors on the still-running 
+pipeline entities, and probably crash the bridge's disable() call. If a 
+bridge is a platform device, I don't think there's any ordering between 
+the tidss's and the bridge's suspend calls.
 
-v2: Defer setting BP_SPEC_REDUCE until VMRUN is imminent, which in turn
-    allows for eliding the lock on 0<=>1 transitions as there is no race
-    with CPUs doing VMRUN before receiving the IPI to set the bit, and
-    having multiple tasks take the lock during svm_srso_vm_init() is a-ok.
+If the bridge is not bound to a pipeline, why would it be enabled in the 
+first place?
 
-v1: https://lore.kernel.org/all/20250502223456.887618-1-seanjc@google.com
+For the bug case... We're in random territory, then. If the driver is 
+bugging, are you sure it's safe and useful to suspend it? Or would it be 
+better to not do anything...
 
- arch/x86/kvm/svm/svm.c | 71 ++++++++++++++++++++++++++++++++++++++----
- arch/x86/kvm/svm/svm.h |  2 ++
- 2 files changed, 67 insertions(+), 6 deletions(-)
+I'm not nacking the patch, as this approach seems to be used in multiple 
+drivers. It just rings multiple alarm bells here, and I don't understand 
+how exactly it's supposed to work. That said, the driver is using 
+UNIVERSAL_DEV_PM_OPS(), so I think switching to 
+DEFINE_RUNTIME_DEV_PM_OPS() is at least not worse (well, I can't be 
+quite sure even about that =).
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index cc1c721ba067..15f7a0703c16 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
- 	kvm_cpu_svm_disable();
- 
- 	amd_pmu_disable_virt();
--
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
- }
- 
- static int svm_enable_virtualization_cpu(void)
-@@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
- 		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
--
- 	return 0;
- }
- 
-@@ -1518,6 +1512,63 @@ static void svm_vcpu_free(struct kvm_vcpu *vcpu)
- 	__free_pages(virt_to_page(svm->msrpm), get_order(MSRPM_SIZE));
- }
- 
-+#ifdef CONFIG_CPU_MITIGATIONS
-+static DEFINE_SPINLOCK(srso_lock);
-+static atomic_t srso_nr_vms;
-+
-+static void svm_srso_clear_bp_spec_reduce(void *ign)
-+{
-+	struct svm_cpu_data *sd = this_cpu_ptr(&svm_data);
-+
-+	if (!sd->bp_spec_reduce_set)
-+		return;
-+
-+	msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+	sd->bp_spec_reduce_set = false;
-+}
-+
-+static void svm_srso_vm_destroy(void)
-+{
-+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-+		return;
-+
-+	if (atomic_dec_return(&srso_nr_vms))
-+		return;
-+
-+	guard(spinlock)(&srso_lock);
-+
-+	/*
-+	 * Verify a new VM didn't come along, acquire the lock, and increment
-+	 * the count before this task acquired the lock.
-+	 */
-+	if (atomic_read(&srso_nr_vms))
-+		return;
-+
-+	on_each_cpu(svm_srso_clear_bp_spec_reduce, NULL, 1);
-+}
-+
-+static void svm_srso_vm_init(void)
-+{
-+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-+		return;
-+
-+	/*
-+	 * Acquire the lock on 0 => 1 transitions to ensure a potential 1 => 0
-+	 * transition, i.e. destroying the last VM, is fully complete, e.g. so
-+	 * that a delayed IPI doesn't clear BP_SPEC_REDUCE after a vCPU runs.
-+	 */
-+	if (atomic_inc_not_zero(&srso_nr_vms))
-+		return;
-+
-+	guard(spinlock)(&srso_lock);
-+
-+	atomic_inc(&srso_nr_vms);
-+}
-+#else
-+static void svm_srso_vm_init(void) { }
-+static void svm_srso_vm_destroy(void) { }
-+#endif
-+
- static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-@@ -1550,6 +1601,11 @@ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- 	    (!boot_cpu_has(X86_FEATURE_V_TSC_AUX) || !sev_es_guest(vcpu->kvm)))
- 		kvm_set_user_return_msr(tsc_aux_uret_slot, svm->tsc_aux, -1ull);
- 
-+	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE) &&
-+	    !sd->bp_spec_reduce_set) {
-+		sd->bp_spec_reduce_set = true;
-+		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+	}
- 	svm->guest_state_loaded = true;
- }
- 
-@@ -5036,6 +5092,8 @@ static void svm_vm_destroy(struct kvm *kvm)
- {
- 	avic_vm_destroy(kvm);
- 	sev_vm_destroy(kvm);
-+
-+	svm_srso_vm_destroy();
- }
- 
- static int svm_vm_init(struct kvm *kvm)
-@@ -5061,6 +5119,7 @@ static int svm_vm_init(struct kvm *kvm)
- 			return ret;
- 	}
- 
-+	svm_srso_vm_init();
- 	return 0;
- }
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index d4490eaed55d..f16b068c4228 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -335,6 +335,8 @@ struct svm_cpu_data {
- 	u32 next_asid;
- 	u32 min_asid;
- 
-+	bool bp_spec_reduce_set;
-+
- 	struct vmcb *save_area;
- 	unsigned long save_area_pa;
- 
-
-base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
--- 
-2.49.0.967.g6a0df3ecc3-goog
+  Tomi
 
