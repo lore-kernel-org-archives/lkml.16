@@ -1,103 +1,181 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387E01DED5E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5329C156236
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478478; cv=none; b=Mszgp6yfqORgrKOBptFzzhj/IibDeHS/M21/xUJlAVLup46ojZSnn6gFBsrKspxDA6Zsmli5nMhi0wZ0ej8GqDd68wxxjABbwnrjdwfLlmNWNWu02PuvsB7gWX95J/kdMudmQDwDkcZL1SYAhiFfSQMfNVqizzIYR0kmOEcwajE=
+	t=1746478527; cv=none; b=CQ4qfOX3RBY2SxYPPUTGn6NrCkcllyJekIYdda6rGWFS2Hcc7RLU15itTHxPdAnfKfAkh16n7NAXra4zS9d18MbPnTcIPWP8ocOmS6hvbdgVjIlACai92MWIhgl46QCgK5anv7Xms8qHlMn0EosRon6reDwcHrv8gBlnoZx95Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478478; c=relaxed/simple;
-	bh=pfa+PYeg4WPVwVxgRN4mqVIVdS5dCfF6BR4NmCcohGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N8iShCNQWW4MeKNR8q0++OPppsodN3GgOs1mtdLNfSobGF03TTkCG6YRLSpVkNPDWXwO7BgMo4ezkwsMovaTOG4jyu6xIGPF+p1YgNwJzIMh5hl/8gHDYf78WYMtVH38cuQyekXzX0JO5lVBMR9fZMrXXmDiiGrDl2Llut/vRLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HySrKJbO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746478527; c=relaxed/simple;
+	bh=CcZ1jORXsXUNNI5DmPwrvSmetMSvhSPTegSj1nPNGfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qBMqt8dcsnJcTnsikyNsZ1fHh5gP2/tdHVFUG9B8xnCHCMT8FJiAujd3zcM4fQufRhjt/JrSewKWlT4VC1q+9pyeC9ZncFhmZk1EoSpZFCfgBR5rWF4avWmkcNWmaNeMBv5QE2LVduVedyRR0bjxU1EHyXvzvMTuWX+2W7v34UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=mryhlDDi; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HySrKJbO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B302E40E0173;
-	Mon,  5 May 2025 20:54:32 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id su_X-5hhMmCg; Mon,  5 May 2025 20:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746478468; bh=NF9NxKE8++1cFpk51jh/WPMkv9XRVzQgo4qOw9yfOj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HySrKJbOVoSqEUY6UOwErCXwDMheKjL0vOUBNa9bQ5yNLJw1fkR4nQBz5w97FNSjq
-	 yLiCyl6Ydu6rnB9xv1bp70reSMddbZ1IodX3QJ1ZoVfduy+hZvBmW4j0AqoZBLJjK1
-	 NXFqlXaEnalLc4kMQpGzdrwZrIkWNEw8vlu2OD4HYUoult1DIZGb3d3AL17SvMeITP
-	 6sgWyQWeTfvMMmFDeQesOtmxeyMFRf5uLiND5hHutAC3Z9715ljTGCgOaOQRKQHtic
-	 E86W8vPhQ7/oafCEppXTYOcAmLFUSg5wxXXLl0+zqLcaK8uaQ3viYX04wawtlIXar5
-	 t4xxjxBXLko/0zUQwNXJvIvkOrOvz+qxHIx79PzZalpYYmWP4oeXvJBL7f6ekLcP0i
-	 hgejLlF566u00ot50dfqEn2Rtyxkuz3pnlJ9TUsPvaJVbbbooFanoCJjNVxiaPW86o
-	 SJRHweAftyLlo5phwRlGwYxkTAALlAI3fRTBlve+itPS1QViV7zkaC2kjWfUvQdadz
-	 32NoFzKugBAxN8CK647T1KXs4cpKzd//bOXNJnDW4XKm8XjFKzgpcWXzLO4nAMkd+7
-	 NLE97zLIQtzemP9SpHQKuuKDWPHQ44pm/yQHDy4n7nelDEvBXIliAw/MORBMpvPY1s
-	 /Mko/vBobHIjN5Kqu7MIhMI0=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 322EB40E01FA;
-	Mon,  5 May 2025 20:54:14 +0000 (UTC)
-Date: Mon, 5 May 2025 22:54:05 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, Ingo Molnar <mingo@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-Message-ID: <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
-References: <20250425084216.3913608-1-mingo@kernel.org>
- <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk>
- <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com>
- <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
- <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="mryhlDDi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1746478524;
+ bh=qQneQiujTp667QxrLtu0L+PuxYk5iu271S89xRTqn6s=;
+ b=mryhlDDiUrBpvLIzZVjjRhzoFNYGcnJgqs5yYyS+k7O/6fwKyAPTOtNyircrygQ7h4Sa+jMC2
+ 7JHHLwIJyKV9ef1ZZy4AhaqtlSZVoj4xh9cw2mjS7HWLVbKhzOm7fJUn5jaQyUAugEdaLuUf5lT
+ NDLyHFYOd9G9Gq8nUXGytFwYQAsulxVWyZVHl8t9hIN5E+Bk3hxVtXFwLYXtILoj3dmPnbvJgky
+ AEAhJ8ZI546MA85KKiXiXdo8eeXEiqqkyRc+w8Kvga2G1DTX4j2zEESUlalysyehdy6TjuO2x6P
+ Xr0pR5NMC+4jl72qPBb/o7h05OF4pDex6b6f4QwKCjuQ==
+X-Forward-Email-ID: 681925af46c37f8647c20276
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.2
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <f0ef6679-7ddf-4deb-98a3-755ac2b61a57@kwiboo.se>
+Date: Mon, 5 May 2025 22:55:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/5] arm64: dts: rockchip: Add SDMMC/SDIO controllers
+ for RK3528
+To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Shresth Prasad <shresthprasad7@gmail.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Detlev Casanova <detlev.casanova@collabora.com>,
+ Chukun Pan <amadeus@jmu.edu.cn>, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250417143647.43860-1-ziyao@disroot.org>
+ <20250417143647.43860-5-ziyao@disroot.org>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250417143647.43860-5-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 12:57:40PM -0700, H. Peter Anvin wrote:
-> One thing that happened with i386 was that we found out that the only
-> remaining "users" were people dragging out an old machine to test if the
-> kernel still booted.
+On 2025-04-17 16:36, Yao Zi wrote:
+> RK3528 features two SDIO controllers and one SD/MMC controller, describe
+> them in devicetree. Since their sample and drive clocks are located in
+> the VO and VPU GRFs, corresponding syscons are added to make these
+> clocks available.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
-Follow this thread:
+SD-cards and SDIO WiFi is detected on my RK3528 boards with help of this
+so this is:
 
-https://lore.kernel.org/r/CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
 
-People booting latest kernel on 486 without CPUID support. 
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 69 ++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> index 826f9be0be19..931d4ac004c5 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> @@ -321,6 +321,16 @@ qos_vpu: qos@ff280400 {
+>  			reg = <0x0 0xff280400 0x0 0x20>;
+>  		};
+>  
+> +		vpu_grf: syscon@ff340000 {
+> +			compatible = "rockchip,rk3528-vpu-grf", "syscon";
+> +			reg = <0x0 0xff340000 0x0 0x8000>;
+> +		};
+> +
+> +		vo_grf: syscon@ff360000 {
+> +			compatible = "rockchip,rk3528-vo-grf", "syscon";
+> +			reg = <0x0 0xff360000 0x0 0x10000>;
+> +		};
 
-I can't find it in me to care for that old rust and yet I did it again. :-\
+Adding these two syscons could possible be split out into a separate
+patch as they are also needed for adding support for the two Ethernet
+controllers [1], the GMAC driver already landed in v6.15-rc1.
 
-So yeah, +1 for removing old code which ain't worth maintaining.
+[1] https://lore.kernel.org/all/20250310001254.1516138-1-jonas@kwiboo.se/
 
-There's stable and older kernels, those folks can use those and that's it.
+Regards,
+Jonas
 
-Thx.
+> +
+>  		cru: clock-controller@ff4a0000 {
+>  			compatible = "rockchip,rk3528-cru";
+>  			reg = <0x0 0xff4a0000 0x0 0x30000>;
+> @@ -501,6 +511,65 @@ sdhci: mmc@ffbf0000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		sdio0: mmc@ffc10000 {
+> +			compatible = "rockchip,rk3528-dw-mshc",
+> +				     "rockchip,rk3288-dw-mshc";
+> +			reg = <0x0 0xffc10000 0x0 0x4000>;
+> +			clocks = <&cru HCLK_SDIO0>,
+> +				 <&cru CCLK_SRC_SDIO0>,
+> +				 <&cru SCLK_SDIO0_DRV>,
+> +				 <&cru SCLK_SDIO0_SAMPLE>;
+> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +			fifo-depth = <0x100>;
+> +			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <200000000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&sdio0_bus4>, <&sdio0_clk>, <&sdio0_cmd>;
+> +			resets = <&cru SRST_H_SDIO0>;
+> +			reset-names = "reset";
+> +			status = "disabled";
+> +		};
+> +
+> +		sdio1: mmc@ffc20000 {
+> +			compatible = "rockchip,rk3528-dw-mshc",
+> +				     "rockchip,rk3288-dw-mshc";
+> +			reg = <0x0 0xffc20000 0x0 0x4000>;
+> +			clocks = <&cru HCLK_SDIO1>,
+> +				 <&cru CCLK_SRC_SDIO1>,
+> +				 <&cru SCLK_SDIO1_DRV>,
+> +				 <&cru SCLK_SDIO1_SAMPLE>;
+> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +			fifo-depth = <0x100>;
+> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <200000000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&sdio1_bus4>, <&sdio1_clk>, <&sdio1_cmd>;
+> +			resets = <&cru SRST_H_SDIO1>;
+> +			reset-names = "reset";
+> +			status = "disabled";
+> +		};
+> +
+> +		sdmmc: mmc@ffc30000 {
+> +			compatible = "rockchip,rk3528-dw-mshc",
+> +				     "rockchip,rk3288-dw-mshc";
+> +			reg = <0x0 0xffc30000 0x0 0x4000>;
+> +			clocks = <&cru HCLK_SDMMC0>,
+> +				 <&cru CCLK_SRC_SDMMC0>,
+> +				 <&cru SCLK_SDMMC_DRV>,
+> +				 <&cru SCLK_SDMMC_SAMPLE>;
+> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+> +			fifo-depth = <0x100>;
+> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&sdmmc_bus4>, <&sdmmc_clk>, <&sdmmc_cmd>,
+> +				    <&sdmmc_det>;
+> +			resets = <&cru SRST_H_SDMMC0>;
+> +			reset-names = "reset";
+> +			rockchip,default-sample-phase = <90>;
+> +			status = "disabled";
+> +		};
+> +
+>  		dmac: dma-controller@ffd60000 {
+>  			compatible = "arm,pl330", "arm,primecell";
+>  			reg = <0x0 0xffd60000 0x0 0x4000>;
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
