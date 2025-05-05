@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACE53984DE;
-	Mon,  5 May 2025 23:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0DB37EA88;
+	Mon,  5 May 2025 23:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487307; cv=none; b=EMOdPXm3D9GUt98dNT4ee9J+Lt2YPWKMjuU+LLDPN3tLV+p6AD8qidNTCspfXIpE40jvDBonPwcyAXOISiWlo00EyQi6gumTwHstamhIqbnI1Zoc0GCh1/BejjsUcUYHe/Kj/S8yJMoRKbTmDmenSd1c5IxcPMa7+ihLxE7lAWE=
+	t=1746487318; cv=none; b=ZkRYI1jSZk6Cv3mbJQL62BwS1NqurwPMGjOb+T41v0wrYTKD8JuI0HyK67lHXKzle8O/1MELuK1f3mXdGr5X8iGd8TMYtnqJDpQpJDg6kGuHRQnsvE7HBzc2HBCZqO1IRw+UJdAlPgs5LKqCQFxioeW9r2EsATFGGT0lgMsXc1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487307; c=relaxed/simple;
-	bh=zERVQQNvuOQinF99ex3FLAIPNtpSUKafbHMHhaIZqb0=;
+	s=arc-20240116; t=1746487318; c=relaxed/simple;
+	bh=zEWgyvgE0K3/6juLqJn8ugmpW06gemNbsD2fMXiHnzM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Br+co8PpuHD61dE/CsW0diikn7AGNbPb4lFMADZ6zsWJjnamTdZl3OhtIy4CDnpeODK30XZs9O0NOgCOVzga0dFYbiHtO/dNuft1m1wShi09Wp4ccpAxS6A5iSjW8tEMgEkbHSzJLfIgME7Rr0Bh02HmYQ3+W5NPSBWRN+liG48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDW+j+Xg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=b47tNzJW03PRVRHjwU7Y4V1AjhSbLAADgBWXytwq5MuG4Azpjz6D5blfDiexqJkVYDyE5PkPJ6ZPtasvrlAU/u4KJxN4KvkCrsG1FsspbFcW2/S3CzQx+YO1i/Pb6NFlSmgmID4g9WkPZN0zUElRO4ccclAY+/EEtdgr6Rwo1Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMOoeNLb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDW+j+Xg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81DEC4CEEF;
-	Mon,  5 May 2025 23:21:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMOoeNLb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD18C4CEEE;
+	Mon,  5 May 2025 23:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487306;
-	bh=zERVQQNvuOQinF99ex3FLAIPNtpSUKafbHMHhaIZqb0=;
+	s=k20201202; t=1746487317;
+	bh=zEWgyvgE0K3/6juLqJn8ugmpW06gemNbsD2fMXiHnzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vDW+j+XgxhzeJHHQJPXJbv2VPZGWKeobxDpsk9keBl6yjdcCf8vZ/5oUKd/v+J1Eg
-	 Nrmnhxf1n/Xzv0DonNk0QArJV9XiGKIXN4q0UtUfKmr9fZ9qY/hHAD0258YIPEDudH
-	 oMd9/lHcqxPsvXUpSDLHN+RwVhNotrD9bbDLsJS42Wx3u4rF1CwSzFRBIKfJMC4yk1
-	 yIFlxDWCga/f5+mOfNzB3Fd2encbih781pNxlIDWK80Z9i5Zx3Hp0K2IGZkwcRFztN
-	 LijQqSz4YGSsJ+JqPKvI2jR/bMQJIwmzAg11XOxUCVF8m3O4zhjv5ocrpQZ2dx3ci+
-	 kO0NTRZNhMZlQ==
+	b=YMOoeNLbKASS6peXeD6ID1XEvrEj4xxPeTo/uzuIaYQuz4/oWgOOm9rPuqaqHlrJ/
+	 3dDqHWmwNi0+/0MDBpkmIfpfD6UuS5rgkZ2e45wZwb8ujoo8/uCw4b11aPUi/xbqX7
+	 JPFzafWaU/paXNZsHWr7hIWhpKPjFGVVtk9p0+gDTkIuNiFYdR1mplKxWjwNzVzOBQ
+	 LSIRJuTaFzVtt6Zay/cdwKe97GSIFEFeLIy4/O1vIg614VBhbirmZh1GkzuCHSmY6d
+	 35NHpbynTOCg5Hpg34pYKjwz4TTDoD3pbwrmkSsrNQsLyvQ90p+ojWCTlpLreCRP2g
+	 UMkm8KBBy7hzw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Isaac Scott <isaac.scott@ideasonboard.com>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com
-Subject: [PATCH AUTOSEL 5.10 112/114] regulator: ad5398: Add device tree support
-Date: Mon,  5 May 2025 19:18:15 -0400
-Message-Id: <20250505231817.2697367-112-sashal@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 02/79] mailbox: use error ret code of of_parse_phandle_with_args()
+Date: Mon,  5 May 2025 19:20:34 -0400
+Message-Id: <20250505232151.2698893-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
-References: <20250505231817.2697367-1-sashal@kernel.org>
+In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
+References: <20250505232151.2698893-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,64 +46,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.237
+X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Isaac Scott <isaac.scott@ideasonboard.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-[ Upstream commit 5a6a461079decea452fdcae955bccecf92e07e97 ]
+[ Upstream commit 24fdd5074b205cfb0ef4cd0751a2d03031455929 ]
 
-Previously, the ad5398 driver used only platform_data, which is
-deprecated in favour of device tree. This caused the AD5398 to fail to
-probe as it could not load its init_data. If the AD5398 has a device
-tree node, pull the init_data from there using
-of_get_regulator_init_data.
+In case of error, of_parse_phandle_with_args() returns -EINVAL when the
+passed index is negative, or -ENOENT when the index is for an empty
+phandle. The mailbox core overwrote the error return code with a less
+precise -ENODEV. Use the error returned code from
+of_parse_phandle_with_args().
 
-Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Link: https://patch.msgid.link/20250128173143.959600-4-isaac.scott@ideasonboard.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/ad5398.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/mailbox/mailbox.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/ad5398.c b/drivers/regulator/ad5398.c
-index 75f432f61e919..f4d6e62bd963e 100644
---- a/drivers/regulator/ad5398.c
-+++ b/drivers/regulator/ad5398.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 4229b9b5da98f..6f54501dc7762 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -350,11 +350,12 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
  
- #define AD5398_CURRENT_EN_MASK	0x8000
+ 	mutex_lock(&con_mutex);
  
-@@ -221,15 +222,20 @@ static int ad5398_probe(struct i2c_client *client,
- 	const struct ad5398_current_data_format *df =
- 			(struct ad5398_current_data_format *)id->driver_data;
+-	if (of_parse_phandle_with_args(dev->of_node, "mboxes",
+-				       "#mbox-cells", index, &spec)) {
++	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
++					 index, &spec);
++	if (ret) {
+ 		dev_dbg(dev, "%s: can't parse \"mboxes\" property\n", __func__);
+ 		mutex_unlock(&con_mutex);
+-		return ERR_PTR(-ENODEV);
++		return ERR_PTR(ret);
+ 	}
  
--	if (!init_data)
--		return -EINVAL;
--
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
- 	config.dev = &client->dev;
-+	if (client->dev.of_node)
-+		init_data = of_get_regulator_init_data(&client->dev,
-+						       client->dev.of_node,
-+						       &ad5398_reg);
-+	if (!init_data)
-+		return -EINVAL;
-+
- 	config.init_data = init_data;
-+	config.of_node = client->dev.of_node;
- 	config.driver_data = chip;
- 
- 	chip->client = client;
+ 	chan = ERR_PTR(-EPROBE_DEFER);
 -- 
 2.39.5
 
