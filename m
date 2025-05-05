@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91DB4207A2A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0698A20AF87
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443406; cv=none; b=eavK6dcep+ZNA+mEFnsYvJCWUhT6MNVdFBPplsfklWCFrYdq+Z5YNtm3BTXRDxxha5CnqRDXlaAB5ocok8MSTjaPK6YfwUVyGvVRofmSI+4YjLQaYyaktWoqN2c145VumyGIrLF2EvOAcpS29QVn+5PI1W7HiexRNP7Hax8jj+8=
+	t=1746443410; cv=none; b=VdboGKwExDdyJV2cHmj2PiKGA0bs7RZpi/KpjSDGr2lT2Z7nArDYHQ6XNFfJ/2RMOt46vFtKL8Sc4IeEZ3+4yTtuRwta3t2kGuMQDNydsdzFBQWFW0At9V6lcgKMWv/rh0wZZnNNXai3RYq8d0ORmAVin0O82JurqyD4cCvPWD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443406; c=relaxed/simple;
-	bh=JOLQBLpPiaepcEm/EFr3IeBQdfN0H9wF5InampQemhc=;
+	s=arc-20240116; t=1746443410; c=relaxed/simple;
+	bh=n16jQOi/Rv/VysZ+tnvcUnyGBHA4GQKdR3n6dwxGyEQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ofj6N1dq/xxVcXDL1kYZTJezlAr1T92TXFb1agGM4iSga2p9DpGySH0pWtGy6b+enOqfozm5TrxVZZllklhAwOc76Si79q7k5gRiVCUbpaRg+ODR8p9YbuDx/94yd5g5NM+8N2qH+WZU+bjIXVOga1waNCmVIv6Bf1Qe3k5+bWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3PAN3n/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rtrkibBLL/xejG/GhrIDSLkNq0+KEbQNa5+YruyA097UxLhfJqlV+IejJhU0KldQ9DYxBX/lC0lAbXPcz8qeg3R/9oPTsPOCYJZyiIqmAfngm2yDmGgIKCczqqf4DmSkKqKcHuMqID6YkyfU2zfPw2uZ1d9jzsVk1vTBdqJeBGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZhRbUSD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3PAN3n/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0E2C4CEE4;
-	Mon,  5 May 2025 11:10:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZhRbUSD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E85C4CEE4;
+	Mon,  5 May 2025 11:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746443406;
-	bh=JOLQBLpPiaepcEm/EFr3IeBQdfN0H9wF5InampQemhc=;
+	s=k20201202; t=1746443409;
+	bh=n16jQOi/Rv/VysZ+tnvcUnyGBHA4GQKdR3n6dwxGyEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M3PAN3n/fuyYpYuSgdG40juaPbONi0O97rGWCRSbkRw/OoX26YE5JrmMOxCqs4+n4
-	 4AE09BBcF2bWnJWjqUuLBjhGni6YzDLcH2CbpnCWFOzCMZlv5H6s/CLKI5gXwynKHz
-	 cvjkKT4ndxrEm4bJKfoJDbjtsw1VTk4kVxegpXW8Ew5Grw9GdRz/9LGBkmRbZRvKLR
-	 vc79Yn1WTW+sGRSc13z+CHP4EKvYcmXGQZY8pgElOhDAOBuj12bF6W+0lnUum17GDF
-	 6XS21TuQKBjNB5+ZxCE2RfGdwfHN8ptASQ9Z7uSQouBwDfrvJ/+o0A907D3rEkBovz
-	 DKZxUyctv7U2g==
+	b=cZhRbUSDCapbMEuKxBcUT8iuwPNQRHnEuL9z98OuDSnbEVUkytxXkSv7UKrR3wgW7
+	 Wbxvux52qPr/49eUO2XGW1RTRQaUEvq6ILhmMR9pj1YjYjBt1LLt18XItxBkD9oXpR
+	 iqjQOw8j5+aQlSMKbGST3kSb8JwlTg1SScUpqXPJByxTV5q+GwcyadMu/Uqxz83CQ5
+	 uxojEpexnoNR6FpcVwOjmyWbpGTExZmkjBn7rTNtUgFX2Lt1ijyIwo5YG/3nonqTBz
+	 2pfsNnPA7mDYCgNIpaH30E5PAvCg7+8RpOKJywj67U9L6INKLSfSgSYy0Q3yKfAPTa
+	 NZLOak73+8tuQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: "H . Peter Anvin" <hpa@zytor.com>,
@@ -39,9 +39,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	David Woodhouse <dwmw@amazon.co.uk>,
 	Masahiro Yamada <yamada.masahiro@socionext.com>,
 	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 05/15] x86/kbuild: Remove ancient 'arch/i386/' and 'arch/x86_64/' directory removal 'archclean' target
-Date: Mon,  5 May 2025 13:09:36 +0200
-Message-ID: <20250505110946.1095363-6-mingo@kernel.org>
+Subject: [PATCH 06/15] x86/tools: insn_decoder_test.c: Emit standard build success messages
+Date: Mon,  5 May 2025 13:09:37 +0200
+Message-ID: <20250505110946.1095363-7-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250505110946.1095363-1-mingo@kernel.org>
 References: <20250505110946.1095363-1-mingo@kernel.org>
@@ -53,11 +53,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We have to go back 17 years into Git history, to kernels that won't
-even build or boot with modern build environments, to come across
-the obsolete arch/i386/ and arch/x86_64/ directories.
+The standard 'success' output of insn_decoder_test spams build logs with:
 
-Remove some of their last functional residuals in the 'archclean' target.
+  arch/x86/tools/insn_decoder_test: success: Decoded and checked 8258521 instructions
+
+Prefix the message with the standard '  ' (two spaces) used by kbuild to denote
+regular build messages, making it easier for tools to filter out
+warnings and errors.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -68,24 +70,22 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 ---
- arch/x86/Makefile | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/tools/insn_decoder_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index fb4f0f15d1df..6348782e1be0 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -352,10 +352,6 @@ $(orc_hash_h): $(srctree)/arch/x86/include/asm/orc_types.h $(orc_hash_sh) FORCE
- archprepare: $(orc_hash_h)
- endif
- 
--archclean:
--	$(Q)rm -rf $(objtree)/arch/i386
--	$(Q)rm -rf $(objtree)/arch/x86_64
--
- define archhelp
-   echo  '* bzImage		- Compressed kernel image (arch/x86/boot/bzImage)'
-   echo  '  install		- Install kernel using (your) ~/bin/$(INSTALLKERNEL) or'
+diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_decoder_test.c
+index 08cd913cbd4e..8bf15c4aefa9 100644
+--- a/arch/x86/tools/insn_decoder_test.c
++++ b/arch/x86/tools/insn_decoder_test.c
+@@ -167,7 +167,7 @@ int main(int argc, char **argv)
+ 		pr_warn("Decoded and checked %d instructions with %d "
+ 			"failures\n", insns, warnings);
+ 	else
+-		fprintf(stdout, "%s: success: Decoded and checked %d"
++		fprintf(stdout, "  %s: success: Decoded and checked %d"
+ 			" instructions\n", prog, insns);
+ 	return 0;
+ }
 -- 
 2.45.2
 
