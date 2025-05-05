@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5651280A37;
-	Mon,  5 May 2025 22:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F03E35D7BF;
+	Mon,  5 May 2025 22:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485898; cv=none; b=lYOfNu8v03P/L1jQZvLATCAi8DEGIacaMA1tEEHTf+dcaMkkb4DK6aE8z585M9kq3s/MSZH2aoyERIx0XfOsrTmOWYFc5M+EyMUvcNfuyVZQqcz5m3oKUleeGL8M5xLxyto/gngySPIolSH8W5GGjm5wZk4RmAJzn+G7EwpPtr4=
+	t=1746485907; cv=none; b=Gj9dWiSxloFA0L8UPTvXiUM/S97WYehTrElt+ggZaNbLFTc43nF7owZSYopdrKodiDGQRrVOKGnT35E1AyFlTae2nTDOHQzJm0nPDMzTriRZ3pxeiM/aJ2KOFi9RPukymZNNkbyEjN6+LwEGTmDdClkN6QXmO8d5kb24uLcYRYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485898; c=relaxed/simple;
-	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
+	s=arc-20240116; t=1746485907; c=relaxed/simple;
+	bh=QTl/bFmcjYT6RvFJZuAeXHESyiMLhcUNbI0/Y+RFxOA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bYomrnqa33OLYKJjNqiUlfdlgbIeb1lMfqMzJnS/DYBbDb8E1v/2bqrxMFfrv6k99Xzbx1Zzu6Kwpnw0HGF6834Bc2pFHUesgxUS1rnJtseggxeQD9mWhnOv16rhG0y6IIhDDeQUla+sF+qauaRZumtl5/yaHYNUyytlWCmFnn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckvpb0mO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=oFAYtIsuD75CB2PngNdjXNsIJwpj9LQ6/NK2iDiCFUS3H89YZvU5bVsUb8DevcIEuJfjzAV9gNU5m0DFRkWbjvgNB88z9tfVVZ4tEwHvEpvqMTIczk7GxPaYqBrG4/My6Fm6z5ycI35spJ9xoQ8Phx2rLekr6D10lWGQVAp4FE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ymklz+QC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckvpb0mO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B82F2C4CEEE;
-	Mon,  5 May 2025 22:58:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ymklz+QC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EBEC4CEE4;
+	Mon,  5 May 2025 22:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485898;
-	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
+	s=k20201202; t=1746485906;
+	bh=QTl/bFmcjYT6RvFJZuAeXHESyiMLhcUNbI0/Y+RFxOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ckvpb0mO+BiWldk1mU6CORIigqhCbO4QLRDdfHhgHbhBdy4GbDq6mM9BGY/X4ZzGT
-	 iWp/GvYQNAC/76w6heje6A/b6+ugENNvSkrpKH1vaGGj1BOKOAVuHgjd8AeLjAAijQ
-	 4NDwMAjvIsKp2jlJHuqZIIPDfZ7ohXMKKfp/d/yF3oB2SNU3gMh9wS49NWMyby8dbn
-	 fxcZ5Q7g9w9YlMvpaIE3OpvcU1Ch1AWnLFqZOMPRqpn8V3gST8IkoI+09/RUn2MoN0
-	 JLf2rdJaFJTDdsiXESLwOzhzlCG+se+s09ZmUVi7EyLM4Tm/w3KYFqW7UQhcfvpcRS
-	 XzUwrFUjwKJJA==
+	b=Ymklz+QCJIyr7MWE1zcccJWh1MvwQFIkWo2+56WdfV5ADwJQyC42MEOynb3gMHvZ0
+	 uFOcvQKvzGMkxu8IiI6Y0zOdY5K/oVCdqZPJYJRLP5zszMYADaIRJUHvqpDLBRlZRX
+	 AJ6uzxfpYtbp7JjbHeurIt9Q7VSfuCY6h398wbO15B1za3lMaeMcjsbav1iriz2Ujy
+	 vGlx8eceQd4ld1T+G8hq47OWZmH7VCwxxdWOxuQfXBXquaxMSQNPnuiKzsjV3eHi2o
+	 7RIXhqhLRt0z8BPUzmhLmXMaqn624y07WkI6zqioZfqwlGUAnUOk8zTKFDQsaDQwOO
+	 mfCI/5F9McOyA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Benjamin Berg <benjamin@sipsolutions.net>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 054/294] um: Store full CSGSFS and SS register from mcontext
-Date: Mon,  5 May 2025 18:52:34 -0400
-Message-Id: <20250505225634.2688578-54-sashal@kernel.org>
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 059/294] scsi: st: ERASE does not change tape location
+Date: Mon,  5 May 2025 18:52:39 -0400
+Message-Id: <20250505225634.2688578-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,43 +46,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Benjamin Berg <benjamin@sipsolutions.net>
+From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
 
-[ Upstream commit cef721e0d53d2b64f2ba177c63a0dfdd7c0daf17 ]
+[ Upstream commit ad77cebf97bd42c93ab4e3bffd09f2b905c1959a ]
 
-Doing this allows using registers as retrieved from an mcontext to be
-pushed to a process using PTRACE_SETREGS.
+The SCSI ERASE command erases from the current position onwards.  Don't
+clear the position variables.
 
-It is not entirely clear to me why CSGSFS was masked. Doing so creates
-issues when using the mcontext as process state in seccomp and simply
-copying the register appears to work perfectly fine for ptrace.
-
-Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
-Link: https://patch.msgid.link/20250224181827.647129-2-benjamin@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+Link: https://lore.kernel.org/r/20250311112516.5548-3-Kai.Makisara@kolumbus.fi
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/um/os-Linux/mcontext.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/st.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/um/os-Linux/mcontext.c b/arch/x86/um/os-Linux/mcontext.c
-index 49c3744cac371..81b9d1f9f4e68 100644
---- a/arch/x86/um/os-Linux/mcontext.c
-+++ b/arch/x86/um/os-Linux/mcontext.c
-@@ -26,7 +26,6 @@ void get_regs_from_mc(struct uml_pt_regs *regs, mcontext_t *mc)
- 	COPY(RIP);
- 	COPY2(EFLAGS, EFL);
- 	COPY2(CS, CSGSFS);
--	regs->gp[CS / sizeof(unsigned long)] &= 0xffff;
--	regs->gp[CS / sizeof(unsigned long)] |= 3;
-+	regs->gp[SS / sizeof(unsigned long)] = mc->gregs[REG_CSGSFS] >> 48;
- #endif
- }
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index 293074f30906f..fb193caa4a3fa 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -2895,7 +2895,6 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
+ 			timeout = STp->long_timeout * 8;
+ 
+ 		DEBC_printk(STp, "Erasing tape.\n");
+-		fileno = blkno = at_sm = 0;
+ 		break;
+ 	case MTSETBLK:		/* Set block length */
+ 	case MTSETDENSITY:	/* Set tape density */
 -- 
 2.39.5
 
