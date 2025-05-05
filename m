@@ -1,78 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05C927465A;
-	Mon,  5 May 2025 21:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0616D9C2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746480592; cv=none; b=sIDzEofbWft5kazTpciXrAKs05NfL1KBf3JBzPRprUdycQfaJvh2xgWT3BIhOozFyA5f2n63SNEt2l8b2ISypvsjkKDYB3qjQaIDhYU8wq4TWhA13/CcNBVN53kqkuP2hLDrhvZj5U7s8uTC24DxbuBIjVw9VfkNGiExS5vbJF4=
+	t=1746480640; cv=none; b=MIDSf+ZuR4CDXlWETk621R1ZJorcG7IDpfzK7TP9VEgzHTGBhM7EKucklNZ36rqDZV+Jthc4H1aVnkr8CoPtbG9jGfS30NrI3JVlT/RifI6/wlWHsk9cDy/Nu0eUh9l+mATPNUZvZOueNCkUNg/qqPKHlYWCOhYB7IDPptNNrLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746480592; c=relaxed/simple;
-	bh=/Ain24s739aGvnZz4WCmIN8M9wK3tBJPtL2EuL9Rocw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LWVis9zaq6hGzkGbQbqUmZhyYi9+H+wuos0zi2CLOs7n3W4dSFIBfbHaH8EDVE906QfuwjkNxpFQ1FbTjxciDDA8hzFpVb9EOu5JzsxoFo1orQ5T8gVwd6K2TmYqdcB6VamzpKsbya1IIyznSdlDWaZ5flg7uzO6O7nxbWWmg5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbNP2go3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746480640; c=relaxed/simple;
+	bh=Bj2fusfJTaaWr0/xX5QKN09D9c+IyZzzknNjk0DRKO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QxaWmIVCpgbCbT0GM+hB3NvGcd34Lro6zF1N4LZMoOMkXWytArVDtOa9N7RNWIJn60TjqRgqQk7A4RFVjRxNCt45Sn4o1SBcgOsHGXObpgDfXk27aswt3y8iZkbtmKVd75ubBOkqWqc62f6yOzxvSulZh5hSQ+eBTA3YdGtzfMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=He41qURn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbNP2go3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74AB3C4CEE4;
-	Mon,  5 May 2025 21:29:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="He41qURn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3527FC4CEE4;
+	Mon,  5 May 2025 21:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746480592;
-	bh=/Ain24s739aGvnZz4WCmIN8M9wK3tBJPtL2EuL9Rocw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YbNP2go344+igjigYBmVrFFPb/jaH7sau9r8GCvfvkYfFTXIlZOZ+/UWLNk9V/2R7
-	 4acG4be9+eLtEIEIiYVXeYCoYRluR5Oy7J/pukSrCNNJrXNwtV2B3B2VVOmeLZVuvS
-	 W7cSXpYyumrLGCnDpf9y+lQha7U2NQ2lEptsAtRgwyuxrsEe/aU9b4ZgaTc1fP6VB7
-	 3B6Tghh4Pdhg3sQqKXEV/c+N4ZkyTEC1HfCcIZzmgz5YzPt60iegFFccyRZfHhYEiY
-	 OddBE0lMpXxhDCSoc70ay7DnJCQjENJnSx1k6VZhDUO6XX5/CA7ubD3r5eKfRV5v8S
-	 8999h0yG6vpBg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADDA39D60BC;
-	Mon,  5 May 2025 21:30:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1746480640;
+	bh=Bj2fusfJTaaWr0/xX5QKN09D9c+IyZzzknNjk0DRKO8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=He41qURn356N+WZ9NGxXG3uT8/1fHsD0+clnf/9yB+yqY2dcifm3kMhcW4VKynjAq
+	 e/GEXTbyC6WJbMbJqC3f7E5qVF0QtTUidFfnXYRb/5HXdGN/JHzxZ6tuvJV2JRxIEU
+	 hOd2d4gHACxdWRZmCj+exuvA/CyPeiF/lP7os4hupQeb6CtDYzo8DcIm8N/ScWYbdJ
+	 SrpJj58EFNSnP1C4pbpDQUEEeOxXcjybsOr4Ia4+SOQQsXNatQ9uITsyS46KL/c+90
+	 zl9eoOKbsjsbkj5tvPrskfuq7B1NWB2O+wpczfUF4N6aYfxAJXXu53jdrNd6T2eceF
+	 q/a3TGBAi+aKg==
+Date: Mon, 5 May 2025 11:30:39 -1000
+From: Tejun Heo <tj@kernel.org>
+To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH sched_ext/for-6.15-fixes] sched_ext: bpf_iter_scx_dsq_new()
+ should always initialize iterator
+Message-ID: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] bpf: Replace offsetof() with struct_size()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174648063174.894801.9510082135983077383.git-patchwork-notify@kernel.org>
-Date: Mon, 05 May 2025 21:30:31 +0000
-References: <20250503151513.343931-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250503151513.343931-2-thorsten.blum@linux.dev>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello:
+From 3ca42b7aea35cbcfb8d1fdde09e10a54edf97b26 Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Mon, 5 May 2025 11:28:21 -1000
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+BPF programs may call next() and destroy() on BPF iterators even after new()
+returns an error value. bpf_iter_scx_dsq_new() could leave the iterator in
+an uninitialized state after an error return causing bpf_iter_scx_dsq_next()
+to dereference garbage data. Make bpf_iter_scx_dsq_new() always clear
+$kit->dsq so that next() and destroy() become noops.
 
-On Sat,  3 May 2025 17:15:13 +0200 you wrote:
-> Compared to offsetof(), struct_size() provides additional compile-time
-> checks for structs with flexible arrays (e.g., __must_be_array()).
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> 
-> [...]
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 650ba21b131e ("sched_ext: Implement DSQ iterator")
+Cc: stable@vger.kernel.org # v6.12+
+---
+ kernel/sched/ext.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Here is the summary with links:
-  - [bpf-next] bpf: Replace offsetof() with struct_size()
-    https://git.kernel.org/bpf/bpf-next/c/41948afcf503
-
-You are awesome, thank you!
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 4e37b40ce280..f5133249fd4d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -6827,6 +6827,12 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id,
+ 	BUILD_BUG_ON(__alignof__(struct bpf_iter_scx_dsq_kern) !=
+ 		     __alignof__(struct bpf_iter_scx_dsq));
+ 
++	/*
++	 * next() and destroy() will be called regardless of the return value.
++	 * Always clear $kit->dsq.
++	 */
++	kit->dsq = NULL;
++
+ 	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
+ 		return -EINVAL;
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+2.49.0
