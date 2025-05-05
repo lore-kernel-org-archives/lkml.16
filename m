@@ -1,48 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D872F6B2B;
-	Mon,  5 May 2025 23:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E3B2F6B55;
+	Mon,  5 May 2025 23:17:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487075; cv=none; b=gvV0ngaE0icMsspZ4NDTdU2ysbDG7M2XO6Hbd0YCCNTqzGzzYlh/XUHD1UB3HTWPwngd1WQKXlVeJU0u1kMoSWvyLMdP4soste3v/HVc/oUs/xW4i0/k6eawRQ4cy/CRZsJZcMBXzgU840qOYZjqF9OmQubKkH8FT8mSxQiX7+4=
+	t=1746487079; cv=none; b=WBPI6LYLxbfAy7IVCZI7EafOiGfe0p2T0xQn1H+oB0qkcyTZYh1Lhi+KeeDnSyffsbWArkLJr9CoXi4qikXK3yeyxP76W7I/mnx9fKCLpdpvYJk/rWxcU0mFBq9LjCh630pwCLn62x+cXD7Eb1AWPXVc0nTiVDR+B77Zx/xUlcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487075; c=relaxed/simple;
-	bh=/2J5vELcYhIB5u+gaNT3hu3osVWdh/Cs8c/m8gYGHg0=;
+	s=arc-20240116; t=1746487079; c=relaxed/simple;
+	bh=VkEDehoOkFDH575yzWrUFq76dyse+0I2ePUzowEbN3Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lSy/UFqSnPrPZ8DWI8cMg6lfdWxQH95rS3o1FKlXovuHJPy6uCy80Pmicw6k9Xo0fNFKht5R6CNfRQTkkIZPR3CsQN0vW8UKeQJqqjdowgnp/R7tU9ndv8Q1H0JDXsYKLiQKCrG1gdc2q9HMApcGKRWy+YdLhwXGyxU5KGfEoRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIQgdC7V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kCl1o8xMXSIQfd3pbGMXv9eVa17LQJnoCZfBVpiOrh2PsHgxhqD0j5JkgRxLuCZK6KPDnmPNg6N+hNzKhz9Kt0u6IbFz4Vfc+o+zjxwyc2lHTZGj9gE4PEettFNsvLm7ad7lcBy/m1D46P6PkVkaS0yNRQ34Q45n1/ZWhUoibpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqVgjClv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIQgdC7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 857B4C4CEEF;
-	Mon,  5 May 2025 23:17:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqVgjClv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E25EC4CEE4;
+	Mon,  5 May 2025 23:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487074;
-	bh=/2J5vELcYhIB5u+gaNT3hu3osVWdh/Cs8c/m8gYGHg0=;
+	s=k20201202; t=1746487078;
+	bh=VkEDehoOkFDH575yzWrUFq76dyse+0I2ePUzowEbN3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mIQgdC7VMBEXLV3+NTb3vxpg+5uQ3khw6HwHTjOvGfRTBcITeNWA30R2OGzepm807
-	 zZ4TrcQr48PVrhqlfNxwA/QXVOuxLAQ9mZwtlRbnMs7/o4Y7bhCmOmqkTngeo6tcyl
-	 CudtxkmbMOzk7gP4LfTIALQsdBBVtdn3SaCV39VfM6P64SpEq6IGGWOsWcs8z1mJau
-	 v8y9B6cFJHzD7unXdKBNOci2ZHao3MbDx/Kx/1wseHyURzHlzSSJrOIJGjZIN2mk2f
-	 GZ8Hane0fxmegSgOBCCrrn/KDtAPrU1o7gs0zrMCjTp+7lrkKLMKeRLT7oT2ZoUuti
-	 uz6L4VbWKbDnA==
+	b=NqVgjClviuWJlmLwjaS6PNMwSSzyfukt0VhG1WOPhHw6cjvPixxxgTKBQjG/U41tw
+	 1ol3yypsqUm+9GIcN03M5xZnqTJO1CWT2b43Wt3fZo1hDyOzxNqQdqNwcArovKhHRQ
+	 knK8sKPi/JwKnGOW7c2QLjl/jN6MhYqMGhemKr+X0t/7WdH+9+IUeBarPe1XCHQpWz
+	 OzZgdd5Zyod0thv4RZS+c7kcgtsLlgfYbpThFfkAXBAuZ2PYJBCrOl5SiCvy2WCfTE
+	 uSYLU9WI+UQNWFqJAr7m/pB+cBMqFv1mClDBqLt4lHY35lRR3yHkQzUpvsc/3wSGO1
+	 0CoDb9FDy1YlA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ankur Arora <ankur.a.arora@oracle.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>,
+Cc: Konstantin Taranov <kotaranov@microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
-	urezki@gmail.com,
-	rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 140/153] rcu: fix header guard for rcu_all_qs()
-Date: Mon,  5 May 2025 19:13:07 -0400
-Message-Id: <20250505231320.2695319-140-sashal@kernel.org>
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	shradhagupta@linux.microsoft.com,
+	mlevitsk@redhat.com,
+	ernis@linux.microsoft.com,
+	peterz@infradead.org,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 141/153] net/mana: fix warning in the writer of client oob
+Date: Mon,  5 May 2025 19:13:08 -0400
+Message-Id: <20250505231320.2695319-141-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -57,41 +66,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ankur Arora <ankur.a.arora@oracle.com>
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-[ Upstream commit ad6b5b73ff565e88aca7a7d1286788d80c97ba71 ]
+[ Upstream commit 5ec7e1c86c441c46a374577bccd9488abea30037 ]
 
-rcu_all_qs() is defined for !CONFIG_PREEMPT_RCU but the declaration
-is conditioned on CONFIG_PREEMPTION.
+Do not warn on missing pad_data when oob is in sgl.
 
-With CONFIG_PREEMPT_LAZY, CONFIG_PREEMPTION=y does not imply
-CONFIG_PREEMPT_RCU=y.
-
-Decouple the two.
-
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+Link: https://patch.msgid.link/1737394039-28772-9-git-send-email-kotaranov@linux.microsoft.com
+Reviewed-by: Shiraz Saleem <shirazsaleem@microsoft.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rcutree.h | 2 +-
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
-index 53209d6694001..3828ff8a2f9c9 100644
---- a/include/linux/rcutree.h
-+++ b/include/linux/rcutree.h
-@@ -66,7 +66,7 @@ extern int rcu_scheduler_active __read_mostly;
- void rcu_end_inkernel_boot(void);
- bool rcu_inkernel_boot_has_ended(void);
- bool rcu_is_watching(void);
--#ifndef CONFIG_PREEMPTION
-+#ifndef CONFIG_PREEMPT_RCU
- void rcu_all_qs(void);
- #endif
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 0fb42193643dc..7864611f55a77 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -957,7 +957,7 @@ static u32 mana_gd_write_client_oob(const struct gdma_wqe_request *wqe_req,
+ 	header->inline_oob_size_div4 = client_oob_size / sizeof(u32);
+ 
+ 	if (oob_in_sgl) {
+-		WARN_ON_ONCE(!pad_data || wqe_req->num_sge < 2);
++		WARN_ON_ONCE(wqe_req->num_sge < 2);
+ 
+ 		header->client_oob_in_sgl = 1;
  
 -- 
 2.39.5
