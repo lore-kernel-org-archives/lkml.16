@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CC62FA100;
-	Mon,  5 May 2025 23:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97C72FA116;
+	Mon,  5 May 2025 23:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487338; cv=none; b=k0iMqZVVl17UXgfPac4SQ0aQK5uYje+qdmZETarAEWDLwOp04zj2OE+is6diiSxngqyK42UjzL/dwW7gnhsyqMwzBYLXBXwSve651Qqnd2K0Je/3/BGJUPPJUSGXf/g2MQbEDht1wMbklP+775sEm2uP3hOru4DeSR8OemAknmE=
+	t=1746487346; cv=none; b=m/TGSsfsYR55WyGJhfvV/1z5CZjbYbvtaASQ2hDK4BaKVY2qsvjD22T8bKj1F6nDUDk1jsdWZJm8eqjaC3QaaCG3ybv6Akvsb/MzT/bEJ2wWcBMv7qeA0bhRtNZ3L0LWboMT8s2jChM1DhNbhQ4P991pv19g8TvGHPY2Rr1lDvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487338; c=relaxed/simple;
-	bh=iGR/zZ+vHKPqohPSHU9sFA3QVASc8jKfflvcI/g/eUM=;
+	s=arc-20240116; t=1746487346; c=relaxed/simple;
+	bh=GDhtgJbQZBwYTJEjmRrnC25UbBpD9N12xAJTAGozXJ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tVwSZlm9e+PNlbMplvNQiR3w20KOEa+qxCLHjwpgNmQzE3Uka0j8YaskHOX5tUcWnNTo3+aDbGqeHKLwPMph0kO+K3LAer2uU8u6Wnj2DIWqH88P8PRYp/hGnz7jWlTJOxe/vSmLO2cZN8RJs01NqEAeuIp8QBSNrOhnrzRZdqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zqrypqhn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=VXri8nQkexTv3/Bi/QocSplD2EhNwG0QZVx/OoczfkxqWhZtjJ2v7R3/DwMBAAZ15iYHlx+aJgwXcjprPjyUH/cCE11cWvI9ZEP1zTBu27jE3a7LQ90WJrjKUt5xW4espPVxnqvAS23LTFVMzE6VXCUEXSkeQfb6La9MXOWQ97k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIMB7Cf5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zqrypqhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2969C4CEE4;
-	Mon,  5 May 2025 23:22:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIMB7Cf5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB241C4CEED;
+	Mon,  5 May 2025 23:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487336;
-	bh=iGR/zZ+vHKPqohPSHU9sFA3QVASc8jKfflvcI/g/eUM=;
+	s=k20201202; t=1746487345;
+	bh=GDhtgJbQZBwYTJEjmRrnC25UbBpD9N12xAJTAGozXJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZqrypqhndepzTXHAwRysf8JlfeOE38ZVvc4+MhLJy+AdhaZqy6XhhjGigjPpG/GRD
-	 FAPLb56DwRqZM6tSlblLn0Pq2ND1RIAsVhIkI9R8NQ9MsvxawgTl2vu4v/pw1RPKqr
-	 PofUFz7OBD8rFxxIgKdHfYTO6uVd8y+BdzZQNRrzba+W3jmGSL2JyrOyu6b5hES3pb
-	 YPRUTHpoxyMilECoJDVgy3aKRsU8t1LqnSBcndeoRf14LQUL5KpwLN5TR/UMVQVNo6
-	 hf/j+JrXWtJ95HuV871NF1/8lknm0/zYeyALOwJZTwp+TZcM0432HAPBFUpfQV0vdO
-	 Z+VrVSbNYkgNA==
+	b=oIMB7Cf57GhK9Zw8KD+UMd2O/FEQcO2Rk0kFUCUPgRmrjAixyxxMeXrVLV0mOgDWt
+	 NVnUqRMbxLeAT0rpi8MpQWklMjNb3lS4jOwgzYUSQAnCP11g+pKFwe1tBr00WDhzra
+	 FIdSZDHRiktdNgBY28HIS5yuE4xAU1fDayXacs7lfogBMcLNH4a2gf1l/OobHwzG4D
+	 c0tye6j8xHJhNlhpDzQMDHmvuz8o0FIW/XB41pHDYHt8kaJ7m05cqxR1pauaj0DvQr
+	 Z3xguEHNFfBSrZA+oxcbbu66yWaZMUzA84FeRlbtbaxJuU1m1n0swZE7IQZM+kWWxE
+	 39OLrjJZZ3wtg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mark Harmstone <maharmstone@fb.com>,
-	Qu Wenruo <wqu@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/79] btrfs: avoid linker error in btrfs_find_create_tree_block()
-Date: Mon,  5 May 2025 19:20:46 -0400
-Message-Id: <20250505232151.2698893-14-sashal@kernel.org>
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 19/79] scsi: st: Tighten the page format heuristics with MODE SELECT
+Date: Mon,  5 May 2025 19:20:51 -0400
+Message-Id: <20250505232151.2698893-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -48,64 +46,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Mark Harmstone <maharmstone@fb.com>
+From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
 
-[ Upstream commit 7ef3cbf17d2734ca66c4ed8573be45f4e461e7ee ]
+[ Upstream commit 8db816c6f176321e42254badd5c1a8df8bfcfdb4 ]
 
-The inline function btrfs_is_testing() is hardcoded to return 0 if
-CONFIG_BTRFS_FS_RUN_SANITY_TESTS is not set. Currently we're relying on
-the compiler optimizing out the call to alloc_test_extent_buffer() in
-btrfs_find_create_tree_block(), as it's not been defined (it's behind an
- #ifdef).
+In the days when SCSI-2 was emerging, some drives did claim SCSI-2 but did
+not correctly implement it. The st driver first tries MODE SELECT with the
+page format bit set to set the block descriptor.  If not successful, the
+non-page format is tried.
 
-Add a stub version of alloc_test_extent_buffer() to avoid linker errors
-on non-standard optimization levels. This problem was seen on GCC 14
-with -O0 and is helps to see symbols that would be otherwise optimized
-out.
+The test only tests the sense code and this triggers also from illegal
+parameter in the parameter list. The test is limited to "old" devices and
+made more strict to remove false alarms.
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Mark Harmstone <maharmstone@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+Link: https://lore.kernel.org/r/20250311112516.5548-4-Kai.Makisara@kolumbus.fi
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/scsi/st.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 04788940afafc..64af1c7f95c24 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -5134,10 +5134,10 @@ struct extent_buffer *find_extent_buffer(struct btrfs_fs_info *fs_info,
- 	return NULL;
- }
- 
--#ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
- struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
- 					u64 start)
- {
-+#ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
- 	struct extent_buffer *eb, *exists = NULL;
- 	int ret;
- 
-@@ -5173,8 +5173,11 @@ struct extent_buffer *alloc_test_extent_buffer(struct btrfs_fs_info *fs_info,
- free_eb:
- 	btrfs_release_extent_buffer(eb);
- 	return exists;
--}
-+#else
-+	/* Stub to avoid linker error when compiled with optimizations turned off. */
-+	return NULL;
- #endif
-+}
- 
- struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
- 					  u64 start)
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index 2b5e3e2ba3b8b..8f927851ccf86 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -3076,7 +3076,9 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
+ 			   cmd_in == MTSETDRVBUFFER ||
+ 			   cmd_in == SET_DENS_AND_BLK) {
+ 			if (cmdstatp->sense_hdr.sense_key == ILLEGAL_REQUEST &&
+-			    !(STp->use_pf & PF_TESTED)) {
++				cmdstatp->sense_hdr.asc == 0x24 &&
++				(STp->device)->scsi_level <= SCSI_2 &&
++				!(STp->use_pf & PF_TESTED)) {
+ 				/* Try the other possible state of Page Format if not
+ 				   already tried */
+ 				STp->use_pf = (STp->use_pf ^ USE_PF) | PF_TESTED;
 -- 
 2.39.5
 
