@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7986827D78A;
-	Mon,  5 May 2025 22:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA7C27D786;
+	Mon,  5 May 2025 22:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484912; cv=none; b=UnjjObl324S/YeIi51A5vRMVPMHKhubxJejk/pihT77uRxky+VC+QPsSB3pwauq3oDpiA5RflZbYd8kx+W84KKkAqcoGonkDUpE0WGwKLBUz6reQDfSChB6MMgIBLI1fp7nQx9LSYpJ385GV9obv3eN47kV28q355+JzCKnTeeA=
+	t=1746484923; cv=none; b=MvXKPTlXt5uubiaW9X+wFc/L3o/u37tcqmf9RZlbitJ2if8uucDH1T5akHxXekFwP7i3Xg4ybM3WZsbjhRuOtfytM+J+9POIH/09NEDNiSJRtZxSqlaHAYK8OLW+NBLD+FoF0YHS2PwPCDcyxyKCwctIpRpCKJdhfeM9U63xGBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484912; c=relaxed/simple;
-	bh=qwYCagQop5BpTjSn3yF121cknD/oRVQ9uIR8lwKt7tc=;
+	s=arc-20240116; t=1746484923; c=relaxed/simple;
+	bh=ikB6SErqWkThOyImGk4WEEG5UGvxZgZ7KBXa1b1k3CQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hanhQhiLzq+mU24JVqxOSECvjZnuBre+sqo6ICamWGDZZkWfaPNGaz0gQvYHimxp8701Rw+WuaYWix0nmbnwxiSZ0x/wwKGLJMOQKfeoS7ovns22/YeUGV07NOKdUe3Hz4QKW1nePnXnTC6SHXeEA8VRXvfVpu8T8XAOWpER0Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnCs/ZAV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Es7fEjdNIC6ffjI1KgW6Ot7zRAPzIQM2B2bOub764vBDB1yKgLE18+BIStCu38/GJaZA0AkGMFaQGmcDBN2npNvlhu2e8uGPFvxbTivy8cIL9Xa/zYZRykzrKxnympK40W7Y1AtZy6Zb2ah0pMBBb2BRbKr+vWkClzUcmTi0J2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3vLWOBV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnCs/ZAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE50C4CEEF;
-	Mon,  5 May 2025 22:41:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3vLWOBV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23CEC4CEEE;
+	Mon,  5 May 2025 22:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484911;
-	bh=qwYCagQop5BpTjSn3yF121cknD/oRVQ9uIR8lwKt7tc=;
+	s=k20201202; t=1746484922;
+	bh=ikB6SErqWkThOyImGk4WEEG5UGvxZgZ7KBXa1b1k3CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KnCs/ZAVLVNtqy0/bbjiUEdxOmSkbsCRyQOgly99EGkbq9glQZiuGEnxfGa4Co5rZ
-	 ca2Md5FCUxmqmgkuHOnsvmmZfRA5es2kECkdtpCRLt9C3zAxgeTuPjDEsGtVLn5ACe
-	 NqaiF+L4QwMCvl2SnwpIOVvDvCqbHpkjfgAXJQ3ypPkpI6cqNe2jGv1ayftreJBasE
-	 4sVkfO+Jt9B2J2x+5+THjYhHb8aWMSUB6hw9eebmOcn1yGXoaOZbaHZ50HXr8YNb+2
-	 kJ8arJSxlwCsuWm2ZizKMQEFq4rYfe5QIKsIh8UJvPrVKyFFjBlVDaO0GXiFVWwsnm
-	 BxCF+CO9oU4sg==
+	b=l3vLWOBV+H7T4RmjrE6aQ/NsgNe/RF01rcJ6X3OO8Ln42INXR7RduN5nQ1Z0HKxBj
+	 YUNrxf8BqOIQiXAbVKdkCnikHnzC6yU+Hq+bl882olrK55/7tD/9KYWOgC+L/m6X/4
+	 dqrax+HcPBoXzm1Wli6XRUExZpMPwVxxqh185JVSibFgbEnOhwyD6Yuv0MJHyA1HhY
+	 qbttgfYQp9Z4pLUKed+sfEN2BSRyPIS/HBf+4MQscLVQnbtVhnJ8mnyT8wp2aArdGY
+	 rHVKjcb4+iVd2OugQfEaDXevZm4UMn4dG90PFG65g7Zf2BE/cakVUd4xJ1FVz/snZB
+	 OBMMqlebwgT/Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vitalii Mordan <mordan@ispras.ru>,
-	Andi Shyti <andi.shyti@kernel.org>,
+Cc: Filipe Manana <fdmanana@suse.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 071/486] i2c: pxa: fix call balance of i2c->clk handling routines
-Date: Mon,  5 May 2025 18:32:27 -0400
-Message-Id: <20250505223922.2682012-71-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 078/486] btrfs: get zone unusable bytes while holding lock at btrfs_reclaim_bgs_work()
+Date: Mon,  5 May 2025 18:32:34 -0400
+Message-Id: <20250505223922.2682012-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,39 +53,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Vitalii Mordan <mordan@ispras.ru>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit be7113d2e2a6f20cbee99c98d261a1fd6fd7b549 ]
+[ Upstream commit 1283b8c125a83bf7a7dbe90c33d3472b6d7bf612 ]
 
-If the clock i2c->clk was not enabled in i2c_pxa_probe(), it should not be
-disabled in any path.
+At btrfs_reclaim_bgs_work(), we are grabbing a block group's zone unusable
+bytes while not under the protection of the block group's spinlock, so
+this can trigger race reports from KCSAN (or similar tools) since that
+field is typically updated while holding the lock, such as at
+__btrfs_add_free_space_zoned() for example.
 
-Found by Linux Verification Center (linuxtesting.org) with Klever.
+Fix this by grabbing the zone unusable bytes while we are still in the
+critical section holding the block group's spinlock, which is right above
+where we are currently grabbing it.
 
-Signed-off-by: Vitalii Mordan <mordan@ispras.ru>
-Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
-Link: https://lore.kernel.org/r/20250212172803.1422136-1-mordan@ispras.ru
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/block-group.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 4d76e71cdd4be..afc1a8171f59e 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1503,7 +1503,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 				i2c->adap.name);
- 	}
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 4423d8b716a58..aa8656c8b7e7e 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1891,6 +1891,17 @@ void btrfs_reclaim_bgs_work(struct work_struct *work)
+ 			up_write(&space_info->groups_sem);
+ 			goto next;
+ 		}
++
++		/*
++		 * Cache the zone_unusable value before turning the block group
++		 * to read only. As soon as the block group is read only it's
++		 * zone_unusable value gets moved to the block group's read-only
++		 * bytes and isn't available for calculations anymore. We also
++		 * cache it before unlocking the block group, to prevent races
++		 * (reports from KCSAN and such tools) with tasks updating it.
++		 */
++		zone_unusable = bg->zone_unusable;
++
+ 		spin_unlock(&bg->lock);
+ 		spin_unlock(&space_info->lock);
  
--	clk_prepare_enable(i2c->clk);
-+	ret = clk_prepare_enable(i2c->clk);
-+	if (ret)
-+		return dev_err_probe(&dev->dev, ret,
-+				     "failed to enable clock\n");
+@@ -1907,13 +1918,6 @@ void btrfs_reclaim_bgs_work(struct work_struct *work)
+ 			goto next;
+ 		}
  
- 	if (i2c->use_pio) {
- 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
+-		/*
+-		 * Cache the zone_unusable value before turning the block group
+-		 * to read only. As soon as the blog group is read only it's
+-		 * zone_unusable value gets moved to the block group's read-only
+-		 * bytes and isn't available for calculations anymore.
+-		 */
+-		zone_unusable = bg->zone_unusable;
+ 		ret = inc_block_group_ro(bg, 0);
+ 		up_write(&space_info->groups_sem);
+ 		if (ret < 0)
 -- 
 2.39.5
 
