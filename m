@@ -1,141 +1,75 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE38E1E493C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF7722AE7F;
+	Mon,  5 May 2025 12:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447302; cv=none; b=QsJR2pQE9Pep8HUtwmUpQOUekzbH3toLOHTx11KdUG75Q4b9G8WS7tZEnwT1bcDtoXJoaMmvPLz9x3QLW5Fc8c+DF7juYmp++ZyQpgVFK4PS795SclGqC70W9K76pNl0PsQv4ZQIlI91snJ0BxnIHUrzh+Cgxd8I412a88BDi28=
+	t=1746447323; cv=none; b=IsyDokTVT/IQQMVfnGznVm6F+7EcPDSsrJRDeDcyDDXplbxsCiCUJcTGOnk7sExlqtBy3xwTrefiA8eq/79Zg7Vaacia7kLR4huxNOVT4YV72nE70zqT6GatTcwrRhEYH88a0BRBomlov7Me02qmoYuCegpNnPZ1Ot5K1tMbi6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447302; c=relaxed/simple;
-	bh=+JunN5LHxQnSTzNrxTkTpwaTbQxXMqM6ucxT3WMKXO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c8LdbLwITJEmCMAVQxkx/RdNTHhOq1AWeKziJ5JWZlMri6EljYbXju/OgFuNUa5rmjj6scegBxWC7O7O4kVgT2TiNalQGoes3bFoVAHe/UlbVObp6V9XQp61Un5p4cFzWuIp+gx6kP6GC9ak410W+vX3Zd/vnWTsMXk87d6Wj+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=mKv/+ktI; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746447323; c=relaxed/simple;
+	bh=/ZxlZzMuIp9unqNcD0XajEpNxCAOmLzEQvkD+safKWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C/XuxNGvSuyXFTqdi0B7sbBUCEiZocDStBsmRLehX2e0ys/R3FJHWvfu8tZ/mOZNYDlG1g5bDI2McVG1XownjOaKiRkX1uz5J4obFXSrF9eL6/OnxxA5A3Mqc2msbDQ6FgafPqVS/hKeyT74f7/VHt7vo/RNSuTWph1CFIHuDAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dq9gqMTM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="mKv/+ktI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746447299;
- bh=2e/MuYHAA+jWnpekvvoY+BPMl0OhYcezCPyB7/Johv8=;
- b=mKv/+ktILGb3Uuf++NNYkyl7QhOFJhwuELweXrhbjuxgAoTFiOSv1Nb7w5El9Sx/lGZJpdYb6
- 0Y/jyWTErfEQK8eu0pg27dYwurCnrAc/SWhiqeo2Mjlaj5CFwr6a+blC0K1NpdYGyGmehxnkdpL
- Q2Ge4ZqQuJFCusDWVHLop1K6w1rgGviwSOxNn6RCdlsNT7g8KiB3UtHURUwAtE7iMUDHc10yj6/
- h1XZiJW2R8shP14J3j9jnZv46Vgq41Nkxh9p4Vc3v3n3VY8MHcDcsPQvcO0S+yH01/aAWFaAVwc
- SajZq4/0mXkByOO6Is88Xt8dRKRuOBYgCmmaAfHv6ALA==
-X-Forward-Email-ID: 6818abba07f380a11152deca
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <4dc3a05d-34eb-44d1-9855-7b8e626e1942@kwiboo.se>
-Date: Mon, 5 May 2025 14:14:46 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dq9gqMTM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=NbulvA1d2ndRK+1/mUS5QJdpNLrzeNCoxVF106IVpuA=; b=dq9gqMTMjXBY5G9paS6dfm7P92
+	SVXbVDW8brc1RsEIoIejCyXOIQdSjKv+i+i+8iOM2aW37Ua+MTzv7krWhHgTsklDHVhFpjPdrxcxZ
+	rKn1bkML3TsYPLwe6xQkgNejQBuUnmJuLF08oDTNnSDemhFR3QG0XgWfPR5nLW8N7Pz8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uBuiw-00BajR-Pd; Mon, 05 May 2025 14:15:06 +0200
+Date: Mon, 5 May 2025 14:15:06 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thangaraj Samynathan <thangaraj.s@microchip.com>
+Cc: netdev@vger.kernel.org, bryan.whitehead@microchip.com,
+	UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 net-next] net: lan743x: configure interrupt
+  moderation timers based on speed
+Message-ID: <e2d7079b-f2d3-443d-a0e5-cb4f7a85b1e6@lunn.ch>
+References: <20250505072943.123943-1-thangaraj.s@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Add Luckfox Omni3576 Board
- support
-To: John Clark <inindev@gmail.com>
-Cc: heiko@sntech.de, robh@kernel.org, conor+dt@kernel.org,
- detlev.casanova@collabora.com, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250502205533.51744-1-inindev@gmail.com>
- <20250504102447.153551-1-inindev@gmail.com>
- <20250504102447.153551-4-inindev@gmail.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250504102447.153551-4-inindev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505072943.123943-1-thangaraj.s@microchip.com>
 
-Hi John,
+On Mon, May 05, 2025 at 12:59:43PM +0530, Thangaraj Samynathan wrote:
+> Configures the interrupt moderation timer value to 64us for 2.5G,
+> 150us for 1G, 330us for 10/100M. Earlier this was 400us for all
+> speeds. This improvess UDP TX and Bidirectional performance to
+> 2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
+> experimenting with different values.
 
-On 2025-05-04 12:24, John Clark wrote:
-> Add device tree for the Luckfox Omni3576 Carrier Board with Core3576
-> Module, powered by the Rockchip RK3576 SoC with four Cortex-A72 cores,
-> four Cortex-A53 cores, and a Mali-G52 MC3 GPU. This initial
-> implementation enables essential functionality for booting Linux and
-> basic connectivity.
-> 
-> Supported and tested features:
->  - UART for serial console
->  - SD card for storage
->  - PCIe with NVMe SSD (detected, mounted, and fully functional)
->  - Gigabit Ethernet 0 with RGMII PHY
->  - USB 2.0 host ports
->  - RK806 PMIC for power management
->  - RTC with timekeeping and wake-up
->  - GPIO-controlled LED with heartbeat trigger
->  - eMMC (enabled, not populated on tested board)
-> 
-> The device tree provides a foundation for further peripheral support, such
-> as WiFi, MIPI-DSI, HDMI, and Ethernet 1, in future updates.
-> 
-> Tested on Linux 6.15-rc4
-> 
-> Signed-off-by: John Clark <inindev@gmail.com>
-> ---
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../dts/rockchip/rk3576-luckfox-omni3576.dts  | 779 ++++++++++++++++++
->  2 files changed, 780 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index 7948522cb225..22d74367b7e6 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -136,6 +136,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-display-vz.dtbo
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-io-expander.dtbo
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-armsom-sige5.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-evb1-v10.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-luckfox-omni3576.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-roc-pc.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3576-rock-4d.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3582-radxa-e52c.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts b/arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
-> new file mode 100644
-> index 000000000000..73351ba7830c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
-> @@ -0,0 +1,779 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2024 Rockchip Electronics Co., Ltd.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/soc/rockchip,vop2.h>
-> +#include "rk3576.dtsi"
-> +
-> +/ {
-> +	model = "Luckfox Omni3576";
-> +	compatible = "luckfox,omni3576", "rockchip,rk3576";
+It would be good to also implement:
 
-Because this is a carrier board this should probably be something like:
+       ethtool -c|--show-coalesce devname
 
-  compatible = "luckfox,omni3576", "luckfox,core3576", "rockchip,rk3576";
+       ethtool -C|--coalesce devname [adaptive-rx on|off] [adaptive-tx on|off]
+              [rx-usecs N] [rx-frames N] [rx-usecs-irq N] [rx-frames-irq N]
+              [tx-usecs N] [tx-frames N] [tx-usecs-irq N] [tx-frames-irq N]
+              [stats-block-usecs N] [pkt-rate-low N] [rx-usecs-low N]
+              [rx-frames-low N] [tx-usecs-low N] [tx-frames-low N]
+              [pkt-rate-high N] [rx-usecs-high N] [rx-frames-high N]
+              [tx-usecs-high N] [tx-frames-high N] [sample-interval N]
+              [cqe-mode-rx on|off] [cqe-mode-tx on|off] [tx-aggr-max-bytes N]
+              [tx-aggr-max-frames N] [tx-aggr-time-usecs N]
 
-And this .dts-file should be split up into something like:
-- rk3576-luckfox-core3576.dtsi for parts related to the Core3576 SoM
-- rk3576-luckfox-omni3576.dts for parts only related to the carrier board
+so the user can configure it. Sometimes lower power is more important
+than high speed.
 
-Regards,
-Jonas
-
-[snip]
+	Andrew
