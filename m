@@ -1,47 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F62F2989BC;
-	Mon,  5 May 2025 22:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F82359620;
+	Mon,  5 May 2025 22:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484927; cv=none; b=tNkheTeaGqMfGKBYCqLZw0lVwK6wRuCGdXnK4xByHqwBx2pgnzR/cDW30JYkwbfiT3K3qn+rrEuit2JDfFGywUre8yvTfu8DwfSbkKAgel/TILu+KFcVQSof/t3jly0u1r+qGyyZIV7QziEFU5lOL8iHCUmUwHswwVc70vhXtYA=
+	t=1746484948; cv=none; b=grN4YsZUbC1okOoXf+rI+uza2v02oWp7WcPDHcFw9eaPDBpzdeGOZHuhScFbw1nqxUw4y7ZTOsFJpROPzrd9WZA7RG6beFSr8O39FkaaJ6IFLkK7ITOwxRw0SsHS946vivDloIlsb69g0eLeOyEkk0cujBIOSwKAlO6BKuXD/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484927; c=relaxed/simple;
-	bh=B2Sst9Y20fMXhTIfWJF5SBOWaQ6eWmMfQDIXffAOvlA=;
+	s=arc-20240116; t=1746484948; c=relaxed/simple;
+	bh=kB3Of2TAfMWjq4ISnDkHwtPTUxxjDoqlJgVbF9jFa5c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G1kS+X8bYaI0gUkGKHcqs1946APNgJtYaypJRec557OmcY3OtOBfGNKWooVe7HIN5Jo84EhjBbUBmUqZyTg6vjBmSyLjP4hH88Uf6zi0DFkbMy/b30KEcU86AHnh1SpSmZxP1IS2ZbnTz1m7v3hvyzYw8XxYZ7t8ctinTMcA0mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb9nWJx9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jt+NZz0Ah3pAbsLcoO2JCtKmfMuLx/LrBZkcgz1KCxqP/AOQuGtMBZFZL6md1Y1UW92HY8KYJJ1Xnu2zzlVDrq4NGotNRg1RZu0Di9enPQjB5fwrZvJmwo4bXNJsplEZHbFK3oj6T8HQtOr7EqDWPeaeWwPD9XKDF30EGZWvPds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEW8USIO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb9nWJx9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4D9C4CEE4;
-	Mon,  5 May 2025 22:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEW8USIO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58CA8C4CEED;
+	Mon,  5 May 2025 22:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484927;
-	bh=B2Sst9Y20fMXhTIfWJF5SBOWaQ6eWmMfQDIXffAOvlA=;
+	s=k20201202; t=1746484947;
+	bh=kB3Of2TAfMWjq4ISnDkHwtPTUxxjDoqlJgVbF9jFa5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hb9nWJx9jAkW7fLAF2692dwSeRTezWjTDm4XI3G1MwvkxqTfiqLZJzaeTpGO7PViQ
-	 Kja52wHCuDjLc7ZF4hCyKX3Bt03BTEzmveAPGdJOh15dqY6UesNtLJV6Hj84oAXzjc
-	 pinorqfuxIiGPKhzdoQ9HZlNO9om9gbZ9XMULaOb3kwBAq1/Ok3oI2dwXGWb0lFrPo
-	 S954TqUduuQxE1RIsX2GtSXdoNTHRqFDUjnbcGxwWI/1z7LceuuWwjOBn50F7c5WgN
-	 ymbBBIz3ifpNBhznbL6sLEmgp7b8Ga3aMY1YwrOJz+D6YJPZWbr9Ob+foy7LGHthf7
-	 zqx3koGf9LNOg==
+	b=tEW8USIOHYaxsOxllC0RCLxuGJfEibAjzNccldMpjj/NmOw73MX78T3IQom6QS8hh
+	 B3FFcKY6NThbXniWQt1p3pxTMqd4bgOs4gnjDYWbSlhFVtOqM1x5fAZLyIwzJGFKqZ
+	 d/wXcMCHvq2XnOo6pxpdT/a1+R6sx+/mb5/UjBDume4afUY14mmJpHfXgQmDNXvgU1
+	 yLyJ170yA93RwBGmjsCM6nGrXWgX9gosloq2FtQGiVM5aXu0CATjovcpHARgDo7T/f
+	 9+icDeIqu9EaX7sFXS/4XPd9w6ojbEYD8aFswcup6Bfmh1cGhS30AsMpkMTuYLEGm0
+	 ktUs+LRSHEzJw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>,
-	Wen Tao <wentao@uniontech.com>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Tejun Heo <tj@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Tiwei Bie <tiwei.btw@antgroup.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	josef@toxicpanda.com,
-	cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 081/486] blk-cgroup: improve policy registration error handling
-Date: Mon,  5 May 2025 18:32:37 -0400
-Message-Id: <20250505223922.2682012-81-sashal@kernel.org>
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	akpm@linux-foundation.org,
+	rppt@kernel.org,
+	dave.hansen@linux.intel.com,
+	richard.weiyang@gmail.com,
+	benjamin.berg@intel.com,
+	kevin.brodsky@arm.com,
+	linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 090/486] um: Update min_low_pfn to match changes in uml_reserved
+Date: Mon,  5 May 2025 18:32:46 -0400
+Message-Id: <20250505223922.2682012-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,95 +54,39 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Chen Linxuan <chenlinxuan@uniontech.com>
+From: Tiwei Bie <tiwei.btw@antgroup.com>
 
-[ Upstream commit e1a0202c6bfda24002a3ae2115154fa90104c649 ]
+[ Upstream commit e82cf3051e6193f61e03898f8dba035199064d36 ]
 
-This patch improve the returned error code of blkcg_policy_register().
+When uml_reserved is updated, min_low_pfn must also be updated
+accordingly. Otherwise, min_low_pfn will not accurately reflect
+the lowest available PFN.
 
-1. Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn
-   function pairs to the start of blkcg_policy_register(). This ensures
-   we immediately return -EINVAL if the function pairs are not correctly
-   provided, rather than returning -ENOSPC after locking and unlocking
-   mutexes unnecessarily.
-
-   Those locks should not contention any problems, as error of policy
-   registration is a super cold path.
-
-2. Return -ENOMEM when cpd_alloc_fn() failed.
-
-Co-authored-by: Wen Tao <wentao@uniontech.com>
-Signed-off-by: Wen Tao <wentao@uniontech.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-Reviewed-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+Link: https://patch.msgid.link/20250221041855.1156109-1-tiwei.btw@antgroup.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-cgroup.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ arch/um/kernel/mem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index f1cf7f2909f3a..643d6bf66522e 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1725,27 +1725,27 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 	struct blkcg *blkcg;
- 	int i, ret;
+diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
+index a5b4fe2ad9315..6ca9ea4a230bc 100644
+--- a/arch/um/kernel/mem.c
++++ b/arch/um/kernel/mem.c
+@@ -70,6 +70,7 @@ void __init mem_init(void)
+ 	map_memory(brk_end, __pa(brk_end), uml_reserved - brk_end, 1, 1, 0);
+ 	memblock_free((void *)brk_end, uml_reserved - brk_end);
+ 	uml_reserved = brk_end;
++	min_low_pfn = PFN_UP(__pa(uml_reserved));
  
-+	/*
-+	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
-+	 * without pd_alloc_fn/pd_free_fn can't be activated.
-+	 */
-+	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
-+	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
-+		return -EINVAL;
-+
- 	mutex_lock(&blkcg_pol_register_mutex);
- 	mutex_lock(&blkcg_pol_mutex);
- 
- 	/* find an empty slot */
--	ret = -ENOSPC;
- 	for (i = 0; i < BLKCG_MAX_POLS; i++)
- 		if (!blkcg_policy[i])
- 			break;
- 	if (i >= BLKCG_MAX_POLS) {
- 		pr_warn("blkcg_policy_register: BLKCG_MAX_POLS too small\n");
-+		ret = -ENOSPC;
- 		goto err_unlock;
- 	}
- 
--	/*
--	 * Make sure cpd/pd_alloc_fn and cpd/pd_free_fn in pairs, and policy
--	 * without pd_alloc_fn/pd_free_fn can't be activated.
--	 */
--	if ((!pol->cpd_alloc_fn ^ !pol->cpd_free_fn) ||
--	    (!pol->pd_alloc_fn ^ !pol->pd_free_fn))
--		goto err_unlock;
--
- 	/* register @pol */
- 	pol->plid = i;
- 	blkcg_policy[pol->plid] = pol;
-@@ -1756,8 +1756,10 @@ int blkcg_policy_register(struct blkcg_policy *pol)
- 			struct blkcg_policy_data *cpd;
- 
- 			cpd = pol->cpd_alloc_fn(GFP_KERNEL);
--			if (!cpd)
-+			if (!cpd) {
-+				ret = -ENOMEM;
- 				goto err_free_cpds;
-+			}
- 
- 			blkcg->cpd[pol->plid] = cpd;
- 			cpd->blkcg = blkcg;
+ 	/* this will put all low memory onto the freelists */
+ 	memblock_free_all();
 -- 
 2.39.5
 
