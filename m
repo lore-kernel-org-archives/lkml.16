@@ -1,46 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5ADD37EA85;
-	Mon,  5 May 2025 23:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459D63B8A0F;
+	Mon,  5 May 2025 23:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487319; cv=none; b=C2WpFjXlyhtMHNmts2GXdJC1Z3yPBU/3pLSH4CXVNHrO/85vG8FSXKNv1wb/WluQM99md+ZcOgZW93NytgqhUw+/u+3XfXG05/KgQoXLuvtT8EsceSD2gn6usHTueqp/hG8T20PIh/8R4FNzNJj+J7sMxLt0RGw3vzrYurpVu2c=
+	t=1746487312; cv=none; b=SBnWu8G5SOmwQCw4vnbZ77CMDiz0nd6dM0BarpCj8n9UF3WNhbHAiAqHsJ0XDlsDU4PooWjgv6zkLIurBsyBV8au31hLx7JTdw4yfy50UF2eD1tG80q7MvbOi//Abw+ow4Fmurgh87oVFXwcPERfUxp6WDwAqXtHfK52CsxMbbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487319; c=relaxed/simple;
-	bh=Ri+uoAYihEtW5+8ixH8UW6Kg4Ak/15ZETE//xeGI+vo=;
+	s=arc-20240116; t=1746487312; c=relaxed/simple;
+	bh=AszapdjkdG/OED5SC5JlpPorz91kZ37h5pVVZ+Xc5mU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KfjNhd6DwFilJ48lXWXRbTtDkv3RTWQaXU9lak2SAKtrvD61HQrVEvWwIGVEmPyo6meifgiHSKAQjeFX62VHNZKjrf2pMkTHBGIdWLyz5E3+C6FRrew2HnbWQ0CCgq3jDeiLfuYF/zih46jbR5DLt/CngcbeZDSax7thWvV2JkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JN5DZ096; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=phClGlXJYJHnW/rYy0OOpECFKwCIysa3IdPbveQc2chWb/ld+FhDs/yLEPfPQ1b4WBtDFmtnIPGCIyojET+gYe1PB2S/igbDGMbZA/VmNbK0TP3v8eWp3GPwKGlCE47O669b/XKoeCBZ6eT5wFYq9XL5a3+p8dboFp26ejZdcAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sAfgX0mr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JN5DZ096"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0224C4CEEF;
-	Mon,  5 May 2025 23:21:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAfgX0mr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D469C4CEE4;
+	Mon,  5 May 2025 23:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487318;
-	bh=Ri+uoAYihEtW5+8ixH8UW6Kg4Ak/15ZETE//xeGI+vo=;
+	s=k20201202; t=1746487310;
+	bh=AszapdjkdG/OED5SC5JlpPorz91kZ37h5pVVZ+Xc5mU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JN5DZ096esX8Ul5MhAlFjBccs26kgNM6ArDUmRgmZMyrsIrQGoQ0uEPC70dBunhes
-	 MkdeHr5YaFqIU720OJQ1CbhD0th93FTq6Ma4TIKprHN4Nnook/ISHyLwzENetoy4rK
-	 YeoBoGXyCWb914Jc3gKxqSgX28g6SbKk4ony5aiUXBeFymylTPhLTM1dk4N8hC8KRp
-	 o4yACMPdU1XVFCmBCHLovv+4K3VeKW7A7EvFSuNxDDvdoXJpXuivdkQqLs1qdzuuxC
-	 QLKqgQEbiBfn+1LwWMrzIq1E/olYbQCtc0/n9KO3o23XzcKXi9NPfhn+dXP4OfSDm9
-	 hRqOTlVnAt7hw==
+	b=sAfgX0mrfgqsKIw0+OBnmwj/TpSyRqkaz92WdznRpcT+VsvVH/xKw+HNFWGRiZ6Jm
+	 NZPHC5MFtKP9j9KIUk0e4/dDblpx/tnUSPH1jA+xar+ryoppWRqbYQh0I+thpdnjEK
+	 b7fzHuSLTZSj29Asrp7J7fxa2EWyzPWHsTFDCo4cvhg0ERdm+2zozY+wH0qmELM7jG
+	 NPClbtF3dovTr/11He3ZAJNqLNs/acQn3o5BlM6nDkOAxFxJbx6pTG2ynhxAumKMs3
+	 N6YE4TMp6DFhCaQMGWCsUknVo0MPaaT/QldA9OkuiaeT6/eY7XF1AoD3MrscZBcyaM
+	 m2bbl9GSxl2JQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shixiong Ou <oushixiong@kylinos.cn>,
-	Helge Deller <deller@gmx.de>,
+Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	timur@kernel.org,
-	linux-fbdev@vger.kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 03/79] fbdev: fsl-diu-fb: add missing device_remove_file()
-Date: Mon,  5 May 2025 19:20:35 -0400
-Message-Id: <20250505232151.2698893-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 114/114] drm: Add valid clones check
+Date: Mon,  5 May 2025 19:18:17 -0400
+Message-Id: <20250505231817.2697367-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
-References: <20250505232151.2698893-1-sashal@kernel.org>
+In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
+References: <20250505231817.2697367-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,34 +52,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-[ Upstream commit 86d16cd12efa547ed43d16ba7a782c1251c80ea8 ]
+[ Upstream commit 41b4b11da02157c7474caf41d56baae0e941d01a ]
 
-Call device_remove_file() when driver remove.
+Check that all encoders attached to a given CRTC are valid
+possible_clones of each other.
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241216-concurrent-wb-v4-3-fe220297a7f0@quicinc.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/fsl-diu-fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_atomic_helper.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-index d4c2a6b3839ec..3dc399704adc1 100644
---- a/drivers/video/fbdev/fsl-diu-fb.c
-+++ b/drivers/video/fbdev/fsl-diu-fb.c
-@@ -1828,6 +1828,7 @@ static int fsl_diu_remove(struct platform_device *pdev)
- 	int i;
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index dee3b81dec587..8612dd552d392 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -557,6 +557,30 @@ mode_valid(struct drm_atomic_state *state)
+ 	return 0;
+ }
  
- 	data = dev_get_drvdata(&pdev->dev);
-+	device_remove_file(&pdev->dev, &data->dev_attr);
- 	disable_lcdc(&data->fsl_diu_info[0]);
++static int drm_atomic_check_valid_clones(struct drm_atomic_state *state,
++					 struct drm_crtc *crtc)
++{
++	struct drm_encoder *drm_enc;
++	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state,
++									  crtc);
++
++	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask) {
++		if (!drm_enc->possible_clones) {
++			DRM_DEBUG("enc%d possible_clones is 0\n", drm_enc->base.id);
++			continue;
++		}
++
++		if ((crtc_state->encoder_mask & drm_enc->possible_clones) !=
++		    crtc_state->encoder_mask) {
++			DRM_DEBUG("crtc%d failed valid clone check for mask 0x%x\n",
++				  crtc->base.id, crtc_state->encoder_mask);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ /**
+  * drm_atomic_helper_check_modeset - validate state object for modeset changes
+  * @dev: DRM device
+@@ -720,6 +744,10 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+ 		ret = drm_atomic_add_affected_planes(state, crtc);
+ 		if (ret != 0)
+ 			return ret;
++
++		ret = drm_atomic_check_valid_clones(state, crtc);
++		if (ret != 0)
++			return ret;
+ 	}
  
- 	free_irq(data->irq, data->diu_reg);
+ 	/*
 -- 
 2.39.5
 
