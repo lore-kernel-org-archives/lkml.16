@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F4936BA55;
-	Mon,  5 May 2025 22:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822E12D8DA9;
+	Mon,  5 May 2025 22:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485819; cv=none; b=GqqsZc+rSYaMvuMDE/gzoxW8O2IQwzqzRPu2+4MuPfrTmRyvVauK1MvISz2Zb9UdpUrZGxStIORVIFgCiM9yD05sHE31/uKp4ZyVJXIvNEY9sD7HRUQ6fB8VpqSRBzUPZ940I7NMe/FS7K+XQEPxrTRI2+zk7SGW8ROqwMBYyeg=
+	t=1746485826; cv=none; b=GC1I2d5PdRembd2oy4YcB5GiU4iGzO8a2yQCJsVKwk66ye1F92LWGybdf+FrE3wEsOIMIwwjznLiE7kn7DW7lfj+tDm0zzqPGvn3Y9lIjy0jrdFUS4SerqhbwfrAxK4Ng1LUQXzxYS5bS4MIOma8McCpHwMefHX9/i/cwLBFeeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485819; c=relaxed/simple;
-	bh=eEUI680ypmPuZ5QWILhPpSBV4+NzpYcdAqCvbVpWpUg=;
+	s=arc-20240116; t=1746485826; c=relaxed/simple;
+	bh=iZHQ+x/yJmF2kpb8qxJthxWQ4unr5cOMDIGLqJ6ibpQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UCOb+DO77KP3PmV7jPli1WoN5QV2KKEFKQcJtTvmAqa8fEdk6pk2Jxm1Gz76WOVmDfSxitlI7pXwipRuTkpicwHyDY1OUue1EO583IklZukgndHZW6m3S3KwUx2qDd31RatJEhbVFZ+Ap9jRkXJvlYRjwZOp4doyNHY3EG9VX/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3kmmcqC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E7g+1iO/+n9D54NCmYS/KQfm0SanpOloNpsOOKYMhDAkgQB0IJ/GJShAJT2xOyt5yiOFxi5+mwgFeOvSuUxzPqGjY+K33s6QcE9+muke9sjL1inLHSctBG2qXc87YSYe9UTsIVyHf/6nqwkUXMHelcJ76fQTkhrctNqM4gC/2s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4sxJzDf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3kmmcqC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619FFC4CEE4;
-	Mon,  5 May 2025 22:56:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4sxJzDf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8097FC4CEE4;
+	Mon,  5 May 2025 22:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485819;
-	bh=eEUI680ypmPuZ5QWILhPpSBV4+NzpYcdAqCvbVpWpUg=;
+	s=k20201202; t=1746485825;
+	bh=iZHQ+x/yJmF2kpb8qxJthxWQ4unr5cOMDIGLqJ6ibpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q3kmmcqCk51X5eX2IWgn/GU44EXHnUOJSPWg2heZTdNkQt+JQ4+Wdce3LFh74Ymis
-	 tNsBtTiSd+VTspyOaauJAo7MjLVowrudfO3YqJlv9Oy88JZUIN0JLIFOhBK5VnV0sP
-	 ExYcARBybYHGg+wHDZHrYIGTfIO/GmII3GSXidt8NiTiqpRPlYII0VbkNW2u7e6+lQ
-	 S2ISLEnCok/ZU1pa90cA5XiaS5K91QA9YhrCYCDcQdsV2ZcEjdjkHbgJCWvQclHXop
-	 5A9zPaDXXTD8DUuuy+MMyktY8lh+JNFrWnVJAAB+5QzqLPKvYZlzXKGMwiUh0gwYt4
-	 O+nIKGsz5E36g==
+	b=J4sxJzDfNnjbTdZS1gCvMq4bTf5jMNl+cGeC9i3luGeBcbNYG+wPLPUL5DFsm6mWT
+	 xXjJxAbd3bgvzh9QdEqFhlCbrLlQgx2yQ8U7kXY3trrEfSFuNr8z10TA4Oy+UNmrBy
+	 qd2Ry+RfOvse9gut2qDB72Q5XrNMg+Hcoz58oN+Fb18WlEU0Alni5vXEYXbNKGDIdc
+	 cdxWtqLXkEzut1nnnjz+caZ016bq1UmGylfI75OiltproB1eyx9be8ziEsl9/JkNBc
+	 qUdCkWu4ZSpok/9e4Hla5oObaomDj7oClSm//rfTL1dbT6qTHqp21yA5y42JAdtq3u
+	 4beTfvd/9hlAQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Huisong Li <lihuisong@huawei.com>,
-	Adam Young <admiyo@os.amperecomputing.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
+Cc: Shixiong Ou <oushixiong@kylinos.cn>,
+	Helge Deller <deller@gmx.de>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 014/294] mailbox: pcc: Use acpi_os_ioremap() instead of ioremap()
-Date: Mon,  5 May 2025 18:51:54 -0400
-Message-Id: <20250505225634.2688578-14-sashal@kernel.org>
+	timur@kernel.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 017/294] fbdev: fsl-diu-fb: add missing device_remove_file()
+Date: Mon,  5 May 2025 18:51:57 -0400
+Message-Id: <20250505225634.2688578-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,47 +52,31 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-[ Upstream commit d181acea5b864e91f38f5771b8961215ce5017ae ]
+[ Upstream commit 86d16cd12efa547ed43d16ba7a782c1251c80ea8 ]
 
-The Platform Communication Channel (PCC) mailbox driver currently uses
-ioremap() to map channel shared memory regions. However it is preferred
-to use acpi_os_ioremap(), which is mapping function specific to EFI/ACPI
-defined memory regions. It ensures that the correct memory attributes
-are applied when mapping ACPI-provided regions.
+Call device_remove_file() when driver remove.
 
-While at it, also add checks for handling any errors with the mapping.
-
-Acked-by: Huisong Li <lihuisong@huawei.com>
-Tested-by: Huisong Li <lihuisong@huawei.com>
-Tested-by: Adam Young <admiyo@os.amperecomputing.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/pcc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/fsl-diu-fb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
-index f8215a8f656a4..49254d99a8ad6 100644
---- a/drivers/mailbox/pcc.c
-+++ b/drivers/mailbox/pcc.c
-@@ -419,8 +419,12 @@ int pcc_mbox_ioremap(struct mbox_chan *chan)
- 		return -1;
- 	pchan_info = chan->con_priv;
- 	pcc_mbox_chan = &pchan_info->chan;
--	pcc_mbox_chan->shmem = ioremap(pcc_mbox_chan->shmem_base_addr,
--				       pcc_mbox_chan->shmem_size);
-+
-+	pcc_mbox_chan->shmem = acpi_os_ioremap(pcc_mbox_chan->shmem_base_addr,
-+					       pcc_mbox_chan->shmem_size);
-+	if (!pcc_mbox_chan->shmem)
-+		return -ENXIO;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(pcc_mbox_ioremap);
+diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
+index 0bced82fa4940..8cf1268a4e554 100644
+--- a/drivers/video/fbdev/fsl-diu-fb.c
++++ b/drivers/video/fbdev/fsl-diu-fb.c
+@@ -1827,6 +1827,7 @@ static void fsl_diu_remove(struct platform_device *pdev)
+ 	int i;
+ 
+ 	data = dev_get_drvdata(&pdev->dev);
++	device_remove_file(&pdev->dev, &data->dev_attr);
+ 	disable_lcdc(&data->fsl_diu_info[0]);
+ 
+ 	free_irq(data->irq, data->diu_reg);
 -- 
 2.39.5
 
