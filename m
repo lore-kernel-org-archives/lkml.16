@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71BD205E26
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8979214226
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443431; cv=none; b=K0Clq+EIlLm/hdBlb6JS5vxgiD1itAy+0waFVwZRion8wpyITpbrXYT6JB6K6teJgGOR0YwUYbjTgjQKc25qAtqUuQhwsknm1Gec/fZF2QfIZ6NnTUJ13BZrFiiL3Qw09hNH/CaJR8kio2EeZx5pfUUNdyHkJDPhrED4xuspjyw=
+	t=1746443434; cv=none; b=I6KPJlJHvyQHdAA+1uV2xzIhJHwo5UjB7OMX5/aQ6szexjogo2bauRKkwfYCfJrYYj3QiqeIZ/X3Y2v9eXYXCjm1U9ZGrHJJsNdh7D3bkyUexTNtEXHfuvQtMq1qiLg6xUFCoTWDh5E3SA1fVHRqiLNL5J2zV+h+ibHFf0ezQhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443431; c=relaxed/simple;
-	bh=Pt+p7zDcd5Dd2Egjs/IMAeZBuEr2l+v5gQzfym0JIQM=;
+	s=arc-20240116; t=1746443434; c=relaxed/simple;
+	bh=d9aWtdPFc7Gw+SlMMmk8a7/GMzqd2tG1kqnHVDm7MAo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=liCN1zmclN+42LthQvdnboNChI6+Hzgt8kVEm8TPf3LgmeZ7pMKqwX26HyXpnMeDymfxBS0Oo/9/Ksuh9hZCzF5YGJQYOnJHbyF7onYrLGLphVNpo54UbbeFcsNY6aPo3WW1KRcxmwnVkMMmrCK5WRQg6YTzKr8smq6OgZyuBqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z8C03a2e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GjeKuh4CcxHVDz/Qrb4y4WYbyYENv55Ziv1+Zd0vwSNu/geAFE0I2Sx0o1F0jzry5DE4FuBo48Y15ZGKWef38iL7n1H6CSxr5vP/whMsO0X0vpgxODWGHtyT4R8/7U5DxlFb8Dinv00CUqQ2QMCGz922hkTgQxTNdxxbZUPloo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sdd04ZRO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z8C03a2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE9DC4CEE4;
-	Mon,  5 May 2025 11:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sdd04ZRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3A9C4CEE9;
+	Mon,  5 May 2025 11:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746443430;
-	bh=Pt+p7zDcd5Dd2Egjs/IMAeZBuEr2l+v5gQzfym0JIQM=;
+	s=k20201202; t=1746443433;
+	bh=d9aWtdPFc7Gw+SlMMmk8a7/GMzqd2tG1kqnHVDm7MAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z8C03a2eQXWQZ6EaF5qDC6alzB37KP3wfEp3g0rpaNdp8wxnRG018EsmwrutnELm/
-	 Fuh6Qx2eVOrKJwu4t1l5qAaZCk8Pfjx08/AqV4122S5QrPr0nHhvv6Bl7Dnj2vT1Ak
-	 +W9D9H/B63Gdy2FfyV1TIeGiZ5XAKYKVmO9wGIsthnbJ9WoPmp2QQx1gtu3KyVI0Vv
-	 59TXrZCp13uuDXijMKjKKTa9KxtysyiOtDgj+fvRxw/NMnU6DA9wFW7LiBhacp3Lxq
-	 1IGsTuyuoJPt9IYDeBfEARVnZ+ee4GfIF8MUqPiXFCj1Ag4crBhJUe+5HIA6em/PRe
-	 7/LTNb0/dYa+A==
+	b=Sdd04ZROepfkn8VJjMhlu6okePRz2otAOBCcC5POMqm1Q71omnJb/rblPbHH5ALtx
+	 ce5RsnFASCE4l9J4S/e+c4VCiqOuHSR0pFuBIqBQRDO3HGio2yLl/QAr2iXXaixx5t
+	 Zl2VnpkxLFOhos8nGaDh0jWdHx8ivLaTXq1dmvXimIfoeNZi9fjsKh8qrBwanMae6c
+	 VxnkN580HyvdBuIhW3QHMleqlqZL5dovhnV5ydr/e0eJmadip/q6q0XEQHKXo+kNTi
+	 jbrXRQ2I8SirO9J4PYB4vM2UT9p2n1kQneHWn1105cw5d2UH1TOnAA0U0hRfnsVFJ1
+	 zIiLEwh2jBkUQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: "H . Peter Anvin" <hpa@zytor.com>,
@@ -39,9 +39,9 @@ Cc: "H . Peter Anvin" <hpa@zytor.com>,
 	David Woodhouse <dwmw@amazon.co.uk>,
 	Masahiro Yamada <yamada.masahiro@socionext.com>,
 	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 12/15] x86/kconfig/64: Enable popular kernel debugging options in the defconfig
-Date: Mon,  5 May 2025 13:09:43 +0200
-Message-ID: <20250505110946.1095363-13-mingo@kernel.org>
+Subject: [PATCH 13/15] x86/kconfig/64: Enable popular scheduler, cgroups and namespaces options in the defconfig
+Date: Mon,  5 May 2025 13:09:44 +0200
+Message-ID: <20250505110946.1095363-14-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250505110946.1095363-1-mingo@kernel.org>
 References: <20250505110946.1095363-1-mingo@kernel.org>
@@ -55,48 +55,13 @@ Content-Transfer-Encoding: 8bit
 
 Since the x86 defconfig aims to be a distro kernel work-alike with
 fewer drivers and a shorter build time, enable a handful of
-kernel debugging options that are typically enabled on major Linux
-distributions.
+popular scheduler and cgroups options that are typically enabled
+on major Linux distributions.
 
 The options enabled is a superset of the latest Ubuntu and Fedora
 kernel debugging configs, using Ubuntu's config-6.11.0-24-generic
 file, Fedora's kernel-x86_64-fedora.config and RHEL's
 kernel-x86_64-rhel.config from kernel-ark.git.
-
-Notable features enabled:
-
- - CONFIG_UBSAN=y:
-
-     Despite the runtime overhead, UBSAN is actively enabled
-     in all 3 major Linux distros I checked, so we want it
-     enabled in the defconfig as well - to better see the
-     consequences.
-
- - CONFIG_DEBUG_SHIRQ=y:
-
-     Fedora/RHEL have this enabled, while Ubuntu has it disabled.
-
- - CONFIG_DEBUG_LIST=y:
-
-     Fedora/RHEL have it enabled, while Ubuntu has it disabled.
-
- - CONFIG_FUNCTION_PROFILER=y:
-
-     This is enabled on all distros I checked as well.
-
-DEBUGINFO is still disabled, despite enabled in all Linux distros,
-because the ~10x .o bloat is still just so painful on anything
-but the most powerful build boxes.
-
-Note that while the following features seemingly get removed from
-the defconfig :
-
-  - CONFIG_BLK_DEV_INITRD=y
-  - CONFIG_KPROBES=y
-  - CONFIG_MAGIC_SYSRQ=y
-
-they are actually still enabled in the actual .config, because they
-get selected by other options indirectly.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
@@ -107,86 +72,77 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: Michal Marek <michal.lkml@markovi.net>
 ---
- arch/x86/configs/defconfig.x86_64 | 46 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 43 insertions(+), 3 deletions(-)
+ arch/x86/configs/defconfig.x86_64 | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
-index 4f2fab465196..3d585c33016b 100644
+index 3d585c33016b..09e9a8823dc1 100644
 --- a/arch/x86/configs/defconfig.x86_64
 +++ b/arch/x86/configs/defconfig.x86_64
-@@ -31,7 +31,6 @@ CONFIG_CGROUP_PERF=y
+@@ -2,6 +2,7 @@ CONFIG_WERROR=y
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+ CONFIG_AUDIT=y
++# CONFIG_CONTEXT_TRACKING_USER_FORCE is not set
+ CONFIG_NO_HZ=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_BPF_SYSCALL=y
+@@ -11,26 +12,45 @@ CONFIG_BPF_PRELOAD=y
+ CONFIG_BPF_PRELOAD_UMD=y
+ CONFIG_BPF_LSM=y
+ CONFIG_PREEMPT_VOLUNTARY=y
++CONFIG_SCHED_CORE=y
++CONFIG_VIRT_CPU_ACCOUNTING_GEN=y
++CONFIG_IRQ_TIME_ACCOUNTING=y
+ CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
+ CONFIG_TASKSTATS=y
+ CONFIG_TASK_DELAY_ACCT=y
+ CONFIG_TASK_XACCT=y
+ CONFIG_TASK_IO_ACCOUNTING=y
++CONFIG_PSI=y
++CONFIG_PSI_DEFAULT_DISABLED=y
+ CONFIG_LOG_BUF_SHIFT=18
+-CONFIG_CGROUPS=y
++CONFIG_PRINTK_INDEX=y
++CONFIG_UCLAMP_TASK=y
++CONFIG_NUMA_BALANCING=y
++CONFIG_MEMCG=y
++CONFIG_MEMCG_V1=y
+ CONFIG_BLK_CGROUP=y
+-CONFIG_CGROUP_SCHED=y
++CONFIG_CFS_BANDWIDTH=y
++CONFIG_UCLAMP_TASK_GROUP=y
+ CONFIG_CGROUP_PIDS=y
+ CONFIG_CGROUP_RDMA=y
++CONFIG_CGROUP_DMEM=y
+ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CGROUP_HUGETLB=y
+ CONFIG_CPUSETS=y
++CONFIG_CPUSETS_V1=y
+ CONFIG_CGROUP_DEVICE=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_PERF=y
  CONFIG_CGROUP_BPF=y
  CONFIG_CGROUP_MISC=y
  CONFIG_CGROUP_DEBUG=y
--CONFIG_BLK_DEV_INITRD=y
++CONFIG_NAMESPACES=y
++CONFIG_USER_NS=y
++CONFIG_CHECKPOINT_RESTORE=y
++CONFIG_SCHED_AUTOGROUP=y
++CONFIG_SYSFS_SYSCALL=y
++CONFIG_EXPERT=y
  CONFIG_KALLSYMS_ALL=y
  CONFIG_PROFILING=y
  CONFIG_KEXEC=y
-@@ -69,7 +68,6 @@ CONFIG_KVM_INTEL=y
- CONFIG_KVM_AMD=y
- CONFIG_KVM_XEN=y
- CONFIG_KVM_MAX_NR_VCPUS=4096
--CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
-@@ -298,13 +296,55 @@ CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
- CONFIG_SECURITY_SELINUX_BOOTPARAM=y
+@@ -298,7 +318,6 @@ CONFIG_SECURITY_SELINUX_BOOTPARAM=y
  CONFIG_PRINTK_TIME=y
-+CONFIG_BOOT_PRINTK_DELAY=y
-+CONFIG_DYNAMIC_DEBUG=y
- CONFIG_DEBUG_KERNEL=y
--CONFIG_MAGIC_SYSRQ=y
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_HEADERS_INSTALL=y
-+CONFIG_DEBUG_SECTION_MISMATCH=y
-+CONFIG_KGDB=y
-+CONFIG_KGDB_TESTS=y
-+CONFIG_KGDB_LOW_LEVEL_TRAP=y
-+CONFIG_KGDB_KDB=y
-+CONFIG_KDB_KEYBOARD=y
-+CONFIG_UBSAN=y
-+CONFIG_UBSAN_SHIFT=y
-+CONFIG_PAGE_OWNER=y
-+CONFIG_PAGE_POISONING=y
- CONFIG_DEBUG_WX=y
-+CONFIG_PER_VMA_LOCK_STATS=y
- CONFIG_DEBUG_STACK_USAGE=y
-+CONFIG_SCHED_STACK_END_CHECK=y
-+CONFIG_KFENCE=y
-+CONFIG_DEBUG_SHIRQ=y
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_HARDLOCKUP_DETECTOR=y
-+CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=y
-+CONFIG_WQ_CPU_INTENSIVE_REPORT=y
- CONFIG_SCHEDSTATS=y
-+CONFIG_NMI_CHECK_CPU=y
-+CONFIG_DEBUG_LIST=y
-+CONFIG_RCU_CPU_STALL_CPUTIME=y
-+CONFIG_BOOTTIME_TRACING=y
-+CONFIG_FUNCTION_GRAPH_RETVAL=y
-+CONFIG_FPROBE=y
-+CONFIG_FUNCTION_PROFILER=y
-+CONFIG_STACK_TRACER=y
-+CONFIG_SCHED_TRACER=y
-+CONFIG_HWLAT_TRACER=y
-+CONFIG_TIMERLAT_TRACER=y
-+CONFIG_MMIOTRACE=y
-+CONFIG_FTRACE_SYSCALLS=y
- CONFIG_BLK_DEV_IO_TRACE=y
-+CONFIG_USER_EVENTS=y
-+CONFIG_HIST_TRIGGERS=y
-+CONFIG_TRACE_EVENT_INJECT=y
-+CONFIG_RV=y
-+CONFIG_RV_MON_WWNR=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
-+CONFIG_EARLY_PRINTK_USB_XDBC=y
- CONFIG_DEBUG_BOOT_PARAMS=y
- CONFIG_DEBUG_ENTRY=y
-+CONFIG_FUNCTION_ERROR_INJECTION=y
-+CONFIG_MEMTEST=y
+ CONFIG_BOOT_PRINTK_DELAY=y
+ CONFIG_DYNAMIC_DEBUG=y
+-CONFIG_DEBUG_KERNEL=y
+ CONFIG_STRIP_ASM_SYMS=y
+ CONFIG_HEADERS_INSTALL=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
 -- 
 2.45.2
 
