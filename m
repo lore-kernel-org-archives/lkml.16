@@ -1,116 +1,224 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906012561A8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CC217B50F
 	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450779; cv=none; b=qon/kxzJ9QZPrZQH3qcx0veY3Cdxersf7Wjr/dyzOi3JmxqcmTxZ0enILfyPnDwtEPsaouMwt2q+JpssXtTqk7xGEJieDTG0K7FRbCWF6qMeg1sKFY+53f7b0Kkl0tWiFEYgHw1w2/tTmbVAZrU5dP2JUcbJas4ffdQAWDCqme0=
+	t=1746450779; cv=none; b=UhwWktvmWOXRTFeAuSJmOl82VkAQq/O5mW6SgBmz6a8Pb+PVC1mr+y7nQXaIrCw6sZJ6QDTCteT1p3UPrqO7XPmCwP4tjOcpW8iAlvSpKTAY+80pJTPwtK3zvTVQM3gJzRou9z/ebVc09kkr8ZHpNlUgpHtFdiGeTsF7XjxV7tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746450779; c=relaxed/simple;
-	bh=a47lUOyTilUaWEtfz6Pw6vX43fkt2saGX2+NfHjH/kA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HnANrHQ2a8OLFWIl5X0tT4xI9Dr4IpQsZXcXjCNCGAcJxrR316IzLpB34IujjXrw/MUfQlh/ERsgZgLFvMV076VxXO6GIcdc3fAWu8IxahJhYl9mDIXkHkgjvYTLIFCe7fn6WvWGgfm/l9GAMMRTqsRpzdV+U3VJJeQ1r4+mcxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvcr-0006PX-1O; Mon, 05 May 2025 15:12:53 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvcq-001EYf-0D;
-	Mon, 05 May 2025 15:12:52 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uBvcp-000Jxu-3C;
-	Mon, 05 May 2025 15:12:52 +0200
-Message-ID: <3685c6351d8b940abe70ccf22d783e71ced6f6da.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] spi: stm32-ospi: Make usage of
- reset_control_acquire/release() API
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Patrice Chotard <patrice.chotard@foss.st.com>, Mark Brown
- <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-Date: Mon, 05 May 2025 15:12:51 +0200
-In-Reply-To: <20250411-b4-upstream_ospi_reset_update-v2-2-4de7f5dd2a91@foss.st.com>
-References: 
-	<20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com>
-	 <20250411-b4-upstream_ospi_reset_update-v2-2-4de7f5dd2a91@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	bh=+3SZVu3mOE6JWF/lVbjUNNPQXe2+gGC9qYUKy8nTzeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jgbb92ecUSywIDfwV/mr3d2wUI+EGPTgEZ0wCJQgZrERJ/SqRyVD5FLDQyqU56xDhRcubaxsmGQWik00vQ+uc8gbgsoxcl6mxTIEC+9FAceLGChyabfDcOed40wYsMu497n1LNnulNrac2fBEeVnOdIltKbQe5QXAXj2q4Nx/KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PsD8s2OA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/XQayTp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=PsD8s2OA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/XQayTp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PsD8s2OA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/XQayTp";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PsD8s2OA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/XQayTp"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B90231F794;
+	Mon,  5 May 2025 13:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746450775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
+	b=PsD8s2OAk8HAgWOBE//B317AlN87M8IHR+cuwgkJzAfIwxbSt02R45V/a3kxFue5nwJmVD
+	8XHzBjey8HaPW1Yq5nvRl2XrVC5qBeJ/5J+0VxiphLzo79OTN5QLKDXpu/L2sme+hHUFLj
+	pZbGOWb+9mPlhwPeFxGPIQQKGdGBJ68=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746450775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
+	b=M/XQayTp70ZfCozRwUMXL29V1Kt6hPCENGQCfFLAqMhlTMlk1VcxXnm1JWX/hHjQTb1+J9
+	yc6ZCEO38tVMZBAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746450775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
+	b=PsD8s2OAk8HAgWOBE//B317AlN87M8IHR+cuwgkJzAfIwxbSt02R45V/a3kxFue5nwJmVD
+	8XHzBjey8HaPW1Yq5nvRl2XrVC5qBeJ/5J+0VxiphLzo79OTN5QLKDXpu/L2sme+hHUFLj
+	pZbGOWb+9mPlhwPeFxGPIQQKGdGBJ68=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746450775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vAzJhDQ3oZg78MFDLniHbP1StB2cbsxdD5OCjTZpEKk=;
+	b=M/XQayTp70ZfCozRwUMXL29V1Kt6hPCENGQCfFLAqMhlTMlk1VcxXnm1JWX/hHjQTb1+J9
+	yc6ZCEO38tVMZBAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A00E1372E;
+	Mon,  5 May 2025 13:12:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sSUxJVe5GGhwLwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 05 May 2025 13:12:55 +0000
+Message-ID: <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
+Date: Mon, 5 May 2025 15:12:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/codetag: sub in advance when free non-compound high
+ order pages
+Content-Language: en-US
+To: David Wang <00107082@163.com>, akpm@linux-foundation.org,
+ surenb@google.com, mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org,
+ ziy@nvidia.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Shakeel Butt <shakeel.butt@linux.dev>
+References: <20250504061923.66914-1-00107082@163.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250504061923.66914-1-00107082@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[163.com,linux-foundation.org,google.com,suse.com,cmpxchg.org,nvidia.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Patrice,
+On 5/4/25 08:19, David Wang wrote:
+> When page is non-compound, page[0] could be released by other
+> thread right after put_page_testzero failed in current thread,
+> pgalloc_tag_sub_pages afterwards would manipulate an invalid
+> page for accounting remaining pages:
+> 
+> [timeline]   [thread1]                     [thread2]
+>   |          alloc_page non-compound
+>   V
+>   |                                        get_page, rf counter inc
+>   V
+>   |          in ___free_pages
+>   |          put_page_testzero fails
+>   V
+>   |                                        put_page, page released
+>   V
+>   |          in ___free_pages,
+>   |          pgalloc_tag_sub_pages
+>   |          manipulate an invalid page
+>   V
+>   V
+> 
+> Move the tag page accounting ahead, and only account remaining pages
+> for non-compound pages with non-zero order.
+> 
+> Signed-off-by: David Wang <00107082@163.com>
 
-On Fr, 2025-04-11 at 14:41 +0200, Patrice Chotard wrote:
-> As ospi reset is consumed by both OMM and OSPI drivers, use the reset
-> acquire/release mechanism which ensure exclusive reset usage.
->=20
-> This avoid to call reset_control_get/put() in OMM driver each time
-> we need to reset OSPI children and guarantee the reset line stays
-> deasserted.
->=20
-> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+Hmm, I think the problem was introduced by 51ff4d7486f0 ("mm: avoid extra
+mem_alloc_profiling_enabled() checks"). Previously we'd get the tag pointer
+upfront and avoid the page use-after-free.
+
+It would likely be nicer to fix it by going back to that approach for
+___free_pages(), while hopefully keeping the optimisations of 51ff4d7486f0
+for the other call sites where it applies?
+
 > ---
->  drivers/spi/spi-stm32-ospi.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-> index d002b9c16714684e4e4623f9255a7f2660c46fd1..ef840f377459891b559be6d6c=
-0435408fb58a1e9 100644
-> --- a/drivers/spi/spi-stm32-ospi.c
-> +++ b/drivers/spi/spi-stm32-ospi.c
-> @@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_d=
-evice *pdev)
->  		return ret;
->  	}
-> =20
-> -	ospi->rstc =3D devm_reset_control_array_get_exclusive(dev);
-> +	ospi->rstc =3D devm_reset_control_array_get_exclusive_released(dev);
->  	if (IS_ERR(ospi->rstc))
->  		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
->  				     "Can't get reset\n");
-> @@ -936,11 +936,14 @@ static int stm32_ospi_probe(struct platform_device =
-*pdev)
->  	if (ret < 0)
->  		goto err_pm_enable;
-> =20
-> -	if (ospi->rstc) {
-> -		reset_control_assert(ospi->rstc);
-> -		udelay(2);
-> -		reset_control_deassert(ospi->rstc);
-> -	}
-> +	ret =3D reset_control_acquire(ospi->rstc);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
+>  mm/page_alloc.c | 36 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5669baf2a6fe..c42e41ed35fe 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1163,12 +1163,25 @@ static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr)
+>  		this_cpu_sub(tag->counters->bytes, PAGE_SIZE * nr);
+>  }
+>  
+> +static inline void pgalloc_tag_add_pages(struct page *page, unsigned int nr)
+> +{
+> +	struct alloc_tag *tag;
 > +
-> +	reset_control_assert(ospi->rstc);
-> +	udelay(2);
-> +	reset_control_deassert(ospi->rstc);
-> +	reset_control_release(ospi->rstc);
+> +	if (!mem_alloc_profiling_enabled())
+> +		return;
+> +
+> +	tag = __pgalloc_tag_get(page);
+> +	if (tag)
+> +		this_cpu_add(tag->counters->bytes, PAGE_SIZE * nr);
+> +}
+> +
+>  #else /* CONFIG_MEM_ALLOC_PROFILING */
+>  
+>  static inline void pgalloc_tag_add(struct page *page, struct task_struct *task,
+>  				   unsigned int nr) {}
+>  static inline void pgalloc_tag_sub(struct page *page, unsigned int nr) {}
+>  static inline void pgalloc_tag_sub_pages(struct page *page, unsigned int nr) {}
+> +static inline void pgalloc_tag_add_pages(struct page *page, unsigned int nr) {}
+>  
+>  #endif /* CONFIG_MEM_ALLOC_PROFILING */
+>  
+> @@ -5065,11 +5078,28 @@ static void ___free_pages(struct page *page, unsigned int order,
+>  {
+>  	/* get PageHead before we drop reference */
+>  	int head = PageHead(page);
+> +	/*
+> +	 * For remaining pages other than the first page of
+> +	 * a non-compound allocation, we decrease its tag
+> +	 * pages in advance, in case the first page is released
+> +	 * by other thread inbetween our put_page_testzero and any
+> +	 * accounting behavior afterwards.
+> +	 */
+> +	unsigned int remaining_tag_pages = 0;
+>  
+> -	if (put_page_testzero(page))
+> +	if (order > 0 && !head) {
+> +		if (unlikely(page_ref_count(page) > 1)) {
+> +			remaining_tag_pages = (1 << order) - 1;
+> +			pgalloc_tag_sub_pages(page, remaining_tag_pages);
+> +		}
+> +	}
+> +
+> +	if (put_page_testzero(page)) {
+> +		/* no need special treat for remaining pages, add it back. */
+> +		if (unlikely(remaining_tag_pages > 0))
+> +			pgalloc_tag_add_pages(page, remaining_tag_pages);
+>  		__free_frozen_pages(page, order, fpi_flags);
+> -	else if (!head) {
+> -		pgalloc_tag_sub_pages(page, (1 << order) - 1);
+> +	} else if (!head) {
+>  		while (order-- > 0)
+>  			__free_frozen_pages(page + (1 << order), order,
+>  					    fpi_flags);
 
-Could you keep the reset control (mostly) acquired from probe() to
-remove()? The reset control would have to be released/acquired in OSPI
-suspend/resume so that OMM can temporarily acquire control during OMM
-resume.
-
-regards
-Philipp
