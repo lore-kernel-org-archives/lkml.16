@@ -1,67 +1,25 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB28227EBB
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C38D1FF60E;
+	Mon,  5 May 2025 12:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449505; cv=none; b=DEkOAbelKDGxAzLmEowwist7SOEltiHNMJXKFbZ9YG92tT1f6dZDrdXQ3d6IEJhfT6hK+RRuKrvxS7DnwPEczDup6hrG64+ZRsDkqyBeeugDyY4ZKFEEMDy5/lkun7wxX7AP/s5QO3bxmUqoUUGFaM1z/MyG2REdPOvt5eBB9o4=
+	t=1746449518; cv=none; b=Ig4g9Izgf9aZglIdnWjpDh1Jit9ilc//FI3L4MlW0ZoP/+VC0OjnUYVkJWoCTxroOyqT8vvkEMegqtFZyiNfHtuIW0LWx2A7wxGHuaVWlH21/UqyCaMNZ+jGIlqLMocF83DLFyZxTsOZzXBJpCnQAoQtU8FliHFakoqgSKbGhFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449505; c=relaxed/simple;
-	bh=FoBIp4eZZUPth4U6Z8BrTi5mS/VqDvY2PiNsSfCw0IY=;
+	s=arc-20240116; t=1746449518; c=relaxed/simple;
+	bh=VzzllNI+quXH8CvXC+n8SG8EyIUo7LIToXW+3F0UJPw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nagkrZRSksKg2CKzzW5QCdjmYMiWbWc8l44Di9AJr6OrErRYNBq7bt677oSOW/uJtfICK/Ao26v1humCjnXgVfTGhB8OxipaXOxWMF0eQQCq8gR+r7oNy0yxBxyH7qX/gKVqDbls9nbCJEgjpxhLlb++7KTE3R6RuNemsJ8wC2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JCW8JfVX; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JCW8JfVX"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545C5DNr007806;
-	Mon, 5 May 2025 12:51:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=dyhw/F
-	IP+Ggm5eJ5avMrVAF3kLS/rap+JLAS6WAosgI=; b=JCW8JfVXwhmjO0Rzx6PLAh
-	SbywPWhxcSwR8HLTKaxaMwDwif5X5J+OB6OkIt6T/003Ev9Q9kq/P2BI6lswX03t
-	LO9cUU3s5C8SN0fnTva5PqhkbaHm7/JsWIKysl7i+o49HlePWl1NarLHXXZ76Ixp
-	g5pDYN86wIp4aac1lzI94GoD3U17bfpfdo5oJPfbIVh0yu7fsZzJDQveqbPp0SII
-	O71v0RDkkkK9xmT7YeTf7FenaLaX6mINiqz83bmdxYiIi6uNixCQUnX3JiqChm6n
-	+dFiigDYObszjdlhu6k+R2L6tUlkHYLoGb796LIGix+2sJebYwJf3AqWD/DTs6RA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46egcv2w0h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 12:51:20 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 545CnHFa018659;
-	Mon, 5 May 2025 12:51:19 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46egcv2w0c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 12:51:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5458gwKP032220;
-	Mon, 5 May 2025 12:51:18 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46dxyme4tn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 12:51:18 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 545CpIbw30540396
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 May 2025 12:51:18 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 733E958050;
-	Mon,  5 May 2025 12:51:18 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7F34F58054;
-	Mon,  5 May 2025 12:51:13 +0000 (GMT)
-Received: from [9.124.223.213] (unknown [9.124.223.213])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  5 May 2025 12:51:13 +0000 (GMT)
-Message-ID: <b539ce77-e994-422d-92fc-2c9505cc26a1@linux.ibm.com>
-Date: Mon, 5 May 2025 18:21:11 +0530
+	 In-Reply-To:Content-Type; b=SJYybKjJ5PXqcSKvfVrAfaW6oX9EzwXfFdP0GDrTSsGNJhI7HY+xpv3MsTOj1hpUMDsfv2Di2CVfp0TEOTnhS7riWOPO/Vz0AsToLoEhjvCD53XAy8HncSWVNVQ+WGUBWpUFp9qitY1DtFTOZwglacaKZXXSEHkcJbTIw36Gyq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A99A21007;
+	Mon,  5 May 2025 05:51:44 -0700 (PDT)
+Received: from [10.57.93.118] (unknown [10.57.93.118])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CAD33F58B;
+	Mon,  5 May 2025 05:51:50 -0700 (PDT)
+Message-ID: <12a74640-753a-4116-90f9-42ec0337f751@arm.com>
+Date: Mon, 5 May 2025 13:51:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,163 +27,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] driver/base: Optimize memory block registration to
- reduce boot time
-To: David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>
-Cc: Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
-        Danilo Krummrich <dakr@kernel.org>,
-        Ritesh Harjani <ritesh.list@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com>
- <aBdK2EIMYYRmmEwA@kernel.org>
- <a1e0cddc-ed38-4f48-b028-f3ab5025c157@linux.ibm.com>
- <188fbfba-afb4-4db7-bbba-7689a96be931@redhat.com>
- <aBhoqpC4Jy-c-74p@localhost.localdomain>
- <74c500dd-8d1c-4177-96c7-ddd51ca77306@redhat.com>
- <aBhva9D6H5BtkSID@localhost.localdomain>
- <0e568e33-34fa-40f6-a20d-ebf653de123d@redhat.com>
- <aBiGquz1Exx8KUqq@localhost.localdomain>
- <da921072-64a8-4ef1-b583-763406e57e8b@redhat.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <da921072-64a8-4ef1-b583-763406e57e8b@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
+ page_cache_ra_order()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Jan Kara <jack@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Dave Chinner <david@fromorbit.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250430145920.3748738-1-ryan.roberts@arm.com>
+ <20250430145920.3748738-2-ryan.roberts@arm.com>
+ <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
+ <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
+ <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fHabdSf_RQKPP6W4SqXRBmrzMUryeuL0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEyMSBTYWx0ZWRfX20roR/65sH0s FF0KlBjk6J2d0t8pEQ3XgJo+8ufB6iWh+gClrD1PVrbsxNglzRL8/9sicdDI5aPZ0ph5XqWLRF/ hyJ/yBV70MbhYJZ2xRVJ9PpwVKeeeksL+wfWDhVNhGczROvAQSQmwAev2khPWIjkNIsM1G6+u5q
- DuR8avyB24XpiaqTTUNMT95lCm3tpW3wG1XFCZ/evcb7xkdYHwkBTdF0NX3H29NlY/ZKJJvCyaT 5WKjV6+nPHP1wTOYVI08x5DzlpH9Hu0Cjgu4zxiEQgJTSdLulb4mkW1JZ2AcyPhZ/vp3QhJFt1y DezIhe6JbVrL8C7OyjJZxUkPGphvmDvAftYoATIP0Fo9E33BixfmeN2pZAuC/o2DVrGAAs1NYiy
- 5fKGgM1ChMkBKpdQ7n73/92LjHn4NtKSeCjziw1QoE1TvbeAnuJ3AOb6ttDFmzFbk7g2yTdq
-X-Authority-Analysis: v=2.4 cv=O7k5vA9W c=1 sm=1 tr=0 ts=6818b448 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=ndBISzoNWe6kelugQUgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: QKkbnFU8QpeYtmkXTH4Jskx9DvAdOo9l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
- adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050121
 
-
-On 5/5/25 4:06 PM, David Hildenbrand wrote:
-> On 05.05.25 11:36, Oscar Salvador wrote:
->> On Mon, May 05, 2025 at 10:12:48AM +0200, David Hildenbrand wrote:
->>> Assume you hotplug the second CPU. The node is already 
->>> registered/online, so
->>> who does the register_cpu_under_node() call?
+On 05/05/2025 11:25, David Hildenbrand wrote:
+> On 05.05.25 12:09, Jan Kara wrote:
+>> On Mon 05-05-25 11:51:43, David Hildenbrand wrote:
+>>> On 30.04.25 16:59, Ryan Roberts wrote:
+>>>> page_cache_ra_order() takes a parameter called new_order, which is
+>>>> intended to express the preferred order of the folios that will be
+>>>> allocated for the readahead operation. Most callers indeed call this
+>>>> with their preferred new order. But page_cache_async_ra() calls it with
+>>>> the preferred order of the previous readahead request (actually the
+>>>> order of the folio that had the readahead marker, which may be smaller
+>>>> when alignment comes into play).
+>>>>
+>>>> And despite the parameter name, page_cache_ra_order() always treats it
+>>>> at the old order, adding 2 to it on entry. As a result, a cold readahead
+>>>> always starts with order-2 folios.
+>>>>
+>>>> Let's fix this behaviour by always passing in the *new* order.
+>>>>
+>>>> Worked example:
+>>>>
+>>>> Prior to the change, mmaping an 8MB file and touching each page
+>>>> sequentially, resulted in the following, where we start with order-2
+>>>> folios for the first 128K then ramp up to order-4 for the next 128K,
+>>>> then get clamped to order-5 for the rest of the file because pa_pages is
+>>>> limited to 128K:
+>>>>
+>>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
+>>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
+>>>> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
+>>>> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
+>>>> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
+>>>> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
+>>>> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
+>>>> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
+>>>> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
+>>>> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
+>>>> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
+>>>> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
+>>>> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
+>>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
+>>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
+>>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
 >>>
->>> It's register_cpu() I guess? But no idea in which order that is 
->>> called with
->>> node onlining.
+>>> Interesting, I would have thought we'd ramp up earlier.
 >>>
->>> The code has to be cleaned up such that onlining a node does not 
->>> traverse
->>> any cpus / memory.
+>>>> ...
+>>>>
+>>>> After the change, the same operation results in the first 128K being
+>>>> order-0, then we start ramping up to order-2, -4, and finally get
+>>>> clamped at order-5:
+>>>>
+>>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
+>>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
+>>>> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
+>>>> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
+>>>> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
+>>>> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
+>>>> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
+>>>> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
+>>>> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
+>>>> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
+>>>> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
+>>>> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
+>>>> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
+>>>> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
+>>>> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
+>>>> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
+>>>> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
+>>>> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
+>>>> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
+>>>> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
+>>>> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
+>>>> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
+>>>> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
+>>>> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
+>>>> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
+>>>> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
+>>>> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
+>>>> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
+>>>> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
+>>>> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
+>>>> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
+>>>> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
+>>>> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
+>>>> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
+>>>> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
+>>>> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
+>>>> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
+>>>> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
+>>>> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
+>>>> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
+>>>> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
+>>>> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
+>>>> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
+>>>> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
+>>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
+>>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
+>>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
+>>>> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
 >>>
->>> Whoever adds a CPU / memory *after onlining the node* must register the
->>> device manually under the *now online* node.
+>>> Similar here, do you know why we don't ramp up earlier. Allocating that many
+>>> order-0 + order-2 pages looks a bit suboptimal to me for a sequential read.
 >>
->> So, I think this is the sequence of events:
->>
->> - hotplug cpu:
->>    acpi_processor_hotadd_init
->>     register_cpu
->>      register_cpu_under_node
->>
->>    online_store
->>     device_online()->dev_bus_online()
->>      cpu_subsys->online()
->>       cpu_subsys_online
->>        cpu_device_up
->>         cpu_up
->>          try_online_node  <- brings node online
->>           ...
->>           register_one_node <- registers cpu under node
->>          _cpu_up
->
-> My thinking was, whether we can simply move the 
-> register_cpu_under_node() after the try_online_node(). See below 
-> regarding early.
->
-> And then, remove the !node_online check from register_cpu_under_node().
->
-> But it's all complicated, because for memory, we link a memory block 
-> to the node (+set the node online) when it gets added, not when it 
-> gets onlined.
->
-> For CPUs, we seem to be creating the link + set the node online when 
-> the CPU gets onlined.
->
->>
->> The first time we hotplug a cpu to the node, note that
->> register_cpu()->register_cpu_under_node() will bail out as node is still
->> offline, so only cpu's sysfs will be created but they will not be linked
->> to the node.
-> > Later, online_store()->...->cpu_subsys_online()->..->cpu_up() will 
-> take> care of 1) onlining the node and 2) register the cpu to the node 
-> (so,
->> link the sysfs).
->
->
-> And only if it actually gets onlined I assume.
->
->>
->> The second time we hotplug a cpu,
->> register_cpu()->register_cpu_under_node() will do its job as the node is
->> already onlined.
->> And we will not be calling register_one_node() from __try_online_node()
->> because of the same reason.
->>
->> The thing that bothers me is having register_cpu_under_node() spread
->> around.
->
-> Right.
->
->> I think that ideally, we should only be calling 
->> register_cpu_under_node()
->> from register_cpu(), but we have this kinda of (sort of weird?) relation
->> that even if we hotplug the cpu, but we do not online it, the numa node
->> will remain online, and so we cannot do the linking part (cpu <-> node),
->> so we could not really only have register_cpu_under_node() in
->> register_cpu(), which is the hot-add part, but we also need it in the
->> cpu_up()->try_online_node() which is the online part.
->
-> Maybe one could handle CPUs similar to how we handle it with memory: 
-> node gets onlined + link created as soon as we add the CPU, not when 
-> we online it.
->
-> But likely there is a reason why we do it like that today ...
->
->>
->> And we cannot also remove the register_cpu_under_node() from
->> register_cpu() because it is used in other paths (e.g: at boot time ).
->
-> Ah, so in that case we don't call cpu_up ... hm.
->
-> Of course, we can always detect the context (early vs. hotplug). 
-> Maybe, we should split the early vs. hotplug case up much earlier.
->
-> register_cpu_early() / register_cpu_hotplug() ... maybe
+>> Note that this is reading through mmap using the mmap readahead code. If
+>> you use standard read(2), the readahead window starts small as well and
+>> ramps us along with the desired order so we don't allocate that many small
+>> order pages in that case.
 
-Hi David and Oscar,
+That does raise an interesting question though; why do we use a fixed size
+window for mmap? It feels like we could start with a smaller window and ramp it
+up as order ramps up too, capped to the end of the vma.
 
-I was thinking that __try_online_node(nid, true) being called from
-try_online_node() might cause issues with this patch. From the
-discussion above, what I understand is:
+Although perhaps that is an investigation for another day... My main motivation
+here was to be consistent about what page_cache_ra_order()'s new_order means,
+and to actually implement algorithm that was originally intended - start from 0
+and ramp up +2 on each readahead marker.
 
-When try_online_node() is called, there are no memory resources
-available for the node, so register_memory_blocks_under_node()
-has no effect. Therefore, our patch should work in all cases.
-
-Do you think we need to make any changes to this patch?
-
-Thanks
-Donet
+> 
+> Ah, thanks for that information! :)
+> 
 
