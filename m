@@ -1,138 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3786B26A1DD;
-	Mon,  5 May 2025 16:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C6A25A347
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462559; cv=none; b=lSecSMvNJS+dCKZNH27dgIuu3P+1dTVFHjmBqnkXG3o40dKFbqIzxcqdsIjNqkgbqTV7G5/npls6IXgjmVDOSibwh2xtwvDLZ9Gni+2tCF7h2aiiQEWGKmg7ULip2IGrGchVZTNs2O1yUKR1tPSTO+zC0Qs+o55rpnGVRXmsLy0=
+	t=1746462610; cv=none; b=lSZ+FWbfjojl0uJR4SccQ6qx3EqLkQY4c9mn88iI5zshTqcDLB9QJqgY1W2Nh6/GlgGux9aMVQyCeMjBxb9tblhRrxTlNNkXwUfM/LmzE0+I8x75OPOWXLXMOqMO5MVtJeySiRHCF8uZSEjZxuL8RgeqG7AFOuc+q1CXivWri74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462559; c=relaxed/simple;
-	bh=ajbCwWftDfvs+1Id/YDxdYFbVBlzFvZKJLyOCpC3Gbw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8KvEiX2vFHr+tnoFBAwYuBHRdBrMdsj0I+VYxG2kMWLYAho1HZb5Aw7xRd8RKlVs3rfhlZwcznsvtyBA2ZlFqOSNZgfA+9jjEeqaAqpKc975gDrOrZpIloq7+Dm2EdtvZCCDmZSVAf/ak9IJlQKFUa37RLpdWtnzqn0xVxFIGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JFO/HnX5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746462610; c=relaxed/simple;
+	bh=H6VsQ3ag4QIbMJJwLIn5s+PQRj0m/of7xuBQfifzTNI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=J//lDig6ZcjBfbrBuFU68I6L33F2OOHLrbvHHLS0CxUjng6shmmhjY2YounsXOVcS8GcFpTXY6hYmmzC2IhfazUaUrmLups8/QB+bwL4wnbB3fieBqKBgsBPqoVYd+q463WFnYgpc+HB73DF2IuwyLT53DPJzKdNpo+kRsLbeoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F1sA/5qA; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JFO/HnX5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DBAC4CEE4;
-	Mon,  5 May 2025 16:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746462558;
-	bh=ajbCwWftDfvs+1Id/YDxdYFbVBlzFvZKJLyOCpC3Gbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JFO/HnX5Dd9A3AJO6wj9kT4YM2ctqQhmhHrsW3Y+nmzUmUoXa5vOwuCpwl4038yUZ
-	 prsCI7Mk4mV+guHuu+/t+Sctl9aqq6azRa13IFfwb8BfL+sKrRGYZTUL+8tcFOFNro
-	 2ubmV/Xc4MkFkxwDIX8uxMgqJ9VbAMTjxkd4Wmx4=
-Date: Mon, 5 May 2025 18:29:15 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] rust: debugfs: Bind DebugFS directory creation
-Message-ID: <2025050510-landmark-probing-17f8@gregkh>
-References: <20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com>
- <20250502-debugfs-rust-v4-1-788a9c6c2e77@google.com>
- <aBYNyqTRlpGAJVuB@polis>
- <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F1sA/5qA"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73c205898aaso3189818b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746462607; x=1747067407; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkzCOh0jkJV3D2UkVWO21Y95jmzysYfbX+jTMC9XHaA=;
+        b=F1sA/5qAU1e56WUUig/6J1cMHXdEsAOgerGE3GF24kFXalPqSYSt5r7qH+1Apj6xHS
+         RjK7MHdNBFAufVfssqZUQsF++gKzYF5bf0xnHjagGvTOjHR7flHbeRLX9DGy3HNUZ3cO
+         nsvHRyVqdEHJC8HfzBsjMlJqT6002h/2x6uH7fjuSu2DwbKpOH4OS9jXuRVzOJHhj5JA
+         gGDkWObmaFfJ4St4xzJ/8t0Ey+0186Fo2OLleVnFeOSyRQEVeP5InLAyACz7lRPhdURl
+         adH7Z1oJJ9U656j686WH1p01rVnqvzUiNnLKolHFQgPpbyQf3UfvB10w+AFO6H1hebX0
+         A7MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746462607; x=1747067407;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkzCOh0jkJV3D2UkVWO21Y95jmzysYfbX+jTMC9XHaA=;
+        b=QQH0DqKAUiluK5ISFTvPRfQLiaJKGlhmOS92kAPmpbmsYUpDA7pAlArKIdLhrNEAlY
+         28cS0Ux2FrsJ0gxntQ6RujpeAhvSVjwRJswXjtjlarZ5cOWhXVLlh8iOTDQX94+zn+bq
+         pBWY44/yp0E0nWDfPg7oiaoxacCye2tu3k/vbcw/+MzlBRXVq9x+qcTfyvObPwHgjOyw
+         hMx/WZlGkyuUAtQ67Ctg9u+BHrmzRilQWhTZv1WifxjxUELeXY4JdzRN/kv+dxtUDzWr
+         qoldXR5xLBNAy7UG5TxZ7T3afukJRvMCyJQh9T/XJMDROcu5cVteIBMEcd66ip+30pPH
+         YXrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXR+YGJnGQh/B/vCS+c18BxZUbRZXIfLNRvlrV9SKDdjVDdGRwOEeaVJFf2N9FQc/2Tyu9UFvXdZrCfzP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAUqH5FsDBvGH7hBONjUQ75kIRDNlDmbkdKASf4kC0p1VLOFrz
+	kTbipLzjdXiVGj289ruoo9LZXAO/RozWrwwQ093V07vTEZJzSv8Ki0a+i8JpbeOfa4FQJ7FuqEB
+	xgA==
+X-Google-Smtp-Source: AGHT+IG56pQZFfDC0atRju7067QzQAi4LAHqfakmnwJ1czJMt2mWwK9DekzpfKSa8yYXzH9Paj6xHccuq+c=
+X-Received: from pfgu9.prod.google.com ([2002:a05:6a00:989:b0:73c:25ef:3578])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1384:b0:740:596b:eaf4
+ with SMTP id d2e1a72fcca58-740673f2464mr14271331b3a.16.1746462607289; Mon, 05
+ May 2025 09:30:07 -0700 (PDT)
+Date: Mon, 5 May 2025 09:30:05 -0700
+In-Reply-To: <LV3PR12MB9265E790428699931E58BE8D948E2@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com>
+Mime-Version: 1.0
+References: <Z7OUZhyPHNtZvwGJ@Asmaa.> <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local>
+ <f16941c6a33969a373a0a92733631dc578585c93@linux.dev> <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local>
+ <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local> <aBKzPyqNTwogNLln@google.com>
+ <20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local> <aBOnzNCngyS_pQIW@google.com>
+ <20250505152533.GHaBjYbcQCKqxh-Hzt@fat_crate.local> <LV3PR12MB9265E790428699931E58BE8D948E2@LV3PR12MB9265.namprd12.prod.outlook.com>
+Message-ID: <aBjnjaK0wqnQBz8M@google.com>
+Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
+From: Sean Christopherson <seanjc@google.com>
+To: David Kaplan <David.Kaplan@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Patrick Bellasi <derkling@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Patrick Bellasi <derkling@matbug.net>, 
+	Brendan Jackman <jackmanb@google.com>, Michael Larabel <Michael@michaellarabel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, May 05, 2025 at 09:21:51AM -0700, Matthew Maurer wrote:
-> On Sat, May 3, 2025 at 5:36 AM Danilo Krummrich <dakr@kernel.org> wrote:
+On Mon, May 05, 2025, David Kaplan wrote:
+> > On Thu, May 01, 2025 at 09:56:44AM -0700, Sean Christopherson wrote:
+> > > Heh, I considered that, and even tried it this morning because I
+> > > thought it wouldn't be as tricky as I first thought, but turns out,
+> > > yeah, it's tricky.  The complication is that KVM needs to ensure
+> > BP_SPEC_REDUCE=1 on all CPUs before any VM is created.
+> > >
+> > > I thought it wouldn't be _that_ tricky once I realized the 1=>0 case
+> > > doesn't require ordering, e.g. running host code while other CPUs have
+> > > BP_SPEC_REDUCE=1 is totally fine, KVM just needs to ensure no guest code is
+> > executed with BP_SPEC_REDUCE=0.
+> > > But guarding against all the possible edge cases is comically difficult.
+> > >
+> > > For giggles, I did get it working, but it's a rather absurd amount of
+> > > complexity
 > >
-> > On Fri, May 02, 2025 at 07:49:30PM +0000, Matthew Maurer wrote:
-> > > +/// Owning handle to a DebugFS directory.
-> > > +///
-> > > +/// This directory will be cleaned up when it goes out of scope.
-> > > +///
-> > > +/// # Invariants
-> > > +///
-> > > +/// The wrapped pointer will always be `NULL`, an error, or an owned DebugFS `dentry`.
-> > > +#[repr(transparent)]
-> > > +pub struct Dir<'a, const KEEP: bool = false> {
+> > Thanks for taking the time to explain - that's, well, funky. :-\
 > >
-> > Why did you move to a const generic, rather than a new type? What's the
-> > advantage? AFAICS, it just makes it less obvious to see from the type itself how
-> > it will behave. Reading Dir<true> doesn't make it obvious what it does.
+> > Btw, in talking about this, David had this other idea which sounds
+> > interesting:
 > >
-> > While I prefer a new type over the const generic, I'm fine with it. But I think
-> > we should use something more descriptive than a bool. Please see
-> > device::DeviceContext for reference.
+> > How about we do a per-CPU var which holds down whether BP_SPEC_REDUCE is
+> > enabled on the CPU?
+> >
+> > It'll toggle the MSR bit before VMRUN on the CPU when num VMs goes 0=>1. This
+> > way you avoid the IPIs and you set the bit on time.
 > 
-> I'm fine with a new type or a using a more descriptive const generic -
-> I did the const-generic to avoid the need to make one variant the
-> derefee, which can sometimes complicate structure. I'll default to a
-> more descriptive const-generic.
+> Almost.  My thought was that kvm_run could do something like:
 > 
-> >
-> > > +    /// Create a DebugFS subdirectory.
-> > > +    ///
-> > > +    /// This returns a [`Dir<'_, true>`], which will not be automatically cleaned up when it
-> > > +    /// leaves scope.
-> > > +    /// To convert this to a handle governing the lifetime of the directory, use [`Dir::owning`].
-> > > +    ///
-> > > +    /// Regardless of conversion, subdirectory handles cannot outlive the directory handle they
-> > > +    /// were created from.
-> > > +    ///
-> > > +    /// # Examples
-> > > +    ///
-> > > +    /// ```
-> > > +    /// # use kernel::c_str;
-> > > +    /// # use kernel::debugfs::Dir;
-> > > +    /// let parent = Dir::new(c_str!("parent"));
-> > > +    /// let child = parent.subdir(c_str!("child"));
-> > > +    /// ```
-> > > +    pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b, true> {
-> > > +        Dir::create(name, Some(self))
-> > > +    }
-> >
-> > The default should be that the directory is removed when the Dir instance is
-> > dropped.
-> >
-> > The common case (which people expect) is that an object is cleaned up on drop().
+> If (!this_cpu_read(bp_spec_reduce_is_set)) {
+>    wrmsrl to set BP_SEC_REDUCE
+>    this_cpu_write(bp_spec_reduce_is_set, 1)
+> }
 > 
-> In general for Rust, I agree with you. For this particular case, I
-> have a strong disagreement - take a look at calls to
-> `debugfs_create_dir` in existing C code - new code chooses to discard
-> subdirectory handles when done and rely on the recursive remove of the
-> root directory to clean up subdirectories. If you and Greg K-H both
-> agree that I should make them drop by default, I'll switch it, but I
-> think this is me following the subsystem maintainer's intentions here.
+> That ensures the bit is set for your core before VMRUN.  And as noted below,
+> you can clear the bit when the count drops to 0 but that one is safe from
+> race conditions.
 
-I'm ok with the directory being cleaned up when it goes out of scope.
-That makes way more sense overall, and will prevent leaks and other
-messes.
+/facepalm
 
-For the C api, what I really don't like is when we were returning a
-dentry to the caller, as then they had to manage it.  Ideally I didn't
-want them to have to manage anything, hence the "lookup_and_remove"
-function I added, all that was needed to remember is the name of the
-directory, which the driver almost always already knew.
+I keep inverting the scenario in my head.  I'm so used to KVM needing to ensure
+it doesn't run with guest state that I keep forgetting that running with
+BP_SPEC_REDUCE=1 is fine, just a bit slower.
 
-With Rust it's simpler, you can save off a reference and when it goes
-away, it gets cleaned up.  You don't have access to the raw dentry,
-which takes away my original objection, and if debugfs is not enabled,
-there's no additional storage requirements.
+With that in mind, the best blend of simplicity and performance is likely to hook
+svm_prepare_switch_to_guest() and svm_prepare_host_switch().  switch_to_guest()
+is called when KVM is about to do VMRUN, and host_switch() is called when the
+vCPU is put, i.e. when the task is scheduled out or when KVM_RUN exits to
+userspace.
 
-So let's keep it simple here, and rely on lifetime rules when we can.
+The existing svm->guest_state_loaded guard avoids toggling the bit when KVM
+handles a VM-Exit and re-enters the guest.  The kernel may run a non-trivial
+amount of code with BP_SPEC_REDUCE, e.g. if #NPF triggers swap-in, an IRQ arrives
+while handling the exit, etc., but that's all fine from a security perspective.
 
-thanks,
+IIUC, per Boris[*] an IBPB is needed when toggling BP_SPEC_REDUCE on-demand:
 
-greg k-h
+ : You want to IBPB before clearing the MSR as otherwise host kernel will be
+ : running with the mistrained gunk from the guest.
+
+[*] https://lore.kernel.org/all/20250217160728.GFZ7NewJHpMaWdiX2M@fat_crate.local
+
+Assuming that's the case...
+
+Compile-tested only.  If this looks/sounds sane, I'll test the mechanics and
+write a changelog.
+
+---
+ arch/x86/include/asm/msr-index.h |  2 +-
+ arch/x86/kvm/svm/svm.c           | 26 +++++++++++++++++++-------
+ arch/x86/kvm/x86.h               |  1 +
+ arch/x86/lib/msr.c               |  2 --
+ 4 files changed, 21 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e6134ef2263d..0cc9267b872e 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -725,7 +725,7 @@
+ 
+ /* Zen4 */
+ #define MSR_ZEN4_BP_CFG                 0xc001102e
+-#define MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT 4
++#define MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE	BIT(4)
+ #define MSR_ZEN4_BP_CFG_SHARED_BTB_FIX_BIT 5
+ 
+ /* Fam 19h MSRs */
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index cc1c721ba067..2d87ec216811 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
+ 	kvm_cpu_svm_disable();
+ 
+ 	amd_pmu_disable_virt();
+-
+-	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+-		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+ }
+ 
+ static int svm_enable_virtualization_cpu(void)
+@@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
+ 		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
+ 	}
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+-		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+-
+ 	return 0;
+ }
+ 
+@@ -1550,12 +1544,25 @@ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	    (!boot_cpu_has(X86_FEATURE_V_TSC_AUX) || !sev_es_guest(vcpu->kvm)))
+ 		kvm_set_user_return_msr(tsc_aux_uret_slot, svm->tsc_aux, -1ull);
+ 
++	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
++		wrmsrl(MSR_ZEN4_BP_CFG, kvm_host.zen4_bp_cfg |
++					MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE);
++
+ 	svm->guest_state_loaded = true;
+ }
+ 
+ static void svm_prepare_host_switch(struct kvm_vcpu *vcpu)
+ {
+-	to_svm(vcpu)->guest_state_loaded = false;
++	struct vcpu_svm *svm = to_svm(vcpu);
++
++	if (!svm->guest_state_loaded)
++		return;
++
++	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE)) {
++		indirect_branch_prediction_barrier();
++		rdmsrl(MSR_ZEN4_BP_CFG, kvm_host.zen4_bp_cfg);
++	}
++	svm->guest_state_loaded = false;
+ }
+ 
+ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+@@ -5364,6 +5371,11 @@ static __init int svm_hardware_setup(void)
+ 
+ 	init_msrpm_offsets();
+ 
++	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE)) {
++		rdmsrl(MSR_ZEN4_BP_CFG, kvm_host.zen4_bp_cfg);
++		WARN_ON(kvm_host.zen4_bp_cfg & MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE);
++	}
++
+ 	kvm_caps.supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
+ 				     XFEATURE_MASK_BNDCSR);
+ 
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 88a9475899c8..629eae9e4f59 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -51,6 +51,7 @@ struct kvm_host_values {
+ 	u64 xcr0;
+ 	u64 xss;
+ 	u64 arch_capabilities;
++	u64 zen4_bp_cfg;
+ };
+ 
+ void kvm_spurious_fault(void);
+diff --git a/arch/x86/lib/msr.c b/arch/x86/lib/msr.c
+index 5a18ecc04a6c..4bf4fad5b148 100644
+--- a/arch/x86/lib/msr.c
++++ b/arch/x86/lib/msr.c
+@@ -103,7 +103,6 @@ int msr_set_bit(u32 msr, u8 bit)
+ {
+ 	return __flip_bit(msr, bit, true);
+ }
+-EXPORT_SYMBOL_GPL(msr_set_bit);
+ 
+ /**
+  * msr_clear_bit - Clear @bit in a MSR @msr.
+@@ -119,7 +118,6 @@ int msr_clear_bit(u32 msr, u8 bit)
+ {
+ 	return __flip_bit(msr, bit, false);
+ }
+-EXPORT_SYMBOL_GPL(msr_clear_bit);
+ 
+ #ifdef CONFIG_TRACEPOINTS
+ void do_trace_write_msr(unsigned int msr, u64 val, int failed)
+
+base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+-- 
