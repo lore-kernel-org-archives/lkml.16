@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E602638A9;
-	Mon,  5 May 2025 14:47:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A291824DFFE;
+	Mon,  5 May 2025 14:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456478; cv=none; b=XgGZrsqV7T3DewjBrysHaIK8Y4cSbn2KlEXRKyE9p58e2qtHqNkW5T/f+yiZV1rVY1WebmzKN0MNAcbCIl2BBDW1C51jCoLMGDYpQlAG80vqbModWt+s767HPZ/0tV9YsGh3QckXGdx531ZpAIQsBR1oBGK013rnEqShgUbWDsY=
+	t=1746456482; cv=none; b=YVobqcYpFHWWH9qfoJfwu+hjb3bN8VDzS0Terw/e0k3uZfhb/ZBX1ETfXfiQiA4uPJWyk77LnWVH6ZatDEwQ8e/cF99LpUqvtbm3NgfsADrE48ksXcjQ/ERcX28Jr6xluR1khMJIZJ/j4yqGtWEN7PYn0PbNuTyr7OJu3CrSy+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456478; c=relaxed/simple;
-	bh=t50fhT43Bfd8BmApJE0C1bDwCwK9ss1PApinceUQq3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R3MD12WyXXa6rxgqW1usOL2qjJ1SvxFpaMHD05qsjPlgEj0Fi+ACd/+02hngGg+4Ro/mJVylWn5IIlv/JvTd/kjfmxco0EgIYajMK8PgwQUfL3gJFUwcQWokf0k9+AWfARSswjSTVcVNQf7qsfRsmuhntZRkulZ45AWWWf3JMxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYyKI12R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456482; c=relaxed/simple;
+	bh=c+pP4yQZXvYS3sVwWH2LIpaoNypsEQI8UTeEhqJ9hI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FrXpI3BEr+8nNht5oM1HwWUiVvEitNJVDtrEJbn1kzEGDFrlLEh0wDmkgvwlB1cvojPWH+tYL787h8WDgBi71RwKOGN2LwKL5CWf4AfKteLgkFWDRztGNe04IuTNKOYr6HxMrEforppHRkTO8Z2B3r1H7Wnq3JKCuUfiixQPYT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dpq3RVV7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYyKI12R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 079EAC4CEEE;
-	Mon,  5 May 2025 14:47:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dpq3RVV7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC80C4CEE4;
+	Mon,  5 May 2025 14:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456478;
-	bh=t50fhT43Bfd8BmApJE0C1bDwCwK9ss1PApinceUQq3U=;
+	s=k20201202; t=1746456482;
+	bh=c+pP4yQZXvYS3sVwWH2LIpaoNypsEQI8UTeEhqJ9hI0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=FYyKI12R2CSVcrH0SldWaOX+itbbwUmCF5nTpQe9DmhRKLK9v42kqmZH5AZSc8E+0
-	 WTmFyGXyO4y8vHHphUTSG3w+M+7G3P9b9ZCDrhJToUZqTFeDogthrFiA4yoZRMMG6B
-	 KAS1p8YrGrl981a85Nkz1YmsuQOjNxtsrJbJ3a5jYFd/JiDGriNKjiD2o2jaNIEOME
-	 D6mC0fujcaj3VDlJRs9chqO7HFVGmSJrA1fuvIblCPQXi8O9J/gCZm7EZsoKD09s7z
-	 r7AK4Pms1Tx+9I2X8fzTzWGulAu0fO3XIqa1fP4rvC3unAYlh9Gkqyr+62Cd4jx9Up
-	 O9p9V+PY5ZNHw==
+	b=Dpq3RVV7yLk0Xi0/nKkObZeulS8/ghbLaxUO280bsjU9BDrnWUfZmkWhorWT9eVhe
+	 BRLGJMDTguBX9yguBiL6+6ttRACBjNMS+qSPLBxP67NrFpb7bxTv2xLovWnGa3niLc
+	 PmlxiYh9erK7LSP5FjGvuE/8FAuc/8j7cXhZGS+z8cgLbWYKM2VEaRRweG7K6oxE7c
+	 OXzT8zu70I9RrP7UNaoTG+Sc+m8DXV/JPahXJ/18pYEX+pLWOGgmaY7ipFQ9Gi5BB/
+	 HKScGG0XIiM6YZrJYD5r7oGJsOe2Z0kwShmzbwrnjRZVZbMYut0t/kus6DcNwGx5m3
+	 CULI6Dy0BXlGg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Cristian Birsan <cristian.birsan@microchip.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert microchip,pic32mzda-evic to DT schema
-Date: Mon,  5 May 2025 09:47:53 -0500
-Message-ID: <20250505144754.1291072-1-robh@kernel.org>
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert nvidia,tegra20-ictlr to DT schema
+Date: Mon,  5 May 2025 09:47:58 -0500
+Message-ID: <20250505144759.1291261-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,139 +47,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Microchip PIC32 interrupt controller binding to schema
+Convert the NVIDIA Legacy interrupt controller binding to schema
 format. It's a straight-forward conversion of the typical interrupt
 controller.
 
+All the possible compatibles were not documented, so add the ones in
+use.
+
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../microchip,pic32-evic.txt                  | 67 -------------------
- .../microchip,pic32mzda-evic.yaml             | 60 +++++++++++++++++
- 2 files changed, 60 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mzda-evic.yaml
+ .../nvidia,tegra20-ictlr.txt                  | 41 ----------
+ .../nvidia,tegra20-ictlr.yaml                 | 82 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
 deleted file mode 100644
-index c3a1b37c4c35..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32-evic.txt
+index 2ff356640100..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
 +++ /dev/null
-@@ -1,67 +0,0 @@
--Microchip PIC32 Interrupt Controller
--====================================
+@@ -1,41 +0,0 @@
+-NVIDIA Legacy Interrupt Controller
 -
--The Microchip PIC32 contains an Enhanced Vectored Interrupt Controller (EVIC).
--It handles all internal and external interrupts. This controller exists outside
--of the CPU and is the arbitrator of all interrupts (including interrupts from
--the CPU itself) before they are presented to the CPU.
+-All Tegra SoCs contain a legacy interrupt controller that routes
+-interrupts to the GIC, and also serves as a wakeup source. It is also
+-referred to as "ictlr", hence the name of the binding.
 -
--External interrupts have a software configurable edge polarity. Non external
--interrupts have a type and polarity that is determined by the source of the
--interrupt.
+-The HW block exposes a number of interrupt controllers, each
+-implementing a set of 32 interrupts.
 -
--Required properties
---------------------
+-Required properties:
 -
--- compatible: Should be "microchip,pic32mzda-evic"
--- reg: Specifies physical base address and size of register range.
--- interrupt-controller: Identifies the node as an interrupt controller.
--- #interrupt cells: Specifies the number of cells used to encode an interrupt
--  source connected to this controller. The value shall be 2 and interrupt
--  descriptor shall have the following format:
+-- compatible : should be: "nvidia,tegra<chip>-ictlr". The LIC on
+-  subsequent SoCs remained backwards-compatible with Tegra30, so on
+-  Tegra generations later than Tegra30 the compatible value should
+-  include "nvidia,tegra30-ictlr".	
+-- reg : Specifies base physical address and size of the registers.
+-  Each controller must be described separately (Tegra20 has 4 of them,
+-  whereas Tegra30 and later have 5).
+-- interrupt-controller : Identifies the node as an interrupt controller.
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source. The value must be 3.
 -
--	<hw_irq irq_type>
+-Notes:
 -
--  hw_irq - represents the hardware interrupt number as in the data sheet.
--  irq_type - is used to describe the type and polarity of an interrupt. For
--  internal interrupts use IRQ_TYPE_EDGE_RISING for non persistent interrupts and
--  IRQ_TYPE_LEVEL_HIGH for persistent interrupts. For external interrupts use
--  IRQ_TYPE_EDGE_RISING or IRQ_TYPE_EDGE_FALLING to select the desired polarity.
+-- Because this HW ultimately routes interrupts to the GIC, the
+-  interrupt specifier must be that of the GIC.
+-- Only SPIs can use the ictlr as an interrupt parent. SGIs and PPIs
+-  are explicitly forbidden.
 -
--Optional properties
---------------------
--- microchip,external-irqs: u32 array of external interrupts with software
--  polarity configuration. This array corresponds to the bits in the INTCON
--  SFR.
+-Example:
 -
--Example
---------
--
--evic: interrupt-controller@1f810000 {
--	compatible = "microchip,pic32mzda-evic";
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	reg = <0x1f810000 0x1000>;
--	microchip,external-irqs = <3 8 13 18 23>;
--};
--
--Each device/peripheral must request its interrupt line with the associated type
--and polarity.
--
--Internal interrupt DTS snippet
--------------------------------
--
--device@1f800000 {
--	...
--	interrupts = <113 IRQ_TYPE_LEVEL_HIGH>;
--	...
--};
--
--External interrupt DTS snippet
--------------------------------
--
--device@1f800000 {
--	...
--	interrupts = <3 IRQ_TYPE_EDGE_RISING>;
--	...
--};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mzda-evic.yaml b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mzda-evic.yaml
+-	ictlr: interrupt-controller@60004000 {
+-		compatible = "nvidia,tegra20-ictlr", "nvidia,tegra-ictlr";
+-		reg = <0x60004000 64>,
+-		      <0x60004100 64>,
+-		      <0x60004200 64>,
+-		      <0x60004300 64>;
+-		interrupt-controller;
+-		#interrupt-cells = <3>;
+-		interrupt-parent = <&intc>;
+-	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.yaml b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.yaml
 new file mode 100644
-index 000000000000..74bfc42693f0
+index 000000000000..074a873880e5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/microchip,pic32mzda-evic.yaml
-@@ -0,0 +1,60 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.yaml
+@@ -0,0 +1,82 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/microchip,pic32mzda-evic.yaml#
++$id: http://devicetree.org/schemas/interrupt-controller/nvidia,tegra20-ictlr.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Microchip PIC32 EVIC Interrupt Controller
++title: NVIDIA Tegra20 Legacy Interrupt Controller
 +
 +maintainers:
-+  - Cristian Birsan <cristian.birsan@microchip.com>
++  - Thierry Reding <treding@nvidia.com>
++  - Jonathan Hunter <jonathanh@nvidia.com>
 +
 +description: >
-+  The Microchip PIC32 contains an Enhanced Vectored Interrupt Controller (EVIC).
-+  It handles all internal and external interrupts. This controller exists
-+  outside of the CPU and is the arbitrator of all interrupts (including
-+  interrupts from the CPU itself) before they are presented to the CPU.
++  All Tegra SoCs contain a legacy interrupt controller that routes interrupts to
++  the GIC, and also serves as a wakeup source. It is also referred to as
++  "ictlr", hence the name of the binding.
 +
-+  External interrupts have a software configurable edge polarity. Non external
-+  interrupts have a type and polarity that is determined by the source of the
-+  interrupt.
++  The HW block exposes a number of interrupt controllers, each implementing a
++  set of 32 interrupts.
++
++  Notes:
++    - Because this HW ultimately routes interrupts to the GIC, the
++      interrupt specifier must be that of the GIC.
++    - Only SPIs can use the ictlr as an interrupt parent. SGIs and PPIs
++      are explicitly forbidden.
 +
 +properties:
 +  compatible:
-+    items:
-+      - const: microchip,pic32mzda-evic
++    oneOf:
++      - items:
++          - enum:
++              - nvidia,tegra114-ictlr
++              - nvidia,tegra124-ictlr
++          - const: nvidia,tegra30-ictlr
++      - enum:
++          - nvidia,tegra20-ictlr
++          - nvidia,tegra30-ictlr
 +
 +  reg:
-+    maxItems: 1
++    description: Each entry is a block of 32 interrupts
++    minItems: 4
++    maxItems: 5
 +
 +  interrupt-controller: true
 +
 +  '#interrupt-cells':
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  microchip,external-irqs:
-+    description:
-+      External interrupts with software polarity configuration corresponding to
-+      the INTCON SFR bits.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
++    const: 3
 +
 +required:
 +  - compatible
@@ -186,15 +171,32 @@ index 000000000000..74bfc42693f0
 +
 +additionalProperties: false
 +
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: nvidia,tegra20-ictlr
++    then:
++      properties:
++        reg:
++          maxItems: 4
++    else:
++      properties:
++        reg:
++          minItems: 5
++
 +examples:
 +  - |
-+      interrupt-controller@1f810000 {
-+          compatible = "microchip,pic32mzda-evic";
-+          reg = <0x1f810000 0x1000>;
-+          interrupt-controller;
-+          #interrupt-cells = <2>;
-+          microchip,external-irqs = <3 8 13 18 23>;
-+      };
++    interrupt-controller@60004000 {
++        compatible = "nvidia,tegra20-ictlr";
++        reg = <0x60004000 64>,
++              <0x60004100 64>,
++              <0x60004200 64>,
++              <0x60004300 64>;
++        interrupt-controller;
++        #interrupt-cells = <3>;
++    };
 -- 
 2.47.2
 
