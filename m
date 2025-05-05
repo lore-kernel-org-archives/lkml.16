@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524ED27875A;
-	Mon,  5 May 2025 22:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472E727876A;
+	Mon,  5 May 2025 22:55:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485749; cv=none; b=DDg6qZlBwVHTRCNWmE8h5cS1DpKScKwt7SxZPUkgbObVqYcSdcpF4tLGr5kNL+/2TLbxC2U7b/A+8YuORWTmhqCbVF+pEUU1sc4i2KT03vNvg28J/pAZCrlNKlYvgnE/qxusI3tKdTvsIqp8rLRyKV3+YuiKoNLiSI4NQq7RlzA=
+	t=1746485754; cv=none; b=mzUhMa2nVtNQj/GWeSmkMug3HkIdEkBzm591T2vgGuLP6zAh71IoXatK7coUkhGMSTTou86z2dHh3ZQwaZ9fgpHU/UiP5HTYJPeiS5mRnNSq2MEpmRHBrcbfeb6Smz6u5IYLNAjQVxR1qp4Ovd5GgkviO2NnrECmoM0nuFAZtMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485749; c=relaxed/simple;
-	bh=AO9GV99mzhCrPk2fpfmQvbB6VP8nxmgcM6cNff05R70=;
+	s=arc-20240116; t=1746485754; c=relaxed/simple;
+	bh=o4+uztkPQXenoWSyVjeVRZRqnUM8k5WafB0IE+JZD7I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ETcbP+OL25PyV9ouKMoGRyjMnVJ5xXrX4fIniQGt2AAFbCbH9rQcP98HG5YC0BjPKZC2U+UvN29WbSca7a6tGv9HDt0sag9yle1KNWq93RvY8zec6+sTxoKJYCx9bJWPYzd8Z9PW1MvLMs8GEYDxqt+obaQMXgDzfea0bO5VEDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJREYSs8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Vw0otwGAyscEvXG1Eavqe987VJxp9FPXfx+UIjj7WAjPmIIUaYowPRyABsk2p3AMtoCR35F7wAHSGnTzdj/FuAYSQZpOsQnL9+0yGgrUMslvhY0qXbA0HD2m+xbL++jGcwxBtvZ6URjwDw8xoLBrxnRLuubaZulSIKa0CLjQ1cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXHqAdUv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJREYSs8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3860C4CEEE;
-	Mon,  5 May 2025 22:55:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXHqAdUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45322C4CEE4;
+	Mon,  5 May 2025 22:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485748;
-	bh=AO9GV99mzhCrPk2fpfmQvbB6VP8nxmgcM6cNff05R70=;
+	s=k20201202; t=1746485754;
+	bh=o4+uztkPQXenoWSyVjeVRZRqnUM8k5WafB0IE+JZD7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dJREYSs84nl656NY/K0MHDK5IgLE8S14KuI+52ir8g72826OYbR7LRC5q62r0qkCG
-	 UE+cDy312RWN94+ntAdY7nZY56FeBbczJB3Y77TQLQGWRONIyucCK9jYDSwaNvzyqy
-	 /bBKsS1ILmIcw4tQfGa7m3ELHHTtb9DnlWtzXmYc8dKNOITDLnEe7aMptUbufeVxTB
-	 LFYtFLhFxcYxhWQOJDumIO3jBz6zsEezSpG31QyF5IpH8MH5BfH1eD4EjNMdzm2vXu
-	 NF0iFLxmdlVeWF0U5a6qBdAGfiayWxObk3Y2GBw/Dk1XxnzO8lE73LdWIfmGh4con1
-	 /DNn2RN3t0ZzA==
+	b=mXHqAdUv03rDaifF5dY6Z2ABl76wuWQiaaIMeDn8n9bijGUuIHUeYaofZ7sV7GEsQ
+	 +nlS6lXmwk36d0du7nWIc2iIktCDgcZWubU8Dj1sY8ctnD+6dZ3NU59+QDWGXsX3No
+	 BJtZEkKdkcVF3+vAPq45q/QDoe5eF8VTAKSyuJUsxcgqukoI1XcGyt7Cz3JiXgWUwE
+	 hTwAlt9dWcezyNUI5wNQJU+sB+YaeFCC67nEYKG3xNNLVkWn0OFImtJt0usV0xKJ6m
+	 MSgWzSiwqpWZc61Y3DfwYzk+29700v4hoN7uyortY8NztlLz2nP3cPIyVbfClA0s+8
+	 BqPmuxSYcyiTQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+Cc: Sean Anderson <sean.anderson@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 460/486] perf/amd/ibs: Fix ->config to sample period calculation for OP PMU
-Date: Mon,  5 May 2025 18:38:56 -0400
-Message-Id: <20250505223922.2682012-460-sashal@kernel.org>
+	michal.simek@amd.com,
+	linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 465/486] spi: zynqmp-gqspi: Always acknowledge interrupts
+Date: Mon,  5 May 2025 18:39:01 -0400
+Message-Id: <20250505223922.2682012-465-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,72 +52,70 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ravi Bangoria <ravi.bangoria@amd.com>
+From: Sean Anderson <sean.anderson@linux.dev>
 
-[ Upstream commit 598bdf4fefff5af4ce6d26d16f7b2a20808fc4cb ]
+[ Upstream commit 89785306453ce6d949e783f6936821a0b7649ee2 ]
 
-Instead of using standard perf_event_attr->freq=0 and ->sample_period
-fields, IBS event in 'sample period mode' can also be opened by setting
-period value directly in perf_event_attr->config in a MaxCnt bit-field
-format.
+RXEMPTY can cause an IRQ, even though we may not do anything about it
+(such as if we are waiting for more received data). We must still handle
+these IRQs because we can tell they were caused by the device.
 
-IBS OP MaxCnt bits are defined as:
-
-  (high bits) IbsOpCtl[26:20] = IbsOpMaxCnt[26:20]
-  (low bits)  IbsOpCtl[15:0]  = IbsOpMaxCnt[19:4]
-
-Perf event sample period can be derived from MaxCnt bits as:
-
-  sample_period = (high bits) | ((low_bits) << 4);
-
-However, current code just masks MaxCnt bits and shifts all of them,
-including high bits, which is incorrect. Fix it.
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/r/20250115054438.1021-4-ravi.bangoria@amd.com
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Link: https://patch.msgid.link/20250116224130.2684544-6-sean.anderson@linux.dev
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/spi/spi-zynqmp-gqspi.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 8f3b5764e139d..d34ee6f04f18f 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -272,7 +272,7 @@ static int perf_ibs_init(struct perf_event *event)
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index b9df39e06e7cd..4b091b4d4ff37 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -799,7 +799,6 @@ static void zynqmp_process_dma_irq(struct zynqmp_qspi *xqspi)
+ static irqreturn_t zynqmp_qspi_irq(int irq, void *dev_id)
  {
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_ibs *perf_ibs;
--	u64 max_cnt, config;
-+	u64 config;
- 	int ret;
+ 	struct zynqmp_qspi *xqspi = (struct zynqmp_qspi *)dev_id;
+-	irqreturn_t ret = IRQ_NONE;
+ 	u32 status, mask, dma_status = 0;
  
- 	perf_ibs = get_ibs_pmu(event->attr.type);
-@@ -309,10 +309,19 @@ static int perf_ibs_init(struct perf_event *event)
- 		if (!hwc->sample_period)
- 			hwc->sample_period = 0x10;
- 	} else {
--		max_cnt = config & perf_ibs->cnt_mask;
-+		u64 period = 0;
-+
-+		if (perf_ibs == &perf_ibs_op) {
-+			period = (config & IBS_OP_MAX_CNT) << 4;
-+			if (ibs_caps & IBS_CAPS_OPCNTEXT)
-+				period |= config & IBS_OP_MAX_CNT_EXT_MASK;
-+		} else {
-+			period = (config & IBS_FETCH_MAX_CNT) << 4;
-+		}
-+
- 		config &= ~perf_ibs->cnt_mask;
--		event->attr.sample_period = max_cnt << 4;
--		hwc->sample_period = event->attr.sample_period;
-+		event->attr.sample_period = period;
-+		hwc->sample_period = period;
+ 	status = zynqmp_gqspi_read(xqspi, GQSPI_ISR_OFST);
+@@ -814,27 +813,24 @@ static irqreturn_t zynqmp_qspi_irq(int irq, void *dev_id)
+ 				   dma_status);
  	}
  
- 	if (!hwc->sample_period)
+-	if (mask & GQSPI_ISR_TXNOT_FULL_MASK) {
++	if (!mask && !dma_status)
++		return IRQ_NONE;
++
++	if (mask & GQSPI_ISR_TXNOT_FULL_MASK)
+ 		zynqmp_qspi_filltxfifo(xqspi, GQSPI_TX_FIFO_FILL);
+-		ret = IRQ_HANDLED;
+-	}
+ 
+-	if (dma_status & GQSPI_QSPIDMA_DST_I_STS_DONE_MASK) {
++	if (dma_status & GQSPI_QSPIDMA_DST_I_STS_DONE_MASK)
+ 		zynqmp_process_dma_irq(xqspi);
+-		ret = IRQ_HANDLED;
+-	} else if (!(mask & GQSPI_IER_RXEMPTY_MASK) &&
+-			(mask & GQSPI_IER_GENFIFOEMPTY_MASK)) {
++	else if (!(mask & GQSPI_IER_RXEMPTY_MASK) &&
++			(mask & GQSPI_IER_GENFIFOEMPTY_MASK))
+ 		zynqmp_qspi_readrxfifo(xqspi, GQSPI_RX_FIFO_FILL);
+-		ret = IRQ_HANDLED;
+-	}
+ 
+ 	if (xqspi->bytes_to_receive == 0 && xqspi->bytes_to_transfer == 0 &&
+ 	    ((status & GQSPI_IRQ_MASK) == GQSPI_IRQ_MASK)) {
+ 		zynqmp_gqspi_write(xqspi, GQSPI_IDR_OFST, GQSPI_ISR_IDR_MASK);
+ 		complete(&xqspi->data_completion);
+-		ret = IRQ_HANDLED;
+ 	}
+-	return ret;
++	return IRQ_HANDLED;
+ }
+ 
+ /**
 -- 
 2.39.5
 
