@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847EE2FAEBC;
-	Mon,  5 May 2025 23:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B112857F2;
+	Mon,  5 May 2025 23:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487387; cv=none; b=cH9KM1bR+2gcRXLCoupl9HFwvDCac0FSJqoXXjI/YDyCDnfVK2S9r8tqsmNqAVphdHFnWUS6mDaw++owJVj2DGentsTHL3iPIqGIx1Xz/CGs18AzWLXceFTtw/YjozxRLLzNhunEgjFszXR5xvHoiWTZdqQQr4Qmt+w9W3YnM6c=
+	t=1746487391; cv=none; b=M87lIkG41kpRDGaB7twZPIO5dt+1ipvfMbZBqbjqklNua6q8G8yWPSWt9scCMuPr/YnPZRRdmGqy/Tlx4IIL/Cr5cZfLE/+FFq6t53VBJEOg91iHpsFvWscWg73YZy4TtrqcxdydG7LD0dXjCEMkWDD+tbweYh+5jrlj5/akfyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487387; c=relaxed/simple;
-	bh=PUoU3kFI4BLvkins4qhJssnKl2gATCFExsBo1yCK+EA=;
+	s=arc-20240116; t=1746487391; c=relaxed/simple;
+	bh=ZTd19gbXMM2JQclcAhf5+lMh4BnjWdzATH/0xqyENVQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X7lX9/4lqoyDxbs/po7/u1v+kGAV7PxXP5/hB7p+r5EvnP8iX1uYdSgtL8ezwEOzuaQzktIKI3VYUKv6eN1pnT8+lucn255DhuNoh2R+U3YcmkGxXy01h0iCCNkfvnijEC1WQrSU0plOAVikJ7xpQUFdrabQzHpgABf/fZM8PTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7KJM8xZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mkUq2/GeEWhf9xwBH+k+TaooGgsRDgTSmhgHT8kZdAOjIaj7DNV2F61qirb2zCFdLto89rK/HArBABRQk4SLcTD7UrZg2mKrDH3NtLVnTSJdhBZ6/+Dq3LuTiqyImVeqSD0kFoxP5pI30vtFmDPIhgWYaC/JDchvo+ij+6CkbJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8of1/Qn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7KJM8xZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F522C4CEE4;
-	Mon,  5 May 2025 23:23:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8of1/Qn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C4BC4CEED;
+	Mon,  5 May 2025 23:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487386;
-	bh=PUoU3kFI4BLvkins4qhJssnKl2gATCFExsBo1yCK+EA=;
+	s=k20201202; t=1746487390;
+	bh=ZTd19gbXMM2JQclcAhf5+lMh4BnjWdzATH/0xqyENVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j7KJM8xZwJ/UnxXphfZgwKRAj7VVBv1ZcqSUuKBufVSRXrFOjR/4X/1SSK21WZRVj
-	 3K20kvqSTMr4pE23GDUtILM18Rpb9Mq+oVQPN2BffkjooCmlnK+CoASoJMd42UPc8o
-	 aGaJu84UUz+R6YIxY17q50dq6AZJ0TjPNkW66o6xGdqHrMmdDe8sPoh+dxR8Fr+krJ
-	 ng5kaYfKsLjAe/uVSUPtGRbNgvgh5sKzgbm8ip6D4oD5igB1LG/Q4L4hFtlVh7mBmO
-	 1wHo8AeR0ESr/vrtzbwnM2viWLxRd3faEpAPowWj4/lMgIlP3aMxMKFCfRfEIim2pW
-	 K8jFRkro1IWiQ==
+	b=K8of1/QnETwh2G6emZTS5Kjumpl9s4leY8+dd48Nkq+nui4hfog3uPsulojWPOEZQ
+	 BFdWHNiBXlq5vKPvd5tKA1lQZNqH4709wljvm9jfvHskjz0biZo7iTCfSOCkb7JuR/
+	 WGeYtiM0LSqMZEwUCwod3PeiEH44BNzyokXFJmxSXFp+R3au0gQsG5miJ4BqfIUOXX
+	 xLVergjah0ZLzBw6/wPjbzKe78jS2YTZTF/u+4wv9xpj5oyizmRE6hn9akvAA30fU8
+	 H000HzGcNjSS/zt28kcibNztlbtEQpKrH4ZwegRpoEN5Fi81VyFSPbe+1t2arT/969
+	 yONhCnaXl2riA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Philip Yang <Philip.Yang@amd.com>,
-	Felix Kuehling <felix.kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Hangbin Liu <liuhangbin@gmail.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	Felix.Kuehling@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 42/79] drm/amdkfd: KFD release_work possible circular locking
-Date: Mon,  5 May 2025 19:21:14 -0400
-Message-Id: <20250505232151.2698893-42-sashal@kernel.org>
+	jv@jvosburgh.net,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 44/79] bonding: report duplicate MAC address in all situations
+Date: Mon,  5 May 2025 19:21:16 -0400
+Message-Id: <20250505232151.2698893-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -51,83 +51,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Philip Yang <Philip.Yang@amd.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 1b9366c601039d60546794c63fbb83ce8e53b978 ]
+[ Upstream commit 28d68d396a1cd21591e8c6d74afbde33a7ea107e ]
 
-If waiting for gpu reset done in KFD release_work, thers is WARNING:
-possible circular locking dependency detected
+Normally, a bond uses the MAC address of the first added slave as the bond’s
+MAC address. And the bond will set active slave’s MAC address to bond’s
+address if fail_over_mac is set to none (0) or follow (2).
 
-  #2  kfd_create_process
-        kfd_process_mutex
-          flush kfd release work
+When the first slave is removed, the bond will still use the removed slave’s
+MAC address, which can lead to a duplicate MAC address and potentially cause
+issues with the switch. To avoid confusion, let's warn the user in all
+situations, including when fail_over_mac is set to 2 or not in active-backup
+mode.
 
-  #1  kfd release work
-        wait for amdgpu reset work
-
-  #0  amdgpu_device_gpu_reset
-        kgd2kfd_pre_reset
-          kfd_process_mutex
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock((work_completion)(&p->release_work));
-                  lock((wq_completion)kfd_process_wq);
-                  lock((work_completion)(&p->release_work));
-   lock((wq_completion)amdgpu-reset-dev);
-
-To fix this, KFD create process move flush release work outside
-kfd_process_mutex.
-
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+Link: https://patch.msgid.link/20250225033914.18617-1-liuhangbin@gmail.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/bonding/bond_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index 662e4d973f13a..b07deeb987475 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -277,6 +277,14 @@ struct kfd_process *kfd_create_process(struct file *filep)
- 	if (thread->group_leader->mm != thread->mm)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 89797b2575733..3b235a269c1b8 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1954,7 +1954,7 @@ static int __bond_release_one(struct net_device *bond_dev,
  
-+	/* If the process just called exec(3), it is possible that the
-+	 * cleanup of the kfd_process (following the release of the mm
-+	 * of the old process image) is still in the cleanup work queue.
-+	 * Make sure to drain any job before trying to recreate any
-+	 * resource for this process.
-+	 */
-+	flush_workqueue(kfd_process_wq);
-+
- 	/*
- 	 * take kfd processes mutex before starting of process creation
- 	 * so there won't be a case where two threads of the same process
-@@ -289,14 +297,6 @@ struct kfd_process *kfd_create_process(struct file *filep)
- 	if (process) {
- 		pr_debug("Process already found\n");
- 	} else {
--		/* If the process just called exec(3), it is possible that the
--		 * cleanup of the kfd_process (following the release of the mm
--		 * of the old process image) is still in the cleanup work queue.
--		 * Make sure to drain any job before trying to recreate any
--		 * resource for this process.
--		 */
--		flush_workqueue(kfd_process_wq);
--
- 		process = create_process(thread);
- 		if (IS_ERR(process))
- 			goto out;
+ 	RCU_INIT_POINTER(bond->current_arp_slave, NULL);
+ 
+-	if (!all && (!bond->params.fail_over_mac ||
++	if (!all && (bond->params.fail_over_mac != BOND_FOM_ACTIVE ||
+ 		     BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP)) {
+ 		if (ether_addr_equal_64bits(bond_dev->dev_addr, slave->perm_hwaddr) &&
+ 		    bond_has_slaves(bond))
 -- 
 2.39.5
 
