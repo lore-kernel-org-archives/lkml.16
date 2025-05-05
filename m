@@ -1,77 +1,87 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8713C171A1;
-	Mon,  5 May 2025 07:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307371C84B3;
+	Mon,  5 May 2025 07:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430222; cv=none; b=KpJyvCjsPrBhLlA9oT1PVGF6MCd1h+6a9uJuqY5ZdamHSf2q/Kvy+wK1zMKYIpFn1aDyAECBaihH5gmUz80NKGobNrfJl64cxxi6HK1/aoe+Sa0tu8PbohFpTtVkfugLWHZ1grkbdQ0WogPXzYkj05EuGaxbT/y5U1ky6HhB98A=
+	t=1746430246; cv=none; b=gKiPPyWvpKKeJkLqwTq3qS6pSMyA4ZkLWsh67C78e+RUSHIJPxQu7MC4QRHP9gX9HRJ9a9s5py9G5gnPVAkEEjCIWgqnKwKCN+sJbs2W+KifqjxYBkug0BJ2d/UNAMLeAFvToy0vvstjo+w2F8KneKEz9g5xolvfp7Is6W4qwp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746430222; c=relaxed/simple;
-	bh=9byBrgGiWivV4zXfCGyXLK7u6F5KMMq/Ap3brTL2r8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/WfMm6Bg2q/zwQ6BYUu+Sl71C2kNKbeglo07w2UeKCn+oUmLvXu9UbCSv2KqDy+oR1U+TCXVmKTzbtPyj/GWpsJRcZJtMkHZJadcukygvzYxz4X+tbWK3uXClc7fgCDsgwSxfvxDaId5chIy8+O8IelFZWKCnMKISvfAkNIUnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Xcz0r9Ny; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746430246; c=relaxed/simple;
+	bh=YryKvQ1nIFLnXzH0TxCdQBQxjXBGgZILAGT9RFPjNA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A9BdJFOveE0sxoTrTw5ArZAxVlDGC9e/tdBJAlNDP0ePx8nH7L1Bg4ujd7OoKYq0sr47leQwDRtl+GpGBqHFKeAinAvZnCBAMaIOhAuWAsT2hPwYeWHTmaOjSXSt3vkU1hZldCw/SZWoZEjapbCdxSxxvXVxT1H7oCWqS0IPgqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=C0BETl3H; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Xcz0r9Ny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746429632;
-	bh=9byBrgGiWivV4zXfCGyXLK7u6F5KMMq/Ap3brTL2r8E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xcz0r9Nyr/GBvTffACDxkAv0DCvVxl40GgqtQeif64zW1Jj1VKuW21++n/5L+CwcH
-	 WwsLeAUQhz/pAjv0CSWKcU7esBvAb/PnjPRwW3HWWT66sGH1y/lT3HHHNN18sxHAi5
-	 Q5rH3aDHLE22aoXPw49tTF1UfTC3AP57J/mAOvWopAdLWN9Kx3Qhcg5b2qd7tbFeuD
-	 T9YlnGDey09aUkqj+0axPC7knUJh2m+neJ4fKnOKV25W92xM7w9i9FU6aECdSl7/cX
-	 ZI8HLcMMcMhc+TuKfrn3QGt+7DIHhqTQDmYBvphkcby/PAdUsDQHOM1Z0oVHWckqlu
-	 gvJrP+TM/SUnw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6A81517E0F89;
-	Mon,  5 May 2025 09:20:31 +0200 (CEST)
-Message-ID: <97b93862-8572-45fb-ba02-96a0bb747700@collabora.com>
-Date: Mon, 5 May 2025 09:20:30 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="C0BETl3H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1746430232;
+	bh=YryKvQ1nIFLnXzH0TxCdQBQxjXBGgZILAGT9RFPjNA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C0BETl3HfmGFUdSzIC3FvL7IZAB7DuFHkqWfS1CRDmK3yqa7aCEZpdPrVl2FhnIy5
+	 zioclXleHpTOzjiSgiLaSIomsfiKf4o5aQxRKI8ZsggiRf7toPnWP0+KufAyM9AMq9
+	 eB96fu5Bg3NmA+cyGawWx41OqiNdZCR22jMgJ4R4=
+Date: Mon, 5 May 2025 09:30:31 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Ben Hutchings <ben@decadent.org.uk>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
+Message-ID: <5e996ded-2325-48b5-9cde-972b70e0934a@t-8ch.de>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+ <aBEttQH4kimHFScx@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: mediatek: mt8188-mt6359: select
- CONFIG_SND_SOC_MT6359_ACCDET
-To: Arnd Bergmann <arnd@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Alexandre Mergnat <amergnat@baylibre.com>,
- Zoran Zhan <zoran.zhan@mediatek.com>,
- =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250505052106.1811802-1-arnd@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250505052106.1811802-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBEttQH4kimHFScx@intel.com>
 
-Il 05/05/25 07:20, Arnd Bergmann ha scritto:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 2025-04-29 22:51:17+0300, Ville Syrjälä wrote:
+> On Sat, Mar 15, 2025 at 02:20:14PM +0100, Thomas Weißschuh wrote:
+> > -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+> > Other references, for example in debug information, are not affected.
+> > This makes handling of file references in the compiler outputs harder to
+> > use and creates problems for reproducible builds.
+> > 
+> > Switch to -ffile-prefix map which affects all references.
+> > 
+> > Also drop the documentation section advising manual specification of
+> > -fdebug-prefix-map for reproducible builds, as it is not necessary
+> > anymore.
 > 
-> The driver support was added without selecting the codec, which leads to
-> a link failure:
+> Hi,
 > 
-> aarch64-linux-ld: sound/soc/mediatek/mt8188/mt8188-mt6359.o: in function `mt8188_mt6359_init':
-> mt8188-mt6359.c:(.text+0x19f0): undefined reference to `mt6359_accdet_enable_jack_detect'
+> This broke 'objdump -S' completely for me.
 > 
-> Fixes: f35d834d67ad ("ASoC: mediatek: mt8188-mt6359: Add accdet headset jack detect support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> I see the following difference in the debug info:
+> -    <12>   DW_AT_name        : (indirect line string, offset: 0): drivers/gpu/drm/i915/i915_config.c
+> -    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x23): /home/.../src/linux-2.6/build
+> +    <12>   DW_AT_name        : (indirect line string, offset: 0): ../drivers/gpu/drm/i915/i915_config.c
+> +    <16>   DW_AT_comp_dir    : (indirect line string, offset: 0x26): /home/.../src/linux-2.6/build
+> 
+> Looks like I can work around it with some combination of --prefix and
+> --prefix-strip, but that seems far too tedious to have to do every
+> time I need to decode an oops.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Yeah the --prefix and --prefix-strip mechanism is only an ugly
+workaround.
+Unfortunately I don't see a nice for this issue at the moment.
+
+Masahiro, could you revert this commit for now?
+I'll try to come up with something better.
 
 
+Thomas
