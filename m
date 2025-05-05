@@ -1,75 +1,45 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F70189B8B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F0F25C839;
+	Mon,  5 May 2025 14:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455397; cv=none; b=rtugvxWn2U5AnVwyaySG76KDyYJ8MDw5XlA14S0gB0hyQIw8byyI75xNHkHHLj15Hp2Ys993AYE4latDyP2KhgthJZIDmhlLFJDrgUAS/0Feyb1Z+5ewFRmpK9R+mVCV3jwu03jE3IBC19m2/Xn6K4AL1VZXpJcnWoFuRI7keJs=
+	t=1746455409; cv=none; b=O1BBCNUzYMnYWQLohZOyluvhjg02AY6PHXCZAKtcRSqR9TQie5u1oDp77qq4FjW0WzzNqZiMOe1voX88CBQSG0Uc99jr1dh4tylQOOAr9B1B5PKDpqn+V41QGCN623fJlnctHdPq8ql+2+VsamjjmiwXFlD029IDoakvNeOD1/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455397; c=relaxed/simple;
-	bh=Ely5tk2iUnBd6WgCdvnjfeBYslRXjUKtmfs3uZ84qJc=;
+	s=arc-20240116; t=1746455409; c=relaxed/simple;
+	bh=4j0o1rykGNx1GToDhdSP39vGQ4lWCej0GHB/+vebaw0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nK7Y11CHVHWydKDp6y5F0hsUcZuYUUlXcBapV9XPjSRobua1M5u8wOWmzWOJpUIItd2YS3kVcBoZS6g/g5cLRX7EdS3mQE/qNm1x0CR0mF8XwHGcJYtn0jLdNXRyUJ152jOUupH8Vhrg3RnQpjCuoRgNj2Pn5ukRtHFW9du75iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=nwBexBEp; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=l3wio81Ken0DJpoK4WPS1ogg/0AyCkSxoon11MFNOxj7ci8/3aeTrPeHyMTjm3/RsP0RqYEDFzQbfVJ+92AcmAhVrnW9ov6/NGTSIuOGaw0aM8jURunmpdiI6c/zSUD5uVt/v95ll0NvhHMj1eyVaSlWb2pRWN6D9x1w/U9uT2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y+i052vL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="nwBexBEp"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7caea4bc9e9so184554085a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:29:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746455394; x=1747060194; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YI8/2634Nw/dQ8gDrL9YbXV+Mn+GWRh9uG0ypiDuisI=;
-        b=nwBexBEpyyUqOo44IpIJ3jCM3WbbTgh4eOPGvQmc232YkRiTbjtsXnWHyviOZOObJ9
-         M/GDk1x05MHE9bIytT8ZaJTslBLBu5Bvqw2cLJI4aXNkMW0uUepiXQ+EYoToO+98eIt4
-         y6frL6UURfnT9BJUm1o21lFVoSYvTBrLh9GcRBR0xIWJZvcVqX6Aj48hJVC30JW4YqFq
-         7xcXHtEwRRNLeYpVAfc1eddoxagxMRoOv7sNtsYfbDBwTNlIwG00qo8LFiR/gqlEv520
-         DgCJNmx9oUbRU79nPF42llNcTEz3EugWVwutP6EmDEk+ftDSHyJ+tqUdQBDkIx5fkKsl
-         5n0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746455394; x=1747060194;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YI8/2634Nw/dQ8gDrL9YbXV+Mn+GWRh9uG0ypiDuisI=;
-        b=JuPDGDui44nNbKkQojzGBa8QNqPWp+Fld9G2N8Ju0+iGsthTmIkFNDlWAdxU+UphEb
-         0McJMrIv28/SeDHFe/wuLt3X8T1zoQ7vlPBStlcIZaOotJqgOphoZlrEKfe5Lpuk5J1t
-         fveK40fqGMJGqrKCcH9X0QRJfAbeP4ceqIlfWnWM8CswyB5GIG4ue++/0eJCxgsD/Ja5
-         IhwJjK2u5XdEyanUcsNhW1tLiCQG2z0awZqZ+wFwskOKU4jPKdv9DeraUs0gi5+uCdB/
-         J+OoLiCjmicTtV6G4udLIOy8WQIidzBdJaPYf5N94igNvqV9HSDpDWP3Cl3tx6vEtliB
-         wDEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrQuD5ZTcY9lgVCHfiM8dBGlqm1zMKuxepmk12+EpT3vuFypLMYjOqqFLJLaBEPTgYMMpBsjD1TRdxGC8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys0pRLfldeT8gH66k5T7hoC8vEwd7wwmCjT3wHBc63/84w1QOS
-	vSBpZlQXYTeGqnL1QRksSmW0w/8twGbNj/xhfOG9p9BZF0V/10doIEYLjvJYvTs6/ADIiNl/sGb
-	YJ5U=
-X-Gm-Gg: ASbGnctz8MciGo1taaSqz8BaaQYYerueXTbbdNMfCOIRfML4h+ipJVSp7IdiQSp5NjQ
-	Yi7NblxxtfTe5cDzwtAMUvBDCSbq7Hw2Wkpz+3S2FZ/bk7p97l7mj1E4/1dk4+y+jAdE22Eng2U
-	OjqN2CXRv5+pHDY6D8tVqJuOBoCdgqPL5yob2FQMZL524NKZBt6B0Tz5l2pn9wzfpFhczqUfubb
-	I547WqPG7CTlZTiIgU/SEj1D59yLACu5cvfrDrjz/PzG/ckRZCA+Pyo5grQNjwXIRpRsQDbro55
-	POAsqZetQVw4h0RmfWS/D9az9k+qBdEBTEyeXZ0=
-X-Google-Smtp-Source: AGHT+IHJEg/hzySYg6+JWlkAwj0DS0qxu7+Xu8xCTzoYz+Qk5R1OLuNOPT5RVk6Enm6pqqr2508HBg==
-X-Received: by 2002:a05:620a:460b:b0:7c9:2612:32d3 with SMTP id af79cd13be357-7cae3a92c34mr867371185a.20.1746455394233;
-        Mon, 05 May 2025 07:29:54 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cad23c40aesm576065585a.35.2025.05.05.07.29.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 07:29:53 -0700 (PDT)
-Date: Mon, 5 May 2025 10:29:49 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Igor Belousov <igor.b@beldev.am>
-Subject: Re: [PATCH] mm/zblock: use vmalloc for page allocations
-Message-ID: <20250505142949.GB30814@cmpxchg.org>
-References: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y+i052vL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DDAC4CEE4;
+	Mon,  5 May 2025 14:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746455408;
+	bh=4j0o1rykGNx1GToDhdSP39vGQ4lWCej0GHB/+vebaw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y+i052vLyeBz97D7t0ga1iiua9zTsUcYnLBlxHs1G1E03z9AoDwuztVEwC5z+VCIn
+	 Vus4no+UpjRLGjHABoI4/T960VDcuAG3QF4kVhtN61dnxCdrHSDT0spNllLi1/nfwT
+	 sFyOhE1j+cLr2abJM/OYN9aP2Zo1nNb6HNzTD8Yo=
+Date: Mon, 5 May 2025 16:30:05 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] uaccess: rust: add strncpy_from_user
+Message-ID: <2025050544-sneak-compactor-d701@gregkh>
+References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+ <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,35 +48,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250502080156.1672957-1-vitaly.wool@konsulko.se>
+In-Reply-To: <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com>
 
-On Fri, May 02, 2025 at 10:01:56AM +0200, Vitaly Wool wrote:
->  static struct zblock_block *alloc_block(struct zblock_pool *pool,
->  					int block_type, gfp_t gfp,
-> -					unsigned long *handle)
-> +					unsigned long *handle,
-> +					unsigned int nid)
->  {
-> +	struct block_list *block_list = &pool->block_lists[block_type];
-> +	unsigned int num_pages = block_desc[block_type].num_pages;
->  	struct zblock_block *block;
-> -	struct block_list *block_list;
-> +	struct page *page = NULL;
->  
-> -	block = (void *)__get_free_pages(gfp, block_desc[block_type].order);
-> -	if (!block)
-> -		return NULL;
-> +	if (!vmalloc_small_blocks && zblock_get_order(num_pages) >= 0) {
-> +		page = try_alloc_pages(nid, zblock_get_order(num_pages));
+On Mon, May 05, 2025 at 12:17:31PM +0000, Alice Ryhl wrote:
+> This patch adds a direct wrapper around the C function of the same name.
+> It's not really intended for direct use by Rust code since
+> strncpy_from_user has a somewhat unfortunate API where it only
+> nul-terminates the buffer if there's space for the nul-terminator. This
+> means that a direct Rust wrapper around it could not return a &CStr
+> since the buffer may not be a cstring. However, we still add the method
+> to build more convenient APIs on top of it, which will happen in
+> subsequent patches.
+> 
+> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  rust/kernel/uaccess.rs | 35 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> index 80a9782b1c6e98ed6eae308ade8551afa7adc188..a7b123915e9aa2329f376d67cad93e2fc17ae017 100644
+> --- a/rust/kernel/uaccess.rs
+> +++ b/rust/kernel/uaccess.rs
+> @@ -8,7 +8,7 @@
+>      alloc::{Allocator, Flags},
+>      bindings,
+>      error::Result,
+> -    ffi::c_void,
+> +    ffi::{c_char, c_void},
+>      prelude::*,
+>      transmute::{AsBytes, FromBytes},
+>  };
+> @@ -369,3 +369,36 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+>          Ok(())
+>      }
+>  }
+> +
+> +/// Reads a nul-terminated string into `buf` and returns the length.
+> +///
+> +/// This reads from userspace until a NUL byte is encountered, or until `buf.len()` bytes have been
+> +/// read. Fails with [`EFAULT`] if a read happens on a bad address (some data may have been
+> +/// copied). When the end of the buffer is encountered, no NUL byte is added, so the string is
+> +/// *not* guaranteed to be NUL-terminated when `Ok(buf.len())` is returned.
+> +///
+> +/// # Guarantees
+> +///
+> +/// When this function returns `Ok(len)`, it is guaranteed that the first `len` of `buf` bytes are
+> +/// initialized and non-zero. Furthermore, if `len < buf.len()`, then `buf[len]` is a NUL byte.
+> +/// Unsafe code may rely on these guarantees.
+> +#[inline]
+> +#[expect(dead_code)]
+> +fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]) -> Result<usize> {
 
-This is broken in several ways.
+Nit, the parameters here are backwards from the C version of
+strncpy_from_user(), which is going to cause us no end of grief when
+reviewing code between the two languages :(
 
-The function is meant for NMI contexts - the "try" refers to
-trylocking the freelists, in case whatever got interrupted was inside
-the allocator already. This will fall back to vmalloc unpredictably.
+Also, it's not your fault, but we don't have any type of __user tag for
+data coming from userspace yet to track this type of thing?  The
+compiler (well sparse) can catch this type of thing in C, any hints on
+what we could do in Rust for the same type of guarantee (i.e. don't
+touch user data before it's been copied, and then we need to treat it as
+"unverified" but that's a different patch series...)
 
-It also doesn't take a gfp parameter, which ignores the zswap ones,
-and substitutes a set that doesn't make any sense in this context:
-__GFP_NOMEMALLOC is counter productive inside reclaim; __GFP_ACCOUNT
-wreaks complete havoc on how compressed memory is charged to cgroups
-(double charging the wrong groups for shared blocks).
+thanks,
+
+greg k-h
