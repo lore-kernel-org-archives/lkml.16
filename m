@@ -1,90 +1,212 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F961CD1F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462185; cv=pass; b=tF+Hn4REB5U6g/62jGo6vt9rnOpF4Zoa0y4IBSVdPtfXwM0N4vI+Pfu0QA9Kjf0oUi5nJ/tcQDP9yMKs8LQYnGmcDzf2kBCzcVK68IVFMe5SnqG2JfDNp8HlnLjnd1cgpm9aevLSoEaN6Pl2dwOwhUMSR54vjZPV/Tjd906PWKs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462185; c=relaxed/simple;
-	bh=7OvQ9Fo0tUTXljcF2N+k29uN7bcPhl/8/tSD+MUKVZs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=iEv6qQ/LMuX1JOjsVIhjvG0fDe+8v1aCgCoHVQK+55DiA1xTP8LyqGoB0os+9M/Uv+Wo3rxbnfU9oeCdG1sT49AUK9hovEHTX36mes6jzI8FfId4lhaENKhHRbglofEuP7G4v3WH50pX91VF1EbhIx61L9iSiUPtNQ7hCa9f43M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=ZPhpFQpD; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC71865E3;
+	Mon,  5 May 2025 16:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746462394; cv=none; b=BessoZ/BaMylpORTeYmNEtxK5n5D3SOysSzaS3KIsIeJTFLrWgN8PSWtVDLAkYi5h/GNWVP2kB4jjI0piog3H1LLcs4P2uqUohVWeet2lHExrRmSGdTXaTSY1EamT5swSf03/oJLMaOths3SNOQiMHFu5xUVfJV1uQWhQjnDiLs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746462394; c=relaxed/simple;
+	bh=GtIIzxDECq7kLae9jREw4F50qmrqIijGoHyorGzxYbw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A3/oRqZagRTQIKkA0bD0ZfdZAjVg2X9mf31Croq19TB1FT6dwbrpAgFnPWGUBoQeaZgHt0mSLdBe/tsTXuK1x5MJ7p0q5W8IZC6xtUwS0ZHnHWvQoMs5OhyA8KB9h9E7PKUKf8Bn1ZpB3t32IkUiW1kOHcPCHzPuJ6Tvm3c0gLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9p6gnBk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="ZPhpFQpD"
-ARC-Seal: i=1; a=rsa-sha256; t=1746462161; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Z/pEykjnon0LWQmbob4yKSYuKsmWmcHky+HCf9cBweMRAte5XDu0iJpCfRiDeGYGqy3GNi7BRJOi1jD9t+5fD+DL2j1SpFFoirXxwLvBgv5fEhG2atZT5cwFLrUDz7XB1QthxkBfImJpuM5Pf7YczZKBoG/YwNsMOn2qDPHOBdc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746462161; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Cn34lMEWOSB8EK9h95x7SSV4y9boi8anfMX1Giz4Mis=; 
-	b=jxM6qLSgW54nnqKwt23RPf41T0Bf9oklvHKepYq41mhEalUZQoHNqSgixChXnQ/rFiNIMnLei4k38BjHUHkeMimvnzwH1/tj0ceuo5XSkrhrrg+w95F8OZIrJbNeBfzPnWEPr3ZJAasSNBdw/aOfeUuBDBRvJasTzGgGRrrf+M0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746462161;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Cn34lMEWOSB8EK9h95x7SSV4y9boi8anfMX1Giz4Mis=;
-	b=ZPhpFQpD5dzmzC0l9ZimFix67MJ/zDeGB3W4LKqi1CBXX6ZYiks6l9usZNiwzxq4
-	EQdVM4ipZPIc/rPy90WEJWOCHn7dfM6SP3E9oGSolShBNNZWjLYyVnI163B/zPRxpDI
-	TA1eaLNEvE0wkkNVnNNNnp/FuUafcTC8x132VXqk=
-Received: by mx.zohomail.com with SMTPS id 174646215944673.6589727735876;
-	Mon, 5 May 2025 09:22:39 -0700 (PDT)
-Message-ID: <c3ae2790-20d8-4220-848e-7b02b185e893@collabora.com>
-Date: Mon, 5 May 2025 19:22:35 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9p6gnBk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00960C4CEE4;
+	Mon,  5 May 2025 16:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746462394;
+	bh=GtIIzxDECq7kLae9jREw4F50qmrqIijGoHyorGzxYbw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J9p6gnBkEFKu7t4zhvSfi4T0OXWty2q9dBQYJ/RXZhU0TPeDoaVsC4xsdpt5aSelq
+	 ELWVFNnyxXwb55qoWMwf5QdhhakNFQTmqJ0KQhLT8izzTFiwVGhDt9B+OC71K0auqg
+	 WmCdwkNeywxp4arN/C/tLjX3O47QwvRl6ytpgY6c25QPu4Yc4K45U7+WhOKWWs82OO
+	 qFrtfWGXSIS/xX5wCz9tzCshlvtEKdiSS31a6WBkgxg19+JNgYkWwUytZHWFV/fb0K
+	 8oYx/ZlFi4QbhHtq2LwepFh376O30+h42b1aHnhYad+wEBtyisJwnULsx3x+q/5DZo
+	 Eju87o1Mv+VrQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uByeF-00Bmmj-O3;
+	Mon, 05 May 2025 17:26:31 +0100
+Date: Mon, 05 May 2025 17:26:31 +0100
+Message-ID: <86jz6vgh1k.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Quentin Perret <qperret@google.com>,
+	Fuad Tabba <tabba@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: LM regression: fce886a60207 KVM: arm64: Plumb the pKVM MMU in KVM
+In-Reply-To: <7863e387-0b91-fac5-9925-e461ae7b30cd@redhat.com>
+References: <3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com>
+	<86msbrguka.wl-maz@kernel.org>
+	<e1117e68-ef05-9de2-d018-685bb7d86bb5@redhat.com>
+	<86ldrbgl2x.wl-maz@kernel.org>
+	<7863e387-0b91-fac5-9925-e461ae7b30cd@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] virtgpu: deallocate capsets on device deinit
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>
-Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, dri-devel@lists.freedesktop.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
- <20250505-virtgpu-queue-cleanup-v1-v1-3-810923da2b1e@linaro.org>
- <5271820d-7afd-45e5-8103-b7d4fc818278@collabora.com>
-Content-Language: en-US
-In-Reply-To: <5271820d-7afd-45e5-8103-b7d4fc818278@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sebott@redhat.com, oliver.upton@linux.dev, qperret@google.com, tabba@google.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 5/5/25 18:58, Dmitry Osipenko wrote:
-> On 5/5/25 11:59, Manos Pitsidianakis wrote:
->> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
->> index 7b3c4d314f8eee692e2842a7056d6dc64936fc2f..a8b751179332b9ec2fbba1392a6ee0e638a5192e 100644
->> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
->> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
->> @@ -286,6 +286,10 @@ void virtio_gpu_deinit(struct drm_device *dev)
->>  	flush_work(&vgdev->cursorq.dequeue_work);
->>  	flush_work(&vgdev->config_changed_work);
->>  	virtio_reset_device(vgdev->vdev);
->> +	spin_lock(&vgdev->display_info_lock);
->> +	drmm_kfree(dev, vgdev->capsets);
->> +	vgdev->capsets = NULL;
->> +	spin_unlock(&vgdev->display_info_lock);
+On Mon, 05 May 2025 17:05:08 +0100,
+Sebastian Ott <sebott@redhat.com> wrote:
 > 
-> Isn't this lock superfluous?
+> On Mon, 5 May 2025, Marc Zyngier wrote:
+> > On Mon, 05 May 2025 15:01:24 +0100,
+> > Sebastian Ott <sebott@redhat.com> wrote:
+> >> 
+> >> On Mon, 5 May 2025, Marc Zyngier wrote:
+> >>> On Mon, 05 May 2025 11:52:00 +0100,
+> >>> Sebastian Ott <sebott@redhat.com> wrote:
+> >>>> Doing back and forth migrations currently fails on arm after a couple iterations.
+> >>>> During the failing migration KVM_RUN exits via guest_abort and returns -ENOMEM.
+> >>>> I can reliably reproduce this by migrating between 2 qemu instances on an ampere
+> >>>> altra machine. This fails after < 5 iterations. In this case qemu would spit out
+> >>>> smth like this (other than that - nothing in the logs):
+> >>>> 
+> >>>> error: kvm run failed Cannot allocate memory
+> >>>>  PC=0000aaaae7d48590 X00=0000aaaae80a2e00 X01=0000aaaae7ea2fc0
+> >>>> X02=0000000001d3a5d0 X03=0000aaaae7eace8c X04=000000003b9aca00
+> >>>> X05=000000000000004a X06=000000000000004a X07=0000000028000000
+> >>>> X08=0000000000001d70 X09=0000000000000018 X10=000144b7d0000000
+> >>>> X11=00ffffffffffffff X12=000000008378f367 X13=0000aaab1a202d70
+> >>>> X14=0000000000000000 X15=0000000000000000 X16=0000ffffa2e2f7a8
+> >>>> X17=0000ffffa2541f20 X18=000000000000a000 X19=84bfda6288cf2dd6
+> >>>> X20=0000aaab1a1f1ce0 X21=000000007fffffff X22=0000ffffc5431788
+> >>>> X23=0000aaab1a17db60 X24=0000ffffc5431770 X25=0000000100000000
+> >>>> X26=0000004100000000 X27=0000000000000001 X28=0000aaab1a1f1c20
+> >>>> X29=0000ffffc54316d0 X30=0000aaaae7f8cd24  SP=0000ffffc5431650
+> >>>> PSTATE=20001000 --C- EL0t
+> >>>> 
+> >>>> Guest and host are otherwise idle, kvm is in normal VHE mode.
+> >>>> 
+> >>>> Git bisect points to (fce886a60207 "KVM: arm64: Plumb the pKVM MMU in KVM")
+> >>>> I also double checked that by reverting this commit on top of 6.14.
+> >>> 
+> >>> Thanks for find the triggering commit. Can you further identify *what*
+> >>> causes the -ENOMEM? The only new -ENOMEM in that patch is the one
+> >>> added to topup_hyp_memcache(), which shouldn't be called.
+> >> 
+> >> The kvm_pgtable_stage2_map() call in user_mem_abort() returns -ENOMEM
+> >> because the memcache pointer was not initialized!
+> >> 
+> >> It looks like smth like this without other conditions could do the trick:
+> >> 
+> >> if (!is_protected_kvm_enabled())
+> >> 	memcache = &vcpu->arch.mmu_page_cache;
+> >> else
+> >> 	memcache = &vcpu->arch.pkvm_memcache;
+> >> 
+> >> (I'll try this now)
+> > 
+> > Right, we end-up with an uninitialised memcache variable. Why isn't
+> > the compiler screaming?
+> 
+> Yea. Also I was under the impression that these kind of warnings tend to
+> over indicate..
 
-Wait a minute, vgdev->capsets is allocated using drmm, hence it's
-auto-freed when DRM device is freed. This patch shouldn't be needed.
+Quite. The obvious conclusion is that compilers are crap. Oh well.
+
+> 
+> > I think you can indeed simply hoist the init of memcache very early
+> > on, which should solve hopefully solve the issue.
+> 
+> It solves the issue for me. Please note that in this case topup cache is
+> not called - I hope that this is not an issue (but it was also the case
+> before commit fce886a60207).
+
+Indeed, and that's how I expect it to fail. We're also pretty lucky
+that we get a NULL instead of some random pointer...
+
+> From c594bbf9c3c4186594b798734ea9b1779be3b584 Mon Sep 17 00:00:00 2001
+> From: Sebastian Ott <sebott@redhat.com>
+> Date: Mon, 5 May 2025 11:09:58 -0400
+> Subject: [PATCH] KVM: arm64: Fix uninitialized memcache pointer in user_mem_abort()
+> 
+> Commit fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM") made the
+> initialization of the local memcache variable in user_mem_abort()
+> conditional, leaving a codepath where it is used uninitialized via
+> kvm_pgtable_stage2_map().
+> 
+> This can lead to migration failures where KVM_RUN exits with -ENOMEM.
+
+Not only. It can fail on any path that requires a stage-2 allocation
+without transition via a permission fault or logging. It is actually
+pretty amazing that it fails so rarely...
+
+> Fix this by making sure that memcache is always valid.
+> 
+> Fixes: fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM")
+> Signed-off-by: Sebastian Ott <sebott@redhat.com>
+
++ Cc: stable@vger.kernel.org
+
+> ---
+>  arch/arm64/kvm/mmu.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 754f2fe0cc67..6c3c658c5f29 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1501,6 +1501,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  		return -EFAULT;
+>  	}
+> 
+> +	if (!is_protected_kvm_enabled())
+> +		memcache = &vcpu->arch.mmu_page_cache;
+> +	else
+> +		memcache = &vcpu->arch.pkvm_memcache;
+> +
+>  	/*
+>  	 * Permission faults just need to update the existing leaf entry,
+>  	 * and so normally don't require allocations from the memcache. The
+> @@ -1511,10 +1516,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  		int min_pages = kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu);
+> 
+>  		if (!is_protected_kvm_enabled()) {
+> -			memcache = &vcpu->arch.mmu_page_cache;
+>  			ret = kvm_mmu_topup_memory_cache(memcache, min_pages);
+>  		} else {
+> -			memcache = &vcpu->arch.pkvm_memcache;
+
+Feel free to drop the {}s that are now superfluous.
+
+>  			ret = topup_hyp_memcache(memcache, min_pages);
+>  		}
+>  		if (ret)
+> 
+
+With the above addressed:
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+Please post it as a standalone patch so that Oliver can add it to the
+next batch of fixes for 6.15.
+
+Thanks,
+
+	M.
 
 -- 
-Best regards,
-Dmitry
+Without deviation from the norm, progress is not possible.
