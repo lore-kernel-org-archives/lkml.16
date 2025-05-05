@@ -1,192 +1,127 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB201AAA1F;
-	Mon,  5 May 2025 07:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0E31D5ADC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746430394; cv=none; b=n/qM0mjUcYsWIYPrUTjNC5mJ2YwJWeFJ18pjalUtvZihpsmP3E8b4Usk9wpYw+Nqk+zwI7a8/N61hXr9tsUJFwwSm37KVO0wk5ytuGOphBjD0+LUyJwnDYU6bABmB18CBq/0KoUR+/7Bkt2/gP7GgI6eJrLXBKKZJHgcebmqRQs=
+	t=1746430413; cv=none; b=O+zpEM5KptX2DfeOUdUbNSOIEB+K5w8V4/PEE3izPxFpdLC0+DO5rWajWtMcaPSy9VSsQ8glswCmzcBirGd8wE1qDhIiOrX261oiziQ9aQC3tbQx7qwGwzcBdJt/qRbIOWMQVeTuNt9/ieJet1zWW/eiGSUlIjxF2l8yu7w9vg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746430394; c=relaxed/simple;
-	bh=AqOHYLAKEMOVfCfoPPUkBYDLm8AEpL2ZvA3H2A6fh7o=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cPqqvDGzsAWlHm03hPAKRfd4HnOxT3llLXUCG5f99yI40w7sbGcSv9Z51xxpmHrmD6eW1t44flr0+r28Ryo8x4FQPVJ0V+KfMP1u5tinNo0coIMUHBuC7S7xMJ67yVKUnXC8kW1V8cgU0w72KExUeLvPTf35wcAOgM2fyhkP+gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PMwr6FOt; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1746430413; c=relaxed/simple;
+	bh=0XkG1rhDDdkzr4vxxq+ni5pkurrsCo1DaBkTzd2qMDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qkv9hRjPUcEVGjp9lBUchFTMoQGS95eAedc09g/BfUlnvW9pcb17oreWeCcXYcUz6NV5PGjv7Icspii3UpKNsLNG3IGDZ5zV6aVqkkIZKmM2mf+jp0Afj3CYoMK1aVT0TaZjmnfNuCLbYKGrEoVFjfjmB0aVWdLTGAgLH/8RDpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sX8+DbPY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oI7y3cP8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PMwr6FOt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1746430393; x=1777966393;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=AqOHYLAKEMOVfCfoPPUkBYDLm8AEpL2ZvA3H2A6fh7o=;
-  b=PMwr6FOtCo2U6U80S7Yb+R3VqMDSoQroP+2eIEFl0TTp32TGdxIgD9HD
-   j71oU/DzCuLwrK/fJ4WmLZwlQ2dUhNW3B0xtGt6QV+q7tI1a37Ag9Go8e
-   irx6oZ6c5H0+SexIe05COIz3qI8TOeQ1rsZzqjx3Gl45YrQ1KP0GF5BN7
-   Vasvb7awNn0hyDBYIzYt/KpMfQHl9CQYLJA1PqEXcoLXKGciIoI9hJyqk
-   HIX6NGD9HF+EA+vI1/X+ECuuO49ZIrWVv7iI1gtRLLP+guKyOVEGxgIki
-   IMWQVM0DJdzvDPZajEyZJLJkzLukxo0MK5CtLmFsOrnD3bm6VALA2nSK6
-   A==;
-X-CSE-ConnectionGUID: we+1GUIsRwCKmoJC4zLVXw==
-X-CSE-MsgGUID: 4cOdXlr9QU6G3mdzYA/oQQ==
-X-IronPort-AV: E=Sophos;i="6.15,262,1739862000"; 
-   d="scan'208";a="41706941"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 May 2025 00:33:06 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 5 May 2025 00:33:01 -0700
-Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Mon, 5 May 2025 00:32:58 -0700
-From: Thangaraj Samynathan <thangaraj.s@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <bryan.whitehead@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 net-next] net: lan743x: configure interrupt  moderation timers based on speed
-Date: Mon, 5 May 2025 12:59:43 +0530
-Message-ID: <20250505072943.123943-1-thangaraj.s@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sX8+DbPY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oI7y3cP8"
+Date: Mon, 5 May 2025 09:33:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746430410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bLwEBdjvQahjJSYq8z8eni9Njb//2FpLv9Dx89BPmLg=;
+	b=sX8+DbPYCsZSXj7XsOakuqLfGLEHw1Nd4nkA5Sw3eN39GsGxZit+wVOw1o6B1Z8QFtKwi8
+	INcFwTn7otcE0y+lCILL6Jm+316FpKRRqqRTLuEzyW/IYFiLKLpCe8nYKpSEtry004/VKf
+	AcCTZaP67YPA+8dkPQqV0jG+q7cSB9gIWKcaZ5dlJNJ4PtWFjkPWVJkQ0fSsh7KC/LyOjj
+	R5DMuYkPzDCsKlxJ8wMAoCijtljQDPnEVQnPD1TSIKUYHPvC9FU4RgPiJRneRr/7C6aepc
+	IY3cZs40OMxZWfkz7m6nHGrWp9xdMXy/scf3i1b8t1aVUSgXlcQfwZUx7iAt+w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746430410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bLwEBdjvQahjJSYq8z8eni9Njb//2FpLv9Dx89BPmLg=;
+	b=oI7y3cP8B33FLfDyM7+FCJheUoMRtzra4Mmq6fSZW+D3oLsiQ+SFSZJcffpfAEVRbJFzyQ
+	hMzh8K4p/V38VkDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v12 21/21] selftests/futex: Add futex_numa_mpol
+Message-ID: <20250505073321.7isb-eaO@linutronix.de>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-22-bigeasy@linutronix.de>
+ <20250502190838.GB24078@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250502190838.GB24078@noisy.programming.kicks-ass.net>
 
-Configures the interrupt moderation timer value to 64us for 2.5G,
-150us for 1G, 330us for 10/100M. Earlier this was 400us for all
-speeds. This improvess UDP TX and Bidirectional performance to
-2.3Gbps from 1.4Gbps in 2.5G. These values are derived after
-experimenting with different values.
+On 2025-05-02 21:08:38 [+0200], Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 06:29:21PM +0200, Sebastian Andrzej Siewior wrote:
+> > diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
+> > index 9d305520e849b..b664e8f92bfd7 100644
+> > --- a/tools/testing/selftests/futex/include/futex2test.h
+> > +++ b/tools/testing/selftests/futex/include/futex2test.h
+> > @@ -8,6 +8,11 @@
+> >  
+> >  #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
+> >  
+> > +struct futex32_numa {
+> > +	futex_t futex;
+> > +	futex_t numa;
+> > +};
+> > +
+> >  /**
+> >   * futex_waitv - Wait at multiple futexes, wake on any
+> >   * @waiters:    Array of waiters
+> > @@ -20,3 +25,32 @@ static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned lon
+> >  {
+> >  	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
+> >  }
+> > +
+> > +static inline int futex2_wait(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+> > +			      unsigned long flags, struct timespec *timo, clockid_t clockid)
+> > +{
+> > +	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
+> 
+> I'm confused, sure this should be __NR_futex_wait
+> 
+> > +}
+> > +
+> > +/*
+> > + * futex_wait2() - block on uaddr with optional timeout
+> > + * @val:	Expected value
+> > + * @flags:	FUTEX2 flags
+> > + * @timeout:	Relative timeout
+> > + * @clockid:	Clock id for the timeout
+> > + */
+> > +static inline int futex2_wait2(void *uaddr, long val, unsigned int flags,
+> > +			      struct timespec *timeout, clockid_t clockid)
+> 
+> And this should be futex2_wait().
 
-Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
----
- drivers/net/ethernet/microchip/lan743x_main.c | 61 +++++++++++--------
- drivers/net/ethernet/microchip/lan743x_main.h |  5 +-
- 2 files changed, 41 insertions(+), 25 deletions(-)
+Yes. I didn't want to change it right away but yes. There already is a
+futex2_wait() which uses the waitv syscall.
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index e2d6bfb5d693..6d570132f409 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -620,27 +620,6 @@ static int lan743x_intr_open(struct lan743x_adapter *adapter)
- 		lan743x_csr_write(adapter, INT_VEC_EN_SET,
- 				  INT_VEC_EN_(0));
- 
--	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0)) {
--		lan743x_csr_write(adapter, INT_MOD_CFG0, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG1, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG2, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG3, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG4, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG5, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG6, LAN743X_INT_MOD);
--		lan743x_csr_write(adapter, INT_MOD_CFG7, LAN743X_INT_MOD);
--		if (adapter->is_pci11x1x) {
--			lan743x_csr_write(adapter, INT_MOD_CFG8, LAN743X_INT_MOD);
--			lan743x_csr_write(adapter, INT_MOD_CFG9, LAN743X_INT_MOD);
--			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00007654);
--			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00003210);
--		} else {
--			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00005432);
--			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00000001);
--		}
--		lan743x_csr_write(adapter, INT_MOD_MAP2, 0x00FFFFFF);
--	}
--
- 	/* enable interrupts */
- 	lan743x_csr_write(adapter, INT_EN_SET, INT_BIT_MAS_);
- 	ret = lan743x_intr_test_isr(adapter);
-@@ -3035,6 +3014,31 @@ static void lan743x_phylink_mac_link_down(struct phylink_config *config,
- 	netif_tx_stop_all_queues(netdev);
- }
- 
-+static void lan743x_config_int_mod(struct lan743x_adapter *adapter, u32 int_mod)
-+{
-+	if (!(adapter->csr.flags & LAN743X_CSR_FLAG_IS_A0)) {
-+		lan743x_csr_write(adapter, INT_MOD_CFG0, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG1, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG2, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG3, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG4, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG5, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG6, int_mod);
-+		lan743x_csr_write(adapter, INT_MOD_CFG7, int_mod);
-+		if (adapter->is_pci11x1x) {
-+			lan743x_csr_write(adapter, INT_MOD_CFG8, int_mod);
-+			lan743x_csr_write(adapter, INT_MOD_CFG9, int_mod);
-+
-+			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00007654);
-+			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00003210);
-+		} else {
-+			lan743x_csr_write(adapter, INT_MOD_MAP0, 0x00005432);
-+			lan743x_csr_write(adapter, INT_MOD_MAP1, 0x00000001);
-+		}
-+		lan743x_csr_write(adapter, INT_MOD_MAP2, 0x00FFFFFF);
-+	}
-+}
-+
- static void lan743x_phylink_mac_link_up(struct phylink_config *config,
- 					struct phy_device *phydev,
- 					unsigned int link_an_mode,
-@@ -3044,6 +3048,7 @@ static void lan743x_phylink_mac_link_up(struct phylink_config *config,
- {
- 	struct net_device *netdev = to_net_dev(config->dev);
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
-+	u32 int_mod;
- 	int mac_cr;
- 	u8 cap;
- 
-@@ -3052,15 +3057,23 @@ static void lan743x_phylink_mac_link_up(struct phylink_config *config,
- 	 * Resulting value corresponds to SPEED_10
- 	 */
- 	mac_cr &= ~(MAC_CR_CFG_H_ | MAC_CR_CFG_L_);
--	if (speed == SPEED_2500)
-+	if (speed == SPEED_2500) {
- 		mac_cr |= MAC_CR_CFG_H_ | MAC_CR_CFG_L_;
--	else if (speed == SPEED_1000)
-+		int_mod = LAN743X_INT_MOD_2_5G;
-+	} else if (speed == SPEED_1000) {
- 		mac_cr |= MAC_CR_CFG_H_;
--	else if (speed == SPEED_100)
-+		int_mod = LAN743X_INT_MOD_1G;
-+	} else if (speed == SPEED_100) {
- 		mac_cr |= MAC_CR_CFG_L_;
-+		int_mod = LAN743X_INT_MOD_100M;
-+	} else {
-+		int_mod = LAN743X_INT_MOD_10M;
-+	}
- 
- 	lan743x_csr_write(adapter, MAC_CR, mac_cr);
- 
-+	lan743x_config_int_mod(adapter, int_mod);
-+
- 	lan743x_ptp_update_latency(adapter, speed);
- 
- 	/* Flow Control operation */
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index db5fc73e41cc..189d979356a0 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -860,7 +860,10 @@ struct lan743x_adapter;
- #define LAN743X_USED_RX_CHANNELS	(4)
- #define LAN743X_USED_TX_CHANNELS	(1)
- #define PCI11X1X_USED_TX_CHANNELS	(4)
--#define LAN743X_INT_MOD	(400)
-+#define LAN743X_INT_MOD_2_5G		(64)
-+#define LAN743X_INT_MOD_1G		(150)
-+#define LAN743X_INT_MOD_100M		(330)
-+#define LAN743X_INT_MOD_10M		(330)
- 
- #if (LAN743X_USED_RX_CHANNELS > LAN743X_MAX_RX_CHANNELS)
- #error Invalid LAN743X_USED_RX_CHANNELS
--- 
-2.25.1
+> 
+> > +{
+> > +	return syscall(__NR_futex_wait, uaddr, val, 1, flags, timeout, clockid);
+> > +}
+> > +
+> > +/*
+> > + * futex2_wake() - Wake a number of futexes
+> > + * @nr:		Number of threads to wake at most
+> > + * @flags:	FUTEX2 flags
+> > + */
+> > +static inline int futex2_wake(void *uaddr, int nr, unsigned int flags)
+> > +{
+> > +	return syscall(__NR_futex_wake, uaddr, 1, nr, flags);
+> > +}
 
+Sebastian
