@@ -1,154 +1,140 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB081DF733;
-	Mon,  5 May 2025 08:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A291C1E260D
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746432007; cv=none; b=bW/H0X0lSSRD5pd4sqrHUXAGFpDAntvFwkt+KnljIKAZ3eLyPhSw+GmIf/kNo985CIH+Gpxbp80dzBJfDhmJlAVAlF0TotrRXlR7HgWAWNTal/WqAxG2Co/INCo37Cs5utKIyRBZuwkIiGCG9OL+eWy/oqvB0MnOx5/V/M2Zf8c=
+	t=1746432013; cv=none; b=LduIS76f4AEXcjebuOIgt7Ao9+TxH27Uso/yrFWLHTLtoZoTvTCgv9fBC80dEIuqEl/OGc7Mk+hXkMq8vHRBJ4UHiJtqmH9wIjI/jF4zlVr1WO4gPK/XUZg8udqKIijo1+bDSZvJKghf1XC7BfOCFa9N7jKJAtC9swdho6U4EJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746432007; c=relaxed/simple;
-	bh=yDPy55Cf9Zyk4amT2UFhvK6TEYzPakN4rmyC6eHpXpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NObYbh237zZmdm9cwbz7KqTpTe8P8vzL2P3047XLYNA6UfQmAbw6vZ55T3zUIlcAyhNQguXVW2LS3bxJNpmhhrJcl4UQM2oIJ99/GZiMKYJ9NDniYJnzzVEfY/Y5+YKaK1lubpmuZYZ6cpvZhfk8VL7wgu4nZxN5EvqQHQl9F34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=cK9noqLn; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1746432013; c=relaxed/simple;
+	bh=A8UtNB0lJZVwOw8RbKz+nI+hjf5xw0t3exJaxERP1Eo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AEIin/RfmhTnK103xNN8fsVeWX4dgJBKmLRuPqPjgT7Ygj86s7Z5dyg76GzoGVEhL8mYqrO74FW+R/AnMYbjvHPYvm0zkDDTJJ5NsMpTjPMrG7SL51/UV2nMy6eosWZ4fE2LDKkkXtPT+WMciIHIOEMMJyaCGTsUVbdgbGFoYnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qUFSbVlB; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="cK9noqLn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FWcMhUUAD341x1j4p0TzxNBabdUQcp6F1O3NT2s7Z9I=; b=cK9noqLnLdYH8B5aHwnOVCr3N8
-	aFx1PhEY/AeDmgx30074nqdwSaV2O3JlovBwN6qZ/ncicaMyCEmmS5VH5ez+VuFKd6PT0O1dadn2r
-	wSLeCT/LpfhW2+tGGAd1OHXe6ZHyqa/nGbiRAfRLHCReM+BqRN7kELFx9302k1TmN7zG74MGAjvQS
-	fTQElveeg8b8N6vHKjQVnWT6esJW1+jbbFhJiNuPJfxizo4WtlSeFARU7XnwbnNBrZ7HXJbQArCez
-	rVvQHu/zsoCp0KQ0De/EW7oY711Av6tuCj9lf5vm3d9s6HYfNWrpdq+WpN9MUeeC+mTEiWxp/EEzO
-	zNzibs3g==;
-Received: from [89.212.21.243] (port=58904 helo=[192.168.69.116])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1uBpsB-00BenA-24;
-	Mon, 05 May 2025 09:04:18 +0200
-Message-ID: <282a7e41-97f8-4fd4-9f03-29f70acc4df2@norik.com>
-Date: Mon, 5 May 2025 09:04:17 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qUFSbVlB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1746432007;
+	bh=A8UtNB0lJZVwOw8RbKz+nI+hjf5xw0t3exJaxERP1Eo=;
+	h=From:Date:Subject:To:Cc:From;
+	b=qUFSbVlBeeWEyVZsN8Gij5NvhF7Lo/f7YAWRcBt6dICkaUk0YQmKPWzkE09TuqzMA
+	 aAHaz1V/RdS9lTqFcke2bgg7haPSZ5bn5wWGWmi7dTUDZ3PhGhasnFhRxki+oSnWX+
+	 uCRJ6o83Ucy/58M0M+V/CzhpiRviZqAqcP2t0tXo=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 05 May 2025 09:59:37 +0200
+Subject: [PATCH v5] locking/mutex: Mark devm_mutex_init() as __must_check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Upstream] [PATCH 2/2] arm64: dts: freescale: Add PHYTEC
- phyBOARD-Nash-i.MX93 support
-To: Wadim Egorov <w.egorov@phytec.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- upstream@lists.phytec.de
-References: <20250425064107.174548-1-primoz.fiser@norik.com>
- <20250425064107.174548-2-primoz.fiser@norik.com>
- <000c1117-81d1-4a74-9d36-f83a2b0fedd3@phytec.de>
-Content-Language: en-US
-From: Primoz Fiser <primoz.fiser@norik.com>
-Autocrypt: addr=primoz.fiser@norik.com; keydata=
- xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
- JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
- ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
- gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
- jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
- 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
- TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
- AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
-Organization: Norik systems d.o.o.
-In-Reply-To: <000c1117-81d1-4a74-9d36-f83a2b0fedd3@phytec.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Message-Id: <20250505-must_check-devm_mutex_init-v5-1-92fa4b793c6e@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAOhvGGgC/33PzWrDMAzA8VcpPs/Dn7Hb096jlBAryixG0hE7X
+ kfJu8/tGBus5CL46/ATurKEM2Fih92VzVgo0XmqYZ92DGI3vSKnvjZTQhkptOTjknILEeGN91j
+ GdlwyXlqaKHPowHod+s4PyCrwPuNAlzt+PNWOlPJ5/rzfKvK2/Wbr2GKL5JJjIzDsXfDg1MsHU
+ koJ4hKfJ8zsZhf141mhhNn0FBfchUY5CSY4bB56+q/nNz1dPWUsGul6gD0+9MyvZ4Tb9Ez913o
+ XuooNTdD/vHVdvwCM5SpuuQEAAA==
+X-Change-ID: 20241031-must_check-devm_mutex_init-cac583bda8fe
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>, 
+ Will Deacon <will@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746432005; l=2993;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=A8UtNB0lJZVwOw8RbKz+nI+hjf5xw0t3exJaxERP1Eo=;
+ b=pe6pxWBIiSGuzsdsD7O24W+Yd1l43xIyslhtyNp1IixG6z2jZKkMURlSxzBzKq+BSpXLUiDEO
+ t6z0zdeSvK1CORoN2XdHfV8z8cSQxPM5hg+a9huglOiZRXNPWNLkIfq
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Hi Wadim,
+Even if it's not critical, the avoidance of checking the error code
+from devm_mutex_init() call today diminishes the point of using the devm
+variant of it. Tomorrow it may even leak something. Enforce all callers
+checking the return value through the compiler.
 
-On 28. 04. 25 16:31, Wadim Egorov wrote:
-> Hi Primoz,
-> 
-> a few of the node references you are adding are out of alphabetical order.
+As devm_mutex_init() itself is a macro, it can not be annotated
+directly. Annotate __devm_mutex_init() instead.
+Unfortunately __must_check/warn_unused_result don't propagate through
+statement expression. So move the statement expression into the argument
+list of the call to __devm_mutex_init() through a helper macro.
 
-Only &mdio node is out of alphabetical order.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+Changes in v5:
+- Pick up review tag from Andy
+- Link to v4: https://lore.kernel.org/r/20250407-must_check-devm_mutex_init-v4-1-587bacc9f6b3@weissschuh.net
 
-But this is done by choice to keep it together with &eqos node since
-both nodes are related to the 2nd Ethernet interface (&ethphy2) and thus
-kept logically with each other.
+Changes in v4:
+- Drop already applied leds-1202 driver patch
+- Rebase on v6.15-rc1
+- Link to v3: https://lore.kernel.org/r/20250208-must_check-devm_mutex_init-v3-0-245e417dcc9e@weissschuh.net
 
-We did the same for phyBOARD-Segin-i.MX93.
+Changes in v3:
+- Introduce and use helper macro __mutex_init_ret()
+- Link to v2: https://lore.kernel.org/r/20250204-must_check-devm_mutex_init-v2-0-7b6271c4b7e6@weissschuh.net
 
-> 
-> Am 25.04.25 um 09:41 schrieb Primoz Fiser:
->> Add initial support for PHYTEC phyBOARD-Nash-i.MX93 board [1] based on
->> the PHYTEC phyCORE-i.MX93 SoM (System-on-Module) [2].
->>
->> Supported board features:
->>   * ADC
->>   * CAN
->>   * Ethernet 2x
->>   * EEPROM
->>   * eMMC
->>   * Heartbeat LED
->>   * RTC
-> 
-> eMMC and Hearbeat LED are not board features but SoM features.
+Changes in v2:
+- Rebase on 6.14-rc1
+- Fix up leds-1202 driver
+- Link to v1: https://lore.kernel.org/r/20241202-must_check-devm_mutex_init-v1-1-e60eb97b8c72@weissschuh.net
+---
+ include/linux/mutex.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-That's true.
+diff --git a/include/linux/mutex.h b/include/linux/mutex.h
+index 2143d05116be1b0ac239951a9d5d0b90ad99062c..d9342341c13fc036dd9257537c85ff61f0f03da0 100644
+--- a/include/linux/mutex.h
++++ b/include/linux/mutex.h
+@@ -126,11 +126,11 @@ do {							\
+ 
+ #ifdef CONFIG_DEBUG_MUTEXES
+ 
+-int __devm_mutex_init(struct device *dev, struct mutex *lock);
++int __must_check __devm_mutex_init(struct device *dev, struct mutex *lock);
+ 
+ #else
+ 
+-static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
++static inline int __must_check __devm_mutex_init(struct device *dev, struct mutex *lock)
+ {
+ 	/*
+ 	 * When CONFIG_DEBUG_MUTEXES is off mutex_destroy() is just a nop so
+@@ -141,14 +141,17 @@ static inline int __devm_mutex_init(struct device *dev, struct mutex *lock)
+ 
+ #endif
+ 
+-#define devm_mutex_init(dev, mutex)			\
++#define __mutex_init_ret(mutex)				\
+ ({							\
+ 	typeof(mutex) mutex_ = (mutex);			\
+ 							\
+ 	mutex_init(mutex_);				\
+-	__devm_mutex_init(dev, mutex_);			\
++	mutex_;						\
+ })
+ 
++#define devm_mutex_init(dev, mutex) \
++	__devm_mutex_init(dev, __mutex_init_ret(mutex))
++
+ /*
+  * See kernel/locking/mutex.c for detailed documentation of these APIs.
+  * Also see Documentation/locking/mutex-design.rst.
 
-I will remove those from the list in v2 and only list carrier-board
-features.
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20241031-must_check-devm_mutex_init-cac583bda8fe
 
-BR,
-Primoz
-
-> 
->>   * RS-232/RS-485
->>   * SD-card
->>   * TPM 2.0
->>   * USB
->>
->> For more details see the product pages for the development kit and the
->> SoM:
->>
->> [1] https://www.phytec.eu/en/produkte/development-kits/phyboard-nash/
->> [2]
->> https://www.phytec.eu/en/produkte/system-on-modules/phycore-imx-91-93/
->>
->> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> 
-> With that changed,
-> 
-> Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
-> 
-
+Best regards,
 -- 
-Primoz Fiser
-phone: +386-41-390-545
-email: primoz.fiser@norik.com
---
-Norik systems d.o.o.
-Your embedded software partner
-Slovenia, EU
-phone: +386-41-540-545
-email: info@norik.com
+Thomas Weißschuh <linux@weissschuh.net>
+
