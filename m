@@ -1,261 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F66C1E48A;
-	Mon,  5 May 2025 08:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E864B665
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746432352; cv=none; b=R12zB/kST2EZ8vUWZK7QW7/xEzMCUenORFE9n8Sivqcc/Q5ISp3askF+HwoPlWjsCbjpMf121ZUUPWAOSBX1I0XMCi/YOnF0PEl5n/08iIiFfrT77odHZJ7Gt8KqoULoOmSOVfJH8NOgcV6dJuP5sCymUfStlq99UrI4jcZJFRc=
+	t=1746432430; cv=none; b=D1S+e5ko3DHSyhFYMLqFq1gTuNZtl04MtGRSyWSTxujOtTfR9G6lA18bcWnyjlW/soSQY+obmdp3RwlqXdxjjlG759oobioUmvIF2WYMMCGoZthwohWKrAt+8vv1qJZ8s7bKxCvBDokD7P0qGq5+/TrNBJKpipaPVrWOqBYRuTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746432352; c=relaxed/simple;
-	bh=sEn0JbLJ+2KtLbxcEixQL7BULeNTdU1w4BNv+zrfAC8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tigdb62GrS5JK6GegQ3piYNGZ1E7Cb3l3b47ieT7brQlGhbgIKQByt3M0S3FkNxKKZIpaRqfa2Ws4Do0rrVnb5VLlPui417c0JeBazkuwNsHlhb979ugQ+jaUDEyM3Y7eT9BubX8mgfmPjGSjfuNIQvn/wfVh9ex6T6sDh+3lpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=icdt4AeV; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746432430; c=relaxed/simple;
+	bh=Ldya9+ZXHjKjFlbqHRlwdTpttV/IT1HvHFQJE/ulyk0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Fo7t3sauigxsuspUPkE7pl3q3ngbbUP+MItP198di7gxVYrZUc0euzy68wRXthXpCDWaQHKC2nxJ4wDMWZo3s35CnnkSZ/0nqsI3rZUfyLLQ9qjCITuK4lQwzbpXhInMj3bCpWKMJtCkL5ueZnETtYXKt6KppmCL1IAweINcJG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XEYa/Y3R; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="icdt4AeV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746432347; x=1777968347;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=sEn0JbLJ+2KtLbxcEixQL7BULeNTdU1w4BNv+zrfAC8=;
-  b=icdt4AeVIYp9k2OmheG5IHiVmo0dFfPg1Z8N5/LQHT8Mj/1p4Vx6tIGU
-   8S7YhjaR2Xwv+EGlarchQwz5W6euzJ/j11THNp3J1olLg7ll6OBObMkg3
-   z09rWz9YGSuIm5o5JJ+zFI9rso+HkzlMFKtJv1mmFTFYYctMzJGlwwvgv
-   IV2TTAqDYHe59DbGrB40BMg1jt3SdP3FGRP6xmQ3WDm+5wn+uy6UkI0fM
-   K303whK/rfXTgxfkwHY4kYhI2dQi4DxFaCNBD72wybOuS+ik1G5eEoBcj
-   GTXne1AvRrSW351QvJn0hZ8m/532UHunyUUCvhdx/lgx9nmWkZCdqvJiH
-   w==;
-X-CSE-ConnectionGUID: kKeEGmyAR0OeMSNznpfonA==
-X-CSE-MsgGUID: uL8mDdTtRQu3/1bCpjrDow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="65433511"
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="65433511"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 01:05:46 -0700
-X-CSE-ConnectionGUID: WVpB8LTlQ5Gp6D46hzAfvw==
-X-CSE-MsgGUID: ZyvzMFgARIqh2D8utixdPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
-   d="scan'208";a="140172578"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.232])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 01:05:38 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Jeff Layton <jlayton@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Jeff
- Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v6 06/10] ref_tracker: automatically register a file in
- debugfs for a ref_tracker_dir
-In-Reply-To: <20250430-reftrack-dbgfs-v6-6-867c29aff03a@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250430-reftrack-dbgfs-v6-0-867c29aff03a@kernel.org>
- <20250430-reftrack-dbgfs-v6-6-867c29aff03a@kernel.org>
-Date: Mon, 05 May 2025 11:05:35 +0300
-Message-ID: <87frhjwkhc.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XEYa/Y3R"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 589D4240101
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:07:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1746432421; bh=Ldya9+ZXHjKjFlbqHRlwdTpttV/IT1HvHFQJE/ulyk0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
+	b=XEYa/Y3R3G/pZxse0zPoRu9I07BK1DnFj1NztBy08TFL8r2eQN1JK3bvCm68reeIU
+	 9WA10nw+WswPXv1nprXJPuLxdvAlYKIsbgxsokT72Q48BfynY+wUxrsS7PxG6kNo/t
+	 VYGMS6x+ywgpuh3wSVaLM9XJBEdfoY+ACcfrIGTMoeakmawVFmtaJg4j0041mtWYJu
+	 7La8ff8EX4O8Qbdb1dfmeOxI9r4ONenyJdr1OO7cxbxa7J31devPsrbZqyqMdh6VTP
+	 x3HNBXP1+M5yDyfQUsuS2j++5JXReAM0gty69mX1FXRRgkqBNzWy/Yxo6kMfY6bp7i
+	 3NI59mlpMQTmQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZrYyr4TLVz6v0b;
+	Mon,  5 May 2025 10:07:00 +0200 (CEST)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+Date: Mon, 05 May 2025 08:06:39 +0000
+Subject: [PATCH v2] xfs: Verify DA node btree hash order
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-xfs-hash-check-v2-1-226d44b59e95@posteo.net>
+X-B4-Tracking: v=1; b=H4sIAI5xGGgC/3XMQQ7CIBCF4as0s3YMoLXVlfcwXSAdhJhAwxBS0
+ 3B3sXuX/0vetwFT8sRw6zZIVDz7GFqoQwfG6fAi9HNrUEL14iwVrpbRaXZoHJk3Pmk4XYdxlFo
+ ZaKclkfXrDj6m1s5zjumz+0X+1r9UkSjRkpGWbD8LcbkvkTPFY6AMU631C+3AZBKtAAAA
+X-Change-ID: 20250412-xfs-hash-check-be7397881a2c
+To: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746432407; l=1894;
+ i=charmitro@posteo.net; s=20250412; h=from:subject:message-id;
+ bh=Ldya9+ZXHjKjFlbqHRlwdTpttV/IT1HvHFQJE/ulyk0=;
+ b=SJ3FkV+GKPNOvm3hS93MfHLRitfL7HsXcS9xRaNSv7acsN8cUpR3KSTgni1rf+tGsjNGlZv55
+ /zoHwPbpy53AR/9r8HxOLnOS6zX8v+skHwh1jk+HKhbAFxVhA/CaSYx
+X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
+ pk=Dwccy7f4QM74qKQFgkWc/EpYGEDY0qvP4cycC87VXeQ=
 
-On Wed, 30 Apr 2025, Jeff Layton <jlayton@kernel.org> wrote:
-> Currently, there is no convenient way to see the info that the
-> ref_tracking infrastructure collects. Attempt to create a file in
-> debugfs when called from ref_tracker_dir_init().
->
-> The file is given the name "class@%px", as having the unmodified address
-> is helpful for debugging. This should be safe since this directory is only
-> accessible by root
->
-> If debugfs file creation fails, a pr_warn will be isssued.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  include/linux/ref_tracker.h | 14 +++++++++
->  lib/ref_tracker.c           | 73 +++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 85 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-> index 2adae128d4b5e45f156af4775a1d184bb596fa91..c6e65d7ef4d4fc74c60fcabd19166c131d4173e2 100644
-> --- a/include/linux/ref_tracker.h
-> +++ b/include/linux/ref_tracker.h
-> @@ -5,6 +5,7 @@
->  #include <linux/types.h>
->  #include <linux/spinlock.h>
->  #include <linux/stackdepot.h>
-> +#include <linux/seq_file.h>
+The xfs_da3_node_verify() function checks the integrity of directory
+and attribute B-tree node blocks. However, it was missing a check to
+ensure that the hash values of the btree entries within the node are
+non-decreasing hash values (allowing equality).
 
-Nothing here requires seq_file.h as far as I can tell. Please avoid
-superfluous header dependencies.
+Add a loop to iterate through the btree entries and verify that each
+entry's hash value is greater than the previous one. If an
+out-of-order hash value is detected, return failure to indicate
+corruption.
 
-BR,
-Jani.
+This addresses the "XXX: hash order check?" comment and improves
+corruption detection for DA node blocks.
 
->  
->  struct ref_tracker;
->  
-> @@ -18,12 +19,17 @@ struct ref_tracker_dir {
->  	struct list_head	list; /* List of active trackers */
->  	struct list_head	quarantine; /* List of dead trackers */
->  	const char		*class; /* object classname */
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct dentry		*dentry;
-> +#endif
->  	char			name[32];
->  #endif
->  };
->  
->  #ifdef CONFIG_REF_TRACKER
->  
-> +void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir);
-> +
->  static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
->  					unsigned int quarantine_count,
->  					const char *class,
-> @@ -37,7 +43,11 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
->  	refcount_set(&dir->untracked, 1);
->  	refcount_set(&dir->no_tracker, 1);
->  	dir->class = class;
-> +#ifdef CONFIG_DEBUG_FS
-> +	dir->dentry = NULL;
-> +#endif
->  	strscpy(dir->name, name, sizeof(dir->name));
-> +	ref_tracker_dir_debugfs(dir);
->  	stack_depot_init();
->  }
->  
-> @@ -66,6 +76,10 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
->  {
->  }
->  
-> +static inline void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir)
-> +{
-> +}
-> +
->  static inline void ref_tracker_dir_exit(struct ref_tracker_dir *dir)
->  {
->  }
-> diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-> index b69c11e83c18c19aaa2dc23f802291d4a7e82a66..3ee4fd0f33407881cfa140dcb7d8b40e3c2722de 100644
-> --- a/lib/ref_tracker.c
-> +++ b/lib/ref_tracker.c
-> @@ -31,6 +31,14 @@ struct ref_tracker_dir_stats {
->  	} stacks[];
->  };
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +static void ref_tracker_debugfs_remove(struct ref_tracker_dir *dir);
-> +#else
-> +static inline void ref_tracker_debugfs_remove(struct ref_tracker_dir *dir)
-> +{
-> +}
-> +#endif
-> +
->  static struct ref_tracker_dir_stats *
->  ref_tracker_get_stats(struct ref_tracker_dir *dir, unsigned int limit)
->  {
-> @@ -197,6 +205,7 @@ void ref_tracker_dir_exit(struct ref_tracker_dir *dir)
->  	bool leak = false;
->  
->  	dir->dead = true;
-> +	ref_tracker_debugfs_remove(dir);
->  	spin_lock_irqsave(&dir->lock, flags);
->  	list_for_each_entry_safe(tracker, n, &dir->quarantine, head) {
->  		list_del(&tracker->head);
-> @@ -313,8 +322,7 @@ EXPORT_SYMBOL_GPL(ref_tracker_free);
->  #ifdef CONFIG_DEBUG_FS
->  #include <linux/debugfs.h>
->  
-> -static __maybe_unused int
-> -ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
-> +static int ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
->  {
->  	struct ostream os = { .func = pr_ostream_seq,
->  			      .prefix = "",
-> @@ -328,6 +336,67 @@ ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
->  	return os.used;
->  }
->  
-> +static int ref_tracker_debugfs_show(struct seq_file *f, void *v)
-> +{
-> +	struct ref_tracker_dir *dir = f->private;
-> +
-> +	return ref_tracker_dir_seq_print(dir, f);
-> +}
-> +
-> +static int ref_tracker_debugfs_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct ref_tracker_dir *dir = inode->i_private;
-> +
-> +	return single_open(filp, ref_tracker_debugfs_show, dir);
-> +}
-> +
-> +static const struct file_operations ref_tracker_debugfs_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= ref_tracker_debugfs_open,
-> +	.read		= seq_read,
-> +	.llseek		= seq_lseek,
-> +	.release	= single_release,
-> +};
-> +
-> +/**
-> + * ref_tracker_dir_debugfs - create debugfs file for ref_tracker_dir
-> + * @dir: ref_tracker_dir to be associated with debugfs file
-> + *
-> + * In most cases, a debugfs file will be created automatically for every
-> + * ref_tracker_dir. If the object was created before debugfs is brought up
-> + * then that may fail. In those cases, it is safe to call this at a later
-> + * time to create the file.
-> + */
-> +void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir)
-> +{
-> +	char name[NAME_MAX + 1];
-> +	int ret;
-> +
-> +	/* No-op if already created */
-> +	if (!IS_ERR_OR_NULL(dir->dentry))
-> +		return;
-> +
-> +	ret = snprintf(name, sizeof(name), "%s@%px", dir->class, dir);
-> +	name[sizeof(name) - 1] = '\0';
-> +
-> +	if (ret < sizeof(name))
-> +		dir->dentry = debugfs_create_file(name, S_IFREG | 0400,
-> +						  ref_tracker_debug_dir, dir,
-> +						  &ref_tracker_debugfs_fops);
-> +	else
-> +		dir->dentry = ERR_PTR(-ENAMETOOLONG);
-> +
-> +	if (IS_ERR(dir->dentry))
-> +		pr_warn("ref_tracker: unable to create debugfs file for %s: %pe\n",
-> +			name, dir->dentry);
-> +}
-> +EXPORT_SYMBOL(ref_tracker_dir_debugfs);
-> +
-> +static void ref_tracker_debugfs_remove(struct ref_tracker_dir *dir)
-> +{
-> +	debugfs_remove(dir->dentry);
-> +}
-> +
->  static int __init ref_tracker_debugfs_init(void)
->  {
->  	ref_tracker_debug_dir = debugfs_create_dir("ref_tracker", NULL);
+Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+---
+Changes in v2:
+- Changed comparison from <= to < to allow equal hash values.
+- Updated commit message to clarify "non-decreasing" nature of hash
+  values.
+- Link to v1: https://lore.kernel.org/r/20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net
+---
+ fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..7c42be30c3eb746e12b457ca6fce7c88ac191ba8 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -247,7 +247,16 @@ xfs_da3_node_verify(
+ 	    ichdr.count > mp->m_attr_geo->node_ents)
+ 		return __this_address;
+ 
+-	/* XXX: hash order check? */
++	/* Check hash order */
++	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
++
++	for (int i = 1; i < ichdr.count; i++) {
++		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
++
++		if (curr_hash < prev_hash)
++			return __this_address;
++		prev_hash = curr_hash;
++	}
+ 
+ 	return NULL;
+ }
+
+---
+base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
+change-id: 20250412-xfs-hash-check-be7397881a2c
+
+Best regards,
 -- 
-Jani Nikula, Intel
+Charalampos Mitrodimas <charmitro@posteo.net>
+
