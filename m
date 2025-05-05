@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05A62F0B99;
-	Mon,  5 May 2025 23:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E602F0B89;
+	Mon,  5 May 2025 23:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486696; cv=none; b=Zos1bb1QiGvNIe28r6ycgqAqr54IGR0q5wpnd3Y5Pnkf2Pw4dgHRCzH2FKUeTQQ+Y5S6GEyESSgPFSHP/ZTNmKBmR2yW96WdHISh/zhbuKB6kwjBdFBs1q7FlAH0TRdd2el2IQ1LgNlBg6QnxaCCNUElwhSLEq7BPD7iNumvakw=
+	t=1746486690; cv=none; b=kiXDE3yocsPL7qg560idZjmHxMuA0O5+/zz/mdwnD6D1zxGYB97jLBXc4CNKXHUUdIeAYr/4BuFk3oEUXpw0wGqE9Sz4t5BKHkss5s0PE2oA8qknP0eTdUqkoZTNUUg0CAHFFEu7GuJRGCSBEohW+GTtoDadbnn3G9H/DUn4VoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486696; c=relaxed/simple;
-	bh=DcBtJovJsu3jpYnB8W3UhYdmyseKevG4gSm6pkrtvrI=;
+	s=arc-20240116; t=1746486690; c=relaxed/simple;
+	bh=F7wlOSoyZJPNbhzzfvtwOOj3HiP7SzYrJM37PZhVR5E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XfuRcF5HTe7gF+sH5aIiRC8YEmXr2vHw5bXV7ioFWKzn+NS6gz7aMpcShnm/e4Klkl+BUQqfeFVxw9yJf5j232akUuTj5kF+d8Vt2vf7FEK90MoC20cXk4h98eHX7j7KN83JFMXk1gOQRbIsw+/PiRx9bR9l6/dS8hcv2S2xApo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Goop1idN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GHlGQFB/yQqUDqe1ISOz1QXz7qxu7Sdzxg+DB2pw2+99Vggm1Tgc5QJeF/ofLElsMLDgbNiQ+78/8GdxUPdCkrOgDGTq2S/+AdJvfaFyrpNNQ9LonuQPAAStUxU8ck1UB6ZkQi3XTj4e8vbMcnCFaHOCmbLvrEMtzISLwVGva4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IyUuOUnz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Goop1idN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9158EC4CEEF;
-	Mon,  5 May 2025 23:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IyUuOUnz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0943EC4CEE4;
+	Mon,  5 May 2025 23:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486695;
-	bh=DcBtJovJsu3jpYnB8W3UhYdmyseKevG4gSm6pkrtvrI=;
+	s=k20201202; t=1746486689;
+	bh=F7wlOSoyZJPNbhzzfvtwOOj3HiP7SzYrJM37PZhVR5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Goop1idNhNdSkiBwyu6ei3HKSTpNbFV4ffY4N8ChvW/j5ze0m8g8XoSGoSQIa3d5b
-	 zGSA4kQA+vR9bdkQYMzfU9ztf/eBtPNrZS4nehjcrFtXDUEnMqoJ4I8PemorxpM8PE
-	 88eGdgh2RCTKSf+h6cgQidpVYsz36goG+QKOV28f5ZeVHmfSruw+T5dEmyql/wk9NX
-	 tjkw3ZbaG2IvsCPFtowRg61LhHq4jXUVaANgCdCZuMz/hhZ65DCF8X/aHL+R7Y2d9o
-	 ngsEeNcWqTV4b+3UeClqmhL772fF2yRzkd01o1XQ3Np4PBnrLbELMcAM2cQbXnvTY2
-	 zfWgIhGUkw7nQ==
+	b=IyUuOUnzrVRdFpzyaqMvNjfQVgqe2AD4tqvvuHaAlZeOzABt4bES5X7bwpzXoUxhK
+	 tm514Qz25kriJy1cWjboZGqLTCzABXLAxgJoIE8aR7juno0vi7sGr5KhtCW/p7s/Ea
+	 wwoerLF4cHdOKuGQacCgxcXPu7HcAynAlCSiN2ovBoOWHPYAFLL5fUF+ptS5BN/3j0
+	 5jsc0klj0e1TQgjBZtXQz4R16EPWOMAF0GeMCb6HmobSoodpIIwZdcdhMJmT7HGMEN
+	 GTaVRZfjuDR7nGrnSj13sg3hMBHZ8X0ugCeapfkMi+AyyaiiJFX7UIRldUDiCmoBE6
+	 wggzWkTfYVOyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	"Artem S . Tashkinov" <aros@gmx.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 156/212] ASoC: tas2764: Add reg defaults for TAS2764_INT_CLK_CFG
-Date: Mon,  5 May 2025 19:05:28 -0400
-Message-Id: <20250505230624.2692522-156-sashal@kernel.org>
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 152/212] media: test-drivers: vivid: don't call schedule in loop
+Date: Mon,  5 May 2025 19:05:24 -0400
+Message-Id: <20250505230624.2692522-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -56,31 +53,126 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit d64c4c3d1c578f98d70db1c5e2535b47adce9d07 ]
+[ Upstream commit e4740118b752005cbed339aec9a1d1c43620e0b9 ]
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-4-dbab892a69b5@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Artem reported that the CPU load was 100% when capturing from
+vivid at low resolution with ffmpeg.
+
+This was caused by:
+
+while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+       !kthread_should_stop())
+        schedule();
+
+If there are no other processes running that can be scheduled,
+then this is basically a busy-loop.
+
+Change it to wait_event_interruptible_timeout() which doesn't
+have that problem.
+
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Reported-by: Artem S. Tashkinov <aros@gmx.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219570
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tas2764.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/test-drivers/vivid/vivid-kthread-cap.c  | 11 ++++++++---
+ drivers/media/test-drivers/vivid/vivid-kthread-out.c  | 11 ++++++++---
+ .../media/test-drivers/vivid/vivid-kthread-touch.c    | 11 ++++++++---
+ drivers/media/test-drivers/vivid/vivid-sdr-cap.c      | 11 ++++++++---
+ 4 files changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index fc8479d3d2852..72db361ac3611 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -636,6 +636,7 @@ static const struct reg_default tas2764_reg_defaults[] = {
- 	{ TAS2764_TDM_CFG2, 0x0a },
- 	{ TAS2764_TDM_CFG3, 0x10 },
- 	{ TAS2764_TDM_CFG5, 0x42 },
-+	{ TAS2764_INT_CLK_CFG, 0x19 },
- };
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-cap.c b/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
+index 690daada7db4f..54e6a6772035f 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-cap.c
+@@ -894,9 +894,14 @@ static int vivid_thread_vid_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
  
- static const struct regmap_range_cfg tas2764_regmap_ranges[] = {
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "Video Capture Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-out.c b/drivers/media/test-drivers/vivid/vivid-kthread-out.c
+index 0833e021bb11d..8a17a01e6e426 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-out.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-out.c
+@@ -235,9 +235,14 @@ static int vivid_thread_vid_out(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "Video Output Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-kthread-touch.c b/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
+index fa711ee36a3fb..c862689786b69 100644
+--- a/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
++++ b/drivers/media/test-drivers/vivid/vivid-kthread-touch.c
+@@ -135,9 +135,14 @@ static int vivid_thread_touch_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "Touch Capture Thread End\n");
+ 	return 0;
+diff --git a/drivers/media/test-drivers/vivid/vivid-sdr-cap.c b/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
+index 0ae5628b86c95..abccd1d0109ec 100644
+--- a/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
++++ b/drivers/media/test-drivers/vivid/vivid-sdr-cap.c
+@@ -206,9 +206,14 @@ static int vivid_thread_sdr_cap(void *data)
+ 			next_jiffies_since_start = jiffies_since_start;
+ 
+ 		wait_jiffies = next_jiffies_since_start - jiffies_since_start;
+-		while (time_is_after_jiffies(cur_jiffies + wait_jiffies) &&
+-		       !kthread_should_stop())
+-			schedule();
++		if (!time_is_after_jiffies(cur_jiffies + wait_jiffies))
++			continue;
++
++		wait_queue_head_t wait;
++
++		init_waitqueue_head(&wait);
++		wait_event_interruptible_timeout(wait, kthread_should_stop(),
++					cur_jiffies + wait_jiffies - jiffies);
+ 	}
+ 	dprintk(dev, 1, "SDR Capture Thread End\n");
+ 	return 0;
 -- 
 2.39.5
 
