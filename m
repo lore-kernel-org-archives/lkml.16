@@ -1,51 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FD038C427;
-	Mon,  5 May 2025 23:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1282F3A6C;
+	Mon,  5 May 2025 23:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486833; cv=none; b=hHkwnDR7SE8wQyeVNFSQ1/ojyZEk5SaMv+G6Ye+64khgGAAWWZv6r7Ej0TDxCCos3IRlaGAt0f63xQx7SI/KsSPRsIO0EaPoBR0DX11tv6vzUu55xNElVVEYkZO3/8Fiy7Pzcgtk3ajGzxhMTMFrXOYLkVlhQBpkdR0nT/Wye7E=
+	t=1746486884; cv=none; b=uXlM/rfmzt5tesRRWOJKrCC2bnI532T9cAcPAP0zX7nhE68DevFrhN6rMVE5KuM83T0rDbagI9NLeGMWBuA3ZNct4ORTPVzpdmdkdf9xYIiFwlhJY6Gr6X2UN7D2wcwi5wij2NiH0aOAI7swQV+GWFceiYOhwLM+37F4WYiIQuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486833; c=relaxed/simple;
-	bh=rZH0oVvmMuJWhuTZhXkZy+7BLI99xIwPwspnd7/8z3Q=;
+	s=arc-20240116; t=1746486884; c=relaxed/simple;
+	bh=uzRngQ09N+cYqFREnf8hrA6RbO131KtnUMMDuxB7Wfw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=burg/BlaveTLBj8yE1Hcn2D95xMsMTyM0HkMr08ysMteDO48QVC+qA9gIRK27p+AvQkbBfEpBQKgFMHKn0eINsXhar2xXSlI+/Kc5HiimjkXEAdzBBSra4hdvNLJmwp/IXMebCOxIr9/mm5W6Y8OZlZiZYU/CiZXDrdml0HoU+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IN3q1mlN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RZwOq7/9ho0O5aHPeYaGzKqu+YGOmA3mUFoSaiZxpJDcl5HKUIj7B30BoOdUOXydHUgNSAIa2U7uUUZ5InqoKbu4P6QbZacvhTaboGq47+TdaM7brFprlFQHBMa2WybgKlZ37DRd3g7JCufMwMnLF2iIlfe1o39DnHDlgPYy0bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bg4/GM9r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IN3q1mlN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F207C4CEE4;
-	Mon,  5 May 2025 23:13:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bg4/GM9r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52AA1C4CEEE;
+	Mon,  5 May 2025 23:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486833;
-	bh=rZH0oVvmMuJWhuTZhXkZy+7BLI99xIwPwspnd7/8z3Q=;
+	s=k20201202; t=1746486884;
+	bh=uzRngQ09N+cYqFREnf8hrA6RbO131KtnUMMDuxB7Wfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IN3q1mlNfVoBTw5AeA/KN8Mf1Hd+iHsBhbKKv3+o3JDiXQnBm/LufM5H01518KAFf
-	 xC59oLm5XdSqa1U44sMHIrE9x6MMMagJ41kWraUQlICaytH+IpIMFdaRc/v/H4bMq7
-	 1bIgnU8c4dHZvrX7qLJ47YgKO27nRCOllXXB86pfKpG4GbMwAal1RxPEHsAEO4rsAB
-	 gtt0JWJDPLskCHCT8LaSf6pKWMmILyRsx3k2fbv/xsKSWM4m4GqrNS5Jk3GtQoe7FT
-	 K/Uc+5MXoa77NCV75VgoZGla5IZ4ncdLRrcb6tBsNCEVOyyQFYT7W59HBvRlS23VCR
-	 sFk4PW+OMHuqA==
+	b=bg4/GM9rSNV/t82Ngw2uhDY3hw2R7VnItQ1dz5atD4ogC2t+3R/Z1I2P2vBN+c155
+	 FbeHtDg634IltX8OOhusVx/QzneGpl0PPdPbcCOmFIbQMpKbWGfozECrUQ2pbaT0Iy
+	 WRYFo5FpIx/B8fVD4JrVlLWBik6IvtRgC/Pnof4aQXBgtnLyif3fIJaia84uLiq71U
+	 MtZpL3YiWKjDWga3aQm+CUxIbooYbfLqN7ZKDxAftDLKHr9nI5IZoIEmr7L1YzWTTI
+	 prUXTxxtP3I7z8mFuLVCMT4FRnNTtRJPXBuOhexren2y8ru+CMJPU5YTn9+BdDwcAA
+	 qHnu0JgnkxZTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryo Takakura <ryotkkr98@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
+Cc: Mikulas Patocka <mpatocka@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	bigeasy@linutronix.de,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	neilb@suse.de,
-	csander@purestorage.com,
-	frederic@kernel.org,
-	kprateek.nayak@amd.com,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.15 014/153] lockdep: Fix wait context check on softirq for PREEMPT_RT
-Date: Mon,  5 May 2025 19:11:01 -0400
-Message-Id: <20250505231320.2695319-14-sashal@kernel.org>
+	agk@redhat.com,
+	snitzer@kernel.org,
+	dm-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.15 042/153] dm: restrict dm device size to 2^63-512 bytes
+Date: Mon,  5 May 2025 19:11:29 -0400
+Message-Id: <20250505231320.2695319-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -60,97 +51,37 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ryo Takakura <ryotkkr98@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 61c39d8c83e2077f33e0a2c8980a76a7f323f0ce ]
+[ Upstream commit 45fc728515c14f53f6205789de5bfd72a95af3b8 ]
 
-Since:
+The devices with size >= 2^63 bytes can't be used reliably by userspace
+because the type off_t is a signed 64-bit integer.
 
-  0c1d7a2c2d32 ("lockdep: Remove softirq accounting on PREEMPT_RT.")
+Therefore, we limit the maximum size of a device mapper device to
+2^63-512 bytes.
 
-the wait context test for mutex usage within "in softirq context" fails
-as it references @softirq_context:
-
-    | wait context tests |
-    --------------------------------------------------------------------------
-                                   | rcu  | raw  | spin |mutex |
-    --------------------------------------------------------------------------
-                 in hardirq context:  ok  |  ok  |  ok  |  ok  |
-  in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
-                 in softirq context:  ok  |  ok  |  ok  |FAILED|
-
-As a fix, add lockdep map for BH disabled section. This fixes the
-issue by letting us catch cases when local_bh_disable() gets called
-with preemption disabled where local_lock doesn't get acquired.
-In the case of "in softirq context" selftest, local_bh_disable() was
-being called with preemption disable as it's early in the boot.
-
-[ boqun: Move the lockdep annotations into __local_bh_*() to avoid false
-         positives because of unpaired local_bh_disable() reported by
-	 Borislav Petkov and Peter Zijlstra, and make bh_lock_map
-	 only exist for PREEMPT_RT. ]
-
-[ mingo: Restored authorship and improved the bh_lock_map definition. ]
-
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250321143322.79651-1-boqun.feng@gmail.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/softirq.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/md/dm-table.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index dc60f0c66a25f..d63d827da2d6a 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -140,6 +140,18 @@ static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
- 	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
- };
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index 52083d397fc4b..f14177c7657c0 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -660,6 +660,10 @@ int dm_table_add_target(struct dm_table *t, const char *type,
+ 		DMERR("%s: zero-length target", dm_device_name(t->md));
+ 		return -EINVAL;
+ 	}
++	if (start + len < start || start + len > LLONG_MAX >> SECTOR_SHIFT) {
++		DMERR("%s: too large device", dm_device_name(t->md));
++		return -EINVAL;
++	}
  
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+static struct lock_class_key bh_lock_key;
-+struct lockdep_map bh_lock_map = {
-+	.name			= "local_bh",
-+	.key			= &bh_lock_key,
-+	.wait_type_outer	= LD_WAIT_FREE,
-+	.wait_type_inner	= LD_WAIT_CONFIG, /* PREEMPT_RT makes BH preemptible. */
-+	.lock_type		= LD_LOCK_PERCPU,
-+};
-+EXPORT_SYMBOL_GPL(bh_lock_map);
-+#endif
-+
- /**
-  * local_bh_blocked() - Check for idle whether BH processing is blocked
-  *
-@@ -162,6 +174,8 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
- 
- 	WARN_ON_ONCE(in_hardirq());
- 
-+	lock_map_acquire_read(&bh_lock_map);
-+
- 	/* First entry of a task into a BH disabled section? */
- 	if (!current->softirq_disable_cnt) {
- 		if (preemptible()) {
-@@ -225,6 +239,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
- 	WARN_ON_ONCE(in_irq());
- 	lockdep_assert_irqs_enabled();
- 
-+	lock_map_release(&bh_lock_map);
-+
- 	local_irq_save(flags);
- 	curcnt = __this_cpu_read(softirq_ctrl.cnt);
- 
-@@ -275,6 +291,8 @@ static inline void ksoftirqd_run_begin(void)
- /* Counterpart to ksoftirqd_run_begin() */
- static inline void ksoftirqd_run_end(void)
- {
-+	/* pairs with the lock_map_acquire_read() in ksoftirqd_run_begin() */
-+	lock_map_release(&bh_lock_map);
- 	__local_bh_enable(SOFTIRQ_OFFSET, true);
- 	WARN_ON_ONCE(in_interrupt());
- 	local_irq_enable();
+ 	tgt->type = dm_get_target_type(type);
+ 	if (!tgt->type) {
 -- 
 2.39.5
 
