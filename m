@@ -1,147 +1,83 @@
-Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5EA270563;
-	Mon,  5 May 2025 20:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7623726FDAA;
+	Mon,  5 May 2025 20:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477719; cv=none; b=qAWQMn8BKvPxLATZHqFkTt1TprFyPBDcKK9rnulQ/jGYC4YsvCDfZL1ST9R60KMT660H7sgdqnxF3UdLcxrR/rGlHzAdSo+pnOK3SCVOHYTIygq8ppaSIKKjO99B6oYM/X++8RBIQcGHqRLNd9HUGhxA0Vj1laR1DVelNs9q6Bs=
+	t=1746477732; cv=none; b=MUOdUKSjgJbjVccHBu71JQp032kyRwbumrPJKhMC+J8UUkN0e87rqH1YyE4ZQj4uaSnsfS02eRkx9w3D2UvEiEOYUtRdwVkWDGNLveBHilFspoX8SQmnUUDQxAmQjDqyoLvy+BS3sSLtOiACt3FaIJDhDDYqSpm3eFLj+GqXYXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477719; c=relaxed/simple;
-	bh=JFXh0UmvB1uXyN+c4SwPO7I3Kv92fk+6q4OTM2LBtxI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OeWokdmnC6cyUxIuUNCWXVcRMPBYNzjyuggSBXv8aZ/iiPjRVOwuuWItry51PRuuHWVf/KSgnI9K440KxlNnY1r+kgEL3rQZTtpa/xt5o/50h/le5pZ1GhtPf8iBGIHFHt/Ri5aTO/isLjORi1BqY33PbvInExeySALgzAhBkXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=UI7wZdHs; arc=none smtp.client-ip=78.46.3.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+	s=arc-20240116; t=1746477732; c=relaxed/simple;
+	bh=dGtv3RQfd81ha2ADXYVqJXeZnAASB8WkWmra4owmmC0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E/XoV0jl3rmsNRecgFMoxBN9vYABymoOI44f6e6bCJq0N4ZCNaDAkOVXz7SlIWxy2CXnYnPH+8sR18UiJEKCwtIWT3Q5zzkeN+EP7wWKy2fTVFIK6kY22lt6gBtXtuqJkigS+I99Qwe8y9DTriGKCw/ZDno4j32gJL2RNFXEKBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=dypUlMDa; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="UI7wZdHs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=it-klinger.de; s=default2502; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=Z1yjOM7mfQmYrtvU5Bojq8sDhROmKsvPzkPUXkARBXU=; b=UI7wZdHskkRPdTEgO30a9SVY+X
-	+LSQvWPWgCyhT5Le9bxeQD2OIomCc8rJrJIojh4t5bns6Lf3dfnsGJlo9C4x+AgyS4k2Sbly9IP7Y
-	wyOfn3QfHB66QgLvVRH4KhIVxwuEPUX3J74uyF7/APDb9NaXmUCk3MnC368Q1+dbyQD2VC0ubiZgC
-	WQ5p4nRc/HGyZFRVWdVKqfK5njvvyXQdEPnveOh1yJHjE4YzYxnShFv2kaVBQYHhn0K2o0lg0DGHI
-	KBzLLnY6ecXwXf5ACfTghUbijppotql54oDKOmnbDFSfnH9Vvp5c6IWR0qUJDt6YlFiyuzSucmdWA
-	VU6V6cVg==;
-Received: from sslproxy08.your-server.de ([78.47.166.52])
-	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ak@it-klinger.de>)
-	id 1uC2MT-000Dod-1k;
-	Mon, 05 May 2025 22:24:25 +0200
-Received: from [31.220.118.240] (helo=anderl.fritz.box)
-	by sslproxy08.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ak@it-klinger.de>)
-	id 1uC2MS-0007So-0p;
-	Mon, 05 May 2025 22:24:25 +0200
-From: Andreas Klinger <ak@it-klinger.de>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: Andreas Klinger <ak@it-klinger.de>,
-	lars@metafoo.de,
-	javier.carrasco.cruz@gmail.com,
-	mazziesaccount@gmail.com,
-	andriy.shevchenko@linux.intel.com,
-	muditsharma.info@gmail.com,
-	perdaniel.olsson@axis.com,
-	emil.gedenryd@axis.com,
-	mgonellabolduc@dimonoff.com,
-	arthur.becker@sentec.com,
-	clamor95@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 1/3] dt-bindings: iio: light: veml6046x00: add color sensor
-Date: Mon,  5 May 2025 22:23:11 +0200
-Message-Id: <20250505202313.205522-2-ak@it-klinger.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505202313.205522-1-ak@it-klinger.de>
-References: <20250505202313.205522-1-ak@it-klinger.de>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dypUlMDa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746477730; x=1778013730;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=G0EXnOP3G7keUVE+ya5D8zXpMtGwAkLtHPqE4Gmd3X0=;
+  b=dypUlMDaQ3aD0qAGjkMUCf6J3Mo5Yto5VKwYgkiGDWGM2l25weU6SUkF
+   HNscWTnSuppa1o+4/DDVHz8OpV880oKVxzLGoaOy+C6RdWvdIjWnNpLNX
+   0IYRPB+s62QD/t9WLxRCrv6Fa5wdosoe/IKySOHPsEIOud0AAILhIAvan
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
+   d="scan'208";a="495725901"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 20:42:06 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:18793]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.114:2525] with esmtp (Farcaster)
+ id f9ec8b4f-e323-4cd6-9ab9-e9c3fe307cb0; Mon, 5 May 2025 20:42:05 +0000 (UTC)
+X-Farcaster-Flow-ID: f9ec8b4f-e323-4cd6-9ab9-e9c3fe307cb0
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 20:42:04 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 20:42:00 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jannh@google.com>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <brauner@kernel.org>,
+	<daan.j.demeyer@gmail.com>, <davem@davemloft.net>, <david@readahead.eu>,
+	<edumazet@google.com>, <horms@kernel.org>, <jack@suse.cz>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping tasks to connect to coredump socket
+Date: Mon, 5 May 2025 13:41:20 -0700
+Message-ID: <20250505204152.33909-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAG48ez2YRJxDmAZEOSWVvCyz0fkHN2NaC=_mLzcLibVKVOWqHw@mail.gmail.com>
+References: <CAG48ez2YRJxDmAZEOSWVvCyz0fkHN2NaC=_mLzcLibVKVOWqHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: ak@it-klinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27629/Mon May  5 10:35:28 2025)
+X-ClientProxiedBy: EX19D031UWA004.ant.amazon.com (10.13.139.19) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Add a new compatible for Vishay high accuracy RGBIR color sensor
-veml6046x00.
+From: Jann Horn <jannh@google.com>
+Date: Mon, 5 May 2025 21:55:06 +0200
+> On Mon, May 5, 2025 at 9:45 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+> > and LSM can check if the source socket is a kernel socket too.
+> 
+> ("a kernel socket" is not necessarily the same as "a kernel socket
+> intended for core dumping")
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../iio/light/vishay,veml6046x00.yaml         | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
+Yes, but why we need to care about it :)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml b/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
-new file mode 100644
-index 000000000000..112d448ff0bf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/vishay,veml6046x00.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/vishay,veml6046x00.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Vishay VEML6046X00 High accuracy RGBIR color sensor
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description:
-+  VEML6046X00 datasheet at https://www.vishay.com/docs/80173/veml6046x00.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,veml6046x00
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        color-sensor@29 {
-+            compatible = "vishay,veml6046x00";
-+            reg = <0x29>;
-+            vdd-supply = <&vdd_reg>;
-+            interrupt-parent = <&gpio2>;
-+            interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+        };
-+    };
-+...
--- 
-2.39.5
-
+It doesn't happen or it's out-of-tree driver that is out-of-control
+for us but should be in-control on the host where the service is
+running.
