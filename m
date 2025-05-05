@@ -1,52 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D672D81B1;
-	Mon,  5 May 2025 22:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7F2D3226;
+	Mon,  5 May 2025 22:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485770; cv=none; b=Ht61T5RxpKyiMysjHC4SpWZt38pjXKcFAN8ecHqFIpZrGh2M1mRL2Hjax+3WdrD1Pdrp+xsHBUHnqw+CZT91kX7k1tRM5qCFPyz4ZucYRqbxP6Hlr7Eb8oY5aqfCkGX81CktFuKL5AD+PPJyfV6h91Hs19oSkJjbebtGjTC8ago=
+	t=1746485555; cv=none; b=gWgpQTre3KQAgayTo7gaLZAvtY5XPt0FORIiRcv+quwKCB5EBlSoHv0tONKJDZ+SfkwLHanHGo92W+dSlfbbs0I4hK+FPTEY8yyZOIvCAb+SVaw8rtMgdwIke4JGVrPKQZmzIL9sBla7S+EWlzMFOy8Lg93szQlgbX5pS+ibnXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485770; c=relaxed/simple;
-	bh=93cAwYNrBhIobUYALRIN+aixfXZiY+QQPC4xzf6ndok=;
+	s=arc-20240116; t=1746485555; c=relaxed/simple;
+	bh=ywQc+q+7aIhTjqr3vp96We4Fj/UP2c1vhX0+GicUBbQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dDBa+V9GHAlcLnYFRLga6HUh+pPfqO67MVIR34Q6N+wlni1XXKE9/kG7n77t2NIzRAvZKwMEKGTPlnddY87wiu2KTLeZ8RQta5lLa3PSqwFCLsAMKi9QQ8BurDSDPCFTWkW52Z0bTXtJB2Cxik3I07oBdm11yi9+Ck9+zAU438M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jnws1f8C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QAd43ikh0ngiCu4GRnEW1CLx9IwXK2EtHjoSsia4BAz4D5JZyz6gwLL18IFGCayKLwk1DyUbv7/f6GGed8jyyJSuiodP42GB/SFcNKtLxrcYNe1ka+oMXjgke/kThqf5BP+B0w0TBG1jFiYPL2Zm2OI5c8WsX9Gp2z/hcE0wh4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsQoHDRI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jnws1f8C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 640CAC4CEE4;
-	Mon,  5 May 2025 22:56:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsQoHDRI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE558C4CEEF;
+	Mon,  5 May 2025 22:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485769;
-	bh=93cAwYNrBhIobUYALRIN+aixfXZiY+QQPC4xzf6ndok=;
+	s=k20201202; t=1746485555;
+	bh=ywQc+q+7aIhTjqr3vp96We4Fj/UP2c1vhX0+GicUBbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jnws1f8CMaZttwaxTVaO8jNKesS2K2YEybgz5E/bg15xyxe//lcrFtqrgR/1NqsOj
-	 gNNw4/H+niiWPQ4gW41y2tbO/oU0CkbyNsTqZCF7llSBEHfMHjVQoVwNOUrUdjBxyD
-	 uwoL9eZ7WhwzEKmMPxmCtGDMzpZPnhDor3zxUOSK4XAmhUTu6AtSc6udqrrUv481pW
-	 9/xkebR2C8slpcZSW86+nlxYKgjtweJGQ1NQEgx2cEseNpAVRVeOpHdU+ICswvEpZW
-	 Wdtu2UMX1DH1oOoZf3GH7+OSpVkaXVHXFXiFENhVKrgzAO8KzCE7BRk8f3P/Yz5KDo
-	 /2aoJdXwxnVsQ==
+	b=PsQoHDRIxlmPpjcAjgM5Zc1XWK/L2AAXfz9DGNz9uym4vYuVKsZr5TMh4JDQWajpy
+	 j07qElSv1QukkrmX0bFv1LSYtCjyKsiMhu3wgiGpxaEx1mf1ix06Y/ZOYi8FHw3s6f
+	 PwtMIFhtqIclu56iGwWGsQ7WJqa4izdhQAEBSlxo/gCZmOwMWdYtJvpPHait93D9f0
+	 ayYLv6h8plZdwWxlaXTSTrTrBotz2brGJnqNPO4Nj4rECqW3x9j52eCubmZAARiy4C
+	 mzBtf/CXka2mzugfxN0jsXizG98qfThSPIagoBqZNuiBBRmIsx8Bkd6UQgg9a/9Zjk
+	 Ik+sb0dun73GA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Olivier Moysan <olivier.moysan@foss.st.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Martin Tsai <Martin.Tsai@amd.com>,
+	Anthony Koo <anthony.koo@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	lumag@kernel.org,
-	broonie@kernel.org,
-	stefan.ekenberg@axis.com,
+	siqueira@igalia.com,
+	dennis.chan@amd.com,
+	robin.chen@amd.com,
+	mwen@igalia.com,
+	Kaitlyn.Tse@amd.com,
+	george.shen@amd.com,
+	Wayne.Lin@amd.com,
+	Gabe.Teeger@amd.com,
+	Cruise.Hung@amd.com,
+	Ovidiu.Bunea@amd.com,
+	wenjing.liu@amd.com,
+	Zhongwei.Zhang@amd.com,
+	chiahsuan.chung@amd.com,
+	duncan.ma@amd.com,
+	jack.chang@amd.com,
+	zaeem.mohamed@amd.com,
+	nicholas.kazlauskas@amd.com,
+	Syed.Hassan@amd.com,
+	dillon.varone@amd.com,
+	aric.cyr@amd.com,
+	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 474/486] drm: bridge: adv7511: fill stream capabilities
-Date: Mon,  5 May 2025 18:39:10 -0400
-Message-Id: <20250505223922.2682012-474-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 367/486] drm/amd/display: Support multiple options during psr entry.
+Date: Mon,  5 May 2025 18:37:23 -0400
+Message-Id: <20250505223922.2682012-367-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -61,37 +79,79 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Olivier Moysan <olivier.moysan@foss.st.com>
+From: Martin Tsai <Martin.Tsai@amd.com>
 
-[ Upstream commit c852646f12d4cd5b4f19eeec2976c5d98c0382f8 ]
+[ Upstream commit 3a5fa55455db6a11248a25f24570c365f9246144 ]
 
-Set no_i2s_capture and no_spdif_capture flags in hdmi_codec_pdata structure
-to report that the ADV7511 HDMI bridge does not support i2s or spdif audio
-capture.
+[WHY]
+Some panels may not handle idle pattern properly during PSR entry.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250108170356.413063-2-olivier.moysan@foss.st.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+[HOW]
+Add a condition to allow multiple options on power down
+sequence during PSR1 entry.
+
+Reviewed-by: Anthony Koo <anthony.koo@amd.com>
+Signed-off-by: Martin Tsai <Martin.Tsai@amd.com>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dc_types.h       | 7 +++++++
+ drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c   | 4 ++++
+ drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h | 6 ++++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-index 8f786592143b6..24e1e11acf697 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
-@@ -244,7 +244,9 @@ static const struct hdmi_codec_pdata codec_data = {
- 	.ops = &adv7511_codec_ops,
- 	.max_i2s_channels = 2,
- 	.i2s = 1,
-+	.no_i2s_capture = 1,
- 	.spdif = 1,
-+	.no_spdif_capture = 1,
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_types.h b/drivers/gpu/drm/amd/display/dc/dc_types.h
+index c8bdbbba44ef9..1aca9e96c474f 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_types.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_types.h
+@@ -1009,6 +1009,13 @@ struct psr_settings {
+ 	unsigned int psr_sdp_transmit_line_num_deadline;
+ 	uint8_t force_ffu_mode;
+ 	unsigned int psr_power_opt;
++
++	/**
++	 * Some panels cannot handle idle pattern during PSR entry.
++	 * To power down phy before disable stream to avoid sending
++	 * idle pattern.
++	 */
++	uint8_t power_down_phy_before_disable_stream;
  };
  
- int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511)
+ enum replay_coasting_vtotal_type {
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
+index cae18f8c1c9a0..8821153d0ac3b 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
+@@ -419,6 +419,10 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
+ 	copy_settings_data->relock_delay_frame_cnt = 0;
+ 	if (link->dpcd_caps.sink_dev_id == DP_BRANCH_DEVICE_ID_001CF8)
+ 		copy_settings_data->relock_delay_frame_cnt = 2;
++
++	copy_settings_data->power_down_phy_before_disable_stream =
++		link->psr_settings.power_down_phy_before_disable_stream;
++
+ 	copy_settings_data->dsc_slice_height = psr_context->dsc_slice_height;
+ 
+ 	dc_wake_and_execute_dmub_cmd(dc, &cmd, DM_DMUB_WAIT_TYPE_WAIT);
+diff --git a/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h b/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
+index 7835100b37c41..d743368303682 100644
+--- a/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
++++ b/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
+@@ -2869,6 +2869,12 @@ struct dmub_cmd_psr_copy_settings_data {
+ 	 * Some panels request main link off before xth vertical line
+ 	 */
+ 	uint16_t poweroff_before_vertical_line;
++	/**
++	 * Some panels cannot handle idle pattern during PSR entry.
++	 * To power down phy before disable stream to avoid sending
++	 * idle pattern.
++	 */
++	uint8_t power_down_phy_before_disable_stream;
+ };
+ 
+ /**
 -- 
 2.39.5
 
