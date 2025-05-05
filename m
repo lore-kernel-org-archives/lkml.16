@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA7738B4C3;
-	Mon,  5 May 2025 23:01:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20065379432;
+	Mon,  5 May 2025 23:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486074; cv=none; b=imGinKyAofqN4FhFjb2gGnb73TaAbjnydqLNTC3z6Xdc+W++up5ExJ+TiQubjMmZkRWPe01br/3P30HmInRx0M6wxPGf/Jjo/bBWgxpGoLEdXyhKhgkeumYssOzlDTIfYeLwSEZwwnI9IewvH2hzT8K5SJ3SV/TiMfEd7NXFjdc=
+	t=1746486088; cv=none; b=Ucq59qf+Jt8FdHViT9kSDp+167kBhvzrSha2sUo+eJpB6tI9h+geq0TXbmnIZAC+fg6Tvi3wjeIoXV0UeivholXTvgIO5sECb5+oXDU7igGc0opZVePQbSOKkxfbpCVaal5fFDR+9xemWGEYO/pxXNnlagYY9gl7zb3qiWUdKf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486074; c=relaxed/simple;
-	bh=Tg0oO72UEuWrNhyBlLj2lqOxWmKsDt6D3xHET3569wM=;
+	s=arc-20240116; t=1746486088; c=relaxed/simple;
+	bh=BpFM42YEpVEK+w9jwsAluXPgJE5xWhTxX355y0AvYwI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UihwjR1oE3GtCmg61eziXKeFjvImveoCxKSotsuQUF9S9DV+LmFnG3qh7++430b/pn/pLzkitfWjFTSgZ7tjPodl6WD8uHCyXb5/xVz2u/AlswSRDAMgQ6hemqlzk26TjKJxi3Em+qx4IKvaU94nURS5zELOfcs+R00ddcyA7dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dX9OEldP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cDzW8G7WLcgtSvONjrz5g8JHDksWXkDGDcHAFjMN2PJ2rmEqlmOhlhitvrs8OjevwPa3QrwytAnh/tlqDJOpYF3XzHn41shUKJdcqYgsBaT4+F2BeVwmTZqMpGkRHEiELi+9ou/I50KvPgFLkat5urYY0xntcyckEUlcqY22rSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IM2CGwBa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dX9OEldP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5937C4CEEE;
-	Mon,  5 May 2025 23:01:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IM2CGwBa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FD6C4CEED;
+	Mon,  5 May 2025 23:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486072;
-	bh=Tg0oO72UEuWrNhyBlLj2lqOxWmKsDt6D3xHET3569wM=;
+	s=k20201202; t=1746486087;
+	bh=BpFM42YEpVEK+w9jwsAluXPgJE5xWhTxX355y0AvYwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dX9OEldPO4FHfk4M8pcYJDKhtchTVfvuOH0Mc2cwhCUFe1kYjsbX23bMJ5PHtdtAa
-	 FvtJotMG21qkv4VkWJ4UrrN4/FL4AayywWo5M6Ocax1MUiR03CrR3URxBGXGGTsN3b
-	 OZvgqjRNakeiSPZM4UL/t+Y9DTDz9JfZvpb0OlT4pnn6m2BPKVh0s5k6lalZMsV6m5
-	 4hH7vXsRQq8Mmr3WvkMfmCSj4Np6AnB2f3k4fwMk8cGtabDIGyVxv1fjDUDDIppubc
-	 6KtuLFMEs1SWjzo5SltpUCLjd2qw48skbYU8Q1+G68t6bauEaIyU/k6DPvoRnjoLmz
-	 CN9qRFG5ehY2Q==
+	b=IM2CGwBaDep6UUmNbU1dRkSMGr9nhAUjZ/4Z9rK+/b7J9FD0zmUeFQ1uWDMXlWPwo
+	 0Uv3omaBnl2gJS8hY/nJaA4AgBFXZ3mRGxSfk8LBgtA+bzHf29m8hBR3h7GJGBZxLS
+	 AgqfctebzCRkvKvFMrGAjcg5WIbq4VZUJbyri0Dcx7NXwpPdbWrtFwbBv7nSFEU65W
+	 4plmoibiqsenrjaza7/RQTRm1qaRzDX+5ZHS5Ihx6ulxjNPnd3X4AIBMUjuq7az+2k
+	 4lBBP8wk+b8RTv598SaFXHz90V8+2QQw2eBlT6/nkpRcY/ip624UsTOFPhlYC/mBpe
+	 ySztZpwSgfD5w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stanimir Varbanov <svarbanov@suse.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <james.quinlan@broadcom.com>,
-	"Ivan T . Ivanov" <iivanov@suse.de>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+Cc: Eric Woudstra <ericwouds@gmail.com>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jim2101024@gmail.com,
-	nsaenz@kernel.org,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	bhelgaas@google.com,
-	linux-rpi-kernel@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	lorenzo@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	netdev@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 140/294] PCI: brcmstb: Expand inbound window size up to 64GB
-Date: Mon,  5 May 2025 18:54:00 -0400
-Message-Id: <20250505225634.2688578-140-sashal@kernel.org>
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 148/294] net: ethernet: mtk_ppe_offload: Allow QinQ, double ETH_P_8021Q only
+Date: Mon,  5 May 2025 18:54:08 -0400
+Message-Id: <20250505225634.2688578-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -56,49 +56,91 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Stanimir Varbanov <svarbanov@suse.de>
+From: Eric Woudstra <ericwouds@gmail.com>
 
-[ Upstream commit 25a98c727015638baffcfa236e3f37b70cedcf87 ]
+[ Upstream commit 7fe0353606d77a32c4c7f2814833dd1c043ebdd2 ]
 
-The BCM2712 memory map can support up to 64GB of system memory, thus
-expand the inbound window size in calculation helper function.
+mtk_foe_entry_set_vlan() in mtk_ppe.c already supports double vlan
+tagging, but mtk_flow_offload_replace() in mtk_ppe_offload.c only allows
+for 1 vlan tag, optionally in combination with pppoe and dsa tags.
 
-The change is safe for the currently supported SoCs that have smaller
-inbound window sizes.
+However, mtk_foe_entry_set_vlan() only allows for setting the vlan id.
+The protocol cannot be set, it is always ETH_P_8021Q, for inner and outer
+tag. This patch adds QinQ support to mtk_flow_offload_replace(), only in
+the case that both inner and outer tags are ETH_P_8021Q.
 
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Jim Quinlan <james.quinlan@broadcom.com>
-Tested-by: Ivan T. Ivanov <iivanov@suse.de>
-Link: https://lore.kernel.org/r/20250224083559.47645-7-svarbanov@suse.de
-[kwilczynski: commit log]
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Only PPPoE-in-Q (as before) and Q-in-Q are allowed. A combination
+of PPPoE and Q-in-Q is not allowed.
+
+Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+Link: https://patch.msgid.link/20250225201509.20843-1-ericwouds@gmail.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/ethernet/mediatek/mtk_ppe_offload.c   | 22 +++++++++----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 940af934ce1bb..8b88e30db7447 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -284,8 +284,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
- 	if (log2_in >= 12 && log2_in <= 15)
- 		/* Covers 4KB to 32KB (inclusive) */
- 		return (log2_in - 12) + 0x1c;
--	else if (log2_in >= 16 && log2_in <= 35)
--		/* Covers 64KB to 32GB, (inclusive) */
-+	else if (log2_in >= 16 && log2_in <= 36)
-+		/* Covers 64KB to 64GB, (inclusive) */
- 		return log2_in - 15;
- 	/* Something is awry so disable */
- 	return 0;
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+index a4efbeb162084..889fd26843e60 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
+@@ -34,8 +34,10 @@ struct mtk_flow_data {
+ 	u16 vlan_in;
+ 
+ 	struct {
+-		u16 id;
+-		__be16 proto;
++		struct {
++			u16 id;
++			__be16 proto;
++		} vlans[2];
+ 		u8 num;
+ 	} vlan;
+ 	struct {
+@@ -330,18 +332,19 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+ 		case FLOW_ACTION_CSUM:
+ 			break;
+ 		case FLOW_ACTION_VLAN_PUSH:
+-			if (data.vlan.num == 1 ||
++			if (data.vlan.num + data.pppoe.num == 2 ||
+ 			    act->vlan.proto != htons(ETH_P_8021Q))
+ 				return -EOPNOTSUPP;
+ 
+-			data.vlan.id = act->vlan.vid;
+-			data.vlan.proto = act->vlan.proto;
++			data.vlan.vlans[data.vlan.num].id = act->vlan.vid;
++			data.vlan.vlans[data.vlan.num].proto = act->vlan.proto;
+ 			data.vlan.num++;
+ 			break;
+ 		case FLOW_ACTION_VLAN_POP:
+ 			break;
+ 		case FLOW_ACTION_PPPOE_PUSH:
+-			if (data.pppoe.num == 1)
++			if (data.pppoe.num == 1 ||
++			    data.vlan.num == 2)
+ 				return -EOPNOTSUPP;
+ 
+ 			data.pppoe.sid = act->pppoe.sid;
+@@ -431,12 +434,9 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+ 	if (offload_type == MTK_PPE_PKT_TYPE_BRIDGE)
+ 		foe.bridge.vlan = data.vlan_in;
+ 
+-	if (data.vlan.num == 1) {
+-		if (data.vlan.proto != htons(ETH_P_8021Q))
+-			return -EOPNOTSUPP;
++	for (i = 0; i < data.vlan.num; i++)
++		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.vlans[i].id);
+ 
+-		mtk_foe_entry_set_vlan(eth, &foe, data.vlan.id);
+-	}
+ 	if (data.pppoe.num == 1)
+ 		mtk_foe_entry_set_pppoe(eth, &foe, data.pppoe.sid);
+ 
 -- 
 2.39.5
 
