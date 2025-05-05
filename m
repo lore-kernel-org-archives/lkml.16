@@ -1,50 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5912D81AF;
-	Mon,  5 May 2025 22:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B21C2DA53E;
+	Mon,  5 May 2025 22:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485767; cv=none; b=TndNzjItBsvdwws/Tpo3hFQsBcqDEKpwy+9BfisDU5I4SWZis0VSLAyO9ilupflV2nVxloJEVsMNzhIflQDcAcw14oDTYrtcv9l2qcNutrVX9qIiSnbgF6cpO8x6sRp8edEqsT5lVpLk86Qz+qb2u0UfyEndO+erZKX418MQfiA=
+	t=1746485571; cv=none; b=pna+UKXtiNUdg7p8W/lUXoNWR5EUO8Upot9Isc5tdH+8KW6ef4v+0rPGOLnWJ3FF+nNFxI1AIPNyMchgmKSGx9/oMATsHbY18xB0L3/8DwzRPVSe9x4+BlAzym2nF3Bnni1ysSEc/L1Pe+s7w8v/xlDp9DxNP7OSIemqAfL/Vac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485767; c=relaxed/simple;
-	bh=exINYAVBeI8oiIvNu7w93uO+6/hrDZFff9ESeVyYoT0=;
+	s=arc-20240116; t=1746485571; c=relaxed/simple;
+	bh=tEpnyqxpUwmbm0CU1poVcn8w/flZiQr2S/rIImIpo/E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o7NpRQ+KX0vEmMTuDR8ZQ5A5rgU/K2ppxUTQdMBLh2zoboLW8bykQtIpdK5FYi5M9ENE/6ue8VEXCSievxXIV4WjIveYHQIiYK/spXfDBOQpuplHYOnZSTFQY0qzIux9X8A4sT/gelTxAgOHkP1jH+oG7hnqQXPhpZuCcT/aKrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRS/JuCf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VbuApivZn6OsciQJvBPJf5N0ga/vDNDgipgbqoNndePJIz1vB5WBUs6IghEnE51GuSDnNASEGO07GhL6wFDbB/jZXw/aSBHkXxJe6I7yOOCtN0MHgrxI+32+ZY3UPUzWIhPtpjE4GLcRwpFCSs8WAPYfk8XXenUN899LkmuxImw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qS3OVwQh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRS/JuCf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E0C4CEED;
-	Mon,  5 May 2025 22:56:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qS3OVwQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6135DC4CEED;
+	Mon,  5 May 2025 22:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485766;
-	bh=exINYAVBeI8oiIvNu7w93uO+6/hrDZFff9ESeVyYoT0=;
+	s=k20201202; t=1746485570;
+	bh=tEpnyqxpUwmbm0CU1poVcn8w/flZiQr2S/rIImIpo/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TRS/JuCf0zYpT4Q0odol96KuxzQrnAZf/Jsh0rFcKUKKU9sxac8jVcHnG3iTqu+CU
-	 p7Z+oFFjYHQrXfCMiI4JPGqI8sWGsqzbcVsyr6ku6Luh+nKH2OVwXYb7YlFJrdAvTR
-	 B2jmbdmKJ9ypZvgU5PpCA6cOUSkTf9PVYQBxPCE+qmNoaX5i/uIBrFMd94XOk6rj5R
-	 y7SF89kxBDw7b8xz5LcIYdran9ftaVoj1qFq/KvM82z2CXexg6OC2JFMHj9JKnW+N6
-	 r15gMpZ+mTeByllNtdf/YzY2YT5huM+BqsekqNDmuL1h9K6Yf2t7tPjkIEgpHpcX6q
-	 wRr0YowTL/H1g==
+	b=qS3OVwQh7BtCvrQLE2l0sAplxMcRFeHH+INgvnHU+GmfyKk5zS3NfyiCQ0w+NEdFq
+	 pSPuHyaaLYndzSEHnlMy63j/UJs6+NGz3hqQKsHZ8VJE/V5OqeJx9nixSVLvFYwUlV
+	 f7aoR+/YwBLTHxAMjJso9utXxoR7RFeNHFyP+SWHXEWB1GLCwUuIo6r5dt9nN6qho7
+	 WFf+D0FcHP8q0ZtGlfZmqFTgvnwKaD9D+HVQxNL8V5GcuwUPPnEJp4sLHpmR0JeCPj
+	 CV8pngSLP6ffRYeyhLrcRG9R+qU2WNuYZK2J0Z3wlXvdARC7RdGUVzPIy9K5r5lFXG
+	 BEowQCdAddyNQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Olivier Moysan <olivier.moysan@foss.st.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Joshua Aberback <joshua.aberback@amd.com>,
+	Alvin Lee <alvin.lee2@amd.com>,
+	Wayne Lin <wayne.lin@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	lgirdwood@gmail.com,
-	lumag@kernel.org,
-	jonas@kwiboo.se,
-	kuninori.morimoto.gx@renesas.com,
-	herve.codina@bootlin.com,
-	krzysztof.kozlowski@linaro.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 473/486] ASoC: hdmi-codec: allow to refine formats actually supported
-Date: Mon,  5 May 2025 18:39:09 -0400
-Message-Id: <20250505223922.2682012-473-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	Alvin.Lee2@amd.com,
+	rodrigo.siqueira@amd.com,
+	alex.hung@amd.com,
+	dillon.varone@amd.com,
+	Austin.Zheng@amd.com,
+	Samson.Tam@amd.com,
+	rostrows@amd.com,
+	yi-lchen@amd.com,
+	PeiChen.Huang@amd.com,
+	aurabindo.pillai@amd.com,
+	linux@treblig.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 371/486] drm/amd/display: Increase block_sequence array size
+Date: Mon,  5 May 2025 18:37:27 -0400
+Message-Id: <20250505223922.2682012-371-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -59,52 +70,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Olivier Moysan <olivier.moysan@foss.st.com>
+From: Joshua Aberback <joshua.aberback@amd.com>
 
-[ Upstream commit 038f79638e0676359e44c5db458d52994f9b5ac1 ]
+[ Upstream commit 3a7810c212bcf2f722671dadf4b23ff70a7d23ee ]
 
-Currently the hdmi-codec driver registers all the formats that are
-allowed on the I2S bus. Add i2s_formats field to codec data, to allow
-the hdmi codec client to refine the list of the audio I2S formats
-actually supported.
+[Why]
+It's possible to generate more than 50 steps in hwss_build_fast_sequence,
+for example with a 6-pipe asic where all pipes are in one MPC chain. This
+overflows the block_sequence buffer and corrupts block_sequence_steps,
+causing a crash.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250108170356.413063-3-olivier.moysan@foss.st.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+[How]
+Expand block_sequence to 100 items. A naive upper bound on the possible
+number of steps for a 6-pipe asic, ignoring the potential for steps to be
+mutually exclusive, is 91 with current code, therefore 100 is sufficient.
+
+Reviewed-by: Alvin Lee <alvin.lee2@amd.com>
+Signed-off-by: Joshua Aberback <joshua.aberback@amd.com>
+Signed-off-by: Wayne Lin <wayne.lin@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hdmi-codec.h    | 1 +
- sound/soc/codecs/hdmi-codec.c | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/amd/display/dc/inc/core_types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-index 5e1a9eafd10f5..a65da989dab16 100644
---- a/include/sound/hdmi-codec.h
-+++ b/include/sound/hdmi-codec.h
-@@ -122,6 +122,7 @@ struct hdmi_codec_ops {
- /* HDMI codec initalization data */
- struct hdmi_codec_pdata {
- 	const struct hdmi_codec_ops *ops;
-+	u64 i2s_formats;
- 	uint i2s:1;
- 	uint no_i2s_playback:1;
- 	uint no_i2s_capture:1;
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index d9df29a26f4f2..3f9dfdbc693e0 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -1077,6 +1077,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 	if (hcd->i2s) {
- 		daidrv[i] = hdmi_i2s_dai;
- 		daidrv[i].playback.channels_max = hcd->max_i2s_channels;
-+		if (hcd->i2s_formats) {
-+			daidrv[i].playback.formats = hcd->i2s_formats;
-+			daidrv[i].capture.formats = hcd->i2s_formats;
-+		}
- 		if (hcd->no_i2s_playback)
- 			memset(&daidrv[i].playback, 0,
- 			       sizeof(daidrv[i].playback));
+diff --git a/drivers/gpu/drm/amd/display/dc/inc/core_types.h b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
+index e1e3142cdc00a..62fb2009b3028 100644
+--- a/drivers/gpu/drm/amd/display/dc/inc/core_types.h
++++ b/drivers/gpu/drm/amd/display/dc/inc/core_types.h
+@@ -621,7 +621,7 @@ struct dc_state {
+ 	 */
+ 	struct bw_context bw_ctx;
+ 
+-	struct block_sequence block_sequence[50];
++	struct block_sequence block_sequence[100];
+ 	unsigned int block_sequence_steps;
+ 	struct dc_dmub_cmd dc_dmub_cmd[10];
+ 	unsigned int dmub_cmd_count;
 -- 
 2.39.5
 
