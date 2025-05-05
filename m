@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943F22C1785;
-	Mon,  5 May 2025 22:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BB92C17A0;
+	Mon,  5 May 2025 22:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485372; cv=none; b=R0Qd2Em+qvGnFgdQJ3X1A029NIqHULGGEGTLBOX7L0Y/Fz1a8e4T57j1FCbeU1qfKQNvMlpWPafmgxOXih40CFw1jfnHX72L61bykf8Jb0dGjN2t3RhbdVTx+eGU1BMsWM55c/TP8ZJDAmrYUlE0SvVe6VGCeIiRbuGDTTUlEqI=
+	t=1746485373; cv=none; b=dInylSbk6yQB+Vr065YXOsAtpql362/Qm7N6WdSdSi5bTyA6I1HHPE0VE9EhSpBYaBOquRKKWgted9Cc0MLPyFg8HYbm+ZYsstFYj+r6hnWajD9D8MNi3Hd5FONa3wtloRaAsMCNO8kPRNaWUEKkr2MUw0HSok4QgF5Jk8fEoLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485372; c=relaxed/simple;
-	bh=YVBEWd8fzTq67NZgBhRcJJ1n5ZNEhk8+BBu3Q9IDrXI=;
+	s=arc-20240116; t=1746485373; c=relaxed/simple;
+	bh=oWh6utGVMzCnodEAboCMwtV7BDi78kZURU9WXd8r9ng=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=psNSVhbsXzhfGP1ziDRFYZPWq6Tt3SluXVvxSldFbGMTTDuKwZUVjLUixMFDdrtxIhIXFKXIE+GE4KIv4CDlVg6CZLq6i7aetiMWqmMk0FWTRPaOdMSHFxfml1vHuFGtXZHYbmnvf4oeG48+B620KXBpmhIZDU46q5ki/9kyNBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JmvhBqS2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JrJfwhu/NCoWlhZDXKzJZLwFJHKBmw8sgQ9XPlEoGR0NNrN7o47QrR9nYl6fyQRjBgJVf3yY8zDqE1Dm+vU/2duxhVnrGtD3nO+xtErPj4RSGqgYd65Of69etXBuZE4qFZJxExLpzDj/HOG950tHYc6nb/KWg2JZ7uMvbrI+VP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2QCaRF9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JmvhBqS2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DD3C4CEEF;
-	Mon,  5 May 2025 22:49:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2QCaRF9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD43C4CEE4;
+	Mon,  5 May 2025 22:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485371;
-	bh=YVBEWd8fzTq67NZgBhRcJJ1n5ZNEhk8+BBu3Q9IDrXI=;
+	s=k20201202; t=1746485372;
+	bh=oWh6utGVMzCnodEAboCMwtV7BDi78kZURU9WXd8r9ng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JmvhBqS2jPEH/9Ohwr9cbz+MQe9xVtExFodBDZ2p8Bc33w4PLzsKxQuf+TKatL9C+
-	 gflKvI4U+2sZ+DNFtLeb1Ai5dSUPVkw2f0IxB7XUc0HqGi/ZGJPb0mfaKFPm+4O1lM
-	 SVa6Hd0d1mYbAJVqsG4ECHBiuPzpbvtHysixi/37iCuHHI3o3lpXzqOnqHxNZIMsB+
-	 DXbBb4CU2e8viVmzNLvGUpXeKe3G6ngF3TUnF8gUN57R5GWQCY5q59J5kIMpSXH/Pg
-	 ObuMrTxEUyKRNFu/noZOHVbGpBXYrI3BNXB14BBb8LfmXkdf13LN1v2dYm9ogbhvIb
-	 dGPy7um37aRyg==
+	b=D2QCaRF99E3hClrn0ILacH9bIvSbS66eOaiLEZ9/dWoeYOsAxM9tyBmhqHsK/GFCK
+	 z75zxIlqvSJbiqbpHbzU6u1fLa+X7Mi/++/uSjod2O6r+pvcp+VygucXAwiGDbZ94D
+	 L6xP2cNdJdGyYa0W0iyKB7Epgr9wMzOMSvW9TSsZza/N/s27Nc6Y+q1u9k+SbbipfJ
+	 pwz2ZeBEFOOPFzuE0mVKpTtfmQN+CLEgdajScsDl9IIfCWLVaBcjKdYWqekMjFWQNK
+	 tTFuk+dHdcdTBiHcK6yK56uTtcnplc6qBwYwS8Nz7RZifupVwCJmeJ7+JBiycAl4V1
+	 IX+68P2qWtvXg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Frank Li <Frank.Li@nxp.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc: Chris Morgan <macromorgan@hotmail.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-i3c@lists.infradead.org,
-	imx@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 295/486] i3c: master: svc: Flush FIFO before sending Dynamic Address Assignment(DAA)
-Date: Mon,  5 May 2025 18:36:11 -0400
-Message-Id: <20250505223922.2682012-295-sashal@kernel.org>
+	wens@csie.org
+Subject: [PATCH AUTOSEL 6.12 296/486] mfd: axp20x: AXP717: Add AXP717_TS_PIN_CFG to writeable regs
+Date: Mon,  5 May 2025 18:36:12 -0400
+Message-Id: <20250505223922.2682012-296-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,37 +50,47 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Frank Li <Frank.Li@nxp.com>
+From: Chris Morgan <macromorgan@hotmail.com>
 
-[ Upstream commit a892ee4cf22a50e1d6988d0464a9a421f3e5db2f ]
+[ Upstream commit bfad07fe298bfba0c7ddab87c5b5325970203a1e ]
 
-Ensure the FIFO is empty before issuing the DAA command to prevent
-incorrect command data from being sent. Align with other data transfers,
-such as svc_i3c_master_start_xfer_locked(), which flushes the FIFO before
-sending a command.
+Add AXP717_TS_PIN_CFG (register 0x50) to the table of writeable
+registers so that the temperature sensor can be configured by the
+battery driver.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/r/20250129162250.3629189-1-Frank.Li@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Chris Morgan <macromorgan@hotmail.com>
+Link: https://lore.kernel.org/r/20250204155835.161973-3-macroalpha82@gmail.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i3c/master/svc-i3c-master.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mfd/axp20x.c       | 1 +
+ include/linux/mfd/axp20x.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index 6ffe022dbb5b4..62913feae45dd 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -860,6 +860,8 @@ static int svc_i3c_master_do_daa_locked(struct svc_i3c_master *master,
- 	u32 reg;
- 	int ret, i;
- 
-+	svc_i3c_master_flush_fifo(master);
-+
- 	while (true) {
- 		/* SVC_I3C_MCTRL_REQUEST_PROC_DAA have two mode, ENTER DAA or PROCESS DAA.
- 		 *
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 4051551757f2d..3780929039710 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -214,6 +214,7 @@ static const struct regmap_range axp717_writeable_ranges[] = {
+ 	regmap_reg_range(AXP717_VSYS_V_POWEROFF, AXP717_VSYS_V_POWEROFF),
+ 	regmap_reg_range(AXP717_IRQ0_EN, AXP717_IRQ4_EN),
+ 	regmap_reg_range(AXP717_IRQ0_STATE, AXP717_IRQ4_STATE),
++	regmap_reg_range(AXP717_TS_PIN_CFG, AXP717_TS_PIN_CFG),
+ 	regmap_reg_range(AXP717_ICC_CHG_SET, AXP717_CV_CHG_SET),
+ 	regmap_reg_range(AXP717_DCDC_OUTPUT_CONTROL, AXP717_CPUSLDO_CONTROL),
+ 	regmap_reg_range(AXP717_ADC_CH_EN_CONTROL, AXP717_ADC_CH_EN_CONTROL),
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index f4dfc1871a95b..d1c21ad6440d1 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -135,6 +135,7 @@ enum axp20x_variants {
+ #define AXP717_IRQ2_STATE		0x4a
+ #define AXP717_IRQ3_STATE		0x4b
+ #define AXP717_IRQ4_STATE		0x4c
++#define AXP717_TS_PIN_CFG		0x50
+ #define AXP717_ICC_CHG_SET		0x62
+ #define AXP717_ITERM_CHG_SET		0x63
+ #define AXP717_CV_CHG_SET		0x64
 -- 
 2.39.5
 
