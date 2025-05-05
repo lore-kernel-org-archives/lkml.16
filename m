@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341C328469A;
-	Mon,  5 May 2025 23:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F5928A716;
+	Mon,  5 May 2025 23:17:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487015; cv=none; b=OVypa9YT5b60c9ja0n02ech0NixkrJ/uqJJl8LxUt+h8SQl3MdAfZsWY8hYRMH6Vvku6rMJ3kzx1o7zHHDwaHk4+TXZrYOo1NM3V7Xg8f+Or1Ed/1ZMi0FTVbOAODGbJaCwofYkQry1NLGBrsvvy3pIUUl1UyIureQvDQLjLk8U=
+	t=1746487022; cv=none; b=lY6b/y2JKny9THUg4mSuD7AJMpuCLA2EOyiCxSF9ro4bmslSMDiX1vkT4f2IQJWXMm8guFuZ3909XpgMKD8lvpk7gLaRyMmObvXdSPz1HKiBTx+C1Y++ha84iblFjMaZ6L2BV9XvzqnTDyU3X5u5caD+LqdbNPDCxDNI2a2OIiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487015; c=relaxed/simple;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
+	s=arc-20240116; t=1746487022; c=relaxed/simple;
+	bh=ECRz2VfaKuPxDhpmY33wQ+nrPN5Czu4r27KgfaOuRzc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ABMDNC3VuTodpIWWcTeJmT+XS10gxzHLJpSQL93NbX5REXC9gVk+zaoD2CtjX7S9Y1Xpq/GdIVRgq0tI3fpDwU0iYRxsKDzVWL81L4D60Mfq7N3N41TrmdiRX3bYwv/nIupOrdJEsG4P9n8JhtZ7NZydbgqcgHWM9jnYeXewl14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hijo+N4W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=aD40o+47mVk8ufq5IzU8TBNYts+3r8Ef7gL4WJfmCGuCprD/Q5mgQPTXgFOSE+pZSyAUgH54M0wF9AD0S8Ud1u1M2ZrCQCTh1FDfpOjemJD2bAfljbVgF7HPInHDlPNKoJkklT70uaauA2W225TNbbIz0/Z/XrmdtTu4wtWWFx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRPA+suT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hijo+N4W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD794C4CEEF;
-	Mon,  5 May 2025 23:16:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRPA+suT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9583C4CEEE;
+	Mon,  5 May 2025 23:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487014;
-	bh=TBiToOS22xXZR/yDLGAa0T27o9hnSJUf3WOeI4oWn+I=;
+	s=k20201202; t=1746487021;
+	bh=ECRz2VfaKuPxDhpmY33wQ+nrPN5Czu4r27KgfaOuRzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hijo+N4WP7o7uVFa6Zjgjqizh7luTpxPVRKCwHmTCJIOje3oYcwaGPvHYSJ71JoAM
-	 YQAznE4SeVoqbZr4P5oIBjZdmztzTFTVZfiLV/I9mEUWQlqvHh0k2x2yNoP2Ip+xwz
-	 l0o5DOTRhtd5cT5uwRyBPkhg6jQY1BoHjTp84EnwCLxmujoe+tesHqQPCTQ0NlQ/c/
-	 GQA1kS3PfBZiWB6OaQoNCkMC+kdtT+3NpUwH0uHk03F2FSztFsQ5epXX/ghoX5z+tu
-	 bsEOzu5PEFh9Xu1a2x9aZMyJjFZfh6vflpmaA4cITDMVkyapbNdJMWwDwob5TBK+f3
-	 BORqHawXuWiMg==
+	b=MRPA+suTXyfQeua7E+yakJS74A+BHgRIaFr8uUdhHXj/X/uuFbxZ0kC5q4wDGo9aA
+	 B25yXRO2N8YPeD62hhowsG/TsVpw+t/kEW2XacCoW6bfLElTbXvUdF3bTMXINpc2u+
+	 7Mvg2hp8HNwCxeEA4G9tNfzwgH57jTWO5y4tDs4EvVYmtLcHbhHDXfij0pT6uk7uTE
+	 CJcFB8rcAcQCCXug4DwUtSVoiR4iPnci3cWX4hMFuRds448buAFIEyhtZ9MreVL36P
+	 W1aFomSjRHCeA/W+mJG9jdfAb/wuFGJoxuYYr8vVf9VurQpFcBlLOiTGoyklI7BZnw
+	 JzetI6W7XYdyw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Xiaochun Lee <lixc17@lenovo.com>,
+Cc: =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 108/153] PCI: Fix old_size lower bound in calculate_iosize() too
-Date: Mon,  5 May 2025 19:12:35 -0400
-Message-Id: <20250505231320.2695319-108-sashal@kernel.org>
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 112/153] ASoC: ops: Enforce platform maximum on initial value
+Date: Mon,  5 May 2025 19:12:39 -0400
+Message-Id: <20250505231320.2695319-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -52,43 +54,70 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+From: Martin Povišer <povik+lin@cutebit.org>
 
-[ Upstream commit ff61f380de5652e723168341480cc7adf1dd6213 ]
+[ Upstream commit 783db6851c1821d8b983ffb12b99c279ff64f2ee ]
 
-Commit 903534fa7d30 ("PCI: Fix resource double counting on remove &
-rescan") fixed double counting of mem resources because of old_size being
-applied too early.
+Lower the volume if it is violating the platform maximum at its initial
+value (i.e. at the time of the 'snd_soc_limit_volume' call).
 
-Fix a similar counting bug on the io resource side.
-
-Link: https://lore.kernel.org/r/20241216175632.4175-6-ilpo.jarvinen@linux.intel.com
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiaochun Lee <lixc17@lenovo.com>
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+[Cherry picked from the Asahi kernel with fixups -- broonie]
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://patch.msgid.link/20250208-asoc-volume-limit-v1-1-b98fcf4cdbad@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-bus.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/soc-ops.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index a159bfdfa2512..04c3ae8efc0f8 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -806,11 +806,9 @@ static resource_size_t calculate_iosize(resource_size_t size,
- 	size = (size & 0xff) + ((size & ~0xffUL) << 2);
- #endif
- 	size = size + size1;
--	if (size < old_size)
--		size = old_size;
- 
--	size = ALIGN(max(size, add_size) + children_add_size, align);
--	return size;
-+	size = max(size, add_size) + children_add_size;
-+	return ALIGN(max(size, old_size), align);
+diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
+index d8d0a26a554de..9eb4181c6697f 100644
+--- a/sound/soc/soc-ops.c
++++ b/sound/soc/soc-ops.c
+@@ -621,6 +621,33 @@ int snd_soc_get_volsw_range(struct snd_kcontrol *kcontrol,
  }
+ EXPORT_SYMBOL_GPL(snd_soc_get_volsw_range);
  
- static resource_size_t calculate_memsize(resource_size_t size,
++static int snd_soc_clip_to_platform_max(struct snd_kcontrol *kctl)
++{
++	struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
++	struct snd_ctl_elem_value uctl;
++	int ret;
++
++	if (!mc->platform_max)
++		return 0;
++
++	ret = kctl->get(kctl, &uctl);
++	if (ret < 0)
++		return ret;
++
++	if (uctl.value.integer.value[0] > mc->platform_max)
++		uctl.value.integer.value[0] = mc->platform_max;
++
++	if (snd_soc_volsw_is_stereo(mc) &&
++	    uctl.value.integer.value[1] > mc->platform_max)
++		uctl.value.integer.value[1] = mc->platform_max;
++
++	ret = kctl->put(kctl, &uctl);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
+ /**
+  * snd_soc_limit_volume - Set new limit to an existing volume control.
+  *
+@@ -645,7 +672,7 @@ int snd_soc_limit_volume(struct snd_soc_card *card,
+ 		struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
+ 		if (max <= mc->max - mc->min) {
+ 			mc->platform_max = max;
+-			ret = 0;
++			ret = snd_soc_clip_to_platform_max(kctl);
+ 		}
+ 	}
+ 	return ret;
 -- 
 2.39.5
 
