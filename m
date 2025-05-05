@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874BC35A57D;
-	Mon,  5 May 2025 22:45:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6176829CB56;
+	Mon,  5 May 2025 22:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485135; cv=none; b=N73I0437UXLwxeCCcyvXoYbq6PLZckCoxuri3goT+Rw6AOs7/PDcF65XYKFDIezbsW5q8ijaFdYyW+pcmkJbDEyXjFyKDFlV3mvUpTP240ULmqO4rmwnNuTq75Ch/kYu+J2mqC5adaI+AoL75Cn7FVGsiSUy2YPEcHKlha5bCNI=
+	t=1746485143; cv=none; b=N9QMhroALzeBan/vpKVM2mve3JZsZeqD+MAEFSgJQjhWRlvI7P+/3dVWZPuIgVJ6rJaM/uW4GThU4AWQ8NKRgIFYYT8h2YfokPLwQtK0lYNbAI+vrlKDHXJhJdGfapYoxcekzRKaVfaVHqKPKWzpdzWmoAYBmH3OkgxG/t2enP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485135; c=relaxed/simple;
-	bh=pmor54l4XCngCgD85lLEsbS8WfQxEScnVxwUdAVvBSc=;
+	s=arc-20240116; t=1746485143; c=relaxed/simple;
+	bh=Ztz+nIN4jVsm5dk1LbPMMQ3xifHEySLYwovq03zpYkw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i2Upa9gIl8RKzrQ9MfMIq/gEMRzBwcI9fRLgt970TEEbFQ2DcFKsTV9SCSZIwyfHs34ZrOg0iEJOLy9a9h1BJeo236W6UA/xYkjD6vWMe2bxWZqrTb/IQ6K+p6B+hcrrsNpxqMCBZdSwwzn/sRlSsWEptE0s+zHWdzTwhuCirUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeR/nZqB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=drlWdQvVgOqLbPjkNFwRZMh5MUYv4z9v1GKVWiTyfwD6heI+YiliLyY6161wUjgoQjYOt6P31BsasX7TU/8srxkJG5FAMtju3cct2Kv5jlsjykEcbZSuU3buO6W4gVvC6X7peXvW93hIh053XzLPLXM1ZmF6tSQnzcwTE1CJtf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiVFqIso; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeR/nZqB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08DD0C4CEED;
-	Mon,  5 May 2025 22:45:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiVFqIso"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361F6C4CEF1;
+	Mon,  5 May 2025 22:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485134;
-	bh=pmor54l4XCngCgD85lLEsbS8WfQxEScnVxwUdAVvBSc=;
+	s=k20201202; t=1746485141;
+	bh=Ztz+nIN4jVsm5dk1LbPMMQ3xifHEySLYwovq03zpYkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NeR/nZqBOLEqID0tzY6WaLFhHKsO2HQyX6o/vWraDmah+gv7Np26Q7cWp/c6PYw08
-	 MQp2/nxEZIfRir5DeEL/Y9LTb+nzuB/XroyhCO6JLQiUivYLGe4/skh9T/4dOA6mB4
-	 i8Cta697jfAAl3GTcZtpW+ABbB+5XC1pIZcd6XvUCQ8My11rC3tA5YuDMDmPXLKFAX
-	 EFUBE2hZCdlzAjh7OyqA2jEiYgn1HAx0TBpV27JwnnqF0EyYDS8JYP1X6sBUP5E1I/
-	 iqjmejtcBFwwgju25HXsHIGV7Px4Jo9GMDf2SCtx45zyX/L33o7fsjOr7cBQV9WS+7
-	 OQzCfdB3LN6SA==
+	b=QiVFqIso5MyEiVmXaMBqv9nOl4HuXmxrZkQgTdIdPguD85GKch6K0l+beC5Z1C5jj
+	 EX5lgZKz7IwXnJf7hEHD+5/A/XVMz4x+xgFQn3YJ+eb34Qb1PJZ0Bj6+h4bMmu4hku
+	 7bL6ipx0umnzYJhpHzTiS/dr6YX+oyjLIw5s+WJ4VvinzOE82//0RLU6am2dJbNZWx
+	 XqqqdHZGAgsDQQLoNjURq0LM41qtOrkpiF9qKMHgiaeFtluNyvHQpj0fPaDjMJR2N6
+	 gGt5bDeVHSd1yNazJxlLcSgks7KHpPgmApuuNO5UYlmkOv7WJMOp44fP0guHedm15J
+	 T5fCNcl+pN2gQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jon Hunter <jonathanh@nvidia.com>,
-	Thierry Reding <treding@nvidia.com>,
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	thierry.reding@gmail.com,
-	dstotland@nvidia.com,
-	bgriffis@nvidia.com,
-	devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 177/486] arm64: tegra: Resize aperture for the IGX PCIe C5 slot
-Date: Mon,  5 May 2025 18:34:13 -0400
-Message-Id: <20250505223922.2682012-177-sashal@kernel.org>
+	linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 181/486] rtc: ds1307: stop disabling alarms on probe
+Date: Mon,  5 May 2025 18:34:17 -0400
+Message-Id: <20250505223922.2682012-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,46 +49,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 6d4bfe6d86af1ef52bdb4592c9afb2037f24f2c4 ]
+[ Upstream commit dcec12617ee61beed928e889607bf37e145bf86b ]
 
-Some discrete graphics cards such as the NVIDIA RTX A6000 support
-resizable BARs. When connecting an A6000 card to the NVIDIA IGX Orin
-platform, resizing the BAR1 aperture to 8GB fails because the current
-device-tree configuration for the PCIe C5 slot cannot support this.
-Fix this by updating the device-tree 'reg' and 'ranges' properties for
-the PCIe C5 slot to support this.
+It is a bad practice to disable alarms on probe or remove as this will
+prevent alarms across reboots.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20250116151903.476047-1-jonathanh@nvidia.com
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20250303223744.1135672-1-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/rtc/rtc-ds1307.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dts
-index 36e8880537460..9ce55b4d2de89 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dts
-@@ -302,6 +302,16 @@ pcie@14160000 {
- 		};
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 872e0b679be48..5efbe69bf5ca8 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -1807,10 +1807,8 @@ static int ds1307_probe(struct i2c_client *client)
+ 		 * For some variants, be sure alarms can trigger when we're
+ 		 * running on Vbackup (BBSQI/BBSQW)
+ 		 */
+-		if (want_irq || ds1307_can_wakeup_device) {
++		if (want_irq || ds1307_can_wakeup_device)
+ 			regs[0] |= DS1337_BIT_INTCN | chip->bbsqi_bit;
+-			regs[0] &= ~(DS1337_BIT_A2IE | DS1337_BIT_A1IE);
+-		}
  
- 		pcie@141a0000 {
-+			reg = <0x00 0x141a0000 0x0 0x00020000   /* appl registers (128K)      */
-+			       0x00 0x3a000000 0x0 0x00040000   /* configuration space (256K) */
-+			       0x00 0x3a040000 0x0 0x00040000   /* iATU_DMA reg space (256K)  */
-+			       0x00 0x3a080000 0x0 0x00040000   /* DBI reg space (256K)       */
-+			       0x2e 0x20000000 0x0 0x10000000>; /* ECAM (256MB)               */
-+
-+			ranges = <0x81000000 0x00 0x3a100000 0x00 0x3a100000 0x0 0x00100000      /* downstream I/O (1MB) */
-+				  0x82000000 0x00 0x40000000 0x2e 0x30000000 0x0 0x08000000      /* non-prefetchable memory (128MB) */
-+				  0xc3000000 0x28 0x00000000 0x28 0x00000000 0x6 0x20000000>;    /* prefetchable memory (25088MB) */
-+
- 			status = "okay";
- 			vddio-pex-ctl-supply = <&vdd_1v8_ls>;
- 			phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
+ 		regmap_write(ds1307->regmap, DS1337_REG_CONTROL,
+ 			     regs[0]);
 -- 
 2.39.5
 
