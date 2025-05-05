@@ -1,118 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F0F25C839;
-	Mon,  5 May 2025 14:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F7717B50F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455409; cv=none; b=O1BBCNUzYMnYWQLohZOyluvhjg02AY6PHXCZAKtcRSqR9TQie5u1oDp77qq4FjW0WzzNqZiMOe1voX88CBQSG0Uc99jr1dh4tylQOOAr9B1B5PKDpqn+V41QGCN623fJlnctHdPq8ql+2+VsamjjmiwXFlD029IDoakvNeOD1/U=
+	t=1746455528; cv=none; b=L+HPHK18G6U3xy6nWKaim/iVRY7Jx3d4xxRm1xxYQZdSH5Oq9P0ks32IHvq1L6xMVqlqFVtJE892PmttbBAKZ4JRTLapBfvjuJ/BJI+bb67xkHmN5cafEBHv5orj6cKvQBDYtBDBRoElNDEwVc7+Fhp+CIszItYGknkckf+p9NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455409; c=relaxed/simple;
-	bh=4j0o1rykGNx1GToDhdSP39vGQ4lWCej0GHB/+vebaw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l3wio81Ken0DJpoK4WPS1ogg/0AyCkSxoon11MFNOxj7ci8/3aeTrPeHyMTjm3/RsP0RqYEDFzQbfVJ+92AcmAhVrnW9ov6/NGTSIuOGaw0aM8jURunmpdiI6c/zSUD5uVt/v95ll0NvhHMj1eyVaSlWb2pRWN6D9x1w/U9uT2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y+i052vL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746455528; c=relaxed/simple;
+	bh=IYPXgw/t9enEBh5s6b8ufe/hnPw6ndScQx6VQ5ln5Vw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=NEXez4y5ua5CB51/a85BBpPbjeFKEp0d3rquTRPEp3bisD22KTA+cygvpRzdIlGjGr2cgS5vW4xJnIkn7IuSekQyeuJNDX6C7wJ1UTB4YOGLE4FxIl8D4ngnnCxt2BJ68rwkBU2N/pRDWnWaJD5XS0D82lireJe6WCM6RpHQR/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=lGWSIlYJ reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y+i052vL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8DDAC4CEE4;
-	Mon,  5 May 2025 14:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746455408;
-	bh=4j0o1rykGNx1GToDhdSP39vGQ4lWCej0GHB/+vebaw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y+i052vLyeBz97D7t0ga1iiua9zTsUcYnLBlxHs1G1E03z9AoDwuztVEwC5z+VCIn
-	 Vus4no+UpjRLGjHABoI4/T960VDcuAG3QF4kVhtN61dnxCdrHSDT0spNllLi1/nfwT
-	 sFyOhE1j+cLr2abJM/OYN9aP2Zo1nNb6HNzTD8Yo=
-Date: Mon, 5 May 2025 16:30:05 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] uaccess: rust: add strncpy_from_user
-Message-ID: <2025050544-sneak-compactor-d701@gregkh>
-References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
- <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="lGWSIlYJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=/iKhHXdYy1FVlNTfxYSUFTO6/q/u/BAYTYvmtxNn4gg=; b=l
+	GWSIlYJ7twSvWPZHZAKnC0AA2GhuAzFDumYHVYNuU0ztc/cRdPrXZ62ygLh9RPF9
+	J3QUbf7NtE/eLSkuErgRtce0mL5ZfJA3nO3MnIAI5eK4GuDPMP38JMIAXpKEJUBz
+	sxpa40AqoccALlOYUwDwKTXREXEefVCGyAaRAtuaDI=
+Received: from 00107082$163.com ( [111.35.191.17] ) by
+ ajax-webmail-wmsvr-40-131 (Coremail) ; Mon, 5 May 2025 22:31:01 +0800 (CST)
+Date: Mon, 5 May 2025 22:31:01 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Vlastimil Babka" <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
+	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	"Shakeel Butt" <shakeel.butt@linux.dev>
+Subject: Re: [PATCH] mm/codetag: sub in advance when free non-compound high
+ order pages
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
+References: <20250504061923.66914-1-00107082@163.com>
+ <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
+X-NTES-SC: AL_Qu2fBPieukwt5yOYYukXn0oTju85XMCzuv8j3YJeN500lyX10RAvZ25bJlHU0fmINxqmoQmpcDt+19t1bLZ7db+fL+cFMTGsWNG1WkcGN+M1
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-strncpy-from-user-v3-1-85c677fd4f91@google.com>
+Message-ID: <1da43908.3afc.196a0db7dc3.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gygvCgDnT3mmyxhoTuWjAA--.18912W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAhEqmgYuTbx-AAFsB
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Mon, May 05, 2025 at 12:17:31PM +0000, Alice Ryhl wrote:
-> This patch adds a direct wrapper around the C function of the same name.
-> It's not really intended for direct use by Rust code since
-> strncpy_from_user has a somewhat unfortunate API where it only
-> nul-terminates the buffer if there's space for the nul-terminator. This
-> means that a direct Rust wrapper around it could not return a &CStr
-> since the buffer may not be a cstring. However, we still add the method
-> to build more convenient APIs on top of it, which will happen in
-> subsequent patches.
-> 
-> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/uaccess.rs | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index 80a9782b1c6e98ed6eae308ade8551afa7adc188..a7b123915e9aa2329f376d67cad93e2fc17ae017 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -8,7 +8,7 @@
->      alloc::{Allocator, Flags},
->      bindings,
->      error::Result,
-> -    ffi::c_void,
-> +    ffi::{c_char, c_void},
->      prelude::*,
->      transmute::{AsBytes, FromBytes},
->  };
-> @@ -369,3 +369,36 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
->          Ok(())
->      }
->  }
-> +
-> +/// Reads a nul-terminated string into `buf` and returns the length.
-> +///
-> +/// This reads from userspace until a NUL byte is encountered, or until `buf.len()` bytes have been
-> +/// read. Fails with [`EFAULT`] if a read happens on a bad address (some data may have been
-> +/// copied). When the end of the buffer is encountered, no NUL byte is added, so the string is
-> +/// *not* guaranteed to be NUL-terminated when `Ok(buf.len())` is returned.
-> +///
-> +/// # Guarantees
-> +///
-> +/// When this function returns `Ok(len)`, it is guaranteed that the first `len` of `buf` bytes are
-> +/// initialized and non-zero. Furthermore, if `len < buf.len()`, then `buf[len]` is a NUL byte.
-> +/// Unsafe code may rely on these guarantees.
-> +#[inline]
-> +#[expect(dead_code)]
-> +fn raw_strncpy_from_user(ptr: UserPtr, buf: &mut [MaybeUninit<u8>]) -> Result<usize> {
-
-Nit, the parameters here are backwards from the C version of
-strncpy_from_user(), which is going to cause us no end of grief when
-reviewing code between the two languages :(
-
-Also, it's not your fault, but we don't have any type of __user tag for
-data coming from userspace yet to track this type of thing?  The
-compiler (well sparse) can catch this type of thing in C, any hints on
-what we could do in Rust for the same type of guarantee (i.e. don't
-touch user data before it's been copied, and then we need to treat it as
-"unverified" but that's a different patch series...)
-
-thanks,
-
-greg k-h
+CgpBdCAyMDI1LTA1LTA1IDIxOjEyOjU1LCAiVmxhc3RpbWlsIEJhYmthIiA8dmJhYmthQHN1c2Uu
+Y3o+IHdyb3RlOgo+T24gNS80LzI1IDA4OjE5LCBEYXZpZCBXYW5nIHdyb3RlOgo+PiBXaGVuIHBh
+Z2UgaXMgbm9uLWNvbXBvdW5kLCBwYWdlWzBdIGNvdWxkIGJlIHJlbGVhc2VkIGJ5IG90aGVyCj4+
+IHRocmVhZCByaWdodCBhZnRlciBwdXRfcGFnZV90ZXN0emVybyBmYWlsZWQgaW4gY3VycmVudCB0
+aHJlYWQsCj4+IHBnYWxsb2NfdGFnX3N1Yl9wYWdlcyBhZnRlcndhcmRzIHdvdWxkIG1hbmlwdWxh
+dGUgYW4gaW52YWxpZAo+PiBwYWdlIGZvciBhY2NvdW50aW5nIHJlbWFpbmluZyBwYWdlczoKPj4g
+Cj4+IFt0aW1lbGluZV0gICBbdGhyZWFkMV0gICAgICAgICAgICAgICAgICAgICBbdGhyZWFkMl0K
+Pj4gICB8ICAgICAgICAgIGFsbG9jX3BhZ2Ugbm9uLWNvbXBvdW5kCj4+ICAgVgo+PiAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2V0X3BhZ2UsIHJmIGNvdW50ZXIg
+aW5jCj4+ICAgVgo+PiAgIHwgICAgICAgICAgaW4gX19fZnJlZV9wYWdlcwo+PiAgIHwgICAgICAg
+ICAgcHV0X3BhZ2VfdGVzdHplcm8gZmFpbHMKPj4gICBWCj4+ICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBwdXRfcGFnZSwgcGFnZSByZWxlYXNlZAo+PiAgIFYKPj4g
+ICB8ICAgICAgICAgIGluIF9fX2ZyZWVfcGFnZXMsCj4+ICAgfCAgICAgICAgICBwZ2FsbG9jX3Rh
+Z19zdWJfcGFnZXMKPj4gICB8ICAgICAgICAgIG1hbmlwdWxhdGUgYW4gaW52YWxpZCBwYWdlCj4+
+ICAgVgo+PiAgIFYKPj4gCj4+IE1vdmUgdGhlIHRhZyBwYWdlIGFjY291bnRpbmcgYWhlYWQsIGFu
+ZCBvbmx5IGFjY291bnQgcmVtYWluaW5nIHBhZ2VzCj4+IGZvciBub24tY29tcG91bmQgcGFnZXMg
+d2l0aCBub24temVybyBvcmRlci4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAw
+MTA3MDgyQDE2My5jb20+Cj4KPkhtbSwgSSB0aGluayB0aGUgcHJvYmxlbSB3YXMgaW50cm9kdWNl
+ZCBieSA1MWZmNGQ3NDg2ZjAgKCJtbTogYXZvaWQgZXh0cmEKPm1lbV9hbGxvY19wcm9maWxpbmdf
+ZW5hYmxlZCgpIGNoZWNrcyIpLiBQcmV2aW91c2x5IHdlJ2QgZ2V0IHRoZSB0YWcgcG9pbnRlcgo+
+dXBmcm9udCBhbmQgYXZvaWQgdGhlIHBhZ2UgdXNlLWFmdGVyLWZyZWUuCgoKT2gsIHlvdSdyZSBy
+aWdodC4gSSBmb3Jnb3QgdG8gY2hlY2sgaGlzdG9yeS4uLi4uLgoKCj4KPkl0IHdvdWxkIGxpa2Vs
+eSBiZSBuaWNlciB0byBmaXggaXQgYnkgZ29pbmcgYmFjayB0byB0aGF0IGFwcHJvYWNoIGZvcgo+
+X19fZnJlZV9wYWdlcygpLCB3aGlsZSBob3BlZnVsbHkga2VlcGluZyB0aGUgb3B0aW1pc2F0aW9u
+cyBvZiA1MWZmNGQ3NDg2ZjAKPmZvciB0aGUgb3RoZXIgY2FsbCBzaXRlcyB3aGVyZSBpdCBhcHBs
+aWVzPwoKQWZ0ZXIgY2hlY2tpbmcgdGhhdCBjb21taXQsIEkga2luZCBvZiBmZWVscyB0aGUgY2hh
+bmdlcyBpbiBfX2ZyZWVfcGFnZXMgYXJlCiB0aGUgbWFqb3Igb3B0aW1pemF0aW9uIG9mIHRoZSBj
+b21taXQuLi4uCldoYXQgYWJvdXQgcmV2ZXJ0IHRoYXQgY29tbWl0IGFuZCBtYWtlIG9wdGltaXph
+dGlvbiBieSBjb25kaXRpb24gY2hlY2tzLApzaW1pbGFyIHRvIHdoYXQgdGhpcyBwYXRjaCBkaWQ/
+CiAKCgpEYXZpZAoK
