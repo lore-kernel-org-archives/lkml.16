@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5482037A8B6;
-	Mon,  5 May 2025 23:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B671135B92E;
+	Mon,  5 May 2025 23:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486151; cv=none; b=hmAD5DHR+A6jWhxRb+0smWIHLNl3V4VsQr5wFO9hFtbnomTa7IJBb2EiZpS2olufxRZkAbEFjBVg7BjyVvOKjiMrLCkL5M8JCECwnaVd/NW7rjJrHMukP2tbGciBPGnejsYK1LjzjS7L1Ok+IqZxVEz+DtLJXEDlv40+3xmyIkQ=
+	t=1746486138; cv=none; b=MdCRqFyuAG47SSZSGMGW3MqeH83/8jbxQiCCUdszq3yDXdk+biohIbVlbLNyR9W+oJ/wVpiu4y9FFxPl22QNYphMJnqgxf4xtvDZd8K7TUicL1IbuFmE3M2CFNA137LUdekVefWfMaGkBx1E9vb/Ar+4Lva4ctuw23LKTPRlHi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486151; c=relaxed/simple;
-	bh=0jrTjslHxbnVxgsMgzGNHFGh0/mdDFuYfc6oBpVnebA=;
+	s=arc-20240116; t=1746486138; c=relaxed/simple;
+	bh=V88aNIaWiSEb+uXYq12/yLYHfrK/r/sRZOY2QArhhQo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LgrZ7I0DoBw2ldj0MxRBlDU8jte5aFrvbshoPb7pwyBRI7Pm4oBOW63Sf53UkqTIer9zC2vf1F7NzuQecx9rwAO5z1Q/f+hyO+B6VKwfxBsw1End5b5kxhbuyBpsDQMteW0eFgIE4pUaSPVc6dHcD5QO4mGdRRovgE2y2alhflU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMJhgDgs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=C8ocqbmCstXHdI04gu25vhVfx/s7hJ7u45BzhmzqCld4/rqhXrrCfvCLM+crOSh15PF3Q262FMCYxNY0crSbBciWZrSpHpWAiP74TVoECoO/U9z0+T8Rkw34ONxjKhGCNI4fkMyzCXTqJeHqqrZm5C/t1Mpl+/ggCSSikSEkTZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuQGFzIw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMJhgDgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C51C4CEE4;
-	Mon,  5 May 2025 23:02:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuQGFzIw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E021CC4CEEE;
+	Mon,  5 May 2025 23:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486149;
-	bh=0jrTjslHxbnVxgsMgzGNHFGh0/mdDFuYfc6oBpVnebA=;
+	s=k20201202; t=1746486137;
+	bh=V88aNIaWiSEb+uXYq12/yLYHfrK/r/sRZOY2QArhhQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NMJhgDgsKL7EVdsv+3UyCMpwGtOwGHvV1QG+LFf8M+k1pXb/T8M6Ipq+EFXPJ098D
-	 kVIaLWKUov3BribrydILfMYRSDhcRESP56uxjiY7H5qpR0irEjfCmeqvMu6qI/Cpzx
-	 pwYmzkznLXwWdEnbhYJzkUprXhaUizmQ79f/eL4neEu2KbBpdvkTe0Olva/Cm9I5Ud
-	 mrcPaWLPsr2pFA1Hx3RTjTfss8LoQX9zOPuCSczsdTWyGoYWw5LBZ9F8TsAUzycIiD
-	 sDMm5I1K0HoHL20EsCczoL1rknYHe31sMdyTbii4kwrS16VaLEQHujPQSfc2KKwap+
-	 S52X9TC5Z50XQ==
+	b=SuQGFzIwGjx1po7pGQfL5FoLhybFrZS/Mqh5FJgAVtN4S3zGlT4WCRvIi14fVIjq7
+	 Ul7g5xCNNr6/iJCMTzqyn8E04kePscdDvDejmdtyzFlTawEPfa1Fu8Jr9Cs5Jjzt3E
+	 l1yfo0NsTp5Zp1AjfStqGG7Cl01AN8WnMX7GDfloGK9TyEBxew66+Wa6kHQb/0Zh+3
+	 RoWQ16JO+29OmZVMUQf4XH7C3JBSw8lwbCYzudUiFBeOCYZ/vwZ/KiJKRREZnww5e+
+	 Cs0RnNKmLm0+a8u6vB+QUkoLE82goqPJcm2v8TLGrfQsOMuwvZYKaA9tJSi8qi/aJF
+	 WgTjX3MQWWSIA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 178/294] wifi: rtw88: Fix rtw_init_ht_cap() for RTL8814AU
-Date: Mon,  5 May 2025 18:54:38 -0400
-Message-Id: <20250505225634.2688578-178-sashal@kernel.org>
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 171/294] crypto: skcipher - Zap type in crypto_alloc_sync_skcipher
+Date: Mon,  5 May 2025 18:54:31 -0400
+Message-Id: <20250505225634.2688578-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -50,57 +50,31 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit c7eea1ba05ca5b0dbf77a27cf2e1e6e2fb3c0043 ]
+[ Upstream commit ee509efc74ddbc59bb5d6fd6e050f9ef25f74bff ]
 
-Set the RX mask and the highest RX rate according to the number of
-spatial streams the chip can receive. For RTL8814AU that is 3.
+The type needs to be zeroed as otherwise the user could use it to
+allocate an asynchronous sync skcipher.
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/4e786f50-ed1c-4387-8b28-e6ff00e35e81@gmail.com
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ crypto/skcipher.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 557526e0eb7f3..0d0b5123b5fe2 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1544,6 +1544,7 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- {
- 	const struct rtw_chip_info *chip = rtwdev->chip;
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
-+	int i;
+diff --git a/crypto/skcipher.c b/crypto/skcipher.c
+index 7b275716cf4e3..acc879ed6031a 100644
+--- a/crypto/skcipher.c
++++ b/crypto/skcipher.c
+@@ -811,6 +811,7 @@ struct crypto_sync_skcipher *crypto_alloc_sync_skcipher(
  
- 	ht_cap->ht_supported = true;
- 	ht_cap->cap = 0;
-@@ -1563,17 +1564,11 @@ static void rtw_init_ht_cap(struct rtw_dev *rtwdev,
- 	ht_cap->ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
- 	ht_cap->ampdu_density = chip->ampdu_density;
- 	ht_cap->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
--	if (efuse->hw_cap.nss > 1) {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0xFF;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(300);
--	} else {
--		ht_cap->mcs.rx_mask[0] = 0xFF;
--		ht_cap->mcs.rx_mask[1] = 0x00;
--		ht_cap->mcs.rx_mask[4] = 0x01;
--		ht_cap->mcs.rx_highest = cpu_to_le16(150);
--	}
-+
-+	for (i = 0; i < efuse->hw_cap.nss; i++)
-+		ht_cap->mcs.rx_mask[i] = 0xFF;
-+	ht_cap->mcs.rx_mask[4] = 0x01;
-+	ht_cap->mcs.rx_highest = cpu_to_le16(150 * efuse->hw_cap.nss);
- }
+ 	/* Only sync algorithms allowed. */
+ 	mask |= CRYPTO_ALG_ASYNC | CRYPTO_ALG_SKCIPHER_REQSIZE_LARGE;
++	type &= ~(CRYPTO_ALG_ASYNC | CRYPTO_ALG_SKCIPHER_REQSIZE_LARGE);
  
- static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
+ 	tfm = crypto_alloc_tfm(alg_name, &crypto_skcipher_type, type, mask);
+ 
 -- 
 2.39.5
 
