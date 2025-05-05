@@ -1,107 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5032701A0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698955680;
+	Mon,  5 May 2025 20:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477898; cv=none; b=b2vkYouqi2xwk5hh0JSDDQv/FlAq8/FtHKzBie+2zQ/IOglIBXixoZsjnptlg2s7QYeF8ext3x/HxYDN4SrS8WC84wTPDQ2CCyigmW7utYAP5cge7N9ri4hRiEHWhY77oZvBKbm1VAPSxSYlPeRngXSJqGQyZ2F878QEnaxn8nw=
+	t=1746477975; cv=none; b=NkR3xp2wsiVloX2vgdm68i0Uw9EZlBvffOZJhr1FAHZGLzekFNwyApghzVziFIHwv4cEY2l68yiR157vnEtrKqimGNr60CIavlY76ZSF6ywkUzbgrleli3QB2wtcOot6sbmmxf7kMDn4c5lWI2M6we5YJ9DPdewKKgSMjaCatYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477898; c=relaxed/simple;
-	bh=ubdBjhQyfvrlKkg+rzmLXqPA/dVljltrJ12y21NRBts=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UEzrQ1rOW7oiQOgPlzsy/c1+G7WMFwT1RpesKbR2jCvcux6USc3rpCGxGXSMPJlgkoTqvc15JWNkD+ZJyCsaxiV+k7/6v8xDVlZp4DJV0qtdOQ2o4Msj9s8CQltR68ypHFUs4691iNQ7gzWV2IN6Wj/tiwhOZJEAajiQROUWn/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpT1K7p+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746477975; c=relaxed/simple;
+	bh=GYCgYxHNKqU6EEr7JY7HlY6hgLPVmcWr69EXEM+HrQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ghfzqchFZfjoNXqwO/sBNcmIDue4Jv/28ciYOSm3Zn1jlL3+rpHItWNg1r0OyjQeP9sjH7G5ciPu9/lFVV9ccCNkLqfQXrbTwMSj9+86yBMCbUrFyF8aZG2F2zhq6zPsVRGMB8sJa/lubXrCBwlcn008L4sR5MTVoImrSdUhohM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqD7tais; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpT1K7p+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D746C4CEE4;
-	Mon,  5 May 2025 20:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746477898;
-	bh=ubdBjhQyfvrlKkg+rzmLXqPA/dVljltrJ12y21NRBts=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=jpT1K7p+AEBP+oiObyE85RAqOoZ8tHiEgeiYpmZYZJ3hzPrs3CaZ5A1xu0+zboUIa
-	 NzIEkxm6GdfknuSmd6WmiRM47EuEbSlQFL+FCTFjtxPD8szjXg8iE/87bK00HjP5zq
-	 43W2pRMGkb1sPdACK4xn4gyda55fQ5/nd4Rd/3ikfjc+eogKbil4jR8KMiZ4WrL59i
-	 pe8M1Ipz+e68Gj727wssLS1MWG4iEgSZOkofJULqkYKStbDrNPNci+4nUtU9LJ36r1
-	 W/sdzh4H19Y+usS0xxWihYuowfIp+gVK6737RDp841QaZ+BIjklthDB9bWUTklzhoB
-	 kjKHcfLDENSKQ==
-Date: Mon, 5 May 2025 13:44:55 -0700 (PDT)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: Jason Andryuk <jason.andryuk@amd.com>
-cc: Juergen Gross <jgross@suse.com>, 
-    Stefano Stabellini <sstabellini@kernel.org>, 
-    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-    xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xenbus: Allow PVH dom0 a non-local xenstore
-In-Reply-To: <20250503131935.1885-1-jason.andryuk@amd.com>
-Message-ID: <alpine.DEB.2.22.394.2505051343080.3879245@ubuntu-linux-20-04-desktop>
-References: <20250503131935.1885-1-jason.andryuk@amd.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqD7tais"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-acb39c45b4eso785329566b.1;
+        Mon, 05 May 2025 13:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746477972; x=1747082772; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tybCDQgbYv/YcqEFOas0tcjmYlNZGGrI6YJEE/TM6nk=;
+        b=MqD7taisksdcWw062hZrMFlwLet9a1iKtdFZSe0ut6uuoE7M6KkyBFb+L/svpp6V48
+         AFltEqUIXlXFfBVdUXhUaVfwOSwXG09Njqio/Vhm80HD0QfFPOzJrAGCTekn91GLbXIS
+         3JpJeD0YdfqH3mBzDyQi9IcXWtqAp7NTrikotnEHpq+WZNdyZb69GpgC/qumnCAApZo9
+         OF95/sKnFvQZidBWQ1+dAT35EH4sEJRgCB7XQ+/CCjFJGOGJOrLg4e2ujvE7JGmjmTn1
+         QrxyRJi72HiAOI0TJhCWjoEqATG2dxUDE+y94F1hP1YECMzcsL4T70oZSZAx4Z8czokC
+         rMbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746477972; x=1747082772;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tybCDQgbYv/YcqEFOas0tcjmYlNZGGrI6YJEE/TM6nk=;
+        b=qynrM4LBXRlFF0ASKZltSjQ7RHHRhSNnvxh37EqXMCafitzlInl6fMHuZ4hwaAMnQ2
+         5xeW2iYrZNsWHeIhkCszkKEx3JMI9RK3fotVkoW7nRw6zIkfhx+ZKvGf0UfLE9yuzs/h
+         6zItjKay+C3rZpZNypyeGEgLVjdJa592Yff044MprmIg1shH4tPLi3GwhqSCgsg7op7O
+         51+cJU8c4/dOzVRHKP/bLmJCb/WY/PQQvaYOfZURR7uj9HJJaB+1DO80mihjXfWutkIl
+         a1YWWvSPPqQpEX4l8bdvOU/dszaEAijQELLs53q5H5/WbFWca/dLNXkLYJuQnETa/uo8
+         ahSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpVt9+DjESJ7bTr5vn9ZtgcEJu9jXq8NABn5ACv9jEa7Flp1Vypp+tIPvcLM75Sz0cCy0=@vger.kernel.org, AJvYcCWRp1mFYV6DeSc6ocuFJNoOn/Fx2KH8rc9kVRwn7ppAU8rY13PELcvUUbt9rnIGZ0qx27AVZzmjALkRo9H7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQOQ6imKAAGfqbea/CWjAc9Fnq9AigXazah3G/xoI6awqD7Sd9
+	WmkfpurFqArq79Zp0oHp0tgYKFcpLEyfWdopL8w6I8OdYWOtS2u4sgDDAJkH+aJqwOID7YQW/PH
+	UToNCExlR0+V7hiDXZ8hKD0zeaTQHZ5TU
+X-Gm-Gg: ASbGnctHFs4o8t9NZlQkmri9TBJ3Btzj70yZiqJSb9Il5dmZdN5dCbIBtHH9kR3+EMk
+	cLecmqkL7oLjjc2GSMVs+EawiqPYL9jOfvpkXwlUizN2A43p+gyerfwzdjp4NTr6l5TKpaTvYTZ
+	Uzqi6Pt/DtAea5T8DBc7VCYFhuyeOMRpHUvKlowlgIKxfOSJrJiYmm58RT
+X-Google-Smtp-Source: AGHT+IFaoqY71pVRRJ7P+HRGZj3SOTKvX2Bacc/R5kHHu8emAV4IQZMSOIuhMj/lCAmrBkYAx8BjwvJXUajJimq1MLs=
+X-Received: by 2002:a17:907:7eaa:b0:ace:6703:3cd5 with SMTP id
+ a640c23a62f3a-ad17b5aa887mr1473094466b.19.1746477971517; Mon, 05 May 2025
+ 13:46:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250505063918.3320164-1-senozhatsky@chromium.org> <CAEf4BzZkVg39JqGeuAjypf=WXsOG8JVDS8SSkVLDjHUuHzxoow@mail.gmail.com>
+In-Reply-To: <CAEf4BzZkVg39JqGeuAjypf=WXsOG8JVDS8SSkVLDjHUuHzxoow@mail.gmail.com>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Mon, 5 May 2025 22:45:34 +0200
+X-Gm-Features: ATxdqUGyV175Iz8wUrQeZgFbma2bBdb8CE0GxiTDzIoLvf4w6Vmp-tKnEzQZwmg
+Message-ID: <CAP01T754qZJNS7N8Q3dTB-2ApCRPbG1sUU2RpxT4ePFbv9-8=g@mail.gmail.com>
+Subject: Re: [PATCH] bpf: add bpf_msleep_interruptible()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 3 May 2025, Jason Andryuk wrote:
-> Make xenbus_init() allow a non-local xenstore for a PVH dom0 - it is
-> currently forced to XS_LOCAL.  With Hyperlaunch booting dom0 and a
-> xenstore stubdom, dom0 can be handled as a regular XS_HVM following the
-> late init path.
-> 
-> Drop the use of xen_initial_domain() and just check for the event
-> channel instead.  This matches the PV case where there is no check for
-> initial domain.
-> 
-> Check the full 64bit HVM_PARAM_STORE_EVTCHN value to catch the off
-> chance that high bits are set for the 32bit event channel.
-> 
-> Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+On Mon, 5 May 2025 at 21:57, Andrii Nakryiko <andrii.nakryiko@gmail.com> wr=
+ote:
+>
+> On Sun, May 4, 2025 at 11:40=E2=80=AFPM Sergey Senozhatsky
+> <senozhatsky@chromium.org> wrote:
+> >
+> > bpf_msleep_interruptible() puts a calling context into an
+> > interruptible sleep.  This function is expected to be used
+> > for testing only (perhaps in conjunction with fault-injection)
+> > to simulate various execution delays or timeouts.
+>
+> I'm a bit worried that we'll be opening a bit too much of an
+> opportunity to arbitrarily slow down kernel in a way that would be
+> actually pretty hard to detect (CPU profilers won't see this, you'd
+> need to rely on off-CPU profiling, which is not as developed as far as
+> profilers go).
+>
+> I understand the appeal, don't get me wrong, but we have no way to
+> enforce "is expected to be used for testing only". It's also all too
+> easy to sleep for a really long time, and there isn't really any
+> reasonable limit that would mitigate this, IMO.
+>
+> If I had to do this for my own testing/fuzzing needs, I'd probably try
+> to go with a custom kfunc provided by my small and trivial kernel
+> module (modules can extend BPF with custom kfuncs). And see if it's
+> useful.
+>
+> One other alternative to enforce the "for testing only" aspect might
+> be a custom kernel config, that would be expected to not make it into
+> production. Though I'd start with the kernel module approach first,
+> probably.
+>
+> P.S. BPF's "sleepable" is really "faultable", where a BPF program
+> might wait (potentially for a long time) for kernel to fault memory
+> in, but that's a bit more well-defined sleeping behavior. Here it's
+> just a random amount of time to put whatever task the BPF program
+> happened to run in the context of, which seems like a much bigger
+> leap. So while we do have sleepable BPF programs, they can't just
+> arbitrarily and voluntarily sleep (at least today).
+>
+> P.P.S. And when you think about this, we do rely on sleepable/trace
+> RCU grace periods to be not controlled so directly and arbitrarily by
+> any one BPF program, while here with bpf_msleep_interruptible() we'll
+> be giving a lot of control to one BPF program to delay resource
+> freeing of all other BPF programs (and not just sleepable ones, mind
+> you: think sleepable hooks running non-sleepable BPF programs, like
+> with sleepable tracepoints of uprobes).
+>
 
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+I agree with the sentiment, but I think it's already possible such that
+adding this will neither worsen or improve the status quo.
+
+You can have a userfaultfd in user space, and do a bpf_copy_from_user
+on the address such that you can trap the fault for as long as you
+wish (with rcu_tasks_trace read section open) [0]. I used it in the
+past to reconstruct race conditions.
+
+  [0]: https://lore.kernel.org/bpf/20220114163953.1455836-11-memxor@gmail.c=
+om.
+
+So we probably need a solution to this problem even for 'faulting'
+sleep, perhaps by scoping the read section to the program with SRCU,
+or something similar.
 
 
-> ---
->  drivers/xen/xenbus/xenbus_probe.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-> index 6d32ffb01136..7604f70ee108 100644
-> --- a/drivers/xen/xenbus/xenbus_probe.c
-> +++ b/drivers/xen/xenbus/xenbus_probe.c
-> @@ -966,9 +966,15 @@ static int __init xenbus_init(void)
->  	if (xen_pv_domain())
->  		xen_store_domain_type = XS_PV;
->  	if (xen_hvm_domain())
-> +	{
->  		xen_store_domain_type = XS_HVM;
-> -	if (xen_hvm_domain() && xen_initial_domain())
-> -		xen_store_domain_type = XS_LOCAL;
-> +		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
-> +		if (err)
-> +			goto out_error;
-> +		xen_store_evtchn = (int)v;
-> +		if (!v)
-> +			xen_store_domain_type = XS_LOCAL;
-> +	}
->  	if (xen_pv_domain() && !xen_start_info->store_evtchn)
->  		xen_store_domain_type = XS_LOCAL;
->  	if (xen_pv_domain() && xen_start_info->store_evtchn)
-> @@ -987,10 +993,6 @@ static int __init xenbus_init(void)
->  		xen_store_interface = gfn_to_virt(xen_store_gfn);
->  		break;
->  	case XS_HVM:
-> -		err = hvm_get_parameter(HVM_PARAM_STORE_EVTCHN, &v);
-> -		if (err)
-> -			goto out_error;
-> -		xen_store_evtchn = (int)v;
->  		err = hvm_get_parameter(HVM_PARAM_STORE_PFN, &v);
->  		if (err)
->  			goto out_error;
-> -- 
-> 2.34.1
-> 
+> >
+> > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > ---
+> >  include/linux/bpf.h            |  1 +
+> >  include/uapi/linux/bpf.h       |  9 +++++++++
+> >  kernel/bpf/helpers.c           | 13 +++++++++++++
+> >  kernel/trace/bpf_trace.c       |  2 ++
+> >  tools/include/uapi/linux/bpf.h |  9 +++++++++
+> >  5 files changed, 34 insertions(+)
+> >
+>
+> [...]
+>
