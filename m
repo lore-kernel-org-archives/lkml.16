@@ -1,338 +1,83 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784E125DAE1
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9554425D8FA
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460311; cv=none; b=X10FOyPeVsGDk8M9KwEjSrYs6JSeCXjPcEU6kmAMF+w7YuWWiSmfqpnnDSFLrICpp7hu5uU6vI90RItaghzLGzygAlMMgqIRlMESmjOVBT+KM8DZpIsBNhOuVtxpn2J/GL1nhk9ybTGLS1E4k9ndsCwoOkLEyl7oB0AEU+1BMM0=
+	t=1746460334; cv=none; b=j5Zui68sLEEiwj9NVAuSNaDDdLgMnkY+11w+Z0gd9lGnf0IFXfEYyB07i2YBih9tLEEBYlpcdmZHQNp6VRqVgsnfktH1993rJhU+Wq3+AORHyXslQz+q7J+pf9S3iDoTA7YVfocV2UWyfWxhgB8R4hpTwKM9wgS0qNibPgJo+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460311; c=relaxed/simple;
-	bh=E/ouETHxCribkFH/l4cIUUThSDdAwv1HuscA6q8cJME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f1ub/RTYnos4svn4TOthycDCOFk+QE81x+iYMnodiMGHXAUyEEpbSSqNXLKKpj3Sw/o0QSBq+KjpQop5orwR1iPp8Qheh3yVzhISYQ9AdMjI9y8OEmb8AnhPNQeWq/ToYL+XRySXl4wJomqjQZVwQ7nhevWUhVGff9ZkTGIC+sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K792Qbc6; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746460334; c=relaxed/simple;
+	bh=oiOejJCbfqzwUZU106HHZyvHCL0wN8VY5YWpFmWMxNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4fGrWYTK475M6YV6ZkwoMxL4FxXeVVIgOEZah6VP+ZZ2h8/uWy4pl5HKwkdMqqb4EO1+68CNCC0sFh5E1at3mN8/3o5BSUoLNKC/B9YXKGGhElqiRZVnwOklf8du51ENpNq0UM4pM3pqtIzAJCJNMItINS+QXsKY270sx87Iuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/zZQO3T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K792Qbc6"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso14587a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746460308; x=1747065108; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rfrPNwnin6OLWmMYx+AfwJyrSyct0onk2Si8di7Lblo=;
-        b=K792Qbc6KFvBACvlnzQ5US9weZIBz++omt6/QVXy2GvuX8ZMXTuC0pc+Q9c+Nes0xw
-         ZF1BzvEmDlk72DQv+AU3M+RHzX3Sx2Tv8J79Jjc2qMl+NmAxeKKm8mAbQZnhhl4f/xqY
-         E2FIAS427qc4zp9uGit7O52EbNpOU3iMyAEppQLfWIyAcBvoxcmrphNhzjsJoDA5yomR
-         p3K0Md4ewSE/rA63GIqdYTKT3FGo6fjlCUEOIPTF6FGiAU77mQjg2pUWKeER92PnCEr8
-         jtH9zl3m+FWQfSZTf44dj84MboBN+OuOQ/L4rh5vhjm+on7kU9fFyziNcS/FHwDOny7q
-         pUSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746460308; x=1747065108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rfrPNwnin6OLWmMYx+AfwJyrSyct0onk2Si8di7Lblo=;
-        b=qroG+/R2Ojho5o4NA4VQKpMM+S7SJutbUpQc7zlTSvSjM3zl/9tcuEnGZCbmbv3JPJ
-         /xLTLu194P2qqA19tdbsNz4HjDLgaqeRw6cKXy1kKiHlXxMFQYwF79ngsgaRJMSt3CDm
-         dwybLXWbZGosfr5DRkUd3hIz4Xlm+CWHSH13XQG70xOaeyHQotxQ3+WKcDYqqZBSvDaU
-         mW5j+WqyojfxEZcRnhd45hICWmJY3bzn435oKQ3jnncvDFjQU1xmKkH81JFq8FwpTvui
-         XzF//eQZfgqrvVfhCYnay8bDdNCh24Y2fXHY0zK7gA4kRLP/oGGZytfI10Eqo3IUWaU6
-         CJ5A==
-X-Gm-Message-State: AOJu0YxtOb4kvUP2xStSZORw259TeOtlsqvL/jFDImTJjlkh8tf47Sq3
-	czmkr4vuTQNt/1rKEIR3l/4LOK+iq0sW46S31tAmBQZ36KK7/YmlOKe+RrvUjKFfMrh94wB7Zps
-	xBaqaVgwdRciLsebw363kn2JMbUY+sEoe0dk8nzYZZEheDN5nDIn2
-X-Gm-Gg: ASbGncsCer/ScG/bK2qvsjgKDT9Eg5SO8D7F4Egk9fj3Uve6O0TIeRZfmTE0rTGJfWv
-	3hsn1JxxeUVYfVBqHFCcOMdMIyqYQpNduOkWEvfcorHbDh67PIvz1TnPNyAxqornkBJ2mXeB35n
-	eDzi3u7j1xZrDRzG3oE0GOQw==
-X-Google-Smtp-Source: AGHT+IEk/oLC58id/Uho8V9/jhtlshoFkjymX27AlthyhCEgesuGdvJ9WKnyLdNmFBJHMMCGrtyrw7tz5tc425zpKpM=
-X-Received: by 2002:a05:6402:d6b:b0:5e0:eaa6:a2b0 with SMTP id
- 4fb4d7f45d1cf-5fb56694457mr7301a12.5.1746460307575; Mon, 05 May 2025 08:51:47
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/zZQO3T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EC0C4CEEE;
+	Mon,  5 May 2025 15:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746460334;
+	bh=oiOejJCbfqzwUZU106HHZyvHCL0wN8VY5YWpFmWMxNU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=M/zZQO3TNV4m4/RBZ9L38N1/YcTFkL0d4V05mQ0pudhM8voH3YyvD4PPpSXvlx6W8
+	 +JZfCuE9ukONxQS5zGK/mHHhAsZsxLYgz2CqylufuWUsaML+UdmlEXeY3G6/ouOZG9
+	 cgxT+Wa5uqzPztc36KN9rUc1LthyEgvkOCxu1HYcCmYqjWc6pOHvxToT37OZ+2+E21
+	 vuBHtrA9WS2vsyKzjH0u6boiJdT1ZW9tH6hN04TlnN305eDfFYRhBm7M6iiR9dySuC
+	 vaqpdbfhKZ5RSBC8ANbBaDAwvzGYr/oc8xgAVr8DPtTVhT5jB/w/D5rkRfVvKxq0QM
+	 8tEMT7+HMAWew==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A0630CE08DA; Mon,  5 May 2025 08:52:13 -0700 (PDT)
+Date: Mon, 5 May 2025 08:52:13 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: Re: [PATCH v4 0/20] ratelimit: Reduce ratelimit's false-positive
+ misses
+Message-ID: <738b09ea-235a-4140-b8c7-67ab44c0bc9a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
+ <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
+ <72ee57b8-9e2a-4cad-aaa0-1e3353d146d8@paulmck-laptop>
+ <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
+ <aBijFf91NBzjy0kr@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321221444.2449974-1-jmattson@google.com> <20250321221444.2449974-2-jmattson@google.com>
- <aBAIL6oGYJ7IV85X@google.com>
-In-Reply-To: <aBAIL6oGYJ7IV85X@google.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Mon, 5 May 2025 08:51:35 -0700
-X-Gm-Features: ATxdqUF8s45XhGILx8sqJ676GY2Xk8LlUB1Fsvc90iMTYiTwy2rWSDMf28VCrxo
-Message-ID: <CALMp9eS7XHpFWMAtnJPQijYO1TVW25-UGmFqc33eAeb1AE_9YA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBijFf91NBzjy0kr@localhost.localdomain>
 
-On Mon, Apr 28, 2025 at 3:58=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Fri, Mar 21, 2025, Jim Mattson wrote:
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/ap=
-i.rst
-> > index 2b52eb77e29c..6431cd33f06a 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
-> >    #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-> >    #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-> >    #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-> > +  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
->
-> Might be pre-existing with C-states, but I think the documentation needs =
-to call
-> out that userspace is responsible for enumerating APERFMPERF in guest CPU=
-ID.
->
-> And more importantly, KVM either needs to honor APERFMPERF in each vCPU's=
- CPUID,
-> or the documentation needs to call out that KVM doesn't honor guest CPUID=
- for
-> APERF/MPERF MSRs.  I don't have a strong preference either way, but I'm l=
-eaning
-> toward having KVM honor CPUID so that if someone copy+pastes the KVM self=
-test
-> code for the host enabling, it'll do the right thing.  On the other hand,=
- KVM
-> doesn't (and shouldn't) fully emulate the MSRs, so I'm a-ok if we ignore =
-CPUID
-> entirely (but document it).
->
-> Ignoring CPUID entirely would also make it easier to document that KVM do=
-esn't
-> upport loading/saving C-state or APERF/MPERF MSRs via load/store lists on=
- VM-Enter
-> and VM-Exit.  E.g. we can simply say KVM doesn't emulate the MSRs in any =
-capacity,
-> and that the capability disable the exit/interception, no more no less.
->
-> Heh, I guess maybe I've talked myself into having KVM ignore guest CPUID =
-:-)
+On Mon, May 05, 2025 at 01:37:57PM +0200, Petr Mladek wrote:
+> On Tue 2025-04-29 18:05:00, Paul E. McKenney wrote:
+> > Hello!
+> > 
+> > This v4 series replaces open-coded uses of the ratelimit_state structure
+> > with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
+> > case with a flag, provides a ___ratelimit() trylock-failure fastpath to
+> > (almost) eliminate false-positive misses, simplifies the code, and adds
+> > a simple test.
+> > 
+> > The key point of this series is the reduction of false-positive misses.
+> > More could be done to avoid open-coded access to the ->interval and
+> > ->burst fields, and to tighten up checking of user input for these fields,
+> > but those are jobs for later patches.
+> 
+> JFYI, the whole series looks good to me.
 
-I concur. I will add a note to that effect.
+I double-checked, and after I apply these two Reviewed-by's, each patch
+in the series will have either your Signed-off-by or your Reviewed-by,
+so thank you for your reviews and feedback!
 
-> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> > index ea44c1da5a7c..5b38d5c00788 100644
-> > --- a/arch/x86/kvm/svm/svm.h
-> > +++ b/arch/x86/kvm/svm/svm.h
-> > @@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned =
-long pa)
-> >  #define      IOPM_SIZE PAGE_SIZE * 3
-> >  #define      MSRPM_SIZE PAGE_SIZE * 2
-> >
-> > -#define MAX_DIRECT_ACCESS_MSRS       48
-> > +#define MAX_DIRECT_ACCESS_MSRS       50
->
-> Ugh, I really need to get the MSR interception cleanup series posted.
->
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 4b64ab350bcd..1b3cdca806b4 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -4535,6 +4535,9 @@ static u64 kvm_get_allowed_disable_exits(void)
-> >  {
-> >       u64 r =3D KVM_X86_DISABLE_EXITS_PAUSE;
-> >
-> > +     if (boot_cpu_has(X86_FEATURE_APERFMPERF))
-> > +             r |=3D KVM_X86_DISABLE_EXITS_APERFMPERF;
-> > +
-> >       if (!mitigate_smt_rsb) {
-> >               r |=3D KVM_X86_DISABLE_EXITS_HLT |
-> >                       KVM_X86_DISABLE_EXITS_CSTATE;
-> > @@ -6543,7 +6546,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >
-> >               if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB=
-) &&
-> >                   cpu_smt_possible() &&
-> > -                 (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-> > +                 (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
-> > +                                   KVM_X86_DISABLE_EXITS_APERFMPERF)))
-> >                       pr_warn_once(SMT_RSB_MSG);
-> >
-> >               if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
-> > @@ -6554,6 +6558,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >                       kvm->arch.hlt_in_guest =3D true;
-> >               if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
-> >                       kvm->arch.cstate_in_guest =3D true;
-> > +             if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
-> > +                     kvm->arch.aperfmperf_in_guest =3D true;
->
-> Rather that an ever-growing stream of a booleans, what about tracing the =
-flags
-> as a u64 and providing a builder macro to generate the helper?  The latte=
-r is a
-> bit gratuitous, but this seems like the type of boilerplate that would be
-> embarassingly easy to screw up without anyone noticing.
->
-> Very lightly tested...
->
-> --
-> From: Sean Christopherson <seanjc@google.com>
-> Date: Mon, 28 Apr 2025 11:35:47 -0700
-> Subject: [PATCH] KVM: x86: Consolidate DISABLE_EXITS_xxx handling into a
->  single kvm_arch field
->
-> Replace the individual xxx_in_guest booleans with a single field to track
-> exits that have been disabled for a VM.  To further cut down on the amoun=
-t
-> of boilerplate needed for each disabled exit, add a builder macro to
-> generate the accessor.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  5 +----
->  arch/x86/kvm/svm/svm.c          |  2 +-
->  arch/x86/kvm/vmx/vmx.c          |  2 +-
->  arch/x86/kvm/x86.c              | 25 ++++++++-----------------
->  arch/x86/kvm/x86.h              | 28 +++++++++-------------------
->  5 files changed, 20 insertions(+), 42 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index 6c06f3d6e081..4b174499b29c 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1389,10 +1389,7 @@ struct kvm_arch {
->
->         gpa_t wall_clock;
->
-> -       bool mwait_in_guest;
-> -       bool hlt_in_guest;
-> -       bool pause_in_guest;
-> -       bool cstate_in_guest;
-> +       u64 disabled_exits;
->
->         unsigned long irq_sources_bitmap;
->         s64 kvmclock_offset;
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index cc1c721ba067..0f0c06be85d6 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -5053,7 +5053,7 @@ static int svm_vm_init(struct kvm *kvm)
->         }
->
->         if (!pause_filter_count || !pause_filter_thresh)
-> -               kvm->arch.pause_in_guest =3D true;
-> +               kvm->arch.disabled_exits |=3D KVM_X86_DISABLE_EXITS_PAUSE=
-;
->
->         if (enable_apicv) {
->                 int ret =3D avic_vm_init(kvm);
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ef2d7208dd20..109ade8fc47b 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7613,7 +7613,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
->  int vmx_vm_init(struct kvm *kvm)
->  {
->         if (!ple_gap)
-> -               kvm->arch.pause_in_guest =3D true;
-> +               kvm->arch.disabled_exits |=3D KVM_X86_DISABLE_EXITS_PAUSE=
-;
->
->         if (boot_cpu_has(X86_BUG_L1TF) && enable_ept) {
->                 switch (l1tf_mitigation) {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f6ce044b090a..3800d6cfecce 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6591,27 +6591,18 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->                         break;
->
->                 mutex_lock(&kvm->lock);
-> -               if (kvm->created_vcpus)
-> -                       goto disable_exits_unlock;
-> -
-> +               if (!kvm->created_vcpus) {
->  #define SMT_RSB_MSG "This processor is affected by the Cross-Thread Retu=
-rn Predictions vulnerability. " \
->                     "KVM_CAP_X86_DISABLE_EXITS should only be used with S=
-MT disabled or trusted guests."
->
-> -               if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB=
-) &&
-> -                   cpu_smt_possible() &&
-> -                   (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-> -                       pr_warn_once(SMT_RSB_MSG);
-> +                       if (!mitigate_smt_rsb && cpu_smt_possible() &&
-> +                           boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
-> +                           (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE)=
-)
-> +                               pr_warn_once(SMT_RSB_MSG);
->
-> -               if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
-> -                       kvm->arch.pause_in_guest =3D true;
-> -               if (cap->args[0] & KVM_X86_DISABLE_EXITS_MWAIT)
-> -                       kvm->arch.mwait_in_guest =3D true;
-> -               if (cap->args[0] & KVM_X86_DISABLE_EXITS_HLT)
-> -                       kvm->arch.hlt_in_guest =3D true;
-> -               if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
-> -                       kvm->arch.cstate_in_guest =3D true;
-> -               r =3D 0;
-> -disable_exits_unlock:
-> +                       kvm->arch.disabled_exits |=3D cap->args[0];
-> +                       r =3D 0;
-> +               }
->                 mutex_unlock(&kvm->lock);
->                 break;
->         case KVM_CAP_MSR_PLATFORM_INFO:
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 88a9475899c8..1675017eea88 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -481,25 +481,15 @@ static inline u64 nsec_to_cycles(struct kvm_vcpu *v=
-cpu, u64 nsec)
->             __rem;                                              \
->          })
->
-> -static inline bool kvm_mwait_in_guest(struct kvm *kvm)
-> -{
-> -       return kvm->arch.mwait_in_guest;
-> -}
-> -
-> -static inline bool kvm_hlt_in_guest(struct kvm *kvm)
-> -{
-> -       return kvm->arch.hlt_in_guest;
-> -}
-> -
-> -static inline bool kvm_pause_in_guest(struct kvm *kvm)
-> -{
-> -       return kvm->arch.pause_in_guest;
-> -}
-> -
-> -static inline bool kvm_cstate_in_guest(struct kvm *kvm)
-> -{
-> -       return kvm->arch.cstate_in_guest;
-> -}
-> +#define BUILD_DISABLED_EXITS_HELPER(lname, uname)                       =
-       \
-> +static inline bool kvm_##lname##_in_guest(struct kvm *kvm)              =
-       \
-> +{                                                                       =
-       \
-> +       return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_##uname; =
-       \
-> +}
-> +BUILD_DISABLED_EXITS_HELPER(hlt, HLT);
-> +BUILD_DISABLED_EXITS_HELPER(pause, PAUSE);
-> +BUILD_DISABLED_EXITS_HELPER(mwait, MWAIT);
-> +BUILD_DISABLED_EXITS_HELPER(cstate, CSTATE);
-
-The boilerplate is bad, but that's abhorrent.
-
->  static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
->  {
->
-> base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
-> --
+							Thanx, Paul
