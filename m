@@ -1,167 +1,109 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564092580E2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A795680
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478817; cv=none; b=ZSsyU+lS4DaiNFrKbp1Ej04vZ+wFIZAY/5XuI/IuwjlFfF+JrW3AQ2IElgAS1HN2i774N+rrvS29PMee0jPJA6N4MxGcjZ3ZVfAG2Hkkj5vZL8lNwF7xQAkajgZE8+Rm/DMZ7c/2hFnQn5h7exck8glbhLUUEVNKLpNggv1z9V0=
+	t=1746478912; cv=none; b=CkZsX0hJxYaTqpZMSWe4ALNCUDYyw0NKFDnJPSralbitOT4m8VBVA5zn4B6LaXftEXEsE+nxY34eSxJ9Sv44dAFKreSjFXEKN7f2ocAyD3NiuRPF/eurmHGB8/UUc3gre1HsrXiB/HfwBg2i78+/0VZ3EumHVVPlSIIOmHpr03k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478817; c=relaxed/simple;
-	bh=5ufq1FfQ7+ItMWnW/bHVbCw8E2sCN/GQabyoCbiAToM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BtRDU9JeZvbsz4FetzxN8oFZdEHx7vyi2JT5SsfhWGLB0/ilvXYfKFY5wm32MBkvdp6funv4kY9ISYS9SSNXi1YZeLHRxKg/sve/5z3N4bXjxLEyVT5A3uV2eNmJVmcOG3bkBut6bXHpdOgC88LRAUcaWgBSN5j3ufNHjY9C91Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Fc9td3m6; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746478912; c=relaxed/simple;
+	bh=rTFXvpoFOiDsJ0MIB+jbnVwtIFoe/zbuCTQ6dEySNdc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bL9l1bIaqc9ZUF0fyuGxH64y0+D6VCwVTrgdBZVEamZmGf/uSaXyTe5VI8JGN0nUrkLk8gVzQ30+cbAIQRQ3Vp+a2dAyQgEG2ayVlXW9plaIWG4Tp62coHDuT6nH91P/YgBeeZNW9PhFunHeE48XVXC06AXAM6hEUDv0CyFVFiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y+KVArNz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Fc9td3m6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746478815;
- bh=D6mVc2F17QEJBHK1fhZDepaSGxODcDU0cKVXx0iYDDg=;
- b=Fc9td3m61nSny/ihFaGBpYktonG0IbPNePezmIXHp5PRSxccTl69MDQwsFOvpyNQu/VLufIyL
- 53zVweULUtmKnIAfvZnTw/5eCov1jjMm18byK+m0ZFTqCbDBfFBIEuWK7FbOLcWI2OfJw0p9gx7
- qsSxTNvqZtwHljsdsYUZ4fgLiBUJ2a7b3CgH04QcI9yhXKiqj83G7C+tt+FBIqK0XKpnjLAd0IA
- BcmuQbcuz4ZqMxXOIHV7Raaf5VnP71Jqp6am8mds8yfCP/BE2KXP1wuiJFG1v7ubYTlehAIg3J0
- uJ+KUTk1RgqzZhO5dyhfVKOGtXqyznntUQdJxbq/vDzg==
-X-Forward-Email-ID: 681926d746c37f8647c203a8
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <f19f11f7-c020-44a3-84fa-eb9ca48ed11f@kwiboo.se>
-Date: Mon, 5 May 2025 23:00:03 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y+KVArNz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746478910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lkCRFfNqatPCh1SRs3dEvTgyEfbqqLQiDH+3i3waEkI=;
+	b=Y+KVArNz/LLoNm5cVC2UU7ubiJrF1+8d7ByZls+bttoOGPbfCt3tV0gsdU29H4lHyo/V3E
+	yUWp8P2Mj1PRZzXohEvDB12qeE+B6PPAZvCCmiRuF9SC+ywwzYVx/IFticgAIirblnGSqe
+	ubuE0PkhjOQbGVeON6D1DAUNXB/RxNo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-F1MtIffoMpi8p4RZ4ZYCEw-1; Mon,
+ 05 May 2025 17:01:47 -0400
+X-MC-Unique: F1MtIffoMpi8p4RZ4ZYCEw-1
+X-Mimecast-MFC-AGG-ID: F1MtIffoMpi8p4RZ4ZYCEw_1746478905
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74CAE1955E8C;
+	Mon,  5 May 2025 21:01:45 +0000 (UTC)
+Received: from [10.22.80.45] (unknown [10.22.80.45])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9337430001A2;
+	Mon,  5 May 2025 21:01:42 +0000 (UTC)
+Date: Mon, 5 May 2025 23:01:38 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Eric Biggers <ebiggers@kernel.org>
+cc: dm-devel@lists.linux.dev, Alasdair Kergon <agk@redhat.com>, 
+    Mike Snitzer <snitzer@kernel.org>, linux-block@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, 
+    Gaurav Kashyap <quic_gaurkash@quicinc.com>
+Subject: Re: [PATCH v2 2/2] dm: pass through operations on wrapped inline
+ crypto keys
+In-Reply-To: <20250505170336.GA197153@sol>
+Message-ID: <5ca7e728-96ed-4419-6689-f36081b7e2da@redhat.com>
+References: <20250501212320.8281-1-ebiggers@kernel.org> <20250501212320.8281-3-ebiggers@kernel.org> <af9771ce-5e88-02d1-3595-fd18a6f2eb28@redhat.com> <20250505170336.GA197153@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] arm64: dts: rockchip: Enable SD-card interface on
- Radxa E20C
-To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Shresth Prasad <shresthprasad7@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Chukun Pan <amadeus@jmu.edu.cn>, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250417143647.43860-1-ziyao@disroot.org>
- <20250417144005.43927-1-ziyao@disroot.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250417144005.43927-1-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 2025-04-17 16:40, Yao Zi wrote:
-> SD-card is available on Radxa E20C board.
+
+
+On Mon, 5 May 2025, Eric Biggers wrote:
+
+> On Mon, May 05, 2025 at 06:15:01PM +0200, Mikulas Patocka wrote:
+> > 
+> > I have a dumb question - if it doesn't matter through which block device 
+> > do you set up the keys, why do you set them up through a block device at 
+> > all?
+> > 
+> > What about making functions that set up the keys without taking block 
+> > device as an argument, calling these functions directly and bypassing 
+> > device mapper entirely?
 > 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Userspace needs to direct the key setup operations, so we'd need a UAPI for it
+> to do so.  We could add a custom syscall, or some hacked-up extension of
+> add_key(), and add a custom registration mechanism to allow a single
+> implementation of wrapped keys (e.g. from ufs-qcom) to register itself as the
 
-SD-card is detected and working on my E20C, and this also seem to match
-the schematics for E20C:
+What happens if there are multiple ufs-qcom controllers? Is it 
+unsupported?
 
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 148500000Hz (slot req 150000000Hz, actual 148500000HZ div = 0)
-  dwmmc_rockchip ffc30000.mmc: Successfully tuned phase to 215
-  mmc1: new UHS-I speed SDR104 SDHC card at address 59b4
-  mmcblk1: mmc1:59b4 USD00 29.5 GiB
-   mmcblk1: p1
-
-  $ cat /sys/kernel/debug/mmc1/ios
-  lock:           150000000 Hz
-  actual clock:   148500000 Hz
-  vdd:            21 (3.3 ~ 3.4 V)
-  bus mode:       2 (push-pull)
-  chip select:    0 (don't care)
-  power mode:     2 (on)
-  bus width:      2 (4 bits)
-  timing spec:    6 (sd uhs SDR104)
-  signal voltage: 1 (1.80 V)
-  driver type:    0 (driver type B)
-
-So this is:
-
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
-
-Regards,
-Jonas
-
-> ---
->  .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> system's wrapped key provider which the syscall would then use.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> index 57a446b5cbd6..09d917a0acc5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> @@ -17,6 +17,7 @@ / {
->  
->  	aliases {
->  		mmc0 = &sdhci;
-> +		mmc1 = &sdmmc;
->  	};
->  
->  	chosen {
-> @@ -108,6 +109,18 @@ vcc5v0_sys: regulator-5v0-vcc-sys {
->  		regulator-min-microvolt = <5000000>;
->  		regulator-max-microvolt = <5000000>;
->  	};
-> +
-> +	vccio_sd: regulator-vccio-sd {
-> +		compatible = "regulator-gpio";
-> +		gpios = <&gpio4 RK_PB6 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdmmc_vol_ctrl_h>;
-> +		regulator-name = "vccio_sd";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		states = <1800000 0x0>, <3300000 0x1>;
-> +		vin-supply = <&vcc5v0_sys>;
-> +	};
->  };
->  
->  &pinctrl {
-> @@ -130,6 +143,12 @@ wan_led_g: wan-led-g {
->  			rockchip,pins = <4 RK_PC0 RK_FUNC_GPIO &pcfg_pull_none>;
->  		};
->  	};
-> +
-> +	sdmmc {
-> +		sdmmc_vol_ctrl_h: sdmmc-vol-ctrl-h {
-> +			rockchip,pins = <4 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
->  };
->  
->  &saradc {
-> @@ -148,6 +167,17 @@ &sdhci {
->  	status = "okay";
->  };
->  
-> +&sdmmc {
-> +	bus-width = <4>;
-> +	cap-mmc-highspeed;
-> +	cap-sd-highspeed;
-> +	disable-wp;
-> +	sd-uhs-sdr104;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vccio_sd>;
-> +	status = "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart0m0_xfer>;
+> But it seemed cleaner to instead use block device ioctls and take advantage of
+> the existing blk-crypto-profile.  That already handles registering and
+> unregistering the implementation, and it also already handles things like
+> locking, and resuming the UFS controller if it's in suspend.
+> 
+> It also keeps the door open to supporting the case where different
+> wrapped-key-capable block devices don't necessarily accept the same keys, even
+> if that isn't the case currently.
+> 
+> - Eric
+
+I think that using ioctl on block device is ok.
+
+But I don't see why do you need to perform the ioctl on device mapper 
+device and let device mapper select a random underlying device where the 
+ioctl is forwarded? You can as well select a random physical disk in your 
+userspace application and call the ioctl on it.
+
+Mikulas
 
