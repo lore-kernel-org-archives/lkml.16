@@ -1,111 +1,111 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25C02040A8;
-	Mon,  5 May 2025 11:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0401F582C;
+	Mon,  5 May 2025 11:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445963; cv=none; b=eB0/0ESVCTLDa0g03abKNeDJB/O13QPngGHaUpjXy61WhmeH76trDuQ0e6IXRaMg7CjRuv4Z4dBtjq4JZT9eqaSA78jwJN5O0sK9rHQLoIv+0q+1qyohcxXchHx66TIMxlwv7b4hnz4gjQoJZzHKQpNB1HYl14ja3TavO44qGQg=
+	t=1746446064; cv=none; b=Ptl7bZ+y3TdmESNVDKwW0ToxAeJ65hYChkm+PDBMzHy6uswJNsPTseKp6r8GPhrq+X3YlhtDYs/WiLU8/sWXkFTJov4CtXDLl3wSxXysAtO3QLot7az1DOf4K0xB+bBIvChhsYDDZeQIu3gA+YlpVtJalgoDOJN0gHLmRuQWlLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445963; c=relaxed/simple;
-	bh=4kaZEUxGVTYwxOZIR6two8Odt1oN1JQHgkymxLgLVS8=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:Mime-Version:
-	 References:In-Reply-To; b=uiJjuz/RRu/4bIptTn5ySSCCtfqPh/2NNNH8b/nRpfkQQ2FYjnMCyxpfoRY1IetAvZsXNhMpnZx/pY71dWu9/duCGJtuLbRKx3au5Q2CNdSMjQmUiKNSeowrUP4VZ/vAsKJUmgHhR14XUMAzhKE2ujyd4l6C6GRiGBGVvnTd0SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Jr7cWSqc; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746446064; c=relaxed/simple;
+	bh=qmzVyPm7j3nmQE46OISA4W3ZMSMKJlH5HQQ8JPoNguc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=S37OI0VDlGOOfRakyOH4EZ4xHQaq0PMxy59sIq7m2V5pkXn9kVqQxiKgWzcHBpqRjP77Fj3hBWlW5EnX1t8GdUoIi6PjCTou6EdfZkkSm6y3QTLiNMBUnwJJ4xSvEAxfLEycKDxZdmhjxvQbVomZsNf7WZ64ROVruDY/Y4j0jZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byuMQ2au; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Jr7cWSqc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F111432A2;
-	Mon,  5 May 2025 11:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746445952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vm8qmex3bAGRILrPZHXrirOvCQozzFYhA+oyW1nX2/A=;
-	b=Jr7cWSqcIA1lpycR6i5nolFqFjVEdLgYXoW24zAYltxtUHfKBqnhE0pHou0wG9DxIvkI8z
-	zFDQb6X1TEw32V5IEJX8uJCQG6mFBBZgkqkNbR9hmPQbK34Mw0vDp7L8Xa2Ppo03LRTv7/
-	musII7g5mPco3A3vzxZBs0XnvdogiQed15QcxXnB3DsA1YmjKarmdiZgavq1ietgMfKMvD
-	3Jd0n9feQ6jfJ/jPsCZwxt4ameL6rD6bVz9g0Rd6GWLnZKfbEXPHcnSVVP8BH4beHbIxPH
-	2H+smQfh5OoSA2XEwdE3j6Z2KTM5sgnHcmZZHzOxrRmaXZV7Zzefu0nwAg/TFw==
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 05 May 2025 13:52:30 +0200
-Message-Id: <D9O7F5Q6F1PS.2Q7R864GRUHZQ@bootlin.com>
-Subject: Re: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byuMQ2au"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746446064; x=1777982064;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qmzVyPm7j3nmQE46OISA4W3ZMSMKJlH5HQQ8JPoNguc=;
+  b=byuMQ2ausMS+unF8cUd6ybAiOHDSSh6wNAgiStNIKbr1R+Az+mUlgdGB
+   fMAw6lZnEU387O1BYh2IkWVtqgbObFbPqPPnSD2g5FjHfWb7jpuDsS81C
+   bVvKHPnaTinRTpgVLQ6qoLcFXSgggMyaECHIkVBpPR01qQVivAA/Xgdw5
+   2GCwrWtUoRAWfwAFjpybiEn1rVQ0nfAleABOjgR25DOtNyXC5oc472dco
+   6fbZDiC54uBFuWuvtQO1TNUFxGVM4PNQ0R3H2aSkwU1RSvdZn5brq4C8x
+   0rsQery73kuMZb7LWUpxYAbK158KRyTGXzbdl1IEfrrfH8uisSvCTJ000
+   Q==;
+X-CSE-ConnectionGUID: U4BJrhi3QG+sNuRw3VMfVg==
+X-CSE-MsgGUID: GH4r7fzuQIqQq3iC/5utwA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="59441780"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="59441780"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 04:54:23 -0700
+X-CSE-ConnectionGUID: Frs+DaCMTxOWwOFnr8IS2A==
+X-CSE-MsgGUID: aiFvh5/xR5GJvDin/W2IzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="166282629"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.68])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 04:54:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>,
+	Moshe Shemesh <moshe@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Keith Busch <kbusch@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
+Date: Mon,  5 May 2025 14:54:12 +0300
+Message-Id: <20250505115412.37628-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
- <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
- <D9LQ7NV1LJM9.F2GF0YEEDFEY@bootlin.com>
- <aBTSNsCupbpAscwA@smile.fi.intel.com>
-In-Reply-To: <aBTSNsCupbpAscwA@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedutddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkufevhffvggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhtdeuhfehtdekueeltdejffdtuefgueffhfeiueegleffueevvefgtedtkeegjeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri May 2, 2025 at 4:09 PM CEST, Andy Shevchenko wrote:
-> On Fri, May 02, 2025 at 03:58:04PM +0200, Mathieu Dubois-Briand wrote:
->> On Fri May 2, 2025 at 12:52 PM CEST, Andy Shevchenko wrote:
->> > On Mon, Apr 28, 2025 at 01:57:28PM +0200, Mathieu Dubois-Briand wrote:
->
-> ...
->
->> >> +				pos =3D max(0, (int)pos + steps);
->> >
->> > Please, no castings for min()/max()/clamp(). It diminishes the use of =
-those
->> > macros.
->>=20
->> Sorry, I'm not sure to get the point. Should I use MIN_T() instead?
->
-> Are the second argument is compile-time constant? I don't think so. Hence=
- no
-> use for MIN*()/MAX*(). First of all, try to answer to the Q: Why is the e=
-xplicit
-> casting being used? The second Q: How can it be easily fixed without usin=
-g _t()
-> variants of the macros?
+The commit a4e772898f8b ("PCI: Add missing bridge lock to
+pci_bus_lock()") made the lock function to call depend on
+dev->subordinate but left pci_slot_unlock() unmodified creating locking
+asymmetry compared with pci_slot_lock().
 
-Err right, no MIN/MAX of course.
+Because of the asymmetric lock handling, the same bridge device is
+unlocked twice. First pci_bus_unlock() unlocks bus->self and then
+pci_slot_unlock() will unconditionally unlock the same bridge device.
 
-Explicit cast is here because the unsigned int + int sum would result in
-an unsigned int.
+Move pci_dev_unlock() inside an else branch to match the logic in
+pci_slot_lock().
 
-I will use an intermediate signed value. Also the whole logic here can
-be simplified a bit, so I will rework the whole block.
+Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: <stable@vger.kernel.org>
+---
 
-Best regards,
-Mathieu
+v2:
+- Improve changelog (Lukas)
+- Added Cc stable
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ drivers/pci/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 4d7c9f64ea24..26507aa906d7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5542,7 +5542,8 @@ static void pci_slot_unlock(struct pci_slot *slot)
+ 			continue;
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ }
+ 
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.39.5
 
