@@ -1,57 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D9D3792B4;
-	Mon,  5 May 2025 23:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF893379413;
+	Mon,  5 May 2025 23:01:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486060; cv=none; b=fWMzePRT2NYDhLxhBVj9CmiJQMzEivZdLPxeqS6nkKCYu+HcdgR7WMz1F5dBec91SGPQmx6MWGxbk+zvCATZbnozhXRl/ZEq5PSYOaeAgsedOovuMPnynXKuKfFCT1TabHZEYdG+15SB/aUhBIuSlqSqbUgIPjWmWVJUmD8fORY=
+	t=1746486086; cv=none; b=fOfWPu5GmdJJXL/DFr7WKd6CA7xNtuWM895cJvFmHA57cU6byO5hKwz5U9ulgdY3SNaoKbqKFyRMf3HFVUSwT5I8a+9PNZdbdD56R0wJwOdzrByGz9n5IuZsqwRAoyMiwDVxIAV3fv5YPNMmLEHuncFKliMunu7kLvc8jielXyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486060; c=relaxed/simple;
-	bh=BLHcE08rHIsKAZb0PIIR3MMag85ICV+AGfZz6R+LiXU=;
+	s=arc-20240116; t=1746486086; c=relaxed/simple;
+	bh=jY2bLFrM4OmbAvQoCMBjY6y3zOJ5tAN7yOeLduNkcfk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UonqKQDM5KhaffYmqsnsz/cDHLthBGaQM9dIPcORx78kZWZW6LuZ2dXff36I3q92FBsBWkabIod3lPmOtF2Lt0nJNkrapoQBmO9mTkxZvWn5ywZ96YuL8JD/2o1WPvGm8nwrR3S8P0dwAhOrQaR9p7fp/lN4VjwzLgOLoowpLYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+RzV6Vy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Uk0hf7kRdafD4BuTxcZbCAyKBA07fv5JVUlxDQgJP6CJaJKsadSExQtqpaEOLrrLGprsA3uc2lRtZtWY+jEVKvnGikhVMEcQB6opKw2KumJu3JRYCHa8D5dVQIBhf8y6lvdQ5/6YCPdMsEc4nHLZCQ4AHddfU+NdPXAe6Vx0XUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPhY3NYc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+RzV6Vy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458E7C4CEE4;
-	Mon,  5 May 2025 23:00:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPhY3NYc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB63C4CEEF;
+	Mon,  5 May 2025 23:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486058;
-	bh=BLHcE08rHIsKAZb0PIIR3MMag85ICV+AGfZz6R+LiXU=;
+	s=k20201202; t=1746486084;
+	bh=jY2bLFrM4OmbAvQoCMBjY6y3zOJ5tAN7yOeLduNkcfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R+RzV6Vy1NuVN792RZj+lWpmAPm2esI8kPsXkXfS47/Eo4eGHacot2iKdxxWsITMK
-	 x5aP0kZ1dT8yWmLWCtgcVBm1xak/O1WwvVjdjq3MMydWFSBfz+scveqyb83MsHbVpY
-	 zmvqn70OdndULIQzOiaiWYUtodwZTOKBoIxKgzyImLHDp0H+JAme5EjeyR1ouJC1m6
-	 mfY6Ct3ckunbP/1JHnyOxBbzsXnQgQrmczPBlDiUUdMt51ysSBfA3to1Lp+vzp4wpv
-	 tne0MNU4/xm0LCE/3l8IhdRFEQHoglRiEgbspNR0IXInLhJU26Yjx3EsjUyrhNXH82
-	 y+ngM1pWNtiyg==
+	b=XPhY3NYcR8xIsUbBJec5NnmJSCv9bsQ9102qmyB/86lOU/w8l527YFOImpbKbriIM
+	 igp7rznqv+/iXA1Qx2Xjj6RpDwo5kelIJUnMUIwSUz8w9mLqN9L0CUpmaLqhYTN3kn
+	 lCy3fNo0ZTeOYtloeJLBN5CKyIF9S4mMDkTlcAqvoLCEk7OMcSkAI69iygZlmNC+1y
+	 PSoFQL0B7zaWYxiHjY+zkGIloCLlxr0CBgQk6Zdg1JQ4lmEjluXscqpgfqYmSMdJO7
+	 qlrvJyzLXRzNYftAGEMUEgwNzsMeLn+NThz3hkA+3qhVLSB/UkaM3HxDoXy7ExW/hQ
+	 xzM0x38z5XM9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	David Kaplan <David.Kaplan@amd.com>,
+Cc: Yuanjun Gong <ruc_gongyuanjun@163.com>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	corbet@lwn.net,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	akpm@linux-foundation.org,
-	paulmck@kernel.org,
-	rostedt@goodmis.org,
-	thuth@redhat.com,
-	ardb@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 131/294] x86/bugs: Make spectre user default depend on MITIGATION_SPECTRE_V2
-Date: Mon,  5 May 2025 18:53:51 -0400
-Message-Id: <20250505225634.2688578-131-sashal@kernel.org>
+	pavel@kernel.org,
+	jakob+lkml@paranoidlabs.org,
+	u.kleine-koenig@baylibre.com,
+	linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 147/294] leds: pwm-multicolor: Add check for fwnode_property_read_u32
+Date: Mon,  5 May 2025 18:54:07 -0400
+Message-Id: <20250505225634.2688578-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -66,94 +53,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Breno Leitao <leitao@debian.org>
+From: Yuanjun Gong <ruc_gongyuanjun@163.com>
 
-[ Upstream commit 98fdaeb296f51ef08e727a7cc72e5b5c864c4f4d ]
+[ Upstream commit 6d91124e7edc109f114b1afe6d00d85d0d0ac174 ]
 
-Change the default value of spectre v2 in user mode to respect the
-CONFIG_MITIGATION_SPECTRE_V2 config option.
+Add a check to the return value of fwnode_property_read_u32()
+in case it fails.
 
-Currently, user mode spectre v2 is set to auto
-(SPECTRE_V2_USER_CMD_AUTO) by default, even if
-CONFIG_MITIGATION_SPECTRE_V2 is disabled.
-
-Set the spectre_v2 value to auto (SPECTRE_V2_USER_CMD_AUTO) if the
-Spectre v2 config (CONFIG_MITIGATION_SPECTRE_V2) is enabled, otherwise
-set the value to none (SPECTRE_V2_USER_CMD_NONE).
-
-Important to say the command line argument "spectre_v2_user" overwrites
-the default value in both cases.
-
-When CONFIG_MITIGATION_SPECTRE_V2 is not set, users have the flexibility
-to opt-in for specific mitigations independently. In this scenario,
-setting spectre_v2= will not enable spectre_v2_user=, and command line
-options spectre_v2_user and spectre_v2 are independent when
-CONFIG_MITIGATION_SPECTRE_V2=n.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Kaplan <David.Kaplan@amd.com>
-Link: https://lore.kernel.org/r/20241031-x86_bugs_last_v2-v2-2-b7ff1dab840e@debian.org
+Signed-off-by: Yuanjun Gong <ruc_gongyuanjun@163.com>
+Link: https://lore.kernel.org/r/20250223121459.2889484-1-ruc_gongyuanjun@163.com
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  2 ++
- arch/x86/kernel/cpu/bugs.c                      | 10 +++++++---
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/leds/rgb/leds-pwm-multicolor.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 184f2f96f6a54..005455d32f8da 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5960,6 +5960,8 @@
+diff --git a/drivers/leds/rgb/leds-pwm-multicolor.c b/drivers/leds/rgb/leds-pwm-multicolor.c
+index e1a81e0109e8a..c0aa34b1d0e2d 100644
+--- a/drivers/leds/rgb/leds-pwm-multicolor.c
++++ b/drivers/leds/rgb/leds-pwm-multicolor.c
+@@ -135,8 +135,11 @@ static int led_pwm_mc_probe(struct platform_device *pdev)
  
- 			Selecting 'on' will also enable the mitigation
- 			against user space to user space task attacks.
-+			Selecting specific mitigation does not force enable
-+			user mitigations.
- 
- 			Selecting 'off' will disable both the kernel and
- 			the user space protections.
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 78545f7e9cc6c..b14c86610b639 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1290,9 +1290,13 @@ static __ro_after_init enum spectre_v2_mitigation_cmd spectre_v2_cmd;
- static enum spectre_v2_user_cmd __init
- spectre_v2_parse_user_cmdline(void)
- {
-+	enum spectre_v2_user_cmd mode;
- 	char arg[20];
- 	int ret, i;
- 
-+	mode = IS_ENABLED(CONFIG_MITIGATION_SPECTRE_V2) ?
-+		SPECTRE_V2_USER_CMD_AUTO : SPECTRE_V2_USER_CMD_NONE;
+ 	/* init the multicolor's LED class device */
+ 	cdev = &priv->mc_cdev.led_cdev;
+-	fwnode_property_read_u32(mcnode, "max-brightness",
++	ret = fwnode_property_read_u32(mcnode, "max-brightness",
+ 				 &cdev->max_brightness);
++	if (ret)
++		goto release_mcnode;
 +
- 	switch (spectre_v2_cmd) {
- 	case SPECTRE_V2_CMD_NONE:
- 		return SPECTRE_V2_USER_CMD_NONE;
-@@ -1305,7 +1309,7 @@ spectre_v2_parse_user_cmdline(void)
- 	ret = cmdline_find_option(boot_command_line, "spectre_v2_user",
- 				  arg, sizeof(arg));
- 	if (ret < 0)
--		return SPECTRE_V2_USER_CMD_AUTO;
-+		return mode;
+ 	cdev->flags = LED_CORE_SUSPENDRESUME;
+ 	cdev->brightness_set_blocking = led_pwm_mc_set;
  
- 	for (i = 0; i < ARRAY_SIZE(v2_user_options); i++) {
- 		if (match_option(arg, ret, v2_user_options[i].option)) {
-@@ -1315,8 +1319,8 @@ spectre_v2_parse_user_cmdline(void)
- 		}
- 	}
- 
--	pr_err("Unknown user space protection option (%s). Switching to AUTO select\n", arg);
--	return SPECTRE_V2_USER_CMD_AUTO;
-+	pr_err("Unknown user space protection option (%s). Switching to default\n", arg);
-+	return mode;
- }
- 
- static inline bool spectre_v2_in_ibrs_mode(enum spectre_v2_mitigation mode)
 -- 
 2.39.5
 
