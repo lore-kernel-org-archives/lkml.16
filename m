@@ -1,253 +1,145 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA0434CF5;
-	Mon,  5 May 2025 18:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C6B26B097;
+	Mon,  5 May 2025 18:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470012; cv=none; b=s0x3MczJ/IYK79Y+St3BnvZJXklqWTc2EoQlBwiuKsYKVVc6sFAE40n05/jZDGd5zK9loc60IqWBCkvV3MRCwB6BUM4Cf+mwvWqQUmXMDY86ipNcuiAMQrhsrLhpp/FOx9G+kcZn7zBNaMVMYaz6x3EAGH8RV71ioPW5qDiBXbc=
+	t=1746470037; cv=none; b=fXHbdKDdKI5CNz1v1PL5aKHrqYyVeM1hfDZNgZAikVom7ovLc5ffWkGWTIcOmNVJBtWWWPxcf+BjU2pMgRQsQMQ6OjLLEjrwBtD5QpU3TdMdivoKtbb+78q1yLdVSTsaXLM0u2dR9WaKqajWFAZvLCxC5lqLwWnDwZr0l1FlqZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470012; c=relaxed/simple;
-	bh=HXO5JcDo80JaOhk9cK0Fhw9BSR/xmOMPB4eD9xgN0xI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IsnOLEr/a1ph0OC4HvFL7khpG7+Q2jOKXo7ynmhppUCs3aWXk8+uzcunhPJm/UrZH3gTUiYvTrD7iNSSJyxg8tiHGRElVOVd2JPmR5n2cjARFWgSlnwRRf2AtfjK6nPF4MjR43ka0MjmoknmEkdeCnQvnisKOpuxJ+sBfEmQUBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=qs2smi/h; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746470037; c=relaxed/simple;
+	bh=5S8M/c10REYo4PgzbC8d4IT8+Lk4+t8C4D84ntmXYig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E88KG/iexXiOpYECGyN8S05AgK207aBZYXzblgx9Zhcz4q/yAoB00OQe0CEavcG0yslZJOZHxFWR9m4wu8gLtZA/Fmrnu1O+6+lVR8PinZ20ppmHZ9gdZxA/xeAWZxrA84PCW1Fc1F5OHEdJlj/uoscCgvqGZabSJpMl13aRhus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SoYI82O2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qs2smi/h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746470011; x=1778006011;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KmnKyyPy8iUgcNbmIz3b3IApAhNbCnLedsjN4F9Uwb0=;
-  b=qs2smi/hdp+Hg2DcoQK/DkOIQt7IvquaZ1E0XAgmkEF2EtxTAw4maH0V
-   VBgZbQb+IlZCh2R1iVo/enHBieGfSSrOXTcLNjQ7A9C3tiQi3aP+9/z2d
-   6V3XVu/89brAqOCodWOVE8yhGGeHuiuVul80QUFLgdU5irTthjgcJgfF+
-   M=;
-X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
-   d="scan'208";a="90169577"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:33:23 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:46279]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.30.21:2525] with esmtp (Farcaster)
- id bf9ed52f-b5c4-4af4-80e5-24084eff4961; Mon, 5 May 2025 18:33:16 +0000 (UTC)
-X-Farcaster-Flow-ID: bf9ed52f-b5c4-4af4-80e5-24084eff4961
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:33:15 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 5 May 2025 18:33:11 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
-	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
-	<kuniyu@amazon.com>, <lennart@poettering.net>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
-Date: Mon, 5 May 2025 11:33:00 -0700
-Message-ID: <20250505183303.14126-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
-References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SoYI82O2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52CCC4CEE4;
+	Mon,  5 May 2025 18:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746470037;
+	bh=5S8M/c10REYo4PgzbC8d4IT8+Lk4+t8C4D84ntmXYig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SoYI82O2m/0NkHy3N0fDYrkgm4jlBTVenJoq4IKfWeLcfvsNnwVrpKnHUupKwt/nl
+	 3pQNcVC8/9H/16kDZFtWQt2miX73DaRlN5Osus4B8lZAvuRT6QU/89CqQJOSZzeveC
+	 9rOmzYMlRSLuZb2wAQYQL/JndyteJ41+qxP20NRhizh9M0lwsa/QjxA9j6HX5Jxkdd
+	 O1H1DJxEAZy+Cl0NSWuJfq4vujaxlj2IApj4o1O1E9JRETaH3hky1FaEuf0aLndNoa
+	 0sCJmd3SXWtabtXlmy/QPTI+qnvpze+Ugjc2BrkeORZUscI+0gje96xfp9nLxNT8Sa
+	 je5WDQ9cAuFHg==
+Date: Mon, 5 May 2025 13:33:55 -0500
+From: Rob Herring <robh@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 5/9] rust: device: Introduce PropertyGuard
+Message-ID: <20250505183355.GA1658159-robh@kernel.org>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-6-remo@buenzli.dev>
+ <5946174b-3178-462d-bb59-1e0d6c5f4dda@de.bosch.com>
+ <D9O8WJ0RDNIA.4JYLWLYLBC2A@buenzli.dev>
+ <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
+ <D9OCJQ1HH5CM.2OHEAOF271GMC@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+In-Reply-To: <D9OCJQ1HH5CM.2OHEAOF271GMC@buenzli.dev>
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 05 May 2025 13:13:38 +0200
-> Coredumping currently supports two modes:
+On Mon, May 05, 2025 at 05:53:33PM +0200, Remo Senekowitsch wrote:
+> On Mon May 5, 2025 at 5:37 PM CEST, Rob Herring wrote:
+> > On Mon, May 5, 2025 at 8:02 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
+> >>
+> >> On Mon May 5, 2025 at 7:14 AM CEST, Dirk Behme wrote:
+> >> > On 04/05/2025 19:31, Remo Senekowitsch wrote:
+> >> >> This abstraction is a way to force users to specify whether a property
+> >> >> is supposed to be required or not. This allows us to move error
+> >> >> logging of missing required properties into core, preventing a lot of
+> >> >> boilerplate in drivers.
+> >> >>
+> >> >> It will be used by upcoming methods for reading device properties.
+> >> >>
+> >> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> >> >> ---
+> >> >>  rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++++
+> >> >>  1 file changed, 59 insertions(+)
+> >> >>
+> >> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+> >> >> index 6ccc7947f9c31..59c61e2493831 100644
+> >> >> --- a/rust/kernel/device/property.rs
+> >> >> +++ b/rust/kernel/device/property.rs
+> >> >> @@ -123,3 +123,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+> >> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+> >> >>      }
+> >> >>  }
+> >> >> +
+> >> >> +/// A helper for reading device properties.
+> >> >> +///
+> >> >> +/// Use [`Self::required_by`] if a missing property is considered a bug and
+> >> >> +/// [`Self::optional`] otherwise.
+> >> >> +///
+> >> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
+> >> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
+> >> >> +    /// The result of reading the property.
+> >> >> +    inner: Result<T>,
+> >> >> +    /// The fwnode of the property, used for logging in the "required" case.
+> >> >> +    fwnode: &'fwnode FwNode,
+> >> >> +    /// The name of the property, used for logging in the "required" case.
+> >> >> +    name: &'name CStr,
+> >> >> +}
+> >> >> +
+> >> >> +impl<T> PropertyGuard<'_, '_, T> {
+> >> >> +    /// Access the property, indicating it is required.
+> >> >> +    ///
+> >> >> +    /// If the property is not present, the error is automatically logged. If a
+> >> >> +    /// missing property is not an error, use [`Self::optional`] instead. The
+> >> >> +    /// device is required to associate the log with it.
+> >> >> +    pub fn required_by(self, dev: &super::Device) -> Result<T> {
+> >> >> +        if self.inner.is_err() {
+> >> >> +            dev_err!(
+> >> >> +                dev,
+> >> >> +                "{}: property '{}' is missing\n",
+> >> >> +                self.fwnode.display_path(),
+> >> >> +                self.name
+> >> >> +            );
+> >> >> +        }
+> >> >> +        self.inner
+> >> >> +    }
+> >> >
+> >> > Thinking about the .required_by(dev) I wonder if there will be cases
+> >> > where we do *not* have a device? I.e. where we really have a fwnode,
+> >> > only. And therefore can't pass a device. If we have such cases do we
+> >> > need to be able to pass e.g. Option(dev) and switch back to pr_err() in
+> >> > case of None?
+> >>
+> >> In that case, bringing back the previous .required() method seems
+> >> reasonable to me. But only if we definitely know such cases exist.
+> >
+> > They definitely exist. Any property in a child node of the device's
+> > node when the child itself is not another device for example.
 > 
-> (1) Dumping directly into a file somewhere on the filesystem.
-> (2) Dumping into a pipe connected to a usermode helper process
->     spawned as a child of the system_unbound_wq or kthreadd.
-> 
-> For simplicity I'm mostly ignoring (1). There's probably still some
-> users of (1) out there but processing coredumps in this way can be
-> considered adventurous especially in the face of set*id binaries.
-> 
-> The most common option should be (2) by now. It works by allowing
-> userspace to put a string into /proc/sys/kernel/core_pattern like:
-> 
->         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> 
-> The "|" at the beginning indicates to the kernel that a pipe must be
-> used. The path following the pipe indicator is a path to a binary that
-> will be spawned as a usermode helper process. Any additional parameters
-> pass information about the task that is generating the coredump to the
-> binary that processes the coredump.
-> 
-> In the example core_pattern shown above systemd-coredump is spawned as a
-> usermode helper. There's various conceptual consequences of this
-> (non-exhaustive list):
-> 
-> - systemd-coredump is spawned with file descriptor number 0 (stdin)
->   connected to the read-end of the pipe. All other file descriptors are
->   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
->   already caused bugs because userspace assumed that this cannot happen
->   (Whether or not this is a sane assumption is irrelevant.).
-> 
-> - systemd-coredump will be spawned as a child of system_unbound_wq. So
->   it is not a child of any userspace process and specifically not a
->   child of PID 1. It cannot be waited upon and is in a weird hybrid
->   upcall which are difficult for userspace to control correctly.
-> 
-> - systemd-coredump is spawned with full kernel privileges. This
->   necessitates all kinds of weird privilege dropping excercises in
->   userspace to make this safe.
-> 
-> - A new usermode helper has to be spawned for each crashing process.
-> 
-> This series adds a new mode:
-> 
-> (3) Dumping into an abstract AF_UNIX socket.
-> 
-> Userspace can set /proc/sys/kernel/core_pattern to:
-> 
->         @linuxafsk/coredump_socket
-> 
-> The "@" at the beginning indicates to the kernel that the abstract
-> AF_UNIX coredump socket will be used to process coredumps.
-> 
-> The coredump socket uses the fixed address "linuxafsk/coredump.socket"
-> for now.
+> I don't think that counts, because you do have a device in that
+> situation. The log should be assicated with that. So callers are
+> responsible to propagate a reference to the device to wherever the call
+> to .required_by(dev) is happening.
 
-What's behind this dicision from v2 ?
+Ah, right. So it would just be cases that aren't a driver at all. That's 
+limited to the OF_DECLARE cases. I agree we can worry about those later.
 
-/proc/sys/kernel/core_pattern can only be set by Administrator
-and I don't see the point in having this limitation on the
-AF_UNIX side.
-
-
-
-> 
-> The coredump socket is located in the initial network namespace.
-
-I understand this is a reasonable decision to avoid complicated
-path management in the mount ns but keep connectivity from any
-namespace.
-
-
-> To bind
-> the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
-> user namespace. Listening and reading can happen from whatever
-> unprivileged context is necessary to safely process coredumps.
-> 
-> When a task coredumps it opens a client socket in the initial network
-> namespace and connects to the coredump socket. For now only tasks that
-> are acctually coredumping are allowed to connect to the initial coredump
-> socket.
-
-This can be controlled by BPF (cgroup sockops or LSM) if a user
-really cares about spam clients.
-
-I think how to set up coredump is userspace responsibility.
-
-
-> 
-> - The coredump server should use SO_PEERPIDFD to get a stable handle on
->   the connected crashing task. The retrieved pidfd will provide a stable
->   reference even if the crashing task gets SIGKILLed while generating
->   the coredump.
-> 
-> - By setting core_pipe_limit non-zero userspace can guarantee that the
->   crashing task cannot be reaped behind it's back and thus process all
->   necessary information in /proc/<pid>. The SO_PEERPIDFD can be used to
->   detect whether /proc/<pid> still refers to the same process.
-> 
->   The core_pipe_limit isn't used to rate-limit connections to the
->   socket. This can simply be done via AF_UNIX socket directly.
-> 
-> - The pidfd for the crashing task will contain information how the task
->   coredumps. The PIDFD_GET_INFO ioctl gained a new flag
->   PIDFD_INFO_COREDUMP which can be used to retreive the coredump
->   information.
-> 
->   If the coredump gets a new coredump client connection the kernel
->   guarantees that PIDFD_INFO_COREDUMP information is available.
->   Currently the following information is provided in the new
->   @coredump_mask extension to struct pidfd_info:
-> 
->   * PIDFD_COREDUMPED is raised if the task did actually coredump.
->   * PIDFD_COREDUMP_SKIP	is raised if the task skipped coredumping (e.g.,
->     undumpable).
->   * PIDFD_COREDUMP_USER	is raised if this is a regular coredump and
->     doesn't need special care by the coredump server.
->   * IDFD_COREDUMP_ROOT is raised if the generated coredump should be
->     treated as sensitive and the coredump server should restrict to the
->     generated coredump to sufficiently privileged users.
-> 
-> - Since unix_stream_connect() runs bpf programs during connect it's
->   possible to even redirect or multiplex coredumps to other sockets.
-
-If the socket is in a cgroup, yes, and even if not, BPF LSM can
-reject some requests.
-
-
-> 
-> - The coredump server should mark itself as non-dumpable.
->   To capture coredumps for the coredump server itself a bpf program
->   should be run at connect to redirect it to another socket in
->   userspace. This can be useful for debugging crashing coredump servers.
-> 
-> - A container coredump server in a separate network namespace can simply
->   bind to linuxafsk/coredump.socket and systemd-coredump fowards
->   coredumps to the container.
-
-I think the name should be also configurable in non-initial netns.
-
-
-> 
-> - Fwiw, one idea is to handle coredumps via per-user/session coredump
->   servers that run with that users privileges.
-> 
->   The coredump server listens on the coredump socket and accepts a
->   new coredump connection. It then retrieves SO_PEERPIDFD for the
->   client, inspects uid/gid and hands the accepted client to the users
->   own coredump handler which runs with the users privileges only.
-> 
-> The new coredump socket will allow userspace to not have to rely on
-> usermode helpers for processing coredumps and provides a safer way to
-> handle them instead of relying on super privileged coredumping helpers.
-> 
-> This will also be significantly more lightweight since no fork()+exec()
-> for the usermodehelper is required for each crashing process. The
-> coredump server in userspace can just keep a worker pool.
-> 
-> This is easy to test:
-> 
-> (a) coredump processing (we're using socat):
-> 
->     > cat coredump_socket.sh
->     #!/bin/bash
-> 
->     set -x
-> 
->     sudo bash -c "echo '@linuxafsk/coredump.socket' > /proc/sys/kernel/core_pattern"
->     sudo socat --statistics abstract-listen:linuxafsk/coredump.socket,fork FILE:core_file,create,append,trunc
-> 
-> (b) trigger a coredump:
-> 
->     user1@localhost:~/data/scripts$ cat crash.c
->     #include <stdio.h>
->     #include <unistd.h>
-> 
->     int main(int argc, char *argv[])
->     {
->             fprintf(stderr, "%u\n", (1 / 0));
->             _exit(0);
->     }
+Rob
