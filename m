@@ -1,148 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B859226B0A9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2429264A77
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746466340; cv=none; b=ulh96CqHntwFOPsz4a2sSLec9vY3w4ugPI/5ofTCwlcEfyVouSRMY/z2jytyo6JtuPmle/WjSTtfs+Q9Q/8/+hAqRApVBoi9ytKTWTjOofTtzUvyoBpItmg6Wr+NcyunXv+Ymol/Sx6T6GRY7IPjfktGV6UitGMMSMClrToTtF4=
+	t=1746466368; cv=none; b=mFhl6sQf9RH1YiuLLVYwBTFOYavD+MhM3m2Oi+bEztvUTRKrAUzHIUkuVBLPWqLE8rPCal2qizxMMgeCr48tlyBXQvT+Hctd4E3RGwmJcC9eNSTb/r4fmYhptd7U2ps1oVRkOGmLtPzrwn5VNxlqZXtUoQEhZVXuKWWzcP+jKWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746466340; c=relaxed/simple;
-	bh=Sirt4gr8r2sZgygHZ7WpIIJ0uwlYX2WulgE8mLU8plo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MZiSTXEwPGUrLTrHaG4BuJ+hwOwem7xpMaam+FSPSDeu10+E7wqBrJ6HeEznXdvoxyQ+8MpF5HXTT5hxQ+h2hAbAC9i/e+qYT+jqh5N+RLaECtSOqRRYWvch8jRqnZu3/ZNXuYP3EOMkyNeeld3U4hYldEU6w2rqBemb41Adg4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VnKDC/kQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnKDC/kQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746466337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JjAxyTaB2HZtvewgEgyYKDE4ThQVrWuUNuivvsqnLN4=;
-	b=VnKDC/kQEWL7ywPq6slUWFdLrlAgBb5Q1a2Xb28QFnTeuawMGw/dbDLxE7Gn1nCQysZnyH
-	2cn8DQRAkM/2wa2ITAHW2++QJ0MIlKgBKkWEosBdoaXndUv+/Q62myddz6x9VZDpfuQ1dR
-	1Bh+sSOQV8Tlqk2OvL+MZ2IQWHpMtnE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-1hVR47jAMXWm7iOz7TjFrA-1; Mon, 05 May 2025 13:32:16 -0400
-X-MC-Unique: 1hVR47jAMXWm7iOz7TjFrA-1
-X-Mimecast-MFC-AGG-ID: 1hVR47jAMXWm7iOz7TjFrA_1746466335
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so25208355e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:32:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746466335; x=1747071135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JjAxyTaB2HZtvewgEgyYKDE4ThQVrWuUNuivvsqnLN4=;
-        b=nkCcEg0abqU/sXaBxVsaLrgZXCzzji9zLuelq97L3kSOg5ohDhu+3J6ZyC19FKcvmh
-         eX2dibOUMXt0Y3vojTm+ctJdzR4twnOS1BnGWp65PEmE5dOp3nA50JOLQXARIUzME5N4
-         pEGaE3woCV5t3eEvveCCXxK+GFxaLHcaQTI5ZiS1K1ROVO5PubuiJ9RFxLqG8JciE42u
-         4+FGu2Mc0t3PkFNRoSojiVP449Ah/EkMrBSINXxypCl02Rmg1klycZ7JHq9QHR9WuHCi
-         bKjpsAg9t80paczcgEFN/lMNBBrHQZzuLOzSfhaoPcPhe9eYei13EEHudy2qJlmqvPFo
-         Jsbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsfbBeWf0cE78dh8JfICENFnYvJpyOvz/+DlZdYnrdDvCaq+s1i+dMDxW+LsbiilvJaX4I2A2tFWANFfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS8wX7yrw4RFZfH3CGQFyJbuJ0oTw64+IbzjdnUZgsCXK5dRP1
-	jZgs5Mv9c74g1IugCjqRgwEqUe7NiObVfiham6ekwrJDG9QPqarH10xIYx0027cexLAnf1weIuP
-	J/S4drfl5ir6ioj8L2w8LFBdIL1nRiF69gtVcV2c/9rrs/OhrftiZS43/Yg3Ngw==
-X-Gm-Gg: ASbGncsTCfMNyKsy2yHx7ZbCPWwTGp9TdaapKXC2EV7eA6qb3nuPDM1wQNa/tWgL5JN
-	A85sjcp7WI/aFSI3nZd/IC/ZW7s1Fhr57DQtzX6FNIHLtFkvPjnnYKLL+azBtiuT2PEDwVckMrv
-	8YydMvILjm7TsUE4MYn4c2AZxP+2W8mjLmqtVpP0OyNxUyEc/1Qux7nEySnonEhuQdCJqCjwB8S
-	Djs6F5m4K5HDeyGXdi6/JMZfeRXU+M6vE2PtTFR9uuyl/L49sSJZ//jv1ToOXCHn2cF0DE4MvFk
-	eflpYJ/UHUbRMZ3xYEC58MTWC0EdGlqC7ziMwB/Tad3Ti3QoXR6K+hJTnRbaFAi5YO5zTD9oxw=
-	=
-X-Received: by 2002:a05:600c:a401:b0:43c:e2dd:98f3 with SMTP id 5b1f17b1804b1-441c525facbmr56096285e9.21.1746466335025;
-        Mon, 05 May 2025 10:32:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFILc2vKI3/xP04PnDAD0gBqfLoTJ7gk5HkYL4nRmV2jGTs1rwbkDQtRYRRFH+l5ESk0GD4dg==
-X-Received: by 2002:a05:600c:a401:b0:43c:e2dd:98f3 with SMTP id 5b1f17b1804b1-441c525facbmr56096055e9.21.1746466334623;
-        Mon, 05 May 2025 10:32:14 -0700 (PDT)
-Received: from rh.fritz.box (p200300f6af1bce00e6fe5f11c0a7f4a1.dip0.t-ipconnect.de. [2003:f6:af1b:ce00:e6fe:5f11:c0a7:f4a1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0c3dsm11343310f8f.12.2025.05.05.10.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 10:32:14 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Cc: Quentin Perret <qperret@google.com>,
-	Fuad Tabba <tabba@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Sebastian Ott <sebott@redhat.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] KVM: arm64: Fix uninitialized memcache pointer in user_mem_abort()
-Date: Mon,  5 May 2025 19:31:48 +0200
-Message-ID: <20250505173148.33900-1-sebott@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746466368; c=relaxed/simple;
+	bh=uXxAR8n0fPcQeh48F1sLbPqGN+YK5mxQPIrLZmz4/4k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fSiqbqvWpd7q9xdc+XFozEukGymijh6ylLRpfCrB0qgysiz9qmyAygOL89Vt//XRJoo2mI1IC6f1MCORqHvz+JZIDgPxf9I26Ivlx0rPG+Mi/hZRh0mY0PuJQZ96kMfW9k0zsLPeKdnnzvQWouODljT+vCU1JmtZ12Bv81oqCD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1uBzgH-00059P-JL; Mon, 05 May 2025 19:32:41 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1uBzgG-001GRL-2G;
+	Mon, 05 May 2025 19:32:40 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1uBzgG-00CHb5-21;
+	Mon, 05 May 2025 19:32:40 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Mon, 05 May 2025 19:32:38 +0200
+Subject: [PATCH v2] usb: typec: tcpm: detect orientation in debug acc mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-tcpm-v2-1-71c6a21596b4@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIADX2GGgC/12MOw7DIBAFr2JtHSIW4fyq3CNygfHG3iKAgCBHF
+ ncPcRm9ap5Gs0GiyJTg1m0QqXBi7xqoQwd2MW4mwVNjUFL1sk1kG15C46hHcyYjyUJTQ6Qnr3v
+ mMTReOGUfP3u14O/9CxQUKOiEWl0vvZGo7oHc/M7RO16PE8FQa/0CHmYoX50AAAA=
+To: Badhri Jagan Sridharan <badhri@google.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1967;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=uXxAR8n0fPcQeh48F1sLbPqGN+YK5mxQPIrLZmz4/4k=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBoGPY4bKHqX7zhgErbDMFYIQyl/qA4Ts8N+ZDqF
+ AipRFT94sGJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCaBj2OAAKCRC/aVhE+XH0
+ q9dfEACAVRII2DIau5ppoZOTWIIdr49h+Eii3K9VOKE/M+7ZfsjyV9pd3hei2g3+/W3qONFs/Cr
+ BLPc5GwQNN/vwuwy6XZBBFhlU707/7lZAuSbM0oCQzvHQ981fdfuPgKzX/XAxk3eJGn/+seYxLm
+ yIBK/0H/O+7GNkzhkCGiqdG1KOt50Q6PU6URJVxqm1Q6zMNPCkJcISRC+c4awZlwrJCJwz9pF8x
+ /8bgdYYWIrIh094ka7YtxI3vwMzSOwWrLRxj59CjQdO8s/vZwhA+hGGG/qZdbtuwlfX3OTS+Q/2
+ i994uxCHeZRy0Jj/iAbj8rhwjSffp2l7Ye8+RJ9VIDNvwkZVYFc69Nn8ZlgRfBOTUb/sQM3fGAP
+ roq0KwG7sUfgZNBtG6x7fqnkHIgvUjzLm3q4sokFEITYWp/TZLxOCnqzvLcTKkwlR+4PuymeR9n
+ L8UX1rne9hCTx7zCxKn8dq7LQCu8RomFW/4rf3bIoYD+NCo3ta3VpY7Fb+/vCOQx6p6CHm0UpTA
+ S1zKFbJ45mAVh/3iJTBOab6zgayY0j+xN8T5hIE3z8waGeyKKadKIMBLFbNLnsdTBFFQfqGAF58
+ rLBCQs8dV3wQ+Xou71xPnQGwUorOhCyUHM//F1uDaRYT4EdJODXcIR+2QAW/TJZ9iWSWDVNHk5F
+ PYS/if1/EpnnaBg==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Commit fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM") made the
-initialization of the local memcache variable in user_mem_abort()
-conditional, leaving a codepath where it is used uninitialized via
-kvm_pgtable_stage2_map().
+For the debug accessory case, the orientation can be detected by reading
+the cc resistor values. The will be TYPEC_CC_RP_DEF and TYPEC_CC_RP_1_5
+in sink mode and TYPEC_CC_RA TYPEC_CC_RD in src mode.
 
-This can fail on any path that requires a stage-2 allocation
-without transition via a permission fault or dirty logging.
-
-Fix this by making sure that memcache is always valid.
-
-Fixes: fce886a60207 ("KVM: arm64: Plumb the pKVM MMU in KVM")
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/kvmarm/3f5db4c7-ccce-fb95-595c-692fa7aad227@redhat.com/
+Fixes: 64843d0ba96 ('usb: typec: tcpm: allow to use sink in accessory mode')
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
- arch/arm64/kvm/mmu.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Changes in v2:
+- Added fixes tag as suggested by gregkh
+- Link to v1: https://lore.kernel.org/r/20250505-tcpm-v1-1-e6142985a012@pengutronix.de
+---
+ drivers/usb/typec/tcpm/tcpm.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 754f2fe0cc67..eeda92330ade 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1501,6 +1501,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 		return -EFAULT;
- 	}
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 784fa23102f90..478e9c80fc8c2 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -611,6 +611,12 @@ static const char * const pd_rev[] = {
+ #define tcpm_port_is_sink(port) \
+ 	(tcpm_cc_is_sink((port)->cc1) || tcpm_cc_is_sink((port)->cc2))
  
-+	if (!is_protected_kvm_enabled())
-+		memcache = &vcpu->arch.mmu_page_cache;
-+	else
-+		memcache = &vcpu->arch.pkvm_memcache;
++#define tcpm_port_is_debug_pol_cc1(port) \
++	((tcpm_port_is_sink(port) && \
++	 (port->cc2 == TYPEC_CC_RP_DEF && port->cc1 == TYPEC_CC_RP_1_5)) || \
++	 (!tcpm_port_is_sink(port) && \
++	 (port->cc2 == TYPEC_CC_RA && port->cc1 == TYPEC_CC_RD)))
 +
- 	/*
- 	 * Permission faults just need to update the existing leaf entry,
- 	 * and so normally don't require allocations from the memcache. The
-@@ -1510,13 +1515,11 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	if (!fault_is_perm || (logging_active && write_fault)) {
- 		int min_pages = kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu);
+ #define tcpm_cc_is_source(cc) ((cc) == TYPEC_CC_RD)
+ #define tcpm_cc_is_audio(cc) ((cc) == TYPEC_CC_RA)
+ #define tcpm_cc_is_open(cc) ((cc) == TYPEC_CC_OPEN)
+@@ -4569,8 +4575,11 @@ static int tcpm_acc_attach(struct tcpm_port *port)
+ 	if (tcpm_port_is_audio(port))
+ 		state = TYPEC_MODE_AUDIO;
  
--		if (!is_protected_kvm_enabled()) {
--			memcache = &vcpu->arch.mmu_page_cache;
-+		if (!is_protected_kvm_enabled())
- 			ret = kvm_mmu_topup_memory_cache(memcache, min_pages);
--		} else {
--			memcache = &vcpu->arch.pkvm_memcache;
-+		else
- 			ret = topup_hyp_memcache(memcache, min_pages);
--		}
-+
- 		if (ret)
- 			return ret;
- 	}
+-	if (tcpm_port_is_debug(port))
++	if (tcpm_port_is_debug(port)) {
++		port->polarity = tcpm_port_is_debug_pol_cc1(port) ?
++					TYPEC_POLARITY_CC1 : TYPEC_POLARITY_CC2;
+ 		state = TYPEC_MODE_DEBUG;
++	}
+ 
+ 	ret = tcpm_set_roles(port, true, state, role, data);
+ 	if (ret < 0)
 
-base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
+---
+base-commit: 588d032e9e566997db3213dee145dbe3bda297b6
+change-id: 20250505-tcpm-41b4ba7ea0ec
+
+Best regards,
 -- 
-2.49.0
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
