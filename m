@@ -1,203 +1,165 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5388C1C8606
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810781CD1F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746424980; cv=none; b=W644jqiAd20tkKwoC47MiSXCHLxfNjaO44fNYqMMAKwjYGm9eGyZUPdM2fBJymcuYn2pHLxG7mv6YwAf2lZAbrsa+8ggEAix14nakGoJnonnMBv7BVeRRcRf10MOtBqQGVfn7Zxz7WpW6bv+6vkDKu1sL9VwQokZyUdHqXiPlLU=
+	t=1746424986; cv=none; b=aHc8kONRYwfbZOUVNzc6zNlrOdhLVdjKLgCgL1RG57muCEV2ZiQ67oFh3cAhlquv/pFr2ShKFW4biA4Zn96XOP1CEgyOO7F/Py0ALaDYE2l7cizENtEQ4N9zP1niFjvnuMT0Ws4X93YYgyj4CiCNVABFi6wkD5n53wWQFUIhklM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746424980; c=relaxed/simple;
-	bh=F4vahJQAhNNz3quYWOnwreWN2lFBESZN8wReSW+bMHM=;
+	s=arc-20240116; t=1746424986; c=relaxed/simple;
+	bh=FIbiteMZlY9SCgyxfo4jij+T+/OrfTrRlsMpySNafqo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m51lrKXJY9U8Fwv8ZcayunZBl54SrV/r9ZBePlMLW2PMZnGyyaPzwoHyF473Lwphq7l/h4xs5PPne2uxwU4cjDVer+DN/BFfhQYUsO1xsxzb5HCdorWU2moN02Qd8z6npsJFsVy2ICmzhrguyy0TZgfjEszpZrzNomx1yoCYOo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BC4Y073v; arc=none smtp.client-ip=209.85.219.46
+	 To:Cc:Content-Type; b=T4aD+cgj/LqDYn2APhVLcFzxeSUSv3yK889F18LuSMxBOl8f2V+wnGlMN8301VE2Hkn3CUhv1gcrwduMmxAbj+idPkq1LCBNrbIocUrTRsXa6rL0goA4I0aUT2CnznwmL/5apt/cDNkqZ1yzX7pxVnhv2R3rdEVH5cOk26nxpk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pzIpgCJS; arc=none smtp.client-ip=209.85.219.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BC4Y073v"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8ec399427so39866986d6.2
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 23:02:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pzIpgCJS"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f4cd4c07c3so35912986d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 23:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746424977; x=1747029777; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746424983; x=1747029783; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FTIZXWEposkEOq77/CuYl6muvyV97BiYlj+fZW2kgZg=;
-        b=BC4Y073v8EQFKLix0vxgnLQtBKBT/OhUxiQfkiL7ZVKCyZa/FMCNF8c0swm2JqfDM6
-         VU7oQgsQQZ5Nq0up+QODLCDpkHFFbDrKRplvZtBz3wzCWPMQV1QAm46zc+XKI1F7FnZC
-         dxVprVU6YXetYhdEM8V44YQQ8yUafkirEngvFJsDssdhzSzLvLOY5yT0L6BkDP/YtmEW
-         Wmyyms2T9kMYtyYTc7AozzjPlU3dNnfj8dpZmZcARKJADMpPmpYLLufVNnnI53tBx2GM
-         r7x0nvN+E+1tsKuKarS+H3cH5hyAf/lg0626akpkb6u+pRb9oVmNQrLoQ7/4W9FaNNzV
-         89qQ==
+        bh=Lp7k18Mv0Q6/j6kZMYeXgsYrn45iaXMsKtCRHT7Mtfo=;
+        b=pzIpgCJSGNqH98t38M3NyUnOM0JcMiaAIcCCqVb6AjJ6AG69kVEnQ/omK7eBB720YM
+         vSiu3XWlO+LjdrsBFvEiRvHrvp4csgpLUG63paljiE7pkUYMUmLJmB1JbvKS3e05ebPd
+         ePbMcCztu3LGE31JnDqRbb+OM8UlmW+it1tSuej3159R7vzNHwo99woAQC5A4j0yT2vD
+         ci5QtHLQmUL40up4WIITnkcpxWucGq2j/9M/r6ZtoME68VSXJrIiLwNSvFD2G4NBeuV5
+         qdXQ66+Scjk41HdKYiIyQ5wb7Kx7d2oEPi/8n5D7TiUClnH5mJIwp2OXDx7i80XY2Xvc
+         xPEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746424977; x=1747029777;
+        d=1e100.net; s=20230601; t=1746424983; x=1747029783;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FTIZXWEposkEOq77/CuYl6muvyV97BiYlj+fZW2kgZg=;
-        b=klV4Y5jZj4KiKPrGhs0wOz195G05knFnU5BLbKdmzADmxm5n+k66bx+6o1yhzaomhS
-         pToampK2PclBqD0zwZKbQF9VIn5HASFKgBWcDDmr8IF8fyWtduuYNv50UqoBXlfUPEd3
-         7LqmNn6sDd+g8L9ORmB/cEuSFNJm1Gti07tYuEiEPXtTGVN9mgR9gCv/3v6xHIdDcq8v
-         57gPvI+p6IdGKc4fiqX3fAY6X/hocrt1cXRkNd0S3N4C96LashCIIxig/Qir1HAqRjnI
-         ZVw4cIY0n6SlogFPwW+Ag9ap6iAPCs+2fabUQrQiShtP/q4R5xYyFeWHzfAJLbY7367Z
-         TnCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXI2+9YvWFB4jTxi8r8/loaot/Gq/8gLaUacESLdyi72mJ8P1Lg6eJ5ILf1FOaRQmLm2tQFNp0PR7IpIZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVIli64ZiIS7ax9S9bhm19HMh2soykdh8e/PTY1yRhrob6BT7q
-	j9exrKICJ+kURK74wlWVa6vXMuGSXRcK2NsE/scOdZdSwvCwnydZBUf1TAT57Cy8lfIml9KVnqQ
-	F8FXUbiZFnAir4gCaS2TnHIwp2RSUpw0G0wBQ
-X-Gm-Gg: ASbGnctCiuqYRHeg7iIiLPZH5HGsQj1C+T1oklHTUIuAp84DrFcX6doMxVPlAgZgeX1
-	Us5wpy6Dm7wqkAxbLpQqLZUnmq1h+V6UmG98HFQd00O9JIPYEC5r32B4CucErjpliI5TeoCWqV2
-	BhlSP6feQrx6RDfQpWx2XFJfk=
-X-Google-Smtp-Source: AGHT+IHvnBRkLV0yPC58kQDugMI0D05YJSCJ/82ITf12XDS/cMie5SVaCSotW3gGLYrpmHO0sLSvZoZHB/qdZc9r06s=
-X-Received: by 2002:a05:6214:1307:b0:6f4:c824:9d3d with SMTP id
- 6a1803df08f44-6f52384eceemr125534656d6.37.1746424976931; Sun, 04 May 2025
- 23:02:56 -0700 (PDT)
+        bh=Lp7k18Mv0Q6/j6kZMYeXgsYrn45iaXMsKtCRHT7Mtfo=;
+        b=mI0UdshBu5AJkVsL6ecDCeNOSvM5mjZrtZhKpg2mkXcK+qV6t/QTBi8Y4Rrr8ZRr65
+         pZufD8h4GCxXmh5M6sFUDSTvVOixbQbfr3DT/VdxX4OERmYGqrmvFGaskb+Mex96sn9q
+         b0Js5ghS3eE9J7zdM23GHxAbYX4cx8zcCTt9mPP3C8ejsdERrSWuGmr0/Gkk7JJynSlk
+         jitRTyK5mq2gIxefXJyUrqa38CNSJ+qMem9iOJWbzPmrI5a9nB1q1KszmeYvpdvhC0vP
+         1DRsD7y0Y93l1hKgQORpAmG1BwhKAPJs6QSPGeHjqr//4MhGIN08YuLksLOpUZmT4RIM
+         PdWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDWyF+y/aeB/eR2wZIc0NGfBH1HuF5XVZeAN8gOI6opVw2sJ89Q2D7et2JMnIp6vHFqAFihIh1LqgHorY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4cPnv3mI9ZfTZhVZp5gFT+DV6pdvxf/XObCAV33eoByrSgdZY
+	bopT4bc0YTeV6DoMoOO35tUCnJ5oT19audfsrvikq0/MEleIiMWo1wptCCrk6SC6tSwzA7Szbku
+	DIPiMhea3lXgAvCZnHHAeqh30LyUgGYH8SkX4
+X-Gm-Gg: ASbGncsSNm/MYPny9queD0aCkYDfyNtgp76bvYUGOY0hxl2K+EypYneA9l4S3b420J/
+	tdBsY9U9n+XdaO66XiGpeXoemehRLlysWjFngrndzSo2kQNiR7E3Wn1Zvknj+45AzwuWLFDQJGu
+	X7c/vf9ezuGi9VFNPMqD8dZQ8=
+X-Google-Smtp-Source: AGHT+IH8g7ImerDBSxOboHoBPQcGP9wlwdTQbMMeBILHYZ7QA9s7UXVKzKHRdL1v/6NO8hsad206wvuhez4QMz2l88s=
+X-Received: by 2002:a05:6214:2509:b0:6e6:591b:fa62 with SMTP id
+ 6a1803df08f44-6f523725879mr136920846d6.5.1746424983121; Sun, 04 May 2025
+ 23:03:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502215133.1923676-1-ojeda@kernel.org> <20250502215133.1923676-8-ojeda@kernel.org>
-In-Reply-To: <20250502215133.1923676-8-ojeda@kernel.org>
+References: <20250502172459.14175-1-skhan@linuxfoundation.org>
+In-Reply-To: <20250502172459.14175-1-skhan@linuxfoundation.org>
 From: David Gow <davidgow@google.com>
-Date: Mon, 5 May 2025 14:02:44 +0800
-X-Gm-Features: ATxdqUF8CsR4W9w3FVi75qqgqr3prGPC0Y2_AW4HmQuTefiWbq5MSME8G2N-tLc
-Message-ID: <CABVgOS=bnn-G_DjEUh_Odq2iHJ-xg7R-DR4krjZd+o9R3-Pr0w@mail.gmail.com>
-Subject: Re: [PATCH 7/7] Documentation: rust: testing: add docs on the new
- KUnit `#[test]` tests
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Date: Mon, 5 May 2025 14:02:51 +0800
+X-Gm-Features: ATxdqUEOFbaKQ5-k-iDPtcXV4ssda5KgtLHNB_FKJVJq9iGd9UirXfm6UpmFVI0
+Message-ID: <CABVgOSkUEaGnsCY5g4EJnvJhJ1PkCjfC7dDs41HjWhT-WLdfyg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: use ARCH from compile.h in unclean source tree msg
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: masahiroy@kernel.org, nathan@kernel.org, nicolas.schier@linux.dev, 
+	brendan.higgins@linux.dev, rmoar@google.com, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kselftest@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000068e9de06345d40ab"
+	boundary="000000000000c7824506345d4023"
 
---00000000000068e9de06345d40ab
+--000000000000c7824506345d4023
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 3 May 2025 at 05:52, Miguel Ojeda <ojeda@kernel.org> wrote:
+On Sat, 3 May 2025 at 01:25, Shuah Khan <skhan@linuxfoundation.org> wrote:
 >
-> There was no documentation yet on the KUnit-based `#[test]`s.
+> When make finds the source tree unclean, it prints a message to run
+> "make ARCH=x86_64 mrproper" message using the ARCH from the command
+> line. The ARCH specified in the command line could be different from
+> the ARCH of the existing build in the source tree.
 >
-> Thus add it now.
+> This could cause problems in regular kernel build and kunit workflows.
 >
-> It includes an explanation about the `assert*!` macros being mapped to
-> KUnit and the support for `-> Result` introduced in these series.
+> Regular workflow:
 >
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> - Build x86_64 kernel
+>         $ make ARCH=x86_64
+> - Try building another arch kernel out of tree with O=
+>         $ make ARCH=um O=/linux/build
+> - kbuild detects source tree is unclean
+>
+>   ***
+>   *** The source tree is not clean, please run 'make ARCH=um mrproper'
+>   *** in /linux/linux_srcdir
+>   ***
+>
+> - Clean source tree as suggested by kbuild
+>         $ make ARCH=um mrproper
+> - Source clean appears to be clean, but it leaves behind generated header
+>   files under arch/x86
+>         arch/x86/realmode/rm/pasyms.h
+>
+> A subsequent x86_64e build fails with
+>   "undefined symbol sev_es_trampoline_start referenced ..."
+>
+> kunit workflow runs into this issue:
+>
+> - Build x86_64 kernel
+> - Run kunit tests:  it tries to build for user specified ARCH or uml
+>   as default:
+>         $ ./tools/testing/kunit/kunit.py run
+>
+> - kbuild detects unclean source tree
+>
+>   ***
+>   *** The source tree is not clean, please run 'make ARCH=um mrproper'
+>   *** in /linux/linux_6.15
+>   ***
+>
+> - Clean source tree as suggested by kbuild
+>         $ make ARCH=um mrproper
+> - Source clean appears to be clean, but it leaves behind generated header
+>   files under arch/x86
+>
+> The problem shows when user tries to run tests on ARCH=x86_64:
+>
+>         $ ./tools/testing/kunit/kunit.py run ARCH=x86_64
+>
+>         "undefined symbol sev_es_trampoline_start referenced ..."
+>
+> Build trips on arch/x86/realmode/rm/pasyms.h left behind by a prior
+> x86_64 build.
+>
+> Problems related to partially cleaned source tree are hard to debug.
+> Change Makefile to unclean source logic to use ARCH from compile.h
+> UTS_MACHINE string. With this change kbuild prints:
+>
+>         $ ./tools/testing/kunit/kunit.py run
+>
+>   ***
+>   *** The source tree is not clean, please run 'make ARCH=x86_64 mrproper'
+>   *** in /linux/linux_6.15
+>   ***
+>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > ---
 
-Assuming all of the other changes go through, this looks good to me.
 
-It _may_ be useful to add some notes about when to choose KUnit tests
-versus rusttest host tests: particularly around cross-compiling and/or
-the need to call kernel APIs / access global kernel state. But some of
-that is covered in the general kernel testing / KUnit documentation in
-Documentation/dev-tools, anyway.
+Thanks very much! This is much better, and has given the right message
+on all of the architecture in-/out-of-tree build combinations I've
+thrown at it.
 
-Reviewed-by: David Gow <davidgow@google.com>
+Reviewed-by: David Gow <davidgow@google.com<
 
 Cheers,
 -- David
 
-
-
->  Documentation/rust/testing.rst | 71 ++++++++++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->
-> diff --git a/Documentation/rust/testing.rst b/Documentation/rust/testing.rst
-> index 6337b83815ab..f43cb77bcc69 100644
-> --- a/Documentation/rust/testing.rst
-> +++ b/Documentation/rust/testing.rst
-> @@ -130,6 +130,77 @@ please see:
->
->         https://rust.docs.kernel.org/kernel/error/type.Result.html#error-codes-in-c-and-rust
->
-> +The ``#[test]`` tests
-> +---------------------
-> +
-> +Additionally, there are the ``#[test]`` tests. Like for documentation tests,
-> +these are also fairly similar to what you would expect from userspace, and they
-> +are also mapped to KUnit.
-> +
-> +These tests are introduced by the ``kunit_tests`` procedural macro, which takes
-> +the name of the test suite as an argument.
-> +
-> +For instance, assume we want to test the function ``f`` from the documentation
-> +tests section. We could write, in the same file where we have our function:
-> +
-> +.. code-block:: rust
-> +
-> +       #[kunit_tests(rust_kernel_mymod)]
-> +       mod tests {
-> +           use super::*;
-> +
-> +           #[test]
-> +           fn test_f() {
-> +               assert_eq!(f(10, 20), 30);
-> +           }
-> +       }
-> +
-> +And if we run it, the kernel log would look like::
-> +
-> +           KTAP version 1
-> +           # Subtest: rust_kernel_mymod
-> +           # speed: normal
-> +           1..1
-> +           # test_f.speed: normal
-> +           ok 1 test_f
-> +       ok 1 rust_kernel_mymod
-> +
-> +Like documentation tests, the ``assert!`` and ``assert_eq!`` macros are mapped
-> +back to KUnit and do not panic. Similarly, the
-> +`? <https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-question-mark-operator>`_
-> +operator is supported, i.e. the test functions may return either nothing (i.e.
-> +the unit type ``()``) or ``Result`` (i.e. any ``Result<T, E>``). For instance:
-> +
-> +.. code-block:: rust
-> +
-> +       #[kunit_tests(rust_kernel_mymod)]
-> +       mod tests {
-> +           use super::*;
-> +
-> +           #[test]
-> +           fn test_g() -> Result {
-> +               let x = g()?;
-> +               assert_eq!(x, 30);
-> +               Ok(())
-> +           }
-> +       }
-> +
-> +If we run the test and the call to ``g`` fails, then the kernel log would show::
-> +
-> +           KTAP version 1
-> +           # Subtest: rust_kernel_mymod
-> +           # speed: normal
-> +           1..1
-> +           # test_g: ASSERTION FAILED at rust/kernel/lib.rs:335
-> +           Expected is_test_result_ok(test_g()) to be true, but is false
-> +           # test_g.speed: normal
-> +           not ok 1 test_g
-> +       not ok 1 rust_kernel_mymod
-> +
-> +If a ``#[test]`` test could be useful as an example for the user, then please
-> +use a documentation test instead. Even edge cases of an API, e.g. error or
-> +boundary cases, can be interesting to show in examples.
-> +
->  The ``rusttest`` host tests
->  ---------------------------
->
-> --
-> 2.49.0
->
-
---00000000000068e9de06345d40ab
+--000000000000c7824506345d4023
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -287,13 +249,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgOhQm0Yv11IA1aNt2BDEqXeGrdQyk
-TPPAIbQlAzNgT78wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NTA1MDYwMjU3WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg3X3HoZJb3UQrZ4tNJScQMKXLmJjG
+mjxZzzvQklR7xPIwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NTA1MDYwMzAzWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAHAUjESrxyvjoVU0k2C2LVRJjE/PvT+1dIsnv4725cHFM5U52xL/ulCmu40rvbWGd
-M4Uy4UG7Qhsen5zvQ5aOFPur0LluhfSAvdPQ2jyXghLbak3qmF1vK++KIYP0f/Ede1YL4bOJ151O
-lk3iLeBn+yyDR4uQFAVP2++k/UlXi2tKB+64q8SEeYsboyOz2dygF5FSoEmiWCTUL1I20SPCS7de
-FIA1KsnWVLjOu1Yi/ZCYJlTnWKIa2726YnshM5sImNxets/b/LkY4HcwXff6Ke/QWP1041spMq14
-tI1NenSClwQE8vMRpDhqabDL8MP+wZ55SzhI5Qq4NGLyo1DKWw==
---00000000000068e9de06345d40ab--
+AQEBBQAEggEAbP/vTr/ysmcXMdSLMw6J9D5uwgh//Tau0tx6k6oF9cAQ9U5vnqt/dwim/cKcUnVj
+M5SZyHgmC98dLj2cCKSDAAe4vPSEB1NbjnaRvW+fB2VCWcniQVEr39qCS+a4kKjmuJ9hL7eZJPnU
+bmUlfsP0j9WoJBWznbEcTH1xaHmeu1vZwEhEwxxjnMlU72FzY1Q/NbCwQnwvikQ6p/bWxhzvolrO
+BbViX4RkQre1oESHnvYZFp4AI7PCuQxrJMhIoBeBI+nKvdObZwPzJYJcNqa6GONmrZ7o0GNa9PiA
+WUTqvEDg9PJ/nNxoyJSOjIFbru/UfjNR71oeq2vAiV+COwjayw==
+--000000000000c7824506345d4023--
