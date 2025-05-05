@@ -1,43 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4D52D47A2;
-	Mon,  5 May 2025 22:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3D52D3FB5;
+	Mon,  5 May 2025 22:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485619; cv=none; b=cKoJ0oO4ZvMEoBGjcrzlwxn85/7BTLueRjWVgVKnGKP4tvC/drenQf3tFnd17EVV1GP/7tL/TYc0H/J7JQvcUqKUM692q6fL12PF7D0S+CahVIX6nCNeRpoXgGTBSGlB6zUZrwCUKM+gNezva3noEJw/QnX6DIiuApjZu4wXNtY=
+	t=1746485615; cv=none; b=LnjxGzAE7jiGWtBlZcgtWLir86umUIXWPdUG6MnuEwk/FcJfbX6OMkkmC/9caOBH+4SXtRxkTrnAGWs+/38yCHPo3VMqlDd2Iz1EB3AiNg+Ah9+yiySpp6manXmD7SvEzW71vs20XCcxHBOSzZ5PkTzEM/7U+dK34+gUdOTg/jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485619; c=relaxed/simple;
-	bh=ssn/ZHnwsREDe+ZIr3IpyRX2mXuA6gGJb1ktxetpc3Q=;
+	s=arc-20240116; t=1746485615; c=relaxed/simple;
+	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hrHSsYNCZp/raT2Qdr7SVek60BuLuq3xduV50efcjP5m/tFoCKBg+yg/F3scn4GYC1dMaYNcNQR+08kZhxRNvfcqm3KJPcUoMVXl3f/D29lG8IXY75ptaASAhtT+Q4nJm0zlzCyI68D326EGMVFUUlMN0G5XGP0A9W59nbRecrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8FqtH4F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QVgWnG13FdVwV7CY/jJIL5nXLJW5V1+Wx2ja2w9wZCDSvJ5PgIowLHGB8u59QsybZEzYEJiqdl5vbw2SxTzFMLxToY+oadW3KjzsjZ2kl4gXjq9DkL2KcPgOGT7HKoTc2X6HIdWdZRt+SLnIgWWYZuIubqWtiMA0qTSLQDa9qw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJQu5zxo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8FqtH4F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292D0C4CEEE;
-	Mon,  5 May 2025 22:53:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJQu5zxo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97BAC4CEEE;
+	Mon,  5 May 2025 22:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485619;
-	bh=ssn/ZHnwsREDe+ZIr3IpyRX2mXuA6gGJb1ktxetpc3Q=;
+	s=k20201202; t=1746485614;
+	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u8FqtH4FZirpnLEbfy3TK6ghz0gHuaZktTkoR9iXeDae5HaOBVkt2kiWsZhH9HR4I
-	 yTy+tPoRcMifokMXy4sIxwrDyzQ4H6pZo3ENxmROGii27YtfjzYjPorjiVgmMnULJB
-	 hbcbrjW9Tjx6c6hWnywharb9bUd7wjmrRsuxeSZFaA0I+JT8j3mxknCX8iJXwtYmNh
-	 EyuRgSa6EDBPK4iC2rVZY150v7k2Zs7zqS6nrZ+T7kEiVpqv6PJHa+/gsN9RwTECM/
-	 LCvs3iAe5jfhc1vKONOA180sX/zfFNE3R7Jt2v0vQL9gYocRr2CNK3D9RgnTvVxlEq
-	 oBhaINNH94aVw==
+	b=CJQu5zxoBVoVmaJNMfBSD48VoIxUu7pm/6fAej74FeHoqPTU9eGIMG+pUvGAmf7Qb
+	 RnOuRNNKg/yLakzMYG4MDCvfRA/Pk2SoUmPzIirmpHkXp7YLVXYf3BebA7DjEvYmZr
+	 Opsvwr9qVdf/1TAE8/7qxpc3xbs4yzaQQlosydUgjESe8jZHLaRuwp72v9NlIS4v64
+	 zr5HMpELNuV8DuqHKObKfh1Q43gll1Sh/WqCpaQ951JYdcOaU5E5W1r/TIDq2vLqQ6
+	 4nRcoBmYpb983svKcnacjtOxmMeACjNTIcWRG5Tcow3in8+N9k95oxmvA5iKJCV7zS
+	 ZIE5aHA806OTQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 390/486] wifi: mac80211: don't unconditionally call drv_mgd_complete_tx()
-Date: Mon,  5 May 2025 18:37:46 -0400
-Message-Id: <20250505223922.2682012-390-sashal@kernel.org>
+	martineau@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 387/486] mptcp: pm: userspace: flags: clearer msg if no remote addr
+Date: Mon,  5 May 2025 18:37:43 -0400
+Message-Id: <20250505223922.2682012-387-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,37 +57,53 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-[ Upstream commit 1798271b3604b902d45033ec569f2bf77e94ecc2 ]
+[ Upstream commit 58b21309f97b08b6b9814d1ee1419249eba9ef08 ]
 
-We might not have called drv_mgd_prepare_tx(), so only call
-drv_mgd_complete_tx() under the same conditions.
+Since its introduction in commit 892f396c8e68 ("mptcp: netlink: issue
+MP_PRIO signals from userspace PMs"), it was mandatory to specify the
+remote address, because of the 'if (rem->addr.family == AF_UNSPEC)'
+check done later one.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Reviewed-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250205110958.e091fc39a351.Ie6a3cdca070612a0aa4b3c6914ab9ed602d1f456@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+In theory, this attribute can be optional, but it sounds better to be
+precise to avoid sending the MP_PRIO on the wrong subflow, e.g. if there
+are multiple subflows attached to the same local ID. This can be relaxed
+later on if there is a need to act on multiple subflows with one
+command.
+
+For the moment, the check to see if attr_rem is NULL can be removed,
+because mptcp_pm_parse_entry() will do this check as well, no need to do
+that differently here.
+
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/pm_userspace.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index f000026ab714a..ba0af3018cf58 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -3589,7 +3589,8 @@ static void ieee80211_set_disassoc(struct ieee80211_sub_if_data *sdata,
- 	if (tx)
- 		ieee80211_flush_queues(local, sdata, false);
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index e35178f5205fa..bb76295d04c56 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -589,11 +589,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		goto set_flags_err;
  
--	drv_mgd_complete_tx(sdata->local, sdata, &info);
-+	if (tx || frame_buf)
-+		drv_mgd_complete_tx(sdata->local, sdata, &info);
+-	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
+-		if (ret < 0)
+-			goto set_flags_err;
+-	}
++	ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
++	if (ret < 0)
++		goto set_flags_err;
  
- 	/* clear AP addr only after building the needed mgmt frames */
- 	eth_zero_addr(sdata->deflink.u.mgd.bssid);
+ 	if (loc.addr.family == AF_UNSPEC ||
+ 	    rem.addr.family == AF_UNSPEC) {
 -- 
 2.39.5
 
