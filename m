@@ -1,56 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E31BA49;
-	Mon,  5 May 2025 18:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A351D54EE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470268; cv=none; b=jW4P/FUcyqSAW2zrpSSLmmejRhuuyRdKciMdNUcLD3c0mj+6OE4OmEppLvD+ppOc/EKgTVEt3hETXat9bjlgxj+2Azv++mRng/s+/ptr3plnparIKhLsuP7n9tqyy3KLWQDeZmw3PsQBMZ/x94TFERI5d4zc4XHaO4m+H5geJME=
+	t=1746470384; cv=none; b=ZZl4UZzgbKLOxxoaeeCynzO3FpgTCuTkD4B4P+lZJ/3ZB2Y+nbg6qkwdrrMniskX/5tYnWOlKXz1lF/u0PypkP5mD69uEDfGU1WzXk5MssScppwQ6CpeQ86+P4dEC7HNITUoo88HaoVxORQT9KWfePoyobiFoul6IwjMqWjAO+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470268; c=relaxed/simple;
-	bh=9qPKb+Gua9cbPCEVlARsehJnRTW9bGkKm5SEPQuKcrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Yg0bPIwrLR7XW6iVzX9Vnoi4Ju7IZ9oKcyiAqPL10htCLZCkTjnHD5ip2oUUu5O8/OMmaIJZKiF0mWTtd45HE9lhAnaN9r5yVGy4NXaTw0KFeM4xlhIHfJzSxZHzHWKmYNTFH8od2P0mNNoQFvp8TTsvKP1wdCCqUt4Q/IsvHZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfDNVKr1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746470384; c=relaxed/simple;
+	bh=hXBcmhzt7pc6mnlU3vaU2qmGiS+9/nJx5CuvAcuDxoM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GjRE2QvbtpoM4Nn0pBV/FS1eXGcZsNdS+YG3irsL+/+sHXFWHc6KNwVJB74c9562r0MluZRkve2X1ukadxbfoGJxVpmLkO38s193mLQO2b1PMX91R+AU3RS7OSTwKpyoRiR1j+H0m27vSodi6j2yirgWzvcicY9dYnd4uu6F2ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=hma8j/LP; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfDNVKr1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C491C4CEE4;
-	Mon,  5 May 2025 18:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746470267;
-	bh=9qPKb+Gua9cbPCEVlARsehJnRTW9bGkKm5SEPQuKcrQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AfDNVKr1YOX32jmVJIlKkt8WCJN0cjmngoh685Cnwd273gFdj6NGrBgwIPqGEMGGa
-	 fb9RjBo3z5ey8nVhJchVKT1DcnCvKByl1OivLyOahnUKqqHoNrM0/ndzv7YXBiUpdL
-	 sYyahSlnBCZJfxdvO3RHArx24qiEh2qaXf/wugM1O1Pf4rdIZvxLBZwwToIayS0Yt2
-	 3l10enOSVoagw9gB9JSX7OUMZMyT/tfpvssenlWGBQxwWbPmV8CUTp12agPJm0dnJy
-	 8PEgJP5zgqoS4iWMafzXyTrbuIfXXTplKVKh0I/58VogMssSbWrwhKQ1rzEoR77wfp
-	 anuDQOcHFB/5w==
-Date: Mon, 5 May 2025 13:37:46 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] PCI: dwc: Pass DWC PCIe mode to
- dwc_pcie_debugfs_init()
-Message-ID: <20250505183746.GA989979@bhelgaas>
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="hma8j/LP"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso2838001f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1746470380; x=1747075180; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r39SIeBEKMPL6NAc24Q2e8XKW+qtgjjLIiRr8dMiQPo=;
+        b=hma8j/LPJpq2VP4VSnLFKv5J8fIktsNniUoWw3ynZbUjkiJMcu7IWllkXixFUcCSOR
+         b0Gkr//lOu99HYwdzzqD8kbAI08Ua+cm+rEdv3RbJD7WhNPQiJVaV6YuiAQ0Zps1lHmJ
+         S10x0/JwY3XVg0bwinsDIRSzOMIlILemP0MmnTbsj+l/KwX1zcuokCnwVLGwMCXuA+pw
+         TQXgsryfJFXS7Y3cw4cUNLXjxlcmy7hnoe5yFxkIT+nyZ+g08JFDPrib6XyUNJ7dYMk1
+         5HAF2q3MHy5QeREMhVmbt7qUigw6rXct874H6HAPZZYDy7nC/cV8qWnPC8HapFEKIEJF
+         pMLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746470380; x=1747075180;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r39SIeBEKMPL6NAc24Q2e8XKW+qtgjjLIiRr8dMiQPo=;
+        b=Bl7e9E6jr92B4r2zkLiEuuOO1cWAZ3NIpYfrL255+8MCFbsTorX+XPdfyrv5gxAUju
+         v+Ey2DC/CdGW4dLVfKMBW0R2GO2DJQti0kpYDctaLRi5pM2X/VFCJcIe9o7RxkPtlH5j
+         CR9Ve4EsvFg2blxc7wvhi1kAf+Yikwl+l1fvf2pLYlfoZYE2ZBN+Y+zb01pa7sa3R9uJ
+         rvQYb1fso0NM2KD7MirsVw4X+ZGXUAtO8/23HDJrvqSyO87wUkCvES5E9vNu+g9ypSPj
+         enpK8ugUqmS67Q2l4fMBYlYjUWMeYQwnjkcgbgeGRKVrJyrRGsueL8C/5ltIK8hYrPvi
+         IbKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8zk6BLVhGBokNgv7ONEoXQ8Us+Bo+tKzBW/eRsgW0xkjOc89kNUjCYhBr5U1BuWczGibYdhM/QIDGgps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqDDBLUmhzPnrIC1lTr4jQ4YRtECDe7RTZYmrNQzsgfDzCzm71
+	AtU3rx3Lgpw6GQhHfuAasJ2uOYuWgoxBBU5uebZZBtuTkgOXEtaytzOLBrT/661nU8MTiny4wD7
+	m
+X-Gm-Gg: ASbGncswGK+OpZ43yhq2bCHWu4OCU10cUweS54nS9I9ILj0xSgargcsbOUC+1iUklvx
+	w/2qVzOf75M669fbtQJUA3JOrcbTF3ULs+9Jv6TkobvppMTRuXHDmFQZBtc6Btk3Vz40iywaSCa
+	Lva5KQTWWFJn4Evgs/W2/iIKI2KTuPF3mu+U5ErHLg57bnB4Csd0zmW3ZP2dZTCFaU32NkB+RJV
+	Yfr0Y6vhGJpytJIYhShllEAxlAQyvKACEVKK0UheoGQKUcYmNDPScY/iRX6QLREBF1SCswWv2ow
+	vydR3k/9tWw0BlMCx/+49qpti6yZEKFH5kOjXRLcn2utLM1giNTpelSFOmKu9UG06CUfzUM6HsC
+	Bq/vJfY4kK03dguOLt0VKctPwUc1DfLklKwfG
+X-Google-Smtp-Source: AGHT+IGaobnO4beOxK06wBrh3AtVwE6dZwzlJzIKWXgEz52cycCg7Fbg2XB6I7+Nolx5NZpbK0CsIw==
+X-Received: by 2002:a5d:59a7:0:b0:39f:bfa:7c90 with SMTP id ffacd0b85a97d-3a0ab57d1bdmr475313f8f.13.1746470379915;
+        Mon, 05 May 2025 11:39:39 -0700 (PDT)
+Received: from [192.168.1.240] (0.0.6.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff::600])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae8117sm11328877f8f.56.2025.05.05.11.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 11:39:39 -0700 (PDT)
+From: Lorenz Bauer <lmb@isovalent.com>
+Subject: [PATCH bpf-next v3 0/3] Allow mmap of /sys/kernel/btf/vmlinux
+Date: Mon, 05 May 2025 19:38:42 +0100
+Message-Id: <20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-pcie-ptm-v4-2-02d26d51400b@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALIFGWgC/23NQQ7CIBQE0Ks0rMXAp1jrynsYF4i/9ictNFBJT
+ dO7S1iZxuVkMm9WFjEQRnapVhYwUSTvclCHitneuBdyeubMQIAWWkiexoHce+HjaCYOaLU+Kau
+ wkyxPpoAdLYW7scfUcYfLzO656SnOPnzKT5Kl/08myQU3BhqodQO6PV8p+mQGdPPR+rFgCX4B2
+ AGQgVZbaGStai3bPbBt2xcErgqQ9wAAAA==
+X-Change-ID: 20250501-vmlinux-mmap-2ec5563c3ef1
+To: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Lorenz Bauer <lmb@isovalent.com>
+X-Mailer: b4 0.14.2
 
-On Mon, May 05, 2025 at 07:54:40PM +0530, Manivannan Sadhasivam wrote:
-> Upcoming PTM debugfs interface relies on the DWC PCIe mode to expose the
-> relevat debugfs attributes to userspace. So pass the mode to
-> dwc_pcie_debugfs_init() API from host and ep drivers and save it in
-> 'struct dw_pcie::mode'.
+I'd like to cut down the memory usage of parsing vmlinux BTF in ebpf-go.
+With some upcoming changes the library is sitting at 5MiB for a parse.
+Most of that memory is simply copying the BTF blob into user space.
+By allowing vmlinux BTF to be mmapped read-only into user space I can
+cut memory usage by about 75%.
 
-s/relevat/relevant/
+Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
+---
+Changes in v3:
+- Remove slightly confusing calculation of trailing (Alexei)
+- Use vm_insert_page (Alexei)
+- Simplified libbpf code
+- Link to v2: https://lore.kernel.org/r/20250502-vmlinux-mmap-v2-0-95c271434519@isovalent.com
+
+Changes in v2:
+- Use btf__new in selftest
+- Avoid vm_iomap_memory in btf_vmlinux_mmap
+- Add VM_DONTDUMP
+- Add support to libbpf
+- Link to v1: https://lore.kernel.org/r/20250501-vmlinux-mmap-v1-0-aa2724572598@isovalent.com
+
+---
+Lorenz Bauer (3):
+      btf: allow mmap of vmlinux btf
+      selftests: bpf: add a test for mmapable vmlinux BTF
+      libbpf: Use mmap to parse vmlinux BTF from sysfs
+
+ include/asm-generic/vmlinux.lds.h                  |  3 +-
+ kernel/bpf/sysfs_btf.c                             | 37 ++++++++++
+ tools/lib/bpf/btf.c                                | 83 +++++++++++++++++++---
+ tools/testing/selftests/bpf/prog_tests/btf_sysfs.c | 83 ++++++++++++++++++++++
+ 4 files changed, 194 insertions(+), 12 deletions(-)
+---
+base-commit: 38d976c32d85ef12dcd2b8a231196f7049548477
+change-id: 20250501-vmlinux-mmap-2ec5563c3ef1
+
+Best regards,
+-- 
+Lorenz Bauer <lmb@isovalent.com>
+
