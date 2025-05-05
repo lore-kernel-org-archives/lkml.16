@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31EC2D9025;
-	Mon,  5 May 2025 22:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709D42D1907;
+	Mon,  5 May 2025 22:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485502; cv=none; b=YUZqOVmlRu1KbALoQXG/njUNp+7ywa0/4HyjQM0V1EgeowOFIPc1jX+QnEwdyh3Tk9sgGe4QCXHXw+bNMDTdtwOxKa8gkUxnPZXHWlqnOz4JFGpek4ych+Xe20c66G9iv86ZNIx8GZ7VIFl0GUXf+nSmjpi0zwKOE4U8GW9Uby0=
+	t=1746485490; cv=none; b=BpFyZUMsKbeFlGsuujUTUbiotrxk97mavLO8vZFTSdJo+p/UqaifkiIXoZTqZaLpfJxcWF9OrlZ2TYuO4j6K9m3PgmpMOnXlu5QbVVJy9zx844TTPMdEpY5pmn8n9MqRREOmpLb8JlBwd/L/19XH0Vx1BALpsnlmdayTNJfk0kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485502; c=relaxed/simple;
-	bh=DV0btcbHT/VKBuY1f2UIoqlIVhOii2QIYaEHvmCG8kQ=;
+	s=arc-20240116; t=1746485490; c=relaxed/simple;
+	bh=2ceJD08yP8wgB+0CCl0SfGxjXpS17on4ocWe/k5HT0E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HYNiKSZ2cBNMwVwtpedtgxGD7ZTOEEyQ3DdkaNLT/5VJpb4qaN7Jb/b5KdBYYbI8mjTSFf/Nuo118UVIJmqtxZKzxHo1hI4mquU+97mSI7bQi08SJA6y0IWsy/SFa2UC4/uqYi5cd9rGd1TZWIPVXA0BLxJgU3IFZLH/wp0LSvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSVMrlVz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=L/co6LyjM+uyEx1L6wx/FMblpCn44B+BvZCs5J/HhylCGgvpRg1gxdwTG1XPEpwfKpyR0m/YH6C3y+Eze5AG+LCk9ErTTBBVT6N8SffQDXszbhGKA19p/ldl18MB2tXW46oBepJHlpBI0irAKHXOH4NcrA04m1DXAugSW/dvtxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGB+BLCZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSVMrlVz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77728C4CEED;
-	Mon,  5 May 2025 22:51:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGB+BLCZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11700C4CEE4;
+	Mon,  5 May 2025 22:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485501;
-	bh=DV0btcbHT/VKBuY1f2UIoqlIVhOii2QIYaEHvmCG8kQ=;
+	s=k20201202; t=1746485490;
+	bh=2ceJD08yP8wgB+0CCl0SfGxjXpS17on4ocWe/k5HT0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sSVMrlVzouGUwq7V/UOavERsSfIIuYf2LXJ4LMtyFBmAUfn0tewqPGomD3CnAPHDo
-	 s0Mlbt06/XKCgSelPSSlyzOzmGZbZSp3LMW7B02m+z3D1bWMJXilGIcu21YZOrJHAa
-	 D4mi/9pDvYeRO4fF8na6qFRlSqQJ8T+PKtA9VG6VEFX0yaE1bFu066c7Jp+YKrkXkg
-	 PqpfPjExXyYYM1Z1O1sbJWtv9MToaOXzEoAzAwyNUJgxpBq7w0oJHOOlORHVbwrvuX
-	 q2j+7VD8XxshsSidJm5/Vy4ggS47IpKK8/hI4Pqho7yOhyg7YvkoRdFMADdwYN9tnq
-	 6VpC1sA5cfOYw==
+	b=pGB+BLCZjylOvlxmaKInG9Ty+JxrugtN8I0B7vS1qgkR86Uj2GDGnToWxPuIJf94R
+	 55qYtqAyccpWj5YUB8s5ggGSF10bRrrC6+z4VdRlVl+E7+/mQZjkc6yiY+CkwAj3Uc
+	 9d//JNQW7TG+MH7O619XDXYRtIUGZPIYrqOzc1ro6dNnv8PITMKpal++7UM6C7W+yJ
+	 WKMYcHnF8xlia9Z1kIr8y/jzylSyX8Q9LeVOD868LE3g9AhD3s3yDTIdqardSwezXJ
+	 3p8NV1zqcMKIhego+yH0m4uCz3jYYPKRyMmL9vwzpLPGSgHNxNtuS3s4feCsFIZ+XU
+	 4uY/HQZwBspiQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Francois Dugast <francois.dugast@intel.com>,
+	Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	kees@kernel.org,
-	nathan@kernel.org,
-	rppt@kernel.org
-Subject: [PATCH AUTOSEL 6.12 349/486] x86/ibt: Handle FineIBT in handle_cfi_failure()
-Date: Mon,  5 May 2025 18:37:05 -0400
-Message-Id: <20250505223922.2682012-349-sashal@kernel.org>
+	thomas.hellstrom@linux.intel.com,
+	rodrigo.vivi@intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 343/486] drm/xe: Stop ignoring errors from xe_ttm_stolen_mgr_init()
+Date: Mon,  5 May 2025 18:36:59 -0400
+Message-Id: <20250505223922.2682012-343-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,138 +56,106 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Lucas De Marchi <lucas.demarchi@intel.com>
 
-[ Upstream commit 882b86fd4e0d49bf91148dbadcdbece19ded40e6 ]
+[ Upstream commit ff57025c358603555f1e0ae0d50282a460433594 ]
 
-Sami reminded me that FineIBT failure does not hook into the regular
-CFI failure case, and as such CFI_PERMISSIVE does not work.
+Make sure to differentiate normal behavior, e.g. there's no stolen, from
+allocation errors or failure to initialize lower layers.
 
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-Link: https://lkml.kernel.org/r/20250214092619.GB21726@noisy.programming.kicks-ass.net
+Reviewed-by: Francois Dugast <francois.dugast@intel.com>
+Reviewed-by: Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250213192909.996148-5-lucas.demarchi@intel.com
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/cfi.h    | 11 +++++++++++
- arch/x86/kernel/alternative.c | 30 ++++++++++++++++++++++++++++++
- arch/x86/kernel/cfi.c         | 22 ++++++++++++++++++----
- 3 files changed, 59 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/xe/xe_device.c         |  4 +++-
+ drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c | 17 +++++++++--------
+ drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h |  2 +-
+ 3 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
-index 31d19c815f992..7dd5ab239c87b 100644
---- a/arch/x86/include/asm/cfi.h
-+++ b/arch/x86/include/asm/cfi.h
-@@ -126,6 +126,17 @@ static inline int cfi_get_offset(void)
- 
- extern u32 cfi_get_func_hash(void *func);
- 
-+#ifdef CONFIG_FINEIBT
-+extern bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type);
-+#else
-+static inline bool
-+decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
-+{
-+	return false;
-+}
-+
-+#endif
-+
- #else
- static inline enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
- {
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index d17518ca19b8b..3c95880866f16 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1063,6 +1063,7 @@ asm(	".pushsection .rodata			\n"
- 	"	endbr64				\n"
- 	"	subl	$0x12345678, %r10d	\n"
- 	"	je	fineibt_preamble_end	\n"
-+	"fineibt_preamble_ud2:			\n"
- 	"	ud2				\n"
- 	"	nop				\n"
- 	"fineibt_preamble_end:			\n"
-@@ -1070,9 +1071,11 @@ asm(	".pushsection .rodata			\n"
- );
- 
- extern u8 fineibt_preamble_start[];
-+extern u8 fineibt_preamble_ud2[];
- extern u8 fineibt_preamble_end[];
- 
- #define fineibt_preamble_size (fineibt_preamble_end - fineibt_preamble_start)
-+#define fineibt_preamble_ud2  (fineibt_preamble_ud2 - fineibt_preamble_start)
- #define fineibt_preamble_hash 7
- 
- asm(	".pushsection .rodata			\n"
-@@ -1377,6 +1380,33 @@ static void poison_cfi(void *addr)
+diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+index bb85208cf1a94..5c37bed3c948f 100644
+--- a/drivers/gpu/drm/xe/xe_device.c
++++ b/drivers/gpu/drm/xe/xe_device.c
+@@ -694,7 +694,9 @@ int xe_device_probe(struct xe_device *xe)
  	}
+ 
+ 	/* Allocate and map stolen after potential VRAM resize */
+-	xe_ttm_stolen_mgr_init(xe);
++	err = xe_ttm_stolen_mgr_init(xe);
++	if (err)
++		return err;
+ 
+ 	/*
+ 	 * Now that GT is initialized (TTM in particular),
+diff --git a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
+index f7113cf6109d5..ef84fa757b26f 100644
+--- a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
++++ b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
+@@ -201,17 +201,16 @@ static u64 detect_stolen(struct xe_device *xe, struct xe_ttm_stolen_mgr *mgr)
+ #endif
  }
  
-+/*
-+ * regs->ip points to a UD2 instruction, return true and fill out target and
-+ * type when this UD2 is from a FineIBT preamble.
-+ *
-+ * We check the preamble by checking for the ENDBR instruction relative to the
-+ * UD2 instruction.
-+ */
-+bool decode_fineibt_insn(struct pt_regs *regs, unsigned long *target, u32 *type)
-+{
-+	unsigned long addr = regs->ip - fineibt_preamble_ud2;
-+	u32 endbr, hash;
-+
-+	__get_kernel_nofault(&endbr, addr, u32, Efault);
-+	if (endbr != gen_endbr())
-+		return false;
-+
-+	*target = addr + fineibt_preamble_size;
-+
-+	__get_kernel_nofault(&hash, addr + fineibt_preamble_hash, u32, Efault);
-+	*type = (u32)regs->r10 + hash;
-+
-+	return true;
-+
-+Efault:
-+	return false;
-+}
-+
- #else
+-void xe_ttm_stolen_mgr_init(struct xe_device *xe)
++int xe_ttm_stolen_mgr_init(struct xe_device *xe)
+ {
+-	struct xe_ttm_stolen_mgr *mgr = drmm_kzalloc(&xe->drm, sizeof(*mgr), GFP_KERNEL);
+ 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
++	struct xe_ttm_stolen_mgr *mgr;
+ 	u64 stolen_size, io_size;
+ 	int err;
  
- static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
-diff --git a/arch/x86/kernel/cfi.c b/arch/x86/kernel/cfi.c
-index e6bf78fac1462..f6905bef0af84 100644
---- a/arch/x86/kernel/cfi.c
-+++ b/arch/x86/kernel/cfi.c
-@@ -70,11 +70,25 @@ enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
- 	unsigned long target;
- 	u32 type;
+-	if (!mgr) {
+-		drm_dbg_kms(&xe->drm, "Stolen mgr init failed\n");
+-		return;
+-	}
++	mgr = drmm_kzalloc(&xe->drm, sizeof(*mgr), GFP_KERNEL);
++	if (!mgr)
++		return -ENOMEM;
  
--	if (!is_cfi_trap(regs->ip))
--		return BUG_TRAP_TYPE_NONE;
-+	switch (cfi_mode) {
-+	case CFI_KCFI:
-+		if (!is_cfi_trap(regs->ip))
-+			return BUG_TRAP_TYPE_NONE;
-+
-+		if (!decode_cfi_insn(regs, &target, &type))
-+			return report_cfi_failure_noaddr(regs, regs->ip);
-+
-+		break;
+ 	if (IS_SRIOV_VF(xe))
+ 		stolen_size = 0;
+@@ -224,7 +223,7 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
  
--	if (!decode_cfi_insn(regs, &target, &type))
--		return report_cfi_failure_noaddr(regs, regs->ip);
-+	case CFI_FINEIBT:
-+		if (!decode_fineibt_insn(regs, &target, &type))
-+			return BUG_TRAP_TYPE_NONE;
-+
-+		break;
-+
-+	default:
-+		return BUG_TRAP_TYPE_NONE;
-+	}
+ 	if (!stolen_size) {
+ 		drm_dbg_kms(&xe->drm, "No stolen memory support\n");
+-		return;
++		return 0;
+ 	}
  
- 	return report_cfi_failure(regs, regs->ip, &target, type);
+ 	/*
+@@ -240,7 +239,7 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
+ 				     io_size, PAGE_SIZE);
+ 	if (err) {
+ 		drm_dbg_kms(&xe->drm, "Stolen mgr init failed: %i\n", err);
+-		return;
++		return err;
+ 	}
+ 
+ 	drm_dbg_kms(&xe->drm, "Initialized stolen memory support with %llu bytes\n",
+@@ -248,6 +247,8 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
+ 
+ 	if (io_size)
+ 		mgr->mapping = devm_ioremap_wc(&pdev->dev, mgr->io_base, io_size);
++
++	return 0;
  }
+ 
+ u64 xe_ttm_stolen_io_offset(struct xe_bo *bo, u32 offset)
+diff --git a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
+index 1777245ff8101..8e877d1e839bd 100644
+--- a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
++++ b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
+@@ -12,7 +12,7 @@ struct ttm_resource;
+ struct xe_bo;
+ struct xe_device;
+ 
+-void xe_ttm_stolen_mgr_init(struct xe_device *xe);
++int xe_ttm_stolen_mgr_init(struct xe_device *xe);
+ int xe_ttm_stolen_io_mem_reserve(struct xe_device *xe, struct ttm_resource *mem);
+ bool xe_ttm_stolen_cpu_access_needs_ggtt(struct xe_device *xe);
+ u64 xe_ttm_stolen_io_offset(struct xe_bo *bo, u32 offset);
 -- 
 2.39.5
 
