@@ -1,58 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF8B2561DC;
-	Mon,  5 May 2025 20:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA81B2701DB
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477533; cv=none; b=JWtnhUazSz09aYJFeRycfLyfK3aUkHIs+S3MQ53yBUe3JhEgwRqc2CpL9+dcKaiBx+PDvfjzPrB9YD1q4cg1E7GQwkA9tqQrqLBv2hVwlzMwY+eSCzg0Wba/zZxaTQVPSQ3toUMg95zhwQ1S7Y8nmMAavMiVA80QZPgpeezDwI0=
+	t=1746477543; cv=none; b=SS50ClcrnjaQafyWMp6RqLja/M5laqIgOk0AyiGjsVVuhjzpcxft12HlkM5xXXqiUE5hDU1GEK/gPWrFp7Koa66XZMfJO1Gc3wtoyAyAP+QMTuCbw5o78LXrV04xWw7krdWdc8o3sDNdwUt/PtRsLCGylHuNXvkcZC6uxHy1Pw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477533; c=relaxed/simple;
-	bh=Nwkb4533cnkgEOovGIY8bmWIMqTqCYeGxbR5tYw46QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l4FTEzdz8Ba7ZyK3/p4s7Zz3G+/OQSzQCtXOvppeK089d7Bw7/SICpuxNyUnMv/4yh3BxJjU3qkMsacznnlyW8W6/RAzCxTDzNWH5yLP+ui80saV/r9mlkN/9c2FM7u3LmbHTdgccEmcLckUjaZkiYu7JUuBq241oEveiVsqq4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ncz+Tbkt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746477543; c=relaxed/simple;
+	bh=b1VdaxnbTgifyjhmcpWeHl2+iooGjNIhyVLAzp9jU+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fLAqWGtkLuS9nKNuRVwQFu6BnIOHkCPm+BY9tQGBYAdhWI3vCqXv1GsDiCvGdOkWUZcsIEjSFlrAfVD2yFViqyFmIIN7fKBJq/cBPZjZSmfsig8EgAbhGA82iMX3hiWOtoe1NxaPOu74LtDgnIRHCVf9O8tkn3OlTb0Lm10gbrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net; spf=pass smtp.mailfrom=david-bauer.net; dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b=FB0zDdcf; arc=none smtp.client-ip=185.26.156.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=david-bauer.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ncz+Tbkt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90450C4CEE4;
-	Mon,  5 May 2025 20:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746477533;
-	bh=Nwkb4533cnkgEOovGIY8bmWIMqTqCYeGxbR5tYw46QM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ncz+TbktmSTf07F89Z3vST5L7x2VI2HxQppVQkwLJzo1Tld2luiXvdmYLiVhp//7f
-	 rHxPilqU3LgSPxmaihCPbJTwjLX9+U5MT0+kO8a6kFg3NPdb/9CsNlSKE41+g4eQ1F
-	 xRM//DI4BFJbgc5mNMEAOwOQgHdopU21C6wR/oidwHe2uVl9uArPKLojdt2yWypt0l
-	 Neo0CXkyscsTr+HTeF1Ek+ceEs+wHrPndwf/4ogYSKQMr/HUbwi/vH34hCBhErsno+
-	 W+YBwvax50EmWl4iV+9iLMcf3I0mplgMw3KWh4u2UI9vF30g2uyDqOdFzQil+88kBB
-	 x/zDDalYyAwvA==
-Date: Mon, 5 May 2025 22:38:49 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Alexey Charkov <alchark@gmail.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, oe-kbuild-all@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b="FB0zDdcf"
+Received: from perseus.uberspace.de (perseus.uberspace.de [95.143.172.134])
+	by mailgate02.uberspace.is (Postfix) with ESMTPS id 09F9218016A
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:38:51 +0200 (CEST)
+Received: (qmail 3330 invoked by uid 988); 5 May 2025 20:38:50 -0000
+Authentication-Results: perseus.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by perseus.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 05 May 2025 22:38:50 +0200
+From: David Bauer <mail@david-bauer.net>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: i2c: i2c-wmt: Convert to YAML
-Message-ID: <7oxuyl2d6zcv4ucqrny5bytodiqmxdxgcxovdere3cier53mlb@tuuw4ooldnvv>
-References: <20250430-vt8500-i2c-binding-v2-1-0cf22d0c2d42@gmail.com>
- <202505011756.SZDFqCew-lkp@intel.com>
+Subject: [PATCH 1/2] dt-bindings: input: add Semtech SX951x binding
+Date: Mon,  5 May 2025 22:38:44 +0200
+Message-ID: <20250505203847.86714-1-mail@david-bauer.net>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505011756.SZDFqCew-lkp@intel.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Bar: -
+X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-2.999999) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
+X-Rspamd-Score: -1.599999
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=david-bauer.net; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=b1VdaxnbTgifyjhmcpWeHl2+iooGjNIhyVLAzp9jU+s=;
+	b=FB0zDdcfEzQWeHyPMJWwSB1vNltbJkgkZnd8fke9nUwvp0KIdH9lbHCvnov+dY8Q/0QobH38zb
+	ka7YFagwCF59umPBdaMm7ySnBfxx1uv3M8zeAwT39tqidVXvmcXLjSA01zj6Kdz4At+1GUIJAE/Y
+	Ft+qS7f/RPK7L3LycGtluRjbp2IoW6bd3MSeVoIPhWuXCu6gsneztKcSxOTPhbjoWinEKhkVRK1l
+	h8D0K18KD/91czo9liakIJ+mjy2Mx6WFqHgWAIjNvi9vULcN1aUI3b2DJ5zIgpqi1bCv5QOlKFqh
+	ZMFN1nB3Qrw62K+WfJTC57CAd0RzTKYqd0ieO0BzhwsrPQIKL0WrIvvzAfLdlOKRCLke+ME0U9Q3
+	V7JoNUlumLppE5gGEAtcNSuNitbwcyl54hSlQx961tU8FFS+WcxJ35bGrXThbdX4iFIqFzS9FD1Y
+	lmjpT3K9kbIvLolV33LpHt8cZSoVy6ogZUCOT0fLcxWhBH0Cwpn6ONP7cHuGqtrl3ajqIij9Fjib
+	juLT5Qgv8jG6gewgR9nePUjbhqUT/uD+jVqihsCi6ZtodWQRra93COCe/nZZ2CBlrKFhh81a7Flo
+	iLhG3rOFj2Hiruq5jLEuBUWX/W5s/2NizAsREGOYjM6kP+CLfM3annRXHjfyTCJCyb+25SzaMMbY
+	k=
 
-Hi Alexey,
+Add device-tree binding for the Semtech SX9512/SX9513 family of touch
+controllers with integrated LED driver.
 
-> >> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/i2c/i2c-wmt.txt
+Signed-off-by: David Bauer <mail@david-bauer.net>
+---
+ .../bindings/input/semtech,sx951x.yaml        | 180 ++++++++++++++++++
+ 1 file changed, 180 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/semtech,sx951x.yaml
 
-please send a v3 with the MAINTAINERS file updated.
+diff --git a/Documentation/devicetree/bindings/input/semtech,sx951x.yaml b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+new file mode 100644
+index 000000000000..e4f938decd86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/semtech,sx951x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech SX9512/SX9513 based capacitive touch sensors
++
++description: |
++  The Semtech SX9512/SX9513 Family of capacitive touch controllers
++  with integrated LED drivers. The device communication is using I2C only.
++
++maintainers:
++  - David Bauer <mail@david-bauer.net>
++
++properties:
++  compatible:
++    enum:
++      - semtech,sx9512
++      - semtech,sx9513
++
++  reg:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  poll-interval:
++    default: 100
++    description: |
++      The polling interval for touch events in milliseconds.
++
++patternProperties:
++  "^channel@[0-7]$":
++    $ref: input.yaml#
++    type: object
++    description: |
++      Each node represents a channel of the touch controller.
++      Each channel provides a capacitive touch sensor input and
++      an LED driver output.
++
++    properties:
++      reg:
++        enum: [0, 1, 2, 3, 4, 5, 6, 7]
++
++      linux,keycodes:
++        maxItems: 1
++        description: |
++          Specifies an array of numeric keycode values to
++          be used for the channels. If this property is
++          omitted, the channel is not used as a key.
++
++      semtech,cin-delta:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 3
++        default: 3
++        description: |
++          The capacitance delta which is used to detect a touch
++          or release event. The property value is mapped to a
++          farad range between 7pF and 2.3pF internally. The delta
++          becomes smaller the higher the value is.
++
++      semtech,sense-threshold:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        minimum: 0
++        maximum: 255
++        default: 4
++        description: |
++          The threshold value after which the channel detects a touch.
++          Refer to the datasheet for the internal calculation of the
++          resulting touch sensitivity.
++
++      led:
++        $ref: /schemas/leds/common.yaml#
++        type: object
++        unevaluatedProperties: false
++        description: |
++          Presence of this property indicates the channel
++          is used as an LED driver.
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/input/input.h>
++    #include <dt-bindings/leds/common.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      touch@2b {
++        compatible = "semtech,sx9512";
++
++        reg = <0x2b>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        poll-interval = <100>;
++
++        channel@1 {
++          reg = <1>;
++
++          semtech,cin-delta = <0x3>;
++          semtech,sense-threshold = <0xff>;
++
++          linux,keycodes = <KEY_A>;
++        };
++
++        channel@2 {
++          reg = <2>;
++
++          semtech,cin-delta = <0x3>;
++          semtech,sense-threshold = <0xff>;
++
++          linux,keycodes = <KEY_B>;
++        };
++
++        channel@3 {
++          reg = <3>;
++
++          semtech,cin-delta = <0x3>;
++          semtech,sense-threshold = <0xff>;
++
++          linux,keycodes = <KEY_WPS_BUTTON>;
++        };
++
++        channel@4 {
++          reg = <4>;
++
++          led {
++            color = <LED_COLOR_ID_RED>;
++            function = LED_FUNCTION_WAN;
++          };
++        };
++
++        channel@5 {
++          reg = <5>;
++
++          led {
++            color = <LED_COLOR_ID_GREEN>;
++            function = LED_FUNCTION_WAN;
++          };
++        };
++
++        channel@6 {
++          reg = <6>;
++
++          led {
++            color = <LED_COLOR_ID_GREEN>;
++            function = LED_FUNCTION_WLAN;
++            linux,default-trigger = "phy1tx";
++          };
++        };
++
++        channel@7 {
++          reg = <7>;
++
++          led {
++            color = <LED_COLOR_ID_GREEN>;
++            function = LED_FUNCTION_WLAN;
++            linux,default-trigger = "phy0tx";
++          };
++        };
++      };
++    };
+-- 
+2.47.2
 
-Thanks,
-Andi
