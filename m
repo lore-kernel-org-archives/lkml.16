@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845993BA86D;
-	Mon,  5 May 2025 23:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AB03B96ED;
+	Mon,  5 May 2025 23:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487340; cv=none; b=FiP0MoidRCm1wmmiflMpYIcl4k+V4x+VTrN1XX0+gw0AvdAi952iIVyVbx82PDZ5YmWAIkCMXJj1l6brPR6RbqSBSQB0XHTQNaNnwsjFK6XPzFQ+ngcJg19Myh/5W8ow08RozmZjhtFeaHWMP0ZxNB3I7BWGDzOKzCA4IBQBYrA=
+	t=1746487323; cv=none; b=gPPfTg/l2ZbE0pjBiDu6XjVAygaKUH3vkyako8KxGbVqoQhX7NTCiwgZFmFpCxYaLyqlGcJxtnTdYyDUEbHsBI6uznwlg2XDWfqFoCkeP9nigtvwpJUCpEJnpuzbyoGOW2Qx15xytG2Ufgx7Qa8IHLqvfpHZTGPH1eIP7TXn8Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487340; c=relaxed/simple;
-	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
+	s=arc-20240116; t=1746487323; c=relaxed/simple;
+	bh=0ykm/0vK3HhFGgPGriruaUJgrWRvgzXlTZAKnX0DZnk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=izYNRnnxSqnZp0AH7MRqBr9wQ85+3+53hjrvprjgMy6edBfcssUuzKzVAcHoDaRkkk2EAmiB4nPgHpGAzvXO1NmyoEUxcSZaqMPAMS1prCxgzjhjW1xWDQWsRixD2N9avbK49XLCyFC9LsVYEGNEt1I1F1diRSf1S/+DvU+OGu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMypXH/o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UuPxEBBcScXJcgkmkG6A7A1swctj963guZ3jW6H2OwX4ksSV79CG+t6MNAD/bH7tieRwPNi8Cm2zAn6yurK7iKIsh1mNSx+b5w+T/7Gcldq5QCtemXzphAdiOh2vOOQKy/bUHAMOL1rnYFtUqbH6xWGLKSRYOtwDKeSBgKJV/Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=achvxy+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMypXH/o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D7FC4CEE4;
-	Mon,  5 May 2025 23:22:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="achvxy+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4EFC4CEF1;
+	Mon,  5 May 2025 23:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487340;
-	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
+	s=k20201202; t=1746487322;
+	bh=0ykm/0vK3HhFGgPGriruaUJgrWRvgzXlTZAKnX0DZnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TMypXH/o+fPZO1iiX6csIFuhWyFem3lNzKsjYnfhjpORBUC5+tZ/8ZisIIVhtT/R/
-	 eYBZAroow6K+OL6dtnw38k1thFpggo2EwzKVwGgPez6f208W2a2r6YI9uAsZjJWme4
-	 6M3OtMCeHeSz4yJPRd6xJwo69ENjtuKyOzyugE/roZnOLwpG2iW90JORUvpyHWiiBm
-	 ZO1re0/sSVTXLu9o3BjlzK/53fKY+LZihJyzc0uGt58LUrQNt74nrRwZDdynExwmHL
-	 7TsQlKpxpbH/7MtzTALWV1dxKD0JytLSCqw0KvzS7iQkamIxNF4/nQVnHpbnUW7Q0Q
-	 gROF/UU33D8RQ==
+	b=achvxy+TRKPz10bFXeJTAUE53bFh3xFBD/C44elSHRoQ25KqLDk2Kpl7+9c+vhfgt
+	 ZcR/1zZIjZePrVKgwy++vaBKLmeYeTuS9XM9rZD49R7QGI1ddwpIqFOjf0PwZSyc7L
+	 K4wbKdiZLnU3sG3Th7Sz1nwdjuDR0m/cOXwMWY+rp9o5CXVWJD0OteOFPxTRkPfc3W
+	 tA2yhICYySvCjGyl+pfYe0UpmlK588iZgEL1BRmzVkhZg563lSQsCUNUFwJlQkEXCO
+	 r91rov3qqtgX+plKuuUPNUkhGmIg/cKIRS5WBeUJoHXVVOWZNnXwe8uB4XSLTrUeVS
+	 z58YcvODjW4jw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Benjamin Berg <benjamin@sipsolutions.net>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	richard@nod.at,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 16/79] um: Store full CSGSFS and SS register from mcontext
-Date: Mon,  5 May 2025 19:20:48 -0400
-Message-Id: <20250505232151.2698893-16-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 05/79] NFSv4: Treat ENETUNREACH errors as fatal for state recovery
+Date: Mon,  5 May 2025 19:20:37 -0400
+Message-Id: <20250505232151.2698893-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -58,38 +53,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Benjamin Berg <benjamin@sipsolutions.net>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit cef721e0d53d2b64f2ba177c63a0dfdd7c0daf17 ]
+[ Upstream commit 0af5fb5ed3d2fd9e110c6112271f022b744a849a ]
 
-Doing this allows using registers as retrieved from an mcontext to be
-pushed to a process using PTRACE_SETREGS.
+If a containerised process is killed and causes an ENETUNREACH or
+ENETDOWN error to be propagated to the state manager, then mark the
+nfs_client as being dead so that we don't loop in functions that are
+expecting recovery to succeed.
 
-It is not entirely clear to me why CSGSFS was masked. Doing so creates
-issues when using the mcontext as process state in seccomp and simply
-copying the register appears to work perfectly fine for ptrace.
-
-Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
-Link: https://patch.msgid.link/20250224181827.647129-2-benjamin@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/um/os-Linux/mcontext.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/nfs/nfs4state.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/um/os-Linux/mcontext.c b/arch/x86/um/os-Linux/mcontext.c
-index 49c3744cac371..81b9d1f9f4e68 100644
---- a/arch/x86/um/os-Linux/mcontext.c
-+++ b/arch/x86/um/os-Linux/mcontext.c
-@@ -26,7 +26,6 @@ void get_regs_from_mc(struct uml_pt_regs *regs, mcontext_t *mc)
- 	COPY(RIP);
- 	COPY2(EFLAGS, EFL);
- 	COPY2(CS, CSGSFS);
--	regs->gp[CS / sizeof(unsigned long)] &= 0xffff;
--	regs->gp[CS / sizeof(unsigned long)] |= 3;
-+	regs->gp[SS / sizeof(unsigned long)] = mc->gregs[REG_CSGSFS] >> 48;
- #endif
- }
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 1d38484e0a53b..b64a3751c3e4a 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2655,7 +2655,15 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
+ 			" with error %d\n", section_sep, section,
+ 			clp->cl_hostname, -status);
+-	ssleep(1);
++	switch (status) {
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		nfs_mark_client_ready(clp, -EIO);
++		break;
++	default:
++		ssleep(1);
++		break;
++	}
+ out_drain:
+ 	memalloc_nofs_restore(memflags);
+ 	nfs4_end_drain_session(clp);
 -- 
 2.39.5
 
