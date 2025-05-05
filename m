@@ -1,56 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0193596A;
-	Mon,  5 May 2025 11:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EF36D17;
+	Mon,  5 May 2025 11:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746444087; cv=none; b=Z/IjSGvBkUU5UTzJPohyRmAugf20AVbUsZWxGMfRZ1+lmpK5ULL5S7N890JLaQNzKXi3FrY0KGUPFLl6YSpMUlTgik43xp6daEdouzvH6xyphWwUKUU7TmH2xy7KIDmDOMcO4+5kgAzNC1Ed7tInLj6Ur+h80QrQdwyRxj+smiU=
+	t=1746444176; cv=none; b=tvCpk4URv8aueV8kNj8GhdKdUste2cFpmRwAKBLuGUyS+Z7DFkpUw1Gq26IIH9RICEMmiOYT8qGROc0r17x+C4xwijeVzlJI7aFlCjHFUWj0+1SCVNEcpHdAQxjHO6xkopM2QdwSpjXmVgNgSpvT648bNJLkdQU7QKhVMr2t67M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746444087; c=relaxed/simple;
-	bh=pFHoGF4eR/esOPyY0NpyPkrHPO25l3+a6P/HKWcIYSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pDsmn8jPjIVGgapZeJv5+FWdIXRGucMw5C1heA6RkZPZofCpP0QzNYlZKx5dyfme2hcegR7KG7U7yLFo+WWQz2Ytb3OuC1cfauEbvA6Gx/lbVeAN4s5tfo2/CZJCzJoZJAJDKiUsON5k/IxT9ZaspLXbsckj341ip+NF18ZVnKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yCQg60dV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746444176; c=relaxed/simple;
+	bh=X7f/cj2HyCw5T24zVizPuI3ejjSC/I4KfwGIek8QsVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o7YqcQRSwuFs7Zqfr8QgTGbN95iwsOlY/oQfHzLCob3KTR79CkYAn4SR2vWbek8m0Ryys/Iru9Ntk5fMTCoGQXYOApNQ37TvYrLWEGPZM3gQc80KPvzfZSJR3ChgMxRF9cwgE66sD1ku0dawO3jqHZmngoLgT+0+xYY3IG3XqGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dngknP3B; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yCQg60dV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425E4C4CEE4;
-	Mon,  5 May 2025 11:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746444086;
-	bh=pFHoGF4eR/esOPyY0NpyPkrHPO25l3+a6P/HKWcIYSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yCQg60dVFD61b/qzkQ85VrW6/be3UgmwHAzhgKQQ7HZ3zuGVwE6RZnyl9BMrTfTXU
-	 FjYAiDgMEOCQzaMG+xi/eTvdz0iVRMlvc/VG845qijmAA4rKtUhCmxsfExI0yHndm7
-	 OIfsNDz9J7McIWoJZ8Hhpquf5uCvx0XlSmZ8OfmI=
-Date: Mon, 5 May 2025 13:21:18 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Badhri Jagan Sridharan <badhri@google.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: tcpm: detect orientation in debug acc mode
-Message-ID: <2025050510-malformed-outweigh-3dbf@gregkh>
-References: <20250505-tcpm-v1-1-e6142985a012@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dngknP3B"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8428D1FCEE;
+	Mon,  5 May 2025 11:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746444170;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BjQD6/4ZASrQpmuxOr/8hzy+9Fqcd4Ygjsti998CXt4=;
+	b=dngknP3B2/vVmzmsbaZxjuZILonwn1c7s6KP+leUH2BrK41WmAJ3r2zE0ccLwPB4wpBLzT
+	JUXW0vkq4VwyeHl3/ucynqrRsnTi85cb3eztsVpv+p4OzzL17kaM2dsaLTtnLxkh6Xc/ON
+	clU6u/QuPeMjTz7YdipPU6gbqmxfgQX+ipKfIVjFyyyFkCHwf5ParQX1yatiTBo/obF9nC
+	Ou5RRD21tdkElQ9rvlhNgLylZpNhJjsmny3GfYwbTSQvCLifHN++17o8zo67wunEZCHZgt
+	JgH0CwAwK+UOKoPI5wri7ICjZoPWrJC2d36EjvwpV1hPU+SCbPyP6aC0i+8Xlg==
+Date: Mon, 5 May 2025 13:22:47 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 3/9] i2c: atr: split up i2c_atr_get_mapping_by_addr()
+Message-ID: <20250505132247.3ba8af2a@booty>
+In-Reply-To: <f3bf2c93-31ac-4881-9ca3-ddc33cf3ded3@gmail.com>
+References: <20250428102516.933571-1-demonsingur@gmail.com>
+	<20250428102516.933571-4-demonsingur@gmail.com>
+	<20250430163307.528671a8@booty>
+	<f3bf2c93-31ac-4881-9ca3-ddc33cf3ded3@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505-tcpm-v1-1-e6142985a012@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedtleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepfihsrgdorhgvnhgvs
+ hgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, May 05, 2025 at 01:06:16PM +0200, Michael Grzeschik wrote:
-> For the debug accessory case, the orientation can be detected by reading
-> the cc resistor values. The will be TYPEC_CC_RP_DEF and TYPEC_CC_RP_1_5
-> in sink mode and TYPEC_CC_RA TYPEC_CC_RD in src mode.
+On Mon, 5 May 2025 13:26:54 +0300
+Cosmin Tanislav <demonsingur@gmail.com> wrote:
+
+> On 4/30/25 5:33 PM, Luca Ceresoli wrote:
+> > On Mon, 28 Apr 2025 13:25:08 +0300
+> > Cosmin Tanislav <demonsingur@gmail.com> wrote:
+> >   
+> >> The i2c_atr_get_mapping_by_addr() function handles three separate
+> >> usecases: finding an existing mapping, creating a new mapping, or
+> >> replacing an existing mapping if a new mapping cannot be created
+> >> because there aren't enough aliases available.
+> >>
+> >> Split up the function into three different functions handling its
+> >> individual usecases to prepare for better usage of each one.
+> >>
+> >> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>  
+> > 
+> > This function has become quite complex over time, so this looks like a
+> > good cleanup by itself even not counting the advantages coming with the
+> > following patches.
+> > 
+> > I have only one small remark, see below.
+> >   
+> >> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
+> >> index 939fb95fe781..184c57c31e60 100644
+> >> --- a/drivers/i2c/i2c-atr.c
+> >> +++ b/drivers/i2c/i2c-atr.c
+> >> @@ -239,9 +239,23 @@ static void i2c_atr_release_alias(struct i2c_atr_alias_pool *alias_pool, u16 ali
+> >>   	spin_unlock(&alias_pool->lock);
+> >>   }
+> >>   
+> >> -/* Must be called with alias_pairs_lock held */
+> >>   static struct i2c_atr_alias_pair *
+> >> -i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+> >> +i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+> >> +{
+> >> +	struct i2c_atr_alias_pair *c2a;
+> >> +
+> >> +	lockdep_assert_held(&chan->alias_pairs_lock);
+> >> +
+> >> +	list_for_each_entry(c2a, &chan->alias_pairs, node) {
+> >> +		if (c2a->addr == addr)
+> >> +			return c2a;
+> >> +	}
+> >> +
+> >> +	return NULL;
+> >> +}
+> >> +
+> >> +static struct i2c_atr_alias_pair *
+> >> +i2c_atr_replace_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+> >>   {
+> >>   	struct i2c_atr *atr = chan->atr;
+> >>   	struct i2c_atr_alias_pair *c2a;
+> >> @@ -254,41 +268,57 @@ i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+> >>   
+> >>   	alias_pairs = &chan->alias_pairs;
+> >>   
+> >> -	list_for_each_entry(c2a, alias_pairs, node) {
+> >> -		if (c2a->addr == addr)
+> >> -			return c2a;
+> >> +	if (unlikely(list_empty(alias_pairs)))
+> >> +		return NULL;
+> >> +
+> >> +	list_for_each_entry_reverse(c2a, alias_pairs, node) {
+> >> +		if (!c2a->fixed) {
+> >> +			found = true;
+> >> +			break;
+> >> +		}
+> >>   	}
+> >>   
+> >> +	if (!found)
+> >> +		return NULL;
+> >> +
+> >> +	atr->ops->detach_addr(atr, chan->chan_id, c2a->addr);
+> >> +	c2a->addr = addr;
+> >> +
+> >> +	list_move(&c2a->node, alias_pairs);
+> >> +
+> >> +	alias = c2a->alias;
+> >> +
+> >> +	ret = atr->ops->attach_addr(atr, chan->chan_id, c2a->addr, c2a->alias);
+> >> +	if (ret) {
+> >> +		dev_err(atr->dev, "failed to attach 0x%02x on channel %d: err %d\n",
+> >> +			addr, chan->chan_id, ret);
+> >> +		i2c_atr_destroy_c2a(&c2a);
+> >> +		i2c_atr_release_alias(chan->alias_pool, alias);
+> >> +		return NULL;
+> >> +	}
+> >> +
+> >> +	return c2a;
+> >> +}
+> >> +
+> >> +static struct i2c_atr_alias_pair *
+> >> +i2c_atr_create_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)  
+> > 
+> > I would move the _create function before the _replace one, because
+> > that's the logical order in which they are called.
+> >   
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> Sadly the diff actually becomes bigger by doing this.
+> before: 78 insertions(+), 32 deletions(-)
+> after: 84 insertions(+), 38 deletions(-)
 
-What commit id does this fix?
+The diff size is not at all the primary goal. I just epected it would
+reduce, but OK, it does not matter.
 
-thanks,
+> If we were to put things in a logical order then should we put _find()
+> after create(), or after replace()? There's no specific order in that
+> case. I think we should keep things as-is as it matches the previous
+> branches of the code, just split into separate functions.
 
-greg k-h
+Definitely find, create, replace. It's the order in which they are
+executed, as clearly visible i2c_atr_get_mapping_by_addr(). It's also
+the logical order in the old code, even though it is visually looking
+reverse:
+
+[old] i2c_atr_find_mapping_by_addr():
+  - list_for_each_entry()   # then new _find
+  - i2c_atr_reserve_alias() # this is the 1st half of the new _create
+  - if (success)
+    - i2c_atr_create_c2a()  # 2nd half of the new _create
+  - else
+    - list_for_each_entry_reverse... atr->ops->detach_addr...
+      list_move...          # the new _replace
+
+This has of course no impact on the actual executed code, it's just a
+matter of code organization which I believe should be intuitive when
+doable with a small effort.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
