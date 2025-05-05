@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1C36AD3E;
-	Mon,  5 May 2025 22:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1412B35B92E;
+	Mon,  5 May 2025 22:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485788; cv=none; b=c/I/yA66JIsllpmHik/EB9Ukcto6X5j1tJZG/0JQGXR07zgb4/dA+vBIZVAtyReN/aXmIxxLT0oyT4TqDGL6yT/ymsSow0g45EHZaVuQXbuDWO6Exyk7wnMXUNcRErb3toIarf5fzXNKXAcsKZOwq9aTIwDwcM+9SxuWdOVfbC4=
+	t=1746485841; cv=none; b=DMJ4g3gibpUJ2fIh2tfpHXnoY/hHjth0AYJr8X5l02SVeB1+7KvTZg7PJN+qjJIggLJMWuJKStkqjhtd7kPVq2CbM2lqhwMs23isc+cxSghxAYudji3JiTytElffByCslehO3gCRqcfLZjKjnrAo1gOPodo6AdoVQvgMW3Sq1/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485788; c=relaxed/simple;
-	bh=iczV1HlI/2jffBDU8pp3h5oTO12sKfPrCJaQ6eo9G8s=;
+	s=arc-20240116; t=1746485841; c=relaxed/simple;
+	bh=r0BFMOQNK5XzDChbKZz77n0K6xWYlsbv5PIyw+Iw7nI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eQmHpr/bDDDTZ+/IiYmtd1m53PRky1Yo2wKCdQafURBN3TgYzy6bQ2TpET0srv999e7c65FXN1sbsgt7APzRdgL5ndIIUd3D3cyCKkNc+fYLi63A9i8fNLCdqqW/PzvvifJvt6wwOFEh8KA9X+ASxOi3atwnOPizxrOdqUGucjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7C3d2ya; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iRx0u2g46L1bnrt7hvf9juwpa9APeHSwWcJ+ZTdEpT+MhW/EY9c2fuVd2udYiOcCb/KgIDA4qMTWHSpc/a29zas08+CYx+7PJ0nTeAsRbtmGT7jtLxA7VrE2mkF2tjETFj1WRko6Nflxamy1I7/G/FftdsNS0eHyCVgTr87yVfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/NVT//e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7C3d2ya"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90182C4CEF4;
-	Mon,  5 May 2025 22:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/NVT//e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C4CC4CEF3;
+	Mon,  5 May 2025 22:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485787;
-	bh=iczV1HlI/2jffBDU8pp3h5oTO12sKfPrCJaQ6eo9G8s=;
+	s=k20201202; t=1746485839;
+	bh=r0BFMOQNK5XzDChbKZz77n0K6xWYlsbv5PIyw+Iw7nI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X7C3d2yamEobr/I0PlrQIfavdV5Hc7A4jgw5wV02Bgn4YJTJUkYiVGrToOeeKnFxx
-	 R+yZ4Y4ddktKsVyqfHLczEp5/Zq4ldNu2Y3ImuJe9P455H9NiEEMTfn90GjsfIb7rV
-	 Zl/aBFc6VYGRYIzbpTkG2wbvObtFMMCgS1QDNVOFU4Yzb9w34NNrMflOq/QXuf4aFM
-	 /Htkiy76kO8tCSlWFvsruBbClDHk1N8ehVk3JhetYKhqBLPRSTpcBKEVEw3GwCTRie
-	 w18jGlctTBubFldtYDSzachHFm8l/6czy8aDzAgCGM+TyBZY/qWxPqi9r/ip4f7eoP
-	 qW7e9BoY9JGGQ==
+	b=f/NVT//e3Qo6tCHYaadeH/0gB+/gyff4Tv8DhhWPNVwiw1A8BWloA11mHFKxsPXFB
+	 86p9GpotQdfC4hnmojbRYP1s7LSNjIhXwGR/SSXKZPbkY/0JqwDTHI383rU2V3/HHp
+	 w+IgKRqXCY5MGUDq6sirbMnU+tHmAdGFwvsBHhYapwXz+RP8Sk0SKyHDFLfQij4oTN
+	 2UrC+jLkwXZF+xPriq+ekJ+9OWFsxbm63L1mTNX671hxse0vijQ7nx6WPJGg8sQJrM
+	 0AVIuz0GXrfjCZTY7NRtsMGl3oLYeAxGjMXy8ALAFsGfrqwx9bo0nDnexfaiODNbwc
+	 U26nQFf9fs+Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 485/486] drm: Add valid clones check
-Date: Mon,  5 May 2025 18:39:21 -0400
-Message-Id: <20250505223922.2682012-485-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 022/294] NFSv4: Treat ENETUNREACH errors as fatal for state recovery
+Date: Mon,  5 May 2025 18:52:02 -0400
+Message-Id: <20250505225634.2688578-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
+References: <20250505225634.2688578-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,71 +50,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 41b4b11da02157c7474caf41d56baae0e941d01a ]
+[ Upstream commit 0af5fb5ed3d2fd9e110c6112271f022b744a849a ]
 
-Check that all encoders attached to a given CRTC are valid
-possible_clones of each other.
+If a containerised process is killed and causes an ENETUNREACH or
+ENETDOWN error to be propagated to the state manager, then mark the
+nfs_client as being dead so that we don't loop in functions that are
+expecting recovery to succeed.
 
-Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20241216-concurrent-wb-v4-3-fe220297a7f0@quicinc.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ fs/nfs/nfs4state.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 32902f77f00dd..40e4e1b6c9110 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -574,6 +574,30 @@ mode_valid(struct drm_atomic_state *state)
- 	return 0;
- }
- 
-+static int drm_atomic_check_valid_clones(struct drm_atomic_state *state,
-+					 struct drm_crtc *crtc)
-+{
-+	struct drm_encoder *drm_enc;
-+	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state,
-+									  crtc);
-+
-+	drm_for_each_encoder_mask(drm_enc, crtc->dev, crtc_state->encoder_mask) {
-+		if (!drm_enc->possible_clones) {
-+			DRM_DEBUG("enc%d possible_clones is 0\n", drm_enc->base.id);
-+			continue;
-+		}
-+
-+		if ((crtc_state->encoder_mask & drm_enc->possible_clones) !=
-+		    crtc_state->encoder_mask) {
-+			DRM_DEBUG("crtc%d failed valid clone check for mask 0x%x\n",
-+				  crtc->base.id, crtc_state->encoder_mask);
-+			return -EINVAL;
-+		}
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 794bb4aa588d3..9fc71dc090c25 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2741,7 +2741,15 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
+ 			" with error %d\n", section_sep, section,
+ 			clp->cl_hostname, -status);
+-	ssleep(1);
++	switch (status) {
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		nfs_mark_client_ready(clp, -EIO);
++		break;
++	default:
++		ssleep(1);
++		break;
 +	}
-+
-+	return 0;
-+}
-+
- /**
-  * drm_atomic_helper_check_modeset - validate state object for modeset changes
-  * @dev: DRM device
-@@ -745,6 +769,10 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
- 		ret = drm_atomic_add_affected_planes(state, crtc);
- 		if (ret != 0)
- 			return ret;
-+
-+		ret = drm_atomic_check_valid_clones(state, crtc);
-+		if (ret != 0)
-+			return ret;
- 	}
- 
- 	/*
+ out_drain:
+ 	memalloc_nofs_restore(memflags);
+ 	nfs4_end_drain_session(clp);
 -- 
 2.39.5
 
