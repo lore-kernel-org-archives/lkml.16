@@ -1,43 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E4E277815;
-	Mon,  5 May 2025 22:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4876335B943;
+	Mon,  5 May 2025 22:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485104; cv=none; b=KgFwCoB/gGNyeca2nxW4qto8vvrLrrdupGYsZE/rbZI+w7pWpXUMk7lbgHRQ0VN4SpCBMgxmahC1Qv6wRThRAw02eqFscXrfQXIR/p7mL0uPS9m0tQ4ZJ+Y4Z52ZCO5TOrbDuT7jxy3X5RDkC83QeWaf0FbZh0kZJn6Dj0sTOFk=
+	t=1746485094; cv=none; b=gSb3dfdlE6glHssZi9j9//CtJu2s2DSO47WI90GprMm3YR4igDskJzvVIdYFBTviYjObr77uvMWPf2t4tfQmE/VZSawAOts4oqdDQSdCkPRSNq4mBA1rFsbrf1N1g6VX7ro0SvWhBBttFD23Vs5s8l2FCi3LDsyMFoAFF9vcUwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485104; c=relaxed/simple;
-	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
+	s=arc-20240116; t=1746485094; c=relaxed/simple;
+	bh=zZiauDy3ZQ0maEJ4+SVMQYd52KbHuDbXb/JLMalbTOg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kovgte84Gy/71bkB75cgfqbCdkdZ5V4TZk+NXaf34CNJ3yNh/V80WYEArTKTzoX/U2PSZwZwMW3hPCPStqwhmL0wzN2r/uAMQFUyWoI9TVX0V+Ve3M55ozGof5YW9fkbP0yfDZOyramIojQ8gQhLPFN8HqgGOBEZmzJWSpRs2TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKMAxRLm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SsBPsAM8AuYShK70jqZFFOX6BaSS0kuUq0Hufh/kR856AAZ80K+jTXMzgDtZfZQ4RZpcQb8tlQCnLB+MxYJHZu3FjFscTGPFnRr99FkOyTJERvK4wOtrsiY9nvsUxgBIw55JNSkdgShjxRLQ97hO+41DlyJqfbYUm4Xc1d1wVJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoW0+Gzx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKMAxRLm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD11C4CEE4;
-	Mon,  5 May 2025 22:45:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoW0+Gzx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3F7C4CEED;
+	Mon,  5 May 2025 22:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485104;
-	bh=OGEmbQrUFdVZHyv53Gw+XrgRi5QoqkjyJgMiANsk2VM=;
+	s=k20201202; t=1746485094;
+	bh=zZiauDy3ZQ0maEJ4+SVMQYd52KbHuDbXb/JLMalbTOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iKMAxRLmRFST8T1BZQbJA/nnc4z/QUyEEkOLD6x7NK+b3SR+XCYcR2nuNLjFR2RUb
-	 hw+K8Wn/iLwP4mE2WBNvWGCOmYTmpgYI1nqXLP7RAUnKIsf5DxrBv9hee72kb+h4dy
-	 2/RNoHV3LPwBUDTLgSNEazbuwBU0xKdXCA8kFOv6s7dkJQ/q8ZiiSm5tZmz8ZDXZOm
-	 C3MXYfOudk50CAK7hVDJvSVXezSyYDmaFLT7U0ayVAxlRrq4lU+mYwG/8rRvYaHQMG
-	 PltmyXxmQd9GRhVincba4GbG5o8N30s+bk5pkGfPoKnIr1urvVium04eo04WK8wWKF
-	 NJmU9X48jCTWQ==
+	b=hoW0+GzxJJv5gfHM/ExckbAbEGpcEsN1fWsUUyMw5rDGdLEy2xS/m1GX/TSQUxWiG
+	 2bjKOtgeD644iXge03BjcO7gCh6Cpd1VEX3YQoxWkU9rsznEJj9dbzRTx+HiviqF+j
+	 lXjhYZIo68MuvFkgIv1LKNQtxGDYu7zbAJZ106Mvfv0ceFqvvA0tQ08pRHE39b+32k
+	 TPDpqM8rcRzVgx93vXEOH92Qs+qT9yDYJQRolWUqv7HCT373IRKLtcPAsNA0Y7YmAL
+	 K1CMaFxZH3UElvT9SRcgFoe3VTZ3wk5TikW9cX1JFaq9NkvDKRF/x0dW9fcPG91xQd
+	 APcvX1xbmYzNw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Coly Li <colyli@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Yu Kuai <yukuai3@huawei.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Leon Huang <Leon.Huang1@amd.com>,
+	Robin Chen <robin.chen@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 163/486] badblocks: Fix a nonsense WARN_ON() which checks whether a u64 variable < 0
-Date: Mon,  5 May 2025 18:33:59 -0400
-Message-Id: <20250505223922.2682012-163-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	wenjing.liu@amd.com,
+	zaeem.mohamed@amd.com,
+	anthony.koo@amd.com,
+	jerry.zuo@amd.com,
+	Kaitlyn.Tse@amd.com,
+	joshua.aberback@amd.com,
+	alex.hung@amd.com,
+	Sungjoon.Kim@amd.com,
+	michael.strauss@amd.com,
+	muyuan.yang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 159/486] drm/amd/display: Fix incorrect DPCD configs while Replay/PSR switch
+Date: Mon,  5 May 2025 18:33:55 -0400
+Message-Id: <20250505223922.2682012-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,52 +69,78 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Coly Li <colyli@kernel.org>
+From: Leon Huang <Leon.Huang1@amd.com>
 
-[ Upstream commit 7e76336e14de9a2b67af96012ddd46c5676cf340 ]
+[ Upstream commit 0d9cabc8f591ea1cd97c071b853b75b155c13259 ]
 
-In _badblocks_check(), there are lines of code like this,
-1246         sectors -= len;
-[snipped]
-1251         WARN_ON(sectors < 0);
+[Why]
+When switching between PSR/Replay,
+the DPCD config of previous mode is not cleared,
+resulting in unexpected behavior in TCON.
 
-The WARN_ON() at line 1257 doesn't make sense because sectors is
-unsigned long long type and never to be <0.
+[How]
+Initialize the DPCD in setup function
 
-Fix it by checking directly checking whether sectors is less than len.
-
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Coly Li <colyli@kernel.org>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20250309160556.42854-1-colyli@kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Robin Chen <robin.chen@amd.com>
+Signed-off-by: Leon Huang <Leon.Huang1@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/badblocks.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../link/protocols/link_edp_panel_control.c   | 25 ++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index db4ec8b9b2a8c..a9709771a1015 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -1349,14 +1349,15 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- 	len = sectors;
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
+index 3aa05a2be6c09..fa642f4b88c2d 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_edp_panel_control.c
+@@ -674,6 +674,18 @@ bool edp_setup_psr(struct dc_link *link,
+ 	if (!link)
+ 		return false;
  
- update_sectors:
-+	/* This situation should never happen */
-+	WARN_ON(sectors < len);
++	//Clear PSR cfg
++	memset(&psr_configuration, 0, sizeof(psr_configuration));
++	dm_helpers_dp_write_dpcd(
++		link->ctx,
++		link,
++		DP_PSR_EN_CFG,
++		&psr_configuration.raw,
++		sizeof(psr_configuration.raw));
 +
- 	s += len;
- 	sectors -= len;
++	if (link->psr_settings.psr_version == DC_PSR_VERSION_UNSUPPORTED)
++		return false;
++
+ 	dc = link->ctx->dc;
+ 	dmcu = dc->res_pool->dmcu;
+ 	psr = dc->res_pool->psr;
+@@ -684,9 +696,6 @@ bool edp_setup_psr(struct dc_link *link,
+ 	if (!dc_get_edp_link_panel_inst(dc, link, &panel_inst))
+ 		return false;
  
- 	if (sectors > 0)
- 		goto re_check;
- 
--	WARN_ON(sectors < 0);
 -
- 	if (unacked_badblocks > 0)
- 		rv = -1;
- 	else if (acked_badblocks > 0)
+-	memset(&psr_configuration, 0, sizeof(psr_configuration));
+-
+ 	psr_configuration.bits.ENABLE                    = 1;
+ 	psr_configuration.bits.CRC_VERIFICATION          = 1;
+ 	psr_configuration.bits.FRAME_CAPTURE_INDICATION  =
+@@ -950,6 +959,16 @@ bool edp_setup_replay(struct dc_link *link, const struct dc_stream_state *stream
+ 	if (!link)
+ 		return false;
+ 
++	//Clear Replay config
++	dm_helpers_dp_write_dpcd(link->ctx, link,
++		DP_SINK_PR_ENABLE_AND_CONFIGURATION,
++		(uint8_t *)&(replay_config.raw), sizeof(uint8_t));
++
++	if (!(link->replay_settings.config.replay_supported))
++		return false;
++
++	link->replay_settings.config.replay_error_status.raw = 0;
++
+ 	dc = link->ctx->dc;
+ 
+ 	replay = dc->res_pool->replay;
 -- 
 2.39.5
 
