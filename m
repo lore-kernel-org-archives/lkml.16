@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6923B9713;
-	Mon,  5 May 2025 23:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BAC28B7EC;
+	Mon,  5 May 2025 23:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487327; cv=none; b=RYq1ukp5z2zrvU3wvzBfvyIXxBYDEnIYmELwgVcg2Eq36kt60p9hojWwDr10fAPW4I+T2KM5uMC3HN7f8gA66UGTYBicnD+2JAZG1ozTrz0yR4ZPq/g5mf5ykZIWJ2yvFoS+KVBhf6/P/mHZ+/vCrycbZqOW+34jgZWixXoowM0=
+	t=1746487328; cv=none; b=ZLDuYlZGrgfYGnXSIVvzo58Wfh2QmO/OZl3YOi6oSctSQ9ATarTquUj8xnJI66srwwAR6hshYpv2DQ4dm9DfX7HlLeC4WD/s+3WM1nFWincZj/HYiCgdc7aAUwkkPZ/2H06CWpCQStMqTMtXXyHBMHxKSIZCiGBvv0KKB3exsQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487327; c=relaxed/simple;
-	bh=U0TwbD88pZSRao+uKN5cVvjVctGmavvj1FmStfO7D18=;
+	s=arc-20240116; t=1746487328; c=relaxed/simple;
+	bh=9J/hAcUA8PxogD6w8rN8nr7ZfzjH2zUPbNoujqwzwHM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JplbD4pDoHz4PyOtnugNEsbEsSuJajtvMJiPwuZuB5gEZy87IqLWZPs9av8c6M0kfBVd3x7fQfjnB9baWp4qreZUCCqZSMcdfP6bLv47FGzOv1VIVSfsrsqy5fRcwJSIX9y98lSle6eP4IRTl+0Jr21dTj/7UFxLylp0cQGwl5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouw3d8UJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FI8Tdm8tTIUZQgtE57CEaTy0RWF7MSO3424hgl32lqhXYOuy+njk8Jy1NO3K1poftcDh+ZQjwJB6OwhLaRgkNlc4p2NluHwPSzIHiiB4xMjBcJE3/5hx+I7Dpj7NNk89VyyCdgZ6ih1UDDyMgwHkUR+C8CW5tSF5ejUX4dii4ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5yBPCwf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouw3d8UJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F63FC4CEE4;
-	Mon,  5 May 2025 23:22:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5yBPCwf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C541C4CEEE;
+	Mon,  5 May 2025 23:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487326;
-	bh=U0TwbD88pZSRao+uKN5cVvjVctGmavvj1FmStfO7D18=;
+	s=k20201202; t=1746487327;
+	bh=9J/hAcUA8PxogD6w8rN8nr7ZfzjH2zUPbNoujqwzwHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ouw3d8UJiZkIaNUhLY/kNvzsKk5bLLL/ppUAYuEi8rjnuCA4+BRlTrnTOEuXJCXQk
-	 CIg8Yd9NFrL1s50ITCWKKnllbDLDPk+cbweljvtom3Hv9HDWaUMZ8p9lhoBTV3T4e2
-	 Wjz0GWd7UOPf89fNlKZnjQGbQb7uJt1sTZ4KdbYyG4OPgS5DH4tHK8dibkpprfVpLO
-	 RUJy4xcuk5dvm5IR8zMhFVBWnwMKyVWP2qMi+vXqBIVDkr5IjsRmx3aAaqhNW8EeHI
-	 Fst9lcHEHHaluWmYcsrwn5evM6qnOMTZMjmSWXgjf0/AjAIxqV+/OkIhgCLLWUDIvX
-	 8nKhYEwnYJBig==
+	b=r5yBPCwf1nLTqdII3kaXTuECClKeb9Lq5TRe2zmVFeZiRzjr4JFgsjHCFC9xeSfg7
+	 7sWPqR4ISpXPxT4E/nQYTVChzIAcHzhQQfrKhk2et+yXBdlDDp3S+A+JVFO72o0cQx
+	 tOWwHK6s45KSW9nMZZ55YVyGOoxomYuazbbSbHx6PwkVokxX5eXmiZPg3bUpnGLJH9
+	 1RfM8vw/oHNIE4YGyT4WoFk4BDcnflOJanyBHlmQ3VzEC05imx2ptFmWegfAi52wOl
+	 DE8+yi+2K+A1jDEjUvEEFHTrJI2gQzldwNZEyvvCpDfKOgvW3QbaW57DJxbdYtAjK0
+	 0K/ANC7RAK3rw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	akpm@linux-foundation.org,
-	mhocko@suse.com,
-	mjguzik@gmail.com,
-	pasha.tatashin@soleen.com,
-	alexjlzheng@tencent.com
-Subject: [PATCH AUTOSEL 5.4 07/79] exit: fix the usage of delay_group_leader->exit_code in do_notify_parent() and pidfs_exit()
-Date: Mon,  5 May 2025 19:20:39 -0400
-Message-Id: <20250505232151.2698893-7-sashal@kernel.org>
+Cc: Jing Su <jingsusu@didiglobal.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 08/79] dql: Fix dql->limit value when reset.
+Date: Mon,  5 May 2025 19:20:40 -0400
+Message-Id: <20250505232151.2698893-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -54,49 +49,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Jing Su <jingsusu@didiglobal.com>
 
-[ Upstream commit 9133607de37a4887c6f89ed937176a0a0c1ebb17 ]
+[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
 
-Consider a process with a group leader L and a sub-thread T.
-L does sys_exit(1), then T does sys_exit_group(2).
+Executing dql_reset after setting a non-zero value for limit_min can
+lead to an unreasonable situation where dql->limit is less than
+dql->limit_min.
 
-In this case wait_task_zombie(L) will notice SIGNAL_GROUP_EXIT and use
-L->signal->group_exit_code, this is correct.
+For instance, after setting
+/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
+an ifconfig down/up operation might cause the ethernet driver to call
+netdev_tx_reset_queue, which in turn invokes dql_reset.
 
-But, before that, do_notify_parent(L) called by release_task(T) will use
-L->exit_code != L->signal->group_exit_code, and this is not consistent.
-We don't really care, I think that nobody relies on the info which comes
-with SIGCHLD, if nothing else SIGCHLD < SIGRTMIN can be queued only once.
+In this case, dql->limit is reset to 0 while dql->limit_min remains
+non-zero value, which is unexpected. The limit should always be
+greater than or equal to limit_min.
 
-But pidfs_exit() is more problematic, I think pidfs_exit_info->exit_code
-should report ->group_exit_code in this case, just like wait_task_zombie().
-
-TODO: with this change we can hopefully cleanup (or may be even kill) the
-similar SIGNAL_GROUP_EXIT checks, at least in wait_task_zombie().
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250324171941.GA13114@redhat.com
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Jing Su <jingsusu@didiglobal.com>
+Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/dynamic_queue_limits.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 56d3a099825fb..5015ecdda6d95 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -262,6 +262,9 @@ void release_task(struct task_struct *p)
- 	leader = p->group_leader;
- 	if (leader != p && thread_group_empty(leader)
- 			&& leader->exit_state == EXIT_ZOMBIE) {
-+		/* for pidfs_exit() and do_notify_parent() */
-+		if (leader->signal->flags & SIGNAL_GROUP_EXIT)
-+			leader->exit_code = leader->signal->group_exit_code;
- 		/*
- 		 * If we were the last child thread and the leader has
- 		 * exited already, and the leader's parent ignores SIGCHLD,
+diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
+index e659a027036ec..f6807062b32a3 100644
+--- a/lib/dynamic_queue_limits.c
++++ b/lib/dynamic_queue_limits.c
+@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
+ void dql_reset(struct dql *dql)
+ {
+ 	/* Reset all dynamic values */
+-	dql->limit = 0;
++	dql->limit = dql->min_limit;
+ 	dql->num_queued = 0;
+ 	dql->num_completed = 0;
+ 	dql->last_obj_cnt = 0;
 -- 
 2.39.5
 
