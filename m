@@ -1,176 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D7B1F4C8A;
-	Mon,  5 May 2025 07:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6391CAA98
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746428558; cv=none; b=K9PqOFwzWxOalEnbu6uJK0xhYtjEw6nzYSgSQQwsg7Tgn83ksalhp0NqGFjT/OeVdIrAC27TRBf8KVlPag0qF4PHZVQEG1E7Wnbi76JrwoRaB4I6txG97C3LqVQKOtv81KUB7VBMF4/+9fcERTXMMdySMK6I7cSQPigqk+iPyCo=
+	t=1746428739; cv=none; b=sk55ePmRUBRqow9eAc/abgUuZQjY19pHfLdyEgbrLReUxc18EKVFPZaAEpvMSWJsgHK06938sn1iQ5QGH654gCOxcTobf3umtPPhM3SYCAXRutz7+WxpWcXsFSvl7bLRAr5dPRSJLrbmSTmVhfZWjgUPk1TENDFf4Yyok4viXV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746428558; c=relaxed/simple;
-	bh=d1+z79zg+kihe5QDvuiZPuBTqwMqD9eJrziwPARATZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HfvIs/uUAdqD/dz/m/Emmc/NnoUCypT3XeHf6PV3eyA2CULIqoA+PIWlooQO+jM0ZcqPZmlIGAM7qSIDdJ8VkOFvmPOt6hBnBNv6bqPLfHaONCB7BlDw7gDB5U7j1uWWhLzNRHhThUA2PJuJbcci/jgCuDaIQ+5+vVfVZiY2b7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udIyTs1j; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udIyTs1j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5DBC4CEE4;
-	Mon,  5 May 2025 07:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746428557;
-	bh=d1+z79zg+kihe5QDvuiZPuBTqwMqD9eJrziwPARATZw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=udIyTs1jU0xkkPO2JwNPXSUyJHDJzOGOAJqZEBd18QourGwZw+baXEZ9gTe8BJ0EJ
-	 DKGtIef9GidDihg430dzb3TV4U9nSk0oH0fWDOqZMUUied876JK1wN1He2oUOPQ9+s
-	 4talNO552304u79Njy1LPb0QYEBAPSm4JRnjt0U38ZXHn3uQXTkQ6SLZmvo5VPfcSN
-	 4oQb+HpClX6Qepsm/ir1G8Cf48WpHUEF6GV/yNoKGVauQurcR8AKjzjpLESRp4OM8E
-	 eFEoy59bj9uf5LIDs5y+12okk38f0cZDP+qoR+lYvzBX1noadVlU3+zY/zH2A2FB5S
-	 5rtZiYk4O/uXQ==
-From: Leon Romanovsky <leon@kernel.org>
-To: 
-Cc: Christoph Hellwig <hch@lst.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: [PATCH v11 9/9] docs: core-api: document the IOVA-based API
-Date: Mon,  5 May 2025 10:01:46 +0300
-Message-ID: <a3a7009a0b75b4087e9edc903f6dc3ed3ff5a0a1.1746424934.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1746424934.git.leon@kernel.org>
-References: <cover.1746424934.git.leon@kernel.org>
+	s=arc-20240116; t=1746428739; c=relaxed/simple;
+	bh=k4X3Nv021dW8jfuf/JCzY3IEXEVO82prEbX9vWVvZoA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JzFHfloJ8UXWb6NQTThWQ3nzuad5oPKy7OtjU781Lz1lEvioZwb7NqFaFu5sPtQMJmNUpAYWdcbgiLWss1ERV5EMcWV3KLliW54XFWHXFSPP6iL91TOui9eNZTEgyO6q1NOEfrSFFVz01oycWpjSfWQato0zEOORXQ+5cOFI72o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d922570570so52573745ab.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 00:05:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746428736; x=1747033536;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xLWP2zVJ6fOZqqq1heDqtffHuRpKeSsgJdPsgVovfB8=;
+        b=nSFoWrjYLwyp3gs08lW8pgRYPHhB52cwZK5iGsfB/p+aGZ9iJvqoENMBURAXo3oRvS
+         nM3psm4iK6VcPrwarMQ4Qx04WLZC2FZaUnLhD+a0qMsRaqlaiMYE47d1QTop0cqVqkvy
+         moEiUIqS6QnigBXmrX92z2RTToIYvMzwlqeYPeB+2Bp0lkqOJrC73Y5oTOaE+Xxcw7b1
+         s4FqLgoRMR+Jk2EELQTfnTHMUiHYBjECBkqInKXnY/shhiT9vzDeXOAX/MaT20GDzVPZ
+         nFULQUpBevyaDmxvtke3/U7voS62fKciHen3M4Bpp5wanU7BNUGhdKcJlr4JcdxxLSjK
+         X8qA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJpk1kXX7EtyDP9tbAimfTjwA5cxtL9xBQCqvnFitX9qQFDEcyMg0LtLx2wbsdQgEhO70gyuuK/3glb34=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMW+j5j6yAtbZeIEDmSDZ7qR4srHQ6r+PzO01JBVqoVfkInb9R
+	DbsQMavjwioK/rX0GPG6JDvW/Rv/CGVQGxXgsLrJjeUCHkEd6FuyesI88DxzVlEa5Zx72fYG5Z4
+	NCU+/pFaoD2cH8NGythWpwwA98zocO8FhV1YqsbiG9OuAOAI29a5+Uzk=
+X-Google-Smtp-Source: AGHT+IHyfS0v1j5nW12pwutZMnVxePBGV8nWsNpeKPp52ke6dPrmo2UnIsK2qNh+kDMZrEd0wrsgUgot9MOUQ4xA1GJItwEPzSrF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a26:b0:3d6:d162:be12 with SMTP id
+ e9e14a558f8ab-3da5b3437e9mr59371665ab.21.1746428736480; Mon, 05 May 2025
+ 00:05:36 -0700 (PDT)
+Date: Mon, 05 May 2025 00:05:36 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68186340.a70a0220.254cdc.0047.GAE@google.com>
+Subject: [syzbot] [bluetooth?] [usb?] general protection fault in lookup_or_create_module_kobject
+From: syzbot <syzbot+7fb8a372e1f6add936dd@syzkaller.appspotmail.com>
+To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Christoph Hellwig <hch@lst.de>
+Hello,
 
-Add an explanation of the newly added IOVA-based mapping API.
+syzbot found the following issue on:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+HEAD commit:    7a13c14ee59d Merge tag 'for-6.15-rc4-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=117ddf74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
+dashboard link: https://syzkaller.appspot.com/bug?extid=7fb8a372e1f6add936dd
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=107a139b980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1788302f980000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-7a13c14e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/723f1b9e0adc/vmlinux-7a13c14e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e75e39192fa8/bzImage-7a13c14e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7fb8a372e1f6add936dd@syzkaller.appspotmail.com
+
+RDX: 0000000000000000 RSI: 0000000000005501 RDI: 0000000000000005
+RBP: 00007fc431fa0100 R08: 0000000000000000 R09: 00302e6364755f79
+R10: 0000000000000011 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc43289e520 R14: 00007fc431f9f0d0 R15: 00007ffd3ac3bac8
+ </TASK>
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 0 UID: 0 PID: 5424 Comm: syz-executor428 Not tainted 6.15.0-rc4-syzkaller-00051-g7a13c14ee59d #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:kasan_byte_accessible+0x12/0x30 mm/kasan/generic.c:199
+Code: 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 48 c1 ef 03 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 07 3c 08 0f 92 c0 c3 cc cc cc cc cc 66 66 66 66 66 66 2e
+RSP: 0018:ffffc9000da77840 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: ffffffff8b585807 RCX: 92d5a11e0ccfe200
+RDX: 0000000000000000 RSI: ffffffff8b585807 RDI: 0000000000000004
+RBP: ffffffff819b39d8 R08: 0000000000000001 R09: 0000000000000000
+R10: dffffc0000000000 R11: fffffbfff1efda6f R12: 0000000000000000
+R13: 0000000000000020 R14: 0000000000000020 R15: 0000000000000001
+FS:  00007fc431fa16c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc431f9eff8 CR3: 0000000052ad3000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __kasan_check_byte+0x12/0x40 mm/kasan/common.c:556
+ kasan_check_byte include/linux/kasan.h:399 [inline]
+ lock_acquire+0x8d/0x360 kernel/locking/lockdep.c:5840
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+ complete_with_flags kernel/sched/completion.c:20 [inline]
+ complete+0x28/0x1b0 kernel/sched/completion.c:47
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x228/0x480 lib/kobject.c:737
+ lookup_or_create_module_kobject+0x150/0x170 kernel/params.c:783
+ module_add_driver+0xb9/0x310 drivers/base/module.c:46
+ bus_add_driver+0x391/0x640 drivers/base/bus.c:682
+ driver_register+0x23a/0x320 drivers/base/driver.c:249
+ usb_gadget_register_driver_owner+0xf9/0x270 drivers/usb/gadget/udc/core.c:1700
+ raw_ioctl_run drivers/usb/gadget/legacy/raw_gadget.c:595 [inline]
+ raw_ioctl+0x149a/0x3c90 drivers/usb/gadget/legacy/raw_gadget.c:1306
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc43281c58b
+Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+RSP: 002b:00007fc431f9f020 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fc43281c58b
+RDX: 0000000000000000 RSI: 0000000000005501 RDI: 0000000000000005
+RBP: 00007fc431fa0100 R08: 0000000000000000 R09: 00302e6364755f79
+R10: 0000000000000011 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fc43289e520 R14: 00007fc431f9f0d0 R15: 00007ffd3ac3bac8
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:kasan_byte_accessible+0x12/0x30 mm/kasan/generic.c:199
+Code: 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 48 c1 ef 03 48 b8 00 00 00 00 00 fc ff df <0f> b6 04 07 3c 08 0f 92 c0 c3 cc cc cc cc cc 66 66 66 66 66 66 2e
+RSP: 0018:ffffc9000da77840 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: ffffffff8b585807 RCX: 92d5a11e0ccfe200
+RDX: 0000000000000000 RSI: ffffffff8b585807 RDI: 0000000000000004
+RBP: ffffffff819b39d8 R08: 0000000000000001 R09: 0000000000000000
+R10: dffffc0000000000 R11: fffffbfff1efda6f R12: 0000000000000000
+R13: 0000000000000020 R14: 0000000000000020 R15: 0000000000000001
+FS:  00007fc431fa16c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc431f9eff8 CR3: 0000000052ad3000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+   7:	00
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	90                   	nop
+   b:	90                   	nop
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	90                   	nop
+   f:	90                   	nop
+  10:	90                   	nop
+  11:	90                   	nop
+  12:	90                   	nop
+  13:	90                   	nop
+  14:	90                   	nop
+  15:	90                   	nop
+  16:	90                   	nop
+  17:	90                   	nop
+  18:	66 0f 1f 00          	nopw   (%rax)
+  1c:	48 c1 ef 03          	shr    $0x3,%rdi
+  20:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  27:	fc ff df
+* 2a:	0f b6 04 07          	movzbl (%rdi,%rax,1),%eax <-- trapping instruction
+  2e:	3c 08                	cmp    $0x8,%al
+  30:	0f 92 c0             	setb   %al
+  33:	c3                   	ret
+  34:	cc                   	int3
+  35:	cc                   	int3
+  36:	cc                   	int3
+  37:	cc                   	int3
+  38:	cc                   	int3
+  39:	66                   	data16
+  3a:	66                   	data16
+  3b:	66                   	data16
+  3c:	66                   	data16
+  3d:	66                   	data16
+  3e:	66                   	data16
+  3f:	2e                   	cs
+
+
 ---
- Documentation/core-api/dma-api.rst | 71 ++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-index 8e3cce3d0a23..2ad08517e626 100644
---- a/Documentation/core-api/dma-api.rst
-+++ b/Documentation/core-api/dma-api.rst
-@@ -530,6 +530,77 @@ routines, e.g.:::
- 		....
- 	}
- 
-+Part Ie - IOVA-based DMA mappings
-+---------------------------------
-+
-+These APIs allow a very efficient mapping when using an IOMMU.  They are an
-+optional path that requires extra code and are only recommended for drivers
-+where DMA mapping performance, or the space usage for storing the DMA addresses
-+matter.  All the considerations from the previous section apply here as well.
-+
-+::
-+
-+    bool dma_iova_try_alloc(struct device *dev, struct dma_iova_state *state,
-+		phys_addr_t phys, size_t size);
-+
-+Is used to try to allocate IOVA space for mapping operation.  If it returns
-+false this API can't be used for the given device and the normal streaming
-+DMA mapping API should be used.  The ``struct dma_iova_state`` is allocated
-+by the driver and must be kept around until unmap time.
-+
-+::
-+
-+    static inline bool dma_use_iova(struct dma_iova_state *state)
-+
-+Can be used by the driver to check if the IOVA-based API is used after a
-+call to dma_iova_try_alloc.  This can be useful in the unmap path.
-+
-+::
-+
-+    int dma_iova_link(struct device *dev, struct dma_iova_state *state,
-+		phys_addr_t phys, size_t offset, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs);
-+
-+Is used to link ranges to the IOVA previously allocated.  The start of all
-+but the first call to dma_iova_link for a given state must be aligned
-+to the DMA merge boundary returned by ``dma_get_merge_boundary())``, and
-+the size of all but the last range must be aligned to the DMA merge boundary
-+as well.
-+
-+::
-+
-+    int dma_iova_sync(struct device *dev, struct dma_iova_state *state,
-+		size_t offset, size_t size);
-+
-+Must be called to sync the IOMMU page tables for IOVA-range mapped by one or
-+more calls to ``dma_iova_link()``.
-+
-+For drivers that use a one-shot mapping, all ranges can be unmapped and the
-+IOVA freed by calling:
-+
-+::
-+
-+   void dma_iova_destroy(struct device *dev, struct dma_iova_state *state,
-+		size_t mapped_len, enum dma_data_direction dir,
-+                unsigned long attrs);
-+
-+Alternatively drivers can dynamically manage the IOVA space by unmapping
-+and mapping individual regions.  In that case
-+
-+::
-+
-+    void dma_iova_unlink(struct device *dev, struct dma_iova_state *state,
-+		size_t offset, size_t size, enum dma_data_direction dir,
-+		unsigned long attrs);
-+
-+is used to unmap a range previously mapped, and
-+
-+::
-+
-+   void dma_iova_free(struct device *dev, struct dma_iova_state *state);
-+
-+is used to free the IOVA space.  All regions must have been unmapped using
-+``dma_iova_unlink()`` before calling ``dma_iova_free()``.
- 
- Part II - Non-coherent DMA allocations
- --------------------------------------
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
