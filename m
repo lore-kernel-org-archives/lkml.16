@@ -1,579 +1,397 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2062.outbound.protection.outlook.com [40.107.92.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF819995E;
-	Mon,  5 May 2025 03:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746416489; cv=none; b=t83c7nVRZ6EVGDm2+FhowrYteREVfvtAonmPFWprBD+vpEeT/6N2lSWI0/NY6jVvKc6Y2en53l2NpjjM2GXz16bRvjaVHMv6rsZa6gavb6iDdsMEiO01kmeI3vW+DOgYY2PEZWlWGoNC7BXObf6qc366CV6mSuICY3JdjbZtEfs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746416489; c=relaxed/simple;
-	bh=ByfqStrZOFFD1ShUdkzoy8zvnyc1diQe9z4u8X8qs/4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dvi0NsPXNjv4Fw7T/mb1uml8fZmvI60M7Cpdb0qGCB574b1ns3xMBhbvQqOBMYjwGc7+zF9RQt2ZRPIIDKhgc40Jw1TcO6UGct8k1HVkBPaOm8hxo726y3ea/esbBaalYm39Qss9BlT8BVfxvuorZ5ddRQHyMd3kJT6Nww+HzP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V2AglH/S; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45694C6E;
+	Mon,  5 May 2025 03:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746417067; cv=fail; b=heoyPxBvn/iXZ5pipjyRl2xMh+tqPW9eXgmgmbfCy9OjIvPgAHt4JcPMY5vejJ05adWSZXVnwdQKdBUI9tuTX9UodbvcXqQwFIUHibKhoeDVMyMQ3V2iwXNJRL0A5L5iwLkDuWBKqMjNK820meJnNqLBU58l0z5tTWnByxK3m+4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746417067; c=relaxed/simple;
+	bh=iTQsRcXu3rb3fRG2Cv6hkUUw/9lgoCvDvGJKVY2O7hc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dmpDVqf268q/hpVPS3pJUEwMBkJZRP07GWUU+t0hfuQWkTZXUtQGA+T+h+OvNihA1OGFARFbzQSiND0D7ksUeUIqETFZaCq8HM/HHsem2MY4/ft5NH08U9Ww0fHlFygrzGnCo4bdI/xCGtkFeGisbQcdcRM3JCKoZsMSxoGUFpg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZDUThniz; arc=fail smtp.client-ip=40.107.92.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2AglH/S"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1060079b3a.0;
-        Sun, 04 May 2025 20:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746416487; x=1747021287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wmHKfJR1ziPrVikJdXnKjPURXQCGaEO7vULcpbgNuEA=;
-        b=V2AglH/S+aV4bG1caxA+TnwPkOsdiUwbZQ7Z0xO5nr+UYr7mnsCyrtZU/9mrDufVRH
-         sqQldLAVmuLlfKhl0EYECd65S1saBme5weO0CciZ1jNxdR8kc31M8FYuJ16DiEUKl6bz
-         6iRCWMEoJcPcHxDqLvcMj7pd/ghhgMe+2occQNa0zKqgA2NJFs797Szf/bWFKjjwmrvJ
-         VB9KCKGU9I7BR4IQMZCfYYtMvrkOmPNiP6OQvoZa/zCu8n4jM0/zJSTbyTF8T7pmBj0/
-         LvR/Pn5fZsq/8AE2Ql0XQshZ1F5OwY81hAuHR9ZNFQHW7RJWeYM/XSu1Fu6MgvVLH1Or
-         ZZ3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746416487; x=1747021287;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wmHKfJR1ziPrVikJdXnKjPURXQCGaEO7vULcpbgNuEA=;
-        b=kzDsetAHsVPoTtATdYV4rTXHJlFH6uo8PuJz6CyMlgrq9EAK0vGQJLaBuJL4Jf/Olg
-         /6dfI0zxoZIwB1AJnZcS9QCa5bSR0ihs6go23P9hTjIzRLQv12z7iloqMyl+iXQr399E
-         JLWbKaxmLoiaI+YwRIrF6oyORGNuk27fKbmn98Yco6nhNl5aogWthE4P0hyJykTcXnsw
-         ECWOaogTZH9mg0tSJmpwFTTkSTxvkV+InRG4phnEYkJp2yA323gUml5YQWLjl/VspSzH
-         m+CwKwQQkcirjLV5iYryak3gK13GbsaK071Dta/0nH2wBY+jMAGPPG1fkt4cHnqrkazQ
-         tysA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0IAP/eVlkPuBxQJAlKJz33aypPpKut9uH7rWTRt8M66pDiLatoQE1BZrxGwKia6AnocfLevPJvIk=@vger.kernel.org, AJvYcCUuMhQUU7Q7el7yKN2g6in1Jt8nNwplgmSLtwLTJqAIApo7UH3HuVQI+qDz5qNtWWsUQiN3OZ0FGqhkEWaI@vger.kernel.org, AJvYcCWILOsdQGgfcGEGANQM6bepmRsrxgcyXCj/8h52tJRMJ+v6h5F4IWMkYJectZsHW6aN8GXU4t184D7DsZYaL1m3joDZTg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY6kspJZWoKhEzhaaOUrbSqE0F93oO2vsU0/RBy85qSnMiap8w
-	PRyGl1GhypPTZrUrtHMC6HFNNyvN5gyz0DNAvsz7x2SWQ+Tdmr/H
-X-Gm-Gg: ASbGncvy79cL29tT0xWrdFcyfKOafyt4TsvREYGQ4ReFLv/n0reNoXmBsEL7TsJf3UA
-	SLQObz0mIokZ/YLt/kEqyZ+u+YzRNR++2UGOU1XHntyeumSf5URoQib2ss/sbXAKGMSKvmlcarB
-	7c+XfZ5NAnOempda92qPdhw0nJE3J3LDb+opiDEQ/IupljTIdVyc0LYz49FHOwTKLrb26hvms0i
-	HaC9pEziKCfXHJmHL7oyGCOrVNohADluuto5CcqqAO7+jtrEnhEHs/xBQCEFstT1xURLMyq9sfG
-	G4upB4cq+bwgl1d83mqw1o/+fwailaPoVwnCfZ1j1JlM5tm7sNXp/R7FGA45e8/FdqCrosZbF/V
-	a23IYo2BL+8eJ8wHmRPOP117x
-X-Google-Smtp-Source: AGHT+IGFzeRzYp9yOHUbsv4C0jp7gj0CfedyFu2Q0eGMATL/qUwTeP2V5UmuJsD5hd7RMFsAnVM6Hg==
-X-Received: by 2002:a17:90b:51cd:b0:2ef:19d0:2261 with SMTP id 98e67ed59e1d1-30a619a4dfamr10018742a91.16.1746416486353;
-        Sun, 04 May 2025 20:41:26 -0700 (PDT)
-Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a5ad86c01sm4409402a91.46.2025.05.04.20.41.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 20:41:26 -0700 (PDT)
-Date: Sun, 04 May 2025 20:41:27 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Alok Tiwari <alok.a.tiwari@oracle.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v8_4/6=5D_platform/x86=3A_Add?=
- =?US-ASCII?Q?_Lenovo_Capability_Data_01_WMI_Driver?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <c6ce49f7-cf45-469d-a151-b157d5f182b7@gmx.de>
-References: <20250505010659.1450984-1-derekjohn.clark@gmail.com> <20250505010659.1450984-5-derekjohn.clark@gmail.com> <c6ce49f7-cf45-469d-a151-b157d5f182b7@gmx.de>
-Message-ID: <A0A05012-D725-4F1D-B262-004DB2CDC8D1@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZDUThniz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a25tae0M/K3eJQQw9tX8yd5i2No8KvsvYCUiuyKZSF/yIwxlSKqTn+qWwzIEP29m9NB5GJW/zeJnu6oAAhvY5RTSC/fmoeNef8eQ6r7yROKHuUDvx3dTsxHXDFIRh0P0cHbs2DLeNoV/mwN9ZKFyFYWm/LueAVLn3hw/s8AN9SP9nQWxRpmNPAM8H6NM1PekraMYYZlCc8eeA0r2Ysc43MYa6TKXLEGcrlbzihrvv1on6Z+//aZ6CIpYGzwJqt7xn0NbELRYaZe5b0Xu24p+6WeZSFZs0XljRJSwP6aN3t8WVvl8/UyQavNWzXJMHf/qZfy1GtLxL1VkZIQjhvrKXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KmXr2RpE6+KbKxE093lXxPccD9y3x7bvmfB9SxJ/wuY=;
+ b=WoZTdgRkVHhconlDfxlIgyoUgWd48h/8F1eH4fTmCD5X93hAQUuCSW6y4e6w1UcdRdeAhONtsXcNtv9zn9oCV2YHi3jiitbH8LmEjeLz/W8z4YjPkXJtRZPRI+RWVquV8uOm5Zbo0Khqcv7PsGOOljyiIRK7PDoHTpGQFeShOl4UZ2UGnhjxAcifSXvMf8OPbSI27kgGf7L9MZCjOUOXaZ7IL7fXqTDwol/n1263fHrmaQcXCR3xntD1gEiNzu5wZBNxWkrq//iW85KW4IrHygHD7Dv+Yl7aFkIuQJhu1A2ZzgdQF/9BJ1yw7pnZVZGEAT0Ke3lGUpw/e0YsKRiTJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KmXr2RpE6+KbKxE093lXxPccD9y3x7bvmfB9SxJ/wuY=;
+ b=ZDUThnizjUoy4gICxL9MLx7f+BsAjW6PZRzKNX4o6YxggPIxGRET7CLAr0AzkZCskCQf+gg4g/AAdmm31lJa8NoT8/vfAreRjEYBtuFIJss54/oVOTcgM6GFTXyBFcwoHAnfbDlcZoseNCPTOBtlYJl48Sc1w4BBxOwqGstHcLM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
+ by SA1PR12MB6800.namprd12.prod.outlook.com (2603:10b6:806:25c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Mon, 5 May
+ 2025 03:51:01 +0000
+Received: from DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::1fc8:2c4c:ea30:a42f]) by DM6PR12MB4401.namprd12.prod.outlook.com
+ ([fe80::1fc8:2c4c:ea30:a42f%7]) with mapi id 15.20.8699.022; Mon, 5 May 2025
+ 03:51:00 +0000
+Message-ID: <8f746aa3-9ee6-45a8-84b1-da335be17c2e@amd.com>
+Date: Mon, 5 May 2025 09:20:54 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for May 2
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Neeraj.Upadhyay@amd.com
+References: <20250502194808.67e5164f@canb.auug.org.au>
+Content-Language: en-US
+From: "Jain, Ayush" <ayushjai@amd.com>
+In-Reply-To: <20250502194808.67e5164f@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0129.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:2b1::11) To DM6PR12MB4401.namprd12.prod.outlook.com
+ (2603:10b6:5:2a9::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4401:EE_|SA1PR12MB6800:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ae99ca5-60f1-49fd-d036-08dd8b880c92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WGdkMFpEeFlwRDNranJ3LzZuR2I2b0d0U0duZHdBdTBydmw4MWV4dEw0VzRR?=
+ =?utf-8?B?b1VMN09rWExvbGFsS2hMeTdnazhIOEtycklDZ2hVcUwxYi9EZ1pQR3ZsOXB0?=
+ =?utf-8?B?bG05WlNvNHRCL29sbkwwc1BWdkNyTGdjV205L0ZWTyszZ3dmcytGMnU0MFcw?=
+ =?utf-8?B?aFAxaWs3OGZDVVorbTQ4ZGRkWTFqZ0dwcHZQeTdrWEsrSUNOcDhwR3NZK0lJ?=
+ =?utf-8?B?OXA0OEQrNTFHbnNkWnVnZDQ2VDVWcjBsL1E0RnYrc0xLNFoxS3pDbjV2eHgr?=
+ =?utf-8?B?bDhwSWYreWV2MGdIRjJkSnc5TXNRMGlMSERLc1BjZTdyNmo3RExqeHZ4Yzg0?=
+ =?utf-8?B?Z3FSdTh0Vkg0alMvUXRVTkl0MlhiV216QzFqUU5IYUdLSkVORkhkTzc1SGlm?=
+ =?utf-8?B?cUhURFJrUENLdnFNZzUyaFlIVncwWFphaXgvd3U2OGhmVGRSY3k5OWx3U1dx?=
+ =?utf-8?B?dGx4OWpHNFFmRXk0UUZOTnZSY3EzVWVWZGoyZ05FVjBJbHZXTmdEZE5WaXZs?=
+ =?utf-8?B?elJydTZiWXFtS2V6VzlJMzJiQk02NHBHR2dkR29IUVgrZndsWTVQSGtQczg5?=
+ =?utf-8?B?VG5JQW9xdGZBZWNBaHUyditucTAwSGp5Z3BqQjZ5bEU5L3B3MFQ4aWJYSlp5?=
+ =?utf-8?B?SjlsWEcrb0NBWGoyK0tKUXh2Y1JWWWZvaG5odDBqR2xMZHhwdmNVd2xBNm9I?=
+ =?utf-8?B?dUIrd3R1MDdRUnJoQVIwL24xaWVsMTJlRlZ6ZXlQNUZLczg4Mmt4aHpGL1BC?=
+ =?utf-8?B?dkpsRDJMT2xWTnROYnpqS0ttcWZqa2Q3TmpPWmlNUEhHaGVHMG15R25xQzdL?=
+ =?utf-8?B?d2RKWFpKd1Jkb2xmZDVQVGtMdG5SeUc2TUIyNTJoTStVZEZmUWVBMW9SRWNk?=
+ =?utf-8?B?cVZOVlkvMmJWLzMybCsrL1VRd2cvOGdkd3NFTnloY25zbi9xcnkycm1adS9w?=
+ =?utf-8?B?WjRWaEErcE9yVWNVbnVxTHJ0eElibDhqZHlZSk0yd0FjM0F3aThaMTZBeWps?=
+ =?utf-8?B?amRvaWE5SUtWUXpMTWN2bHF1N3VubjN3c2xMb0FHREQzc2tjdHh4eFZNUTh6?=
+ =?utf-8?B?ckl0Q1dqZ1d2ajRrdGJEMmUyTjRoQ3lYNm81eGx0eXVJM20vRCtHTDNIQU0w?=
+ =?utf-8?B?OXlvTHVmY1RtVkg2MU1ZMzNhNlN2dGJ1a3N5L3BhbVdjTTJweTA4cG16VXor?=
+ =?utf-8?B?Vm5HRXNYTndRVnU0eWV5QnczdXdxTzVTSWZJamN0RnlUaUpXRDdoT0xLUzRS?=
+ =?utf-8?B?OC90TkFGdmMrYUpSMGYydHh4TW5LRzRpSE5QZHoxbUVkTmhjV25WcW91Njcr?=
+ =?utf-8?B?aGRzdGpGbUIwM3k1b29zZ3FMWW1BdmhoeDFHYWdtbm8wa1BWVUJJYmxSa3o5?=
+ =?utf-8?B?bkQ2YnZxUXk2OXdrcEg1SmZWeGJ5Y09YMkVBTFBKRTRORys1NXFQUjBnQ3Rn?=
+ =?utf-8?B?Z3Y5RWJadk4wN2ZIWmJ2cmNGSXBLYWh3cW5keHhrOUR5RjB2RU9SekVDSG5F?=
+ =?utf-8?B?YmRiTThEa2xud0ZySGE5YWI3dzZPSjltakhScGZOVlFqKzM4Tjl0TWxxZElL?=
+ =?utf-8?B?YnFjL0pVTCs3dlB6T25iZWFSWmczWjZjd2xuemRmQWdqWTl0RFhSdWJ5NVlX?=
+ =?utf-8?B?M1o2YUFCRnBvZ1VVd3NOZ0J6UVF3bWRjZ3JYVFZkbXkvQ3RzMDFaeEN1anpz?=
+ =?utf-8?B?a2dyVHZna0xuYW1oNVZ3eHpMYmk0bVdxeDhneXJ3SE13cnZkclJwV090eGZy?=
+ =?utf-8?B?dHFwZmN1MVI4bGZqUGJzSWduVTYvK3M3ZEtZZTZIeUxSeTdTYjBybVdIb0d5?=
+ =?utf-8?B?QUdwS3FiZUNvem5wdFo5eUhoOTl3eEdLLy82V2VON0Z5c2VWdnhBQzErem9S?=
+ =?utf-8?Q?TYDIq7hjJ0/u9?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZlpiSDZwYjdXSUxYbkU3aXVxazVPeE94cHNBT0pSZ3YwbmxudTRMN2RycERy?=
+ =?utf-8?B?MU9jZzZMQ0ZmZWR2Y29OV0JoM0tFSXpReVVTcXJhTTVDd1BmTTFQRVBKTUVs?=
+ =?utf-8?B?bVptbFRZaFpvZC9ONElzdXVGWGRhblN1Z1hUWmZ5ZDdpcEZuNTdYKzRQZE1w?=
+ =?utf-8?B?TjB0VjlLWXFLRGptNVVnaHpoTFNaNzJBT2pOWStWVjM5TmhBaEFLcWw5RGdF?=
+ =?utf-8?B?TnlDRThGVkl5N1BzZ3E1L1hzbVJsOTdpaXpNWEFXRlBJWG4zU0pWRml4dkdz?=
+ =?utf-8?B?NDZnVG9RR0tTdFQrbkdCakplN0YxL1FBM2NIL2VvcUlKVHFNTmVhY2Q1U2lj?=
+ =?utf-8?B?eXhEaGI5UW1OUjhqaHRpZFk5VEpYNSt4V1lOUU1QUG9HMWRmbW5jTHlad2tq?=
+ =?utf-8?B?eGsvblpPaFE4N2FsM3MwNnZwc0FHQmF3S3FDTGZjdURBSk40cDhsQkVCM0tk?=
+ =?utf-8?B?QmdpTjh2Uyt2S05FNGxCL0FCRTRYVmc5TmtFSkRNK1U4MFdkdm9JbExxNGFx?=
+ =?utf-8?B?MjhMQUIzWlhuUTJLS21ZTjF1V3NXZU1YVnJhWlArUTlyOXJKbC9qb0k0Qnd5?=
+ =?utf-8?B?WkpwUHI4dC9xcjBTUUhCWXptMk5KTUdmd3hobnVZdWNWSEdLbmpadmNkVi9m?=
+ =?utf-8?B?VGd4NXlWWllCVGFCYUQ0WFJmT3Y2d1hCc3M4RDVpMFVLc2VqS2tnT0FoRHJu?=
+ =?utf-8?B?ZlhPc21BemRndDZQd2VrZFkzOWY5Zmt4MmJXZEFDMEtZMGJMQ1FWRFNpK25h?=
+ =?utf-8?B?djVBd2Z4Qm9PWWZ4NERmTVBnZHR1REZHK2FxWjZadWxCVTQwVVdGcU5aU2F6?=
+ =?utf-8?B?Vjk4V1BKWGRHWER2Q0ZDQyt2c0kvVE1ucHZBSlp5Tm81eDlZZkVqbmdxYXdq?=
+ =?utf-8?B?eTByK1U5bmJuZXRCTytEZExSK1pTYXRuVSswMlhPTlErMUFYdjJtZGZwMXJ6?=
+ =?utf-8?B?ejByRjFVRGszTmR0TzlHVDU4dTY1a2UrNEpuczc2aisrSjUrK0J6Y0Jxa3BB?=
+ =?utf-8?B?YVI2N1BBVE5vV0ZrZS9OeE84TzJESEJrdVdMc2hRNzFiMGFLa1VLQk9TSXRh?=
+ =?utf-8?B?YnpmOEJIazU1VllucGlUdjcxNlMvT0g2TFVwVjZYbUUzY282eUNacUt0ZjFQ?=
+ =?utf-8?B?RHI1TzdwQVBXUzNINjJGNy9vNkU1YXVFdUEvSEs4ZVhBcjlvMmVvUEsrdWY5?=
+ =?utf-8?B?ckNvNFVUbE9vY3E3Snpsb1Vvb1NiQ1NlTnd1UkRvMlIyNHI1cEJRRmxleHAr?=
+ =?utf-8?B?dldMWUpwakUwQjBITW9CTERodWo3ZGovMzV0dWlROFYrcEdicldMRlVhOXJB?=
+ =?utf-8?B?cGIveFFVcGoyaE1VSkJIa1NUTWhrRERHYk9xeEtDb2JQN01YaS9YZWN6ZC9o?=
+ =?utf-8?B?MTlWdG9ZZUFYalJyUVlIbHhUZERCTnF3djJSTjNZQjZ1bjkreFh4NTU0Qm9h?=
+ =?utf-8?B?TEZaR0RQY2ZCQ1BqdnNYNzk2YVozZnhRUjE2MTBOMVNYeGlFRmF4L0RyZDNl?=
+ =?utf-8?B?bS9mL0hmZWlycVdyMjRRSnZZQXdneFJpRUVDUkt3UnFkenkrOGlQYVl5OFNH?=
+ =?utf-8?B?dDI0Qkh1dTZEMmFONmtPdFhIVFdOek9VOUZFWU9ETWJtTUJiRkdvOTY4OEw1?=
+ =?utf-8?B?QkgzU3lSU080dGRIRjZUeGtxTFJUYWNoTm9SdXcyLytETFpENkxnOG9yY1BD?=
+ =?utf-8?B?cEpOakJMMnh2NlE5T09pbUEycy9tZC83Ynl6YmY0eEdNTlhlbXZiVEpIZHY3?=
+ =?utf-8?B?SnFWbjliQmRoVHhrS2dMV1ByTU5ab0tCS2tlSnZQWFk2Zk40L3BDOXRKSE9a?=
+ =?utf-8?B?amZsOGtOWFdSSnJITFRNdjFNSE9XN2dNNDQxRTdxbE5PQ0p4YTl6ZG5wRVBq?=
+ =?utf-8?B?Q1J6NmxEVnNKYlIrZk1qa08wRWdUNGxQdlJjcWM4Y1ZYUnBFVHl4Y3F3ZXhM?=
+ =?utf-8?B?dTJzY0JEREw2OUNKdUdRNVB6M2lZL21FdDhnV3FzZVFZZ3BsWkg5Z1FWdGdE?=
+ =?utf-8?B?M1dCTlFxSHFBQkNrZW9XYzZLTFYwWmR3WnhXZ1NjU01IN2ZSUm9hL1hjZitN?=
+ =?utf-8?B?VWhoNnBmaEpzODYvV1lMTUM5UEZJTk4ydVF2Z0JNNCs0U0lvRFVrKzhlcGpv?=
+ =?utf-8?Q?grcmkdc98V9DD27I1TTaZ+7NS?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ae99ca5-60f1-49fd-d036-08dd8b880c92
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4401.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 03:51:00.6704
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vE9XmNKTZ/CiiqpE1Qohtlt80d2Wb69E+xqtAdLgDBYWNLk7DbrdoQjzB9ZiSeirpqx6AtAkR7WNzNGlTvNWlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6800
+
+Hello Stephen,
+
+On 5/2/2025 3:18 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20250501:
+> 
+> I have reverted a commit in the mm-nonmm-unstable tree that was causing
+> build failures.
+> 
+> The scmi tree gained a build failure for which I disabled a CONFIG option.
+> 
+> The tip tree still had its build failure so I used the version from
+> next-20250414.
+> 
+> The ipmi tree gained conflicts against Linus' tree.
+> 
+> The char-misc tree still had its build failure so I used the version
+> from next-20250428.
+> 
+> Non-merge commits (relative to Linus' tree): 7260
+>  7323 files changed, 304374 insertions(+), 157636 deletions(-)
+> 
+> ----------------------------------------------------------------------------
+> 
+> I have created today's linux-next tree at
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+> are tracking the linux-next tree using git, you should not use "git pull"
+> to do so as that will try to merge the new linux-next release with the
+> old one.  You should use "git fetch" and checkout or reset to the new
+> master.
+> 
+> You can see which trees have been included by looking in the Next/Trees
+> file in the source.  There is also the merge.log file in the Next
+> directory.  Between each merge, the tree was built with a ppc64_defconfig
+> for powerpc, an allmodconfig for x86_64, a multi_v7_defconfig for arm
+> and a native build of tools/perf. After the final fixups (if any), I do
+> an x86_64 modules_install followed by builds for x86_64 allnoconfig,
+> powerpc allnoconfig (32 and 64 bit), ppc44x_defconfig, allyesconfig
+> and pseries_le_defconfig and i386, arm64, s390, sparc and sparc64
+> defconfig and htmldocs. And finally, a simple boot test of the powerpc
+> pseries_le_defconfig kernel in qemu (with and without kvm enabled).
+> 
+> Below is a summary of the state of the merge.
+> 
+> I am currently merging 395 trees (counting Linus' and 150 trees of bug
+> fix patches pending for the current release).
+> 
+> Stats about the size of the tree over time can be seen at
+> http://neuling.org/linux-next-size.html .
+> 
+> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+> Gortmaker for triage and bug fixes.
+> 
+
+Hitting Kernel Panic on latest-next while running rcutorture tests
+
+37ff6e9a2ce3 ("Add linux-next specific files for 20250502")
+
+Attaching kernel logs below:
+
+[ 1070.635450] rcu-torture: rcu_torture_read_exit: End of episode
+[ 1074.047617] BUG: kernel NULL pointer dereference, address:
+0000000000000498
+[ 1074.054577] #PF: supervisor read access in kernel mode
+[ 1074.059718] #PF: error_code(0x0000) - not-present page
+[ 1074.064856] PGD 0 P4D 0
+[ 1074.067395] Oops: Oops: 0000 [#1] SMP NOPTI
+[ 1074.071583] CPU: 48 UID: 0 PID: 307 Comm: migration/48 Not tainted
+6.15.0-rc4-next-20250502-37ff6e9a2ce3-1746413815614 #1 PREEMPT(voluntary)
+[ 1074.084258] Hardware name: Dell Inc. PowerEdge R6515/0R4CNN, BIOS
+2.16.0 07/09/2024
+[ 1074.091913] Stopper: multi_cpu_stop+0x0/0x130 <- migrate_swap+0xad/0x120
+[ 1074.098619] RIP: 0010:__migrate_swap_task+0x2e/0x180
+[ 1074.103585] Code: 00 55 48 89 e5 41 57 41 56 41 55 41 54 49 89 fc 53
+48 63 de 48 83 87 a0 03 00 00 01 66 90 4c 8b af 50 09 00 00 e8 c2 47 07
+00 <49> 8b bd 98 04 00 00 e8 26 11 36 00 48 89 c7 48 85 c0 74 0a be 3b
+[ 1074.122332] RSP: 0018:ffffa4bc4d54bdb0 EFLAGS: 00010002
+[ 1074.127557] RAX: 0000000000000001 RBX: 0000000000000007 RCX:
+0000000000000000
+[ 1074.134688] RDX: ffff8d80c01fcec0 RSI: 0000000000000007 RDI:
+ffff8d2153c93480
+[ 1074.141822] RBP: ffffa4bc4d54bdd8 R08: 000000fa1239fb41 R09:
+ffff8d9f3e832380
+[ 1074.148955] R10: 0000000000000004 R11: 0000000000000001 R12:
+ffff8d2153c93480
+[ 1074.156088] R13: 0000000000000000 R14: ffff8d60dc9ac14c R15:
+ffff8d2153c9414c
+[ 1074.163218] FS:  0000000000000000(0000) GS:ffff8d9f8a626000(0000)
+knlGS:0000000000000000
+[ 1074.171306] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1074.177051] CR2: 000000000000049op+0x10/0x10
+[ 1074.203665]  cpu_stopper_thread+0xa6/0x160
+[ 1074.207767]  smpboot_thread_fn+0x122/0x280
+[ 1074.211866]  kthread+0x11a/0x230
+[ 1074.215098]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[ 1074.219717]  ? _raw_spin_unlock_irq+0x28/0x50
+[ 1074.224076]  ? __pfx_kthread+0x10/0x10
+[ 1074.227829]  ret_from_fork+0x40/0x60
+[ 1074.231407]  ? __pfx_kthread+0x10/0x10
+[ 1074.235161]  ret_from_fork_asm+0x1a/0x30
+[ 1074.239089]  </TASK>
+[ 1074.241279] Modules linked in: rcutorture torture xt_tcpudp
+nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 nf_tables nfnetlink binfmt_misc ipmi_ssif nls_iso8859_1
+intel_rapl_msr intel_rapl_common amd64_edac edac_mce_amd kvm_amd
+dell_smbios wmi_bmof kvm dell_wmi_descriptor dcdbas rapl ccp k10temp
+acpi_power_meter ptdma wmi ipmi_si acpi_ipmi ipmi_devintf
+ipmi_msghandler mac_hid sch_fq_codel dm_multipath scsi_dh_rdac
+scsi_dh_emc scsi_dh_alua msr fuse efi_pstore ip_tables x_tables autofs4
+btrfs blake2b_generic raid10 raid456 async_raid6_recov async_memcpy
+async_pq async_xor async_tx xor raid6_pq raid1 raid0 mgag200
+drm_client_lib i2c_algo_bit drm_shmem_helper drm_kms_helper nvme
+ghash_clmulni_intel drm tg3 mpt3sas nvme_core ahci bnxt_en i2c_piix4
+raid_class libahci i2c_smbus scsi_transport_sas aesni_intel [last
+unloaded: torture]
+[ 1074.316817] CR2: 0000000000000498
+[ 1074.320135] ---[ end trace 0000000000000000 ]---
+[ 1074.418846] pstore: backend (erst) writing error (-28)
+[ 1074.423983] RIP: 0010:__migrate_swap_task+0x2e/0x180
+[ 1074.428949] Code: 00 55 48 89 e5 41 57 41 56 41 55 41 54 49 89 fc 53
+48 63 de 48 83 87 a0 03 00 00 01 66 90 4c 8b af 50 09 00 00 e8 c2 47 07
+00 <49> 8b bd 98 04 00 00 e8 26 11 36 00 48 89 c7 48 85 c0 74 0a be 3b
+[ 1074.447694] RSP: 0018:ffffa4bc4d54bdb0 EFLAGS: 00010002
+[ 1074.452919] RAX: 0000000000000001 RBX: 0000000000000007 RCX:
+0000000000000000
+[ 1074.460051] RDX: ffff8d80c01fcec0 RSI: 0000000000000007 RDI:
+ffff8d2153c93480
+[ 1074.467184] RBP: ffffa4bc4d54bdd8 R08: 000000fa1239fb41 R09:
+ffff8d9f3e832380
+[ 1074.474317] R10: 0000000000000004 R11: 0000000000000001 R12:
+ffff8d2153c93480
+[ 1074.481450] R13: 0000000000000000 R14: ffff8d60dc9ac14c R15:
+ffff8d2153c9414c
+[ 1074.488581] FS:  0000000000000000(0000) GS:ffff8d9f8a626000(0000)
+knlGS:0000000000000000
+[ 1074.496666] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1074.502414] CR2: 0000000000000498 CR3: 000000409341a002 CR4:
+0000000000770ef0
+[ 1074.509547] PKRU: 55555554
+[ 1074.512258] note: migration/48[307] exited with irqs disabled
+[ 1084.683268] watchdog: CPU6: Watchdog detected hard LOCKUP on cpu 6
+[ 1084.683274] Modules linked in: rcutorture torture xt_tcpudp
+nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 nf_tables nfnetlink binfmt_misc ipmi_ssif nls_iso8859_1
+intel_rapl_msr intel_rapl_common amd64_edac edac_mce_amd kvm_amd
+dell_smbios wmi_bmof kvm dell_wmi_descriptor dcdbas rapl ccp k10temp
+acpi_power_meter ptdma wmi ipmi_si acpi_ipmi ipmi_devintf
+ipmi_msghandler mac_hid sch_fq_codel dm_multipath scsi_dh_rdac
+scsi_dh_emc scsi_dh_alua msr fuse efi_pstore ip_tables x_tables autofs4
+btrfs blake2b_generic raid10 raid456 async_raid6_recov async_memcpy
+async_pq async_xor async_tx xor raid6_pq raid1 raid0 mgag200
+drm_client_lib i2c_algo_bit drm_shmem_helper drm_kms_helper nvme
+ghash_clmulni_intel drm tg3 mpt3sas nvme_core ahci bnxt_en i2c_piix4
+raid_class libahci i2c_smbus scsi_transport_sas aesni_intel [last
+unloaded: torture]
+[ 1084.683352] CPU: 6 UID: 0 PID: 83659 Comm: rcu_torture_rea Tainted: G
+     D             6.15.0-rc4-next-20250502-37ff6e9a2ce3-1746413815614
+#1 PREEMPT(voluntary)
+[ 1084.683357] Tainted: [D]=DIE
+[ 1084.683358] Hardware name: Dell Inc. PowerEdge R6515/0R4CNN, BIOS
+2.16.0 07/09/2024
+[ 1084.683360] RIP: 0010:native_queued_spin_lock_slowpath+0x2b4/0x300
+[ 1084.683368] Code: 63 ff 4c 8d a8 c0 d1 20 b4 49 81 ff ff 1f 00 00 77
+46 4e 03 2c fd e0 5e f7 b2 49 89 5d 00 8b 43 08 85 c0 75 09 f3 90 8b 43
+08 <85> c0 74 f7 48 8b 13 48 85 d2 0f 84 5e ff ff ff 0f 0d 0a e9 56 ff
+[ 1084.683370] RSP: 0018:ffffa4bc6b503a28 EFLAGS: 00000046
+[ 1084.683373] RAX: 0000000000000000 RBX: ffff8d403f9b31c0 RCX:
+0000000000000008
+[ 1084.683375] RDX: 0000000000000047 RSI: 00000000011c0100 RDI:
+ffff8d403f9f2280
+[ 1084.683376] RBP: ffffa4bc6b503a50 R08: 0000000000000080 R09:
+ffffffffffffff00
+[ 1084.683377] R10: 0000000000000000 R11: 0000000000000080 R12:
+ffff8d403f9f2280
+[ 1084.683379] R13: ffff8d403fdb31c0 R14: 00000000001c0000 R15:
+0000000000000046
+[ 1084.683380] FS:  0000000000000000(0000) GS:ffff8d408b7a6000(0000)
+knlGS:0000000000000000
+[ 1084.683382] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1084.683384] CR2: 00007f54f32a3010 CR3: 000000209f547008 CR4:
+0000000000770ef0
+[ 1084.683385] PKRU: 55555554
+[ 1084.683387] Call Trace:
+[ 1084.683388]  <TASK>
+[ 1084.683395]  _raw_spin_lock+0x3c/0x50
+[ 1084.683399]  raw_spin_rq_lock_nested+0x28/0xa0
+[ 1084.683404]  _raw_spin_rq_lock_irqsave+0x29/0x60
+[ 1084.683408]  sched_balance_rq+0x6c8/0x1430
+[ 1084.683412]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683422]  sched_balance_newidle+0x1ba/0x450
+[ 1084.683426]  pick_next_task_fair+0x39/0x500
+[ 1084.683429]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683431]  ? dequeue_task_fair+0xb1/0x1b0
+[ 1084.683433]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683436]  __pick_next_task+0x43/0x1b0
+[ 1084.683440]  __schedule+0x20c/0x15b0
+[ 1084.683443]  ? trace_preempt_on+0x1f/0x70
+[ 1084.683447]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683450]  ? preempt_count_sub+0x50/0x80
+[ 1084.683452]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683455]  ? hrtimer_start_range_ns+0x137/0x4b0
+[ 1084.683459]  ? srso_alias_return_thunk+0x5/0xfbef5
+[ 1084.683463]  schedule+0x_us+0x23/0x30 [torture]
+[ 1084.683489]  rcu_torture_reader+0x138/0x200 [rcutorture]
+[ 1084.683496]  ? __pfx_rcu_torture_timer+0x10/0x10 [rcutorture]
+[ 1084.683503]  kthread+0x11a/0x230
+[ 1084.683507]  ? __pfx_rcu_torture_reader+0x10/0x10 [rcutorture]
+[ 1084.683512]  ? _raw_spin_unlock_irq+0x28/0x50
+[ 1084.683516]  ? __pfx_kthread+0x10/0x10
+[ 1084.683519]  ret_from_fork+0x40/0x60
+[ 1084.683524]  ? __pfx_kthread+0x10/0x10
+[ 1084.683527]  ret_from_fork_asm+0x1a/0x30
+[ 1084.683535]  </TASK>
+[ 1084.683537] Kernel panic - not syncing: Hard LOCKUP
+[ 1086.154471] Shutting down cpus with NMI
+[ 1086.169269] Kernel Offset: 0x30200000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 1086.583614] ---[ end Kernel panic - not syncing: Hard LOCKUP ]---
 
 
+Test recreate steps:
+1. Load rcutorture module to machine
+2. Toggle cpu status (Online/offline)
 
-On May 4, 2025 6:32:43 PM PDT, Armin Wolf <W_Armin@gmx=2Ede> wrote:
->Am 05=2E05=2E25 um 03:06 schrieb Derek J=2E Clark:
->
->> Adds lenovo-wmi-capdata01 driver which provides the
->> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
->> enabled hardware=2E Provides an interface for querying if a given
->> attribute is supported by the hardware, as well as its default_value,
->> max_value, min_value, and step increment=2E
->>=20
->> Reviewed-by: Alok Tiwari <alok=2Ea=2Etiwari@oracle=2Ecom>
->> Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
->> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> ---
->> v8:
->>   - Use devm_mutex_init() instead of mutex_init()=2E
->>   - Check return of devm_add_action_or_reset during probe=2E
->>   - Don't check if cd01 list exists in bind as the driver will bail if
->>     there is a malloc/populating issue prior to bind=2E
->>   - Fix typos=2E
->> v7:
->>   - Do memcpy instead of returning pointer in lwmi_cd01_get_data=2E
->>   - Put list mutex inside lwmi_cd01_priv struct=2E
->>   - Unregister from acpi events on dev remove=2E
->>   - Fix typos=2E
->> v6:
->>   - Recache capabiltiy data on ACPI AC events to ensure accutare
->>     max_value=2E
->>   - Fix typos and rewordings from v5 review=2E
->> v5:
->>   - Return to cache at device initialization=2E On component bind, pass=
- a
->>     pointer to lenovo-wmi-other=2E
->>   - Fixes from v4 review=2E
->> v4:
->>   - Make driver data a private struct, remove references from Other Mod=
-e
->>     driver=2E
->>   - Don't cache data at device initialization=2E Instead, on component =
-bind,
->>     cache the data on a member variable of the Other Mode driver data
->>     passed as a void pointer=2E
->>   - Add header file for capdata01 structs=2E
->>   - Add new struct to pass capdata01 array data and array length to Oth=
-er
->>     Mode=2E
->> v3:
->> - Add as component to lenovo-wmi-other driver=2E
->> v2:
->> - Use devm_kmalloc to ensure driver can be instanced, remove global
->>    reference=2E
->> - Ensure reverse Christmas tree for all variable declarations=2E
->> - Remove extra whitespace=2E
->> - Use guard(mutex) in all mutex instances, global mutex=2E
->> - Use pr_fmt instead of adding the driver name to each pr_err=2E
->> - Remove noisy pr_info usage=2E
->> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv=2E
->> - Use list to get the lenovo_wmi_cd01_priv instance in
->>    lenovo_wmi_capdata01_get as none of the data provided by the macros
->>    that will use it can pass a member of the struct for use in
->>    container_of=2E
->> ---
->>   MAINTAINERS                                 |   1 +
->>   drivers/platform/x86/Kconfig                |   4 +
->>   drivers/platform/x86/Makefile               |   1 +
->>   drivers/platform/x86/lenovo-wmi-capdata01=2Ec | 300 +++++++++++++++++=
-+++
->>   drivers/platform/x86/lenovo-wmi-capdata01=2Eh |  25 ++
->>   5 files changed, 331 insertions(+)
->>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Ec
->>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Eh
->>=20
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 2b4b06e81192=2E=2E1b22e41cc730 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -13164,6 +13164,7 @@ L:	platform-driver-x86@vger=2Ekernel=2Eorg
->>   S:	Maintained
->>   F:	Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->>   F:	Documentation/wmi/devices/lenovo-wmi-other=2Erst
->> +F:	drivers/platform/x86/lenovo-wmi-capdata01=2E*
->>   F:	drivers/platform/x86/lenovo-wmi-events=2E*
->>   F:	drivers/platform/x86/lenovo-wmi-helpers=2E*
->>   diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
->> index 13b8f4ac5dc5=2E=2E64663667f0cb 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
->>   	tristate
->>   	depends on ACPI_WMI
->>   +config LENOVO_WMI_DATA01
->> +	tristate
->> +	depends on ACPI_WMI
->> +
->>   config IDEAPAD_LAPTOP
->>   	tristate "Lenovo IdeaPad Laptop Extras"
->>   	depends on ACPI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
->> index fc039839286a=2E=2E7a35c77221b7 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi=2Eo
->>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook=2Eo
->>   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger=2E=
-o
->>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera=2Eo
->> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+=3D lenovo-wmi-capdata01=2Eo
->>   obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events=2Eo
->>   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers=2Eo
->>   diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Ec b/drivers/=
-platform/x86/lenovo-wmi-capdata01=2Ec
->> new file mode 100644
->> index 000000000000=2E=2E9e2758426564
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Ec
->> @@ -0,0 +1,300 @@
->> +// SPDX-License-Identifier: GPL-2=2E0-or-later
->> +/*
->> + * Lenovo Capability Data 01 WMI Data Block driver=2E
->> + *
->> + * Lenovo Capability Data 01 provides information on tunable attribute=
-s used by
->> + * the "Other Mode" WMI interface=2E The data includes if the attribut=
-e is
->> + * supported by the hardware, the default_value, max_value, min_value,=
- and step
->> + * increment=2E Each attribute has multiple pages, one for each of the=
- thermal
->> + * modes managed by the Gamezone interface=2E
->> + *
->> + * Copyright (C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> + */
->> +
->> +#include "linux/printk=2Eh"
->> +#include <linux/acpi=2Eh>
->> +#include <linux/cleanup=2Eh>
->> +#include <linux/component=2Eh>
->> +#include <linux/container_of=2Eh>
->> +#include <linux/device=2Eh>
->> +#include <linux/export=2Eh>
->> +#include <linux/gfp_types=2Eh>
->> +#include <linux/module=2Eh>
->> +#include <linux/mutex=2Eh>
->> +#include <linux/mutex_types=2Eh>
->> +#include <linux/notifier=2Eh>
->> +#include <linux/overflow=2Eh>
->> +#include <linux/types=2Eh>
->> +#include <linux/wmi=2Eh>
->> +
->> +#include "lenovo-wmi-capdata01=2Eh"
->> +
->> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE=
-018154"
->> +
->> +#define ACPI_AC_CLASS "ac_adapter"
->> +#define ACPI_AC_NOTIFY_STATUS 0x80
->> +
->> +struct lwmi_cd01_priv {
->> +	struct notifier_block acpi_nb; /* ACPI events */
->> +	struct wmi_device *wdev;
->> +	struct cd01_list *list;
->> +};
->> +
->> +struct cd01_list {
->> +	struct mutex list_mutex; /* list R/W mutex */
->> +	u8 count;
->> +	struct capdata01 data[];
->> +};
->> +
->> +/**
->> + * lwmi_cd01_component_bind() - Bind component to master device=2E
->> + * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device=
-=2E
->> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device=2E
->> + * @data: capdata01_list object pointer used to return the capability =
-data=2E
->> + *
->> + * On lenovo-wmi-other's master bind, provide a pointer to the local c=
-apdata01
->> + * list=2E This is used to call lwmi_cd01_get_data to look up attribut=
-e data
->> + * from the lenovo-wmi-other driver=2E
->> + *
->> + * Return: 0
->> + */
->> +static int lwmi_cd01_component_bind(struct device *cd01_dev,
->> +				    struct device *om_dev, void *data)
->> +{
->> +	struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
->> +	struct cd01_list **cd01_list =3D data;
->> +
->> +	*cd01_list =3D priv->list;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct component_ops lwmi_cd01_component_ops =3D {
->> +	=2Ebind =3D lwmi_cd01_component_bind,
->> +};
->> +
->> +/**
->> + * lwmi_cd01_get_data - Get the data of the specified attribute
->> + * @dev: The lenovo-wmi-capdata01 parent device=2E
->> + * @tunable_attr: The attribute to be found=2E
->> + * @output: Pointer to a capdata01 struct to return the data=2E
->> + *
->> + * Retrieves the capability data 01 struct pointer for the given
->> + * attribute for its specified thermal mode=2E
->> + *
->> + * Return: 0 on success, or -EINVAL=2E
->> + */
->> +int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struc=
-t capdata01 *output)
->> +{
->> +	u8 idx;
->> +
->> +	guard(mutex)(&list->list_mutex);
->> +	for (idx =3D 0; idx < list->count; idx++) {
->> +		if (list->data[idx]=2Eid !=3D attribute_id)
->> +			continue;
->> +		memcpy(output, &list->data[idx], sizeof(list->data[idx]));
->> +		return 0;
->> +	};
->> +
->> +	return -EINVAL;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD01");
->> +
->> +/**
->> + * lwmi_cd01_setup() - Cache all WMI data block information
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Loop through each WMI data block and cache the data=2E
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_cd01_cache(struct lwmi_cd01_priv *priv)
->> +{
->> +	int idx;
->> +
->> +	guard(mutex)(&priv->list->list_mutex);
->> +	for (idx =3D 0; idx < priv->list->count; idx++) {
->> +		union acpi_object *ret_obj __free(kfree) =3D NULL;
->> +
->> +		ret_obj =3D wmidev_block_query(priv->wdev, idx);
->> +		if (!ret_obj)
->> +			return -ENODEV;
->> +
->> +		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
->> +		    ret_obj->buffer=2Elength < sizeof(priv->list->data[idx]))
->> +			continue;
->> +
->> +		memcpy(&priv->list->data[idx], ret_obj->buffer=2Epointer,
->> +		       ret_obj->buffer=2Elength);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_cd01_alloc() - Allocate a cd01_list struct in drvdata
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Allocate a cd01_list struct large enough to contain data from all W=
-MI data
->> + * blocks provided by the interface=2E
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_cd01_alloc(struct lwmi_cd01_priv *priv)
->> +{
->> +	struct cd01_list *list;
->> +	size_t list_size;
->> +	int count;
->> +
->> +	count =3D wmidev_instance_count(priv->wdev);
->> +	list_size =3D struct_size(list, data, count);
->> +
->> +	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
->> +	if (!list)
->> +		return -ENOMEM;
->> +
->> +	devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
->
->Please check the result of devm_mutex_init(), as this function might fail=
-=2E
->
->Other than that the whole series looks good to me=2E Hopefully we can fin=
-ally merge this
->for the 6=2E16 kernel cycle=2E
->
->Thanks,
->Armin Wolf
->
+https://github.com/avocado-framework-tests/avocado-misc-tests/blob/master/generic/rcutorture.py
 
-Will do=2E I'll give this version a few more days for additional comments =
-before I submit that change=2E
 
-Thanks,=20
-Derek
+Let me know, if more details are needed from my end
 
->> +	list->count =3D count;
->> +	priv->list =3D list;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_cd01_setup() - Cache all WMI data block information
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Allocate a cd01_list struct large enough to contain data from all W=
-MI data
->> + * blocks provided by the interface=2E Then loop through each data blo=
-ck and
->> + * cache the data=2E
->> + *
->> + * Return: 0 on success, or an error code=2E
->> + */
->> +static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
->> +{
->> +	int ret;
->> +
->> +	ret =3D lwmi_cd01_alloc(priv);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return lwmi_cd01_cache(priv);
->> +}
->> +
->> +/**
->> + * lwmi_cd01_notifier_call() - Call method for lenovo-wmi-capdata01 dr=
-iver notifier=2E
->> + * block call chain=2E
->> + * @nb: The notifier_block registered to lenovo-wmi-events driver=2E
->> + * @action: Unused=2E
->> + * @data: The ACPI event=2E
->> + *
->> + * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_p=
-rofile
->> + * of a change=2E
->> + *
->> + * Return: notifier_block status=2E
->> + */
->> +static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned=
- long action,
->> +				   void *data)
->> +{
->> +	struct acpi_bus_event *event =3D data;
->> +	struct lwmi_cd01_priv *priv;
->> +	int ret;
->> +
->> +	if (strcmp(event->device_class, ACPI_AC_CLASS) !=3D 0)
->> +		return NOTIFY_DONE;
->> +
->> +	priv =3D container_of(nb, struct lwmi_cd01_priv, acpi_nb);
->> +
->> +	switch (event->type) {
->> +	case ACPI_AC_NOTIFY_STATUS:
->> +		ret =3D lwmi_cd01_cache(priv);
->> +		if (ret)
->> +			return NOTIFY_BAD;
->> +
->> +		return NOTIFY_OK;
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
->> +}
->> +
->> +/**
->> + * lwmi_cd01_unregister() - Unregister the cd01 ACPI notifier_block=2E
->> + * @data: The ACPI event notifier_block to unregister=2E
->> + */
->> +static void lwmi_cd01_unregister(void *data)
->> +{
->> +	struct notifier_block *acpi_nb =3D data;
->> +
->> +	unregister_acpi_notifier(acpi_nb);
->> +}
->> +
->> +static int lwmi_cd01_probe(struct wmi_device *wdev, const void *contex=
-t)
->> +
->> +{
->> +	struct lwmi_cd01_priv *priv;
->> +	int ret;
->> +
->> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->wdev =3D wdev;
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->> +	ret =3D lwmi_cd01_setup(priv);
->> +	if (ret)
->> +		return ret;
->> +
->> +	priv->acpi_nb=2Enotifier_call =3D lwmi_cd01_notifier_call;
->> +
->> +	ret =3D register_acpi_notifier(&priv->acpi_nb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister, &p=
-riv->acpi_nb);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
->> +}
->> +
->> +static void lwmi_cd01_remove(struct wmi_device *wdev)
->> +{
->> +	component_del(&wdev->dev, &lwmi_cd01_component_ops);
->> +}
->> +
->> +static const struct wmi_device_id lwmi_cd01_id_table[] =3D {
->> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
->> +	{}
->> +};
->> +
->> +static struct wmi_driver lwmi_cd01_driver =3D {
->> +	=2Edriver =3D {
->> +		=2Ename =3D "lenovo_wmi_cd01",
->> +		=2Eprobe_type =3D PROBE_PREFER_ASYNCHRONOUS,
->> +	},
->> +	=2Eid_table =3D lwmi_cd01_id_table,
->> +	=2Eprobe =3D lwmi_cd01_probe,
->> +	=2Eremove =3D lwmi_cd01_remove,
->> +	=2Eno_singleton =3D true,
->> +};
->> +
->> +/**
->> + * lwmi_cd01_match() - Match rule for the master driver=2E
->> + * @dev: Pointer to the capability data 01 parent device=2E
->> + * @data: Unused void pointer for passing match criteria=2E
->> + *
->> + * Return: int=2E
->> + */
->> +int lwmi_cd01_match(struct device *dev, void *data)
->> +{
->> +	return dev->driver =3D=3D &lwmi_cd01_driver=2Edriver;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
->> +
->> +module_wmi_driver(lwmi_cd01_driver);
->> +
->> +MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
->> +MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
->> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Eh b/drivers/pl=
-atform/x86/lenovo-wmi-capdata01=2Eh
->> new file mode 100644
->> index 000000000000=2E=2Ebd06c5751f68
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Eh
->> @@ -0,0 +1,25 @@
->> +/* SPDX-License-Identifier: GPL-2=2E0-or-later */
->> +
->> +/* Copyright (C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>=
- */
->> +
->> +#ifndef _LENOVO_WMI_CAPDATA01_H_
->> +#define _LENOVO_WMI_CAPDATA01_H_
->> +
->> +#include <linux/types=2Eh>
->> +
->> +struct device;
->> +struct cd01_list;
->> +
->> +struct capdata01 {
->> +	u32 id;
->> +	u32 supported;
->> +	u32 default_value;
->> +	u32 step;
->> +	u32 min_value;
->> +	u32 max_value;
->> +};
->> +
->> +int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struc=
-t capdata01 *output);
->> +int lwmi_cd01_match(struct device *dev, void *data);
->> +
->> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
+If you fix the issue in a separate patch/commit (i.e. not just a new
+version of
+the same patch/commit), kindly add following tags
+Reported-by: Ayush Jain <Ayush.jain3@amd.com>
 
-- Derek
+Thanks and Regards,
+Ayush Jain
+
+
