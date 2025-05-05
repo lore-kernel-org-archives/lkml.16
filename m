@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C6A2D47B2;
-	Mon,  5 May 2025 22:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B202D47C6;
+	Mon,  5 May 2025 22:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485640; cv=none; b=UneLdgod+SJTosPtGdAJtRBcoKTbPi6S4S4GmvfDf9lDvSm7HS8wGIVqKFlKh7SaNkTKLOn3fnxfHXD0EQQbLbuIK8MGwVmIp7ACLAD9bXBCed47g6FBJv4WnRZxUGLbxY1sThtKsfdkYzsYuHQW607TtSA/2AMgcDCZTtM8ozs=
+	t=1746485642; cv=none; b=fyi+LiM8zFuCRF7wQHfT9QxfTpTZSgl1E/1DKup3MOZR6e3pqGsOwLOqR/HyjU9BbPvf++k2SEblOX+pDuw0MXQ7xcDrs6W/n4ruNDj4bE9EbUsupkp5hqndz9oZviW6UYcdtNiF1jS/Eps0hABzKNuy/G5zgHqpzUG3MLM75IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485640; c=relaxed/simple;
-	bh=e/k20abkQuttj3bf5I0w4t8OoJXtdjuvxVSs2L+icLE=;
+	s=arc-20240116; t=1746485642; c=relaxed/simple;
+	bh=5VC5trwgL58pOlCEvy6EgNbNTSJ0i7Tyy7yTSO/wics=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lf28WwwEcZOZ1NMU7uHQi5qg2bSgkF8gx6Chho7k9xjXFknorP3vgNbBhrqd7N3t4t1autlE08DW+IGHrBD5B27VGEYKcHCoPNF/Bxk3/isKgkGEQwLE8nZ7sXW+Z4lOTsengtTrDUQfvBdCK4qMbdzVhJ539IkeAuDi1sKIQAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEsnWDah; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dnUCpy69q9X9XWbnu2FLm2vIWk1QBnVI8FU2tWTf2pBB7DpWtEGfzJGdhtqEJOIivRh3KgssNnKxLv4Y8DWUJZNq/1j5EPbwtAfveRbtCtV8b/ruJnM1HrdtdtaMGvQp5lzUecovEDdMmSE1kgM/mhB0YYWpj3gjmlw/hqKJfU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEKc0tZi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEsnWDah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5050C4CEE4;
-	Mon,  5 May 2025 22:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEKc0tZi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D8FC4CEE4;
+	Mon,  5 May 2025 22:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485638;
-	bh=e/k20abkQuttj3bf5I0w4t8OoJXtdjuvxVSs2L+icLE=;
+	s=k20201202; t=1746485642;
+	bh=5VC5trwgL58pOlCEvy6EgNbNTSJ0i7Tyy7yTSO/wics=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CEsnWDah6cf0nbbnyh5ks5XeE907ZQts2TVluXzKR+/AX4+JAmTx+JSyCO7xVX0Ik
-	 5vWFl/GxpmfEdBgR4tfWWMsiLoJ/u1HN+ZzlTbAvWprsugdDr6T2wISZyFpiChy+uv
-	 rm65PXA1rrhUATB0RLxwxGid9ki+2Ku8r2Pha06vvqSNuSeZVHo8Hix6ikpNiI1mk9
-	 VXdL4vkWWBN1N4CZqp6533PGBeHNAmlczIISXvn7I0K9fevtLGHwr2osC4wFPB46tM
-	 EzgBBuw75qbZD4dmn2iAlXZlDUsQsNDCdlBqePo+2gUilvCl7b6wF4k+2Fgt0E+KYa
-	 QHAdzcQhZRI1A==
+	b=TEKc0tZi7Q1+GVloCPgojG/9YY8Fr+3mKAUDHJNhXBO4Mrh0LIZ6lQVYOETS7Jo4H
+	 nXw98H4A8Ahw8OjVKKI4d+MJrW5AAuAbP+0PQfmdHHRpeqhWWkIcVWhClDOt7QNhSY
+	 S0+G8T14cVMgnE40hevMmv2YSdmoHlucV0pYDZ+ho+Gm8/r2cfNsqpd1NgrVfR9/+f
+	 BS/3MVuZnpZhlZPen5oB3xG+2V9r+2cli/+OTLoVfs41O7RAnuztQPdxLUjPcmgUeG
+	 L/VPYYmhyJEYsQhVIZ8Q+2bVVYDBoobUL/x2h9cGxt56hjz1Jc0Gn78hmQ0rqZHr9m
+	 V8JeeoUajEHrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Marek Vasut <marex@denx.de>,
+	Lee Jones <lee@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	lars@metafoo.de,
-	jic23@kernel.org,
-	linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 399/486] iio: adc: ad7944: don't use storagebits for sizing
-Date: Mon,  5 May 2025 18:37:55 -0400
-Message-Id: <20250505223922.2682012-399-sashal@kernel.org>
+	pavel@kernel.org,
+	andrew@lunn.ch,
+	lukma@denx.de,
+	linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 401/486] leds: trigger: netdev: Configure LED blink interval for HW offload
+Date: Mon,  5 May 2025 18:37:57 -0400
+Message-Id: <20250505223922.2682012-401-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,96 +53,82 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: David Lechner <dlechner@baylibre.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 503d20ed8cf7c7b40ec0bd94f53c490c1d91c31b ]
+[ Upstream commit c629c972b310af41e9e072febb6dae9a299edde6 ]
 
-Replace use of storagebits with realbits for determining the number of
-bytes needed for SPI transfers.
+In case a PHY LED implements .blink_set callback to set LED blink
+interval, call it even if .hw_control is already set, as that LED
+blink interval likely controls the blink rate of that HW offloaded
+LED. For PHY LEDs, that can be their activity blinking interval.
 
-When adding SPI offload support, storagebits will always be 32 rather
-than 16 for 16-bit 16-bit chips so we can no longer rely on storagebits
-being the correct size expected by the SPI framework (it always uses
-4 bytes for > 16-bit xfers and 2 bytes for > 8-bit xfers). Instead,
-derive the correct size from realbits since it will always be correct
-even when SPI offloading is used.
+The software blinking is not affected by this change.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-vy: Nuno Sa <nuno.sa@analog.com>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
-Link: https://patch.msgid.link/20250207-dlech-mainline-spi-engine-offload-2-v8-10-e48a489be48c@baylibre.com
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+With this change, the LED interval setting looks something like this:
+$ echo netdev > /sys/class/leds/led:green:lan/trigger
+$ echo 1 > /sys/class/leds/led:green:lan/brightness
+$ echo 250 > /sys/class/leds/led:green:lan/interval
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Link: https://lore.kernel.org/r/20250120113740.91807-1-marex@denx.de
+Signed-off-by: Lee Jones <lee@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/adc/ad7944.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/leds/trigger/ledtrig-netdev.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-index 0f36138a71445..58a25792cec37 100644
---- a/drivers/iio/adc/ad7944.c
-+++ b/drivers/iio/adc/ad7944.c
-@@ -98,6 +98,9 @@ struct ad7944_chip_info {
- 	const struct iio_chan_spec channels[2];
- };
+diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+index 4b0863db901a9..356a55ced2c28 100644
+--- a/drivers/leds/trigger/ledtrig-netdev.c
++++ b/drivers/leds/trigger/ledtrig-netdev.c
+@@ -68,6 +68,7 @@ struct led_netdev_data {
+ 	unsigned int last_activity;
  
-+/* get number of bytes for SPI xfer */
-+#define AD7944_SPI_BYTES(scan_type) ((scan_type).realbits > 16 ? 4 : 2)
-+
- /*
-  * AD7944_DEFINE_CHIP_INFO - Define a chip info structure for a specific chip
-  * @_name: The name of the chip
-@@ -164,7 +167,7 @@ static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *
+ 	unsigned long mode;
++	unsigned long blink_delay;
+ 	int link_speed;
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(supported_link_modes);
+ 	u8 duplex;
+@@ -86,6 +87,10 @@ static void set_baseline_state(struct led_netdev_data *trigger_data)
+ 	/* Already validated, hw control is possible with the requested mode */
+ 	if (trigger_data->hw_control) {
+ 		led_cdev->hw_control_set(led_cdev, trigger_data->mode);
++		if (led_cdev->blink_set) {
++			led_cdev->blink_set(led_cdev, &trigger_data->blink_delay,
++					    &trigger_data->blink_delay);
++		}
  
- 	/* Then we can read the data during the acquisition phase */
- 	xfers[2].rx_buf = &adc->sample.raw;
--	xfers[2].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[2].len = AD7944_SPI_BYTES(chan->scan_type);
- 	xfers[2].bits_per_word = chan->scan_type.realbits;
+ 		return;
+ 	}
+@@ -454,10 +459,11 @@ static ssize_t interval_store(struct device *dev,
+ 			      size_t size)
+ {
+ 	struct led_netdev_data *trigger_data = led_trigger_get_drvdata(dev);
++	struct led_classdev *led_cdev = trigger_data->led_cdev;
+ 	unsigned long value;
+ 	int ret;
  
- 	spi_message_init_with_transfers(&adc->msg, xfers, 3);
-@@ -193,7 +196,7 @@ static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
+-	if (trigger_data->hw_control)
++	if (trigger_data->hw_control && !led_cdev->blink_set)
+ 		return -EINVAL;
  
- 	xfers[1].rx_buf = &adc->sample.raw;
--	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[1].len = AD7944_SPI_BYTES(chan->scan_type);
- 	xfers[1].bits_per_word = chan->scan_type.realbits;
+ 	ret = kstrtoul(buf, 0, &value);
+@@ -466,9 +472,13 @@ static ssize_t interval_store(struct device *dev,
  
- 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
-@@ -228,7 +231,7 @@ static int ad7944_chain_mode_init_msg(struct device *dev, struct ad7944_adc *adc
- 	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
+ 	/* impose some basic bounds on the timer interval */
+ 	if (value >= 5 && value <= 10000) {
+-		cancel_delayed_work_sync(&trigger_data->work);
++		if (trigger_data->hw_control) {
++			trigger_data->blink_delay = value;
++		} else {
++			cancel_delayed_work_sync(&trigger_data->work);
  
- 	xfers[1].rx_buf = adc->chain_mode_buf;
--	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits) * n_chain_dev;
-+	xfers[1].len = AD7944_SPI_BYTES(chan->scan_type) * n_chain_dev;
- 	xfers[1].bits_per_word = chan->scan_type.realbits;
+-		atomic_set(&trigger_data->interval, msecs_to_jiffies(value));
++			atomic_set(&trigger_data->interval, msecs_to_jiffies(value));
++		}
+ 		set_baseline_state(trigger_data);	/* resets timer */
+ 	}
  
- 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
-@@ -274,12 +277,12 @@ static int ad7944_single_conversion(struct ad7944_adc *adc,
- 		return ret;
- 
- 	if (adc->spi_mode == AD7944_SPI_MODE_CHAIN) {
--		if (chan->scan_type.storagebits > 16)
-+		if (chan->scan_type.realbits > 16)
- 			*val = ((u32 *)adc->chain_mode_buf)[chan->scan_index];
- 		else
- 			*val = ((u16 *)adc->chain_mode_buf)[chan->scan_index];
- 	} else {
--		if (chan->scan_type.storagebits > 16)
-+		if (chan->scan_type.realbits > 16)
- 			*val = adc->sample.raw.u32;
- 		else
- 			*val = adc->sample.raw.u16;
-@@ -409,8 +412,7 @@ static int ad7944_chain_mode_alloc(struct device *dev,
- 	/* 1 word for each voltage channel + aligned u64 for timestamp */
- 
- 	chain_mode_buf_size = ALIGN(n_chain_dev *
--		BITS_TO_BYTES(chan[0].scan_type.storagebits), sizeof(u64))
--		+ sizeof(u64);
-+		AD7944_SPI_BYTES(chan[0].scan_type), sizeof(u64)) + sizeof(u64);
- 	buf = devm_kzalloc(dev, chain_mode_buf_size, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
 -- 
 2.39.5
 
