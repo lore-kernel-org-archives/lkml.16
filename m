@@ -1,190 +1,247 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654ED1D54EF
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0D21D54EF;
+	Mon,  5 May 2025 09:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437862; cv=none; b=Qx0j7vwg4GJNA87sY32mOZDPxJN5qK4zHx+Y5muJ9MilfOTOYA9ySqh+yIEEi/UjGEW4qt8KiWRnpfXeh6AKs3G2l3IxsriUfgGcReEtF2DcUBQxfRJybNyek7BpaQi6iAtSUOGrqlPKCSrglHbvTktnZCb4tvIlTXB0oWMQ+2I=
+	t=1746437953; cv=none; b=dZa8S5a+ag2wD0hjSGBDh/zOXmtqFVkN3EkcopUGYlyICeSqNWT137z6LyiXSEQ3gHvC/NpyUx77oyoMUEmPWV9cIKLQmNridE1hAUw1h6uXjwgioLKJonM9LKiZ10f0Dez3CdSMQ6gLLE3QPB3s9nYrbtM/GRocxNeLBDxGBFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437862; c=relaxed/simple;
-	bh=ba2hWlxchqI1r03nzBeqAuqkxolyG8QFR2s4GUBTLVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bg8y49AxVdD3wUg/qF8+lsnLPCBRpg3heKLO9cMedVJJnVHSVO8cmzE63YaRzNqO1lbUD+sLFNOxJtXI4R5bPvxNazhJH+grg40fu9deNcmtY9apF1FveyeDtr/MmHoamkgsSX5MppREVwQX10VGP3RMltTlgbdIakQtgiq+wIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BCE7D211E9;
-	Mon,  5 May 2025 09:37:38 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AFA1B13883;
-	Mon,  5 May 2025 09:37:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pdHcKuKGGGhCbwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 09:37:38 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 6DB05A082A; Mon,  5 May 2025 11:37:38 +0200 (CEST)
-Date: Mon, 5 May 2025 11:37:38 +0200
-From: Jan Kara <jack@suse.cz>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>, 
-	Dave Chinner <david@fromorbit.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
-Subject: Re: [RFC PATCH v4 2/5] mm/readahead: Terminate async readahead on
- natural boundary
-Message-ID: <67wws7qs5v3poq6sefrrt4dgdn4ejh52mg5x7ycbxqvrfdvow3@zraqczowrvrl>
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-3-ryan.roberts@arm.com>
- <3myknukhnrtdb4y5i6ewcgpubg2fopxc35ii6a4oy5ffgn7xdf@uileryotgd7z>
+	s=arc-20240116; t=1746437953; c=relaxed/simple;
+	bh=xwwc4ndRJjO2Z++ZadBpZDcEDVZqHZtE3WdeKXJGUog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u0rGbuFprpOvESp65B6lBxUctBHCsIT7rz/TAHGJ7Iuhjl7g8DxNdsFOOkBHzQsiiKzRl37oq37ddUQSuGmIffPVvZZb20fNGG6a5cXybWoSfojT0Y5lJ6qkbfBvO/qWQeHek7KTNB+ukPPp/UEG9Sm+7VgoO0HBByZuB0XM3rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvFGTbjK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvFGTbjK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F973C4CEE4;
+	Mon,  5 May 2025 09:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746437952;
+	bh=xwwc4ndRJjO2Z++ZadBpZDcEDVZqHZtE3WdeKXJGUog=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fvFGTbjKC0TLuNNuruyy+b7IUsLLfzk6S/iL96G1GtchIzGrHoo0xxF5MgYULKbbC
+	 AWhRnic1WLeVvFmYTEfSzYNoNhnI58GmVn92thL9pq30DKEn1eQnCf+uZccqQRakWG
+	 jU5SdGfT2QaxKYKoVBFu2tcfrCUMif6dZs0A1Cd7XHm6vctTSnvejO99KdqrblZezd
+	 osCtk/9vCa1WKsComqy/7hymYKCRmm6A9SvDXvMAdQ78wY/9PdLOoduxaw8fdHyAlF
+	 9oxSt7cLTUna2lsPbaTrgd5rL36J1ltper1hHcnN6V6Efc+Vi4V304/3HJYFDMGsY8
+	 2OVsL1BnOucKg==
+From: Alexey Gladkov <legion@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Alexey Gladkov <legion@kernel.org>
+Subject: [PATCH v2 5/7] modpost: Create modalias for builtin modules
+Date: Mon,  5 May 2025 11:38:29 +0200
+Message-ID: <20250505093830.25688-1-legion@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <efd64a6f-d6e5-4790-96b6-0776cd3a7f5a@suse.com>
+References: <efd64a6f-d6e5-4790-96b6-0776cd3a7f5a@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3myknukhnrtdb4y5i6ewcgpubg2fopxc35ii6a4oy5ffgn7xdf@uileryotgd7z>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: BCE7D211E9
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Transfer-Encoding: 8bit
 
-On Mon 05-05-25 11:13:26, Jan Kara wrote:
-> On Wed 30-04-25 15:59:15, Ryan Roberts wrote:
-> > Previously asynchonous readahead would read ra_pages (usually 128K)
-> > directly after the end of the synchonous readahead and given the
-> > synchronous readahead portion had no alignment guarantees (beyond page
-> > boundaries) it is possible (and likely) that the end of the initial 128K
-> > region would not fall on a natural boundary for the folio size being
-> > used. Therefore smaller folios were used to align down to the required
-> > boundary, both at the end of the previous readahead block and at the
-> > start of the new one.
-> > 
-> > In the worst cases, this can result in never properly ramping up the
-> > folio size, and instead getting stuck oscillating between order-0, -1
-> > and -2 folios. The next readahead will try to use folios whose order is
-> > +2 bigger than the folio that had the readahead marker. But because of
-> > the alignment requirements, that folio (the first one in the readahead
-> > block) can end up being order-0 in some cases.
-> > 
-> > There will be 2 modifications to solve this issue:
-> > 
-> > 1) Calculate the readahead size so the end is aligned to a folio
-> >    boundary. This prevents needing to allocate small folios to align
-> >    down at the end of the window and fixes the oscillation problem.
-> > 
-> > 2) Remember the "preferred folio order" in the ra state instead of
-> >    inferring it from the folio with the readahead marker. This solves
-> >    the slow ramp up problem (discussed in a subsequent patch).
-> > 
-> > This patch addresses (1) only. A subsequent patch will address (2).
-> > 
-> > Worked example:
-> > 
-> > The following shows the previous pathalogical behaviour when the initial
-> > synchronous readahead is unaligned. We start reading at page 17 in the
-> > file and read sequentially from there. I'm showing a dump of the pages
-> > in the page cache just after we read the first page of the folio with
-> > the readahead marker.
+For some modules, modalias is generated using the modpost utility and
+the section is added to the module file.
 
-<snip>
+When a module is added inside vmlinux, modpost does not generate
+modalias for such modules and the information is lost.
 
-> Looks good. When I was reading this code some time ago, I also felt we
-> should rather do some rounding instead of creating small folios so thanks
-> for working on this. Feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
+As a result kmod (which uses modules.builtin.modinfo in userspace)
+cannot determine that modalias is handled by a builtin kernel module.
 
-But now I've also remembered why what you do here isn't an obvious win.
-There are storage devices (mostly RAID arrays) where optimum read size
-isn't a power of 2. Think for example a RAID-0 device composed from three
-disks. It will have max_pages something like 384 (512k * 3). Suppose we are
-on x86 and max_order is 9. Then previously (if we were lucky with
-alignment) we were alternating between order 7 and order 8 pages in the
-page cache and do optimally sized IOs od 1536k. Now you will allocate all
-folios of order 8 (nice) but reads will be just 1024k and you'll see
-noticeable drop in read throughput (not nice). Note that this is not just a
-theoretical example but a real case we have hit when doing performance
-testing of servers and for which I was tweaking readahead code in the past.
+$ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
+pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
 
-So I think we need to tweak this logic a bit. Perhaps we should round_down
-end to the minimum alignment dictated by 'order' and maxpages? Like:
+$ modinfo xhci_pci
+name:           xhci_pci
+filename:       (builtin)
+license:        GPL
+file:           drivers/usb/host/xhci-pci
+description:    xHCI PCI Host Controller Driver
 
-1 << min(order, ffs(max_pages) + PAGE_SHIFT - 1)
+Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
+modpost if the module is built separately.
 
-If you set badly aligned readahead size manually, you will get small pages
-in the page cache but that's just you being stupid. In practice, hardware
-induced readahead size need not be powers of 2 but they are *sane* :).
+To fix this it is necessary to generate the same modalias for vmlinux as
+for the individual modules. Fortunately '.vmlinux.export.o' is already
+generated from which '.modinfo' can be extracted in the same way as for
+vmlinux.o.
 
-								Honza
+Signed-off-by: Alexey Gladkov <legion@kernel.org>
+---
 
-> > diff --git a/mm/readahead.c b/mm/readahead.c
-> > index 8bb316f5a842..82f9f623f2d7 100644
-> > --- a/mm/readahead.c
-> > +++ b/mm/readahead.c
-> > @@ -625,7 +625,7 @@ void page_cache_async_ra(struct readahead_control *ractl,
-> >  	unsigned long max_pages;
-> >  	struct file_ra_state *ra = ractl->ra;
-> >  	pgoff_t index = readahead_index(ractl);
-> > -	pgoff_t expected, start;
-> > +	pgoff_t expected, start, end, aligned_end;
-> >  	unsigned int order = folio_order(folio);
-> >  
-> >  	/* no readahead */
-> > @@ -657,7 +657,6 @@ void page_cache_async_ra(struct readahead_control *ractl,
-> >  		 * the readahead window.
-> >  		 */
-> >  		ra->size = max(ra->size, get_next_ra_size(ra, max_pages));
-> > -		ra->async_size = ra->size;
-> >  		goto readit;
-> >  	}
-> >  
-> > @@ -678,9 +677,13 @@ void page_cache_async_ra(struct readahead_control *ractl,
-> >  	ra->size = start - index;	/* old async_size */
-> >  	ra->size += req_count;
-> >  	ra->size = get_next_ra_size(ra, max_pages);
-> > -	ra->async_size = ra->size;
-> >  readit:
-> >  	order += 2;
-> > +	end = ra->start + ra->size;
-> > +	aligned_end = round_down(end, 1UL << order);
-> > +	if (aligned_end > ra->start)
-> > +		ra->size -= end - aligned_end;
-> > +	ra->async_size = ra->size;
-> >  	ractl->_index = ra->start;
-> >  	page_cache_ra_order(ractl, ra, order);
-> >  }
-> > -- 
-> > 2.43.0
-> > 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+v2: As Petr Pavlu suggested, I separated the builtin modules from the external
+    modules. I've also added a search for duplicate modules.
+
+---
+ include/linux/module.h   |  4 ----
+ scripts/mod/file2alias.c |  5 +++++
+ scripts/mod/modpost.c    | 35 +++++++++++++++++++++++++++--------
+ scripts/mod/modpost.h    | 15 ++++++++++++++-
+ 4 files changed, 46 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 7250b4a527ec..6225793ddcd4 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -257,14 +257,10 @@ extern void cleanup_module(void);
+ 	__PASTE(type,			\
+ 	__PASTE(__, name)))))))
+ 
+-#ifdef MODULE
+ /* Creates an alias so file2alias.c can find device table. */
+ #define MODULE_DEVICE_TABLE(type, name)			\
+ extern typeof(name) __mod_device_table(type, name)	\
+   __attribute__ ((unused, alias(__stringify(name))))
+-#else  /* !MODULE */
+-#define MODULE_DEVICE_TABLE(type, name)
+-#endif
+ 
+ /* Version of form [<epoch>:]<version>[-<extra-version>].
+  * Or for CVS/RCS ID version, everything but the number is stripped.
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index dff1799a4c79..be221923f582 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -1509,6 +1509,11 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 	typelen = name - type;
+ 	name += strlen("__");
+ 
++	if (mod->is_vmlinux) {
++		mod = find_module(NULL, modname, modnamelen);
++		mod = mod ?: new_builtin_module(modname, modnamelen);
++	}
++
+ 	/* Handle all-NULL symbols allocated into .bss */
+ 	if (info->sechdrs[get_secindex(info, sym)].sh_type & SHT_NOBITS) {
+ 		zeros = calloc(1, sym->st_size);
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index be89921d60b6..db3c172d4528 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -168,22 +168,26 @@ char *get_line(char **stringp)
+ 	return orig;
+ }
+ 
+-/* A list of all modules we processed */
++/* A list of all modules (vmlinux or *.ko) we processed */
+ LIST_HEAD(modules);
+ 
+-static struct module *find_module(const char *filename, const char *modname)
++/* A list of all builtin modules we processed */
++LIST_HEAD(builtin_modules);
++
++struct module *find_module(const char *filename, const char *name, size_t namelen)
+ {
+ 	struct module *mod;
+ 
+ 	list_for_each_entry(mod, &modules, list) {
+-		if (!strcmp(mod->dump_file, filename) &&
+-		    !strcmp(mod->name, modname))
++		if ((mod->dump_file && !strcmp(mod->dump_file, filename)) &&
++		    namelen != strlen(mod->name) &&
++		    !strncmp(mod->name, name, namelen))
+ 			return mod;
+ 	}
+ 	return NULL;
+ }
+ 
+-static struct module *new_module(const char *name, size_t namelen)
++struct module *create_module(const char *name, size_t namelen, bool is_builtin)
+ {
+ 	struct module *mod;
+ 
+@@ -207,7 +211,10 @@ static struct module *new_module(const char *name, size_t namelen)
+ 	 */
+ 	mod->is_gpl_compatible = true;
+ 
+-	list_add_tail(&mod->list, &modules);
++	if (is_builtin)
++		list_add_tail(&mod->list, &builtin_modules);
++	else
++		list_add_tail(&mod->list, &modules);
+ 
+ 	return mod;
+ }
+@@ -2021,11 +2028,23 @@ static void write_if_changed(struct buffer *b, const char *fname)
+ static void write_vmlinux_export_c_file(struct module *mod)
+ {
+ 	struct buffer buf = { };
++	struct module_alias *alias, *next;
+ 
+ 	buf_printf(&buf,
+-		   "#include <linux/export-internal.h>\n");
++		   "#include <linux/export-internal.h>\n"
++		   "#include <linux/module.h>\n");
+ 
+ 	add_exported_symbols(&buf, mod);
++
++	list_for_each_entry(mod, &builtin_modules, list) {
++		list_for_each_entry_safe(alias, next, &mod->aliases, node) {
++			buf_printf(&buf, "MODULE_ALIAS_MODNAME(\"%s\", \"%s\");\n",
++					mod->name, alias->str);
++			list_del(&alias->node);
++			free(alias);
++		}
++	}
++
+ 	write_if_changed(&buf, ".vmlinux.export.c");
+ 	free(buf.p);
+ }
+@@ -2112,7 +2131,7 @@ static void read_dump(const char *fname)
+ 			continue;
+ 		}
+ 
+-		mod = find_module(fname, modname);
++		mod = find_module(fname, modname, strlen(modname));
+ 		if (!mod) {
+ 			mod = new_module(modname, strlen(modname));
+ 			mod->dump_file = fname;
+diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+index 9133e4c3803f..1d0dd4ee944a 100644
+--- a/scripts/mod/modpost.h
++++ b/scripts/mod/modpost.h
+@@ -107,7 +107,7 @@ struct module_alias {
+ };
+ 
+ /**
+- * struct module - represent a module (vmlinux or *.ko)
++ * struct module - represent a module (vmlinux, a builtin module, or *.ko)
+  *
+  * @dump_file: path to the .symvers file if loaded from a file
+  * @aliases: list head for module_aliases
+@@ -199,6 +199,19 @@ static inline bool is_valid_name(struct elf_info *elf, Elf_Sym *sym)
+ 	return !is_mapping_symbol(name);
+ }
+ 
++struct module *find_module(const char *filename, const char *name, size_t namelen);
++struct module *create_module(const char *name, size_t namelen, bool is_builtin);
++
++static inline struct module *new_module(const char *name, size_t namelen)
++{
++	return create_module(name, namelen, false);
++}
++
++static inline struct module *new_builtin_module(const char *name, size_t namelen)
++{
++	return create_module(name, namelen, true);
++}
++
+ /* symsearch.c */
+ void symsearch_init(struct elf_info *elf);
+ void symsearch_finish(struct elf_info *elf);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.49.0
+
