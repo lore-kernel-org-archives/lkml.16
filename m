@@ -1,70 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7F2D3226;
-	Mon,  5 May 2025 22:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5912D81AF;
+	Mon,  5 May 2025 22:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485555; cv=none; b=gWgpQTre3KQAgayTo7gaLZAvtY5XPt0FORIiRcv+quwKCB5EBlSoHv0tONKJDZ+SfkwLHanHGo92W+dSlfbbs0I4hK+FPTEY8yyZOIvCAb+SVaw8rtMgdwIke4JGVrPKQZmzIL9sBla7S+EWlzMFOy8Lg93szQlgbX5pS+ibnXE=
+	t=1746485767; cv=none; b=TndNzjItBsvdwws/Tpo3hFQsBcqDEKpwy+9BfisDU5I4SWZis0VSLAyO9ilupflV2nVxloJEVsMNzhIflQDcAcw14oDTYrtcv9l2qcNutrVX9qIiSnbgF6cpO8x6sRp8edEqsT5lVpLk86Qz+qb2u0UfyEndO+erZKX418MQfiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485555; c=relaxed/simple;
-	bh=ywQc+q+7aIhTjqr3vp96We4Fj/UP2c1vhX0+GicUBbQ=;
+	s=arc-20240116; t=1746485767; c=relaxed/simple;
+	bh=exINYAVBeI8oiIvNu7w93uO+6/hrDZFff9ESeVyYoT0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QAd43ikh0ngiCu4GRnEW1CLx9IwXK2EtHjoSsia4BAz4D5JZyz6gwLL18IFGCayKLwk1DyUbv7/f6GGed8jyyJSuiodP42GB/SFcNKtLxrcYNe1ka+oMXjgke/kThqf5BP+B0w0TBG1jFiYPL2Zm2OI5c8WsX9Gp2z/hcE0wh4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsQoHDRI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=o7NpRQ+KX0vEmMTuDR8ZQ5A5rgU/K2ppxUTQdMBLh2zoboLW8bykQtIpdK5FYi5M9ENE/6ue8VEXCSievxXIV4WjIveYHQIiYK/spXfDBOQpuplHYOnZSTFQY0qzIux9X8A4sT/gelTxAgOHkP1jH+oG7hnqQXPhpZuCcT/aKrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRS/JuCf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsQoHDRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE558C4CEEF;
-	Mon,  5 May 2025 22:52:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRS/JuCf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E0C4CEED;
+	Mon,  5 May 2025 22:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485555;
-	bh=ywQc+q+7aIhTjqr3vp96We4Fj/UP2c1vhX0+GicUBbQ=;
+	s=k20201202; t=1746485766;
+	bh=exINYAVBeI8oiIvNu7w93uO+6/hrDZFff9ESeVyYoT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PsQoHDRIxlmPpjcAjgM5Zc1XWK/L2AAXfz9DGNz9uym4vYuVKsZr5TMh4JDQWajpy
-	 j07qElSv1QukkrmX0bFv1LSYtCjyKsiMhu3wgiGpxaEx1mf1ix06Y/ZOYi8FHw3s6f
-	 PwtMIFhtqIclu56iGwWGsQ7WJqa4izdhQAEBSlxo/gCZmOwMWdYtJvpPHait93D9f0
-	 ayYLv6h8plZdwWxlaXTSTrTrBotz2brGJnqNPO4Nj4rECqW3x9j52eCubmZAARiy4C
-	 mzBtf/CXka2mzugfxN0jsXizG98qfThSPIagoBqZNuiBBRmIsx8Bkd6UQgg9a/9Zjk
-	 Ik+sb0dun73GA==
+	b=TRS/JuCf0zYpT4Q0odol96KuxzQrnAZf/Jsh0rFcKUKKU9sxac8jVcHnG3iTqu+CU
+	 p7Z+oFFjYHQrXfCMiI4JPGqI8sWGsqzbcVsyr6ku6Luh+nKH2OVwXYb7YlFJrdAvTR
+	 B2jmbdmKJ9ypZvgU5PpCA6cOUSkTf9PVYQBxPCE+qmNoaX5i/uIBrFMd94XOk6rj5R
+	 y7SF89kxBDw7b8xz5LcIYdran9ftaVoj1qFq/KvM82z2CXexg6OC2JFMHj9JKnW+N6
+	 r15gMpZ+mTeByllNtdf/YzY2YT5huM+BqsekqNDmuL1h9K6Yf2t7tPjkIEgpHpcX6q
+	 wRr0YowTL/H1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Martin Tsai <Martin.Tsai@amd.com>,
-	Anthony Koo <anthony.koo@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Olivier Moysan <olivier.moysan@foss.st.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	siqueira@igalia.com,
-	dennis.chan@amd.com,
-	robin.chen@amd.com,
-	mwen@igalia.com,
-	Kaitlyn.Tse@amd.com,
-	george.shen@amd.com,
-	Wayne.Lin@amd.com,
-	Gabe.Teeger@amd.com,
-	Cruise.Hung@amd.com,
-	Ovidiu.Bunea@amd.com,
-	wenjing.liu@amd.com,
-	Zhongwei.Zhang@amd.com,
-	chiahsuan.chung@amd.com,
-	duncan.ma@amd.com,
-	jack.chang@amd.com,
-	zaeem.mohamed@amd.com,
-	nicholas.kazlauskas@amd.com,
-	Syed.Hassan@amd.com,
-	dillon.varone@amd.com,
-	aric.cyr@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 367/486] drm/amd/display: Support multiple options during psr entry.
-Date: Mon,  5 May 2025 18:37:23 -0400
-Message-Id: <20250505223922.2682012-367-sashal@kernel.org>
+	perex@perex.cz,
+	tiwai@suse.com,
+	lgirdwood@gmail.com,
+	lumag@kernel.org,
+	jonas@kwiboo.se,
+	kuninori.morimoto.gx@renesas.com,
+	herve.codina@bootlin.com,
+	krzysztof.kozlowski@linaro.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 473/486] ASoC: hdmi-codec: allow to refine formats actually supported
+Date: Mon,  5 May 2025 18:39:09 -0400
+Message-Id: <20250505223922.2682012-473-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -79,79 +59,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Martin Tsai <Martin.Tsai@amd.com>
+From: Olivier Moysan <olivier.moysan@foss.st.com>
 
-[ Upstream commit 3a5fa55455db6a11248a25f24570c365f9246144 ]
+[ Upstream commit 038f79638e0676359e44c5db458d52994f9b5ac1 ]
 
-[WHY]
-Some panels may not handle idle pattern properly during PSR entry.
+Currently the hdmi-codec driver registers all the formats that are
+allowed on the I2S bus. Add i2s_formats field to codec data, to allow
+the hdmi codec client to refine the list of the audio I2S formats
+actually supported.
 
-[HOW]
-Add a condition to allow multiple options on power down
-sequence during PSR1 entry.
-
-Reviewed-by: Anthony Koo <anthony.koo@amd.com>
-Signed-off-by: Martin Tsai <Martin.Tsai@amd.com>
-Signed-off-by: Alex Hung <alex.hung@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250108170356.413063-3-olivier.moysan@foss.st.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dc_types.h       | 7 +++++++
- drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c   | 4 ++++
- drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h | 6 ++++++
- 3 files changed, 17 insertions(+)
+ include/sound/hdmi-codec.h    | 1 +
+ sound/soc/codecs/hdmi-codec.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dc_types.h b/drivers/gpu/drm/amd/display/dc/dc_types.h
-index c8bdbbba44ef9..1aca9e96c474f 100644
---- a/drivers/gpu/drm/amd/display/dc/dc_types.h
-+++ b/drivers/gpu/drm/amd/display/dc/dc_types.h
-@@ -1009,6 +1009,13 @@ struct psr_settings {
- 	unsigned int psr_sdp_transmit_line_num_deadline;
- 	uint8_t force_ffu_mode;
- 	unsigned int psr_power_opt;
-+
-+	/**
-+	 * Some panels cannot handle idle pattern during PSR entry.
-+	 * To power down phy before disable stream to avoid sending
-+	 * idle pattern.
-+	 */
-+	uint8_t power_down_phy_before_disable_stream;
- };
- 
- enum replay_coasting_vtotal_type {
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-index cae18f8c1c9a0..8821153d0ac3b 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-@@ -419,6 +419,10 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
- 	copy_settings_data->relock_delay_frame_cnt = 0;
- 	if (link->dpcd_caps.sink_dev_id == DP_BRANCH_DEVICE_ID_001CF8)
- 		copy_settings_data->relock_delay_frame_cnt = 2;
-+
-+	copy_settings_data->power_down_phy_before_disable_stream =
-+		link->psr_settings.power_down_phy_before_disable_stream;
-+
- 	copy_settings_data->dsc_slice_height = psr_context->dsc_slice_height;
- 
- 	dc_wake_and_execute_dmub_cmd(dc, &cmd, DM_DMUB_WAIT_TYPE_WAIT);
-diff --git a/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h b/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
-index 7835100b37c41..d743368303682 100644
---- a/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
-+++ b/drivers/gpu/drm/amd/display/dmub/inc/dmub_cmd.h
-@@ -2869,6 +2869,12 @@ struct dmub_cmd_psr_copy_settings_data {
- 	 * Some panels request main link off before xth vertical line
- 	 */
- 	uint16_t poweroff_before_vertical_line;
-+	/**
-+	 * Some panels cannot handle idle pattern during PSR entry.
-+	 * To power down phy before disable stream to avoid sending
-+	 * idle pattern.
-+	 */
-+	uint8_t power_down_phy_before_disable_stream;
- };
- 
- /**
+diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
+index 5e1a9eafd10f5..a65da989dab16 100644
+--- a/include/sound/hdmi-codec.h
++++ b/include/sound/hdmi-codec.h
+@@ -122,6 +122,7 @@ struct hdmi_codec_ops {
+ /* HDMI codec initalization data */
+ struct hdmi_codec_pdata {
+ 	const struct hdmi_codec_ops *ops;
++	u64 i2s_formats;
+ 	uint i2s:1;
+ 	uint no_i2s_playback:1;
+ 	uint no_i2s_capture:1;
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index d9df29a26f4f2..3f9dfdbc693e0 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -1077,6 +1077,10 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 	if (hcd->i2s) {
+ 		daidrv[i] = hdmi_i2s_dai;
+ 		daidrv[i].playback.channels_max = hcd->max_i2s_channels;
++		if (hcd->i2s_formats) {
++			daidrv[i].playback.formats = hcd->i2s_formats;
++			daidrv[i].capture.formats = hcd->i2s_formats;
++		}
+ 		if (hcd->no_i2s_playback)
+ 			memset(&daidrv[i].playback, 0,
+ 			       sizeof(daidrv[i].playback));
 -- 
 2.39.5
 
