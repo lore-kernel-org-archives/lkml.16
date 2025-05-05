@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BDA2ECFE3;
-	Mon,  5 May 2025 23:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DCF2ECFDE;
+	Mon,  5 May 2025 23:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486502; cv=none; b=l6Xpv4V+w/vGR+yYIEiK6BoHT9Mpe6JpYMS0c8Wow6DYIhG611ouXcDvSIWW9NKPZgF9sPpWFV9qmTaS9Q1yI15V3tAtZbCOwKaXtLaRN/BDnFr2wgNmswonEUvuSc1iCmmVcAOUFWkT7B7ltC8l/SDLpzJp00aS6DgOmROa0Qc=
+	t=1746486503; cv=none; b=tc2f20vsKT0ED9qxvuchhUbFWbe38Gsj4ohicAGVw+gO6xG4WkRwIvsG5QRyHl09c3Kyiw42Wc8xBP2ZVk6+0RtxHWVVJHKbcWfAhi6yCAY5M4rLNspWkFFD8rD+IhwQRHI4YEgPxfKTEOBqTTWdKGzebnKHyPojFfmI6w7lESA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486502; c=relaxed/simple;
-	bh=0uhOEJdesMZ0/FMN3zc75mJ1ev9hHoeL2W/wxepzwK0=;
+	s=arc-20240116; t=1746486503; c=relaxed/simple;
+	bh=QaeO5+EedxfnKY00NP1qaHHaC2Fbe8mCW3AnLeOwdCs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NvZ9cA4deT7VFc0yQZpdme/AJYXhrKNhnxtEFdI5iTJmAUc64n9wg7lYZsIJnl0ml/qh3y0qVdXhVVzTinnWJXoVwM9legKJcmIKh9dW+nXCcAzpypKJbYrfhbraDvcMnkuNlVyvZET+QvaVnIo86DPgdSQtSBkVe3TIt5dFuOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8+DI7ZE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KiA0dODXhbNrdECa9CEZ/Y01NWgddvEnY7aO3Osn46JCZXueq+YXryXiiBko/oQZNJox1fsbqSpzOdkDnieqnArtXfQkrh3gTQwgbNE5yAGaFceWH9iSRDMZsFW3Nvbb9SkrY2Y4y6H3E+2zXtW5/1SYMT+YPzQlk6DfKx1mbzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIxMDgOY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8+DI7ZE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252F1C4CEEE;
-	Mon,  5 May 2025 23:08:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIxMDgOY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CFC2C4CEEF;
+	Mon,  5 May 2025 23:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486501;
-	bh=0uhOEJdesMZ0/FMN3zc75mJ1ev9hHoeL2W/wxepzwK0=;
+	s=k20201202; t=1746486502;
+	bh=QaeO5+EedxfnKY00NP1qaHHaC2Fbe8mCW3AnLeOwdCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H8+DI7ZElXRFLCk8pNwP4B6SfdcXuO8ntSqY7g5kA21uo0LQtQ023mEC7s60mfY4k
-	 /oMv9uKQXgadf93jQZbCK3tej7CbM9ETzmToEJ4Ds0BvG9S8l9KWToU94gzonT2wPz
-	 E2d1rh5d+R9jqxMvhEzEXesDtEPxrQPsAIgRZNh+lN0WWRlhlLDUo8nDchAQ/eVQ/w
-	 XYtrVTbX+yfcf73BB1nF0l9R6xPN250MuN3iCB+MBTRNIccFICPGyoz3tCdWz0IR0R
-	 GZZHMpAx1hlg6bd74/UHg2+UIh2RjuIkDMKjquYfX92wtuQUS32/hbiUf49XC+xRXx
-	 L7YqBS72IJEQg==
+	b=rIxMDgOYDYaMWvBAp9rfPZt0s+UW2nM9mheb4PExKnR+6MIuvjxHosUqppA3H7R4W
+	 6KebVg7fuqUqk3ZTTS+0xNgaWx+TO25kmUUELnj7QGrIqSzQqY22SsaRoGVI85A6NU
+	 ILcmeXMDISDBo5G45UMH4A5APR6f/bFhDw2i4P/DpTR/BRNcNluu3A2k2/Ljj4v/2G
+	 kgzwWk2l7JiOv70NKHmhKrIYiss4a/sd1eoQsG5LmXMrZsns8UwEtFNQRsnUoKAtI5
+	 NvtMODtYdmuaaB6YZB2M3ZEOQPZByCQI6abCg5ezGqIaSrS4WnZ36A5TEFzxprYd5t
+	 8OB7nR17142pA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eric Sandeen <sandeen@redhat.com>,
-	Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Baokun Li <libaokun1@huawei.com>,
+	Zhang Yi <yi.zhang@huawei.com>,
+	Jan Kara <jack@suse.cz>,
+	Theodore Ts'o <tytso@mit.edu>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.1 062/212] f2fs: defer readonly check vs norecovery
-Date: Mon,  5 May 2025 19:03:54 -0400
-Message-Id: <20250505230624.2692522-62-sashal@kernel.org>
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 063/212] ext4: reject the 'data_err=abort' option in nojournal mode
+Date: Mon,  5 May 2025 19:03:55 -0400
+Message-Id: <20250505230624.2692522-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -51,54 +53,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Baokun Li <libaokun1@huawei.com>
 
-[ Upstream commit 9cca49875997a1a7e92800a828a62bacb0f577b9 ]
+[ Upstream commit 26343ca0df715097065b02a6cddb4a029d5b9327 ]
 
-Defer the readonly-vs-norecovery check until after option parsing is done
-so that option parsing does not require an active superblock for the test.
-Add a helpful message, while we're at it.
+data_err=abort aborts the journal on I/O errors. However, this option is
+meaningless if journal is disabled, so it is rejected in nojournal mode
+to reduce unnecessary checks. Also, this option is ignored upon remount.
 
-(I think could be moved back into parsing after we switch to the new mount
-API if desired, as the fs context will have RO state available.)
-
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://patch.msgid.link/20250122110533.4116662-4-libaokun@huaweicloud.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/ext4/super.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 72160b906f4b3..0802357d45256 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -745,10 +745,8 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 			set_opt(sbi, DISABLE_ROLL_FORWARD);
- 			break;
- 		case Opt_norecovery:
--			/* this option mounts f2fs with ro */
-+			/* requires ro mount, checked in f2fs_default_check */
- 			set_opt(sbi, NORECOVERY);
--			if (!f2fs_readonly(sb))
--				return -EINVAL;
- 			break;
- 		case Opt_discard:
- 			if (!f2fs_hw_support_discard(sbi)) {
-@@ -1404,6 +1402,12 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		f2fs_err(sbi, "Allow to mount readonly mode only");
- 		return -EROFS;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 7f0231b349057..f829f989f2b59 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2741,6 +2741,13 @@ static int ext4_check_opt_consistency(struct fs_context *fc,
  	}
-+
-+	if (test_opt(sbi, NORECOVERY) && !f2fs_readonly(sbi->sb)) {
-+		f2fs_err(sbi, "norecovery requires readonly mount");
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
  
+ 	if (is_remount) {
++		if (!sbi->s_journal &&
++		    ctx_test_mount_opt(ctx, EXT4_MOUNT_DATA_ERR_ABORT)) {
++			ext4_msg(NULL, KERN_WARNING,
++				 "Remounting fs w/o journal so ignoring data_err option");
++			ctx_clear_mount_opt(ctx, EXT4_MOUNT_DATA_ERR_ABORT);
++		}
++
+ 		if (ctx_test_mount_opt(ctx, EXT4_MOUNT_DAX_ALWAYS) &&
+ 		    (test_opt(sb, DATA_FLAGS) == EXT4_MOUNT_JOURNAL_DATA)) {
+ 			ext4_msg(NULL, KERN_ERR, "can't mount with "
+@@ -5318,6 +5325,11 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+ 				 "data=, fs mounted w/o journal");
+ 			goto failed_mount3a;
+ 		}
++		if (test_opt(sb, DATA_ERR_ABORT)) {
++			ext4_msg(sb, KERN_ERR,
++				 "can't mount with data_err=abort, fs mounted w/o journal");
++			goto failed_mount3a;
++		}
+ 		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
+ 		clear_opt(sb, JOURNAL_CHECKSUM);
+ 		clear_opt(sb, DATA_FLAGS);
 -- 
 2.39.5
 
