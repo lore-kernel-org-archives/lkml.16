@@ -1,214 +1,111 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145141FFC54
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3661F4CAF
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440374; cv=none; b=oF38eL9F0XUX7SRbkphyiDEukSqxPmj32eb+CWNKQgpxPQ5Hv8aJgkwrqT+BJ5hhvbxX80NxkDLQ4Ik3Y0Ljl/nzdT4Bum86UgH98Ki8m/aNFpgxnNZz3XyfzHEzL91EnNFpKz9KrxhCA4o77BJkRN3hK9Odir2ttRHTpAouWaw=
+	t=1746440438; cv=none; b=p1KfvB5ECuvHsbDANGKcztXFhlSg9BSfGc6NQn7kL7UpEItNjSzc5VcFDz5bUA5euikh6zSMD/VuUdIn/HcwEpY6ELXZi98freaS/xvECXh8lFNvoBZNr53Dmx1of/u7mMrvI9rAqpFURDCcaN/DSYE/iMMRxZZTW7T1ARLigwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440374; c=relaxed/simple;
-	bh=mNa/uiTmEdoK25350PSbbzC4LDPmme5ZJWXsPeMD7Wg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDULljM/VYIp12yI/62UVU+kAglblb2Gr4l4/OwwbcfbQP0JYf6XuUzariEvd5jTsIgPL0n9qwn4kfJm/B7EZapod6i2344e4VhpfgzzTaUU07V/T4jNjqxigwrWPw65I2wbJQuBT8GAHjCp989RLr6QUb5uqN2CCb9wr8yvIhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0lCdcRpp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jjxJqT0g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0lCdcRpp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jjxJqT0g; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746440438; c=relaxed/simple;
+	bh=u7SASzk9B1qb0Z6HBxttKJAZ2Si/MjyY9aEcEYnOxaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gs1s/wNgUALAXVcp5cU/CiKTj78B5rjEUvmDyDt85A93TjqbUG2ogbXA1G6GtyrU5zwDAX8SqrnDb7FeOqUo0fzn3k4nEHL9Fjobl/nzYSvNiAAZqkduFQcatFMMu3yWtVkrgW9bZ6FbFp5GQlvRr2SqpZK0z81DdTNaXLNXL/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LEpGTtO+; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0lCdcRpp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jjxJqT0g";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0lCdcRpp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jjxJqT0g"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 223431F79E;
-	Mon,  5 May 2025 10:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746440371; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/79JINGlnETKRWA48EB1xIAB54+ZzNq2juC8J6iZKak=;
-	b=0lCdcRppK3YBy2ZiXgIs7wQA/4EkBp72vfBWgqsPabZ7suIHZsHPMdAFQKBCfpyengtCaS
-	e1odnkzqw/R/rMEHBqYwyO9/DiroF135YIymD60/c0ddyRYfuNOQ4beJrh2HNMorcB5f0v
-	5x8rafHz4rLV86mVo7b2OxaYD2CVHsE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746440371;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/79JINGlnETKRWA48EB1xIAB54+ZzNq2juC8J6iZKak=;
-	b=jjxJqT0gzp/lQkLLMZpzvFXmZKi0/lxHpa+cNzl++BN7BigGS/lWxsiqTCuT4lpF/q364q
-	VRV1513OUSsMfBBQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0lCdcRpp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=jjxJqT0g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746440371; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/79JINGlnETKRWA48EB1xIAB54+ZzNq2juC8J6iZKak=;
-	b=0lCdcRppK3YBy2ZiXgIs7wQA/4EkBp72vfBWgqsPabZ7suIHZsHPMdAFQKBCfpyengtCaS
-	e1odnkzqw/R/rMEHBqYwyO9/DiroF135YIymD60/c0ddyRYfuNOQ4beJrh2HNMorcB5f0v
-	5x8rafHz4rLV86mVo7b2OxaYD2CVHsE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746440371;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/79JINGlnETKRWA48EB1xIAB54+ZzNq2juC8J6iZKak=;
-	b=jjxJqT0gzp/lQkLLMZpzvFXmZKi0/lxHpa+cNzl++BN7BigGS/lWxsiqTCuT4lpF/q364q
-	VRV1513OUSsMfBBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D0F3013883;
-	Mon,  5 May 2025 10:19:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cNSgMbKQGGhuewAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 05 May 2025 10:19:30 +0000
-Message-ID: <29c139fe-337d-4cd2-944b-8e26080a326f@suse.de>
-Date: Mon, 5 May 2025 12:19:30 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LEpGTtO+"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso8408184a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746440433; x=1747045233; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+uJJhUKYfceGuW/WMXQtjwzbnKP4fzH4IrlmqJCfI98=;
+        b=LEpGTtO+UY8Axz06Ym+Ou7b/oDMe1R+tfh9TYliPJGhGJPZi5+Qwc0TExOVQUyfpkt
+         6EvT+2qesVSu7QzWz0JE7v2rrb0FKkPHKhYMU7FE1rTs0hcaVHK2ZV0oLUJ3nvASjgp1
+         doWM7+QKfRfQTgMhJ0gKePjoVK2kUb7oh1vqqeYFEjtkwYbfQSfXHMokIwkHz7cZLlYW
+         H3/VDXMvxJaRCgbCBVBf2XZu5QNFrfu8l1TY/bn3NxWdzcTPPZEbtstp8/RDVbPmWEnB
+         bsjKheIDEMlFrEOL8OXI7BfJ99AbHRjPlQSl/gWWtkNVs0b2Bu98RHkuMSCooeBYXDjr
+         J1qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746440433; x=1747045233;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+uJJhUKYfceGuW/WMXQtjwzbnKP4fzH4IrlmqJCfI98=;
+        b=MjPdSra1I3pZiyaI5eQzKFRI1i4QFRpGyzdNI2lVtMyPWpWiXnFRIFJb+ecnCJ7yC/
+         kCn8dzmDyQBIFpzkU7aoscyEzLGWc4OdFq5jdbNuWNfPBxjy32J7ZFkLXilGlYXkg0oW
+         N4/d/f5qd1S2mrJ7musBdd3RQhi7Kg+MlI5wYSDdHY46Z7oGjKKfMqxFJoupzAyVH5nB
+         eIHlp4RI705GAG5i8muqAA7nBz/8jgUFMO4Queq2w6CX7Tu38/piiNAWUq5lCXAFWhFK
+         3610TmTlAZMVuTLsYd6nhaTPPIs6HYup4IRoSvHtNL8Z0sCAmpE5nful2TuB7Os+WQYP
+         Qlyw==
+X-Gm-Message-State: AOJu0YxsX+GDYjM/xXTuw4axIwy1baR8TxEoXf+s53sBB20fSSiDtnSt
+	5A4vjMBzT4ONpHvznqoaOyYlN12BFPTkzTzyGFe6z4zYJsXGauEQWlFh6RmAlTGSSPs6GSUDxTA
+	0
+X-Gm-Gg: ASbGncuqqbsA09ene3dWcQRjUyjEDj+CPQrtQUmvHMbj0WQ+pAhPhKkZbph7xqTPFdo
+	qtg2+80kQ4+wd7RwJg0+B3KL0FemT4n1j4T5LaAEqkkrY6WYI9WY9sSC7txfwmTV1nbDWqC69nW
+	N6ue38cqpfwfJyD2+DTK/Z07O5sIwpkUEAPydu1jGV/aYcF8G6+/7rdmGJu/qhaxx7pr7+weV03
+	BoLSU8hsLWYKOX7m9p17dRW/bNY47eGe0GyvzAb5pNWENMgoiK281lm6JGfqWcn8C6o97Y7RTwC
+	I4pb4cNB2KdIzpGrd0cDvxofEc5CYePGfy64QeoF6ZzLiwJQ71E=
+X-Google-Smtp-Source: AGHT+IEQIhePk2r+9V+A7DdcgLKv9lsNGIMxjzbahFi41BQEakcywtuloLNZGACO28vRNOYKsGLfbg==
+X-Received: by 2002:a17:907:1c1d:b0:ace:cae6:c85c with SMTP id a640c23a62f3a-ad1a4a8d651mr577728566b.39.1746440433276;
+        Mon, 05 May 2025 03:20:33 -0700 (PDT)
+Received: from localhost.localdomain ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891ef1e0sm469477966b.77.2025.05.05.03.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 03:20:32 -0700 (PDT)
+Date: Mon, 5 May 2025 12:20:31 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: Re: [PATCH v4 11/20] ratelimit: Force re-initialization when
+ rate-limiting re-enabled
+Message-ID: <aBiQ3XTQpE3wD4nE@localhost.localdomain>
+References: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
+ <20250430010524.3614408-11-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/sitronix: move tiny Sitronix drivers to their own
- subdir
-To: Javier Martinez Canillas <javierm@redhat.com>,
- Marcus Folkesson <marcus.folkesson@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, David Lechner <david@lechnology.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-References: <20250503-sitronix-v2-1-5efbed896be2@gmail.com>
- <27a5f519-de87-4fab-b465-bb89ae5b988b@suse.de>
- <87r013wgoy.fsf@minerva.mail-host-address-is-not-set>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <87r013wgoy.fsf@minerva.mail-host-address-is-not-set>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 223431F79E
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[redhat.com,gmail.com,linux.intel.com,kernel.org,ffwll.ch,lechnology.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430010524.3614408-11-paulmck@kernel.org>
 
-Hi Javier, Marcus
+On Tue 2025-04-29 18:05:15, Paul E. McKenney wrote:
+> Currently, if rate limiting is disabled, ___ratelimit() does an immediate
+> early return with no state changes.  This can result in false-positive
+> drops when re-enabling rate limiting.  Therefore, mark the ratelimit_state
+> structure "uninitialized" when rate limiting is disabled.
+> 
+> [ paulmck: Apply Petr Mladek feedback. ]
+> 
+> Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
+> Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Cc: Mateusz Guzik <mjguzik@gmail.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: John Ogness <john.ogness@linutronix.de>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 
-Am 05.05.25 um 11:27 schrieb Javier Martinez Canillas:
-> Thomas Zimmermann <tzimmermann@suse.de> writes:
->
-> Hello Thomas,
->
->> Hi,
->>
->> there's one major issue here. You must not change the Kconfig symbols or
->> you'll break kernel updates for a lot of people. So those TINYDRM_* must
->> remain as is.
->>
-> I disagree. The https://docs.kernel.org/admin-guide/abi.html document
-> explictly states that Kconfig symbols are not an ABI, and userspace
-> should not rely on these not changing over time.
+Looks goot to me:
 
-To summarize our discussion on irc [1]: changing the symbols is ok, but 
-we should make it compatible to ease the transition. To do so, the new 
-Kconfig file can still contain the old Kconfig symbol and the new one 
-defaults to it. Something like this:
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-config TINYDRM_ST7586
-   tristate
-   default n
-
-config DRM_ST7586
-   tristate "bla bla"
-   ...
-   default TINYDRM_ST7586
-
-Doing 'make olddefconfig' or a similar make command sets the new symbol 
-from the pre-existing one. After a few releases the old symbol can be 
-removed.
-
-Best regards
-Thomas
-
-
-[1] 
-https://people.freedesktop.org/~cbrill/dri-log/?channel=dri-devel&highlight_names=&date=2025-05-05&show_html=true
-
->
->> Best regards
->> Thomas
->>
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Best Regards,
+Petr
