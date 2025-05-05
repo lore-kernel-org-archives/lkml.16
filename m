@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD23C2D37EF;
-	Mon,  5 May 2025 22:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00752D3806;
+	Mon,  5 May 2025 22:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485239; cv=none; b=junG3c7sNtGngr537OnS1kRE3vW3vPRCZAsG7WzdAoNre4L4kabX2xTji+H6a77E88/pVt3sg3ZLR7qwyEmp1WafbWv29ry1oracugpycRGnRvBPDr0o1r5SUc1oK+eHXyetW6k4mhHsz6AewXBOQZ6j4qXVMUW8pl+Uiel7BKM=
+	t=1746485241; cv=none; b=H43kmUCslqyyhEmXkXZ+ZTCGkP9eb1wbuaQMa5A7kuqLpli6Z8DoxYATmEAtb2zAJQYm/AvM4UJ72Sn0EsuHni6ab9XPYyHS9/zMAjFBtpLVyhiIUq56PG/E8oyCtoqI1ymRsnW++xFC7RqnYw4BYThj2Z30D6Bub3E4l/paKBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485239; c=relaxed/simple;
-	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
+	s=arc-20240116; t=1746485241; c=relaxed/simple;
+	bh=ibdy/rtIaou04q3IrNpDo1noO5Avp/t2atPZu9N7z+M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eGTZYkGCPO9n2Ba7CEwXemiwZFx4OYX8jGJGhSlnhZ9k9OfgSVhBfTeX70FLFqseo4BuNpKQLF3paJxZfX1HPLmoU64xXHY01yra8scQ3ck0kpKq+j9lT6yvtT3xO0D0CSKDHjX/w68ndahcHYGxEIN0e8YNKM/HOjiiCXHmD3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sFl7pGS3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QhL6eH/6ySicP2BhCYdPsby2FZaFbwFlz3J7EmLWZGUKk7dOZDPg2oxiWucaMs1T5Lk/J7pdSU5s3xehg8MJzok0h975Xbo4nAAsWS8IGo756W+h0GqH1g8sdmwgqAmfOBjxv7/vpcl86n/4xHNP82+KlVfU59hq3Z7sMRIXIPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Omo0CiHW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sFl7pGS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706D3C4CEED;
-	Mon,  5 May 2025 22:47:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Omo0CiHW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED419C4CEE4;
+	Mon,  5 May 2025 22:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485238;
-	bh=Q6mzvyxCFKn0LYzphUXFPUR4b1GinHCbmTPxZGgDFAI=;
+	s=k20201202; t=1746485239;
+	bh=ibdy/rtIaou04q3IrNpDo1noO5Avp/t2atPZu9N7z+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sFl7pGS3Mp5yRD+wJVWyy5C9CQkpAiJMR1VWSc0LlOQ3TbIDRcGrETxSru5A2JRvf
-	 DB7ribZ42Nzyx4evfGdH9LGZzNm3USUiwQWz4LdDmOhLXE5B7DtXyW0yi0m6gRpHgv
-	 EulKpVDBs43q95u/uOR9Gr1Ioa0xwga1X0iWuKnKGOK1eh8fTYJusb+0AD3h076zoU
-	 LvU12QS7pKzvPPb2oGOmohpTrSM618oXGuxuKx4pI+ANdpCbWslheqyBHUO1RboLOr
-	 t/4MQ929kGsVxqbLjtdNRXtbji2aKTAPGJ2e7Junf+Gt1s94FW4/6dqYLudZv5orfV
-	 xGy5cl0/GdQew==
+	b=Omo0CiHWdBxm11fRMEf6gFqOBHMDylgYa6rhaWJ9M+PGVqOvkECYjm57KlYK+GLtj
+	 +0YdSaofWdy2xU8nVw4sOoF7GtSczxCBVFmKGcah93dGqEoKKNhCfu6SvsBF1+r2K1
+	 Ep1DW17oepupKbLshB+lk5X8Pj3qskr37L7uuWxtY0X1w9bGxzHzMleHqeDCHxgiZ2
+	 Xos53BNmxjz/B2UZdc2OWTjde94Nfc7u+lukcsTAwnjdoDdc08rvwaIg8OSdzjMeDk
+	 w3eGv7aORB5IzAwbEPT4vf1u6MwjsMfDj+gVU2J6uVIZ24EbNWHbMGB5m6Mi5hIGDF
+	 tVAa3D4KCBIeA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Will Deacon <will@kernel.org>,
+Cc: Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Sven Peter <sven@svenpeter.dev>,
 	Sasha Levin <sashal@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 228/486] perf: arm_pmuv3: Call kvm_vcpu_pmu_resync_el0() before enabling counters
-Date: Mon,  5 May 2025 18:35:04 -0400
-Message-Id: <20250505223922.2682012-228-sashal@kernel.org>
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 229/486] soc: apple: rtkit: Use high prio work queue
+Date: Mon,  5 May 2025 18:35:05 -0400
+Message-Id: <20250505223922.2682012-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,41 +52,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: "Rob Herring (Arm)" <robh@kernel.org>
+From: Janne Grunau <j@jannau.net>
 
-[ Upstream commit 04bd15c4cbc3f7bd2399d1baab958c5e738dbfc9 ]
+[ Upstream commit 22af2fac88fa5dbc310bfe7d0b66d4de3ac47305 ]
 
-Counting events related to setup of the PMU is not desired, but
-kvm_vcpu_pmu_resync_el0() is called just after the PMU counters have
-been enabled. Move the call to before enabling the counters.
+rtkit messages as communication with the DCP firmware for framebuffer
+swaps or input events are time critical so use WQ_HIGHPRI to prevent
+user space CPU load to increase latency.
+With kwin_wayland 6's explicit sync mode user space load was able to
+delay the IOMFB rtkit communication enough to miss vsync for surface
+swaps. Minimal test scenario is constantly resizing a glxgears
+Xwayland window.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Tested-by: James Clark <james.clark@linaro.org>
-Link: https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-1-4e9922fc2e8e@kernel.org
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Janne Grunau <j@jannau.net>
+Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Link: https://lore.kernel.org/r/20250226-apple-soc-misc-v2-3-c3ec37f9021b@svenpeter.dev
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/apple/rtkit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 0afe02f879b45..d9b56f0f90942 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -816,10 +816,10 @@ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
- 	else
- 		armv8pmu_disable_user_access();
+diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+index e6d940292c9fb..00d59a81db88b 100644
+--- a/drivers/soc/apple/rtkit.c
++++ b/drivers/soc/apple/rtkit.c
+@@ -667,7 +667,7 @@ struct apple_rtkit *apple_rtkit_init(struct device *dev, void *cookie,
+ 	rtk->mbox->rx = apple_rtkit_rx;
+ 	rtk->mbox->cookie = rtk;
  
-+	kvm_vcpu_pmu_resync_el0();
-+
- 	/* Enable all counters */
- 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
--
--	kvm_vcpu_pmu_resync_el0();
- }
- 
- static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
+-	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_MEM_RECLAIM,
++	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_HIGHPRI | WQ_MEM_RECLAIM,
+ 					  dev_name(rtk->dev));
+ 	if (!rtk->wq) {
+ 		ret = -ENOMEM;
 -- 
 2.39.5
 
