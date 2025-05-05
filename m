@@ -1,42 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169692ECFF2;
-	Mon,  5 May 2025 23:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072332ED06D;
+	Mon,  5 May 2025 23:08:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486508; cv=none; b=BdM/dzjqEEJIUgUvpycvLOPLSmF66UfkVeJYLKfn9KitEZrSGxXj1snABzmw1sjAGuhVy3nhcsupClocQk2PwUXJ/QEhOgBGR6tIzTw8oorGpa3o2aKpdu63G2Qv3TwSxA5ADpWyXgj34M0fxRrYyMzYO7YorjPZHTvkgcGeSS8=
+	t=1746486513; cv=none; b=sWGK+liw48+hWahclQBgyJFR0Z9bGVxThGcyNGozCjtv/XkfbCH97pymPn7u0Ojoh8NbRC9bJRssI5DZz95BEtKtqHDUsQoBA2DBvm+H+6e70BhWNH3jyhtTrWHc+ZFtgtsrblYloWwQ/Os3eC4l42ysI0YYOFEXx7EMRqvIWPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486508; c=relaxed/simple;
-	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
+	s=arc-20240116; t=1746486513; c=relaxed/simple;
+	bh=lPog47QGvgV+ETJkQFbNqdqrBnE3MM2NASVff6hG8Ko=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hV8fT/QuIWhK85bTUmB4BSM7ao+g8hztPJ2kXNJCLhsTqqKGfYfOSpv984AqX6s4yGLlw6fbxRYwYxhhuvH+ENSU/lOldJJl7Zk0I5RrmAERyTU3tTXwQJ2wRQQ1r+FKMq90lLhZU/CPINtsr75/A54Ybfm88ltOywfbsoUAXG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMGHO7M7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oGGkyHjqlYGtJBy3ChIZBpdU6srB1zIzNvEtMjM8oeQh/WwDALJGyfIl4o+H9a+9OLnFlV0jBXwFDrAhGJcsL+v/MtVnoo3n5bjMiu1JBM0s80RXzkuyH5CYAtS3DHXhcYR2LKry36kPb4GyXD9Ogx1qNWH9Orc+7pgNMYAOf8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrK3DVQV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMGHO7M7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5FFCC4CEE4;
-	Mon,  5 May 2025 23:08:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrK3DVQV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEA4C4CEE4;
+	Mon,  5 May 2025 23:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486507;
-	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
+	s=k20201202; t=1746486511;
+	bh=lPog47QGvgV+ETJkQFbNqdqrBnE3MM2NASVff6hG8Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UMGHO7M7C90LCrtZcP4GY7itygntj0Dn2sRje9yV5SC899uJDXwD9+VAowNqqGHtM
-	 Kf3160txExjICU+HmnXzunPu2ygvvaA34XcaMFgrTmP6WmlNcLfa61obiGVxh1o6WM
-	 Gcc5er1HhSfhNc1g8Vc0Y+pos4BfSoN0aLE6C+wxWK/vjaiYdOXN7jB8H091qs+nSJ
-	 pcsVzvv4cSyK6o5HP3h0x6VXhyYM5kbU3u5cv7SDaXm4HEZhrHxuqAiqmERU3ebbvw
-	 KbbVg9qzpLpQfSyeD6e+WxzOOZqoAcdNSvlchC0VcABC1whJDsiQekiHZt7STnDKyy
-	 1k0+vQ8m9KkSA==
+	b=VrK3DVQVFm5OGzkyQ31CGXU2GH4sqm9c9QohQumZm4U03zHOCsISUb76wxHnZBrM6
+	 2azIpkwlccAlKz1gHo94HDjst0HkeKsPE9mFh8xj9e145YOIDH2ePLcH4JVX8iYib7
+	 775tm4L2qnQ0d/8QCPgFW8nWf3d5n1oQIsWaSWU+478x6e6yDSDqNwiVYIx8by4x42
+	 +/V6zPV9ru8FuR8VvmW8Zrc6cZGmEkGfGCGcqFgLk5wIuIYxIA1HcGzJX/wL0Aw+yV
+	 gE0xjDtBglflH/YG/JqlAeCYHMrw3j6lUGa3Dkg7xM21nVlVqAQp9gwC/7vQcmkqU/
+	 +C5+md690PyYA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	anna-maria@linutronix.de,
-	frederic@kernel.org
-Subject: [PATCH AUTOSEL 6.1 066/212] timer_list: Don't use %pK through printk()
-Date: Mon,  5 May 2025 19:03:58 -0400
-Message-Id: <20250505230624.2692522-66-sashal@kernel.org>
+	peterx@redhat.com,
+	joey.gouly@arm.com,
+	yangyicong@hisilicon.com,
+	ioworker0@gmail.com
+Subject: [PATCH AUTOSEL 6.1 068/212] arm64/mm: Check PUD_TYPE_TABLE in pud_bad()
+Date: Mon,  5 May 2025 19:04:00 -0400
+Message-Id: <20250505230624.2692522-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -46,66 +53,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+From: Ryan Roberts <ryan.roberts@arm.com>
 
-[ Upstream commit a52067c24ccf6ee4c85acffa0f155e9714f9adce ]
+[ Upstream commit bfb1d2b9021c21891427acc86eb848ccedeb274e ]
 
-This reverts commit f590308536db ("timer debug: Hide kernel addresses via
-%pK in /proc/timer_list")
+pud_bad() is currently defined in terms of pud_table(). Although for some
+configs, pud_table() is hard-coded to true i.e. when using 64K base pages
+or when page table levels are less than 3.
 
-The timer list helper SEQ_printf() uses either the real seq_printf() for
-procfs output or vprintk() to print to the kernel log, when invoked from
-SysRq-q. It uses %pK for printing pointers.
+pud_bad() is intended to check that the pud is configured correctly. Hence
+let's open-code the same check that the full version of pud_table() uses
+into pud_bad(). Then it always performs the check regardless of the config.
 
-In the past %pK was prefered over %p as it would not leak raw pointer
-values into the kernel log. Since commit ad67b74d2469 ("printk: hash
-addresses printed with %p") the regular %p has been improved to avoid this
-issue.
-
-Furthermore, restricted pointers ("%pK") were never meant to be used
-through printk(). They can still unintentionally leak raw pointers or
-acquire sleeping looks in atomic contexts.
-
-Switch to the regular pointer formatting which is safer, easier to reason
-about and sufficient here.
-
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
-Link: https://lore.kernel.org/all/20250311-restricted-pointers-timer-v1-1-6626b91e54ab@linutronix.de
+Cc: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Link: https://lore.kernel.org/r/20250221044227.1145393-7-anshuman.khandual@arm.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/time/timer_list.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/pgtable.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index ed7d6ad694fba..20a5e6962b696 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -46,7 +46,7 @@ static void
- print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
- 	    int idx, u64 now)
- {
--	SEQ_printf(m, " #%d: <%pK>, %ps", idx, taddr, timer->function);
-+	SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, timer->function);
- 	SEQ_printf(m, ", S:%02x", timer->state);
- 	SEQ_printf(m, "\n");
- 	SEQ_printf(m, " # expires at %Lu-%Lu nsecs [in %Ld to %Ld nsecs]\n",
-@@ -98,7 +98,7 @@ print_active_timers(struct seq_file *m, struct hrtimer_clock_base *base,
- static void
- print_base(struct seq_file *m, struct hrtimer_clock_base *base, u64 now)
- {
--	SEQ_printf(m, "  .base:       %pK\n", base);
-+	SEQ_printf(m, "  .base:       %p\n", base);
- 	SEQ_printf(m, "  .index:      %d\n", base->index);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 1d713cfb0af16..426c3cb3e3bb1 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -677,7 +677,8 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
+ 	pr_err("%s:%d: bad pmd %016llx.\n", __FILE__, __LINE__, pmd_val(e))
  
- 	SEQ_printf(m, "  .resolution: %u nsecs\n", hrtimer_resolution);
+ #define pud_none(pud)		(!pud_val(pud))
+-#define pud_bad(pud)		(!pud_table(pud))
++#define pud_bad(pud)		((pud_val(pud) & PUD_TYPE_MASK) != \
++				 PUD_TYPE_TABLE)
+ #define pud_present(pud)	pte_present(pud_pte(pud))
+ #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
+ #define pud_valid(pud)		pte_valid(pud_pte(pud))
 -- 
 2.39.5
 
