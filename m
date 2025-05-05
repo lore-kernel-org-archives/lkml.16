@@ -1,51 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF67286423;
-	Mon,  5 May 2025 23:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACEA3710F2;
+	Mon,  5 May 2025 23:03:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486184; cv=none; b=lLOr620+iK7pDc6l9aWpFEZLG7E7j3/jUIxWVuY7h+v6ezdnuKa1BjhRarPcpcnKNesSilzbXv7ucA1UZlUTd2xRijaOexsx55rvkM8C+vsgIeXyXAvUx/gmgH07bcMLHFcTw1SvTHOVNv7P9NEHKWNyQi9egvjb3XlvUp11wpg=
+	t=1746486199; cv=none; b=ZoG7JGw7LH0l6h7kmMXNyFPcI/4Rr/u0b9NTmuD5ylb61gLzjivSW/gt/XjB7Zr0CirUEa6oFuZrFrRS3pbojwUZofh/x4N3wkSJcZp3CJrtdV+qbswxN3va4bBUaGNILCh0dEbw7g49Jt9fvXgwXwRNWvL5yhFS+LtW5VSKyi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486184; c=relaxed/simple;
-	bh=epos424aK9x9LhxqU7GJMC9sbp5GjGE5n+DQWUwkP5E=;
+	s=arc-20240116; t=1746486199; c=relaxed/simple;
+	bh=vjZQ1VPxcLbNPDdNN17kBs0nqjUFWQOxO5EqmHg9gBU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mjpdo0ivQ4jYOJM/eEr8YrnDZiuASY8vYMRgS4YNamX+9vDlTaE5Ylv1EXeLnf0D+31zCvkLQkrQoDf5/e4hmOdNM8FgP1tKX/HB5sKdkqa3YSogCK2P8S8FLKbIsyEzo76PMIYers1Sr0uUrtrDWBctCASCCplQu8UzG9mT70E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wunqb2To; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=T3Gmv3dpYjx9sjZWDhWfFQiTZQEV6pr8/HmbT+xs9wcXY7UWaFOZ+sZhm5zkYvh6aHjffRS0zPnyyN/pod4UEtUgQlEpnIiH7oC40l6noPvUh2spi4DctOP1j9lGxj4CwHnOePL1CC3C07DhFLxkEQDAAGmCPjVG27L5PGW9u4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfCykZYN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wunqb2To"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4124AC4CEED;
-	Mon,  5 May 2025 23:03:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfCykZYN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1FFC4CEF1;
+	Mon,  5 May 2025 23:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486183;
-	bh=epos424aK9x9LhxqU7GJMC9sbp5GjGE5n+DQWUwkP5E=;
+	s=k20201202; t=1746486198;
+	bh=vjZQ1VPxcLbNPDdNN17kBs0nqjUFWQOxO5EqmHg9gBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wunqb2ToS9CikcwhmdpmmcoRGNIuYz/t5KzFPqTRnOXM80DbYzMqWXTs1X2/nJ+0W
-	 IyXe2k6n7PvJ0L2GY6gf8f9wsIIUgkCSnSRmOecH757ardCUN2RvJ2IkOx072U6IkP
-	 8JY+34gWAFLOnCKotMamZDtftFpbi1tqfmrduNqC/OXyT7Q/7M/OYHr8v7r+8ckUhM
-	 f3y7RKInHtpdNmYaHb/hyp07MrzYe1aqhC491CQ0slgf4RffD5gzSUAAShxmQLJV78
-	 O9CcYUVH2LSsNM+9O8jeOPbtDWsdE6YOnzdazLkTlp6t4CrmdIfoxovRbIdMkXviJu
-	 WKOcOCqvaNbJg==
+	b=rfCykZYNt1Fn4tBd7TDkhO9rNImX9mukm74TZ2tCrVNVcBfnPixA7dQEU6MSrg11m
+	 a+om7x2TF/n9STGchVUx3uof62vEPxsIeYG9zP3XGaMNbn1+AnKgyGoXSVJAnS3fAE
+	 SVGo6yOuppXOZbEWk6iyiMaiT+oRX/SoLjABbH+gK2km5oQE9TIcPTMBXC6l037LMC
+	 6ln1xGaPpYf+oXqZwm4hguwPohTzOg9VW5DFd0jUUcBHpGlXsC9ulW+zFq8EWJYU+1
+	 SdNw7AFdUESLG5uxUpL5vl65fjrE0y7bff5GYhqtu5aOu1s7guBEiRgG3nRUroAYZi
+	 KWNJSvyyK398w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
+Cc: Hector Martin <marcan@marcan.st>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 191/294] eth: mlx4: don't try to complete XDP frames in netpoll
-Date: Mon,  5 May 2025 18:54:51 -0400
-Message-Id: <20250505225634.2688578-191-sashal@kernel.org>
+	shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 200/294] ASoC: tas2764: Add reg defaults for TAS2764_INT_CLK_CFG
+Date: Mon,  5 May 2025 18:55:00 -0400
+Message-Id: <20250505225634.2688578-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -60,37 +56,31 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit 8fdeafd66edaf420ea0063a1f13442fe3470fe70 ]
+[ Upstream commit d64c4c3d1c578f98d70db1c5e2535b47adce9d07 ]
 
-mlx4 doesn't support ndo_xdp_xmit / XDP_REDIRECT and wasn't
-using page pool until now, so it could run XDP completions
-in netpoll (NAPI budget == 0) just fine. Page pool has calling
-context requirements, make sure we don't try to call it from
-what is potentially HW IRQ context.
-
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-Link: https://patch.msgid.link/20250213010635.1354034-3-kuba@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-4-dbab892a69b5@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_tx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/tas2764.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_tx.c b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-index 65cb63f6c4658..61a0fd8424a2c 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-@@ -450,6 +450,8 @@ int mlx4_en_process_tx_cq(struct net_device *dev,
+diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
+index e87a07eee9737..4e5381c07f504 100644
+--- a/sound/soc/codecs/tas2764.c
++++ b/sound/soc/codecs/tas2764.c
+@@ -636,6 +636,7 @@ static const struct reg_default tas2764_reg_defaults[] = {
+ 	{ TAS2764_TDM_CFG2, 0x0a },
+ 	{ TAS2764_TDM_CFG3, 0x10 },
+ 	{ TAS2764_TDM_CFG5, 0x42 },
++	{ TAS2764_INT_CLK_CFG, 0x19 },
+ };
  
- 	if (unlikely(!priv->port_up))
- 		return 0;
-+	if (unlikely(!napi_budget) && cq->type == TX_XDP)
-+		return 0;
- 
- 	netdev_txq_bql_complete_prefetchw(ring->tx_queue);
- 
+ static const struct regmap_range_cfg tas2764_regmap_ranges[] = {
 -- 
 2.39.5
 
