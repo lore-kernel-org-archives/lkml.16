@@ -1,47 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21D128031D;
-	Mon,  5 May 2025 22:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80EE36AADA;
+	Mon,  5 May 2025 22:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485760; cv=none; b=Q4FpIPBYAFhF5cClQkjTnClWPfyH352rQEAtblMQSoD6xbQhKoLRxoGEyTgdhK2gKonXnQu2kMzF8/xIcR7Ipg/oZi2fCRsCOvR1O2vfiNLw1p6Iu4SvRfqMylczVyomtE8Lp+aXbVKjmAMtIa45jMtuX9g2ZJfbfVVBmVFcoTQ=
+	t=1746485778; cv=none; b=RkpaMrkZKEzES53nYiU+ikskafZCYxdMjfMN7dir6z0/UjCOVmvGE1HnU7DD4tKnLL9bwURH5tIiXloamLzgji/uK+DFd+BH0K8M2JeE0o9GCJxoAKjKa5eTWFT2/CXCEoD2VEANHGyUvtwREQEB8sW/Fr2QnO+UIM74Gw0a0Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485760; c=relaxed/simple;
-	bh=5EK3ujhSzpb7eoLDLCPJ4F+Yy6hZCLVlJzYSvX3MzDw=;
+	s=arc-20240116; t=1746485778; c=relaxed/simple;
+	bh=q/+mYq37A2zsEi1sgl1dNJHL57ifGxjCo65jUBiAv88=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ScrCqpLFFSqcc+VPRWVOM6eSY6sdgywRG0fFd54BHEEBWgapHJDhmdrlYt9UU/YYChU2otv22EFvcpeawr0iHiAESWP/clW1P6aRX3qq3cvSTktw9fFJ5X6khCOtHg9PLMHBVPtp6Bhe1gR5ZCG+o7zkUR8T40Sqci3MOqkTzkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jjdaj52l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p9ia4LyGGZIfa8suFpf1ZrLqm63bCbhGiVYkBtgCAOnF8QTmcB+a4wH+pQht+hzufF8FN6mSsvNbDAO95UO16ntz1DNnAHze0jaPX5SUiI1HrzAue5gBumtS9gMXkEosZ1q97OVuXs2BnbIX9v73xVMeRdVRYm7mP0elW6WqeF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGdYWSs0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jjdaj52l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F6ECC4CEEF;
-	Mon,  5 May 2025 22:55:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGdYWSs0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9416CC4CEEE;
+	Mon,  5 May 2025 22:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485759;
-	bh=5EK3ujhSzpb7eoLDLCPJ4F+Yy6hZCLVlJzYSvX3MzDw=;
+	s=k20201202; t=1746485777;
+	bh=q/+mYq37A2zsEi1sgl1dNJHL57ifGxjCo65jUBiAv88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jjdaj52lFXUNnI7YmzHd7MJn+YoXhaAdTqQ9ybJetVTRbd3sDonwF1hS8kXC+wDk7
-	 uxGPkKFjDSXgiO8B2DXeFGynCIDdcOsxDyUsFsKDmekXXfCqxoJK9Dk07CwBsGxQkZ
-	 1BEg+CkJrfV4cQmlF4q+Obxk0O7u94IEc1dM3lyatv7B1Iy6pjcww4n6y8aQxaWU3e
-	 0jZ8dYFha35XkSqYiVlEFAmTcXp/vE8xZzCpO10kR+S/a5qR6gIiZalDHd/6eMslzA
-	 cmbVjalizJQQTI6pMwCl/IXwDvqBi2M4jMDIxM+5IZiWK6pp8Xp2W3XHa30IkVFKI3
-	 tbqbvYMZ4/qMA==
+	b=PGdYWSs0aj9+zVi+d8hgmXU5d3556lgbLqVl/SiW/E84h5ZVmY4usGkJox1YuyIo6
+	 DllGYt/qQw3EJCbI0K7cMqLJFl4WmWYy0L88YUKhRvlwYTX8oAdpi0H26XKrJTBZLb
+	 No53pJmTJmzGTq/3ey4bQ3rjxu4o8eJXlWde/N/ewsqRB56aAQMNhBdeR1pTmj5+SG
+	 0Ogtj0fxrBbR0E6yQz5mlBgSbV7xzPtRec+GXs8qBuQ3eyN/zsyijll4TPSZMwCGE0
+	 ipOuH+TR+JmN8VEpMLySJlRtV3rINFwblCgB4n4S1H4gYPB6fCZtVo+ArQzPIEBWUN
+	 Fwb5cIttr4uMw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+Cc: Ching-Te Ku <ku920601@realtek.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lucas.demarchi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 469/486] drm/xe/pf: Reset GuC VF config when unprovisioning critical resource
-Date: Mon,  5 May 2025 18:39:05 -0400
-Message-Id: <20250505223922.2682012-469-sashal@kernel.org>
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 479/486] wifi: rtw89: coex: Separated Wi-Fi connecting event from Wi-Fi scan event
+Date: Mon,  5 May 2025 18:39:15 -0400
+Message-Id: <20250505223922.2682012-479-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,115 +45,61 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Michal Wajdeczko <michal.wajdeczko@intel.com>
+From: Ching-Te Ku <ku920601@realtek.com>
 
-[ Upstream commit 33f17e2cbd930a2a00eb007d9b241b6db010a880 ]
+[ Upstream commit 4a57346652154bb339c48b41166df9154cff33f5 ]
 
-GuC firmware counts received VF configuration KLVs and may start
-validation of the complete VF config even if some resources where
-unprovisioned in the meantime, leading to unexpected errors like:
+Wi-Fi connecting process don't need to assign to firmware slot control,
+if assign firmware slot control for Wi-Fi connecting event, firmware will
+not toggle slots because driver don't tell the slot schedule to firmware.
+Wi-Fi connecting event end should also cancel the 4way handshake status.
 
- $ echo 1 | sudo tee /sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/contexts_quota
- $ echo 0 | sudo tee /sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/contexts_quota
- $ echo 1 | sudo tee /sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/doorbells_quota
- $ echo 0 | sudo tee /sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/doorbells_quota
- $ echo 1 | sudo tee /sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/ggtt_quota
- tee: '/sys/kernel/debug/dri/0000:00:02.0/gt0/vf1/ggtt_quota': Input/output error
-
-To mitigate this problem trigger explicit VF config reset after
-unprovisioning any of the critical resources (GGTT, context or
-doorbell IDs) that GuC is monitoring.
-
-Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
-Reviewed-by: Michał Winiarski <michal.winiarski@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250129195947.764-3-michal.wajdeczko@intel.com
+Signed-off-by: Ching-Te Ku <ku920601@realtek.com>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Link: https://patch.msgid.link/20250110015416.10704-3-pkshih@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c | 37 +++++++++++++++++++---
- 1 file changed, 33 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw89/coex.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
-index c9ed996b9cb0c..786f0dba41437 100644
---- a/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
-+++ b/drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c
-@@ -323,6 +323,26 @@ static int pf_push_full_vf_config(struct xe_gt *gt, unsigned int vfid)
- 	return err;
+diff --git a/drivers/net/wireless/realtek/rtw89/coex.c b/drivers/net/wireless/realtek/rtw89/coex.c
+index 5f878f086f7cf..6cdbf02f405ae 100644
+--- a/drivers/net/wireless/realtek/rtw89/coex.c
++++ b/drivers/net/wireless/realtek/rtw89/coex.c
+@@ -5356,7 +5356,8 @@ static void _action_wl_scan(struct rtw89_dev *rtwdev)
+ 	struct rtw89_btc_wl_info *wl = &btc->cx.wl;
+ 	struct rtw89_btc_wl_dbcc_info *wl_dinfo = &wl->dbcc_info;
+ 
+-	if (RTW89_CHK_FW_FEATURE(SCAN_OFFLOAD, &rtwdev->fw)) {
++	if (btc->cx.state_map != BTC_WLINKING &&
++	    RTW89_CHK_FW_FEATURE(SCAN_OFFLOAD, &rtwdev->fw)) {
+ 		_action_wl_25g_mcc(rtwdev);
+ 		rtw89_debug(rtwdev, RTW89_DBG_BTC, "[BTC], Scan offload!\n");
+ 	} else if (rtwdev->dbcc_en) {
+@@ -7178,6 +7179,8 @@ void rtw89_btc_ntfy_scan_finish(struct rtw89_dev *rtwdev, u8 phy_idx)
+ 		_fw_set_drv_info(rtwdev, CXDRVINFO_DBCC);
+ 	}
+ 
++	btc->dm.tdma_instant_excute = 1;
++
+ 	_run_coex(rtwdev, BTC_RSN_NTFY_SCAN_FINISH);
  }
  
-+static int pf_push_vf_cfg(struct xe_gt *gt, unsigned int vfid, bool reset)
-+{
-+	int err = 0;
-+
-+	xe_gt_assert(gt, vfid);
-+	lockdep_assert_held(xe_gt_sriov_pf_master_mutex(gt));
-+
-+	if (reset)
-+		err = pf_send_vf_cfg_reset(gt, vfid);
-+	if (!err)
-+		err = pf_push_full_vf_config(gt, vfid);
-+
-+	return err;
-+}
-+
-+static int pf_refresh_vf_cfg(struct xe_gt *gt, unsigned int vfid)
-+{
-+	return pf_push_vf_cfg(gt, vfid, true);
-+}
-+
- static u64 pf_get_ggtt_alignment(struct xe_gt *gt)
- {
- 	struct xe_device *xe = gt_to_xe(gt);
-@@ -419,6 +439,10 @@ static int pf_provision_vf_ggtt(struct xe_gt *gt, unsigned int vfid, u64 size)
- 			return err;
+@@ -7630,7 +7633,8 @@ void rtw89_btc_ntfy_role_info(struct rtw89_dev *rtwdev,
+ 	else
+ 		wl->status.map.connecting = 0;
  
- 		pf_release_vf_config_ggtt(gt, config);
-+
-+		err = pf_refresh_vf_cfg(gt, vfid);
-+		if (unlikely(err))
-+			return err;
- 	}
- 	xe_gt_assert(gt, !xe_ggtt_node_allocated(config->ggtt_region));
+-	if (state == BTC_ROLE_MSTS_STA_DIS_CONN)
++	if (state == BTC_ROLE_MSTS_STA_DIS_CONN ||
++	    state == BTC_ROLE_MSTS_STA_CONN_END)
+ 		wl->status.map._4way = false;
  
-@@ -744,6 +768,10 @@ static int pf_provision_vf_ctxs(struct xe_gt *gt, unsigned int vfid, u32 num_ctx
- 			return ret;
- 
- 		pf_release_config_ctxs(gt, config);
-+
-+		ret = pf_refresh_vf_cfg(gt, vfid);
-+		if (unlikely(ret))
-+			return ret;
- 	}
- 
- 	if (!num_ctxs)
-@@ -1041,6 +1069,10 @@ static int pf_provision_vf_dbs(struct xe_gt *gt, unsigned int vfid, u32 num_dbs)
- 			return ret;
- 
- 		pf_release_config_dbs(gt, config);
-+
-+		ret = pf_refresh_vf_cfg(gt, vfid);
-+		if (unlikely(ret))
-+			return ret;
- 	}
- 
- 	if (!num_dbs)
-@@ -2003,10 +2035,7 @@ int xe_gt_sriov_pf_config_push(struct xe_gt *gt, unsigned int vfid, bool refresh
- 	xe_gt_assert(gt, vfid);
- 
- 	mutex_lock(xe_gt_sriov_pf_master_mutex(gt));
--	if (refresh)
--		err = pf_send_vf_cfg_reset(gt, vfid);
--	if (!err)
--		err = pf_push_full_vf_config(gt, vfid);
-+	err = pf_push_vf_cfg(gt, vfid, refresh);
- 	mutex_unlock(xe_gt_sriov_pf_master_mutex(gt));
- 
- 	if (unlikely(err)) {
+ 	_run_coex(rtwdev, BTC_RSN_NTFY_ROLE_INFO);
 -- 
 2.39.5
 
