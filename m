@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9289A2D0ADC;
-	Mon,  5 May 2025 22:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753D62D0AD2;
+	Mon,  5 May 2025 22:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485454; cv=none; b=fXmBtZ8w6XNqbHgAs+Fga89Bu0AnLIEIUcdx/CJp+JXXppiUUuFsTJdSjTun5qGOl8rsHz7EIfifOa6nN7MFj+fGeYhbHWN4OgXKjlhnnEyCBcdL+MK0eMI8RfxUpJQtuCtm6IU2EwVHmx6/gTx0JKMOPnVEAgBzVVCeqBmvwzw=
+	t=1746485453; cv=none; b=hdyBesMNxlLNEEnlPuApZXZP0a7bwbUHd2GP6TJ2pyY719WYJH/aEFhDsxIdt1ZWDG+l55OtjJyq8yTxmJfvadWI2m/63uicRPX6GuPzVIPe7TDS8PoYKNJkSTbo/k6yBQBs8a6isecOKUpTzTE+jfC4DDwqVLhWz74vrqxfbEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485454; c=relaxed/simple;
-	bh=WG6h0YozOTRuKa/hRcDZ+ntlBYNJHMUhoxiLBf1qQVo=;
+	s=arc-20240116; t=1746485453; c=relaxed/simple;
+	bh=af6rOhANjnb0Paoo1pZ8H+1cHjwxV6bm3QUYbbdQ8AU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m0XKy08Ef+gUBJ27lPK38r/YVqxgZnKEQjO6FKMCxCdz/ifDMVrwjU0Pg7a4zskgODTqJH328Z1N7DJ9NWfDs/MWaKRW0yWcg5g7850l5y8Q/lEweTVxdiN+SGW4Coe9ztKaXG5yBwcm3HE711ieeTj3BAk0msig3FoPGTUZkrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxPr68KW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bK40+7N820iLuNmt5FwrlV4C/V7FZ4pksfjDY+mPpm6H9BjtjS/oUTkKpwavOzkKwbx74ZSe9QgTshQsCC30TlqaAOkCiyVNz/0iGmmUUlmk6hFWr6B5QogmyS7O/pff9oGXiTMvmR/L0viBsCkgxPUQbTkAMCBgoP38qMVdkac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPwtUfwv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxPr68KW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F0CC4CEEE;
-	Mon,  5 May 2025 22:50:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPwtUfwv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC49C4CEEF;
+	Mon,  5 May 2025 22:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485453;
-	bh=WG6h0YozOTRuKa/hRcDZ+ntlBYNJHMUhoxiLBf1qQVo=;
+	s=k20201202; t=1746485451;
+	bh=af6rOhANjnb0Paoo1pZ8H+1cHjwxV6bm3QUYbbdQ8AU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CxPr68KW7lBV2ZqgriVyy2JqPGULTNHlUTPn0q/N20pBs4GYCZK3S9aE57XblJhVj
-	 /s6cMnTMwFIvb5NcLM/ivuF1j2LsHt0oQQiuB+h1Gw/zhbIM6WjKPd3KrXNN7zyjo0
-	 AHD2g3t4+sgxEq1AcEtiCE1B/5xYWh1H37mdO0JP88jMPyQHjzU8WgNRjRr+NjyxUF
-	 fjU4QKsfI58IRDrhQAD8/hyyaDsL6FP4zYirdATsC0j1tb2VqcKVhKTzcW22tdhcVn
-	 /omIhMJDUcBJcd1K0Q2eqb/AMTjrgOOzJYznjdIKBkooJaWk88A3QsOEBeKBgWKEfC
-	 MCf+QcDj6GSGw==
+	b=cPwtUfwv70OyZ8b/Iq4Yx7XEe3mgHt4Q4vqK7TceSOjI+Yv6VfRPRg1yh67/nVmqJ
+	 lYzcBbj2lX0XfeYXgvBid+Z1S34aNURDu089/q5/AHRtdfPv6il+7Cwxx5cCY9Vk2K
+	 Hl89sl0bNBACWsgq3Zkl9xGL47r58ncHIfKLRMPpa7KNCthYNhKogNm6n6RLrXPDQd
+	 Un+b5Lsd+GeReQeUhlQ0VoHitq1x7T2+g55P5bVMwuH5f5vthwjuTIesGMHYqhHtaa
+	 ffL8B4v+oWRmIH/BjyS74LUTcaIOG/TYjFbc9SF2SiEnQ/DA2EGf48sQqBlxtrLZOQ
+	 UiZhjPYc/k1Ug==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrew Jones <ajones@ventanamicro.com>,
-	Anup Patel <apatel@ventanamicro.com>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	anup@brainfault.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 319/486] irqchip/riscv-imsic: Set irq_set_affinity() for IMSIC base
-Date: Mon,  5 May 2025 18:36:35 -0400
-Message-Id: <20250505223922.2682012-319-sashal@kernel.org>
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	nathan@kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 318/486] hrtimers: Replace hrtimer_clock_to_base_table with switch-case
+Date: Mon,  5 May 2025 18:36:34 -0400
+Message-Id: <20250505223922.2682012-318-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -55,83 +53,85 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Jones <ajones@ventanamicro.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 999f458c1771354371ba367dd84f55f9a62a4233 ]
+[ Upstream commit 4441b976dfeff0d3579e8da3c0283300c618a553 ]
 
-The IMSIC driver assigns the IMSIC domain specific imsic_irq_set_affinity()
-callback to the per device leaf MSI domain. That's a layering violation as
-it is called with the leaf domain data and not with the IMSIC domain
-data. This prevents moving the IMSIC driver to the common MSI library which
-uses the generic msi_domain_set_affinity() callback for device MSI domains.
+Clang and GCC complain about overlapped initialisers in the
+hrtimer_clock_to_base_table definition. With `make W=1` and CONFIG_WERROR=y
+(which is default nowadays) this breaks the build:
 
-Instead of using imsic_irq_set_affinity() for leaf MSI domains, use
-imsic_irq_set_affinity() for the non-leaf IMSIC base domain and use
-irq_chip_set_affinity_parent() for leaf MSI domains.
+  CC      kernel/time/hrtimer.o
+kernel/time/hrtimer.c:124:21: error: initializer overrides prior initialization of this subobject [-Werror,-Winitializer-overrides]
+  124 |         [CLOCK_REALTIME]        = HRTIMER_BASE_REALTIME,
 
-[ tglx: Massaged change log ]
+kernel/time/hrtimer.c:122:27: note: previous initialization is here
+  122 |         [0 ... MAX_CLOCKS - 1]  = HRTIMER_MAX_CLOCK_BASES,
 
-Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+(and similar for CLOCK_MONOTONIC, CLOCK_BOOTTIME, and CLOCK_TAI).
+
+hrtimer_clockid_to_base(), which uses the table, is only used in
+__hrtimer_init(), which is not a hotpath.
+
+Therefore replace the table lookup with a switch case in
+hrtimer_clockid_to_base() to avoid this warning.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250217085657.789309-2-apatel@ventanamicro.com
+Link: https://lore.kernel.org/all/20250214134424.3367619-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-riscv-imsic-platform.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ kernel/time/hrtimer.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/irqchip/irq-riscv-imsic-platform.c b/drivers/irqchip/irq-riscv-imsic-platform.c
-index c708780e8760f..5d7c30ad8855b 100644
---- a/drivers/irqchip/irq-riscv-imsic-platform.c
-+++ b/drivers/irqchip/irq-riscv-imsic-platform.c
-@@ -96,9 +96,8 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 				  bool force)
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index db9c06bb23116..06fbc226341fd 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -117,16 +117,6 @@ DEFINE_PER_CPU(struct hrtimer_cpu_base, hrtimer_bases) =
+ 	.csd = CSD_INIT(retrigger_next_event, NULL)
+ };
+ 
+-static const int hrtimer_clock_to_base_table[MAX_CLOCKS] = {
+-	/* Make sure we catch unsupported clockids */
+-	[0 ... MAX_CLOCKS - 1]	= HRTIMER_MAX_CLOCK_BASES,
+-
+-	[CLOCK_REALTIME]	= HRTIMER_BASE_REALTIME,
+-	[CLOCK_MONOTONIC]	= HRTIMER_BASE_MONOTONIC,
+-	[CLOCK_BOOTTIME]	= HRTIMER_BASE_BOOTTIME,
+-	[CLOCK_TAI]		= HRTIMER_BASE_TAI,
+-};
+-
+ static inline bool hrtimer_base_is_online(struct hrtimer_cpu_base *base)
  {
- 	struct imsic_vector *old_vec, *new_vec;
--	struct irq_data *pd = d->parent_data;
+ 	if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
+@@ -1597,14 +1587,19 @@ u64 hrtimer_next_event_without(const struct hrtimer *exclude)
  
--	old_vec = irq_data_get_irq_chip_data(pd);
-+	old_vec = irq_data_get_irq_chip_data(d);
- 	if (WARN_ON(!old_vec))
- 		return -ENOENT;
+ static inline int hrtimer_clockid_to_base(clockid_t clock_id)
+ {
+-	if (likely(clock_id < MAX_CLOCKS)) {
+-		int base = hrtimer_clock_to_base_table[clock_id];
+-
+-		if (likely(base != HRTIMER_MAX_CLOCK_BASES))
+-			return base;
++	switch (clock_id) {
++	case CLOCK_REALTIME:
++		return HRTIMER_BASE_REALTIME;
++	case CLOCK_MONOTONIC:
++		return HRTIMER_BASE_MONOTONIC;
++	case CLOCK_BOOTTIME:
++		return HRTIMER_BASE_BOOTTIME;
++	case CLOCK_TAI:
++		return HRTIMER_BASE_TAI;
++	default:
++		WARN(1, "Invalid clockid %d. Using MONOTONIC\n", clock_id);
++		return HRTIMER_BASE_MONOTONIC;
+ 	}
+-	WARN(1, "Invalid clockid %d. Using MONOTONIC\n", clock_id);
+-	return HRTIMER_BASE_MONOTONIC;
+ }
  
-@@ -116,13 +115,13 @@ static int imsic_irq_set_affinity(struct irq_data *d, const struct cpumask *mask
- 		return -ENOSPC;
- 
- 	/* Point device to the new vector */
--	imsic_msi_update_msg(d, new_vec);
-+	imsic_msi_update_msg(irq_get_irq_data(d->irq), new_vec);
- 
- 	/* Update irq descriptors with the new vector */
--	pd->chip_data = new_vec;
-+	d->chip_data = new_vec;
- 
--	/* Update effective affinity of parent irq data */
--	irq_data_update_effective_affinity(pd, cpumask_of(new_vec->cpu));
-+	/* Update effective affinity */
-+	irq_data_update_effective_affinity(d, cpumask_of(new_vec->cpu));
- 
- 	/* Move state of the old vector to the new vector */
- 	imsic_vector_move(old_vec, new_vec);
-@@ -135,6 +134,9 @@ static struct irq_chip imsic_irq_base_chip = {
- 	.name			= "IMSIC",
- 	.irq_mask		= imsic_irq_mask,
- 	.irq_unmask		= imsic_irq_unmask,
-+#ifdef CONFIG_SMP
-+	.irq_set_affinity	= imsic_irq_set_affinity,
-+#endif
- 	.irq_retrigger		= imsic_irq_retrigger,
- 	.irq_compose_msi_msg	= imsic_irq_compose_msg,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE |
-@@ -245,7 +247,7 @@ static bool imsic_init_dev_msi_info(struct device *dev,
- 		if (WARN_ON_ONCE(domain != real_parent))
- 			return false;
- #ifdef CONFIG_SMP
--		info->chip->irq_set_affinity = imsic_irq_set_affinity;
-+		info->chip->irq_set_affinity = irq_chip_set_affinity_parent;
- #endif
- 		break;
- 	default:
+ static void __hrtimer_init(struct hrtimer *timer, clockid_t clock_id,
 -- 
 2.39.5
 
