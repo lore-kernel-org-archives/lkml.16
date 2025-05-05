@@ -1,40 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1022A2EC035;
-	Mon,  5 May 2025 23:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFAD280CEA;
+	Mon,  5 May 2025 23:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486482; cv=none; b=FuZY49dTD06g+xEd6NYhWLCDHRkLVDroi8PeqdPMsNdKbQZ1jmTHqU36XUn3QaIgg0++73tENWiIrJ/vhI+iM6mju4R1lrtWkPnC76ZgnmdGxse8nuGPpReg0OuTFm4e+IDw4erqSm2bZPVIgcJDR7DOfilZ3iyuMmngh91aHKg=
+	t=1746486485; cv=none; b=pBkaMTqIEa8Udh9IrkYHvC8bE4UVtSCFckzSulDv86SlgKzzvp/cTtv9LNrUCcSP4hx2XIJHzZNsk43f/jNSmP8boea/WUN1gqsfKUaocA13eGycz+bCWCuVIZ8MdUbm+b6E+ElFaFrDKK/yFlYn+VJowOsjb3x5UfwEc/d1Nik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486482; c=relaxed/simple;
-	bh=9eKdi1Lvmq91N7uyyZ1lMWayaYzUrRUixnaStxJDtAo=;
+	s=arc-20240116; t=1746486485; c=relaxed/simple;
+	bh=QZJg/qnDtIKPDm96Agh/Xj3Gqhe9xZPuYljzuQiAzTY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lGq9ThPxrd2/pItvUwy7I2k+uuaEXUqOLC5MvOujzv0CqzqcoTJ6zAyggt5ujR2rrBzNuQ+frXCl1q0CIlPw60DdF2zEIQMPGRYvvfxg4QcxrztyBeARXOMP6D27xLFGdhYmN//KHajKc+r8m3Ln9PHBKakoGRyaserRrQYHMjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKD3rt6z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=n1nttc+hSTWfrYcE5YABY512/a7N5SaWQHkBccBAx+yTkVOIn5yaf9pjdZvouZynCE3v/QFQG6FtHuqzCVIV37YdzUpLFnLDlmPLtSg9K08TQgPjx5JWW1ohgtPLIJHjhNDG3+++FkhtDkWIqNZ+wdGXHTmWfBX+WEekaC5ckd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrGMm+Gu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKD3rt6z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C5AEC4CEEF;
-	Mon,  5 May 2025 23:08:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrGMm+Gu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57836C4CEE4;
+	Mon,  5 May 2025 23:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486480;
-	bh=9eKdi1Lvmq91N7uyyZ1lMWayaYzUrRUixnaStxJDtAo=;
+	s=k20201202; t=1746486484;
+	bh=QZJg/qnDtIKPDm96Agh/Xj3Gqhe9xZPuYljzuQiAzTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oKD3rt6znSmxJD/i+5J/5P142vFdLsYqZiaKRJNyJjGnXVdPSkwQb2ffelClj6LO3
-	 aFPlM6r8oAB0UkRxeBFuVB9PYRfkr+9i6ffZaTVNLLIPRgtHR6WP0SidjvKGKhv4kr
-	 Ae0D2owp+xkfelOATJgQlJsR+CJIhTNJaS4nXq8Uc1k4rS94MCdnlTl5c1pyem2jY8
-	 iVnQPdHnJXK+1YKhuMJrqW2ROpHmYOb8ZQzUShfCat3s/qDJ6hfdW90y2EVzpDsHcE
-	 ZPEy8Kv7kHCI5Uay4EwFCctmSt+sAQvptqSLDsBkj1xTwRs8cOcNayez3I0xFaTSf2
-	 9iIAGOyXh9uUA==
+	b=GrGMm+Gu7A//lbkE1XWiuJuAkKK6lxAa3Jxe2DkV7cPzZpAWvKv5CEaQ2Ugy3A6eR
+	 bBl3ssMSXY3MtM510LGq8C2qqn1LRtZ9KW0F9AJtokfUlmliP4wspv3Tlu/Xwz09Eu
+	 5Ebyks4rGxpGrOT13a5plsWdiFOwzgkKR8JCDsrC4q+h4I+5/tnnMIU6/E6wI0UBtu
+	 CLssR5JSXdnXRcipYik+TlmRwTOWJR8sLiNKQGsawqS3vOOt2hmP+qwzzdKiQ8QFyp
+	 t5RUGm9jAn47tjqql0wJM+oCjX2N4SFQu1G0bmtKZZY0k487Zt27nIEIiFYhSalaQQ
+	 1zczHSa0n9Y/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 052/212] rtc: rv3032: fix EERD location
-Date: Mon,  5 May 2025 19:03:44 -0400
-Message-Id: <20250505230624.2692522-52-sashal@kernel.org>
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	matthias.bgg@gmail.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.1 054/212] ASoC: mediatek: mt6359: Add stub for mt6359_accdet_enable_jack_detect
+Date: Mon,  5 May 2025 19:03:46 -0400
+Message-Id: <20250505230624.2692522-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -44,37 +52,49 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-[ Upstream commit b0f9cb4a0706b0356e84d67e48500b77b343debe ]
+[ Upstream commit 0116a7d84b32537a10d9bea1fd1bfc06577ef527 ]
 
-EERD is bit 2 in CTRL1
+Add a stub for mt6359_accdet_enable_jack_detect() to prevent linker
+failures in the machine sound drivers calling it when
+CONFIG_SND_SOC_MT6359_ACCDET is not enabled.
 
-Link: https://lore.kernel.org/r/20250306214243.1167692-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Link: https://patch.msgid.link/20250306-mt8188-accdet-v3-3-7828e835ff4b@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-rv3032.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/mt6359-accdet.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/rtc/rtc-rv3032.c b/drivers/rtc/rtc-rv3032.c
-index c3bee305eacc6..9c85ecd9afb8e 100644
---- a/drivers/rtc/rtc-rv3032.c
-+++ b/drivers/rtc/rtc-rv3032.c
-@@ -69,7 +69,7 @@
- #define RV3032_CLKOUT2_FD_MSK		GENMASK(6, 5)
- #define RV3032_CLKOUT2_OS		BIT(7)
+diff --git a/sound/soc/codecs/mt6359-accdet.h b/sound/soc/codecs/mt6359-accdet.h
+index c234f2f4276a1..78ada3a5bfae5 100644
+--- a/sound/soc/codecs/mt6359-accdet.h
++++ b/sound/soc/codecs/mt6359-accdet.h
+@@ -123,6 +123,15 @@ struct mt6359_accdet {
+ 	struct workqueue_struct *jd_workqueue;
+ };
  
--#define RV3032_CTRL1_EERD		BIT(3)
-+#define RV3032_CTRL1_EERD		BIT(2)
- #define RV3032_CTRL1_WADA		BIT(5)
- 
- #define RV3032_CTRL2_STOP		BIT(0)
++#if IS_ENABLED(CONFIG_SND_SOC_MT6359_ACCDET)
+ int mt6359_accdet_enable_jack_detect(struct snd_soc_component *component,
+ 				     struct snd_soc_jack *jack);
++#else
++static inline int
++mt6359_accdet_enable_jack_detect(struct snd_soc_component *component,
++				 struct snd_soc_jack *jack)
++{
++	return -EOPNOTSUPP;
++}
++#endif
+ #endif
 -- 
 2.39.5
 
