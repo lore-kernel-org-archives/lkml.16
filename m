@@ -1,90 +1,158 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8811BEF8C;
-	Mon,  5 May 2025 19:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7312F15E5C2;
+	Mon,  5 May 2025 19:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746471748; cv=none; b=WHQTx6GCA5q+qRmgWlXYR3yUgaJsbOpwTE9RPoT3Kqi9wru+QECrPNFZfGx6toWOZqhdi6fjXw0fXb86ROkn6rrNqmqsFUZb5As0HNGpkhPJuVz6DiQVuVc/XmmRh2i0jo2o3vTUjM26UAuW3xgoYTliH53zuBdwIgy9xAN+0ac=
+	t=1746471867; cv=none; b=R+ux/lOTQezowDyc5p6E9MGHJTS0WWq8PQYRAnVCVRk4O8uyBdPEhb4LX0c0Jw2UB4vrcAS5wvwFFz7N3eybO3wVJrD4gLt8gJW58xFOi+2cU7sOfZh9AfZw8FqhygVGyyd/8gBXlR2iTwF9TASw2/CHUTivazW6QpVOIZCuJc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746471748; c=relaxed/simple;
-	bh=5Ocka9NXimvK/4LAht1ULSkY1xlJ9KYEYW2PzYVXnQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RWkmyGnm8fT39ZzN/Pn3pZXAnpuWpLPj3RKkWYAlDsgxtQ4JoUUmEGpxCt2HkgSIdbN+M+faxqtpcB4asqmuNb8QreA0wmhZ1W4pFnYT1FF9XNUs48bU+UVWRMqwdZCX/VtzFocJoL/jeHzwN100H8mr8X3Rrpra4vtfVyyFbcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=snbSOG35; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1746471867; c=relaxed/simple;
+	bh=izSms8sGQYUggHY9S7UnMpJnXxKmpSogXKQNsa3cjNg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jhfOO2kS2ruMF8FyU/2IoRVFA6NU8aDTaQGS8uNN9HRurjwOVMNModZmma8+6IiaKx/OITausuEfi7ML1BiuwWnYoZ5f8uPAnqxlIiWpbylAROAfvknUuF9t/iD+Nr5uNQAQ0//IVOdCKO+Pvmz2VYqz1L5eTvlZq8gRW/BHnuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Z0fUyD5u; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="snbSOG35"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 28873A05E5;
-	Mon,  5 May 2025 21:02:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=AJYT6ZXuMuODnWTrjnxZ
-	jizwjH0vp02GLwvaZErh7mQ=; b=snbSOG35oaQvBdSf6VaV1gV/6zvxxxNyHKQW
-	tYw6RhTVHkK16mjkL/r7Db6oPOAhB7rbSd69JFIMNKZM5W6W3zY82sSfQxjdrfbP
-	zGnsYbHor5ZonPp9VxpNY8P7sHV2Unt7H7YIaur10jdUVGlDRsmJx2jYDFlOxSLM
-	x1NSP5TJ1GEDjnYv19WaXXTSnudSOXqCdOKid5FSj0AGkWhCpM3QHzr3VdMEIEpG
-	KBRUMScbM8WdW2axJN2IETyUho7EtH0JMNZLLkpS6YRQ5uAsm2ZzipNod33gcBSu
-	iSeMgV8kkwtOcgUR7hWmdVCunD51Tzl3Sk+wZiuvE7OhAIaXm/5Vq3G6hhHpvtNH
-	4HxxxorIKW4Hr4GsBwsqvT8tIeoDJfCgZM9kO0lVxtNhZAhYZdv0rxY09AYyj9v2
-	kXlhf1nPW4suPKjnzAj3eCVBW5ntxb2zK/u96KHxpbJJDPdhBrhkHlxG/JJWeY9u
-	NU+HeQWU1mQvYMqoWyBi0Qb2BTZny5q+Da6nQ8S9E4bL82q8jsfTQXfadCafQixV
-	VfRPSOQb4SlJDtjrI2Apqzh8aB2D+yxkfFe6VKcbizZJUIgEOApW3G/duWIDKj9u
-	cysUJL3KeJsMu2KudAxIKI7M+ioEfj9HKSfM5H4gldEm7xaybxzWPs3ovo9iIW94
-	Rmov+kU=
-Message-ID: <8dadb7ae-1a7d-48d4-8dbd-40f6d9f35a6d@prolan.hu>
-Date: Mon, 5 May 2025 21:02:22 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Z0fUyD5u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746471865; x=1778007865;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Td4vvOerswAkNrGkBojxfVVI0SbWMNHg1n7xxwnPCEI=;
+  b=Z0fUyD5uNj2OCdXaSjLZLz9JjTYHsQdEVmS0C3P8OC84jASNoWXgIcs1
+   0O/Nj4oCQu+DFawYo/NN1krdDyhjHnIAXpZ33pReu1KaKwjnm/VL+w29U
+   4Ly6SwVnGtE0/VvHo94eTgxtgx/xGTphBotXxX5ITMuKafiD2H997diSy
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
+   d="scan'208";a="47006807"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 19:04:23 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:17651]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.224:2525] with esmtp (Farcaster)
+ id cc72ab76-5240-4688-ba15-e4cd5000e079; Mon, 5 May 2025 19:04:23 +0000 (UTC)
+X-Farcaster-Flow-ID: cc72ab76-5240-4688-ba15-e4cd5000e079
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 19:04:22 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 19:04:18 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <bluca@debian.org>, <daan.j.demeyer@gmail.com>, <davem@davemloft.net>,
+	<david@readahead.eu>, <edumazet@google.com>, <horms@kernel.org>,
+	<jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <me@yhndnzj.com>, <netdev@vger.kernel.org>,
+	<oleg@redhat.com>, <pabeni@redhat.com>, <viro@zeniv.linux.org.uk>,
+	<zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v2 3/6] coredump: support AF_UNIX sockets
+Date: Mon, 5 May 2025 12:03:50 -0700
+Message-ID: <20250505190410.17360-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250503-gegessen-trugen-6474e70e59df@brauner>
+References: <20250503-gegessen-trugen-6474e70e59df@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Varshini
- Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
-	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Len
- Brown" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, "Alexander
- Dahl" <ada@thorsis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>, Pavel Machek <pavel@kernel.org>
-References: <20250327195928.680771-2-csokas.bence@prolan.hu>
- <20250327195928.680771-3-csokas.bence@prolan.hu>
- <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
- <b38b27d4-c3d3-450c-8634-2e07f393a76c@prolan.hu>
- <CAJZ5v0hRsXw45utNMEhLB=i56tsJDz8AvYfV2stPbtRHh09HUg@mail.gmail.com>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <CAJZ5v0hRsXw45utNMEhLB=i56tsJDz8AvYfV2stPbtRHh09HUg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853667166
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D038UWB002.ant.amazon.com (10.13.139.185) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hi Rafael,
+From: Christian Brauner <brauner@kernel.org>
+Date: Sat, 3 May 2025 07:17:10 +0200
+> On Fri, May 02, 2025 at 10:23:44PM +0200, Jann Horn wrote:
+> > On Fri, May 2, 2025 at 10:11 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > On Fri, May 02, 2025 at 04:04:32PM +0200, Jann Horn wrote:
+> > > > On Fri, May 2, 2025 at 2:42 PM Christian Brauner <brauner@kernel.org> wrote:
+> > > > > diff --git a/fs/coredump.c b/fs/coredump.c
+> > > > [...]
+> > > > > @@ -801,6 +841,73 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+> > > > >                 }
+> > > > >                 break;
+> > > > >         }
+> > > > > +       case COREDUMP_SOCK: {
+> > > > > +               struct file *file __free(fput) = NULL;
+> > > > > +#ifdef CONFIG_UNIX
+> > > > > +               ssize_t addr_size;
+> > > > > +               struct sockaddr_un unix_addr = {
+> > > > > +                       .sun_family = AF_UNIX,
+> > > > > +               };
+> > > > > +               struct sockaddr_storage *addr;
+> > > > > +
+> > > > > +               /*
+> > > > > +                * TODO: We need to really support core_pipe_limit to
+> > > > > +                * prevent the task from being reaped before userspace
+> > > > > +                * had a chance to look at /proc/<pid>.
+> > > > > +                *
+> > > > > +                * I need help from the networking people (or maybe Oleg
+> > > > > +                * also knows?) how to do this.
+> > > > > +                *
+> > > > > +                * IOW, we need to wait for the other side to shutdown
+> > > > > +                * the socket/terminate the connection.
+> > > > > +                *
+> > > > > +                * We could just read but then userspace could sent us
+> > > > > +                * SCM_RIGHTS and we just shouldn't need to deal with
+> > > > > +                * any of that.
+> > > > > +                */
+> > > >
+> > > > I don't think userspace can send you SCM_RIGHTS if you don't do a
+> > > > recvmsg() with a control data buffer?
+> > >
+> > > Oh hm, then maybe just a regular read at the end would work. As soon as
+> > > userspace send us anything or we get a close event we just disconnect.
+> > >
+> > > But btw, I think we really need a recvmsg() flag that allows a receiver
+> > > to refuse SCM_RIGHTS/file descriptors from being sent to it. IIRC, right
+> > > now this is a real issue that systemd works around by always calling its
+> > > cmsg_close_all() helper after each recvmsg() to ensure that no one sent
+> > > it file descriptors it didn't want. The problem there is that someone
+> > > could have sent it an fd to a hanging NFS server or something and then
+> > > it would hang in close() even though it never even wanted any file
+> > > descriptors in the first place.
+> > 
+> > Would a recvmsg() flag really solve that aspect of NFS hangs? By the
+> > time you read from the socket, the file is already attached to an SKB
+> > queued up on the socket, and cleaning up the file is your task's
+> > responsibility either way (which will either be done by the kernel for
+> > you if you don't read it into a control message, or by userspace if it
+> > was handed off through a control message).
 
-On 2025. 04. 29. 13:08, Rafael J. Wysocki wrote:
->> Did this end up being applied?
+Right.  recvmsg() is too late.  Once sendmsg() is done, the last
+fput() responsibility could fall on the receiver.
+
+Btw, I was able to implement the cmsg_close_all() equivalent at
+sendmsg() with BPF LSM to completely remove the issue.
+
+I will send a series shortly and hope you like it :)
+
+
+> > The process that sent the
+> > file to you might already be gone, it can't be on the hook for
+> > cleaning up the file anymore.
 > 
-> Just applied as 6.16 material, I'll let you know when the tag to pull
-> from is ready.
-> 
-> Thanks!
-> 
+> Hm, I guess the unix_gc() runs in task context? I had thought that it
+> might take care of that.
 
-Thank you! In the meantime, I submitted the DMA cleanup part as well, 
-for now rebased onto pm-next, but there seems to be no diff between it 
-and dma-next in the relevant files (drivers/dma/dmaengine.c and 
-drivers/spi/atmel-quadspi.c).
+Note that unix_gc() is a garbage collector only for AF_UNIX fds
+that have circular dependency:
 
-Bence
+  1) AF_UNIX sk1 sends its fd to itself
 
+  2) AF_UNIX sk1 sends its fd to AF_UNIX sk2 and
+     AF_UNIX sk2 sends its fd to AF_UNIX sk1
+
+In these examples, file refcnts remain even after close() by all
+users of fds.
+
+So, the GC is not a mechanism to deligate fput() for fds sent
+by SCM_RIGHTS.
