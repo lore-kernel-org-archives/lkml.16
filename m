@@ -1,41 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BB92C17A0;
-	Mon,  5 May 2025 22:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C414128313D;
+	Mon,  5 May 2025 22:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485373; cv=none; b=dInylSbk6yQB+Vr065YXOsAtpql362/Qm7N6WdSdSi5bTyA6I1HHPE0VE9EhSpBYaBOquRKKWgted9Cc0MLPyFg8HYbm+ZYsstFYj+r6hnWajD9D8MNi3Hd5FONa3wtloRaAsMCNO8kPRNaWUEKkr2MUw0HSok4QgF5Jk8fEoLM=
+	t=1746485437; cv=none; b=IeutrWnmlTrgOpPd84EPHouKGxqZiJNiWD6SoVtrDEs9ZDzMdo4d0pyeVaT9izS++4NU0hMh0fIJeIr4c6VvPJXwnxQpFtsAmptH7F5PLnSYajCJVr+TEM9EOKQ+cV654YTAwXnYc8EYMuv23zvLM/v4d6rVPuPsXPUqcoIfnC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485373; c=relaxed/simple;
-	bh=oWh6utGVMzCnodEAboCMwtV7BDi78kZURU9WXd8r9ng=;
+	s=arc-20240116; t=1746485437; c=relaxed/simple;
+	bh=Q/z1OYzbZGZh4Ae9QR7+MOtWA0d3XI9Jhx7OzIAuTVI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JrJfwhu/NCoWlhZDXKzJZLwFJHKBmw8sgQ9XPlEoGR0NNrN7o47QrR9nYl6fyQRjBgJVf3yY8zDqE1Dm+vU/2duxhVnrGtD3nO+xtErPj4RSGqgYd65Of69etXBuZE4qFZJxExLpzDj/HOG950tHYc6nb/KWg2JZ7uMvbrI+VP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2QCaRF9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QkDSTOe/DeP5oLLNu8+5zhfQa5f1RfqFjyFd1JpzzXmcO8gmrwEhpKpspHa3VIodmUFuVIPr1kCj13L7bkybMC1Czh8mhi2k80AaX1BC7qUVnOnbLH/I6XbkP1E3WOlAeIzXrHDMYVlibPT0vEGLFbUPxWsUi56Zpw+FSmLaEqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPoqathE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2QCaRF9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD43C4CEE4;
-	Mon,  5 May 2025 22:49:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPoqathE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658A4C4CEED;
+	Mon,  5 May 2025 22:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485372;
-	bh=oWh6utGVMzCnodEAboCMwtV7BDi78kZURU9WXd8r9ng=;
+	s=k20201202; t=1746485436;
+	bh=Q/z1OYzbZGZh4Ae9QR7+MOtWA0d3XI9Jhx7OzIAuTVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D2QCaRF99E3hClrn0ILacH9bIvSbS66eOaiLEZ9/dWoeYOsAxM9tyBmhqHsK/GFCK
-	 z75zxIlqvSJbiqbpHbzU6u1fLa+X7Mi/++/uSjod2O6r+pvcp+VygucXAwiGDbZ94D
-	 L6xP2cNdJdGyYa0W0iyKB7Epgr9wMzOMSvW9TSsZza/N/s27Nc6Y+q1u9k+SbbipfJ
-	 pwz2ZeBEFOOPFzuE0mVKpTtfmQN+CLEgdajScsDl9IIfCWLVaBcjKdYWqekMjFWQNK
-	 tTFuk+dHdcdTBiHcK6yK56uTtcnplc6qBwYwS8Nz7RZifupVwCJmeJ7+JBiycAl4V1
-	 IX+68P2qWtvXg==
+	b=IPoqathEoGXA71ZgPo4yf0280owY942NMg98fTwg7zIl1e4SvygPZs7TAZ+Ull8Oo
+	 5Lsa3HFYE1a+6NFMl4Q71jAdP2ZQssD2LZCjg76a1siwJ0o7c1KkXxqXiWStrE17O2
+	 6UhYacXVroUjo5lpRrt+AALklNA8Ylt78jHKe29938q/CF20bhXjqhEPv1UacT2tbB
+	 v3FyVolHRl3prY/aNYDU4lOAu5yZqS+UYHpYP9ivKRIxPGJtNurRP6nDl5d7SVet+4
+	 T1TzB/QRtOJzDgl53k65+re1Ocl/mZLpBULn+gDXJCvLKAcoaxihSMnMcTu2+6UTeb
+	 ywFVfTa/1eGVw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chris Morgan <macromorgan@hotmail.com>,
-	Lee Jones <lee@kernel.org>,
+Cc: Eduard Zingerman <eddyz87@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	wens@csie.org
-Subject: [PATCH AUTOSEL 6.12 296/486] mfd: axp20x: AXP717: Add AXP717_TS_PIN_CFG to writeable regs
-Date: Mon,  5 May 2025 18:36:12 -0400
-Message-Id: <20250505223922.2682012-296-sashal@kernel.org>
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 310/486] bpf: don't do clean_live_states when state->loop_entry->branches > 0
+Date: Mon,  5 May 2025 18:36:26 -0400
+Message-Id: <20250505223922.2682012-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,47 +52,102 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Chris Morgan <macromorgan@hotmail.com>
+From: Eduard Zingerman <eddyz87@gmail.com>
 
-[ Upstream commit bfad07fe298bfba0c7ddab87c5b5325970203a1e ]
+[ Upstream commit 9e63fdb0cbdf3268c86638a8274f4d5549a82820 ]
 
-Add AXP717_TS_PIN_CFG (register 0x50) to the table of writeable
-registers so that the temperature sensor can be configured by the
-battery driver.
+verifier.c:is_state_visited() uses RANGE_WITHIN states comparison rules
+for cached states that have loop_entry with non-zero branches count
+(meaning that loop_entry's verification is not yet done).
 
-Signed-off-by: Chris Morgan <macromorgan@hotmail.com>
-Link: https://lore.kernel.org/r/20250204155835.161973-3-macroalpha82@gmail.com
-Signed-off-by: Lee Jones <lee@kernel.org>
+The RANGE_WITHIN rules in regsafe()/stacksafe() require register and
+stack objects types to be identical in current and old states.
+
+verifier.c:clean_live_states() replaces registers and stack spills
+with NOT_INIT/STACK_INVALID marks, if these registers/stack spills are
+not read in any child state. This means that clean_live_states() works
+against loop convergence logic under some conditions. See selftest in
+the next patch for a specific example.
+
+Mitigate this by prohibiting clean_verifier_state() when
+state->loop_entry->branches > 0.
+
+This undoes negative verification performance impact of the
+copy_verifier_state() fix from the previous patch.
+Below is comparison between master and current patch.
+
+selftests:
+
+File                                Program                       Insns (A)  Insns (B)  Insns    (DIFF)  States (A)  States (B)  States  (DIFF)
+----------------------------------  ----------------------------  ---------  ---------  ---------------  ----------  ----------  --------------
+arena_htab.bpf.o                    arena_htab_llvm                     717        423   -294 (-41.00%)          57          37   -20 (-35.09%)
+arena_htab_asm.bpf.o                arena_htab_asm                      597        445   -152 (-25.46%)          47          37   -10 (-21.28%)
+arena_list.bpf.o                    arena_list_add                     1493       1822   +329 (+22.04%)          30          37    +7 (+23.33%)
+arena_list.bpf.o                    arena_list_del                      309        261    -48 (-15.53%)          23          15    -8 (-34.78%)
+iters.bpf.o                         checkpoint_states_deletion        18125      22154  +4029 (+22.23%)         818         918  +100 (+12.22%)
+iters.bpf.o                         iter_nested_deeply_iters            593        367   -226 (-38.11%)          67          43   -24 (-35.82%)
+iters.bpf.o                         iter_nested_iters                   813        772     -41 (-5.04%)          79          72     -7 (-8.86%)
+iters.bpf.o                         iter_subprog_check_stacksafe        155        135    -20 (-12.90%)          15          14     -1 (-6.67%)
+iters.bpf.o                         iter_subprog_iters                 1094        808   -286 (-26.14%)          88          68   -20 (-22.73%)
+iters.bpf.o                         loop_state_deps2                    479        356   -123 (-25.68%)          46          35   -11 (-23.91%)
+iters.bpf.o                         triple_continue                      35         31     -4 (-11.43%)           3           3     +0 (+0.00%)
+kmem_cache_iter.bpf.o               open_coded_iter                      63         59      -4 (-6.35%)           7           6    -1 (-14.29%)
+mptcp_subflow.bpf.o                 _getsockopt_subflow                 501        446    -55 (-10.98%)          25          23     -2 (-8.00%)
+pyperf600_iter.bpf.o                on_event                          12339       6379  -5960 (-48.30%)         441         286  -155 (-35.15%)
+verifier_bits_iter.bpf.o            max_words                            92         84      -8 (-8.70%)           8           7    -1 (-12.50%)
+verifier_iterating_callbacks.bpf.o  cond_break2                         113        192    +79 (+69.91%)          12          21    +9 (+75.00%)
+
+sched_ext:
+
+File               Program                 Insns (A)  Insns (B)  Insns      (DIFF)  States (A)  States (B)  States    (DIFF)
+-----------------  ----------------------  ---------  ---------  -----------------  ----------  ----------  ----------------
+bpf.bpf.o          layered_dispatch            11485       9039    -2446 (-21.30%)         848         662    -186 (-21.93%)
+bpf.bpf.o          layered_dump                 7422       5022    -2400 (-32.34%)         681         298    -383 (-56.24%)
+bpf.bpf.o          layered_enqueue             16854      13753    -3101 (-18.40%)        1611        1308    -303 (-18.81%)
+bpf.bpf.o          layered_init              1000001       5549  -994452 (-99.45%)       84672         523  -84149 (-99.38%)
+bpf.bpf.o          layered_runnable             3149       1899    -1250 (-39.70%)         288         151    -137 (-47.57%)
+bpf.bpf.o          p2dq_init                    2343       1936     -407 (-17.37%)         201         170     -31 (-15.42%)
+bpf.bpf.o          refresh_layer_cpumasks      16487       1285   -15202 (-92.21%)        1770         120   -1650 (-93.22%)
+bpf.bpf.o          rusty_select_cpu             1937       1386     -551 (-28.45%)         177         125     -52 (-29.38%)
+scx_central.bpf.o  central_dispatch              636        600       -36 (-5.66%)          63          59       -4 (-6.35%)
+scx_central.bpf.o  central_init                  913        632     -281 (-30.78%)          48          39      -9 (-18.75%)
+scx_nest.bpf.o     nest_init                     636        601       -35 (-5.50%)          60          58       -2 (-3.33%)
+scx_pair.bpf.o     pair_dispatch             1000001       1914  -998087 (-99.81%)       58169         142  -58027 (-99.76%)
+scx_qmap.bpf.o     qmap_dispatch                2393       2187      -206 (-8.61%)         196         174     -22 (-11.22%)
+scx_qmap.bpf.o     qmap_init                   16367      22777    +6410 (+39.16%)         603         768    +165 (+27.36%)
+
+'layered_init' and 'pair_dispatch' hit 1M on master, but are verified
+ok with this patch.
+
+Signed-off-by: Eduard Zingerman <eddyz87@gmail.com>
+Link: https://lore.kernel.org/r/20250215110411.3236773-4-eddyz87@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/axp20x.c       | 1 +
- include/linux/mfd/axp20x.h | 1 +
- 2 files changed, 2 insertions(+)
+ kernel/bpf/verifier.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 4051551757f2d..3780929039710 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -214,6 +214,7 @@ static const struct regmap_range axp717_writeable_ranges[] = {
- 	regmap_reg_range(AXP717_VSYS_V_POWEROFF, AXP717_VSYS_V_POWEROFF),
- 	regmap_reg_range(AXP717_IRQ0_EN, AXP717_IRQ4_EN),
- 	regmap_reg_range(AXP717_IRQ0_STATE, AXP717_IRQ4_STATE),
-+	regmap_reg_range(AXP717_TS_PIN_CFG, AXP717_TS_PIN_CFG),
- 	regmap_reg_range(AXP717_ICC_CHG_SET, AXP717_CV_CHG_SET),
- 	regmap_reg_range(AXP717_DCDC_OUTPUT_CONTROL, AXP717_CPUSLDO_CONTROL),
- 	regmap_reg_range(AXP717_ADC_CH_EN_CONTROL, AXP717_ADC_CH_EN_CONTROL),
-diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-index f4dfc1871a95b..d1c21ad6440d1 100644
---- a/include/linux/mfd/axp20x.h
-+++ b/include/linux/mfd/axp20x.h
-@@ -135,6 +135,7 @@ enum axp20x_variants {
- #define AXP717_IRQ2_STATE		0x4a
- #define AXP717_IRQ3_STATE		0x4b
- #define AXP717_IRQ4_STATE		0x4c
-+#define AXP717_TS_PIN_CFG		0x50
- #define AXP717_ICC_CHG_SET		0x62
- #define AXP717_ITERM_CHG_SET		0x63
- #define AXP717_CV_CHG_SET		0x64
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 294fbafbeba75..592ee3b47635b 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -17282,12 +17282,16 @@ static void clean_verifier_state(struct bpf_verifier_env *env,
+ static void clean_live_states(struct bpf_verifier_env *env, int insn,
+ 			      struct bpf_verifier_state *cur)
+ {
++	struct bpf_verifier_state *loop_entry;
+ 	struct bpf_verifier_state_list *sl;
+ 
+ 	sl = *explored_state(env, insn);
+ 	while (sl) {
+ 		if (sl->state.branches)
+ 			goto next;
++		loop_entry = get_loop_entry(&sl->state);
++		if (loop_entry && loop_entry->branches)
++			goto next;
+ 		if (sl->state.insn_idx != insn ||
+ 		    !same_callsites(&sl->state, cur))
+ 			goto next;
 -- 
 2.39.5
 
