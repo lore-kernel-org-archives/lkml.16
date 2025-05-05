@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7066336AADD;
-	Mon,  5 May 2025 22:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F542D86AE;
+	Mon,  5 May 2025 22:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485778; cv=none; b=Q7QoHkLjT97tkWR5NQgyzLTG1yN+aYKXEZI3Kqio1OZQiWaTskA0YnGmOT8621K78VDxxy3/lqDg7JGu3WBu+DozM1Vcl08RkYlm4XwkEdi/NvboGODzJBaBkEzo/qBMF8zRPvq2rWpsQuyeu3BR3iAHtObCO4mNs3BovkijJWs=
+	t=1746485785; cv=none; b=fyZRU//+0whopRB+4cSeivabVg2yVHLP0ynQzDxQvqyful8JXOTVp+47+n0Gkhow3Ae3w9EghcdrIHtGmi49knDgT0LGKDUiKg+Q3sLhwb0D8P5/ETQft8uvzIPzV4vl3cV41/GFNJEINxZiGK9AuSzJz9yHhZlJLSAJW404iKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485778; c=relaxed/simple;
-	bh=L3J2k0XYHN23Rq/RpMF8JSWvtYRT5nuLPd31jZByzMw=;
+	s=arc-20240116; t=1746485785; c=relaxed/simple;
+	bh=1RiZHA+OCdayigUJ9WuzS0RIlKabyjr9xW6t/jmqZqc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lM6ADhJALAmkUgwNpvmVpAEnknLaukxIUxS7DDKWiPU9DyFXtfIeNhBl2xtU7b64Kw5+fnXbOfki9UbQvS1jCj/T2i5pI3FnIcrNREMV7xBmg06SvY6itrqYX8tpeG1XH4F1HrmgX4MOVV1Fm5ldzXGdTxZhXshEpXX71C0YxsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5WUiQf/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KP9b+4KfATMY7SHCeUOaVN2AUUBc6XgV/I5yE9dcEI4JPGO/v4TnC3L8MRQgPLB0km0VosVCjiuZbdHhKmluhMX/0k8Rcto1QCqetqpVKn5huI24xOVNuhuh8OKnC3jmg7wPSIopJ2t55uRkXwiQl3jpXY/5Jmh9Boora2exH8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vd5vt1OB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5WUiQf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA99C4CEF2;
-	Mon,  5 May 2025 22:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vd5vt1OB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED8EC4CEE4;
+	Mon,  5 May 2025 22:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485776;
-	bh=L3J2k0XYHN23Rq/RpMF8JSWvtYRT5nuLPd31jZByzMw=;
+	s=k20201202; t=1746485784;
+	bh=1RiZHA+OCdayigUJ9WuzS0RIlKabyjr9xW6t/jmqZqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5WUiQf/1jk4Bd3uppcrHK7yYpPz27ZtHkP9Fmznbo6D8ZDog4m5oCToT3V3kGs00
-	 YHGfuWyPq3Bpl+m52+rkJVdMy3VEaUVxfkcwUpcV8fx8X90IwyzP2bQjKzKszcDvzJ
-	 4WK6Hx2yBFRv2E2Pq/dCwQzImw16pmFJCCWPKjxmJ0YrtCpNrv+7zgleZeyeBG3YF6
-	 eGNJbtlGHfnvsY1XFyrvbv3OXSANfvX8yUOoIsP0eGJ9h2DwgSSn1RgswLV7mahFp8
-	 3iMPN+mMIX8c/7qFqVqQPvIIeKyl6AOkmoaVxy3uF9c0UYPX0GPJfIOe7A+CP1V4nr
-	 RGhgyX+dyA8AQ==
+	b=Vd5vt1OBkqGan7pDt1gsorzmtFfiEY7sOHuTCTaDd+nSSRTjVZUXriRMdAb+/cds0
+	 skgQXICEK8X6FAoXQ49tSkSj8vHigAse4jvHjUu+OHwpjWd1cB3r1zsL0KyxR+oEWT
+	 22oM+YoEP7tL6sENjPSbpO49vlo7Hga5F7wJ8H1jMfZjEPhOrEFZkZ5QG9vAQZhD7S
+	 OhUL4uu4Efl4LMMAq+oAh4uBuZ50wN8un5NPMum2ZS2Q+kO4hEb3wFaIM6c8tueO0G
+	 G5YUBVxu43L1ESeXtvrHfbj/c8tR7eB+MpuvgLQv8jAXOzR65BTwMpWuDik6zVC530
+	 M94KX6kqunZ8g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Maarten Lankhorst <dev@lankhorst.se>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
+Cc: "Lin.Cao" <lincao12@amd.com>,
+	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 478/486] drm/xe: Do not attempt to bootstrap VF in execlists mode
-Date: Mon,  5 May 2025 18:39:14 -0400
-Message-Id: <20250505223922.2682012-478-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 483/486] drm/buddy: fix issue that force_merge cannot free all roots
+Date: Mon,  5 May 2025 18:39:19 -0400
+Message-Id: <20250505223922.2682012-483-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -55,37 +56,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Maarten Lankhorst <dev@lankhorst.se>
+From: "Lin.Cao" <lincao12@amd.com>
 
-[ Upstream commit f3b59457808f61d88178b0afa67cbd017d7ce79e ]
+[ Upstream commit 467dce3817bd2b62ccd6fcfd7aae76f242ac907e ]
 
-It was mentioned in a review that there is a possibility of choosing
-to load the module with VF in execlists mode.
+If buddy manager have more than one roots and each root have sub-block
+need to be free. When drm_buddy_fini called, the first loop of
+force_merge will merge and free all of the sub block of first root,
+which offset is 0x0 and size is biggest(more than have of the mm size).
+In subsequent force_merge rounds, if we use 0 as start and use remaining
+mm size as end, the block of other roots will be skipped in
+__force_merge function. It will cause the other roots can not be freed.
 
-Of course this doesn't work, just bomb out as hard as possible.
+Solution: use roots' offset as the start could fix this issue.
 
-Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20241210083111.230484-12-dev@lankhorst.se
-Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
+Signed-off-by: Lin.Cao <lincao12@amd.com>
+Signed-off-by: Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241226070116.309290-1-Arunpravin.PaneerSelvam@amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_gt_sriov_vf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/drm_buddy.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_gt_sriov_vf.c b/drivers/gpu/drm/xe/xe_gt_sriov_vf.c
-index 7ddbfeaf494ac..29badbd829ab6 100644
---- a/drivers/gpu/drm/xe/xe_gt_sriov_vf.c
-+++ b/drivers/gpu/drm/xe/xe_gt_sriov_vf.c
-@@ -235,6 +235,9 @@ int xe_gt_sriov_vf_bootstrap(struct xe_gt *gt)
+diff --git a/drivers/gpu/drm/drm_buddy.c b/drivers/gpu/drm/drm_buddy.c
+index 103c185bb1c8a..ca42e6081d27c 100644
+--- a/drivers/gpu/drm/drm_buddy.c
++++ b/drivers/gpu/drm/drm_buddy.c
+@@ -324,7 +324,7 @@ EXPORT_SYMBOL(drm_buddy_init);
+  */
+ void drm_buddy_fini(struct drm_buddy *mm)
  {
- 	int err;
+-	u64 root_size, size;
++	u64 root_size, size, start;
+ 	unsigned int order;
+ 	int i;
  
-+	if (!xe_device_uc_enabled(gt_to_xe(gt)))
-+		return -ENODEV;
-+
- 	err = vf_reset_guc_state(gt);
- 	if (unlikely(err))
- 		return err;
+@@ -332,7 +332,8 @@ void drm_buddy_fini(struct drm_buddy *mm)
+ 
+ 	for (i = 0; i < mm->n_roots; ++i) {
+ 		order = ilog2(size) - ilog2(mm->chunk_size);
+-		__force_merge(mm, 0, size, order);
++		start = drm_buddy_block_offset(mm->roots[i]);
++		__force_merge(mm, start, start + size, order);
+ 
+ 		WARN_ON(!drm_buddy_block_is_free(mm->roots[i]));
+ 		drm_block_free(mm, mm->roots[i]);
 -- 
 2.39.5
 
