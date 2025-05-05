@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BA42F47AB;
-	Mon,  5 May 2025 23:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B92C37A8B6;
+	Mon,  5 May 2025 23:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486952; cv=none; b=QNZ70ixohOwO19t+YfpSAQAsFAh334qCKS8MHjdeTllX1HWwU0Br0Rjzd+RqXrUKeE7THnN1kDLQifysgYZI1jRwdzVhIErsFGtUP/76GHKfxWw1y1JL4rTB9Yef0CyefVFE6yKwJ/w4WsttttRrRJX0uvjI/cvIjvBVrJk3/vQ=
+	t=1746486977; cv=none; b=b7Z2wcuSspn7tgS6OzxEwZvvyHOeb9vsm4W1lvrc/tVSdnjvFFV9ACoRPkR97RVm4er2MO4IVOu6OLq+wBMz4hBlYfGze73dMTtMwVo7Y6mQ1FoLsQDJVYrUSXnC10Z2qaObXNzjrre+mS6gaOAfIw1QG7dbHgYt/6I4bcsHhHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486952; c=relaxed/simple;
-	bh=Je9p50v3ECggCieJTKmx0a/RNXWgaIb96it/GOQKV8k=;
+	s=arc-20240116; t=1746486977; c=relaxed/simple;
+	bh=RIErKMVGtM2quZHl9rmspMuPKcpJzdebSl75GX8Lo9k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VyscgK7TBw/5EVK7POPwOmC74eEuA5t6YiaI9GmUC3x+spOMhT1Sw3KPpEWU1ZSoaIYVGGq4l2I3LU33zR4ssrnHQfd7HWwQDKiupzmJphptbf3AVnQlz/PMdTafEFeWXD4/K+ziPxEDvndDCV5FYX4CY1B9/Qm4LU7lqzROYAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvsPVycp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WbXKqKtFo3tLs+WwPMspCBMG/Lv4h+VTOeVTpC8I3uXLWBh6L9kdelT+iiBZ4GXstpm2gjntjsTS1zP4LpYutbV8T4HWCCZDiZSin0NlVu2/M9VZxxGToXVUq1tVfx9JxWp60gVhMdBU6O0GqVwgKmObNZCPTA7wvQuR/wZhgMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otYctlR1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvsPVycp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 992FBC4CEE4;
-	Mon,  5 May 2025 23:15:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otYctlR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F33CFC4CEE4;
+	Mon,  5 May 2025 23:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486951;
-	bh=Je9p50v3ECggCieJTKmx0a/RNXWgaIb96it/GOQKV8k=;
+	s=k20201202; t=1746486976;
+	bh=RIErKMVGtM2quZHl9rmspMuPKcpJzdebSl75GX8Lo9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gvsPVycpkvgBxL4SABop6vyLFDAqz7Jyhe2ZjayFldWIYKIk8ouIqj0/TEB6Jaz0H
-	 6CABr2ha+Cw73hKRUVT5KQhIiCTRzUxTYHsw5Cww8lzgHy+KvOFgjjcrlmdZJKXSR6
-	 Ftkiu9AEucfzpfpWA5hHx3GzoYs0VPN3rMOUpK7EvIEhWmbP34rmi1c155OkufOZis
-	 F2nXSFxWgePyjDAnPB7uChAxzDhnuznpNWhnY8MNoqwIVkXIbDkchiNgmFGVZwr+uW
-	 dAqj1qjn4MUf/YXl32aJsB42W1lQORDboHmIR7NtuMT+yA/e7ursbWcHnd8AqgaTqY
-	 TFzMnvaU1iDcQ==
+	b=otYctlR146UdW99Cl4pwbZPlV2sCTlGxoOPWoHH68iwf45U58pm53Pf7R15vGgeUI
+	 gLBVX4L7eylIl/OvjZw0mQ/o5ZWVdhACda9UmZ4B01EUWYbXSO24FrpV+dgHSA1Yal
+	 +XIuL+Gd7UGhC7FUlenGWg468Iijdhu5MF+WW60QRtMe9Ltda3ukfpqILBCOXJGu1o
+	 zDRio+tp+oCUPt+4uz8vJ2jWfeJH5F0b+qC1MQ8bJIheOXuPCIAy6zEqvgJfHgFzu5
+	 JVDKkaRJEdbUuwocOXzMYbtunJXn7vZwKowgAvv7hkEbM2X09AhUQCVyQD3z6Vz/z+
+	 1d+zJCS5G6ykQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Guenter Roeck <linux@roeck-us.net>,
+Cc: Yihan Zhu <Yihan.Zhu@amd.com>,
+	Samson Tam <samson.tam@amd.com>,
+	Zaeem Mohamed <zaeem.mohamed@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 075/153] hwmon: (gpio-fan) Add missing mutex locks
-Date: Mon,  5 May 2025 19:12:02 -0400
-Message-Id: <20250505231320.2695319-75-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.15 089/153] drm/amd/display: handle max_downscale_src_width fail check
+Date: Mon,  5 May 2025 19:12:16 -0400
+Message-Id: <20250505231320.2695319-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -51,73 +59,57 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
+From: Yihan Zhu <Yihan.Zhu@amd.com>
 
-[ Upstream commit 9fee7d19bab635f89223cc40dfd2c8797fdc4988 ]
+[ Upstream commit 02a940da2ccc0cc0299811379580852b405a0ea2 ]
 
-set_fan_speed() is expected to be called with fan_data->lock being locked.
-Add locking for proper synchronization.
+[WHY]
+If max_downscale_src_width check fails, we exit early from TAP calculation and left a NULL
+value to the scaling data structure to cause the zero divide in the DML validation.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Link: https://lore.kernel.org/r/20250210145934.761280-3-alexander.stein@ew.tq-group.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+[HOW]
+Call set default TAP calculation before early exit in get_optimal_number_of_taps due to
+max downscale limit exceed.
+
+Reviewed-by: Samson Tam <samson.tam@amd.com>
+Signed-off-by: Yihan Zhu <Yihan.Zhu@amd.com>
+Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/gpio-fan.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn30/dcn30_dpp.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
-index fbf3f5a4ecb67..6d518c10723a0 100644
---- a/drivers/hwmon/gpio-fan.c
-+++ b/drivers/hwmon/gpio-fan.c
-@@ -394,7 +394,12 @@ static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
- 	if (state >= fan_data->num_speed)
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_dpp.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_dpp.c
+index 0601c17426af2..27932a32057e3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_dpp.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_dpp.c
+@@ -386,11 +386,6 @@ bool dpp3_get_optimal_number_of_taps(
+ 	int min_taps_y, min_taps_c;
+ 	enum lb_memory_config lb_config;
  
-+	mutex_lock(&fan_data->lock);
+-	if (scl_data->viewport.width > scl_data->h_active &&
+-		dpp->ctx->dc->debug.max_downscale_src_width != 0 &&
+-		scl_data->viewport.width > dpp->ctx->dc->debug.max_downscale_src_width)
+-		return false;
+-
+ 	/*
+ 	 * Set default taps if none are provided
+ 	 * From programming guide: taps = min{ ceil(2*H_RATIO,1), 8} for downscaling
+@@ -428,6 +423,12 @@ bool dpp3_get_optimal_number_of_taps(
+ 	else
+ 		scl_data->taps.h_taps_c = in_taps->h_taps_c;
+ 
++	// Avoid null data in the scl data with this early return, proceed non-adaptive calcualtion first
++	if (scl_data->viewport.width > scl_data->h_active &&
++		dpp->ctx->dc->debug.max_downscale_src_width != 0 &&
++		scl_data->viewport.width > dpp->ctx->dc->debug.max_downscale_src_width)
++		return false;
 +
- 	set_fan_speed(fan_data, state);
-+
-+	mutex_unlock(&fan_data->lock);
-+
- 	return 0;
- }
- 
-@@ -490,7 +495,11 @@ MODULE_DEVICE_TABLE(of, of_gpio_fan_match);
- 
- static void gpio_fan_stop(void *data)
- {
-+	struct gpio_fan_data *fan_data = data;
-+
-+	mutex_lock(&fan_data->lock);
- 	set_fan_speed(data, 0);
-+	mutex_unlock(&fan_data->lock);
- }
- 
- static int gpio_fan_probe(struct platform_device *pdev)
-@@ -564,7 +573,9 @@ static int gpio_fan_suspend(struct device *dev)
- 
- 	if (fan_data->gpios) {
- 		fan_data->resume_speed = fan_data->speed_index;
-+		mutex_lock(&fan_data->lock);
- 		set_fan_speed(fan_data, 0);
-+		mutex_unlock(&fan_data->lock);
- 	}
- 
- 	return 0;
-@@ -574,8 +585,11 @@ static int gpio_fan_resume(struct device *dev)
- {
- 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
- 
--	if (fan_data->gpios)
-+	if (fan_data->gpios) {
-+		mutex_lock(&fan_data->lock);
- 		set_fan_speed(fan_data, fan_data->resume_speed);
-+		mutex_unlock(&fan_data->lock);
-+	}
- 
- 	return 0;
- }
+ 	/*Ensure we can support the requested number of vtaps*/
+ 	min_taps_y = dc_fixpt_ceil(scl_data->ratios.vert);
+ 	min_taps_c = dc_fixpt_ceil(scl_data->ratios.vert_c);
 -- 
 2.39.5
 
