@@ -1,103 +1,303 @@
-Received: from mail-ua1-f98.google.com (mail-ua1-f98.google.com [209.85.222.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207B2D47B4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58B12D47BA;
+	Mon,  5 May 2025 22:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485625; cv=none; b=BH3eqA5ZshA6YW+WCLQuoY3iuERa8cd7BUkTk4FZBg7VOyZq3r0BX0UXCFV5R3HAQK6u6W4T7gvRnjAnWU6b7fJP2A7J+K2gFhV+PzTwW03zec3oE2dI/+Kdj85z/CmR49oJ1hVRVFl/9aTAnkyKgFRtv4ndel9M6fWXrU42k8Y=
+	t=1746485631; cv=none; b=hWLGLFarJjY0bFWWo3JbgrgFHe9oEbwSvshWvYIhcf9TFRDGH5TkApKNI5/lpwsiViFEEyfrYBhS4np/EYDUyqIHpSP05395YgNnwBIQ0wOz3tKYbQU371aCnmNak6oD3V7so6rXvQ629hDwyTNCNDoB/NM0kQ7VECsRoD0BNSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485625; c=relaxed/simple;
-	bh=oWRWu4J3rOlzeZEZE09NG8G8JVW/wVAOK1aQt+vNBTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbP/hf0jCI/5X9P4P+9v82w74PY5yqEv3gXdpGpZGvCzCjyL6jxVZv5OXq02zVB7Ph6nLtM38iN0XRszQQGGLZgZpQ9eylHibKPJPPPwhLAXDIzswlciVl8ARsdZCbJyu5WZEXePJQ0PgTr4jIeSN3qM03/QmLEn1A/Y1Hq4YJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bGsJ3rqe; arc=none smtp.client-ip=209.85.222.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746485631; c=relaxed/simple;
+	bh=rvINE1xczsfYHzY4skdGfLUM0secf1TOZYDxrR9/9gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tv1wsZOvIa74896aRvtifNGtQcza6TwtqNZFkgwU1YhyemrcSfLIXGXDt4qY9K8ySHbH7DhgwVbFkCQ7U2PbfTjIilgqnRJ+2sMaNj8JhhMN8cNkdiQpm28a5u6gI3MNOGiyELzRY5T2aG2mhKMAImGt4RszSrx0hW5QYVV4QeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLS5Lb/o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bGsJ3rqe"
-Received: by mail-ua1-f98.google.com with SMTP id a1e0cc1a2514c-86c29c0acdfso1289417241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:53:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746485621; x=1747090421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eiXzmkb8vltyH6u1BZ9L/v+dxL0ZMqO2O1cKAYZNXPs=;
-        b=bGsJ3rqe20V11uU6uC/iGYzpZKh3HRfig0sea/5RoX8n5OVPtHegjGPFD4xu6w4ph8
-         CNqcZh5i/ZG6nnbU74h0d86JJJAmEGTgCmuANFaZEU64iDNBUp7Gi8C84KgQUR9AHgY3
-         vp96z2XM4EPNNvQEGC2Mj6wXlWeNlEFvp9OM5TWArIJL/zhen0wOwN2S6VDlEy/XZHRS
-         S6FmSFPdFJbPxZVBSH96YZY7z3SJx/dd2BC1lLSVXhXKRBNlXorGLuWxJuo6D1J3C3a9
-         F4lYi/djUnNL72zS0b17PZh6RG/2Xj0X3UoG7228wFpagW8Q8kLQW4hAC+p2QB2R4lRP
-         XCZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746485621; x=1747090421;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiXzmkb8vltyH6u1BZ9L/v+dxL0ZMqO2O1cKAYZNXPs=;
-        b=Ej1SUbmKBAnrRYGY5Pk3fJRnha/0wliZXeBq6dtTF+LQZ9nQJBVyoc6gmb0mo3WPir
-         TCw/qW9BMdZCxIRLgLZfnyPjMMkeQZKZUU3uuTOeGBI8atPiUsqP9p8EW1WxnjUsPkRC
-         T/Ob6DU/meZLd2hqlIJC3a+dx5OD1SuqLVc/yc0i1YN76rNuRCTyKBGDjirKaD05RaZl
-         gOBO7Yu8YlvcgfR8l72gYLpLRivGpOjCPCHhPWTLuC7KEI8Bc/4BsfsKcfy09FrrIbp7
-         h+QnpKI6fE8e4E+6yaCOUslcG/XoJhG2MwUmYncleDxG6ER8qt17IcbIjRj4Aa0Qo5ui
-         2CPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUreJ9SE1IAw+LqU0ACeT6ZzePR9YWbkAq+Koelk68KadLO+8QYcnAnODRAi8+qLvV4CaAUKYFFMk6Tkcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmqX3bsCo7+6bF8yhpaienjbevNxgyeFTsJQ4KohQGk76yP95D
-	S0UHOJ4FFpHqMxYClGqc5jF0GDXZITGsAhYMMkwOQbeSw55uPBjknxOEsggkb7rL6tb4MX56eSa
-	yJPQ3HYWzB/LGXB87zquFqPppJntpY+1U6SuHjPX21bz5Ckam
-X-Gm-Gg: ASbGncsIYq8rOuyCG0XMwobh18XX+SMMl3bwqFX0iMsfiMKsKC0gNpOAqR5wyEBCOV3
-	RTWD6KUTxKKV+XPuXrOj8NZpXMz39HbmiJvnQEKECbZhjq4I8OuKDbfxu+BcC2Q4Xc+jEI4mFuG
-	dJ7t1hu4kf7HGF1owyyS6hantsIHdr8JN+BhmrV480uJZMwq5tuKT7ammrDyy/mZhVdobxYmOnM
-	KhXhdsvwobcpJCTSiRopMekP6bfUPUxgAujNpWR8xj4RNkoZMxb64rcbbkKC96upBUm1TJtff2u
-	FUm/2brz6XXBxPT0i3/6HPuLjRyF8Uo=
-X-Google-Smtp-Source: AGHT+IGuGPu+zNWnKMENBRH1cGq6mvAP2tt0vUVDuY0s1KGIy/+MxU+EJ2xkScan9kLdomgicesqCN/5M43b
-X-Received: by 2002:a05:6102:5681:b0:4da:e631:a472 with SMTP id ada2fe7eead31-4dafb690042mr8174826137.20.1746485621498;
-        Mon, 05 May 2025 15:53:41 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id a1e0cc1a2514c-8780afe9e7esm785191241.3.2025.05.05.15.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 15:53:41 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id BCD78340278;
-	Mon,  5 May 2025 16:53:40 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id B0A55E40643; Mon,  5 May 2025 16:53:40 -0600 (MDT)
-Date: Mon, 5 May 2025 16:53:40 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] selftests: ublk: more misc fixes
-Message-ID: <aBlBdBl8uKCIVOPG@dev-ushankar.dev.purestorage.com>
-References: <20250428-ublk_selftests-v1-0-5795f7b00cda@purestorage.com>
- <aBkgLOxWLp74TShe@dev-ushankar.dev.purestorage.com>
- <aBkg0LW5YO6Osdnw@dev-ushankar.dev.purestorage.com>
- <3a6050b3-03f6-4c22-a2c3-33ab6a453376@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLS5Lb/o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8CEC4CEED;
+	Mon,  5 May 2025 22:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746485629;
+	bh=rvINE1xczsfYHzY4skdGfLUM0secf1TOZYDxrR9/9gc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iLS5Lb/oQmNOr0gLaoIE5VfZWa7nBmKgDgF5e6QqUkoqgUGEpTn+8DTbN8RHqWLgt
+	 2FmxpZyJRkUzEB4dULb2hoVKGZ3mn3ni/6MHEjikAEeD6ND6JyS+hQ5vWElB4vaHzt
+	 g397ZcZZTGjqt3Yykw/kalXHI+WlQiL48R3GSsVBxzHYRs26EHAJM454tnRvC5zhi3
+	 VTe+GayDA2qlORZFKFhMNqjbZzfeC2IZ3Yw6Nts7ycvrgUN5u3DVGxvBzHHnDmAGFq
+	 LReDGvNtoUQb2DFJvxOcohkCky98WocUucXDSoTqu2tJ75rzTZ9NEJC3kFlcxAh7Ed
+	 OsXl00IhaWv+A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Gaurav Batra <gbatra@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sasha Levin <sashal@kernel.org>,
+	mpe@ellerman.id.au,
+	sbhat@linux.ibm.com,
+	brking@linux.vnet.ibm.com,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 6.12 395/486] powerpc/pseries/iommu: create DDW for devices with DMA mask less than 64-bits
+Date: Mon,  5 May 2025 18:37:51 -0400
+Message-Id: <20250505223922.2682012-395-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a6050b3-03f6-4c22-a2c3-33ab6a453376@kernel.dk>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 04:44:19PM -0600, Jens Axboe wrote:
-> On 5/5/25 2:34 PM, Uday Shankar wrote:
-> > On Mon, May 05, 2025 at 02:31:40PM -0600, Uday Shankar wrote:
-> >> Hi Jens,
-> >>
-> >> Can you take a look at Ming's comment on the first patch and merge the
-> >> set if things look good? I can rebase/repost it as needed.
-> > 
-> > Bleh, sorry, I meant to send this as a reply to v2:
-> > 
-> > https://lore.kernel.org/linux-block/20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com/
-> 
-> Let's give Ming a chance to review v2, then I can get it queued up.
+From: Gaurav Batra <gbatra@linux.ibm.com>
 
-It looks like he has already reviewed all the patches in the set.
+[ Upstream commit 67dfc11982f7e3c37f0977e74671da2391b29181 ]
+
+Starting with PAPR level 2.13, platform supports placing PHB in limited
+address mode. Devices that support DMA masks less that 64-bit but greater
+than 32-bits are placed in limited address mode. In this mode, the
+starting DMA address returned by the DDW is 4GB.
+
+When the device driver calls dma_supported, with mask less then 64-bit, the
+PowerPC IOMMU driver places PHB in the Limited Addressing Mode before
+creating DDW.
+
+Signed-off-by: Gaurav Batra <gbatra@linux.ibm.com>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Link: https://patch.msgid.link/20250108164814.73250-1-gbatra@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/pseries/iommu.c | 110 +++++++++++++++++++++----
+ 1 file changed, 94 insertions(+), 16 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 8f32340960e21..d6ebc19fb99c5 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -52,7 +52,8 @@ enum {
+ enum {
+ 	DDW_EXT_SIZE = 0,
+ 	DDW_EXT_RESET_DMA_WIN = 1,
+-	DDW_EXT_QUERY_OUT_SIZE = 2
++	DDW_EXT_QUERY_OUT_SIZE = 2,
++	DDW_EXT_LIMITED_ADDR_MODE = 3
+ };
+ 
+ static struct iommu_table *iommu_pseries_alloc_table(int node)
+@@ -1327,6 +1328,54 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
+ 			 ret);
+ }
+ 
++/*
++ * Platforms support placing PHB in limited address mode starting with LoPAR
++ * level 2.13 implement. In this mode, the DMA address returned by DDW is over
++ * 4GB but, less than 64-bits. This benefits IO adapters that don't support
++ * 64-bits for DMA addresses.
++ */
++static int limited_dma_window(struct pci_dev *dev, struct device_node *par_dn)
++{
++	int ret;
++	u32 cfg_addr, reset_dma_win, las_supported;
++	u64 buid;
++	struct device_node *dn;
++	struct pci_dn *pdn;
++
++	ret = ddw_read_ext(par_dn, DDW_EXT_RESET_DMA_WIN, &reset_dma_win);
++	if (ret)
++		goto out;
++
++	ret = ddw_read_ext(par_dn, DDW_EXT_LIMITED_ADDR_MODE, &las_supported);
++
++	/* Limited Address Space extension available on the platform but DDW in
++	 * limited addressing mode not supported
++	 */
++	if (!ret && !las_supported)
++		ret = -EPROTO;
++
++	if (ret) {
++		dev_info(&dev->dev, "Limited Address Space for DDW not Supported, err: %d", ret);
++		goto out;
++	}
++
++	dn = pci_device_to_OF_node(dev);
++	pdn = PCI_DN(dn);
++	buid = pdn->phb->buid;
++	cfg_addr = (pdn->busno << 16) | (pdn->devfn << 8);
++
++	ret = rtas_call(reset_dma_win, 4, 1, NULL, cfg_addr, BUID_HI(buid),
++			BUID_LO(buid), 1);
++	if (ret)
++		dev_info(&dev->dev,
++			 "ibm,reset-pe-dma-windows(%x) for Limited Addr Support: %x %x %x returned %d ",
++			 reset_dma_win, cfg_addr, BUID_HI(buid), BUID_LO(buid),
++			 ret);
++
++out:
++	return ret;
++}
++
+ /* Return largest page shift based on "IO Page Sizes" output of ibm,query-pe-dma-window. */
+ static int iommu_get_page_shift(u32 query_page_size)
+ {
+@@ -1394,7 +1443,7 @@ static struct property *ddw_property_create(const char *propname, u32 liobn, u64
+  *
+  * returns true if can map all pages (direct mapping), false otherwise..
+  */
+-static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
++static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn, u64 dma_mask)
+ {
+ 	int len = 0, ret;
+ 	int max_ram_len = order_base_2(ddw_memory_hotplug_max());
+@@ -1413,6 +1462,9 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	bool pmem_present;
+ 	struct pci_dn *pci = PCI_DN(pdn);
+ 	struct property *default_win = NULL;
++	bool limited_addr_req = false, limited_addr_enabled = false;
++	int dev_max_ddw;
++	int ddw_sz;
+ 
+ 	dn = of_find_node_by_type(NULL, "ibm,pmemory");
+ 	pmem_present = dn != NULL;
+@@ -1439,7 +1491,6 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	 * the ibm,ddw-applicable property holds the tokens for:
+ 	 * ibm,query-pe-dma-window
+ 	 * ibm,create-pe-dma-window
+-	 * ibm,remove-pe-dma-window
+ 	 * for the given node in that order.
+ 	 * the property is actually in the parent, not the PE
+ 	 */
+@@ -1459,6 +1510,20 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	if (ret != 0)
+ 		goto out_failed;
+ 
++	/* DMA Limited Addressing required? This is when the driver has
++	 * requested to create DDW but supports mask which is less than 64-bits
++	 */
++	limited_addr_req = (dma_mask != DMA_BIT_MASK(64));
++
++	/* place the PHB in Limited Addressing mode */
++	if (limited_addr_req) {
++		if (limited_dma_window(dev, pdn))
++			goto out_failed;
++
++		/* PHB is in Limited address mode */
++		limited_addr_enabled = true;
++	}
++
+ 	/*
+ 	 * If there is no window available, remove the default DMA window,
+ 	 * if it's present. This will make all the resources available to the
+@@ -1505,6 +1570,15 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 		goto out_failed;
+ 	}
+ 
++	/* Maximum DMA window size that the device can address (in log2) */
++	dev_max_ddw = fls64(dma_mask);
++
++	/* If the device DMA mask is less than 64-bits, make sure the DMA window
++	 * size is not bigger than what the device can access
++	 */
++	ddw_sz = min(order_base_2(query.largest_available_block << page_shift),
++			dev_max_ddw);
++
+ 	/*
+ 	 * The "ibm,pmemory" can appear anywhere in the address space.
+ 	 * Assuming it is still backed by page structs, try MAX_PHYSMEM_BITS
+@@ -1513,23 +1587,21 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	 */
+ 	len = max_ram_len;
+ 	if (pmem_present) {
+-		if (query.largest_available_block >=
+-		    (1ULL << (MAX_PHYSMEM_BITS - page_shift)))
++		if (ddw_sz >= MAX_PHYSMEM_BITS)
+ 			len = MAX_PHYSMEM_BITS;
+ 		else
+ 			dev_info(&dev->dev, "Skipping ibm,pmemory");
+ 	}
+ 
+ 	/* check if the available block * number of ptes will map everything */
+-	if (query.largest_available_block < (1ULL << (len - page_shift))) {
++	if (ddw_sz < len) {
+ 		dev_dbg(&dev->dev,
+ 			"can't map partition max 0x%llx with %llu %llu-sized pages\n",
+ 			1ULL << len,
+ 			query.largest_available_block,
+ 			1ULL << page_shift);
+ 
+-		len = order_base_2(query.largest_available_block << page_shift);
+-
++		len = ddw_sz;
+ 		dynamic_mapping = true;
+ 	} else {
+ 		direct_mapping = !default_win_removed ||
+@@ -1543,8 +1615,9 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 		 */
+ 		if (default_win_removed && pmem_present && !direct_mapping) {
+ 			/* DDW is big enough to be split */
+-			if ((query.largest_available_block << page_shift) >=
+-			     MIN_DDW_VPMEM_DMA_WINDOW + (1ULL << max_ram_len)) {
++			if ((1ULL << ddw_sz) >=
++			    MIN_DDW_VPMEM_DMA_WINDOW + (1ULL << max_ram_len)) {
++
+ 				direct_mapping = true;
+ 
+ 				/* offset of the Dynamic part of DDW */
+@@ -1555,8 +1628,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 			dynamic_mapping = true;
+ 
+ 			/* create max size DDW possible */
+-			len = order_base_2(query.largest_available_block
+-							<< page_shift);
++			len = ddw_sz;
+ 		}
+ 	}
+ 
+@@ -1685,7 +1757,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 	__remove_dma_window(pdn, ddw_avail, create.liobn);
+ 
+ out_failed:
+-	if (default_win_removed)
++	if (default_win_removed || limited_addr_enabled)
+ 		reset_dma_window(dev, pdn);
+ 
+ 	fpdn = kzalloc(sizeof(*fpdn), GFP_KERNEL);
+@@ -1704,6 +1776,9 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 		dev->dev.bus_dma_limit = dev->dev.archdata.dma_offset +
+ 						(1ULL << max_ram_len);
+ 
++	dev_info(&dev->dev, "lsa_required: %x, lsa_enabled: %x, direct mapping: %x\n",
++			limited_addr_req, limited_addr_enabled, direct_mapping);
++
+ 	return direct_mapping;
+ }
+ 
+@@ -1829,8 +1904,11 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
+ {
+ 	struct device_node *dn = pci_device_to_OF_node(pdev), *pdn;
+ 
+-	/* only attempt to use a new window if 64-bit DMA is requested */
+-	if (dma_mask < DMA_BIT_MASK(64))
++	/* For DDW, DMA mask should be more than 32-bits. For mask more then
++	 * 32-bits but less then 64-bits, DMA addressing is supported in
++	 * Limited Addressing mode.
++	 */
++	if (dma_mask <= DMA_BIT_MASK(32))
+ 		return false;
+ 
+ 	dev_dbg(&pdev->dev, "node is %pOF\n", dn);
+@@ -1843,7 +1921,7 @@ static bool iommu_bypass_supported_pSeriesLP(struct pci_dev *pdev, u64 dma_mask)
+ 	 */
+ 	pdn = pci_dma_find(dn, NULL);
+ 	if (pdn && PCI_DN(pdn))
+-		return enable_ddw(pdev, pdn);
++		return enable_ddw(pdev, pdn, dma_mask);
+ 
+ 	return false;
+ }
+-- 
+2.39.5
 
