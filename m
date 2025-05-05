@@ -1,121 +1,165 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5694E15574E;
-	Mon,  5 May 2025 15:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7879C1DED49;
+	Mon,  5 May 2025 15:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459345; cv=none; b=uYzxAnLrx23Yiq6LJDo7qmGEccd+/y407oDbBEGYKp00QQEAH3OSFd6BH/tYF+1uKVJgqyJ6zL8XoAhpD9SqkmcxjQtzC5RgSstJ1TlhxbC2e2J3WW3aZGhvUm+RXTPbZV1eH2HhAOL24ekIavJHR65/07mOBFHBFm44uJaPn8g=
+	t=1746459469; cv=none; b=YtwWlqCVfkPQgwk/nWtCd4U+7IVzd6xVG32L/0/1YfdglzgI97aRPtWF+6uKy4ZowbSMYnhm04QKTcBTg1SEPcraB/QM8mFpWXut8Og8ZUtQl2E6aIavbKI2rGDMmjwE0WqMPU4nWaboxfH1R4/ZUZA7eM9MEZ+Qmh39Q8ekAiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459345; c=relaxed/simple;
-	bh=ewFVZFQZbDeeKnyWJtIq5KQNwlCmzVBjh47/PpeYkLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SecHhYvem0zZJT1n3OGL7CsAAIT2bFnqMmIVeocl86/U75eADHo4JYaoh32fZ5/4jzoqGVOHsYriP7mgVC6bnv62btjjvWklxoAWNUgPceSYp+KZnpXDLDv/XXCF9zBLvGbykj87VH8A4emRhDGsb12srvfvdQkAh59F1045kjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fwMHoFxk; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746459469; c=relaxed/simple;
+	bh=kgjT8WEf5LwjWtrsLGMHB9U6vbfqzylva8cBtuqg4/Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EqZH58hfsiKwUlbwPl3RbRO2m2PmKbzxyWa/O/kS4DjGDMvmBiFjLZzO7oVk0YfcNo1hLIKvJtTG8uvCVcCbF4lep9Dco3+DKMBf95ig11MriPvbyfiYaBgbskYsh+D+NDdRrSBy/72OZ4djvHU8Jj4v9QKQenHVOZaJ59s2WjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwKNxUQZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fwMHoFxk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=xx7um2Wi1pWgoLAnG1wNQOMj93n7z+CICbU/G2C2QB8=;
-	b=fwMHoFxk2qqKM0irqVgEpNUSu2SVAZC7Ai07L6z8QiaXuog0Ry08etpfMxx2O7
-	O2t+gU9J+tZ2iF7E8Ccm6r7c9AXIk9emjApdtRuwZcF+q/M2X0PMn8/c/12P18ai
-	jkWwDmZwxRd5w9g6onWXvXDeIOHIobr5HssFnsqsgm1sE=
-Received: from [192.168.71.93] (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgCnDly32hhoxsOjBw--.14721S2;
-	Mon, 05 May 2025 23:35:19 +0800 (CST)
-Message-ID: <4cfa9138-43c7-4ca8-bb00-3bd15ab0dd98@163.com>
-Date: Mon, 5 May 2025 23:35:20 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwKNxUQZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9A2C4CEF1;
+	Mon,  5 May 2025 15:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746459469;
+	bh=kgjT8WEf5LwjWtrsLGMHB9U6vbfqzylva8cBtuqg4/Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dwKNxUQZf9DhoOXPnXrcKKcI1sbxhKg/2c9DLx+rYuulyHwb4yjGZavcfEyrutpIi
+	 J058STMeDCvMeAONM3Xse0pIht/au9ewF7th9hYtEEOkLboOvc+aUgdYlnYHb1Xlp9
+	 46+lN/U2vFHsPWUmJ48BoFov+Kz0iiEg362XY2HHf7SxxIwxRdc4ai3woK7OoMvcRo
+	 q0grF+rnpLBKuNEd7M6P/NdZbbt2/JXQp2Vq2S4LMdMvW7dVobrIwBr+Rnw5KacOQ5
+	 nn7+wg7RTqVFUzx6Vr6xnfrZNg6QuuElNdIhOYOC9b2/Omd5N1q5qnAeuaPT9mut4g
+	 z9tqN8RbBZSmQ==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acb5ec407b1so802670666b.1;
+        Mon, 05 May 2025 08:37:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVq4kHWfO53OjDm2/vYA1g5ZeCRBen8YHYMDtBGGArTlWxbLU+aJAuAfPn3knVNfCfOpxIlSn6Rj8LDjxAz@vger.kernel.org, AJvYcCW2N6tNxdgiGJ5m080fAreRZ2EGl/PdZjV5afrIlMISBVMUue9+71lFPM/jKq5bkZCqK69WQMVWmNRE6Tl9WWE=@vger.kernel.org, AJvYcCWJTPfdSIa6AfcQ8g7s0reJ63P0Wm9GdgN9Eg5ttqGDrqyTXk9pbD7l1BKBYVkE+K7X9zQF3aq1g5Ma@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5LI4hsmO59hLRZc16IfvY18W+AZ430i43I998ZVzoEnfWsEKE
+	rKpdG/3CoMv6DHnWHAD2Kl8fzEECILLN8Kj4ZQbkh4cat9prtG0hwkSgSNsBGU/L8JaCVoIxmUU
+	YWJ8BQFG3Cd7N1099A1+S69yIXQ==
+X-Google-Smtp-Source: AGHT+IF5AdNi6ekQVBhEb6rjF7V2tE+jZ02cfPCg2chOIcgD2I4YdahkYMy23tbr5pS6sBhTqg3+U5rrGHICU/lzw5A=
+X-Received: by 2002:a17:907:3f91:b0:acb:b5a4:ba35 with SMTP id
+ a640c23a62f3a-ad1a48bc3c9mr793360166b.2.1746459467451; Mon, 05 May 2025
+ 08:37:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xhci: Add missing parameter description to
- xhci_get_endpoint_index()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250504160415.183331-1-18255117159@163.com>
- <2025050546-unlivable-monitor-ad66@gregkh>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <2025050546-unlivable-monitor-ad66@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:QCgvCgCnDly32hhoxsOjBw--.14721S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCr15Kr4kCr4fKr1fJFykAFb_yoW5ArW5pF
-	4avr9Ykr1xWry093Wqgw4ftr15Ka9rCay3u347u34YyrWjyFyxX3s3KF4vgFnrAr4F9F18
-	CrWIqw1DWr15Xa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U21vfUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwtEo2gY0lG7GwAAsk
+References: <20250504173154.488519-1-remo@buenzli.dev> <20250504173154.488519-6-remo@buenzli.dev>
+ <5946174b-3178-462d-bb59-1e0d6c5f4dda@de.bosch.com> <D9O8WJ0RDNIA.4JYLWLYLBC2A@buenzli.dev>
+In-Reply-To: <D9O8WJ0RDNIA.4JYLWLYLBC2A@buenzli.dev>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 May 2025 10:37:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
+X-Gm-Features: ATxdqUGu6okHMU6FbF2k6yuoAMnbFwZyqbdFtsRZc_x_x-_V0GDUKq40RCC19ns
+Message-ID: <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] rust: device: Introduce PropertyGuard
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, Saravana Kannan <saravanak@google.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 5, 2025 at 8:02=E2=80=AFAM Remo Senekowitsch <remo@buenzli.dev>=
+ wrote:
+>
+> On Mon May 5, 2025 at 7:14 AM CEST, Dirk Behme wrote:
+> > On 04/05/2025 19:31, Remo Senekowitsch wrote:
+> >> This abstraction is a way to force users to specify whether a property
+> >> is supposed to be required or not. This allows us to move error
+> >> logging of missing required properties into core, preventing a lot of
+> >> boilerplate in drivers.
+> >>
+> >> It will be used by upcoming methods for reading device properties.
+> >>
+> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> >> ---
+> >>  rust/kernel/device/property.rs | 59 +++++++++++++++++++++++++++++++++=
++
+> >>  1 file changed, 59 insertions(+)
+> >>
+> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/prope=
+rty.rs
+> >> index 6ccc7947f9c31..59c61e2493831 100644
+> >> --- a/rust/kernel/device/property.rs
+> >> +++ b/rust/kernel/device/property.rs
+> >> @@ -123,3 +123,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+> >>      }
+> >>  }
+> >> +
+> >> +/// A helper for reading device properties.
+> >> +///
+> >> +/// Use [`Self::required_by`] if a missing property is considered a b=
+ug and
+> >> +/// [`Self::optional`] otherwise.
+> >> +///
+> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provid=
+ed.
+> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
+> >> +    /// The result of reading the property.
+> >> +    inner: Result<T>,
+> >> +    /// The fwnode of the property, used for logging in the "required=
+" case.
+> >> +    fwnode: &'fwnode FwNode,
+> >> +    /// The name of the property, used for logging in the "required" =
+case.
+> >> +    name: &'name CStr,
+> >> +}
+> >> +
+> >> +impl<T> PropertyGuard<'_, '_, T> {
+> >> +    /// Access the property, indicating it is required.
+> >> +    ///
+> >> +    /// If the property is not present, the error is automatically lo=
+gged. If a
+> >> +    /// missing property is not an error, use [`Self::optional`] inst=
+ead. The
+> >> +    /// device is required to associate the log with it.
+> >> +    pub fn required_by(self, dev: &super::Device) -> Result<T> {
+> >> +        if self.inner.is_err() {
+> >> +            dev_err!(
+> >> +                dev,
+> >> +                "{}: property '{}' is missing\n",
+> >> +                self.fwnode.display_path(),
+> >> +                self.name
+> >> +            );
+> >> +        }
+> >> +        self.inner
+> >> +    }
+> >
+> > Thinking about the .required_by(dev) I wonder if there will be cases
+> > where we do *not* have a device? I.e. where we really have a fwnode,
+> > only. And therefore can't pass a device. If we have such cases do we
+> > need to be able to pass e.g. Option(dev) and switch back to pr_err() in
+> > case of None?
+>
+> In that case, bringing back the previous .required() method seems
+> reasonable to me. But only if we definitely know such cases exist.
 
+They definitely exist. Any property in a child node of the device's
+node when the child itself is not another device for example.
 
-On 2025/5/5 13:00, Greg KH wrote:
-> On Mon, May 05, 2025 at 12:04:15AM +0800, Hans Zhang wrote:
->> Fix kernel-doc warning by documenting the @desc parameter:
->>
->> drivers/usb/host/xhci.c:1369: warning: Function parameter or struct member
->> 'desc' not described in 'xhci_get_endpoint_index'
->>
->> Add detailed description of the @desc parameter and clarify the indexing
->> logic for control endpoints vs other types. This brings the documentation
->> in line with kernel-doc requirements while maintaining technical accuracy.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
-> 
-> What commit id does this fix?
-> 
+> > From the beginning of our discussion I think to remember that the C API
+> > has both the fwnode_property_*() and device_property_*() because there
+> > are use cases for the fwnode_property_*() API where is no device?
 
-Hi Greg,
+Correct.
 
-export ARCH=arm64
-make defconfig
-make Image W=1 -j16
+> I'm not sure what you're referring to, the closest thing I can think of
+> is this comment by Rob [1] where he mentions the device_property_*()
+> functions only exist in C for a minimal convenience gain and we may not
+> want to keep that in Rust.
 
-./aarch64-none-linux-gnu-gcc -v
-Using built-in specs.
-COLLECT_GCC=./aarch64-none-linux-gnu-gcc
-COLLECT_LTO_WRAPPER=/media/zhb/hans/code/cix_linux_gcc/arm-gnu-toolchain-12.3.rel1-x86_64-aarch64-none-linux-gnu/bin/../libexec/gcc/aarch64-none-linux-gnu/12.3.1/lto-wrapper
-Target: aarch64-none-linux-gnu
-Configured with: 
-/data/jenkins/workspace/GNU-toolchain/arm-12/src/gcc/configure 
---target=aarch64-none-linux-gnu --prefix= 
---with-sysroot=/aarch64-none-linux-gnu/libc 
---with-build-sysroot=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/install//aarch64-none-linux-gnu/libc 
---with-bugurl=https://bugs.linaro.org/ --enable-gnu-indirect-function 
---enable-shared --disable-libssp --disable-libmudflap 
---enable-checking=release --enable-languages=c,c++,fortran 
---with-gmp=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools 
---with-mpfr=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools 
---with-mpc=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools 
---with-isl=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools 
---enable-fix-cortex-a53-843419 --with-pkgversion='Arm GNU Toolchain 
-12.3.Rel1 (Build arm-12.35)'
-Thread model: posix
-Supported LTO compression algorithms: zlib
-gcc version 12.3.1 20230626 (Arm GNU Toolchain 12.3.Rel1 (Build arm-12.35))
+The point there was if there's not the same convenience with Rust,
+then we shouldn't keep the API.
 
+I think this came up previously, but I don't think it matters whether
+we print the device name or fwnode path. If you have either one, you
+can figure out both the driver and node. Arguably the fwnode path is
+more useful because that's likely where the error is.
 
-I'm debugging the problem of pci and modified the iinclude/linux/pci.h 
-file. If the above compilation method is adopted, the following warnings 
-will occur. Use my patch and the warning disappears.
-
-Compilation warning:
-drivers/usb/host/xhci.c:1370: warning: Function parameter or struct 
-member 'desc' not described in 'xhci_get_endpoint_index'
-
-
-The reproduction method can also be modified by modifying the 
-drivers/usb/host/xhci.c file and then compiling, and the above warning 
-will appear.
-
-Please review whether this needs to be fixed. If not, please ignore this 
-patch.
-
-
-Best regards,
-Hans
-
+Rob
