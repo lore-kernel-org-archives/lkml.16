@@ -1,230 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991C536BFE6;
-	Mon,  5 May 2025 22:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C9C2BD5B4;
+	Mon,  5 May 2025 22:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485195; cv=none; b=dgI6DhO4pPJ/DzZE8767XA+S8CAKkXQoo4YzpSg9w6DTa7HequYC1gSuE/1b/BVtWErsGdzj48GkblJeazrC2gfzbwK5Wz6mheNyQWoaQd7IKdfr9JPlD4zsz7FXm1xGjnSYIlik0NPKmt3uT68SDURMywajcRHv0JY7INlIWmw=
+	t=1746485203; cv=none; b=od9/JRjxZte4oCU7DlIQZ/z7a5r4qYnOHBIsWuuLNcxKplsGboWoUYrR3KaZqd05WWnjBOEZtnhT6MGho/0lho+Gg9jBRWHE2hkCxWhNk7SqVC65tPdA3VZuKYzGPbtSItQlVUtNsrQENYt1J2AlZ00ri1gP/VREubmgt0pwQfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485195; c=relaxed/simple;
-	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s7AJgXPhjMh7mq9ho7RpBx5xGthF4mFPLl8aohrI3EA8mBla16D+jw2VuYn94Mv3/9Xuhtr0myxcOp/UD1jkFTWSnLGww4ujPMRZh5WI6cwy+319zpSa1Yb3AGJXs3Nd5WnDZlCMz8VmsKab8QQpZn9TDYRWwnP84SFa1SBB08M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6kLc9UB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485203; c=relaxed/simple;
+	bh=C8BUscfLIIEUfvzsO14+qAva3/lpPpQTzT0cD2qt8sc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=bDuMpfBmNiCmf7MDN8mLj5u/UUuvsxDT+260C6uMfuNgqyphukIwNHm1D336rJ4ogax4kO/uUF/xWlHQqXIHyWE6KsT/0wF+kLQjkkM0XKk0X2OXU3Lmpc2gbMmq/7UKSKiFtQ3GuNdgbstzPMF67VEZU9wAcXmyKENSnu+v+MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4oxRSGS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6kLc9UB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB2BC4CEE4;
-	Mon,  5 May 2025 22:46:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4oxRSGS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36161C4CEEE;
+	Mon,  5 May 2025 22:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485194;
-	bh=dax5wqEKuM333ZcfbQ21Tr60WY5WK+s4KXT4IfgTIks=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j6kLc9UB6Rw+HTpKzJxzs5GULAbvEaeI6X4oJLQmFuvHuBWWvr9LuQjpJ9KrV3aXY
-	 fg+O4GiXnVCpL/1T7kM4fFM4thnI7vGCwwv6b4HGnJ16R+uvHAkgElXm6/o6vsO1It
-	 aXo8DeTfQ3lUvMbY9au7/QsfMvSv5wwAjjltoCH5VXDwZ4qfFBTJ+eFx4osu9tEB+K
-	 DSugQPkTJRjpX6iQqosqoj1qm8Y7Z4CNeMTGNouwWBIp7JFRC6zfkMwy1uTFOjgGsC
-	 ugiVnx4GFLkr3P8CqE6gcTBTgAOK3Zl0FQdVycKDTGoRORxbWyyuszmXL0wd8CWN/q
-	 ZEdbZZQPctoUA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Artur Weber <aweber.kernel@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	florian.fainelli@broadcom.com,
-	rjui@broadcom.com,
-	sbranden@broadcom.com,
-	dan.carpenter@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 204/486] pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
-Date: Mon,  5 May 2025 18:34:40 -0400
-Message-Id: <20250505223922.2682012-204-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+	s=k20201202; t=1746485201;
+	bh=C8BUscfLIIEUfvzsO14+qAva3/lpPpQTzT0cD2qt8sc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=a4oxRSGSlExtFAtplZWiA+qIDsvJOMZi8sLWjVYd05dpqAuINhxc1xH3A9IEvmXX/
+	 Bz9vJ22KduqkULFLZwQHrgoLR8HtIfZmdxyT9FX5ja5MfB7JFEqAhYR50AAOv3/8dg
+	 0mhikYnCbomldcIMgwlYLP1x3ON2xR1Hq+pEczHrGvoDCOAdt8oRXpkmv3badwJrek
+	 3df1R/1rrRJfOZatJOeLE4XlSQWttRk8vi/OXFNMK+U7unnFYixOXp8TNJwg4pz1QC
+	 jP7AJVaA3STliPfLtFhlmdiT5Jum6tJTDL/vGEZbYe5P1BuCzi5TYjr+LAgWJ8PZCB
+	 WgBOLCfGBs/ZQ==
+From: Mark Brown <broonie@kernel.org>
+To: alsa-devel@alsa-project.org, 
+ Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: Mario.Limonciello@amd.com, venkataprasad.potturu@amd.com, 
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com, 
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
+ sound-open-firmware@alsa-project.org, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
+References: <20250502154445.3008598-1-Vijendar.Mukunda@amd.com>
+Subject: Re: [PATCH 0/9] ASoC: SOF: amd: add soundwire IO support for
+ ACP7.0 & ACP7.1 platforms
+Message-Id: <174648519686.4113425.12105826328467218171.b4-ty@kernel.org>
+Date: Tue, 06 May 2025 07:46:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-From: Artur Weber <aweber.kernel@gmail.com>
+On Fri, 02 May 2025 21:12:39 +0530, Vijendar Mukunda wrote:
+> This patch series contains
+> - ACP sof stack improvements
+> - Add support for ACP7.1 platform.
+> - Soundwire IO support for ACP7.0 & ACP7.1 platforms
+> 
+> Link: https://github.com/thesofproject/linux/pull/5392
+> Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> 
+> [...]
 
-[ Upstream commit 07b5a2a13f4704c5eae3be7277ec54ffdba45f72 ]
+Applied to
 
-Replace uses of bare "unsigned" with "unsigned int" to fix checkpatch
-warnings. No functional change.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-Link: https://lore.kernel.org/20250303-bcm21664-pinctrl-v3-2-5f8b80e4ab51@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 44 +++++++++++++-------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+Thanks!
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-index cf6efa9c0364a..a039b490cdb8e 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-@@ -72,7 +72,7 @@ static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
- struct bcm281xx_pin_function {
- 	const char *name;
- 	const char * const *groups;
--	const unsigned ngroups;
-+	const unsigned int ngroups;
- };
- 
- /*
-@@ -84,10 +84,10 @@ struct bcm281xx_pinctrl_data {
- 
- 	/* List of all pins */
- 	const struct pinctrl_pin_desc *pins;
--	const unsigned npins;
-+	const unsigned int npins;
- 
- 	const struct bcm281xx_pin_function *functions;
--	const unsigned nfunctions;
-+	const unsigned int nfunctions;
- 
- 	struct regmap *regmap;
- };
-@@ -941,7 +941,7 @@ static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
- };
- 
- static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
--						  unsigned pin)
-+						  unsigned int pin)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -985,7 +985,7 @@ static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
- }
- 
- static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
--						   unsigned group)
-+						   unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -993,9 +993,9 @@ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
--					   unsigned group,
-+					   unsigned int group,
- 					   const unsigned **pins,
--					   unsigned *num_pins)
-+					   unsigned int *num_pins)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1007,7 +1007,7 @@ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 
- static void bcm281xx_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
- 					  struct seq_file *s,
--					  unsigned offset)
-+					  unsigned int offset)
- {
- 	seq_printf(s, " %s", dev_name(pctldev->dev));
- }
-@@ -1029,7 +1029,7 @@ static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
- }
- 
- static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
--						 unsigned function)
-+						 unsigned int function)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1037,9 +1037,9 @@ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
--					   unsigned function,
-+					   unsigned int function,
- 					   const char * const **groups,
--					   unsigned * const num_groups)
-+					   unsigned int * const num_groups)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1050,8 +1050,8 @@ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
--			       unsigned function,
--			       unsigned group)
-+			       unsigned int function,
-+			       unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	const struct bcm281xx_pin_function *f = &pdata->functions[function];
-@@ -1082,7 +1082,7 @@ static const struct pinmux_ops bcm281xx_pinctrl_pinmux_ops = {
- };
- 
- static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *config)
- {
- 	return -ENOTSUPP;
-@@ -1091,9 +1091,9 @@ static int bcm281xx_pinctrl_pin_config_get(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1207,9 +1207,9 @@ static const u16 bcm281xx_pullup_map[] = {
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
--				   unsigned pin,
-+				   unsigned int pin,
- 				   unsigned long *configs,
--				   unsigned num_configs,
-+				   unsigned int num_configs,
- 				   u32 *val,
- 				   u32 *mask)
- {
-@@ -1277,9 +1277,9 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
- 
- /* Goes through the configs and update register val/mask */
- static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
--				    unsigned pin,
-+				    unsigned int pin,
- 				    unsigned long *configs,
--				    unsigned num_configs,
-+				    unsigned int num_configs,
- 				    u32 *val,
- 				    u32 *mask)
- {
-@@ -1321,9 +1321,9 @@ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
- }
- 
- static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
--					   unsigned pin,
-+					   unsigned int pin,
- 					   unsigned long *configs,
--					   unsigned num_configs)
-+					   unsigned int num_configs)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 	enum bcm281xx_pin_type pin_type;
--- 
-2.39.5
+[1/9] ASoC: SOF: amd: remove else condition in resume sequence
+      commit: e46da64f333ede33adc3a1903821a73ed6c018a6
+[2/9] ASoC: SOF: amd: add missing acp descriptor field
+      commit: 7c2bad7b95db5b4b978853cd4dd042ae3ec83e63
+[3/9] ASoC: SOF: amd: add ACP7.1 platform support
+      commit: 451bd0e7b91c83f817b741557c9be0f133d3836d
+[4/9] ASoC: SOF: amd: update soundwire specific acp descriptor fields
+      commit: 8cc69ecbf195aaf90e8bd5f364ed10ec0bdecb5f
+[5/9] ASoC: SOF: amd: enable ACP_PME_EN register for ACP7.0 & ACP7.1 platforms
+      commit: cc489cced17b2e32170ee87a3b64aaa3c7c6fddb
+[6/9] ASoC: SOF: amd: refactor acp reset sequence
+      commit: 169c5e444bb9cd4ae770f54157a04fdd8569508a
+[7/9] ASoC: SOF: amd: enable soundwire host wake irq mask
+      commit: a536f3c51edb63900b3340978d38da3aabc1fb2f
+[8/9] ASoC: SOF: amd: add soundwire wake irq handling
+      commit: 1f41bf67bfe3721a4d4d36695302801cf70b5a70
+[9/9] ASoC: SOF: amd: add build support for soundwire
+      commit: e68074c63fded9468c513f65734ffb4c80dc2a6d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
