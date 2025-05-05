@@ -1,144 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3368313E41A;
-	Mon,  5 May 2025 09:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7711F5413
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746436949; cv=none; b=jM5MMyug4vWeMMB1LUAxsizNuNqh5r22ji5UedeW+k/OL8Bor74tvrH4FY2SIea3nNcgRVHbswxDxybCkKhFijoMFxNulOR8/x/gMABWVA+ma23le/qj2+Z02elE+ThXzgddSI3LAO8vfxGfCL7zWAGI7Bj3vb0sUSex2Orsns8=
+	t=1746436988; cv=none; b=ZBLe76e6I68Ydjp0TM0WZ3a/fccUTy9FJTu4fsG1pHJ9YqbH8AkotiuvY+w4pLqAyg/PvvkPQkIxa9XEkqm6rpSLBpI/dcSpaj2+2Jyy7vTjKkES2g4ExtXvsVA4qgodTG+VI5oltciYeOJXkJ+hiBZ+XcIGMvklUXzlfmya/uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746436949; c=relaxed/simple;
-	bh=4PPmKt8IuhKlMpBTvl8losUbw3pKFTJ9SWl59nts+x0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AJxTuURS4yJsf/By6azzwKd+A2VbohUF5iLHWumwEHCeeXH0ZvCXxWy1khVQikMVTKfjxH4JRiPvONMrv8ETypcI9VzJeb0fb4izMA0wZhXWuvMs4wjtmaj/7wslW/GZuLy/ezauOJKZKsdMH4v2xEL20gSxw4YAkFowWK8jSUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=il3ouxPM; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746436988; c=relaxed/simple;
+	bh=VOdVgXxRjUc9ZrK+YEPI5gJ5KQN0O3vZhuF2gL43jZY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GygBJNXovH3zpbwCstaeKRXOCRG9tbSNyN/XFvMiQamwuBtptlrmL3SHmS9nWI8XdhpIr8lwZVZAdOkEhbvQfnBGHp01MctK1rUMXTD/6b2Mp+k4NJstH61c2GQ8ILOWhb/Mul9QU0fNi0kCXJw3Qv5L+AbnwieM61ECy8xAMi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gbAg5WgB; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="il3ouxPM"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NVdZV014482;
-	Mon, 5 May 2025 09:22:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lXNQXYb5NPbFeM8ThHXJaleH2ashWd2spg6TCDzP+vw=; b=il3ouxPML3OgCM53
-	WdBbupHxmavG7WvLfC72uSS5BPDLtN/qoDHpuyi2W7DrKoMnLVEh/MgqgY4GJX/5
-	MZbDXMuGC6DkJhOHYxcB0e5sNADWjVDTG1uN+cxe8bXkKt+Hwg0LQPRhPbp3rca0
-	ShcnlSncEt5Z+aeeOkIej1DqtTwXKA9W4+p4d4tayZRm+wdWiwGs/XPRdNnapiBm
-	TT/LR0FzzEr2wkz4HBUUAcm2vcqpwibOLGogBDPKKrgI7JAj/JPjWMOV8QxSH565
-	iZDe6F/yePKphpqzyxW2fwAtwLOZbNSmHTslIGkt3M0El/drpFCFDtnQ6rrtxa7u
-	xWaPlQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9nkur26-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 09:22:01 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5459M0kk019240
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 May 2025 09:22:00 GMT
-Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 02:21:53 -0700
-Message-ID: <c486415a-1c08-4089-b837-15671d5922f3@quicinc.com>
-Date: Mon, 5 May 2025 14:51:50 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gbAg5WgB"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so22128655e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746436985; x=1747041785; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vYhLhqsz0QgAIGtWeBREADtT5U6NplMqh1ZF+EYzXS8=;
+        b=gbAg5WgBMNtVDuWUCSbgxCGk0zPekgmYIDAzLlk714isQeDFzNfISmckcMqh37tL5r
+         45Tk/+7eqw0EAez/ZCwt4nDX65ih6Ttj/1hMRJBNyrPqQJMtBWFC5N+Tq3/C5rf+133S
+         NGnuEJX6Ah/Chk/ZN56ICkltHywauAsB3IEg+jXBZFLsbOz1ppCN5XRJ5JXsEN/bh30a
+         kj7+V/G9ukGoRfYO0GTRsYKZyls5h+3zy1rUb3qft7J1hb2S90Kzdg4MBgjeqyho6pX2
+         UfG4TGZvtk1KOkojwTQdgXtI9lgvDukf4zJKnkRMh00nQ98qIZEIiizOKLfZZ9Kn/I7t
+         u2sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746436985; x=1747041785;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vYhLhqsz0QgAIGtWeBREADtT5U6NplMqh1ZF+EYzXS8=;
+        b=VfYxmCnbaLWNzr+FcIyISZpNZaeCPyFuhUofTX6ehaZ69xNrH2T/B65sLsrp2L0dXs
+         JTBdjnW/r5HBKVtsRhVhzi82xvlRbF4SdgDTacM3wQllaNkZteBPScPd5rBrIuYJHjMk
+         maXNZIdubkbvuZDiwasqp7OvoTV1Nd1lj8yokpSY+07/2GrIvi7KhG2b2Ofj3gQyouGp
+         nDXM+/7W4TDlISyh9tRINYbDOgbEOWBRP6Y2cMj81W/lYTdhvZtCsMb5iywv7+tCrQjc
+         3vMyUHzJYo9tkPZLve81nVfq9mYboFQC3Ji43r05dAU0p77Iq8p+OfnzP1dQOwvujJoQ
+         IcoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSQk39csXLSx1OlCqmbBwM0aALhxjqAq/2/TZYZq4WtTPElZyfMtSob6o32IYikWNRDSmH2oEci7oTPDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdyRalqvB8Vz1k4UTJPVi4D0MCJ42X3gQmrPrlfRQ459KxQ0UD
+	xV+sdunHxL9Rxp+qSv2P8csMiQAfaitaExvMIc/al0jK7KHhEVZnAS9cib9sA9Ah+eQUwjmbCQr
+	DZUrEBktLLg/48g==
+X-Google-Smtp-Source: AGHT+IGKmUkyRXUGCux/8W5tzNoSQGrev54dx73LRy4mpzycYZ3R0Lrs7YdSqxCw934omv5QZx/C9TtcgUJDmVo=
+X-Received: from wmbbi5.prod.google.com ([2002:a05:600c:3d85:b0:440:5e10:a5a6])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:a41:b0:43d:94:cfe6 with SMTP id 5b1f17b1804b1-441c48dbdaemr51294055e9.16.1746436985561;
+ Mon, 05 May 2025 02:23:05 -0700 (PDT)
+Date: Mon, 5 May 2025 09:23:03 +0000
+In-Reply-To: <20250502140237.1659624-3-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/11] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <robdclark@gmail.com>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <sean@poorly.run>, <marijn.suijten@somainline.org>,
-        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
-        <krzk+dt@kernel.org>, <konradybcio@kernel.org>, <conor+dt@kernel.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
-        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
-References: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
- <20250424062431.2040692-8-quic_amakhija@quicinc.com>
- <11e76323-db6b-428b-816f-e96fc9523fe5@oss.qualcomm.com>
-Content-Language: en-US
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <11e76323-db6b-428b-816f-e96fc9523fe5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA4OCBTYWx0ZWRfX7bTr2sAFs/qZ
- fRrcuR9T2+BdlU1d8bAio25xNpQMNE+VmgeC3qSXal9nIR0TdYl6sQJGwXz1DR5jmbBaGLI3Ovc
- HbI83GCK2ZvKj5RnPwnBpRyYpIX/5+6PuKGJ+8zepCC/XM7qXGXOW0kopW6Eeh6B/8gcX3e/KWD
- gWh3y7WCAGB0ZrfdHB0YngyCmbtSO9uPDL0vM2p71bpncKvcT3zPvPXLVCX4Mtnl8XsA3VXTgls
- yT5RZ/PhBY9kfXqUbvQ1lOsScQmph2Pvt9abILswNMQRMSADOv1A1AbELXUI8BNaeteMbeFztVL
- Ipi2WPWd3zjbFev+FfdIfoF76A8Ozm6qWtO3MQDsThAv2q//msAucXPP4WGj5Pg5PZjy36sV/hX
- skYkmcnazOXJxJnTwILp1SIJ277JMSUGdJ/5cNocV6aLefk+RL/6ICwUmPT1rXMlYP9GQSpa
-X-Proofpoint-GUID: 2nQCdatEFbyePhqHO_QO4GIyi-qr0a6F
-X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=68188339 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=WlFH9gXdXrC4dCi8yUwA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 2nQCdatEFbyePhqHO_QO4GIyi-qr0a6F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 adultscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 clxscore=1015 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050088
+Mime-Version: 1.0
+References: <20250502140237.1659624-1-ojeda@kernel.org> <20250502140237.1659624-3-ojeda@kernel.org>
+Message-ID: <aBiDd43KSHJJqpge@google.com>
+Subject: Re: [PATCH 2/5] rust: clean Rust 1.87.0's `clippy::ptr_eq` lints
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 4/26/2025 3:42 PM, Konrad Dybcio wrote:
-> On 4/24/25 8:24 AM, Ayushi Makhija wrote:
->> Add anx7625 DSI to DP bridge device nodes.
->>
->> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 181 +++++++++++++++++++++
->>  1 file changed, 181 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 175f8b1e3b2d..b8851faec271 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -28,6 +28,13 @@ chosen {
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> +	vph_pwr: vph-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vph_pwr";
+On Fri, May 02, 2025 at 04:02:34PM +0200, Miguel Ojeda wrote:
+> Starting with Rust 1.87.0 (expected 2025-05-15) [1], Clippy may expand
+> the `ptr_eq` lint, e.g.:
 > 
-> Please provide a reference voltage for this one
-
-Hi Konard,
-
-Thanks, for the review.
-
-Please ignore the previous comment, will update the below reference voltage in next patchset.
-
-+ regulator-min-microvolt = <12000000>;
-+ regulator-max-microvolt = <12000000>;
-
-Thanks,
-Ayushi
-
-> otherwise
+>     error: use `core::ptr::eq` when comparing raw pointers
+>        --> rust/kernel/list.rs:438:12
+>         |
+>     438 |         if self.first == item {
+>         |            ^^^^^^^^^^^^^^^^^^ help: try: `core::ptr::eq(self.first, item)`
+>         |
+>         = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_eq
+>         = note: `-D clippy::ptr-eq` implied by `-D warnings`
+>         = help: to override `-D warnings` add `#[allow(clippy::ptr_eq)]`
 > 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Thus clean the few cases we have.
 > 
-> Konrad
+> This patch may not be actually needed by the time Rust 1.87.0 releases
+> since a PR to relax the lint has been beta nominated [2] due to reports
+> of being too eager (at least by default) [3].
+> 
+> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned in older LTSs).
+> Link: https://github.com/rust-lang/rust-clippy/pull/14339 [1]
+> Link: https://github.com/rust-lang/rust-clippy/pull/14526 [2]
+> Link: https://github.com/rust-lang/rust-clippy/issues/14525 [3]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
+For the list file, it might be nice to import core::ptr instead of using
+the full path each time. Or maybe just disable this lint.
+
+Alice
