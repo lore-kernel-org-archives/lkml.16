@@ -1,164 +1,126 @@
-Received: from mail.tkos.co.il (wiki.tkos.co.il [84.110.109.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BE615AF6;
-	Mon,  5 May 2025 16:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4D315AF6
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460994; cv=none; b=ghWBeRqEqPDEhRTKfZghhRZKtAgsF4qgZld3aRdt79HH7A+DyPYyeNbOKG7b3JI/L4b1WYSsvXSfbNJdzFl1WxZ4auej40mUiCj1G18j7lF+t00/E1o4T/lySZmbguJ/TDD4y/WKV7ZpNdGl7KcHxcUsqWbs6ejccy59scGlADI=
+	t=1746461011; cv=none; b=uh6PST2kKo+hx40lQjDcsCcwFHIKdQbU2qTfrkbluoEzrZr4vNIadjw8mlTzBGYmQ0Qnig1V97GPmyzX/7aHiK/mIlhIxXMJC1AwKs6DCsgrL0AyftTiLkXAyUR2FizLiUEgviLM5MUi/QVWf2RZSg05m820/GH5TJJIqr4LoLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460994; c=relaxed/simple;
-	bh=JShUoHNOxcFtMymlCDbXQT4jf0W+lgjQzqYxCFWCtdo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=O2c3ohwGke3F30CvgBOOw9Ax32Z3kPvCL8Fnm6cIwkoeCvbkez/LAxvFUovyQ2WuhfF6jm81rULHRJKA/0MML4RrUXF31TvudD3gCRnWk+BtOEbQYo2j1Nw2yzQ3qo1Nflslzkoskxz8mE4WZt2jW5v7GjaQVndlx4RvT3Gvmjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=ORUpY0pX; arc=none smtp.client-ip=84.110.109.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
+	s=arc-20240116; t=1746461011; c=relaxed/simple;
+	bh=UftVvy8RC4icpI3AhefASAQZ/iEzxTAxJn3EY71RiK4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qhlp+zwo+Um6Gbgd5XNV/hlQ9wnBRKpw8SbqWD69Xotyz8bsyn8AabeC61gjklrSTySEFPuEmJowXcuP0ppZuif+oF0PXutjdcZjZ7yjJe++8B+MqrXPb33ConsvOaAxoURWzDjYBNWOruyjvmhTBDKVQCcV7cxzNTvqXDvIGxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ERGyzyzw; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="ORUpY0pX"
-Received: from localhost (unknown [10.0.8.2])
-	by mail.tkos.co.il (Postfix) with ESMTP id 4E544440F5F;
-	Mon,  5 May 2025 18:57:15 +0300 (IDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1746460635;
-	bh=JShUoHNOxcFtMymlCDbXQT4jf0W+lgjQzqYxCFWCtdo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ORUpY0pXkoPMM3sK8BZwYsIzlsNX4uinKRBLTP0+ztPwc/savUZQbYomplJ73ST7H
-	 IC2/HweQzUlIOCO7ruYHaeuA957fPRWdRiTIJQMK5ye42lVqWbVptq1VFUQz45sUYc
-	 R19iKlNYQN/DGJjk5Sa7EgQk8d8ghtbHJ1kmDHYZt7LtX9tEC/hO/+04lB9SBOHthY
-	 lnLqDB0V05YnVrO3QjB8Df6qyJ+JP5QYUhHNewzMgFHhztAWPG0z3elAQneVRHp7c1
-	 B5JwQrAQ0TGH5j8pQS3N7AzuldtQPksuU+M1t8umBmXRgLrg0SJJTZe5Sg82SWYM/j
-	 NhAOHS8MHPC+g==
-From: Baruch Siach <baruch@tkos.co.il>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,  Krzysztof Kozlowski
- <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
-  linux-kernel@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- cnxt,cx92755-ic to DT schema
-In-Reply-To: <20250505144644.1288617-1-robh@kernel.org> (Rob Herring's message
-	of "Mon, 5 May 2025 09:46:43 -0500")
-References: <20250505144644.1288617-1-robh@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Mon, 05 May 2025 18:57:22 +0300
-Message-ID: <87v7qfyrrx.fsf@tarshish>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ERGyzyzw"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso6643865a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746461007; x=1747065807; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=h01CWeWtSOhKaIqy3G/6IN778pW2sxnxWWRyeifkMkg=;
+        b=ERGyzyzwL3A//wQnEWkf4/5Cdk37LQYWlrosDP8jY7wfeXg629HTQT182qdQql4QWI
+         ZtvHMnNhCeT8cFjYXMfNBcsq/8gm9dJ8VcEvGA3fHvArmJ2TDmatIEFgIXDf3Eu/wOTL
+         AQSwlHeQt3REBaMb5hvVUdwyyATclUhPY7eVw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746461007; x=1747065807;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h01CWeWtSOhKaIqy3G/6IN778pW2sxnxWWRyeifkMkg=;
+        b=gsHHLE8xZXPaDAhr7re+m4CUT5c/Q1mMndtzZOT2YOk2EJB267/8oOYNUKp2UmkkHS
+         HW6j3E6fLSOdedRViQ/PE4wY35yAvvYHrC2MSjK5EWKtMu05hVYEdwb30spX2W2ByMiT
+         ZyOcA8caRPuWD+e+BrdPzuSH//jeZV5G3C+n9WR8fjrbE2VX66wYA6ENKEmlvHYEq/pi
+         FYUgi+6toyBTQJucT+d7Tw+gN1GRu0GaO41dd3N1FL8NxeJXAt6WHNTsRoIXY1Wqw0i9
+         CE0ZSle6+kFJx4FNGaFHntHSfY0m7tN7mmBjSnLAdBYba/2JOviEwUPcd7E6+xjiUU7w
+         EN7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXLRO57Eh5Mg/l9im2Z6YoYbYo/ATkeIvQyfT3QA3qnF93omxqpQ4u/beoxzYBrvSYCsxJscgJaS6gmYAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGsvaoWk0K27es4wMkXhYfINgRtBUVUA/9+xOK6DDjy9QzFfGG
+	FbYu9+M7cjU/AEEZLdw7bXbHOIbW/votoabIGSVW6TzXKLwV2NHwWM4G/i+UU80+4HNv9vCbraS
+	oLCE=
+X-Gm-Gg: ASbGnctwSg1fuCTMSe1soh19P63RVy4RImyFUBMdZRfQZv2YEWGM8Rj26wzg3gvEcwF
+	ShMgZtJeWvq1e2ilKk9BeB7ZVd5q+gpWZRW6Aor21sLePaEI5AJeUld1cmLngxma5RxRXyEG+RU
+	YaU1PpkAR5s2lWZzX0FkxyP0sJXQlikx7B3/nD4kyZXi4ZqsUf9+wAyfchBVY6uI2BAnNjdIj9+
+	UTN0/DakIGG2gc+DPg3zR92bq6O335cM/FkzoCqwN4BOkELVbs2enXufimyT7Ydz6FEqcKDvd1f
+	JTiGKiGyp54MCbB3hZEZNrU0eTxEZh7iZGxldxqblRRbnkCfPGk4DWpMF5gd+6f+T2paEYCXxG3
+	koRVwuc0ePtmptnBEeES/yf9vgg==
+X-Google-Smtp-Source: AGHT+IFuCoBDt2QgBc4AjHYYSeGg7K2lDnt/RWgn5zs8oNa6lBaU6RgbXRuxFJp0AZ04nzunYpzx6Q==
+X-Received: by 2002:a17:907:7f8d:b0:aca:d6fd:39a with SMTP id a640c23a62f3a-ad1a4b1f68cmr679798866b.51.1746461006624;
+        Mon, 05 May 2025 09:03:26 -0700 (PDT)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a7a0csm512393566b.72.2025.05.05.09.03.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 09:03:26 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso6743764a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:03:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXzts6aYko8TG20SHYIZcZ+cTl0CzA//M+hF59iOLU3ZnqK9ZxyaBvDh6+hEy0HYt5gmBPlTSBDqU5BY7A=@vger.kernel.org
+X-Received: by 2002:a05:6402:90a:b0:5f4:d60f:93f0 with SMTP id
+ 4fb4d7f45d1cf-5fab05e0b12mr6165955a12.31.1746461005714; Mon, 05 May 2025
+ 09:03:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250425003342.GA795313@ax162> <CAHk-=whfT3A8K2Z+WbieGG5Hhc9QAT5s3qsbB19O0Roj2G5tfA@mail.gmail.com>
+ <20250425021138.GA3800209@ax162> <CAHk-=wjDV3nOK34rbU8bdo6OjM=KYoCN92=1eVEVFu=FQr8TNA@mail.gmail.com>
+ <alpine.DEB.2.21.2505051543470.31828@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2505051543470.31828@angie.orcam.me.uk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 5 May 2025 09:03:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiQN=jqK9n-mUEAD1Q36t-6d589M_rAG568pLq2KysJ5w@mail.gmail.com>
+X-Gm-Features: ATxdqUF6pY-99F2WQNkeFTpXwDSx0anOhOWjLVNn7A_NmLH1XNT6o446qEa5uEM
+Message-ID: <CAHk-=wiQN=jqK9n-mUEAD1Q36t-6d589M_rAG568pLq2KysJ5w@mail.gmail.com>
+Subject: Re: Adding __popcountsi2 and __popcountdi2
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Rob,
-
-On Mon, May 05 2025, Rob Herring (Arm) wrote:
-
-> Convert the Conexant Digicolor interrupt controller binding to schema
-> format. It's a straight-forward conversion of the typical interrupt
-> controller.
+On Mon, 5 May 2025 at 08:05, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
 >
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-
-Acked-by: Baruch Siach <baruch@tkos.co.il>
-
-Thanks,
-baruch
-
-> ---
->  .../interrupt-controller/cnxt,cx92755-ic.yaml | 47 +++++++++++++++++++
->  .../interrupt-controller/digicolor-ic.txt     | 21 ---------
->  2 files changed, 47 insertions(+), 21 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
+> On Thu, 24 Apr 2025, Linus Torvalds wrote:
 >
-> diff --git
-> a/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
-> b/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
-> new file mode 100644
-> index 000000000000..3f016cf47812
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/cnxt,cx92755-ic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Conexant Digicolor Interrupt Controller
-> +
-> +maintainers:
-> +  - Baruch Siach <baruch@tkos.co.il>
-> +
-> +description: Conexant Digicolor Interrupt Controller
-> +
-> +properties:
-> +  compatible:
-> +    const: cnxt,cx92755-ic
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  syscon:
-> +    description: A phandle to the syscon node describing UC registers
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - syscon
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller@f0000040 {
-> +        compatible = "cnxt,cx92755-ic";
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        reg = <0xf0000040 0x40>;
-> +        syscon = <&uc_regs>;
-> +    };
-> diff --git
-> a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> deleted file mode 100644
-> index 42d41ec84c7b..000000000000
-> --- a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> +++ /dev/null
-> @@ -1,21 +0,0 @@
-> -Conexant Digicolor Interrupt Controller
-> -
-> -Required properties:
-> -
-> -- compatible : should be "cnxt,cx92755-ic"
-> -- reg : Specifies base physical address and size of the interrupt controller
-> -  registers (IC) area
-> -- interrupt-controller : Identifies the node as an interrupt controller
-> -- #interrupt-cells : Specifies the number of cells needed to encode an
-> -  interrupt source. The value shall be 1.
-> -- syscon: A phandle to the syscon node describing UC registers
-> -
-> -Example:
-> -
-> -	intc: interrupt-controller@f0000040 {
-> -		compatible = "cnxt,cx92755-ic";
-> -		interrupt-controller;
-> -		#interrupt-cells = <1>;
-> -		reg = <0xf0000040 0x40>;
-> -		syscon = <&uc_regs>;
-> -	};
+> > > I will test declaring __popcount{s,d}i2() as aliases of
+> > > __sw_hweight{32,64}() to see what effect that has but I figured that
+> > > calling the __arch_hweight variants was more correct because some
+> > > architectures (at least RISC-V and x86 when I looked) use alternatives
+> > > in that path to use hardware instructions and avoid the software path
+> > > altogether. While there would still be the overhead from the function
+> > > call, I figured not using the software fallback would at least soften
+> > > that blow.
+> >
+> > Once you have the overhead of a function call - and all the register
+> > games etc that involves, you're almost certainly better off with the
+> > simple unconditional bitwise games.
+>
+>  Unless optimising for size, which we do support.
 
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+I think you missed the part where I said
+
+ "But if you want to do this, put the damn thing as an alias on the code
+  that actually *does* the SW fallback in lib/hweight.c."
+
+IOW, what I object to is being *stupid* and doing *two* function
+calls. It sure as hell doesn't optimize for size.
+
+If you want to optimize for size, just call the existing SW fallback
+in lib/hweight.c.
+
+Don't call a *new* function that then calls the existing SW fallback
+as another fallback level.
+
+Because that just makes me go "Eww".
+
+Honestly, from a performance standpoint absolutely none of this
+matters. Unless you *inline* the bit scanning as a single instruction
+- which this is *NOT* about - you have already lost.
+
+So at that point, it's a question of just how pointless you want the code to be.
+
+             Linus
