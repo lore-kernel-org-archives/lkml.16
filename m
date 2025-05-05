@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458452D1911;
-	Mon,  5 May 2025 22:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7952D269F;
+	Mon,  5 May 2025 22:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485518; cv=none; b=C8isHF3JCupZy+6Pt7iu1sFSWfG9q5uWo0i40RMFURjGofnhfC6/E05jLzV2/pnySWMrqM0QFCcJadrSvpch+eMTf6fF4RTn//+arRlr5sGUXa9B2jVbm23O0ALa1DWmegSFlk0PW55fwIFn0fuwrPzyItGGm3p3GIkvTMpfnjM=
+	t=1746485529; cv=none; b=AuUKInSejGruTA6y8R5Qg/g/JbtLdZNybLP6pDQfv/kop1OGk1YivHb6iB1mOn5j3iBOA6AThG86FA7x/+ORS5N3JLiKzT6lP0NsG+eABXd9tPME3rMS9G1D/mhV72PVV59r63cOAY7VX/02Qo3R2hWV5moabB0Y0q+m+IYx+eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485518; c=relaxed/simple;
-	bh=TLICFF25+qv6NQ98MajtS61MRmvmcv3cv/0SCr3TxSw=;
+	s=arc-20240116; t=1746485529; c=relaxed/simple;
+	bh=HxDtch4IqgpHeb7qWXQwCYhi2AwwzgWpUVKxiGz9wIk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iZzKqweh2m4x5ci8zjqbzDru44UJrbVMJXvGDv+iPEXwc3uFuon1Wj7aEsJx1RmsN0FPyw57lP6SHi2OTqIftHJZlvyXpIfWDKDjFNF3By7y4T1M/c/I7WSKjl7G4WG84MoMjPpPGC3ebP/NxsqaaCvgKmVW69a8/y28VqFcvU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJ/HEIWu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PI88U4ZTxg9DEi3sG3e4MVCNE/zFtA/7ItHR8INs2fjUaQcKMz8Hq9kIVwbY+3KqZrBJqIRaTGy4nUK75u+1lMfCwTgg104+pm2484cyNvf4e9F0Ax5ZybfBpkYTee2ZELHumS35m0n/2HcvQYx1JXq/TixH3zlDgoafvWpSYyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJeyaZJC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJ/HEIWu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BBEC4CEEF;
-	Mon,  5 May 2025 22:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJeyaZJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E6FC4CEE4;
+	Mon,  5 May 2025 22:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485518;
-	bh=TLICFF25+qv6NQ98MajtS61MRmvmcv3cv/0SCr3TxSw=;
+	s=k20201202; t=1746485528;
+	bh=HxDtch4IqgpHeb7qWXQwCYhi2AwwzgWpUVKxiGz9wIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nJ/HEIWumNLLZthWkEpf22nkkko/m7XEKsTD/VzHncWnrpkyX7xLsWNUcw2u2E8V7
-	 J2WuQYGbJNAnrELb8t4ARiWgAVtK9a3U3L7TCZa798JZFWnYK9D9Bmr0K/MPV/4YJy
-	 /xLpr0IK9k4K/nR4Uxea/PFt6LC7SLYp+RZnT1hXvkjj6gObF82gHr2LhP9SZCq7Zj
-	 f6iFa5MKIHHdVTP2FztkbWRdo99DrlUmKv8Q4JjBf+/7UDnzlOqnNghAyYt38PGeyF
-	 mRJQogVvmf6vWwBz1Vud/gimUfJz13tFVVw4hzUPV1oUCVP4p+0WRPfpc/JP/qXbxD
-	 QCplTMeIMlORQ==
+	b=fJeyaZJCR2rZWjGTzH+q4E46Ew6Gv1o6P8MBW+nNGLiKfjpPmbko+9PxbodqZdW/r
+	 neFXX7602ITn5uxGGI27Ivz7ayKir40mI8wdJs2c7pBzgwEvyp5hOBN3yuisGX1/Y3
+	 VxBrcXxkb1qWhMxWtSe2vBjMZJBzP+83aRdJpIHUc7hUCu5FqBd3NkimrXjqqkYO7R
+	 SeUfm3mSf/IPw9A/t1tK9l9pIEqweam4kPPgUbv6olP7/hSszXIk7CgEWjxYx4YNuq
+	 GAsimPNDCeQTnjTiqp0nvh2GcYXA3XJWs+qf7W+ZRykGDAxzJt8tDtV7o5VKyFIbed
+	 7n88Qv2X1W53Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-	Vinod Koul <vkoul@kernel.org>,
+Cc: Eric Huang <jinhuieric.huang@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	yung-chuan.liao@linux.intel.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 357/486] soundwire: amd: change the soundwire wake enable/disable sequence
-Date: Mon,  5 May 2025 18:37:13 -0400
-Message-Id: <20250505223922.2682012-357-sashal@kernel.org>
+	Felix.Kuehling@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 361/486] drm/amdkfd: fix missing L2 cache info in topology
+Date: Mon,  5 May 2025 18:37:17 -0400
+Message-Id: <20250505223922.2682012-361-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,44 +56,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+From: Eric Huang <jinhuieric.huang@amd.com>
 
-[ Upstream commit dcc48a73eae7f791b1a6856ea1bcc4079282c88d ]
+[ Upstream commit 5ffd56822a7159917306d99f18fd15dfd7288f20 ]
 
-During runtime suspend scenario, SoundWire wake should be enabled and
-during system level suspend scenario SoundWire wake should be disabled.
+In some ASICs L2 cache info may miss in kfd topology,
+because the first bitmap may be empty, that means
+the first cu may be inactive, so to find the first
+active cu will solve the issue.
 
-Implement the SoundWire wake enable/disable sequence as per design flow
-for SoundWire poweroff mode.
+v2: Only find the first active cu in the first xcc
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Link: https://lore.kernel.org/r/20250207065841.4718-2-Vijendar.Mukunda@amd.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Eric Huang <jinhuieric.huang@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Acked-by: Lijo Lazar <lijo.lazar@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/amd_manager.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
-index 0d01849c35861..e3d5e6c1d582c 100644
---- a/drivers/soundwire/amd_manager.c
-+++ b/drivers/soundwire/amd_manager.c
-@@ -1110,6 +1110,7 @@ static int __maybe_unused amd_suspend(struct device *dev)
- 		amd_sdw_wake_enable(amd_manager, false);
- 		return amd_sdw_clock_stop(amd_manager);
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
-+		amd_sdw_wake_enable(amd_manager, false);
- 		/*
- 		 * As per hardware programming sequence on AMD platforms,
- 		 * clock stop should be invoked first before powering-off
-@@ -1137,6 +1138,7 @@ static int __maybe_unused amd_suspend_runtime(struct device *dev)
- 		amd_sdw_wake_enable(amd_manager, true);
- 		return amd_sdw_clock_stop(amd_manager);
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
-+		amd_sdw_wake_enable(amd_manager, true);
- 		ret = amd_sdw_clock_stop(amd_manager);
- 		if (ret)
- 			return ret;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+index bcb5cdc4a9d81..82da568604b6e 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+@@ -1683,17 +1683,32 @@ static int fill_in_l2_l3_pcache(struct kfd_cache_properties **props_ext,
+ 				int cache_type, unsigned int cu_processor_id,
+ 				struct kfd_node *knode)
+ {
+-	unsigned int cu_sibling_map_mask;
++	unsigned int cu_sibling_map_mask = 0;
+ 	int first_active_cu;
+ 	int i, j, k, xcc, start, end;
+ 	int num_xcc = NUM_XCC(knode->xcc_mask);
+ 	struct kfd_cache_properties *pcache = NULL;
+ 	enum amdgpu_memory_partition mode;
+ 	struct amdgpu_device *adev = knode->adev;
++	bool found = false;
+ 
+ 	start = ffs(knode->xcc_mask) - 1;
+ 	end = start + num_xcc;
+-	cu_sibling_map_mask = cu_info->bitmap[start][0][0];
++
++	/* To find the bitmap in the first active cu in the first
++	 * xcc, it is based on the assumption that evrey xcc must
++	 * have at least one active cu.
++	 */
++	for (i = 0; i < gfx_info->max_shader_engines && !found; i++) {
++		for (j = 0; j < gfx_info->max_sh_per_se && !found; j++) {
++			if (cu_info->bitmap[start][i % 4][j % 4]) {
++				cu_sibling_map_mask =
++					cu_info->bitmap[start][i % 4][j % 4];
++				found = true;
++			}
++		}
++	}
++
+ 	cu_sibling_map_mask &=
+ 		((1 << pcache_info[cache_type].num_cu_shared) - 1);
+ 	first_active_cu = ffs(cu_sibling_map_mask);
 -- 
 2.39.5
 
