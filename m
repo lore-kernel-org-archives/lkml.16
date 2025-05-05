@@ -1,91 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78443594A;
-	Mon,  5 May 2025 10:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935F51FF1BE
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440903; cv=none; b=rFqhtOdmKvgd9WTzfHMywFgBsa9xn/u5SdfhlybGKVd8+vQ6A89kNuT+yq5PEVGlaAxv1PpK7mX/RaQSEwpewpAUJXnAvsQhnS9jbzBnZC3XWMgkcHV6PjNeoxNFGEIvR0vgdSKWta0SkYtx6sTCGzquyyqBEG/OrYE4Vcf58pw=
+	t=1746440927; cv=none; b=WtbY10mNOcg1LFtlnwPBmQc71vEHmXseqvLlXGGhrHwKG1xEtE2ZFimh4itcldTiexuchYtGxSaWeGwg3GqEbPplek5YfNmUt420nf2LXxqJoTYR1oFH7rDWFWOZDVy4rSbu9OYAKedrV5wGoD3cHj1dJL3aitFV8Ml7pkoJEfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440903; c=relaxed/simple;
-	bh=66daequcQ/NDexhWr8PIUigqcaAhG0eSU90sQJO68FQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ut1yfIRGz5Bho5xJQUMaumoNqSQlXdXGBw8kbk+cqWRUwt+KfLKtFzYIqh6VTtyX38SzJlUGP+DwgTCY1CVVIlT/aDKOX++kyFTMtL8fJVrCRIsFSZJRwLLYhHDjx19OHGBkQ7FLOM2h3zeON1H1jvhc8CQdFNNiscr6u4KD32Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FsJ19w4c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746440927; c=relaxed/simple;
+	bh=xIcOI+rjF3wJTGw4eMiYZwpFjQIjmwn5TZ7wOVL4//I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ROShRPSYcpkIlzUB+dOi0XsnmWwoIzEuD+vmWgvC9yg8NeesG2/YRZCN3Kne7UQQV7P+oWiSN440EWLIaArU9xQ66uDYVTvBArPvra8lksFtxZXG4MS1hEuR559zSJlGtXW6wsFAId4uYgLjjxHONoS1ESVbPUaJ24mzOeJhXwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wgju/r0Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7HF6QuGH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wgju/r0Q; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7HF6QuGH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FsJ19w4c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7A0C4CEE4;
-	Mon,  5 May 2025 10:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746440903;
-	bh=66daequcQ/NDexhWr8PIUigqcaAhG0eSU90sQJO68FQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FsJ19w4cA1oC7cBqw6eQAjq6/6g02V5qmGhXbNw41xQ9WRkFmDkRa7/ta7OYVLnvE
-	 1TWtCGgCRaujzZ0p4XApFmIuMXhnP45k0N23iGWJ6oj6npo1hsfixjGB1qCCzCS1lr
-	 nYUAzQFcQeO4BvFaADNp5Rjv/RsVehbnLEgsFDRPxr6L5SGqKmIr+9RTQuZ9qpNNVN
-	 l9Aor1uINFFMiIKTX33SeuQGgPcFHJCTitJcqTV2oBjOPCZDc0NrNfddpIbd6a1xv/
-	 pxnx9GXayfQMttXsmW/EL7O9jONmJsoAdz3elLqwNnkV09wvnmqDyzSUY/nciqg8f1
-	 o3AWlE7VMAaDA==
-Date: Mon, 5 May 2025 19:28:17 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, ldewangan@nvidia.com,
-	thierry.reding@gmail.com, jonathanh@nvidia.com,
-	linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [regression] jetson-tk1: spi do not probe anymore
-Message-ID: <aBiSwa1dB9i52noU@finisterre.sirena.org.uk>
-References: <aBdOMUhuUqbZm9w1@Red>
- <aBfsJpId0Jrcz228@finisterre.sirena.org.uk>
- <CALHNRZ-At4WmJXoNs_x0XD=bRTRsKMBm1qOQGkFcNOvFfVDaMw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wgju/r0Q";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7HF6QuGH";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wgju/r0Q";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7HF6QuGH"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9CB4A216E7;
+	Mon,  5 May 2025 10:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746440923; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUKmF0l1uoVegKQTRJ4xaHNRok4JcaH5/hPpcntKhyI=;
+	b=Wgju/r0Qemj5aT0tMy2WWHYQEpRd+WGMHVqvzJXgCR+gq4FJaiw3L7fWfrsJb4JjrDV8Vj
+	uldC7dRTjWTaqY8cT3Hil+aQ21Kyu4e7L15S2tWfQqfeIbYMZmns5z1Ewg5CCpkW435K2D
+	gfbSIUwXvjSlQziPOrRmrwgXVrVd2hs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746440923;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUKmF0l1uoVegKQTRJ4xaHNRok4JcaH5/hPpcntKhyI=;
+	b=7HF6QuGHuORbmwguxzRS9EEaMSSqL1j3+OCe3f0DjNrolRC0muiMK1yo1NmfICY9ekFw0q
+	zopGSA3510VzfgBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="Wgju/r0Q";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=7HF6QuGH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746440923; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUKmF0l1uoVegKQTRJ4xaHNRok4JcaH5/hPpcntKhyI=;
+	b=Wgju/r0Qemj5aT0tMy2WWHYQEpRd+WGMHVqvzJXgCR+gq4FJaiw3L7fWfrsJb4JjrDV8Vj
+	uldC7dRTjWTaqY8cT3Hil+aQ21Kyu4e7L15S2tWfQqfeIbYMZmns5z1Ewg5CCpkW435K2D
+	gfbSIUwXvjSlQziPOrRmrwgXVrVd2hs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746440923;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUKmF0l1uoVegKQTRJ4xaHNRok4JcaH5/hPpcntKhyI=;
+	b=7HF6QuGHuORbmwguxzRS9EEaMSSqL1j3+OCe3f0DjNrolRC0muiMK1yo1NmfICY9ekFw0q
+	zopGSA3510VzfgBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7527813883;
+	Mon,  5 May 2025 10:28:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ck+zG9uSGGjafQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 05 May 2025 10:28:43 +0000
+Message-ID: <81a2e692-dd10-4253-afbc-062e0be67ca4@suse.cz>
+Date: Mon, 5 May 2025 12:28:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="moz6Kvl7+K7SGkY9"
-Content-Disposition: inline
-In-Reply-To: <CALHNRZ-At4WmJXoNs_x0XD=bRTRsKMBm1qOQGkFcNOvFfVDaMw@mail.gmail.com>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] memcg: no irq disable for memcg stock lock
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ linux-mm <linux-mm@kvack.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Meta kernel team <kernel-team@meta.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+References: <20250502001742.3087558-1-shakeel.butt@linux.dev>
+ <20250502001742.3087558-4-shakeel.butt@linux.dev>
+ <CAADnVQJ-XEEwVppk-qY2mmGB4R18_nqH-wdv5nuJf2LST5=Aaw@mail.gmail.com>
+ <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9CB4A216E7
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
+On 5/3/25 01:03, Shakeel Butt wrote:
+>> > index cd81c70d144b..f8b9c7aa6771 100644
+>> > --- a/mm/memcontrol.c
+>> > +++ b/mm/memcontrol.c
+>> > @@ -1858,7 +1858,6 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+>> >  {
+>> >         struct memcg_stock_pcp *stock;
+>> >         uint8_t stock_pages;
+>> > -       unsigned long flags;
+>> >         bool ret = false;
+>> >         int i;
+>> >
+>> > @@ -1866,8 +1865,8 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+>> >                 return ret;
+>> >
+>> >         if (gfpflags_allow_spinning(gfp_mask))
+>> > -               local_lock_irqsave(&memcg_stock.lock, flags);
+>> > -       else if (!local_trylock_irqsave(&memcg_stock.lock, flags))
+>> > +               local_lock(&memcg_stock.lock);
+>> > +       else if (!local_trylock(&memcg_stock.lock))
+>> >                 return ret;
+>>
+>> I don't think it works.
+>> When there is a normal irq and something doing regular GFP_NOWAIT
+>> allocation gfpflags_allow_spinning() will be true and
+>> local_lock() will reenter and complain that lock->acquired is
+>> already set... but only with lockdep on.
+> 
+> Yes indeed. I dropped the first patch and didn't fix this one
+> accordingly. I think the fix can be as simple as checking for
+> in_task() here instead of gfp_mask. That should work for both RT and
+> non-RT kernels.
 
---moz6Kvl7+K7SGkY9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+These in_task() checks seem hacky to me. I think the patch 1 in v1 was the
+correct way how to use the local_trylock() to avoid these.
 
-On Sun, May 04, 2025 at 09:10:59PM -0500, Aaron Kling wrote:
+As for the RT concerns, AFAIK RT isn't about being fast, but about being
+preemptible, and the v1 approach didn't violate that - taking the slowpaths
+more often shouldn't be an issue.
 
-> This should be fixed by a patch [0] which was recently picked up. I
-> saw the same issue on a tegra 210 device and submitted that to fix it.
-> Can you verify if it fixes this case too?
+Let me quote Shakeel's scenario from the v1 thread:
 
-For those playing at home that's "spi: tegra114: Don't fail
-set_cs_timing when delays are zero" - that explains why I couldn't find
-where the delays were set.
+> I didn't really think too much about PREEMPT_RT kernels as I assume
+> performance is not top priority but I think I get your point. Let me
 
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read especially when they have no internet access.
-I do frequently catch up on my mail on flights or while otherwise
-travelling so this is even more pressing for me than just being about
-making things a bit easier to read.
+Agreed.
 
---moz6Kvl7+K7SGkY9
-Content-Type: application/pgp-signature; name="signature.asc"
+> explain and correct me if I am wrong. On PREEMPT_RT kernel, the local
+> lock is a spin lock which is actually a mutex but with priority
+> inheritance. A task having the local lock can still get context switched
 
------BEGIN PGP SIGNATURE-----
+Let's say (seems implied already) this is a low prio task.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgYkr4ACgkQJNaLcl1U
-h9DLgAf/YK0kjuVbV4NkD/i11a7EiOqvMFi5Ma0zOGm075MgNWJ5Fo/EfBLcLyXT
-TDFkpa9JnRh6geQNwY3J/qammrJIcVxEyyS0SyjCtQscBcjWnTQWfOKPadWx3svz
-OxtarNeGVHzbfrMQcz4cncecSff3jQfoDC9FhTEpViEn+zpL27beI3YDrSAhfFZy
-sx8eYWneAd5FVsnnbQzuUU+iIPxX5hANhSS+TnKjRx+yKt9dKjvrjMcLMXtO/puJ
-U2z0sfqPq1jTMJwzTIrgKfPHmyCWxe6Z3nsiLQ1fDeR+TtSf2rfG+U6yIeMsZDta
-gjh4s6Bpk0YATu8faAFEjdWBsJg+HA==
-=qBFY
------END PGP SIGNATURE-----
+> (but will remain on same CPU run queue) and the newer task can try to
 
---moz6Kvl7+K7SGkY9--
+And this is a high prio task.
+
+> acquire the memcg stock local lock. If we just do trylock, it will
+> always go to the slow path but if we do local_lock() then it will sleeps
+> and possibly gives its priority to the task owning the lock and possibly
+> make that task to get the CPU. Later the task slept on memcg stock lock
+> will wake up and go through fast path.
+
+I think from RT latency perspective it could very much be better for the
+high prio task just skip the fast path and go for the slowpath, instead of
+going to sleep while boosting the low prio task to let the high prio task
+use the fast path later. It's not really a fast path anymore I'd say.
