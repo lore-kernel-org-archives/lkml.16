@@ -1,168 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43672D1638;
-	Mon,  5 May 2025 22:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBEA35A765;
+	Mon,  5 May 2025 22:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485172; cv=none; b=qNTt19MIrPwxa0YTeQ+4+V7JnDQrPtBx8yStmoupvus7tsWf6u6H/SOIs+tL3Q3yoKI+eiQw7B3TmvYWXUBV/hO19f0TvzQXTekU0hLjwFmDdj2mjWsHHzGP7yzZ6HekwzO4cN6tit2j6/gKOpUD7DsgJ4DB4qOSnElAbx92bCA=
+	t=1746485170; cv=none; b=lml1zYoyr2+MfbEJMer/MEZ6g+7qBj2pHLqt+sm4EkEbsskRWLAgq7pChkh0YFgYYXiTDmGF9XMgiKMzX53OymFe3AOXY0Vfqh8tT/sOvW2rt6HLM+6/85h5N2dAknIM6ESVQzrCyyagN4g4Cq07+LSJZOW7skacrnvV9Sn28CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485172; c=relaxed/simple;
-	bh=0tuhh9/DxMp177RlmvvmX2DCNEAa0XiBPG0HzEDVFiI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J9XasVJqadGjsoQHlJOdQR3NOAb4S5v4BwfAn9c9OwF/RymlKlz91nM27FZ3sq/3zLweO/iUbmwY93y+K5+emY+n4Bi9IZSRiCHNgmuVMtvFqt+Vrx4/lGg3hKJ0st8uMbEVcugaWL1ZqwwWXOJLvVIsRHLamfWE8fyq2e/UshI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVdrO5Gh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485170; c=relaxed/simple;
+	bh=AS2TsFu8Kc7csbiJYii5SkgQrzo5hXNx2c6AtZWQVfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u1HRuAQHQ3BbWFVu9eZi2ocs8hwsU+EpMTAvk44RdyeEy+FAaWdd4J/ETsPUvAmgrF2LG5c4DebNHm2Ulkm3w9InW49CmPUEucu2s1TVrkPkF6veczZtLJuNc0TJNPKPJp0DYunljWOALfjsDbFBBF90WibyjyN/j3lz4Q19sp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3QBcI6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVdrO5Gh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE09C4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3QBcI6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EE4C4CEE4;
 	Mon,  5 May 2025 22:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485171;
-	bh=0tuhh9/DxMp177RlmvvmX2DCNEAa0XiBPG0HzEDVFiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mVdrO5GhucS4MWa1jVJnxD70GQb0zSpkoQe2G+/QZoUU1ce3VJTKvbQNVCaMt8Y4K
-	 L9Wrwo0JrrHzIXcBhNhhsRmGjubqYh9UJIu+HSz1s3WVlnFv6YxW5TljbYe6m2a9Hj
-	 uOyGdnx4SzXN7rwNdMmk11qx8Ym0lApKFBtvZ4L2hTQFDmJoVrR94cEQA9jQiLxjoQ
-	 AALHMj9+7G1g01lgau+o0Liasl7S2JXP2xXc+Q8CzrgAkGKwSqFPQ5VU8/7W0NgOnh
-	 4vpNzaRKG36anMfDprmccYnOKKAy+sKyA9FQ6Z5rJ8vum/ALHyO4xXm6RX3H4wRr5p
-	 wSuXywe5v0e6A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-	Dillon Varone <dillon.varone@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	zaeem.mohamed@amd.com,
-	Hansen.Dsouza@amd.com,
-	joshua.aberback@amd.com,
-	Cruise.Hung@amd.com,
-	PeiChen.Huang@amd.com,
-	duncan.ma@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 197/486] drm/amd/display: Ensure DMCUB idle before reset on DCN31/DCN35
-Date: Mon,  5 May 2025 18:34:33 -0400
-Message-Id: <20250505223922.2682012-197-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+	s=k20201202; t=1746485169;
+	bh=AS2TsFu8Kc7csbiJYii5SkgQrzo5hXNx2c6AtZWQVfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s3QBcI6/oA0tA/PINZMYq4M38D3tbRwKAXJDV6Hr+ga8m/gVZZ95oar+vdrAk5Yhd
+	 SGd6VqgCRRpKTqJCkcn5HzEFAfu+R+eGBjc6WSDDlqQ6kg/MBANCXMVscaVBxH4iyF
+	 MCyVB6QIn1ExoO6/X+Ctpw/GnBfzOiewFztOcJl2T2lXkc75NLPHMSW5kSUNMBDglS
+	 0b9Qln+5S9vuIv0nBjPeMFc6zwX3tNo+FCOoCvt5VUz7hh8ljH270qq2IJeI0adTjc
+	 Lc3IO/Hsc0RuHl788v3v3ExF8rxDnbk/O50eDOfYe15liNSmz6xPgITNzLoAtip5kS
+	 URYXhj3D+7o2w==
+Date: Tue, 6 May 2025 07:46:04 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, lgirdwood@gmail.com,
+	perex@perex.cz, tiwai@suse.com, javier.carrasco.cruz@gmail.com,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.14 591/642] ASoC: cpcap: Implement
+ .set_bias_level
+Message-ID: <aBk_rHbbzvR_vD64@finisterre.sirena.org.uk>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-591-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BmqjSXNMkh0e0Yd9"
+Content-Disposition: inline
+In-Reply-To: <20250505221419.2672473-591-sashal@kernel.org>
+X-Cookie: Well begun is half done.
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit c707ea82c79dbd1d295ec94cc6529a5248c77757 ]
+--BmqjSXNMkh0e0Yd9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[Why]
-If we soft reset before halt finishes and there are outstanding
-memory transactions then the memory interface may produce unexpected
-results, such as out of order transactions when the firmware next runs.
+On Mon, May 05, 2025 at 06:13:27PM -0400, Sasha Levin wrote:
+> From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+>=20
+> [ Upstream commit 5b4288792ff246cf2bda0c81cebcc02d1f631ca3 ]
+>=20
+> With VAUDIO regulator being always on, we have to put it in low-power mode
+> when codec is not in use to decrease power usage.
+>=20
+> Do so by implementing driver .set_bias_level callback.
 
-These can manifest as random or unexpected load/store violations.
+This is clearly a performance improvement not a bug fix.
 
-[How]
-Increase the timeout before soft reset to ensure the DMCUB has quiesced.
-This is effectively 1s maximum based on experimentation.
+--BmqjSXNMkh0e0Yd9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Use the enable bit check on DCN31 like we're doing on DCN35 and reorder
-the reset writes to follow the HW programming guide.
+-----BEGIN PGP SIGNATURE-----
 
-Ensure we're reading SCRATCH7 instead of SCRATCH8 for the HALT code.
-No current versions of DMCUB firmware use the SCRATCH8 boot bit to
-dynamically switch where the HALT code goes to maintain backwards
-compatibility with PSP.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgZP6sACgkQJNaLcl1U
+h9AzuQf/TsuJY2vN7IY0edGyLFwWnvp3oaCEwl470g0akuayphANG/PQhswy/1aF
+mNXr7LOguHFmhEVZeH20D7ByqnzGffdB511QUKgJXIX4B6zyhpzn51hqJc8BYTXL
+tcOBAnJfTmjdyHW4WdbEd7zln7BcX2gmDbPs9jYzERHtbqvuTpPeIrXN/qrwlBrd
+z7S88euH09affGKk1ypNJ9+NCbi0vhljp6cOI4BB2AN+UnC8pi3EG4j5rPk9HN4a
+o134B+T8brNoSzEExEj1B8eB2yrxD/aQ70/rwu0XCMfGwuw8bIFF2uNR40JhhUSv
+sW/Qtbq6cvzmIyrlCJmIM73woreV5Q==
+=GcKz
+-----END PGP SIGNATURE-----
 
-Reviewed-by: Dillon Varone <dillon.varone@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Wayne Lin <wayne.lin@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../gpu/drm/amd/display/dmub/src/dmub_dcn31.c   | 17 +++++++++++------
- .../gpu/drm/amd/display/dmub/src/dmub_dcn35.c   |  4 ++--
- 2 files changed, 13 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn31.c b/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn31.c
-index d9f31b191c693..1a68b5782cac6 100644
---- a/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn31.c
-+++ b/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn31.c
-@@ -83,8 +83,8 @@ static inline void dmub_dcn31_translate_addr(const union dmub_addr *addr_in,
- void dmub_dcn31_reset(struct dmub_srv *dmub)
- {
- 	union dmub_gpint_data_register cmd;
--	const uint32_t timeout = 100;
--	uint32_t in_reset, scratch, i, pwait_mode;
-+	const uint32_t timeout = 100000;
-+	uint32_t in_reset, is_enabled, scratch, i, pwait_mode;
- 
- 	REG_GET(DMCUB_CNTL2, DMCUB_SOFT_RESET, &in_reset);
- 
-@@ -108,7 +108,7 @@ void dmub_dcn31_reset(struct dmub_srv *dmub)
- 		}
- 
- 		for (i = 0; i < timeout; ++i) {
--			scratch = dmub->hw_funcs.get_gpint_response(dmub);
-+			scratch = REG_READ(DMCUB_SCRATCH7);
- 			if (scratch == DMUB_GPINT__STOP_FW_RESPONSE)
- 				break;
- 
-@@ -125,9 +125,14 @@ void dmub_dcn31_reset(struct dmub_srv *dmub)
- 		/* Force reset in case we timed out, DMCUB is likely hung. */
- 	}
- 
--	REG_UPDATE(DMCUB_CNTL2, DMCUB_SOFT_RESET, 1);
--	REG_UPDATE(DMCUB_CNTL, DMCUB_ENABLE, 0);
--	REG_UPDATE(MMHUBBUB_SOFT_RESET, DMUIF_SOFT_RESET, 1);
-+	REG_GET(DMCUB_CNTL, DMCUB_ENABLE, &is_enabled);
-+
-+	if (is_enabled) {
-+		REG_UPDATE(DMCUB_CNTL2, DMCUB_SOFT_RESET, 1);
-+		REG_UPDATE(MMHUBBUB_SOFT_RESET, DMUIF_SOFT_RESET, 1);
-+		REG_UPDATE(DMCUB_CNTL, DMCUB_ENABLE, 0);
-+	}
-+
- 	REG_WRITE(DMCUB_INBOX1_RPTR, 0);
- 	REG_WRITE(DMCUB_INBOX1_WPTR, 0);
- 	REG_WRITE(DMCUB_OUTBOX1_RPTR, 0);
-diff --git a/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn35.c b/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn35.c
-index 2ccad79053c58..4581eb4794518 100644
---- a/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn35.c
-+++ b/drivers/gpu/drm/amd/display/dmub/src/dmub_dcn35.c
-@@ -88,7 +88,7 @@ static inline void dmub_dcn35_translate_addr(const union dmub_addr *addr_in,
- void dmub_dcn35_reset(struct dmub_srv *dmub)
- {
- 	union dmub_gpint_data_register cmd;
--	const uint32_t timeout = 100;
-+	const uint32_t timeout = 100000;
- 	uint32_t in_reset, is_enabled, scratch, i, pwait_mode;
- 
- 	REG_GET(DMCUB_CNTL2, DMCUB_SOFT_RESET, &in_reset);
-@@ -113,7 +113,7 @@ void dmub_dcn35_reset(struct dmub_srv *dmub)
- 		}
- 
- 		for (i = 0; i < timeout; ++i) {
--			scratch = dmub->hw_funcs.get_gpint_response(dmub);
-+			scratch = REG_READ(DMCUB_SCRATCH7);
- 			if (scratch == DMUB_GPINT__STOP_FW_RESPONSE)
- 				break;
- 
--- 
-2.39.5
-
+--BmqjSXNMkh0e0Yd9--
