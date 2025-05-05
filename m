@@ -1,185 +1,124 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA381F9F7C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D0D211C;
+	Mon,  5 May 2025 11:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746444512; cv=none; b=DrAA7OSksMVZlJrfqnx8l2J0yUS5lcZjekwYIu6L1OWnRpvM4hLK77/RRhFS9l5cgVthHXoZ9GZQsVhEczR+DxwU+ufvTXBtx2Ad8TWy1WBuj/V9YfU1X9lpfsSoCJtx2gVF+EXAYa9MfUKCZC+ataHAy760jryyKmFd/IS471Y=
+	t=1746444725; cv=none; b=uGys8pe2q4+XBpkNW05Q9J7yD9molBwOLycsZnTKjSq46cpnWfLlCI/Wn7Sk+DA9zYdHQyLCOkpGxxZ3wZh/NWsB0ILaZR++h/sdGoCYvpEnz8YcWvMXx8F6Pb+xCu1M687fkm0cCOy/GmMfDPS2Wq8SdXXrHaxE3RE2952AWtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746444512; c=relaxed/simple;
-	bh=fozcw/cPzDCRQYDoH/cphECQbWBs/UYkwW7QVUbB8js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g9aEanY/fD1fFJBOjhVz/vhc5iGn4Wh9PAnBO8IDClEEs3OwNGfhVjVdHty5WGOPZCyReAyAIad4q/l/gcsW92vwYQLW6tFaPrNLr04DMB0qSfxGKtWrNKqLdSV+gheLwtYjanE+/1uRyIqm+yWjt74glXNE1g+xOqi9pWGWkfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=eTZJc3OQ; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1746444725; c=relaxed/simple;
+	bh=sSbIcbJAsWOp8UQ8YetgntsO4PWlZoiT+/z23PFgjSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHffrpxV9cYHCAxU+pCPi1b1XaC7Vp/Y6Ll8V75q09YmWHsW0lbGc/U4OcZgTikkQSoweoL6FuaQy7Jl8v8C9IskbM+qGH9szW5G8aLTJQtZ9+ID7jVBuM25pwEvvJhLo8okznuwL6pd09UzuPIzTcrHuv6LDLj7NhgsqmcZmp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fsxm77yl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="eTZJc3OQ"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so6307155a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1746444509; x=1747049309; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aB3cMr3JDp0nKZr8OwsHEx3We5XLotlduuz1352Eao4=;
-        b=eTZJc3OQPMj7DocRX3Tt8i2/6sbj6z2miUhjFkXj04/Om61jg2DT7Zr6Jg2jf++EZe
-         kWMz9+OtS/v02i1chVzzI3i8/K52U+txzz5cJGKgtVRv/3AnSkPNuBcjzYTo5nJqD7dy
-         dBSm9p3iFS8Krq2nW5TzhYOFTPckgYX2yguj4fY9DZs27MuKc8fp8+SpqJwgz+JJSHeu
-         tyCLBcMecAgOfybpELIL2+vkdYN/BFQieuBKnnTYeXzNj7BRGCZCuQRE+8fEC5y+aDXB
-         LKH/IK6cVeGe0krbIu3e21nj7SBGRcvllDZmS4AeujDYeN4ddvnzTEtIf/6pMk4MZL51
-         +mXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746444509; x=1747049309;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aB3cMr3JDp0nKZr8OwsHEx3We5XLotlduuz1352Eao4=;
-        b=u42TDd7lFUZzaat8qMqCasHhI9pKk3MEtNq4VSm2DVNnHA184onOI6r+c/j+8StOk1
-         Q1ufKaufZ7pQi9tM0bE7vJyw3Wq3PIX1QCMtRIg/lFsLw6TfK0Amy24/MXjt1ymKCG6H
-         MLUuabYCewQ6Eh5/25LKCltQGxAl53Oi2aLxQZ09LfiPOmUyFfzHNCdmGgHxu36vPwF/
-         EnWcfVxKqFfpAPiPKCllDwYX2cISr3BF7+Xx8kdsk0segupfR2lyGRDsLinDrm8h7M63
-         oFgHhNqjlorCWBWmK6ScAxvy6852cCdJss57pmYLR1+WzPuaRc9fQpicjub+gLwYPCJr
-         TdFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIx8tmuUsGeRLYE3r5hY01oW3YX9XLGd4nw1wvRIrtQ2QxXP9gDJb3psAwhaoFWJcCrWwc6gQl+/4ATas=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh0DuVwn2Frn3BcUUTy4VHx84CC/1cZbImjXF1PpBipsEy32YX
-	3FGG1R/yoFO+A+JX/gxTwmqzyDWgBBbsA2IthfP3bcxmLVd0u23qVMVm3GvveCo=
-X-Gm-Gg: ASbGncvd70Yh/2MHlHxTDYerdP6g/IS381NsWuvofa/vJIe8sHgcqRIxgQSmsXFnF6O
-	wAX+TCieEqdPrf3zT0CUVkBetvr7+Z3U5gERyli2cmUJrt7blN8OkHAIpDUUXawi+CEJiK7Mufu
-	dCJaGYKaKmglCj2mF6EKZ9be8GFwcvf44m5nAoaHnXxMYccLWAdhQm7oMtgscQDlKzJS2nHqPR7
-	HD9sn85bcjZGgTenhAe2Vm00fauSdAjYpQzZpG4rvmLR6hrop03lY2FlQNLXjPGWmA17hDE+P5n
-	rX1yro7fsE+f57fgSRe/T7SpAZmCyUh1xEUAsNP/7vEOPxgQymRB5fPwy9XH
-X-Google-Smtp-Source: AGHT+IGvEp3fdacUme4FWMSlQbtpUEv8ay4IyBgw8S68wSBoAmf9cWSX9tpMSyCX12ZWHunmUEvARQ==
-X-Received: by 2002:a17:907:3e09:b0:ace:c43a:63e9 with SMTP id a640c23a62f3a-ad1a4a8d7dfmr571983666b.42.1746444508643;
-        Mon, 05 May 2025 04:28:28 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914733esm476716866b.33.2025.05.05.04.28.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 04:28:28 -0700 (PDT)
-Message-ID: <542674b6-bdcf-4149-99b4-a5568745eabd@tuxon.dev>
-Date: Mon, 5 May 2025 14:28:26 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fsxm77yl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A687EC4CEE4;
+	Mon,  5 May 2025 11:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746444724;
+	bh=sSbIcbJAsWOp8UQ8YetgntsO4PWlZoiT+/z23PFgjSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fsxm77yl/0UYSuPasfDxI0DDQ+yQgUblo+5EapHuBNXJHYnucDYSJ/3hUfz81Bk/s
+	 iMyH/ZJiwgV7ue7soUxQtthKJpmfahf2b7o6rYv3tmBmpij0fqaADOb4YGUYd5f0jM
+	 hGvOJS28faIDNxA80AladUNM3gwLOdwkviZArL19O8EA3xXan0q2sWPKQp64cpCUzA
+	 qB5QZw14PoAeLNN9gtXpKlZU10s8HWaF7eO1IB96/LXUuDwXaCzEaYn3fWSVX1SthS
+	 MWNOFW9w/ihSvubKHq+knSw9OnT+7+2c4vSdcS3fvXTO4EhsQO2j4WNppI9VQNpqpN
+	 TOz0WXvOm5E7A==
+Date: Mon, 5 May 2025 13:31:59 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	"Chang S. Bae" <chang.seok.bae@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
+ Make task_struct::thread constant size)
+Message-ID: <aBihr1qRFBm1xj3_@gmail.com>
+References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
+ <202505041418.F47130C4C8@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
- documentation for the PCIe IP on Renesas RZ/G3S
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
- mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
- p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250501201636.GA776341@bhelgaas>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250501201636.GA776341@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505041418.F47130C4C8@keescook>
 
-Hi, Bjorn,
 
-On 01.05.2025 23:16, Bjorn Helgaas wrote:
-> On Wed, Apr 30, 2025 at 01:32:32PM +0300, Claudiu wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
->> Base Specification 4.0. It is designed for root complex applications and
->> features a single-lane (x1) implementation. Add documentation for it.
->> The interrupts, interrupt-names, resets, reset-names, clocks, clock-names
->> description were obtained from the hardware manual.
+* Kees Cook <kees@kernel.org> wrote:
+
+> But as reported above, there *is* a copy in copy_uabi_to_xstate(). (It
+> seems there are several, actually.)
 > 
->> +        pcie@11e40000 {
->> +            compatible = "renesas,r9a08g045s33-pcie";
->> +            reg = <0 0x11e40000 0 0x10000>;
->> +            ranges = <0x03000000 0 0x30000000 0 0x30000000 0 0x8000000>;
->> +            dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x8000000>;
->> +            bus-range = <0x0 0xff>;
->> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
->> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
->> +            clock-names = "aclk", "clkl1pm";
->> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
->> +                     <&cpg R9A08G045_PCI_RST_B>,
->> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
->> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
->> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
->> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
->> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
->> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
->> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
+> int copy_sigframe_from_user_to_xstate(struct task_struct *tsk,
+>                                       const void __user *ubuf)
+> {
+>         return copy_uabi_to_xstate(x86_task_fpu(tsk)->fpstate, NULL, ubuf, &tsk->thread.pkru);
+> }
 > 
-> Could this be structured in a way that separates the shared Root
-> Complex properties from the ones that are specific to the Root Port?
-> I know the current hardware only supports a single Root Port, but I
-> think we should plan to be able to support multiple Root Ports.
-
-I'm not sure how should I do this. These are just the reset signals as the
-manual describes them. Can you, please, point me an example driver/device
-tree that I could check?
-
-Thank you for your review,
-Claudiu
-
+> This appears to be writing into x86_task_fpu(tsk)->fpstate. With or
+> without CONFIG_X86_DEBUG_FPU, this resolves to:
 > 
->> +            interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
->> +                         <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
->> +            interrupt-names = "int_serr", "int_serr_cor", "int_serr_nonfatal",
->> +                              "int_serr_fatal", "axi_err_int", "inta_rc",
->> +                              "intb_rc", "intc_rc", "intd_rc",
->> +                              "intmsi_rc", "int_link_bandwidth", "int_pm_pme",
->> +                              "dma_int", "pcie_evt_int", "msg_int",
->> +                              "int_all";
->> +            #interrupt-cells = <1>;
->> +            interrupt-map-mask = <0 0 0 7>;
->> +            interrupt-map = <0 0 0 1 &pcie_intx 0>, /* INT A */
->> +                            <0 0 0 2 &pcie_intx 1>, /* INT B */
->> +                            <0 0 0 3 &pcie_intx 2>, /* INT C */
->> +                            <0 0 0 4 &pcie_intx 3>; /* INT D */
->> +            device_type = "pci";
->> +            num-lanes = <1>;
->> +            #address-cells = <3>;
->> +            #size-cells = <2>;
->> +            power-domains = <&cpg>;
->> +            renesas,sysc = <&sysc>;
->> +            vendor-id = <0x1912>;
->> +            device-id = <0x0033>;
->> +
->> +            pcie_intx: legacy-interrupt-controller {
->> +                interrupt-controller;
->> +                #interrupt-cells = <1>;
->> +                #address-cells = <0>;
->> +                interrupt-parent = <&gic>;
->> +                interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
->> +                             <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
->> +                             <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
->> +                             <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>;
->> +            };
->> +        };
->> +    };
->> +
->> +...
->> -- 
->> 2.43.0
->>
+> 	((struct fpu *)((void *)(task) + sizeof(*(task))))
+> 
+> i.e. the memory "after task_struct" is cast to "struct fpu", and the
+> uses the "fpstate" pointer. How that pointer gets set looks to be
+> variable, but I think the one we care about here is:
+> 
+>         fpu->fpstate = &fpu->__fpstate;
+> 
+> And struct fpu::__fpstate says:
+> 
+>         struct fpstate                  __fpstate;
+>         /*
+>          * WARNING: '__fpstate' is dynamically-sized.  Do not put
+>          * anything after it here.
+>          */
+> 
+> So we're still dealing with a dynamically sized thing, even if it's not
+> within the literal struct task_struct -- it's still in the kmem cache,
+> though.
 
+Indeed!
+
+> So, this is still copying out of the kmem cache for task_struct, and the
+> window seems unchanged (still fpu regs). This is what the window was
+> before:
+> 
+> void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+> {
+>         *offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
+>         *size = fpu_kernel_cfg.default_size;
+> }
+> 
+> And the same commit I mentioned above removed it.
+> 
+> I think the misunderstanding is here:
+> 
+> >    The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
+> >    now that the FPU structure is not embedded in the task struct anymore, which
+> >    reduces text footprint a bit.
+> 
+> Yes, FPU is no longer in task_struct, but it IS in the kmem cache named
+> "task_struct", since the fpstate is still being allocated there.
+
+Thank you for this fantastic explanation and the bug fix!
+
+Since IMHO it would be a shame to lose all these explanations, and 
+because it's been exposed to -next for weeks without getting reported, 
+I've applied your fix to tip:x86/fpu after changeloggifying it. I've 
+also added your SOB, if that's fine with you. Let's not destroy genuine 
+Git history, let's not lose credit and let's not lose all these details 
+by squashing this fix into the buggy commit...
+
+Thanks,
+
+	Ingo
