@@ -1,135 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FE61FF2;
-	Mon,  5 May 2025 16:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBBF1A3146;
+	Mon,  5 May 2025 16:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746463655; cv=none; b=pbWHLw8CQkF01t5T+sZqPyvoNprpJX1bI4kzBpuVawtj0rJAGXm2C8Lt6ehTO9JanU0Xbq3vFvLzGmuLaGMy/xyDlwrWt5yz2Uqce6EiyJIgxAs9Gz1FLTKIWeph+v1vk0fE1sM8MRO5jY82KsC418zFwJhhjoNqX0C6s1/gPVI=
+	t=1746463707; cv=none; b=ELQTMSIoRD20Pky2tR3CzPdLH/LL2BU8cnhtXj4T/N0TyATTgqlom+iKfx8bByoQyRGdFqEUh4BndUMCzCbdM2RK5L3Wy9vgkodtjKmzCZTjbzplMLXudbW3d1xtBUMFTGf8MfW2ylk0OzSJRMT5hlwHyo0R8MA9M/6YyKO1IJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746463655; c=relaxed/simple;
-	bh=I3lVk2Q64JSR7tBffHJPKcwgPr9JNnLARrE2qnLrjzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mV2NdDiHd/2PDiuyDqt624kkHadaD3AgvuitllnIqHk5lYtkgScUMi2NxvUhUaTNYBcGU60FuY52cOMx/TZfl2zbBIOlYh6/AMm7NV/G7gFqCIhhwLQjHutQzHMjqdMbhc0XCY/9GOcAxFhSlOBi2Phkm/wxFjs//b1hoGoTPLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0K23mVL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746463707; c=relaxed/simple;
+	bh=5W2g15VIrTki04UaYjIsAJR6NJYW3rXBhykFdLdKGUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=epE/K3D8V9h7Q/LczBtegMX3dM5+HWiW0//2hWzBEwLtHS9/y8BWrXTWLECmCnQgkBNrgMDbq+RkHpLOCnCpBzsNCiK7kZveS+FFLbVNH5l++1kviQcrvjoph5CpXq8CYU1dY0RxaKHNDEEwh815b7OgC7T8EtPqlUI0gghYmKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGdng2cx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0K23mVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64C4C4CEE4;
-	Mon,  5 May 2025 16:47:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGdng2cx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A578EC4CEE4;
+	Mon,  5 May 2025 16:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746463655;
-	bh=I3lVk2Q64JSR7tBffHJPKcwgPr9JNnLARrE2qnLrjzM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=S0K23mVLk8Bcnd/xrbdh38kr6sIFLw5v1Q0hf6MHZr24qlTV8MqXdHlzqj+XreFg/
-	 yAOlLKB7g4inNaxoYEf05tQAkpsa9O5vnLNrMkQDl0An02hzB1a/6+/UNURHVMA+1S
-	 js8JS+50+VYLeKuKPahFUuFt/BMCrbiGtoOlvki77Zd0AW/e3HDC43mZNV5QQEQwFE
-	 3DD7maxQWQZohnxZeAJQUOkuqpT3kV31v8MAZAq8IV3jb599aSupsSXWk8xSs97sgs
-	 FVeNDBVCe18yxTvf+EIWFV5CYdKVn6JM3IgXtjL+UyeFxrB1ZpR/0xhEJxpIPW/V0e
-	 /jw5z0ZnM0SHw==
-Date: Mon, 5 May 2025 17:47:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Trevor Gamblin
- <tgamblin@baylibre.com>
-Subject: Re: [PATCH v5 0/7] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
-Message-ID: <20250505174724.686d61b5@jic23-huawei>
-In-Reply-To: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-References: <20250505-iio-introduce-iio_declare_buffer_with_ts-v5-0-814b72b1cae3@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1746463706;
+	bh=5W2g15VIrTki04UaYjIsAJR6NJYW3rXBhykFdLdKGUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iGdng2cxaDohr6k3f3r8VrtQ4EIjOu4ivCrdZscvBfowCAhJPWLm2ORl3gPZsDVFp
+	 Gdp8roCdRjLiPMvegnpbJDw001JTfu/jXNLaW2W347t60kbDKDiTmx4d9F4GJ0lVAt
+	 XLl1uNWYDfIi89dTWFmXDGeyWNpjOC59sHtu9OIrTFfMDtkf1riGEZNHmKBOvc+Yll
+	 FHOln8mSBjAXjOWcOaYjQ54OYcGxz0gIG10+i/Uz++OOXC864qayNFcNfvQ6feIY+R
+	 LOoEP/gSLzZjhdklXI0lKQxNe45o+y2SV0oG29+Xyt1oOEj4tLf1qTJc2eZESktuUp
+	 5r5IlkwkSxYlg==
+Date: Mon, 5 May 2025 18:48:18 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <aBjr0tdFIPly5ZY2@polis>
+References: <20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com>
+ <20250502-debugfs-rust-v4-1-788a9c6c2e77@google.com>
+ <aBYNyqTRlpGAJVuB@polis>
+ <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com>
 
-On Mon, 05 May 2025 11:31:41 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Mon, May 05, 2025 at 09:21:51AM -0700, Matthew Maurer wrote:
+> On Sat, May 3, 2025 at 5:36 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > On Fri, May 02, 2025 at 07:49:30PM +0000, Matthew Maurer wrote:
+> > > +/// Owning handle to a DebugFS directory.
+> > > +///
+> > > +/// This directory will be cleaned up when it goes out of scope.
+> > > +///
+> > > +/// # Invariants
+> > > +///
+> > > +/// The wrapped pointer will always be `NULL`, an error, or an owned DebugFS `dentry`.
+> > > +#[repr(transparent)]
+> > > +pub struct Dir<'a, const KEEP: bool = false> {
+> >
+> > Why did you move to a const generic, rather than a new type? What's the
+> > advantage? AFAICS, it just makes it less obvious to see from the type itself how
+> > it will behave. Reading Dir<true> doesn't make it obvious what it does.
+> >
+> > While I prefer a new type over the const generic, I'm fine with it. But I think
+> > we should use something more descriptive than a bool. Please see
+> > device::DeviceContext for reference.
+> 
+> I'm fine with a new type or a using a more descriptive const generic -
+> I did the const-generic to avoid the need to make one variant the
+> derefee, which can sometimes complicate structure. I'll default to a
+> more descriptive const-generic.
 
-> Creating a buffer of the proper size and correct alignment for use with
-> iio_push_to_buffers_with_ts() is commonly used and not easy to get
-> right (as seen by a number of recent fixes on the mailing list).
-> 
-> In general, we prefer to use this pattern for creating such buffers:
-> 
-> struct {
->     u16 data[2];
->     aligned_s64 timestamp;
-> } buffer;
-> 
-> However, there are many cases where a driver may have a large number of
-> channels that can be optionally enabled or disabled in a scan or the
-> driver might support a range of chips that have different numbers of
-> channels or different storage sizes for the data. In these cases, the
-> timestamp may not always be at the same place relative to the data. To
-> handle these, we allocate a buffer large enough for the largest possible
-> case and don't care exactly where the timestamp ends up in the buffer.
-> 
-> For these cases, we propose to introduce new macros to make it easier
-> it easier for both the authors to get it right and for readers of the
-> code to not have to do all of the math to verify that it is correct.
-> 
-> I have just included a few examples of drivers that can make use of this
-> new macro, but there are dozens more.
+Sounds good to me.
 
-Looks good to me.  I'll leave it on list for a day or two though for
-everyone else to take a final look!
+> > > +    pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b, true> {
+> > > +        Dir::create(name, Some(self))
+> > > +    }
+> >
+> > The default should be that the directory is removed when the Dir instance is
+> > dropped.
+> >
+> > The common case (which people expect) is that an object is cleaned up on drop().
 > 
-> ---
-> Changes in v5:
-> - Add new patch to set minimum alignment to 8 for IIO_DMA_MINALIGN.
-> - Adjust IIO_DECLARE_DMA_BUFFER_WITH_TS() macro for above change.
-> - Drop one ad4695 patch that was already applied.
-> - Link to v4: https://lore.kernel.org/r/20250428-iio-introduce-iio_declare_buffer_with_ts-v4-0-6f7f6126f1cb@baylibre.com
-> 
-> Changes in v4:
-> - Dropped static_assert()s from the first patch.
-> - Handle case when IIO_DMA_MINALIGN < sizeof(timestamp).
-> - Added one more patch for ad4695 to rename a confusing macro.
-> - Link to v3: https://lore.kernel.org/r/20250425-iio-introduce-iio_declare_buffer_with_ts-v3-0-f12df1bff248@baylibre.com
-> 
-> Changes in v3:
-> - Fixed a few mistakes, style issues and incorporate other feedback (see
->   individual commit message changelogs for details).
-> - Link to v2: https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com
-> 
-> Changes in v2:
-> - Add 2nd macro for case where we need DMA alignment.
-> - Add new patch for ad4695 to convert buffer from u8 to u16 before
->   making use of the new macro.
-> - Drop the bmp280 patch since it was determined to have a better
->   alternative not using these macros.
-> - Add a few more examples to show the non-DMA case, both in a struct and
->   stack allocated.
-> - Link to v1: https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com
-> 
-> ---
-> David Lechner (7):
->       iio: make IIO_DMA_MINALIGN minimum of 8 bytes
->       iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
->       iio: adc: ad4695: use IIO_DECLARE_DMA_BUFFER_WITH_TS
->       iio: adc: ad4695: rename AD4695_MAX_VIN_CHANNELS
->       iio: adc: ad7380: use IIO_DECLARE_DMA_BUFFER_WITH_TS
->       iio: accel: sca3300: use IIO_DECLARE_BUFFER_WITH_TS
->       iio: adc: at91-sama5d2: use IIO_DECLARE_BUFFER_WITH_TS
-> 
->  drivers/iio/accel/sca3300.c        | 18 ++--------------
->  drivers/iio/adc/ad4695.c           | 11 +++++-----
->  drivers/iio/adc/ad7380.c           |  3 +--
->  drivers/iio/adc/at91-sama5d2_adc.c | 13 ++----------
->  include/linux/iio/iio.h            | 42 ++++++++++++++++++++++++++++++++++++++
->  5 files changed, 52 insertions(+), 35 deletions(-)
-> ---
-> base-commit: 7e9a82ab5b861d3c33c99a22c1245a5b262ee502
-> change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
-> 
-> Best regards,
+> In general for Rust, I agree with you. For this particular case, I
+> have a strong disagreement - take a look at calls to
+> `debugfs_create_dir` in existing C code - new code chooses to discard
+> subdirectory handles when done and rely on the recursive remove of the
+> root directory to clean up subdirectories. If you and Greg K-H both
+> agree that I should make them drop by default, I'll switch it, but I
+> think this is me following the subsystem maintainer's intentions here.
 
+I don't see how picking a (Rust) consitent default is contrary to relying on
+recursive remove of directories.
+
+I don't want this API to have "inverse drop semantics"; it's gonna confuse
+people and, AFAIK, it'd be the only API doing that.
+
+Your original code with Dir::keep() was perfectly fine and it was still
+supporting the "recursive remove case" properly.
+
+So, again this *not* an either-or case, we can have both.
