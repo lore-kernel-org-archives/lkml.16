@@ -1,189 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E11DE3AF;
-	Mon,  5 May 2025 09:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CB91F7910
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438945; cv=none; b=E5IBC+opG1V12WxDcg5dmoojFHR8SNncUXGhf7mAVEWHF+oR4CKzj1VatAjyPJKASusFnMuUeZnkl2mGLF4RQic97eOIkWCIaQVUcnK1rv4BZwjbh4o0EkXCDeB1iZlunSOrrCHuUECriRubB0RaakjxoeuCBA0pUlbVuHdl9lM=
+	t=1746438949; cv=none; b=oUg8D/5ezWYKUoT6jba/wxK9I+tTTWbdu9CxVaUwOXvq7TgHh+YwjQa0KlMb8ZLqG9whGuS7BmYOZmrldThEMFIvUow71nCknuizRVKDi8Mgi7e0asOgmUPQtPixbtVFSEh2lv8EcUsW+9Jk/OYpy9xaL+aI/uQUosiy2vK+PIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438945; c=relaxed/simple;
-	bh=C+qofN41T9ZGZV/Yauz2+1+PKYZmi9DihY6aLigOKSI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kvN5/jnEA0Q2i+sOqYyTd8iwS8bIBErs4UAIlIrZbkPjG3P5SR3ZnWglPaoRDVEKnStHpcXQVtXdnRvgRuSU3NdArTcZP/Nlt4sI9iny/qyHGz8L6tmb4KrwyWbAENvXTRUi3MEAvJdcVPqsyk4B2LzujebhexYKEhhNn2Qy+nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIG6OFKK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746438949; c=relaxed/simple;
+	bh=4fXXGQzfUtKtkKuKQhES1f00tVzlysT3cxFwz6vRIHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFTcBJf3uGoq81T2FZyy9EKWNwGzyZA3Bv4R6UNiKfPyZve0KNUUYQo/aJxZeYExCsmvrdSAI5e0nCNR2JnJ/lvE/e022AmyVhfwpgfqKAKNBCHnjCe20qCE0KOnjY/topZ4s2G4wZChox6tZ3UCH60qeTHO/0Mmz3T8D+0ap5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gEBvWWkD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIG6OFKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC56C4CEE4;
-	Mon,  5 May 2025 09:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746438945;
-	bh=C+qofN41T9ZGZV/Yauz2+1+PKYZmi9DihY6aLigOKSI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=lIG6OFKKuZoF45Xa5t+XOx2zCpIrNGnvG4tQ+MSOPD8cmpNfuqXBeXEQJCQvzV+Tr
-	 TVb9iR3kx5r/nLo6Ivm3btPA3XlQ1WlJcKlQqOVMIlcMTrRvwmjmMdJuvInwuiCPPZ
-	 j8/qiNiZSyf80yMW3JYb2+5Jlr3gxr2/Mfow6l+49fECTvMk6Q2I0ypz0+JQrlAxho
-	 m1CyDA2fbsGuf3vuEmN7m4xX165tSxjwDG616sOdZ1kPN3eRCQ1k9Z188xhX/3gZw9
-	 MdcMGURjj6qG05hThenfkuXn/UuLCyj0UebROnk9llUV1GLIsasAYQwNUqb9Agw06X
-	 q3+FbTdn7wyzw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Masahiro Yamada"
- <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,  "Luis
- Chamberlain" <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,
-  "Nicolas Schier" <nicolas.schier@linux.dev>,  "Trevor Gross"
- <tmgross@umich.edu>,  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
-  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
- <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
- KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v11 2/3] rust: add parameter support to the `module!` macro
-In-Reply-To: <aBTMMHWNXS7wK7zS@google.com> (Alice Ryhl's message of "Fri, 02
-	May 2025 13:44:16 +0000")
-References: <20250502-module-params-v3-v11-0-6096875a2b78@kernel.org>
-	<20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
-	<WroEJHY8a-y8vbSQkUvGJJs7yTQGKMsHJqmWFYGkz5bZ_PsiE8GAozjSaNpWjWina1XanjVNpV0Av3woiaUtJg==@protonmail.internalid>
-	<aBTMMHWNXS7wK7zS@google.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Mon, 05 May 2025 11:55:33 +0200
-Message-ID: <878qnbxtyi.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gEBvWWkD"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544MZLfW017719
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 09:55:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=2/mHzBkdkIdu/XMlXL1MKLhp
+	gnZzaTuY/YtYOHlKf3k=; b=gEBvWWkDAkH2mH/o/AVZkrUpWTD4uiNsgHtK99c8
+	AvUfzmTcVjreuEAaeGXJ/02eEIQVkGXFDalkYM/5GLCSAn99rML7YNX/pC50nIsS
+	ARbmezpJL6NLNvoI3xhEWcqOXRB44X8Q8sidxWpM8ISrkmYsS9k+rRN9UuHyU3jP
+	A0G+3psf8E207D7s+ToOAFiLPZ63rTuWfnr6jTdTV37lmBzKyhOSU+mogdFjQU0r
+	JWA8PEzy62ISv8yXGXeBuGteAJsCyKuFcoMvKC9GMlth9GJOmbaJ86zYnIXXRJdB
+	ZlY3rRmqSodzYAYI6sr0mGzsxaT7lWLHiiD3/YwD8mPf2g==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46dce9bmf5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:55:46 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4768488f4d7so66759591cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:55:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746438945; x=1747043745;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2/mHzBkdkIdu/XMlXL1MKLhpgnZzaTuY/YtYOHlKf3k=;
+        b=oX3bEXyR7ZUa9pXea4FmwvfWh/p8lhwWEDClA75cjtV26baxnautVymhiSc8WEY8I/
+         p2X2aiKs6G4lCwU1nGMF1/qpCgIhq2weZ9KapaUM+yomymArbx36XFTpCxZJ+scqTX0d
+         4e0GIdbXuFrH5neMgzna5Y18/T+u6IOqXmlv6KVTtPZWfoWl5NJvaInSh1AnJve1xtop
+         CahnqE6GoE9IqflipTOXSN2Oa8ihpwR47+Hvn2vghv0BQVz4UigkZvmyYrSFOpox/kQu
+         25KBZ0cxgkKIOC4vjFSu6THbBYj0wcNuUwI2AJ2LjvNyAMwSoe81Dn9M1SAg4TsBcFTh
+         4L8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWvxEjx9uPMP0xM7XSlvGLNC4Yam5jfXb0V+OfTbSwTmbHda0+g7TrpAFncdJquVL/YO1s5Eow4X9bJXW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZog2Kt05kZIc47bgyiyomvbU1ygSK0Duvyp4w+9zE801wwOjo
+	yWwHlJaEPgC0wdsdHVVsQO87493AVE36vQHLePZK1V2blP4H4AmS0F7Mm7EQLZIhaBuR4TOd0g1
+	TAl6W4WZgyULpibuO5xIwmBesqPS828H4/KQ5zXjxEVVZ1rXHAl8ffJMVS9EL0kYSF6gad0s=
+X-Gm-Gg: ASbGncvII8CIayKIsB35CGY4kujbr1puWKercM+QLiG8C5ifS5SVqNtcyRnFBTG59Zg
+	g2Z4e3x6AKHhcE6nkoVOtGQ4YZPapDs4WJ8d6yQa2/ugwU6TG4Ocysx1MaO04cBmtn61g2zuK9J
+	yqLfVyZIfxia9M3FNmyNpKv5VATvF0nYMtSOmWqxyNbTv03dvBTQiQfmZhTrkEMeV+ymgbpwgx7
+	l4aNnzr/CaLLN4GSu2CQAdaHwZpQQ55zPYYPuRpreakSSxxEVsfbaDAgt2xUjOX/gcmeJEjUXZo
+	YYUZbW4T1C3N9IVq3/oqUq1ydWYV7dTZ+WArXp4m7oYoSzRyf1OM116YNmrOAaiR1JMhlm+wHxA
+	=
+X-Received: by 2002:a05:6214:1c0e:b0:6f5:117c:76cf with SMTP id 6a1803df08f44-6f51580c00fmr168424606d6.40.1746438945414;
+        Mon, 05 May 2025 02:55:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGknyWbznndebKntrV92c9APdUuAC3oqeLq7ISMW2xppAZupC/c68JL1jEz5Pc9uS8Y/NJ8Dg==
+X-Received: by 2002:a05:6214:1c0e:b0:6f5:117c:76cf with SMTP id 6a1803df08f44-6f51580c00fmr168424416d6.40.1746438945126;
+        Mon, 05 May 2025 02:55:45 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6a9fsm1658248e87.234.2025.05.05.02.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:55:44 -0700 (PDT)
+Date: Mon, 5 May 2025 12:55:42 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 0/3] SC8280XP SLPI
+Message-ID: <xwuxekxqqt76xi5vitfwp4juwm7vowkdn7zjniymup6pmcwwef@rkr366xgetxz>
+References: <20250503-topic-8280_slpi-v1-0-9400a35574f7@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250503-topic-8280_slpi-v1-0-9400a35574f7@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDA5NCBTYWx0ZWRfX4X2cvjAyLO90
+ JO+rkpYsAiluc9Y6rw4VOQ46M6NOIeJm5K4A4kFdEk9CqYvdoRCh+IkxnlaxryaLNQlda+e45cG
+ NOtBg7z1IQNmIV0bRxpxOGlkcXvwM7G00BHzA1nMzNMy5Re6r/hLE4bbgmyYtMUeZd/rcgSJyw1
+ 3kE5aPMcCswXRo43TxeAAzE22RX28aqQAK2i1/+U3l9+9TM20w5AQavIRep4ExupSPWJko7xLJl
+ vZLmAdcnn0bnNjnCawigMVblTtSV7jk6Iht5b63JxjEFT/fWtWx7epf3PcyDcha6FX2+qXQzMbC
+ kUbEZ41nrgeKW9Q2lNKwCcXywyWDTLzW/9i6S6xYHfHmlbxB7Mb8hMFoQ7G1sqvMJbYzInKfbri
+ +DIUaJ1ubGC9jKSbndeaE5ll/QqzPufYbUnmZtU9YhOJw3i9I+5Vy7JZMvkpmG1uTk94U8mL
+X-Proofpoint-ORIG-GUID: f755uNwqyNLi-glwPsJs72DUoOxm3q1v
+X-Authority-Analysis: v=2.4 cv=Qope3Uyd c=1 sm=1 tr=0 ts=68188b22 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=x_-MvMI86miFrt3VAdAA:9 a=CjuIK1q_8ugA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-GUID: f755uNwqyNLi-glwPsJs72DUoOxm3q1v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=611 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050094
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Sat, May 03, 2025 at 12:37:58AM +0200, Konrad Dybcio wrote:
+> SC8280XP features a SLPI, much like its distant relative, SM8350.
+> 
+> This series adds the bindings and dt node for it (also cleaning up the
+> DTSI in meantime)
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Konrad Dybcio (3):
+>       dt-bindings: remoteproc: qcom,sm8350-pas: Add SC8280XP
+>       arm64: dts: qcom: sc8280xp: Fix node order
+>       arm64: dts: qcom: sc8280xp: Add SLPI
+> 
 
-> On Fri, May 02, 2025 at 02:16:35PM +0200, Andreas Hindborg wrote:
->> Add support for module parameters to the `module!` macro. Implement read
->> only support for integer types without `sysfs` support.
->>
->> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
->> Tested-by: Daniel Gomez <da.gomez@samsung.com>
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
->> +unsafe extern "C" fn set_param<T>(
->> +    val: *const kernel::ffi::c_char,
->> +    param: *const crate::bindings::kernel_param,
->> +) -> core::ffi::c_int
->> +where
->> +    T: ModuleParam,
->> +{
->> +    // NOTE: If we start supporting arguments without values, val _is_ =
-allowed
->> +    // to be null here.
->> +    if val.is_null() {
->> +        // TODO: Use pr_warn_once available.
->> +        crate::pr_warn!("Null pointer passed to `module_param::set_para=
-m`");
->> +        return EINVAL.to_errno();
->> +    }
->> +
->> +    // SAFETY: By function safety requirement, val is non-null and
->> +    // null-terminated. By C API contract, `val` is live and valid for =
-reads
->> +    // for the duration of this function.
->> +    let arg =3D unsafe { CStr::from_char_ptr(val) };
->> +
->> +    crate::error::from_result(|| {
->> +        let new_value =3D T::try_from_param_arg(arg)?;
->> +
->> +        // SAFETY: `param` is guaranteed to be valid by C API contract
->> +        // and `arg` is guaranteed to point to an instance of `T`.
->> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as *mu=
-t T };
->> +
->> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
->> +        // access. `old_value` is pointing to an initialized static, and
->> +        // so it is properly initialized.
->> +        unsafe { core::ptr::replace(old_value, new_value) };
->
-> You don't use the return value of this, so this is equivalent to
-> unsafe { *old_value =3D new_value };
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> # Lenovo X13s
 
-Thanks.
-
->
->> +macro_rules! make_param_ops {
->> +    ($ops:ident, $ty:ty) =3D> {
->> +        ///
->> +        /// Static [`kernel_param_ops`](srctree/include/linux/modulepar=
-am.h)
->> +        /// struct generated by `make_param_ops`
->> +        #[doc =3D concat!("for [`", stringify!($ty), "`].")]
->> +        pub static $ops: $crate::bindings::kernel_param_ops =3D $crate:=
-:bindings::kernel_param_ops {
->> +            flags: 0,
->> +            set: Some(set_param::<$ty>),
->> +            get: None,
->> +            free: Some(free::<$ty>),
->
-> You could potentially only include `free` if
-> `core::mem::needs_drop::<T>()` as an optimization.
-
-Right, nice =F0=9F=91=8D
-
->
->> +    fn emit_params(&mut self, info: &ModuleInfo) {
->> +        let Some(params) =3D &info.params else {
->> +            return;
->> +        };
->> +
->> +        for param in params {
->> +            let ops =3D param_ops_path(&param.ptype);
->> +
->> +            // Note: The spelling of these fields is dictated by the us=
-er space
->> +            // tool `modinfo`.
->> +            self.emit_param("parmtype", &param.name, &param.ptype);
->> +            self.emit_param("parm", &param.name, &param.description);
->> +
->> +            write!(
->> +                self.param_buffer,
->> +                "
->> +                    pub(crate) static {param_name}:
->> +                        ::kernel::module_param::ModuleParamAccess<{para=
-m_type}> =3D
->> +                            ::kernel::module_param::ModuleParamAccess::=
-new({param_default});
->
-> Is this global accessible to the user?
-
-Yes.
-
-> It would be a use-after-free to
-> access it during module teardown. For example, what if I access this
-> static during its own destructor? Or during the destructor of another
-> module parameter?
-
-Yes, that is a problem.
-
-We can get around it for now by just not calling `free` for now. We only
-support simple types that do not need drop. I think we would have to
-seal the `ModuleParam` trait for this.
-
-For a proper solution, we could
- - Require a token to read the parameter.
- - Synchronize on a module private field and return an option from the
-   parameter getter. This would require module exit to run before param
-   free. I think this is the case, but I did not check.
- - Use a `Revocable` and revoke the parameter in `free`.
-
-Any other ideas or comments on the outlined solutions?
-
-
-Best regards,
-Andreas Hindborg
-
-
+-- 
+With best wishes
+Dmitry
