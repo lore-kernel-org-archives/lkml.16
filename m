@@ -1,235 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195B21F417E;
-	Mon,  5 May 2025 13:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48E21459F7
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450477; cv=none; b=QEGrGushqoTP+E64r7ZYb+IozyjtDB/m+/L7blcPGNaK/4UDbFCllgC+hVVCxEQBMPIraUJz1P4g7AZKbLOINADwOP76YMiU41H8Bb72sQagmSLMkhgp7IpksX8KFKuB3V7sJD8bKo91yEE9sv2zf6NFOwAlVjgq70es0WieF/Y=
+	t=1746450527; cv=none; b=lHb+i0+hyLREzW+72vykmYZbalW0AVIOgE1TdAfI9bbQReVn/HrWpWCrGOH659swozTbF6eEDC/2Dq1O4wfrmwpsAdq9yuJeXHqyk6Tc1QjC/5CH9t1K/k62hcFCXnLxtCw2Z/YCemm5dswCWSDYl4AOCZbRmddfflYaOlMJAbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450477; c=relaxed/simple;
-	bh=Ja6gaduoMfpLfx53EIkIq4u5tNzA++ROap/e8Y99wWw=;
+	s=arc-20240116; t=1746450527; c=relaxed/simple;
+	bh=CcTxzgBbzI90f+wN0JcENM4jZ4hoxOhLzv6DnmnMc4A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BwcMJjHLmUhdv4EulSzr/OsOBOdfqq+MY5/1YlKuGeotN5vTArSE8n5pf0nETOnxSuOaErjJ7YFC91BZWGBpMHBxzIJvNdeSTGXLHovb+GH4/6AjBNJphfE6fJgmRY0EzldXc/cKOTV2POMOkSyZq/B0CCje7k38X8io+n1p6Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ja9Hcmsy; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=oLPS90sl//+5VI4wZTTxLK37bbJF7K7oFrcPn/ow0xIutkTzOIFsExT/1tYYHSrOpAxpmSjmPi5QFPLghZX9qTufnow22Cix9rXA0qcZ4jZvo10vhzMSDMxpIyB5taTtUTlekX1WCQ7nzsd49nXYOcA7RTI4lB287V1DHIQ1Ba4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kq5iKNY/; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ja9Hcmsy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7897DC4CEE4;
-	Mon,  5 May 2025 13:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746450475;
-	bh=Ja6gaduoMfpLfx53EIkIq4u5tNzA++ROap/e8Y99wWw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ja9HcmsyLfZ19y+WL2iW3vsZK1VE3PJIrJdBemBPgFEftVVt6nxhrg8Q4vTdXfxEZ
-	 7A8iHImTQOsw2JOOZFN2si8oi9WK9ESrdzCTcfDFwa4EO9ZfwvVyISQucBknjXsInM
-	 DLD0ao10+HgE1g3WY0bTr4pbFeCW2eBTsf071MO0+vH9BFyGPVSyDXTaKIKaHEKv7g
-	 7XP4UdfhigzwjfV4+0wrULXeXD9sURFqfajnFS9kh8NlixABzgcegBIciibD4RQc7G
-	 d7U0pnUvIIWEn27/HruVLiS9NUJTquctsBNPtbyW4XzGM+/mRqKZlsC4oEfc5if7/C
-	 bqxMp086S26Vg==
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f8ae3ed8adso3168136b6e.3;
-        Mon, 05 May 2025 06:07:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjBKcz39w/9S83wsG4U9Ta2D1GzGkkgxo/gbOhrkwFxbfAWBkYXWvu3cF0Y/ad93N1mrzkD1hrdP8ZPQ==@vger.kernel.org, AJvYcCUntqnj1wsBuZlR0fM8lQEkEvVJRZKhhgBqQ48eINCDef8aKxu6pbBWzMMHUyr1Llw0FlWih9uiGL9t@vger.kernel.org, AJvYcCUq+r5dI1hrW9ujOvzIVX7RqP9wbWGTz2aswSzX9vvlX6HnRgo8GFp9kIfPHQ18b0eOYrYrJUKp6mwMGbxn@vger.kernel.org, AJvYcCVrFO65ewQ9TnBBOI4YH0DqzttmpavraN0Xbdx8b+EkIsVsCZI2YFJMybv71GzQVw8j8GNIcxBltGYxwl/T@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPiZtm1yA+89iUMXL9fc5gq3A7Pn4Fly6fOzuPD6CcofADQ5gL
-	UI4W8vHgmQJUQ3Dg9OVmPNpHzTlnCviCtt4uRCxfLPk0RFcJAtzPrJ2Su70z6HVzHphbAsWcej3
-	KI0jf2Zy8iyygectD1cY06rDwg0M=
-X-Google-Smtp-Source: AGHT+IHafvTUmLP+318TJZovnwvkV7NxuJchj37bOS0+RlXAjCLDey4g2q/qRn3CyHFWlAdadNbnH6Ys4hKJ+xORPyo=
-X-Received: by 2002:a05:6871:6a6:b0:2cc:3586:294f with SMTP id
- 586e51a60fabf-2dab2fe1391mr7120194fac.9.1746450474755; Mon, 05 May 2025
- 06:07:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kq5iKNY/"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so12836a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 06:08:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746450524; x=1747055324; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CcTxzgBbzI90f+wN0JcENM4jZ4hoxOhLzv6DnmnMc4A=;
+        b=kq5iKNY/AnIUtVknlPT/tz98zm4MSOGfJnLvMZH5/eXGakKynlE9gEdHx8ZEJHpvbm
+         nRNIruInVpmfJt2my0CZFwVH/9hrFAqp6vxR+vbgNQT6OAvKXDurcpbFdiiKUQBbHOlm
+         6lgK9imDnlBKKa7RsE6DswQyetBWo6MVlxy7HcwAnk01VUsGIB263xLRt7tcAIJbYFMT
+         A9uNi7TdPvRYxw87Epu9uRGBL7Zae4geyq10K8jiAl7x5nKvVYc3yDklB/jssV2IxZoN
+         YO/llfhEmc1//+pu4h5h1iSRwW0DBsdkTJo/+p3/lUBVfdwY0rRM3CvCcHcF9hquimbZ
+         YvHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746450524; x=1747055324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CcTxzgBbzI90f+wN0JcENM4jZ4hoxOhLzv6DnmnMc4A=;
+        b=L0PvSYAqQpSzsEjk4rmEX6lTuNgfgMpCiWNn4/T0nZFzmeyTUcXb1Btr05x18Fm1JG
+         Ag2qH2Vuvs9emcOCy86B3lBZBHuhqIYW8F2p+khBbEnEZ7iIsAktVdCA9dr7JJfxH9p5
+         oAs8DNcrFmCi/u24C/+fK3vLHNsttk9lNfBn1nO2Jdy23GzvJ49GV6mqzwJS45w60X57
+         CKsPeYTgnPSQkAN8v5t7Jd871yhDAIjkNI3v7EnUP2NwN3piyQFJbx4RlokfE5WsPSNK
+         f3Kacbg8bQLREgGC/D7hWcMjB1EIryCcHsy8Bmn0jW0XzDOEIJD9ffmSAQVF3nMN1uth
+         ALRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhBr1uaqbBD//wzs+qdEYAz3CoBbCE8669l4TQrxrYcpsfLRh4sWeFRNKqzkuMCw081fFNr5wXf1z36XY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTw9KDpmO+Pev+OceEiAyt8OVyjSNnTbnAMjj/PJVd0ItbICe2
+	F4P/pUw28z7Ys2I1Ehs0qSID75g1zwKEP8EFY9NU8W4Nb8NLwAX9DlO02htoInw1+SBW0+p2Pea
+	VzlUHAbcfmqIkka1XXEP84GqGJMb6Cyi3e5T3
+X-Gm-Gg: ASbGncv9DEG/4+UoUd4cV8YYyLdN3XPO+BdmmyO1QCcI5gBkDYY8gCRk8sB7TiQ9nbl
+	lYB4XS4Jx45CZTZ2jr/hJpwkppy5mhjKV56iD4a2ZECvZw3eO04qGL0cyDJBf/dN+oiX93CROdC
+	aOgy6Y5ttAX0VWabU2ujFjUz16C8PJ49WBP0C5ozpzhXo5iYn6Eg==
+X-Google-Smtp-Source: AGHT+IFX1jZnIEUIqKHTcho7yIpvOOHBKxzhoHPTnmaDdVP2OafarV7bS2cZO9snYNbMzLKCcMCds3n+Ecp9RGACrAw=
+X-Received: by 2002:a50:ab11:0:b0:5e5:b44c:ec8f with SMTP id
+ 4fb4d7f45d1cf-5faaa1f2701mr123881a12.3.1746450523693; Mon, 05 May 2025
+ 06:08:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com> <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 5 May 2025 15:07:43 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j262Jorbb5--WY6KedR7CWvdTTYP10ZRZTqXhTNJ1GiA@mail.gmail.com>
-X-Gm-Features: ATxdqUHOe_bTrNgfNcYSdbpuewLh6hfF5OjL2949NofDe1GEt1BvWztbAYVUpwQ
-Message-ID: <CAJZ5v0j262Jorbb5--WY6KedR7CWvdTTYP10ZRZTqXhTNJ1GiA@mail.gmail.com>
-Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox for
- Intel processors
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
-	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
-	linux-hyperv@vger.kernel.org, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
-	Ricardo Neri <ricardo.neri@intel.com>
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org> <20250505-work-coredump-socket-v3-8-e1832f0e1eae@kernel.org>
+In-Reply-To: <20250505-work-coredump-socket-v3-8-e1832f0e1eae@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 5 May 2025 15:08:07 +0200
+X-Gm-Features: ATxdqUHIxwIoIqV0etAlWQHM7DrrKMZU_RnaVc88wfMW5gzzGzHJfNE1OpkPS5Y
+Message-ID: <CAG48ez3UKBf0bGJY_xh1MHwHgDh1bwhbzMdxS64=gHNZDnNuMQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 08/10] net, pidfs, coredump: only allow coredumping
+ tasks to connect to coredump socket
+To: Christian Brauner <brauner@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
-<ricardo.neri-calderon@linux.intel.com> wrote:
->
-> Add DeviceTree bindings for the wakeup mailbox used on Intel processors.
->
-> x86 platforms commonly boot secondary CPUs using an INIT assert, de-asser=
-t
-> followed by Start-Up IPI messages. The wakeup mailbox can be used when th=
-is
-> mechanism unavailable.
->
-> The wakeup mailbox offers more control to the operating system to boot
-> secondary CPUs than a spin-table. It allows the reuse of same wakeup vect=
-or
-> for all CPUs while maintaining control over which CPUs to boot and when.
-> While it is possible to achieve the same level of control using a spin-
-> table, it would require to specify a separate cpu-release-addr for each
-> secondary CPU.
->
-> Originally-by: Yunhong Jiang <yunhong.jiang@linux.intel.com>
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> Changes since v2:
->  - Implemented the mailbox as a reserved-memory node. Add to it a
->    `compatible` property. (Krzysztof)
->  - Explained the relationship between the mailbox and the `enable-mehod`
->    property of the CPU nodes.
->  - Expanded the documentation of the binding.
->
-> Changes since v1:
->  - Added more details to the description of the binding.
->  - Added requirement a new requirement for cpu@N nodes to add an
->    `enable-method`.
-> ---
->  .../reserved-memory/intel,wakeup-mailbox.yaml | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/int=
-el,wakeup-mailbox.yaml
->
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/intel,wake=
-up-mailbox.yaml b/Documentation/devicetree/bindings/reserved-memory/intel,w=
-akeup-mailbox.yaml
-> new file mode 100644
-> index 000000000000..d97755b4673d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reserved-memory/intel,wakeup-mail=
-box.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/reserved-memory/intel,wakeup-mailbox.=
-yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Wakeup Mailbox for Intel processors
-> +
-> +description: |
-> +  The Wakeup Mailbox provides a mechanism for the operating system to wa=
-ke up
-> +  secondary CPUs on Intel processors. It is an alternative to the INIT-!=
-INIT-
-> +  SIPI sequence used on most x86 systems.
-> +
-> +  Firmware must define the enable-method property in the CPU nodes as
-> +  "intel,wakeup-mailbox" to use the mailbox.
-> +
-> +  Firmware implements the wakeup mailbox as a 4KB-aligned memory region =
-of size
-> +  of 4KB. It is memory that the firmware reserves so that each secondary=
- CPU can
-> +  have the operating system send a single message to them. The firmware =
-is
-> +  responsible for putting the secondary CPUs in a state to check the mai=
-lbox.
-> +
-> +  The structure of the mailbox is as follows:
-> +
-> +  Field           Byte   Byte  Description
-> +                 Length Offset
-> +  ----------------------------------------------------------------------=
---------
-> +  Command          2      0    Command to wake up the secondary CPU:
-> +                                        0: Noop
-> +                                        1: Wakeup: Jump to the wakeup_ve=
-ctor
-> +                                        2-0xFFFF: Reserved:
-> +  Reserved         2      2    Must be 0.
-> +  APIC_ID          4      4    APIC ID of the secondary CPU to wake up.
-> +  Wakeup_Vector    8      8    The wakeup address for the secondary CPU.
-> +  ReservedForOs 2032     16    Reserved for OS use.
-> +  ReservedForFW 2048   2048    Reserved for firmware use.
-> +  ----------------------------------------------------------------------=
---------
-> +
-> +  To wake up a secondary CPU, the operating system 1) prepares the wakeu=
-p
-> +  routine; 2) populates the address of the wakeup routine address into t=
-he
-> +  Wakeup_Vector field; 3) populates the APIC_ID field with the APIC ID o=
-f the
-> +  secondary CPU; 4) writes Wakeup in the Command field. Upon receiving t=
-he
-> +  Wakeup command, the secondary CPU acknowledges the command by writing =
-Noop in
-> +  the Command field and jumps to the Wakeup_Vector. The operating system=
- can
-> +  send the next command only after the Command field is changed to Noop.
-> +
-> +  The secondary CPU will no longer check the mailbox after waking up. Th=
-e
-> +  secondary CPU must ignore the command if its APIC_ID written in the ma=
-ilbox
-> +  does not match its own.
-> +
-> +  When entering the Wakeup_Vector, interrupts must be disabled and 64-bi=
-t
-> +  addressing mode must be enabled. Paging mode must be enabled. The virt=
-ual
-> +  address of the Wakeup_Vector page must be equal to its physical addres=
-s.
-> +  Segment selectors are not used.
+On Mon, May 5, 2025 at 1:14=E2=80=AFPM Christian Brauner <brauner@kernel.or=
+g> wrote:
+> Make sure that only tasks that actually coredumped may connect to the
+> coredump socket. This restriction may be loosened later in case
+> userspace processes would like to use it to generate their own
+> coredumps. Though it'd be wiser if userspace just exposed a separate
+> socket for that.
 
-This interface is defined in the ACPI specification and all of the
-above information is present there.
-
-Why are you copying it without acknowledging the source of it instead
-of just saying where this interface is defined and pointing to its
-definition?
-
-> +
-> +maintainers:
-> +  - Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: reserved-memory.yaml
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,wakeup-mailbox
-> +
-> +  alignment:
-> +    description: The mailbox must be 4KB-aligned.
-> +    const: 0x1000
-> +
-> +required:
-> +  - compatible
-> +  - alignment
-
-Why do you need the "alignment" property if the alignment is always the sam=
-e?
-
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    reserved-memory {
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <1>;
-> +
-> +        wakeup-mailbox@12340000 {
-> +            compatible =3D "intel,wakeup-mailbox";
-> +            alignment =3D <0x1000>;
-> +            reg =3D <0x0 0x12340000 0x1000>;
-> +        };
-> +    };
-> --
+This implementation kinda feels a bit fragile to me... I wonder if we
+could instead have a flag inside the af_unix client socket that says
+"this is a special client socket for coredumping".
