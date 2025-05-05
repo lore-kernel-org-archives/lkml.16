@@ -1,240 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F59C300284;
-	Mon,  5 May 2025 23:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7926128C86F
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487717; cv=none; b=nd9oIOy0FmMuhCGSD8m3i7uH+QFFy1kTVz//n0QUbho1YrCTPFLpx/iJbq+JZ0ySKkuErcUw8vwtlg4JHNFpTbk0C+wkTjGE9cACTPRD8p3UtjQ40Y5NbR7qW6VYdL3RJamnLEXF6BCvgyuuB7nwuh8HuzWNWDw+GrVuLRPdMXc=
+	t=1746487809; cv=none; b=bir4fO9QN9OFnSQ6S7NdUUhNH8QYjl2rm+Jp8jPRMmPCav3n76b+fMkTD7mr9oidRWRdnaUHTZw9EoM1iytoX+ocRD5yNcFc+5pwJ2dgYUJgCVQR2FnB2w6kRiUKpNigvYaxE7utyWTNsUSfqpy/epbB8IVHY1MysfZbmCXkEBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487717; c=relaxed/simple;
-	bh=2I5h0E0Wfyt6IbnnGUZMO1vhobqu5/o7Q7zpDetyRzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Q5nbMGh0M/sKLNDBbGEOod0sWibFRXCGV+ChDdyUqtQldfaIvknTHHhWJBn4wZ/blPTYGC3PdjUosJKXB3qMS2+nIyxMV2KvszBzLAbKwdUIEf5Qxmp4y81n3SmHkYiG2MWS+BmAfzBqxWHm94/AOVcyPPSpT2vaK4LUHMiT02Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fkCnzTdP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746487809; c=relaxed/simple;
+	bh=Z9EL2AmRSSi1CFpKFRtGl/iUg7FQoO1nMOq7Ho2Xk+s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TqqJ8hvsKBoN49UbSHbCUSYRcNzUPr3x76uPP4XSippGJ/fVJBUEOJ7vbpfiQwPEJe8F+ZGui34ZM1OdXf0YcKTBNJevLD8a4XEp9ypMsGXNoW9QBU84kBc5S31N+bRHoiMZfVtZgDUDlq4+gbF4NP7D6SE9KZsmCQ3clUNfCo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intelfx.name; spf=pass smtp.mailfrom=intelfx.name; dkim=pass (1024-bit key) header.d=intelfx.name header.i=@intelfx.name header.b=dHPQHa8L; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=intelfx.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intelfx.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fkCnzTdP"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 545M8Xxc026325;
-	Mon, 5 May 2025 23:28:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0CFm2uDuF4QslEcgCv0g0HtvXtQzjBrqc+iTCQS8mQY=; b=fkCnzTdP4HUQ+8vK
-	3JvCuyPtLLhi6ffEvUOTXYENaqgXRZ48mxJSamtlaPlI1fmc17kRRAQpEdjF+tq/
-	rixjwZBc8FferMlI7crGeJTGbKoWb742myuQYN+LtcNWDTwK82DcJJT9iFXdBDPT
-	tElWxH0wFPNnzpOh5s8vBkQ4ZYJGfuhq/crQ9juZvm4GyJ2l2ADzfQiXq8Qohmch
-	nzsZaV2Y5twDWg2TdA6A+tDHqL6q3fx/AoUpaobcB49VpSVoQtvru4XZadusWiDo
-	nVP23sGbeIHlE7DHTAtvUU1j70yTnsAUiEpKExbT6uSyu7/7FUFWo3T2ZBuPOz59
-	/o8mcQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46f5uur555-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 23:28:19 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 545NSIGg016450
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 5 May 2025 23:28:18 GMT
-Received: from [10.134.71.99] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 5 May 2025
- 16:28:18 -0700
-Message-ID: <342326dd-3739-4a8f-b83d-fe21bb67b46b@quicinc.com>
-Date: Mon, 5 May 2025 16:28:17 -0700
+	dkim=pass (1024-bit key) header.d=intelfx.name header.i=@intelfx.name header.b="dHPQHa8L"
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso7462907a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 16:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intelfx.name; s=google; t=1746487804; x=1747092604; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7EeTWe2vOY9sfTUd+uEiP0EKhNqq6tm4RMFETZhCTuA=;
+        b=dHPQHa8LKYK6uTyLDRU87YyPifgJs/IDF/cWgPtGlLdJgpUh2irGJPykdncYPUSH1k
+         9BhI6MzvCw0YIHREknNdZp8GvBrqQoHw8DJ4EsVIvXrF3Z96ui+oOn+EI6EzU9zqYFG+
+         C63xgMlBtXZSJwZMjqGM7MttWVRaD2mslsNWQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746487804; x=1747092604;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7EeTWe2vOY9sfTUd+uEiP0EKhNqq6tm4RMFETZhCTuA=;
+        b=Ffm8MZQFFbOdA/0vlfHiht9qJU82hhULmVAN4gK0oeVJy6EmC2Cp3S5vCyc1EnDIHW
+         wKoLL1/kMIhIxgb3xtMPbdF9CoJiRAymo/mblEJGLbE9MQGbD1MEFd7r0D0W/amXTjEJ
+         vMUzQoINia1zt+1xs9sLQqpBQ5h9keEy++H/B6fLhgEbdqhWAN+lA1RunPd11uoJy/Ri
+         qbFyxYreegaP659n2w5SnUJ7hA9Cl8Z4TF0xDTGXSfLqS7dgfL7p4/OM5kjwohScqoao
+         aBxgMgOUJb0p23eKsTyajJ7NBLpM/GssVrjM7ps39zaEk15SfAbYe6wNw6H2WUw9jy/6
+         fFKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnYvNegNMZJF7zjHjicSieeFNLNPHt+8Obh6GL/kVX6Y/IDIMshhrSPqClm1Xybc+44Tsrk8EIcLAXpQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdGccfVj5cnX9DPcXahI8e0OllGh9ikOxY2+Gltf8ec5KF5U0l
+	DZsKmfGZjLjDGv9W/GYagYG9F8rPHEGuvv8mKer7wM7UN0VG7GMTIV8l38U8KjU=
+X-Gm-Gg: ASbGnctlc8YE0XOZlXEpLeVN9TrX03oGMjzOAqPdvrogFTM34nWypIcLkSs4K28QfgB
+	4kYN91d66R+sWfqQvt8eLJwh+CKPEixSLQ72xCCz8mriZwur6NSaYzH5SvE8lYUfcM41BGcf0Kb
+	w0MJ4DHHRwr71roQJ8jO26Lq4WTwUoO0DvJaULTxdKuQbqNKBRYe9HCH7Loq1AvhSSIVoWAD2oW
+	Ia2lzoAk5CFFrlF5aotGTkIbT9Epf4Tk6+mrHJPDjxBPvOBbxiXJU24Ro1TFCeK4kenDTue4/wj
+	VaD2uysSKcRhbjcRKW3DIhDFTGN2S21a9gE2Zk08gg7UWo4eziu2m1y7BS7wtO8rLsr+kNk0U3L
+	Zzjqp43vl7x6c5KnVuoGp
+X-Google-Smtp-Source: AGHT+IEIBEY87wJBYO9p8Dng2HG4EwyPw5fqzeX7ufKZxdMeozQDVcOD6O/19cWw9AkxLLXqHNpBwg==
+X-Received: by 2002:a17:907:7ea5:b0:acf:c80d:ad81 with SMTP id a640c23a62f3a-ad1d46a9ae2mr72197666b.39.1746487804347;
+        Mon, 05 May 2025 16:30:04 -0700 (PDT)
+Received: from [192.168.100.9] (188-169-240-93.dsl.utg.ge. [188.169.240.93])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1895090a1sm575604866b.137.2025.05.05.16.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 16:30:03 -0700 (PDT)
+Message-ID: <9b1d18baf8d6839630073058a3b33c31d1b4649f.camel@intelfx.name>
+Subject: Re: [PATCH 12/15] x86/kconfig/64: Enable popular kernel debugging
+ options in the defconfig
+From: Ivan Shapovalov <intelfx@intelfx.name>
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>, Linus Torvalds	
+ <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Borislav Petkov	 <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ard
+ Biesheuvel	 <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, David
+ Woodhouse	 <dwmw@amazon.co.uk>, Masahiro Yamada
+ <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>
+Date: Tue, 06 May 2025 03:30:01 +0400
+In-Reply-To: <20250505110946.1095363-13-mingo@kernel.org>
+References: <20250505110946.1095363-1-mingo@kernel.org>
+	 <20250505110946.1095363-13-mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/33] drm/msm/dpu: rework HW block feature handling
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul
-	<sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        "David
- Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Vinod Koul
-	<vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>
-References: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=L9cdQ/T8 c=1 sm=1 tr=0 ts=68194993 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=8YDd2d3uNFf-k3v2XIwA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: c0f8rar1s6Sl_mr0AwWaIm5v7ftWnRTd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDIyMSBTYWx0ZWRfX9ZfMUrFJJeNM
- avlDbWX50FQTA56C2EJ4nZaRAh0SVAVrmlJFI9t8ukzL9SNRqveILb9AZV1NJRc5At7dQXA3FrQ
- 69kNdbQsJ1jYGkN93iyqTIPPmjeKqP6lfOsR6hQf0GL+4hV0JZTtjsZPQ5B7ijPWRWVu/r7uyzv
- 45ZW/18GLIWH+xK3zcARvryMrjbvJp13y6tiZNNqcKEC7QWLW2zGavq/NNuep+AkCmdknVdqwUg
- n3ZquMp7zs+9VrUQs84vIZX7o5wh9GtceStN0/eQFRIbWyZvHlWFU+tw0C9g9X/5g25ida0J5eD
- y5PT7b1VxqmP992hcLhfdRz1aShmYAuvkKaUreGUlpI+nqR13bNfh6ldq9RIkB1x1q3N8F2gg0D
- QPvIWsOvZn7vctVd8wAQCjXQWE1j8nwYKwUnd6P/ixNY4MbmPjlX4TP0/MAK4tMluDM768ST
-X-Proofpoint-ORIG-GUID: c0f8rar1s6Sl_mr0AwWaIm5v7ftWnRTd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_10,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 impostorscore=0
- mlxscore=0 priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505050221
 
+On 2025-05-05 at 13:09 +0200, Ingo Molnar wrote:
+>=20
+>  - CONFIG_DEBUG_LIST=3Dy:
+>=20
+>      Fedora/RHEL have it enabled, while Ubuntu has it disabled.
 
+(Please forgive my potential ignorance.)
 
-On 4/24/2025 2:30 AM, Dmitry Baryshkov wrote:
-> Some time ago we started the process of converting HW blocks to use
-> revision-based checks instead of having feature bits (which are easy to
-> miss or to set incorrectly). Then the process of such a conversion was
-> postponed. (Mostly) finish the conversion. The only blocks which still
-> have feature bits are SSPP, WB and VBIF. In the rare cases where
-> behaviour actually differs from platform to platform (or from block to
-> block) use unsigned long bitfields, they have simpler syntax to be
-> checked and don't involve test_bit() invocation.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+If I'm guessing right, the point of CONFIG_DEBUG_LIST being enabled
+everywhere is probably more about hardening than debugging, and given
+that since 6.6 we have a CONFIG_LIST_HARDENED[1], wouldn't it make more
+sense to use that instead?
 
-Hi Dmitry,
+Or is the point here to exactly follow the typical distro config,
+without regard to whether it's actually the optimal thing to do?
 
-I agree that some features like *_HAS_LAYER_EXT4 and INTF_INPUT_CTRL can 
-be replaced with a general version check.
-However, for other features (such as DPU_MIXER_SOURCESPLIT --> 
-dpu_lm_cfg::sourcesplit), it seems to me, you've just replaced the 
-feature bit with an equivalent catalog field.
-So while some features can be dropped from the feature flag list, it 
-seems that we would still need feature flags (in some form) for others.
+[1]: https://lore.kernel.org/all/20230811151847.1594958-3-elver@google.com/
 
-Overall though, I think that dropping the feature bits makes it less 
-clear exactly what features are supported for which chipsets and makes 
-it harder to relegate features to specific chipsets.
-
-So while I do see where you're coming from here, I'm a bit hesitant of 
-the overall move to drop feature flags for the reasons above.
-
-Thanks,
-
-Jessica Zhang
-
-> ---
-> Changes in v3:
-> - Repost, fixing email/author issues caused by b4 / mailmap interaction
-> - Link to v2: https://lore.kernel.org/r/20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com
-> 
-> Changes in v2:
-> - Rebased on top of the current msm-next
-> - Link to v1: https://lore.kernel.org/r/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org
-> 
-> ---
-> Dmitry Baryshkov (33):
->        drm/msm/dpu: stop passing mdss_ver to setup_timing_gen()
->        drm/msm/dpu: drop INTF_SC7280_MASK
->        drm/msm/dpu: inline _setup_ctl_ops()
->        drm/msm/dpu: inline _setup_dsc_ops()
->        drm/msm/dpu: inline _setup_dspp_ops()
->        drm/msm/dpu: inline _setup_mixer_ops()
->        drm/msm/dpu: remove DSPP_SC7180_MASK
->        drm/msm/dpu: get rid of DPU_CTL_HAS_LAYER_EXT4
->        drm/msm/dpu: get rid of DPU_CTL_ACTIVE_CFG
->        drm/msm/dpu: get rid of DPU_CTL_FETCH_ACTIVE
->        drm/msm/dpu: get rid of DPU_CTL_DSPP_SUB_BLOCK_FLUSH
->        drm/msm/dpu: get rid of DPU_CTL_VM_CFG
->        drm/msm/dpu: get rid of DPU_DATA_HCTL_EN
->        drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
->        drm/msm/dpu: get rid of DPU_INTF_INPUT_CTRL
->        drm/msm/dpu: get rid of DPU_PINGPONG_DSC
->        drm/msm/dpu: get rid of DPU_PINGPONG_DITHER
->        drm/msm/dpu: get rid of DPU_MDP_VSYNC_SEL
->        drm/msm/dpu: get rid of DPU_MDP_PERIPH_0_REMOVED
->        drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
->        drm/msm/dpu: get rid of DPU_MIXER_COMBINED_ALPHA
->        drm/msm/dpu: get rid of DPU_DIM_LAYER
->        drm/msm/dpu: get rid of DPU_DSC_HW_REV_1_2
->        drm/msm/dpu: get rid of DPU_DSC_OUTPUT_CTRL
->        drm/msm/dpu: get rid of DPU_WB_INPUT_CTRL
->        drm/msm/dpu: get rid of DPU_SSPP_QOS_8LVL
->        drm/msm/dpu: drop unused MDP TOP features
->        drm/msm/dpu: drop ununused PINGPONG features
->        drm/msm/dpu: drop ununused MIXER features
->        drm/msm/dpu: get rid of DPU_MIXER_SOURCESPLIT
->        drm/msm/dpu: get rid of DPU_DSC_NATIVE_42x_EN
->        drm/msm/dpu: get rid of DPU_CTL_SPLIT_DISPLAY
->        drm/msm/dpu: move features out of the DPU_HW_BLK_INFO
-> 
->   .../drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h    |  53 +++-----
->   .../drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h   |   4 -
->   .../drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h   |   3 -
->   .../drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h   |   4 -
->   .../drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h    |  15 +--
->   .../drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h    |  19 +--
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h |  19 +--
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h |  12 +-
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h |  21 +---
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h |  11 +-
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h |  43 ++-----
->   .../drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h    |  45 ++-----
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h |  31 ++---
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  19 +--
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  16 +--
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h |  42 ++-----
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h |  14 +--
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h |   5 -
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h |  16 +--
->   .../drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h    |   5 -
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h |   6 -
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h |  44 ++-----
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h |  22 +---
->   .../drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h   |  50 ++------
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h |  47 ++------
->   .../drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h    |  53 ++------
->   .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h |  47 ++------
->   .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   |  52 ++------
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   |   2 +-
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |   3 +-
->   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |   7 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  51 +-------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     | 134 ++-------------------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 108 ++++++++---------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |   4 +
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c         |  21 ++--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.h         |   3 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c     |   7 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c        |  10 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  14 +--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   5 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |  28 ++---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |   3 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c     |   5 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c    |   4 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |   5 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   2 +
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c         |  11 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c          |   2 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   4 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             |  17 ++-
->   51 files changed, 304 insertions(+), 864 deletions(-)
-> ---
-> base-commit: a4efc119e8149503e5fe9e9f7828b79af2fe77c6
-> change-id: 20241213-dpu-drop-features-7603dc3ee189
-> 
-> Best regards,
-
+--=20
+Ivan Shapovalov / intelfx /
