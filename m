@@ -1,172 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C38D1FF60E;
-	Mon,  5 May 2025 12:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1924D1F3FEC
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449518; cv=none; b=Ig4g9Izgf9aZglIdnWjpDh1Jit9ilc//FI3L4MlW0ZoP/+VC0OjnUYVkJWoCTxroOyqT8vvkEMegqtFZyiNfHtuIW0LWx2A7wxGHuaVWlH21/UqyCaMNZ+jGIlqLMocF83DLFyZxTsOZzXBJpCnQAoQtU8FliHFakoqgSKbGhFs=
+	t=1746449623; cv=none; b=t27+7baHMNxJ30gcqs1CCnXZP9JYRdOM9L8VEq4TtNWtwUXzcXy3ZhoetfN4lPQkqI7G0KXcIGuDCZ53HKx8zqf1Qh5NbDyP6VgSBmyMHsWQo9PWVkYQAJSN1y6Zzd2hlaNpbJtBq9cxJSYkrLowxy6kkeGSScMMYE58qMFkFdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449518; c=relaxed/simple;
-	bh=VzzllNI+quXH8CvXC+n8SG8EyIUo7LIToXW+3F0UJPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJYybKjJ5PXqcSKvfVrAfaW6oX9EzwXfFdP0GDrTSsGNJhI7HY+xpv3MsTOj1hpUMDsfv2Di2CVfp0TEOTnhS7riWOPO/Vz0AsToLoEhjvCD53XAy8HncSWVNVQ+WGUBWpUFp9qitY1DtFTOZwglacaKZXXSEHkcJbTIw36Gyq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A99A21007;
-	Mon,  5 May 2025 05:51:44 -0700 (PDT)
-Received: from [10.57.93.118] (unknown [10.57.93.118])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CAD33F58B;
-	Mon,  5 May 2025 05:51:50 -0700 (PDT)
-Message-ID: <12a74640-753a-4116-90f9-42ec0337f751@arm.com>
-Date: Mon, 5 May 2025 13:51:48 +0100
+	s=arc-20240116; t=1746449623; c=relaxed/simple;
+	bh=e6yzW/ZN46CFaNCfL7PIyJJsT7+CNCnO+9OsbZN6mbw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gZGQmZZD4RpbSV0tTvomT9J4XiS4l/muetKLGl+jPjSoxtncUAqXYczvJr+4sXzIoPGHori97R8pETt7vWfPFWWdhz/C77i+sd1ul6cLgxWv6iC0ASdqH0XB1AMvT4BukoAk3vOIxXcWCWsMf1sQhy5JWygi67dsIU8GVoZUIks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvKB-0001yX-6r; Mon, 05 May 2025 14:53:35 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvKA-001ESr-2Q;
+	Mon, 05 May 2025 14:53:34 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvKA-000Jb9-27;
+	Mon, 05 May 2025 14:53:34 +0200
+Message-ID: <168c0dc2b1a9ebabbfd993e3a516dbf96d809f47.camel@pengutronix.de>
+Subject: Re: [PATCH v6 1/3] dt-bindings: reset: Add compatible for Amlogic
+ A4/A5 Reset Controller
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Zelong
+ Dong <zelong.dong@amlogic.com>, Conor Dooley <conor.dooley@microchip.com>,
+ Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>,  Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Kevin Hilman
+ <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+ kelvin.zhang@amlogic.com
+Date: Mon, 05 May 2025 14:53:34 +0200
+In-Reply-To: <5bb02494-e974-4d2f-a00f-417312b73bc1@linaro.org>
+References: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
+	 <20250411-a4-a5-reset-v6-1-89963278c686@amlogic.com>
+	 <5bb02494-e974-4d2f-a00f-417312b73bc1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Jan Kara <jack@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
- <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
- <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
- <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 05/05/2025 11:25, David Hildenbrand wrote:
-> On 05.05.25 12:09, Jan Kara wrote:
->> On Mon 05-05-25 11:51:43, David Hildenbrand wrote:
->>> On 30.04.25 16:59, Ryan Roberts wrote:
->>>> page_cache_ra_order() takes a parameter called new_order, which is
->>>> intended to express the preferred order of the folios that will be
->>>> allocated for the readahead operation. Most callers indeed call this
->>>> with their preferred new order. But page_cache_async_ra() calls it with
->>>> the preferred order of the previous readahead request (actually the
->>>> order of the folio that had the readahead marker, which may be smaller
->>>> when alignment comes into play).
->>>>
->>>> And despite the parameter name, page_cache_ra_order() always treats it
->>>> at the old order, adding 2 to it on entry. As a result, a cold readahead
->>>> always starts with order-2 folios.
->>>>
->>>> Let's fix this behaviour by always passing in the *new* order.
->>>>
->>>> Worked example:
->>>>
->>>> Prior to the change, mmaping an 8MB file and touching each page
->>>> sequentially, resulted in the following, where we start with order-2
->>>> folios for the first 128K then ramp up to order-4 for the next 128K,
->>>> then get clamped to order-5 for the rest of the file because pa_pages is
->>>> limited to 128K:
->>>>
->>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
->>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
->>>> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
->>>> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
->>>> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
->>>> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
->>>> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
->>>> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
->>>> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
->>>> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
->>>> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
->>>> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
->>>> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
->>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
->>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
->>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
->>>
->>> Interesting, I would have thought we'd ramp up earlier.
->>>
->>>> ...
->>>>
->>>> After the change, the same operation results in the first 128K being
->>>> order-0, then we start ramping up to order-2, -4, and finally get
->>>> clamped at order-5:
->>>>
->>>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
->>>> -----  ----------  ----------  ---------  -------  -------  -----  -----
->>>> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
->>>> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
->>>> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
->>>> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
->>>> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
->>>> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
->>>> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
->>>> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
->>>> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
->>>> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
->>>> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
->>>> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
->>>> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
->>>> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
->>>> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
->>>> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
->>>> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
->>>> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
->>>> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
->>>> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
->>>> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
->>>> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
->>>> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
->>>> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
->>>> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
->>>> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
->>>> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
->>>> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
->>>> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
->>>> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
->>>> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
->>>> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
->>>> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
->>>> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
->>>> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
->>>> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
->>>> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
->>>> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
->>>> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
->>>> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
->>>> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
->>>> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
->>>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
->>>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
->>>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
->>>> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
->>>
->>> Similar here, do you know why we don't ramp up earlier. Allocating that many
->>> order-0 + order-2 pages looks a bit suboptimal to me for a sequential read.
->>
->> Note that this is reading through mmap using the mmap readahead code. If
->> you use standard read(2), the readahead window starts small as well and
->> ramps us along with the desired order so we don't allocate that many small
->> order pages in that case.
+Hi Neil,
 
-That does raise an interesting question though; why do we use a fixed size
-window for mmap? It feels like we could start with a smaller window and ramp it
-up as order ramps up too, capped to the end of the vma.
+On Mo, 2025-05-05 at 14:30 +0200, Neil Armstrong wrote:
+> Hi Philipp,
+>=20
+> On 11/04/2025 13:38, Kelvin Zhang via B4 Relay wrote:
+> > From: Zelong Dong <zelong.dong@amlogic.com>
+> >=20
+> > Add compatibles for Amlogic A4 and A5 reset controllers,
+> > which fall back to 'amlogic,meson-s4-reset'.
+> >=20
+> > Signed-off-by: Zelong Dong <zelong.dong@amlogic.com>
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Link: https://lore.kernel.org/r/20240918074211.8067-2-zelong.dong@amlog=
+ic.com
+> > Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+> > ---
+> >   .../bindings/reset/amlogic,meson-reset.yaml        | 22 +++++++++++++=
++--------
+> >   1 file changed, 14 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-rese=
+t.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> > index 695ef38a7bb346c92b4cf428e7615d45682c940a..150e95c0d9bed74c7045942=
+610a311114a257889 100644
+> > --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> > +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> > @@ -12,14 +12,20 @@ maintainers:
+> >  =20
+> >   properties:
+> >     compatible:
+> > -    enum:
+> > -      - amlogic,meson8b-reset # Reset Controller on Meson8b and compat=
+ible SoCs
+> > -      - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compat=
+ible SoCs
+> > -      - amlogic,meson-axg-reset # Reset Controller on AXG and compatib=
+le SoCs
+> > -      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible=
+ SoCs
+> > -      - amlogic,meson-s4-reset # Reset Controller on S4 and compatible=
+ SoCs
+> > -      - amlogic,c3-reset # Reset Controller on C3 and compatible SoCs
+> > -      - amlogic,t7-reset
+> > +    oneOf:
+> > +      - enum:
+> > +          - amlogic,meson8b-reset # Reset Controller on Meson8b and co=
+mpatible SoCs
+> > +          - amlogic,meson-gxbb-reset # Reset Controller on GXBB and co=
+mpatible SoCs
+> > +          - amlogic,meson-axg-reset # Reset Controller on AXG and comp=
+atible SoCs
+> > +          - amlogic,meson-a1-reset # Reset Controller on A1 and compat=
+ible SoCs
+> > +          - amlogic,meson-s4-reset # Reset Controller on S4 and compat=
+ible SoCs
+> > +          - amlogic,c3-reset # Reset Controller on C3 and compatible S=
+oCs
+> > +          - amlogic,t7-reset
+> > +      - items:
+> > +          - enum:
+> > +              - amlogic,a4-reset
+> > +              - amlogic,a5-reset
+> > +          - const: amlogic,meson-s4-reset
+> >  =20
+> >     reg:
+> >       maxItems: 1
+> >=20
+>=20
+> Do you plan to take this change ?
+>
+> It has been laying around on the list for a while now, I plan
+> to apply it in my amlogic/drivers tree at the end of the week.
 
-Although perhaps that is an investigation for another day... My main motivation
-here was to be consistent about what page_cache_ra_order()'s new_order means,
-and to actually implement algorithm that was originally intended - start from 0
-and ramp up +2 on each readahead marker.
+I thought you'd pick it up together with the dts patches [1].
 
-> 
-> Ah, thanks for that information! :)
-> 
+[1] https://lore.kernel.org/all/a5d9b775dd860d8f2bbf174300a2e3161b654035.ca=
+mel@pengutronix.de/
 
+
+regards
+Philipp
