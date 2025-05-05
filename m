@@ -1,156 +1,98 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D782A207A25
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD76B27467C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746481410; cv=none; b=uH/ZJ6E1FSM1lkQ26tMZGUR18+EZrmhMR7JXTTcGhLrVIZ2g1nltK1Ff+w772r/E/T/lCAiOtj4zj3zUModRUWmrbA44uUaf2DSlf38BK0xhY9g/kciVwIzXK0lmC2OZOIBsyq6BKRi8oNzWC5UZr4i1aWiZ+eECp3P5mvUYeRE=
+	t=1746481414; cv=none; b=PM2gYrWfjf33i6GwIh1SVL2JI/QyNC1/m96j4NvySKxwpdN4ZXc7ox95UvPXDb0LC7ovKMSnTIAHaKRDkY5N7pCptTXKUujtMYsTsFb0HKUX9Dg0KHJ9nX/Kr+eStbFiCCJ/J7n7NNcXKyN99bMT5R7OGfta6FtEaRbjhVn2jmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746481410; c=relaxed/simple;
-	bh=+hANYyFQtx1EgGjBCpJ7MWJJnAreVe2idWvmWxuQ4/4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P8s/76ChpqHw9TuMJFEF89aUZfJL9qXFx7XqkB5l9lDw9uqNqRCVhUNfVZYcY1BMVvt6btXiejgqIaqciT/t+HMJJvpMUu8WGrF1Wb099uX9zYYR4wOIIgq0idB9uDuOq0/RWYJnE6E0iZWSIkz0aQHIgXdt7Dc5HIC3EnHfjWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=JwlsYelQ; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746481414; c=relaxed/simple;
+	bh=782/j8VuVXPsDo9FtOq8U2gJO3T8w54PlKGmD2Su4/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=R2Q1vNFGYiEvtRPAACK3wWll5GDboA88OJJgDbu2QU3rYvSCOlWUBoNvNyFhYe5lKiJrEkNmaHBPJ97bzxOFuNvCOMsf7EJJJZPklpHAoCtBvE4w1vHXe8/kE5Ml+bUG/r6Njc3272DowjH9tSbGj5UW4qkg1a7xdaZHlmAZGg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WmuE32nt; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="JwlsYelQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AN+3dNxn3MY1vaRKcmzsO/FoebdtS2q00kaPMAJNXwI=; b=JwlsYelQsGAowRchvEmrbJqvWi
-	N2dCyoVbHLS81zxL37vsF9Hve9gKukrpxDIUKMow85qeaPxygI23ObMpgyc9zhhCHG0AqoxGoJAxR
-	+N6h1veFBfJ2iRAXR2Ku7v0R11I4k3GKFKuuMbJcnTOeE+yA5xfcyQ3mHfhz+eIP15Cx0IvbYsI8N
-	18Kmhz1iyA9iAMMp1AcNsBXJMbv73fiD0OY9p1MfXTnnQLAw33zlJTfOfPJt/oejvf208lYMEQ6XW
-	KhHP+ft4T0/MdYCZSRukH0j+Ie7P2mwcLUU76yJOzWQU54tkoiNt+lUoNeVnf9E3lYNBBv+VuwGtP
-	0qXxmS2Q==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uC3Xc-003uVS-F7; Mon, 05 May 2025 23:43:19 +0200
-Message-ID: <7a0da763-08ae-4e3a-a630-2ce3d32e477e@igalia.com>
-Date: Mon, 5 May 2025 18:43:16 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmuE32nt"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5fafcdac19aso2587952a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 14:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746481411; x=1747086211; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ol3IEZ7LSZOHC59KsmPrp2w+pYdKCYy/J7ZrkCYyWZ0=;
+        b=WmuE32ntRm2MVVrlypI3qEB5dfBztKH9+tp5q9UAJJuKj2UTzXG5F9vw887QxrEgfC
+         KVML9xprc1yLDdhKAG4FyGZlJqS6sf/5ls5XGrGntPX3rNNn3sEYlCX+UvBgqIl4gFzV
+         JzClhbg19dgrmLD9+kqNuubjOg6Vtybf9VLmi23OfAnQ2HP9M1RXB7si3/jv8UOgLa8N
+         WAELj9U2c6KZMvyziVhBfMN4U/NGIAJtVp/JM6cOOT4E9+nRwn3kbZhw/t/8gv25EiU0
+         0Lz+SS0kc694XIQxfLgADPW0ZZgTKtztNUp7tUdc/tHxu/GoppfVg6fCVrdq2vXRsSfA
+         iwYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746481411; x=1747086211;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ol3IEZ7LSZOHC59KsmPrp2w+pYdKCYy/J7ZrkCYyWZ0=;
+        b=k54JnvapIS1CpwkzdFHXVHA2kXhUY1NE8n+/HMyHJHgr3yBc8KXmvSBrTHwOfnAABE
+         4P5IC1JJNmEsl6ZDbFgLJ9TUI1NEpLzgZ1yeF0dHMaRcj5OLJn5ZSdw1mR6t2ou5QV84
+         EsOGQJ+iWOt/eAR9rmy7tNfAQbO2ikAM4EvUx+cNFWWBizLobugXDyKz+W2RMKVoCgtf
+         ccosT1nl/zERxeJOd8WxbWxAkYyjQhkm1KhUnmLAwPu/4SUxfNprlgdm+/L1X8fz9ply
+         cLGWpstZ6iX0DOfoCUd6UxeVDpKG3sEOwEoMErphuC0CCqyim/DTvtwFC0zBPFQy0rYa
+         Lreg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR25LCzgGNLMn52wpPa5iUjyYCkOSwoGnJhq07rDPWhZ0YCe8I2cXgeBsYEyYB0Sv+d9tDYuC7Zlh+nMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjSLupoG63iMNvEDa3vN+8pgmTob1ESzCSIfCuvM+tqc5cQRLS
+	CW0jAjQAFUqLN5pq/m92jrAZaSlgUd2DcN8cxZ9IfGwKLRt92JFx
+X-Gm-Gg: ASbGncsctYR7L5SGKCEbaMKPqpIIq6KXGLo/ecITZvsPi4X0ZbifAfV/rY4bAejYpjQ
+	epTevihDwDBVbvZ/FOdK6vSJJGLEKKZshc4zi0IauOtfG7AhDbgm0mUWSldx8YbXtfh5U/4F2tx
+	Q6LQ53zJRn5xMq9NusOsjlc5O9pZ2s3Ikb/6H1RtQwmY1Zfw7uVgDaaAY31eQVMNvpySfanVm2z
+	/ofR9h+dVGWWTHpsw4aoQB4NyO9KNzBIobar/85v5g3J9hGYzDFixEcid2tVndgMCs3Fckq1V7f
+	jckE+eZRh7bkaox2ji6INuFqjFBZ
+X-Google-Smtp-Source: AGHT+IFi6x6jPMd+mKWdAZPRETHxceakoOg+kCexoD4oLsDM+OULK+rkoK5R8rpP9nOBiXytUV8NUw==
+X-Received: by 2002:a05:6402:5246:b0:5fb:206f:7847 with SMTP id 4fb4d7f45d1cf-5fb70c56b36mr489327a12.26.1746481410856;
+        Mon, 05 May 2025 14:43:30 -0700 (PDT)
+Received: from pc ([165.51.9.142])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77bf1e14sm5964777a12.73.2025.05.05.14.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 14:43:29 -0700 (PDT)
+Date: Mon, 5 May 2025 22:43:26 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc: salah.triki@gmail.com
+Subject: [PATCH] drivers: memory: bt1-l2-ctl: replace scnprintf() with
+ sysfs_emit()
+Message-ID: <aBkw_p9GkH2fm2UJ@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 03/21] futex: Move futex_queue() into
- futex_wait_setup()
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Darren Hart <dvhart@infradead.org>, linux-kernel@vger.kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-4-bigeasy@linutronix.de>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250416162921.513656-4-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Em 16/04/2025 13:29, Sebastian Andrzej Siewior escreveu:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> futex_wait_setup() has a weird calling convention in order to return
-> hb to use as an argument to futex_queue().
-> 
-> Mostly such that requeue can have an extra test in between.
-> 
-> Reorder code a little to get rid of this and keep the hb usage inside
-> futex_wait_setup().
-> 
-> [bigeasy: fixes]
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Documentation/filesystems/sysfs.rst mentions that show() should only
+use sysfs_emit() or sysfs_emit_at() when formating the value to be
+returned to user space. So replace scnprintf() with sysfs_emit().
 
-[...]
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ drivers/memory/bt1-l2-ctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-> index 25877d4f2f8f3..6cf10701294b4 100644
-> --- a/kernel/futex/waitwake.c
-> +++ b/kernel/futex/waitwake.c
-> @@ -339,18 +339,8 @@ static long futex_wait_restart(struct restart_block *restart);
->    * @q:		the futex_q to queue up on
->    * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
->    */
-> -void futex_wait_queue(struct futex_hash_bucket *hb, struct futex_q *q,
-> -			    struct hrtimer_sleeper *timeout)
-> +void futex_do_wait(struct futex_q *q, struct hrtimer_sleeper *timeout)
+diff --git a/drivers/memory/bt1-l2-ctl.c b/drivers/memory/bt1-l2-ctl.c
+index 78bd71b203f2..0fd96abc172a 100644
+--- a/drivers/memory/bt1-l2-ctl.c
++++ b/drivers/memory/bt1-l2-ctl.c
+@@ -222,7 +222,7 @@ static ssize_t l2_ctl_latency_show(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	return scnprintf(buf, PAGE_SIZE, "%u\n", data);
++	return sysfs_emit(buf, "%u\n", data);
+ }
+ 
+ static ssize_t l2_ctl_latency_store(struct device *dev,
+-- 
+2.43.0
 
-Update the name in the kernel doc comment as well. Also drop from the 
-comment the part that says "futex_queue() and ..."
-
->   {
-> -	/*
-> -	 * The task state is guaranteed to be set before another task can
-> -	 * wake it. set_current_state() is implemented using smp_store_mb() and
-> -	 * futex_queue() calls spin_unlock() upon completion, both serializing
-> -	 * access to the hash list and forcing another memory barrier.
-> -	 */
-> -	set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
-> -	futex_queue(q, hb, current);
-> -
->   	/* Arm the timer */
->   	if (timeout)
->   		hrtimer_sleeper_start_expires(timeout, HRTIMER_MODE_ABS);
-> @@ -578,7 +568,8 @@ int futex_wait_multiple(struct futex_vector *vs, unsigned int count,
->    * @val:	the expected value
->    * @flags:	futex flags (FLAGS_SHARED, etc.)
->    * @q:		the associated futex_q
-> - * @hb:		storage for hash_bucket pointer to be returned to caller
-> + * @key2:	the second futex_key if used for requeue PI
-> + * task:	Task queueing this futex
->    *
->    * Setup the futex_q and locate the hash_bucket.  Get the futex value and
->    * compare it with the expected value.  Handle atomic faults internally.
-> @@ -589,8 +580,10 @@ int futex_wait_multiple(struct futex_vector *vs, unsigned int count,
->    *  - <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is unlocked
->    */
->   int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
-> -		     struct futex_q *q, struct futex_hash_bucket **hb)
-> +		     struct futex_q *q, union futex_key *key2,
-> +		     struct task_struct *task)
->   {
-> +	struct futex_hash_bucket *hb;
->   	u32 uval;
->   	int ret;
->   
-> @@ -618,12 +611,12 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
->   		return ret;
->   
->   retry_private:
-> -	*hb = futex_q_lock(q);
-> +	hb = futex_q_lock(q);
->   
->   	ret = futex_get_value_locked(&uval, uaddr);
->   
->   	if (ret) {
-> -		futex_q_unlock(*hb);
-> +		futex_q_unlock(hb);
->   
->   		ret = get_user(uval, uaddr);
->   		if (ret)
-> @@ -636,10 +629,25 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
->   	}
->   
->   	if (uval != val) {
-> -		futex_q_unlock(*hb);
-> -		ret = -EWOULDBLOCK;
-> +		futex_q_unlock(hb);
-> +		return -EWOULDBLOCK;
->   	}
->   
-> +	if (key2 && futex_match(&q->key, key2)) {
-> +		futex_q_unlock(hb);
-> +		return -EINVAL;
-
-Please add this new ret value in the kernel doc too.
