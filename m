@@ -1,49 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B31439527F;
-	Mon,  5 May 2025 23:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AB1220F4E;
+	Mon,  5 May 2025 23:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486271; cv=none; b=jDKFBOHcxXP5bDfHujTT+Momm1i9VwPML32/5V8mgKMISbSAqTlV7Nkyx6Ip2U3VPnPwa+DXq21aoRSOYsM4iy6HvnKAYD15XrekLR80UJy9TlbHfkOM1yMeYswFlc4bWWOeHInv3/vdHkdxAOj15Fs91+TAyW3yS+0hqXuhDfw=
+	t=1746486297; cv=none; b=bqljrt9MzIoKngk2tki+HDDZ10SPsBxd9TJX3itcKlPLCHfJCa3wOYg4QcuFMzS7d0yZS5a7VW6QRgXUBDfSWRhqb+PR7Eb35SvOg7etX7PrFh8WRCKoVekNr4tgheg1EsON1joyzpSSD4+q4Sa27lDTBor9BX/p4c2CWRh4vb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486271; c=relaxed/simple;
-	bh=rNRQtODZcnpVBIPGRz8IF6cUXjg8GEwei8Nmbe8MrKE=;
+	s=arc-20240116; t=1746486297; c=relaxed/simple;
+	bh=pJS5gDJn4L7Ui65d9Ezyw0LskcjJRE1S20yZ1un/upo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GYd5m9wctK5U+tbc/phSdZtKe5l5nHmlSzjui6XvxqNMt8mWM1A8gP9ays3eUDgfHJPcURrVLHF99Lrbq+bpep/p8sefoJvJ0CVpD+KoQVIJVr72bJ7OVJ00pwUmN7SmOtnY4BvUMNrk5xfqAKJuAK1oN91LWwJQe313QjUDA0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vbkc9Ve2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aBqeKtTsAHsLZEPGxPC1GLtVrgdFpDA3o4jpGx7W48wKA1ruROFSkQAhzgYYJtqRaekyrtJrFL+sraihvapaPH4CLcDU30ZreEm+8j2bqYoM90CdZoEgE0adw5T7WPFBL7LdHv5nDVN0krQyqLJpS4lQm2sXGn10xHPwmXHva0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpqEQKmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vbkc9Ve2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29549C4CEE4;
-	Mon,  5 May 2025 23:04:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpqEQKmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44AC6C4CEE4;
+	Mon,  5 May 2025 23:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486270;
-	bh=rNRQtODZcnpVBIPGRz8IF6cUXjg8GEwei8Nmbe8MrKE=;
+	s=k20201202; t=1746486296;
+	bh=pJS5gDJn4L7Ui65d9Ezyw0LskcjJRE1S20yZ1un/upo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vbkc9Ve2WFxcfg5sdFgkMjbOX5xyraOabkI6K/VGB6DGy7H3oSyZ5D+r8JnZyPjvl
-	 vt4hPyPdUPSH/+NgzAdbZHg+jbtBPl0fnjcdsg6+kM9QDUd3p4HlOSyYoMELXfAhJV
-	 C3Q6OGZqNlL0Eyc+RfmkplOqolmFsIqehLGG3zjQ/ryBs1F3IO/9tvMOGmxK2aW+o9
-	 sAM/6w5aDA+2mjs3jcLyR1a4G1AJFPv3mx3jhg9n7s6TF3M3/FM6Bk0WD2RPJNf8/O
-	 zkSj2mCkkFa/8B+eXMPCDXHWhqqzzrt1dt7+pM3Cc37q7g2UgEUQcri4HbqRxzy1A7
-	 0VhLX1lDwOhyw==
+	b=QpqEQKmNvJc3OA7XXHjax42ge4rRtm25gnSWqLQWT9uVmuYGR13wi92CUFlhjTXM5
+	 iWSEvQW6vIqzXdaY3YUACtZOiwnujtc17N2q1mtNM8unhE8J7I/sCGnz/xHOqcE5H3
+	 31LLT1iMH6mvEIK4nXY3gdfTQ3gL7ZAZAvwRNz5OHqcYSL3prDYx+ckJ3lJphbMHl/
+	 09ILYfBKY2T6kazZYK3E6OGjIepKyh/zbN1xPqYPx70wOAcSyUvpNAOQKoy8QRc2q2
+	 oMkvGrlbu8oXMICxk4QKBiw7KpoWj6cStIb+WSqW11JdU3XS9pcZEGPBAzXHZYK6/O
+	 5OR/ZDBuEmS8Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexei Lazar <alazar@nvidia.com>,
-	Dragos Tatulea <dtatulea@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
 	andrew+netdev@lunn.ch,
 	davem@davemloft.net,
 	edumazet@google.com,
 	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 232/294] net/mlx5: Extend Ethtool loopback selftest to support non-linear SKB
-Date: Mon,  5 May 2025 18:55:32 -0400
-Message-Id: <20250505225634.2688578-232-sashal@kernel.org>
+	gregkh@linuxfoundation.org,
+	hayeswang@realtek.com,
+	horms@kernel.org,
+	dianders@chromium.org,
+	ste3ls@gmail.com,
+	phahn-oss@avm.de,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 243/294] r8152: add vendor/device ID pair for Dell Alienware AW1022z
+Date: Mon,  5 May 2025 18:55:43 -0400
+Message-Id: <20250505225634.2688578-243-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -58,39 +61,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Alexei Lazar <alazar@nvidia.com>
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
 
-[ Upstream commit 95b9606b15bb3ce1198d28d2393dd0e1f0a5f3e9 ]
+[ Upstream commit 848b09d53d923b4caee5491f57a5c5b22d81febc ]
 
-Current loopback test validation ignores non-linear SKB case in
-the SKB access, which can lead to failures in scenarios such as
-when HW GRO is enabled.
-Linearize the SKB so both cases will be handled.
+The Dell AW1022z is an RTL8156B based 2.5G Ethernet controller.
 
-Signed-off-by: Alexei Lazar <alazar@nvidia.com>
-Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Link: https://patch.msgid.link/20250209101716.112774-15-tariqt@nvidia.com
+Add the vendor and product ID values to the driver. This makes Ethernet
+work with the adapter.
+
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+Link: https://patch.msgid.link/20250206224033.980115-1-olek2@wp.pl
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/r8152.c   | 1 +
+ include/linux/usb/r8152.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-index 08a75654f5f18..c170503b3aace 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_selftest.c
-@@ -165,6 +165,9 @@ mlx5e_test_loopback_validate(struct sk_buff *skb,
- 	struct udphdr *udph;
- 	struct iphdr *iph;
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index bbcefcc7ef8f0..1e85cfe524e87 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -10032,6 +10032,7 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{ USB_DEVICE(VENDOR_ID_NVIDIA,  0x09ff) },
+ 	{ USB_DEVICE(VENDOR_ID_TPLINK,  0x0601) },
+ 	{ USB_DEVICE(VENDOR_ID_DLINK,   0xb301) },
++	{ USB_DEVICE(VENDOR_ID_DELL,    0xb097) },
+ 	{ USB_DEVICE(VENDOR_ID_ASUS,    0x1976) },
+ 	{}
+ };
+diff --git a/include/linux/usb/r8152.h b/include/linux/usb/r8152.h
+index 33a4c146dc19c..2ca60828f28bb 100644
+--- a/include/linux/usb/r8152.h
++++ b/include/linux/usb/r8152.h
+@@ -30,6 +30,7 @@
+ #define VENDOR_ID_NVIDIA		0x0955
+ #define VENDOR_ID_TPLINK		0x2357
+ #define VENDOR_ID_DLINK			0x2001
++#define VENDOR_ID_DELL			0x413c
+ #define VENDOR_ID_ASUS			0x0b05
  
-+	if (skb_linearize(skb))
-+		goto out;
-+
- 	/* We are only going to peek, no need to clone the SKB */
- 	if (MLX5E_TEST_PKT_SIZE - ETH_HLEN > skb_headlen(skb))
- 		goto out;
+ #if IS_REACHABLE(CONFIG_USB_RTL8152)
 -- 
 2.39.5
 
