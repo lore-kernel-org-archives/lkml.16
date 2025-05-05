@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6BC28A72B;
-	Mon,  5 May 2025 23:17:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008AE390CA7;
+	Mon,  5 May 2025 23:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487025; cv=none; b=ib8zGPq+28U4K3PoAqVqZ9+vIT0BK+pY+YJk+mKqODEaCcCHKjzs4bdLpgZPGmbmlKrnPYi5cWR2GudTCNtOwlddHO2T1mpsFyV0KMsANBhxBOecbb3wEqw0sWsDD3AmIz+N1G8UMeMGBsRgM4EG9Khtd45E8CpPVsXbN17UTyY=
+	t=1746487005; cv=none; b=uXnkWReAd83Syk9l5K9MWt7526lfrvOhO2aOJ8zX2KIMhpribjLeWo5QtfUWZ0Wo4P8EVyGlPdm7FNmHD/CiHTAHO+SrSYyr/AaTUJmlJy7evSYv97VKYEIqjFrnGkrBo0LZk8GloNR/pWiszdPHiIsskISpkIemFmx6vUjmsxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487025; c=relaxed/simple;
-	bh=LcwQlAEda51+4jXDt1x9oG2t6rsVcxkQ3Gw3R2XDHF0=;
+	s=arc-20240116; t=1746487005; c=relaxed/simple;
+	bh=3u8xB5OTX/oGLpUbG3arB7SHSe3UaZLuPCMX6ZCHerg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mcTrgR4FcehhZ7ij5h0XgYWOFUMb+DbvzIWy3uh9gzp3ZAYGGjc0F9fWDmR2Ziwl7NfKdO9jKFN0Fmzh/3VUpti48hXARTrw9mocD+8AL2IRUtWJO/yiQouJc8aU3t4F6wFkHVGWwgVdw/QBNnLE/xy1lec9Yjr2F6iptwZlgLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeIz9MLO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QENjXFXOzvogpPklomqCDcwMbLgoyC6NI5PcimHI78EMCZbk0n9HWiWaWyl7El0q+Ih6Lf+dRXDVH2Bt12UKVtN12mxFlgCrVjMzlvrp4YmJPohexvVPPYB4MnSCE7tUGJoD63RWOp3rhpo69ljJC1CbtX/1RUn/FD/UUhl7WXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDsD6hwR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeIz9MLO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11010C4CEF1;
-	Mon,  5 May 2025 23:17:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDsD6hwR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00B09C4CEF1;
+	Mon,  5 May 2025 23:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487024;
-	bh=LcwQlAEda51+4jXDt1x9oG2t6rsVcxkQ3Gw3R2XDHF0=;
+	s=k20201202; t=1746487003;
+	bh=3u8xB5OTX/oGLpUbG3arB7SHSe3UaZLuPCMX6ZCHerg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KeIz9MLOpEkJQcldE05MxCsZLYlQRpJteCsOITAez8DlHZV5lbISSzjv+T6HbDZWh
-	 lXKRzspOiU2HlI/WnSnD+q4r102WYxisexarRXpESCSWm6jd3re2yI6+KV24o+felR
-	 NznlRG9w37bNGPbYjxB/Uv/lEvMzucaAm59XsooRMD90w5C+fUHIHLNg9a9ByxEvEX
-	 Ma4nUYV7xjCzvQw+2ml5WgdSKO/bY4CJei0P2IczRnKh7aWtIfOBKGj/SASq61hMrz
-	 ntwuJ6zeafEYGQfPNSP98A2cAS0L1EN6EtwDAcuwRbr3vfUIG9ljgnCkb8s4OTKrSj
-	 OZoqQO3YIYNjA==
+	b=KDsD6hwRpqdvA5maLklfKoJ6xhrtniAXiX/qcuX5J8Mp3aVcnvwHZZxuT2gHYd98Y
+	 tWoPZ1oQtY4VUzcDW8i6oUFTm+VFmYYvSrzcEqvAzUy5F16axZbkn3+ItJiEXCFwFc
+	 WwfDwIchMFFDU6jlSbTIUKn/cpRBOUqKfYdleOErbmxxcs5VAghB0fH7vqClE3HG4y
+	 ZDyeijMvL8qbsQZgjtBJTr/9YiD6Jd0cNwuePLZHQBoXU8Hx1jKsK2+gRsDhtG0aDw
+	 clWM6+I9NiyUqG1Obuf2niRMmJqkYAXnUVA+QpC+vFb2eeIJU23NN+xmqHSJvi8jxf
+	 ba9OowbQRE2Dg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Tony Luck <tony.luck@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 114/153] ASoC: soc-dai: check return value at snd_soc_dai_set_tdm_slot()
-Date: Mon,  5 May 2025 19:12:41 -0400
-Message-Id: <20250505231320.2695319-114-sashal@kernel.org>
+	bp@alien8.de,
+	linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 103/153] EDAC/ie31200: work around false positive build warning
+Date: Mon,  5 May 2025 19:12:30 -0400
+Message-Id: <20250505231320.2695319-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -53,52 +52,103 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7f1186a8d738661b941b298fd6d1d5725ed71428 ]
+[ Upstream commit c29dfd661fe2f8d1b48c7f00590929c04b25bf40 ]
 
-snd_soc_dai_set_tdm_slot() calls .xlate_tdm_slot_mask() or
-snd_soc_xlate_tdm_slot_mask(), but didn't check its return value.
-Let's check it.
+gcc-14 produces a bogus warning in some configurations:
 
-This patch might break existing driver. In such case, let's makes
-each func to void instead of int.
+drivers/edac/ie31200_edac.c: In function 'ie31200_probe1.isra':
+drivers/edac/ie31200_edac.c:412:26: error: 'dimm_info' is used uninitialized [-Werror=uninitialized]
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+drivers/edac/ie31200_edac.c:412:26: note: 'dimm_info' declared here
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://patch.msgid.link/87o6z7yk61.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+I don't see any way the unintialized access could really happen here,
+but I can see why the compiler gets confused by the two loops.
+
+Instead, rework the two nested loops to only read the addr_decode
+registers and then keep only one instance of the dimm info structure.
+
+[Tony: Qiuxu pointed out that the "populate DIMM info" comment was left
+behind in the refactor and suggested moving it. I deleted the comment
+as unnecessry in front os a call to populate_dimm_info(). That seems
+pretty self-describing.]
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/all/20250122065031.1321015-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dai.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/edac/ie31200_edac.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
-index 3db0fcf24385a..05a9404544de9 100644
---- a/sound/soc/soc-dai.c
-+++ b/sound/soc/soc-dai.c
-@@ -271,10 +271,11 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index acb011cfd8c4f..5e61ca1b72e00 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -397,10 +397,9 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	int i, j, ret;
+ 	struct mem_ctl_info *mci = NULL;
+ 	struct edac_mc_layer layers[2];
+-	struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+ 	void __iomem *window;
+ 	struct ie31200_priv *priv;
+-	u32 addr_decode, mad_offset;
++	u32 addr_decode[IE31200_CHANNELS], mad_offset;
  
- 	if (dai->driver->ops &&
- 	    dai->driver->ops->xlate_tdm_slot_mask)
--		dai->driver->ops->xlate_tdm_slot_mask(slots,
--						      &tx_mask, &rx_mask);
-+		ret = dai->driver->ops->xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
- 	else
--		snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+		ret = snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+	if (ret)
-+		goto err;
+ 	/*
+ 	 * Kaby Lake, Coffee Lake seem to work like Skylake. Please re-visit
+@@ -458,19 +457,10 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 		mad_offset = IE31200_MAD_DIMM_0_OFFSET;
+ 	}
  
- 	dai->tx_mask = tx_mask;
- 	dai->rx_mask = rx_mask;
-@@ -283,6 +284,7 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
- 	    dai->driver->ops->set_tdm_slot)
- 		ret = dai->driver->ops->set_tdm_slot(dai, tx_mask, rx_mask,
- 						      slots, slot_width);
-+err:
- 	return soc_dai_ret(dai, ret);
- }
- EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
+-	/* populate DIMM info */
+ 	for (i = 0; i < IE31200_CHANNELS; i++) {
+-		addr_decode = readl(window + mad_offset +
++		addr_decode[i] = readl(window + mad_offset +
+ 					(i * 4));
+-		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode);
+-		for (j = 0; j < IE31200_DIMMS_PER_CHANNEL; j++) {
+-			populate_dimm_info(&dimm_info[i][j], addr_decode, j,
+-					   skl);
+-			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
+-				 dimm_info[i][j].size,
+-				 dimm_info[i][j].dual_rank,
+-				 dimm_info[i][j].x16_width);
+-		}
++		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode[i]);
+ 	}
+ 
+ 	/*
+@@ -481,14 +471,22 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	 */
+ 	for (i = 0; i < IE31200_DIMMS_PER_CHANNEL; i++) {
+ 		for (j = 0; j < IE31200_CHANNELS; j++) {
++			struct dimm_data dimm_info;
+ 			struct dimm_info *dimm;
+ 			unsigned long nr_pages;
+ 
+-			nr_pages = IE31200_PAGES(dimm_info[j][i].size, skl);
++			populate_dimm_info(&dimm_info, addr_decode[j], i,
++					   skl);
++			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
++				 dimm_info.size,
++				 dimm_info.dual_rank,
++				 dimm_info.x16_width);
++
++			nr_pages = IE31200_PAGES(dimm_info.size, skl);
+ 			if (nr_pages == 0)
+ 				continue;
+ 
+-			if (dimm_info[j][i].dual_rank) {
++			if (dimm_info.dual_rank) {
+ 				nr_pages = nr_pages / 2;
+ 				dimm = edac_get_dimm(mci, (i * 2) + 1, j, 0);
+ 				dimm->nr_pages = nr_pages;
 -- 
 2.39.5
 
