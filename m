@@ -1,170 +1,192 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714D826B2B3;
-	Mon,  5 May 2025 16:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746463713; cv=none; b=SrkHOIEB3Ot7PoutE1Qj2VxId4aJzBpOiw93P9IyWDiQRKm4cjvp6Mw9R581MESjvsmJ+Zlg10oVgq8HYgFe31Pvms3OffL4gW6VQLGmknXnttnp1WT0FHiU+Mpkj8a99rhtimURzK5kfqJsAbdX+hH3phiczivpc8uMV54W9u8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746463713; c=relaxed/simple;
-	bh=C01nA5O+mLAiMonn6J6BABuNOVIjZa6tsn0yxFC2RGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rg1BnKShQA7nGRxf7gWkjP0c6TizimHsO3Cg62cV/MDC8mrb6iH6gzzXh3uJZO5ZWc7rAXqRh5AHDDhmv6OGb+PZQQAfqMjVrgh8+jGHKhjtXBWBIeJnXdg3bIRlL2IlM4nd6TYKvcaWZ13TviWbUsi3oytPGie639JMoj9BJ5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CeeK4OFO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B479B1A255C;
+	Mon,  5 May 2025 16:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746463827; cv=fail; b=CYLQPQksb1P+5S31aBoKsCZMio96gK/T2b9LftAgWy0OPskhY9MIwdjA8UZWhbshDfw3BsQyqmTlo3pbBG8vJktIh+VWVzZqlSIdogB1NyPLZz5wvJUln3C3hzGBo9G//Pd8/AEmqhZ5wz+rOnt4Gd/g+I7TVSujYaluDE/2Vbw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746463827; c=relaxed/simple;
+	bh=fcjGJE+1Uv4pAHCZmMXinKbUEt5JmgLebj+PYBl+3C4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fnU96cq7WU63+jQtniUGMOEcPrnjAUBh664+gRvCIw/J4oVNOVmHcnuWwjn++sF3ar9TG0R6qbr0bcUzayIUNRyo0RGg7DFuHWDoN9E3YJUdaBhCUKhVyIv3F20FA4MDKhjFJdOzIYa4cKgRoSjNk00EdJet9SI6r4CJ5REm0GI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=p0Sc24cV; arc=fail smtp.client-ip=40.107.243.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CeeK4OFO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C31CA40E0173;
-	Mon,  5 May 2025 16:48:27 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id AzBYAK1vnQVS; Mon,  5 May 2025 16:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746463703; bh=EJEF51VWcEDI3LL6qft8RIIp1wktw3QhPsx0cJZ+hYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CeeK4OFOWs3dtFI/N52HRV+9ukuAQTwFH4sZVPgR9o2L/5VgGiTK6nRvWpjO1P06o
-	 Ir6Iz4AHCtnfP8bBe0MEKtUe0E7EAuKdda9oPkrwWpsZ+gglGElwRYWB+CbT0vH5iL
-	 OOcus6GumonVt8gS8iDHHmcZ6BfazWjCUmcWHWeiA5RE1UqYzp4rgN6GLrjxrm9k/5
-	 NUoKdKg5y9WbCXq54OuaYLACfMVVr5sjdcOaoa1Wfq1ga7uJ8GskTNndzxwEHNPh2e
-	 910GbvdgBBnIOCxSJr93YI3L5o/fEPv4S1RK3LpVMQrYYloud9QDdP6O20Pg39xYGE
-	 RJjqpjh4MQrWHd0cxQ1f7SGGm2nDExYWID5sG5raCtefI5ePWw5BQWXO1Lg+6LI/zD
-	 /phR+ikyzXpxCgiizOm0lvP0hVE9FUi6+G+O4cAIA2/nZcDZ+n9dpjIHEc+IYEoGIX
-	 Fb+vT+1qXDtXDP9DuT01o0Z5opGyUO1z7eQ42Ot8NbwdcCbpefIu0W0QS9erL2RGfg
-	 rZ33RoNMnGGU3Z4vgM7skpOMBvb8oH10BXMiXlAKQA4NxfmfZiSTJbzeSvt1I6+A+n
-	 ZRKUfDht0QyTaXh9gvdMHLUWQfSXE0kFH6oCM2sn11HNROeFTL4vGgbjvz+Phbe3/x
-	 gYh0dxJCmibYGYzBr/HzyW/4=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4ABC40E0239;
-	Mon,  5 May 2025 16:48:06 +0000 (UTC)
-Date: Mon, 5 May 2025 18:47:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Len Brown <len.brown@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, linux-efi@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: x86/boot] x86/boot: Provide __pti_set_user_pgtbl() to
- startup code
-Message-ID: <20250505164759.GKaBjrv5SI4MX_NiX-@fat_crate.local>
-References: <20250504095230.2932860-40-ardb+git@google.com>
- <174636840512.22196.14007684119604658714.tip-bot2@tip-bot2>
- <20250505160346.GJaBjhYp09sLZ5AyyJ@fat_crate.local>
- <CAMj1kXGY6GTmm1PCVwyaCieVDDLWF_wEfRGbGooCnVf+o-Pupw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="p0Sc24cV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZRd6Z0GZOJ4Nyw7sAwWwbEaEWgptAGJNP2tzmNdR9fr2GyKYkqU9wjDUv9nE3Bq1waXoFZg4Q+N1RCc5EhpU+xhXErNf4Ad1rIIfEK2brJFSeIwbWbOgseWYOtntsB4ZzcXetB5Q6QFArfdb3aeWskegMqnrJ1QuYcAXIQ0NLn2ZqdyPMCE2woJGi+tD6PHjMUmJEZU7aTQoFlNwd4JF5rF26bxFMcXeDAF9IDO8PtA3pToEmfezgI0a7CaYQki8U01yFdfFtYA7+aNF0DSYrACoMed4JPrRa5uh2ZvQ2eAxGnfOURkKFBV9WeE8aDoLJm9CBfGrZW//a9/8GiktJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z0n7Tspj8ibG8yEA3X3plcQ+ki3JQkq0ljbXWOv2hSc=;
+ b=IE3V/Ghft0LvpIIaqhkRxTxNscbThuEnztFcfMTr+VAoxXiifBGavkX3sPqNXeRPjDO80kycjpcSUdhb8dGG5JF/xmcnJgQgDsXg0fYNPIFlBqjV+2XZOXf0g+aLu5tVlL6G2Ik9Fl79NY7f51vp/Y8F27YYmErDj7eRU+oogC02Cpe2uF4Qf0/1ASCuGAy7fwWhJzaVZRuwYpUK90PDd5EULx0N0nJzd9GwRu2NyoX5IJXOu7RNilWMUGWfw3VxLl4XJLm2soo/jcVH0kr7/h/vQCjTVZFPJP6i9Xl0Q/qqjwctnmtzkZcvP3XUOkKGym2hLqg7oAU/ehTOn6WN2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z0n7Tspj8ibG8yEA3X3plcQ+ki3JQkq0ljbXWOv2hSc=;
+ b=p0Sc24cVoJVdofwY+i7ONbbSv7RD0uSqI5e6nWZwHo6niAsJwMmOwM95+fdz8RCewfPU3pHBDivLqwdEdDe/9NC9L5BbTlVCPMRiBX6QYHPLoljgCMOuWZdh4Ghnfiau013bOTTfZevJoRa66fKCCv+YPyN18BIbhdcQNPTxphWEwUt+EpU4CKOxCjHgBsZVLFiv248OJ1/f8eI9PCgt9VZWA9nhH+X8NP/CRZv1RSpUA/Z5uyFpFPfhF2Np2t3SSGLKunhLem+oabmVcN8VOwTffOLT2GWmw9b4SxpDKxPMEgywHLuylxfkIiXtzYHSqk9Q6qY+LGW7qE8Xeo8KGA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by CH3PR12MB7740.namprd12.prod.outlook.com (2603:10b6:610:145::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Mon, 5 May
+ 2025 16:50:20 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8699.026; Mon, 5 May 2025
+ 16:50:20 +0000
+Date: Mon, 5 May 2025 13:50:19 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
+	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
+	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 13/22] iommufd: Add mmap interface
+Message-ID: <20250505165019.GM2260709@nvidia.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <7be26560c604b0cbc2fd218997b97a47e4ed11ff.1745646960.git.nicolinc@nvidia.com>
+ <c4d03b52-422e-41ab-845b-1d2eda7ca9e2@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4d03b52-422e-41ab-845b-1d2eda7ca9e2@linux.intel.com>
+X-ClientProxiedBy: BN8PR04CA0031.namprd04.prod.outlook.com
+ (2603:10b6:408:70::44) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGY6GTmm1PCVwyaCieVDDLWF_wEfRGbGooCnVf+o-Pupw@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH3PR12MB7740:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1edbe3d-cb35-47fc-53bb-08dd8bf4ebd8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?btgUnlYba+pFJN6VNLlMHquA9nwx8vICp52kiymDtNN46WggwE+dQ9WSvRPN?=
+ =?us-ascii?Q?kCH/RHVP2sYbXrVmotA/5uqGkdRliDbfWqMDU99PbpBrtYzBUL700NHLDogc?=
+ =?us-ascii?Q?y1zJDtTk6RbK7Nddksk+w2FKEOC5HwyYZB+5BfGXYMl3M0fGnMjdiMArfvEF?=
+ =?us-ascii?Q?GXP261dQYfp+9y9Oddz2snwe+UdIxGUDG4dm/xwyX2tl6R4792fBo+qKPZrp?=
+ =?us-ascii?Q?hXezxg7O260sds+c69YAD6GNUv0iRigp1Gh/iTORyQBoh8+uD9kfQW85UA4q?=
+ =?us-ascii?Q?XJzIDEEPTnhYXqSl5d6SqYJWxFw2adEJQKmJm+wUbvMMPU7BolUOE8ZmJfph?=
+ =?us-ascii?Q?SkGGzYQIv+7P52XTWQj96Mc9TqVQ3M8IUdavTlMqOi4CzbkRjo5TWiVyMQAc?=
+ =?us-ascii?Q?Y+DVAms3kbWi6cU1eG3uDea7IyYEq6h+kce8L3GuFdwXj30YdZybP2p6GVRi?=
+ =?us-ascii?Q?jkmM7cpEDuq6oh2cusLIDqaMiJeCu3dHB9DsVdu0GnINWtmEbyjCAMLxamGG?=
+ =?us-ascii?Q?5KmeFCSrzqcUIK+8ikQ1HJKcGcGAmWhBqxgXvX7tdnRtg5X+Wq40PCAKglWq?=
+ =?us-ascii?Q?7VdsKdTd7ghBoJB4iWPheOe9xcsTyERFdoheJu7MPHFLOUs6ruuOqG7b7z5d?=
+ =?us-ascii?Q?n8vzowmQUMFfbdC1mUiyS/2aZYYfKnHh30KnSw9blKQL6gP9FbLV8ekRl6uX?=
+ =?us-ascii?Q?87CTNkLw+EJsRrRNrfhxNoDSETtDmiWkC3VW4N0ge/e+ZtYReYPv+URkz6BS?=
+ =?us-ascii?Q?/WomqT7B/JcfjfUBWgjT/TRE+p0ojcdcPwNd8QvjmoCPbSyzNTwvbdv1VqYd?=
+ =?us-ascii?Q?pM7j6ltowJKCOt3gIxmbV/4jK2oKTNiKOg6BKN8o6/hnUK/GbsqD3l0BZGzo?=
+ =?us-ascii?Q?b3XA+0IhTF4s9Ka0sQQLr2U/DZTqHpCVtDvNuQo72DXyL+K+Oz/pHfjeX+PG?=
+ =?us-ascii?Q?oUVHrpUe2t1Rac+Ad5Pk7fRlAzMipIT6ITUNcLrKu25jzaSXzPCiduD1YqVd?=
+ =?us-ascii?Q?83574FJwlJhoshn9qYt+MctxHuAxbGxSlWPu97uS+UoQ/ISE6JV/h1csMJW1?=
+ =?us-ascii?Q?RfOko7dnvNfgo7bH7R3nIDUvtBB3MVL+AUybOAEU1llFHlsuz1iksfwJj5Hu?=
+ =?us-ascii?Q?9oXIhuwvT19HhWwzN5tisXaKtBz5hEUrOEz52M+RMzZr8loaCq114s1OTou8?=
+ =?us-ascii?Q?uYRnaGFpQyFl6J9+fSunsAPfx+D7INd6JZbgThvcPJKWic2MpPuxuHA9mDP4?=
+ =?us-ascii?Q?7LfkGRBDJ2WQ3LGk3W2z4HF4gIWVnv53hO+egROxn6Sy6rrgneP1vw1ltKzk?=
+ =?us-ascii?Q?u+Oz/5f0qk829Pv4m/lKA1a3naMKfH0JTxK6Ojj2rZxXkTcCTsWkjsu2wNkl?=
+ =?us-ascii?Q?l+y2BnPiIUvU61zgL7ejNxZc+XewkuiL4V/sDvLnIxQNVOEwkImVe8M3zO6U?=
+ =?us-ascii?Q?p7fM78F9taM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?a8N5+VaGFOL7ZVYDMlcq4FuGhYKEyf1adxVzVMhAKqDqlRV7J433plBR6DU0?=
+ =?us-ascii?Q?ninBp0m/u6EKa5S+amT3U9D2XF2nwzhN6uNMn5EYCwF6rtCbatQSXP8Y5KOV?=
+ =?us-ascii?Q?ovWQQQgyNi2MnxjFQs7sEnc8jT2rzL5ki+Uy6mQT20P1avMXmHKkdGW1fX2x?=
+ =?us-ascii?Q?eOjJ9ak31f6slpll0MZjOysENNFcBBANrJ+DTevQ4q2A2CzBYo4XrzO8pu/V?=
+ =?us-ascii?Q?stgEvLRh4UVGVU4I2MSa0IxhVC1bKhA5+dtcEiaMVT/a76owD1n34tHtdDAS?=
+ =?us-ascii?Q?ti4+SWSnloRnYaDbP9UXu8vRr/3ux4RQXBdPK812HvJ4lOJdPwDr23hvDAn7?=
+ =?us-ascii?Q?Akn6Hn8g6nlkoyYkjMkXUQRteNCwCh27bXmsmmVbokQUpsvPX8s+HWN6Xbi9?=
+ =?us-ascii?Q?3+YfMaGx/++s7qOQK2CGajDRs21cLn4tVFr36prhwmGhf7mob3UeZKEXEAko?=
+ =?us-ascii?Q?Caf+YOo75nbgXImABF7DkQNeZDO2S6Gxths1l1lA6Xf0yOqTWxIQKJhMNUdu?=
+ =?us-ascii?Q?nZlCNlROt+Q5jAb31FBxI4Q3P5wbDobCnXU12LBYWEuwiBiThqVREqoh1bi4?=
+ =?us-ascii?Q?w+K/qYlxqN6YrjlnV5ujJ1XRmyoKFmbpUt6P6OAVroYNdCgcsCnHSC1np3gx?=
+ =?us-ascii?Q?XaOblVENPTpT2bDoDSK443fk64pdXvKgMkXlSsZaJyJnE8QbLaaJwT/BHI+e?=
+ =?us-ascii?Q?y/MfzM75La0slwTaiC+8L+OcNoxTxtfSRFCk6FV0qTt7TbJutSigIGVT8IbN?=
+ =?us-ascii?Q?Otw8S15nSvvOlmjoxsU+Vsh43moQuuAkmgXxHPr3D7jBUqZ2IBDFaQx7Bs11?=
+ =?us-ascii?Q?2/K3KSlG/wZ3XZ+sggZdnHX++ElSV9q6SoZ1+UPb/M4woJwbgNyumMZw6Qnf?=
+ =?us-ascii?Q?a324VpV/XNFj+h02Hdn05fblW1D2uOYDUtegHIuxJY9ecJP2YPrpCJlNBIu1?=
+ =?us-ascii?Q?DTwHeCKXuHZUkK7lUS3e5awMONF20VK5VExbZBhIGWQ+J6Gg6nAvjnLrchJ4?=
+ =?us-ascii?Q?izdNmQEu/Hkag/fC7GrVUXHvBqBnt5WNZDwLXYVJzEQY/0IYRmP0ywQ6ikcY?=
+ =?us-ascii?Q?qblYEmUGnHItE0olktBKlAqmDRQXPcXl5BSEiCp8s7nSLEUbTmjg2cmLtlUC?=
+ =?us-ascii?Q?szdGnlzxdstzqLw+bYNLvQBAbziJ9Tgjg73WOdeJqDVi4Mtcj39yOk74QC4H?=
+ =?us-ascii?Q?AQ0PUznf7OXR7PYdV/pdAE2gg5WfG4zZmfd798+0xaX5QwXQcXJ333A3bfMa?=
+ =?us-ascii?Q?nhydRZxUMrNZW79q+aCps4yak6De3xPKS7c6PnvMUeSFgDx1bM+AuqXoE35D?=
+ =?us-ascii?Q?v6ulKqOp791tWbN6zd8ujeYGXP5W/2z0RNeUmipdH3UXnhrLK6IBP40V6YCk?=
+ =?us-ascii?Q?2+YmrTqO4MQC/gO4SeyUV7oJ9m4gA4wdpMA6XWpvL/s2MpjtlRSKOIyT5oIk?=
+ =?us-ascii?Q?o4/vpK71fNu66l7QvOQ0RPf1O6sg82NkTT2T7TwnjDOUgOqfRd5JDn2GhC4b?=
+ =?us-ascii?Q?/Ri9ONBqlXrbNU9l8yMBMamess1cRTk6vdWoWyhV1YAi6V/Xy8ErnwM05jcy?=
+ =?us-ascii?Q?Se/fC+Zf7uEPbLqjPJYpiUu0k8ZwlFfAeGhB1bxJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1edbe3d-cb35-47fc-53bb-08dd8bf4ebd8
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 16:50:20.5227
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nGuZn0E9fw+nWb+8Es/XBoWUjgh9tdSr6sIY7P6QfxIF1vM126Kkx2rOy9x3rhnx
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7740
 
-On Mon, May 05, 2025 at 06:19:49PM +0200, Ard Biesheuvel wrote:
-> This patch by itself does nothing. The symbol is __weak for the time
-> being, and given that this code does not have its __pi_ prefixes yet,
-> this function will be superseded by the existing one. (If you remove
-> the __weak you will get a linker error)
+On Mon, Apr 28, 2025 at 10:50:32AM +0800, Baolu Lu wrote:
+> On 4/26/25 13:58, Nicolin Chen wrote:
+> > For vIOMMU passing through HW resources to user space (VMs), add an mmap
+> > infrastructure to map a region of hardware MMIO pages.
+> > 
+> > Maintain an mt_mmap per ictx for validations. To allow IOMMU drivers to
+> > add and delete mmappable regions to/from the mt_mmap, add a pair of new
+> > helpers: iommufd_ctx_alloc_mmap() and iommufd_ctx_free_mmap().
 > 
-> Are you sure this patch is causing the issue?
+> I am wondering why the dma_buf mechanism isn't used here, considering
+> that this also involves an export and import pattern.
 
-My by-foot bisection of x86/boot is below.
+The provider will be a memfd or something, that isn't where we want to
+put dmabuf..
 
-I don't know if this patch uncovers something or maybe changes placement...
+> > +/* Entry for iommufd_ctx::mt_mmap */
+> > +struct iommufd_mmap {
+> > +	unsigned long pfn_start;
+> > +	unsigned long pfn_end;
+> > +};
+> 
+> This structure is introduced to represent a mappable/mapped region,
+> right? It would be better to add comments specifying whether the start
+> and end are inclusive or exclusive.
 
-Tom also pointed to
+start/end are supposed to be non-inclusive range in iommufd
+land. start/last for inclusive.
 
-4067196a5227 ("mm/page_alloc: fix deadlock on cpu_hotplug_lock in __accept_page()")
+This should be a u64 too
 
-as potentially related.
+> > +void iommufd_ctx_free_mmap(struct iommufd_ctx *ictx, unsigned long immap_id)
+> > +{
+> > +	kfree(mtree_erase(&ictx->mt_mmap, immap_id >> PAGE_SHIFT));
+> 
+> MMIO lifecycle question: what happens if a region is removed from the
+> maple tree (and is therefore no longer mappable), but is still mapped
+> and in use by userspace?
 
-And now I went and tried to reproduce the warning and it fired ontop of:
+I think we should probably zap it and make any existing VMAs
+SIGBUS... Otherwise it is hard to reason about from the kernel side
 
-419cbaf6a56a ("x86/boot: Add a bunch of PIC aliases")
-
-which is the previous patch.
-
-Ufff, this is one of those which don't reproduce reliably because it was fine
-on that commit in the previous run. Nasty.
-
-Lemme go dig more.
-
----
-
-ed4d95d033e3 (HEAD, refs/remotes/tip/x86/boot) x86/sev: Disentangle #VC handling code from startup code
-
-<--- NOT
-
-[    1.227968] smp: Brought up 1 node, 32 CPUs
-[    1.231576] smpboot: Total of 32 processors activated (191999.61 BogoMIPS)
-[    1.247644] ------------[ cut here ]------------
-[    1.248697] WARNING: CPU: 17 PID: 104 at kernel/jump_label.c:276 __static_key_slow_dec_cpuslocked+0x2a/0x80
-[    1.251592] Modules linked in:
-[    1.252370] CPU: 17 UID: 0 PID: 104 Comm: kworker/17:0 Not tainted 6.15.0-rc4+ #2 PREEMPT(voluntary) 
-[    1.253173] node 0 deferred pages initialised in 12ms
-[    1.254539] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-[    1.257490] Workqueue: events unaccepted_cleanup_work
-[    1.258698] RIP: 0010:__static_key_slow_dec_cpuslocked+0x2a/0x80
-[    1.259574] Code: 0f 1f 44 00 00 53 48 89 fb e8 82 66 e5 ff 8b 03 85 c0 78 16 74 54 83 f8 01 74 11 8d 50 ff f0 0f b1 13 75 ec 5b e9 66 bf 8c 00 <0f> 0b 48 c7 c7 00 44 54 82 e8 a8 5f 8c 00 8b 03 83 f8 ff 74 33 85
-[    1.266446] Memory: 7574396K/8381588K available (13737K kernel code, 2487K rwdata, 6056K rodata, 3916K init, 3592K bss, 791248K reserved, 0K cma-reserved)
-[    1.263574] RSP: 0018:ffffc9000048fe40 EFLAGS: 00010286
-[    1.267573] RAX: 00000000ffffffff RBX: ffffffff82f10d00 RCX: 0000000000000000
-[    1.269388] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffffffff82f10d00
-[    1.275578] RBP: ffff88827b7d4d98 R08: 8080808080808080 R09: ffff888100b59100
-[    1.277441] R10: ffff888100050cc0 R11: fefefefefefefeff R12: ffff88827326e300
-[    1.279574] R13: ffff888100bc1940 R14: ffff8881000e2405 R15: ffff8881000e2400
-[    1.281460] FS:  0000000000000000(0000) GS:ffff8882f0400000(0000) knlGS:0000000000000000
-[    1.281460] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.281460] CR2: 0000000000000000 CR3: 0008000002c22000 CR4: 00000000003506f0
-[    1.287576] Call Trace:
-[    1.288381]  <TASK>
-[    1.289015]  static_key_slow_dec+0x1f/0x40
-[    1.289980]  process_one_work+0x171/0x330
-[    1.290988]  worker_thread+0x247/0x390
-[    1.291576]  ? __pfx_worker_thread+0x10/0x10
-[    1.292773]  kthread+0x107/0x240
-[    1.293536]  ? __pfx_kthread+0x10/0x10
-[    1.295573]  ret_from_fork+0x30/0x50
-[    1.295575]  ? __pfx_kthread+0x10/0x10
-[    1.296580]  ret_from_fork_asm+0x1a/0x30
-[    1.297507]  </TASK>
-[    1.298085] ---[ end trace 0000000000000000 ]---
-
-5297886f0cc4 x86/boot: Provide __pti_set_user_pgtbl() to startup code
-
-<--- OK
-
-419cbaf6a56a x86/boot: Add a bunch of PIC aliases
-f932adcc8650 x86/linkage: Add SYM_PIC_ALIAS() macro helper to emit symbol aliases
-
-<--- OK
-
-ae862964cbc5 x86/sev: Move instruction decoder into separate source file
-fae89bbfdd9d x86/sev: Make sev_snp_enabled() a static function
-b3464a36f7f2 x86/boot: Disregard __supported_pte_mask in __startup_64()
-bd4a58beaaf1 x86/boot: Move early_setup_gdt() back into head64.c
-
-<--- OK
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jason
