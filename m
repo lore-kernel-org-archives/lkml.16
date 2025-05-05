@@ -1,233 +1,261 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2057.outbound.protection.outlook.com [40.107.102.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8323E58CD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 23:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746488045; cv=none; b=F31W6eJ8mS2gMnkhnQqIBDKPwUKQsqz0In/lW2xcRND2KQVMzFokscQWklYG3ZD28WrvkawCfb54sI8mtB4+//4ztAKJ/OEALJFjnZjvRb8hZtO0UgzC777l6t9kqIv3a1E6fEeTxKZIzwnjLPDSps/r6J0sAtmCjps+zkns6qE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746488045; c=relaxed/simple;
-	bh=sve3vY3CJA2H9KhL6N14xJagE0byGd/9BYCCTSFziCU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uJSLi2cWNwI+54U87cG1T/7jyGE1vXSB93rzFI1AM45qpZydqqCCa1GEfawooBXSGtdT/oqbC/MSL/v/XjBraNb4cfnuir5YExTapJZQDT2DELoCObo8RVL8740c0cAFLZseuGb3eVFx/5FHJAk5hoyVJSPqT923JMTfc/Aqvdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FSBQfC35; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363ED3EE0FA;
+	Mon,  5 May 2025 23:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746488210; cv=fail; b=BCuC/mjkVNPcoraGz4Cv+WMi+Qhnup0fnyCMlazRv6rt7zVqI7batFHP0rzbOdjZQ+dErFpJuww9D5ldB+2q/JQFxkjBsL3I+Q1nW7Jsx687dlQQohtKgtCF1waM1sHnmFs4NVIoi1krWaeYfD20RqS53i6I/O2VAH97FeCzv5U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746488210; c=relaxed/simple;
+	bh=MiOdD+tbSgVWZINlFdCqCBaND5BLkV8Rnmg7pIs1gpA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SCzrQ1+6VXof8cJRTIbhRFfebiYNyYyWYGK3t+xbBFvr4B1Z603GIEiQ45Ouad6DbMS7P4e60RK4IcvEfFsc7pm2P7dbnbfSmh/tr8UcA3+UZZ//jCqEKJh9LPjNVs4e79nFR2254y5Yq1IAM5M+dmxNfimy8MVPgHDIj/QGIhs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kHhteOxL; arc=fail smtp.client-ip=40.107.102.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FSBQfC35"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=uiR+3CEeBKWRWtRm+179P73pOavCkS1oCUl8AfS/Uy8=; b=FSBQfC35lzQuk08eQZwxVcd1Fz
-	jaT+Xw4o0DNf/FLkrmbiNM+IAtdZZQ0AeKURjSPGYJZcjMbZe+BY3CV4llkKc7uUU/ZC0aukncCXq
-	hEap0BvotUz46fMgw6/NpMfB1ue1Zdyd6GD1lRi7Wk6NnxIIKqaNwdHNk7uGGfO5Ka6BG2ilIv6xb
-	hENt1sb73US3e3dtiMvodMXwkwyXh+A3btgQOv+2oWlnj1B4RF30+jp90dnezZ1uivM37f0otSm1P
-	Xf6kVzcJXKw19mYGsm0YOZ3iSRX9SVkulTVDT0fFReBlHDPzM5VEGgLmKRJDjNC+LZ0e16CX6qNNC
-	OKCdK0DQ==;
-Received: from [15.248.7.87] (helo=u09cd745991455d.ant.amazon.com)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uC5Ij-0000000FZLN-0KnB;
-	Mon, 05 May 2025 23:33:53 +0000
-Message-ID: <944ddefdc0ef3dc0f78c7957afa7f12e360a4392.camel@infradead.org>
-Subject: Re: [PATCH v1 0/6] x86/boot: Enable earlyprintk on MMIO (8-bit)
-From: David Woodhouse <dwmw2@infradead.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Ashish Kalra <ashish.kalra@amd.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, linux-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Denis Mukhin
- <dmukhin@ford.com>
-Date: Mon, 05 May 2025 16:32:38 -0700
-In-Reply-To: <aBjSzIPaovOl03Eg@smile.fi.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
-	 <db19e81405d17e9eb9a3c1d4798220178e4f9373.camel@infradead.org>
-	 <aBjFtWDSuXVq9kW-@smile.fi.intel.com>
-	 <3c1bd53c8ee5fe0a6e281551dfe2089679e8e5eb.camel@infradead.org>
-	 <aBjSZA29o2zZYvGh@smile.fi.intel.com> <aBjSzIPaovOl03Eg@smile.fi.intel.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-1hyg0VtQQ3LT5b4SyEmR"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kHhteOxL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kTgwao6ytNQ1CvDLRz2jE57eWN6zJs3311oYr19EQe+s4DgzvoMyIotyGp6YfP3gV/JYQpg5Ji1GZ9tVCccZKVUpH70OOcNXrQfDYaE9pk+CzOR/qNoKIS7N4uljmykC/9BjyKyMuicQiN418g/vTHlFiUkTV6ovoC+cJUzeEKj3GQvKlcN0FXS+QWWJ4uIhyw/vGhTvhp850LYsO93BzgnVN0Rf8ep5rS5Mu2AR0dZz+FvikgD00WFxYubUXBodt1czG+HYWgJWzGnFBcjxMLiEQ+r9yQd1cfdGJ2MYufv2l8bW0U7zvIzQVZRl8hhYKSwNEnxR8mlKYoU8dnFzGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YC9f3pZL9XWuSrCqbn4JFiD7ZeaWUWWfBUgFIfpm4AU=;
+ b=VLlMvGWEhrZiek/X/PzpUeyOW6Ap/CeKSCt7K25zKj6cVbbDROrjdxbE1qs4d8Qlzu/lKWKBhNw/ukydx97kztaGLzJx9vpKLHnsUXr4SjG54jKjb1xq8317MZsLdL6LAh3Scq2kS/0Ft0uf1BgV0DshbGXLnceHlP+BnGi8cKan35a9p8z2r9zRs6yIPvaIuvARSxAU3R7KEbWEar04rn7wu7WkaBJQrMdHfAxWiPMfWudRJCC/DRng5qxiliD2dZv7rZNe+CmdiPeN878D4dYCXSGT3jHoznL9he+B6vZeqedARsTn9ncVJzZ6h20LBgH3N4Xv699NGNu+6OtOkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YC9f3pZL9XWuSrCqbn4JFiD7ZeaWUWWfBUgFIfpm4AU=;
+ b=kHhteOxL+vR/+BeaAP5GSU1ndJIqKtPbDfxNofnP66R/IXa+iOsy5b/QQ0HWz7Ynoomqs5prE+oMSnziro/6CcsufCRSbmw6sRYyOafm9Au0uSWgMSXZM2ySbDuPgYEerQ/ITwpwQYfijk/lRr4eF2mFm55DDtqPABS6PNKxOI8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
+ by CH3PR12MB8660.namprd12.prod.outlook.com (2603:10b6:610:177::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
+ 2025 23:36:40 +0000
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8699.022; Mon, 5 May 2025
+ 23:36:40 +0000
+Message-ID: <34890707-201a-44f9-afb3-b065ae71b246@amd.com>
+Date: Mon, 5 May 2025 18:36:37 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/10] Basic SEV-SNP Selftests
+To: Sean Christopherson <seanjc@google.com>,
+ "Pratik R. Sampat" <prsampat@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, pbonzini@redhat.com,
+ thomas.lendacky@amd.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, shuah@kernel.org, pgonda@google.com,
+ nikunj@amd.com, pankaj.gupta@amd.com, michael.roth@amd.com, sraithal@amd.com
+References: <20250305230000.231025-1-prsampat@amd.com>
+ <174622216534.881262.8086472919667553138.b4-ty@google.com>
+ <b1cc7366-bd30-46ee-ac6e-35c2b08ffdb5@amd.com> <aBlGp8i_zzGgKeIl@google.com>
+Content-Language: en-US
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <aBlGp8i_zzGgKeIl@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0275.namprd13.prod.outlook.com
+ (2603:10b6:208:2bc::10) To BL3PR12MB9049.namprd12.prod.outlook.com
+ (2603:10b6:208:3b8::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|CH3PR12MB8660:EE_
+X-MS-Office365-Filtering-Correlation-Id: 151f7f12-90c1-4b6a-9add-08dd8c2daf8c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?THhtM3ZwdGtFMktTbDRva3h4MmhTMHpuOEpQUVVWMTJpQ2RMeUUwZkVGT2pK?=
+ =?utf-8?B?K0hVUzZTUSt6VU54UjJleWFoMWtwckpQcUg0Y2dPVklqTmtVVVkvVWNNUHhk?=
+ =?utf-8?B?c0ZVN0cvMDFsSnIrRWE5NTcwMFNUQWM4Sk1jYkxraU9nQTh0Vjk0MG0xVldP?=
+ =?utf-8?B?RGVQY1lhWEJpR1l1akJxZ2JFR0JXVGxNY01Dc0N4UGRNQk1LcXp0NjNYSkdi?=
+ =?utf-8?B?Y0kzQ2Nwdy90OVl4WjdJZlZ4RXhrbWtaOEc2SFlSVkVuYnlqdXBKR2w0em5E?=
+ =?utf-8?B?L3hXLzhhNlVRTDBJSDRwQ0dkaVA3dUxEVFJrRWVQYXZHMUNlNHFHRU8wVkdB?=
+ =?utf-8?B?N2tzTXp0b1hoUU5HVUhFdGJ3RmlqWDVTaTdTdW10QnF4UFZ6R0lIY3BGNnJy?=
+ =?utf-8?B?L1UreHNONkFBRURvWDdOaHQyY0prM01xajZFVTRzbHJwUDJWd0N2OTBaNHgx?=
+ =?utf-8?B?aDdtVXJLemJ2TnBjQTQ0UnJIaGUzU24vZ0lDdk5JNDAxL0pVY0duLysvVWdQ?=
+ =?utf-8?B?MnZEbTVTTHc1Ym9HM25QeDJOK2hJa2lpZU1ReW5FbktOMVpQd1ZUTmgxZStL?=
+ =?utf-8?B?ZnBzOVdoMm1FRXR4QXQ3R3Jld2ZwZ2VLUndJODM0em0yaUV6eDdKaDViaFYz?=
+ =?utf-8?B?Zkd1NTVkRkYrME5rOFZZZitGZnAvU1cyMUNjN1Z6TkxYVTlGQmpkVGJ5MjYx?=
+ =?utf-8?B?czUwY2xoV201K3dsOFBuT3doVGhvZnM4N0VlYW1BeFhYU1NQNUpvUE92NExZ?=
+ =?utf-8?B?S0kwbnVlay9wYnYvYkk3TTRNbjVidUg5V1JnWFpmYzdKWG5GRGJtWHY5MkZT?=
+ =?utf-8?B?SmRydStZdkZhdStaQnZzbnN2QUthc1FxZmtLcUttQ0dGV1FyMFB4NTR6MWp4?=
+ =?utf-8?B?eDRycXg3bS9mYlFuZlRSczhTSXFacXczNXRjRTNrUEFpbmEzQnR2d0VRRUd0?=
+ =?utf-8?B?KzRESFRocXNPMHZuWmwrdGVrZS9td3JxeWVoK3ZMdGVWNkpId3dnNHIyWnc4?=
+ =?utf-8?B?bUY4UWpIbkVaYWFoOTF2VFRNWFNzUU5yaVA5N2cydUNPakxvZXFhZ2U4V2xX?=
+ =?utf-8?B?UTZNdkFmbE9jSDdZMmxGME1qRCtsVUQwS2RJdDBPamQwd0YxTmY2WnJSdWdx?=
+ =?utf-8?B?c2x1eER3Tm1ZZ2NUb1UvcjFOREpPeVJEU2tkTVVrbkxLL3JCSzBwL3kyaGhD?=
+ =?utf-8?B?VXIxWVdLNmgzWkc4eWJWenZuQ2FrdUhnUE9udW5jQmxJYXBTK3lpYTc1MHdR?=
+ =?utf-8?B?R0RGSlRVUVBKQ0VOOEJJcUl3VUtOYjcybzFTUXpGR1MrNUZxZEw1Wks4b2tr?=
+ =?utf-8?B?OGZveExwcG9Jdm80TGlCNUNOTFBaenEyTHliSE85ZGJXUVl1TXZhRFB4N2dK?=
+ =?utf-8?B?SEJqY3BMcGQzV1hoNU93QXlhVVJCN3gxcEFXaS9xcjRSckQrR1J4TnFFcU9o?=
+ =?utf-8?B?T2lmOUllSUIycEpOL0hFQlNncFNSdHNudjRGNW5lSElLV1ZKMFNrbnBValYr?=
+ =?utf-8?B?NitVOGUxQVAwNWlVUWo3OFNJejVvWTk1dy9EZGF4OEoyY0dVWUgrZHFIR1lC?=
+ =?utf-8?B?VjVjM1krcXdxcXhpbnJYRDhONWlLWDdxZ3lnc3pOWkN4LzdGVEsrdUR2d1B2?=
+ =?utf-8?B?ejNWa1hQYzZPR1BBOXF6MGcxU0lUaDhDelAvc055SnloSytaeW5oYytOekw2?=
+ =?utf-8?B?WnZ6UlNRZGRDL1ViS29zQ0FoVFpsUWROa1NxbjBtLzFvUHh5a045dDNYQnp5?=
+ =?utf-8?B?WkM3c2NWT2NKeDl2ZndsSXhNSkxjZ3dqdmwwUElIZ0Vvd3cvaVMxTy80K1Zm?=
+ =?utf-8?B?Z01MWHFnWlBzR3FOREt0bC9zcUZkRzBmaVdITzU1RjVkdUVuUzM4OUFWOUNK?=
+ =?utf-8?B?TUR4M2R3WXI3NGZLWFpWS2dyWnFCcjNmQkRFYWdScHgvMDR2Mk9XbHpWRy9F?=
+ =?utf-8?Q?hHOGExi872o=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cEVjcGprR2NtYWplc2hnV1k2MFZKK09OMm1aN0Rzcmx1ZHV4TUhCMXNIOXVx?=
+ =?utf-8?B?VUhZMHJ1dEZVbmtXTjRSbUt4NFpwK2NsWlg1SXFhckMrZG5aVnVTRUFOM0RG?=
+ =?utf-8?B?dzhZbmQ5Wkc5Q3VNaFpDMDlPN0lDS0M2eGs0dW5zTm5vRElYYVcxVTBaUitN?=
+ =?utf-8?B?NDZaVkZLbU9qM1psNlRwZ0tMUmtQdUVSZHpRSFMwS0ZrbTV1bnVXbjYyTGwy?=
+ =?utf-8?B?SUZydWxCcDVFZWVrRXYvcVY5ZERzMGMwMVdLVUJoRDB0NHBXOVpoaG1iMllU?=
+ =?utf-8?B?NFp4VDJUekJqSTVjWFZBNitOT3NtT2xsYi9qT09LK3EwcjFVM2JWcWR2UXEr?=
+ =?utf-8?B?QUdleTNsYk4vdm16dHFRRlo1NENJNjRDSXVNNklSVnllelRMRUtFOC91a3Jm?=
+ =?utf-8?B?WTVwWWdDc2dwSnJlMTZuU0NHTHhGTmgvSW9lR2dPeUZQU1dGM29HNU8wamVj?=
+ =?utf-8?B?dlovcUF5Wm90OEY1WlhXcVdvZ3FpT2QzSWNZVW9rTXhOc2dJQ3BuR3B1YlFE?=
+ =?utf-8?B?czc5b2pQbWduakhMRHdPYm5KbklYUkNaWTRURy9JbDFkVDVaSy9BR210VDdE?=
+ =?utf-8?B?VVBLbDQ1YVkvZE5RdEhGczA3NndxcGhKaFZuTHRXYjFJSkRXQ2pCR0lZSlh0?=
+ =?utf-8?B?MU5nSGtNY0QyYnFwNC9Qb2FORlRuMTNKdUhSZXZXNTJhTG1tTGY0bVBiUGJj?=
+ =?utf-8?B?OExYeUhONnorL0xCR1ZaK2JSajcxWFFmdFdLZkxYVS9JZ0ZSaXV5bVBoQ1E3?=
+ =?utf-8?B?Njc1SWhuUjBKOGRwWnhtZ0U2ZlZyc2c5ZlFYVk1sY3VyT2pNT054aG1rZ2Jn?=
+ =?utf-8?B?MGRXQkw1M0o1dVlaMjdkRWJabXkrSjBBOVBvWVBDVDU5VDdQckMrTDFQMnp5?=
+ =?utf-8?B?Uzc0MWNOQVIxQWdOUDZMNnMyRWJ0cnVmb2lKTUN6V3k1MUxFU3RyNzFJMjlP?=
+ =?utf-8?B?ZUV5VWkybi9vdGdaU01ZejMxaGxXUm5iWWt1SU9IM0JGM05NOWpFMkM4bHVG?=
+ =?utf-8?B?d2hLY1FLdURTRVdRL2NxMTBkK2xEK2g3MGhHQldhKzRMc3pUbGFyNFk3QzlY?=
+ =?utf-8?B?Q2tvcU5FUzdxN0tLZXc5T2ZYbFVpaDE4ZmFSN0dudTZKNlVhRlc4VmdPYzEy?=
+ =?utf-8?B?Q3gwZllsRXY5cVIrWExBeWVwS1YrOVQ2aFVxZUNJSTZoNDdhQmQyb2JVNmo4?=
+ =?utf-8?B?VXI5ZEFQajF3TlB4OFl5SnJRRDlGMDZGVVVOd00rV2EyMDFpTHVtOVhJWVQr?=
+ =?utf-8?B?MUt1VzEwemptTUJQaVRsdlNYSWI0b0l1WEJQWng2aXNCTzZWbWJDUk9WUE5a?=
+ =?utf-8?B?OXVVY3VNR213cFR4U3BoT2hSd1RmSUNXbzJNTEFWM0dnTnlyRWdFMFZXQ0ZZ?=
+ =?utf-8?B?VlF4cFlhcURUTGlTZnNSSVorRzdQWnVEVTNKM1p0eVp3Q3Y2cW9LU0RIYytY?=
+ =?utf-8?B?NitONjJKVmk3c3Q1aGQvN0J0WGVDeEt0TldySG4rdzM1YVlWRFpnOHNXeXFo?=
+ =?utf-8?B?TUh2WThGb3ZSYnJ6Kzg1RDhuVjI2QVV5NUFVZFgzZmlCd1czZWoxcFZ4S01M?=
+ =?utf-8?B?YjVkUk9PSnoycHFJTGh6bEFXOGlRenZCWlRTVE5iT1JyQnBJeWs1RGM2WGU4?=
+ =?utf-8?B?M0ZJMTA5d2xtalJVNVkza3pGRzhWSTZscTYrK3JWNTlTMHFDWFdRelRjak1J?=
+ =?utf-8?B?NTBzdmtJVHpKSUtJdXhNbFZ4aDRJR2ExekFHVTNhV05wL0Q2NUQ2Y0lPZVk3?=
+ =?utf-8?B?dFVQNVNmbDJkWUZOU25xZlhMcjZJMG5oaTdoYW5yRng4VnVjTXBLYW9LaUVv?=
+ =?utf-8?B?OFhNaGNnR281SEFzeEpQUWZPdDgrcWlObTQyUHBjYVhwR0FYUGppRVpmVU1P?=
+ =?utf-8?B?emQrY3llcWlOWGFPUUJaVlUwRWU1VWV5T1JiMVcxdWR2aFYyUHQ5aHdBYjQy?=
+ =?utf-8?B?SkVGcDNtNW5CMXVDWGpITzF4WWw1Y2xESmZDRlpIMHFYS1gvMy9KbnN3M3pZ?=
+ =?utf-8?B?a3EwbWdRVDRsTThGTVg0UXU1enpMNmtZanM3OWFBTHhGd1pJNFpKR2Uwb1lV?=
+ =?utf-8?B?Mk9aaVZ3VjVhOWZYZHpFQmZJM1RsOXZqYlRnSzUyRWZFczlGVFpRaHgyV3VH?=
+ =?utf-8?Q?laalSBcdsOGrRfAMONq1hWGyr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 151f7f12-90c1-4b6a-9add-08dd8c2daf8c
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 23:36:40.5339
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jOMjD4nF+pAQGN75qzOHab+64gMpeLafZlcztXnYh8Vd/pdDBiY0ds5jVEV6ajQSl5TYVWmoTen3957tCZ+FvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8660
 
+Hello Sean,
 
---=-1hyg0VtQQ3LT5b4SyEmR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 5/5/2025 6:15 PM, Sean Christopherson wrote:
+> On Mon, May 05, 2025, Pratik R. Sampat wrote:
+>> Hi Sean,
+>>
+>> On 5/2/25 4:50 PM, Sean Christopherson wrote:
+>>> On Wed, 05 Mar 2025 16:59:50 -0600, Pratik R. Sampat wrote:
+>>>> This patch series extends the sev_init2 and the sev_smoke test to
+>>>> exercise the SEV-SNP VM launch workflow.
+>>>>
+>>>> Primarily, it introduces the architectural defines, its support in the
+>>>> SEV library and extends the tests to interact with the SEV-SNP ioctl()
+>>>> wrappers.
+>>>>
+>>>> [...]
+>>>
+>>> Applied 2-9 to kvm-x86 selftests.  AIUI, the KVM side of things should already
+>>> be fixed.  If KVM isn't fixed, I want to take that discussion/patch to a
+>>> separate thread.
+>>>
+>>
+>> Thanks for pulling these patches in.
+>>
+>> For 1 - Ashish's commit now returns failure for this case [1].
+>> Although, it appears that the return code isn't checked within
+>> sev_platform_init()[2], so it shouldn't change existing behavior. In the
+>> kselftest case, if platform init fails, the selftest will also fail — just as
+>> it does currently too.
+> 
+> Argh, now I remember the issue.  But _sev_platform_init_locked() returns '0' if
+> psp_init_on_probe is true, and I don't see how deferring __sev_snp_init_locked()
+> will magically make it succeed the second time around.
+> 
+> So shouldn't the KVM code be this?
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index e0f446922a6e..dd04f979357d 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -3038,6 +3038,14 @@ void __init sev_hardware_setup(void)
+>         sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+>  
+>  out:
+> +       if (sev_enabled) {
+> +               init_args.probe = true;
+> +               if (sev_platform_init(&init_args))
+> +                       sev_supported = sev_es_supported = sev_snp_supported = false;
+> +               else
+> +                       sev_snp_supported &= sev_is_snp_initialized();
+> +       }
+> +
+>         if (boot_cpu_has(X86_FEATURE_SEV))
+>                 pr_info("SEV %s (ASIDs %u - %u)\n",
+>                         sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+> @@ -3067,12 +3075,6 @@ void __init sev_hardware_setup(void)
+>  
+>         if (!sev_enabled)
+>                 return;
+> -
+> -       /*
+> -        * Do both SNP and SEV initialization at KVM module load.
+> -        */
+> -       init_args.probe = true;
+> -       sev_platform_init(&init_args);
+>  }
+>  
+>  void sev_hardware_unsetup(void)
+> --
+> 
+> Ashish, what am I missing?
+> 
 
-On Mon, 2025-05-05 at 18:01 +0300, Andy Shevchenko wrote:
-> On Mon, May 05, 2025 at 05:59:48PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 05, 2025 at 07:35:04AM -0700, David Woodhouse wrote:
-> > > On Mon, 2025-05-05 at 17:05 +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 02, 2025 at 10:33:49AM -0700, David Woodhouse
-> > > > wrote:
-> > > > > On Fri, 2025-05-02 at 15:29 +0300, Andy Shevchenko wrote:
-> > > > > > Some of the platforms may have no legacy COM ports and only
-> > > > > > provide
-> > > > > > an MMIO accessible UART. Add support for such to
-> > > > > > earlyprintk for the
-> > > > > > boot phase of the kernel.
-> > > > >=20
-> > > > > Shiny. I had to hack QEMU's PCI serial port to do unnatural
-> > > > > things, in
-> > > > > order to test the mmio32 variant which was the only thing the
-> > > > > earlyprintk code used to support. But I *did* so, and it
-> > > > > works with the
-> > > > > kexec debugging.
-> > > > >=20
-> > > > > Can you add support for this mode to the kexec debugging too,
-> > > > > please?
-> > > >=20
-> > > > Do you mean to add MMIO 8-bit to kexec assembly code and other
-> > > > parts like you
-> > > > did in the below mentioned change?
-> > > >=20
-> > > > I can try it at some point, but have no time right now for
-> > > > this.
-> > > > I would appreciate if you can give a try for this patch series
-> > > > functionality to see if it helps for the initial messages (as
-> > > > far as I understand you also want to have this in the second
-> > > > kernel, right?).
-> > >=20
-> > > I'll see if I can find the time to take a look. Got a branch I
-> > > can pull
-> > > your series from?
-> >=20
-> > Yeo,
-> > https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fboot=
--earlyprintk
-> > .
->=20
-> But just FYI that with `b4` it's as easy to pull from the mailing
-> list as from
-> a branch:
->=20
-> 	b4 am
-> 20250502123145.4066635-1-andriy.shevchenko@linux.intel.com
-> 	git am -C1 -s ...
+As far as setting sev*_enabled is concerned, i believe they are more specific to SNP/SEV/SEV-ES being enabled in the system,
+which is separate from SEV_INIT/SNP_INIT (SNP_INIT success indicates that RMP been initialized, SNP has to be already enabled via 
+MSR_SYSCFG before SNP_INIT is called), though SEV_INIT/SNP_INIT may fail but SEV/SNP support will still be enabled on the
+system.
 
+Additionally as SEV_INIT/SNP_INIT during sev_platform_init() have failed, so any SEV/SEV-ES/SNP VM launch will fail
+as the firmware will return invalid platform state as INITs have failed.
+ 
+From my understanding, sev*_enabled indicates the user support to enable/disable support for SEV/SEV-ES/SEV-SNP, 
+as the sev*_enabled are the KVM module parameters, while sev*_supported indicates if platform has that support enabled.
 
-Thanks. Should I be expecting this to work...?
+And before the SEV/SNP init support was moved to KVM from CCP module, doing SEV/SNP INIT could fail but that still
+had KVM detecting SEV/SNP support enabled, so this moving SEV/SNP init stuff to KVM module from CCP driver is
+consistent with the previous behavior.
+ 
+Thanks,
+Ashish
 
-qemu-system-x86_64 -display none -vga none  -accel kvm,kernel-irqchip=3Dspl=
-it \
-  -kernel arch/x86/boot/bzImage \
-  -append "console=3DttyS4 root=3D/dev/vda1 earlyprintk=3Dpciserial" \
-  -chardev stdio,mux=3Don,id=3Dchar0,signal=3Doff -mon char0 -device pci-se=
-rial,chardev=3Dchar0
+>> Regardless of what we decide on what the right behavior is, fail vs skip (I
+>> don't mind the former) we can certainly do that over new patches rebased over
+>> the new series.
+> 
+> FAIL, for sure.  Unless someone else pipes up with a good reason why they need
+> to defer INIT_EX, that's Google's problem to solve.
 
-
-I get no early output (I think it's still using the mmio32 variant),
-and I only see output from when the real driver takes over:
-
-[    0.894054] printk: legacy console [ttyS4] enabled
-[    0.895498] printk: legacy bootconsole [earlyser0] disabled
-...
-
-
-
---=-1hyg0VtQQ3LT5b4SyEmR
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUwNTIzMzIz
-OFowLwYJKoZIhvcNAQkEMSIEII7xIgdM8uhc7JOoRVPRG8tOPwKd7HV97ybJJwWaRF4dMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAttIwQ0UZwK6s
-feQqJA+pIUblWC5xmKKX+wvcbdo6TckDUoE9B/bI13tpvnN93bD8AgaDRLNhcUpZvO9JxkqKu589
-mfNqWEzXpTqwmmjZvqryIxSrsFgzmYaCXgQg6Z+A7Jx459Mv9Hgn8kSz3geP6akdHRok+ImqcYdi
-+Y4OzC71Wd9lAFwSIYqdsuzIjK0ZPC7mjrnDCgGocNjZglB5RZnrGYGsx03XNG4SrwU7T7up7vbj
-ubH+pfY8vpJhoI84GCFGeS5DnPMs31adqqVwsdtUe7mT2Kba4Nw3oaeEZqZiSgEG8XENR4JVqMYk
-fVpSz8FWOqKHRygTkKgTzmfgyeOm+GOJAMxUh7XGH/WyUsMwMU8ZFpe88qWjFdsoHJnQJBSNCeQm
-666WrnlqImaOINz0PAnxxepoWew9q5g/UoyCTL5ab9GSgxRPgj8DyUEy4SjMZAts5Lgj2EPz+tr4
-G/3xoicXNaDJf6q4F2vyxhQtat8tpI4q5jOVP4zauX649xbCqborESugemqgUwtNXcqNWIAZRewB
-E+gJMorL8XIf/pv1tvMnHVXOEQH0YSKX8d/HfRF2b7LNnwzx3cN28O++63d9hGjh7gYruw5rezHG
-J+0c/k7762SKHdDcn0lo7FbxhJ8z9QRRq5RyOPUVNUePv9en8fimPWujmpNVBzsAAAAAAAA=
-
-
---=-1hyg0VtQQ3LT5b4SyEmR--
