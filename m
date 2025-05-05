@@ -1,132 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57237EEC3;
-	Mon,  5 May 2025 17:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B0C2580F1;
+	Mon,  5 May 2025 18:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746467724; cv=none; b=lLy7b2eRvVYWXe/SOATkbthbFh3Rm0IO8TG/vmem4t7gzbyNtPLNtVQ/cSe6Xp5W8AIU7hl3rOK6BT5Rh+EFbexznT1HugBUJVsW4nQKFm3K+zgIDmflyngL/pMEmYuw2m5Zypqa+hGlZoT1jxYJxnWVRsHSXkum3dmGWytnH8s=
+	t=1746468090; cv=none; b=foLqJ3V6ZOTGfE1nixygKrxxIW6pMqa9ty4w4lnQIMiMtNWJIPdTdTZRtq6gM/rtWJc3Gfaw/m8nR1VzqyuHSLrNC7xxfkwhyycwnKnVUR+wkk+HXYCsgCs/YEzCoBAsNQQ+/fLdHQ9ahKG1eXkOfec+bmakxbLapiOLxGCbjYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746467724; c=relaxed/simple;
-	bh=AJV9SWBkkofgsLLmLFvkjd7VkJ+uBk28zKmrUgYUJ7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G9kppZWzoSpbd42gdqK4ZCD/yAWZUKQcYxYKUwJ0hCwmFKbS1BaciQHm1vu+wQV9n4CC1HPSODfGgKWoVO49A3mOzAjiPwpXbGFwcHRxpvsuXDYHQ4ksndwwkAl4BbvphjEOeUQGzWFUR276uUMbH/OWucqFgrXv+eQHcUbvXFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gwcIlonh; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746468090; c=relaxed/simple;
+	bh=3MDlRXQE9cdOsif4zioLiCuqYDFy6zBFGDLRzxGLLCY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VZ5dP322kO4fJk1/eXkYO0snm+KZIwIDoqg1yrn4l034po6bsKG9xcCTzqO358UX5/qPqq4S1t9V9bR0Sv/DSoh2XpU38el/TsDsKLqGv4X7+hu8e6htxmWl4N4GFz2B1fqUMA38iN5geDWtFcnezNnsZCNZy37GV6g/Um0AoQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g64+Z5rx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gwcIlonh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746467722; x=1778003722;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AJV9SWBkkofgsLLmLFvkjd7VkJ+uBk28zKmrUgYUJ7I=;
-  b=gwcIlonhkM/OSkRHlow0am03buz/hVte+HlEF/nFJ+oA5APE0FbI03FZ
-   BKbT7UvAvPxNloUdJwFO+/XtbtML99C6s5jZOwmpV3bBtiYxjBpB6+g/J
-   WdK4N0iLhqkLl9skUpDC+zCocjReEubxPw07Rkcg7DaWDzXVPFG1GlsLo
-   zWs7piyU+wTxrsYBSkQ8yMfmQw0mLz2OwsH3vG8bFnZ1EX/xBSIPb/bMU
-   5Id318+iqpoXOuDezXMSQLrps3ldd706y3NPUjt9ieNcv3kvrSzLe+1+g
-   EFeEi1Y3waP9gfhvH/Oh5MvvPF/B0uXffN0xCUAfGuUrXsgoE/tPZcetC
-   g==;
-X-CSE-ConnectionGUID: WVsivdpSSOOz88YAqAth0Q==
-X-CSE-MsgGUID: rqq37WSnRxqhD2kXdqdqdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="65501809"
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="65501809"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:55:21 -0700
-X-CSE-ConnectionGUID: IsSejwSVQm63kp4GldYRSQ==
-X-CSE-MsgGUID: Cvmm7A5bQOeZAfj37N1eFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
-   d="scan'208";a="166247736"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.37])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 10:55:16 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>
-Subject:
- Re: [PATCH v5 08/14] cxl/port: Replace put_cxl_root() by a cleanup helper
-Date: Mon, 05 May 2025 19:55:12 +0200
-Message-ID: <2303863.vFx2qVVIhK@fdefranc-mobl3>
-In-Reply-To: <20250428214318.1682212-9-rrichter@amd.com>
-References:
- <20250428214318.1682212-1-rrichter@amd.com>
- <20250428214318.1682212-9-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g64+Z5rx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C187CC4CEE4;
+	Mon,  5 May 2025 18:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746468089;
+	bh=3MDlRXQE9cdOsif4zioLiCuqYDFy6zBFGDLRzxGLLCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g64+Z5rx2YDTX/WfqHAUNh1Ms5hXAFmr7zL1TXlg8BLeOPD+mFNU2rou1i+w9jyau
+	 SZdBKlIaQ+bGais7za/Nzklb4AldtkLbgVewpEVTsVzXGhsbzF+cYLN3RJreRTBDv9
+	 hdS1NptRDyj/0FYoXfTUwI8XoNugoSfiqHR4Zip68SHGFEAp14L5/P+LY6r/0lLJlf
+	 Us2E/uFJuiNgroXBIYFR9i8KvlC6pPv8KQkeAl+A9OryRMbvcdLM5PzOlpeYFrdN+V
+	 k9jHuw288SH/OmDkD/QPSmMxkfpws0GuLYPk81HkE90wfKqC77bO/xoACpk2SxsSyG
+	 6/8eQ9RulIZkw==
+Date: Mon, 5 May 2025 18:01:27 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>, ardb@kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, decui@microsoft.com,
+	dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
+	imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com,
+	jgross@suse.com, justin.ernst@hpe.com, kprateek.nayak@amd.com,
+	kyle.meyer@hpe.com, kys@microsoft.com, lenb@kernel.org,
+	mingo@redhat.com, nikunj@amd.com, papaluri@amd.com,
+	perry.yuan@amd.com, peterz@infradead.org, rafael@kernel.org,
+	russ.anderson@hpe.com, steve.wahl@hpe.com, tglx@linutronix.de,
+	thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
+	tony.luck@intel.com, xin@zytor.com, yuehaibing@huawei.com,
+	linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+Message-ID: <aBj895aOnhgsIiwO@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+References: <20250430204720.108962-1-romank@linux.microsoft.com>
+ <aBUByjvfjLsPU_5f@liuwe-devbox-ubuntu-v2.tail21d00.ts.net>
+ <41778d44-19dc-4212-a981-d5a82eaf9577@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41778d44-19dc-4212-a981-d5a82eaf9577@linux.microsoft.com>
 
-On Monday, April 28, 2025 11:43:11=E2=80=AFPM Central European Summer Time =
-Robert Richter wrote:
-> Function put_cxl_root() is only used by its cleanup helper. Remove the
-> function entirely and only use the helper.
->=20
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+On Mon, May 05, 2025 at 10:22:47AM -0700, Roman Kisel wrote:
+> 
+> 
+> On 5/2/2025 10:32 AM, Wei Liu wrote:
+> > On Wed, Apr 30, 2025 at 01:47:20PM -0700, Roman Kisel wrote:
+> 
+> [...]
+> 
+> > >   arch/x86/coco/sev/core.c           | 13 ++-----------
+> > >   arch/x86/hyperv/hv_vtl.c           | 12 ++----------
+> > >   arch/x86/hyperv/ivm.c              |  2 +-
+> > >   arch/x86/include/asm/apic.h        |  8 ++++----
+> > >   arch/x86/include/asm/mshyperv.h    |  5 +++--
+> > >   arch/x86/kernel/acpi/madt_wakeup.c |  2 +-
+> > >   arch/x86/kernel/apic/apic_noop.c   |  8 +++++++-
+> > >   arch/x86/kernel/apic/x2apic_uv_x.c |  2 +-
+> > >   arch/x86/kernel/smpboot.c          | 10 +++++-----
+> > 
+> > Since this is tagged as a hyperv-next patch, I'm happy to pick this up.
+> > 
+> 
+> Thank you very much, Wei!
+> 
+> > Some changes should be acked by x86 maintainers.
+> 
+> Tom and Thomas reviewed the patch, and the `scripts/get_maintainer.pl`
+> prints them as x86 maintainers. If I understand correctly what you're
+> saying, someone who sends patches from the x86 tree to Linus should add
+> Acked-by to the patch. Likely I should just wait until such person gets
+> to this patch.
+> 
+> If I'm misunderstanding, I'd appreciate a quick note to help me navigate
+> this :)
+> 
 
-Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+$ ./scripts/get_maintainer.pl -f arch/x86/kernel
+Thomas Gleixner <tglx@linutronix.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:89/608=15%)
+Ingo Molnar <mingo@redhat.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:180/608=30%)
+Borislav Petkov <bp@alien8.de> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:245/608=40%)
+Dave Hansen <dave.hansen@linux.intel.com> (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),commit_signer:70/608=12%)
+x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+"H. Peter Anvin" <hpa@zytor.com> (reviewer:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Reinette Chatre <reinette.chatre@intel.com> (commit_signer:65/608=11%)
+Tony Luck <tony.luck@intel.com> (authored:31/608=5%)
+James Morse <james.morse@arm.com> (authored:31/608=5%)
+linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
 
-> ---
->  drivers/cxl/core/port.c | 9 ---------
->  drivers/cxl/cxl.h       | 4 ++--
->  2 files changed, 2 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c9087515d743..e325f08aaf32 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1037,15 +1037,6 @@ struct cxl_root *find_cxl_root(struct cxl_port *po=
-rt)
->  }
->  EXPORT_SYMBOL_NS_GPL(find_cxl_root, "CXL");
-> =20
-> -void put_cxl_root(struct cxl_root *cxl_root)
-> -{
-> -	if (!cxl_root)
-> -		return;
-> -
-> -	put_device(&cxl_root->port.dev);
-> -}
-> -EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
-> -
->  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
->  {
->  	struct cxl_dport *dport;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 960efcc60476..ea06850ecaea 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -737,10 +737,10 @@ struct cxl_port *devm_cxl_add_port(struct device *h=
-ost,
->  struct cxl_root *devm_cxl_add_root(struct device *host,
->  				   const struct cxl_root_ops *ops);
->  struct cxl_root *find_cxl_root(struct cxl_port *port);
-> -void put_cxl_root(struct cxl_root *cxl_root);
-> -DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_cxl_root(_T))
-> =20
-> +DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->por=
-t.dev))
->  DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) pu=
-t_device(&_T->dev))
-> +
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
->  void cxl_bus_rescan(void);
->  void cxl_bus_drain(void);
->=20
+I'm looking for acks / reviews from Thomas, Ingo, Borislav, or Dave.
 
+If Thomas had given an ack or a review before, you should've added that
+to the patch here.
 
+You don't need to do that for this patch. Please point me to Thomas'
+reply to the previous version and I can add the missing tag to patch
+while I queue it.
 
-
+Thanks,
+Wei.
