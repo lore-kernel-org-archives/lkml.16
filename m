@@ -1,51 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A800E2F6B29;
-	Mon,  5 May 2025 23:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1146F3AA15B;
+	Mon,  5 May 2025 23:18:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487074; cv=none; b=YCZi+3FAjY16s8hW42BnQ6B4+0xtVs0k3G8nswda4QJwpi0okwj54n2O4aourPYy7dJ79S9Jb5pnAq7gdt+EGGr5orIztP8oTXQKbmgihU0Hzk+R9en3Mj3ctaciR2hnaqUqJa2BGMUzocUh4ocopMvZ+sL/4mJhPVsv/sfVT/0=
+	t=1746487102; cv=none; b=FRGgflkam7SReT7WWq2HU3IRpGlazMt2vr57gZRarK1SmiplyoMtbcLyP9bgBK2JUlo2w8G+QGMDhUgDxvpQngiX4g38PB9vGFIoNFO4PQRXwdFtw1lAMkSI/5CNIgL7m1Q8/TxwR1k+delm8+eBjkLETC5nKMKJdoL/x83PMDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487074; c=relaxed/simple;
-	bh=xSLLz/4eix5InbKfFV8XKKJhByYuDsQyk3B6wkXDwHY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oyCicqZr2H+IOUc3IdsNH53iIOWma5EuzqHFBEg0cBRCTNz7+Kq2IhtQ2bdYFvcof/Q+t1qVxTE1x0hx7shxW8AfepJWEXnbIHaEVXbLSaL1M+IQxD3ZtlGwvql8QKBVKbtWTsqLISYUnx+2gynonGlTBStvBPwcK+cZrsDiXeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irXGZByO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746487102; c=relaxed/simple;
+	bh=D7yTrFE188wv1sO2UwjIZZtfQPAmYQjWziJlrOLJbv8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y6OcoAHX/aq9GU25roqCTtQqJWXvttyJC4IceNXFlRJ9Aold/Av8vfp6tNrA1mDafVIPy2qk5gStferBu93ruh+0YPYb4yO7zZqWdpsDJGHcW9yPwFrCttg4i4u4JtWnq34vXL9FRQk5VWQAIrN8hDP1vOTl/Q8NnPiQPWXbuco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d5IEoz/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irXGZByO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03B6C4CEED;
-	Mon,  5 May 2025 23:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d5IEoz/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD86C4CEE4;
+	Mon,  5 May 2025 23:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487073;
-	bh=xSLLz/4eix5InbKfFV8XKKJhByYuDsQyk3B6wkXDwHY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=irXGZByOeE0NR8B690YMlm6nRyb8bYnDF1GqztQnfVSNyAM822lYSHCS+PS/wKqni
-	 UeGifxkE8wko8hKU9w9WjcaUomfO7HOdRnKEkoyERnr0E+epToTdYYos76rqC6lpZy
-	 BOYEHy2BbNd8jckcz7EkflQ8YNEz9nbA6EzZibEbDhZtqlew5yL/EaBRh0+kFLXvoD
-	 4vBISjRYicvM1Gorh3fsqR7nLocL69BRlfj5IWWwfNeDTfAkqdSzAT4zKXGEs6Yfbf
-	 wRpvGXoWswecIuGSLg9De/h6pPdkOR8TO2JqbO+CXm+/4MUoW91f4gIEuo+JQDjbgU
-	 U6grwGpxRbXYA==
+	s=k20201202; t=1746487101;
+	bh=D7yTrFE188wv1sO2UwjIZZtfQPAmYQjWziJlrOLJbv8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=d5IEoz/dKUdE6YumbVaQSCpi8ok0eiUJeMczX6EZ3b5k9rDiziozV8ANrLEJGF/5J
+	 v/r/t2O6/AqFcJ+Mt74t6MFyD3PBJOdoM0n726szHeXT45FmCugrKpcFQZmtuG1vlX
+	 nLDrz/N1aeRcHYtU7yqy72l3xzJ96rescpG2UTnVjJD2i48IRI/5ViM3UpvZgjOidF
+	 IRyr17QMx1PGDjYH8IpYnmAfeTGQiTVBaYPpCf0HjKo3UOIOApHrhXmSbfgqiZqhKL
+	 /trSk0SZ+F4ODIe2ADX2JFKM9XrRpJkaW2YUJExczDI4MhVpDjMrxBRg37gNtq/IVc
+	 xSg+Rz+zj0YgQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ankur Arora <ankur.a.arora@oracle.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	neeraj.upadhyay@kernel.org,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
-	urezki@gmail.com,
-	rcu@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 139/153] rcu: handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y
-Date: Mon,  5 May 2025 19:13:06 -0400
-Message-Id: <20250505231320.2695319-139-sashal@kernel.org>
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 001/114] kconfig: merge_config: use an empty file as initfile
+Date: Mon,  5 May 2025 19:16:24 -0400
+Message-Id: <20250505231817.2697367-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,64 +44,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Ankur Arora <ankur.a.arora@oracle.com>
+From: Daniel Gomez <da.gomez@samsung.com>
 
-[ Upstream commit 83b28cfe796464ebbde1cf7916c126da6d572685 ]
+[ Upstream commit a26fe287eed112b4e21e854f173c8918a6a8596d ]
 
-With PREEMPT_RCU=n, cond_resched() provides urgently needed quiescent
-states for read-side critical sections via rcu_all_qs().
-One reason why this was needed: lacking preempt-count, the tick
-handler has no way of knowing whether it is executing in a
-read-side critical section or not.
+The scripts/kconfig/merge_config.sh script requires an existing
+$INITFILE (or the $1 argument) as a base file for merging Kconfig
+fragments. However, an empty $INITFILE can serve as an initial starting
+point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
+if -m is not used. This variable can point to any configuration file
+containing preset config symbols (the merged output) as stated in
+Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
+contain just the merge output requiring the user to run make (i.e.
+KCONFIG_ALLCONFIG=<$INITFILE> make <allnoconfig/alldefconfig> or make
+olddefconfig).
 
-With (PREEMPT_LAZY=y, PREEMPT_DYNAMIC=n), we get (PREEMPT_COUNT=y,
-PREEMPT_RCU=n). In this configuration cond_resched() is a stub and
-does not provide quiescent states via rcu_all_qs().
-(PREEMPT_RCU=y provides this information via rcu_read_unlock() and
-its nesting counter.)
+Instead of failing when `$INITFILE` is missing, create an empty file and
+use it as the starting point for merges.
 
-So, use the availability of preempt_count() to report quiescent states
-in rcu_flavor_sched_clock_irq().
-
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree_plugin.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ scripts/kconfig/merge_config.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index b48b42d76474e..9e84d603e882e 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -945,13 +945,16 @@ static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp)
-  */
- static void rcu_flavor_sched_clock_irq(int user)
- {
--	if (user || rcu_is_cpu_rrupt_from_idle()) {
-+	if (user || rcu_is_cpu_rrupt_from_idle() ||
-+	     (IS_ENABLED(CONFIG_PREEMPT_COUNT) &&
-+	      (preempt_count() == HARDIRQ_OFFSET))) {
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index d7d5c58b8b6aa..557f37f481fdf 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -98,8 +98,8 @@ INITFILE=$1
+ shift;
  
- 		/*
- 		 * Get here if this CPU took its interrupt from user
--		 * mode or from the idle loop, and if this is not a
--		 * nested interrupt.  In this case, the CPU is in
--		 * a quiescent state, so note it.
-+		 * mode, from the idle loop without this being a nested
-+		 * interrupt, or while not holding the task preempt count
-+		 * (with PREEMPT_COUNT=y). In this case, the CPU is in a
-+		 * quiescent state, so note it.
- 		 *
- 		 * No memory barrier is required here because rcu_qs()
- 		 * references only CPU-local variables that other CPUs
+ if [ ! -r "$INITFILE" ]; then
+-	echo "The base file '$INITFILE' does not exist.  Exit." >&2
+-	exit 1
++	echo "The base file '$INITFILE' does not exist. Creating one..." >&2
++	touch "$INITFILE"
+ fi
+ 
+ MERGE_LIST=$*
 -- 
 2.39.5
 
