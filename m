@@ -1,229 +1,157 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C87318BB8E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769CCEAE7
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746441271; cv=none; b=W3jrDDC5XGpRyCaammxH0Fl8ol+Y1dC8VDCxFi5deRmoXgnBVMa+vkMCAD80n0VgjTmLlGAiuWqwgfClK7BH3KtFUiqRxozvNhAGVpx+xPTk8YvSF20WQz73zMlgxv4E9oi7FN+QwXgtl1o5dHwpTIurBmPi36tnMAmmwf/iYB0=
+	t=1746441323; cv=none; b=DBzYmE+xlZOe5EiJYgLap+zeA8nAP32Pi+LPu6ftCLjgTslEsCiQaSNFIo4LA959UQkQyhwZQS+8h+8e4u8BebOqgqR++O5/UIS16fFQnLxa3xXebguV0xIQrAePwGiKbtetF9xUflyykod44TFg5fJrIYUb/qZOG7iTqjs5QwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746441271; c=relaxed/simple;
-	bh=WeW++sc7Ir6ObedDUnvc8sAUg2ZFARvxBvx/qAnkaR0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iRGPE5bOwwGRidqp10QyMUC5PbeIIoDbY9ELGd+2ysvxP5gCEE9sSk8KUiJgUZmuNn1Uo0/Tlz9AsOqYMGS0eFrLrTBEmDdQt9JdGM5ZsEeLuYLKpKcpnfWslOym3CM9ekRjD6Cs5wVKQ/cRmu8sSPApbw+qhITTETeDZFN/3ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86463467dddso401315039f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:34:29 -0700 (PDT)
+	s=arc-20240116; t=1746441323; c=relaxed/simple;
+	bh=DaC2vDdqmokz9Jt/U40zeutsPirki/qadpEpK5UZga8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tK7+MfSJok+aAslD5u2mfg4I7hXKhy4aP8mtCVlo4HACgcvGmnU8N+8ZL/SKwuxpjloSfsp7+NZbhq+ot1JiWBTzlZPuaF/OTmU0DLRdTGq+JXYx8JHwMbvF9WoqGkPyhs1+fVwmn9gH+oqrH1Pn1f0SZ3p8vgfv9Iyd2mso3BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g3PUSukw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g3PUSukw"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 544NVdg1014482
+	for <linux-kernel@vger.kernel.org>; Mon, 5 May 2025 10:35:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mzndjCg+e2OPuoc9rAF/IaDWFAfTk+vHxfMSSvYANmI=; b=g3PUSukwQcumUQ4W
+	hpzGmBY1y8ZIOFAs1AI7ul4kpiFVp9AusLV6bWWe06IKm0C948aSuV2Gh82W2dV/
+	PyZJOc25/WBfqwSAp0DtZDZV6jm3e/D1pKWFUQKyRediGofam3Vaxzuf0kuJPmnB
+	Lz9y1kEmtzmDhpORXn+HFWtXmrAeFf5KrkKcJV9qYbaVYDCwn5SaDdhxjWdQ1QFq
+	uEJXKnO2b3I/mOFa57Gcv3dNXzo/5NwkpA4VHCmjGf8dyMdJhvsYGA7i0J/RG1x4
+	YXCrkAiYF0aOQdJhNkn+nd34jmD89CrrVwbTdVGvArsBqb1y3B2MSJebe06a0e/5
+	GQV7MQ==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46d9nkuwgn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:35:21 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-736b431ee0dso3189378b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:35:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746441268; x=1747046068;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sYdlBI8ssJwo4ScSwECC/spZIPg9qF5fMqFOEhOjZIQ=;
-        b=h6D50TP9IhNRC2ZaKC2uFEcorgoO0OHWK+vfD7TQ8piSOeI0FhYqDhp3vSnkXnXlqb
-         SQE74eaXVHyRBLC5RCnOfdR/0nKd4RlFhX6HGibEMgNKl9wAThcte0y9DL46I0Rib1nc
-         3uHZg9IlBRn6xuf1egUlxmF7IMpM7T8gk1L3XyoFPIrGhCphu5udeW5VVm8v+Qgylly2
-         Xoh7gdYJMrE0PP5WJtFxbl18z4k6wmhtn8Yj1DlkqStF/YUZDRjZv4PemOxwNPlF/Eh+
-         E1LMG82Ksnfo2ETw+mPHACNmUBytm59O9UUmXxpImzavsd6gkrN87KNfgxYE9GifzY7l
-         aZtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiU6EqJWZb9Qee9oBwIO4hv22ZGjLf/ZeygcCAEza89b/vBAUUIkXvcKpFq+oiYxIaXZ6j2+xoMFtjvcY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZFjcc23bZrienlZX+tcFU/25h//JwsTQBYh6bPA59+kCBdSLm
-	QvKP3+omolgVEtSMxVAXdVu0sAPCv6DZIzE7geLutTziFybgiMMZ91loUzjV1LoijbU5QM7j0cT
-	YBNYuGkCxSpfbjHtz+XbobsFdkQ1wixkT+o+2zwoeWUjjTr/aa9wsWPA=
-X-Google-Smtp-Source: AGHT+IG2KGkmLe00nyLdhVaNaPbJYigMSoAylaAZi/awdsJuXK9Y47izTsSWsm2cDZWx0AR+T+jykcCF7RzhaanRg27AMEsxCZwj
+        d=1e100.net; s=20230601; t=1746441320; x=1747046120;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mzndjCg+e2OPuoc9rAF/IaDWFAfTk+vHxfMSSvYANmI=;
+        b=ZARWkXUxppv1+KJEKS4C+vebcu8XYw2DOzREQJpg0pQQR6GdFSQ+M8zGjw7J/Q9F/n
+         mvLeIeAcknyabEgzuryXpGpQ69Q8rrQHUBA9P7SYIpwroDbKGwCFPy5DsQpS04fmOu+J
+         hZgW7CPkHYe3ul9KVAw3mfoYjihFKQOjJ6MHIWfJ9r/kfiPlqmR0wWe0jXlFeHzBrZz6
+         oAb0JUqPVZUVEs++smqtsuOg9PJF+7l7zcbCTlWmB28N4mtmhpUGAY2DEeC33RqHeoqp
+         vGYIxt2Y5IfM8PBmFQUaDO5MTNSQvdPHBeJyTifytm58X184V7mFBw41xTDR15McRfbQ
+         8ZnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJafBdx/VrfuHXqkl+OaaUxR5vGynuCTyXhcXyX5wwICWZQqlH953ZlnaLKJWjeMp5zkPTOOFKKhjs35k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvmqYXWUqIBIKzJVZyPaVKpNAqqgO67Wozri5tvBzoLeIII5Bo
+	cT14aKoEMOx73Et2giaQ3jrMr850rkuoRnepat8Tq0YXNpqriBx6E2aoI1jG4JCO4IM9onQ0Mal
+	AYqHiY9b5wzCWTaEf+zBRunp/L1XfCAkScVNPy53Ogi6ilnnH7mVgPLDR/eck5kA=
+X-Gm-Gg: ASbGnctcxMqcl/TwX2yuUNhfRma486AtFL0suiaaWsz2fOLe07jfd1W3H2RHBneiza+
+	T4rvR1noEB37b3HrWh7ItNB7PhVYh0hwDMTgJPnHy+7ftqjNMBapXCR64g7qI7D/1F9BWftIIaf
+	zIpwiW/sch5hXX5mT5t1rcnPG6aXufAxNiV/ke5wHSr1slgnE8PfYlRa33yjo6ufouNOA/rFccB
+	XnHH1OOa4POPmXA/hUSe5nPUFAWolH/v2if0h/PfGQWWQ69GNAfJp8C0mBJRW31PV8WwNOKxi+G
+	5TMIGwoyQb1HkwXOZod7ilC8p8zRcCivOfQy10dPgr/x7N99mXpA
+X-Received: by 2002:a05:6a20:7d9b:b0:1f5:6878:1a43 with SMTP id adf61e73a8af0-20cde85d355mr16144496637.14.1746441320564;
+        Mon, 05 May 2025 03:35:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHP03PciZv8s1ToFZ5GwS61QgMF+GczmQXsLG40quiJUaX2iw5O5dKsziticwj7Edr0uWka/A==
+X-Received: by 2002:a05:6a20:7d9b:b0:1f5:6878:1a43 with SMTP id adf61e73a8af0-20cde85d355mr16144478637.14.1746441320214;
+        Mon, 05 May 2025 03:35:20 -0700 (PDT)
+Received: from [10.151.37.217] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a225sm6379719b3a.23.2025.05.05.03.35.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 03:35:19 -0700 (PDT)
+Message-ID: <15f4021a-821b-4a5d-8873-8eb8f59484e2@oss.qualcomm.com>
+Date: Mon, 5 May 2025 16:05:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3982:b0:3d8:2032:ca67 with SMTP id
- e9e14a558f8ab-3da5b2733cemr60017915ab.9.1746441268631; Mon, 05 May 2025
- 03:34:28 -0700 (PDT)
-Date: Mon, 05 May 2025 03:34:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68189434.a70a0220.254cdc.004c.GAE@google.com>
-Subject: [syzbot] [kernel?] upstream test error: KASAN: slab-use-after-free
- Write in binder_add_device (4)
-From: syzbot <syzbot+a805d0cdcff99bbd3e34@syzkaller.appspotmail.com>
-To: arve@android.com, brauner@kernel.org, cmllamas@google.com, 
-	gregkh@linuxfoundation.org, joel@joelfernandes.org, 
-	linux-kernel@vger.kernel.org, maco@android.com, surenb@google.com, 
-	syzkaller-bugs@googlegroups.com, tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    29281a76709c Merge tag 'kvmarm-fixes-6.14-2' into kvmarm-m..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git fuzzme
-console output: https://syzkaller.appspot.com/x/log.txt?x=10ce5a70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=22c3bbf92fcca116
-dashboard link: https://syzkaller.appspot.com/bug?extid=a805d0cdcff99bbd3e34
-compiler:       Debian clang version 20.1.3 (++20250415083350+2131242240f7-1~exp1~20250415203523.103), Debian LLD 20.1.3
-userspace arch: arm64
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-29281a76.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1ad34e8daa75/vmlinux-29281a76.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/196ddebb5870/Image-29281a76.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a805d0cdcff99bbd3e34@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in hlist_add_head include/linux/list.h:1026 [inline]
-BUG: KASAN: slab-use-after-free in binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
-Write of size 8 at addr 0af0000013140208 by task syz-executor/3298
-Pointer tag: [0a], memory tag: [31]
-
-CPU: 0 UID: 0 PID: 3298 Comm: syz-executor Not tainted 6.14.0-rc2-syzkaller-g29281a76709c #0
-Hardware name: linux,dummy-virt (DT)
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- print_address_description+0xac/0x290 mm/kasan/report.c:378
- print_report+0x84/0xa0 mm/kasan/report.c:489
- kasan_report+0xb0/0x110 mm/kasan/report.c:602
- kasan_tag_mismatch+0x28/0x3c mm/kasan/sw_tags.c:175
- __hwasan_tag_mismatch+0x30/0x60 arch/arm64/lib/kasan_sw_tags.S:55
- hlist_add_head include/linux/list.h:1026 [inline]
- binder_add_device+0xf4/0xf8 drivers/android/binder.c:6932
- binderfs_binder_device_create+0xbfc/0xc28 drivers/android/binderfs.c:210
- binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
- vfs_get_super fs/super.c:1280 [inline]
- get_tree_nodev+0xdc/0x1cc fs/super.c:1299
- binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
- vfs_get_tree+0xc4/0x3cc fs/super.c:1814
- do_new_mount+0x2a0/0x988 fs/namespace.c:3560
- path_mount+0x650/0x101c fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount fs/namespace.c:4088 [inline]
- __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-Allocated by task 3290:
- kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
- save_stack_info+0x30/0x138 mm/kasan/tags.c:106
- kasan_save_alloc_info+0x14/0x20 mm/kasan/tags.c:142
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x8c/0x90 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x2a0/0x404 mm/slub.c:4325
- kmalloc_noprof include/linux/slab.h:901 [inline]
- kzalloc_noprof include/linux/slab.h:1037 [inline]
- binderfs_binder_device_create+0x1ac/0xc28 drivers/android/binderfs.c:147
- binderfs_fill_super+0xb30/0xe20 drivers/android/binderfs.c:729
- vfs_get_super fs/super.c:1280 [inline]
- get_tree_nodev+0xdc/0x1cc fs/super.c:1299
- binderfs_fs_context_get_tree+0x28/0x38 drivers/android/binderfs.c:749
- vfs_get_tree+0xc4/0x3cc fs/super.c:1814
- do_new_mount+0x2a0/0x988 fs/namespace.c:3560
- path_mount+0x650/0x101c fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount fs/namespace.c:4088 [inline]
- __arm64_sys_mount+0x36c/0x468 fs/namespace.c:4088
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x90/0x2b4 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x180/0x2f4 arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x58/0x74 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x134 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-Freed by task 3290:
- kasan_save_stack+0x40/0x6c mm/kasan/common.c:47
- save_stack_info+0x30/0x138 mm/kasan/tags.c:106
- kasan_save_free_info+0x18/0x24 mm/kasan/tags.c:147
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x64/0x68 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2353 [inline]
- slab_free mm/slub.c:4609 [inline]
- kfree+0x148/0x44c mm/slub.c:4757
- binderfs_evict_inode+0x1e8/0x2b8 drivers/android/binderfs.c:278
- evict+0x4d4/0xbe8 fs/inode.c:796
- iput_final fs/inode.c:1946 [inline]
- iput+0x928/0x9e0 fs/inode.c:1972
- dentry_unlink_inode+0x624/0x660 fs/dcache.c:440
- __dentry_kill+0x224/0x808 fs/dcache.c:643
- shrink_kill+0xd4/0x2cc fs/dcache.c:1088
- shrink_dentry_list+0x420/0x970 fs/dcache.c:1115
- shrink_dcache_parent+0x80/0x200 fs/dcache.c:-1
- do_one_tree+0x2c/0x148 fs/dcache.c:1578
- shrink_dcache_for_umount+0xb0/0x198 fs/dcache.c:1595
- generic_shutdown_super+0x84/0x424 fs/super.c:620
- kill_anon_super fs/super.c:1237 [inline]
- kill_litter_super+0xa4/0xdc fs/super.c:1247
- binderfs_kill_super+0x50/0xcc drivers/android/binderfs.c:791
- deactivate_locked_super+0xf0/0x17c fs/super.c:473
- deactivate_super+0xf4/0x104 fs/super.c:506
- cleanup_mnt+0x3fc/0x484 fs/namespace.c:1413
- __cleanup_mnt+0x20/0x30 fs/namespace.c:1420
- task_work_run+0x1bc/0x254 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x740/0x23b0 kernel/exit.c:938
- do_group_exit+0x1d4/0x2ac kernel/exit.c:1087
- get_signal+0x1440/0x1554 kernel/signal.c:3036
- do_signal+0x23c/0x3ecc arch/arm64/kernel/signal.c:1658
- do_notify_resume+0x78/0x27c arch/arm64/kernel/entry-common.c:148
- exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
- exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
- el0_svc+0xb0/0x134 arch/arm64/kernel/entry-common.c:745
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-The buggy address belongs to the object at fff0000013140200
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 8 bytes inside of
- 512-byte region [fff0000013140200, fff0000013140400)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x53140
-flags: 0x1ffc00000000000(node=0|zone=0|lastcpupid=0x7ff|kasantag=0x0)
-page_type: f5(slab)
-raw: 01ffc00000000000 d7f000000c801900 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- fff0000013140000: 92 92 92 92 92 92 92 92 92 92 92 92 92 92 92 92
- fff0000013140100: 92 92 fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->fff0000013140200: 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31
-                   ^
- fff0000013140300: 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31
- fff0000013140400: 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e 6e
-==================================================================
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: ipq5424: fix MSI base vector interrupt
+ number
+Content-Language: en-US
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vignesh Viswanathan
+ <quic_viswanat@quicinc.com>,
+        stable@vger.kernel.org
+References: <20250505-msi-vector-v1-1-559b0e224b2d@oss.qualcomm.com>
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <20250505-msi-vector-v1-1-559b0e224b2d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDEwMCBTYWx0ZWRfX4PT5Tlk6IKTG
+ 3X6wbcthLZ+ZDnLHkCGRMjNkOX9/P3PZp2sQ5cwWQ7YhzGiiGrOHrQUly0KbEAW5WVeb/eNB3lC
+ Vfim06jUfHzFGLCL3qLw3GEitz1q6y7hVfuHcHlkYsGLU7jkIYSF65g+o1OPoRWUtDP5yXyOzUW
+ F697s56CeR9Gi+8AFdP7rMOYcu+6Q5TlJHQspZWp13TBdITs/2qG2VPk7tZtPqWi7x9ITuvkuJe
+ t+voBZEkqwR6pvCJhRWGT3RyZJYhPEB7sOabhBRpJ7CLtzgdnGIWlMsxyyGzFJh3h59qJFz6X4Z
+ spHEYiKfn5+29W1U2Cwwf2uiHlDhn1SQKEY7rmWqQYiuF96priWkfGHhOCtHokh8fuGLKBYaBAz
+ EH+sYseGaH/GOUSddwOSLLqOkGiiHHv4wZq8+POEqREMe+4U8xze5Ru8PMmf5PCusvCqUi1d
+X-Proofpoint-GUID: u-Veb0ayONSqYkL_KZplOpXM_3qjluow
+X-Authority-Analysis: v=2.4 cv=LpeSymdc c=1 sm=1 tr=0 ts=68189469 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=rSoPyq_vb_VxFnRLzkQA:9 a=QEXdDO2ut3YA:10
+ a=2VI0MkxyNR6bbpdq8BZq:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: u-Veb0ayONSqYkL_KZplOpXM_3qjluow
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=759 adultscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 clxscore=1015 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050100
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 5/5/2025 3:29 PM, Kathiravan Thirumoorthy wrote:
+> From: Vignesh Viswanathan <quic_viswanat@quicinc.com>
+>
+> As per the hardware design, MSI interrupt starts from 704. Fix the same.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Please ignore this patch. There has been some confusion.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 1a91d2a6021e ("arm64: dts: qcom: add IPQ5424 SoC and rdp466 board support")
+> Signed-off-by: Vignesh Viswanathan <quic_viswanat@quicinc.com>
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>   arch/arm64/boot/dts/qcom/ipq5424.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> index 5d6ed2172b1bb0a57c593f121f387ec917f42419..7a2e5c89b26ad8010f158be6f052b307e8a32fb5 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
+> @@ -371,7 +371,7 @@ intc: interrupt-controller@f200000 {
+>   			#redistributor-regions = <1>;
+>   			redistributor-stride = <0x0 0x20000>;
+>   			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> -			mbi-ranges = <672 128>;
+> +			mbi-ranges = <704 128>;
+>   			msi-controller;
+>   		};
+>   
+>
+> ---
+> base-commit: 407f60a151df3c44397e5afc0111eb9b026c38d3
+> change-id: 20250505-msi-vector-f0dcd22233d9
+>
+> Best regards,
