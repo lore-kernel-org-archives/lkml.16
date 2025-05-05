@@ -1,98 +1,242 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B88C26B090;
-	Mon,  5 May 2025 17:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248381F6667;
+	Mon,  5 May 2025 17:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746465433; cv=none; b=jU5JGZ5L7LAS7m2W/qluN9rTdO/AS7rKds8JthltXyegNR2Ma6xJdPj/JzlQRXextPylUXMI2dVmAr9LgMHSfWHc5sWJGMGOzPi0rBvREVqd/Tpa4H/Fke16pS79jtvb6p6me3BYoepCKPfZMAwVLeyjZKKXPs+4YPye5G4zKGc=
+	t=1746465514; cv=none; b=XKpLpwsPsaK/1SLj6PIE5yIpxDqF971lkfVZajysrDpzqh4VNVrfV7R9KgfwXvZ1ybonUb1l6s+pBUDlJp4H6vo/x6Qjq7Pm2TQEcyuJdNKfKWEstm4bCj/ztTeEJWHtvijKkL7Np4Q572qqm5RWIbtwbIpqe4W5kYSKQa5SyKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746465433; c=relaxed/simple;
-	bh=XwhrX5688XfHG0muf4l+yvgcLX5Pt+ya7oVl24w7wsA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KNwOjeHYaYtwIUYzsNjuF6WZLOrkoH20C5/dqkgo87gnATkNpxfVpmD7uGUcLej8DuklpqMY3a2HyloA2nSnznkjWNPBl86ALRsGymAcpaGdBVfMXl7PLdqw+ous2sjQ6hqGJEig/t4xRWel4j7t4xMIRVx6k57RNPxpCNZLXb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpyqFqm0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746465514; c=relaxed/simple;
+	bh=zAYILOUuPLzGJcE+H/qrkjNUK62hvMnUtpZ+b93J6PE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MQbw6ug2o9TnNAG6+cHix1ATbOk5jP/r+C/35uRCqaSQtMmTsQVMZrZ3BdMretqo5LfOmFFIEm64lFpU6tbYInG9bFuWa1bVOlPcUEYrx5Ym7x4SOWn87RhY0qfEhdd5GFg8VoKd5kfJZ/qUw8afN5X9MphHGlOLFPh0U7+IJr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKjhSY1Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpyqFqm0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF8B6C4CEE4;
-	Mon,  5 May 2025 17:17:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKjhSY1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E03C4CEEE;
+	Mon,  5 May 2025 17:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746465432;
-	bh=XwhrX5688XfHG0muf4l+yvgcLX5Pt+ya7oVl24w7wsA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PpyqFqm0Kq+6GO0UyFOmcYlso29dLcLhwa9vGeVLSTNf6YPsdnoJGwozYB/FDD4jr
-	 6+ufva/uUuirffr8BTZze+YTTRefqS+16//hJunoWE2t2LMmqN6PddEd91YWulWyvv
-	 GtLD0oVEkqUJBcSe2VFlnkDQMtDPRFHwckbHsbmo/VtBVYeFVK5VMdyz7Wda+e+c9N
-	 2NmSxr4GzoMr2rYI54zUsptLvcE2Cra/Jq/M0MDawyqL4cAYkgbGpDmrCvT6l1Mibg
-	 RC4UOyTS3H6OdokxtNeJUrwW3NP+O55obgRIbwUDmulmZUL5UzUkJwxFyqCTUIqfEd
-	 uDydqgVYJOjgA==
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f9832f798aso3390120b6e.2;
-        Mon, 05 May 2025 10:17:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV74BHzwv04pBSqdUlTjykW/6O8Xbg+d4z33OfErI5WD7pAJgCynsefi/OdxscLUINm+vu2xlbwNBqO@vger.kernel.org, AJvYcCXzv5fI86I3zg0VjP6t2X3oHHAkbug8f/v96tC0mtSZYBZWUlGg8ZnsyshzGqam5bVha+JO+0vQwCp9tMi4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUOq7oA99XM4YQv3w6+Cws0Ln5GxIgooC5BTWTcFCb2ZNzy24J
-	LuXFZ1TyL95ueUB9Mffi74OonYAHmfMGixT+e+txWdVFjj0e9LwByM9OK9mtK1np6oQ0xmgejaT
-	28Jg7EjzifWHPIxps9Q1ll8FCIzs=
-X-Google-Smtp-Source: AGHT+IG26hieWdXffhDj4dGbE8M0F2bOh1fmNZd9NNoGu7oIJPkd8RdYORqFuleYnObxvkfUU+ir8/ZXZ36gkFCOMCo=
-X-Received: by 2002:a05:6870:a1a7:b0:2b7:d3d2:ba53 with SMTP id
- 586e51a60fabf-2dab2fe1dfamr7344930fac.12.1746465432182; Mon, 05 May 2025
- 10:17:12 -0700 (PDT)
+	s=k20201202; t=1746465513;
+	bh=zAYILOUuPLzGJcE+H/qrkjNUK62hvMnUtpZ+b93J6PE=;
+	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
+	b=bKjhSY1ZFAKpkyxZ4vBD4W9x8dCZDJZkQW3reZNSIuF9qTqh99PTq+rQLO5ew/UaW
+	 5JNE8HkQuTds+5Tn+9CvaMY9gymsMbyj3i5/EmvwSZPmxZgPW9DqHrml3NzsMKXtEU
+	 +ps5924p/evGCsh4iPrg72kBsA5O6myVmHYewV8vaiPAIOEDYgmWfGvwOEekHQSCEn
+	 RZZNXRi47qVPxCtEjJvTXcbU70cEnY6BCEBu+M+K/5QNw07fAX9Us3h4IWx4ICWu3O
+	 86NPJFX87m6u/VLensYpuY8u+kZyPikBwfvofCEVJpaZunpT1M+F8unJ9P2KVQ+4jO
+	 6TExxeLdUQpyw==
+Message-ID: <0736898d8d53e6249d5be637c9b7e7c81398218a.camel@kernel.org>
+Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in
+ kernel 6.14.3 and above
+From: Niklas Schnelle <niks@kernel.org>
+Reply-To: niks@kernel.org
+To: Mingyen Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=98=8E=E8=AB=BA=29?=	
+ <Mingyen.Hsieh@mediatek.com>, "stable@vger.kernel.org"
+ <stable@vger.kernel.org>,  "fossben@pm.me"	 <fossben@pm.me>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+ "linux-mediatek@lists.infradead.org"
+	 <linux-mediatek@lists.infradead.org>, Allan Wang
+ =?UTF-8?Q?=28=E7=8E=8B=E5=AE=B6=E5=81=89=29?=
+	 <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>
+Date: Mon, 05 May 2025 19:18:29 +0200
+In-Reply-To: <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
+References:
+		 	<EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me>
+				 <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
+				 <5ae1ef34c9844d6d0f5fb167dd596a4c43321367.camel@kernel.org>
+			 <28ef2cc608d071d1530902d7b5df045555ab5651.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429202412.380637-1-tony.luck@intel.com> <20250429202412.380637-2-tony.luck@intel.com>
- <CAJZ5v0ju_Xirnft+5C=-GtG3hmT9xGjVqNFPRugXR7o1RzfHrg@mail.gmail.com> <SJ1PR11MB60833EFB63D1356DF14336F7FC8E2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-In-Reply-To: <SJ1PR11MB60833EFB63D1356DF14336F7FC8E2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 5 May 2025 19:17:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hU4drHhqWcj0Q_U_P7bkjDs-jUMN-KCSQNW9Avkqk=ig@mail.gmail.com>
-X-Gm-Features: ATxdqUGskPJuK-G9lNlMrid3uP4z4sDmx663ya8BRYM30u6OaROhtVDw5gFZdHI
-Message-ID: <CAJZ5v0hU4drHhqWcj0Q_U_P7bkjDs-jUMN-KCSQNW9Avkqk=ig@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] ACPICA: Define MRRM ACPI table
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"Keshavamurthy, Anil S" <anil.s.keshavamurthy@intel.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 5, 2025 at 7:12=E2=80=AFPM Luck, Tony <tony.luck@intel.com> wro=
-te:
->
-> > > +/* Values for region_id_flags above */
-> > > +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_LOCAL   (1<<0)
-> > > +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_REMOTE  (1<<1)
-> > > +
-> > >  /*******************************************************************=
-************
-> > >   *
-> > >   * MSDM - Microsoft Data Management table
-> > > --
-> >
-> > All of the above definitions should be there in linux-next now.
-> >
-> > Can you please check if they are there and they are correct?
-> > Alternatively, please check
-> >
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git=
-/log/?h=3Dtesting
->
-> Rafael,
->
-> I checked the "testing" branch. The MRRM bits there look good.
->
-> Do you want me to post a V5 of this series that drops patch1?
->
-> Fenghua had some comments ... the one about a spurious blank
-> line in mrrm_init() is real. I'm less sure about documenting the
-> meaning of "X" in the ABI documentation patch.
+On Mon, 2025-05-05 at 05:48 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=E8=AB=
+=BA) wrote:
+> On Sun, 2025-05-04 at 00:39 +0200, Niklas Schnelle wrote:
+> >=20
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >=20
+> >=20
+> > On Wed, 2025-04-30 at 06:47 +0000, Mingyen Hsieh (=E8=AC=9D=E6=98=8E=E8=
+=AB=BA) wrote:
+> > > On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me=C2=A0wrote:
+> > > >=20
+> > > > External email : Please do not click links or open attachments
+> > > > until
+> > > > you have verified the sender or the content.
+> > > >=20
+> > > >=20
+> > > > Hello all,
+> > > >=20
+> > > > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed
+> > > > that
+> > > > I could no longer ping *.local addresses provided by Avahi. In
+> > > > addition, I also noticed that I was not able to get a DHCP IPv6
+> > > > address from my router, no matter how many times I rebooted the
+> > > > router or reconnected with NetworkManager.
+> > > >=20
+> > > > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses
+> > > > immediately.
+> > > > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
+> > > > address will stay there for a while before disappearing later,
+> > > > possibly because the DHCP lease expired? I am not sure exactly
+> > > > when
+> > > > it stops working.
+> > > >=20
+> > > > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
+> > > > offending commit that causes mDNS to fail:
+> > > >=20
+> > > > commit 80007d3f92fd018d0a052a706400e976b36e3c87
+> > > > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
+> > > > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *=
+sta_cmd
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 =
+upstream.
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO =
+firmware.
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabli=
+ng MLO when
+> > > > the
+> > > > firmware supports it")
+> > > >=20
+> > > > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++----=
+---
+> > > > ----
+> > > > --------------------------------------------
+> > > > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
+> > > >=20
+> > > > I do not know if this same commit is also causing the IPv6 issues
+> > > > as
+> > > > testing that requires quite a bit of time to reproduce. What I do
+> > > > know with certainty as of this moment is that it definitely
+> > > > breaks in
+> > > > kernel 6.14.3.
+> > > >=20
+> > > > I've attached my hardware info as well as dmesg logs from the
+> > > > last
+> > > > working kernel from the bisect and 6.14.4 which exhibits the
+> > > > issue.
+> > > > Please let me know if there's any other info you need.
+> > > >=20
+> > > > Thanks!
+> > > > Benjamin Xiao
+> > >=20
+> > > Hi,
+> > >=20
+> > > Thanks for reporting this issue, we will aim into this.
+> > >=20
+> > > Can you provide me with your testing steps?
+> > >=20
+> > > Best Regards,
+> > > Yen.
+> > >=20
+> >=20
+> > Hi Yan,
+> >=20
+> > I see the same IPv6 issue on my Framework 13 (Ryzen 5 AI 340) with an
+> > mt7925e WiFI module. My setup is just a home router with native IPv6
+> > both for my uplink and in the LAN. The problems with IPv6 can already
+> > be seen just in the LAN for example by checking which IP was used for
+> > SSH, in my setup it should always be IPv6 but falls back to IPv4 in
+> > the
+> > broken state.
+> >=20
+> > As another data point, I tried reverting cb1353ef3473 ("wifi: mt76:
+> > mt7925: integrate *mlo_sta_cmd and *sta_cmd") on top of 6.15.-rc4.
+> > This
+> > fully restores IPv6 for me. Also note I'm running this with the
+> > mt7925
+> > firmware version 20250425073330 from linux-firmware's master branch
+> > as
+> > I had some dropped connections with earlier firmware.
+> >=20
+> > So it definitely looks like that commit also broke IPv6 and not just
+> > mDNS. Note that if if I use DHCPv6 instead of router advertisements,
+> > on
+> > the latest firmware, but without the revert, I get a global IPv6
+> > address added to the interface but then native IPv6 addresses are
+> > still
+> > uncreachable. With the offending patch reverted my SSH session to an
+> > IPv6 only host works fine and is stable. Also I'd be willing to test
+> > a
+> > proper fix as I rely on IPv6 heavily due to having to use CGNAT for
+> > IPv4 but not for IPv6.
+> >=20
+> >=20
+> > Thanks,
+> > Niklas
+>=20
+> Hi Benjamin & Niklas,
+>=20
+> Can you help to try this patch? I can get IPv6 address through this
+> patch.
+>=20
+> If it can work at your environment as well, i will upstream it and add
+> test tag with you.
+>=20
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> index a42b584634ab..fd756f0d18f8 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
+> @@ -2183,14 +2183,14 @@ mt7925_mcu_sta_cmd(struct mt76_phy *phy,
+>                         mt7925_mcu_sta_mld_tlv(skb, info->vif, info-
+> > link_sta->sta);
+>                         mt7925_mcu_sta_eht_mld_tlv(skb, info->vif,
+> info->link_sta->sta);
+>                 }
+> -
+> -               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> > link_sta);
+>         }
+>=20
+>         if (!info->enable) {
+>                 mt7925_mcu_sta_remove_tlv(skb);
+>                 mt76_connac_mcu_add_tlv(skb, STA_REC_MLD_OFF,
+>                                         sizeof(struct tlv));
+> +       } else {
+> +               mt7925_mcu_sta_hdr_trans_tlv(skb, info->vif, info-
+> > link_sta);
+>         }
+>=20
+>         return mt76_mcu_skb_send_msg(dev, skb, info->cmd, true);
+>=20
+>=20
+> Thanks~
+> Yen.
+>=20
 
-If you want to update any of the 3 last patches, please send an
-update.  Otherwise, let me know and I can pick them up from the
-current series.
+Hi Yen,
 
-Thanks!
+As the patch didn't apply, I edited mt7925_mcu_sta_cmd() manually on
+top of v6.15-rc5 according to the diff. With that IPv6 works fine for
+me.
+
+If it were me, I'd probably structure the if different. I'd leave
+the=C2=A0mt7925_mcu_sta_hdr_trans_tlv() where it is but have an inner if
+(info->link_sta) inside just if (!info->enable), then the !info->enable
+case becomes just an else. I'd maybe even put the if (info->link_sta)
+body in its own static function if that makes sense semantically, but I
+don't know enough (anything) about the driver to know. Anyway, that's
+all a matter of taste and actually makes the patch quite a bit larger.
+
+So whichever way you decide on feel free to add:
+
+Tested-by: Niklas Schnelle <niks@kernel.org>
+
+Thanks,
+Niklas
