@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74ACC239E7F;
-	Mon,  5 May 2025 23:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A1C239E71;
+	Mon,  5 May 2025 23:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486370; cv=none; b=cXJryjSWpuDa+e4EIYNB0jIwEDLdDzDe5n3aJjBMy1R8Ei71Ws0J5UutCMTsZkSdtpEdc7icwlK84Zz605AaA3slafshAh8DqxvCxUjuR3ISP6VkdKBZ/aWME5ng+b7EyYhRxAB+a8KrEQymBAce0CpX56JpLWZYNtbl23voqoQ=
+	t=1746486353; cv=none; b=KUIiZYmz5a3yfICdBSzHDkIIJVKe3CwX5Vsn4Co/RO3F5YkLJQ0Ywj5N5rgSDcMT93+rbCfyIiqxw8+naBlXB1x7WFFRIru1cOUNISdToriJpP1Ayv5OKm7tFZN0k2p2j0ujLK32udsQCKKldlGJJq8zOjjjiwzoTseax5u4gCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486370; c=relaxed/simple;
-	bh=8f+4JA5Io5v6P7QfORZw/DEeSg70+UT4TeDj9RGyMLY=;
+	s=arc-20240116; t=1746486353; c=relaxed/simple;
+	bh=zeqisvW8BXWVJ6urW1OBGJzYoRnVb8dvb7S/BOriN2Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W5WXcAciA+J2xcE1Yfk2QD2IStDPqgw69A5K7O5BMfGE+uD8ty6SPp/6oZURx7TBIymrCVQy/lqgv2yifHdqS3s/kVPCYSQPO0OE0hXzCl72CIXc2e1o/jAMxDfIJm4KsBAjxavV4yB0fAGtAuxxctdDlF1t+//jmDHTIfgY/gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYWwZzlR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TsBMxSxb/JALHXpx4fzaby+Zuqgw1csL76yV3Wz5Y2jTUJEObPR7m2OI+BS94jj1XCwNM5IcSIkYDZem/lBTW+WocKNrzLKGjYS7ALX8p+T3mHIH2oAJzyP5TThp+YXb9z8bj1cErikQekPYue8Kkdea2W5bXI/ZM0kayLqxoRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQ6qvVcA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYWwZzlR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89139C4CEF1;
-	Mon,  5 May 2025 23:06:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQ6qvVcA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D1FC4CEEF;
+	Mon,  5 May 2025 23:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486370;
-	bh=8f+4JA5Io5v6P7QfORZw/DEeSg70+UT4TeDj9RGyMLY=;
+	s=k20201202; t=1746486352;
+	bh=zeqisvW8BXWVJ6urW1OBGJzYoRnVb8dvb7S/BOriN2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dYWwZzlRLauDi3g7HPLwC0xK0gOKnWcFOl0rPIhSsRq1w7tl2WLRF2HWacn+rAg/D
-	 y7LOCBncZEk/QvUx9DNImM8MomIyXXDFcEGNVNTZl83JPoPKPsUAIJnOi/lqqovD80
-	 W6se4VerXb/pxVetlEdhqxv1XF3i+DGd2kO8ItCpIpaw60FJo5PfCqeGFIHgv5sBqH
-	 I2NkX/mVwDBoimsmrxPaLw3xFde9j/mmL1M3Tb/rGToIPu+gQZ2lUEpW/J9LMb1ppF
-	 e606rWIA0hVBYN4Qyxc2t2sEAj51Zu9LChtJkWcBxNfwftODqVghwG6YhQ7p1vwkIX
-	 TABxB7WX+zY+A==
+	b=RQ6qvVcA43poQre0syV1c3hoMhClpicgklMl2YSRWOGz1oAc4JLrzKbIbcA+Mr1/z
+	 TR0KwzYmZNNs2MX8lt1FSw9va6DL+9wUWgdln5yvNbnE88NiiBXRXL3P84n9fSDgt8
+	 V7ABmhLhv2hf8LVj1VEK6nU2TWOLNdlJ8t8MltL4L4EStsyr0KYFGAn5FzR8j5saEA
+	 JvL18THTCan4TBybuG+5o9/AzRU9i8Ncl7+0xojGVPF9TucM5ph8BVC4nonhAk1arP
+	 mYUs0s+hNvIE498ElTFhK1Z6ZYT/4r/InIC0qcs4F1H4vdP9z8ib9nS9jpueF2dg37
+	 b3lhpXmR2QUSQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Rosen Penev <rosenp@gmail.com>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Shuming Fan <shumingf@realtek.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 288/294] wifi: ath9k: return by of_get_mac_address
-Date: Mon,  5 May 2025 18:56:28 -0400
-Message-Id: <20250505225634.2688578-288-sashal@kernel.org>
+	oder_chiou@realtek.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 275/294] ASoC: rt722-sdca: Add some missing readable registers
+Date: Mon,  5 May 2025 18:56:15 -0400
+Message-Id: <20250505225634.2688578-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -46,47 +51,101 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Rosen Penev <rosenp@gmail.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit dfffb317519f88534bb82797f055f0a2fd867e7b ]
+[ Upstream commit f9a5c4b6afc79073491acdab7f1e943ee3a19fbb ]
 
-When using nvmem, ath9k could potentially be loaded before nvmem, which
-loads after mtd. This is an issue if DT contains an nvmem mac address.
+Add a few missing registers from the readable register callback.
 
-If nvmem is not ready in time for ath9k, -EPROBE_DEFER is returned. Pass
-it to _probe so that ath9k can properly grab a potentially present MAC
-address.
-
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
-Acked-by: Toke Høiland-Jørgensen <toke@toke.dk>
-Link: https://patch.msgid.link/20241105222326.194417-1-rosenp@gmail.com
-Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Suggested-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Link: https://patch.msgid.link/20250107154408.814455-6-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/rt722-sdca-sdw.c | 49 +++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index 4f00400c7ffb8..58386906598a7 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -691,7 +691,9 @@ static int ath9k_of_init(struct ath_softc *sc)
- 		ah->ah_flags |= AH_NO_EEP_SWAP;
- 	}
- 
--	of_get_mac_address(np, common->macaddr);
-+	ret = of_get_mac_address(np, common->macaddr);
-+	if (ret == -EPROBE_DEFER)
-+		return ret;
- 
- 	return 0;
- }
+diff --git a/sound/soc/codecs/rt722-sdca-sdw.c b/sound/soc/codecs/rt722-sdca-sdw.c
+index c382cb6be6025..c0bb1b4b2dcb5 100644
+--- a/sound/soc/codecs/rt722-sdca-sdw.c
++++ b/sound/soc/codecs/rt722-sdca-sdw.c
+@@ -28,9 +28,50 @@ static bool rt722_sdca_readable_register(struct device *dev, unsigned int reg)
+ 			0):
+ 	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_GE49, RT722_SDCA_CTL_DETECTED_MODE,
+ 			0):
+-	case SDW_SDCA_CTL(FUNC_NUM_HID, RT722_SDCA_ENT_HID01, RT722_SDCA_CTL_HIDTX_CURRENT_OWNER,
+-			0) ... SDW_SDCA_CTL(FUNC_NUM_HID, RT722_SDCA_ENT_HID01,
+-			RT722_SDCA_CTL_HIDTX_MESSAGE_LENGTH, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_XU03, RT722_SDCA_CTL_SELECTED_MODE,
++			0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_USER_FU05,
++			  RT722_SDCA_CTL_FU_MUTE, CH_L) ...
++	     SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_USER_FU05,
++			  RT722_SDCA_CTL_FU_MUTE, CH_R):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_XU0D,
++			  RT722_SDCA_CTL_SELECTED_MODE, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_USER_FU0F,
++			  RT722_SDCA_CTL_FU_MUTE, CH_L) ...
++	     SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_USER_FU0F,
++			  RT722_SDCA_CTL_FU_MUTE, CH_R):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_PDE40,
++			  RT722_SDCA_CTL_REQ_POWER_STATE, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_PDE12,
++			  RT722_SDCA_CTL_REQ_POWER_STATE, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_CS01,
++			  RT722_SDCA_CTL_SAMPLE_FREQ_INDEX, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_JACK_CODEC, RT722_SDCA_ENT_CS11,
++			  RT722_SDCA_CTL_SAMPLE_FREQ_INDEX, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_MIC_ARRAY, RT722_SDCA_ENT_USER_FU1E,
++			  RT722_SDCA_CTL_FU_MUTE, CH_01) ...
++	     SDW_SDCA_CTL(FUNC_NUM_MIC_ARRAY, RT722_SDCA_ENT_USER_FU1E,
++			  RT722_SDCA_CTL_FU_MUTE, CH_04):
++	case SDW_SDCA_CTL(FUNC_NUM_MIC_ARRAY, RT722_SDCA_ENT_IT26,
++			  RT722_SDCA_CTL_VENDOR_DEF, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_MIC_ARRAY, RT722_SDCA_ENT_PDE2A,
++			  RT722_SDCA_CTL_REQ_POWER_STATE, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_MIC_ARRAY, RT722_SDCA_ENT_CS1F,
++			  RT722_SDCA_CTL_SAMPLE_FREQ_INDEX, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_HID, RT722_SDCA_ENT_HID01,
++			  RT722_SDCA_CTL_HIDTX_CURRENT_OWNER, 0) ...
++	     SDW_SDCA_CTL(FUNC_NUM_HID, RT722_SDCA_ENT_HID01,
++			  RT722_SDCA_CTL_HIDTX_MESSAGE_LENGTH, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_AMP, RT722_SDCA_ENT_USER_FU06,
++			  RT722_SDCA_CTL_FU_MUTE, CH_L) ...
++	     SDW_SDCA_CTL(FUNC_NUM_AMP, RT722_SDCA_ENT_USER_FU06,
++			  RT722_SDCA_CTL_FU_MUTE, CH_R):
++	case SDW_SDCA_CTL(FUNC_NUM_AMP, RT722_SDCA_ENT_OT23,
++			  RT722_SDCA_CTL_VENDOR_DEF, CH_08):
++	case SDW_SDCA_CTL(FUNC_NUM_AMP, RT722_SDCA_ENT_PDE23,
++			  RT722_SDCA_CTL_REQ_POWER_STATE, 0):
++	case SDW_SDCA_CTL(FUNC_NUM_AMP, RT722_SDCA_ENT_CS31,
++			  RT722_SDCA_CTL_SAMPLE_FREQ_INDEX, 0):
+ 	case RT722_BUF_ADDR_HID1 ... RT722_BUF_ADDR_HID2:
+ 		return true;
+ 	default:
+@@ -74,6 +115,7 @@ static bool rt722_sdca_mbq_readable_register(struct device *dev, unsigned int re
+ 	case 0x5600000 ... 0x5600007:
+ 	case 0x5700000 ... 0x5700004:
+ 	case 0x5800000 ... 0x5800004:
++	case 0x5810000:
+ 	case 0x5b00003:
+ 	case 0x5c00011:
+ 	case 0x5d00006:
+@@ -81,6 +123,7 @@ static bool rt722_sdca_mbq_readable_register(struct device *dev, unsigned int re
+ 	case 0x5f00030:
+ 	case 0x6100000 ... 0x6100051:
+ 	case 0x6100055 ... 0x6100057:
++	case 0x6100060:
+ 	case 0x6100062:
+ 	case 0x6100064 ... 0x6100065:
+ 	case 0x6100067:
 -- 
 2.39.5
 
