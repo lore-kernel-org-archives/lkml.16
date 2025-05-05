@@ -1,86 +1,121 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F7717B50F
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B7202C34
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455528; cv=none; b=L+HPHK18G6U3xy6nWKaim/iVRY7Jx3d4xxRm1xxYQZdSH5Oq9P0ks32IHvq1L6xMVqlqFVtJE892PmttbBAKZ4JRTLapBfvjuJ/BJI+bb67xkHmN5cafEBHv5orj6cKvQBDYtBDBRoElNDEwVc7+Fhp+CIszItYGknkckf+p9NQ=
+	t=1746455542; cv=none; b=A6yx5reyD5SAHNslBKrmzlPNc2Ss2sa8rKtDwa2wy4CkXpmgWClhyzQxwbPXZjZSofunG8rqjurDHfWwjMvxrGjtfTvohctTuP9oqbijVEO4OeahqL6kAzftnohFRj0F4b1bWslQ3EkexEFGqs/dazuhRDQPHOccMjEVzUmmtXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455528; c=relaxed/simple;
-	bh=IYPXgw/t9enEBh5s6b8ufe/hnPw6ndScQx6VQ5ln5Vw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=NEXez4y5ua5CB51/a85BBpPbjeFKEp0d3rquTRPEp3bisD22KTA+cygvpRzdIlGjGr2cgS5vW4xJnIkn7IuSekQyeuJNDX6C7wJ1UTB4YOGLE4FxIl8D4ngnnCxt2BJ68rwkBU2N/pRDWnWaJD5XS0D82lireJe6WCM6RpHQR/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=lGWSIlYJ reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1746455542; c=relaxed/simple;
+	bh=e+0ixCQAB8W0GMaVTPmt2pQk324LCu5mkg5wTjPzaZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=En8T7GMGmGjAQYghj7G70t8cRvqgWbCgWHiK5sL7GOUwpFdEqExmx7ENyECDjnKw93sTMSaBjUA+BTpMI3toDfRZs2Nel47L50NpUeXnwJGwgFcCw+KQhsI0mz6LYLwUXVTz5CgxBFwAeVhyKzP/s5zuNfjwI2B/PbcsJLYtas8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lawefhdz; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="lGWSIlYJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=/iKhHXdYy1FVlNTfxYSUFTO6/q/u/BAYTYvmtxNn4gg=; b=l
-	GWSIlYJ7twSvWPZHZAKnC0AA2GhuAzFDumYHVYNuU0ztc/cRdPrXZ62ygLh9RPF9
-	J3QUbf7NtE/eLSkuErgRtce0mL5ZfJA3nO3MnIAI5eK4GuDPMP38JMIAXpKEJUBz
-	sxpa40AqoccALlOYUwDwKTXREXEefVCGyAaRAtuaDI=
-Received: from 00107082$163.com ( [111.35.191.17] ) by
- ajax-webmail-wmsvr-40-131 (Coremail) ; Mon, 5 May 2025 22:31:01 +0800 (CST)
-Date: Mon, 5 May 2025 22:31:01 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Vlastimil Babka" <vbabka@suse.cz>
-Cc: akpm@linux-foundation.org, surenb@google.com, mhocko@suse.com,
-	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	"Shakeel Butt" <shakeel.butt@linux.dev>
-Subject: Re: [PATCH] mm/codetag: sub in advance when free non-compound high
- order pages
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
-References: <20250504061923.66914-1-00107082@163.com>
- <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
-X-NTES-SC: AL_Qu2fBPieukwt5yOYYukXn0oTju85XMCzuv8j3YJeN500lyX10RAvZ25bJlHU0fmINxqmoQmpcDt+19t1bLZ7db+fL+cFMTGsWNG1WkcGN+M1
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lawefhdz"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso42579145e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746455538; x=1747060338; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a+ecdvXRp9B7lDrSJDnwst1YRnJE0a6dpkQ8An/AD48=;
+        b=Lawefhdz9B6aZS0CiZcWs34OeDz1S3yCgIblhsnafkiEuJ12pfQSJmM3EeW1lSmnee
+         LhP/hlnxzR0JuuoCv+BV9yjlehIDKfMtxyd7zrf4Kmcc31Zj87no3j/4SJG0Y2zMid3Z
+         KPW/X3hklDU7SsY50UCJSOKu6kMYbR3uIBcBfxfFFyjpLQ8xYz3ZJS4wXqEJDeHJDrF9
+         mVRm10YyyVcQjI7EmgKErubA9zpT61rdaThM9KaqfqkoR1ggl7qkrXEGfOe4AUBg/xAW
+         x1zjRum/ssP6E56uRDmGw+yGBLIDdct4G6/bhH/9BLO1iPPW0q3R7D6h4hd1ymQQEEIV
+         9G8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746455538; x=1747060338;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a+ecdvXRp9B7lDrSJDnwst1YRnJE0a6dpkQ8An/AD48=;
+        b=kDfLFYPZ6EhcM0/xoAaAfN7nF8D+HSHgQ69XtVTkiKPukL0FaZoNISRrH1YdAZZKge
+         LRbFz/7/TlzH8YVd0Mu5DrkEc3bsIc78vNuB0J0rS9KB2daZEab5bAKGmlqMMFt+IHKd
+         P5ONDBRovWrh0ouQc9nuHRuM6EDKor/Tnni/csm/LYobWSsus0u0k0iCFgav2V7tabhx
+         nXSCWggemeXg/qQoTZ2PG4yNdjyIllUCMYRQx+aqIi50B4sA+cpzPQAzRilu5esdV8HZ
+         cLfF4XGnaY3k2AS6GUYV3Kw5k8McF/ucE9jgJlaBCjmaQ6oxlTD3sG+dylwCUmW35Lme
+         12gA==
+X-Forwarded-Encrypted: i=1; AJvYcCV84QCZQAzZG2q46X4VubjTGlyzzyatrwP733b2It/FNd5EcHOhy4u9ZQvwQFEiJI22kwbDVN3fkMR2F/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7swI6E60ISxvTvLzeCQxColgwoykWrb1xGtUdZiBf+NmTH922
+	JfBfMwaf5//hkiNQleXnHuHZ0FkWVfA1/6Ceu7OghCmJe4FTwn9KnQXFv0H8GSo=
+X-Gm-Gg: ASbGncu6NHpRBOm7w1piEJNYYLjxeEpMbQ0oWo1/I4ZGaduW033BdMqSgIz0ko2XVpt
+	zLhgamw1G1hv/zUisrWEbHWBVORN00i5Vw9UZNSmk6kkfiGibHII8R02aoj0t45aqwz9umsGvU9
+	9OVV4TNT4ArzkuzQb7V18LLELSdp2sUes+Gpzk6vUjQqEL9W274Df/tgtoZG33L+oP/4Hvanv2P
+	x62pHKWAYptT7OghUG6QHFrKXlwjI8i8pTIsv/Y8cxa+aT++ii45/js4//Wsj0CiJLpGtKoWdjc
+	MnctJt+7V+4AQzps1Uz/TmutA3cFD45QuGk4eCYCHEU5mQ==
+X-Google-Smtp-Source: AGHT+IGyIpQEeGOI1bpJxkqVYKCv5xmDFxvVhoHPMyQ+WpC+IU6OnU3bGuzYtxbn8Ywflhv/y8WTSQ==
+X-Received: by 2002:a05:600c:45d1:b0:43a:b0ac:b10c with SMTP id 5b1f17b1804b1-441c49236b0mr63894895e9.26.1746455537718;
+        Mon, 05 May 2025 07:32:17 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2aed5e8sm180265185e9.16.2025.05.05.07.32.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 07:32:17 -0700 (PDT)
+Date: Mon, 5 May 2025 17:32:12 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yunjeong Mun <yunjeong.mun@sk.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 next] mm/mempolicy: Fix error code in sysfs_wi_node_add()
+Message-ID: <aBjL7Bwc0QBzgajK@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1da43908.3afc.196a0db7dc3.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:gygvCgDnT3mmyxhoTuWjAA--.18912W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAhEqmgYuTbx-AAFsB
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-CgpBdCAyMDI1LTA1LTA1IDIxOjEyOjU1LCAiVmxhc3RpbWlsIEJhYmthIiA8dmJhYmthQHN1c2Uu
-Y3o+IHdyb3RlOgo+T24gNS80LzI1IDA4OjE5LCBEYXZpZCBXYW5nIHdyb3RlOgo+PiBXaGVuIHBh
-Z2UgaXMgbm9uLWNvbXBvdW5kLCBwYWdlWzBdIGNvdWxkIGJlIHJlbGVhc2VkIGJ5IG90aGVyCj4+
-IHRocmVhZCByaWdodCBhZnRlciBwdXRfcGFnZV90ZXN0emVybyBmYWlsZWQgaW4gY3VycmVudCB0
-aHJlYWQsCj4+IHBnYWxsb2NfdGFnX3N1Yl9wYWdlcyBhZnRlcndhcmRzIHdvdWxkIG1hbmlwdWxh
-dGUgYW4gaW52YWxpZAo+PiBwYWdlIGZvciBhY2NvdW50aW5nIHJlbWFpbmluZyBwYWdlczoKPj4g
-Cj4+IFt0aW1lbGluZV0gICBbdGhyZWFkMV0gICAgICAgICAgICAgICAgICAgICBbdGhyZWFkMl0K
-Pj4gICB8ICAgICAgICAgIGFsbG9jX3BhZ2Ugbm9uLWNvbXBvdW5kCj4+ICAgVgo+PiAgIHwgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2V0X3BhZ2UsIHJmIGNvdW50ZXIg
-aW5jCj4+ICAgVgo+PiAgIHwgICAgICAgICAgaW4gX19fZnJlZV9wYWdlcwo+PiAgIHwgICAgICAg
-ICAgcHV0X3BhZ2VfdGVzdHplcm8gZmFpbHMKPj4gICBWCj4+ICAgfCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBwdXRfcGFnZSwgcGFnZSByZWxlYXNlZAo+PiAgIFYKPj4g
-ICB8ICAgICAgICAgIGluIF9fX2ZyZWVfcGFnZXMsCj4+ICAgfCAgICAgICAgICBwZ2FsbG9jX3Rh
-Z19zdWJfcGFnZXMKPj4gICB8ICAgICAgICAgIG1hbmlwdWxhdGUgYW4gaW52YWxpZCBwYWdlCj4+
-ICAgVgo+PiAgIFYKPj4gCj4+IE1vdmUgdGhlIHRhZyBwYWdlIGFjY291bnRpbmcgYWhlYWQsIGFu
-ZCBvbmx5IGFjY291bnQgcmVtYWluaW5nIHBhZ2VzCj4+IGZvciBub24tY29tcG91bmQgcGFnZXMg
-d2l0aCBub24temVybyBvcmRlci4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFdhbmcgPDAw
-MTA3MDgyQDE2My5jb20+Cj4KPkhtbSwgSSB0aGluayB0aGUgcHJvYmxlbSB3YXMgaW50cm9kdWNl
-ZCBieSA1MWZmNGQ3NDg2ZjAgKCJtbTogYXZvaWQgZXh0cmEKPm1lbV9hbGxvY19wcm9maWxpbmdf
-ZW5hYmxlZCgpIGNoZWNrcyIpLiBQcmV2aW91c2x5IHdlJ2QgZ2V0IHRoZSB0YWcgcG9pbnRlcgo+
-dXBmcm9udCBhbmQgYXZvaWQgdGhlIHBhZ2UgdXNlLWFmdGVyLWZyZWUuCgoKT2gsIHlvdSdyZSBy
-aWdodC4gSSBmb3Jnb3QgdG8gY2hlY2sgaGlzdG9yeS4uLi4uLgoKCj4KPkl0IHdvdWxkIGxpa2Vs
-eSBiZSBuaWNlciB0byBmaXggaXQgYnkgZ29pbmcgYmFjayB0byB0aGF0IGFwcHJvYWNoIGZvcgo+
-X19fZnJlZV9wYWdlcygpLCB3aGlsZSBob3BlZnVsbHkga2VlcGluZyB0aGUgb3B0aW1pc2F0aW9u
-cyBvZiA1MWZmNGQ3NDg2ZjAKPmZvciB0aGUgb3RoZXIgY2FsbCBzaXRlcyB3aGVyZSBpdCBhcHBs
-aWVzPwoKQWZ0ZXIgY2hlY2tpbmcgdGhhdCBjb21taXQsIEkga2luZCBvZiBmZWVscyB0aGUgY2hh
-bmdlcyBpbiBfX2ZyZWVfcGFnZXMgYXJlCiB0aGUgbWFqb3Igb3B0aW1pemF0aW9uIG9mIHRoZSBj
-b21taXQuLi4uCldoYXQgYWJvdXQgcmV2ZXJ0IHRoYXQgY29tbWl0IGFuZCBtYWtlIG9wdGltaXph
-dGlvbiBieSBjb25kaXRpb24gY2hlY2tzLApzaW1pbGFyIHRvIHdoYXQgdGhpcyBwYXRjaCBkaWQ/
-CiAKCgpEYXZpZAoK
+Smatch complains that there is a missing error code here.  Arguments
+could be made either way about what correct behavior should be but
+in the end we decided that returning -EINVAL probably made sense.
+
+The wi_node_notifier() already prints an error so this pr_info() is
+duplicative so delete it.
+
+Fixes: bc7527e0a127 ("mm/mempolicy: support memory hotplug in weighted interleave")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
+Reviewed-by: Rakie Kim <rakie.kim@sk.com>
+---
+v2: Delete the pr_info() message as well
+
+ mm/mempolicy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index f43951668c41..9a2b4b36f558 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3539,7 +3539,7 @@ static const struct kobj_type wi_ktype = {
+ 
+ static int sysfs_wi_node_add(int nid)
+ {
+-	int ret = 0;
++	int ret;
+ 	char *name;
+ 	struct iw_node_attr *new_attr;
+ 
+@@ -3568,7 +3568,7 @@ static int sysfs_wi_node_add(int nid)
+ 	mutex_lock(&wi_group->kobj_lock);
+ 	if (wi_group->nattrs[nid]) {
+ 		mutex_unlock(&wi_group->kobj_lock);
+-		pr_info("node%d already exists\n", nid);
++		ret = -EEXIST;
+ 		goto out;
+ 	}
+ 
+-- 
+2.47.2
+
