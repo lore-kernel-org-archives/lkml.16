@@ -1,38 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548293777AB;
-	Mon,  5 May 2025 22:49:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31CA2C1E2E;
+	Mon,  5 May 2025 22:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485387; cv=none; b=PbAqP9SZ4BtYePTc0xID+HzAcwcxSqxpp5/IuTDmKnM24RduRWj0MeG/86NJEQ/5bzGuWlJbE5iM7jvmlgrt8pJUTASU0LmKve9E/nT+tKTMFbY4t05jFDSOUg6cG1a4IkB+MCoPWS5u3rW14/cWlGP+t3Z3cR+YU/B3LYO0rO4=
+	t=1746485407; cv=none; b=OYnORzyxfJuk5ImWB8PfB4rK8sIVBq3fqZCNjqyvHuSzNoFPaYHYFXLeoOVxlV5gjqtTurA++hQ0eCjohOlSFg7P8wBKc/wfOPQZo6ZPcLh4q30UV5JKRvJLiStrankQNQ/S5cIaddYpnp8I31DJbf1S2duF6oxdlssHE2QWLYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485387; c=relaxed/simple;
-	bh=Dj/wqjaxFVPICNVresQ1n3X4G4IA/QoG3r56gNsEk2I=;
+	s=arc-20240116; t=1746485407; c=relaxed/simple;
+	bh=TmMziUAO7Ca/u8ecyVo8LJZtOW71FIb95pElB9+CaSA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NHz18+nppJEPzPT90Mr7GDhxJfkklwusVTXkuKRh9iRBgPGfPKnehwKNWqNHCd3PNfuY9a8ZdHmLC7anutr1rvm08Gytw3OAnm1H01t7Y9G+QsuJ8hdGs0OL5zOLDINw+MCuvUzM78vKp0LDdnnr/LBX0sSEWOwlIpyQVb9b3zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyvL4nf2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=r0AG08eFg+AohTkEbpAd+TjneL68+ownuls9VUcapUV4b3sLVhdYKiqzxUOEQMOPEdlfzVulP8WqultQgG/GwXNVFX48th4SYFOFgVYD20Ytcl5FgdITT7dNT7jY2pKMqEqlKjuPRB52b936dd0ntfbVGYn8C4bhW45XBdtNmAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wgy7cuhw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyvL4nf2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA2AC4CEED;
-	Mon,  5 May 2025 22:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wgy7cuhw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19B0C4CEED;
+	Mon,  5 May 2025 22:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485386;
-	bh=Dj/wqjaxFVPICNVresQ1n3X4G4IA/QoG3r56gNsEk2I=;
+	s=k20201202; t=1746485407;
+	bh=TmMziUAO7Ca/u8ecyVo8LJZtOW71FIb95pElB9+CaSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DyvL4nf2L0kmbPkuOxfffEii3a0nPxgwy7jBzEbVOpe0BrWAIR6KTCMR8bFT9pbMI
-	 Dyy9iTkWIqabxQ1t+NeDMSiqd80blQZxRJc6ZCmQxWv6a1pz7gg8BliFUhjnb/pV4h
-	 fKDnDZNTYvhfFLDS0+IGGrpLOxEvnwBVgPoiQv10OZBIggpuJDOnNSUgq06ZA4n4ib
-	 1alCKHUwB2042gJCNZp/eaf4FIaaxOQOOyogpQ7DDxz5DHOo+vSnX3rroI5LqOSpCs
-	 lvgMRvbIiEOIEY/A9QiIleoRreinS58y2gaVTKrqVeVZQyJJLWG0n6lDM4K4iR80vY
-	 r8xRGJgjJAmiw==
+	b=Wgy7cuhwyWy5mEIJydT180q+bg1t7TcbNaILhZa8XHcj8rzFr6Wv6H/GcmP9ZQ1b9
+	 8PUVlplCSzo4o+sfGfzln6senT5/UxiggoGrL+4xkcSv5XRCD2S6wKQ0JBnRI95LmV
+	 ONMq/6DPnWgCAQNsoW0+9XVK03JABZgjSIPzVQOedoy/8JI/LlbDpvZ0lawUze02Rf
+	 8RNsZ7OEy0j1aUh2d32dtDxjn0UeqALqtzrtndHK+hJxW+yu/W3T/7C4hEWbEeOFAG
+	 dPiHfDJvOdwXJuupRBZ6CiUACd+K1KWH2K/F/GScn+IH3H1B0WBzMEttKHtbqjxbtJ
+	 Hc6P2FD+Idnqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-	Gabe Teeger <gabe.teeger@amd.com>,
-	Leo Chen <leo.chen@amd.com>,
-	Syed Hassan <syed.hassan@amd.com>,
+Cc: George Shen <george.shen@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
 	Roman Li <roman.li@amd.com>,
 	Daniel Wheeler <daniel.wheeler@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
@@ -42,18 +40,21 @@ Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
 	christian.koenig@amd.com,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	Charlene.Liu@amd.com,
-	chiahsuan.chung@amd.com,
+	wayne.lin@amd.com,
+	Gabe.Teeger@amd.com,
+	michael.strauss@amd.com,
+	Hansen.Dsouza@amd.com,
+	robin.chen@amd.com,
+	Cruise.Hung@amd.com,
+	ryanseto@amd.com,
 	alex.hung@amd.com,
-	Nicholas.Susanto@amd.com,
-	Ausef.Yousof@amd.com,
-	sungjoon.kim@amd.com,
 	PeiChen.Huang@amd.com,
+	Ausef.Yousof@amd.com,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 301/486] drm/amd/display: Guard against setting dispclk low when active
-Date: Mon,  5 May 2025 18:36:17 -0400
-Message-Id: <20250505223922.2682012-301-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 303/486] drm/amd/display: Read LTTPR ALPM caps during link cap retrieval
+Date: Mon,  5 May 2025 18:36:19 -0400
+Message-Id: <20250505223922.2682012-303-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -68,63 +69,90 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: George Shen <george.shen@amd.com>
 
-[ Upstream commit 72d7a7fa1f2404fd31c84a8f808b1b37021a3a9e ]
+[ Upstream commit de84d580126eb2214937df755cfec5ef0901479e ]
 
 [Why]
-We should never apply a minimum dispclk value while in prepare_bandwidth
-or while displays are active. This is always an optimization for when
-all displays are disabled.
+The latest DP spec requires the DP TX to read DPCD F0000h through F0009h
+when detecting LTTPR capabilities for the first time.
 
 [How]
-Defer dispclk optimization until safe_to_lower = true and display_count
-reaches 0.
+Update LTTPR cap retrieval to read up to F0009h (two more bytes than the
+previous F0007h), and store the LTTPR ALPM capabilities.
 
-Since 0 has a special value in this logic (ie. no dispclk required)
-we also need adjust the logic that clamps it for the actual request
-to PMFW.
-
-Reviewed-by: Gabe Teeger <gabe.teeger@amd.com>
-Reviewed-by: Leo Chen <leo.chen@amd.com>
-Reviewed-by: Syed Hassan <syed.hassan@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
+Signed-off-by: George Shen <george.shen@amd.com>
 Signed-off-by: Roman Li <roman.li@amd.com>
 Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c    | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dc_dp_types.h         | 12 ++++++++++++
+ .../display/dc/link/protocols/link_dp_capability.c   |  6 +++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c
-index 7d0d8852ce8d2..a4ac601a30c35 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c
-@@ -452,14 +452,19 @@ void dcn35_update_clocks(struct clk_mgr *clk_mgr_base,
- 		update_dppclk = true;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_dp_types.h b/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
+index 41bd95e9177a4..223c3d55544b2 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_dp_types.h
+@@ -959,6 +959,14 @@ union dp_128b_132b_supported_lttpr_link_rates {
+ 	uint8_t raw;
+ };
  
--	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)) {
-+	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) &&
-+	    (new_clocks->dispclk_khz > 0 || (safe_to_lower && display_count == 0))) {
-+		int requested_dispclk_khz = new_clocks->dispclk_khz;
++union dp_alpm_lttpr_cap {
++	struct {
++		uint8_t AUX_LESS_ALPM_SUPPORTED	:1;
++		uint8_t RESERVED				:7;
++	} bits;
++	uint8_t raw;
++};
 +
- 		dcn35_disable_otg_wa(clk_mgr_base, context, safe_to_lower, true);
+ union dp_sink_video_fallback_formats {
+ 	struct {
+ 		uint8_t dp_1024x768_60Hz_24bpp_support	:1;
+@@ -1103,6 +1111,7 @@ struct dc_lttpr_caps {
+ 	uint8_t max_ext_timeout;
+ 	union dp_main_link_channel_coding_lttpr_cap main_link_channel_coding;
+ 	union dp_128b_132b_supported_lttpr_link_rates supported_128b_132b_rates;
++	union dp_alpm_lttpr_cap alpm;
+ 	uint8_t aux_rd_interval[MAX_REPEATER_CNT - 1];
+ };
  
--		if (dc->debug.min_disp_clk_khz > 0 && new_clocks->dispclk_khz < dc->debug.min_disp_clk_khz)
--			new_clocks->dispclk_khz = dc->debug.min_disp_clk_khz;
-+		/* Clamp the requested clock to PMFW based on their limit. */
-+		if (dc->debug.min_disp_clk_khz > 0 && requested_dispclk_khz < dc->debug.min_disp_clk_khz)
-+			requested_dispclk_khz = dc->debug.min_disp_clk_khz;
+@@ -1352,6 +1361,9 @@ struct dp_trace {
+ #ifndef DPCD_MAX_UNCOMPRESSED_PIXEL_RATE_CAP
+ #define DPCD_MAX_UNCOMPRESSED_PIXEL_RATE_CAP    0x221c
+ #endif
++#ifndef DP_LTTPR_ALPM_CAPABILITIES
++#define DP_LTTPR_ALPM_CAPABILITIES              0xF0009
++#endif
+ #ifndef DP_REPEATER_CONFIGURATION_AND_STATUS_SIZE
+ #define DP_REPEATER_CONFIGURATION_AND_STATUS_SIZE	0x50
+ #endif
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+index d9a1e1a599674..842636c7922b4 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
+@@ -1495,7 +1495,7 @@ static bool dpcd_read_sink_ext_caps(struct dc_link *link)
  
-+		dcn35_smu_set_dispclk(clk_mgr, requested_dispclk_khz);
- 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
--		dcn35_smu_set_dispclk(clk_mgr, clk_mgr_base->clks.dispclk_khz);
+ enum dc_status dp_retrieve_lttpr_cap(struct dc_link *link)
+ {
+-	uint8_t lttpr_dpcd_data[8] = {0};
++	uint8_t lttpr_dpcd_data[10] = {0};
+ 	enum dc_status status;
+ 	bool is_lttpr_present;
+ 
+@@ -1545,6 +1545,10 @@ enum dc_status dp_retrieve_lttpr_cap(struct dc_link *link)
+ 			lttpr_dpcd_data[DP_PHY_REPEATER_128B132B_RATES -
+ 							DP_LT_TUNABLE_PHY_REPEATER_FIELD_DATA_STRUCTURE_REV];
+ 
++	link->dpcd_caps.lttpr_caps.alpm.raw =
++			lttpr_dpcd_data[DP_LTTPR_ALPM_CAPABILITIES -
++							DP_LT_TUNABLE_PHY_REPEATER_FIELD_DATA_STRUCTURE_REV];
 +
- 		dcn35_disable_otg_wa(clk_mgr_base, context, safe_to_lower, false);
- 
- 		update_dispclk = true;
+ 	/* If this chip cap is set, at least one retimer must exist in the chain
+ 	 * Override count to 1 if we receive a known bad count (0 or an invalid value) */
+ 	if ((link->chip_caps & EXT_DISPLAY_PATH_CAPS__DP_FIXED_VS_EN) &&
 -- 
 2.39.5
 
