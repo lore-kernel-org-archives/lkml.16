@@ -1,149 +1,92 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E20825C80D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D0525A64D
 	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459792; cv=none; b=kpdXCzCoULpL2iHjvkCjcaWWBxXIhIKBi9MMU3Hprbjmj9sjtgodTVUZ4Ef1yP60zHjoJ+U6tTxfX91L7T55NX38azPMRjOEp9Qt15Vn/rLpp03K/HbA3pcoskEH8YV4belBblpzvbvtSa8yVvKeANLITSPRV7Ar/rv/3ilAg5I=
+	t=1746459793; cv=none; b=YNrs6RNu1jTVf5e6by3JW6NEkiecmuZ1uOVClcYvXvbkT6aS7mu/p/kCzzjeJm8NQ/7okJCAsiJrt99jOvzMDl9E9mQ/WTdsHOKiO3B8SSidhC/+rpHXfie0JdbHnpmD953B3tTsfP+DDneh3NyWqNjoJBAPuaPhN9MxKd22hPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459792; c=relaxed/simple;
-	bh=1hZxccIbWniJZ+0x/jSm8xcr1oxitOmB1wV1lj698qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SMKRdEX38xo53Vn64GaQcSoeGkZ3oMG5mxWOqWD+Mmx2mbGHHNF2OlRXZf7HxzssiZ760yTeg11gYbkc4vp0PHxd3+sCqcauqB+8wmyMOznT2+0lHK3qrmBvvK5pUZsnm9Fzld9JhL5+Eclh264lO7MLog3FLACT7JwPT/Wj5q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=oHsAZVYn; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746459793; c=relaxed/simple;
+	bh=QRTbxv6zAHeMDzXhqL8aw35yYIDNThc5twhBqvEaco4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ugiqqtc7ptqg05df32k0rs6QG5ftVhD6P+8Z1GnXbJosEwty456FwqRuYaKmDro7YGlBZlXGgTYeTsJB0O4bt4nJDqTe+vpWdUpb2WIoaar05xD5cMpXXwoGJNBgwd68NREb9eWWo28xzSi26zWL9GMipzNl1/+a3S7lUZX5ibg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HP7Z397R; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oHsAZVYn"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so53523125ad.2
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HP7Z397R"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6064d4c14ebso1052378eaf.2
         for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746459787; x=1747064587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXTYmNfnp3L8OKmlj5S0ckFXV6E7LYKVxcLkR0qYEOA=;
-        b=oHsAZVYn/zLnji7tX2YmwFySDJ8h6/ITcsF6DhF2Ftn1pMO0rsYnh4lgL3LPJouZax
-         9XRmG9ufBvYkS1IO/4I03e1qIXiSzO7uN0WH/uDjfREPWv5UMF+4KaWckecj+5ttICFw
-         Lu0/GOudp94ptjbOt2AZvnThqo6jWnxEtO6Ro=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746459790; x=1747064590; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jADEHGiMlecVFngKrds8KPNTRKyJX4Rr2PqMnmh5p04=;
+        b=HP7Z397RXibyRH45OVZiWscWZnLDnQIKIkOEAj86AHCkuMW8RT1kxo360dsr1bcdOg
+         udG2Bv+vZHR6yaMcwOUavh174fAv7bbYH5gYOBu/CLnyyv4J3nWkgDK+VyRtuXaoPW2A
+         5lSVIqrod4kVYyR9jBeywUqmqez/ULw8UXXBTIthF60acb6lFRvFPDlnnMCwF00wM9nY
+         X7jrOK4TMBpsELHthudUtJzrZ7SaY/qd3CooyIEQrp485JS+Jquj3P7TrHIQv4lxosww
+         y0Y1NlFMWFaa290hv29txP6Q5Atv6vM/kckxMYqtQMywv5igP/avxoJorXI8tmUfAW1O
+         xsrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746459787; x=1747064587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HXTYmNfnp3L8OKmlj5S0ckFXV6E7LYKVxcLkR0qYEOA=;
-        b=GczFLEFYx/Mg9TnIfWvYrNXb8CWqitaJOQ0b1LfFaWJ+OJ1c5TfGwSAmwiMuqn3/46
-         qFYQEv4N9DW7DV6oqTfKZQk7GUwfLWJBPBeLzF9rTfqZkYmRjYIQQQUf3499e4eU9xpV
-         WaFtK3WRyRYNuSYKtnxxe+sEZ3QQSfwhSlpZuT9eb4imaAsNMaR54+VFVWbtA72Fj77Q
-         MVtgr+Jx0uHKwEOvG9D0SjMy8/kHFEQPmzWw9kM8KmtRevrZX+dDn01h78gYTdoHO9w4
-         doJq/bWAspoC9FVF54tm61Bfljq2M3Th9zBojEAgVqAeY4eUN18YcnXy1ntRGbyK/AHV
-         mehA==
-X-Gm-Message-State: AOJu0YwlpLELfozsu/WrmgF2g5IaHzQOpTQAdFjv/UhV4fvOB/2Avc0f
-	EjDqNhZhq87OV0xpibJuaTvj4lEX17g2AEeaJCYaibNGh9GFVLoIfneXXFluaXmHTI3+Y5gD2G0
-	=
-X-Gm-Gg: ASbGncuIlcUSfHQf1ZtEju0x/tcbNUlwwCQyRelrwrNLis+4ST77ryuIFcPhlHrWhUU
-	HJ6kEjnw2IHqrpzmh7cDnHJhafX4wvXedLv03masWVRAzPd3g33jssSfFfDEF5+xwXVxs8XRa3d
-	dmsRBPbeOqc8FKOWKbuXL/5jbenaQJgkxI5gCTINBRRh1IJ+h2bZ6bn8/ifqRDqLAy6/pjyItCC
-	1i7vP+8x8DcZFHWULCweNpG9ebIipyTmgAcQzaRFfXayBA8ADqRiLdS75eJ8iRbVLwlH44Wli6k
-	Qu21GvEUl/VavaA0nkfbe4nPd/u5rWcr7eTODlPI2bZtO2wsT1yxl8ul312StLzCoofQh4E4Pun
-	R/uQrBjeY
-X-Google-Smtp-Source: AGHT+IFwxFQlfzCtimlZJcfkL96olikSz5kKeAd5LyyZCc2KDzX+2v79JjXg6w+8eIOda2qaHTUUkg==
-X-Received: by 2002:a17:902:f64a:b0:224:b60:3cd3 with SMTP id d9443c01a7336-22e102ecf83mr220509765ad.19.1746459787623;
-        Mon, 05 May 2025 08:43:07 -0700 (PDT)
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com. [209.85.215.182])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e98desm56639145ad.55.2025.05.05.08.43.04
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1746459790; x=1747064590;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jADEHGiMlecVFngKrds8KPNTRKyJX4Rr2PqMnmh5p04=;
+        b=w8wMTZwHE2qfQhJaMqBY65V+hPoyNbNcXivBQyMweCrna/SsraRD+3pcxmZUZQRRzg
+         ErQfhNLnSYKwbFQHt9jwrXpdAUJ7SMzJZk6WLUBurPP4/ZvdeVHxlKikwTwi/pUUShlQ
+         eYLlrUBAagzmsxVnrYm3QWgBhTOr1WdMX5ezlaiegMVc3dHw/z7m0CUfHnRILHSIj58X
+         D6qg1zg44cpOME0CIkNi7A7Obm8r7h0WGhr/6wEFwR+zOTtZu7nlfsIU4DTNoF1WLIMX
+         hEsa10NXOuurMMdYCmw7NIJuJuWjgrEJW9aCas49Tk7/EpH0QTJA4VEehxhTTNDO+/ID
+         IqKA==
+X-Gm-Message-State: AOJu0Yyzl8l+0mrLRRFmMkFQSYvzjTCtQltYSfBI+7zBDkDdjN45PkeO
+	uYhYZcICGkBo47fc5MHegDxBeWWXz9AST6Q/rIS98O/M9XnHd3PXJIyV+qmm2Ig=
+X-Gm-Gg: ASbGncsecnK7BI96wfNNy0iP9E1IdRajATK1HfltzTTOcRL04b9G+dP4tRzKSr81oB6
+	3QKvqLUMRiIXPwVmWfKa6fItOxt1fnHuJIYiidgzWac92LTer+GlrolljUbQlwDOOc4lqFNx/TK
+	mKIpgC4rpLB/+vCHOIKa2BwoebJtOL5x6xD3J2LTqwE+BhpQeL+ctSWN6BPHy/zvmZuM5vJ8EiP
+	jxvVuhLayR3vmzpsS4SLytZMJi0EWTQY/Cu+G1MRCNOsg9xdABqi1AK8JD69vfcLYJxl8YtJe5h
+	AopT6uyf6IZ4szS6+3O2mA1yLQX66c/ByQ85QD5PINxUynbXnJeJ3S4lWcuIYJQqCfegJamiKeC
+	YdJOBImQkn9xN8Mc=
+X-Google-Smtp-Source: AGHT+IFL2btLIVQtJx76CsbwyLNK829LBAKSDjNc/uTEdqP95tY4Xs4YkW2YjtftOF3WDWyRbGLvmg==
+X-Received: by 2002:a05:6820:1f11:b0:5fe:9edb:eafe with SMTP id 006d021491bc7-6080030c637mr4626794eaf.5.1746459790013;
+        Mon, 05 May 2025 08:43:10 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:2151:6806:9b7:545d? ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7db20f9sm1668000eaf.16.2025.05.05.08.43.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 08:43:04 -0700 (PDT)
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so3446742a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:43:04 -0700 (PDT)
-X-Received: by 2002:a17:90b:520f:b0:2fe:9e6c:add9 with SMTP id
- 98e67ed59e1d1-30a4e5c5d2dmr22184245a91.18.1746459784032; Mon, 05 May 2025
- 08:43:04 -0700 (PDT)
+        Mon, 05 May 2025 08:43:09 -0700 (PDT)
+Message-ID: <a8f47109-f370-49db-abe8-955ba287ab0c@baylibre.com>
+Date: Mon, 5 May 2025 10:43:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502205147.283272733@goodmis.org> <20250502205348.643055437@goodmis.org>
-In-Reply-To: <20250502205348.643055437@goodmis.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 5 May 2025 08:42:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
-X-Gm-Features: ATxdqUEbLIdnfk4KhX4VeDp15dHAX0mPiplezQT4DJTJ5-tAGVeLSoklxA5bYvU
-Message-ID: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
-Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
- of setting per CPU disabled
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Signed-off-by missing for commit in the iio tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250505074801.258da03a@canb.auug.org.au>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250505074801.258da03a@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 5/4/25 4:48 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   1a521690c060 ("iio: adc: ad7606: explicit timestamp alignment")
+> 
+> is missing a Signed-off-by from its author.
+> 
 
-On Fri, May 2, 2025 at 1:53=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> The per CPU "disabled" value was the original way to disable tracing when
-> the tracing subsystem was first created. Today, the ring buffer
-> infrastructure has its own way to disable tracing. In fact, things have
-> changed so much since 2008 that many things ignore the disable flag.
->
-> The kdb_ftdump() function iterates over all the current tracing CPUs and
-> increments the "disabled" counter before doing the dump, and decrements i=
-t
-> afterward.
->
-> As the disabled flag can be ignored, doing this today is not reliable.
-> Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
-> disable and then enabled the entire ring buffer in one go!
->
-> Cc: Jason Wessel <jason.wessel@windriver.com>
-> Cc: Daniel Thompson <danielt@kernel.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_kdb.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> index 1e72d20b3c2f..b5cf3fdde8cb 100644
-> --- a/kernel/trace/trace_kdb.c
-> +++ b/kernel/trace/trace_kdb.c
-> @@ -120,9 +120,7 @@ static int kdb_ftdump(int argc, const char **argv)
->         trace_init_global_iter(&iter);
->         iter.buffer_iter =3D buffer_iter;
->
-> -       for_each_tracing_cpu(cpu) {
-> -               atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->di=
-sabled);
-> -       }
-> +       tracer_tracing_off(iter.tr);
->
->         /* A negative skip_entries means skip all but the last entries */
->         if (skip_entries < 0) {
-> @@ -135,9 +133,7 @@ static int kdb_ftdump(int argc, const char **argv)
->
->         ftrace_dump_buf(skip_entries, cpu_file);
->
-> -       for_each_tracing_cpu(cpu) {
-> -               atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->di=
-sabled);
-> -       }
-> +       tracer_tracing_on(iter.tr);
+Thanks for reporting this. The oversight has been fixed.
 
-This new change seems less safe than the old one. Previously you'd
-always increment by one at the start of the function and decrement by
-one at the end. Now at the start of the function you'll set
-"buffer_disabled" to 1 and at the end you'll set it to 0. If
-"buffer_disabled" was already 1 at the start of the function your new
-sequence will end up having the side effect of changing it to 0.
-
--Doug
