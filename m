@@ -1,44 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE8E281529;
-	Mon,  5 May 2025 23:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA1337AAA1;
+	Mon,  5 May 2025 23:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486300; cv=none; b=DKvFvafS/EaEMHu/qjaUCoLHAGYm/x+wdV4WSyz3d2Cn9+dDAjxag/upoIkNJmovb/M0oJdZQBhFf4FhGGQmmGdJYb9F0iHpe6xfW/o7VF+Y/a3DY/vxTzpE994YuoGHkku6ehH1l1gDAlVq2fk7plxMsvz+fLVmAdfbOu//JrU=
+	t=1746486285; cv=none; b=tytWv7C2TSlcN0JHp70iJsp84Yu75eBiwPDEwKoMaravCOizRUqOkFLPNBfjXGOSL6xeh/BeZxERVHQEPgnDvJYnQvZPNz/ivjOZ8q8xbvfnqT8x/F0afOftnAS4hXnZivXDzC13jWjOifcAm9aPhdVLr3RNzAkC6m8sx4lN3/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486300; c=relaxed/simple;
-	bh=EFGW6uKidnmuYk/YSiUU4OZvZImJqmyUCCrIWsc34uA=;
+	s=arc-20240116; t=1746486285; c=relaxed/simple;
+	bh=nYl/Y8JZBlavhH1uIkWXXNkXoxUwVdbtcBSrLbSP2tE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TwGRy/7fiQSMG56WCesrHgJaf+IEF9StZBOVM1yn5bYLHZywklWhm8qBpsC+J0gYZlP4lZdznbaaUCzsOwQu0YxyqOs3K/SS45egWay5juFIURiQM0KI1KRkyE4AYWv7DII/P9IfZ/WiY9SiPQNifY13mo4ZHoz+h6glK1h2a9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltZ5D7d6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ksz6QoXYE/qwdTuW1LHwEgDtmLB5gS3/3ZdG6Wva1LFq3EeXXp/NmtEuLIZkebUFt7Pk1bst/DStl1ShVxdH694xhRWWl9VC3A3BMMBZF24+I7VnGmhTAqEz3NQR8XICFLExBDNDudYnZCQzxVdGRJUA9ICOBTfKSpVHxHa7oGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXQQ4ZHC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltZ5D7d6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F018C4CEEE;
-	Mon,  5 May 2025 23:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXQQ4ZHC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7491BC4CEED;
+	Mon,  5 May 2025 23:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486299;
-	bh=EFGW6uKidnmuYk/YSiUU4OZvZImJqmyUCCrIWsc34uA=;
+	s=k20201202; t=1746486284;
+	bh=nYl/Y8JZBlavhH1uIkWXXNkXoxUwVdbtcBSrLbSP2tE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ltZ5D7d6A1es6GfMm2A9+LrUXBAa4TQYTSNy3/rqUTQrOTdSfC4aWfIR8ofmQj2MY
-	 Nopq6nza58XURb4AtpWnbT4Idk95/o0V9InlIsemgN2SOhKqU0xboqnSm1lLtoncCf
-	 LdBZVAkbotHcJZ/InTVdTGP/vhubNV56FAcWGgC4KxmnuIYsslTLSpaTcXnxaLcbpA
-	 l9j3/h+w3bj0neHja7Oe9d13apiiOCQBaKuuLmZ/c2CN3qAjKih1HWeam/KT6iujDy
-	 r8n8xrb7JPF++b8k02rsPf3hvfHnNxTiDbINU9ILhiN/hN0tx9JIYtFzBbPUuTA/wq
-	 MiArUQeW36wdw==
+	b=fXQQ4ZHCJap/lG6mRvjk5E9OSqb78Sq0IgbmHItDYZ8EL7IdyPqY6748w7jdpHpIz
+	 6yeRgu9CZM9G7Lobbt+O3LKGhQfEQiw6Sclh6emoSvu4q2X+s/iBDM8EjhngSm90Fn
+	 5/s8zfWWRsFBede0cxU0YDV8MuYcNafFnLqQkzG2g7GCUKuw6yxNizoZ4QJ9oZZbCN
+	 DCv49RfdJFW/3JuWCQVI0FXvkIdNF+42057hcdbF0+kuOzl7l0qTYW4GsbGy+hkCvD
+	 t5ZPKyMOAecugfmAoWJfG3hWiRT0ZXESmOmn2PQrob4LJIMTjkYCGcP8/pxTNT8Ox+
+	 LcHNidL8ekloQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>,
-	Lee Jones <lee@kernel.org>,
+Cc: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Csókás,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	pavel@kernel.org,
-	andrew@lunn.ch,
-	lukma@denx.de,
-	linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 245/294] leds: trigger: netdev: Configure LED blink interval for HW offload
-Date: Mon,  5 May 2025 18:55:45 -0400
-Message-Id: <20250505225634.2688578-245-sashal@kernel.org>
+	wei.fang@nxp.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	imx@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 239/294] net: fec: Refactor MAC reset to function
+Date: Mon,  5 May 2025 18:55:39 -0400
+Message-Id: <20250505225634.2688578-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -48,86 +55,118 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Marek Vasut <marex@denx.de>
+From: Csókás, Bence <csokas.bence@prolan.hu>
 
-[ Upstream commit c629c972b310af41e9e072febb6dae9a299edde6 ]
+[ Upstream commit 67800d296191d0a9bde0a7776f99ca1ddfa0fc26 ]
 
-In case a PHY LED implements .blink_set callback to set LED blink
-interval, call it even if .hw_control is already set, as that LED
-blink interval likely controls the blink rate of that HW offloaded
-LED. For PHY LEDs, that can be their activity blinking interval.
+The core is reset both in `fec_restart()` (called on link-up) and
+`fec_stop()` (going to sleep, driver remove etc.). These two functions
+had their separate implementations, which was at first only a register
+write and a `udelay()` (and the accompanying block comment). However,
+since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
+meant that these implementations diverged, often causing bugs.
 
-The software blinking is not affected by this change.
+For instance, as of now, `fec_stop()` does not check for
+`FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+a PM power-down event; and `fec_restart()` missed the refactor renaming
+the "magic" constant `1` to `FEC_ECR_RESET`.
 
-With this change, the LED interval setting looks something like this:
-$ echo netdev > /sys/class/leds/led:green:lan/trigger
-$ echo 1 > /sys/class/leds/led:green:lan/brightness
-$ echo 250 > /sys/class/leds/led:green:lan/interval
+To harmonize current implementations, and eliminate this source of
+potential future bugs, refactor implementation to a common function.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Link: https://lore.kernel.org/r/20250120113740.91807-1-marex@denx.de
-Signed-off-by: Lee Jones <lee@kernel.org>
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
+Link: https://patch.msgid.link/20250207121255.161146-2-csokas.bence@prolan.hu
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/trigger/ledtrig-netdev.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/freescale/fec_main.c | 52 +++++++++++------------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 79719fc8a08fb..f8912fa60c498 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -54,6 +54,7 @@ struct led_netdev_data {
- 	unsigned int last_activity;
- 
- 	unsigned long mode;
-+	unsigned long blink_delay;
- 	int link_speed;
- 	u8 duplex;
- 
-@@ -69,6 +70,10 @@ static void set_baseline_state(struct led_netdev_data *trigger_data)
- 	/* Already validated, hw control is possible with the requested mode */
- 	if (trigger_data->hw_control) {
- 		led_cdev->hw_control_set(led_cdev, trigger_data->mode);
-+		if (led_cdev->blink_set) {
-+			led_cdev->blink_set(led_cdev, &trigger_data->blink_delay,
-+					    &trigger_data->blink_delay);
-+		}
- 
- 		return;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 2d6b50903c923..419df6559492e 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1074,6 +1074,29 @@ static void fec_enet_enable_ring(struct net_device *ndev)
  	}
-@@ -386,10 +391,11 @@ static ssize_t interval_store(struct device *dev,
- 			      size_t size)
- {
- 	struct led_netdev_data *trigger_data = led_trigger_get_drvdata(dev);
-+	struct led_classdev *led_cdev = trigger_data->led_cdev;
- 	unsigned long value;
- 	int ret;
+ }
  
--	if (trigger_data->hw_control)
-+	if (trigger_data->hw_control && !led_cdev->blink_set)
- 		return -EINVAL;
- 
- 	ret = kstrtoul(buf, 0, &value);
-@@ -398,9 +404,13 @@ static ssize_t interval_store(struct device *dev,
- 
- 	/* impose some basic bounds on the timer interval */
- 	if (value >= 5 && value <= 10000) {
--		cancel_delayed_work_sync(&trigger_data->work);
-+		if (trigger_data->hw_control) {
-+			trigger_data->blink_delay = value;
++/* Whack a reset.  We should wait for this.
++ * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
++ * instead of reset MAC itself.
++ */
++static void fec_ctrl_reset(struct fec_enet_private *fep, bool allow_wol)
++{
++	u32 val;
++
++	if (!allow_wol || !(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
++		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
++		    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
++			writel(0, fep->hwp + FEC_ECNTRL);
 +		} else {
-+			cancel_delayed_work_sync(&trigger_data->work);
- 
--		atomic_set(&trigger_data->interval, msecs_to_jiffies(value));
-+			atomic_set(&trigger_data->interval, msecs_to_jiffies(value));
++			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
++			udelay(10);
 +		}
- 		set_baseline_state(trigger_data);	/* resets timer */
- 	}
++	} else {
++		val = readl(fep->hwp + FEC_ECNTRL);
++		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
++		writel(val, fep->hwp + FEC_ECNTRL);
++	}
++}
++
+ /*
+  * This function is called to start or restart the FEC during a link
+  * change, transmit timeout, or to reconfigure the FEC.  The network
+@@ -1090,17 +1113,7 @@ fec_restart(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
+ 
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
+-	    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
+-		writel(0, fep->hwp + FEC_ECNTRL);
+-	} else {
+-		writel(1, fep->hwp + FEC_ECNTRL);
+-		udelay(10);
+-	}
++	fec_ctrl_reset(fep, false);
+ 
+ 	/*
+ 	 * enet-mac reset will reset mac address registers too,
+@@ -1354,22 +1367,7 @@ fec_stop(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
+ 
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (!(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
+-		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES) {
+-			writel(0, fep->hwp + FEC_ECNTRL);
+-		} else {
+-			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
+-			udelay(10);
+-		}
+-	} else {
+-		val = readl(fep->hwp + FEC_ECNTRL);
+-		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
+-		writel(val, fep->hwp + FEC_ECNTRL);
+-	}
++	fec_ctrl_reset(fep, true);
+ 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
+ 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
  
 -- 
 2.39.5
