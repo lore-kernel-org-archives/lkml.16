@@ -1,114 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170C313AF2;
-	Mon,  5 May 2025 22:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D830B13AF2;
+	Mon,  5 May 2025 22:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483184; cv=none; b=M8l1J34WuGV1NWXI2C8kKPJ5Vur2cth6fypfVmAtqypJnElwo+afZZYUWwrA1sw0PUJTW4JmDCBcqvkABP2fkdExkpZjx/45Fc2YcKJKtLP6B3JNmb0CfSoPisWCe8/8VQt193n8IOJg3EYVxI8RL+FMP/sw2t8fHziV2ISZVn4=
+	t=1746483264; cv=none; b=R2mInjPDozHKxQoZgZuCDrErOOO+6/x1kFryT8Bbd//x/Q4oPqH6dyQP/wgxP7pgDbw5FFZgRZSuf/1yPxLMcZrlWpjRSNsjc7B4YgXxBcQmlU3qg6nXhUNU1i8tqBjVO+m7w+DDLfImX3X0HJtfRqMKvFzqi5wtliaFCR9CbTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483184; c=relaxed/simple;
-	bh=wyVv8r87sFQD3h4JxZbcpjjhi07POlfuqfD61jwf/WE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4/sVdu9SciKf7uJEk7JnhWb0LwQCBNUd5WgzZSIKbHwgpyMySmX4ZUCwaQt3WxMDdZAAeOtyT+KtU/lu21uKXlV1hchl931vTBVRE+Eb+9WA78x2mIJrohLwPqjEvRJMnRfjXUE31GyeEqGDmo4qQxMCHiJvT9enUbXENiZI0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZANMyNE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746483264; c=relaxed/simple;
+	bh=JCdTVHeAiF0SMN4hqWeIRsGnSNa8+AKoDVxqQWbHrto=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c5JV0ZtwyE0loEVarhEW8z2xqGyWCCCXEIQLmHME398C0n5bQc/ggAhw0N/jCdzenUBkW0Af+hHEMCIdJIWMR3JUa3vgfSmbYyGe9L3cY0uwCxYw2kFqdtq2XRc5fDztCeR9nnhH4sMsX6ySBud1pV52mG7C3EBLTcO+CUBDz/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILzqhfNb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZANMyNE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E369AC4CEE4;
-	Mon,  5 May 2025 22:13:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILzqhfNb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3503C4CEE4;
+	Mon,  5 May 2025 22:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483183;
-	bh=wyVv8r87sFQD3h4JxZbcpjjhi07POlfuqfD61jwf/WE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EZANMyNEI1oG7oG8Lbnk5GKx+kYRPd8c8oPqrO9lTzLaEamqD+IznbrSMUeVs9yuh
-	 nNDSW3vIph88Xbc0VVlZ0+dZLABQaupc/jqipV2tosqfK/66kDlNDI3L8P1vmD1leu
-	 jgNiYfmoJ0y/hApMjRcRod2/FCSIev2PLpY3PSXKg7tF+rysIVI5xIjzODARRUAjxk
-	 MV2CJSPY3T9VKAGWFAUNMU71o5yFphGWaiMP5mSTSItTQzQL0+S8IvYtCBhWVtzZdQ
-	 gzVL7qxqOFHr6qEmBRPF8zFnrcKtOmtlQA8U11VJ//lldEf80oTMQMKyRp6Q+OtnUm
-	 I2FGI/wEY8jIQ==
-Date: Tue, 6 May 2025 00:13:00 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
-	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-	Tony Lindgren <tony@atomide.com>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jayesh Choudhary <j-choudhary@ti.com>
-Subject: Re: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
-Message-ID: <6nn2l75kkbkdu3wf3kta4mezno6cy4e3zzwzdc4cpmujjhr6lp@ct7w72zwbrhu>
-References: <20250415075230.16235-1-johan+linaro@kernel.org>
- <vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
- <aAIiJQVAUdWJFVy7@hovoldconsulting.com>
- <hn3gsrizar6xbr4seclnb6xot4fo4ztryks4w7exvztsdzj4f6@jhobhujf3ezi>
- <aBiMJ0z5q4K2xTGT@hovoldconsulting.com>
+	s=k20201202; t=1746483263;
+	bh=JCdTVHeAiF0SMN4hqWeIRsGnSNa8+AKoDVxqQWbHrto=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ILzqhfNbvYCWWYNei9NySyINnqmj+vX4Uo4YCwnNjClRr+XCNFhMeTFETL/nNN7e1
+	 JawE5UF1X0oD/0SlVRr46MxRg2t/6Z9RjHT9z2Iv9jdRtJXfMbEezwQQp1vxJV2Lgt
+	 S5fhTEbcCpfMZ+1tp9hc1shvXu2OTvSSkfKHVEizmU4nvQExX4U/6hhNpHGXNqgsMy
+	 w9oKV2vLfyQqu8erislSZuZVh5SaJfO4JBzSkfakvlZ7J4LYvR4+iWrHbeBTN2i0pN
+	 OSqO+q8mwASWIrUVK1aJthDGNs6GzEvE5o+ZxNvzC/moA8SMovng1b2pveMOUROC/i
+	 ltKIztPq4E/PA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 001/642] kconfig: merge_config: use an empty file as initfile
+Date: Mon,  5 May 2025 18:03:37 -0400
+Message-Id: <20250505221419.2672473-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBiMJ0z5q4K2xTGT@hovoldconsulting.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-Hi Johan,
+From: Daniel Gomez <da.gomez@samsung.com>
 
-On Mon, May 05, 2025 at 12:00:07PM +0200, Johan Hovold wrote:
-> On Tue, Apr 29, 2025 at 03:10:13PM +0200, Andi Shyti wrote:
-> > On Fri, Apr 18, 2025 at 11:57:57AM +0200, Johan Hovold wrote:
-> > > On Thu, Apr 17, 2025 at 11:41:51PM +0200, Andi Shyti wrote:
-> > > > On Tue, Apr 15, 2025 at 09:52:30AM +0200, Johan Hovold wrote:
-> > > > > Using of_property_read_bool() for non-boolean properties is deprecated
-> > > > > and results in a warning during runtime since commit c141ecc3cecd ("of:
-> > > > > Warn when of_property_read_bool() is used on non-boolean properties").
-> > > > > 
-> > > > > Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
-> > > > > Cc: Jayesh Choudhary <j-choudhary@ti.com>
-> > > > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > > > 
-> > > > Thanks for your patch! I'm going to drop the Fixes tag, as this
-> > > > isn't really a bug fix but rather a warning suppression during
-> > > > boot time.
-> > > 
-> > > Thanks, but I think you should have kept the Fixes tag and merged this
-> > > for 6.15 (i2c-host-fixes) since this is a new warning in 6.15-rc1 (and
-> > > that does warrant a Fixes tag). Perhaps I should have highlighted that
-> > > better.
-> > > 
-> > > If the offending patch had been posted or merged before such uses
-> > > started generating warnings in 6.14-rc1 then that would have been a
-> > > different matter.
-> > 
-> > I'm sorry, but as I understand it, the Fixes tag should be used
-> > only when an actual bug is being fixed. I've seen stable
-> > maintainers getting annoyed when it's used for non-bug issues.
-> 
-> You seem to confuse the Fixes tag with a CC stable tag. A Fixes tag is
-> used to indicate which commit introduced an issue, while the CC stable
-> tag is used to flag a commit for backporting (and the fact that autosel
-> tends to pick up patches with just a Fixes doesn't change this).
+[ Upstream commit a26fe287eed112b4e21e854f173c8918a6a8596d ]
 
-(the Cc tag for fixes is not mandatory, it's more a courtesy)
+The scripts/kconfig/merge_config.sh script requires an existing
+$INITFILE (or the $1 argument) as a base file for merging Kconfig
+fragments. However, an empty $INITFILE can serve as an initial starting
+point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
+if -m is not used. This variable can point to any configuration file
+containing preset config symbols (the merged output) as stated in
+Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
+contain just the merge output requiring the user to run make (i.e.
+KCONFIG_ALLCONFIG=<$INITFILE> make <allnoconfig/alldefconfig> or make
+olddefconfig).
 
-> It's perfectly fine to fix an issue and use a Fixes tag when doing so
-> even if the fix itself does not qualify for backporting (for whatever
-> reason).
+Instead of failing when `$INITFILE` is missing, create an empty file and
+use it as the starting point for merges.
 
-Oh yes, I forgot that patch was part of the 6.15 merge window. I
-will then move it to the -fixes and send it for this week's merge
-request.
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/kconfig/merge_config.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks and sorry for the confusion,
-Andi
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index 0b7952471c18f..79c09b378be81 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -112,8 +112,8 @@ INITFILE=$1
+ shift;
+ 
+ if [ ! -r "$INITFILE" ]; then
+-	echo "The base file '$INITFILE' does not exist.  Exit." >&2
+-	exit 1
++	echo "The base file '$INITFILE' does not exist. Creating one..." >&2
++	touch "$INITFILE"
+ fi
+ 
+ MERGE_LIST=$*
+-- 
+2.39.5
 
-> > The system works perfectly fine even with the warning printed.
-> > It might confuse CI systems, but that shouldn't really be our
-> > concern.
-> 
-> You should not knowingly be introducing new warnings. The Fixes tag I
-> added showed that this was an issue introduced in 6.15-rc1, and, unless
-> discovered really late in the cycle, it should be fixed before 6.15 is
-> out.
-> 
-> Johan
