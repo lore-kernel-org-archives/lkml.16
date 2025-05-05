@@ -1,121 +1,132 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E550B25569
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5CE26B2C8;
+	Mon,  5 May 2025 16:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462893; cv=none; b=DluHKcizqUanzJgsEqi69GhnzDRg9tj+OlrLjFBH8YDGLJl4JbBpgaFoGEEauCl1dWL9pe6hE8EXODJLk8K4NGKfGCTRFBsw9+AI17u2adlX6mIjQzP1eyf3NS3mbbswJV5DIe992MTl6Gt/vR6XUrqYeQpJkoJLOJdbgxp/Iss=
+	t=1746462898; cv=none; b=qjtlBc4MHs8feyc+9oSs0nwluJmTOprzw/ONzs3dDJljSgLzKqe63UhkBjQC2oEwN+VVCCIcIJp8VSsOqsQhQNbjjvhPXJ6c19pxmTMKVStPHRxlMBzETCJ8FaEf/rum8B1ZhT/MWW6l+QfK+SzA+05U4jwTqI4QN/qTCaaip9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462893; c=relaxed/simple;
-	bh=A12Scv7ytXIGYDwUN8lKj7+z0agiYKiJJY2n1zzTEjo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gb3L2l3tyZZ3GbnHahsyoo0l4N2ceo7LgU43WgL92/IgNYHh4ZiLu76qFUjO0jyYi5e/bVRinr8S8jcqWqHC9cmklaYdoo65Z+5bOiMse48Zvqx7QNtk1VO8Mw+xuxrWN4snmUEpA2ZarWyFHUQhgdiQS/VF2SzO8To2fnKIcH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=liVHA4Cb; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746462898; c=relaxed/simple;
+	bh=TDSdxWRzVL3EAEkfKtH0hU2ro1FZ98QdYMon1zNugjY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Hx9FlXl5q28GHrd8CIHO634138JCq4iDBjV3q82lZ7a8enC5Z2qm0Q69bxT6uKH0qPhTQtZG7N1VZKW7IWu09izdCzfHbLrpBl329HAmWNCjL5lA67DVkeI+1SJXXc2jOHm2nGwG7S1N16oK60EM+9uytLfbc+jrXha2Hmu1Ix8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TAXmGWzQ; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="liVHA4Cb"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7395095a505so3207687b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746462891; x=1747067691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eiBa6zb0lDhzXPXRhzuTGt3+NvizFZFKEQdim+eMko8=;
-        b=liVHA4Cb8KgkaE1Z3lPjR3fwJ4RNQSiUqpQEmpccnLQNOj3FEiIEOriQt9/Niy8Sia
-         HscqqDHgfMd68aultyVNJm1Q8US81EO6ZHCS1r8m+PioKK1bX+yRgntyVaOFytvs03z+
-         Iys3XQ1XtFgJBaQnxm619spbWHWrNX4o9sNngPhwaDxXGwolDQQbN7hLEKsUcCB7YHBr
-         IcrahmaIeitK24qPfAsDk+fcMRXM217gTIvMgf/GK5kNSC9+sPcsTElxthp1l+dOmfSW
-         EE6t86iT2X19HkhyQAuANm+cFA9rwBbCcZguUaB7Cjv4JFUwzSr/GomsdE9qxm921vjD
-         c7vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462891; x=1747067691;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eiBa6zb0lDhzXPXRhzuTGt3+NvizFZFKEQdim+eMko8=;
-        b=XALnGX7j2g9jjnn7RBYR/zGfP9Gi0VaprtdotU2LOVMILXniDsWs1lhwzAF1AIemJk
-         wEgL/X+2Hy+7pbUPyTFQkxtc28qgFHjHHWkekN26p8cwBlCwPd34A3vAURB4GzCj0IYw
-         sQAazb+tMgEpT4r3agfnnCTT5aMnb77qhl5NBVtuzUqlb3tvurzd/nXptIqobKFwXBI9
-         lHdoYjerQuJ+3IWqCXeiRtQvL/HW9TDHv1tRab8rp56TNaHgM4JzVJSMvUzPTAqnZqxT
-         XVWY62E68EV4m9xl+nfqjz3fmQh3uRHTbcdqY/4dHLEChWpKSfaMunoP4Bbr3a0psPBP
-         6YxQ==
-X-Gm-Message-State: AOJu0YyDj5zqEqpkthAknwFi5tHvopMO1DiIAoNnx3P445AazHZi6cAz
-	NoywZYWx9zdVRs6yui1oLsV64ghsjLx07CRYLKhKubJtlYZtmzsnODlzK9WIVqJjx0uIV0ra3nM
-	slg==
-X-Google-Smtp-Source: AGHT+IGYJWs2r6Yy1GErbwJ4rX8nNUsnKXyjBwCp0QzTIRA6FoH/LhpBo27Spr+rArx9lXGnAWetGjkoXS8=
-X-Received: from pfde21.prod.google.com ([2002:aa7:8c55:0:b0:736:3a40:5df5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:90d7:0:b0:740:6f69:dce9
- with SMTP id d2e1a72fcca58-7406f69decbmr8901171b3a.0.1746462891238; Mon, 05
- May 2025 09:34:51 -0700 (PDT)
-Date: Mon, 5 May 2025 09:34:49 -0700
-In-Reply-To: <CALMp9eS7XHpFWMAtnJPQijYO1TVW25-UGmFqc33eAeb1AE_9YA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TAXmGWzQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=p7qKF
+	3tUQSId+5j0TA3YQ1zlCcvIy9JeUWpUNfkjAIU=; b=TAXmGWzQO0FQEEtpnh/KI
+	4ZR/4VJKkC0OfMFbbHxpJanghQoa3P2H6flt6EYBbnN0WOI45fsQE/CV8TSBYbZo
+	y5R2o/fW2Sn7/dqrBGXAT5AtDwMOPMVNVHDOIcDMkQs6cxTF4WzUb1aUpVKU8g2v
+	FQ9TLOUfeV77thS/7rrZYU=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDn+lmO6BhoumvGBw--.3540S4;
+	Tue, 06 May 2025 00:34:24 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	kw@linux.com
+Cc: cassel@kernel.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v11 2/6] PCI: Clean up __pci_find_next_cap_ttl() readability
+Date: Tue,  6 May 2025 00:34:16 +0800
+Message-Id: <20250505163420.198012-3-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250505163420.198012-1-18255117159@163.com>
+References: <20250505163420.198012-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250321221444.2449974-1-jmattson@google.com> <20250321221444.2449974-2-jmattson@google.com>
- <aBAIL6oGYJ7IV85X@google.com> <CALMp9eS7XHpFWMAtnJPQijYO1TVW25-UGmFqc33eAeb1AE_9YA@mail.gmail.com>
-Message-ID: <aBjoqW6qzoc2RGrZ@google.com>
-Subject: Re: [PATCH v3 1/2] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDn+lmO6BhoumvGBw--.3540S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tFyUuF4Uur15Ar17AFW5Wrg_yoW8uw1DpF
+	98Ca47Ar48JF47Cws29ayjyr13Xa4qkrW8G3yagwn8uFy2yF10qwsIkFy3tF17JrZ293W5
+	XrWqv395WF90yaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pix9N3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx1Eo2gY3b-03AAAsb
 
-On Mon, May 05, 2025, Jim Mattson wrote:
-> On Mon, Apr 28, 2025 at 3:58=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> > index 88a9475899c8..1675017eea88 100644
-> > --- a/arch/x86/kvm/x86.h
-> > +++ b/arch/x86/kvm/x86.h
-> > @@ -481,25 +481,15 @@ static inline u64 nsec_to_cycles(struct kvm_vcpu =
-*vcpu, u64 nsec)
-> >             __rem;                                              \
-> >          })
-> >
-> > -static inline bool kvm_mwait_in_guest(struct kvm *kvm)
-> > -{
-> > -       return kvm->arch.mwait_in_guest;
-> > -}
-> > -
-> > -static inline bool kvm_hlt_in_guest(struct kvm *kvm)
-> > -{
-> > -       return kvm->arch.hlt_in_guest;
-> > -}
-> > -
-> > -static inline bool kvm_pause_in_guest(struct kvm *kvm)
-> > -{
-> > -       return kvm->arch.pause_in_guest;
-> > -}
-> > -
-> > -static inline bool kvm_cstate_in_guest(struct kvm *kvm)
-> > -{
-> > -       return kvm->arch.cstate_in_guest;
-> > -}
-> > +#define BUILD_DISABLED_EXITS_HELPER(lname, uname)                     =
-         \
-> > +static inline bool kvm_##lname##_in_guest(struct kvm *kvm)            =
-         \
-> > +{                                                                     =
-         \
-> > +       return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_##uname=
-;        \
-> > +}
-> > +BUILD_DISABLED_EXITS_HELPER(hlt, HLT);
-> > +BUILD_DISABLED_EXITS_HELPER(pause, PAUSE);
-> > +BUILD_DISABLED_EXITS_HELPER(mwait, MWAIT);
-> > +BUILD_DISABLED_EXITS_HELPER(cstate, CSTATE);
->=20
-> The boilerplate is bad, but that's abhorrent.
+Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+- Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+- Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+- Extract PCI capability fields via FIELD_GET() with standardized masks.
+- Add necessary headers (linux/align.h).
 
-Assuming it's the macros you hate, keep the "u64 disabled_exits" change but
-manually code all of the getters?
+The changes are purely non-functional cleanups, ensuring behavior remains
+identical to the original implementation.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v10:
+- Remove #include <uapi/linux/pci_regs.h> and add macro definition comments.
+
+Changes since v9:
+- None
+
+Changes since v8:
+- Split into patch 1/6, patch 2/6.
+- The
+---
+ drivers/pci/pci.c             | 9 +++++----
+ include/uapi/linux/pci_regs.h | 2 ++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e77d5b53c0ce..27d2adb18a30 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/align.h>
+ #include <linux/kernel.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+@@ -432,17 +433,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+ 	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+ 
+ 	while ((*ttl)--) {
+-		if (pos < 0x40)
++		if (pos < PCI_STD_HEADER_SIZEOF)
+ 			break;
+-		pos &= ~3;
++		pos = ALIGN_DOWN(pos, 4);
+ 		pci_bus_read_config_word(bus, devfn, pos, &ent);
+ 
+-		id = ent & 0xff;
++		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+ 		if (id == 0xff)
+ 			break;
+ 		if (id == cap)
+ 			return pos;
+-		pos = (ent >> 8);
++		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+ 	}
+ 	return 0;
+ }
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index ba326710f9c8..35051f9ac16a 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -206,6 +206,8 @@
+ /* 0x48-0x7f reserved */
+ 
+ /* Capability lists */
++#define PCI_CAP_ID_MASK		0x00ff	/* Capability ID mask */
++#define PCI_CAP_LIST_NEXT_MASK	0xff00	/* Next Capability Pointer mask */
+ 
+ #define PCI_CAP_LIST_ID		0	/* Capability ID */
+ #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+-- 
+2.25.1
+
