@@ -1,137 +1,122 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1ED26E158
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C42F1B0F31;
+	Mon,  5 May 2025 18:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470628; cv=none; b=AkheCBtmnQ8x1VpHB9OmMGOYAgxed0yv4mJ2J3dkiDWT4cNHQTIK4s3D3h13BSbcOkr7UjTQDKZOKVknqNJiiBKSpazvVcuLxmPfsSBOPnZ9ySt2spz+JO3fibjJ9jlfdunqgGHoF97EgwHqAcoO/Qq3PrsOWkwVdI4LiS6bLRw=
+	t=1746470634; cv=none; b=nF3KK4jZpW7SfQEtqCsPJRafxGYPMrIQbx3d71K2kMsSiV1ZsoWdU3xFe876Cj19R01YsBQfOr8clK57QZhGOh7LKEyEXkF1lJaJyeS7kRcFA9Ub5Uxlfr1zaDsNoUYcPrd508iXH/PcpKYICfnp4ZaAWCYxa3WHbCPNKSZT6RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470628; c=relaxed/simple;
-	bh=ZR0smQcVBHP0L6IgFqeTioftf6YGCApCP+omIEUN/2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OL5+doKK9IAQxgwyAjuA1hyjfgbns8LgkemKkJisnci0dESPURBRktWJwMtI736mCpIOlFXwXSP21EBI5FukyUwcWeds3JiJt3NA07V4ByRtIZmOiF5scUFyYSipomskWWNAsPoIAbCfFQ5FfZ12yZtZlU1JhS6S1is187FMRFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfDzp+VW; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746470634; c=relaxed/simple;
+	bh=LbuYk15hVptDZsuRbMqI5YgO3RsvLpjnt+XuoYI2XaI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R/WTGNmfqvHIo5nhlu/rnRn7GmbJDcs2J4SBZiWWJu7eAJO4jTuTBHrX5N+vXHcpFxVzXGtcTzo3t6FgFJod6+M5q8QEAyIsXIMDB1pLeAu+vXsEjNHTUBLHOkVXp+rN6X14vkKUT1r+DIrBE4oAEg9kQPMiDVq9EmeKMgHge08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSMLSwyj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfDzp+VW"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso4990175b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746470626; x=1747075426; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yQzbmjudt+hJvG7n8NMoirGU7KRPkcRToJ0JJSw35CU=;
-        b=hfDzp+VWwcmyZYXDkindWPq7DwXIASjYCJ4aOt2xKLmXhscVaULia1KbOEuULwui8K
-         eU7yaQ9ABGboCOMLbLnjviZraxRIUZwCNEjmbBBDVPSdOcNMJbD2seDGwniwDmU4PoGN
-         c9Yjyr7SLOnlmlxOrEnXxf5DLTzyitM57DeLedPpp5Zh6ex0ydgwMDJWBGShwnXRwkoj
-         UCWTUxOENjTiYqYZUc1ooremnu+cxFDOP1y8H3htyDimhNvS2taTGtCDg37k0tyOF2uZ
-         qczeiJN5SdX6Wjv/qfSjaJObKfFePvJBXXan5GIqodKAUlvxjWpUwx3tuGvb6p5b3fej
-         t5yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746470626; x=1747075426;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yQzbmjudt+hJvG7n8NMoirGU7KRPkcRToJ0JJSw35CU=;
-        b=sU4euA2b+LD60IwxHEp715xFR3JcqKqZ6UCiBXdk3KlLyTW78wDfy70Y5M6KNDAK62
-         +5ZDSJKyoEc/LMYwdSUsYCPz9aoJClM307fgrVMwL8S1GPh40yEFepd4b2rlYSNcq2QX
-         FhrG5SXEQQF7ohfZzXqNyf7fwFjccLtuTJSdEzRL8+HbAX7RR5iJ4xLEls4mVi+6ENqf
-         AgrPeiqJcDcVzxdtCwIbGU7oxJQ3ccSXeKrhzv6+E2mqDNMbHteH7R4X1gXPdkSwFmsf
-         aXpi616mNDMDJvC2MITA9WpaGaHJU6paVbrCxE39D8TYjr7bNJvQ1++N+cu/4NMAK27+
-         +8hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1/PptLXEpIe54/OJY9xoavoY5ms+gDweY8MwYcRi25qVRCr2E/AuK2XnECO2HfiwBy5zAzSyHtBFrKtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4b3OFHg4UpvalzlbOLMnTOryn3LNA5SLiyA2D/c9VbvWYDvK8
-	3dBMgLDli5nWWVME1uroGx12H+6cLcXB9gODOpmjOslDR4m8r/6Z7sJL2H2J
-X-Gm-Gg: ASbGncuVGPNLepkoFCmg+bAngY69XBewBenmCe354105AfOrknHI7KO/4vAJBUkukGv
-	XglWnaf/etp6RfAd0I3Qv2ixxWLXC9G8qUHPinVCqHsE9sTjL6thgyTbTUFLLkt71KtsSrFEgJI
-	VS+aPdoT9re5leJRekHrt63SUpTRgjn646k+NnYH5BFu4SPsg8Y0o4lRR78NANnsAEwVSZh92Ct
-	pEskdn1INyhbLsLcXbwpnTeaPQHySuFL1JEEuO6ke68rmGImRDKXn/yJnVL5ytWLvnSxe3GwSN1
-	fs5JkYCbss/kjJWAxUzHeyuPovPtPhoz+tS+VJ2f4yUaazVbZxC0frq6NZxXxbf9DJQNlQ==
-X-Google-Smtp-Source: AGHT+IGMBauXSP9NfIaQaM7+UUg7ZcaSiDMXtLxYknxQzEukhYbTe1ekmAy1F/1+blL1smz9X2PsTg==
-X-Received: by 2002:a05:6a00:1308:b0:73d:f9d2:9c64 with SMTP id d2e1a72fcca58-74090eb4df2mr813280b3a.10.1746470625673;
-        Mon, 05 May 2025 11:43:45 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:afa:5db4:54e4:f59c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405902167csm7433788b3a.98.2025.05.05.11.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 11:43:45 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: neil.armstrong@linaro.org
-Cc: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	khilman@baylibre.com,
-	jbrunet@baylibre.com,
-	martin.blumenstingl@googlemail.com,
-	christophe.jaillet@wanadoo.fr,
-	skhan@linuxfoundation.org,
-	dri-devel@lists.freedesktop.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH v2] drm/meson: Use 1000ULL when operating with mode->clock
-Date: Tue,  6 May 2025 02:43:38 +0800
-Message-ID: <20250505184338.678540-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSMLSwyj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 09A88C4CEE4;
+	Mon,  5 May 2025 18:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746470634;
+	bh=LbuYk15hVptDZsuRbMqI5YgO3RsvLpjnt+XuoYI2XaI=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=RSMLSwyjuf/aUVLVbsPtvHS5RmZ7MU4VYH4jTbHX7gVskffXjV2gg6oYQxnYSg2qQ
+	 1dONMxyZCLLnqftYqA++ANtfpKwl34+jkF71JqoHIUQfYpcMHYIUf1Hh513Oo3NLBP
+	 5PgXEKkNtfqKfR0vS2Ry7E3XiSeWB90d6z8wsxE6VkDNDk656i58SZnD+OJ78a0QP2
+	 5DItM0+5K9jk91xRoUuussvulN4Zjlpw3tjpbXHjU1eNRm5yNplthc6+YT0ow++Ote
+	 jupZtzZwKiNyD//2SwmoTMTQvqX3k02uXecB3S1iH0Di6JlvLgwWMVCyC+T+JMAMGE
+	 raOkKK1gODx6Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4B4C3ABBC;
+	Mon,  5 May 2025 18:43:53 +0000 (UTC)
+From: Kurt Borja via B4 Relay <devnull+kuurtb.gmail.com@kernel.org>
+Subject: [PATCH v4 0/2] platform/x86: alienware-wmi-wmax: Add support for
+ GPIO methods
+Date: Mon, 05 May 2025 15:43:30 -0300
+Message-Id: <20250505-awcc-gpio-v4-0-edda44c3a0dc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANIGGWgC/13M0QrCIBTG8VcZXmd4jrqxrnqP6MKp24SWQ8OKs
+ XfPjSDp8juc338h0QZnIzlVCwk2uej8PQ9xqIge1X2w1Jm8CTKUTACn6qk1HWbnKYoOeqmlqA2
+ S/D8H27vX3rpc8x5dfPjw3tMJtuu3gmUlAWUUaqYAOs37Vp2HSbnbUfuJbJWEpWxKiVnqhgNve
+ CcNw3/Jf1IyLCXP0qpWtRwNAIpSruv6ARus38EWAQAA
+X-Change-ID: 20250413-awcc-gpio-24b1f5c546d2
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: Gabriel Marcano <gabemarcano@yahoo.com>, 
+ platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1934; i=kuurtb@gmail.com;
+ h=from:subject:message-id;
+ bh=LbuYk15hVptDZsuRbMqI5YgO3RsvLpjnt+XuoYI2XaI=;
+ b=owGbwMvMwCUmluBs8WX+lTTG02pJDBmSbFcldaW/3n4TcmjDk3sC+ev23X+1sN7WfxrvCVm+6
+ MubvXeEdJSyMIhxMciKKbK0Jyz69igq763fgdD7MHNYmUCGMHBxCsBEXCIYGT7t3LY4znne4d0n
+ dVg2hLmLxN6Zr3b97PM8tkqp/LTNPb8ZGV6J+qybV/jl8brFRcabEo/0xEj9dmmasyY10yi7UmQ
+ qPzsA
+X-Developer-Key: i=kuurtb@gmail.com; a=openpgp;
+ fpr=54D3BE170AEF777983C3C63B57E3B6585920A69A
+X-Endpoint-Received: by B4 Relay for kuurtb@gmail.com/default with
+ auth_id=387
+X-Original-From: Kurt Borja <kuurtb@gmail.com>
+Reply-To: kuurtb@gmail.com
 
-Coverity scan reported the usage of "mode->clock * 1000" may lead to
-integer overflow. Use "1000ULL" instead of "1000"
-when utilizing it to avoid potential integer overflow issue.
+Hi all,
 
-Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1646759
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+I found a great blog post [1], which described the reverse engineering
+process of the GPIO control methods present on this device.
+
+In summary, these methods expose some debugging capabilities of the RGB
+lighting controller present on Dell gaming laptops. See [Patch 2] for
+more info.
+
+Exposing these methods to DebugFS is useful for developers exploring
+this RGB controllers (myself included).
+
+Thanks for your feedback!
+
+[1] https://gabriel.marcanobrady.family/blog/2024/12/16/dell-g5-5505-se-acpi-or-figuring-out-how-to-reset-the-rgb-controller/
+
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-Changelog:
+Changes in v4:
+- Reuse name[] for all file a directory names in awcc_debugfs_init()
+- Reword commit message to correctly reflect previous changes
+- Link to v3: https://lore.kernel.org/r/20250502-awcc-gpio-v3-0-ea9a932d1124@gmail.com
 
-v1 -> v2:
-	- Use 1000ULL instead of casting the type of "mode->clock"
-	- Refine commit title and message
-	- Fix the issue for the evaluation inside drm_mode_status
-	  meson_encoder_hdmi_mode_valid() as well
+Changes in v3:
+- Create pinX files dynamically, based on GPIO pin count
+- Added note on dummy input arguments in Documentation
+- Link to v2: https://lore.kernel.org/r/20250427-awcc-gpio-v2-0-c731373b5d02@gmail.com
 
-Christophe,
-Thanks for your review and your suggestion, I think I should add a tag
-for you,too, but I'm not sure what should I add, if you would be so kind
-please let me know how should I tag you in the patch.
+Changes in v2:
+- Dropped module parameter
+- Added ABI documentation to Patch 1
+- Small improvements to documentation based on Armin's comments
+- Improved Pin description table format
+- Link to v1: https://lore.kernel.org/r/20250423-awcc-gpio-v1-0-160a11bc3f9a@gmail.com
+
+---
+Kurt Borja (2):
+      platform/x86: alienware-wmi-wmax: Expose GPIO debug methods
+      Documentation: wmi: alienware-wmi: Add GPIO control documentation
+
+ Documentation/ABI/testing/debugfs-alienware-wmi |  20 +++++
+ Documentation/wmi/devices/alienware-wmi.rst     |  82 ++++++++++++++++++-
+ drivers/platform/x86/dell/alienware-wmi-wmax.c  | 104 +++++++++++++++++++++++-
+ 3 files changed, 201 insertions(+), 5 deletions(-)
+---
+base-commit: 67e2635fe0cca5f0383c0780db986d8237e83f0a
+change-id: 20250413-awcc-gpio-24b1f5c546d2
 
 Best regards,
-I Hsin Cheng
----
- drivers/gpu/drm/meson/meson_encoder_hdmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/meson/meson_encoder_hdmi.c b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-index 7752d8ac85f0..c08fa93e50a3 100644
---- a/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-+++ b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
-@@ -75,7 +75,7 @@ static void meson_encoder_hdmi_set_vclk(struct meson_encoder_hdmi *encoder_hdmi,
- 	unsigned long long venc_freq;
- 	unsigned long long hdmi_freq;
- 
--	vclk_freq = mode->clock * 1000;
-+	vclk_freq = mode->clock * 1000ULL;
- 
- 	/* For 420, pixel clock is half unlike venc clock */
- 	if (encoder_hdmi->output_bus_fmt == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
-@@ -123,7 +123,7 @@ static enum drm_mode_status meson_encoder_hdmi_mode_valid(struct drm_bridge *bri
- 	struct meson_encoder_hdmi *encoder_hdmi = bridge_to_meson_encoder_hdmi(bridge);
- 	struct meson_drm *priv = encoder_hdmi->priv;
- 	bool is_hdmi2_sink = display_info->hdmi.scdc.supported;
--	unsigned long long clock = mode->clock * 1000;
-+	unsigned long long clock = mode->clock * 1000ULL;
- 	unsigned long long phy_freq;
- 	unsigned long long vclk_freq;
- 	unsigned long long venc_freq;
 -- 
-2.43.0
+ ~ Kurt
+
 
