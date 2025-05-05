@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1449C2E3397;
-	Mon,  5 May 2025 23:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDF7287519;
+	Mon,  5 May 2025 23:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486234; cv=none; b=rWZrnhYNPhc1J5R32XFSCso1OH6VpyxQiaoVIBYrGzY0kT1tcgkEzx66+F17e6Y0HqYxNHCZ20J1tzKSr1mCAtADFUUUlhUA7VYg62aPXIEqFlZBMDwCW8IYFHxnJVEcjfnEkpdIo2ttjuHz9pJ7wf0zvZkLW0drRi8ftexF7bY=
+	t=1746486229; cv=none; b=piPKCN4Vc8fNx2c3Nuwjm4NccneV2xcH6Ebu8XyY6EibIXS4Vcdkk6JFCvo9YI8WDyCJRTmKIZd/uTkY2JeLu8wwyPR7529yottBn8ZpAhqLu6boKCecoNJz6IoiChVm9LQc8FwqPrinjaDFR+rylzUJsPSCUN2U5BW7ZdpQsF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486234; c=relaxed/simple;
-	bh=I0C6suGkAqWWKOlyoHK9Oa6XU47EuCa70xa5hNDgPuQ=;
+	s=arc-20240116; t=1746486229; c=relaxed/simple;
+	bh=nUhJPQAzAYCk+aYvLGOs2YSzYmxWM9N3qBgyHew88IU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ryxmuE+d0ngGuiY3/00/20WQqF2ttNKBrh2yfq9PgxO+0t3AOXdDsaiIECrcnDIVCdnldfuq9pppHN7K5n8BM8855pBF5MxRhpDQsu/a6bBmmop1Xyn8hYQdXYZuRiK8Kcgaqappb4GgDtnLMDxt8KNjD863k1Iwhx3l6nvQMUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH7hJ2fF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YrrmEywHXdKiMryo1ExNfFv31XmBiL0IVvVWF1PSpwrXrSzEt/XraYGJI4YvtoPIegTyT5k99FJHrojPBPgifjCCz3Ry1nJGFXPKCQa5Fwg3ZKwwRBh5o4mX7WIXrRFAwTxmxY/+c/FTnR1VNcOVfTFlmYK2UzZKCJutTwub9as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zhq3/I/r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH7hJ2fF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2443EC4CEE4;
-	Mon,  5 May 2025 23:03:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zhq3/I/r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB730C4CEEF;
+	Mon,  5 May 2025 23:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486234;
-	bh=I0C6suGkAqWWKOlyoHK9Oa6XU47EuCa70xa5hNDgPuQ=;
+	s=k20201202; t=1746486228;
+	bh=nUhJPQAzAYCk+aYvLGOs2YSzYmxWM9N3qBgyHew88IU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KH7hJ2fFWmL9ITcHRM4CwjVVUQ2lr7tLTx1HxdjT0rcbywCb8yXy/H40S3uF5MDmb
-	 EKcQHbHvYX+6yeOAWbLOThXXd6+sbTXe0MyvTqtABeawyH7kD4SSAb18sDA/R0WAV3
-	 HWTM9rUbsxMf5zV9ywBVg5CYMwh3uv7e9T2GPO9ltRN7NYp3nHKhcUuDK0VvJ9YLN5
-	 z5ZDh13cOL/B+3RB2cJCkSFpUEWOPj2xcHnorDh3XZBHzzc9NJ+5iz6xVvJxl4S7WJ
-	 CT+l5p4OBiMsqdOutG8+kWZDUz8o1eqhVhJJrGPAvXsNJ9vh2hbzWpzglCugeNBbKL
-	 PJ9nbsQH8h7yw==
+	b=Zhq3/I/re8iL5bpdC5NXwDtrGln0zdAg6XAdFsbBho+bHoN8UzDHYLs4j6tRJaKFT
+	 hzFA7+h9qdeHReIEvc1wUwIUKXy1Y968dGou89cfUOhmjjr6UVH9w3bbBSvXmNP4n7
+	 /27qMzNk42OuIo5bnmzKF5O5vnKX88Fpwc4kVdYDX8SG6S1SEkFpZraJsLVqGMRFzV
+	 Y0HchsU4S+ZuAlCOVBZRYbsskMjWUXMGOLZqTGkOHpmYhViyVASJ9/UChOoXUSxtK8
+	 GrB+zEXs8hUv6VFRUtMNitkK9fKFgzdpx0DyphXLxFDsLRbgAPp2YYgqHxIA1OM1TD
+	 pzdjXegCfV5kw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-	Vinod Koul <vkoul@kernel.org>,
+Cc: zihan zhou <15645113830zzh@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	yung-chuan.liao@linux.intel.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 221/294] soundwire: amd: change the soundwire wake enable/disable sequence
-Date: Mon,  5 May 2025 18:55:21 -0400
-Message-Id: <20250505225634.2688578-221-sashal@kernel.org>
+	mingo@redhat.com,
+	juri.lelli@redhat.com
+Subject: [PATCH AUTOSEL 6.6 218/294] sched: Reduce the default slice to avoid tasks getting an extra tick
+Date: Mon,  5 May 2025 18:55:18 -0400
+Message-Id: <20250505225634.2688578-218-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -51,44 +52,78 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+From: zihan zhou <15645113830zzh@gmail.com>
 
-[ Upstream commit dcc48a73eae7f791b1a6856ea1bcc4079282c88d ]
+[ Upstream commit 2ae891b826958b60919ea21c727f77bcd6ffcc2c ]
 
-During runtime suspend scenario, SoundWire wake should be enabled and
-during system level suspend scenario SoundWire wake should be disabled.
+The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
+means that we have a default slice of:
 
-Implement the SoundWire wake enable/disable sequence as per design flow
-for SoundWire poweroff mode.
+  0.75 for 1 cpu
+  1.50 up to 3 cpus
+  2.25 up to 7 cpus
+  3.00 for 8 cpus and above.
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Link: https://lore.kernel.org/r/20250207065841.4718-2-Vijendar.Mukunda@amd.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+For HZ=250 and HZ=100, because of the tick accuracy, the runtime of
+tasks is far higher than their slice.
+
+For HZ=1000 with 8 cpus or more, the accuracy of tick is already
+satisfactory, but there is still an issue that tasks will get an extra
+tick because the tick often arrives a little faster than expected. In
+this case, the task can only wait until the next tick to consider that it
+has reached its deadline, and will run 1ms longer.
+
+vruntime + sysctl_sched_base_slice =     deadline
+        |-----------|-----------|-----------|-----------|
+             1ms          1ms         1ms         1ms
+                   ^           ^           ^           ^
+                 tick1       tick2       tick3       tick4(nearly 4ms)
+
+There are two reasons for tick error: clockevent precision and the
+CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING. with
+CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
+without it, because of clockevent precision, tick still often less than
+1ms.
+
+In order to make scheduling more precise, we changed 0.75 to 0.70,
+Using 0.70 instead of 0.75 should not change much for other configs
+and would fix this issue:
+
+  0.70 for 1 cpu
+  1.40 up to 3 cpus
+  2.10 up to 7 cpus
+  2.8 for 8 cpus and above.
+
+This does not guarantee that tasks can run the slice time accurately
+every time, but occasionally running an extra tick has little impact.
+
+Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20250208075322.13139-1-15645113830zzh@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/amd_manager.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/fair.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
-index 79173ab540a6b..31b203ebbae0c 100644
---- a/drivers/soundwire/amd_manager.c
-+++ b/drivers/soundwire/amd_manager.c
-@@ -1138,6 +1138,7 @@ static int __maybe_unused amd_suspend(struct device *dev)
- 		amd_sdw_wake_enable(amd_manager, false);
- 		return amd_sdw_clock_stop(amd_manager);
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
-+		amd_sdw_wake_enable(amd_manager, false);
- 		/*
- 		 * As per hardware programming sequence on AMD platforms,
- 		 * clock stop should be invoked first before powering-off
-@@ -1165,6 +1166,7 @@ static int __maybe_unused amd_suspend_runtime(struct device *dev)
- 		amd_sdw_wake_enable(amd_manager, true);
- 		return amd_sdw_clock_stop(amd_manager);
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
-+		amd_sdw_wake_enable(amd_manager, true);
- 		ret = amd_sdw_clock_stop(amd_manager);
- 		if (ret)
- 			return ret;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 268e2a49b964e..6ce3028e6e852 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -73,10 +73,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+ /*
+  * Minimal preemption granularity for CPU-bound tasks:
+  *
+- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
++ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
+  */
+-unsigned int sysctl_sched_base_slice			= 750000ULL;
+-static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
++unsigned int sysctl_sched_base_slice			= 700000ULL;
++static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
+ 
+ /*
+  * After fork, child runs first. If set to 0 (default) then
 -- 
 2.39.5
 
