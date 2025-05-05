@@ -1,64 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115E136A10D;
-	Mon,  5 May 2025 22:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164FE36AD01;
+	Mon,  5 May 2025 22:46:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485190; cv=none; b=LBFKwwoXRiSUvS9g3guwr8eE3fS9GJ2R+YSN71+SY4JIbHqJdUoEoRkTAkDvhpP9teEC3FjSUlGqhReYa9zO2jRdTjihH7rJ4gSTh7PP4aF5YIaIu7uFDksOVMac/3DmIU8qmMmSr6FaN4lbTd5NbgXBvQfVWgI37KuqowoF1vg=
+	t=1746485192; cv=none; b=GWKL0sIqaQ93JIdf1AxsA76psFLQKnU8mh990pdk3lY3V6qP+UXdpNYGvCMtMJJC2Quvc1QC/FU09oN9VNBFoNfStNTMj9pBt7/K/icD4/iGOAZFfyWD/Of95vaAm2TI0qLqvCLiw5K/flG+rs+t9deMhbgAeRjo4yHD+O3+H38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485190; c=relaxed/simple;
-	bh=hyYq7nG/l+zyzsAhvhImcu2vMyON/1WJ1gYYCv70Kmk=;
+	s=arc-20240116; t=1746485192; c=relaxed/simple;
+	bh=wxrYziaHvHD4g27gI9lEQ96DcRoUY+dEeU7cwjvuTl0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gA0uV9dzGzhzQ7rW4VQQvEn8WOVd8ptHVFN+hTT+VyVDFtvinSQQnj1gn8uSGqaskDJw+Bc4G3CarwEPRqrwQwknPk7tngtGUWoBfLtcIFQDhwLFlRhTCFfIms8HW4vgNxuS4NBTxSxWSvGPDiAsSE7YV0qcPVDyXm2pgzJNr/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5UFGFBH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X/U78HgiRZ0myq71QUVwRIA6W+C2G1kLf/NM3KPq5iJF/B/8jvRfU+7rNvg0XGALwxJs5nVsfyuzmaaQYTZahOo6dGWuV+p6Cl2BTzeMPDxa3JqRlmzelBzUJstB+Raase9KxhHuVfZ5vpVZ9TlXr3jURdfm/PAOenLSom3qVq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0T17SaI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5UFGFBH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B60EEC4CEE4;
-	Mon,  5 May 2025 22:46:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0T17SaI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEEFCC4CEE4;
+	Mon,  5 May 2025 22:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485188;
-	bh=hyYq7nG/l+zyzsAhvhImcu2vMyON/1WJ1gYYCv70Kmk=;
+	s=k20201202; t=1746485192;
+	bh=wxrYziaHvHD4g27gI9lEQ96DcRoUY+dEeU7cwjvuTl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q5UFGFBHjNt5Vz4pxHkGLXH6ClT28qUZSdJ2thDIVoF2T3mD2hAO7XyTGqB3fb/YU
-	 QH/Dg/54R+gGhSAV2Wr6OvaMCfrco/QhzyU7FqwjdQTdse+DJpI2sYXkuwkH/rSQeU
-	 +E+Is9v5zr5ApwAcneO7iyWcrVDdTVdwKhYYnv6bSgvvHRCkkYgxYvt7Yc2PsnYuqw
-	 UIhoM+985y6XVj3mWaxUERJEoJY48B7tIo1itOyqQMbmHkrKFEqDZNR7ufGATHVeTa
-	 GK8NPnwG3XqC/20kEGPODj2yImzEtDgI5G+cA0B7/CEX+AZiP37CkdkIdwCwB5Ro4j
-	 Q0xHpSATLrPWQ==
+	b=W0T17SaIr3eBEquxW2dSEWgTDz6coZgGuigJPVMZw8cHxwueDDKwMnb5GTQduZ0h1
+	 NrXnGtly5s+NZJlwHOX4UF0q7dWpdzkc6/WL3GR39fX3s5UqRCE08qXACuTgtOelh/
+	 gsHpkaGAoigcug6asGcLV32J/vBZoBgi2/wMBoz6wXpB9gUN49qE1SbBcfWjIone1I
+	 MTYVlTz7gVOpN/dvDcsQvVrWM/NliVQpmcNOXNOygo9dWxK41JlLEVmO5TeyCSNnmv
+	 PSEjCfmLWqVJDm7iGgfq+A+F9WhwCOWBdUXtYZkGepLMtlVc32TavEh6f9VgRCu3Rj
+	 zXytkkqqcrUBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Aric Cyr <Aric.Cyr@amd.com>,
-	Aric Cyr <aric.cyr@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	austin.zheng@amd.com,
-	jun.lei@amd.com,
-	siqueira@igalia.com,
-	alex.hung@amd.com,
-	alvin.lee2@amd.com,
-	aurabindo.pillai@amd.com,
-	Ilya.Bakoulin@amd.com,
-	mario.limonciello@amd.com,
-	Wayne.Lin@amd.com,
-	Josip.Pavic@amd.com,
-	dillon.varone@amd.com,
-	wenjing.liu@amd.com,
-	linux@treblig.org,
-	Leo.Zeng@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 201/486] drm/amd/display: Request HW cursor on DCN3.2 with SubVP
-Date: Mon,  5 May 2025 18:34:37 -0400
-Message-Id: <20250505223922.2682012-201-sashal@kernel.org>
+	mchehab@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	ribalda@chromium.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 203/486] media: cx231xx: set device_caps for 417
+Date: Mon,  5 May 2025 18:34:39 -0400
+Message-Id: <20250505223922.2682012-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -73,57 +53,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Aric Cyr <Aric.Cyr@amd.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit b74f46f3ce1e5f6336645f1e9ff47c56d5dfdef1 ]
+[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
 
-[why]
-When SubVP is active the HW cursor size is limited to 64x64, and
-anything larger will force composition which is bad for gaming on
-DCN3.2 if the game uses a larger cursor.
+The video_device for the MPEG encoder did not set device_caps.
 
-[how]
-If HW cursor is requested, typically by a fullscreen game, do not
-enable SubVP so that up to 256x256 cursor sizes are available for
-DCN3.2.
+Add this, otherwise the video device can't be registered (you get a
+WARN_ON instead).
 
-Reviewed-by: Aric Cyr <aric.cyr@amd.com>
-Signed-off-by: Aric Cyr <Aric.Cyr@amd.com>
-Signed-off-by: Wayne Lin <wayne.lin@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Not seen before since currently 417 support is disabled, but I found
+this while experimenting with it.
+
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c             | 3 ++-
- drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 216b525bd75e7..762bf04efe7ed 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -4734,7 +4734,8 @@ static bool full_update_required(struct dc *dc,
- 			stream_update->lut3d_func ||
- 			stream_update->pending_test_pattern ||
- 			stream_update->crtc_timing_adjust ||
--			stream_update->scaler_sharpener_update))
-+			stream_update->scaler_sharpener_update ||
-+			stream_update->hw_cursor_req))
- 		return true;
- 
- 	if (stream) {
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
-index 6f490d8d7038c..56dda686e2992 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml/dcn32/dcn32_fpu.c
-@@ -626,6 +626,7 @@ static bool dcn32_assign_subvp_pipe(struct dc *dc,
- 		 * - Not TMZ surface
- 		 */
- 		if (pipe->plane_state && !pipe->top_pipe && !pipe->prev_odm_pipe && !dcn32_is_center_timing(pipe) &&
-+				!pipe->stream->hw_cursor_req &&
- 				!(pipe->stream->timing.pix_clk_100hz / 10000 > DCN3_2_MAX_SUBVP_PIXEL_RATE_MHZ) &&
- 				(!dcn32_is_psr_capable(pipe) || (context->stream_count == 1 && dc->caps.dmub_caps.subvp_psr)) &&
- 				dc_state_get_pipe_subvp_type(context, pipe) == SUBVP_NONE &&
+diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
+index abb967c8bd352..6cb130eb32d58 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-417.c
++++ b/drivers/media/usb/cx231xx/cx231xx-417.c
+@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
+ 	vfd->lock = &dev->lock;
+ 	vfd->release = video_device_release_empty;
+ 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
++	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
++			   V4L2_CAP_VIDEO_CAPTURE;
+ 	video_set_drvdata(vfd, dev);
+ 	if (dev->tuner_type == TUNER_ABSENT) {
+ 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
 -- 
 2.39.5
 
