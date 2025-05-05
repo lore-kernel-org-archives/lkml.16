@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5383B2D112E;
-	Mon,  5 May 2025 22:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5292A2D190B;
+	Mon,  5 May 2025 22:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485472; cv=none; b=RA8//7DEok16/9Pcro6y+zeLgcoudYOYUDVF35fTy9KrHbunlckcyrcMBNSIAzBE1wEygJzoRji9D31Wu0Vtyll+AM/okfowXZyrSMjJR/nXxnBHKU0Nd2FyJEPBYf1ojX9RGWNg9e/E6aVu+GzvJfifZqsnYo/U1+NtaCrQTwo=
+	t=1746485480; cv=none; b=LnBg8FYWrujm/K6B7mMyypK/eGYskZVGrs5HUr58Ica9A66HghcFrUQcG4D6mGEs55Ckwq2j6AxgY1Vp1cVwNAdnWeCuK0gxt3MaMx+S8lMk+iRw9wfnN1JGA55YFMwhtahvbB+ZJQXTzX0w5OgdhrfPSi599SVqK/Vjn8QFs2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485472; c=relaxed/simple;
-	bh=AWuDwQHhVZqwsKiuJexopmeKVA3Ii4AwL48PA1xN6vs=;
+	s=arc-20240116; t=1746485480; c=relaxed/simple;
+	bh=pwIrPYe2moK7L7uJ3vTZLVwNuFiG5U0eZA331dBMFMM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q/Xl4+0QJkP5TgRX972uy3vHIf8IZFsR5AyOH4bnrlOjlMZuUyj1jMkCihxRsz6Df0pEJfQfDPASHQcvMsfBRiItBRVduEsgPjZ86YM4I33aX7T+WYHtKkJUt0MHSwI2HxYDGkAzeRehrvxJweRt+8LowIRC55fv8Cra4eiXg6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyXgX/6S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ba36sJJKFG7tROR/diLtkhYJHaRO5V6gk7XShJHCqXhi5FgvoLmqJMLQCRjzhuBWDhEd6yziDB5EeDuIB8mu2/gxI4mUEvZRZIovsMIoLf4u7L2tOPUoT2r0PVMYlroCNQLzVDlBbgjRm0cBN6ev++3dUW+frTmCCdJ8/uZSEho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdDU+o2+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyXgX/6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70274C4CEED;
-	Mon,  5 May 2025 22:51:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdDU+o2+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDE2C4CEED;
+	Mon,  5 May 2025 22:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485472;
-	bh=AWuDwQHhVZqwsKiuJexopmeKVA3Ii4AwL48PA1xN6vs=;
+	s=k20201202; t=1746485479;
+	bh=pwIrPYe2moK7L7uJ3vTZLVwNuFiG5U0eZA331dBMFMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YyXgX/6SsTmgrNGfOhAOSLvrLCsNvR9XOM03lovb9QQTWT9IyBQp6J6RECsv4MA5Y
-	 gLjX6cg995y7L9cjPSddkGsayHTbTo9V/S0poBi+pIPLDDhjwtTrxEjJG3GMcHmfG5
-	 V9W+diRErck2zUEFJtHGUyV4lDel5QGlc0Pq6pBybRk1Vh3MEhV4jom25/yWP+2Je0
-	 7WzUlwj7zDVXCA3ChsWXgks6vULmV8YJSNrl5BbrbRI4dJojUUq1bA+UcRPWYeJaSP
-	 WE5uu3Y84QMeE2nuvkcEu65tx/tzRTVEWAFb/r5Yu8j84HUvsrc5bH8eNypczENhIp
-	 iTb2SXL8R6jnA==
+	b=IdDU+o2+t/cNdTob4I+Xs9EdfZOZ7UqYBbHeujMf6/yccnGa3wXLrksGADsIrMnAU
+	 zE8fx8j/apWheZMrpS/ZcMNVPuA8P7Ex/eFPK1+w+fYWjlHlfyUVXP3DOjXmr9jNm8
+	 syJR1RU7XyT5Udg/I5VmOi3zd5RPkLB5PZEwSfekeXmG780/EIEY575wDxoI0SVgkE
+	 VGzm314OZ6YaJT7cwpSR8gdpWLwmp/8wk9bW/2cl46+uoUAfLjcIRRUvL6jn7Q2fL6
+	 Gr8kE93Ik2W4Su/9Oc+rZBNpTQtOYk2WpmQmXpCiuvcikVzuv01G3XGCbNfhCzkhFQ
+	 J9DNYJ2jeoLBw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Valentin Caron <valentin.caron@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 331/486] pinctrl: devicetree: do not goto err when probing hogs in pinctrl_dt_to_map
-Date: Mon,  5 May 2025 18:36:47 -0400
-Message-Id: <20250505223922.2682012-331-sashal@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Tejun Heo <tj@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 336/486] kernfs: Acquire kernfs_rwsem in kernfs_node_dentry().
+Date: Mon,  5 May 2025 18:36:52 -0400
+Message-Id: <20250505223922.2682012-336-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,107 +50,47 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Valentin Caron <valentin.caron@foss.st.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit c98868e816209e568c9d72023ba0bc1e4d96e611 ]
+[ Upstream commit 5b2fabf7fe8f745ff214ff003e6067b64f172271 ]
 
-Cross case in pinctrl framework make impossible to an hogged pin and
-another, not hogged, used within the same device-tree node. For example
-with this simplified device-tree :
+kernfs_node_dentry() passes kernfs_node::name to
+lookup_positive_unlocked().
 
-  &pinctrl {
-    pinctrl_pin_1: pinctrl-pin-1 {
-      pins = "dummy-pinctrl-pin";
-    };
-  };
+Acquire kernfs_root::kernfs_rwsem to ensure the node is not renamed
+during the operation.
 
-  &rtc {
-    pinctrl-names = "default"
-    pinctrl-0 = <&pinctrl_pin_1 &rtc_pin_1>
-
-    rtc_pin_1: rtc-pin-1 {
-      pins = "dummy-rtc-pin";
-    };
-  };
-
-"pinctrl_pin_1" configuration is never set. This produces this path in
-the code:
-
-  really_probe()
-    pinctrl_bind_pins()
-    | devm_pinctrl_get()
-    |   pinctrl_get()
-    |     create_pinctrl()
-    |       pinctrl_dt_to_map()
-    |         // Hog pin create an abort for all pins of the node
-    |         ret = dt_to_map_one_config()
-    |         | /* Do not defer probing of hogs (circular loop) */
-    |         | if (np_pctldev == p->dev->of_node)
-    |         |   return -ENODEV;
-    |         if (ret)
-    |           goto err
-    |
-    call_driver_probe()
-      stm32_rtc_probe()
-        pinctrl_enable()
-          pinctrl_claim_hogs()
-            create_pinctrl()
-              for_each_maps(maps_node, i, map)
-                // Not hog pin is skipped
-                if (pctldev && strcmp(dev_name(pctldev->dev),
-                                      map->ctrl_dev_name))
-                  continue;
-
-At the first call of create_pinctrl() the hogged pin produces an abort to
-avoid a defer of hogged pins. All other pin configurations are trashed.
-
-At the second call, create_pinctrl is now called with pctldev parameter to
-get hogs, but in this context only hogs are set. And other pins are
-skipped.
-
-To handle this, do not produce an abort in the first call of
-create_pinctrl(). Classic pin configuration will be set in
-pinctrl_bind_pins() context. And the hogged pin configuration will be set
-in pinctrl_claim_hogs() context.
-
-Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
-Link: https://lore.kernel.org/20250116170009.2075544-1-valentin.caron@foss.st.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/20250213145023.2820193-4-bigeasy@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/kernfs/mount.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 6a94ecd6a8dea..0b7f74beb6a6a 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -143,10 +143,14 @@ static int dt_to_map_one_config(struct pinctrl *p,
- 		pctldev = get_pinctrl_dev_from_of_node(np_pctldev);
- 		if (pctldev)
- 			break;
--		/* Do not defer probing of hogs (circular loop) */
-+		/*
-+		 * Do not defer probing of hogs (circular loop)
-+		 *
-+		 * Return 1 to let the caller catch the case.
-+		 */
- 		if (np_pctldev == p->dev->of_node) {
- 			of_node_put(np_pctldev);
--			return -ENODEV;
-+			return 1;
- 		}
- 	}
- 	of_node_put(np_pctldev);
-@@ -265,6 +269,8 @@ int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev)
- 			ret = dt_to_map_one_config(p, pctldev, statename,
- 						   np_config);
- 			of_node_put(np_config);
-+			if (ret == 1)
-+				continue;
- 			if (ret < 0)
- 				goto err;
- 		}
+diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+index 1358c21837f1a..0f6379ae258d1 100644
+--- a/fs/kernfs/mount.c
++++ b/fs/kernfs/mount.c
+@@ -207,6 +207,7 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *kn,
+ {
+ 	struct dentry *dentry;
+ 	struct kernfs_node *knparent;
++	struct kernfs_root *root;
+ 
+ 	BUG_ON(sb->s_op != &kernfs_sops);
+ 
+@@ -216,6 +217,9 @@ struct dentry *kernfs_node_dentry(struct kernfs_node *kn,
+ 	if (!kn->parent)
+ 		return dentry;
+ 
++	root = kernfs_root(kn);
++	guard(rwsem_read)(&root->kernfs_rwsem);
++
+ 	knparent = find_next_ancestor(kn, NULL);
+ 	if (WARN_ON(!knparent)) {
+ 		dput(dentry);
 -- 
 2.39.5
 
