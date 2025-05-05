@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F102D113A;
-	Mon,  5 May 2025 22:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D622749F0;
+	Mon,  5 May 2025 22:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485471; cv=none; b=obyOKJZK5wlUh8jYzY1qOZZ1811slD3cZZwM6FpmKOPmzD7WkZtE8eUjfUE0NKoelksthmJahUced7SjGSKoBNL6uLJQopqZT/eCZ28CWM5xvcToj3IuNiezjaxFRoP8Lm1TK9B6Y8yhTYlA7Lu6nmgi/auu71OdK5QVz0JS/ec=
+	t=1746485480; cv=none; b=lf3stPeEZxlrPso3T//F3TKuwmCNY9o4CGkr3yfm/qO/k02bNCouw/CppTzMa4HdD5CPPaM8yJBqo8bzuoS5bXdxnJkJxy51dFA22i3Rs/gaNwmilOqTxglIekBwUen5yWKn5r+N/nrKq9DM7VhZ+6ZcVzWKEyQA900WUYUG2Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485471; c=relaxed/simple;
-	bh=mL8EK6vs3ZcgIypuRMahinbFQPPZZjHaEGVJlBDoZrU=;
+	s=arc-20240116; t=1746485480; c=relaxed/simple;
+	bh=lFmRf0UqXzAD/H+cDJ45OmX59Qe26LwGgupNtdazpJ0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oqXhC3wMg3O4dltz3FeUtSg0hd5JO/5ruDZJlIb8v17sdrJ7Zmz8oxA7HjJT+aHbQo0N2r/dNXi+1lwt4i2QyITohMB2AWp9MWXUwDAPG8qc9Ob1xLfbkhHxvjgtkm3K/c0ar3Ki7pBDpN4sxL9no4svoJsnQZlQDldDZKAPb/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qki16aMl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LnFM5b7CVE/oBLoE8d8ytVh842RMKG2DGw90b6rdC05NfSKUzi86ZEUsS74bm55T4zQPhLIMRIjzwD/YqE4lcDHMXv4UvwP9Uy9PbaPIkUXIeFxtyR1DLfTNCJXqyrNxCip8O8z6Px8onkibVmb/WF4IfPHb8aWJh5BPPvfRm5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKJMoRul; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qki16aMl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D812C4CEEE;
-	Mon,  5 May 2025 22:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKJMoRul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 928EDC4CEE4;
+	Mon,  5 May 2025 22:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485471;
-	bh=mL8EK6vs3ZcgIypuRMahinbFQPPZZjHaEGVJlBDoZrU=;
+	s=k20201202; t=1746485480;
+	bh=lFmRf0UqXzAD/H+cDJ45OmX59Qe26LwGgupNtdazpJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qki16aMlZdEkvigy/VloRU3dcAg6+ci3nVpKEOCBMbex1Z8kz2LwD7+sYNF16yzUG
-	 wQdV4JD85Dfq0P6xnBAd7s6pMCFtaCqXY5vj8zHcvDlsJwiBHEF4CHsC2zZz7gxnDX
-	 E2l26XbQlH5x7k23oh3zy8QR0CWuBpd7CW2ReMytN2MqPbfIL05Rl2T0QN3vQ5FphK
-	 FxKUmo/k+Y0WkgYH+WAAQSPAlOZ9JSuVX/vkI8IXE/poHLRYepC+7cmS8rWH9x1WpJ
-	 cQf6PfbWErIk08qV/ZmNMeddia+UmhQXSwOzr8Acp1qwWaML4nTpHXqVKsGCI7KpoC
-	 fXwwxPrfUkWIA==
+	b=PKJMoRulYn9MPLX0kzFLep1MuNVfyDWb4/5sCYHFX0mYehFW4Pu2HrbfDkf4LsJNz
+	 W3Syo1BGukpYzUrglSIa/7/yWpg343IWZ4LvyGeEkpTwyztHP3RJykWiadXeAWWAJw
+	 ngAiEA+AkA2Hm9zKSJgvc1VvE8b/0HfDoHVlHzp9hW4gNCJyKRmkR1g6HHSHZ9aZj0
+	 Bn3/A3+iIe9T7ei9JG6hAO3JPFlxoK77tFMarovzskQl5LcrI3rXIZ7ZbSLTRdr9Ik
+	 BpMQ0CYHQK2U2tbzBid74zcG5Ek3gYRdERRLrqFciCvjLKmSbRVUTgWXVD5mfQdnVN
+	 Y7Ry0LWfROdhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 330/486] ASoC: soc-dai: check return value at snd_soc_dai_set_tdm_slot()
-Date: Mon,  5 May 2025 18:36:46 -0400
-Message-Id: <20250505223922.2682012-330-sashal@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Tejun Heo <tj@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 337/486] kernfs: Acquire kernfs_rwsem in kernfs_get_parent_dentry().
+Date: Mon,  5 May 2025 18:36:53 -0400
+Message-Id: <20250505223922.2682012-337-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,52 +50,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 7f1186a8d738661b941b298fd6d1d5725ed71428 ]
+[ Upstream commit 122ab92dee80582c39740609a627198dd5b6b595 ]
 
-snd_soc_dai_set_tdm_slot() calls .xlate_tdm_slot_mask() or
-snd_soc_xlate_tdm_slot_mask(), but didn't check its return value.
-Let's check it.
+kernfs_get_parent_dentry() passes kernfs_node::parent to
+kernfs_get_inode().
 
-This patch might break existing driver. In such case, let's makes
-each func to void instead of int.
+Acquire kernfs_root::kernfs_rwsem to ensure kernfs_node::parent isn't
+replaced during the operation.
 
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://patch.msgid.link/87o6z7yk61.wl-kuninori.morimoto.gx@renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/20250213145023.2820193-3-bigeasy@linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dai.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/kernfs/mount.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
-index 4e08892d24c62..de09d21add453 100644
---- a/sound/soc/soc-dai.c
-+++ b/sound/soc/soc-dai.c
-@@ -275,10 +275,11 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
+diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+index 0f6379ae258d1..4a0ff08d589ca 100644
+--- a/fs/kernfs/mount.c
++++ b/fs/kernfs/mount.c
+@@ -145,7 +145,9 @@ static struct dentry *kernfs_fh_to_parent(struct super_block *sb,
+ static struct dentry *kernfs_get_parent_dentry(struct dentry *child)
+ {
+ 	struct kernfs_node *kn = kernfs_dentry_node(child);
++	struct kernfs_root *root = kernfs_root(kn);
  
- 	if (dai->driver->ops &&
- 	    dai->driver->ops->xlate_tdm_slot_mask)
--		dai->driver->ops->xlate_tdm_slot_mask(slots,
--						      &tx_mask, &rx_mask);
-+		ret = dai->driver->ops->xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
- 	else
--		snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+		ret = snd_soc_xlate_tdm_slot_mask(slots, &tx_mask, &rx_mask);
-+	if (ret)
-+		goto err;
- 
- 	for_each_pcm_streams(stream)
- 		snd_soc_dai_tdm_mask_set(dai, stream, *tdm_mask[stream]);
-@@ -287,6 +288,7 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
- 	    dai->driver->ops->set_tdm_slot)
- 		ret = dai->driver->ops->set_tdm_slot(dai, tx_mask, rx_mask,
- 						      slots, slot_width);
-+err:
- 	return soc_dai_ret(dai, ret);
++	guard(rwsem_read)(&root->kernfs_rwsem);
+ 	return d_obtain_alias(kernfs_get_inode(child->d_sb, kn->parent));
  }
- EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
+ 
 -- 
 2.39.5
 
