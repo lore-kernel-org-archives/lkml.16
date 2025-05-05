@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632C52F2C4B;
-	Mon,  5 May 2025 23:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB322F2C50;
+	Mon,  5 May 2025 23:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486828; cv=none; b=OF8BqMIDToxjUq2Xvsx8qYGzidVz77rqxxmDoUwsOdIq7mnRz69fwlg03DBXys2whb2tHfh3v3uTr4haqOnH70EdPD+yHNN58BemGzHKLDqSl7fwvghEAXIg+RUgTWG+rs4sjNGRAXVP+ZzNGdp2ZKYZmgPArnjSsuh3xXVGe6I=
+	t=1746486822; cv=none; b=LpPvATkVDMU4IE9GZZOx9W81ivfBqL4Xz1+N85CaQ4Mea7JqnIaBa4SojQ8hxqo3x6kWAC5GdWIch5ocW/V0UlcltopT17ol6aznBndOgu4q9tohufFFGACa482Fj2De4LKCA2U3oj4JHDmP8QR9BOQ9Jyuu9T/jMi/5yIG9cvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486828; c=relaxed/simple;
-	bh=Qp0IIlHYIciNX7Eip4u3/xx/27fVip6CeUOfHnBhWHI=;
+	s=arc-20240116; t=1746486822; c=relaxed/simple;
+	bh=ispatKRpWlb5wfrhSPJHXYIpR4sWJYMrjMX2BIsRmNo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JoGcoKbsziAsnE4FkUJl1p/jXXYnUVOlkxJFKsA40fBWWTHQjh4ljsO4diGncpSUgYRYzbeLNqUR1f6qmxa2pzQuFV3K9Uu14A5NHyxiMAn5gpI4ALFjUtaI+Jq09Cjt6pQyFO6e9FcRV8hhYzIy+cO7q9RDpHwp2EGRhf+9o3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFoWVUga; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XEyFjJ2KoRAPuZd7PX6VWR9HWqjJMvKT6zuN0na5IRZivs2Bt1hsFxPHfRHza7UR2AwX6cLCIApHZSQaMKgNOnCo4QFbGwYMeb3MjNKIS1NJcLzKI5CF3qLOYKF8TUbNJiuoKo0yysW3Py/kkfkDf/edeLaZ7dwKaK/xZ4LFGgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CY8aU0no; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFoWVUga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62524C4CEED;
-	Mon,  5 May 2025 23:13:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CY8aU0no"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26294C4CEE4;
+	Mon,  5 May 2025 23:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486827;
-	bh=Qp0IIlHYIciNX7Eip4u3/xx/27fVip6CeUOfHnBhWHI=;
+	s=k20201202; t=1746486822;
+	bh=ispatKRpWlb5wfrhSPJHXYIpR4sWJYMrjMX2BIsRmNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DFoWVUgagd3J1decoEdLXA741GO/Jlt4pp67O1tkJqGJ8vyGNfP7FwI07WCi/9hZE
-	 rKj9qHBCHThFFOutprWpr+kEIjFWzTNLg+TxH8vDFnyEDmWWUMWsa7/rCukcreXX1Y
-	 XeQSsugw9H94fjsY3EQYASdXr4EfAFtEI2y1DrzBDXOzbX/M9Ao7CjOZS3O/fnNwJ+
-	 vCwJYo06b3rf/44aek+DHbkk8lFAZCj8byQF69AlG5Jd+tEqY0d+m5+JTdIBfjV2uK
-	 g1+udmx+W4/2djTJijY7DQqUnzrxieGV9m/Y0iaSBYLGc6SWFGc8V6vqh9SfYVIvh6
-	 DLdE/WeI8pltw==
+	b=CY8aU0no5bSkunUbHlkHAEW/YSrnKhspmmBKFnyKYWFpoh5fCwMWrpWBG36AxX9G+
+	 +dPbiNQandXD0jy7l7t1O+Syr2vYrtZIhoZJ1cmUWJkOsLmF/mi5y2t35OU+LFoTvV
+	 DCcpJssXlG8dawqo4q0wGEWYKn9v+hTiLB52WzA4yXd9p61OL2cOubffC+RYAh8OsV
+	 u2wQI5o55AbB+V97zDC2xt3Vx7GFphVC4/SXtfjDrhQWZsVyPf4M9gk2qeokzsIMTe
+	 Hgwo0ve7PJ9Gk3f8UHZpLLiHhvkPHLQ3XhB0wDK0cHsCKG/Pqd8l9uplddQA8fSSs0
+	 FG11lWpnaBMNw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alice Guo <alice.guo@nxp.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Benjamin Coddington <bcodding@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 011/153] thermal/drivers/qoriq: Power down TMU on system suspend
-Date: Mon,  5 May 2025 19:10:58 -0400
-Message-Id: <20250505231320.2695319-11-sashal@kernel.org>
+	trondmy@kernel.org,
+	anna@kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 008/153] NFSv4: Treat ENETUNREACH errors as fatal for state recovery
+Date: Mon,  5 May 2025 19:10:55 -0400
+Message-Id: <20250505231320.2695319-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -52,61 +53,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Alice Guo <alice.guo@nxp.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 229f3feb4b0442835b27d519679168bea2de96c2 ]
+[ Upstream commit 0af5fb5ed3d2fd9e110c6112271f022b744a849a ]
 
-Enable power-down of TMU (Thermal Management Unit) for TMU version 2 during
-system suspend to save power. Save approximately 4.3mW on VDD_ANA_1P8 on
-i.MX93 platforms.
+If a containerised process is killed and causes an ENETUNREACH or
+ENETDOWN error to be propagated to the state manager, then mark the
+nfs_client as being dead so that we don't loop in functions that are
+expecting recovery to succeed.
 
-Signed-off-by: Alice Guo <alice.guo@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
-Link: https://lore.kernel.org/r/20241209164859.3758906-2-Frank.Li@nxp.com
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/qoriq_thermal.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/nfs/nfs4state.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 73049f9bea252..34a5fbcc3d200 100644
---- a/drivers/thermal/qoriq_thermal.c
-+++ b/drivers/thermal/qoriq_thermal.c
-@@ -19,6 +19,7 @@
- #define SITES_MAX		16
- #define TMR_DISABLE		0x0
- #define TMR_ME			0x80000000
-+#define TMR_CMD			BIT(29)
- #define TMR_ALPF		0x0c000000
- #define TMR_ALPF_V2		0x03000000
- #define TMTMIR_DEFAULT	0x0000000f
-@@ -345,6 +346,12 @@ static int __maybe_unused qoriq_tmu_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	if (data->ver > TMU_VER1) {
-+		ret = regmap_set_bits(data->regmap, REGS_TMR, TMR_CMD);
-+		if (ret)
-+			return ret;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 76e2cdddf95c1..b1dec7a9bd723 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2726,7 +2726,15 @@ static void nfs4_state_manager(struct nfs_client *clp)
+ 	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
+ 			" with error %d\n", section_sep, section,
+ 			clp->cl_hostname, -status);
+-	ssleep(1);
++	switch (status) {
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		nfs_mark_client_ready(clp, -EIO);
++		break;
++	default:
++		ssleep(1);
++		break;
 +	}
-+
- 	clk_disable_unprepare(data->clk);
- 
- 	return 0;
-@@ -359,6 +366,12 @@ static int __maybe_unused qoriq_tmu_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	if (data->ver > TMU_VER1) {
-+		ret = regmap_clear_bits(data->regmap, REGS_TMR, TMR_CMD);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* Enable monitoring */
- 	return regmap_update_bits(data->regmap, REGS_TMR, TMR_ME, TMR_ME);
- }
+ out_drain:
+ 	memalloc_nofs_restore(memflags);
+ 	nfs4_end_drain_session(clp);
 -- 
 2.39.5
 
