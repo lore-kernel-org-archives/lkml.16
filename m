@@ -1,66 +1,67 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CF91F5425
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341BA1F63D9
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746435604; cv=none; b=uweh0SdX7wvTyoV99huHBz/VCAZqCi4KNB1zAfTXiJWTAZxgvCZNqL+CUqPHmW3nGlNwS7vXum4VagNfMxW+jDk7ASgH67L9aJVPS9KCTY2s+/f6WYwQH4DQvv47P6S9U+2hFR0dt5DbFtojJF//vOACvTv0n9uGCGovhUo8XHM=
+	t=1746435606; cv=none; b=a5jq0nf8cOkSIY39EcgHKq6pD4kLWSbyGkUdAsCqa6ea5Jqfhwxqjprxfq1iGex46aRcYfTAO+PEegB6WKD1MLfJIGt25FBAP4HVGYoCermbrzMbLygLbVL5fttDVbw+8diO1EZTLeLdWJQhc+/IdeCyqe6VUWTQt6zfqPESeZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746435604; c=relaxed/simple;
-	bh=4ujhfnsD9gR0dVbtPkG6+9ZOl4u1TOz+cGHcmkSuqBg=;
+	s=arc-20240116; t=1746435606; c=relaxed/simple;
+	bh=0gWVNbRB11j6NzQheFtP3AhW2B6FSY8x/IiQjLkDkHA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aWJ/ZLZ42wj2p1W5mJn7QWhyQAIqg7iQlJ2ouTIWYjsZ3EUn19W1noxzKRXkYcvX2+3jN1knXXEPSogeioq6/daQacUUgBlUiX7A5rNhupX4rxefTIoMpIWM+SNSBt9DAAYnZP6GCOuCBtkzdAvr31HiTP8LlHoygrOUDlcT8d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nD1SFOAP; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:To:Cc; b=SWRn2FCBAA709mEFrrzYIJ3N/j+aQkZz98eYsKWNpSbc/vk8P1+toxpMl6E1tNJQQd627vG+UOTBJH9NKmLTz6YQiHLKzF6ZSeg+QzIN8DScDW/FLE5z8kYODOeqSFFCAl5P49Vq+9qOVBin8a0a8s19bXWQXW2P8FsufisvZAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RWcbr5sU; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nD1SFOAP"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so34889775e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:00:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RWcbr5sU"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0782d787so24992155e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746435601; x=1747040401; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746435602; x=1747040402; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=S92e1vh4VqkP6Isn8EhCS9MZeN0/LLF2cWcJYmEVWj4=;
-        b=nD1SFOAP9tjgY55Ka22meOpH8vyPOHms+rdbWJ7SnGQJ+jENQ9+WstFSY7xLxQIab6
-         hEBT0nVpxkLXSZ9CCdVS4mIlg5bASBrzeGenyhAkrT6/hjjbS1j+/kEwmJI/h8u+I8AS
-         BtuiaoeVnsyX69/T/m12Bnh68rdopDCOm3vv6WSTSxEk69TC0D01uMvzHscC8udqY/Za
-         dq7iAwdarQ7cOZOnG+ERAbFWzYECvEhz/ft4IR3kyaHGrYJohuQJbBW3e44cbkr18JRS
-         exnum6cCNyVuNlR4tEcFVaZJKZhmrLVhHJ3GyJDzWW34MHDS5VITF2AcN+yFHwdecA/3
-         dPPQ==
+        bh=2aENDSHoBUQDncGi75hijmd8KFyNYGfXXoOg+4vaXxg=;
+        b=RWcbr5sUp+Uef0fgr4Ax24U8C3u1Epi3ODDCvFI2trhRTXRX2/bLBXzPIkWM3FWknh
+         NUgFmYIsWHt9UWZPfKI+VQ4mCbcqpg+hn2a+ZiPnYAC8xcf/QX4xMaOtZJkaXBrwa2sp
+         JOifaKT949Y9cJiS41FHN+A5ZQ36y2HOs+D7seauLxS/0oBZMXzO+sFxYU1jNzgizQvd
+         4B8DhavghLnZipPwaXVN+u8BGxjpUbjFF2Voc3l8hyvP+vXu41A5+CalU7YHhYXqYFG/
+         K9PC5PqRHYZLp8wy/aCZFq+eDnU0qLs9s0T609+mtfVjHlnByqhd5zDbST11AQUwDS+i
+         g8HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746435601; x=1747040401;
+        d=1e100.net; s=20230601; t=1746435602; x=1747040402;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S92e1vh4VqkP6Isn8EhCS9MZeN0/LLF2cWcJYmEVWj4=;
-        b=ue3gnZzQcD2McJHuVKbEgdt6lUC36YEmK5jpPrX6eVaSBWwDTQoSYRcFtuNDDwgDjz
-         lLVbIhIldiFBgVt8tpxqUVNYBw4BO2TkeU6S4KRoehTYYIrIMkE6o6dMy5/J1bB9jL4G
-         YNSohSzEfCzT5mrIWqSakkaEe8M/S69l0nGeAX2gki5SR5MiDEDc4cG9n+VUI+4mzVmz
-         8P+DNw72fR6cuk0LvrK55SceLHmTxAHYjzfXrbVmngBNKv5/MNAoXus1qsb1dEc6bwWa
-         6jtEQ45U85bo8tVI0Kw2OBzit6z5a5OkCMW4UAtkGgGPWjzbCb8JgzOdPTjIeAFGQ//p
-         bHDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWdqS3dWxM93vMFJsEFEKxfAZizfAnfNtzvyoSYKYUxlUlCCO1Wul8D0li/8stELIfaovt7xkppwT75FzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxOz7xXOVlIQvB5Lb1UoIyihEi2UXxfbO07GOabvVLK4scce9/
-	oze8k+N0EYEpAvFO0JiHnnMRlWIdFavRP/620LcX2ifRS0oWOIflabqVFjzKb1c=
-X-Gm-Gg: ASbGncuhRbTCef1LRUsEzdu1Y+DkVjBf/tZjZKWRmgEF4Umctsq1hCO86Hb0zu+mnlL
-	AEtgNB5WsOUCt+041GPrZgfieEqOCNsfrkp0LzIrooP4KbUgjY+BDhTIZf8obORgqGyWr5YwRMh
-	+HQzIc6/i/jp02UAUdzdGVpP5CMMSYcn44sabn0vrRjNNW2E6Fp03xInxJFFoZ3t7OHKnAeWVHU
-	amce0WiYtsYr3g7XXB3b3Dll7/3UNyKGOV32jzKDqXdjpFZUy6If4zNY6VQkmF6qmdX+F5DJnFQ
-	F5SerjXQWOPDN6bE+4o6PEp4Z4GKxH/LFtKztGNAthnD0J5RnyGGuFDGU47gCl5OowxsyZbYoFq
-	DEuuxFJ1Vj1yni8U=
-X-Google-Smtp-Source: AGHT+IHjn0WyAvaUOF4DlLpk6vtF8Nr+Hc5ikZjH0bnD+F7TX2WdfOdAMYnVE4VqixoQkEYwPJFamw==
-X-Received: by 2002:a05:600c:37ce:b0:43c:f629:66f3 with SMTP id 5b1f17b1804b1-441c48d16ddmr50750345e9.18.1746435600672;
-        Mon, 05 May 2025 02:00:00 -0700 (PDT)
+        bh=2aENDSHoBUQDncGi75hijmd8KFyNYGfXXoOg+4vaXxg=;
+        b=oZVFlfHtQwN5BN3um+ZXZGIL5dMnPTzvC1+JjHwT7azD2ensq0j3PgW4XWBBYMwLhL
+         HDYKL7UZFgf1sdc3P3/eESy1DMQYoGBrpKpMxbNtUKBlN6vpktc4ShrIjmkqEnyvRxtl
+         8//yCTBWU1CmbSwki28gM/+k/nGOsJ0BQlnx4l1zdFZj6V5ouZHB3ndeURVbju2wNEzs
+         gC+NXYcIJJ/HV2cqsppZqheD04bng54glJVsyQfTFdzIxsHvbDnx4m7lMvdtNjrmJvTx
+         7jsYq97O/zsF5mkpNRbR4PjDelRrdtVRTeoaxKnIdCqhmmGA1ifnwSduE5Sk+9XZNAV3
+         plyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJD21FiwdnawrOBvy08fyYJzH3FtHq46q7aD71u0kpcr1sRN4r+K+B/PaRWB/qHmVCzj8Ige8pAzS8SJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu8t7AEvSYBivhgw6vLsE6aC8ndUpg56/8svvZXXd1PPSCjUpR
+	jzHytTdO69FZoo6nj9C/t8ed9oxmdqycSZ4HVc3ttjOXv8RY3bHr21dk/WMZdpJRdLOt2BaA1z/
+	FzXU=
+X-Gm-Gg: ASbGncsTia+wfn8Gx7YjNogWwgaQYDvpTz0dm2zqcGAgvMX38LI+v0MaEEOP8+SPyKg
+	OVgw0pkSakGU96Kz31MQLtfqxjZJBg+Vgf3xjAb4Ff45Apn+0G/ZPTQ5mRrvFRgDBGgkba51EJu
+	avbU1KndjXhJ1AX8RlxEbJ6fK3+uAmIEgqrt+dp3DuXm6C1pDKBdE/Nrv9RnflWHiUpcdR4bBLI
+	mQ14g34uaysXvcAExa+tfbPdpzB1ZXTMl0hmI8EfqDX893Ci17pwYHxkzmhDt2l63zXnrSoutty
+	+vdAWu9SaJ/Hm90j+dsBbBwhNKUT2+tHhxQYGa0X5SbWdHpVKo5fe83vszFHkt20H+pn9arU9oM
+	55hcqRoc/EijnB8k=
+X-Google-Smtp-Source: AGHT+IGg0Vn+z3bbOg/uzaXcU9oRZ5gyFrNKK7mD8WX6VvRKSYjefILs7xFlLJvJAY/rZ0IGfGWxiA==
+X-Received: by 2002:a05:600c:8283:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-441c49483f8mr58600635e9.30.1746435602452;
+        Mon, 05 May 2025 02:00:02 -0700 (PDT)
 Received: from [127.0.1.1] (adsl-186.37.6.163.tellas.gr. [37.6.163.186])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28045sm170432475e9.35.2025.05.05.01.59.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28045sm170432475e9.35.2025.05.05.02.00.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 02:00:00 -0700 (PDT)
+        Mon, 05 May 2025 02:00:02 -0700 (PDT)
 From: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-Date: Mon, 05 May 2025 11:59:15 +0300
-Subject: [PATCH 2/3] virtgpu: add virtio_gpu_fence_cleanup()
+Date: Mon, 05 May 2025 11:59:16 +0300
+Subject: [PATCH 3/3] virtgpu: deallocate capsets on device deinit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250505-virtgpu-queue-cleanup-v1-v1-2-810923da2b1e@linaro.org>
+Message-Id: <20250505-virtgpu-queue-cleanup-v1-v1-3-810923da2b1e@linaro.org>
 References: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
 In-Reply-To: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
 To: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
@@ -84,88 +85,53 @@ Cc: =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
  virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
  Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2670;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1065;
  i=manos.pitsidianakis@linaro.org; h=from:subject:message-id;
- bh=4ujhfnsD9gR0dVbtPkG6+9ZOl4u1TOz+cGHcmkSuqBg=;
+ bh=0gWVNbRB11j6NzQheFtP3AhW2B6FSY8x/IiQjLkDkHA=;
  b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0VCYlFLUy9aQU5Bd0FLQVhjcHgzQi9mZ
- 25RQWNzbVlnQm9HSDRMSkxTOFIxYU8xdmI3Z2kyZkpSYUYwVWc5CnQzaGcwdkg1WUw0UkJzSXFU
- dnVKQWpNRUFBRUtBQjBXSVFUTVhCdE9SS0JXODRkd0hSQjNLY2R3ZjM0SjBBVUMKYUJoK0N3QUt
- DUkIzS2Nkd2YzNEowUGhtRC85S0h6ZFVTRGdlZHdreWhPWHdiNWp5R0ZiY1NSRDNGczMxUHh2SA
- owMzBDK3ptczh3aFpRUWkyWjhIckp1NDZzb1pDcUlSREVkemRkWjBuUzZmbE4wVUlpSE5LTDdSV
- TFZcTBVT1R5CmpTMzdZbkx6NmlWQjlydFQxcUdnd05sOXM4bGZCdWxxNEFNUW5hd3lxRVhyd0ti
- UGw1SjcwbDBRMnVxSHNzcTIKTktjYVRQdThDUncrNkUwS3d4Wlh2Snd5dVBsRmo5YlRvZStJZXh
- BVUFSb0tteWtDNmtMUXpyYkMzVnNUc2pTaApzbUg0V093ZDUrMWkra2dYS0VKc3VvV25LZGFEcX
- FqL2dKSTBSUGtKc3FvazBoclF1S3BRSFFsaTBYWThpUStwCitoaElrQ0dvOERZSjVZR2V3bWxQR
- EMxbGtvR0h1K1ZUY0RSTW9iZk9mSVBrcWt0TjNmOTQyMEFHb0VYV01yYnEKb2JkUzd1VU52WW1B
- YUVnTzJaMVhZOUtZWkkrUW9TTzB5b3NrcWgyUjdOVkhrbG9iZ1FGWFBKYkpDejJ2U3FwaApXZkF
- DVTIvekxmencrdTNzaWNyaEQvc3dYVWErLzIxV2tzMnhWbWU2ZnJEREhXbzdZMXNWNmNFQk5uaz
- ArQXpyCkxkOHp4Nm14cFVaLzk0QlJWeG5waDJGbWhJZTUzVFpoS213bVlrdlJpcFRuUytuQ3R2T
- DkvOXdTZENtcFBIMjIKNy9HMjN4cVRNS0s4a2pwZncvNE13ZGhNSjcwVHl5UVh6UG94VERxQzAv
- ejIxN2lDQW9mZkdYUVh3MlBiWVhQbAorNncvY2MyZTk0RS9VbVlhUnVYUEpEejN4b1lHeUxSMyt
- kNVFjbi84N3d1dXdpVWxTalI4OTQ4TlFJMTNaMHk4CitTVEluQT09Cj1SY1FOCi0tLS0tRU5EIF
+ 25RQWNzbVlnQm9HSDRMbDdqamlhQ3I0b0s2OVo3LzBzKzdVNWx3CmpudkIydlE2b2hCOEdXWElV
+ ZzJKQWpNRUFBRUtBQjBXSVFUTVhCdE9SS0JXODRkd0hSQjNLY2R3ZjM0SjBBVUMKYUJoK0N3QUt
+ DUkIzS2Nkd2YzNEowTHZSRUFDUkIrdGM4Sk9ENzJTL3lzM2JPWDhFV3RaLzByRWszRm9aSnpWZA
+ pTQ0RSem0zL1BKeWZmeWMyYmUzS3o2RDU3SkFjRzV2dERlOFJFbXNxaE5GUmlrdnd6RVZnOGo5N
+ 2NrNTFsZHR4CnMxdC82TmlXYzFlZmFXMTJNNVprWGFwdVpPSVZ3SVlGUVFwY1N1VDg0REtMV0xQ
+ UnBqTG9BcmFSYTE2UndaRk0KWEJWVEl3ZUg4WWI3ekluMzkzMFVKckordDgxaUg4bUFFTlFjVHB
+ PVWFxMVFCeWE1U3FHK29aSENWTFV3b21kdwpwS3Z3ajBKMW5MM0VvTVJNOUhLUFZPRTlpVjdzVk
+ RvdnlDRHlNM3M3T095OXJ0elk1c0VqYkhxK3ptdWJrU1ZZCmhsRWNKUkRVYk1yVnRBSGI0Zy84d
+ GxzMGp0OEluUGhERWg1SmNTeTlJYnpwWjNVQnJxNithNEpxQ2M3bzVzSjYKUUg2YmJJelZYZlkr
+ VThvamc3a05VSGd0V0lYc0VNOFozeUhhcG1NWWVzRVhMWDRCTTdjMUxIK2NoT2syRk54UQpjWkx
+ HblBlNVl3ZkFQQnYyNkJCUnhMdFhvUGZRNGJqdWd1YnVnTkRsQnNNajFnOHRUQmhBZ3pIMkZ1bX
+ VjdDJHCkhBcjVaTVR1N2JUYVlPQ2dHL2ZwNVZzZERWYWd5UTliSGpubjNqS0RlWjR5Z2hFcHlQO
+ EtydjdPV0JzVTZpdFEKR1Z5T0RNUi9JeXdycjFuNUVGQUtaOHQrRjk1MmtmWHZlVEFPQkRxZHI1
+ WS8ra09OckRpem5iVnptcDZzbmx0OApURFpab1Mxa1d3ZDFEVGR5cm96T3puajRYQ00wdTVRSGZ
+ sYWhPQWNhdjJZY0Q0ZVRTcVl4b0hTZFlONkJoZUl5CnluUnNNdz09Cj1MSFJmCi0tLS0tRU5EIF
  BHUCBNRVNTQUdFLS0tLS0K
 X-Developer-Key: i=manos.pitsidianakis@linaro.org; a=openpgp;
  fpr=7C721DF9DB3CC7182311C0BF68BC211D47B421E1
 
-When virtio_gpu_remove() is called, there might be in-flight command
-objects in the virtqueues that the VIRTIO device hasn't processed. These
-commands might use fences, which end up being leaked, as reported by
-/sys/kernel/debug/kmemleak.
-
-This commit adds a cleanup function that lowers the reference count of
-all in-flight fences, resulting in their de-allocation.
+virtio_gpu_device's capsets field is allocated with the DRM memory
+allocator but never freed. Add the appropriate freeing call inside
+virtio_gpu_deinit.
 
 Signed-off-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  1 +
- drivers/gpu/drm/virtio/virtgpu_fence.c | 12 ++++++++++++
- drivers/gpu/drm/virtio/virtgpu_kms.c   |  1 +
- 3 files changed, 14 insertions(+)
+ drivers/gpu/drm/virtio/virtgpu_kms.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index b3d367be6f204dbc98bf1c6e5c43a37ac8c0d8b3..c94b5edb2aec42fe5cd6416e243cf40e4e2b060f 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -465,6 +465,7 @@ void virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
- 			  struct virtio_gpu_fence *fence);
- void virtio_gpu_fence_event_process(struct virtio_gpu_device *vdev,
- 				    u64 fence_id);
-+void virtio_gpu_fence_cleanup(struct virtio_gpu_device *vdev);
- 
- /* virtgpu_object.c */
- void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_fence.c b/drivers/gpu/drm/virtio/virtgpu_fence.c
-index 44c1d8ef3c4d07881e2c4c92cc67f6aba7a5df4f..3e536d190c0464f4db8955605bbf0aa4aa3612bd 100644
---- a/drivers/gpu/drm/virtio/virtgpu_fence.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_fence.c
-@@ -157,3 +157,15 @@ void virtio_gpu_fence_event_process(struct virtio_gpu_device *vgdev,
- 	}
- 	spin_unlock_irqrestore(&drv->lock, irq_flags);
- }
-+
-+void virtio_gpu_fence_cleanup(struct virtio_gpu_device *vgdev)
-+{
-+	struct virtio_gpu_fence_driver *drv = &vgdev->fence_drv;
-+	struct virtio_gpu_fence *curr, *tmp;
-+
-+	list_for_each_entry_safe(curr, tmp, &drv->fences, node) {
-+		dma_fence_signal_locked(&curr->f);
-+		list_del(&curr->node);
-+		dma_fence_put(&curr->f);
-+	}
-+}
 diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index da70d9248072b64786a5d48b71bccaa80b8aae8f..7b3c4d314f8eee692e2842a7056d6dc64936fc2f 100644
+index 7b3c4d314f8eee692e2842a7056d6dc64936fc2f..a8b751179332b9ec2fbba1392a6ee0e638a5192e 100644
 --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
 +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -286,6 +286,7 @@ void virtio_gpu_deinit(struct drm_device *dev)
+@@ -286,6 +286,10 @@ void virtio_gpu_deinit(struct drm_device *dev)
  	flush_work(&vgdev->cursorq.dequeue_work);
  	flush_work(&vgdev->config_changed_work);
  	virtio_reset_device(vgdev->vdev);
-+	virtio_gpu_fence_cleanup(vgdev);
++	spin_lock(&vgdev->display_info_lock);
++	drmm_kfree(dev, vgdev->capsets);
++	vgdev->capsets = NULL;
++	spin_unlock(&vgdev->display_info_lock);
+ 	virtio_gpu_fence_cleanup(vgdev);
  	virtio_gpu_queue_cleanup(vgdev);
  	vgdev->vdev->config->del_vqs(vgdev->vdev);
- }
 
 -- 
 2.47.2
