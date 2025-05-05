@@ -1,45 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCA2249F9;
-	Mon,  5 May 2025 09:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5121F8EF6
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438387; cv=none; b=OMSE/Es4NNE5yonPBH6PH+pacylI6FBEoylX3ykgoTEi+IWx+YnfeRPIcLdnMEMD1T6cZT4teQZoHyj/b+y053fNzbFsvs4n7gjpVMK/4iZrcr2xrPcI1SivahCh96bqin+TP2HgGj3AvBeMQ771m0aOiy+G6kodBQwdjOUReXw=
+	t=1746438567; cv=none; b=Od++WrwkmJxaT7UHCSww/7x53sx7gHY8fFCfcU1r6pc/tdRO03dIIt+hObSvbOLbnEOKHZs1YcraU+6rtCLznzAjK0PaQol1d57cxv/3xwshW6MDpy63GATv3nsPmgMEDtXkX9YKTEXLeZaP+kHBc3/atQQXeFnuvO76a1utX1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438387; c=relaxed/simple;
-	bh=UIH5JSP4tb5O+YYw9nvsN/xpMiimsjcLY/Sq6JGo1rU=;
+	s=arc-20240116; t=1746438567; c=relaxed/simple;
+	bh=gvzkYTs5rtpmqTb8VcPZ2BZt4c/wz+av7Ml2LLrsOrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=japCRHcsoaPQp4OAs2QWM4hqxC5TBQ3amvnBIijoyNsp6TsjJorjWPesSYXG9YxlypCtK2YqtjBVifuyLKF0zheRJtnqCQsIc4gYL2MedmacAyxUu95AO5FZkfObGUXaA5hw/8ZtcAZvH2OYF42NxAzjQwFVj7Gk+76dH46XWBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+mMqabc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuQXFlLAJhNK03vPJqszulyUq295ahRbZz7BZwt7e6ukwCFA/1Tb27paBNYX2Gl3T4puWw3GqAClF70GAgb1z37DoM0EI9se+jyZXuCz8qfTn/vOo2k03/96s7S25q6rM1/2nuBWojI33wu5XuTm/P8kPX3xxy50V4V8AZBlO/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cvzRzO5V; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+mMqabc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68450C4CEF0;
-	Mon,  5 May 2025 09:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746438386;
-	bh=UIH5JSP4tb5O+YYw9nvsN/xpMiimsjcLY/Sq6JGo1rU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d+mMqabcZPXEMSQ4l+2nRswkHIGh3AUbUehE72H9h1EAU9MjZZHCWV5IfaPmo/0FG
-	 Qbm+++Y5QTOF706JU0r2XV9crrx7BTB5NeO0rupYv2fmlVe82VIpGWZ9XQWvGaVWWO
-	 OjM+1KiaDsVr8VQ9seoQ0ZLMOGBFmiwZOOszHsjo2WVBYx0gvoA4XMLF9mszNrODlT
-	 RhbPnNgh5x+GNXsjDV09q4V+cV67iIumFcD4mlRKKjapZ9TVvRbBubSecLXqlUnE4r
-	 qv+BTv3uC0HEfVclSF29lUnBkvJLAlmu6r9p8vJ7sFbnNaqoemHRaKqc72B07wJfwV
-	 Vc0Rqzpam5HfQ==
-Date: Mon, 5 May 2025 11:46:20 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v2 5/7] modpost: Create modalias for builtin modules
-Message-ID: <aBiI7Iv2LtQJUWG4@example.org>
-References: <efd64a6f-d6e5-4790-96b6-0776cd3a7f5a@suse.com>
- <20250505093830.25688-1-legion@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cvzRzO5V"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acb415dd8faso629006266b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746438563; x=1747043363; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BnBvCblRkYEN9Ha75Czu/UHxSFQXfVj92v2hVXdBmw=;
+        b=cvzRzO5VSdzYYdu8zwdQc5dPP6cTQ1lEMaSiaO6qdXVWS1vFQyL9eDw6UqSPkpQc7m
+         +KVIb95ry0t+iYcjGVzONhlgBoqVi8zXejSnJQxvnT/ucsnAxzc2zeFmh6bx7w/TxyLT
+         pSdTJRdsfAz5XdnmHVcppVa4ZlZJmdu81RoVZ1SJFFGaq45p8cLIJMc7zV1Zge7Bd19R
+         yCACTwN12kXdhgaNpzTXEFW9HV+XcqnrAUo27YLBMr0CT+7qqQI0bGxHx4YS6+TKulL2
+         ansZLDCY4ZlFE+ZyHBve2RELwQiQL2PuMPsq4/eV0dMeeHexBOmlK6WnQIWdk0kCQpRD
+         iGyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746438563; x=1747043363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1BnBvCblRkYEN9Ha75Czu/UHxSFQXfVj92v2hVXdBmw=;
+        b=pSqokcgIIsSVLAWawfIngzYO8IikTMIKHCcocMBjAOV6nYBw4EjSblW8cKX71JkxA8
+         uDlwa9sit532wV0exXLsk1KT4cC9/u27EeEFYtmmP2oBiiAdxF5uSVqL+/VzW2Z/m5iW
+         3Qej4PQOd6ULyDSUMwmITQpJ8qoj6X8eZKhmv5btMgKc5zkoWvzZZUJDDiVwQ2OMzfWR
+         mj1D7Xbej2BWJW6gNELa5p8s5VUnKyiSaMCdAmDyKS44MgFhdeUcGNQ25GXOgV3mX0/X
+         450L6cJvbE0rsbN/RrcaqQQNKmwoCyl0pqxkw+xl00l9OiMtGptHkDV6oMjH1FvGzx5G
+         VAjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyAyHapdtfDGtF1taeka0Ag1lEeRGbhM6DKcHwAlVjQPoUxVfGr7RgpVwRHS6DO6+rt/D014VuitSoY88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxicOkf50SAaR85WpM8hDJ9sVHBPOBJXfSIciNGrPOp3TjaoEEF
+	WVKsXv3wvIKiaYofRmg7pRSLqKfT7eHHRK6oyPfOBojaR5pbL9QUuqN0KYIf3g==
+X-Gm-Gg: ASbGncvF+J1koOgAm+M3kCsIzTi6rchPqxJpGMVqT/1BJZ2dhR9LOzBxN6JZXuG3uzh
+	HZ90/W2YJklb/f3bs/3GfWfHWUYYu4eLbZqQucUoR/qOtujt2/dXdpRBxtzXkO8uf9SebZQYnPA
+	cUKjbi5lrPNT6LyRPOP/5hxkzPbWdlsvrhkThRtPHv8renI9sN1A+zbiYznneqg3KaATNc3iWiM
+	yrmrSeQDNhRLvM1X2czDvgAvtjKsYiauJKMZkc5+2cZtwKCpkYG31QjWpavRGtejp2rTj+M20N6
+	JLHu4FqN5UEXA0r7OIGgggAsvH/9fHfqDQMgO732Iu4ZIDtO6OqufGaizBRiyZmp+rtaWVRLyAP
+	6NKC8H/hEcVyTQV00DA==
+X-Google-Smtp-Source: AGHT+IFYGMgq5KfTLL8HI20N+F541w/zDb+X8QB3oV7HJE3GRuklU1l2cXFO8FZH21KvDjj0U5xzlg==
+X-Received: by 2002:a17:907:9411:b0:ace:c50a:f87 with SMTP id a640c23a62f3a-ad1a4b040f5mr560069966b.46.1746438563048;
+        Mon, 05 May 2025 02:49:23 -0700 (PDT)
+Received: from google.com (201.31.90.34.bc.googleusercontent.com. [34.90.31.201])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18950ace4sm463710566b.153.2025.05.05.02.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:49:22 -0700 (PDT)
+Date: Mon, 5 May 2025 09:49:17 +0000
+From: Matt Bobrowski <mattbobrowski@google.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: add bpf_msleep_interruptible()
+Message-ID: <aBiJnR5MEL5hVXXC@google.com>
+References: <20250505063918.3320164-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,206 +77,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505093830.25688-1-legion@kernel.org>
+In-Reply-To: <20250505063918.3320164-1-senozhatsky@chromium.org>
 
-On Mon, May 05, 2025 at 11:38:29AM +0200, Alexey Gladkov wrote:
-> For some modules, modalias is generated using the modpost utility and
-> the section is added to the module file.
-> 
-> When a module is added inside vmlinux, modpost does not generate
-> modalias for such modules and the information is lost.
-> 
-> As a result kmod (which uses modules.builtin.modinfo in userspace)
-> cannot determine that modalias is handled by a builtin kernel module.
-> 
-> $ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
-> pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
-> 
-> $ modinfo xhci_pci
-> name:           xhci_pci
-> filename:       (builtin)
-> license:        GPL
-> file:           drivers/usb/host/xhci-pci
-> description:    xHCI PCI Host Controller Driver
-> 
-> Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
-> modpost if the module is built separately.
-> 
-> To fix this it is necessary to generate the same modalias for vmlinux as
-> for the individual modules. Fortunately '.vmlinux.export.o' is already
-> generated from which '.modinfo' can be extracted in the same way as for
-> vmlinux.o.
-> 
-> Signed-off-by: Alexey Gladkov <legion@kernel.org>
+On Mon, May 05, 2025 at 03:38:59PM +0900, Sergey Senozhatsky wrote:
+> bpf_msleep_interruptible() puts a calling context into an
+> interruptible sleep.  This function is expected to be used
+> for testing only (perhaps in conjunction with fault-injection)
+> to simulate various execution delays or timeouts.
+>
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 > ---
+>  include/linux/bpf.h            |  1 +
+>  include/uapi/linux/bpf.h       |  9 +++++++++
+>  kernel/bpf/helpers.c           | 13 +++++++++++++
+>  kernel/trace/bpf_trace.c       |  2 ++
+>  tools/include/uapi/linux/bpf.h |  9 +++++++++
+>  5 files changed, 34 insertions(+)
 > 
-> v2: As Petr Pavlu suggested, I separated the builtin modules from the external
->     modules. I've also added a search for duplicate modules.
-> 
-> ---
->  include/linux/module.h   |  4 ----
->  scripts/mod/file2alias.c |  5 +++++
->  scripts/mod/modpost.c    | 35 +++++++++++++++++++++++++++--------
->  scripts/mod/modpost.h    | 15 ++++++++++++++-
->  4 files changed, 46 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 7250b4a527ec..6225793ddcd4 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -257,14 +257,10 @@ extern void cleanup_module(void);
->  	__PASTE(type,			\
->  	__PASTE(__, name)))))))
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 3f0cc89c0622..85bd1daaa7df 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -3392,6 +3392,7 @@ extern const struct bpf_func_proto bpf_get_retval_proto;
+>  extern const struct bpf_func_proto bpf_user_ringbuf_drain_proto;
+>  extern const struct bpf_func_proto bpf_cgrp_storage_get_proto;
+>  extern const struct bpf_func_proto bpf_cgrp_storage_delete_proto;
+> +extern const struct bpf_func_proto bpf_msleep_interruptible_proto;
 >  
-> -#ifdef MODULE
->  /* Creates an alias so file2alias.c can find device table. */
->  #define MODULE_DEVICE_TABLE(type, name)			\
->  extern typeof(name) __mod_device_table(type, name)	\
->    __attribute__ ((unused, alias(__stringify(name))))
-> -#else  /* !MODULE */
-> -#define MODULE_DEVICE_TABLE(type, name)
-> -#endif
->  
->  /* Version of form [<epoch>:]<version>[-<extra-version>].
->   * Or for CVS/RCS ID version, everything but the number is stripped.
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index dff1799a4c79..be221923f582 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -1509,6 +1509,11 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
->  	typelen = name - type;
->  	name += strlen("__");
->  
-> +	if (mod->is_vmlinux) {
-> +		mod = find_module(NULL, modname, modnamelen);
-> +		mod = mod ?: new_builtin_module(modname, modnamelen);
-> +	}
-> +
->  	/* Handle all-NULL symbols allocated into .bss */
->  	if (info->sechdrs[get_secindex(info, sym)].sh_type & SHT_NOBITS) {
->  		zeros = calloc(1, sym->st_size);
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index be89921d60b6..db3c172d4528 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -168,22 +168,26 @@ char *get_line(char **stringp)
->  	return orig;
->  }
->  
-> -/* A list of all modules we processed */
-> +/* A list of all modules (vmlinux or *.ko) we processed */
->  LIST_HEAD(modules);
->  
-> -static struct module *find_module(const char *filename, const char *modname)
-> +/* A list of all builtin modules we processed */
-> +LIST_HEAD(builtin_modules);
-> +
-> +struct module *find_module(const char *filename, const char *name, size_t namelen)
->  {
->  	struct module *mod;
->  
->  	list_for_each_entry(mod, &modules, list) {
-> -		if (!strcmp(mod->dump_file, filename) &&
-> -		    !strcmp(mod->name, modname))
-> +		if ((mod->dump_file && !strcmp(mod->dump_file, filename)) &&
-> +		    namelen != strlen(mod->name) &&
+>  const struct bpf_func_proto *tracing_prog_func_proto(
+>    enum bpf_func_id func_id, const struct bpf_prog *prog);
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 71d5ac83cf5d..cbbb6d70a7a3 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -5814,6 +5814,14 @@ union bpf_attr {
+>   *		0 on success.
+>   *
+>   *		**-ENOENT** if the bpf_local_storage cannot be found.
+> + *
+> + * long bpf_msleep_interruptible(long timeout)
+> + *	Description
+> + *		Make the current task sleep until *timeout* milliseconds have
+> + *		elapsed or until a signal is received.
+> + *
+> + *	Return
+> + *		The remaining time of the sleep duration in milliseconds.
+>   */
+>  #define ___BPF_FUNC_MAPPER(FN, ctx...)			\
+>  	FN(unspec, 0, ##ctx)				\
+> @@ -6028,6 +6036,7 @@ union bpf_attr {
+>  	FN(user_ringbuf_drain, 209, ##ctx)		\
+>  	FN(cgrp_storage_get, 210, ##ctx)		\
+>  	FN(cgrp_storage_delete, 211, ##ctx)		\
+> +	FN(msleep_interruptible, 212, ##ctx)		\
+>  	/* This helper list is effectively frozen. If you are trying to	\
+>  	 * add a new helper, you should add a kfunc instead which has	\
+>  	 * less stability guarantees. See Documentation/bpf/kfuncs.rst	\
 
-Of course there has to be an '==' here. I'll fix it if this patch fits.
+I noticed that you've written the newly proposed BPF helper in the
+legacy BPF helper form, which I believe is now discouraged, as also
+stated within the above comment. You probably want to respin this
+patch series having written this newly proposed BPF helper in BPF
+kfuncs [0] form instead.
 
-> +		    !strncmp(mod->name, name, namelen))
->  			return mod;
->  	}
->  	return NULL;
->  }
->  
-> -static struct module *new_module(const char *name, size_t namelen)
-> +struct module *create_module(const char *name, size_t namelen, bool is_builtin)
->  {
->  	struct module *mod;
->  
-> @@ -207,7 +211,10 @@ static struct module *new_module(const char *name, size_t namelen)
->  	 */
->  	mod->is_gpl_compatible = true;
->  
-> -	list_add_tail(&mod->list, &modules);
-> +	if (is_builtin)
-> +		list_add_tail(&mod->list, &builtin_modules);
-> +	else
-> +		list_add_tail(&mod->list, &modules);
->  
->  	return mod;
->  }
-> @@ -2021,11 +2028,23 @@ static void write_if_changed(struct buffer *b, const char *fname)
->  static void write_vmlinux_export_c_file(struct module *mod)
->  {
->  	struct buffer buf = { };
-> +	struct module_alias *alias, *next;
->  
->  	buf_printf(&buf,
-> -		   "#include <linux/export-internal.h>\n");
-> +		   "#include <linux/export-internal.h>\n"
-> +		   "#include <linux/module.h>\n");
->  
->  	add_exported_symbols(&buf, mod);
-> +
-> +	list_for_each_entry(mod, &builtin_modules, list) {
-> +		list_for_each_entry_safe(alias, next, &mod->aliases, node) {
-> +			buf_printf(&buf, "MODULE_ALIAS_MODNAME(\"%s\", \"%s\");\n",
-> +					mod->name, alias->str);
-> +			list_del(&alias->node);
-> +			free(alias);
-> +		}
-> +	}
-> +
->  	write_if_changed(&buf, ".vmlinux.export.c");
->  	free(buf.p);
->  }
-> @@ -2112,7 +2131,7 @@ static void read_dump(const char *fname)
->  			continue;
->  		}
->  
-> -		mod = find_module(fname, modname);
-> +		mod = find_module(fname, modname, strlen(modname));
->  		if (!mod) {
->  			mod = new_module(modname, strlen(modname));
->  			mod->dump_file = fname;
-> diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-> index 9133e4c3803f..1d0dd4ee944a 100644
-> --- a/scripts/mod/modpost.h
-> +++ b/scripts/mod/modpost.h
-> @@ -107,7 +107,7 @@ struct module_alias {
+Additionally, as part of your patch series I think you'll also want to
+include some selftests.
+
+[0] https://docs.kernel.org/bpf/kfuncs.html
+
+> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> index e3a2662f4e33..0a3449c282f2 100644
+> --- a/kernel/bpf/helpers.c
+> +++ b/kernel/bpf/helpers.c
+> @@ -1905,6 +1905,19 @@ static const struct bpf_func_proto bpf_dynptr_data_proto = {
+>  	.arg3_type	= ARG_CONST_ALLOC_SIZE_OR_ZERO,
 >  };
 >  
->  /**
-> - * struct module - represent a module (vmlinux or *.ko)
-> + * struct module - represent a module (vmlinux, a builtin module, or *.ko)
+> +BPF_CALL_1(bpf_msleep_interruptible, long, timeout)
+> +{
+> +	return msleep_interruptible(timeout);
+> +}
+> +
+> +const struct bpf_func_proto bpf_msleep_interruptible_proto = {
+> +	.func		= bpf_msleep_interruptible,
+> +	.gpl_only	= false,
+> +	.might_sleep	= true,
+> +	.ret_type	= RET_INTEGER,
+> +	.arg1_type	= ARG_ANYTHING,
+> +};
+> +
+>  const struct bpf_func_proto bpf_get_current_task_proto __weak;
+>  const struct bpf_func_proto bpf_get_current_task_btf_proto __weak;
+>  const struct bpf_func_proto bpf_probe_read_user_proto __weak;
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 52c432a44aeb..8a0b96aed0c0 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1475,6 +1475,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  		return &bpf_get_branch_snapshot_proto;
+>  	case BPF_FUNC_find_vma:
+>  		return &bpf_find_vma_proto;
+> +	case BPF_FUNC_msleep_interruptible:
+> +		return &bpf_msleep_interruptible_proto;
+>  	default:
+>  		break;
+>  	}
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index 71d5ac83cf5d..cbbb6d70a7a3 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -5814,6 +5814,14 @@ union bpf_attr {
+>   *		0 on success.
 >   *
->   * @dump_file: path to the .symvers file if loaded from a file
->   * @aliases: list head for module_aliases
-> @@ -199,6 +199,19 @@ static inline bool is_valid_name(struct elf_info *elf, Elf_Sym *sym)
->  	return !is_mapping_symbol(name);
->  }
->  
-> +struct module *find_module(const char *filename, const char *name, size_t namelen);
-> +struct module *create_module(const char *name, size_t namelen, bool is_builtin);
-> +
-> +static inline struct module *new_module(const char *name, size_t namelen)
-> +{
-> +	return create_module(name, namelen, false);
-> +}
-> +
-> +static inline struct module *new_builtin_module(const char *name, size_t namelen)
-> +{
-> +	return create_module(name, namelen, true);
-> +}
-> +
->  /* symsearch.c */
->  void symsearch_init(struct elf_info *elf);
->  void symsearch_finish(struct elf_info *elf);
+>   *		**-ENOENT** if the bpf_local_storage cannot be found.
+> + *
+> + * long bpf_msleep_interruptible(long timeout)
+> + *	Description
+> + *		Make the current task sleep until *timeout* milliseconds have
+> + *		elapsed or until a signal is received.
+> + *
+> + *	Return
+> + *		The remaining time of the sleep duration in milliseconds.
+>   */
+>  #define ___BPF_FUNC_MAPPER(FN, ctx...)			\
+>  	FN(unspec, 0, ##ctx)				\
+> @@ -6028,6 +6036,7 @@ union bpf_attr {
+>  	FN(user_ringbuf_drain, 209, ##ctx)		\
+>  	FN(cgrp_storage_get, 210, ##ctx)		\
+>  	FN(cgrp_storage_delete, 211, ##ctx)		\
+> +	FN(msleep_interruptible, 212, ##ctx)		\
+>  	/* This helper list is effectively frozen. If you are trying to	\
+>  	 * add a new helper, you should add a kfunc instead which has	\
+>  	 * less stability guarantees. See Documentation/bpf/kfuncs.rst	\
 > -- 
-> 2.49.0
+> 2.49.0.906.g1f30a19c02-goog
 > 
-
--- 
-Rgrds, legion
-
