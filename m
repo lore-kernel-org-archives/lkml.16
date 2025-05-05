@@ -1,104 +1,156 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869822505D6
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D89E25C6F0
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746455248; cv=none; b=sQKss8HlrKFSOu+68g9owmrBR93QWjAMtH9xlIpD60M0QyPq3Y/y9uwxd9F83Ot6J4nvJS5nlr94eroE4LhMmT7uoddi/AVPW+nmGz35fVDB7YP6evSJ9nV685YrpnRt2HnmE/pwq23g4PPPz7I0/fNVMN/A+CyPmhdXYB+mil0=
+	t=1746455283; cv=none; b=a+EkjBmCRbDLgOJ0s/5zm6q7Wi74KKuRvq6xfncoDmyAvROAE75LPoDxlHU2IjMaiIYZMNfX8Y7O9wreV57gZcZVDIZT8hCaRwE36UBJFUrUk2lXZY9EYPsSkSrGPEZN8kFXri/RO2Yf1b/cKeOKCQD8wlWowKkSUWD6oqmqbg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746455248; c=relaxed/simple;
-	bh=Ly0CvE3a7Ft2cguZwUX08mOhOyHbvdJxbcYNTMDul48=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JerEDi6aIUfPl181dIRy5+h3ajTrSCyPloa+KywGMDd04+MirTofWTOfHfCar8HWk9FLI+uDiX4xEj+ZqVkUI080zI6U0gVgSM6YAxdUyR22JemsyugvNvgNIwtYf3LJeSAY9LXntsJ8Y2vUbUseLfJa4nWnyVNxLZQvt2lDOSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hw9zGMpK; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746455283; c=relaxed/simple;
+	bh=8bG+q9cvIxNRKMt+IdST9BOBQGsJ4SSG4cIoMmhVp70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FJwjckHW/jxscnYQ0qK/Rv5zge4qhS36oJxsig0bYnQyHJkZ1D9yw+N+zF6QZALZ7athMMALgXchkDigweWbI7fAm9t8A433jSrMaYOzEN71cHI/vyZGbFvOIZ7Mf3jRFTGA1qc4CkdmmAEsB/3uB7kpvI2Lcn0C2x/L2tmKbc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FAEmofIC; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hw9zGMpK"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so37054325e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:27:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FAEmofIC"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso59828766b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 07:27:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746455245; x=1747060045; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=suse.com; s=google; t=1746455278; x=1747060078; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oAtVszf1vdrmHz2MZSZ/fpRznhrZHx8AbHdFOY7qIPA=;
-        b=hw9zGMpKmVUHTAtRLOzfTBFRB2Mgum2BJuCXuGBnWHTC+aN6ruDP/oTg6iqSUJL0eW
-         iErNIwjpqpqYBeIu5SvADdpPFSG6U58CIrLnqVF5h47cfBaWm4bJUtlrEbOMYpWLRBVV
-         K17JdBBJ8ZFVs+yjm+4k0sy3jNAERytEnjVYNc6Vq+VZL1uT9F+PP0cDU91fnvFMPW4I
-         FStqDEPzemnzZZE7SkYSkl40X+8d5aV/KrU2nAez87aAMRWzi+KUM3kWbanJf8OgbJm7
-         GEacw5DSq+YN2I3iZDYASIzKhrHQl+90HN+1xXKbHned67p9NBJeZsofmcwkC9g57HqJ
-         LLug==
+        bh=VBzMpH2jBdczGJAGi07riCizg5SErgbDrt1biXSYE6I=;
+        b=FAEmofIC0oMM+HqGX1QdwjAskqxFoWHqsDymqlRLBS/KhXeZxE+mwWfJq29JUleahh
+         vKT2odpe77T24da5PV0EMgZ19hC2eRe4ZrMkJVRQRz0eIKE20NtNaupb7t2dlnTladb6
+         4mHbjKw5IN4P2WzraDyaCPW1q3P+ecfzDwBrl6jMs7w3fpy/jYI+5rBEE66Agxn9GF77
+         g4Y8NWq5b6bnb9NlFU8Pc/my94E230XqMhM79g5fUvX3TSlwsiVK2ibWES8kafcBxZG4
+         tnLTBER/EMzZktt84zMYVCpiHMTBHreMBiFItt1ZWyOn+8aGousocxWBWePautMA2OGz
+         bc2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746455245; x=1747060045;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1746455278; x=1747060078;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oAtVszf1vdrmHz2MZSZ/fpRznhrZHx8AbHdFOY7qIPA=;
-        b=XaftKcgj/WIbtNM0LTPVNgRUAB1vUqB2adLXLAChwfNckKfEkFs/adp4W+Ok8F1/sm
-         FSGE+lgE2bq7IlyICY8ppA7BXpLs1/nOuiE3lIb/DSanB6YVy5OssHLpDWD6NqH23Tdg
-         Cae9kTwlurLKlzqk5rbDSBO1s97n+sHJyrQeQTxYkjayiY/iHrcIQ//1cIex+0DpCCXc
-         1ZePCrSqJRpoXNnM03Ifbe/jsZtgqGGrho/VL8g9GacdiwsDQwzmk/jIUHROVnq2wQ5M
-         w19qgq7IVzpjNMJTiC+SFID40MJI3X3dBNzpt8VUJ5/8qlq+HjB7ipfctpnB4PlH7vSe
-         M1Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1ZFY5FpeTHAuegKc7mvJx7VR6IgMZPLSWlLsybQnwD85uDz1n2Zw4g+ZcggtOJdkHqB1NpaFcx8KckEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrAElAPVrXPddFuausTaJD5QjmN5SXWs2sxs/zANGkwht5unqz
-	jDpSJcVv5lxKgmfGk7BtlV820brvEn2MVRcbcomv9nzTNGRd1gBYMfqfPoS7IL8=
-X-Gm-Gg: ASbGncvhF0sKqr+ofxfN4Q6xTjBIyUbhay8fB50pRFSuHC/+Kywqg5DEAMxuNx7+zdb
-	4VDAcq0dNRb5uMDVIiP9ZAcFhLAz/bQzHYD0/0QzHDSGV77P9CEvWNpgzilIxsia0zPzbSAv5S6
-	sxnCccUvjUqLE2xX1mdwia8dvErpYnxhxWm2J8s6Lt3zyfOtsaXFe+kcnd8v2ZJFWEg9tdieQ19
-	j3LqOjTp8E2W0CHGoi8IzlrfW8O58JG4YyBOa+WisJFzltqymlUtbxG7Rms7IQQdcqpuIJxHA6o
-	b03Nc0Rs2wbuVgaXvEeYuDdVz37bKozQw7zTDcRjrAYAtg==
-X-Google-Smtp-Source: AGHT+IHdZ4eHWjSeHJWyp03pTCeFtVQb1fWivNtID+bl+XU3/4RJV+jvA1o2S7f/8WrZbEMT8MT8Rw==
-X-Received: by 2002:a05:600c:3494:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-441c48aa314mr72504945e9.4.1746455244822;
-        Mon, 05 May 2025 07:27:24 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2aecb60sm180087725e9.11.2025.05.05.07.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 07:27:24 -0700 (PDT)
-Date: Mon, 5 May 2025 17:27:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Shyam Prasad N <sprasad@microsoft.com>
-Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>,
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] cifs: Fix double unlock bug in open_cached_dir()
-Message-ID: <aBjKyIM-OqMBjFNv@stanley.mountain>
+        bh=VBzMpH2jBdczGJAGi07riCizg5SErgbDrt1biXSYE6I=;
+        b=BQAE3IMt25agD0SZjAjps3J1JxgvOIkicv64dX3otMU24NpCk6v2q/e8mhNE+wKJ1+
+         ljal1PISR0Cj4DYyp8yvRaGHihB7eONvRi40dUH7oubk0NdEktZXm25Zjqhc/oqSjm8P
+         1D+N1a6IFFfxCKfyLgu0wN1AQKAIorPasDhkimdeftaL1HXyzL7hiwM7JnqrtTxiFRZ/
+         1wm4sFU+xGXMudtYNGr4IGSDPxk0I0GSMFzFoMAluIFt59zJxG5/VAGS7Ox2VSgKn7Zr
+         tUE6q0jG5XAx69z9xmUcE/rFAbNDwd+vN4vnK0HD9Zmq50HqgGqbknfeGOWwYlCegnLd
+         WT4Q==
+X-Gm-Message-State: AOJu0Yyzm+dwtIuFfv8ElCV3RdtkSYEFaw8FnLm6VodIo4TGICiEqjZ0
+	py7sh5diITsiso15uPnt2LfIKrF3x8oiI8fH9jcS/OQib44lWp95RZcd3OaW/zk=
+X-Gm-Gg: ASbGncuMVV3eoZ7V7mNPl7YFPyUKqfsLeiWNPhgRBZishh+KJ92KWv/4LorAM5+bYRi
+	b9OJNVmXh4JG07iA/rMUlv1qvN8X5ocRFqNnM+8Ggj2fckUsVh665kG+o5LXVpXN9JSlA6ywItW
+	ycjfDIpPpfvx8TTCEmIcJaeSAnJkxbte5Uw3vrk4SGq8nc9CFGlIBQXNw8hrsDzgz69tEeZsbdc
+	rKuDhXbgN+VOg2zFhMK1sHbGhFjcpZ9bWIU+h41cY7NZXeTOeVMyodUOUIerYDrraXfDzhkBI8Z
+	dgQijIcxpM1GNrg8qj8hj67/mIrVBIXHbevdS58Elp8gXALsu2B7xg==
+X-Google-Smtp-Source: AGHT+IExfE0hcX78gw0nn1iPLAnLmMN0HdxWQnnSN8VNB89rL2yQ8NHWy4t+WCuJ1B8DNVSnVHuwAg==
+X-Received: by 2002:a17:906:c115:b0:ad0:c6ae:c0c9 with SMTP id a640c23a62f3a-ad1a4ab7f0dmr731420066b.40.1746455277537;
+        Mon, 05 May 2025 07:27:57 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a1f2dsm498974566b.40.2025.05.05.07.27.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 07:27:57 -0700 (PDT)
+Message-ID: <68e762ec-d320-4077-b321-63eefefe6d7d@suse.com>
+Date: Mon, 5 May 2025 16:27:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 22/25] module: Remove outdated comment about text_size
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
+ Yair Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+ Nicolas Saenz Julienne <nsaenz@amazon.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+ Jason Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Naveen N Rao <naveen@kernel.org>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Miguel Ojeda <ojeda@kernel.org>, "Mike Rapoport (Microsoft)"
+ <rppt@kernel.org>, Rong Xu <xur@google.com>,
+ Rafael Aquini <aquini@redhat.com>, Song Liu <song@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Randy Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <20250429113242.998312-23-vschneid@redhat.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250429113242.998312-23-vschneid@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The "goto out;" also does mutex_unlock(&cfid->cfid_mutex) so delete
-this duplicate unlock.
+On 4/29/25 13:32, Valentin Schneider wrote:
+> The text_size bit referred to by the comment has been removed as of commit
+> 
+>   ac3b43283923 ("module: replace module_layout with module_memory")
+> 
+> and is thus no longer relevant. Remove it and comment about the contents of
+> the masks array instead.
+> 
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 
-Fixes: 62adfb82c199 ("cifs: serialize initialization and cleanup of cfid")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-To be honest I suspect that we're going to have to revert
-62adfb82c199 ("cifs: serialize initialization and cleanup of cfid")
-instead of fixing it?  So this patch might not be worth applying.
+This comment cleanup is independent of the rest of the series. I've
+picked it separately on modules-next.
 
- fs/smb/client/cached_dir.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/fs/smb/client/cached_dir.c b/fs/smb/client/cached_dir.c
-index 9e20e3dc2c03..3f4fe1ecdcaf 100644
---- a/fs/smb/client/cached_dir.c
-+++ b/fs/smb/client/cached_dir.c
-@@ -238,7 +238,6 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,
- 	 */
- 	npath = path_no_prefix(cifs_sb, path);
- 	if (IS_ERR(npath)) {
--		mutex_unlock(&cfid->cfid_mutex);
- 		rc = PTR_ERR(npath);
- 		goto out;
- 	}
 -- 
-2.47.2
-
+Thanks,
+Petr
