@@ -1,62 +1,62 @@
 Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BB226FD87
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A622701B5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746469526; cv=none; b=taI4F9Qsj/mkvlCTwW9sHhBm1EcuaaeWB9akphUDUhFuZo60gTfew/cmrb1urPjcWWNIUsZ9ot4A+uVo6FeZifs+xPv2CVAQYWQ7IS845CqE9+c6+e/2finDIpI6Ba9/DbvaVJ2TlXyD1cbTwW7Cr0DZwxrLgEvEF1zr+0gnei4=
+	t=1746469528; cv=none; b=a/ut272pcYXjNG8YJStx3N3D0tWSE7T9jbe1xCe6hCNGuvkKTMu+I8amYjyian1/rdB/px1Ns1Dg3HRtWt5LMtK0n+dGf83a5BQRWi6QjxF2SdfcYZy4u6TMiDiPHbFYLYURSe87VghVnmkI/HAyzJCjZCjCuPmYfoYyeDf906U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746469526; c=relaxed/simple;
-	bh=rpHxyb0DLYYyztziMIbQjAgIVXs+GZVjWh0HN3QaywQ=;
+	s=arc-20240116; t=1746469528; c=relaxed/simple;
+	bh=FuFEl9n7hXKGBPHmlu+rFQ0mLr8r8w2qyN8+rXrz7D8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+FOZOVqs3J3s2H6QTWMOd4nUNXi3log54STeUkMXIIjAk/ILIApSpaJJlobw5xMbW3Q3G4p6i0Lq48gKfZkFanr8sGqnGNfpkoNVS78baIKy+UpMlomWfNuqHts/kQwQhy8XOlEcy2EJEpxLjYSi+3Ai/sTpR26RvKnUR66m28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1XQBGo0; arc=none smtp.client-ip=209.85.219.180
+	 MIME-Version; b=pzRB2x0RY1idlPNlz1k1Nrw94xXKLxIDCZcsu+9PrNs5ssdGkZKRhRPqUEUGqq5cLSz/AoD3L4lZUZkcNyb7SHIUACpswwby/wpNpNARFo8sPoshyRyUR2ZYxs1lrRACyBA666iXNMGVYA1imNUvIoB202SMxJ2jjaCGqev7jJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gt9OBTx2; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1XQBGo0"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e743bffc234so3793834276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gt9OBTx2"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7387d4a336so3879498276.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:25:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746469524; x=1747074324; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746469526; x=1747074326; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hwqgkNEYXyHkWyB1qk5+iP2RABWt8GbLuKvUfRd5GZM=;
-        b=R1XQBGo0nAQoQkKWlJCrBoD0oLwh+xYbk7fayKi5sn8Q0U323XPlb5266MP+v5l+IF
-         NZGxnUVgLwZlqKYNRo+ek7mh1KBsjEQNlPB8u3IBNXHGThH4CcNeIJ37otCecHCsKhFo
-         OvVvN02e2gytJN7r0Qz014/gu1yfSEAA+MwTQ47vKco8KBtYXA2p8NRRrQL7sktQvmZg
-         s8+plIFkJ7UAMuUcYs3Dd3/d+sNGu1LRPC1C0MGCbV6aJUfvvQ6DqRBBfTO4T+rZ2c3s
-         XZXXCufadodUyRlekwh/7LCo12qVUVct9ysMIqxKsw+bNeq3B9ahB1trXdEVvrcelEWJ
-         EIxA==
+        bh=XuThg12fH4g5ZORp98F9C2viVi9rSeBkPi/CF3lFj4A=;
+        b=gt9OBTx2gTTxkXu++lXR18rLtpR0OIYLJTc3+juibHdKDRcKmRQTDWEBJxjhCz7Xdl
+         oy+slaUj80bBuxhH8bARu3CPfAVy1/eh6gVt6khYKSeV7YjfFMOMtmyVK5OoWiHxvg9/
+         Ho4RPtqXlQr3Gjnj9MbEFzzOdpRGXuI2bi4YiPLfGfXWdxArRZxKDtl6eEyybK/NkaiD
+         cwWtVutO6Em7w9T3evBps1rY4gywLELBQGYLqwCk73yhFrOjeC/BwIvMd2AUtpQ2AOFf
+         CyQrls14YoZOaifoCw0RnHP0oXFHTAnyeAxL7iMRwyqsFPTKLSP3HqoATuRWGAWKOqb+
+         SCuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746469524; x=1747074324;
+        d=1e100.net; s=20230601; t=1746469526; x=1747074326;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hwqgkNEYXyHkWyB1qk5+iP2RABWt8GbLuKvUfRd5GZM=;
-        b=Axn3Y1tfRcN69P17LWicYHA2lKxYeyxPKqVRnuQ8u7N7MthO0T8GNsxove91kzJP/9
-         1dkIwLb7FNc83qQ9Pf3L/wIslx7A9pfLu54RWdrtR2F6iokNjbCSEjlPgzI/juZaYnMU
-         IkG3DDn/vy4F2pv9B/W9HRC9a76i7O5mOtuQZOdDtUhprzhNM8hKJayPwOmJPAikcASB
-         W5JpaiiFt4QW+FJD04VVD9DcK9MxNupH338DZn5rdp9WyUW/vuFWdd5tfUTErmrZFGtw
-         aNsXCPhotYMph9RTHcvrMESFZzCMVT8hUfD97rwCvWq4jGGP1I+y0nCIoVYccgZZ3UUz
-         qUHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWo7EzYcgzE7sB7+9GKdYsyS5p1wfXe6G5q7AW791SEb8s7zh02XA0hRdYZoojLgqk+fJ3+oGtzKGOk/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHJJrO2ZXA0cJ1ZB0xockv2tmaeQH5I7C2FX7V4/yNCVFez0qN
-	ulVzoiCD5kStPNKIgQ5tTynx77ft1CB8+yNCULteuqn4ylP9lCWX
-X-Gm-Gg: ASbGncuLz2HUQkd6ft+4CFaKzkB8KjS2QsD62KMOmBBF3z9cvJ/X0uW1z5Tpvm26HXE
-	COOyKHxGWC7VgzAa75qHkV9OfcuPWvOkVALiD1IfsqUEHjq0qzBfl/Rz2hRM+KZaxeN+6PNJmr0
-	eS98uZzMaVvQzL6VqacbfMQ7CXTctwXDFLwukI4zYhiWRia3AOZG5JXDatbCVL333EoVThUA4sK
-	jpjfbrmgdJUGE4YatD9kt332AaQeg/XboJdhR/FLzxIFD3qW9Hl6mdDvS8YayJteH8e2f6lZbpw
-	0pCTjnJvY0r0aJRBF9K3zigLS5sd9p2H0ujxY8OO/6dIFi37yTQ=
-X-Google-Smtp-Source: AGHT+IE2+UpQqJEfjCrdtdiWhaN6CoBtUcm6sMMIYpKWlJ/i479Wjm6/BZbUBkpHYu7GG5xJuDO0gw==
-X-Received: by 2002:a05:6902:2183:b0:e72:8957:328d with SMTP id 3f1490d57ef6-e757d350a3cmr9673327276.34.1746469524067;
-        Mon, 05 May 2025 11:25:24 -0700 (PDT)
+        bh=XuThg12fH4g5ZORp98F9C2viVi9rSeBkPi/CF3lFj4A=;
+        b=wV+SdFTT6hglqtAeks0wVt3HMpqAMZ2d9/pUb1SRKreR0QkQuDcFmrTuDbdC6mO3kW
+         2PQLVkIyfg7wb+FSUpIiLiF/0tHTSsZe0OcIu3bDLd+R9EjAlbRW8obgDAyOkSh0cfOq
+         LKz5iz0Nc4L0z+jea9G7D7XX160cSVi7z3JmK5TUa+kf0yW8iABv57GDcZzVQr2ZW8FA
+         37Ugtmr3EAsjwIvgrV7p5tc2zuggJG6zyo+00zl9UNSOrvGl3Zm1X3czGwVVWUkLqFel
+         H8X7bvCqK0bAU+F+pp/YOTSpen+x7hIKxA9ZsekydteIbL2TzKgMqeNMGBbpH3tJAeGu
+         IhyA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAnT8++879lrnK2FyDtFgzV7usma9cOJ96CojQCDO0WOU8rDT/7t4NHKDb2vM2G7BcJmNWNi4s3sVcZPs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYjPsnkKUPFhb9UFImfR5LnHlqaEW7/ucB1NdHrm/X4LbzIEPr
+	+k+cTCePT2D6kX0jBeszxA4w6QRrqf6IgrKK0/U6ZTn6GCNmAyAw
+X-Gm-Gg: ASbGncvlTcMx/tqv7AXo8ojJEHl7D9sPAZvAgIgybmsOJ/j2/2VVDd0n8qAnjgWJ6pX
+	Q43X+QiwPwvDsupGeQRMjHGojcnptrltuEja7mn3iKVCWAPtSl0FGSHGTSuH/we2UbjZmgDdK7T
+	nAWPFU0k7iLmJnLILthcYY2jyDuarlaSmGO1jq2qLjzwelR78VwGDWOY6NWYmyuQ4OwpU58Liv2
+	8cNCGHjRMwVGCpAtKUHJCEH9eAbHTt8GSS77hq8CQ7ToRKHiT9CNDspKWSTFMSLCK7PlxLQH65V
+	eeD5dpc1awS0hYqM7qMw9OmmVL7SlTgzG1wnI94XKErzu2kPNQszZ7J9udBRTA==
+X-Google-Smtp-Source: AGHT+IHWYXQ31FfmXio3NIqUd2zrA9/4L6iOyWFYTcB4iuWcOjNrqaYf3lxVr14Id2sBiuOIFJkjlA==
+X-Received: by 2002:a05:6902:729:b0:e72:ecd8:6d44 with SMTP id 3f1490d57ef6-e757d2d97c6mr10480471276.20.1746469525631;
+        Mon, 05 May 2025 11:25:25 -0700 (PDT)
 Received: from localhost.localdomain ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e755e7a897asm2113429276.38.2025.05.05.11.25.22
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e755e7a897asm2113429276.38.2025.05.05.11.25.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 11:25:23 -0700 (PDT)
+        Mon, 05 May 2025 11:25:25 -0700 (PDT)
 From: nifan.cxl@gmail.com
 To: muchun.song@linux.dev,
 	willy@infradead.org,
@@ -70,9 +70,9 @@ Cc: mcgrof@kernel.org,
 	linux-kernel@vger.kernel.org,
 	nifan.cxl@gmail.com,
 	Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH v4 3/4] mm/hugetlb: Refactor __unmap_hugepage_range() to take folio instead of page
-Date: Mon,  5 May 2025 11:22:43 -0700
-Message-ID: <20250505182345.506888-5-nifan.cxl@gmail.com>
+Subject: [PATCH v4 4/4] mm/hugetlb: Convert use of struct page to folio in __unmap_hugepage_range()
+Date: Mon,  5 May 2025 11:22:44 -0700
+Message-ID: <20250505182345.506888-6-nifan.cxl@gmail.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250505182345.506888-2-nifan.cxl@gmail.com>
 References: <20250505182345.506888-2-nifan.cxl@gmail.com>
@@ -86,98 +86,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Fan Ni <fan.ni@samsung.com>
 
-The function __unmap_hugepage_range() has two kinds of users:
-1) unmap_hugepage_range(), which passes in the head page of a folio.
-   Since unmap_hugepage_range() already takes folio and there are no other
-   uses of the folio struct in the function, it is natural for
-   __unmap_hugepage_range() to take folio also.
-2) All other uses, which pass in NULL pointer.
-
-In both cases, we can pass in folio. Refactor __unmap_hugepage_range() to
-take folio.
+In __unmap_hugepage_range(), the "page" pointer always points to the
+first page of a huge page, which guarantees there is a folio associating
+with it.  Convert the "page" pointer to use folio.
 
 Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Acked-by: David Hildenbrand <david@redhat.com>
 Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/hugetlb.h |  4 ++--
- mm/hugetlb.c            | 18 +++++++++---------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ mm/hugetlb.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index f6d5f24e793c..eb21619206af 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -134,7 +134,7 @@ void unmap_hugepage_range(struct vm_area_struct *,
- void __unmap_hugepage_range(struct mmu_gather *tlb,
- 			  struct vm_area_struct *vma,
- 			  unsigned long start, unsigned long end,
--			  struct page *ref_page, zap_flags_t zap_flags);
-+			  struct folio *, zap_flags_t zap_flags);
- void hugetlb_report_meminfo(struct seq_file *);
- int hugetlb_report_node_meminfo(char *buf, int len, int nid);
- void hugetlb_show_meminfo_node(int nid);
-@@ -455,7 +455,7 @@ static inline long hugetlb_change_protection(
- 
- static inline void __unmap_hugepage_range(struct mmu_gather *tlb,
- 			struct vm_area_struct *vma, unsigned long start,
--			unsigned long end, struct page *ref_page,
-+			unsigned long end, struct folio *folio,
- 			zap_flags_t zap_flags)
- {
- 	BUG();
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index c339ffe05556..443b75e116cf 100644
+index 443b75e116cf..d53caf96a4b2 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -5840,7 +5840,7 @@ int move_hugetlb_page_tables(struct vm_area_struct *vma,
- 
- void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			    unsigned long start, unsigned long end,
--			    struct page *ref_page, zap_flags_t zap_flags)
-+			    struct folio *folio, zap_flags_t zap_flags)
+@@ -5843,11 +5843,11 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 			    struct folio *folio, zap_flags_t zap_flags)
  {
  	struct mm_struct *mm = vma->vm_mm;
++	const bool folio_provided = !!folio;
  	unsigned long address;
-@@ -5913,12 +5913,12 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 	pte_t *ptep;
+ 	pte_t pte;
+ 	spinlock_t *ptl;
+-	struct page *page;
+ 	struct hstate *h = hstate_vma(vma);
+ 	unsigned long sz = huge_page_size(h);
+ 	bool adjust_reservation = false;
+@@ -5911,14 +5911,13 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 			continue;
+ 		}
  
- 		page = pte_page(pte);
+-		page = pte_page(pte);
  		/*
--		 * If a reference page is supplied, it is because a specific
--		 * page is being unmapped, not a range. Ensure the page we
--		 * are about to unmap is the actual page of interest.
-+		 * If a folio is supplied, it is because a specific
-+		 * folio is being unmapped, not a range. Ensure the folio we
-+		 * are about to unmap is the actual folio of interest.
+ 		 * If a folio is supplied, it is because a specific
+ 		 * folio is being unmapped, not a range. Ensure the folio we
+ 		 * are about to unmap is the actual folio of interest.
  		 */
--		if (ref_page) {
--			if (page != ref_page) {
-+		if (folio) {
-+			if (page_folio(page) != folio) {
+-		if (folio) {
+-			if (page_folio(page) != folio) {
++		if (folio_provided) {
++			if (folio != page_folio(pte_page(pte))) {
  				spin_unlock(ptl);
  				continue;
  			}
-@@ -5982,9 +5982,9 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+@@ -5928,12 +5927,14 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 			 * looking like data was lost
+ 			 */
+ 			set_vma_resv_flags(vma, HPAGE_RESV_UNMAPPED);
++		} else {
++			folio = page_folio(pte_page(pte));
+ 		}
  
- 		tlb_remove_page_size(tlb, page, huge_page_size(h));
+ 		pte = huge_ptep_get_and_clear(mm, address, ptep, sz);
+ 		tlb_remove_huge_tlb_entry(h, tlb, ptep, address);
+ 		if (huge_pte_dirty(pte))
+-			set_page_dirty(page);
++			folio_mark_dirty(folio);
+ 		/* Leave a uffd-wp pte marker if needed */
+ 		if (huge_pte_uffd_wp(pte) &&
+ 		    !(zap_flags & ZAP_FLAG_DROP_MARKER))
+@@ -5941,7 +5942,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 					make_pte_marker(PTE_MARKER_UFFD_WP),
+ 					sz);
+ 		hugetlb_count_sub(pages_per_huge_page(h), mm);
+-		hugetlb_remove_rmap(page_folio(page));
++		hugetlb_remove_rmap(folio);
+ 
  		/*
--		 * Bail out after unmapping reference page if supplied
-+		 * If we were instructed to unmap a specific folio, we're done.
+ 		 * Restore the reservation for anonymous page, otherwise the
+@@ -5950,8 +5951,8 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 		 * reservation bit.
  		 */
--		if (ref_page)
-+		if (folio)
+ 		if (!h->surplus_huge_pages && __vma_private_lock(vma) &&
+-		    folio_test_anon(page_folio(page))) {
+-			folio_set_hugetlb_restore_reserve(page_folio(page));
++		    folio_test_anon(folio)) {
++			folio_set_hugetlb_restore_reserve(folio);
+ 			/* Reservation to be adjusted after the spin lock */
+ 			adjust_reservation = true;
+ 		}
+@@ -5975,16 +5976,17 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 				 * count will not be incremented by free_huge_folio.
+ 				 * Act as if we consumed the reservation.
+ 				 */
+-				folio_clear_hugetlb_restore_reserve(page_folio(page));
++				folio_clear_hugetlb_restore_reserve(folio);
+ 			else if (rc)
+ 				vma_add_reservation(h, vma, address);
+ 		}
+ 
+-		tlb_remove_page_size(tlb, page, huge_page_size(h));
++		tlb_remove_page_size(tlb, folio_page(folio, 0),
++				     folio_size(folio));
+ 		/*
+ 		 * If we were instructed to unmap a specific folio, we're done.
+ 		 */
+-		if (folio)
++		if (folio_provided)
  			break;
  	}
  	tlb_end_vma(tlb, vma);
-@@ -6059,7 +6059,7 @@ void unmap_hugepage_range(struct vm_area_struct *vma, unsigned long start,
- 	tlb_gather_mmu(&tlb, vma->vm_mm);
- 
- 	__unmap_hugepage_range(&tlb, vma, start, end,
--			       &folio->page, zap_flags);
-+			       folio, zap_flags);
- 
- 	mmu_notifier_invalidate_range_end(&range);
- 	tlb_finish_mmu(&tlb);
 -- 
 2.47.2
 
