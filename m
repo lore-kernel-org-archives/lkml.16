@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816C736DD4A;
-	Mon,  5 May 2025 22:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E714D370B16;
+	Mon,  5 May 2025 22:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485201; cv=none; b=atQE+BRLNi6BsNUYUtJcK6XxFMVkapWqsSWqtpHnyXkl9M/ESrpQnXp0f1vTWqeCagjwJrAzKqAbpblnFsIt2RlwSZ0E4XFJO/fVpBFZiE9ljQnIa9q+KGFjyUGJSvXQOnkurxLQplQjawe75PQ0zeiH50YL3jRrdnPtxse3fuo=
+	t=1746485212; cv=none; b=VAQNPZNJYAVb/salNaRwZ7u2opXlSPDfT8Nopzood5FFcD3y/rB4puEiKKIXBZivTNN8w/Qu3AMHqjiZSrlMKlE29BNmNIJIhEQtlBXha1FbplSVns9q7OwT3QOCji7zWrkf9ESZ5MljpWKEloTWYKHkLEdPcwnN7Xkr5mSY0JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485201; c=relaxed/simple;
-	bh=yuXGiFMgftvcB/kFfE2afuFLtedFU/p8/E+RKzxHC2E=;
+	s=arc-20240116; t=1746485212; c=relaxed/simple;
+	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LUykHMS3UTKjEnyEXOC9tryB/xgNBpccw9za06STduk5kJAKuhQpwY8zWBzDEWfeMMcEvfueSQAsi8DCemgf81N2MxfFVPniw3CH2HmCaBRuth0rJQH5QaYWlX+x93VMMNZe8J/o2bTNQAnsI6G96LJOnwBOMhmvyW62W2PKaBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIr6N989; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=q3IEf+Hls3ZMYmDw0dVFC9zDbmKGLz1DteI0SzvHi4tHMXSX9Zjo/TwVVaNd8bSWq81b6RgKZFZ+WSHp0n5q34mu78vILnvWFKYIq0VMdm86oWwEsVcNL9If/voqUEkSCOpH8yQgHcJ5CpXxv8tzGVwZcReev4QLfKwmHAK0cEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzHaMdgL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIr6N989"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B8AFC4CEEF;
-	Mon,  5 May 2025 22:46:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzHaMdgL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75A0C4CEEF;
+	Mon,  5 May 2025 22:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485201;
-	bh=yuXGiFMgftvcB/kFfE2afuFLtedFU/p8/E+RKzxHC2E=;
+	s=k20201202; t=1746485211;
+	bh=8S/5I22qd4S0oH7P51ixZiHczSeXqwMQkKM+m4qTrFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OIr6N989MIzujB2dKup1LZBgszKzoi1mP+YtMYgY9GTHFUbHqEvnhAUKdpwtQL3ZC
-	 JZQCT8jzrKDvHTrdhICzZNUBdAxqRjabzaHFcQ+Rybo+zQX6OhwAg9C9F9Q0Uvr+rv
-	 p/aQYnVeFqcK7sSsttUD63RT3qF6sVymV8nuEYmXix/7F4bnxzYnrPvV4FJxHiyEEq
-	 HOX6yShL4my9BmhW4xA2QJ3/hxhAO5DMw94jPK/9TNDdMl987427lgZfzTwbtoBpwB
-	 L9fyE625ymhTfiTsS4XQVP01hslKQA+drCnxheyAx/chA7HM/ztGq4+JfbmY72UHPi
-	 tmGTVWSeUjXCw==
+	b=AzHaMdgLnZTWxOs3wo+pHODzHkhlxPbxbBuNFxmqVmGrjKcpFmAmE0dh1lRnupjDm
+	 4gZUyQyyMSEumTPNQCs5BEkJEmwyGpiYb7Zau0IZRXVC+8fPc42RulqLYWHFSfRLcG
+	 6F8VO1tI9g6uqaE+Fo1SpakJgDKWqtAKH0kLsH9tzUULKPlOInt10R04eDKkd/W+BG
+	 4NuPVMOjxviy6H5IzeQOAaVPeeWF8IBgmwvkYnUXMVIjMz39a/8OrFBqvKkartSqGe
+	 d3N6mmmOPwU0VUNubI32iB2glJ5mMgCfD7K4Xz98RuOOXHjbO+rd5LArz7C7i+O1iL
+	 WEGluETPRWGog==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrei Botila <andrei.botila@oss.nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Ian Rogers <irogers@google.com>,
+	Frederic Weisbecker <fweisbec@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	hkallweit1@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	sd@queasysnail.net,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 207/486] net: phy: nxp-c45-tja11xx: add match_phy_device to TJA1103/TJA1104
-Date: Mon,  5 May 2025 18:34:43 -0400
-Message-Id: <20250505223922.2682012-207-sashal@kernel.org>
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 213/486] perf/hw_breakpoint: Return EOPNOTSUPP for unsupported breakpoint type
+Date: Mon,  5 May 2025 18:34:49 -0400
+Message-Id: <20250505223922.2682012-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -56,116 +58,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Andrei Botila <andrei.botila@oss.nxp.com>
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
 
-[ Upstream commit a06a868a0cd96bc51401cdea897313a3f6ad01a0 ]
+[ Upstream commit 061c991697062f3bf87b72ed553d1d33a0e370dd ]
 
-Add .match_phy_device for the existing TJAs to differentiate between
-TJA1103 and TJA1104.
-TJA1103 and TJA1104 share the same PHY_ID but TJA1104 has MACsec
-capabilities while TJA1103 doesn't.
+Currently, __reserve_bp_slot() returns -ENOSPC for unsupported
+breakpoint types on the architecture. For example, powerpc
+does not support hardware instruction breakpoints. This causes
+the perf_skip BPF selftest to fail, as neither ENOENT nor
+EOPNOTSUPP is returned by perf_event_open for unsupported
+breakpoint types. As a result, the test that should be skipped
+for this arch is not correctly identified.
 
-Signed-off-by: Andrei Botila <andrei.botila@oss.nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Link: https://patch.msgid.link/20250228154320.2979000-2-andrei.botila@oss.nxp.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+To resolve this, hw_breakpoint_event_init() should exit early by
+checking for unsupported breakpoint types using
+hw_breakpoint_slots_cached() and return the appropriate error
+(-EOPNOTSUPP).
+
+Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Link: https://lore.kernel.org/r/20250303092451.1862862-1-skb99@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/nxp-c45-tja11xx.c | 54 +++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
+ kernel/events/hw_breakpoint.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/nxp-c45-tja11xx.c b/drivers/net/phy/nxp-c45-tja11xx.c
-index 9788b820c6be7..99a5eee77bec1 100644
---- a/drivers/net/phy/nxp-c45-tja11xx.c
-+++ b/drivers/net/phy/nxp-c45-tja11xx.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /* NXP C45 PHY driver
-- * Copyright 2021-2023 NXP
-+ * Copyright 2021-2025 NXP
-  * Author: Radu Pirea <radu-nicolae.pirea@oss.nxp.com>
-  */
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 6c2cb4e4f48da..8f3f624419aa9 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -950,9 +950,10 @@ static int hw_breakpoint_event_init(struct perf_event *bp)
+ 		return -ENOENT;
  
-@@ -18,6 +18,8 @@
+ 	/*
+-	 * no branch sampling for breakpoint events
++	 * Check if breakpoint type is supported before proceeding.
++	 * Also, no branch sampling for breakpoint events.
+ 	 */
+-	if (has_branch_stack(bp))
++	if (!hw_breakpoint_slots_cached(find_slot_idx(bp->attr.bp_type)) || has_branch_stack(bp))
+ 		return -EOPNOTSUPP;
  
- #include "nxp-c45-tja11xx.h"
- 
-+#define PHY_ID_MASK			GENMASK(31, 4)
-+/* Same id: TJA1103, TJA1104 */
- #define PHY_ID_TJA_1103			0x001BB010
- #define PHY_ID_TJA_1120			0x001BB031
- 
-@@ -1930,6 +1932,30 @@ static void tja1120_nmi_handler(struct phy_device *phydev,
- 	}
- }
- 
-+static int nxp_c45_macsec_ability(struct phy_device *phydev)
-+{
-+	bool macsec_ability;
-+	int phy_abilities;
-+
-+	phy_abilities = phy_read_mmd(phydev, MDIO_MMD_VEND1,
-+				     VEND1_PORT_ABILITIES);
-+	macsec_ability = !!(phy_abilities & MACSEC_ABILITY);
-+
-+	return macsec_ability;
-+}
-+
-+static int tja1103_match_phy_device(struct phy_device *phydev)
-+{
-+	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
-+	       !nxp_c45_macsec_ability(phydev);
-+}
-+
-+static int tja1104_match_phy_device(struct phy_device *phydev)
-+{
-+	return phy_id_compare(phydev->phy_id, PHY_ID_TJA_1103, PHY_ID_MASK) &&
-+	       nxp_c45_macsec_ability(phydev);
-+}
-+
- static const struct nxp_c45_regmap tja1120_regmap = {
- 	.vend1_ptp_clk_period	= 0x1020,
- 	.vend1_event_msg_filt	= 0x9010,
-@@ -2000,7 +2026,6 @@ static const struct nxp_c45_phy_data tja1120_phy_data = {
- 
- static struct phy_driver nxp_c45_driver[] = {
- 	{
--		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1103),
- 		.name			= "NXP C45 TJA1103",
- 		.get_features		= nxp_c45_get_features,
- 		.driver_data		= &tja1103_phy_data,
-@@ -2022,6 +2047,31 @@ static struct phy_driver nxp_c45_driver[] = {
- 		.get_sqi		= nxp_c45_get_sqi,
- 		.get_sqi_max		= nxp_c45_get_sqi_max,
- 		.remove			= nxp_c45_remove,
-+		.match_phy_device	= tja1103_match_phy_device,
-+	},
-+	{
-+		.name			= "NXP C45 TJA1104",
-+		.get_features		= nxp_c45_get_features,
-+		.driver_data		= &tja1103_phy_data,
-+		.probe			= nxp_c45_probe,
-+		.soft_reset		= nxp_c45_soft_reset,
-+		.config_aneg		= genphy_c45_config_aneg,
-+		.config_init		= nxp_c45_config_init,
-+		.config_intr		= tja1103_config_intr,
-+		.handle_interrupt	= nxp_c45_handle_interrupt,
-+		.read_status		= genphy_c45_read_status,
-+		.suspend		= genphy_c45_pma_suspend,
-+		.resume			= genphy_c45_pma_resume,
-+		.get_sset_count		= nxp_c45_get_sset_count,
-+		.get_strings		= nxp_c45_get_strings,
-+		.get_stats		= nxp_c45_get_stats,
-+		.cable_test_start	= nxp_c45_cable_test_start,
-+		.cable_test_get_status	= nxp_c45_cable_test_get_status,
-+		.set_loopback		= genphy_c45_loopback,
-+		.get_sqi		= nxp_c45_get_sqi,
-+		.get_sqi_max		= nxp_c45_get_sqi_max,
-+		.remove			= nxp_c45_remove,
-+		.match_phy_device	= tja1104_match_phy_device,
- 	},
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_TJA_1120),
+ 	err = register_perf_hw_breakpoint(bp);
 -- 
 2.39.5
 
