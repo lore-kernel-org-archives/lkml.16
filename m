@@ -1,140 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BED2040B6;
-	Mon,  5 May 2025 13:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF524C62;
+	Mon,  5 May 2025 13:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746452119; cv=none; b=GkdW+QDPMht/RcvlnQpjhltlURthfFCsiSbieehNI+4KIUJZEHAeu9hfG2N+fPUNw5SFWq+WTAQ6x7fn4YpqHDBvtKKhaNBqp6WoNnlAvrINlJqDSnoMguwLcE4ALWmHufUkFN2u2SDApSTq/G5SKUUWecHKz9a9GLKt5mF0n1k=
+	t=1746452181; cv=none; b=u46pkb1qCc0jTegLwbJrp3215HJvrG0x8sXhzZFw58AXH/2rZXO3zODxvYeLK0TpR403GYPYDSMXguPvgSQCg/zX0OQ6NOkNqOMBiZyi+RyfCHKMGvy/4GecKWClg/vo4lnn0VsAbJ7YhN7ZIe4kwVx/WsYeZlgp/rq5dln5p/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746452119; c=relaxed/simple;
-	bh=lZYJj5+RvlpcB3C/3nThNIVF+4ts/zwD2yTL3wPkp6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuaOK6RC86zHlAzerYOF/Royd3zJyVZI7hNQkbToyOu9662p7Z8k/qZW8q90uesOxoT/LyIFWhTJlqZjFjNKBFjwTN6G873sR7o424MKWNExTaUdcpKniWkJe5ntmbxnSx9gwhMrxMK8aN+4yg3kIHz5vClh2vDmrsBtroBrXKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkF1cTFv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746452181; c=relaxed/simple;
+	bh=uOJBODAAKPuFa4Z8nueJ1234uRbOUbVAkLthri4BfYY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=KkNWpfC1D7tPJ+4tiZY8/s8gqVsEh1/z/y+iRb3mgJJY1ZYGb30sfuHWHJt6AOdlMiLmnjLVFm+I1IsGxYd0OvsuUQBKcLGoZEoC5xzk7BbaQWrwZCfiHA6a947WTOn1bWF04QIFijFmidls02bvNyE3QqLapeNsnVQ6LspmfcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hKCTVi5Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=84OK2RdA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkF1cTFv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4726BC4CEE4;
-	Mon,  5 May 2025 13:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746452118;
-	bh=lZYJj5+RvlpcB3C/3nThNIVF+4ts/zwD2yTL3wPkp6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qkF1cTFvbhP4Ye7NeV9917c1PkBLXuYnLDbiOErKUKsUumdsSQbOSMNV+zqY18Rek
-	 iMgcsmDQnKKTGn+zuxvwpTgU95tKAC7axgb/oimBwIeWBH4Qdl//jsdS4phegc4QB6
-	 Od8s6UqytlBBSYBU6sYpgrW0+Xp5QP9sPiVwNULR2e9TANRtMUkmw+uXdjg01d79Ln
-	 oApceD/DookzKf4fYwsDQNTRHGg1JtviuRWBg02Cwd5WEcQ0XvCA/LXEG/YJP63KIn
-	 sUWf6i8bS2nrfk6KNE3ZE7xDcac83jrNRzGftJ/nnH7mqWNvilg2dKT7aNvbAlNFVZ
-	 3fsRCjlhW9PCw==
-Date: Mon, 5 May 2025 15:35:13 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Hubbard <jhubbard@nvidia.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Christian Brauner <christian@brauner.io>, Shuah Khan <shuah@kernel.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>, seanjc@google.com
-Subject: Re: [PATCH v3 3/3] selftests: pidfd: add tests for PIDFD_SELF_*
-Message-ID: <20250505-postablage-drinnen-ddaa539abc18@brauner>
-References: <cover.1729073310.git.lorenzo.stoakes@oracle.com>
- <c083817403f98ae45a70e01f3f1873ec1ba6c215.1729073310.git.lorenzo.stoakes@oracle.com>
- <a3778bea-0a1e-41b7-b41c-15b116bcbb32@linuxfoundation.org>
- <a6133831-3fc3-49aa-83c6-f9aeef3713c9@lucifer.local>
- <5b0b8e1e-6f50-4e18-bf46-39b00376c26e@nvidia.com>
- <20250501114235.GP4198@noisy.programming.kicks-ass.net>
- <20250501124646.GC4356@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hKCTVi5Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="84OK2RdA"
+Date: Mon, 05 May 2025 13:36:12 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746452177;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Bd2rSTkmVaU7j5jj/A5Uc+IFo+zPwqwgYaQTycNbHM=;
+	b=hKCTVi5Q0N5KIMdDMzr/8yfZi0PFpKcktGAVsZO23Xy3MojgFjtbn5VeCVG0DtzZn2+PaY
+	wq4lE0/ApOSrnf1zNh/S3ZmTaVCKSyStFGtsXeyppPkGPs+i7PO9L8j7Qx7WOfKFlP4Tsu
+	aK5i5EFrVa4GfIypq/NGg4dOsy8UkEvviXJkg+rwQISHK3ZrwI8+MlZLIMiZUixrBtL/e5
+	3b3n5xYZis28Vr10nhAZVdOSfMJwe3UbtNZM1Cll9mUIrmFRnGz3FwMPKTmOTY4lcT8Nbh
+	szy2zFAhstEkHRpEjzv2MZpv2nUjr0k1koVASZ91PJmOfh9/HsqNNQ33LwT23Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746452177;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Bd2rSTkmVaU7j5jj/A5Uc+IFo+zPwqwgYaQTycNbHM=;
+	b=84OK2RdAATnKV2KeAWD1R6ErEz+/SCEIWnlMktgN5p2JXU2FGZCHLAxt1zxFhlNVxQCGzE
+	Sby1dWwHy2y1J8Ag==
+From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq/irqdesc: Decrease indentation level in
+ __irq_get_desc_lock()
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250416114122.2191820-2-andriy.shevchenko@linux.intel.com>
+References: <20250416114122.2191820-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250501124646.GC4356@noisy.programming.kicks-ass.net>
+Message-ID: <174645217211.22196.13632864206682410292.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 01, 2025 at 02:46:46PM +0200, Peter Zijlstra wrote:
-> On Thu, May 01, 2025 at 01:42:35PM +0200, Peter Zijlstra wrote:
-> > On Wed, Oct 16, 2024 at 07:14:34PM -0700, John Hubbard wrote:
-> > > On 10/16/24 3:06 PM, Lorenzo Stoakes wrote:
-> > > > On Wed, Oct 16, 2024 at 02:00:27PM -0600, Shuah Khan wrote:
-> > > > > On 10/16/24 04:20, Lorenzo Stoakes wrote:
-> > > ...
-> > > > > > diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-> > > > > > index 88d6830ee004..1640b711889b 100644
-> > > > > > --- a/tools/testing/selftests/pidfd/pidfd.h
-> > > > > > +++ b/tools/testing/selftests/pidfd/pidfd.h
-> > > > > > @@ -50,6 +50,14 @@
-> > > > > >    #define PIDFD_NONBLOCK O_NONBLOCK
-> > > > > >    #endif
-> > > > > > +/* System header file may not have this available. */
-> > > > > > +#ifndef PIDFD_SELF_THREAD
-> > > > > > +#define PIDFD_SELF_THREAD -100
-> > > > > > +#endif
-> > > > > > +#ifndef PIDFD_SELF_THREAD_GROUP
-> > > > > > +#define PIDFD_SELF_THREAD_GROUP -200
-> > > > > > +#endif
-> > > > > > +
-> > > > > 
-> > > > > As mentioned in my response to v1 patch:
-> > > > > 
-> > > > > kselftest has dependency on "make headers" and tests include
-> > > > > headers from linux/ directory
-> > > > 
-> > > > Right but that assumes you install the kernel headers on the build system,
-> > > > which is quite a painful thing to have to do when you are quickly iterating
-> > > > on a qemu setup.
-> > > > 
-> > > > This is a use case I use all the time so not at all theoretical.
-> > > > 
-> > > 
-> > > This is turning out to be a fairly typical reaction from kernel
-> > > developers, when presented with the "you must first run make headers"
-> > > requirement for kselftests.
-> > > 
-> > > Peter Zijlstra's "NAK NAK NAK" response [1] last year was the most
-> > > colorful, so I'll helpfully cite it here. :)
-> > 
-> > Let me re-try this.
-> > 
-> > This is driving me insane. I've spend the past _TWO_ days trying to
-> > build KVM selftests and I'm still failing.
-> > 
-> > This is absolute atrocious crap and is costing me valuable time.
-> > 
-> > Please fix this fucking selftests shit to just build. This is unusable
-> > garbage.
-> 
-> So after spending more time trying to remember how to debug Makefiles (I
-> hate my life), I found that not only do I need this headers shit, the
-> kvm selftests Makefile is actively broken if you use: make O=foo
-> 
-> -INSTALL_HDR_PATH = $(top_srcdir)/usr
-> +INSTALL_HDR_PATH = $(top_srcdir)/$(O)/usr
-> 
-> 
-> And then finally, I can do:
-> 
-> make O=foo headers_install
-> make O=foo -C tools/testing/selftests/kvm/
-> 
-> So yeah, thank you very much for wasting my time *AGAIN*.
-> 
-> 
-> Seriously, I want to be able to do:
-> 
->   cd tools/testing/selftests/foo; make
-> 
-> and have it just work. I would strongly suggest every subsystem to
-> reclaim their selftests and make it so again.
-> 
-> And on that, let me go merge the fixes I need to have x86 and futex
-> build without this headers shit.
+The following commit has been merged into the irq/core branch of tip:
 
-I'm completely lost as to what's happening here or whether the test here
-is somehow at fault for something.
+Commit-ID:     e5032ead8599affac5d8b816ea3c9d63ebeec6b4
+Gitweb:        https://git.kernel.org/tip/e5032ead8599affac5d8b816ea3c9d63ebeec6b4
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Wed, 16 Apr 2025 14:40:33 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 05 May 2025 15:24:06 +02:00
 
-The pidfd.h head explicitly has no dependency on the pidfd uapi header
-itself and I will NAK anything that makes it so. It's just a giant pain.
+genirq/irqdesc: Decrease indentation level in __irq_get_desc_lock()
+
+There is a conditional that covers all the code for the entire function.
+Invert it and decrease indentation level. This also helps for further
+changes to be clearer and tidier.
+
+[ tglx: Removed line breaks ]
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250416114122.2191820-2-andriy.shevchenko@linux.intel.com
+---
+ kernel/irq/irqdesc.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 4bcc6ff..5b3aee2 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -896,27 +896,27 @@ unsigned int irq_get_next_irq(unsigned int offset)
+ 	return irq_find_at_or_after(offset);
+ }
+ 
+-struct irq_desc *
+-__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
+-		    unsigned int check)
++struct irq_desc *__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
++				     unsigned int check)
+ {
+-	struct irq_desc *desc = irq_to_desc(irq);
++	struct irq_desc *desc;
+ 
+-	if (desc) {
+-		if (check & _IRQ_DESC_CHECK) {
+-			if ((check & _IRQ_DESC_PERCPU) &&
+-			    !irq_settings_is_per_cpu_devid(desc))
+-				return NULL;
+-
+-			if (!(check & _IRQ_DESC_PERCPU) &&
+-			    irq_settings_is_per_cpu_devid(desc))
+-				return NULL;
+-		}
++	desc = irq_to_desc(irq);
++	if (!desc)
++		return NULL;
++
++	if (check & _IRQ_DESC_CHECK) {
++		if ((check & _IRQ_DESC_PERCPU) && !irq_settings_is_per_cpu_devid(desc))
++			return NULL;
+ 
+-		if (bus)
+-			chip_bus_lock(desc);
+-		raw_spin_lock_irqsave(&desc->lock, *flags);
++		if (!(check & _IRQ_DESC_PERCPU) && irq_settings_is_per_cpu_devid(desc))
++			return NULL;
+ 	}
++
++	if (bus)
++		chip_bus_lock(desc);
++	raw_spin_lock_irqsave(&desc->lock, *flags);
++
+ 	return desc;
+ }
+ 
