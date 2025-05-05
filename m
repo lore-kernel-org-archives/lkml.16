@@ -1,181 +1,152 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5329C156236
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883871A8418;
+	Mon,  5 May 2025 20:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478527; cv=none; b=CQ4qfOX3RBY2SxYPPUTGn6NrCkcllyJekIYdda6rGWFS2Hcc7RLU15itTHxPdAnfKfAkh16n7NAXra4zS9d18MbPnTcIPWP8ocOmS6hvbdgVjIlACai92MWIhgl46QCgK5anv7Xms8qHlMn0EosRon6reDwcHrv8gBlnoZx95Qg=
+	t=1746478606; cv=none; b=jUW4WuIdvgdD4rkehikjDVRwgBj6uwO0NTCaS5rRZ5ewPYQOsMyTsRA8K+ukLJongIL/9RgYyJBHRhxCSXgavBTFMhCi9fCsLalvbZyJPmpAPJqdXR0VB5ugledNOEtaBGVwtXdFAHXAMrpPzggrWt4Aa25JSydajsA36ygJKyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478527; c=relaxed/simple;
-	bh=CcZ1jORXsXUNNI5DmPwrvSmetMSvhSPTegSj1nPNGfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qBMqt8dcsnJcTnsikyNsZ1fHh5gP2/tdHVFUG9B8xnCHCMT8FJiAujd3zcM4fQufRhjt/JrSewKWlT4VC1q+9pyeC9ZncFhmZk1EoSpZFCfgBR5rWF4avWmkcNWmaNeMBv5QE2LVduVedyRR0bjxU1EHyXvzvMTuWX+2W7v34UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=mryhlDDi; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746478606; c=relaxed/simple;
+	bh=+zSEcQXcJSa0UVLRCve/MVPW781/atvqhwN219jf8j4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hvfOuxPOxv5DFOlQ0HG5tQTRp/UTkb40vErL+kd+NqnzjXjUWPM+d0VO47snyrHZVj6uT2ltAQ1I9ZJDxeXw1K70IPRbw/1tG/1+yzU+gChH9vvc6eI1tDAYDbANdeR9E6a15Zi2b18OiALk2ixU43ZEcpQmEZs5ntRcZ0dXvoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTlvn8Yf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="mryhlDDi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746478524;
- bh=qQneQiujTp667QxrLtu0L+PuxYk5iu271S89xRTqn6s=;
- b=mryhlDDiUrBpvLIzZVjjRhzoFNYGcnJgqs5yYyS+k7O/6fwKyAPTOtNyircrygQ7h4Sa+jMC2
- 7JHHLwIJyKV9ef1ZZy4AhaqtlSZVoj4xh9cw2mjS7HWLVbKhzOm7fJUn5jaQyUAugEdaLuUf5lT
- NDLyHFYOd9G9Gq8nUXGytFwYQAsulxVWyZVHl8t9hIN5E+Bk3hxVtXFwLYXtILoj3dmPnbvJgky
- AEAhJ8ZI546MA85KKiXiXdo8eeXEiqqkyRc+w8Kvga2G1DTX4j2zEESUlalysyehdy6TjuO2x6P
- Xr0pR5NMC+4jl72qPBb/o7h05OF4pDex6b6f4QwKCjuQ==
-X-Forward-Email-ID: 681925af46c37f8647c20276
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <f0ef6679-7ddf-4deb-98a3-755ac2b61a57@kwiboo.se>
-Date: Mon, 5 May 2025 22:55:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTlvn8Yf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEDBBC4AF09;
+	Mon,  5 May 2025 20:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746478606;
+	bh=+zSEcQXcJSa0UVLRCve/MVPW781/atvqhwN219jf8j4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GTlvn8YfPvSKCrQhLeMR60udbVb7VAivkh32QAzn72XFsGXir9p0ZFC35gTE0ELT+
+	 sNh0esvjITXpsa3q/ZNOSdwd51X7ceWQ8Jdj0AiZ7errYoj9DCv2ZcmvLB//aKDfnc
+	 zaSDAGnZuZq+hyQj5EVY/AoH7GL3YRU/qe6kjgSAW9+gxxWoI/P0uXF4siO2M/e8TQ
+	 2m4lmJrAXUt9OMG5toAEeXjMk0yZKSiXOvmrqbIVdj85m24166N9H1olVsgtxR3RTb
+	 Q7mTomzu8xogbraiwsHjoXfgrlsjIDsX0vx7FDKKyDjNtcXtjyk+QvaVG3rgHPNeb6
+	 MM4vzIVqMjDng==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acb615228a4so1140944566b.0;
+        Mon, 05 May 2025 13:56:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVstBBFNm5a4oQ7a5+jNUGy2iM/Pw5bVQJpYA+NkYI6bNEiPZQksEduZ+fhNl6SEdoW7rVuKOJMIvXp@vger.kernel.org, AJvYcCX9lEk5I46wUOqfmr24/XITFKEu/V5iE0p+V5pnSPLUNQ0a9T2zdtFqMyFQBtmFTz6r23adlOKXz/VNbPxB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ1YBiuJbAq8SanPJStuO+msNVPqtjOx/RB+ULBjUhESmSsLkM
+	xWore/gijrthggPzmK2NyY/pgskUDPc/3gYZrT4CuGeKLAGjFe748iA1pxnS272kbwZ6+P+wt/u
+	EPMp7e2t/Y9mUuPmhYGIP++4i/Q==
+X-Google-Smtp-Source: AGHT+IGkJVWyh0QSuT5meDQSjUXPMHR2CgBR7bcqa5G7fqFp4zogRHH6ii5TTGWVWqUyH/EwtI9puy7YAAqslZ74eDc=
+X-Received: by 2002:a17:907:7251:b0:ac7:e4b5:4827 with SMTP id
+ a640c23a62f3a-ad1d2fa229emr75140366b.28.1746478604546; Mon, 05 May 2025
+ 13:56:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] arm64: dts: rockchip: Add SDMMC/SDIO controllers
- for RK3528
-To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Shresth Prasad <shresthprasad7@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Chukun Pan <amadeus@jmu.edu.cn>, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250417143647.43860-1-ziyao@disroot.org>
- <20250417143647.43860-5-ziyao@disroot.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250417143647.43860-5-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <b1990c97-8751-4964-a3e8-9598f4cfac2a@beagleboard.org>
+ <20250430160944.7740d5e9@bootlin.com> <e05c315d-a907-45f0-8f5c-1c106b05f548@beagleboard.org>
+ <2025050448-snipping-flatbed-2752@gregkh> <eefa06c1-478f-4670-80c7-4bde8c808e1b@beagleboard.org>
+ <2025050426-expel-overarch-3454@gregkh> <CAMuHMdU6YmGnZqGt6ptXdaTSiSYFaAZqFRKL=WyBZ8W3Cv39kA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU6YmGnZqGt6ptXdaTSiSYFaAZqFRKL=WyBZ8W3Cv39kA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 May 2025 15:56:33 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLr1Ag5==EE-rB=L7=OZQMjGGyDkgpxoz9_=tvXy2HOsA@mail.gmail.com>
+X-Gm-Features: ATxdqUEzwkZLzGgqG3YoBCDaB7fyZVe_0W2NIGUQBC4xaFWWiXwkAu9GuXGlbQ0
+Message-ID: <CAL_JsqLr1Ag5==EE-rB=L7=OZQMjGGyDkgpxoz9_=tvXy2HOsA@mail.gmail.com>
+Subject: Re: [Discussion] Global vs Local devicetree overlays for addon board
+ + connector setups
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ayush Singh <ayush@beagleboard.org>, 
+	Herve Codina <herve.codina@bootlin.com>, xypron.glpk@gmx.de, 
+	Jason Kridner <jkridner@beagleboard.org>, Deepak Khatri <lorforlinux@beagleboard.org>, 
+	Dhruva Gole <d-gole@ti.com>, Robert Nelson <robertcnelson@beagleboard.org>, Andrew Davis <afd@ti.com>, 
+	David Gibson <david@gibson.dropbear.id.au>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Pantelis Antoniou <pantelis.antoniou@gmail.com>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-17 16:36, Yao Zi wrote:
-> RK3528 features two SDIO controllers and one SD/MMC controller, describe
-> them in devicetree. Since their sample and drive clocks are located in
-> the VO and VPU GRFs, corresponding syscons are added to make these
-> clocks available.
-> 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+On Mon, May 5, 2025 at 1:44=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> On Sun, 4 May 2025 at 15:13, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Sun, May 04, 2025 at 06:30:24PM +0530, Ayush Singh wrote:
+> > > On 5/4/25 18:20, Greg Kroah-Hartman wrote:
+> > > > On Sun, May 04, 2025 at 06:03:26PM +0530, Ayush Singh wrote:
+> > > > > > It depends on the bus the device is added.
+> > > > > > when an overlay is applied by the kernel, OF_RECONFIG_* events =
+are
+> > > > > > triggered. Some buses handle them:
+> > > > > >
+> > > > > >         $ git grep OF_RECONFIG_CHANGE
+> > > > > >         drivers/bus/imx-weim.c: case OF_RECONFIG_CHANGE_ADD:
+> > > > > >         drivers/bus/imx-weim.c: case OF_RECONFIG_CHANGE_REMOVE:
+> > > > > >         drivers/gpio/gpiolib-of.c:      case OF_RECONFIG_CHANGE=
+_ADD:
+> > > > > >         drivers/gpio/gpiolib-of.c:      case OF_RECONFIG_CHANGE=
+_REMOVE:
+> > > > > >         drivers/i2c/i2c-core-of.c:      case OF_RECONFIG_CHANGE=
+_ADD:
+> > > > > >         drivers/i2c/i2c-core-of.c:      case OF_RECONFIG_CHANGE=
+_REMOVE:
+> > > > > >         drivers/of/dynamic.c: * Return: OF_RECONFIG_CHANGE_REMO=
+VE on device going from enabled to
+> > > > > >         drivers/of/dynamic.c: * disabled, OF_RECONFIG_CHANGE_AD=
+D on device going from disabled to
+> > > > > >         drivers/of/dynamic.c:   return new_state ? OF_RECONFIG_=
+CHANGE_ADD : OF_RECONFIG_CHANGE_REMOVE;
+> > > > > >         drivers/of/platform.c:  case OF_RECONFIG_CHANGE_ADD:
+> > > > > >         drivers/of/platform.c:  case OF_RECONFIG_CHANGE_REMOVE:
+> > > > > >         drivers/spi/spi.c:      case OF_RECONFIG_CHANGE_ADD:
+> > > > > >         drivers/spi/spi.c:      case OF_RECONFIG_CHANGE_REMOVE:
+> > > > > >         include/linux/of.h:     OF_RECONFIG_CHANGE_ADD,
+> > > > > >         include/linux/of.h:     OF_RECONFIG_CHANGE_REMOVE,
+> > > > >
+> > > > > Well, if some bus does handle the event, I guess it is a bug in t=
+he
+> > > > > subsystems that do not? Maybe Greg Kroah-Hartman can clarify the =
+expected
+>
+> Support for OF_RECONFIG_* events was added only to buses where users
+> had a need for it (spi, i2c, platform, weim) and to the GPIO subsystem
+> (for hogs).  More can be added...
+>
+> > > > > behavior here? Maybe we are in transition phase here.
+> > > > Perhaps those other busses just do not have OF devices and so they =
+never
+> > > > needed to add that functionality to them?
+> > > >
+> > > > If they do, then by all means add that code.  OF devices are not
+> > > > possible for many bus types, so there shouldn't be a need to add th=
+is to
+> > > > the driver core, right?
+> > >
+> > > UART devices are pretty common in both Beagle capes and MikroBUS. So =
+I think
+> > > that will probably need to be added at some point.
+> >
+> > uarts are not a bus, they are a type of device that is implemented by
+> > many different bus drivers (pci, USB, etc.)
+>
+> It depends...
+> https://elixir.bootlin.com/linux/v6.14.5/source/Documentation/devicetree/=
+bindings/serial/serial.yaml#L90
+>
+> It makes perfect sense to add support for OF_RECONFIG_* events to the
+> serial bus, so people can attach e.g. a bluetooth or GNSS device to a
+> serial header on their board (or even to a legacy serial port on a PC),
+> load a DT overlay, and enjoy a working device.
 
-SD-cards and SDIO WiFi is detected on my RK3528 boards with help of this
-so this is:
+serdev has bigger issues than lack of OF_RECONFIG_* support. Whether a
+UART is bound to tty or serdev is purely based on whether there's a
+child node or not under the UART node. Until someone figures out how
+to make unbinding from tty layer work or allow both at the same time,
+then it's not going to matter.
 
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+Notifier events are usually a solution waiting for something better. I
+think we should actually remove the property notifiers. While we can
+support nodes coming and going, we absolutely have no support for
+properties coming and going. I don't think we want to start
+refcounting properties either.
 
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 69 ++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index 826f9be0be19..931d4ac004c5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -321,6 +321,16 @@ qos_vpu: qos@ff280400 {
->  			reg = <0x0 0xff280400 0x0 0x20>;
->  		};
->  
-> +		vpu_grf: syscon@ff340000 {
-> +			compatible = "rockchip,rk3528-vpu-grf", "syscon";
-> +			reg = <0x0 0xff340000 0x0 0x8000>;
-> +		};
-> +
-> +		vo_grf: syscon@ff360000 {
-> +			compatible = "rockchip,rk3528-vo-grf", "syscon";
-> +			reg = <0x0 0xff360000 0x0 0x10000>;
-> +		};
-
-Adding these two syscons could possible be split out into a separate
-patch as they are also needed for adding support for the two Ethernet
-controllers [1], the GMAC driver already landed in v6.15-rc1.
-
-[1] https://lore.kernel.org/all/20250310001254.1516138-1-jonas@kwiboo.se/
-
-Regards,
-Jonas
-
-> +
->  		cru: clock-controller@ff4a0000 {
->  			compatible = "rockchip,rk3528-cru";
->  			reg = <0x0 0xff4a0000 0x0 0x30000>;
-> @@ -501,6 +511,65 @@ sdhci: mmc@ffbf0000 {
->  			status = "disabled";
->  		};
->  
-> +		sdio0: mmc@ffc10000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc10000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDIO0>,
-> +				 <&cru CCLK_SRC_SDIO0>,
-> +				 <&cru SCLK_SDIO0_DRV>,
-> +				 <&cru SCLK_SDIO0_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <200000000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&sdio0_bus4>, <&sdio0_clk>, <&sdio0_cmd>;
-> +			resets = <&cru SRST_H_SDIO0>;
-> +			reset-names = "reset";
-> +			status = "disabled";
-> +		};
-> +
-> +		sdio1: mmc@ffc20000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc20000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDIO1>,
-> +				 <&cru CCLK_SRC_SDIO1>,
-> +				 <&cru SCLK_SDIO1_DRV>,
-> +				 <&cru SCLK_SDIO1_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <200000000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&sdio1_bus4>, <&sdio1_clk>, <&sdio1_cmd>;
-> +			resets = <&cru SRST_H_SDIO1>;
-> +			reset-names = "reset";
-> +			status = "disabled";
-> +		};
-> +
-> +		sdmmc: mmc@ffc30000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc30000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDMMC0>,
-> +				 <&cru CCLK_SRC_SDMMC0>,
-> +				 <&cru SCLK_SDMMC_DRV>,
-> +				 <&cru SCLK_SDMMC_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <150000000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&sdmmc_bus4>, <&sdmmc_clk>, <&sdmmc_cmd>,
-> +				    <&sdmmc_det>;
-> +			resets = <&cru SRST_H_SDMMC0>;
-> +			reset-names = "reset";
-> +			rockchip,default-sample-phase = <90>;
-> +			status = "disabled";
-> +		};
-> +
->  		dmac: dma-controller@ffd60000 {
->  			compatible = "arm,pl330", "arm,primecell";
->  			reg = <0x0 0xffd60000 0x0 0x4000>;
-
+Rob
