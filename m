@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56EF374589;
-	Mon,  5 May 2025 22:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B162BD929;
+	Mon,  5 May 2025 22:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485932; cv=none; b=kfln9k/XPngn9hLNjfzLDPTCnbxaSYtHlavtkYegcOaK9dTpz1sPBW6k49Ytmmi/2sELUJav73du+RbIfFZoHtjB7sqGMF3GBeWTjKeSP4azRGD6qOrVd+fbWfm4l/ZXPeYXQ2UfJNATT9Pj/k32h+wJV3B6OmkzqU+fj3gTmPU=
+	t=1746485955; cv=none; b=cTvYWSB78T7yGIFv47zum9JHrerWnIL3A2ddOtGGy4QyYdQIZYzHxSWWvSnUqJt2zV8zb0lWgKsJzuADhIIGJjp84YaHS+mRUPOwoX7ADrn7srEhH9newGiipCcCyE+o31wy0jRpPQScE5+ITOyT1P5jJ965dmR74AWxQBdrviI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485932; c=relaxed/simple;
-	bh=GK31QfUDyBBGfYjJDHgtizcta3uBh9rj9nFl+F5ZUjc=;
+	s=arc-20240116; t=1746485955; c=relaxed/simple;
+	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R63mUhldImhiLb+gJ3XGgRvGftfj9v5ZFxxKKYpZNR4KhGTxaZok6CSuH4ZIX6HjCePwITPn0KRSUzFT/9M5abf9RQQkeeTnsuAeXz0qV72BnRII5NEvxabxcyMKU2UR6dnFNTjwLaWMfpIy4Uj5SGrHKtEpoSQEKNuQGgMYqp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4TWE7sY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=q31NhgLVsug5PUxxqmRqMeQlzBuJs8ct/BRvjfwHZBIzg95MSJnBJAjAyGCgItrtZ02t74rqNYFC5pzBPy7qICZ7KujvwouILXNwvjtYAp0lXDoybiGySGEoYfAkl0lM8qU6UOCIz9QZgLLxRylJw/no430ZJFh281emqYN90gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRitPlOW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4TWE7sY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF9EC4CEEE;
-	Mon,  5 May 2025 22:58:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRitPlOW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CB7C4CEED;
+	Mon,  5 May 2025 22:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485931;
-	bh=GK31QfUDyBBGfYjJDHgtizcta3uBh9rj9nFl+F5ZUjc=;
+	s=k20201202; t=1746485953;
+	bh=VN5EtMg9ZrHmsH7A10pX7oRSpKuBk9x0NuB/eM47aWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z4TWE7sYa2akso7vMYJtNIh6ZkH1PFsde3FfzLwNyXM2SsTsJGRZve7YrBPsYiRSi
-	 FkSAfH4h8m0rjJfiO9j/rSkoz+fDT/Lu8KhnQ+RXP/y8IEGBnxPW8XYqfkFY+dZxcT
-	 lwyPpZQNhICEIw5YdtjEEBN3lW5JKRKLlOEZu0VixChS9zTDNjYs7LG5nk4R7PFZ+x
-	 x1sEOtFzgDw963c5J6H/6aGIGbt/qdfaBNUGwpH6y8cntBaO7UjTIWwEEvNo3x1P4O
-	 pUB6sM/qDzCPr57647ybU98ipPbUsKGIFFAa+ll+HWY+EYa3/5ruAHLrDmmR4zcL83
-	 3gB4LxCQRz1ug==
+	b=bRitPlOWzXaiAxr47T8VQEVhzhzZiCKIihQ2VsaY1PZuAjGzP4U0WzD/RX8SQeybW
+	 yY5PGjkOSN+eFtLpwBZhcQJOlMh++ywPxZz/ScxFiUqozivJNG08P2F87FpTn4kjfs
+	 EovNVnSE6Le1Z7V5WU6kakgWIFoLhad4nA4J0DmUttKEBBqGmBgUNm8nCjW35q7zCZ
+	 5Dz9fULwiZrye3kGDvThQEirDSdfZDV17P3/1K4o9BzVml3AxplxwHp+KYII5tov36
+	 gugxnSD2qmTTYYZ1Eo4C2AOQMeCwhwzg2zjdvaRR7KPIC5cHUJ58QDkBPL7W1Bpeiw
+	 wwg2O7J/jlACg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Guangguan Wang <guangguan.wang@linux.alibaba.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	jaka@linux.ibm.com,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-rdma@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 072/294] net/smc: use the correct ndev to find pnetid by pnetid table
-Date: Mon,  5 May 2025 18:52:52 -0400
-Message-Id: <20250505225634.2688578-72-sashal@kernel.org>
+	anna-maria@linutronix.de,
+	frederic@kernel.org
+Subject: [PATCH AUTOSEL 6.6 083/294] timer_list: Don't use %pK through printk()
+Date: Mon,  5 May 2025 18:53:03 -0400
+Message-Id: <20250505225634.2688578-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,123 +46,66 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+From: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-[ Upstream commit bfc6c67ec2d64d0ca4e5cc3e1ac84298a10b8d62 ]
+[ Upstream commit a52067c24ccf6ee4c85acffa0f155e9714f9adce ]
 
-When using smc_pnet in SMC, it will only search the pnetid in the
-base_ndev of the netdev hierarchy(both HW PNETID and User-defined
-sw pnetid). This may not work for some scenarios when using SMC in
-container on cloud environment.
-In container, there have choices of different container network,
-such as directly using host network, virtual network IPVLAN, veth,
-etc. Different choices of container network have different netdev
-hierarchy. Examples of netdev hierarchy show below. (eth0 and eth1
-in host below is the netdev directly related to the physical device).
-            _______________________________
-           |   _________________           |
-           |  |POD              |          |
-           |  |                 |          |
-           |  | eth0_________   |          |
-           |  |____|         |__|          |
-           |       |         |             |
-           |       |         |             |
-           |   eth1|base_ndev| eth0_______ |
-           |       |         |    | RDMA  ||
-           | host  |_________|    |_______||
-           ---------------------------------
-     netdev hierarchy if directly using host network
-           ________________________________
-           |   _________________           |
-           |  |POD  __________  |          |
-           |  |    |upper_ndev| |          |
-           |  |eth0|__________| |          |
-           |  |_______|_________|          |
-           |          |lower netdev        |
-           |        __|______              |
-           |   eth1|         | eth0_______ |
-           |       |base_ndev|    | RDMA  ||
-           | host  |_________|    |_______||
-           ---------------------------------
-            netdev hierarchy if using IPVLAN
-            _______________________________
-           |   _____________________       |
-           |  |POD        _________ |      |
-           |  |          |base_ndev||      |
-           |  |eth0(veth)|_________||      |
-           |  |____________|________|      |
-           |               |pairs          |
-           |        _______|_              |
-           |       |         | eth0_______ |
-           |   veth|base_ndev|    | RDMA  ||
-           |       |_________|    |_______||
-           |        _________              |
-           |   eth1|base_ndev|             |
-           | host  |_________|             |
-           ---------------------------------
-             netdev hierarchy if using veth
-Due to some reasons, the eth1 in host is not RDMA attached netdevice,
-pnetid is needed to map the eth1(in host) with RDMA device so that POD
-can do SMC-R. Because the eth1(in host) is managed by CNI plugin(such
-as Terway, network management plugin in container environment), and in
-cloud environment the eth(in host) can dynamically be inserted by CNI
-when POD create and dynamically be removed by CNI when POD destroy and
-no POD related to the eth(in host) anymore. It is hard to config the
-pnetid to the eth1(in host). But it is easy to config the pnetid to the
-netdevice which can be seen in POD. When do SMC-R, both the container
-directly using host network and the container using veth network can
-successfully match the RDMA device, because the configured pnetid netdev
-is a base_ndev. But the container using IPVLAN can not successfully
-match the RDMA device and 0x03030000 fallback happens, because the
-configured pnetid netdev is not a base_ndev. Additionally, if config
-pnetid to the eth1(in host) also can not work for matching RDMA device
-when using veth network and doing SMC-R in POD.
+This reverts commit f590308536db ("timer debug: Hide kernel addresses via
+%pK in /proc/timer_list")
 
-To resolve the problems list above, this patch extends to search user
--defined sw pnetid in the clc handshake ndev when no pnetid can be found
-in the base_ndev, and the base_ndev take precedence over ndev for backward
-compatibility. This patch also can unify the pnetid setup of different
-network choices list above in container(Config user-defined sw pnetid in
-the netdevice can be seen in POD).
+The timer list helper SEQ_printf() uses either the real seq_printf() for
+procfs output or vprintk() to print to the kernel log, when invoked from
+SysRq-q. It uses %pK for printing pointers.
 
-Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-Reviewed-by: Wenjia Zhang <wenjia@linux.ibm.com>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In the past %pK was prefered over %p as it would not leak raw pointer
+values into the kernel log. Since commit ad67b74d2469 ("printk: hash
+addresses printed with %p") the regular %p has been improved to avoid this
+issue.
+
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping looks in atomic contexts.
+
+Switch to the regular pointer formatting which is safer, easier to reason
+about and sufficient here.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+Link: https://lore.kernel.org/all/20250311-restricted-pointers-timer-v1-1-6626b91e54ab@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_pnet.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/time/timer_list.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
-index dbcc72b43d0c0..d44d7f427fc94 100644
---- a/net/smc/smc_pnet.c
-+++ b/net/smc/smc_pnet.c
-@@ -1084,14 +1084,16 @@ static void smc_pnet_find_roce_by_pnetid(struct net_device *ndev,
- 					 struct smc_init_info *ini)
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index ed7d6ad694fba..20a5e6962b696 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -46,7 +46,7 @@ static void
+ print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
+ 	    int idx, u64 now)
  {
- 	u8 ndev_pnetid[SMC_MAX_PNETID_LEN];
-+	struct net_device *base_ndev;
- 	struct net *net;
+-	SEQ_printf(m, " #%d: <%pK>, %ps", idx, taddr, timer->function);
++	SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, timer->function);
+ 	SEQ_printf(m, ", S:%02x", timer->state);
+ 	SEQ_printf(m, "\n");
+ 	SEQ_printf(m, " # expires at %Lu-%Lu nsecs [in %Ld to %Ld nsecs]\n",
+@@ -98,7 +98,7 @@ print_active_timers(struct seq_file *m, struct hrtimer_clock_base *base,
+ static void
+ print_base(struct seq_file *m, struct hrtimer_clock_base *base, u64 now)
+ {
+-	SEQ_printf(m, "  .base:       %pK\n", base);
++	SEQ_printf(m, "  .base:       %p\n", base);
+ 	SEQ_printf(m, "  .index:      %d\n", base->index);
  
--	ndev = pnet_find_base_ndev(ndev);
-+	base_ndev = pnet_find_base_ndev(ndev);
- 	net = dev_net(ndev);
--	if (smc_pnetid_by_dev_port(ndev->dev.parent, ndev->dev_port,
-+	if (smc_pnetid_by_dev_port(base_ndev->dev.parent, base_ndev->dev_port,
- 				   ndev_pnetid) &&
-+	    smc_pnet_find_ndev_pnetid_by_table(base_ndev, ndev_pnetid) &&
- 	    smc_pnet_find_ndev_pnetid_by_table(ndev, ndev_pnetid)) {
--		smc_pnet_find_rdma_dev(ndev, ini);
-+		smc_pnet_find_rdma_dev(base_ndev, ini);
- 		return; /* pnetid could not be determined */
- 	}
- 	_smc_pnet_find_roce_by_pnetid(ndev_pnetid, ini, NULL, net);
+ 	SEQ_printf(m, "  .resolution: %u nsecs\n", hrtimer_resolution);
 -- 
 2.39.5
 
