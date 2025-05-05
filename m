@@ -1,41 +1,49 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD77F167DB7
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168332F22;
+	Mon,  5 May 2025 07:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746428794; cv=none; b=hNVeTdh4wG1LIL0mmVc7uAKlRRKcW/BTznFMhTyaEaA5claDYnKea3+45lUVTwDq7AFrOIgd8ElPItHpQBMkoUIY4erPyPHPXB4f90LfoBI7Lr+jburYu3ajkqqGiBKqH2s5WxVRt59qWeBfVUIlIhhSwg5UrSfg00SyHjBpZgU=
+	t=1746428849; cv=none; b=bIjrDqT7HfoK6M9bMd+jDpNv17J+UraLRX03L0f6qeSt25WjDVEzOP7dcoBdcBMHnDTKOctCdYBJw4lSzmMjPOu+rnk0xbgbwxzgFkI3r10yNWJ/4ZH0wNnL78C3P6gpI2goWEY3dacEIzxjfuH7XCht9SgTMC5Kjd9bIsD7jLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746428794; c=relaxed/simple;
-	bh=agdf8tfyPqTN/rAN9Hf6YgKVYC9qjd+YRImPZNohMIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CC+OUV1s6HhHSd2M496HTzDkaxZWEmfwBjLAf2n0KRr3df8o1i8eoJAwSObe7pPBDHuGZvyZtE5Wu2PLHHF3sflBtNMnedEpO8wbI1uAMjjNSaeWZdnKjJsL/NFj3Uu2pCOGi+UtAzsZP2hebvPpKJ4CzcIfHEzu892GsmORNm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=CQ7Wwaul; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1746428849; c=relaxed/simple;
+	bh=RkCKem2ilcaRlQrvBAQ1A0ircFTfTmD0DZFuyTNRC24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=koJixPVfzpAXy13hBvlMOaqCVxyv7neIxkD9PDqpXxGzLGyYt1CuvKuZoB3oQknNjp+FvQTsghoCs8x6sLVbPObyTg3VYf1jOcF4Ud1gU3psQjp1MP71MUtE2W9vc24lXCMfnNS/mGtiTZQkKsWBMXSLrHTt09aZ6icbCmsk7vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hnehQkTh; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="CQ7Wwaul"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1746428790;
- bh=gIXg7np9usec25+u5f5CPg2C+dLhyz1Hb6Nl/ECOjP4=;
- b=CQ7Wwaulma4QRhTixZ0UHxzavdchAaPfJHOE7fHk5QhMwgA0XOApJMfHPUkC4MGJ3IuY2txcX
- F5NUGMDNQUAk0J4gJ2Ql55tAXxTq4/ud/O9DZuoO6YbAvwUiuobC3dhdYc1l4uEqQk0hUHYnkJr
- UfYi3ZUBYN9zFVGzSjcB08qpO8CW5xgmtJ0Y0sQFBWJ8iWuZmR8JnknSp5FW7L4IoPl46eGKh1S
- 1ICS8z31Xs5So17Y6yGs2K037r+e02HczAfNbLnqw9Yc6lBIros1HZspef45noSKvoDfsQwH23K
- CQvjkLPBNpFVimpYxhrfYT3V8eREBYYpqXCAF+Xo/a4w==
-X-Forward-Email-ID: 68186375baed44ffca19f440
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <9b804428-1c36-437b-9d48-4bce2a79ce63@kwiboo.se>
-Date: Mon, 5 May 2025 09:06:25 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hnehQkTh"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54576ceh882866
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 02:06:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746428798;
+	bh=CjMQjxbI4MVkcYVy6hFeJm3Q9c2cTiQFbTSz3mMbm8g=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=hnehQkThiz8l+CaJyoKa489nowKLIpNWxhsd1AsDwYKoT38YDiJ9szQLsshvw2Lck
+	 g030p5BPFEXVZsjjNGWcxrL89YVMZOdsyMbYAK/62nOKgWa0tAISBHOs4ONZBu6FpF
+	 NDovo1ZG5f87f/bk6BJoWqiw9auIHRjZiHZC7RMI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54576cHI010010
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 5 May 2025 02:06:38 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
+ May 2025 02:06:37 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 5 May 2025 02:06:37 -0500
+Received: from [10.24.69.232] (ws.dhcp.ti.com [10.24.69.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54576VRR040260;
+	Mon, 5 May 2025 02:06:32 -0500
+Message-ID: <6da2f444-443e-403b-9def-f66f0cf65010@ti.com>
+Date: Mon, 5 May 2025 12:36:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,81 +51,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: Add onboard EEPROM for Radxa
- E20C
-To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chukun Pan <amadeus@jmu.edu.cn>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250417120118.17610-3-ziyao@disroot.org>
- <20250417120118.17610-6-ziyao@disroot.org>
+Subject: Re: [PATCH v3 08/13] media: ti: j721e-csi2rx: add support for
+ processing virtual channels
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC: <jai.luthra@linux.dev>, <mripard@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <devarsht@ti.com>,
+        <y-abhilashchandra@ti.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
+        <s-jain1@ti.com>, <vigneshr@ti.com>, <sakari.ailus@linux.intel.com>,
+        <hverkuil-cisco@xs4all.nl>, <tomi.valkeinen@ideasonboard.com>,
+        <jai.luthra@ideasonboard.com>, <changhuang.liang@starfivetech.com>,
+        <jack.zhu@starfivetech.com>
+References: <20250417065554.437541-1-r-donadkar@ti.com>
+ <20250417065554.437541-9-r-donadkar@ti.com>
+ <20250421133418.GI29483@pendragon.ideasonboard.com>
 Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250417120118.17610-6-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
+From: Rishikesh Donadkar <r-donadkar@ti.com>
+In-Reply-To: <20250421133418.GI29483@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 2025-04-17 14:01, Yao Zi wrote:
-> Radxa E20C ships an onboard I2C EEPROM for storing production
-> information. Enable it in devicetree.
-> 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
-Reading from the EEPROM on my E20C works:
+On 21/04/25 19:04, Laurent Pinchart wrote:
+> Hi Rishikesh,
+>
+> Thank you for the patch.
 
-  $ hexdump -C /sys/devices/platform/soc/ffa58000.i2c/i2c-1/1-0050/1-00500/nvmem
-  00000000  52 41 44 58 01 00 03 00  00 01 00 00 01 00 01 00  |RADX............|
-  00000010  58 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |X...............|
-  00000020  00 00 00 00 00 00 00 00  20 20 52 61 64 78 61 20  |........  Radxa |
-  00000030  54 65 63 68 6e 6f 6c 6f  67 79 20 43 6f 2e 2c 20  |Technology Co., |
-  00000040  4c 74 64 2e 00 00 00 00  00 00 44 31 45 38 31 30  |Ltd.......D1E810|
-  00000050  4f 32 52 32 39 58 34 59  36 00 00 00 00 00 00 00  |O2R29X4Y6.......|
-  00000060  00 00 00 00 00 00 00 00  00 00 9e 69 04 00 02 00  |...........i....|
-  00000070  0c 00 00 00 01 00 56 31  2e 31 30 32 00 00 ed 09  |......V1.102....|
-  00000080  05 00 03 00 78 00 00 00  01 00 30 00 00 00 00 00  |....x.....0.....|
-  00000090  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 e0  |................|
-  000000a0  4c 0d 0a 5c 00 e0 4c 0d  0a 5b 00 00 00 00 00 00  |L..\..L..[......|
-  000000b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
-  *
-  000000f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 cf 50  |...............P|
 
-So this is:
+Hi Laurent,
 
-Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+Thanks you for the review.
 
+
+>
+> On Thu, Apr 17, 2025 at 12:25:49PM +0530, Rishikesh Donadkar wrote:
+>> From: Jai Luthra <j-luthra@ti.com>
+>>
+>> Use get_frame_desc() to get the frame desc from the connected source,
+>> and use the provided virtual channel instead of hardcoded one.
+>>
+>> get_frame_desc() works per stream, but as we don't support multiple
+>> streams yet, we will just always use stream 0. If the source doesn't
+>> support get_frame_desc(), fall back to the previous method of always
+>> capturing virtual channel 0.
+>>
+>> Co-developed-by: Pratyush Yadav <p.yadav@ti.com>
+>> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+>> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+>> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
+>> ---
+>>   .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 39 +++++++++++++++++++
+>>   1 file changed, 39 insertions(+)
+>>
+>> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+>> index e85d04d7c2ff9..3e2a0517a9096 100644
+>> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+>> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+>> @@ -29,6 +29,7 @@
+>>   #define SHIM_DMACNTX_EN			BIT(31)
+>>   #define SHIM_DMACNTX_YUV422		GENMASK(27, 26)
+>>   #define SHIM_DMACNTX_SIZE		GENMASK(21, 20)
+>> +#define SHIM_DMACNTX_VC			GENMASK(9, 6)
+>>   #define SHIM_DMACNTX_FMT		GENMASK(5, 0)
+>>   #define SHIM_DMACNTX_YUV422_MODE_11	3
+>>   #define SHIM_DMACNTX_SIZE_8		0
+>> @@ -105,6 +106,8 @@ struct ti_csi2rx_ctx {
+>>   	struct media_pad		pad;
+>>   	u32				sequence;
+>>   	u32				idx;
+>> +	u32				vc;
+>> +	u32				stream;
+>>   };
+>>   
+>>   struct ti_csi2rx_dev {
+>> @@ -573,6 +576,7 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_ctx *ctx)
+>>   	}
+>>   
+>>   	reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
+>> +	reg |= FIELD_PREP(SHIM_DMACNTX_VC, ctx->vc);
+>>   
+>>   	writel(reg, csi->shim + SHIM_DMACNTX(ctx->idx));
+>>   
+>> @@ -846,6 +850,33 @@ static void ti_csi2rx_buffer_queue(struct vb2_buffer *vb)
+>>   	}
+>>   }
+>>   
+>> +static int ti_csi2rx_get_vc(struct ti_csi2rx_ctx *ctx)
+>> +{
+>> +	struct ti_csi2rx_dev *csi = ctx->csi;
+>> +	struct v4l2_mbus_frame_desc fd;
+>> +	struct media_pad *pad;
+>> +	int ret, i;
+> i can never be negative, you can make it an unsigned int.
+
+
+Will fix.
+
+
+>
+>> +
+>> +	pad = media_entity_remote_pad_unique(&csi->subdev.entity, MEDIA_PAD_FL_SOURCE);
+>> +	if (!pad)
+>> +		return -ENODEV;
+>> +
+>> +	ret = v4l2_subdev_call(csi->source, pad, get_frame_desc, pad->index,
+>> +			       &fd);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (fd.type != V4L2_MBUS_FRAME_DESC_TYPE_CSI2)
+>> +		return -EINVAL;
+>> +
+>> +	for (i = 0; i < fd.num_entries; i++) {
+>> +		if (ctx->stream == fd.entry[i].stream)
+>> +			return fd.entry[i].bus.csi2.vc;
+>> +	}
+>> +
+>> +	return -ENODEV;
+>> +}
+>> +
+>>   static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>   {
+>>   	struct ti_csi2rx_ctx *ctx = vb2_get_drv_priv(vq);
+>> @@ -866,6 +897,14 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
+>>   	if (ret)
+>>   		goto err;
+>>   
+>> +	ret = ti_csi2rx_get_vc(ctx);
+>> +	if (ret == -ENOIOCTLCMD)
+>> +		ctx->vc = 0;
+>> +	else if (ret < 0)
+>> +		goto err;
+>> +	else
+>> +		ctx->vc = ret;
+>> +
+> When you'll add support for multiple streams in patch 11/13, you will
+> end up calling .get_frame_desc() once per stream. All calls will return
+> the same information, so it's a bit wasteful. Would it be possible to
+> call this function once only at start time, and cache and use the
+> results for all video devices ?
+
+
+Yes, Right. I will make these changes in 11/13 when adding
+
+muti-stream support.
+
+
+>
+>>   	ti_csi2rx_setup_shim(ctx);
+>>   
+>>   	ctx->sequence = 0;
 Regards,
-Jonas
-
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> index 57a446b5cbd6..6e77f7753ff7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-> @@ -110,6 +110,20 @@ vcc5v0_sys: regulator-5v0-vcc-sys {
->  	};
->  };
->  
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1m0_xfer>;
-> +	status = "okay";
-> +
-> +	eeprom@50 {
-> +		compatible = "belling,bl24c16a", "atmel,24c16";
-> +		reg = <0x50>;
-> +		pagesize = <16>;
-> +		read-only;
-> +		vcc-supply = <&vcc_3v3>;
-> +	};
-> +};
-> +
->  &pinctrl {
->  	gpio-keys {
->  		user_key: user-key {
-
+Rishikesh
