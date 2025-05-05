@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7ED3BBDC4;
-	Mon,  5 May 2025 23:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860272FAECC;
+	Mon,  5 May 2025 23:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487366; cv=none; b=e9ah/SMJHvror9SCT9ph6vTPRvnRCJJjMbGObuDHGQ/whgmYkwc93uXIYWW1qBVL7KQCX9fKoida6I4tnc/FWK3kZG3qxTSQzPtZhskZTD8XdPn50qY6twRTvRZPG+YnzOeOSg1o4bwthTnHEu7kM3408WE14/b64FT6M9hGvQU=
+	t=1746487388; cv=none; b=meWAhdr8IAhZ486BPEtS4hI2GnQSXO3bVy0Nz5UXWaMCSmXBN0p9sj6ztIeNhRATshjQH2z/kk+28DDElMKHs1S8lLdl0D/Ygrkc5+zQRJDhvUcUbaEkDGvt0y+3prrFK9ozuweUYK3TDgDrDCSbW3RxXiy/+inkgmjKCW/rfFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487366; c=relaxed/simple;
-	bh=dfOTnwW8EMM0rb/gURkfrAF+WWhNq1xDnrQSDySzLdI=;
+	s=arc-20240116; t=1746487388; c=relaxed/simple;
+	bh=r1tiKjuKfbd96zLtE+khOfPEPljsl9llIGk5isv3VwU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ArjaOYgSYN7i2iWD725b/TblcpCLg7tCRF5BNCGJo58FA51alIXMgTKJ/8YGqv4Ipy3xevR4BjZKXt+JnHwXI6nnvJCayupn1J5OhUyDHzsn5cEUMduCmE8DBUjwQUhSqw9w6nKadapkqv9BHReE2LRHwpBYtSRBp6jTjC0tCZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZ7itu3/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=K8jzSF7SP9RduV+SL7shaD4mW5OcnNbRHGga7yCeWYdJqS60k90vat3E2HN7mvfSfsCwSdLSI4+rg9MKM5d6WKmfCA43LIBu70sPzs6cvdRz7B71eMZjt+eB5K8t0ssvdiJ0PcjGVtMfkBH4i5RaFWDj3tiAJI5cwd5TIexFaAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJEBddhj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZ7itu3/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3711C4CEED;
-	Mon,  5 May 2025 23:22:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJEBddhj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC276C4CEEE;
+	Mon,  5 May 2025 23:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487364;
-	bh=dfOTnwW8EMM0rb/gURkfrAF+WWhNq1xDnrQSDySzLdI=;
+	s=k20201202; t=1746487388;
+	bh=r1tiKjuKfbd96zLtE+khOfPEPljsl9llIGk5isv3VwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cZ7itu3/UglnyViyl70NwQstgAgva38MnrNykf1znd73/jIPzXkwvWgUDUQEXmEJE
-	 6zCsjRkHyug1BZsMHwn04T427Uao+Q96WgR8oPNZUXaeLzb3gur15h74LW0+1Fh//5
-	 Rl++vr7jeV+6fKfOr31MHtjh/pdRkyjZ1HN0t9XyOjZfwOViTKVitTis/t1eiOTCio
-	 ekJT5kNZJKqjRPqvwtMIdbS1ig/nhlf4EGB0JQWxqMeQ+6AdnV8sFI4HwSeaqNbaCq
-	 VjIj0X/hp8sRG4PCrut2gbe7eTgw4GLwQ0bltbXJtg8HXsZ2Iv46UY5kW/ADY7rV5p
-	 ZZds9lfJ505Gw==
+	b=vJEBddhj9LiXDIz3E//MW/xvde+KlG9JD4MpM0pemEKOb+0yWKIEV+JwwdHav6TxH
+	 CLeqR6Y/9LcwGxxhrqkXGfkC0iPHfZr7iRLtJ1f2Q+6Ix6oZYfYrDSeLC/4lry4cn+
+	 g11wOlNRx3NJQtF7+Je5P2MD+eWBfjLDiwswemhNlDXXH9INA8ECEgs9fliTesDeyf
+	 wuR6lZ1RvvOihpFJw9kw8pEH8roSl1yJWAxZQs/V4HjKz5r1EF0ZxOSYIUrkH1Npe3
+	 c5OJ9qn6n/cTo7pBAuXu/CXQx1lq3aaMeF/unIMzIzKYmtbOXiI9N0lMsZzccYWDgd
+	 oeQkGd1FOzMnw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Markus Elfring <elfring@users.sourceforge.net>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 31/79] media: c8sectpfe: Call of_node_put(i2c_bus) only once in c8sectpfe_probe()
-Date: Mon,  5 May 2025 19:21:03 -0400
-Message-Id: <20250505232151.2698893-31-sashal@kernel.org>
+	iyappan@os.amperecomputing.com,
+	keyur@os.amperecomputing.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 43/79] net: xgene-v2: remove incorrect ACPI_PTR annotation
+Date: Mon,  5 May 2025 19:21:15 -0400
+Message-Id: <20250505232151.2698893-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -51,42 +56,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit b773530a34df0687020520015057075f8b7b4ac4 ]
+[ Upstream commit 01358e8fe922f716c05d7864ac2213b2440026e7 ]
 
-An of_node_put(i2c_bus) call was immediately used after a pointer check
-for an of_find_i2c_adapter_by_node() call in this function implementation.
-Thus call such a function only once instead directly before the check.
+Building with W=1 shows a warning about xge_acpi_match being unused when
+CONFIG_ACPI is disabled:
 
-This issue was transformed by using the Coccinelle software.
+drivers/net/ethernet/apm/xgene-v2/main.c:723:36: error: unused variable 'xge_acpi_match' [-Werror,-Wunused-const-variable]
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://patch.msgid.link/20250225163341.4168238-2-arnd@kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/apm/xgene-v2/main.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-index 69070b7068318..8229fbb88a8db 100644
---- a/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-+++ b/drivers/media/platform/sti/c8sectpfe/c8sectpfe-core.c
-@@ -813,13 +813,12 @@ static int c8sectpfe_probe(struct platform_device *pdev)
- 		}
- 		tsin->i2c_adapter =
- 			of_find_i2c_adapter_by_node(i2c_bus);
-+		of_node_put(i2c_bus);
- 		if (!tsin->i2c_adapter) {
- 			dev_err(&pdev->dev, "No i2c adapter found\n");
--			of_node_put(i2c_bus);
- 			ret = -ENODEV;
- 			goto err_clk_disable;
- 		}
--		of_node_put(i2c_bus);
+diff --git a/drivers/net/ethernet/apm/xgene-v2/main.c b/drivers/net/ethernet/apm/xgene-v2/main.c
+index 848be6bf2fd1f..514a121d96aeb 100644
+--- a/drivers/net/ethernet/apm/xgene-v2/main.c
++++ b/drivers/net/ethernet/apm/xgene-v2/main.c
+@@ -9,8 +9,6 @@
  
- 		tsin->rst_gpio = of_get_named_gpio(child, "reset-gpios", 0);
+ #include "main.h"
  
+-static const struct acpi_device_id xge_acpi_match[];
+-
+ static int xge_get_resources(struct xge_pdata *pdata)
+ {
+ 	struct platform_device *pdev;
+@@ -733,7 +731,7 @@ MODULE_DEVICE_TABLE(acpi, xge_acpi_match);
+ static struct platform_driver xge_driver = {
+ 	.driver = {
+ 		   .name = "xgene-enet-v2",
+-		   .acpi_match_table = ACPI_PTR(xge_acpi_match),
++		   .acpi_match_table = xge_acpi_match,
+ 	},
+ 	.probe = xge_probe,
+ 	.remove = xge_remove,
 -- 
 2.39.5
 
