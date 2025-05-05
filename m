@@ -1,131 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECDB204840;
-	Mon,  5 May 2025 21:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC45262FD3
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746479366; cv=none; b=T8EjTFqrNCIDd2MOkDYn/wMrZBX4GTXZs3f7TQM9IoQbXlEEn0fbE/zrTgZAWUgOnixWd7cRAHDK46b4z8IBM/bcumanxVnuLP1d24iUpLiz40qZcC7O4C0RoMBShCd4AlSqLdXq1X30DOkXKPURqDwVoHKKirHIgWweNCa9mjY=
+	t=1746479408; cv=none; b=Xt9oJmUj9rzXb1GdgxvjUCemkdccahJVi5aquXPwXLf8IZu7nH0xjyj/aVVPYY+LGRPCY5UEG7ef3jzlUrA+ieCezGHyXvGOdfP3mlmQiMfqqdrtarJ9a5HFwWM8fQajDdhYS3WpYlym9ffXM3iNiu/D9n1CI3ztoQr0JksdZP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746479366; c=relaxed/simple;
-	bh=KV7fCtsVdiotwii6ldKNDZX/3Xgo8iGcftnuvms2J2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fZq/RVpmrFDggm0RGe2iCMuHzoTj7majkazJVWIHsYhVb8cmTx5MGd5QVhZWyz+5Iprn93tYEl3I+Jat4lsp+gqj8JFaesWfQHDmSasJL3nDM7rqdxujaeFPgkZuG5sspKzR3+odnq99Pq8iCOA9F8zVkSqQoDaALDTuu0KJw/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8wyIb9j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746479408; c=relaxed/simple;
+	bh=lfzmpTI5Zy2UVhF4CAX1rxW4vQswe/zK8UGIQIoY42c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1j/xgTzO8sHUQjw4bHo/vizt47GS81jkC3hofjvwpDvLPwkMCFfupxlCoR6CzftHEz77ng7nPgtZttRGbOxKyQsjfJZHb48fX/wr4/+hRP8UHP13c3vOIuUMo+XbhlrmdrivJFGWOe0pySHz+CctYMrNKeMtHJGYne+T5WjnSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=oB6QYGqx; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8wyIb9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F1AC4CEE4;
-	Mon,  5 May 2025 21:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746479365;
-	bh=KV7fCtsVdiotwii6ldKNDZX/3Xgo8iGcftnuvms2J2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N8wyIb9jdd0hoqMgI1FEsIWrhzJauWDjedt8eLP9JQk3x9ogATs6BH5PYCL0ALjjy
-	 Jfe6IFLrH/ysp5JmEx48t91Ah0dd0ktEDNV1Kyz6BRvIAskm44Dxf6OGIF/SpLJDAW
-	 EpH4IUzWhN2REicwH0WPD7tUsQ5VCT51LWE/7z+uxQ5mIY2WwMLuMykbFyBzQWBybl
-	 m/p3r1wXdBYPMIEcG53ew+vihSqXluvsBK3DTpq8DB9baCXGFpV+ptIzXGszKiICEt
-	 4XCb9J/MmWQj5MVrWbK3ciyJ3ZvJVZrqhOuB2KBmk81nZtGbyUrdCK1elvpZOad3av
-	 aAAtBZ+QUrk0Q==
-Date: Mon, 5 May 2025 14:09:21 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	"Chang S. Bae" <chang.seok.bae@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: hardened_usercopy 32-bit (was: Re: [tip: x86/merge] x86/fpu:
- Make task_struct::thread constant size)
-Message-ID: <202505051408.7CABD131@keescook>
-References: <20250503120712.GJaBYG8A-D77MllFZ3@fat_crate.local>
- <202505041418.F47130C4C8@keescook>
- <aBihr1qRFBm1xj3_@gmail.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="oB6QYGqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MDcQlJn8nq2GB8lUZMQzSjuo5eyn1SxZ+f3uLHRF0Mc=; b=oB6QYGqxQpB64DXTDqut7gEcDW
+	j2nEXEXiMEhepsGSF2TcRfIaQRcw940Nc4VvEdZpqifi9a3MG6mE0G1P2x35a2F1TReV66a17XED8
+	3FIuG+1atQuBN2T6riBS6iDpOyRni6nFffw1iFgKHpJWa1eM3/TDeoRfJ5HrwlRIJIxSU+tph7iZR
+	hilW0DZi3sSIPlEmsW4ZvFG8R4Bp2SjIHai4S+9M+6kK7pMAmbVVRPzfWXbqbkeiZ1hXIKFNfRX9P
+	Rp2C731fchj4qt7dDI+EdFOxgoxpfyey2I3omfw9pt89TX+nf75Av2miLIqMqxfQ5XuO7ja0miDeR
+	5+/K8HUg==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uC317-003tiI-Ps; Mon, 05 May 2025 23:09:44 +0200
+Message-ID: <f86db0fc-83de-4fbe-bfe9-9e46ed028f31@igalia.com>
+Date: Mon, 5 May 2025 18:09:41 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBihr1qRFBm1xj3_@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 01/21] rcuref: Provide rcuref_is_dead()
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-2-bigeasy@linutronix.de>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20250416162921.513656-2-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 01:31:59PM +0200, Ingo Molnar wrote:
-> 
-> * Kees Cook <kees@kernel.org> wrote:
-> 
-> > But as reported above, there *is* a copy in copy_uabi_to_xstate(). (It
-> > seems there are several, actually.)
-> > 
-> > int copy_sigframe_from_user_to_xstate(struct task_struct *tsk,
-> >                                       const void __user *ubuf)
-> > {
-> >         return copy_uabi_to_xstate(x86_task_fpu(tsk)->fpstate, NULL, ubuf, &tsk->thread.pkru);
-> > }
-> > 
-> > This appears to be writing into x86_task_fpu(tsk)->fpstate. With or
-> > without CONFIG_X86_DEBUG_FPU, this resolves to:
-> > 
-> > 	((struct fpu *)((void *)(task) + sizeof(*(task))))
-> > 
-> > i.e. the memory "after task_struct" is cast to "struct fpu", and the
-> > uses the "fpstate" pointer. How that pointer gets set looks to be
-> > variable, but I think the one we care about here is:
-> > 
-> >         fpu->fpstate = &fpu->__fpstate;
-> > 
-> > And struct fpu::__fpstate says:
-> > 
-> >         struct fpstate                  __fpstate;
-> >         /*
-> >          * WARNING: '__fpstate' is dynamically-sized.  Do not put
-> >          * anything after it here.
-> >          */
-> > 
-> > So we're still dealing with a dynamically sized thing, even if it's not
-> > within the literal struct task_struct -- it's still in the kmem cache,
-> > though.
-> 
-> Indeed!
-> 
-> > So, this is still copying out of the kmem cache for task_struct, and the
-> > window seems unchanged (still fpu regs). This is what the window was
-> > before:
-> > 
-> > void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
-> > {
-> >         *offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
-> >         *size = fpu_kernel_cfg.default_size;
-> > }
-> > 
-> > And the same commit I mentioned above removed it.
-> > 
-> > I think the misunderstanding is here:
-> > 
-> > >    The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
-> > >    now that the FPU structure is not embedded in the task struct anymore, which
-> > >    reduces text footprint a bit.
-> > 
-> > Yes, FPU is no longer in task_struct, but it IS in the kmem cache named
-> > "task_struct", since the fpstate is still being allocated there.
-> 
-> Thank you for this fantastic explanation and the bug fix!
-> 
-> Since IMHO it would be a shame to lose all these explanations, and 
-> because it's been exposed to -next for weeks without getting reported, 
-> I've applied your fix to tip:x86/fpu after changeloggifying it. I've 
-> also added your SOB, if that's fine with you. Let's not destroy genuine 
-> Git history, let's not lose credit and let's not lose all these details 
-> by squashing this fix into the buggy commit...
+Em 16/04/2025 13:29, Sebastian Andrzej Siewior escreveu:
+> rcuref_read() returns the number of references that are currently held.
+> If 0 is returned then it is not safe to assume that the object ca be
 
-Okay, sounds good. :) Yeah, please consider it:
+the object *can* be
 
-Signed-off-by: Kees Cook <kees@kernel.org>
+> scheduled for deconstruction because it is marked DEAD. This happens if
+> the return value of rcuref_put() is ignored and assumptions are made.
+> 
+> If 0 is returned then the counter transitioned from 0 to RCUREF_NOREF.
+> If rcuref_put() did not return to the caller then the counter did not
+> yet transition from RCUREF_NOREF to RCUREF_DEAD. This means that there
+> is still a chance that the counter will transition from RCUREF_NOREF to
+> 0 meaning it is still valid and must not be deconstructed. In this brief
+> window rcuref_read() will return 0.
+> 
+> Provide rcuref_is_dead() to determine if the counter is marked as
+> RCUREF_DEAD.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>   include/linux/rcuref.h | 22 +++++++++++++++++++++-
+>   1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/rcuref.h b/include/linux/rcuref.h
+> index 6322d8c1c6b42..2fb2af6d98249 100644
+> --- a/include/linux/rcuref.h
+> +++ b/include/linux/rcuref.h
+> @@ -30,7 +30,11 @@ static inline void rcuref_init(rcuref_t *ref, unsigned int cnt)
+>    * rcuref_read - Read the number of held reference counts of a rcuref
+>    * @ref:	Pointer to the reference count
+>    *
+> - * Return: The number of held references (0 ... N)
+> + * Return: The number of held references (0 ... N). The value 0 does not
+> + * indicate that it is safe to schedule the object, protected by this reference
+> + * counter, for deconstruction.
+> + * If you want to know if the reference counter has been marked DEAD (as
+> + * signaled by rcuref_put()) please use rcuread_is_dead().
+>    */
+>   static inline unsigned int rcuref_read(rcuref_t *ref)
+>   {
+> @@ -40,6 +44,22 @@ static inline unsigned int rcuref_read(rcuref_t *ref)
 
-Thanks!
+Above this line there's a comment "Return 0 if within the DEAD zone." 
+Perhaps move this comment from the function to the kernel doc as well?
 
--- 
-Kees Cook
