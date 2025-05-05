@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4913A91AB;
-	Mon,  5 May 2025 23:18:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A800E2F6B29;
+	Mon,  5 May 2025 23:17:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487083; cv=none; b=kVfKneNJ+fb1q77rWbFx4zFpXi5MGOT6ETcv8/a4LqoqfjfXatZQOr5r4UOSXeSegV+mTMRfYoJt+NGMQZoZTyG3uqH1X1PsJadessiRy3SWXp7JmsPptzGuQHjDnHrcOzTyL4gKEl48knwlmZWlKnpBkfTh9/F0PMkdHdk1AGY=
+	t=1746487074; cv=none; b=YCZi+3FAjY16s8hW42BnQ6B4+0xtVs0k3G8nswda4QJwpi0okwj54n2O4aourPYy7dJ79S9Jb5pnAq7gdt+EGGr5orIztP8oTXQKbmgihU0Hzk+R9en3Mj3ctaciR2hnaqUqJa2BGMUzocUh4ocopMvZ+sL/4mJhPVsv/sfVT/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487083; c=relaxed/simple;
-	bh=Q5HBnP8a1kUf13Gm4zsvVjnT7DLr3v++THNIQz6dZRA=;
+	s=arc-20240116; t=1746487074; c=relaxed/simple;
+	bh=xSLLz/4eix5InbKfFV8XKKJhByYuDsQyk3B6wkXDwHY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XthSHMB5VEI17OH8QdiPZRPo+u4nnUVtE3oLOqB1BnR0kBIv6FvoKvPBDORnjA0RBkOVytMuTqr20gfugovkDI+1CQPUWEC//nJ1+q8vQ/JLwTnc52SkXWec1hWokfdBtxSKbgUlVaDyrueT/J3CTb/ueJf4E3lajaS/E1DeNYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvQzOmV2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oyCicqZr2H+IOUc3IdsNH53iIOWma5EuzqHFBEg0cBRCTNz7+Kq2IhtQ2bdYFvcof/Q+t1qVxTE1x0hx7shxW8AfepJWEXnbIHaEVXbLSaL1M+IQxD3ZtlGwvql8QKBVKbtWTsqLISYUnx+2gynonGlTBStvBPwcK+cZrsDiXeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irXGZByO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvQzOmV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EE8C4CEF1;
-	Mon,  5 May 2025 23:18:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irXGZByO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C03B6C4CEED;
+	Mon,  5 May 2025 23:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487082;
-	bh=Q5HBnP8a1kUf13Gm4zsvVjnT7DLr3v++THNIQz6dZRA=;
+	s=k20201202; t=1746487073;
+	bh=xSLLz/4eix5InbKfFV8XKKJhByYuDsQyk3B6wkXDwHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OvQzOmV2kafjMlIfmGOdCBEeA4SuHpBa8ZPnwb/ZS4DbdfVu4mrvaaX+4EiFeROmj
-	 AAE0HaMJrD4zrMWyZlAZvOyr6CB/kgRjUTyJ500/g0E3RuqwlKYTQ9JMpzq2I9IMdL
-	 JgfYz1me1EIb+WTTmNgipRoPKiN3QJ/Xyddlm0XnOw/aYHbqEjQKQeuE2WFn3t5Xi+
-	 /qbaBgt+ic+2xZUtyt1OXan8ySeCinPiPuxZi5ir79D0ZUa3wu9+LtGRIUCPRUkZHj
-	 NAMSUNuXdgWQDBcTGZGjznOPOG+wF1E8hat9q02U6GJdiWApd56bJyBHSLTZEaehoR
-	 FrFh4Oolq45GQ==
+	b=irXGZByOeE0NR8B690YMlm6nRyb8bYnDF1GqztQnfVSNyAM822lYSHCS+PS/wKqni
+	 UeGifxkE8wko8hKU9w9WjcaUomfO7HOdRnKEkoyERnr0E+epToTdYYos76rqC6lpZy
+	 BOYEHy2BbNd8jckcz7EkflQ8YNEz9nbA6EzZibEbDhZtqlew5yL/EaBRh0+kFLXvoD
+	 4vBISjRYicvM1Gorh3fsqR7nLocL69BRlfj5IWWwfNeDTfAkqdSzAT4zKXGEs6Yfbf
+	 wRpvGXoWswecIuGSLg9De/h6pPdkOR8TO2JqbO+CXm+/4MUoW91f4gIEuo+JQDjbgU
+	 U6grwGpxRbXYA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: junan <junan76@163.com>,
-	Jiri Kosina <jkosina@suse.com>,
+Cc: Ankur Arora <ankur.a.arora@oracle.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jikos@kernel.org,
-	bentiss@kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 144/153] HID: usbkbd: Fix the bit shift number for LED_KANA
-Date: Mon,  5 May 2025 19:13:11 -0400
-Message-Id: <20250505231320.2695319-144-sashal@kernel.org>
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	urezki@gmail.com,
+	rcu@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 139/153] rcu: handle quiescent states for PREEMPT_RCU=n, PREEMPT_COUNT=y
+Date: Mon,  5 May 2025 19:13:06 -0400
+Message-Id: <20250505231320.2695319-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -53,32 +57,61 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: junan <junan76@163.com>
+From: Ankur Arora <ankur.a.arora@oracle.com>
 
-[ Upstream commit d73a4bfa2881a6859b384b75a414c33d4898b055 ]
+[ Upstream commit 83b28cfe796464ebbde1cf7916c126da6d572685 ]
 
-Since "LED_KANA" was defined as "0x04", the shift number should be "4".
+With PREEMPT_RCU=n, cond_resched() provides urgently needed quiescent
+states for read-side critical sections via rcu_all_qs().
+One reason why this was needed: lacking preempt-count, the tick
+handler has no way of knowing whether it is executing in a
+read-side critical section or not.
 
-Signed-off-by: junan <junan76@163.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.com>
+With (PREEMPT_LAZY=y, PREEMPT_DYNAMIC=n), we get (PREEMPT_COUNT=y,
+PREEMPT_RCU=n). In this configuration cond_resched() is a stub and
+does not provide quiescent states via rcu_all_qs().
+(PREEMPT_RCU=y provides this information via rcu_read_unlock() and
+its nesting counter.)
+
+So, use the availability of preempt_count() to report quiescent states
+in rcu_flavor_sched_clock_irq().
+
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/usbkbd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree_plugin.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-index df02002066cef..1d94d246f8162 100644
---- a/drivers/hid/usbhid/usbkbd.c
-+++ b/drivers/hid/usbhid/usbkbd.c
-@@ -160,7 +160,7 @@ static int usb_kbd_event(struct input_dev *dev, unsigned int type,
- 		return -1;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index b48b42d76474e..9e84d603e882e 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -945,13 +945,16 @@ static void rcu_preempt_check_blocked_tasks(struct rcu_node *rnp)
+  */
+ static void rcu_flavor_sched_clock_irq(int user)
+ {
+-	if (user || rcu_is_cpu_rrupt_from_idle()) {
++	if (user || rcu_is_cpu_rrupt_from_idle() ||
++	     (IS_ENABLED(CONFIG_PREEMPT_COUNT) &&
++	      (preempt_count() == HARDIRQ_OFFSET))) {
  
- 	spin_lock_irqsave(&kbd->leds_lock, flags);
--	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 3) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
-+	kbd->newleds = (!!test_bit(LED_KANA,    dev->led) << 4) | (!!test_bit(LED_COMPOSE, dev->led) << 3) |
- 		       (!!test_bit(LED_SCROLLL, dev->led) << 2) | (!!test_bit(LED_CAPSL,   dev->led) << 1) |
- 		       (!!test_bit(LED_NUML,    dev->led));
- 
+ 		/*
+ 		 * Get here if this CPU took its interrupt from user
+-		 * mode or from the idle loop, and if this is not a
+-		 * nested interrupt.  In this case, the CPU is in
+-		 * a quiescent state, so note it.
++		 * mode, from the idle loop without this being a nested
++		 * interrupt, or while not holding the task preempt count
++		 * (with PREEMPT_COUNT=y). In this case, the CPU is in a
++		 * quiescent state, so note it.
+ 		 *
+ 		 * No memory barrier is required here because rcu_qs()
+ 		 * references only CPU-local variables that other CPUs
 -- 
 2.39.5
 
