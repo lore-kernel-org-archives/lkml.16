@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B3529A3EC;
-	Mon,  5 May 2025 22:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A034629A3F3;
+	Mon,  5 May 2025 22:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485052; cv=none; b=CzxO0x9xWsLvRlY9JXRYU/5DspBDR7R/uv2qDzQaXbnaCXNBolKwxEsF1wn2X8JnFWMCmpnd0vOGFOtxv6lHFyWalaW1TKMiIWlACbBnWgSh1xOt7OzvP4P9gJucSpKty/m8RBu/FD0O7pvkM/oKRqCZMD5k7rFNrv5oNmV5dMA=
+	t=1746485039; cv=none; b=uUmyf7uOQGXxG0b4p9kw/Lm4P+smFTpf6Hu9iSTC10pEqB2egIdF0fk2Olbw1AOxkvW8V4Glumz+vg8TE2hf5e+PLtYao5DRHQeykzV6r1EfzMKlEpJ2vMWPg6r0wpKiDgj/PEVtVbsRRCZdUTcg5GRmzpBNObhJU9ISSp6N9rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485052; c=relaxed/simple;
-	bh=xlEAAQ5akJKtVJ5XsixfuB2tCpVwfqVZv6z2P0/TBFs=;
+	s=arc-20240116; t=1746485039; c=relaxed/simple;
+	bh=1VbaWWLdA5HmNjEIviEi/XhdFnVk+gwnKiAHhTR9D7s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WPkxre25fN3y2mmL6yr92dMTYreOAidLyXleVN1h+2xcgQ3pmedabKeEE0WFE4bRwo0k8OV1b5JKmUlNRUfxojInz3izZhVsGkUv0QVf5ci5gLNluYQqSRR3Lto5YcF1wm+YW2FHGbz1XkxBiOlDWDXerwpMPdkfeIwa3cSOwrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLTRXMMo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LGnFS1dl1WAP50x6Bzj1ZO2t4vbm8Y5lpc3hooJIFxAUrdPP5lquF9r7+PyR/GMLtl/5v4zS4u6ByUufM9HyPQMab4/V0hhkK1rzyHdC1de1/eSefwdodv+E+X9BMR8eaY7DujSH4Suoy0px+T6A7BOPccq/FNg4D2XUoMeDTdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UozyPwGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLTRXMMo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C40FC4CEE4;
-	Mon,  5 May 2025 22:44:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UozyPwGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46F5C4CEEE;
+	Mon,  5 May 2025 22:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485052;
-	bh=xlEAAQ5akJKtVJ5XsixfuB2tCpVwfqVZv6z2P0/TBFs=;
+	s=k20201202; t=1746485039;
+	bh=1VbaWWLdA5HmNjEIviEi/XhdFnVk+gwnKiAHhTR9D7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qLTRXMMolhooXbapq4ZQh7ehv9rx9r1fVX2aKTKwVSdDwA13Uf3qyvLgLMsfAvzs0
-	 sAvtBKwG4X2N4fDJsxARmA5SZEEmCbBzE6rx8HYtpn6qdLpvihwYO6jEVdtBpKcHc0
-	 XNcdlhV/GHfaXMbUDefe9e157ooGPLyI3KNkchMjm6/aNq3w6xJ87FvrgYKHFuaDy/
-	 Ek1BOfPg7c3UwcslvjfpQ5xck+OeTsQDdT4VqVUouLp70qSmt/KpLs7YwL61HMyBMz
-	 c8DYVVAqskqF0nURfEfPi8smzTT6dRgXRnqx71DMunkS93VD64l5mv9zPczMk0DOjm
-	 WBcVFd8oSWOeQ==
+	b=UozyPwGIEmCU1YE6S85lnKz4gD6hn2IlqIV+/eZ5BtGiJMi1b9JIgWLz9eKyGYszp
+	 GGpFkJkxQtoWJytrH4rDobXTBFSAeFI5pdu4RhscuryeE3La05RwgHLLS7ggKRVcU+
+	 bcyCQ18PI5hyx/rhSTy4/Ryqg7UloIxR4a3mACbeDZT4zmQihqzr4Y0O0yH70FggLq
+	 eD2RHPa1l/sVb4le2+jHLvuXClpZXIhPnl16nn6dFjcddB+tOP6Rp2VtqeHdjJQ5Uz
+	 UPYuLq6y8mKuDNAwdrV2XlRLh6LCoamSzjRjS61yyU7jYJAVifA4RSZjts4dpuo30T
+	 laQrlcVTd0vFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Avraham Stern <avraham.stern@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>,
+Cc: Kees Cook <kees@kernel.org>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux@treblig.org,
-	ilan.peer@intel.com,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 143/486] wifi: iwlwifi: mvm: fix setting the TK when associated
-Date: Mon,  5 May 2025 18:33:39 -0400
-Message-Id: <20250505223922.2682012-143-sashal@kernel.org>
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 136/486] PNP: Expand length of fixup id string
+Date: Mon,  5 May 2025 18:33:32 -0400
+Message-Id: <20250505223922.2682012-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,39 +50,37 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Avraham Stern <avraham.stern@intel.com>
+From: Kees Cook <kees@kernel.org>
 
-[ Upstream commit 3ad61970ac9e164be1b09b46c01aa942e8966132 ]
+[ Upstream commit 425b1c97b07f2290700f708edabef32861e2b2db ]
 
-When running secured ranging and the initiator is associated with
-the responder, the TK was not set in the range request command.
-Fix it.
+GCC 15's -Wunterminated-string-initialization saw that "id" was not
+including the required trailing NUL character. Instead of marking "id"
+with __nonstring[1], expand the length of the string as it is used in
+(debugging) format strings that expect a properly formed C string.
 
-Signed-off-by: Avraham Stern <avraham.stern@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250308231427.603dc31579d9.Icd19d797e56483c08dd22c55b96fee481c4d2f3d@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+Link: https://patch.msgid.link/20250310222432.work.826-kees@kernel.org
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/pnp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-index 55245f913286b..2ed7a0d77ef83 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-@@ -773,7 +773,11 @@ iwl_mvm_ftm_set_secured_ranging(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
+diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+index b7a7158aaf65e..23fe3eaf242d6 100644
+--- a/include/linux/pnp.h
++++ b/include/linux/pnp.h
+@@ -290,7 +290,7 @@ static inline void pnp_set_drvdata(struct pnp_dev *pdev, void *data)
+ }
  
- 			target.bssid = bssid;
- 			target.cipher = cipher;
-+			target.tk = NULL;
- 			ieee80211_iter_keys(mvm->hw, vif, iter, &target);
-+
-+			if (!WARN_ON(!target.tk))
-+				memcpy(tk, target.tk, TK_11AZ_LEN);
- 		} else {
- 			memcpy(tk, entry->tk, sizeof(entry->tk));
- 		}
+ struct pnp_fixup {
+-	char id[7];
++	char id[8];
+ 	void (*quirk_function) (struct pnp_dev *dev);	/* fixup function */
+ };
+ 
 -- 
 2.39.5
 
