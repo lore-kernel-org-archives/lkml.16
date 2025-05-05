@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0543BAF87;
-	Mon,  5 May 2025 23:22:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081C02FA13C;
+	Mon,  5 May 2025 23:22:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487348; cv=none; b=IMvfXLRuIwxrjUfJtyHtEsg8u2JRleA9Kh8ms864QjlewWd77JWg27hSm/9gEK1varDLkPazs3LI/t+PQkjQpfKlOBjd3lBglSo8tWaYShd6K9LJZ3TJGmh3cA7zV9Kh0+h+JYLarmvmJGh/AKBlfxRm3kcltTMfY3NMwhPbYQY=
+	t=1746487362; cv=none; b=Eqmh3C8yMY4WFaqXgWlD+9Rck0KYemXbGxCEtAJXa2hxE4ydEd8KvIee9+DO3BmUevcR9vcWZdRhWr6rOqeLZV/4mr9DXR5KNHolQyaPie62Hn9vw5U+69ZXNK3CDmNkMpi1RsDBG7QwyP0wOMiTakJ0wv5jXe/1EuELTUgQhyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487348; c=relaxed/simple;
-	bh=Q+v7VZoENNlzJV9ZQLNwya7jNn5yUDxBD4kC0ULM0Ag=;
+	s=arc-20240116; t=1746487362; c=relaxed/simple;
+	bh=+cOW+XFNyEKWT9XmO3vjFm6O5F1Xpb7lUdZAFlUF9iQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LiWOCdVAPGsC6l1JGIieMqMcwscpJ7U6kTFt0ifdHC+blPnE6fvbwaT9rfRYZFUrHUKPYj+IQbV9hfb+oXP3YQYzRlZl3aJL+DmTYsPOnVY+wK8l8qWZORQ7/Bgdsc3LlsqGOMwwnwLeQOCuVtoVQ7sDFTG1XF1lr5t3ix97wO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PJIRJgvn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=thXM5MoOL0NESEwwoGkcG/G7dJ9/F/eEfUCdevFwf73Fs/JhCpRlfhPJsVq9a68vOMEp05K6TQvZ6/82H0V/E8u/UkJCiJksnDSenUXua86bkLUmNiHa+Tp7eUr4G2T66lRvhHjMKrIKC8/Phr1l47TfZLrHGENFfW6GL0lkZz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AscTYczO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJIRJgvn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE06CC4AF09;
-	Mon,  5 May 2025 23:22:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AscTYczO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD83C4CEE4;
+	Mon,  5 May 2025 23:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487346;
-	bh=Q+v7VZoENNlzJV9ZQLNwya7jNn5yUDxBD4kC0ULM0Ag=;
+	s=k20201202; t=1746487360;
+	bh=+cOW+XFNyEKWT9XmO3vjFm6O5F1Xpb7lUdZAFlUF9iQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PJIRJgvniun6llULIUJUaYzUefx6eahx75hu+f/sct8FxF+Lt80T4sk5N+VQLgAAP
-	 aA7WG9jZeMTrWrdjUqPiHl8JKiaCWVk3DOUkjQ5Yk0h7YQqnHe76C8BuT81xz6/eeo
-	 j5zlVwhdek6EBqOGXnyllTuh6/T7J7Rqka1nO+r8oPSGRWhQIXPBPAzmaJN8Xb7yAV
-	 GtFm+pIxY6MmWExhzD45ROhxzdEdDDFUp4NCoKAk29jVA0dFGaZfDzxC3VMrrceFwC
-	 6yqak+j+vjhKJ+XVCiknzN/y7dso4DRqAMRQf3awk1KgTWUBaIvbOM4o+tZVV/kcHg
-	 HGWagZSCutsqg==
+	b=AscTYczOcAKMe0pBIyUn9Ohii7ldaFb7dO3iKLB1It/GydxhMqFIPWNMwnAFl1kQv
+	 k/GCHUsjgMxpj4xQ1RV35Kdd6WvurVUpUokiVb351drwUIucf85P6HzDdnSZv4YeCb
+	 od1W3al1X6Umh1KtVh1vxMtQpdpwQva4e1KP6Ljw6cJMJ+Dvft7vbMTGS8IED3WO88
+	 gp0H/0VvNeQ+SpIUd5lcF0e4IEZ8gxfgAQ6zYbwUXRyket55sxusZrDsdHQPbop+bK
+	 ULyOgtLaVz0VMyJdRHw6gSqqOi1ORLicc2xRhKWIx2c27QXIyrszoWAEfY05hgx9zS
+	 FfNC7ODY+3J2Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
 	Sasha Levin <sashal@kernel.org>,
-	James.Bottomley@HansenPartnership.com,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 20/79] scsi: st: ERASE does not change tape location
-Date: Mon,  5 May 2025 19:20:52 -0400
-Message-Id: <20250505232151.2698893-20-sashal@kernel.org>
+	alex.aring@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wpan@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 29/79] ieee802154: ca8210: Use proper setters and getters for bitwise types
+Date: Mon,  5 May 2025 19:21:01 -0400
+Message-Id: <20250505232151.2698893-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -46,39 +54,80 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit ad77cebf97bd42c93ab4e3bffd09f2b905c1959a ]
+[ Upstream commit 169b2262205836a5d1213ff44dca2962276bece1 ]
 
-The SCSI ERASE command erases from the current position onwards.  Don't
-clear the position variables.
+Sparse complains that the driver doesn't respect the bitwise types:
 
-Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
-Link: https://lore.kernel.org/r/20250311112516.5548-3-Kai.Makisara@kolumbus.fi
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+drivers/net/ieee802154/ca8210.c:1796:27: warning: incorrect type in assignment (different base types)
+drivers/net/ieee802154/ca8210.c:1796:27:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
+drivers/net/ieee802154/ca8210.c:1796:27:    got unsigned short [usertype]
+drivers/net/ieee802154/ca8210.c:1801:25: warning: incorrect type in assignment (different base types)
+drivers/net/ieee802154/ca8210.c:1801:25:    expected restricted __le16 [addressable] [assigned] [usertype] pan_id
+drivers/net/ieee802154/ca8210.c:1801:25:    got unsigned short [usertype]
+drivers/net/ieee802154/ca8210.c:1928:28: warning: incorrect type in argument 3 (different base types)
+drivers/net/ieee802154/ca8210.c:1928:28:    expected unsigned short [usertype] dst_pan_id
+drivers/net/ieee802154/ca8210.c:1928:28:    got restricted __le16 [addressable] [usertype] pan_id
+
+Use proper setters and getters for bitwise types.
+
+Note, in accordance with [1] the protocol is little endian.
+
+Link: https://www.cascoda.com/wp-content/uploads/2018/11/CA-8210_datasheet_0418.pdf [1]
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/20250305105656.2133487-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/st.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ieee802154/ca8210.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-index 8f927851ccf86..3f798f87e8d98 100644
---- a/drivers/scsi/st.c
-+++ b/drivers/scsi/st.c
-@@ -2889,7 +2889,6 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
- 			timeout = STp->long_timeout * 8;
+diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
+index d394e2b65054d..d99976034027c 100644
+--- a/drivers/net/ieee802154/ca8210.c
++++ b/drivers/net/ieee802154/ca8210.c
+@@ -1487,8 +1487,7 @@ static u8 mcps_data_request(
+ 	command.pdata.data_req.src_addr_mode = src_addr_mode;
+ 	command.pdata.data_req.dst.mode = dst_address_mode;
+ 	if (dst_address_mode != MAC_MODE_NO_ADDR) {
+-		command.pdata.data_req.dst.pan_id[0] = LS_BYTE(dst_pan_id);
+-		command.pdata.data_req.dst.pan_id[1] = MS_BYTE(dst_pan_id);
++		put_unaligned_le16(dst_pan_id, command.pdata.data_req.dst.pan_id);
+ 		if (dst_address_mode == MAC_MODE_SHORT_ADDR) {
+ 			command.pdata.data_req.dst.address[0] = LS_BYTE(
+ 				dst_addr->short_address
+@@ -1837,12 +1836,12 @@ static int ca8210_skb_rx(
+ 	}
+ 	hdr.source.mode = data_ind[0];
+ 	dev_dbg(&priv->spi->dev, "srcAddrMode: %#03x\n", hdr.source.mode);
+-	hdr.source.pan_id = *(u16 *)&data_ind[1];
++	hdr.source.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[1]));
+ 	dev_dbg(&priv->spi->dev, "srcPanId: %#06x\n", hdr.source.pan_id);
+ 	memcpy(&hdr.source.extended_addr, &data_ind[3], 8);
+ 	hdr.dest.mode = data_ind[11];
+ 	dev_dbg(&priv->spi->dev, "dstAddrMode: %#03x\n", hdr.dest.mode);
+-	hdr.dest.pan_id = *(u16 *)&data_ind[12];
++	hdr.dest.pan_id = cpu_to_le16(get_unaligned_le16(&data_ind[12]));
+ 	dev_dbg(&priv->spi->dev, "dstPanId: %#06x\n", hdr.dest.pan_id);
+ 	memcpy(&hdr.dest.extended_addr, &data_ind[14], 8);
  
- 		DEBC_printk(STp, "Erasing tape.\n");
--		fileno = blkno = at_sm = 0;
- 		break;
- 	case MTSETBLK:		/* Set block length */
- 	case MTSETDENSITY:	/* Set tape density */
+@@ -1969,7 +1968,7 @@ static int ca8210_skb_tx(
+ 	status =  mcps_data_request(
+ 		header.source.mode,
+ 		header.dest.mode,
+-		header.dest.pan_id,
++		le16_to_cpu(header.dest.pan_id),
+ 		(union macaddr *)&header.dest.extended_addr,
+ 		skb->len - mac_len,
+ 		&skb->data[mac_len],
 -- 
 2.39.5
 
