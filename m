@@ -1,181 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520CB19C546
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF85204840
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746475541; cv=none; b=HwZMEIekxm2MdUmlsIJ0MynDmAmDY+80YNzU9qnQYkkVAHFQ1C2QpUyInY9FgOL2kcYfQRD/CvTpCRSQVPx6pSBCSkBOey0DOACngJk88za0du4XtIyTUIChUBIxr6LzdYKo0heo4Ol3tCD7zH8r0lu9smLqPY0EhzrrseguMtE=
+	t=1746475716; cv=none; b=eLGdzfYHRAILNUk/FJMylFI3+gZP9z5diwYfJg/7jDIejhyHzGyqZ2heLKbxOHTqxBy71lnmV9T+7O4PQaDde9zz9EiggKD9d3CwrMz0FaXvJWm5wVQpGvsyultEl8YAXVXVDUqwchwpWrk5L7aO8yz+0uUBm0eUF2hfYykNgI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746475541; c=relaxed/simple;
-	bh=nacOnyrBarn+yAqaqC6CGmDtmnRJvYgxOqwOXj1IIc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liNrF0yoMn65ZFjWGaLoEH0SnV6NQ0vW7C48Gt1qxVuPwuK2QJtWUVNITr4ftauJ4iuL5fHyTOZiD8bB6gpfJjX3zW/ev4Qu14TdlJ8dB3NGqukPplQvjC0Zb4HUojeYWIOp+lOnlRi40VrkI1IT87RzBhdw72J4gLeOTGwjyBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N+/ZnJo0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746475716; c=relaxed/simple;
+	bh=1KzQAdzt6kozgctVLqMUI+0YIdwgkoZ9QgFaIIjRSbE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=M+letH0dSkqhZgaNUgbLoUa88jI4/QBvYDtDW7493B8u78EMFwrGsN5qNbi3wqi4RYudVKx5Rebq0MH25wriNjCoh+fPOw0Zl7yqDXGAl4bvkIJ5+P/zeJcCDgcloCgum3LtMB4d9UxCNPoZ2neXt4zUmK47EX9BPEHK/HWQRPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oZiZeZng; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N+/ZnJo0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746475538;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YFUdBwtJFHu0IdSQXDQrNEDkNHrYdeA6mBR+yrTNtIk=;
-	b=N+/ZnJo05gKPipR146OvfLspdvcJV+eaImN0AbnYFcgv++6l+RLMsnFiS3+O5UG6HGPrhe
-	DeJOaQfwFY2nzvNpgIUchOa1JBKgknFDkAQ6PahltpO2/ZaffNZy7YpWP5iAN3S/Pnpn++
-	cMRviNFGUUJTR2vylRNutC1084Nwqj0=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-424-knODAdTXP_O4LeEQ12BS4Q-1; Mon, 05 May 2025 16:05:37 -0400
-X-MC-Unique: knODAdTXP_O4LeEQ12BS4Q-1
-X-Mimecast-MFC-AGG-ID: knODAdTXP_O4LeEQ12BS4Q_1746475536
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ead629f6c6so90129046d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:05:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oZiZeZng"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224364f2492so44482615ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746475713; x=1747080513; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOuRgIeoWvJ+xJkqB+IUVGx6fHLCdoleXxRua1kYdv4=;
+        b=oZiZeZng1O6abYgkRBb2yDSOBu1crc8JUScQpT+ThWyZC+xSEeYZG1bskcHh4L7cdO
+         bVU6B1Aidy2gg0hwUhe57cYD5CP4pQ3bc2Gl7Il8mXNdQ/j+f5ffURb3+28znr1nARgA
+         7gXJM35dd3l7cB7QwthjC8IJuVmq1e3b9eW435xK6GFuSXK9etjRso1n3+PYq1YNZ+j4
+         3sEi1AJGBNEDV5PMElsxSQ6WM/SoEvfhnpKjuRdDcNvyNzc92p3L6PbINvU49VG20jdc
+         4mvbwu3ZnfKEmB1O0FDPXUJR2lze2adoHwy52xEqFhCYfOQiLZxvxalIn2t50R/We8nA
+         cL3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746475536; x=1747080336;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YFUdBwtJFHu0IdSQXDQrNEDkNHrYdeA6mBR+yrTNtIk=;
-        b=AuOpumCcK9Q4Geneg+HWTaKSpAkR2ut3GIwVsGVDBq4avvrUOVJaCaw0rDsPc0UELk
-         sj9XOqedJFAVv+P1SPdRvgHYrV/mijwoRr+j7EDMWnkp+SfwdySh9XC9M/s1FaeQpIDI
-         kkGmtNmotnGXotekL33Goqe1+hFLaA/itn9fceQ0wvBAPhpu3HUaOyqqec6MFEqMiwvG
-         b8kiOJ+eI9+X6PpNXiPLQQ59anmZa+etB1rlEFUid6EkqRu6agnQ34xMCB147atG0Y7z
-         dpbsbulW/y/Rc/dIPfuXd30JaowgiRIM3qYFY2pRA8ZruCcu56eB3t55qTL6noU38cuM
-         lBkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKbq0jZhGiPbwDX0j+nhSCSC2GPUqHuhEN2ubnz0uS47mTUkxRWfhSjs0c38C2BlZt8KfVJj0VfA3Rmno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyypFV0bepoGJNfzXQMjuZLrxdYPJ0psDodLqzqVPIdPkQXxp7G
-	Q8D1Z5pJKNixFV29/zE1ttkNYMz0WSaJWC22k00VrW0mqmhvFqh4Zhr0l17ZloRH+CBhAwp0DcP
-	hYjYb4vLc1D098KH65ow4Gz1qvv2gVSAE0mv6pavQkU03Jdt2I6v2vaenFiD2Sg==
-X-Gm-Gg: ASbGnctOAZ1phDSyWwNTPexBUYPdHjdKRJ+LnUnMHrVm+OXISbMUfjQEG3pkLWa9wi/
-	KtHkF0pwjDOr0oLJPrIV/0F6oxAcZ0lqCskPaFrR28me9od+EteARSLv4vovK4RieYJcd5XyNT0
-	gqAwQzK6uw/BWl1k3T75p5Zy8IzPZXquxcfJeZe0V175cVicZNWXho1GZzj3CuqjSSKiv3I0Yzn
-	Od726jb450buWH/CBJslNGUtGYaaCvsRJZoHYpcu3mJQObafenih6zolLzJqm2IfMTipCGK5k9E
-	Sk8=
-X-Received: by 2002:a05:6214:411a:b0:6f4:c602:806e with SMTP id 6a1803df08f44-6f528c51f14mr123959866d6.13.1746475536599;
-        Mon, 05 May 2025 13:05:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAX8vD/Mhme2rAizgX3udqaLznlk0blCrJd5nt93pvyI5CBbUh+Ubh3gass9cVF6sOpMENQw==
-X-Received: by 2002:a05:6214:411a:b0:6f4:c602:806e with SMTP id 6a1803df08f44-6f528c51f14mr123959606d6.13.1746475536265;
-        Mon, 05 May 2025 13:05:36 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f4826ddsm59766116d6.101.2025.05.05.13.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 13:05:35 -0700 (PDT)
-Date: Mon, 5 May 2025 16:05:32 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Kyle Huey <me@kylehuey.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-	criu@lists.linux.dev, Robert O'Callahan <robert@ocallahan.org>
-Subject: Re: Suppress pte soft-dirty bit with UFFDIO_COPY?
-Message-ID: <aBkaDN7N_6qDGdIz@x1.local>
-References: <CAP045Ap3e6x52TvB8WyBHBjJ8HYtAmnKnGgj_fog3P+F5igP-A@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1746475713; x=1747080513;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOuRgIeoWvJ+xJkqB+IUVGx6fHLCdoleXxRua1kYdv4=;
+        b=Kfx+uK5vjRoJZPpQbP0xBmmvulgGp3nN35kWD3kjeiHZUv/G6j6sc98N+F+yLJCdMH
+         YEnq1dyyHxyF9fpLND2hdy/uEm3z5Npslw5Wy7y7hyAesJ2DdovrUdf25FsiQZAPyxyE
+         ZtvvyfE6md2CmBGoWFaEnLt/GKoPTb//FL9d3K1SRCzIZM4kV++aJvYeYDipF1YNvwtE
+         jTv/EuF62IN2xdTPxiEYSsoFkV2IGjgkEMyRzY9sWXD1n7UOl6LQAryOTIBAFCa+VLL3
+         pZ18/I6VO6HsuGmXKy4j4aef6cBvlsa6I/pnNHlWYbCxpYAbGTSb9UsdsLrEa+ZOeDT2
+         G2Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXieW/Bn150LczoMLakwDbHMuB0BrteJGicjDLoeszz4Zetz9FZFvGI7EksLYA2oOqrCO9k8JxSwmyMe3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqKJVWYevRX0ErCLwH3LuIN3ECjkipYprAxFJLCF7XOdG3zeV8
+	rAkgYcv2OUECVl8h0sbJ4j4Q7c7tcAsxRX5VaGmgsFxmhHVRe9fVgt5ehmlPJJamvsx1z4SEAv+
+	sTRG56DHZ4nOjfceb+A==
+X-Google-Smtp-Source: AGHT+IGAxfh3fReuw49sEBnCIqEgZnEB4d1Kz9/LHzQ3CYJt6UkvcZ+t0jrC2mykwUxbQTB6d5Dqd6LW9byg1ZNs
+X-Received: from plkp1.prod.google.com ([2002:a17:902:6b81:b0:220:ea57:34e3])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f648:b0:224:93e:b5d7 with SMTP id d9443c01a7336-22e32eff19bmr9877065ad.34.1746475713621;
+ Mon, 05 May 2025 13:08:33 -0700 (PDT)
+Date: Mon,  5 May 2025 13:07:45 -0700
+In-Reply-To: <20250501225425.635167-15-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAP045Ap3e6x52TvB8WyBHBjJ8HYtAmnKnGgj_fog3P+F5igP-A@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250501225425.635167-15-changyuanl@google.com>
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250505200745.1975264-1-changyuanl@google.com>
+Subject: Re: [PATCH v7 14/18] x86/boot: make sure KASLR does not step over KHO
+ preserved memory
+From: Changyuan Lyu <changyuanl@google.com>
+To: changyuanl@google.com
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com, 
+	devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com, 
+	graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, kexec@lists.infradead.org, 
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org, 
+	saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Kyle,
+Hi Andrew,
 
-On Mon, May 05, 2025 at 09:37:01AM -0700, Kyle Huey wrote:
-> tl;dr I'd like to add UFFDIO_COPY_MODE_DONTSOFTDIRTY that does not add
-> the _PAGE_SOFT_DIRTY bit to the relevant pte flags. Any
-> thoughts/objections?
-> 
-> The kernel has a "soft-dirty" bit on ptes which tracks if they've been
-> written to since the last time /proc/pid/clear_refs was used to clear
-> the soft-dirty bit. CRIU uses this to track which pages have been
-> modified since a previous checkpoint and reduce the size of the
-> checkpoints taken. I would like to use this in my debugger[0] to track
-> which pages a program function dirties when that function is invoked
-> from the debugger.
-> 
-> However, the runtime environment for this function is rather unusual.
-> In my debugger, the process being debugged doesn't actually exist
-> while it's being debugged. Instead, we have a database of all program
-> state (including registers and memory values) from when the process
-> was executed. It's in some sense a giant core dump that spans multiple
-> points in time. To execute a program function from the debugger we
-> rematerialize the program state at the desired point in time from our
-> database.
-> 
-> For performance reasons, we fill in the memory lazily[1] via
-> userfaultfd. This makes it difficult to use the soft-dirty bit to
-> track the writes the function triggers, because UFFDIO_COPY (and
-> friends) mark every page they touch as soft-dirty. Because we have the
-> canonical source of truth for the pages we materialize via UFFDIO_COPY
-> we're only interested in what happens after the userfaultfd operation.
-> 
-> Clearing the soft-dirty bit is complicated by two things:
-> 1. There's no way to clear the soft-dirty bit on a single pte, so
-> instead we have to clear the soft-dirty bits for the entire process.
-> That requires us to process all the soft-dirty bits on every other pte
-> immediately to avoid data loss.
-> 2. We need to clear the soft-dirty bits after the userfaultfd
-> operation, but in order to avoid racing with the task that triggered
-> the page fault we have to do a non-waking copy, then clear the bits,
-> and then separately wake up the task.
-> 
-> To work around all of this, we currently have a 4 step process:
-> 1. Read /proc/pid/pagemap and note all ptes that are soft-dirty.
-> 2. Do the UFFDIO_COPY with UFFDIO_COPY_MODE_DONTWAKE.
-> 3. Write to /proc/pid/clear_refs to clear soft-dirty bits across the process.
-> 4. Do a UFFDIO_WAKE.
-> 
-> The overhead of all of this (particularly step 1) is a millisecond or
-> two *per page* that we lazily materialize, and while that's not
-> crippling for our purposes, it is rather undesirable. What I would
-> like to have instead is a UFFDIO_COPY mode that leaves the soft-dirty
-> bit unchanged, i.e. a UFFDIO_COPY_MODE_DONTSOFTDIRTY. Since we clear
-> all the soft-dirty bits once after setting up all the mmaps in the
-> process the relevant ptes would then "just do the right thing" from
-> our perspective.
-> 
-> But I do want to get some feedback on this before I spend time writing
-> any code. Is there a reason not to do this? Or an alternate way to
-> achieve the same goal?
+Based on Dave's feedback above, could you please take the following
+fix and squash it with "x86/boot: make sure KASLR does not step over
+KHO preserved memory" with the updated commit message in mm-unstable?
 
-Have you looked at the wr-protect mode, and UFFDIO_COPY_MODE_WP for _COPY?
+Thank you very much!
 
-If sync fault is a perf concern for frequent writes, just to mention at
-least latest Linux also supports async tracking (UFFD_FEATURE_WP_ASYNC),
-which is almost exactly soft dirty bits to me, though it solves a few
-issues it has on e.g. false positives over vma merging and swapping, or
-like you said missing of finer granule reset mechanisms.
+Best,
+Changyuan
 
-Maybe you also want to have a look at the pagemap ioctl introduced some
-time ago ("Pagemap Scan IOCTL", which, IIRC was trying to use uffd-wp in
-soft-dirty-like way):
+---- 8< ----
 
-https://www.kernel.org/doc/Documentation/admin-guide/mm/pagemap.rst
+From 464b5750c55f978b47da242f50ec7dbcbac1948c Mon Sep 17 00:00:00 2001
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Date: Mon, 5 May 2025 11:29:23 -0700
+Subject: [PATCH] fixup! x86/boot: make sure KASLR does not step over KHO
+ preserved memory
 
-> 
-> If this is generally sensible, then a couple questions:
-> 1. Do I need a UFFD_FEATURE flag for this, or is it enough for a
-> program to be able to detect the existence of a
-> UFFDIO_COPY_MODE_DONTSOFTDIRTY by whether the ioctl accepts the flag
-> or returns EINVAL? I would tend to think the latter.
+During kexec handover (KHO) memory contains data that should be
+preserved and this data would be consumed by kexec'ed kernel.
 
-The latter requires all the setups needed, and an useless ioctl to probe.
-Not a huge issue, but since userfaultfd is extensible, a feature flag might
-be better as long as a new feature is well defined.
+To make sure that the preserved memory is not overwritten, KHO uses
+"scratch regions" to bootstrap kexec'ed kernel. These regions are
+guaranteed to not have any memory that KHO would preserve and are used as
+the only memory the kernel sees during the early boot.
 
-> 2. Should I add this mode for the other UFFDIO variants (ZEROPAGE,
-> MOVE, etc) at the same time even if I don't have any use for them?
+The scratch regions are passed in the setup_data by the first kernel with
+other KHO parameters. If the setup_data contains the KHO parameters, limit
+randomization to scratch areas only to make sure preserved memory won't get
+overwritten.
 
-Probably not.  I don't see a need to implement something just to make the
-API look good..  If any chunk of code in the Linux kernel has no plan to be
-used, we should probably not adding them since the start..
+Since all the pointers in setup_data are represented by u64, they require
+double casting (first to unsigned long and then to the actual pointer type)
+to compile on 32-bits. This looks goofy out of context, but it is
+unfortunately the way that this is handled across the tree. There are at
+least a dozen instances of casting like this.
 
-Thanks,
+Signed-off-by: Alexander Graf <graf@amazon.com>
+Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+---
+ arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
--- 
-Peter Xu
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 25de8c3e17cdb..3b0948ad449f9 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -764,25 +764,26 @@ static void process_e820_entries(unsigned long minimum,
+  * If KHO is active, only process its scratch areas to ensure we are not
+  * stepping onto preserved memory.
+  */
+-#ifdef CONFIG_KEXEC_HANDOVER
+ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+ {
+ 	struct kho_scratch *kho_scratch;
+ 	struct setup_data *ptr;
++	struct kho_data *kho;
+ 	int i, nr_areas = 0;
 
+-	ptr = (struct setup_data *)boot_params_ptr->hdr.setup_data;
++	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
++		return false;
++
++	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
+ 	while (ptr) {
+ 		if (ptr->type == SETUP_KEXEC_KHO) {
+-			struct kho_data *kho = (struct kho_data *)ptr->data;
+-
+-			kho_scratch = (void *)kho->scratch_addr;
++			kho = (struct kho_data *)(unsigned long)ptr->data;
++			kho_scratch = (void *)(unsigned long)kho->scratch_addr;
+ 			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
+-
+ 			break;
+ 		}
+
+-		ptr = (struct setup_data *)ptr->next;
++		ptr = (struct setup_data *)(unsigned long)ptr->next;
+ 	}
+
+ 	if (!nr_areas)
+@@ -801,13 +802,6 @@ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+
+ 	return true;
+ }
+-#else
+-static inline bool process_kho_entries(unsigned long minimum,
+-				       unsigned long image_size)
+-{
+-	return false;
+-}
+-#endif
+
+ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 					   unsigned long image_size)
+@@ -824,6 +818,10 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 		return 0;
+ 	}
+
++	/*
++	 * During kexec handover only process KHO scratch areas that are known
++	 * not to contain any data that must be preserved.
++	 */
+ 	if (!process_kho_entries(minimum, image_size) &&
+ 	    !process_efi_entries(minimum, image_size))
+ 		process_e820_entries(minimum, image_size);
+--
+2.49.0.967.g6a0df3ecc3-goog
