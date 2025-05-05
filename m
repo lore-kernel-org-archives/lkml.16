@@ -1,104 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F313A80E8;
-	Mon,  5 May 2025 23:17:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953493A80FF;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487038; cv=none; b=tngk7iDeb0N+i83epw/RX287s9wg7LfeAs5LpZSMnk+osad0w1RQRh5w77te6iwV5Ic3XPYiXSgfPlq8Hx7gBNeAA78+ZPY7Gxne7BoEzq3KwlREigsrju0TsIYZEgjo0GJi0MGVAgcif9u6uhR5ybXWMRX5v+lptPAljzU5z/M=
+	t=1746487042; cv=none; b=t/XpIFQxF7azmnpAA5IihSYJz/PNlrlh4V22h8uiGlhd0SBu9b0E4ivbf2lzXta34E3BrAiCqiGjr4VLj0rFPfCag9M/4zbT+QhObNNbG94rSGzoowdHHmzfwrDtFq33du72Hx4jbFPdkhPe2C4pjpKNAvR2zMihq8YpCkmCtBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487038; c=relaxed/simple;
-	bh=uBdoissBPpGSULb9insgyqATPgy7GITB84igV0I3bo8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QyjDuxrZF1I/RkpfY2YdS8Pa2zN1nXWA+0prAP0UXhC4Tfz2UGTm39c8Ini7a0fN9VI+NcuqPnj/oe8SM80vVaKMoJ62f9r5/C4Y6FwXnAhLSc4RcWDSz5cUY6/Jl2gvlCuxDlPmpLX9jiXygxvyJE6dOgZq+UxtUij9lx2K5os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir5AZy11; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746487042; c=relaxed/simple;
+	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dGfHopJNiK7y8vtbuZYugt/+c2GyiJxyl/+GwEEBnqvXlPR4+uosVSlh7HKgELRK8qudqbSsmFIR2PabhXjeyrz/KZqtln4Nd+fR2boP+/+ZYvvrSHFM6m7EQTlf1F9VpLI+VzUEFIORzhQjOOseCijBDsnENcMF0HAkrqTUfOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHQSb+UR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir5AZy11"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF07C4CEE4;
-	Mon,  5 May 2025 23:17:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHQSb+UR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F69CC4CEF2;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487036;
-	bh=uBdoissBPpGSULb9insgyqATPgy7GITB84igV0I3bo8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ir5AZy11nZcAizCdGy+1r7A5a+fL0Ej4mdDkSyIMI2UHyfWjWgmdvkiQ6FJ5vjwEJ
-	 EFKytDhtJYTQTXQGc4CCxyR7W0mdkxN9J73hr3n/mIbE/ilI0QwN9psUFAiFWh0WZP
-	 8RQSgV+W4s/dqxL3lCtUdPfgoo/Ip07pt1C1HdsmwdVsbNh6sYSmnWIfgB9yruSDfK
-	 ZWbClV5DpO5CsKI36XKQdhwCeLU92VsARDc1StTV2FLwgi3YOZfkumZAlNWD/m6p2Q
-	 VTgDmWdbPB6vvYArGhRHF7EoKe8HNIPqN3WNfHbIXCdIoVC4+joh2YEDtirTU1XYlu
-	 4YpBr0+FlYt2Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Jiang Liu <gerry@linux.alibaba.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	Hawking.Zhang@amd.com,
-	sunil.khatri@amd.com,
-	candice.li@amd.com,
-	YiPeng.Chai@amd.com,
-	le.ma@amd.com,
-	Feifei.Xu@amd.com,
-	kevinyang.wang@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.15 121/153] drm/amdgpu: reset psp->cmd to NULL after releasing the buffer
-Date: Mon,  5 May 2025 19:12:48 -0400
-Message-Id: <20250505231320.2695319-121-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+	s=k20201202; t=1746487041;
+	bh=9FN4e+9q1iQnxjAeLllxG2YEgg/RjuG3V6jT5Cc3/I8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=oHQSb+UR+on+kuZusS9Yu74PTg3VBf6O9EhkFSwAscwWh/7IvbA4ztA4SH+cmg15t
+	 g8ZLwtjHsHzAuMWSc+jMIjyYKIYyXx95ktNZ0IwM15htJ9gUmIpY8xIdeTqtWbQ+i0
+	 1Rc/GewX1n1w6AAu6zCoWSrjjUhHu4qa3AEWChngqWzhwNrkeB+HLXnY+noq0CrOdG
+	 YIDEVys9BKVuFfWHeUe1MFPUcFmaXf3d/CsgfP3pysh86V0m+WFj7TiwpYMyEwGmeU
+	 dMBbGVNVfOS6siIpmAn3GnQU1aof0MlLCUErNNPNs5bOpyOpreDoVr26Ac8rZVD8/3
+	 MGI5QnhlPnPUg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513CBC3ABBF;
+	Mon,  5 May 2025 23:17:21 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Mon, 05 May 2025 18:17:20 -0500
+Subject: [PATCH v5 1/3] irqdomain: Export irq_domain_free_irqs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-pci-tegra-module-v5-1-827aaac998ba@gmail.com>
+References: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
+In-Reply-To: <20250505-pci-tegra-module-v5-0-827aaac998ba@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746487040; l=813;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=HMpL5ZC0u0zHUx7X6iaMy1A5L01kC5VZDDTCKB3qS7U=;
+ b=LaAbT5EvNzNwAB4BC0Ck5T23zGZj4q9krSlQ7WSRYBQo5Edwt9whPV4JQW2SGuncIi8euA16N
+ qsRIrfwehp3AWws1U7UZfrIqd+wtNHfvXlBn2AC/Ug9FpOzwewuTj6U
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-From: Jiang Liu <gerry@linux.alibaba.com>
+From: Aaron Kling <webgeek1234@gmail.com>
 
-[ Upstream commit e92f3f94cad24154fd3baae30c6dfb918492278d ]
+Export irq_domain_free_irqs() to allow PCI/MSI drivers like pci-tegra to
+be built as a module.
 
-Reset psp->cmd to NULL after releasing the buffer in function psp_sw_fini().
-
-Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
-Signed-off-by: Jiang Liu <gerry@linux.alibaba.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ kernel/irq/irqdomain.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-index a8b7f0aeacf83..64bf24b64446b 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-@@ -353,7 +353,6 @@ static int psp_sw_fini(void *handle)
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index ec6d8e72d980f604ded2bfa2143420e0e0095920..36cd79a8a2ce960b07b03c40067343ec8f632452 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1890,6 +1890,7 @@ void irq_domain_free_irqs(unsigned int virq, unsigned int nr_irqs)
+ 	irq_domain_free_irq_data(virq, nr_irqs);
+ 	irq_free_descs(virq, nr_irqs);
+ }
++EXPORT_SYMBOL_GPL(irq_domain_free_irqs);
+ 
+ static void irq_domain_free_one_irq(struct irq_domain *domain, unsigned int virq)
  {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 	struct psp_context *psp = &adev->psp;
--	struct psp_gfx_cmd_resp *cmd = psp->cmd;
- 
- 	psp_memory_training_fini(psp);
- 	if (psp->sos_fw) {
-@@ -373,8 +372,8 @@ static int psp_sw_fini(void *handle)
- 	    adev->asic_type == CHIP_SIENNA_CICHLID)
- 		psp_sysfs_fini(adev);
- 
--	kfree(cmd);
--	cmd = NULL;
-+	kfree(psp->cmd);
-+	psp->cmd = NULL;
- 
- 	amdgpu_bo_free_kernel(&psp->fw_pri_bo,
- 			      &psp->fw_pri_mc_addr, &psp->fw_pri_buf);
+
 -- 
-2.39.5
+2.48.1
+
 
