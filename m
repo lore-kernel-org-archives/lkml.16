@@ -1,47 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFA237533D;
-	Mon,  5 May 2025 22:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B742BE7BB;
+	Mon,  5 May 2025 22:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485271; cv=none; b=RVqc9/hYvLsHeQdjvQkyKxjqCwWWBBY72tmaGwLJP6w/uoJ6kGShecKKWBh0MeykRukAUqJZAUd0QwA0DDURq1udZx5jb6zFQ1S/0nQqSjcTEXDcemLO1N3NczrlryAxmcruWZh7pPmBjk6OKlYFOTOvVJPUhyT9e/SMBGkVOL8=
+	t=1746485275; cv=none; b=DmYDoEOfLZZYG6Iugc64q3DAS9aH3bpKZLnIFLTXWujUPXpr0LrXSAI1M1QDc6MGZs6qnGtz8dEIJu3yQw/xspkcOTjevANEnQACQvLkU++lFPIjWmxqZTDJDH7DUmxDdgIytsnePjtzKZCD2k8Fgh45YVA4EkXbQ90PqkG4oEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485271; c=relaxed/simple;
-	bh=pb2oVT93ib72xdnlaAdoQ8z1PWQRPnFU+pEqI39w8SA=;
+	s=arc-20240116; t=1746485275; c=relaxed/simple;
+	bh=sxEgw4/xPQat4lCQR+i4/CUFUKOYT7PxqtHzO2BYxog=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kkueUyM5+F2I4D+AZcefHtzWNFL44vDGXFTBD98v9ISGMXGhXc6X2Kb9lsYxKKu1Uad2bPKG5T0S6J/aEvubL0Y0yfhX708c+VsFh7mHJbMemviZs2jdfUbOssNLdi8F0FX9MzhwDDPFbHEa4O92y41tuYXBl0eBHhlv8xDqboo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh7ha+9W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RBlJGPG4yMerDnoVtR+OidqPPAoCYQydJCO6gE5m9wS/z3G7t8UPYgnM2kZiVmR/6d/XRaykg6KNE+NnqxkLvmPLcQwf0+s50UKGqWyxxZet1lO1Ty4JFv06pe+8Zg7KuhplVFChSBkK/J83Qnz+e1pbMXqIT2VDX+9YtXF+DxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dD20EV+U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh7ha+9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7166C4CEF1;
-	Mon,  5 May 2025 22:47:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dD20EV+U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78157C4CEED;
+	Mon,  5 May 2025 22:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485271;
-	bh=pb2oVT93ib72xdnlaAdoQ8z1PWQRPnFU+pEqI39w8SA=;
+	s=k20201202; t=1746485275;
+	bh=sxEgw4/xPQat4lCQR+i4/CUFUKOYT7PxqtHzO2BYxog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gh7ha+9WrBIxuYo/8MIbkpLMXXWvtUO3Kw+dpDlGyfa6rOuzhrrSk4LTZO4U9yxM9
-	 4VyzV2QGag+6ZereS7z0bUxv0lsvlcHW0QtWz2tkCwvw94HYCVrLIQ+7xoG9LCnKFV
-	 hf/gOHqbi6JI7MBtzPNV2ghh+2NZmjFF1wrMW2IhjDPCfGibHqaWbain65dPpC7Ecx
-	 5v4EhVcvlzihvtjPYJYuU25w1mU59anmm/Hbx7Pu+4j9C/QB19ipIOYxhR943054o/
-	 dvdh29SANV9MzcDsuZfocevvgDPgizRfiLzYzaopQ0OZ71OqLrDQdwXAljhn0edvjT
-	 DbNi3czDnM5Ww==
+	b=dD20EV+UT43X+4tIH80Zv+vA0dw2Ud2OwePSsog0j1GM0XS3GINd9JPHbZvsnm0a4
+	 z5wgjtB1h81EJauAW7F7MhNQXE4ZNHZJYhrDcwbt7uVuGPgHrbjSB7l5Q2zvzUHY1W
+	 LTKznKyXceBy86PwygHFvCUi9uHk67TbcaOeG4tonwaCBUpfND3migyzTQU5Bbv7fN
+	 XXIHCPMTlflc7OHLGpT+GtVi+OkzIKwpLrhl7gdhUqz8iUVFF/KsJyhsnQxYWjbGWe
+	 oXI5KlZgfhA25are17ySGbIMewFCoycRxghKYuq2VXKiYyxuTLjcEAterUKfXbJazd
+	 vfHAHgE9W+gng==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Andrew Davis <afd@ti.com>,
+	Nishanth Menon <nm@ti.com>,
 	Sasha Levin <sashal@kernel.org>,
-	iyappan@os.amperecomputing.com,
-	keyur@os.amperecomputing.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 245/486] net: xgene-v2: remove incorrect ACPI_PTR annotation
-Date: Mon,  5 May 2025 18:35:21 -0400
-Message-Id: <20250505223922.2682012-245-sashal@kernel.org>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 248/486] soc: ti: k3-socinfo: Do not use syscon helper to build regmap
+Date: Mon,  5 May 2025 18:35:24 -0400
+Message-Id: <20250505223922.2682012-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -56,45 +50,66 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Andrew Davis <afd@ti.com>
 
-[ Upstream commit 01358e8fe922f716c05d7864ac2213b2440026e7 ]
+[ Upstream commit a5caf03188e44388e8c618dcbe5fffad1a249385 ]
 
-Building with W=1 shows a warning about xge_acpi_match being unused when
-CONFIG_ACPI is disabled:
+The syscon helper device_node_to_regmap() is used to fetch a regmap
+registered to a device node. It also currently creates this regmap
+if the node did not already have a regmap associated with it. This
+should only be used on "syscon" nodes. This driver is not such a
+device and instead uses device_node_to_regmap() on its own node as
+a hacky way to create a regmap for itself.
 
-drivers/net/ethernet/apm/xgene-v2/main.c:723:36: error: unused variable 'xge_acpi_match' [-Werror,-Wunused-const-variable]
+This will not work going forward and so we should create our regmap
+the normal way by defining our regmap_config, fetching our memory
+resource, then using the normal regmap_init_mmio() function.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://patch.msgid.link/20250225163341.4168238-2-arnd@kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Andrew Davis <afd@ti.com>
+Link: https://lore.kernel.org/r/20250123181726.597144-1-afd@ti.com
+Signed-off-by: Nishanth Menon <nm@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/apm/xgene-v2/main.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/soc/ti/k3-socinfo.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/apm/xgene-v2/main.c b/drivers/net/ethernet/apm/xgene-v2/main.c
-index 9e90c23814910..68335935cea77 100644
---- a/drivers/net/ethernet/apm/xgene-v2/main.c
-+++ b/drivers/net/ethernet/apm/xgene-v2/main.c
-@@ -9,8 +9,6 @@
+diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
+index 4fb0f0a248288..704039eb3c078 100644
+--- a/drivers/soc/ti/k3-socinfo.c
++++ b/drivers/soc/ti/k3-socinfo.c
+@@ -105,6 +105,12 @@ k3_chipinfo_variant_to_sr(unsigned int partno, unsigned int variant,
+ 	return -ENODEV;
+ }
  
- #include "main.h"
- 
--static const struct acpi_device_id xge_acpi_match[];
--
- static int xge_get_resources(struct xge_pdata *pdata)
++static const struct regmap_config k3_chipinfo_regmap_cfg = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
++
+ static int k3_chipinfo_probe(struct platform_device *pdev)
  {
- 	struct platform_device *pdev;
-@@ -731,7 +729,7 @@ MODULE_DEVICE_TABLE(acpi, xge_acpi_match);
- static struct platform_driver xge_driver = {
- 	.driver = {
- 		   .name = "xgene-enet-v2",
--		   .acpi_match_table = ACPI_PTR(xge_acpi_match),
-+		   .acpi_match_table = xge_acpi_match,
- 	},
- 	.probe = xge_probe,
- 	.remove_new = xge_remove,
+ 	struct device_node *node = pdev->dev.of_node;
+@@ -112,13 +118,18 @@ static int k3_chipinfo_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct soc_device *soc_dev;
+ 	struct regmap *regmap;
++	void __iomem *base;
+ 	u32 partno_id;
+ 	u32 variant;
+ 	u32 jtag_id;
+ 	u32 mfg;
+ 	int ret;
+ 
+-	regmap = device_node_to_regmap(node);
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = regmap_init_mmio(dev, base, &k3_chipinfo_regmap_cfg);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+ 
 -- 
 2.39.5
 
