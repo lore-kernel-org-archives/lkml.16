@@ -1,117 +1,189 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7036F4F1;
-	Mon,  5 May 2025 09:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783E11DE3AF;
+	Mon,  5 May 2025 09:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438936; cv=none; b=SFu82SgzJVdXIXWG1K/D8FM5SIHFIk5y0Ykex3lxc5xg0DtyiweaBGllqG6quUtNhbXsR4BQF7uTNMq4PEWTQxdJuVXBPd9giXH4EZHyqu2/J40cxCtIS7eUuRw5f2WROwCb119BVd9sGs8xOpg4uBDt7jlcrKLivBuauHTnk00=
+	t=1746438945; cv=none; b=E5IBC+opG1V12WxDcg5dmoojFHR8SNncUXGhf7mAVEWHF+oR4CKzj1VatAjyPJKASusFnMuUeZnkl2mGLF4RQic97eOIkWCIaQVUcnK1rv4BZwjbh4o0EkXCDeB1iZlunSOrrCHuUECriRubB0RaakjxoeuCBA0pUlbVuHdl9lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438936; c=relaxed/simple;
-	bh=YCu1DVWXV15rZ391SGqEaLIhxhTxoTFgzak6kJEYabs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k5+x4LzEaXK2EX2PZzsKWDDUzdOySX9FGoUSHOqqIDJnq/XmYakXI0Of75YJQxicd5SbOL7cQUrBu8/8H6X4JzUJKOGJ13yOM6h9/NhrJjc7TnBDVQQ1wdrGZUTMiJLeyU5DwAOVc9PeIu/ThGPvo1634LUMnymrEHU2jpK9MGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WQem0V/z; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746438945; c=relaxed/simple;
+	bh=C+qofN41T9ZGZV/Yauz2+1+PKYZmi9DihY6aLigOKSI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kvN5/jnEA0Q2i+sOqYyTd8iwS8bIBErs4UAIlIrZbkPjG3P5SR3ZnWglPaoRDVEKnStHpcXQVtXdnRvgRuSU3NdArTcZP/Nlt4sI9iny/qyHGz8L6tmb4KrwyWbAENvXTRUi3MEAvJdcVPqsyk4B2LzujebhexYKEhhNn2Qy+nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIG6OFKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WQem0V/z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746438928;
-	bh=wClUWaY3Wl0XfzWjXcyW4fUNHnVCAUDtmE1qViFHSeo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=WQem0V/zVd5kkKxFULGNe80jSGVBnX7hk1/y1cqy3s0RQoOY+Yg+EUPSwr1yvwiZa
-	 vpxYc/RIaY+F0sX3Ct+kVSGyAqL4D7ERvmo/r9w9r9XihC2WcvfAHzD5VBZxvJPF7t
-	 Sd77i+3QpZRHxkQtYpbpYHULE4px4n2MKZ9l5KfJDYomPasMnLeNrLsg6UA09yn63u
-	 cGpz0JZFFh/ZDPbBXhpb3x0poIPKPgzIEHqhzuZ2CN1xIBSb43lpZie3n6e8P3NApV
-	 X8atK5x90RQ1pJgjvNwM8/h6SeZ1Rp0n/wzYNjQLgbpHyb3om/42I0iwWz/UBtTx5L
-	 vnWaUu7/KZhIA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrcN05cqsz4wyR;
-	Mon,  5 May 2025 19:55:28 +1000 (AEST)
-Date: Mon, 5 May 2025 19:55:27 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Herbert Xu <herbert@gondor.apana.org.au>, Linux Crypto List
- <linux-crypto@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the crypto tree
-Message-ID: <20250505195527.4c4237c4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIG6OFKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC56C4CEE4;
+	Mon,  5 May 2025 09:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746438945;
+	bh=C+qofN41T9ZGZV/Yauz2+1+PKYZmi9DihY6aLigOKSI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lIG6OFKKuZoF45Xa5t+XOx2zCpIrNGnvG4tQ+MSOPD8cmpNfuqXBeXEQJCQvzV+Tr
+	 TVb9iR3kx5r/nLo6Ivm3btPA3XlQ1WlJcKlQqOVMIlcMTrRvwmjmMdJuvInwuiCPPZ
+	 j8/qiNiZSyf80yMW3JYb2+5Jlr3gxr2/Mfow6l+49fECTvMk6Q2I0ypz0+JQrlAxho
+	 m1CyDA2fbsGuf3vuEmN7m4xX165tSxjwDG616sOdZ1kPN3eRCQ1k9Z188xhX/3gZw9
+	 MdcMGURjj6qG05hThenfkuXn/UuLCyj0UebROnk9llUV1GLIsasAYQwNUqb9Agw06X
+	 q3+FbTdn7wyzw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Masahiro Yamada"
+ <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,  "Luis
+ Chamberlain" <mcgrof@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,
+  "Nicolas Schier" <nicolas.schier@linux.dev>,  "Trevor Gross"
+ <tmgross@umich.edu>,  "Adam Bratschi-Kaye" <ark.email@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu" <petr.pavlu@suse.com>,
+  "Sami Tolvanen" <samitolvanen@google.com>,  "Daniel Gomez"
+ <da.gomez@samsung.com>,  "Simona Vetter" <simona.vetter@ffwll.ch>,  "Greg
+ KH" <gregkh@linuxfoundation.org>,  "Fiona Behrens" <me@kloenk.dev>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v11 2/3] rust: add parameter support to the `module!` macro
+In-Reply-To: <aBTMMHWNXS7wK7zS@google.com> (Alice Ryhl's message of "Fri, 02
+	May 2025 13:44:16 +0000")
+References: <20250502-module-params-v3-v11-0-6096875a2b78@kernel.org>
+	<20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
+	<WroEJHY8a-y8vbSQkUvGJJs7yTQGKMsHJqmWFYGkz5bZ_PsiE8GAozjSaNpWjWina1XanjVNpV0Av3woiaUtJg==@protonmail.internalid>
+	<aBTMMHWNXS7wK7zS@google.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Mon, 05 May 2025 11:55:33 +0200
+Message-ID: <878qnbxtyi.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/h9FYyv=y73CibUN15Xmcai=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/h9FYyv=y73CibUN15Xmcai=
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-Commits
+> On Fri, May 02, 2025 at 02:16:35PM +0200, Andreas Hindborg wrote:
+>> Add support for module parameters to the `module!` macro. Implement read
+>> only support for integer types without `sysfs` support.
+>>
+>> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
+>> Tested-by: Daniel Gomez <da.gomez@samsung.com>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>
+>> +unsafe extern "C" fn set_param<T>(
+>> +    val: *const kernel::ffi::c_char,
+>> +    param: *const crate::bindings::kernel_param,
+>> +) -> core::ffi::c_int
+>> +where
+>> +    T: ModuleParam,
+>> +{
+>> +    // NOTE: If we start supporting arguments without values, val _is_ =
+allowed
+>> +    // to be null here.
+>> +    if val.is_null() {
+>> +        // TODO: Use pr_warn_once available.
+>> +        crate::pr_warn!("Null pointer passed to `module_param::set_para=
+m`");
+>> +        return EINVAL.to_errno();
+>> +    }
+>> +
+>> +    // SAFETY: By function safety requirement, val is non-null and
+>> +    // null-terminated. By C API contract, `val` is live and valid for =
+reads
+>> +    // for the duration of this function.
+>> +    let arg =3D unsafe { CStr::from_char_ptr(val) };
+>> +
+>> +    crate::error::from_result(|| {
+>> +        let new_value =3D T::try_from_param_arg(arg)?;
+>> +
+>> +        // SAFETY: `param` is guaranteed to be valid by C API contract
+>> +        // and `arg` is guaranteed to point to an instance of `T`.
+>> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as *mu=
+t T };
+>> +
+>> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
+>> +        // access. `old_value` is pointing to an initialized static, and
+>> +        // so it is properly initialized.
+>> +        unsafe { core::ptr::replace(old_value, new_value) };
+>
+> You don't use the return value of this, so this is equivalent to
+> unsafe { *old_value =3D new_value };
 
-  e4274cd4f727 ("crypto: hisilicon/qm - replace devm_kzalloc with devm_kcal=
-loc")
-  3f9ea3a5618e ("crypto: hisilicon/qm - remove sizeof(char)")
-  7da3b0ff2af8 ("crypto: sun8i-ce-hash - use pm_runtime_resume_and_get()")
-  2c870574fb94 ("crypto: sun8i-ce - undo runtime PM changes during driver r=
-emoval")
-  24418b58792a ("hwrng: rockchip - add support for RK3576's RNG")
-  e511999438e1 ("dt-bindings: rng: rockchip,rk3588-rng: add rk3576-rng comp=
-atible")
-  13917ce458c7 ("crypto: rng - fix documentation for crypto_rng_alg()")
-  c6527b8ca148 ("crypto: qat - add qat_6xxx driver")
-  bed3233d9e4f ("crypto: qat - add firmware headers for GEN6 devices")
-  4903f74450d1 ("crypto: qat - update firmware api")
-  e9833be85348 ("crypto: qat - export adf_init_admin_pm()")
-  a260a62349b0 ("crypto: qat - expose configuration functions")
-  8e84a854176a ("crypto: qat - export adf_get_service_mask()")
-  ff193f6c14e9 ("crypto: qat - add GEN6 firmware loader")
-  c1e216382091 ("crypto: qat - refactor FW signing algorithm")
-  25177bb3f705 ("crypto: qat - use pr_fmt() in qat uclo.c")
-  5fc9923d1554 ("crypto: qat - refactor compression template logic")
-  424b3c3cfbae ("crypto: qat - rename and relocate timer logic")
-  9b6fc5b6e9c0 ("crypto: qat - include qat_common in top Makefile")
-  f230dcfe428b ("crypto: lib/sha256 - improve function prototypes")
-  e42b6c1e17cc ("crypto: sha256 - remove sha256_base.h")
-  91c5c4bf145d ("crypto: x86/sha256 - implement library instead of shash")
-  42802c7f8eff ("crypto: sparc/sha256 - implement library instead of shash")
-  1a92dd688525 ("crypto: sparc - move opcodes.h into asm directory")
-  d31058b2589f ("crypto: s390/sha256 - implement library instead of shash")
-  fe11c8974fdc ("crypto: riscv/sha256 - implement library instead of shash")
-  9d2b1924c137 ("crypto: powerpc/sha256 - implement library instead of shas=
-h")
-  19c9460ea05b ("crypto: mips/sha256 - implement library instead of shash")
-  6df537365d25 ("crypto: arm64/sha256 - implement library instead of shash")
-  4fcab0fbfd54 ("crypto: arm64/sha256 - remove obsolete chunking logic")
-  7f4bd270972c ("crypto: arm/sha256 - implement library instead of shash")
+Thanks.
 
-are missing a Signed-off-by from their committer.
+>
+>> +macro_rules! make_param_ops {
+>> +    ($ops:ident, $ty:ty) =3D> {
+>> +        ///
+>> +        /// Static [`kernel_param_ops`](srctree/include/linux/modulepar=
+am.h)
+>> +        /// struct generated by `make_param_ops`
+>> +        #[doc =3D concat!("for [`", stringify!($ty), "`].")]
+>> +        pub static $ops: $crate::bindings::kernel_param_ops =3D $crate:=
+:bindings::kernel_param_ops {
+>> +            flags: 0,
+>> +            set: Some(set_param::<$ty>),
+>> +            get: None,
+>> +            free: Some(free::<$ty>),
+>
+> You could potentially only include `free` if
+> `core::mem::needs_drop::<T>()` as an optimization.
 
---=20
-Cheers,
-Stephen Rothwell
+Right, nice =F0=9F=91=8D
 
---Sig_/h9FYyv=y73CibUN15Xmcai=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>
+>> +    fn emit_params(&mut self, info: &ModuleInfo) {
+>> +        let Some(params) =3D &info.params else {
+>> +            return;
+>> +        };
+>> +
+>> +        for param in params {
+>> +            let ops =3D param_ops_path(&param.ptype);
+>> +
+>> +            // Note: The spelling of these fields is dictated by the us=
+er space
+>> +            // tool `modinfo`.
+>> +            self.emit_param("parmtype", &param.name, &param.ptype);
+>> +            self.emit_param("parm", &param.name, &param.description);
+>> +
+>> +            write!(
+>> +                self.param_buffer,
+>> +                "
+>> +                    pub(crate) static {param_name}:
+>> +                        ::kernel::module_param::ModuleParamAccess<{para=
+m_type}> =3D
+>> +                            ::kernel::module_param::ModuleParamAccess::=
+new({param_default});
+>
+> Is this global accessible to the user?
 
------BEGIN PGP SIGNATURE-----
+Yes.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgYiw8ACgkQAVBC80lX
-0GxhAgf+KZPb3I3J+rquhpAlzHSkWwKvisIVeuvXDrrz8jU+tjXiliqSZwdMgKka
-mQdvXnvhrtfrTQY6VZ7B6IZvFTaXwjQKXQeoE5f6L2thkAnXXrTCPVYWy2hEdGUl
-/vFHKrVNPzqxRFALK51pW4SNMafvfQj/fn9OdgdUetd4CCAD1kOg2OtyNYgj0ezU
-IVIgTjAnkLDdRA5s7XvkPA+lMRGu9EJdQr3Cxe+oV0iMoozznY6ZZAFMVO/mS5op
-Z4wnMdgZ1H7Keb2/YMgJre+0MM/QcRB28SylnIqOtwLfOoZanWIzVHSQFBL0dCpJ
-9wvpH8mm8c/b37T0JdP6P/uGRwgPjA==
-=x2t4
------END PGP SIGNATURE-----
+> It would be a use-after-free to
+> access it during module teardown. For example, what if I access this
+> static during its own destructor? Or during the destructor of another
+> module parameter?
 
---Sig_/h9FYyv=y73CibUN15Xmcai=--
+Yes, that is a problem.
+
+We can get around it for now by just not calling `free` for now. We only
+support simple types that do not need drop. I think we would have to
+seal the `ModuleParam` trait for this.
+
+For a proper solution, we could
+ - Require a token to read the parameter.
+ - Synchronize on a module private field and return an option from the
+   parameter getter. This would require module exit to run before param
+   free. I think this is the case, but I did not check.
+ - Use a `Revocable` and revoke the parameter in `free`.
+
+Any other ideas or comments on the outlined solutions?
+
+
+Best regards,
+Andreas Hindborg
+
+
