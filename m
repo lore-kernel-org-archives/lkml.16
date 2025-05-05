@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196FF289826;
-	Mon,  5 May 2025 23:14:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9621628982A;
+	Mon,  5 May 2025 23:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486853; cv=none; b=smZd+Uo7vSm+Xvh352ifr57Nk/2jIg3Qd1TAK2MjvVSSS9XL0JUlNtJ7A1ifNsOUuhL8NFd34Ro/qFWcx8qbFwrAabq3wd7w0nIL1kPUriGSX7E7qRsX4jIbALYpO7zKCiMy0JpStfgoF5n+82L/hpUbpmEe1ou/GOS2fa9oH0c=
+	t=1746486857; cv=none; b=Hb6VfvGzrRNtxT1YuLaNfGh52VTPIAOyQifmMMp1JGg4CHqxeTFIIVxCRRWGZXjYSa3fjAKNMi4mxEAotJGNpsbjDnehtFL0X6+Stymp0kulmEnqNlTefMyJxZJKxvK8G4cYIakjMY/W+QAtmFrbdpIU4usscR9UYoO9jDCjxVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486853; c=relaxed/simple;
-	bh=6K1W7Zy3vyBKZTLpth2DPhBesAHtGw1EAG+78Ae1Obo=;
+	s=arc-20240116; t=1746486857; c=relaxed/simple;
+	bh=0EWvK4TsmZ4hBZAMOT+xfxdc3HMMgFzeks/y6hvpEGE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mAI9KpqkOeozh3gYNq7jVi/jLUvEUEayhNDn3Jg+t4TQyKnZhUT9k6lzk+/k2eXOhflU0VZm9nLKRwHd7ODwjlYbUuDfIT8ViFTJ+nMF+VM4jL8BYx/Jjv+BSphO6OHthRLZYLHgTvBC5BzfGw0mraCzxm2HVSiYGClPJHTwxXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MS1Pzm65; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EheZwb3FsL13w0TdheB5s1AoK2JBAZeeE5sd9YB+9sMxBscgfRdAlIWLlmtUW7XpYFg9aNyGzo0EutPGXavEKaMX7DCwe9YJavigO67QR4qyNcYGwMpVvOihm1HSZzabdGUqWIClAiuQDHQmQS5roGqB5eLILmOsK99xYSSLImQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU/rqBrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MS1Pzm65"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A04C4CEE4;
-	Mon,  5 May 2025 23:14:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU/rqBrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723C5C4CEED;
+	Mon,  5 May 2025 23:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486852;
-	bh=6K1W7Zy3vyBKZTLpth2DPhBesAHtGw1EAG+78Ae1Obo=;
+	s=k20201202; t=1746486857;
+	bh=0EWvK4TsmZ4hBZAMOT+xfxdc3HMMgFzeks/y6hvpEGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MS1Pzm65pzvEtTS97JrJGAe4XEAwT7go+JxmHA3xNSUeRTalJxRJPGswQQAdR0wfY
-	 6k85Fs4tubxiqa3GYd3F6O14sQym2U2A+kRq/BJecjoVvAOFYMxZMGRhFIlogBvPuY
-	 6UUuzGNhEDh/8F01Hw/L9j53Awuzlgb4LNkXDIJnvvYdZ4dgBlsAnumW96S7VgJsKD
-	 6qH64yVhrPYUQUBdCUFYy4LFEU0NPDXySqA6w1uTpSigJewRK4MjwyqIUkpYYQrB68
-	 DlRFkysypTg6Ozi18ahYQ9AST+nAJsKsQK1Z/fUBQlrlQrj3zPlfDK06guxHQ698ZH
-	 OUetK0WuisIqg==
+	b=QU/rqBrKUH6KumuPQzsv7iuz6wovWmMAiFAIrM9vfJO1CIXpjvpKGQen3S3pCLBOx
+	 ahhooVH7vfei2Iy+Yh+SHBbLNZLgTU81f4uHZlDenC60L4QorwK1AJcZAslANCuyzG
+	 PDAYHp7/1l0t96xzKGs2oZYxzDjfUAM2FUloThEmCI/t4ItzQ/HQiVE2E5nqV08z/3
+	 5DqKBXBmmwAgqfNTsBtgyLXPzZh/SrKFlBXAE04Dh69qGPHQV9P7w91xEg5mwz4PZS
+	 nCTbiyFfwSUqaHO2n6kllfkuJ/YF0i10LIrVF0sqtYJW88ftVuoodgEQu09KrvAkZ4
+	 /JQwrl/8mFagg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Boris Burkov <boris@bur.io>,
-	Filipe Manana <fdmanana@suse.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Stanley Chu <yschu@nuvoton.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 024/153] btrfs: make btrfs_discard_workfn() block_group ref explicit
-Date: Mon,  5 May 2025 19:11:11 -0400
-Message-Id: <20250505231320.2695319-24-sashal@kernel.org>
+	miquel.raynal@bootlin.com,
+	linux-i3c@lists.infradead.org,
+	imx@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.15 028/153] i3c: master: svc: Fix missing STOP for master request
+Date: Mon,  5 May 2025 19:11:15 -0400
+Message-Id: <20250505231320.2695319-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -53,104 +53,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Boris Burkov <boris@bur.io>
+From: Stanley Chu <yschu@nuvoton.com>
 
-[ Upstream commit 895c6721d310c036dcfebb5ab845822229fa35eb ]
+[ Upstream commit 0430bf9bc1ac068c8b8c540eb93e5751872efc51 ]
 
-Currently, the async discard machinery owns a ref to the block_group
-when the block_group is queued on a discard list. However, to handle
-races with discard cancellation and the discard workfn, we have a
-specific logic to detect that the block_group is *currently* running in
-the workfn, to protect the workfn's usage amidst cancellation.
+The controller driver nacked the master request but didn't emit a
+STOP to end the transaction. The driver shall refuse the unsupported
+requests and return the controller state to IDLE by emitting a STOP.
 
-As far as I can tell, this doesn't have any overt bugs (though
-finish_discard_pass() and remove_from_discard_list() racing can have a
-surprising outcome for the caller of remove_from_discard_list() in that
-it is again added at the end).
-
-But it is needlessly complicated to rely on locking and the nullity of
-discard_ctl->block_group. Simplify this significantly by just taking a
-refcount while we are in the workfn and unconditionally drop it in both
-the remove and workfn paths, regardless of if they race.
-
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Boris Burkov <boris@bur.io>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Link: https://lore.kernel.org/r/20250318053606.3087121-4-yschu@nuvoton.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/discard.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/i3c/master/svc-i3c-master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/discard.c b/fs/btrfs/discard.c
-index bd9dde374e5d8..3ddd0c24a94ea 100644
---- a/fs/btrfs/discard.c
-+++ b/fs/btrfs/discard.c
-@@ -151,13 +151,7 @@ static bool remove_from_discard_list(struct btrfs_discard_ctl *discard_ctl,
- 	block_group->discard_eligible_time = 0;
- 	queued = !list_empty(&block_group->discard_list);
- 	list_del_init(&block_group->discard_list);
--	/*
--	 * If the block group is currently running in the discard workfn, we
--	 * don't want to deref it, since it's still being used by the workfn.
--	 * The workfn will notice this case and deref the block group when it is
--	 * finished.
--	 */
--	if (queued && !running)
-+	if (queued)
- 		btrfs_put_block_group(block_group);
- 
- 	spin_unlock(&discard_ctl->lock);
-@@ -243,9 +237,10 @@ static struct btrfs_block_group *peek_discard_list(
- 			block_group->discard_cursor = block_group->start;
- 			block_group->discard_state = BTRFS_DISCARD_EXTENTS;
- 		}
--		discard_ctl->block_group = block_group;
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 368429a34d600..92488ba5b5f2a 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -437,6 +437,7 @@ static void svc_i3c_master_ibi_work(struct work_struct *work)
+ 		queue_work(master->base.wq, &master->hj_work);
+ 		break;
+ 	case SVC_I3C_MSTATUS_IBITYPE_MASTER_REQUEST:
++		svc_i3c_master_emit_stop(master);
+ 	default:
+ 		break;
  	}
- 	if (block_group) {
-+		btrfs_get_block_group(block_group);
-+		discard_ctl->block_group = block_group;
- 		*discard_state = block_group->discard_state;
- 		*discard_index = block_group->discard_index;
- 	}
-@@ -469,9 +464,20 @@ static void btrfs_discard_workfn(struct work_struct *work)
- 
- 	block_group = peek_discard_list(discard_ctl, &discard_state,
- 					&discard_index, now);
--	if (!block_group || !btrfs_run_discard_work(discard_ctl))
-+	if (!block_group)
- 		return;
-+	if (!btrfs_run_discard_work(discard_ctl)) {
-+		spin_lock(&discard_ctl->lock);
-+		btrfs_put_block_group(block_group);
-+		discard_ctl->block_group = NULL;
-+		spin_unlock(&discard_ctl->lock);
-+		return;
-+	}
- 	if (now < block_group->discard_eligible_time) {
-+		spin_lock(&discard_ctl->lock);
-+		btrfs_put_block_group(block_group);
-+		discard_ctl->block_group = NULL;
-+		spin_unlock(&discard_ctl->lock);
- 		btrfs_discard_schedule_work(discard_ctl, false);
- 		return;
- 	}
-@@ -523,15 +529,7 @@ static void btrfs_discard_workfn(struct work_struct *work)
- 	spin_lock(&discard_ctl->lock);
- 	discard_ctl->prev_discard = trimmed;
- 	discard_ctl->prev_discard_time = now;
--	/*
--	 * If the block group was removed from the discard list while it was
--	 * running in this workfn, then we didn't deref it, since this function
--	 * still owned that reference. But we set the discard_ctl->block_group
--	 * back to NULL, so we can use that condition to know that now we need
--	 * to deref the block_group.
--	 */
--	if (discard_ctl->block_group == NULL)
--		btrfs_put_block_group(block_group);
-+	btrfs_put_block_group(block_group);
- 	discard_ctl->block_group = NULL;
- 	__btrfs_discard_schedule_work(discard_ctl, now, false);
- 	spin_unlock(&discard_ctl->lock);
 -- 
 2.39.5
 
