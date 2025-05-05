@@ -1,173 +1,157 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C81D79A0
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E32F1D54EF
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440143; cv=none; b=LbOHmkv1/KpJyQyxpuKkdxGTIgb7/nLrZG8psdj9Ywfyn61yHlD1gZ6Cf+qykTP2cIzhOvcQ71UVB/wWL9WNqlLuy3NPitNSTbJMswGozDlONGGL0ir6GLhRFKd3MmSnOhdceBS7uA4Apxm1tz7/qzSQfL+5rKOiXNLBByR1Gjg=
+	t=1746440216; cv=none; b=G97BaYviQKhQnZRYUGzznBsoCwhf25MKxGiG79iSfZStkByNgJM6IBxWufxB/WnQUhku+B4X127s7dcIZH+J82yzR0aFae/fSro9DJB4Zhmyy4u5uSSEHbNVaFXAFTSsPNgIwYzuKrEc/xMucAWoVsA2rvwQ7T+B86b88nMW70s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440143; c=relaxed/simple;
-	bh=snF7aYKt9AG7vZEbsjnjM619XOg20nFrINAofsqZ3EM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7TbR2X3TSBvHkB7r4q2XnAPFuknayC2t/bC+EepOZXUkRVHz5m0V2OtLhzyUgN+OPDLIyjogVIQBM5RcZCo5AcYrCZIzogBxKH1AA1VUoAM8szxh8LV7u+XUix87lYeNsSx9b/yK29ROe/1gn443nkYhmVWJ5QPxz9ioMGJwvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=O0ozi0Yy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDLxeXUj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=O0ozi0Yy; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eDLxeXUj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746440216; c=relaxed/simple;
+	bh=mevWuU4xNwiUirBkvdaNf+/+QiabGjfTbLpHvUrs9FQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dImNjDfQcEs6pBEXlngbXJKU8rqQ+tMOAHgkEeoGKYdjLd/AA9S+UYKr5xI9bl0XCyaCiAziYj5o53wiIRqCsg3MPxyK3tDKB+Xvi/wbsrl5AdbO1jlG9SW7om7e8cAsugvQBL9Q+avL8Uu/X5dwcU1CViBOP3ZiaMR2WBxEqRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wrdSdj5N; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="O0ozi0Yy";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDLxeXUj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="O0ozi0Yy";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eDLxeXUj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0B96F2123E;
-	Mon,  5 May 2025 10:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746440140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wrdSdj5N"
+Message-ID: <43d7374f-dc89-4137-bb7d-39b9b1a1dd63@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746440200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
-	b=O0ozi0YyzWYSTL0UO+7fxLULKwVHY6hkMpYmnJ9lQXlqajfflFZXVGUrQ72JkscFGb5Oi9
-	5bUt1SS680pAqOfdaH87LsjNaMazqH1mz3RfuzpTIGr0HUhJn9KFt4hNB2cj0ISC5hSMWP
-	jinslxMrb9FGkdemw4eLbvR7m9KKm74=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746440140;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
-	b=eDLxeXUjjaD/AUu9uRgIG/wA3Epgy07dGouxPaahhKorPQ09YfpJCRDAgUjk1rsxHQuVxz
-	tQ6g8Pi9dd595dAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=O0ozi0Yy;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=eDLxeXUj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746440140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
-	b=O0ozi0YyzWYSTL0UO+7fxLULKwVHY6hkMpYmnJ9lQXlqajfflFZXVGUrQ72JkscFGb5Oi9
-	5bUt1SS680pAqOfdaH87LsjNaMazqH1mz3RfuzpTIGr0HUhJn9KFt4hNB2cj0ISC5hSMWP
-	jinslxMrb9FGkdemw4eLbvR7m9KKm74=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746440140;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iAbhV4/tIIoCKneizhnsh4v1nbNLXfelEvALszEo3qE=;
-	b=eDLxeXUjjaD/AUu9uRgIG/wA3Epgy07dGouxPaahhKorPQ09YfpJCRDAgUjk1rsxHQuVxz
-	tQ6g8Pi9dd595dAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E7A6D13883;
-	Mon,  5 May 2025 10:15:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cLiDOMuPGGhCegAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 05 May 2025 10:15:39 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E484EA0670; Mon,  5 May 2025 12:15:38 +0200 (CEST)
-Date: Mon, 5 May 2025 12:15:38 +0200
-From: Jan Kara <jack@suse.cz>
-To: Andrey Kriulin <kitotavrik.s@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Andrey Kriulin <kitotavrik.media@gmail.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] fs: minix: Fix handling of corrupted directories
-Message-ID: <a6log74bqsrkzlrckh3gbzpi4mxuj45mr7tddtghck76oum4io@pmks35zdahqn>
-References: <20250502164337.62895-1-kitotavrik.media@gmail.com>
+	bh=k9oeIjP/XK15ndT9uH90YP5m53JwmFwFM7/2OTSeJIY=;
+	b=wrdSdj5Nz0QcfudccPsOjQ8nWkhyqQ41MCdvQKMr4Mz0I7OyXzNlTsRiI/I8J3hZ4xY6CP
+	QZH/AqHwyWs51D48n/jcJHd1cjPMISGkQfstkxbL/7+V5kp3KezE04O/DBHq3KjuO2WGex
+	anxBLHoNZs8or2MqNWUwp8ywmgw4ngg=
+Date: Mon, 5 May 2025 12:16:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502164337.62895-1-kitotavrik.media@gmail.com>
-X-Rspamd-Queue-Id: 0B96F2123E
-X-Spam-Score: -2.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,infradead.org,toxicpanda.com,suse.de,suse.cz,vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Subject: Re: [PATCH v1] soundwire: intel_auxdevice: Fix system suspend/resume
+ handling
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>, linux-sound@vger.kernel.org
+References: <5891540.DvuYhMxLoT@rjwysocki.net>
+ <30acf520-c137-4b49-8b69-08e35a7c5969@linux.dev>
+ <CAJZ5v0iCsd8fdXRdicT7mqsRte39WC+SVjgfz2NHS9QpvSnDdw@mail.gmail.com>
+ <CAJZ5v0iFPf=WT3CjNqtioUoiX9jc5nmZLJnAkQOhBTmGq_ioAw@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+In-Reply-To: <CAJZ5v0iFPf=WT3CjNqtioUoiX9jc5nmZLJnAkQOhBTmGq_ioAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri 02-05-25 19:43:36, Andrey Kriulin wrote:
-> If the directory is corrupted and the number of nlinks is less than 2 
-> (valid nlinks have at least 2), then when the directory is deleted, the
-> minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-> value.
+
+
+On 4/25/25 13:43, Rafael J. Wysocki wrote:
+> On Fri, Apr 25, 2025 at 8:10 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>>
+>> On Fri, Apr 25, 2025 at 7:14 PM Pierre-Louis Bossart
+>> <pierre-louis.bossart@linux.dev> wrote:
+>>>
+>>> On 4/24/25 20:13, Rafael J. Wysocki wrote:
+>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>
+>>>> The code in intel_suspend() and intel_resume() needs to be properly
+>>>> synchronized with runtime PM which is not the case currently, so fix
+>>>> it.
+>>>>
+>>>> First of all, prevent runtime PM from triggering after intel_suspend()
+>>>> has started because the changes made by it to the device might be
+>>>> undone by a runtime resume of the device.  For this purpose, add a
+>>>> pm_runtime_disable() call to intel_suspend().
+>>>
+>>> Allow me to push back on this, because we have to be very careful with a hidden state transition that needs to happen.
+>>>
+>>> If a controller was suspended by pm_runtime, it will enter the clock stop mode.
+>>>
+>>> If the system needs to suspend, the controller has to be forced to exit the clock stop mode and the bus has to restart before we can suspend it, and that's why we had those pm_runtime_resume().
+>>>
+>>> Disabling pm_runtime when entering system suspend would be problematic for Intel hardware, it's a known can of worms.
+>>
+>> No, it wouldn't AFAICS.
+
+I was referring to the SoundWire controller. The states are different 
+between pm_runtime suspend (clock is stopped but external wakes are 
+supported) and system suspend (external wakes are not supported).
+
+If the system suspend is entered while the device is already in 
+pm_runtime suspend, then we have to perform a full resume before the 
+system suspend.
+
+I am not going to argue on how to perform this resume, just that it's 
+required. The direction transition from pm_runtime suspend to system 
+suspend is not supported.
+
+>>> It's quite possible that some of the code in intel_suspend() is no longer required because the .prepare will resume the bus properly, but I wanted to make sure this state transition out of clock-stop is known and taken into consideration.
+>>
+>> This patch doesn't change the functionality in intel_suspend(), it
+>> just prevents runtime resume running in parallel with it or after it
+>> from messing up with the hardware.
+>>
+>> I don't see why it would be unsafe to do and please feel free to prove me wrong.
 > 
-> Make nlinks validity check for directory in minix_lookup.
+> Or just tell me what I'm missing in the reasoning below.
 > 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> This code:
 > 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
+> -    if (pm_runtime_suspended(dev)) {
+> -        dev_dbg(dev, "pm_runtime status was suspended, forcing active\n");
+> -
+> -        /* follow required sequence from runtime_pm.rst */
+> -        pm_runtime_disable(dev);
+> -        pm_runtime_set_active(dev);
+> -        pm_runtime_mark_last_busy(dev);
+> -        pm_runtime_enable(dev);
+> -
+> -        pm_runtime_resume(bus->dev);
+> -
+> -        link_flags = md_flags >> (bus->link_id * 8);
+> -
+> -        if (!(link_flags & SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE))
+> -            pm_runtime_idle(dev);
+> -    }
+> 
+> that is being removed by my patch (because it is invalid - more about
+> that later) had never run before commit bca84a7b93fd ("PM: sleep: Use
+> DPM_FLAG_SMART_SUSPEND conditionally") because setting
+> DPM_FLAG_SMART_SUSPEND had caused the core to call
+> pm_runtime_set_active() on the device in the noirq resume phase, so it
+> had never been seen as runtime-suspended in intel_resume().  After
+> commit bca84a7b93fd the core doesn't do that any more, so if the
+> device has been runtime-suspended before intel_suspend() runs,
+> intel_resume() will see that its status is RPM_SUSPENDED.  The code in
+> question will run and it will crash and burn if
+> SDW_INTEL_MASTER_DISABLE_PM_RUNTIME_IDLE is set in the link flags.
+> 
+> The reason why that code is invalid is because the
+> pm_runtime_set_active() call in it causes the status to change to
+> RPM_ACTIVE, but it doesn't actually change the state of the device
+> (that is still physically suspended).  The subsequent
+> pm_runtime_resume() sees that the status is RPM_ACTIVE and it doesn't
+> do anything.  At this point, the device is still physically suspended,
+> but its runtime PM status is RPM_ACTIVE, so if pm_runtime_idle() runs,
+> it will trigger an attempt to suspend and that will break because the
+> device is already suspended.
+> 
+> So this code had never run before and it demonstrably doesn't work, so
+> I don't see why removing it could be incorrect.
 
-Thanks for the patch. One comment below.
+I don't have enough knowledge to counter your arguments :-). I think we 
+misread the documentation in runtime_pm.pst, this sort of sequence is 
+mentioned but on system resume, and we applied it for system suspend as 
+well.
 
-> diff --git a/fs/minix/namei.c b/fs/minix/namei.c
-> index 8938536d8..5717a56fa 100644
-> --- a/fs/minix/namei.c
-> +++ b/fs/minix/namei.c
-> @@ -28,8 +28,13 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
->  		return ERR_PTR(-ENAMETOOLONG);
->  
->  	ino = minix_inode_by_name(dentry);
-> -	if (ino)
-> +	if (ino) {
->  		inode = minix_iget(dir->i_sb, ino);
-> +		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
-> +			iput(inode);
-> +			return ERR_PTR(-EIO);
-> +		}
-> +	}
->  	return d_splice_alias(inode, dentry);
->  }
 
-I don't think this is the best place to handle such check. IMO it would be
-more logical to do it in minix_iget() - V[12]_minix_iget() to be more
-precise - to properly catch all the paths where the inode is loaded into
-memory. This way your check will not happen for the root directory inode
-for example.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
