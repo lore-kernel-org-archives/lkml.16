@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2275E390E3F;
-	Mon,  5 May 2025 23:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52263A6FB3;
+	Mon,  5 May 2025 23:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487004; cv=none; b=cZd0GAA9H9l3jluPn0qQLPersxx2nfpdx2yvlvzDYsQuXrZ98msS3p0dghjEx0CVhnrVDrn9Z8rTM7PW1Xbu9hugA8AcMY2WVQhyUsKpFXW0p5c0l1ocvkgVjAP+H0RwA6l442h984STkQG2RkfrJ0rY77ySPERL5GTEWs1v6Gw=
+	t=1746487011; cv=none; b=N3m1cMWxGYFZyMCsUeipUbOn5jYw846mJ4T6KUL7N5XPH+tqagpuTdSCwUXLGJdBrzF1I0voqmXhiThzH9bgEf0AT3Z9Y5vb4HQsM3m4hGx/xNXAKu93LKV/ADYdjqR7UajT7WyuIT7NTvXFQfqsVIiPHD4syU6RJgYt7oXrkP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487004; c=relaxed/simple;
-	bh=Tw1OAR1vKnRom5Z/mLgyXztrEWHUgnnKnbtvpFmrB0I=;
+	s=arc-20240116; t=1746487011; c=relaxed/simple;
+	bh=RB1GCYxJZRBjdfu7LkDBzuFWTa4iGUxDh2yLcwZrvbw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hgmTCWJhLbbYfdFzZI8yZViTax18O+xl2qRChP+vqd7o6SZBTFOLzc82UmeKMOK8SogFC69P6u3sL3nof2LzRy9PzvKJywGbocSqRxR3OytNEY9IHkRlmmDq4bMfNCDFvzGyoyC/m/awaAn9YGzZauCloLHx5FrR3cDXzGaLUSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGVfpWvy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fCLUWKtoYYYXgxGO5ik906dWziPUxm5yFX5LtAxGYrVz6+mU0d3jt/PkTMxfZDtG0J7/ZM4QRXUQ4YSrw8jTkky6fBedkGJWNR9ydKsSUmE+4AYtIh8mn+CajdmMbuv0qVFCvfBCZyI/cz0i1w+e4DYf9Jc+KroaMdFY85Pmf18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPYtBnrb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGVfpWvy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A59C4CEEE;
-	Mon,  5 May 2025 23:16:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPYtBnrb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87886C4CEE4;
+	Mon,  5 May 2025 23:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487002;
-	bh=Tw1OAR1vKnRom5Z/mLgyXztrEWHUgnnKnbtvpFmrB0I=;
+	s=k20201202; t=1746487011;
+	bh=RB1GCYxJZRBjdfu7LkDBzuFWTa4iGUxDh2yLcwZrvbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JGVfpWvywFBZvS89uKhKohHR3TfNM/W8TTD2WLAscnVXJNqLCVayMDBalDoaEd6r2
-	 pxEWrLKVECfmwNOMhOYMgi4IqKXccl61uhN/eny5ooQBezZ7/OM19d0K3VTNgJeWOx
-	 Htj+svcniotkRYTuou6ylXsCKdGhP7f4aTT4eXhrj7f+vnaKsFLkkdemp7lc0HH2ZQ
-	 iyJUGlPyK7a4qg+/oueDB3PdHQm1afD6uCAo9xJIbaRxW8mvxrseboFmPrGmycWS8e
-	 FgP/1UUvI7dLZh06g3Yl6X4lldylWc8u9/iT8GCoH7qC47KeCF9qkCOGwPRoY1rbPa
-	 TK21bduEilQEw==
+	b=LPYtBnrbXqxZUGdBY8hOmiK6TjP3lkwcGQIn147+3f+MMRf/OwcH548PTeqrrZMo6
+	 yx2y3Je9OYV8sJ/BnLgR8QZ8prf+knOiVn67uDUeWbokxvlpzaXYbaouPRln2nAIwO
+	 eQvV54yNR1zG9j1i/cw1bdW72pgFpwdhMYSWWyiRPjxVnJtpU8t7FxmL90BKHd0DMJ
+	 ks7gV735VvGMjp1vL4o9jXb78rQqjW4KuW3lGD/52dva8KhJ75sbuJIRLV9lY11hNm
+	 PWpTJtn4ieZfxyDn/rHCYZUnEps52a1uuKsQczdxJAJS8w57zol23CR7WpQ84vHLpE
+	 K0sunltuMgQEQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 102/153] net: pktgen: fix access outside of user given buffer in pktgen_thread_write()
-Date: Mon,  5 May 2025 19:12:29 -0400
-Message-Id: <20250505231320.2695319-102-sashal@kernel.org>
+	u.kleine-koenig@baylibre.com,
+	linux-can@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 106/153] can: c_can: Use of_property_present() to test existence of DT property
+Date: Mon,  5 May 2025 19:12:33 -0400
+Message-Id: <20250505231320.2695319-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -54,47 +53,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Peter Seiderer <ps.report@gmx.net>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit 425e64440ad0a2f03bdaf04be0ae53dededbaa77 ]
+[ Upstream commit ab1bc2290fd8311d49b87c29f1eb123fcb581bee ]
 
-Honour the user given buffer size for the strn_len() calls (otherwise
-strn_len() will access memory outside of the user given buffer).
+of_property_read_bool() should be used only on boolean properties.
 
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://patch.msgid.link/20250219084527.20488-8-ps.report@gmx.net
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Link: https://patch.msgid.link/20250212-syscon-phandle-args-can-v2-3-ac9a1253396b@linaro.org
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/pktgen.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/can/c_can/c_can_platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 28417fe2a7a2a..2b7b1de70cf47 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -1876,8 +1876,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	i = len;
+diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
+index c5d7093d54133..c29862b3bb1f3 100644
+--- a/drivers/net/can/c_can/c_can_platform.c
++++ b/drivers/net/can/c_can/c_can_platform.c
+@@ -334,7 +334,7 @@ static int c_can_plat_probe(struct platform_device *pdev)
+ 		/* Check if we need custom RAMINIT via syscon. Mostly for TI
+ 		 * platforms. Only supported with DT boot.
+ 		 */
+-		if (np && of_property_read_bool(np, "syscon-raminit")) {
++		if (np && of_property_present(np, "syscon-raminit")) {
+ 			u32 id;
+ 			struct c_can_raminit *raminit = &priv->raminit_sys;
  
- 	/* Read variable name */
--
--	len = strn_len(&user_buffer[i], sizeof(name) - 1);
-+	max = min(sizeof(name) - 1, count - i);
-+	len = strn_len(&user_buffer[i], max);
- 	if (len < 0)
- 		return len;
- 
-@@ -1907,7 +1907,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	if (!strcmp(name, "add_device")) {
- 		char f[32];
- 		memset(f, 0, 32);
--		len = strn_len(&user_buffer[i], sizeof(f) - 1);
-+		max = min(sizeof(f) - 1, count - i);
-+		len = strn_len(&user_buffer[i], max);
- 		if (len < 0) {
- 			ret = len;
- 			goto out;
 -- 
 2.39.5
 
