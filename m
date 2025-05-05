@@ -1,49 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25D92D8192;
-	Mon,  5 May 2025 22:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D778B36BA30;
+	Mon,  5 May 2025 22:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485771; cv=none; b=ounH3eYntKZvc9u7A7Dx69l7R6vkoRkWiI73O2b9Kma8m/8JW0Oc/KMJG2tVLOWcp/GDK0bpbwp6+U1UzduqEeQHIhrUHPXNsDcWjev3iIWcD66nS1KZYZnsdTY1zcG2L/fvQKPHIEcm88PAbW7boMwnUkrf5JHkNPOCcxSAzyc=
+	t=1746485799; cv=none; b=udpD6/p/iEj0k6VAsI2N3v2mxx+4GvQAsNm8JPRsm5mgZnb5JMLhLM7uErmgryTcBnOm6CMW57mQHh2G5Mu3Wbh6eaY2RdM2E36dUf02mDxhevEDLRc5tMh7CwxS185DmcEJXasQTONaqox1HGrWD6OXy8vTDSBkBo9k6XEnFBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485771; c=relaxed/simple;
-	bh=SlTQksXt8m44xfjDoWZQpuTcycqa3I09Ut1LCHhtKF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=os69JCy8qlgZkdjlYCJ8yuvP4ySdysfVUh8jzsLevZLPrbIFl492ACXItratRQRp52GZ/11HHkzObZLq9TgXJNxhzneNHTpoD3966IMD/+afqWuu7I39Vk9UGwMo+yDjvJa0n7Eg4DXMOOWQCMG+X7Mv+FWBu9qZq4jOGhkeqV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5hel6QX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485799; c=relaxed/simple;
+	bh=JCdTVHeAiF0SMN4hqWeIRsGnSNa8+AKoDVxqQWbHrto=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f+1fbrmhqzDAb6hMtBlGNMRQES1xjk3tNmzsX3cbLLfLj4cYFRFWf1qFB2HImtD9FdXpXGznPlTuJfhW/1HUJPnqIrRsa4ok0VM9QhV0gzFiEmeleKzQH/vhtPLvlQlzNbPiOq0F/iD+qt4CkXuOihpkFe8f4nepmYZT0tIVHXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2/XiBUd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5hel6QX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A19C4CEED;
-	Mon,  5 May 2025 22:56:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2/XiBUd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0B9C4CEE4;
+	Mon,  5 May 2025 22:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485771;
-	bh=SlTQksXt8m44xfjDoWZQpuTcycqa3I09Ut1LCHhtKF4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f5hel6QXgPE4a6ftDa1Viv4LdBr3QC6pSL0OI12bIQLqosgB9XX7nG1nY5Iwp32Rk
-	 x98+H602RMGwbh/AH3zAwb4JnNnCI4SZ1JOxM4dkleZtkk3LPPAuniJyk0UTccmuFi
-	 3+XcrG7eD5T5yyoA2ysfIHf+2qqy+IBNJ0KeegBUn4vk9n15AVqbC5kxnamXCN27v/
-	 R+xkI9oueag6RnIx6iZo0HSuI1BdxCjwcVhiUXhHILl+wePSntO1QMyvLGcFIS96vM
-	 nmvWCpEdpl50gGO1/IjAqjggM8Bz99Z/r0QeJbZtzYB2O2hwP1UcIw37DNWA0Oz4ep
-	 IsksP2t0e9Y5g==
+	s=k20201202; t=1746485799;
+	bh=JCdTVHeAiF0SMN4hqWeIRsGnSNa8+AKoDVxqQWbHrto=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j2/XiBUdvdi0HNLkKt5p/rtdeM7tK/7f6LbZGUJmErItlsQ+8NxM8COpF+KqVSJKP
+	 dlv11sl81EuykE0EwnfnKjyLbME1HhNUmqEucbiJT3KXMc6ZCJ2JhzS+ADsNlLgha+
+	 cnQIOofE9yMqtTU7XQFoB3l9EDDr/LeKC5VaI+P8VjtfVIUrLOJaSiZcYGB+NiX20l
+	 iBYofWnSjXqMXSPZBhDXdNUkBYuhFafYkTKkfoOhPCfKAQ0RhGO8Zx74lTVI3tO3eU
+	 SDQOPbTrx4rKbh4+d6pNX35qTEbP9P93dQ/ring9ldZqQQLXLNU9HCkqyon2BgoAJU
+	 CMBDITGgySTog==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zhi Wang <zhiw@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>,
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	lyude@redhat.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	ttabi@nvidia.com,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 475/486] drm/nouveau: fix the broken marco GSP_MSG_MAX_SIZE
-Date: Mon,  5 May 2025 18:39:11 -0400
-Message-Id: <20250505223922.2682012-475-sashal@kernel.org>
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 001/294] kconfig: merge_config: use an empty file as initfile
+Date: Mon,  5 May 2025 18:51:41 -0400
+Message-Id: <20250505225634.2688578-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,40 +44,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
+X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Zhi Wang <zhiw@nvidia.com>
+From: Daniel Gomez <da.gomez@samsung.com>
 
-[ Upstream commit bbae6680cfe38b033250b483722e60ccd865976f ]
+[ Upstream commit a26fe287eed112b4e21e854f173c8918a6a8596d ]
 
-The macro GSP_MSG_MAX_SIZE refers to another macro that doesn't exist.
-It represents the max GSP message element size.
+The scripts/kconfig/merge_config.sh script requires an existing
+$INITFILE (or the $1 argument) as a base file for merging Kconfig
+fragments. However, an empty $INITFILE can serve as an initial starting
+point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
+if -m is not used. This variable can point to any configuration file
+containing preset config symbols (the merged output) as stated in
+Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
+contain just the merge output requiring the user to run make (i.e.
+KCONFIG_ALLCONFIG=<$INITFILE> make <allnoconfig/alldefconfig> or make
+olddefconfig).
 
-Fix the broken marco so it can be used to replace some magic numbers in
-the code.
+Instead of failing when `$INITFILE` is missing, create an empty file and
+use it as the starting point for merges.
 
-Signed-off-by: Zhi Wang <zhiw@nvidia.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250124182958.2040494-8-zhiw@nvidia.com
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/kconfig/merge_config.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-index 9c83bab0a5309..fc84ca214f247 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-@@ -58,7 +58,7 @@
- #include <linux/parser.h>
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index 0b7952471c18f..79c09b378be81 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -112,8 +112,8 @@ INITFILE=$1
+ shift;
  
- #define GSP_MSG_MIN_SIZE GSP_PAGE_SIZE
--#define GSP_MSG_MAX_SIZE GSP_PAGE_MIN_SIZE * 16
-+#define GSP_MSG_MAX_SIZE (GSP_MSG_MIN_SIZE * 16)
+ if [ ! -r "$INITFILE" ]; then
+-	echo "The base file '$INITFILE' does not exist.  Exit." >&2
+-	exit 1
++	echo "The base file '$INITFILE' does not exist. Creating one..." >&2
++	touch "$INITFILE"
+ fi
  
- struct r535_gsp_msg {
- 	u8 auth_tag_buffer[16];
+ MERGE_LIST=$*
 -- 
 2.39.5
 
