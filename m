@@ -1,47 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A5F28A71D;
-	Mon,  5 May 2025 23:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66565390E1B;
+	Mon,  5 May 2025 23:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487023; cv=none; b=mqLeTbyQUpqmPc90+oZcF/jBgSECKyeP7eTyIhAL4EmrwP+m4Ll0En/MQF4PEMUweFb1Q219Cu5M0rBysNpT49Ek3MEHCkjW39P0XW15l3iY6fCRLugui0VJjESPxkMJsdjQAyH0jHEQ7IwGSCguzagjCnQqSSRRytkqKADdSc8=
+	t=1746486998; cv=none; b=NidUkj1w8IoS58oDNo8oy2c5c7qA9M9L0qBHLhT+Weog29WF1BgAC9eaNTPD2ZYf8HNA2y5VC5FYB8pu11/weJbF1LAXbCIC5dnM9TVwDVI2lguR+9obbJJaWFMjYkNzGT2VLPgGSMmFRzOyHnTv7es4UPZ2euZ+eOaPMyejsY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487023; c=relaxed/simple;
-	bh=LLQuEcCjyB9jS5CBbndYwbv8jLZmUyx7IeQqD3sRRgo=;
+	s=arc-20240116; t=1746486998; c=relaxed/simple;
+	bh=kE+Ox8+wh2XWdCq4ivPaCQX40m7HZo0+tSTOrHgS04E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=azgI7XU3CLOWZ1QHOIfvzlW9mvjcqo6WdCevI5lMsemfY0OCCQZAFTJyYSCLD5vQ53zbtmLSEvY6zp/uf83bGQAhFqQcl62+QD7NUdDERxUqMDjYt23lHu9kSh6QkLrRwBtl+LvvbjmWsMQnD3WmmtHvwcxdNm9sJyZ/ZJyk+Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QY1bxjWu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dRE84BTks1BxJWoiILcNLlUaFOeJUCoPFwXKhmZ8RrSlGOyVobsKnHaoFegBAk91yXoB9UaIaUFpE5WIT19pm4tFy1a603VIhAXayepy0pwtNUyqvnyNbwMO5pQGVGIJh0zL19fYGbKWQCclo/GbSFTG5NcYkLW3Y6jrdOLsnkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/qZmqL0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QY1bxjWu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E40EC4CEEF;
-	Mon,  5 May 2025 23:17:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/qZmqL0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23002C4CEF2;
+	Mon,  5 May 2025 23:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487022;
-	bh=LLQuEcCjyB9jS5CBbndYwbv8jLZmUyx7IeQqD3sRRgo=;
+	s=k20201202; t=1746486997;
+	bh=kE+Ox8+wh2XWdCq4ivPaCQX40m7HZo0+tSTOrHgS04E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QY1bxjWuJPQ4Q74fhUN3ufejN0ERXu4VChmhv/A4QK5nRlj5fLcxNMS+VwErhD1AG
-	 9rNyoPkHcdJ97NFjVGNgrE4D9/NeFSK2k5fPP93v4Dilane1JxLjWTS11qdC/fbsdu
-	 emgFASDCXsGO1fRkqYaCsgzsUiIaofzsRe/ejKKg2GRCQShDQKfZxbFHjNmeuN4bvu
-	 KZpwmVoKZh1pkeNyyiHUhBArs0UzIpnoKsR242BYs+Yb149q7uA5TwTV69cg0EpSRX
-	 1nqR1d//JZ546dBpNwGEbJDeoHFnxt65+KwX+NoH+9bR4lcfhKMt8aeUyGPT8KIDOa
-	 hBcg2hHaD/7Gw==
+	b=M/qZmqL0XvZP+RTu+GeaHA5eTJ0YEIgWNJhe/XzWT+Z0QBr0REBV/6BGHs662zfZY
+	 94fq2sKVAyYNi3jSvKIr4snpDxG5UCEsNMCij5tIwq0RKS6B6xvz4ApV+QdJvGD7Rs
+	 nalPyFvvt22sQ+iP2oV6t6tSTC0Ze6J+3eyq1FVckbg2oBsr6J30c4OnILPQ/UG30A
+	 XaQRRZLF8/5KnWqxaxAqStB0rHi1l/y4wdAfXZ7whYtDXKHI3BxXEQ8ktIhKUHGuiS
+	 lbAme1Zh3Ix5TRmxE/wNnC3n2rNuXhBxJjiDnsmiR2tjlHDhDTjFrURnP1DUmmXUze
+	 HWETn/xJll7Sg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 113/153] ASoC: tas2764: Power up/down amp on mute ops
-Date: Mon,  5 May 2025 19:12:40 -0400
-Message-Id: <20250505231320.2695319-113-sashal@kernel.org>
+	sathya.prakash@broadcom.com,
+	sreekanth.reddy@broadcom.com,
+	suganath-prabu.subramani@broadcom.com,
+	James.Bottomley@HansenPartnership.com,
+	MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 098/153] scsi: mpt3sas: Send a diag reset if target reset fails
+Date: Mon,  5 May 2025 19:12:25 -0400
+Message-Id: <20250505231320.2695319-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -56,106 +55,62 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 
-[ Upstream commit 1c3b5f37409682184669457a5bdf761268eafbe5 ]
+[ Upstream commit 5612d6d51ed2634a033c95de2edec7449409cbb9 ]
 
-The ASoC convention is that clocks are removed after codec mute, and
-power up/down is more about top level power management. For these chips,
-the "mute" state still expects a TDM clock, and yanking the clock in
-this state will trigger clock errors. So, do the full
-shutdown<->mute<->active transition on the mute operation, so the amp is
-in software shutdown by the time the clocks are removed.
+When an IOCTL times out and driver issues a target reset, if firmware
+fails the task management elevate the recovery by issuing a diag reset to
+controller.
 
-This fixes TDM clock errors when streams are stopped.
-
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-1-dbab892a69b5@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Link: https://lore.kernel.org/r/1739410016-27503-5-git-send-email-shivasharan.srikanteshwara@broadcom.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tas2764.c | 51 ++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 30 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 273bf4027a6e5..559a160e1f4d9 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -130,33 +130,6 @@ static SOC_ENUM_SINGLE_DECL(
- static const struct snd_kcontrol_new tas2764_asi1_mux =
- 	SOC_DAPM_ENUM("ASI1 Source", tas2764_ASI1_src_enum);
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index 20336175c14f5..81cd96b93bdf8 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -678,6 +678,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
+ 	size_t data_in_sz = 0;
+ 	long ret;
+ 	u16 device_handle = MPT3SAS_INVALID_DEVICE_HANDLE;
++	int tm_ret;
  
--static int tas2764_dac_event(struct snd_soc_dapm_widget *w,
--			     struct snd_kcontrol *kcontrol, int event)
--{
--	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
--	int ret;
--
--	switch (event) {
--	case SND_SOC_DAPM_POST_PMU:
--		tas2764->dac_powered = true;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	case SND_SOC_DAPM_PRE_PMD:
--		tas2764->dac_powered = false;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	default:
--		dev_err(tas2764->dev, "Unsupported event\n");
--		return -EINVAL;
--	}
--
--	if (ret < 0)
--		return ret;
--
--	return 0;
--}
--
- static const struct snd_kcontrol_new isense_switch =
- 	SOC_DAPM_SINGLE("Switch", TAS2764_PWR_CTRL, TAS2764_ISENSE_POWER_EN, 1, 1);
- static const struct snd_kcontrol_new vsense_switch =
-@@ -169,8 +142,7 @@ static const struct snd_soc_dapm_widget tas2764_dapm_widgets[] = {
- 			    1, &isense_switch),
- 	SND_SOC_DAPM_SWITCH("VSENSE", TAS2764_PWR_CTRL, TAS2764_VSENSE_POWER_EN,
- 			    1, &vsense_switch),
--	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2764_dac_event,
--			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
-+	SND_SOC_DAPM_DAC("DAC", NULL, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_OUTPUT("OUT"),
- 	SND_SOC_DAPM_SIGGEN("VMON"),
- 	SND_SOC_DAPM_SIGGEN("IMON")
-@@ -191,9 +163,28 @@ static int tas2764_mute(struct snd_soc_dai *dai, int mute, int direction)
- {
- 	struct tas2764_priv *tas2764 =
- 			snd_soc_component_get_drvdata(dai->component);
-+	int ret;
-+
-+	if (!mute) {
-+		tas2764->dac_powered = true;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
+ 	issue_reset = 0;
  
- 	tas2764->unmuted = !mute;
--	return tas2764_update_pwr_ctrl(tas2764);
-+	ret = tas2764_update_pwr_ctrl(tas2764);
-+	if (ret)
-+		return ret;
+@@ -1111,18 +1112,25 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
+ 			if (pcie_device && (!ioc->tm_custom_handling) &&
+ 			    (!(mpt3sas_scsih_is_pcie_scsi_device(
+ 			    pcie_device->device_info))))
+-				mpt3sas_scsih_issue_locked_tm(ioc,
++				tm_ret = mpt3sas_scsih_issue_locked_tm(ioc,
+ 				  le16_to_cpu(mpi_request->FunctionDependent1),
+ 				  0, 0, 0,
+ 				  MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET, 0,
+ 				  0, pcie_device->reset_timeout,
+ 			MPI26_SCSITASKMGMT_MSGFLAGS_PROTOCOL_LVL_RST_PCIE);
+ 			else
+-				mpt3sas_scsih_issue_locked_tm(ioc,
++				tm_ret = mpt3sas_scsih_issue_locked_tm(ioc,
+ 				  le16_to_cpu(mpi_request->FunctionDependent1),
+ 				  0, 0, 0,
+ 				  MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET, 0,
+ 				  0, 30, MPI2_SCSITASKMGMT_MSGFLAGS_LINK_RESET);
 +
-+	if (mute) {
-+		tas2764->dac_powered = false;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int tas2764_set_bitwidth(struct tas2764_priv *tas2764, int bitwidth)
++			if (tm_ret != SUCCESS) {
++				ioc_info(ioc,
++					 "target reset failed, issue hard reset: handle (0x%04x)\n",
++					 le16_to_cpu(mpi_request->FunctionDependent1));
++				mpt3sas_base_hard_reset_handler(ioc, FORCE_BIG_HAMMER);
++			}
+ 		} else
+ 			mpt3sas_base_hard_reset_handler(ioc, FORCE_BIG_HAMMER);
+ 	}
 -- 
 2.39.5
 
