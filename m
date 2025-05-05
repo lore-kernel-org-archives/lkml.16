@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4379272E60;
-	Mon,  5 May 2025 23:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD2B2F818E;
+	Mon,  5 May 2025 23:19:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487186; cv=none; b=a68imzOdlyGRK589CN0Q95ELX+AdGs6ClTgB/UOJ+Fjis+OWwi18PiOfeRL35eD8iVqzhoRQzzPVuXnKBnSbx+/jkYWHxL+BTuDndmeJUn7S76r/kpmNMPZ6HDZ7fc7oZP0q+bq52asJg1jbeFpj1bsiVPxQ1NxRN8X0d5iFYHY=
+	t=1746487196; cv=none; b=gUnAwn/YetZ83tr0j4znpa1DjbdJeXB/FUJw6gz1RzwGyVOfR9tAR3fD/3J5Ms/RFRQPJppNt3HxZJCbsmWRE8Vz1lzKdfXjEbx9hHQQPEw3wGXgHN3DvudzESc1V35nYzSkCgFp+oeYtCTGOTeyzdR8MOaZqp8LiwQnk56wA5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487186; c=relaxed/simple;
-	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
+	s=arc-20240116; t=1746487196; c=relaxed/simple;
+	bh=KT+uXDczhG9CVFcFO/QUvgBQUbGLWTZv1Qclq7yxCGw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BQE8Uc1DJpho8+f6bzWaQP4gykzNb1H1xebgt48/uV3KJHPStcQc4mzvkIwgM9hQZlPpl5crx1uxM47aT01MRZ7AEZFaZOQB7AISM723MzkYifV5J5d0SYYVeTXN3s6HQritqN4qn4Qr7nJEA0z3OejqLwhh8RCpJ6pmcbP9qw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWSHEYeM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z51/EZTzXr+/wdPPZHbEycw8oLooHKqFecE+KbOUXJ44kTErZrYKLYQlBOccJipwEmug/s7Munap1zxNQxpPlSsRWhXL0QBJBXhPJLRBoI3M6Vif1UYKmzXBQRCegmdw1Xg0gPggiowXfXgC6Rb1hewkHODZgk4s8A6olqLLbC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZV9zMkLD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWSHEYeM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A252C4CEEF;
-	Mon,  5 May 2025 23:19:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZV9zMkLD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B93FC4CEEF;
+	Mon,  5 May 2025 23:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487185;
-	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
+	s=k20201202; t=1746487195;
+	bh=KT+uXDczhG9CVFcFO/QUvgBQUbGLWTZv1Qclq7yxCGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TWSHEYeMoboShy+JhAkTUT7RS5eU1KZu/WyLZrZVvg8/Rrr5eEADVpaOSNkUvQ5Pb
-	 A2HbUnFBnECXrf5UHAHb6S07y0l60lTfuCljihpNDNBH5Xgl7W00iQ5wWnz21JxZFj
-	 pFA2/PUvTQqPl979U1bcheW+LK5JJM/FwidAicYSC8PQOpRSW6hmob4QFKLsQoUumb
-	 Rv/jXMdE4dTL9/hFcOH9wlCfNAFXox7on5h1+sVqk5Zlw5150S4vxmHvutnSHJjBJM
-	 qnR27k8hmOwKmMSrCJrejKFEQ5DhuqPr3rcvOPFx9Lai8KimLzPtFSx/UhHQJKYOmT
-	 KJ0N9D+UhTEAQ==
+	b=ZV9zMkLD44MdQ3/UoflK/8azkTDfhiJ55trbDUbHDI+Nr6SiR2b6Ztq9e1O9nZNYa
+	 w4aYi+EiwoMfdr5QfEXyuiIYMKibnEtcJKEYlMwmqRXe/WsWYf77Riemq3OM2Jl7ws
+	 T6Q2UJWL505xHNa5A0Mc4abbu+tA6Yw9jjQyLRmzXwjHT5ZuC/dqTfOCvpqwQ3Vyty
+	 0lbGeF7I239WHZ8wL2BZOJDhGNWaWADMLTRgwbfhK8/TjIgaNCPdCQXKt5KKFjKR3k
+	 i2AAU37jMlGGrREctXQsWYxVEotj1O5Ozh6+ucCoHl4P7usb6YZroQJ52UpYBg2sWu
+	 ROTWJVwCP/A2A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	christophe.jaillet@wanadoo.fr,
-	ribalda@chromium.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 047/114] media: cx231xx: set device_caps for 417
-Date: Mon,  5 May 2025 19:17:10 -0400
-Message-Id: <20250505231817.2697367-47-sashal@kernel.org>
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 051/114] ipv4: fib: Move fib_valid_key_len() to rtm_to_fib_config().
+Date: Mon,  5 May 2025 19:17:14 -0400
+Message-Id: <20250505231817.2697367-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -53,38 +54,126 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
+[ Upstream commit 254ba7e6032d3fc738050d500b0c1d8197af90ca ]
 
-The video_device for the MPEG encoder did not set device_caps.
+fib_valid_key_len() is called in the beginning of fib_table_insert()
+or fib_table_delete() to check if the prefix length is valid.
 
-Add this, otherwise the video device can't be registered (you get a
-WARN_ON instead).
+fib_table_insert() and fib_table_delete() are called from 3 paths
 
-Not seen before since currently 417 support is disabled, but I found
-this while experimenting with it.
+  - ip_rt_ioctl()
+  - inet_rtm_newroute() / inet_rtm_delroute()
+  - fib_magic()
 
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In the first ioctl() path, rtentry_to_fib_config() checks the prefix
+length with bad_mask().  Also, fib_magic() always passes the correct
+prefix: 32 or ifa->ifa_prefixlen, which is already validated.
+
+Let's move fib_valid_key_len() to the rtnetlink path, rtm_to_fib_config().
+
+While at it, 2 direct returns in rtm_to_fib_config() are changed to
+goto to match other places in the same function
+
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
+Link: https://patch.msgid.link/20250228042328.96624-12-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/fib_frontend.c | 18 ++++++++++++++++--
+ net/ipv4/fib_trie.c     | 22 ----------------------
+ 2 files changed, 16 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
-index c5e21785fafe2..02343e88cc618 100644
---- a/drivers/media/usb/cx231xx/cx231xx-417.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-417.c
-@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
- 	vfd->lock = &dev->lock;
- 	vfd->release = video_device_release_empty;
- 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
-+	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
-+			   V4L2_CAP_VIDEO_CAPTURE;
- 	video_set_drvdata(vfd, dev);
- 	if (dev->tuner_type == TUNER_ABSENT) {
- 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
+diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
+index 5e2a003cd83c7..f902cd8cb852b 100644
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -817,19 +817,33 @@ static int rtm_to_fib_config(struct net *net, struct sk_buff *skb,
+ 		}
+ 	}
+ 
++	if (cfg->fc_dst_len > 32) {
++		NL_SET_ERR_MSG(extack, "Invalid prefix length");
++		err = -EINVAL;
++		goto errout;
++	}
++
++	if (cfg->fc_dst_len < 32 && (ntohl(cfg->fc_dst) << cfg->fc_dst_len)) {
++		NL_SET_ERR_MSG(extack, "Invalid prefix for given prefix length");
++		err = -EINVAL;
++		goto errout;
++	}
++
+ 	if (cfg->fc_nh_id) {
+ 		if (cfg->fc_oif || cfg->fc_gw_family ||
+ 		    cfg->fc_encap || cfg->fc_mp) {
+ 			NL_SET_ERR_MSG(extack,
+ 				       "Nexthop specification and nexthop id are mutually exclusive");
+-			return -EINVAL;
++			err = -EINVAL;
++			goto errout;
+ 		}
+ 	}
+ 
+ 	if (has_gw && has_via) {
+ 		NL_SET_ERR_MSG(extack,
+ 			       "Nexthop configuration can not contain both GATEWAY and VIA");
+-		return -EINVAL;
++		err = -EINVAL;
++		goto errout;
+ 	}
+ 
+ 	if (!cfg->fc_table)
+diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+index 1bdcdc79d43f9..6c53381fa36f7 100644
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -1145,22 +1145,6 @@ static int fib_insert_alias(struct trie *t, struct key_vector *tp,
+ 	return 0;
+ }
+ 
+-static bool fib_valid_key_len(u32 key, u8 plen, struct netlink_ext_ack *extack)
+-{
+-	if (plen > KEYLENGTH) {
+-		NL_SET_ERR_MSG(extack, "Invalid prefix length");
+-		return false;
+-	}
+-
+-	if ((plen < KEYLENGTH) && (key << plen)) {
+-		NL_SET_ERR_MSG(extack,
+-			       "Invalid prefix for given prefix length");
+-		return false;
+-	}
+-
+-	return true;
+-}
+-
+ static void fib_remove_alias(struct trie *t, struct key_vector *tp,
+ 			     struct key_vector *l, struct fib_alias *old);
+ 
+@@ -1181,9 +1165,6 @@ int fib_table_insert(struct net *net, struct fib_table *tb,
+ 
+ 	key = ntohl(cfg->fc_dst);
+ 
+-	if (!fib_valid_key_len(key, plen, extack))
+-		return -EINVAL;
+-
+ 	pr_debug("Insert table=%u %08x/%d\n", tb->tb_id, key, plen);
+ 
+ 	fi = fib_create_info(cfg, extack);
+@@ -1671,9 +1652,6 @@ int fib_table_delete(struct net *net, struct fib_table *tb,
+ 
+ 	key = ntohl(cfg->fc_dst);
+ 
+-	if (!fib_valid_key_len(key, plen, extack))
+-		return -EINVAL;
+-
+ 	l = fib_find_node(t, &tp, key);
+ 	if (!l)
+ 		return -ESRCH;
 -- 
 2.39.5
 
