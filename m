@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5622EDB10;
-	Mon,  5 May 2025 23:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4422280CCE;
+	Mon,  5 May 2025 23:09:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486529; cv=none; b=ND3omDffIHnfw8brdfBh42daiAbXBtXE/5QrJmPL5/m8MAB2w5cwWkU/Upnzfr/aIAdte75dww1WNEP/tXeZDRJ0CwVU3vLu0lCvi0YHiiet9rUkncttP8YxMU2+cWAQ9KBnSUOuG1fplVzE8ylhhs4SypEyyqbFUjawCMnB+bg=
+	t=1746486555; cv=none; b=Y9PMKjjP13buBs5SQ6ycJT01SLGzTV9oe1zNfrwxriVap1E5Bnw6p07o+LAcstbzZ/ekz0PLgTJ5NG5Hg+2CXXzdKbp0zrrjvotd+u93UacQyEfEeJOZbXJkWjlfz6u6SHZxNLCywTAXDEInB8RWYLFEPQrysobDip9O9lsqhm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486529; c=relaxed/simple;
-	bh=5rLbFGI1jdtTys8urj6ThJmPQTDR5DqcFT+GBK4ygSE=;
+	s=arc-20240116; t=1746486555; c=relaxed/simple;
+	bh=VLmPVKRTDLh7bBgAVXDRQ5oH+GsZgA6fXTxvCcWcfz8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WJNtlaEcqOjbLnsXyMSUJv2ZpRaKidsS8LTITTt8I50kHQoSzvfvCjVtkdTpGThQa/jrVlU7uvFgTHosDz3RNXdYBc/KeeLq26oxTgYEUKcW4J5ZSACcxQG1dsrNEWBIjq/G2qQH//wt74KzIqEWKDmNT7ld23aFqaUy9tXTFzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kIQPa79A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hamiWJmsyuiNLi5/hmjce0zqfK1sCzG34cwGH1ADxn3sCGYOQZgpeoJwg/lTvWPsRy3IhXGMFlATPDCV0dezpI+235fgCl7GclRiPqKJ3d1FkjXA5r1h0bw/uPvv7TdEShcvYIBT/ZD+sUOL1K19MOwchymgxoqxexAHxrWgo3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bELJILS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kIQPa79A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17709C4CEEF;
-	Mon,  5 May 2025 23:08:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bELJILS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5874C4CEF1;
+	Mon,  5 May 2025 23:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486529;
-	bh=5rLbFGI1jdtTys8urj6ThJmPQTDR5DqcFT+GBK4ygSE=;
+	s=k20201202; t=1746486555;
+	bh=VLmPVKRTDLh7bBgAVXDRQ5oH+GsZgA6fXTxvCcWcfz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kIQPa79AKMLO9Bk0PGbZvn7Dws8V9n66+cU6ERYx/qvNrTGOtG3jzE+YjweXfXWl1
-	 XQLMpBNkrMShWzraM3liOC4ocdBS0aF0+OaN3GgUOkg8sryj92m4zK7r33/zTxSOzx
-	 gytvPXpMqSZ2n9r2L5/yh/kRUcjGhM4yJjDWsU+nJ2Bb52PLqhOz1qhbX+szS15Y5r
-	 u15BkfechLSI1HyldR/EStc1umtQxZ4QYz0vAoD7IannvZtPDgdIebcJB/mG5qkZt7
-	 0dpCIgAk+wEUboGV2hFOL5H4ZWSdlm8qX0gSlwv7enUZyOPDVhuUOq1B5f2FTdVdzS
-	 DmZ/dgIaSX4Tw==
+	b=bELJILS/z5T5f3ZiqUE1zD8FLrKx24x4PwGYLjWLFI/fGuyMezzYOVLvGue0oB1lt
+	 /tGKkt6rbyJ003aWxC30EYLybJTiYZbku5R04HyknJr81WdBquppnoBlKfWFqB7saA
+	 cDbzCEkKhARBjg+OBq/LkV7Z/Auy1HNbacPk18Qm+L5itpiw7MIqZEJ3m0+GNPvtM6
+	 tVwzwCsnUrOXhvi8Bd7dEhWwYf6mO/2Q+LkwdV4GRrSMVR3P8GX8F62K5n/euhFRMs
+	 f1CpOddvfuCr/YrzYk2Thrr5vuxDfQojZdktaXVgbSY8mKdjn2z3oNlqnHv1Gx0W0d
+	 elUVXE4+mQvpg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexey Klimov <alexey.klimov@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	srini@kernel.org,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 076/212] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
-Date: Mon,  5 May 2025 19:04:08 -0400
-Message-Id: <20250505230624.2692522-76-sashal@kernel.org>
+	devel@lists.orangefs.org
+Subject: [PATCH AUTOSEL 6.1 089/212] orangefs: Do not truncate file size
+Date: Mon,  5 May 2025 19:04:21 -0400
+Message-Id: <20250505230624.2692522-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -56,46 +51,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Klimov <alexey.klimov@linaro.org>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-[ Upstream commit 89be3c15a58b2ccf31e969223c8ac93ca8932d81 ]
+[ Upstream commit 062e8093592fb866b8e016641a8b27feb6ac509d ]
 
-Setting format to s16le is required for compressed playback on compatible
-soundcards.
+'len' is used to store the result of i_size_read(), so making 'len'
+a size_t results in truncation to 4GiB on 32-bit systems.
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-Link: https://patch.msgid.link/20250228161430.373961-1-alexey.klimov@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Link: https://lore.kernel.org/r/20250305204734.1475264-2-willy@infradead.org
+Tested-by: Mike Marshall <hubcap@omnibond.com>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/sm8250.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/orangefs/inode.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
-index 41be09a07ca71..65e51b6b46ff9 100644
---- a/sound/soc/qcom/sm8250.c
-+++ b/sound/soc/qcom/sm8250.c
-@@ -7,6 +7,7 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- #include <sound/pcm.h>
-+#include <sound/pcm_params.h>
- #include <linux/soundwire/sdw.h>
- #include <sound/jack.h>
- #include <linux/input-event-codes.h>
-@@ -39,9 +40,11 @@ static int sm8250_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
- 					SNDRV_PCM_HW_PARAM_RATE);
- 	struct snd_interval *channels = hw_param_interval(params,
- 					SNDRV_PCM_HW_PARAM_CHANNELS);
-+	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+index b3bbb5a5787ac..cc81ff6ac735e 100644
+--- a/fs/orangefs/inode.c
++++ b/fs/orangefs/inode.c
+@@ -23,9 +23,9 @@ static int orangefs_writepage_locked(struct page *page,
+ 	struct orangefs_write_range *wr = NULL;
+ 	struct iov_iter iter;
+ 	struct bio_vec bv;
+-	size_t len, wlen;
++	size_t wlen;
+ 	ssize_t ret;
+-	loff_t off;
++	loff_t len, off;
  
- 	rate->min = rate->max = 48000;
- 	channels->min = channels->max = 2;
-+	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
+ 	set_page_writeback(page);
  
- 	return 0;
- }
+@@ -94,8 +94,7 @@ static int orangefs_writepages_work(struct orangefs_writepages *ow,
+ 	struct orangefs_write_range *wrp, wr;
+ 	struct iov_iter iter;
+ 	ssize_t ret;
+-	size_t len;
+-	loff_t off;
++	loff_t len, off;
+ 	int i;
+ 
+ 	len = i_size_read(inode);
 -- 
 2.39.5
 
