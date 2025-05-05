@@ -1,48 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39BF3AEC35;
-	Mon,  5 May 2025 23:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A045680;
+	Mon,  5 May 2025 23:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487204; cv=none; b=VvyADEcA2S3FWblqMX3ArZCMLgOf2RyNVujFTeF6sikMzP8mFDt9asGAyWiQZuGFZ3/SVX89ENT1tjoNVcbBXUGVXak7G/YI6JFqsjHDqMjvdQqFU3nxbivDcayhVpHfdfV6tgIN3NWBFEwMEDQnpTG5WJfkr9kPITdxObcZGVg=
+	t=1746487211; cv=none; b=OnM7JQOsWgkygjpQOOhAMSPpGZQ0PydEISZxY8vzUXef0woxHykV/zA4sBxXbbrHftl9g4iEK9fbqNmc3ZDznkIqnrvURqe5OblRG2yTDk1c8o0D8T0Gx8azUmqWGsoQUHVYufC84BRLqa2j/t1noDos9L483ky4CPbaHVkxPHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487204; c=relaxed/simple;
-	bh=IXXHiVnUA/V4FGI1fhktHwjm0WNVqBGhcWQhRX+M5lo=;
+	s=arc-20240116; t=1746487211; c=relaxed/simple;
+	bh=ENgbqkBgGMa5Coy1KnyAD6orBWru8MWNRBgdgyZkbhk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e+gL3lLJ+gH/p5pWJ70fm6QIlJGtSy9Mro0miBpr6L1v6flLpjasEfk/zm5ddYqgXcgegYh9u1GP51VRs7iaIsg83DehR42mgFLww8ePpr9MZg2TJUQuqrU5q1emYjavYfZ8GCSJKolMWdcLF7r1ErGupq70hDE+QQ8O6zhLc/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pgl75MKZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ioZliPmSTRuOt2vPehx3VJpLnN5UNtWNVf5GittLDRqu8Mzgyg1BIiCqP7ttT6NnQKHCNfgDXh1zHGiEzks5V7k1zeLQxVclr0H0XXeQZF5SpdPM4xa2nWUOMVEiVr/udu4LYXl0MDaI9fBWpk96ZttyjJSY4BkXIFqxSpcHBMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqmWeQFx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pgl75MKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278E4C4CEEF;
-	Mon,  5 May 2025 23:20:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqmWeQFx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84861C4CEF2;
+	Mon,  5 May 2025 23:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487203;
-	bh=IXXHiVnUA/V4FGI1fhktHwjm0WNVqBGhcWQhRX+M5lo=;
+	s=k20201202; t=1746487209;
+	bh=ENgbqkBgGMa5Coy1KnyAD6orBWru8MWNRBgdgyZkbhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pgl75MKZn/NgTS+Vv2IQuDamTo4FqA7YeE7ynVs3e5KzyV1aGjO6UWX1OxY7haokc
-	 PFsDneoujHzzFUqQFR7fejLDUhT4gxi9pKv8jB9mi9pmqdCVUGszFyrsROMfO0ciMG
-	 YxE19X5Z+1yaiXAGMH4JGlv7Ry3PU3j2Mr0QMzJEsIhNCZKgvXErkXWcTzwriOZIU1
-	 HIfkyTaX3Tdp0+4ny1CKXGUkIokMbKsb4QhXBKlms8Es69H7N4GZiInvniqjHU2i2L
-	 7nb+1bhnQrwOWaIoJfRzEzD05iSg/Vya4jWyL06qLChBG5L0DONellAg7z8CknYrmv
-	 LJpnx/U7dmZYw==
+	b=iqmWeQFx35XWQUmQmo8mn0s5l6ZuuRCWuXXtiFGKb5H0IIhdDMHWej37V6QJbLqD3
+	 mBt5epxgvqiKMfXb/XMJox5Oo7UBp7TKUMiZR8bhxm+3bwoo6dcTZfEWsCHeDXKxE9
+	 UzJ1TZliidGTlM9WWWkExE/1Ol8dy3ues3+Y/H8wWltuiEbngABiDZFQpxXhKD15RG
+	 BOZjGizW4Loh/O1hF9ZWlAEqtEABIz6JRTVv9UJi3msRcTXcZZPNZ9nwx23nANv9VJ
+	 C8Kq13so5pWZ+zb/8HcPycYKSNnyrGH4/WzfFgmaqhujqyFfSEYxZbPwwSdrZTxFjX
+	 PdYVAHiOtHhPg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Stanimir Varbanov <svarbanov@suse.de>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	"Ivan T . Ivanov" <iivanov@suse.de>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	matthias.bgg@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
+	jim2101024@gmail.com,
+	nsaenz@kernel.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 055/114] drm/mediatek: mtk_dpi: Add checks for reg_h_fre_con existence
-Date: Mon,  5 May 2025 19:17:18 -0400
-Message-Id: <20250505231817.2697367-55-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 058/114] PCI: brcmstb: Add a softdep to MIP MSI-X driver
+Date: Mon,  5 May 2025 19:17:21 -0400
+Message-Id: <20250505231817.2697367-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -52,54 +55,42 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+From: Stanimir Varbanov <svarbanov@suse.de>
 
-[ Upstream commit 8c9da7cd0bbcc90ab444454fecf535320456a312 ]
+[ Upstream commit 2294059118c550464dd8906286324d90c33b152b ]
 
-In preparation for adding support for newer DPI instances which
-do support direct-pin but do not have any H_FRE_CON register,
-like the one found in MT8195 and MT8188, add a branch to check
-if the reg_h_fre_con variable was declared in the mtk_dpi_conf
-structure for the probed SoC DPI version.
+Then the brcmstb PCIe driver and MIP MSI-X interrupt controller
+drivers are built as modules there could be a race in probing.
 
-As a note, this is useful specifically only for cases in which
-the support_direct_pin variable is true, so mt8195-dpintf is
-not affected by any issue.
+To avoid this, add a softdep to MIP driver to guarantee that
+MIP driver will be load first.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20250217154836.108895-6-angelogioacchino.delregno@collabora.com/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Tested-by: Ivan T. Ivanov <iivanov@suse.de>
+Link: https://lore.kernel.org/r/20250224083559.47645-5-svarbanov@suse.de
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index ac75c10aed2f6..3a58d3dfd558f 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -340,12 +340,13 @@ static void mtk_dpi_config_swap_input(struct mtk_dpi *dpi, bool enable)
- 
- static void mtk_dpi_config_2n_h_fre(struct mtk_dpi *dpi)
- {
--	mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
-+	if (dpi->conf->reg_h_fre_con)
-+		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
- }
- 
- static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
- {
--	if (dpi->conf->edge_sel_en)
-+	if (dpi->conf->edge_sel_en && dpi->conf->reg_h_fre_con)
- 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
- }
- 
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 2fc4fe23e6bbf..85be07e8b418a 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1326,3 +1326,4 @@ module_platform_driver(brcm_pcie_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
+ MODULE_AUTHOR("Broadcom");
++MODULE_SOFTDEP("pre: irq_bcm2712_mip");
 -- 
 2.39.5
 
