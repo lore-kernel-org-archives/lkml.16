@@ -1,45 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABC62BEC52;
-	Mon,  5 May 2025 22:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CC2BEC50;
+	Mon,  5 May 2025 22:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485304; cv=none; b=kxMe0AgegsmWlRUY5X+V0z10ROvs0nOsX5+Pklku1S6prW4MjGmNVGpRk7oZko1VLIiAN4LpkROoIMPwcPjwnkDmV8alPIlf5Jdof9Me6cv1Lw5k0OUFTzzH1tDiRPPpR8ne5A/HmE8F0Oz2MwY44FgIIljJCSSqSCA0B62Omnk=
+	t=1746485303; cv=none; b=qeumB61I9rlvLJJK+bm+Jg0dJGzVNgsC9TvqA+3MW+P9ppYTEU7jaeERqbJB6+fdRXL7dbjJUud3zGMTt6HBz2hX2tlKR9Znupf1+dvmuLXTxXvp2EHV5uCUwHSsiyQnt8DcVTjYBxH25qdUWYiUNOORtI3ROlMuD75YuLYfdfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485304; c=relaxed/simple;
-	bh=Me0u92KtWJbVatZweqiucn310jO79Ids9W1Hom/IDw8=;
+	s=arc-20240116; t=1746485303; c=relaxed/simple;
+	bh=pZixKMDv/OOtTOQUEBvTpSiQGwtm0IPKyVHMle9zWxU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n1TtrqLEpQ90RzB0tBU0RAhqRkJuk62jS9SbEU3kmtMS5R0GAIsrdMGY++hSbZEa2aEuiJok74hEE8J0aqBhHR5ZzYGZBov7z6YwdfCGGFSIjYbBO6NpbxtxVKIQ/UzS5+i3H8+5KR7Q8AjwRj4Z1T2Kvz3gglle6Ag9JD5+HHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh4xGY9a; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Cr1zAYmQA5WVzXmzMnh/xTC4CGCo6QDIUinHqp7sT5DkYvo1+Y1opeSAS9rEhpVg9YMHJonVWAy+C9G5jegw3bCOBlzRHen9IrtSX5Ua4rfxTiUs1A8WVDzv5woc9nt3RcQuEKWkHx/Fj79y1Av03uvxIHt7N7tGNbCMlRgghjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ow0DoITz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh4xGY9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2687C4CEEE;
-	Mon,  5 May 2025 22:48:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ow0DoITz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A09C4CEE4;
+	Mon,  5 May 2025 22:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485304;
-	bh=Me0u92KtWJbVatZweqiucn310jO79Ids9W1Hom/IDw8=;
+	s=k20201202; t=1746485302;
+	bh=pZixKMDv/OOtTOQUEBvTpSiQGwtm0IPKyVHMle9zWxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Nh4xGY9aSPXBxAOmIAwg7HoD700taaHrLQuoIQTIiwwgWX84l19OSQX7LGR6Zv7Yz
-	 jpJcbeRBv6QQdwXS1F17KiS7Yi3BniJcQXMVaMthe/GM60Sa2A25DwGu6aR67fxGTm
-	 qfTdhM2HwV/YtW6inwkI/FtlGj1gLHysF15i1w4OUVk3u3a1qwLh7lfK/OTlJFioGn
-	 56aTRxfDlKDeXv4dpNfP5ObxhxBdFIKLiCSm3xYG5NfSCQrRgCUhSJ8oKZpL3rLaMg
-	 P9R2qMLigPgRQ/ZftMXAeRIzx8I//JA1YQhOKuLrEhb38bRzm5b9WPPf7iWIP6cpI0
-	 8D5dJGcx2Fgtw==
+	b=ow0DoITzHXO1uUVY3j8TarJ1XFwimwUyPNGrqtfZd2xd+ml+cnLSKh5vkLNniA+i1
+	 4K6g03Lm2Rwe0m6xmxeNd3rp6Qh44wgSWCK+aOXUhhDKiLchdhfKG+OmrJdS/SEBtZ
+	 mxRZUtmR9ombVop4roVEaDAOGAQqDJiO2wFoup1aQQzaXCZM2LFpjnxS1D3bohxbGD
+	 fhihDRi9w7tSyutlBVoLLhWhDBirf10UGR4ALj4Guj9aJrcrD24xcLHC/TLjpiGg6S
+	 awZbuZOvDDY6UOSNl4nroUccw4ZJjU5xzlGH1A9CdsbTSLJ1JPT3aApbcuxPq/utiW
+	 O8ib1zs24xfEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mike Christie <michael.christie@oracle.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
+Cc: Waiman Long <longman@redhat.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	jasowang@redhat.com,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 258/486] vhost-scsi: Return queue full for page alloc failures during copy
-Date: Mon,  5 May 2025 18:35:34 -0400
-Message-Id: <20250505223922.2682012-258-sashal@kernel.org>
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	kai.huang@intel.com,
+	peterz@infradead.org,
+	pbonzini@redhat.com,
+	brgerst@gmail.com
+Subject: [PATCH AUTOSEL 6.12 257/486] x86/nmi: Add an emergency handler in nmi_desc & use it in nmi_shootdown_cpus()
+Date: Mon,  5 May 2025 18:35:33 -0400
+Message-Id: <20250505223922.2682012-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -54,77 +60,170 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Mike Christie <michael.christie@oracle.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 891b99eab0f89dbe08d216f4ab71acbeaf7a3102 ]
+[ Upstream commit fe37c699ae3eed6e02ee55fbf5cb9ceb7fcfd76c ]
 
-This has us return queue full if we can't allocate a page during the
-copy operation so the initiator can retry.
+Depending on the type of panics, it was found that the
+__register_nmi_handler() function can be called in NMI context from
+nmi_shootdown_cpus() leading to a lockdep splat:
 
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Message-Id: <20241203191705.19431-5-michael.christie@oracle.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+  WARNING: inconsistent lock state
+  inconsistent {INITIAL USE} -> {IN-NMI} usage.
+
+   lock(&nmi_desc[0].lock);
+   <Interrupt>
+     lock(&nmi_desc[0].lock);
+
+  Call Trace:
+    _raw_spin_lock_irqsave
+    __register_nmi_handler
+    nmi_shootdown_cpus
+    kdump_nmi_shootdown_cpus
+    native_machine_crash_shutdown
+    __crash_kexec
+
+In this particular case, the following panic message was printed before:
+
+  Kernel panic - not syncing: Fatal hardware error!
+
+This message seemed to be given out from __ghes_panic() running in
+NMI context.
+
+The __register_nmi_handler() function which takes the nmi_desc lock
+with irq disabled shouldn't be called from NMI context as this can
+lead to deadlock.
+
+The nmi_shootdown_cpus() function can only be invoked once. After the
+first invocation, all other CPUs should be stuck in the newly added
+crash_nmi_callback() and cannot respond to a second NMI.
+
+Fix it by adding a new emergency NMI handler to the nmi_desc
+structure and provide a new set_emergency_nmi_handler() helper to set
+crash_nmi_callback() in any context. The new emergency handler will
+preempt other handlers in the linked list. That will eliminate the need
+to take any lock and serve the panic in NMI use case.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20250206191844.131700-1-longman@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/scsi.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/nmi.h |  2 ++
+ arch/x86/kernel/nmi.c      | 42 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/reboot.c   | 10 +++------
+ 3 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index 35a03306d1345..f9a106bbe8ee1 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -757,7 +757,7 @@ vhost_scsi_copy_iov_to_sgl(struct vhost_scsi_cmd *cmd, struct iov_iter *iter,
- 	size_t len = iov_iter_count(iter);
- 	unsigned int nbytes = 0;
- 	struct page *page;
--	int i;
-+	int i, ret;
+diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+index 41a0ebb699ec6..f677382093f36 100644
+--- a/arch/x86/include/asm/nmi.h
++++ b/arch/x86/include/asm/nmi.h
+@@ -56,6 +56,8 @@ int __register_nmi_handler(unsigned int, struct nmiaction *);
  
- 	if (cmd->tvc_data_direction == DMA_FROM_DEVICE) {
- 		cmd->saved_iter_addr = dup_iter(&cmd->saved_iter, iter,
-@@ -770,6 +770,7 @@ vhost_scsi_copy_iov_to_sgl(struct vhost_scsi_cmd *cmd, struct iov_iter *iter,
- 		page = alloc_page(GFP_KERNEL);
- 		if (!page) {
- 			i--;
-+			ret = -ENOMEM;
- 			goto err;
- 		}
+ void unregister_nmi_handler(unsigned int, const char *);
  
-@@ -777,8 +778,10 @@ vhost_scsi_copy_iov_to_sgl(struct vhost_scsi_cmd *cmd, struct iov_iter *iter,
- 		sg_set_page(&sg[i], page, nbytes, 0);
++void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler);
++
+ void stop_nmi(void);
+ void restart_nmi(void);
+ void local_touch_nmi(void);
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index ed163c8c8604e..9a95d00f14233 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -40,8 +40,12 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nmi.h>
  
- 		if (cmd->tvc_data_direction == DMA_TO_DEVICE &&
--		    copy_page_from_iter(page, 0, nbytes, iter) != nbytes)
-+		    copy_page_from_iter(page, 0, nbytes, iter) != nbytes) {
-+			ret = -EFAULT;
- 			goto err;
-+		}
++/*
++ * An emergency handler can be set in any context including NMI
++ */
+ struct nmi_desc {
+ 	raw_spinlock_t lock;
++	nmi_handler_t emerg_handler;
+ 	struct list_head head;
+ };
  
- 		len -= nbytes;
- 	}
-@@ -793,7 +796,7 @@ vhost_scsi_copy_iov_to_sgl(struct vhost_scsi_cmd *cmd, struct iov_iter *iter,
- 	for (; i >= 0; i--)
- 		__free_page(sg_page(&sg[i]));
- 	kfree(cmd->saved_iter_addr);
--	return -ENOMEM;
-+	return ret;
+@@ -132,9 +136,22 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
+ static int nmi_handle(unsigned int type, struct pt_regs *regs)
+ {
+ 	struct nmi_desc *desc = nmi_to_desc(type);
++	nmi_handler_t ehandler;
+ 	struct nmiaction *a;
+ 	int handled=0;
+ 
++	/*
++	 * Call the emergency handler, if set
++	 *
++	 * In the case of crash_nmi_callback() emergency handler, it will
++	 * return in the case of the crashing CPU to enable it to complete
++	 * other necessary crashing actions ASAP. Other handlers in the
++	 * linked list won't need to be run.
++	 */
++	ehandler = desc->emerg_handler;
++	if (ehandler)
++		return ehandler(type, regs);
++
+ 	rcu_read_lock();
+ 
+ 	/*
+@@ -224,6 +241,31 @@ void unregister_nmi_handler(unsigned int type, const char *name)
  }
+ EXPORT_SYMBOL_GPL(unregister_nmi_handler);
  
- static int
-@@ -1277,9 +1280,9 @@ vhost_scsi_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
- 			 " %d\n", cmd, exp_data_len, prot_bytes, data_direction);
++/**
++ * set_emergency_nmi_handler - Set emergency handler
++ * @type:    NMI type
++ * @handler: the emergency handler to be stored
++ *
++ * Set an emergency NMI handler which, if set, will preempt all the other
++ * handlers in the linked list. If a NULL handler is passed in, it will clear
++ * it. It is expected that concurrent calls to this function will not happen
++ * or the system is screwed beyond repair.
++ */
++void set_emergency_nmi_handler(unsigned int type, nmi_handler_t handler)
++{
++	struct nmi_desc *desc = nmi_to_desc(type);
++
++	if (WARN_ON_ONCE(desc->emerg_handler == handler))
++		return;
++	desc->emerg_handler = handler;
++
++	/*
++	 * Ensure the emergency handler is visible to other CPUs before
++	 * function return
++	 */
++	smp_wmb();
++}
++
+ static void
+ pci_serr_error(unsigned char reason, struct pt_regs *regs)
+ {
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index dc1dd3f3e67fc..9aaac1f9f45b5 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -926,15 +926,11 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ 	shootdown_callback = callback;
  
- 		if (data_direction != DMA_NONE) {
--			if (unlikely(vhost_scsi_mapal(cmd, prot_bytes,
--						      &prot_iter, exp_data_len,
--						      &data_iter))) {
-+			ret = vhost_scsi_mapal(cmd, prot_bytes, &prot_iter,
-+					       exp_data_len, &data_iter);
-+			if (unlikely(ret)) {
- 				vq_err(vq, "Failed to map iov to sgl\n");
- 				vhost_scsi_release_cmd_res(&cmd->tvc_se_cmd);
- 				goto err;
+ 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+-	/* Would it be better to replace the trap vector here? */
+-	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
+-				 NMI_FLAG_FIRST, "crash"))
+-		return;		/* Return what? */
++
+ 	/*
+-	 * Ensure the new callback function is set before sending
+-	 * out the NMI
++	 * Set emergency handler to preempt other handlers.
+ 	 */
+-	wmb();
++	set_emergency_nmi_handler(NMI_LOCAL, crash_nmi_callback);
+ 
+ 	apic_send_IPI_allbutself(NMI_VECTOR);
+ 
 -- 
 2.39.5
 
