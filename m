@@ -1,615 +1,256 @@
-Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC864266577
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FE61C861D
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477542; cv=none; b=SbgkAns68Rj7R0KXvxkMALGV6FvsLFlYaCUuUIYHIFZzFVvpn5PEyEL4stBNa+FUBBAHkgHaYKutlOEZVMde331opogU4Qz1q2hdD+uyk6E5d1ivgenlN4CmVye8rIED43G5rFpZ1HYLWdAh8BxT/NXc5bI6Z+PsBxbzhhqMRYc=
+	t=1746477596; cv=none; b=CwJASr3N4zEddIMdDLUWOeAxT6SQ2XWSoVJ7SM9wqEZt1LIsS94RWN+XjqLMcg5GcRUNUGCwVaRaDtWlSf8CDNyJltkRsDR2Y5gwYE09n0h6KKIDXsjt2GG/m6m1IIjSoY8gOxTTDL5JNcyWDPv7bjTUdi7Yd6cusqdEbwqf7QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477542; c=relaxed/simple;
-	bh=0sI4HyKW9Sag1UOUgVnLRdjo8ozNumYt5IKXsDJeyTQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vn31DGjL3Yw0yWb1AASw0woAJXndaXeSQ24L5meY5TH9m8RsxKA8+mKnDpzKL44Tvl2jb1TCNCWcjGieGWnLdQAWHTnZtjtiVK5LVSuRKgZUd4xJGbPQFBOYeLCkcsOZkfiOgMOoKhPR0SGrawC3G+SNIwoUo7nZ8v4Cy8XWEOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net; spf=pass smtp.mailfrom=david-bauer.net; dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b=MbYIP5Ir; arc=none smtp.client-ip=185.26.156.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=david-bauer.net
+	s=arc-20240116; t=1746477596; c=relaxed/simple;
+	bh=eXsbeYaStEdVkB/9iiuPPvCcb0GJ33j+Y7Lm4GpCn+k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jc2n3BPH0EBVVUgA8e4yJsQ4RKRGmJ77KSGKWwh9fbsmjUb61meu2vCYFqSAmhedJJnN8IDK8JzNoYc8WRjyQ1V19b0DXpf0D0E2SXqf3PNAZtyMxQgJCnwC1iR3WtOXJTplR4JUz+Yzu8qi9syQo6gO/yhYra9UUfyQuLmcZc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLd/vkHu; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b="MbYIP5Ir"
-Received: from perseus.uberspace.de (perseus.uberspace.de [95.143.172.134])
-	by mailgate02.uberspace.is (Postfix) with ESMTPS id A726C180164
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:38:52 +0200 (CEST)
-Received: (qmail 3345 invoked by uid 988); 5 May 2025 20:38:52 -0000
-Authentication-Results: perseus.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by perseus.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 05 May 2025 22:38:52 +0200
-From: David Bauer <mail@david-bauer.net>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH 2/2] Input sx951x: add Semtech SX9512/SX9513 driver
-Date: Mon,  5 May 2025 22:38:45 +0200
-Message-ID: <20250505203847.86714-2-mail@david-bauer.net>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250505203847.86714-1-mail@david-bauer.net>
-References: <20250505203847.86714-1-mail@david-bauer.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLd/vkHu"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ace98258d4dso700081366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746477592; x=1747082392; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
+        b=QLd/vkHuh1aYpsrxFJeG5L2oIdxl7BRm5QD8CjbIETy3pd5/CPEXvUyvLLz2EI2hy0
+         2IcebbvCpV9YKZcMSngKbGuWsdgevZ9+IpqN9ZhnLCOC3WryxRp5D1vocG2keeyNibcH
+         FDOFHqUqLYBVLTKEGwyCW4jNhYD8zVimhVS5Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746477592; x=1747082392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
+        b=pOq3CPSilUFX565zaILVkoGzOQ+gZQUcUwB6rdnWim61zzoKLT1k5W2TEjJdrC1oC8
+         NVKiIe1Ebzt0kg6chWbBLC28/B02JbIp07regXcxL9Y9rOxpWIoZ6TiTLC23qk5d0TC5
+         KiU6iZPTyK+E8dgR5gfbwRxK6W0+LDfL/sTyOfjU97mNc6uxCbAcOdxzTSamp5WVNMuh
+         FTmC9i+QxA/ZB/qc28UMomUha7JtVbv6tdzMSTgiRcehYWFutPBDSmMf0u2/kXNixvtm
+         XwxUrKL1rUt8D9DUJmlcdWEeQHmtpqSaS3Z2akMvIif5pORlihgPayUO12ohrgoxpTuS
+         TdWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXTpXjf4CQzVx4LN18fxFoqNnjtDAhpxPHTnGQPtfqup+8OsTHb0HRYAKQEGiVOGJvK63YZxWqSYQIntjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVtINog2bbS0Ouz6fsHY156A3kTD6gol21blChBslakGjbzQw/
+	fmC0mhmUhqAZVNXg1/dymaTs+xQVkdJTgJlFeMrEK23d+aqMpO+e9IwvZGjdZArTPFWLJxZQ1e7
+	Fzg==
+X-Gm-Gg: ASbGncvFmsJNLKGt3eVqe8fl3zWam3u/Cn4ZZNP/Omtjg6jeM5K0yiFTRn/IFhAE9Xr
+	+Js1ibe9Yah2hCqr3HQCDom4h2nIQ0D08bSLrmJXNqTrgvyrvPRLMI3TMEu6rwevsk7c4BBJUVg
+	rcuE+ytBCLHS1+yd2/ePB8gjS41b6qgSZghiDg/JaGLLGbIsJdRD1JwPYU5BjBbqC3wTUZPT8+x
+	Hvwd26/xxuOb5jndsNH2lG0d3mHvmhNOBpXYiOy1/fniEc5nNB72tpqrbaJfBhq9gdwn8ny4/qu
+	qFBgp0YkWKEr4xPJHN/+z92kSkJ10sgJAmg4l/RcZAMtOiyaQRyuqv3XRpi67he3Zzk3fghBKW9
+	S02U=
+X-Google-Smtp-Source: AGHT+IHl/FZXDoHnUsjvWf5v+cz03Vn3tNCqpV7L3ukwATnQcTtZ8TUhQ7xOgWbnZFH5DaLel1wtXA==
+X-Received: by 2002:a17:907:d087:b0:acb:b0d7:15d8 with SMTP id a640c23a62f3a-ad1d46dd5b2mr29989066b.51.1746477592227;
+        Mon, 05 May 2025 13:39:52 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a733csm549446266b.73.2025.05.05.13.39.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 13:39:52 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so905429066b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:39:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVZWyvjstD6USix3t8WKQl6ql2YWsLcwFgCpmgvlTN3gPAdWt7NkHLOxisUEFNpeT9JZUuNB8ld8/xhWNI=@vger.kernel.org
+X-Received: by 2002:a05:651c:b2a:b0:319:d856:c2f3 with SMTP id
+ 38308e7fff4ca-3266b59789emr751721fa.10.1746477268328; Mon, 05 May 2025
+ 13:34:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: -
-X-Rspamd-Report: MID_CONTAINS_FROM(1) BAYES_HAM(-3) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: -1.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=david-bauer.net; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=0sI4HyKW9Sag1UOUgVnLRdjo8ozNumYt5IKXsDJeyTQ=;
-	b=MbYIP5Irtw+CJRam7W4JVa1Ff+/tG9IViIVlk9f82Za4kyAm5hrWMK9Wd/bOFG+23jgAbnsM3Q
-	JsqkoICGFusBHXo8VEbR2RWGHynuK4K96R7kvUzrtBlh6VinEKjVK4MBTH9n921+VGuPhsiB4/cp
-	+04HKdcbbF0Tx2l10iwNnXIYxuH+QLhlC1YQnYnYGNdOYzu1AnWIzU4kVHDPbc+TNgb2ksHETr2e
-	JB+d4GDqes1cmqyV4t3GLxUQCvvqoiwJ4AWm6c8n6N8iPDi38OzchN80hqoNrzCD2LOJVbkzIhRU
-	X4tU7I9r9c0JNabDVkjIRDIpRnghuQD+6TskDTkT1Lt5WEmpoF7RP2qc4aa/fGuUSW2H2f5s7+6o
-	h2ms/ixkcpSNrOskOA8xyHAOyoHkuL6l5jeINiWNgPKdbAvWXjqbRSuTySnII48AMB8wfbC4hG5x
-	h//g0KczBRSjreSJEWZR5h4VFr6r5EaBdQbAXdS499YmwafRHPZW1mRiV/15SHyGgytUwd4JA5Ch
-	0dd4mSiNNk4OsxIFjscFQ2azgwua4Eg9mmWw3kxS3ArCKvMLKHuMA0oAeS69qsuShQUTZSjEOZRK
-	aevhAVKHFyTPa2WsYJ9DnrJA6g7zIzpSiKywnY+q7c4UpI4L1vxyFBKdajk/SEMLESTyJ5j2EF33
-	U=
+References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
+ <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org> <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
+ <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
+ <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com> <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
+In-Reply-To: <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 5 May 2025 22:34:16 +0200
+X-Gmail-Original-Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
+X-Gm-Features: ATxdqUEg2rUAsN7TYo98ElSvRXDzyBQACXaWg80nr6xGofF6c5WfqBKJm9vPYRM
+Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for v4l2_fwnode_device_parse
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Hans de Goede <hdegoede@redhat.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Semtech SX9512/SX9513 is a family of capacitive touch-keyboard
-controllers.
+Hi Sakari
 
-All chips offer 8 channel touch sensitive inputs with one LED driver per
-output channel.
+On Tue, 22 Apr 2025 at 11:41, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+>
+> Hi Hans, Ricardo,
+>
+> On Tue, Apr 22, 2025 at 10:44:41AM +0200, Hans de Goede wrote:
+> > Hi Ricardo,
+> >
+> > On 22-Apr-25 2:23 AM, Ricardo Ribalda wrote:
+> > > Hi Sakari
+> > >
+> > > On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrot=
+e:
+> > >>
+> > >> Hi Ricardo,
+> > >>
+> > >> Thanks for the patch.
+> > >>
+> > >> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
+> > >>> This patch modifies v4l2_fwnode_device_parse() to support ACPI devi=
+ces.
+> > >>>
+> > >>> We initially add support only for orientation via the ACPI _PLD met=
+hod.
+> > >>>
+> > >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > >>> ---
+> > >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++=
+++++++++----
+> > >>>  1 file changed, 52 insertions(+), 6 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/=
+v4l2-core/v4l2-fwnode.c
+> > >>> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1=
+c96f2a5ede3fa9d64dab3 100644
+> > >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > >>> @@ -15,6 +15,7 @@
+> > >>>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > >>>   */
+> > >>>  #include <linux/acpi.h>
+> > >>> +#include <acpi/acpi_bus.h>
+> > >>>  #include <linux/kernel.h>
+> > >>>  #include <linux/mm.h>
+> > >>>  #include <linux/module.h>
+> > >>> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwn=
+ode_handle *fwnode,
+> > >>>  }
+> > >>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
+> > >>>
+> > >>> -int v4l2_fwnode_device_parse(struct device *dev,
+> > >>> -                          struct v4l2_fwnode_device_properties *pr=
+ops)
+> > >>> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
+> > >>> +                                      struct v4l2_fwnode_device_pr=
+operties *props)
+> > >>> +{
+> > >>> +     struct acpi_pld_info *pld;
+> > >>> +     int ret =3D 0;
+> > >>> +
+> > >>> +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld=
+)) {
+> > >>> +             dev_dbg(dev, "acpi _PLD call failed\n");
+> > >>> +             return 0;
+> > >>> +     }
+> > >>
+> > >> You could have software nodes in an ACPI system as well as DT-aligne=
+d
+> > >> properties. They're not the primary means to convey this information=
+ still.
+> > >>
+> > >> How about returning e.g. -ENODATA here if _PLD doesn't exist for the=
+ device
+> > >> and then proceeding to parse properties as in DT?
+> > >
+> > > Do you mean that there can be devices with ACPI handles that can also
+> > > have DT properties?
+> >
+> > Yes it is possible to embed DT properties in ACPI, but I don't
+> > think that is really applicable here.
+>
+> This is determined by
+> Documentation/firmware-guide/acpi/DSD-properties-rules.rst . So rotation
+> and orientation shouldn't come from _DSD properties on ACPI systems.
 
-The also SX9512 supports proximity detection which is currently not
-supported with the driver.
+Doesn't this contradict what DisCo does?
 
-This chip can be found on the Genexis Pulse EX400 repeater platform.
 
-Link: https://www.mouser.com/datasheet/2/761/SEMTS05226_1-2575172.pdf
+if (!fwnode_property_present(adev_fwnode, "rotation")) {
+struct acpi_pld_info *pld;
 
-Signed-off-by: David Bauer <mail@david-bauer.net>
----
- drivers/input/keyboard/Kconfig  |  11 +
- drivers/input/keyboard/Makefile |   1 +
- drivers/input/keyboard/sx951x.c | 490 ++++++++++++++++++++++++++++++++
- 3 files changed, 502 insertions(+)
- create mode 100644 drivers/input/keyboard/sx951x.c
+if (acpi_get_physical_device_location(handle, &pld)) {
+swnodes->dev_props[NEXT_PROPERTY(prop_index, DEV_ROTATION)] =3D
+PROPERTY_ENTRY_U32("rotation",
+   pld->rotation * 45U);
+kfree(pld);
+}
+}
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 1d0c5f4c0f99..6dc397389c64 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -616,6 +616,17 @@ config KEYBOARD_SUNKBD
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called sunkbd.
- 
-+config KEYBOARD_SX951X
-+	tristate "Semtech SX951X capacitive touch controller"
-+	depends on OF && I2C
-+	select REGMAP_I2C
-+	help
-+	  Say Y here to enable the Semtech SX9512/SX9153 capacitive
-+	  touch controller driver.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called sx951x.
-+
- config KEYBOARD_SH_KEYSC
- 	tristate "SuperH KEYSC keypad support"
- 	depends on ARCH_SHMOBILE || COMPILE_TEST
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index aecef00c5d09..e59ca83c30ec 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -66,6 +66,7 @@ obj-$(CONFIG_KEYBOARD_STOWAWAY)		+= stowaway.o
- obj-$(CONFIG_KEYBOARD_ST_KEYSCAN)	+= st-keyscan.o
- obj-$(CONFIG_KEYBOARD_SUN4I_LRADC)	+= sun4i-lradc-keys.o
- obj-$(CONFIG_KEYBOARD_SUNKBD)		+= sunkbd.o
-+obj-$(CONFIG_KEYBOARD_SX951X)		+= sx951x.o
- obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
- obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
- obj-$(CONFIG_KEYBOARD_TM2_TOUCHKEY)	+= tm2-touchkey.o
-diff --git a/drivers/input/keyboard/sx951x.c b/drivers/input/keyboard/sx951x.c
-new file mode 100644
-index 000000000000..66355036aa95
---- /dev/null
-+++ b/drivers/input/keyboard/sx951x.c
-@@ -0,0 +1,490 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Input driver for Semtech SX9512/SX9513 capacitive touch sensors.
-+ *
-+ * The difference between SX9512 and SX9513 is the presence of proximity
-+ * sensing capabilities on the SX9512.
-+ *
-+ * SX951xB is the identical chip but with a different I2C address.
-+ *
-+ * (c) 2025 David Bauer <mail@david-bauer.net>
-+ */
-+
-+ #include <linux/kernel.h>
-+ #include <linux/module.h>
-+ #include <linux/input.h>
-+ #include <linux/leds.h>
-+ #include <linux/of.h>
-+ #include <linux/regmap.h>
-+ #include <linux/i2c.h>
-+ #include <linux/gpio/consumer.h>
-+ #include <linux/bitfield.h>
-+
-+ /* Generic properties */
-+#define SX951X_I2C_ADDRESS		0x2b
-+#define SX951XB_I2C_ADDRESS_		0x2d
-+#define SX951X_NUM_CHANNELS		8
-+#define SX951X_POLL_INTERVAL		100
-+
-+/* Registers*/
-+#define SX951X_REG_IRQ_SRC		0x00
-+#define SX951X_REG_TOUCH_STATUS		0x01
-+#define SX951X_REG_PROXIMITY_STATUS	0x02
-+#define SX951X_REG_COMPENSATION_STATUS	0x03
-+#define SX951X_REG_IRQ_NVM_CTRL		0x04
-+#define SX951X_REG_SPO2_MODE_CTRL	0x07
-+#define SX951X_REG_PWR_KEY_CTRL		0x08
-+#define SX951X_REG_IRQ_MASK		0x09
-+
-+/* LED registers */
-+#define SX951X_REG_LED_MAP_ENG1		0x0c
-+#define SX951X_REG_LED_MAP_ENG2		0x0d
-+#define SX951X_REG_LED_PWM_FREQ		0x0e
-+#define SX951X_REG_LED_MODE		0x0f
-+#define SX951X_REG_LED_IDLE		0x10
-+#define SX951X_REG_LED_OFF_DELAY	0x11
-+#define SX951X_REG_LED_ON_ENG1		0x12
-+#define SX951X_REG_LED_FADE_ENG1	0x13
-+#define SX951X_REG_LED_ON_ENG2		0x14
-+#define SX951X_REG_LED_FADE_ENG2	0x15
-+#define SX951X_REG_LED_POWER_IDLE	0x16
-+#define SX951X_REG_LED_POWER_ON		0x17
-+#define SX951X_REG_LED_POWER_OFF	0x18
-+#define SX951X_REG_LED_POWER_FADE	0x19
-+#define SX951X_REG_LED_POWER_ON_PULSE	0x1a
-+#define SX951X_REG_LED_POWER_MODE	0x1b
-+
-+/* Capacitive touch sensing registers*/
-+#define SX951X_REG_CAP_SENSE_ENABLE			0x1e
-+
-+#define SX951X_REG_CAP_SENSE_RANGE(x)			(0x1f + (x))
-+#define SX951X_REG_CAP_SENSE_RANGE_CIN_DELTA_MASK	GENMASK(1, 0)
-+
-+#define SX951X_REG_CAP_SENSE_THRESH(x)			(0x28 + (x))
-+#define SX951X_REG_CAP_SENSE_THRESH_ALL			0x30
-+
-+#define SX951X_REG_CAP_SENSE_OP				0x31
-+#define SX951X_REG_CAP_SENSE_MODE			0x32
-+#define SX951X_REG_CAP_SENSE_DEBOUNCE			0x33
-+
-+/* Reset register*/
-+#define SX951X_REG_SOFT_RESET			0xff
-+
-+/* Default properties (keys)*/
-+#define SX951X_KEY_DEFAULT_CIN_DELTA		0x03
-+#define SX951X_KEY_DEFAULT_SENSE_THRESHOLD	0x04
-+
-+struct sx951x_key_data {
-+	u32 cin_delta;
-+	u32 sense_threshold;
-+};
-+
-+struct sx951x_led {
-+#ifdef CONFIG_LEDS_CLASS
-+	struct led_classdev cdev;
-+	struct sx951x_priv *priv;
-+
-+	u32 reg;
-+	bool registered;
-+#endif
-+};
-+
-+struct sx951x_priv {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct input_dev *idev;
-+	const struct sx951x_hw_data *hw;
-+
-+	struct sx951x_led leds[SX951X_NUM_CHANNELS];
-+
-+	/* device-config */
-+	u32 poll_interval;
-+
-+	/* key-config */
-+	u32 keycodes[SX951X_NUM_CHANNELS];
-+	struct sx951x_key_data key_data[SX951X_NUM_CHANNELS];
-+};
-+
-+struct sx951x_hw_data {
-+	bool has_proximity_sensing;
-+};
-+
-+static const struct reg_default sx951x_reg_defaults[] = {
-+	{ SX951X_REG_LED_MAP_ENG1,		0x00 },
-+	{ SX951X_REG_LED_MAP_ENG2,		0x00 },
-+	{ SX951X_REG_LED_PWM_FREQ,		0x10 },
-+	{ SX951X_REG_LED_IDLE,			0xff },
-+	{ SX951X_REG_LED_ON_ENG1,		0xff },
-+	{ SX951X_REG_LED_ON_ENG2,		0xff },
-+	{ SX951X_REG_LED_POWER_IDLE,		0xff },
-+	{ SX951X_REG_LED_POWER_ON,		0xff },
-+	{ SX951X_REG_CAP_SENSE_ENABLE,		0x00 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(0),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(1),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(2),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(3),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(4),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(5),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(6),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_RANGE(7),	0x40 },
-+	{ SX951X_REG_CAP_SENSE_THRESH(0),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(1),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(2),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(3),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(4),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(5),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(6),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH(7),	0x0f },
-+	{ SX951X_REG_CAP_SENSE_THRESH_ALL,	0x0f },
-+	{ SX951X_REG_CAP_SENSE_OP,		0x14 },
-+	{ SX951X_REG_CAP_SENSE_MODE,		0x70 },
-+	{ SX951X_REG_CAP_SENSE_DEBOUNCE,	0xff },
-+};
-+
-+static bool sx951x_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case SX951X_REG_TOUCH_STATUS:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config sx951x_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = SX951X_REG_SOFT_RESET,
-+
-+	.reg_defaults = sx951x_reg_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(sx951x_reg_defaults),
-+
-+	.cache_type = REGCACHE_MAPLE,
-+	.volatile_reg = sx951x_volatile_reg,
-+};
-+
-+#ifdef CONFIG_LEDS_CLASS
-+static int sx951x_led_set(struct led_classdev *cdev, enum led_brightness value)
-+{
-+	struct sx951x_led *led = container_of(cdev, struct sx951x_led, cdev);
-+	struct sx951x_priv *priv = led->priv;
-+
-+	return regmap_update_bits(priv->regmap,
-+				  SX951X_REG_LED_MAP_ENG2,
-+				  BIT(led->reg),
-+				  value ? BIT(led->reg) : 0);
-+}
-+
-+static int sx951x_led_init(struct sx951x_priv *priv,
-+			   struct device_node *channel_node, u32 reg)
-+{
-+	struct device_node *led_node;
-+	struct sx951x_led *led = &priv->leds[reg];
-+	struct led_init_data init_data = {};
-+	int error;
-+
-+	if (led->registered) {
-+		dev_err(priv->dev,
-+			"LED %d already registered\n", reg);
-+		return -EINVAL;
-+	}
-+
-+	led_node = of_get_child_by_name(channel_node, "led");
-+	if (!led_node) {
-+		/* No LED */
-+		return 0;
-+	}
-+
-+	led->cdev.flags = 0;
-+	led->cdev.brightness_set_blocking = sx951x_led_set;
-+	led->cdev.max_brightness = 1;
-+	led->cdev.brightness = LED_OFF;
-+
-+	init_data.default_label = of_get_property(led_node, "label", NULL);
-+	init_data.fwnode = of_fwnode_handle(led_node);
-+
-+	led->reg = reg;
-+	led->priv = priv;
-+
-+	error = devm_led_classdev_register_ext(priv->dev, &led->cdev, &init_data);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+#endif
-+
-+static void sx951x_poll(struct input_dev *input)
-+{
-+	struct sx951x_priv *priv = input_get_drvdata(input);
-+	struct device *dev = priv->dev;
-+	unsigned int val;
-+	int error;
-+	int i;
-+
-+	error = regmap_read(priv->regmap, SX951X_REG_TOUCH_STATUS, &val);
-+	if (error) {
-+		dev_err(dev, "Failed to read touch status: %d\n", error);
-+		return;
-+	}
-+
-+	for (i = 0; i < SX951X_NUM_CHANNELS; i++) {
-+		if (priv->keycodes[i] == KEY_RESERVED)
-+			continue;
-+
-+		input_report_key(input, priv->keycodes[i], !!(val & BIT(i)));
-+		input_sync(input);
-+	}
-+}
-+
-+static int sx951x_channel_init(struct sx951x_priv *priv, struct device_node *of_node,
-+			       u32 chan_idx)
-+{
-+	struct sx951x_key_data *key_data;
-+	struct device *dev = priv->dev;
-+	int error;
-+
-+	key_data = &priv->key_data[chan_idx];
-+
-+	/* Defaults */
-+	key_data->cin_delta = SX951X_KEY_DEFAULT_CIN_DELTA;
-+	key_data->sense_threshold = SX951X_KEY_DEFAULT_SENSE_THRESHOLD;
-+
-+	error = of_property_read_u32(of_node, "linux,keycodes",
-+				     &priv->keycodes[chan_idx]);
-+	if (error) {
-+		/* Not configured */
-+		return 0;
-+	}
-+
-+	error = of_property_read_u32(of_node, "semtech,cin-delta",
-+				     &key_data->cin_delta);
-+	if (key_data->cin_delta > 0x03) {
-+		dev_err(dev, "Failed to read cin-delta for channel %d: %d\n",
-+			chan_idx, error);
-+		return error;
-+	}
-+
-+	error = of_property_read_u32(of_node, "semtech,sense-threshold",
-+				     &key_data->sense_threshold);
-+	if (key_data->sense_threshold > 0xff) {
-+		dev_err(dev, "Failed to read sense-threshold for channel %d: %d\n",
-+			chan_idx, error);
-+		return error;
-+	}
-+
-+	error = regmap_update_bits(priv->regmap,
-+				   SX951X_REG_CAP_SENSE_RANGE(chan_idx),
-+				   SX951X_REG_CAP_SENSE_RANGE_CIN_DELTA_MASK,
-+				   key_data->cin_delta);
-+
-+	if (error) {
-+		dev_err(dev, "Failed to set cin-delta for channel %d: %d\n",
-+			chan_idx, error);
-+		return error;
-+	}
-+
-+	error = regmap_write(priv->regmap,
-+			     SX951X_REG_CAP_SENSE_THRESH(chan_idx),
-+			     key_data->sense_threshold);
-+	if (error) {
-+		dev_err(dev, "Failed to set sense-threshold for channel %d: %d\n",
-+			chan_idx, error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sx951x_channels_init(struct sx951x_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	unsigned int channels = 0;
-+	int error;
-+	u32 reg;
-+
-+	for_each_child_of_node_scoped(dev->of_node, child) {
-+		error = of_property_read_u32(child, "reg", &reg);
-+		if (error != 0 || reg >= SX951X_NUM_CHANNELS) {
-+			dev_err(dev, "Invalid channel %d\n", reg);
-+			return -EINVAL;
-+		}
-+
-+		priv->keycodes[reg] = KEY_RESERVED;
-+
-+		error = sx951x_channel_init(priv, child, reg);
-+		if (error) {
-+			dev_err(dev, "Failed to initialize channel %d: %d\n",
-+				reg, error);
-+			return error;
-+		}
-+
-+		if (priv->keycodes[reg] != KEY_RESERVED)
-+			channels |= BIT(reg);
-+
-+#ifdef CONFIG_LEDS_CLASS
-+		error = sx951x_led_init(priv, child, reg);
-+		if (error) {
-+			dev_err(dev, "Failed to initialize LED %d: %d\n",
-+				reg, error);
-+			return error;
-+		}
-+#endif
-+	}
-+
-+	/* Enable sensing on channels with keycode configured */
-+	error = regmap_write(priv->regmap,
-+			     SX951X_REG_CAP_SENSE_ENABLE,
-+			     channels);
-+
-+	return 0;
-+}
-+
-+static int sx951x_input_init(struct sx951x_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	int i, error;
-+
-+	priv->idev = devm_input_allocate_device(dev);
-+	if (!priv->idev)
-+		return -ENOMEM;
-+
-+	priv->idev->name = "SX9512/SX9513 capacitive touch sensor";
-+	priv->idev->id.bustype = BUS_I2C;
-+	__set_bit(EV_KEY, priv->idev->evbit);
-+
-+	for (i = 0; i < SX951X_NUM_CHANNELS; i++)
-+		__set_bit(priv->keycodes[i], priv->idev->keybit);
-+
-+	__clear_bit(KEY_RESERVED, priv->idev->keybit);
-+
-+	priv->idev->keycode = priv->keycodes;
-+	priv->idev->keycodesize = sizeof(priv->keycodes[0]);
-+	priv->idev->keycodemax = SX951X_NUM_CHANNELS;
-+
-+	input_set_drvdata(priv->idev, priv);
-+
-+	error = input_setup_polling(priv->idev, sx951x_poll);
-+	if (error) {
-+		dev_err(dev, "Unable to set up polling: %d\n", error);
-+		return error;
-+	}
-+
-+	input_set_poll_interval(priv->idev, priv->poll_interval);
-+
-+	error = input_register_device(priv->idev);
-+	if (error) {
-+		dev_err(dev, "Unable to register polled device: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sx951x_probe(struct i2c_client *i2c_client)
-+{
-+	const struct i2c_device_id *id;
-+	const struct sx951x_hw_data *hw;
-+	struct device *dev = &i2c_client->dev;
-+	struct sx951x_priv *priv;
-+	int error;
-+
-+	if (i2c_client->addr != SX951X_I2C_ADDRESS &&
-+	    i2c_client->addr != SX951XB_I2C_ADDRESS_) {
-+		dev_err(dev, "Invalid I2C address: 0x%02x\n",
-+			i2c_client->addr);
-+		return -ENODEV;
-+	}
-+
-+	id = i2c_client_get_device_id(i2c_client);
-+	hw = i2c_get_match_data(i2c_client);
-+	if (!id || !hw) {
-+		dev_err(dev, "Invalid device configuration\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = devm_kzalloc(dev,
-+			    sizeof(struct sx951x_priv),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->hw = hw;
-+
-+	priv->regmap = devm_regmap_init_i2c(i2c_client, &sx951x_regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	/* Parse device configuration */
-+	if (of_property_read_u32(dev->of_node, "poll-interval",
-+				 &priv->poll_interval))
-+		priv->poll_interval = SX951X_POLL_INTERVAL;
-+
-+	/* Register LED and input channels */
-+	error = sx951x_channels_init(priv);
-+	if (error) {
-+		dev_err(dev, "Failed to initialize channels: %d\n", error);
-+		return error;
-+	}
-+
-+	/* Register input device */
-+	error = sx951x_input_init(priv);
-+	if (error) {
-+		dev_err(dev, "Failed to register input device: %d\n", error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sx951x_remove(struct i2c_client *i2c_client)
-+{
-+	struct sx951x_priv *priv = i2c_get_clientdata(i2c_client);
-+
-+	/* Disable sensing */
-+	regmap_write(priv->regmap, SX951X_REG_CAP_SENSE_ENABLE, 0x00);
-+
-+	/* Turn off all LEDs */
-+	regmap_write(priv->regmap, SX951X_REG_LED_MAP_ENG2, 0x00);
-+}
-+
-+static const struct sx951x_hw_data sx9512_hw_data = {
-+	.has_proximity_sensing = true,
-+};
-+
-+static const struct sx951x_hw_data sx9513_hw_data = {
-+	.has_proximity_sensing = false,
-+};
-+
-+static const struct of_device_id sx951x_dt_ids[] = {
-+	{ .compatible = "semtech,sx9512", .data = &sx9512_hw_data },
-+	{ .compatible = "semtech,sx9513", .data = &sx9513_hw_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sx951x_dt_ids);
-+
-+static const struct i2c_device_id sx951x_i2c_ids[] = {
-+	{ "sx9512", (kernel_ulong_t)&sx9512_hw_data },
-+	{ "sx9513", (kernel_ulong_t)&sx9513_hw_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, sx951x_i2c_ids);
-+
-+static struct i2c_driver sx951x_i2c_driver = {
-+	.driver = {
-+		.name	= "sx951x",
-+		.of_match_table = sx951x_dt_ids,
-+	},
-+	.id_table	= sx951x_i2c_ids,
-+	.probe		= sx951x_probe,
-+	.remove		= sx951x_remove,
-+};
-+
-+module_i2c_driver(sx951x_i2c_driver);
-+
-+MODULE_DESCRIPTION("Semtech SX9512/SX9513 driver");
-+MODULE_AUTHOR("David Bauer <mail@david-bauer.net>");
-+MODULE_LICENSE("GPL");
--- 
-2.47.2
+It seems to first check for the rotation property, and then check _DSD.
 
+If I send a v2, shall I also replace DisCo even if that means
+reverting its logic?
+
+
+>
+> >
+> > But we also have secondary software-fwnodes which are used
+> > extensively on x86 to set device-properties on devices by
+> > platform code to deal with ACPI tables sometimes having
+> > incomplete information.
+> >
+> > For example atm _PLD is already being parsed in:
+> >
+> > drivers/media/pci/intel/ipu-bridge.c and that is then used to add
+> > a standard "orientation" device-property on the sensor device.
+> >
+> > This is actually something which I guess we can drop once your
+> > patches are in, since those should then do the same in a more
+> > generic manner.
+>
+> DisCo for Imaging support currently also digs this information from _PDL
+> (see init_crs_csi2_swnodes() in drivers/acpi/mipi-disco-img.c), but this
+> is only done if a _CRS CSI-2 descriptor is present. It could also be done
+> for devices with the IPU Windows specific ACPI objects and it would be a
+> natural location for handing quirks -- there are some
+> unrelated Dell DSDT quirks already.
+>
+> >
+> > > What shall we do if _PLD contradicts the DT property? What takes prec=
+edence?
+> >
+> > As for priorities, at east for rotation it seems that we are going
+> > to need some quirks, I already have a few Dell laptops where it seems
+> > that the sensor is upside down and parsing the rotation field in
+> > the IPU6 specific SSDB ACPI package does not yield a 180=C2=B0 rotation=
+,
+> > so we are going to need some quirks.
+> >
+> > I expect these quirks to live in the bridge code, while your helper
+> > will be called from sensor drivers, so in order to allow quirks to
+> > override things, I think that first the "orientation" device-property
+> > should be checked (which the ACPI glue code we have can set before
+> > the sensor driver binds) and only then should _PLD be checked.
+> >
+> > IOW _PLD should be seen as the fallback, because ACPI tables are
+> > often a copy and paste job so it can very well contain wrong info
+> > copy-pasted from some example ACPI code or from another hw model.
+>
+> Unfortunately that does happen. :-(
+>
+> --
+> Regards,
+>
+> Sakari Ailus
+
+
+
+--=20
+Ricardo Ribalda
