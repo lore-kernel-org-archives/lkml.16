@@ -1,155 +1,154 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1CC1459F7;
-	Mon,  5 May 2025 06:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F251B3F3D;
+	Mon,  5 May 2025 06:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746426178; cv=none; b=bSsZmHWu3HT6F7dG9kgWoamofmH7VE5cy5/JBvwQFjXV6G/SZYag8oWMwEYgkppzpt/HlFhTCatuRO9HjtcLpKJQR0nFft5rdUM12h7E3VpgJKME2uF5LRMkiEruUQgesnZjnOx8Aw2XssqnO2SHrUzUvQepurlpbZ+Q5Uq6y7g=
+	t=1746426210; cv=none; b=j+8XNFp0Z+vFmOxQf+VXF9yJth1pSH5lzAdcIjm6xDFABa0e92QcysmbQ05Fufd4ysRnedSegK6bb1y3T4gdXADFsw+T/G+QF4k3nOUS5+bDIz43g/kdY5FrHzi4lUcUazt3pNp1Ls0WFkT0ileetQu18kapoF/sJ1Fjw+TLc+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746426178; c=relaxed/simple;
-	bh=MPUs4KraZc3aeghxZP54Y8ZKgxtKYIoo7VWIRHwCrow=;
+	s=arc-20240116; t=1746426210; c=relaxed/simple;
+	bh=blz46dfKcTkqUU1mdHuxtQzWM8gPcsEOF9yJwSPZQjo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKjtLrsepv8wV2fwGQdoV/1FMqD8JZPGyU04pB6LTDtvmKgg+/J/cEKTEF29rM9fgUeFup2JrbpwzxB2z336v7xZ1u+ECr0qk3mg5gXU6AQuLoPtJIYnmIf5xe8C/TatXqc/cvt3gFa69x5VTrG49uqEhdrD/oN8z+YMDDscdag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QiylwdGt; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WL6b36FCJTB8qWp9zY0SMsz9ioQJ3xEqxrfvskUQDBDbeLnV/qLcfFxVP4IN88WglI23yE3WLmsrgpkoEWGnGKBseA3NHBKmhDIfBodXOilxFQZZoEgK6//UDbfd8mnYsd3kH4B+ApIahIob46N+SW0VGSH83xhQ33uGRNzCZVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koamshTJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QiylwdGt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6crzyY4cRgs7sWNOVET6cPYOHzfjUqNaeeku35IfyF4=; b=QiylwdGt65nFPM0JNR3fMaNZuA
-	Xt3wXttqIBV3/rty7gejWyvvemGT5SH2vSDn5Qluc7xEDj53AAe9vdBzFp2LafK41wer+kAOwa7lS
-	hcQ/AeWxm4afC9iOx/WaIgLg2QiEsXz1QkJ1gdpHzklRuEFe3KuhHliuSnrsTqh0+5uRRvR+EmTHS
-	EV+l2EpTFT2Vrn3NB1HsFwRgXT9euCn51TzRMEgI4LdZlhhAojDAr93gj232XyNxadj2mTML7MRjl
-	SDoQe6HJaGd80Fz5l2g8xHunE4wLV32VIsy/10lNAelvJebRrI3jjdY2Qnxsmphn7DPNBtq9nkH8u
-	L1x+mcFg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uBpE6-00000006Vu5-3QMm;
-	Mon, 05 May 2025 06:22:54 +0000
-Date: Sun, 4 May 2025 23:22:54 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <aBhZPm28c6Yn5KH2@infradead.org>
-References: <aBO_32OsMj3hsJsv@kspp>
- <aBRrP8EuNkeAtPC9@infradead.org>
- <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koamshTJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076EFC4CEE4;
+	Mon,  5 May 2025 06:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746426209;
+	bh=blz46dfKcTkqUU1mdHuxtQzWM8gPcsEOF9yJwSPZQjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=koamshTJSZ1WF/eCcwZGiyDpkwsaCADLfvS3QwjV5PotkB/YOwWC8XyuJVSsdLCIk
+	 /4Jtd7bMz2vmYsMNWmf/X4Sis4kqCPIcH2Wo9nzKbUDCdEWEjPm99kDdRKffgOIfVC
+	 GO8aK9v8GOt73LRnb9Tey6JAPxRlvzcCyhCmmdVLeIQZNUJGxNU4jtNLGVqIHj+dbm
+	 MEpwGnq7vCW5rHYuMgB1xOP/tAAjfa3OIH4mb6zlf/o2UpzxgLckv3VDuOX+zXChXs
+	 TEqMARo/LYFzdXeUg1+VrFmrPwI3ZjNDFpR2bMvYWKsJuqvZsxTYKkHx5l6dtCp9Kp
+	 s2eAL5PrUzyBg==
+Date: Mon, 5 May 2025 08:23:26 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250505-beneficial-fossa-of-weather-67c676@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-34-8f91a404d86b@bootlin.com>
+ <20250428-wild-condor-of-defiance-cadf60@houat>
+ <20250428172516.79058e22@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="fxb23j2izsboyssh"
 Content-Disposition: inline
-In-Reply-To: <33d7a1b3-4bf7-4337-ba82-dbd4b95ad0b8@acm.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250428172516.79058e22@booty>
 
-On Sat, May 03, 2025 at 12:08:23PM -0700, Bart Van Assche wrote:
-> On 5/1/25 11:50 PM, Christoph Hellwig wrote:
-> > (I still wish we'd kill the stupid struct and this test and just used
-> > the simpler and cleaner bitshifting and masking)
-> 
-> Bit-shifting and masking results in faster code. For slow path code I
-> prefer bitfields because this results in much more compact source code.
 
-Despite claims to the contrary bit tests and masking are often a lot
-simpler, and you don't need the duplicate struct layouts and tests
-verifying that you get them right as it is almost impossible to write
-code that only works on LE or BE.  E.g. the patch below would simplify
-the stream status quite a bit.  It also fixes the assumption that the
-bitfield endianess is the same as the byte endianess, which is not
-true in general (although I think it is for all Linux supported
-architectures).
+--fxb23j2izsboyssh
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 34/34] drm/bridge: panel: convert to
+ devm_drm_bridge_alloc() API
+MIME-Version: 1.0
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index f0eec4708ddd..41ed22f1ad0b 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -5528,7 +5528,8 @@ static int resp_get_stream_status(struct scsi_cmnd *scp,
- 	     offset += 8, stream_id++) {
- 		struct scsi_stream_status *stream_status = (void *)arr + offset;
- 
--		stream_status->perm = stream_id < PERMANENT_STREAM_COUNT;
-+		if (stream_id < PERMANENT_STREAM_COUNT)
-+			stream_status->flags |= SCSI_STREAM_STATUS_PERM;
- 		put_unaligned_be16(stream_id,
- 				   &stream_status->stream_identifier);
- 		stream_status->rel_lifetime = stream_id + 1;
-diff --git a/drivers/scsi/scsi_proto_test.c b/drivers/scsi/scsi_proto_test.c
-index c093389edabb..d61302e7715a 100644
---- a/drivers/scsi/scsi_proto_test.c
-+++ b/drivers/scsi/scsi_proto_test.c
-@@ -22,15 +22,6 @@ static void test_scsi_proto(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, d.desc.params[0] + 0, 0xe4);
- 	KUNIT_EXPECT_EQ(test, d.desc.params[1] + 0, 0xe3);
- 
--	static const union {
--		struct scsi_stream_status s;
--		u8 arr[sizeof(struct scsi_stream_status)];
--	} ss = { .arr = { 0x80, 0, 0x12, 0x34, 0x3f } };
--	KUNIT_EXPECT_EQ(test, ss.s.perm + 0, 1);
--	KUNIT_EXPECT_EQ(test, get_unaligned_be16(&ss.s.stream_identifier),
--			0x1234);
--	KUNIT_EXPECT_EQ(test, ss.s.rel_lifetime + 0, 0x3f);
--
- 	static const union {
- 		struct scsi_stream_status_header h;
- 		u8 arr[sizeof(struct scsi_stream_status_header)];
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 3f6e87705b62..deb8af152f13 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3215,7 +3215,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
- 		return false;
- 	if (get_unaligned_be32(&buf.h.len) < sizeof(struct scsi_stream_status))
- 		return false;
--	return buf.s.perm;
-+	return buf.s.flags & SCSI_STREAM_STATUS_PERM;
- }
- 
- static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
-diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
-index f64385cde5b9..88c1d950be54 100644
---- a/include/scsi/scsi_proto.h
-+++ b/include/scsi/scsi_proto.h
-@@ -319,26 +319,10 @@ static_assert(sizeof(struct scsi_io_group_descriptor) == 16);
- 
- /* SCSI stream status descriptor */
- struct scsi_stream_status {
--#if defined(__BIG_ENDIAN)
--	u8 perm: 1;
--	u8 reserved1: 7;
--#elif defined(__LITTLE_ENDIAN)
--	u8 reserved1: 7;
--	u8 perm: 1;
--#else
--#error
--#endif
--	u8 reserved2;
-+	u8 flags;
-+#define SCSI_STREAM_STATUS_PERM		(1u << 7)
- 	__be16 stream_identifier;
--#if defined(__BIG_ENDIAN)
--	u8 reserved3: 2;
--	u8 rel_lifetime: 6;
--#elif defined(__LITTLE_ENDIAN)
--	u8 rel_lifetime: 6;
--	u8 reserved3: 2;
--#else
--#error
--#endif
-+	u8 rel_lifetime;
- 	u8 reserved4[3];
- };
- 
+On Mon, Apr 28, 2025 at 05:25:16PM +0200, Luca Ceresoli wrote:
+> Hi Maxime,
+>=20
+> On Mon, 28 Apr 2025 13:39:23 +0200
+> Maxime Ripard <mripard@kernel.org> wrote:
+>=20
+> > On Thu, Apr 24, 2025 at 10:05:49PM +0200, Luca Ceresoli wrote:
+> > > This is the new API for allocating DRM bridges.
+> > >=20
+> > > The devm lifetime management of this driver is peculiar. The underlyi=
+ng
+> > > device for the panel_bridge is the panel, and the devm lifetime is ti=
+ed the
+> > > panel device (panel->dev). However the panel_bridge allocation is not
+> > > performed by the panel driver, but rather by a separate entity (typic=
+ally
+> > > the previous bridge in the encoder chain).
+> > >=20
+> > > Thus when that separate entoty is destroyed, the panel_bridge is not
+> > > removed automatically by devm, so it is rather done explicitly by cal=
+ling
+> > > drm_panel_bridge_remove(). This is the function that does devm_kfree(=
+) the
+> > > panel_bridge in current code, so update it as well to put the bridge
+> > > reference instead.
+> > >=20
+> > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com> =20
+> >=20
+> > This looks fine, but we need a TODO entry to clean this up later on, and
+> > a comment on devm_drm_put_bridge that this is inherently unsafe and
+> > must not be used.
+>=20
+> Ah, I see, OK.
+>=20
+> Quick draft:
+>=20
+>  /**
+>   * devm_drm_put_bridge - Release a bridge reference obtained via devm
+>   * @dev: device that got the bridge via devm
+>   * @bridge: pointer to a struct drm_bridge obtained via devm
+>   *
+>   * Same as drm_bridge_put() for bridge pointers obtained via devm functi=
+ons
+>   * such as devm_drm_bridge_alloc().
+> + *
+> + * This function is a temporary workaround and MUST NOT be used. Manual
+> + * handling of bridge lifetime is inherently unsafe.
+>   */
+
+That part looks good to me
+
+> and:
+>=20
+> -	devm_kfree(panel_bridge->panel->dev, bridge);
+> +       /* TODO remove this after reworking panel_bridge lifetime */
+> +	devm_drm_put_bridge(panel_bridge->panel->dev, bridge);
+>  }
+>=20
+> Does it look good enough?
+
+That too, but I was talking about an entry in
+https://www.kernel.org/doc/html/latest/gpu/todo.html
+
+Maxime
+
+--fxb23j2izsboyssh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBhZWgAKCRAnX84Zoj2+
+dmbVAX4gMY0F9VXdFsIIKKBjn5Ev2tMwW+uv6doEaqoNJIEat9dVa/bvOYl9n6tm
+ZNZ29HABeQEtltAKrypsuFB4FFzNPiZADC9MB5moran2psvsF2a1chXqCjrK2xyp
+FQXpVqx4qw==
+=pRS+
+-----END PGP SIGNATURE-----
+
+--fxb23j2izsboyssh--
