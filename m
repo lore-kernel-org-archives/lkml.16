@@ -1,68 +1,81 @@
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D57D1B85CC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037EB16EB7C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746428196; cv=none; b=Mo7R+ofPGCzvLxcTut1wVHmWi1RUitU/gGazalQJx9rj9v9AaA4nb10YNIExi7oTjXAEiZ9+igdjAh5wVPAk4OnH3b4djmzmERzAS2pho7UQIhXM9abMG0VGlOFTW3TTRjmVXlpGWfswmXYHpnczdVU6rC5NQx5Ih0Hv2ULYmfU=
+	t=1746428230; cv=none; b=anfHD+YhLtV5xlt6GE+OYhZqu29KeYl/QcG62Cg1K7WjTL8Dwtb9/VNeoFtDU5NwL80MGXgasddfkQCHnZGNSP+uih6Uly+RRommdejFKK54nzpDdXR5dvs2u/0qp8ZaP4PrnY1h1cMG17Tq3Hl39Ms+90fvsFihWcz7PPJTK1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746428196; c=relaxed/simple;
-	bh=NmpMGrUecPPaiFhxxOgCqTp/KV5SsmZh2KQYe2xB9Vc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jZ3hCbvIkpWN7xMvXXBzAel8JXR+4CHNSZPn5PQGNFkr6uAPHW9OSoON/5fr3OwcMvIt6c18t/URq9aBC8eKnUel7dvH7kTgb8hIsNrReexMqviUcx6gLK7lDhAYq6KzxAKhJtEfSNZClkPApcAQEXHokTdggWmw+PV67LzPjds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id ea14cced-297d-11f0-acc7-005056bd6ce9;
-	Mon, 05 May 2025 09:55:23 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 5 May 2025 09:55:22 +0300
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] list: Remove redundant 'extern' for function
- prototypes
-Message-ID: <aBhg2i7k8ZprSkCV@surfacebook.localdomain>
-References: <20250502121742.3997529-1-andriy.shevchenko@linux.intel.com>
- <20250503193542.bd707ba88b542bb797fa49b9@linux-foundation.org>
+	s=arc-20240116; t=1746428230; c=relaxed/simple;
+	bh=/VmOnuh5bHMubxNqiAWhXj8YCH1lo7spVhbc2xWeNIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2YkH3Sri5WW9KIguQqZ5WD85bX8C8Kd8SMxxpLELqxibJ+DhvKFYXrfur6hfXqiaLdHw5DE5sJxVxQffaccBzWts3iqYZpBIP9Sb92ew7vtRNk4ULtHn1ZuttsMCBcsgZvXgEEexgT2RqhrNqedRwo59rG7n3QuewV+U1yrs9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RuKcV9tA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rgjNRZRs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RuKcV9tA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rgjNRZRs"
+Date: Mon, 5 May 2025 08:56:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746428226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VmOnuh5bHMubxNqiAWhXj8YCH1lo7spVhbc2xWeNIQ=;
+	b=RuKcV9tAKP/G5JxlMYHkDO/nHgsnCswJw3blnr0PFexaz+rcqG6uCwQHIVkhCvb1ZlYv0q
+	mJRwQHcnEEnHAvcJke10QH0IZSd3Tj3KkesIWe1yn1/H0HmMW/N/b1Le5CDFRZ0ucw9QRH
+	RSfQ3OdtspfHsGcPKFzs3LaVt7kn5YXxV/Voo0z94VGqlc9dQRqQRUG0RLcyiz1Re7yYY4
+	mDK0dwVjN9K/7qUif0x1N8LtRbtQtLha2Z5HX5q6Cla7Q2/2fRE0WCYZZdkRCMZ8jNeF/g
+	IeiNIZ0DGSNLyRye33cz77ggGZ+4xPVYxUPW853TxNVyqfv0HSvhaymc7oPs+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746428226;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VmOnuh5bHMubxNqiAWhXj8YCH1lo7spVhbc2xWeNIQ=;
+	b=rgjNRZRs9ZlaHQyjOhwDjJbz3Lb/H19Kofg7SGmqhsTS/iqeJx+6KuoUg9R+UDM5U7m1BI
+	pK9H9R30NN8IaTBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Marco Crivellari <marco.crivellari@suse.com>
+Cc: linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH 4/4] Workqueue: add WQ_PERCPU to every alloc_workqueue
+ user
+Message-ID: <20250505065658.pHJpgrgL@linutronix.de>
+References: <20250503082834.49413-1-marco.crivellari@suse.com>
+ <20250503082834.49413-5-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250503193542.bd707ba88b542bb797fa49b9@linux-foundation.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250503082834.49413-5-marco.crivellari@suse.com>
 
-Sat, May 03, 2025 at 07:35:42PM -0700, Andrew Morton kirjoitti:
-> On Fri,  2 May 2025 15:17:42 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > The 'extern' keyword is redundant for function prototypes.
-> > list.h never used them and new code in general is better
-> > without them.
+On 2025-05-03 10:28:34 [+0200], Marco Crivellari wrote:
+> By default, alloc_workqueue() creates bound workqueues
+> (i.e., without WQ_UNBOUND).
+>=20
+> With the introduction of the WQ_PERCPU flag (equivalent
+> to !WQ_UNBOUND), any alloc_workqueue() caller that
+> doesn=E2=80=99t explicitly specify WQ_UNBOUND must now use WQ_PERCPU.
+>=20
+> All existing users have been updated accordingly.
+>=20
+> Suggested-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 
-...
+You could also update Documentation/core-api/workqueue.rst. You
+introduce additional flags and you could note the default if this new
+flag is missing.
 
-> > -extern bool __list_valid_slowpath __list_del_entry_valid_or_report(struct list_head *entry);
-> > +bool __list_valid_slowpath __list_del_entry_valid_or_report(struct list_head *entry);
-> 
-> I'll apply this because you continue to do significant work on list.h
-> but I don't want to spend the next 5 years buried in little "remove
-> externs" patches!
-
-Thank you!
-
-FWIW, I made this change because (as stated in the commit message) list.h from
-the beginning hasn't used that keyword and a relatively new change brought
-this. It's not a part of any huge churn, and just a standalone ad-hoc change.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sebastian
