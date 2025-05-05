@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381782D900E;
-	Mon,  5 May 2025 22:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9E72D903A;
+	Mon,  5 May 2025 22:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485498; cv=none; b=JMngEfTSK9lefHXkodtQAAnJmw/sHR6xih2BEnXgf0ix2W9h5FmXbCympeOPf/pJeKMajF0pABJJRy2sxedTyB0PQ4q38FoBo6SPPg7FQZUUTsLSViSWDpGmbJ5sUZFPGLugbWFRlS6hV7xOvlVvCfn2nYno0sqYA3jlMpauyio=
+	t=1746485510; cv=none; b=DL/yQf7DfzCd/AZZm5METNCnMu4bB4h9FAqvoJQvM1na4LwZOOXPOpSOGdeBzDDC2hP3dgML+92v8U19KfIPHXswMlQxlb7/TCXx2QBHaHnpf/kQ9rXyWj3VTzO3Rhmbz/uscKVlto3sYFJ2AFt/T+5mlU8g0fE04BzKuKiWdxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485498; c=relaxed/simple;
-	bh=coLhG9Pp1bgSTr9mtBnDZVokSNSSpLEUVDDReXuEQes=;
+	s=arc-20240116; t=1746485510; c=relaxed/simple;
+	bh=L6D9xzoCd0UnYBZlHB7c9sOjUCs838NdruQURRT1GHc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mm2/Rotyzc1KJTIzdkkF6HtSf/XGGRRuuEoRqdfhGjzO3ezNsN8THMEczz23tpfy+Kr27GUmJio4K9+xn72I+gdZYoS6BeA2CzjhVELQeUnFVyp/2tDmKlkGie6MXAhSgfivY6+LEOtnnIMlOBI2w3/+/wShCAkMbVzCgEYw93w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JC5tqzDI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aP50wV3PRgtkDpZBAzAZW9530CuHBqTrAnpKfHYIwxirFmTaeWLaBqGDNiCz91AW/VvmqOfyGYteXP7aTpzYo6rA66j9GUEZ81sgnPIiZgzV3Nm/h0bWxK5BftGhEraMbELtvQ2GhmWHTZvT7Tbwshe/xy0UPt5DjolftwhBthU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpK+a+V7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JC5tqzDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07A0C4CEE4;
-	Mon,  5 May 2025 22:51:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpK+a+V7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F950C4CEE4;
+	Mon,  5 May 2025 22:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485498;
-	bh=coLhG9Pp1bgSTr9mtBnDZVokSNSSpLEUVDDReXuEQes=;
+	s=k20201202; t=1746485509;
+	bh=L6D9xzoCd0UnYBZlHB7c9sOjUCs838NdruQURRT1GHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JC5tqzDI+zVUhZ3Xl3flGvNNH3EN0VAMeimdQ346xS2QvhbRddC7VGBRYGU30otdN
-	 jfKF6TK6b4fcmMK13j67jM4duzTSRK58wpIo5KQXu3hOeNevKnScejcdCg8cH0c5fd
-	 PzrSHCraV2VmBqMzlzV37TlFc2wacz7i/40yJP/hv4aY1m5A2YWbgiUuaIs8hjOeij
-	 Crg4MF6vSj0AcqiqY1yclvR0h7oQ1yWNerZmUOK9TU1DDCyOuSlgrTiPaiNpo+JmYK
-	 3O0nGYRD9LQQgc1U5xAwCvEWx0+tm5MGZjl9v4y/CRpDGQ57zIZLuKxmsrhGEBFDVr
-	 MMKnzqs6buteQ==
+	b=KpK+a+V75Q6xPXb/cPRRVQZcPXzIrccHXceFTod+JAqqE2R/dwE3SMxYKgwrL/lTj
+	 MR9tyscBNCeLUfcizVhYyxAhNEYONSvjnpdXefwFsHYZTqatYg7EXtqgI14fgt2K5N
+	 RFQYHctQBrqBbt8tJsftsQZgGo7R4S+WadSNrVxNs6CA/x0JPmlKge0WxecFZ1xV95
+	 vkP0coutb+R2iKJikI96R7WnOArObbmbE+vSrwJjAV8GGS7CzlMgZanvQBgl+OZ5Qp
+	 iichhs88WEC5cnGytbkhMxwuqVkCo/KLE/iLDq2jORUpsvd60lkcHJ3qKkAeMJFiYW
+	 8AVUbUM2YTB1g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shuicheng Lin <shuicheng.lin@intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	lucas.demarchi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 348/486] drm/xe/debugfs: Add missing xe_pm_runtime_put in wedge_mode_set
-Date: Mon,  5 May 2025 18:37:04 -0400
-Message-Id: <20250505223922.2682012-348-sashal@kernel.org>
+	jirislaby@kernel.org,
+	p.zabel@pengutronix.de,
+	wsa+renesas@sang-engineering.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	namcao@linutronix.de,
+	linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 352/486] serial: sh-sci: Update the suspend/resume support
+Date: Mon,  5 May 2025 18:37:08 -0400
+Message-Id: <20250505223922.2682012-352-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -55,34 +56,162 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Shuicheng Lin <shuicheng.lin@intel.com>
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-[ Upstream commit b31e668d3111b100d16fd7db8db335328ce8c6d5 ]
+[ Upstream commit 22a6984c5b5df8eab864d7f3e8b94d5a554d31ab ]
 
-xe_pm_runtime_put is missed in the failure path.
+The Renesas RZ/G3S supports a power saving mode where power to most of the
+SoC components is turned off. When returning from this power saving mode,
+SoC components need to be re-configured.
 
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Shuicheng Lin <shuicheng.lin@intel.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250213230322.1180621-1-shuicheng.lin@intel.com
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+The SCIFs on the Renesas RZ/G3S need to be re-configured as well when
+returning from this power saving mode. The sh-sci code already configures
+the SCIF clocks, power domain and registers by calling uart_resume_port()
+in sci_resume(). On suspend path the SCIF UART ports are suspended
+accordingly (by calling uart_suspend_port() in sci_suspend()). The only
+missing setting is the reset signal. For this assert/de-assert the reset
+signal on driver suspend/resume.
+
+In case the no_console_suspend is specified by the user, the registers need
+to be saved on suspend path and restore on resume path. To do this the
+sci_console_save()/sci_console_restore() functions were added. There is no
+need to cache/restore the status or FIFO registers. Only the control
+registers. The registers that will be saved/restored on suspend/resume are
+specified by the struct sci_suspend_regs data structure.
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20250207113313.545432-1-claudiu.beznea.uj@bp.renesas.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/sh-sci.c | 71 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index 051a37e477f4c..278ce1c37b395 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -156,6 +156,7 @@ static ssize_t wedged_mode_set(struct file *f, const char __user *ubuf,
- 		ret = xe_guc_ads_scheduler_policy_toggle_reset(&gt->uc.guc.ads);
- 		if (ret) {
- 			xe_gt_err(gt, "Failed to update GuC ADS scheduler policy. GuC may still cause engine reset even with wedged_mode=2\n");
-+			xe_pm_runtime_put(xe);
- 			return -EIO;
- 		}
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 80efe3b0ed0c3..779074b1c2be4 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -104,6 +104,15 @@ struct plat_sci_reg {
+ 	u8 offset, size;
+ };
+ 
++struct sci_suspend_regs {
++	u16 scsmr;
++	u16 scscr;
++	u16 scfcr;
++	u16 scsptr;
++	u8 scbrr;
++	u8 semr;
++};
++
+ struct sci_port_params {
+ 	const struct plat_sci_reg regs[SCIx_NR_REGS];
+ 	unsigned int fifosize;
+@@ -134,6 +143,8 @@ struct sci_port {
+ 	struct dma_chan			*chan_tx;
+ 	struct dma_chan			*chan_rx;
+ 
++	struct reset_control		*rstc;
++
+ #ifdef CONFIG_SERIAL_SH_SCI_DMA
+ 	struct dma_chan			*chan_tx_saved;
+ 	struct dma_chan			*chan_rx_saved;
+@@ -153,6 +164,7 @@ struct sci_port {
+ 	int				rx_trigger;
+ 	struct timer_list		rx_fifo_timer;
+ 	int				rx_fifo_timeout;
++	struct sci_suspend_regs		suspend_regs;
+ 	u16				hscif_tot;
+ 
+ 	bool has_rtscts;
+@@ -3384,6 +3396,7 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
  	}
+ 
+ 	sp = &sci_ports[id];
++	sp->rstc = rstc;
+ 	*dev_id = id;
+ 
+ 	p->type = SCI_OF_TYPE(data);
+@@ -3532,13 +3545,57 @@ static int sci_probe(struct platform_device *dev)
+ 	return 0;
+ }
+ 
++static void sci_console_save(struct sci_port *s)
++{
++	struct sci_suspend_regs *regs = &s->suspend_regs;
++	struct uart_port *port = &s->port;
++
++	if (sci_getreg(port, SCSMR)->size)
++		regs->scsmr = sci_serial_in(port, SCSMR);
++	if (sci_getreg(port, SCSCR)->size)
++		regs->scscr = sci_serial_in(port, SCSCR);
++	if (sci_getreg(port, SCFCR)->size)
++		regs->scfcr = sci_serial_in(port, SCFCR);
++	if (sci_getreg(port, SCSPTR)->size)
++		regs->scsptr = sci_serial_in(port, SCSPTR);
++	if (sci_getreg(port, SCBRR)->size)
++		regs->scbrr = sci_serial_in(port, SCBRR);
++	if (sci_getreg(port, SEMR)->size)
++		regs->semr = sci_serial_in(port, SEMR);
++}
++
++static void sci_console_restore(struct sci_port *s)
++{
++	struct sci_suspend_regs *regs = &s->suspend_regs;
++	struct uart_port *port = &s->port;
++
++	if (sci_getreg(port, SCSMR)->size)
++		sci_serial_out(port, SCSMR, regs->scsmr);
++	if (sci_getreg(port, SCSCR)->size)
++		sci_serial_out(port, SCSCR, regs->scscr);
++	if (sci_getreg(port, SCFCR)->size)
++		sci_serial_out(port, SCFCR, regs->scfcr);
++	if (sci_getreg(port, SCSPTR)->size)
++		sci_serial_out(port, SCSPTR, regs->scsptr);
++	if (sci_getreg(port, SCBRR)->size)
++		sci_serial_out(port, SCBRR, regs->scbrr);
++	if (sci_getreg(port, SEMR)->size)
++		sci_serial_out(port, SEMR, regs->semr);
++}
++
+ static __maybe_unused int sci_suspend(struct device *dev)
+ {
+ 	struct sci_port *sport = dev_get_drvdata(dev);
+ 
+-	if (sport)
++	if (sport) {
+ 		uart_suspend_port(&sci_uart_driver, &sport->port);
+ 
++		if (!console_suspend_enabled && uart_console(&sport->port))
++			sci_console_save(sport);
++		else
++			return reset_control_assert(sport->rstc);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -3546,8 +3603,18 @@ static __maybe_unused int sci_resume(struct device *dev)
+ {
+ 	struct sci_port *sport = dev_get_drvdata(dev);
+ 
+-	if (sport)
++	if (sport) {
++		if (!console_suspend_enabled && uart_console(&sport->port)) {
++			sci_console_restore(sport);
++		} else {
++			int ret = reset_control_deassert(sport->rstc);
++
++			if (ret)
++				return ret;
++		}
++
+ 		uart_resume_port(&sci_uart_driver, &sport->port);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.39.5
 
