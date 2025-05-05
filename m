@@ -1,73 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2F9224CC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 10:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674C8EAE7;
+	Mon,  5 May 2025 10:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746440744; cv=none; b=EyAD31PXkh247X16+kDvYlBvbfOxTy6Tsc9bvzAoTiI1MFGDljh6h3g+6o4DS4WqLzqjImyWED2MzIn+41pYjraw9kfjJpFqmWjnfU5XYb92zRmiQ84m12lTVwg7wU2pyAPsm4evwkaAkczLen6O9U7+l84/QQaD+rgC/v6m07g=
+	t=1746440823; cv=none; b=T3j2BiO2vWeO8RCAkCAZH4nESnKn1I/l3z5ny2bEr2te9MRc9JQc+jB2UPu4WfBaPTCDPDYoTOabH31JayfkpQ9+59MkvMXod1U80WHIDtTKYLpPN9OJroeILvVdlJvSUjowdJqqOo07XzOTuJF0dsWNIFw5i/Jed1/lx7fXy/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746440744; c=relaxed/simple;
-	bh=dPDk8vp3GZ832m618Pmb5UfJ2sVcRo3SC7Yf8xKJECY=;
+	s=arc-20240116; t=1746440823; c=relaxed/simple;
+	bh=vIEn5jPg1DlXlT2DtAHSUaaG6Asm33c6yiTnu7goALA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrKGK+8iiD+FryWYEqiHdWLYlj6PdIEkJ9GIyiD8/nZhs2lhjU7+1cHwa1dgTlUv5JD+R6LbYoutsGkDB5tKCZhxponOUHntLfVSzQPP/F4zY2qYA90iHZIRwODYISyaYSv7CR+69fi+Xm2TxbJ3yjvaOVjD3q6mkuE6OxlEM+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FyuSoYUW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Nbdu5SMPP3Lge9sLNTehyXLi86Qz3yMMUP61DZlL1s4INZAqlZut5YsU+yfF7k5jHHsynVbaK6acW3KK2ENQPCSJO6Cdl6boTZKOnOANKJramoaYCrQ05CUGEydKcalV/JY6C9uIJjjMx+AtH0ITtsaNEdNlLSn1RvqyUih3jMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gpwKPMcJ; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyuSoYUW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746440740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=uhA4ifLaOKoc2V5PzkrQF11rjVTTh27khKET9nyYOa0=;
-	b=FyuSoYUW/iR5FVF55SclhnPK4H0/m+oHVbiavUFmHVulw2ysOP72hsdfoIpzc35iWaeBh3
-	nsdcW+TajLb/du6xSpAE/o1reuYQojAeFzp83SD4ZvRSmKXriC9HOyU09rTjmD+yb8Ucjg
-	0rqlkfHTc0zqhKAF67ReCzdy2pv4WeY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-2jXAiqTAMzat-owcJZETMA-1; Mon, 05 May 2025 06:25:39 -0400
-X-MC-Unique: 2jXAiqTAMzat-owcJZETMA-1
-X-Mimecast-MFC-AGG-ID: 2jXAiqTAMzat-owcJZETMA_1746440739
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ea256f039so32285925e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 03:25:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gpwKPMcJ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2c663a3daso836475866b.2;
+        Mon, 05 May 2025 03:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746440820; x=1747045620; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ONK1gMSU4x7CVxggdEmF7Yfu7g3KNC31GYbuN3RsWUg=;
+        b=gpwKPMcJZjKQCBrV77tOAI81kXA5o2wOKmXpWaJEBawcynqsqcBrZCRn0iiVAW7SAX
+         muCqYH2lyo9ETMDqAUNiXHIxXdOW1durB5CHCid4+/oG99J5j6qFrpJrlSiWFT7hcO6L
+         HvJ/Kk4jotySsTdNJLHoottFT8MFWXSRjxeemJIYTDmqErWRQypd/uknE52+6uYA0HuP
+         y+iAfteJmFYnRMgFv9R9zJQiCPNAxuRkzzKZRd3OtqkYyK7WlsajpkiDWMElsBLH8V0U
+         dCxFNJkzqIqvL/g4EvGgqPQpvW/HMdfx8ozIbySUKpwZPkrG0vEgUjcBaxM80tqyChGn
+         tSRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746440738; x=1747045538;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uhA4ifLaOKoc2V5PzkrQF11rjVTTh27khKET9nyYOa0=;
-        b=owqOD2JooYCi2uc+ceg3n3Ihk6rVl0f1/gc+W228teh8CYh51N4XRhfLlzhTyemLev
-         T8WiTNlhMWaE+xpRqb1PHwpExZZCfgysG9SQ0QnJtdYrH4k3MTRCreA8UD/zl+LLQZyr
-         JaP9XAYHmWPVDKp4pfG/Kuk9QAk6Hn7tnOKrRMPBm+H5gPLqPAXVAK16eNAAiXacWsZ6
-         GVfEhUqCjvgzGz91cF9odXZQirVovqSoQ1FMl+Ewj6QIgmmwe+yrXx9qPq99wWVO7pM1
-         RQ+WGjdvhK9BOi4Ys/z+9Oma6ftE12/uKkQ2ve1pYkRMG9fTtO6zwZsp3CJZnWQedoXa
-         t0Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdUuVtwcEFewAyK/e4xuf+5piFjimbQEd4N6Wa9eBf7o2TLoNB0UHl62+jKlz9k0DOCrwJyAhXEzjn7aI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzISrg7OB0lMBswxssLhutSl/C7k/hHRhx1fWSavJw1+hlLrpaS
-	ftfcybak9vVaWgqYnB52S0+n+2gQd9D8mtPWQlGFhoKtwYxXzeBTvR/TuammqBMo7yWKMhHEfyY
-	V/e4s2ZEO5NdYhJd78ECOWsN0aD1PGQ9IbER5kN9+/BkHFfscLQjls2q+jaLZKg==
-X-Gm-Gg: ASbGncu5ZeMwX+D+BTlvbCGss342GB1t2B/XXACLSPYsF0wSxV91tNdnZIynfRTFnrL
-	feSjVmid/gy1WLHncLPSRfCCg9vggoQZNHujfwiZ42wno4szfvuVD7RELCmnuJhIEDwjv5pLBNL
-	Yx5zOuX83t4zNW1NcewpkGUXCRmuBQQhoguFAaFPwFIyHk0uKjRmmtVSTYz35NwR1ZFI3LbrUOR
-	LgsgVB8T08ElsenteFgIlWMvJ5QAZuxWCPQ5IPEjUgdvi2own8YDU7k3GAv5CdGirIegoyVMDTv
-	9Vqgvkaq/CPy2LHWFzyZVbF8CAC4/I0Gg10W+53mj3l/MQMndjtQfvE2K+l3Ll0gwyMdcFgOn+L
-	0TJvK0L2hUA0vwtI2uPW1vNUJXI9KNAr+Z4AhbT4=
-X-Received: by 2002:a05:600c:a55:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-441c48dbffemr69645975e9.15.1746440738566;
-        Mon, 05 May 2025 03:25:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG46LR3x4BEcojru2BOwZQKtlpbpA9Ti7QJTaZcyFpN/BSfCje5D7I8KCeBJEW2jfM/SOM9Sg==
-X-Received: by 2002:a05:600c:a55:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-441c48dbffemr69645575e9.15.1746440738121;
-        Mon, 05 May 2025 03:25:38 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73d:2400:3be1:a856:724c:fd29? (p200300cbc73d24003be1a856724cfd29.dip0.t-ipconnect.de. [2003:cb:c73d:2400:3be1:a856:724c:fd29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc50esm132057425e9.8.2025.05.05.03.25.37
+        d=1e100.net; s=20230601; t=1746440820; x=1747045620;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONK1gMSU4x7CVxggdEmF7Yfu7g3KNC31GYbuN3RsWUg=;
+        b=xF1xfLYkIP7XT8UWiATOTxmeVKDTj9NwUdBAOF4j4fEPbYuOV+XcsVhwPXLQZtcxRt
+         Jzit+Isr1suxPuMg2kABBWhQHCrSTjEra3VWma53clSQ5MoVI8SY9bGpwsecZdLBwsmc
+         f1uHeq1RS0xd9Imh1o8zoVeGZTbsH0BQ2kHkUzdg1W3wDMCPU3RX6gfQZfHcZ/ZF+ba2
+         Sc/Zso2YFWSkOcbV1i6rc2HMJSkm7eySk4KVQUnF+uszf+xkfcfJEloCaF33RLBt9ZuK
+         FqDE9DbTXV1JrGkomfeQk9lvbLQlpgKqeqvWz5ARTOOc0PEQo/SBnqYttsrbffHi0Lno
+         wLZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEqIZWP1jByKJ9UGb6yNJIV4D0L70qts+ta5wS4/bhil+13Yih8wBXKD5bKtNVlZXsvDUvbJICzig=@vger.kernel.org, AJvYcCVql3iDYZT7X6l4wAtLVeM9GOgHAC8xrEfuxkVfK1xgcPHoZgXitb5fWzqVqK5Ooiv8DJC94yOESOYKIwCc@vger.kernel.org, AJvYcCXTqrves7gNc80CumfIvFE0muVdcuTANnUYBze4V/5BTUHrxnrqR6VTQfG7H6DjJzRW0PmKbtnrdkUqEQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBQLBVNfxPvBAXanl98bOEYimdKGJ4NrwfOG4tX13NI87TDxHK
+	yu6jxLEUseNgYURyd96fxl6wGnO47wxybZ9SKHnfr30Mln5hOKzz
+X-Gm-Gg: ASbGncv5WURiyxwKGjVpFf3aj63QF2bfei5PQEcl//0xs/K72bOuvTTQ2TvrvRJO1jA
+	oCLaOBhm3qW+RHtvOzSb57bCIHH7ij4P+jMv+TYpxS9/i0AfNyBK1Ve22FLvLACZbQHCtEWld2w
+	ZeybdevyA1lqynUNLI62wdLNt93RPGFu2fGy3IHRErabhBXWnm1XpYsghCaocck5zgtdOCP7UVY
+	WFOylIqaxpNhLk3aVhs1COjuMDvl99nV64phHhdK+jnsHMA4PT5QGO+qW2RcvBKfH9iCeiN6IbC
+	FJdRB3hejRz+og9UFJnhpB9QmW66KxN6nuSjOzGphUo49o0KWoaF9o8o
+X-Google-Smtp-Source: AGHT+IEA88UDbqLeQ5CxfAdCRwRoKBxVmMrFW+eXkNcP3H/zkxJqAzxrUQDJ2fMD6z2jNnNIopn6jg==
+X-Received: by 2002:a17:906:f5a4:b0:ace:cc7f:8abe with SMTP id a640c23a62f3a-ad1a49c349cmr679078166b.31.1746440819386;
+        Mon, 05 May 2025 03:26:59 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.128.5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18950ac90sm471864166b.150.2025.05.05.03.26.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 03:25:37 -0700 (PDT)
-Message-ID: <d4bfefdf-bd87-4d2e-b7bb-4a11e5d32242@redhat.com>
-Date: Mon, 5 May 2025 12:25:36 +0200
+        Mon, 05 May 2025 03:26:58 -0700 (PDT)
+Message-ID: <f3bf2c93-31ac-4881-9ca3-ddc33cf3ded3@gmail.com>
+Date: Mon, 5 May 2025 13:26:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,184 +66,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 1/5] mm/readahead: Honour new_order in
- page_cache_ra_order()
-To: Jan Kara <jack@suse.cz>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Dave Chinner <david@fromorbit.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Kalesh Singh <kaleshsingh@google.com>, Zi Yan <ziy@nvidia.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20250430145920.3748738-1-ryan.roberts@arm.com>
- <20250430145920.3748738-2-ryan.roberts@arm.com>
- <48b4aa79-943b-46bc-ac24-604fdf998566@redhat.com>
- <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v4 3/9] i2c: atr: split up i2c_atr_get_mapping_by_addr()
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Romain Gantois <romain.gantois@bootlin.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250428102516.933571-1-demonsingur@gmail.com>
+ <20250428102516.933571-4-demonsingur@gmail.com>
+ <20250430163307.528671a8@booty>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <mhayjykmkxhvnivthdrc2bb3cvqbdesa42puzimx75xfagcnqn@osy4qeiyfxvn>
+In-Reply-To: <20250430163307.528671a8@booty>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 05.05.25 12:09, Jan Kara wrote:
-> On Mon 05-05-25 11:51:43, David Hildenbrand wrote:
->> On 30.04.25 16:59, Ryan Roberts wrote:
->>> page_cache_ra_order() takes a parameter called new_order, which is
->>> intended to express the preferred order of the folios that will be
->>> allocated for the readahead operation. Most callers indeed call this
->>> with their preferred new order. But page_cache_async_ra() calls it with
->>> the preferred order of the previous readahead request (actually the
->>> order of the folio that had the readahead marker, which may be smaller
->>> when alignment comes into play).
->>>
->>> And despite the parameter name, page_cache_ra_order() always treats it
->>> at the old order, adding 2 to it on entry. As a result, a cold readahead
->>> always starts with order-2 folios.
->>>
->>> Let's fix this behaviour by always passing in the *new* order.
->>>
->>> Worked example:
->>>
->>> Prior to the change, mmaping an 8MB file and touching each page
->>> sequentially, resulted in the following, where we start with order-2
->>> folios for the first 128K then ramp up to order-4 for the next 128K,
->>> then get clamped to order-5 for the rest of the file because pa_pages is
->>> limited to 128K:
->>>
->>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
->>> -----  ----------  ----------  ---------  -------  -------  -----  -----
->>> FOLIO  0x00000000  0x00004000      16384        0        4      4      2
->>> FOLIO  0x00004000  0x00008000      16384        4        8      4      2
->>> FOLIO  0x00008000  0x0000c000      16384        8       12      4      2
->>> FOLIO  0x0000c000  0x00010000      16384       12       16      4      2
->>> FOLIO  0x00010000  0x00014000      16384       16       20      4      2
->>> FOLIO  0x00014000  0x00018000      16384       20       24      4      2
->>> FOLIO  0x00018000  0x0001c000      16384       24       28      4      2
->>> FOLIO  0x0001c000  0x00020000      16384       28       32      4      2
->>> FOLIO  0x00020000  0x00030000      65536       32       48     16      4
->>> FOLIO  0x00030000  0x00040000      65536       48       64     16      4
->>> FOLIO  0x00040000  0x00060000     131072       64       96     32      5
->>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
->>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
->>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
->>
->> Interesting, I would have thought we'd ramp up earlier.
->>
->>> ...
->>>
->>> After the change, the same operation results in the first 128K being
->>> order-0, then we start ramping up to order-2, -4, and finally get
->>> clamped at order-5:
->>>
->>> TYPE    STARTOFFS     ENDOFFS       SIZE  STARTPG    ENDPG   NRPG  ORDER
->>> -----  ----------  ----------  ---------  -------  -------  -----  -----
->>> FOLIO  0x00000000  0x00001000       4096        0        1      1      0
->>> FOLIO  0x00001000  0x00002000       4096        1        2      1      0
->>> FOLIO  0x00002000  0x00003000       4096        2        3      1      0
->>> FOLIO  0x00003000  0x00004000       4096        3        4      1      0
->>> FOLIO  0x00004000  0x00005000       4096        4        5      1      0
->>> FOLIO  0x00005000  0x00006000       4096        5        6      1      0
->>> FOLIO  0x00006000  0x00007000       4096        6        7      1      0
->>> FOLIO  0x00007000  0x00008000       4096        7        8      1      0
->>> FOLIO  0x00008000  0x00009000       4096        8        9      1      0
->>> FOLIO  0x00009000  0x0000a000       4096        9       10      1      0
->>> FOLIO  0x0000a000  0x0000b000       4096       10       11      1      0
->>> FOLIO  0x0000b000  0x0000c000       4096       11       12      1      0
->>> FOLIO  0x0000c000  0x0000d000       4096       12       13      1      0
->>> FOLIO  0x0000d000  0x0000e000       4096       13       14      1      0
->>> FOLIO  0x0000e000  0x0000f000       4096       14       15      1      0
->>> FOLIO  0x0000f000  0x00010000       4096       15       16      1      0
->>> FOLIO  0x00010000  0x00011000       4096       16       17      1      0
->>> FOLIO  0x00011000  0x00012000       4096       17       18      1      0
->>> FOLIO  0x00012000  0x00013000       4096       18       19      1      0
->>> FOLIO  0x00013000  0x00014000       4096       19       20      1      0
->>> FOLIO  0x00014000  0x00015000       4096       20       21      1      0
->>> FOLIO  0x00015000  0x00016000       4096       21       22      1      0
->>> FOLIO  0x00016000  0x00017000       4096       22       23      1      0
->>> FOLIO  0x00017000  0x00018000       4096       23       24      1      0
->>> FOLIO  0x00018000  0x00019000       4096       24       25      1      0
->>> FOLIO  0x00019000  0x0001a000       4096       25       26      1      0
->>> FOLIO  0x0001a000  0x0001b000       4096       26       27      1      0
->>> FOLIO  0x0001b000  0x0001c000       4096       27       28      1      0
->>> FOLIO  0x0001c000  0x0001d000       4096       28       29      1      0
->>> FOLIO  0x0001d000  0x0001e000       4096       29       30      1      0
->>> FOLIO  0x0001e000  0x0001f000       4096       30       31      1      0
->>> FOLIO  0x0001f000  0x00020000       4096       31       32      1      0
->>> FOLIO  0x00020000  0x00024000      16384       32       36      4      2
->>> FOLIO  0x00024000  0x00028000      16384       36       40      4      2
->>> FOLIO  0x00028000  0x0002c000      16384       40       44      4      2
->>> FOLIO  0x0002c000  0x00030000      16384       44       48      4      2
->>> FOLIO  0x00030000  0x00034000      16384       48       52      4      2
->>> FOLIO  0x00034000  0x00038000      16384       52       56      4      2
->>> FOLIO  0x00038000  0x0003c000      16384       56       60      4      2
->>> FOLIO  0x0003c000  0x00040000      16384       60       64      4      2
->>> FOLIO  0x00040000  0x00050000      65536       64       80     16      4
->>> FOLIO  0x00050000  0x00060000      65536       80       96     16      4
->>> FOLIO  0x00060000  0x00080000     131072       96      128     32      5
->>> FOLIO  0x00080000  0x000a0000     131072      128      160     32      5
->>> FOLIO  0x000a0000  0x000c0000     131072      160      192     32      5
->>> FOLIO  0x000c0000  0x000e0000     131072      192      224     32      5
->>
->> Similar here, do you know why we don't ramp up earlier. Allocating that many
->> order-0 + order-2 pages looks a bit suboptimal to me for a sequential read.
+
+
+On 4/30/25 5:33 PM, Luca Ceresoli wrote:
+> On Mon, 28 Apr 2025 13:25:08 +0300
+> Cosmin Tanislav <demonsingur@gmail.com> wrote:
 > 
-> Note that this is reading through mmap using the mmap readahead code. If
-> you use standard read(2), the readahead window starts small as well and
-> ramps us along with the desired order so we don't allocate that many small
-> order pages in that case.
+>> The i2c_atr_get_mapping_by_addr() function handles three separate
+>> usecases: finding an existing mapping, creating a new mapping, or
+>> replacing an existing mapping if a new mapping cannot be created
+>> because there aren't enough aliases available.
+>>
+>> Split up the function into three different functions handling its
+>> individual usecases to prepare for better usage of each one.
+>>
+>> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> 
+> This function has become quite complex over time, so this looks like a
+> good cleanup by itself even not counting the advantages coming with the
+> following patches.
+> 
+> I have only one small remark, see below.
+> 
+>> diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
+>> index 939fb95fe781..184c57c31e60 100644
+>> --- a/drivers/i2c/i2c-atr.c
+>> +++ b/drivers/i2c/i2c-atr.c
+>> @@ -239,9 +239,23 @@ static void i2c_atr_release_alias(struct i2c_atr_alias_pool *alias_pool, u16 ali
+>>   	spin_unlock(&alias_pool->lock);
+>>   }
+>>   
+>> -/* Must be called with alias_pairs_lock held */
+>>   static struct i2c_atr_alias_pair *
+>> -i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+>> +i2c_atr_find_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+>> +{
+>> +	struct i2c_atr_alias_pair *c2a;
+>> +
+>> +	lockdep_assert_held(&chan->alias_pairs_lock);
+>> +
+>> +	list_for_each_entry(c2a, &chan->alias_pairs, node) {
+>> +		if (c2a->addr == addr)
+>> +			return c2a;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +static struct i2c_atr_alias_pair *
+>> +i2c_atr_replace_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+>>   {
+>>   	struct i2c_atr *atr = chan->atr;
+>>   	struct i2c_atr_alias_pair *c2a;
+>> @@ -254,41 +268,57 @@ i2c_atr_get_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+>>   
+>>   	alias_pairs = &chan->alias_pairs;
+>>   
+>> -	list_for_each_entry(c2a, alias_pairs, node) {
+>> -		if (c2a->addr == addr)
+>> -			return c2a;
+>> +	if (unlikely(list_empty(alias_pairs)))
+>> +		return NULL;
+>> +
+>> +	list_for_each_entry_reverse(c2a, alias_pairs, node) {
+>> +		if (!c2a->fixed) {
+>> +			found = true;
+>> +			break;
+>> +		}
+>>   	}
+>>   
+>> +	if (!found)
+>> +		return NULL;
+>> +
+>> +	atr->ops->detach_addr(atr, chan->chan_id, c2a->addr);
+>> +	c2a->addr = addr;
+>> +
+>> +	list_move(&c2a->node, alias_pairs);
+>> +
+>> +	alias = c2a->alias;
+>> +
+>> +	ret = atr->ops->attach_addr(atr, chan->chan_id, c2a->addr, c2a->alias);
+>> +	if (ret) {
+>> +		dev_err(atr->dev, "failed to attach 0x%02x on channel %d: err %d\n",
+>> +			addr, chan->chan_id, ret);
+>> +		i2c_atr_destroy_c2a(&c2a);
+>> +		i2c_atr_release_alias(chan->alias_pool, alias);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return c2a;
+>> +}
+>> +
+>> +static struct i2c_atr_alias_pair *
+>> +i2c_atr_create_mapping_by_addr(struct i2c_atr_chan *chan, u16 addr)
+> 
+> I would move the _create function before the _replace one, because
+> that's the logical order in which they are called.
+> 
 
-Ah, thanks for that information! :)
+Sadly the diff actually becomes bigger by doing this.
+before: 78 insertions(+), 32 deletions(-)
+after: 84 insertions(+), 38 deletions(-)
 
--- 
-Cheers,
+If we were to put things in a logical order then should we put _find()
+after create(), or after replace()? There's no specific order in that
+case. I think we should keep things as-is as it matches the previous
+branches of the code, just split into separate functions.
 
-David / dhildenb
+> As a nice side effect, this might make the diff more readable.
+> 
+> Luca
+> 
 
