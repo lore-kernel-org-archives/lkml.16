@@ -1,140 +1,221 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCB5198833
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAE719D8A7
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746463039; cv=none; b=bS5CGg04Qy4ne5pizuuN2yV6bDkUIRriesFcUcKJkTb/r2RfAebrPaqMv8P082vRI3a8OwENWs4ox6nLdXCjk4BPgP4Z/ATF3OCwye7zKVE9ZMBJK4scafKxc3+fXElczXsw2kPxJ0ZrahpuC9F503qcQiqKyCCCMtLcJXV7uh8=
+	t=1746463066; cv=none; b=RgCIzZbSiAyS5K9ALc+Cdy0lNOFgV2zUvENnOfnSkkpz2bRUyqLSHutFo3va4ur/2gJvFLbf4Ds6V0M8SoTpBepp0KUKPassz8QMAyXA1EkGnohHMrY3DYG+qLbhWyZQAH3WVSqZSJT5YIUGsb/8eVsI6O0PJjs1SQylb1O6juQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746463039; c=relaxed/simple;
-	bh=DYVG8FHPEwJMjW4hwHccNZPPUKc3Wmzb9dipMGOCitc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=clipTZK3YrjE8XqQopRgTFSAVrXsWsdE1gLh11YJmgjwXE5GXm4q13rJKp0B/3tCmJdDGxVxktJA81QLaCwjfWSNoZ+nhAy07SV578zuVTIQJhj9wXquhH1KeGcZjcB4YSLmnxb+jXopsPD6OapFupXgyE9aen3Mwp1F8p9uHEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=Dk1+jdg5; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	s=arc-20240116; t=1746463066; c=relaxed/simple;
+	bh=mBshjPZ3/6P82KSQc2M1yyZltOOhhVEU81eyexwjKaI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Laj6mKaszjV6W/k1ac1LHKBQt2BtwERIImSE0k+Ka/A6FKAGiiBu5q4iyHdiaH0z/7eLyBSE3nvwuuK6WfHue6Y8zTzYbIs6Q0TmIzHmhsfdc/sUmmfyFxcd1tVmS4FRpso9ejiTgk2CQg/Zv4EQyOA4j3VjyiKp1Rfb5phb0TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kZuMr0C3; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="Dk1+jdg5"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso48109101fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:37:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZuMr0C3"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ac9aea656so5023147f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1746463034; x=1747067834; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DYVG8FHPEwJMjW4hwHccNZPPUKc3Wmzb9dipMGOCitc=;
-        b=Dk1+jdg5Np4SJrA/eeNPF2x2QMTDqxCez5zT95NGx8rpqJaYrGo5KDUcblHqsoCP1l
-         WpG5mmcrWqCD5TZv/C8J5MrEmb0TUvQwoAtkFANhxPSud6pDbTrkkxtLLvMNTgPNKBML
-         vC4w3Oe4Q3YkXR24beZrZc1TRlKDwEFU79JUKcU4rfq/BqxZcFOZanXy8VbmwR0ze/pD
-         Vgoi/U1fqB5q1osxmT5+5OhBEbHD6RalC+mUpQlfPo3zll9aZhRmcNrQCw/PEBdrESFO
-         krHNvjynOeeFrFG1OZYlW2WSShwcZvgK6EQ0+gUMSD9enHhWe5rAbOjv7tKZRX+jcnVh
-         qYHA==
+        d=linaro.org; s=google; t=1746463062; x=1747067862; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yr8TswpY3A6Dc4L25cPMCHuCuSSJ0UUr6HAbypQjy60=;
+        b=kZuMr0C3x+dkRCg+mRDlNeIWFhgiqpt58HOwF5HxdwgLXilCfu6/yQhV795PKqdLCr
+         2+3+yCvjJYe17LuOOY29Wjlxost3u77J14aPcYqYzuX7OVljEpCIOLes+UWC0JPQmnhp
+         B9EHPdu/Z4PuB6IajwJ5w7l39M0G3PuFran2VRrtyM/mloF4KrwZ+eWWy4dwANCYHioR
+         mgJdDfLF0un2dXLW1c0oTc3GMYasGQ3WsmGD1pdoqcJ3td9tg5Nw57PQkQdwXMcfwRhN
+         O9GwAANL3fCe4tQC5Zs3P4LvaqKZslPF/bBxeAvoPRb+yLee8kUAM5vs6a3H0WWSuWqv
+         JPiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746463034; x=1747067834;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DYVG8FHPEwJMjW4hwHccNZPPUKc3Wmzb9dipMGOCitc=;
-        b=v86h2vpNIwcMoe0hzur2DS+TM3/xeOsGcp7tbT8kKLls3Flf9cuMBqHCWn3vATGQZP
-         16VswnQRUksv4/EZoEUgnp0HmcU5EZFTkAEQd4JTYAJvPf3F81hR+tDhNAs76HV8djSQ
-         Va5gaygm5xGO1ez+m8y+8J1M4O26ydCzaokHhl1cGc/3l5u5oPW1XzuCoz19YNwoQ4ET
-         1M7JlL8J17IGyk8xDPOLj1dIbYlalqYwOUuUW7xGdNFmFJQ9IzBK5gC/KG6tNJVoZqj0
-         7oY27/ZJkOv8xboIWYTigxlZtWvcCH8/yhPI8dmfoIUfD3qdRPvr68GhZRuNIVBUoM/g
-         QjCg==
-X-Gm-Message-State: AOJu0Yy4IW125cw7ON0WLT6r35OD8R4ns2unnNB3O79uloitqi/8g9Av
-	lzHJbrIM23dnJtN7vmVS7y01mW5Vey37qUDQjz+hX5okTLt4HonI2upqlSqKFdYTT3nL2t/+t09
-	xcHLy5lYjufhAIxPZz0SORfAvr/LGxDA76Bvc
-X-Gm-Gg: ASbGncsuY2MaO+knKlWKCRIRmGn50PJuYXvpqjbvTM0DIN51S+x+7nBQ6uT4DFlQrO9
-	DMqwL1xvsfQLX3aE4XX6ohtKNv1D0f7lSHOETmB7pPN5yhHEZTsY0QxkbRzGxSuwoM5sDTiHNMx
-	hVCZh+OsleAt/5RPP/y480vQu2HkaVt4mD
-X-Google-Smtp-Source: AGHT+IEf041WQMZsEB6ApJMZB+Xxx8JHQfvRRsLBSqzHkQpZbZMtYWqmoWb/v7skUZcL3dTPnjTDniBrEIOLE/Z180E=
-X-Received: by 2002:a2e:a812:0:b0:31f:8659:dc23 with SMTP id
- 38308e7fff4ca-32352503df1mr32065821fa.33.1746463033960; Mon, 05 May 2025
- 09:37:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746463062; x=1747067862;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yr8TswpY3A6Dc4L25cPMCHuCuSSJ0UUr6HAbypQjy60=;
+        b=jy9IsFg7aqx99Gs2ACJiBHf0kZkU4CLS2ys8mbA/qdNIHN1utOrTE+eqZeFUF7J+W1
+         nlr1++ttPhqVeF9Kh61vb8qcVU2oic6DAQwVLQ435zC+PSjQffe7wV0CfVlPXvPbveE7
+         z9Z7sesH3/yDRTQvyhMTWU3Dwrsfd7xbTMMYYpzNAtYRW0KgpUEKkPSEEnM1lL5v13sU
+         ejFR5yrLpsbW+7/DresXNMhRMT8Kd7OcxecEGz1hYRMLYBkrMLCqklEhImaRLQ/SdZ+g
+         xH0/0hdhkvHW7afPxdD6lfyN96VfTwKsxmpw1w+zcqnsHzAUkE2A0PETmkwoYxxILcsU
+         n04w==
+X-Forwarded-Encrypted: i=1; AJvYcCV6hxDMAVUAdWr1aXdIeYJhB9TxI1O5rfK6HpUNkTVVt1degNrzwgjeRe7Plx5YBhJBQTA067x159/smCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8R3TX1uVvET+zst9qrOgOJ6jGeM31IGoLBKSJT9BH7nJWVENy
+	nxK8kIiE1iCi7aj2Y/7tr0Yn7ftMtr7eug9mqR5GWKy79d4K3DPkhA3IbLKs1w8=
+X-Gm-Gg: ASbGncvUbUyZI6k86SVD8haQwLNNizhwav8jkToQmW8xdKg6odmOXkEKPkFWZjc6nNM
+	7HGdeqf/XU6Y+VSRu+buPDlNrvSjHpl46IFRLqpYvjva36FQLSI9UfSCakub6IPYoEqHVXJ7MrR
+	4d7283F0FKnmPVIpCeASaAJrMIt7CHb8tB9BRj8A0Kh8C5S/S8U3jRYnzTgOj44wUjrh3/GHgzw
+	jqoOlAj+KH8U48AI41MrP/W16RGaoZhTswceFfSfLaa6Ii25VbUizx8X/8v2HAsgPaBXHLdfsj6
+	YJiW24EPqMgBGuk4wS2HpWSvKwI9t4HsPXQa7/lgaF9/W80rENXyUQmLvsLhuvrA6yT1D1h9r8w
+	6Rb6TAMQ5S1CGMA6nYQ==
+X-Google-Smtp-Source: AGHT+IGs6rOJBnDj9UoUwhP8ghCAx8JImm1LfeczGsYdnnjRsWRy34NkOumegI2DPDbTRRqAp3oJng==
+X-Received: by 2002:a5d:64ec:0:b0:39c:12f2:2f86 with SMTP id ffacd0b85a97d-3a09fd6cd7dmr4748116f8f.8.1746463062457;
+        Mon, 05 May 2025 09:37:42 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3? ([2a01:e0a:3d9:2080:88d3:1ad7:3ae1:56e3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae344esm10716888f8f.25.2025.05.05.09.37.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 09:37:42 -0700 (PDT)
+Message-ID: <4b2a8c38-fdff-4408-88ab-fbab385893ae@linaro.org>
+Date: Mon, 5 May 2025 18:37:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Kyle Huey <me@kylehuey.com>
-Date: Mon, 5 May 2025 09:37:01 -0700
-X-Gm-Features: ATxdqUEwA7iSnVgV7ajfnBVATpF9QSTCIL6wXi_qBYuQWjWHd4nepvj6iJ4LJmk
-Message-ID: <CAP045Ap3e6x52TvB8WyBHBjJ8HYtAmnKnGgj_fog3P+F5igP-A@mail.gmail.com>
-Subject: Suppress pte soft-dirty bit with UFFDIO_COPY?
-To: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>
-Cc: open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, criu@lists.linux.dev, 
-	"Robert O'Callahan" <robert@ocallahan.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 22/23] media: iris: Add internal buffer calculation for
+ HEVC and VP9 decoders
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-22-552158a10a7d@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-22-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tl;dr I'd like to add UFFDIO_COPY_MODE_DONTSOFTDIRTY that does not add
-the _PAGE_SOFT_DIRTY bit to the relevant pte flags. Any
-thoughts/objections?
+On 01/05/2025 21:13, Dikshita Agarwal wrote:
+> Add internal buffer count and size calculations for HEVC and VP9
+> decoders.
+> 
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_buffer.c     |   3 +
+>   drivers/media/platform/qcom/iris/iris_vpu_buffer.c | 397 ++++++++++++++++++++-
+>   drivers/media/platform/qcom/iris/iris_vpu_buffer.h |  46 ++-
+>   3 files changed, 432 insertions(+), 14 deletions(-)
+> 
 
-The kernel has a "soft-dirty" bit on ptes which tracks if they've been
-written to since the last time /proc/pid/clear_refs was used to clear
-the soft-dirty bit. CRIU uses this to track which pages have been
-modified since a previous checkpoint and reduce the size of the
-checkpoints taken. I would like to use this in my debugger[0] to track
-which pages a program function dirties when that function is invoked
-from the debugger.
+<snip>
 
-However, the runtime environment for this function is rather unusual.
-In my debugger, the process being debugged doesn't actually exist
-while it's being debugged. Instead, we have a database of all program
-state (including registers and memory values) from when the process
-was executed. It's in some sense a giant core dump that spans multiple
-points in time. To execute a program function from the debugger we
-rematerialize the program state at the desired point in time from our
-database.
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_buffer.h b/drivers/media/platform/qcom/iris/iris_vpu_buffer.h
+> index 62af6ea6ba1f..2272f0c21683 100644
+> --- a/drivers/media/platform/qcom/iris/iris_vpu_buffer.h
+> +++ b/drivers/media/platform/qcom/iris/iris_vpu_buffer.h
+> @@ -13,6 +13,10 @@ struct iris_inst;
+>   #define DMA_ALIGNMENT			256
+>   
+>   #define NUM_HW_PIC_BUF			32
+> +#define LCU_MAX_SIZE_PELS 64
+> +#define LCU_MIN_SIZE_PELS 16
+> +#define HDR10_HIST_EXTRADATA_SIZE (4 * 1024)
+> +
+>   #define SIZE_HW_PIC(size_per_buf)	(NUM_HW_PIC_BUF * (size_per_buf))
+>   
+>   #define MAX_TILE_COLUMNS		32
+> @@ -28,11 +32,47 @@ struct iris_inst;
+>   #define SIZE_SLIST_BUF_H264		512
+>   #define H264_DISPLAY_BUF_SIZE		3328
+>   #define H264_NUM_FRM_INFO		66
+> -
+> -#define SIZE_SEI_USERDATA		4096
+> -
+> +#define H265_NUM_TILE_COL 32
+> +#define H265_NUM_TILE_ROW 12
 
-For performance reasons, we fill in the memory lazily[1] via
-userfaultfd. This makes it difficult to use the soft-dirty bit to
-track the writes the function triggers, because UFFDIO_COPY (and
-friends) mark every page they touch as soft-dirty. Because we have the
-canonical source of truth for the pages we materialize via UFFDIO_COPY
-we're only interested in what happens after the userfaultfd operation.
+This one should be 128, in fact it was right on v2 and seems itr got wrong on v3.
 
-Clearing the soft-dirty bit is complicated by two things:
-1. There's no way to clear the soft-dirty bit on a single pte, so
-instead we have to clear the soft-dirty bits for the entire process.
-That requires us to process all the soft-dirty bits on every other pte
-immediately to avoid data loss.
-2. We need to clear the soft-dirty bits after the userfaultfd
-operation, but in order to avoid racing with the task that triggered
-the page fault we have to do a non-waking copy, then clear the bits,
-and then separately wake up the task.
+Grepping in downstream also shows 128:
+$ grep H265_NUM_TILE_ROW ./ -R
+./driver/variant/iris33/inc/hfi_buffer_iris33.h:#define H265_NUM_TILE_ROW 128
+./driver/variant/iris33/inc/hfi_buffer_iris33.h:#define H265_NUM_TILE (H265_NUM_TILE_ROW * H265_NUM_TILE_COL + 1)
+./driver/variant/iris3/inc/hfi_buffer_iris3.h:#define H265_NUM_TILE_ROW 128
+./driver/variant/iris3/inc/hfi_buffer_iris3.h:#define H265_NUM_TILE (H265_NUM_TILE_ROW * H265_NUM_TILE_COL + 1)
+./driver/variant/iris2/inc/hfi_buffer_iris2.h:#define H265_NUM_TILE_ROW 128
+./driver/variant/iris2/inc/hfi_buffer_iris2.h:#define H265_NUM_TILE (H265_NUM_TILE_ROW * H265_NUM_TILE_COL + 1)
 
-To work around all of this, we currently have a 4 step process:
-1. Read /proc/pid/pagemap and note all ptes that are soft-dirty.
-2. Do the UFFDIO_COPY with UFFDIO_COPY_MODE_DONTWAKE.
-3. Write to /proc/pid/clear_refs to clear soft-dirty bits across the process.
-4. Do a UFFDIO_WAKE.
+And fixing to to 128 makes HEVC works flawlessly on SM8650.
 
-The overhead of all of this (particularly step 1) is a millisecond or
-two *per page* that we lazily materialize, and while that's not
-crippling for our purposes, it is rather undesirable. What I would
-like to have instead is a UFFDIO_COPY mode that leaves the soft-dirty
-bit unchanged, i.e. a UFFDIO_COPY_MODE_DONTSOFTDIRTY. Since we clear
-all the soft-dirty bits once after setting up all the mmaps in the
-process the relevant ptes would then "just do the right thing" from
-our perspective.
+Neil
 
-But I do want to get some feedback on this before I spend time writing
-any code. Is there a reason not to do this? Or an alternate way to
-achieve the same goal?
+> +#define H265_NUM_TILE (H265_NUM_TILE_ROW * H265_NUM_TILE_COL + 1)
+> +#define SIZE_H265D_BSE_CMD_PER_BUF (16 * sizeof(u32))
+> +
+> +#define NUM_SLIST_BUF_H265 (80 + 20)
+> +#define SIZE_SLIST_BUF_H265 (BIT(10))
+> +#define H265_DISPLAY_BUF_SIZE (3072)
+> +#define H265_NUM_FRM_INFO (48)
+> +
+> +#define VP9_NUM_FRAME_INFO_BUF 32
+> +#define VP9_NUM_PROBABILITY_TABLE_BUF (VP9_NUM_FRAME_INFO_BUF + 4)
+> +#define VP9_PROB_TABLE_SIZE (3840)
+> +#define VP9_FRAME_INFO_BUF_SIZE (6144)
+> +#define BUFFER_ALIGNMENT_32_BYTES 32
+> +#define CCE_TILE_OFFSET_SIZE ALIGN(32 * 4 * 4, BUFFER_ALIGNMENT_32_BYTES)
+> +#define MAX_SUPERFRAME_HEADER_LEN (34)
+> +#define MAX_FE_NBR_CTRL_LCU64_LINE_BUFFER_SIZE 64
+> +#define MAX_FE_NBR_CTRL_LCU32_LINE_BUFFER_SIZE 64
+> +#define MAX_FE_NBR_CTRL_LCU16_LINE_BUFFER_SIZE 64
+> +#define MAX_SE_NBR_CTRL_LCU16_LINE_BUFFER_SIZE (128 / 8)
+> +#define MAX_SE_NBR_CTRL_LCU32_LINE_BUFFER_SIZE (128 / 8)
+> +#define VP9_UDC_HEADER_BUF_SIZE	(3 * 128)
+> +
+> +#define SIZE_SEI_USERDATA			4096
+> +#define SIZE_DOLBY_RPU_METADATA (41 * 1024)
+>   #define H264_CABAC_HDR_RATIO_HD_TOT	1
+>   #define H264_CABAC_RES_RATIO_HD_TOT	3
+> +#define H265D_MAX_SLICE	1200
+> +#define SIZE_H265D_HW_PIC_T SIZE_H264D_HW_PIC_T
+> +#define H265_CABAC_HDR_RATIO_HD_TOT 2
+> +#define H265_CABAC_RES_RATIO_HD_TOT 2
+> +#define SIZE_H265D_VPP_CMD_PER_BUF (256)
+> +
+> +#define VPX_DECODER_FRAME_CONCURENCY_LVL (2)
+> +#define VPX_DECODER_FRAME_BIN_HDR_BUDGET 1
+> +#define VPX_DECODER_FRAME_BIN_RES_BUDGET 3
+> +#define VPX_DECODER_FRAME_BIN_DENOMINATOR 2
+> +
+> +#define VPX_DECODER_FRAME_BIN_RES_BUDGET_RATIO (3 / 2)
+> +
+>   #define SIZE_H264D_HW_PIC_T		(BIT(11))
+>   
+>   #define MAX_FE_NBR_CTRL_LCU64_LINE_BUFFER_SIZE	64
+> 
 
-If this is generally sensible, then a couple questions:
-1. Do I need a UFFD_FEATURE flag for this, or is it enough for a
-program to be able to detect the existence of a
-UFFDIO_COPY_MODE_DONTSOFTDIRTY by whether the ioctl accepts the flag
-or returns EINVAL? I would tend to think the latter.
-2. Should I add this mode for the other UFFDIO variants (ZEROPAGE,
-MOVE, etc) at the same time even if I don't have any use for them?
-
-- Kyle
-
-[0] https://pernos.co/
-[1] Conceptually this is similar to CRIU's `restore --lazy-pages`. We
-set up all the mappings at the beginning but we don't back them.
-Instead we UFFDIO_REGISTER them all and when they're touched for the
-first time we go get the pages from our database and then UFFDIO_COPY
-them into the address space.
