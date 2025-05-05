@@ -1,99 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6E324A066;
-	Mon,  5 May 2025 12:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41AB124A051
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447463; cv=none; b=deDPCE7smBmwPl+4xLms+tTy51h/yR+SraXw0QYLMZH3r/ZiMNZ4aKk+uf47Y5iBqhG/goBkbxdypfaq6gQVcXsBhzV441op2IMJhyFUpVH5rmO9tlKCD72qIKwBd3lpULXeWGndeORbkkIOemUr12LMUcKCbssj8lg01SCxY2Q=
+	t=1746447467; cv=none; b=RtaT9ejnsItpOiV4SZSuvYPOM3l4/IrBQzYmCoijiOBBwx+GqdoMAfc6TxtO9/LnKQCqF2lRLWcqbDtqg0EMjKlpA3WnlaQZ5zs7+3VxGMX6r8NKiIw6XLzy9eEzL+RY51IexdbrP6F9vhSdLDavOdcl+Z9R7bfVzTwTLmK4q8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447463; c=relaxed/simple;
-	bh=+c9qtL1XLrdv0KjM1c64k7CAIhE9e6+G1EbaLs6rza0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ov6GeatfUvlne/abBcgKwvstZfnNb65gppRlmKEU2vq92vvyTD/JdYylXxw6k6JV3JXM24a1RlmM2trquvMSmn2YXwbeYAySoXKdpHapJqkMiITzkcwPahRZO2IJ/+rXEyICZzUCPDC87dZ8MYkdqU5x9VRH4AG7iH7PXg+rDUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPQrW9iO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746447467; c=relaxed/simple;
+	bh=AT8JQLw8EOBIqLg1hsD+PdWTgjTnmcFKPeIxajf3hEQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OU9krvmj5B9RbmLYM/IggdB4iVJw5jVZNvn9hrINl+SD97EESGoswuXYexTFerg1S6psry59zlX2tt4+n2uOpM3Ln2C44CRnjdbJfKT6KUmeI0gTKdF1ouk8coWEY/gQDe7paWpasET8Gt/gj7lMS+ZqkNGIY9UL/dwCMI7pntc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PVCwPr3m; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPQrW9iO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D32DC4CEE9;
-	Mon,  5 May 2025 12:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746447460;
-	bh=+c9qtL1XLrdv0KjM1c64k7CAIhE9e6+G1EbaLs6rza0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=lPQrW9iO5alAJxK83Y8+fEo/xiQA+Q+teKxHd3UG23liLxPqpJvSwszf5B9S/hTQS
-	 yslfVuH1Rrb/mZ/2OIuL/NOrCFYwPf+DF3Dn1a6q7EYErzs6GMXjKZ786F7GWq6UPd
-	 VGHA1nN63UgjGIqXe4iHpUiY2EYCbUbaPJcYjS5bbPXynyvbWFEQx6I/2IUvV+zwRC
-	 FR9YAYf1xRxDH4TNH4xkGR/JqE72i/PHcyrrPcHjm6fByDWyb/QrUwiQAv8JKZCUsz
-	 Zo9hAxspt4yNmFepQHoMWN3ZbLqWi0cRWtTRWHxUJeWrLMjYSHF0aemu1WWFnJpDcq
-	 U3+CVYCrAMRfQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <a.hindborg@samsung.com>,  <boqun.feng@gmail.com>,
-  <frederic@kernel.org>,  <lyude@redhat.com>,  <tglx@linutronix.de>,
-  <anna-maria@linutronix.de>,  <jstultz@google.com>,  <sboyd@kernel.org>,
-  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,  <gary@garyguo.net>,
-  <bjorn3_gh@protonmail.com>,  <benno.lossin@proton.me>,
-  <aliceryhl@google.com>,  <tmgross@umich.edu>,
-  <chrisi.schrefl@gmail.com>,  <arnd@arndb.de>,  <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
-In-Reply-To: <20250505.201004.457132112950898883.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Mon, 05 May 2025 20:10:04 +0900")
-References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
-	<8734djxrm0.fsf@kernel.org>
-	<Wa3bx4DMYJMjJ594BFBTdQoD4WJzqhDRxMPUQfyH68XpKhZQ--5WEB8bTYEQuDm-pB1hl_PHqsm5wuv29WuIyg==@protonmail.internalid>
-	<20250505.201004.457132112950898883.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Mon, 05 May 2025 13:51:56 +0200
-Message-ID: <87tt5zwa03.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PVCwPr3m"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3912a0439afso1199837f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746447463; x=1747052263; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tUtKJCb9zxzQYcQhaWAG9VNqZWaDz69k5Oi4J/8AuAI=;
+        b=PVCwPr3mb6f1nghKqNe0mJYcel4FXSkBM4nran61asDSd2sCR3vK/WSFzk+jwBlgo+
+         0KPIw+KfR6qWD39LGlKzCKGY2r//khtKBAtgQ18wOSjazhsZjS0f//1qQulM6udIzN5K
+         7XhzF++aiiHFIM9LJXlNXlpkKp2cRPDzwoY8HIlYBupw64h+6ZqnRHYFf1zficwAy4JT
+         CqyJfrmJRvH4t+cR0ugwe0BQymRxgtL4l90ebkzujAFF/SILT7VUOJ41cB2iD7QTXAH3
+         Yzfj10HdvIYHolAYJTWC9btjJydYaMAtk4tEXK0Zvsn17OsHHBOjNB18uagvCDeCuPOl
+         +9bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746447463; x=1747052263;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tUtKJCb9zxzQYcQhaWAG9VNqZWaDz69k5Oi4J/8AuAI=;
+        b=RE9W0UsTSUVRTEcaYBig82Rbn9vXiauhe6aZPCM90urIdML7snGw0j1FbwvKSNU722
+         aVVhjrdpN/srRvyNotBAH0PbvsMdP4w17F3fIM6Hx8EGfTzcQA0UJ+ngVdjr11fAxcX8
+         wF7Ebc+dH4doGDkqbRw70CGYTAncuvMDCxBPK+JVO/WlqLn1RhrLW0B7gBCMLQ8IoyVe
+         JK2qcs+IpKE50NoNUWNYcwCP+8pqHOwpY3QVFZ20B0PM+0QvhPsNxraD0Y1z7BwQwuNH
+         cqjDsA+lM2E8Xcn/2qQlXbBctUVoIeJhZGlguXvewVZ+3h3rp+PDsHj0hlVfTN3NISU+
+         g0OA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfHBBFSWqfzkY6hl9GCIUnexY8MZnbifX+gWhdTHnPxmny0A7P7FYy7h065XZ+ZAoqUoMayH3xIGSM5SU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3MbiqHzMQo/EaDjzJrWnMTqjUbtEfQOHm3XNjp1qLSF/nvRDM
+	z7N0/dtfSfLE5n/BEQpLVCkyBsxhdd0vpjyVQy91rjePvyycMQkukyk6izFDAMiPMxRc1imNjqa
+	/9LA8RY16ejC+CQ==
+X-Google-Smtp-Source: AGHT+IEA9C52kPPF6qxConSxBxERklqj6Hl7vrYxzP0AmGH60eFxWxlKTQ+JAbCuorOuBGBO+0IgW9dNOLQSXws=
+X-Received: from wro26.prod.google.com ([2002:a05:6000:41da:b0:39a:bcee:e7a1])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a5d:47a8:0:b0:399:7f44:5c74 with SMTP id ffacd0b85a97d-3a09cf3df66mr7148614f8f.55.1746447463637;
+ Mon, 05 May 2025 05:17:43 -0700 (PDT)
+Date: Mon, 05 May 2025 12:17:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAFqsGGgC/33NTQ6CMBCG4auYrh3Tlh/BlfcwLko7A02EkhYbC
+ eHuFlaaGJfvJN8zCwvoLQZ2OSzMY7TBuiFFdjww3amhRbAmNZNcFjyXOYTJD3qcgbzr4ZnWIEg
+ aXjZcG4Ms7UaPZF+7ebun7myYnJ/3F1Fs139aFCCA6iojlKKsCnVtnWsfeNKuZxsX5SdR/yIkc DhjSUorzRviX8S6rm+ezM8g9gAAAA==
+X-Change-Id: 20250424-strncpy-from-user-1f2d06b0cdde
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1565; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=AT8JQLw8EOBIqLg1hsD+PdWTgjTnmcFKPeIxajf3hEQ=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoGKxgSg5DtzqlaVnObt7fpY20lByyFUVpTFEKN
+ W8Buuw+L56JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBisYAAKCRAEWL7uWMY5
+ RksMEACO9sKHWqUgFcihbZJfxagX0rGCiMt2/rX0/70s7EuVAOBqWm3u+f2wdUwZ9eDdc2qsDuF
+ HaQFmfxe0iCHbtecSaY/sIs/p3WNtHtZdLxHlPtfCvYp65mpwwxPBTOE6DIiVIHfl+m+a/oq5Pm
+ 9X85hmin8Bl52kRa0FW3zFapkr7rz60sUfkPjB6NhS5yU0pyMeNBqDCWvfQaVs+PsJ4XNq5bYTg
+ hTMMNENsNzRkFKsLufDtGH5738LNnbR+8c6IkkjJ1gIlsijZRx/8Cb7exbYYFs2aHS81lu/ajkz
+ OOC8/qEptoadFWw/oqE+lS2HCCUzQfsGgD81Fkk7aYkIjzIk0PsVqglD09VwXgmlxTJxc7yJNfo
+ 4cc4HrZjbvkOZY0WhZmFi2YxzqLaIZVbQ8y/cAxAsBndC4a2p8vuXihkuksO1xWtFQULSjp2LR6
+ CcO2XhavUmC2EL8l65OSeRwyGBn/BZaU4/0qgk382K9rIuyx6rvN684TKbdjeDfoACSxPalYhML
+ kEJ7I5nGhHYHNmafp3h1oq1o05MZ1YivCt2iute2rLWPmFf8mFC7v5ofXdnxKEHXqPDim5vBmxa
+ t89EslyWv3t4EFeO9SuVFnnILBPnrItwB+TChhP6zEFsLLRN/t2GiHk5PJY5G/Rg0L8Z52Dezb6 esAC+jbqipzMXPQ==
+X-Mailer: b4 0.14.2
+Message-ID: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+Subject: [PATCH v3 0/2] strncpy_from_user for Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+There is currently no easy way to read NUL-terminated strings from
+userspace. Trying to use the ordinary read function on an array of the
+maximum length doesn't work because it could fail with EFAULT when the C
+string is shorter than the maximum length. In this case,
+strncpy_from_user is better because it doesn't return EFAULT even if it
+encounters a page fault on bytes that are after the NUL-terminator but
+before the maximum length.
 
-> On Mon, 05 May 2025 12:46:15 +0200
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->> FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
->>
->>> Avoid 64-bit integer division that 32-bit architectures don't
->>> implement generally. This uses ktime_to_ms() and ktime_to_us()
->>> instead.
->>>
->>> The timer abstraction needs i64 / u32 division so C's div_s64() can be
->>> used but ktime_to_ms() and ktime_to_us() provide a simpler solution
->>> for this timer abstraction problem. On some architectures, there is
->>> room to optimize the implementation of them, but such optimization can
->>> be done if and when it becomes necessary.
->>>
->>> One downside of calling the C's functions is that the as_micros/millis
->>> methods can no longer be const fn. We stick with the simpler approach
->>> unless there's a compelling need for a const fn.
->>>
->>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
->>
->>
->> Please consult recent MAINTAINERS file when you send patches. If you
->> intend for me to see a patch, please use my registered email address.
->
-> Sorry, I did follow that for the last two patchsets (generalizing
-> Instant and hrtimer), but somehow I messed up with this one.
->
-> Should I resend v2 of this fix to the correct email address?
->
-> https://lore.kernel.org/lkml/20250502004524.230553-1-fujita.tomonori@gmail.com/
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v3:
+- Remove pub from raw_strncpy_from_user.
+- Mention that some data may have been copied on EFAULT.
+- Add more comments to strcpy_into_buf about tricky cases.
+- Rewrite documentation of strcpy_into_buf.
+- Pick up Reviewed-by tags.
+- Link to v2: https://lore.kernel.org/r/20250429-strncpy-from-user-v2-0-7e6facac0bf0@google.com
 
-No I got it from list, so it's fine for this one. But please stop CC'ing
-the the Samsung address.
+Changes in v2:
+- Rename the raw wrapper around strncpy_from_user to raw_strncpy_from_user.
+- Add a more convenient helper on top that adds the missing
+  NUL-terminator when necessary.
+- Link to v1: https://lore.kernel.org/r/20250424-strncpy-from-user-v1-1-f983fe21685a@google.com
 
+---
+Alice Ryhl (2):
+      uaccess: rust: add strncpy_from_user
+      uaccess: rust: add UserSliceReader::strcpy_into_buf
+
+ rust/kernel/uaccess.rs | 86 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 85 insertions(+), 1 deletion(-)
+---
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250424-strncpy-from-user-1f2d06b0cdde
 
 Best regards,
-Andreas Hindborg
-
-
+-- 
+Alice Ryhl <aliceryhl@google.com>
 
