@@ -1,47 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EADE220F34;
-	Mon,  5 May 2025 23:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A2037AAAC;
+	Mon,  5 May 2025 23:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486281; cv=none; b=nOcE7rRR8RpSM7bF/ZR0TM/exh1aKF3JPZX8BACQpo/87DbYoWo9gDa5GtYJ1azxhqtzGkxKM+eeDaBYUki4GAmilOWtkpmWmWN8P0xS8zLVQ585KRjSx/gmWyxr6W7eYo8vSwzEjswtE8CjcQRS/EVvSqwjnR82dg8tbzzSKTU=
+	t=1746486289; cv=none; b=oCR0DM1V5QsZCKxAAY0NxfUH8I+YveEVP4z2nlE8Fpxb5KdUJMRECLwOchn3UShC6MoOZ+7TdA91T8auZD3r39If17eXLA1LFAMlxM0JabYCEgBDgc2xDEfbiz+eiJ6lIyKU0I5lu4is8W+RiAm2LupwzYSNzCEda+VHnurqHf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486281; c=relaxed/simple;
-	bh=9zvCCOWJdwLGXWCGRIX2czqINN3A9otRARCoU21GV1I=;
+	s=arc-20240116; t=1746486289; c=relaxed/simple;
+	bh=ShalBwS1Y2wOs6bcGbDnxbkDL3MZRFx9ic01FXzv8Ic=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RVdWQHCxwNRKXCVdoQaTB5w7HDqTZJj5g7Zh0nSqlXNBXC7ojO1rniLY2gH3E6CJM+GWq/Pvc+uxJsJoNGdW9+4apir9zN9pt03XsR8eu1+LnyJje4jwOFreLHQ4N45NzthpyuQg8hS2TtZh3Tmh6EUdVkZ+a6ifQO0MjRbaxJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rzj2iMtS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Lbi+20iw3dB7uNEzQLiRV8A01LidYjdLKbKWxseIbKr95lpRAAZPBJKenznUrPo1/RV1jUZIXUASP1oT0ih/Y8LpWro7F/aJre8v3jNVbxwcvE3LrwtX1WxRbqvdgYH6lpF55pM4XC6gPGqP0xiiHi+ZqdFdCaQjZ/3uyeZ4aaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=da5Gc1rK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rzj2iMtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3720FC4CEED;
-	Mon,  5 May 2025 23:04:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="da5Gc1rK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62486C4CEE4;
+	Mon,  5 May 2025 23:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486279;
-	bh=9zvCCOWJdwLGXWCGRIX2czqINN3A9otRARCoU21GV1I=;
+	s=k20201202; t=1746486287;
+	bh=ShalBwS1Y2wOs6bcGbDnxbkDL3MZRFx9ic01FXzv8Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rzj2iMtSFbdqwjVPmROQQ9+NmHcFQmViBt14UzDC3buLYzDkXrvz9TwlvaG1/hl56
-	 F8aoc/6ozq43lVqXG3B5qMoiOfCUT+7RuPKdObTGUDkzEZXvNx563EOteLnk+tKrL4
-	 eC6OVqzAyeWYoSOljUqAPQHwJwm7whJ1de2wxJSNfb3u16R/WR26lBJyjvgaHACag7
-	 jv/muFzaNNBTLpWQ/mwATYHD2sEC7C2350Ztf2qGORWqm/0uZ6/wN2mvvqvQiGx/Dy
-	 I6jzFlFp+9lPleU3FNNuEI3CXwz09xmgYBnpU4lkJsNvWKMji972QIb1NlsSC9LL7T
-	 DYYKe8lTus0OQ==
+	b=da5Gc1rKIYv514BOhH4of3HzBYbP3WHkr0XqCb+pm5LWqh/DdA92cb8y8bM4O5u+1
+	 LXwUYFQPyohluUoU9PlaTW4WdhR9yKTGGz6OIQluiQ4QwjTwnOzjwNuJLkuE2Spk86
+	 fEd0n7YW61F/UsZaX2ktlHNQBwNbrKMuJj4nZHSIx6/pVw+wsDWTl2dNo4ypXqBfOD
+	 obE8DXjCbpRbRBX9IcpGtnoPkkfDY6kysugAv92a+5UMKx5qBhbmb6PY9VmsZ1LFPB
+	 OC4vaHK67UBtCoQGw9b1BmgBTAWEoqmMuisY5paeiYi9iThYV3ofC8p5NLtH3G57GG
+	 BAqeLx8SW3BRg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Stefan Wahren <wahrenst@gmx.net>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+Cc: Gaurav Batra <gbatra@linux.ibm.com>,
+	Donet Tom <donettom@linux.ibm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mwen@igalia.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 236/294] drm/v3d: Add clock handling
-Date: Mon,  5 May 2025 18:55:36 -0400
-Message-Id: <20250505225634.2688578-236-sashal@kernel.org>
+	mpe@ellerman.id.au,
+	david@redhat.com,
+	rppt@kernel.org,
+	Jonathan.Cameron@huawei.com,
+	akpm@linux-foundation.org,
+	dan.j.williams@intel.com,
+	nilay@linux.ibm.com,
+	sbhat@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 6.6 240/294] powerpc/pseries/iommu: memory notifier incorrectly adds TCEs for pmemory
+Date: Mon,  5 May 2025 18:55:40 -0400
+Message-Id: <20250505225634.2688578-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -51,109 +54,140 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Gaurav Batra <gbatra@linux.ibm.com>
 
-[ Upstream commit 4dd40b5f9c3d89b67af0dbe059cf4a51aac6bf06 ]
+[ Upstream commit 6aa989ab2bd0d37540c812b4270006ff794662e7 ]
 
-Since the initial commit 57692c94dcbe ("drm/v3d: Introduce a new DRM driver
-for Broadcom V3D V3.x+") the struct v3d_dev reserved a pointer for
-an optional V3D clock. But there wasn't any code, which fetched it.
-So add the missing clock handling before accessing any V3D registers.
+iommu_mem_notifier() is invoked when RAM is dynamically added/removed. This
+notifier call is responsible to add/remove TCEs from the Dynamic DMA Window
+(DDW) when TCEs are pre-mapped. TCEs are pre-mapped only for RAM and not
+for persistent memory (pmemory). For DMA buffers in pmemory, TCEs are
+dynamically mapped when the device driver instructs to do so.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
-Signed-off-by: Maíra Canal <mcanal@igalia.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250201125046.33030-1-wahrenst@gmx.net
+The issue is 'daxctl' command is capable of adding pmemory as "System RAM"
+after LPAR boot. The command to do so is -
+
+daxctl reconfigure-device --mode=system-ram dax0.0 --force
+
+This will dynamically add pmemory range to LPAR RAM eventually invoking
+iommu_mem_notifier(). The address range of pmemory is way beyond the Max
+RAM that the LPAR can have. Which means, this range is beyond the DDW
+created for the device, at device initialization time.
+
+As a result when TCEs are pre-mapped for the pmemory range, by
+iommu_mem_notifier(), PHYP HCALL returns H_PARAMETER. This failed the
+command, daxctl, to add pmemory as RAM.
+
+The solution is to not pre-map TCEs for pmemory.
+
+Signed-off-by: Gaurav Batra <gbatra@linux.ibm.com>
+Tested-by: Donet Tom <donettom@linux.ibm.com>
+Reviewed-by: Donet Tom <donettom@linux.ibm.com>
+Signed-off-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Link: https://patch.msgid.link/20250130183854.92258-1-gbatra@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/v3d/v3d_drv.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/mmzone.h      |  1 +
+ arch/powerpc/mm/numa.c                 |  2 +-
+ arch/powerpc/platforms/pseries/iommu.c | 29 ++++++++++++++------------
+ 3 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index ffbbe9d527d32..0e8ea99011884 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -226,11 +226,21 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+diff --git a/arch/powerpc/include/asm/mmzone.h b/arch/powerpc/include/asm/mmzone.h
+index da827d2d08666..f2c4457c94c39 100644
+--- a/arch/powerpc/include/asm/mmzone.h
++++ b/arch/powerpc/include/asm/mmzone.h
+@@ -35,6 +35,7 @@ extern cpumask_var_t node_to_cpumask_map[];
+ #ifdef CONFIG_MEMORY_HOTPLUG
+ extern unsigned long max_pfn;
+ u64 memory_hotplug_max(void);
++u64 hot_add_drconf_memory_max(void);
+ #else
+ #define memory_hotplug_max() memblock_end_of_DRAM()
+ #endif
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index f6c4ace3b2219..65a9df0b9e5a0 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1342,7 +1342,7 @@ int hot_add_scn_to_nid(unsigned long scn_addr)
+ 	return nid;
+ }
  
-+	v3d->clk = devm_clk_get_optional(dev, NULL);
-+	if (IS_ERR(v3d->clk))
-+		return dev_err_probe(dev, PTR_ERR(v3d->clk), "Failed to get V3D clock\n");
-+
-+	ret = clk_prepare_enable(v3d->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Couldn't enable the V3D clock\n");
-+		return ret;
-+	}
-+
- 	mmu_debug = V3D_READ(V3D_MMU_DEBUG_INFO);
- 	mask = DMA_BIT_MASK(30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_PA_WIDTH));
- 	ret = dma_set_mask_and_coherent(dev, mask);
- 	if (ret)
--		return ret;
-+		goto clk_disable;
+-static u64 hot_add_drconf_memory_max(void)
++u64 hot_add_drconf_memory_max(void)
+ {
+ 	struct device_node *memory = NULL;
+ 	struct device_node *dn = NULL;
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index b1e6d275cda9e..bf02f94a973db 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -1183,17 +1183,13 @@ static LIST_HEAD(failed_ddw_pdn_list);
  
- 	v3d->va_width = 30 + V3D_GET_FIELD(mmu_debug, V3D_MMU_VA_WIDTH);
+ static phys_addr_t ddw_memory_hotplug_max(void)
+ {
+-	resource_size_t max_addr = memory_hotplug_max();
+-	struct device_node *memory;
++	resource_size_t max_addr;
  
-@@ -245,28 +255,29 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 		ret = PTR_ERR(v3d->reset);
+-	for_each_node_by_type(memory, "memory") {
+-		struct resource res;
+-
+-		if (of_address_to_resource(memory, 0, &res))
+-			continue;
+-
+-		max_addr = max_t(resource_size_t, max_addr, res.end + 1);
+-	}
++#if defined(CONFIG_NUMA) && defined(CONFIG_MEMORY_HOTPLUG)
++	max_addr = hot_add_drconf_memory_max();
++#else
++	max_addr = memblock_end_of_DRAM();
++#endif
  
- 		if (ret == -EPROBE_DEFER)
--			return ret;
-+			goto clk_disable;
+ 	return max_addr;
+ }
+@@ -1471,7 +1467,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+ 		window->direct = true;
  
- 		v3d->reset = NULL;
- 		ret = map_regs(v3d, &v3d->bridge_regs, "bridge");
+ 		/* DDW maps the whole partition, so enable direct DMA mapping */
+-		ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
++		ret = walk_system_ram_range(0, ddw_memory_hotplug_max() >> PAGE_SHIFT,
+ 					    win64->value, tce_setrange_multi_pSeriesLP_walk);
  		if (ret) {
- 			dev_err(dev,
- 				"Failed to get reset control or bridge regs\n");
--			return ret;
-+			goto clk_disable;
- 		}
- 	}
+ 			dev_info(&dev->dev, "failed to map DMA window for %pOF: %d\n",
+@@ -1658,11 +1654,17 @@ static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
+ 	struct memory_notify *arg = data;
+ 	int ret = 0;
  
- 	if (v3d->ver < 41) {
- 		ret = map_regs(v3d, &v3d->gca_regs, "gca");
- 		if (ret)
--			return ret;
-+			goto clk_disable;
- 	}
- 
- 	v3d->mmu_scratch = dma_alloc_wc(dev, 4096, &v3d->mmu_scratch_paddr,
- 					GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
- 	if (!v3d->mmu_scratch) {
- 		dev_err(dev, "Failed to allocate MMU scratch page\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto clk_disable;
- 	}
- 
- 	ret = v3d_gem_init(drm);
-@@ -289,6 +300,8 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
- 	v3d_gem_destroy(drm);
- dma_free:
- 	dma_free_wc(dev, 4096, v3d->mmu_scratch, v3d->mmu_scratch_paddr);
-+clk_disable:
-+	clk_disable_unprepare(v3d->clk);
- 	return ret;
- }
- 
-@@ -303,6 +316,8 @@ static void v3d_platform_drm_remove(struct platform_device *pdev)
- 
- 	dma_free_wc(v3d->drm.dev, 4096, v3d->mmu_scratch,
- 		    v3d->mmu_scratch_paddr);
++	/* This notifier can get called when onlining persistent memory as well.
++	 * TCEs are not pre-mapped for persistent memory. Persistent memory will
++	 * always be above ddw_memory_hotplug_max()
++	 */
 +
-+	clk_disable_unprepare(v3d->clk);
- }
- 
- static struct platform_driver v3d_platform_driver = {
+ 	switch (action) {
+ 	case MEM_GOING_ONLINE:
+ 		spin_lock(&dma_win_list_lock);
+ 		list_for_each_entry(window, &dma_win_list, list) {
+-			if (window->direct) {
++			if (window->direct && (arg->start_pfn << PAGE_SHIFT) <
++				ddw_memory_hotplug_max()) {
+ 				ret |= tce_setrange_multi_pSeriesLP(arg->start_pfn,
+ 						arg->nr_pages, window->prop);
+ 			}
+@@ -1674,7 +1676,8 @@ static int iommu_mem_notifier(struct notifier_block *nb, unsigned long action,
+ 	case MEM_OFFLINE:
+ 		spin_lock(&dma_win_list_lock);
+ 		list_for_each_entry(window, &dma_win_list, list) {
+-			if (window->direct) {
++			if (window->direct && (arg->start_pfn << PAGE_SHIFT) <
++				ddw_memory_hotplug_max()) {
+ 				ret |= tce_clearrange_multi_pSeriesLP(arg->start_pfn,
+ 						arg->nr_pages, window->prop);
+ 			}
 -- 
 2.39.5
 
