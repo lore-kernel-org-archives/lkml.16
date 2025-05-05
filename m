@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C05337BE0C;
-	Mon,  5 May 2025 23:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0911E2F8BCF;
+	Mon,  5 May 2025 23:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487249; cv=none; b=sjLSl6828jqlmHuROEcHh0YxsKdH+MZGIT46sGDmab8ZfCtao9ZgpVqLZKPeIh2fo4tGKoM9khnJVljc3jDkPMjrb6TR8U7IhVzZ4wiqIQP0/f8y9xk912/b4YBf5tBru4cki/KG6xnHSXKimOoXeVMmR7Mlz43bem74WoIUcWU=
+	t=1746487244; cv=none; b=C2IgkZOpqQL35Bpi6K4ZXicSo4cRyFmjQeCUEYnWBruMZ4Pp2TKA8mep9t3ZkJ5n0FsmbPQF8O/MBrIUWbsOokqoLk0/btQehxEXYghDCaFGbFAS8hBGYN+oABHJaSrPmcnGCLYlTe4SRiabkCzBWF8f4Xu4+hG/hbDwp/VnIJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487249; c=relaxed/simple;
-	bh=ctq2HEvnujahFPz7cH4UMcGubUAwVqWS3cYH6tARv/E=;
+	s=arc-20240116; t=1746487244; c=relaxed/simple;
+	bh=Nx8scXla9ValBM11uvtLamrG6d7WCnagX7kaHOl45iM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I8rEwJA5LfWohM31Usd/n9aSvBqF/gb69js30qLSQBmKl2xN2ukPd1WR5AIAh519DuFB3BonVxcq79jEh/G+72YMFBGe/7YE4DtcaMh+DG8W7A6T7W7+Xa9sr8EQ5BCU+uyFLSMeXjpTOOEumORD/rg4B7cGLnceAlMoIvlan1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSiHWSz1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TIPG83OP5aaUQioi5obpJ1hbgdLMgV/tsq5H/CSGCnpDlc2JaYsk9SlLLVXhCiHplYjFDgY6IveYUtkWGsinVvIhJ7AFm71qiALJOH1410SLv47CDAhQctBbDPu7dxR2YU3ULYTX/x+MyuUeF7WkeYkfllX8nv9KLRlUCBQw5uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJ0QV3Ek; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSiHWSz1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817FFC4CEE4;
-	Mon,  5 May 2025 23:20:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJ0QV3Ek"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1BECC4CEF6;
+	Mon,  5 May 2025 23:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487247;
-	bh=ctq2HEvnujahFPz7cH4UMcGubUAwVqWS3cYH6tARv/E=;
+	s=k20201202; t=1746487242;
+	bh=Nx8scXla9ValBM11uvtLamrG6d7WCnagX7kaHOl45iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pSiHWSz1IeygHF4qxzWJBSoAxrmAyLWIsorCE7POnIRP/c9ylyMbFgr/ccGilKIKc
-	 YDumluaQiz3O2TvFjHStnQQ2RJ4BonKQewrCfvhanW/jFU9tri8BLq5eL2LVTVy8Ed
-	 dipYKiBEaetOg10py0eU+ENID6xvOG+AclBOtTJDyQQvgNz8nL/+fQBXhamMkqkxrr
-	 NEXKwGAol8J+Fhz09YgTfXO71NpmXNLGtabx+Mn5IBo+Oq82aQIU/HtgoQiJGp7SBr
-	 xN2b9cDeUGwN9Lb3PqCghPoH54wfO4ioYZ8i9EeiQTpavr1wEyXb2S2qftcjpKM2Sc
-	 X2QzUlC2YqnZQ==
+	b=sJ0QV3EkIUKigL1DI2sikKYVhFF++Wi4Vf97bQB/HSHJXT0goXEehS1O747hynze2
+	 /a4cRo8nsCWOFO1Nxs7b/vQlPVJ9fHWQjRFpyMwkUGSSik+lVTjYtlj1IaObIV+WZR
+	 Lma2LYec9IZctgLyJzNCeoa4siix1LG/3KyYEmb2Kd47ttOeev1lql3G/L2jAI/Zio
+	 7WOMIZ45r2y+3gl+2d4c+5w7OR5vZwWSoWVNOTOHRv58gkDk/NSC8xIFuVYTB+IDKs
+	 vx6ySEJ6BNCRQNjWJ0XDsnYypZW6S4ZqxcpXl0xZllfYsJEvUfhFnlTd/ObZ09KdbG
+	 rGvys39lZvHuQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>,
+	Tony Luck <tony.luck@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	u.kleine-koenig@baylibre.com,
-	linux-can@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 078/114] can: c_can: Use of_property_present() to test existence of DT property
-Date: Mon,  5 May 2025 19:17:41 -0400
-Message-Id: <20250505231817.2697367-78-sashal@kernel.org>
+	bp@alien8.de,
+	linux-edac@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 076/114] EDAC/ie31200: work around false positive build warning
+Date: Mon,  5 May 2025 19:17:39 -0400
+Message-Id: <20250505231817.2697367-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -53,35 +52,103 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit ab1bc2290fd8311d49b87c29f1eb123fcb581bee ]
+[ Upstream commit c29dfd661fe2f8d1b48c7f00590929c04b25bf40 ]
 
-of_property_read_bool() should be used only on boolean properties.
+gcc-14 produces a bogus warning in some configurations:
 
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Link: https://patch.msgid.link/20250212-syscon-phandle-args-can-v2-3-ac9a1253396b@linaro.org
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+drivers/edac/ie31200_edac.c: In function 'ie31200_probe1.isra':
+drivers/edac/ie31200_edac.c:412:26: error: 'dimm_info' is used uninitialized [-Werror=uninitialized]
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+drivers/edac/ie31200_edac.c:412:26: note: 'dimm_info' declared here
+  412 |         struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+      |                          ^~~~~~~~~
+
+I don't see any way the unintialized access could really happen here,
+but I can see why the compiler gets confused by the two loops.
+
+Instead, rework the two nested loops to only read the addr_decode
+registers and then keep only one instance of the dimm info structure.
+
+[Tony: Qiuxu pointed out that the "populate DIMM info" comment was left
+behind in the refactor and suggested moving it. I deleted the comment
+as unnecessry in front os a call to populate_dimm_info(). That seems
+pretty self-describing.]
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/all/20250122065031.1321015-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/c_can/c_can_platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/ie31200_edac.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
-index 8f0dde85e3da2..1e0bf3405394a 100644
---- a/drivers/net/can/c_can/c_can_platform.c
-+++ b/drivers/net/can/c_can/c_can_platform.c
-@@ -330,7 +330,7 @@ static int c_can_plat_probe(struct platform_device *pdev)
- 		/* Check if we need custom RAMINIT via syscon. Mostly for TI
- 		 * platforms. Only supported with DT boot.
- 		 */
--		if (np && of_property_read_bool(np, "syscon-raminit")) {
-+		if (np && of_property_present(np, "syscon-raminit")) {
- 			u32 id;
- 			struct c_can_raminit *raminit = &priv->raminit_sys;
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index cad20e87783b5..79a6612bd01e4 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -398,10 +398,9 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	int i, j, ret;
+ 	struct mem_ctl_info *mci = NULL;
+ 	struct edac_mc_layer layers[2];
+-	struct dimm_data dimm_info[IE31200_CHANNELS][IE31200_DIMMS_PER_CHANNEL];
+ 	void __iomem *window;
+ 	struct ie31200_priv *priv;
+-	u32 addr_decode, mad_offset;
++	u32 addr_decode[IE31200_CHANNELS], mad_offset;
  
+ 	/*
+ 	 * Kaby Lake, Coffee Lake seem to work like Skylake. Please re-visit
+@@ -459,19 +458,10 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 		mad_offset = IE31200_MAD_DIMM_0_OFFSET;
+ 	}
+ 
+-	/* populate DIMM info */
+ 	for (i = 0; i < IE31200_CHANNELS; i++) {
+-		addr_decode = readl(window + mad_offset +
++		addr_decode[i] = readl(window + mad_offset +
+ 					(i * 4));
+-		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode);
+-		for (j = 0; j < IE31200_DIMMS_PER_CHANNEL; j++) {
+-			populate_dimm_info(&dimm_info[i][j], addr_decode, j,
+-					   skl);
+-			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
+-				 dimm_info[i][j].size,
+-				 dimm_info[i][j].dual_rank,
+-				 dimm_info[i][j].x16_width);
+-		}
++		edac_dbg(0, "addr_decode: 0x%x\n", addr_decode[i]);
+ 	}
+ 
+ 	/*
+@@ -482,14 +472,22 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ 	 */
+ 	for (i = 0; i < IE31200_DIMMS_PER_CHANNEL; i++) {
+ 		for (j = 0; j < IE31200_CHANNELS; j++) {
++			struct dimm_data dimm_info;
+ 			struct dimm_info *dimm;
+ 			unsigned long nr_pages;
+ 
+-			nr_pages = IE31200_PAGES(dimm_info[j][i].size, skl);
++			populate_dimm_info(&dimm_info, addr_decode[j], i,
++					   skl);
++			edac_dbg(0, "size: 0x%x, rank: %d, width: %d\n",
++				 dimm_info.size,
++				 dimm_info.dual_rank,
++				 dimm_info.x16_width);
++
++			nr_pages = IE31200_PAGES(dimm_info.size, skl);
+ 			if (nr_pages == 0)
+ 				continue;
+ 
+-			if (dimm_info[j][i].dual_rank) {
++			if (dimm_info.dual_rank) {
+ 				nr_pages = nr_pages / 2;
+ 				dimm = edac_get_dimm(mci, (i * 2) + 1, j, 0);
+ 				dimm->nr_pages = nr_pages;
 -- 
 2.39.5
 
