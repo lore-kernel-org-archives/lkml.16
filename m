@@ -1,119 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FAC1C1F05;
-	Mon,  5 May 2025 21:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463B88F66;
+	Mon,  5 May 2025 21:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746481499; cv=none; b=bqtGul7ohclkO6UWl96EMj4vupvkjrnqfXV+LW+fQz9QT2p6WpQ4qwbd+Uh1sKGU96nUZIus8Gkh6PYIJUWnxamao40nS1fikWgWKW1CdOyxH1QwPkY+Ppit9Rj2MM4Yu/i8zz5Uo6CxyG8f5fZoAF4rbUIZFv3cFBD3NBEaH/o=
+	t=1746481524; cv=none; b=W+SJCnc/geEbw/JY/o34lcvAJkHDJgdRMv67fOxdb4oGgrDTJQPokR8YHZ71cotfj/cNmXTaetmxHLXozpb+7oNWJ5JmpVLCo9DOJ1pslDGib9cI3JgwcbY0Rb++sV5seNkdFcNtNtqDVMtSkGK8dhutnqoTW0CCqlOOlpkiYIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746481499; c=relaxed/simple;
-	bh=QlQXqiJRcUcsqLT4BtgsUCAWJ+bsHCvuv98JrHBbUus=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nAP6GUSPuNBhJ/zXPDCNuTpgj3/u6CiBooq8NrPeIniwb/L8XyVv7MB31ZW4dj1R42W3PgbBshSscOZVtCeMt3aZOQtGvjG/rHK55DGkbdKP9yd9tAmxC+m0eS5g+bprZITt9bbhaPaJifF4sGXex9tEsfZTWnCImTbCm3pdJoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GHuMv1rt; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746481524; c=relaxed/simple;
+	bh=CahsuzGP8dclaXFz+knFgcQXHHqAzaQBNmxGDlAkIL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+bYcdk4o1cGmjbN9VreKXxQNiDLfPmyQsce3Q/KwOQTJiAqb7Pgpgy+QOD4r0/9KuYaxx6B+zIiFpqs1A0VZETl/n1FaQ9KQ3QWvQfIMMVTuKzysut9SBjLSjnM3v5GkkGibCXCO6vCBTbK/wiBMFq5iB+Iz2ii9f/Fi0wXq8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtwYcLYX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GHuMv1rt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746481493;
-	bh=/+s1iPc26YCmSpvShRrXdax3x1rFHs/iyPOXRBhDmYY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GHuMv1rtBvksDbCJuFZxN5ToompGNH0vaiIaGpadcwgN6ZEuSgLUQMt27bEYyjhvj
-	 UK0++hvoB4xoJY1MgF1X1yNOnHYR7ymEUf/V0wWeBCKgdviWoY9eQp1H3Vfgx9VrsA
-	 OKychBZJDNQTmkE8FFOmEfCJofxzy8Bhifj8uMrFmGWSN9gy6fV0g20Jw65ECZS+RJ
-	 EM3YOkZpFEhQOyJ3wjl7usRRvY6Y8vasnFQOCfaEtm1/2DkEy49kohqyLkTbEMwIal
-	 Sp8u0XUZ6QvCBDeTKeetIHnlVS7/mC0raQHDlPPq9evDsflIyHE3tYd2TDbG36j+Q+
-	 /RjGa5XBRkOng==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zrw6Y16cmz4wbr;
-	Tue,  6 May 2025 07:44:53 +1000 (AEST)
-Date: Tue, 6 May 2025 07:44:52 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, ARM
- <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the stm32 tree
-Message-ID: <20250506074452.65f4e0af@canb.auug.org.au>
-In-Reply-To: <20250501113753.53f6fc88@canb.auug.org.au>
-References: <20250501113753.53f6fc88@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtwYcLYX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FB1C4CEE4;
+	Mon,  5 May 2025 21:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746481523;
+	bh=CahsuzGP8dclaXFz+knFgcQXHHqAzaQBNmxGDlAkIL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XtwYcLYXjRqNIOVkspHeOA5jcmAG+AI8w7iuDC5UjI4oGeiCVtujq4P3SWD55vpR9
+	 AiMkCnNN+cKeI62Wy8C7Jf7QTwl1IZVTFlwWxnGc0PNr7OMwMoV+smjMRdwBC4YTXF
+	 WeK84DGTx47JfYOXV5NeRl4sZ+IdYLDgoH55pdCKaRWvOjNVmLJH3WsiTaAFm9PHCQ
+	 w37PNHSwKHv1kiS1o6LCBJZ7NiwwjZ3TimmbQKzLB08nIOUO/gRbLDBfIVY+Xtqde2
+	 i6ZbrRB8j0yj+7tpAMiWEX0LEZp6c9lYWNuxNbaMSGx9ws+mOtS0ehv543wm220phy
+	 frWnZlgAMAVIg==
+Date: Mon, 5 May 2025 23:45:20 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Z qiang <qiang.zhang1211@gmail.com>, paulmck@kernel.org,
+	neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
+Message-ID: <aBkxcKPYOPCvfN7J@pavilion.home>
+References: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
+ <aA9U9QvB2t2MLuU2@pavilion.home>
+ <CALm+0cW2tXM-HvzoMsNBk4DNyZ-LuUkGj5M4wVLJixSvUDP+Dw@mail.gmail.com>
+ <b1d6d155-de0a-4715-9de6-45d3d9e5c9a6@nvidia.com>
+ <CALm+0cUx2siBvaRYwWGsN21PC=UUUy1EqLTRe5HmRW2ECWtUWA@mail.gmail.com>
+ <2c8098f0-2010-4714-97ca-7f46629d67f8@nvidia.com>
+ <6dc114e4-83d3-40ff-9642-114552f40a75@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zMy.MsZf4ijzjRR=.y.Gt/_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6dc114e4-83d3-40ff-9642-114552f40a75@nvidia.com>
 
---Sig_/zMy.MsZf4ijzjRR=.y.Gt/_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Le Mon, May 05, 2025 at 09:38:02AM -0400, Joel Fernandes a écrit :
+> Frederic, there are a couple of ways we can move forward hear. Does the
+> softirq_count() approach sound good to you? If yes, I can fixup the patch
+> myself.
 
-Hi all,
+That approach looks good yes.
 
-On Thu, 1 May 2025 11:37:53 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> The following commits are also in the arm-soc-fixes tree as different
-> commits (but the same patches):
->=20
->   0530a74f3f43 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp23 SoCs")
->   6485975d7832 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-3 SoCs")
->   635ff238ff7b ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp21 SoCs")
->   2ae67a2e7e4f ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-1 SoCs")
->   97d0a619e248 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp25 SoCs")
->   e5694384b07d ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-5 SoCs")
->=20
-> These are commits
->=20
->   2ef5c66cba61 ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp23 SoCs")
->   3a1e1082097b ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-3 SoCs")
->   1bc229e9bb9c ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp21 SoCs")
->   02dc83f09c72 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-1 SoCs")
->   06c231fe953a ("arm64: dts: st: Use 128kB size for aliased GIC400 regist=
-er access on stm32mp25 SoCs")
->   de2b2107d5a4 ("arm64: dts: st: Adjust interrupt-controller for stm32mp2=
-5 SoCs")
->=20
-> in the arm-soc-fixes tree.
+> 
+> I am also Ok at this point to take it in for 6.16, though I've also stored it in
+> my rcu/dev branch for Neeraj's 6.17 PR, just in case :)
 
-These letter commits are now in Linus' tree.
+I'm fine either way. To me it's neither too late nor too early :-)
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks.
 
---Sig_/zMy.MsZf4ijzjRR=.y.Gt/_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> 
+>  - Joel
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgZMVQACgkQAVBC80lX
-0GzyJwf/dlMQPP5xQckkJraDiIWaxvaUG5t0WidE1Zo8gsr4U+0BtV5HWeycgSe7
-tKbO4AwXoLf+ACJ83EbpuLOah4oF+Gbn9Dp5DIMvS7ilx2+s5VsMnggdGP5dZtxr
-h7KeByL73xlaZZQdcUZvxe0aDE+Yra9Dq+LfDKryzMkt7y0SCQtEghIx6hA4DLm7
-E15Rrai23FvmHhQxx4ftWk3razwkR5IG0IFBg83Nh2aa6SnGn7rvGAif9Lcny6en
-gYhZPEvcXbgfDxTHqYNNNnVSf9X4uQ0Oa9LOdJ7UDdOojmNaE85QIH8NjU43ixCs
-Fwhlybs/VCx+x7u4R7RIibBZwlBvfw==
-=4q8H
------END PGP SIGNATURE-----
-
---Sig_/zMy.MsZf4ijzjRR=.y.Gt/_--
+-- 
+Frederic Weisbecker
+SUSE Labs
