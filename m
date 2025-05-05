@@ -1,85 +1,65 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29F325B66A
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460730; cv=pass; b=RdxP2tD8SR/OuA5FMMDpmEOPE7Y4M0aoCCu7vCWm9aan+meZg6kNDM6ngPFRXe20l9FvPwruYKK1PBTyhnNvpUsmlA3yzmBdqYCKDKUfqUPacqJPGAqEQQueLJDsom/XzFb2SL8gsO6zRwlmqzyiCp+PXP5VBBSSi9jABzXsut8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460730; c=relaxed/simple;
-	bh=dqzIEx/W4l4vbBcDBDn0WwrxquzWxWupbZcwuG21YlQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uVosk8OYYAlDcOtynyxmwqZGmch1Ra53YE6hmfsXf2eCTo77vAAUlnnJISGVrwBSyKEo1AdMNS+/V/QLndGH/AWvMX31OxWPw1HCESPy7+c6+DQ2BPP4LGStMCPi0Odr1CQzFtuccbpZG3G3OgSX5uSXVIgGgLSbi5wfYGPWyXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=f49hcz9h; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="f49hcz9h"
-ARC-Seal: i=1; a=rsa-sha256; t=1746460699; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hkUgx6Mj/ja9r8LQOpbhvnz1tEB+uND8C0BBBexnI5VPuVRmlXjhYVAadafBQ15CdzBdIRUx8FegOjiFlym9ZtjgkE9ODh1Mt6ZZSbIR1f9e11P4e3QctvXi1EHd82wzxM6kbBOSXj4S7wJIHMJId/O7icQXyS/TzkmDO3u5gZU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746460699; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TBneRj8Wi3aNUjuAlFYRMoAHRWU9YFWZYst/MYENSsQ=; 
-	b=YflmZBIk1tFU68O2ldxn8mopG7vCn7GTdSFAwknks0prURZvK9A7rPQjV6FTt1uiMhFZBcbvkoFhGXE25+k5VXbaDzGogEEBvfO7VyBJnIuX6mY0G7V99aGizFPypIg+j2bW7sLDOeiGeBhM7B7KxD1h484CkrVllc5TyBSVGkc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746460699;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=TBneRj8Wi3aNUjuAlFYRMoAHRWU9YFWZYst/MYENSsQ=;
-	b=f49hcz9h3d8aXahF6KPCqBKJrWYbRPoyLvDAgCu9MCKQjf694ZHcTHtrzmuJr/bB
-	4kRh+yznnWV8nhiOHyqMEO8AjlBXISA0t4Ggo7CqaA7m4avMt+jeyMZVj2hj/9K1Hr4
-	Olo9ZhRpErCWAmyQItoVLm5iQq4gqgKGOzLEqP0k=
-Received: by mx.zohomail.com with SMTPS id 1746460696721946.0446506917006;
-	Mon, 5 May 2025 08:58:16 -0700 (PDT)
-Message-ID: <5271820d-7afd-45e5-8103-b7d4fc818278@collabora.com>
-Date: Mon, 5 May 2025 18:58:11 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C6C191F74;
+	Mon,  5 May 2025 15:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746460764; cv=none; b=LJ+vszihqnAqNY4y93B+wLneSEWj6FXq7w4V1nWW/dT3E4QrBA3x1CSLXZAW9PxNpAs1WLJ0dOIONO4vxOKUtGCYMLmGeUHoeIKMR4UoypNRNhZeeKjKRIc3BeruaIxsSnKEbYonaHmb8f2fbPWELP2tmXZnbAsbk9fRvaXKCrM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746460764; c=relaxed/simple;
+	bh=RrD7x6fU3Iy2GJmHhBB/95FzxOioR68AN8IEskQgsMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b5gw9eX0gOgz2/H4bYsOZhUuA7TC/1s/HRsU0F9eetezRcjWau1q0zkpUFjweUfiBuurUNue6A0kggjyv1bZYOCXE7Rl24FnEPACKWLln1KMXy8DfgwHtAlfgGyaOi+3VHSOgxKI6kRtYcP5axZVPDRUthGPQX8PJIF7R+dh364=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74690C4CEE4;
+	Mon,  5 May 2025 15:59:22 +0000 (UTC)
+Date: Mon, 5 May 2025 11:59:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Jason Wessel <jason.wessel@windriver.com>,
+ Daniel Thompson <danielt@kernel.org>
+Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
+ of setting per CPU disabled
+Message-ID: <20250505115928.2fb446b6@gandalf.local.home>
+In-Reply-To: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
+References: <20250502205147.283272733@goodmis.org>
+	<20250502205348.643055437@goodmis.org>
+	<CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] virtgpu: deallocate capsets on device deinit
-To: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>
-Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, dri-devel@lists.freedesktop.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
- <20250505-virtgpu-queue-cleanup-v1-v1-3-810923da2b1e@linaro.org>
-Content-Language: en-US
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20250505-virtgpu-queue-cleanup-v1-v1-3-810923da2b1e@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-On 5/5/25 11:59, Manos Pitsidianakis wrote:
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> index 7b3c4d314f8eee692e2842a7056d6dc64936fc2f..a8b751179332b9ec2fbba1392a6ee0e638a5192e 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> @@ -286,6 +286,10 @@ void virtio_gpu_deinit(struct drm_device *dev)
->  	flush_work(&vgdev->cursorq.dequeue_work);
->  	flush_work(&vgdev->config_changed_work);
->  	virtio_reset_device(vgdev->vdev);
-> +	spin_lock(&vgdev->display_info_lock);
-> +	drmm_kfree(dev, vgdev->capsets);
-> +	vgdev->capsets = NULL;
-> +	spin_unlock(&vgdev->display_info_lock);
+On Mon, 5 May 2025 08:42:52 -0700
+Doug Anderson <dianders@chromium.org> wrote:
 
-Isn't this lock superfluous?
+> This new change seems less safe than the old one. Previously you'd
 
--- 
-Best regards,
-Dmitry
+Well, it matters what you your definition of "safe" is ;-)
+
+The new change prevents the ring buffer from having anything written to it,
+where as the old change didn't disable everything.
+
+> always increment by one at the start of the function and decrement by
+> one at the end. Now at the start of the function you'll set
+> "buffer_disabled" to 1 and at the end you'll set it to 0. If
+> "buffer_disabled" was already 1 at the start of the function your new
+> sequence will end up having the side effect of changing it to 0.
+
+Good point. How about I add a tracer_tracing_disable() and
+tracer_tracing_enable() that is not an on off switch and uses:
+ring_buffer_disable/enable() that decrements/increments disabling of the
+ring buffer?
+
+That way it keeps the same semantics.
+
+-- STeve
