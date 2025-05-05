@@ -1,44 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164FE36AD01;
-	Mon,  5 May 2025 22:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8F536DD30;
+	Mon,  5 May 2025 22:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485192; cv=none; b=GWKL0sIqaQ93JIdf1AxsA76psFLQKnU8mh990pdk3lY3V6qP+UXdpNYGvCMtMJJC2Quvc1QC/FU09oN9VNBFoNfStNTMj9pBt7/K/icD4/iGOAZFfyWD/Of95vaAm2TI0qLqvCLiw5K/flG+rs+t9deMhbgAeRjo4yHD+O3+H38=
+	t=1746485200; cv=none; b=IdspDht9zgFQ8o2c7pFDqeKoVNIndHxoQQW2djezCWGl9VfyKH521ASmkBwEiLGNM1zSKzSwwQRGBE98NFUuC+YDbQNNKRLkUQsRN2oAzVTomP5EeLWxaWz54fUtcd0LWoSJFiFD2P+wlMJLsalrsls4w9TMIn4rh0CUJ+bTW4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485192; c=relaxed/simple;
-	bh=wxrYziaHvHD4g27gI9lEQ96DcRoUY+dEeU7cwjvuTl0=;
+	s=arc-20240116; t=1746485200; c=relaxed/simple;
+	bh=kiINvKw8UeJPMKrVPPDdggBN7qCqrAgYNgQSm+tWCUc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X/U78HgiRZ0myq71QUVwRIA6W+C2G1kLf/NM3KPq5iJF/B/8jvRfU+7rNvg0XGALwxJs5nVsfyuzmaaQYTZahOo6dGWuV+p6Cl2BTzeMPDxa3JqRlmzelBzUJstB+Raase9KxhHuVfZ5vpVZ9TlXr3jURdfm/PAOenLSom3qVq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0T17SaI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LBZCQX2UTvwjHGB8o6mIFki1OsX5wno0EOYRMj11XrwSm5XrJUU3FpD8h8BqQ/+dtWI4PDniTLpE9yw7nw1duGilvyp5LVvmPehgRoWlVPCSo9ukOE38gBSDL8j/bFxKqt8sosVf/dvwaiFeeak117wv7G5W9PSpIpUycXJJJYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQzONJye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0T17SaI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEEFCC4CEE4;
-	Mon,  5 May 2025 22:46:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQzONJye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 757A6C4CEE4;
+	Mon,  5 May 2025 22:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485192;
-	bh=wxrYziaHvHD4g27gI9lEQ96DcRoUY+dEeU7cwjvuTl0=;
+	s=k20201202; t=1746485199;
+	bh=kiINvKw8UeJPMKrVPPDdggBN7qCqrAgYNgQSm+tWCUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W0T17SaIr3eBEquxW2dSEWgTDz6coZgGuigJPVMZw8cHxwueDDKwMnb5GTQduZ0h1
-	 NrXnGtly5s+NZJlwHOX4UF0q7dWpdzkc6/WL3GR39fX3s5UqRCE08qXACuTgtOelh/
-	 gsHpkaGAoigcug6asGcLV32J/vBZoBgi2/wMBoz6wXpB9gUN49qE1SbBcfWjIone1I
-	 MTYVlTz7gVOpN/dvDcsQvVrWM/NliVQpmcNOXNOygo9dWxK41JlLEVmO5TeyCSNnmv
-	 PSEjCfmLWqVJDm7iGgfq+A+F9WhwCOWBdUXtYZkGepLMtlVc32TavEh6f9VgRCu3Rj
-	 zXytkkqqcrUBw==
+	b=OQzONJyeDjey+4QTT7bKZeoAfEqUv9Z2v6E3x9k2Yb90MiCtn8R7VoATGs0RynkjQ
+	 bg/F31D3EWHVNitXIxrwfE89C2cmnMBiyEjeODa87iWNP/hPhMtZ+DTfinNF3gfLk0
+	 bK8UWT5LZWCPEQKiNkZX3JSRobSodpqd4b5xa6mBd8j34zeVZoRXmFVYD/LkeHgyKE
+	 k+SoBTB4SghLkUnbtUY9ZRzVkasI/Wch2lYcW4QL+669AArdLf3TwXNAhQVnCTYEOU
+	 6yEMj1Xnb+JDuD/8XY73vxY3x+yXVKgoi3lG0goB1wfWWlcMzxyYSrrFLtAzV97n00
+	 PMqtrlDdL7mvg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	christophe.jaillet@wanadoo.fr,
-	ribalda@chromium.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 203/486] media: cx231xx: set device_caps for 417
-Date: Mon,  5 May 2025 18:34:39 -0400
-Message-Id: <20250505223922.2682012-203-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	alexander.sverdlin@gmail.com,
+	hkallweit1@gmail.com,
+	u.kleine-koenig@baylibre.com,
+	lorenzo@kernel.org,
+	aleksander.lobakin@intel.com,
+	nicolas.dichtel@6wind.com,
+	linux-omap@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 206/486] net: ethernet: ti: cpsw_new: populate netdev of_node
+Date: Mon,  5 May 2025 18:34:42 -0400
+Message-Id: <20250505223922.2682012-206-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,38 +63,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
+[ Upstream commit 7ff1c88fc89688c27f773ba956f65f0c11367269 ]
 
-The video_device for the MPEG encoder did not set device_caps.
+So that of_find_net_device_by_node() can find CPSW ports and other DSA
+switches can be stacked downstream. Tested in conjunction with KSZ8873.
 
-Add this, otherwise the video device can't be registered (you get a
-WARN_ON instead).
-
-Not seen before since currently 417 support is disabled, but I found
-this while experimenting with it.
-
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Link: https://patch.msgid.link/20250303074703.1758297-1-alexander.sverdlin@siemens.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ti/cpsw_new.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
-index abb967c8bd352..6cb130eb32d58 100644
---- a/drivers/media/usb/cx231xx/cx231xx-417.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-417.c
-@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
- 	vfd->lock = &dev->lock;
- 	vfd->release = video_device_release_empty;
- 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
-+	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
-+			   V4L2_CAP_VIDEO_CAPTURE;
- 	video_set_drvdata(vfd, dev);
- 	if (dev->tuner_type == TUNER_ABSENT) {
- 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 557cc71b9dd22..0eee1a0527b5c 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1417,6 +1417,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
+ 		ndev->netdev_ops = &cpsw_netdev_ops;
+ 		ndev->ethtool_ops = &cpsw_ethtool_ops;
+ 		SET_NETDEV_DEV(ndev, dev);
++		ndev->dev.of_node = slave_data->slave_node;
+ 
+ 		if (!napi_ndev) {
+ 			/* CPSW Host port CPDMA interface is shared between
 -- 
 2.39.5
 
