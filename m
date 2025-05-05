@@ -1,217 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D1C2C859;
-	Mon,  5 May 2025 13:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAD01D54EE;
+	Mon,  5 May 2025 13:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746453052; cv=none; b=JrB4a0ZxKVqz3/Yt9scEezyb48Fu/+JPy6PO1DAD5g1YCd3KrUNHe9OrzV6ryBN1YBGZoo0NQMSzAZU/nivv4g+iO8uhKQ0qoxEFwZh7wNhJSHZSr/AhDju6E5C6mbQSNvap4TDSplPkAOw1pqMiIFtKhqtgrS5/rZhnvwt5+O8=
+	t=1746453126; cv=none; b=kx1lmZVXuI6l2lvpASS8F5wv/m1fJlmCAL7g/4zlyjskdJbML53s9vDQhbp6WC/XvjFMBw/xr2S8NAwQzzAQWap927fd0biIseRjs1kM/YuDRpfjAeWhTTRQbZsKsOvEzfhjTCbDCCNi7U+cdDcAF2PgEINFeFRvRdr+4RDKqzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746453052; c=relaxed/simple;
-	bh=Vqk0ZpZc2qCwVlVPa1gNgdMWQzO0ZUreacqfzsriyUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oxxq4seAFvOCGpgpY/WZikIAE68zEbzB+6wQ9MkltnhvYzd7Yt9/3w8GgWvFWdkgqcGAewltpUdQiyHOgPLqPtr7UiF1pFEEIHqyzQTAkNHIGNQnSDI8PochzFyvDiVNh5FrjxR505B2CV0quP83Jvy4POEGRMWnbt/bgFhUQEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTQlqip/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746453126; c=relaxed/simple;
+	bh=mb/ZzQf87Hmkvnvv9v9dPUSGx/B52gYFvCwDkSRat3M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gPHy6SBhJCgeL6yoSOjl3itucGw4e8wqZi2Dzi7wvn628gFogTOWsGMrylSZBCOODlZeUlhsa2GBWIJRRUmI6ahHkIIhFb3+WOkUWAFtqf0agx3TRYXTmXonHboGPHlVZ/nMJb6dVBePXfHkM9/u2XG/F02sP2GPtx9tBU48in8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCEATgL/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTQlqip/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17FD5C4CEE4;
-	Mon,  5 May 2025 13:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746453051;
-	bh=Vqk0ZpZc2qCwVlVPa1gNgdMWQzO0ZUreacqfzsriyUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hTQlqip/9RtDq3faJnMsVwE+9Nde3Mnr3H4IzjZ81T1juQF7EOoMHDLstfmKej10J
-	 H5gITaG4z0iFzIuIUu5YI7joHG0oT4jg+r6UknQ66QsthJD0whwF68MulFkkvvx6et
-	 WST+LOzBuWuy5KdJQ27kmB+EfVrnyofS9Igy5t4TJA6uKGA0YIxV3KfJwtKhE0pqQt
-	 4t7Fv+aAPqZhR3s55I2uhb1r5gusiltCLG2pwI7myW53nhgqHhnin9Pc/ah2May61z
-	 7/WfFkRLcv9dcAN0AftB7MhohCeBd6cdZO5VhJRPo7G8KY1PzQPG8f2UkLMhs1fkaW
-	 5roincr1ws3Uw==
-Date: Mon, 5 May 2025 15:50:43 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
-	peterx@redhat.com, hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, 
-	shuah@kernel.org, adobriyan@gmail.com, josef@toxicpanda.com, yebin10@huawei.com, 
-	linux@weissschuh.net, willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-Message-ID: <20250505-wachen-konform-3fe08f1b3214@brauner>
-References: <20250418174959.1431962-1-surenb@google.com>
- <20250418174959.1431962-8-surenb@google.com>
- <CAG48ez3YLWh9hXQQdGVQ7hCsd=k_i2Z2NO6qzT6NaOYiRjy=nw@mail.gmail.com>
- <CAJuCfpGGiwTbMeGAeYNtQ5SsFenUw8up6ToLy=VstULM_TSoXA@mail.gmail.com>
- <CAG48ez15g5n9AoMJk1yPHsDCq2PGxCHc2WhCAzH8B2o6PgDwzQ@mail.gmail.com>
- <CAJuCfpG+YjyVE-6TaAQEjwc0iixqN8Epf25jo2awtL=gqY=afA@mail.gmail.com>
- <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCEATgL/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746453125; x=1777989125;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=mb/ZzQf87Hmkvnvv9v9dPUSGx/B52gYFvCwDkSRat3M=;
+  b=hCEATgL/Lwvsi8v8u1JN/74KkiWu7aNulrkBUXYcAGVvADPHMfQbL1BB
+   9KnNQ7Fw2blC/mI9xU4AEeA6evXJertFCbx4qWNw63ceHoN29eCGL0GXh
+   GYsOUnN6BlB0pCO1cPZCwKPlyCDDevLqEdv1Ts6mknsMvNuY/o1MVsA/G
+   UuEmCfyWHv2cZhH+jZHBXLHHaEEY+CC8vqYhjUk11q/DBAUZQkAZokjl5
+   LU9/4bMH65zdW5LKTKDUO4awCRT9599lhwGypsLk023O/7S4QU8VggeFX
+   3hf2GzZQ/gpNFZ3rSDRC9U+EoQEu4lzkCdwvt049FvMN2j3mRyWfN2FHD
+   g==;
+X-CSE-ConnectionGUID: /ccn6U9zTyS6XEQghK8cdg==
+X-CSE-MsgGUID: IfGAggCxQs2nLah7SxxlnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="48072993"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="48072993"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:05 -0700
+X-CSE-ConnectionGUID: vQGifHJcSoiEVbIeQ9K4tA==
+X-CSE-MsgGUID: 9yjBbPIGRsGI1FEc9zDhTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="134994343"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.68])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 06:52:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Derek John Clark <derekjohn.clark@gmail.com>, 
+ =?utf-8?q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= <samsagax@gmail.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <aBSE71VKfBlQg_fZ@stanley.mountain>
+References: <aBSE71VKfBlQg_fZ@stanley.mountain>
+Subject: Re: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
+ oxp_psy_ext_set_prop()
+Message-Id: <174645311458.23202.1330515283470994332.b4-ty@linux.intel.com>
+Date: Mon, 05 May 2025 16:51:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez0ntTH_sOaPiqML715jyTCujwyh3Og1wBq9RNLbu55C5Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Tue, Apr 29, 2025 at 08:54:58PM +0200, Jann Horn wrote:
-> On Tue, Apr 29, 2025 at 8:04 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> > On Tue, Apr 29, 2025 at 10:21 AM Jann Horn <jannh@google.com> wrote:
-> > >
-> > > Hi!
-> > >
-> > > (I just noticed that I incorrectly assumed that VMAs use kfree_rcu
-> > > (not SLAB_TYPESAFE_BY_RCU) when I wrote my review of this, somehow I
-> > > forgot all about that...)
-> >
-> > Does this fact affect your previous comments? Just want to make sure
-> > I'm not missing something...
-> 
-> When I suggested using "WRITE_ONCE(vma->vm_file, NULL)" when tearing
-> down a VMA, and using get_file_rcu() for the lockless lookup, I did
-> not realize that you could actually also race with all the other
-> places that set ->vm_file, like __mmap_new_file_vma() and so on; and I
-> did not think about whether any of those code paths might leave a VMA
-> with a dangling ->vm_file pointer.
-> 
-> I guess maybe that means you really do need to do the lookup from the
-> copied data, as you did in your patch; and that might require calling
-> get_file_active() on the copied ->vm_file pointer (instead of
-> get_file_rcu()), even though I think that is not really how
-> get_file_active() is supposed to be used (it's supposed to be used
-> when you know the original file hasn't been freed yet). Really what
+On Fri, 02 May 2025 11:40:15 +0300, Dan Carpenter wrote:
 
-I think it's fine for get_file_active() to be used in this way. That
-->vm_file pointer usage should get a fat comment above it explaining how
-what you're doing is safe.
+> The "val->intval" variable is an integer which comes from the user.  This
+> code has an upper bounds check but the lower bounds check was
+> accidentally omitted.  The write_to_ec() take a u8 value as a parameter
+> so negative values would be truncated to positive values in the 0-255
+> range.
+> 
+> Return -EINVAL if the user passes a negative value.
+> 
+> [...]
 
-> you'd want for that is basically a raw __get_file_rcu(), but that is
-> static and I think Christian wouldn't want to expose more of these
-> internals outside VFS...
 
-Yeah, no. I don't want that to be usable outside of that file.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> (In that case, all the stuff below about get_file_rcu() would be moot.)
-> 
-> Or you could pepper WRITE_ONCE() over all the places that write
-> ->vm_file, and ensure that ->vm_file is always NULLed before its
-> reference is dropped... but that seems a bit more ugly to me.
-> 
-> > > On Tue, Apr 29, 2025 at 7:09 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > On Tue, Apr 29, 2025 at 8:40 AM Jann Horn <jannh@google.com> wrote:
-> > > > > On Fri, Apr 18, 2025 at 7:50 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > > > With maple_tree supporting vma tree traversal under RCU and vma and
-> > > > > > its important members being RCU-safe, /proc/pid/maps can be read under
-> > > > > > RCU and without the need to read-lock mmap_lock. However vma content
-> > > > > > can change from under us, therefore we make a copy of the vma and we
-> > > > > > pin pointer fields used when generating the output (currently only
-> > > > > > vm_file and anon_name). Afterwards we check for concurrent address
-> > > > > > space modifications, wait for them to end and retry. While we take
-> > > > > > the mmap_lock for reading during such contention, we do that momentarily
-> > > > > > only to record new mm_wr_seq counter. This change is designed to reduce
-> > > > > > mmap_lock contention and prevent a process reading /proc/pid/maps files
-> > > > > > (often a low priority task, such as monitoring/data collection services)
-> > > > > > from blocking address space updates.
-> > > > > [...]
-> > > > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > > > > > index b9e4fbbdf6e6..f9d50a61167c 100644
-> > > > > > --- a/fs/proc/task_mmu.c
-> > > > > > +++ b/fs/proc/task_mmu.c
-> > > > > [...]
-> > > > > > +/*
-> > > > > > + * Take VMA snapshot and pin vm_file and anon_name as they are used by
-> > > > > > + * show_map_vma.
-> > > > > > + */
-> > > > > > +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_area_struct *vma)
-> > > > > > +{
-> > > > > > +       struct vm_area_struct *copy = &priv->vma_copy;
-> > > > > > +       int ret = -EAGAIN;
-> > > > > > +
-> > > > > > +       memcpy(copy, vma, sizeof(*vma));
-> > > > > > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> > > > > > +               goto out;
-> > > > >
-> > > > > I think this uses get_file_rcu() in a different way than intended.
-> > > > >
-> > > > > As I understand it, get_file_rcu() is supposed to be called on a
-> > > > > pointer which always points to a file with a non-zero refcount (except
-> > > > > when it is NULL). That's why it takes a file** instead of a file* - if
-> > > > > it observes a zero refcount, it assumes that the pointer must have
-> > > > > been updated in the meantime, and retries. Calling get_file_rcu() on a
-> > > > > pointer that points to a file with zero refcount, which I think can
-> > > > > happen with this patch, will cause an endless loop.
-> > > > > (Just as background: For other usecases, get_file_rcu() is supposed to
-> > > > > still behave nicely and not spuriously return NULL when the file* is
-> > > > > concurrently updated to point to another file*; that's what that loop
-> > > > > is for.)
-> > > >
-> > > > Ah, I see. I wasn't aware of this subtlety. I think this is fixable by
-> > > > checking the return value of get_file_rcu() and retrying speculation
-> > > > if it changed.
-> > >
-> > > I think you could probably still end up looping endlessly in get_file_rcu().
-> 
-> (Just to be clear: What I meant here is that get_file_rcu() loops
-> *internally*; get_file_rcu() is not guaranteed to ever return if the
-> pointed-to file has a zero refcount.)
-> 
-> > By "retrying speculation" I meant it in the sense of
-> > get_vma_snapshot() retry when it takes the mmap_read_lock and then
-> > does mmap_lock_speculate_try_begin to restart speculation. I'm also
-> > thinking about Liam's concern of guaranteeing forward progress for the
-> > reader. Thinking maybe I should not drop mmap_read_lock immediately on
-> > contention but generate some output (one vma or one page worth of
-> > vmas) before dropping mmap_read_lock and proceeding with speculation.
-> 
-> Hm, yeah, I guess you need that for forward progress...
-> 
-> > > > > (If my understanding is correct, maybe we should document that more
-> > > > > explicitly...)
-> > > >
-> > > > Good point. I'll add comments for get_file_rcu() as a separate patch.
-> > > >
-> > > > >
-> > > > > Also, I think you are introducing an implicit assumption that
-> > > > > remove_vma() does not NULL out the ->vm_file pointer (because that
-> > > > > could cause tearing and could theoretically lead to a torn pointer
-> > > > > being accessed here).
-> > > > >
-> > > > > One alternative might be to change the paths that drop references to
-> > > > > vma->vm_file (search for vma_close to find them) such that they first
-> > > > > NULL out ->vm_file with a WRITE_ONCE() and do the fput() after that,
-> > > > > maybe with a new helper like this:
-> > > > >
-> > > > > static void vma_fput(struct vm_area_struct *vma)
-> > > > > {
-> > > > >   struct file *file = vma->vm_file;
-> > > > >
-> > > > >   if (file) {
-> > > > >     WRITE_ONCE(vma->vm_file, NULL);
-> > > > >     fput(file);
-> > > > >   }
-> > > > > }
-> > > > >
-> > > > > Then on the lockless lookup path you could use get_file_rcu() on the
-> > > > > ->vm_file pointer _of the original VMA_, and store the returned file*
-> > > > > into copy->vm_file.
-> > > >
-> > > > Ack. Except for storing the return value of get_file_rcu(). I think
-> > > > once we detect that  get_file_rcu() returns a different file we should
-> > > > bail out and retry. The change in file is an indication that the vma
-> > > > got changed from under us, so whatever we have is stale.
-> > >
-> > > What does "different file" mean here - what file* would you compare
-> > > the returned one against?
-> >
-> > Inside get_vma_snapshot() I would pass the original vma->vm_file to
-> > get_file_rcu() and check if it returns the same value. If the value
-> > got changed we jump to  /* Address space got modified, vma might be
-> > stale. Re-lock and retry. */ section. That should work, right?
-> 
-> Where do you get an "original vma->vm_file" from?
-> 
-> To be clear, get_file_rcu(p) returns one of the values that *p had
-> while get_file_rcu(p) is running.
+The list of commits applied:
+[1/1] platform/x86: oxpec: Add a lower bounds check in oxp_psy_ext_set_prop()
+      commit: 55cd5e760618b3bca5b8ab63fe65ab78a753adf8
+
+--
+ i.
+
