@@ -1,107 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F80E2517B1;
-	Mon,  5 May 2025 12:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB4C1FFC54;
+	Mon,  5 May 2025 12:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746449902; cv=none; b=g/ahpeU06URXCWZA85ujX4lnm5/8sq+iK71gKZa+sfwsY6TLA7IOV8kOJ9quFggEtiFPK7nEX3xEP6U/UzC767RWJXCH7Vg4DRIsnCLk7LJspVjbGuTXIxCYZU81hxPtprDLzhL5lDtLAXQY3QkvarDtvETM1uxYEhZ1IXQOzdY=
+	t=1746449928; cv=none; b=PhZ8N2Hb/VPaUjWo5aQUJrWlEhc4r2Pmey27G2/qixrwdV+qXsoQNDzl6bGzz1CFuugR1ZJ8J4WkQ/gKzcs4vh5ckRCjUOXRr0f1Loy3wJYwXnNLNIixzirs4zy/5csFWj7nMiQkfYCHxytwcFPNrC834Hkh8NofK/9eJnu5IyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746449902; c=relaxed/simple;
-	bh=zUJfziWAGP2+Gb35t5MMHAlc3r4VppAN3Xf6keJyrXM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gEGqt9bTDjrvcT4Mwmqo7PCH6vlWedaX8Q+efXGk5psBSm5DMkiGNJWU4kb5fVhovEzfrClW3NfKrlQVH1240kNfDAkRuo7mJuEDovOgt2eKtuOWnIs8prDphEMPyzfMF+g3arBOIgMILVU7JTdhWSkK/RRk1PdhZgYYVX3BxDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=G531Kove; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746449928; c=relaxed/simple;
+	bh=sNmtbDYyAH0QhdlAVyLq1vp0uWmcDyuaUF8/6fzv6SU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fPmS5hisULCQsQi1a3BXtRQqNsCBZ5AU22FG+cS8H+XAK1BUbKe3jSz5VzCWnaXsABIv8woZZfaBrj1p1+0liWAQ8gCusLC35FuraZaVvvlTeM4ob9hjGgBIKdetu++QaybAnJFlVnII5qm76Q5hRA4wgE/mECK2JWI65NVtiyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cf8OQu6H; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="G531Kove"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC196C4CEE4;
-	Mon,  5 May 2025 12:58:21 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="G531Kove"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1746449900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B1E2O4wlc3qZ5ZvfelMaj2liJE8Ndd4lVZIoL+xu/sQ=;
-	b=G531KovetTj6YEJp7dqR6JpiEvhYN9hsFAPbcXKFeJ6VoYXowTUCohtkd+9ddYIRw8METt
-	xwP0fY9iK+bqzBiUXRgo3Hnjbz/dRV4eI1IEg3QOj38WSCBwAdoNbtA0NjG+BL4xo+RSqx
-	YpqvYSAZyBCurtu2Z+LY1yu/FMWslVo=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 796f16d6 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 5 May 2025 12:58:20 +0000 (UTC)
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2d4f8c42f49so3044566fac.1;
-        Mon, 05 May 2025 05:58:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIsw5T+qHOi7PpP6t5Uip1tGNLe4K46Wl1sgL4triwcKT4e1uhcHvCwQEUJNz8BLlzjn65iyCCMqmM4y8=@vger.kernel.org, AJvYcCXQ9bQbQbsFQTIMa81g3n2GLJhedIVilcSMcqn3nGJvzvDnOxK7HCI4QRs9dh8/dY9Iktst2U+UykKd4RrBnW/D@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF+9m9sq5OkjrH9Nkk/35VmASanC6AluKIAGNtRYdr2zaLl4qq
-	96rxlVbrHoWFtVv8wifqEvp6U9nDsx3i7f6OZdVhoF/mLvqMXIomidr+xwYda4wBaHpNlSf6bTM
-	HiIKqEQ2BII2aEsjdLTGX3aI60uQ=
-X-Google-Smtp-Source: AGHT+IEdrqURA6nv3beJvV2jOQXW2GGmyAGQrNeF8oucxH1ZUimpuTLl8YKIlHxEGlHM5TMIx7/V0i0OUvDgadLOgk0=
-X-Received: by 2002:a05:6871:208b:b0:2d8:5015:1a8d with SMTP id
- 586e51a60fabf-2da93aaeb9emr9482003fac.11.1746449898844; Mon, 05 May 2025
- 05:58:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cf8OQu6H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746449927; x=1777985927;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sNmtbDYyAH0QhdlAVyLq1vp0uWmcDyuaUF8/6fzv6SU=;
+  b=Cf8OQu6H4jOSornSXQ5pKB7mB3h27WUv2qK2zS+rOsgFxTUjtrFO7Sil
+   TjWKbWyEIhMcjV+zk1UJHpMHD+WPzraXZJuAHNzRiqgfqggW/YXdF1n/3
+   rOJvUjG6gBPcQSBFvuFqYFHR8xOXk5g5UG5MqwnaNsLn5mYdej89Q8As9
+   wQdN9BzOvo/rHb4WYfR5DuExppEpNjScrb8pe1KCtwH45DEvBfSE4D9oc
+   Dgu9ORLX8eTW12DB7m5fyR2y+QfLnuKcR2Xl9sUOn2zypXjd/vS3jwEc5
+   UsNjlES9vQsKRo3FBKswuqU6zjLtuxwCJr4BelFkgFoHLvygAyIhQIBQH
+   Q==;
+X-CSE-ConnectionGUID: jL8189nsTdqT7wf0hF4i4A==
+X-CSE-MsgGUID: XNgEARydRWWZ62I7iidhBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="51864137"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="51864137"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:58:47 -0700
+X-CSE-ConnectionGUID: EwyPKLVdRHmygFvOuKFeGQ==
+X-CSE-MsgGUID: /sEBP1+/TQ608Uge10qMnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="135757610"
+Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 05:58:43 -0700
+Message-ID: <e1be89ec-186b-4195-90c2-bd97e50b01f4@linux.intel.com>
+Date: Mon, 5 May 2025 20:58:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505-selftests-vdso-fixes-v2-0-3bc86e42f242@linutronix.de> <20250505-selftests-vdso-fixes-v2-4-3bc86e42f242@linutronix.de>
-In-Reply-To: <20250505-selftests-vdso-fixes-v2-4-3bc86e42f242@linutronix.de>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Mon, 5 May 2025 14:58:06 +0200
-X-Gmail-Original-Message-ID: <CAHmME9ppP0mAh6HMaHDi+XTuU8E6be9wSPYTYO-GvX=vYJCYeg@mail.gmail.com>
-X-Gm-Features: ATxdqUHCIk4fN7_3pTZKn2m-GTOYNSlswNMtBkbYEcmnRNWz1C-sSyFjRBS4m_w
-Message-ID: <CAHmME9ppP0mAh6HMaHDi+XTuU8E6be9wSPYTYO-GvX=vYJCYeg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] selftests: vDSO: vdso_test_getrandom: Drop some
- dead code
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] ASoC: intel/sdw_utils: Assign initial value in
+ asoc_sdw_rt_amp_spk_rtd_init()
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+ pierre-louis.bossart@linux.dev, Vijendar.Mukunda@amd.com,
+ peter.ujfalusi@linux.intel.com, peterz@infradead.org,
+ christophe.jaillet@wanadoo.fr, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, bard.liao@intel.com
+References: <20250505074142.615408-1-richard120310@gmail.com>
+ <2933e4c7-fc4c-4161-afee-cd6abcd79ef5@linux.intel.com>
+ <aBizHlY-UxnBsNDs@vaxr-BM6660-BM6360>
+Content-Language: en-US
+From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
+In-Reply-To: <aBizHlY-UxnBsNDs@vaxr-BM6660-BM6360>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thomas,
 
-On Mon, May 5, 2025 at 11:19=E2=80=AFAM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> vgetrandom_put_state() and the variable ret in kselftest() are never used=
-.
->
-> Drop the dead code.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
->  tools/testing/selftests/vDSO/vdso_test_getrandom.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/tools/testing/selftests/vDSO/vdso_test_getrandom.c b/tools/t=
-esting/selftests/vDSO/vdso_test_getrandom.c
-> index f36e50f372f935e6d4da3175c81e210653bdce1d..b0e0d664508a38d6dde9df0a6=
-1ec8198ee928a17 100644
-> --- a/tools/testing/selftests/vDSO/vdso_test_getrandom.c
-> +++ b/tools/testing/selftests/vDSO/vdso_test_getrandom.c
-> @@ -100,15 +100,6 @@ static void *vgetrandom_get_state(void)
->         return state;
->  }
->
-> -static void vgetrandom_put_state(void *state)
-> -{
-> -       if (!state)
-> -               return;
-> -       pthread_mutex_lock(&vgrnd.lock);
-> -       vgrnd.states[vgrnd.len++] =3D state;
-> -       pthread_mutex_unlock(&vgrnd.lock);
-> -}
 
-This sort of acts as example code / basic reference code for libcs and
-such. So I like having this function around. Could you just mark it as
-unused with an attribute but otherwise keep it?
+On 5/5/2025 8:46 PM, I Hsin Cheng wrote:
+> On Mon, May 05, 2025 at 04:27:04PM +0800, Liao, Bard wrote:
 
-Jason
+> 
+> Hi,
+> 
+> Thanks for your kindly review!
+> 
+>> The existing name_prefix is with either "-1" or "-2". But we can't make
+>> the assumption in the asoc_sdw_rt_amp_spk_rtd_init() helper. We might
+>> have "-3", "-4" etc in the future.
+>>
+> I get it, so in that case we should stick with current implementation
+> then. For "ret"'s initial value, do you think "-EINVAL" is ok or do you
+> prefer other value to be used ?
+
+-EINVAL is good to me.
+
+> I'll refine commit message and send a formal v2 patch with your
+> preference.
+> 
+> Best regards,
+> I Hsin Cheng
+> 
+
+
