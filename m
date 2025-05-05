@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EE92F3665;
-	Mon,  5 May 2025 23:14:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40055279354;
+	Mon,  5 May 2025 23:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486896; cv=none; b=iB/T+YwAB0X8c4vly1qJO4zYktwdeZcl7ofxl/H4UvpFx+2fT9RmzisPDXW9O8KyNXGtcxtreJFFYAcj40gWNzqTmCMMte3alvVjNq6WeJTW4SQIu+fxc17AK4D2AQs7+h/O/4cFyfDH9g0ZoL5TSiguOkunw/o78jVeIVt9ThM=
+	t=1746486935; cv=none; b=QFuOZBmLsf5hN8I8jGMHAc1jk1+E1gxgwRW1YgZwMeQB9DrA6YXelwrflC9wEZSrbWlpB0HoGpM9GyoKp1Qu7N3bh40fkCsdIpj50H/YuZQm5gKi14pIEtudRJIEe6wVBbpTNcHpTPrcxmwrmBG/9oV5tjnW72l9W+1VlX8rjT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486896; c=relaxed/simple;
-	bh=2XFm1n3rp0v8R1kDBJ2wjznnUIXVrgdlFCkBNUHrBcQ=;
+	s=arc-20240116; t=1746486935; c=relaxed/simple;
+	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Mj7P/BSuezsz3tcU44oSGii9hrGwlRlm8u3HW5v7CmbOsU7xrxj6BeZkK1RiSoqCr6MDLg7FQJ66eKA+C3Nvg595f2KRf6wz1SVMwNzDZs5j6OxR277oR+siJFLI1pVJQwNz6wLc/UaLs7HbAjvbjodhvijXxr6LmhW5TBqccrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQFn+DDO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=co6QmymJ5EqDi1VrJuom8ot8wWk6D/iN6xMduXdTyy8Dl2C0iocW8FN72x2/5N+C654HZ3GQdq0RZ+/bQkPirlrW+fQCiv9GEE5l3kIv5bqT5VH7CoDkO29NpOLciPjeWQNBoNdnDtB0uRgP3ySidFz2bPZ5T2Cy/bp13WDDqjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMtU/bjL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQFn+DDO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C8A8C4CEE4;
-	Mon,  5 May 2025 23:14:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMtU/bjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27567C4CEEF;
+	Mon,  5 May 2025 23:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486895;
-	bh=2XFm1n3rp0v8R1kDBJ2wjznnUIXVrgdlFCkBNUHrBcQ=;
+	s=k20201202; t=1746486934;
+	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qQFn+DDOASPs/4XyCfqkgqUGSpPqqXIfM3CjF2KvnucaKb3V6I97Bo6yaiy4T3awD
-	 tq53l8uKbz+L0Fs7o3pMOTXfUij9D7UHCdhAR3lcIurOpnSPGNw1VITR/1kmF99GpS
-	 GxNiOZyMvTBGrqPVs4ED821EfXCX/I82HCnS1RSg2h1fFiu4yDK7A/ZZ2HcMXUe74x
-	 9T04afWWMxgYJOjLQvOTFQfAgMn+xN6Xvs/xHbjBekcBHnRE08XLsg9aTfGunFDN0R
-	 i3WFXISKJgjUMfRbSJVHYRvbWN3Tl2lxojroEOcnw0Gq1OR8eNUm0wvz9fNdUClCGe
-	 QnTWEcqGblWyQ==
+	b=VMtU/bjLYBRT456dIK1p3b4wOBTUEpT53FmofYpP4PASjJvdUHEdEBhzwi7Xwt7tv
+	 xRzXhDsDfEE9rQqyZbsY/gwO9hD8WwUhK8at6l4KzAYvGlMYfSnoJeGOyF2FxJkxHv
+	 Z58l2dg0XtQn4pHe/hXnBJ8+MaWkKeNO5azflLF99bBCeEeii0nApS6nTe++LJRkGo
+	 cQd5c2r5XJvvD78ra2/xSL49j7B1VaqL7Ix/xDygNGNs8QTuAXJnE96iYGA7HT2oMQ
+	 GTfmdTuOrmNva08v3QYRo9VaAkWh5Qt+4enQLkcLuiEGnlQuEmEAxvcInbJtNqiASQ
+	 bTDRoMIaPHYoQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	yangyicong@hisilicon.com,
-	ioworker0@gmail.com
-Subject: [PATCH AUTOSEL 5.15 049/153] arm64/mm: Check PUD_TYPE_TABLE in pud_bad()
-Date: Mon,  5 May 2025 19:11:36 -0400
-Message-Id: <20250505231320.2695319-49-sashal@kernel.org>
+	mchehab@kernel.org,
+	christophe.jaillet@wanadoo.fr,
+	ribalda@chromium.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 067/153] media: cx231xx: set device_caps for 417
+Date: Mon,  5 May 2025 19:11:54 -0400
+Message-Id: <20250505231320.2695319-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -58,47 +53,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ryan Roberts <ryan.roberts@arm.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit bfb1d2b9021c21891427acc86eb848ccedeb274e ]
+[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
 
-pud_bad() is currently defined in terms of pud_table(). Although for some
-configs, pud_table() is hard-coded to true i.e. when using 64K base pages
-or when page table levels are less than 3.
+The video_device for the MPEG encoder did not set device_caps.
 
-pud_bad() is intended to check that the pud is configured correctly. Hence
-let's open-code the same check that the full version of pud_table() uses
-into pud_bad(). Then it always performs the check regardless of the config.
+Add this, otherwise the video device can't be registered (you get a
+WARN_ON instead).
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250221044227.1145393-7-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Not seen before since currently 417 support is disabled, but I found
+this while experimenting with it.
+
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index b5e969bc074d3..a0bfa9cd76dab 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -623,7 +623,8 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- 	pr_err("%s:%d: bad pmd %016llx.\n", __FILE__, __LINE__, pmd_val(e))
- 
- #define pud_none(pud)		(!pud_val(pud))
--#define pud_bad(pud)		(!pud_table(pud))
-+#define pud_bad(pud)		((pud_val(pud) & PUD_TYPE_MASK) != \
-+				 PUD_TYPE_TABLE)
- #define pud_present(pud)	pte_present(pud_pte(pud))
- #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
- #define pud_valid(pud)		pte_valid(pud_pte(pud))
+diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
+index c5e21785fafe2..02343e88cc618 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-417.c
++++ b/drivers/media/usb/cx231xx/cx231xx-417.c
+@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
+ 	vfd->lock = &dev->lock;
+ 	vfd->release = video_device_release_empty;
+ 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
++	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
++			   V4L2_CAP_VIDEO_CAPTURE;
+ 	video_set_drvdata(vfd, dev);
+ 	if (dev->tuner_type == TUNER_ABSENT) {
+ 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
 -- 
 2.39.5
 
