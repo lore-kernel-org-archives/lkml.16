@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4FC28A700;
-	Mon,  5 May 2025 23:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6B32E6866;
+	Mon,  5 May 2025 23:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487019; cv=none; b=kVK2CdPF+R4uJGcTgm+4XBvKNcyXcgyu80wjogQeXDtTW+SyOk6y2UlPhCq/hvqRR7eNdCxP9OUtQppwg05XPKkN9MPm/jQ8ciXCevt5geGykt795zkXjikeBtALQnNQLDM1grHRfPjdoonlY0N+45WJqcNChiH7u6g+NsuQvOM=
+	t=1746487030; cv=none; b=KJfgIOjk6Ymhy4p2p7Jdrokell9Ps0m33emUiB1DwSZJuBW4mn1I7ZZEE1v5M/pVPhBqpp7k+Fu5Oa5teNQ/roSPrioUZwPPb/fZr/Aa3WLxb9oDAi9CcIj5KLYRqNBIhXY+h8uMY8XtHE+po3lPwi3QPYIod1u9fx7KnQBX96s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487019; c=relaxed/simple;
-	bh=JxjItHrrQgLMHSz/Gv5gajhZoDln5AohXYwfHcgnOyw=;
+	s=arc-20240116; t=1746487030; c=relaxed/simple;
+	bh=mtJZe148ds/7SXixYCWlYPriawhd+rrZbac0kHfAhtQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dd+gOyqabtAe3Fm7+RZu4aLrDuPw9QmP6ck1Hz2LeD1xq8w9oZct15RCssL9pfhwzyxR9mg+xbg9SZPSNmNDi+arhvOirzdjGNj9nzMKWcbwo0zTaivgzd1I/Mz10pStnwlW06UcAlv5PsLlucKp2BIEMct84DQSo0S5POxuDuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkH16t5E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uaSEokcMLTnl09KmVruEDEB7jfEDyi7onC2tyscoujBrB5C6Iv910XQ+XbEvAGhI6oXnrW150N6zEkoNTf7Yf0nIP+JWg041ISacRJppJ+HaampLR6IB06KKd9s52gJVbVsUaGgXpxu/5fLuonrr9MjZyl2QXwlGI1VRWXXieyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+MTLqcG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkH16t5E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A5FC4CEED;
-	Mon,  5 May 2025 23:16:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+MTLqcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FF6C4CEE4;
+	Mon,  5 May 2025 23:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487017;
-	bh=JxjItHrrQgLMHSz/Gv5gajhZoDln5AohXYwfHcgnOyw=;
+	s=k20201202; t=1746487029;
+	bh=mtJZe148ds/7SXixYCWlYPriawhd+rrZbac0kHfAhtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rkH16t5EibkbO9BEXyCS7JoIyOsIxBMmm8d/7VeeXIbqiuRf6fVrVqOvp8geLosh5
-	 d5XtcJl5HRM7q0ZNYLqTwFa9s+7UzoiBEajuIRNpM4Ku9ECWRSusIfa8cJ+qbl5j3s
-	 PqZamyMkhyQNyW6slXuIZBZtEJ9rb5o3BhlsSsCqCLMqH50sHJKctHZkYjb5iqu2qb
-	 obed4Uf6jL+cS29phXlQspHJQCaJ7LYTTsrqGMWNAcu7HMTeZI1pyELbCSs7LiUWY0
-	 fSutSsg+dzha66zyXPOxmpONreHq5o420Sw9hhRu2KRWotVvLVLZ+A/T/MednEVehJ
-	 gCPVxtV/qRuYQ==
+	b=a+MTLqcGW5gZJqsNf8qPl+LEWJSymfu7QHCLyu+gwKGsZAkWjc6XyIpHLdi6j2JDf
+	 Nj/thGG17hHmKCBKrOF7RdQRfgVxpVsrTdbcNF2xL4lyXeXwQXvlRNV5VLP+H9abq+
+	 tSqRyScsl/oJE5aTcHRPPYAsanFaAQmt6gbRbjCUW0vKXco5JFpNxz2awmCbGo6ykr
+	 0eDgCShdYQ6yu05NMf6DM0h7mZ6V5Fw/2uWiRaQVmAcP38hS5SJ+g3FpBwhWrT3wkY
+	 3+lEXAkOGbOUH6knkgxHb393P9TMFTVmxCfmy/QdM3mjoalNNg1zBTZSwLsBmEglVR
+	 B0EQ5hY2d1qhQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shahar Shitrit <shshitrit@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 110/153] net/mlx5: Modify LSB bitmask in temperature event to include only the first bit
-Date: Mon,  5 May 2025 19:12:37 -0400
-Message-Id: <20250505231320.2695319-110-sashal@kernel.org>
+	mchehab@kernel.org,
+	laurent.pinchart+renesas@ideasonboard.com,
+	umang.jain@ideasonboard.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	tomm.merciai@gmail.com,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 117/153] media: v4l: Memset argument to 0 before calling get_mbus_config pad op
+Date: Mon,  5 May 2025 19:12:44 -0400
+Message-Id: <20250505231320.2695319-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -58,43 +56,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Shahar Shitrit <shshitrit@nvidia.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 633f16d7e07c129a36b882c05379e01ce5bdb542 ]
+[ Upstream commit 91d6a99acfa5ce9f95ede775074b80f7193bd717 ]
 
-In the sensor_count field of the MTEWE register, bits 1-62 are
-supported only for unmanaged switches, not for NICs, and bit 63
-is reserved for internal use.
+Memset the config argument to get_mbus_config V4L2 sub-device pad
+operation to zero before calling the operation. This ensures the callers
+don't need to bother with it nor the implementations need to set all
+fields that may not be relevant to them.
 
-To prevent confusing output that may include set bits that are
-not relevant to NIC sensors, we update the bitmask to retain only
-the first bit, which corresponds to the sensor ASIC.
-
-Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Mateusz Polchlopek <mateusz.polchlopek@intel.com>
-Link: https://patch.msgid.link/20250213094641.226501-4-tariqt@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/events.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/v4l2-core/v4l2-subdev.c | 2 ++
+ include/media/v4l2-subdev.h           | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/events.c b/drivers/net/ethernet/mellanox/mlx5/core/events.c
-index a1ac3a654962e..080aee3e3f9bb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
-@@ -160,6 +160,10 @@ static int temp_warn(struct notifier_block *nb, unsigned long type, void *data)
- 	u64 value_msb;
- 
- 	value_lsb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_lsb);
-+	/* bit 1-63 are not supported for NICs,
-+	 * hence read only bit 0 (asic) from lsb.
-+	 */
-+	value_lsb &= 0x1;
- 	value_msb = be64_to_cpu(eqe->data.temp_warning.sensor_warning_msb);
- 
- 	mlx5_core_warn(events->dev,
+diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+index 5d27a27cc2f24..6f2267625c7ea 100644
+--- a/drivers/media/v4l2-core/v4l2-subdev.c
++++ b/drivers/media/v4l2-core/v4l2-subdev.c
+@@ -314,6 +314,8 @@ static int call_enum_dv_timings(struct v4l2_subdev *sd,
+ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
+ 				struct v4l2_mbus_config *config)
+ {
++	memset(config, 0, sizeof(*config));
++
+ 	return check_pad(sd, pad) ? :
+ 	       sd->ops->pad->get_mbus_config(sd, pad, config);
+ }
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index 9a476f902c425..262b5e5cebc4c 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -714,7 +714,9 @@ struct v4l2_subdev_state {
+  *		     possible configuration from the remote end, likely calling
+  *		     this operation as close as possible to stream on time. The
+  *		     operation shall fail if the pad index it has been called on
+- *		     is not valid or in case of unrecoverable failures.
++ *		     is not valid or in case of unrecoverable failures. The
++ *		     config argument has been memset to 0 just before calling
++ *		     the op.
+  *
+  * @set_mbus_config: set the media bus configuration of a remote sub-device.
+  *		     This operations is intended to allow, in combination with
 -- 
 2.39.5
 
