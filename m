@@ -1,148 +1,131 @@
-Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212A1ACEAC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB5F20F098;
+	Mon,  5 May 2025 12:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446691; cv=none; b=VmBxvRvziG2Xsq6x1DaiHSGOxrDCHJj/iEIDnyLrlHQu5z2itlJB5LAl1PD4+8vZHi1SMY/JGdpD332sx2VJdlytpV4pEW4ml7PDPNbKnq4xIe1AcrY1P6KtqjXZtu570EiuNA1dDt6icR83dpNQaNCSGTxjdXexNj7/1vhh/LE=
+	t=1746446696; cv=none; b=amFcAL3ZrmYRwp8Ji8A4XDPcPNF+B+WG39sK3jm/uwB+rB911ZWI5AhcvpubexoSoT7GvXSz8R6JXYLv/sYx8eg2aOLoY8MzZoH1v4hU7Xf86CX0SxUbwjIP0L6b00bNELDj74k7HgKUf+n9smcPPHsslpzdEkhMN3kUTYC0/Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446691; c=relaxed/simple;
-	bh=0arvIUSifnZxahyQL3PgmRS+MaPEBBGATf2lplycaL4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YQnyJVibGl+EeqR4ER/OeTY6g1pE4g/VpNgpM4JK1n0+USGpNhc4+ZrWcUob5FfNUugoxAHWb+ify1qEpvxa4iS07LKeOwtOCutORtr24PIxvl/e135TzadiieE6nj0ApIcLPJxTYeraUHRnSBUw2MYevHlZzVBC5X88tzxhj2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
-Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
- (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
- 13:59:38 +0200
-Received: from lnxdevrm02.bk.prodrive.nl (10.1.1.121) by
- EXCOP01.bk.prodrive.nl (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4
- via Frontend Transport; Mon, 5 May 2025 13:59:38 +0200
-Received: from paugeu by lnxdevrm02.bk.prodrive.nl with local (Exim 4.96)
-	(envelope-from <paul.geurts@prodrive-technologies.com>)
-	id 1uBuTy-008B5T-0u;
-	Mon, 05 May 2025 13:59:38 +0200
-From: Paul Geurts <paul.geurts@prodrive-technologies.com>
-To: <lgirdwood@gmail.com>, <broonie@kernel.org>,
-	<frieder.schrempf@kontron.de>, <Frank.Li@nxp.com>, <marex@denx.de>,
-	<yibin.gong@nxp.com>, <joy.zou@nxp.com>, <linux-kernel@vger.kernel.org>
-CC: <martijn.de.gouw@prodrive-technologies.com>, Paul Geurts
-	<paul.geurts@prodrive-technologies.com>
-Subject: [PATCH] regulator: pca9450: Add restart handler
-Date: Mon, 5 May 2025 13:59:36 +0200
-Message-ID: <20250505115936.1946891-1-paul.geurts@prodrive-technologies.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1746446696; c=relaxed/simple;
+	bh=R9WlJifQRmfUPd0XmkKuNtBr7Si9/5o603rGPk5oPnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iqERUMyKgq/Op476CBWv1QDF8jNih38WTfxXHXk/31X1yaXYoEDlZ+r0lFWd5nYDfCKJEF3fH2xWd8BPb/bpT4SYdZ9+yQn2bSMNKkgS1n6cx8Ctrli6uVBqBj60gZx+r3DZNJgj9e5ytWkxWFkCF19/w28UWcErjA1OvlGcuH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfoOYGKY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfoOYGKY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7112C4CEE4;
+	Mon,  5 May 2025 12:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746446695;
+	bh=R9WlJifQRmfUPd0XmkKuNtBr7Si9/5o603rGPk5oPnA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CfoOYGKYGIA2Sx8PZH371D4ghhP5D/ilTqAL1uz3IyP2UhQQhlAWJHcU5YwT7sQDJ
+	 ScNCPiP88okyji4jYYKxbvgj8Y6EkLVwmz8BY4kCSu8ry2FunYgQg6XD1xRJXvrh/k
+	 GMYTp3r3F8onOHnAKDCXqy/Yui+4LmY1G+S/dTzsHIqhuPP4sQjh6qmZnrCsfmrGfQ
+	 mLybIIeCGyUdTKtfyJl/155dfB8UPot7AE6xu2c/DhlGUcnbJBPwS2L8UOApTOyfJq
+	 y0XRySA7QoOTse1kd81Hwg4Zf9dZHZK82b1YnRZdZgcze8hOQZlUpKiMzCzMa2XTjT
+	 AI85eaMTw93CA==
+Date: Mon, 5 May 2025 13:04:48 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "wbg@kernel.org" <wbg@kernel.org>
+Subject: Re: [PATCH] counter: interrupt-cnt: Convert atomic_t ->
+ atomic_long_t
+Message-ID: <20250505130448.49eb1a73@jic23-huawei>
+In-Reply-To: <91c00e75bc25267d57863494d638f0a43e499ac4.camel@siemens.com>
+References: <20250331152222.2263776-1-alexander.sverdlin@siemens.com>
+	<91c00e75bc25267d57863494d638f0a43e499ac4.camel@siemens.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-When restarting a CPU powered by the PCA9450 power management IC, it
-is beneficial to use the PCA9450 to power cycle the CPU and all its
-connected peripherals to start up in a known state. The PCA9450 features
-a cold start procedure initiated by an I2C command.
+On Fri, 2 May 2025 09:24:18 +0000
+"Sverdlin, Alexander" <alexander.sverdlin@siemens.com> wrote:
 
-Add a restart handler so that the PCA9450 is used to restart the CPU.
-The restart handler sends command 0x14 to the SW_RST register,
-initiating a cold reset (Power recycle all regulators except LDO1, LDO2
-and CLK_32K_OUT)
+> Dear maintainers,
+>=20
+> On Mon, 2025-03-31 at 17:22 +0200, A. Sverdlin wrote:
+> > From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> >=20
+> > Convert the internal counter type to atomic_long_t, which:
+> > - doesn't change much for existing in-tree users as they are 32-bit any=
+way
+> > =C2=A0 (stm32/i.MX6)
+> > - doesn't introduce performace penalty on 32-bit platforms
+> > - provides 64-bit resolution on 64-bit platforms with virtually no
+> > =C2=A0 preformance penalty
+> >=20
+> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com> =20
+>=20
+> I've noticed that the patch has been marked as "Changes Requested" in
+> the patchwork, could it be a mistake? Because I never received any
+> change request.
 
-As the PCA9450 is a PMIC specific for the i.MX8M family CPU, the restart
-handler priority is set just slightly higher than imx2_wdt and the PSCI
-restart handler. This makes sure this restart handler takes precedence.
+Probably a miss click by me if you mean the IIO patchwork.
+I tend to mark all counter stuff as handled elsewhere rather than keeping
+track of it in that patchwork instance.=20
 
-Signed-off-by: Paul Geurts <paul.geurts@prodrive-technologies.com>
----
- drivers/regulator/pca9450-regulator.c | 27 +++++++++++++++++++++++++++
- include/linux/regulator/pca9450.h     |  5 +++++
- 2 files changed, 32 insertions(+)
+Jonathan
 
-diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
-index a56f3ab754fa..14d19a6d6655 100644
---- a/drivers/regulator/pca9450-regulator.c
-+++ b/drivers/regulator/pca9450-regulator.c
-@@ -9,6 +9,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-+#include <linux/reboot.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -33,6 +34,7 @@ struct pca9450 {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct gpio_desc *sd_vsel_gpio;
-+	struct notifier_block restart_nb;
- 	enum pca9450_chip_type type;
- 	unsigned int rcnt;
- 	int irq;
-@@ -965,6 +967,25 @@ static irqreturn_t pca9450_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static int pca9450_i2c_restart_handler(struct notifier_block *nb,
-+				unsigned long action, void *data)
-+{
-+	struct pca9450 *pca9450 = container_of(nb, struct pca9450, restart_nb);
-+	struct i2c_client *i2c = container_of(pca9450->dev, struct i2c_client, dev);
-+
-+	dev_dbg(&i2c->dev, "Restarting device..\n");
-+	if (i2c_smbus_write_byte_data(i2c, PCA9450_REG_SWRST, SW_RST_COMMAND) == 0) {
-+		/* tRESTART is 250ms, so 300 should be enough to make sure it happened */
-+		mdelay(300);
-+		/* When we get here, the PMIC didn't power cycle for some reason. so warn.*/
-+		dev_warn(&i2c->dev, "Device didn't respond to restart command\n");
-+	} else {
-+		dev_err(&i2c->dev, "Restart command failed\n");
-+	}
-+
-+	return 0;
-+}
-+
- static int pca9450_i2c_probe(struct i2c_client *i2c)
- {
- 	enum pca9450_chip_type type = (unsigned int)(uintptr_t)
-@@ -1107,6 +1128,12 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
- 	pca9450->sd_vsel_fixed_low =
- 		of_property_read_bool(ldo5->dev.of_node, "nxp,sd-vsel-fixed-low");
- 
-+	pca9450->restart_nb.notifier_call = pca9450_i2c_restart_handler;
-+	pca9450->restart_nb.priority = PCA9450_RESTART_HANDLER_PRIORITY;
-+
-+	if (register_restart_handler(&pca9450->restart_nb))
-+		dev_warn(&i2c->dev, "Failed to register restart handler\n");
-+
- 	dev_info(&i2c->dev, "%s probed.\n",
- 		type == PCA9450_TYPE_PCA9450A ? "pca9450a" :
- 		(type == PCA9450_TYPE_PCA9451A ? "pca9451a" : "pca9450bc"));
-diff --git a/include/linux/regulator/pca9450.h b/include/linux/regulator/pca9450.h
-index b427b5873de1..85b4fecc10d8 100644
---- a/include/linux/regulator/pca9450.h
-+++ b/include/linux/regulator/pca9450.h
-@@ -35,6 +35,8 @@ enum {
- 	PCA9450_DVS_LEVEL_MAX,
- };
- 
-+#define PCA9450_RESTART_HANDLER_PRIORITY 130
-+
- #define PCA9450_BUCK1_VOLTAGE_NUM	0x80
- #define PCA9450_BUCK2_VOLTAGE_NUM	0x80
- #define PCA9450_BUCK3_VOLTAGE_NUM	0x80
-@@ -235,4 +237,7 @@ enum {
- #define I2C_LT_ON_RUN			0x02
- #define I2C_LT_FORCE_ENABLE		0x03
- 
-+/* PCA9450_REG_SW_RST command */
-+#define SW_RST_COMMAND			0x14
-+
- #endif /* __LINUX_REG_PCA9450_H__ */
--- 
-2.39.2
+>=20
+> > ---
+> > =C2=A0drivers/counter/interrupt-cnt.c | 8 ++++----
+> > =C2=A01 file changed, 4 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/counter/interrupt-cnt.c b/drivers/counter/interrup=
+t-cnt.c
+> > index 949598d51575a..8df5457b0a076 100644
+> > --- a/drivers/counter/interrupt-cnt.c
+> > +++ b/drivers/counter/interrupt-cnt.c
+> > @@ -15,7 +15,7 @@
+> > =C2=A0#define INTERRUPT_CNT_NAME "interrupt-cnt"
+> > =C2=A0
+> > =C2=A0struct interrupt_cnt_priv {
+> > -	atomic_t count;
+> > +	atomic_long_t count;
+> > =C2=A0	struct gpio_desc *gpio;
+> > =C2=A0	int irq;
+> > =C2=A0	bool enabled;
+> > @@ -29,7 +29,7 @@ static irqreturn_t interrupt_cnt_isr(int irq, void *d=
+ev_id)
+> > =C2=A0	struct counter_device *counter =3D dev_id;
+> > =C2=A0	struct interrupt_cnt_priv *priv =3D counter_priv(counter);
+> > =C2=A0
+> > -	atomic_inc(&priv->count);
+> > +	atomic_long_inc(&priv->count);
+> > =C2=A0
+> > =C2=A0	counter_push_event(counter, COUNTER_EVENT_CHANGE_OF_STATE, 0);
+> > =C2=A0
+> > @@ -89,7 +89,7 @@ static int interrupt_cnt_read(struct counter_device *=
+counter,
+> > =C2=A0{
+> > =C2=A0	struct interrupt_cnt_priv *priv =3D counter_priv(counter);
+> > =C2=A0
+> > -	*val =3D atomic_read(&priv->count);
+> > +	*val =3D atomic_long_read(&priv->count);
+> > =C2=A0
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > @@ -102,7 +102,7 @@ static int interrupt_cnt_write(struct counter_devic=
+e *counter,
+> > =C2=A0	if (val !=3D (typeof(priv->count.counter))val)
+> > =C2=A0		return -ERANGE;
+> > =C2=A0
+> > -	atomic_set(&priv->count, val);
+> > +	atomic_long_set(&priv->count, val);
+> > =C2=A0
+> > =C2=A0	return 0;
+> > =C2=A0} =20
+>=20
 
