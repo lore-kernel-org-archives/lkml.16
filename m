@@ -1,39 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0616D9C2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99197274667
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 21:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746480640; cv=none; b=MIDSf+ZuR4CDXlWETk621R1ZJorcG7IDpfzK7TP9VEgzHTGBhM7EKucklNZ36rqDZV+Jthc4H1aVnkr8CoPtbG9jGfS30NrI3JVlT/RifI6/wlWHsk9cDy/Nu0eUh9l+mATPNUZvZOueNCkUNg/qqPKHlYWCOhYB7IDPptNNrLA=
+	t=1746480646; cv=none; b=XWlAjjCSVPkMxiUZ8hF2RmQkXl12PwKYlwNVWuQlBBxfesqyH3u5pMK475+xQXHUIJ3aETWuWSX8/pOSqmgn5eL7v+XI9FE4Npvo3bk4IIFeYJl8QP0StGFazOyZ5EuKcxEaK/XVArOlo2w5Ae0t5pZ5ucixm0irmOA35SbjBWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746480640; c=relaxed/simple;
-	bh=Bj2fusfJTaaWr0/xX5QKN09D9c+IyZzzknNjk0DRKO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QxaWmIVCpgbCbT0GM+hB3NvGcd34Lro6zF1N4LZMoOMkXWytArVDtOa9N7RNWIJn60TjqRgqQk7A4RFVjRxNCt45Sn4o1SBcgOsHGXObpgDfXk27aswt3y8iZkbtmKVd75ubBOkqWqc62f6yOzxvSulZh5hSQ+eBTA3YdGtzfMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=He41qURn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746480646; c=relaxed/simple;
+	bh=IK064DxGL6rd2AXReFr8WLkQruOrkwYNSi+SXBiuUcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XraDzHCKz2YLvSH7X0vhm0hmBo58rV0ADdQMcAm8n+qYw0O1fZBqKYJ4duCS/DrwaoMkdNLHeStsRpCZm9PonqlBEOHV8lSJlrNL6a9TpQBX81ughY7B7H3+1EW9dmUyQHmaBYwQ6W8+bC9Ju6nNzbAAV/8H9+Zc1jlrLPxoF4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dbUOX+p/; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="He41qURn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3527FC4CEE4;
-	Mon,  5 May 2025 21:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746480640;
-	bh=Bj2fusfJTaaWr0/xX5QKN09D9c+IyZzzknNjk0DRKO8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=He41qURn356N+WZ9NGxXG3uT8/1fHsD0+clnf/9yB+yqY2dcifm3kMhcW4VKynjAq
-	 e/GEXTbyC6WJbMbJqC3f7E5qVF0QtTUidFfnXYRb/5HXdGN/JHzxZ6tuvJV2JRxIEU
-	 hOd2d4gHACxdWRZmCj+exuvA/CyPeiF/lP7os4hupQeb6CtDYzo8DcIm8N/ScWYbdJ
-	 SrpJj58EFNSnP1C4pbpDQUEEeOxXcjybsOr4Ia4+SOQQsXNatQ9uITsyS46KL/c+90
-	 zl9eoOKbsjsbkj5tvPrskfuq7B1NWB2O+wpczfUF4N6aYfxAJXXu53jdrNd6T2eceF
-	 q/a3TGBAi+aKg==
-Date: Mon, 5 May 2025 11:30:39 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH sched_ext/for-6.15-fixes] sched_ext: bpf_iter_scx_dsq_new()
- should always initialize iterator
-Message-ID: <aBkt_4tEZATxf6-Q@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dbUOX+p/"
+Date: Mon, 5 May 2025 14:30:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746480629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4siW68oDPSIdvipM3gqfjnaQhK22j3W7xRxbXDcucJ0=;
+	b=dbUOX+p/WAESDrw8cbIJP2Y64eqW+Hr9gR8/bt/Boxi8WEj/t+D+2V70gZV+YD5owGLCSh
+	zj3jVcQGXp+ShoQPg5ujhWsAGJrKWxnoS+P6Qcn0iPjvxt7jQgoDEHUynudXexBbNXh5vF
+	ytdXmBB/GN+oSTiX9gl/cnTMEPlHZh4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: xu.xin16@zte.com.cn
+Cc: akpm@linux-foundation.org, david@redhat.com, 
+	linux-kernel@vger.kernel.org, wang.yaxin@zte.com.cn, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, yang.yang29@zte.com.cn
+Subject: Re: [PATCH v2 0/9] support ksm_stat showing at cgroup level
+Message-ID: <ir2s6sqi6hrbz7ghmfngbif6fbgmswhqdljlntesurfl2xvmmv@yp3w2lqyipb5>
+References: <20250501120854885LyBCW0syCGojqnJ8crLVl@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,40 +43,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250501120854885LyBCW0syCGojqnJ8crLVl@zte.com.cn>
+X-Migadu-Flow: FLOW_OUT
 
-From 3ca42b7aea35cbcfb8d1fdde09e10a54edf97b26 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Mon, 5 May 2025 11:28:21 -1000
+On Thu, May 01, 2025 at 12:08:54PM +0800, xu.xin16@zte.com.cn wrote:
+> From: xu xin <xu.xin16@zte.com.cn>
+> 
+> With the enablement of container-level KSM (e.g., via prctl [1]), there is
+> a growing demand for container-level observability of KSM behavior. However,
+> current cgroup implementations lack support for exposing KSM-related
+> metrics.
+> 
+> This patch introduces a new interface named ksm_stat
+> at the cgroup hierarchy level, enabling users to monitor KSM merging
+> statistics specifically for containers where this feature has been
+> activated, eliminating the need to manually inspect KSM information for
+> each individual process within the cgroup.
+> 
+> Users can obtain the KSM information of a cgroup just by:
+> 
+> # cat /sys/fs/cgroup/memory.ksm_stat
+> ksm_rmap_items 76800
+> ksm_zero_pages 0
+> ksm_merging_pages 76800
+> ksm_process_profit 309657600
+> 
+> Current implementation supports both cgroup v2 and cgroup v1.
+> 
 
-BPF programs may call next() and destroy() on BPF iterators even after new()
-returns an error value. bpf_iter_scx_dsq_new() could leave the iterator in
-an uninitialized state after an error return causing bpf_iter_scx_dsq_next()
-to dereference garbage data. Make bpf_iter_scx_dsq_new() always clear
-$kit->dsq so that next() and destroy() become noops.
+Before adding these stats to memcg, add global stats for them in
+enum node_stat_item and then you can expose them in memcg through
+memory.stat instead of a new interface.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 650ba21b131e ("sched_ext: Implement DSQ iterator")
-Cc: stable@vger.kernel.org # v6.12+
----
- kernel/sched/ext.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 4e37b40ce280..f5133249fd4d 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -6827,6 +6827,12 @@ __bpf_kfunc int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id,
- 	BUILD_BUG_ON(__alignof__(struct bpf_iter_scx_dsq_kern) !=
- 		     __alignof__(struct bpf_iter_scx_dsq));
- 
-+	/*
-+	 * next() and destroy() will be called regardless of the return value.
-+	 * Always clear $kit->dsq.
-+	 */
-+	kit->dsq = NULL;
-+
- 	if (flags & ~__SCX_DSQ_ITER_USER_FLAGS)
- 		return -EINVAL;
- 
--- 
-2.49.0
