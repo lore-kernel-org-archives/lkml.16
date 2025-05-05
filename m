@@ -1,158 +1,163 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0745680
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D025680;
+	Mon,  5 May 2025 18:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746469035; cv=none; b=qhjdgweYIRNuiGPuYEUJUWWmu3eMlNE4Af4qW3/GFYz+8HkurJCiDW8MyGSZAlTMbK1A/73rZPgYrWFh0dhF/NUN9VRFQYlc36xxvwon4wLm/RfWnAvpeDA7RzeX1iOYOW5ZuIPGEfpikfv+/G7yPMRHlmJKmjZdyPpLAZXoh6M=
+	t=1746469094; cv=none; b=ksGI7tMYleAu63IpbMEDlCoUSkUNbe3HjmWcFebr1iRUQW7zErHbA3Af3b1ZcW4CH0ep5t7wlj5BUZ7iercqW+L6zrITm2uH5S53MSGnSN1muqqWYjG/e/TDqV6+TqiRebmxLVLIUBGYDzNxd2tI9uy65aHGN/HqUp6nQ5g83Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746469035; c=relaxed/simple;
-	bh=ebM4dpi9tTj1/J6Zu4pVcvgIwpnGYs8XJ6sG1Hbq8m4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n2nqULXD8UdSYtxjxfgIIrfMNmBo6nqqIZlttr6KNgOWPOYh7O3ezZb44HpzDDRaxLqpWB1R8ojMrzu5NxSHuNqtfijRhiHIT9jMGdM2l+PAU3kLBHUwtvJdIvaT4h0lDfpeYeEPZE9hRFePfw+q4pBuvSoeRtfJJz/2uQvE0vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0efNXa1K; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746469094; c=relaxed/simple;
+	bh=d1oCyEAhdl5k3byt/GQARFiUPsdGUPEYZ9qeb+fuMV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BdEVvjUTg0pxXKiuoK/THHvx8Is8sASE6Z/hh4X90KEC8kWO0vQFdZE11Xg6vIkcr7X1E0J7UIWhrDjFD9Vn3B1z3dpllRYUcbBaA2NBhESvaNlxv2yjluIfh7mx2UuSIrwgAueS8V49pnVrwnRvh/gfLhITQH//q0eBm4CK0pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=clDP0RsW; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0efNXa1K"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4c32ba00861so1335206137.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746469031; x=1747073831; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6RdDSV3C1kkoxQpJwSli9pdvJprdzRDcGLg/gY+ewYo=;
-        b=0efNXa1KGH5gWOf3cgeob43GRgbpvGT8H/TvwCrd55v9Vm+TtRaS/cxbOlmd77bcAV
-         +0zMagvuoA+aPcGEq3tfeYjvj5ant7HAg8hl5VybkgafYJnqUw+fCM5gHUBwFYK6CE6W
-         6RXvnaPfkPv4pYiwLj4BYQ3MsQNG+oETE0aVd5anrWlGo6+VxjGGlMIFUV7OAcHcYjpg
-         AoQuCf0c+oSz3pDB1vApH76szfOaNLtwr+/GRxxLjnfATA7an46on+1qQ+Mjk0vfUbGL
-         ev+2/O97nO7oggcgD33lUbzpi+8LMgE9EMc2/gc0bcunAV57RKI7FjZLBUMzjt+yH7oH
-         2YoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746469031; x=1747073831;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6RdDSV3C1kkoxQpJwSli9pdvJprdzRDcGLg/gY+ewYo=;
-        b=Avb7Ea/gNTL2S28ygXelqn6qCz67KL9tfO1H4VLj3kBoBjr4WrzYLA7lW0+cBeTEyZ
-         LOMOyrLoClNyl8fwFWpmQqzY1z206GQILoeFiBEbZRwOkj528N7yAr0LcZ4MaWsFTuJ+
-         drr3IUo0Lq3j4ghgr6/Xbgc2U2p8VLQrYxMRd39oV36xIzPB2KScm7M88KiA8v/TwxfA
-         K3Tzg0hnnSqGkRSmU/Xz6Wd1xPHW6it/JjkgREz97eLdmnnNK3gkj80VUa9nplqQQY9U
-         GgQVsrn91q/7FzVGmpntrwpnUm8u1Ocf9JRQSu6h+1b9ieWl3xMuum+qivS1EE5FpKpr
-         CzvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIXgWCxRfUI3BbcknJewNnnTrSWtF6nRB8pn+ixG/kO2ueQ717G8dgWClwbdzwupts7ikn/NV26v//m/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlrcG/8HMXChV04nAdU8pieDTMhI1MTsL6+5iYRhDjR85jkqT0
-	TryNkSKEQeK0IE1IyLA0+D/pJ8W0c8PteS9GwDjL2+yBdhqNMWrPkUYrI9l+GQNFVS0uLbA/UH8
-	FuuzZuSrE26w6SMf1w3nrZAQ6l961KOX5v2uZ
-X-Gm-Gg: ASbGncvHgHbpgnCbh272hBxixvOkx9lMkZBIbffPKI2Qp5KZ3aZeOvcl/mOsBur2yTK
-	b6ELryhD2csGRyDFAY5vFWg+FsYaT8fod08aXJdGfu/OrSvXU/DOl1UVAQzdi+14oaE9QLEqDgs
-	sIdVzTHltuUCwus0jyWTE7
-X-Google-Smtp-Source: AGHT+IF/v/NhUlwDl+Ul0geebRYwa8/EIVndjMjgtVnXrErs28xqOVyt7NYHnyhn7xzOG/mZcLIcvccqpB89VJSlcqA=
-X-Received: by 2002:a05:6102:158d:b0:4c4:dead:59ab with SMTP id
- ada2fe7eead31-4db14781447mr4073359137.5.1746469031346; Mon, 05 May 2025
- 11:17:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="clDP0RsW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746469093; x=1778005093;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=d1oCyEAhdl5k3byt/GQARFiUPsdGUPEYZ9qeb+fuMV0=;
+  b=clDP0RsWogglFjscS+zYKgo3NSGWJwsAdWPO6KXI2XADlUDRZysmE70a
+   huYosKa/a4l8rAnI/K3WMdOMzmASI8P4KH/KvZQSKD6WZzdcLS9NoHPPC
+   j6REkP6ER5XEM8FUHk3R37Na5m7Kr1gJ8gwp42XPHA4OdpgcFVBpp5HyX
+   kAXyRkNdD7NFIApzMd3Yrz/w30k/eo1OME9WA4qrhwUh3hTBFWxO4wFoy
+   zB+6SinmNDsndiWyiyofzOkcnLCQxXOrgJgh5o2UIOnRSZqzpxIaevhTW
+   NHGc8eZ/M88X71C87kd24PAdPbYmc2TMkZjD7cq+Gpcr5r3/lmJYraytT
+   A==;
+X-CSE-ConnectionGUID: 09qI2G0eTRalK1Pv6s9czw==
+X-CSE-MsgGUID: JoN/s9UbREmSd3N7+B/PQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11424"; a="58755467"
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="58755467"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 11:18:12 -0700
+X-CSE-ConnectionGUID: aLrVDZERTuaBC/6yoI32Gg==
+X-CSE-MsgGUID: K/q7KrlITEShfCLGEV+p/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,264,1739865600"; 
+   d="scan'208";a="166389318"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.37])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 11:18:08 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v5 11/14] cxl/region: Add function to find a port's switch decoder
+ by range
+Date: Mon, 05 May 2025 20:18:05 +0200
+Message-ID: <3624777.dWV9SEqChM@fdefranc-mobl3>
+In-Reply-To: <20250428214318.1682212-12-rrichter@amd.com>
+References:
+ <20250428214318.1682212-1-rrichter@amd.com>
+ <20250428214318.1682212-12-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503184001.make.594-kees@kernel.org> <20250503184623.2572355-3-kees@kernel.org>
-In-Reply-To: <20250503184623.2572355-3-kees@kernel.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Mon, 5 May 2025 11:16:58 -0700
-X-Gm-Features: ATxdqUG-8XZR84SCa_hy8LufhE4gnWyYrv86WHg4i3ik94ojF9GAbNyF1NZH5uE
-Message-ID: <CAFhGd8rGJcveDn4g1nS=tURe-uT1+PFm2EQeWpUrH_oy763yFg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] integer-wrap: Force full rebuild when .scl file changes
-To: Kees Cook <kees@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Marco Elver <elver@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Sat, May 3, 2025 at 11:46=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
->
-> Since the integer wrapping sanitizer's behavior depends on its associated
-> .scl file, we must force a full rebuild if the file changes. If not,
-> instrumentation may differ between targets based on when they were built.
->
-> Generate a new header file, integer-wrap.h, any time the Clang .scl
-> file changes. Include the header file in compiler-version.h when its
-> associated feature name, INTEGER_WRAP, is defined. This will be picked
-> up by fixdep and force rebuilds where needed.
->
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Monday, April 28, 2025 11:43:14=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> Factor out code to find the switch decoder of a port for a specific
+> address range. Reuse the code to search a root decoder, create the
+> function cxl_port_find_switch_decoder() and rework
+> match_root_decoder_by_range() to be usable for switch decoders too.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+
 > ---
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas.schier@linux.dev>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: <linux-kbuild@vger.kernel.org>
-> Cc: <kasan-dev@googlegroups.com>
-> Cc: <linux-hardening@vger.kernel.org>
-> ---
->  include/linux/compiler-version.h | 3 +++
->  scripts/Makefile.ubsan           | 1 +
->  scripts/basic/Makefile           | 5 +++++
->  3 files changed, 9 insertions(+)
->
-> diff --git a/include/linux/compiler-version.h b/include/linux/compiler-ve=
-rsion.h
-> index 69b29b400ce2..187e749f9e79 100644
-> --- a/include/linux/compiler-version.h
-> +++ b/include/linux/compiler-version.h
-> @@ -19,3 +19,6 @@
->  #ifdef RANDSTRUCT
->  #include <generated/randstruct_hash.h>
->  #endif
-> +#ifdef INTEGER_WRAP
-> +#include <generated/integer-wrap.h>
-> +#endif
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 9e35198edbf0..653f7117819c 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)             +=3D $(ca=
-ll cc-option,-fsanitize-trap=3Dundefined
->  export CFLAGS_UBSAN :=3D $(ubsan-cflags-y)
->
->  ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=3D  \
-> +       -DINTEGER_WRAP                                          \
->         -fsanitize-undefined-ignore-overflow-pattern=3Dall        \
->         -fsanitize=3Dsigned-integer-overflow                      \
->         -fsanitize=3Dunsigned-integer-overflow                    \
-> diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
-> index dd289a6725ac..fb8e2c38fbc7 100644
-> --- a/scripts/basic/Makefile
-> +++ b/scripts/basic/Makefile
-> @@ -14,3 +14,8 @@ cmd_create_randstruct_seed =3D \
->  $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
->         $(call if_changed,create_randstruct_seed)
->  always-$(CONFIG_RANDSTRUCT) +=3D randstruct.seed
+>  drivers/cxl/core/region.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index a292d5c4c4a9..ef5408301714 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3205,33 +3205,39 @@ static int devm_cxl_add_dax_region(struct cxl_reg=
+ion *cxlr)
+>  	return rc;
+>  }
+> =20
+> -static int match_root_decoder_by_range(struct device *dev,
+> -				       const void *data)
+> +static int match_decoder_by_range(struct device *dev, const void *data)
+>  {
+>  	const struct range *r1, *r2 =3D data;
+> -	struct cxl_root_decoder *cxlrd;
+> +	struct cxl_decoder *cxld;
+> =20
+> -	if (!is_root_decoder(dev))
+> +	if (!is_switch_decoder(dev))
+>  		return 0;
+> =20
+> -	cxlrd =3D to_cxl_root_decoder(dev);
+> -	r1 =3D &cxlrd->cxlsd.cxld.hpa_range;
+> +	cxld =3D to_cxl_decoder(dev);
+> +	r1 =3D &cxld->hpa_range;
+>  	return range_contains(r1, r2);
+>  }
+> =20
+> +static struct cxl_decoder *
+> +cxl_port_find_switch_decoder(struct cxl_port *port, struct range *hpa)
+> +{
+> +	struct device *cxld_dev =3D device_find_child(&port->dev, hpa,
+> +						    match_decoder_by_range);
 > +
-> +# integer-wrap: if the .scl file changes, we need to do a full rebuild.
-> +$(obj)/../../include/generated/integer-wrap.h: $(srctree)/scripts/intege=
-r-wrap-ignore.scl FORCE
-> +       $(call if_changed,touch)
-> +always-$(CONFIG_UBSAN_INTEGER_WRAP) +=3D ../../include/generated/integer=
--wrap.h
+> +	return cxld_dev ? to_cxl_decoder(cxld_dev) : NULL;
+> +}
+> +
+>  static struct cxl_root_decoder *
+>  cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+>  {
+>  	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
+>  	struct cxl_port *port =3D cxled_to_port(cxled);
+>  	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
+> -	struct cxl_decoder *cxld =3D &cxled->cxld;
+> +	struct cxl_decoder *root, *cxld =3D &cxled->cxld;
+>  	struct range *hpa =3D &cxld->hpa_range;
+> -	struct device *cxlrd_dev;
+> =20
+> -	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, hpa,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> +	root =3D cxl_port_find_switch_decoder(&cxl_root->port, hpa);
+> +	if (!root) {
+>  		dev_err(cxlmd->dev.parent,
+>  			"%s:%s no CXL window for range %#llx:%#llx\n",
+>  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> @@ -3239,7 +3245,7 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *=
+cxled)
+>  		return NULL;
+>  	}
+> =20
+> -	return to_cxl_root_decoder(cxlrd_dev);
+> +	return to_cxl_root_decoder(&root->dev);
+>  }
+> =20
+>  static int match_region_by_range(struct device *dev, const void *data)
+>=20
 
-I'm not sure how this fake header stuff works to ensure builds deps
-are tracked properly but we do need scl files to be considered as part
-of complete builds, so:
 
-Acked-by: Justin Stitt <justinstitt@google.com>
 
-> --
-> 2.34.1
->
+
