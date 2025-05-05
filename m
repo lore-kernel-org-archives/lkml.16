@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6985B2989B9;
-	Mon,  5 May 2025 22:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFAF2989AD;
+	Mon,  5 May 2025 22:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484925; cv=none; b=hgxtxONA8qHQ2X8yewfv9RTBKSKi1V3jLmRjVPd+1iFbTlXyiPecMmYm0uVhJ4ArmQHpS+mq/NnRamV9d9H97GWWXLWgmj2CD63BZDkWAiBwhZC4WpAKUF4gFLm0REKV0fN9L9fmm3/1JJb9ZRNrFFWel0ZCmT0S7qcihvIX2bc=
+	t=1746484909; cv=none; b=DAnegFud5vOgx45ZtvLsmH2RDiadvnrEOefY/bIEa4pCOYqqptrwJ2ZdmFADb1mbiW21wdR16xJv8hMDAFn06sNX+nvRpxJ8QvJaUwflZggNMpFw8mfmR7x6D6X9rkv57oHgETd6EqSxvUmgE2Afgje9EE2MvXdhewJcalPYUoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484925; c=relaxed/simple;
-	bh=vwyJJuUHQHIUu8CW2ekQWNLRuX3fK4CBnipe7jy1lc4=;
+	s=arc-20240116; t=1746484909; c=relaxed/simple;
+	bh=bHyz8c5tpBcqMqkz5kIdDIq0oeqPCdzWTDQUhNkqZGE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C1VRPloR/Yslx2/lB5e70MW3HU4KER4/bv+lkTLaeDUF8/b+jKsxc1xy9B2fJSNf/yGzXn4AIyU8p+rglJA++lmUI71K2li+MttH5suatiuCQMixvnfwCd7SpxomoWsYCBBZqSLydW4J3xx06bZnL17MhoQIS1w/sWQ8yb4aMLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YoDW5HGJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tYPrd5BbvKwxqOTzlJq8IYEg6drgGM7mDmMokgDe7iZqNEIrqQwWrd5U1jQDeIyjHz3RIaJonZKKP/vHOdI8HA9f7WWgpBSuva2ylg72+TJpaF+bF9S6AcK/ORaLcPwomDY8V0j8mWyjbozDxC6BfuPNAYV7G50dIveFdckj9uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joXavFqo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YoDW5HGJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D0C5C4CEEE;
-	Mon,  5 May 2025 22:42:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joXavFqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD561C4CEEE;
+	Mon,  5 May 2025 22:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484925;
-	bh=vwyJJuUHQHIUu8CW2ekQWNLRuX3fK4CBnipe7jy1lc4=;
+	s=k20201202; t=1746484909;
+	bh=bHyz8c5tpBcqMqkz5kIdDIq0oeqPCdzWTDQUhNkqZGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YoDW5HGJHhWz9EXSbayOxWdFmnCe5ShXFaQBpq2cnvUpD9YMZYsxUCmuF7aFuyawy
-	 ZbfIHjWwGwTRFvJdulceGOKKXszoGzbSZfrVxjI3B9H0jKRH085ycm9ickbgW/4M+H
-	 hov4S2BpTNsT80RGpC1pdpLi1STvlPre23r3FU8lsDLxDBFJGJI8leQUWLJX+JE4XX
-	 doJTxWY7dknsK3vQCfbqS6+7qjY5i8emo2lIqFdzeIRIsn/IEHGsYm/WBMEwHUvxfz
-	 BeoRcLmnLAuPniRUei8c461TdsubrzLzB1uGi6suov0EI77WscwernPusaBWRiqj43
-	 sHFUl8gFqlSsQ==
+	b=joXavFqo/hmo2bDXI4o7T09XGkPpf+mbqeIrfgwkh5VjgnTjfJeVQYKqGBUPAC0sm
+	 vAymu44zg5eUAARoFdPgw5jNGo/sTYvlJ8wAsDnGv6dhJZtZsuoPQGRhti8rpYCia7
+	 FTmJkN8M226OqxJwwgJZsjvF88ufzhM0XcpFfRQx1nbp7HDifxCYQjHx+rnRGu1UdN
+	 IoR64k0N2tVP+N9LhmZdxf2cxoJ9U4LJT50nsJeMJ8D2lBsZcEfjnOpI/2oRyJQ8Vv
+	 LLbdcvQZQm6DKE8SB7Giq5IYVBRx+WBWlKRVzdbqBra+H5scuSywxnVdeZ8sZKqkUJ
+	 i1hGEl8zHTkeA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	David Sterba <dsterba@suse.com>,
+Cc: Philip Redkin <me@rarity.fan>,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Rik van Riel <riel@surriel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Sasha Levin <sashal@kernel.org>,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 080/486] btrfs: zoned: exit btrfs_can_activate_zone if BTRFS_FS_NEED_ZONE_FINISH is set
-Date: Mon,  5 May 2025 18:32:36 -0400
-Message-Id: <20250505223922.2682012-80-sashal@kernel.org>
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	x86@kernel.org
+Subject: [PATCH AUTOSEL 6.12 069/486] x86/mm: Check return value from memblock_phys_alloc_range()
+Date: Mon,  5 May 2025 18:32:25 -0400
+Message-Id: <20250505223922.2682012-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,37 +58,51 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Philip Redkin <me@rarity.fan>
 
-[ Upstream commit 26b38e28162ef4ceb1e0482299820fbbd7dbcd92 ]
+[ Upstream commit 631ca8909fd5c62b9fda9edda93924311a78a9c4 ]
 
-If BTRFS_FS_NEED_ZONE_FINISH is already set for the whole filesystem, exit
-early in btrfs_can_activate_zone(). There's no need to check if
-BTRFS_FS_NEED_ZONE_FINISH needs to be set if it is already set.
+At least with CONFIG_PHYSICAL_START=0x100000, if there is < 4 MiB of
+contiguous free memory available at this point, the kernel will crash
+and burn because memblock_phys_alloc_range() returns 0 on failure,
+which leads memblock_phys_free() to throw the first 4 MiB of physical
+memory to the wolves.
 
-Reviewed-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+At a minimum it should fail gracefully with a meaningful diagnostic,
+but in fact everything seems to work fine without the weird reserve
+allocation.
+
+Signed-off-by: Philip Redkin <me@rarity.fan>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lore.kernel.org/r/94b3e98f-96a7-3560-1f76-349eb95ccf7f@rarity.fan
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/zoned.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/mm/init.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
-index 2603c9d60fd21..d1167aeb07354 100644
---- a/fs/btrfs/zoned.c
-+++ b/fs/btrfs/zoned.c
-@@ -2326,6 +2326,9 @@ bool btrfs_can_activate_zone(struct btrfs_fs_devices *fs_devices, u64 flags)
- 	if (!btrfs_is_zoned(fs_info))
- 		return true;
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 101725c149c42..9cbc1e6057d3c 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -645,8 +645,13 @@ static void __init memory_map_top_down(unsigned long map_start,
+ 	 */
+ 	addr = memblock_phys_alloc_range(PMD_SIZE, PMD_SIZE, map_start,
+ 					 map_end);
+-	memblock_phys_free(addr, PMD_SIZE);
+-	real_end = addr + PMD_SIZE;
++	if (!addr) {
++		pr_warn("Failed to release memory for alloc_low_pages()");
++		real_end = max(map_start, ALIGN_DOWN(map_end, PMD_SIZE));
++	} else {
++		memblock_phys_free(addr, PMD_SIZE);
++		real_end = addr + PMD_SIZE;
++	}
  
-+	if (test_bit(BTRFS_FS_NEED_ZONE_FINISH, &fs_info->flags))
-+		return false;
-+
- 	/* Check if there is a device with active zones left */
- 	mutex_lock(&fs_info->chunk_mutex);
- 	spin_lock(&fs_info->zone_active_bgs_lock);
+ 	/* step_size need to be small so pgt_buf from BRK could cover it */
+ 	step_size = PMD_SIZE;
 -- 
 2.39.5
 
