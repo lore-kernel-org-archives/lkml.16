@@ -1,158 +1,106 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FEC1F866B;
-	Mon,  5 May 2025 12:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AAA1F866B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 12:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746447646; cv=none; b=Zgqo+32P1aq8u+OmU5baL7jAooHDRNJ6JsiUBtPwlVAL9GrSsMpInyV6kHfvklUVT+HwbipakhlPzZvQZTj/rCS/NPEoud6Gbjd7RUIB9Df4apocflYBjCis7ed557d0NxAKM/pm8gpk2WqEEfgLx3wbf9v8rKgQMOsSefpnEck=
+	t=1746447689; cv=none; b=GdRcXsoGIfzuEpbGJmQrw7ajjzVTS+R1HaPia+Vk5k8CoqGfVUPFk7NFhClIGCyWWm5JK0B/f4XhdyzecxnmiMF2BtQk4QwyAFgtuUOi0Fj7eX0HHfHJVkwdi03TY/RlmwnULQGmcHSOcJjF2ZQtvMdfwfz61rk9l7rZk/wAvJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746447646; c=relaxed/simple;
-	bh=s89VJ/1EaCKaePelhYq4jo2czu3Rjni85JG5mwztG/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rueAuGXZGCLsw2d3hCfBs/NOQg5k0Mg3Lt4ytqJadWckK6TJGi3MeEl1i6RDzW1PCrocXWa5BfgtPLgN92gUPBQRur1JcPTQ25u73S/KtcO38anLtQYgeHUjqct4/rsKouGfoQY2cSsroHh8OVx911RB1utbZUelG9yTkBd9D74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VcIPzoF7; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1746447689; c=relaxed/simple;
+	bh=Im1IPj+bDmZA9T37fooSkQu3rIpJ4OZzqFkHpGOgocY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OWZwNmWc9yjfZfa/aILrX0Uwpytg8Kda9gDQpps6cq2ZEv8m2XcFbWvA8oqI4OlExWjNm6H/vuFnZzIfzp6WXqsq5zwSfnavydsJOd5ECbnTkwZ1nMzPfSUJnKjX0+GuawVO8PpBorNOCdPeLEZAgAaPXb62XZ8ZcQXq2uV1pZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=owTfBveG; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VcIPzoF7"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5459iofq026377;
-	Mon, 5 May 2025 14:20:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	vNv4YiLlgQtzs0T1f6YhVskbVHM2VZaXMMv7y7lFYks=; b=VcIPzoF7GvsOd/WZ
-	rsEAtn10/CuuGxpRtZPvKcVSO7L+0Hjoxqjze9wOkJ9oZpbrrxZaHOXoUWI0qxhl
-	5TqA8vbrHSzY4TszLkb9rxuxEC5JqBHyfzuTGQj46DDsopVDxMROJmXHMApay6iY
-	ndorEak3fidDnUd5uf+bp9VwMhDKVc1IJp5KZAg5Vi9bc8h89XpZg4rNnLd6oZqP
-	fLMl5nQp6KMHLwLMGOf8rLK5VrF4OskEJgbJb4IIJszd8dpt3DEUNIXifeP4dBoj
-	/K7j8uKefrb9yibR31mFUYlRxanDfE7YmEBAyxqWzpvo03+OSgsyRkAqgMZ5HDzi
-	u7+SPQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dbekp93d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 14:20:20 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7B78140048;
-	Mon,  5 May 2025 14:19:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7A9A5AF1E53;
-	Mon,  5 May 2025 14:17:39 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
- 2025 14:17:39 +0200
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
- 2025 14:17:38 +0200
-Message-ID: <c7a1b615-9171-4675-b5d6-fe5741f1ac0b@foss.st.com>
-Date: Mon, 5 May 2025 14:17:37 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="owTfBveG"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so5272537f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 05:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746447686; x=1747052486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Im1IPj+bDmZA9T37fooSkQu3rIpJ4OZzqFkHpGOgocY=;
+        b=owTfBveGQPKTwJtOXkc0KC3KYqRgHE3UyFLSajxwgkp+2u9VryF8AfL0O/FK9StxN+
+         E3XtTTc8kNgyVv5/C9K0BDIY2fc3/5aVH5Ezy4X/p15NcxuTW4OuH7Zc/mjYtJLQoB2A
+         kuxx+BoswrVnQxWwsAD0idw4mQOc1JyMWGoXKfFNLHfnJPSaVH0/pUaD9/+hiQ8I5uHO
+         4XLPUF9ngICBucNW4ZcFJVZSx21Xrfapdg8r5pAxiCNgXyuH/1pND/Ez1jDyhY0ELkZS
+         n+m9QLN44g2Z2LLIwq130lCgqlCV5RtJe/P4ZEoV1nheFqUdCXPtLcAo7ZX3wsRfOAt6
+         6big==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746447686; x=1747052486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Im1IPj+bDmZA9T37fooSkQu3rIpJ4OZzqFkHpGOgocY=;
+        b=jjlg3oldtKNNhaVHj07sP6MePInvtvC70Cbp6RJaCGq9n5XB4/Ql3FlWCFWGhMAAMe
+         4NwFkqOzrd5wtzFHJpwbM+t9krNYlClXMZuwAfLpyWdfUFSaE4RQWJypaYz7UTIsTz80
+         Zh9bAB24L6WKq6g+58dMgm++iUuPYmI53+5UVbXqiDl/LFrrVnXztg99NthRz/8CRP4u
+         iCN62oTqHeabkOuYhn9RO3UhERLIRKGAGuwS8XWu9I+U5bn9gyXmzBZQIn+ndKzTsTko
+         vz4pdhpN/+8tFXAZN+PgkSq8sHMeBYhpZqH7wxfBiVCA+W3gpFN7BDd6LrnpAdER1lvv
+         vGsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHxGPn5oYO4yjLZNbEVd4Zh+2YbBrnCpHMw3ibxJ43EnoNMDD0EdUzkoKjIDwLiUgHPa7hvXeKVCHFJ1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp+W1dWoF9r+ZW1r0CG3hrn2B+jeOkQF6Yy5HVzDlYhZXMSNrS
+	XxvjF134DmeSBqHViq20vaCO1LZsAtrvlLzBTQjTE7KXXE6k3Y2nxeRLsiV/wexcT3jx6+U3yph
+	AHs+Q8qqbJ5KiKDD4aXTnzOsa0rRcCI57zI7F
+X-Gm-Gg: ASbGncveS3y1mjx9PBHVjunAZT1LSlOk5XAXXDqNzr7TAH+46A/9qwHcTOkf/T2Kcr4
+	M16xiw+ftry/IMtqm3hgbbC62xsK4/o6lufHnGRLUTbtUvqmdrhnOPID2ikW6R4dch6yM5Nl63E
+	uKelVJcpAsF77aVAFJKJQ8yr0RN3OBBFj7VHRBQWV/682H6pRfh5pY
+X-Google-Smtp-Source: AGHT+IElySC8OTRaik+ESWXIBFnocNI0YzCxWhx6pDVOwBbkeQUT5b6uzjWIvVw0B3wT+bVAv9hCaOqg0s24m/7evm8=
+X-Received: by 2002:a5d:59a3:0:b0:39e:e438:8e4b with SMTP id
+ ffacd0b85a97d-3a09fdfc2a0mr4585112f8f.50.1746447685849; Mon, 05 May 2025
+ 05:21:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM, IIO,
- counter, clocksource
-To: Lee Jones <lee@kernel.org>
-CC: <daniel.lezcano@linaro.org>, <alexandre.torgue@foss.st.com>,
-        <tglx@linutronix.de>, <ukleinek@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <jic23@kernel.org>, <robh@kernel.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>, <wbg@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
- <20250501131454.GO1567507@google.com>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20250501131454.GO1567507@google.com>
+References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+In-Reply-To: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 5 May 2025 14:21:13 +0200
+X-Gm-Features: ATxdqUENSeiUkyfFBFmJqQFcAbNdNhtjRVnvyrZUQiTdO3set9SdTBdmdfiKOjs
+Message-ID: <CAH5fLgiP2pwxc6JCsJ481=0N7_q-Z=PFK829pU_nW+piN9O2gA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] strncpy_from_user for Rust
+To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-05-05_01,2025-02-21_01
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 5, 2025 at 2:17=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
+ote:
+>
+> There is currently no easy way to read NUL-terminated strings from
+> userspace. Trying to use the ordinary read function on an array of the
+> maximum length doesn't work because it could fail with EFAULT when the C
+> string is shorter than the maximum length. In this case,
+> strncpy_from_user is better because it doesn't return EFAULT even if it
+> encounters a page fault on bytes that are after the NUL-terminator but
+> before the maximum length.
+>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> Changes in v3:
+> - Remove pub from raw_strncpy_from_user.
+> - Mention that some data may have been copied on EFAULT.
+> - Add more comments to strcpy_into_buf about tricky cases.
+> - Rewrite documentation of strcpy_into_buf.
+> - Pick up Reviewed-by tags.
+> - Link to v2: https://lore.kernel.org/r/20250429-strncpy-from-user-v2-0-7=
+e6facac0bf0@google.com
 
+Oh I forgot to mention that I added a documentation alias so that
+searching for strncpy_from_user using the search box on
+https://rust.docs.kernel.org/ will show this function in the search
+results.
 
-On 5/1/25 15:14, Lee Jones wrote:
-> On Tue, 29 Apr 2025, Fabrice Gasnier wrote:
-> 
->> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
->> clocksource low-power timer (LPTIM) drivers.
->> This new variant is managed by using a new DT compatible string, hardware
->> configuration and version registers.
->> It comes with a slightly updated register set, some new features and new
->> interconnect signals inside the SoC.
->> Same feature list as on STM32MP1x is supported currently.
->> The device tree files add all instances in stm32mp251 dtsi file.
->>
->> Changes in V6
->> ---
->> - Fixed kernel test robot warning
->>   https://lore.kernel.org/oe-kbuild-all/202504261456.aCATBoYN-lkp@intel.com/
->>
->> Changes in V5
->> ---
->> - Add a necessary delay in clocksource driver, when enabling the timer.
->> - Add collected Acks
->> - Dropped IIO trigger patch as applied by Jonathan [1] (no dependency)
->>   [1] https://lore.kernel.org/all/20250331110435.26157ebe@jic23-huawei/
->>
->> Changes in V4
->> ---
->> - Simplify IIO trigger driver as per Jonathan's comments.
->> - Rework clocksource driver: encapsulate mp25 changes in separate function
->>   after Daniel's suggestion.
->> - Add some definitions to MFD header.
->>
->> Changes in V3
->> ---
->> - Yaml indentation issue fixed, reported by Rob's bot
->>
->> Changes in V2
->> ---
->> - Review comments from Krzysztof
->>   - Adopt compatible fallback in dt-bindings and driver
->>   - drivers: drop "st,stm32mp25-..." compatibles when unused (e.g. no .data)
->>   - counter driver: no update (patch dropped)
->>   - defconfig: only enable the necessary config for upstream board
->>   - add lptimer DT node in stm32mp257f-ev1 board
->> - Add missing management of IER access for stm32mp25
->>
->> Fabrice Gasnier (7):
->>   dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
->>   mfd: stm32-lptimer: add support for stm32mp25
->>   clocksource: stm32-lptimer: add support for stm32mp25
->>   pwm: stm32-lp: add support for stm32mp25
->>   arm64: defconfig: enable STM32 LP timer clockevent driver
->>   arm64: dts: st: add low-power timer nodes on stm32mp251
->>   arm64: dts: st: use lptimer3 as tick broadcast source on
->>     stm32mp257f-ev1
->>
->>  .../bindings/mfd/st,stm32-lptimer.yaml        |  40 +++-
->>  arch/arm64/boot/dts/st/stm32mp251.dtsi        | 177 ++++++++++++++
->>  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |   8 +
->>  arch/arm64/configs/defconfig                  |   2 +
->>  drivers/clocksource/timer-stm32-lp.c          |  61 ++++-
->>  drivers/mfd/stm32-lptimer.c                   |  33 ++-
->>  drivers/pwm/pwm-stm32-lp.c                    | 219 +++++++++++++++---
->>  include/linux/mfd/stm32-lptimer.h             |  37 ++-
->>  8 files changed, 537 insertions(+), 40 deletions(-)
-> 
-> Is it just the Clocksource Ack that we're waiting on now?
-> 
-Hi Lee,
-
-Yes,
-
-Best Regards,
-Fabrice
+Alice
