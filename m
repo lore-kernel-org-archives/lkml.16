@@ -1,88 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6A5267B87;
-	Mon,  5 May 2025 16:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A62817B425;
+	Mon,  5 May 2025 16:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460904; cv=none; b=cpc9JpjUQHv0Q6CxsUgHGXO587WSXLG+UmL4vo1K4LQi9dQtKXipYP5yvhh6hzHtw3n9uKDPkkhWrXc/oImzirUE3BxQs3zgPDs3IRMyrfwSvxZcYbUnzbhUasp5PRoGsmhlBk8Q5brvx4aPYGc7RKCApBZQNH7X14ykCgbyTdI=
+	t=1746460961; cv=none; b=NlRywuInH77YfcQGoBis2uahGutJeSwSUmU+jrbiLwRPq44aFKH4rMeNHWJ3R21RlKt7yXhA1XPVeVf21YkWTrSWbGQdOfJHYIl3R1H4dU5d8qmtSjp2mXXxgVDKKEVT5v5VFZ90uMtHbnlPv0/gsY9E/6qfbj9NRFpNuz6xWMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460904; c=relaxed/simple;
-	bh=Xs8bl10bcylz4Dw8GlP0/8FtrLWuB7u/NZgpuQFIpMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KaH9iOa57Y4RDTjf4ROGqgFPAfl9gJlj3QQwPEe9IdER02y+vRTWRjxfbUygebOBGOczAeylXF2hy08vZLJNMclELYWg5tA6xfGoSJKxftc7ewnXkJkP3KuHUrO+GqkYCnVOnZW53NRUbfN9tMNBhkNxuZ6l6yUFamvvLXqAoZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyyESiok; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyyESiok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B99C4CEE4;
-	Mon,  5 May 2025 16:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746460900;
-	bh=Xs8bl10bcylz4Dw8GlP0/8FtrLWuB7u/NZgpuQFIpMI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eyyESiokYLh9ubQLqmcx3M8PwoqCmkggVGqtBunwTi9BzsVgRchaLwGELiO2ND/8d
-	 PK/hM9TqNRxLJHS5dB/PEiD3kRNBteQ+mtPFVOyrFwCwnTJDCCjRF4Y9izOQ/i0+0W
-	 G8iKmNGwN2Mj33Hia2usrDmu2G/uQ4edfIS0RpL7yKrpU3R/iIeavwDwYZNnbl39PR
-	 3AhESrBbm9eAMzfoRMXqry4LzdNT4QN33n9NsUDyVn5h3UMUTBzPWl/hO3dc8O/bip
-	 c17wsUQu6XOw/GdgHgJ/4tlPfRTexJ7CPYMXCyYf/NBHK6oNVoapo1k1GXMOGOJaMH
-	 7P04+Mkg47XUg==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac7bd86f637so1037900266b.1;
-        Mon, 05 May 2025 09:01:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUwT55WNtEd1U/LYu2L0rCfiY2v5O2kkbkleow+PEwi7xiOsVYjtjhW3XgGOfn636EC61NCtkvQdYCtW8TD@vger.kernel.org, AJvYcCVQJ2mm2Z0A0yDlZ49ER4WyocrTbKpnBE4aNScmizMtNUDWlfGgcihn5v1t6RmvlumXAtrt+u9O/3hF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXMTAaDlRPNJE5658HF2uksZZfNi3dwquufun9e/vWgd2wgkOl
-	/DFY/wNt4W3vGLRVp7e32H5yi514EyU4bbmE4M/42dHxlUt3IJzFQT+Fb/Ti4kDFuFCxPlySgFC
-	xVtDdo1qo0K6x4RbQxJArqYcWYA==
-X-Google-Smtp-Source: AGHT+IHfviMcBncTTa/1eCjWCnBct7i6MyJt6T+Wrpj1Wgj48u+M8H6U/CUxCGyw206ENd08m+4pjdY+JLqyuk5X1H4=
-X-Received: by 2002:a17:907:7b9f:b0:acb:4d5b:d1c0 with SMTP id
- a640c23a62f3a-ad1d2e7a8camr3126266b.6.1746460899312; Mon, 05 May 2025
- 09:01:39 -0700 (PDT)
+	s=arc-20240116; t=1746460961; c=relaxed/simple;
+	bh=859W0ONICk/lnxUxe5B+N7CDRdPaRvyaAVNgbcTT6to=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W8T5OFcCT08hoMWGGd0G467lw39PI526ljxFlNhXn7cCegM/+frFCbbcbNhL/NdZsj2ZgSw4iahsJoq0YMLSqCCLVsg2LAAhdSJ34/+pELoYT7XtNQuaJk8+4FdwMf/rL7C3OQ+dLtlvyFbT6oNYf1TfIxhkgwmnQWwhMUv/SKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9B8F443A39;
+	Mon,  5 May 2025 16:02:26 +0000 (UTC)
+Message-ID: <c59f2632-d96f-43c6-869d-5e5f743f2dbd@ghiti.fr>
+Date: Mon, 5 May 2025 18:02:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505144743.1290672-1-robh@kernel.org> <dd9795f1-872a-4f7f-b4df-52cee65151a7@lunn.ch>
-In-Reply-To: <dd9795f1-872a-4f7f-b4df-52cee65151a7@lunn.ch>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 5 May 2025 11:01:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJx9ayQkwGP9Hjh+UfnDauW0Shcx0VjD02Nb8Yv21v0pQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFssFJdVgx2aD1amm6bObYdHX-rX_gIiMecci16s8o1EMllLhzA-cGGGBA
-Message-ID: <CAL_JsqJx9ayQkwGP9Hjh+UfnDauW0Shcx0VjD02Nb8Yv21v0pQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- marvell,orion-bridge-intc to DT schema
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-	Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Fix kernel crash due to PR_SET_TAGGED_ADDR_CTRL
+Content-Language: en-US
+To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250504101920.3393053-1-namcao@linutronix.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250504101920.3393053-1-namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeegvggrvdemvgehvdeimeeiheduudemheefgegtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeegvggrvdemvgehvdeimeeiheduudemheefgegtpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeegvggrvdemvgehvdeimeeiheduudemheefgegtngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepnhgrmhgtrghosehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmp
+ dhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehsrghmuhgvlhdrhhholhhlrghnugesshhifhhivhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, May 5, 2025 at 10:09=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
+Hi Nam,
+
+On 04/05/2025 12:19, Nam Cao wrote:
+> When userspace does PR_SET_TAGGED_ADDR_CTRL, but Supm extension is not
+> available, the kernel crashes:
 >
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,or=
-ion-bridge-intc.yaml
-> > @@ -0,0 +1,53 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/marvell,orion-=
-bridge-intc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Marvell Orion SoC Bridge Interrupt Controller
-> > +
-> > +maintainers:
-> > +  - Andrew Lunn <andrew@lunn.ch>
-> > +  - Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Oops - illegal instruction [#1]
+>      [snip]
+> epc : set_tagged_addr_ctrl+0x112/0x15a
+>   ra : set_tagged_addr_ctrl+0x74/0x15a
+> epc : ffffffff80011ace ra : ffffffff80011a30 sp : ffffffc60039be10
+>      [snip]
+> status: 0000000200000120 badaddr: 0000000010a79073 cause: 0000000000000002
+>      set_tagged_addr_ctrl+0x112/0x15a
+>      __riscv_sys_prctl+0x352/0x73c
+>      do_trap_ecall_u+0x17c/0x20c
+>      andle_exception+0x150/0x15c
+
+
+It seems like the csr write is triggering this illegal instruction, can 
+you confirm it is? If so, I can't find in the specification that an 
+implementation should do that when writing envcfg and I can't reproduce 
+it on qemu. Where did you see this oops?
+
+Thanks,
+
+Alex
+
+
 >
-> You should probably drop Sebastian. I've not heard from him in years.
-
-Okay. I would have (probably) if he was not still listed in
-MAINTAINERS. Perhaps should be dropped from there too?
-
-Note that the lists here were all generated from what MAINTAINERS said
-(if anything) or the author(s) of the original .txt binding.
-
-Rob
+> Fix it by checking if Supm is available.
+>
+> Fixes: 09d6775f503b ("riscv: Add support for userspace pointer masking")
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: stable@vger.kernel.org
+> ---
+>   arch/riscv/kernel/process.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index 7c244de77180..3db2c0c07acd 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -275,6 +275,9 @@ long set_tagged_addr_ctrl(struct task_struct *task, unsigned long arg)
+>   	unsigned long pmm;
+>   	u8 pmlen;
+>   
+> +	if (!riscv_has_extension_unlikely(RISCV_ISA_EXT_SUPM))
+> +		return -EINVAL;
+> +
+>   	if (is_compat_thread(ti))
+>   		return -EINVAL;
+>   
