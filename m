@@ -1,49 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1792D5CE7;
-	Mon,  5 May 2025 22:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395701474B8;
+	Mon,  5 May 2025 22:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485684; cv=none; b=ivDTBNBWnrGkffTQeF55rLKrxSQ3hzEg2DmubAIFfPLbsBh8KfbkvcB43rq/jgan6g7+4BDOJ2TupnsLhDMq2OAZEe2kXEeUq7iQiajXqQ6Bxi8Jigo3sIxckkGfJOWhSmdivx8lVqLeGvk+RbMThxcK/SKDVOMu5kBsRyY7yzc=
+	t=1746485689; cv=none; b=FVibT3rZT1KA+32GSELJOkgb+RrDPMv323EazPXFBEzieXC3tDxWWtvd8uVfcSp6uGzzVQHyeoUbARMN+p5pWoNXnUwA24myWr3DZ32UgXC6dQCjmMBmMVtrkWExODj6+rs5Hb+Q8FIBWD7Wy4l/va+eFlRscQNv83lGUKry/1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485684; c=relaxed/simple;
-	bh=GEmoE8ZMsXsanwoyXRNDMaRJS40Ti3n9tpU7IktHxQE=;
+	s=arc-20240116; t=1746485689; c=relaxed/simple;
+	bh=VVgmndga1VaSEzVBYDI4b53/Gvrf7qNKSw0GXrRXzHw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lOkA198UC2whOvFzlyjruDnjW5ETsoEP3iT3wvjSlaUu5aaf4CqxSTi8LAeUS118EFedSsSVlFij5k3b+nM+4yVvPwkrJrveS3Cys00AhBPUFqZ+UMnkU0dQA7yPQlEzCi9pRzPbDWQCpxDJ6adnqMY6MJBL79jIvGkm6ftzwu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLDfKSEI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CsFfwWa4o2q3em2csac4GgIwReQeAh4EMSnK2jcm19ypuu8EneLN2KKbBOsbiHCtJv1f7mJgVPwka28nqKzwqAm+suqb6tGdOYGbGXli7JTJ4LzAf2MuBAWRT4E2I8/CUC021UWgbMbSAFV3YJqy/rMr13SWbe/oajoLYeNezbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/ThmBnN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLDfKSEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3963C4CEEE;
-	Mon,  5 May 2025 22:54:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/ThmBnN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03F1C4CEE4;
+	Mon,  5 May 2025 22:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485683;
-	bh=GEmoE8ZMsXsanwoyXRNDMaRJS40Ti3n9tpU7IktHxQE=;
+	s=k20201202; t=1746485689;
+	bh=VVgmndga1VaSEzVBYDI4b53/Gvrf7qNKSw0GXrRXzHw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nLDfKSEIAxJAJT72fOvUn3mYzV61edvImObcieIhmpVTai7a10saSCJ3jURcV/e+I
-	 gvu9tLkkzfBfozN/87tkkMpysqVCh9cACEpC1RYdx0dtQzKUTR92akRMxcjTC1z7HK
-	 mwLfdN+WQfDCu2JWcMXgJ0/fn5ETH7BuRGoyAz6+Y528l3+OEnzSoyYxmaEmkxxhDL
-	 2l1FQtf7jXEXiG82ZB3nY5ctWfX9rc2a3MrU+g0FtpCTu/978zx4aHnodye247Ui8v
-	 JE1kdvHp4IlHFN//sEEf60tucJZwMrdHrghQ27lJrlbqVYJkaRtlaIlrYVtBYvbdUK
-	 8uUiWDLB08rBA==
+	b=t/ThmBnNDUPoAHYVD/lJUO+OihvSVYG5+UN7EcP9Pr03i2irSnUNO2r/GRYF5lgPK
+	 JQbPJvdeS4K8JvJ4i001Rh/iTItO72aV2a6FSNM/wh04saVqIDG1sN0uUd9ca6URO7
+	 WrnvoDIlIQBGmgpAssBLEPN2TGb3BWP3jTLVA0NWa6o2XS1Epu8OPB4q+nywKU2Xt9
+	 BQibEC6FjovilEvbzs9nAFG4xSgdvDhRId0iYa+PHYHcU4sGa7E9dpZcDzbgHr/zJi
+	 7LTPhMA8/qj6TrWD3BoN9YZWl8ExH/la9DVn/ED5KrvFkgafhpqOtZT650IsKk1HIb
+	 6o0gVekAfpemg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Jason Xing <kerneljasonxing@gmail.com>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
 	davem@davemloft.net,
 	pabeni@redhat.com,
-	menglong8.dong@gmail.com,
-	gnault@redhat.com,
+	kuniyu@amazon.com,
+	sdf@fomichev.me,
+	ahmed.zaki@intel.com,
+	aleksander.lobakin@intel.com,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 424/486] vxlan: Annotate FDB data races
-Date: Mon,  5 May 2025 18:38:20 -0400
-Message-Id: <20250505223922.2682012-424-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 427/486] net: flush_backlog() small changes
+Date: Mon,  5 May 2025 18:38:23 -0400
+Message-Id: <20250505223922.2682012-427-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -58,142 +57,73 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit f6205f8215f12a96518ac9469ff76294ae7bd612 ]
+[ Upstream commit cbe08724c18078564abefbf6591078a7c98e5e0f ]
 
-The 'used' and 'updated' fields in the FDB entry structure can be
-accessed concurrently by multiple threads, leading to reports such as
-[1]. Can be reproduced using [2].
+Add READ_ONCE() around reads of skb->dev->reg_state, because
+this field can be changed from other threads/cpus.
 
-Suppress these reports by annotating these accesses using
-READ_ONCE() / WRITE_ONCE().
+Instead of calling dev_kfree_skb_irq() and kfree_skb()
+while interrupts are masked and locks held,
+use a temporary list and use __skb_queue_purge_reason()
 
-[1]
-BUG: KCSAN: data-race in vxlan_xmit / vxlan_xmit
+Use SKB_DROP_REASON_DEV_READY drop reason to better
+describe why these skbs are dropped.
 
-write to 0xffff942604d263a8 of 8 bytes by task 286 on cpu 0:
- vxlan_xmit+0xb29/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff942604d263a8 of 8 bytes by task 287 on cpu 2:
- vxlan_xmit+0xadf/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00000000fffbac6e -> 0x00000000fffbac6f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 2 UID: 0 PID: 287 Comm: mausezahn Not tainted 6.13.0-rc7-01544-gb4b270f11a02 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
-
-[2]
- #!/bin/bash
-
- set +H
- echo whitelist > /sys/kernel/debug/kcsan
- echo !vxlan_xmit > /sys/kernel/debug/kcsan
-
- ip link add name vx0 up type vxlan id 10010 dstport 4789 local 192.0.2.1
- bridge fdb add 00:11:22:33:44:55 dev vx0 self static dst 198.51.100.1
- taskset -c 0 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
- taskset -c 2 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
-
-Reviewed-by: Petr Machata <petrm@nvidia.com>
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/20250204145549.1216254-2-idosch@nvidia.com
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Link: https://patch.msgid.link/20250204144825.316785-1-edumazet@google.com
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan/vxlan_core.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ net/core/dev.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 01f66760e1328..474faccf75fd9 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -227,9 +227,9 @@ static int vxlan_fdb_info(struct sk_buff *skb, struct vxlan_dev *vxlan,
- 			be32_to_cpu(fdb->vni)))
- 		goto nla_put_failure;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 7b7b36c43c82c..2ba2160dd093a 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6034,16 +6034,18 @@ static DEFINE_PER_CPU(struct work_struct, flush_works);
+ static void flush_backlog(struct work_struct *work)
+ {
+ 	struct sk_buff *skb, *tmp;
++	struct sk_buff_head list;
+ 	struct softnet_data *sd;
  
--	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
-+	ci.ndm_used	 = jiffies_to_clock_t(now - READ_ONCE(fdb->used));
- 	ci.ndm_confirmed = 0;
--	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
-+	ci.ndm_updated	 = jiffies_to_clock_t(now - READ_ONCE(fdb->updated));
- 	ci.ndm_refcnt	 = 0;
++	__skb_queue_head_init(&list);
+ 	local_bh_disable();
+ 	sd = this_cpu_ptr(&softnet_data);
  
- 	if (nla_put(skb, NDA_CACHEINFO, sizeof(ci), &ci))
-@@ -434,8 +434,8 @@ static struct vxlan_fdb *vxlan_find_mac(struct vxlan_dev *vxlan,
- 	struct vxlan_fdb *f;
+ 	backlog_lock_irq_disable(sd);
+ 	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
+-		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
++		if (READ_ONCE(skb->dev->reg_state) == NETREG_UNREGISTERING) {
+ 			__skb_unlink(skb, &sd->input_pkt_queue);
+-			dev_kfree_skb_irq(skb);
++			__skb_queue_tail(&list, skb);
+ 			rps_input_queue_head_incr(sd);
+ 		}
+ 	}
+@@ -6051,14 +6053,16 @@ static void flush_backlog(struct work_struct *work)
  
- 	f = __vxlan_find_mac(vxlan, mac, vni);
--	if (f && f->used != jiffies)
--		f->used = jiffies;
-+	if (f && READ_ONCE(f->used) != jiffies)
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	return f;
+ 	local_lock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 	skb_queue_walk_safe(&sd->process_queue, skb, tmp) {
+-		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
++		if (READ_ONCE(skb->dev->reg_state) == NETREG_UNREGISTERING) {
+ 			__skb_unlink(skb, &sd->process_queue);
+-			kfree_skb(skb);
++			__skb_queue_tail(&list, skb);
+ 			rps_input_queue_head_incr(sd);
+ 		}
+ 	}
+ 	local_unlock_nested_bh(&softnet_data.process_queue_bh_lock);
+ 	local_bh_enable();
++
++	__skb_queue_purge_reason(&list, SKB_DROP_REASON_DEV_READY);
  }
-@@ -1009,12 +1009,12 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	    !(f->flags & NTF_VXLAN_ADDED_BY_USER)) {
- 		if (f->state != state) {
- 			f->state = state;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 		if (f->flags != fdb_flags) {
- 			f->flags = fdb_flags;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 	}
-@@ -1048,7 +1048,7 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	}
  
- 	if (ndm_flags & NTF_USE)
--		f->used = jiffies;
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	if (notify) {
- 		if (rd == NULL)
-@@ -1477,7 +1477,7 @@ static bool vxlan_snoop(struct net_device *dev,
- 				    src_mac, &rdst->remote_ip.sa, &src_ip->sa);
- 
- 		rdst->remote_ip = *src_ip;
--		f->updated = jiffies;
-+		WRITE_ONCE(f->updated, jiffies);
- 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
- 	} else {
- 		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
-@@ -2825,7 +2825,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			if (f->flags & NTF_EXT_LEARNED)
- 				continue;
- 
--			timeout = f->used + vxlan->cfg.age_interval * HZ;
-+			timeout = READ_ONCE(f->used) + vxlan->cfg.age_interval * HZ;
- 			if (time_before_eq(timeout, jiffies)) {
- 				netdev_dbg(vxlan->dev,
- 					   "garbage collect %pM\n",
+ static bool flush_required(int cpu)
 -- 
 2.39.5
 
