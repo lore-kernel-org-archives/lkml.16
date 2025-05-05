@@ -1,217 +1,137 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC59268FD5
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C6E26A083;
+	Mon,  5 May 2025 16:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464053; cv=none; b=lUS4S9mo35fVOEUPnKECel8SAcN2uajxpQlm8EAEgfecOJexAHed83y5P46rXG8AM+nvYTYR0aaP6dip/P6jktV8/j8FD3CbuXyJQtdC51SlDMvZfgvcfR6j7nHdaZFTtKw3/UrSyf/uw9pwx22VMRJc9oQ7iRNOp+dM8lqcULk=
+	t=1746464055; cv=none; b=T44Sinu3YwaBbhHb+SM6HOdDtUCOuqZYTK71fugj36D2RIlnF1+/bMOfSqmZmSZM5M1QfOWl9zdSx0k0u9K2KFT5oAg8MQ5+avahc/uB1M2zeM57rSLigeygbtML0LavuqhVIXila3GdinNBP6VQ9kpER7imsPLFbrQ4EwcXQSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464053; c=relaxed/simple;
-	bh=RsOwvsOf1dtwYMPYCup7z8yztSB7dT4IWuAMmQDF6eM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nRLep4ftWlxBc9A4b357ZpBJmNCR6jtQc4d9bvrdihCswwQL2WyDo+0YZuHwS3fSJpU57gsoWItwcAL4I/eSzYCCh8Oh1w0PpKIepDBJ9XlaurcNEiwBMgXBa/0HSdBkp4vdjoYB/ADbmh7i+aI34SVWX5BuaPTuYDgHFPgaK8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R9NJHaYj; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746464055; c=relaxed/simple;
+	bh=ttqHVDDDHkBY5vhptujKheHjTcF5u2BkFKS/tkcNWhk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=KOGUpe8wV8i+r8qb55j4v6WLVJdCTw/e7ESWZ9ZNAzzbSSYLA8P4LPODPdNwihvapACEeN30KKceXnk71Hfr70CU6ZhuCc8Rj34ObXZ1Rwm6Q6bsL4Gq9M066tYArHSyzTzqkESJ19TSvMtHol7FrtrFxEh3v6Du/d320jgCOno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KZUizA55; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ziQ9SsQA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R9NJHaYj"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47666573242so8251cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746464050; x=1747068850; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BvkwbBAAy51gwoOy2GdGqciR4ki2e9eLZIkUV7w/43I=;
-        b=R9NJHaYjsJbvpjiR+aZqkswJC1V53ynxoOM/zt20m+uVDc8HU0jR737zkB9XODQzME
-         W7BXzEiJEtUd/AL1W6lnjymAnjzAjCtELO1JP3ssyl45WDLN1knzK2axvKwloLFmKHKc
-         GILeKboxwtKFd97YqAb10HmmFaxHGbwIJlR70Omh1CO02OMAWOW1RmdOWXqaR6C3e1cf
-         QYCP9Ji0CM3UC9pYkCpGfaP/Cjbjzr7hbHITUjojuH0AiDp32cFbo44gCfRPIgGI6GA1
-         ASJ3NMqo/ToJKzh3/tfdlF3enEkmujhmqgPMHRFHMQtxfJ/xFYwiwUnC69Aow5yViH8b
-         oWOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746464050; x=1747068850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BvkwbBAAy51gwoOy2GdGqciR4ki2e9eLZIkUV7w/43I=;
-        b=Tb+eHgy+8llq2hvoEQubAudeKLVMSIPO3jWvvn5/9KZLaruiSnZ2zMtfLzjxSF6pkj
-         zUHcXgfhT6PRiN3Xjz3pg5DfoyN9g6lWe3vrIUVcd6M9V/YtK9TJauBAD1mUENoMiEb1
-         DSZGiv67cxzp37JCrNGjcfabZVlb0DFxRJSI0qycbwirH3VfddmQq8K9IgRqmZGS9w1l
-         BpSCaRuU/cM7iRa1ScvdlRWissaWnXQGm9+yf143M55OT7ks0cFkpbfRvhMOzMHuL4Dq
-         EdUxFrnhaEyjTuATiHkXIeztMFdDhu8JDK8l51wuuyKb2cLfaoBWZlr75+5X2ZTk89CV
-         9xuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQj8U+4m9cPbeaUeUCFAo41/DjALEIMaFpmIrS2QxNqPydaINZncyAYofYGPjx/FivPBJEVSZEKZFfMfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyC3Rc5jAI6MuWlb0awnZYsh0FWttuSIW8lw4H0uOF3AhsNTp2
-	xUH5rnMFuFreZF9enxQiuWVpY5enY+wCsK2Vo/qXgBRQlVS7x7a4eBx/p362nARxnZvZ8PA+oSJ
-	wpro6tZPWruwdZatm0CWjozICbPDbmI0canPL
-X-Gm-Gg: ASbGncswR8ue37NwZAyGSnFLH9yZc+UbX23Xz8FihzITSDQo/gp/m9oDpZjxjummQ/g
-	bk2pjwDnXMVq5J8kemYqKgUNjv7scqZzgSXLgdjs1GeHqQ40K8OaO+KUHFfjeP17lZ0FIE1/MKI
-	KnQwX+5BYyWaVNeSVSNJNa
-X-Google-Smtp-Source: AGHT+IFYImIoddN52fXijvNt5y6xVdVxVQ9f+9nrzOlBgiGz/IPyWvzu/ePbKaCOYpESVtCd6w3BF/y++SOQRaJqoG4=
-X-Received: by 2002:a05:622a:1aa2:b0:479:1958:d81a with SMTP id
- d75a77b69052e-490cbca1fdfmr634351cf.6.1746464049875; Mon, 05 May 2025
- 09:54:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KZUizA55";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ziQ9SsQA"
+Date: Mon, 05 May 2025 16:54:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746464051;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ep/elUp+vcOIOApnlluNfdGIMIfcz9HW14oEBAc8nNc=;
+	b=KZUizA553FkSk23iJXTBpMXQwBUIoNVr/CRLMrK9cFpa8NAF/090h/fnKvk+iN4c1M+hry
+	WY+HaGXO1nqYzyLYIA9Qax8IgZnJsziJx2XmL4w/FhgARMWEBXWTbB+J+tti6UmsZsIE2R
+	XBj1H7P47qP8c/yRrkk5NWvr+9ShUSHjzJYNwsArjIlgV3ZGKgepPoYBsJOQFHxmYI/zZI
+	hLNkLoh7MHQ7ry58w1rOg0MIBOVWkpN8uIiM5KbDl6nsQMzDtPiIsU7iFKdWEsW++eclhH
+	dbk69/J0qtcNVpeRLMiHlD9zeH1ZHSsGD93uuG1/WbB8Bs/ShFcP13+GQ/bqsw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746464051;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ep/elUp+vcOIOApnlluNfdGIMIfcz9HW14oEBAc8nNc=;
+	b=ziQ9SsQAqkJYQGq7ONXXqLQ4nJmGzTj8TqpYpgd34PnWUkGfDsyBUVLUgshzatPzd4nlMq
+	7MDMyxyANxggO4Dw==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/boot: Provide __pti_set_user_pgtbl() to startup code
+Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Arnd Bergmann <arnd@arndb.de>,
+ David Woodhouse <dwmw@amazon.co.uk>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+ Kevin Loughlin <kevinloughlin@google.com>, Len Brown <len.brown@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, linux-efi@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250504095230.2932860-40-ardb+git@google.com>
+References: <20250504095230.2932860-40-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504061923.66914-1-00107082@163.com> <8edbd2be-d495-4bfc-a9f3-6eaae7a66d91@suse.cz>
- <1da43908.3afc.196a0db7dc3.Coremail.00107082@163.com> <0feb4309-431f-4b74-83bf-e16198798c30@suse.cz>
- <CAJuCfpHS9obp7yoxRUPoj3Yp8KkkYWCnnoXwtmAOxfynnq8aug@mail.gmail.com> <3be93014.40dc.196a153f521.Coremail.00107082@163.com>
-In-Reply-To: <3be93014.40dc.196a153f521.Coremail.00107082@163.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 5 May 2025 09:53:58 -0700
-X-Gm-Features: ATxdqUHI1cER8ebejXFC0ZlXWgWhayyDJtXaCo0vHjoz4cOy8TogE8Lp7Fok_sE
-Message-ID: <CAJuCfpHKcDkce=no0Uu3UO2ua2GkgkKMZxnctMuDbOqQNKj_KA@mail.gmail.com>
-Subject: Re: [PATCH] mm/codetag: sub in advance when free non-compound high
- order pages
-To: David Wang <00107082@163.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org, mhocko@suse.com, 
-	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Shakeel Butt <shakeel.butt@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174646405074.406.11902047835715348370.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 5, 2025 at 9:43=E2=80=AFAM David Wang <00107082@163.com> wrote:
->
->
->
->
-> At 2025-05-05 23:33:50, "Suren Baghdasaryan" <surenb@google.com> wrote:
-> >On Mon, May 5, 2025 at 7:55=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> =
-wrote:
-> >>
-> >> On 5/5/25 16:31, David Wang wrote:
-> >> >
-> >> >
-> >> > At 2025-05-05 21:12:55, "Vlastimil Babka" <vbabka@suse.cz> wrote:
-> >> >>On 5/4/25 08:19, David Wang wrote:
-> >> >>> When page is non-compound, page[0] could be released by other
-> >> >>> thread right after put_page_testzero failed in current thread,
-> >> >>> pgalloc_tag_sub_pages afterwards would manipulate an invalid
-> >> >>> page for accounting remaining pages:
-> >> >>>
-> >> >>> [timeline]   [thread1]                     [thread2]
-> >> >>>   |          alloc_page non-compound
-> >> >>>   V
-> >> >>>   |                                        get_page, rf counter in=
-c
-> >> >>>   V
-> >> >>>   |          in ___free_pages
-> >> >>>   |          put_page_testzero fails
-> >> >>>   V
-> >> >>>   |                                        put_page, page released
-> >> >>>   V
-> >> >>>   |          in ___free_pages,
-> >> >>>   |          pgalloc_tag_sub_pages
-> >> >>>   |          manipulate an invalid page
-> >> >>>   V
-> >> >>>   V
-> >> >>>
-> >> >>> Move the tag page accounting ahead, and only account remaining pag=
-es
-> >> >>> for non-compound pages with non-zero order.
-> >> >>>
-> >> >>> Signed-off-by: David Wang <00107082@163.com>
-> >
-> >Thanks for reporting!
-> >
-> >> >>
-> >> >>Hmm, I think the problem was introduced by 51ff4d7486f0 ("mm: avoid =
-extra
-> >> >>mem_alloc_profiling_enabled() checks"). Previously we'd get the tag =
-pointer
-> >> >>upfront and avoid the page use-after-free.
-> >
-> >Right, sorry I missed that.
-> >
-> >> >
-> >> >
-> >> > Oh, you're right. I forgot to check history......
-> >> >
-> >> >
-> >> >>
-> >> >>It would likely be nicer to fix it by going back to that approach fo=
-r
-> >> >>___free_pages(), while hopefully keeping the optimisations of 51ff4d=
-7486f0
-> >> >>for the other call sites where it applies?
-> >> >
-> >> > After checking that commit, I kind of feels the changes in __free_pa=
-ges are
-> >> >  the major optimization of the commit....
-> >>
-> >> We could have both pgalloc_tag_get() to use in __free_page() as before
-> >> 51ff4d7486f0, and keep __pgalloc_tag_get() to use in pgalloc_tag_split=
-() and
-> >> pgalloc_tag_swap().
-> >
-> >Yes, we can add back pgalloc_tag_get() which would call
-> >__pgalloc_tag_get() if mem_alloc_profiling_enabled() is true and
-> >change pgalloc_tag_sub_pages() back to use tags instead of pages.
-> >__free_pages() is the only user of that function, so that change
-> >should not affect anything else.
->
->
-> Adding back pgalloc_tag_get() seems just reverting 51ff4d7486f0.....
+The following commit has been merged into the x86/boot branch of tip:
 
-Not quite. pgalloc_tag_split() and pgalloc_tag_swap() will still be
-using __pgalloc_tag_get(), so would avoid the extra checks.
+Commit-ID:     f92d3fe32874e83986b9edc330ccc9bc9faaa92a
+Gitweb:        https://git.kernel.org/tip/f92d3fe32874e83986b9edc330ccc9bc9faaa92a
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Sun, 04 May 2025 11:52:45 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 05 May 2025 18:48:58 +02:00
 
-> Do you want me to do it or you take over and make further adjustments?
+x86/boot: Provide __pti_set_user_pgtbl() to startup code
 
-The change I suggested should be simple, so take a stab at it and I'll
-review and ack. If you prefer me to make the change, let me know.
+The SME encryption startup code populates page tables using the ordinary
+set_pXX() helpers, and in a PTI build, these will call out to
+__pti_set_user_pgtbl() to manipulate the shadow copy of the page tables
+for user space.
 
->
->
->
-> >
-> >>
-> >> I think __free_page() didn't benefit from the stated purpose of "avoid=
-ing
-> >> mem_alloc_profiling_enabled() ... which is often called after that che=
-ck was
-> >> already done"
-> >>
-> >> > What about revert that commit and make optimization by condition che=
-cks,
-> >> > similar to what this patch did?
-> >>
-> >> The downside of the condition checks is they make the code more comple=
-x and
-> >> might actually increase overhead when mem_alloc_profiling_enabled() is
-> >> false, as those checks add non-static branches outside of the static b=
-ranch
-> >> that's mem_alloc_profiling_enabled().
-> >>
-> >> I think __free_pages() before 51ff4d7486f0 was quite ok.
-> >>
-> >> - pgalloc_tag_get() is done unconditionally, but its code is all insid=
-e the
-> >> mem_alloc_profiling_enabled() static branch so that's a no-op when pro=
-filing
-> >> is not enabled
-> >>
-> >> - pgalloc_tag_sub_pages() is also all behind the static branch inside.=
- Also
-> >> it's a very rare path anyway, most freeing should go through the
-> >> put_page_testzero() being true.
-> >
-> >Yeah, the main goal of that change in __free_page() was to make
-> >__pgalloc_tag_get() a local function for alloc_tags and limiting the
-> >direct use of struct alloc_tag in the core mm code. Obviously I
-> >screwed up forgetting why we had to store the tag in the first place.
-> >An additional comment in __free_page() is probably a good idea to
-> >avoid confusion in the future.
-> >Thanks,
-> >Suren.
-> >
-> >>
-> >> > David
-> >> >
-> >>
+This is unneeded for the startup code, which only manipulates the
+swapper page tables, and so this call could be avoided in this
+particular case. So instead of exposing the ordinary
+__pti_set_user_pgtblt() to the startup code after its gets confined into
+its own symbol space, provide an alternative which just returns pgd,
+which is always correct in the startup context.
+
+Annotate it as __weak for now, this will be dropped in a subsequent
+patch.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lore.kernel.org/r/20250504095230.2932860-40-ardb+git@google.com
+---
+ arch/x86/boot/startup/sme.c |  9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+index 5738b31..753cd20 100644
+--- a/arch/x86/boot/startup/sme.c
++++ b/arch/x86/boot/startup/sme.c
+@@ -564,3 +564,12 @@ void __head sme_enable(struct boot_params *bp)
+ 	cc_vendor	= CC_VENDOR_AMD;
+ 	cc_set_mask(me_mask);
+ }
++
++#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
++/* Local version for startup code, which never operates on user page tables */
++__weak
++pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
++{
++	return pgd;
++}
++#endif
