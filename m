@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0D2385422;
-	Mon,  5 May 2025 23:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1873A3C1997;
+	Mon,  5 May 2025 23:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487428; cv=none; b=AZGrsIEOAlY1lTiJgblzVpumb+oAk8cTV3gJ8x1uwFDK/qIgGZyHkrtuTmeOQong51vBeX4yOhN2/iCZrwOHdMzA1ShSBnwIpY/IV+Nqy04YHwFJAU2xVYA62HqGtJ1kkmIGiuafw7SzZW1MuzylrNCEWzS9Iu0Xwfl7iUEkyn0=
+	t=1746487447; cv=none; b=W0q68E5DMmfJ/H8REasKkr4nmZKJUyMXZVbtNIQMENi6zWJiWLIfde3IB1ZUy4bD7+ulc7Uftk48V4jocrDJPAblaVU9KQePv/+Wi+m5gXIyzXKFia+y3kBh6icfnLgKCMCAOmeVqflndRXj1wZxAm4jIBPnDEFLlFqBNAchuU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487428; c=relaxed/simple;
-	bh=qFWqH2m4VdVUeXk8WYPLlL0rQMwt65e+mgnXxmQ7TNY=;
+	s=arc-20240116; t=1746487447; c=relaxed/simple;
+	bh=zERVQQNvuOQinF99ex3FLAIPNtpSUKafbHMHhaIZqb0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sspoTavHOLYhhnJ9MxBpqDvuT3N/FWz1FDQHw9b+Cxc2qT2W8owZ+PfVbDCXOAPlSPUfEMg6Z4Y6t/bLVNtVV4OsoEcgSa8+Ph9qZTFNEXSGKi60h0J6/7ZJbfxhCINnyG0S4KELLAq9GLgPrPq6uJIK3Mfa7ToSjKLHIhvkjZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ct7kUO2G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fi9PhoI9ua/vwXDL23wUV+jz18fu+i2mGi7/xWtergX+tIHCa84SFnneHueGm69GopbufptsEs8R1FAdy8lAI2yMrpk6Ldc30+vYxeQW5QZNWU1HDSVhNNkDzqvk7kls7IYJFScS3lKOkFGk887sf1dJ/tDsnE03Y1GEc+z9zBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2GEJX68; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ct7kUO2G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651DBC4CEE4;
-	Mon,  5 May 2025 23:23:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2GEJX68"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18462C4CEEE;
+	Mon,  5 May 2025 23:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487426;
-	bh=qFWqH2m4VdVUeXk8WYPLlL0rQMwt65e+mgnXxmQ7TNY=;
+	s=k20201202; t=1746487445;
+	bh=zERVQQNvuOQinF99ex3FLAIPNtpSUKafbHMHhaIZqb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ct7kUO2Ge6xi8HCOA++9VVhG8cLZfSRbTLlX/Jzh3asI2nBFi/opkTzv7EEri+7u1
-	 /ISac8tUmVvdEGog2uW15NsnKaxDLj8fZhNXeAPWTbDHWwzwul8YYCXNfZuacf2CHq
-	 c8ovEk0QuW13SA26zk6+Sm9g7V+ICPfAqz4WCtQSxIwpTvigqYDbRyQZ8rx8wP11/b
-	 fxvgrQoV6KmJQPwOGAOkhO0L0iB0y2G7Eoq0F5Z0lhUozLAoIlWQXQLmGRdTIpqFPv
-	 cQojLnxvW1kIdTSIWGElV+hj5HFS2AIpZzE7NmRvKpGwh4mAFUBOjkaq0lBUGJ2Iv6
-	 B1fQmq7/TWf4A==
+	b=d2GEJX68x0NtHze3U/xreEyB+ayTf6BaNeKTMsh4VI7NKYMT6DzoOaL9M/lDJy/Nh
+	 TGnNG6/RvKFWGpZ7JzdUuMbm7HxN0jPzmovssIN8bT5zVioByfAcPnzpED5vkO6y8t
+	 9WHodEmrkpt3LjqG21EZnxKUmkq5lJD34csWyhAYf/sZI6pEtMtqkO8n0mbKOGg5LF
+	 1CGZVZS6wIeRWslBWcl3CVUrgucSt+nsKmNu8mQQjmT9fthN/5PdeYtRMQ0pcGcgE8
+	 N19VopXM8nXuOAUeQhzoxbD/k/HQmhUtksVKJeEiv8L5kRcveRiyW4o1CP+swIMdhP
+	 7kIsGJsv6I5qQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Isaac Scott <isaac.scott@ideasonboard.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 65/79] ip: fib_rules: Fetch net from fib_rule in fib[46]_rule_configure().
-Date: Mon,  5 May 2025 19:21:37 -0400
-Message-Id: <20250505232151.2698893-65-sashal@kernel.org>
+	lgirdwood@gmail.com
+Subject: [PATCH AUTOSEL 5.4 77/79] regulator: ad5398: Add device tree support
+Date: Mon,  5 May 2025 19:21:49 -0400
+Message-Id: <20250505232151.2698893-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -55,59 +51,61 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+From: Isaac Scott <isaac.scott@ideasonboard.com>
 
-[ Upstream commit 5a1ccffd30a08f5a2428cd5fbb3ab03e8eb6c66d ]
+[ Upstream commit 5a6a461079decea452fdcae955bccecf92e07e97 ]
 
-The following patch will not set skb->sk from VRF path.
+Previously, the ad5398 driver used only platform_data, which is
+deprecated in favour of device tree. This caused the AD5398 to fail to
+probe as it could not load its init_data. If the AD5398 has a device
+tree node, pull the init_data from there using
+of_get_regulator_init_data.
 
-Let's fetch net from fib_rule->fr_net instead of sock_net(skb->sk)
-in fib[46]_rule_configure().
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-Tested-by: Ido Schimmel <idosch@nvidia.com>
-Link: https://patch.msgid.link/20250207072502.87775-5-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Isaac Scott <isaac.scott@ideasonboard.com>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Link: https://patch.msgid.link/20250128173143.959600-4-isaac.scott@ideasonboard.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_rules.c  | 4 ++--
- net/ipv6/fib6_rules.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/regulator/ad5398.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/fib_rules.c b/net/ipv4/fib_rules.c
-index e9a3cc9e98dfa..1617ea18fae3a 100644
---- a/net/ipv4/fib_rules.c
-+++ b/net/ipv4/fib_rules.c
-@@ -220,9 +220,9 @@ static int fib4_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
- 			       struct nlattr **tb,
- 			       struct netlink_ext_ack *extack)
- {
--	struct net *net = sock_net(skb->sk);
-+	struct fib4_rule *rule4 = (struct fib4_rule *)rule;
-+	struct net *net = rule->fr_net;
- 	int err = -EINVAL;
--	struct fib4_rule *rule4 = (struct fib4_rule *) rule;
+diff --git a/drivers/regulator/ad5398.c b/drivers/regulator/ad5398.c
+index 75f432f61e919..f4d6e62bd963e 100644
+--- a/drivers/regulator/ad5398.c
++++ b/drivers/regulator/ad5398.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
  
- 	if (frh->tos & ~IPTOS_TOS_MASK) {
- 		NL_SET_ERR_MSG(extack, "Invalid tos");
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index 3cf9dc2231036..acb8610c9a9df 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -344,9 +344,9 @@ static int fib6_rule_configure(struct fib_rule *rule, struct sk_buff *skb,
- 			       struct nlattr **tb,
- 			       struct netlink_ext_ack *extack)
- {
-+	struct fib6_rule *rule6 = (struct fib6_rule *)rule;
-+	struct net *net = rule->fr_net;
- 	int err = -EINVAL;
--	struct net *net = sock_net(skb->sk);
--	struct fib6_rule *rule6 = (struct fib6_rule *) rule;
+ #define AD5398_CURRENT_EN_MASK	0x8000
  
- 	if (rule->action == FR_ACT_TO_TBL && !rule->l3mdev) {
- 		if (rule->table == RT6_TABLE_UNSPEC) {
+@@ -221,15 +222,20 @@ static int ad5398_probe(struct i2c_client *client,
+ 	const struct ad5398_current_data_format *df =
+ 			(struct ad5398_current_data_format *)id->driver_data;
+ 
+-	if (!init_data)
+-		return -EINVAL;
+-
+ 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
+ 	config.dev = &client->dev;
++	if (client->dev.of_node)
++		init_data = of_get_regulator_init_data(&client->dev,
++						       client->dev.of_node,
++						       &ad5398_reg);
++	if (!init_data)
++		return -EINVAL;
++
+ 	config.init_data = init_data;
++	config.of_node = client->dev.of_node;
+ 	config.driver_data = chip;
+ 
+ 	chip->client = client;
 -- 
 2.39.5
 
