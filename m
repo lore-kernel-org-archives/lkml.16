@@ -1,54 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE93F2F4039;
-	Mon,  5 May 2025 23:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E9D2F4781;
+	Mon,  5 May 2025 23:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486941; cv=none; b=jN0LWYCgqixfb5hwGiRKJ7z9wZdCbcrYlD75lk6+ubfahCjzn3qa8uiO7Ek0BekqJY0EbUJXC6jRUBG5yNztaFjIQvsVG7wGq1d2MU8YTwibM3otUr6fkCDMAjGU7O8e2SGA08Cf5X/uohpxmOLeZNPvdesS1zZfDDSXFA2gcx0=
+	t=1746486946; cv=none; b=VP9WuzGWb/uvXYByMYOgprgc4LfYvllP0m8i7eMtHtwPFoIsQAA5hWQ8zhIP3QNihf+Wb+TvNtOKPXv4l+b654Q4RyN3a0BG3cBwXjkSD/7JQueJd0ONOPFqYYghKOxf/baUT1BusKq/b2waoeSi0MEw88jNDhPZpg6a3PRzV00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486941; c=relaxed/simple;
-	bh=zpYXZf/1szlzcErFIeG/BZoeXx0H2PEPmL6HjLHy8H8=;
+	s=arc-20240116; t=1746486946; c=relaxed/simple;
+	bh=ggZCPrTSho50jbXEpTb8AGo+L5OS1xyB50R//QbDXlk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZrJPsdeVlex5NBRes2KmAQYBbTF2u0yJmZK3HwxIZrgO6I0XHcotpSadsf3+XADCAIkzXeiK8GclBPf0voCqXIm5ZSxcKnaxuxvOwG36GzmedAkbiQ5+/BZiRaIVQtXIFfZ6ihF946+XqeSvdL5GUD39M1nu9Vb2YB3UIQna2B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/PTVPJ5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jle0/ZgiZLydpxAm+bpsN6ZhvlvweyLaE9DAR7WB+Y0c/2F25r0zrKtbkeTp0yUuDr0bpoWGhknhmYgM94YX5AWSCYnQJJdatq40U7jCxIwehf1iG7xNzwwlObnN8QxvJfn4ULQVlfG+vN/U2FbxOS36YqzxAGmWv5pXbbHnVZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ia1eHzug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/PTVPJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41EEC4CEED;
-	Mon,  5 May 2025 23:15:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ia1eHzug"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62D0C4CEEE;
+	Mon,  5 May 2025 23:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486939;
-	bh=zpYXZf/1szlzcErFIeG/BZoeXx0H2PEPmL6HjLHy8H8=;
+	s=k20201202; t=1746486945;
+	bh=ggZCPrTSho50jbXEpTb8AGo+L5OS1xyB50R//QbDXlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E/PTVPJ5mlcVF6ywpuF0DbDhsqhnBW/NsONWR0nzERD91/SREwPb6nMwQ8W3faEqm
-	 Q1eXvsAA6okcXUxWoYoXuT3R8KdwN3bKGfMm0QkJJLRTV30T1KlnAVO704/eOB177K
-	 mb4mta6hQtO7rZSu8nLUFpXFdI0xlITT4PeO0dWK/OXUU8K+5S+gw0EH+Yv2zGE9s3
-	 3ZVhzuzD+qSArgKkRHocZ/15L8zAfmrAeOQglG46iyJ3beEeknnkMvY0qseGrUYH4t
-	 0c2iA1Akhi6O474wszth4rqgXmRQaQLWSvifE3k3EDJnrjle+phw8idQjm3IRJ1Qey
-	 xS4M996tXWEpg==
+	b=Ia1eHzugbr5Oui3HcexcgEErlAvVJiEVxy77fY2Gb694eTs7H+O1T57kGlFBdrSNq
+	 MmRy7RYcYA/YEqzTfvFIB15KPGBGHjQFTENWhqOvTq/XCcVfpRjujt5tbwG3pVKGcL
+	 C0q0lI2aKwyJK5J3Aoc/buWOgJa8HiVJJnkUr0iZQ39AaFjsco0HJ1G1X5pD3k36Sj
+	 qwO/b1n4dJWO2Ib4+87hDHWGzB5NWBrUHRXaXnhQnnd2dUIE12lj/1mL53onM1q1V+
+	 fKjlEOiU9vOK01vXLWh0vwg0I+1BfGH/UVm3Fb3UkWigpNtugeTx6d5/UyDQ45Zk1I
+	 SqI1kZdB88bPw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Yunke Cao <yunkec@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	alexander.sverdlin@gmail.com,
-	lorenzo@kernel.org,
-	aleksander.lobakin@intel.com,
-	nicolas.dichtel@6wind.com,
-	hkallweit1@gmail.com,
-	u.kleine-koenig@baylibre.com,
-	linux-omap@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 069/153] net: ethernet: ti: cpsw_new: populate netdev of_node
-Date: Mon,  5 May 2025 19:11:56 -0400
-Message-Id: <20250505231320.2695319-69-sashal@kernel.org>
+	laurent.pinchart@ideasonboard.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 072/153] media: uvcvideo: Add sanity check to uvc_ioctl_xu_ctrl_map
+Date: Mon,  5 May 2025 19:11:59 -0400
+Message-Id: <20250505231320.2695319-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -63,35 +54,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
 
-[ Upstream commit 7ff1c88fc89688c27f773ba956f65f0c11367269 ]
+[ Upstream commit 990262fdfce24d6055df9711424343d94d829e6a ]
 
-So that of_find_net_device_by_node() can find CPSW ports and other DSA
-switches can be stacked downstream. Tested in conjunction with KSZ8873.
+Do not process unknown data types.
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-Link: https://patch.msgid.link/20250303074703.1758297-1-alexander.sverdlin@siemens.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Tested-by: Yunke Cao <yunkec@google.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Link: https://lore.kernel.org/r/20250203-uvc-roi-v17-15-5900a9fed613@chromium.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw_new.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/uvc/uvc_v4l2.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 13e34ad72f265..923746ba87a61 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1418,6 +1418,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
- 		ndev->netdev_ops = &cpsw_netdev_ops;
- 		ndev->ethtool_ops = &cpsw_ethtool_ops;
- 		SET_NETDEV_DEV(ndev, dev);
-+		ndev->dev.of_node = slave_data->slave_node;
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index a86d470a9f98f..2f8b485ddde04 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -35,6 +35,12 @@ static int uvc_ioctl_ctrl_map(struct uvc_video_chain *chain,
+ 	unsigned int size;
+ 	int ret;
  
- 		if (!napi_ndev) {
- 			/* CPSW Host port CPDMA interface is shared between
++	if (xmap->data_type > UVC_CTRL_DATA_TYPE_BITMASK) {
++		uvc_dbg(chain->dev, CONTROL,
++			"Unsupported UVC data type %u\n", xmap->data_type);
++		return -EINVAL;
++	}
++
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (map == NULL)
+ 		return -ENOMEM;
 -- 
 2.39.5
 
