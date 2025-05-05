@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01457359DF2;
-	Mon,  5 May 2025 22:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE7359DED;
+	Mon,  5 May 2025 22:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484974; cv=none; b=FZPspryuThpRQvwqjP4RqNxWCbBkh7AhqC+JpzEa3WzQe+2jQxciIeNQhYwNXDNN73mdeQYZThVGRLgj4E4/w5lXv+cBFnjgJE9bs4sfHJEKr5DtxylV8ZAwkORA0JsvSjqWKch7igwpeyvLFe2x3BqhTeTDH64bVJafJDnxDBQ=
+	t=1746484971; cv=none; b=RiWMEiwo8+dUmXeWcSA93/wsqKkq3nzbFTJPaMmRunATEiPwYlNnsvHlApLzYNN8dEzdHTU8iPYn9WybT5VjxR0wVQEIDMvouU+kri8Xfr9Bx4hAHbF7egHrl1MIHOjWIotpJ+BdMio0pniVyeaN2ycTGJoqLvmP7ovwqHU2gcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484974; c=relaxed/simple;
-	bh=+lQY26jWCWM43qhyyyBfmt9srxMrAHoP688AWa3PYjA=;
+	s=arc-20240116; t=1746484971; c=relaxed/simple;
+	bh=voUt6UCtPflvDhsBYQZpXVfdDV5XzYCSHE3Hzu1CIcY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WX2oFYdbeLyDCzHBugxOBzfDmGLfdmQi5QbqdenZdMURUKzA90XN1Wa+F6x79v461akJ3RljEZgQi7PDGgvXDbZmgp5X0K5kCdPeKyXFyy5td+i2nQ81SzMDLeQTpOdSxXkUK8VDQ/7tU9p4d+naRAplCykkPrJimFaFodHrspI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5HHMrOB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=N5C5Kr2BO3qfBurYLtRvQpSF8qN4hw82IlbiBjP24Wv0CZYviEupZALz+QtBXVnlbye2wPQtvBN4tdcpUCClanDzhL1K4Rf0uQdbfxI2TYRS3QdQ6RADluNt87jRTfZia++Qv+342YsyoEOUFTJg0Mjki3KHUGBWxXqvd0PApT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spVKWHEl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5HHMrOB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34609C4CEEF;
-	Mon,  5 May 2025 22:42:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spVKWHEl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39835C4CEEF;
+	Mon,  5 May 2025 22:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484973;
-	bh=+lQY26jWCWM43qhyyyBfmt9srxMrAHoP688AWa3PYjA=;
+	s=k20201202; t=1746484971;
+	bh=voUt6UCtPflvDhsBYQZpXVfdDV5XzYCSHE3Hzu1CIcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h5HHMrOBG5muytqkjIvGQWTcPmmfxKr9iZFgG93WM/J9moEMpPEcINefKQMny8jMc
-	 +pJ4oHFPiS7lc1wBXdFCbW7HkBb5/u+LpuCHaUO9HVNGVErmuvlIhW0v8o/QaL9eIk
-	 vPF/yvdPOvipM5zuvleSxVele48B+KXZRA2flxqY6vMpCKbbBbT1NAa37F7y9B4hfF
-	 yZFT//cwkmpQtSJtahfv4pwfyh0kz8WNRSxs2dgAjEeG3n/PL2f0fQRbA65m/+Teer
-	 siV5V2odqii7vNN+YGv+Iwt1TqyHxzz989jUrD7PrkOvc8BpY1RVJbqA5OTrNiJCYz
-	 SG5pk9/g9RSbQ==
+	b=spVKWHElt90Al0ZVOpU01VXBnY3mM9da0r24+/lnYfjG5AH1DC61z1JpAYeRoBvxU
+	 cIPgvtS3+HtiaLUl8CGw3tQNZh8HaEC4GG9GOsUTkLM+bbhMzja7IuuSW6CkjlQRBV
+	 DdpFwVCF3qOWuSDara7PxTgOiRcsm6tte4dzAwF7hh8eQIj2iI7C85h1fR0PTIwdJo
+	 Nrdb1o77wqTePvGYRf6MZuER74I9yIe48lXxjB8SnoRa/BHSjEn+QP5fQBxTWrfvS/
+	 fSuIki2dhXrm0Qn6WxE8cfycXUKN6hb/huZ10avO3euEAtqEr0Rksjm4qQXlbwE2hw
+	 9RM7up4CWi0/w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc: Jan Kara <jack@suse.cz>,
+	Zhang Yi <yi.zhang@huawei.com>,
+	Theodore Ts'o <tytso@mit.edu>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 104/486] rtc: rv3032: fix EERD location
-Date: Mon,  5 May 2025 18:33:00 -0400
-Message-Id: <20250505223922.2682012-104-sashal@kernel.org>
+	jack@suse.com,
+	linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 102/486] jbd2: do not try to recover wiped journal
+Date: Mon,  5 May 2025 18:32:58 -0400
+Message-Id: <20250505223922.2682012-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -49,32 +52,56 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit b0f9cb4a0706b0356e84d67e48500b77b343debe ]
+[ Upstream commit a662f3c03b754e1f97a2781fa242e95bdb139798 ]
 
-EERD is bit 2 in CTRL1
+If a journal is wiped, we will set journal->j_tail to 0. However if
+'write' argument is not set (as it happens for read-only device or for
+ocfs2), the on-disk superblock is not updated accordingly and thus
+jbd2_journal_recover() cat try to recover the wiped journal. Fix the
+check in jbd2_journal_recover() to use journal->j_tail for checking
+empty journal instead.
 
-Link: https://lore.kernel.org/r/20250306214243.1167692-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
+Link: https://patch.msgid.link/20250206094657.20865-4-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-rv3032.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/recovery.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-rv3032.c b/drivers/rtc/rtc-rv3032.c
-index 35b2e36b426a0..cb01038a2e27f 100644
---- a/drivers/rtc/rtc-rv3032.c
-+++ b/drivers/rtc/rtc-rv3032.c
-@@ -69,7 +69,7 @@
- #define RV3032_CLKOUT2_FD_MSK		GENMASK(6, 5)
- #define RV3032_CLKOUT2_OS		BIT(7)
+diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+index 667f67342c522..f85f401526c54 100644
+--- a/fs/jbd2/recovery.c
++++ b/fs/jbd2/recovery.c
+@@ -287,19 +287,20 @@ static int fc_do_one_pass(journal_t *journal,
+ int jbd2_journal_recover(journal_t *journal)
+ {
+ 	int			err, err2;
+-	journal_superblock_t *	sb;
+-
+ 	struct recovery_info	info;
  
--#define RV3032_CTRL1_EERD		BIT(3)
-+#define RV3032_CTRL1_EERD		BIT(2)
- #define RV3032_CTRL1_WADA		BIT(5)
+ 	memset(&info, 0, sizeof(info));
+-	sb = journal->j_superblock;
  
- #define RV3032_CTRL2_STOP		BIT(0)
+ 	/*
+ 	 * The journal superblock's s_start field (the current log head)
+ 	 * is always zero if, and only if, the journal was cleanly
+-	 * unmounted.
++	 * unmounted. We use its in-memory version j_tail here because
++	 * jbd2_journal_wipe() could have updated it without updating journal
++	 * superblock.
+ 	 */
+-	if (!sb->s_start) {
++	if (!journal->j_tail) {
++		journal_superblock_t *sb = journal->j_superblock;
++
+ 		jbd2_debug(1, "No recovery required, last transaction %d, head block %u\n",
+ 			  be32_to_cpu(sb->s_sequence), be32_to_cpu(sb->s_head));
+ 		journal->j_transaction_sequence = be32_to_cpu(sb->s_sequence) + 1;
 -- 
 2.39.5
 
