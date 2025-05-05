@@ -1,50 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A292FAEA2;
-	Mon,  5 May 2025 23:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6133E3BE0C2;
+	Mon,  5 May 2025 23:23:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487385; cv=none; b=sJIRbUn0eg2XsDRNdsdD6zttCSeNZGydLrdKwg5fr5Qz2uyJQ17QkIE0gkbf3Jm+EMOAwFB3qk7eK4c3QIoylAwFvnM+9nC4H9GuXHnvCHZjou6N3pKL3u9JjQcjYJzLEo9e+OJW4FXelUcqTEBmCL5B5C5CJnPjaCjyBn/gZN8=
+	t=1746487409; cv=none; b=R3aNlQCrlKB5B95kdtlWIMkfvK5RJElADjJWwYOiiU63DWQLF5q2Ftnr0m3PrzWn7ZZX6aX07CScPmh8NV1AkVXXlH7r4kNwe5njIZFJxqqu2DwHePiFVdmVq0LrnJCF8FeYv9AFn+3ZtJaNWryTV7/XP5Phgi48EUPyHltbQEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487385; c=relaxed/simple;
-	bh=KTy838vSImfgRkAZls9shdxJHt8SBKKLmKVJeLwAxaE=;
+	s=arc-20240116; t=1746487409; c=relaxed/simple;
+	bh=m3gj8PSzjfXPwRUTE5aW1/XgqUd/bkAgDJtD7cLr5FU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oHWXHcluQyRicnUBNjeyRdUZiI2wMeBjv9RhSgTTLiNc8aej1jnfq/e1BfhrTdP+0hZ8Np52LEt2Ypw+VtIW7METiQL0bRW1xWBJBfB0x5AmzcxefurCBFRLYFzjaEnq5xQ2KCDLc1KVbfk8RGUrRQMahlsLBlc7FrIaq5aNxUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWVQeEJk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uaSIJDRdGUtCPnTJJcGG0Fcq2MUM4wSUbg+0u+aTTWxjt+DqM3wtaMPpAM4TNU6XDOSSg58m6mLkTS0Peyl14mf4lqonyy0Nn9BdM7WqBs764vEV2XZQjbELWtm8nMVWk6x/6b7Wvl0ZWYh16I9Ecxk43rFtytEd3yEFHUYuPdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvthHW/A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWVQeEJk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E50C4CEE4;
-	Mon,  5 May 2025 23:23:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvthHW/A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786C0C4CEEE;
+	Mon,  5 May 2025 23:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487384;
-	bh=KTy838vSImfgRkAZls9shdxJHt8SBKKLmKVJeLwAxaE=;
+	s=k20201202; t=1746487408;
+	bh=m3gj8PSzjfXPwRUTE5aW1/XgqUd/bkAgDJtD7cLr5FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aWVQeEJkFdeK7w7K9NTU9yCCH9wAfpoy+HachPrmlb8F9jk2VWV8my0dAnxnVFFSF
-	 U517jWA4kO8+nP3Gb28cFDfu1oJb4o1iT4GPIZkNXts5wjrlyvQ79zbUXixrlrVbUi
-	 f912ILY+QiK1fItrPdSM0dF5wUjNkd+g36bdvL6JdUPEkbGmID6oY8sbmOT7r8+Wlc
-	 dpUkFAxDRLj5pwqYKC8b2qHgI+y/+MabMMnF+JBNst+r/LWlaAk7ibWjStndwRvA8p
-	 vmxoE6//5cdCiPyPVN6bbi2HMaJAkdeXZ6G41oqxxzo8dcr1ui5/uqagNO0MzF4Psk
-	 3PY0padauGIDw==
+	b=tvthHW/ABfM7tUqf2GtoECcfbI/Cgp0siVuZKF0dt8GjpJuypHlLU1zxgSBrPmkDQ
+	 IYt2LXIe20xAk3v5/yvWZ58VPMxi8Gm6ANTZt0P+dNGAmvs0OGVVNBQasHC9A08Dh0
+	 lx795oiCOKV1wvRtyiB/6Zj3Sv3EI3Ii4WXVFPtKfouAYi9qKZR/rOAVt4k41An1uR
+	 fSZ8uKp2pje02zo0PhiN7PIMux5EWUlOTnPuM8hTHIh7dpZuCOSnjjRBLTWzdy2WnU
+	 HtnEihvJ2ysdtNOAIoov9fzPunAaK8yVcRcxqpHf7GH/hSuoFTBXF5W6D8R3H4Wvi2
+	 mwbjLMC64nGsg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Moshe Shemesh <moshe@nvidia.com>,
-	Shahar Shitrit <shshitrit@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
-	"David S . Miller" <davem@davemloft.net>,
+Cc: Xiaofei Tan <tanxiaofei@huawei.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	saeedm@nvidia.com,
-	andrew+netdev@lunn.ch,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 41/79] net/mlx5: Avoid report two health errors on same syndrome
-Date: Mon,  5 May 2025 19:21:13 -0400
-Message-Id: <20250505232151.2698893-41-sashal@kernel.org>
+	rafael@kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 54/79] ACPI: HED: Always initialize before evged
+Date: Mon,  5 May 2025 19:21:26 -0400
+Message-Id: <20250505232151.2698893-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -59,40 +51,65 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Moshe Shemesh <moshe@nvidia.com>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-[ Upstream commit b5d7b2f04ebcff740f44ef4d295b3401aeb029f4 ]
+[ Upstream commit cccf6ee090c8c133072d5d5b52ae25f3bc907a16 ]
 
-In case health counter has not increased for few polling intervals, miss
-counter will reach max misses threshold and health report will be
-triggered for FW health reporter. In case syndrome found on same health
-poll another health report will be triggered.
+When the HED driver is built-in, it initializes after evged because they
+both are at the same initcall level, so the initialization ordering
+depends on the Makefile order.  However, this prevents RAS records
+coming in between the evged driver initialization and the HED driver
+initialization from being handled.
 
-Avoid two health reports on same syndrome by marking this syndrome as
-already known.
+If the number of such RAS records is above the APEI HEST error source
+number, the HEST resources may be exhausted, and that may affect
+subsequent RAS error reporting.
 
-Signed-off-by: Moshe Shemesh <moshe@nvidia.com>
-Reviewed-by: Shahar Shitrit <shshitrit@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-Reviewed-by: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To fix this issue, change the initcall level of HED to subsys_initcall
+and prevent the driver from being built as a module by changing ACPI_HED
+in Kconfig from "tristate" to "bool".
+
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Link: https://patch.msgid.link/20250212063408.927666-1-tanxiaofei@huawei.com
+[ rjw: Changelog edits ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/health.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/Kconfig | 2 +-
+ drivers/acpi/hed.c   | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/health.c b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-index d4ad0e4192bbe..44e3f8cfecacb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-@@ -736,6 +736,7 @@ static void poll_health(struct timer_list *t)
- 	health->prev = count;
- 	if (health->miss_counter == MAX_MISSES) {
- 		mlx5_core_err(dev, "device's health compromised - reached miss count\n");
-+		health->synd = ioread8(&h->synd);
- 		print_health_info(dev);
- 		queue_work(health->wq, &health->report_work);
- 	}
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index ebe1e9e5fd81c..3902fe64c484d 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -431,7 +431,7 @@ config ACPI_SBS
+ 	  the modules will be called sbs and sbshc.
+ 
+ config ACPI_HED
+-	tristate "Hardware Error Device"
++	bool "Hardware Error Device"
+ 	help
+ 	  This driver supports the Hardware Error Device (PNP0C33),
+ 	  which is used to report some hardware errors notified via
+diff --git a/drivers/acpi/hed.c b/drivers/acpi/hed.c
+index cf148287e2baf..75166839c99e0 100644
+--- a/drivers/acpi/hed.c
++++ b/drivers/acpi/hed.c
+@@ -72,7 +72,12 @@ static struct acpi_driver acpi_hed_driver = {
+ 		.notify = acpi_hed_notify,
+ 	},
+ };
+-module_acpi_driver(acpi_hed_driver);
++
++static int __init acpi_hed_driver_init(void)
++{
++	return acpi_bus_register_driver(&acpi_hed_driver);
++}
++subsys_initcall(acpi_hed_driver_init);
+ 
+ ACPI_MODULE_NAME("hed");
+ MODULE_AUTHOR("Huang Ying");
 -- 
 2.39.5
 
