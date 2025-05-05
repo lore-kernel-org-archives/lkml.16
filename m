@@ -1,56 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014BD2DAF79;
-	Mon,  5 May 2025 22:59:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B744F37B334;
+	Mon,  5 May 2025 22:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485945; cv=none; b=OLB/Xv59t7SK60xW+EtE3BOMeeBVa/H0VdRVdatzzeVwPo1Fj7mP3qLiGf9RtGwSsVDtIV2IwkRFsERWr+ubLsC3fJ8EZ+RLIjPhaLSvpjQ6mtMcSZmw1hagEdlNTJ5t3AAxIKDXsrh/jVEHel4SSScd/TWDFXWyDS6Bk2e1arw=
+	t=1746485952; cv=none; b=s4fW5KRnsvyaRKiaHOC3RwBRKGj8zsrvh5byQZ4Emr2W0Dhm1OwF6+cqqrM/D6dKT7TtQOQpz7nOCtK/+I2e9Qh5xkt3KCTLiC+6L+g6RbAd4qN48U5Pjt//LWuKqD5Ps3+zywB4gcK8B7mPrwc6Ac9sLDRi62wNI8XGogm7/KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485945; c=relaxed/simple;
-	bh=mtaoxzu2wIT0jKOX7m7gen8ET0e4nSpgKqsSlV3NGZU=;
+	s=arc-20240116; t=1746485952; c=relaxed/simple;
+	bh=dS6QQO9Cqg/2YcT2b/EwzqYv1BU1w2n7lfxpqM83hrw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IjrJR26YWZjQ0eXN2Eeo49QQ/+J+bOnplzIVJF1k4YWcVpH2Y6+Z3H5GtsNfuVg4hGqhx4gxoXkEQ440iZbCHlFpd7hMkNI96v4KJs4DXLrIndwkF9TfemMgAw1drmO+P7p4GLkvUw8Jqcul9jj1Fmpd2QxIcb3xFRCf54j29Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8uu4lwP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nb345OV9GrpfmQ1U8GP1C+HZL3oZioHgpuHBeTMCjVA+CxQ95W0Fee8K02M0c6gvNzVt86ImhV2zkRYcLA7/1i1J4EENr2tELb6KExCe3Eu+xx1V40wJTi+7f+A/MUSHyX0OFBuWZgJ4TAQTK/QVw5GI2U9NkhgCJWn5WEBW670=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjZLj76y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8uu4lwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A5BC4CEE4;
-	Mon,  5 May 2025 22:59:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjZLj76y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA639C4CEEE;
+	Mon,  5 May 2025 22:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485944;
-	bh=mtaoxzu2wIT0jKOX7m7gen8ET0e4nSpgKqsSlV3NGZU=;
+	s=k20201202; t=1746485952;
+	bh=dS6QQO9Cqg/2YcT2b/EwzqYv1BU1w2n7lfxpqM83hrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T8uu4lwPfF4CbujQeKi7/F3z4wC7B4zAiZBd6/rWF2Hk8zyXF15Duo4sXRc2wiugQ
-	 G6JuK1lMnHaU8AIDu4K7UIKSUnmDjUrT1xQwBH1Cb441tuIcex/LfXhNPZSQhIruYh
-	 lHEiOYrD53JtrrHe5zi0TKInqmsNd+KjXA3OavLYmMeXgvJEsE6lohb8nNLtX2moHE
-	 4+OCLGXekG3oefh9QqNHn74TCRrIjycpITypsD841lnb6pyaF8l6MXfZ25MBZTePu9
-	 AtzRmUyizLNsykPUMsKdpsBAkvaE/r66h4K/ITtvWk1LfdlgLBx73NLP5JPMBgdo5G
-	 /0cZTuCROGqWw==
+	b=QjZLj76yyLkDASo3+gp+tdlgn0W1FofVdAvKmnFl8EFQZTf1vdJ91GEZZo5FwMnay
+	 IjeL1We5+4BVQjGzYs6qtn2XeVWPuSTtuWAEr//XK1qwcj4nDVJF3mAHkk0klPPK76
+	 98QtEZC4EFEwZW64qimrllLKaIe/apzbzZHxbbCyG7tHorg5isjCmIH/df3DqIaU6/
+	 klxfr7VHIW+95QbQF1YClXLv3qe51WIDl+UdeMN9AcuQvOeAVTfxpbEOW2NamzUGYT
+	 ljFetUgoviPLH4wIcBkxILupv0wc2zDe3hFH+vdARf9+8n2fooqrg2LidLlCdndfi8
+	 TZ6jIdbzautpA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryan Walklin <ryan@testtoast.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Philippe Simons <simons.philippe@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	csokas.bence@prolan.hu,
-	mesihkilinc@gmail.com,
-	andre.przywara@arm.com,
-	codekipper@gmail.com,
-	jbrunet@baylibre.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 077/294] ASoC: sun4i-codec: support hp-det-gpios property
-Date: Mon,  5 May 2025 18:52:57 -0400
-Message-Id: <20250505225634.2688578-77-sashal@kernel.org>
+	anna-maria@linutronix.de
+Subject: [PATCH AUTOSEL 6.6 082/294] posix-timers: Add cond_resched() to posix_timer_add() search loop
+Date: Mon,  5 May 2025 18:53:02 -0400
+Message-Id: <20250505225634.2688578-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -65,126 +51,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Ryan Walklin <ryan@testtoast.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a149377c033afe6557c50892ebbfc0e8b7e2e253 ]
+[ Upstream commit 5f2909c6cd13564a07ae692a95457f52295c4f22 ]
 
-Add support for GPIO headphone detection with the hp-det-gpios
-property. In order for this to properly disable the path upon
-removal of headphones, the output must be labelled Headphone which
-is a common sink in the driver.
+With a large number of POSIX timers the search for a valid ID might cause a
+soft lockup on PREEMPT_NONE/VOLUNTARY kernels.
 
-Describe a headphone jack and detection GPIO in the driver, check for
-a corresponding device tree node, and enable jack detection in a new
-machine init function if described.
+Add cond_resched() to the loop to prevent that.
 
-Signed-off-by: Chris Morgan <macromorgan@hotmail.com>
-Signed-off-by: Ryan Walklin <ryan@testtoast.com>
+[ tglx: Split out from Eric's series ]
 
---
-Changelog v1..v2:
-- Separate DAPM changes into separate patch and add rationale.
-
-Tested-by: Philippe Simons <simons.philippe@gmail.com>
-Link: https://patch.msgid.link/20250214220247.10810-4-ryan@testtoast.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lore.kernel.org/all/20250214135911.2037402-2-edumazet@google.com
+Link: https://lore.kernel.org/all/20250308155623.635612865@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-codec.c | 53 +++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ kernel/time/posix-timers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index f0a5fd9011018..0d7758cc84c63 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -25,6 +25,7 @@
- #include <linux/gpio/consumer.h>
- 
- #include <sound/core.h>
-+#include <sound/jack.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -239,6 +240,7 @@ struct sun4i_codec {
- 	struct clk	*clk_module;
- 	struct reset_control *rst;
- 	struct gpio_desc *gpio_pa;
-+	struct gpio_desc *gpio_hp;
- 
- 	/* ADC_FIFOC register is at different offset on different SoCs */
- 	struct regmap_field *reg_adc_fifoc;
-@@ -1277,6 +1279,49 @@ static struct snd_soc_dai_driver dummy_cpu_dai = {
- 	.ops = &dummy_dai_ops,
- };
- 
-+static struct snd_soc_jack sun4i_headphone_jack;
-+
-+static struct snd_soc_jack_pin sun4i_headphone_jack_pins[] = {
-+	{ .pin = "Headphone", .mask = SND_JACK_HEADPHONE },
-+};
-+
-+static struct snd_soc_jack_gpio sun4i_headphone_jack_gpio = {
-+	.name = "hp-det",
-+	.report = SND_JACK_HEADPHONE,
-+	.debounce_time = 150,
-+};
-+
-+static int sun4i_codec_machine_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_card *card = rtd->card;
-+	struct sun4i_codec *scodec = snd_soc_card_get_drvdata(card);
-+	int ret;
-+
-+	if (scodec->gpio_hp) {
-+		ret = snd_soc_card_jack_new_pins(card, "Headphone Jack",
-+						 SND_JACK_HEADPHONE,
-+						 &sun4i_headphone_jack,
-+						 sun4i_headphone_jack_pins,
-+						 ARRAY_SIZE(sun4i_headphone_jack_pins));
-+		if (ret) {
-+			dev_err(rtd->dev,
-+				"Headphone jack creation failed: %d\n", ret);
-+			return ret;
-+		}
-+
-+		sun4i_headphone_jack_gpio.desc = scodec->gpio_hp;
-+		ret = snd_soc_jack_add_gpios(&sun4i_headphone_jack, 1,
-+					     &sun4i_headphone_jack_gpio);
-+
-+		if (ret) {
-+			dev_err(rtd->dev, "Headphone GPIO not added: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *dev,
- 							int *num_links)
- {
-@@ -1302,6 +1347,7 @@ static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *dev,
- 	link->codecs->name	= dev_name(dev);
- 	link->platforms->name	= dev_name(dev);
- 	link->dai_fmt		= SND_SOC_DAIFMT_I2S;
-+	link->init		= sun4i_codec_machine_init;
- 
- 	*num_links = 1;
- 
-@@ -1742,6 +1788,13 @@ static int sun4i_codec_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index b924f0f096fa4..7534069f60333 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -118,6 +118,7 @@ static int posix_timer_add(struct k_itimer *timer)
+ 			return id;
+ 		}
+ 		spin_unlock(&hash_lock);
++		cond_resched();
  	}
- 
-+	scodec->gpio_hp = devm_gpiod_get_optional(&pdev->dev, "hp-det", GPIOD_IN);
-+	if (IS_ERR(scodec->gpio_hp)) {
-+		ret = PTR_ERR(scodec->gpio_hp);
-+		dev_err_probe(&pdev->dev, ret, "Failed to get hp-det gpio\n");
-+		return ret;
-+	}
-+
- 	/* reg_field setup */
- 	scodec->reg_adc_fifoc = devm_regmap_field_alloc(&pdev->dev,
- 							scodec->regmap,
+ 	/* POSIX return code when no timer ID could be allocated */
+ 	return -EAGAIN;
 -- 
 2.39.5
 
