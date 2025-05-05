@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54D23991AF;
-	Mon,  5 May 2025 23:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BA13991BC;
+	Mon,  5 May 2025 23:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486470; cv=none; b=U8XMeBD/RHnL7fgz2Ltjv+4BPtUjewgzS/kJiUBUuSGxTSBYCI4fiaPwn6/qK17wsHTpW97OXcNlvf4g7l1L8EFWa3025qTK46i1X7AXEkpNjT041v74CVaWZOt/I/8geefAVXWQTucrIwxNTqxspr7lWp2rdGrZXfKwH2W9i0I=
+	t=1746486473; cv=none; b=EAaKoQzdE3iKxP0xqbXwetF9sgOXUyVs7ksiyEGWTsj9S0s02WO8O/SpIT8psldi2OIH33vG+8uxqp+8elO9BleVIbuvd39UqJdZt5Zaf01bHmCdePWIWWGklIXiJkpss1y/mIi7nKgcgU2ZedKRmOk3/uuWCiQMO6btChffpt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486470; c=relaxed/simple;
-	bh=Kla4zjxFzkrE6Pr2b/gaHFQSldCKjlm/rmVI/KRUkA8=;
+	s=arc-20240116; t=1746486473; c=relaxed/simple;
+	bh=qwMJOQ5swyZ+SMObVdycJa5sk+yXTYnxZmLt9zQKnKo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NaI0GxXntE9pKDWCeGr6TkSjMeaEB23QfoQggNJXO2RxDMH1p8INiX4fzdOFdLOfXymAAsfXPpHY9L9hGIObLZGOhHgOgN/m/6HzkgS8flHHtIOBh5npi1rtFH7Hb7QbMm2TkJ+p7x4qvk8m6vID3ndq/vLI8bZA9HEwSWaSlHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlPdMvJe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hKRjAgKO1ZO0uoVj+r8zDQnpDZEkon29A+8/nhm+BLLZI3qjg83ZaRaPnYxMLKnzr8HOaOnJo/tG/l758Ishaf2OQrubSamMBBamdYQA7f/LZDfutxGsdFxsMean3BPls6L1H8SxUUKYlIhPW0ZImbXIanIax4aVfZbHBkkjHlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsKsB1pv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlPdMvJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F56C4CEF1;
-	Mon,  5 May 2025 23:07:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsKsB1pv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A49C4CEEF;
+	Mon,  5 May 2025 23:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486469;
-	bh=Kla4zjxFzkrE6Pr2b/gaHFQSldCKjlm/rmVI/KRUkA8=;
+	s=k20201202; t=1746486472;
+	bh=qwMJOQ5swyZ+SMObVdycJa5sk+yXTYnxZmLt9zQKnKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlPdMvJeBMiTkPdp7TXxruBxCKvA1lA/ND9QHe0tz5N/wBbB337YQeO64HAsprpvy
-	 9x9dQAVIBiYMdXLrF9y/gOjvzi29WRntDdN3EviQDK+kbCu61ra3RQCbJ0FHWWyxuY
-	 YIrMwWmLGV3p0W50Z0XJt4Cj0KCqDIth46kyEgQAzUJHSGYtGzvOpjnPI/hYVngAsc
-	 Y3P/2UhvHOmnQQYx/m5nix8mqSKy7lxuhnb/1/4v/QikJK5HwI4IJtrRlF4HWWx2bD
-	 Qa1ebv0ZNma8ukDjPNG50R5c3KpQAgiN/yj1UOa/v0BlcEwu3/+m8s5S2sE0IyfpBd
-	 vv6d0SKZTS/dA==
+	b=KsKsB1pvKhC0LzeIP5zGFbxbXXxNJ2w6sas6AJVWOxB46yT6A0IGsINUiRKuTLx5n
+	 jUnqorJ/NePjt8z/oDn/Y7BzRCE8c+zRIrwxq8vCktG7lhRWQznNNy4DhT+FvsXerz
+	 HAPArPqUFS7Oylvx9UawKLnRlOb4hlw9Y2/FQr4SdGq1vvFN0zBkfSzifU7N1kaGC4
+	 68u0vZeljWXd83xPeLhnaAMSvbFHQO2jRbOEXj9IS0d3S8Ux+yoUgnCqR7rDz45Kl2
+	 IFqFUMqnXXagrnqfzZpojDGFid3h+oB7HkdeNU1WNnSQ+oPk3Ea6Kvp/T4wqtZBsq8
+	 GOxgHwAwN+TMw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Serge Hallyn <serge@hallyn.com>,
-	Jan Kara <jack@suse.cz>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: =?UTF-8?q?Kai=20M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 046/212] ext4: reorder capability check last
-Date: Mon,  5 May 2025 19:03:38 -0400
-Message-Id: <20250505230624.2692522-46-sashal@kernel.org>
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 048/212] scsi: st: ERASE does not change tape location
+Date: Mon,  5 May 2025 19:03:40 -0400
+Message-Id: <20250505230624.2692522-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -54,50 +52,33 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Christian Göttsche <cgzones@googlemail.com>
+From: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
 
-[ Upstream commit 1b419c889c0767a5b66d0a6c566cae491f1cb0f7 ]
+[ Upstream commit ad77cebf97bd42c93ab4e3bffd09f2b905c1959a ]
 
-capable() calls refer to enabled LSMs whether to permit or deny the
-request.  This is relevant in connection with SELinux, where a
-capability check results in a policy decision and by default a denial
-message on insufficient permission is issued.
-It can lead to three undesired cases:
-  1. A denial message is generated, even in case the operation was an
-     unprivileged one and thus the syscall succeeded, creating noise.
-  2. To avoid the noise from 1. the policy writer adds a rule to ignore
-     those denial messages, hiding future syscalls, where the task
-     performs an actual privileged operation, leading to hidden limited
-     functionality of that task.
-  3. To avoid the noise from 1. the policy writer adds a rule to permit
-     the task the requested capability, while it does not need it,
-     violating the principle of least privilege.
+The SCSI ERASE command erases from the current position onwards.  Don't
+clear the position variables.
 
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://patch.msgid.link/20250302160657.127253-2-cgoettsche@seltendoof.de
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Kai Mäkisara <Kai.Makisara@kolumbus.fi>
+Link: https://lore.kernel.org/r/20250311112516.5548-3-Kai.Makisara@kolumbus.fi
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/balloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/st.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/ext4/balloc.c b/fs/ext4/balloc.c
-index fbd0329cf254e..9efe97f3721bc 100644
---- a/fs/ext4/balloc.c
-+++ b/fs/ext4/balloc.c
-@@ -638,8 +638,8 @@ static int ext4_has_free_clusters(struct ext4_sb_info *sbi,
- 	/* Hm, nope.  Are (enough) root reserved clusters available? */
- 	if (uid_eq(sbi->s_resuid, current_fsuid()) ||
- 	    (!gid_eq(sbi->s_resgid, GLOBAL_ROOT_GID) && in_group_p(sbi->s_resgid)) ||
--	    capable(CAP_SYS_RESOURCE) ||
--	    (flags & EXT4_MB_USE_ROOT_BLOCKS)) {
-+	    (flags & EXT4_MB_USE_ROOT_BLOCKS) ||
-+	    capable(CAP_SYS_RESOURCE)) {
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index 284c2cf1ae662..3ff4e6d44db88 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -2887,7 +2887,6 @@ static int st_int_ioctl(struct scsi_tape *STp, unsigned int cmd_in, unsigned lon
+ 			timeout = STp->long_timeout * 8;
  
- 		if (free_clusters >= (nclusters + dirty_clusters +
- 				      resv_clusters))
+ 		DEBC_printk(STp, "Erasing tape.\n");
+-		fileno = blkno = at_sm = 0;
+ 		break;
+ 	case MTSETBLK:		/* Set block length */
+ 	case MTSETDENSITY:	/* Set tape density */
 -- 
 2.39.5
 
