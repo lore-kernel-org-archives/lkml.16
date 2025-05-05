@@ -1,115 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FD625D90D;
-	Mon,  5 May 2025 14:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BC6204C0F;
+	Mon,  5 May 2025 14:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456252; cv=none; b=AnEfKVsjW9sEwNHR24baRbUpdON6OJaH9m5YBI4B+LzDz4669jxfPtxL4yeDskRy3VE2FbexKbdT74/t2v4rvk7qr/pr8i3tSjWTtAkwllgVXbohSy3nFHQNd4SeppxBskr8tMyxP+d59i4BFGT1dV++71QDuOcoGbkxbi7WdIU=
+	t=1746456314; cv=none; b=QWDZ30VzF/S/Hu6fHfb/FlK9BxlyoevZUavoMXTbE6+336sKYEC+GdEIBxC6op2ui53ugOFZG9iseBEab9TJ/Y9lnv0al/JY8r1Y5Po8E0C5VWuzyHeTAkftfsgziEYscU16ar2thN4GkLib6+oAtv5Netc6/T7Ajw+b7Ye8twc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456252; c=relaxed/simple;
-	bh=vkzC9zv68KsWIrMeAfc6iXVzA8iO3cgRRySvwrwTtVI=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=s/seTd2YUOxJchkMk4IRukIv3k9ixGjLsQHqEEN3ZkOmZwWEYagt1AaVSqrQ8rULnz3hnRUkHGWRmzzOLqdB9zOb/xbRwMcg09fnk4wMauk6sYo0pLk8Pc+nwgn3Be+Y9bNv5pRd/MzPGfZPen2hvSrmklfQTRMMHBw7kATrq6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJBFrTr8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456314; c=relaxed/simple;
+	bh=Aak0zC7hFrMtPsSvTJIW47N4jkePCGca82zdtPNT7wQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TQe4Dph/Jz74lgSZ8XcJAZzaDpQnkZeierrBaWZnaPrznBkPqww5p/jZrRAQFOjiY3Q2QZ+rGW4NzT3u5EyFK2W85+JEYbuG5Czq4sYssMxg6HG3x2esZk9ueAr6PgaJaZgUGFR6gyN1vsVNwNxuAl7DXn8ZtIjb3L+e7GY2S6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YtR3FyM+; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJBFrTr8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F22C4CEF0;
-	Mon,  5 May 2025 14:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456251;
-	bh=vkzC9zv68KsWIrMeAfc6iXVzA8iO3cgRRySvwrwTtVI=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=AJBFrTr8gRuydAYqiTXhh0btD+lTuqY2jzFE3q1LbzL+Kff56DrNpOwwjBJXJZebl
-	 OFsbjEIhFh0Rwqumqr+6lKj3l8ggzeY7mC8pziOk+hLvibCM6ya40ueCcpjQYBbT+B
-	 sFbdPeXh945g/Ema75fQGhpi6S1xN1mFFik1PK+9R4sHnF8jzZznStJqYH72yRfbMZ
-	 mvrBXfl1BNVl/HG8sePzywo8sFBtR0xNqwY5T9X2+9YlSrMpqYQTng5O6DnKrJz7uu
-	 2LBpJsaJnsUuwdAvJBfqRzx+TGV/zZrHrf9XUgGNQGZvlDIAaRou/QcyAKHZV3dvvZ
-	 2PhUqqpgJfn9A==
-Date: Mon, 05 May 2025 09:44:10 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtR3FyM+"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a064a3e143so1985229f8f.3;
+        Mon, 05 May 2025 07:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746456310; x=1747061110; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Aak0zC7hFrMtPsSvTJIW47N4jkePCGca82zdtPNT7wQ=;
+        b=YtR3FyM+M1njA+QFd+jZ7kYV5c5RLAu09z01T7GjRIFwsYKEO/meO4mB6HnR8pFHPx
+         RNnDIQ7MAak7TOHX3smMGBu4+uupRSRaMfb47ugSqU21MaYP/MMgyzIULH15vbtyqU9X
+         VScg5Hl5hCniFgZG5RpFlhwd/mDdWYySuJJToQOrUSR0J8Sx7H08ku1voV/JORff9vQL
+         M0DuHqOiYWVxgE9ubflyqywtS+zrJPWZazowxc3QWEl7ymii+KDCUpchdotzw5HGhtXH
+         29VqLKAEpieKI6BIZouULxAEoxs8a+4hllEgw8TQq5nTnZRfYcAf3eNqJnQ/5boFGAli
+         AWzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746456310; x=1747061110;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Aak0zC7hFrMtPsSvTJIW47N4jkePCGca82zdtPNT7wQ=;
+        b=FodfN1REHZk+7154w9M1tF58N+p4oODxDcrwQo+E5e6ZL96ZhTpiAyBEwDjDqzzj4W
+         O16WCE11CYaKG1lOQAvyciL9H30jCnzDp3ZsomywGqP56+kIgMESnj1QOOOjjWhoatmh
+         wyyraOZtinNlyc9wS5Ly5N5eSSVDidcRkaz+W8fRlXSEZSYGpl6mqb7HudOqWtQzYlpK
+         fk8mI6nZ6U09HApZTmfZRmOGuXf7FHL1t290GmkRtUrSUAFNyXPhWvIHsK7SYwNPoNyj
+         158tWCZ/gWNuQu3hAJ9sI39C5+0U/wpHaYz4qpuqifONQtkX63JLi0hS/KWzJg7mnapI
+         G4ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVYxyvAXE2HeIt3tvVbyXyIrnsMTOtveu0BpMD7YyFxm0ymutDiJJXBOSbMuV+dnT/m04I3BMvOa05fr64=@vger.kernel.org, AJvYcCXFIGooLoaDuHWepuxYl/3mOyQHdve10i7ug7rXtqC0/YD7Rf3lD6NKpnMjTvKxu5pnDz0ig2U/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG6vHL4DpH1XXSh7EaeCZAF7hVXP66BMpoNzfQHttyHYWY2zKk
+	TDB9xCwqS6UiR9txxMVszSXlSPdDLg9JuNyftY9zmEAA6jTvKr1I
+X-Gm-Gg: ASbGncsEBuqe/moNtfrrsPkxiDbB+FirJahRWKGTjbl7pS80DkgiWxp00eGnbv0b5Vi
+	PfWK9EGAlsOgRBn+QcdXvul2mjQC32/v/cXhhEB+XfJ1HRhb9v9c3v2mSziBRBHdljsobiO7POw
+	C1aAsIk8vcbGH9DEv5KlbL+sOK0PUi+G3w8SzD5i1p+eDv3IOt+aWQQS+6vfehFHexFrzcQ3+92
+	/dxyVJwZifwk15QGLC3hIdOm4XlK6CGQe1cV1h6TqnkUZgOpok6g/0jGxt+FwCceFOC5Tp2yAKq
+	gLishtnI84Himdc4KyQSPPqCk4o2uJw6EmZLbR9PJoe6EJk/FQ3H72Sm39clHEQgmUsG6e0uChT
+	LHxmvXvjA
+X-Google-Smtp-Source: AGHT+IHjK1h3k/XdxelFNq/AmylJkok9PMTAM8PU6xwHm3aH5PDmmrprgcYcfC9J9d+yZNo3RyZVzg==
+X-Received: by 2002:a5d:5f41:0:b0:3a0:85b5:463b with SMTP id ffacd0b85a97d-3a09fdd83bamr5193375f8f.48.1746456310282;
+        Mon, 05 May 2025 07:45:10 -0700 (PDT)
+Received: from ?IPv6:2001:8a0:e602:d900:8437:41c5:1bd4:5790? ([2001:8a0:e602:d900:8437:41c5:1bd4:5790])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28082sm180278025e9.34.2025.05.05.07.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 07:45:09 -0700 (PDT)
+Message-ID: <ec35d40dcd06ddbcfc0409ffa01aaee22c601716.camel@gmail.com>
+Subject: Re: [PATCH v1] drm/bridge: cdns-dsi: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+From: Vitor Soares <ivitro@gmail.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vitor Soares <vitor.soares@toradex.com>,
+ dri-devel@lists.freedesktop.org,  linux-kernel@vger.kernel.org, Aradhya
+ Bhatia <aradhya.bhatia@linux.dev>,  Jayesh Choudhary <j-choudhary@ti.com>,
+ stable@vger.kernel.org, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>
+Date: Mon, 05 May 2025 15:45:08 +0100
+In-Reply-To: <fbde0659-78f3-46e4-98cf-d832f765a18b@ideasonboard.com>
+References: <20250428094048.1459620-1-ivitro@gmail.com>
+	 <fbde0659-78f3-46e4-98cf-d832f765a18b@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sean Wang <sean.wang@mediatek.com>, linux-mediatek@lists.infradead.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, wenst@chromium.org, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-To: Sirius Wang <sirius.wang@mediatek.com>
-In-Reply-To: <20250505121627.3944728-1-sirius.wang@mediatek.com>
-References: <20250505121627.3944728-1-sirius.wang@mediatek.com>
-Message-Id: <174645594319.1246809.14814085003624998764.robh@kernel.org>
-Subject: Re: [PATCH 0/2] Add mt8189 dts evaluation board and Mafefile
 
+On Tue, 2025-04-29 at 09:32 +0300, Tomi Valkeinen wrote:
+> Hi,
+>=20
+> On 28/04/2025 12:40, Vitor Soares wrote:
+> > From: Vitor Soares <vitor.soares@toradex.com>
+> >=20
+> > The deprecated UNIVERSAL_DEV_PM_OPS() macro uses the provided callbacks
+> > for both runtime PM and system sleep. This causes the DSI clocks to be
+> > disabled twice: once during runtime suspend and again during system
+> > suspend, resulting in a WARN message from the clock framework when
+> > attempting to disable already-disabled clocks.
+> >=20
+> > [=C2=A0=C2=A0 84.384540] clk:231:5 already disabled
+> > [=C2=A0=C2=A0 84.388314] WARNING: CPU: 2 PID: 531 at /drivers/clk/clk.c=
+:1181
+> > clk_core_disable+0xa4/0xac
+> > ...
+> > [=C2=A0=C2=A0 84.579183] Call trace:
+> > [=C2=A0=C2=A0 84.581624]=C2=A0 clk_core_disable+0xa4/0xac
+> > [=C2=A0=C2=A0 84.585457]=C2=A0 clk_disable+0x30/0x4c
+> > [=C2=A0=C2=A0 84.588857]=C2=A0 cdns_dsi_suspend+0x20/0x58 [cdns_dsi]
+> > [=C2=A0=C2=A0 84.593651]=C2=A0 pm_generic_suspend+0x2c/0x44
+> > [=C2=A0=C2=A0 84.597661]=C2=A0 ti_sci_pd_suspend+0xbc/0x15c
+> > [=C2=A0=C2=A0 84.601670]=C2=A0 dpm_run_callback+0x8c/0x14c
+> > [=C2=A0=C2=A0 84.605588]=C2=A0 __device_suspend+0x1a0/0x56c
+> > [=C2=A0=C2=A0 84.609594]=C2=A0 dpm_suspend+0x17c/0x21c
+> > [=C2=A0=C2=A0 84.613165]=C2=A0 dpm_suspend_start+0xa0/0xa8
+> > [=C2=A0=C2=A0 84.617083]=C2=A0 suspend_devices_and_enter+0x12c/0x634
+> > [=C2=A0=C2=A0 84.621872]=C2=A0 pm_suspend+0x1fc/0x368
+> >=20
+> > To address this issue, replace UNIVERSAL_DEV_PM_OPS() with
+> > DEFINE_RUNTIME_DEV_PM_OPS(), which avoids redundant suspend/resume call=
+s
+> > by checking if the device is already runtime suspended.
+> >=20
+> > Cc: <stable@vger.kernel.org> # 6.1.x
+> > Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+> > Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
+> > ---
+> > =C2=A0 drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 10 +++++-----
+> > =C2=A0 1 file changed, 5 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> > b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> > index b022dd6e6b6e..62179e55e032 100644
+> > --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> > +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> > @@ -1258,7 +1258,7 @@ static const struct mipi_dsi_host_ops cdns_dsi_op=
+s =3D {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.transfer =3D cdns_dsi_=
+transfer,
+> > =C2=A0 };
+> > =C2=A0=20
+> > -static int __maybe_unused cdns_dsi_resume(struct device *dev)
+> > +static int cdns_dsi_resume(struct device *dev)
+> > =C2=A0 {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct cdns_dsi *dsi =
+=3D dev_get_drvdata(dev);
+> > =C2=A0=20
+> > @@ -1269,7 +1269,7 @@ static int __maybe_unused cdns_dsi_resume(struct
+> > device *dev)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > =C2=A0 }
+> > =C2=A0=20
+> > -static int __maybe_unused cdns_dsi_suspend(struct device *dev)
+> > +static int cdns_dsi_suspend(struct device *dev)
+> > =C2=A0 {
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct cdns_dsi *dsi =
+=3D dev_get_drvdata(dev);
+> > =C2=A0=20
+> > @@ -1279,8 +1279,8 @@ static int __maybe_unused cdns_dsi_suspend(struct
+> > device *dev)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > =C2=A0 }
+> > =C2=A0=20
+> > -static UNIVERSAL_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend,
+> > cdns_dsi_resume,
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 NULL);
+> > +static DEFINE_RUNTIME_DEV_PM_OPS(cdns_dsi_pm_ops, cdns_dsi_suspend,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cdns_dsi_resume, NULL);
+>=20
+> I'm not sure if this, or the UNIVERSAL_DEV_PM_OPS, is right here. When=
+=20
+> the system is suspended, the bridge drivers will get a call to the=20
+> *_disable() hook, which then disables the device. If the bridge driver=
+=20
+> would additionally do something in its system suspend hook, it would=20
+> conflict with normal disable path.
+>=20
+> I think bridges/panels should only deal with runtime PM.
+>=20
+> =C2=A0 Tomi
+>=20
 
-On Mon, 05 May 2025 20:15:44 +0800, Sirius Wang wrote:
-> MT8189 is a SoC based on 64bit ARMv8 architecture. It contains 6 CA55
-> and 2 CA78 cores. MT8189 share many HW IP with MT8188 series.
-> 
-> We add basic chip support for MediaTek MT8189 on evaluation board.
-> 
-> In this series, we also add dt-bindings document definition for MT8189.
-> 
-> Sirius Wang (2):
->   WIP: dt-bindings: arm: Add compatible for MediaTek MT8189
->   WIP: arm64: dts: mt8189: Add mt8189 dts evaluation board and Mafefile
-> 
->  .../devicetree/bindings/arm/mediatek.yaml     |   4 +
->  arch/arm64/boot/dts/mediatek/Makefile         |   1 +
->  arch/arm64/boot/dts/mediatek/mt8189-evb.dts   |  20 +
->  arch/arm64/boot/dts/mediatek/mt8189.dtsi      | 441 ++++++++++++++++++
->  4 files changed, 466 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
-> 
-> --
-> 2.45.2
-> 
-> 
-> 
+In the proposed change, we make use of pm_runtime_force_suspend() during
+system-wide suspend. If the device is already suspended, this call is a
+no-op and disables runtime PM to prevent spurious wakeups during the
+suspend period. Otherwise, it triggers the device=E2=80=99s runtime_suspend=
+()
+callback.
 
+I briefly reviewed other bridge drivers, and those that implement runtime
+PM appear to follow a similar approach, relying solely on runtime PM
+callbacks and using pm_runtime_force_suspend()/resume() to handle
+system-wide transitions.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250505 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250505121627.3944728-1-sirius.wang@mediatek.com:
-
-arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: / (mediatek,mt8189-evb): memory: False schema does not allow {'device_type': ['memory'], 'reg': [[0, 1073741824, 0, 3221225472]]}
-	from schema $id: http://devicetree.org/schemas/root-node.yaml#
-arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: idle-states: 'clusteroff-b', 'clusteroff-l', 'clusteroff-m', 'cpuoff-b', 'cpuoff-l', 'cpuoff-m', 'mcusysoff-b', 'mcusysoff-l', 'mcusysoff-m', 's2idle', 'system-vcore' do not match any of the regexes: '^(cpu|cluster)-', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
-arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: idle-states: entry-method:0: 'psci' was expected
-	from schema $id: http://devicetree.org/schemas/cpu/idle-states.yaml#
-arch/arm64/boot/dts/mediatek/mt8189-evb.dtb: serial@11001000 (mediatek,mt6577-uart): Unevaluated properties are not allowed ('uart-line' was unexpected)
-	from schema $id: http://devicetree.org/schemas/serial/mediatek,uart.yaml#
-
-
-
-
+Best regards,
+Vitor Soares
 
