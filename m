@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34A22F5FB8;
-	Mon,  5 May 2025 23:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2ADA2F6B5B;
+	Mon,  5 May 2025 23:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487067; cv=none; b=Y7IkLSpeq1CONPno4yBLX9TXS/BSDXin/sGDArerXNMlTploxRJrHCWhjsUHuuuY6nijOdAOQC8BZPt5MNlyOsC5o2uRXZvOyMWFKBtYR4oBgeoDhQj8QM63aSv0UJO92wiUl2/dRK4THFIrgHrxmBHPAHnv93H+bYNWXXYoIXA=
+	t=1746487079; cv=none; b=WKGpb20vYq1ovRhHVKMDj2/jKDw3JDKNwf9ldU8XrQjfkpnUx/92lOeoDAHemste9PvnRoBAd3zLPmJ0Z126MvyYtqF0MZ6C3s2KKIglaIbmUA59pfgH6xNVX/Pe4q6nJmABNWxyKv30cR25I/cSfW3Ngo2Nu0D+ddu/dImdhAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487067; c=relaxed/simple;
-	bh=KWNQkcUpLYPaaAMI1wQpEgFfwenRPtBvR5QXr06sJBI=;
+	s=arc-20240116; t=1746487079; c=relaxed/simple;
+	bh=CMDfBiFwcjIQ0GzR+o2KKA+zOU0rN/vwkB/RvxyrxWA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a8YEhbTM7NbY72Kj4Xp8L1XEjnpNPCgup3aEWpzR6cTLzo7QjZ8MQpXdpeA9g2FWYV2ptOxiG6fAl/u8ZV1bnK8ldlD7SewBKC01GIcskBrOp+GYcQFR8c0dtmB7cQI9g0YmrPifPt7zZrw7eZkn+9NoFGt9PohzdcA6e9dVWv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6tj8Asm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bp+dp5z8R3lOeAn3gvhlEJb0WgjISplLOe/1wch9uaYC85ICru/a7ZHdxDJaY4xb57k7/RBfbiSu+GLXghd6mfA3/crxsIitKB2duiahXV3Zjy90oUkxQs1m6HnySQOW6PQN8fsJWt7VfQa4+VlKACDrvmUk0dusVqGZFlIYnjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imgs4Z5+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6tj8Asm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE13C4CEED;
-	Mon,  5 May 2025 23:17:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imgs4Z5+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4EE9C4CEF1;
+	Mon,  5 May 2025 23:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487067;
-	bh=KWNQkcUpLYPaaAMI1wQpEgFfwenRPtBvR5QXr06sJBI=;
+	s=k20201202; t=1746487079;
+	bh=CMDfBiFwcjIQ0GzR+o2KKA+zOU0rN/vwkB/RvxyrxWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O6tj8AsmsP9cvs9psTgvcXpqhMddOSK6XLVlrcNOBdV2suoHqa02wQLvrwvjQtlBs
-	 vA75J3iuR4QSaNKhhJyWpg7NS+yySW1U8tynfvTzsHYvs0V2K/XSeGFSwWJzoa++EG
-	 TEMfZhOO+jVQJT+wghIbzbm7jjBThvcn1JE4T9ZnnfO3ju8OGEgKvb1PhgA3CnW7OQ
-	 KEDV2r/qKigjexURWU51tjvTX0ikxMnJkIPxVov37IzUWGeJHBGzKfbJPhl4X0YPhP
-	 aPKp0yOJk74xe57+6VaXUZBR2Ua61X42No8yCiehuOMDcpTpmemOF6refb/WrIK6tV
-	 N4bTJvhxcq5fw==
+	b=imgs4Z5+5M7KiGE2y4jIRYpHjryLiYWFHVQvDLKBei/ZxlY5wVgIxSYHeYd89qjhT
+	 qRbetTWGUUr0WbWI3ssTC7Ia/om6E13QmkfSMBAr+kfjI5/7890hObMiTvN4DbsRyQ
+	 zoPcBTZMAFIy9E1Se6S15cRh8DcvYbsL8rFqomviTOjAtRZ+1YZ+zNGvEgKN7s7DMz
+	 aINRMKX/46WWEabCjumXecs6BBHl0FSYPjJZAIuCJ4T7O+jaKS14zDMqTnALIipO2M
+	 zoUQ4g4pivCNIHyEX/u+ij9k5xqZbvIYe2Bwd41jwprokmIOjlKI+zaVtQVtjHZL/o
+	 xqL1GgEm5aMtQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Justin Tee <justin.tee@broadcom.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	menglong8.dong@gmail.com,
-	gnault@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 136/153] vxlan: Annotate FDB data races
-Date: Mon,  5 May 2025 19:13:03 -0400
-Message-Id: <20250505231320.2695319-136-sashal@kernel.org>
+	james.smart@broadcom.com,
+	dick.kennedy@broadcom.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 142/153] scsi: lpfc: Handle duplicate D_IDs in ndlp search-by D_ID routine
+Date: Mon,  5 May 2025 19:13:09 -0400
+Message-Id: <20250505231320.2695319-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -58,142 +53,64 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Justin Tee <justin.tee@broadcom.com>
 
-[ Upstream commit f6205f8215f12a96518ac9469ff76294ae7bd612 ]
+[ Upstream commit 56c3d809b7b450379162d0b8a70bbe71ab8db706 ]
 
-The 'used' and 'updated' fields in the FDB entry structure can be
-accessed concurrently by multiple threads, leading to reports such as
-[1]. Can be reproduced using [2].
+After a port swap between separate fabrics, there may be multiple nodes in
+the vport's fc_nodes list with the same fabric well known address.
+Duplication is temporary and eventually resolves itself after dev_loss_tmo
+expires, but nameserver queries may still occur before dev_loss_tmo.  This
+possibly results in returning stale fabric ndlp objects.  Fix by adding an
+nlp_state check to ensure the ndlp search routine returns the correct newer
+allocated ndlp fabric object.
 
-Suppress these reports by annotating these accesses using
-READ_ONCE() / WRITE_ONCE().
-
-[1]
-BUG: KCSAN: data-race in vxlan_xmit / vxlan_xmit
-
-write to 0xffff942604d263a8 of 8 bytes by task 286 on cpu 0:
- vxlan_xmit+0xb29/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff942604d263a8 of 8 bytes by task 287 on cpu 2:
- vxlan_xmit+0xadf/0x2380
- dev_hard_start_xmit+0x84/0x2f0
- __dev_queue_xmit+0x45a/0x1650
- packet_xmit+0x100/0x150
- packet_sendmsg+0x2114/0x2ac0
- __sys_sendto+0x318/0x330
- __x64_sys_sendto+0x76/0x90
- x64_sys_call+0x14e8/0x1c00
- do_syscall_64+0x9e/0x1a0
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x00000000fffbac6e -> 0x00000000fffbac6f
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 2 UID: 0 PID: 287 Comm: mausezahn Not tainted 6.13.0-rc7-01544-gb4b270f11a02 #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
-
-[2]
- #!/bin/bash
-
- set +H
- echo whitelist > /sys/kernel/debug/kcsan
- echo !vxlan_xmit > /sys/kernel/debug/kcsan
-
- ip link add name vx0 up type vxlan id 10010 dstport 4789 local 192.0.2.1
- bridge fdb add 00:11:22:33:44:55 dev vx0 self static dst 198.51.100.1
- taskset -c 0 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
- taskset -c 2 mausezahn vx0 -a own -b 00:11:22:33:44:55 -c 0 -q &
-
-Reviewed-by: Petr Machata <petrm@nvidia.com>
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/20250204145549.1216254-2-idosch@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Justin Tee <justin.tee@broadcom.com>
+Link: https://lore.kernel.org/r/20250131000524.163662-5-justintee8345@gmail.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan/vxlan_core.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index 65a2f4ab89970..9c4d7bedc7641 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -334,9 +334,9 @@ static int vxlan_fdb_info(struct sk_buff *skb, struct vxlan_dev *vxlan,
- 			be32_to_cpu(fdb->vni)))
- 		goto nla_put_failure;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 54aff304cdcf4..d04669ae878bd 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -5631,6 +5631,7 @@ static struct lpfc_nodelist *
+ __lpfc_findnode_did(struct lpfc_vport *vport, uint32_t did)
+ {
+ 	struct lpfc_nodelist *ndlp;
++	struct lpfc_nodelist *np = NULL;
+ 	uint32_t data1;
  
--	ci.ndm_used	 = jiffies_to_clock_t(now - fdb->used);
-+	ci.ndm_used	 = jiffies_to_clock_t(now - READ_ONCE(fdb->used));
- 	ci.ndm_confirmed = 0;
--	ci.ndm_updated	 = jiffies_to_clock_t(now - fdb->updated);
-+	ci.ndm_updated	 = jiffies_to_clock_t(now - READ_ONCE(fdb->updated));
- 	ci.ndm_refcnt	 = 0;
+ 	list_for_each_entry(ndlp, &vport->fc_nodes, nlp_listp) {
+@@ -5645,14 +5646,20 @@ __lpfc_findnode_did(struct lpfc_vport *vport, uint32_t did)
+ 					 ndlp, ndlp->nlp_DID,
+ 					 ndlp->nlp_flag, data1, ndlp->nlp_rpi,
+ 					 ndlp->active_rrqs_xri_bitmap);
+-			return ndlp;
++
++			/* Check for new or potentially stale node */
++			if (ndlp->nlp_state != NLP_STE_UNUSED_NODE)
++				return ndlp;
++			np = ndlp;
+ 		}
+ 	}
  
- 	if (nla_put(skb, NDA_CACHEINFO, sizeof(ci), &ci))
-@@ -542,8 +542,8 @@ static struct vxlan_fdb *vxlan_find_mac(struct vxlan_dev *vxlan,
- 	struct vxlan_fdb *f;
- 
- 	f = __vxlan_find_mac(vxlan, mac, vni);
--	if (f && f->used != jiffies)
--		f->used = jiffies;
-+	if (f && READ_ONCE(f->used) != jiffies)
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	return f;
+-	/* FIND node did <did> NOT FOUND */
+-	lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
+-			 "0932 FIND node did x%x NOT FOUND.\n", did);
+-	return NULL;
++	if (!np)
++		/* FIND node did <did> NOT FOUND */
++		lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
++				 "0932 FIND node did x%x NOT FOUND.\n", did);
++
++	return np;
  }
-@@ -1073,12 +1073,12 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	    !(f->flags & NTF_VXLAN_ADDED_BY_USER)) {
- 		if (f->state != state) {
- 			f->state = state;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 		if (f->flags != fdb_flags) {
- 			f->flags = fdb_flags;
--			f->updated = jiffies;
-+			WRITE_ONCE(f->updated, jiffies);
- 			notify = 1;
- 		}
- 	}
-@@ -1112,7 +1112,7 @@ static int vxlan_fdb_update_existing(struct vxlan_dev *vxlan,
- 	}
  
- 	if (ndm_flags & NTF_USE)
--		f->used = jiffies;
-+		WRITE_ONCE(f->used, jiffies);
- 
- 	if (notify) {
- 		if (rd == NULL)
-@@ -1525,7 +1525,7 @@ static bool vxlan_snoop(struct net_device *dev,
- 				    src_mac, &rdst->remote_ip.sa, &src_ip->sa);
- 
- 		rdst->remote_ip = *src_ip;
--		f->updated = jiffies;
-+		WRITE_ONCE(f->updated, jiffies);
- 		vxlan_fdb_notify(vxlan, f, rdst, RTM_NEWNEIGH, true, NULL);
- 	} else {
- 		u32 hash_index = fdb_head_index(vxlan, src_mac, vni);
-@@ -3000,7 +3000,7 @@ static void vxlan_cleanup(struct timer_list *t)
- 			if (f->flags & NTF_EXT_LEARNED)
- 				continue;
- 
--			timeout = f->used + vxlan->cfg.age_interval * HZ;
-+			timeout = READ_ONCE(f->used) + vxlan->cfg.age_interval * HZ;
- 			if (time_before_eq(timeout, jiffies)) {
- 				netdev_dbg(vxlan->dev,
- 					   "garbage collect %pM\n",
+ struct lpfc_nodelist *
 -- 
 2.39.5
 
