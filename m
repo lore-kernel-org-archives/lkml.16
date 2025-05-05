@@ -1,163 +1,100 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0BA1DED5E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3081C1E52D;
+	Mon,  5 May 2025 20:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746478211; cv=none; b=iJWyOieZCKrWu7YY1EJjBBdudObkhDRTxajDL7brp5gL2sGGrIdHyUvQsGmQJJrallzY7R5scLKotN2b3pqgSk7v5+3MB+S0wJo1iIRrB5B+JmOjVB3lgSFwB2ElF9bVtmCgjvvERyhXSjmoUENAmubeOkg3EkHTzZtyTo9wh+8=
+	t=1746478304; cv=none; b=SLL562qE9+AWhFOeiqnF0yVwB6K5KVOEDvXyLm9H5+6kQWwoEDJirAWRHcNuVMKPM5MAapFN/5KJBV7gqD2bTmvJBzYnFFvLZiL9TQGtgqHJLjVThhx7bLekT+zknZX2oaffX0V3k3+ZJyTJHitggQ8qVpBn2QMndwvXqx/l0qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746478211; c=relaxed/simple;
-	bh=lbYOOzUdlsyvOpHixDp0NGqXVE2yy85/aWguybOWo8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sqWz8cVQ2QzIm2Qezs2nf6KCsN5M+4AudQs0CFxDa8V7zJbix40h9sJGXC4imju9L0+ZAd7EAjisISQ+FzxdjNjuOigjbzFSO1TFreW4xzELeuoqwiAKTuJNpBiIosItAC2FG3vDk+bk6B34iXHb8vjZhHw0Pdsb/INn+XXArTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ahAcf858; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746478304; c=relaxed/simple;
+	bh=IgTjNfi3VL3hIyePgRde0JnYRHqsl2LKqnBWsGSemao=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C+dH6OSiEJfVUVRteGdh5YJNpd946b8nRFtHZ9x4knNqZpjlaxsM6+17R+5RGjvGZaA12V+ltBGONs5U4XwgzwM4qPPrxDcvAJ4+jBYRTPWJRgShnfmLK6E7a/gQ8PdM0go8TCCjjG1ar5k1AgMJVVd6Eei1Co5wyfFmVmCX+aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=JnN3ESRP; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ahAcf858"
-Date: Mon, 5 May 2025 13:49:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746478194;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OXnskhOWpeWI0e/0mm8lMZ5XqD+oRKL2LPwz4l/PMBI=;
-	b=ahAcf858/5Hm3ezeiisZ4WTTLdRS5hJGHpFzbfKMCqqLIuBQj7tciw3L3RZcPfd5PO1gTK
-	QWLKGxM8ABZv/l4euaYLcdZIjUPgP2i0nYO7qmvo4IZcAubQH3T6+48kFKU9m3oHGuVZdL
-	mmRjo4RYH9HxPCzyMhWBRplB2m/AAzM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Shakeel Butt <shakeel.butt@gmail.com>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Meta kernel team <kernel-team@meta.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] memcg: no irq disable for memcg stock lock
-Message-ID: <jilyoryfq7cg6xp4cxbipct5vfbhu7ivp2jmzzigufqd6r5uss@h2cmibfg3fdf>
-References: <20250502001742.3087558-1-shakeel.butt@linux.dev>
- <20250502001742.3087558-4-shakeel.butt@linux.dev>
- <CAADnVQJ-XEEwVppk-qY2mmGB4R18_nqH-wdv5nuJf2LST5=Aaw@mail.gmail.com>
- <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
- <81a2e692-dd10-4253-afbc-062e0be67ca4@suse.cz>
- <ek6ptpggcmnp5kyt37ytriu6d4gj5grpfwcok3rupu5tbjoil3@6cqmoj43bsum>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="JnN3ESRP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=FVu8CAAOjGOH1bx9/sKXfRmnx7Hckvr5z5ZblQxIGao=; b=JnN3ESRPJSKijjzcvIYnDU+U0G
+	fyhM3kIv5rXcDOEWBbvY4cGJy9nPTQJOoYlUx5XsU1bkdvh4KW12rO7du3DYglRPV7aofhjrGSw51
+	M2OG/LUtOPMc0L2Uxuhz4JK3wIux8igRe8EHKJaubX3dga+wcSmMjkjli1sZ06GtR5F1UwzuM/9A2
+	tP8ExaG/dI/JjAljgwqlWAdQAguBfD362qve2v5hZj8/OjmeRfA0wkY9kgTxa1xIdicoJWEJJx4I1
+	LMgJIeux3XU0ahbTyuk+BCgDqTvtWJvmUamG2LftvgcqJYwqp7vDMRsj3Wad/Ur+eQYCpg3gX9M1Q
+	Lt8GIWpA==;
+Received: from i53875a1d.versanet.de ([83.135.90.29] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uC2mc-0007Lg-OC; Mon, 05 May 2025 22:51:26 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v3 00/10] Add RK3576 SAI Audio Controller Support
+Date: Mon,  5 May 2025 22:51:15 +0200
+Message-ID: <174647826637.1329543.9602946046704845460.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
+References: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ek6ptpggcmnp5kyt37ytriu6d4gj5grpfwcok3rupu5tbjoil3@6cqmoj43bsum>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 05, 2025 at 10:13:37AM -0700, Shakeel Butt wrote:
-> Ccing networking folks.
+
+On Fri, 02 May 2025 13:03:06 +0200, Nicolas Frattaroli wrote:
+> This series adds support for Rockchip's Serial Audio Interface (SAI)
+> controller, found on SoCs such as the RK3576. The SAI is a flexible
+> controller IP that allows both transmitting and receiving digital audio
+> in the I2S, TDM and PCM formats. Instances of this controller are used
+> both for externally exposed audio interfaces, as well as for audio on
+> video interfaces such as HDMI.
 > 
-> Background: https://lore.kernel.org/dvyyqubghf67b3qsuoreegqk4qnuuqfkk7plpfhhrck5yeeuic@xbn4c6c7yc42/
-> 
-> On Mon, May 05, 2025 at 12:28:43PM +0200, Vlastimil Babka wrote:
-> > On 5/3/25 01:03, Shakeel Butt wrote:
-> > >> > index cd81c70d144b..f8b9c7aa6771 100644
-> > >> > --- a/mm/memcontrol.c
-> > >> > +++ b/mm/memcontrol.c
-> > >> > @@ -1858,7 +1858,6 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
-> > >> >  {
-> > >> >         struct memcg_stock_pcp *stock;
-> > >> >         uint8_t stock_pages;
-> > >> > -       unsigned long flags;
-> > >> >         bool ret = false;
-> > >> >         int i;
-> > >> >
-> > >> > @@ -1866,8 +1865,8 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
-> > >> >                 return ret;
-> > >> >
-> > >> >         if (gfpflags_allow_spinning(gfp_mask))
-> > >> > -               local_lock_irqsave(&memcg_stock.lock, flags);
-> > >> > -       else if (!local_trylock_irqsave(&memcg_stock.lock, flags))
-> > >> > +               local_lock(&memcg_stock.lock);
-> > >> > +       else if (!local_trylock(&memcg_stock.lock))
-> > >> >                 return ret;
-> > >>
-> > >> I don't think it works.
-> > >> When there is a normal irq and something doing regular GFP_NOWAIT
-> > >> allocation gfpflags_allow_spinning() will be true and
-> > >> local_lock() will reenter and complain that lock->acquired is
-> > >> already set... but only with lockdep on.
-> > > 
-> > > Yes indeed. I dropped the first patch and didn't fix this one
-> > > accordingly. I think the fix can be as simple as checking for
-> > > in_task() here instead of gfp_mask. That should work for both RT and
-> > > non-RT kernels.
-> > 
-> > These in_task() checks seem hacky to me. I think the patch 1 in v1 was the
-> > correct way how to use the local_trylock() to avoid these.
-> > 
-> > As for the RT concerns, AFAIK RT isn't about being fast, but about being
-> > preemptible, and the v1 approach didn't violate that - taking the slowpaths
-> > more often shouldn't be an issue.
-> > 
-> > Let me quote Shakeel's scenario from the v1 thread:
-> > 
-> > > I didn't really think too much about PREEMPT_RT kernels as I assume
-> > > performance is not top priority but I think I get your point. Let me
-> > 
-> > Agreed.
-> > 
-> > > explain and correct me if I am wrong. On PREEMPT_RT kernel, the local
-> > > lock is a spin lock which is actually a mutex but with priority
-> > > inheritance. A task having the local lock can still get context switched
-> > 
-> > Let's say (seems implied already) this is a low prio task.
-> > 
-> > > (but will remain on same CPU run queue) and the newer task can try to
-> > 
-> > And this is a high prio task.
-> > 
-> > > acquire the memcg stock local lock. If we just do trylock, it will
-> > > always go to the slow path but if we do local_lock() then it will sleeps
-> > > and possibly gives its priority to the task owning the lock and possibly
-> > > make that task to get the CPU. Later the task slept on memcg stock lock
-> > > will wake up and go through fast path.
-> > 
-> > I think from RT latency perspective it could very much be better for the
-> > high prio task just skip the fast path and go for the slowpath, instead of
-> > going to sleep while boosting the low prio task to let the high prio task
-> > use the fast path later. It's not really a fast path anymore I'd say.
-> 
-> Thanks Vlastimil, this is actually a very good point. Slow path of memcg
-> charging is couple of atomic operations while the alternative here is at
-> least two context switches (and possibly scheduler delay). So, it does
-> not seem like a fast path anymore.
-> 
-> I have cc'ed networking folks to get their take as well. Orthogonally I
-> will do some netperf benchmarking on v1 with RT kernel.
+> [...]
 
-Let me share the result with PREEMPT_RT config on next-20250505 with and
-without the v1 of this series.
+Applied, thanks!
 
-I ran varying number of netperf clients in different cgroups on a 72 CPU
-machine.
+[01/10] dt-bindings: clock: rk3576: add IOC gated clocks
+        commit: 4210f21c004a18aad11c55bdaf552e649a4fd286
+[02/10] clk: rockchip: introduce auxiliary GRFs
+        commit: 70a114daf2077472e58b3cac23ba8998e35352f4
+[03/10] clk: rockchip: introduce GRF gates
+        commit: e277168cabe9fd99e647f5dad0bc846d5d6b0093
+[04/10] clk: rockchip: add GATE_GRFs for SAI MCLKOUT to rk3576
+        commit: 9199ec29f0977efee223791c9ee3eb402d23f8ba
 
- $ netserver -6
- $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
-
-number of clients | Without series | With series
-  6               | 38559.1 Mbps   | 38652.6 Mbps
-  12              | 37388.8 Mbps   | 37560.1 Mbps
-  18              | 30707.5 Mbps   | 31378.3 Mbps
-  24              | 25908.4 Mbps   | 26423.9 Mbps
-  30              | 22347.7 Mbps   | 22326.5 Mbps
-  36              | 20235.1 Mbps   | 20165.0 Mbps
-
-I don't see any significant performance difference for the network
-intensive workload with this series.
-
-I am going to send out v3 which will be rebased version of v1 with all
-these details unless someone has concerns about this.
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
