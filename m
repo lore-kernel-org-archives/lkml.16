@@ -1,130 +1,83 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCD01D959B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 19:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28E81D959B;
+	Mon,  5 May 2025 19:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746475105; cv=none; b=GO5jCANmfJFxiSIUs+xPD/m9cTJVngFx9MIUnqSZqeudPuREEUrcMj4d4ldD6c+SiZj1Fpa9oYN2uBh6geVBLWDemAaWuxJrFh7PEbFThJzhP1yDwS+w6fVNCMigB0kPO7iuI/icUpRvXtkzGwuVkN2IRQifE8EqXgvGoHVX/sY=
+	t=1746475109; cv=none; b=K/CoTpQ86DitaDWYh3Pi7Db5J546s2PSDV6W+UgzfIrrzqJiAmbcwgqr9bW5Rk2ADxPPAxKaGhi+SCyJlQCk34LRn0QlKYwr0vViEH6+yplQU4Y4umJf3WBDJYgUD+aCdELlL6i4ogx+IQ+AMYjusfEJDg7O8B3WJv7FLm9ewlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746475105; c=relaxed/simple;
-	bh=GyfU+DZiBpK8lRLtIFAf+Xi3Qouz0MysyIidL+OUoK8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=b4WF321r1Zyh4GGLNjbMOOvHO1DaH+mPCRn2NkxsGQ8cUXMhR0H8lg0oziEc/Ep5JmyICl6LiyOwF3YO4i/vgIcDFl7mRoztSyBWGyUz26ObcIxRSFa7aG0mIFE+pbONPVYRnDog32fnigE6DtHM0isN6IIHy3TN8vFbqB4gR+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FL11Usqq; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746475109; c=relaxed/simple;
+	bh=xjHOhcYzMXv+FCgJe3jivwsMVlYgbcm0qjJEQ0SFgXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EzWkbL3VdcDInldywQiqw4P+FpMxj4Ww4FCUKzlwYM//TsqQzZUsDyxoqThf3yIM7LPxiU4JsLB1r+jo2225qY5/sq2cG1MEjRl79j8y0JIPEhsqUNJ/q0TRlXoGed2mtol87tVk6vPKV54XllOmtquF/4ta7bfuxMSSYH5f07I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jYcuYJtG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FL11Usqq"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 545Jvgtn441117
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 5 May 2025 12:57:42 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 545Jvgtn441117
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746475064;
-	bh=SAEe8v43wEjUktsbc88YLiuFdKJLtiH/B9TKjrSZxL8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=FL11UsqqD6VofHYYTI/0mroIrxuVo7PWgNsyRL3iW7cnvLmRKw4JhiScZ6g/Jkkoi
-	 qACfQOynB95hwso1wuc90axpnf3qBNwB7zq6kzCG7JMYn3coAMAtBdWiStvmnOSRi4
-	 ZqOeaRSvMu8Q9eYfoSVBet1zqpXAIUOd+pMJeVXei5pkPZNfcUlm8QOo7DkAlx8din
-	 Hpxbezca5DiIlxpYsDhUWQcPrlUwFsAltXKq/4S59Oo+G0kDt4uhjayZNvW2fDkfKu
-	 c7gGuvpnARiE/o0bbfN8xbyZJyFKVnij+Bb2LMwvHAhO/efmBY4a4yRQ+S+o3JUX8m
-	 KHSTaauAwXaug==
-Date: Mon, 05 May 2025 12:57:40 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-CC: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_0/15=5D_x86=3A_Remove_su?=
- =?US-ASCII?Q?pport_for_TSC-less_and_CX8-less_CPUs?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
-References: <20250425084216.3913608-1-mingo@kernel.org> <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk>
-Message-ID: <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jYcuYJtG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24CEC4CEEE;
+	Mon,  5 May 2025 19:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746475109;
+	bh=xjHOhcYzMXv+FCgJe3jivwsMVlYgbcm0qjJEQ0SFgXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jYcuYJtGVB+MFnvtpOFUuijOxfhyhAS1jhzd9tT+eszXUncGC51kkkJZhJwTFrY3n
+	 IqMMMrr0z7Xgm31Ivp6JkV1DyKzLLGbCLmtdANgDtw166FQ6jH4Wex6SUAsrGHQv5r
+	 ZPn+pe1K0GPLLASX8VU/WEGzyTT2wOve7YjM4g4UZ8iViw7GIR9Rh2wqBOg5nSIndn
+	 gNQamE8Lggb6NRLB35cvhBmpt9ojf/veJ28UVI7xCzCbRWWf70/OezI79ud34b28My
+	 9hC6MO9ztkm4JzwoA91I1iElup1N087fI1klfZkmrih7CpBGPOm/4xCjCxNYKfVKS7
+	 ovhHb95DdNPAA==
+Date: Mon, 5 May 2025 21:58:26 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
+Cc: Jean Delvare <jdelvare@suse.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, 
+	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] i2c: i801: don't instantiate spd5118 under SPD
+ Write Disable
+Message-ID: <zsont6dpoaovu66tcgnd2lalllrzh4hz46fac5bto2ui5nyp7e@nhde2pkrjr4m>
+References: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com>
 
-On May 5, 2025 6:04:12 AM PDT, "Maciej W=2E Rozycki" <macro@orcam=2Eme=2Euk=
-> wrote:
->On Mon, 5 May 2025, H=2E Peter Anvin wrote:
->
->> >>  > I really get the feeling that it's time to leave i486 support beh=
-ind=2E
->> >>  > There's zero real reason for anybody to waste one second of
->> >>  > development effort on this kind of issue=2E
->> >>=20
->> >> This series increases minimum kernel support features to include TSC=
- and
->> >> CX8 (CMPXCHG8B) hardware support, which removes 486 (and derivatives=
-) support
->> >> and early-586 (and derivatives) support=2E
->> >
->> > FWIW I'm not happy about that at the very least because this will pre=
-vent=20
->> >me from using my 486 box for EISA defxx driver maintenance=2E  What ex=
-actly=20
->> >is the problem with 486?
->> >
->> > I know the lack of TSC has security implications, but don't use the=
-=20
->> >machine in a way for which it would be an issue and I don't expect any=
-one=20
->> >doing otherwise=2E  We have non-x86 platforms that lack a high-resolut=
-ion=20
->> >timer and nobody's going to drop them=2E
->> >
->> > We also have platforms that lack atomics, let alone double-precision =
-ones=20
->> >and they're fine too, so why is x86 different?
->>=20
->> Why is x86 different? Because it is a tightly integrated platform with=
-=20
->> code shared across a very large number of generations, without "silly=
-=20
->> embedded nonsense hacks=2E"
->
-> Thank you for the clarification=2E  By "silly embedded nonsense hacks" I=
-=20
->suppose you refer to missing instruction emulation, which some platforms=
-=20
->do so as to contain legacy support in a single place and let the rest of=
-=20
->the code base assume the required feature is there, relieving maintainers=
-=20
->from extra burden, correct?
->
->> I think if you have a use case, you need to speak up about it, rather=
-=20
->> than for people to guess=2E
->
-> Which I just did; I think that's exactly what an RFC is about, isn't it?
->
->  Maciej
+Hi Yo-Jung,
 
-No, with "silly embedded nonsense hacks" (Google for it) I mean ad hoc hac=
-ks breaking the notion of a common platform=2E
+On Wed, Apr 30, 2025 at 07:26:15PM +0800, Yo-Jung (Leo) Lin wrote:
+> On some PC platforms, the BIOS may enable i801's SPD Write Disable bit and
+> forbid writes to certain SMBus addresses. For the i801 family those addresses
+> are 0x50 to 0x57[1], where the spd5118 sensors are usually probed.
+> 
+> The write-disabling bit will make sensor functions related to writes and
+> nvmem access unusable.
+> 
+> Also, the driver is unable to sync back values from regcache to the sensors
+> during resume, leading to resume failure. This has been observed on multiple
+> existing PC platforms from Dell and HP.
+> 
+> Furthermore, BIOS can be implemented in a way that, after a reset, the sensor
+> page value must be selected to 0 first before its values can be read.
+> Not being able to write to the registers renders the temperature reading
+> unusable. See discussion in [2].
+> 
+> To address these issues, do not instantiate spd5118 if the SPD Write Disable
+> bit is set.
+> 
+> [1] 18.1.16 HOSTC—Host Configuration Register (SMBus—D31:F3),
+>     Intel 8 Series/C220 Series Chipset Family Platform Controller Hub(PCH)
+> 
+> [2] https://lore.kernel.org/all/acf31929-5d13-4fc5-b370-ab7fc5062455@roeck-us.net/
+> 
+> Signed-off-by: Yo-Jung Lin (Leo) <leo.lin@canonical.com>
 
-As far as EISA is concerned, could you go into more detail? What are the r=
-emaining users of EISA? One thing that happened with i386 was that we found=
- out that the only remaining "users" were people dragging out an old machin=
-e to test if the kernel still booted=2E With bigsmp we had similar experien=
-ces =E2=80=93 in at least one case we ended up maintaining support for a sy=
-stem of which there were no machines left in existence=2E=2E=2E
+You forgot to add the r-b from Guenter. I added it and pushed to
+i2c/i2c-host.
+
+Thanks,
+Andi
