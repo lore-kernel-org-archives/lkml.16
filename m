@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEF62F5F8C;
-	Mon,  5 May 2025 23:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DD2DFA34;
+	Mon,  5 May 2025 23:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487050; cv=none; b=Ki9g9U3AmRmZTaYZLmctIYnClQBhSnYFTBMw+NNLYUC3RGOxJpn1b0p1j2WA6Yb9O64It9E2RW6ewsuT3BkFuGs7nHPPH6CDnz25GbhctVi1p4ESRzNCvmiGi0pf1arIy8656vf8g9NkWaD9lLjSd56yv+lI+APUkq7oQ3SRIgM=
+	t=1746487063; cv=none; b=Sog9eQsFk+rYsI8LpeoO56/R+u7g29P3M62IjYspeFEiF8lQ7zzhElxNThRdHxbG41pHvVjZpGdkhUErTGqG9a/nauUNiQbAENUYe2REMgzHnn4FTMAgVLj7WdYIBPZdP81X2ai0xl2kYklIl6OJSXJ542YiXb106TQFSfu1DmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487050; c=relaxed/simple;
-	bh=T2qmy5ncWhxt5hWVNFScjFQX/mUJeyWHOuGCtBfYFg8=;
+	s=arc-20240116; t=1746487063; c=relaxed/simple;
+	bh=h6OHI3FbPEfD9G5lZ79fVkjvKGaIDLLBUsBfFsS+sn0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MfuP16VfjfXUxvNNK6kEsA1xCnff4wOz4m6aGhQ8ez4YwwaElhbR15o+VVV+toGRWvaqwkOlwRMFsZ7k5Rdr+LXb8apAqfKfJ2IyUA5xcI2NmR4WWq4UWxC/cXsXaSwVcCJO1wU9f3W0uBBBwcmaktKb8c3SjiS9ECxqvQiM3C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7q2zsVb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ihSMgSi72UhORNkybPkEBh7WamqH524MxH6Z2b+zJXTgnec9B06fu1CF3Hb+u8k6ZTCIbkm80l5P5Kefw75xvSxjZVPIneoK5MUM+HGlYQB5K1SU2uiX1F8jxs/rzaiN3PY5SYPU/Tmygfn3o6274nxMnOamxkRHEmBkoRfdOj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kgUJOhfa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7q2zsVb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675CEC4CEEE;
-	Mon,  5 May 2025 23:17:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgUJOhfa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C32C9C4CEE4;
+	Mon,  5 May 2025 23:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487049;
-	bh=T2qmy5ncWhxt5hWVNFScjFQX/mUJeyWHOuGCtBfYFg8=;
+	s=k20201202; t=1746487062;
+	bh=h6OHI3FbPEfD9G5lZ79fVkjvKGaIDLLBUsBfFsS+sn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z7q2zsVbf8OIe06LqqCcm2geeJAN3nkMVStv1XPNQJ3l2wzjl2BAfNIulHP1cGAjs
-	 n5fsP6BX5yeHcC+jnWO5ppFD1JYJ4H1thEEPEApZIP3Yi5Mm+avdXdmgCWNyovwCw/
-	 b2pi1RgVD6WYgZ8Vif3+aqiR9i5tsDbwTZJxR+CHerz4gWI0vEIcK+oJzA/ae3VXTI
-	 386H9IaOJ74ufDsZsDF+2iiFkg/kPS6OuGSz2Q6E6Y6s/56NQQayRHsUAKNiPXBAXz
-	 MC4kBC4+r6OCLNXl/ZklM/TB1L33iHUl91fzPlG7a5XtykMlzVzALeHtLYy1wqSrYX
-	 NVrDYIf9CD9Fw==
+	b=kgUJOhfaSVWKDq2+CUq0QsD4F1tbllfWGml7+If1nkLmuSuuwjcBVTYpXPJlZJMOB
+	 tbkHyPAo+i6hFA/0J8sjus9+OpCP15ax/iKGqY+odPvRpUi69vLmqV0kfY20D4O+Ld
+	 RgiKvHCrHwxfS9QYEEGyHoUEfI19N2nn1k79ZQ+NC5AdbQBr8Ehs5bUlImrh6lgqOQ
+	 /d/AtkcNCUYnyQO8n6lPjzZ3i+y32s35tN6xt4h7E5zEyH/Y/qwL4MH4O/83Nbbbp/
+	 vH61yEbXWrdE/j0bBe/aXp1miSJdUApjGRHgz455JFSJyNv8nJcgNbXJIOiRSmCS0z
+	 xu3OseoEkk47Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 127/153] wifi: mac80211: remove misplaced drv_mgd_complete_tx() call
-Date: Mon,  5 May 2025 19:12:54 -0400
-Message-Id: <20250505231320.2695319-127-sashal@kernel.org>
+	akpm@linux-foundation.org,
+	mhocko@suse.com,
+	Liam.Howlett@Oracle.com,
+	mjguzik@gmail.com,
+	pasha.tatashin@soleen.com,
+	alexjlzheng@tencent.com
+Subject: [PATCH AUTOSEL 5.15 133/153] exit: change the release_task() paths to call flush_sigqueue() lockless
+Date: Mon,  5 May 2025 19:13:00 -0400
+Message-Id: <20250505231320.2695319-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -52,39 +56,80 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-[ Upstream commit f4995cdc4d02d0abc8e9fcccad5c71ce676c1e3f ]
+[ Upstream commit fb3bbcfe344e64a46574a638b051ffd78762c12d ]
 
-In the original commit 15fae3410f1d ("mac80211: notify driver on
-mgd TX completion") I evidently made a mistake and placed the
-call in the "associated" if, rather than the "assoc_data". Later
-I noticed the missing call and placed it in commit c042600c17d8
-("wifi: mac80211: adding missing drv_mgd_complete_tx() call"),
-but didn't remove the wrong one. Remove it now.
+A task can block a signal, accumulate up to RLIMIT_SIGPENDING sigqueues,
+and exit. In this case __exit_signal()->flush_sigqueue() called with irqs
+disabled can trigger a hard lockup, see
+https://lore.kernel.org/all/20190322114917.GC28876@redhat.com/
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Reviewed-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-Link: https://patch.msgid.link/20250205110958.6ed954179bbf.Id8ef8835b7e6da3bf913c76f77d201017dc8a3c9@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fortunately, after the recent posixtimer changes sys_timer_delete() paths
+no longer try to clear SIGQUEUE_PREALLOC and/or free tmr->sigq, and after
+the exiting task passes __exit_signal() lock_task_sighand() can't succeed
+and pid_task(tmr->it_pid) will return NULL.
+
+This means that after __exit_signal(tsk) nobody can play with tsk->pending
+or (if group_dead) with tsk->signal->shared_pending, so release_task() can
+safely call flush_sigqueue() after write_unlock_irq(&tasklist_lock).
+
+TODO:
+	- we can probably shift posix_cpu_timers_exit() as well
+	- do_sigaction() can hit the similar problem
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20250206152314.GA14620@redhat.com
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/exit.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 11d9bce1a4390..ae379bd9dccca 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -5952,7 +5952,6 @@ int ieee80211_mgd_deauth(struct ieee80211_sub_if_data *sdata,
- 		ieee80211_report_disconnect(sdata, frame_buf,
- 					    sizeof(frame_buf), true,
- 					    req->reason_code, false);
--		drv_mgd_complete_tx(sdata->local, sdata, &info);
- 		return 0;
- 	}
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 04fc65f2b690d..78bfd3aa2bdf8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -195,20 +195,13 @@ static void __exit_signal(struct task_struct *tsk)
+ 	__unhash_process(tsk, group_dead);
+ 	write_sequnlock(&sig->stats_lock);
  
+-	/*
+-	 * Do this under ->siglock, we can race with another thread
+-	 * doing sigqueue_free() if we have SIGQUEUE_PREALLOC signals.
+-	 */
+-	flush_sigqueue(&tsk->pending);
+ 	tsk->sighand = NULL;
+ 	spin_unlock(&sighand->siglock);
+ 
+ 	__cleanup_sighand(sighand);
+ 	clear_tsk_thread_flag(tsk, TIF_SIGPENDING);
+-	if (group_dead) {
+-		flush_sigqueue(&sig->shared_pending);
++	if (group_dead)
+ 		tty_kref_put(tty);
+-	}
+ }
+ 
+ static void delayed_put_task_struct(struct rcu_head *rhp)
+@@ -272,6 +265,16 @@ void release_task(struct task_struct *p)
+ 	proc_flush_pid(thread_pid);
+ 	put_pid(thread_pid);
+ 	release_thread(p);
++	/*
++	 * This task was already removed from the process/thread/pid lists
++	 * and lock_task_sighand(p) can't succeed. Nobody else can touch
++	 * ->pending or, if group dead, signal->shared_pending. We can call
++	 * flush_sigqueue() lockless.
++	 */
++	flush_sigqueue(&p->pending);
++	if (thread_group_leader(p))
++		flush_sigqueue(&p->signal->shared_pending);
++
+ 	put_task_struct_rcu_user(p);
+ 
+ 	p = leader;
 -- 
 2.39.5
 
