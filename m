@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B338284B55;
-	Mon,  5 May 2025 23:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548732F5F95;
+	Mon,  5 May 2025 23:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487058; cv=none; b=cZ0BD/eeyDmfiJCbCoFhM8uRW/bDoXwU8YtoIyslish+wUCMKbQga5bdLAwLxZL7wzJic9UtAnH4E6sEfVvLSi3EB6JfurvXqPnh2sMlQK6stgx2tL3KHV/S3oNc8DIkF8hOBag+EOxIkzghAKw/2SXt0C/+r7ucJ1OAjUH2wl8=
+	t=1746487064; cv=none; b=h4Yo7/jsv9wo+m5oL1Yu189ub7FFf5zurD++wM5KuamTy+6BxhbfjRuSuEsrGeCP/IIWMQYheIT8sdDXcK2LzOWXnmiekglz18zbfvZtt3dInh3qxOzn5FaJHrLdB8DyAXi268lj7ckE8w7nhYqBaLis7n35H79XVAmtX17xKMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487058; c=relaxed/simple;
-	bh=6+NLqhCF3Kjmx7Us5b5nviG4k0V+VsQpYeHE8wNxAtc=;
+	s=arc-20240116; t=1746487064; c=relaxed/simple;
+	bh=yHsbA/Yy80CKLzVxffermAhP8qR6DnaOEHWNnHxxUwI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VzergF8f/SZEvv6yaeXu9GTepV/4rbuobXiytrbRRBhlpnLPos2cGGWGlIv0eMFNagzlM8pJ1FZOh8nTTskvd2fC7Ka9DtGTB3rH2NrzTZO+KbHStQ1QyVl1nY1bOkgFuE/q6KBIRk//AVF0hvJorqsCXKh6I6GhrnXyrCqrOBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HPUXAn2l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RbJQBAPTNn/hFDlnZ19dbfDjv3WlRs+IjKkoBus6kaPlX38z6SXceH9j8u8mqBcpT2cmU7davS1hL2H/96RFwTFjWhc5J2fTfMx/P3yWg/f3QROYQcvsveanfdrvvYeuLSfLWYxPvcLmd7lB//DW/sy0fpjMbJJyW8Zq+74JBZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzyOrXO0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HPUXAn2l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795D6C4CEE4;
-	Mon,  5 May 2025 23:17:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzyOrXO0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718FAC4CEEF;
+	Mon,  5 May 2025 23:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487058;
-	bh=6+NLqhCF3Kjmx7Us5b5nviG4k0V+VsQpYeHE8wNxAtc=;
+	s=k20201202; t=1746487063;
+	bh=yHsbA/Yy80CKLzVxffermAhP8qR6DnaOEHWNnHxxUwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HPUXAn2ltSQXyCpKRHKzy9RNvlAh+ZS+IGy+QXO9AwhxJvk9OWmc53DdNcIXsOmmk
-	 UM3POD5jPXk4F54tFPNydS3mGG6l0TZ3GvkxALehN3EBFBsHViS9o+wlm4G82oDUgu
-	 B0hTqfPWlrPUtx35BUIGpxp04zvxGcosxRqNl3A30R4wBBvmKiDCRpyZID9uFozYWc
-	 rKTlp+bjJag1ftvDrj3Q0WlTaghBYbRoNAFGkTYA18V3YPn2L99fZBnHbTWE1fKk/4
-	 LBfRZ0A3KpeIfCn10BQUUaGhQ3TN+A3WXmLXA9FyQA/XeKjFSGVofLHCfGhD9zVFrA
-	 4jsGHpnlyaxmQ==
+	b=nzyOrXO0f0zFYGbLuME8CYMhCGPq1pV5HxupmXmq42PzqHC6XZrUR6wuarnexeai7
+	 YdHZI1hVutvJ/svudlmwFi4UsojoG7luPBEwoohKEYpSx3xkAsFy/+n7Z66xUW/aA5
+	 GeR9V12oj4Z/By8G0MT9AcBjpHqNLRf3R0UaHpg2Qx2YUKgXh7Z0Y+fsQjhtdz5eFF
+	 0Uqs9R+vDCLHOLJkE/osm69TowvP3y2DrC8/nVumQQ8OwE8sjt257rU+GXd2D79wef
+	 95wW67cfiyOl+kubaSEd58raNZtIUAY52lNqSW4e58QjsuvxzeHtQQedY2P/KFtEqe
+	 rnF+Na6a+xeQA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Andrey Vatoropin <a.vatoropin@crpt.ru>,
+	Guenter Roeck <linux@roeck-us.net>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 131/153] wifi: rtw88: Fix download_firmware_validate() for RTL8814AU
-Date: Mon,  5 May 2025 19:12:58 -0400
-Message-Id: <20250505231320.2695319-131-sashal@kernel.org>
+	jdelvare@suse.com,
+	linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 134/153] hwmon: (xgene-hwmon) use appropriate type for the latency value
+Date: Mon,  5 May 2025 19:13:01 -0400
+Message-Id: <20250505231320.2695319-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -50,47 +51,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-[ Upstream commit 9e8243025cc06abc975c876dffda052073207ab3 ]
+[ Upstream commit 8df0f002827e18632dcd986f7546c1abf1953a6f ]
 
-After the firmware is uploaded, download_firmware_validate() checks some
-bits in REG_MCUFW_CTRL to see if everything went okay. The
-RTL8814AU power on sequence sets bits 13 and 12 to 2, which this
-function does not expect, so it thinks the firmware upload failed.
+The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
+evaluated using 32-bit arithmetic.
 
-Make download_firmware_validate() ignore bits 13 and 12.
+Since a value of type 'u64' is used to store the eventual result,
+and this result is later sent to the function usecs_to_jiffies with
+input parameter unsigned int, the current data type is too wide to
+store the value of ctx->usecs_lat.
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/049d2887-22fc-47b7-9e59-62627cb525f8@gmail.com
+Change the data type of "usecs_lat" to a more suitable (narrower) type.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+Link: https://lore.kernel.org/r/20250204095400.95013-1-a.vatoropin@crpt.ru
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/reg.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwmon/xgene-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/reg.h b/drivers/net/wireless/realtek/rtw88/reg.h
-index c0fb1e446245f..3e5bd64bc09c0 100644
---- a/drivers/net/wireless/realtek/rtw88/reg.h
-+++ b/drivers/net/wireless/realtek/rtw88/reg.h
-@@ -107,6 +107,7 @@
- #define BIT_SHIFT_ROM_PGE	16
- #define BIT_FW_INIT_RDY		BIT(15)
- #define BIT_FW_DW_RDY		BIT(14)
-+#define BIT_CPU_CLK_SEL		(BIT(12) | BIT(13))
- #define BIT_RPWM_TOGGLE		BIT(7)
- #define BIT_RAM_DL_SEL		BIT(7)	/* legacy only */
- #define BIT_DMEM_CHKSUM_OK	BIT(6)
-@@ -124,7 +125,7 @@
- 				 BIT_CHECK_SUM_OK)
- #define FW_READY_LEGACY		(BIT_MCUFWDL_RDY | BIT_FWDL_CHK_RPT |	       \
- 				 BIT_WINTINI_RDY | BIT_RAM_DL_SEL)
--#define FW_READY_MASK		0xffff
-+#define FW_READY_MASK		(0xffff & ~BIT_CPU_CLK_SEL)
+diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
+index 60a8ff56c38e9..9e82ba43f5cd2 100644
+--- a/drivers/hwmon/xgene-hwmon.c
++++ b/drivers/hwmon/xgene-hwmon.c
+@@ -110,7 +110,7 @@ struct xgene_hwmon_dev {
  
- #define REG_MCU_TST_CFG		0x84
- #define VAL_FW_TRIGGER		0x1
+ 	phys_addr_t		comm_base_addr;
+ 	void			*pcc_comm_addr;
+-	u64			usecs_lat;
++	unsigned int		usecs_lat;
+ };
+ 
+ /*
 -- 
 2.39.5
 
