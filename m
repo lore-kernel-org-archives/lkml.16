@@ -1,175 +1,183 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2058.outbound.protection.outlook.com [40.107.244.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518FD1F37B8
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433484; cv=none; b=GsfDFJo3JuCafQ0jF1c7ktKAueGbt3K8EpbR95Rxu8C2kg8t8ubOnAycHKMvW2KM5GGvl65IFvUsgw9aDnCONfKMsBwdde0VT/CwXk+Eelpb6W4M3j5hE3O3J0UBE2/sESx9MR38T8OwoMhWyrq7T0xeV1KxDYx3TG43J7OjHmA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433484; c=relaxed/simple;
-	bh=qORKuU3vb1cjfT1bxyPIwH3ijIYk0g/RaecJjYjAq/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pCw7kC3nzH2ZlBan4K8KeAe24RurIg6F+oJwSzow3RIvchw0pXkwCsSCTkK+DYOKz+i7mhr732Rzi88Nz7bsAZNZFYkzfkuaGsY4BTu26GrgVeb4VugdBdjm2ujUYZfUJbSgDrZXPwJi4u02o30x5myFNp88uMzwE/8XTcKgVRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=izfqsK0K; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C941F37D4
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746433506; cv=fail; b=fYCBMHlOLVkHfVmfsWmLCsqMCdWfkMYA858+12usdaVBNkBqcUAV43iMXJn0k0oc5z/QsIAtf6urqpwOfOqrOvuviSqM5KTP6MWtEwB/C0cmpMig1GzbT+A6iGGtQPKLYoD+OBdf9JjNCp/jX8/YMQtmj5wxTQ7e32pcNm5AO/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746433506; c=relaxed/simple;
+	bh=oor5lRuLlOEyOhZuYpjhenQuHoHWlLCbzTMY2ngRTLQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=c+MFFf+verwnlniPMtiETDIInLObve9SNoN1MM59KmJXWPIT+h44vwv3RZheNp42lOa6JRz2d064yvXthNNvbcvlyVn7W4+dWD4pY1WsTA9HkhEvaPy2gNlOL+v8/sR+9ej2Boney3nXMNvxVPdlmtJkKTcd05j2wgDRWA1Gvhw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=an/30xC4; arc=fail smtp.client-ip=40.107.244.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="izfqsK0K"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224341bbc1dso51058285ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746433481; x=1747038281; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=68nceW03d24h3XPl8Ecm9vp6ySFut8dycHsfcJVfie4=;
-        b=izfqsK0K/sujp2gTNeZCfZ2sLNHoBU49IdgXrM+TpwNUHf77ZgnDeEJkQyLten3yNr
-         zhgPVi0JIOXocl4/28J0iqcPlBhgSnT5gtNjmIs/Ng4gWM70uJemmxhLS2B8faD3WK/b
-         dolDKBsxW4z2TAyXak2pPjWwBv80kt0xS9065o0J67eIOTPAKocZtXuakducrVwiJtxo
-         EpXAnWWHYqW5zuJI4BlmDYfNNPvW/dVdHqvhsOOWJkiJ60D8w65jZdARTh0pqI50YVcV
-         OOBVuegoexVtt7Q2dlGLIQfJb/ZGHja7fwHVmVomNuVw2WCAQ8ZDBq77Wz8C5auNDtlV
-         ORug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746433481; x=1747038281;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=68nceW03d24h3XPl8Ecm9vp6ySFut8dycHsfcJVfie4=;
-        b=mmGUfMEEyPLY3PE/Lcvim34QROm80ldmaqP9L6uOHxj/3DvUR82TvxDJGvk7lOg1df
-         Z48itTCDVo06TrXaDCSJu+uXGiwtqKB+ZKRSlZ48+b032wTHES9v3p6k2R4APevyUGAm
-         i2Zh8W/DtDXWUsfnnQY52HNAvJuXnyHHWUd1Bbb68iKH6Hpc+FdKlXud3M9vdV/XkVb3
-         stDNEWVyc0xr3h3KjRTfG0uJKUGBn9CcIllNBvTGhLtLT1S2GWd6TJGLAAMmaamARZHW
-         EU8cdvFH87Sq+t6UTjeqTL4NNvyI4ch91zain5q+7v/8Mc7LzzGepZQxYhIrOrFxLk6F
-         OOMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ+ipIAbkztm8MmZOhOMOuq7XWWX5hUNWYbkqJSIL/pIU5EcsIcVC5gmbH/SXWJPiDtcq0RV76KqWhv8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysHAK9YVXJzrNbxoZ8c8CgbZ5bqNMRCy7MzKnnyTCa/CLPRkKu
-	ktm1JZ6kJYkCMLqxk3WGwZpdjZknSeQHYgIOdrKAU21t2bNop2AyL8uIddpy3g==
-X-Gm-Gg: ASbGncv5jdUo5dGb8N5xGfOJWN0GjnDZe4k1HiLUCYtIR50+4t535emJKD0YQxQ8+zi
-	If+VOIc/l7l9TtQGv8dNGRihmVkCMMJC+wSyQsFc5E/wXVq80IrZPtnqIOxueRRgLvHReo1CqZq
-	y3uPh2M5NycT6tzFOJ5qjUElhAR2Gum0AnsyhTZqjL/QdoeaW9YS2IQNhpe192foV7Bw3qI6cPj
-	QohOs2LEAZJmzhGHI0tW/ZqQYHXvwRiL7iws/8jDKWo+MHhf7FeIeGg3ArDzRD/8zVVNCVTkAAD
-	KSOC3Os3rVA+SshjC1yL3V3zLRepTCTzSYGUEU+OSGk1WwnoPAY=
-X-Google-Smtp-Source: AGHT+IGLhQnLyNiAlToJpYp8qq06+C8yuSXZTpN/AelxN609WUfQmyW/IvndZCZKUnXVgINsasK6lg==
-X-Received: by 2002:a17:903:2f83:b0:227:e980:919d with SMTP id d9443c01a7336-22e18c4f079mr113098375ad.47.1746433481549;
-        Mon, 05 May 2025 01:24:41 -0700 (PDT)
-Received: from thinkpad ([120.60.48.235])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522ec04sm49029085ad.216.2025.05.05.01.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 01:24:41 -0700 (PDT)
-Date: Mon, 5 May 2025 13:54:34 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "cassel@kernel.org" <cassel@kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Thierry Reding <treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, 
-	Krishna Thota <kthota@nvidia.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>, 
-	"sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH V3] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <p7res56nt2khlblt635js3xqdytlxqaypu2sfrigfaamqcc4ch@7oatwsmashin>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <vrqkwvwwjrirsrrionoqbdynha3pahabmkhzk5rs5vfb3wugh7@4zagyt7ycbbv>
- <SN7PR12MB8028F87148D1B635F832EEB9B88E2@SN7PR12MB8028.namprd12.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="an/30xC4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hxQYNoSJn3hbwKFyeQWz+Fi/oIGKz24U7/BzHCesDRs0gvmQhBi7ItcKArcbugSO5G9axDjhMJLx4Rw7sB/fP01CgBXcxMhEVXRMjaR9z7D3tlTv3Tuqe8RlScP7yLimvXgrnSwXOwBOyVB647sKChsOiDmPy1UWlmqF3mHSZIpm88FOtOU5hcRuhn4seTg5dcj14a44iDz583mkfM1CxgtvqJrm7KaC3FMe0MWwwNKe1ifW65Glrqb08Ekh8a4aZcooaLo6L+1Li/UapCmdJz6YcEco31A+/1wvovOzsJwp5HjPT1Uh/4PnWSvuvXF9pSJ0OIkjOS+/udUv6vD8Yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oor5lRuLlOEyOhZuYpjhenQuHoHWlLCbzTMY2ngRTLQ=;
+ b=SyoP+7W//hsJ3aUuHUBgo43BCn4QMa5lMPHah/mjRISD2+RFPxb7kgR8QEgL/sO46hjSIMkvtCXDwXQfJyPsMupHyTEA2e3r75oEa15P1rmdGs7sP6NTxB/yVthB10THdjOFsaiqzvyOqROIp8Ib2AjF1vW8VEI1quMPbmUsH8Lh/8AYMb7URdzn4hV8cauxx9nN3fuI3o3eXXM0f4xSPaTaZ/efoTeG0GP7Q6SOK0ByA+Lw6NlLfi7VCVLWD9xupN/lg3gOU1CmJxG/Dlr1wEFL334s5hC0Q78Xh7AkMqbXGKcD4h7uxb108reuKR8xzqKIRNs5u5d/z6t6b2yVaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oor5lRuLlOEyOhZuYpjhenQuHoHWlLCbzTMY2ngRTLQ=;
+ b=an/30xC4k9vuvNo48HEctx0+6dIxEK6aIntj5cZ2kMDudYWArgp4eSqc0/0aGN6JAlfPktdWj2w2QioEzjRxf7bDxKN0C/JeNevydCDzkdv6eclnzqH6mWd2vYUpzWBOCr0q9ES4hNo1Luj1DATjEdTwP7aoJIrHVF26lAX8pfA=
+Received: from BN9PR12MB5340.namprd12.prod.outlook.com (2603:10b6:408:105::22)
+ by SN7PR12MB8434.namprd12.prod.outlook.com (2603:10b6:806:2e6::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Mon, 5 May
+ 2025 08:25:02 +0000
+Received: from BN9PR12MB5340.namprd12.prod.outlook.com
+ ([fe80::5e5b:9074:7674:62e]) by BN9PR12MB5340.namprd12.prod.outlook.com
+ ([fe80::5e5b:9074:7674:62e%4]) with mapi id 15.20.8699.026; Mon, 5 May 2025
+ 08:25:02 +0000
+From: "Agarwal, Nikhil" <nikhil.agarwal@amd.com>
+To: Robin Murphy <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"will@kernel.org" <will@kernel.org>, "Gupta, Nipun" <Nipun.Gupta@amd.com>,
+	Greg KH <gregkh@linuxfoundation.org>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will McVicker
+	<willmcvicker@google.com>
+Subject: RE: [PATCH] cdx: Fix driver_managed_dma check
+Thread-Topic: [PATCH] cdx: Fix driver_managed_dma check
+Thread-Index: AQHbteeDwR70EpuztEKldNkZwh9VpbPDweiA
+Date: Mon, 5 May 2025 08:25:02 +0000
+Message-ID:
+ <BN9PR12MB53403A7217557610F489313B9D8E2@BN9PR12MB5340.namprd12.prod.outlook.com>
+References: <20250425133929.646493-2-robin.murphy@arm.com>
+In-Reply-To: <20250425133929.646493-2-robin.murphy@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_ActionId=77e75334-3b69-48d2-aaae-31e329302e04;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_ContentBits=0;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_Enabled=true;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_Method=Privileged;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_Name=Non-Business_New;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_SetDate=2025-05-05T08:23:03Z;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_94523dde-f9d1-4aa7-80a9-c0900420d3c3_Tag=10,
+ 0, 1, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR12MB5340:EE_|SN7PR12MB8434:EE_
+x-ms-office365-filtering-correlation-id: 0af7f2ea-fa48-4298-d774-08dd8bae54fa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?AA9hmi8aI+nUqbMg2h7Kjyynk4ZCeYaI4d4+HlZ1LLhDAJNjXnEJyX5CwluR?=
+ =?us-ascii?Q?0qR+XcjbhzxqP4Miy0Kjh3zqBD7TrEAcJmETjO3Y6tcYvFNwlRIh95T2qOW9?=
+ =?us-ascii?Q?5eSuhO2QhJh+KJc8j2pZ0ZzojbwrvYZ8rTdEX1/GrPdbLx2Xu4BwkbLEik9c?=
+ =?us-ascii?Q?6K1prgF71DdSv2F3OH/6/kj9zAVBMg2nRCr//AzKIxkVIsTvIxVmJ2+EcOGc?=
+ =?us-ascii?Q?gdmfkiAAODG+OFE+to3US/KmXwTcw/Xgf+HE5qA0TG/dgzpSWbWYUZH34grn?=
+ =?us-ascii?Q?wZPxFrXVcr5m7zhZRYQBtH39Ke/fs+kmu1HGTCKNqkiJHpD4ftZWks0QxS59?=
+ =?us-ascii?Q?Pj1kOKLF1WahBbphxJDC/x1ub3VF/t0b/0CjoAYmmbcZ0bQKV1V37ONKnLss?=
+ =?us-ascii?Q?FKIEygn/0qJk3Y0s1i2FrthD21dB2mOpfUt0WtYYsVOyEZjllfOUhmLcWXx2?=
+ =?us-ascii?Q?nXD6BDatQcI1QlvVh7zHh1QqqQr3meR/Wp2kJg0AhlnEgVPr8hH55WfBh5re?=
+ =?us-ascii?Q?k7Si3ngxgawyWJ36WyF3ABfyKcy6Il2lHHew7Brry8XZY8YxyigIsy2Uvpt2?=
+ =?us-ascii?Q?zJhrJ4XoMHInpiX102Nt4/zc5wQs5rhuS07aOie+9YnAj9jRtM/kwvwAbMAk?=
+ =?us-ascii?Q?5Et0TQLiBK6wBAeNm08uUIMDtWpB/KSS8ZtHPHiIxrfcjfTMTAxSa2Ynv8Ju?=
+ =?us-ascii?Q?/WZ6lrVzXAJEdrTM3h3k6atPnLspNOLE5tI7rMYQ6QGJtPwWouiD0fi0X6+k?=
+ =?us-ascii?Q?oqQ0GuR0JXw1LJ3eVijXf1dHxgrHaN0Vci4rSgeJ0lN33eQvHVy0yqUdp9iV?=
+ =?us-ascii?Q?1NyoVOTrcCyT4Zux0tRVUlmWcUuwDCOdr578XrgZIpRCQ9Qdt1Uvnu6YK9d8?=
+ =?us-ascii?Q?rjwYXKlWTGkMvtaX2LXMFRtJXdg44n7mR8wDnyTX2kdEGfssA6iBFUghwHq+?=
+ =?us-ascii?Q?lFvBT2axrQEpnvz1aqI3DyXQQPqoYU6PjI/+v/2fb+3dQocfuQ90/VPIdlQ7?=
+ =?us-ascii?Q?sPV5rHj3i0cu+EVx3/tFlJ1Oj28umbY4XoVntt0p755ybhCGsQZO/tSxdH6V?=
+ =?us-ascii?Q?MbyBNVGZVOj+i/BA+EFbaclLeZGaGJwC/8rnlmTmHRNYC5hHejzy6pNOj1Uc?=
+ =?us-ascii?Q?153PfGGCxpMCg8BWnE9mmp73dPZkeT6ecdMP2adRTjwmYC3saxvRH5lfNd8Y?=
+ =?us-ascii?Q?FdxD0Gqfjq0VvG2hRlnK0DeaWbKiYMGPhDKecXQjikbB7ZoFdSTOy6JMVxe4?=
+ =?us-ascii?Q?I1OQ+KkWnY1AoKxwPb484hfNkSIpJ2ISwTM6RINHueM1pjMxxE0B+vcGW20i?=
+ =?us-ascii?Q?iIVuQrIRCx5AWtbhC990JYzfET/aMEGcOUXJv+cPNZjj4qElG7IVV8k7iD1Q?=
+ =?us-ascii?Q?Q8EKPLwhPBL7U6aHVi0XSbJRstDT80RVtTDmLQa8GmdA4yofMDTpMiGUJtvd?=
+ =?us-ascii?Q?1YQyUJ0kqVy0Ug5XJjxCbmX3i1SJFq3m4zhPF+3tuTFoILgjBFDHiYcKUbK3?=
+ =?us-ascii?Q?JWudjP7oUK1p5wQ=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5340.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?cnmdLPojwTVIMIe+rvGwumyq2Hy6Zwr90NZ0lnN/0lkzS0y5ybH1DDaeicLR?=
+ =?us-ascii?Q?HPpBHDuYl6zDclUo63GS4EKIpeOuDUIx/YdZCr6Lj5J0XFiKH1rmIN/B66ov?=
+ =?us-ascii?Q?VGX3irhIy8tcUbohNDxk4f0x5UObeWKaVEv84VlCM0l9XEKpVzNW0G2pG22i?=
+ =?us-ascii?Q?o4ek5k4pTeeJnjUX01sV+3lSQlROMxFi7JKXVlpkKUYxU2CfVFjBmFpQUziH?=
+ =?us-ascii?Q?ymCoIsTKq/0Kl2+FMODSs/f4WQ7CyOcoqsAbfn0hVcz0ubaFOiJlnDHEIJXp?=
+ =?us-ascii?Q?xo9VKVWvp+pYHsqFXjl0Iz8aHgKEkkvIcIXf4qpLqk+yURMVblesfPTy4Jlg?=
+ =?us-ascii?Q?DbmA751Fg9sr1ld0XDFv15G4JPCtLTXsmn4g98rbw9rvFt4L3SkcQgSqIWoK?=
+ =?us-ascii?Q?6ve38NrunT2EpBRhJkkRNNYI57NK3mn9cWEaXP3RGAAYBLkpnUEUWfftr8Bj?=
+ =?us-ascii?Q?O2gzQqS1KL4kNGxIA3qQLjyNbWHpda574hEwulcYcqdR11FxlmAmkxVpkqmA?=
+ =?us-ascii?Q?KZrfifKFyRHQP451n17tEJwh3QImRu0pNr8JAGw3TA/QrDdCMX8jMKH3W7WC?=
+ =?us-ascii?Q?MTNzb18V0w115cBxQ33ecSnz1jkOsZXCk1HaNWTRiPwLmHLRPbrZqKgBowOQ?=
+ =?us-ascii?Q?+WErPPcp7QKwAtxP8Ov3m/IwVc7J8WHqzws6/w0seHJuzOhDbK24fdA8csPF?=
+ =?us-ascii?Q?zFDz8N27vZRiBN5+4dUXyTO6wrxkMrCJa0AK6ykuCStDkDWdWrb+TYXFPIE7?=
+ =?us-ascii?Q?j1s+Rm8gy9nkcLwYlVpxyozQnvAdlJCepYOGqf4KMOEmLiBth4LUYSbPLqiY?=
+ =?us-ascii?Q?Y1fMnmdNRYxcGZmVyORorf5lSekjSi43pnck9culAiDqdohxAc1wGAs3N7OM?=
+ =?us-ascii?Q?SGj3D5SkPfcGypJXKw8z0tkyLoimk2dASkGUa4gstM4PhdeszweL87IutDCr?=
+ =?us-ascii?Q?2WQt+0ANPtFFxrzGxCJa9FJgoPSw5etWhnXuZDhET9rZ4nTyUjmOeF4xHFPT?=
+ =?us-ascii?Q?VTjBEAKJU9Tq4icGxnQSWoYgMigRS9g5nmA7+bdKxs7ZQjGLlnYnisZt/sIu?=
+ =?us-ascii?Q?dePMmosQel6ZlwWY9lJC+wZwQUDs6boZR9/SxP5rsNyEXRRn16JxjuMVMrJp?=
+ =?us-ascii?Q?LwBI3+dzcNMiAHzMTxr4+OrbD0UztBh/PtGxfvO9af9M+zAKRYBBYLCdG/VB?=
+ =?us-ascii?Q?NvJYTxa/mCF7QXh0mkWWxxWTbLpP+Sb6SInDMLOFwJeoixsWRAdEVCOXFy24?=
+ =?us-ascii?Q?0jCMKWeIqVZur0OrC3cmeS+woJsMToXhoymopyESHMJ+gZp/RXY8pZNEK002?=
+ =?us-ascii?Q?w7bVEzJXdPey3zcLih9V6/8JhkaZg83y786aQjfaEFs+XoZ/v4tmZgtPo73C?=
+ =?us-ascii?Q?IEX/3YVdPqWEHndAUb1MEGfb0n3V3kl0rZYT96viQ8FE38qE3vDZ58Xv5azm?=
+ =?us-ascii?Q?wxeExyt87CteNazsMmjBan5V5LRt9VablUxzXPYCDXqFdW2swPyNMNCWiNjZ?=
+ =?us-ascii?Q?JGKrgaDvAo00dR+dLUmMZoemfayBZm+c5tyKs7B9Yf9VCOciQBSJxQKv24X6?=
+ =?us-ascii?Q?Pv5hFImtYI3On3gciTA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SN7PR12MB8028F87148D1B635F832EEB9B88E2@SN7PR12MB8028.namprd12.prod.outlook.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5340.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0af7f2ea-fa48-4298-d774-08dd8bae54fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2025 08:25:02.2303
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KIYVgXyTEY5rXjGPV9hqbUk15YBkwAhlX0juPiaPDxRtAaLllgc0F4U5qRVJHSbC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8434
 
-On Mon, May 05, 2025 at 06:21:41AM +0000, Vidya Sagar wrote:
-> Hi Manivannan,
-> Please let me know if you are expecting any further changes to this patch.
-> 
 
-As per Vinod's comment, you either need to split PHY changes separate or get an
-Ack from Vinod to merge both changes through PCI tree.
 
-- Mani
+> -----Original Message-----
+> From: Robin Murphy <robin.murphy@arm.com>
+> Sent: Friday, April 25, 2025 7:09 PM
+> To: joro@8bytes.org; will@kernel.org; Gupta, Nipun <Nipun.Gupta@amd.com>;
+> Agarwal, Nikhil <nikhil.agarwal@amd.com>
+> Cc: iommu@lists.linux.dev; linux-kernel@vger.kernel.org; Will McVicker
+> <willmcvicker@google.com>
+> Subject: [PATCH] cdx: Fix driver_managed_dma check
+>=20
+> Since it's not currently safe to take device_lock() in the IOMMU probe pa=
+th, that can
+> race against really_probe() setting dev->driver before attempting to bind=
+. The race
+> itself isn't so bad, since we're only concerned with dereferencing dev->d=
+river itself
+> anyway, but sadly my attempt to implement the check with minimal churn le=
+ads to a
+> kind of TOCTOU issue, where dev->driver becomes valid after to_cdx_driver=
+(NULL)
+> is already computed, and thus the check fails to work as intended.
+>=20
+> Will and I both hit this with the platform bus, but the pattern here is t=
+he same, so fix
+> it for correctness too.
+>=20
+> Reported-by: Will McVicker <willmcvicker@google.com>
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe pa=
+th")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-> Thanks,
-> Vidya Sagar
-> ________________________________
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Sent: Friday, April 18, 2025 22:51
-> To: Vidya Sagar <vidyas@nvidia.com>
-> Cc: lpieralisi@kernel.org <lpieralisi@kernel.org>; kw@linux.com <kw@linux.com>; robh@kernel.org <robh@kernel.org>; bhelgaas@google.com <bhelgaas@google.com>; cassel@kernel.org <cassel@kernel.org>; linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Thierry Reding <treding@nvidia.com>; Jon Hunter <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>; Manikanta Maddireddy <mmaddireddy@nvidia.com>; sagar.tv@gmail.com <sagar.tv@gmail.com>
-> Subject: Re: [PATCH V3] PCI: dwc: tegra194: Broaden architecture dependency
-> 
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Thu, Apr 17, 2025 at 01:16:07PM +0530, Vidya Sagar wrote:
-> > Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> > check, allowing the PCIe controller to be built on Tegra platforms
-> > beyond Tegra194. Additionally, ensure compatibility by requiring
-> > ARM64 or COMPILE_TEST.
-> >
-> > Link: https://patchwork.kernel.org/project/linux-pci/patch/20250128044244.2766334-1-vidyas@nvidia.com/
-> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> - Mani
-> 
-> > ---
-> > v3:
-> > * Addressed warning from kernel test robot
-> >
-> > v2:
-> > * Addressed review comments from Niklas Cassel and Manivannan Sadhasivam
-> >
-> >  drivers/pci/controller/dwc/Kconfig | 4 ++--
-> >  drivers/phy/tegra/Kconfig          | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index d9f0386396ed..815b6e0d6a0c 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -226,7 +226,7 @@ config PCIE_TEGRA194
-> >
-> >  config PCIE_TEGRA194_HOST
-> >       tristate "NVIDIA Tegra194 (and later) PCIe controller (host mode)"
-> > -     depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > +     depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
-> >       depends on PCI_MSI
-> >       select PCIE_DW_HOST
-> >       select PHY_TEGRA194_P2U
-> > @@ -241,7 +241,7 @@ config PCIE_TEGRA194_HOST
-> >
-> >  config PCIE_TEGRA194_EP
-> >       tristate "NVIDIA Tegra194 (and later) PCIe controller (endpoint mode)"
-> > -     depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > +     depends on ARCH_TEGRA && (ARM64 || COMPILE_TEST)
-> >       depends on PCI_ENDPOINT
-> >       select PCIE_DW_EP
-> >       select PHY_TEGRA194_P2U
-> > diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-> > index f30cfb42b210..342fb736da4b 100644
-> > --- a/drivers/phy/tegra/Kconfig
-> > +++ b/drivers/phy/tegra/Kconfig
-> > @@ -13,7 +13,7 @@ config PHY_TEGRA_XUSB
-> >
-> >  config PHY_TEGRA194_P2U
-> >       tristate "NVIDIA Tegra194 PIPE2UPHY PHY driver"
-> > -     depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || COMPILE_TEST
-> > +     depends on ARCH_TEGRA || COMPILE_TEST
-> >       select GENERIC_PHY
-> >       help
-> >         Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x
-> > --
-> > 2.25.1
-> >
-> 
-> --
-> மணிவண்ணன் சதாசிவம்
+Acked-by: Nikhil Agarwal <nikhil.agarwal@amd.com>
 
--- 
-மணிவண்ணன் சதாசிவம்
