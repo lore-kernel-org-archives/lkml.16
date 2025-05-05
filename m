@@ -1,46 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE993392F93;
-	Mon,  5 May 2025 23:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B57D3ABCEA;
+	Mon,  5 May 2025 23:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487126; cv=none; b=NZpgRvDDTxFwhY2jjU1X9sKvt9hZDEexEiSj+z0jrf1zM7iJlcsyjS2LdvK/hdzOVil8rgxRtGDBTl/1tkEWFH3VELYyOg+EYalJOX88YzKFls3eAVc00jBE4EsDUieqSwOAH5/99dQxJX0Jqzd+lyCl45F1J4T4Pn1kWrTYyVI=
+	t=1746487133; cv=none; b=cNEcBswmr1BbvFkPUaXhGTiH4c2E1uziXiYhAxr4IiM93snAYZQlBy3fh30dZ7zKDB8YtvS7LcW2MRAtNMumk/KdUG2T+l7XnbFaPBSZqi2bLGJD5oN62E2HaLZl3wFXZNNofS7bT/OAS6fOVPGhh1gIWy7RcwZ8ucAsbzMPOww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487126; c=relaxed/simple;
-	bh=1BSmrDs6dTVRT8K2+i9kol7+Sfem7R29/3HUUWM4/dU=;
+	s=arc-20240116; t=1746487133; c=relaxed/simple;
+	bh=qyEFOo3dGJ8zBBN3Gmf+P6PpGQtWOSG8F0FiNzvT9Ig=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gLoSZFHXfgadDXGni564KWEsLWydo37ovj/BGKbBhE36mnco4VWPUwU0B3ygkvwUWS0Sy3hILIGqyqbGQnLijRi/2V3xlKxoOxoUYnzgie5m3XNRO00Ik25dXqZ4aj/yg32ds61bPoPChbyLvEP28L2rDpVz2pft6a8hXvMQI4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4Yl1fDJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LQ9apgjRqwGfvyKfpx1efS3klHRTmr9PP2MHQrL8h4G1Z/TzQTWg9pGBGSLe178fbHTJ8Ucv5LuGwoMN74m398yNOHrH9ile4OUyfu+GK34yYt/mnSRO4sRVRa/IszeCR5rdBJaAgO7b0wQF3Plrfhc3swwBu1T95dW3qWxROFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbTmzX/6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4Yl1fDJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1581CC4CEED;
-	Mon,  5 May 2025 23:18:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbTmzX/6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270C8C4CEE4;
+	Mon,  5 May 2025 23:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487125;
-	bh=1BSmrDs6dTVRT8K2+i9kol7+Sfem7R29/3HUUWM4/dU=;
+	s=k20201202; t=1746487132;
+	bh=qyEFOo3dGJ8zBBN3Gmf+P6PpGQtWOSG8F0FiNzvT9Ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U4Yl1fDJdrTChclhoCy2X1iND9vax5Ba6yczLoZ/0uH49isiwD4sHFxXKoGe8QUBN
-	 oP9a+gJ5v3+E3xrxOEdlxcdJCCz6C0YP/eWFhSKzi+DVzv3zrgpwxoUvQ5g1NgAdF3
-	 +kM3dnUJE58Z9QHKyriQBvE1f87ihaOhXjrqMLkqvLtYH9lK+H44+Z3gwSKKAa5RYC
-	 ZfNPcMPlo3xy+4Mc3505jZiDXJ9rhZHP/GKdqfF+Gnpo9t5B5vq02Ly+EqAdh8/77D
-	 +J8PkbNCrRJzosvjiruM2ot4BuUtFmlL1E1G+TZqA4p/6kTUCh36HpXEG4ZG7P7yRI
-	 hBzMbqez4xiaw==
+	b=HbTmzX/6fz3IXLJIedOeOMeeA+tsjoAfqZ9YuSCUZ+v22Uj/mR1bjZZ4EZqgk4z+g
+	 0qZoW2rtE4TY/vxUMjkcDitkbxGwngAlFE40AM1x5GynhhUtKTXDkeCLW0b/lQDRuI
+	 ujT0Dd2ZJu3Eskf2H8EDXFS9JAm+fn4+F8BxNLgSCEt2xNnKcVXI8YPCSGm/Foc2s1
+	 5z/F+prR2EcwnR7SK6eYVfvb/wq13r4VKyo2f9v9vno/FrUqwyqTuiF1571RpCg0vF
+	 3OpWHyzF/5rOP0VOawWjAqZjDptQ6WwNbMzpDXdTsGUjMHlumrDNr9KejecKlqDlH1
+	 J0Ulxenh2YqXg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
+Cc: Robert Richter <rrichter@amd.com>,
+	Pankaj Gupta <pankaj.gupta@amd.com>,
+	Ira Weiny <ira.weiny@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	akpm@linux-foundation.org,
-	mhocko@suse.com,
-	Liam.Howlett@Oracle.com,
-	mjguzik@gmail.com,
-	alexjlzheng@tencent.com,
-	pasha.tatashin@soleen.com
-Subject: [PATCH AUTOSEL 5.10 011/114] exit: fix the usage of delay_group_leader->exit_code in do_notify_parent() and pidfs_exit()
-Date: Mon,  5 May 2025 19:16:34 -0400
-Message-Id: <20250505231817.2697367-11-sashal@kernel.org>
+	dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	nvdimm@lists.linux.dev
+Subject: [PATCH AUTOSEL 5.10 015/114] libnvdimm/labels: Fix divide error in nd_label_data_init()
+Date: Mon,  5 May 2025 19:16:38 -0400
+Message-Id: <20250505231817.2697367-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -55,49 +54,62 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Robert Richter <rrichter@amd.com>
 
-[ Upstream commit 9133607de37a4887c6f89ed937176a0a0c1ebb17 ]
+[ Upstream commit ef1d3455bbc1922f94a91ed58d3d7db440652959 ]
 
-Consider a process with a group leader L and a sub-thread T.
-L does sys_exit(1), then T does sys_exit_group(2).
+If a faulty CXL memory device returns a broken zero LSA size in its
+memory device information (Identify Memory Device (Opcode 4000h), CXL
+spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
+driver:
 
-In this case wait_task_zombie(L) will notice SIGNAL_GROUP_EXIT and use
-L->signal->group_exit_code, this is correct.
+ Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
+ RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
 
-But, before that, do_notify_parent(L) called by release_task(T) will use
-L->exit_code != L->signal->group_exit_code, and this is not consistent.
-We don't really care, I think that nobody relies on the info which comes
-with SIGCHLD, if nothing else SIGCHLD < SIGRTMIN can be queued only once.
+Code and flow:
 
-But pidfs_exit() is more problematic, I think pidfs_exit_info->exit_code
-should report ->group_exit_code in this case, just like wait_task_zombie().
+1) CXL Command 4000h returns LSA size = 0
+2) config_size is assigned to zero LSA size (CXL pmem driver):
 
-TODO: with this change we can hopefully cleanup (or may be even kill) the
-similar SIGNAL_GROUP_EXIT checks, at least in wait_task_zombie().
+drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250324171941.GA13114@redhat.com
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+3) max_xfer is set to zero (nvdimm driver):
+
+drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
+
+4) A subsequent DIV_ROUND_UP() causes a division by zero:
+
+drivers/nvdimm/label.c: /* Make our initial read size a multiple of max_xfer size */
+drivers/nvdimm/label.c: read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
+drivers/nvdimm/label.c-                 config_size);
+
+Fix this by checking the config size parameter by extending an
+existing check.
+
+Signed-off-by: Robert Richter <rrichter@amd.com>
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Link: https://patch.msgid.link/20250320112223.608320-1-rrichter@amd.com
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/exit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvdimm/label.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index af9c8e794e4d7..05f682cfdd6a7 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -254,6 +254,9 @@ void release_task(struct task_struct *p)
- 	leader = p->group_leader;
- 	if (leader != p && thread_group_empty(leader)
- 			&& leader->exit_state == EXIT_ZOMBIE) {
-+		/* for pidfs_exit() and do_notify_parent() */
-+		if (leader->signal->flags & SIGNAL_GROUP_EXIT)
-+			leader->exit_code = leader->signal->group_exit_code;
- 		/*
- 		 * If we were the last child thread and the leader has
- 		 * exited already, and the leader's parent ignores SIGCHLD,
+diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+index 9251441fd8a35..5251058adc4d1 100644
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -421,7 +421,8 @@ int nd_label_data_init(struct nvdimm_drvdata *ndd)
+ 	if (ndd->data)
+ 		return 0;
+ 
+-	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0) {
++	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0 ||
++	    ndd->nsarea.config_size == 0) {
+ 		dev_dbg(ndd->dev, "failed to init config data area: (%u:%u)\n",
+ 			ndd->nsarea.max_xfer, ndd->nsarea.config_size);
+ 		return -ENXIO;
 -- 
 2.39.5
 
