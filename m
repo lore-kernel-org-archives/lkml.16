@@ -1,57 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BB028032F;
-	Mon,  5 May 2025 22:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7BE36BA54;
+	Mon,  5 May 2025 22:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485824; cv=none; b=GIUUOENVkGsMmkHSdRUxR92IKRwoZpQtrfnr9DpJxJy8TDX4wyMtJoaYVfdg+oD7JIQ3G1oxd7WQpPIsjy7BM7AbncllWhw/ZAq4ok6XeIabD+Kl+i5tTe9Pfapuf3BAwD2sqmAQWYdlOCbqgZFxASeYipgKgyDMmxXDttIcT3Q=
+	t=1746485817; cv=none; b=uQnXdMCFj4NoK3mrTORrdkbbr4QoP/A6UfdcwM1+kpxTFGYrYs+o1+GxPpdfgsW0fva//67owP9O2T2b3jsJygyEDUVysNQlKjYahn7Ws1e1aoS7n7CV0u73AfO7B9Fh9huhXkwPPRCSvPAnJ01zuUW/8ou0AqHb1fOEMNPm1e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485824; c=relaxed/simple;
-	bh=9DI2HHnmjUxdW4QLwVgpY8p3vKpqr9H6QE5nZNsdzMQ=;
+	s=arc-20240116; t=1746485817; c=relaxed/simple;
+	bh=uTmiRea4hOCIjqYNm/wUuB0SkTWcMumpaWLAy2oruCo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RaOcIpHC+nbZjPBbHTxINeTXJ+DEHL/deAIQIMtoz984E3lKyA1KNZw5yUYGbuKl4AksCj4+2+wA6Zs6Gegma64nHQOPnrfWKqCDfmdJm+vOPliQoJuufag8RazUpmweVZg4al8GoRqWyE/JqwQ+OcMvh4o5yuFWwaXMhkD6Tos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViPDxfI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=MhoxOjNtb3Y5bxeqRPLsGxhBgbbC+0aV8rOo07x2SLpCy7W6w1/oI1YFQtkoD6WRe+1KIgCVw/eAtKtEb/IqmWKXqQ4dL01e0A2syVyp2XoUb2P5xDVgTK5hYD7LTpBa74vxIcNrV06ts5pFzIhPEchLrq7W6iNultU3Im83pGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLOjdYy+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViPDxfI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E971FC4CEE4;
-	Mon,  5 May 2025 22:57:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLOjdYy+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6CA3C4CEED;
+	Mon,  5 May 2025 22:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485824;
-	bh=9DI2HHnmjUxdW4QLwVgpY8p3vKpqr9H6QE5nZNsdzMQ=;
+	s=k20201202; t=1746485816;
+	bh=uTmiRea4hOCIjqYNm/wUuB0SkTWcMumpaWLAy2oruCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HViPDxfI069hmYjymkGcnFDTKIb4MI/G86S5TtX8n6baTzyS9QTWOw3DzZ9r6pBYM
-	 ZewILBl8RC+GrZ3hyaM70qtTKqV5VLvuKtHug4Qa2gz+YlciYSTQ+dLGpqflJdT2dT
-	 Hxj0sO5FaCGRI8S1RLc4dHGmvFgRDffexdAoyIC/3mWC0/u07r00A0/GD3LOCc99It
-	 u/Pc3iXzC2U+Jqq/hKyrWpf3PEgPBpI6BumsjqB/25vOyir/pcFTu25DNLJjeYeUtd
-	 /ao36HULowz5n+eADWP+miCK/8yGpMGUVAoC3LWPnLYVYl0+PIwJp3wF5ly0/5TjlJ
-	 zS3T+HdKUa7hA==
+	b=PLOjdYy+8POXUASgqBD6B42CelWNSIKeehO2xS/WACou8pOZ6AMwTNyOyj4WqxyxM
+	 Gf5N8KLnBGJ678E5PgDnZlKzti7+yFNLIv0qUbyXTdjwEabSeLMiWqTINbRGB8BTmW
+	 crmGVXtPXBcgQqepfnOMAyroV9aznXig7tXSO5m4vygWFPgqKgCyQbgoGu1ownfusJ
+	 +6Yyww5vVP9WyXlOK8ZKP9DIjTLV7XcQGLIc/HaoWJqs8iKGRPw2awfhjNZ+eYlWm1
+	 DNQwz1bw4/Ppc1ChaELfwP42rSnCaG78X5kaioyoSCH5Yo9w0eCsDll7WD9vDHxeOS
+	 8ugbaukhRSbEA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Samuel Holland <samuel.holland@sifive.com>,
-	Jesse Taube <mr.bossman075@gmail.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alexghiti@rivosinc.com,
-	namcao@linutronix.de,
-	bjorn@rivosinc.com,
-	vincenzo.frascino@arm.com,
-	stuart.menefy@codasip.com,
-	luxu.kernel@bytedance.com,
-	david@redhat.com,
-	akpm@linux-foundation.org,
-	libang.li@antgroup.com,
-	abrestic@rivosinc.com,
-	anshuman.khandual@arm.com,
-	yongxuan.wang@sifive.com,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 016/294] riscv: Allow NOMMU kernels to access all of RAM
-Date: Mon,  5 May 2025 18:51:56 -0400
-Message-Id: <20250505225634.2688578-16-sashal@kernel.org>
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 012/294] tracing: Mark binary printing functions with __printf() attribute
+Date: Mon,  5 May 2025 18:51:52 -0400
+Message-Id: <20250505225634.2688578-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -61,83 +48,159 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Samuel Holland <samuel.holland@sifive.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 2c0391b29b27f315c1b4c29ffde66f50b29fab99 ]
+[ Upstream commit 196a062641fe68d9bfe0ad36b6cd7628c99ad22c ]
 
-NOMMU kernels currently cannot access memory below the kernel link
-address. Remove this restriction by setting PAGE_OFFSET to the actual
-start of RAM, as determined from the devicetree. The kernel link address
-must be a constant, so keep using CONFIG_PAGE_OFFSET for that purpose.
+Binary printing functions are using printf() type of format, and compiler
+is not happy about them as is:
 
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Reviewed-by: Jesse Taube <mr.bossman075@gmail.com>
-Link: https://lore.kernel.org/r/20241026171441.3047904-3-samuel.holland@sifive.com
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+kernel/trace/trace.c:3292:9: error: function ‘trace_vbprintk’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+kernel/trace/trace_seq.c:182:9: error: function ‘trace_seq_bprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
+
+Fix the compilation errors by adding __printf() attribute.
+
+While at it, move existing __printf() attributes from the implementations
+to the declarations. IT also fixes incorrect attribute parameters that are
+used for trace_array_printk().
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Kees Cook <kees@kernel.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Link: https://lore.kernel.org/r/20250321144822.324050-4-andriy.shevchenko@linux.intel.com
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/page.h    | 12 ++++--------
- arch/riscv/include/asm/pgtable.h |  2 +-
- 2 files changed, 5 insertions(+), 9 deletions(-)
+ include/linux/trace.h     |  4 ++--
+ include/linux/trace_seq.h |  8 ++++----
+ kernel/trace/trace.c      | 11 +++--------
+ kernel/trace/trace.h      | 16 +++++++++-------
+ 4 files changed, 18 insertions(+), 21 deletions(-)
 
-diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-index 4d1f58848129e..dbb9d0d0f405e 100644
---- a/arch/riscv/include/asm/page.h
-+++ b/arch/riscv/include/asm/page.h
-@@ -26,12 +26,9 @@
-  * When not using MMU this corresponds to the first free page in
-  * physical memory (aligned on a page boundary).
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index fdcd76b7be83d..7eaad857dee04 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -72,8 +72,8 @@ static inline int unregister_ftrace_export(struct trace_export *export)
+ static inline void trace_printk_init_buffers(void)
+ {
+ }
+-static inline int trace_array_printk(struct trace_array *tr, unsigned long ip,
+-				     const char *fmt, ...)
++static inline __printf(3, 4)
++int trace_array_printk(struct trace_array *tr, unsigned long ip, const char *fmt, ...)
+ {
+ 	return 0;
+ }
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 3691e0e76a1a2..62147eecf931d 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -79,8 +79,8 @@ extern __printf(2, 3)
+ void trace_seq_printf(struct trace_seq *s, const char *fmt, ...);
+ extern __printf(2, 0)
+ void trace_seq_vprintf(struct trace_seq *s, const char *fmt, va_list args);
+-extern void
+-trace_seq_bprintf(struct trace_seq *s, const char *fmt, const u32 *binary);
++extern __printf(2, 0)
++void trace_seq_bprintf(struct trace_seq *s, const char *fmt, const u32 *binary);
+ extern int trace_print_seq(struct seq_file *m, struct trace_seq *s);
+ extern int trace_seq_to_user(struct trace_seq *s, char __user *ubuf,
+ 			     int cnt);
+@@ -104,8 +104,8 @@ static inline __printf(2, 3)
+ void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
+ {
+ }
+-static inline void
+-trace_seq_bprintf(struct trace_seq *s, const char *fmt, const u32 *binary)
++static inline __printf(2, 0)
++void trace_seq_bprintf(struct trace_seq *s, const char *fmt, const u32 *binary)
+ {
+ }
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a41c99350a5bf..60c3f8352ddcf 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3487,10 +3487,9 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
+ }
+ EXPORT_SYMBOL_GPL(trace_vbprintk);
+ 
+-__printf(3, 0)
+-static int
+-__trace_array_vprintk(struct trace_buffer *buffer,
+-		      unsigned long ip, const char *fmt, va_list args)
++static __printf(3, 0)
++int __trace_array_vprintk(struct trace_buffer *buffer,
++			  unsigned long ip, const char *fmt, va_list args)
+ {
+ 	struct trace_event_call *call = &event_print;
+ 	struct ring_buffer_event *event;
+@@ -3543,7 +3542,6 @@ __trace_array_vprintk(struct trace_buffer *buffer,
+ 	return len;
+ }
+ 
+-__printf(3, 0)
+ int trace_array_vprintk(struct trace_array *tr,
+ 			unsigned long ip, const char *fmt, va_list args)
+ {
+@@ -3573,7 +3571,6 @@ int trace_array_vprintk(struct trace_array *tr,
+  * Note, trace_array_init_printk() must be called on @tr before this
+  * can be used.
   */
--#ifdef CONFIG_64BIT
- #ifdef CONFIG_MMU
-+#ifdef CONFIG_64BIT
- #define PAGE_OFFSET		kernel_map.page_offset
--#else
--#define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
--#endif
- /*
-  * By default, CONFIG_PAGE_OFFSET value corresponds to SV57 address space so
-  * define the PAGE_OFFSET value for SV48 and SV39.
-@@ -41,6 +38,9 @@
- #else
- #define PAGE_OFFSET		_AC(CONFIG_PAGE_OFFSET, UL)
- #endif /* CONFIG_64BIT */
-+#else
-+#define PAGE_OFFSET		((unsigned long)phys_ram_base)
-+#endif /* CONFIG_MMU */
+-__printf(3, 0)
+ int trace_array_printk(struct trace_array *tr,
+ 		       unsigned long ip, const char *fmt, ...)
+ {
+@@ -3618,7 +3615,6 @@ int trace_array_init_printk(struct trace_array *tr)
+ }
+ EXPORT_SYMBOL_GPL(trace_array_init_printk);
  
- #ifndef __ASSEMBLY__
+-__printf(3, 4)
+ int trace_array_printk_buf(struct trace_buffer *buffer,
+ 			   unsigned long ip, const char *fmt, ...)
+ {
+@@ -3634,7 +3630,6 @@ int trace_array_printk_buf(struct trace_buffer *buffer,
+ 	return ret;
+ }
  
-@@ -97,11 +97,7 @@ typedef struct page *pgtable_t;
- #define MIN_MEMBLOCK_ADDR      0
- #endif
+-__printf(2, 0)
+ int trace_vprintk(unsigned long ip, const char *fmt, va_list args)
+ {
+ 	return trace_array_vprintk(&global_trace, ip, fmt, args);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index db0d2641125e7..faf892aecdf49 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -800,13 +800,15 @@ static inline void __init disable_tracing_selftest(const char *reason)
  
--#ifdef CONFIG_MMU
- #define ARCH_PFN_OFFSET		(PFN_DOWN((unsigned long)phys_ram_base))
--#else
--#define ARCH_PFN_OFFSET		(PAGE_OFFSET >> PAGE_SHIFT)
--#endif /* CONFIG_MMU */
- 
- struct kernel_mapping {
- 	unsigned long page_offset;
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index f540b2625714d..332a6bf72b1d5 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -12,7 +12,7 @@
- #include <asm/pgtable-bits.h>
- 
- #ifndef CONFIG_MMU
--#define KERNEL_LINK_ADDR	PAGE_OFFSET
-+#define KERNEL_LINK_ADDR	_AC(CONFIG_PAGE_OFFSET, UL)
- #define KERN_VIRT_SIZE		(UL(-1))
- #else
- 
+ extern void *head_page(struct trace_array_cpu *data);
+ extern unsigned long long ns2usecs(u64 nsec);
+-extern int
+-trace_vbprintk(unsigned long ip, const char *fmt, va_list args);
+-extern int
+-trace_vprintk(unsigned long ip, const char *fmt, va_list args);
+-extern int
+-trace_array_vprintk(struct trace_array *tr,
+-		    unsigned long ip, const char *fmt, va_list args);
++
++__printf(2, 0)
++int trace_vbprintk(unsigned long ip, const char *fmt, va_list args);
++__printf(2, 0)
++int trace_vprintk(unsigned long ip, const char *fmt, va_list args);
++__printf(3, 0)
++int trace_array_vprintk(struct trace_array *tr,
++			unsigned long ip, const char *fmt, va_list args);
++__printf(3, 4)
+ int trace_array_printk_buf(struct trace_buffer *buffer,
+ 			   unsigned long ip, const char *fmt, ...);
+ void trace_printk_seq(struct trace_seq *s);
 -- 
 2.39.5
 
