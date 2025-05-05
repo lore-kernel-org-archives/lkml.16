@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE3037644A;
-	Mon,  5 May 2025 22:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C12376893;
+	Mon,  5 May 2025 22:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485988; cv=none; b=Xosf46ckpCvlLxYo1lNc9ZfQHWNmg/fBBx4r0RC39SdyscPj2Fy6jvM0JMk9U2vwjj/HrHFKrBGnunu74LkZumORCYwTwEsRLVu9ohEIdumzBd4TenZiZYqRxaVoaCFGwJ0Ny2JcHhOliER741K0POq/aiuLaIyxFFUGk3lFcfo=
+	t=1746485990; cv=none; b=WLAwpfWvag3DXyG5gz51RtPSoHUdVjfO5d8PpLfIZELcXiaDRQn7ksaVdhSL5KxRK8CJqTuN3p4gzm4YxOCQVd3k7uV7Mp9NFhrrsgDtZboo/ibEbhdkmaioM7CsuQiEfKCfaTRReg5WKv3uN4kA67W9tjjv5jRojYEPhLJPvOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485988; c=relaxed/simple;
-	bh=wRlgtUevqMElDfA1JrkyqCdvrsKyxqffpyjyC2gQpGs=;
+	s=arc-20240116; t=1746485990; c=relaxed/simple;
+	bh=9onfsYXpFGOuv6V3xZe7zRvcKy8UCVXwkVjWMBo2Olo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jGtLp9W6XAmsSgk3z29IAXl+MFRVdUXjLHbb8qpdzyxCMxyo+e1AFTg5FX9TaNcoNdJQgO8cfOcMwKeX6zhSiBz9DMSv+JVoM7ByyIubQJ8NZAqMJSPwR5WzUrVWyls0N339F7VNloqFlICBENgjbIyCWcLH6vCOa4jiw4zRGZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEl/eZdO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LnNx0tHqD1yXjrchOpPCn45+ox7gnCkeumdE3Flq1FOoWw8nabZ6goyOA/eWKZYTM8JfniyJS6sjlj3r7OijE78J34/mD1FMMZ/8NDJcdZdBTRPDZ4L4rlONtqmfsU0XqbRN2M/hePr4QGDYDeUUpu0sycx5l98q+cmsglq+K64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8tXl4nA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEl/eZdO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BE0C4CEED;
-	Mon,  5 May 2025 22:59:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8tXl4nA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A407C4CEE4;
+	Mon,  5 May 2025 22:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485987;
-	bh=wRlgtUevqMElDfA1JrkyqCdvrsKyxqffpyjyC2gQpGs=;
+	s=k20201202; t=1746485989;
+	bh=9onfsYXpFGOuv6V3xZe7zRvcKy8UCVXwkVjWMBo2Olo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pEl/eZdOch2KiUWW7Y0JkoNkYdPBHhfBV0h61jCipol8G40XdcJXAJi3xL9m+GmQc
-	 sdxd732/zH+pyjQWIrmIDXQN3zBYmtvvRQZ29LOj0I83S90Uj0aa4VHYbOSFei8IKz
-	 bMuhGUbHb9S3AhWeOb/ypf11Pk78ZwBH2oxdNc1eYJOFM4DdCQVu07jzrpE0Cme/0U
-	 e3JR+Ffcn3+1K9GtOhOlz73+9eq3uVbz8tUv2v1mr/ZserFHbSSzhy3niGhSWEl/cs
-	 xZNz1s8GKk3bvtpgxX2TTqsmtQlsVDO7SSxk5NIyXGXk4aHxiboJdr9wLAFEORCaCl
-	 BSlaAec4CCRUw==
+	b=o8tXl4nAvwkGYr6Ozte1FoiXrHxSiUK0AdVq4vMUYHKDVts/ggJ0MqpGtzyxER5y3
+	 630ZNSeS1BVe1NkCMTyvOHjhSy/d8vbFL8CE7+rSczxC0bfumsBa/PoQ2B8C2augd7
+	 smw6M60WtZEBFtCgZv24eCJtuqsE9hlXmJii23BSVH7UnIhLQHbCxDomaJIKs14reO
+	 8dVtlXP8JnWhCNXVkfpQYMdXSVUJzPHymlYuYo6f+j+rwX/slfg3vuMNdz+RunTT5a
+	 d1iuwQxfvX7MwHFKVjgcMdFEnse3XhzakdNels3so0NPA4XjMeltQLeCZO0YvkQJZg
+	 3qHt3Bt58PwJQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexey Klimov <alexey.klimov@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Vasant Hegde <vasant.hegde@amd.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Joerg Roedel <jroedel@suse.de>,
 	Sasha Levin <sashal@kernel.org>,
-	srini@kernel.org,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 098/294] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
-Date: Mon,  5 May 2025 18:53:18 -0400
-Message-Id: <20250505225634.2688578-98-sashal@kernel.org>
+	joro@8bytes.org,
+	will@kernel.org,
+	iommu@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 099/294] iommu/amd/pgtbl_v2: Improve error handling
+Date: Mon,  5 May 2025 18:53:19 -0400
+Message-Id: <20250505225634.2688578-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -56,46 +53,34 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Klimov <alexey.klimov@linaro.org>
+From: Vasant Hegde <vasant.hegde@amd.com>
 
-[ Upstream commit 89be3c15a58b2ccf31e969223c8ac93ca8932d81 ]
+[ Upstream commit 36a1cfd497435ba5e37572fe9463bb62a7b1b984 ]
 
-Setting format to s16le is required for compressed playback on compatible
-soundcards.
+Return -ENOMEM if v2_alloc_pte() fails to allocate memory.
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-Link: https://patch.msgid.link/20250228161430.373961-1-alexey.klimov@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://lore.kernel.org/r/20250227162320.5805-4-vasant.hegde@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/sm8250.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iommu/amd/io_pgtable_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
-index 88a7169336d61..580eb20b0771a 100644
---- a/sound/soc/qcom/sm8250.c
-+++ b/sound/soc/qcom/sm8250.c
-@@ -7,6 +7,7 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- #include <sound/pcm.h>
-+#include <sound/pcm_params.h>
- #include <linux/soundwire/sdw.h>
- #include <sound/jack.h>
- #include <linux/input-event-codes.h>
-@@ -39,9 +40,11 @@ static int sm8250_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
- 					SNDRV_PCM_HW_PARAM_RATE);
- 	struct snd_interval *channels = hw_param_interval(params,
- 					SNDRV_PCM_HW_PARAM_CHANNELS);
-+	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+diff --git a/drivers/iommu/amd/io_pgtable_v2.c b/drivers/iommu/amd/io_pgtable_v2.c
+index cbf0c46015125..6c0777a3c57b7 100644
+--- a/drivers/iommu/amd/io_pgtable_v2.c
++++ b/drivers/iommu/amd/io_pgtable_v2.c
+@@ -259,7 +259,7 @@ static int iommu_v2_map_pages(struct io_pgtable_ops *ops, unsigned long iova,
+ 		pte = v2_alloc_pte(pdom->nid, pdom->iop.pgd,
+ 				   iova, map_size, gfp, &updated);
+ 		if (!pte) {
+-			ret = -EINVAL;
++			ret = -ENOMEM;
+ 			goto out;
+ 		}
  
- 	rate->min = rate->max = 48000;
- 	channels->min = channels->max = 2;
-+	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
- 
- 	return 0;
- }
 -- 
 2.39.5
 
