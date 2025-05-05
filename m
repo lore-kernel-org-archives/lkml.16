@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ABB381EB9;
-	Mon,  5 May 2025 23:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFC91FF1D5;
+	Mon,  5 May 2025 23:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486026; cv=none; b=r0a6OV6Wr1uYeyLPjoUlLMOs5XW+IsyW7wZh1brQm0gY7KpkFIOARX3F9Z2Wg8jPRI+CHGE1gFTlljmSR9xBSIf1sXCl4NgDoFzBwYu0XGvfEAKR2wYtDfTm5M64JcWnMvdjlIlqFTK8TpX2zUep5iCtnqGaMaYvOPD07xdBBTI=
+	t=1746486028; cv=none; b=H2SKYnBrOUFXeVm3zcX4yJB1yRwrSVSJUYOkX7Myx1auhOGqbcRPy4k69e7ngW9JMebO1WRl3Ift3uaI6bUonX6REIImhR4HnTZcJ5SpJODAE7gw15PH6JO2A98WX+NDvxWp2cqdPsZdDykni5/ZnICaKl9QyOThOtuls/rt2+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486026; c=relaxed/simple;
-	bh=iVcHR6MNU2Ms51/2agHFm39aFyCxn2z/dB4SZocitH4=;
+	s=arc-20240116; t=1746486028; c=relaxed/simple;
+	bh=JNy+zJeq3jws0kmkGcJxf/N3gsQLEcZ7b17mzTChmoE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HIHDLY78EgcF4bsRIK9ALCe9IOdRt3K9RCNqYbNel6Xhq5iTB6wdL4I+6Ys9V2XFJoC1g2XnUC384Jj2ezQCEtfAE75YpuYqtlEw/K55TRGq9oCy08K/lmgiREU/hb2c/JzS/EeRdRPnIRNOdOcGFiXXoFI4RhMn3XIjG9jmAL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMkdAe0Q; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gvnts+KAJu40Co5Du+qZDTASpFuS7QgOpeiEhqkGo0VnShhQy9NDIxz+asUB/xx3vlY72IEF/sjwyAYVR312fdmt+OXgNSSZ4BCm6oF/os3NERcxlxL8shSIq+4/7YHx1c1kNWKscK+NuZsBipEsJkTKZU/2+4aXNCYJ3UB6sAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0rZqbwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMkdAe0Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3BEC4CEED;
-	Mon,  5 May 2025 23:00:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0rZqbwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747B7C4CEE4;
+	Mon,  5 May 2025 23:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486025;
-	bh=iVcHR6MNU2Ms51/2agHFm39aFyCxn2z/dB4SZocitH4=;
+	s=k20201202; t=1746486027;
+	bh=JNy+zJeq3jws0kmkGcJxf/N3gsQLEcZ7b17mzTChmoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZMkdAe0QyhLA+NadSVdrVr6Gl9FTRi/TQTuQb8/ZGP5lrNS85ahAWCBE3IyoTjidR
-	 cwRRMhPnRG2/mqRbcAPjCcBQargrzJTULHQLwUmZtB4KOzXznrc7EzFTvSsfZ9FaUF
-	 YeVVh01cgtDczSuxqmypzx+4NRjfRWiKXYNvOmZ8ZPu9zuqy0dCdcJ2kvr544OZMis
-	 NHjSWAa+9yU/Qgx8rf5SHHI5F9N6WQDEHqG1sYV6FpfjsJ7uiru70vEg6r+lOuPBeJ
-	 /DmIVL52Q1C/dVgwGrzIwzt913CqE6m3M6V9Py+bNAUjfV7H+AX5VrjWNnwGmyZFdX
-	 c7KCXh+qA+wqA==
+	b=m0rZqbwYuKAfPYA3WrwyZszW1UWKTQzRXRRRcRc3PQp5ds72LxjXFxIgtU+Pz/rQ2
+	 u1kKjJE8lU+gnFfd9DSXG+xRPf2ewB04+t2EAtlLJjyKl6FCX0FCWbbGPCuWjMKnL6
+	 FfEzReH3rEmyUzQU8/IT2bIMs+QkW3rJhKowmFwE+sLEZeGF+XV6B80cGGz4q/9q9L
+	 cnrhCMxG8I439is+aJP+CIRUtWfWgcvLq6O1BvG7N1oZHsDBtdo3R6eqZ1apoWBF+K
+	 nGsDu+5AdnWNhgZzn0ckR8H1Iyg1xc1UCfcNEEk3j5fhmvA/Wo1NA8Vhj87nW6d3ZX
+	 AmQU42x0qcc0w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
-	Luca Weiss <luca@lucaweiss.eu>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Victor Lu <victorchengchi.lu@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mathieu.poirier@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 117/294] remoteproc: qcom_wcnss: Handle platforms with only single power domain
-Date: Mon,  5 May 2025 18:53:37 -0400
-Message-Id: <20250505225634.2688578-117-sashal@kernel.org>
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	Hawking.Zhang@amd.com,
+	tao.zhou1@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 118/294] drm/amdgpu: Do not program AGP BAR regs under SRIOV in gfxhub_v1_0.c
+Date: Mon,  5 May 2025 18:53:38 -0400
+Message-Id: <20250505225634.2688578-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -48,113 +51,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Matti Lehtimäki <matti.lehtimaki@gmail.com>
+From: Victor Lu <victorchengchi.lu@amd.com>
 
-[ Upstream commit 65991ea8a6d1e68effdc01d95ebe39f1653f7b71 ]
+[ Upstream commit 057fef20b8401110a7bc1c2fe9d804a8a0bf0d24 ]
 
-Both MSM8974 and MSM8226 have only CX as power domain with MX & PX being
-handled as regulators. Handle this case by reodering pd_names to have CX
-first, and handling that the driver core will already attach a single
-power domain internally.
+SRIOV VF does not have write access to AGP BAR regs.
+Skip the writes to avoid a dmesg warning.
 
-Signed-off-by: Matti Lehtimäki <matti.lehtimaki@gmail.com>
-[luca: minor changes]
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
-Link: https://lore.kernel.org/r/20250206-wcnss-singlepd-v2-2-9a53ee953dee@lucaweiss.eu
-[bjorn: Added missing braces to else after multi-statement if]
-Signed-off-by: Bjorn Andersson <andersson@kernel.org>
+Signed-off-by: Victor Lu <victorchengchi.lu@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_wcnss.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-index 90de22c81da97..153260b4e2eb4 100644
---- a/drivers/remoteproc/qcom_wcnss.c
-+++ b/drivers/remoteproc/qcom_wcnss.c
-@@ -117,10 +117,10 @@ static const struct wcnss_data pronto_v1_data = {
- 	.pmu_offset = 0x1004,
- 	.spare_offset = 0x1088,
- 
--	.pd_names = { "mx", "cx" },
-+	.pd_names = { "cx", "mx" },
- 	.vregs = (struct wcnss_vreg_info[]) {
--		{ "vddmx", 950000, 1150000, 0 },
- 		{ "vddcx", .super_turbo = true},
-+		{ "vddmx", 950000, 1150000, 0 },
- 		{ "vddpx", 1800000, 1800000, 0 },
- 	},
- 	.num_pd_vregs = 2,
-@@ -131,10 +131,10 @@ static const struct wcnss_data pronto_v2_data = {
- 	.pmu_offset = 0x1004,
- 	.spare_offset = 0x1088,
- 
--	.pd_names = { "mx", "cx" },
-+	.pd_names = { "cx", "mx" },
- 	.vregs = (struct wcnss_vreg_info[]) {
--		{ "vddmx", 1287500, 1287500, 0 },
- 		{ "vddcx", .super_turbo = true },
-+		{ "vddmx", 1287500, 1287500, 0 },
- 		{ "vddpx", 1800000, 1800000, 0 },
- 	},
- 	.num_pd_vregs = 2,
-@@ -397,8 +397,17 @@ static irqreturn_t wcnss_stop_ack_interrupt(int irq, void *dev)
- static int wcnss_init_pds(struct qcom_wcnss *wcnss,
- 			  const char * const pd_names[WCNSS_MAX_PDS])
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c b/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
+index 66c6bab75f8a5..0d3d00681edac 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfxhub_v1_0.c
+@@ -92,12 +92,12 @@ static void gfxhub_v1_0_init_system_aperture_regs(struct amdgpu_device *adev)
  {
-+	struct device *dev = wcnss->dev;
- 	int i, ret;
+ 	uint64_t value;
  
-+	/* Handle single power domain */
-+	if (dev->pm_domain) {
-+		wcnss->pds[0] = dev;
-+		wcnss->num_pds = 1;
-+		pm_runtime_enable(dev);
-+		return 0;
-+	}
+-	/* Program the AGP BAR */
+-	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BASE, 0);
+-	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BOT, adev->gmc.agp_start >> 24);
+-	WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_TOP, adev->gmc.agp_end >> 24);
+-
+ 	if (!amdgpu_sriov_vf(adev) || adev->asic_type <= CHIP_VEGA10) {
++		/* Program the AGP BAR */
++		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BASE, 0);
++		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_BOT, adev->gmc.agp_start >> 24);
++		WREG32_SOC15_RLC(GC, 0, mmMC_VM_AGP_TOP, adev->gmc.agp_end >> 24);
 +
- 	for (i = 0; i < WCNSS_MAX_PDS; i++) {
- 		if (!pd_names[i])
- 			break;
-@@ -418,8 +427,15 @@ static int wcnss_init_pds(struct qcom_wcnss *wcnss,
- 
- static void wcnss_release_pds(struct qcom_wcnss *wcnss)
- {
-+	struct device *dev = wcnss->dev;
- 	int i;
- 
-+	/* Handle single power domain */
-+	if (wcnss->num_pds == 1 && dev->pm_domain) {
-+		pm_runtime_disable(dev);
-+		return;
-+	}
-+
- 	for (i = 0; i < wcnss->num_pds; i++)
- 		dev_pm_domain_detach(wcnss->pds[i], false);
- }
-@@ -437,10 +453,13 @@ static int wcnss_init_regulators(struct qcom_wcnss *wcnss,
- 	 * the regulators for the power domains. For old device trees we need to
- 	 * reserve extra space to manage them through the regulator interface.
- 	 */
--	if (wcnss->num_pds)
--		info += num_pd_vregs;
--	else
-+	if (wcnss->num_pds) {
-+		info += wcnss->num_pds;
-+		/* Handle single power domain case */
-+		num_vregs += num_pd_vregs - wcnss->num_pds;
-+	} else {
- 		num_vregs += num_pd_vregs;
-+	}
- 
- 	bulk = devm_kcalloc(wcnss->dev,
- 			    num_vregs, sizeof(struct regulator_bulk_data),
+ 		/* Program the system aperture low logical page number. */
+ 		WREG32_SOC15_RLC(GC, 0, mmMC_VM_SYSTEM_APERTURE_LOW_ADDR,
+ 			min(adev->gmc.fb_start, adev->gmc.agp_start) >> 18);
 -- 
 2.39.5
 
