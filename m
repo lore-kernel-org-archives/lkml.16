@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D483589D2;
-	Mon,  5 May 2025 22:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E03F35903A;
+	Mon,  5 May 2025 22:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484940; cv=none; b=qXnk9bgNgAngeClngsSWwun4H9Zfg4AbMC5/BHiYXt2RZyeDB0q7sAjoXG679ze0sVXKVZvsENIAMW1e1/1rv42YVkTaKCzBNy9i7AmOvoySCrxkFOx31Qs9cWyiGN9bJ2WNDUhoLnAuWYauFUUpGrgs5ZsaFtzQbrPEaXkPIuo=
+	t=1746484943; cv=none; b=bEzD+87fQjIuRbDnFAsX0j4Dvu7X60jYtTO6poCk8Eopfmcyl+r06mxB8jvn+Mg8pVcsmW6VH3PsF4BiToNRZVBPVMFC2JIIpnR0kFIZWgOcqh+XTMk+X/ctqLm8Qv3JIYnOz2CcaiI59CI8sQCKfMdFrgYowTMQgNqr2622WS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484940; c=relaxed/simple;
-	bh=Mo3VTkzF1AIgn1cJigM5Oe1FxcUfv4q/iX7gWwFkfz0=;
+	s=arc-20240116; t=1746484943; c=relaxed/simple;
+	bh=NWrCB9QKWE9LHJw3TZ6TiMGktRwEOC/Vp74f1sAzblg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E497qkNkzbjBAQL1HktuxY/0tLewf8ZNgbDaENW1eyZO9jaetpW/LO+pLmBDEbUCBgeYJTlckrdsXeWmQa0SZiwupLtOr/QlmDOLp+ssyfwvB8qQm4iGN8rksWPpSUzj1MyNId4XRptVpMYterskK3iDNboVfFGm5OYuGt49Wsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rRMymOBL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l1/ek/P7ZZyWs5eBaxX5FTRg4rPJfH63/xjxkhzAQj8xNGJD4a7ZrPWuVb0OLzLcSvhnMGMwlTvVSOl4TyFu4GON6JnOjhISoZ3/VTJmXOqJrfqKjxt1LvyG2GURSZIDJxXZ+JVnxSsEgBRUNsk8nYVfUjkP1Q29CNW7iJBKAAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSE+zTCj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rRMymOBL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17F8C4CEEE;
-	Mon,  5 May 2025 22:42:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSE+zTCj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69BCC4CEEE;
+	Mon,  5 May 2025 22:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484940;
-	bh=Mo3VTkzF1AIgn1cJigM5Oe1FxcUfv4q/iX7gWwFkfz0=;
+	s=k20201202; t=1746484942;
+	bh=NWrCB9QKWE9LHJw3TZ6TiMGktRwEOC/Vp74f1sAzblg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rRMymOBL/fiopGjdMxdkK8omSSO6Iw9gHOjpl+qwPkoIsVYtdGZNN4QvMZGP/xQ+O
-	 yCm8HSPxOh8p99GcAunN3SClR8ic42d6EAjCXWBTcm9p9o8JesrGw+BmJgYZ4Oz66F
-	 e4oe8oKn6Y6LcsdryIdmPzff5mBzakVmYIkKjIhwM5oBtW5djGLzYDG8T1UolN0sf5
-	 Bx/+MruHhJwzY3U2Fm4hLAEa3IRAUxmaN+t9RNW7LuYSlC4jytzxjgci6KnfqyH2SF
-	 KaM4yFgQ6cw0qGH3UzTughi9iNdlWFEMvjhiSq8lnLWLZo7MtzpzEkIPwnqixnfGdR
-	 0siV6qvSjV5qQ==
+	b=pSE+zTCjLJlGfk8mItOdo+seOCE5rZTTvX/I6wR9XZQzOjOfIu12FVeJhyqeb3Nm1
+	 rIg+ePm9hK2EScULUM18mnrgCkC2X2IYbK50U9YKMgG6ElxTQhNieYQ4KG81Am4geO
+	 yel+AXewG28Dk/3vWWYxnALPe2aj4h3YRe5i+DRpSK2O8jr1insaNbC1eXG+5Ooupj
+	 YsS5z0M7YZ27QGzZxVZWc1r8wFksvzzhg1VJ69nL9qHStTjYfvCSZoLf1OiiYYlPc3
+	 83xqtuyY/E9qbFRheIRWsaURDk4iJSSwWXBb9YYD3xqkpc18fD6BJHXK1jqPhdX4Yx
+	 zVr7fp1EEK9dA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Heiko Carstens <hca@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
+Cc: Nick Hu <nick.hu@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
 	Sasha Levin <sashal@kernel.org>,
-	will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 086/486] s390/tlb: Use mm_has_pgste() instead of mm_alloc_pgste()
-Date: Mon,  5 May 2025 18:32:42 -0400
-Message-Id: <20250505223922.2682012-86-sashal@kernel.org>
+	tglx@linutronix.de,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 088/486] clocksource/drivers/timer-riscv: Stop stimecmp when cpu hotplug
+Date: Mon,  5 May 2025 18:32:44 -0400
+Message-Id: <20250505223922.2682012-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -57,37 +56,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Carstens <hca@linux.ibm.com>
+From: Nick Hu <nick.hu@sifive.com>
 
-[ Upstream commit 9291ea091b29bb3e37c4b3416c7c1e49e472c7d5 ]
+[ Upstream commit 70c93b026ed07078e933583591aa9ca6701cd9da ]
 
-An mm has pgstes only after s390_enable_sie() has been called, while
-mm_alloc_pgste() may be always true (e.g. via sysctl setting).
+Stop the timer when the cpu is going to be offline otherwise the
+timer interrupt may be pending while performing power-down.
 
-Limit the calls to gmap_unlink() in pte_free_tlb() to those cases
-where there might be something to unlink.
-
-Reviewed-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Suggested-by: Anup Patel <anup@brainfault.org>
+Link: https://lore.kernel.org/lkml/20240829033904.477200-3-nick.hu@sifive.com/T/#u
+Signed-off-by: Nick Hu <nick.hu@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20250219114135.27764-3-nick.hu@sifive.com
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/tlb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clocksource/timer-riscv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/s390/include/asm/tlb.h b/arch/s390/include/asm/tlb.h
-index e95b2c8081eb8..793afe236df07 100644
---- a/arch/s390/include/asm/tlb.h
-+++ b/arch/s390/include/asm/tlb.h
-@@ -85,7 +85,7 @@ static inline void pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
- 	tlb->mm->context.flush_mm = 1;
- 	tlb->freed_tables = 1;
- 	tlb->cleared_pmds = 1;
--	if (mm_alloc_pgste(tlb->mm))
-+	if (mm_has_pgste(tlb->mm))
- 		gmap_unlink(tlb->mm, (unsigned long *)pte, address);
- 	tlb_remove_ptdesc(tlb, pte);
+diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+index 48ce50c5f5e68..4d7cf338824a3 100644
+--- a/drivers/clocksource/timer-riscv.c
++++ b/drivers/clocksource/timer-riscv.c
+@@ -126,7 +126,13 @@ static int riscv_timer_starting_cpu(unsigned int cpu)
+ 
+ static int riscv_timer_dying_cpu(unsigned int cpu)
+ {
++	/*
++	 * Stop the timer when the cpu is going to be offline otherwise
++	 * the timer interrupt may be pending while performing power-down.
++	 */
++	riscv_clock_event_stop();
+ 	disable_percpu_irq(riscv_clock_event_irq);
++
+ 	return 0;
  }
+ 
 -- 
 2.39.5
 
