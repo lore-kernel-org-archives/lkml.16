@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B6B36EF35;
-	Mon,  5 May 2025 22:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1A36EF37;
+	Mon,  5 May 2025 22:57:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485864; cv=none; b=Hky+ImWLXqVQpYoXC6OW73yZgAxelq/O0wD36WlmBy8iAw4u3z9vfTCjehwUrzq7vQBI6Y8fnfU1pwG7QF+PjfguILqBDV2evxYaG9bpUK29Y/d/y690Ns6FHKoi4ZF28rAr+EsWvqlWg7ai9UdC+hKSb+7AQah29z3P82PFgJM=
+	t=1746485864; cv=none; b=R5Auj0vidVvaO/0zOnxxuPl134uPh5yb6QbOCCS28ysc9HQ3p+xLftiEdHCHe8bK8Arj3rYBmHhjuvk9+TPSUHlsDlvRVrKzE35urXklhw3ojNuk9CIgqlPDtB5agODQ1QBmogPJY4Hk2X1y6o4xITes3pM6FyMMcgEgdSMtk70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746485864; c=relaxed/simple;
-	bh=rRPQrr8rQ2U57aU/QceYFLpT/KG7abauUVPWd1WRWmc=;
+	bh=W1KoIUb4JGXXwoEaGriyWSvSgIDLHl3lD+Np+7AzArM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AgoZ2jQNDWym9FGV4kd4ajdtpCXVHbOS4TL2ICfbDpWVbt8gsXDGZu1FMu+ccnKbo/3Rxt/hVJ2XzOX2lD5EhlzdmXmWPNa9NIP5A+FrkpLEDiWC8aJ/i4dJMBXmqi7EQHACf9viJtTk6xCH+RyY5DBXuXGD2ysSmZdipKLZqRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMepZpEQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=i5Hc7gDuc8wHPkj/o76/CJCQhBzbz8/Occ+1cRISppr7jWuUJw5mCCd4KL1hz8W27SstI0spGowyzcvuNrAb6jjKXJ6eI9wMr+lnHRZN48H8p8yYQE2Enm6Ahbb4xS7yMagpJdVIhSBm7xKPaV55imkAlmYNv6z3OUBNPRoSkU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9iXGVV2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMepZpEQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5F7C4CEE4;
-	Mon,  5 May 2025 22:57:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9iXGVV2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA064C4CEEE;
+	Mon,  5 May 2025 22:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485863;
-	bh=rRPQrr8rQ2U57aU/QceYFLpT/KG7abauUVPWd1WRWmc=;
+	s=k20201202; t=1746485864;
+	bh=W1KoIUb4JGXXwoEaGriyWSvSgIDLHl3lD+Np+7AzArM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mMepZpEQVXXHb5ROzxLJbgP0xcq6KcodXDzqk6b41IUTPdD3YrikQvGVWcpzkcPW0
-	 kVkPlUcAbwxJ7uGAHF+AFHd8qIGZ/gJgyaGxctAUhJXNDXTYMaWsnaMAGVM/kW0TGj
-	 AuuPTNtQAGkHsqtEiJdL1qcBKlWjwybfQq+QPMxyrO18cqh5rAQRWeQOfLJx0TkNML
-	 ZipYCfIFTvWHf8QYs8TZLI3unKcLY+udIRywKjkzGTSKmSnoBn/cVNhdMX0JT/Mnju
-	 Uxrjs+MKsqnsYMO9Icb1vxzTUnNxAw02oKmMrUh9cJr39mIw6uXXRRgtrEq4jn330o
-	 MLLZw6baLB2DA==
+	b=X9iXGVV2ehc3i2u5ZfSMjyOf+MDp2k8U4gxobnyxctYU/PZF7WP9Ip4//IeeZjOXW
+	 IoTUdXsf/5XuC7P/VmpXhPD4ne7hDylO681/bD4kZ3YWHjH1QNI4Jz8WLU8ZyHrpNM
+	 I14HufLH5tvLh2ZXMDXYB5dneHGiEZKgD8nkxWll9U91ascHi5+89dw5Mlas5bMOOi
+	 o83CxUp/qp6XX3VRgHvODIPwNzpQV2B33pweH6dPoRFIXS/MIslIoWiJgy5wTHCffE
+	 T89jo0/VoHwd/Pidfm7lmtOQzyOhkjVE3MNEjZezpHrr177JQOOpz7Dakn+AGaWsll
+	 lzWAlATM8O8PA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Robert Richter <rrichter@amd.com>,
-	Pankaj Gupta <pankaj.gupta@amd.com>,
-	Ira Weiny <ira.weiny@intel.com>,
+Cc: Erick Shepherd <erick.shepherd@ni.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	nvdimm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 036/294] libnvdimm/labels: Fix divide error in nd_label_data_init()
-Date: Mon,  5 May 2025 18:52:16 -0400
-Message-Id: <20250505225634.2688578-36-sashal@kernel.org>
+	linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 037/294] mmc: host: Wait for Vdd to settle on card power off
+Date: Mon,  5 May 2025 18:52:17 -0400
+Message-Id: <20250505225634.2688578-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -54,62 +51,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Robert Richter <rrichter@amd.com>
+From: Erick Shepherd <erick.shepherd@ni.com>
 
-[ Upstream commit ef1d3455bbc1922f94a91ed58d3d7db440652959 ]
+[ Upstream commit 31e75ed964582257f59156ce6a42860e1ae4cc39 ]
 
-If a faulty CXL memory device returns a broken zero LSA size in its
-memory device information (Identify Memory Device (Opcode 4000h), CXL
-spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
-driver:
+The SD spec version 6.0 section 6.4.1.5 requires that Vdd must be
+lowered to less than 0.5V for a minimum of 1 ms when powering off a
+card. Increase wait to 15 ms so that voltage has time to drain down
+to 0.5V and cards can power off correctly. Issues with voltage drain
+time were only observed on Apollo Lake and Bay Trail host controllers
+so this fix is limited to those devices.
 
- Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
- RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
-
-Code and flow:
-
-1) CXL Command 4000h returns LSA size = 0
-2) config_size is assigned to zero LSA size (CXL pmem driver):
-
-drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
-
-3) max_xfer is set to zero (nvdimm driver):
-
-drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
-
-4) A subsequent DIV_ROUND_UP() causes a division by zero:
-
-drivers/nvdimm/label.c: /* Make our initial read size a multiple of max_xfer size */
-drivers/nvdimm/label.c: read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
-drivers/nvdimm/label.c-                 config_size);
-
-Fix this by checking the config size parameter by extending an
-existing check.
-
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Link: https://patch.msgid.link/20250320112223.608320-1-rrichter@amd.com
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Erick Shepherd <erick.shepherd@ni.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20250314195021.1588090-1-erick.shepherd@ni.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/label.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-pci-core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 082253a3a9560..04f4a049599a1 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -442,7 +442,8 @@ int nd_label_data_init(struct nvdimm_drvdata *ndd)
- 	if (ndd->data)
- 		return 0;
+diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+index 6b351810a301c..dbfe0a5324eaf 100644
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -608,8 +608,12 @@ static void sdhci_intel_set_power(struct sdhci_host *host, unsigned char mode,
  
--	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0) {
-+	if (ndd->nsarea.status || ndd->nsarea.max_xfer == 0 ||
-+	    ndd->nsarea.config_size == 0) {
- 		dev_dbg(ndd->dev, "failed to init config data area: (%u:%u)\n",
- 			ndd->nsarea.max_xfer, ndd->nsarea.config_size);
- 		return -ENXIO;
+ 	sdhci_set_power(host, mode, vdd);
+ 
+-	if (mode == MMC_POWER_OFF)
++	if (mode == MMC_POWER_OFF) {
++		if (slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_APL_SD ||
++		    slot->chip->pdev->device == PCI_DEVICE_ID_INTEL_BYT_SD)
++			usleep_range(15000, 17500);
+ 		return;
++	}
+ 
+ 	/*
+ 	 * Bus power might not enable after D3 -> D0 transition due to the
 -- 
 2.39.5
 
