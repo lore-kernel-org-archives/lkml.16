@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A962F230E;
-	Mon,  5 May 2025 23:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7419C283FC2;
+	Mon,  5 May 2025 23:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486811; cv=none; b=mf1HrKMkmdOqTlCjkhKewxtqg6Ppw82tiIR5+KWx96e1vChxtZCh0OjjUS73+78xocUZ4efk13vnU5DLvkEIZxL+xIJ9J1azMHxxu55Qyn1XwTvjqWH/8MTlRQb7RA6i3hqxuTZm8m8mD4ViL5yla9t7ViaYpA+9kD68gBB1zSk=
+	t=1746486806; cv=none; b=a4O1C6GZvXAailG2RgmjdCh3FXej23e1GuI65GbtkyHmUZwIN1SFFjOeiGJxL4F11sAPqhnBhoZnBERnzFDUfGvww2N3x1WypeVQIvNZxWX9XrgH+shRH//SvqirysEx+N2FJe2JoppGoqy6QSkuoPv5/BPGV0792hJTm5iltzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486811; c=relaxed/simple;
-	bh=dGzUyxuhzvfEM3R/PhIaZ3ZpTDVIzR52pu2g+3tx7Rw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lcX1G94ff+LEUX0CnMJcso1+bmajRLT/yS5NsD1kV1r7UM+N7DAuEkU3NWpWtwFCCBXX4RpdHZqMCIxoYQgwgsULCWxkN1p2rp1tqWVtMRAvrFf32VKshOKlxZJBE+xuVCj5aUx4oxYbnQ9S5mTHFxL0wG9K5oRfkcXSeKdKnFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZejMIhV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746486806; c=relaxed/simple;
+	bh=50o+LJ1eACnewrVR5dFUb4W6VBBY1lGHoNCIrnReK/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uYwob08nbV+LmBnHni5YBcrOYNq4ijK2TpDvFaYj5MAHOMsiqa/Iw3WAswOyPoX+r1kUQk99sL5OeyES7vlRknpPEFHQwGH+9XWNtKg5B8DFD/vq/riWSgIUeG/ZvgTwPRRsbYrmpo3Qrhkt2kIxxjc7VtAUAeUQtKK8c4Tf1TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rz5lCF3+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZejMIhV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0E1C4CEEF;
-	Mon,  5 May 2025 23:13:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rz5lCF3+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F1FC4CEE4;
+	Mon,  5 May 2025 23:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486810;
-	bh=dGzUyxuhzvfEM3R/PhIaZ3ZpTDVIzR52pu2g+3tx7Rw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JZejMIhVFxF1VmTq6oCnYhRW/dXbMoAufMJ5ifvu20NgPiUdrE4VnEe9To3n0iwa1
-	 KG0ujiI6ra1fIbK/aI5pLl44IdooNHyEZWBzKn+YBirG4/ljzDX/4k7nyssGBz7CD3
-	 AELYmrAZtkcq8o8OGpY82zSOAg7yoIrxBDqq+qCuVQOYw/qnvnljsvIALmKwwb7v+U
-	 /RXpmAKYB3il8ZUo+5jKGb7/bnN0xO4bW1bW0unGG8Mq513+0OUB1xy86cvG3b52AP
-	 A6E8c+r5nrNR35M8LUr7VinN0R7OvlZtQsf5AkEnIuaXmixVFQGD1nfl/EUZBjjALY
-	 TG0oIUSdScD5g==
+	s=k20201202; t=1746486805;
+	bh=50o+LJ1eACnewrVR5dFUb4W6VBBY1lGHoNCIrnReK/Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rz5lCF3+JoviKZKE6R5GghkIhPWf08DKqDbaby5o3IZnrJKuwhsc5pc8Z8Oe1xBCh
+	 i3DlVhhELnt/IsHbmDm3PwOwn7kMDzlAyVGF8BxWooirhTzcUWwkGy9H5+K9BUH2zA
+	 pmpWMZvoRso5mchUyraGYexgZZzrvKpbG57wm8gSNB7SCRhRQYv1LBnLoWDZUJ6Xnk
+	 dEpTVyWXfz0XzE2NqbQtYG2LnV7hgjJjXcUjXTILVr7d3XtyzsrAOhL+UUUm7XHbCr
+	 tb6UuMifY6ovOKnb95Je6dmX43g48c+UuCUWXF6IsloaMGPKLOHirDKTCGVz6fEIBc
+	 AgnlYOagsrjXg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Shixiong Ou <oushixiong@kylinos.cn>,
-	Helge Deller <deller@gmx.de>,
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	timur@kernel.org,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.15 005/153] fbdev: fsl-diu-fb: add missing device_remove_file()
-Date: Mon,  5 May 2025 19:10:52 -0400
-Message-Id: <20250505231320.2695319-5-sashal@kernel.org>
+	linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 001/153] kconfig: merge_config: use an empty file as initfile
+Date: Mon,  5 May 2025 19:10:48 -0400
+Message-Id: <20250505231320.2695319-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,31 +47,46 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+From: Daniel Gomez <da.gomez@samsung.com>
 
-[ Upstream commit 86d16cd12efa547ed43d16ba7a782c1251c80ea8 ]
+[ Upstream commit a26fe287eed112b4e21e854f173c8918a6a8596d ]
 
-Call device_remove_file() when driver remove.
+The scripts/kconfig/merge_config.sh script requires an existing
+$INITFILE (or the $1 argument) as a base file for merging Kconfig
+fragments. However, an empty $INITFILE can serve as an initial starting
+point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
+if -m is not used. This variable can point to any configuration file
+containing preset config symbols (the merged output) as stated in
+Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
+contain just the merge output requiring the user to run make (i.e.
+KCONFIG_ALLCONFIG=<$INITFILE> make <allnoconfig/alldefconfig> or make
+olddefconfig).
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Instead of failing when `$INITFILE` is missing, create an empty file and
+use it as the starting point for merges.
+
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/fsl-diu-fb.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/kconfig/merge_config.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/fsl-diu-fb.c b/drivers/video/fbdev/fsl-diu-fb.c
-index ce3c5b0b8f4ef..53be4ab374cc3 100644
---- a/drivers/video/fbdev/fsl-diu-fb.c
-+++ b/drivers/video/fbdev/fsl-diu-fb.c
-@@ -1829,6 +1829,7 @@ static int fsl_diu_remove(struct platform_device *pdev)
- 	int i;
+diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+index 72da3b8d6f307..151f9938abaa7 100755
+--- a/scripts/kconfig/merge_config.sh
++++ b/scripts/kconfig/merge_config.sh
+@@ -105,8 +105,8 @@ INITFILE=$1
+ shift;
  
- 	data = dev_get_drvdata(&pdev->dev);
-+	device_remove_file(&pdev->dev, &data->dev_attr);
- 	disable_lcdc(&data->fsl_diu_info[0]);
+ if [ ! -r "$INITFILE" ]; then
+-	echo "The base file '$INITFILE' does not exist.  Exit." >&2
+-	exit 1
++	echo "The base file '$INITFILE' does not exist. Creating one..." >&2
++	touch "$INITFILE"
+ fi
  
- 	free_irq(data->irq, data->diu_reg);
+ MERGE_LIST=$*
 -- 
 2.39.5
 
