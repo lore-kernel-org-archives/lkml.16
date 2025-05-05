@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436EC2EEBCC;
-	Mon,  5 May 2025 23:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480E72F10AF;
+	Mon,  5 May 2025 23:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486652; cv=none; b=YF+7i9Oy8HxOoKJhdKmDaipjrRWp8ZoePLp7zTaSqT92tw4zyYXjm/SEmCvdB7rFkQwujVDmPPl0VMiMCsF5KW8C0bRovj966JuFat+HD5s10wXhJ6gl/+3fct07bh8NZA3obIG2owcDgbTsixgxPJO0m7u6rJX1gWYEAlzFm1o=
+	t=1746486704; cv=none; b=gyg1OKPkY4D5jYgPd1rv2smI9VqqMu4cGmkVJfWnsM2xyhc8I+KKVKW5bLy6E2jIJ9kW6di9/Ag8LCIw8TCihIu1X57QDVQmhhl2lhFkg41VSKluc83z2voFxJehRbo/rF5f01zR27oqPVwgHIR8gPtwcA8ASOaipJ4tP4zyDEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486652; c=relaxed/simple;
-	bh=lDkW0xEZ9elFVTKpmQgbN4fZNCsqxVXNzoUBSQ6F45Y=;
+	s=arc-20240116; t=1746486704; c=relaxed/simple;
+	bh=25Ojv8klnLISHg0C6XQR3eGHdYQ0sMT0gShyf/sP9kI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jdWhsLwyjtPR0nZ8JvLTMLi9v1WN2GtQr74pxWd0jJi0aEEvq0iqMy+4aFNXUjya2GvgEwfMG47F7yXpH/cR4PvQOMwBOsqvsj6bqpmrf9ZQdrLrbB2YhCqq1hdR9cYoomn0veBZkPkLwG3qCWjkek7AbVabFhnY2QqHmyPYnRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWhXOJPR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t9bR1Luu3AjKlpa44YYBsAVnmK78+mocdQ+RsaIOqWgY3sUKP/mmG6yeCayPQbiwhgTj/iEP+B4wvV7p7iJgfyltkJepY04vDdT0F/NQbffRynjD6rlqjy0Jl1P0JAloUe2SUciXsijQ1TQYryzv44eLGn1B68J1nOkIpGVpWoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gF/t2CYV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWhXOJPR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B8AC4CEE4;
-	Mon,  5 May 2025 23:10:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gF/t2CYV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CF4C4CEE4;
+	Mon,  5 May 2025 23:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486651;
-	bh=lDkW0xEZ9elFVTKpmQgbN4fZNCsqxVXNzoUBSQ6F45Y=;
+	s=k20201202; t=1746486703;
+	bh=25Ojv8klnLISHg0C6XQR3eGHdYQ0sMT0gShyf/sP9kI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iWhXOJPRutq6Rm8ckT0jePYi4NIngsBRSTsR/Sr9dxFlH7BrvvEva7/IgFOiuoxGk
-	 iKAVcup9BIOGOwa8w1sGRtpXfrn/0jqj5FVwnhHYInu3yN7MSigoRwABxWJ7spsXVX
-	 hLgLpbZHJLayfMQVkC61Vz53vZQ+cWgVyIf3wUjBSA3pFGOe9qk//hL4iyaFpQYLDJ
-	 /q2g2Y6/OsEBJEj9WlVXtTjABtVNiyWCjAkfSyfxOFyP5KoNyzgd4zokrmeiOHGpzn
-	 AWxeY+sRDWu40VL0xgkCuMsaAQsbxx6T4DYg5qLzBICsN27GTNJpNqnuzC8Xq9hzmP
-	 XAazJ9AbEbmqQ==
+	b=gF/t2CYVhkhn4fKiO0Pxf1Pc2/aGuFSK0oqL9YGLf4v/5SBwOsHU73H+wpQMGBEyD
+	 9/C7WAmUgLAwuJrvNM9kF/5bOEknnKbP0Rc6Wpl1q070MWKNxWvTLKPmkeD/WA7ZLz
+	 GFvt1dAcI23x+1qBdpd+VlV1+iQRUWMh6wq62iLMWeGXwLBJehsF4lkFPqW+EJXKXp
+	 iJ926vu+iJ7umpaee+bglyJ9eoGyAanTEF6IM+UPotm3rThm0IMK4v3MPoKZKOjEVY
+	 gbstovfW2z/KLunx+GnRCcxGzms0mnT73oeTeAKHu3cpX2KyhYSKUKIW31szOrHIhg
+	 5BVoyDIyQq7Yw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+Cc: Konstantin Andreev <andreev@swemel.ru>,
+	Casey Schaufler <casey@schaufler-ca.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 136/212] wifi: rtw88: Fix rtw_init_vht_cap() for RTL8814AU
-Date: Mon,  5 May 2025 19:05:08 -0400
-Message-Id: <20250505230624.2692522-136-sashal@kernel.org>
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 161/212] smack: recognize ipv4 CIPSO w/o categories
+Date: Mon,  5 May 2025 19:05:33 -0400
+Message-Id: <20250505230624.2692522-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -50,66 +53,73 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+From: Konstantin Andreev <andreev@swemel.ru>
 
-[ Upstream commit 6be7544d19fcfcb729495e793bc6181f85bb8949 ]
+[ Upstream commit a158a937d864d0034fea14913c1f09c6d5f574b8 ]
 
-Set the MCS maps and the highest rates according to the number of
-spatial streams the chip has. For RTL8814AU that is 3.
+If SMACK label has CIPSO representation w/o categories, e.g.:
 
-Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-Link: https://patch.msgid.link/e86aa009-b5bf-4b3a-8112-ea5e3cd49465@gmail.com
+| # cat /smack/cipso2
+| foo  10
+| @ 250/2
+| ...
+
+then SMACK does not recognize such CIPSO in input ipv4 packets
+and substitues '*' label instead. Audit records may look like
+
+| lsm=SMACK fn=smack_socket_sock_rcv_skb action=denied
+|   subject="*" object="_" requested=w pid=0 comm="swapper/1" ...
+
+This happens in two steps:
+
+1) security/smack/smackfs.c`smk_set_cipso
+   does not clear NETLBL_SECATTR_MLS_CAT
+   from (struct smack_known *)skp->smk_netlabel.flags
+   on assigning CIPSO w/o categories:
+
+| rcu_assign_pointer(skp->smk_netlabel.attr.mls.cat, ncats.attr.mls.cat);
+| skp->smk_netlabel.attr.mls.lvl = ncats.attr.mls.lvl;
+
+2) security/smack/smack_lsm.c`smack_from_secattr
+   can not match skp->smk_netlabel with input packet's
+   struct netlbl_lsm_secattr *sap
+   because sap->flags have not NETLBL_SECATTR_MLS_CAT (what is correct)
+   but skp->smk_netlabel.flags have (what is incorrect):
+
+| if ((sap->flags & NETLBL_SECATTR_MLS_CAT) == 0) {
+| 	if ((skp->smk_netlabel.flags &
+| 		 NETLBL_SECATTR_MLS_CAT) == 0)
+| 		found = 1;
+| 	break;
+| }
+
+This commit sets/clears NETLBL_SECATTR_MLS_CAT in
+skp->smk_netlabel.flags according to the presense of CIPSO categories.
+The update of smk_netlabel is not atomic, so input packets processing
+still may be incorrect during short time while update proceeds.
+
+Signed-off-by: Konstantin Andreev <andreev@swemel.ru>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/main.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ security/smack/smackfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
-index 7c390c2c608d8..8a47cfb358b16 100644
---- a/drivers/net/wireless/realtek/rtw88/main.c
-+++ b/drivers/net/wireless/realtek/rtw88/main.c
-@@ -1552,8 +1552,9 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
- 			     struct ieee80211_sta_vht_cap *vht_cap)
- {
- 	struct rtw_efuse *efuse = &rtwdev->efuse;
--	u16 mcs_map;
-+	u16 mcs_map = 0;
- 	__le16 highest;
-+	int i;
- 
- 	if (efuse->hw_cap.ptcl != EFUSE_HW_CAP_IGNORE &&
- 	    efuse->hw_cap.ptcl != EFUSE_HW_CAP_PTCL_VHT)
-@@ -1576,21 +1577,15 @@ static void rtw_init_vht_cap(struct rtw_dev *rtwdev,
- 	if (rtw_chip_has_rx_ldpc(rtwdev))
- 		vht_cap->cap |= IEEE80211_VHT_CAP_RXLDPC;
- 
--	mcs_map = IEEE80211_VHT_MCS_SUPPORT_0_9 << 0 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 4 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 6 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 8 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 10 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 12 |
--		  IEEE80211_VHT_MCS_NOT_SUPPORTED << 14;
--	if (efuse->hw_cap.nss > 1) {
--		highest = cpu_to_le16(780);
--		mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << 2;
--	} else {
--		highest = cpu_to_le16(390);
--		mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << 2;
-+	for (i = 0; i < 8; i++) {
-+		if (i < efuse->hw_cap.nss)
-+			mcs_map |= IEEE80211_VHT_MCS_SUPPORT_0_9 << (i * 2);
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index d955f3dcb3a5e..9dca3672d82b4 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -922,6 +922,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+ 	if (rc >= 0) {
+ 		old_cat = skp->smk_netlabel.attr.mls.cat;
+ 		rcu_assign_pointer(skp->smk_netlabel.attr.mls.cat, ncats.attr.mls.cat);
++		if (ncats.attr.mls.cat)
++			skp->smk_netlabel.flags |= NETLBL_SECATTR_MLS_CAT;
 +		else
-+			mcs_map |= IEEE80211_VHT_MCS_NOT_SUPPORTED << (i * 2);
- 	}
- 
-+	highest = cpu_to_le16(390 * efuse->hw_cap.nss);
-+
- 	vht_cap->vht_mcs.rx_mcs_map = cpu_to_le16(mcs_map);
- 	vht_cap->vht_mcs.tx_mcs_map = cpu_to_le16(mcs_map);
- 	vht_cap->vht_mcs.rx_highest = highest;
++			skp->smk_netlabel.flags &= ~(u32)NETLBL_SECATTR_MLS_CAT;
+ 		skp->smk_netlabel.attr.mls.lvl = ncats.attr.mls.lvl;
+ 		synchronize_rcu();
+ 		netlbl_catmap_free(old_cat);
 -- 
 2.39.5
 
