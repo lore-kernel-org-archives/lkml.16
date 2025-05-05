@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DCF2ECFDE;
-	Mon,  5 May 2025 23:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB01D2ECFF6;
+	Mon,  5 May 2025 23:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486503; cv=none; b=tc2f20vsKT0ED9qxvuchhUbFWbe38Gsj4ohicAGVw+gO6xG4WkRwIvsG5QRyHl09c3Kyiw42Wc8xBP2ZVk6+0RtxHWVVJHKbcWfAhi6yCAY5M4rLNspWkFFD8rD+IhwQRHI4YEgPxfKTEOBqTTWdKGzebnKHyPojFfmI6w7lESA=
+	t=1746486506; cv=none; b=NrqKAmL9bTjVyOI9JTeN6tOK4m+xwMA7AeHO8pSva5hPZn8HhTnTyQEMotz4bJpg9Jw3WZkQCswisWtxlmh5avYGrBXZExW9qTtyMoAMZaFwxmhocg1rkjdc61jQisnqgNCoeSMTFuFNQo8Tn8KR+P2s3ZGY3RIlohoffbNfY9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486503; c=relaxed/simple;
-	bh=QaeO5+EedxfnKY00NP1qaHHaC2Fbe8mCW3AnLeOwdCs=;
+	s=arc-20240116; t=1746486506; c=relaxed/simple;
+	bh=8ONW94dM+NZTcEz/+rs4aAEOz/0Y7F+L1BCO5cWJ4U0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KiA0dODXhbNrdECa9CEZ/Y01NWgddvEnY7aO3Osn46JCZXueq+YXryXiiBko/oQZNJox1fsbqSpzOdkDnieqnArtXfQkrh3gTQwgbNE5yAGaFceWH9iSRDMZsFW3Nvbb9SkrY2Y4y6H3E+2zXtW5/1SYMT+YPzQlk6DfKx1mbzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIxMDgOY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mxqaCHnx+EYYkBNYmOutNu5MMs0p3K0sYvXPcZgdy9fBg6vyIHJILQwbXHNGXBKM6d4Ujv0azU2j00a8DhO2vR/z22XMqNh0yJm3FXpd/1N7MLQVyZSnriaFPmzEFEO8Tca9qwzrdTfX5waC0p6zet3plKoHmE7lN8GT8Fjb2rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+m0KR3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIxMDgOY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CFC2C4CEEF;
-	Mon,  5 May 2025 23:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+m0KR3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6558AC4CEEF;
+	Mon,  5 May 2025 23:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486502;
-	bh=QaeO5+EedxfnKY00NP1qaHHaC2Fbe8mCW3AnLeOwdCs=;
+	s=k20201202; t=1746486506;
+	bh=8ONW94dM+NZTcEz/+rs4aAEOz/0Y7F+L1BCO5cWJ4U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rIxMDgOYDYaMWvBAp9rfPZt0s+UW2nM9mheb4PExKnR+6MIuvjxHosUqppA3H7R4W
-	 6KebVg7fuqUqk3ZTTS+0xNgaWx+TO25kmUUELnj7QGrIqSzQqY22SsaRoGVI85A6NU
-	 ILcmeXMDISDBo5G45UMH4A5APR6f/bFhDw2i4P/DpTR/BRNcNluu3A2k2/Ljj4v/2G
-	 kgzwWk2l7JiOv70NKHmhKrIYiss4a/sd1eoQsG5LmXMrZsns8UwEtFNQRsnUoKAtI5
-	 NvtMODtYdmuaaB6YZB2M3ZEOQPZByCQI6abCg5ezGqIaSrS4WnZ36A5TEFzxprYd5t
-	 8OB7nR17142pA==
+	b=M+m0KR3qc4NmOsrMk38k6z5uzPFonweaFERAcMT/Hd2svsmNL68vTiSPQkk0sfjgG
+	 bsdnmvmHwcK1/SgyAp8jSvr+mKHOYh+KmTWZ9oYvkfVAGFuetj5xn62FF1n1KcXfDX
+	 CFx7GQULMMt0y7kDMWAaeOX1kE9RYTUvRPgAaWqU62Le+iE2T7MgFHIuww4k1iZ1jY
+	 yC3LUSOcQO84hvt4/OD38oEFBVq2qHYFEQRvcx4xBYGX/pS847OchXvtaDqDLrhbLi
+	 XwQbG/qKdpjd1Ng/KTEUbegUVZLNwnAVnv0qHh2Dy/ZuHugPczOP0JWjG2n7gN49mW
+	 tvFoq5r2BPFJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Baokun Li <libaokun1@huawei.com>,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Jan Kara <jack@suse.cz>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: Eric Dumazet <edumazet@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 063/212] ext4: reject the 'data_err=abort' option in nojournal mode
-Date: Mon,  5 May 2025 19:03:55 -0400
-Message-Id: <20250505230624.2692522-63-sashal@kernel.org>
+	anna-maria@linutronix.de
+Subject: [PATCH AUTOSEL 6.1 065/212] posix-timers: Add cond_resched() to posix_timer_add() search loop
+Date: Mon,  5 May 2025 19:03:57 -0400
+Message-Id: <20250505230624.2692522-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -53,54 +51,39 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: Baokun Li <libaokun1@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 26343ca0df715097065b02a6cddb4a029d5b9327 ]
+[ Upstream commit 5f2909c6cd13564a07ae692a95457f52295c4f22 ]
 
-data_err=abort aborts the journal on I/O errors. However, this option is
-meaningless if journal is disabled, so it is rejected in nojournal mode
-to reduce unnecessary checks. Also, this option is ignored upon remount.
+With a large number of POSIX timers the search for a valid ID might cause a
+soft lockup on PREEMPT_NONE/VOLUNTARY kernels.
 
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://patch.msgid.link/20250122110533.4116662-4-libaokun@huaweicloud.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Add cond_resched() to the loop to prevent that.
+
+[ tglx: Split out from Eric's series ]
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Link: https://lore.kernel.org/all/20250214135911.2037402-2-edumazet@google.com
+Link: https://lore.kernel.org/all/20250308155623.635612865@linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/time/posix-timers.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 7f0231b349057..f829f989f2b59 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2741,6 +2741,13 @@ static int ext4_check_opt_consistency(struct fs_context *fc,
- 	}
- 
- 	if (is_remount) {
-+		if (!sbi->s_journal &&
-+		    ctx_test_mount_opt(ctx, EXT4_MOUNT_DATA_ERR_ABORT)) {
-+			ext4_msg(NULL, KERN_WARNING,
-+				 "Remounting fs w/o journal so ignoring data_err option");
-+			ctx_clear_mount_opt(ctx, EXT4_MOUNT_DATA_ERR_ABORT);
-+		}
-+
- 		if (ctx_test_mount_opt(ctx, EXT4_MOUNT_DAX_ALWAYS) &&
- 		    (test_opt(sb, DATA_FLAGS) == EXT4_MOUNT_JOURNAL_DATA)) {
- 			ext4_msg(NULL, KERN_ERR, "can't mount with "
-@@ -5318,6 +5325,11 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
- 				 "data=, fs mounted w/o journal");
- 			goto failed_mount3a;
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 2d6cf93ca370a..fc08d4ccdeeb9 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -161,6 +161,7 @@ static int posix_timer_add(struct k_itimer *timer)
+ 			return id;
  		}
-+		if (test_opt(sb, DATA_ERR_ABORT)) {
-+			ext4_msg(sb, KERN_ERR,
-+				 "can't mount with data_err=abort, fs mounted w/o journal");
-+			goto failed_mount3a;
-+		}
- 		sbi->s_def_mount_opt &= ~EXT4_MOUNT_JOURNAL_CHECKSUM;
- 		clear_opt(sb, JOURNAL_CHECKSUM);
- 		clear_opt(sb, DATA_FLAGS);
+ 		spin_unlock(&hash_lock);
++		cond_resched();
+ 	}
+ 	/* POSIX return code when no timer ID could be allocated */
+ 	return -EAGAIN;
 -- 
 2.39.5
 
