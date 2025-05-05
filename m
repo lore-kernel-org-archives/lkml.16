@@ -1,192 +1,134 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94D01A070E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EBB155C88
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746435401; cv=none; b=o8Rl8L12vlBDaP3IAOr3YABk/4QI/QLMRuzVmokMrPf56V//NXLE7/I/gKW/ljcOriy22/YvUNnuyJ9onPf+dYZXUkWLXcflFR6y57DwtRLPlAqOmzgD9oElXDspoVR3Uyba52bpqV0pqQ3N6BeMNskX818FtTJ1kfVesFTsE/0=
+	t=1746435429; cv=none; b=EDx7JX8HJsH4lXfwGJFcww406knszaDQxQmlD+GpZMjsBBP90x3Ym0lS/CWr0UyIjt7o25yabN/3BVZXopSnAEk5/HYxnVg2UkyH2oM5PQQSo97wq0wqzyLaKtiJ5zCRhI4jl56ems+TaRjfn9xnazbCBncl165UY2smom3n3SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746435401; c=relaxed/simple;
-	bh=SmMCH697xC8Jvds5eQIi5w8fCsVUUCW9mlghMxxm3kg=;
+	s=arc-20240116; t=1746435429; c=relaxed/simple;
+	bh=zwQ2WGMJRkig3reMsZHumtlh3zNCndRtN4zYIDuHLec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pcyv3Gwc0fqKKxRRo0gpM252HgdQ2VU2V9KQHoigNgbdkeZ1GPwnmQ9rA/qErvrq/pD8beTC9MNW9cAcskUB9FceeNC8zwKpXZJN0E4HTeWQgNwaqJaXHaBBoyU7IMz6lzXhvM09iGw4jZDxDe8wnTpwZT7TjlqUm8Q3i/ADLkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IKH0kldk; arc=none smtp.client-ip=209.85.221.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAjzjAX8yX+xkvR1EBZLsGHfNwY8751KKY573OQ7W8lrx4RIG/zL/HYclmjB9aT7tLG+wHRgzCLV24PkuT0PWKdkAIgT/cjid7ImEvhHLSEm9pAHFhUCsqSEyo7Ioawmk2+GposS4jiQTSq4oUvJpJAGVVLVkr3uMlZIm07WMBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rbt+1+ru; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IKH0kldk"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac9aea656so4479596f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:56:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rbt+1+ru"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acb39c45b4eso666547566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746435398; x=1747040198; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Sv1fXA/kXVQWR1mgUjAfLmrac7SzbmHKcHFUSyKNyaM=;
-        b=IKH0kldkiw8v07nDcr/TjCCgcz7Xu2sbfPrRhwzumT91UcwMsJNgwHnIA/TUICMucP
-         BehgQou9jvh5B/77GNKxVO7vP4tOvK/FRIxiTnKPAT3Zn+Ux0e7zJUllNja6PqDmx+kz
-         RjllalaoMWwzmOg3p3mVMDablpM1X1mlPxIM7tg5N6zgdj26Hqd3SIElyxERgiJBAnCJ
-         GltrGw31BUmiXXLWqQMM3Uk3t+yCcIp1FkxfCAiiaAO9hmvTCsVnz3P6+p0hnpr3tfIC
-         83jhyqct2oBRBpWXoJH8FszqfZcQCMbjIj3t6/vQpSQ/9GBjaDilyidcEp701FT+71yx
-         fgMA==
+        d=linaro.org; s=google; t=1746435424; x=1747040224; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=twFRaaGQAif63hrg13kb5IFUKfR33Ambpgl1WwN0LnE=;
+        b=rbt+1+rulLi1Ty+KpoH8MhEjxhaIO6NTjneMqGWjgGXAsqOfgiWSCUChaEcjc0gDxt
+         WvNwF5sYCfF1Z0eksKBatcf39px3IEfgeitePSz0LtJ9v7IQ+HoEHeIu/J1/gLiUEdkM
+         2vHg2Ps5XW6ZdsW4eBGkI/of3OSaspGiZBe2bCOAfIXfRRZAWb9/dTyo4C3kx2dFC3K0
+         NjIe6vX4ZpTvrBzss9qw/lxeR+/rkR2lwxA6mxJSjztSoHv1nlkz9o09hcAnn1zrN1+K
+         P3UyC4RVjE3+upL8Fpb1SxZkvjT75KQTF9azti42ccPCAgtczPsAkpYaL84JZhvmGZhR
+         dZFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746435398; x=1747040198;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sv1fXA/kXVQWR1mgUjAfLmrac7SzbmHKcHFUSyKNyaM=;
-        b=gvg0dLZJ3gPZl31nEwO4b41xMlQ1WZJUd1+/X/l2io2KbMDpvbcvbb9YnbDx8YdB1y
-         0WxWTaR1MuFUP9F/64cvRntpWil9bUV9y9l2B/23lLPEhJhACOEFkbDggZW2iFObdze/
-         D60SjWaHtge1w0EEtUR8+xGLU9WnZJO5wci2PCIRSH8sct/Bsl2FOKjlKYSo5UwmmaI4
-         F6HLGICobOCMKSyeIV5KrSeZ3zc8Ph3IO2t45c8cfa4DuJh9gzqegCG2WbcRTzE5X1xj
-         p1Z/GKnxaHOxhkrhtzLhKkgTQ5TvvH26Wqd1vX25J1IQtploBUWSD6SOlENnxhUBDR6b
-         aWfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLJkCUJnncm3wLqADN8uyo3BLKs00lpdJupn2h4c+SqZb3P+PLDiaf66ai7PRzO2x4M8Sdm534bw69A00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIcxRGAR8oLNU1xQGO/1VQtZTUcF6H3aqKuv8r+EUfFWDmHRRK
-	l+wJwhSRYHgSyIDhVfx/qfPjMZkBFu3/aPBqlaadoW6m7pNutXIYBRdfziSNWHc=
-X-Gm-Gg: ASbGncuE5REiun6DhjD9nowlsDcAHo7DIREKqSbWrZ0Mr18/h67mjdcIqhtBLse5gvh
-	Kp1VWQl3Az6UUNQpwuq02vcOdmVH+hqj+RuX74wcoVy6SrjEhylR4WuNzLUR6JNAo/8iAv7X3x1
-	NDn/e6dQy4GQPptYfu+ldTeV0bZxzFB+EBY0P/CIxjJ00JXfPX4oYXhlZeXd9LnxsUs1Gmp14fk
-	aaVok1pHRCRsFHcrNyLA8oLDbxKbeMgQKljQ48RGn5JR5x1qdg4K0/K5rLIboH4sKTEVoAx1gWv
-	EfrMR6BU77V6RYojWnt9kSSOoc6jXe06b9HgRkCqyPXYjKBmgYOx/zx4IwX5T2WmOnIYsPiF9JI
-	P/nk=
-X-Google-Smtp-Source: AGHT+IGfImCYDlojSB1Sb4V6Dn940fvmK1LybNwwBa7WbdE2kVT+4CXyDuAT8T7krErERsIUODmGCw==
-X-Received: by 2002:a5d:64e8:0:b0:38f:2766:759f with SMTP id ffacd0b85a97d-3a09fdbf30cmr4610206f8f.41.1746435398100;
-        Mon, 05 May 2025 01:56:38 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b172a8sm9880997f8f.91.2025.05.05.01.56.37
+        d=1e100.net; s=20230601; t=1746435424; x=1747040224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=twFRaaGQAif63hrg13kb5IFUKfR33Ambpgl1WwN0LnE=;
+        b=q1BL/zaeFCCX6usqN/tGaMbDPoA66pCCfn8L3ImicwBQCGyDWYHl3pFoGsLL+dFv6e
+         6QsDvjpTLGcR3+6lDVQHeAiqOQin267OSii+IO3vFKJ5CXoxFvhfYLaLKDJ8uACEzTAp
+         gOnk+wKcPdhTnBnOceo/aRpL8nGeIowhMgC1Jmz5AF6dENFEMLQEsKxxEA54euV6Ct5z
+         0Q65eAScAUQpTAqQDOcqYJCzmADQctdw6IhYwFzpTuFH146HPA7bHNXPolaxx0ifqJhj
+         VbtYmnOlFEG8YFBevjV7VViNPhv/PTiu0rckSmxUVDfurqMkg7fJg6nuePlguOCq2CC7
+         QemQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVE86nqtmy/rQAidlspBAsDSvbJk7z883FcYkRXEHjchjlYdxp0nX/EuMQ+eBB9kIG+yaFCZxTkJ0qj2NM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjOQI9sikbfYH15T4n3n7HnfOq5XZ0ru9VzOoIs+wgt0o8qwng
+	1156gK4V1ObONtF52D8wCu9grNa2A2grhHRK63TyKWmqnqh8iRiRxLnJXgxdBfU=
+X-Gm-Gg: ASbGncuPd1xUNdf6h5SMfL5q9SV2lTYSApcLd9pNm66Ls7gRQxt8hndvHKLdObAsxqQ
+	Wk6rV8n1BbX4x1EgoGK71fpp4/yrKZTsSOklB/6/RFMw1GfoqQ5iu4nVyt8t/QRaiQNztrVEPEP
+	hGT6R/O/G0QZSKu/eCp9YS8yeZrQL0LdWjWyLLMppKGoxrrdkSB5JkymvNKPYrr5domwvA5bhvn
+	Z2CkzWSi3wYx4HL05NjQKAqyX2btc/NjHXHXTQL9k7GwBsyLbZ8rt4rwShlJO0dEJmWLGROFHcD
+	UH8fAd/5HqlTJPg9C7hA+sOudOIw/HzVNKotmSE5sS+2HzkBbg==
+X-Google-Smtp-Source: AGHT+IE7wNqWzTYqeQUTRoeCnQGzyN3VhgiWSTOZ9M/mvZ4hW4jHw55Y7DRHPzUaVluMv512tH+2nw==
+X-Received: by 2002:a17:906:dc8a:b0:ac3:afb1:dee7 with SMTP id a640c23a62f3a-ad17b5dbc98mr1130736866b.28.1746435424095;
+        Mon, 05 May 2025 01:57:04 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:d6d0:d270:a4d:dbd])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad189508d03sm458777866b.133.2025.05.05.01.57.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 01:56:37 -0700 (PDT)
-Date: Mon, 5 May 2025 10:56:35 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Jonathan Cameron <jic23@kernel.org>, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] thermal: thermal-generic-adc: add temperature
- sensor channel
-Message-ID: <aBh9Q8zr2MtfVJtq@mai.linaro.org>
-References: <20250430055807.11805-1-clamor95@gmail.com>
- <20250430055807.11805-2-clamor95@gmail.com>
+        Mon, 05 May 2025 01:57:03 -0700 (PDT)
+Date: Mon, 5 May 2025 10:56:56 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: keep remotely controlled units
+ on during boot
+Message-ID: <aBh9WL2OMjTqBJch@linaro.org>
+References: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250430055807.11805-2-clamor95@gmail.com>
+In-Reply-To: <20250503-bam-dma-reset-v1-1-266b6cecb844@oss.qualcomm.com>
 
-On Wed, Apr 30, 2025 at 08:58:07AM +0300, Svyatoslav Ryhel wrote:
-> To avoid duplicating sensor functionality and conversion tables, this
-> design allows converting an ADC IIO channel's output directly into a
-> temperature IIO channel. This is particularly useful for devices where
-> hwmon isn't suitable or where temperature data must be accessible through
-> IIO.
+On Sat, May 03, 2025 at 03:41:43AM +0300, Dmitry Baryshkov wrote:
+> The commit 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM
+> underflow") made sure the BAM DMA device gets suspended, disabling the
+> bam_clk. However for remotely controlled BAM DMA devices the clock might
+> be disabled prematurely (e.g. in case of the earlycon this frequently
+> happens before UART driver is able to probe), which causes device reset.
 > 
-> One such device is, for example, the MAX17040 fuel gauge.
+> Use sync_state callback to ensure that bam_clk stays on until all users
+> are probed (and are able to vote upon corresponding clocks).
 > 
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> ---
->  drivers/thermal/thermal-generic-adc.c | 55 ++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
-> index ee3d0aa31406..7c844589b153 100644
-> --- a/drivers/thermal/thermal-generic-adc.c
-> +++ b/drivers/thermal/thermal-generic-adc.c
-> @@ -7,6 +7,7 @@
->   * Author: Laxman Dewangan <ldewangan@nvidia.com>
->   */
->  #include <linux/iio/consumer.h>
-> +#include <linux/iio/iio.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -73,6 +74,58 @@ static const struct thermal_zone_device_ops gadc_thermal_ops = {
->  	.get_temp = gadc_thermal_get_temp,
->  };
->  
-> +static const struct iio_chan_spec gadc_thermal_iio_channels[] = {
-> +	{
-> +		.type = IIO_TEMP,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-> +	}
-> +};
-> +
-> +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int *val, int *val2, long mask)
-> +{
-> +	struct gadc_thermal_info *gtinfo = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_PROCESSED:
-> +		ret = gadc_thermal_get_temp(gtinfo->tz_dev, val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		return IIO_VAL_INT;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info gadc_thermal_iio_info = {
-> +	.read_raw = gadc_thermal_read_raw,
-> +};
-> +
-> +static int gadc_iio_register(struct device *dev, struct gadc_thermal_info *gti)
-> +{
-> +	struct gadc_thermal_info *gtinfo;
-> +	struct iio_dev *indio_dev;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*gtinfo));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	gtinfo = iio_priv(indio_dev);
-> +	memcpy(gtinfo, gti, sizeof(*gtinfo));
+> Fixes: 0ac9c3dd0d6f ("dmaengine: qcom: bam_dma: fix runtime PM underflow")
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Why copy the structure ?
+Thanks for the patch! I actually created almost the same patch on
+Friday, after struggling with this issue on DB410c when trying to add
+the MPM as wakeup-parent for GPIOs. :-)
 
-Copying the thermal zone device pointer should be enough, no ?
+How is this issue related to _remotely-controlled_ BAMs?
 
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->info = &gadc_thermal_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = gadc_thermal_iio_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(gadc_thermal_iio_channels);
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
->  static int gadc_thermal_read_linear_lookup_table(struct device *dev,
->  						 struct gadc_thermal_info *gti)
->  {
-> @@ -153,7 +206,7 @@ static int gadc_thermal_probe(struct platform_device *pdev)
->  
->  	devm_thermal_add_hwmon_sysfs(dev, gti->tz_dev);
->  
-> -	return 0;
-> +	return gadc_iio_register(&pdev->dev, gti);
->  }
->  
->  static const struct of_device_id of_adc_thermal_match[] = {
-> -- 
-> 2.48.1
-> 
+The BAM clock will get disabled for all types of BAM control, so I don't
+think the type of BAM control plays any role here. The BLSP DMA instance
+that would most likely interfere with UART earlycon is
+controlled-remotely on some SoCs (e.g. MSM8916), but currently not all
+of them (e.g. MSM8974, IPQ8074, IPQ9574, ...).
 
--- 
+The fixes tag also doesn't look correct to me, since commit 0ac9c3dd0d6f
+("dmaengine: qcom: bam_dma: fix runtime PM underflow") only changed the
+behavior for BAMs with "if (!bdev->bamclk)". This applies to some/most
+remotely-controlled BAMs, but the issue we have here occurs only because
+we do have a clock and cause it to get disabled prematurely.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Checking for if (bdev->bamclk) would probably make more sense. In my
+patch I did it just unconditionally, because runtime PM is currently
+a no-op for BAMs without clock anyway.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+I think it's also worth noting in the commit message that this is sort
+of a stop-gap solution. The root problem is that the earlycon code
+doesn't claim the clock while active. Any of the drivers that consume
+this shared clock could trigger the issue, I had to fix a similar issue
+in the spi-qup driver before in commit 0c331fd1dccf ("spi: qup: Request
+DMA before enabling clocks"). On some SoCs (e.g. MSM8974), we have
+"dmas" currently only on &blsp2_i2c5, so the UART controller wouldn't
+even be considered as consumer to wait for before calling the bam_dma
+.sync_state.
+
+It may be more reliable to implement something like in
+drivers/clk/imx/clk.c imx_register_uart_clocks(), which tries to claim
+only the actually used UART clocks until late_initcall_sync(). That
+would at least make it independent from individual drivers, but assumes
+the UART driver can actually probe before late_initcall_sync() ...
+Most of this code is generic though, so perhaps releasing the clocks
+could be hooked up somewhere generic, when earlycon exits ...?
+
+Thanks,
+Stephan
