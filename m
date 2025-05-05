@@ -1,101 +1,118 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8712E20D506;
-	Mon,  5 May 2025 11:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA42520469E
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746443417; cv=none; b=O8kk1OrHX74KStYsiadWH7IxmewWMQhWipkoAnsIUHVEFDXw6z9oQF7La3EItsiQowIXvyHCNM+cT53mg1Kqet5wlp+8PAPRDWc4gzn5IdBZkO5w6UpW+ARI+o7Bz6yzH/2LMMCL3vqd7FbXtb4kX3nqAXFv5Mh8YmJ9zapEeNE=
+	t=1746443421; cv=none; b=BAnb5FkENSTX8Kqi8NUEBmExqaQmgN7/n0AHxAG0SminDJ9ZosstovQHkrOahK/hMK16UgBERi9oaaB87Rcs5Lh9XRee6AJXNiezPxWAMfs+2k6qRz9nwxiAKXsAPEp6u/sA1JjL5iqsHSG7d/CGnfP5XKsVP/nl4hprFcv0CLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746443417; c=relaxed/simple;
-	bh=iJaVMgd50y/RnCXRg81TNgmiWPGPCTRnLSqLZR4Fta8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tM0/YdRx1kWVlFzNZ/Dxp9NtO3fQfQx2hYzX3Dsuaq6bgjDMFGPeueodItlr5XrWxVrNULA3uqhmEUCbn8DDvYrrrCI6SBMknHLD9YJwhYUwjjJm4GuX6/HcRYKQ3IU4ktlSDzpfjWjRpzY3vKpRIqg/yeXJVJe2b40UYA2/ZyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=uanME0bx; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1746443421; c=relaxed/simple;
+	bh=Kv5zyUKb0GmVJw1Mk+6HiPZoLKaYjwIer2SVe5GSZCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e+fouEZ5QF/aFW3yfAaHtim+T3+D1QNdh47XTSZHqmzBSltPjPuZbn4wOnHExhpCNvCsObk3QM1IV3C4uXsg/o4dr2zhZ6F784h+iMojc5FM6D4mwhUkS7XmvFfKhSwxbmyjYyZatHEjDPROFK5hetHI2P/6oxsnyV+GkvpWQCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMaIVKsj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="uanME0bx"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5457crpm028600;
-	Mon, 5 May 2025 12:49:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	dZm36Yfu/299NsjICP2d/3EQGEdcRXUPll1j4pYAovk=; b=uanME0bxGMeWrEun
-	VXEhYyAmcF3Ggw6Bcn0ItgQ/sXDGAggQUoiRu+HWBFgJMRHKGBmt4uszK+mxTGjg
-	o3Tr4N6p1GVASh8Az3GJTKGm/NkyLblxT5Ke0MtYoSGhwxW+02J5JGvJzj7Ujk3J
-	HN0UBvoQ/rtT4AxjrQcl9s5Y//Ke129sHGJIUfuZGfU5J4f6l7D7c6dxHrbrEpQU
-	iXZNJf80abNSQNLxV6wYhfMpdDFPffsIcRc1lq3ygHidGPfzclqhmkDlKid9zkW2
-	IFIF4qK671K5M+46V4eStRbxVfdg1ZeD2h9gqOaS8G+so445XQboBtVpnV/3DCh4
-	wnNnzQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46dx3m3yn7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 May 2025 12:49:50 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 037C940060;
-	Mon,  5 May 2025 12:48:32 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B3199B0ECC8;
-	Mon,  5 May 2025 12:47:24 +0200 (CEST)
-Received: from [10.131.131.7] (10.131.131.7) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 5 May
- 2025 12:47:24 +0200
-Message-ID: <b25bf051-1459-4572-8d41-ebdf5fd7abf3@foss.st.com>
-Date: Mon, 5 May 2025 12:47:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMaIVKsj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0FEAC4CEE9;
+	Mon,  5 May 2025 11:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746443420;
+	bh=Kv5zyUKb0GmVJw1Mk+6HiPZoLKaYjwIer2SVe5GSZCo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CMaIVKsjskZoxwY/C/hnWfTUQMBSknnzr66cWdR2XUPCk8pN3ENrFaTYT4PaEafeZ
+	 BGAjJxLTf6PXaFx17obuvjy0Qt5Qzwf7BDhq1PGJ7HBWbwoCDZvwWkI5qW+CUpAT9j
+	 4/HKLGBXHSyr/WFUrrKXv3WxPUfpW6uCjjQcasJy9gp5v9fM/T4AAX496L7GVDgTW0
+	 BTzI6OD8sg0lqSZSTx36PltJKwRHuYm6mnh0Bwc9mR6xgVYlkTcdqwcIJnBEbNfVJe
+	 4lL9wApF0mGmfAI7doKt/9b2531fHsxMcljpKvtbeDkTSc2H2KL7M187Y9Qg1Qf9lj
+	 LBb2FUl9gcGmg==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: "H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Carlos Bilbao <carlos.bilbao@kernel.org>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Fei Li <fei1.li@intel.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Juergen Gross <jgross@suse.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH 09/15] x86/kconfig/64: Enable more virtualization guest options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN and Intel TDX
+Date: Mon,  5 May 2025 13:09:40 +0200
+Message-ID: <20250505110946.1095363-10-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250505110946.1095363-1-mingo@kernel.org>
+References: <20250505110946.1095363-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: <benjamin.mugnier@foss.st.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <laurent.pinchart@ideasonboard.com>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <tomm.merciai@gmail.com>
-References: <20250502201849.12588-1-sylvain.petinot@foss.st.com>
- <20250502201849.12588-3-sylvain.petinot@foss.st.com>
- <aBhwIl7G60EJ9k9F@kekkonen.localdomain>
-Content-Language: en-US
-From: Sylvain Petinot <sylvain.petinot@foss.st.com>
-In-Reply-To: <aBhwIl7G60EJ9k9F@kekkonen.localdomain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
 
-Hi Sakari,
+Since the x86 defconfig aims to be a distro kernel work-alike with
+fewer drivers and a shorter build time, refresh all the virtualization
+guest Kconfig features, enabling paravirt spinlocks, and
+enabling the guest support code for the following guests:
 
-Le 05/05/2025 à 10:00, Sakari Ailus a écrit :
-> Hi Sylvain,
-> 
-> Thanks for the update.
-> 
-> On Fri, May 02, 2025 at 10:18:49PM +0200, Sylvain Petinot wrote:
->> +static int vd56g3_check_csi_conf(struct vd56g3 *sensor,
->> +				 struct fwnode_handle *endpoint)
->> +{
->> +	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
->> +	u32 phy_data_lanes[VD56G3_MAX_CSI_DATA_LANES] = { ~0, ~0 };
->> +	u8 n_lanes;
->> +	u64 frequency;
->> +	int p, l;
-> 
-> unsigned int. There are more cases where you have a loop variable that
-> doesn't need to be signed. Please address these in a follow-up patch.
-> 
+ - Xen
+ - Xen_PVH
+ - Jailhouse
+ - ACRN
+ - Intel TDX
 
-Thanks for raising the point. I'll do that asap.
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Carlos Bilbao <carlos.bilbao@kernel.org>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Elena Reshetova <elena.reshetova@intel.com>
+Cc: Fei Li <fei1.li@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/configs/defconfig.x86_64 | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/arch/x86/configs/defconfig.x86_64 b/arch/x86/configs/defconfig.x86_64
+index 156e9490e29b..514f8fdc2102 100644
+--- a/arch/x86/configs/defconfig.x86_64
++++ b/arch/x86/configs/defconfig.x86_64
+@@ -31,6 +31,12 @@ CONFIG_KEXEC=y
+ CONFIG_SMP=y
+ CONFIG_HYPERVISOR_GUEST=y
+ CONFIG_PARAVIRT=y
++CONFIG_PARAVIRT_SPINLOCKS=y
++CONFIG_XEN=y
++CONFIG_XEN_PVH=y
++CONFIG_JAILHOUSE_GUEST=y
++CONFIG_ACRN_GUEST=y
++CONFIG_INTEL_TDX_GUEST=y
+ CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
+ CONFIG_X86_MSR=y
+ CONFIG_X86_CPUID=y
 -- 
-Sylvain
+2.45.2
 
