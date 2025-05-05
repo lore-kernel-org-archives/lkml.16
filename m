@@ -1,132 +1,162 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0051F9F70;
-	Mon,  5 May 2025 15:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851311F9F70;
+	Mon,  5 May 2025 15:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460408; cv=none; b=LukfICHVZftTFJcu+J8N3eQh9CT10UkZtoomk/MAZ2ciurlEd/RL1lrdFbK9FRJMoyREe+Cb0XAVfq1qRoKettiRoxIRKYOWsH3l3PZGxoTUOEUC4/5w/LPiYGCun3/KryWDxpvXRM8HM8/8qihJH5e2BTayTpPESPM0KlZadX0=
+	t=1746460430; cv=none; b=SixjnfB6Rn6Joa0YLafNt70Gp64NYHgZnkRdPXF8My/wdOV6k4c98cEEKqjpF9T2yuN9xhIUJQ2R4XXuPeDYSi+YJzAHy7aRkZu/6sKIZnqy4e7jrvlJvs5FBt/45FI+/nSslIXT52CUoodjUWvuD+vwZTMZ8HVQMbGhRbTePgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460408; c=relaxed/simple;
-	bh=8RkBVqfox7fwCwPsAC9qgiss0kSBBf8x9It9eI8yJz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q3CToObH89Dic2/VwGrRc7TrJcR9NP2YCdBcshI4ZwJkJ9O/wHwfSG598+1rn9hKFCePBhLu3v8CSLAyiZxhdGrNh0tE1DH+4PWu/AvF+iuM1+MJMOZOl605sOZjxQgFUpomuq/d0+X9YU41lZZBob1IIdLJIH0tWLmJmeNbrsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5240764f7c1so1195068e0c.2;
-        Mon, 05 May 2025 08:53:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746460404; x=1747065204;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0eVBPdIANQkUOyeisDxdJnjXvcyAPwO1HmPMz4yFNDg=;
-        b=Dc2xzQwoY3T5G60Du4tjfHjFf74KCYNtHG981TdJo8KQs6xCx98FDCjpsbm5FpHuwN
-         PlKwFJwWXSt8Z1ridEYN3q/xpRBYwA4Nc1nZMbipS97x0WVSWTN7K3aH5liYg/rKlUeE
-         H5hMCZkQy82GlTCuehsljqzuC2iIeBk6tLJINSdwdj6usZFwYknodPhsicwR2uVETDe1
-         gEvEnSCJwr1eSsBPKR6fXfhHhvLNE7K9B8UN9y8CG6bHsAxM1xQMk/Dk21M2rFBBiEjM
-         qySWNGGy5LhBlJB3YYN7zRu5l6JkB73D2n4ImKghvO/vByWpejNwzdbC2fzH3WOh/9KP
-         0kGg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2kc/t8K7OLDJwIPtBYuZzKONt4xwLva4VEIQH3PPxIwEevqrDcg3m2vKinNtq8PaPL6vUEJxOHRS3@vger.kernel.org, AJvYcCWXsl9xoTPPfC+UF+9PVxRmTz+j4R7tnYwjwmAuZTiQ2hfbzDoDmO46Q2GRNFHEjY2lnptsso/dNR2XNkhOLmAlNQo=@vger.kernel.org, AJvYcCWbLZ37l2q3LmJUXLiNWIybgYAPMpWy1IBJieQZsxgQpetqMD4YZZ6m78/0Na5ri1gxENBDKGIM1okR@vger.kernel.org, AJvYcCX5oTD9d2PCYYlzILbdXBBdr9lSzdQnHQOwaX8xAs6TgDeNiwBfIri+6JMAcKN7DqNt2Ag+Hg/DtrFGloqo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUAHZn1coGg0yCjOP3sgEMFVh5md2yuKJSsWfqCuGARtFG58Iz
-	Fug+C5CjYKwV2YQG5XTPy31430UtbV51jUweWJvIaCxZfUub+zGIOivAVF5Q
-X-Gm-Gg: ASbGncvyMPJyag4mqNcbyk5SUBmdmwEngvZ6HXtqxbZvODvwN0tFTtV+xWI+0cWTFqP
-	fRuZjAvWXaD5DMZObKScxCaQ7mCCP/ckLfYhls9aDE/s17ynhXL2hGZYjDwfu8LoWqOf0SWCkqS
-	ev9xN6753i5K3LjCGlafe+AJOpzd4PN/HZ7HMLeoxm5A02C8aeCpo1i/LHmVq1csn8AoEwQiGHk
-	psthB3rOyLudlILXoue1wRyuF4BRq+mCEN8zDT3wtXKj30TgubvVJaThFBXcV86ov49o+0mU11K
-	IX8sV/2n52dewgScvZ3yIWkKHwoFcvj/NH3xKpTbAMJsEBVNaK8WKd7YmpTcFv+pkx+kZjDWEt0
-	Zki6As5gJkUoZ3A==
-X-Google-Smtp-Source: AGHT+IEfkfD2ItAR/7FtQTasBVwhsXN/svNz62QJ3Pvang6MOtscfcAd/EH7bRUNbHSt/oTwTl8bkQ==
-X-Received: by 2002:a05:6122:32cf:b0:526:42c2:8453 with SMTP id 71dfb90a1353d-52aed7a4e23mr6875008e0c.7.1746460404319;
-        Mon, 05 May 2025 08:53:24 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae401eed5sm1571402e0c.20.2025.05.05.08.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 08:53:23 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-8782c05137bso206108241.2;
-        Mon, 05 May 2025 08:53:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1EtGSNpDzeFXUv27gAs2ufS8evmfTpDap/IlfDrXxNfwuxUDYdVGnfyPLMHQ9KdPXn8HrpuIrzXvJ@vger.kernel.org, AJvYcCWJbmNUUvKxuXPy6d68uLVYKypURudONiAhplXp0SWcZh1udbHIL3ouYN4kMzPMTFYi6Vi11Dq/aCTX2bvRpuwi4sg=@vger.kernel.org, AJvYcCX4/ElyUhiK3ZYHZvuowwHs7as0QRJ2VXY8pSfUB3ToMKfiBA+GrK9FH9qK2vBivhM1bXY+Hx++CqVq0Jer@vger.kernel.org, AJvYcCXhtMplQPQ7JJ0YYDv2IpXvvliFQtZAy2iCqT/mlpu4PDMWgnpfMJKX0CXJxcvokFqbc+OHaX6ZyYjD@vger.kernel.org
-X-Received: by 2002:a05:6102:1492:b0:4b1:1eb5:8ee3 with SMTP id
- ada2fe7eead31-4dafb6ec028mr8759884137.22.1746460403317; Mon, 05 May 2025
- 08:53:23 -0700 (PDT)
+	s=arc-20240116; t=1746460430; c=relaxed/simple;
+	bh=U21AvJMNJlSMdc0qYquq7flkukxOR54eWkwMAX7w+yE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=X6Y4CA5bTvwpgbuqLZfOxWhs5aQnskc8Tp9/0gvaoy5E8mMGrXaRurKF1I7bUiE1lQpa9Tgn3y8NXzhba6B5EOZ3p3/WcMvLbP+gx5ZyuQ/W+o+X6StdLtskX3A6iyKzSOt9UGBwD92YakL096SDRw1z2eGqCbzqDXtkhDKgFwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZrmKG4rPRz9tZT;
+	Mon,  5 May 2025 17:53:38 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com> <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 5 May 2025 17:53:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
-X-Gm-Features: ATxdqUFlsIimMDXgDoVOyWKi-0CFxh4-I-vFRJaa5_Ji6cKjTXTxtCDDilP-BCg
-Message-ID: <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
-Subject: Re: [PATCH 2/7] clk: renesas: rzg2l-cpg: Move pointers at the
- beginning of struct
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 05 May 2025 17:53:33 +0200
+Message-Id: <D9OCJQ1HH5CM.2OHEAOF271GMC@buenzli.dev>
+Cc: "Dirk Behme" <dirk.behme@de.bosch.com>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v4 5/9] rust: device: Introduce PropertyGuard
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Rob Herring" <robh@kernel.org>
+References: <20250504173154.488519-1-remo@buenzli.dev>
+ <20250504173154.488519-6-remo@buenzli.dev>
+ <5946174b-3178-462d-bb59-1e0d6c5f4dda@de.bosch.com>
+ <D9O8WJ0RDNIA.4JYLWLYLBC2A@buenzli.dev>
+ <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+bzCc2r4H6=MfWq=9ku1SMCUL03KkCTeBPcqQrUEUMLg@mail.gmail.com>
 
-Hi Claudiu,
-
-On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Mon May 5, 2025 at 5:37 PM CEST, Rob Herring wrote:
+> On Mon, May 5, 2025 at 8:02=E2=80=AFAM Remo Senekowitsch <remo@buenzli.de=
+v> wrote:
+>>
+>> On Mon May 5, 2025 at 7:14 AM CEST, Dirk Behme wrote:
+>> > On 04/05/2025 19:31, Remo Senekowitsch wrote:
+>> >> This abstraction is a way to force users to specify whether a propert=
+y
+>> >> is supposed to be required or not. This allows us to move error
+>> >> logging of missing required properties into core, preventing a lot of
+>> >> boilerplate in drivers.
+>> >>
+>> >> It will be used by upcoming methods for reading device properties.
+>> >>
+>> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+>> >> ---
+>> >>  rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++=
+++
+>> >>  1 file changed, 59 insertions(+)
+>> >>
+>> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/prop=
+erty.rs
+>> >> index 6ccc7947f9c31..59c61e2493831 100644
+>> >> --- a/rust/kernel/device/property.rs
+>> >> +++ b/rust/kernel/device/property.rs
+>> >> @@ -123,3 +123,62 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+>> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+>> >>      }
+>> >>  }
+>> >> +
+>> >> +/// A helper for reading device properties.
+>> >> +///
+>> >> +/// Use [`Self::required_by`] if a missing property is considered a =
+bug and
+>> >> +/// [`Self::optional`] otherwise.
+>> >> +///
+>> >> +/// For convenience, [`Self::or`] and [`Self::or_default`] are provi=
+ded.
+>> >> +pub struct PropertyGuard<'fwnode, 'name, T> {
+>> >> +    /// The result of reading the property.
+>> >> +    inner: Result<T>,
+>> >> +    /// The fwnode of the property, used for logging in the "require=
+d" case.
+>> >> +    fwnode: &'fwnode FwNode,
+>> >> +    /// The name of the property, used for logging in the "required"=
+ case.
+>> >> +    name: &'name CStr,
+>> >> +}
+>> >> +
+>> >> +impl<T> PropertyGuard<'_, '_, T> {
+>> >> +    /// Access the property, indicating it is required.
+>> >> +    ///
+>> >> +    /// If the property is not present, the error is automatically l=
+ogged. If a
+>> >> +    /// missing property is not an error, use [`Self::optional`] ins=
+tead. The
+>> >> +    /// device is required to associate the log with it.
+>> >> +    pub fn required_by(self, dev: &super::Device) -> Result<T> {
+>> >> +        if self.inner.is_err() {
+>> >> +            dev_err!(
+>> >> +                dev,
+>> >> +                "{}: property '{}' is missing\n",
+>> >> +                self.fwnode.display_path(),
+>> >> +                self.name
+>> >> +            );
+>> >> +        }
+>> >> +        self.inner
+>> >> +    }
+>> >
+>> > Thinking about the .required_by(dev) I wonder if there will be cases
+>> > where we do *not* have a device? I.e. where we really have a fwnode,
+>> > only. And therefore can't pass a device. If we have such cases do we
+>> > need to be able to pass e.g. Option(dev) and switch back to pr_err() i=
+n
+>> > case of None?
+>>
+>> In that case, bringing back the previous .required() method seems
+>> reasonable to me. But only if we definitely know such cases exist.
 >
-> Move pointers at the beginning of structure definition to avoid padding,
-> if any.
+> They definitely exist. Any property in a child node of the device's
+> node when the child itself is not another device for example.
+
+I don't think that counts, because you do have a device in that
+situation. The log should be assicated with that. So callers are
+responsible to propagate a reference to the device to wherever the call
+to .required_by(dev) is happening.
+
+>> > From the beginning of our discussion I think to remember that the C AP=
+I
+>> > has both the fwnode_property_*() and device_property_*() because there
+>> > are use cases for the fwnode_property_*() API where is no device?
 >
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -1183,20 +1183,20 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
->  /**
->   * struct mstp_clock - MSTP gating clock
->   *
-> + * @priv: CPG/MSTP private data
-> + * @sibling: pointer to the other coupled clock
->   * @hw: handle between common and hardware-specific interfaces
->   * @off: register offset
->   * @bit: ON/MON bit
->   * @enabled: soft state of the clock, if it is coupled with another clock
-> - * @priv: CPG/MSTP private data
-> - * @sibling: pointer to the other coupled clock
->   */
->  struct mstp_clock {
-> +       struct rzg2l_cpg_priv *priv;
-> +       struct mstp_clock *sibling;
-
-I would move them below hw (which contains only pointers), so
-to_mod_clock() needs no calculations.
-
->         struct clk_hw hw;
->         u16 off;
->         u8 bit;
->         bool enabled;
-> -       struct rzg2l_cpg_priv *priv;
-> -       struct mstp_clock *sibling;
->  };
+> Correct.
 >
->  #define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
+>> I'm not sure what you're referring to, the closest thing I can think of
+>> is this comment by Rob [1] where he mentions the device_property_*()
+>> functions only exist in C for a minimal convenience gain and we may not
+>> want to keep that in Rust.
+>
+> The point there was if there's not the same convenience with Rust,
+> then we shouldn't keep the API.
+>
+> I think this came up previously, but I don't think it matters whether
+> we print the device name or fwnode path. If you have either one, you
+> can figure out both the driver and node. Arguably the fwnode path is
+> more useful because that's likely where the error is.
+>
+> Rob
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
