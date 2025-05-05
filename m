@@ -1,157 +1,122 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E699F1C3C18
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDF4DDC3;
+	Mon,  5 May 2025 18:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470834; cv=none; b=a9XMDOlqJpZ/pAzc3TgnWQVkOgckRP8Aup9+fu1bmWChR0SkIuHexZW5Jj6thwxrSXhPCWXc2dsw7U23kwaljR1zdBr5rjbezvLis907alxlY/j0HJddgBcV0EA8HyxPffz/fjACGGEMY3l+Hf7d9T+IfowZnVInJC7cRH3hwK8=
+	t=1746470948; cv=none; b=ZYusRfFXLSZzdYZdRXawQujPSD3zf3xVvpSF8R4+TU9JFfodiqxoTcv2TUllhDTURm7mSoJh2OXZYjnC6JxYRUDLXoMdCcn5MECYZhpPh7I1+4DW14FoFmJWn4xJplhVTTCxM746p5QYayhzSdlLEdF7qoaRtG7xnqyDFJ95VGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470834; c=relaxed/simple;
-	bh=uBJ7Sa/PrR5rePngwuntuhMPWvr7I69Vj5BV8YF5Qnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvh0d61BA0Io8rTQsSPo/ZWt7JIlVqICwToYrU3oKXeBu2wYW0BzBJV8+O7c3l7T7J0P5WUfKptoM5d8egKvvrjpL45DHs+7FqvTQ0uiF+fWftdvHiLZvyHYiNaLbrGy6IIQwMaprXcr+HV/f89O0n7MCmz3ss2H6hv5xWGNysg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C3y0wwI9; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746470948; c=relaxed/simple;
+	bh=0khgXCASiHK6JYlqgsdUdNJz4kXf5NEs+mufVRGpI3c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rgz9OCUcsjqYugVqGCVgq7jRzKdGlIT/TIF+dqiKGujFTh7BT43IVkuE7RLGf8Mw+WHFdlA/axCrVDugcJCYWCCXJBgNhcLShTGozqKjb2oby0/VKPCg7G9RS4JEtkPQuqTdZUUiGXylccKmfopNtW8S+J7s8D/o0VZD1n90pb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=l8K2CcGm; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C3y0wwI9"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e1eafa891so25645ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:47:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="l8K2CcGm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746470832; x=1747075632; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L+ZVcMDj6eiAq+w7fHgu0Ionz2mUULkjJy07tfVzR30=;
-        b=C3y0wwI93/TzbpMNwjEDs7rn8gi6OVtMdnAqMQVutgwYizMvJuC+1iXdjIxVMDNYll
-         gkUQMOhC9sIEgz8yQD9S8NWn9WYr+NUybXdloYDGTmi45kHnb3PCNbZAKs+xwku9ZBHB
-         5kLqAVHnFAowBHZsENj4dkpTpV0Q0mOv90yEZX7RwdVtAzGLbSwcVrXkQ/4t1H7Ia+Hv
-         j4zUQdDSzDsWU7fuH1bHzwf71Qm4UXqIhFc33zQZAZP2mpC09olKBm2xq1mehATDEzYn
-         uFC2PF8NBPscgSwVjFuukn4Qh5rtYjl3sI5p5ImSai2iA0UnJ1+ZqMWfwI/JstxESJZu
-         D6sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746470832; x=1747075632;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L+ZVcMDj6eiAq+w7fHgu0Ionz2mUULkjJy07tfVzR30=;
-        b=KuFV1QgEUS2m345dcT5T6OpxgSPVQZycxzvetyWjhH+AqpJXelugqTgDW+OsVWuqXR
-         zIIAZeUcY9oYPSvVuDJr1bByStIXBarcZRDGFTJieUi8wKr8zQeg2diL0DD6ZGQg/umF
-         igw/xfhYrWapao6gvDN1+7qni+ZzIy1kHOyIV4lMjqapEbv/2Iw6xCyYmhmXtz5BUmdP
-         IsNuH4OziouEDGNud5dKLQLxKL8fJk9xDfVM+qlOWvxUnSSnYFVEzdpkN3o0VsHX6el2
-         pdFfpwhSaEIVde8zhG0fYt0DeXPvbhhgnaKpK3jZNOdC2oV60WSkjA4nysS8o7N3SEfJ
-         dPAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4DC8tfwCJ3ufQK9Airkk1zeRZAWL81Ft5HnyTDtnQpSfvULqdGK1Am6aShV+u7E57Wh4iEwqb7h4fBz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGUu7+BZEFRp/C3ZE7lr0Eo007TYeiyIRPtRBWoLz+LN4s6nmy
-	+CN6qyWQEll5pOZf11r8xjI9vv4blcHOsSQS2yUoSgeDjbpE2RppAW4kNTFt4w==
-X-Gm-Gg: ASbGnctYU+ZoFZuqtZV4tDnKTQ4fCXjES98blGs4x5ylYn24XqLpr8xZ6abpa+CMaHT
-	bv7NEh8ODM7dE4pp3lITsWLB2o1L8591E34BZFrEV+KrlIzq03OqEaYSAs1snSJ66thON3KoGgb
-	GlFd4F773/fkwv/u3Jt5GhNrCCr/aE2MmaSKsoRdaVVP2AFw7pKvFntHfSy/WlqJRudYJrQhR8R
-	4fDe5YWpF5pOxdU6qg90Lo7ySauOGajpsv0Sk/tcmSBw5UAkBm8QYWmrcdZ/qXC83b1EtNxtNZ1
-	qjI5Iv+m4Q6KXvd0lmammcCKeqRG87rpzrA6WiganH7sIzHF0dZl9gCU0SD6O7+N2sggPfk4MPV
-	7wTSvxbg=
-X-Google-Smtp-Source: AGHT+IF+yI+Dgd32z62Vz4IkzG0Ih79IcbEYi6NeCGDCJdKqEO9PIlfWJBKMKIGX6EtzZ1WS3NzDOg==
-X-Received: by 2002:a17:902:da2d:b0:21f:2ded:bfc5 with SMTP id d9443c01a7336-22e3508e4d0mr352355ad.28.1746470831803;
-        Mon, 05 May 2025 11:47:11 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522054esm58673755ad.118.2025.05.05.11.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 11:47:11 -0700 (PDT)
-Date: Mon, 5 May 2025 18:47:00 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
-	corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
-	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
-	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
-	yi.l.liu@intel.com, mshavit@google.com, zhangzekun11@huawei.com,
-	iommu@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
-	vasant.hegde@amd.com
-Subject: Re: [PATCH v2 13/22] iommufd: Add mmap interface
-Message-ID: <aBkHpJIeDxJJSxeS@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <7be26560c604b0cbc2fd218997b97a47e4ed11ff.1745646960.git.nicolinc@nvidia.com>
- <aBE1gUz9y415EuBQ@google.com>
- <aBE38GwvGBnpRNLc@google.com>
- <aBE47aySzDp2lsAz@Asurada-Nvidia>
- <aBE800DsAOOZ4ybv@google.com>
- <aBE/CD4Ilbydnmud@Asurada-Nvidia>
- <aBFGCxcTh54pecsk@google.com>
- <aBFIsYg+ITU8RvTT@Asurada-Nvidia>
- <20250505165552.GN2260709@nvidia.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746470946; x=1778006946;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Vx0lieCdiisZ+VzesD1JWNDpyrV2ThBTOINQevgKwOE=;
+  b=l8K2CcGmawHi51/Rq05j5OfYWNqatpBmub3atQSrby86TULpgS6NwaaJ
+   r/ql63G+57P9snl4+1/D35pqY0L0YFJn6IA9XPRS2c1+zPI64DzCspB0I
+   vUwPWZPKAyMerazuyP2/xXrfzhg2ogQu1EET0SUYtk24KkPZAQRs4XODk
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,264,1739836800"; 
+   d="scan'208";a="294767473"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2025 18:49:00 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:55221]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.32:2525] with esmtp (Farcaster)
+ id fe65f5b7-16b4-42d9-a0df-dc3694f4ff37; Mon, 5 May 2025 18:48:59 +0000 (UTC)
+X-Farcaster-Flow-ID: fe65f5b7-16b4-42d9-a0df-dc3694f4ff37
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 18:48:59 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 5 May 2025 18:48:55 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
+	<davem@davemloft.net>, <david@readahead.eu>, <edumazet@google.com>,
+	<horms@kernel.org>, <jack@suse.cz>, <jannh@google.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <lennart@poettering.net>,
+	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC v3 04/10] coredump: add coredump socket
+Date: Mon, 5 May 2025 11:48:43 -0700
+Message-ID: <20250505184847.15534-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250505-work-coredump-socket-v3-4-e1832f0e1eae@kernel.org>
+References: <20250505-work-coredump-socket-v3-4-e1832f0e1eae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250505165552.GN2260709@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWC001.ant.amazon.com (10.13.139.233) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Mon, May 05, 2025 at 01:55:52PM -0300, Jason Gunthorpe wrote:
-> On Tue, Apr 29, 2025 at 02:46:25PM -0700, Nicolin Chen wrote:
-> > > > > > > > > +	immap = kzalloc(sizeof(*immap), GFP_KERNEL);
-> > > > > > > > > +	if (!immap)
-> > > > > > > > > +		return -ENOMEM;
-> > > > > > > > > +	immap->pfn_start = base >> PAGE_SHIFT;
-> > > > > > > > > +	immap->pfn_end = immap->pfn_start + (size >> PAGE_SHIFT) - 1;
-> > > > > > > > > +
-> > > > > > > > > +	rc = mtree_alloc_range(&ictx->mt_mmap, immap_id, immap, sizeof(immap),
-> > > > > > > > 
-> > > > > > > > I believe this should be sizeof(*immap) ?
-> > > > > > > 
-> > > > > > > Ugh, Sorry, shouldn't this be size >> PAGE_SHIFT (num_indices to alloc) ?
-> > > > > > 
-> > > > > > mtree_load() returns a "struct iommufd_map *" pointer.
-> > > > > 
-> > > > > I'm not talking about mtree_load. I meant mtree_alloc_range takes in a
-> > > > > "size" parameter, which is being passed as sizeof(imap) in this patch.
-> > > > > IIUC, the mtree_alloc_range, via mas_empty_area, gets a range that is
-> > > > > sufficient for the given "size". 
-> > > > > 
-> > > > > Now in this case, "size" would be the no. of pfns which are mmap-able.
-> > > > > By passing sizeof(immap), we're simply reserving sizeof(ptr) i.e. 8 pfns
-> > > > > for a 64-bit machine. Whereas we really, just want to reserve a range
-> > > > > for size >> PAGE_SHIFT pfns.
-> > > > 
-> > > > But we are not storing pfns but the immap pointer..
-> 
-> That doesn't seem right, the entire point of using a maple tree is to
-> manage the pfn number space, ie the pgoff argument to mmap.
-> 
-> So when calling mtree_alloc_range:
-> 
-> int mtree_alloc_range(struct maple_tree *mt, unsigned long *startp,
-> 		void *entry, unsigned long size, unsigned long min,
-> 		unsigned long max, gfp_t gfp)
-> 
-> size should be the number of PFNs this mmap is going to use, which is
-> not sizeof() anything
-> 
-> min should be 0 and max should be uh.. U32_MAX >> PAGE_SHIFT
-> IIRC.. There is a different limit for pgof fon 32 bit mmap()
-> 
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 05 May 2025 13:13:42 +0200
+> @@ -801,6 +846,40 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  		}
+>  		break;
+>  	}
+> +	case COREDUMP_SOCK: {
+> +		struct file *file __free(fput) = NULL;
+> +#ifdef CONFIG_UNIX
+> +		struct socket *socket;
+> +
+> +		/*
+> +		 * It is possible that the userspace process which is
+> +		 * supposed to handle the coredump and is listening on
+> +		 * the AF_UNIX socket coredumps. Userspace should just
+> +		 * mark itself non dumpable.
+> +		 */
+> +
+> +		retval = sock_create_kern(&init_net, AF_UNIX, SOCK_STREAM, 0, &socket);
+> +		if (retval < 0)
+> +			goto close_fail;
+> +
+> +		file = sock_alloc_file(socket, 0, NULL);
+> +		if (IS_ERR(file)) {
+> +			sock_release(socket);
+> +			retval = PTR_ERR(file);
+> +			goto close_fail;
+> +		}
+> +
+> +		retval = kernel_connect(socket,
+> +					(struct sockaddr *)(&coredump_unix_socket),
+> +					COREDUMP_UNIX_SOCKET_ADDR_SIZE, 0);
 
-This is what I was thinking as well.. why use a maple tree if we aren't
-allocating a range to manage pfns.. I was still thinking about this in
-v3 which made me hold back from acking this. I'm glad we clarified this!
+This blocks forever if the listener's accept() queue is full.
 
-> > > Ohh... so we are storing the raw pointer in the mtree.. I got confused
-> > > with the `LONG_MAX >> PAGE_SHIFT`.. Sorry about the confusion!
-> > 
-> > Yes. We want the pointer at mtree_load(). The pfn range is for
-> > validation after mtree_load(). And we are likely to stuff more
-> > bits into the immap structure for other verifications.
-> 
-> Validation is fine, but you still have to reserve the whole pfn number
-> space to get sensible non-overlapping pgoffs out of the allocator.
-> 
-> Jason
+I think we don't want that and should pass O_NONBLOCK.
 
-Thanks
-Praan
+To keep the queue clean is userspace responsibility, and we don't
+need to care about a weird user.
+
+
+> +		if (retval)
+> +			goto close_fail;
+> +
+> +		cprm.limit = RLIM_INFINITY;
+> +#endif
+> +		cprm.file = no_free_ptr(file);
+> +		break;
+> +	}
+>  	default:
+>  		WARN_ON_ONCE(true);
+>  		retval = -EINVAL;
