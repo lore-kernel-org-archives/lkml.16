@@ -1,99 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E9229290C;
-	Mon,  5 May 2025 22:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6B82741CF;
+	Mon,  5 May 2025 22:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746483444; cv=none; b=DqCJ2ji+CnQ/kMcklfmMudBAVjc4VK0ka29/3l2O//RAkwoiQVfggVmJUrr48c4P+Z+IzNWkboqDWrlgy5bd6N+a119yRzrFxGEDRqt7J6EOCPnHAkqwOGEU+bSgbIdeaWVKjIVvdf/Q1jA7CI1cgQJfUXUu8bWNWlsOs476t9g=
+	t=1746483487; cv=none; b=dmxFkpuFWTq+Zl2mw201S0WzexpFudpn36hYSGr4F0r48wKnZJmnHiT/7Qv2wu98k+ER4E+z1kS4Tjaqv04o50TApiW0LWFVR7R/MU3m/wbUI2ufR8EoWvEssLWWg0ekQ6WXMFlOx+oj8kgS7TKQlQQrB0u7dXf01/H4As6B3m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746483444; c=relaxed/simple;
-	bh=MzX9AmNrEMzOaOZaVzfQFEUOLYHVPhdROtRvsA3H9+k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XbvsqvWqfNFqXwlAfigBSWMt8DJgmAC6Qc4E+sBSFq7u1w638tatppNU152nxBSdXUDdVpWplbsoKjqGS7n7fA2gf33FF8MdaRZ9XAYTTy9p+Nvc/QulV9NVw/ZxLakzd4iFtD2YWnV6ueo735bgRf9yGo0KITX0TNFHKpNwkMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvH/6fF5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746483487; c=relaxed/simple;
+	bh=ICQOgm/oxvbMn3j3DrNQVqEImZIBabjshKw7nTcOCxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KO4fkGdgz5CZiHS8oTQ0Uf3gqji0NPb/LZrfe9NHolmX/ocm8ZN6fNZYCUB5zuG8AFhGtbsomjwFgxpZoIvc2BcbPhsmPaoWbzdJV5m0BImeVNXoLsjZe3uLqEH7gZDtopRKvMLm82Slua6CzA803mAzLspOUMrnB9tlZUGraMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DR74P9QT; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvH/6fF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3B7C4CEF9;
-	Mon,  5 May 2025 22:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746483444;
-	bh=MzX9AmNrEMzOaOZaVzfQFEUOLYHVPhdROtRvsA3H9+k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CvH/6fF5SgBsBjf0T/4CZx+Fco7uL9bHWUimJHlM586/J50+4lalJb74PD9SZJ7bN
-	 8AA6TpylJ+RgKiRPfcJRocHwqgTUjW/1T+ayp3uJ7TrNaaa4MZkJaLmZJpJeexjbE2
-	 WNp4vyQOiffaeRyR921TRD7obHTvTAC4pGp2Eq1zXcwT6SR7IgWFE2VNGL3kFXQzU3
-	 hKqHerAWcxfktosKdALfl6IWIjaWIa5iiXv7WSA0TW1bZ+qzCFdJvHYtccfEgO6AZO
-	 1TAE1TxC+OxYNwxA5RpsdirnMXNyJdCdCEfFxD1YsztKDyxMdTnuEzXIVdRaFrILNK
-	 TsjLsvKyUd58w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Quan Zhou <quan.zhou@mediatek.com>,
-	Felix Fietkau <nbd@nbd.name>,
-	Sasha Levin <sashal@kernel.org>,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	sean.wang@mediatek.com,
-	mingyen.hsieh@mediatek.com,
-	deren.wu@mediatek.com,
-	linux-wireless@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.14 082/642] wifi: mt76: mt7925: fix fails to enter low power mode in suspend state
-Date: Mon,  5 May 2025 18:04:58 -0400
-Message-Id: <20250505221419.2672473-82-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DR74P9QT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B824B41E0D;
+	Mon,  5 May 2025 22:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746483482;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eKS/cb+SXa/UAIJAbrppHX30ENDfVc1mR64QNynsoJ0=;
+	b=DR74P9QTZJGbK9Z79HPwvtbYGMuId/FJAYXc0xvaA64UZWDmBAagBMoKtWL2xXdl/x079W
+	m63W6CroOIhAM4xgrppK6BouWErcNqQsYWRPi7ampHQbHjX4T9G24pP32Tz6+Mg7q7nWYw
+	X2w6npZ4QLKGezj3R/RWR2SIeH+B16WUP9/sg4EtFE0v1FfYptRGJCoYEKDjOwoCPS/org
+	XXeHAqendbaizLhLpPBFGYhOLBi6lwGoEHwrL9AYWBwD+aLurH175au+kI8pWVoBv+vPGN
+	ohkgBa8r9wMKsiK/C/uth99HI9KGFT18U/5gYwk6xLYiAIBGamkMIb89ZvhUig==
+Date: Tue, 6 May 2025 00:17:58 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jason Xing <kernelxing@tencent.com>, Richard Cochran
+ <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, "Russell King (Oracle)"
+ <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next] net: Add support for providing the PTP
+ hardware source in tsinfo
+Message-ID: <20250506001758.297449f1@kmaincent-XPS-13-7390>
+In-Reply-To: <20250429150657.1f32a10c@kernel.org>
+References: <20250425-feature_ptp_source-v1-1-c2dfe7b2b8b4@bootlin.com>
+ <20250429150657.1f32a10c@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkedvvdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmedutgelrgemfegusghfmeehrgegugemvgefvggsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemudgtlegrmeefuggsfhemhegrgegumegvfegvsgdphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtv
+ ghrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: Quan Zhou <quan.zhou@mediatek.com>
+Thanks for the review!
 
-[ Upstream commit 2d5630b0c9466ac6549495828aa7dce7424a272a ]
+On Tue, 29 Apr 2025 15:06:57 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-The mt7925 sometimes fails to enter low power mode during suspend.
-This is caused by the chip firmware sending an additional ACK event
-to the host after processing the suspend command. Due to timing issues,
-this event may not reach the host, causing the chip to get stuck.
-To resolve this, the ACK flag in the suspend command is removed,
-as it is not needed in the MT7925 architecture. This prevents the
-firmware from sending the additional ACK event, ensuring the device
-can reliably enter low power mode during suspend.
+> On Fri, 25 Apr 2025 19:42:43 +0200 Kory Maincent wrote:
+> > Multi-PTP source support within a network topology has been merged,
+> > but the hardware timestamp source is not yet exposed to users.
+> > Currently, users only see the PTP index, which does not indicate
+> > whether the timestamp comes from a PHY or a MAC.
+> >=20
+> > Add support for reporting the hwtstamp source using a
+> > hwtstamp-source field, alongside hwtstamp-phyindex, to describe
+> > the origin of the hardware timestamp.
+> >=20
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > ---
+> > Not sure moving the hwtstamp_source enum to uapi/linux/net_tstamp.h and
+> > adding this header to ynl/Makefile.deps is the best choice. Maybe it is
+> > better to move the enum directly to ethtool.h header. =20
+>=20
+> Weak preference for the YAML and therefore ethtool.h from my side.
+> That way the doc strings will propagate to more places, like the HTML
+> docs.
 
-Signed-off-by: Quan Zhou <quan.zhou@mediatek.com>
-Link: https://patch.msgid.link/d056938144a3a0336c3a4e3cec6f271899f32bf7.1736775666.git.quan.zhou@mediatek.com
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 3 +++
- 1 file changed, 3 insertions(+)
+Ack.
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-index e6d053c0cdbd2..8dc5dc0af1b1b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/mcu.c
-@@ -3294,6 +3294,9 @@ int mt7925_mcu_fill_message(struct mt76_dev *mdev, struct sk_buff *skb,
- 		else
- 			uni_txd->option = MCU_CMD_UNI_EXT_ACK;
- 
-+		if (cmd == MCU_UNI_CMD(HIF_CTRL))
-+			uni_txd->option &= ~MCU_CMD_ACK;
-+
- 		goto exit;
- 	}
- 
--- 
-2.39.5
+> > diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+> > index
+> > ff0758e88ea1008efe533cde003b12719bf4fcd3..1414aed0b6adeae15b56e7a99a7d9=
+eeb43ba0b6c
+> > 100644 --- a/include/linux/net_tstamp.h +++ b/include/linux/net_tstamp.h
+> > @@ -13,12 +13,6 @@
+> >  					 SOF_TIMESTAMPING_TX_HARDWARE | \
+> >  					 SOF_TIMESTAMPING_RAW_HARDWARE)
+> > =20
+> > -enum hwtstamp_source {
+> > -	HWTSTAMP_SOURCE_UNSPEC, =20
+>=20
+> when is unspec used in practice? Only path I could spot that may not
+> set it is if we fetch the data by PHC index?
 
+Indeed it is not used. I think it get merged in one of the several version
+tackling the "make PTP selectable support" work. As it is finally not used =
+we
+could drop it.
+=20
+> > -	HWTSTAMP_SOURCE_NETDEV,
+> > -	HWTSTAMP_SOURCE_PHYLIB,
+> > -};
+> > -
+> >  /**
+> >   * struct hwtstamp_provider_desc - hwtstamp provider description
+> >   * =20
+>=20
+> > diff --git a/include/uapi/linux/net_tstamp.h
+> > b/include/uapi/linux/net_tstamp.h index
+> > a93e6ea37fb3a69f331b1c90851d4e68cb659a83..bf5fb9f7acf5c03aaa121e0cda3c0=
+b1d83e49f71
+> > 100644 --- a/include/uapi/linux/net_tstamp.h +++
+> > b/include/uapi/linux/net_tstamp.h @@ -13,6 +13,19 @@
+> >  #include <linux/types.h>
+> >  #include <linux/socket.h>   /* for SO_TIMESTAMPING */
+> > =20
+> > +/**
+> > + * enum hwtstamp_source - Source of the hardware timestamp
+> > + * @HWTSTAMP_SOURCE_UNSPEC: Source not specified or unknown
+> > + * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from the net devi=
+ce =20
+>=20
+> We should probably document that netdev here means that the timestamp
+> comes from a MAC or device which has MAC and PHY integrated together?
+
+Yes, I will.
+
+>=20
+> > + * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one of the P=
+HY
+> > + *			    devices of the network topology
+> > + */
+> > +enum hwtstamp_source {
+> > +	HWTSTAMP_SOURCE_UNSPEC,
+> > +	HWTSTAMP_SOURCE_NETDEV,
+> > +	HWTSTAMP_SOURCE_PHYLIB,
+> > +}; =20
+>=20
+> > --- a/net/ethtool/common.c
+> > +++ b/net/ethtool/common.c
+> > @@ -920,12 +920,20 @@ int ethtool_get_ts_info_by_phc(struct net_device =
+*dev,
+> >  		struct phy_device *phy;
+> > =20
+> >  		phy =3D ethtool_phy_get_ts_info_by_phc(dev, info,
+> > hwprov_desc);
+> > -		if (IS_ERR(phy))
+> > +		if (IS_ERR(phy)) {
+> >  			err =3D PTR_ERR(phy);
+> > -		else
+> > -			err =3D 0;
+> > +			goto out;
+> > +		}
+> > +
+> > +		info->phc_source =3D HWTSTAMP_SOURCE_PHYLIB;
+> > +		info->phc_phyindex =3D phy->phyindex;
+> > +		err =3D 0;
+> > +		goto out; =20
+>=20
+> The goto before the else looks a bit odd now.
+> Can we return directly in the error cases?
+> There is no cleanup to be done.
+
+Yes indeed.
+
+> > +	} else {
+> > +		info->phc_source =3D HWTSTAMP_SOURCE_NETDEV;
+> >  	}
+> > =20
+> > +out:
+> >  	info->so_timestamping |=3D SOF_TIMESTAMPING_RX_SOFTWARE |
+> >  				 SOF_TIMESTAMPING_SOFTWARE;
+> > =20
+> > @@ -947,10 +955,14 @@ int __ethtool_get_ts_info(struct net_device *dev,
+> > =20
+> >  		ethtool_init_tsinfo(info);
+> >  		if (phy_is_default_hwtstamp(phydev) &&
+> > -		    phy_has_tsinfo(phydev))
+> > +		    phy_has_tsinfo(phydev)) {
+> >  			err =3D phy_ts_info(phydev, info);
+> > -		else if (ops->get_ts_info)
+> > +			info->phc_source =3D HWTSTAMP_SOURCE_PHYLIB;
+> > +			info->phc_phyindex =3D phydev->phyindex;
+> > +		} else if (ops->get_ts_info) {
+> >  			err =3D ops->get_ts_info(dev, info);
+> > +			info->phc_source =3D HWTSTAMP_SOURCE_NETDEV; =20
+>=20
+> Let's move the assignment before the calls if we can?
+> Otherwise someone adding code below may miss the fact that err may
+> already be carrying an unhandled error.
+
+Ack.
+
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
