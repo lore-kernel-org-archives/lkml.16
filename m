@@ -1,94 +1,209 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5A82E62C
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23E1176AC8
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 07:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746429286; cv=none; b=NtU8g710Qlu/RRqI+qQNV207zFpU/zaNJBG9ySLlN5/L4iJSNfAB4AukJ2gGsTYJ7zLd4O5cM9OCFJVhuuyQJEz7qe4Q2NtT2hg4mkIbhM4QFAn6HQN+HVTlN196sErE7wj7D4Z2O7nGuDM6QxqVfJGep3ptnN/4xMHKeOlt6Lc=
+	t=1746429373; cv=none; b=tNEVsjqcfQf8IftXCgK6V8+qGzMkYEcVZBnC9F09h2zVHbV9Dml7TUG6fF7+tPbMl47KUqI2NFR3mWO9UZ2NqI3UpTor1hBbTA9Jl28w3Anp+C7B92/P0yvBvsiu+I+qCxVtE8DW9HXS7WDDy5vMv8/Vr6Su7G/C/IiHiZVNpT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746429286; c=relaxed/simple;
-	bh=ntvgR+0RhYHXBZFPpk/GytmrkyvhnGwsT0YHZ3OosHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ftpAqiMS9gMkNPsQP0C9EjiofbeZqYj7VXIKcAu0aLTe1uUISyvd3h6XoyQwYv7aGZhHBIFVbYbo88mgDHtKJGgYcssPAXeIASkt7U2RIw7602lgp6zllmnbMMLl7FM8AI+YGmZDjmAEMMhUKwtJoE00QuTfkBRqZK0wArgG1yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jjN/yH8T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3kk6zNl3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746429373; c=relaxed/simple;
+	bh=dWsgs3StDp5NfrqEmNwBsxpG0yY5EeSOTheWPqbEBfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rxyMZOQF+ERBtEZdEY6RuDbh4zowcSXFXuDRA68c844JCJ5NUQaauhVYNj/clK29U6cEQlGcGr5KF3djtnynM555Vv0LT2KdANVcLv1irMNLtzUU3BzyuXJ1sTUU0Xfn4fYGjtfJ9BtEiTW2BcmRT4LS/XQO16BgXLsZmsEN0Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=Us9Q1sqH; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jjN/yH8T";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3kk6zNl3"
-Date: Mon, 5 May 2025 09:14:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746429283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FHPB3XEe0MVRw2MyKFTBl8Q3rrWxQtgQWTIUHObvouI=;
-	b=jjN/yH8T9vN6zYWCDUPD2t+Mvu0wbNKHloKXenBu3pNKe6gmsoDndMYH5IwcIyYipJoZNw
-	bgK3heiThvOwAoaFA6A/En67btHyHrMTYq+syIlml6kz5uIN7TL9Xd35kM8CNid+HMPfFB
-	zdvw8SI1+ynqDtKk5PglXKEBmhJypttv578P4giulfTi1RjSrLwjAz38wR4QXOTA/jbED7
-	MqVcmj1VVqv3YI3803L5mjLRtlDzbGrjuw6m8Xm3gM7oY0yWJqfqLYYYgvRKDdV0LoD6MJ
-	8qUjjYCHmQAeu9UCGm0ikvve+v6Lj09nhC2GRF7kL+GdWDOVWb6NqAlAKvfybQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746429283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FHPB3XEe0MVRw2MyKFTBl8Q3rrWxQtgQWTIUHObvouI=;
-	b=3kk6zNl3kE6OD6HkwzWD/cbJVgJjKa6VjMpeH1hAZh7HzM3Pbga1bNAK+7/AdBgzzTFeE3
-	Tch6irunWRWeUOBw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH v12 15/21] futex: Allow to make the private hash immutable
-Message-ID: <20250505071438.C4_3Mx0S@linutronix.de>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-16-bigeasy@linutronix.de>
- <20250502180154.GY4439@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="Us9Q1sqH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1746429371;
+ bh=uCAJ/1smKtAmYm+WKYPnozKlTBBJTpkCk5xD4ZLhIP8=;
+ b=Us9Q1sqHAmZrYcY83ISen4PTXBhChQ6uQAfgQkqElm+O3GKRoWTygphpWVOYJQefh8d2MRhMZ
+ Q6NzMHTVAZoe81h3fT+NZMSrSNtyIqmVvP1GYxVQ54axnX1OZbyCTHhrarmKDT2NnbBTUwENzsG
+ aaWawX2w7NmwaTjL7qXUz55CLwY98fq/Jh0VjJXmJXHMnfyiZzgAdNYeEXFynOwRdHYUpsqWXOS
+ aRVRx+99V2Tx/ZxcSeuJyQ8u/O36umGCGtpO/lxKL5tknXjtzNVRM/vNFgbRiMDtp9v1D2DueEK
+ XNpEQc16LbXOr/oGm7AcE10dowMdinkTHIBnH9J3t4Tg==
+X-Forward-Email-ID: 6818635ebaed44ffca19f3f7
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.2
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <727f7797-3a0c-426a-8f74-6adfb3215dc7@kwiboo.se>
+Date: Mon, 5 May 2025 09:06:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250502180154.GY4439@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] arm64: dts: rockchip: Add I2C controllers for
+ RK3528
+To: Yao Zi <ziyao@disroot.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chukun Pan <amadeus@jmu.edu.cn>,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250417120118.17610-3-ziyao@disroot.org>
+ <20250417120118.17610-5-ziyao@disroot.org>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250417120118.17610-5-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-05-02 20:01:54 [+0200], Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 06:29:15PM +0200, Sebastian Andrzej Siewior wrote:
-> > My initial testing showed that
-> > 	perf bench futex hash
-> > 
-> > reported less operations/sec with private hash. After using the same
-> > amount of buckets in the private hash as used by the global hash then
-> > the operations/sec were about the same.
-> > 
-> > This changed once the private hash became resizable. This feature added
-> > a RCU section and reference counting via atomic inc+dec operation into
-> > the hot path.
-> > The reference counting can be avoided if the private hash is made
-> > immutable.
-> > Extend PR_FUTEX_HASH_SET_SLOTS by a fourth argument which denotes if the
-> > private should be made immutable. Once set (to true) the a further
-> > resize is not allowed (same if set to global hash).
-> > Add PR_FUTEX_HASH_GET_IMMUTABLE which returns true if the hash can not
-> > be changed.
-> > Update "perf bench" suite.
+On 2025-04-17 14:01, Yao Zi wrote:
+> Describe I2C controllers shipped by RK3528 in devicetree. For I2C-2,
+> I2C-4 and I2C-7 which come with only a set of possible pins, a default
+> pin configuration is included.
 > 
-> Does the below make sense? This changes arg4 into a flags field and uses
-> bit0 for immutable.
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+
+Reading from the i2c EEPROM on a E20C works with this, so this is:
+
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+
+Regards,
+Jonas
+
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 110 +++++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
 > 
-> (the point where I got upset is where arg4==2 was accepted :-)
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> index 826f9be0be19..2c9780069af9 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> @@ -24,6 +24,14 @@ aliases {
+>  		gpio2 = &gpio2;
+>  		gpio3 = &gpio3;
+>  		gpio4 = &gpio4;
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +		i2c4 = &i2c4;
+> +		i2c5 = &i2c5;
+> +		i2c6 = &i2c6;
+> +		i2c7 = &i2c7;
+>  		serial0 = &uart0;
+>  		serial1 = &uart1;
+>  		serial2 = &uart2;
+> @@ -465,6 +473,108 @@ uart7: serial@ffa28000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		i2c0: i2c@ffa50000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa50000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C0>, <&cru PCLK_I2C0>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c1: i2c@ffa58000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa58000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C1>, <&cru PCLK_I2C1>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c2: i2c@ffa60000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa60000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C2>, <&cru PCLK_I2C2>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&i2c2m1_xfer>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c3: i2c@ffa68000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa68000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C3>, <&cru PCLK_I2C3>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c4: i2c@ffa70000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa70000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C4>, <&cru PCLK_I2C4>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&i2c4_xfer>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c5: i2c@ffa78000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa78000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C5>, <&cru PCLK_I2C5>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c6: i2c@ffa80000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa80000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C6>, <&cru PCLK_I2C6>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c7: i2c@ffa88000 {
+> +			compatible = "rockchip,rk3528-i2c",
+> +				     "rockchip,rk3399-i2c";
+> +			reg = <0x0 0xffa88000 0x0 0x1000>;
+> +			clocks = <&cru CLK_I2C7>, <&cru PCLK_I2C7>;
+> +			clock-names = "i2c", "pclk";
+> +			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&i2c7_xfer>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		saradc: adc@ffae0000 {
+>  			compatible = "rockchip,rk3528-saradc";
+>  			reg = <0x0 0xffae0000 0x0 0x10000>;
 
-I see, it makes sense. It makes sense and leaves room for later.
-
-Sebastian
