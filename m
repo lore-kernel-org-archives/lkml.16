@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAB42D3209;
-	Mon,  5 May 2025 22:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F502DA52D;
+	Mon,  5 May 2025 22:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485559; cv=none; b=ClAXeRBaVOVbfwGxbMS+XECdfoBSDi68ovYenW/ugpBleujEKA1m5pZap8jeIpYSKeUs/N7AP8ln8lXsKKmdVM+PViaskOqJW8evchxAr2JcQQCDRK4LNsu57IrwQAMqtptv1PwWNcOaC0xH643ZOkn5CxIz665yOLQryvhdpX4=
+	t=1746485566; cv=none; b=h9CZLkNdUKDNKxEzETU/ggAPZyNAxS2g4Ut41k1N4Yw90FDQqdjFMiWEiwgdqZa4v44cxKrDzMW4i6qLVfiNYr711P9V+AYRaIZd9rTBKfEyx5vAUOzfX3RCDXETfaX/4x9p5KT7YD2K9YTiss5Ys7ANODsFy8Via8eCR51yBS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485559; c=relaxed/simple;
-	bh=okfQ0p2BkEh19Ojv1U+9vH9B+4z3vlhl41JYyyWl/RM=;
+	s=arc-20240116; t=1746485566; c=relaxed/simple;
+	bh=GXJ3ln4fmVC95xJ/nz54IuqackY6monmNUpFwtpRZj8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nubDtsp2jaPtjPrg5nut/1EO18QcD0Q27i2QDk9UYTgzz0yekRCIj85n3BQc3dO+GDxcHLWEqetR7CxGV6OYFLbs1iVbpfNm9eArTcaV1t5b/19lAJgjBiZPJQbYkY/cetSvPptehBSiI3CbHOn0d3sWDdJy0SAxOO5SMX/+X5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLI17ZQ7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aE+wpu01HPbKF31B1PjRNBE7/HZGg03w/kC/c/FwCWScijtj3gHXthniQE8hbWCJDRM+Duqph0C1ok0N2+hbnpnpBwrLCEder8PE2hVQOAHgUfMqs/Ynsi3nCIEETlUdAb57SgwK1dSQlBS6f30ZqEfk7AaYDYLcpw9+siEBWc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dq8U1lWv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLI17ZQ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F7D7C4CEE4;
-	Mon,  5 May 2025 22:52:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dq8U1lWv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752F8C4CEEE;
+	Mon,  5 May 2025 22:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485559;
-	bh=okfQ0p2BkEh19Ojv1U+9vH9B+4z3vlhl41JYyyWl/RM=;
+	s=k20201202; t=1746485566;
+	bh=GXJ3ln4fmVC95xJ/nz54IuqackY6monmNUpFwtpRZj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cLI17ZQ72Yb8rbmTc922eXCL6KhWzCVZQ7XaO5gK/GXWMICW2wCjvB3vXFaiHMngP
-	 5MIsB2qOtzQYtAHZT+dDYqRjBo267TTz/MmGpGMELXNt7Ix0z/1UEsn8f3BxweQTQk
-	 wXvVibEyod/0TXV1ZcFS5jDq97a6SPDBouJZGsZWhNAj7ELj6PXp2z/yw3X6xSmS10
-	 EJ/aaQl68BaWpAPNDriPv5f2FICmxxgoJdDRoXYQdNsp5IH2719nXDtvPwJyh4t6rD
-	 5uG6/0LPhFGQqcB1q+0S/WS4DHtVNPfRI9BF6UfK0Ya4VRpI1WeP2PFC627XnHQaz8
-	 SsqtQ/5R3rs6A==
+	b=Dq8U1lWvOFy14kdkdo2KD20qigjg5pnSkaOZUszkfO7qMkvkW7cTmxlLVzISEO1/e
+	 2O+gUhPwYX//u3aT9osnXzF8HhqRJcTQBmHFuYwoYvXIi8etj/iTMU/7kKmsax3JQS
+	 NVSBEJhepHdQoXJMODBw2KuvHGA27ePHXa+clujhtoumbf9DcfQZCDz6vRIa8nXzwY
+	 y8Qo58wAhiDkBwddSk9eVjhmNsIgpmCjIbe4AO9nvHIb4/R/QSqpz+0XCFkMo1/sU4
+	 QF7tfsLx9bWjMwI9oCkRMYRqzTzMmJo+qHfIu4dQ4UsolT9FReRgBuLIqX0c+jbzM4
+	 /CuOegx0JNiTw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Brandon Syu <Brandon.Syu@amd.com>,
-	Charlene Liu <charlene.liu@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
+Cc: Tom Chung <chiahsuan.chung@amd.com>,
+	Roman Li <roman.li@amd.com>,
+	Zaeem Mohamed <zaeem.mohamed@amd.com>,
 	Daniel Wheeler <daniel.wheeler@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
@@ -40,23 +40,23 @@ Cc: Brandon Syu <Brandon.Syu@amd.com>,
 	christian.koenig@amd.com,
 	airlied@gmail.com,
 	simona@ffwll.ch,
-	Charlene.Liu@amd.com,
+	siqueira@igalia.com,
+	alex.hung@amd.com,
 	alvin.lee2@amd.com,
-	chiahsuan.chung@amd.com,
-	jerry.zuo@amd.com,
-	Kaitlyn.Tse@amd.com,
-	Ovidiu.Bunea@amd.com,
-	ryanseto@amd.com,
-	martin.tsai@amd.com,
-	yi-lchen@amd.com,
-	tjakobi@math.uni-bielefeld.de,
-	Sungjoon.Kim@amd.com,
-	michael.strauss@amd.com,
+	aurabindo.pillai@amd.com,
+	Austin.Zheng@amd.com,
+	Ilya.Bakoulin@amd.com,
+	mario.limonciello@amd.com,
+	Wayne.Lin@amd.com,
+	Josip.Pavic@amd.com,
+	dillon.varone@amd.com,
+	wenjing.liu@amd.com,
+	linux@treblig.org,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 368/486] Revert "drm/amd/display: Exit idle optimizations before attempt to access PHY"
-Date: Mon,  5 May 2025 18:37:24 -0400
-Message-Id: <20250505223922.2682012-368-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 370/486] drm/amd/display: Initial psr_version with correct setting
+Date: Mon,  5 May 2025 18:37:26 -0400
+Message-Id: <20250505223922.2682012-370-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -71,55 +71,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Brandon Syu <Brandon.Syu@amd.com>
+From: Tom Chung <chiahsuan.chung@amd.com>
 
-[ Upstream commit be704e5ef4bd66dee9bb3f876964327e3a247d31 ]
+[ Upstream commit d8c782cac5007e68e7484d420168f12d3490def6 ]
 
-This reverts commit de612738e9771bd66aeb20044486c457c512f684.
+[Why & How]
+The initial setting for psr_version is not correct while
+create a virtual link.
 
-Reason to revert: screen flashes or gray screen appeared half of the
-screen after resume from S4/S5.
+The default psr_version should be DC_PSR_VERSION_UNSUPPORTED.
 
-Reviewed-by: Charlene Liu <charlene.liu@amd.com>
-Signed-off-by: Brandon Syu <Brandon.Syu@amd.com>
-Signed-off-by: Alex Hung <alex.hung@amd.com>
+Reviewed-by: Roman Li <roman.li@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Zaeem Mohamed <zaeem.mohamed@amd.com>
 Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-index 297f313794e49..809c556f4e7de 100644
---- a/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/hwss/dce110/dce110_hwseq.c
-@@ -1890,7 +1890,6 @@ void dce110_enable_accelerated_mode(struct dc *dc, struct dc_state *context)
- 	bool can_apply_edp_fast_boot = false;
- 	bool can_apply_seamless_boot = false;
- 	bool keep_edp_vdd_on = false;
--	struct dc_bios *dcb = dc->ctx->dc_bios;
- 	DC_LOGGER_INIT();
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 762bf04efe7ed..ff189177244bb 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -276,6 +276,7 @@ static bool create_links(
+ 		link->link_id.type = OBJECT_TYPE_CONNECTOR;
+ 		link->link_id.id = CONNECTOR_ID_VIRTUAL;
+ 		link->link_id.enum_id = ENUM_ID_1;
++		link->psr_settings.psr_version = DC_PSR_VERSION_UNSUPPORTED;
+ 		link->link_enc = kzalloc(sizeof(*link->link_enc), GFP_KERNEL);
  
- 
-@@ -1967,8 +1966,6 @@ void dce110_enable_accelerated_mode(struct dc *dc, struct dc_state *context)
- 			hws->funcs.edp_backlight_control(edp_link_with_sink, false);
- 		}
- 		/*resume from S3, no vbios posting, no need to power down again*/
--		if (dcb && dcb->funcs && !dcb->funcs->is_accelerated_mode(dcb))
--			clk_mgr_exit_optimized_pwr_state(dc, dc->clk_mgr);
- 
- 		power_down_all_hw_blocks(dc);
- 
-@@ -1981,8 +1978,6 @@ void dce110_enable_accelerated_mode(struct dc *dc, struct dc_state *context)
- 		disable_vga_and_power_gate_all_controllers(dc);
- 		if (edp_link_with_sink && !keep_edp_vdd_on)
- 			dc->hwss.edp_power_control(edp_link_with_sink, false);
--		if (dcb && dcb->funcs && !dcb->funcs->is_accelerated_mode(dcb))
--			clk_mgr_optimize_pwr_state(dc, dc->clk_mgr);
- 	}
- 	bios_set_scratch_acc_mode_change(dc->ctx->dc_bios, 1);
- }
+ 		if (!link->link_enc) {
 -- 
 2.39.5
 
