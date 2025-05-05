@@ -1,112 +1,399 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021801E1DE5;
-	Mon,  5 May 2025 09:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6024B19E819
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746435987; cv=none; b=S7hnGVIaPCSHJKwJLXrtLunaX6TBGCRDsexoX7UrNUOqZsukgeJUNRSGedD4QW8ATpllHKQKbCW7VlfP3+niHkxkKOft5LCe7k9R0UJ+HWeOrHLtf30HYDAJqdMYTrzTayWS1FtkFUf8t7cuyGLLHl+eqrcV5Q9aW2sh+kWp8aw=
+	t=1746436001; cv=none; b=ZY7rr3mH4dNeGR/nHyV/58mOBYItAA9B9Lrec0mmwvlwDc6hsoGOSnxWbWxd9TVcfZcQ1cJ/ig/w61Nqz10ROb5ciH9jZDb7gENSuPBKIRXWJm8qQDFWH4i61KxwJzmGr3LhgzdNvM3gt3EtwtaqOfkgTINGSe+BKK3kffX6psA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746435987; c=relaxed/simple;
-	bh=dwiDZndRFyLkL2brJUMP8qqJ8MGyigXi64I7ooe65Go=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p8fP4NypiHeIrKYvY72LMkwBVPd/bCMDG0OT3HjEiZAaJChk76eqIhWYGMgQgeX+zENZ5Ohwypb36CfxcyuxZJnY+Zd7t29UnGJriOi79t5/guFg/olFiE88styJhfvKZ2ZaLDdq2ORupSgAckvl7CA7pjcHSEOO4U0fkPfkH1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0MeWC9Vi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZzjkqVyJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746436001; c=relaxed/simple;
+	bh=2zOPbx/4d5fobmgLm+O7lAZ9Xln/LzKFyAM7D0L46zc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iwA/dbspWkyLWWxYNZm+kJFWMrQt5Gq6lQITCLm7ZwvxjI8UscEECE9AOFtVioswuCtfcJJVeyqO8+Hu4U+rroXhhoAWlQABMmMaojSG2lFjvZgoE3b1fgwaIqTuS48sVXZpHp0UXM/fHKdDnB7Obyjlb1HoSVeoRct26E9m868=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nkxK11hg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GFFGnOO3; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nkxK11hg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GFFGnOO3; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0MeWC9Vi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZzjkqVyJ"
-Date: Mon, 5 May 2025 11:06:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746435983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nkxK11hg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GFFGnOO3";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nkxK11hg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GFFGnOO3"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6F97321265;
+	Mon,  5 May 2025 09:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746435997; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hU2mOFIakYu1JXvoaJZnS0pZd0tIlcvrypVKAXkNPt8=;
-	b=0MeWC9VixBL+yIvcu/2Vlj+rC6XYBt0Lwwuj3lI+T3JWTk7UbRlU6/M9YpEreOhCvWu2Qs
-	B88oLp/ncbGh3sUCtOPSFA/rk2AgtwtYIlEnGFFACtfQaCK2ZyZ52kjwggqe3hdfec4gjY
-	5hZh3sm7VvJylzBTo0G3yBviNVhGU1QBdUcmvlM7oo22hKZzut5vZBdUHIc1MFoqvVhUVV
-	s7XDBVITq0Es3ChLniEuXjqIAn/m90t6UMj/LbsZz0cxH+aSLsaRKUxpya5OzxYBEEcjGx
-	BTbdld+hUlBa4WNM4q8VP23PBdjCOQpZrBkWDV8v1VExSWa1ZS+TkuDN7fJUJw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746435983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cJgGwcX94y0/ULGhSqyRKu/CwENFIGVHPNo0hYEehTc=;
+	b=nkxK11hgvmXaa+wzuoI4/R6fvRDjI9k/Zu4uf3VQkvzb4pakZAmMs1UaBh5E2CGveT5GOa
+	i+sTWSnL7PMumxgDJI5DwN2Jrsinp2fISMsThvB7LGL6ylnCZnsh9Ws4bG++YTe+E3B1fy
+	F1Iz7UXQw7jrwBZyjwbX/xxmoljFOBc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746435997;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hU2mOFIakYu1JXvoaJZnS0pZd0tIlcvrypVKAXkNPt8=;
-	b=ZzjkqVyJrEYAyTAbEVRah1Hmfig2TmjA9h3qEpX0F3TlWJQjVp6+a5ySJH8PjLF0hAfJyy
-	34v9hcGVh2sJizCA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>, linux-mm <linux-mm@kvack.org>,
-	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Meta kernel team <kernel-team@meta.com>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2 3/3] memcg: no irq disable for memcg stock lock
-Message-ID: <20250505090617.Q6tHb1NH@linutronix.de>
-References: <20250502001742.3087558-1-shakeel.butt@linux.dev>
- <20250502001742.3087558-4-shakeel.butt@linux.dev>
- <CAADnVQJ-XEEwVppk-qY2mmGB4R18_nqH-wdv5nuJf2LST5=Aaw@mail.gmail.com>
- <CAGj-7pWqvtWj2nSOaQwoLbwUrVcLfKc0U2TcmxuSB87dWmZcgQ@mail.gmail.com>
- <CAADnVQ+dhiuvrmTiKeGCnjDk9=4ygETJXR+E4zQr5H2MzBLBCQ@mail.gmail.com>
- <CAGj-7pXrKBr+LC_Mbj+xyud=tXpR3bCYwzOQTUgM8aSZ0qNnhA@mail.gmail.com>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cJgGwcX94y0/ULGhSqyRKu/CwENFIGVHPNo0hYEehTc=;
+	b=GFFGnOO3E/mHW/eTVaPAZqjUiQ0LZ2DxzjK4EdhmBkOp+joYU/V477t/U+nnn8Nj7u3syT
+	ZZszdVNHDy792yBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nkxK11hg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GFFGnOO3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746435997; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cJgGwcX94y0/ULGhSqyRKu/CwENFIGVHPNo0hYEehTc=;
+	b=nkxK11hgvmXaa+wzuoI4/R6fvRDjI9k/Zu4uf3VQkvzb4pakZAmMs1UaBh5E2CGveT5GOa
+	i+sTWSnL7PMumxgDJI5DwN2Jrsinp2fISMsThvB7LGL6ylnCZnsh9Ws4bG++YTe+E3B1fy
+	F1Iz7UXQw7jrwBZyjwbX/xxmoljFOBc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746435997;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=cJgGwcX94y0/ULGhSqyRKu/CwENFIGVHPNo0hYEehTc=;
+	b=GFFGnOO3E/mHW/eTVaPAZqjUiQ0LZ2DxzjK4EdhmBkOp+joYU/V477t/U+nnn8Nj7u3syT
+	ZZszdVNHDy792yBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3388E1372E;
+	Mon,  5 May 2025 09:06:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id frUyC51/GGg8ZgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 05 May 2025 09:06:37 +0000
+Message-ID: <27a5f519-de87-4fab-b465-bb89ae5b988b@suse.de>
+Date: Mon, 5 May 2025 11:06:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAGj-7pXrKBr+LC_Mbj+xyud=tXpR3bCYwzOQTUgM8aSZ0qNnhA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/sitronix: move tiny Sitronix drivers to their own
+ subdir
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, David Lechner <david@lechnology.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ Javier Martinez Canillas <javierm@redhat.com>
+References: <20250503-sitronix-v2-1-5efbed896be2@gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250503-sitronix-v2-1-5efbed896be2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6F97321265
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com,linux.intel.com,kernel.org,ffwll.ch,lechnology.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,gitlab.freedesktop.org:url]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 2025-05-02 16:40:53 [-0700], Shakeel Butt wrote:
-> On Fri, May 2, 2025 at 4:28=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> [...]
-> > > >
-> > > > I don't think it works.
-> > > > When there is a normal irq and something doing regular GFP_NOWAIT
-> > > > allocation gfpflags_allow_spinning() will be true and
-> > > > local_lock() will reenter and complain that lock->acquired is
-> > > > already set... but only with lockdep on.
-> > >
-> > > Yes indeed. I dropped the first patch and didn't fix this one
-> > > accordingly. I think the fix can be as simple as checking for
-> > > in_task() here instead of gfp_mask. That should work for both RT and
-> > > non-RT kernels.
-> >
-> > Like:
-> > if (in_task())
-> >   local_lock(...);
-> > else if (!local_trylock(...))
-> >
-> > Most of the networking runs in bh, so it will be using
-> > local_trylock() path which is probably ok in !PREEMPT_RT,
-> > but will cause random performance issues in PREEMP_RT,
-> > since rt_spin_trylock() will be randomly failing and taking
-> > slow path of charging. It's not going to cause permanent
-> > nginx 3x regression :), but unlucky slowdowns will be seen.
-> > A task can grab that per-cpu rt_spin_lock and preempted
-> > by network processing.
->=20
-> Does networking run in bh for PREEMPT_RT as well?
+Hi,
 
-It does but BH is preemptible.
+there's one major issue here. You must not change the Kconfig symbols or 
+you'll break kernel updates for a lot of people. So those TINYDRM_* must 
+remain as is.
 
-> I think I should get networking & RT folks opinion on this one. I will
-> decouple this irq patch from the decoupling lock patches and start a
-> separate discussion thread.
+Best regards
+Thomas
 
-Sebastian
+Am 03.05.25 um 10:13 schrieb Marcus Folkesson:
+> We start to have support many Sitronix displays in the tiny directory,
+> and we expect more to come.
+>
+> Move them to their own subdirectory.
+>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Suggested-by: Javier Martinez Canillas <javierm@redhat.com>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+> Changes in v2:
+> - Rebase on drm-misc-next
+> - Link to v1: https://lore.kernel.org/r/20250428-sitronix-v1-1-4e7cc0a8195a@gmail.com
+> ---
+>   MAINTAINERS                                     |  6 ++--
+>   drivers/gpu/drm/Kconfig                         |  2 ++
+>   drivers/gpu/drm/Makefile                        |  1 +
+>   drivers/gpu/drm/sitronix/Kconfig                | 41 +++++++++++++++++++++++++
+>   drivers/gpu/drm/sitronix/Makefile               |  3 ++
+>   drivers/gpu/drm/{tiny => sitronix}/st7571-i2c.c |  0
+>   drivers/gpu/drm/{tiny => sitronix}/st7586.c     |  0
+>   drivers/gpu/drm/{tiny => sitronix}/st7735r.c    |  0
+>   drivers/gpu/drm/tiny/Kconfig                    | 41 -------------------------
+>   drivers/gpu/drm/tiny/Makefile                   |  3 --
+>   10 files changed, 50 insertions(+), 47 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 81b81cc68ca2482f2965b801693ff8a43bbf2053..6b2d3d4c467b8b360317437027e20c4014c97a21 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7680,13 +7680,13 @@ M:	David Lechner <david@lechnology.com>
+>   S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/display/sitronix,st7586.txt
+> -F:	drivers/gpu/drm/tiny/st7586.c
+> +F:	drivers/gpu/drm/sitronix/st7586.c
+>   
+>   DRM DRIVER FOR SITRONIX ST7571 PANELS
+>   M:	Marcus Folkesson <marcus.folkesson@gmail.com>
+>   S:	Maintained
+>   F:	Documentation/devicetree/bindings/display/sitronix,st7571.yaml
+> -F:	drivers/gpu/drm/tiny/st7571-i2c.c
+> +F:	drivers/gpu/drm/sitronix/st7571-i2c.c
+>   
+>   DRM DRIVER FOR SITRONIX ST7701 PANELS
+>   M:	Jagan Teki <jagan@amarulasolutions.com>
+> @@ -7707,7 +7707,7 @@ M:	David Lechner <david@lechnology.com>
+>   S:	Maintained
+>   T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
+>   F:	Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> -F:	drivers/gpu/drm/tiny/st7735r.c
+> +F:	drivers/gpu/drm/sitronix/st7735r.c
+>   
+>   DRM DRIVER FOR SOLOMON SSD130X OLED DISPLAYS
+>   M:	Javier Martinez Canillas <javierm@redhat.com>
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 3921772ae61214e6ac0337edc147a46af0010070..cc7385c334eb6ad484688d9eb483c2c6a9c39e11 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -385,6 +385,8 @@ source "drivers/gpu/drm/xlnx/Kconfig"
+>   
+>   source "drivers/gpu/drm/gud/Kconfig"
+>   
+> +source "drivers/gpu/drm/sitronix/Kconfig"
+> +
+>   source "drivers/gpu/drm/solomon/Kconfig"
+>   
+>   source "drivers/gpu/drm/sprd/Kconfig"
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index b5d5561bbe5fd72f3915e6a52f325fdb79c7981e..70510620f29c874e376c795fb05d426a0faae05c 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -221,6 +221,7 @@ obj-$(CONFIG_DRM_TIDSS) += tidss/
+>   obj-y			+= xlnx/
+>   obj-y			+= gud/
+>   obj-$(CONFIG_DRM_HYPERV) += hyperv/
+> +obj-y			+= sitronix/
+>   obj-y			+= solomon/
+>   obj-$(CONFIG_DRM_SPRD) += sprd/
+>   obj-$(CONFIG_DRM_LOONGSON) += loongson/
+> diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..25cae32e5c3ec11399a12f1f2bb2ede91c27d4d4
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sitronix/Kconfig
+> @@ -0,0 +1,41 @@
+> +config DRM_ST7571_I2C
+> +	tristate "DRM support for Sitronix ST7571 display panels (I2C)"
+> +	depends on DRM && I2C && MMU
+> +	select DRM_CLIENT_SELECTION
+> +	select DRM_GEM_SHMEM_HELPER
+> +	select DRM_KMS_HELPER
+> +	select REGMAP_I2C
+> +	help
+> +	  DRM driver for Sitronix ST7571 panels controlled over I2C.
+> +
+> +	  if M is selected the module will be called st7571-i2c.
+> +
+> +config DRM_ST7586
+> +	tristate "DRM support for Sitronix ST7586 display panels"
+> +	depends on DRM && SPI
+> +	select DRM_CLIENT_SELECTION
+> +	select DRM_KMS_HELPER
+> +	select DRM_GEM_DMA_HELPER
+> +	select DRM_MIPI_DBI
+> +	help
+> +	  DRM driver for the following Sitronix ST7586 panels:
+> +	  * LEGO MINDSTORMS EV3
+> +
+> +	  If M is selected the module will be called st7586.
+> +
+> +config DRM_ST7735R
+> +	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+> +	depends on DRM && SPI
+> +	select DRM_CLIENT_SELECTION
+> +	select DRM_KMS_HELPER
+> +	select DRM_GEM_DMA_HELPER
+> +	select DRM_MIPI_DBI
+> +	select BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
+> +	  LCDs:
+> +	  * Jianda JD-T18003-T01 1.8" 128x160 TFT
+> +	  * Okaya RH128128T 1.44" 128x128 TFT
+> +
+> +	  If M is selected the module will be called st7735r.
+> +
+> diff --git a/drivers/gpu/drm/sitronix/Makefile b/drivers/gpu/drm/sitronix/Makefile
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..bd139e5a6995fa026cc635b3c29782473d1efad7
+> --- /dev/null
+> +++ b/drivers/gpu/drm/sitronix/Makefile
+> @@ -0,0 +1,3 @@
+> +obj-$(CONFIG_DRM_ST7571_I2C)		+= st7571-i2c.o
+> +obj-$(CONFIG_DRM_ST7586)		+= st7586.o
+> +obj-$(CONFIG_DRM_ST7735R)		+= st7735r.o
+> diff --git a/drivers/gpu/drm/tiny/st7571-i2c.c b/drivers/gpu/drm/sitronix/st7571-i2c.c
+> similarity index 100%
+> rename from drivers/gpu/drm/tiny/st7571-i2c.c
+> rename to drivers/gpu/drm/sitronix/st7571-i2c.c
+> diff --git a/drivers/gpu/drm/tiny/st7586.c b/drivers/gpu/drm/sitronix/st7586.c
+> similarity index 100%
+> rename from drivers/gpu/drm/tiny/st7586.c
+> rename to drivers/gpu/drm/sitronix/st7586.c
+> diff --git a/drivers/gpu/drm/tiny/st7735r.c b/drivers/gpu/drm/sitronix/st7735r.c
+> similarity index 100%
+> rename from drivers/gpu/drm/tiny/st7735r.c
+> rename to drivers/gpu/drm/sitronix/st7735r.c
+> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+> index daa1adbb1b43325d644ae13f3cabfc1bb01ff4d8..6d1b3e2cb3fbd8630864824ae985897b9d8095c7 100644
+> --- a/drivers/gpu/drm/tiny/Kconfig
+> +++ b/drivers/gpu/drm/tiny/Kconfig
+> @@ -199,44 +199,3 @@ config TINYDRM_SHARP_MEMORY
+>   	  * 4.40" Sharp Memory LCD (LS044Q7DH01)
+>   
+>   	  If M is selected the module will be called sharp_memory.
+> -
+> -config TINYDRM_ST7586
+> -	tristate "DRM support for Sitronix ST7586 display panels"
+> -	depends on DRM && SPI
+> -	select DRM_CLIENT_SELECTION
+> -	select DRM_KMS_HELPER
+> -	select DRM_GEM_DMA_HELPER
+> -	select DRM_MIPI_DBI
+> -	help
+> -	  DRM driver for the following Sitronix ST7586 panels:
+> -	  * LEGO MINDSTORMS EV3
+> -
+> -	  If M is selected the module will be called st7586.
+> -
+> -config DRM_ST7571_I2C
+> -	tristate "DRM support for Sitronix ST7571 display panels (I2C)"
+> -	depends on DRM && I2C && MMU
+> -	select DRM_CLIENT_SELECTION
+> -	select DRM_GEM_SHMEM_HELPER
+> -	select DRM_KMS_HELPER
+> -	select REGMAP_I2C
+> -	help
+> -	  DRM driver for Sitronix ST7571 panels controlled over I2C.
+> -
+> -	  if M is selected the module will be called st7571-i2c.
+> -
+> -config TINYDRM_ST7735R
+> -	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+> -	depends on DRM && SPI
+> -	select DRM_CLIENT_SELECTION
+> -	select DRM_KMS_HELPER
+> -	select DRM_GEM_DMA_HELPER
+> -	select DRM_MIPI_DBI
+> -	select BACKLIGHT_CLASS_DEVICE
+> -	help
+> -	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
+> -	  LCDs:
+> -	  * Jianda JD-T18003-T01 1.8" 128x160 TFT
+> -	  * Okaya RH128128T 1.44" 128x128 TFT
+> -
+> -	  If M is selected the module will be called st7735r.
+> diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
+> index 0151590db5cbd80aebde0629afd03f47b83c3045..4a9ff61ec25420e2c0a648c04eaab7ca25dd5407 100644
+> --- a/drivers/gpu/drm/tiny/Makefile
+> +++ b/drivers/gpu/drm/tiny/Makefile
+> @@ -6,7 +6,6 @@ obj-$(CONFIG_DRM_BOCHS)			+= bochs.o
+>   obj-$(CONFIG_DRM_CIRRUS_QEMU)		+= cirrus-qemu.o
+>   obj-$(CONFIG_DRM_GM12U320)		+= gm12u320.o
+>   obj-$(CONFIG_DRM_PANEL_MIPI_DBI)	+= panel-mipi-dbi.o
+> -obj-$(CONFIG_DRM_ST7571_I2C)		+= st7571-i2c.o
+>   obj-$(CONFIG_TINYDRM_HX8357D)		+= hx8357d.o
+>   obj-$(CONFIG_TINYDRM_ILI9163)		+= ili9163.o
+>   obj-$(CONFIG_TINYDRM_ILI9225)		+= ili9225.o
+> @@ -15,5 +14,3 @@ obj-$(CONFIG_TINYDRM_ILI9486)		+= ili9486.o
+>   obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
+>   obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
+>   obj-$(CONFIG_TINYDRM_SHARP_MEMORY)	+= sharp-memory.o
+> -obj-$(CONFIG_TINYDRM_ST7586)		+= st7586.o
+> -obj-$(CONFIG_TINYDRM_ST7735R)		+= st7735r.o
+>
+> ---
+> base-commit: e782ac936941cff4c5580bb5cc2ec0e91468068c
+> change-id: 20250424-sitronix-2c1f68b46866
+>
+> Best regards,
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
