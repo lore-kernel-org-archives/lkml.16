@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607CC2D7AE6;
-	Mon,  5 May 2025 22:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6724278745;
+	Mon,  5 May 2025 22:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485729; cv=none; b=EyI4qL5roRrb4DUphMMcMSB3/2lGQoxscZFkIFFW4lgkDPMR5RMF63HNsSjczzlNtIazWJ4ANGr+NF6chbflVf+zwjljQ9wBFgrSDoEVExs5C21IR/BYcE8BWf5XKjVX8n4vHbuMME1/vXnT9FzdYO6aLkGXNc40z0//sIdXpN4=
+	t=1746485734; cv=none; b=AqxtZAP8txkzhsHWfj5YUMCg/Z+JJGNuF9F2mhbqeuPUqm5Elp5JugIkdoYq6cstlNcYlc++6JnOxF/FQaqKaDSQO2pMxISO9UcnoOX2dCbTbuJgg/EkH/GGnimTWXpDlT63bNQGip5SN+LLDK8JHcOdhUjyUZdDvjJolyib230=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485729; c=relaxed/simple;
-	bh=KCH91/zsYJ4aTUBVAhrrGbgMbywzpLFiEgK6TFB6SxE=;
+	s=arc-20240116; t=1746485734; c=relaxed/simple;
+	bh=5Ul5afnxT4Ev7pMFKXsZJc0l/RU9J+GqH7JwLx6dk74=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oFEbWOyqiX4EgPFCRb5c6gwXQO7VbICKtAxsqTfOaxssMt/XyKsuPzXU1cQGFaFmVuvBOLW+bDKki4dXdxzw17zmwVE9wZWZx8xrM1BnPcG7i4ZPxkxaNXkdfmA/v3KhKKwpdsn2ZBU4oAJ51tjtDzOyLcabE3uwA6yFn6tr6ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpeJ4SI9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=VTfnpSgviKR8wN2fztvzTLg4ldPoT5Y3A4rE8k4HdfHD5KWjRcDkd7sf3DN/WLwGM7sMkW4jJqKvdU+X0jJ2YrP+2uYwEiw+QSVQQ+tEgaZm799pLIgph3O3exXyp6oqd2s/yNCXnAsC6SiumfPk0WElXONu3rqDiO/ccTV3ZNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlTI5LR6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpeJ4SI9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900FCC4CEE4;
-	Mon,  5 May 2025 22:55:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlTI5LR6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2535DC4CEE4;
+	Mon,  5 May 2025 22:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485727;
-	bh=KCH91/zsYJ4aTUBVAhrrGbgMbywzpLFiEgK6TFB6SxE=;
+	s=k20201202; t=1746485734;
+	bh=5Ul5afnxT4Ev7pMFKXsZJc0l/RU9J+GqH7JwLx6dk74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gpeJ4SI9iXaSae5UtWgfzH30ggObgB5odAgcQCxPCCsIsCmq08KRRNfl9Ol78TABr
-	 Wl7VZUcRkLU90w8TdElWZG5mPp4jwv0hP8hzdK/H95uADvNHWuLkAT5h8jAnlp7kd/
-	 x7TjBu3MnJM/Wlrth1NBJsG4gYQ5sYZsg/5nxwWanRXXXv4iyTwlcdgAxJigCPl+p1
-	 YeJpGP/6THFm4meXh4ATf6tvUwo/1uL3VqPXuDQNRZ9oVJmCBL2UoV6aJcP19FFZ2D
-	 xQTGylI43UdNt7IkBj3Nqenqd/sPuJzCK5+K0DsLCP0Rp2bA6B/YL02I8KPGHfo8iS
-	 jgDgtLXiJ5pGA==
+	b=NlTI5LR6js7dFUd1BpHxTagrwpqA0FOQnRhcrHodC3qEI/p24tpXoxDxg4IzF1xvn
+	 3WvN5JwfAFX9sVxWHWMFNEhIUqCvOXk6QbIpwn+X6JxNDp3+lzNx03JJnTXzV1QEGP
+	 VIbZlorf3gAhYD91wvn1V0L5Mv2/YGrmI522vP/k10E5UC9UGjr2Fhixa05/0HktD9
+	 3N/UiDXS8wvFhnMY/CuJx+l7tWi2fVKxZYO1sXmsnr3UEcmBvUsQt3UTdo2xDg7e1E
+	 GESMTG8+RJa81RVgcrFrLX58egX8NrdZCi7Bpk7xZWgFO0duAphjKJIpiHMYghpzdX
+	 iMu5xrUbUQhgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Naman Trivedi <naman.trivedimanojbhai@amd.com>,
-	Senthil Nathan Thangaraj <senthilnathan.thangaraj@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <anup@brainfault.org>,
 	Sasha Levin <sashal@kernel.org>,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	sean.anderson@linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 447/486] arm64: zynqmp: add clock-output-names property in clock nodes
-Date: Mon,  5 May 2025 18:38:43 -0400
-Message-Id: <20250505223922.2682012-447-sashal@kernel.org>
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 451/486] irqchip/riscv-aplic: Add support for hart indexes
+Date: Mon,  5 May 2025 18:38:47 -0400
+Message-Id: <20250505223922.2682012-451-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,83 +49,98 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Naman Trivedi <naman.trivedimanojbhai@amd.com>
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
-[ Upstream commit 385a59e7f7fb3438466a0712cc14672c708bbd57 ]
+[ Upstream commit b93afe8a3ac53ae52296d65acfaa9c5f582a48cc ]
 
-Add clock-output-names property to clock nodes, so that the resulting
-clock name do not change when clock node name is changed.
-Also, replace underscores with hyphens in the clock node names as per
-dt-schema rule.
+RISC-V APLIC specification defines "hart index" in:
 
-Signed-off-by: Naman Trivedi <naman.trivedimanojbhai@amd.com>
-Acked-by: Senthil Nathan Thangaraj <senthilnathan.thangaraj@amd.com>
-Link: https://lore.kernel.org/r/20241122095712.1166883-1-naman.trivedimanojbhai@amd.com
-Signed-off-by: Michal Simek <michal.simek@amd.com>
+  https://github.com/riscv/riscv-aia
+
+Within a given interrupt domain, each of the domain’s harts has a unique
+index number in the range 0 to 2^14 − 1 (= 16,383). The index number a
+domain associates with a hart may or may not have any relationship to the
+unique hart identifier (“hart ID”) that the RISC-V Privileged Architecture
+assigns to the hart. Two different interrupt domains may employ entirely
+different index numbers for the same set of harts.
+
+Further, this document says in "4.5 Memory-mapped control region for an
+interrupt domain":
+
+The array of IDC structures may include some for potential hart index
+numbers that are not actual hart index numbers in the domain. For example,
+the first IDC structure is always for hart index 0, but 0 is not
+necessarily a valid index number for any hart in the domain.
+
+Support arbitrary hart indices specified in an optional APLIC property
+"riscv,hart-indexes" which is specified as an array of u32 elements, one
+per interrupt target. If this property is not specified, fallback to use
+logical hart indices within the domain.
+
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Link: https://lore.kernel.org/all/20250129091637.1667279-3-vladimir.kondratiev@mobileye.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-riscv-aplic-direct.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-index 60d1b1acf9a03..385fed8a852af 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-@@ -10,39 +10,44 @@
- 
- #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
- / {
--	pss_ref_clk: pss_ref_clk {
-+	pss_ref_clk: pss-ref-clk {
- 		bootph-all;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <33333333>;
-+		clock-output-names = "pss_ref_clk";
- 	};
- 
--	video_clk: video_clk {
-+	video_clk: video-clk {
- 		bootph-all;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <27000000>;
-+		clock-output-names = "video_clk";
- 	};
- 
--	pss_alt_ref_clk: pss_alt_ref_clk {
-+	pss_alt_ref_clk: pss-alt-ref-clk {
- 		bootph-all;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
-+		clock-output-names = "pss_alt_ref_clk";
- 	};
- 
--	gt_crx_ref_clk: gt_crx_ref_clk {
-+	gt_crx_ref_clk: gt-crx-ref-clk {
- 		bootph-all;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <108000000>;
-+		clock-output-names = "gt_crx_ref_clk";
- 	};
- 
--	aux_ref_clk: aux_ref_clk {
-+	aux_ref_clk: aux-ref-clk {
- 		bootph-all;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <27000000>;
-+		clock-output-names = "aux_ref_clk";
- 	};
+diff --git a/drivers/irqchip/irq-riscv-aplic-direct.c b/drivers/irqchip/irq-riscv-aplic-direct.c
+index 7cd6b646774b9..205ad61d15e49 100644
+--- a/drivers/irqchip/irq-riscv-aplic-direct.c
++++ b/drivers/irqchip/irq-riscv-aplic-direct.c
+@@ -31,7 +31,7 @@ struct aplic_direct {
  };
  
+ struct aplic_idc {
+-	unsigned int		hart_index;
++	u32			hart_index;
+ 	void __iomem		*regs;
+ 	struct aplic_direct	*direct;
+ };
+@@ -219,6 +219,20 @@ static int aplic_direct_parse_parent_hwirq(struct device *dev, u32 index,
+ 	return 0;
+ }
+ 
++static int aplic_direct_get_hart_index(struct device *dev, u32 logical_index,
++				       u32 *hart_index)
++{
++	const char *prop_hart_index = "riscv,hart-indexes";
++	struct device_node *np = to_of_node(dev->fwnode);
++
++	if (!np || !of_property_present(np, prop_hart_index)) {
++		*hart_index = logical_index;
++		return 0;
++	}
++
++	return of_property_read_u32_index(np, prop_hart_index, logical_index, hart_index);
++}
++
+ int aplic_direct_setup(struct device *dev, void __iomem *regs)
+ {
+ 	int i, j, rc, cpu, current_cpu, setup_count = 0;
+@@ -265,8 +279,12 @@ int aplic_direct_setup(struct device *dev, void __iomem *regs)
+ 		cpumask_set_cpu(cpu, &direct->lmask);
+ 
+ 		idc = per_cpu_ptr(&aplic_idcs, cpu);
+-		idc->hart_index = i;
+-		idc->regs = priv->regs + APLIC_IDC_BASE + i * APLIC_IDC_SIZE;
++		rc = aplic_direct_get_hart_index(dev, i, &idc->hart_index);
++		if (rc) {
++			dev_warn(dev, "hart index not found for IDC%d\n", i);
++			continue;
++		}
++		idc->regs = priv->regs + APLIC_IDC_BASE + idc->hart_index * APLIC_IDC_SIZE;
+ 		idc->direct = direct;
+ 
+ 		aplic_idc_set_delivery(idc, true);
 -- 
 2.39.5
 
