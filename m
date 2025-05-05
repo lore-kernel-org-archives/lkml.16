@@ -1,137 +1,195 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367221EA73
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7702063F0;
+	Mon,  5 May 2025 11:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445808; cv=none; b=SqjtRVZvvPw8zoQ7lProf1w9r97HqGPbLMqc6Z2TuRlugcMygAWN6pE3nLsDDHFnVjLhMFZuOgzBFNg12zvKcN5O5C4qhlNflhoPWJcItLqv1znkFNU4UTPnomMOUxCEoADTUxDdcp7FREnMhOKUDyy+w3Lqtd1Yd2A6g/JGEzs=
+	t=1746445813; cv=none; b=U2Y8uPlbONp2U7tNR/BeMZLudVfwiB9twFk5oXhxqRBNQLhwIbDNZbhlOhc6oIIpU7WWqXSxvafex8HDnd85nzQ02Nc1PvNjj6muo3mJ4ifEZnlpCJJ6TU/63nBAyfKRgpJr1WSpbXzCvc8m6WFyz6MzC9uYCM85gpFmfV5BUNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445808; c=relaxed/simple;
-	bh=rhCbX5uuvYAaZMIyV4VH9BaTqUl8pgKKKmIEEp2IjbU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dlvzCwWpn13NJ7T7lY6/6ySBiKIv0U2SLkesfIYfmF0+TG2on1OVCXZP2b4YUZ8CMzbY1f6qBVPtneEMhlPEK2ILD3Ec7wy1mt79da0OsL/sRp2AWGzFnAr8PyhS6ihW5J35SJVbTxWq+e3yO8Cj9IVhVBrF+K6t72uEJqyHXBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=eWDx4cTE; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746445813; c=relaxed/simple;
+	bh=qQexBfIZsy8yop5EiW0+JAI8tUBYSzoNr18NJ7Z56w8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKIuNQZ75u8zSmRSXL4sGIf/lz/1zxDt0bo7znjPlz0iKWEEaRdNF4q3Lz4Zc5yuwxtcDCqml9dnd96WdDFABLNtDWdcjlhaXLGbErW5gQMq+Pnrut903BFgyt3cpSgS5GPVSj6g6XKBu8vAUIY2gsZbNkQj0o6I0WucSy+9pjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S92r8YRB; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eWDx4cTE"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 545BnaiZ252302
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 5 May 2025 04:49:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 545BnaiZ252302
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746445777;
-	bh=uEb9M5Lmbc5dIus9R8qV3BhjTNuZuZsXNlEwYoEZtzE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=eWDx4cTEYnYCvQwlWqZeWuUMOJrcsTic6DH1Cn4LITwxbjHIxg1QQLOJRRnyxgdAA
-	 fX3J0LGI5esRrTWS9uRWutzA29zGmN0HJhNs+zgit6iz13q0b+SGp3oG8I2n1OIt3C
-	 +aln0Q/KQi/oUO5xHfZPW7n+MBpd8RcJtwsroRB+fdTsCvoVV8xt5hM+FXehmHMiAu
-	 L1JaXmngVKRJW0J5cyTD1ZxPmAC7rW0qroGGM/zSoUd0Pz7ZqvdZ1tNPjzt2QVC0ow
-	 bJ86cCXAmXkzZyOako+CCH5IfKfJ7wDiJ/yTEnsdlldivQCdY716U4jpz8nKzSybI1
-	 AY/+ewMg2mpvg==
-Date: Mon, 05 May 2025 04:49:35 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_-tip=5D_x86/asm=3A_Use_=25a_in?=
- =?US-ASCII?Q?stead_of_=25c=28=25=25rip=29_in_rip=5Frel=5Fptr=28=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
-References: <20250504184342.125253-1-ubizjak@gmail.com> <dd4c1795-ee0f-4589-9430-d759e59d5b96@zytor.com> <CAMj1kXHLfa2OzT+mo8qFxp5NtLHxaxnO3+skt_we=QOTtPFUqw@mail.gmail.com> <79AB4DAE-18EE-4F3C-980F-46304C021EC1@zytor.com> <CAMj1kXHG8JPLR5BjhSh+nJLhFoC-cT+-me4nc5kHXSxFUaw1aQ@mail.gmail.com>
-Message-ID: <D503B59D-AE83-4B2A-BC26-13F01A18C14B@zytor.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S92r8YRB"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5453iIan017516;
+	Mon, 5 May 2025 11:49:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NAW+FJ
+	NyjFqwtJqZzMOnDM3E2VP8rF2PoFWySRO3URg=; b=S92r8YRBxAnfsjn2iN0dpN
+	2pjQFzZnj0IWzevPoOONHk3ByWCVxcoOxgz98RsFpIU61VSpaNQt4Wv9UC5gOVnC
+	CkFT0smnrEqWgNf49zRXZaAStWL94AcOmsl5Yb8oHUyPIN2kj7qJGvalOKTEGfPt
+	VOHyGh/bbcA8sURwU5MExkBqQNbi9hLblB+ADcy3uUdYpiQmZrC261A/hrkD9Re4
+	aS8aVwZU4C/GyNtXIzQDT252MdD7WMfBVSavUdwn/6ysPBzMrz3B58/7CM+ze1bT
+	81Spm0d44Hq3ZulSolyMiESntADd/7HrCNBv6xB4pvh/5LEzLwMZ14Us4q+Y9fUA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46eftkjsvx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 11:49:45 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 545BUCvd020358;
+	Mon, 5 May 2025 11:49:44 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46eftkjsvv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 11:49:44 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5459k2O8013880;
+	Mon, 5 May 2025 11:49:43 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e0625pb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 May 2025 11:49:43 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 545BngPp36241730
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 May 2025 11:49:42 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1EB6B20049;
+	Mon,  5 May 2025 11:49:42 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3ECAF20040;
+	Mon,  5 May 2025 11:49:39 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.124.223.112])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  5 May 2025 11:49:39 +0000 (GMT)
+Date: Mon, 5 May 2025 17:19:34 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maddy@linux.ibm.com
+Subject: Re: [PATCH 3/4] perf python: Add evlist close and next methods
+Message-ID: <wu4cq5jilwtwdle2xuj5vuzz2cc6hx4whrbshkiw2pregk4xdi@lj7i53kssgur>
+References: <20250501093633.578010-1-gautam@linux.ibm.com>
+ <20250501093633.578010-4-gautam@linux.ibm.com>
+ <CAP-5=fX1qodprWrwK7yq2WYZNnLtiEe_rjvw0aJ7gXY2ma+Hzw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX1qodprWrwK7yq2WYZNnLtiEe_rjvw0aJ7gXY2ma+Hzw@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA1MDExMSBTYWx0ZWRfX623FoS93JY6N j0Wymi06tOIr/07dp5Zg6tixKohVEpt8S67YHgmHXGL8RT5ykFRSE/DDKU5YYKKmFNIa8y7tT2h pdoJdG0diAdpSz0ttKbLMxIp7GU5a+CDM0TISRY9RtKhhFY+HwLIpO8KYMDY1MiWSuGnnKsR21V
+ QxpFsgIRg78l5MPQTZpCyTdIX/iYZ880CVmNqmW833LigGNLE35MC8nxy6z9JAyTW1lTiSJdhyc 5Xm3KG+tcGldw14kgn+oaNfMKMMYy5vC3ZE5b5/vOL4IhMoeRkEnyeFoKs6Bid5ok6sCUqEfz0+ 06Nwf3vdFZYVBayTm/mI/LE/OCeBy+kMajRlwCNsBv0Po8jFC43eWdESEsB8JSMsAn2abnR6blR
+ 9TQ3Cx627IXpSMDlpsKMEIkmrd5isXM0JUQIfLrTCr6TXiEUJGzFZcoNqXowdHbOLZSeElO7
+X-Proofpoint-GUID: bn9S-77Tu2AjFxpd8gRXjQGJQZer1yzW
+X-Authority-Analysis: v=2.4 cv=Q7vS452a c=1 sm=1 tr=0 ts=6818a5d9 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=xCs7A96TP6Cw99lmuhcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: _qiyHADQZzXP0T4p6v3YZPU6F1W5NiFF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-05_05,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 clxscore=1015 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505050111
 
-On May 5, 2025 3:42:46 AM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrote:
->On Mon, 5 May 2025 at 08:09, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
->>
->> On May 4, 2025 10:48:19 PM PDT, Ard Biesheuvel <ardb@kernel=2Eorg> wrot=
-e:
->> >On Mon, 5 May 2025 at 04:59, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
->> >>
->> >> On 5/4/25 11:43, Uros Bizjak wrote:
->> >> > The "a" asm operand modifier substitutes a memory reference, with =
-the
->> >> > actual operand treated as address=2E  For x86_64, when a symbol is
->> >> > provided, the "a" modifier emits "sym(%rip)" instead of "sym"=2E
->> >> >
->> >
->> >Clang does not
->> >
->> >https://godbolt=2Eorg/z/5Y58T45f5
->> >
->> >> > No functional changes intended=2E
->> >> >
->> >
->> >NAK=2E There is a functional change with Clang, which does not emit
->> >%(rip), and this is the whole point of this thing=2E
->> >
->> >> > Signed-off-by: Uros Bizjak <ubizjak@gmail=2Ecom>
->> >> > Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->> >> > Cc: Ingo Molnar <mingo@kernel=2Eorg>
->> >> > Cc: Borislav Petkov <bp@alien8=2Ede>
->> >> > Cc: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
->> >> > Cc: "H=2E Peter Anvin" <hpa@zytor=2Ecom>
->> >> > Cc: Ard Biesheuvel <ardb@kernel=2Eorg>
->> >> > ---
->> >> >   arch/x86/include/asm/asm=2Eh | 2 +-
->> >> >   1 file changed, 1 insertion(+), 1 deletion(-)
->> >> >
->> >> > diff --git a/arch/x86/include/asm/asm=2Eh b/arch/x86/include/asm/a=
-sm=2Eh
->> >> > index f963848024a5=2E=2Ed7610b99b8d8 100644
->> >> > --- a/arch/x86/include/asm/asm=2Eh
->> >> > +++ b/arch/x86/include/asm/asm=2Eh
->> >> > @@ -116,7 +116,7 @@
->> >> >   #ifndef __ASSEMBLER__
->> >> >   static __always_inline __pure void *rip_rel_ptr(void *p)
->> >> >   {
->> >> > -     asm("leaq %c1(%%rip), %0" : "=3Dr"(p) : "i"(p));
->> >> > +     asm("leaq %a1, %0" : "=3Dr"(p) : "i"(p));
->> >> >
->> >> >       return p;
->> >> >   }
->> >>
->> >> Also, this function really should be __attribute_const__ rather than=
- __pure=2E
->> >>
->> >
->> >No it should really not=2E
->> >
->> >rip_rel_ptr() will yield different results depending on whether it is
->> >called [by the same code] from the 1:1 mapping or the ordinary kernel
->> >virtual mapping of memory, and this is basically the entire reason we
->> >need it in the first place=2E
->> >
->> >Lying to the compiler about this is not a good idea imo=2E
->>
->> Goddamnit, another clang bug=2E Someone fix the damned thing, please=2E=
-=2E=2E
->
->How is this a bug? The %a modifier is documented as producing a memory
->reference - the fact that GCC on x86_64 always emits a RIP-relative
->reference regardless of whether we are generating PIC code or not is
->an implementation detail, and not fundamental to yield correct code=2E
->
->Clang produces something that matches the constraints that we gave it
->- we cannot blame the tools for the mess of our own making where we
->call C code from alternative mappings of memory, while we lie to the
->compiler that the code is position dependent and non-relocatable=2E
+On Thu, May 01, 2025 at 08:49:08AM -0700, Ian Rogers wrote:
+> On Thu, May 1, 2025 at 2:37 AM Gautam Menghani <gautam@linux.ibm.com> wrote:
+> >
+> > Add support for the evlist close and next methods. The next method
+> > enables iterating over the evsels in an evlist.
+> >
+> > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > ---
+> >  tools/perf/util/python.c | 47 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >
+> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > index 5a4d2c9aaabd..599cb37600f1 100644
+> > --- a/tools/perf/util/python.c
+> > +++ b/tools/perf/util/python.c
+> > @@ -1163,6 +1163,16 @@ static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
+> >         return Py_None;
+> >  }
+> >
+> > +static PyObject *pyrf_evlist__close(struct pyrf_evlist *pevlist)
+> > +{
+> > +       struct evlist *evlist = &pevlist->evlist;
+> > +
+> > +       evlist__close(evlist);
+> > +
+> > +       Py_INCREF(Py_None);
+> > +       return Py_None;
+> > +}
+> > +
+> >  static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
+> >  {
+> >         struct record_opts opts = {
+> > @@ -1202,6 +1212,31 @@ static PyObject *pyrf_evlist__enable(struct pyrf_evlist *pevlist)
+> >         return Py_None;
+> >  }
+> >
+> > +static PyObject *pyrf_evlist__next(struct pyrf_evlist *pevlist,
+> > +                                  PyObject *args, PyObject *kwargs)
+> > +{
+> > +       struct evlist *evlist = &pevlist->evlist;
+> > +       PyObject *py_evsel;
+> > +       struct perf_evsel *pevsel;
+> > +       struct evsel *evsel;
+> > +       struct pyrf_evsel *next_evsel = PyObject_New(struct pyrf_evsel, &pyrf_evsel__type);
+> > +       static char *kwlist[] = { "evsel", NULL };
+> > +
+> > +       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist,
+> > +                                        &py_evsel))
+> > +               return NULL;
+> > +
+> > +       pevsel = (py_evsel == Py_None) ? NULL : &(((struct pyrf_evsel *)py_evsel)->evsel.core);
+> > +       pevsel = perf_evlist__next(&(evlist->core), pevsel);
+> > +       if (pevsel != NULL) {
+> > +               evsel = container_of(pevsel, struct evsel, core);
+> > +               next_evsel = container_of(evsel, struct pyrf_evsel, evsel);
+> > +               return (PyObject *) next_evsel;
+> > +       }
+> > +
+> > +       return Py_None;
+> > +}
+> > +
+> 
+> Thanks for this! Have you looked at the existing iteration support?
+> There's an example here:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/python/tracepoint.py?h=perf-tools-next#n26
+> ```
+>     for ev in evlist:
+>         ev.sample_type = ev.sample_type & ~perf.SAMPLE_IP
+>         ev.read_format = 0
+> ```
+> In the next patch you have:
+> ```
+>         evsel = evlist.next(None)
+>         while evsel != None:
+>             counts = evsel.read(0, 0)
+>             print(counts.val, counts.ena, counts.run)
+>             evsel = evlist.next(evsel)
+> ```
+> I believe the former looks better. It also isn't clear to me if next
+> belongs on evlist or evsel.
 
-It is documented to produce an (%rip) reference in the gcc documentation, =
-and gcc is the reference for inline assembly=2E
+Yes, the existing support would be the right way, I missed that. Will fix in
+v2.
 
-Furthermore, documentation is not reality=2E Code is=2E
+and regarding the next() function, I think we should keep it for evlist
+because for the C code it's defined in the context of evlist, so would
+avoid confusion. But since it is not needed for the iteration, should
+I keep it in v2?
+
+Thanks,
+Gautam
