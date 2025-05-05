@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6040F288C08;
-	Mon,  5 May 2025 23:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC90C239E80;
+	Mon,  5 May 2025 23:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486382; cv=none; b=BhpZTGSHLwC8U4L6EX9xrmYCv1+FB8aXMiZlQvGqECt3ICuFzKmgZV74Hq/4BfqSvC6tjTwp3L8LhErANP3movReF1nGmOQwJS4KnQK9vtnUhDRRWe5ZSCMRZ9QE+MF9Dzwo9Y02+8UKjrIEpDHN2nX+cUOrfuH9akCi3/cpuv8=
+	t=1746486371; cv=none; b=O+UmfWCVLVxKbBy6cQXkWMyZ0A/cxe9VmOPS0JNRn/qcdGF2oKG4Oth5q9kHoff6PJVrsj40jAdRfgZNUnbcnpDn6GdOz3Nxfg/gVOx2AT77sfZi5wxfAA+emUVScrkxXncqgfVpfiqZpYtTNz8vOSktZSCW/XHkQq5eIsmToUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486382; c=relaxed/simple;
-	bh=8E7nac/QCc3SLVtRbHD9vhpFGLL1kZeil0JHEGfxZME=;
+	s=arc-20240116; t=1746486371; c=relaxed/simple;
+	bh=Eu0Vxmjy+j96zmKQbWqFv06fTIOV9pidgP4pHpT+D9Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JyF35iwxeTkwXuzaLzlkHlIyb7cT+nLIrdV8zi5xX9dJF7KdDYp9t3Bp3uClasUkyI4FZ8wvI49vRKhwc+JoAJjkKeMciudccbjh/bJMtHi/slH7Crb0LLzO32baDYXnzRvgQiYWGDa1mhECainXG92BSWBl0nTR4wP6x2ngAOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PH38lmVg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PdSyjzsLM1Lr2KIybnYEhdprTrsB8FaxgyE4NQCs9smA33BLx9O6OA5MteYGigxhWU4ss4UZTzYotfn8Y9BLSviYhTwyO3PdEbUCuI4vbZe/S0TX7eTj3/yVKDXOn7LEcxQWWfVBlLSGai3iYC6I9/nDO8xWn7B7ZD8YhXIdIKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHXa2kfy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PH38lmVg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134D9C4CEEF;
-	Mon,  5 May 2025 23:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHXa2kfy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7036C4CEEE;
+	Mon,  5 May 2025 23:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486381;
-	bh=8E7nac/QCc3SLVtRbHD9vhpFGLL1kZeil0JHEGfxZME=;
+	s=k20201202; t=1746486371;
+	bh=Eu0Vxmjy+j96zmKQbWqFv06fTIOV9pidgP4pHpT+D9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PH38lmVgTOK0jEnp+9nVq/RcpTsiBVJCfsuMQl9wz0y3BNrKTdSv/YFBkfH59xMKs
-	 sxGcoD3HPG3N0B4rfyoOyFC0WYiNngBcxJEmPYr2g7+1bWppEKzQKNGmsvHcWVNMud
-	 3KEyozuvcY//8QbzYcGh4AMLg0h7zPVSTdJDO7chErCEYpmzqXxFummy5gvh30J2n1
-	 dq3kC4kI+P34Nsa4h/FmfxwqfFVQE5XDOpZPcqrzsmXaKyBOVDKdtcCaaGSNDPU2iS
-	 3AFjryyfD++bBT5XZWm7wfOBVBvXuQrRe1nLsfP8TDevuMTHdy5VS2XpiOa2jgJYyQ
-	 uFSqQWSQM3eEg==
+	b=WHXa2kfyWrlErSsszY91+kJ03HPDAHe3cl+XseLM6he9ulJf0WH4zDgfgMdZ3NJT1
+	 pkj41wH/hyJzDP5j4h37kwmXHweUs9DOdJ/D1cc4PO/zGtOblTikG0l0M9wg+Cv1Y7
+	 jocJhzkD16//o4dVFEDkXXPnKS7LtfONdMArXMHltiK7hz6XTp/Zq3zvvbYqohUZ7X
+	 ntQKURoM3aXmkjFqmsV9CuiqOvMd6/dLnXkQFUaYKVE9Ca0VDpd1EG6FaWXnc1iM1X
+	 AWna2lslumUPgCxpl8+p84o+PLYXIdf8i3faQtp1ZOQEQ1r1xipJ6bIqJsvC1PTWb2
+	 wepUwGrPh7KSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Douglas Anderson <dianders@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
+Cc: P Praneesh <quic_ppranees@quicinc.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 293/294] drm/panel-edp: Add Starry 116KHD024006
-Date: Mon,  5 May 2025 18:56:33 -0400
-Message-Id: <20250505225634.2688578-293-sashal@kernel.org>
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.6 289/294] wifi: ath12k: Fix end offset bit definition in monitor ring descriptor
+Date: Mon,  5 May 2025 18:56:29 -0400
+Message-Id: <20250505225634.2688578-289-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -55,55 +52,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Douglas Anderson <dianders@chromium.org>
+From: P Praneesh <quic_ppranees@quicinc.com>
 
-[ Upstream commit 749b5b279e5636cdcef51e15d67b77162cca6caa ]
+[ Upstream commit 6788a666000d600bd8f2e9f991cad9cc805e7f01 ]
 
-We have a few reports of sc7180-trogdor-pompom devices that have a
-panel in them that IDs as STA 0x0004 and has the following raw EDID:
+End offset for the monitor destination ring descriptor is defined as
+16 bits, while the firmware definition specifies only 12 bits.
+The remaining bits (bit 12 to bit 15) are reserved and may contain
+junk values, leading to invalid information retrieval. Fix this issue
+by updating the correct genmask values.
 
-  00 ff ff ff ff ff ff 00  4e 81 04 00 00 00 00 00
-  10 20 01 04 a5 1a 0e 78  0a dc dd 96 5b 5b 91 28
-  1f 52 54 00 00 00 01 01  01 01 01 01 01 01 01 01
-  01 01 01 01 01 01 8e 1c  56 a0 50 00 1e 30 28 20
-  55 00 00 90 10 00 00 18  00 00 00 00 00 00 00 00
-  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 fe
-  00 31 31 36 4b 48 44 30  32 34 30 30 36 0a 00 e6
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
 
-We've been unable to locate a datasheet for this panel and our partner
-has not been responsive, but all Starry eDP datasheets that we can
-find agree on the same timing (delay_100_500_e200) so it should be
-safe to use that here instead of the super conservative timings. We'll
-still go a little extra conservative and allow `hpd_absent` of 200
-instead of 100 because that won't add any real-world delay in most
-cases.
-
-We'll associate the string from the EDID ("116KHD024006") with this
-panel. Given that the ID is the suspicious value of 0x0004 it seems
-likely that Starry doesn't always update their IDs but the string will
-still work to differentiate if we ever need to in the future.
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250109142853.1.Ibcc3009933fd19507cc9c713ad0c99c7a9e4fe17@changeid
+Signed-off-by: P Praneesh <quic_ppranees@quicinc.com>
+Link: https://patch.msgid.link/20241223060132.3506372-8-quic_ppranees@quicinc.com
+Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath12k/hal_desc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 94fe2f3836a9a..53b3b24d7d7c0 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1923,6 +1923,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('S', 'H', 'P', 0x1523, &sharp_lq140m1jw46.delay, "LQ140M1JW46"),
- 	EDP_PANEL_ENTRY('S', 'H', 'P', 0x154c, &delay_200_500_p2e100, "LQ116M1JW10"),
+diff --git a/drivers/net/wireless/ath/ath12k/hal_desc.h b/drivers/net/wireless/ath/ath12k/hal_desc.h
+index 6c17adc6d60b5..1bb840c2bef57 100644
+--- a/drivers/net/wireless/ath/ath12k/hal_desc.h
++++ b/drivers/net/wireless/ath/ath12k/hal_desc.h
+@@ -2918,7 +2918,7 @@ struct hal_mon_buf_ring {
  
-+	EDP_PANEL_ENTRY('S', 'T', 'A', 0x0004, &delay_200_500_e200, "116KHD024006"),
- 	EDP_PANEL_ENTRY('S', 'T', 'A', 0x0100, &delay_100_500_e200, "2081116HHD028001-51D"),
+ #define HAL_MON_DEST_COOKIE_BUF_ID      GENMASK(17, 0)
  
- 	{ /* sentinal */ }
+-#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(15, 0)
++#define HAL_MON_DEST_INFO0_END_OFFSET		GENMASK(11, 0)
+ #define HAL_MON_DEST_INFO0_FLUSH_DETECTED	BIT(16)
+ #define HAL_MON_DEST_INFO0_END_OF_PPDU		BIT(17)
+ #define HAL_MON_DEST_INFO0_INITIATOR		BIT(18)
 -- 
 2.39.5
 
