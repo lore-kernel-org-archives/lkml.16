@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF922C0306;
-	Mon,  5 May 2025 22:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0AA2BE7B1;
+	Mon,  5 May 2025 22:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485339; cv=none; b=b/kY67OGTyhG5zMOPtldvTMJGNT3CDcYyMSOJZXWgWZmKBj8TdzDYZzr+cwE2jbIN9f9zjdO2RXTlVMZ1VDfJ+x05Z9PiSZgX6EsO5Vk5zsRgQYAdI2mT4I2kNfSRUcAIps2WMPoB7Rs8dUIkWWTC7UFBKXSX7lp9lYgwzbVPN8=
+	t=1746485254; cv=none; b=XGXv5U+oL89irVmn7G2eodCFMBlAq6Z9FIYycgdTIGGSOB7GSudYKmwRGGWfOZeqsd0gp3qM68PTFr9Wm9CfCNMKFQUym8PI8cdYC+i8ruu+lF/CFfCBMftNDnHs0czvDwAfGAI6GiAPbwmcaj+oEp7+jWvm2Q8lLLKnCr5NMAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485339; c=relaxed/simple;
-	bh=481MeWMj+cVJvQa2lmFDWC+y3q6Ng+pvrM0i1634QHw=;
+	s=arc-20240116; t=1746485254; c=relaxed/simple;
+	bh=jIhSum4+a6VmsFbYcJTxe1fbt8iNZlAUy3+yev6QYro=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G8PNBA3rkTJDz2sV4azRAqvnGLx1W5Da683RXdi5TPJgCMcmS9io2uiUb7k5ja6rO0GvN7L+BAUXm0k0csGd9qxL1NqPXbOCElfUkkunwlnGrBqghJND1o/tSmGtZnAh8PxCCVOEiYOoBQIe4nu5dUE8hnlvbyYs5g4rtGy7wfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMbHx3Bf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=g0fomfqZIOxLK9bhNV2xKXNlDpZyQPlRWKqkVlG0OHczA4dQRUH1dNCkJOlbNZx84ROpAWzSsJ8zaUpAaDFbHYT2pRje+9XVypn7pNDzGKJ+r8Y4j/6r99aDt/j/hWUGTcDUv8DlkashJsRw0C41L3UP/eso+iaFBfXJ+EDy0pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUoshxnS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMbHx3Bf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EBDC4CEF1;
-	Mon,  5 May 2025 22:48:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUoshxnS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DF6C4CEED;
+	Mon,  5 May 2025 22:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485338;
-	bh=481MeWMj+cVJvQa2lmFDWC+y3q6Ng+pvrM0i1634QHw=;
+	s=k20201202; t=1746485253;
+	bh=jIhSum4+a6VmsFbYcJTxe1fbt8iNZlAUy3+yev6QYro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aMbHx3BfoXcqdmk6hmfbud33gFVjGjKYz2A6pMDiH5Eb2vkFgBfUNJgNYIoM2xIfj
-	 qAPY1caxYro9dTzypd1zsQqgaPPKB8mrTKizfuMxtGZbQZdtwUKcFiaK6kxu3OLxBy
-	 DVkPWF2XXmHzXQwovXRLCjj/e0TpH5DxFnkSTKc+qc2w2Zz535yYBngYlqveRSR8UW
-	 O9Mb4bnkCTYjRB+OdcvUOIN18k/lxG1unrVk+B1vIGZbm5eZdbVvE/nDAMgAbGtx5D
-	 RnA7N84MlQGAcBMcXhjEC15z7gKaZ3BCVb76izoZ/TjqktqOwk4eHuj4hLbZ8TLEQv
-	 KPhCY+eKsLaww==
+	b=LUoshxnSBbJYYxVqXyQ9UjsHUb8OavG5ae3ju2kLhBGpSYpRQIgnOv3RA74PQti9E
+	 f+xC+skDrjbmocqSFzUuchzpSXwDiZbtxaN6kLE/YKxjnBfijlWCFKLEqpSEKX1PDI
+	 CBo/AMdbOqnvaVbhLQ9Bmi2HlJq31jh16eJWAxYiv3GSx/s68QpCcs56NFhoUonqeQ
+	 JCtfDnTUrPwqP57hKxYN5YD8vhwC5gyJucrHiVWuiR4DET1PZyWKEjZ2NlhxD+Rm8S
+	 pEukfK+aWP9YMbSTXgJ6Tiiy7bUEoVRj+/8u0HUrZ3saXgOOVgLtvxcZisahsFrt+u
+	 ihOomzAVmvPlw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
-	Ashutosh Dixit <ashutosh.dixit@intel.com>,
+Cc: Satyanarayana K V P <satyanarayana.k.v.p@intel.com>,
+	=?UTF-8?q?Micha=C5=82=20Wajdeczko?= <michal.wajdeczko@intel.com>,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>,
+	=?UTF-8?q?Piotr=20Pi=C3=B3rkowski?= <piotr.piorkowski@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	lucas.demarchi@intel.com,
 	thomas.hellstrom@linux.intel.com,
@@ -39,9 +41,9 @@ Cc: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>,
 	simona@ffwll.ch,
 	intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 275/486] drm/xe/oa: Ensure that polled read returns latest data
-Date: Mon,  5 May 2025 18:35:51 -0400
-Message-Id: <20250505223922.2682012-275-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 237/486] drm/xe/pf: Create a link between PF and VF devices
+Date: Mon,  5 May 2025 18:35:13 -0400
+Message-Id: <20250505223922.2682012-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -51,40 +53,121 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+From: Satyanarayana K V P <satyanarayana.k.v.p@intel.com>
 
-[ Upstream commit 98c9d27ab30aa9c6451d3a34e6e297171f273e51 ]
+[ Upstream commit 8c0aff7d92e2be25717669eb65a81a89740a24f2 ]
 
-In polled mode, user calls poll() for read data to be available before
-performing a read(). In the duration between these 2 calls, there may be
-new data available in the OA buffer. To ensure user reads all available
-data, check for latest data in the OA buffer in polled read.
+When both PF and VF devices are enabled on the host, they
+resume simultaneously during system resume.
 
-Signed-off-by: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
-Reviewed-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250212010255.1423343-1-umesh.nerlige.ramappa@intel.com
+However, the PF must finish provisioning the VF before any
+VFs can successfully resume.
+
+Establish a parent-child device link between the PF and VF
+devices to ensure the correct order of resumption.
+
+V4 -> V5:
+- Added missing break in the error condition.
+V3 -> V4:
+- Made xe_pci_pf_get_vf_dev() as a static function and updated
+  input parameter types.
+- Updated xe_sriov_warn() to xe_sriov_abort() when VF device
+  cannot be found.
+V2 -> V3:
+- Added function documentation for xe_pci_pf_get_vf_dev().
+- Added assertion if not called from PF.
+V1 -> V2:
+- Added a helper function to get VF pci_dev.
+- Updated xe_sriov_notice() to xe_sriov_warn() if vf pci_dev
+  is not found.
+
+Signed-off-by: Satyanarayana K V P <satyanarayana.k.v.p@intel.com>
+Cc: Michał Wajdeczko <michal.wajdeczko@intel.com>
+Cc: Michał Winiarski <michal.winiarski@intel.com>
+Cc: Piotr Piórkowski <piotr.piorkowski@intel.com>
+Reviewed-by: Piotr Piorkowski <piotr.piorkowski@intel.com>
+Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20250224102807.11065-2-satyanarayana.k.v.p@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_oa.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/xe/xe_pci_sriov.c | 51 +++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/xe_oa.c b/drivers/gpu/drm/xe/xe_oa.c
-index 448766033690c..d306ed0a04434 100644
---- a/drivers/gpu/drm/xe/xe_oa.c
-+++ b/drivers/gpu/drm/xe/xe_oa.c
-@@ -535,6 +535,7 @@ static ssize_t xe_oa_read(struct file *file, char __user *buf,
- 			mutex_unlock(&stream->stream_lock);
- 		} while (!offset && !ret);
- 	} else {
-+		xe_oa_buffer_check_unlocked(stream);
- 		mutex_lock(&stream->stream_lock);
- 		ret = __xe_oa_read(stream, buf, count, &offset);
- 		mutex_unlock(&stream->stream_lock);
+diff --git a/drivers/gpu/drm/xe/xe_pci_sriov.c b/drivers/gpu/drm/xe/xe_pci_sriov.c
+index aaceee748287e..09ee8a06fe2ed 100644
+--- a/drivers/gpu/drm/xe/xe_pci_sriov.c
++++ b/drivers/gpu/drm/xe/xe_pci_sriov.c
+@@ -62,6 +62,55 @@ static void pf_reset_vfs(struct xe_device *xe, unsigned int num_vfs)
+ 			xe_gt_sriov_pf_control_trigger_flr(gt, n);
+ }
+ 
++static struct pci_dev *xe_pci_pf_get_vf_dev(struct xe_device *xe, unsigned int vf_id)
++{
++	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
++
++	xe_assert(xe, IS_SRIOV_PF(xe));
++
++	/* caller must use pci_dev_put() */
++	return pci_get_domain_bus_and_slot(pci_domain_nr(pdev->bus),
++			pdev->bus->number,
++			pci_iov_virtfn_devfn(pdev, vf_id));
++}
++
++static void pf_link_vfs(struct xe_device *xe, int num_vfs)
++{
++	struct pci_dev *pdev_pf = to_pci_dev(xe->drm.dev);
++	struct device_link *link;
++	struct pci_dev *pdev_vf;
++	unsigned int n;
++
++	/*
++	 * When both PF and VF devices are enabled on the host, during system
++	 * resume they are resuming in parallel.
++	 *
++	 * But PF has to complete the provision of VF first to allow any VFs to
++	 * successfully resume.
++	 *
++	 * Create a parent-child device link between PF and VF devices that will
++	 * enforce correct resume order.
++	 */
++	for (n = 1; n <= num_vfs; n++) {
++		pdev_vf = xe_pci_pf_get_vf_dev(xe, n - 1);
++
++		/* unlikely, something weird is happening, abort */
++		if (!pdev_vf) {
++			xe_sriov_err(xe, "Cannot find VF%u device, aborting link%s creation!\n",
++				     n, str_plural(num_vfs));
++			break;
++		}
++
++		link = device_link_add(&pdev_vf->dev, &pdev_pf->dev,
++				       DL_FLAG_AUTOREMOVE_CONSUMER);
++		/* unlikely and harmless, continue with other VFs */
++		if (!link)
++			xe_sriov_notice(xe, "Failed linking VF%u\n", n);
++
++		pci_dev_put(pdev_vf);
++	}
++}
++
+ static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+@@ -92,6 +141,8 @@ static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
+ 	if (err < 0)
+ 		goto failed;
+ 
++	pf_link_vfs(xe, num_vfs);
++
+ 	xe_sriov_info(xe, "Enabled %u of %u VF%s\n",
+ 		      num_vfs, total_vfs, str_plural(total_vfs));
+ 	return num_vfs;
 -- 
 2.39.5
 
