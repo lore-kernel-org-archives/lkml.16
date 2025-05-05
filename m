@@ -1,131 +1,221 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E5542A9B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834D21AC458;
+	Mon,  5 May 2025 17:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746467202; cv=none; b=VDJKDIuUKOmOywaVVxTJ8mjCaCUCZbm3B1OV2k4O55ErXM0jh0dkKhu9C1Iabp3WvyNJPxRX4W+tNpCLsdu+wv9GNbPjhqDSTNDN+nyORRNnRSPma94ALQkExX7z5h/UpHf1mXXUzeJNOik6HIe0zd1iQdoOQT6GxowQAcw6MwM=
+	t=1746467233; cv=none; b=R0ccIGkoA5m3cV6CN8w1rOb3Q+3hXnQ5JA4gwZig2lCkKfXjZRBJyRIHbyI8yMJ3QWZdHSL9nivPp7+Z7VqPGfwNxBRJ5zaSnQVfJJJFemY5ObCU/KogISYAZQU1ynV6yk9SYNGyMmgQ0fBXSZRu8OdotTto8YXI2p6wjrKU3jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746467202; c=relaxed/simple;
-	bh=flx8Ljw5SKcwo6d908KI2oJJPOswRDybxWbQ0sBwqXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mej4aGffqRuefRO4oZcP5DXrbG+P7vfcL8uw7PV89CNUv/ahAQIIcS/CFZx0cbJN+mlnA0gYPFFYX9gGlA5LKlJ1cJ96m5P51K2TcdITNlCAhm/vGw7Q0NHF9frg2mWngbGE7lJEyN3CXjLkEazHWZv7i8J3usYMj8NciT9RNqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WfoQlf4j; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746467233; c=relaxed/simple;
+	bh=y0ZpQ6ZMJcFQtR9JoG+u889WezBkhmmP03zluTSmHI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UVlLAYQTKvTOA/ERM216NQJkvkZKKznT09cU17piPyVyqmWV01BiFWPzJLTD2mxjA0emuRbKZjWvL9TgGb76ksredGywWKsKyQJeAaiI8dpZEBmW8Cgl3YhUfiOo/1FgMg/Wp543sOHeMMgIZq/D4iMrdOyRfvkKvfjC0oFE2lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZLahehg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WfoQlf4j"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so648135766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746467198; x=1747071998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=43yWpaDFlvzQdOUfoFXBeY0L6VRPaAC57++Wqp89Ras=;
-        b=WfoQlf4jXViXBpXOQLTbOnWIO5RZV2Gq/6MNcaBBHXu4feRPDHYy+ZYqykb+pQRd5e
-         ktyZeAyaWz+4rvU6rZPnty17yBJGLz+r7LUq+655ZcDoreE+kmU3nMD1bVYO+hEYMz6m
-         rsYoH5SU0KL8yErHMcDDDAfWSDcAt5fiAR2wSZJ1gfwWUXuaL27PrUoQ8bsoYa9OyBuf
-         CKMoIFo071qwd0s46F9KJQVu9wXgj3FxQgjNdxy3anU+x2N+X6RX6DS/qXBoRGLfQcfE
-         J6jTTChziU+sYdXTGraI/Hi4c/nIqeCg7ACy1FRDNJvDuMJEBFnqH9GYw0CaNf3dRZrL
-         0NPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746467198; x=1747071998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=43yWpaDFlvzQdOUfoFXBeY0L6VRPaAC57++Wqp89Ras=;
-        b=udEBEugmfZFJYJEiIkCtBNiKRgwKD2odiR9ltkV7q/BhD6iHph3ubuUEvryMWM0yvd
-         /ustMbt545s+LSYz9ugeJFcT46J28xTnVBfICWbVAtQNB44O/HpV4Y+8Agk4wF6CNGMg
-         +7QNJONA9pcX88SNvtgDwZN5yHT0h+/qtIOtvugHBMHOjIgntgnP2zJ1Gs/rcuCIe9b5
-         h3qcI5ysp0WHQRHMCuIvwVfAPl5yAIGllB6r8g6UTsZReIajEdd7a/+EQnQiSa29D259
-         CZLnfGeC3VOsBti91ibNPoa45bZ5CZtV0hgisMLStOgYhStdxM09OkDuV0u9mhWB+MVa
-         aTBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmCDMDocA4lRyqg5gHe/0vr926D/6KKRE3rfUHsREKrkokf9hxJrarlFLtPbsC9ZCTBt294XNfVnsbMf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL/onAGgQofa8I2SKXQjCQpn3hRnGDIl/PhP768ey2aW+4mCrb
-	SEtIQWH+dq7GgS7OVM5V6+1VoXPJVmxeIbbMC+/VvjIKTUxTQBO07ZSwuI2QnUg=
-X-Gm-Gg: ASbGncuNxVx0CnuVRt4CeuemZIfo1ptyIYtEqJG/eB1wOkESNzA8pSTmtoqpo6wK//F
-	+/z8r1ah5OTFZUC6AQLOjtiGcip/jH+InHwOhA0i5QWaWjePpUlqbZU0AoiwCMpx52+2YrkCab5
-	jEF65G6k2k3tAF2c2LCz6m8Yi6niluyvoFBa5Ucu3sziUzb2L+A8np1FIc+35aU5FVqum1/FMaX
-	aEqP3yEc4cn6730N618TfvwpF9JHvxfbICCm+wTooSsumfC/Dfz01BmSl0PZvMQh2u5z1Lzz5eN
-	sNU6BmqdRpeL09ddLzgQQBQcNE+0rGyINz1FSyiDcsE=
-X-Google-Smtp-Source: AGHT+IHZlXsEPKMLo2zRS60G2WHXFj+ckZOv4p4jkB4sqgQ0nGSrOlorMH5olM9T7Zhs5WwmEyP8Cg==
-X-Received: by 2002:a17:906:bf48:b0:ace:4197:9ac5 with SMTP id a640c23a62f3a-ad1906a9acdmr985756166b.27.1746467198490;
-        Mon, 05 May 2025 10:46:38 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a311bsm532577666b.54.2025.05.05.10.46.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 10:46:38 -0700 (PDT)
-Date: Mon, 5 May 2025 19:46:36 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-Cc: "Jain, Ayush" <ayushjai@amd.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Mel Gorman <mgormanmgorman@suse.de>, Michal Hocko <mhocko@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, "Chen, Tim C" <tim.c.chen@intel.com>, 
-	Aubrey Li <aubrey.li@intel.com>, Libo Chen <libo.chen@oracle.com>, cgroups@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Madadi Vineeth Reddy <vineethr@linux.ibm.com>, 
-	Neeraj.Upadhyay@amd.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3] sched/numa: add statistics of numa balance task
- migration
-Message-ID: <tkfh4h5ntl42jc2tnwyj6dhiqouf6mowin7euvrnbs2tyiqlay@bpzdptv3plsf>
-References: <20250430103623.3349842-1-yu.c.chen@intel.com>
- <8b248ff3-43ae-4e40-9fa4-ba4a04f3c18b@amd.com>
- <bd936eba-e536-4825-ae64-d1bd23c6eb4c@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZLahehg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D99E6C4CEE4;
+	Mon,  5 May 2025 17:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746467233;
+	bh=y0ZpQ6ZMJcFQtR9JoG+u889WezBkhmmP03zluTSmHI4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NZLahehgYKmOiKeq33MCXS9z+7/V21fRzPEjMB5Hk+QNX42SiGWX1+qR3ytW74FkT
+	 fo4ZvYFj3tqn3r1Au7PS/qTnPFenYuuUjyiGsDAsVFLkJSyXzIB6EOX1YmYiDM0rPo
+	 GD8dUJBaxM/hRz3fY62UHxQS2do9v/xKKNK9MEwSBjZg+X6p5Zar7u48eRSOTfbw5q
+	 BWXitrKnIaSezFNbBNbme+RfsTQMNVvwhWdCHoxOFJFHoJJkJWjyBCT7AbVjw2QgDX
+	 wPnFefOXCPEuQ/zeKMcTUesYNiKXYlpvXFz8ALouvj4aUe9e0ZzuDgJM5L7ksWUvF8
+	 3nkFQuqcQy0EA==
+Date: Mon, 5 May 2025 18:47:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: =?UTF-8?B?VMOzdGggSsOhbm9z?= via B4 Relay
+ <devnull+gomba007.gmail.com@kernel.org>
+Cc: gomba007@gmail.com, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: chemical: Add driver for SEN0322
+Message-ID: <20250505184705.6f00321a@jic23-huawei>
+In-Reply-To: <20250505-iio-chemical-sen0322-v2-2-217473983b42@gmail.com>
+References: <20250505-iio-chemical-sen0322-v2-0-217473983b42@gmail.com>
+	<20250505-iio-chemical-sen0322-v2-2-217473983b42@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="22qdon36iehurhxm"
-Content-Disposition: inline
-In-Reply-To: <bd936eba-e536-4825-ae64-d1bd23c6eb4c@intel.com>
-
-
---22qdon36iehurhxm
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] sched/numa: add statistics of numa balance task
- migration
-MIME-Version: 1.0
 
-On Mon, May 05, 2025 at 11:03:10PM +0800, "Chen, Yu C" <yu.c.chen@intel.com=
-> wrote:
-> According to this address,
->    4c 8b af 50 09 00 00    mov    0x950(%rdi),%r13  <--- r13 =3D p->mm;
->    49 8b bd 98 04 00 00    mov    0x498(%r13),%rdi  <--- p->mm->owner
-> It seems that this task to be swapped has NULL mm_struct.
+On Mon, 05 May 2025 09:52:59 +0200
+T=C3=B3th J=C3=A1nos via B4 Relay <devnull+gomba007.gmail.com@kernel.org> w=
+rote:
 
-So it's likely a kernel thread. Does it make sense to NUMA balance
-those? (I na=EFvely think it doesn't, please correct me.) ...
+> From: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
+>=20
+> Add support for the DFRobot SEN0322 oxygen sensor.
+>=20
+> Datasheet:
+> 	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
 
->  static void __migrate_swap_task(struct task_struct *p, int cpu)
->  {
->         __schedstat_inc(p->stats.numa_task_swapped);
-> -       count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
-> +       if (p->mm)
-> +               count_memcg_event_mm(p->mm, NUMA_TASK_SWAP);
+Checkpatch is lagging behind the times, but it is fine to use this
+as a formal tag in the tag block..
+>=20
+> To instantiate (assuming device is connected to I2C-2):
+> 	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
+>=20
+> To get the oxygen concentration (assuming device is iio:device0) multiply
+> the values read from:
+> 	/sys/bus/iio/devices/iio:device0/in_concentration_raw
+> 	/sys/bus/iio/devices/iio:device0/in_concentration_scale
+>=20
+Datasheet: https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
 
-=2E.. proper fix should likely guard this earlier, like the guard in
-task_numa_fault() but for the other swapped task.
+> Signed-off-by: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
+A few other little things inline.
 
-Michal
+Nice little driver :)
 
---22qdon36iehurhxm
-Content-Type: application/pgp-signature; name="signature.asc"
+Jonathan
 
------BEGIN PGP SIGNATURE-----
+> diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen032=
+2.c
+> new file mode 100644
+> index 000000000000..c2dfb0ff7f40
+> --- /dev/null
+> +++ b/drivers/iio/chemical/sen0322.c
+> @@ -0,0 +1,167 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for the DFRobot SEN0322 oxygen sensor.
+> + *
+> + * Datasheet:
+> + *	https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
+> + *
+> + * Possible I2C slave addresses:
+> + *	0x70
+> + *	0x71
+> + *	0x72
+> + *	0x73
+> + *
+> + * Copyright (C) 2025 T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <linux/iio/iio.h>
+> +
+> +#define SEN0322_REG_DATA	0x03
+> +#define SEN0322_REG_COEFF	0x0A
+> +
+> +struct sen0322 {
+> +	struct regmap	*regmap;
+> +};
+> +
+> +static int sen0322_read_scale(struct sen0322 *sen0322, int *num, int *de=
+n)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(sen0322->regmap, SEN0322_REG_COEFF, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (val) {
+> +		*num =3D val;
+> +		*den =3D 100000;
+> +	} else {
+> +		*num =3D 209;
+> +		*den =3D 120000;
 
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBj5egAKCRAt3Wney77B
-SanGAPwNhmE23Z/0QW0JWDF2KTaNoo6f1GDl48W1opF0LxB1lQD+MNowOWLQ/L5v
-tgd+J+GBmSPm7cJPRvC8MFMHKdQZTQE=
-=EAuC
------END PGP SIGNATURE-----
+This is odd enough, that perhaps we could add a comment on why, or at least
+a cross reference to where these numbers come from?
+What is the special meaning of 0?
 
---22qdon36iehurhxm--
+> +	}
+> +
+> +	dev_dbg(regmap_get_device(sen0322->regmap), "scale: %d/%d\n",
+> +		*num, *den);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sen0322_read_data(struct sen0322 *sen0322)
+> +{
+> +	u8 data[4] =3D { 0 };
+
+If you are only read 3 bytes, why is this 4 long?
+
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data, 3);
+
+Having shortened above, use sizeof(data) for that 3 to avoid
+any potential future mismatch in sizes.
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D data[0] * 100 + data[1] * 10 + data[2];
+> +
+> +	dev_dbg(regmap_get_device(sen0322->regmap), "data: %d\n", ret);
+
+Given you more or less directly provide this to userspace now I'd drop
+the dev_dbg() as not adding any value for debugging.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int sen0322_read_raw(struct iio_dev *iio_dev,
+> +			    const struct iio_chan_spec *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct sen0322 *sen0322 =3D iio_priv(iio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		switch (chan->type) {
+> +		case IIO_CONCENTRATION:
+As the sensor only does concentration, you could either drop this
+check on basis we can't get here without it or if you want=20
+a strong sanity check do it outside the switch statement as
+	if (chan->type !=3D IIO_CONCENTRATION)
+		return -EINVAL;
+
+
+> +			ret =3D sen0322_read_data(sen0322);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			*val =3D ret;
+> +			return IIO_VAL_INT;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_CONCENTRATION:
+> +			ret =3D sen0322_read_scale(sen0322, val, val2);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			return IIO_VAL_FRACTIONAL;
+> +
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+
