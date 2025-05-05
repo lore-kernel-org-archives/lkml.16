@@ -1,168 +1,283 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763633596A;
-	Mon,  5 May 2025 11:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C9C1E5219;
+	Mon,  5 May 2025 11:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746445333; cv=none; b=KBW6x/posg8+tOKG0dwQjIKSKdL59kW9rxSTmpHHoIHTZLsui2/0tyjgWjapbZAkKz9WtjwLAwgItJet41XlCA7AUxqt9V6YGXvqtNZF1KAzOzyjKltEstd9lptQwZRjerRSs+S8Q10BJ/0a2GckNAgbKajsNl94tDsirU/xHog=
+	t=1746445418; cv=none; b=U9ECi3axbo8/4c1avlj8XM/OhTX2pDiAG1zvgLOX1EfMikkibecoRv9J0AnLymT8ViDUx8bCJd7pHb9CSyMVZQDzxl4+fPLC0yNLDNCuZz+7YBmC7k0dfmd2TfdrRvnE+52InWXm1wr8dU9GfUzmKz5QjhuikL46ZA+Go0n5SQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746445333; c=relaxed/simple;
-	bh=3ShDgHcrv0si/8F2zUrP8xt3sbXDU6yq8+ErTpjgbbA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RG/ENaQl0PjzUwIPeylLrVWezYIa8TqMFvtE59V+MKa1FHxrHygprCnun65Fus73kY9MU1vAPxXAXMjVMtSPD3dDwBdfKLzQTP8eKHvZPxBvNxn9xP08JKBR817zojSddGNBiPLKJ1Mer4mwKKFC/zGSwJTx5sxhAdVkCh/Figg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hp4EBdh9; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746445418; c=relaxed/simple;
+	bh=gUrhLh98uxjh0zegPMm+AoREjmn791EQcGfFdgz6q/Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QcgcI7Y87jd93Qh1VFlpmgyHveaNmAeR03cV07Bq3jNNF1EyKHo0B7N7TigIYrXv22pqoQ9WrCQ2XaqoIcTUPebnKqJebzYAEJjlxggPL15AMrd2VrDTPVcPWKmEq6Qwdvw6XcUJRGVkJk1zXVM4rvi9xApLwARAvBBoT/C4cUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gk8ZF53a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kUgyxaOo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hp4EBdh9"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c1efc457bso2845571f8f.2;
-        Mon, 05 May 2025 04:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746445329; x=1747050129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KruIqdPdauGVWjRYCa4lawsGc3EYFEr3EbHiC3ED+fE=;
-        b=Hp4EBdh9ixPBzHy7kPaFpLpFSciYdaZgMNgksVYiBjIL90kcS2k3orzgBClchk/qgB
-         llRaX5Wt5QDr/hV2W+MPpDsYPr+HFWxdIFGmUPMfKE00y2sbVwHA7rgWukARWxP3DSNC
-         Wjc+zSv5fuJcw3NWHVUKXj/2Cc7LRbJwB8QawrxAAqhLsevKoA6/O4uupCZSNrRaMmn+
-         EpyIXcFDzDaQJrCs+ZPyjIKSZQleca/unsXFXqGFqty4WGYTVmjHs5ABR6YXCwBCT07z
-         dgfX56pUZdhwXGhVGuq9FGnDOLMrKhlUisDtsi6M2RimcTkTYtUNxhr7uLywwNCW7OoJ
-         2LUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746445329; x=1747050129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KruIqdPdauGVWjRYCa4lawsGc3EYFEr3EbHiC3ED+fE=;
-        b=L9V5pCFJWfzve+i/I+ZD0fAkpMYpiHt3TILac3D70A3NCEuXnd9GnSU59VUCACTWbq
-         EPI7jW6t2vpwIZkXDBKtYS2iJ9ZmyZbDHPR0X7SHMakL0sYNC++LnV/GhrpBRqBqGrUI
-         LetwfT7vXQEGbUFjXJ/Iv0LfR4YfAzu214UyXqgaNsfkESlCTN6mXMAOWjwES1ncHVgN
-         W85+cvhwp0mupMsxrFA4Gh1TCanEFuHMfnGtd5qMfcnIec1DvPIMcV2BbwTdJOz+vSks
-         NZSGBBXdao2ZXFO1F+5go0DrvU/8A1vjZ5TDMUBXeEn3Kj0vFbQX8cETkbUSJvpkbH7a
-         sJ4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUmpCc5vpUtpwOGfvdkpexb6W/VKX4excVyAeVOYyvS1VYNw5+O97brTzq8sFo9M6lEk/sEowGSo9CENV91@vger.kernel.org, AJvYcCVO4BkAnP0m/8SbuE9rf3r61M9hzLReh/YZ2iqnxwvoinMOPvK7A1OE9Ccw/SZAEFjXAcQUVeHjoUwj@vger.kernel.org
-X-Gm-Message-State: AOJu0YziSw1Jy/g7E9ptGIK19STRdHQ87WVd0KmM5IR+mOMsCEnVJfRE
-	iqsWpQ9qTA0Uo9Ox4TGhf7HU6wNoqnr1mn26b02cKuZctLJ6uy62Wk5Cpx7+2vbzcLQ7fbDyZUH
-	AiO6WYIzDsTSpWRMf9v9JLnczN1Y=
-X-Gm-Gg: ASbGncsDjVG7FiBe82I3EYz3LBmqCn2EHU0lqmYMyPsYsbFX8p/+7w9Dp8tKB4ruiAK
-	Tvn96+N+Q+FgzDLKjOxt0/Q9Xx4N0liRWHNiL9TkfCA5rqdcwJ6u+jbreB07i9FH75MBCdr5wmk
-	1MAv+duwrtrRdDViRDUEq+mJxGke4cddFphA==
-X-Google-Smtp-Source: AGHT+IF0b08rVUeiB6pMpxCseBfmukd/TOtG6DGSWcy45xXCpz3/srzTxmFTfkMiKUYFe9RprpS0sbmx07u7TavER8A=
-X-Received: by 2002:a05:6000:1ac9:b0:39c:1f04:a646 with SMTP id
- ffacd0b85a97d-3a09fd726camr4763586f8f.13.1746445328440; Mon, 05 May 2025
- 04:42:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gk8ZF53a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kUgyxaOo"
+Date: Mon, 05 May 2025 11:43:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746445413;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E3qV84kubrP8h1aJ/Dasc0vKHhQrScDWYLE25IXJCHE=;
+	b=Gk8ZF53aqyuiAoWnQaCjYe2HZYlX5QXIY9Irxk7ftC44JLgsDJ2lpQ7cEyWWs+hMA5s3wl
+	wvw3FylzQnZig4p1QOpRIrOQ6jopbzMzawwqcq2ZwQRU8mrI3N7f4ygDiTePU5EkSEf2Wd
+	Rn5U/QGVREaV7lay/Q2NarEmoGiDUOkfpPmPUtYEs7w2XDG/g0SxmU4bUwYJj1iJ91uk22
+	1xGl72ekjm5001Vjdnifk9KcYl7fLtdhH01yD3B3OI7o1R8aDaj87NKd9rBMJfoCDibJMN
+	qbXCD4OhFYPVdzvx3ll8hd+a0YhA9Iu5HXz/692biyh3F798+V+xbX/6ahHafA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746445413;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E3qV84kubrP8h1aJ/Dasc0vKHhQrScDWYLE25IXJCHE=;
+	b=kUgyxaOo4hey+ETApz5phpIymhLBUNfr5cBIpOhJ0931axDji12pqW3BfuIpwhTlVXyM1D
+	UdV77ePhZhlfihCw==
+From: "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu: Restore fpu_thread_struct_whitelist() to fix
+ CONFIG_HARDENED_USERCOPY=y crash
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Kees Cook <kees@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, "Chang S. Bae" <chang.seok.bae@intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Brian Gerst <brgerst@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-hardening@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <202505041418.F47130C4C8@keescook # Discussion #2>
+References: <202505041418.F47130C4C8@keescook # Discussion #2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250503094149.29201-1-clamor95@gmail.com> <20250503094149.29201-3-clamor95@gmail.com>
- <ffac4a1b-5dfa-48e9-8ac4-37939b6a9347@linaro.org>
-In-Reply-To: <ffac4a1b-5dfa-48e9-8ac4-37939b6a9347@linaro.org>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Mon, 5 May 2025 14:41:57 +0300
-X-Gm-Features: ATxdqUG83kxEDJWXfjf1kMB8KKjw9VeaTfQqOHpfaGzkV6Mu-zq0PSNbH5qNHFs
-Message-ID: <CAPVz0n3i7=jM9GB-CggFOJEN7B+oBWvyqsSn8UXav3MH0BQJ5g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] drm: panel: Add support for Renesas R61307 based
- MIPI DSI panel
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174644540908.22196.11861468097053965791.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-=D0=BF=D0=BD, 5 =D1=82=D1=80=D0=B0=D0=B2. 2025=E2=80=AF=D1=80. =D0=BE 10:50=
- Neil Armstrong <neil.armstrong@linaro.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On 03/05/2025 11:41, Svyatoslav Ryhel wrote:
-> > R61307 is liquid crystal driver for high-definition amorphous silicon
-> > (a-Si) panels and is ideal for tablets and smartphones.
-> >
-> > Supported compatibles are:
-> > - hit,tx13d100vm0eaa
-> > - koe,tx13d100vm0eaa
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >   drivers/gpu/drm/panel/Kconfig                |  13 +
-> >   drivers/gpu/drm/panel/Makefile               |   1 +
-> >   drivers/gpu/drm/panel/panel-renesas-r61307.c | 327 ++++++++++++++++++=
+The following commit has been merged into the x86/fpu branch of tip:
+
+Commit-ID:     960bc2bcba5987a82530b9756e1f602a894cffa4
+Gitweb:        https://git.kernel.org/tip/960bc2bcba5987a82530b9756e1f602a894cffa4
+Author:        Kees Cook <kees@kernel.org>
+AuthorDate:    Sun, 04 May 2025 15:30:38 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 05 May 2025 13:24:32 +02:00
+
+x86/fpu: Restore fpu_thread_struct_whitelist() to fix CONFIG_HARDENED_USERCOPY=y crash
+
+Borislav Petkov reported the following boot crash on x86-32,
+with CONFIG_HARDENED_USERCOPY=y:
+
+  |  usercopy: Kernel memory overwrite attempt detected to SLUB object 'task_struct' (offset 2112, size 160)!
+  |  ...
+  |  kernel BUG at mm/usercopy.c:102!
+
+So the useroffset and usersize arguments are what control the allowed
+window of copying in/out of the "task_struct" kmem cache:
+
+        /* create a slab on which task_structs can be allocated */
+        task_struct_whitelist(&useroffset, &usersize);
+        task_struct_cachep = kmem_cache_create_usercopy("task_struct",
+                        arch_task_struct_size, align,
+                        SLAB_PANIC|SLAB_ACCOUNT,
+                        useroffset, usersize, NULL);
+
+task_struct_whitelist() positions this window based on the location of
+the thread_struct within task_struct, and gets the arch-specific details
+via arch_thread_struct_whitelist(offset, size):
+
+	static void __init task_struct_whitelist(unsigned long *offset, unsigned long *size)
+	{
+		/* Fetch thread_struct whitelist for the architecture. */
+		arch_thread_struct_whitelist(offset, size);
+
+		/*
+		 * Handle zero-sized whitelist or empty thread_struct, otherwise
+		 * adjust offset to position of thread_struct in task_struct.
+		 */
+		if (unlikely(*size == 0))
+			*offset = 0;
+		else
+			*offset += offsetof(struct task_struct, thread);
+	}
+
+Commit cb7ca40a3882 ("x86/fpu: Make task_struct::thread constant size")
+removed the logic for the window, leaving:
+
+	static inline void
+	arch_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+	{
+		*offset = 0;
+		*size = 0;
+	}
+
+So now there is no window that usercopy hardening will allow to be copied
+in/out of task_struct.
+
+But as reported above, there *is* a copy in copy_uabi_to_xstate(). (It
+seems there are several, actually.)
+
+	int copy_sigframe_from_user_to_xstate(struct task_struct *tsk,
+					      const void __user *ubuf)
+	{
+		return copy_uabi_to_xstate(x86_task_fpu(tsk)->fpstate, NULL, ubuf, &tsk->thread.pkru);
+	}
+
+This appears to be writing into x86_task_fpu(tsk)->fpstate. With or
+without CONFIG_X86_DEBUG_FPU, this resolves to:
+
+	((struct fpu *)((void *)(task) + sizeof(*(task))))
+
+i.e. the memory "after task_struct" is cast to "struct fpu", and the
+uses the "fpstate" pointer. How that pointer gets set looks to be
+variable, but I think the one we care about here is:
+
+        fpu->fpstate = &fpu->__fpstate;
+
+And struct fpu::__fpstate says:
+
+        struct fpstate                  __fpstate;
+        /*
+         * WARNING: '__fpstate' is dynamically-sized.  Do not put
+         * anything after it here.
+         */
+
+So we're still dealing with a dynamically sized thing, even if it's not
+within the literal struct task_struct -- it's still in the kmem cache,
+though.
+
+Looking at the kmem cache size, it has allocated "arch_task_struct_size"
+bytes, which is calculated in fpu__init_task_struct_size():
+
+        int task_size = sizeof(struct task_struct);
+
+        task_size += sizeof(struct fpu);
+
+        /*
+         * Subtract off the static size of the register state.
+         * It potentially has a bunch of padding.
+         */
+        task_size -= sizeof(union fpregs_state);
+
+        /*
+         * Add back the dynamically-calculated register state
+         * size.
+         */
+        task_size += fpu_kernel_cfg.default_size;
+
+        /*
+         * We dynamically size 'struct fpu', so we require that
+         * 'state' be at the end of 'it:
+         */
+        CHECK_MEMBER_AT_END_OF(struct fpu, __fpstate);
+
+        arch_task_struct_size = task_size;
+
+So, this is still copying out of the kmem cache for task_struct, and the
+window seems unchanged (still fpu regs). This is what the window was
+before:
+
+	void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+	{
+		*offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
+		*size = fpu_kernel_cfg.default_size;
+	}
+
+And the same commit I mentioned above removed it.
+
+I think the misunderstanding is here:
+
+  | The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
+  | now that the FPU structure is not embedded in the task struct anymore, which
+  | reduces text footprint a bit.
+
+Yes, FPU is no longer in task_struct, but it IS in the kmem cache named
+"task_struct", since the fpstate is still being allocated there.
+
+Partially revert the earlier mentioned commit, along with a
+recalculation of the fpstate regs location.
+
+Fixes: cb7ca40a3882 ("x86/fpu: Make task_struct::thread constant size")
+Reported-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Kees Cook <kees@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org
+Link: https://lore.kernel.org/all/20250409211127.3544993-1-mingo@kernel.org/ # Discussion #1
+Link: https://lore.kernel.org/r/202505041418.F47130C4C8@keescook             # Discussion #2
+---
+ arch/x86/include/asm/processor.h | 12 +++++-------
+ arch/x86/kernel/fpu/core.c       | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index eaa7214..ad33903 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -522,14 +522,12 @@ extern struct fpu *x86_task_fpu(struct task_struct *task);
+ # define x86_task_fpu(task)	((struct fpu *)((void *)(task) + sizeof(*(task))))
+ #endif
+ 
+-/*
+- * X86 doesn't need any embedded-FPU-struct quirks:
+- */
+-static inline void
+-arch_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
++extern void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size);
 +
-> >   3 files changed, 341 insertions(+)
-> >   create mode 100644 drivers/gpu/drm/panel/panel-renesas-r61307.c
-> >
->
-> <snip>
->
-> > +static int renesas_r61307_probe(struct mipi_dsi_device *dsi)
-> > +{
-> > +     struct device *dev =3D &dsi->dev;
-> > +     struct renesas_r61307 *priv;
-> > +     int ret;
-> > +
-> > +     priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     priv->vcc_supply =3D devm_regulator_get(dev, "vcc");
-> > +     if (IS_ERR(priv->vcc_supply))
-> > +             return dev_err_probe(dev, PTR_ERR(priv->vcc_supply),
-> > +                                  "Failed to get vcc-supply\n");
-> > +
-> > +     priv->iovcc_supply =3D devm_regulator_get(dev, "iovcc");
-> > +     if (IS_ERR(priv->iovcc_supply))
-> > +             return dev_err_probe(dev, PTR_ERR(priv->iovcc_supply),
-> > +                                  "Failed to get iovcc-supply\n");
-> > +
-> > +     priv->reset_gpio =3D devm_gpiod_get_optional(dev, "reset",
-> > +                                                GPIOD_OUT_HIGH);
-> > +     if (IS_ERR(priv->reset_gpio))
-> > +             return dev_err_probe(dev, PTR_ERR(priv->reset_gpio),
-> > +                                  "Failed to get reset gpios\n");
-> > +
-> > +     if (device_property_read_bool(dev, "renesas,inversion"))
-> > +             priv->inversion =3D true;
-> > +
-> > +     if (device_property_read_bool(dev, "renesas,contrast"))
-> > +             priv->dig_cont_adj =3D true;
-> > +
-> > +     priv->gamma =3D 0;
-> > +     device_property_read_u32(dev, "renesas,gamma", &priv->gamma);
-> > +
-> > +     priv->dsi =3D dsi;
-> > +     mipi_dsi_set_drvdata(dsi, priv);
-> > +
-> > +     dsi->lanes =3D 4;
-> > +     dsi->format =3D MIPI_DSI_FMT_RGB888;
-> > +     dsi->mode_flags =3D MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYN=
-C_PULSE |
-> > +                       MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_L=
-PM;
-> > +
-> > +     drm_panel_init(&priv->panel, dev, &renesas_r61307_panel_funcs,
-> > +                    DRM_MODE_CONNECTOR_DSI);
->
-> Please switch to devm_drm_panel_alloc()
->
-
-This helper is not available as for 6.15-rc5
-
-> > +
-> > +     ret =3D drm_panel_of_backlight(&priv->panel);
-> > +     if (ret)
-> > +             return dev_err_probe(dev, ret, "Failed to get backlight\n=
-");
-> > +
-> > +     drm_panel_add(&priv->panel);
-> > +
-> <snip>
->
-> With that:
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
++static inline void arch_thread_struct_whitelist(unsigned long *offset,
++						unsigned long *size)
+ {
+-	*offset = 0;
+-	*size = 0;
++	fpu_thread_struct_whitelist(offset, size);
+ }
+ 
+ static inline void
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index fa13129..105b1b8 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -681,6 +681,20 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
+ }
+ 
+ /*
++ * While struct fpu is no longer part of struct thread_struct, it is still
++ * allocated after struct task_struct in the "task_struct" kmem cache. But
++ * since FPU is expected to be part of struct thread_struct, we have to
++ * adjust for it here.
++ */
++void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
++{
++	/* The allocation follows struct task_struct. */
++	*offset = sizeof(struct task_struct) - offsetof(struct task_struct, thread);
++	*offset += offsetof(struct fpu, __fpstate.regs);
++	*size = fpu_kernel_cfg.default_size;
++}
++
++/*
+  * Drops current FPU state: deactivates the fpregs and
+  * the fpstate. NOTE: it still leaves previous contents
+  * in the fpregs in the eager-FPU case.
