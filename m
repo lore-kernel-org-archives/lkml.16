@@ -1,195 +1,180 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2134.outbound.protection.outlook.com [40.107.247.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE61EB1AE
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746433142; cv=fail; b=d/lmfMcmgRzb8nMYq04CWacC+7vbdVZEHHjyaL+CAWbDK9sOVZWdlm305dY7yGJHPYGlTlcNY7o/CDHBr0qJj15XtijklWFCOkz0QaqT2FiaDyFFUXrWlRbtk7pAS56SC0VvSWzv508g9E0vQLnZpUP7sPaINLG6vy2hb+9t1gY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746433142; c=relaxed/simple;
-	bh=FVcflraQjJLk6JBa9L7MwOkY6iQRlqZATvRbuIqPVKA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Vp9NsldBtIic52sXbwUXc5aw1jmxSTBNkvC+Abc/OpugUgwVxtLtsV+v63ZAGN23RaJPaIkcDs0dYbRJYs0HQGMjVpymeZi1AMRqK3Zi8Dmt6slKfMHk2cQEnXJJx4a7edOAASsnzTliQhsFDb2zYQqvqKyjj0wSSW1cQPXNj1Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=e8Nvk66j; arc=fail smtp.client-ip=40.107.247.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="e8Nvk66j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sIr3ORFlhEHzA41bh/ACX46La2ksKisobsLrbajrySmGA1Ktwr+wI9vWeZaKqKGizIdrMBq+7DRv47YrvhGbZ0nTo8Edx/5k1MkcWXqGEv/WAbZSIC/YjdMpei3lAGjMzEZpzpIlpnA166WcS2Gop1S+kpuUoGxz8+aC/iDrgEbQMaG+6+salXFuer7mjk8c7oBjqnqdrkKmlMk0OXEjWI3Zh82gPLaZNLhSb7RissidvYwAVC+lJWkCMkwVpvApDQyFc6NQvjHoQyGZSLBltCeAw/hOS8ocUzpEK/XRiynaKPqp3GAjm5eeJlUKyhmzZG5/Dg5pNkjMX8JOCwRzTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KqA5t5rYp/r/ZJwSGHOVkzCLqSwezjn3z6RQslketsQ=;
- b=WC9+WSLS+CIhqmyAc183+mvZf067T8HjRJkiMINWn+cB9EwK9R3LTxZrJwqaVgF8oUo3qq2AGUPm6YXqmRZgOaPjZgNZgvRR1RR9gleAuwqZogv+XP/jgHFzUGgMpfOKUz2G/5+CGfQsf8wJb7HtffEbIsqDfmPmXL+Gb6hduX/owWJxCTIRZQBGvkBGP1nBJjwndJgJx+5DRpoFUjJQzxhAAn+uUILruXsuhgDfICKAZT7Mcqu0h8RgPcXp1+s0F6CyHTwWp9IknJq+6K2I+qQP9OAwwcIhFR9Hq8X8KHEryWFA9D/QTRVM5QPoPe/DUaOvrnExGd99Enx7xbR7og==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=phytec.de; dmarc=pass action=none header.from=phytec.de;
- dkim=pass header.d=phytec.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KqA5t5rYp/r/ZJwSGHOVkzCLqSwezjn3z6RQslketsQ=;
- b=e8Nvk66j87hi6axJdyUq/UuxyCWXrhCkjgDDXaaaJo0882EGF8cge3qly0DRjiU/FhpI82YOW7/a7EWDGSkRvj8eRXLkd5mUTW1uT3p+iMAxrYjV8D+JjHUjf5O+1sPQDf7uxW5OPHzcpEJvMJwPwoA3kIi0JJ571cFHiIDKB3y/99dLp1v2AXt0tj4A/qxSVxSvcxQArTeAviE5XIAmK9a7nKLKMLguw8GXX2DTyTHhnfCAQC6NontiPI+XawpCT3oF2m421gbH01XOFu2JqyWITorrVBa54w/sXs3OUpDJx95srK9TFXajAfey5EK/ltW4NCUXCtTFC7y6a6sWZw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=phytec.de;
-Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM (2603:10a6:800:248::6)
- by AS2P195MB2248.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:59f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
- 2025 08:18:56 +0000
-Received: from VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- ([fe80::24f:8371:2871:5981]) by VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- ([fe80::24f:8371:2871:5981%4]) with mapi id 15.20.8699.019; Mon, 5 May 2025
- 08:18:56 +0000
-Message-ID: <f40e97a2-41f4-430b-b3f4-815587201191@phytec.de>
-Date: Mon, 5 May 2025 10:18:44 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Upstream] [PATCH] arm64: defconfig: Enable BANG BANG Thermal
- Governor
-To: Garrett Giordano <ggiordano@phytec.com>, catalin.marinas@arm.com,
- will@kernel.org, quic_bjorande@quicinc.com, geert+renesas@glider.be,
- dmitry.baryshkov@linaro.org, krzysztof.kozlowski@linaro.org,
- shawnguo@kernel.org, neil.armstrong@linaro.org,
- alexander.stein@ew.tq-group.com, biju.das.jz@bp.renesas.com,
- javier.carrasco@wolfvision.net, elinor.montmasson@savoirfairelinux.com,
- linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-References: <20250113185607.2210352-1-ggiordano@phytec.com>
-Content-Language: en-US
-From: Daniel Schultz <d.schultz@phytec.de>
-In-Reply-To: <20250113185607.2210352-1-ggiordano@phytec.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4P223CA0018.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:303:80::23) To VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:800:248::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0062354F8C
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 08:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746433187; cv=none; b=f3FsU+daCjTBvmMxNVBqW1Q5G4ERNu9cYR4zBQdlZzdxUwdcGc33kdsKVf51T8zAF5wf12iSBXxuh1iSd8XmmiZgl+mh0durcWuS1xIAfnt/dR8vnEN0x/O9ODxBkaW0HLUNN8u31q07XuJkynsZMuIDliDF3nltfZCIo/6nUzg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746433187; c=relaxed/simple;
+	bh=r9rYPVC2YF+ZjyEZ11V++8o29EOx6S04DHWNKd2FW1E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=no6hJVmoWPhkh2bUyVzD30EROUzM1iLI0ROrc3VOqMS+xYRwJ5DDYf19oSn4RAA8KIq2GF+svDf86aIaDihlfbLH968lIV/z0XTz8ig0sdNq1aU+1yfAwer/JGRq5NKZkU61mN7I3A8flh2Lm8DzYFObI6y5CneGwHXj4AfgxPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85dad58e80fso1211267939f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 01:19:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746433185; x=1747037985;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LCEX1EFRv238GEFwbV0ta+5g1/4AzphWXF1yuqUojmQ=;
+        b=q+YDsDFMxRYHmwxpZmij6WXP0cfmILI0B6VpatpWnxbRBzQFtG98TmdUiwZ93rMwzg
+         Kx3rZ+KYy7fmoJFXkA4aQ9DMYTjywKgNe7RoOVtqAPF+uhSYtvkiU42wBFZsLj9CE+FS
+         pAwvP7xU1ppzM+XQ2GtyCgS5KMWDXZbP2RrYCGExmXawkpo5sQLaVGYdq3oPstYa2a7P
+         +BHbD5LkFPQhdvmNXD+opgIlol+jPgEcLqX9sS6naCmkjQB8/818Pn4uxthiKrR8+Ka0
+         fy2qVrJzsvpM4DtolPmPpegrFbNs9DN293FqmPd2lyr4nsVmUTK+qa1Q7ULyTdp9W20j
+         TiRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgJ33GWEV1wvTYWBxjnXoAfhUeAnpUNVM5+NoGB1erEZcQ4RRpFxHHU6PSVSCOeU17mC3FVzlIUjUc7Ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZmwNQfhYC9pN7xt/6SQMyH0JsnE/MSA8t0VHBw4whEaHt7GPF
+	5xZdwh5+X5wp4PGPleH256B8BUpHauvhDmyXbFSg9p+Q7h+tXLkW/2tsG8ABiXh9PynOLeTOAuh
+	UYhP1Y1iVmZYAzgVHK5RqrsJjcJu6K9X1R7XHD45j9WiZVXiFuDmTrDo=
+X-Google-Smtp-Source: AGHT+IFcfEiDVC9durfNCBonV8iLmv00fPKHqCzuwev0MrP2Ul3bfDxrHJ6vnrFnx+uxZZfZZzOIg8HpckhJyp35Pz/r5SduMJi+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI0P195MB2484:EE_|AS2P195MB2248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1603a1e9-02fe-4884-7cdd-08dd8bad7ac1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|10070799003|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WkZTQndKZnc3aDZUN0wxbWhZOTZaS2xhL0hNUUJBWmRncFRieU1LMXRTaXJR?=
- =?utf-8?B?M2s2TE03Q3RRMUVGejdidWw4WjJ6YXpGVUh4cWdFalB0ZThoVUpac29wUGQz?=
- =?utf-8?B?VDBkSXUxdnoybk1mTHdRSFNvNTJTMExZS0JYTkxVaS9Za3F1MTROSnJoQVB4?=
- =?utf-8?B?UWhKRUxPSXNzZm9QdCtjbmMvVWhnV1liTG1oL2hjdStuMVRveHd5UkovRHVk?=
- =?utf-8?B?ZFRVU0lKeTlsYzY3U3N6OUlUb0pldzA3YVJ1WEtWcTVCbzkrVk82cGU5OUZX?=
- =?utf-8?B?VllDWUhTN1RHbXJ0WTlQbDMxNDZZb1c2MW9vMFU1clNKb2taTHErem5PMnRw?=
- =?utf-8?B?MndtbXlkVzZZZnhZa2N2M0JBZVBraHgxbjYzeTZxSjdiYVhwVWVEay9RRHl3?=
- =?utf-8?B?NXFjZmhLWVFKOUw1THBIYWVOL3VmcytrOVlsbm9BOVh5MmduZmZ5WFg5eHU5?=
- =?utf-8?B?ejVINjhkRTc0NVJBci9MdXhtcmpJc3EyYW9TNVVkNGhReEZmR0U3YTBTdmxk?=
- =?utf-8?B?VWpTN0pwVXRUZ0dDa01NTjhVZlVCd25GdkxkM2NubVNSa2NlSWlBYVFIVDla?=
- =?utf-8?B?N0VXdGtLUEJGNWtLaVlpK2Zrbys4OHp3TzJrV3NmMFgxaDNIeFIyajlmWUI1?=
- =?utf-8?B?M0RnR25HSnBJVWxEZ0JLYjJLNHZiU2ZubnozUHBXcWRqZDBVeGpEYUViZWpH?=
- =?utf-8?B?SC9GUXJ3amdKNDIvQjhWWGNBMkt6YTNYZFFEclpLMkFmRm1panQ1b0habmtK?=
- =?utf-8?B?VkhDSkdOQ2J4MjBpU05MSW0xeVJCWTZsTHdLWC93cUt2bDBML1RaRHh2MVdj?=
- =?utf-8?B?eURpSVVvdXJBUFdOY2xsM0lNWkNYeUZBZ2V2ZkhoMXl2MG1iSGJqOE0yWjNj?=
- =?utf-8?B?VGsvM0NiclhOdlNmVXozaU9RVFF5ci9YR2tPWEFVaU1icG5mbmdrOGlhZXJZ?=
- =?utf-8?B?Y3hLbE42Zlorb1FSL3M4bmVkenJ2S25tL3BVMkhoaTIyUFNBYTVWWWV2d2xN?=
- =?utf-8?B?YWpUMG1lTkRyeWtoWU96YW5MTkRBS1MrMTBqTGhrVURKWGpGYkVhTEQwVVkz?=
- =?utf-8?B?OFVFY3BLUTJZK1ZoOEVyaVdDNURFakZDelhhU1h2ZURxSHVHVUhWVGRlWVkr?=
- =?utf-8?B?dExuc0xMbTBVNEd5MU5MRG9EeHcrNE10NFRXZTgrK0hud2NXZ2psZFJHN2gw?=
- =?utf-8?B?KzJJR2tUdGJISzBQckFnMmdCSENsYnVzYXZwVC84WVJKVi9iVmtiTHpSc1NB?=
- =?utf-8?B?RU1rd3hGbUFtSGpTMWl3S251WHhWY3k1WksyeDFtS3NwRlgyWGd1YmVyTHJL?=
- =?utf-8?B?UGdCV1JoaFJBUkJaejFKYjBGcWtFekt1WnFaRkMxdnZubzhvY0FPNzVQMEhI?=
- =?utf-8?B?OVlhNEhIWk9nc3l0WHNjNE4xWHd4a2Z6eGZlQ1ZrcXNZYlJYYWIxSUhTOXF3?=
- =?utf-8?B?TmtjQ0Yva0ZRdkdGOCt2RTA1cWt2U1l1OWZyZUNuVG1aK2pIRlR6MWNtZDJl?=
- =?utf-8?B?VUlxZy9XWWpUOStGRENHUTZzZVRpdjVjL3hMR0RHQXJRM3NiZllhNS96QzB5?=
- =?utf-8?B?aXpXNFlSVHVQN1djL1FCWDY2QyttV2JYMDA0YVorVTdnY2tCblpjYmV3WW91?=
- =?utf-8?B?bWNpWHFhTS9TbE5jeXZBWFB0aklmQlJCN0NpcjdSZlRCSlJIUWlLY1YrdlMv?=
- =?utf-8?B?eUJzSnovQWc5emNoTmI2cDZtMnQ5MmJXYW1acU5OaGVYMFEyUTY2S3dnbTNu?=
- =?utf-8?B?RUpyWDRBR1ZSbE4yVGxHbFFBM1RuWDZ6Sisvb2ptcGozaW10TW5uRWJZRFN1?=
- =?utf-8?B?dFVFb0U1SkRZdjVUbmNZMnZuMHFKVXVDcFBVTGpLK2F5QlNpQ2dGckpNRDUy?=
- =?utf-8?B?NnU5aDgwc3BPTkxuSTVrNWRua3ZDaWwvNUZiY3lQYzQ1eUFJVDVHaXFYZDlZ?=
- =?utf-8?B?VmNwTFRLRVJXTjEzZDlNL0FOTS8zWGplVGVrdHUyMXpPTnFnQUdnRnpsa0ox?=
- =?utf-8?B?cHZKb1NFeU5BPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0P195MB2484.EURP195.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(10070799003)(921020)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L3BPbjFuWXRzVWNFUHJvZkNqQTVFdFNkNU5ZQnhWQUFXTzhvNXF0L3hlcW0w?=
- =?utf-8?B?V0l5YjhiQjZmMWFNRnIvbTJLS2ZWREFQVjc1OHArVlB0N0J6Q2taUUJ2M1Qv?=
- =?utf-8?B?Uk9qVU5xWFhNY3RSay9RK1lrWDhDeEVQdWRwQmFEY0dWV2lMQ0I1Zko5bkxE?=
- =?utf-8?B?eVVXRURZbDJBaWhxMzFvUGFYN2tjRS9rN1I4Vjl2NHArQkZpbm5lT3k0TFVp?=
- =?utf-8?B?Z2p3SUU2dFdUbnJldVlad2srVk0yMzZmQ25Takxmc2R5eElQUjBTSmhIS0Vl?=
- =?utf-8?B?c3lVZ0hONk0zSG0zeHBGYVp2ZHRkRThJd2RWUW5wU2NmdnBDd2szTzE2aEJR?=
- =?utf-8?B?Y0xrUGxkY3ZsWHJPZUNrbEd4YzQzUDlLcWpGaGdWczhNejRPWm9ZZ0xUTndN?=
- =?utf-8?B?NEdneUtQSHlxMHN0eWcxaWhlSDFQMjJwTWhkQi90d2xOSHRvSWNnQkw4ZTAv?=
- =?utf-8?B?eHlHUGRWL0wzN0xoUnBOU0NwU2hZUGpvTXFabnUzQU45bTc3aDd2WlZLc3JO?=
- =?utf-8?B?NkU1Yi9oczdzYTNhN3R1YUdQSU5POHVwbE9OY1FaMGZzWjBYcjRxUE1DdFU5?=
- =?utf-8?B?Q0h4ek5sYTlZRnBoT3NRRGlCRjZHUDVDcWxVZy9VeGorUjd6NWp4eG9LYnls?=
- =?utf-8?B?VWkzZ3MzUFNCVU5vbHNubUwzdm9MZ0pmSGtHQUVaVDcxenJrNnZLNUVlRnBH?=
- =?utf-8?B?YUo4T2JtWERsRU04U1pReWJRaVhEeFRCOE9Xcjc3V2tzRkdRbi9ZMjVxSmJJ?=
- =?utf-8?B?cUtuVWNUWDFVSEwxSlBqL2hGNUhJZ25MZ1pWYVkvWVZkMi82TStpTUhhZXBJ?=
- =?utf-8?B?WDl0d0R1QVpoVkpFZ01UbzZjRXpaeVFLT2FSYk5KdGN5UUQ4WkVmQ2Uydmt4?=
- =?utf-8?B?bVI3Q05VOG92c01MYjdJbVozb25HTk00YWFEN3Z0OXVDMVRkdUFIUVJnSFh5?=
- =?utf-8?B?MUVobUltdHBLRGlxVFNHODBvcGdld0MwMCtzcU8rZ0ZzM1FWK0g2K1RwL0VB?=
- =?utf-8?B?M0ZUL1c4SHVJc1J0em1ubjRQNFBjZldlNzFQMmZjQzBUSUJ5NncyQmlJQUZL?=
- =?utf-8?B?eWtjSm0waUV4V2VnemIydGlQRlpPZGJWK2JBSUlJajdHM2dWaUZnSk11cGtL?=
- =?utf-8?B?Q1NDUHFyYzIxd2p5U0tucWxnVTBQN2pqcHVVNjFjTlRkUFJGKzArNUEwUUpB?=
- =?utf-8?B?ZXlxWnRucEVmWlY3OHFyL0thY1VhNmxoSzdUY3F2TDN2RFVPZlBXZXNrUEJl?=
- =?utf-8?B?Rys4c2lPQm50ZS9KR294UEJaamVUclZhZjhJQ1lteEo3MlFXUW4vU3FPSk1K?=
- =?utf-8?B?NWtrTDZ0dmtFeGhJbnA3WEF0aXhmYklKOXNKM3dmYzFHeHhUVDY4MnZEL0xa?=
- =?utf-8?B?clFHRXd6ZkxLcUNMRFZmc1d5QWFlWW1kMW5QTWRxYjZGTk53MEc2c0hCTjhO?=
- =?utf-8?B?SFNRdHUyVERMWW9FR2ZhTzBqSmRyamhMU2ZmdGora1ZsbFlmR3NhYWhLWlFx?=
- =?utf-8?B?QUN5M1c2cktjdGdGTWdTa050ODhYUU9nV1FZcHlROERzQ2VtM3ZhcUNIempz?=
- =?utf-8?B?MDlqYjc3OHJLQkhwQ2VIaHpGenlCM3dOUWM2SW9jaG5tL3I0WTVNUEt0cGdQ?=
- =?utf-8?B?anE4dHFwVUFOZlNKME1NNDRQek5BRjFCWlZtdkNUU0lqRDc4ZUJ2akkzTnhO?=
- =?utf-8?B?UmhZTjE5ajBJU25qMk5NU0t6UWtqUWhxOXJMRGExTng4R2lDNHYwOEF5NFZI?=
- =?utf-8?B?K3hmc1YvNWFMcHJTUTJNUmlQaTJ2TDlXK04weHhjd0NMWFUzV0sybHgreksx?=
- =?utf-8?B?WVZMYml1VkNGTzdjMEllQ1pMVlFQRkV5S283QlBNbHcvZWxQT2U2MUJGZ1dF?=
- =?utf-8?B?Tk5heFJ0WUJLQnhxZnFFSVpPSXl1cHdqQWJqVnVicTE1Wm5SaEwzRWJNaDR4?=
- =?utf-8?B?b1BDYWdpdzZTU3BsTGYyd2hLbHNSK25IODRSZCs3dnRFaWFCdkdRK08yMkt0?=
- =?utf-8?B?SlNNSGZKUnJaSERoRDJ5SUpFUXhxV2ZHYWVqTm1ReENUNDVDSnkwZ1VSVWkx?=
- =?utf-8?B?Q3VyMldZSDVNY0hwWjFkY1J3RTczR2FTb1dwQnZkQjBTRGlzRnJSNnRsd240?=
- =?utf-8?B?SzVJK2Z0M05CNGppdnNHdzdWS1VZak9HWCtHVUhqTS9FMlArSkdVd2EvY0hK?=
- =?utf-8?Q?OTWIw2XmgCmezuu76dWTtHummeGhGfRFbxWe/3DZ16jD?=
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1603a1e9-02fe-4884-7cdd-08dd8bad7ac1
-X-MS-Exchange-CrossTenant-AuthSource: VI0P195MB2484.EURP195.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 08:18:56.5181
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n/A/xaeNbbf/GcE6INIfri76aTG0hqu+jJsaBNBqI6wyB0Rjptgn7WpajyjqyUv1NjdEhGiZ3XftSts3shmdEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2P195MB2248
+X-Received: by 2002:a05:6e02:158b:b0:3d8:21ae:d9c with SMTP id
+ e9e14a558f8ab-3da5b23bd5emr63649525ab.5.1746433185026; Mon, 05 May 2025
+ 01:19:45 -0700 (PDT)
+Date: Mon, 05 May 2025 01:19:45 -0700
+In-Reply-To: <62cfbaa1e97f658c2d0f87859919d59b5d88510c.camel@codeconstruct.com.au>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681874a1.a70a0220.254cdc.004a.GAE@google.com>
+Subject: Re: [syzbot] [net?] upstream test error: KMSAN: use-after-free in mctp_dump_addrinfo
+From: syzbot <syzbot+1065a199625a388fce60@syzkaller.appspotmail.com>
+To: matt@codeconstruct.com.au
+Cc: matt@codeconstruct.com.au, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hey,
+> #syz dup: [syzbot] [net?] upstream test error: KMSAN: uninit-value in
 
-can someone please take a look at this patch? I can also re-send in case 
-it doesn't apply anymore. Thanks!
+can't find the dup bug
 
-- Daniel
-
-On 1/13/25 19:56, Garrett Giordano wrote:
-> Enable the BANG BANG Thermal Governor to manage the GPIO Fan using
-> hysteresis on the PHYTEC phyBOARD-Lyra AM625.
+> mctp_dump_addrinfo
 >
-> Signed-off-by: Garrett Giordano <ggiordano@phytec.com>
-> ---
->   arch/arm64/configs/defconfig | 1 +
->   1 file changed, 1 insertion(+)
+> On Thu, 2025-05-01 at 04:15 -0700, syzbot wrote:
+>> Hello,
+>> 
+>> syzbot found the following issue on:
+>> 
+>> HEAD commit:    4f79eaa2ceac kbuild: Properly disable -Wunterminated-strin..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=15bc71b3980000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=53c85d265a8f3692
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=1065a199625a388fce60
+>> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+>> 
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/3594998c29f0/disk-4f79eaa2.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/2cd908ac5281/vmlinux-4f79eaa2.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/5ea15b7bacde/bzImage-4f79eaa2.xz
+>> 
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+1065a199625a388fce60@syzkaller.appspotmail.com
+>> 
+>> =====================================================
+>> BUG: KMSAN: use-after-free in mctp_dump_addrinfo+0x208/0xac0 net/mctp/device.c:128
+>>  mctp_dump_addrinfo+0x208/0xac0 net/mctp/device.c:128
+>>  rtnl_dump_all+0x3ec/0x5b0 net/core/rtnetlink.c:4380
+>>  rtnl_dumpit+0xd5/0x2f0 net/core/rtnetlink.c:6824
+>>  netlink_dump+0x97b/0x1690 net/netlink/af_netlink.c:2309
+>>  __netlink_dump_start+0x716/0xd60 net/netlink/af_netlink.c:2424
+>>  netlink_dump_start include/linux/netlink.h:340 [inline]
+>>  rtnetlink_dump_start net/core/rtnetlink.c:6853 [inline]
+>>  rtnetlink_rcv_msg+0x1262/0x14b0 net/core/rtnetlink.c:6920
+>>  netlink_rcv_skb+0x54a/0x680 net/netlink/af_netlink.c:2534
+>>  rtnetlink_rcv+0x35/0x40 net/core/rtnetlink.c:6982
+>>  netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+>>  netlink_unicast+0xed5/0x1290 net/netlink/af_netlink.c:1339
+>>  netlink_sendmsg+0x10b3/0x1250 net/netlink/af_netlink.c:1883
+>>  sock_sendmsg_nosec net/socket.c:712 [inline]
+>>  __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+>>  __sys_sendto+0x590/0x710 net/socket.c:2180
+>>  __do_sys_sendto net/socket.c:2187 [inline]
+>>  __se_sys_sendto net/socket.c:2183 [inline]
+>>  __x64_sys_sendto+0x130/0x200 net/socket.c:2183
+>>  x64_sys_call+0x3c0b/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:45
+>>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>>  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+>>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> 
+>> Uninit was created at:
+>>  slab_free_hook mm/slub.c:2324 [inline]
+>>  slab_free mm/slub.c:4656 [inline]
+>>  kmem_cache_free+0x286/0xf00 mm/slub.c:4758
+>>  skb_kfree_head net/core/skbuff.c:1056 [inline]
+>>  skb_free_head net/core/skbuff.c:1070 [inline]
+>>  skb_release_data+0xe56/0x1110 net/core/skbuff.c:1097
+>>  skb_release_all net/core/skbuff.c:1162 [inline]
+>>  __kfree_skb+0x6b/0x260 net/core/skbuff.c:1176
+>>  consume_skb+0x83/0x230 net/core/skbuff.c:1408
+>>  netlink_broadcast_filtered+0x21b6/0x2370 net/netlink/af_netlink.c:1524
+>>  nlmsg_multicast_filtered include/net/netlink.h:1129 [inline]
+>>  nlmsg_multicast include/net/netlink.h:1148 [inline]
+>>  nlmsg_notify+0x15b/0x2f0 net/netlink/af_netlink.c:2577
+>>  rtnl_notify+0xba/0x100 net/core/rtnetlink.c:958
+>>  inet6_rt_notify+0x27d/0x4a0 net/ipv6/route.c:6270
+>>  fib6_add_rt2node net/ipv6/ip6_fib.c:1259 [inline]
+>>  fib6_add+0x33c7/0x6c70 net/ipv6/ip6_fib.c:1488
+>>  __ip6_ins_rt net/ipv6/route.c:1351 [inline]
+>>  ip6_ins_rt+0xc0/0x170 net/ipv6/route.c:1361
+>>  __ipv6_ifa_notify+0x851/0x1990 net/ipv6/addrconf.c:6283
+>>  ipv6_ifa_notify net/ipv6/addrconf.c:6322 [inline]
+>>  add_addr+0x301/0x4c0 net/ipv6/addrconf.c:3206
+>>  init_loopback net/ipv6/addrconf.c:3289 [inline]
+>>  addrconf_init_auto_addrs+0xb53/0x10e0 net/ipv6/addrconf.c:3564
+>>  addrconf_notify+0x1643/0x1d10 net/ipv6/addrconf.c:3741
+>>  notifier_call_chain kernel/notifier.c:85 [inline]
+>>  raw_notifier_call_chain+0xdd/0x410 kernel/notifier.c:453
+>>  call_netdevice_notifiers_info+0x1ac/0x2b0 net/core/dev.c:2176
+>>  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+>>  call_netdevice_notifiers net/core/dev.c:2228 [inline]
+>>  __dev_notify_flags+0x20d/0x3c0 net/core/dev.c:-1
+>>  netif_change_flags+0x162/0x1e0 net/core/dev.c:9434
+>>  dev_change_flags+0x18c/0x320 net/core/dev_api.c:68
+>>  devinet_ioctl+0x1186/0x2500 net/ipv4/devinet.c:1200
+>>  inet_ioctl+0x4c0/0x6f0 net/ipv4/af_inet.c:1001
+>>  sock_do_ioctl+0x9c/0x480 net/socket.c:1190
+>>  sock_ioctl+0x70b/0xd60 net/socket.c:1311
+>>  vfs_ioctl fs/ioctl.c:51 [inline]
+>>  __do_sys_ioctl fs/ioctl.c:906 [inline]
+>>  __se_sys_ioctl+0x239/0x400 fs/ioctl.c:892
+>>  __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:892
+>>  x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+>>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>>  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+>>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> 
+>> CPU: 1 UID: 0 PID: 5440 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 PREEMPT(undef) 
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+>> =====================================================
+>> 
+>> 
+>> ---
+>> This report is generated by a bot. It may contain errors.
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+>> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> 
+>> syzbot will keep track of this issue. See:
+>> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>> 
+>> If the report is already addressed, let syzbot know by replying with:
+>> #syz fix: exact-commit-title
+>> 
+>> If you want to overwrite report's subsystems, reply with:
+>> #syz set subsystems: new-subsystem
+>> (See the list of subsystem names on the web dashboard)
+>> 
+>> If the report is a duplicate of another one, reply with:
+>> #syz dup: exact-subject-of-another-report
+>> 
+>> If you want to undo deduplication, reply with:
+>> #syz undup
 >
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index c62831e61586..3fd04c689269 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -690,6 +690,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
->   CONFIG_SENSORS_SL28CPLD=m
->   CONFIG_SENSORS_INA2XX=m
->   CONFIG_SENSORS_INA3221=m
-> +CONFIG_THERMAL_GOV_BANG_BANG=y
->   CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
->   CONFIG_CPU_THERMAL=y
->   CONFIG_DEVFREQ_THERMAL=y
