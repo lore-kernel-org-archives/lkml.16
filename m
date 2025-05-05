@@ -1,103 +1,104 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFFB7D3F4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 06:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D509C7D3F4;
+	Mon,  5 May 2025 06:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746425229; cv=none; b=RbFcRzIBpVWrYKJBIDCmVmtfi5uE/q6Lc6gkEUQ/NIAnZsrT+Nh9gPsi/1DD2LZB2I4/J/KrosevGXZimVyLb4n/RTWnuVH6K4FdHTUecGtG0ZDozxYqDmgFww/fhfLn3TAK2Y9aFNg4RRWRoo7L1d+1G6ouDgdlxWK8mjcTOFI=
+	t=1746425322; cv=none; b=UZJB4uuag7EuluxHgRS6f0O0iZBSnKOQvIyqBeSw58Rjoo9nlKrNJ5quOOWpgKTVeyJe3TS4qSgVDAwmxN0ZH6Ffd2Gvsc4CfyWjJsomkd3fT+bpseqiXVjZHYBZeXJmCDPSX1uRA3WhSPt+LcRJIuZo6Pmm6n0XJkheWCi6ixc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746425229; c=relaxed/simple;
-	bh=r97ODS01jVS5UqiDBxvN4knjSEmTW/O5p+2kvMl3Ugw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jf9XFlkQt03opLjSOpORS6LPfiKGbKkhh1uV/PqKWP8LspVhoBptq47CfmJQtretaVFlH1XflBoBFXHWhA0GQWjgI1dDomxwWV63Fkx2W6ykuc8LmmnuF4WQ/aE5Lz36UyDolss/33uMe8jXcUN7RK9hwr98h7MpK5DYQEK/N5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNgoWXTx; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746425322; c=relaxed/simple;
+	bh=dxadrVdNhP19del1n4qzWfOieZZNfrkSoNMHSbs79L0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XoNH80xKSCo6gxHNPGNN+AaMA/RiZswqAkwx6RmZLsDyzpv2rSD/Q0DHJDJcptA5yiix1O6aqyte9gwDdDvIRDH08aGBtiA0c6JAyyVcslKIQQVtDaKdsNj/PyNAHJZCsAoPbd7JfnwIqHdhpK3Amt34zJ+yd6p4HUn/Y0PWTMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VIPq3GuR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNgoWXTx"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5499614d3d2so2759258e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 23:07:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746425225; x=1747030025; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B8V9Ps7jbE8jnuxPOFs9R/dg2Of18jnvqrS5Md17ya8=;
-        b=ZNgoWXTxj/7lpcaU6Dod03BsJPGQZ30uolGr5ay7jCjCvEgHxLuOy0J7q47PJIyEIm
-         XnjtbXJ0YsMVU9/1eb0rRFdKxFBft4hPvD6m74thXOj+fvi62xotAYeqDzy2PNrPjVxO
-         o95s6BWhLvMsXGy+7hYGHgKvJT/zen3zr0qj3lg/8TZKlRqgjTgdcF1ZzI1jwffZpGfX
-         f5GVzob5O8Ee8l5LLTzm9WY3zCVHU+lYvAHt1d3UnCTzceNTOSY7vfPcCuWmY1ZO6nQe
-         5UA8XOO3zIBxT+FdZK/NTkpxji+lHwB88mShjnNcoa619WIE/zH/JkpvbguZnBEWZ/iK
-         W/Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746425225; x=1747030025;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B8V9Ps7jbE8jnuxPOFs9R/dg2Of18jnvqrS5Md17ya8=;
-        b=TMdIkAHaAiv5LNGX6shYQXReNrdMVJQ55dRvFKTPLtkgLtRnqX/Ebhuqk1/TVh/ZkZ
-         sR++APYJ757Syev9khG8LJu5sQYxOekdsfZMvuY5f39AkLZfQKbvSAcdccaAZ7e6MhNY
-         xIDZk9NchREooyM71Wk/6IkGwf1z3c1dJM7OXf7QupADJpqcFzFvs5CpDXnhC95/o8DW
-         4gIPmNC7wfiP/rvVCSVQTjbApXkT0hxxjlqL3u1ZYbj0EDGLQIz3xQj9mmkBDowL6UdM
-         SDZplcdPn+QVB5n+ESlnhHHz/eDBF/nKInXZ+VumyENmn/KMtumQItxDkywg/5teXXh5
-         Y+AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX614AGWZZ8GRUZIpDRUjaAB+W3gS0WZ86vgNGwnPlwi6aC8vyw1zvbsYyith5wVeyomTi76bM/Nr8Tgnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn6HsjxJcJDKa80IadRbSFnE9eRqk5JMU42OXR/hNCwohW10MD
-	YrUnNSXin6ynTXSHzwHlAYFE0rfGo+NLKC0TFOsIWBUg2e0mu1FY
-X-Gm-Gg: ASbGncvS3fVkkM09AgaBqAM9vV0/fmXa7SV2ZsyEhK2UTeLmviqphxGelsTaFp1NxwZ
-	AfUfRj1z7+pWRX5vjcfoQYFDtUdrkqmfRMI1mREpSMLg36vfGJleOYQg7S85t7E9DffbaQICTYq
-	Pt/ShnguZ1UaAqX2Jaa2YnmH3x/h0o8y6RntvD0PaJbKMqh6hBusWtO57md2q9fvI1ddK4oob1w
-	Q1flAz3zMwh3DjLL+H1qUpEGAdyrWwrclWYQyKfiR8xjl61CPLpFP/DxABXbMb539a6PTi1G6Cd
-	hCEIdOGqhfl/avXLnte6LAe8/oO1QVt6FW/dFINLvkBVUU1JJ5AFGMHlTcR/kV10DNq2e3lf5G6
-	2WOqvPNfAfuj/pH463/B1/g==
-X-Google-Smtp-Source: AGHT+IEXgScT+SssJhKZFpa5RXpCB5kBlcWBgYhkA0StnKa71bD6adtx3oWN3VX9qxU3sGniNQHo/Q==
-X-Received: by 2002:a05:6512:3c82:b0:545:381:70a with SMTP id 2adb3069b0e04-54f9efbe839mr1449032e87.15.1746425225242;
-        Sun, 04 May 2025 23:07:05 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94f6efbsm1599163e87.256.2025.05.04.23.07.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 23:07:04 -0700 (PDT)
-Message-ID: <54f3b79a-38d2-4760-ba1a-125172142255@gmail.com>
-Date: Mon, 5 May 2025 09:07:03 +0300
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VIPq3GuR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746425315;
+	bh=UHSmpTlpcxFizkGJ884sLienNu54x81UBaqYBVI2tw4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VIPq3GuRGKH9eeUnUYuE1XQNrgk7ozwdrG8VDPx8daOtK2wuleJra1jiUjBIeSP9Y
+	 dT2DWLR/wy9lQ4I8kPSp8xf7l6sTnYm67hmVepAvInIQYMzbaCn4/PWa1whrgMXDLS
+	 ux5PUe4v6PDReO+HAETCsfzkABoGcX51YEb0Mv36KNX1bhdaSHPni57+nG16xlPa51
+	 x8sLa1MLNB8x3SOlIr+hQzAKLaFdGhr5khsuVF90C0xyigDQaMSdVQjY0CQ0WnrWW9
+	 8e/lpMM6dYyVQ4TLng8lxLX8Mi5KP679rPQNLIFi2mxqxK4npSua7j/MvZKIElsZBv
+	 Lp+tsJt3Nqr8g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZrWL95xYVz4x0t;
+	Mon,  5 May 2025 16:08:33 +1000 (AEST)
+Date: Mon, 5 May 2025 16:08:31 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Naman Jain
+ <namjain@linux.microsoft.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <linux@weissschuh.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20250505160831.73e797b7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: bd718x7: Ensure SNVS power state is used as
- requested
-To: Esben Haabendal <esben@geanix.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
- <j3M49vfoxys9iFGLs2PwAULHoQsSQsHAKmaT1D2QCwyjUJNzjxXKESFYkXasW3_3owOakk-tXosNLIgfnMC6vQ==@protonmail.internalid>
- <52221c62-689c-44d2-b65d-07a5301090b3@gmail.com> <87tt638q7t.fsf@geanix.com>
- <6JY6cJAFrLw-8XD2zgLh0lxzqzEVtz-49qgct8PAirT1ik1BU1glEyOJJg8lgYnivBWFz1vi7-faSRX_yCgmrQ==@protonmail.internalid>
- <2996270f-d03e-45f7-9b6b-c5675c39515b@gmail.com> <87ikmi82ut.fsf@geanix.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <87ikmi82ut.fsf@geanix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/1TCQhpT7V4rWPOeBOIk1Ui7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 03/05/2025 12:23, Esben Haabendal wrote:
-> 
-> What do you think, should we leave it in the current state, or can we
-> figure out a way to allow the driver to actively change the watchdog
-> reset to go to SNVS power state?
+--Sig_/1TCQhpT7V4rWPOeBOIk1Ui7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I can't really think of a safe way other than adding a new property.
+Hi all,
 
-The IC is oldish, and AFACS, quite widely used. People seem to have 
-found a way to make it work without (in-tree) feature for changing the 
-reset target to the SNVS. I wouldn't try to implement this unless we 
-have a use-case really requiring it. So, I'd suggest you to do it in 
-boot. Still, if you have a valid case for this to be done in the driver 
-- then I have no reason to object adding a new binding + support in the 
-driver.
+After merging the char-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Yours,
-	-- Matti
+drivers/hv/vmbus_drv.c:1893:22: error: initialization of 'const struct bin_=
+attribute * const*' from incompatible pointer type 'struct bin_attribute **=
+' [-Wincompatible-pointer-types]
+ 1893 |         .bin_attrs =3D vmbus_chan_bin_attrs,
+      |                      ^~~~~~~~~~~~~~~~~~~~
+drivers/hv/vmbus_drv.c:1893:22: note: (near initialization for 'vmbus_chan_=
+group.<anonymous>.bin_attrs')
+
+Caused by commit
+
+  f31fe8165d36 ("uio_hv_generic: Fix sysfs creation path for ring buffer")
+
+interacting with commit
+
+  9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
+
+from the driver-core tree.
+
+I have applied the following merge fixup for today.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1TCQhpT7V4rWPOeBOIk1Ui7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgYVd8ACgkQAVBC80lX
+0GyzZQf5AdQ1g2zO2a3za56Zv++dmurRBGQ9xTszAVWbZ8t2bhVRJ9ehgsrP27kD
+AhfVgqPNkE5qNowelaPH98GH+nLrxf1yrWCTnb0R0e89esGvwbqv08VmkeoH/lNv
+eJJWZ3pC3J/buiFj9uoXXWS2HPFl723rJ4MUKeqLMO8fbOG8SaCVgHYtR3zgsc67
+dgmWwqMM2ifL3wJMK5pKHW3Wu8PvnJ9aMMlR8G1VZhoJd4+erbPbUF+WR7fT6Nxi
+b33KHuAcu294ateHbmxFGvwyy47KRhsLw8ls4ViNqH+6ZjHemgVQDuxk8qDfWjk8
+4bv09r2EzEQ8kNsQzoOo+iqMvbkUZw==
+=g8TH
+-----END PGP SIGNATURE-----
+
+--Sig_/1TCQhpT7V4rWPOeBOIk1Ui7--
