@@ -1,56 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D8A299AAE;
-	Mon,  5 May 2025 22:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C56C2777FD;
+	Mon,  5 May 2025 22:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485016; cv=none; b=QkGCtw2syz9GQ4G+Xcosj4ir8lE7XmyV5bfpS4tCuxLrvDLrqnE8Ev/c7q0f+yvobOcYzFMIk760OFOGHJav6RAdGnhWkuqkXeuSTePRiWX8ob06C6Klp7sWK6s754xMvgOsbxy9UqvW5esRdeoJ+sq3ONacXTcLo85lpIvpIgs=
+	t=1746485008; cv=none; b=iADIgfiha+ozAj2vGLhf51fp/KfFhO8jDW25ZibSrFNdAp+ADntnhncwGYm6i09jrOvX3FynUWel7yZqsFOZNP6KyjayyZFzgcm17tPuHnK4MQAUwNfVcHJBmQYxJfrn2sYg7yfhNQl5Ye5OlJeG2MRpm3eJDdhvoKlH221RGUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485016; c=relaxed/simple;
-	bh=9nylInJVXm9TVFSZYpUXKz42kDfLqGneBtEXJdGEI/Y=;
+	s=arc-20240116; t=1746485008; c=relaxed/simple;
+	bh=6UGNE9vNQ2U0ZSBt3Uj0ajyLGZ/nnFCOEwgbf+opl6Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NU/H6eyQno2DsKjwUYNEILdM+sCs6SayLwV4d2R6zR6w80ZMrCNcweHTvFQQzVYElDZXgaJiSZlwl1XiA0NVkW1QormZLBHl8YoG9LhDtyWyCitawLXuYOrTg5M2MjFLJ6vWJTAvLdrOdIftTG6jB+Ib45GDe2dM4Uk7Asm0dUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pl1jHu0r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TE62StFjDie3ROho1313kZbM7R6py59XYofS4DQywWZDZWct9QbptoeNozx9zSqsv/YGVIYExeZX3679KWX+29nQu5xyoLx39dQH8xwQHPxlkR7WimMFgh2zd7ZpJITvyiw4W/oqI0QyYSztn/ah1vgBZVyOoNcJ9dVhrN6EY7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBK/GiJI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl1jHu0r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11CCC4CEED;
-	Mon,  5 May 2025 22:43:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBK/GiJI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E2DBC4CEE4;
+	Mon,  5 May 2025 22:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485015;
-	bh=9nylInJVXm9TVFSZYpUXKz42kDfLqGneBtEXJdGEI/Y=;
+	s=k20201202; t=1746485008;
+	bh=6UGNE9vNQ2U0ZSBt3Uj0ajyLGZ/nnFCOEwgbf+opl6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Pl1jHu0r2B9W+SX+SZeUsga/zOxgciePk6V4Vz6G9eWz11WzBJp58bKyLshm1WG6p
-	 2F8KcbP2Kbo7cEgVTU4GperkW/FIUB+W4nODrmHWr0mUgxK7I9W3Jyr+ccBOyj6TF1
-	 prCYoh3G6eK/7pKy248OmgCNMJUsWrrMO9q9a7LpPJrC1Xb7LcIm4cl/Unzw8TxkVr
-	 WQHmSUWTIkwHHUtXVEk4EB6kmhbLkofvrY50dBSHIvxCZE6Jd9Hub7bdr/KSthaikC
-	 pPVdPLoKdZM4GDuzJ+pbOs9PKRCwtwg7OwTfhiY9Ah9g6k6MPE6BVgWFlf72YDAHU3
-	 bWtdv3nZZ0PhQ==
+	b=SBK/GiJIvK/TPMgwd10C+13fvT9HolLQDbZW0rxQ7Jykj5AKryCnSyXlDBj9Pz/zx
+	 nRtq+VR/lqPiagpb6p2mfzzZd1WqBxDLNwO0mdKma9Su8HVho/u9DU1dPyirBwivO4
+	 b9TcUuRg9yl6NAd25bHKDZc6RMc3CU8kKKBhKZvfAwiivzehJ/taqrPHqiJd7SoNCn
+	 UcN7IkRsfT1RYWy+fZmnk8oBhsEEUuStJYBGR7tlyed1n3oz5aZSOE2+ejgIegrPel
+	 /MKQ8iIjynTt9zJsYMAmgwphyQv3kWQeLQm5npwnvhiWLG4vjVvGd1Q4iA/yhIt7S6
+	 tlFdH5PURzCvA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryan Walklin <ryan@testtoast.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Philippe Simons <simons.philippe@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	Mukul Joshi <mukul.joshi@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	csokas.bence@prolan.hu,
-	mesihkilinc@gmail.com,
-	andre.przywara@arm.com,
-	codekipper@gmail.com,
-	jbrunet@baylibre.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 123/486] ASoC: sun4i-codec: support hp-det-gpios property
-Date: Mon,  5 May 2025 18:33:19 -0400
-Message-Id: <20250505223922.2682012-123-sashal@kernel.org>
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	sunil.khatri@amd.com,
+	vitaly.prosyak@amd.com,
+	srinivasan.shanmugam@amd.com,
+	tim.huang@amd.com,
+	Jesse.zhang@amd.com,
+	Prike.Liang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 121/486] drm/amdgpu/gfx11: don't read registers in mqd init
+Date: Mon,  5 May 2025 18:33:17 -0400
+Message-Id: <20250505223922.2682012-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -65,126 +60,176 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Ryan Walklin <ryan@testtoast.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit a149377c033afe6557c50892ebbfc0e8b7e2e253 ]
+[ Upstream commit e27b36ea6ba5f29e91fcfb375ea29503708fcf43 ]
 
-Add support for GPIO headphone detection with the hp-det-gpios
-property. In order for this to properly disable the path upon
-removal of headphones, the output must be labelled Headphone which
-is a common sink in the driver.
+Just use the default values.  There's not need to
+get the value from hardware and it could cause problems
+if we do that at runtime and gfxoff is active.
 
-Describe a headphone jack and detection GPIO in the driver, check for
-a corresponding device tree node, and enable jack detection in a new
-machine init function if described.
-
-Signed-off-by: Chris Morgan <macromorgan@hotmail.com>
-Signed-off-by: Ryan Walklin <ryan@testtoast.com>
-
---
-Changelog v1..v2:
-- Separate DAPM changes into separate patch and add rationale.
-
-Tested-by: Philippe Simons <simons.philippe@gmail.com>
-Link: https://patch.msgid.link/20250214220247.10810-4-ryan@testtoast.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Mukul Joshi <mukul.joshi@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-codec.c | 53 +++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c | 47 ++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index 330bc0c09f56b..93dd88fb805dd 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -21,6 +21,7 @@
- #include <linux/gpio/consumer.h>
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+index 0357fea8ae1df..1f06b22dbe7c6 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+@@ -63,6 +63,23 @@
+ #define regPC_CONFIG_CNTL_1		0x194d
+ #define regPC_CONFIG_CNTL_1_BASE_IDX	1
  
- #include <sound/core.h>
-+#include <sound/jack.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -235,6 +236,7 @@ struct sun4i_codec {
- 	struct clk	*clk_module;
- 	struct reset_control *rst;
- 	struct gpio_desc *gpio_pa;
-+	struct gpio_desc *gpio_hp;
++#define regCP_GFX_MQD_CONTROL_DEFAULT                                             0x00000100
++#define regCP_GFX_HQD_VMID_DEFAULT                                                0x00000000
++#define regCP_GFX_HQD_QUEUE_PRIORITY_DEFAULT                                      0x00000000
++#define regCP_GFX_HQD_QUANTUM_DEFAULT                                             0x00000a01
++#define regCP_GFX_HQD_CNTL_DEFAULT                                                0x00a00000
++#define regCP_RB_DOORBELL_CONTROL_DEFAULT                                         0x00000000
++#define regCP_GFX_HQD_RPTR_DEFAULT                                                0x00000000
++
++#define regCP_HQD_EOP_CONTROL_DEFAULT                                             0x00000006
++#define regCP_HQD_PQ_DOORBELL_CONTROL_DEFAULT                                     0x00000000
++#define regCP_MQD_CONTROL_DEFAULT                                                 0x00000100
++#define regCP_HQD_PQ_CONTROL_DEFAULT                                              0x00308509
++#define regCP_HQD_PQ_DOORBELL_CONTROL_DEFAULT                                     0x00000000
++#define regCP_HQD_PQ_RPTR_DEFAULT                                                 0x00000000
++#define regCP_HQD_PERSISTENT_STATE_DEFAULT                                        0x0be05501
++#define regCP_HQD_IB_CONTROL_DEFAULT                                              0x00300000
++
+ MODULE_FIRMWARE("amdgpu/gc_11_0_0_pfp.bin");
+ MODULE_FIRMWARE("amdgpu/gc_11_0_0_me.bin");
+ MODULE_FIRMWARE("amdgpu/gc_11_0_0_mec.bin");
+@@ -3896,7 +3913,7 @@ static void gfx_v11_0_gfx_mqd_set_priority(struct amdgpu_device *adev,
+ 	if (prop->hqd_pipe_priority == AMDGPU_GFX_PIPE_PRIO_HIGH)
+ 		priority = 1;
  
- 	/* ADC_FIFOC register is at different offset on different SoCs */
- 	struct regmap_field *reg_adc_fifoc;
-@@ -1263,6 +1265,49 @@ static struct snd_soc_dai_driver dummy_cpu_dai = {
- 	.ops = &dummy_dai_ops,
- };
+-	tmp = RREG32_SOC15(GC, 0, regCP_GFX_HQD_QUEUE_PRIORITY);
++	tmp = regCP_GFX_HQD_QUEUE_PRIORITY_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_HQD_QUEUE_PRIORITY, PRIORITY_LEVEL, priority);
+ 	mqd->cp_gfx_hqd_queue_priority = tmp;
+ }
+@@ -3918,14 +3935,14 @@ static int gfx_v11_0_gfx_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_mqd_base_addr_hi = upper_32_bits(prop->mqd_gpu_addr);
  
-+static struct snd_soc_jack sun4i_headphone_jack;
-+
-+static struct snd_soc_jack_pin sun4i_headphone_jack_pins[] = {
-+	{ .pin = "Headphone", .mask = SND_JACK_HEADPHONE },
-+};
-+
-+static struct snd_soc_jack_gpio sun4i_headphone_jack_gpio = {
-+	.name = "hp-det",
-+	.report = SND_JACK_HEADPHONE,
-+	.debounce_time = 150,
-+};
-+
-+static int sun4i_codec_machine_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_card *card = rtd->card;
-+	struct sun4i_codec *scodec = snd_soc_card_get_drvdata(card);
-+	int ret;
-+
-+	if (scodec->gpio_hp) {
-+		ret = snd_soc_card_jack_new_pins(card, "Headphone Jack",
-+						 SND_JACK_HEADPHONE,
-+						 &sun4i_headphone_jack,
-+						 sun4i_headphone_jack_pins,
-+						 ARRAY_SIZE(sun4i_headphone_jack_pins));
-+		if (ret) {
-+			dev_err(rtd->dev,
-+				"Headphone jack creation failed: %d\n", ret);
-+			return ret;
-+		}
-+
-+		sun4i_headphone_jack_gpio.desc = scodec->gpio_hp;
-+		ret = snd_soc_jack_add_gpios(&sun4i_headphone_jack, 1,
-+					     &sun4i_headphone_jack_gpio);
-+
-+		if (ret) {
-+			dev_err(rtd->dev, "Headphone GPIO not added: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *dev,
- 							int *num_links)
- {
-@@ -1288,6 +1333,7 @@ static struct snd_soc_dai_link *sun4i_codec_create_link(struct device *dev,
- 	link->codecs->name	= dev_name(dev);
- 	link->platforms->name	= dev_name(dev);
- 	link->dai_fmt		= SND_SOC_DAIFMT_I2S;
-+	link->init		= sun4i_codec_machine_init;
+ 	/* set up mqd control */
+-	tmp = RREG32_SOC15(GC, 0, regCP_GFX_MQD_CONTROL);
++	tmp = regCP_GFX_MQD_CONTROL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_MQD_CONTROL, VMID, 0);
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_MQD_CONTROL, PRIV_STATE, 1);
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_MQD_CONTROL, CACHE_POLICY, 0);
+ 	mqd->cp_gfx_mqd_control = tmp;
  
- 	*num_links = 1;
+ 	/* set up gfx_hqd_vimd with 0x0 to indicate the ring buffer's vmid */
+-	tmp = RREG32_SOC15(GC, 0, regCP_GFX_HQD_VMID);
++	tmp = regCP_GFX_HQD_VMID_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_HQD_VMID, VMID, 0);
+ 	mqd->cp_gfx_hqd_vmid = 0;
  
-@@ -1728,6 +1774,13 @@ static int sun4i_codec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+@@ -3933,7 +3950,7 @@ static int gfx_v11_0_gfx_mqd_init(struct amdgpu_device *adev, void *m,
+ 	gfx_v11_0_gfx_mqd_set_priority(adev, mqd, prop);
  
-+	scodec->gpio_hp = devm_gpiod_get_optional(&pdev->dev, "hp-det", GPIOD_IN);
-+	if (IS_ERR(scodec->gpio_hp)) {
-+		ret = PTR_ERR(scodec->gpio_hp);
-+		dev_err_probe(&pdev->dev, ret, "Failed to get hp-det gpio\n");
-+		return ret;
-+	}
-+
- 	/* reg_field setup */
- 	scodec->reg_adc_fifoc = devm_regmap_field_alloc(&pdev->dev,
- 							scodec->regmap,
+ 	/* set up time quantum */
+-	tmp = RREG32_SOC15(GC, 0, regCP_GFX_HQD_QUANTUM);
++	tmp = regCP_GFX_HQD_QUANTUM_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_HQD_QUANTUM, QUANTUM_EN, 1);
+ 	mqd->cp_gfx_hqd_quantum = tmp;
+ 
+@@ -3955,7 +3972,7 @@ static int gfx_v11_0_gfx_mqd_init(struct amdgpu_device *adev, void *m,
+ 
+ 	/* set up the gfx_hqd_control, similar as CP_RB0_CNTL */
+ 	rb_bufsz = order_base_2(prop->queue_size / 4) - 1;
+-	tmp = RREG32_SOC15(GC, 0, regCP_GFX_HQD_CNTL);
++	tmp = regCP_GFX_HQD_CNTL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_HQD_CNTL, RB_BUFSZ, rb_bufsz);
+ 	tmp = REG_SET_FIELD(tmp, CP_GFX_HQD_CNTL, RB_BLKSZ, rb_bufsz - 2);
+ #ifdef __BIG_ENDIAN
+@@ -3964,7 +3981,7 @@ static int gfx_v11_0_gfx_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_gfx_hqd_cntl = tmp;
+ 
+ 	/* set up cp_doorbell_control */
+-	tmp = RREG32_SOC15(GC, 0, regCP_RB_DOORBELL_CONTROL);
++	tmp = regCP_RB_DOORBELL_CONTROL_DEFAULT;
+ 	if (prop->use_doorbell) {
+ 		tmp = REG_SET_FIELD(tmp, CP_RB_DOORBELL_CONTROL,
+ 				    DOORBELL_OFFSET, prop->doorbell_index);
+@@ -3976,7 +3993,7 @@ static int gfx_v11_0_gfx_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_rb_doorbell_control = tmp;
+ 
+ 	/* reset read and write pointers, similar to CP_RB0_WPTR/_RPTR */
+-	mqd->cp_gfx_hqd_rptr = RREG32_SOC15(GC, 0, regCP_GFX_HQD_RPTR);
++	mqd->cp_gfx_hqd_rptr = regCP_GFX_HQD_RPTR_DEFAULT;
+ 
+ 	/* active the queue */
+ 	mqd->cp_gfx_hqd_active = 1;
+@@ -4062,14 +4079,14 @@ static int gfx_v11_0_compute_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_hqd_eop_base_addr_hi = upper_32_bits(eop_base_addr);
+ 
+ 	/* set the EOP size, register value is 2^(EOP_SIZE+1) dwords */
+-	tmp = RREG32_SOC15(GC, 0, regCP_HQD_EOP_CONTROL);
++	tmp = regCP_HQD_EOP_CONTROL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_HQD_EOP_CONTROL, EOP_SIZE,
+ 			(order_base_2(GFX11_MEC_HPD_SIZE / 4) - 1));
+ 
+ 	mqd->cp_hqd_eop_control = tmp;
+ 
+ 	/* enable doorbell? */
+-	tmp = RREG32_SOC15(GC, 0, regCP_HQD_PQ_DOORBELL_CONTROL);
++	tmp = regCP_HQD_PQ_DOORBELL_CONTROL_DEFAULT;
+ 
+ 	if (prop->use_doorbell) {
+ 		tmp = REG_SET_FIELD(tmp, CP_HQD_PQ_DOORBELL_CONTROL,
+@@ -4098,7 +4115,7 @@ static int gfx_v11_0_compute_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_mqd_base_addr_hi = upper_32_bits(prop->mqd_gpu_addr);
+ 
+ 	/* set MQD vmid to 0 */
+-	tmp = RREG32_SOC15(GC, 0, regCP_MQD_CONTROL);
++	tmp = regCP_MQD_CONTROL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_MQD_CONTROL, VMID, 0);
+ 	mqd->cp_mqd_control = tmp;
+ 
+@@ -4108,7 +4125,7 @@ static int gfx_v11_0_compute_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_hqd_pq_base_hi = upper_32_bits(hqd_gpu_addr);
+ 
+ 	/* set up the HQD, this is similar to CP_RB0_CNTL */
+-	tmp = RREG32_SOC15(GC, 0, regCP_HQD_PQ_CONTROL);
++	tmp = regCP_HQD_PQ_CONTROL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_HQD_PQ_CONTROL, QUEUE_SIZE,
+ 			    (order_base_2(prop->queue_size / 4) - 1));
+ 	tmp = REG_SET_FIELD(tmp, CP_HQD_PQ_CONTROL, RPTR_BLOCK_SIZE,
+@@ -4134,7 +4151,7 @@ static int gfx_v11_0_compute_mqd_init(struct amdgpu_device *adev, void *m,
+ 	tmp = 0;
+ 	/* enable the doorbell if requested */
+ 	if (prop->use_doorbell) {
+-		tmp = RREG32_SOC15(GC, 0, regCP_HQD_PQ_DOORBELL_CONTROL);
++		tmp = regCP_HQD_PQ_DOORBELL_CONTROL_DEFAULT;
+ 		tmp = REG_SET_FIELD(tmp, CP_HQD_PQ_DOORBELL_CONTROL,
+ 				DOORBELL_OFFSET, prop->doorbell_index);
+ 
+@@ -4149,17 +4166,17 @@ static int gfx_v11_0_compute_mqd_init(struct amdgpu_device *adev, void *m,
+ 	mqd->cp_hqd_pq_doorbell_control = tmp;
+ 
+ 	/* reset read and write pointers, similar to CP_RB0_WPTR/_RPTR */
+-	mqd->cp_hqd_pq_rptr = RREG32_SOC15(GC, 0, regCP_HQD_PQ_RPTR);
++	mqd->cp_hqd_pq_rptr = regCP_HQD_PQ_RPTR_DEFAULT;
+ 
+ 	/* set the vmid for the queue */
+ 	mqd->cp_hqd_vmid = 0;
+ 
+-	tmp = RREG32_SOC15(GC, 0, regCP_HQD_PERSISTENT_STATE);
++	tmp = regCP_HQD_PERSISTENT_STATE_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_HQD_PERSISTENT_STATE, PRELOAD_SIZE, 0x55);
+ 	mqd->cp_hqd_persistent_state = tmp;
+ 
+ 	/* set MIN_IB_AVAIL_SIZE */
+-	tmp = RREG32_SOC15(GC, 0, regCP_HQD_IB_CONTROL);
++	tmp = regCP_HQD_IB_CONTROL_DEFAULT;
+ 	tmp = REG_SET_FIELD(tmp, CP_HQD_IB_CONTROL, MIN_IB_AVAIL_SIZE, 3);
+ 	mqd->cp_hqd_ib_control = tmp;
+ 
 -- 
 2.39.5
 
