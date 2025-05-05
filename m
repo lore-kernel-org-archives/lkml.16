@@ -1,175 +1,116 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979CE1A2632
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D0C25C807
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462126; cv=none; b=mTLGbWT5OSraBfNf/EjYaR1Xka4GhL8EH7C6tNs4hvSM4RkHU+vXr5KCgSavNs2bq7HfESPPl9AcyIXNFikv1BfwutbcikgzHobSpGIjJgd6s+u06kRCuTL9jFAcntllGdjuDq5rPiY5A22JWutQ8R07dyP4uZt+MfhKVy1E+cw=
+	t=1746462140; cv=none; b=GEygtM3RVBmV1/w/Z1owPNKUigyUR5kg02RtyAPn2chzaSoakB0gEUL2D/cP8NqUEDWDXREdvQ84jWrlhz3xW0V4VKClEAQgrNtjIjffrqLt7++QiedtLkU/0aes5FAOA99jLwb10tuatiwOGRk6XoYeSrIvCUX9LovxAYwQaL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462126; c=relaxed/simple;
-	bh=EJqzxpuGVEyLYHz9y6CeWnGJrstnQCi1EP/Dywpd5kI=;
+	s=arc-20240116; t=1746462140; c=relaxed/simple;
+	bh=dx+0A0+zGYkg14I6OBkj3/ss6kuJ7p0HznjIA0M5sBw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BT81OzJNI+r5Z+Ks8e6Tl7UzJmPLjBdp3tdPg8b8KTQtq1DNmcxruktYxa5yCq5DpKep+geYdnfmi6lgYpmL1+NYJ10YGeuGKjDvykXO0H6dha2k/BRxOtYAzTRZEbwfBO23i9MvvumlYZDeZisAPlRbrhM1h6SEAN06TFXPUqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LC9TxnB4; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=MRAdQjkM/NpqxfeXLHvw2bieI0YrElFZDep+swhm0vabYlz0WntwJGkke4z5OUlq0nSvKFQWTxPT+1Me1+rcmh+s7ufaQ6n0cxk8P2kqG+udTtGzLRH1jz3Wp3g/IqnhhEAG0RfGDiSjfWzZGI67gNnVIw18E4l9+tKOdFYVbX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=d/aZ2g9q; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LC9TxnB4"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso15057a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:22:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="d/aZ2g9q"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6ff37565154so39541377b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:22:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746462123; x=1747066923; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1746462137; x=1747066937; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uZWM29ZYXPE6WZovBDu4ysa6ypJm1CwHnOC5/T+iIsg=;
-        b=LC9TxnB4ou8GQkDOdtiKAABon6QpuQRMuyR70LPBgEV2ENOD2DU06iu+AJu9/KHb/Q
-         99gjUOkSCd4VVA9M9r/MQbhYv2MDRR5s0fkXnB73nnPd9BosKBlORp/x4AWu88NdZykn
-         agugNvZsZhAtFNyzYcRRrv6nswjVxKsNjyQwCpUptwBJNLx5I4uLB2EI2GKtauwdJe78
-         01uUNR0F3ZohoyvzjxLfuiv/twwRXv2JU5ug2xIWhEvBO/iqOssh4C5+uW+iwrSjh4ZH
-         i6ALYaumIS/HSkINsnppFIS8ioA8KsCKLsL1dId0+RNyWD5tPJrAhosL9DJWysuAI7ub
-         UKKw==
+        bh=BUSGTKlbA5H24+yBQN4jIkG58T5ExeiJA4eFJ+JNTtQ=;
+        b=d/aZ2g9q4bY9fC5ic82QjW2gNn84oN08nKwoGcD2su899FBEW/oaxzkyoC/rX5BDWT
+         7WtVn/VgA4O6UlDBrtXJI0KzzYRjd5O/Fce5mGCyT0iQrp1+3Qct2UdcDGQk2qCbTJ4J
+         qLt9+T11iy68OREJTQJHK7tHvhe3nmKHUuQUdGWsdRANAQlIaS+zo0X2QSstvtQ9iwQG
+         wb6sxZk+TB59/B/z3u1H+oYg1d7qmU2NciHyaucXTz4rGDNeDHJH7W1Qh3XDdhFdP13m
+         Ilf/DtHSyKqqa92kCbzcfyM2PfEAaoRuNCM+kKeLuJc/eJWX8ZjrGcO25vuT0p60nZvs
+         +N5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462123; x=1747066923;
+        d=1e100.net; s=20230601; t=1746462137; x=1747066937;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uZWM29ZYXPE6WZovBDu4ysa6ypJm1CwHnOC5/T+iIsg=;
-        b=tEuW5LoqB6QuOT1J9FELNLOj0hEb+Ypdq7Y4LIFOz5oQbyaH7CGYsLp+SnLQlc3txt
-         QkCMzvxvAUOOsx6dFHkdlp5ZLxE1Y0v8rDy3iXCYwss5Lv106rbWtYj6hXjhRS9xbVhz
-         xZRwgTydwDLBW+bNHvzIocgTWKDn4aGe4Df0Ktp++91IXXTMlitxMmmMfgT/0355WemA
-         F4y8Pyu/BtrqmrTVsEOB4xZ64hnMhyLuJTcxKB4+xnnRWSdx+vlKFzvl3Rk/PFjGAuSp
-         7eoRp7ytDx+iFFuRRIk6VtEJrDjkts3+5t8h78yQhihFjnyrR69vNQVKv6v9cAuyxGnb
-         fAzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkTJU77XyL5eOWLW3E9EmQEfEgIRrqNZ8WTkSzvuBBgk3HJEQFOOyuX7qHvycSGwY7qzMWSYCchMw/2UI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0N/71x82NHbUc6ElwgBVgy6ffl29ujXZ30v/lNxYC3LX5CFgD
-	4u3Q2/w/mRLjsfQNfx80+2qJVyKVRJ+wrZr4LqSHtMq+Yq0FXDuWWMy0z0Ukx/FuUQVVdIdgl9d
-	uyRX0LnRLzhf0Zg2wVPoLxMz7++R29Jb9rN4s
-X-Gm-Gg: ASbGncvFTvIpx8OYsiA4UzhaHptgXcDpYNPHtM0LtYZgX4XVdG8cvtGck02tJM7MmG0
-	+t+Vyvyd72ZuCMxHberocX4ShBnO3HLnxMt+tapzJ61Hy2ujIJEnwLKC8VoJusECwB81KsDJ0pV
-	li23bKS09dvZYKVFRrvcw2gnIK4nm7m06rJ+RjFf6jNSugp//VZhRe
-X-Google-Smtp-Source: AGHT+IF3W3JEvAdEn+6XkclyIVYv5toqYTej+h7meAPk6df9tgcuXw9vF/e0pkd6A8Xlf/Wfop4LfqAhu1LtVh/wG0E=
-X-Received: by 2002:a05:6402:1507:b0:5f8:7b57:e5c2 with SMTP id
- 4fb4d7f45d1cf-5fb566852d6mr12307a12.4.1746462122587; Mon, 05 May 2025
- 09:22:02 -0700 (PDT)
+        bh=BUSGTKlbA5H24+yBQN4jIkG58T5ExeiJA4eFJ+JNTtQ=;
+        b=X3Ym+0NKuDNexCZZTXd8jtE2Dllc6S5Wh5/NXQRFcG+2NuXF/h8/JGalXnUlSBnw6r
+         /LI6hI/IaAQvYXUy3vcUZan26htzlicO0WvG+y68KzUWuaNYyMwiVh/ltI1L42/g6q8o
+         PBEjWNfxFpkQ1ZRChttuhEbnfAu5CbDxkbhkQiT6RaPYDEADUu1GazEKbc7rTHjMNnxC
+         2hulGK5lnRHH3/X9+0ynVQAxL4v+qy4RCg8RutrikZgEbNHlWCTOB/GyIxhTPmkYBlG6
+         74ro6pP9Bj1yI53/tOBE7pbJ0yqMC49Hy83JHBqoFIbtH2G0/KCsOB6+CaEi1fTdyWC9
+         10FA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6yUt63mqM8BncwUrnT7wlIfNlastIU8e3e2+sX0JI1xm9U+4RLPLhCXFK74jhSaHi6ywBpo82oUNbe80=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi/+DyTX+BIjntG+gtZCz7uRln8ZIkXObMv60H2bMkUlnNVyG7
+	1qEzsdCvLNghGHJAnHXD6vuOQZz42ChiOpBVdQ1+F3aAWHwUMORtUlBhlobHqvUpHgPFG+8BjCZ
+	Ssal1XAdeLifR3Vqsca6lIGUomhB1eKg0Db0q
+X-Gm-Gg: ASbGnct/jWlA6iPf4Fef1KwxJoRGTXemSCDEuhrKiEHIH64C/4THz8z5x+vmWErv8kB
+	wjsW070KX4gvB2c7oixfWtJcj9bhyE2/RXtBHOYXDOrzh0xQ5HeLWm28a3PG8IEzd8h+XrPPAJx
+	skUuUZtgolJblRWluGJeGW5w==
+X-Google-Smtp-Source: AGHT+IH2DUE5HVNEg2bSjlLOWtDIRC8IZyXb2mE2mCyNBUhFsO4FmPL69/3p57Fob2eoRjHd/ddHHp962kCkNWER8p8=
+X-Received: by 2002:a05:690c:6504:b0:702:537b:dca8 with SMTP id
+ 00721157ae682-708e119b266mr116732617b3.4.1746462136818; Mon, 05 May 2025
+ 09:22:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502-debugfs-rust-v4-0-788a9c6c2e77@google.com>
- <20250502-debugfs-rust-v4-1-788a9c6c2e77@google.com> <aBYNyqTRlpGAJVuB@polis>
-In-Reply-To: <aBYNyqTRlpGAJVuB@polis>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Mon, 5 May 2025 09:21:51 -0700
-X-Gm-Features: ATxdqUGcMXMdSjP5tftelubLXCUlS4UUnNm62xHIfh2j0Jbk-ZgPQhIrNbn7VhU
-Message-ID: <CAGSQo03Fz-U6pTYn1kL5GRsTOSpKnSnsG52oCrJii6MPM9x73Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] rust: debugfs: Bind DebugFS directory creation
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
+References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+ <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
+ <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+In-Reply-To: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 5 May 2025 12:22:05 -0400
+X-Gm-Features: ATxdqUHVSCLwU25t9Nh-Eb-QNfhRN532QIA5RHPtIkiKO7hREbMXnOdoRrxJisQ
+Message-ID: <CAHC9VhRf2gBDGFBW1obwCaGzK4RdH+ft_J-HXV6U7x7yiCJn5g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
+To: KP Singh <kpsingh@kernel.org>
+Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
+	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
+	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
+	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
+	justinstitt@google.com, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
+	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
+	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
+	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
+	xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 3, 2025 at 5:36=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> w=
+On Sun, May 4, 2025 at 7:25=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrote:
+> On Sun, May 4, 2025 at 7:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
 rote:
->
-> On Fri, May 02, 2025 at 07:49:30PM +0000, Matthew Maurer wrote:
-> > +/// Owning handle to a DebugFS directory.
-> > +///
-> > +/// This directory will be cleaned up when it goes out of scope.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// The wrapped pointer will always be `NULL`, an error, or an owned D=
-ebugFS `dentry`.
-> > +#[repr(transparent)]
-> > +pub struct Dir<'a, const KEEP: bool =3D false> {
->
-> Why did you move to a const generic, rather than a new type? What's the
-> advantage? AFAICS, it just makes it less obvious to see from the type its=
-elf how
-> it will behave. Reading Dir<true> doesn't make it obvious what it does.
->
-> While I prefer a new type over the const generic, I'm fine with it. But I=
- think
-> we should use something more descriptive than a bool. Please see
-> device::DeviceContext for reference.
+> > On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wr=
+ote:
 
-I'm fine with a new type or a using a more descriptive const generic -
-I did the const-generic to avoid the need to make one variant the
-derefee, which can sometimes complicate structure. I'll default to a
-more descriptive const-generic.
+...
 
+> > > ... here's how we think it should be done:
+> > >
+> > > * The core signing logic and the tooling stays in BPF, something that=
+ the users
+> > >   are already using. No new tooling.
+> >
+> > I think we need a more detailed explanation of this approach on-list.
+> > There has been a lot of vague guidance on BPF signature validation
+> > from the BPF community which I believe has partly led us into the
+> > situation we are in now.  If you are going to require yet another
+> > approach, I think we all need to see a few paragraphs on-list
+> > outlining the basic design.
 >
-> > +    /// Create a DebugFS subdirectory.
-> > +    ///
-> > +    /// This returns a [`Dir<'_, true>`], which will not be automatica=
-lly cleaned up when it
-> > +    /// leaves scope.
-> > +    /// To convert this to a handle governing the lifetime of the dire=
-ctory, use [`Dir::owning`].
-> > +    ///
-> > +    /// Regardless of conversion, subdirectory handles cannot outlive =
-the directory handle they
-> > +    /// were created from.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// let parent =3D Dir::new(c_str!("parent"));
-> > +    /// let child =3D parent.subdir(c_str!("child"));
-> > +    /// ```
-> > +    pub fn subdir<'b>(&'b self, name: &CStr) -> Dir<'b, true> {
-> > +        Dir::create(name, Some(self))
-> > +    }
->
-> The default should be that the directory is removed when the Dir instance=
- is
-> dropped.
->
-> The common case (which people expect) is that an object is cleaned up on =
-drop().
+> Definitely, happy to share design / code.
 
-In general for Rust, I agree with you. For this particular case, I
-have a strong disagreement - take a look at calls to
-`debugfs_create_dir` in existing C code - new code chooses to discard
-subdirectory handles when done and rely on the recursive remove of the
-root directory to clean up subdirectories. If you and Greg K-H both
-agree that I should make them drop by default, I'll switch it, but I
-think this is me following the subsystem maintainer's intentions here.
+At this point I think a quick paragraph or two on how you believe the
+design should work would be a good start, I don't think code is
+necessary unless you happen to already have something written.
 
->
-> > +impl<'a> Dir<'a, true> {
-> > +    /// Upgrade a non-owning directory to one which will be removed on=
- drop.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// let debugfs =3D Dir::new(c_str!("parent"));
-> > +    /// let subdir =3D debugfs.subdir(c_str!("child"));
-> > +    /// // If subdir were dropped, the directory would not be removed.
-> > +    /// let owned_subdir =3D subdir.owning();
-> > +    /// // If owned_subdir is dropped, "child" will be removed.
-> > +    /// ```
-> > +    pub fn owning(self) -> Dir<'a, false> {
-> > +        Dir {
-> > +            dir: self.dir,
-> > +            _phantom: self._phantom,
-> > +        }
-> > +    }
->
-> As mentioned above, please make it the other way around.
+--=20
+paul-moore.com
