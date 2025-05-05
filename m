@@ -1,93 +1,128 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8456B2C086E;
-	Mon,  5 May 2025 22:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE5A3344F4;
+	Mon,  5 May 2025 22:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484583; cv=none; b=YTMCMujevoUD2R+YRSK+U60c48+vSif4YjckTx6v4g5Mof+XgvVrF17d5H8vDjCiWilFw5so/zGknmnTVIhVwmvuRn8ozZFhwRUlgHCsz+Wgcgn9tJit7qCDKml+X+QBCCbJojlaWMJsNOUh2V5MdMzsnLF+9n1rRYjkMLPCjow=
+	t=1746484584; cv=none; b=Qc9gn0sWgySNcs5wAHavPljGntbrSc+o5v8CDmNb7jxXSwCauoGTSp+5MrOGprkTjIOXbJZIHCSChxyl1gdTOAls1UnJ0T+a0KQpl/A0FX3OOo765fKYdbKRMajDrDyjiUe4ssThVimmA2DC8PBGdEhmss0OtirELRXkdy/nnd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484583; c=relaxed/simple;
-	bh=V/as8NAbScpAc7r0jNSjRHgZ4ii7oO7JrW99rb0nMJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBSD+MgkyX7mLRblRRhfxE0FsyLidXyYwvyhm1GYrzORRnmoNvPIdzN6s3HTFahAe1OoY0MBWQ9a2h8VgM9TQ5NDKVWm1DOm0M+TG8OlO0roNlKhZS4Jp5AeDQrd9CxuuVMs0LrQpueTH5Rvj8ZeHeIVbPUETV0jqgLUY04aT4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=KODD3dnU; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1746484584; c=relaxed/simple;
+	bh=cZ7WccVEY3rBxlcARtOzc5KgjxT33cNmGCMLTwHk7F4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P3EsLyVk1BiNOP2DP/InV11g2xxSck78syW51SK/2WsFQ8AluAZ2Z6wJg4B5SnROc5fp4DT6L/AeGnYsE0dBgb0OP/8GRxnb+DFBW+vQRWHH6DR9AWL44I+nsl2JlV9jKcMU+NMEUomDBXBee3F5zM67/t4dgrB79P3hlgBJV4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmjtv9y2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="KODD3dnU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-	bh=wjv/3kkg8ER8GtdmsC4OfpctOuq/Lbu60oSY4NqUSV4=; b=KODD3dnUFam1+/IYyLJc/CXSLs
-	Gw9rntN2BqtvuXlFEaZG6JhJA6URM/jLipCXwPYSr/YFlP9n4gLuYF2daWvE2rDCC7/vAkm6s0nuN
-	QXiS6iKN3ofsx7PLEDDx6y9jUN9RXgITzSCI4Tsoj5PUIYa/DJBvbFIJhCstkDKqUwbc02C12msB4
-	n2FHQzzYVeE56cAlg2pjy1u1CuD8oPlQuosvbOI+scszXsJeP/LLq1vjB8RGKxpTUp6AmIV81HpQg
-	DIBWC0kfOdO3g7lB20nmxiiE6+K7HJbBWhLw45OAmxaH5ayGw5kNEpepcvcpoKjN9NZz0O6a1JQdr
-	06dZq0rw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uC4Q3-000000073Pb-3xQP;
-	Mon, 05 May 2025 22:36:15 +0000
-Date: Mon, 5 May 2025 23:36:15 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Yunseong Kim <ysk@kzalloc.com>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>,
-	byungchul@sk.com, max.byungchul.park@gmail.com,
-	linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: Prevent panic from NULL dereference in
- alloc_fs_context() during do_exit()
-Message-ID: <20250505223615.GK2023217@ZenIV>
-References: <20250505203801.83699-2-ysk@kzalloc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmjtv9y2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF27C4CEED;
+	Mon,  5 May 2025 22:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746484583;
+	bh=cZ7WccVEY3rBxlcARtOzc5KgjxT33cNmGCMLTwHk7F4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qmjtv9y2uNrfelxC40eW+tIFlHeN07PIoyXbUPJzdA4MfyK/GRmurC/lDZnvSJjT1
+	 dmqMkUZZ3mrdfMuijRRiPjryahir6ElCjpQjgNrZBn6mFDUV2fDbX2JtP5djhH05MY
+	 4qmyZ9+2t9CGMtGhoAU8ONUM904kvRuAz0ayvnIt4OnjH49nLXj/wFldQCSoEANrDy
+	 a+B9CEeYtfBg0UJBA+01E2b2uJHziSTdmfxKU2K00agP5ed+1Y1lzUMk434eVnR2cs
+	 jZ4m9PXXRi/DqjC/0kZ4wpKCIX7Dki2ztaQptvJNgCRlamCZRro5ufxmYtQm/UxPpH
+	 nNyEp8R97upxg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	kernel test robot <lkp@intel.com>,
+	Simon Horman <horms@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 548/642] ipv4: ip_gre: Fix set but not used warning in ipgre_err() if IPv4-only
+Date: Mon,  5 May 2025 18:12:44 -0400
+Message-Id: <20250505221419.2672473-548-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250505203801.83699-2-ysk@kzalloc.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, May 06, 2025 at 05:38:02AM +0900, Yunseong Kim wrote:
-> The function alloc_fs_context() assumes that current->nsproxy and its
-> net_ns field are valid. However, this assumption can be violated in
-> cases such as task teardown during do_exit(), where current->nsproxy can
-> be NULL or already cleared.
-> 
-> This issue was triggered during stress-ng's kernel-coverage.sh testing,
-> Since alloc_fs_context() can be invoked in various contexts — including
-> from asynchronous or teardown paths like do_exit() — it's difficult to
-> guarantee that its input arguments are always valid.
-> 
-> A follow-up patch will improve the granularity of this fix by moving the
-> check closer to the actual mount trigger(e.g., in efivarfs_pm_notify()).
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-UGH.
+[ Upstream commit 50f37fc2a39c4a8cc4813629b4cf239b71c6097d ]
 
-> diff --git a/fs/fs_context.c b/fs/fs_context.c
-> index 582d33e81117..529de43b8b5e 100644
-> --- a/fs/fs_context.c
-> +++ b/fs/fs_context.c
-> @@ -282,6 +282,9 @@ static struct fs_context *alloc_fs_context(struct file_system_type *fs_type,
->  	struct fs_context *fc;
->  	int ret = -ENOMEM;
->  
-> +	if (!current->nsproxy || !current->nsproxy->net_ns)
-> +		return ERR_PTR(-EINVAL);
-> +
->  	fc = kzalloc(sizeof(struct fs_context), GFP_KERNEL_ACCOUNT);
->  	if (!fc)
->  		return ERR_PTR(-ENOMEM);
+if CONFIG_NET_IPGRE is enabled, but CONFIG_IPV6 is disabled:
 
-That might paper over the oops, but I very much doubt that this will be
-a correct fix...  Note that in efivarfs_pm_notify() we have other
-fun issues when run from such context - have task_work_add() fail in
-fput() and if delayed_fput() runs right afterwards and
-        efivar_init(efivarfs_check_missing, sfi->sb, false);
-in there might end up with UAF...
+    net/ipv4/ip_gre.c: In function ‘ipgre_err’:
+    net/ipv4/ip_gre.c:144:22: error: variable ‘data_len’ set but not used [-Werror=unused-but-set-variable]
+      144 |         unsigned int data_len = 0;
+	  |                      ^~~~~~~~
+
+Fix this by moving all data_len processing inside the IPV6-only section
+that uses its result.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501121007.2GofXmh5-lkp@intel.com/
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://patch.msgid.link/d09113cfe2bfaca02f3dddf832fb5f48dd20958b.1738704881.git.geert@linux-m68k.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/ipv4/ip_gre.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
+index ed1b6b44faf80..c9f11a046c263 100644
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -141,7 +141,6 @@ static int ipgre_err(struct sk_buff *skb, u32 info,
+ 	const struct iphdr *iph;
+ 	const int type = icmp_hdr(skb)->type;
+ 	const int code = icmp_hdr(skb)->code;
+-	unsigned int data_len = 0;
+ 	struct ip_tunnel *t;
+ 
+ 	if (tpi->proto == htons(ETH_P_TEB))
+@@ -182,7 +181,6 @@ static int ipgre_err(struct sk_buff *skb, u32 info,
+ 	case ICMP_TIME_EXCEEDED:
+ 		if (code != ICMP_EXC_TTL)
+ 			return 0;
+-		data_len = icmp_hdr(skb)->un.reserved[1] * 4; /* RFC 4884 4.1 */
+ 		break;
+ 
+ 	case ICMP_REDIRECT:
+@@ -190,10 +188,16 @@ static int ipgre_err(struct sk_buff *skb, u32 info,
+ 	}
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+-	if (tpi->proto == htons(ETH_P_IPV6) &&
+-	    !ip6_err_gen_icmpv6_unreach(skb, iph->ihl * 4 + tpi->hdr_len,
+-					type, data_len))
+-		return 0;
++	if (tpi->proto == htons(ETH_P_IPV6)) {
++		unsigned int data_len = 0;
++
++		if (type == ICMP_TIME_EXCEEDED)
++			data_len = icmp_hdr(skb)->un.reserved[1] * 4; /* RFC 4884 4.1 */
++
++		if (!ip6_err_gen_icmpv6_unreach(skb, iph->ihl * 4 + tpi->hdr_len,
++						type, data_len))
++			return 0;
++	}
+ #endif
+ 
+ 	if (t->parms.iph.daddr == 0 ||
+-- 
+2.39.5
+
