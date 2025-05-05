@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1F3792D5;
-	Mon,  5 May 2025 23:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6086138AC6C;
+	Mon,  5 May 2025 23:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486062; cv=none; b=CcTm1A4H9OqQP0o55RWIs6gQuQ0irE6vQiAxODdod9xDWlXK+ZCou0LJbuRnmmfgMOdjCl4j+bWLSLgWOhlQTxodGYuprG2RNzuvZLtPuPZKoCXbtpHntwbrvIMevMyc7spGpGTSeeMxJjBibAmeg3kGN707AsGET8+5dRyNiug=
+	t=1746486067; cv=none; b=sgZ8CuTl+bKL0fuh/FIEpY6FI9QrfcgtonORonhCjFCN4ZvCmVKvFSGFxPeWcg2Cns2voFfdWQxTMs33JSEdkG/gplJlh+kVwjSdbIZ9HxlJhxrgWn195LNx4LVkFoRIachh/o++df/2+MnZzYoTzJihhFZjZ3QWibP+4/KxhRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486062; c=relaxed/simple;
-	bh=C8WjKFbqZ++qEiSG2oli3g1Fdxmh5WgnNdgoVkApz4E=;
+	s=arc-20240116; t=1746486067; c=relaxed/simple;
+	bh=5yO9rPWl3hIFnTuUWhLDF/4xFnNTBhL48tCp6o5L4sc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PHM4ImmrCmy9Edc4/75+F1BLy7CN8nS8Nzl+8zO6MDd1hoqeBU9hfR15CkUkHxzOl3zuW9QboiDgNf9hWHcnzh6hT5/6J8c2+vVaeZ0WOn4wqRrr1UGF8NWi7q8gd7Qp/KHY7Rkvyip/kz70+5dhizpC1xZkIc6zjP7oLhvBU6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCRPmz4E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XlLuz/BKfuh3AW9K6fQYA5uL6wXxdbtRNgEwuJAa8kBs8JE2FZ/7+iy0MqGZcEHTFP8pwAWKw2NKXU72M3Q6l8sIIgrkcpVjROYgwh7gTV2SoWgB9QJGkHPHGNg3x90SnOftyYJQSR7T+KfvOHRmeqlU22ogc6Xy9i6qX20Fxdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgMepI4F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCRPmz4E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F68C4CEEE;
-	Mon,  5 May 2025 23:00:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgMepI4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FAEFC4CEF5;
+	Mon,  5 May 2025 23:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486061;
-	bh=C8WjKFbqZ++qEiSG2oli3g1Fdxmh5WgnNdgoVkApz4E=;
+	s=k20201202; t=1746486067;
+	bh=5yO9rPWl3hIFnTuUWhLDF/4xFnNTBhL48tCp6o5L4sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rCRPmz4EeaNXuqYwZMXf6fuytwh4Xxy+BV6h2iJpZ49MVoku4EL8c9ea7HeDpTS1f
-	 28iqDX+A+9SNRq6Vq99barnxAsKy3gOse7VJbOvfSiHhcy1JsMTKboEjwe0wYxkUTE
-	 S8ZEG8tAnwC8XxmwUKRH0SP1cyb+Ff9Vsv0+WiEtJV3crFLsTimmYRQXBnmYKnq+7C
-	 3W+E+DBjNhcuqNyuxr620Vs25sWIBuT/3lca85iS4lkzsKEmp8QGhdM2fKz2Xxssvy
-	 lr/hh3LvF7fARVtzJgLjT3ajWNOdmX3F+9TfnQMpRN2EmaDOBdXXjVU7vlOt4XMVBi
-	 3YDmQEZ8ElPjQ==
+	b=rgMepI4F+tf4SB4itda1omNx27oY6rJpuHNxoqvTeL3pDWl8aYDODTaHfyATrhEYX
+	 E6p1Qimna5dmVMgPRG4914FQ7sBtWoYp9arztd5eYlZwMR9J85pZOhkqIecD//XgVn
+	 bUvmr7HzTRgBmR5a1jxtBuNZuSdq6xRpBAxfxoTqKE/wz7FEucK0WqzDZaN9Sc0J7k
+	 WilZZQDRI17GLk9l+88W1kwyRoubY7bPg4rO4KNPXPOr1Qe3bJ3fBnRtX9zCqTNb7s
+	 QVhW86HhsmbKl079xFbH2mDjKEHHtMcvAfB0j3D+rpGXJ1SilfJ4fIfYBiDF80u4dP
+	 VepnWYktqsZYg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Li Bin <bin.li@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Ryan Wanner <Ryan.Wanner@microchip.com>,
-	Durai Manickam KR <durai.manickamkr@microchip.com>,
-	Andrei Simion <andrei.simion@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+Cc: Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Sven Peter <sven@svenpeter.dev>,
 	Sasha Levin <sashal@kernel.org>,
-	linux@armlinux.org.uk,
-	alexandre.belloni@bootlin.com,
+	asahi@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 133/294] ARM: at91: pm: fix at91_suspend_finish for ZQ calibration
-Date: Mon,  5 May 2025 18:53:53 -0400
-Message-Id: <20250505225634.2688578-133-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 137/294] soc: apple: rtkit: Use high prio work queue
+Date: Mon,  5 May 2025 18:53:57 -0400
+Message-Id: <20250505225634.2688578-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -56,88 +52,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Li Bin <bin.li@microchip.com>
+From: Janne Grunau <j@jannau.net>
 
-[ Upstream commit bc4722c3598d0e2c2dbf9609a3d3198993093e2b ]
+[ Upstream commit 22af2fac88fa5dbc310bfe7d0b66d4de3ac47305 ]
 
-For sama7g5 and sama7d65 backup mode, we encountered a "ZQ calibrate error"
-during recalibrating the impedance in BootStrap.
-We found that the impedance value saved in at91_suspend_finish() before
-the DDR entered self-refresh mode did not match the resistor values. The
-ZDATA field in the DDR3PHY_ZQ0CR0 register uses a modified gray code to
-select the different impedance setting.
-But these gray code are incorrect, a workaournd from design team fixed the
-bug in the calibration logic. The ZDATA contains four independent impedance
-elements, but the algorithm combined the four elements into one. The elements
-were fixed using properly shifted offsets.
+rtkit messages as communication with the DCP firmware for framebuffer
+swaps or input events are time critical so use WQ_HIGHPRI to prevent
+user space CPU load to increase latency.
+With kwin_wayland 6's explicit sync mode user space load was able to
+delay the IOMFB rtkit communication enough to miss vsync for surface
+swaps. Minimal test scenario is constantly resizing a glxgears
+Xwayland window.
 
-Signed-off-by: Li Bin <bin.li@microchip.com>
-[nicolas.ferre@microchip.com: fix indentation and combine 2 patches]
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Tested-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-Tested-by: Durai Manickam KR <durai.manickamkr@microchip.com>
-Tested-by: Andrei Simion <andrei.simion@microchip.com>
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-Link: https://lore.kernel.org/r/28b33f9bcd0ca60ceba032969fe054d38f2b9577.1740671156.git.Ryan.Wanner@microchip.com
-Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Signed-off-by: Janne Grunau <j@jannau.net>
+Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Link: https://lore.kernel.org/r/20250226-apple-soc-misc-v2-3-c3ec37f9021b@svenpeter.dev
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/soc/apple/rtkit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 22ecaf09d00f9..f635ad29511f6 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -538,11 +538,12 @@ extern u32 at91_pm_suspend_in_sram_sz;
+diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+index d9f19dc99da5e..b9c5281c445ee 100644
+--- a/drivers/soc/apple/rtkit.c
++++ b/drivers/soc/apple/rtkit.c
+@@ -744,7 +744,7 @@ struct apple_rtkit *apple_rtkit_init(struct device *dev, void *cookie,
+ 	rtk->mbox_cl.rx_callback = &apple_rtkit_rx;
+ 	rtk->mbox_cl.tx_done = &apple_rtkit_tx_done;
  
- static int at91_suspend_finish(unsigned long val)
- {
--	unsigned char modified_gray_code[] = {
--		0x00, 0x01, 0x02, 0x03, 0x06, 0x07, 0x04, 0x05, 0x0c, 0x0d,
--		0x0e, 0x0f, 0x0a, 0x0b, 0x08, 0x09, 0x18, 0x19, 0x1a, 0x1b,
--		0x1e, 0x1f, 0x1c, 0x1d, 0x14, 0x15, 0x16, 0x17, 0x12, 0x13,
--		0x10, 0x11,
-+	/* SYNOPSYS workaround to fix a bug in the calibration logic */
-+	unsigned char modified_fix_code[] = {
-+		0x00, 0x01, 0x01, 0x06, 0x07, 0x0c, 0x06, 0x07, 0x0b, 0x18,
-+		0x0a, 0x0b, 0x0c, 0x0d, 0x0d, 0x0a, 0x13, 0x13, 0x12, 0x13,
-+		0x14, 0x15, 0x15, 0x12, 0x18, 0x19, 0x19, 0x1e, 0x1f, 0x14,
-+		0x1e, 0x1f,
- 	};
- 	unsigned int tmp, index;
- 	int i;
-@@ -553,25 +554,25 @@ static int at91_suspend_finish(unsigned long val)
- 		 * restore the ZQ0SR0 with the value saved here. But the
- 		 * calibration is buggy and restoring some values from ZQ0SR0
- 		 * is forbidden and risky thus we need to provide processed
--		 * values for these (modified gray code values).
-+		 * values for these.
- 		 */
- 		tmp = readl(soc_pm.data.ramc_phy + DDR3PHY_ZQ0SR0);
- 
- 		/* Store pull-down output impedance select. */
- 		index = (tmp >> DDR3PHY_ZQ0SR0_PDO_OFF) & 0x1f;
--		soc_pm.bu->ddr_phy_calibration[0] = modified_gray_code[index];
-+		soc_pm.bu->ddr_phy_calibration[0] = modified_fix_code[index] << DDR3PHY_ZQ0SR0_PDO_OFF;
- 
- 		/* Store pull-up output impedance select. */
- 		index = (tmp >> DDR3PHY_ZQ0SR0_PUO_OFF) & 0x1f;
--		soc_pm.bu->ddr_phy_calibration[0] |= modified_gray_code[index];
-+		soc_pm.bu->ddr_phy_calibration[0] |= modified_fix_code[index] << DDR3PHY_ZQ0SR0_PUO_OFF;
- 
- 		/* Store pull-down on-die termination impedance select. */
- 		index = (tmp >> DDR3PHY_ZQ0SR0_PDODT_OFF) & 0x1f;
--		soc_pm.bu->ddr_phy_calibration[0] |= modified_gray_code[index];
-+		soc_pm.bu->ddr_phy_calibration[0] |= modified_fix_code[index] << DDR3PHY_ZQ0SR0_PDODT_OFF;
- 
- 		/* Store pull-up on-die termination impedance select. */
- 		index = (tmp >> DDR3PHY_ZQ0SRO_PUODT_OFF) & 0x1f;
--		soc_pm.bu->ddr_phy_calibration[0] |= modified_gray_code[index];
-+		soc_pm.bu->ddr_phy_calibration[0] |= modified_fix_code[index] << DDR3PHY_ZQ0SRO_PUODT_OFF;
- 
- 		/*
- 		 * The 1st 8 words of memory might get corrupted in the process
+-	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_MEM_RECLAIM,
++	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_HIGHPRI | WQ_MEM_RECLAIM,
+ 					  dev_name(rtk->dev));
+ 	if (!rtk->wq) {
+ 		ret = -ENOMEM;
 -- 
 2.39.5
 
