@@ -1,43 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B3B1F30A4
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 14:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F509846C;
+	Mon,  5 May 2025 14:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746454881; cv=none; b=hJG/Qpyod11EtzfInwYUTNIviXu9JVCpPQgoe5Cll6e9NyNVyN7uvIBfn2dyOZETmVV0tzXngSVs93+FA6SmnCvbTCSK6Q8uV00sKw+oqmxhF0RbZViR2A6A8gzvTpEHfXv739BciWCGaypQ+p5iJWzzl8blvSNJ518cARV2KSo=
+	t=1746454957; cv=none; b=hFaWWnfxjgGRVs2B3nr1sOWoZBhS61HwljPnd57NHs+eF4ZFaUL/+rJESD1X0oUJmVD9OMbUMSPVmMoox/cE8zyk3Q5nOSGGaOcJZmt2V9mOA4akswMMk10Dl+G/Zk/JMhS3QT5sXw3DTzyuXaGjaZcprISzNzNWNbc33Y8ovc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746454881; c=relaxed/simple;
-	bh=ZV1Z2VR14ylgUix5FI+lRqQxmCZ8sNITwbPQ8g/6YZ4=;
+	s=arc-20240116; t=1746454957; c=relaxed/simple;
+	bh=YKNW51Oj6jwIFNQC6Q50xPijXy2UdxETS26563QVe3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=povkFeCmw5cICPw1+m1SBTJbqDqHI6eHgaCqXLu6pPzZopxXBaPX9Pk9vbJyveDUfQTH2UUtnVe0xcnpnVwiB1Pc+o2TKDJDEtTueY7Ks9M/UM/0H6I5jcVVECj+F6QITVspN88wsndc9XGFEEGHCFYzwvCBTQCN/np7qLbPqoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sySoIGMP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YnxpFmSieyTMyDU+HKA8UHdIJCG18vlUxAnLLQu/xkUHV6xhgKL6ztS/kLe1JmCmo1yJMKS2JaYB8a7rx3gsBDJmTAVk9KMwp7UgMctM0/l6LmK0ak3KOirltoZtoFtnxxmkIT7Vw9P3/0cFFVa6URYmvd/0fdHfzecXCt8AXaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TV3Z2C4+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sySoIGMP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72633C4CEEE;
-	Mon,  5 May 2025 14:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TV3Z2C4+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D48C4CEE4;
+	Mon,  5 May 2025 14:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746454881;
-	bh=ZV1Z2VR14ylgUix5FI+lRqQxmCZ8sNITwbPQ8g/6YZ4=;
+	s=k20201202; t=1746454955;
+	bh=YKNW51Oj6jwIFNQC6Q50xPijXy2UdxETS26563QVe3g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sySoIGMPnXUia5gYgjghar7ayTInJeYfRjo2/RniRA41GldkAI2ofuMu+WZG3CAXH
-	 JvXuPMjVSMmQnyW+6xyj88pSxOTAN7RDvRMCTVMguHzr+4Vck1CZCanTIpzkKniKHG
-	 et31GrPjuani2EXpEvdZY8+Y7L//LHseeLjMc+fUi1idbEC+rV2dta8ZfatCQ5Dwfu
-	 7Dzk7m9RXC4GCBsklFVloFDarYOorTi6RLZy3Ld5mkUoa7Ept3bxn/h9nYDadJcsTH
-	 Fvkk1SAmCw+axLL2v+I/vUa206XXCA2FtvC2LanRYViRWuIo1PJ/0kIc09OzVGUXss
-	 j1TzuqzhjSpZA==
-Date: Mon, 5 May 2025 08:21:18 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] nvme/pci: PRP list DMA pool partitioning
-Message-ID: <aBjJXo8Svq2f3E9N@kbusch-mbp>
-References: <20250426020636.34355-1-csander@purestorage.com>
- <CADUfDZr=OWv-bt+rzNQZ7zii9JyNxmkYCJxXCiCNsoHhT5UcYw@mail.gmail.com>
+	b=TV3Z2C4+UL/Mk5nBP3PIITQF9fiKzEQ5TYSxDbr50CbBn+Jk3bqvlHN8onbP2G1oO
+	 H+RmQHSy0s0DmE/dM6Ep61r5S4aeoWY0Q1Cwe4rlWwF5VfmccNIH0h2mZJftjZi6se
+	 ZTqb6giZBEH9co6ScHyhyWwlhdLKyprgbEZweKnn6Q+adHKDc2tT+4JHcWwBqyK082
+	 zPFAgIjiuJMBAseIz7Ms2EMiD3u1C8PDB6E+/s/XaKuUGQapwv79B65BUjWDF67Avp
+	 AaWzjCvne0Urzo+Eobo5axLk7aHbBYf8PW6/RStfGUuoRqL0z6ARhR9n1Raxu/Uaa2
+	 8C5gkmFeIgrAQ==
+Date: Mon, 5 May 2025 07:22:34 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, brauner@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v11 02/16] xfs: only call xfs_setsize_buftarg once per
+ buffer target
+Message-ID: <20250505142234.GG1035866@frogsfrogsfrogs>
+References: <20250504085923.1895402-1-john.g.garry@oracle.com>
+ <20250504085923.1895402-3-john.g.garry@oracle.com>
+ <20250505054031.GA20925@lst.de>
+ <8ea91e81-9b96-458e-bd4e-64eada31e184@oracle.com>
+ <20250505104901.GA10128@lst.de>
+ <bb8efa28-19e6-42f5-9a26-cdc0bc48926e@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,14 +54,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADUfDZr=OWv-bt+rzNQZ7zii9JyNxmkYCJxXCiCNsoHhT5UcYw@mail.gmail.com>
+In-Reply-To: <bb8efa28-19e6-42f5-9a26-cdc0bc48926e@oracle.com>
 
-On Fri, May 02, 2025 at 09:48:17AM -0700, Caleb Sander Mateos wrote:
-> It seems like there is consensus on this series and all patches have
-> multiple reviews. Would it be possible to queue it up for 6.16? The
-> NVMe tree seems like it would make sense, though maybe the dmapool
-> patch needs to go through the mm tree?
+On Mon, May 05, 2025 at 11:55:13AM +0100, John Garry wrote:
+> On 05/05/2025 11:49, Christoph Hellwig wrote:
+> > On Mon, May 05, 2025 at 11:04:55AM +0100, John Garry wrote:
+> > > @@ -503,6 +509,9 @@ xfs_open_devices(
+> > >   		mp->m_logdev_targp = xfs_alloc_buftarg(mp, logdev_file);
+> > >   		if (!mp->m_logdev_targp)
+> > >   			goto out_free_rtdev_targ;
+> > > +		error = sync_blockdev(mp->m_logdev_targp->bt_bdev);
+> > > +		if (error)
+> > > +			goto out_free_rtdev_targ;
+> > >   	} else {
+> > >   		mp->m_logdev_targp = mp->m_ddev_targp;
+> > >   		/* Handle won't be used, drop it */
+> > > 
+> > > 
+> > > Right?
+> > Yes.  Or in fact just folding it into xfs_alloc_buftarg, which might
+> > be even simpler.
+> 
+> Yes, that was my next question..
+> 
+> >  While you're at it adding a command why we are doing
+> > the sync would also be really useful, and having it in just one place
+> > helps with that.
+> 
+> ok, there was such comment in xfs_preflush_devices().
+> 
+> @Darrick, please comment on whether happy with changes discussed.
 
-The subsequent nvme patches depend on the dmapool patch, so they all
-need to go through the same tree. It's okay with me if nvme picks these
-up, but I think we need an Ack from one of the mm reviewers/maintainers.
+I put the sync_blockdev calls in a separate function so that the
+EIO/ENOSPC/whatever errors that come from the block device sync don't
+get morphed into ENOMEM by xfs_alloc_buftarg before being passed up.  I
+suppose we could make that function return an ERR_PTR, but I was trying
+to avoid making even more changes at the last minute, again.
+
+--D
+
+> Thanks,
+> John
+> 
+> 
