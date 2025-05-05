@@ -1,934 +1,568 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62717E0E4;
-	Mon,  5 May 2025 11:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E12920299B
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746444360; cv=none; b=bF5Grj8EKWQA1azrN8vUeFlzzIWiS2CtDfYYOu10bm/kkjXyVJcl32npi/O5nL9gLaleIJmPVM31Xdl4NVxLzbtk5YCQmfMndNO6SXyjI2qc7kCa2jltm9/Zfn39OkxuXLR544dlrAHJHWcmyinM5rvdqNeWulCyPT5yeIgVtYA=
+	t=1746444412; cv=none; b=hjwTN826FEe/2aK6/6+XM1fmOizFiLfrBxxiIG0QDBhe4I5SvsDJ/THfk9n9r/ZZsMcnSz4cB/TPWIjl++aDcbkl/MsSpZdaEnacxJhro9TOmsRQYE78JK0fOYh61bop82vs0Omv/Aqi+dHNXsZO1v1ZPR4hi1RHGtIpF1GrFB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746444360; c=relaxed/simple;
-	bh=+VpDObejx/PYTl8EPeyF4RnJ/Elk84mg7Zt0j7cAiIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SocliIJsq/0aJ9c8B3iUeUyRtj5PPd6RR5uk0+zl8JVBDbToBBhVNfNmWUx5QadV7sxQnbB3ZFAEr6vJXZbzIZB3OOEgZaE3S8SWCOLCRz12gOXlCNgPZTwEUdOXYNyiOiPaD+8mcpmNvpt0GMVHRBDrMm92FI7fIjkAYIzY4A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ld4mcERI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746444412; c=relaxed/simple;
+	bh=ZA2z6cJRHQYDJ8d+kqKuQv28t55EAKg9bMI/g/+ksG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jib763EMg3b9Ais1cMwvDZMaiS2lF+QE6ZihAszhUF92jnvnzzX0ZqqFwBOtWR5r1cj/GOQH+7Hujk3Z02Vy3+HF+/YoiaeLmAmJybWV6BOn1rkCzEW3dJxo5+d/W0feVZb8Yz/f/0oMbe+9Jd5kb9q876WmuajXHY6x2nhfHSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=U68JEeNw; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ld4mcERI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2375AC4CEE4;
-	Mon,  5 May 2025 11:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746444359;
-	bh=+VpDObejx/PYTl8EPeyF4RnJ/Elk84mg7Zt0j7cAiIU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ld4mcERItJKti4l04BW1cJANe2ITaINb+QaDCuzwxefIdhPLgMdhuTyhFZ2yDA1+6
-	 vQ1QE1eWTFZfhgIiBmqCa0DPogLyKRz1zJ9+MXwsFPS+D0cBerMsURu0pOpUusC9We
-	 xGKlZT3ykIfKBvU0FBMmCYkNJ4gZqlLBaDSLH/YXNHnSYe9EhFngPHJ0V9kELgiKTr
-	 b3Wi1+wTjxcy3b9kBoKou3mWMfDm8XIV9HlN1BepWc/+pfwzRig351JtCmEi/Zv1Kf
-	 9ZRq0aEbk7evQtnnCKwV5WZFCTKQIvhICChDF4vZZ/BPEkqiWUkvk3ibP7iSbBj3oe
-	 6XVgqZkJaQkmg==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54af20849bbso4913802e87.0;
-        Mon, 05 May 2025 04:25:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVyZ3dNE5wnIX/S9hD9duaBLZ16qj4mswaXLVFRCzVkjAg4JFAO+yDT9OA5UGpj/kVDDd4mBTd/tumO/5gd@vger.kernel.org, AJvYcCXTCHOL7mnFH7S6hdQbdQDZYRJppFyUTtRTMLUzV2Lu1OV7NAa/AyqaGmKFXrYnM1LzF5g/psEPbE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZk6cxvg6wFrKUH1q7lNvjn+Sz9vsebM9FBpqVyrrxU90twBJd
-	Dy6hn+aVhLhZ7/rWb7dXAOQHAlvTbpNmVlt4tYBDvjf4UnBMLsjnkJfmQpG3VlPGUC9iTvJ9tJt
-	Gl6m+k8nwwmtXpHsB2e8uXYWSRMQ=
-X-Google-Smtp-Source: AGHT+IGlj4/fJZbvCoodWPT2z9wdIdNHDt2Era4cx+VR1U9J7CaIJ/l5HuJhBgr9cRrQFAKSc4vI3qYaN2uh4Zs15Vw=
-X-Received: by 2002:a05:6512:3b9f:b0:549:903a:1bf with SMTP id
- 2adb3069b0e04-54fa4f96b5bmr1584309e87.48.1746444357302; Mon, 05 May 2025
- 04:25:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="U68JEeNw"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb5ec407b1so746451466b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1746444407; x=1747049207; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HCvqM0r6z/uk3aGi4ylWlG5lxduJ69/W6EjVsgplTuc=;
+        b=U68JEeNwmWjVqpmpx2J36Kp5jSiExSqcEx6d1BwstMYifRCE/v6JxgluKUvxIxNub3
+         T07uF7oPANvPPYv55WFNO+aeuzJ51lXWiBw4xwBEZyiNfib13UUBbd44aP7iisly4kBl
+         +chn8VHv8WzCQCq1uRYwEy304h5jHkP1YFkmuTmdOg91lhZOTQ0zxIKTUoHhnjdc5ymN
+         pI1EWVj4JITfpTvcCMjjeoFSPTONuYbvAIF2GiJjJvWZs9FQmPbVPTZRZWMTuZR9ffKM
+         gcKeGIYHfpUsc5pV6HSY4rnxMxy9BBN/fogr9we1FsQ+/DgL+Oldjomr5eQB8Jj7Hvjn
+         qYFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746444407; x=1747049207;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HCvqM0r6z/uk3aGi4ylWlG5lxduJ69/W6EjVsgplTuc=;
+        b=p5aAd+CI0Cmu/GazwZGyPqM4Yv6uP0DPEKV9JJGJ/3a6RLqbs9Ti1OvN2liD+d3/f0
+         Bi6L3cSf+KF+mR4TvL8uGwy45Anamj7IZTv2EvqdCV7eg4iSdLeLZkosvQzkgaIebGcp
+         yepg/SUkGZb/d/zzrT9RXqzPyj54F5vn2O0wisxYw1bJXsCP1Hweyo2AdXInYmabJVe5
+         zyQcmiSjTraXy3d1Pc90V3S74opnXyJlU100/YI94/sGQrYvHQK82lM2JJzidC4fx+0W
+         sxqHXZ5axR99UA7kJPOK9ZyW73qYxrxL2mMw3redAFUHX6kW0Yl7HsGJGJi+loSVpkWq
+         mFsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs6+vbQYR0Un/A6FGMqsBtWdRivqOMz3ruOz4nnNbArVv3U/H4Gh+AdUbWPJ8pSIxC0di5rr3mTEzADMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLPc4VSUlpT3j85fOMVdwW0qyp+QwALfexnK34oLSo3KoT7gGz
+	/zPZUVsnSMw5rz9U5oe9/12doG/HCtPuWmqYjayLH/v8OUguTtsiOHipBTu4pBE=
+X-Gm-Gg: ASbGncuACQrsvr1jBCJJ3AkvUoAv6FsJrzj9ikfZdkMwTL+gtnG+YJU4lC0lRtxAnfU
+	2rylkcDgdH6ZKRILdfHvmVtMblJeYWshuHCkYJgx3RG2npoqbKEwPOYammSfkKB/RAkwpcUA6eR
+	8bo7Bovf7J6qgHsqNfp4fFRz50/8tEVDUbxSTxFpunRQTg+Cz1+mPDPRxN6AJMDwVzDtxfpkrse
+	0aNKADi5doNumgfGOL6adaFakdhPEMiSF4kyCIbX86cVxo4TFcrmLAy+cpL/ybo3YXhTWg1x8K8
+	jeanVEeIA+tThmXMT16lROmsffbbLfSrbbH6m2TOgFrqoCK/Hw9/TVsNJKNo
+X-Google-Smtp-Source: AGHT+IE/BbfbnYQze2kaqqgFxS+06OA8NFnbPS8TBkXLo8cERNYeU7a+LhmpysBXuNhwrmO3RWpezA==
+X-Received: by 2002:a17:907:86a1:b0:ac8:1126:ac15 with SMTP id a640c23a62f3a-ad1a4ad4ca6mr634522866b.41.1746444406393;
+        Mon, 05 May 2025 04:26:46 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a7467sm481981866b.67.2025.05.05.04.26.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 04:26:45 -0700 (PDT)
+Message-ID: <26bdfbd6-7bf5-4688-b793-5d0f613d340b@tuxon.dev>
+Date: Mon, 5 May 2025 14:26:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250504182244.30446-1-pali@kernel.org>
-In-Reply-To: <20250504182244.30446-1-pali@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 5 May 2025 13:25:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE5DQ-tBFa+xLR10+joGADRB6BJ70EvDfJzfWJr1o3Q2A@mail.gmail.com>
-X-Gm-Features: ATxdqUGfDZqgG70gTaSSyMTKdYHbhaU_gmMgsRnF5eENCpWSDW6bW-tLc4xWRdo
-Message-ID: <CAMj1kXE5DQ-tBFa+xLR10+joGADRB6BJ70EvDfJzfWJr1o3Q2A@mail.gmail.com>
-Subject: Re: [PATCH] include: pe.h: Fix PE definitions
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, linux-efi@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, geert+renesas@glider.be, magnus.damm@gmail.com,
+ mturquette@baylibre.com, sboyd@kernel.org, saravanak@google.com,
+ p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250501201211.GA768334@bhelgaas>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20250501201211.GA768334@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Pali,
+Hi, Bjorn,
 
-On Sun, 4 May 2025 at 20:23, Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> * Rename constants to their standard PE names:
->   - MZ_MAGIC -> IMAGE_DOS_SIGNATURE
->   - PE_MAGIC -> IMAGE_NT_SIGNATURE
->   - PE_OPT_MAGIC_PE32_ROM -> IMAGE_ROM_OPTIONAL_HDR_MAGIC
->   - PE_OPT_MAGIC_PE32 -> IMAGE_NT_OPTIONAL_HDR32_MAGIC
->   - PE_OPT_MAGIC_PE32PLUS -> IMAGE_NT_OPTIONAL_HDR64_MAGIC
->   - IMAGE_DLL_CHARACTERISTICS_NX_COMPAT -> IMAGE_DLLCHARACTERISTICS_NX_CO=
-MPAT
->
+On 01.05.2025 23:12, Bjorn Helgaas wrote:
+> On Wed, Apr 30, 2025 at 01:32:33PM +0300, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+>> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+>> only as a root complex, with a single-lane (x1) configuration. The
+>> controller includes Type 1 configuration registers, as well as IP
+>> specific registers (called AXI registers) required for various adjustments.
+>>
+>> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
+>> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
+>> host driver can be reused for these variants with minimal adjustments.
+> 
+> I guess this current driver only supports RZ/GS3 in Root Complex mode?
 
-Where are these 'standard PE names' defined?
+That's right.
 
-> * Import constants and their description from readpe and file projects
->   which contains current up-to-date information:
->   - IMAGE_FILE_MACHINE_*
->   - IMAGE_FILE_*
->   - IMAGE_SUBSYSTEM_*
->   - IMAGE_DLLCHARACTERISTICS_*
->   - IMAGE_DLLCHARACTERISTICS_EX_*
->   - IMAGE_DEBUG_TYPE_*
->
-> * Add missing IMAGE_SCN_* constants and update their incorrect descriptio=
-n
->
-> * Fix incorrect value of IMAGE_SCN_MEM_PURGEABLE constant
->
-> * Add description for win32_version and loader_flags PE fields
->
+> If so, I don't think this paragraph is necessary or really relevant.
 
-Given that the Linux kernel only uses PE executables in the context of
-EFI boot, might it be better to source our definitions from the
-Tianocore project instead? The 'file' and 'readpe' projects don't seem
-authoritative to me when it comes to the PE/COFF format. (And these
-symbolic names do not exist in the PE/COFF specification)
+OK, I'll drop it.
+
+> 
+>> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
+>> @@ -0,0 +1,1561 @@
+> 
+> I can't figure out the line width you're using.  Generally code in
+> drivers/pci/ is formatted to fit in 80 columns.  Much of this file is
+> formatted for that, but there are many cases that seem to use 90 or
+> 100 columns.
+
+I formated it at 100 columns where the lines were longer. I wasn't aware
+the PCI rule is to have line formated at 80 columns. I'll switch to it in
+the next version.
+
+> 
+> For single-line comments that are not a sentence or are a single
+> sentence, it's typical to omit the period at end.
+
+I'll follow this rule, too.
+
+> 
+>> +static void rzg3s_pcie_update_bits(void __iomem *base, u32 offset, u32 mask, u32 val)
+>> +{
+>> +	u32 tmp;
+>> +
+>> +	tmp = readl(base + offset);
+>> +	tmp &= ~mask;
+>> +	tmp |= val & mask;
+>> +	writel(tmp, base + offset);
+>> +}
+> 
+> Nothing rzg3s-specific here.
+> 
+> I think u32p_replace_bits() (include/linux/bitfield.h) is basically this.
+
+I wasn't aware of it. I'll use it in the next version. Thank for pointing it.
+
+> 
+>> +static int rzg3s_pcie_config_access(struct rzg3s_pcie_host *host, struct pci_bus *bus,
+>> +				    unsigned int devfn, int where, u32 *data,
+>> +				    enum rzg3s_pcie_cfg_access_type access_type)
+>> +{
+>> +	bool type0 = pci_is_root_bus(bus->parent) ? true : false;
+>> +	unsigned int dev, func, reg, tr_type;
+>> +	int ret;
+>> +
+>> +	dev = PCI_SLOT(devfn);
+>> +	func = PCI_FUNC(devfn);
+>> +	reg = where & ~0x3;
+> 
+> This obviously has to be serialized with other config accesses.  Can
+> you add a comment about what provides that serialization?  I assume
+> it's probably pci_lock via pci_lock_config()?
+
+Yes, it is the pci_lock via pci_{lock, unlock}_config(). I'll add a comment
+for it.
+
+> 
+>> +	/* Set the destination. */
+>> +	writel(FIELD_PREP(RZG3S_PCI_REQADR1_BUS, bus->number) |
+>> +	       FIELD_PREP(RZG3S_PCI_REQADR1_DEV, dev) |
+>> +	       FIELD_PREP(RZG3S_PCI_REQADR1_FUNC, func) |
+>> +	       FIELD_PREP(RZG3S_PCI_REQADR1_REG, reg),
+>> +	       host->axi + RZG3S_PCI_REQADR1);
+>> +
+>> +	/* Set byte enable. */
+>> +	writel(RZG3S_PCI_REQBE_BYTE_EN, host->axi + RZG3S_PCI_REQBE);
+>> +
+>> +	if (access_type == RZG3S_PCIE_CFG_ACCESS_RD) {
+>> +		tr_type = type0 ? RZG3S_PCI_REQISS_TR_TP0_RD : RZG3S_PCI_REQISS_TR_TP1_RD;
+>> +	} else {
+>> +		tr_type = type0 ? RZG3S_PCI_REQISS_TR_TP0_WR : RZG3S_PCI_REQISS_TR_TP1_WR;
+>> +
+>> +		/* Set the write data.  */
+>> +		writel(0, host->axi + RZG3S_PCI_REQDATA(0));
+>> +		writel(0, host->axi + RZG3S_PCI_REQDATA(1));
+>> +		writel(*data, host->axi + RZG3S_PCI_REQDATA(2));
+>> +	}
+>> +
+>> +	/* Set the type of request. */
+>> +	writel(tr_type, host->axi + RZG3S_PCI_REQISS);
+>> +
+>> +	/* Issue the request and wait to finish. */
+>> +	ret = rzg3s_pcie_issue_request(host);
+>> +	if (ret) {
+>> +		if (access_type == RZG3S_PCIE_CFG_ACCESS_RD)
+>> +			PCI_SET_ERROR_RESPONSE(data);
+>> +
+>> +		return PCIBIOS_SET_FAILED;
+>> +	}
+>> +
+>> +	/* Read the data. */
+>> +	if (access_type == RZG3S_PCIE_CFG_ACCESS_RD)
+>> +		*data = readl(host->axi + RZG3S_PCI_REQRCVDAT);
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+> 
+>> +static int rzg3s_pcie_read_conf(struct pci_bus *bus, unsigned int devfn, int where, int size,
+>> +				u32 *val)
+>> +{
+>> +	struct rzg3s_pcie_host *host = bus->sysdata;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * Bus number for root complex is set to zero. 
+> 
+> A root bus is not always bus number zero.  It sounds like the bus
+> number is configurable on this hardware?
+
+According to the documentation, yes, it is configurable. However, I haven't
+tried with anything other than zero.
+
+>  I don't see a dependency on
+> the bus number, so I'm wondering why this sentence is here.
+
+In probe, this function is called from
+https://elixir.bootlin.com/linux/v6.14.5/source/drivers/pci/probe.c#L2992
+with devfn in range [0, 256).
+I had issues with letting the code configuring the controller with these
+requests. Double checking it now, I think I've managed to make it work.
+Thank you for pointing it.
+
+> 
+>> +	   ... Skip other requests for
+>> +	 * vendor and device ID (where = 0x00).
+> 
+> Why do we need to avoid config reads for root bus devices other than
+> 00.0?  Does the hardware not fabricate ~0 read data when a PCI error
+> occurs?
+> 
+> It looks like you allow reads for other root bus devices at non-zero
+> offsets?  E.g., we could read the Device ID at offset 0x02?
+
+I had initially issues with the initialization sequence pointed above. But
+your question made me re-checking it and I've manage to make it work. I'll
+drop this limitation in the next version.
+
+> 
+>> +	 */
+>> +	if (pci_is_root_bus(bus) && PCI_SLOT(devfn) && !where)
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>> +	ret = rzg3s_pcie_read_config_access(host, bus, devfn, where, val);
+>> +	if (ret != PCIBIOS_SUCCESSFUL)
+>> +		return ret;
+>> +
+>> +	if (size == 1)
+>> +		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
+>> +	else if (size == 2)
+>> +		*val = (*val >> (BITS_PER_BYTE * (where & 2))) & 0xffff;
+>> +
+>> +	dev_dbg(&bus->dev, "%s(): bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
+>> +		__func__, bus->number, devfn, where, size, *val);
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+> 
+>> +static int rzg3s_pcie_write_conf(struct pci_bus *bus, unsigned int devfn, int where, int size,
+>> +				 u32 val)
+>> +{
+>> +	struct rzg3s_pcie_host *host = bus->sysdata;
+>> +	u32 shift, data;
+>> +	int ret;
+>> +
+>> +	ret = rzg3s_pcie_read_config_access(host, bus, devfn, where, &data);
+>> +	if (ret != PCIBIOS_SUCCESSFUL)
+>> +		return ret;
+> 
+> I guess this controller can't do an atomic config write, so you have
+> to do a read/modify/write?
+
+That's true.
+
+>  That's broken in some corner cases, e.g.,
+> it can corrupt RW1C bits in adjacent registers.
+> 
+> We emit a warning about this in pci_generic_config_write32().  I don't
+> think we've been consistent about similar warnings in driver-specific
+> code like this, but I would like to have a dmesg hint so that if we
+> ever trip over this, it might be easier to debug.
+
+OK, I'll add a one time debug message for this.
+
+> 
+>> +	dev_dbg(&bus->dev, "%s(): bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
+>> +		__func__, bus->number, devfn, where, size, val);
+>> +
+>> +	if (size == 1) {
+>> +		shift = BITS_PER_BYTE * (where & 3);
+>> +		data &= ~(0xff << shift);
+>> +		data |= ((val & 0xff) << shift);
+>> +	} else if (size == 2) {
+>> +		shift = BITS_PER_BYTE * (where & 2);
+>> +		data &= ~(0xffff << shift);
+>> +		data |= ((val & 0xffff) << shift);
+>> +	} else {
+>> +		data = val;
+>> +	}
+>> +
+>> +	return rzg3s_pcie_write_config_access(host, bus, devfn, where, data);
+>> +}
+> 
+>> +static struct irq_chip rzg3s_pcie_msi_bottom_chip = {
+>> +	.name			= "rz-pcie-msi",
+>> +	.irq_ack		= rzg3s_pcie_msi_irq_ack,
+>> +	.irq_mask		= rzg3s_pcie_msi_irq_mask,
+>> +	.irq_unmask		= rzg3s_pcie_msi_irq_unmask,
+>> +	.irq_compose_msi_msg	= rzg3s_pcie_msi_compose_msg,
+> 
+> s/msi_compose_msg/compose_msi_msg/
+> to match .irq_compose_msi_msg, which doesn't quite match the others
+> but makes it easier to grep and compare .irq_compose_msi_msg
+> implementations.
+
+OK
+
+> 
+>> +	 * According to the RZ/G3S HW manual (section 34.4.5.2 Setting the MSI Window)
+>> +	 * the MSI window need to be within any AXI window. Find an AXI window to setup
+>> +	 * the MSI window.
+> 
+> There may be several revisions of the RZ/G3S spec and they might not
+> preserve section numbers, so it might be worth including "r1.0" or
+> whatever to make the citation unambiguous.
+
+OK
+
+> 
+>> +static struct irq_chip rzg3s_pcie_intx_irq_chip = {
+>> +	.name = "PCIe INTx",
+>> +	.irq_ack = rzg3s_pcie_intx_ack,
+>> +	.irq_mask = rzg3s_pcie_intx_mask,
+>> +	.irq_unmask = rzg3s_pcie_intx_unmask,
+> 
+> Would prefer *_irq_ack, *_irq_mask, *_irq_unmask similar to MSI ops
+> above.
+
+OK
+
+> 
+>> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host)
+>> +{
+>> +	struct device *dev = host->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct device_node *intc_np __free(device_node) = of_get_child_by_name(np,
+>> +								"legacy-interrupt-controller");
+>> +	int irq_count;
+>> +
+>> +	if (!intc_np) {
+>> +		dev_warn(dev, "legacy-interrupt-controller node is absent\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	irq_count = of_irq_count(intc_np);
+>> +	if (irq_count != PCI_NUM_INTX)
+>> +		return dev_err_probe(dev, -EINVAL,
+>> +				     "Invalid IRQ entries in legacy-interrupt-controller\n");
+> 
+> We now know the value of irq_count, so why not just use PCI_NUM_INTX
+> below?
+
+Will use PCI_NUM_INTX in the next version.
+
+> 
+>> +	for (int i = 0; i < irq_count; i++) {
+>> +		int irq = irq_of_parse_and_map(intc_np, i);
+>> +
+>> +		if (!irq)
+>> +			return dev_err_probe(dev, -EINVAL, "Failed to parse and map INTx IRQ\n");
+> 
+> Could say which one?
+
+Sure!
+
+> 
+>> +
+>> +		host->intx_irqs[i] = irq;
+>> +		irq_set_chained_handler_and_data(irq, rzg3s_pcie_intx_irq_handler, host);
+>> +	}
+>> +
+>> +	host->intx_domain = irq_domain_add_linear(intc_np, irq_count,
+>> +						  &rzg3s_pcie_intx_domain_ops, host);
+>> +	if (!host->intx_domain)
+>> +		return dev_err_probe(dev, -EINVAL, "Failed to add irq domain for INTX irqs\n");
+> 
+> s/INTX/INTx/ to match above.
+> s/irqs/IRQs/ to match above.
+
+OK
+
+> 
+>> +static int rzg3s_pcie_set_max_link_speed(struct rzg3s_pcie_host *host)
+>> +{
+>> +	u32 lcs, cs2, link_speed, remote_supported_link_speeds, tmp;
+>> +	u8 ltssm_state_l0 = 0xc;
+>> +	int ret;
+>> +
+>> +	/*
+>> +	 * According to the RZ/G3S HW manual (section 34.6.3 Caution when Changing
+>> +	 * the Speed Spontaneously) link speed change can be done only when the
+>> +	 * link training and status state machine in the PCIe Core Link is L0.
+>> +	 */
+>> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, tmp,
+>> +				 FIELD_GET(RZG3S_PCI_PCSTAT1_LTSSM_STATE, tmp) == ltssm_state_l0,
+>> +				 100, 1000);
+> 
+> Where do these timeout values come from?
+
+These were obtained from experimenting.
+
+>  Is there or should there be
+> a #define for them?
+
+I'll add defines in the next version.
+
+> 
+>> +static void rzg3s_pcie_cfg_init(struct rzg3s_pcie_host *host)
+>> +{
+>> +	/* Enable access control to the CFGU. */
+>> +	writel(RZG3S_PCI_PERM_CFG_HWINIT_EN, host->axi + RZG3S_PCI_PERM);
+>> +
+>> +	/* Update vendor ID and device ID. */
+>> +	writel(FIELD_PREP(RZG3S_PCI_CFG_VID_VENDOR, host->vendor_id) |
+>> +	       FIELD_PREP(RZG3S_PCI_CFG_VID_DEVICE, host->device_id),
+>> +	       host->pcie + RZG3S_PCI_CFG_VID);
+>> +
+>> +	/* HW manual recommends to write 0xffffffff on initialization. */
+>> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00L);
+>> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00U);
+>> +
+>> +	/* Primary bus = 0, secondary bus = 1, subordinate bus = 1. */
+>> +	writel(FIELD_PREP(RZG3S_PCI_CFG_BNR_SUBORDINATE_BUS, 1) |
+>> +	       FIELD_PREP(RZG3S_PCI_CFG_BNR_SECONDARY_BUS, 1),
+>> +	       host->pcie + RZG3S_PCI_CFG_BNR);
+> 
+> I assume this configures a Root Port.  Is the primary bus hardwired to
+> zero?
+
+The documentation doens't mentioned anything about limiting it to zero.
+
+>  There's no PCIe requirement that a root bus be bus 0.  This
+> looks like it limits the subordinate bus unnecessarily.  The PCI core
+> can program the secondary and subordinate bus numbers to accommodate
+> the attached hierarchy.
+
+I'll work on dropping this limitation in the next version.
 
 
+> 
+>> +static void rzg3s_pcie_irqs_init(struct rzg3s_pcie_host *host)
+> 
+> This and many of the following functions have names that don't
+> correspond to anything in other drivers, which makes it harder to
+> transfer knowledge between the drivers.  If you can find a pattern
+> somewhere to follow, it will make it easier for others to read the
+> driver.
 
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> ---
->  arch/arm/boot/compressed/efi-header.S       |   6 +-
->  arch/arm64/kernel/efi-header.S              |   6 +-
->  arch/loongarch/kernel/efi-header.S          |   4 +-
->  arch/loongarch/kernel/head.S                |   2 +-
->  arch/riscv/kernel/efi-header.S              |   8 +-
->  arch/x86/boot/header.S                      |  10 +-
->  crypto/asymmetric_keys/verify_pefile.c      |   8 +-
->  drivers/firmware/efi/libstub/zboot-header.S |  10 +-
->  include/linux/pe.h                          | 279 ++++++++++++--------
->  9 files changed, 201 insertions(+), 132 deletions(-)
->
-> diff --git a/arch/arm/boot/compressed/efi-header.S b/arch/arm/boot/compre=
-ssed/efi-header.S
-> index 230030c13085..ad1a5807291e 100644
-> --- a/arch/arm/boot/compressed/efi-header.S
-> +++ b/arch/arm/boot/compressed/efi-header.S
-> @@ -20,7 +20,7 @@
->                 @ is accepted as an EFI binary. Booting via the UEFI stub
->                 @ will not execute those instructions, but the ARM/Linux
->                 @ boot protocol does, so we need some NOPs here.
-> -               .inst   MZ_MAGIC | (0xe225 << 16)       @ eor r5, r5, 0x4=
-d000
-> +               .inst   IMAGE_DOS_SIGNATURE | (0xe225 << 16)    @ eor r5,=
- r5, 0x4d000
->                 eor     r5, r5, 0x4d000                 @ undo previous i=
-nsn
->  #else
->                 __nop
-> @@ -43,7 +43,7 @@
->                 .long   pe_header - start               @ Offset to the P=
-E header.
->
->  pe_header:
-> -               .long   PE_MAGIC
-> +               .long   IMAGE_NT_SIGNATURE
->
->  coff_header:
->                 .short  IMAGE_FILE_MACHINE_THUMB        @ Machine
-> @@ -60,7 +60,7 @@ coff_header:
->  #define __pecoff_code_size (__pecoff_data_start - __efi_start)
->
->  optional_header:
-> -               .short  PE_OPT_MAGIC_PE32               @ PE32 format
-> +               .short  IMAGE_NT_OPTIONAL_HDR32_MAGIC   @ PE32 format
->                 .byte   0x02                            @ MajorLinkerVers=
-ion
->                 .byte   0x14                            @ MinorLinkerVers=
-ion
->                 .long   __pecoff_code_size              @ SizeOfCode
-> diff --git a/arch/arm64/kernel/efi-header.S b/arch/arm64/kernel/efi-heade=
-r.S
-> index 11d7f7de202d..329e8df9215f 100644
-> --- a/arch/arm64/kernel/efi-header.S
-> +++ b/arch/arm64/kernel/efi-header.S
-> @@ -28,7 +28,7 @@
->         .macro  __EFI_PE_HEADER
->  #ifdef CONFIG_EFI
->         .set    .Lpe_header_offset, . - .L_head
-> -       .long   PE_MAGIC
-> +       .long   IMAGE_NT_SIGNATURE
->         .short  IMAGE_FILE_MACHINE_ARM64                // Machine
->         .short  .Lsection_count                         // NumberOfSectio=
-ns
->         .long   0                                       // TimeDateStamp
-> @@ -40,7 +40,7 @@
->                 IMAGE_FILE_LINE_NUMS_STRIPPED           // Characteristic=
-s
->
->  .Loptional_header:
-> -       .short  PE_OPT_MAGIC_PE32PLUS                   // PE32+ format
-> +       .short  IMAGE_NT_OPTIONAL_HDR64_MAGIC           // PE32+ format
->         .byte   0x02                                    // MajorLinkerVer=
-sion
->         .byte   0x14                                    // MinorLinkerVer=
-sion
->         .long   __initdata_begin - .Lefi_header_end     // SizeOfCode
-> @@ -66,7 +66,7 @@
->         .long   .Lefi_header_end - .L_head              // SizeOfHeaders
->         .long   0                                       // CheckSum
->         .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         // Subsystem
-> -       .short  IMAGE_DLL_CHARACTERISTICS_NX_COMPAT     // DllCharacteris=
-tics
-> +       .short  IMAGE_DLLCHARACTERISTICS_NX_COMPAT      // DllCharacteris=
-tics
->         .quad   0                                       // SizeOfStackRes=
-erve
->         .quad   0                                       // SizeOfStackCom=
-mit
->         .quad   0                                       // SizeOfHeapRese=
-rve
-> diff --git a/arch/loongarch/kernel/efi-header.S b/arch/loongarch/kernel/e=
-fi-header.S
-> index 5f23b85d78ca..ba0bdbf86aa8 100644
-> --- a/arch/loongarch/kernel/efi-header.S
-> +++ b/arch/loongarch/kernel/efi-header.S
-> @@ -7,7 +7,7 @@
->  #include <linux/sizes.h>
->
->         .macro  __EFI_PE_HEADER
-> -       .long   PE_MAGIC
-> +       .long   IMAGE_NT_SIGNATURE
->  .Lcoff_header:
->         .short  IMAGE_FILE_MACHINE_LOONGARCH64          /* Machine */
->         .short  .Lsection_count                         /* NumberOfSectio=
-ns */
-> @@ -20,7 +20,7 @@
->                 IMAGE_FILE_LINE_NUMS_STRIPPED           /* Characteristic=
-s */
->
->  .Loptional_header:
-> -       .short  PE_OPT_MAGIC_PE32PLUS                   /* PE32+ format *=
-/
-> +       .short  IMAGE_NT_OPTIONAL_HDR64_MAGIC           /* PE32+ format *=
-/
->         .byte   0x02                                    /* MajorLinkerVer=
-sion */
->         .byte   0x14                                    /* MinorLinkerVer=
-sion */
->         .long   __inittext_end - .Lefi_header_end       /* SizeOfCode */
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 506a99a5bbc7..e3865e92a917 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -20,7 +20,7 @@
->         __HEAD
->
->  _head:
-> -       .word   MZ_MAGIC                /* "MZ", MS-DOS header */
-> +       .word   IMAGE_DOS_SIGNATURE     /* "MZ", MS-DOS header */
->         .org    0x8
->         .dword  _kernel_entry           /* Kernel entry point (physical a=
-ddress) */
->         .dword  _kernel_asize           /* Kernel image effective size */
-> diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-heade=
-r.S
-> index c5f17c2710b5..2efc3aaf4a8c 100644
-> --- a/arch/riscv/kernel/efi-header.S
-> +++ b/arch/riscv/kernel/efi-header.S
-> @@ -9,7 +9,7 @@
->  #include <asm/set_memory.h>
->
->         .macro  __EFI_PE_HEADER
-> -       .long   PE_MAGIC
-> +       .long   IMAGE_NT_SIGNATURE
->  coff_header:
->  #ifdef CONFIG_64BIT
->         .short  IMAGE_FILE_MACHINE_RISCV64              // Machine
-> @@ -27,9 +27,9 @@ coff_header:
->
->  optional_header:
->  #ifdef CONFIG_64BIT
-> -       .short  PE_OPT_MAGIC_PE32PLUS                   // PE32+ format
-> +       .short  IMAGE_NT_OPTIONAL_HDR64_MAGIC           // PE32+ format
->  #else
-> -       .short  PE_OPT_MAGIC_PE32                       // PE32 format
-> +       .short  IMAGE_NT_OPTIONAL_HDR32_MAGIC           // PE32 format
->  #endif
->         .byte   0x02                                    // MajorLinkerVer=
-sion
->         .byte   0x14                                    // MinorLinkerVer=
-sion
-> @@ -64,7 +64,7 @@ extra_header_fields:
->         .long   efi_header_end - _start                 // SizeOfHeaders
->         .long   0                                       // CheckSum
->         .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         // Subsystem
-> -       .short  IMAGE_DLL_CHARACTERISTICS_NX_COMPAT     // DllCharacteris=
-tics
-> +       .short  IMAGE_DLLCHARACTERISTICS_NX_COMPAT      // DllCharacteris=
-tics
->         .quad   0                                       // SizeOfStackRes=
-erve
->         .quad   0                                       // SizeOfStackCom=
-mit
->         .quad   0                                       // SizeOfHeapRese=
-rve
-> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-> index b5c79f43359b..535ae4d6866c 100644
-> --- a/arch/x86/boot/header.S
-> +++ b/arch/x86/boot/header.S
-> @@ -43,7 +43,7 @@ SYSSEG                =3D 0x1000                /* hist=
-orical load address >> 4 */
->         .section ".bstext", "ax"
->  #ifdef CONFIG_EFI_STUB
->         # "MZ", MS-DOS header
-> -       .word   MZ_MAGIC
-> +       .word   IMAGE_DOS_SIGNATURE
->         .org    0x38
->         #
->         # Offset to the PE header.
-> @@ -51,16 +51,16 @@ SYSSEG              =3D 0x1000                /* hist=
-orical load address >> 4 */
->         .long   LINUX_PE_MAGIC
->         .long   pe_header
->  pe_header:
-> -       .long   PE_MAGIC
-> +       .long   IMAGE_NT_SIGNATURE
->
->  coff_header:
->  #ifdef CONFIG_X86_32
->         .set    image_file_add_flags, IMAGE_FILE_32BIT_MACHINE
-> -       .set    pe_opt_magic, PE_OPT_MAGIC_PE32
-> +       .set    pe_opt_magic, IMAGE_NT_OPTIONAL_HDR32_MAGIC
->         .word   IMAGE_FILE_MACHINE_I386
->  #else
->         .set    image_file_add_flags, 0
-> -       .set    pe_opt_magic, PE_OPT_MAGIC_PE32PLUS
-> +       .set    pe_opt_magic, IMAGE_NT_OPTIONAL_HDR64_MAGIC
->         .word   IMAGE_FILE_MACHINE_AMD64
->  #endif
->         .word   section_count                   # nr_sections
-> @@ -111,7 +111,7 @@ extra_header_fields:
->         .long   salign                          # SizeOfHeaders
->         .long   0                               # CheckSum
->         .word   IMAGE_SUBSYSTEM_EFI_APPLICATION # Subsystem (EFI applicat=
-ion)
-> -       .word   IMAGE_DLL_CHARACTERISTICS_NX_COMPAT     # DllCharacterist=
-ics
-> +       .word   IMAGE_DLLCHARACTERISTICS_NX_COMPAT      # DllCharacterist=
-ics
->  #ifdef CONFIG_X86_32
->         .long   0                               # SizeOfStackReserve
->         .long   0                               # SizeOfStackCommit
-> diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_k=
-eys/verify_pefile.c
-> index 2863984b6700..1f3b227ba7f2 100644
-> --- a/crypto/asymmetric_keys/verify_pefile.c
-> +++ b/crypto/asymmetric_keys/verify_pefile.c
-> @@ -40,13 +40,13 @@ static int pefile_parse_binary(const void *pebuf, uns=
-igned int pelen,
->         } while (0)
->
->         chkaddr(0, 0, sizeof(*mz));
-> -       if (mz->magic !=3D MZ_MAGIC)
-> +       if (mz->magic !=3D IMAGE_DOS_SIGNATURE)
->                 return -ELIBBAD;
->         cursor =3D sizeof(*mz);
->
->         chkaddr(cursor, mz->peaddr, sizeof(*pe));
->         pe =3D pebuf + mz->peaddr;
-> -       if (pe->magic !=3D PE_MAGIC)
-> +       if (pe->magic !=3D IMAGE_NT_SIGNATURE)
->                 return -ELIBBAD;
->         cursor =3D mz->peaddr + sizeof(*pe);
->
-> @@ -55,7 +55,7 @@ static int pefile_parse_binary(const void *pebuf, unsig=
-ned int pelen,
->         pe64 =3D pebuf + cursor;
->
->         switch (pe32->magic) {
-> -       case PE_OPT_MAGIC_PE32:
-> +       case IMAGE_NT_OPTIONAL_HDR32_MAGIC:
->                 chkaddr(0, cursor, sizeof(*pe32));
->                 ctx->image_checksum_offset =3D
->                         (unsigned long)&pe32->csum - (unsigned long)pebuf=
-;
-> @@ -64,7 +64,7 @@ static int pefile_parse_binary(const void *pebuf, unsig=
-ned int pelen,
->                 ctx->n_data_dirents =3D pe32->data_dirs;
->                 break;
->
-> -       case PE_OPT_MAGIC_PE32PLUS:
-> +       case IMAGE_NT_OPTIONAL_HDR64_MAGIC:
->                 chkaddr(0, cursor, sizeof(*pe64));
->                 ctx->image_checksum_offset =3D
->                         (unsigned long)&pe64->csum - (unsigned long)pebuf=
-;
-> diff --git a/drivers/firmware/efi/libstub/zboot-header.S b/drivers/firmwa=
-re/efi/libstub/zboot-header.S
-> index fb676ded47fa..57a52ba0c0b7 100644
-> --- a/drivers/firmware/efi/libstub/zboot-header.S
-> +++ b/drivers/firmware/efi/libstub/zboot-header.S
-> @@ -4,17 +4,17 @@
->
->  #ifdef CONFIG_64BIT
->         .set            .Lextra_characteristics, 0x0
-> -       .set            .Lpe_opt_magic, PE_OPT_MAGIC_PE32PLUS
-> +       .set            .Lpe_opt_magic, IMAGE_NT_OPTIONAL_HDR64_MAGIC
->  #else
->         .set            .Lextra_characteristics, IMAGE_FILE_32BIT_MACHINE
-> -       .set            .Lpe_opt_magic, PE_OPT_MAGIC_PE32
-> +       .set            .Lpe_opt_magic, IMAGE_NT_OPTIONAL_HDR32_MAGIC
->  #endif
->
->         .section        ".head", "a"
->         .globl          __efistub_efi_zboot_header
->  __efistub_efi_zboot_header:
->  .Ldoshdr:
-> -       .long           MZ_MAGIC
-> +       .long           IMAGE_DOS_SIGNATURE
->         .ascii          "zimg"                                  // image =
-type
->         .long           __efistub__gzdata_start - .Ldoshdr      // payloa=
-d offset
->         .long           __efistub__gzdata_size - ZBOOT_SIZE_LEN // payloa=
-d size
-> @@ -25,7 +25,7 @@ __efistub_efi_zboot_header:
->         .long           .Lpehdr - .Ldoshdr                      // PE hea=
-der offset
->
->  .Lpehdr:
-> -       .long           PE_MAGIC
-> +       .long           IMAGE_NT_SIGNATURE
->         .short          MACHINE_TYPE
->         .short          .Lsection_count
->         .long           0
-> @@ -63,7 +63,7 @@ __efistub_efi_zboot_header:
->         .long           .Lefi_header_end - .Ldoshdr
->         .long           0
->         .short          IMAGE_SUBSYSTEM_EFI_APPLICATION
-> -       .short          IMAGE_DLL_CHARACTERISTICS_NX_COMPAT
-> +       .short          IMAGE_DLLCHARACTERISTICS_NX_COMPAT
->  #ifdef CONFIG_64BIT
->         .quad           0, 0, 0, 0
->  #else
-> diff --git a/include/linux/pe.h b/include/linux/pe.h
-> index fdf9c95709ba..cd2b7275385f 100644
-> --- a/include/linux/pe.h
-> +++ b/include/linux/pe.h
-> @@ -39,113 +39,160 @@
->   */
->  #define LINUX_PE_MAGIC 0x818223cd
->
-> -#define MZ_MAGIC       0x5a4d  /* "MZ" */
-> +#define IMAGE_DOS_SIGNATURE    0x5a4d /* "MZ" */
->
-> -#define PE_MAGIC               0x00004550      /* "PE\0\0" */
-> -#define PE_OPT_MAGIC_PE32      0x010b
-> -#define PE_OPT_MAGIC_PE32_ROM  0x0107
-> -#define PE_OPT_MAGIC_PE32PLUS  0x020b
-> +#define IMAGE_NT_SIGNATURE     0x00004550 /* "PE\0\0" */
-> +
-> +#define IMAGE_ROM_OPTIONAL_HDR_MAGIC   0x0107 /* ROM image (for R3000/R4=
-000/R10000/ALPHA), without MZ and PE\0\0 sign */
-> +#define IMAGE_NT_OPTIONAL_HDR32_MAGIC  0x010b /* PE32 executable image *=
-/
-> +#define IMAGE_NT_OPTIONAL_HDR64_MAGIC  0x020b /* PE32+ executable image =
-*/
->
->  /* machine type */
-> -#define        IMAGE_FILE_MACHINE_UNKNOWN      0x0000
-> -#define        IMAGE_FILE_MACHINE_AM33         0x01d3
-> -#define        IMAGE_FILE_MACHINE_AMD64        0x8664
-> -#define        IMAGE_FILE_MACHINE_ARM          0x01c0
-> -#define        IMAGE_FILE_MACHINE_ARMV7        0x01c4
-> -#define        IMAGE_FILE_MACHINE_ARM64        0xaa64
-> -#define        IMAGE_FILE_MACHINE_EBC          0x0ebc
-> -#define        IMAGE_FILE_MACHINE_I386         0x014c
-> -#define        IMAGE_FILE_MACHINE_IA64         0x0200
-> -#define        IMAGE_FILE_MACHINE_M32R         0x9041
-> -#define        IMAGE_FILE_MACHINE_MIPS16       0x0266
-> -#define        IMAGE_FILE_MACHINE_MIPSFPU      0x0366
-> -#define        IMAGE_FILE_MACHINE_MIPSFPU16    0x0466
-> -#define        IMAGE_FILE_MACHINE_POWERPC      0x01f0
-> -#define        IMAGE_FILE_MACHINE_POWERPCFP    0x01f1
-> -#define        IMAGE_FILE_MACHINE_R4000        0x0166
-> -#define        IMAGE_FILE_MACHINE_RISCV32      0x5032
-> -#define        IMAGE_FILE_MACHINE_RISCV64      0x5064
-> -#define        IMAGE_FILE_MACHINE_RISCV128     0x5128
-> -#define        IMAGE_FILE_MACHINE_SH3          0x01a2
-> -#define        IMAGE_FILE_MACHINE_SH3DSP       0x01a3
-> -#define        IMAGE_FILE_MACHINE_SH3E         0x01a4
-> -#define        IMAGE_FILE_MACHINE_SH4          0x01a6
-> -#define        IMAGE_FILE_MACHINE_SH5          0x01a8
-> -#define        IMAGE_FILE_MACHINE_THUMB        0x01c2
-> -#define        IMAGE_FILE_MACHINE_WCEMIPSV2    0x0169
-> -#define        IMAGE_FILE_MACHINE_LOONGARCH32  0x6232
-> -#define        IMAGE_FILE_MACHINE_LOONGARCH64  0x6264
-> +#define        IMAGE_FILE_MACHINE_UNKNOWN      0x0000 /* Unknown archite=
-cture */
-> +#define        IMAGE_FILE_MACHINE_TARGET_HOST  0x0001 /* Interacts with =
-the host and not a WOW64 guest (not for file image) */
-> +#define        IMAGE_FILE_MACHINE_ALPHA_OLD    0x0183 /* DEC Alpha AXP 3=
-2-bit (old images) */
-> +#define        IMAGE_FILE_MACHINE_ALPHA        0x0184 /* DEC Alpha AXP 3=
-2-bit */
-> +#define        IMAGE_FILE_MACHINE_ALPHA64      0x0284 /* DEC Alpha AXP 6=
-4-bit (with 8kB page size) */
-> +#define        IMAGE_FILE_MACHINE_AXP64        IMAGE_FILE_MACHINE_ALPHA6=
-4
-> +#define        IMAGE_FILE_MACHINE_AM33         0x01d3 /* Matsushita AM33=
-, now Panasonic MN103 */
-> +#define        IMAGE_FILE_MACHINE_AMD64        0x8664 /* AMD64 (x64) */
-> +#define        IMAGE_FILE_MACHINE_ARM          0x01c0 /* ARM Little-Endi=
-an (ARMv4) */
-> +#define        IMAGE_FILE_MACHINE_THUMB        0x01c2 /* ARM Thumb Littl=
-e-Endian (ARMv4T) */
-> +#define        IMAGE_FILE_MACHINE_ARMNT        0x01c4 /* ARM Thumb-2 Lit=
-tle-Endian (ARMv7) */
-> +#define        IMAGE_FILE_MACHINE_ARMV7        IMAGE_FILE_MACHINE_ARMNT
-> +#define        IMAGE_FILE_MACHINE_ARM64        0xaa64 /* ARM64 Little-En=
-dian (Classic ABI) */
-> +#define        IMAGE_FILE_MACHINE_ARM64EC      0xa641 /* ARM64 Little-En=
-dian (Emulation Compatible ABI for AMD64) */
-> +#define        IMAGE_FILE_MACHINE_ARM64X       0xa64e /* ARM64 Little-En=
-dian (fat binary with both Classic ABI and EC ABI code) */
-> +#define        IMAGE_FILE_MACHINE_CEE          0xc0ee /* COM+ Execution =
-Engine (CLR pure MSIL object files) */
-> +#define        IMAGE_FILE_MACHINE_CEF          0x0cef /* Windows CE 3.0 =
-Common Executable Format (CEF bytecode) */
-> +#define        IMAGE_FILE_MACHINE_CHPE_X86     0x3a64 /* ARM64 Little-En=
-dian (Compiled Hybrid PE ABI for I386) */
-> +#define        IMAGE_FILE_MACHINE_HYBRID_X86   IMAGE_FILE_MACHINE_CHPE_X=
-86
-> +#define        IMAGE_FILE_MACHINE_EBC          0x0ebc /* EFI/UEFI Byte C=
-ode */
-> +#define        IMAGE_FILE_MACHINE_I386         0x014c /* Intel 386 (x86)=
- */
-> +#define        IMAGE_FILE_MACHINE_I860         0x014d /* Intel 860 (N10)=
- */
-> +#define        IMAGE_FILE_MACHINE_IA64         0x0200 /* Intel IA-64 (wi=
-th 8kB page size) */
-> +#define        IMAGE_FILE_MACHINE_LOONGARCH32  0x6232 /* LoongArch 32-bi=
-t processor family */
-> +#define        IMAGE_FILE_MACHINE_LOONGARCH64  0x6264 /* LoongArch 64-bi=
-t processor family */
-> +#define        IMAGE_FILE_MACHINE_M32R         0x9041 /* Mitsubishi M32R=
- 32-bit Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_M68K         0x0268 /* Motorola 68000 =
-series */
-> +#define        IMAGE_FILE_MACHINE_MIPS16       0x0266 /* MIPS III with M=
-IPS16 ASE Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_MIPSFPU      0x0366 /* MIPS III with F=
-PU Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_MIPSFPU16    0x0466 /* MIPS III with M=
-IPS16 ASE and FPU Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_MPPC_601     0x0601 /* PowerPC 32-bit =
-Big-Endian */
-> +#define        IMAGE_FILE_MACHINE_OMNI         0xace1 /* Microsoft OMNI =
-VM (omniprox.dll) */
-> +#define        IMAGE_FILE_MACHINE_PARISC       0x0290 /* HP PA-RISC */
-> +#define        IMAGE_FILE_MACHINE_POWERPC      0x01f0 /* PowerPC 32-bit =
-Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_POWERPCFP    0x01f1 /* PowerPC 32-bit =
-with FPU Little-Endian */
-> +#define        IMAGE_FILE_MACHINE_POWERPCBE    0x01f2 /* PowerPC 64-bit =
-Big-Endian */
-> +#define        IMAGE_FILE_MACHINE_R3000        0x0162 /* MIPS I Little-E=
-ndian */
-> +#define        IMAGE_FILE_MACHINE_R3000_BE     0x0160 /* MIPS I Big-Endi=
-an */
-> +#define        IMAGE_FILE_MACHINE_R4000        0x0166 /* MIPS III Little=
--Endian (with 1kB or 4kB page size) */
-> +#define        IMAGE_FILE_MACHINE_R10000       0x0168 /* MIPS IV Little-=
-Endian */
-> +#define        IMAGE_FILE_MACHINE_RISCV32      0x5032 /* RISC-V 32-bit a=
-ddress space */
-> +#define        IMAGE_FILE_MACHINE_RISCV64      0x5064 /* RISC-V 64-bit a=
-ddress space */
-> +#define        IMAGE_FILE_MACHINE_RISCV128     0x5128 /* RISC-V 128-bit =
-address space */
-> +#define        IMAGE_FILE_MACHINE_SH3          0x01a2 /* Hitachi SH-3 32=
--bit Little-Endian (with 1kB page size) */
-> +#define        IMAGE_FILE_MACHINE_SH3DSP       0x01a3 /* Hitachi SH-3 DS=
-P 32-bit (with 1kB page size) */
-> +#define        IMAGE_FILE_MACHINE_SH3E         0x01a4 /* Hitachi SH-3E L=
-ittle-Endian (with 1kB page size) */
-> +#define        IMAGE_FILE_MACHINE_SH4          0x01a6 /* Hitachi SH-4 32=
--bit Little-Endian (with 1kB page size) */
-> +#define        IMAGE_FILE_MACHINE_SH5          0x01a8 /* Hitachi SH-5 64=
--bit */
-> +#define        IMAGE_FILE_MACHINE_TAHOE        0x07cc /* Intel EM machin=
-e */
-> +#define        IMAGE_FILE_MACHINE_TRICORE      0x0520 /* Infineon AUDO 3=
-2-bit */
-> +#define        IMAGE_FILE_MACHINE_WCEMIPSV2    0x0169 /* MIPS Windows CE=
- v2 Little-Endian */
->
->  /* flags */
-> -#define IMAGE_FILE_RELOCS_STRIPPED           0x0001
-> -#define IMAGE_FILE_EXECUTABLE_IMAGE          0x0002
-> -#define IMAGE_FILE_LINE_NUMS_STRIPPED        0x0004
-> -#define IMAGE_FILE_LOCAL_SYMS_STRIPPED       0x0008
-> -#define IMAGE_FILE_AGGRESSIVE_WS_TRIM        0x0010
-> -#define IMAGE_FILE_LARGE_ADDRESS_AWARE       0x0020
-> -#define IMAGE_FILE_16BIT_MACHINE             0x0040
-> -#define IMAGE_FILE_BYTES_REVERSED_LO         0x0080
-> -#define IMAGE_FILE_32BIT_MACHINE             0x0100
-> -#define IMAGE_FILE_DEBUG_STRIPPED            0x0200
-> -#define IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP   0x0400
-> -#define IMAGE_FILE_NET_RUN_FROM_SWAP         0x0800
-> -#define IMAGE_FILE_SYSTEM                    0x1000
-> -#define IMAGE_FILE_DLL                       0x2000
-> -#define IMAGE_FILE_UP_SYSTEM_ONLY            0x4000
-> -#define IMAGE_FILE_BYTES_REVERSED_HI         0x8000
-> -
-> -#define IMAGE_FILE_OPT_ROM_MAGIC       0x107
-> -#define IMAGE_FILE_OPT_PE32_MAGIC      0x10b
-> -#define IMAGE_FILE_OPT_PE32_PLUS_MAGIC 0x20b
-> -
-> -#define IMAGE_SUBSYSTEM_UNKNOWN                         0
-> -#define IMAGE_SUBSYSTEM_NATIVE                  1
-> -#define IMAGE_SUBSYSTEM_WINDOWS_GUI             2
-> -#define IMAGE_SUBSYSTEM_WINDOWS_CUI             3
-> -#define IMAGE_SUBSYSTEM_POSIX_CUI               7
-> -#define IMAGE_SUBSYSTEM_WINDOWS_CE_GUI          9
-> -#define IMAGE_SUBSYSTEM_EFI_APPLICATION                10
-> -#define IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER        11
-> -#define IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER     12
-> -#define IMAGE_SUBSYSTEM_EFI_ROM_IMAGE          13
-> -#define IMAGE_SUBSYSTEM_XBOX                   14
-> -
-> -#define IMAGE_DLL_CHARACTERISTICS_DYNAMIC_BASE          0x0040
-> -#define IMAGE_DLL_CHARACTERISTICS_FORCE_INTEGRITY       0x0080
-> -#define IMAGE_DLL_CHARACTERISTICS_NX_COMPAT             0x0100
-> -#define IMAGE_DLLCHARACTERISTICS_NO_ISOLATION           0x0200
-> -#define IMAGE_DLLCHARACTERISTICS_NO_SEH                 0x0400
-> -#define IMAGE_DLLCHARACTERISTICS_NO_BIND                0x0800
-> -#define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER             0x2000
-> -#define IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE  0x8000
-> -
-> -#define IMAGE_DLLCHARACTERISTICS_EX_CET_COMPAT         0x0001
-> -#define IMAGE_DLLCHARACTERISTICS_EX_FORWARD_CFI_COMPAT 0x0040
-> -
-> -/* they actually defined 0x00000000 as well, but I think we'll skip that=
- one. */
-> -#define IMAGE_SCN_RESERVED_0   0x00000001
-> -#define IMAGE_SCN_RESERVED_1   0x00000002
-> -#define IMAGE_SCN_RESERVED_2   0x00000004
-> -#define IMAGE_SCN_TYPE_NO_PAD  0x00000008 /* don't pad - obsolete */
-> -#define IMAGE_SCN_RESERVED_3   0x00000010
-> +#define IMAGE_FILE_RELOCS_STRIPPED             0x0001 /* Relocation info=
- stripped from file */
-> +#define IMAGE_FILE_EXECUTABLE_IMAGE            0x0002 /* File is executa=
-ble (i.e. no unresolved external references) */
-> +#define IMAGE_FILE_LINE_NUMS_STRIPPED          0x0004 /* Line nunbers st=
-ripped from file */
-> +#define IMAGE_FILE_LOCAL_SYMS_STRIPPED         0x0008 /* Local symbols s=
-tripped from file */
-> +#define IMAGE_FILE_AGGRESSIVE_WS_TRIM          0x0010 /* Aggressively tr=
-im working set */
-> +#define IMAGE_FILE_LARGE_ADDRESS_AWARE         0x0020 /* App can handle =
->2gb addresses (image can be loaded at address above 2GB) */
-> +#define IMAGE_FILE_16BIT_MACHINE               0x0040 /* 16 bit word mac=
-hine */
-> +#define IMAGE_FILE_BYTES_REVERSED_LO           0x0080 /* Bytes of machin=
-e word are reversed (should be set together with IMAGE_FILE_BYTES_REVERSED_=
-HI) */
-> +#define IMAGE_FILE_32BIT_MACHINE               0x0100 /* 32 bit word mac=
-hine */
-> +#define IMAGE_FILE_DEBUG_STRIPPED              0x0200 /* Debugging info =
-stripped from file in .DBG file */
-> +#define IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP     0x0400 /* If Image is on =
-removable media, copy and run from the swap file */
-> +#define IMAGE_FILE_NET_RUN_FROM_SWAP           0x0800 /* If Image is on =
-Net, copy and run from the swap file */
-> +#define IMAGE_FILE_SYSTEM                      0x1000 /* System kernel-m=
-ode file (can't be loaded in user-mode) */
-> +#define IMAGE_FILE_DLL                         0x2000 /* File is a DLL *=
-/
-> +#define IMAGE_FILE_UP_SYSTEM_ONLY              0x4000 /* File should onl=
-y be run on a UP (uniprocessor) machine */
-> +#define IMAGE_FILE_BYTES_REVERSED_HI           0x8000 /* Bytes of machin=
-e word are reversed (should be set together with IMAGE_FILE_BYTES_REVERSED_=
-LO) */
-> +
-> +/* subsys */
-> +#define IMAGE_SUBSYSTEM_UNKNOWN                                 0 /* Unk=
-nown subsystem */
-> +#define IMAGE_SUBSYSTEM_NATIVE                          1 /* No subsyste=
-m required (NT device drivers and NT native system processes) */
-> +#define IMAGE_SUBSYSTEM_WINDOWS_GUI                     2 /* Windows gra=
-phical user interface (GUI) subsystem */
-> +#define IMAGE_SUBSYSTEM_WINDOWS_CUI                     3 /* Windows cha=
-racter-mode user interface (CUI) subsystem */
-> +#define IMAGE_SUBSYSTEM_WINDOWS_OLD_CE_GUI              4 /* Old Windows=
- CE subsystem */
-> +#define IMAGE_SUBSYSTEM_OS2_CUI                                 5 /* OS/=
-2 CUI subsystem */
-> +#define IMAGE_SUBSYSTEM_RESERVED_6                      6
-> +#define IMAGE_SUBSYSTEM_POSIX_CUI                       7 /* POSIX CUI s=
-ubsystem */
-> +#define IMAGE_SUBSYSTEM_MMOSA                           8 /* MMOSA/Nativ=
-e Win32E */
-> +#define IMAGE_SUBSYSTEM_WINDOWS_CE_GUI                  9 /* Windows CE =
-subsystem */
-> +#define IMAGE_SUBSYSTEM_EFI_APPLICATION                        10 /* Ext=
-ensible Firmware Interface (EFI) application */
-> +#define IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER                11 /* EFI=
- driver with boot services */
-> +#define IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER             12 /* EFI driver =
-with run-time services */
-> +#define IMAGE_SUBSYSTEM_EFI_ROM_IMAGE                  13 /* EFI ROM ima=
-ge */
-> +#define IMAGE_SUBSYSTEM_XBOX                           14 /* Xbox system=
- */
-> +#define IMAGE_SUBSYSTEM_RESERVED_15                    15
-> +#define IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION       16 /* Windows Boo=
-t application */
-> +#define IMAGE_SUBSYSTEM_XBOX_CODE_CATALOG              17 /* Xbox Code C=
-atalog */
-> +
-> +/* dll_flags */
-> +#define IMAGE_LIBRARY_PROCESS_INIT                     0x0001 /* DLL ini=
-tialization function called just after process initialization */
-> +#define IMAGE_LIBRARY_PROCESS_TERM                     0x0002 /* DLL ini=
-tialization function called just before process termination */
-> +#define IMAGE_LIBRARY_THREAD_INIT                      0x0004 /* DLL ini=
-tialization function called just after thread initialization */
-> +#define IMAGE_LIBRARY_THREAD_TERM                      0x0008 /* DLL ini=
-tialization function called just before thread initialization */
-> +#define IMAGE_DLLCHARACTERISTICS_RESERVED_4            0x0010
-> +#define IMAGE_DLLCHARACTERISTICS_HIGH_ENTROPY_VA       0x0020 /* ASLR wi=
-th 64 bit address space (image can be loaded at address above 4GB) */
-> +#define IMAGE_DLLCHARACTERISTICS_DYNAMIC_BASE          0x0040 /* The DLL=
- can be relocated at load time */
-> +#define IMAGE_DLLCHARACTERISTICS_FORCE_INTEGRITY       0x0080 /* Code in=
-tegrity checks are forced */
-> +#define IMAGE_DLLCHARACTERISTICS_NX_COMPAT             0x0100 /* Image i=
-s compatible with data execution prevention */
-> +#define IMAGE_DLLCHARACTERISTICS_NO_ISOLATION          0x0200 /* Image i=
-s isolation aware, but should not be isolated (prevents loading of manifest=
- file) */
-> +#define IMAGE_DLLCHARACTERISTICS_NO_SEH                        0x0400 /*=
- Image does not use SEH, no SE handler may reside in this image */
-> +#define IMAGE_DLLCHARACTERISTICS_NO_BIND               0x0800 /* Do not =
-bind the image */
-> +#define IMAGE_DLLCHARACTERISTICS_X86_THUNK             0x1000 /* Image i=
-s a Wx86 Thunk DLL (for non-x86/risc DLL files) */
-> +#define IMAGE_DLLCHARACTERISTICS_APPCONTAINER          0x1000 /* Image s=
-hould execute in an AppContainer (for EXE Metro Apps in Windows 8) */
-> +#define IMAGE_DLLCHARACTERISTICS_WDM_DRIVER            0x2000 /* A WDM d=
-river */
-> +#define IMAGE_DLLCHARACTERISTICS_GUARD_CF              0x4000 /* Image s=
-upports Control Flow Guard */
-> +#define IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE 0x8000 /* The ima=
-ge is terminal server (Remote Desktop Services) aware */
-> +
-> +/* IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS flags */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_COMPAT                          =
-       0x0001 /* Image is Control-flow Enforcement Technology Shadow Stack =
-compatible */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_COMPAT_STRICT_MODE              =
-       0x0002 /* CET is enforced in strict mode */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_SET_CONTEXT_IP_VALIDATION_RELAXE=
-D_MODE 0x0004 /* Relaxed mode for Context IP Validation under CET is allowe=
-d */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_DYNAMIC_APIS_ALLOW_IN_PROC      =
-       0x0008 /* Use of dynamic APIs is restricted to processes only */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_RESERVED_1                      =
-       0x0010
-> +#define IMAGE_DLLCHARACTERISTICS_EX_CET_RESERVED_2                      =
-       0x0020
-> +#define IMAGE_DLLCHARACTERISTICS_EX_FORWARD_CFI_COMPAT                  =
-       0x0040 /* All branch targets in all image code sections are annotate=
-d with forward-edge control flow integrity guard instructions */
-> +#define IMAGE_DLLCHARACTERISTICS_EX_HOTPATCH_COMPATIBLE                 =
-               0x0080 /* Image can be modified while in use, hotpatch-compa=
-tible */
-> +
-> +/* section_header flags */
-> +#define IMAGE_SCN_SCALE_INDEX  0x00000001 /* address of tls index is sca=
-led =3D multiplied by 4 (for .tls section on MIPS only) */
-> +#define IMAGE_SCN_TYPE_NO_LOAD 0x00000002 /* reserved */
-> +#define IMAGE_SCN_TYPE_GROUPED 0x00000004 /* obsolete (used for 16-bit o=
-ffset code) */
-> +#define IMAGE_SCN_TYPE_NO_PAD  0x00000008 /* .o only - don't pad - obsol=
-ete (same as IMAGE_SCN_ALIGN_1BYTES) */
-> +#define IMAGE_SCN_TYPE_COPY    0x00000010 /* reserved */
->  #define IMAGE_SCN_CNT_CODE     0x00000020 /* .text */
->  #define IMAGE_SCN_CNT_INITIALIZED_DATA 0x00000040 /* .data */
->  #define IMAGE_SCN_CNT_UNINITIALIZED_DATA 0x00000080 /* .bss */
-> -#define IMAGE_SCN_LNK_OTHER    0x00000100 /* reserved */
-> -#define IMAGE_SCN_LNK_INFO     0x00000200 /* .drectve comments */
-> -#define IMAGE_SCN_RESERVED_4   0x00000400
-> +#define IMAGE_SCN_LNK_OTHER    0x00000100 /* .o only - other type than c=
-ode, data or info */
-> +#define IMAGE_SCN_LNK_INFO     0x00000200 /* .o only - .drectve comments=
- */
-> +#define IMAGE_SCN_LNK_OVERLAY  0x00000400 /* section contains overlay */
->  #define IMAGE_SCN_LNK_REMOVE   0x00000800 /* .o only - scn to be rm'd*/
->  #define IMAGE_SCN_LNK_COMDAT   0x00001000 /* .o only - COMDAT data */
-> -#define IMAGE_SCN_RESERVED_5   0x00002000 /* spec omits this */
-> -#define IMAGE_SCN_RESERVED_6   0x00004000 /* spec omits this */
-> -#define IMAGE_SCN_GPREL                0x00008000 /* global pointer refe=
-renced data */
-> -/* spec lists 0x20000 twice, I suspect they meant 0x10000 for one of the=
-m */
-> -#define IMAGE_SCN_MEM_PURGEABLE        0x00010000 /* reserved for "futur=
-e" use */
-> -#define IMAGE_SCN_16BIT                0x00020000 /* reserved for "futur=
-e" use */
-> -#define IMAGE_SCN_LOCKED       0x00040000 /* reserved for "future" use *=
-/
-> -#define IMAGE_SCN_PRELOAD      0x00080000 /* reserved for "future" use *=
-/
-> +#define IMAGE_SCN_RESERVED_13  0x00002000 /* spec omits this */
-> +#define IMAGE_SCN_MEM_PROTECTED        0x00004000 /* section is memory p=
-rotected (for M68K) */
-> +#define IMAGE_SCN_NO_DEFER_SPEC_EXC 0x00004000 /* reset speculative exce=
-ptions handling bits in the TLB entries (for non-M68K) */
-> +#define IMAGE_SCN_MEM_FARDATA  0x00008000 /* section uses FAR_EXTERNAL r=
-elocations (for M68K) */
-> +#define IMAGE_SCN_GPREL                0x00008000 /* global pointer refe=
-renced data (for non-M68K) */
-> +#define IMAGE_SCN_MEM_SYSHEAP  0x00010000 /* use system heap (for M68K) =
-*/
-> +#define IMAGE_SCN_MEM_PURGEABLE        0x00020000 /* section can be rele=
-ased from RAM (for M68K) */
-> +#define IMAGE_SCN_MEM_16BIT    0x00020000 /* section is 16-bit (for non-=
-M68K where it makes sense: I386, THUMB, MIPS16, MIPSFPU16, ...) */
-> +#define IMAGE_SCN_MEM_LOCKED   0x00040000 /* prevent the section from be=
-ing moved (for M68K and .o I386) */
-> +#define IMAGE_SCN_MEM_PRELOAD  0x00080000 /* section is preload to RAM (=
-for M68K and .o I386) */
->  /* and here they just stuck a 1-byte integer in the middle of a bitfield=
- */
-> -#define IMAGE_SCN_ALIGN_1BYTES 0x00100000 /* it does what it says on the=
- box */
-> +#define IMAGE_SCN_ALIGN_1BYTES 0x00100000 /* .o only - it does what it s=
-ays on the box */
->  #define IMAGE_SCN_ALIGN_2BYTES 0x00200000
->  #define IMAGE_SCN_ALIGN_4BYTES 0x00300000
->  #define IMAGE_SCN_ALIGN_8BYTES 0x00400000
-> @@ -159,7 +206,9 @@
->  #define IMAGE_SCN_ALIGN_2048BYTES 0x00c00000
->  #define IMAGE_SCN_ALIGN_4096BYTES 0x00d00000
->  #define IMAGE_SCN_ALIGN_8192BYTES 0x00e00000
-> -#define IMAGE_SCN_LNK_NRELOC_OVFL 0x01000000 /* extended relocations */
-> +#define IMAGE_SCN_ALIGN_RESERVED 0x00f00000
-> +#define IMAGE_SCN_ALIGN_MASK   0x00f00000
-> +#define IMAGE_SCN_LNK_NRELOC_OVFL 0x01000000 /* .o only - extended reloc=
-ations */
->  #define IMAGE_SCN_MEM_DISCARDABLE 0x02000000 /* scn can be discarded */
->  #define IMAGE_SCN_MEM_NOT_CACHED 0x04000000 /* cannot be cached */
->  #define IMAGE_SCN_MEM_NOT_PAGED        0x08000000 /* not pageable */
-> @@ -168,8 +217,28 @@
->  #define IMAGE_SCN_MEM_READ     0x40000000 /* readable */
->  #define IMAGE_SCN_MEM_WRITE    0x80000000 /* writeable */
->
-> -#define IMAGE_DEBUG_TYPE_CODEVIEW      2
-> -#define IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS 20
-> +#define IMAGE_DEBUG_TYPE_UNKNOWN                0 /* Unknown value, igno=
-red by all tools */
-> +#define IMAGE_DEBUG_TYPE_COFF                   1 /* COFF debugging info=
-rmation */
-> +#define IMAGE_DEBUG_TYPE_CODEVIEW               2 /* CodeView debugging =
-information or Visual C++ Program Database debugging information */
-> +#define IMAGE_DEBUG_TYPE_FPO                    3 /* Frame pointer omiss=
-ion (FPO) information */
-> +#define IMAGE_DEBUG_TYPE_MISC                   4 /* Location of DBG fil=
-e with CodeView debugging information */
-> +#define IMAGE_DEBUG_TYPE_EXCEPTION              5 /* Exception informati=
-on, copy of .pdata section */
-> +#define IMAGE_DEBUG_TYPE_FIXUP                  6 /* Fixup information *=
-/
-> +#define IMAGE_DEBUG_TYPE_OMAP_TO_SRC            7 /* The mapping from an=
- RVA in image to an RVA in source image */
-> +#define IMAGE_DEBUG_TYPE_OMAP_FROM_SRC          8 /* The mapping from an=
- RVA in source image to an RVA in image */
-> +#define IMAGE_DEBUG_TYPE_BORLAND                9 /* Borland debugging i=
-nformation */
-> +#define IMAGE_DEBUG_TYPE_RESERVED10            10 /* Coldpath / Hotpatch=
- debug information */
-> +#define IMAGE_DEBUG_TYPE_CLSID                 11 /* CLSID */
-> +#define IMAGE_DEBUG_TYPE_VC_FEATURE            12 /* Visual C++ counts /=
- statistics */
-> +#define IMAGE_DEBUG_TYPE_POGO                  13 /* COFF group informat=
-ion, data for profile-guided optimization */
-> +#define IMAGE_DEBUG_TYPE_ILTCG                 14 /* Incremental link-ti=
-me code generation */
-> +#define IMAGE_DEBUG_TYPE_MPX                   15 /* Intel Memory Protec=
-tion Extensions */
-> +#define IMAGE_DEBUG_TYPE_REPRO                 16 /* PE determinism or r=
-eproducibility */
-> +#define IMAGE_DEBUG_TYPE_EMBEDDED_PORTABLE_PDB 17 /* Embedded Portable P=
-DB debugging information */
-> +#define IMAGE_DEBUG_TYPE_SPGO                  18 /* Sample profile-guid=
-ed optimization */
-> +#define IMAGE_DEBUG_TYPE_PDBCHECKSUM           19 /* PDB Checksum */
-> +#define IMAGE_DEBUG_TYPE_EX_DLLCHARACTERISTICS 20 /* Extended DLL charac=
-teristics bits */
-> +#define IMAGE_DEBUG_TYPE_PERFMAP               21 /* Location of associa=
-ted Ready To Run PerfMap file */
->
->  #ifndef __ASSEMBLY__
->
-> @@ -235,7 +304,7 @@ struct pe32_opt_hdr {
->         uint16_t image_minor;   /* minor image version */
->         uint16_t subsys_major;  /* major subsystem version */
->         uint16_t subsys_minor;  /* minor subsystem version */
-> -       uint32_t win32_version; /* reserved, must be 0 */
-> +       uint32_t win32_version; /* win32 version reported at runtime */
->         uint32_t image_size;    /* image size */
->         uint32_t header_size;   /* header size rounded up to
->                                    file_align */
-> @@ -246,7 +315,7 @@ struct pe32_opt_hdr {
->         uint32_t stack_size;    /* amt of stack required */
->         uint32_t heap_size_req; /* amt of heap requested */
->         uint32_t heap_size;     /* amt of heap required */
-> -       uint32_t loader_flags;  /* reserved, must be 0 */
-> +       uint32_t loader_flags;  /* loader flags */
->         uint32_t data_dirs;     /* number of data dir entries */
->  };
->
-> @@ -269,7 +338,7 @@ struct pe32plus_opt_hdr {
->         uint16_t image_minor;   /* minor image version */
->         uint16_t subsys_major;  /* major subsystem version */
->         uint16_t subsys_minor;  /* minor subsystem version */
-> -       uint32_t win32_version; /* reserved, must be 0 */
-> +       uint32_t win32_version; /* win32 version reported at runtime */
->         uint32_t image_size;    /* image size */
->         uint32_t header_size;   /* header size rounded up to
->                                    file_align */
-> @@ -280,7 +349,7 @@ struct pe32plus_opt_hdr {
->         uint64_t stack_size;    /* amt of stack required */
->         uint64_t heap_size_req; /* amt of heap requested */
->         uint64_t heap_size;     /* amt of heap required */
-> -       uint32_t loader_flags;  /* reserved, must be 0 */
-> +       uint32_t loader_flags;  /* loader flags */
->         uint32_t data_dirs;     /* number of data dir entries */
->  };
->
-> @@ -301,10 +370,10 @@ struct data_directory {
->         struct data_dirent global_ptr;          /* global pointer reg. Si=
-ze=3D0 */
->         struct data_dirent tls;                 /* .tls */
->         struct data_dirent load_config;         /* load configuration str=
-ucture */
-> -       struct data_dirent bound_imports;       /* no idea */
-> +       struct data_dirent bound_imports;       /* bound import table */
->         struct data_dirent import_addrs;        /* import address table *=
-/
->         struct data_dirent delay_imports;       /* delay-load import tabl=
-e */
-> -       struct data_dirent clr_runtime_hdr;     /* .cor (object only) */
-> +       struct data_dirent clr_runtime_hdr;     /* .cor (clr/.net executa=
-bles) */
->         struct data_dirent reserved;
->  };
->
-> --
-> 2.20.1
->
+OK, I'll think about it. Do you have a recomentation?
+
+> 
+>> +static int rzg3s_pcie_hw_init(struct rzg3s_pcie_host *host, bool probe)
+>> +{
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	/* Set the PCIe related registers. */
+>> +	rzg3s_pcie_cfg_init(host);
+>> +
+>> +	/* Set the interrupts. */
+>> +	rzg3s_pcie_irqs_init(host);
+>> +
+>> +	ret = rzg3s_pcie_resets_bulk_set(reset_control_bulk_deassert, host->cfg_resets,
+>> +					 host->num_cfg_resets);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Wait for link up. */
+>> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
+>> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000, 500000);
+> 
+> Ditto (source of timeout values).
+> 
+>> +static int rzg3s_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	void *devres_group_id;
+>> +	int ret;
+>> +
+>> +	devres_group_id = devres_open_group(dev, NULL, GFP_KERNEL);
+>> +	if (!devres_group_id)
+>> +		return -ENOMEM;
+> 
+> What's the benefit of using devres_open_group()?  No other PCI
+> controller drivers use it.
+
+This driver uses devm_add_action_or_reset() to keep the error path simpler.
+Some of the action or reset registered handlers access the controller
+registers. Because the driver is attached to the platform bus and the
+dev_pm_domain_detach() is called right after driver remove [1] having devm
+action or reset handlers accessing controller register will later lead to
+hangs when the device_unbind_cleanup() -> devres_release_all() will be
+called on remove path. Other issue described in [2] may arries when doing
+continuous unbind/bind if the driver has runtime PM API (not case for this
+driver at the moment) that access directly controller registers.
+
+This is because the dev_pm_domain_detach() drops the clocks from PM domain
+and any subsequent pm_runtime_resume() (or similar function) call will lead
+to no runtime resume of the device.
+
+There is a solution proposed to this here [2] but it slowly progresses.
+Until this will be solved I chosed the appraoch of having the devres group
+opened here. If you agree with it, I had the intention to drop this call if
+there will be an accepted solution for it. If you are OK with going forward
+like this, for the moment, would to prefer me to add a comment about the
+reason the devres_open_group() is used here?
+
+This is not PCIe specific but platform bus specific. There are other
+affected drivers on this side (e.g. rzg2l-adc [3], rzg3s-thermal [4]).
+
+A similar solution as [2] is already used by the i2c subsystem.
+
+[1]
+https://elixir.bootlin.com/linux/v6.14.5/source/drivers/base/platform.c#L1425
+[2]
+https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+[3] https://lore.kernel.org/all/20250330163627.152d76ef@jic23-huawei/
+[4]
+https://lore.kernel.org/all/20250324135701.179827-3-claudiu.beznea.uj@bp.renesas.com/
+
+> 
+>> +	ret = rzg3s_pcie_probe_helper(pdev, devres_group_id);
+> 
+> This is the only driver that uses a *_pcie_probe_helper() function.
+> 
+>> +static DEFINE_NOIRQ_DEV_PM_OPS(rzg3s_pcie_pm_ops, rzg3s_pcie_suspend, rzg3s_pcie_resume);
+> 
+> Adding "_noirq" to the function names would be a good hint.
+
+I missed it. I'll add it in the next version.
+
+> 
+> Only a dozen drivers in the whole tree use DEFINE_NOIRQ_DEV_PM_OPS(),
+> which makes me wonder why this one is different.  There are a dozen or
+> so PCI drivers that use NOIRQ_SYSTEM_SLEEP_PM_OPS().
+
+This is how I'm used to approach it when there are simple dev_pm_ops. I
+didn't know the:
+
+const struct dev_pm_ops name = {
+
+        NOIRQ_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn)
+
+};
+
+is prefered. I'll switch to it in the next version.
+
+Thank you for your review,
+Claudiu
