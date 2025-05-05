@@ -1,116 +1,112 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D0C25C807
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D24D1F2BAB;
+	Mon,  5 May 2025 16:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462140; cv=none; b=GEygtM3RVBmV1/w/Z1owPNKUigyUR5kg02RtyAPn2chzaSoakB0gEUL2D/cP8NqUEDWDXREdvQ84jWrlhz3xW0V4VKClEAQgrNtjIjffrqLt7++QiedtLkU/0aes5FAOA99jLwb10tuatiwOGRk6XoYeSrIvCUX9LovxAYwQaL0=
+	t=1746462159; cv=none; b=gTec71IkPIq6yhcpb4LjDtwJVqkEnS2ZNtltmpPExRzwEJEHZSo7yQmgssY8HIN6YCtU2Y3d39Cklo058EPGriauLr84TS9j3rLIKrxw8yiD+63udewv4x78Xus42YIoCmeDlLVc74PBjjbsPS3lQr2yuxHXNdeuDe4rZpNof2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462140; c=relaxed/simple;
-	bh=dx+0A0+zGYkg14I6OBkj3/ss6kuJ7p0HznjIA0M5sBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MRAdQjkM/NpqxfeXLHvw2bieI0YrElFZDep+swhm0vabYlz0WntwJGkke4z5OUlq0nSvKFQWTxPT+1Me1+rcmh+s7ufaQ6n0cxk8P2kqG+udTtGzLRH1jz3Wp3g/IqnhhEAG0RfGDiSjfWzZGI67gNnVIw18E4l9+tKOdFYVbX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=d/aZ2g9q; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1746462159; c=relaxed/simple;
+	bh=sFOY+QrXVtBQFRQMgXZC8sVi2S+7f/V7wdC68vwuIG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z9npoKwvIFtrE3oIogxRhEsWDeO+SSymqf/+u/HaQDm9lZxv0SA1LisJmuCNX75H4GhfSSUAV/Mp5GD9nf5SxvW1i+xAVWUx4JgN3JYGESeQGBTj4M9yp/w61n942E5pj2dWOijaFvcaRPu5Z/hn5K1vdqixFBoFMQYV+fZO26k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o62aBtRY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="d/aZ2g9q"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6ff37565154so39541377b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:22:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1746462137; x=1747066937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUSGTKlbA5H24+yBQN4jIkG58T5ExeiJA4eFJ+JNTtQ=;
-        b=d/aZ2g9q4bY9fC5ic82QjW2gNn84oN08nKwoGcD2su899FBEW/oaxzkyoC/rX5BDWT
-         7WtVn/VgA4O6UlDBrtXJI0KzzYRjd5O/Fce5mGCyT0iQrp1+3Qct2UdcDGQk2qCbTJ4J
-         qLt9+T11iy68OREJTQJHK7tHvhe3nmKHUuQUdGWsdRANAQlIaS+zo0X2QSstvtQ9iwQG
-         wb6sxZk+TB59/B/z3u1H+oYg1d7qmU2NciHyaucXTz4rGDNeDHJH7W1Qh3XDdhFdP13m
-         Ilf/DtHSyKqqa92kCbzcfyM2PfEAaoRuNCM+kKeLuJc/eJWX8ZjrGcO25vuT0p60nZvs
-         +N5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462137; x=1747066937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BUSGTKlbA5H24+yBQN4jIkG58T5ExeiJA4eFJ+JNTtQ=;
-        b=X3Ym+0NKuDNexCZZTXd8jtE2Dllc6S5Wh5/NXQRFcG+2NuXF/h8/JGalXnUlSBnw6r
-         /LI6hI/IaAQvYXUy3vcUZan26htzlicO0WvG+y68KzUWuaNYyMwiVh/ltI1L42/g6q8o
-         PBEjWNfxFpkQ1ZRChttuhEbnfAu5CbDxkbhkQiT6RaPYDEADUu1GazEKbc7rTHjMNnxC
-         2hulGK5lnRHH3/X9+0ynVQAxL4v+qy4RCg8RutrikZgEbNHlWCTOB/GyIxhTPmkYBlG6
-         74ro6pP9Bj1yI53/tOBE7pbJ0yqMC49Hy83JHBqoFIbtH2G0/KCsOB6+CaEi1fTdyWC9
-         10FA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6yUt63mqM8BncwUrnT7wlIfNlastIU8e3e2+sX0JI1xm9U+4RLPLhCXFK74jhSaHi6ywBpo82oUNbe80=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi/+DyTX+BIjntG+gtZCz7uRln8ZIkXObMv60H2bMkUlnNVyG7
-	1qEzsdCvLNghGHJAnHXD6vuOQZz42ChiOpBVdQ1+F3aAWHwUMORtUlBhlobHqvUpHgPFG+8BjCZ
-	Ssal1XAdeLifR3Vqsca6lIGUomhB1eKg0Db0q
-X-Gm-Gg: ASbGnct/jWlA6iPf4Fef1KwxJoRGTXemSCDEuhrKiEHIH64C/4THz8z5x+vmWErv8kB
-	wjsW070KX4gvB2c7oixfWtJcj9bhyE2/RXtBHOYXDOrzh0xQ5HeLWm28a3PG8IEzd8h+XrPPAJx
-	skUuUZtgolJblRWluGJeGW5w==
-X-Google-Smtp-Source: AGHT+IH2DUE5HVNEg2bSjlLOWtDIRC8IZyXb2mE2mCyNBUhFsO4FmPL69/3p57Fob2eoRjHd/ddHHp962kCkNWER8p8=
-X-Received: by 2002:a05:690c:6504:b0:702:537b:dca8 with SMTP id
- 00721157ae682-708e119b266mr116732617b3.4.1746462136818; Mon, 05 May 2025
- 09:22:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o62aBtRY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653D3C4CEE4;
+	Mon,  5 May 2025 16:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746462158;
+	bh=sFOY+QrXVtBQFRQMgXZC8sVi2S+7f/V7wdC68vwuIG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o62aBtRYwB/QZFkBq5VWw6vOET5V4UrbPN6zhj7pAtTva3xzMuD28a2HHTRLZ0laM
+	 dLfYzg/v8fwMmIsGsPPfh930Z6aZRa/F2pka1SVBW+4cxHt3EfhOMlFOdNejoC5ZGu
+	 NFmea31JIVuCcOgkoLV6IxrkcI8GmHgK9zvRCOn9l0vOXL9d8wvaGXigUJbXn7NoJK
+	 NbcMNz4W+2j0Yo69r8HVngUnCd1P/+0m44FOeoMmBzofOy5LzxXE2ym7GM8RsBwkdJ
+	 nMMZRsEsYgBc8iI1ZdY3G5sC83VFPh1YU1/xiBamfeaoQzcSVAxRxcCIefeg4cnGTP
+	 vrC2seBRgB0/g==
+Date: Mon, 5 May 2025 18:22:31 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] uaccess: rust: add
+ UserSliceReader::strcpy_into_buf
+Message-ID: <aBjlx_AfQCS-pmht@polis>
+References: <20250505-strncpy-from-user-v3-0-85c677fd4f91@google.com>
+ <20250505-strncpy-from-user-v3-2-85c677fd4f91@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
- <20250502210034.284051-1-kpsingh@kernel.org> <CAHC9VhS5Vevcq90OxTmAp2=XtR1qOiDDe5sSXReX5oXzf+siVQ@mail.gmail.com>
- <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
-In-Reply-To: <CACYkzJ5jsWFiXMRDwoGib5t+Xje6STTuJGRZM9Vg2dFz7uPa-g@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 5 May 2025 12:22:05 -0400
-X-Gm-Features: ATxdqUHVSCLwU25t9Nh-Eb-QNfhRN532QIA5RHPtIkiKO7hREbMXnOdoRrxJisQ
-Message-ID: <CAHC9VhRf2gBDGFBW1obwCaGzK4RdH+ft_J-HXV6U7x7yiCJn5g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Introducing Hornet LSM
-To: KP Singh <kpsingh@kernel.org>
-Cc: bboscaccy@linux.microsoft.com, James.Bottomley@hansenpartnership.com, 
-	bpf@vger.kernel.org, code@tyhicks.com, corbet@lwn.net, davem@davemloft.net, 
-	dhowells@redhat.com, gnoack@google.com, herbert@gondor.apana.org.au, 
-	jarkko@kernel.org, jmorris@namei.org, jstancek@redhat.com, 
-	justinstitt@google.com, keyrings@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	llvm@lists.linux.dev, masahiroy@kernel.org, mic@digikod.net, morbo@google.com, 
-	nathan@kernel.org, neal@gompa.dev, nick.desaulniers+lkml@gmail.com, 
-	nicolas@fjasle.eu, nkapron@google.com, roberto.sassu@huawei.com, 
-	serge@hallyn.com, shuah@kernel.org, teknoraver@meta.com, 
-	xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505-strncpy-from-user-v3-2-85c677fd4f91@google.com>
 
-On Sun, May 4, 2025 at 7:25=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrote:
-> On Sun, May 4, 2025 at 7:36=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
-rote:
-> > On Fri, May 2, 2025 at 5:00=E2=80=AFPM KP Singh <kpsingh@kernel.org> wr=
-ote:
+On Mon, May 05, 2025 at 12:17:32PM +0000, Alice Ryhl wrote:
+> +    /// Read a NUL-terminated string from userspace and return it.
+> +    ///
+> +    /// The string is read into `buf` and a NUL-terminator is added if the end of `buf` is reached.
+> +    /// Since there must be space to add a NUL-terminator, the buffer must not be empty. The
+> +    /// returned `&CStr` points into `buf`.
+> +    ///
+> +    /// Fails with [`EFAULT`] if the read happens on a bad address (some data may have been
+> +    /// copied).
+> +    #[doc(alias = "strncpy_from_user")]
+> +    pub fn strcpy_into_buf<'buf>(self, buf: &'buf mut [u8]) -> Result<&'buf CStr> {
+> +        if buf.is_empty() {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        // SAFETY: The types are compatible and `strncpy_from_user` doesn't write uninitialized
+> +        // bytes to `buf`.
+> +        let mut dst = unsafe { &mut *(buf as *mut [u8] as *mut [MaybeUninit<u8>]) };
+> +
+> +        // We never read more than `self.length` bytes.
+> +        if dst.len() > self.length {
+> +            dst = &mut dst[..self.length];
+> +        }
+> +
+> +        let mut len = raw_strncpy_from_user(self.ptr, dst)?;
+> +        if len < dst.len() {
+> +            // Add one to include the NUL-terminator.
+> +            len += 1;
+> +        } else if len < buf.len() {
+> +            // This implies that len == dst.len() < buf.len().
+> +            //
+> +            // This means that we could not fill the entire buffer, but we had to stop reading
+> +            // because we hit the `self.length` limit of this `UserSliceReader`. Since we did not
+> +            // fill the buffer, we treat this case as if we tried to read past the `self.length`
+> +            // limit and received a page fault, which is consistent with other `UserSliceReader`
+> +            // methods that also return page faults when you exceed `self.length`.
+> +            return Err(EFAULT);
+> +        } else {
+> +            // This implies that len == buf.len().
+> +            //
+> +            // This means that we filled the buffer exactly. In this case, we add a NUL-terminator
+> +            // and return it. Unlike the `len < dst.len()` branch, don't modify `len` because it
+> +            // already represents the length including the NUL-terminator.
+> +            //
+> +            // SAFETY: Due to the check at the beginning, the buffer is not empty.
+> +            unsafe { *buf.last_mut().unwrap_unchecked() = 0 };
+> +        }
+> +
+> +        // SAFETY: `raw_strncpy_from_user` guarantees that this range of bytes represents a
+> +        // NUL-terminated string with the only NUL byte being at the end.
 
-...
+This isn't true if we hit the else case above, no?
 
-> > > ... here's how we think it should be done:
-> > >
-> > > * The core signing logic and the tooling stays in BPF, something that=
- the users
-> > >   are already using. No new tooling.
-> >
-> > I think we need a more detailed explanation of this approach on-list.
-> > There has been a lot of vague guidance on BPF signature validation
-> > from the BPF community which I believe has partly led us into the
-> > situation we are in now.  If you are going to require yet another
-> > approach, I think we all need to see a few paragraphs on-list
-> > outlining the basic design.
->
-> Definitely, happy to share design / code.
+With that fixed,
 
-At this point I think a quick paragraph or two on how you believe the
-design should work would be a good start, I don't think code is
-necessary unless you happen to already have something written.
-
---=20
-paul-moore.com
+	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
