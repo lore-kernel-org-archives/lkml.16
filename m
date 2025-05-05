@@ -1,91 +1,104 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CEE208961
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 11:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5F8207A22;
+	Mon,  5 May 2025 11:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746446182; cv=none; b=R7kb07fu32sbUpUUIj8PuAPcGWkld4Jz/MT3B+trh/83QHPzYKj608RT+bN2b8Sh5kQ6fbo2+ivam5JJLsw6RjzVqGfFqKAQTwno3DV6OPqERaS0tX9WBR84R3rL216meMdoS0wy0X2b1X+fLwENNVL4tLohBvhlQXCDS9N1MdI=
+	t=1746446201; cv=none; b=ARl/qwrINjgeqHpAPcBANifFlhHILrt0YJTwKbcM9pc2WLx+LF7UDQnwl/692src7vx2BIUxa4AjWjDr2+dkm4QJ1QUVCBHRqx8W8ADgR+OkQ11Xoc4t5wy6rmRQc3CldBjm3ix2HydX93T4J3+2aaA6rshoFYu9k0BYxZCOcqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746446182; c=relaxed/simple;
-	bh=jg5T4KVLUhTRrdF939eO28MIkOvTR/v7HOz5BEHUbdY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EiekRBxz5OecJto0enzWGM3ujiqqbaKVHTNHlN2JEdyQs1B7zMoyF3e189tqECN03Zo3UXsTHLJqi/FGqtRcbb3Exru/J5w9VBvbbg+vHsup2Y2paTu82qCiz2Wi+LRHR/1f7MeSUp3F8xBumxsjJBtkYuphkXL+O3Ab8UIrERY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f4r0LqxB; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746446201; c=relaxed/simple;
+	bh=bhylBd3wO/oU3H4pz2cS+C+DeqobvL/gAITFSoI+DlI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vc2qFLekhMKrlCJIYvbLK/HoeKFquS9NfgSNyE7ux1ckSEGAAvOq0M3Dd7zJ77enxwxX8Q1IykFcR/9g1DXgKVYtl7MwHlVY6fp1zZWtCcGgTo+MBoIPzpgViRbZyHJoR3qdQyNwoaYinXudsrzkUFLEZQbxrwLc660udWRMCz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBaK1A2A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f4r0LqxB"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so7567522a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 04:56:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746446179; x=1747050979; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jz68Uzn+xh70gzvNlWX0MbH0mKkRQyVFSCgz33BJirc=;
-        b=f4r0LqxBXh6i+rDxN+IG/2eOhOZ5I73nXOkeVS7dPspT1gBn6Obn0xt8LjEADAogjQ
-         F55krbcKtdSvvVioWONZdrr2NqdeXhFXu7KrrFA9Fs6+5W3reD+yoFWZBGEYiqrKA9xy
-         kxDbcKVHlNGkC+B8kZF7RZ8/yxWFjFF88ymv4w/A68mQaW49jvDx6+3aNSY8ukQezoZC
-         gHFJ1g20wuGu/5XgS7EYFLi5S3OFhPfPJWFzodeWVY6Ql2d+UOzRwls80rCNZGVcisvi
-         C2p9TdfuuJkmHVZijAu9/sjztJ8JiDjHu7L87e34kjPG3UdwOafc7lVG1ARXjbMyLLe2
-         yTPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746446179; x=1747050979;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jz68Uzn+xh70gzvNlWX0MbH0mKkRQyVFSCgz33BJirc=;
-        b=w46RQnnJx3hp3cJ1iWiMweqOiXGZlJFhLfjMqOIv+Tk+UUm/qNE/6VTBi8i2/5QpvP
-         BzAg885MONeS7HX64IS4Wgt5LQSyoWBG/86ijd7X2I00Dk6iEZODh+oEtARbam7ntoyb
-         TdJsdhAC9v5/EaH/WkKt4SRvZmyalng5sE0fnTOYimnM9Lszs5KJV709lqUuXsBCxAPJ
-         02YDNFT7m5uKf4l5z8ffM3jvcYDHoL2UaqpflJyaxnSZwaOViQ/aRWWwnIuPXfcqFxGB
-         4gG+8LzvhboyUU53GxRwsg4OeR3lU5yvOni6++njnsbK6zZ4ihIYGqtjU4E1haN81dA4
-         NDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFOjJ6qfUVt7AsjitVLvvrcyD1uP9lSuHR3Ku/Y4P85Ylq8iQ/buPQXqoLdZj82LdjoQstCw1ekZlI/VE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlupIOY0L4HupyXLizeX2G6knjYQzcelEEbfA5pZzsHGTiZr25
-	Vf6+io9ASGZTj0RDZ9JUWf5B3ZGU8n+S4/mgPinTdpmQUFMhs8+x8wtLGSDlXUA=
-X-Gm-Gg: ASbGncu3JkJxGYIhW9lwgorqy6azmH5uA8PqgCCBhhSdBpES+AP9dhdtqHJTbfHve0L
-	8VedY1aBj5Sk24ZkTGJF9/G+xBvrratBUTZhwOJAbXiqXLQqUO/1HNaZgtoTVyZVDMkJxBbSKWS
-	XiXjKj6hS+jvctBepZ74khtCFuWp9GBBYI+CV2oBBfZ4/xE20F5AnlX3h2fzQAlXKtV/HEm5zSC
-	JEj9VaWIvAqCMmiRMeXmPK6Ujlhsfhvtasda7F38YoBRq64wX66bEkSbrHgf9/FZd7vQDspkuVF
-	8qbKTRrnLiKQqX8MmNs9q4Y3Q+fGZl80UTkKA/j2PkA=
-X-Google-Smtp-Source: AGHT+IEt+litOx42ovMOLvvM7tdUauKBNtX/69p1CCT5Gm7nZ2lwM2QfZn0MkxZtRqgHhhDURf79rw==
-X-Received: by 2002:a05:6402:5215:b0:5e5:b388:2a0e with SMTP id 4fb4d7f45d1cf-5fab056de14mr6858941a12.7.1746446178782;
-        Mon, 05 May 2025 04:56:18 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77c04411sm5281064a12.67.2025.05.05.04.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 04:56:18 -0700 (PDT)
-Message-ID: <18f96f82-8d26-4773-878a-5110b19d42f2@suse.com>
-Date: Mon, 5 May 2025 13:56:17 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBaK1A2A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2700C4CEF8;
+	Mon,  5 May 2025 11:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746446200;
+	bh=bhylBd3wO/oU3H4pz2cS+C+DeqobvL/gAITFSoI+DlI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OBaK1A2ACY5mLHZc1RwNmwdp3qGVhRPpfBpIBc11MpDdTgvZjzJh9c2HqD1j/xbtF
+	 IE3axwUzyoBNXJJ9wLAZrwk/C5ae9vmLf+t52fKUMymHOy8rLX7A/TqYZDsgIjmxJO
+	 uqRWlNO0+YLXrPDFvUm39DtT/cGgYkARn3xxiCBrZ2IsI7xVrutO9LTBggxr7tyo3O
+	 Ew0kuk3bVIOPSA41viB1pvME5VT2HftocjkLZGxd/CD0ih9duJtfPjYxm7uyH2I3Y+
+	 LWBUIscuFZsWPeiYe6cTPw8irWThpkd0fbUAw29CUnAaOBvzQ70iM6xL28Uvz7HSBp
+	 JM6Z0txoM6w3w==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso707186766b.3;
+        Mon, 05 May 2025 04:56:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUTFcjz+64Ufa9ld+mJWPz4ZP23wwQhQRSuMVJBrJEFBJsidUVhK2GPyTA/cvwpuAxfS1PczngsEB5I@vger.kernel.org, AJvYcCV2ZJARJ4G8qfHHI9OGqX5+NU5HSVUiWy1Mpuyc9Sqk22QJ7Pqztm1W73m8udeUaeBDAVSGcpVk4NH1AdH51w==@vger.kernel.org, AJvYcCVZMGS8qzdTOz/Ztuvhmmn70/O1oDdJGiWXBFYE8F3kC0PuF1XNFmqorSa3lt0bJgNU6bPZMIzm0+CpAD+I@vger.kernel.org, AJvYcCWhGxdjcXl5JOzOinZfjBe2XupEx1MB4j7M9zEPmuBpErjY/Z3DAQzs2X3AD+kbfgEJKx/Zq0AVrdVQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywymy223P+fB/MSfBZ9EKdFWR6M0JmRYkROn7QO7eHrevoOEATD
+	PKfZuN7erSSBBdGwTeycubyWBwdt2hdZSKd4D3nnnRmk1ehUv1+yMWc30zQf/alRGQrrZT9SmgS
+	MuK+6xl8bcFy29XYXFfXqW0WYPg==
+X-Google-Smtp-Source: AGHT+IFS+UYRYhqu0qLApsmsVcQPU5PxbnUTRMgU4A8cLFv9VbzJgVSFzBJ4TlrMHVGbrQpwwBTff7ATCPn82nTV/yU=
+X-Received: by 2002:a17:907:97c7:b0:aca:d52d:b59b with SMTP id
+ a640c23a62f3a-ad19084ec5fmr805337566b.47.1746446199152; Mon, 05 May 2025
+ 04:56:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] gendwarfksyms: Clean up kABI rule look-ups
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@samsung.com>,
- linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250430214049.2658716-6-samitolvanen@google.com>
- <20250430214049.2658716-7-samitolvanen@google.com>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250430214049.2658716-7-samitolvanen@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250306-topic-dt_bindings_fixups-v1-0-0c84aceb0ef9@oss.qualcomm.com>
+ <174637445759.1385605.15383087742490646226.b4-ty@oss.qualcomm.com>
+In-Reply-To: <174637445759.1385605.15383087742490646226.b4-ty@oss.qualcomm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 5 May 2025 06:56:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKr8Xd8uxFzE0YJTyD+V6N++VV8SX-GB5Xt0_BKkeoGUQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFnhjeEjXeL57DSByQBGcanFON-MWfWdUb7FuuvpsF2gYXLeAeEkshoH0k
+Message-ID: <CAL_JsqKr8Xd8uxFzE0YJTyD+V6N++VV8SX-GB5Xt0_BKkeoGUQ@mail.gmail.com>
+Subject: Re: [PATCH 00/11] Various dt-bindings fixes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Robert Foss <rfoss@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
+	Christian Marangi <ansuelsmth@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Rohit Agarwal <quic_rohiagar@quicinc.com>, Kyle Deng <quic_chunkaid@quicinc.com>, 
+	Vinod Koul <vkoul@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	linux-arm-msm@vger.kernel.org, iommu@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-usb@vger.kernel.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/25 23:40, Sami Tolvanen wrote:
-> Reduce code duplication by moving kABI rule look-ups to separate
-> functions.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Sun, May 4, 2025 at 11:13=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+>
+> On Thu, 06 Mar 2025 19:11:12 +0100, Konrad Dybcio wrote:
+> > A set of not quite related bindings warnings fixes.
+> >
+> >
+>
+> Applied, thanks!
+>
+> [02/11] dt-bindings: display: msm: sm8350-mdss: Describe the CPU-CFG icc =
+path
+>         https://gitlab.freedesktop.org/lumag/msm/-/commit/60b8d3a2365a
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+And now there's a warning in linux-next:
 
--- Petr
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/display/msm/q=
+com,sm8350-mdss.example.dtb:
+display-subsystem@ae00000 (qcom,sm8350-mdss): interconnect-names:
+['mdp0-mem', 'mdp1-mem'] is too short
+        from schema $id:
+http://devicetree.org/schemas/display/msm/qcom,sm8350-mdss.yaml#
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/display/msm/q=
+com,sm8350-mdss.example.dtb:
+display-subsystem@ae00000 (qcom,sm8350-mdss): interconnects:
+[[4294967295, 7, 0, 4294967295, 1, 0], [4294967295, 8, 0, 4294967295,
+1, 0]] is too short
+        from schema $id:
+http://devicetree.org/schemas/display/msm/qcom,sm8350-mdss.yaml#
