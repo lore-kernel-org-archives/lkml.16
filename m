@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE94D35B95B;
-	Mon,  5 May 2025 22:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0995629C336;
+	Mon,  5 May 2025 22:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485103; cv=none; b=QSIl2cDbLFlydf8obRMda7Jz4c3HzbR7MNfMTHSJOaEhevjxwAu4tmlqzEViwg+LwSpL51ZFCKKh9fkiRX2oGQhT+uI5NIIIo0TcNxRzD8SW9seQfTNzvzBbT3oQ/hyZFCN/WTCwZkjomxbL22dlYVO9iaSuGmKjA0I4TF7MwSc=
+	t=1746485112; cv=none; b=ERKv0rjQn26zwFWuX5iBAAzpmaU7u+ouZvc1DjY+tmc/UlFoDjyXyE7BZeZwD2ouNGk0CB/TaDApko9XaVTH03VrKH0Vk71w8RSi2I2zHZwFwJ/kLUB1GdK4fHgw6yszIZJhhIUncztTxLpASwV/xUYcz4L6Hj7DTglxi+1/NPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485103; c=relaxed/simple;
-	bh=ZjH8N2oYszvEYvkkzBImYYwzxEmlFUSz8FVQRcb7JiA=;
+	s=arc-20240116; t=1746485112; c=relaxed/simple;
+	bh=hJchu9HNBiomGtHufvvQooMabHDIoweG+MLUMc5liNg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JNv4z97UW4QSVcgripCyb4rpN6EwqGk4EUdSJM6VJe6N20ng0HpshuCsipkav/x1/LjybgPpciaFy+vtdIstW6h9I6rbsZrHtdRzJsS4sW2WvB1PTpMW6NJIhurnffwltOPxAodSq6h7bwh3bkqbKtRA0PBgz/NN2KRT/fWZJRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMU3fKyX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KysrOg2AGWLPShA/3eiazsdsoAyXkicE4OLV9eHJiKn0qdKLRYezUvl5SVz4rlXcHROz1HlkbQy7V3U3QtNVz9BSshi5D0D8uL1U5L9D+W4f10viAEsI99ISbW1w36+sUY4lo3rxNsUyFt32WtxcZuM0uh6aM1FaUWls58048iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=StHdUEwI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMU3fKyX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739E6C4CEFF;
-	Mon,  5 May 2025 22:45:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="StHdUEwI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BEDC4CEEF;
+	Mon,  5 May 2025 22:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485102;
-	bh=ZjH8N2oYszvEYvkkzBImYYwzxEmlFUSz8FVQRcb7JiA=;
+	s=k20201202; t=1746485110;
+	bh=hJchu9HNBiomGtHufvvQooMabHDIoweG+MLUMc5liNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nMU3fKyXNaxggMVgNLaZJT2BbIHoLggtObKhHDvFwCtDvAVAW9hPzKFWMTOBjro+8
-	 1EtXtbjRtOMxfZiaoPwGZoKA/ha9ngD7Ws7YNOXUBMb+TelJPoMVZTr15/Lv1GvlcF
-	 Kr4MAcp1yc2EHYfE72+2eT4GszPe03bhezRupnEMeRPzjKrLCZ+EYUUSLYLuRxNKIX
-	 +ZgX9xRivbfgNEveqmgv/KLr1cfFCFE0M62mxzIwd92AnUIdIhFIlW1e2A6cEBWrYl
-	 LHC5t5LgAMc0BywmObXWeNuef+UUQwRdwyCATBHmPb81HuMIzsc8/T7QsvFMXp8mzh
-	 NwWJ0RAwqICmg==
+	b=StHdUEwIK/CkVZCuL7Xt2P940WQ02jeJGOom6uhIMA2iOXMgYrQSu7zVD8v1gJYOQ
+	 clpm100/krafqsSv78qbBteIIPpKqDmgNL6PLBMm3PE323fevoCGIWe/ArIP1+pOQG
+	 kfLORU+9vGTdrCb5jVPR+sPBP5HLYgZNJghPSPZ11kauDIf83t1UbJK8bhARzTxn8Z
+	 90VhyDL15QQF/S/Ubz1qCBDcN+X7pactoIu+kC2RiatST4lATYw1DIbtNYKpZymxVh
+	 UgCAl+KLi8BljNKr1fXBwlBspLXVBqXnrfT9Cqw8DxoS1djrJKus1bKtyYhVgQ7l9G
+	 D3Ab93ZNQsU9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Alexey Klimov <alexey.klimov@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Aaron Kling <luceoscutum@gmail.com>,
+	Sumit Gupta <sumitg@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Aaron Kling <webgeek1234@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	srini@kernel.org,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 162/486] ASoC: qcom: sm8250: explicitly set format in sm8250_be_hw_params_fixup()
-Date: Mon,  5 May 2025 18:33:58 -0400
-Message-Id: <20250505223922.2682012-162-sashal@kernel.org>
+	rafael@kernel.org,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	linux-pm@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 167/486] cpufreq: tegra186: Share policy per cluster
+Date: Mon,  5 May 2025 18:34:03 -0400
+Message-Id: <20250505223922.2682012-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -56,46 +57,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Alexey Klimov <alexey.klimov@linaro.org>
+From: Aaron Kling <luceoscutum@gmail.com>
 
-[ Upstream commit 89be3c15a58b2ccf31e969223c8ac93ca8932d81 ]
+[ Upstream commit be4ae8c19492cd6d5de61ccb34ffb3f5ede5eec8 ]
 
-Setting format to s16le is required for compressed playback on compatible
-soundcards.
+This functionally brings tegra186 in line with tegra210 and tegra194,
+sharing a cpufreq policy between all cores in a cluster.
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-Link: https://patch.msgid.link/20250228161430.373961-1-alexey.klimov@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Sumit Gupta <sumitg@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/sm8250.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cpufreq/tegra186-cpufreq.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/qcom/sm8250.c b/sound/soc/qcom/sm8250.c
-index 19adadedc88a2..1001fd3213803 100644
---- a/sound/soc/qcom/sm8250.c
-+++ b/sound/soc/qcom/sm8250.c
-@@ -7,6 +7,7 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- #include <sound/pcm.h>
-+#include <sound/pcm_params.h>
- #include <linux/soundwire/sdw.h>
- #include <sound/jack.h>
- #include <linux/input-event-codes.h>
-@@ -39,9 +40,11 @@ static int sm8250_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
- 					SNDRV_PCM_HW_PARAM_RATE);
- 	struct snd_interval *channels = hw_param_interval(params,
- 					SNDRV_PCM_HW_PARAM_CHANNELS);
-+	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
+index 7b8fcfa55038b..4e5b6f9a56d1b 100644
+--- a/drivers/cpufreq/tegra186-cpufreq.c
++++ b/drivers/cpufreq/tegra186-cpufreq.c
+@@ -73,11 +73,18 @@ static int tegra186_cpufreq_init(struct cpufreq_policy *policy)
+ {
+ 	struct tegra186_cpufreq_data *data = cpufreq_get_driver_data();
+ 	unsigned int cluster = data->cpus[policy->cpu].bpmp_cluster_id;
++	u32 cpu;
  
- 	rate->min = rate->max = 48000;
- 	channels->min = channels->max = 2;
-+	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
+ 	policy->freq_table = data->clusters[cluster].table;
+ 	policy->cpuinfo.transition_latency = 300 * 1000;
+ 	policy->driver_data = NULL;
  
++	/* set same policy for all cpus in a cluster */
++	for (cpu = 0; cpu < ARRAY_SIZE(tegra186_cpus); cpu++) {
++		if (data->cpus[cpu].bpmp_cluster_id == cluster)
++			cpumask_set_cpu(cpu, policy->cpus);
++	}
++
  	return 0;
  }
+ 
 -- 
 2.39.5
 
