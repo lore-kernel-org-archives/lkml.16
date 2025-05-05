@@ -1,99 +1,327 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0B925C70B
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8173C22EF5
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746457911; cv=none; b=EQpGKnSz8D9u6iIIH4TIbQLSm8PzOcVbI7oQd15A+TLLqRQqJQoUGufhrdzW4Gae+dRvTOL8Lf3hoUuBjQkbBR2FlV1V3nhZfP4LFjB4+JrGub7vSZZS3rvPqOK8STQLTQEG7blyBzZrysvblU4pjQrY5Axte2Vmo0C3VBELqlg=
+	t=1746457933; cv=none; b=N2LQ2i1Cw1uOGZSqscWVf9UPwRu6a2OmyxzTSyJWjnvl4zgQe/2UaulS2YD8I4OgwGHyWGm0FdFtP3/STmhNb7ZFhsZD1Y470SNriDX0VU1bzFDUiB9MiH7m5/E+ZNfEP9Mg5/X0Lu8DHuPOS0Gi47ey+wz9fdavDO14tjfqvLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746457911; c=relaxed/simple;
-	bh=J7f5rkEnnZyDN/Zxk28ty3f8ryplNKQEreYL9blZdyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=srdUhy9yDphKfkKdvh7VnvsFrPiOe7Fp1WBzwpY+9mvaDjLRDVKfViPmR44o0KEHpvsQ5Hg50b598qej4dSNlelkjAb8CY1Hnj25/3YtvclotO/bosgg9xARuVw9xdJkaZMNgaRTwIV0aKQY9crLY+5HkTootXED+Q8rAXvx6Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=amPLvqtq; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746457933; c=relaxed/simple;
+	bh=iPuIagoPp727bVaobHs2hJco2zhFDkzKwObmdtsXh8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G59f1Sbzjbfun67ymkUAREdzcqyTwTZ1pv1irkeP68MV7PboXKf918FcvAIO0s7/lVDx5BVtxpgw9wNNJ5bPPm2Ocjh4aFAr3ghYAyklBF41B9O5Q5AdfGUHUPfMILBOvLKnxEXqQihPeZ5bTIjcfxkHePxVI8tMKtL+NhFtyLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Y2WV2n4t; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="amPLvqtq"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so3161033a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746457909; x=1747062709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J7f5rkEnnZyDN/Zxk28ty3f8ryplNKQEreYL9blZdyc=;
-        b=amPLvqtqwjpGoJht11+PudJJXzmgMHfEAYymQfcPnGodoM0gPDnlMk69FoHETEbTO+
-         Z2ov+UcZ0lvNeVUSd/+wjwP9JjmkGy17yvcU3Yuc+Ov9UDIy7v3Xfjy7+mOALe3Rq0am
-         KrMRhlzJ3UXAWKhnCkbUi4BsK3DbVohufA+efn8suPUwqyNkdWStmeea5U2YhbloXi2t
-         tey69mOzfv1wFlPNB+6NMnzISKpGGKlkZapmk8pXV66iu+EEvCFY511Ceop4e0fqZbRi
-         A2DGelyrciy8UlYkk+mUWr517RbS5ZhrzIvH0fhztLmvSbIjVb0FwWJU1fPgOVUdNF6i
-         fvQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746457909; x=1747062709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J7f5rkEnnZyDN/Zxk28ty3f8ryplNKQEreYL9blZdyc=;
-        b=OQpfJ3m/AfNBzyRrnW9rUvPReE6YUc5/fjt/TC6Zj1jdMzQ4113tkCwIlbbuCsVcF2
-         ZNIH/Ap7rKVcCA5WOHkK301pFM4ESRTY5EdOm52DF5sehBPXrC4XYBVUNidHgsz93uLj
-         Q9LyWcgzzfMf/c+Do+tJOGVY538Tglhhsersff/RjaX8vYI66AWn5aNSUmFcuzBbk+u6
-         sr/iWnb9+mmLydsa4cZ1yu+VPWJzNIe1biOdn9bJstEPT6xQp692mJIetZWnq6zjmZyj
-         SxiKCNm0WdW4vjuPTZTI229uivehViJ0vDRr0PkKLLKnxQQLrIIXE1PZ6weMA9znqpIn
-         Jw5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUEqq9dAh39i7Ur/i8dVSz+dnlVXoK/SPSIoKCbn52ORXZ3SUHyHJW21/RYgur3fkhAjyIIPenKWEgdey4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI3aku6xOCk33IFIf/OR9HecNC67Z+5/AqZxH3W0SyrUIUVDJX
-	HkZ9+XDtpYiC0xgtpWisKZrskU2VdNsrdB2J60Irda78eVsEzu8TPZAjyxzJjPzp6f/DApJprkA
-	VCY6cXRSQiaUKbt44/IPBGT7arvVI1/1Lu+Lt
-X-Gm-Gg: ASbGncuQVPSkGlhHg8yuwJoD2sjiW26Yt9FeIVm0OZR2NuGqyYiYvx3i6MxfZqUbgsj
-	T1C1juKqC2YHuUAjPHCEnajvLAcXzkdndNDuWLkij88xZnvxxpYEePHRlzWnsd0st/4zXgWmbyO
-	sXqZiVEU8xwILYVFItMTza1Q==
-X-Google-Smtp-Source: AGHT+IF/DN6Mb9AnQZSO+fGnheiV824IrRTiAYVdybT75nlNooUcBVhmYSMHE5y4Sw6N4a0GayQHjT56d1cqp8glrlQ=
-X-Received: by 2002:a17:90b:2dc4:b0:2fe:955d:cdb1 with SMTP id
- 98e67ed59e1d1-30a4e624af3mr15635710a91.23.1746457908793; Mon, 05 May 2025
- 08:11:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Y2WV2n4t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=Dz5FWaxlIUnGPXCpQyV/LVl7j+l8EyAaVd4woxGkprg=;
+	b=Y2WV2n4tQHFXx4EkJqih8uqVWtWSOlPeCv1eZMwYrmSSLRoguUHqNwFyYEMADF
+	UPrKt8aoYq7J4iH3u2PnKrKkONlgDFy7AwJOki+6uG725MoVQlMlE832OBJtrEYO
+	NeRUlXuhqtK8fhxtfjEFKXgXTqFVHHY26S2ws+JJudwjc=
+Received: from [192.168.124.17] (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAHcpYN1Rho035TEw--.29459S2;
+	Mon, 05 May 2025 23:11:10 +0800 (CST)
+Message-ID: <5c91c6ba-0532-4daf-be14-1a9fb077ee47@163.com>
+Date: Mon, 5 May 2025 23:11:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505141238.4179623-1-aik@amd.com> <20250505141238.4179623-2-aik@amd.com>
-In-Reply-To: <20250505141238.4179623-2-aik@amd.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Mon, 5 May 2025 08:11:35 -0700
-X-Gm-Features: ATxdqUGOVLxznNhA7kpNkep_TQimeP0WJO4XqfH67iHU61-gZrKrUYMm-ZJZ5rE
-Message-ID: <CAAH4kHY0NcG8n-CKWjYPSeJf0YxF+D_pycAXTUDza1E-Qy2v0A@mail.gmail.com>
-Subject: Re: [PATCH 1/4] virt: sev-guest: Contain snp_guest_request_ioctl in sev-guest
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Michael Roth <michael.roth@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Liam Merwick <liam.merwick@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] drm/shmem-helper: Import dmabuf without mapping its
+ sg_table
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sean Paul <sean@poorly.run>,
+ Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250501064324.398650-1-oushixiong1025@163.com>
+ <71ec7bd1-be90-462e-8a07-e56fccae4096@suse.de>
+ <8e4f60ec-caa8-431a-88f8-aee8183d96e5@amd.com>
+ <a681cfd8-0c8c-4ffe-9f42-f0e54ee2539d@163.com>
+ <58fb9a49-4f4f-48f6-ad98-8be27ef0c0f7@amd.com>
+From: oushixiong <oushixiong1025@163.com>
+In-Reply-To: <58fb9a49-4f4f-48f6-ad98-8be27ef0c0f7@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAHcpYN1Rho035TEw--.29459S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Cr13ur45Zr1rGF43Wry3Arb_yoWDZF1DpF
+	45AFyUKrW5tryqgrZ2vw1kAasIgw48Kr1xXry3J3y5uF1ktFnrtr1Fkrn8uFyxAr1UGF1Y
+	qr1UCFWfGryYyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U5DGOUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXQBED2gYzL+GZgAAs1
 
-On Mon, May 5, 2025 at 7:13=E2=80=AFAM Alexey Kardashevskiy <aik@amd.com> w=
-rote:
->
-> SNP Guest Request only uses exitinfo2 which is a return value from GHCB,
-> has meaning beyond ioctl and therefore belongs to snp_guest_req.
->
-> Move exitinfo2 to snp_guest_req, remove snp_guest_request_ioctl from
-> the SEV platform code.
->
-> No functional change intended.
->
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+Hi Christian,
 
-Reviewed-by: Dionna Glaze <dionnaglaze@google.com>
+I don't see strong relevance between my patch and the patches you're 
+referring to.
+Because the drm_gem_prime_import() function imports sg_table by default, 
+my patch provides an alternative
+import callback implementation for SHMEM-based drivers that differs from 
+drm_gem_prime_import().
+drm_gem_shmem_prime_import_sg_table() doesn't need to call 
+dma_buf_map_attachment_unlocked() to import sg_table.
+
+Alternatively, I might not have fully understood the patches you mentioned.
 
 
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+Thanks and Regards,
+
+Shixiong.
+
+在 2025/5/5 22:32, Christian König 写道:
+> Hi Shixiong,
+>
+> for drm changes please base your patches on drm-misc-next or drm-next.
+>
+> That is probably fixed by this one here:
+>
+> commit b72f66f22c0e39ae6684c43fead774c13db24e73
+> Author: Christian König <christian.koenig@amd.com>
+> Date:   Tue Feb 11 17:20:53 2025 +0100
+>
+>      dma-buf: drop caching of sg_tables
+>      
+>      That was purely for the transition from static to dynamic dma-buf
+>      handling and can be removed again now.
+>      
+>      Signed-off-by: Christian König <christian.koenig@amd.com>
+>      Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+>      Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+>      Link: https://patchwork.freedesktop.org/patch/msgid/20250211163109.12200-5-christian.koenig@amd.com
+>
+> After this patch SG tables where only created when necessary.
+>
+> Regards,
+> Christian.
+>
+> On 5/5/25 16:22, oushixiong wrote:
+>> Hi Christian,
+>>
+>> My patch is based on linux-next, so this patch is not based on the latest code. Then, I'd like to ask which patch resolved the issue with sg-tables?
+>>
+>>
+>> Thanks and Regards,
+>>
+>> Shixiong.
+>>
+>>
+>> 在 2025/5/5 19:25, Christian König 写道:
+>>> Hi Thomas & Shixiong,
+>>>
+>>> first of all the patch is still based on outdated code. For example the cache_sgt_mapping member is already removed in drm-misc-next.
+>>>
+>>> So if I'm not completely mistaken the issue is already resolved upstream.
+>>>
+>>> Regards,
+>>> Christian.
+>>>
+>>> On 5/5/25 13:12, Thomas Zimmermann wrote:
+>>>> (cc'ing Christian)
+>>>>
+>>>> Hi,
+>>>>
+>>>> I don't feel qualified to fully review this patch.
+>>>>
+>>>> It would be good to have the issue with sg-tables solved, but I dislike the dedicated initializer macros. So my question is if this has any drawbacks. Or could we make this available and the default for all shmem-based drivers?
+>>>>
+>>>> Best regards
+>>>> Thomas
+>>>>
+>>>> Am 01.05.25 um 08:43 schrieb oushixiong1025@163.com:
+>>>>> From: Shixiong Ou <oushixiong@kylinos.cn>
+>>>>>
+>>>>> [WHY]
+>>>>> 1. Drivers using DRM_GEM_SHADOW_PLANE_HELPER_FUNCS and
+>>>>>       DRM_GEM_SHMEM_DRIVER_OPS (e.g., udl, ast) do not require
+>>>>>       sg_table import.
+>>>>>       They only need dma_buf_vmap() to access the shared buffer's
+>>>>>       kernel virtual address.
+>>>>>
+>>>>> 2. On certain Aspeed-based boards, a dma_mask of 0xffff_ffff may
+>>>>>       trigger SWIOTLB during dmabuf import. However, IO_TLB_SEGSIZE
+>>>>>       restricts the maximum DMA streaming mapping memory, resulting in
+>>>>>       errors like:
+>>>>>
+>>>>>       ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+>>>>>
+>>>>> [HOW]
+>>>>> Provide a gem_prime_import implementation without sg_table mapping
+>>>>> to avoid issues (e.g., "swiotlb buffer is full"). Drivers that do not
+>>>>> require sg_table can adopt this.
+>>>>>
+>>>>> Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+>>>>> ---
+>>>>>     drivers/gpu/drm/drm_gem_shmem_helper.c | 95 ++++++++++++++++++++++++++
+>>>>>     include/drm/drm_gem_shmem_helper.h     | 24 +++++++
+>>>>>     2 files changed, 119 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>>>> index d99dee67353a..9e41e350ff6f 100644
+>>>>> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>>>> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>>>> @@ -39,6 +39,7 @@ MODULE_IMPORT_NS("DMA_BUF");
+>>>>>     static const struct drm_gem_object_funcs drm_gem_shmem_funcs = {
+>>>>>         .free = drm_gem_shmem_object_free,
+>>>>>         .print_info = drm_gem_shmem_object_print_info,
+>>>>> +    .export = drm_gem_shmem_object_prime_export,
+>>>>>         .pin = drm_gem_shmem_object_pin,
+>>>>>         .unpin = drm_gem_shmem_object_unpin,
+>>>>>         .get_sg_table = drm_gem_shmem_object_get_sg_table,
+>>>>> @@ -799,6 +800,100 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>>>>>     }
+>>>>>     EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>>>>>     +const struct dma_buf_ops drm_gem_shmem_prime_dmabuf_ops =  {
+>>>>> +    .cache_sgt_mapping = true,
+>>>>> +    .attach = drm_gem_map_attach,
+>>>>> +    .detach = drm_gem_map_detach,
+>>>>> +    .map_dma_buf = drm_gem_map_dma_buf,
+>>>>> +    .unmap_dma_buf = drm_gem_unmap_dma_buf,
+>>>>> +    .release = drm_gem_dmabuf_release,
+>>>>> +    .mmap = drm_gem_dmabuf_mmap,
+>>>>> +    .vmap = drm_gem_dmabuf_vmap,
+>>>>> +    .vunmap = drm_gem_dmabuf_vunmap,
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * drm_gem_shmem_prime_export - implementation of the export callback
+>>>>> + * @shmem: shmem GEM object
+>>>>> + */
+>>>>> +struct dma_buf *drm_gem_shmem_prime_export(struct drm_gem_shmem_object *shmem,
+>>>>> +                       int flags)
+>>>>> +{
+>>>>> +    struct drm_gem_object *obj = &shmem->base;
+>>>>> +    struct drm_device *dev = obj->dev;
+>>>>> +    struct dma_buf_export_info exp_info = {
+>>>>> +        .exp_name = KBUILD_MODNAME, /* white lie for debug */
+>>>>> +        .owner = dev->driver->fops->owner,
+>>>>> +        .ops = &drm_gem_shmem_prime_dmabuf_ops,
+>>>>> +        .size = obj->size,
+>>>>> +        .flags = flags,
+>>>>> +        .priv = obj,
+>>>>> +        .resv = obj->resv,
+>>>>> +    };
+>>>>> +
+>>>>> +    return drm_gem_dmabuf_export(dev, &exp_info);
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * drm_gem_shmem_prime_import - Import dmabuf without mapping its sg_table
+>>>>> + * @dev: Device to import into
+>>>>> + * @dma_buf: dma-buf object to import
+>>>>> + *
+>>>>> + * Drivers that use the shmem helpers but also wants to import dmabuf without
+>>>>> + * mapping its sg_table can use this as their &drm_driver.gem_prime_import
+>>>>> + * implementation.
+>>>>> + */
+>>>>> +struct drm_gem_object *drm_gem_shmem_prime_import(struct drm_device *dev,
+>>>>> +                          struct dma_buf *dma_buf)
+>>>>> +{
+>>>>> +    struct dma_buf_attachment *attach;
+>>>>> +    struct drm_gem_shmem_object *shmem;
+>>>>> +    size_t size;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    if (dma_buf->ops == &drm_gem_shmem_prime_dmabuf_ops) {
+>>>>> +        struct drm_gem_object *obj;
+>>>>> +
+>>>>> +        obj = dma_buf->priv;
+>>>>> +        if (obj->dev == dev) {
+>>>>> +            /*
+>>>>> +             * Importing dmabuf exported from our own gem increases
+>>>>> +             * refcount on gem itself instead of f_count of dmabuf.
+>>>>> +             */
+>>>>> +            drm_gem_object_get(obj);
+>>>>> +            return obj;
+>>>>> +        }
+>>>>> +    }
+>>>>> +
+>>>>> +    attach = dma_buf_attach(dma_buf, dev->dev);
+>>>>> +    if (IS_ERR(attach))
+>>>>> +        return ERR_CAST(attach);
+>>>>> +
+>>>>> +    get_dma_buf(dma_buf);
+>>>>> +
+>>>>> +    size = PAGE_ALIGN(attach->dmabuf->size);
+>>>>> +
+>>>>> +    shmem = __drm_gem_shmem_create(dev, size, true, NULL);
+>>>>> +    if (IS_ERR(shmem)) {
+>>>>> +        ret = PTR_ERR(shmem);
+>>>>> +        goto fail_detach;
+>>>>> +    }
+>>>>> +
+>>>>> +    drm_dbg_prime(dev, "size = %zu\n", size);
+>>>>> +
+>>>>> +    shmem->base.import_attach = attach;
+>>>>> +    shmem->base.resv = dma_buf->resv;
+>>>>> +
+>>>>> +    return &shmem->base;
+>>>>> +
+>>>>> +fail_detach:
+>>>>> +    dma_buf_detach(dma_buf, attach);
+>>>>> +    dma_buf_put(dma_buf);
+>>>>> +
+>>>>> +    return ERR_PTR(ret);
+>>>>> +}
+>>>>> +EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import);
+>>>>> +
+>>>>>     MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+>>>>>     MODULE_IMPORT_NS("DMA_BUF");
+>>>>>     MODULE_LICENSE("GPL v2");
+>>>>> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+>>>>> index cef5a6b5a4d6..78ef91593a8e 100644
+>>>>> --- a/include/drm/drm_gem_shmem_helper.h
+>>>>> +++ b/include/drm/drm_gem_shmem_helper.h
+>>>>> @@ -110,6 +110,8 @@ int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
+>>>>>     void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
+>>>>>                   struct iosys_map *map);
+>>>>>     int drm_gem_shmem_mmap(struct drm_gem_shmem_object *shmem, struct vm_area_struct *vma);
+>>>>> +struct dma_buf *drm_gem_shmem_prime_export(struct drm_gem_shmem_object *shmem,
+>>>>> +                          int flags);
+>>>>>       int drm_gem_shmem_pin_locked(struct drm_gem_shmem_object *shmem);
+>>>>>     void drm_gem_shmem_unpin_locked(struct drm_gem_shmem_object *shmem);
+>>>>> @@ -168,6 +170,18 @@ static inline void drm_gem_shmem_object_print_info(struct drm_printer *p, unsign
+>>>>>         drm_gem_shmem_print_info(shmem, p, indent);
+>>>>>     }
+>>>>>     +/**
+>>>>> + * drm_gem_shmem_object_prime_export - GEM object function for export()
+>>>>> + * @obj: GEM object
+>>>>> + *
+>>>>> + */
+>>>>> +static inline struct dma_buf *drm_gem_shmem_object_prime_export(struct drm_gem_object *obj,
+>>>>> +                                int flags)
+>>>>> +{
+>>>>> +    struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
+>>>>> +
+>>>>> +    return drm_gem_shmem_prime_export(shmem, flags);
+>>>>> +}
+>>>>>     /**
+>>>>>      * drm_gem_shmem_object_pin - GEM object function for drm_gem_shmem_pin()
+>>>>>      * @obj: GEM object
+>>>>> @@ -276,6 +290,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>>>>>                         struct sg_table *sgt);
+>>>>>     int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>>>>>                       struct drm_mode_create_dumb *args);
+>>>>> +struct drm_gem_object *drm_gem_shmem_prime_import(struct drm_device *dev,
+>>>>> +                          struct dma_buf *buf);
+>>>>>       /**
+>>>>>      * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+>>>>> @@ -287,4 +303,12 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>>>>>         .gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+>>>>>         .dumb_create           = drm_gem_shmem_dumb_create
+>>>>>     +/**
+>>>>> + * This macro provides a shmem GEM operations that implementate a simple
+>>>>> + * gem_prime_import.
+>>>>> + */
+>>>>> +#define DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS \
+>>>>> +    .gem_prime_import    = drm_gem_shmem_prime_import, \
+>>>>> +    .dumb_create        = drm_gem_shmem_dumb_create
+>>>>> +
+>>>>>     #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
+
