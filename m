@@ -1,53 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B4136E084;
-	Mon,  5 May 2025 22:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEE236AAE6;
+	Mon,  5 May 2025 22:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485845; cv=none; b=YzRamGoTMEJeCsGPzTP8a7ueyGMwDEKmTIgtdWHvgBmroF/cfsZd5l1TF0/qkOYJEwfNL4RFnzfIze8r+FS8MZpps7WvGq2yMKY1J1ZRPWHxAn9y9p1uMQM8VXjBuUeCANiUiU5HLUgscCb+qIcil2+a/KEiA/XbuTKYd6s2MI0=
+	t=1746485779; cv=none; b=Lo2j0hK/QVgP8bEgdrqe1jUaNOu/ofEHkj3i5zfUPsyMYmrFNdCmJ2rqLG2vd/zEWiXIejjLQhmrnEyBfk73aLYRPNEjpdUPriP3RS2vqREjC/+1R0ZfTyDihIutdDBJHC0b0b48qD/NYdnCs7uszCo4UbXGprgLrHN9T/Y2Sjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485845; c=relaxed/simple;
-	bh=BYmx1SoM6cZjl6yYUpyus6wm6SDYezgd/kLQ4Fl4VDg=;
+	s=arc-20240116; t=1746485779; c=relaxed/simple;
+	bh=0WlM3M273eukAcoWZ4glCnJUCRC1U7yZ6IfN33uD3Sc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Okqfcs4riMMCnf4CQfktVjj1zAWS/T+1nnJF5ytAxhcuK8vkma+jP7lof2nSbupnBuR026BMhIaY5QBuyt+tgsHPDDkr09NaL72ZUtKScyvFEzEOBFa4jT3Uwb71XMJmszPpQTnf1CTQiUZVa89vAwlemhge5Zku/49dK+nsPGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFV5ElRQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=P2sSsdfKMtLmKPgx4Ipk6sIq6kepRMEgS5X+wHmFy6zRA8fYH1ilHTq50CbwgrynCcUgf4j2UG/ZHtwqUw1+EdNgobdjkZ5oVWh9XqlY8LCsu5MvP5Q9tCdSbyGiH8AUVz78scRFW4qvfC1pMLkPG2GJtD9aV7lnoELi5XJ0tnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmOSFkrg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFV5ElRQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4652AC4CEE4;
-	Mon,  5 May 2025 22:57:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmOSFkrg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7FFBC4CEE4;
+	Mon,  5 May 2025 22:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485843;
-	bh=BYmx1SoM6cZjl6yYUpyus6wm6SDYezgd/kLQ4Fl4VDg=;
+	s=k20201202; t=1746485779;
+	bh=0WlM3M273eukAcoWZ4glCnJUCRC1U7yZ6IfN33uD3Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EFV5ElRQrki9YQMhBEsQx3PoIC6dy2baLUqIqTiyxmsfcJaQlDmfQ8SUB8PIPokYn
-	 ahNIxnYEDGokMpE0AhqkorrybpryrCbSa/IjP11RGZZkR9Y/QIjbqQu93oCz8WEnIr
-	 N2JEldHJaiXBJZStEu3xH0Yg/rYVDKo2HzW4AIN87/bQUklIf1KLkd+QzRdxA/WVnP
-	 0ewm1sx9KvYsoSQsNoTEMsz2yUPBjCzjMkf3dyZ2UTzgZM/62LViYs/14unXa+P9Vb
-	 wI9CTrZh2x7n1LeFWI2cFQPECBJnJgOw2I+YB4YcOpyof/b0IYWBjM1UkGgpNJofg1
-	 M++MS0XiweFjg==
+	b=kmOSFkrgvFXvieK0cqBHazs+1AWyDiI/vg117ldHXx7Re2ubMwAHP4daVdNBx4RqJ
+	 YWH5V3/lOZ+lW360xarryhsif1gimce8gi99bF2A1lLEwzz825FM0pREjX9AXTWviV
+	 9+pVxYNrsSTF7oMRVOGVOacw3IY43LKsjhP/PUNBM6INwWhOM1kcF1QwfX7t9RHyAh
+	 UUo6sNF8IAPJTN3rJZaxPKSnnPh1K3c03Td6QZcFneXhrhPShYMDmrOAYU8J3NdDXI
+	 Sj+VwbQA5DOHMe72wGnuwyK1Ep1UxZGOfDR8HCc60O+bWyLU7lVe4Kc462hkW6AkUU
+	 m+sPMH5L9prEg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
+Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	chuck.lever@oracle.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 024/294] SUNRPC: rpcbind should never reset the port to the value '0'
-Date: Mon,  5 May 2025 18:52:04 -0400
-Message-Id: <20250505225634.2688578-24-sashal@kernel.org>
+	lucas.demarchi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	rodrigo.vivi@intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 480/486] drm/xe/sa: Always call drm_suballoc_manager_fini()
+Date: Mon,  5 May 2025 18:39:16 -0400
+Message-Id: <20250505223922.2682012-480-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
-References: <20250505225634.2688578-1-sashal@kernel.org>
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,41 +53,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.89
+X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Michal Wajdeczko <michal.wajdeczko@intel.com>
 
-[ Upstream commit 214c13e380ad7636631279f426387f9c4e3c14d9 ]
+[ Upstream commit 9cd3f4efc870463f17f6c29114c61fb6bfcaa291 ]
 
-If we already had a valid port number for the RPC service, then we
-should not allow the rpcbind client to set it to the invalid value '0'.
+After successful call to drm_suballoc_manager_init() we should
+make sure to call drm_suballoc_manager_fini() as it may include
+some cleanup code even if we didn't start using it for real.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+As we can abort init() early due to kvzalloc() failure, we should
+either explicitly call drm_suballoc_manager_fini() or, even better,
+postpone drm_suballoc_manager_init() once we finish all other
+preparation steps, so we can rely on fini() that will do cleanup.
+
+Signed-off-by: Michal Wajdeczko <michal.wajdeczko@intel.com>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241220194205.995-2-michal.wajdeczko@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/rpcb_clnt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/xe/xe_sa.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-index 102c3818bc54d..53bcca365fb1c 100644
---- a/net/sunrpc/rpcb_clnt.c
-+++ b/net/sunrpc/rpcb_clnt.c
-@@ -820,9 +820,10 @@ static void rpcb_getport_done(struct rpc_task *child, void *data)
+diff --git a/drivers/gpu/drm/xe/xe_sa.c b/drivers/gpu/drm/xe/xe_sa.c
+index fe2cb2a96f788..1d42547590067 100644
+--- a/drivers/gpu/drm/xe/xe_sa.c
++++ b/drivers/gpu/drm/xe/xe_sa.c
+@@ -57,8 +57,6 @@ struct xe_sa_manager *xe_sa_bo_manager_init(struct xe_tile *tile, u32 size, u32
+ 	}
+ 	sa_manager->bo = bo;
+ 	sa_manager->is_iomem = bo->vmap.is_iomem;
+-
+-	drm_suballoc_manager_init(&sa_manager->base, managed_size, align);
+ 	sa_manager->gpu_addr = xe_bo_ggtt_addr(bo);
+ 
+ 	if (bo->vmap.is_iomem) {
+@@ -72,6 +70,7 @@ struct xe_sa_manager *xe_sa_bo_manager_init(struct xe_tile *tile, u32 size, u32
+ 		memset(sa_manager->cpu_ptr, 0, bo->ttm.base.size);
  	}
  
- 	trace_rpcb_setport(child, map->r_status, map->r_port);
--	xprt->ops->set_port(xprt, map->r_port);
--	if (map->r_port)
-+	if (map->r_port) {
-+		xprt->ops->set_port(xprt, map->r_port);
- 		xprt_set_bound(xprt);
-+	}
- }
- 
- /*
++	drm_suballoc_manager_init(&sa_manager->base, managed_size, align);
+ 	ret = drmm_add_action_or_reset(&xe->drm, xe_sa_bo_manager_fini,
+ 				       sa_manager);
+ 	if (ret)
 -- 
 2.39.5
 
