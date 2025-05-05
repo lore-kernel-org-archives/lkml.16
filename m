@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33B12F8BAC;
-	Mon,  5 May 2025 23:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40BA2F924A;
+	Mon,  5 May 2025 23:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487242; cv=none; b=q7luJt73eu7uGNhkt2Ju8ESxdnm0syIJjGmwtklF0tk+i7gfBxlhdoffYuW+cMMrJaJ1dOjTQ2iKzo9ZlhCuh5HDxnrqAozVC/2b9424ZAAhxLtlblVdMxvC2EilqsXe+xof7AvZEdWQ2w9IybMvuVZeEfjEoF6XwtN5RUI+5Cw=
+	t=1746487266; cv=none; b=dCkrC6XIWpkrwJ0TsRL3nIAEUIlZjITeggYr3PZ09ddY6rl5Tr8km0XyPWCixoIYKBvrttsk0oTOilBS9rxTt3ycXxt85bPoYl6h5jJJ/dRkQC66CMOMjpsxvRJ9LQxjjP6nB7p3InTJjwmlk4UwKx60dQtPYIGLwlyvbMdlIXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487242; c=relaxed/simple;
-	bh=YL/1WgjLI1B6LoS2/NIYGlwG7WEGAG37g1mVj7vL2kA=;
+	s=arc-20240116; t=1746487266; c=relaxed/simple;
+	bh=ZEX27ppZRdcYi8EQSB2vV+HfefZ8MVVX4Xf7WMb1rTY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=To/CMR6zK0SDNS5wCb3w2hAi+RzzPu9H/ElSh82KR4FVQjs0CPKstmYNlj2kdanaUxlAyYwrYic10zjBqGCf6VflGG7t5I40OO8l0rNBvC7ytPskAdmk4D2boyQG2HNlEWHXAHKtGWPq7FFRsX1yGFPg3hbc29BwnQ/4JMGllWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvgdihHf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dakzjB2oijfDJ04NLnx8f+3bCnoTEHi+6Bn/qfhsFlDEUR+GQ0e2q3KRqhP6jDqilSXgs83qsXcv6nI8BBdntQ2PrZQgfYkSievxWs4vD3Razaxk/BccFfffSYwQ5jio7bEQqJTk9GCCZZFi7Y3AE/ImCxn+htXVYgf+w7Bg9yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOU9EKSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvgdihHf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75121C4CEED;
-	Mon,  5 May 2025 23:20:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOU9EKSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EBC5C4CEED;
+	Mon,  5 May 2025 23:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487241;
-	bh=YL/1WgjLI1B6LoS2/NIYGlwG7WEGAG37g1mVj7vL2kA=;
+	s=k20201202; t=1746487265;
+	bh=ZEX27ppZRdcYi8EQSB2vV+HfefZ8MVVX4Xf7WMb1rTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DvgdihHfuI5qUA0ZhbfyiWXXrwcFtQVcgn14rckyWU4wOFEq3zBo7+lWSABK90924
-	 jedGM19JkGl09MewPEE0JMn2a9ziT6f1MiuNI9+hbGkoD/VwSWF183I2q7I0KK2+fj
-	 ZR1vKGJJwsDtvP25JJt9vt8mfIo08X8oP1BxZluHulIZ6mrprSdr6tbqwBvmQKxmrc
-	 5bjNbG1bwIJbRztdLmDPW499SyLEJPQfJV9V+x01xDGoWfvtXBraIcXAmrZVLvBlja
-	 17DJ3wjFNtSXp0EIokoVXwMO4x1zC5BcyZvvEK2hcYQ8QzKvvDRFBRgr9awXeAraM8
-	 KsqatmM4dD6xw==
+	b=sOU9EKSBDo60JQNgXD8T/CLTAX8GDpsArVKj+jy5FMCXPj76EUmOEA0SFU7L4sdEt
+	 doKLwikP8lJRK2/BDZ7RwuEjcUPt5+2PnOLNKSit1oXggCPZIdz7RH+iSGI3bQtIXd
+	 w/o9lhDNUuazG7wTt8yOsnF70STixqSEEqp4VDSxdahZ3SUy8XF5jY33C+CIl1q9OQ
+	 9iYvNF7p+h3gdowB+7uBr8nhEHCvUFKjdZCRes6VaEOxjgxHPN+9clspA3UPcNcU6F
+	 NoYQ0aod5aNz6n4W8IXZhMm78ni0K6e7EQ59tw22gbd4qrz5QKw5Z7GZEW+hbw0AYW
+	 QL4tdAB9Kqm8Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Peter Seiderer <ps.report@gmx.net>,
-	Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 075/114] net: pktgen: fix access outside of user given buffer in pktgen_thread_write()
-Date: Mon,  5 May 2025 19:17:38 -0400
-Message-Id: <20250505231817.2697367-75-sashal@kernel.org>
+	mchehab@kernel.org,
+	laurent.pinchart+renesas@ideasonboard.com,
+	umang.jain@ideasonboard.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	tomm.merciai@gmail.com,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 089/114] media: v4l: Memset argument to 0 before calling get_mbus_config pad op
+Date: Mon,  5 May 2025 19:17:52 -0400
+Message-Id: <20250505231817.2697367-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -54,47 +56,52 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Peter Seiderer <ps.report@gmx.net>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit 425e64440ad0a2f03bdaf04be0ae53dededbaa77 ]
+[ Upstream commit 91d6a99acfa5ce9f95ede775074b80f7193bd717 ]
 
-Honour the user given buffer size for the strn_len() calls (otherwise
-strn_len() will access memory outside of the user given buffer).
+Memset the config argument to get_mbus_config V4L2 sub-device pad
+operation to zero before calling the operation. This ensures the callers
+don't need to bother with it nor the implementations need to set all
+fields that may not be relevant to them.
 
-Signed-off-by: Peter Seiderer <ps.report@gmx.net>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Link: https://patch.msgid.link/20250219084527.20488-8-ps.report@gmx.net
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/pktgen.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/media/v4l2-core/v4l2-subdev.c | 2 ++
+ include/media/v4l2-subdev.h           | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index c2b3c454eddd9..57502e8628462 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -1770,8 +1770,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	i = len;
- 
- 	/* Read variable name */
--
--	len = strn_len(&user_buffer[i], sizeof(name) - 1);
-+	max = min(sizeof(name) - 1, count - i);
-+	len = strn_len(&user_buffer[i], max);
- 	if (len < 0)
- 		return len;
- 
-@@ -1801,7 +1801,8 @@ static ssize_t pktgen_thread_write(struct file *file,
- 	if (!strcmp(name, "add_device")) {
- 		char f[32];
- 		memset(f, 0, 32);
--		len = strn_len(&user_buffer[i], sizeof(f) - 1);
-+		max = min(sizeof(f) - 1, count - i);
-+		len = strn_len(&user_buffer[i], max);
- 		if (len < 0) {
- 			ret = len;
- 			goto out;
+diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+index fbf0dcb313c82..67d3e6511a146 100644
+--- a/drivers/media/v4l2-core/v4l2-subdev.c
++++ b/drivers/media/v4l2-core/v4l2-subdev.c
+@@ -312,6 +312,8 @@ static int call_enum_dv_timings(struct v4l2_subdev *sd,
+ static int call_get_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
+ 				struct v4l2_mbus_config *config)
+ {
++	memset(config, 0, sizeof(*config));
++
+ 	return check_pad(sd, pad) ? :
+ 	       sd->ops->pad->get_mbus_config(sd, pad, config);
+ }
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index 73150520c02d4..ffc6d122f91e5 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -676,7 +676,9 @@ struct v4l2_subdev_pad_config {
+  *		     possible configuration from the remote end, likely calling
+  *		     this operation as close as possible to stream on time. The
+  *		     operation shall fail if the pad index it has been called on
+- *		     is not valid or in case of unrecoverable failures.
++ *		     is not valid or in case of unrecoverable failures. The
++ *		     config argument has been memset to 0 just before calling
++ *		     the op.
+  *
+  * @set_mbus_config: set the media bus configuration of a remote sub-device.
+  *		     This operations is intended to allow, in combination with
 -- 
 2.39.5
 
