@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C414128313D;
-	Mon,  5 May 2025 22:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87906360A4E;
+	Mon,  5 May 2025 22:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485437; cv=none; b=IeutrWnmlTrgOpPd84EPHouKGxqZiJNiWD6SoVtrDEs9ZDzMdo4d0pyeVaT9izS++4NU0hMh0fIJeIr4c6VvPJXwnxQpFtsAmptH7F5PLnSYajCJVr+TEM9EOKQ+cV654YTAwXnYc8EYMuv23zvLM/v4d6rVPuPsXPUqcoIfnC4=
+	t=1746485377; cv=none; b=c1LavmQix2UzVCly0V428XHad9GDisWms/zS8S8kAu9IvjMKXzOM6pfemme9eOFjEbgvhClsYqPSP2EGIeGdPphMY5Qtnx8jx6FL6r0I/x17sE//54HXB2GZ471gZjC69I/oT9uIBQLDIFN+x006vHwoZaRYaLb/A9m+2mubgPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485437; c=relaxed/simple;
-	bh=Q/z1OYzbZGZh4Ae9QR7+MOtWA0d3XI9Jhx7OzIAuTVI=;
+	s=arc-20240116; t=1746485377; c=relaxed/simple;
+	bh=IIXK9K2DVzIQoWl91FaWaC67MYNxQPN0H26Z8DZxsgg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QkDSTOe/DeP5oLLNu8+5zhfQa5f1RfqFjyFd1JpzzXmcO8gmrwEhpKpspHa3VIodmUFuVIPr1kCj13L7bkybMC1Czh8mhi2k80AaX1BC7qUVnOnbLH/I6XbkP1E3WOlAeIzXrHDMYVlibPT0vEGLFbUPxWsUi56Zpw+FSmLaEqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPoqathE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=a7kPa8V549lK/vNntnF9tj18pjxbtgjq3h2o5cLkci436sVhjrnWUH5dVG/XWEO53HKfKymiom2NSI9xABJcDerneidjdVXp2JvqfsoHKQL86oeivLThzlauumRr2DuAeG6OikZXZgRiKIezJgOwoxw3Mtslv9zW0K4d6hDgiIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ry+pjD6Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPoqathE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658A4C4CEED;
-	Mon,  5 May 2025 22:50:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ry+pjD6Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B0BC4CEED;
+	Mon,  5 May 2025 22:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485436;
-	bh=Q/z1OYzbZGZh4Ae9QR7+MOtWA0d3XI9Jhx7OzIAuTVI=;
+	s=k20201202; t=1746485376;
+	bh=IIXK9K2DVzIQoWl91FaWaC67MYNxQPN0H26Z8DZxsgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IPoqathEoGXA71ZgPo4yf0280owY942NMg98fTwg7zIl1e4SvygPZs7TAZ+Ull8Oo
-	 5Lsa3HFYE1a+6NFMl4Q71jAdP2ZQssD2LZCjg76a1siwJ0o7c1KkXxqXiWStrE17O2
-	 6UhYacXVroUjo5lpRrt+AALklNA8Ylt78jHKe29938q/CF20bhXjqhEPv1UacT2tbB
-	 v3FyVolHRl3prY/aNYDU4lOAu5yZqS+UYHpYP9ivKRIxPGJtNurRP6nDl5d7SVet+4
-	 T1TzB/QRtOJzDgl53k65+re1Ocl/mZLpBULn+gDXJCvLKAcoaxihSMnMcTu2+6UTeb
-	 ywFVfTa/1eGVw==
+	b=Ry+pjD6YMpviKAtn30mSSsQi2gJkZEZJcj5Q9SLYvUOXu+cG61VTho7HfliPj/SSP
+	 AtBg2jRgGIbs9EO2u+KH7aq8Hs8t/vdhyGZSYqDndDMrQzCAHz0wh4/4nnGtgncGJX
+	 CG13G4jMVj7as3lVReppNPpEsrVWOuQdXMhyIGYsLJHNvEOn1owvl3BGDYcmZvBoNg
+	 m3jfRg5YVamLzl8a9uqDRF/MdAimf/Mu+Mju4EiZd6AM80QFznZct4a9aYTAq4UjZ8
+	 AVRl2lYMsRa1El2P7BtCTLVe7IF2t8Lxv9oTa5jUUcr0BDHSgprBEQlU4rz3n5wQ+N
+	 4osKjEbvSQMTg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Eduard Zingerman <eddyz87@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Anup Patel <apatel@ventanamicro.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Sasha Levin <sashal@kernel.org>,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 310/486] bpf: don't do clean_live_states when state->loop_entry->branches > 0
-Date: Mon,  5 May 2025 18:36:26 -0400
-Message-Id: <20250505223922.2682012-310-sashal@kernel.org>
+	anup@brainfault.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 298/486] irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector
+Date: Mon,  5 May 2025 18:36:14 -0400
+Message-Id: <20250505223922.2682012-298-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,102 +54,271 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Eduard Zingerman <eddyz87@gmail.com>
+From: Anup Patel <apatel@ventanamicro.com>
 
-[ Upstream commit 9e63fdb0cbdf3268c86638a8274f4d5549a82820 ]
+[ Upstream commit 0f67911e821c67ecfccc365a2103ce276a9a56fe ]
 
-verifier.c:is_state_visited() uses RANGE_WITHIN states comparison rules
-for cached states that have loop_entry with non-zero branches count
-(meaning that loop_entry's verification is not yet done).
+Currently, there is only one "move" pointer in struct imsic_vector so
+during vector movement the old vector points to the new vector and new
+vector points to itself.
 
-The RANGE_WITHIN rules in regsafe()/stacksafe() require register and
-stack objects types to be identical in current and old states.
+To support forced cleanup of the old vector, add separate "move_next" and
+"move_prev" pointers to struct imsic_vector, where during vector movement
+the "move_next" pointer of the old vector points to the new vector and the
+"move_prev" pointer of the new vector points to the old vector.
 
-verifier.c:clean_live_states() replaces registers and stack spills
-with NOT_INIT/STACK_INVALID marks, if these registers/stack spills are
-not read in any child state. This means that clean_live_states() works
-against loop convergence logic under some conditions. See selftest in
-the next patch for a specific example.
+Both "move_next" and "move_prev" pointers are cleared separately by
+__imsic_local_sync() with a restriction that "move_prev" on the new
+CPU is cleared only after the old CPU has cleared "move_next".
 
-Mitigate this by prohibiting clean_verifier_state() when
-state->loop_entry->branches > 0.
-
-This undoes negative verification performance impact of the
-copy_verifier_state() fix from the previous patch.
-Below is comparison between master and current patch.
-
-selftests:
-
-File                                Program                       Insns (A)  Insns (B)  Insns    (DIFF)  States (A)  States (B)  States  (DIFF)
-----------------------------------  ----------------------------  ---------  ---------  ---------------  ----------  ----------  --------------
-arena_htab.bpf.o                    arena_htab_llvm                     717        423   -294 (-41.00%)          57          37   -20 (-35.09%)
-arena_htab_asm.bpf.o                arena_htab_asm                      597        445   -152 (-25.46%)          47          37   -10 (-21.28%)
-arena_list.bpf.o                    arena_list_add                     1493       1822   +329 (+22.04%)          30          37    +7 (+23.33%)
-arena_list.bpf.o                    arena_list_del                      309        261    -48 (-15.53%)          23          15    -8 (-34.78%)
-iters.bpf.o                         checkpoint_states_deletion        18125      22154  +4029 (+22.23%)         818         918  +100 (+12.22%)
-iters.bpf.o                         iter_nested_deeply_iters            593        367   -226 (-38.11%)          67          43   -24 (-35.82%)
-iters.bpf.o                         iter_nested_iters                   813        772     -41 (-5.04%)          79          72     -7 (-8.86%)
-iters.bpf.o                         iter_subprog_check_stacksafe        155        135    -20 (-12.90%)          15          14     -1 (-6.67%)
-iters.bpf.o                         iter_subprog_iters                 1094        808   -286 (-26.14%)          88          68   -20 (-22.73%)
-iters.bpf.o                         loop_state_deps2                    479        356   -123 (-25.68%)          46          35   -11 (-23.91%)
-iters.bpf.o                         triple_continue                      35         31     -4 (-11.43%)           3           3     +0 (+0.00%)
-kmem_cache_iter.bpf.o               open_coded_iter                      63         59      -4 (-6.35%)           7           6    -1 (-14.29%)
-mptcp_subflow.bpf.o                 _getsockopt_subflow                 501        446    -55 (-10.98%)          25          23     -2 (-8.00%)
-pyperf600_iter.bpf.o                on_event                          12339       6379  -5960 (-48.30%)         441         286  -155 (-35.15%)
-verifier_bits_iter.bpf.o            max_words                            92         84      -8 (-8.70%)           8           7    -1 (-12.50%)
-verifier_iterating_callbacks.bpf.o  cond_break2                         113        192    +79 (+69.91%)          12          21    +9 (+75.00%)
-
-sched_ext:
-
-File               Program                 Insns (A)  Insns (B)  Insns      (DIFF)  States (A)  States (B)  States    (DIFF)
------------------  ----------------------  ---------  ---------  -----------------  ----------  ----------  ----------------
-bpf.bpf.o          layered_dispatch            11485       9039    -2446 (-21.30%)         848         662    -186 (-21.93%)
-bpf.bpf.o          layered_dump                 7422       5022    -2400 (-32.34%)         681         298    -383 (-56.24%)
-bpf.bpf.o          layered_enqueue             16854      13753    -3101 (-18.40%)        1611        1308    -303 (-18.81%)
-bpf.bpf.o          layered_init              1000001       5549  -994452 (-99.45%)       84672         523  -84149 (-99.38%)
-bpf.bpf.o          layered_runnable             3149       1899    -1250 (-39.70%)         288         151    -137 (-47.57%)
-bpf.bpf.o          p2dq_init                    2343       1936     -407 (-17.37%)         201         170     -31 (-15.42%)
-bpf.bpf.o          refresh_layer_cpumasks      16487       1285   -15202 (-92.21%)        1770         120   -1650 (-93.22%)
-bpf.bpf.o          rusty_select_cpu             1937       1386     -551 (-28.45%)         177         125     -52 (-29.38%)
-scx_central.bpf.o  central_dispatch              636        600       -36 (-5.66%)          63          59       -4 (-6.35%)
-scx_central.bpf.o  central_init                  913        632     -281 (-30.78%)          48          39      -9 (-18.75%)
-scx_nest.bpf.o     nest_init                     636        601       -35 (-5.50%)          60          58       -2 (-3.33%)
-scx_pair.bpf.o     pair_dispatch             1000001       1914  -998087 (-99.81%)       58169         142  -58027 (-99.76%)
-scx_qmap.bpf.o     qmap_dispatch                2393       2187      -206 (-8.61%)         196         174     -22 (-11.22%)
-scx_qmap.bpf.o     qmap_init                   16367      22777    +6410 (+39.16%)         603         768    +165 (+27.36%)
-
-'layered_init' and 'pair_dispatch' hit 1M on master, but are verified
-ok with this patch.
-
-Signed-off-by: Eduard Zingerman <eddyz87@gmail.com>
-Link: https://lore.kernel.org/r/20250215110411.3236773-4-eddyz87@gmail.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250217085657.789309-8-apatel@ventanamicro.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/irqchip/irq-riscv-imsic-early.c |  8 ++-
+ drivers/irqchip/irq-riscv-imsic-state.c | 96 +++++++++++++++++--------
+ drivers/irqchip/irq-riscv-imsic-state.h |  7 +-
+ 3 files changed, 78 insertions(+), 33 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 294fbafbeba75..592ee3b47635b 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -17282,12 +17282,16 @@ static void clean_verifier_state(struct bpf_verifier_env *env,
- static void clean_live_states(struct bpf_verifier_env *env, int insn,
- 			      struct bpf_verifier_state *cur)
- {
-+	struct bpf_verifier_state *loop_entry;
- 	struct bpf_verifier_state_list *sl;
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index c5c2e6929a2f5..b5def6268936e 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -77,6 +77,12 @@ static void imsic_handle_irq(struct irq_desc *desc)
+ 	struct imsic_vector *vec;
+ 	unsigned long local_id;
  
- 	sl = *explored_state(env, insn);
- 	while (sl) {
- 		if (sl->state.branches)
- 			goto next;
-+		loop_entry = get_loop_entry(&sl->state);
-+		if (loop_entry && loop_entry->branches)
-+			goto next;
- 		if (sl->state.insn_idx != insn ||
- 		    !same_callsites(&sl->state, cur))
- 			goto next;
++	/*
++	 * Process pending local synchronization instead of waiting
++	 * for per-CPU local timer to expire.
++	 */
++	imsic_local_sync_all(false);
++
+ 	chained_irq_enter(chip, desc);
+ 
+ 	while ((local_id = csr_swap(CSR_TOPEI, 0))) {
+@@ -120,7 +126,7 @@ static int imsic_starting_cpu(unsigned int cpu)
+ 	 * Interrupts identities might have been enabled/disabled while
+ 	 * this CPU was not running so sync-up local enable/disable state.
+ 	 */
+-	imsic_local_sync_all();
++	imsic_local_sync_all(true);
+ 
+ 	/* Enable local interrupt delivery */
+ 	imsic_local_delivery(true);
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
+index b97e6cd89ed74..1aeba76d72795 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.c
++++ b/drivers/irqchip/irq-riscv-imsic-state.c
+@@ -124,10 +124,11 @@ void __imsic_eix_update(unsigned long base_id, unsigned long num_id, bool pend,
+ 	}
+ }
+ 
+-static void __imsic_local_sync(struct imsic_local_priv *lpriv)
++static bool __imsic_local_sync(struct imsic_local_priv *lpriv)
+ {
+ 	struct imsic_local_config *mlocal;
+ 	struct imsic_vector *vec, *mvec;
++	bool ret = true;
+ 	int i;
+ 
+ 	lockdep_assert_held(&lpriv->lock);
+@@ -143,35 +144,75 @@ static void __imsic_local_sync(struct imsic_local_priv *lpriv)
+ 			__imsic_id_clear_enable(i);
+ 
+ 		/*
+-		 * If the ID was being moved to a new ID on some other CPU
+-		 * then we can get a MSI during the movement so check the
+-		 * ID pending bit and re-trigger the new ID on other CPU
+-		 * using MMIO write.
++		 * Clear the previous vector pointer of the new vector only
++		 * after the movement is complete on the old CPU.
+ 		 */
+-		mvec = READ_ONCE(vec->move);
+-		WRITE_ONCE(vec->move, NULL);
+-		if (mvec && mvec != vec) {
++		mvec = READ_ONCE(vec->move_prev);
++		if (mvec) {
++			/*
++			 * If the old vector has not been updated then
++			 * try again in the next sync-up call.
++			 */
++			if (READ_ONCE(mvec->move_next)) {
++				ret = false;
++				continue;
++			}
++
++			WRITE_ONCE(vec->move_prev, NULL);
++		}
++
++		/*
++		 * If a vector was being moved to a new vector on some other
++		 * CPU then we can get a MSI during the movement so check the
++		 * ID pending bit and re-trigger the new ID on other CPU using
++		 * MMIO write.
++		 */
++		mvec = READ_ONCE(vec->move_next);
++		if (mvec) {
+ 			if (__imsic_id_read_clear_pending(i)) {
+ 				mlocal = per_cpu_ptr(imsic->global.local, mvec->cpu);
+ 				writel_relaxed(mvec->local_id, mlocal->msi_va);
+ 			}
+ 
++			WRITE_ONCE(vec->move_next, NULL);
+ 			imsic_vector_free(&lpriv->vectors[i]);
+ 		}
+ 
+ skip:
+ 		bitmap_clear(lpriv->dirty_bitmap, i, 1);
+ 	}
++
++	return ret;
+ }
+ 
+-void imsic_local_sync_all(void)
++#ifdef CONFIG_SMP
++static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++{
++	lockdep_assert_held(&lpriv->lock);
++
++	if (!timer_pending(&lpriv->timer)) {
++		lpriv->timer.expires = jiffies + 1;
++		add_timer_on(&lpriv->timer, smp_processor_id());
++	}
++}
++#else
++static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++{
++}
++#endif
++
++void imsic_local_sync_all(bool force_all)
+ {
+ 	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&lpriv->lock, flags);
+-	bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
+-	__imsic_local_sync(lpriv);
++
++	if (force_all)
++		bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
++	if (!__imsic_local_sync(lpriv))
++		__imsic_local_timer_start(lpriv);
++
+ 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+ }
+ 
+@@ -190,12 +231,7 @@ void imsic_local_delivery(bool enable)
+ #ifdef CONFIG_SMP
+ static void imsic_local_timer_callback(struct timer_list *timer)
+ {
+-	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&lpriv->lock, flags);
+-	__imsic_local_sync(lpriv);
+-	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
++	imsic_local_sync_all(false);
+ }
+ 
+ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu)
+@@ -216,14 +252,11 @@ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu
+ 	 */
+ 	if (cpu_online(cpu)) {
+ 		if (cpu == smp_processor_id()) {
+-			__imsic_local_sync(lpriv);
+-			return;
++			if (__imsic_local_sync(lpriv))
++				return;
+ 		}
+ 
+-		if (!timer_pending(&lpriv->timer)) {
+-			lpriv->timer.expires = jiffies + 1;
+-			add_timer_on(&lpriv->timer, cpu);
+-		}
++		__imsic_local_timer_start(lpriv);
+ 	}
+ }
+ #else
+@@ -278,8 +311,9 @@ void imsic_vector_unmask(struct imsic_vector *vec)
+ 	raw_spin_unlock(&lpriv->lock);
+ }
+ 
+-static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, struct imsic_vector *vec,
+-				     bool new_enable, struct imsic_vector *new_move)
++static bool imsic_vector_move_update(struct imsic_local_priv *lpriv,
++				     struct imsic_vector *vec, bool is_old_vec,
++				     bool new_enable, struct imsic_vector *move_vec)
+ {
+ 	unsigned long flags;
+ 	bool enabled;
+@@ -289,7 +323,10 @@ static bool imsic_vector_move_update(struct imsic_local_priv *lpriv, struct imsi
+ 	/* Update enable and move details */
+ 	enabled = READ_ONCE(vec->enable);
+ 	WRITE_ONCE(vec->enable, new_enable);
+-	WRITE_ONCE(vec->move, new_move);
++	if (is_old_vec)
++		WRITE_ONCE(vec->move_next, move_vec);
++	else
++		WRITE_ONCE(vec->move_prev, move_vec);
+ 
+ 	/* Mark the vector as dirty and synchronize */
+ 	bitmap_set(lpriv->dirty_bitmap, vec->local_id, 1);
+@@ -322,8 +359,8 @@ void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *new_ve
+ 	 * interrupt on the old vector while device was being moved
+ 	 * to the new vector.
+ 	 */
+-	enabled = imsic_vector_move_update(old_lpriv, old_vec, false, new_vec);
+-	imsic_vector_move_update(new_lpriv, new_vec, enabled, new_vec);
++	enabled = imsic_vector_move_update(old_lpriv, old_vec, true, false, new_vec);
++	imsic_vector_move_update(new_lpriv, new_vec, false, enabled, old_vec);
+ }
+ 
+ #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
+@@ -386,7 +423,8 @@ struct imsic_vector *imsic_vector_alloc(unsigned int hwirq, const struct cpumask
+ 	vec = &lpriv->vectors[local_id];
+ 	vec->hwirq = hwirq;
+ 	vec->enable = false;
+-	vec->move = NULL;
++	vec->move_next = NULL;
++	vec->move_prev = NULL;
+ 
+ 	return vec;
+ }
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.h b/drivers/irqchip/irq-riscv-imsic-state.h
+index 391e442808275..f02842b84ed58 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.h
++++ b/drivers/irqchip/irq-riscv-imsic-state.h
+@@ -23,7 +23,8 @@ struct imsic_vector {
+ 	unsigned int				hwirq;
+ 	/* Details accessed using local lock held */
+ 	bool					enable;
+-	struct imsic_vector			*move;
++	struct imsic_vector			*move_next;
++	struct imsic_vector			*move_prev;
+ };
+ 
+ struct imsic_local_priv {
+@@ -74,7 +75,7 @@ static inline void __imsic_id_clear_enable(unsigned long id)
+ 	__imsic_eix_update(id, 1, false, false);
+ }
+ 
+-void imsic_local_sync_all(void);
++void imsic_local_sync_all(bool force_all);
+ void imsic_local_delivery(bool enable);
+ 
+ void imsic_vector_mask(struct imsic_vector *vec);
+@@ -87,7 +88,7 @@ static inline bool imsic_vector_isenabled(struct imsic_vector *vec)
+ 
+ static inline struct imsic_vector *imsic_vector_get_move(struct imsic_vector *vec)
+ {
+-	return READ_ONCE(vec->move);
++	return READ_ONCE(vec->move_prev);
+ }
+ 
+ void imsic_vector_move(struct imsic_vector *old_vec, struct imsic_vector *new_vec);
 -- 
 2.39.5
 
