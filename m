@@ -1,177 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AB041C63;
-	Mon,  5 May 2025 13:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5903D41C63
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746450689; cv=none; b=WruEC0HlPCx/Yt/vnpFtDtSkOOntGegrCEJWiUJJRHa1838GqRIggxtkIr05qNK0lCA6++YbdxNMLrS4yPWIZ0SqrAD3wZCSBRoM47XIwyOhiJjm0Ahnesdyp4467O2bQ1JkDQDgulsIeXk/LXxLKiJJfoiC6k4vk5WnbIuryzw=
+	t=1746450695; cv=none; b=QpLuBXgvwc+PTlTIA6kF4gB3n0WShAFPlyrJToDLeL0v9jiJ8bwXFTyRhpEPconEE2z6xaaqwy3PhVVuf3UelEnvAocitPslhaDIhWtTPOb5lpX4V5js0wpbvwU5SqVqMgdQqm0JI+chR8BCF9WspEDEMhhixONOc/4CuPpeCag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746450689; c=relaxed/simple;
-	bh=AiE4ZD17aPOaZAPivHMdsvTvdLsANzKVsMl0h1CzKxE=;
+	s=arc-20240116; t=1746450695; c=relaxed/simple;
+	bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQt4KSYXMjcTdUa8lUl6XvI8qXqywLGFcKu6g24caJqYzd+xOPIv6h9q2xhGxBb7654/zAWxEWXW6c6GdmY/DJYcIx/MsA+W6hkpw//J+p1nrgEoA9zK17HdHBMdFfMuyfx6LjMQ1iQaedDk+gT1UotF12y047tkG93rpa7ww8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l16GkV3L; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=kcOThbOci+KcQwFDfsdVD5QhlK9LG4fjS2lRJiNWPB4rGMDv1CrddKI5C1XyIUQtlyLUAZIirjbRJTj2ydexv3huq3IsWtVH7HP9OtDIVbUdRlA9OQiK+iZ3U+F6NL20C/XX2vqeyyfnWsH0x7ca7CBn8Sbea0wsDYLY6gIvdRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o3+TJmUK; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l16GkV3L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5058C4CEF0;
-	Mon,  5 May 2025 13:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746450688;
-	bh=AiE4ZD17aPOaZAPivHMdsvTvdLsANzKVsMl0h1CzKxE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l16GkV3Ld2+BattRDIXJbk3w/r9clpWMvG402x5q7RD8nn7x0kXSZPgyprKVxrpN4
-	 +7P7dAWCd9ART3bSmImZk6wpBngHX7qic+ioV4bm3XqnKgzh1pbJMuMUDA1DVRXvZm
-	 WZxuhZCFt3+cpYv2p8ZxtWHUZ5ozU2WunK/plugnlKyRctp9dMOANTkfdy3/cP9b7e
-	 VEUmW9fJxyOkOebv4J6I0tkm5B+qT8rxI77R9862v/OodWbx0qB2gVKNSM7D/MpOcS
-	 vHqFNb7YTkWIWmIevDspXquSQBEeKhu5RIKzR3sr/w6pgC7dImq9/Kzh/30q8b0bhP
-	 QSeHnIHN5+bYw==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d060c62b61so3798079fac.0;
-        Mon, 05 May 2025 06:11:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDjOMJ1UcRyT5pFhQ2pOdGLZE8UWrxqIwr3qEXgBu/jkWmDvqttfjofMIxyHCZWF4lqU8IwKpcfIPL1oL5@vger.kernel.org, AJvYcCWr/8Kh8vG4s4MftKAPJ5LvI1VWeAYHA6DgSgMfojsh3tbqx3hC9gRnVt5BFyDqgDPB244MJCwrBpyA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn4DA+e3T3TQzK13F70qwk55iytkJbF0M92PVFDdnp9MeAAFxC
-	zNFkj++XQhdtMWz9rXjwFM2wD5CMW5D9uiwa3yYaG1FEh/DfLTpFG+dxMwcWJetG/ZD4BQ42YOE
-	lKEPc/DoQZ7UaTwSCK4nyhqhDn4o=
-X-Google-Smtp-Source: AGHT+IEtiEpKVa7HVZWvCw/510Dj6uB2h0Kb40e+MiUAYElqu3q1Q8n0n/uqo9E+TBcQ1QRXY5z5k4nxmZ0sPnnYg1Q=
-X-Received: by 2002:a05:6870:30b:b0:2d4:e29d:529a with SMTP id
- 586e51a60fabf-2dae82e08b1mr4199691fac.5.1746450688029; Mon, 05 May 2025
- 06:11:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3+TJmUK"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7329792c6eso3661255276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 06:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746450692; x=1747055492; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
+        b=o3+TJmUK2jdet8ttnQU40NHRGUZcDvpoyfjUp253YsixuedCmxIIycFKuXU0rXj1pv
+         7lI1tXMUE0gTmrFtHVZSfTrXWYMAxo8r/MLoAxT4kk5TpzMEQd094U//2SvlFG7xv4dh
+         3gVA7+avpFHbNiW/okyQRFy5V4YB5OZTnxQjWdBwKkjSfcza3ggU2/e5hs97HYRLdiv7
+         L2MOfmyYHvccBCspjVSJGoxAsefHujHxIC8k9mhzVhhkXYs8mQivE6YDdUFeyE1/CEtP
+         ykV7kdNht4hu19kOF2PxtfS3VJxu09qe+s2KeCuAp/yMS6uYD91f0C/bBnODuNVN3Tf8
+         gd2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746450692; x=1747055492;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JAhyEvfgy1i1Ua4qr7SYpCjo1cisNLOYZt8v/j1Km3s=;
+        b=fgC1mu25Hb+b9H5pL0nX23FcffxcZisC2euRrJzDcYBuQBcsGSLdYJ++YFmRUan/UI
+         K9+WTW3Hd9Ng88uyjOMd7+r7KTvdjLcGzayTSnGlgI9zGxDZ42Hi45IizX3HWCWyuZYA
+         qIfnBxXiJWp2iudiKC7mKMU4c3OY1wbOuLJGCyIhvTXozEjleHL4OLHnL8qNHC/cMrmN
+         LIMegbWViv4n/tLhHVlhwt5VHa1tz2lVPU04/5FU7pTIrXJZGYQNOqBHk6woTfccRIBK
+         /qRVMVCX0KgXbj0wBCU1JOpyl28WUaDgfBye8r2o6IymKxk4eYkoPEp5E4epVb8ctgJ/
+         t5fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXKVoyNc4evstGWe3Nh73KexqPTM4C2p6ZSqjwq+28kE1VXwNq1XegP9XWyMzMSKDyI8ZeTEC/CuvehQ1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsydwzLT+eXAL596UsURUQzoFbitvYuHqmsZbZ4+SGJLhV8nYB
+	RmXomJl+j408ddP2tyXbQOTYpsNg2EleqXtZEP2miLHJgXaaUnEHnkKr+nwFIZ+0tMp9BhJ7qfZ
+	Q31/1biwK+IYKH4GX3D0ZnBnffTGaX01ICbrd3w==
+X-Gm-Gg: ASbGncu8pQjJLVZzQKzIeUYi8uRejpp3Hh6IkkBtx2Wu/vbr+rbcqJb4ahHAtLSCobT
+	eoDo8nKDqHqM0ZmshoqKg1MBecV31qIdR+ktMyIgCuTU65YRnaE8F5IuXEVTiLUsbhwabRJfFut
+	LTv5D0jUnJ6XUAd+G+1WeU9yY=
+X-Google-Smtp-Source: AGHT+IHYbF2WPZAiZQJkMemTDe0eA/WNRrjqs4w7sc6I3JE6Dj46TaOld9R59l3cTHEPKEvrfbHdG2JW0rfdFv4Rzlg=
+X-Received: by 2002:a05:6902:70a:b0:e72:d449:72ed with SMTP id
+ 3f1490d57ef6-e757d2eb6fbmr8387246276.24.1746450692302; Mon, 05 May 2025
+ 06:11:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429202412.380637-1-tony.luck@intel.com> <20250429202412.380637-2-tony.luck@intel.com>
-In-Reply-To: <20250429202412.380637-2-tony.luck@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 5 May 2025 15:11:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ju_Xirnft+5C=-GtG3hmT9xGjVqNFPRugXR7o1RzfHrg@mail.gmail.com>
-X-Gm-Features: ATxdqUFw2uXAVVggnwPyHmHSrJuw6ui02s3ht9p5pPI5ZvNwsrVhW-wXCwzpT0U
-Message-ID: <CAJZ5v0ju_Xirnft+5C=-GtG3hmT9xGjVqNFPRugXR7o1RzfHrg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] ACPICA: Define MRRM ACPI table
-To: Tony Luck <tony.luck@intel.com>
-Cc: rafael@kernel.org, lenb@kernel.org, 
-	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+References: <20250310102229.381887-1-o.rempel@pengutronix.de>
+ <CAPDyKFrC56BBJk=YAPWCCNYNqFAoY74_yH0ZXfNQEiDhaA2xJg@mail.gmail.com> <aBiztawScUfcLELt@pengutronix.de>
+In-Reply-To: <aBiztawScUfcLELt@pengutronix.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 5 May 2025 15:10:56 +0200
+X-Gm-Features: ATxdqUGopRIyAG9fE6pCiDkLofZQUawSDV9qKybdHFgAD5Qsbz0IQB0_BYNYZ5E
+Message-ID: <CAPDyKFoVacuOQV0dH733BnhSXGQ7-c3M_u5=+AonGAXAYLsU3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] mmc: handle undervoltage events and prevent eMMC corruption
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>, 
+	Christian Loehle <christian.loehle@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Avri Altman <Avri.Altman@sandisk.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 10:24=E2=80=AFPM Tony Luck <tony.luck@intel.com> wr=
-ote:
+On Mon, 5 May 2025 at 14:48, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >
-> Patch for reference, this has already been applied to
-> https://github.com/acpica/acpica and will in due course make its way
-> into Linux when the next ACPICA release is ported over.
+> Hi Ulf,
 >
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  include/acpi/actbl1.h |  7 +++++++
->  include/acpi/actbl2.h | 42 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 49 insertions(+)
+> Sorry for very late replay,
 >
-> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> index 387fc821703a..4cb36392e9e9 100644
-> --- a/include/acpi/actbl1.h
-> +++ b/include/acpi/actbl1.h
-> @@ -110,6 +110,13 @@ struct acpi_whea_header {
->         u64 mask;               /* Bitmask required for this register ins=
-truction */
->  };
+> On Thu, Mar 20, 2025 at 03:36:32PM +0100, Ulf Hansson wrote:
+> > Hi Oleksij,
+> >
+> > On Mon, 10 Mar 2025 at 11:22, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> > >
+> > > changes v4:
+> > > - drop HPI and SDHCI related patches
+> > >
+> > > This patch set introduces a framework for handling undervoltage events
+> > > in the MMC subsystem. The goal is to improve system reliability by
+> > > ensuring graceful handling of power fluctuations that could otherwise
+> > > lead to metadata corruption, potentially rendering the eMMC chip
+> > > unusable or causing significant data loss.
+> >
+> > Thanks for posting this! I will spend some time reviewing this next
+> > week and let you know my comments then.
+> >
+> > However, I just wanted to let you know that I just posted a series [1]
+> > (forgot to cc you, sorry), which also reworks the way _mmc_suspend()
+> > understands what scenario it should be running. I am guessing that
+> > re-work is simplifying for your $subject series too. Maybe you would
+> > like to have a look?
 >
-> +/* Larger subtable header (when Length can exceed 255) */
-> +
-> +struct acpi_subtbl_hdr_16 {
-> +       u16 type;
-> +       u16 length;
-> +};
-> +
->  /* https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/acpitab=
-l/ns-acpitabl-aspt_table */
->  #define ASPT_REVISION_ID 0x01
->  struct acpi_table_aspt {
-> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-> index 2e917a8f8bca..e7423db6e24b 100644
-> --- a/include/acpi/actbl2.h
-> +++ b/include/acpi/actbl2.h
-> @@ -37,6 +37,7 @@
->  #define ACPI_SIG_MCHI           "MCHI" /* Management Controller Host Int=
-erface table */
->  #define ACPI_SIG_MPAM           "MPAM" /* Memory System Resource Partiti=
-oning and Monitoring Table */
->  #define ACPI_SIG_MPST           "MPST" /* Memory Power State Table */
-> +#define ACPI_SIG_MRRM           "MRRM"      /* Memory Range and Region M=
-apping table */
->  #define ACPI_SIG_MSDM           "MSDM" /* Microsoft Data Management Tabl=
-e */
->  #define ACPI_SIG_NFIT           "NFIT" /* NVDIMM Firmware Interface Tabl=
-e */
->  #define ACPI_SIG_NHLT           "NHLT" /* Non HD Audio Link Table */
-> @@ -1736,6 +1737,47 @@ struct acpi_msct_proximity {
->         u64 memory_capacity;    /* In bytes */
->  };
+> Ah, very nice. The integration of undervoltage support is easier now.
 >
-> +/***********************************************************************=
-********
-> + *
-> + * MRRM - Memory Range and Region Mapping (MRRM) table
-> + * Conforms to "Intel Resource Director Technology Architecture Specific=
-ation"
-> + * Version 1.1, January 2025
-> + *
-> + ***********************************************************************=
-*******/
-> +
-> +struct acpi_table_mrrm {
-> +       struct acpi_table_header header;        /* Common ACPI table head=
-er */
-> +       u8 max_mem_region;                      /* Max Memory Regions sup=
-ported */
-> +       u8 flags;                               /* Region assignment type=
- */
-> +       u8 reserved[26];
-> +       u8 memory_range_entry[];
-> +};
-> +
-> +/* Flags */
-> +#define ACPI_MRRM_FLAGS_REGION_ASSIGNMENT_OS (1<<0)
-> +
-> +/***********************************************************************=
-********
-> +       *
-> +       * Memory Range entry - Memory Range entry in MRRM table
-> +       *
-> +       *****************************************************************=
-*************/
-> +
-> +struct acpi_mrrm_mem_range_entry {
-> +       struct acpi_subtbl_hdr_16 header;
-> +       u32 reserved0;          /* Reserved */
-> +       u64 addr_base;          /* Base addr of the mem range */
-> +       u64 addr_len;           /* Length of the mem range */
-> +       u16 region_id_flags;    /* Valid local or remote Region-ID */
-> +       u8 local_region_id;     /* Platform-assigned static local Region-=
-ID */
-> +       u8 remote_region_id;    /* Platform-assigned static remote Region=
--ID */
-> +       u32 reserved1;          /* Reserved */
-> +       /* Region-ID Programming Registers[] */
-> +};
-> +
-> +/* Values for region_id_flags above */
-> +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_LOCAL   (1<<0)
-> +#define ACPI_MRRM_VALID_REGION_ID_FLAGS_REMOTE  (1<<1)
-> +
->  /***********************************************************************=
-********
->   *
->   * MSDM - Microsoft Data Management table
-> --
+> I rebased by match on top of mmc/next branch and do some testing
+> tomorrow. If you have no other comments I'll send updated patches after
+> testing.
 
-All of the above definitions should be there in linux-next now.
+That's great! I have started to review the series in more detail, but
+feel free to post a new version, I can look at that instead.
 
-Can you please check if they are there and they are correct?
-Alternatively, please check
+>
+> By the way, are you on embedded recipes this year?
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log=
-/?h=3Dtesting
+Unfortunately not. Linaro Connect in Lisbon clashes with these dates.
+
+Kind regards
+Uffe
