@@ -1,200 +1,144 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazon11020126.outbound.protection.outlook.com [52.101.225.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD1E136E37;
-	Mon,  5 May 2025 05:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.225.126
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746424746; cv=fail; b=DlILr7yHW8StLSyPAgUF6J2Opo8nXR6ACvtI/cwLReYYCEMvHmZs9v/apY8+CDi+8e4ETr2E4W6MHILiMfRI7Xh9fUzxxQY5exyndFm7InmRx3RsqZt5lm900kgRgi7iz9x1zPE3yffsBooZj/GT/JtGcSF1eFW3Jcqca/LKOHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746424746; c=relaxed/simple;
-	bh=qWbX6AAvSaO91Bv8n+fwra3+x2oZP7kT8ENQridOu7Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dlc1DoL8S+42hr4ZeMg+5+hQRL2h4dWAnQz4UiipZvHav38EjANWmLzBszb/6n58cFwR6qgBKd4yLW6ryKwqqIwasiTkp+37PG0X1iK/CjQtYuTgfDuHKSESnbQa+rIR2Wus4++RT9buzP6auUGrF97uPLXAnUqO+uhoxUDBJec=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.225.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LDfi+2f+YupNF7TV6MjVEApG+32MQT/3J8FD8/MqzoCF8jpQRY5Aai0qKYRXikfqPT8sr9lMooidJfU4+IxyVYw7M79JLbjUOEGJTASlCKVpiueYMCkb33MOMOgUYYbIS2J7g/rTWKQzgO45o83a/3bH7P5KLZ4WiXsX2nOOzhCG+q+Mbk6B9G7+xEvHtvyvD86fSqYH6rtdJGruaW5yVNx1giotga4UCilFtBov18JqUh6N95MFpmDcEnkSSNUbEb3/em0nGdXoYBlqYIw1qo9QJYEUkKcqL8zDBPqOb9efguGOgNfCBV3ri5fq47j/i+yVQ4lCMEi75088I/rPRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6mgbBpuH+vwgxATfGxsEGtyfbK3eFvsnmWZJVlfKaB8=;
- b=EjyUCZeDEaTzl2r7roFclZLweovR72P9lQcdQPv/VP78bqQaVJ73bAkhbVVpAJ1Zj+g+pyr9yvtDwMdyAAp5BpmOFzWQVujLyiSRI7j2gnOiko6ZqXi+1EfPXH8/3acu/vwQx3DuJmMjfUt3fcVe2ZQ/HIS68WXsca6kX2bMUkhFfbgHLqTlL8uwGwtbVhEvJTBxuEaVl6VWP7+zehp1Quod88+7P+NMkcWflQBwExFLQnEze+3se3JHGlyybQdaihv0VPvCw2PJmHfLivivkyiyf2G0MwV23NJVtDgwyfsQ5Hbi50URAY/25Nz7wlY9HOcp2S28bOoUL29zMC9Qgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-Received: from PN0P287MB2019.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1b8::9)
- by PN0P287MB1188.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:17e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Mon, 5 May
- 2025 05:58:58 +0000
-Received: from PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
- ([fe80::ac6c:f2c2:8013:8d0f]) by PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
- ([fe80::ac6c:f2c2:8013:8d0f%7]) with mapi id 15.20.8699.026; Mon, 5 May 2025
- 05:58:58 +0000
-From: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
-To: shawnguo@kernel.org,
-	tarang.raval@siliconsignals.io
-Cc: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing SD card timeout
-Date: Mon,  5 May 2025 11:28:27 +0530
-Message-Id: <20250505055828.4160-1-himanshu.bhavani@siliconsignals.io>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PN2PR01CA0125.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::10) To PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:1b8::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3B1B3725
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 05:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746424769; cv=none; b=HksxcEmW9S22ZpedCFbgxGQ19etoAsgo0s6u85dZx0eZaIdTFfJo8J4i285XfJCLLF7Fo5I+mF6c45Weh+yy8MxmMIMPOVKAKTMqHbioukM4DiYoulBzgxlJCdoXx/kKvI27tAEAvMdx1pc73xLJy92dnF3pfkHqCbXQxmapibg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746424769; c=relaxed/simple;
+	bh=T8BOhzj6gnh1orolpakOJwBtatSNBf9YtDaPC5/V3hA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=K9IX9zDyB2h1oabkoerV9RJBm8Z/8cJnoeZZCvBJ4DkpYbFc+JzflsKXhswKUsoQ7sh5l0+OyOumOWMN61pwAtLhFgk1D3l+s6DlH4GOgJ4lfOTDbRBaETHu/2xPzVjzQ1nFkdTIi1Q2aVnuqOv8AKpXCGlYhIMs8vc8Z2PrOAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d586b968cfso82923765ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 04 May 2025 22:59:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746424766; x=1747029566;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KutsmWOwsPqBpoNxW5I/vuWTL3F2OwtZR13w1gq13k0=;
+        b=ZX6QWmBXT2v3g4wPdkS9RrCRRvBjDITUt82EXQAF4ZavZyQMkDjIngDu8NZBslBoem
+         s3Y/tMFFhyvfvOAgHzu9TGUVMOwWz78JCHUuU8mWylRPNwG5Z5ZOS/XlnTEh2mCRBt/F
+         T9HcRVIRGz8O7QkVS98AeA5DchVDkkI2dsb2/Re4QoY7q1Sortto8j868QL8BbYtsrlb
+         npJ/yG7nY4z/8lDTIuD69/pWXlA+HSJu+zqmAe7A/qCllc7eeQ+1lCV+J4aKQyiU4ude
+         TlKsEyWVffW3RghG4C4+AbHdvxsC049gMSZPo1jmFxjbZkoiBSIrNh6t67RZIx4rHiDV
+         6X/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUL3uM9QlAq5+f98yGeDFBxM9x+A/9kGr1IFmcEn+aLpSxI72MKjo31NWDJKPSeSf2asn6c0aXXnPPVZuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFjutkrVz8nGPOBWrQqh9SUaU0lrJrhMsRB0OQ6EY8JFdt5uL7
+	mu3LJH+oEqBRX8WRJ0loSsimcM+iDvQgyvRgbNnO0NNwx+tEFakqSSiZq3gFJvCcAxwb8tHpZR5
+	D7zO9ouTlj4IEjj35d1KtvIfvFR0S2qaM2SZLkk1kD1YQmv5jqo5J3uo=
+X-Google-Smtp-Source: AGHT+IFrE2B83fmtCzbD7ysalL9wZfd6+x4E48Syd0LLPZjBKdKKAIcFRhGURbZbRBURkaTeyM9SfI3UeM5UGH/jxsyOBn2GF2bX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN0P287MB2019:EE_|PN0P287MB1188:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6780f993-5bc2-4006-d550-08dd8b99ed53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9oRgeLHv1MpJ5JZT/rP6ewzryvdbmkuSGH8fgI+elDuG7yzXmvsMStxvUlnC?=
- =?us-ascii?Q?TUj9aUDd0D8NJiUkgIFd7nG1ImGd6e9G5404ItVBIytjLzBQo/8vZWF1pEzr?=
- =?us-ascii?Q?pEA8BkJS11zAzs6ZcUJ5FjDTj6TFNGn3nef7GaVW+O/2UfJsQNq8nxZcdl3S?=
- =?us-ascii?Q?1h4odAFcc2dmRWXyvBegXCbccR/tbtw4vDOQi+5ugY3hBk1FholZ60B0072t?=
- =?us-ascii?Q?MYMzJSYvc+gdzYFD9hum7xwx2YLI82hCQvwNnxuBqkkSOMlZajt7cUpBYTxh?=
- =?us-ascii?Q?Q+zbbTYFi5IgAm+z08/H+UyDGN7TgfgizuTQRy5+mbUNS/2XJKaCQxmDBytr?=
- =?us-ascii?Q?cgBNazovnCSL23/bw5yabM/vw+/2Ce86y3x1M+49d0CHsMLe5jRRB6sKpN6s?=
- =?us-ascii?Q?JM/gC7FYxFFdcSk9rpinD0gZHC+QGAyDL/GYpGXbSBKAYgfirsWiQlYcSnTe?=
- =?us-ascii?Q?NFK+ZpDza89cAFmBdh0i7ToPQKZ8DJJi7sCbdGbVvOgMMeMLT98eiB+lOcO1?=
- =?us-ascii?Q?1InyYPR3209xEga3Pwl/R2GFwxvu/37NTjHf2pgRjGmyoc0Lc6d1d2ncM98Q?=
- =?us-ascii?Q?9KCycjQNscjl5znxSBRdNub9QLAT1zF97WePK2spHyyR2ido5kuaqYGVGj4/?=
- =?us-ascii?Q?bQP9ORLAvCMckn3KkrFFlyMKL0ruIhIyY8Y3fvSV/GkDGJNOuj+d/hv/vXyK?=
- =?us-ascii?Q?RD01tEOX0rRKph3MLjg7Va4ngdHqrB/ctTbgaR0CKS+JObVyCtXqIPjp8Yqm?=
- =?us-ascii?Q?+97j7iRGF9+GHD8Gh47hoxYHSZQ8kZDRRgL+m+IbT9D2l2irO+rJnTSiHSeo?=
- =?us-ascii?Q?tBaz8yh558mslqrVACKA1j+RcNypUiou5Q3hPxolOcZ6xQRgGu7Hel9N8AKA?=
- =?us-ascii?Q?Mb27nK6H/JmcN8R+MrFBHaqNiqE+N7cKi2tHyF/SlIQLIUIbxMg/lzqTvZbK?=
- =?us-ascii?Q?DuSb0bSa0pmvtQ4a0yTjVXH6Pn9zqxZ63mDuCEy+bObAtbBiQ7StfwWuNFZO?=
- =?us-ascii?Q?2NPQqjFyflePDeInjrvqQB7sjMmityHSL26mABMOWWSS9yyrOZWTedNcBq9j?=
- =?us-ascii?Q?0waYqIx+XzYewvWRhtqjTVt2dOxw7PFp80wJG8bohdAjoOiH/uCGW0QOLRY/?=
- =?us-ascii?Q?L+AYnZDuq3u1H/s0iUtxWHJ30VnUP18LlUYLRestQFETxzy8saIG3/h7Nm2w?=
- =?us-ascii?Q?beEpFpm61hRwcISYsIyfyfIKT10/RymUy0PLkcRBnBJ8MPGvQkcbYMxxP1WX?=
- =?us-ascii?Q?lH29640wMwp9z6pCRgai/bi85TZBCHpJu5z0sB3fQQA18ihfWyWs/i5XRBES?=
- =?us-ascii?Q?hwx5McE1c+RHaMN3qxBdEaGsC1DTK2yn3+sMEOSkA3PE8MRxOSd1kDf/rQE1?=
- =?us-ascii?Q?qrThaV5NAas/nP4FyTHx8PK1GgMenwrMy/NfLq5IN9pdWKjQQ6gYF3GyFRsl?=
- =?us-ascii?Q?OcLwI0O2AJqNxNxf6BmGIFosdVD572AtA2qrXYYXRXZKwoQhFJnkgA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN0P287MB2019.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U8XjjLyFNQqrPz6+UyqAk5EZZ0ueNDJLj/Jc3axuygbOkAXPVwwaA+J5RF9i?=
- =?us-ascii?Q?lUjZa0nuhryyTj5iVx5fy7KDZmae8aoH65mwarCpwass+COx7Em7iLA+ikLV?=
- =?us-ascii?Q?BtuBKNtJgldcWuDq07EZdoK88eZ46VCBDhTUS7VZFmIjzkLklwHIYoqmZl8g?=
- =?us-ascii?Q?xm5RVeEPU7OARH1zj+GfXx9xoUxgZQrL8SQvZ68V3WW2GRzmB2Hgr2LCsf2x?=
- =?us-ascii?Q?89ACSENVBcE3LeYMpx512DunCNWysbNvCFnIhBp6NRxFkaMHqCgQJu2mkc7/?=
- =?us-ascii?Q?0wZuY3/VhY5jfPFoCFOYbKjXeyX7wSotl4U6avjoaVWsM/6dv2/Ksm/bMOmN?=
- =?us-ascii?Q?XKnOmh9RMihpv2De3NR0gDaGRn/to2sQUDXxiQ1JtcI/gl/NsvNOzy+6vruJ?=
- =?us-ascii?Q?bU8sBMgHE5Wbgeui6Y2yYn8WkL6KcPSynDq9o9i34ltVnK8iodAz/lDGRgpD?=
- =?us-ascii?Q?6ziPjKJG5j8CNxmPO7ONKHRuLKGPCa71CVhnbxGSYIVDhcFW7R5zL5cSd6Je?=
- =?us-ascii?Q?6ImYfjorDCe+KueKBbVRiMXppQq2b7TtsuO+5snfUYpiMtcjt09gcd3Yr2Y1?=
- =?us-ascii?Q?Qy7vkMweZL8opHuaDuBPNa52YV0v/rhR/MOSl2c5/+aHhBqLp2HKM9CQV4nj?=
- =?us-ascii?Q?jMpv75FxG0dUl1EmAwsN6rcYAlst0DXpBIJee54TgdgdYGhPiZo/PpLZUb6v?=
- =?us-ascii?Q?YTR0lVsAJW8/YR8Ofq6GhTRRPBxh8ps4wRnhZR85O3Y/Eyth3R7M7OY/aeXQ?=
- =?us-ascii?Q?kB5J7coSSP5MGvRL+sv/rfv5cG6qg3HQzOv+rPNVQtePRJY75dkMOfsDZ/Ak?=
- =?us-ascii?Q?Z+ju36z2PBz1LgsgvqGV/AhwE1JAxgh7t1zsZAhSpY5ATturtn+aoljfEBpf?=
- =?us-ascii?Q?POvHwm8gAQxha/FD2NDcKxdCNhj2vpW9Sgdsz3u84z8GN1wqqiPwGUB90x52?=
- =?us-ascii?Q?21Ul1Lert4ulauR/KmrGTkoX6+OTz2Sy8hsi0vsq7O15QKeAebxRdeHI0Xx8?=
- =?us-ascii?Q?PqMUJmM5CMQ44qZqIxzCh6JTEtsWlcC5g2mNpPtrG4uE3V1QNO9827MfBU5j?=
- =?us-ascii?Q?UUjF5M4S+RFUYgKOkW+LICA4G3IyWebiYRuf4egWemimwyc+bv4/LE/SaSUQ?=
- =?us-ascii?Q?Y2Wl/G5GfWTCmy9DgY16v1MDuTJSko7J4j9dn6N84/kO1RcXtWzGl/M28b50?=
- =?us-ascii?Q?qnbsFQWNcSqda/3HK8nsn+V+H8puUWr19pbMQTy/8JlRqprcYswV5xq9ADZ/?=
- =?us-ascii?Q?Fmg9f22vvjvIfOfZCxXO3PWzh0KC1XkRMXEP+l+eesaOJjpYM66etwXxJS2X?=
- =?us-ascii?Q?fPrduE7t7Q78Jg9KP2pPE/jCI1y4vur35I5ao7bE4ZQzxDut2AFn26fRoJSR?=
- =?us-ascii?Q?75MDFEH8rjYyI5ghoK/8PT42+Ep23/B4ZpT5tAMzfbUYJRlH4hMmdV3ykFEm?=
- =?us-ascii?Q?RaFHokM6nxT8I+iv3WPsGle415OGDPJQ9lt6gQi70IRmbQtgw+F9kQld8NVH?=
- =?us-ascii?Q?2jRIjfbdPzNTEJZWqhD2Y/cg4KbdB7xeEewh3oOH7jjWNyN2iLWitsQuUqvC?=
- =?us-ascii?Q?HQ1wbj7WJ0QMoWvRUzu53W6Jf+cTA8U6q/LUE/5N5vkq5K2DM5fA7qrgld8P?=
- =?us-ascii?Q?YyiTBOesiUIgRLrqG8pIbe4=3D?=
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6780f993-5bc2-4006-d550-08dd8b99ed53
-X-MS-Exchange-CrossTenant-AuthSource: PN0P287MB2019.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 05:58:58.6262
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vveDH4vKA1W1Jt4e/GPVX+eOxI6IDA/FiPfnZmE1j1i/N3GvusCNtnwjSHDq/e4PNvU1KZP+FYrISeiuO1OETXt3BzxCGgFZ/cQae7GYrujE6FQPosJYOmye0Df6+lZc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB1188
+X-Received: by 2002:a05:6e02:1908:b0:3d8:2187:5cea with SMTP id
+ e9e14a558f8ab-3da5b23733dmr58521355ab.1.1746424766508; Sun, 04 May 2025
+ 22:59:26 -0700 (PDT)
+Date: Sun, 04 May 2025 22:59:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <681853be.a70a0220.254cdc.0045.GAE@google.com>
+Subject: [syzbot] [usb?] WARNING in osif_xfer/usb_submit_urb
+From: syzbot <syzbot+4687ab80180e5d724f51@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Fix SD card timeout issue caused by LDO5 regulator getting disabled
-after boot.
+Hello,
 
-The kernel log shows LDO5 being disabled, which leads to a timeout
-on USDHC2:
-[   33.760561] LDO5: disabling
-[   81.119861] mmc1: Timeout waiting for hardware interrupt.
+syzbot found the following issue on:
 
-To prevent this, set regulator-boot-on and regulator-always-on for
-LDO5. Also add the vqmmc regulator to properly support 1.8V/3.3V
-signaling for USDHC2 using a GPIO-controlled regulator.
+HEAD commit:    4f79eaa2ceac kbuild: Properly disable -Wunterminated-strin..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=11436f74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
+dashboard link: https://syzkaller.appspot.com/bug?extid=4687ab80180e5d724f51
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103081cc580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ba139b980000
 
-Fixes: 6c2a1f4f71258 ("arm64: dts: imx8mp-var-som-symphony: Add Variscite Symphony board and VAR-SOM-MX8MP SoM")
-Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/12c9f96176cf/disk-4f79eaa2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c24afd828d55/vmlinux-4f79eaa2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b2d77950e184/bzImage-4f79eaa2.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4687ab80180e5d724f51@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+usb 1-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c1
+WARNING: CPU: 1 PID: 5832 at drivers/usb/core/urb.c:413 usb_submit_urb+0x1112/0x1870 drivers/usb/core/urb.c:411
+Modules linked in:
+CPU: 1 UID: 0 PID: 5832 Comm: syz-executor397 Not tainted 6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+RIP: 0010:usb_submit_urb+0x1112/0x1870 drivers/usb/core/urb.c:411
+Code: 0f b6 44 05 00 84 c0 0f 85 38 06 00 00 45 0f b6 04 24 48 c7 c7 20 5f 12 8c 48 8b 74 24 18 4c 89 fa 44 89 f1 e8 7f 6a 6f fa 90 <0f> 0b 90 90 49 bd 00 00 00 00 00 fc ff df e9 2b f4 ff ff 89 e9 80
+RSP: 0018:ffffc9000401f6d0 EFLAGS: 00010246
+RAX: 76fdec7c67ae9b00 RBX: ffff8880216ebd00 RCX: ffff888023fc9e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: 1ffff110034f4a08 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bba4b4 R12: ffff88801a7a5040
+R13: dffffc0000000000 R14: 0000000080000280 R15: ffff88801a7a5700
+FS:  0000555562d49380(0000) GS:ffff8881261cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb480077df0 CR3: 000000007c70a000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ usb_start_wait_urb+0x114/0x4c0 drivers/usb/core/message.c:59
+ usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+ usb_control_msg+0x232/0x3e0 drivers/usb/core/message.c:154
+ osif_usb_read drivers/i2c/busses/i2c-robotfuzz-osif.c:41 [inline]
+ osif_xfer+0x21a/0x5e0 drivers/i2c/busses/i2c-robotfuzz-osif.c:69
+ __i2c_transfer+0x871/0x2170 drivers/i2c/i2c-core-base.c:-1
+ i2c_transfer+0x25b/0x3a0 drivers/i2c/i2c-core-base.c:2315
+ i2c_transfer_buffer_flags+0x105/0x190 drivers/i2c/i2c-core-base.c:2343
+ i2c_master_recv include/linux/i2c.h:79 [inline]
+ i2cdev_read+0x10d/0x220 drivers/i2c/i2c-dev.c:155
+ vfs_read+0x1fd/0x980 fs/read_write.c:568
+ ksys_read+0x145/0x250 fs/read_write.c:713
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f62e575f119
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 31 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd8ac089d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000200000000000 RCX: 00007f62e575f119
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00007f62e57d2610 R08: 00232d6332692f76 R09: 00007ffd8ac08ba8
+R10: 000000000000001f R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffd8ac08b98 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
- arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-index b2ac2583a592..b59da91fdd04 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi
-@@ -35,7 +35,6 @@ memory@40000000 {
- 		      <0x1 0x00000000 0 0xc0000000>;
- 	};
- 
--
- 	reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
- 	        compatible = "regulator-fixed";
- 	        regulator-name = "VSD_3V3";
-@@ -46,6 +45,16 @@ reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
- 	        startup-delay-us = <100>;
- 	        off-on-delay-us = <12000>;
- 	};
-+
-+	reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {
-+		compatible = "regulator-gpio";
-+		regulator-name = "VSD_VSEL";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&gpio2 12 GPIO_ACTIVE_HIGH>;
-+		states = <3300000 0x0 1800000 0x1>;
-+		vin-supply = <&ldo5>;
-+	};
- };
- 
- &A53_0 {
-@@ -205,6 +214,7 @@ &usdhc2 {
-         pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-         cd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-         vmmc-supply = <&reg_usdhc2_vmmc>;
-+	vqmmc-supply = <&reg_usdhc2_vqmmc>;
-         bus-width = <4>;
-         status = "okay";
- };
--- 
-2.34.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
