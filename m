@@ -1,50 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6A52F73CF;
-	Mon,  5 May 2025 23:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E4E3AC5BD;
+	Mon,  5 May 2025 23:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487163; cv=none; b=HcWRNsvhisxaf3ODcYqbJNNTnNVVRcslLSVohIKSATmLAKcLKB2MhZ/saNoEQBaifZz5xX0ymrMoZb7mslP5F4qWABtKnXqHXFv8Z6gCm6tzvKLxkEPxa1G0jalw9Q3MAa4P+myk0ybNDwU1zf0WBw/lqMh4Vm28SdQ9qWxA4WQ=
+	t=1746487145; cv=none; b=H/dV/xTfqGr/moGzcZ9d9e/7NeQN3KS0hhb5+ulm/3hvCuGFcnNLanSW4I+o6KquL79IpYGp1xXiHmuXCPesWFu4Rb4HhUYRsbByPvsaEjINkB20a56lEuJHcG6b671qZZJKnvGj+X/PDisKg9JXh9Nvb0btW96KR7LR9ldSQkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487163; c=relaxed/simple;
-	bh=jMVhMb90pTBBDR8HVAGZnjtvmzmZ8P6g0h8V/n1oEkU=;
+	s=arc-20240116; t=1746487145; c=relaxed/simple;
+	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R9rtQ3S4msk9c4YonB0Zef+PGPJ9Yngqvhu1yOT6RmnO9oEp1Qpo2SMJb+yRFA89hAAzTjM2ZKZJsCH2Ptml4busuiCdwHqRp06oxGaXKcmESGWsy3R8vAjbVQo2V+XdKpDKivo/3hsrZ2QyII0K6C9Rnmghr2Nan1MTsdgoYNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsLQmiWm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xa/cXbGA9fhdIV8nY2Q2IDEKt2mQlfOLHYYdogISreAY63NoYb+A3EyBNATW2t1FW6LcnRdsQmqMu3t9zW8Cuc6lKII6NqZ9lIy8Mz714iXQXI7EdZ+KCKVpX76+vqBs6g2dqma0nvuKGKZb267d8UAzPGnPGCYrrEH47SmJ4I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSrc4YGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsLQmiWm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEA7C4CEE4;
-	Mon,  5 May 2025 23:19:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSrc4YGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5F2C4CEEE;
+	Mon,  5 May 2025 23:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487162;
-	bh=jMVhMb90pTBBDR8HVAGZnjtvmzmZ8P6g0h8V/n1oEkU=;
+	s=k20201202; t=1746487143;
+	bh=o6vPQm8ORAMEIjP7fhptjMtwSNq9nMRVlWGY99NWjZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZsLQmiWmSSvWnNbxMcm+BLMXVN8SUvjrBp52wtNgwTm6IzvGOE+b1cBcisomLzXgC
-	 sPoxxoK5TiCZSv9AzylHsj9qbAwvMSCSKcpg6Nk+grkEfK7YJhPt4igRi4Y80qmIcu
-	 ZBxrFkF9MiFL3CNGmaduCXoGgbCHnUefvedd6hdWgqLgA15gkgyKfGtgyUZZTXSI0/
-	 MY18kCgDTZcPFdTLFYrIh3oT2NHcFbfWma7L6HDyCviwZB27L6E76WTBEWXOKW2XOj
-	 XoqHdaHRS1PrCAm6ConF9RbykbxpTnCzzgo2x1ogwwqTAzjVt9vUPCNzUwy6pGChlH
-	 M7kzgJfjCnuOA==
+	b=gSrc4YGQXNcraedU3V9MzwlkEmcOiZF+MaSYYjotDqktpWMZFN++hOvTMeNeFmfzh
+	 2yA1SDlJ8HruqWDIzeSgNZvtt28MIK/m6tI1AakTe/KaW0Ot9soVf7kaFjJ4E+xdF0
+	 OE5FwOBc1uUzOLtl5W32o/QBSbXs8tZJaXiyco81Iw5TAYC7LGEWOtkXakoHTAnBpF
+	 SBQGUL4GQBLvgSOD+j4qWsmY11aR/z6at+dMXoFe4eKG59COieSRzHO8REmMNLl6gQ
+	 JHKbfsn7H5L7e7VLUe8vo1Lk5xab6OR1NgNOdW92+a3K+DDAkLI6I2WrGwxd7tvLVu
+	 oKDXQOTTM4a2Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: Benjamin Berg <benjamin@sipsolutions.net>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	gshan@redhat.com,
-	peterx@redhat.com,
-	joey.gouly@arm.com,
-	yangyicong@hisilicon.com,
-	ioworker0@gmail.com
-Subject: [PATCH AUTOSEL 5.10 034/114] arm64/mm: Check PUD_TYPE_TABLE in pud_bad()
-Date: Mon,  5 May 2025 19:16:57 -0400
-Message-Id: <20250505231817.2697367-34-sashal@kernel.org>
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.10 022/114] um: Store full CSGSFS and SS register from mcontext
+Date: Mon,  5 May 2025 19:16:45 -0400
+Message-Id: <20250505231817.2697367-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
 References: <20250505231817.2697367-1-sashal@kernel.org>
@@ -59,47 +58,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Ryan Roberts <ryan.roberts@arm.com>
+From: Benjamin Berg <benjamin@sipsolutions.net>
 
-[ Upstream commit bfb1d2b9021c21891427acc86eb848ccedeb274e ]
+[ Upstream commit cef721e0d53d2b64f2ba177c63a0dfdd7c0daf17 ]
 
-pud_bad() is currently defined in terms of pud_table(). Although for some
-configs, pud_table() is hard-coded to true i.e. when using 64K base pages
-or when page table levels are less than 3.
+Doing this allows using registers as retrieved from an mcontext to be
+pushed to a process using PTRACE_SETREGS.
 
-pud_bad() is intended to check that the pud is configured correctly. Hence
-let's open-code the same check that the full version of pud_table() uses
-into pud_bad(). Then it always performs the check regardless of the config.
+It is not entirely clear to me why CSGSFS was masked. Doing so creates
+issues when using the mcontext as process state in seccomp and simply
+copying the register appears to work perfectly fine for ptrace.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250221044227.1145393-7-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
+Link: https://patch.msgid.link/20250224181827.647129-2-benjamin@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/um/os-Linux/mcontext.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 7756a365d4c49..d92b5aed354e9 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -601,7 +601,8 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- 	pr_err("%s:%d: bad pmd %016llx.\n", __FILE__, __LINE__, pmd_val(e))
- 
- #define pud_none(pud)		(!pud_val(pud))
--#define pud_bad(pud)		(!pud_table(pud))
-+#define pud_bad(pud)		((pud_val(pud) & PUD_TYPE_MASK) != \
-+				 PUD_TYPE_TABLE)
- #define pud_present(pud)	pte_present(pud_pte(pud))
- #define pud_leaf(pud)		(pud_present(pud) && !pud_table(pud))
- #define pud_valid(pud)		pte_valid(pud_pte(pud))
+diff --git a/arch/x86/um/os-Linux/mcontext.c b/arch/x86/um/os-Linux/mcontext.c
+index 49c3744cac371..81b9d1f9f4e68 100644
+--- a/arch/x86/um/os-Linux/mcontext.c
++++ b/arch/x86/um/os-Linux/mcontext.c
+@@ -26,7 +26,6 @@ void get_regs_from_mc(struct uml_pt_regs *regs, mcontext_t *mc)
+ 	COPY(RIP);
+ 	COPY2(EFLAGS, EFL);
+ 	COPY2(CS, CSGSFS);
+-	regs->gp[CS / sizeof(unsigned long)] &= 0xffff;
+-	regs->gp[CS / sizeof(unsigned long)] |= 3;
++	regs->gp[SS / sizeof(unsigned long)] = mc->gregs[REG_CSGSFS] >> 48;
+ #endif
+ }
 -- 
 2.39.5
 
