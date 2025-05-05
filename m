@@ -1,210 +1,211 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB0B268FE3
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 16:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746462009; cv=none; b=p57in9mIrKp8KhzC959M+Hrph/NeswMHUo8GojsrpPg/tgzXV2rZhXw4iui6GjYtTVU1RSXPgDnpxByERwHRdPELIXlYFsRJw1ubh8FeX170jaiZShKlNcYon0+D+8eTLBrgL7qGm6snqFKmKf/OPX74H4mmM/zBdMtvDSRE/kM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746462009; c=relaxed/simple;
-	bh=GJGIujdqvg1xWEY2Z71vP7DJDLHy/fpyySkr1haUQhA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P9UVMJSYcKjdAN9mMFJrZRZmODcQy9w2NYfixjXkgPynhhunqY6heoMGYNzP5Bk8YrhSyRITaMxsm2BAV+2rf/pd6dxr7qC5waLSliqp38bW/jSVhSNUz9Ry1K+dv+TvF7AbhwMbfPzg6xNDmdHTVsPjQVNgQfKrgdEeD02jxbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fIuyebuh; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98742698AE;
+	Mon,  5 May 2025 16:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746462016; cv=fail; b=NMZz+bqkwoY7Kfe+TXhOI0pXU9odEqjw1Ag36rFfwKPBUy+ECiZyszdh0N0svXx8UzDuqiutYwDCx8GgfhiUgjrT9R5FW1gJ3oxrFkIH1yQTzVPhJpH3hsNYAb1HMWzVnnyYEaZ4QjUh0szJw3bVP7ZywBK9rWFsBFTLnvivd2c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746462016; c=relaxed/simple;
+	bh=gs428rUVoiqGHYQu/HWyZoiYVLOPQGxccjQz/zkzOZg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=je6uI1sJ7EBb4/tk8HJkswjZNIBYVnqfHgm8hhNonF6ND8vVAEYG1thBEfZmhJPDTI+VnoSMI7qkSEgCLk7Xo5IBeIEt9CHe2yPpMsqIQdtF+36rfGQHqnTyESUUQ4lHF+1o2B11uf4gbpYe9+0xN742e83fdcQ9ms4tQbL5W2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sJuFbJEn; arc=fail smtp.client-ip=40.107.243.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fIuyebuh"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so838848466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 09:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746462004; x=1747066804; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KTaJzD5wlXNj6gSU8yS667BR6AMkr8aIxrqAiT7UBkM=;
-        b=fIuyebuhJ9Blw/e34SwYWYGRJ4JdINeTFRZhnLfYKpl3ZhQXixbUn1yJKQhhSK9/rc
-         LbCkKxCwSiz16jOb285aj6ROak0b/ACSIbVKJAj2AV8L2SHGH2F7/ZbUijM2oTPuYP5U
-         dIijqzbQhKrhtfkoFvQl/jnuKF40BUMoZEO8l+lwHySw5NihI3+Kj82NlqLoCGit6da4
-         Kcqx9lRxIdUspMsqXSll1LVnB8cOH7RULRYk/j/3dFgF42yNDc8jgrGJPK1DH+QdPqsQ
-         fhE46v1zJuog/5Zypwu7WZtz0hhjfEBA8jqZWwiEJg6G7F82YF6yvNCQl539bOy2jVJ1
-         xGhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746462004; x=1747066804;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KTaJzD5wlXNj6gSU8yS667BR6AMkr8aIxrqAiT7UBkM=;
-        b=C4CPmREQc/2SqZWakbfwthomV7vqyKf7bYeiJS2UZiP69AtehPb/vpmRYqxQCqNEKQ
-         Y79J7GtoMq1mHgzwqNGH4Rwz55iXrA1wli4hbqiNp7PVvfqAHQ6aKPKGdObME8vTbkdj
-         Txdd5NTEL+hoWzz81T7tcUqG/ResHtVwcyAV4Cfh95pCjyTJPKZgiNUgZi52SpbQX+Rs
-         fQeA0Oc281wtT2n412zxwjNxLlKo3IwyyG5kYFpKa77Jt5immNeAmD32/AMwwZBnrBST
-         fMnv19Qr4yjIPEnPD6BR9Kw5XHSbAoAP8qbAPygCZN0U15FqLLEnfRzXaQK3HL9tZYtb
-         wEWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeOJqbSHyNCi8vAYTq9I6ByKZXr6eiTYSA0+KB2k8vVatgX/HGonOoyxMU9W5/fhjEH4uO/OntNUDKvIY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA9qZXEUOr7YQ1FVlTWLEhguDrhNfgYdOsHqP44uNYTKDN2ea3
-	nnLIMjDE2SbMiuaoIWrMkwTMSZNFp3zkm2bd6GRnA3JoWv823zetoNoEVwuh4XPa06i3psWkiDf
-	XhAVqPVOVb8E5FggzzJ/uWPp/8OKH/gbXCfGu520oRmCMy9+Hro0=
-X-Gm-Gg: ASbGncvBF0W/zCUuAJhLj5eP90xnuISyWqt44WWtXqXkjLybmrj5m8dVMhpYERwKuKs
-	1U+7XE460NDgGm9uBD41Tm3+DI1HqWv9aYPnzpjK6JSqVjANBSIWrX8PiDq1768MYqheyQcbrzX
-	e8wTW+0jNBFfdJSulP9Jdu
-X-Google-Smtp-Source: AGHT+IFXGOeb8hvV04Ro/TZTbp1dO+ISIeI4KdYxDzL4E9a8cFKNJS/JYu36/MK6jIBCIAWPLhXTTA5LAf8MTyNBUnc=
-X-Received: by 2002:a17:906:6a0d:b0:ace:3f00:25f5 with SMTP id
- a640c23a62f3a-ad1a4897a73mr700368566b.2.1746462004274; Mon, 05 May 2025
- 09:20:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sJuFbJEn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rh1e+TIfz5pFqv3PTI3JqkMhGszrNsVXTIN+GwVjV0lnybMS7xPSShQYup59bSpt8veQsmVzJLFHhTEWsXIinNpPx9L/SmXVql0D9bzIcYCtPZg2pJWs4HW061rjUgjyzWdEe4Y1Y6P4c0Ls06+JJ1vCsJIDCW9gAkZhPetJ47scSDOvdRvnimKtvUNva9qivlzXEJK4S/arkoM9VU75fQlWTroUto52EtzOSsa6cu5q+YSvah/Hu+SuwmBMY2jo0NA3E4K2/ty4udQ/X6raTDCh2VnFMRMJzwmHiE74Lqa1svO57bBXIOj2bPF2J/UEuD6cL7Wd3yKbBx9BOnlFvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HEkgr2WLus37bkgsE6QPbcXvCej8msqRGTM41rNeirE=;
+ b=iPw1aeCFYBxVzPYyaBjchSWpYvACbS3QmLJk17DMYtOtQSPItwhLgf4lUZ0Yus3dhFDMweE4+2EAWHlyzlnunoSk80HAZnqY1oLtX6CpUb6n1D9pnwkvWzhnBPVgkvT704O98vpCPhm0pETlTHH5s2O90F+CjRf/y6CVd9l5KLCG+O61Leyc9cmhBpjxC1soDzcFRl7H+ev+Te3K3vc9gQKPxu/slBF4xbzRnZIbfFMGzS9uWtg76UzlhCUhRUjxL5eix4EF++suS1Foib4KEoF/TVLzWOr2cBpYCySzIOrmwxB94fMd09yMycPGKSQuyZde0Mfc5JRjZLWhDgVAng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HEkgr2WLus37bkgsE6QPbcXvCej8msqRGTM41rNeirE=;
+ b=sJuFbJEnrk+wO3Trt30QHgIiQs/pQHZJVwRISA9ewQd7QHPTvVYTgujLduETIQyQGTpHBlmt6FqA16DHd70oBkOZycxMWrzkf6ubMX95g5/fsI7HoceIGNl1R7/f7saylz05XYCkjhpqNnvr2gLi0u41F45dEXk7jqGdv/ppNhh7+bvMbdmM9GF5OE6YjlhaSKgF5k0v4No1m66w8xHrQfMXQLfCBqPZio+ODnCPTKOLalmyMd8XZWZkPb3X29mb8enxe3r79ybUFc+YRj88UuRlfeR/Ea5VTHD+Ho+4zb0bSYEJXZkETZex3DJA6U+8Y/Fy9XCqJVuHlfNh0bVU9w==
+Received: from SJ2PR07CA0012.namprd07.prod.outlook.com (2603:10b6:a03:505::13)
+ by SA1PR12MB9248.namprd12.prod.outlook.com (2603:10b6:806:3a3::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Mon, 5 May
+ 2025 16:20:09 +0000
+Received: from SJ5PEPF000001F5.namprd05.prod.outlook.com
+ (2603:10b6:a03:505:cafe::52) by SJ2PR07CA0012.outlook.office365.com
+ (2603:10b6:a03:505::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8699.33 via Frontend Transport; Mon,
+ 5 May 2025 16:20:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SJ5PEPF000001F5.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Mon, 5 May 2025 16:20:09 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 5 May 2025
+ 09:19:53 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by drhqmail201.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
+ 2025 09:19:53 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 5 May
+ 2025 09:19:51 -0700
+Received: from nvidia.com (10.127.8.13) by mail.nvidia.com (10.129.68.9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 5 May 2025 09:19:50 -0700
+Date: Mon, 5 May 2025 09:19:48 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Baolu Lu <baolu.lu@linux.intel.com>, <kevin.tian@intel.com>,
+	<corbet@lwn.net>, <will@kernel.org>, <bagasdotme@gmail.com>,
+	<robin.murphy@arm.com>, <joro@8bytes.org>, <thierry.reding@gmail.com>,
+	<vdumpa@nvidia.com>, <jonathanh@nvidia.com>, <shuah@kernel.org>,
+	<jsnitsel@redhat.com>, <nathan@kernel.org>, <peterz@infradead.org>,
+	<yi.l.liu@intel.com>, <mshavit@google.com>, <praan@google.com>,
+	<zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 08/22] iommufd: Abstract iopt_pin_pages and
+ iopt_unpin_pages helpers
+Message-ID: <aBjlJA1ZClRHftdD@nvidia.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <d44272c153e7596c3cef716044de3dc6c2a8254a.1745646960.git.nicolinc@nvidia.com>
+ <376566b4-6c13-45ad-b1e5-8cfe2de437bc@linux.intel.com>
+ <aA+92fNNbDI3Qowk@Asurada-Nvidia>
+ <20250505150109.GH2260709@nvidia.com>
+ <aBjc1ny0Zs7K7gDX@nvidia.com>
+ <20250505155505.GK2260709@nvidia.com>
+ <aBjhUL5/n79cJ17f@nvidia.com>
+ <20250505160554.GL2260709@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429151800.649010-1-neelx@suse.com> <20250430080317.GF9140@twin.jikos.cz>
- <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
- <20250430133026.GH9140@suse.cz> <CAPjX3FdexSywSbJQfrj5pazrBRyVns3SdRCsw1VmvhrJv20bvw@mail.gmail.com>
- <20250502105630.GO9140@suse.cz> <CAPjX3Ffy2=CQP2mx9Wa3BBR54fEAcuo8ADqeTVdcAmCO7g+gmg@mail.gmail.com>
- <20250505141019.GW9140@twin.jikos.cz>
-In-Reply-To: <20250505141019.GW9140@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Mon, 5 May 2025 18:19:52 +0200
-X-Gm-Features: ATxdqUEZT61KVeZ6jM8hQoCnjJA0RgSl9MIJO_BVgcu0oOKH-BgxIfoluMV6c6k
-Message-ID: <CAPjX3Fc3C3xtfZ6Rh8ThYxC0SF3Nn5XsY5DVZ+P8v615tOF9tA@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250505160554.GL2260709@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F5:EE_|SA1PR12MB9248:EE_
+X-MS-Office365-Filtering-Correlation-Id: 933fbcf9-d899-4488-6414-08dd8bf0b453
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7n+Ewda8xvVijUV9ayu6gYwJojAZU58NR8X48dFm9lTLcJYxu05v9IaTfbqc?=
+ =?us-ascii?Q?fheH9dgnmyL0XuyiEEG4sHnAd2U6g8ZM58F+T7iUAr468ivhWIv4BMBkGJWA?=
+ =?us-ascii?Q?lDwpPd/6VIP3BRjF+EjENupIFTK35Dt8aUwzLNYnrNS4opIoiMAAvGjcey0h?=
+ =?us-ascii?Q?eXfX18rHpi36M+F3QWOr1DXaoSFQcXQ+bCNiBe7tF+ZLxzPBdILyFhH2lPgH?=
+ =?us-ascii?Q?g4TAhiXUsO8ZlwJpMX9PxL9iaoWZblreqi9BE99DAP98aipaFWj9hYxxh/rO?=
+ =?us-ascii?Q?mD4BRNSr3KdPfJqpjuvjSczV85T2fb1C6E9V/KGTHYSKq4nLhb0q2JXKfZt6?=
+ =?us-ascii?Q?ace/QxleeJ13jrCCOe91Baj4V8dl05ayo4WdY9/R1BX7CNrlfuprLE+IzU9Q?=
+ =?us-ascii?Q?DgLTAuoHD1/DNx2KZ/+J4iG91Yof26naGarTIRyPc9poISSMPLXUB845VJ6L?=
+ =?us-ascii?Q?olRdYWsnRcteHFKxNS8maoPuv61Aa+E6sFkg5Pooii1gdIWgBakoWFkk45Pd?=
+ =?us-ascii?Q?9o2x9QBtow1M4KCKW6nlXaQfBraHhL+X43p3gjMuvKUiJjwJp5igm/Uc7Fm+?=
+ =?us-ascii?Q?vvE5OwhQM5eKYmERLFm93m1osNEVAlf2BlzGp4BwkwSwcQhlC+nCoTBzKYA8?=
+ =?us-ascii?Q?R0WRB6ZTIqUrZVx64RZZHPu7YAV8yVhW3zGFUJic47qVZReiPig5M9xPmlgt?=
+ =?us-ascii?Q?BJ5QW6jM98+p2Z/c4CacSxVVPVH7ak4XnSOcxDZ8CYvL3uj390yVKdyMJVI+?=
+ =?us-ascii?Q?RJ/QlP61QtdMCzKlX++2Lb1KrlCM7sgfIpWrxUlkH4/ugSfoag4d7FFMjVCv?=
+ =?us-ascii?Q?jTH79ZGd2E1IJOn/VpGoms2RQSzQiML5YJY52xGTd92G4crum45+Uq/xtOW+?=
+ =?us-ascii?Q?GvaBYwC/YxLmRFD+wkjPh7GjBOV9NfSMztVOKjRH1AM76exJSqixsHHeOCGi?=
+ =?us-ascii?Q?AKC0wQoUGh2mg5RjrRUzY69hxb5Xzc6GNLrGSbcrHiGflijj2IrUWSpBL5fU?=
+ =?us-ascii?Q?VyaGn6/wHRL/OhgiROXlHAsnJ6k7l3T6wN+RrXCSGalJvk04lUPYvDvqY6mv?=
+ =?us-ascii?Q?Vt5a0y8BRBjaGTiRMlzUxl+XqCvhD6WkEbyLW7iRfdm1lSrvagaMsrCMonuL?=
+ =?us-ascii?Q?xIKppl5mLqWePVvvkonloDFG30sm573d6cwefAyJ8vspUj4ZCW9Ayszu7OXg?=
+ =?us-ascii?Q?BNPlJUT7LqgILYlqDLjLZlTPzzYYtRfA/vdspHzyxQhLGSKgJySuQfGlTC1R?=
+ =?us-ascii?Q?ZZCh3qO3w00HZTp29CNcOkbq/rjZ3Ka74gJLmzGD7YSc/kNY1tvlTTE5bP5J?=
+ =?us-ascii?Q?UYKQPmCxnGGDOZttRWX9HdnefbMcckUBhfCgGJKtC9sTiZsVh6cUmpiREyb8?=
+ =?us-ascii?Q?SrnyJL21Qt09pjRs4bLp3SXY3aS+0AMl2FqqZR5vuD98vRHJ4OvOduQPRGoE?=
+ =?us-ascii?Q?6T9JGbPuqAUKY8vXK76EUMRsyHdUSsPq15wZjNjjxHOFNsZ5HniZ2PCvhB80?=
+ =?us-ascii?Q?XP8MMLUtjuYKW6iYkzZeov3FH0NTfEFZ1YDg?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 16:20:09.0043
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 933fbcf9-d899-4488-6414-08dd8bf0b453
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9248
 
-On Mon, 5 May 2025 at 16:10, David Sterba <dsterba@suse.cz> wrote:
->
-> On Fri, May 02, 2025 at 02:03:55PM +0200, Daniel Vacek wrote:
-> > > Yeah, 256 is a nice number because it aligns with cachelines on multiple
-> > > architectures, this is useful for splitting the structure to the "data
-> > > accessed together" and locking/refcounting. It's a tentative goal, we
-> > > used to have larger eb size due to own locking implementation but with
-> > > rwsems it got close/under 256.
-> > >
-> > > The current size 240 is 1/4 of cacheline shifted so it's not all clean
-> > > but whe have some wiggle room for adding new members or cached values,
-> > > like folio_size/folio_shift/addr.
-> >
-> > Sounds like we could force align to cacheline or explicitly pad to
-> > 256B? The later could be a bit tricky though.
->
-> We could and we also have conflicting goals:
->
-> - alignment (with some waste)
->
-> - more objects packed into the slab which is 8K
+On Mon, May 05, 2025 at 01:05:54PM -0300, Jason Gunthorpe wrote:
+> On Mon, May 05, 2025 at 09:03:28AM -0700, Nicolin Chen wrote:
+> > On Mon, May 05, 2025 at 12:55:05PM -0300, Jason Gunthorpe wrote:
+> > > On Mon, May 05, 2025 at 08:44:22AM -0700, Nicolin Chen wrote:
+> > > > On Mon, May 05, 2025 at 12:01:09PM -0300, Jason Gunthorpe wrote:
+> > > > > On Mon, Apr 28, 2025 at 10:41:45AM -0700, Nicolin Chen wrote:
+> > > > > > > I'm uncertain, but perhaps pr_warn_ratelimited() would be a better
+> > > > > > > alternative to WARN_ON() here? WARN_ON_ONCE() generates warning messages
+> > > > > > > with kernel call traces in the kernel messages, which might lead users
+> > > > > > > to believe that something serious has happened in the kernel.
+> > > > > > 
+> > > > > > We already have similar practice, e.g. iommufd_hwpt_nested_alloc.
+> > > > > > 
+> > > > > > In my review, a WARN_ON/WARN_ON_ONCE means there is a kernel bug,
+> > > > > > which shouldn't occur in the first place and isn't something that
+> > > > > 
+> > > > > Right, so it should never happen from any ioctl path and syzkaller
+> > > > > should never trigger it based on system call randomization
+> > > > > 
+> > > > > Is that what this achieves?
+> > > > 
+> > > > The functions would be still used in the kernel path. So, I think
+> > > > we need to retain these warnings for that. But given that an ioctl
+> > > > could trigger a series of WARN_ONs, WARN_ON_ONCE is something that
+> > > > wouldn't bother user space a lot while it provides the kernel path
+> > > > enough info to debug.
+> > > 
+> > > No, it does bother userspace, we must not have ioctl triggerable
+> > > WARN_ON at all.
+> > 
+> > You mean we have to eliminate any WARN_ON in a call path of an
+> > ioctl?
+> 
+> Yes, not one that derives from user information. You can WARN_ON if
+> internal kernel structures are corrupted but not if user ioctl
+> arguments are bad.
+> 
+> > We can drop them, just that would mute any kernel bug.
+> 
+> That maybe the right answer
+> 
+> > Btw, IIRC, the destroy ioctl could trigger some WARN_ON in the
+> > remove() when the object's refcount isn't correctly decreased.
+> > Should that be a problem too?
+> 
+> That is kernel data structures being corrupted.
 
-tl.dr> In the end I think it's all about the wasted memory. Either
-there's a good reason for it when the alignment is required or there
-is not and the slab can be packed. In the latter case there is no
-point for discussing cache line misses, IMO. Am I right?
+Oh, then these two WARN_ONs in the unpin() will be only triggered
+in the destroy path when the vcmdq kernel structure is corrupted,
+because the two inputs are not given directly by a destroy ioctl.
 
-Slab allocator is not so simple. By default (but can be tuned globally
-or per slab cache) slabs are allocated up to order 3, so 32Ki on x86.
-But the allocator tries to keep the order lower if at the least
-minimum number of (4*floor(log2(nr_cpus))+4) objects fit in.
+In this case, I think it's similar, so we should retain them, as
+they were?
 
-So a bigger object size results in higher order of slabs (up to o3)
-with about the same number of objects per slab. And vice versa.
-
-In general, the tradeoff is more about wasted memory, see
-calculate_order() and calc_slab_order(). But also the downside is that
-higher order slab which wastes less memory could be harder to allocate
-after some uptime and memory fragmentation.
-
-Anyways, this is a job for slab and it does a good job already so that
-you do not need to be all that concerned about it. Still, some concern
-is always good.
-
-Note, slab also honors the alignment of the given structure. So in the
-end it ultimately depends on the alignment of struct extent_buffer. If
-you really wanted to have some members hot in the same cacheline, we
-could declare the structure with ____cacheline_aligned_in_smp.
-Otherwise some objects may have the desired fields shared and some may
-not.
-
-Well, at least that would be the case if we used KMEM_CACHE() macro
-which we don't at the moment. We still use the old kmem_cache_create()
-API and we are requesting an alignment of 0. So the objects are placed
-completely freely within the slab.
-
-====
-
-And a bit off topic but still related. I'm a bit more concerned about
-wasting 3 xarray slots for each eb (only 1/4 of the slots are being
-used due to deprecated legacy). Each leaf can store only up to 16 ebs
-while there are 64 slots. That's because we are still indexing by
-sector size and not by node size. The xarray/radix tree could save 75%
-of the memory it is using now. At least for the common case of 4Ki
-sector size and 16Ki node size.
-
-> More objects mean better chance to satisfy allocations, that are right
-> now NOFAIL, so blocking metadata operations with worse consequences.
-
-Right, the more objects per slab the better amortized the allocation
-overhead is. That's perfectly clear, no questions about it. But as I
-mentioned this is mostly decided by the slab allocator. Yet, I
-understand your concerns.
-
-> > > >         struct btrfs_fs_info *fs_info;
-> > > >
-> > > >         /*
-> > > > @@ -94,9 +97,6 @@ struct extent_buffer {
-> > > >         spinlock_t refs_lock;
-> > > >         atomic_t refs;
-> > > >         int read_mirror;
-> > > > -       /* >= 0 if eb belongs to a log tree, -1 otherwise */
-> > > > -       s8 log_index;
-> > > > -       u8 folio_shift;
-> > > >         struct rcu_head rcu_head;
-> > > >
-> > > >         struct rw_semaphore lock;
-> > > >
-> > > > you're down to 256 even on -rt. And the great part is I don't see any
-> > > > sacrifices (other than accessing a cacheline in fs_info). We're only
-> > > > using 8 flags now, so there is still some room left for another 8 if
-> > > > needed in the future.
-> > >
-> > > Which means that the size on non-rt would be something like 228, roughly
-> > > calculating the savings and the increase due to spinloct_t going from
-> > > 4 -> 32 bytes. Also I'd like to see the generated assembly after the
-> > > suggested reordering.
-> >
-> > If I see correctly the non-rt will not change when I keep ulong
-> > bflags. The -rt build goes down to 264 bytes. That's a bit better for
-> > free but still not ideal from alignment POV.
-> >
-> > > The eb may not be perfect, I think there could be false sharing of
-> > > refs_lock and refs but this is a wild guess and based only on code
-> >
-> > refs_lock and refs look like they share the same cacheline in every
-> > case. At least on x86.
-> > But still, the slab object is not aligned in the first place. Luckily
-> > the two fields roam together.
-> >
-> > Out of curiosity, is there any past experience where this kind of
-> > optimizations make a difference within a filesystem code?
-> > I can imagine perhaps for fast devices like NVDIMM or DAX the CPU may
-> > become the bottleneck? Or are nowadays NVMe devices already fast
-> > enough to saturate the CPU?
->
-> I don't have a specific example. This is tricky to measure and
-> historically the devices were slow so any IO and waiting made the cache
-> effects irrelevant. With NVMe, modern CPUs we might start seeing that.
-> Instrumentation or profiling of the structures can do that, there are
-> tools for that but the variability of the hardware combinations and
-> runtime conditions makes it hard so I'm resorting to more "static"
-> approach and go after known good patterns like alignment or placement
-> related to cachelines (manually or with ____cacheline_aligned_in_smp).
-
-Yeah, I know perf's cache to cache proved to be especially useful in
-the past with the network stack and other parts of the kernel. But
-that may be a bit different use-case.
-
-> > I faintly recall one issue where I debugged a CPU which could not keep
-> > up with handling the interrupts of finished IO on NVMe submitted by
-> > other CPUs. Though that was on xfs (or maybe ext4) not on btrfs. But
-> > that was a power-play of one against the rest as the interrupt was not
-> > balanced or spread to more CPUs.
+Thanks
+Nicolin
