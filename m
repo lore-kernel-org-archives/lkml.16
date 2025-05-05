@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D8625DB09;
-	Mon,  5 May 2025 14:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC4625DAE8;
+	Mon,  5 May 2025 14:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746456407; cv=none; b=SVzA6P2tQDAZxEn7fuc0CZuwglpCXzLYIlaguxEANSFokNRr0zJGW0FjvCdVuvLtPuYFWnnI9kNkLAsFWHcWEMntPyL8XA8Chi7tl6Vo0zcSJI47zohI+EaXrSX7Apu7NqJFncYdvfD7oJhcUP57JPYKNNyDv0l4a2QdMoD3Oao=
+	t=1746456413; cv=none; b=IbwDZjzZOE8F8+fJZHroZd525wsvFmu1tdKD88CfNiqWspasnQ2LFd2dubfjo+7fWVgwUZC66pN0I9Aw+3F0PApgEroafcyODH2bQrI9HhXJsBn0XXoY2NFs7l2j1/FeoGKR9eyFizKdn+xfCew6nZGOTGDbvo4LXmOfr7pIcUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746456407; c=relaxed/simple;
-	bh=ERHiE7jfGbGlun1ZgZ2HCmXIpyxX1q5s9y081hy3rKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PKXt0V1ghhBrXAI5h81j30RCZY8tkpiMdDo4+DuOrQ3bfX763OM5dt/QIfP+kX+gTPFpVuzw7cYfDsgRF/GihMMGQNDZMWqhR0Sq33S4WiE9qaTni3/IWVAYf5VfYZfRw8UeDhjzedv0wKOWHHYil+zzTEbyjJN+bT3M16Ode6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eqm3zwmd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746456413; c=relaxed/simple;
+	bh=gF5xhIvfAauvIL8M/Yf4HpV1d4YpqJKvrx/fD3GgfmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lb8N2OfF5ToFataLGJj0xGcDzgXhwzGXZs8F9dCPNrBpkfIcD3gC7HoXGgjVJ5V//BnlIAUA3OSZ2xX6M91VB9XONmOjEHzpEXvVwTIabwpMAOKfoIUUHqaiMwvS14msiyXaTbze3HJ2I4onjm4yxaPJWGV+AS6uQAGZfrF5OFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRBvSgCT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eqm3zwmd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74B55C4CEE4;
-	Mon,  5 May 2025 14:46:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRBvSgCT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924BEC4CEE4;
+	Mon,  5 May 2025 14:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746456407;
-	bh=ERHiE7jfGbGlun1ZgZ2HCmXIpyxX1q5s9y081hy3rKg=;
+	s=k20201202; t=1746456412;
+	bh=gF5xhIvfAauvIL8M/Yf4HpV1d4YpqJKvrx/fD3GgfmQ=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Eqm3zwmd/yCKSUaVYeOY9/caSyMOp/lECJPoFIpkTyvxQ+AJ2xlMS+UdwR8Ns7nd9
-	 Fk9OzT/PiavF+RercFPh8XjmXD6AsmOJ6TOtpYBq5MvcRhmx/05Of0G26gKTN89lLH
-	 qGWrjnLDks6KV/2UN3RQj9FGbKFUEKGMNpnPyorxBWjgaUhBRWTRKBb251d3Z9vKJ1
-	 43Ns6TmMaI3dGrNFNfCbCV82gNv4eJ+RAS1EiwwU9YE8de55CxI9gw3lcfABEtyZH5
-	 tIVdoR5qyzgk3zOHiMfD5vhlkfUuidJTm2vfEk1Aq4v7u1Snu9FEmn0msft1iEUmLe
-	 jQ+iLb2ZY3WkA==
+	b=IRBvSgCTs48WmROcz75u+5VN+PXcjelOMXGVJWF6Ui2/x//Iamgom8LPUWne07R/x
+	 jkdrDFFqugxvwsAQlq2jgjF2gceuwmM/4/5ArzHEOyJbOidLTQqra+kXJ2gZ9rrbcm
+	 9/pqjMurMdB65j8xfGSUU+3vweFQnHGnXfnHFR5tTlpNMozd9+ExgukG8C5r0cfZch
+	 JRHJRjynAUYWNsHFut2gS+4a4r9qlxwJKW0rStyYKAZuTIIioau7hkg+Q+eKpieHL/
+	 0Pkp+Yu5e3h7V5+zMXHP9daSjMOFnj5nLW39Ix/cJee+ei8BmFLH7Fm0a8OHtcdOAf
+	 x83wXJN0rsU8Q==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Baruch Siach <baruch@tkos.co.il>
+	Noam Camus <noamc@ezchip.com>
 Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert cnxt,cx92755-ic to DT schema
-Date: Mon,  5 May 2025 09:46:43 -0500
-Message-ID: <20250505144644.1288617-1-robh@kernel.org>
+	devicetree@vger.kernel.org
+Subject: [PATCH] dt-bindings: interrupt-controller: Convert ezchip,nps400-ic to DT schema
+Date: Mon,  5 May 2025 09:46:48 -0500
+Message-ID: <20250505144649.1288786-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,98 +44,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Conexant Digicolor interrupt controller binding to schema
+Convert the EZchip NPS interrupt controller binding to schema
 format. It's a straight-forward conversion of the typical interrupt
 controller.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../interrupt-controller/cnxt,cx92755-ic.yaml | 47 +++++++++++++++++++
- .../interrupt-controller/digicolor-ic.txt     | 21 ---------
- 2 files changed, 47 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
+ .../interrupt-controller/ezchip,nps400-ic.txt | 17 ----------
+ .../ezchip,nps400-ic.yaml                     | 34 +++++++++++++++++++
+ 2 files changed, 34 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.txt
+deleted file mode 100644
+index 888b2b9f7064..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-EZchip NPS Interrupt Controller
+-
+-Required properties:
+-
+-- compatible : should be "ezchip,nps400-ic"
+-- interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source. The value shall be 1.
+-
+-
+-Example:
+-
+-intc: interrupt-controller {
+-	compatible = "ezchip,nps400-ic";
+-	interrupt-controller;
+-	#interrupt-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.yaml b/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.yaml
 new file mode 100644
-index 000000000000..3f016cf47812
+index 000000000000..589c6ebf6c1a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/cnxt,cx92755-ic.yaml
-@@ -0,0 +1,47 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/ezchip,nps400-ic.yaml
+@@ -0,0 +1,34 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/cnxt,cx92755-ic.yaml#
++$id: http://devicetree.org/schemas/ezchip,nps400-ic.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Conexant Digicolor Interrupt Controller
++title: EZchip NPS Interrupt Controller
 +
 +maintainers:
-+  - Baruch Siach <baruch@tkos.co.il>
-+
-+description: Conexant Digicolor Interrupt Controller
++  - Noam Camus <noamc@ezchip.com>
 +
 +properties:
 +  compatible:
-+    const: cnxt,cx92755-ic
-+
-+  reg:
-+    maxItems: 1
++    const: ezchip,nps400-ic
 +
 +  interrupt-controller: true
 +
 +  '#interrupt-cells':
 +    const: 1
 +
-+  syscon:
-+    description: A phandle to the syscon node describing UC registers
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
 +required:
 +  - compatible
-+  - reg
 +  - interrupt-controller
 +  - '#interrupt-cells'
-+  - syscon
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    interrupt-controller@f0000040 {
-+        compatible = "cnxt,cx92755-ic";
++    interrupt-controller {
++        compatible = "ezchip,nps400-ic";
 +        interrupt-controller;
 +        #interrupt-cells = <1>;
-+        reg = <0xf0000040 0x40>;
-+        syscon = <&uc_regs>;
 +    };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-deleted file mode 100644
-index 42d41ec84c7b..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Conexant Digicolor Interrupt Controller
--
--Required properties:
--
--- compatible : should be "cnxt,cx92755-ic"
--- reg : Specifies base physical address and size of the interrupt controller
--  registers (IC) area
--- interrupt-controller : Identifies the node as an interrupt controller
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source. The value shall be 1.
--- syscon: A phandle to the syscon node describing UC registers
--
--Example:
--
--	intc: interrupt-controller@f0000040 {
--		compatible = "cnxt,cx92755-ic";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0xf0000040 0x40>;
--		syscon = <&uc_regs>;
--	};
 -- 
 2.47.2
 
