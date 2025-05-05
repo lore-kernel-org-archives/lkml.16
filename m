@@ -1,64 +1,30 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D0525A64D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA09F201004;
+	Mon,  5 May 2025 15:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459793; cv=none; b=YNrs6RNu1jTVf5e6by3JW6NEkiecmuZ1uOVClcYvXvbkT6aS7mu/p/kCzzjeJm8NQ/7okJCAsiJrt99jOvzMDl9E9mQ/WTdsHOKiO3B8SSidhC/+rpHXfie0JdbHnpmD953B3tTsfP+DDneh3NyWqNjoJBAPuaPhN9MxKd22hPw=
+	t=1746459843; cv=none; b=SFfmVOFt+Gd9RUNAndY1170QrQsuUKrY7nvTEzZnz2zHqAyNeLm0Q4PGP5K1H73r7Piy2YCeblw7SOzr4p/znUAifl1+/K+KGYr5xEaEsbGiZRq4U+pO/+Ixvl0B+/ZJsYu4iVYjEz3d/X67F5FwAhcjEbjnurDu3MRvknrnmRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459793; c=relaxed/simple;
-	bh=QRTbxv6zAHeMDzXhqL8aw35yYIDNThc5twhBqvEaco4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ugiqqtc7ptqg05df32k0rs6QG5ftVhD6P+8Z1GnXbJosEwty456FwqRuYaKmDro7YGlBZlXGgTYeTsJB0O4bt4nJDqTe+vpWdUpb2WIoaar05xD5cMpXXwoGJNBgwd68NREb9eWWo28xzSi26zWL9GMipzNl1/+a3S7lUZX5ibg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HP7Z397R; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746459843; c=relaxed/simple;
+	bh=MJdxEDXCMWdlWjqibmBE+goyhURgYiH9zXguufWTppk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XL9XcFMn+lqPLZt7UrEv3iMRjsw685GjLYQOb10e+2ulLOuK00sjuOjzcRD6ZQZ+EbkazXknLje2EUSQ9Zor5mRvoLxPgBwYxgix/Fwz04Jn411gDdbdbFFRixrUwhRv8JMtsKUcVjqNNQLzRJ5np+cVZsTqnMDD3SItjHxNLk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BqRncqxE; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HP7Z397R"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6064d4c14ebso1052378eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 08:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746459790; x=1747064590; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jADEHGiMlecVFngKrds8KPNTRKyJX4Rr2PqMnmh5p04=;
-        b=HP7Z397RXibyRH45OVZiWscWZnLDnQIKIkOEAj86AHCkuMW8RT1kxo360dsr1bcdOg
-         udG2Bv+vZHR6yaMcwOUavh174fAv7bbYH5gYOBu/CLnyyv4J3nWkgDK+VyRtuXaoPW2A
-         5lSVIqrod4kVYyR9jBeywUqmqez/ULw8UXXBTIthF60acb6lFRvFPDlnnMCwF00wM9nY
-         X7jrOK4TMBpsELHthudUtJzrZ7SaY/qd3CooyIEQrp485JS+Jquj3P7TrHIQv4lxosww
-         y0Y1NlFMWFaa290hv29txP6Q5Atv6vM/kckxMYqtQMywv5igP/avxoJorXI8tmUfAW1O
-         xsrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746459790; x=1747064590;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jADEHGiMlecVFngKrds8KPNTRKyJX4Rr2PqMnmh5p04=;
-        b=w8wMTZwHE2qfQhJaMqBY65V+hPoyNbNcXivBQyMweCrna/SsraRD+3pcxmZUZQRRzg
-         ErQfhNLnSYKwbFQHt9jwrXpdAUJ7SMzJZk6WLUBurPP4/ZvdeVHxlKikwTwi/pUUShlQ
-         eYLlrUBAagzmsxVnrYm3QWgBhTOr1WdMX5ezlaiegMVc3dHw/z7m0CUfHnRILHSIj58X
-         D6qg1zg44cpOME0CIkNi7A7Obm8r7h0WGhr/6wEFwR+zOTtZu7nlfsIU4DTNoF1WLIMX
-         hEsa10NXOuurMMdYCmw7NIJuJuWjgrEJW9aCas49Tk7/EpH0QTJA4VEehxhTTNDO+/ID
-         IqKA==
-X-Gm-Message-State: AOJu0Yyzl8l+0mrLRRFmMkFQSYvzjTCtQltYSfBI+7zBDkDdjN45PkeO
-	uYhYZcICGkBo47fc5MHegDxBeWWXz9AST6Q/rIS98O/M9XnHd3PXJIyV+qmm2Ig=
-X-Gm-Gg: ASbGncsecnK7BI96wfNNy0iP9E1IdRajATK1HfltzTTOcRL04b9G+dP4tRzKSr81oB6
-	3QKvqLUMRiIXPwVmWfKa6fItOxt1fnHuJIYiidgzWac92LTer+GlrolljUbQlwDOOc4lqFNx/TK
-	mKIpgC4rpLB/+vCHOIKa2BwoebJtOL5x6xD3J2LTqwE+BhpQeL+ctSWN6BPHy/zvmZuM5vJ8EiP
-	jxvVuhLayR3vmzpsS4SLytZMJi0EWTQY/Cu+G1MRCNOsg9xdABqi1AK8JD69vfcLYJxl8YtJe5h
-	AopT6uyf6IZ4szS6+3O2mA1yLQX66c/ByQ85QD5PINxUynbXnJeJ3S4lWcuIYJQqCfegJamiKeC
-	YdJOBImQkn9xN8Mc=
-X-Google-Smtp-Source: AGHT+IFL2btLIVQtJx76CsbwyLNK829LBAKSDjNc/uTEdqP95tY4Xs4YkW2YjtftOF3WDWyRbGLvmg==
-X-Received: by 2002:a05:6820:1f11:b0:5fe:9edb:eafe with SMTP id 006d021491bc7-6080030c637mr4626794eaf.5.1746459790013;
-        Mon, 05 May 2025 08:43:10 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:2151:6806:9b7:545d? ([2600:8803:e7e4:1d00:2151:6806:9b7:545d])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7db20f9sm1668000eaf.16.2025.05.05.08.43.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 08:43:09 -0700 (PDT)
-Message-ID: <a8f47109-f370-49db-abe8-955ba287ab0c@baylibre.com>
-Date: Mon, 5 May 2025 10:43:08 -0500
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BqRncqxE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=qfovzFaLa2GoD/0nOLZK1UZHHm0v78eVP37p2oBonBM=;
+	b=BqRncqxEVFp89mDdGHmZPTqvpo0qk7YZ1Nm6239x+UA4qoAdz42hZ/9NObFTbz
+	/lH7ZUp0IRGsicVKcVk82a5zzjH3p9pMWznWr+ujUt1EoqaR5YSq8FUeWWrLUAKp
+	sCr9uTEwUqi3quEC6Ox+8oS7QIaafsjrlHJ4ucfEmvqdw=
+Received: from [192.168.71.93] (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCXCiaI3BhoBlukBw--.13972S2;
+	Mon, 05 May 2025 23:43:05 +0800 (CST)
+Message-ID: <dc6ae086-c4dd-466e-ab7d-ba590877c825@163.com>
+Date: Mon, 5 May 2025 23:43:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,27 +32,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Signed-off-by missing for commit in the iio tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250505074801.258da03a@canb.auug.org.au>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH] xhci: Add missing parameter description to
+ xhci_get_endpoint_index()
+From: Hans Zhang <18255117159@163.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250504160415.183331-1-18255117159@163.com>
+ <2025050546-unlivable-monitor-ad66@gregkh>
+ <4cfa9138-43c7-4ca8-bb00-3bd15ab0dd98@163.com>
 Content-Language: en-US
-In-Reply-To: <20250505074801.258da03a@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <4cfa9138-43c7-4ca8-bb00-3bd15ab0dd98@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:QCgvCgCXCiaI3BhoBlukBw--.13972S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZrW7Gr4rXF47ZF48Aw13urg_yoW5tr17pF
+	yavF9YkF1xJryF9F90gw4ftw15Ka9rCa43W347u345Ar4jyF1xJ3s3KFsYgFnrArsY9F18
+	AFWIgw17Wr1UXa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UzCJQUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwdEo2gY1mpazAABs0
 
-On 5/4/25 4:48 PM, Stephen Rothwell wrote:
-> Hi all,
+
+
+On 2025/5/5 23:35, Hans Zhang wrote:
 > 
-> Commit
 > 
->   1a521690c060 ("iio: adc: ad7606: explicit timestamp alignment")
+> On 2025/5/5 13:00, Greg KH wrote:
+>> On Mon, May 05, 2025 at 12:04:15AM +0800, Hans Zhang wrote:
+>>> Fix kernel-doc warning by documenting the @desc parameter:
+>>>
+>>> drivers/usb/host/xhci.c:1369: warning: Function parameter or struct 
+>>> member
+>>> 'desc' not described in 'xhci_get_endpoint_index'
+>>>
+>>> Add detailed description of the @desc parameter and clarify the indexing
+>>> logic for control endpoints vs other types. This brings the 
+>>> documentation
+>>> in line with kernel-doc requirements while maintaining technical 
+>>> accuracy.
+>>>
+>>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>>
+>> What commit id does this fix?
+>>
 > 
-> is missing a Signed-off-by from its author.
+> Hi Greg,
+> 
+> export ARCH=arm64
+> make defconfig
+> make Image W=1 -j16
+> 
+> ./aarch64-none-linux-gnu-gcc -v
+> Using built-in specs.
+> COLLECT_GCC=./aarch64-none-linux-gnu-gcc
+> COLLECT_LTO_WRAPPER=/media/zhb/hans/code/cix_linux_gcc/arm-gnu-toolchain-12.3.rel1-x86_64-aarch64-none-linux-gnu/bin/../libexec/gcc/aarch64-none-linux-gnu/12.3.1/lto-wrapper
+> Target: aarch64-none-linux-gnu
+> Configured with: 
+> /data/jenkins/workspace/GNU-toolchain/arm-12/src/gcc/configure 
+> --target=aarch64-none-linux-gnu --prefix= 
+> --with-sysroot=/aarch64-none-linux-gnu/libc 
+> --with-build-sysroot=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/install//aarch64-none-linux-gnu/libc --with-bugurl=https://bugs.linaro.org/ --enable-gnu-indirect-function --enable-shared --disable-libssp --disable-libmudflap --enable-checking=release --enable-languages=c,c++,fortran --with-gmp=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools --with-mpfr=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools --with-mpc=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools --with-isl=/data/jenkins/workspace/GNU-toolchain/arm-12/build-aarch64-none-linux-gnu/host-tools --enable-fix-cortex-a53-843419 --with-pkgversion='Arm GNU Toolchain 12.3.Rel1 (Build arm-12.35)'
+> Thread model: posix
+> Supported LTO compression algorithms: zlib
+> gcc version 12.3.1 20230626 (Arm GNU Toolchain 12.3.Rel1 (Build arm-12.35))
+> 
+> 
+> I'm debugging the problem of pci and modified the iinclude/linux/pci.h 
+> file. If the above compilation method is adopted, the following warnings 
+> will occur. Use my patch and the warning disappears.
+> 
+> Compilation warning:
+> drivers/usb/host/xhci.c:1370: warning: Function parameter or struct 
+> member 'desc' not described in 'xhci_get_endpoint_index'
+> 
+> 
+> The reproduction method can also be modified by modifying the 
+> drivers/usb/host/xhci.c file and then compiling, and the above warning 
+> will appear.
+> 
+> Please review whether this needs to be fixed. If not, please ignore this 
+> patch.
+> 
 > 
 
-Thanks for reporting this. The oversight has been fixed.
+Hi Greg,
+
+This patch does not fix specific code errors. Instead, it improves the 
+parameter documentation of the xhci_get_endpoint_index function (adding 
+a description for @desc) to enhance code readability. Therefore, it does 
+not fix any issues with historical submissions and is an independent 
+document improvement patch.
+
+Best regards,
+Hans
 
