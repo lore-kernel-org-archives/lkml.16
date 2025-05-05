@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A881F29953E;
-	Mon,  5 May 2025 22:43:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B5729AAFC;
+	Mon,  5 May 2025 22:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484991; cv=none; b=IjIauinUuq5s/raQ6zzisM6YFcRMIAvz7fU2YNBZokaoKfbtMX3v9ZipUXSVucMw+mkXLrXH244F0UX4XogEvcEqcAyMOapXes66oUP5eFhHWTFrIRtGfj527NtRRjEK+D3QfCXTnLBbNRLdwpg9HWHXpqNOS2VF+lnhVYZ+5qU=
+	t=1746485048; cv=none; b=P9RGjptBSoZnhf/1LlbUWYmvhV1Mm+8oArjdJCd5OAB5fWd6U9LIU9mAQTDr8oyVfHpDSOAusaj5Y2lU1grkNS+lAZk1uUz9yD9zKO5Olto3akQz9bOw+MLt9uinQap+7KBWtgRckuPmQrAcPAzphJOf0oKHG1weVM4ZUlT1Qv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484991; c=relaxed/simple;
-	bh=VzfuitWmNtwy2lfYXQP3+eZjHCxR1uGp2yuas6XIq0o=;
+	s=arc-20240116; t=1746485048; c=relaxed/simple;
+	bh=D2YnTbuB7E/7Nw79ozILZQxHrhH5GxO5/l66638hjKY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j5Dj/TjhyhONwb29ahntgdmcJaU9hrksz35cApCBPJzK3T/G++mmbSlocKdYdcwQ8rCzdLdeJssbQrajWuDeaMw6xrK4P2noGcBugksjS48+51+dYrRdvT9sLkNRcWlqc/9JmoAXn1JYNE8F+bXDwHO0xKqzfiCHEH+dCxexUd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JviV3VXM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IZYhVHwWwDKkRMGOPHvdswJSyWBCE1IBoIGHuzkrc6IZhLSRFOs8sbSTpKqKQ5sv0luszAb6QTfmK7ETfdvh/jgmL1h5yXfwkvPB3jTZvv1/RcuhnEnmb3faOhiggFEI6JsSs85TU4MjqG98lLMJHuR6oaS51XXGV3JSbYeDFQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGJ5OSwf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JviV3VXM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8877CC4CEEE;
-	Mon,  5 May 2025 22:43:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGJ5OSwf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F658C4CEEE;
+	Mon,  5 May 2025 22:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484990;
-	bh=VzfuitWmNtwy2lfYXQP3+eZjHCxR1uGp2yuas6XIq0o=;
+	s=k20201202; t=1746485047;
+	bh=D2YnTbuB7E/7Nw79ozILZQxHrhH5GxO5/l66638hjKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JviV3VXMP1cMgf+SZt8UvV3JcNUIoxt6tN19V0yzMz1GKQkfVk5q7lbmz3tNerrDZ
-	 xZ6mDYGW0byfizr0HUXKs3fSuFf+ry5GiyctT7E7NWT6NmhU3awC0iSQQHxDZ6I6uo
-	 zSULkNQBsRJ3ok2/RTxBcumM0CWgiXyj5UA7GKu///nbMBVp46hVb50EcnnMUyOtUm
-	 Vh7FwtnLVLPbl0B1uz2KKuXbLLOXOy0T0XwZ7BXi6D5DgjbsXPMce3TsrLD6WR0PXt
-	 5id+Z1QTp2eB4pykuqdpgY3DrZHTxzJKyuovtdws2z/r8K9rv7zG/Mtfu1xStxWMnf
-	 bURFm8vS1S9dQ==
+	b=sGJ5OSwf48eix9jZnX9P1AAHBENjW5cQQjekzMzN8odkMd3osHg81s0Aaxu3DeT0a
+	 Hu2jItaUWGIEUNXZw/bj5V6RiBhv06OmwkmPCQuu2cdK+DLmPo3vcPmOosSwGJvs12
+	 Q2Q1mbA8xl87tIMaptPPgfWEgPgdlApUA6iPrzF4yan/DyRNSdeGk/Ftp/etm6I1Fp
+	 jJEL6IbHelUP8tJj0YZrQDx2XsGB9WU0sFUb0QFu6qYIxPHL8G3lw8gzAZC6uJBXCp
+	 I6afga/T3WywoF2mqHD87gIbfPmtiGwQznCGhjw8rTxZazdY3hrqsCnx8DAVWqHmp9
+	 SPZZSaXbr8Uqw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
+Cc: Kaustabh Chakraborty <kauschluss@disroot.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 113/486] kconfig: do not clear SYMBOL_VALID when reading include/config/auto.conf
-Date: Mon,  5 May 2025 18:33:09 -0400
-Message-Id: <20250505223922.2682012-113-sashal@kernel.org>
+	jh80.chung@samsung.com,
+	krzk@kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 140/486] mmc: dw_mmc: add exynos7870 DW MMC support
+Date: Mon,  5 May 2025 18:33:36 -0400
+Message-Id: <20250505223922.2682012-140-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -49,87 +54,172 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
 
-[ Upstream commit 226ac19c217f24f0927d0a73cf9ee613971a188d ]
+[ Upstream commit 7cbe799ac10fd8be85af5e0615c4337f81e575f3 ]
 
-When conf_read_simple() is called with S_DEF_AUTO, it is meant to read
-previous symbol values from include/config/auto.conf to determine which
-include/config/* files should be touched.
+Add support for Exynos7870 DW MMC controllers, for both SMU and non-SMU
+variants. These controllers require a quirk to access 64-bit FIFO in 32-bit
+accesses (DW_MMC_QUIRK_FIFO64_32).
 
-This process should not modify the current symbol status in any way.
-However, conf_touch_deps() currently invalidates all symbol values and
-recalculates them, which is totally unneeded.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+Link: https://lore.kernel.org/r/20250219-exynos7870-mmc-v2-3-b4255a3e39ed@disroot.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/confdata.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/mmc/host/dw_mmc-exynos.c | 41 +++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 3b55e7a4131d9..ac95661a1c9dd 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -385,7 +385,7 @@ int conf_read_simple(const char *name, int def)
+diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+index 6dc057718d2cb..89682f10e69f3 100644
+--- a/drivers/mmc/host/dw_mmc-exynos.c
++++ b/drivers/mmc/host/dw_mmc-exynos.c
+@@ -27,6 +27,8 @@ enum dw_mci_exynos_type {
+ 	DW_MCI_TYPE_EXYNOS5420_SMU,
+ 	DW_MCI_TYPE_EXYNOS7,
+ 	DW_MCI_TYPE_EXYNOS7_SMU,
++	DW_MCI_TYPE_EXYNOS7870,
++	DW_MCI_TYPE_EXYNOS7870_SMU,
+ 	DW_MCI_TYPE_ARTPEC8,
+ };
  
- 	def_flags = SYMBOL_DEF << def;
- 	for_all_symbols(sym) {
--		sym->flags &= ~(def_flags|SYMBOL_VALID);
-+		sym->flags &= ~def_flags;
- 		switch (sym->type) {
- 		case S_INT:
- 		case S_HEX:
-@@ -398,7 +398,11 @@ int conf_read_simple(const char *name, int def)
- 		}
+@@ -69,6 +71,12 @@ static struct dw_mci_exynos_compatible {
+ 	}, {
+ 		.compatible	= "samsung,exynos7-dw-mshc-smu",
+ 		.ctrl_type	= DW_MCI_TYPE_EXYNOS7_SMU,
++	}, {
++		.compatible	= "samsung,exynos7870-dw-mshc",
++		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870,
++	}, {
++		.compatible	= "samsung,exynos7870-dw-mshc-smu",
++		.ctrl_type	= DW_MCI_TYPE_EXYNOS7870_SMU,
+ 	}, {
+ 		.compatible	= "axis,artpec8-dw-mshc",
+ 		.ctrl_type	= DW_MCI_TYPE_ARTPEC8,
+@@ -85,6 +93,8 @@ static inline u8 dw_mci_exynos_get_ciu_div(struct dw_mci *host)
+ 		return EXYNOS4210_FIXED_CIU_CLK_DIV;
+ 	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
+ 	else
+@@ -100,7 +110,8 @@ static void dw_mci_exynos_config_smu(struct dw_mci *host)
+ 	 * set for non-ecryption mode at this time.
+ 	 */
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS5420_SMU ||
+-		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU) {
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
+ 		mci_writel(host, MPSBEGIN0, 0);
+ 		mci_writel(host, MPSEND0, SDMMC_ENDING_SEC_NR_MAX);
+ 		mci_writel(host, MPSCTRL0, SDMMC_MPSCTRL_SECURE_WRITE_BIT |
+@@ -126,6 +137,12 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
+ 				DQS_CTRL_GET_RD_DELAY(priv->saved_strobe_ctrl);
  	}
  
--	expr_invalidate_all();
-+	if (def == S_DEF_USER) {
-+		for_all_symbols(sym)
-+			sym->flags &= ~SYMBOL_VALID;
-+		expr_invalidate_all();
++	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU) {
++		/* Quirk needed for certain Exynos SoCs */
++		host->quirks |= DW_MMC_QUIRK_FIFO64_32;
 +	}
- 
- 	while (getline_stripped(&line, &line_asize, in) != -1) {
- 		struct menu *choice;
-@@ -464,6 +468,9 @@ int conf_read_simple(const char *name, int def)
- 		if (conf_set_sym_val(sym, def, def_flags, val))
- 			continue;
- 
-+		if (def != S_DEF_USER)
-+			continue;
 +
- 		/*
- 		 * If this is a choice member, give it the highest priority.
- 		 * If conflicting CONFIG options are given from an input file,
-@@ -967,10 +974,8 @@ static int conf_touch_deps(void)
- 	depfile_path[depfile_prefix_len] = 0;
+ 	if (priv->ctrl_type == DW_MCI_TYPE_ARTPEC8) {
+ 		/* Quirk needed for the ARTPEC-8 SoC */
+ 		host->quirks |= DW_MMC_QUIRK_EXTENDED_TMOUT;
+@@ -143,6 +160,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
  
- 	conf_read_simple(name, S_DEF_AUTO);
--	sym_calc_value(modules_sym);
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		clksel = mci_readl(host, CLKSEL64);
+ 	else
+@@ -152,6 +171,8 @@ static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
  
- 	for_all_symbols(sym) {
--		sym_calc_value(sym);
- 		if (sym_is_choice(sym))
- 			continue;
- 		if (sym->flags & SYMBOL_WRITE) {
-@@ -1084,12 +1089,12 @@ int conf_write_autoconf(int overwrite)
- 	if (ret)
- 		return -1;
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		mci_writel(host, CLKSEL64, clksel);
+ 	else
+@@ -222,6 +243,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
  
--	if (conf_touch_deps())
--		return 1;
--
- 	for_all_symbols(sym)
- 		sym_calc_value(sym);
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		clksel = mci_readl(host, CLKSEL64);
+ 	else
+@@ -230,6 +253,8 @@ static int dw_mci_exynos_resume_noirq(struct device *dev)
+ 	if (clksel & SDMMC_CLKSEL_WAKEUP_INT) {
+ 		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 			priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 			mci_writel(host, CLKSEL64, clksel);
+ 		else
+@@ -409,6 +434,8 @@ static inline u8 dw_mci_exynos_get_clksmpl(struct dw_mci *host)
  
-+	if (conf_touch_deps())
-+		return 1;
-+
- 	ret = __conf_write_autoconf(conf_get_autoheader_name(),
- 				    print_symbol_for_c,
- 				    &comment_style_c);
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		return SDMMC_CLKSEL_CCLK_SAMPLE(mci_readl(host, CLKSEL64));
+ 	else
+@@ -422,6 +449,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
+ 
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		clksel = mci_readl(host, CLKSEL64);
+ 	else
+@@ -429,6 +458,8 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
+ 	clksel = SDMMC_CLKSEL_UP_SAMPLE(clksel, sample);
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		mci_writel(host, CLKSEL64, clksel);
+ 	else
+@@ -443,6 +474,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
+ 
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		clksel = mci_readl(host, CLKSEL64);
+ 	else
+@@ -453,6 +486,8 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
+ 
+ 	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+ 		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870 ||
++		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7870_SMU ||
+ 		priv->ctrl_type == DW_MCI_TYPE_ARTPEC8)
+ 		mci_writel(host, CLKSEL64, clksel);
+ 	else
+@@ -632,6 +667,10 @@ static const struct of_device_id dw_mci_exynos_match[] = {
+ 			.data = &exynos_drv_data, },
+ 	{ .compatible = "samsung,exynos7-dw-mshc-smu",
+ 			.data = &exynos_drv_data, },
++	{ .compatible = "samsung,exynos7870-dw-mshc",
++			.data = &exynos_drv_data, },
++	{ .compatible = "samsung,exynos7870-dw-mshc-smu",
++			.data = &exynos_drv_data, },
+ 	{ .compatible = "axis,artpec8-dw-mshc",
+ 			.data = &artpec_drv_data, },
+ 	{},
 -- 
 2.39.5
 
