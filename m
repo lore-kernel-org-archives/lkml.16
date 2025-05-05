@@ -1,100 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DBA16F8E5;
-	Mon,  5 May 2025 15:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091352561C2
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460125; cv=none; b=h+56HmCkV1Zhq7vhU+YPB6sVDkFUd18xSANyIXh0kCRVGW5WP4ptuxFmnbanTiWptPHAhJuyU7WkITKCaexQsR1LTuUOgD1ILq6tuxQw4JvEue+4jOQHrWz4/cw385YT+wCjBQCAR4mxltsywS7k6YqnRAscW/4N6iF3NtVgUgg=
+	t=1746460174; cv=none; b=GuN/jNj+jrtdukxb+WU4NddooPFhJG3RuIHio+tmD1lg0IrumJczmsm0VHUIZvpgpxdiw5+vKAsCd9wW7f+d6WY3p2D593z78rpYCFukfYLgeLvZbnZLSg9wbHB74+l6CDJNrrn/iMYAJXSEecxlhq5Ol5KXeZ30Eh9X5dyRvog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460125; c=relaxed/simple;
-	bh=oa0sGywS0FB63vtTpXv9wl4jmko7S3Wb/y/cC9raBzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jOiKBCD2+p3n5Bqmk/X0jlPae9iJYPLVJHWsRhyuhdOqAem8sPyrAt4VH1gcJMn3p5/uVClGSR3ET4e08KWp7m7LaQsDeMSGcWKEgIDpkOYKh/UpMXDDwVhTTewWjWDm6fJRwaNTH7pCVmxiINV3hf4fdMQqRr2dBk0UN38zQE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3202C4CEE4;
-	Mon,  5 May 2025 15:48:43 +0000 (UTC)
-Date: Mon, 5 May 2025 11:48:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jason Wessel
- <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, Douglas
- Anderson <dianders@chromium.org>
-Subject: [PATCH v2] tracing: kdb: Use tracer_tracing_on/off() instead of
- setting per CPU disabled
-Message-ID: <20250505114849.1a9237d5@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746460174; c=relaxed/simple;
+	bh=HfDy/HkyH9OE4BdyiLFSHkuBVpYPTVkooXLx5f3rZOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPLuh9QOHFd0evloJ8+W69cINE5pBrr87A3HA37iSWTaSJBJsS/jGyKba+IpS7YWe4tfrGLJVJ4UJ6hMl38nvkcChu65kvU51w9x312Wb2PYLYsxeboTLXhA+2N22XsoHf9QJXAot6+ZryD77Q7kRBAX0KbMLCAbkzS+UVkOCYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=nUWm3bhJ; arc=none smtp.client-ip=185.125.25.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="nUWm3bhJ"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zrm150CSJzYMl;
+	Mon,  5 May 2025 17:39:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1746459576;
+	bh=2rr0NxT3YygR9iTO8oBRTuCPuvHO/u8bPQjZ4fJ4Dmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nUWm3bhJWq419tUFjizOeRUyHfqL1Ps0Bp0obcoIHzLGMUEs7xv+vVf6XmVNsmKvV
+	 wH9r8SMThoIJnMs9qG2cF5fm99NtOCWlGhihJTREL47QhIulH762DJBS1raj+bSvfd
+	 1Wvsw7/AXtuQSbncvRxa75Y+GzPBAPZ9bWztxg5M=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zrm134TtlzTc8;
+	Mon,  5 May 2025 17:39:35 +0200 (CEST)
+Date: Mon, 5 May 2025 17:39:34 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
+Message-ID: <20250505.ej2ephiNg7Ve@digikod.net>
+References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
+ <20250505.aFia3choo1aw@digikod.net>
+ <CAG48ez0Ti8y5GzZFhdf5cmZWH1XMmz0Q_3y8RCn6ca8UL-jrcA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez0Ti8y5GzZFhdf5cmZWH1XMmz0Q_3y8RCn6ca8UL-jrcA@mail.gmail.com>
+X-Infomaniak-Routing: alpha
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, May 05, 2025 at 04:59:41PM +0200, Jann Horn wrote:
+> On Mon, May 5, 2025 at 4:41 PM Mickaël Salaün <mic@digikod.net> wrote:
+> > On Mon, May 05, 2025 at 01:13:38PM +0200, Christian Brauner wrote:
+> > > Coredumping currently supports two modes:
+> > >
+> > > (1) Dumping directly into a file somewhere on the filesystem.
+> > > (2) Dumping into a pipe connected to a usermode helper process
+> > >     spawned as a child of the system_unbound_wq or kthreadd.
+> > >
+> > > For simplicity I'm mostly ignoring (1). There's probably still some
+> > > users of (1) out there but processing coredumps in this way can be
+> > > considered adventurous especially in the face of set*id binaries.
+> > >
+> > > The most common option should be (2) by now. It works by allowing
+> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
+> > >
+> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> > >
+> > > The "|" at the beginning indicates to the kernel that a pipe must be
+> > > used. The path following the pipe indicator is a path to a binary that
+> > > will be spawned as a usermode helper process. Any additional parameters
+> > > pass information about the task that is generating the coredump to the
+> > > binary that processes the coredump.
+> > >
+> > > In the example core_pattern shown above systemd-coredump is spawned as a
+> > > usermode helper. There's various conceptual consequences of this
+> > > (non-exhaustive list):
+> > >
+> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
+> > >   connected to the read-end of the pipe. All other file descriptors are
+> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
+> > >   already caused bugs because userspace assumed that this cannot happen
+> > >   (Whether or not this is a sane assumption is irrelevant.).
+> > >
+> > > - systemd-coredump will be spawned as a child of system_unbound_wq. So
+> > >   it is not a child of any userspace process and specifically not a
+> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
+> > >   upcall which are difficult for userspace to control correctly.
+> > >
+> > > - systemd-coredump is spawned with full kernel privileges. This
+> > >   necessitates all kinds of weird privilege dropping excercises in
+> > >   userspace to make this safe.
+> > >
+> > > - A new usermode helper has to be spawned for each crashing process.
+> > >
+> > > This series adds a new mode:
+> > >
+> > > (3) Dumping into an abstract AF_UNIX socket.
+> > >
+> > > Userspace can set /proc/sys/kernel/core_pattern to:
+> > >
+> > >         @linuxafsk/coredump_socket
+> > >
+> > > The "@" at the beginning indicates to the kernel that the abstract
+> > > AF_UNIX coredump socket will be used to process coredumps.
+> > >
+> > > The coredump socket uses the fixed address "linuxafsk/coredump.socket"
+> > > for now.
+> > >
+> > > The coredump socket is located in the initial network namespace. To bind
+> > > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
+> > > user namespace. Listening and reading can happen from whatever
+> > > unprivileged context is necessary to safely process coredumps.
+> > >
+> > > When a task coredumps it opens a client socket in the initial network
+> > > namespace and connects to the coredump socket. For now only tasks that
+> > > are acctually coredumping are allowed to connect to the initial coredump
+> > > socket.
+> >
+> > I think we should avoid using abstract UNIX sockets, especially for new
+> > interfaces, because it is hard to properly control such access.  Can we
+> > create new dedicated AF_UNIX protocols instead?  One could be used by a
+> > privileged process in the initial namespace to create a socket to
+> > collect coredumps, and the other could be dedicatde to coredumped
+> > proccesses.  Such (coredump collector) file descriptor or new (proxy)
+> > socketpair ones could be passed to containers.
+> 
+> I would agree with you if we were talking about designing a pure
+> userspace thing; but I think the limits that Christian added on bind()
+> and connect() to these special abstract names in this series
+> effectively make it behave as if they were dedicated AF_UNIX
+> protocols, and prevent things like random unprivileged userspace
+> processes bind()ing to them.
 
-The per CPU "disabled" value was the original way to disable tracing when
-the tracing subsystem was first created. Today, the ring buffer
-infrastructure has its own way to disable tracing. In fact, things have
-changed so much since 2008 that many things ignore the disable flag.
-
-The kdb_ftdump() function iterates over all the current tracing CPUs and
-increments the "disabled" counter before doing the dump, and decrements it
-afterward.
-
-As the disabled flag can be ignored, doing this today is not reliable.
-Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
-disable and then enabled the entire ring buffer in one go!
-
-Cc: Jason Wessel <jason.wessel@windriver.com>
-Cc: Daniel Thompson <danielt@kernel.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250502205348.643055437@goodmis.org
-
-- Remove unused "int cpu;" (kernel test robot)
-
- kernel/trace/trace_kdb.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 1e72d20b3c2f..79f11f7e52df 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -98,7 +98,6 @@ static int kdb_ftdump(int argc, const char **argv)
- 	long cpu_file;
- 	int err;
- 	int cnt;
--	int cpu;
- 
- 	if (argc > 2)
- 		return KDB_ARGCOUNT;
-@@ -120,9 +119,7 @@ static int kdb_ftdump(int argc, const char **argv)
- 	trace_init_global_iter(&iter);
- 	iter.buffer_iter = buffer_iter;
- 
--	for_each_tracing_cpu(cpu) {
--		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
--	}
-+	tracer_tracing_off(iter.tr);
- 
- 	/* A negative skip_entries means skip all but the last entries */
- 	if (skip_entries < 0) {
-@@ -135,9 +132,7 @@ static int kdb_ftdump(int argc, const char **argv)
- 
- 	ftrace_dump_buf(skip_entries, cpu_file);
- 
--	for_each_tracing_cpu(cpu) {
--		atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
--	}
-+	tracer_tracing_on(iter.tr);
- 
- 	kdb_trap_printk--;
- 
--- 
-2.47.2
-
+OK, so why not create a proper protocol?  That should also simplify the
+interface.
