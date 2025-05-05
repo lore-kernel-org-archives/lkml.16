@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A031283FC9;
-	Mon,  5 May 2025 23:13:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3F02F2C75;
+	Mon,  5 May 2025 23:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486837; cv=none; b=XAUe5V/qyXoqBmxkF3j17cxtDim7/y8TUFTpuqnKfPQXpNfNdP/eeUbLJPDx97gvbaayZ1Tb5ncVLO9RZ9oTUZzeFthqZ1Sk/VOU6nvGYSHrWO/AEvlFw/UnDwQlwmOprgFTq7ZJ8zKrwOWnQh73XswMs3M2EFU3J6bUaV/h3g8=
+	t=1746486830; cv=none; b=JFOaFkUJP5kvfIbnB80HtAdYnzwxEs+6LWK5nutAXQExvsKyQNHb06FVmngvgQ6ISfbi3SzIuAldg1qpToQhQQYcgshFtzOaI9XLu6ZzXE6ueCAeEW6Lz1gs1vh7K+0Cfjax+5rqTKoIfateeCP0Pdf6qrkF3uUFHogiOmGtSyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486837; c=relaxed/simple;
-	bh=pyo/ifuuvjKVbu8A8cuH/zczcsL7AJ4+xRVsuQK/wY4=;
+	s=arc-20240116; t=1746486830; c=relaxed/simple;
+	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PeYEiZf/eRvL362kjwDxa+2Ws/orD4TlGltBwiRUlwC5ZzzC9RH4tpJr77HDk0WoLnQ9Q/+PmDdFoEJi+wUZFINjoc19Y6cU9pMIgeY2jzdfSXxIIZ8l6uXabqRrLQUqHqgmPUn34S6iSpdMM5wQ4THBpQQTy9WQ3wDpQ95NmGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWCCMB0m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XX3hQaItL6C14dWvkzC3g6dvfmIRECEaKMeiGfeI361mjJugt779Se6+MO0cycGch1UbQ2+J0HiZC1CL/R3m6L2brqinzSc5c7290/MJ933qjsujnvpdJ3LVngfnCv0MV3Z6Bv1+h8OTHIcvkHNasrhTin8Okg8Zf37mpCKxQfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBs+TmUk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWCCMB0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8584EC4CEED;
-	Mon,  5 May 2025 23:13:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBs+TmUk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB327C4CEE4;
+	Mon,  5 May 2025 23:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486836;
-	bh=pyo/ifuuvjKVbu8A8cuH/zczcsL7AJ4+xRVsuQK/wY4=;
+	s=k20201202; t=1746486830;
+	bh=c/ZRcjt/5odMSgBwPe3ZiTpzNSyYGXxRkVdPpWZtesY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kWCCMB0my/Gg8ZAzsz8KA0P6G5SOca01GBVyhPBJsg58xbkS0LfUqQUNcdhq9Q728
-	 zhA2edBT/mbphTzDk20GGnv7Nwc6tLNnoeDjnfvslsk4ZDdVUn4a7xC8+ktjeHiMnC
-	 xi8zkKT/WBBHqgE4xfmbEgUNrxl2+sX5JBVVRKuChseaBDOqi10GY/Kf7yNYVhsN/Z
-	 jCQT6AN3FdAuvIE7nBmDXgb86wjqwhDs84tTw5+vbmAknZ5wjv4mNS9mPDN69BSb+w
-	 QFdgOeDmy+1N/NgnI/sRzW4s62DuuePQ0h8ajGmeUMMmRNWVvi1lbPi1szkxx0pzQj
-	 xrVGyh15+DK4Q==
+	b=IBs+TmUkcDi7VAKOLDSoclJgodXZhS7ht6BuSB6Ea8y2445GAA54fUFczpR+LTWHH
+	 yBysunE3O4IHDyjk7rFi2/rqLCzWS21Xl7RSpjTWbAgmuWWIFUF+Tq0l//2qMNtCEa
+	 Kg7NWG0WZdnzd3H8TZSHXMcBnefyqBIobyw5Jyqk7rZJfydtt9HWsOfG3QIVOK82Xm
+	 DTaixtnE4XibN4umM+5snDgBTLcYCTL0WIMmEpNfs1CbEPBxCd8fpOa8YClWA0iYoe
+	 SCmfwPuZPm8io6d0yLh3dj+blISIPkK5UM8VxaG5KvEXzXGt+SA1xpDGJO0I9Fb2UK
+	 3j/bdlKG2uz1A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	charlie@rivosinc.com
-Subject: [PATCH AUTOSEL 5.15 016/153] tools/build: Don't pass test log files to linker
-Date: Mon,  5 May 2025 19:11:03 -0400
-Message-Id: <20250505231320.2695319-16-sashal@kernel.org>
+Cc: Jing Su <jingsusu@didiglobal.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 013/153] dql: Fix dql->limit value when reset.
+Date: Mon,  5 May 2025 19:11:00 -0400
+Message-Id: <20250505231320.2695319-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
 References: <20250505231320.2695319-1-sashal@kernel.org>
@@ -51,46 +49,44 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.15.181
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+From: Jing Su <jingsusu@didiglobal.com>
 
-[ Upstream commit 935e7cb5bb80106ff4f2fe39640f430134ef8cd8 ]
+[ Upstream commit 3a17f23f7c36bac3a3584aaf97d3e3e0b2790396 ]
 
-Separate test log files from object files. Depend on test log output
-but don't pass to the linker.
+Executing dql_reset after setting a non-zero value for limit_min can
+lead to an unreasonable situation where dql->limit is less than
+dql->limit_min.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Link: https://lore.kernel.org/r/20250311213628.569562-2-irogers@google.com
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+For instance, after setting
+/sys/class/net/eth*/queues/tx-0/byte_queue_limits/limit_min,
+an ifconfig down/up operation might cause the ethernet driver to call
+netdev_tx_reset_queue, which in turn invokes dql_reset.
+
+In this case, dql->limit is reset to 0 while dql->limit_min remains
+non-zero value, which is unexpected. The limit should always be
+greater than or equal to limit_min.
+
+Signed-off-by: Jing Su <jingsusu@didiglobal.com>
+Link: https://patch.msgid.link/Z9qHD1s/NEuQBdgH@pilot-ThinkCentre-M930t-N000
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.build | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/dynamic_queue_limits.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-index 715092fc6a239..6a043b729b367 100644
---- a/tools/build/Makefile.build
-+++ b/tools/build/Makefile.build
-@@ -130,6 +130,10 @@ objprefix    := $(subst ./,,$(OUTPUT)$(dir)/)
- obj-y        := $(addprefix $(objprefix),$(obj-y))
- subdir-obj-y := $(addprefix $(objprefix),$(subdir-obj-y))
- 
-+# Separate out test log files from real build objects.
-+test-y       := $(filter %_log, $(obj-y))
-+obj-y        := $(filter-out %_log, $(obj-y))
-+
- # Final '$(obj)-in.o' object
- in-target := $(objprefix)$(obj)-in.o
- 
-@@ -140,7 +144,7 @@ $(subdir-y):
- 
- $(sort $(subdir-obj-y)): $(subdir-y) ;
- 
--$(in-target): $(obj-y) FORCE
-+$(in-target): $(obj-y) $(test-y) FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed,$(host)ld_multi)
- 
+diff --git a/lib/dynamic_queue_limits.c b/lib/dynamic_queue_limits.c
+index fde0aa2441480..a75a9ca46b594 100644
+--- a/lib/dynamic_queue_limits.c
++++ b/lib/dynamic_queue_limits.c
+@@ -116,7 +116,7 @@ EXPORT_SYMBOL(dql_completed);
+ void dql_reset(struct dql *dql)
+ {
+ 	/* Reset all dynamic values */
+-	dql->limit = 0;
++	dql->limit = dql->min_limit;
+ 	dql->num_queued = 0;
+ 	dql->num_completed = 0;
+ 	dql->last_obj_cnt = 0;
 -- 
 2.39.5
 
