@@ -1,256 +1,180 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2070.outbound.protection.outlook.com [40.107.249.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FE61C861D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 20:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746477596; cv=none; b=CwJASr3N4zEddIMdDLUWOeAxT6SQ2XWSoVJ7SM9wqEZt1LIsS94RWN+XjqLMcg5GcRUNUGCwVaRaDtWlSf8CDNyJltkRsDR2Y5gwYE09n0h6KKIDXsjt2GG/m6m1IIjSoY8gOxTTDL5JNcyWDPv7bjTUdi7Yd6cusqdEbwqf7QY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746477596; c=relaxed/simple;
-	bh=eXsbeYaStEdVkB/9iiuPPvCcb0GJ33j+Y7Lm4GpCn+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jc2n3BPH0EBVVUgA8e4yJsQ4RKRGmJ77KSGKWwh9fbsmjUb61meu2vCYFqSAmhedJJnN8IDK8JzNoYc8WRjyQ1V19b0DXpf0D0E2SXqf3PNAZtyMxQgJCnwC1iR3WtOXJTplR4JUz+Yzu8qi9syQo6gO/yhYra9UUfyQuLmcZc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLd/vkHu; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D2525C6F4;
+	Mon,  5 May 2025 20:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746477614; cv=fail; b=BSE1KG1UHI7qYp6Vw0r3uZ8PX+d1Xc5fXdgdpwuqx3BFOFwVx8Y1h40jcEtoePvqKYXzTKivaUqWEMHGfhMVqA3Of6aY7KUis4hQSmv4iKsTVm5J9fgpRXSuafyWRMMCVTCp0/I5/H2BxOHvw8zP7jNuvusNb0lqzq56rT2ncYo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746477614; c=relaxed/simple;
+	bh=mqUw7s+nehNvv8MGGEQ/E9H+tzHgL46W8rcS24G9r+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=WbdwUoOj9BXtfxiXR4+6W5DaV4GCpJ/wrESMuw+GWVFSC870JHI56xU2HwKZQneWXdZf1av65M9k4r7MVatL3/QKcYwP6V1jU7VLYiqRibmgC5PGZEcfE17T5hPY75EYgBUsnTIEyja4eYqOfAqCOklmCfPre3qqE3SdJP3NyM0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=OWmaglKi; arc=fail smtp.client-ip=40.107.249.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLd/vkHu"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ace98258d4dso700081366b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:39:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746477592; x=1747082392; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
-        b=QLd/vkHuh1aYpsrxFJeG5L2oIdxl7BRm5QD8CjbIETy3pd5/CPEXvUyvLLz2EI2hy0
-         2IcebbvCpV9YKZcMSngKbGuWsdgevZ9+IpqN9ZhnLCOC3WryxRp5D1vocG2keeyNibcH
-         FDOFHqUqLYBVLTKEGwyCW4jNhYD8zVimhVS5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746477592; x=1747082392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aad+O7LlnePo9Jud5k6L+0x2zxiP/d5GA/t21nuBedc=;
-        b=pOq3CPSilUFX565zaILVkoGzOQ+gZQUcUwB6rdnWim61zzoKLT1k5W2TEjJdrC1oC8
-         NVKiIe1Ebzt0kg6chWbBLC28/B02JbIp07regXcxL9Y9rOxpWIoZ6TiTLC23qk5d0TC5
-         KiU6iZPTyK+E8dgR5gfbwRxK6W0+LDfL/sTyOfjU97mNc6uxCbAcOdxzTSamp5WVNMuh
-         FTmC9i+QxA/ZB/qc28UMomUha7JtVbv6tdzMSTgiRcehYWFutPBDSmMf0u2/kXNixvtm
-         XwxUrKL1rUt8D9DUJmlcdWEeQHmtpqSaS3Z2akMvIif5pORlihgPayUO12ohrgoxpTuS
-         TdWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTpXjf4CQzVx4LN18fxFoqNnjtDAhpxPHTnGQPtfqup+8OsTHb0HRYAKQEGiVOGJvK63YZxWqSYQIntjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVtINog2bbS0Ouz6fsHY156A3kTD6gol21blChBslakGjbzQw/
-	fmC0mhmUhqAZVNXg1/dymaTs+xQVkdJTgJlFeMrEK23d+aqMpO+e9IwvZGjdZArTPFWLJxZQ1e7
-	Fzg==
-X-Gm-Gg: ASbGncvFmsJNLKGt3eVqe8fl3zWam3u/Cn4ZZNP/Omtjg6jeM5K0yiFTRn/IFhAE9Xr
-	+Js1ibe9Yah2hCqr3HQCDom4h2nIQ0D08bSLrmJXNqTrgvyrvPRLMI3TMEu6rwevsk7c4BBJUVg
-	rcuE+ytBCLHS1+yd2/ePB8gjS41b6qgSZghiDg/JaGLLGbIsJdRD1JwPYU5BjBbqC3wTUZPT8+x
-	Hvwd26/xxuOb5jndsNH2lG0d3mHvmhNOBpXYiOy1/fniEc5nNB72tpqrbaJfBhq9gdwn8ny4/qu
-	qFBgp0YkWKEr4xPJHN/+z92kSkJ10sgJAmg4l/RcZAMtOiyaQRyuqv3XRpi67he3Zzk3fghBKW9
-	S02U=
-X-Google-Smtp-Source: AGHT+IHl/FZXDoHnUsjvWf5v+cz03Vn3tNCqpV7L3ukwATnQcTtZ8TUhQ7xOgWbnZFH5DaLel1wtXA==
-X-Received: by 2002:a17:907:d087:b0:acb:b0d7:15d8 with SMTP id a640c23a62f3a-ad1d46dd5b2mr29989066b.51.1746477592227;
-        Mon, 05 May 2025 13:39:52 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891a733csm549446266b.73.2025.05.05.13.39.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 13:39:52 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so905429066b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 13:39:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVZWyvjstD6USix3t8WKQl6ql2YWsLcwFgCpmgvlTN3gPAdWt7NkHLOxisUEFNpeT9JZUuNB8ld8/xhWNI=@vger.kernel.org
-X-Received: by 2002:a05:651c:b2a:b0:319:d856:c2f3 with SMTP id
- 38308e7fff4ca-3266b59789emr751721fa.10.1746477268328; Mon, 05 May 2025
- 13:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="OWmaglKi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H4WOyKtNoAKCpAlEh+I/SmsXxVdtO8qRjd/cMQkF5SqSBaE6vjRuoQqg+0tq9WVywtjWZcQfe5yigXWcwSPV7XxEFwCPQ+MVH6uQ2T/oW1VAnTKxNdMU6uWv0jVg9ESQ39KWKZXnyKHTBEKEiUSyc4oqYdL+N41w6FLOUYQfY+xpXv7It6e8OxYV4tZoSOFC0H26/GjlSrp8QpaRH+uc/BpLl0cYiHosiBlnOoYrz9irMDv5PJVN1dH3qbZyXZGHqFxxoZfoNnmYs57omZ8pyPKnt/Wa5N+pU4wo8JYArTpp8dvpFukenU+KZFFB0Q/QW15+BXsMSfwqF9NXI7c00w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d8VaWO1kXooxCo7LnJurz2FjBqrZkUyzdCaPN2PvKOI=;
+ b=KPjTZVfI0VCkezBmFgENX6tPMT16atOVtNozbchaEP73owVWWYN9nA25jgUmcGo/vB0KGhAX29J8aQmmSxyAHGKz3zW9gS+Iyz9eo2NesQLkaRIovnxHdM9onMprW6TeyNwLpl+3/H95uUCg7gJdoejhs1lw2+PMrv7h/WiJejk6anep3ZU2ggz36okgu23ZpOyMYsKc5LWcg/VRhR8fZuDnk2OiBNT+wCxJXBMKUr/XIRo0L5L0fju5NTE41kGHXKUyDE8Nzk2+pOn59DJLLm+borblxmrhMX0GaA9hOC6PToSl5hTAldLWxY9ZH4ww5t5n5rTVxGJmsMb+E14/aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d8VaWO1kXooxCo7LnJurz2FjBqrZkUyzdCaPN2PvKOI=;
+ b=OWmaglKidjtFMPyCY4nHBOLaFeWTPj3VCGXYDap4StCbuPDPtS8yt8nro2+P9wDLYWP8wRxxNjkqt/VVrCUe/dEx9SrtwXHReUHOR3SktKRfDkNgRLzhv6Y1pfAOdDolQEjlDLwdmDtJs6OPQyGUoaxCHzqLiPB/VQG/eRk4qP80n/USOjSRUv7zpICMdUBMzcQyEApjTdMPyYwTMFRhvd+P7UGBbOxoGRkL+UcoIsAZ7+L0VMbLIYiUNHvQn/zFMdk07VEkPqBKUSJ3hu5FKLqHeZ+LHG2Yiqe8BQE9UiN/OYKt0u8L1SAT9fw3n7Ad5Gn0goKQCObFrvoeAOl1dA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from VI1PR03MB6285.eurprd03.prod.outlook.com (2603:10a6:800:137::14)
+ by DU0PR03MB9613.eurprd03.prod.outlook.com (2603:10a6:10:420::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Mon, 5 May
+ 2025 20:40:08 +0000
+Received: from VI1PR03MB6285.eurprd03.prod.outlook.com
+ ([fe80::e290:ebac:cbe4:198a]) by VI1PR03MB6285.eurprd03.prod.outlook.com
+ ([fe80::e290:ebac:cbe4:198a%5]) with mapi id 15.20.8699.026; Mon, 5 May 2025
+ 20:40:07 +0000
+From: Markus Burri <markus.burri@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Markus Burri <markus.burri@mt.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org,
+	Markus Burri <markus.burri@bbv.ch>
+Subject: [PATCH v3] iio: backend: fix out-of-bound write
+Date: Mon,  5 May 2025 22:38:30 +0200
+Message-Id: <20250505203830.5117-1-markus.burri@mt.com>
+X-Mailer: git-send-email 2.39.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI2P293CA0014.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:45::13) To VI1PR03MB6285.eurprd03.prod.outlook.com
+ (2603:10a6:800:137::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org> <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
- <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
- <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com> <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
-In-Reply-To: <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 5 May 2025 22:34:16 +0200
-X-Gmail-Original-Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
-X-Gm-Features: ATxdqUEg2rUAsN7TYo98ElSvRXDzyBQACXaWg80nr6xGofF6c5WfqBKJm9vPYRM
-Message-ID: <CANiDSCt5_HwfwXDWNGWvzkSAW2ZB4PJwS00=i0EizY_3A-OSgw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for v4l2_fwnode_device_parse
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans de Goede <hdegoede@redhat.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR03MB6285:EE_|DU0PR03MB9613:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91731a82-6fa0-4d75-474b-08dd8c1505bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?EXyVQjXqIFa25KyL7RFnSBOhFyZLQRORDfbEHyMBzZnzhBzefbogud4oKHsf?=
+ =?us-ascii?Q?LMZ+9wEsJSewOgvKmc9O30QWw0iJQyQzdQ7g/j2OmOOhEVPV9UzlBw6e8qrs?=
+ =?us-ascii?Q?t40wFW/A1yaeJ7SldNJRGxu9/hgLw4cp4qJG4JlvsdQ0H3iYAhXj0mZ/8Oon?=
+ =?us-ascii?Q?O+ylFtx/wN5ZgqFbcRAmwIrIsWL9Bxt7jGlHaILcose1Xy6B5yWdj7z9Sta9?=
+ =?us-ascii?Q?ZrV4q2Z4Z0z+CRSvjlyGzktCA2v+pcKxtAF/cE3UdV5lO/udjV89dJVIR3uS?=
+ =?us-ascii?Q?0+OtqUw4Mopy8YmQI/CouliF56aL0vKYdIubwkTIPXC2kXh/t+OuCpwP4rUf?=
+ =?us-ascii?Q?PoMRtkfrMJ9Pv/sfZ+z+tgKkHXfiUaSPcFVDD3ufMCk50oPm+VgvdrQZedDo?=
+ =?us-ascii?Q?Ky2pJTD7TLVEUJFdGTEva+BdlAGNW301NHhHKCKB3KSxGmu+qwkp/6pw0woJ?=
+ =?us-ascii?Q?wbr9Wb/LI7VUSjCRy7zYJWlIbtVJJGEDbRKavBrf+LqvQNGNMzq06VmSWcbi?=
+ =?us-ascii?Q?3AghqCLctEaGQaUoXjU15Sj30Qo0e9NVaTXcSu+nZedHaofHycFXKnxWhqgY?=
+ =?us-ascii?Q?0KqR2DACuD8i1F8OkOErIvU5FqlZvoWdQbd9Ru5CGfCYQOiyMtgsl/VVW4LP?=
+ =?us-ascii?Q?Oo/7qBZe4k7aefffzpnMUATdo1gR639gBlEO7IlrmMglSnYaHXZpV32LbX7g?=
+ =?us-ascii?Q?wtHtnAU/5I4d0BQSSVAvKwCMZJyE3fbL3uWJeHkKgHV9kgUBTtJft19LinnM?=
+ =?us-ascii?Q?onClbzyclpSCzmjBEpQUbqjniCRgL9pqcN8r2+lCtAA/62dqYsgDofJ+/aO4?=
+ =?us-ascii?Q?Mzse+qVeRccX5ULHqXCYgE6vcUjqIfInFf7KM9BJ1oEaZ2h033YSHg49OJ74?=
+ =?us-ascii?Q?1r+7c+NcOK1QEbnfn1G2t1BaLQFBocM66DsL39iyj7KgvsU24Od3/iIpJ/hv?=
+ =?us-ascii?Q?eUV1Frr5Pd5lJajhfF/kFGTucMq1Dgm8+1lvOruqG1e0edp2TmFroDVt8U8v?=
+ =?us-ascii?Q?du0hgvxkZg/HY3Qys0XbIp/76BB3N3e3rSDYirgXB5yu7ADjlF6OimV4u6gR?=
+ =?us-ascii?Q?aAVWf7TzZfOO+6jDLfbBsc+VKGqyKA20BfR+s6HK+sJU436/E+ES50PKxSWz?=
+ =?us-ascii?Q?dJz2doNe7xVz2A5HvWvUeIr/KFQLodg3SuVo5kIVyXYT5oEYzHDrJ8hHsW5m?=
+ =?us-ascii?Q?YRVWNoRyVLyzqvktn6Vr86+/U5ancb9kRQP61C0R9a70O0yPkoa8tks6KAeq?=
+ =?us-ascii?Q?YlKMWeLlvMzDnhipCxPE60vQ6AcGn3uEAWol5OfF/bZBI7E7aK0NrhuxJdvj?=
+ =?us-ascii?Q?i+IyCblURitp7lkVNIM+gDN/QOXd2+68HKB74/qIHVGrTeXmE9LMpH+NnnJ+?=
+ =?us-ascii?Q?kC7Aps2KUEkw7jmZNpzXtBCWWez8y3RUZrG8W1H5RdlSA4Zd+eahUJ3d7zCS?=
+ =?us-ascii?Q?jExqcDA3HPDWQm9wEFdBjb/Pg6oWrqZwaVtBrWRrU/MN7IdK78kdHA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR03MB6285.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tVWQMXj0u0DyCfAd+cxUMEJemjCnnH44Ekty6qLKCilLR24gx5NSoBQ+ube0?=
+ =?us-ascii?Q?hIVhe8qokRauAdeuFfy1IUfvsOasqSCXg/OPMu6BdkY2eSRYD5uvnmT7Bav8?=
+ =?us-ascii?Q?j3/9migT8fm1d3dFj+zm3PB/tIUBln32uy396qd3l4iodHGNnPTZK0POiQPV?=
+ =?us-ascii?Q?Sb2L5w58dGdKOh4e6rY3NkEObUThF9py1JFhD/svgoob2P9D8ZZYDcdy49kV?=
+ =?us-ascii?Q?+lVhTgsb08+n5D1suzuFNbsgLLSOLbQDERCCrPdlUlhF/GuEfwr2LZGn63FP?=
+ =?us-ascii?Q?aarX8HATzeNWQgftwUMSlLwkt2hNoyb/MkonAZboF05YmHWblf/K0j9hbNk/?=
+ =?us-ascii?Q?LAGfCsCGXvpsx/cmZGWZdxz++BQuulRahsRGvHX0bhIA5r6FDeSqhW5TnXEX?=
+ =?us-ascii?Q?A618yLimUfuzF3X9NqCT57hTtTSJH3po4hdIba/qNybcoh3PRoIA8uiNWGTP?=
+ =?us-ascii?Q?PslgwtAsSlNprrn7Jm2CFPAOEmK2Uw6Zq2oFs2OCfPz+irm5dzHi8RmviKID?=
+ =?us-ascii?Q?mlbPmTx3nHwnEGnz4U0v/QPnvXFf4s0RnyfkiLbW9czXhOVoZOWfA3LhD+lg?=
+ =?us-ascii?Q?DAstenyyMHGfgq8zzPkBj7htoS7d8De+RmJaoqexFZta0p5XraqxoLPLFoe6?=
+ =?us-ascii?Q?6PFkj+1xlfslbdpIGWR94ARC+c/GinaDOg5/2lqLNQ/lXnwkQs/Rev7BPGyc?=
+ =?us-ascii?Q?RMMcs+a3v0928W0ozMnMiSB60YTlHRCBp+If6I65AsnJan+B+LF9UOddTrwv?=
+ =?us-ascii?Q?3zjwutG2OwtgnJA1lWS7rWNetQum9aeAk5RLJP3rvWJynzqEYKzhF24r+rr1?=
+ =?us-ascii?Q?cPGEqYUmWTz82Hkq5D2WEZzl3YUGtdF2KqjHDMX9IFHu4HHcFfES6+qLSK7U?=
+ =?us-ascii?Q?i63NggYlvmqI+AdWEj7pkapgemedLdrFqqH5mxpIGOJmv8ikb3AaCQdQWZaT?=
+ =?us-ascii?Q?EgPyO8pR8I7I2v5mzjPh0u8+XRsDa4qNStZeryEIMYTMof/zilTeCKIEkF+2?=
+ =?us-ascii?Q?1F3Uk37EYKyMwejuC4r3b4zoXEp505XUM/UoviMgJJj1hTQ9q8Br6wmSrl6W?=
+ =?us-ascii?Q?Xta9aOKh6Tz7ND/eCkPbiJXEyJvKixuz8vpjYyJIz0vK4o4hWeA+b4KEL118?=
+ =?us-ascii?Q?d4Hi8iT/6ivJrp6ak0dgLvNpBINjfr85/v3hdJMIkEcLQnouOM6ijZMCUOVT?=
+ =?us-ascii?Q?2oDEi4hnFN2Hcce49T9fz5AffMtzbA9zsWpwkYEwSom9rdlRJXV4RuW0gBnw?=
+ =?us-ascii?Q?KWcNAgkxG96ooY+kSGLY2BO0Utu2MiDS1bEiSXlZowyLcOguRmIf/gBba9+m?=
+ =?us-ascii?Q?izNrfBiz23OaZeLolnMlRO0V1t0Nbsjw1DfnZ6XZ5ZwuzqCG7j0JB13vJLMJ?=
+ =?us-ascii?Q?QmYG90dclE/a5nJzNq5HKufpKx/HG+ZHxeJmbzC/3WcrWc4m5q91aDxEbYJs?=
+ =?us-ascii?Q?p1Vhkzxs5AnJHLwCgij0tQiGO1sTpPBKRiC/eYVlIfBFWjXqrWN3brfsFX6o?=
+ =?us-ascii?Q?NSPFIx44kEk9z7XIj48+BP5LjHeg3V+5p/larUq9pPWhM9l3EJ5O4n8ZCVOX?=
+ =?us-ascii?Q?dYIBdY8l06mhJqzhA/LpwmdlSErCSY2eLG4I8WTJ?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91731a82-6fa0-4d75-474b-08dd8c1505bc
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR03MB6285.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2025 20:40:07.6310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WegfZyF2a3q5KVay1P7y+ybG24L+4Hu9pH4aWBcLvUYe1OEz57C/aI52HTfXfVgS9jxNI+NOdlFCYrs181izPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9613
 
-Hi Sakari
+The buffer is set to 80 character. If a caller write more characters,
+count is truncated to the max available space in "simple_write_to_buffer".
+But afterwards a string terminator is written to the buffer at offset count
+without boundary check. The zero termination is written OUT-OF-BOUND.
 
-On Tue, 22 Apr 2025 at 11:41, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Hans, Ricardo,
->
-> On Tue, Apr 22, 2025 at 10:44:41AM +0200, Hans de Goede wrote:
-> > Hi Ricardo,
-> >
-> > On 22-Apr-25 2:23 AM, Ricardo Ribalda wrote:
-> > > Hi Sakari
-> > >
-> > > On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrot=
-e:
-> > >>
-> > >> Hi Ricardo,
-> > >>
-> > >> Thanks for the patch.
-> > >>
-> > >> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
-> > >>> This patch modifies v4l2_fwnode_device_parse() to support ACPI devi=
-ces.
-> > >>>
-> > >>> We initially add support only for orientation via the ACPI _PLD met=
-hod.
-> > >>>
-> > >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > >>> ---
-> > >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++=
-++++++++----
-> > >>>  1 file changed, 52 insertions(+), 6 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/=
-v4l2-core/v4l2-fwnode.c
-> > >>> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1=
-c96f2a5ede3fa9d64dab3 100644
-> > >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > >>> @@ -15,6 +15,7 @@
-> > >>>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > >>>   */
-> > >>>  #include <linux/acpi.h>
-> > >>> +#include <acpi/acpi_bus.h>
-> > >>>  #include <linux/kernel.h>
-> > >>>  #include <linux/mm.h>
-> > >>>  #include <linux/module.h>
-> > >>> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwn=
-ode_handle *fwnode,
-> > >>>  }
-> > >>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
-> > >>>
-> > >>> -int v4l2_fwnode_device_parse(struct device *dev,
-> > >>> -                          struct v4l2_fwnode_device_properties *pr=
-ops)
-> > >>> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> > >>> +                                      struct v4l2_fwnode_device_pr=
-operties *props)
-> > >>> +{
-> > >>> +     struct acpi_pld_info *pld;
-> > >>> +     int ret =3D 0;
-> > >>> +
-> > >>> +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld=
-)) {
-> > >>> +             dev_dbg(dev, "acpi _PLD call failed\n");
-> > >>> +             return 0;
-> > >>> +     }
-> > >>
-> > >> You could have software nodes in an ACPI system as well as DT-aligne=
-d
-> > >> properties. They're not the primary means to convey this information=
- still.
-> > >>
-> > >> How about returning e.g. -ENODATA here if _PLD doesn't exist for the=
- device
-> > >> and then proceeding to parse properties as in DT?
-> > >
-> > > Do you mean that there can be devices with ACPI handles that can also
-> > > have DT properties?
-> >
-> > Yes it is possible to embed DT properties in ACPI, but I don't
-> > think that is really applicable here.
->
-> This is determined by
-> Documentation/firmware-guide/acpi/DSD-properties-rules.rst . So rotation
-> and orientation shouldn't come from _DSD properties on ACPI systems.
+Add a check that the given buffer is smaller then the buffer to prevent.
 
-Doesn't this contradict what DisCo does?
+Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buffer")
+Signed-off-by: Markus Burri <markus.burri@mt.com>
+---
+ drivers/iio/industrialio-backend.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index a43c8d1bb3d0..4a364e038449 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -155,11 +155,14 @@ static ssize_t iio_backend_debugfs_write_reg(struct file *file,
+ 	ssize_t rc;
+ 	int ret;
+ 
++	if (count >= sizeof(buf) - 1)
++		return -ENOSPC;
++
+ 	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
+ 	if (rc < 0)
+ 		return rc;
+ 
+-	buf[count] = '\0';
++	buf[rc] = '\0';
+ 
+ 	ret = sscanf(buf, "%i %i", &back->cached_reg_addr, &val);
+ 
 
-if (!fwnode_property_present(adev_fwnode, "rotation")) {
-struct acpi_pld_info *pld;
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.39.5
 
-if (acpi_get_physical_device_location(handle, &pld)) {
-swnodes->dev_props[NEXT_PROPERTY(prop_index, DEV_ROTATION)] =3D
-PROPERTY_ENTRY_U32("rotation",
-   pld->rotation * 45U);
-kfree(pld);
-}
-}
-
-It seems to first check for the rotation property, and then check _DSD.
-
-If I send a v2, shall I also replace DisCo even if that means
-reverting its logic?
-
-
->
-> >
-> > But we also have secondary software-fwnodes which are used
-> > extensively on x86 to set device-properties on devices by
-> > platform code to deal with ACPI tables sometimes having
-> > incomplete information.
-> >
-> > For example atm _PLD is already being parsed in:
-> >
-> > drivers/media/pci/intel/ipu-bridge.c and that is then used to add
-> > a standard "orientation" device-property on the sensor device.
-> >
-> > This is actually something which I guess we can drop once your
-> > patches are in, since those should then do the same in a more
-> > generic manner.
->
-> DisCo for Imaging support currently also digs this information from _PDL
-> (see init_crs_csi2_swnodes() in drivers/acpi/mipi-disco-img.c), but this
-> is only done if a _CRS CSI-2 descriptor is present. It could also be done
-> for devices with the IPU Windows specific ACPI objects and it would be a
-> natural location for handing quirks -- there are some
-> unrelated Dell DSDT quirks already.
->
-> >
-> > > What shall we do if _PLD contradicts the DT property? What takes prec=
-edence?
-> >
-> > As for priorities, at east for rotation it seems that we are going
-> > to need some quirks, I already have a few Dell laptops where it seems
-> > that the sensor is upside down and parsing the rotation field in
-> > the IPU6 specific SSDB ACPI package does not yield a 180=C2=B0 rotation=
-,
-> > so we are going to need some quirks.
-> >
-> > I expect these quirks to live in the bridge code, while your helper
-> > will be called from sensor drivers, so in order to allow quirks to
-> > override things, I think that first the "orientation" device-property
-> > should be checked (which the ACPI glue code we have can set before
-> > the sensor driver binds) and only then should _PLD be checked.
-> >
-> > IOW _PLD should be seen as the fallback, because ACPI tables are
-> > often a copy and paste job so it can very well contain wrong info
-> > copy-pasted from some example ACPI code or from another hw model.
->
-> Unfortunately that does happen. :-(
->
-> --
-> Regards,
->
-> Sakari Ailus
-
-
-
---=20
-Ricardo Ribalda
