@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A3A359DF9;
-	Mon,  5 May 2025 22:42:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1F7359E00;
+	Mon,  5 May 2025 22:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484977; cv=none; b=O/rB0lDxU31slPtIsXZuqOH9vZ2zVQ/9b1bqB9BN0coo4Ef+Y0YvFdfIYbH673q9kRzr7d/Lw9VLGj9gNvw/q+Wqn9F/AjWu8XXoRZ2pBI8qTL1IkCv2+5CHdDQ7vF3CvOMG9n/H7LGjF/npAW9ZxxKgvD8mUdKJoM6U3SfExQc=
+	t=1746484978; cv=none; b=Ho8dAstlMz5HRnoFJesWarukPOY+eDCkSMJ2czD0UN15fTFbMwFUah2117y4BZw7ObQk0dDae4TAQvrbMbTtvB5ocRENhJenCwU2svH8EwTkvJ7OKrtVOcdaAr9CVsgkSydqvGggg1NC+CPjAzbQPE/4ZVJpLenEucdYqDQcoCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484977; c=relaxed/simple;
-	bh=YQ75bINvl/uiYyqnZhLyfguZ9F0UaUz2ZRP/bkRD+kU=;
+	s=arc-20240116; t=1746484978; c=relaxed/simple;
+	bh=kjAsViGtHjStfVoskh40kOGVqPEkltRf6p3137feQjU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r5h9y55JJYN6vRhyJbVsrRnIkYsvPYU61TyyuozhfbwanJ7raShILG2d0/uPKr5FiwtNy4S2tt/9p2Q3d0lvXDBx23eqnB5wCxceRSuodoQ8WYI7ZD+fYFb+i2fKi4eewPMJC+x46IpbFxJH76AkkPCeM4psIiH5sBfQBtSt94U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tagauJDc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aUqxxMS9/9HTebUsOZdlSMs5/UZiGHW6crZ2aES+kU9X+HbhtmsQmvJapSVYZoY47x6I0nNyaPyaWwt+lK4/CNss/qTfRpdjbUZLJFKMj8VlgtUQ1wyCkRmfpNNbcOF7gpCpF5gOpGxOG7pC3grL81wk+MIk5P30XeF12LZ9DnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSVn8joi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tagauJDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5636FC4CEE4;
-	Mon,  5 May 2025 22:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSVn8joi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DFEC4CEE4;
+	Mon,  5 May 2025 22:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484976;
-	bh=YQ75bINvl/uiYyqnZhLyfguZ9F0UaUz2ZRP/bkRD+kU=;
+	s=k20201202; t=1746484978;
+	bh=kjAsViGtHjStfVoskh40kOGVqPEkltRf6p3137feQjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tagauJDcT/9+ybLUVOchFKqbADIq6YI6zha5Mevau/atT2qhB49Ty9OsKwWF1HffS
-	 BUCpbUkVofuzhh1wnM+j7/ZGrbkO4G3HS6chssYgo787Sv9AEGwzmT72anoYe+X6Xx
-	 I6xrDgNgeoBmJx/GebWjyisowG5KmgAAnyC4ObJO77lrA+DeM5+aH1r2ovDScUPNUg
-	 fFy4WO6CNrskUvw0OVe/rC2KAFigmr/sKkttKLsNkuG7ThHFQtJJ4M66yVaN0MWWH1
-	 LWOo/bxq490RKzR26IYnaL9eEBCUmE+4yO8LxfUo0diNh3MeTCURp5OBc7n6pB+MuB
-	 j95fJXqWHppYw==
+	b=iSVn8joiEkDsoF2EXGVJpdGNfzOh4cIf07pPYv5yZFU8/c9bA4e4Quac5jTMDXUpV
+	 dQAB8gC8irpkNFYeREESyfbDrqvt/QK2jhlwwQ7SWd/WFlgqcd3MI4eM84dwiXfnDH
+	 vOP5RlhGowkyO/r+B1j4AVa42fxpuJHQ/IZtqB7q7NQ6UGfiOVtM7wD/Wiggl3BMB+
+	 ZSc1QopTQY+qlSiwPlapm9RRpfS1W5arhtYiCuOdMUmhhrwQ0Uc+LePw3oxYqfXAcD
+	 iaH+bELdS5qIVZGCV92pPTZyw8H3NPuyygFWfWu7RZZKtn6nie7zvI6C/k+3OJps50
+	 zGttlCnRBgngQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc: Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	andreas.noever@gmail.com,
-	michael.jamet@intel.com,
-	westeri@kernel.org,
-	YehezkelShB@gmail.com,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 106/486] thunderbolt: Do not add non-active NVM if NVM upgrade is disabled for retimer
-Date: Mon,  5 May 2025 18:33:02 -0400
-Message-Id: <20250505223922.2682012-106-sashal@kernel.org>
+	linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 108/486] spi: spi-mux: Fix coverity issue, unchecked return value
+Date: Mon,  5 May 2025 18:33:04 -0400
+Message-Id: <20250505223922.2682012-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,39 +50,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Sergio Perez Gonzalez <sperezglz@gmail.com>
 
-[ Upstream commit ad79c278e478ca8c1a3bf8e7a0afba8f862a48a1 ]
+[ Upstream commit 5a5fc308418aca275a898d638bc38c093d101855 ]
 
-This is only used to write a new NVM in order to upgrade the retimer
-firmware. It does not make sense to expose it if upgrade is disabled.
-This also makes it consistent with the router NVM upgrade.
+The return value of spi_setup() is not captured within
+spi_mux_select() and it is assumed to be always success.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+CID: 1638374
+
+Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Link: https://patch.msgid.link/20250316054651.13242-1-sperezglz@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/retimer.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/spi/spi-mux.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/thunderbolt/retimer.c b/drivers/thunderbolt/retimer.c
-index eeb64433ebbca..3488be7620674 100644
---- a/drivers/thunderbolt/retimer.c
-+++ b/drivers/thunderbolt/retimer.c
-@@ -93,9 +93,11 @@ static int tb_retimer_nvm_add(struct tb_retimer *rt)
- 	if (ret)
- 		goto err_nvm;
+diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
+index c02c4204442f5..0eb35c4e3987e 100644
+--- a/drivers/spi/spi-mux.c
++++ b/drivers/spi/spi-mux.c
+@@ -68,9 +68,7 @@ static int spi_mux_select(struct spi_device *spi)
  
--	ret = tb_nvm_add_non_active(nvm, nvm_write);
--	if (ret)
--		goto err_nvm;
-+	if (!rt->no_nvm_upgrade) {
-+		ret = tb_nvm_add_non_active(nvm, nvm_write);
-+		if (ret)
-+			goto err_nvm;
-+	}
+ 	priv->current_cs = spi_get_chipselect(spi, 0);
  
- 	rt->nvm = nvm;
- 	dev_dbg(&rt->dev, "NVM version %x.%x\n", nvm->major, nvm->minor);
+-	spi_setup(priv->spi);
+-
+-	return 0;
++	return spi_setup(priv->spi);
+ }
+ 
+ static int spi_mux_setup(struct spi_device *spi)
 -- 
 2.39.5
 
