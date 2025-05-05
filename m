@@ -1,114 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9C925D8FA;
-	Mon,  5 May 2025 15:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0051F9F70;
+	Mon,  5 May 2025 15:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460393; cv=none; b=Zt2tKrD0tzs9HXz/rRxILuAZovd37uvATLPjT0g2lpBfiDJYssl/CowuQvRy0y0npekO1sSTNsFkltYCjz2hvM3C+NvOpL//bMQ7goU8UH5mtE3CA9XinG1g1OgqD4qmiKuHCT1BUKnISoAMUGBDWf4X8DKqVp/8lt1v2ssx+c8=
+	t=1746460408; cv=none; b=LukfICHVZftTFJcu+J8N3eQh9CT10UkZtoomk/MAZ2ciurlEd/RL1lrdFbK9FRJMoyREe+Cb0XAVfq1qRoKettiRoxIRKYOWsH3l3PZGxoTUOEUC4/5w/LPiYGCun3/KryWDxpvXRM8HM8/8qihJH5e2BTayTpPESPM0KlZadX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460393; c=relaxed/simple;
-	bh=OuzGpT0oKOvoEQ+Ry+KiXcMfRilwXnlfW13N7w/2E20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xg/vN120xLi1anTivM0sIAsZheJsCWny3aBtPwFvw1l0JvEaR6+OVrUEZw/MPGWbURY7Wig8sAdNJQtEUZ6VLO/tK7bOmkMAEB0g3dUQjOZWvBk27Tz8pBCx8h/kqNlZVl6QUBOaKBMYR/WwFDUvNoYb+/hzEBkVP/clmj5QQ+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIyDE5pT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIyDE5pT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07089C4CEE4;
-	Mon,  5 May 2025 15:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746460393;
-	bh=OuzGpT0oKOvoEQ+Ry+KiXcMfRilwXnlfW13N7w/2E20=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rIyDE5pTCRMWKq4dq3ozIFoUKl8n7pkzKK/h92pKynmDDKXc3SVdOCzfl9ez9MyaZ
-	 /4hOSGsSq/1b4N7d/eAhUlab8dz3ITQjSpuz3aw8C4NdgQLePaufHvzv9jURQBbsdZ
-	 vzdqaLElyzO+m7zd8VHnq2LUSVmLUZbTuKZ+ob3c6EkwPRptNiRn9lfit+PNVQeBMl
-	 zkKcvrONMC7acMkrdJLtwZ642wb4fg0TZcDhnyvuYQPO9DOL2IBTV5Hb7048VU6oeA
-	 bu0bPxHvhH/Xcshm2kIj37BO86qYGEs5QLajU11AJwLKJqKt5x6+T0I2V81jA+5Mn7
-	 wANRNavSkxz/A==
-Message-ID: <2fd10aed-a103-4c65-9193-17a9bc9fd41e@kernel.org>
-Date: Mon, 5 May 2025 17:53:06 +0200
+	s=arc-20240116; t=1746460408; c=relaxed/simple;
+	bh=8RkBVqfox7fwCwPsAC9qgiss0kSBBf8x9It9eI8yJz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q3CToObH89Dic2/VwGrRc7TrJcR9NP2YCdBcshI4ZwJkJ9O/wHwfSG598+1rn9hKFCePBhLu3v8CSLAyiZxhdGrNh0tE1DH+4PWu/AvF+iuM1+MJMOZOl605sOZjxQgFUpomuq/d0+X9YU41lZZBob1IIdLJIH0tWLmJmeNbrsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5240764f7c1so1195068e0c.2;
+        Mon, 05 May 2025 08:53:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746460404; x=1747065204;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0eVBPdIANQkUOyeisDxdJnjXvcyAPwO1HmPMz4yFNDg=;
+        b=Dc2xzQwoY3T5G60Du4tjfHjFf74KCYNtHG981TdJo8KQs6xCx98FDCjpsbm5FpHuwN
+         PlKwFJwWXSt8Z1ridEYN3q/xpRBYwA4Nc1nZMbipS97x0WVSWTN7K3aH5liYg/rKlUeE
+         H5hMCZkQy82GlTCuehsljqzuC2iIeBk6tLJINSdwdj6usZFwYknodPhsicwR2uVETDe1
+         gEvEnSCJwr1eSsBPKR6fXfhHhvLNE7K9B8UN9y8CG6bHsAxM1xQMk/Dk21M2rFBBiEjM
+         qySWNGGy5LhBlJB3YYN7zRu5l6JkB73D2n4ImKghvO/vByWpejNwzdbC2fzH3WOh/9KP
+         0kGg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2kc/t8K7OLDJwIPtBYuZzKONt4xwLva4VEIQH3PPxIwEevqrDcg3m2vKinNtq8PaPL6vUEJxOHRS3@vger.kernel.org, AJvYcCWXsl9xoTPPfC+UF+9PVxRmTz+j4R7tnYwjwmAuZTiQ2hfbzDoDmO46Q2GRNFHEjY2lnptsso/dNR2XNkhOLmAlNQo=@vger.kernel.org, AJvYcCWbLZ37l2q3LmJUXLiNWIybgYAPMpWy1IBJieQZsxgQpetqMD4YZZ6m78/0Na5ri1gxENBDKGIM1okR@vger.kernel.org, AJvYcCX5oTD9d2PCYYlzILbdXBBdr9lSzdQnHQOwaX8xAs6TgDeNiwBfIri+6JMAcKN7DqNt2Ag+Hg/DtrFGloqo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUAHZn1coGg0yCjOP3sgEMFVh5md2yuKJSsWfqCuGARtFG58Iz
+	Fug+C5CjYKwV2YQG5XTPy31430UtbV51jUweWJvIaCxZfUub+zGIOivAVF5Q
+X-Gm-Gg: ASbGncvyMPJyag4mqNcbyk5SUBmdmwEngvZ6HXtqxbZvODvwN0tFTtV+xWI+0cWTFqP
+	fRuZjAvWXaD5DMZObKScxCaQ7mCCP/ckLfYhls9aDE/s17ynhXL2hGZYjDwfu8LoWqOf0SWCkqS
+	ev9xN6753i5K3LjCGlafe+AJOpzd4PN/HZ7HMLeoxm5A02C8aeCpo1i/LHmVq1csn8AoEwQiGHk
+	psthB3rOyLudlILXoue1wRyuF4BRq+mCEN8zDT3wtXKj30TgubvVJaThFBXcV86ov49o+0mU11K
+	IX8sV/2n52dewgScvZ3yIWkKHwoFcvj/NH3xKpTbAMJsEBVNaK8WKd7YmpTcFv+pkx+kZjDWEt0
+	Zki6As5gJkUoZ3A==
+X-Google-Smtp-Source: AGHT+IEfkfD2ItAR/7FtQTasBVwhsXN/svNz62QJ3Pvang6MOtscfcAd/EH7bRUNbHSt/oTwTl8bkQ==
+X-Received: by 2002:a05:6122:32cf:b0:526:42c2:8453 with SMTP id 71dfb90a1353d-52aed7a4e23mr6875008e0c.7.1746460404319;
+        Mon, 05 May 2025 08:53:24 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae401eed5sm1571402e0c.20.2025.05.05.08.53.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 May 2025 08:53:23 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-8782c05137bso206108241.2;
+        Mon, 05 May 2025 08:53:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1EtGSNpDzeFXUv27gAs2ufS8evmfTpDap/IlfDrXxNfwuxUDYdVGnfyPLMHQ9KdPXn8HrpuIrzXvJ@vger.kernel.org, AJvYcCWJbmNUUvKxuXPy6d68uLVYKypURudONiAhplXp0SWcZh1udbHIL3ouYN4kMzPMTFYi6Vi11Dq/aCTX2bvRpuwi4sg=@vger.kernel.org, AJvYcCX4/ElyUhiK3ZYHZvuowwHs7as0QRJ2VXY8pSfUB3ToMKfiBA+GrK9FH9qK2vBivhM1bXY+Hx++CqVq0Jer@vger.kernel.org, AJvYcCXhtMplQPQ7JJ0YYDv2IpXvvliFQtZAy2iCqT/mlpu4PDMWgnpfMJKX0CXJxcvokFqbc+OHaX6ZyYjD@vger.kernel.org
+X-Received: by 2002:a05:6102:1492:b0:4b1:1eb5:8ee3 with SMTP id
+ ada2fe7eead31-4dafb6ec028mr8759884137.22.1746460403317; Mon, 05 May 2025
+ 08:53:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/10] arm64: defconfig: enable ES8328 and ES8328_I2C
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
-References: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
- <20250502-rk3576-sai-v3-10-376cef19dd7c@collabora.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250502-rk3576-sai-v3-10-376cef19dd7c@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com> <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 5 May 2025 17:53:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
+X-Gm-Features: ATxdqUFlsIimMDXgDoVOyWKi-0CFxh4-I-vFRJaa5_Ji6cKjTXTxtCDDilP-BCg
+Message-ID: <CAMuHMdW0eKTfh6QsznWvCEeK5w9W-Zw4ORQ8yaevbYgh6+Ub3A@mail.gmail.com>
+Subject: Re: [PATCH 2/7] clk: renesas: rzg2l-cpg: Move pointers at the
+ beginning of struct
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/05/2025 13:03, Nicolas Frattaroli wrote:
-> The ArmSoM Sige5 board, which is supported in mainline, uses the ES8328
-> audio driver for audio output on its ES8388 codec controlled through I2C.
-> 
-> Enable them as a module.
-Squash these patches. It is one defconfig update, not one commit per one
-symbol.
+Hi Claudiu,
 
-Best regards,
-Krzysztof
+On Thu, 10 Apr 2025 at 16:06, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Move pointers at the beginning of structure definition to avoid padding,
+> if any.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> @@ -1183,20 +1183,20 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
+>  /**
+>   * struct mstp_clock - MSTP gating clock
+>   *
+> + * @priv: CPG/MSTP private data
+> + * @sibling: pointer to the other coupled clock
+>   * @hw: handle between common and hardware-specific interfaces
+>   * @off: register offset
+>   * @bit: ON/MON bit
+>   * @enabled: soft state of the clock, if it is coupled with another clock
+> - * @priv: CPG/MSTP private data
+> - * @sibling: pointer to the other coupled clock
+>   */
+>  struct mstp_clock {
+> +       struct rzg2l_cpg_priv *priv;
+> +       struct mstp_clock *sibling;
+
+I would move them below hw (which contains only pointers), so
+to_mod_clock() needs no calculations.
+
+>         struct clk_hw hw;
+>         u16 off;
+>         u8 bit;
+>         bool enabled;
+> -       struct rzg2l_cpg_priv *priv;
+> -       struct mstp_clock *sibling;
+>  };
+>
+>  #define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
