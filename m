@@ -1,124 +1,96 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.183])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA551957FC
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC818132A;
+	Mon,  5 May 2025 17:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746464686; cv=none; b=L0TnAfNz55823/DhmaMGpScKZatV0S4Ugw6hQ+suCcAllpNUdvCuJt557zG5VKhFS0Qz77G36PLeajy3llAy/y39gXNXTBLJBkPQiYK5eVgsr0PEPHFSguL3g9XSzRDPBYEV88B3L6HX9t/dlAFaRaRbOAatiZo+IKPf0BDlTgg=
+	t=1746464850; cv=none; b=JAcXlvf4i9Qxmv393UCvS+v1ZpnAWEbSas1uNQDZ4NGfpukyfmk6EPH+knhAACbGFH04KqXRyCp51/dmSuxQm2QdgdzAcdSPnP9QgRWDinick0YNYkSUzVLOoP5dL/w0okWK/HwZcGsGnzoQzbWFBOeSkVOc3HqrWIuslurHjXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746464686; c=relaxed/simple;
-	bh=f1unv9uKWkpLkfv0FcoXEn2Mw9gnEODhyfQHPGruINo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qxS1liyRKXdtmYakl+zPxSUh+OLAEJjNNp7H5MgU2/2wtQxBVxGn30VIYR0LzVILUAb+0WoNxS3KZPjfA0UzMZ4j6k7bymslSd2axC9GUhLD1V7t7jT9B089TDEUlbQ6uOpRFhdUbeeCGJj4O8sd3hTxYeTRO9br4nTqLUUW9xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ventureresearch.com; spf=pass smtp.mailfrom=ventureresearch.com; dkim=pass (2048-bit key) header.d=ventureresearch.com header.i=@ventureresearch.com header.b=dAzBLF60; arc=none smtp.client-ip=67.231.154.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ventureresearch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventureresearch.com
+	s=arc-20240116; t=1746464850; c=relaxed/simple;
+	bh=Wgko8I/m9BqxxB27PfRkqwDAClmx9QE/pUan8G37ook=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R4UyzfZTA6D9OJsizT/Euyf9V1WCwHcktj4fW9d/mDYSeIMgB1nu2SFrpQkcio5KGHPQGwb5XOQpzeAftcxySSmI9DcyQJkUXSbLRx1L1kWB8L0OXVqFhDFyfagfS57x3x1hc2U6iuq3tdXT/6AXSqiggB1WZqaSSTZIOny5M8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4DqN/24; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventureresearch.com header.i=@ventureresearch.com header.b="dAzBLF60"
-Received: from engine.ppe-hosted.com (unknown [10.110.50.102])
-	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id E524D602A2;
-	Mon,  5 May 2025 17:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ventureresearch.com;
- h=cc:cc:content-transfer-encoding:content-transfer-encoding:content-type:content-type:date:date:from:from:in-reply-to:in-reply-to:message-id:message-id:mime-version:mime-version:references:references:subject:subject:to:to;
- s=selector-1717781956; bh=sruw//HjQB6XJQIxHMRHC9dIAmbSQWjtCq2IsgN/sbI=;
- b=dAzBLF60Qkk7ahCJWVoinInWp4RsLt0SZWRoUG30RNueTNbgC7Y92Z0AJ+GMmv4suDnqZS9Y0PmhJ33JSxoQEVAZm7LBD+Vte0F9lMlBgvfE29kQXssJS3kxFrARC5PrqkJh4O55mulESP86/VEOOVVHqZnUGuQokmUkxBglT2v1cgvfj2nvXig1WHRnD+nKLZmobq29q4hv1/o91nBXokGmGkA+F5wgXr+xzyhtc2IN/upsmN7pEXPngbfzcPT8JvSztC4IC7OiqsqNSu4zSuPWE3aQwEl7a9+JpFiXE+8oODs+TbxMqqYFh3pNzfnJa8UXF1afUypwC6WiqZs4bQ==
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from Mail2019.crm.ventureresearch.com (unknown [67.210.242.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id DB60B340085;
-	Mon,  5 May 2025 17:04:33 +0000 (UTC)
-Received: from build01-deb.crm.ventureresearch.com (2605:ed00:15b3:1::5:1) by
- mail.ventureresearch.com (2605:ae00:1849:1::1:19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 5 May 2025 12:04:33 -0500
-From: Kevin Baker <kevinb@ventureresearch.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg
-	<sam@ravnborg.org>
-CC: Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Alex Gonzalez <alex.gonzalez@digi.com>,
-	Thierry Reding <treding@nvidia.com>, Rob Herring <robh@kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, Kevin
- Baker <kevinb@ventureresearch.com>
-Subject: [PATCH v2] drm/panel: simple: Update timings for AUO G101EVN010
-Date: Mon, 5 May 2025 12:02:56 -0500
-Message-ID: <20250505170256.1385113-1-kevinb@ventureresearch.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
-References: <dbd8e1bc-bc23-4240-b6b1-321ac6f5ed68@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4DqN/24"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e1782cbb2so3346965ad.0;
+        Mon, 05 May 2025 10:07:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746464848; x=1747069648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wgko8I/m9BqxxB27PfRkqwDAClmx9QE/pUan8G37ook=;
+        b=a4DqN/244hiGlIpVaOp97ncK//IfBYjR0y7koJmhp1CMFEmCyWB/3Sm1zxvXVTOcTH
+         BJuKKYETTEaoNYevdOMNlMpJRtTL0cssN/AABiXuTxnQIYPOTP22n79iUsna26iHX0xe
+         7FDokiiipxqGXJqGzHDVbO5g3vbdVAFSwffuyAprN1k6q3ZsKegHRQq31wmM9W2WAMSb
+         zaJrlcc0cFpd++ITiiuc21PONJ5d67Y+TlkppwoyGWSmxWPU93h9j4UKXys7RoS6UXDj
+         syCbioGs36mKHu0HpxoXKZ5bPi25SPES/PUxF8RSJ7GJtrWSeTCd3y3pr17kVeVUMApM
+         UIaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746464848; x=1747069648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wgko8I/m9BqxxB27PfRkqwDAClmx9QE/pUan8G37ook=;
+        b=j4jNZe52r3sM53c9qSFSyh0dZgfjTh+9ritGjb0whcRnM/Je4ZXRsmpNLVjVpPygGZ
+         pXshYQA4Covtknk3KD2kP5s0VcfOcTT/QHRAvjKi4X/30Z6DF4fPx717NMCUhmOr6IQl
+         tJWm+0yEPaZ+irl6pZBfVHulqYkbc4fmDVpls9rdlPA4sG8yFJaxJSsVS39WCFCnTr4v
+         VV5c/nA90vPI1BM7sDAsV/s+GsHUF5IxBIpYQa0m6HtypqtbD2TUngk782V7UpbwivNL
+         ut5cttYPUXk/Z9WgxD8qChDtXL1535ycDgeFFQgTHkID/IU89DGgXokCdkVxCqAA3D/c
+         7plQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5dd5rKHR3+C5T5f1VDUhYf3dRoXoq6QGjiHfb/q5JDxkH4p1/L4GeUiGiqS/uUqxjIjmcguTcozYMAmcmckY=@vger.kernel.org, AJvYcCW3tzjuT1J58/q/njeB7M6Xj4DwkGOagFUbplwjWS02iBa8zTTaYonQTU9RPjkU76A4GocXvNhWvj3XPZxPxtws@vger.kernel.org, AJvYcCXAsJmQ8ruhRrMy7Rrdb/C3LQTxaq7uaNbARf2rK6HCMCKBPY7os4w3DwMjeK9j+YqO3CJQ8THDCQjLHdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4x4DBYLMh3u/re1Mdx5OG+UAKR99YBHEzH9opda//cKtdmrG5
+	MHSLwxEq/7/wNYYroW0y+DJS44ckPARVCEPrSxoDR9Vb3UX5w8rf2fsa2uSJTzwFJnVQMPYe/j6
+	NGRsvWFoTBIuabmnu+HjtnceiTgI=
+X-Gm-Gg: ASbGnctBrJdTbXJpnE6wpLlEUSpVnFZg1dAap5tK6mqiTnJhAtIdBMdkwnW1b3yYHxY
+	Lz7WjOYYMrIBbHyEziffsyhZzR/oVcEZczy/njogi4nBo9p0j3s9LEkt417bJg6j1IyO+fGYv+m
+	2KCM9Ws4aQVMPYW29kFrwl/w==
+X-Google-Smtp-Source: AGHT+IFLxWjul1SJF7ZqOgOBbbo9BHWzWJnRRxBf0NBIcb0vX721AMZ+hB1vr+RFDd/SU5sNyV4H1Xw17bDGwqpnmp4=
+X-Received: by 2002:a17:903:1905:b0:224:10a2:cad1 with SMTP id
+ d9443c01a7336-22e10373938mr79787315ad.10.1746464848170; Mon, 05 May 2025
+ 10:07:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MDID: 1746464675-oNH0tDlgHK0m
-X-PPE-STACK: {"stack":"us1"}
-X-MDID-O:
- us1;at1;1746464675;oNH0tDlgHK0m;<kevinb@ventureresearch.com>;58e32da1f0e7946bb9643c97f392fd2c
-X-PPE-TRUSTED: V=1;DIR=OUT;
+References: <20250502215133.1923676-1-ojeda@kernel.org> <aBjuCIHH1ZCIVs_0@polis>
+In-Reply-To: <aBjuCIHH1ZCIVs_0@polis>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 5 May 2025 19:07:16 +0200
+X-Gm-Features: ATxdqUGrqf4jwWLSpQZ_Dz46MOZsF8WvrNskaiy2DPAE2SfbmleZGwbWqKSwNaw
+Message-ID: <CANiq72mKKh437k7HQBuyr+oBqAZ23Z=VKgo42TnQjD2s-VoF7Q@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Rust KUnit `#[test]` support improvements
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Switch to panel timings based on datasheet for the AUO G101EVN01.0
-LVDS panel. Default timings were tested on the panel.
+On Mon, May 5, 2025 at 6:57=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> With that, do we still expose `alloc` primitives to userspace tests?
 
-Previous mode-based timings resulted in horizontal display shift.
+I considered removing a bunch of stuff (even the build support for
+non-`macros` `rusttest`, to be honest) -- you are referring to the
+`any(test, testlib)` bits, right?
 
-Signed-off-by: Kevin Baker <kevinb@ventureresearch.com>
-Fixes: 4fb86404a977 ("drm/panel: simple: Add AUO G101EVN010 panel support")
----
- drivers/gpu/drm/panel/panel-simple.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+I think we can wait to see if we need it, or we can also just remove
+it and re-introduce later if needed.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index df718c4a86cb..c79dc8581054 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1026,27 +1026,28 @@ static const struct panel_desc auo_g070vvn01 = {
- 	},
- };
- 
--static const struct drm_display_mode auo_g101evn010_mode = {
--	.clock = 68930,
--	.hdisplay = 1280,
--	.hsync_start = 1280 + 82,
--	.hsync_end = 1280 + 82 + 2,
--	.htotal = 1280 + 82 + 2 + 84,
--	.vdisplay = 800,
--	.vsync_start = 800 + 8,
--	.vsync_end = 800 + 8 + 2,
--	.vtotal = 800 + 8 + 2 + 6,
-+static const struct display_timing auo_g101evn010_timing = {
-+	.pixelclock = { 64000000, 68930000, 85000000 },
-+	.hactive = { 1280, 1280, 1280 },
-+	.hfront_porch = { 8, 64, 256 },
-+	.hback_porch = { 8, 64, 256 },
-+	.hsync_len = { 40, 168, 767 },
-+	.vactive = { 800, 800, 800 },
-+	.vfront_porch = { 4, 8, 100 },
-+	.vback_porch = { 4, 8, 100 },
-+	.vsync_len = { 8, 16, 223 },
- };
- 
- static const struct panel_desc auo_g101evn010 = {
--	.modes = &auo_g101evn010_mode,
--	.num_modes = 1,
-+	.timings = &auo_g101evn010_timing,
-+	.num_timings = 1,
- 	.bpc = 6,
- 	.size = {
- 		.width = 216,
- 		.height = 135,
- 	},
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
--- 
-2.39.5
+Thanks for taking a look!
 
+Cheers,
+Miguel
