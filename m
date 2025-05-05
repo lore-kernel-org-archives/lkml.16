@@ -1,146 +1,125 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091352561C2
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 15:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDF125E464;
+	Mon,  5 May 2025 15:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460174; cv=none; b=GuN/jNj+jrtdukxb+WU4NddooPFhJG3RuIHio+tmD1lg0IrumJczmsm0VHUIZvpgpxdiw5+vKAsCd9wW7f+d6WY3p2D593z78rpYCFukfYLgeLvZbnZLSg9wbHB74+l6CDJNrrn/iMYAJXSEecxlhq5Ol5KXeZ30Eh9X5dyRvog=
+	t=1746460191; cv=none; b=qaquadKgHSNy+q+tHdJxt7L9OySmWNN/VDuknx2OWSxFUSMCgsbyU63vbimsF9nV/BuyftrVHL93gtKsUvpsUi1OhOcu3+oxNCDGQyELrZVyNc4aRJdEeuLwVQTSzkttJBIVj4sGrjN0EFFYFau1VS/NXs1yoULexPF2/30Ja7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460174; c=relaxed/simple;
-	bh=HfDy/HkyH9OE4BdyiLFSHkuBVpYPTVkooXLx5f3rZOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPLuh9QOHFd0evloJ8+W69cINE5pBrr87A3HA37iSWTaSJBJsS/jGyKba+IpS7YWe4tfrGLJVJ4UJ6hMl38nvkcChu65kvU51w9x312Wb2PYLYsxeboTLXhA+2N22XsoHf9QJXAot6+ZryD77Q7kRBAX0KbMLCAbkzS+UVkOCYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=nUWm3bhJ; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1746460191; c=relaxed/simple;
+	bh=hXB5HIS3f+ZCRt/681Lhw22MgJ3Qq9wuAw99RftnTZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PNugqv82YcSJWve43RAwI8GXJJwwuaZjvHiKnsa3oMcpZsPPK5FEcLYkUDxEOG5kflKdI5/UEgpoz/RWhugljaok54aOk5zvFfCiWq7DEPeevaHoRqfoOeYH9gtIW03qjRB8CI8BjCy0UaQs3+ykizSdhfzRa8XWX/2dU7pd4iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZBx9G3Ez; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="nUWm3bhJ"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zrm150CSJzYMl;
-	Mon,  5 May 2025 17:39:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1746459576;
-	bh=2rr0NxT3YygR9iTO8oBRTuCPuvHO/u8bPQjZ4fJ4Dmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nUWm3bhJWq419tUFjizOeRUyHfqL1Ps0Bp0obcoIHzLGMUEs7xv+vVf6XmVNsmKvV
-	 wH9r8SMThoIJnMs9qG2cF5fm99NtOCWlGhihJTREL47QhIulH762DJBS1raj+bSvfd
-	 1Wvsw7/AXtuQSbncvRxa75Y+GzPBAPZ9bWztxg5M=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zrm134TtlzTc8;
-	Mon,  5 May 2025 17:39:35 +0200 (CEST)
-Date: Mon, 5 May 2025 17:39:34 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jann Horn <jannh@google.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH RFC v3 00/10] coredump: add coredump socket
-Message-ID: <20250505.ej2ephiNg7Ve@digikod.net>
-References: <20250505-work-coredump-socket-v3-0-e1832f0e1eae@kernel.org>
- <20250505.aFia3choo1aw@digikod.net>
- <CAG48ez0Ti8y5GzZFhdf5cmZWH1XMmz0Q_3y8RCn6ca8UL-jrcA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBx9G3Ez"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-604f0d27c24so1976745eaf.2;
+        Mon, 05 May 2025 08:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746460189; x=1747064989; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TfSasfyNn2QOSv32qDVaYS8lEHvMrqjWB4CpFRqIp8o=;
+        b=ZBx9G3Ez52HAXm6xtsSA66KRYGrPgwQTXrkA0Iq+3QBhEig8xiy/6paG46whKX7laf
+         nmnCRV6M7b5B7bQ/7jeQ4+JSGUndDAdYvh4sun499DgiWuA3qNU5yrbk5NQ+pWbt0XMT
+         80A2UcOUhD8+0a6XEkQraGAKNIHeh/J2NAuEPajRaVeV17z8j3i39yi5a/7sdI4kG6KF
+         vMnQC5Wxp+NiuCl9DSqruACi7UijIHjdLgvFjEBbia509yylA4aO76WFbT3+z6QXWJdn
+         dUbQM0pTMpKxBxYDSAWlkGG481ZCbfFICleJPRAWSQANfjVaczIspyukk5kYmqK1nXeE
+         foKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746460189; x=1747064989;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TfSasfyNn2QOSv32qDVaYS8lEHvMrqjWB4CpFRqIp8o=;
+        b=Wyk6fUeBoVcRDyoZISkfBryoCXxfAtucfTycNN7jBLMXPyXB7W4z9BX0wHrWksTAqO
+         2oWYtTx1tGk/4Tcre2ZgF66/OSeXA3R760UvXYfUCzdydBOZmjRQ+90Pd7IQ2F35I2cw
+         uYvLzBVD5xBeAkhhXldiyP/I6Amfyk15LkCipkd0zuH4u4DBz1cZO6cE0w2yO3xreIoM
+         /jimmGYR68yretkTBicZv2EyNMP5aptpIL4/5OKMA6s2NcQ+W8yfMZtSs5XfKLkU8w95
+         PxyR5zb/6H5ZJ4epooEn9LqBhRbOrqYrgi+oiwkCYFrim2c2h/WiQ5N5wMBSjwZZFm/p
+         GRgg==
+X-Forwarded-Encrypted: i=1; AJvYcCU43l7lDM2ysFqZgjJzLjcTEfpMd87cpuJE0HgHJELLPfY42pnRuxSZpP0ZwdA0fu0KrFG2M4p0MLR6kBk=@vger.kernel.org, AJvYcCUoHOlfC1wmzKRg57YeRKWr2umHmTeW31BksQY1qw729HxMxvv86HwbwYxl+DRag+hz3i0wh5AlZFI=@vger.kernel.org, AJvYcCXoXfIDzw71wut8I/U+fYVw7AZOdezMPabnzBHSrchFkyiOYeOOoNmMuAsqLG/dtCPDdDVJULEKJkFa8G7i4JLucg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+7ZnnqYk7XEJmkBusWESaZCZA6Ly73IfOUo3y5VSw3NZvdABg
+	xVFN2Mq9A85qPjQir45bTLWpBkxfr5E45F73cNmNRWHX6Jg5UJdM
+X-Gm-Gg: ASbGncsObCFDfy27cYMzhkcMrenlTKApfkNDem8eiku+D88TArBo4v9eY0/1HkiZF9D
+	GIusHC8wLMWG1qgCQ4ZCjMdB66vzdUTjLjtn8f2WhF9zqpU8unEU3cCPzJMV8v16QDqdrX7THDJ
+	cW/18hwDxVSc7Ji7mVp4BkEUOQziGQPAb/CWbtixrDcci9RSzc+KOyiTHf3IS/Uc3thzR22BAKU
+	4UXrfzOMzLxvW5laRob94WZ4dJLFFGWNTO+7Yeya4BDxR0ZbG5WR06fIy0MdCz61xsxyQTzYOCq
+	K+AdximZc9yg7H/eI8lSUGCiHBKnxruHQfWwRcuYSjFyBZiNUbBMtuKZpyGPFPNGaKrqM4oRyA=
+	=
+X-Google-Smtp-Source: AGHT+IFxZaRAPndA18lDE7ChWtiEoMGY9mLpWkb2iP4H0PkM0TVxr3eZLsRh+qcaLAy4IFe3PQLjgA==
+X-Received: by 2002:a05:6820:c81:b0:606:8bce:32a0 with SMTP id 006d021491bc7-608002f986dmr5907169eaf.7.1746460188788;
+        Mon, 05 May 2025 08:49:48 -0700 (PDT)
+Received: from hiagof-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7fe84a8sm1606217eaf.36.2025.05.05.08.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 08:49:48 -0700 (PDT)
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH 0/3] remoteproc: imx_rproc: allow attaching to running core kicked by the bootloader
+Date: Mon,  5 May 2025 12:48:46 -0300
+Message-Id: <20250505154849.64889-1-hiagofranco@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez0Ti8y5GzZFhdf5cmZWH1XMmz0Q_3y8RCn6ca8UL-jrcA@mail.gmail.com>
-X-Infomaniak-Routing: alpha
 
-On Mon, May 05, 2025 at 04:59:41PM +0200, Jann Horn wrote:
-> On Mon, May 5, 2025 at 4:41 PM Mickaël Salaün <mic@digikod.net> wrote:
-> > On Mon, May 05, 2025 at 01:13:38PM +0200, Christian Brauner wrote:
-> > > Coredumping currently supports two modes:
-> > >
-> > > (1) Dumping directly into a file somewhere on the filesystem.
-> > > (2) Dumping into a pipe connected to a usermode helper process
-> > >     spawned as a child of the system_unbound_wq or kthreadd.
-> > >
-> > > For simplicity I'm mostly ignoring (1). There's probably still some
-> > > users of (1) out there but processing coredumps in this way can be
-> > > considered adventurous especially in the face of set*id binaries.
-> > >
-> > > The most common option should be (2) by now. It works by allowing
-> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
-> > >
-> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> > >
-> > > The "|" at the beginning indicates to the kernel that a pipe must be
-> > > used. The path following the pipe indicator is a path to a binary that
-> > > will be spawned as a usermode helper process. Any additional parameters
-> > > pass information about the task that is generating the coredump to the
-> > > binary that processes the coredump.
-> > >
-> > > In the example core_pattern shown above systemd-coredump is spawned as a
-> > > usermode helper. There's various conceptual consequences of this
-> > > (non-exhaustive list):
-> > >
-> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
-> > >   connected to the read-end of the pipe. All other file descriptors are
-> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
-> > >   already caused bugs because userspace assumed that this cannot happen
-> > >   (Whether or not this is a sane assumption is irrelevant.).
-> > >
-> > > - systemd-coredump will be spawned as a child of system_unbound_wq. So
-> > >   it is not a child of any userspace process and specifically not a
-> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
-> > >   upcall which are difficult for userspace to control correctly.
-> > >
-> > > - systemd-coredump is spawned with full kernel privileges. This
-> > >   necessitates all kinds of weird privilege dropping excercises in
-> > >   userspace to make this safe.
-> > >
-> > > - A new usermode helper has to be spawned for each crashing process.
-> > >
-> > > This series adds a new mode:
-> > >
-> > > (3) Dumping into an abstract AF_UNIX socket.
-> > >
-> > > Userspace can set /proc/sys/kernel/core_pattern to:
-> > >
-> > >         @linuxafsk/coredump_socket
-> > >
-> > > The "@" at the beginning indicates to the kernel that the abstract
-> > > AF_UNIX coredump socket will be used to process coredumps.
-> > >
-> > > The coredump socket uses the fixed address "linuxafsk/coredump.socket"
-> > > for now.
-> > >
-> > > The coredump socket is located in the initial network namespace. To bind
-> > > the coredump socket userspace must hold CAP_SYS_ADMIN in the initial
-> > > user namespace. Listening and reading can happen from whatever
-> > > unprivileged context is necessary to safely process coredumps.
-> > >
-> > > When a task coredumps it opens a client socket in the initial network
-> > > namespace and connects to the coredump socket. For now only tasks that
-> > > are acctually coredumping are allowed to connect to the initial coredump
-> > > socket.
-> >
-> > I think we should avoid using abstract UNIX sockets, especially for new
-> > interfaces, because it is hard to properly control such access.  Can we
-> > create new dedicated AF_UNIX protocols instead?  One could be used by a
-> > privileged process in the initial namespace to create a socket to
-> > collect coredumps, and the other could be dedicatde to coredumped
-> > proccesses.  Such (coredump collector) file descriptor or new (proxy)
-> > socketpair ones could be passed to containers.
-> 
-> I would agree with you if we were talking about designing a pure
-> userspace thing; but I think the limits that Christian added on bind()
-> and connect() to these special abstract names in this series
-> effectively make it behave as if they were dedicated AF_UNIX
-> protocols, and prevent things like random unprivileged userspace
-> processes bind()ing to them.
+From: Hiago De Franco <hiago.franco@toradex.com>
 
-OK, so why not create a proper protocol?  That should also simplify the
-interface.
+For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
+started by the bootloader and the M core and A core are in the same
+partition, the driver is not capable to detect the remote core and
+report the correct state of it.
+
+This series of patches implement an API call to the SCU which will
+return the power mode of a given resource (M core in this case) and if
+it is already powered on, the driver will attach to it. This SCU API was
+already being used inside pmdomain/imx/scu-pd.c driver, therefore it has
+been moved to firmware/imx/misc.c so it can be accessed by imx_rproc
+driver.
+
+Finally, the imx_rproc_clk_enable() function was also changed to make it
+return before dev_clk_get() is called, as it currently generates an SCU
+fault reset if the remote core is already running and the kernel tries
+to enable the clock again. These changes are a follow up from a v1 sent
+to imx_rproc [1] and from a reported regression [2].
+
+[1] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
+[2] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+
+Hiago De Franco (3):
+  remoteproc: imx_rproc: skip clock enable when M-core is managed by the
+    SCU
+  firmware: imx: move get power mode function from scu-pd.c to misc.c
+  remoteproc: imx_rproc: add power mode check for remote core attachment
+
+ drivers/firmware/imx/misc.c           | 47 +++++++++++++++++++++++++++
+ drivers/pmdomain/imx/scu-pd.c         | 29 ++++-------------
+ drivers/remoteproc/imx_rproc.c        | 27 +++++++++++++--
+ include/linux/firmware/imx/svc/misc.h |  8 +++++
+ 4 files changed, 87 insertions(+), 24 deletions(-)
+
+-- 
+2.39.5
+
