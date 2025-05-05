@@ -1,109 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B4B1E5218;
-	Mon,  5 May 2025 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972AAA31
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 13:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746451737; cv=none; b=HQrKhfZTS2KJYGbv2+7CxGDGc4DL+ReDza5EQfu2TTfNeBhOoGApADcZalynQJOVgacRxkV3Tuw7eYKu07XPe20N/qzn8/8x09kjlljpvZEGx0j/krVSQhWfxwncV5vyZavyfVWWghQ53nghlPJNLldZSGvtJug6fE9uBBi6ycM=
+	t=1746451738; cv=none; b=caaXyLqT0XBgMb8qaTIZL3H5ipwVJ+sZjOZSsroIiRDuHPe3b/NhMafTnWAxxVlsr12EvJW6yfP9vwD0auVsAcxGO7OZ2o0EHJM0VYXD2QUInQblYQloMwo4KvY9bjlTOKSD+ccfTutjArKPNR9gAqOiBm5BcQvlL3fN19joJeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746451737; c=relaxed/simple;
-	bh=xH7735ca1FwHO7Q1/W7N4dAS2/ej5MPuwbbwF2LGDRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aidxfS5HDwM88NGApdOsNWO0pjkrAZErDKJzAcDbu8YdU4fzZlNvpMWEWX1e38bCcpQ5CWyMrQVGyGJXaC04jfnDPZWVqWSFE7NZ0H3PS+Oi2FnceIeGMl2RB/vJ3nFh/9bmPWzFLCvr3QfcMw0xXJwHbNio/PJH3ESYEd/viME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDtvla5h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDtvla5h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB62C4CEE4;
-	Mon,  5 May 2025 13:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746451736;
-	bh=xH7735ca1FwHO7Q1/W7N4dAS2/ej5MPuwbbwF2LGDRg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JDtvla5hoHPfR/l8HpHtFMPc9hwc5lwxDfhV5UGs+oG6RF74d1+QScND31+NO8I5J
-	 pnLT22DuZ8jpdyxUa94eoZ5Tf2i9slv06h57zL7e0I+CeDB/9XKFCaPkm18idFrtX2
-	 BLpsI/4MihbGtjrRTEPMn/yCKuc41sgMB73QnVzRCpYikAJy6sbo3xYUD95IRf0Q2T
-	 pDl/KlGTQ38TNJXiZN68aAuZc+vV1sJlfbYMe6hrTP13FvWxN+FDS07hCQgLK9vdlg
-	 EUjW/tz0WiFhBz1aSFsqHHDt1U9wKebiON4w3n9rZs+k0A70g6xfu85eWWbMKqv+zJ
-	 0MBq86pyZKIqg==
-Date: Mon, 5 May 2025 14:28:45 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] Documentation: ABI: IIO: add calibconv_delay
- documentation
-Message-ID: <20250505142845.5b58a74c@jic23-huawei>
-In-Reply-To: <357c418f-7f00-416c-937e-f6fea1c0af96@baylibre.com>
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
-	<20250502-wip-bl-ad7606-calibration-v2-1-174bd0af081b@baylibre.com>
-	<20250504161603.7d1027af@jic23-huawei>
-	<357c418f-7f00-416c-937e-f6fea1c0af96@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746451738; c=relaxed/simple;
+	bh=dZ9dBgvKwfKcr/rfkOtP60IfI258WLh7fJ/cniyVNIs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hcoRts0isooFpGnnQb4SMkfDsf1N6QyHEBCElD78tWIcEotSdBrQiu62c56i8r7WmezM6yzaitxcp55QSvF41mIrymooFdSTTHOAFe4sKOEFkLwaUM2TT3xQ4Z/ZLnn05K5l0EntTwZNY/RdZ6yIy/wZRtRuMx851/AR+Y/bMWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvsK-0001cN-La; Mon, 05 May 2025 15:28:52 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvsJ-001Em3-1x;
+	Mon, 05 May 2025 15:28:51 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uBvsJ-000Kk2-1h;
+	Mon, 05 May 2025 15:28:51 +0200
+Message-ID: <1431aa0cb021da0056b9de594c3332045b770d07.camel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] reset: Add
+ devm_reset_control_array_get_exclusive_released()
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Patrice Chotard <patrice.chotard@foss.st.com>, Mark Brown
+ <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Date: Mon, 05 May 2025 15:28:51 +0200
+In-Reply-To: <20250411-b4-upstream_ospi_reset_update-v2-1-4de7f5dd2a91@foss.st.com>
+References: 
+	<20250411-b4-upstream_ospi_reset_update-v2-0-4de7f5dd2a91@foss.st.com>
+	 <20250411-b4-upstream_ospi_reset_update-v2-1-4de7f5dd2a91@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sun, 4 May 2025 14:48:32 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Fr, 2025-04-11 at 14:41 +0200, Patrice Chotard wrote:
+> Add the released variant of devm_reset_control_array_get_exclusive().
+> Needed by spi-smt32-ospi driver as same reset line is ulso used by
+> stm32-omm driver.
+>=20
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-> On 5/4/25 10:16 AM, Jonathan Cameron wrote:
-> > On Fri, 02 May 2025 15:26:58 +0200
-> > Angelo Dureghello <adureghello@baylibre.com> wrote:
-> >   
-> >> From: Angelo Dureghello <adureghello@baylibre.com>
-> >>
-> >> Add new IIO calibconv_delay documentation.
-> >>
-> >> The ad7606 implements a phase calibation feature, in nanoseconds.
-> >> Being this a time delay, using the conv_delay suffix.  
-> > I made a late reply to v1...
-> > 
-> > Key point being that, in the general sense this is only a calibration
-> > thing if it is both writeable and we are using it for filter phase correction.
-> > In more general terms it's just a conversion sampling time offset (and as you have
-> > it here in seconds).  I'm keen we define this to incorporate more general
-> > cases including extra read only info on sequencer timing - that can be useful
-> > if we have something like 
-> >                  _____________
-> > Input 0 --------|             |
-> > Input 1 --------| 4 in, 2 out |-----  ADC0
-> > Input 2 --------|  MUX        |
-> > Input 3 --------|_____________|-----  ADC1
-> > 
-> > That is the ability to schedule more channels across a small number of
-> > simultaneous sampling ADCs.  In these cases we've never had a way to
-> > express what was done together.  Mostly there have been obvious
-> > combinations (i.e. voltage and current at same time on a given wire for
-> > power measurement), but it would still be nice to use your new interface
-> > to allow us to describe what is running here (though probably not control
-> > it as that would be hard to do!)
-> >   
-> I'm totally on board with making this more general than just calibration, but
-> having worked on a couple of multiplexed simultaneous sampling ADCs like this,
-> I'm scratching my head a bit trying to figure out how we would be able to know
-> what the delay was between the conversions, at least in cases where we don't
-> have a hardware conversion trigger based on a clock/pwm. Generally, it is as
-> fast as the SPI bus can bang it out, but that isn't a fixed or predictable
-> amount of time.
+Applied patch 1 to reset/next, thanks!
 
-Yeah, this only applies to self clocking devices with a FIFO (possibly a very
-short one with 1 register per channel in a scan).
-The SPI hammering cases don't work for exactly the reason you mention.
+[1/2] reset: Add devm_reset_control_array_get_exclusive_released()
+      https://git.pengutronix.de/cgit/pza/linux/commit/?id=3D6b3754009f87
 
-For those we might be able to come up with a multi-baseline solution to
-indicate that inputs 0 + 1 are together and 2 + 3 also together but it would
-be fiddly.  So lets wait until we know we need that :)
-
-Jonathan
-
-
+regards
+Philipp
