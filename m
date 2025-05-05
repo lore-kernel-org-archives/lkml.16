@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2813D37110E;
-	Mon,  5 May 2025 23:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D7A392601;
+	Mon,  5 May 2025 23:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486203; cv=none; b=HdSzHbw2Upy/v+bhAtUS72Cj+0g+bcW0pDJrZ8ceMcZCQW/2p692I8mmCglKsC/DN+0pRsIwdtObIUoYdzFE/F9ByV+FHprRt3g2vtyt7p8FwP5qxmdasl9SjQUrGv23rP4OU+0inBA1S+GKBpnTd+1Odf1YDBuW0IsEFBLzHJM=
+	t=1746486189; cv=none; b=MaGAnMAP39zEKixwsF5ooVaQRFtrP3EmXqm8VhLBGKOrQIpjbWiBJ2XqBs4Mhj4VkVhpjGtgLaKdF6XebVK3yXyVKYD3QX25T6OxSUN4qV7/E+x+tXzwKaIu0gscDL73Sw9fY0oa95lEwv4YwmwC/6OsqrZaTLVnuF6WO4Bb5RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486203; c=relaxed/simple;
-	bh=VANGKJ/hWRZQE3K4azUCQVQX14rz4VpksVyyQjJ1Szo=;
+	s=arc-20240116; t=1746486189; c=relaxed/simple;
+	bh=Q4X4RMQLPMf/g1HsGnmghAs5fbLu0Gn6jjGsgWRUALs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t26GFdL8iEGJtgoGBGeF40+6dRDy66zjFytyrRSkCI9gH7cSvzEiqYPO05HC7AEcpInW0DJjhlmvaVM7VU7gBYKS2Mb3o2wFSbbTFmirj5rROfTVsKK49ejCdMi8bVYvrYA32AncHPsXI9rBjqunVVuY1XX0wWioF7mSigp8QKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqqfD4Vs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UDCBR/T11JP8acp6dZsaDoaerYPnbzIPHQf6e9lQzKSiod6uKZIknpBImwqmmMA62K0MPwtS/6VAyEnCvszlRQgmP9JLUp9ZMYK6KnW3i4vRBWJzH4yp0Plp/tmEOD4RNPCUoto1Bvhu44kpEofxvrMdxQxLxUkF3ayDYluubYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBUKLEM0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqqfD4Vs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7BEC4CEED;
-	Mon,  5 May 2025 23:03:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBUKLEM0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DD2C4CEE4;
+	Mon,  5 May 2025 23:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486202;
-	bh=VANGKJ/hWRZQE3K4azUCQVQX14rz4VpksVyyQjJ1Szo=;
+	s=k20201202; t=1746486189;
+	bh=Q4X4RMQLPMf/g1HsGnmghAs5fbLu0Gn6jjGsgWRUALs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DqqfD4VsJ1YgjFOmm0JyjBcMnTMq2RD1gOK9IsMgrrhBn+LJE+7bKVAlSi6IHW4WP
-	 XgLxnev4ZFDAmsdv3uMi1SJTjT+NyisWYFW0CH8motKdZRqeyHNlG4pp8R6ZOeucdn
-	 mjKlkwIJwCupK1YjAv+GXL8ZrlilUqCjSoCeVBCZ/LZt74CkyGAV8BiO3bQ+z1nWjr
-	 QUWRuc5M/CRlnAcTwX9w5n3TJYRpAMsYTatOrqbmTOHx0oNgDYC37rh4dkmSdLLr87
-	 HE5AOCnUtktm7osIDb6MqLcwNUAC4KAbderojg+Tge4HV6ZhMBV/xFjDPRLTrO4a71
-	 5Cyl+WHqMHv7w==
+	b=oBUKLEM09px+gg6olBWzjCC2xQ86FWo++Rj/AA/70wCeAk0xZaTuSKWgptjxmyjtb
+	 Wf7rTKzRT5NG6e8pd66Dd0jwdaQxZNoveZB03QIL30+iWbLB3nxDpHHQkKtLG/U9FQ
+	 xDZydQS1aU6YbqcJsTpjGB0AptvS8Wcvyg78yiVMQMci+4Tx7vYRw6WEnLKEzdHSdt
+	 xRurlycoN2Ixr5sau4cQCiSlzqwv32f0qwlpr7rp4qzHbaIvvR+WuKRGqXaZEK050H
+	 ah6DSM8nty1kSkQA+A0G7LscaN0LRS87PJYIptjqV3nPcC+l2n4GoPF9MGdgkWsONy
+	 ugGopFNcF5sUQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Petr Machata <petrm@nvidia.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 202/294] ASoC: tas2764: Power up/down amp on mute ops
-Date: Mon,  5 May 2025 18:55:02 -0400
-Message-Id: <20250505225634.2688578-202-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	menglong8.dong@gmail.com,
+	gnault@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 194/294] vxlan: Join / leave MC group after remote changes
+Date: Mon,  5 May 2025 18:54:54 -0400
+Message-Id: <20250505225634.2688578-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -56,106 +58,111 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Petr Machata <petrm@nvidia.com>
 
-[ Upstream commit 1c3b5f37409682184669457a5bdf761268eafbe5 ]
+[ Upstream commit d42d543368343c0449a4e433b5f02e063a86209c ]
 
-The ASoC convention is that clocks are removed after codec mute, and
-power up/down is more about top level power management. For these chips,
-the "mute" state still expects a TDM clock, and yanking the clock in
-this state will trigger clock errors. So, do the full
-shutdown<->mute<->active transition on the mute operation, so the amp is
-in software shutdown by the time the clocks are removed.
+When a vxlan netdevice is brought up, if its default remote is a multicast
+address, the device joins the indicated group.
 
-This fixes TDM clock errors when streams are stopped.
+Therefore when the multicast remote address changes, the device should
+leave the current group and subscribe to the new one. Similarly when the
+interface used for endpoint communication is changed in a situation when
+multicast remote is configured. This is currently not done.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-tas2764-v1-1-dbab892a69b5@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Both vxlan_igmp_join() and vxlan_igmp_leave() can however fail. So it is
+possible that with such fix, the netdevice will end up in an inconsistent
+situation where the old group is not joined anymore, but joining the new
+group fails. Should we join the new group first, and leave the old one
+second, we might end up in the opposite situation, where both groups are
+joined. Undoing any of this during rollback is going to be similarly
+problematic.
+
+One solution would be to just forbid the change when the netdevice is up.
+However in vnifilter mode, changing the group address is allowed, and these
+problems are simply ignored (see vxlan_vni_update_group()):
+
+ # ip link add name br up type bridge vlan_filtering 1
+ # ip link add vx1 up master br type vxlan external vnifilter local 192.0.2.1 dev lo dstport 4789
+ # bridge vni add dev vx1 vni 200 group 224.0.0.1
+ # tcpdump -i lo &
+ # bridge vni add dev vx1 vni 200 group 224.0.0.2
+ 18:55:46.523438 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
+ 18:55:46.943447 IP 0.0.0.0 > 224.0.0.22: igmp v3 report, 1 group record(s)
+ # bridge vni
+ dev               vni                group/remote
+ vx1               200                224.0.0.2
+
+Having two different modes of operation for conceptually the same interface
+is silly, so in this patch, just do what the vnifilter code does and deal
+with the errors by crossing fingers real hard.
+
+The vnifilter code leaves old before joining new, and in case of join /
+leave failures does not roll back the configuration changes that have
+already been applied, but bails out of joining if it could not leave. Do
+the same here: leave before join, apply changes unconditionally and do not
+attempt to join if we couldn't leave.
+
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tas2764.c | 51 ++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 30 deletions(-)
+ drivers/net/vxlan/vxlan_core.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 3f622d629f77a..72d6356b89814 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -182,33 +182,6 @@ static SOC_ENUM_SINGLE_DECL(
- static const struct snd_kcontrol_new tas2764_asi1_mux =
- 	SOC_DAPM_ENUM("ASI1 Source", tas2764_ASI1_src_enum);
- 
--static int tas2764_dac_event(struct snd_soc_dapm_widget *w,
--			     struct snd_kcontrol *kcontrol, int event)
--{
--	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
--	int ret;
--
--	switch (event) {
--	case SND_SOC_DAPM_POST_PMU:
--		tas2764->dac_powered = true;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	case SND_SOC_DAPM_PRE_PMD:
--		tas2764->dac_powered = false;
--		ret = tas2764_update_pwr_ctrl(tas2764);
--		break;
--	default:
--		dev_err(tas2764->dev, "Unsupported event\n");
--		return -EINVAL;
--	}
--
--	if (ret < 0)
--		return ret;
--
--	return 0;
--}
--
- static const struct snd_kcontrol_new isense_switch =
- 	SOC_DAPM_SINGLE("Switch", TAS2764_PWR_CTRL, TAS2764_ISENSE_POWER_EN, 1, 1);
- static const struct snd_kcontrol_new vsense_switch =
-@@ -221,8 +194,7 @@ static const struct snd_soc_dapm_widget tas2764_dapm_widgets[] = {
- 			    1, &isense_switch),
- 	SND_SOC_DAPM_SWITCH("VSENSE", TAS2764_PWR_CTRL, TAS2764_VSENSE_POWER_EN,
- 			    1, &vsense_switch),
--	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2764_dac_event,
--			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
-+	SND_SOC_DAPM_DAC("DAC", NULL, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_OUTPUT("OUT"),
- 	SND_SOC_DAPM_SIGGEN("VMON"),
- 	SND_SOC_DAPM_SIGGEN("IMON")
-@@ -243,9 +215,28 @@ static int tas2764_mute(struct snd_soc_dai *dai, int mute, int direction)
+diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
+index 64db3e98a1b66..822cf49d82676 100644
+--- a/drivers/net/vxlan/vxlan_core.c
++++ b/drivers/net/vxlan/vxlan_core.c
+@@ -4240,6 +4240,7 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
+ 			    struct netlink_ext_ack *extack)
  {
- 	struct tas2764_priv *tas2764 =
- 			snd_soc_component_get_drvdata(dai->component);
-+	int ret;
-+
-+	if (!mute) {
-+		tas2764->dac_powered = true;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
+ 	struct vxlan_dev *vxlan = netdev_priv(dev);
++	bool rem_ip_changed, change_igmp;
+ 	struct net_device *lowerdev;
+ 	struct vxlan_config conf;
+ 	struct vxlan_rdst *dst;
+@@ -4263,8 +4264,13 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
+ 	if (err)
+ 		return err;
  
- 	tas2764->unmuted = !mute;
--	return tas2764_update_pwr_ctrl(tas2764);
-+	ret = tas2764_update_pwr_ctrl(tas2764);
-+	if (ret)
-+		return ret;
++	rem_ip_changed = !vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip);
++	change_igmp = vxlan->dev->flags & IFF_UP &&
++		      (rem_ip_changed ||
++		       dst->remote_ifindex != conf.remote_ifindex);
 +
-+	if (mute) {
-+		tas2764->dac_powered = false;
-+		ret = tas2764_update_pwr_ctrl(tas2764);
-+		if (ret)
-+			return ret;
-+	}
+ 	/* handle default dst entry */
+-	if (!vxlan_addr_equal(&conf.remote_ip, &dst->remote_ip)) {
++	if (rem_ip_changed) {
+ 		u32 hash_index = fdb_head_index(vxlan, all_zeros_mac, conf.vni);
+ 
+ 		spin_lock_bh(&vxlan->hash_lock[hash_index]);
+@@ -4308,6 +4314,9 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
+ 		}
+ 	}
+ 
++	if (change_igmp && vxlan_addr_multicast(&dst->remote_ip))
++		err = vxlan_multicast_leave(vxlan);
 +
-+	return 0;
+ 	if (conf.age_interval != vxlan->cfg.age_interval)
+ 		mod_timer(&vxlan->age_timer, jiffies);
+ 
+@@ -4315,7 +4324,12 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
+ 	if (lowerdev && lowerdev != dst->remote_dev)
+ 		dst->remote_dev = lowerdev;
+ 	vxlan_config_apply(dev, &conf, lowerdev, vxlan->net, true);
+-	return 0;
++
++	if (!err && change_igmp &&
++	    vxlan_addr_multicast(&dst->remote_ip))
++		err = vxlan_multicast_join(vxlan);
++
++	return err;
  }
  
- static int tas2764_set_bitwidth(struct tas2764_priv *tas2764, int bitwidth)
+ static void vxlan_dellink(struct net_device *dev, struct list_head *head)
 -- 
 2.39.5
 
