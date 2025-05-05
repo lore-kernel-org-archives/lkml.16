@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D622749F0;
-	Mon,  5 May 2025 22:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8AA361957;
+	Mon,  5 May 2025 22:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485480; cv=none; b=lf3stPeEZxlrPso3T//F3TKuwmCNY9o4CGkr3yfm/qO/k02bNCouw/CppTzMa4HdD5CPPaM8yJBqo8bzuoS5bXdxnJkJxy51dFA22i3Rs/gaNwmilOqTxglIekBwUen5yWKn5r+N/nrKq9DM7VhZ+6ZcVzWKEyQA900WUYUG2Nk=
+	t=1746485484; cv=none; b=ShdRmx5clf6N3d5tPQTNcvjAb5m0PfeOpWNsyZ2KP1Ww5+rs70khIqZnz6dbN9PJle6nuXHH1kp8k7XtkAQkiVvUzcrkKUZ0xy+QhjDpVU5b5f7pbhUkVnaz96zvSg+DGU2lsVzZjDbSzdK5nHejdMmNrbkaDO6wck/Hb0TRTZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485480; c=relaxed/simple;
-	bh=lFmRf0UqXzAD/H+cDJ45OmX59Qe26LwGgupNtdazpJ0=;
+	s=arc-20240116; t=1746485484; c=relaxed/simple;
+	bh=9gbYbTE0WZ+udZ9d6dBdYv7OPC+50CcyB2AOMmpKzDY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LnFM5b7CVE/oBLoE8d8ytVh842RMKG2DGw90b6rdC05NfSKUzi86ZEUsS74bm55T4zQPhLIMRIjzwD/YqE4lcDHMXv4UvwP9Uy9PbaPIkUXIeFxtyR1DLfTNCJXqyrNxCip8O8z6Px8onkibVmb/WF4IfPHb8aWJh5BPPvfRm5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKJMoRul; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BOsFP4lf0w7Gdcv4vmfetE96mpneJCtAWhZT5BP7mD8qa098TnwNHBAsAgP+451rpsf0oSNartz6KDJ9MGMDJ/f0WY95CAIDC9BfIJHs0u+eA5+h4iWUYSSwp2i5FXrjTSxti1bFdXibnIdUBUkjlr0WujavzTeGj087tq2tYDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGK/Iek4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKJMoRul"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 928EDC4CEE4;
-	Mon,  5 May 2025 22:51:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGK/Iek4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8F0FC4CEED;
+	Mon,  5 May 2025 22:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485480;
-	bh=lFmRf0UqXzAD/H+cDJ45OmX59Qe26LwGgupNtdazpJ0=;
+	s=k20201202; t=1746485482;
+	bh=9gbYbTE0WZ+udZ9d6dBdYv7OPC+50CcyB2AOMmpKzDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PKJMoRulYn9MPLX0kzFLep1MuNVfyDWb4/5sCYHFX0mYehFW4Pu2HrbfDkf4LsJNz
-	 W3Syo1BGukpYzUrglSIa/7/yWpg343IWZ4LvyGeEkpTwyztHP3RJykWiadXeAWWAJw
-	 ngAiEA+AkA2Hm9zKSJgvc1VvE8b/0HfDoHVlHzp9hW4gNCJyKRmkR1g6HHSHZ9aZj0
-	 Bn3/A3+iIe9T7ei9JG6hAO3JPFlxoK77tFMarovzskQl5LcrI3rXIZ7ZbSLTRdr9Ik
-	 BpMQ0CYHQK2U2tbzBid74zcG5Ek3gYRdERRLrqFciCvjLKmSbRVUTgWXVD5mfQdnVN
-	 Y7Ry0LWfROdhg==
+	b=OGK/Iek4BsL7UpfoxhtSKFlw+7QJmZ3ynE12WHGbF3dWiiMz6d5rt9Mdc0glUfXUx
+	 DiQGnkBRnNpslybcpJ7+5pEon+phbi73+y12KctkXshw+h6BCrI4E1uFWvSuyxytG1
+	 IXSWiXoaFEKWfhsrCP44AqvP02Am2yoZnZCPdyURozOtMNPyz44gXm0aOVbb7X9Swt
+	 yKEs1LQ5Pou5L6+n6Ar0dIxrLOhoMjaqO7oSJ0ibjawUaImYUQhF+0WKn03MqxxV4V
+	 btoBEcg9YoZZ768XzuMW9ps+iddzzNPuguCAjPnY+H1o5IPc2hWJt3jZeqwgyIy6Hf
+	 C79XEeM03xswA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tejun Heo <tj@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.12 337/486] kernfs: Acquire kernfs_rwsem in kernfs_get_parent_dentry().
-Date: Mon,  5 May 2025 18:36:53 -0400
-Message-Id: <20250505223922.2682012-337-sashal@kernel.org>
+Cc: David Plowman <david.plowman@raspberrypi.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sasha Levin <sashal@kernel.org>,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 339/486] media: i2c: imx219: Correct the minimum vblanking value
+Date: Mon,  5 May 2025 18:36:55 -0400
+Message-Id: <20250505223922.2682012-339-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,39 +55,38 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: David Plowman <david.plowman@raspberrypi.com>
 
-[ Upstream commit 122ab92dee80582c39740609a627198dd5b6b595 ]
+[ Upstream commit e3b82d49bf676f3c873e642038765eac32ab6d39 ]
 
-kernfs_get_parent_dentry() passes kernfs_node::parent to
-kernfs_get_inode().
+The datasheet for this sensor documents the minimum vblanking as being
+32 lines. It does fix some problems with occasional black lines at the
+bottom of images (tested on Raspberry Pi).
 
-Acquire kernfs_root::kernfs_rwsem to ensure kernfs_node::parent isn't
-replaced during the operation.
-
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lore.kernel.org/r/20250213145023.2820193-3-bigeasy@linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David Plowman <david.plowman@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/mount.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/i2c/imx219.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
-index 0f6379ae258d1..4a0ff08d589ca 100644
---- a/fs/kernfs/mount.c
-+++ b/fs/kernfs/mount.c
-@@ -145,7 +145,9 @@ static struct dentry *kernfs_fh_to_parent(struct super_block *sb,
- static struct dentry *kernfs_get_parent_dentry(struct dentry *child)
- {
- 	struct kernfs_node *kn = kernfs_dentry_node(child);
-+	struct kernfs_root *root = kernfs_root(kn);
+diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+index 906aa314b7f84..eaa1496c71bb2 100644
+--- a/drivers/media/i2c/imx219.c
++++ b/drivers/media/i2c/imx219.c
+@@ -74,7 +74,7 @@
+ #define IMX219_REG_VTS			CCI_REG16(0x0160)
+ #define IMX219_VTS_MAX			0xffff
  
-+	guard(rwsem_read)(&root->kernfs_rwsem);
- 	return d_obtain_alias(kernfs_get_inode(child->d_sb, kn->parent));
- }
+-#define IMX219_VBLANK_MIN		4
++#define IMX219_VBLANK_MIN		32
  
+ /* HBLANK control - read only */
+ #define IMX219_PPL_DEFAULT		3448
 -- 
 2.39.5
 
