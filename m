@@ -1,56 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442902D0284;
-	Mon,  5 May 2025 23:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A1B38537D;
+	Mon,  5 May 2025 23:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486032; cv=none; b=UvOBRIrCmnwBoZOwaL0WPBUAhjgVW9eiYEWvLSesXCXW0Cwlhp5Re+PrRIIIJ0CM8bveroCEZIN3dLsDvm/ktdLx8obcp2nC1LigfMazEasZf/d7at25vFAeKtY7o644rqHKesoWYVcPzYM5BSCdd6sW2DVEC4gyt2vt//s2+h4=
+	t=1746486040; cv=none; b=moaso+6fq2+24BYJedHwItmFc9T5WAvkIOhsI8JyZ3b4+E/96/HfnHbKFbpc5Vn+IEwJPoowlYpoDsgk0G1D8KU9E6XqsXELwuzBdd+UmVZLFmJ3Lqcj1eeVF68/KsuDbC4vOoRPef/YH4F73XpAp3OYBfEfWTL7FaPKreB1oNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486032; c=relaxed/simple;
-	bh=0oolSqsZ1MAxsLhdbgfd9396bqGOYrEmyGV7kZGgazM=;
+	s=arc-20240116; t=1746486040; c=relaxed/simple;
+	bh=01wiidAuzlRto34qRYL0NeZB/wjip2m8n3PeBjRuZ54=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hbGkEIBV0M9yBfxXp+Jv3+OVbtizK+HCGxttHZN5ECvKc/NxrbycRBlJB0rUc05rexYWC4wo2vzONeBMCjd6LDSwr3IWnn+yRYn8hbfSHxifF0lRilHsrnuMAwCi6cgvlbUKR4Ur5heqC0iuJC4VAQXigJGso0teHD1ru259tnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/8AmMjX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Y8oO5WCIBEDEc5Y98zhwjYhvjg2pz3AtrSflNdGB9BUnIMPq/ZtDqZxtVwC5RUgJixScpBYsUuXlfBPYasR3CEQXzhJ53SBGv5bnwFveVkjKAV48Uc7D/OgKLnVnrwPR1OAqgBpXLgS7QsTLDujP1twuPs4szeGGUz9slXaLveA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkVgLrrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/8AmMjX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 085A1C4CEE4;
-	Mon,  5 May 2025 23:00:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkVgLrrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20751C4CEE4;
+	Mon,  5 May 2025 23:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486031;
-	bh=0oolSqsZ1MAxsLhdbgfd9396bqGOYrEmyGV7kZGgazM=;
+	s=k20201202; t=1746486039;
+	bh=01wiidAuzlRto34qRYL0NeZB/wjip2m8n3PeBjRuZ54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J/8AmMjXZJbbt33IFaYj72mIL5eZX2qVFW6SQKbuWFNU/m9kWKTMYy6gwo0/WikFT
-	 +iq7x7AEza0lt6IOP4l1VTiq9aFhgokGDF3sXgqyTieiG++nDbqjcF0NR5+Lv/Op6M
-	 dahyWObC+U5TPnjrk2X35vuBxB+rSoaX+A48zvbVOudo52Ki6r3PMGmKhQ8WELCkrb
-	 EyNyM2RrSZUa//tEB5iaTvPzbzKpiuNX2bahzKKq5AnS0kUd+B5s8Mrut/m4iIpOZw
-	 NiMfSwEiFHSUJ2uNp1AzmaTKzb/AKDhd4652susVJO4wuWUqwGZ0RIAlYKHLlfZCyh
-	 9mV4P3GKLf6Fg==
+	b=GkVgLrrMn5s0UVwznnM6ytH/8S3S2FJ6li+RHtC1Y0MTZoqg3kkBwrLOA6PVMTCbE
+	 SJIqrk12BKDt++cuExOzfBgobmif0Lsrb5kLMkWVwRdRGrj0kY4tVgq1pD8JNAtX/U
+	 KWG1SlcYtg4u0CaSlHXpLqaTLLKBGx8y9OrwrSnG27BabryC0srAKqfE7u8CZOwBXj
+	 5KeyjjlAfhHwVuf7cFk5wsIEcLYs6k7O1QStl/AkZBidTVBcJis1voVJ/+M1FDsKIc
+	 gUY+elEmg662bJsIQ+Z6F3Hy8adl5TBtfo7yUMD+VGuTdDWGHnZRnwwLrKTDcKVuxr
+	 NXuePmnwsQHHA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: George Shen <george.shen@amd.com>,
-	Wenjing Liu <wenjing.liu@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	alex.hung@amd.com,
-	michael.strauss@amd.com,
-	roman.li@amd.com,
-	PeiChen.Huang@amd.com,
-	Ausef.Yousof@amd.com,
-	Cruise.Hung@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 119/294] drm/amd/display: Skip checking FRL_MODE bit for PCON BW determination
-Date: Mon,  5 May 2025 18:53:39 -0400
-Message-Id: <20250505225634.2688578-119-sashal@kernel.org>
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	alexander.sverdlin@gmail.com,
+	u.kleine-koenig@baylibre.com,
+	aleksander.lobakin@intel.com,
+	lorenzo@kernel.org,
+	hkallweit1@gmail.com,
+	nicolas.dichtel@6wind.com,
+	linux-omap@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 122/294] net: ethernet: ti: cpsw_new: populate netdev of_node
+Date: Mon,  5 May 2025 18:53:42 -0400
+Message-Id: <20250505225634.2688578-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -65,68 +63,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: George Shen <george.shen@amd.com>
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-[ Upstream commit 0584bbcf0c53c133081100e4f4c9fe41e598d045 ]
+[ Upstream commit 7ff1c88fc89688c27f773ba956f65f0c11367269 ]
 
-[Why/How]
-Certain PCON will clear the FRL_MODE bit despite supporting the link BW
-indicated in the other bits.
+So that of_find_net_device_by_node() can find CPSW ports and other DSA
+switches can be stacked downstream. Tested in conjunction with KSZ8873.
 
-Thus, skip checking the FRL_MODE bit when interpreting the
-hdmi_encoded_link_bw struct.
-
-Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
-Signed-off-by: George Shen <george.shen@amd.com>
-Signed-off-by: Wayne Lin <wayne.lin@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Link: https://patch.msgid.link/20250303074703.1758297-1-alexander.sverdlin@siemens.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dc/link/protocols/link_dp_capability.c    | 30 +++++++++----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/ti/cpsw_new.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-index 3d589072fe307..1e621eae9b7da 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_capability.c
-@@ -239,21 +239,21 @@ static uint32_t intersect_frl_link_bw_support(
- {
- 	uint32_t supported_bw_in_kbps = max_supported_frl_bw_in_kbps;
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 9061dca97fcbf..1c1d4806c119b 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1416,6 +1416,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
+ 		ndev->netdev_ops = &cpsw_netdev_ops;
+ 		ndev->ethtool_ops = &cpsw_ethtool_ops;
+ 		SET_NETDEV_DEV(ndev, dev);
++		ndev->dev.of_node = slave_data->slave_node;
  
--	// HDMI_ENCODED_LINK_BW bits are only valid if HDMI Link Configuration bit is 1 (FRL mode)
--	if (hdmi_encoded_link_bw.bits.FRL_MODE) {
--		if (hdmi_encoded_link_bw.bits.BW_48Gbps)
--			supported_bw_in_kbps = 48000000;
--		else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
--			supported_bw_in_kbps = 40000000;
--		else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
--			supported_bw_in_kbps = 32000000;
--		else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
--			supported_bw_in_kbps = 24000000;
--		else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
--			supported_bw_in_kbps = 18000000;
--		else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
--			supported_bw_in_kbps = 9000000;
--	}
-+	/* Skip checking FRL_MODE bit, as certain PCON will clear
-+	 * it despite supporting the link BW indicated in the other bits.
-+	 */
-+	if (hdmi_encoded_link_bw.bits.BW_48Gbps)
-+		supported_bw_in_kbps = 48000000;
-+	else if (hdmi_encoded_link_bw.bits.BW_40Gbps)
-+		supported_bw_in_kbps = 40000000;
-+	else if (hdmi_encoded_link_bw.bits.BW_32Gbps)
-+		supported_bw_in_kbps = 32000000;
-+	else if (hdmi_encoded_link_bw.bits.BW_24Gbps)
-+		supported_bw_in_kbps = 24000000;
-+	else if (hdmi_encoded_link_bw.bits.BW_18Gbps)
-+		supported_bw_in_kbps = 18000000;
-+	else if (hdmi_encoded_link_bw.bits.BW_9Gbps)
-+		supported_bw_in_kbps = 9000000;
- 
- 	return supported_bw_in_kbps;
- }
+ 		if (!napi_ndev) {
+ 			/* CPSW Host port CPDMA interface is shared between
 -- 
 2.39.5
 
