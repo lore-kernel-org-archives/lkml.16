@@ -1,90 +1,122 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EDB1F582E
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC3218C011
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 09:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746437038; cv=none; b=HVR8QfmNycSKwOeT3f8RWG8iUkodF3v8j+JCFlN1tqTVqcYDAI6kvsrZeUbrKkafGPceBal8cuFooN+nHKg6pQntOCSp3H+uyYASWWXUBBLXc5+zuFRRgMQwnH22kYpUJ378ZzRTGhpWEcZc0uWk9cv/XiNk+P0e1U9MlXVrkJE=
+	t=1746437112; cv=none; b=usMJIRUTFIpxvaAI9iof5ZGmKsIXiIhuOvUXJc9MkZ/M2NRFId1r/bEDZTnNBA4rUMWgPENaoH5DEoFkNBjeIU8Q3Kb9YfvXy2/kWuqd0bPQt7qmT2JbY9Ouj/IHX04PASto/FyM56KHJb+zgPnQ5mSkguZ6NQ2NZLRDiKZd6XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746437038; c=relaxed/simple;
-	bh=2xxpj+2ReE48KbP5KJ11PgdY9Ly28L5Z4eGb6xFarec=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ac6cuu6qswRAA/6U5B+JDuMnjjPGVYBERov0k/KW8ajolzZh2jkM+tBtzZzAlpu/nn7kSRItvilACpQ2jz2bobLIprTbdCcoScqDas2nZ91qHcbve2Dap9VX3X2KhdqlvcUpyu06IZa07Fq6ctr1TnJH1ZfgKTZ6MMh7dxcDHKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4FFtXfNH; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746437112; c=relaxed/simple;
+	bh=QVITToH5qxhFx1BWQg+IbIBAmvkuTWFfapJECTVyxrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKZcKyvFSVy8OPTA5k4OUlz7bWqLFwJmWfCMJQvul4Ufc+b18ztozmXqZ7WIgg++XJBqas011k6VvYwm6LqEcjzG6+r6LRKZWRlh3RIesexkuAVaHhzF3zlx1mLP6qOL/NVuJSYfy0uvHAjxMhGvW7V8sTBEJQ7QNd2fQShnG90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aHCjCDc/; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4FFtXfNH"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so18833515e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:23:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aHCjCDc/"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a064a3e143so1795151f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 02:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746437035; x=1747041835; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UNKpSETC3aRoWs26slbmPYaRhZWnx/HOj+OMKwfNopA=;
-        b=4FFtXfNHVOpQM7Jr4isrJSe+z+VDiBnIBysQtpsEP13Bs+QuNDDQ3nITnhu1f/p8NJ
-         l/SE6uudP+jxg1nXQnETYPZdCnQ7ewTIqU4jbu0rm0jn6RMdy5oXSUb/Aw7r4L0rmP70
-         kOv7A7mTXGxSLlkQTC2FUO4e8lswCGjgJ7iaddAe746FTRkKatN0oqi4yW5lx6dTEioE
-         TO1cBJybvx9NNOtTAJPmp8ulcDNMtXcU2fobHRcnWc78BXpvcWvZM9z/KdpnzUUNfiGE
-         HnrTEJ6qR7ADZvtPyVFpwj9Nk/0WdRQ0f0NfYNawWcKeAUmuZ4MqCU4bFv85+WEczNfc
-         J4Nw==
+        d=suse.com; s=google; t=1746437109; x=1747041909; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VLHJgN/oyXnrIo0WWcOurE6qrYDtA5nem85zqA8FMgw=;
+        b=aHCjCDc/AH30B5seQBy6xySharzdung8XXfuOP4WwHiCaTbmsZp/UOF95o5CK76E5I
+         4ghbmFTwZo93dUl5tMhc3KBQkkr3b5dlP6D231BmUjy1OdyaWgZn2rAXlX4VhcFenXzG
+         UA+ExOA+39rD3/zgOeONw5bAObv0ZZ2OCR9gZhsPnkre4TtN87dSvZpIDhwKW8ihw49F
+         41nsVnk9UJ/rF+iE+40rc8yiD1d5+28grjdGu756qEU3wWYemfM9zsQwpnxhcGHnZKie
+         XHeHh1PtSEjhE8hmiG5bL11l5IRpkMqe2S1DZLaI4yNKjEo9wlilXEt8qRZKEgl6jnPy
+         e5aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746437035; x=1747041835;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UNKpSETC3aRoWs26slbmPYaRhZWnx/HOj+OMKwfNopA=;
-        b=aUcNeMAk7qDn1Jme4o52zMKYimKSME+N+8xwZdyJYjxF4lYk5gfld6+qX/avWFF+++
-         /3b+1n7gulOoVxf0JH23KUdjOgPEL0XLcSDek8R2037sPwsRP3lNOcCxoORW+IP+RuDc
-         LDjuiroCa6wEriBUgkRVRb78pDeGLyvGFQg3CQRvPZbtgwiuSzbvSHMR1uxnRAPOpYmB
-         a7K25SsgZ55Xe2fQUd/dVe91xgqhg+Gy2Di0KKA2em0Kmmw7FXqzYYW9d0fbo25aJ9fI
-         g2kM3KTIZ0KnwZVAsayNNZCJh2GWixy4p4ogW/UMCNuTIjdTsMpu8ehtGn1sdMKvh5MM
-         NFZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXY2j115cdXJ92QUL7V1zp+hr6C2glvbQciPoEv6/rqU0DS3MLkpRPsI4anDXmlTqO5PJphWh4emVM/T64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIAJC7h6tF3RIeb1PjYGn/MHd9YutGxhY3TZgcZv5VSEUDLp02
-	UnNsQsPgB17UH0wllaApBgPg3C1bTDMg3Bkjalp4sZWWZl8IAFz1FWnxPyk4d2hoyaNnSWYSpM8
-	K7f83RW1sBaJeoQ==
-X-Google-Smtp-Source: AGHT+IHD25Gl0hnIcuOchqaJj6jrQJy3Tcy1tSunT6kxPFMJLsXGIsx+DEdSlsV661NRNl3V8hAe7ZryPPG14R4=
-X-Received: from wmbhh12.prod.google.com ([2002:a05:600c:530c:b0:441:b3fe:b95a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3548:b0:43c:e7ae:4bcf with SMTP id 5b1f17b1804b1-441c1c70782mr68477705e9.0.1746437035142;
- Mon, 05 May 2025 02:23:55 -0700 (PDT)
-Date: Mon, 5 May 2025 09:23:53 +0000
-In-Reply-To: <20250502140237.1659624-1-ojeda@kernel.org>
+        d=1e100.net; s=20230601; t=1746437109; x=1747041909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VLHJgN/oyXnrIo0WWcOurE6qrYDtA5nem85zqA8FMgw=;
+        b=pdzIghmFnd+CQvok1E1WtRaMffg9DkD9W8qaWfc5seGCstd54Es8eWRUExfjxh3IKM
+         Hkc69rDtBNVuTM3m2z7oQngOrjP+VwZ2CsxpbTarmvUyFRF2xV/xr4m9nq+nf0XhudE5
+         MznWQDwh1rnlVwU7xvKjzaZU4DdElvZw7jU0EBlwAVNHXGZTX8a9TkilZvKje+l0AKfz
+         t60C2VTkw3DSTB8vVHv3ojXpu26rEQT6BPVEnlVIrGQor9ke6cwZ01MNQjAFEdDu/MZa
+         anFm6iChWYftLecLMBboYE81Y+k6jLfOUT4BjYPfNfkgQx1ruZCuQTQ9nqXBYXY/2m3o
+         w0Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9e6uuF3RPadz/Nwu92Es2PHDX1GZ6QJ7+ivsqlIfjZhxktPi5Zu3fPvfHAVqyhkBRFHdjSJg1tUYUjto=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweqJdC2uYEuUXA6sNuzoX3hHovcAZqn+Td7/1uVN7yxh9YbF2v
+	8dsGAkzLmE9nCQ0e2Lkv7WCVAC2XyJdncjMtS7g7yh7MbkwP78bQLjGyAX8THUU=
+X-Gm-Gg: ASbGncumTuNuSaBdrg7k244l32P9rke6hpUPO5elAgW7NIvagmRr78wYoRGxY41Ytg+
+	yQIyJbSvlwXa3So1uOXFaZ2z4zHDJ3sU58IprSDtEwAn+k/KEeTgiIFIxCTUHelx1xZgphMPNwz
+	CS0iqI45qcXOehMlVeQFazCT/FjhwGLAdSWY860pYX3azfb+xWnVkZFhtFjzdz/AOl3xKy0dN18
+	FukZS4GfPaBbrOgdSzQpN60l3G1R/CeH6fonGNs9po8u5h157Ql1fz0dbVcighQwuTKOPYgG9sv
+	sFODJI6ifzVGGQ7ixOhIW6heCvlAa6jVks9OoZmaIGAN9aLUupM=
+X-Google-Smtp-Source: AGHT+IH5gm4r7UQL7/3DyIsJr+nDH1WHtOXFm5HcZGmyx9BEqYlBQHtFS06BthbZ622QOaFlo1+d1A==
+X-Received: by 2002:a05:6000:310f:b0:3a0:90c3:eb0f with SMTP id ffacd0b85a97d-3a09fd6bb68mr4319266f8f.12.1746437109067;
+        Mon, 05 May 2025 02:25:09 -0700 (PDT)
+Received: from localhost (109-81-80-21.rct.o2.cz. [109.81.80.21])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae0ca4sm9966523f8f.14.2025.05.05.02.25.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 02:25:08 -0700 (PDT)
+Date: Mon, 5 May 2025 11:25:08 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Marco Crivellari <marco.crivellari@suse.com>,
+	linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
+Message-ID: <aBiD9C727RSyNtme@tiehlicka>
+References: <20250503082834.49413-1-marco.crivellari@suse.com>
+ <20250505065121.dlEw6_SC@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502140237.1659624-1-ojeda@kernel.org>
-Message-ID: <aBiDqQxAzTC4N-n-@google.com>
-Subject: Re: [PATCH 0/5] Rust beta (1.87) and nightly (1.88) lint cleanups
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505065121.dlEw6_SC@linutronix.de>
 
-On Fri, May 02, 2025 at 04:02:32PM +0200, Miguel Ojeda wrote:
-> Now that Rust 1.87.0 is close to release, clean up the new lints that appeared.
+On Mon 05-05-25 08:51:21, Sebastian Andrzej Siewior wrote:
+> On 2025-05-03 10:28:30 [+0200], Marco Crivellari wrote:
+> > Hi!
+> Hi,
 > 
-> It may be that one of the patches is not needed by the time it releases, but
-> I prefer to not wait much longer since I would like to land this for -rc6 so
-> that it is clean for release.
+> > This series is the follow up of the discussion from:
+> > 	"workqueue: Always use wq_select_unbound_cpu() for WORK_CPU_UNBOUND."
+> > 	https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de/
+> > 
+> > 1)  [P 1-2] system workqueue rename:
+> >  
+> > 	system_wq is a per-CPU workqueue, but his name is not clear.
+> > 	system_unbound_wq is to be used when locality is not required.
+> > 	
+> > 	system_wq renamed in system_percpu_wq, while system_unbound_wq
+> > 	became system_dfl_wq.
+> > 
+> > 2)  [P 3] Introduction of WQ_PERCPU.
+> > 
+> > 	This patch adds a new WQ_PERCPU flag to explicitly request the legacy
+> > 	per-CPU behavior. WQ_UNBOUND will be removed once the migration is
+> > 	complete.
+> > 
+> > 	Every alloc_workqueue() caller should use one among WQ_PERCPU or
+> > 	WQ_UNBOUND. This is actually enforced warning if both or none of them
+> > 	are present at the same time.
+> > 
+> > 3)  [P 4] alloc_workqueue() callee should pass explicitly WQ_PERCPU.
+> > 
+> > 	This patch ensures that every caller that needs per-cpu workqueue
+> > 	will explicitly require it, using the WQ_PERCPU flag.
 > 
-> In addition, clean some nightly (1.88.0) ones too.
-> 
-> Miguel Ojeda (5):
->   objtool/rust: add one more `noreturn` Rust function for Rust 1.87.0
->   rust: clean Rust 1.87.0's `clippy::ptr_eq` lints
->   rust: clean Rust 1.88.0's `unnecessary_transmutes` lint
->   rust: clean Rust 1.88.0's warning about `clippy::disallowed_macros`
->     configuration
->   rust: clean Rust 1.88.0's `clippy::uninlined_format_args` lint
+> Sounds like a plan.
+> I assume the huge patches were made with coccinelle?
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Yes, this makes a lot of sense. I think it is worth mentioning why do we
+want/need to go through this major refactoring. From my POV this will
+help cpu isolation in a long term because it reduces unpredictable
+interference from pcp workers. 
+-- 
+Michal Hocko
+SUSE Labs
