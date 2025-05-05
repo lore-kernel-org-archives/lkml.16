@@ -1,191 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2D21B0F31;
-	Mon,  5 May 2025 18:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1ED26E158
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 18:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746470537; cv=none; b=hBeaFNChOsWuqVTTNQWfYAIqmREenIixPEy5JJJY8a+tM5Fb8Yh+pTqIwkov0mppZh+m3HJG9EeruT8C23iIlK0K8EC8+fensEFu5MA4eo4mDo/Z3VNwwZ+TAOAkmm9JwV+jBmmfp8RWZckAqNDNT8eKHFhPuJvm7R2MdrdJl6M=
+	t=1746470628; cv=none; b=AkheCBtmnQ8x1VpHB9OmMGOYAgxed0yv4mJ2J3dkiDWT4cNHQTIK4s3D3h13BSbcOkr7UjTQDKZOKVknqNJiiBKSpazvVcuLxmPfsSBOPnZ9ySt2spz+JO3fibjJ9jlfdunqgGHoF97EgwHqAcoO/Qq3PrsOWkwVdI4LiS6bLRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746470537; c=relaxed/simple;
-	bh=WsVm1VWhGB/q4UiDgJw4yMWmXTJdExntWW8us53Bh/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S628Ge3R53BUfRwr6GW/JM6cTUu4khSh/ReZAnhOxLmr7tW8MR6yuUyVgonIYD8USLxnk0Lr/pQWx2Ldv6R/PQ+27/LOv+I0WniFGGz7DOw8cGSvej6BqEv5rPhD3rP7HiYRpn7DL4jlrWa+QmI29tDsyxVYy5hiegbM6rGdmRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKc/2tY7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746470628; c=relaxed/simple;
+	bh=ZR0smQcVBHP0L6IgFqeTioftf6YGCApCP+omIEUN/2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OL5+doKK9IAQxgwyAjuA1hyjfgbns8LgkemKkJisnci0dESPURBRktWJwMtI736mCpIOlFXwXSP21EBI5FukyUwcWeds3JiJt3NA07V4ByRtIZmOiF5scUFyYSipomskWWNAsPoIAbCfFQ5FfZ12yZtZlU1JhS6S1is187FMRFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfDzp+VW; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKc/2tY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2312C4CEE4;
-	Mon,  5 May 2025 18:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746470537;
-	bh=WsVm1VWhGB/q4UiDgJw4yMWmXTJdExntWW8us53Bh/4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cKc/2tY7I2KB0TePdp8Ms5GA6WLpmkSNtLG4wW++4Ho1tEwdtjNXd2kMLh/eMf6vy
-	 vX6b94sG5BXKyh4McwhxanJbFRFwCwRmJBuJQRtZ2hBNAKW5lwCoxbO0BxCKFU1Q5n
-	 1QxTLBV1Zv7f90aZXNEOldeZgw02NJNGlNIcvZszYb6tTlX1U4XwBBpSuqS1xv738G
-	 DUbqRBCwrnRkLrvfebmHXSwxVXuqoNZ3Se3/EqUXCtJlg40b4eMD6ws71Ky5UQHAZR
-	 fEUG1tp6twf0tNT3+KKSAjsNe+j957+tok2IS2J2QVzHWmWNBZkH2D8ghiYePwxWhp
-	 s2LH5kGSH2ldw==
-Date: Mon, 5 May 2025 19:42:04 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Eason Yang <j2anfernee@gmail.com>
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- javier.carrasco.cruz@gmail.com, alisadariana@gmail.com,
- olivier.moysan@foss.st.com, tgamblin@baylibre.com, eblanc@baylibre.com,
- antoniu.miclaus@analog.com, andriy.shevchenko@linux.intel.com,
- gstols@baylibre.com, ramona.nechita@analog.com, matteomartelli3@gmail.com,
- marcelo.schmitt@analog.com, chanh@os.amperecomputing.com,
- KWLIU@nuvoton.com, yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/2] iio: adc: add support for Nuvoton NCT7201
-Message-ID: <20250505194204.3ef319a2@jic23-huawei>
-In-Reply-To: <20250505092600.962675-3-j2anfernee@gmail.com>
-References: <20250505092600.962675-1-j2anfernee@gmail.com>
-	<20250505092600.962675-3-j2anfernee@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfDzp+VW"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso4990175b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 11:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746470626; x=1747075426; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yQzbmjudt+hJvG7n8NMoirGU7KRPkcRToJ0JJSw35CU=;
+        b=hfDzp+VWwcmyZYXDkindWPq7DwXIASjYCJ4aOt2xKLmXhscVaULia1KbOEuULwui8K
+         eU7yaQ9ABGboCOMLbLnjviZraxRIUZwCNEjmbBBDVPSdOcNMJbD2seDGwniwDmU4PoGN
+         c9Yjyr7SLOnlmlxOrEnXxf5DLTzyitM57DeLedPpp5Zh6ex0ydgwMDJWBGShwnXRwkoj
+         UCWTUxOENjTiYqYZUc1ooremnu+cxFDOP1y8H3htyDimhNvS2taTGtCDg37k0tyOF2uZ
+         qczeiJN5SdX6Wjv/qfSjaJObKfFePvJBXXan5GIqodKAUlvxjWpUwx3tuGvb6p5b3fej
+         t5yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746470626; x=1747075426;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yQzbmjudt+hJvG7n8NMoirGU7KRPkcRToJ0JJSw35CU=;
+        b=sU4euA2b+LD60IwxHEp715xFR3JcqKqZ6UCiBXdk3KlLyTW78wDfy70Y5M6KNDAK62
+         +5ZDSJKyoEc/LMYwdSUsYCPz9aoJClM307fgrVMwL8S1GPh40yEFepd4b2rlYSNcq2QX
+         FhrG5SXEQQF7ohfZzXqNyf7fwFjccLtuTJSdEzRL8+HbAX7RR5iJ4xLEls4mVi+6ENqf
+         AgrPeiqJcDcVzxdtCwIbGU7oxJQ3ccSXeKrhzv6+E2mqDNMbHteH7R4X1gXPdkSwFmsf
+         aXpi616mNDMDJvC2MITA9WpaGaHJU6paVbrCxE39D8TYjr7bNJvQ1++N+cu/4NMAK27+
+         +8hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1/PptLXEpIe54/OJY9xoavoY5ms+gDweY8MwYcRi25qVRCr2E/AuK2XnECO2HfiwBy5zAzSyHtBFrKtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4b3OFHg4UpvalzlbOLMnTOryn3LNA5SLiyA2D/c9VbvWYDvK8
+	3dBMgLDli5nWWVME1uroGx12H+6cLcXB9gODOpmjOslDR4m8r/6Z7sJL2H2J
+X-Gm-Gg: ASbGncuVGPNLepkoFCmg+bAngY69XBewBenmCe354105AfOrknHI7KO/4vAJBUkukGv
+	XglWnaf/etp6RfAd0I3Qv2ixxWLXC9G8qUHPinVCqHsE9sTjL6thgyTbTUFLLkt71KtsSrFEgJI
+	VS+aPdoT9re5leJRekHrt63SUpTRgjn646k+NnYH5BFu4SPsg8Y0o4lRR78NANnsAEwVSZh92Ct
+	pEskdn1INyhbLsLcXbwpnTeaPQHySuFL1JEEuO6ke68rmGImRDKXn/yJnVL5ytWLvnSxe3GwSN1
+	fs5JkYCbss/kjJWAxUzHeyuPovPtPhoz+tS+VJ2f4yUaazVbZxC0frq6NZxXxbf9DJQNlQ==
+X-Google-Smtp-Source: AGHT+IGMBauXSP9NfIaQaM7+UUg7ZcaSiDMXtLxYknxQzEukhYbTe1ekmAy1F/1+blL1smz9X2PsTg==
+X-Received: by 2002:a05:6a00:1308:b0:73d:f9d2:9c64 with SMTP id d2e1a72fcca58-74090eb4df2mr813280b3a.10.1746470625673;
+        Mon, 05 May 2025 11:43:45 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:afa:5db4:54e4:f59c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405902167csm7433788b3a.98.2025.05.05.11.43.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 11:43:45 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: neil.armstrong@linaro.org
+Cc: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	khilman@baylibre.com,
+	jbrunet@baylibre.com,
+	martin.blumenstingl@googlemail.com,
+	christophe.jaillet@wanadoo.fr,
+	skhan@linuxfoundation.org,
+	dri-devel@lists.freedesktop.org,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [PATCH v2] drm/meson: Use 1000ULL when operating with mode->clock
+Date: Tue,  6 May 2025 02:43:38 +0800
+Message-ID: <20250505184338.678540-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon,  5 May 2025 17:26:00 +0800
-Eason Yang <j2anfernee@gmail.com> wrote:
+Coverity scan reported the usage of "mode->clock * 1000" may lead to
+integer overflow. Use "1000ULL" instead of "1000"
+when utilizing it to avoid potential integer overflow issue.
 
-> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
-> 
-> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
-> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
-> for independent alarm signals, and all the threshold values could be set
-> for system protection without any timing delay. It also supports reset
-> input RSTIN# to recover system from a fault condition.
-> 
-> Currently, only single-edge mode conversion and threshold events are
-> supported.
+Link: https://scan5.scan.coverity.com/#/project-view/10074/10063?selectedIssue=1646759
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+Changelog:
 
-As below. Setup of threshold events seems to be here, but not the interrupt
-handler that would call iio_push_event() to actually notify userspace they
-occurred.  Is the intent they are getting wired to something else?
+v1 -> v2:
+	- Use 1000ULL instead of casting the type of "mode->clock"
+	- Refine commit title and message
+	- Fix the issue for the evaluation inside drm_mode_status
+	  meson_encoder_hdmi_mode_valid() as well
 
-Even if that is the intent we normally cross wire them to the host as well
-so as to be able to find out what happened.  The use in here of client->irq
-implies such wiring but no sign of it being handled.
+Christophe,
+Thanks for your review and your suggestion, I think I should add a tag
+for you,too, but I'm not sure what should I add, if you would be so kind
+please let me know how should I tag you in the patch.
 
+Best regards,
+I Hsin Cheng
+---
+ drivers/gpu/drm/meson/meson_encoder_hdmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jonathan
+diff --git a/drivers/gpu/drm/meson/meson_encoder_hdmi.c b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
+index 7752d8ac85f0..c08fa93e50a3 100644
+--- a/drivers/gpu/drm/meson/meson_encoder_hdmi.c
++++ b/drivers/gpu/drm/meson/meson_encoder_hdmi.c
+@@ -75,7 +75,7 @@ static void meson_encoder_hdmi_set_vclk(struct meson_encoder_hdmi *encoder_hdmi,
+ 	unsigned long long venc_freq;
+ 	unsigned long long hdmi_freq;
+ 
+-	vclk_freq = mode->clock * 1000;
++	vclk_freq = mode->clock * 1000ULL;
+ 
+ 	/* For 420, pixel clock is half unlike venc clock */
+ 	if (encoder_hdmi->output_bus_fmt == MEDIA_BUS_FMT_UYYVYY8_0_5X24)
+@@ -123,7 +123,7 @@ static enum drm_mode_status meson_encoder_hdmi_mode_valid(struct drm_bridge *bri
+ 	struct meson_encoder_hdmi *encoder_hdmi = bridge_to_meson_encoder_hdmi(bridge);
+ 	struct meson_drm *priv = encoder_hdmi->priv;
+ 	bool is_hdmi2_sink = display_info->hdmi.scdc.supported;
+-	unsigned long long clock = mode->clock * 1000;
++	unsigned long long clock = mode->clock * 1000ULL;
+ 	unsigned long long phy_freq;
+ 	unsigned long long vclk_freq;
+ 	unsigned long long venc_freq;
+-- 
+2.43.0
 
-
-> 
-> Signed-off-by: Eason Yang <j2anfernee@gmail.com>
-> ---
->  MAINTAINERS               |   1 +
->  drivers/iio/adc/Kconfig   |  11 +
->  drivers/iio/adc/Makefile  |   1 +
->  drivers/iio/adc/nct7201.c | 462 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 475 insertions(+)
->  create mode 100644 drivers/iio/adc/nct7201.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 85b031ad7082..065202ab8fe7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17378,6 +17378,7 @@ M:	Eason Yang <j2anfernee@gmail.com>
->  L:	linux-iio@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/adc/nuvoton,nct7201.yaml
-> +F:	drivers/iio/adc/nct7201.c
->  
->  NVIDIA (rivafb and nvidiafb) FRAMEBUFFER DRIVER
->  M:	Antonino Daplas <adaplas@gmail.com>
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 6529df1a498c..6d6af1b51b5e 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -1092,6 +1092,17 @@ config NAU7802
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called nau7802.
->  
-> +config NCT7201
-> +	tristate "Nuvoton Instruments NCT7201 and NCT7202 Power Monitor"
-> +	depends on I2C
-> +	select REGMAP_I2C
-> +	help
-> +	  If you say yes here you get support for the Nuvoton NCT7201 and
-> +	  NCT7202 Voltage Monitor.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nct7201.
-> +
->  config NPCM_ADC
->  	tristate "Nuvoton NPCM ADC driver"
->  	depends on ARCH_NPCM || COMPILE_TEST
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 3e918c3eec69..54e8a7541af6 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -97,6 +97,7 @@ obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
->  obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
->  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
->  obj-$(CONFIG_NAU7802) += nau7802.o
-> +obj-$(CONFIG_NCT7201) += nct7201.o
->  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
->  obj-$(CONFIG_PAC1921) += pac1921.o
->  obj-$(CONFIG_PAC1934) += pac1934.o
-> diff --git a/drivers/iio/adc/nct7201.c b/drivers/iio/adc/nct7201.c
-> new file mode 100644
-> index 000000000000..0dadf699162a
-> --- /dev/null
-> +++ b/drivers/iio/adc/nct7201.c
-> @@ -0,0 +1,462 @@
-
-> +static const struct iio_event_spec nct7201_events[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	}, {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-I'd missed this before but you spend lots of time setting up event
-detectors etc which all looks good, but where are they actually signalled?
-
-The irq handler seems to be missing.
-
-> +};
-
-> +static int nct7201_init_chip(struct nct7201_chip_info *chip)
-> +{
-> +	struct device *dev = regmap_get_device(chip->regmap);
-> +	__le16 data = cpu_to_le16(GENMASK(chip->num_vin_channels - 1, 0));
-> +	unsigned int value;
-> +	int err;
-> +
-> +	err = regmap_write(chip->regmap, NCT7201_REG_CONFIGURATION,
-> +			   NCT7201_BIT_CONFIGURATION_RESET);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to reset chip\n");
-> +
-> +	/*
-> +	 * After about 25 msecs, the device should be ready and then the power-up
-> +	 * bit will be set to 1. If not, wait for it.
-
-Trivial but you don't "wait for it."  That's the right choice here but the comment is
-misleading.
-
-> +	 */
-> +	fsleep(25 * USEC_PER_MSEC);
-> +
-> +	err = regmap_read(chip->regmap, NCT7201_REG_BUSY_STATUS, &value);
-> +	if (err)
-> +		return dev_err_probe(dev, err, "Failed to read busy status\n");
-> +	if (!(value & NCT7201_BIT_PWR_UP))
-> +		return dev_err_probe(dev, -EIO, "Failed to power up after reset\n");
-> +
