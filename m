@@ -1,79 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F5FEAC6;
-	Mon,  5 May 2025 10:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388B2EAC6;
+	Mon,  5 May 2025 10:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746441989; cv=none; b=M0iScjvPftl41tU7PxxCUJGUwI7bvWkxUvO6ILoPZVYUCCWPXvdwy+kEGW4qt2wUufddja4wYDFD0OEbGgWfZaqndapo0IuloYsegpPXnFokM9sKvQikvmvL9Ib9a6XU5eWBzx9/NARov7bF4dHVB7cUM26iBwSJLpP1XfJWYic=
+	t=1746442149; cv=none; b=twnTqZ31Q5E2lriW3p3m44v40amtXv9p5++31FhaYd8YG9gGllHSjVakWeV6MWDq2g2nPOandmOfPiign2T89VX0XhbmiPwQ8XfEQjKK7a724Utx1H5b5zCsqKMi5G+GoDn3ZUzDFGa/650YB+bLrvR6vNPqKyqdMnIykIE0lyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746441989; c=relaxed/simple;
-	bh=lsQkno84P43PZsgutAUcrmLB0VMjgFprSkr3lAzLdAw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rI2hFmnu2F4xLQNPou+AXuVqCsK/hB55JOKuKBrvbjN06SH4NSpBdCOew7QicEj3MfnkwnpVNHZPEyuzxCFrIQu+n/s6eITgjOHCruQXdVD9alpzP6qzEhZqs4giUwIL5vsHxvqiI5Dxo6KbBJpk85wj9zopxwoXqUdCVur325s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQ1Yy1lE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQ1Yy1lE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E99C4CEE4;
-	Mon,  5 May 2025 10:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746441988;
-	bh=lsQkno84P43PZsgutAUcrmLB0VMjgFprSkr3lAzLdAw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=QQ1Yy1lEaC7RKpoKfxl258v7VFl++nlMDlEDu1l9Z6FHPUbVMV79LzShzDiJat6he
-	 FmVg1Yk9GcPs92j9BGkz9gn2xtSgLW9kRyboPsappotIwIiWYN7mu5GytkljbzShjD
-	 zTZsRg8jv1MGBDFHheK2bDFBpCv91oyNw1fJKPjYmvHzhT64vqsG6760qRRrGW6F2b
-	 P19uosBnZk4Ic06pwkCJGBVlbdv7v0SvaH5b6nakrQjxj7N4qS5FhRcIgUYyY9g4lO
-	 2R9aCl0Gv6yPzynoENTU95Tv7JVQVk+jVsZFU8y8V9x8UllSOlsoal+0FKZfft+1dA
-	 OmHAcsoca1l9A==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  a.hindborg@samsung.com,  boqun.feng@gmail.com,  frederic@kernel.org,
-  lyude@redhat.com,  tglx@linutronix.de,  anna-maria@linutronix.de,
-  jstultz@google.com,  sboyd@kernel.org,  ojeda@kernel.org,
-  alex.gaynor@gmail.com,  gary@garyguo.net,  bjorn3_gh@protonmail.com,
-  benno.lossin@proton.me,  aliceryhl@google.com,  tmgross@umich.edu,
-  chrisi.schrefl@gmail.com,  arnd@arndb.de,  linux@armlinux.org.uk
-Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
-In-Reply-To: <20250501015818.226376-1-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Thu, 1 May 2025 10:58:18 +0900")
-References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Mon, 05 May 2025 12:46:15 +0200
-Message-ID: <8734djxrm0.fsf@kernel.org>
+	s=arc-20240116; t=1746442149; c=relaxed/simple;
+	bh=TWSLfPAQGFr10Sswmc3ZrKNirAwVgspFxtgXmzrbs5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mqJQp4GHwl6UKzh3v6FtWt5uQl0YtEySYXa5G0tc4kxZwZ5gymVRczordgq2GsQn7Gwmt1NtskbB8Gvh+7vYuqRpL3cicWQgyU8nRljZAL7fMNcgDLlMK2cQf0+XsqEts8phlXNOEpjcP/AcPujLEHG/ALkIjGoYVg7U4I5uX9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7EC1E67373; Mon,  5 May 2025 12:49:01 +0200 (CEST)
+Date: Mon, 5 May 2025 12:49:01 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, brauner@kernel.org, djwong@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v11 02/16] xfs: only call xfs_setsize_buftarg once per
+ buffer target
+Message-ID: <20250505104901.GA10128@lst.de>
+References: <20250504085923.1895402-1-john.g.garry@oracle.com> <20250504085923.1895402-3-john.g.garry@oracle.com> <20250505054031.GA20925@lst.de> <8ea91e81-9b96-458e-bd4e-64eada31e184@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ea91e81-9b96-458e-bd4e-64eada31e184@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
-
-> Avoid 64-bit integer division that 32-bit architectures don't
-> implement generally. This uses ktime_to_ms() and ktime_to_us()
-> instead.
+On Mon, May 05, 2025 at 11:04:55AM +0100, John Garry wrote:
+> @@ -503,6 +509,9 @@ xfs_open_devices(
+>  		mp->m_logdev_targp = xfs_alloc_buftarg(mp, logdev_file);
+>  		if (!mp->m_logdev_targp)
+>  			goto out_free_rtdev_targ;
+> +		error = sync_blockdev(mp->m_logdev_targp->bt_bdev);
+> +		if (error)
+> +			goto out_free_rtdev_targ;
+>  	} else {
+>  		mp->m_logdev_targp = mp->m_ddev_targp;
+>  		/* Handle won't be used, drop it */
 >
-> The timer abstraction needs i64 / u32 division so C's div_s64() can be
-> used but ktime_to_ms() and ktime_to_us() provide a simpler solution
-> for this timer abstraction problem. On some architectures, there is
-> room to optimize the implementation of them, but such optimization can
-> be done if and when it becomes necessary.
 >
-> One downside of calling the C's functions is that the as_micros/millis
-> methods can no longer be const fn. We stick with the simpler approach
-> unless there's a compelling need for a const fn.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> Right?
 
-
-Please consult recent MAINTAINERS file when you send patches. If you
-intend for me to see a patch, please use my registered email address.
-
-
-Best regards,
-Andreas Hindborg
-
-
+Yes.  Or in fact just folding it into xfs_alloc_buftarg, which might
+be even simpler.  While you're at it adding a command why we are doing
+the sync would also be really useful, and having it in just one place
+helps with that.
