@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529D83839B2;
-	Mon,  5 May 2025 23:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F1F2EE4AE;
+	Mon,  5 May 2025 23:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486592; cv=none; b=Mh+yzFwtAmWmOALDrSQhnTgU2nbUx7moWBNcvlnWuqAmH3Pw6TKbI5vGVqr3NKWkvtg6bVSL+qiKnULncarem6P1izMu6TESNu78qBNjG/aFi/KeAm6qTB983TUaRvzRgNQ165Urfq4H+hJOxW8gNp0oHURGUXEVgBA4AmnLuBI=
+	t=1746486583; cv=none; b=oIWiky8NYxsBoS5dOAWxlFp94n1nySL2zo9k5gEoclKlU7Po4LNZuzwyYtUBWB96IWdpmWrdRwm6wLVO+y+Z8kxe+Ag2xKBRl3gVZGpNb3wsJp7pljRzBDG3hH4Xf+oXRW0fY6/MH9c+rdF8dwDFkUbKSNzrk01SJ5bIwSCyKgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486592; c=relaxed/simple;
-	bh=Be4GReE/g1z05i5QPUuyha8uEEyp4SlEvIx2eE1o4SU=;
+	s=arc-20240116; t=1746486583; c=relaxed/simple;
+	bh=+espPTqWdtGY5fu055kbMiWdUdSJbhnfuL4I/7MRnYI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EW841jajSB32lfpm1M8IZvr2XvC17f9of7BDxnsHU+dOxhlwSePW14wBqQVTQAPJG8H3DNRicelns3S26AcVIB6J6fCFS1ynF4c5eC4qagqPDIw+cQcjxhZDRQTpnLBSLYuPvrBm7nRbEqrTQNDcH0Xrp90YVNO0hM8c4BHZapE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2Jo3sLC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BvsBSPBJNlHTkwfsWJa1yT3vlxOI/VBAqFky6I+6zuukRw9KbinjM1FOCzijRc5+Yv5SwPAoUdjJmKUxg8xu6pNa9dCIuSZ7K7fE17mXkYCE/yVgvgveoFe9lbQGKOuDiQVGHp/S7O7ncda2qs9q9paUWEkC0e870PEZdhLUfvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEmLlIc8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2Jo3sLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A12C4CEE4;
-	Mon,  5 May 2025 23:09:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEmLlIc8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9BFC4CEEE;
+	Mon,  5 May 2025 23:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486592;
-	bh=Be4GReE/g1z05i5QPUuyha8uEEyp4SlEvIx2eE1o4SU=;
+	s=k20201202; t=1746486582;
+	bh=+espPTqWdtGY5fu055kbMiWdUdSJbhnfuL4I/7MRnYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G2Jo3sLCy2stjLd5AzSFvZ5zjHnG4WuhnGjKiIVV7qRmPVaAiIVDkeFhrDeO6wJIB
-	 +Wq13SMCup4WvUwXjrVmL689F+jxBDd1+5oL6DIVAIld6seJmwTQOzsteOlC6mv7gm
-	 62mCrFadG2pFZZudO6i8QSH1V03YPj5WIrC5uG28+pnKAe8P0fkJ7nRtu51k7M/7yS
-	 eHpO0OI+4fTcH814dweQOCuoENAtpuqbYOr2yhqqaSesjE/FIOIdDIwcfvhiybo77T
-	 qbS0DT0wad+UufvBy5GgnydCbjsOKUjt1lN7uJ+sXQ18QLZ9m907PMRe+CsShGx5Ev
-	 2mhxGOwRLoYEQ==
+	b=tEmLlIc8RYnX1Uejslz4pwpAtf5ocZrHUa8Y3JmKuZiyfHgAfx4b9fKtp9omrr+oj
+	 MLtc7M8kyAH6U/FCQ5DM/lq5N4iHYdbNqQvLQu9V6kc5JGHnWLwc2C7F31D6vDQb2r
+	 rFHkZaxxCARWaMPYh1rRyXbW+QiWXHvl8SY3+y8gYvxDhufcYOkR7pEDuHeVw8ODqH
+	 tQvkWqpKkQyI/w4dI6C4j+ChxWrztkazHGawfpraLFpQEi72Tg7HY1gV3lCnBHtdMu
+	 nQOpte38fDg0Jbikz7wy1qy8Xn2VdTtf0xA8nWSNbS0eh2t5JwkHjLnd0dUHzFC/Fg
+	 K6C0nkJ5q5Khg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	CK Hu <ck.hu@mediatek.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Yunke Cao <yunkec@google.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sasha Levin <sashal@kernel.org>,
-	p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	matthias.bgg@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 106/212] drm/mediatek: mtk_dpi: Add checks for reg_h_fre_con existence
-Date: Mon,  5 May 2025 19:04:38 -0400
-Message-Id: <20250505230624.2692522-106-sashal@kernel.org>
+	laurent.pinchart@ideasonboard.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 101/212] media: uvcvideo: Add sanity check to uvc_ioctl_xu_ctrl_map
+Date: Mon,  5 May 2025 19:04:33 -0400
+Message-Id: <20250505230624.2692522-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505230624.2692522-1-sashal@kernel.org>
 References: <20250505230624.2692522-1-sashal@kernel.org>
@@ -57,49 +54,40 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.136
 Content-Transfer-Encoding: 8bit
 
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
 
-[ Upstream commit 8c9da7cd0bbcc90ab444454fecf535320456a312 ]
+[ Upstream commit 990262fdfce24d6055df9711424343d94d829e6a ]
 
-In preparation for adding support for newer DPI instances which
-do support direct-pin but do not have any H_FRE_CON register,
-like the one found in MT8195 and MT8188, add a branch to check
-if the reg_h_fre_con variable was declared in the mtk_dpi_conf
-structure for the probed SoC DPI version.
+Do not process unknown data types.
 
-As a note, this is useful specifically only for cases in which
-the support_direct_pin variable is true, so mt8195-dpintf is
-not affected by any issue.
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Link: https://patchwork.kernel.org/project/dri-devel/patch/20250217154836.108895-6-angelogioacchino.delregno@collabora.com/
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Tested-by: Yunke Cao <yunkec@google.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Link: https://lore.kernel.org/r/20250203-uvc-roi-v17-15-5900a9fed613@chromium.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/usb/uvc/uvc_v4l2.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 1fa958e8c40a1..5ad9c384046cb 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -406,12 +406,13 @@ static void mtk_dpi_config_swap_input(struct mtk_dpi *dpi, bool enable)
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index bd4677a6e653a..0aaa4fce61dae 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -36,6 +36,12 @@ static int uvc_ioctl_ctrl_map(struct uvc_video_chain *chain,
+ 	unsigned int size;
+ 	int ret;
  
- static void mtk_dpi_config_2n_h_fre(struct mtk_dpi *dpi)
- {
--	mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
-+	if (dpi->conf->reg_h_fre_con)
-+		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, H_FRE_2N, H_FRE_2N);
- }
- 
- static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
- {
--	if (dpi->conf->edge_sel_en)
-+	if (dpi->conf->edge_sel_en && dpi->conf->reg_h_fre_con)
- 		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
- }
- 
++	if (xmap->data_type > UVC_CTRL_DATA_TYPE_BITMASK) {
++		uvc_dbg(chain->dev, CONTROL,
++			"Unsupported UVC data type %u\n", xmap->data_type);
++		return -EINVAL;
++	}
++
+ 	map = kzalloc(sizeof(*map), GFP_KERNEL);
+ 	if (map == NULL)
+ 		return -ENOMEM;
 -- 
 2.39.5
 
