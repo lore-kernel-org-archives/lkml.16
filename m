@@ -1,122 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D031E335213;
-	Mon,  5 May 2025 22:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D28335214
+	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 22:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484590; cv=none; b=UGsH7fLHGHhYc/icVhgtepVRV0p4RdkURLI3ZwaCMP1cKQzwQk6AAFOOV4z5akh0uPWIipBILvYS02vkN0hMVKMTMPXyucSOpoFRliZ+/z6yv/pecX0ejH7V7nrFuNVslOvudPID/Cf9M6m6Kz8cDatbinD/ftcEcS3DDN0A4Gk=
+	t=1746484592; cv=none; b=mX9xOzZQ/8U8PfuPpEvQKzI4XL6U1pnZV8eDdCVPHCWfyIXEP6EWUb+BOxC2xNauwq67pm6dVbebp+AD9f9mrEhmZtcMSOQG+F8nZMXo49TJqalI2f0FpM428Fa/jKgli7HS/fOThVTT7/zS0rA9GnrtCluuH2b3CnFuJqsriFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484590; c=relaxed/simple;
-	bh=zmpFkEnZZLrrF49HUhfJohjoZOt4osMV05kEKXJ/pvM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pa06KHILGmFFd/3r/uGz7/E/35PQ2x8Jj+p73ROCtjcS7fYVovPyGJVTMs6raW8mSKIkJ8K0/35XiieXsdqoWoj5mYFkEYPb/PJtlZrn2g8tcF6JGnFZ1h1PgtbiBEsLJFUN+wTQBBsdE+KHqKYgLh0Lbnzy+2HeNw+ZmqqZcZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNwGdJ0K; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNwGdJ0K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E389C4CEE4;
-	Mon,  5 May 2025 22:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484590;
-	bh=zmpFkEnZZLrrF49HUhfJohjoZOt4osMV05kEKXJ/pvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aNwGdJ0KAPoSxinGpxaUhAVq7z75/cNcKQHEDRwzKgQ7TzDRso5TUnWg6ue0X4lP/
-	 72oWsxFfli6cAQdceFw5zLcDTNtyI2ISWSgJiLD7ypUeMV2pTj6bxFO3PrxLLbdy7I
-	 UkEVjhbVy5Ninf4+KCy+WwQ//P870u2BmOfyDVhgniuOSFar2coslNCPdkJXSAQxnj
-	 eH/icCrOGIpG0oP1AM9vlG+G5WBiYSEnmK3qkPibtY9y4zhSBzUbpT0i1cIEkZO3bG
-	 Ql8QRlx73Xw5VYXNTdXeao0gtfqHG4KHzN+OYLDGwNlCd9c8ZE3B2BPTtbwEPxGBCo
-	 0hDsY2vECYwkw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Petr Machata <petrm@nvidia.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	shuah@kernel.org,
-	bridge@lists.linux.dev,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 551/642] bridge: mdb: Allow replace of a host-joined group
-Date: Mon,  5 May 2025 18:12:47 -0400
-Message-Id: <20250505221419.2672473-551-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+	s=arc-20240116; t=1746484592; c=relaxed/simple;
+	bh=9+S4sH3Oi7fBWWndhFeCVL+3b9Cj5GUO9GCYPbX1bMU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cRwu4Rk13gBF+w02yDqAGFH3NtqTPDqcRJ19VV6V2Q28HKjLb/dcvky88wFCJlLkQzgnqBGXs2hWr3TtCOoMs6ltBW2w1Dsikh7eO8esYCYGH5V3PPHn07So2yXovSji3vgZk+ul3kZPvsS1Qli9PYPyKwrNcKqHmB8t0xDI1RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e4f920dacso407448939f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 15:36:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746484590; x=1747089390;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2z9Pd/Vk5Bhcd1MqY2txaj588GzMwMC6vNeVs624vsI=;
+        b=KIb1LJqrpZNEqDG/0XBGTqNR+8PecV773yGvlch1Dt28w2v0fQf90Y/FIzZwysTHQC
+         PakHDProDMBNG8yLQhXllPH+TOZZ7rvY6WVBWDfzwZSQT7Vg9ljbsdFbaouO34MD1HT+
+         gWwzHz8v0T6gIvKcuEO5YVyDb2eA/TBvhtXT43GHWivSgiTX496Frpga1+nXORzYO+Iy
+         Tovj3kviWm+okFRlpoeb7weTDSza86zuA8G23IU+ujhbCBPtjFZh1+nQ1keBNg85HPMq
+         IuWy1juW+LOl0zHuDpqFVZ/P1NI3oH3OwD0VAf8L/yIGcQOUx0I2zaPJo2VSUQz5YCbD
+         wn4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXAjTrGOAMVQlRRTMw30rePhYxDSBalsWnnnNYolvTwM9eXiLwubKh9JUA0sJpmfF9MRGHrddqiGpmDUVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcYKBfYP5Et9slJkTyEFchrgHYYGjTZF4pcITtPMUcCawp4biU
+	rDRL4nQ65zyVWS5pyNF+p71XD/H/4eo+kcZRyPSlXzU7TBqtkFfdbSHPOK1CMl85B0sxyTKWt/r
+	OCiN203Arq//I3DCZt5Uyuyx9yqmKylHU1wTy1F4dT6NVgcMy2snX3ZE=
+X-Google-Smtp-Source: AGHT+IGdEh5Jeiw094ug/FrtdtXCU3SFK1IW7B/rMculblwE0oOjcDc7jEkhquqc+Mg6clUlieWgn78DefAh5chDC/J1OROpKeEv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:ca4a:0:b0:3d5:81aa:4d0a with SMTP id
+ e9e14a558f8ab-3da5b26eab9mr85526325ab.6.1746484589927; Mon, 05 May 2025
+ 15:36:29 -0700 (PDT)
+Date: Mon, 05 May 2025 15:36:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68193d6d.050a0220.37980e.0029.GAE@google.com>
+Subject: [syzbot] [ocfs2?] possible deadlock in ocfs2_move_extent
+From: syzbot <syzbot+68c788938ba0326046a9@syzkaller.appspotmail.com>
+To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
+	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Petr Machata <petrm@nvidia.com>
+Hello,
 
-[ Upstream commit d9e9f6d7b7d0c520bb87f19d2cbc57aeeb2091d5 ]
+syzbot found the following issue on:
 
-Attempts to replace an MDB group membership of the host itself are
-currently bounced:
+HEAD commit:    4f79eaa2ceac kbuild: Properly disable -Wunterminated-strin..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=172041cc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=991cf8e2ade034c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=68c788938ba0326046a9
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
- # ip link add name br up type bridge vlan_filtering 1
- # bridge mdb replace dev br port br grp 239.0.0.1 vid 2
- # bridge mdb replace dev br port br grp 239.0.0.1 vid 2
- Error: bridge: Group is already joined by host.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-A similar operation done on a member port would succeed. Ignore the check
-for replacement of host group memberships as well.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/16be56ff3915/disk-4f79eaa2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ba7f9a1ecd57/vmlinux-4f79eaa2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/834807e42877/bzImage-4f79eaa2.xz
 
-The bit of code that this enables is br_multicast_host_join(), which, for
-already-joined groups only refreshes the MC group expiration timer, which
-is desirable; and a userspace notification, also desirable.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+68c788938ba0326046a9@syzkaller.appspotmail.com
 
-Change a selftest that exercises this code path from expecting a rejection
-to expecting a pass. The rest of MDB selftests pass without modification.
+loop0: detected capacity change from 0 to 32768
+ocfs2: Mounting device (7,0) on (node local, slot 0) with ordered data mode.
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 Not tainted
+------------------------------------------------------
+syz.0.30/6040 is trying to acquire lock:
+ffff888076dd5100 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ffff888076dd5100 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}, at: ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
 
-Signed-off-by: Petr Machata <petrm@nvidia.com>
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
-Link: https://patch.msgid.link/e5c5188b9787ae806609e7ca3aa2a0a501b9b5c4.1738685648.git.petrm@nvidia.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+but task is already holding lock:
+ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_move_extent+0x429/0x17f0 fs/ocfs2/move_extents.c:632
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}:
+       down_write+0x92/0x200 kernel/locking/rwsem.c:1577
+       inode_lock include/linux/fs.h:867 [inline]
+       __ocfs2_flush_truncate_log+0x31e/0x1160 fs/ocfs2/alloc.c:6054
+       ocfs2_flush_truncate_log+0x4a/0x70 fs/ocfs2/alloc.c:6084
+       ocfs2_sync_fs+0x1c6/0x3d0 fs/ocfs2/super.c:406
+       sync_filesystem+0x1d0/0x290 fs/sync.c:66
+       generic_shutdown_super+0x74/0x390 fs/super.c:621
+       kill_block_super+0x3b/0x90 fs/super.c:1710
+       deactivate_locked_super+0xc1/0x1a0 fs/super.c:473
+       deactivate_super fs/super.c:506 [inline]
+       deactivate_super+0xde/0x100 fs/super.c:502
+       cleanup_mnt+0x225/0x450 fs/namespace.c:1435
+       task_work_run+0x150/0x240 kernel/task_work.c:227
+       resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+       exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+       exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+       __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+       syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
+       do_syscall_64+0xda/0x260 arch/x86/entry/syscall_64.c:100
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+       lock_acquire kernel/locking/lockdep.c:5866 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+       down_write+0x92/0x200 kernel/locking/rwsem.c:1577
+       inode_lock include/linux/fs.h:867 [inline]
+       ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
+       __ocfs2_move_extents_range fs/ocfs2/move_extents.c:860 [inline]
+       ocfs2_move_extents+0xd69/0x1980 fs/ocfs2/move_extents.c:927
+       ocfs2_ioctl_move_extents+0x54d/0xb20 fs/ocfs2/move_extents.c:1053
+       ocfs2_ioctl+0x3c6/0x6f0 fs/ocfs2/ioctl.c:946
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl fs/ioctl.c:892 [inline]
+       __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
+                               lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5);
+                               lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
+  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#5);
+
+ *** DEADLOCK ***
+
+5 locks held by syz.0.30/6040:
+ #0: ffff88807ac9a420 (sb_writers#12){.+.+}-{0:0}, at: ocfs2_ioctl_move_extents+0xc4/0xb20 fs/ocfs2/move_extents.c:985
+ #1: ffff888076dd5f40 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #1: ffff888076dd5f40 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: ocfs2_move_extents+0x1c3/0x1980 fs/ocfs2/move_extents.c:905
+ #2: ffff888076dd5be0 (&oi->ip_alloc_sem){+.+.}-{4:4}, at: ocfs2_move_extents+0x429/0x1980 fs/ocfs2/move_extents.c:925
+ #3: ffff888076dd1800 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #3: ffff888076dd1800 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: ocfs2_reserve_suballoc_bits+0x11c/0x48d0 fs/ocfs2/suballoc.c:786
+ #4: ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #4: ffff88805a106d80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_move_extent+0x429/0x17f0 fs/ocfs2/move_extents.c:632
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 6040 Comm: syz.0.30 Not tainted 6.15.0-rc4-syzkaller-00052-g4f79eaa2ceac #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ down_write+0x92/0x200 kernel/locking/rwsem.c:1577
+ inode_lock include/linux/fs.h:867 [inline]
+ ocfs2_move_extent+0x6ea/0x17f0 fs/ocfs2/move_extents.c:640
+ __ocfs2_move_extents_range fs/ocfs2/move_extents.c:860 [inline]
+ ocfs2_move_extents+0xd69/0x1980 fs/ocfs2/move_extents.c:927
+ ocfs2_ioctl_move_extents+0x54d/0xb20 fs/ocfs2/move_extents.c:1053
+ ocfs2_ioctl+0x3c6/0x6f0 fs/ocfs2/ioctl.c:946
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd0fd78e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd0fe5d9038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fd0fd9b5fa0 RCX: 00007fd0fd78e969
+RDX: 00002000000000c0 RSI: 0000000040406f06 RDI: 0000000000000004
+RBP: 00007fd0fd810ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fd0fd9b5fa0 R15: 00007ffe87be5778
+ </TASK>
+
+
 ---
- net/bridge/br_mdb.c                                  | 2 +-
- tools/testing/selftests/net/forwarding/bridge_mdb.sh | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/net/bridge/br_mdb.c b/net/bridge/br_mdb.c
-index 1a52a0bca086d..7e1ad229e1330 100644
---- a/net/bridge/br_mdb.c
-+++ b/net/bridge/br_mdb.c
-@@ -1040,7 +1040,7 @@ static int br_mdb_add_group(const struct br_mdb_config *cfg,
- 
- 	/* host join */
- 	if (!port) {
--		if (mp->host_joined) {
-+		if (mp->host_joined && !(cfg->nlflags & NLM_F_REPLACE)) {
- 			NL_SET_ERR_MSG_MOD(extack, "Group is already joined by host");
- 			return -EEXIST;
- 		}
-diff --git a/tools/testing/selftests/net/forwarding/bridge_mdb.sh b/tools/testing/selftests/net/forwarding/bridge_mdb.sh
-index d9d587454d207..8c1597ebc2d38 100755
---- a/tools/testing/selftests/net/forwarding/bridge_mdb.sh
-+++ b/tools/testing/selftests/net/forwarding/bridge_mdb.sh
-@@ -149,7 +149,7 @@ cfg_test_host_common()
- 	check_err $? "Failed to add $name host entry"
- 
- 	bridge mdb replace dev br0 port br0 grp $grp $state vid 10 &> /dev/null
--	check_fail $? "Managed to replace $name host entry"
-+	check_err $? "Failed to replace $name host entry"
- 
- 	bridge mdb del dev br0 port br0 grp $grp $state vid 10
- 	bridge mdb get dev br0 grp $grp vid 10 &> /dev/null
--- 
-2.39.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
