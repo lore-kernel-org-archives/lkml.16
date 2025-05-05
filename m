@@ -1,135 +1,49 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6204AEBE;
-	Mon,  5 May 2025 05:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E895EBE;
+	Mon,  5 May 2025 05:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746424479; cv=none; b=ZeOl1xCWtaO50RpZLil+TInW2bf+wvzVNj7M0ACcarvFA9c2jKQNes5XDqQz4H8hINUNNsdCCfVDZmHiseevQeGP7Wx32i3uv+wDdm5+cC24ZZ562xrCjvCGmXma8SFzlez/BhK7BeAWJIEk2HaY4Lc2maKhJEGrH/YXdy0J7X8=
+	t=1746424549; cv=none; b=eVqDUaRxzS5xMG1TEDtXrqWH0EH4JL5NWp5xZsGufBp8GLp2KDqbG+Od0cOrCUvYg4j0bgr5tY2a0ao5XHssb48Fze53Ve7fWZbpxG2/SL5ZS/+9frorUsilgLaJKnKMjUNmG94OuD25/Uef2982wIG/sAY9C8oRt7U08puD+6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746424479; c=relaxed/simple;
-	bh=JNhDULvhn4HOLlSr9x6YtX6MGI6nzOi9XQ4X+JR8FDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AcVr1qGnPZxKy7kA9FibQEoXw/axpRSX8yrrihPDROGnb9Ui8xQi2DM72quI36ZDlxlgiKQOvr1ZqTczRg8i4jOwhTUewEYgdx2/vDQOxARy4tdT5VfuvYr8d60Wo6rnvuClPXu4ZrvyPegL4ywSxt5Jb7EqHer7sZP7dLOv/gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJWIxpRQ; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJWIxpRQ"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54d65cb6e8aso5175707e87.1;
-        Sun, 04 May 2025 22:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746424475; x=1747029275; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v41UzD7X2NmBLMS2a6rtXUz59TrgAWuFJrBADKI9liE=;
-        b=RJWIxpRQuFjEoL1Rh0d0q1W+qJ+XZGbVzHOGFywMFHmUClI9vwoimVyd0gFTon7Rnx
-         KC/3S/rj9TOg2pY40smyqQw/78HXPxVhaZdlr4UtWocHy2BWI0KWqY47DLNQE3Tqw8ZB
-         As17A5ug31Apuqu3eA7jJlkMBB2N/Mua2UjGi7eHGeLBEJFRhlMyMKWWso09nx84L3cG
-         EnL5AklfZzBOsWrGJJPr4iBHJVwWFOCCubTfeOuYPVxig1bkdHWli5OM3uoP1PoXpnLL
-         cGvfzXyX5m7gaOrVhReVwBPPqUyMPsGCcNZQ/VeD5c/YMQe196Nhp+alJkIqQoqGBt6p
-         UsVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746424475; x=1747029275;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v41UzD7X2NmBLMS2a6rtXUz59TrgAWuFJrBADKI9liE=;
-        b=YdFnm4OCKymptKUyyGZo2wsq2B1uGceX1FwLjRrA9UOtDJrZJQys7puU39gT45tfTd
-         ZA3wXpX1dIRX+l4yRVSdKA682rou8gOk+WdYnk2vT1Fb1hL5Ro4Gzf6HD11S+bWCe5hw
-         RdxgcIgekEj+p0+cM+P0+rcD2Qij8MKOcnNTHxgGrH5BfqTr2CIPnZrNXXJ4XFY9fGR0
-         WHCt2RuTGPXO7hQJiQhErrqT0V0TnKDCmUC9tP7KiZye3rIXNPetFx6WixSHy2S7NP7A
-         wuYex1QrjnNb3TjOarZH417VRvI2/wQAB6ApVy+RbC47sYsnQewMVCMi3PfHc2bxlGfG
-         MxgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvK8LBM0cKvVr34o+bkm+OVIzjMLX1TcbWd35iloTKpZ9NAh8XuZRJUG9A/nfpPya2PvP/sSOVL5BU@vger.kernel.org, AJvYcCX1x2rSMhsx/bBUJCio4eLajMiJH/6JJgDIO1XIdB6i2WvUacE6rkCm9ZsRGLa8pv/kOhYuPVHI2ILrGBkQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9ZS+iYlNttCJoP/IKaD7BoIa0gMHNQJ7xPbTFg31a7w/K3LDs
-	1GorEUZLcyOEwNNIpmuSiWv6KuSOOCK0hp4j2jEY2uZqTaiYDnqz9mCGcA==
-X-Gm-Gg: ASbGncuqkJTXcyvSeUkCrDL0UpVfJcejTolhxK5LDLmYVmZ/b0R4b7vzQjPcKWB0cBm
-	+HHSDMFGTrSZFlGFz9r5VzQ4vnEfJPIVxvT2NJKiR9wYr2YL5ZPkV0MKEOAMyq+qaDvOKXo5CWm
-	mSNFT9I1xsMmefAfkgfyAyc6hnGObCpuEc32/FX4eYdo37VkiFqcQAn7EwfgdTxZBVoKChomW5s
-	wo1vEhNEcZR6Vbir9nwoYNQ46fFLnk1Z/CU1uMlHFQco3Qwsp5wLRA7GkTLlmmWC4xTbsp/IQys
-	FTAQdVb8DT6IIuRjWjol9Gv7kDIqknLYe2FDWy7ZGbd2xrNbyZvH5W4XMilez+Se47KlU58CMTm
-	c8lxtGj7k3kTLpfXCc+b5Cw==
-X-Google-Smtp-Source: AGHT+IFlzjo2ymbBjO9DidiEJ2qkM8M7MJZlHw2O/AGlyoxxDugUkv/aBtOTyBWKTezqkj2cm5NfpA==
-X-Received: by 2002:a05:6512:3088:b0:54e:86f3:5e54 with SMTP id 2adb3069b0e04-54eb2418fa2mr1896454e87.5.1746424475060;
-        Sun, 04 May 2025 22:54:35 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94ee054sm1587952e87.149.2025.05.04.22.54.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 May 2025 22:54:34 -0700 (PDT)
-Message-ID: <baea6673-b48d-4544-9c6b-5f64d8e76603@gmail.com>
-Date: Mon, 5 May 2025 08:54:32 +0300
+	s=arc-20240116; t=1746424549; c=relaxed/simple;
+	bh=lslOGUWOv2aeb0i9NMR1VzC1Ida5MbIcAK+QwiRTlsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzPhpm0I9RiCYjIDT3CeqtBu+Z9F/fEN6M0wsj6Ixa5oCi1PCAwGUIWMXiuXoozawqMgjp2gSlOHMTZPe/wWtLPxrNldtDAxEKlBKfRRCYDvtbLmzMQ72vP3zEEkA4xn1TSmPMJPMrabd119KQSylOikA0fpIewYuV9ChHE2YNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 30BBA68BEB; Mon,  5 May 2025 07:55:43 +0200 (CEST)
+Date: Mon, 5 May 2025 07:55:43 +0200
+From: hch <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Hans Holmberg <Hans.Holmberg@wdc.com>,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, hch <hch@lst.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/2] xfs: add inode to zone caching for data
+ placement
+Message-ID: <20250505055542.GA21256@lst.de>
+References: <20250430084117.9850-1-hans.holmberg@wdc.com> <20250430084117.9850-3-hans.holmberg@wdc.com> <20250502200415.GS25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] pinctrl: qcom: switch to devm_gpiochip_add_data()
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck
- <linux@roeck-us.net>, Josh Cartwright <joshc@codeaurora.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Doug Anderson <dianders@chromium.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250503-pinctrl-msm-fix-v1-0-da9b7f6408f4@oss.qualcomm.com>
- <20250503-pinctrl-msm-fix-v1-3-da9b7f6408f4@oss.qualcomm.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250503-pinctrl-msm-fix-v1-3-da9b7f6408f4@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502200415.GS25675@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On 03/05/2025 08:32, Dmitry Baryshkov wrote:
-> In order to simplify cleanup actions, use devres-enabled version of
-> gpiochip_add_data().
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/pinctrl/qcom/pinctrl-msm.c | 6 +-----
->   1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 88dd462516c76d58b43d49accbddeea38af8f1ec..b2e8f7b3f3e3d5d232b2bd60e5cace62b21ffb03 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1449,7 +1449,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->   	girq->handler = handle_bad_irq;
->   	girq->parents[0] = pctrl->irq;
->   
-> -	ret = gpiochip_add_data(&pctrl->chip, pctrl);
-> +	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
->   	if (ret) {
->   		dev_err(pctrl->dev, "Failed register gpiochip\n");
->   		return ret;
-> @@ -1470,7 +1470,6 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->   			dev_name(pctrl->dev), 0, 0, chip->ngpio);
->   		if (ret) {
->   			dev_err(pctrl->dev, "Failed to add pin range\n");
-> -			gpiochip_remove(&pctrl->chip);
->   			return ret;
->   		}
->   	}
-> @@ -1608,9 +1607,6 @@ EXPORT_SYMBOL(msm_pinctrl_probe);
->   
->   void msm_pinctrl_remove(struct platform_device *pdev)
->   {
-> -	struct msm_pinctrl *pctrl = platform_get_drvdata(pdev);
-> -
-> -	gpiochip_remove(&pctrl->chip);
->   }
->   EXPORT_SYMBOL(msm_pinctrl_remove);
+On Fri, May 02, 2025 at 01:04:15PM -0700, Darrick J. Wong wrote:
+> It seems like a decent idea to try to land random writes to the same
+> file in the same zone.  This helps us reduce seeking out of the zone on
+> subsequent reads, right?
 
-I suppose this should also make the time window when the GPIO chip has 
-gone, but pinmux is still there (to call the 'gpiochip_line_is_valid()') 
-smaller.
+Yes.  Having as few zones as possible per file also means that GC works
+better, as it often can consolidate extents.
 
-FWIW:
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
-
-Yours,
-	-- Matti
