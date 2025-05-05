@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B903C01D9;
-	Mon,  5 May 2025 23:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934BF2F10A3;
+	Mon,  5 May 2025 23:23:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487431; cv=none; b=ONTKw99nqzVqSWDhnllJ7gNWa0NCGQ6UvBy1CXTl65bKdscKnT05ZTkDnljE2+eBbxDViWns7JwBF5RaLU5lVbEQjPhdNWIF+AJO6fR9hgaNW6zNLRG4jVxA2HGCugdBJq6RNrWH8mkhlK1n4NCgRqfcR/CEj78a+FPLEJ95VC8=
+	t=1746487435; cv=none; b=AE6Kh7Sj2FTPeyPVLrfBHLykmCg/y+KzsQGY2LCGYgq6nz2iolZo/VIgXZV661zws6DoxfboRx3vBPynjyxHq4BVzPzWulEjlQ6bJhRzkMS8UIM84lGd7BamUBW0vEKyVzqiTmLpb1n9Sy87re2W97FS4su6bvupErWb2HL+Vds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487431; c=relaxed/simple;
-	bh=/5BcaKk29skcl6C0x/EXuNzv3BY6vyonckuttvX+NdA=;
+	s=arc-20240116; t=1746487435; c=relaxed/simple;
+	bh=Xqo5iZ4YGVxrB/Rap8N1HtW9HTVyu1H5uyH8lcgaPPQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m8oorU2Zj9JO71UqpEiexKw72xG03eG7zJwDhW9BR6LN8duuQLQ2HuAZ0NKaH8nCfL/r91KJFeG0CD5iqoLTSwnfgDI8psrcjbIy8u6y7ZoVPOEBR7Tw8QsAtGfOc6HOw8EzZ0mjfR7Tei9jXLQ2ohGhjAvc8DCRnimRX/OIHfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFkutQau; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tKEDLkLPDvtRpgsY9wVEQTLVxsFvPW75jBzup4nJA9XJ7lvH4ddXjErE2mrZGkxXv03DsEKJhd2HUIBjjXNa68qKJI990rG5nfPRTjGO+QSrp7MaaSDoLzsO8kWfJX1bkSaBgd76m55Xj0phw7eVGih6dk3Jf02Q+2ThF91nz30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+Uidgvn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFkutQau"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D7AC4CEE4;
-	Mon,  5 May 2025 23:23:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+Uidgvn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D019FC4CEED;
+	Mon,  5 May 2025 23:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487430;
-	bh=/5BcaKk29skcl6C0x/EXuNzv3BY6vyonckuttvX+NdA=;
+	s=k20201202; t=1746487434;
+	bh=Xqo5iZ4YGVxrB/Rap8N1HtW9HTVyu1H5uyH8lcgaPPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HFkutQauMAcbZIBmcPBNZRs05NpUYU8zTQ8S8zkzdhhN4sT8Q2vNb0Ar9ErUX9i9F
-	 +oM1CvFPCS8lzQscfws2l+MwRm0OQiUtsr6tan8f/KZ0O+cx+8m4kXzjqZPWE3WfyR
-	 FNG/0PQbIbbzjcV0BPCcRWSaT6NVc38AZRgOjtiyVdGGWl21RG0nRpAI4WQacImUv8
-	 a1gMW4WYGjDPjg21FKy5nmKXcKymhnaqDLrdNt8xyf7GW8DjtOXLy4bD3gPbWT7jER
-	 qZ7L7EMl5epUQp3xxH57fAGLn4/YYlH/I/xPnP4BEHDi84DgmgjJe+aJtK1ydfrVgN
-	 zlIiVQSkvHWBQ==
+	b=s+UidgvnIT1ExCwe+1KvCS7WGDMJUoZFaleqdkLzOMsa0KUSwuQ2nYIV/izxYPco/
+	 u+u1rz6fqS3k2s77dxX0EAfWM+0z6F0r4GITc6DS9pEhAHOBnT1gmWEpRj02UWOf/j
+	 c2uJxdivejAJBtVdT40QRxr5cfXDylwyd+bYlvqejb5tPFNNhczqw1XX/Kgrj9nnN+
+	 Y1Swo8jdXFEXiZ0BgkPhHQopx1ar5m5eFS3o+qb1xlTVJOvaYYc8ltPPS89rQ20REk
+	 DGixy+f+P0uT+n7VR0O57D3HXBRcWBSuDrTAfTEsk5rg8nEx4AxCPJYuMUE+yGy05L
+	 jikEmw/Vudg9A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrey Vatoropin <a.vatoropin@crpt.ru>,
-	Guenter Roeck <linux@roeck-us.net>,
+Cc: Antoine Tenart <atenart@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jdelvare@suse.com,
-	linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 67/79] hwmon: (xgene-hwmon) use appropriate type for the latency value
-Date: Mon,  5 May 2025 19:21:39 -0400
-Message-Id: <20250505232151.2698893-67-sashal@kernel.org>
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	sdf@fomichev.me,
+	jdamato@fastly.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 69/79] net-sysfs: prevent uncleared queues from being re-added
+Date: Mon,  5 May 2025 19:21:41 -0400
+Message-Id: <20250505232151.2698893-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -51,43 +55,74 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
 Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+From: Antoine Tenart <atenart@kernel.org>
 
-[ Upstream commit 8df0f002827e18632dcd986f7546c1abf1953a6f ]
+[ Upstream commit 7e54f85c60828842be27e0149f3533357225090e ]
 
-The expression PCC_NUM_RETRIES * pcc_chan->latency is currently being
-evaluated using 32-bit arithmetic.
+With the (upcoming) removal of the rtnl_trylock/restart_syscall logic
+and because of how Tx/Rx queues are implemented (and their
+requirements), it might happen that a queue is re-added before having
+the chance to be cleared. In such rare case, do not complete the queue
+addition operation.
 
-Since a value of type 'u64' is used to store the eventual result,
-and this result is later sent to the function usecs_to_jiffies with
-input parameter unsigned int, the current data type is too wide to
-store the value of ctx->usecs_lat.
-
-Change the data type of "usecs_lat" to a more suitable (narrower) type.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
-Link: https://lore.kernel.org/r/20250204095400.95013-1-a.vatoropin@crpt.ru
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Antoine Tenart <atenart@kernel.org>
+Link: https://patch.msgid.link/20250204170314.146022-4-atenart@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/xgene-hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/net-sysfs.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index 559a73bab51e8..15889bcc85875 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -110,7 +110,7 @@ struct xgene_hwmon_dev {
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index bcad7028bbf45..6b0c682e5ea70 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -968,6 +968,22 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
- 	phys_addr_t		comm_base_addr;
- 	void			*pcc_comm_addr;
--	u64			usecs_lat;
-+	unsigned int		usecs_lat;
- };
++	/* Rx queues are cleared in rx_queue_release to allow later
++	 * re-registration. This is triggered when their kobj refcount is
++	 * dropped.
++	 *
++	 * If a queue is removed while both a read (or write) operation and a
++	 * the re-addition of the same queue are pending (waiting on rntl_lock)
++	 * it might happen that the re-addition will execute before the read,
++	 * making the initial removal to never happen (queue's kobj refcount
++	 * won't drop enough because of the pending read). In such rare case,
++	 * return to allow the removal operation to complete.
++	 */
++	if (unlikely(kobj->state_initialized)) {
++		netdev_warn_once(dev, "Cannot re-add rx queues before their removal completed");
++		return -EAGAIN;
++	}
++
+ 	/* Kobject_put later will trigger rx_queue_release call which
+ 	 * decreases dev refcount: Take that reference here
+ 	 */
+@@ -1558,6 +1574,22 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
+ 	struct kobject *kobj = &queue->kobj;
+ 	int error = 0;
  
- /*
++	/* Tx queues are cleared in netdev_queue_release to allow later
++	 * re-registration. This is triggered when their kobj refcount is
++	 * dropped.
++	 *
++	 * If a queue is removed while both a read (or write) operation and a
++	 * the re-addition of the same queue are pending (waiting on rntl_lock)
++	 * it might happen that the re-addition will execute before the read,
++	 * making the initial removal to never happen (queue's kobj refcount
++	 * won't drop enough because of the pending read). In such rare case,
++	 * return to allow the removal operation to complete.
++	 */
++	if (unlikely(kobj->state_initialized)) {
++		netdev_warn_once(dev, "Cannot re-add tx queues before their removal completed");
++		return -EAGAIN;
++	}
++
+ 	/* Kobject_put later will trigger netdev_queue_release call
+ 	 * which decreases dev refcount: Take that reference here
+ 	 */
 -- 
 2.39.5
 
