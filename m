@@ -1,46 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9038F181;
-	Mon,  5 May 2025 23:02:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D641E38F89D;
+	Mon,  5 May 2025 23:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486126; cv=none; b=urF/ts9pH+mKyRI0KgBtF6q9NIsr7M4VALrxxJMmBsfRTg55PpvGvQsvwmhlTdOjqlLlr/xMaAHTLSkCMFLVOOjwxE71Udb8EbEWN3uyannYB+MeM6We4RartQrHPBrR+qCTlObQZcGLYnUNDS3rZ6jgWZfZPFa45tNuFqUnOK4=
+	t=1746486136; cv=none; b=HLT2Tsi/V+fD0a2//kMqb9tGbkruFyPf+WocCqCohbo4nqGchHVlJh+Bjf4HLymRNq0pvezbKG98J42fbbhW+Gn7aFZIwB1E/yHIu8FNdah2yahScFplkc3v/HbbEmJUThCdpgZHc3pANciKnpNJc3oHhMnlPpFvmskrHg6sUGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486126; c=relaxed/simple;
-	bh=2esapROkTMnruviUBIinUj5RrrZr0Z2HKA8ukgHv/V4=;
+	s=arc-20240116; t=1746486136; c=relaxed/simple;
+	bh=+w+qAdKI/xdoPS5oda+XoQCm0mKp1PpX5GAYE62NVHs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QYWY795UoWF0TZ5j83Q7BvWtqX7VfPUzugFFnRErWrpaYxzZjG6GmZzlo2xnE5A35xtjgs0k5VZHL+RVvEWK/hCXUXN39L7FZJvXqII51QmgHZgc+9yzpyn8R9WUOO8+Mt3GStRPkaMU4xSzLgo2ilU5x3uKWbaVVC4+8bz6tic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eu+gRK7J; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iwhFjnNjFTYFDUFjLE4zOUrPS4UWjF1IMwnc5YjNI0+G47XrDXFVPveOLfLVwQQcNZBypbVtm7pTzWcXh60kwXRZjATJVyWktgCeJsCfNGUXf8Vuch7M4SUzpV/mTgWwzfRFKZJPQ/v1K5rau5xmbcJ1NG+DIUodKCnYMDf2kl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fY/zncVk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eu+gRK7J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A59DC4CEED;
-	Mon,  5 May 2025 23:02:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fY/zncVk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACFF7C4CEF1;
+	Mon,  5 May 2025 23:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486124;
-	bh=2esapROkTMnruviUBIinUj5RrrZr0Z2HKA8ukgHv/V4=;
+	s=k20201202; t=1746486135;
+	bh=+w+qAdKI/xdoPS5oda+XoQCm0mKp1PpX5GAYE62NVHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Eu+gRK7J6Cw/CsQyyv4SGyRZYBAZYM8W7Qeyod9HQ57lU3gzFnRaTRCFeVMsBVErv
-	 iRoZpwYB8rgtYJzbnH99KDOaMmVKIA8kt6WrsmycO9ihiW+M0VmxJTa9EAlwiToyLL
-	 eGw6vB7bj20zi13Bh+XocfxWdaVumCD57/yUP08gsiuxiISoZQUdTQamGD1Dr7QSSv
-	 9XdmI0vQUKXPu8EtmvGr0Rn1vDmyeibl4JSKeawCYuoWel8toWambSj/Otzm7YFxw4
-	 1tgi/0BDNq1L7adVtBaxGtBctmoRA5Zr4mbdf9RV2ZlwPEH+/rvKYJUTq8pfwutLNH
-	 nxHivdkoadGfQ==
+	b=fY/zncVkxfTXPckBsJYAFkBvGwhWzUNIW+mkyIW2boSVh7FInyMG7CmzlphZvIZer
+	 8FK4pbGndQXz7b6e/bterceD94n8JlqZhGuGZn7bP6HCIDWiucUJKv3zo4/2aSMukg
+	 wT0G4k5Rt5b74oLG97jqT/XGnoVRG33Bc77QgCDXGzwpDfATlCmIo115JRryE1lk9E
+	 L7mOpzeTIwZrlwa8oBTMGwU2Sd8zascFEOakzpfqfZBBO/Sv+4IRzYBgthFUHlqINA
+	 AZhjXqakOEcqN0WQH7fi7LzzptHH59HeH3juOKfIjNhn7wlYuVSGySg6bd9EiVB0XJ
+	 tAXmXvgmlc1jA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Matthias Fend <matthias.fend@emfend.at>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
+Cc: Balbir Singh <balbirs@nvidia.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	tomi.valkeinen@ideasonboard.com,
-	ribalda@chromium.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 164/294] media: tc358746: improve calculation of the D-PHY timing registers
-Date: Mon,  5 May 2025 18:54:24 -0400
-Message-Id: <20250505225634.2688578-164-sashal@kernel.org>
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	x86@kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 169/294] x86/kaslr: Reduce KASLR entropy on most x86 systems
+Date: Mon,  5 May 2025 18:54:29 -0400
+Message-Id: <20250505225634.2688578-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -55,78 +60,86 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Matthias Fend <matthias.fend@emfend.at>
+From: Balbir Singh <balbirs@nvidia.com>
 
-[ Upstream commit 78d7265e2e1ce349e7f3c6a085f2b66d7b73f4ca ]
+[ Upstream commit 7ffb791423c7c518269a9aad35039ef824a40adb ]
 
-When calculating D-PHY registers, using data rates that are not multiples
-of 16 can lead to precision loss in division operations. This can result in
-register values that produce timing violations against the MIPI standard.
+When CONFIG_PCI_P2PDMA=y (which is basically enabled on all
+large x86 distros), it maps the PFN's via a ZONE_DEVICE
+mapping using devm_memremap_pages(). The mapped virtual
+address range corresponds to the pci_resource_start()
+of the BAR address and size corresponding to the BAR length.
 
-An example:
-cfg->hs_clk_rate = 294MHz
-hf_clk = 18
+When KASLR is enabled, the direct map range of the kernel is
+reduced to the size of physical memory plus additional padding.
+If the BAR address is beyond this limit, PCI peer to peer DMA
+mappings fail.
 
-If the desired value in cfg->init is 100us, which is the minimum allowed
-value, then the LINEINITCNT register is calculated as 1799. But since the
-actual clock is 18.375MHz instead of 18MHz, this setting results in a time
-that is shorter than 100us and thus violates the standard. The correct
-value for LINEINITCNT would be 1837.
+Fix this by not shrinking the size of the direct map when
+CONFIG_PCI_P2PDMA=y.
 
-Improve the precision of calculations by using Hz instead of MHz as unit.
+This reduces the total available entropy, but it's better than
+the current work around of having to disable KASLR completely.
 
-Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
+[ mingo: Clarified the changelog to point out the broad impact ... ]
+
+Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Kees Cook <kees@kernel.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/Kconfig
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/lkml/20250206023201.1481957-1-balbirs@nvidia.com/
+Link: https://lore.kernel.org/r/20250206234234.1912585-1-balbirs@nvidia.com
+--
+ arch/x86/mm/kaslr.c | 10 ++++++++--
+ drivers/pci/Kconfig |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/tc358746.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ arch/x86/mm/kaslr.c | 10 ++++++++--
+ drivers/pci/Kconfig |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/tc358746.c b/drivers/media/i2c/tc358746.c
-index 566f5eaddd572..b12a6bd42102e 100644
---- a/drivers/media/i2c/tc358746.c
-+++ b/drivers/media/i2c/tc358746.c
-@@ -460,24 +460,20 @@ static int tc358746_apply_misc_config(struct tc358746 *tc358746)
- 	return err;
- }
+diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+index 230f1dee4f095..e0b0ec0f82457 100644
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -109,8 +109,14 @@ void __init kernel_randomize_memory(void)
+ 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
+ 		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
  
--/* Use MHz as base so the div needs no u64 */
--static u32 tc358746_cfg_to_cnt(unsigned int cfg_val,
--			       unsigned int clk_mhz,
--			       unsigned int time_base)
-+static u32 tc358746_cfg_to_cnt(unsigned long cfg_val, unsigned long clk_hz,
-+			       unsigned long long time_base)
- {
--	return DIV_ROUND_UP(cfg_val * clk_mhz, time_base);
-+	return div64_u64((u64)cfg_val * clk_hz + time_base - 1, time_base);
- }
+-	/* Adapt physical memory region size based on available memory */
+-	if (memory_tb < kaslr_regions[0].size_tb)
++	/*
++	 * Adapt physical memory region size based on available memory,
++	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
++	 * device BAR space assuming the direct map space is large enough
++	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
++	 * to the physical BAR address.
++	 */
++	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
+ 		kaslr_regions[0].size_tb = memory_tb;
  
--static u32 tc358746_ps_to_cnt(unsigned int cfg_val,
--			      unsigned int clk_mhz)
-+static u32 tc358746_ps_to_cnt(unsigned long cfg_val, unsigned long clk_hz)
- {
--	return tc358746_cfg_to_cnt(cfg_val, clk_mhz, USEC_PER_SEC);
-+	return tc358746_cfg_to_cnt(cfg_val, clk_hz, PSEC_PER_SEC);
- }
+ 	/*
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index e9ae66cc4189b..a3927daebeb02 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -180,6 +180,12 @@ config PCI_P2PDMA
+ 	  P2P DMA transactions must be between devices behind the same root
+ 	  port.
  
--static u32 tc358746_us_to_cnt(unsigned int cfg_val,
--			      unsigned int clk_mhz)
-+static u32 tc358746_us_to_cnt(unsigned long cfg_val, unsigned long clk_hz)
- {
--	return tc358746_cfg_to_cnt(cfg_val, clk_mhz, 1);
-+	return tc358746_cfg_to_cnt(cfg_val, clk_hz, USEC_PER_SEC);
- }
++	  Enabling this option will reduce the entropy of x86 KASLR memory
++	  regions. For example - on a 46 bit system, the entropy goes down
++	  from 16 bits to 15 bits. The actual reduction in entropy depends
++	  on the physical address bits, on processor features, kernel config
++	  (5 level page table) and physical memory present on the system.
++
+ 	  If unsure, say N.
  
- static int tc358746_apply_dphy_config(struct tc358746 *tc358746)
-@@ -492,7 +488,6 @@ static int tc358746_apply_dphy_config(struct tc358746 *tc358746)
- 
- 	/* The hs_byte_clk is also called SYSCLK in the excel sheet */
- 	hs_byte_clk = cfg->hs_clk_rate / 8;
--	hs_byte_clk /= HZ_PER_MHZ;
- 	hf_clk = hs_byte_clk / 2;
- 
- 	val = tc358746_us_to_cnt(cfg->init, hf_clk) - 1;
+ config PCI_LABEL
 -- 
 2.39.5
 
