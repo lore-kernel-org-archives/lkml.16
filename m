@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719A92DBB39;
-	Mon,  5 May 2025 23:00:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD343867C5;
+	Mon,  5 May 2025 23:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486034; cv=none; b=IGGaZ732s3zkab2QnBgC0COPRk8YqOqKP9F8AGiZacDAz+LUyXbSTjypFP6BAjiYAyrdl42RReTzG/FkUhS8xRpFIpZBhM3gD7xIhChiswlVrEpikXk2vdmKu0HPN6LiTIYvN7f/AsM9DgVb0RODIFqCDbdYwYIo2UC6q4Qr/U8=
+	t=1746486041; cv=none; b=pSS1n0UcQUZ0ajOkTO4oOmTfKoj8rjP3VPv7++7p44STWItfviPgiunTWR4UQva03xCF5JHaCmdCkfxpAa+9W6Elfk2mjaCWljHPYEljha0ZRhCeM6oHgM2qZqw/hV7+fsEhxCzDm+zy2ARjI59occCuz5JJDD+f9gfMDxTq144=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486034; c=relaxed/simple;
-	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
+	s=arc-20240116; t=1746486041; c=relaxed/simple;
+	bh=WcgOYCt13//Gm6w2smiHXIK2M2CVcg9ou1RV1ABdh/k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pqGaErO7pfXV4ChG+ILBPm7S7awRGpM2V86e2zZOFTLEjK/A1SjLeiZITF1OVBlvP0GvPO9W8gqgnZEOHb12GNhsOn3SL1YKVM0yHo19GI6LeBKBYkFFpwJ9Dfx6pXHFMbfAHKfNPjoxk8pGeGCGz/XfJL/ex2R04LGnwZVCdtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMOOKsIF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p97pH4DhAm2jOz4a7uyLMdOAJX/5cZggya8eYNX0+xF0hLHIaFSIR1xa9/kqCUa3+j/vq2kmaaTjZjc4FTMjj9Akhkef7AS9QbCcqXwByuRYUxOZpMxhthK2ZWZQyHpAKVerI0HtkjrDusEy9wzyRPSZo5PvNqXFElw0sN4vZ/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvvwB5tv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMOOKsIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBD9C4CEED;
-	Mon,  5 May 2025 23:00:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvvwB5tv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DA6C4CEED;
+	Mon,  5 May 2025 23:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486033;
-	bh=GXQQVWklXWNAEB0XwIb9nq+0BoP+bo7EBFoAE8e69kU=;
+	s=k20201202; t=1746486041;
+	bh=WcgOYCt13//Gm6w2smiHXIK2M2CVcg9ou1RV1ABdh/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OMOOKsIF24LbYELjMEyVq7TVKuzgYmdXepU2nowxSMHv5t4XxwT/nqg7djmBX5a2P
-	 TWsbK4Tmpu4DA2ll0RdDZd3Po8Y8GM1rMDAP3nuLE2F5Wgi/R3Yp5Z+Vs2AWTN6tb2
-	 uBybEMsaYkOdrAgHmlC8norqdZ6ZcXyqdzRMBrt3X3RbuPV9+P19kcik+95oEBZV8W
-	 10TBOhMNqCOOphuKeG0GqOdpscJTJlzMLqpA1sRGGkGm9izVdQPmuZy0jF/DRMSc+o
-	 kDh9agkovr+IuaqbO59xxhfUjYLFI6J8CTCQ+rVv6/8S1VX9s4ZHP5W3H2lWHEQOKr
-	 FO/QAILgPPF0w==
+	b=HvvwB5tveUgcUu6S+zNYAVlXtlK3WHbK2uqYpmDvEwICEnkU0Ihz7Qg3tl1+SaHoh
+	 9cCj8u1LvF7SM5yuVmNQOZZrI+s8s1uJQVHHmJ9CZSJBFYgOLGRIlsngqmjOkQvSf5
+	 cB72M28SF2EXOgA1/+NXknEZ4MJ3tBSFnZtoq2ZIVB/PLq7nVc5iyCuz5bqQ2W4G+i
+	 ikazhtro9wHaJ3yJYLtr5etCQZN3vx+32Bmvi4sJC2UQq8iHeuj7WF/qFFmqOzCXUA
+	 Old525+mJZT+2JSVALO4EYvzfaJ7rWtVV9EDUqooEt9AYIwBoAIQKW4VUhGxG0rT5Y
+	 rRnJBvIVwcmyA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+Cc: Peter Seiderer <ps.report@gmx.net>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mchehab@kernel.org,
-	ribalda@chromium.org,
-	christophe.jaillet@wanadoo.fr,
-	linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 120/294] media: cx231xx: set device_caps for 417
-Date: Mon,  5 May 2025 18:53:40 -0400
-Message-Id: <20250505225634.2688578-120-sashal@kernel.org>
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 123/294] net: pktgen: fix mpls maximum labels list parsing
+Date: Mon,  5 May 2025 18:53:43 -0400
+Message-Id: <20250505225634.2688578-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -53,38 +54,50 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Peter Seiderer <ps.report@gmx.net>
 
-[ Upstream commit a79efc44b51432490538a55b9753a721f7d3ea42 ]
+[ Upstream commit 2b15a0693f70d1e8119743ee89edbfb1271b3ea8 ]
 
-The video_device for the MPEG encoder did not set device_caps.
+Fix mpls maximum labels list parsing up to MAX_MPLS_LABELS entries (instead
+of up to MAX_MPLS_LABELS - 1).
 
-Add this, otherwise the video device can't be registered (you get a
-WARN_ON instead).
+Addresses the following:
 
-Not seen before since currently 417 support is disabled, but I found
-this while experimenting with it.
+	$ echo "mpls 00000f00,00000f01,00000f02,00000f03,00000f04,00000f05,00000f06,00000f07,00000f08,00000f09,00000f0a,00000f0b,00000f0c,00000f0d,00000f0e,00000f0f" > /proc/net/pktgen/lo\@0
+	-bash: echo: write error: Argument list too long
 
-Signed-off-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Peter Seiderer <ps.report@gmx.net>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/cx231xx/cx231xx-417.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/pktgen.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
-index c5e21785fafe2..02343e88cc618 100644
---- a/drivers/media/usb/cx231xx/cx231xx-417.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-417.c
-@@ -1722,6 +1722,8 @@ static void cx231xx_video_dev_init(
- 	vfd->lock = &dev->lock;
- 	vfd->release = video_device_release_empty;
- 	vfd->ctrl_handler = &dev->mpeg_ctrl_handler.hdl;
-+	vfd->device_caps = V4L2_CAP_READWRITE | V4L2_CAP_STREAMING |
-+			   V4L2_CAP_VIDEO_CAPTURE;
- 	video_set_drvdata(vfd, dev);
- 	if (dev->tuner_type == TUNER_ABSENT) {
- 		v4l2_disable_ioctl(vfd, VIDIOC_G_FREQUENCY);
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index 359e24c3f22ca..1decd6300f34c 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -897,6 +897,10 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
+ 	pkt_dev->nr_labels = 0;
+ 	do {
+ 		__u32 tmp;
++
++		if (n >= MAX_MPLS_LABELS)
++			return -E2BIG;
++
+ 		len = hex32_arg(&buffer[i], 8, &tmp);
+ 		if (len <= 0)
+ 			return len;
+@@ -908,8 +912,6 @@ static ssize_t get_labels(const char __user *buffer, struct pktgen_dev *pkt_dev)
+ 			return -EFAULT;
+ 		i++;
+ 		n++;
+-		if (n >= MAX_MPLS_LABELS)
+-			return -E2BIG;
+ 	} while (c == ',');
+ 
+ 	pkt_dev->nr_labels = n;
 -- 
 2.39.5
 
