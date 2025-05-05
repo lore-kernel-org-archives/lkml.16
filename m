@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4427D3602EA;
-	Mon,  5 May 2025 22:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B0B361957;
+	Mon,  5 May 2025 22:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485140; cv=none; b=e6LV5V5X/IVp9stVM5+Ycf9uH9F89gCzDbUravgu2VppxgphyPliT5FKPO/UZjwwXUdY38VTHxJHjug+Bw1wAoOyg/OqqdlsvraiXIXQrtRCFsh7sc4UL5t9TsegkgNq7wu+IDhHUvHYH9OQTfam35DQjI9D4uzfKOAooejJE4M=
+	t=1746485150; cv=none; b=tIxl4tatgmEJkgptOVTqYYi73Og0Edh7hlGOsFyjdqFNYVdeco/ti5aOJZaCP7bapGu1ATEM8WdJhX5SgN3oHK8v/V04SDlrc9ma5mgp9jLvzD9VQY6as0j0BptSQSvQWlFpAn6KCwY2EY8J+3i8RlSqjH7UvdWIFseF2ziX878=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485140; c=relaxed/simple;
-	bh=eYnGd+MTzDvMbzNFHVf56BTjUQYAvOdN/Fe7fP7U1Ng=;
+	s=arc-20240116; t=1746485150; c=relaxed/simple;
+	bh=GFMjn6D0dDQc53/uChYc+vwTz+Ryp4pSn9tW/6DfemY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AOHSe7B5c+zJuMIFbz21N85LqYJQLTp5L1SVcB5dFLGHtkCwFTNUoZExXGNljQml5fIvTah7e26FImWu3GKvtvPwFR+sQ7KZxgf9jYgfeAYRhSFeUSiDAgt5T6wxV+OdBYq/XrlEHHXHsL9LaxyYCzK6aiP0z/hbKcXZX8sHBnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTczwMtu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HiDU/5SZxOl5yPDYPip3pVxMxUOFLgRYFgwqNSzHCetmG7eMd2v3mtoHnuq+0litUInRBiO/0YAtf0NRkio8LCLs661A6mI+QVKjcFz0n4YCNpJWEWoRlflSuVt4c6+ILGtta+zkOK56N5OlkjAgy/jImgCEkZ37PpanKlNLD7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLfYLvMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTczwMtu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3016BC4CEE4;
-	Mon,  5 May 2025 22:45:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLfYLvMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2923C4CEF1;
+	Mon,  5 May 2025 22:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485139;
-	bh=eYnGd+MTzDvMbzNFHVf56BTjUQYAvOdN/Fe7fP7U1Ng=;
+	s=k20201202; t=1746485148;
+	bh=GFMjn6D0dDQc53/uChYc+vwTz+Ryp4pSn9tW/6DfemY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jTczwMtu4reIKvifyS6T6azBVyFJ/6FluxGW2jAZZMxCwLyMRL8mrecuLMjkewk2b
-	 SpQc6OaYgJmgfE3wDS2akbnkJR8985PmMCeyXXEDUlvyLjdf/Bo0An4KP7IGAWznZl
-	 uER3owoczs/6iSTeJuiJLzP22Y8D8WcxjE/hWT40FY1CVb89n7E0RAcMIiOzyBSnID
-	 HD6D9c/lSnA8wP2x2+QwAAhq1iljbZIbdZ3DrAHWdf8Q/od550bcY1bUkfXF03HwAT
-	 ICNUQdHG/td/B5K6HLVr68ipglzpjsHptUTSwxPs7oBkajJRoh8/QiqWO9k7mEWuk/
-	 uEl2TIVJ1BNRw==
+	b=sLfYLvMS5BKVdl2LxBrfIUJ71dkdDLassUDf68Im+Gj+3fKRtICoEWMmCkkjaEZS6
+	 XspWMxalxH+Y+fnkTCCrpu4Lqzwd3mKXjJ+3NXoI3Oj8lqnd9MlLxThdtpo/jVQY7k
+	 Td0pFCy7lmNrhUVKzVBjtyvv6TetXPAlWAh50kN4600lep7pkK3J/Weeu+QocWcy+Y
+	 7r7UwAc/m2f/U5qOcuuJ3BIcJfK0R2bO4a61/5wCLmVLOoBV2JR9Wvb/ilwyV5IJYz
+	 36FjQzgTWdgpmfy29KEnefFRLx/9aQi2UgPUxFHEYGpaQ5/mO7mARItYq6iWcHevrU
+	 tiz1vWVVgGN1A==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.de>,
-	syzbot+2d373c9936c00d7e120c@syzkaller.appspotmail.com,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	viro@zeniv.linux.org.uk,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 179/486] ALSA: seq: Improve data consistency at polling
-Date: Mon,  5 May 2025 18:34:15 -0400
-Message-Id: <20250505223922.2682012-179-sashal@kernel.org>
+	krzk@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 185/486] soc: samsung: include linux/array_size.h where needed
+Date: Mon,  5 May 2025 18:34:21 -0400
+Message-Id: <20250505223922.2682012-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -53,68 +52,117 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit e3cd33ab17c33bd8f1a9df66ec83a15dd8f7afbb ]
+[ Upstream commit 4c57930f68d90e0d52c396d058cfa9ed8447a6c4 ]
 
-snd_seq_poll() calls snd_seq_write_pool_allocated() that reads out a
-field in client->pool object, while it can be updated concurrently via
-ioctls, as reported by syzbot.  The data race itself is harmless, as
-it's merely a poll() call, and the state is volatile.  OTOH, the read
-out of poll object info from the caller side is fragile, and we can
-leave it better in snd_seq_pool_poll_wait() alone.
+This does not necessarily get included through asm/io.h:
 
-A similar pattern is seen in snd_seq_kernel_client_write_poll(), too,
-which is called from the OSS sequencer.
+drivers/soc/samsung/exynos3250-pmu.c:120:18: error: use of undeclared identifier 'ARRAY_SIZE'
+  120 |         for (i = 0; i < ARRAY_SIZE(exynos3250_list_feed); i++) {
+      |                         ^
+drivers/soc/samsung/exynos5250-pmu.c:162:18: error: use of undeclared identifier 'ARRAY_SIZE'
+  162 |         for (i = 0; i < ARRAY_SIZE(exynos5_list_both_cnt_feed); i++) {
+      |                         ^
 
-This patch drops the pool checks from the caller side and add the
-pool->lock in snd_seq_pool_poll_wait() for better data consistency.
-
-Reported-by: syzbot+2d373c9936c00d7e120c@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/67c88903.050a0220.15b4b9.0028.GAE@google.com
-Link: https://patch.msgid.link/20250307084246.29271-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20250305211446.43772-1-arnd@kernel.org
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 5 +----
- sound/core/seq/seq_memory.c    | 1 +
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/soc/samsung/exynos-asv.c     | 1 +
+ drivers/soc/samsung/exynos-chipid.c  | 1 +
+ drivers/soc/samsung/exynos-pmu.c     | 1 +
+ drivers/soc/samsung/exynos-usi.c     | 1 +
+ drivers/soc/samsung/exynos3250-pmu.c | 1 +
+ drivers/soc/samsung/exynos5250-pmu.c | 1 +
+ drivers/soc/samsung/exynos5420-pmu.c | 1 +
+ 7 files changed, 7 insertions(+)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index b30faf731da72..067bf531e6b5f 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1150,8 +1150,7 @@ static __poll_t snd_seq_poll(struct file *file, poll_table * wait)
- 	if (snd_seq_file_flags(file) & SNDRV_SEQ_LFLG_OUTPUT) {
+diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
+index 97006cc3b9461..8e681f5195264 100644
+--- a/drivers/soc/samsung/exynos-asv.c
++++ b/drivers/soc/samsung/exynos-asv.c
+@@ -9,6 +9,7 @@
+  * Samsung Exynos SoC Adaptive Supply Voltage support
+  */
  
- 		/* check if data is available in the pool */
--		if (!snd_seq_write_pool_allocated(client) ||
--		    snd_seq_pool_poll_wait(client->pool, file, wait))
-+		if (snd_seq_pool_poll_wait(client->pool, file, wait))
- 			mask |= EPOLLOUT | EPOLLWRNORM;
- 	}
++#include <linux/array_size.h>
+ #include <linux/cpu.h>
+ #include <linux/device.h>
+ #include <linux/energy_model.h>
+diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+index bba8d86ae1bb0..dedfe6d0fb3f3 100644
+--- a/drivers/soc/samsung/exynos-chipid.c
++++ b/drivers/soc/samsung/exynos-chipid.c
+@@ -12,6 +12,7 @@
+  * Samsung Exynos SoC Adaptive Supply Voltage and Chip ID support
+  */
  
-@@ -2569,8 +2568,6 @@ int snd_seq_kernel_client_write_poll(int clientid, struct file *file, poll_table
- 	if (client == NULL)
- 		return -ENXIO;
++#include <linux/array_size.h>
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/mfd/syscon.h>
+diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
+index dd5256e5aae1a..c40313886a012 100644
+--- a/drivers/soc/samsung/exynos-pmu.c
++++ b/drivers/soc/samsung/exynos-pmu.c
+@@ -5,6 +5,7 @@
+ //
+ // Exynos - CPU PMU(Power Management Unit) support
  
--	if (! snd_seq_write_pool_allocated(client))
--		return 1;
- 	if (snd_seq_pool_poll_wait(client->pool, file, wait))
- 		return 1;
- 	return 0;
-diff --git a/sound/core/seq/seq_memory.c b/sound/core/seq/seq_memory.c
-index 20155e3e87c6a..ccde0ca3d2082 100644
---- a/sound/core/seq/seq_memory.c
-+++ b/sound/core/seq/seq_memory.c
-@@ -427,6 +427,7 @@ int snd_seq_pool_poll_wait(struct snd_seq_pool *pool, struct file *file,
- 			   poll_table *wait)
- {
- 	poll_wait(file, &pool->output_sleep, wait);
-+	guard(spinlock_irq)(&pool->lock);
- 	return snd_seq_output_ok(pool);
- }
++#include <linux/array_size.h>
+ #include <linux/arm-smccc.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+diff --git a/drivers/soc/samsung/exynos-usi.c b/drivers/soc/samsung/exynos-usi.c
+index 114352695ac2b..5a93a68dba87f 100644
+--- a/drivers/soc/samsung/exynos-usi.c
++++ b/drivers/soc/samsung/exynos-usi.c
+@@ -6,6 +6,7 @@
+  * Samsung Exynos USI driver (Universal Serial Interface).
+  */
  
++#include <linux/array_size.h>
+ #include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+diff --git a/drivers/soc/samsung/exynos3250-pmu.c b/drivers/soc/samsung/exynos3250-pmu.c
+index 30f230ed1769c..4bad12a995422 100644
+--- a/drivers/soc/samsung/exynos3250-pmu.c
++++ b/drivers/soc/samsung/exynos3250-pmu.c
+@@ -5,6 +5,7 @@
+ //
+ // Exynos3250 - CPU PMU (Power Management Unit) support
+ 
++#include <linux/array_size.h>
+ #include <linux/soc/samsung/exynos-regs-pmu.h>
+ #include <linux/soc/samsung/exynos-pmu.h>
+ 
+diff --git a/drivers/soc/samsung/exynos5250-pmu.c b/drivers/soc/samsung/exynos5250-pmu.c
+index 7a2d50be6b4ac..2ae5c3e1b07a3 100644
+--- a/drivers/soc/samsung/exynos5250-pmu.c
++++ b/drivers/soc/samsung/exynos5250-pmu.c
+@@ -5,6 +5,7 @@
+ //
+ // Exynos5250 - CPU PMU (Power Management Unit) support
+ 
++#include <linux/array_size.h>
+ #include <linux/soc/samsung/exynos-regs-pmu.h>
+ #include <linux/soc/samsung/exynos-pmu.h>
+ 
+diff --git a/drivers/soc/samsung/exynos5420-pmu.c b/drivers/soc/samsung/exynos5420-pmu.c
+index 6fedcd78cb451..58a2209795f78 100644
+--- a/drivers/soc/samsung/exynos5420-pmu.c
++++ b/drivers/soc/samsung/exynos5420-pmu.c
+@@ -5,6 +5,7 @@
+ //
+ // Exynos5420 - CPU PMU (Power Management Unit) support
+ 
++#include <linux/array_size.h>
+ #include <linux/pm.h>
+ #include <linux/soc/samsung/exynos-regs-pmu.h>
+ #include <linux/soc/samsung/exynos-pmu.h>
 -- 
 2.39.5
 
