@@ -1,44 +1,45 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E3326B2DF;
-	Mon,  5 May 2025 17:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9066926B96A;
+	Mon,  5 May 2025 17:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746466050; cv=pass; b=UI+qG2E2qNaR86DqSoaaBsziVVqSKRf+Pz+OzbMRs5D5DbasQKbAH3igI1Utl+Dl2WZP5A1/Dfl+8em6HXVxjmEzOEOmNetHg/vvZZldQdeddpcBsekuz7yVHtL1Uhs9ogqJqXb30pTpCgAZWrD6XcdsDMjJMYygP2L5/MTi/pk=
+	t=1746466051; cv=pass; b=snCOlEMWhjk/Ybz7H8iBqtEmcTQcX2W7JJPAk4k2tftL5MXP+9muYcF6p/884ZhkOx58JkSwwND5Gk+sgsvtAvwaAEZur0B7yxM8/5y/diAa1XqNxFclyEM0kc2iBhXlEZewabwlEigPYD/6APz0rAGCz2PUJVxb270BwFu4KFM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746466050; c=relaxed/simple;
-	bh=FYpSavXphjADAeX0YHS2mCo1CtZPWxuvq+ePhyKPsfc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hFLEE0sD+B5CEmbLQaaK5Cz0cRAG+7n2CZIuxKOgBkWEWIRa+yCnZHED3mm3/fm7jdfWxTX375KLrVwxaehSVwU6fZJtHQpIW5D6/4VycnWi156aGNQ9QuoGL8iVSVCeKSALLCvhJFyb7YpDpOx6jbGsUVoPjoN2MJrFgKkaWTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=IE3iWLri; arc=pass smtp.client-ip=136.143.184.112
+	s=arc-20240116; t=1746466051; c=relaxed/simple;
+	bh=VW4aB7Eci+66CKEdrWizM7NfU5WhMJaGMzLxapw8WDg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KaDvehJiUVZ8KqpUKE1u+S91M1flr8/Sc1RlQyK+l1Y6FOxg8rzwV6vb8xmEM6butlKPTraa2mqNTJ3XNCn22MkIsPRHqRWHhFzYWFdk791D13itolEWlRSrSHP/K6ObWD294wvQJFeU0duK2DcnHzycxUM8AmSpjpn4Og3Y46E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=NVgBDJD4; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="IE3iWLri"
-ARC-Seal: i=1; a=rsa-sha256; t=1746466016; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="NVgBDJD4"
+ARC-Seal: i=1; a=rsa-sha256; t=1746466026; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=eYJLW9VKE8LhtiM5lq1YZimviiv1G7ucXcu2rts14+KpCXlIAulWWuUGPiAyyQvCLCchqlgyptNOAbHFGuogMuuzp4SGPNIvhCSkwE3UK6iWlmDNaifpix2DBSh6SOkYasHv9ZNLJu3koUttaJ3VEXUHfgAdwz94IivBMM1owwM=
+	b=Ol31He9KAL0nNR6mrsX3AZ2MxA+Wl9fmVjaFdtr2X6b3p9kZUUcUnli2/A3VKUwvOGnjajwEloSZlxLpNSbYrmC9QTczIDf/CG+MnFvle1K7VU/iRvTjwNtCqoDA+aUvSGCRceC14q6ralKJPTLFJTFFjK0MqtX/SKIwA9zjNAI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746466016; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vQz0h8Cg0H00hKBW/D9u6XEnTUbBcY/hnTwQjAPVemg=; 
-	b=dkQ3WSUAJ4e6mKzZUtcZl87lmeu8Y3k9XQqwbyEay7CRlvXc7EbGDTxkOLXInM+Y2Cs4DHZvAfqd8aUfmQ2T4oWT9Ofem9Fe2ic4Wg2FGFUPWx7jSX3AnzEQYqAWI6Hdvn5uvGS2ZYGWIE40csMUOgKtR4jjdGsheeaNQqokJrY=
+	t=1746466026; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=JTB3v+x8w/FUL8jly8m0hmcJty/2pFiwNyr1NhvSBfc=; 
+	b=SootE5B4uevjjwWtjMCOr4q0r9dxYEN9jcsG5xg7FmBNfA0T/b08f+gDKR4Zd5dCsLf/mgicaXxHu7oiTGeJo4ae/nYirpALLvNYjiLpFmrRXnsDaSGnz9bTwTrdCwp2BDoM9a/Fmr4ypERR+4oxoKCgD/YhzKJhHUtbp5jKv/8=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746466016;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746466026;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=vQz0h8Cg0H00hKBW/D9u6XEnTUbBcY/hnTwQjAPVemg=;
-	b=IE3iWLrihEHOABe6/b8r/JpoAQ5kRnNZQ2BmDBRi2oB4EFjHtVpGCcWGRkylVh42
-	tWghVJndZw0DKwh83wTjvaUj4sLxxYrcH9NoKI5TcmionZFKkSPRM5VEjnD5zyObvWS
-	sFA4oFHf9yrqTs83+zF4u6tq8FwncLIzlXI9HsZs=
-Received: by mx.zohomail.com with SMTPS id 1746466015237302.45549093734485;
-	Mon, 5 May 2025 10:26:55 -0700 (PDT)
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=JTB3v+x8w/FUL8jly8m0hmcJty/2pFiwNyr1NhvSBfc=;
+	b=NVgBDJD4k+kVVdTnSKAaohwAkP3qAaSP3SplomwfKDGHL/giP/YqllFtRQlCk+95
+	M1cae3oN7CIMuPqtvKBjBWsl1/99RVIL1yHVaGNWPxRqX4dR9m3bFxeZAc2vmKIpI62
+	/NikEepQk1v2b+rq6pPeGRKWwT2sEtzF4758WSlw=
+Received: by mx.zohomail.com with SMTPS id 1746466025536483.6514707684531;
+	Mon, 5 May 2025 10:27:05 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Subject: [PATCH v2 0/5] RK3576 USB Enablement
-Date: Mon, 05 May 2025 19:26:35 +0200
-Message-Id: <20250505-rk3576-sige5-usb-v2-0-d5ba4305f3be@collabora.com>
+Date: Mon, 05 May 2025 19:26:38 +0200
+Subject: [PATCH v2 3/5] phy: rockchip: usbdp: reset USB3 and reinit on
+ orientation switch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,11 +48,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMv0GGgC/2WOQQ6CMBBFr0Jm7Zi2SCGuvIdhUeoAjUC1LQRDu
- Lu1LM2s3kze/7OBJ2fIwzXbwNFivLFTBHHKQPdq6gjNIzIIJgqWiwrdMy9Kid50VODsGxQ540w
- oIqUVRO3lqDVrirzXBzt6zzE5HEtolCfUdhxNuGYTrQFTehz4Cb3xwbpPemnhyUj3Cyv/2xeOD
- GVJpLmUbSXam7bDoBrr1DlWQL3v+xcS9V7A5QAAAA==
-X-Change-ID: 20250328-rk3576-sige5-usb-230102aeeaca
+Message-Id: <20250505-rk3576-sige5-usb-v2-3-d5ba4305f3be@collabora.com>
+References: <20250505-rk3576-sige5-usb-v2-0-d5ba4305f3be@collabora.com>
+In-Reply-To: <20250505-rk3576-sige5-usb-v2-0-d5ba4305f3be@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
  Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -65,72 +64,157 @@ Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-This series is the result of what I thought would be a quick 10 minute
-job, but turned out to be more like 3 days of pain, suffering, and
-confusion. This should be expected with USB Type C though.
+Until now, super speed on Type-C only worked in one orientation. This is
+because on an orientation switch, the UDPHY was never reinitialised.
 
-The first patch in the series extends the inno usb2 PHY driver to fiddle
-with some GRF flags in that driver when the PHY is connected to a USB
-Type C port. Without this change, devices on USB-C simply don't
-enumerate at all, as the state machine gets stuck waiting for vbus to go
-low or something along those lines.
+Heiko presented a patch to do this[1], but there were concerns over the
+correctness of it[2]. Experimentally using Heiko's patch on RK3576 did
+make me run into issues, though they seemed to be related to the
+orientation switch actually happening while a clock driving a GRF
+register was disabled.
 
-An alternate way to implement this would've been a vendor property in
-the PHY binding which is then checked for in the driver and needs to be
-present in all rockchip inno u2phy instances that happen to be connected
-to a USB Type C connector. This is what downstream does, for example.
+The key issue is that the hardware wants the USB 3 controller to be held
+in reset while the PHY is being reconfigured, otherwise we may run into
+hard-to-catch race conditions.
 
-Patch 2 and 3 allow Super Speed in reverse orientation on USB Type-C
-connectors to work, but I am not entirely confident in the solution I
-arrived at.
+Either way, this patch implements the required ordering in a somewhat
+unpleasant way: we get the USB 3 controller from the DT, and use runtime
+power management to forcibly suspend it while the UDPHY is being
+reconfigured, and then forcibly resume it later. As an added pain in the
+rear, the suspend/resume of the USB 3 controller also tries fiddling
+with the USB 3 PHY part of the UDPHY, which means we introduce an atomic
+flag to skip suspending/resuming the UDPHY if we're resetting the USB 3
+controller. We may just need to skip trying to acquire the mutex again,
+but both ways work for me in practice.
 
-Patch 4 is what I think may have been the culprit of what originally
-made me add the USB2 PHY suspension quirk, but I'm somehow unable to
-reproduce that particular SError fest anymore.
+This solution may in fact be complete rubbish, but it works to get USB 3
+Super Speed working in both cable orientations on my board.
 
-Patch 5 adds the USB related nodes, including associated regulators and
-Type C controllers, to the Sige5 tree.
-
+Link: https://lore.kernel.org/all/20250226103810.3746018-3-heiko@sntech.de/ [1]
+Link: https://lore.kernel.org/linux-rockchip/h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdwqlos3@m4och2fcdm7s/ [2]
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
-Changes in v2:
-- Rebased onto next-20250505
-- Drop the u2susphy quirk, as I can no longer reproduce the original
-  problem with various amounts of ripping up the DT and changing the
-  config. Yeah I'm not super hyped about this now being a heisenbug
-  either.
-- Drop the bindings patch, as Rob showed me there's a way to do this
-  without extending the bindings
-- Rewrite the usb 2 phy driver patch to no longer walk an OF graph from
-  PHY to connector, but instead first find the USB controller that uses
-  this PHY, and then use the USB controller's existing graph connection
-  to the usb connector.
-- Adjust the Sige5 DTS patch to now have two port connections from the
-  USB connector to the drd0 USB controller, one for high-speed aka
-  USB2, one for super-speed aka USB3, ordered as per its binding.
-- Add a patch for rk3576.dtsi to reference u2phy1 as a clock in the drd1
-  controller.
-- Add two patches to fix USB Type-C super speed in reverse orientation.
-- Link to v1: https://lore.kernel.org/r/20250407-rk3576-sige5-usb-v1-0-67eec166f82f@collabora.com
+ drivers/phy/rockchip/phy-rockchip-usbdp.c | 54 +++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
----
-Nicolas Frattaroli (5):
-      phy: rockchip: inno-usb2: add soft vbusvalid control
-      phy: rockchip: usbdp: move orientation handling further down
-      phy: rockchip: usbdp: reset USB3 and reinit on orientation switch
-      arm64: dts: rockchip: reference u2phy1 as clock on RK3576
-      arm64: dts: rockchip: enable USB on Sige5
+diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+index fff54900feea601c8fe6bf4c7123dfebc5661a15..5cd6bbc367f69bca15c2a94a07e72f850b381ae3 100644
+--- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
++++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+@@ -200,6 +200,10 @@ struct rk_udphy {
+ 	/* PHY devices */
+ 	struct phy *phy_dp;
+ 	struct phy *phy_u3;
++
++	/* USB 3 controller device */
++	struct device *ctrl_u3;
++	atomic_t ctrl_resetting;
+ };
+ 
+ static const struct rk_udphy_dp_tx_drv_ctrl rk3588_dp_tx_drv_ctrl_rbr_hbr[4][4] = {
+@@ -1255,6 +1259,9 @@ static int rk_udphy_usb3_phy_init(struct phy *phy)
+ 	struct rk_udphy *udphy = phy_get_drvdata(phy);
+ 	int ret = 0;
+ 
++	if (atomic_read(&udphy->ctrl_resetting))
++		return 0;
++
+ 	mutex_lock(&udphy->mutex);
+ 	/* DP only or high-speed, disable U3 port */
+ 	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs) {
+@@ -1273,6 +1280,9 @@ static int rk_udphy_usb3_phy_exit(struct phy *phy)
+ {
+ 	struct rk_udphy *udphy = phy_get_drvdata(phy);
+ 
++	if (atomic_read(&udphy->ctrl_resetting))
++		return 0;
++
+ 	mutex_lock(&udphy->mutex);
+ 	/* DP only or high-speed */
+ 	if (!(udphy->mode & UDPHY_MODE_USB) || udphy->hs)
+@@ -1401,10 +1411,31 @@ static struct phy *rk_udphy_phy_xlate(struct device *dev, const struct of_phandl
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static struct device_node *rk_udphy_to_controller(struct rk_udphy *udphy)
++{
++	struct device_node *np;
++
++	for_each_node_with_property(np, "phys") {
++		struct of_phandle_iterator it;
++		int ret;
++
++		of_for_each_phandle(&it, ret, np, "phys", NULL, 0) {
++			if (it.node != udphy->dev->of_node)
++				continue;
++
++			of_node_put(it.node);
++			return np;
++		}
++	}
++
++	return NULL;
++}
++
+ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+ 				 enum typec_orientation orien)
+ {
+ 	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
++	int ret;
+ 
+ 	mutex_lock(&udphy->mutex);
+ 
+@@ -1420,6 +1451,18 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+ 	rk_udphy_set_typec_default_mapping(udphy);
+ 	rk_udphy_usb_bvalid_enable(udphy, true);
+ 
++	if (udphy->status != UDPHY_MODE_NONE && udphy->ctrl_u3) {
++		atomic_set(&udphy->ctrl_resetting, 1);
++		pm_runtime_force_suspend(udphy->ctrl_u3);
++
++		ret = rk_udphy_setup(udphy);
++		if (!ret)
++			clk_bulk_disable_unprepare(udphy->num_clks, udphy->clks);
++
++		pm_runtime_force_resume(udphy->ctrl_u3);
++		atomic_set(&udphy->ctrl_resetting, 0);
++	}
++
+ unlock_ret:
+ 	mutex_unlock(&udphy->mutex);
+ 	return 0;
+@@ -1430,12 +1473,22 @@ static void rk_udphy_orien_switch_unregister(void *data)
+ 	struct rk_udphy *udphy = data;
+ 
+ 	typec_switch_unregister(udphy->sw);
++	put_device(udphy->ctrl_u3);
+ }
+ 
+ static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
+ {
++	struct device_node *ctrl = rk_udphy_to_controller(udphy);
+ 	struct typec_switch_desc sw_desc = { };
+ 
++	if (ctrl) {
++		udphy->ctrl_u3 = bus_find_device_by_of_node(udphy->dev->bus, ctrl);
++		of_node_put(ctrl);
++	}
++
++	if (!udphy->ctrl_u3)
++		dev_info(udphy->dev, "couldn't find this PHY's USB3 controller\n");
++
+ 	sw_desc.drvdata = udphy;
+ 	sw_desc.fwnode = dev_fwnode(udphy->dev);
+ 	sw_desc.set = rk_udphy_orien_sw_set;
+@@ -1499,6 +1552,7 @@ static int rk_udphy_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	mutex_init(&udphy->mutex);
++	atomic_set(&udphy->ctrl_resetting, 0);
+ 	platform_set_drvdata(pdev, udphy);
+ 
+ 	if (device_property_present(dev, "orientation-switch")) {
 
- .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 160 +++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3576.dtsi           |   5 +-
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 113 ++++++++++++++-
- drivers/phy/rockchip/phy-rockchip-usbdp.c          | 154 +++++++++++++-------
- 4 files changed, 376 insertions(+), 56 deletions(-)
----
-base-commit: 214464d4c3491d4eb2c0e9d1310d7f60c408b94b
-change-id: 20250328-rk3576-sige5-usb-230102aeeaca
-
-Best regards,
 -- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+2.49.0
 
