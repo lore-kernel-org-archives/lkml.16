@@ -1,210 +1,151 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CED31F4174;
-	Mon,  5 May 2025 09:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629C51FC104;
+	Mon,  5 May 2025 09:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746438598; cv=none; b=YyRqqL9V5RX07VYKbESXRkxQk4CYNQ+qXXuT1GEWFIdmnQCiNsP+631vhMHXAdR47rD1E2dsfBwN/MPLg9DbSOLxOOwLb6esM3aKQeapE99zZPdchkaTyCo9SjqnDTO4L388+4oHWwCkCm2JEDLGcVrerehFnpNF30ck1S6G7NY=
+	t=1746438624; cv=none; b=jCwPd3lVQmN7Tg5w6A2OSdgSrK0Z8V8q+CEY5lg0guH/NCpiPPazFXk9MU77jLzp6MSzEhRZRAoqtM8alM2zPgkGTFpGEcwWyJd19odN0/3aIZiJNmPrqnkbrZu+FsRL1mY8bloGkykapj1Oy3JPxNhTE1Q32t9FJTpTVeekDNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746438598; c=relaxed/simple;
-	bh=tipZ2S0o3QG1iCFQ1UsqU8tcKjAbQcWU0VEoS9DVUHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChuhDXZQFRO1+mp9g8ai6qEoNFOY7pO5WakKJI6JL6HftRInQ8/XVVAwN/vB8+WnG1eC/TkIlx81v1DCmyDKL8C2ZFbM64m9GFnRfwd20dkjF3afgv58cVRH/0gGek7SS+LyVbuUYNRTl1X6rsKSyWnfz0B7R//xEHImtPWHg2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JabQuK2g; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1746438624; c=relaxed/simple;
+	bh=xyNkvtslKHGj6JJUlrcFQwYQudHJaqcW3/RXrny9o0A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cfQv8BUJ2vhqfuMbLtN3yacUvnS6MhNLdKs3i5MRrWywuIBrS2rbQBMDPTtkChAsW/Rmbav2ke0/pSZYrzPZqQ5i242eZGCTMImou5sq4LGTy9n/hytU27H6gKYW2Bhojz2Xy5AX75co1Mr8enXdGmAyDwvRtDfvCYfZZj1Ff7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdqKkyld; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JabQuK2g"
-Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A8A61289;
-	Mon,  5 May 2025 11:49:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1746438584;
-	bh=tipZ2S0o3QG1iCFQ1UsqU8tcKjAbQcWU0VEoS9DVUHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JabQuK2g4OhhQvwY1c2OOgSZ5CNPomCCfYOizL4SMUhgIYK5hJ/YvnVABRiGTN2QP
-	 DG5NIYhxwVMv2t9X4LlVv/6y+8KsOvb3o8lsaZEOFjL6ZBcrTbjeey9Yu3R6Xeq0Yi
-	 svpddiYjEFmoR6dGxaFQor0172/A72VEnYNlXZ5w=
-Date: Mon, 5 May 2025 11:49:50 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v8] media: vsp1: Add VSPX support
-Message-ID: <pzkf2brrpdihb4cmok6ge5zxrpif5tvcd6bes2kta3veunup2h@amcxq3qci5vb>
-References: <20250502-b4-vspx-v8-1-b2a7592668dd@ideasonboard.com>
- <20250502202644.GF20093@pendragon.ideasonboard.com>
- <ptjenvbcovfzj5oukqriu7qx7qqz22r4h6sfmctpsdghwz3so3@naiwhbqwexn6>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdqKkyld"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE61C4CEF0;
+	Mon,  5 May 2025 09:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746438623;
+	bh=xyNkvtslKHGj6JJUlrcFQwYQudHJaqcW3/RXrny9o0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VdqKkyldwr6C0AjZBEWX0c4a5iCB/FtV5oWWZOPhFiCZvkrPReHgLynFOse6P7RgK
+	 xB0gl+zHJDOjXhHeTixnOw8Xq1RTXsYuwTDQ5IOYEMlPPDsDOi/Gk14ec2fXfUddf3
+	 /xkwcpv7egkXU4AgYvKMRYmvzauzJefn7h/aWGRHHR7plsLG+Z2gFLKier2zFKh+BN
+	 DDqlaIlyTkvCp7H6H/qvh2Q/eBpJ5HhRN1v+4xRaPyoABD+Ky+cWbMadxTzomm/byA
+	 eFXa7M5xSzHxv26OaFMqhjPnTpK+2bzkOLhfX7Wm1QJKR6RjJMqrI2zXKaAdyr07eO
+	 mH8V1LsqXgbgg==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d4e91512b4so2518919fac.1;
+        Mon, 05 May 2025 02:50:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU6haZDk7J0CnYJBCsEGnAg+bZS31Az01HQ6hBVkoz/v7Gt9lEOP9RFN9c23z7kVezkEOFZeMofHmhUMA==@vger.kernel.org, AJvYcCW8WAlNsSpQ8jvstnvtHBls7J5xquf7b3IA3q9T6/KJFNuW+cgQdFCfQSKLCQX4I+uQ1QCYjw9qn4ZXrF/i@vger.kernel.org, AJvYcCXNYZey0Js8+DP1i9vkNO4CCy6YmF/io1pBHlmtwHMzyW+cQG0zlbL6BgTlwEz4lhLQ+uSMcJ6Tw7qT@vger.kernel.org, AJvYcCXfrkMwT8zQ1++5+lHtq/y+bgvsvSzXhxrxodkn+Lu205upAtXIrEdOg8h6DKgO/XL8IHYni4YCiCiy65Xi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpUHDe2lSpvwHikbqg9z4kEBDBIfiSaHsn5nAasOhSbGY+ToPC
+	lJptTKo3H+U3CHj3b1EpHQjKBySR4zTpeSxHD3vpUdJ1p7Tf3WfulW2MmzbPv5NtKgoSGkHHThb
+	orFvrjLnx2PAwC7CJ81UP1HiXmpI=
+X-Google-Smtp-Source: AGHT+IEbp+k5+o2JOgK5gAOvr06vFjcOrkxIY+uU1aZ/s1RgB369NC8JEtjjJebp1ckQu/uB3ghNe8BjSnyzBcwjw1c=
+X-Received: by 2002:a05:6871:78e:b0:2c1:6663:f603 with SMTP id
+ 586e51a60fabf-2dae83f34fcmr3628380fac.19.1746438623034; Mon, 05 May 2025
+ 02:50:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ptjenvbcovfzj5oukqriu7qx7qqz22r4h6sfmctpsdghwz3so3@naiwhbqwexn6>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com> <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20250503191515.24041-2-ricardo.neri-calderon@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 5 May 2025 11:50:08 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEBtlssjD1hWqURJ8uHShyMtKDEe5MJtTBEVToiuOdPd7lxfnsRPlG8Ons
+Message-ID: <CAJZ5v0grwGDrwFSbtXzia6ijd4DTOpU3b6RWR4JPfJmXqz78xQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/13] x86/acpi: Add a helper function to setup the
+ wakeup mailbox
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: x86@kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org, 
+	Saurabh Sengar <ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>, 
+	linux-hyperv@vger.kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Ravi V. Shankar" <ravi.v.shankar@intel.com>, 
+	Ricardo Neri <ricardo.neri@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 05, 2025 at 10:19:57AM +0200, Jacopo Mondi wrote:
-> Hi Laurent
+On Sat, May 3, 2025 at 9:10=E2=80=AFPM Ricardo Neri
+<ricardo.neri-calderon@linux.intel.com> wrote:
 >
-> On Fri, May 02, 2025 at 11:26:44PM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Fri, May 02, 2025 at 03:23:10PM +0200, Jacopo Mondi wrote:
-> > > Add support for VSPX, a specialized version of the VSP2 that
-> > > transfers data to the ISP. The VSPX is composed of two RPF units
-> > > to read data from external memory and an IIF instance that performs
-> > > transfer towards the ISP.
-> > >
-> > > The VSPX is supported through a newly introduced vsp1_vspx.c file that
-> > > exposes two interfaces: vsp1_vspx interface, declared in vsp1_vspx.h
-> > > for the vsp1 core to initialize and cleanup the VSPX, and a vsp1_isp
-> > > interface, declared in include/media/vsp1.h for the ISP driver to
-> > > control the VSPX operations.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> > > ---
-> > > The VSPX is a VSP2 function that reads data from external memory using
-> > > two RPF instances and feed it to the ISP.
-> > >
-> > > The VSPX includes an IIF unit (ISP InterFace) modeled in the vsp1 driver
-> > > as a new, simple, entity type.
-> > >
-> > > IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
-> > > interfacing. To prepare to support VSPX, support IIF first by
-> > > introducing a new entity and by adjusting the RPF/WPF drivers to
-> > > operate correctly when an IIF is present.
-> > >
-> > > Changes in v8:
-> > > - Remove patches already collected by Laurent in
-> > >   [GIT PULL FOR v6.16] Renesas media drivers changes
-> > >
-> > > - Rebased on
-> > >   https://gitlab.freedesktop.org/linux-media/users/pinchartl.git #renesas-next
-> > >
-> > > - Changes to the VSPX interface towards the ISP
-> > >   - Split start/stop_streaming
-> > >   - Add vsp1_isp_jobs_release() to release pending jobs
-> > >   - Add vsp1_isp_free_buffer()
-> > >   - Remove vsp1_isp_configure() and compute partitions on job creation
-> > >
-> > > - Driver changes
-> > >   - Drop irq-driver flow
-> > >     The VSPX used to schedule new jobs as soon as processing the last
-> > >     one is done. This doesn't work well with the R-Car ISP design
-> > >     for two reasons:
-> > >     - The ISP needs per-job registers programming
-> > >     - The ISP and VSPX job queues have to stay in sync
-> > >
-> > > - Minors
-> > >   - Remove the jobs_lock as a single lock is fine
-> > >   - Protect against VSPX/ISP irq races in job_run() by checking the
-> > >     VSPX 'busy' register and remove the 'processing' flag
-> > >   - Manually set the pipeline state to STOPPED before scheduling a new
-> > >     job without waiting for frame_end
-> > >
-> > > Changes in v7:
-> > > - Include VSPX driver in the series
-> > > - Use existing VSP1 formats and remove patches extending formats on RPF
-> > > - Rework VSPX driver to split jobs creation and scheduling in two
-> > >   different API entry points
-> > > - Fix VSPX stride using the user provided bytesperline and using the
-> > >   buffer size for ConfigDMA buffers
-> > > - Link to v6: https://lore.kernel.org/r/20250321-v4h-iif-v6-0-361e9043026a@ideasonboard.com
-> > >
-> > > Changes in v6:
-> > > - Little cosmetic change as suggested by Laurent
-> > > - Collect tags
-> > > - Link to v5: https://lore.kernel.org/r/20250319-v4h-iif-v5-0-0a10456d792c@ideasonboard.com
-> > >
-> > > Changes in v5:
-> > > - Drop additional empty line 5/6
-> > > - Link to v4: https://lore.kernel.org/r/20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com
-> > >
-> > > Changes in v4:
-> > > - Fix SWAP bits for RAW10, RAW12 and RAW16
-> > > - Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
-> > >
-> > > Changes in v3:
-> > > - Drop 2/6 from v2
-> > > - Add 5/7 to prepare for a new implementation of 6/7
-> > > - Individual changelog per patch
-> > > - Add 7/7
-> > > - Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
-> > >
-> > > Changes in v2:
-> > > - Collect tags
-> > > - Address review comments from Laurent, a lot of tiny changes here and
-> > >   there but no major redesign worth an entry in the patchset changelog
-> >
-> > You've come a long way since v1, I think we're getting close to a good
-> > implementation.
-> >
+> In preparation to move the functionality to wake secondary CPUs up out of
+> the ACPI code, add a helper function that stores the physical address of
+> the mailbox and updates the wakeup_secondary_cpu_64() APIC callback.
 >
-> Thank you and Niklas for reviews and testing
+> There is a slight change in behavior: now the APIC callback is updated
+> before configuring CPU hotplug offline behavior. This is fine as the APIC
+> callback continues to be updated unconditionally, regardless of the
+> restriction on CPU offlining.
 >
-> > > ---
-> > >  drivers/media/platform/renesas/vsp1/Makefile    |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1.h      |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1_drv.c  |  13 +-
-> > >  drivers/media/platform/renesas/vsp1/vsp1_regs.h |   1 +
-> > >  drivers/media/platform/renesas/vsp1/vsp1_vspx.c | 664 ++++++++++++++++++++++++
-> > >  drivers/media/platform/renesas/vsp1/vsp1_vspx.h |  16 +
-> > >  include/media/vsp1.h                            |  75 +++
-> > >  7 files changed, 770 insertions(+), 1 deletion(-)
-> > >
-
-[snip]
-
-> > > +
-> > > +/**
-> > > + * vsp1_isp_start_streaming - Start processing VSPX jobs
-> > > + *
-> > > + * Start the VSPX and prepare for accepting buffer transfer job requests.
-> > > + *
-> > > + * @dev: The VSP1 struct device
-> > > + * @frame_end: The frame end callback description
-> > > + *
-> > > + * Return: %0 on success or a negative error code on failure
-> > > + */
-> > > +int vsp1_isp_start_streaming(struct device *dev,
-> > > +			     struct vsp1_vspx_frame_end *frame_end)
-> > > +{
-> > > +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
-> > > +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
-> > > +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
-> > > +	unsigned long flags;
-> > > +	u32 value;
-> > > +	int ret;
-> > > +
-> > > +	spin_lock_irqsave(&vspx_pipe->vspx_lock, flags);
-> >
-> > Can this function ever be called with interrupts disabled ? If no, you
-> > can use spin_lock_irq().
-> >
+> The wakeup mailbox is only supported for CONFIG_X86_64 and needed only wi=
+th
+> CONFIG_SMP=3Dy.
 >
-> I think the question here should rather be: do we need to disable
-> local interrupts at all when calling this function ? As the VSPX
-> workflow is now driven by ISP and there are no contentions between any
-> of the driver functions and the VSPX interrupt handler I guess I can
-> use spin_lock() and spin_unlock() everywhere and replace the
-> irqsave/irqrestore versions ?
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+> Changes since v2:
+>  - Introduced this patch.
 >
+> Changes since v1:
+>  - N/A
+> ---
+>  arch/x86/include/asm/smp.h         |  4 ++++
+>  arch/x86/kernel/acpi/madt_wakeup.c | 10 +++++++---
+>  2 files changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> index 0c1c68039d6f..3622951d2ee0 100644
+> --- a/arch/x86/include/asm/smp.h
+> +++ b/arch/x86/include/asm/smp.h
+> @@ -146,6 +146,10 @@ static inline struct cpumask *cpu_l2c_shared_mask(in=
+t cpu)
+>         return per_cpu(cpu_l2c_shared_map, cpu);
+>  }
+>
+> +#ifdef CONFIG_X86_64
+> +void setup_mp_wakeup_mailbox(u64 addr);
+> +#endif
 
-I take this back. Using either spin_lock and spin_lock_irq trigger
-lockdep warnings due to the usage of these function from ISP irq
-context.
+The #ifdef is only necessary if you are going to provide an
+alternative for builds in which the symbol is unset.
 
-To be honest I spent a considerable amount of time making all of this
-lockdep proof and I'll keep using the irqsave version for the time
-being considering the limited overhead compared to _irq.
+> +
+>  #else /* !CONFIG_SMP */
+>  #define wbinvd_on_cpu(cpu)     wbinvd()
+>  static inline int wbinvd_on_all_cpus(void)
+> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
+dt_wakeup.c
+> index f36f28405dcc..04de3db307de 100644
+> --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> @@ -227,7 +227,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_hea=
+ders *header,
+>
+>         acpi_table_print_madt_entry(&header->common);
+>
+> -       acpi_mp_wake_mailbox_paddr =3D mp_wake->mailbox_address;
+> +       setup_mp_wakeup_mailbox(mp_wake->mailbox_address);
 
-> > > +
-> > > +	if (vspx_pipe->enabled) {
+I'd prefer acpi_setup_mp_wakeup_mailbox().
+
+>
+>         if (mp_wake->version >=3D ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
+>             mp_wake->header.length >=3D ACPI_MADT_MP_WAKEUP_SIZE_V1) {
+> @@ -243,7 +243,11 @@ int __init acpi_parse_mp_wake(union acpi_subtable_he=
+aders *header,
+>                 acpi_mp_disable_offlining(mp_wake);
+>         }
+>
+> -       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+> -
+>         return 0;
+>  }
+> +
+> +void __init setup_mp_wakeup_mailbox(u64 mailbox_paddr)
+> +{
+> +       acpi_mp_wake_mailbox_paddr =3D mailbox_paddr;
+> +       apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+> +}
+> --
+> 2.43.0
+>
+>
