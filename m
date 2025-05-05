@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A034629A3F3;
-	Mon,  5 May 2025 22:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B8B29A3F4;
+	Mon,  5 May 2025 22:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485039; cv=none; b=uUmyf7uOQGXxG0b4p9kw/Lm4P+smFTpf6Hu9iSTC10pEqB2egIdF0fk2Olbw1AOxkvW8V4Glumz+vg8TE2hf5e+PLtYao5DRHQeykzV6r1EfzMKlEpJ2vMWPg6r0wpKiDgj/PEVtVbsRRCZdUTcg5GRmzpBNObhJU9ISSp6N9rk=
+	t=1746485041; cv=none; b=UOpmWKT2ACQHCbGdB+760U8rrOM+ke3/JffZVA/iIstn6o6WiNcHP0QCwTtbxROvTIhpXmiv97n7q9NxyZOmBiqXz+SMdChhs50hJjhu46qQVcC+veL2WGp8YrzSV0RjMzhTwa1rDjj1AM30DCsDPS2XVNNrm+of5NHxgO339Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485039; c=relaxed/simple;
-	bh=1VbaWWLdA5HmNjEIviEi/XhdFnVk+gwnKiAHhTR9D7s=;
+	s=arc-20240116; t=1746485041; c=relaxed/simple;
+	bh=vuGAH76yVNoA6UsmNpp/0fHm5dZYlv92C+/rbmGG6oA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LGnFS1dl1WAP50x6Bzj1ZO2t4vbm8Y5lpc3hooJIFxAUrdPP5lquF9r7+PyR/GMLtl/5v4zS4u6ByUufM9HyPQMab4/V0hhkK1rzyHdC1de1/eSefwdodv+E+X9BMR8eaY7DujSH4Suoy0px+T6A7BOPccq/FNg4D2XUoMeDTdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UozyPwGI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tb/7R6GxGuxTPFD3ZL0jNRGgcNHVtYnMvoffOdkirUFMl8wnlnt2ydNF8KoC5n+oulTtffuDYwqNxJ8dChkiuVoj/TiW492jcG72IbjgVyKdmKYwidel0TcNQMYJLeYBmip+6UbmyVn2OVP7Tq0b7FfuWt6gtlNkBwu0uiO2IFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3yK4O11; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UozyPwGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46F5C4CEEE;
-	Mon,  5 May 2025 22:43:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3yK4O11"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7242C4CEE4;
+	Mon,  5 May 2025 22:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485039;
-	bh=1VbaWWLdA5HmNjEIviEi/XhdFnVk+gwnKiAHhTR9D7s=;
+	s=k20201202; t=1746485041;
+	bh=vuGAH76yVNoA6UsmNpp/0fHm5dZYlv92C+/rbmGG6oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UozyPwGIEmCU1YE6S85lnKz4gD6hn2IlqIV+/eZ5BtGiJMi1b9JIgWLz9eKyGYszp
-	 GGpFkJkxQtoWJytrH4rDobXTBFSAeFI5pdu4RhscuryeE3La05RwgHLLS7ggKRVcU+
-	 bcyCQ18PI5hyx/rhSTy4/Ryqg7UloIxR4a3mACbeDZT4zmQihqzr4Y0O0yH70FggLq
-	 eD2RHPa1l/sVb4le2+jHLvuXClpZXIhPnl16nn6dFjcddB+tOP6Rp2VtqeHdjJQ5Uz
-	 UPYuLq6y8mKuDNAwdrV2XlRLh6LCoamSzjRjS61yyU7jYJAVifA4RSZjts4dpuo30T
-	 laQrlcVTd0vFQ==
+	b=G3yK4O11ZrGQ18ta+igIvQa2aBdqEKe0F0btHHNr+89IxpwUCmnWJDhcTy+mpQWKA
+	 uqdftIM6yVBqsfspF5hZaiUrnvkwndVpM+fqPfXArrXw5qv8aYp0NUeTAvuZIh8WHS
+	 crvIg9vr9WUwahNdLdBBjAFrioRN0KrDJya19o4ovevpb4/m2Hxls4IzVH4NYP87C2
+	 QeYJtcwNf2D2ZxJeoIPWD5sdJ7ERybFArozRzP8g4D6BbEjQXD7gbjw5Xx7MK22uWq
+	 HcZaBT8P3NhDyCb61mzzqEuvpzNQSUhYArCM5JIwT3bJoBFUR5l452TLO591dJOont
+	 5jtPiIZiqKzJA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kees Cook <kees@kernel.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Andy Yan <andy.yan@rock-chips.com>,
+	Vinod Koul <vkoul@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 136/486] PNP: Expand length of fixup id string
-Date: Mon,  5 May 2025 18:33:32 -0400
-Message-Id: <20250505223922.2682012-136-sashal@kernel.org>
+	kishon@kernel.org,
+	heiko@sntech.de,
+	linux-phy@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 137/486] phy: rockchip: usbdp: Only verify link rates/lanes/voltage when the corresponding set flags are set
+Date: Mon,  5 May 2025 18:33:33 -0400
+Message-Id: <20250505223922.2682012-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -50,37 +54,172 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Kees Cook <kees@kernel.org>
+From: Andy Yan <andy.yan@rock-chips.com>
 
-[ Upstream commit 425b1c97b07f2290700f708edabef32861e2b2db ]
+[ Upstream commit 969a38be437b68dc9e12e3c3f08911c9f9c8be73 ]
 
-GCC 15's -Wunterminated-string-initialization saw that "id" was not
-including the required trailing NUL character. Instead of marking "id"
-with __nonstring[1], expand the length of the string as it is used in
-(debugging) format strings that expect a properly formed C string.
+According documentation of phy_configure_opts_dp, at the configure
+stage, link rates should only be verify/configure when set_rate
+flag is set, the same applies to lanes and voltage.
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=117178 [1]
-Signed-off-by: Kees Cook <kees@kernel.org>
-Link: https://patch.msgid.link/20250310222432.work.826-kees@kernel.org
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+So do it as the documentation says.
+Because voltage setting depends on the lanes, link rates set
+previously, so record the link rates and lanes at it's verify stage.
+
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Link: https://lore.kernel.org/r/20250312080041.524546-1-andyshrk@163.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/pnp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/phy/rockchip/phy-rockchip-usbdp.c | 87 ++++++++++++++---------
+ 1 file changed, 53 insertions(+), 34 deletions(-)
 
-diff --git a/include/linux/pnp.h b/include/linux/pnp.h
-index b7a7158aaf65e..23fe3eaf242d6 100644
---- a/include/linux/pnp.h
-+++ b/include/linux/pnp.h
-@@ -290,7 +290,7 @@ static inline void pnp_set_drvdata(struct pnp_dev *pdev, void *data)
+diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+index f5c6d264d89ed..d2021f7941e3e 100644
+--- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
++++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+@@ -187,6 +187,8 @@ struct rk_udphy {
+ 	u32 dp_aux_din_sel;
+ 	bool dp_sink_hpd_sel;
+ 	bool dp_sink_hpd_cfg;
++	unsigned int link_rate;
++	unsigned int lanes;
+ 	u8 bw;
+ 	int id;
+ 
+@@ -1102,15 +1104,19 @@ static int rk_udphy_dp_phy_power_off(struct phy *phy)
+ 	return 0;
  }
  
- struct pnp_fixup {
--	char id[7];
-+	char id[8];
- 	void (*quirk_function) (struct pnp_dev *dev);	/* fixup function */
- };
+-static int rk_udphy_dp_phy_verify_link_rate(unsigned int link_rate)
++/*
++ * Verify link rate
++ */
++static int rk_udphy_dp_phy_verify_link_rate(struct rk_udphy *udphy,
++					    struct phy_configure_opts_dp *dp)
+ {
+-	switch (link_rate) {
++	switch (dp->link_rate) {
+ 	case 1620:
+ 	case 2700:
+ 	case 5400:
+ 	case 8100:
++		udphy->link_rate = dp->link_rate;
+ 		break;
+-
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1118,45 +1124,44 @@ static int rk_udphy_dp_phy_verify_link_rate(unsigned int link_rate)
+ 	return 0;
+ }
  
+-static int rk_udphy_dp_phy_verify_config(struct rk_udphy *udphy,
+-					 struct phy_configure_opts_dp *dp)
++static int rk_udphy_dp_phy_verify_lanes(struct rk_udphy *udphy,
++					struct phy_configure_opts_dp *dp)
+ {
+-	int i, ret;
+-
+-	/* If changing link rate was required, verify it's supported. */
+-	ret = rk_udphy_dp_phy_verify_link_rate(dp->link_rate);
+-	if (ret)
+-		return ret;
+-
+-	/* Verify lane count. */
+ 	switch (dp->lanes) {
+ 	case 1:
+ 	case 2:
+ 	case 4:
+ 		/* valid lane count. */
++		udphy->lanes = dp->lanes;
+ 		break;
+ 
+ 	default:
+ 		return -EINVAL;
+ 	}
+ 
+-	/*
+-	 * If changing voltages is required, check swing and pre-emphasis
+-	 * levels, per-lane.
+-	 */
+-	if (dp->set_voltages) {
+-		/* Lane count verified previously. */
+-		for (i = 0; i < dp->lanes; i++) {
+-			if (dp->voltage[i] > 3 || dp->pre[i] > 3)
+-				return -EINVAL;
++	return 0;
++}
+ 
+-			/*
+-			 * Sum of voltage swing and pre-emphasis levels cannot
+-			 * exceed 3.
+-			 */
+-			if (dp->voltage[i] + dp->pre[i] > 3)
+-				return -EINVAL;
+-		}
++/*
++ * If changing voltages is required, check swing and pre-emphasis
++ * levels, per-lane.
++ */
++static int rk_udphy_dp_phy_verify_voltages(struct rk_udphy *udphy,
++					   struct phy_configure_opts_dp *dp)
++{
++	int i;
++
++	/* Lane count verified previously. */
++	for (i = 0; i < udphy->lanes; i++) {
++		if (dp->voltage[i] > 3 || dp->pre[i] > 3)
++			return -EINVAL;
++
++		/*
++		 * Sum of voltage swing and pre-emphasis levels cannot
++		 * exceed 3.
++		 */
++		if (dp->voltage[i] + dp->pre[i] > 3)
++			return -EINVAL;
+ 	}
+ 
+ 	return 0;
+@@ -1196,9 +1201,23 @@ static int rk_udphy_dp_phy_configure(struct phy *phy,
+ 	u32 i, val, lane;
+ 	int ret;
+ 
+-	ret = rk_udphy_dp_phy_verify_config(udphy, dp);
+-	if (ret)
+-		return ret;
++	if (dp->set_rate) {
++		ret = rk_udphy_dp_phy_verify_link_rate(udphy, dp);
++		if (ret)
++			return ret;
++	}
++
++	if (dp->set_lanes) {
++		ret = rk_udphy_dp_phy_verify_lanes(udphy, dp);
++		if (ret)
++			return ret;
++	}
++
++	if (dp->set_voltages) {
++		ret = rk_udphy_dp_phy_verify_voltages(udphy, dp);
++		if (ret)
++			return ret;
++	}
+ 
+ 	if (dp->set_rate) {
+ 		regmap_update_bits(udphy->pma_regmap, CMN_DP_RSTN_OFFSET,
+@@ -1243,9 +1262,9 @@ static int rk_udphy_dp_phy_configure(struct phy *phy,
+ 	}
+ 
+ 	if (dp->set_voltages) {
+-		for (i = 0; i < dp->lanes; i++) {
++		for (i = 0; i < udphy->lanes; i++) {
+ 			lane = udphy->dp_lane_sel[i];
+-			switch (dp->link_rate) {
++			switch (udphy->link_rate) {
+ 			case 1620:
+ 			case 2700:
+ 				regmap_update_bits(udphy->pma_regmap,
 -- 
 2.39.5
 
