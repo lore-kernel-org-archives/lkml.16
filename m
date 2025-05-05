@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFE628DF14;
-	Mon,  5 May 2025 22:31:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC255291872;
+	Mon,  5 May 2025 22:31:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484288; cv=none; b=AMtZexBFE69hcOvAMoD9YXhitUuFE5iZZ8JlZ/pYzA2CWCvSUR/Z89IrQlwYPY6sTsebgAEiHBN9L79L+wfOAgcwKmqsH2qY6C953d01E8kRPRHGT1T06sX3QEXpOJJlsUGUhICEaQUi5kRa6SaBqM1RdwM5ZHWuqTZPv6tucKU=
+	t=1746484289; cv=none; b=lMes8BCnMoQ2VlaDqD1Ena4aD3K1/bpYDaAzThczCyv4DtJzMQHkzMCzlEREDedVShIO7TWanG2ml4g2WNqXPO5/auFWgygeNVKgEPFYbJ4q936xM9pZ6mSWA8jm0nf+tRdKmWr0y6CmWh9/0v88WMEt64K46HOkaV3/pIBCsKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484288; c=relaxed/simple;
-	bh=ZBwHAHoci1CN5jPJYMM0igKKNuqHeRDs1uAY+YiLzuo=;
+	s=arc-20240116; t=1746484289; c=relaxed/simple;
+	bh=zpK1R8wze3U6ReEPtkYuk8uW5B/Opn6Y5h40oQ9O7To=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AivWMMkoPxJlBZdiFRWUJ8bwBqmWWcA+ojdS/stWc6WNIAkM+Wmhed6WoJRx/E4HUtGptmYa6InTVbIZNPCWlVNBXxwzKPBlP7HiFF8tHBLzKMdHE1l9i7eAt4I4EwWPhM7sw9Qw277gpGacTBRA1M4o/fv8adyvx/UYcZUKacE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkMEL8R8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QGPpeAkh2Cya9naWBf7DwbD5UIZQhb5qJFvRcxsBLvHgb7j9zsO6XqjDsDOx4iEj9ALAoxchy7XiYrjwU38AcYmzun1+ePCIt03XfJj8mE7hR4qJ8WcewdTwGhE7mUj2irqVQbavF4iN579BJQ4TmToB3aFYO8uwOu4MAzfHNR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJB4Buvc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkMEL8R8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A366AC4CEED;
-	Mon,  5 May 2025 22:31:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJB4Buvc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C387C4CEEF;
+	Mon,  5 May 2025 22:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484288;
-	bh=ZBwHAHoci1CN5jPJYMM0igKKNuqHeRDs1uAY+YiLzuo=;
+	s=k20201202; t=1746484289;
+	bh=zpK1R8wze3U6ReEPtkYuk8uW5B/Opn6Y5h40oQ9O7To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RkMEL8R8sX8ktq1tB4tHzqGgQtb6Gz+2oSYHZ7cHwFM3KzJeA4N+o+9shuuiaVZkb
-	 CLlef+sm67iQgt3ByfrYAy75fQSu2P/XMkME3cn/sMcmH5Lt/glVXR7XzYM1OUSklm
-	 NeUX4Sy26h4WB0vAlbmx8YgK2mij5Oi/3aAuLc812Z8uzP6pEuS7FqMjBGCaJwXmd7
-	 +N86bWSS0+wW5ZX8fl4UvB0MluSeIof9v18ZvrWQorm3qOcYonhSD/n6lnTWZ2LMeF
-	 LiiSfT7h5j5O3g2JwdwovM/fsKrNFVEprcI5oWbO1hk0EWKw7AflAIi9h0GkUZ1AF1
-	 Wd9mG2x7tevvA==
+	b=NJB4BuvcvYrpgwRwqL3ROSopDaUcy+mqfE2q0qdT6uk4SvYVnjXiw3uxFGTKBrlWP
+	 3tgZrdIVDC3tmbE7m0tx5ysq41YnegMxghRRqPp4OBGjZL6IRxao+VW3SkV+l7y42h
+	 OfDU1xDB4wm0pEtfvxKWtsuq0pon/Sf2EuQxTLPTDtXtXkVvwmLWByUoeiMUr+uOtl
+	 0jm9gwKt/xc4suenBMKAMm20NPSMlDk5GFMDRxtfiTbmcNNCznyibH1uPxah+DEQQ+
+	 KtNA3QJIpa8HoyYCMSKFt/cp4iVteKl3zjNWWoZuPfrklrjoMrJCmPZw2XoVOdQQqi
+	 J/pGXh+FEHBXw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -39,9 +39,9 @@ Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
 	simona@ffwll.ch,
 	intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.14 436/642] drm/xe: Stop ignoring errors from xe_ttm_stolen_mgr_init()
-Date: Mon,  5 May 2025 18:10:52 -0400
-Message-Id: <20250505221419.2672473-436-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 437/642] drm/xe: Fix xe_tile_init_noalloc() error propagation
+Date: Mon,  5 May 2025 18:10:53 -0400
+Message-Id: <20250505221419.2672473-437-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
 References: <20250505221419.2672473-1-sashal@kernel.org>
@@ -58,104 +58,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Lucas De Marchi <lucas.demarchi@intel.com>
 
-[ Upstream commit ff57025c358603555f1e0ae0d50282a460433594 ]
+[ Upstream commit 0bcf41171c64234e79eb3552d00f0aad8a47e8d3 ]
 
-Make sure to differentiate normal behavior, e.g. there's no stolen, from
-allocation errors or failure to initialize lower layers.
+Propagate the error to the caller so initialization properly stops if
+sysfs creation fails.
 
 Reviewed-by: Francois Dugast <francois.dugast@intel.com>
 Reviewed-by: Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20250213192909.996148-5-lucas.demarchi@intel.com
+Link: https://patchwork.freedesktop.org/patch/msgid/20250213192909.996148-4-lucas.demarchi@intel.com
 Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/xe/xe_device.c         |  4 +++-
- drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c | 17 +++++++++--------
- drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h |  2 +-
- 3 files changed, 13 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/xe/xe_tile.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-index 4e1839b483a00..e22f29ac96631 100644
---- a/drivers/gpu/drm/xe/xe_device.c
-+++ b/drivers/gpu/drm/xe/xe_device.c
-@@ -722,7 +722,9 @@ int xe_device_probe(struct xe_device *xe)
- 	}
+diff --git a/drivers/gpu/drm/xe/xe_tile.c b/drivers/gpu/drm/xe/xe_tile.c
+index 07cf7cfe4abd5..37f170effcd67 100644
+--- a/drivers/gpu/drm/xe/xe_tile.c
++++ b/drivers/gpu/drm/xe/xe_tile.c
+@@ -176,9 +176,7 @@ int xe_tile_init_noalloc(struct xe_tile *tile)
  
- 	/* Allocate and map stolen after potential VRAM resize */
--	xe_ttm_stolen_mgr_init(xe);
-+	err = xe_ttm_stolen_mgr_init(xe);
-+	if (err)
-+		return err;
+ 	xe_wa_apply_tile_workarounds(tile);
  
- 	/*
- 	 * Now that GT is initialized (TTM in particular),
-diff --git a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
-index d414421f8c131..d9c9d2547aadf 100644
---- a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
-+++ b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.c
-@@ -207,17 +207,16 @@ static u64 detect_stolen(struct xe_device *xe, struct xe_ttm_stolen_mgr *mgr)
- #endif
+-	err = xe_tile_sysfs_init(tile);
+-
+-	return 0;
++	return xe_tile_sysfs_init(tile);
  }
  
--void xe_ttm_stolen_mgr_init(struct xe_device *xe)
-+int xe_ttm_stolen_mgr_init(struct xe_device *xe)
- {
--	struct xe_ttm_stolen_mgr *mgr = drmm_kzalloc(&xe->drm, sizeof(*mgr), GFP_KERNEL);
- 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-+	struct xe_ttm_stolen_mgr *mgr;
- 	u64 stolen_size, io_size;
- 	int err;
- 
--	if (!mgr) {
--		drm_dbg_kms(&xe->drm, "Stolen mgr init failed\n");
--		return;
--	}
-+	mgr = drmm_kzalloc(&xe->drm, sizeof(*mgr), GFP_KERNEL);
-+	if (!mgr)
-+		return -ENOMEM;
- 
- 	if (IS_SRIOV_VF(xe))
- 		stolen_size = 0;
-@@ -230,7 +229,7 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
- 
- 	if (!stolen_size) {
- 		drm_dbg_kms(&xe->drm, "No stolen memory support\n");
--		return;
-+		return 0;
- 	}
- 
- 	/*
-@@ -246,7 +245,7 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
- 				     io_size, PAGE_SIZE);
- 	if (err) {
- 		drm_dbg_kms(&xe->drm, "Stolen mgr init failed: %i\n", err);
--		return;
-+		return err;
- 	}
- 
- 	drm_dbg_kms(&xe->drm, "Initialized stolen memory support with %llu bytes\n",
-@@ -254,6 +253,8 @@ void xe_ttm_stolen_mgr_init(struct xe_device *xe)
- 
- 	if (io_size)
- 		mgr->mapping = devm_ioremap_wc(&pdev->dev, mgr->io_base, io_size);
-+
-+	return 0;
- }
- 
- u64 xe_ttm_stolen_io_offset(struct xe_bo *bo, u32 offset)
-diff --git a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
-index 1777245ff8101..8e877d1e839bd 100644
---- a/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
-+++ b/drivers/gpu/drm/xe/xe_ttm_stolen_mgr.h
-@@ -12,7 +12,7 @@ struct ttm_resource;
- struct xe_bo;
- struct xe_device;
- 
--void xe_ttm_stolen_mgr_init(struct xe_device *xe);
-+int xe_ttm_stolen_mgr_init(struct xe_device *xe);
- int xe_ttm_stolen_io_mem_reserve(struct xe_device *xe, struct ttm_resource *mem);
- bool xe_ttm_stolen_cpu_access_needs_ggtt(struct xe_device *xe);
- u64 xe_ttm_stolen_io_offset(struct xe_bo *bo, u32 offset);
+ void xe_tile_migrate_wait(struct xe_tile *tile)
 -- 
 2.39.5
 
