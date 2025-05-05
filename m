@@ -1,97 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944882D1105;
-	Mon,  5 May 2025 22:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74A0361289;
+	Mon,  5 May 2025 22:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485455; cv=none; b=U4lU4Uxity5POl5vniFaxXQ/5TnBH2/3R4tMbjHRUUSsy/H5tXnA4d6b/TbZTjgdHlO2swE8nEKzzLLXaSCSI/Sznmx9UIjEIZnYK+m3CuJKoAMVfjVh5oo8mpbp0pVlr0k7Mgx4tbzk35uT4xoSlBCJHanVoN9GAXywOAD9CCk=
+	t=1746485431; cv=none; b=Tu/9RDhvay+By2V/gmdfZWMsLNLnwuZcMtGxgMcH8CCTPefqvYZWxOpX4a5zVPzYkE5ASfFbIog1BGT0IbLTEvhskOlp1B38hyT+1SoNe8K1+uS0m1hzEFiBAXOtF35NC81PcjU0AFj2fXBBlWWlUXw1XPBgpeH45adBKe4Og9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485455; c=relaxed/simple;
-	bh=h93WNiWTrCyQI3Nh7+7mDmYhlhKFljlivtTz1PbBYDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhhFXNl5dOGHX5MPoWvM8FgVvOYIuP1JHErdbrj0SyAy1Wv8TZzXf6ULwrkfhOPjbGKC/4mshbhNC76Mxt5D9EuL6jDyyyQtDApe8A4GObxUR8qspFV/yQM++GeQZurVsOVysL1L4IgT/KUOaakEWlXJl+FcKgCKSEvQPFyUU7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Utq2YDpG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746485431; c=relaxed/simple;
+	bh=lUE1eP6OwOjt5dPp+quRCxl+4FiVxPZlYlJJNyOWc7c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dm+BJiXL3bYKq8O+gihGnEQbVRfEHpazJe443Isi/jvzKRYqwdbRlOBM0gOGu2iHX0O+GIFIMvVs2putibL3PymYFDtBKlCLsx1KjX7u6z7PrLtg9xv8U1UXwuMcAhm0LGLBuqhIMB4RS8Eguzc2FWIMSA41N7HsyKM0omnq0so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mq2ahOo+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Utq2YDpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8D7C4CEED;
-	Mon,  5 May 2025 22:50:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mq2ahOo+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A711AC4CEE4;
+	Mon,  5 May 2025 22:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485455;
-	bh=h93WNiWTrCyQI3Nh7+7mDmYhlhKFljlivtTz1PbBYDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Utq2YDpGylG1fsAlgziWYcuoLBLkJgK12hvOUP8xdcbhzKCLQPCyJ9I39YZ0bUtiu
-	 SluMlGiZLvb46N2Q4DG5PamA5XC+QgziPQKWy3txE91Uos+8Kg1tuEc40Uio6IzLCq
-	 at8qeKmDlXN9PpJnAbQt6rvI4gQIM0qDoB/t1Kbwcw1rLmw7Rzw++kaY2Ro15+7fCs
-	 JmRlrZ9/6bE+FjZjbijUZh+xKD/Mu7I6PLff8kwqsVrdNvmVDPB2je4bZdOkmAIs3b
-	 SXB+sR5TFafIb43E9kBAPPiGcMNOVr0FzbPZ7q6XwXkku4rBrcB2aYOfSAinQDz4ta
-	 EvBzXeQjV/7iQ==
-Date: Tue, 6 May 2025 07:50:50 +0900
-From: Mark Brown <broonie@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 2/9] ASoC: codec: cs42l56: Drop cs42l56.h
-Message-ID: <aBlAys_SvQRHNTcp@finisterre.sirena.org.uk>
-References: <20250428-csl42x-v2-0-e8056313968f@nxp.com>
- <20250428-csl42x-v2-2-e8056313968f@nxp.com>
+	s=k20201202; t=1746485430;
+	bh=lUE1eP6OwOjt5dPp+quRCxl+4FiVxPZlYlJJNyOWc7c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Mq2ahOo+yqzsy0k1C4x9R1hMuyh2FDbAodUi5l/DPOkJQTAzi/AeOCUK+2Txl/ika
+	 zn3AaZcwcm59nw0ImeWUuWshXWcXXe72dQ9UaPhTpXT1Wx1PgtQp1lgheSz76U3gnQ
+	 uSPAyu9HUy22R3lYs6ENFxXRnULEUK9gJEg1lpsdypjhJoVzJiu+OJry3/ivgLwZYM
+	 oHzBpYylcleZfaXDXx35sGlhI/IpOkhW7R/Tbw48DbBg5RmY8v+T8Cq9L1L4JsP+rl
+	 8ykfOWV0VkPpQu4RDwGHBco/DtcVXbM9Jx+khbG2S4ZnRbmKoWWfGcqp504nkMA5yI
+	 /Hr+sjXJ6MKEw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Michael Margolin <mrgolin@amazon.com>,
+	Firas Jahjah <firasj@amazon.com>,
+	Yonatan Nachum <ynachum@amazon.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mbloch@nvidia.com,
+	phaddad@nvidia.com,
+	mgurtovoy@nvidia.com,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 307/486] RDMA/core: Fix best page size finding when it can cross SG entries
+Date: Mon,  5 May 2025 18:36:23 -0400
+Message-Id: <20250505223922.2682012-307-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v5vMaPAMM9Oxt2fN"
-Content-Disposition: inline
-In-Reply-To: <20250428-csl42x-v2-2-e8056313968f@nxp.com>
-X-Cookie: "Elvis is my copilot."
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.26
+Content-Transfer-Encoding: 8bit
 
+From: Michael Margolin <mrgolin@amazon.com>
 
---v5vMaPAMM9Oxt2fN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 486055f5e09df959ad4e3aa4ee75b5c91ddeec2e ]
 
-On Mon, Apr 28, 2025 at 10:09:03AM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> There is no in-tree user of "include/sound/cs42l56.h", so move
-> 'struct cs42l56_platform_data' to cs42l56.c and remove the header file.
-> And platform data is mostly for platforms that create
-> devices non using device tree. CS42L56 is a discontinued product,
-> there is less possibility that new users will use legacy method
-> to create devices. So drop cs42l56.h to prepare using GPIOD API.
+A single scatter-gather entry is limited by a 32 bits "length" field
+that is practically 4GB - PAGE_SIZE. This means that even when the
+memory is physically contiguous, we might need more than one entry to
+represent it. Additionally when using dmabuf, the sg_table might be
+originated outside the subsystem and optimized for other needs.
 
-This breaks an x86 allmodconfig build:
+For instance an SGT of 16GB GPU continuous memory might look like this:
+(a real life example)
 
-/build/stage/linux/sound/soc/codecs/cs42l56.c:26:10: fatal error: 'sound/cs=
-42l56.h' file not found
-   26 | #include <sound/cs42l56.h>
-      |          ^~~~~~~~~~~~~~~~~
-1 error generated.
+dma_address 34401400000, length fffff000
+dma_address 345013ff000, length fffff000
+dma_address 346013fe000, length fffff000
+dma_address 347013fd000, length fffff000
+dma_address 348013fc000, length 4000
 
---v5vMaPAMM9Oxt2fN
-Content-Type: application/pgp-signature; name="signature.asc"
+Since ib_umem_find_best_pgsz works within SG entries, in the above case
+we will result with the worst possible 4KB page size.
 
------BEGIN PGP SIGNATURE-----
+Fix this by taking into consideration only the alignment of addresses of
+real discontinuity points rather than treating SG entries as such, and
+adjust the page iterator to correctly handle cross SG entry pages.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgZQMkACgkQJNaLcl1U
-h9A1Igf/Q06MRKirMShcv/TcB5l7drBIkDOMikE6u4JLDnDWRMiKvQMv5hBWmf2Z
-7dZ+Yj++8mN06HJICtBEhWgF5f8qKM0GEheCbe8AfHEDqsf4mJiSVkPOFF6KNkV5
-XAFg+fU7SpLPVhFpF2k02l734j1AP4OrlfYz1MwwRPit2bG94oFdaH7u/zEnxAIf
-1YYC8qYRiHUUavnPJIX8V9T4TAKw8n9EMLCLK8ApjYgwuxoDVIbnCgyVyyEhL3Mj
-3dj5sLe9lYtVXu7O3+nF4R6W7MrNHJ2rimlRnRhP/oEs3pxkvtwhHbQPty6bn9UQ
-mEN4LZ+tPfGWW+aoIYgdma+8Tm/ong==
-=Eg3Q
------END PGP SIGNATURE-----
+There is currently an assumption that drivers do not ask for pages
+bigger than maximal DMA size supported by their devices.
 
---v5vMaPAMM9Oxt2fN--
+Reviewed-by: Firas Jahjah <firasj@amazon.com>
+Reviewed-by: Yonatan Nachum <ynachum@amazon.com>
+Signed-off-by: Michael Margolin <mrgolin@amazon.com>
+Link: https://patch.msgid.link/20250217141623.12428-1-mrgolin@amazon.com
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/umem.c  | 36 ++++++++++++++++++++++++---------
+ drivers/infiniband/core/verbs.c | 11 +++++-----
+ 2 files changed, 32 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
+index 07c571c7b6999..c5b6863947605 100644
+--- a/drivers/infiniband/core/umem.c
++++ b/drivers/infiniband/core/umem.c
+@@ -80,9 +80,12 @@ unsigned long ib_umem_find_best_pgsz(struct ib_umem *umem,
+ 				     unsigned long pgsz_bitmap,
+ 				     unsigned long virt)
+ {
+-	struct scatterlist *sg;
++	unsigned long curr_len = 0;
++	dma_addr_t curr_base = ~0;
+ 	unsigned long va, pgoff;
++	struct scatterlist *sg;
+ 	dma_addr_t mask;
++	dma_addr_t end;
+ 	int i;
+ 
+ 	umem->iova = va = virt;
+@@ -107,17 +110,30 @@ unsigned long ib_umem_find_best_pgsz(struct ib_umem *umem,
+ 	pgoff = umem->address & ~PAGE_MASK;
+ 
+ 	for_each_sgtable_dma_sg(&umem->sgt_append.sgt, sg, i) {
+-		/* Walk SGL and reduce max page size if VA/PA bits differ
+-		 * for any address.
++		/* If the current entry is physically contiguous with the previous
++		 * one, no need to take its start addresses into consideration.
+ 		 */
+-		mask |= (sg_dma_address(sg) + pgoff) ^ va;
++		if (check_add_overflow(curr_base, curr_len, &end) ||
++		    end != sg_dma_address(sg)) {
++
++			curr_base = sg_dma_address(sg);
++			curr_len = 0;
++
++			/* Reduce max page size if VA/PA bits differ */
++			mask |= (curr_base + pgoff) ^ va;
++
++			/* The alignment of any VA matching a discontinuity point
++			* in the physical memory sets the maximum possible page
++			* size as this must be a starting point of a new page that
++			* needs to be aligned.
++			*/
++			if (i != 0)
++				mask |= va;
++		}
++
++		curr_len += sg_dma_len(sg);
+ 		va += sg_dma_len(sg) - pgoff;
+-		/* Except for the last entry, the ending iova alignment sets
+-		 * the maximum possible page size as the low bits of the iova
+-		 * must be zero when starting the next chunk.
+-		 */
+-		if (i != (umem->sgt_append.sgt.nents - 1))
+-			mask |= va;
++
+ 		pgoff = 0;
+ 	}
+ 
+diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
+index 473ee0831307c..dc40001072a5e 100644
+--- a/drivers/infiniband/core/verbs.c
++++ b/drivers/infiniband/core/verbs.c
+@@ -3109,22 +3109,23 @@ EXPORT_SYMBOL(__rdma_block_iter_start);
+ bool __rdma_block_iter_next(struct ib_block_iter *biter)
+ {
+ 	unsigned int block_offset;
+-	unsigned int sg_delta;
++	unsigned int delta;
+ 
+ 	if (!biter->__sg_nents || !biter->__sg)
+ 		return false;
+ 
+ 	biter->__dma_addr = sg_dma_address(biter->__sg) + biter->__sg_advance;
+ 	block_offset = biter->__dma_addr & (BIT_ULL(biter->__pg_bit) - 1);
+-	sg_delta = BIT_ULL(biter->__pg_bit) - block_offset;
++	delta = BIT_ULL(biter->__pg_bit) - block_offset;
+ 
+-	if (sg_dma_len(biter->__sg) - biter->__sg_advance > sg_delta) {
+-		biter->__sg_advance += sg_delta;
+-	} else {
++	while (biter->__sg_nents && biter->__sg &&
++	       sg_dma_len(biter->__sg) - biter->__sg_advance <= delta) {
++		delta -= sg_dma_len(biter->__sg) - biter->__sg_advance;
+ 		biter->__sg_advance = 0;
+ 		biter->__sg = sg_next(biter->__sg);
+ 		biter->__sg_nents--;
+ 	}
++	biter->__sg_advance += delta;
+ 
+ 	return true;
+ }
+-- 
+2.39.5
+
