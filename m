@@ -1,52 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2434E2D4B49;
-	Mon,  5 May 2025 22:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E9C2D4B6E;
+	Mon,  5 May 2025 22:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485660; cv=none; b=p1AeYbp+bdbzU4Dv/Za+G7zs2AG0nB1/mrQuiEZCOBL7Whi9W64hQcktzLS7/AT1egzs4toPcwL7K9vJVFKOlNusGPCmAdSm2srJvWwtDJznOvq94V56HmbeDhvg7YtQex895I+AbuNbmH+2a/Y/ojXYYs9PALLQcgAJXZYZvv8=
+	t=1746485666; cv=none; b=TtAUXMX3KJ2U2kHMQih9RA1HPqoqRBT0amNDXlaqYq46hRItkRdOx9mI9dD+50igTdVZd6cVJfot+XJAykCP9i9hwIHmBqtOntgvxDhsYHRT8152cLmWs1zJQaKxkxMfRGyOGDfYK6F9uTHoAZ5rMRRAUnaB2c53PfiCW5KdmUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485660; c=relaxed/simple;
-	bh=bpkrz8KBNf3ONWBnGX36j1LvOm1wwo0jVhbLIIk0ZOo=;
+	s=arc-20240116; t=1746485666; c=relaxed/simple;
+	bh=IyFIML+rboKGpxA24Mrd1ILEPJI5G2tbJCi/JtGhixo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jxbzES4OI6Ui8NX09xfR7vBbS33HKWmroo+CYrWye/Ect4kcgaN43SbAbG+zec69rUcCSekJ0VbhZ4x932W22cLR0NkIbvZ+n2IBu96TOcJ/DgStJdrqTVyVuhy0LyLqCcAs3IlFOlz729lUT5U5yorXabqaH/GqBSEfdVgBq2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDRtQETv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OAtYv7ao0+Eex406zoGgv6qykGqrGx3W9nAes4hLBT/abaNELF2sGxvAyRtv/x8IAnA17dusnsbBQjUBc/0cBuPnjXhY8s2x2ir0Kv3uiYj5kTobUgsAuUGuaboEI2eQ1NDzUsQMiwcW2CJLCGXc1E/zdKv8pLPosKxo15/9Yjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2EfpZD0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDRtQETv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44702C4CEE4;
-	Mon,  5 May 2025 22:54:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2EfpZD0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364B1C4CEEE;
+	Mon,  5 May 2025 22:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485659;
-	bh=bpkrz8KBNf3ONWBnGX36j1LvOm1wwo0jVhbLIIk0ZOo=;
+	s=k20201202; t=1746485664;
+	bh=IyFIML+rboKGpxA24Mrd1ILEPJI5G2tbJCi/JtGhixo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CDRtQETvnqghjafQBDajbDdkbVtdJvCMegOb0BqNO8MaOWUPNOd35XCz1pd04nmQ+
-	 6TG0VnW0/X4F2hfHtgSsVfluhdxZDdF0pQGnOaZ2HsK9so3QsrzsXblENhTZZ0QMdE
-	 2rXrVgztQCLuyrRbRf8zMmmU6EGTIdmwcBFUk03KlLio51lemHLo+gFPzU23NHxDEG
-	 2muKeAzhx1SfXmhO5czhQt9JiTXKSwBleS1uHxs4muL+1xybSJuC0x8+Mt5v4eAzHb
-	 z0Un/a0YYR9I/TsoQYOAip7SxY2Y4e2OzIBrlVYSaPVBh/aCr0/lzUv/M0e1c5a+3n
-	 6LkpccVBiW3BA==
+	b=W2EfpZD0h22amkk5TtUzGkME5SNQCkOpN22Wtgc5WlUyPStWch/wWcR0sLrdmI/AE
+	 MpRhhuVsvk8wsJqJWoE0kBBdbZcXBrfxn9sYiub9VqPhQXWJW9HD+kM51QDKcprE0R
+	 l0qG551bOS1Z8ZfB83uPWgUFZesg+NjIt6BFLMNwMh4Gx8OYCl9isCVaHrhjHyDokY
+	 uf4u2ua0vbQ0LHqxgzLdS2ZL2TWOnL4tUASyYhcNSLGGIW3osVCjYKIANb7Ng0kvf4
+	 A56D7UIvTMpbiob16LZ4c4llFTuygdX6wA+6Cg+PZLQIyGwL1r3X4Wv03+myHyRkmt
+	 I8z+okh2DaimQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Mina Almasry <almasrymina@google.com>,
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	hawk@kernel.org,
-	ilias.apalodimas@linaro.org,
-	jdamato@fastly.com,
-	sdf@fomichev.me,
-	kuniyu@amazon.com,
-	kory.maincent@bootlin.com,
-	mkarsten@uwaterloo.ca,
-	bigeasy@linutronix.de,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 412/486] net: page_pool: avoid false positive warning if NAPI was never added
-Date: Mon,  5 May 2025 18:38:08 -0400
-Message-Id: <20250505223922.2682012-412-sashal@kernel.org>
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.12 416/486] f2fs: introduce f2fs_base_attr for global sysfs entries
+Date: Mon,  5 May 2025 18:38:12 -0400
+Message-Id: <20250505223922.2682012-416-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -61,70 +50,153 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit c1e00bc4be06cacee6307cedb9b55bbaddb5044d ]
+[ Upstream commit 21925ede449e038ed6f9efdfe0e79f15bddc34bc ]
 
-We expect NAPI to be in disabled state when page pool is torn down.
-But it is also legal if the NAPI is completely uninitialized.
+In /sys/fs/f2fs/features, there's no f2fs_sb_info, so let's avoid to get
+the pointer.
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-Link: https://patch.msgid.link/20250206225638.1387810-4-kuba@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.h       | 12 ++++++++++++
- net/core/page_pool.c |  7 ++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ fs/f2fs/sysfs.c | 74 ++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 52 insertions(+), 22 deletions(-)
 
-diff --git a/net/core/dev.h b/net/core/dev.h
-index 2e3bb7669984a..764e0097ccf22 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -148,6 +148,18 @@ void xdp_do_check_flushed(struct napi_struct *napi);
- static inline void xdp_do_check_flushed(struct napi_struct *napi) { }
- #endif
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index d9a44f03e558b..7df638f901a1f 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -61,6 +61,12 @@ struct f2fs_attr {
+ 	int id;
+ };
  
-+/* Best effort check that NAPI is not idle (can't be scheduled to run) */
-+static inline void napi_assert_will_not_race(const struct napi_struct *napi)
-+{
-+	/* uninitialized instance, can't race */
-+	if (!napi->poll_list.next)
-+		return;
++struct f2fs_base_attr {
++	struct attribute attr;
++	ssize_t (*show)(struct f2fs_base_attr *a, char *buf);
++	ssize_t (*store)(struct f2fs_base_attr *a, const char *buf, size_t len);
++};
 +
-+	/* SCHED bit is set on disabled instances */
-+	WARN_ON(!test_bit(NAPI_STATE_SCHED, &napi->state));
-+	WARN_ON(READ_ONCE(napi->list_owner) != -1);
+ static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
+ 			     struct f2fs_sb_info *sbi, char *buf);
+ 
+@@ -864,6 +870,25 @@ static void f2fs_sb_release(struct kobject *kobj)
+ 	complete(&sbi->s_kobj_unregister);
+ }
+ 
++static ssize_t f2fs_base_attr_show(struct kobject *kobj,
++				struct attribute *attr, char *buf)
++{
++	struct f2fs_base_attr *a = container_of(attr,
++				struct f2fs_base_attr, attr);
++
++	return a->show ? a->show(a, buf) : 0;
 +}
 +
- void kick_defer_list_purge(struct softnet_data *sd, unsigned int cpu);
- 
- #define XMIT_RECURSION_LIMIT	8
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 7b20f6fcb82c0..c8ce069605c42 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -25,6 +25,7 @@
- 
- #include <trace/events/page_pool.h>
- 
-+#include "dev.h"
- #include "mp_dmabuf_devmem.h"
- #include "netmem_priv.h"
- #include "page_pool_priv.h"
-@@ -1108,11 +1109,7 @@ void page_pool_disable_direct_recycling(struct page_pool *pool)
- 	if (!pool->p.napi)
- 		return;
- 
--	/* To avoid races with recycling and additional barriers make sure
--	 * pool and NAPI are unlinked when NAPI is disabled.
--	 */
--	WARN_ON(!test_bit(NAPI_STATE_SCHED, &pool->p.napi->state));
--	WARN_ON(READ_ONCE(pool->p.napi->list_owner) != -1);
-+	napi_assert_will_not_race(pool->p.napi);
- 
- 	WRITE_ONCE(pool->p.napi, NULL);
++static ssize_t f2fs_base_attr_store(struct kobject *kobj,
++				struct attribute *attr,
++				const char *buf, size_t len)
++{
++	struct f2fs_base_attr *a = container_of(attr,
++				struct f2fs_base_attr, attr);
++
++	return a->store ? a->store(a, buf, len) : 0;
++}
++
+ /*
+  * Note that there are three feature list entries:
+  * 1) /sys/fs/f2fs/features
+@@ -882,14 +907,13 @@ static void f2fs_sb_release(struct kobject *kobj)
+  *     please add new on-disk feature in this list only.
+  *     - ref. F2FS_SB_FEATURE_RO_ATTR()
+  */
+-static ssize_t f2fs_feature_show(struct f2fs_attr *a,
+-		struct f2fs_sb_info *sbi, char *buf)
++static ssize_t f2fs_feature_show(struct f2fs_base_attr *a, char *buf)
+ {
+ 	return sysfs_emit(buf, "supported\n");
  }
+ 
+ #define F2FS_FEATURE_RO_ATTR(_name)				\
+-static struct f2fs_attr f2fs_attr_##_name = {			\
++static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
+ 	.attr = {.name = __stringify(_name), .mode = 0444 },	\
+ 	.show	= f2fs_feature_show,				\
+ }
+@@ -1258,37 +1282,38 @@ static struct attribute *f2fs_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(f2fs);
+ 
++#define BASE_ATTR_LIST(name) (&f2fs_base_attr_##name.attr)
+ static struct attribute *f2fs_feat_attrs[] = {
+ #ifdef CONFIG_FS_ENCRYPTION
+-	ATTR_LIST(encryption),
+-	ATTR_LIST(test_dummy_encryption_v2),
++	BASE_ATTR_LIST(encryption),
++	BASE_ATTR_LIST(test_dummy_encryption_v2),
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	ATTR_LIST(encrypted_casefold),
++	BASE_ATTR_LIST(encrypted_casefold),
+ #endif
+ #endif /* CONFIG_FS_ENCRYPTION */
+ #ifdef CONFIG_BLK_DEV_ZONED
+-	ATTR_LIST(block_zoned),
++	BASE_ATTR_LIST(block_zoned),
+ #endif
+-	ATTR_LIST(atomic_write),
+-	ATTR_LIST(extra_attr),
+-	ATTR_LIST(project_quota),
+-	ATTR_LIST(inode_checksum),
+-	ATTR_LIST(flexible_inline_xattr),
+-	ATTR_LIST(quota_ino),
+-	ATTR_LIST(inode_crtime),
+-	ATTR_LIST(lost_found),
++	BASE_ATTR_LIST(atomic_write),
++	BASE_ATTR_LIST(extra_attr),
++	BASE_ATTR_LIST(project_quota),
++	BASE_ATTR_LIST(inode_checksum),
++	BASE_ATTR_LIST(flexible_inline_xattr),
++	BASE_ATTR_LIST(quota_ino),
++	BASE_ATTR_LIST(inode_crtime),
++	BASE_ATTR_LIST(lost_found),
+ #ifdef CONFIG_FS_VERITY
+-	ATTR_LIST(verity),
++	BASE_ATTR_LIST(verity),
+ #endif
+-	ATTR_LIST(sb_checksum),
++	BASE_ATTR_LIST(sb_checksum),
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	ATTR_LIST(casefold),
++	BASE_ATTR_LIST(casefold),
+ #endif
+-	ATTR_LIST(readonly),
++	BASE_ATTR_LIST(readonly),
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+-	ATTR_LIST(compression),
++	BASE_ATTR_LIST(compression),
+ #endif
+-	ATTR_LIST(pin_file),
++	BASE_ATTR_LIST(pin_file),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(f2fs_feat);
+@@ -1362,9 +1387,14 @@ static struct kset f2fs_kset = {
+ 	.kobj	= {.ktype = &f2fs_ktype},
+ };
+ 
++static const struct sysfs_ops f2fs_feat_attr_ops = {
++	.show	= f2fs_base_attr_show,
++	.store	= f2fs_base_attr_store,
++};
++
+ static const struct kobj_type f2fs_feat_ktype = {
+ 	.default_groups = f2fs_feat_groups,
+-	.sysfs_ops	= &f2fs_attr_ops,
++	.sysfs_ops	= &f2fs_feat_attr_ops,
+ };
+ 
+ static struct kobject f2fs_feat = {
 -- 
 2.39.5
 
