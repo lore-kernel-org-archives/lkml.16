@@ -1,205 +1,199 @@
-Received: from mail-yb1-f225.google.com (mail-yb1-f225.google.com [209.85.219.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F7F4A1D
-	for <linux-kernel@vger.kernel.org>; Mon,  5 May 2025 17:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.225
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746465994; cv=none; b=bSyIJv1St3HLKltxhFaCxbrAwXzFVR8gSKG3VsAhu57hPI92pLF1vOf8o9ZlqqEVW8AHgfM4o34t4KYsJOErcgn71f75WQ3aqkzw/7gDQh7vuRtTpN0wHsew1fZv4E/joVn2ehFHzhlyFFPdn+b3nJ350NH70qMezwy1PJhATTA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746465994; c=relaxed/simple;
-	bh=aODsyg3joXcQ287FoVhkIV5aJfVBMDhrX2MPoMsF9/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hWgE7MmOnOHtDWb7ErcMkj5KnnEchgdONnB34AJktfZw3ItaAzAgASCCIeUJfRjW6IwK+hdrB4VhY22njua5dzp3/yoF/L+0vOI56bGoKXwvKrdk1IWseyLBQY4ckFg8NFhZjj+ag+y6mj+A1Ue93k2iS7ALJ24S1GxNUeyrfAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=GbKWrNHz; arc=none smtp.client-ip=209.85.219.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA9F26738B;
+	Mon,  5 May 2025 17:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746466049; cv=pass; b=qgJCg7MEHXbJLWrLqK6G1u9AUVtM0nXMG8KT3+8mALzJ0JJN3ZVnR6oxs308BNXn4zYN8D5N4LrUFM13ntGWbZWwFp+F77b/CFDm/PkW+KMI5GKCWJIOLjujpemB48Cj2MbUcog3lHo+lixXarMxY1p0ETFN6ro3Z7MyrEzfhcw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746466049; c=relaxed/simple;
+	bh=uJMB3RmoFmNJqBV7ekNdfelHXQHZizUIa4ub+tYRYMc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BBwOTxRRM8Sjytb5okz1HdIMAYNmlUdPyCY6kDOIhGBBaZ8Wfxn4u0KH1wpmgvVAe+3k3ie5W3rxrFtwYnEToBA1w11X76o1/Uy0Hel6qa73hOhE3hJvtFelEULSKflEL6QzXVwWueomyjCxhWHFNw6lslsmm0juXYRMW1FLrlY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=OUrrSne5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="GbKWrNHz"
-Received: by mail-yb1-f225.google.com with SMTP id 3f1490d57ef6-e75b6f8c766so40340276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 05 May 2025 10:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746465991; x=1747070791; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DDBk+OYzCApSnK8VVZgyIgA3ncZhmRQ/48wNK7Y0ijk=;
-        b=GbKWrNHzT5fOlzhH4jPGQXmfFjRfiWXRy59ev1xoqxCppbyi8GibE+zJcxyLeZXoIM
-         MiqJt4b59XkuZvrmywTbQk0UT2C/hJ4A6o8y8yUSAX+FpaQOpct7UppFRzejtPy836I3
-         tUUtvxiJF4KWhqD5V27jjxACWBypiU30O/+iX21UIr0EXro2aN+zSUFjfwIfgZTSOoHU
-         6dI6FCLy1mwNUkQtPHI9bTjlSc0ySERArgUFBw5Ll53jhPtXGpKIPQT9GD4EnXoILd5G
-         Ty+0A3Mpclxtgd2ewYJ/9eM2XEBt0qVA8ah4lKeQ9pTyn8ExHVJt9tyS5xodUUJfAadB
-         jTIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746465991; x=1747070791;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DDBk+OYzCApSnK8VVZgyIgA3ncZhmRQ/48wNK7Y0ijk=;
-        b=HF3aIgfS/VxJMXYP8XKRLF6N1IBlP++WzKwigXa8q6xI8H4qDWTWIrRBhubvhf7CgV
-         OguAwADpFECv3p+YS4n7BofNqrXK95RhDr9E0EQgR8ZC+3wUMQgmkFwH7pIUfnwkiDwi
-         3RekNCafpbGF+L6iDGKRJFLRthZr+9yRdXs2FQqCYJNJM1u6g+M9IzZ85UQox3l7gn2f
-         yc726e+BW3Fqg3b85YBGU539jBRJwtZzLbKRe0nAWGz9OkVIjPc0JeY1TUH12pKw8YS1
-         0ZY/NUfbFagSIpN7fkgrCBhDlYdTL7Bbv0u56NE7LqRqCPRVUD4xBQ1S2RWvxrSyxr0+
-         Lfuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGoLd7XodLvBzqDsZtkOISNWxjRXmKoqQB0Ht4S0+qm81fQXqLbFL3XIoyKpye0VIbbgRKF4wXghw8o4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvjGLcHkdc9ebGNuqTANGNNYq6y2MQS7wxCtbSX667n/M/pgYG
-	cRs1iy0QYdSR7MMydYVlhgnuQwNAj06+/yHbPPb8Kb5l60BA+qBws5sZDK/tLnNqkomVJFPlSd0
-	oCdJp0HYBjQLLCR95STJqrH8DCaKYgsl45SaO7ruzkn2r9z+1
-X-Gm-Gg: ASbGncsm20RNgxJDtMskmLQsz/iYT2pK4biptbWyH3pJpP+kT3rk4U+nrDytGIKUPqa
-	vRRCDRHl1D225GM+3IMwedw67pi3QbA58tB/nNRmPokjlILUjVXBl4UsThZ+1y6BOKhPThb9lSo
-	ZyQwsc2q29N8FI3tu16DeM63N9LwWXJdBlMLQg3PCAHBbHum00t8D/3OjIEs4n01O4R2FQJP5OO
-	DxhJR0FA9CngdKlj6vrse/BtoJjw60p9wahxGid53ggT0oeSPh+R8QqzhFATlR3TVr96I2mN83D
-	idi5Jf1NgAoG+jU2gS0hnIc1Edq1OQ==
-X-Google-Smtp-Source: AGHT+IF8JQQZ9iJZET0yqNKPYRUGBpoq1VA7CgS5xHctkCNPAgyxmvjK72Iq3Quz/EaHkhR44JzXhXdmNEo9
-X-Received: by 2002:a05:690c:7108:b0:6ff:8418:5afb with SMTP id 00721157ae682-708cedf5b65mr78859887b3.5.1746465990790;
-        Mon, 05 May 2025 10:26:30 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-708c46f219csm20088657b3.60.2025.05.05.10.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 10:26:30 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2FBB2340350;
-	Mon,  5 May 2025 11:26:30 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 29BA6E41993; Mon,  5 May 2025 11:26:30 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ublk: consolidate UBLK_IO_FLAG_OWNED_BY_SRV checks
-Date: Mon,  5 May 2025 11:26:23 -0600
-Message-ID: <20250505172624.1121839-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="OUrrSne5"
+ARC-Seal: i=1; a=rsa-sha256; t=1746466024; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=fmdldmq8dsLmVPIYQxY161qfznq7mmrK8ujgoFnjIkPzEUJPSVMYY8y5ut+Yq4vXdqkP7SKZwhP5Wzyxjbfh23I44QYTp86SllgnvqLBSe8GpGFEIykN0WimXb520kO/YGOZ3b+ekHfa4G2XZ6i9Zyqt9/BSN7dbMWLD/wrZW/E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746466024; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=j1pxA+bc+vNKzjIaRT1KaTq/RuyMnrlK34dQ5cfd5BU=; 
+	b=H/LgMSug9gBuSTlAAoH89EXEnXLoIAxQxgP849j+D/LKlY5Q9uHQD6StWX71fuu7j6GqLOaXDO+Jdb7zwLk80/AES7sltnb449RnuCwoPZxPzoZT3MWTb1fewhU88Ft4YcCPajAFM4AIohIiFq6Yr53LcvQIFu3tZoN7/PAtPtU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746466024;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=j1pxA+bc+vNKzjIaRT1KaTq/RuyMnrlK34dQ5cfd5BU=;
+	b=OUrrSne5KQrgU8ndZn2XgYB7UVCtE6WukeUoqU9i2h8TpUfJ/GRmK3mGzruZLOa0
+	jHVIZbquQBl2aWBB3hos/Jc7xVACAr5a/VaHz9O1rjwyVtjoKU7AGUXj7gpnksa99cV
+	KN1nwhKSyjBK54FljqgddZXFRsw1fQcTs6BKIx90=
+Received: by mx.zohomail.com with SMTPS id 1746466022200140.16841011130168;
+	Mon, 5 May 2025 10:27:02 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Mon, 05 May 2025 19:26:37 +0200
+Subject: [PATCH v2 2/5] phy: rockchip: usbdp: move orientation handling
+ further down
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250505-rk3576-sige5-usb-v2-2-d5ba4305f3be@collabora.com>
+References: <20250505-rk3576-sige5-usb-v2-0-d5ba4305f3be@collabora.com>
+In-Reply-To: <20250505-rk3576-sige5-usb-v2-0-d5ba4305f3be@collabora.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Kever Yang <kever.yang@rock-chips.com>, 
+ Frank Wang <frank.wang@rock-chips.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ kernel@collabora.com, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-Every ublk I/O command except UBLK_IO_FETCH_REQ checks that the ublk_io
-has UBLK_IO_FLAG_OWNED_BY_SRV set. Consolidate the separate checks into
-a single one in __ublk_ch_uring_cmd(), analogous to those for
-UBLK_IO_FLAG_ACTIVE and UBLK_IO_FLAG_NEED_GET_DATA.
+The orientation handling code isn't referenced until very far down the
+driver code.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Move it down some ways so it can later reference other driver functions
+without needing forward declarations.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
-v2: rebase
+ drivers/phy/rockchip/phy-rockchip-usbdp.c | 100 +++++++++++++++---------------
+ 1 file changed, 50 insertions(+), 50 deletions(-)
 
- drivers/block/ublk_drv.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 2c8f28c0d0a1..3650bab40dd0 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1924,20 +1924,16 @@ static void ublk_io_release(void *priv)
- static int ublk_register_io_buf(struct io_uring_cmd *cmd,
- 				const struct ublk_queue *ubq, unsigned int tag,
- 				unsigned int index, unsigned int issue_flags)
- {
- 	struct ublk_device *ub = cmd->file->private_data;
--	const struct ublk_io *io = &ubq->ios[tag];
- 	struct request *req;
- 	int ret;
- 
- 	if (!ublk_support_zero_copy(ubq))
- 		return -EINVAL;
- 
--	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
--		return -EINVAL;
--
- 	req = __ublk_check_and_get_req(ub, ubq, tag, 0);
- 	if (!req)
- 		return -EINVAL;
- 
- 	ret = io_buffer_register_bvec(cmd, req, ublk_io_release, index,
-@@ -1949,21 +1945,16 @@ static int ublk_register_io_buf(struct io_uring_cmd *cmd,
- 
- 	return 0;
+diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+index c066cc0a7b4f10fc3cd8779323c369360893520d..fff54900feea601c8fe6bf4c7123dfebc5661a15 100644
+--- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
++++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+@@ -651,56 +651,6 @@ static void rk_udphy_set_typec_default_mapping(struct rk_udphy *udphy)
+ 	udphy->mode = UDPHY_MODE_DP_USB;
  }
  
- static int ublk_unregister_io_buf(struct io_uring_cmd *cmd,
--				  const struct ublk_queue *ubq, unsigned int tag,
-+				  const struct ublk_queue *ubq,
- 				  unsigned int index, unsigned int issue_flags)
+-static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+-				 enum typec_orientation orien)
+-{
+-	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
+-
+-	mutex_lock(&udphy->mutex);
+-
+-	if (orien == TYPEC_ORIENTATION_NONE) {
+-		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
+-		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
+-		/* unattached */
+-		rk_udphy_usb_bvalid_enable(udphy, false);
+-		goto unlock_ret;
+-	}
+-
+-	udphy->flip = (orien == TYPEC_ORIENTATION_REVERSE) ? true : false;
+-	rk_udphy_set_typec_default_mapping(udphy);
+-	rk_udphy_usb_bvalid_enable(udphy, true);
+-
+-unlock_ret:
+-	mutex_unlock(&udphy->mutex);
+-	return 0;
+-}
+-
+-static void rk_udphy_orien_switch_unregister(void *data)
+-{
+-	struct rk_udphy *udphy = data;
+-
+-	typec_switch_unregister(udphy->sw);
+-}
+-
+-static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
+-{
+-	struct typec_switch_desc sw_desc = { };
+-
+-	sw_desc.drvdata = udphy;
+-	sw_desc.fwnode = dev_fwnode(udphy->dev);
+-	sw_desc.set = rk_udphy_orien_sw_set;
+-
+-	udphy->sw = typec_switch_register(udphy->dev, &sw_desc);
+-	if (IS_ERR(udphy->sw)) {
+-		dev_err(udphy->dev, "Error register typec orientation switch: %ld\n",
+-			PTR_ERR(udphy->sw));
+-		return PTR_ERR(udphy->sw);
+-	}
+-
+-	return devm_add_action_or_reset(udphy->dev,
+-					rk_udphy_orien_switch_unregister, udphy);
+-}
+-
+ static int rk_udphy_refclk_set(struct rk_udphy *udphy)
  {
--	const struct ublk_io *io = &ubq->ios[tag];
--
- 	if (!ublk_support_zero_copy(ubq))
- 		return -EINVAL;
- 
--	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
--		return -EINVAL;
--
- 	return io_buffer_unregister_bvec(cmd, index, issue_flags);
+ 	unsigned long rate;
+@@ -1451,6 +1401,56 @@ static struct phy *rk_udphy_phy_xlate(struct device *dev, const struct of_phandl
+ 	return ERR_PTR(-EINVAL);
  }
  
- static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_queue *ubq,
- 		      struct ublk_io *io, __u64 buf_addr)
-@@ -2013,16 +2004,12 @@ static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_queue *ubq,
- 
- static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 				 struct ublk_io *io, struct io_uring_cmd *cmd,
- 				 const struct ublksrv_io_cmd *ub_cmd)
- {
--	struct request *req;
--
--	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
--		return -EINVAL;
-+	struct request *req = io->req;
- 
--	req = io->req;
- 	if (ublk_need_map_io(ubq)) {
- 		/*
- 		 * COMMIT_AND_FETCH_REQ has to provide IO buffer if
- 		 * NEED GET DATA is not enabled or it is Read IO.
- 		 */
-@@ -2102,10 +2089,15 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 	if (io->flags & UBLK_IO_FLAG_ACTIVE) {
- 		ret = -EBUSY;
- 		goto out;
- 	}
- 
-+	/* only UBLK_IO_FETCH_REQ is allowed if io is not OWNED_BY_SRV */
-+	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV) &&
-+	    _IOC_NR(cmd_op) != UBLK_IO_FETCH_REQ)
-+		goto out;
++static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
++				 enum typec_orientation orien)
++{
++	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
 +
- 	/*
- 	 * ensure that the user issues UBLK_IO_NEED_GET_DATA
- 	 * iff the driver have set the UBLK_IO_FLAG_NEED_GET_DATA.
- 	 */
- 	if ((!!(io->flags & UBLK_IO_FLAG_NEED_GET_DATA))
-@@ -2119,11 +2111,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 	ret = -EINVAL;
- 	switch (_IOC_NR(cmd_op)) {
- 	case UBLK_IO_REGISTER_IO_BUF:
- 		return ublk_register_io_buf(cmd, ubq, tag, ub_cmd->addr, issue_flags);
- 	case UBLK_IO_UNREGISTER_IO_BUF:
--		return ublk_unregister_io_buf(cmd, ubq, tag, ub_cmd->addr, issue_flags);
-+		return ublk_unregister_io_buf(cmd, ubq, ub_cmd->addr, issue_flags);
- 	case UBLK_IO_FETCH_REQ:
- 		ret = ublk_fetch(cmd, ubq, io, ub_cmd->addr);
- 		if (ret)
- 			goto out;
- 		break;
-@@ -2131,12 +2123,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		ret = ublk_commit_and_fetch(ubq, io, cmd, ub_cmd);
- 		if (ret)
- 			goto out;
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
--		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
--			goto out;
- 		io->addr = ub_cmd->addr;
- 		if (!ublk_get_data(ubq, io))
- 			return -EIOCBQUEUED;
- 
- 		return UBLK_IO_RES_OK;
++	mutex_lock(&udphy->mutex);
++
++	if (orien == TYPEC_ORIENTATION_NONE) {
++		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
++		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
++		/* unattached */
++		rk_udphy_usb_bvalid_enable(udphy, false);
++		goto unlock_ret;
++	}
++
++	udphy->flip = (orien == TYPEC_ORIENTATION_REVERSE) ? true : false;
++	rk_udphy_set_typec_default_mapping(udphy);
++	rk_udphy_usb_bvalid_enable(udphy, true);
++
++unlock_ret:
++	mutex_unlock(&udphy->mutex);
++	return 0;
++}
++
++static void rk_udphy_orien_switch_unregister(void *data)
++{
++	struct rk_udphy *udphy = data;
++
++	typec_switch_unregister(udphy->sw);
++}
++
++static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
++{
++	struct typec_switch_desc sw_desc = { };
++
++	sw_desc.drvdata = udphy;
++	sw_desc.fwnode = dev_fwnode(udphy->dev);
++	sw_desc.set = rk_udphy_orien_sw_set;
++
++	udphy->sw = typec_switch_register(udphy->dev, &sw_desc);
++	if (IS_ERR(udphy->sw)) {
++		dev_err(udphy->dev, "Error register typec orientation switch: %ld\n",
++			PTR_ERR(udphy->sw));
++		return PTR_ERR(udphy->sw);
++	}
++
++	return devm_add_action_or_reset(udphy->dev,
++					rk_udphy_orien_switch_unregister, udphy);
++}
++
+ static int rk_udphy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+
 -- 
-2.45.2
+2.49.0
 
