@@ -1,43 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDF7287519;
-	Mon,  5 May 2025 23:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF21281516;
+	Mon,  5 May 2025 23:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486229; cv=none; b=piPKCN4Vc8fNx2c3Nuwjm4NccneV2xcH6Ebu8XyY6EibIXS4Vcdkk6JFCvo9YI8WDyCJRTmKIZd/uTkY2JeLu8wwyPR7529yottBn8ZpAhqLu6boKCecoNJz6IoiChVm9LQc8FwqPrinjaDFR+rylzUJsPSCUN2U5BW7ZdpQsF0=
+	t=1746486244; cv=none; b=NkMfYuGB1mOhE0jJ/EKGCF1N5GkRAL+vWtBhB8QcomZtsUw/wIPJYdJUCOpw8ScWCDBqCPDdqiAEFTVFBa47+mzP0NOtu8jRI8fe0erkxh8hqrDVWfGqDsY7PaatyB5z8GnOj8vktGuLg4n2t0DxBnjIRPSR2NxakRjt3QwuVwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486229; c=relaxed/simple;
-	bh=nUhJPQAzAYCk+aYvLGOs2YSzYmxWM9N3qBgyHew88IU=;
+	s=arc-20240116; t=1746486244; c=relaxed/simple;
+	bh=VxKNg81st5yBFqNHGE1oif7k67R0iHenoDCXfIenh+c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YrrmEywHXdKiMryo1ExNfFv31XmBiL0IVvVWF1PSpwrXrSzEt/XraYGJI4YvtoPIegTyT5k99FJHrojPBPgifjCCz3Ry1nJGFXPKCQa5Fwg3ZKwwRBh5o4mX7WIXrRFAwTxmxY/+c/FTnR1VNcOVfTFlmYK2UzZKCJutTwub9as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zhq3/I/r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ouNK2b9epF+37jwPv16hiISiszk4uXd1lxd/m6DT3QGjQ/Ofrdzy9lZxoJHhxOFu/Tk+YeqIfMZN+JPIJsSW2b1sQW05N022916LNMtrE/CBdlZFxDi/+0bCOq9YLXOr6cnXy+pDr+1XNzIpH8MIIy99y9C82ntS9ZE25xUunYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5Lca7IT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zhq3/I/r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB730C4CEEF;
-	Mon,  5 May 2025 23:03:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5Lca7IT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3404C4CEED;
+	Mon,  5 May 2025 23:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486228;
-	bh=nUhJPQAzAYCk+aYvLGOs2YSzYmxWM9N3qBgyHew88IU=;
+	s=k20201202; t=1746486243;
+	bh=VxKNg81st5yBFqNHGE1oif7k67R0iHenoDCXfIenh+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zhq3/I/re8iL5bpdC5NXwDtrGln0zdAg6XAdFsbBho+bHoN8UzDHYLs4j6tRJaKFT
-	 hzFA7+h9qdeHReIEvc1wUwIUKXy1Y968dGou89cfUOhmjjr6UVH9w3bbBSvXmNP4n7
-	 /27qMzNk42OuIo5bnmzKF5O5vnKX88Fpwc4kVdYDX8SG6S1SEkFpZraJsLVqGMRFzV
-	 Y0HchsU4S+ZuAlCOVBZRYbsskMjWUXMGOLZqTGkOHpmYhViyVASJ9/UChOoXUSxtK8
-	 GrB+zEXs8hUv6VFRUtMNitkK9fKFgzdpx0DyphXLxFDsLRbgAPp2YYgqHxIA1OM1TD
-	 pzdjXegCfV5kw==
+	b=U5Lca7ITHCuIXzLa6SaT+NuUDUvh7AMp+XxupYJKmDiKPA7otZ0rGAhMdsMfyiWj0
+	 GHs6BERaIp7OmZiMkiMde1x2uuQclpBTS1u7SdAxZFw9MSDHb7UDJrXtthqkis9yWi
+	 dGEaHREksNWXX+PojYakPSLFc+nfobaVstppdBdlWHMAzeKLa0VbcK5JK/4BS6Hk/2
+	 B9TvtIbGAjR2K9MUCSd2MoJHaDM+juPh7YVE18TnooKJeCOrqS9G7I7cnI49tqhMuc
+	 moSVamOVTI/wGh8YdVTBwJuJG1ax2jp+XNPOnlFlqipX4q+gVDsfZ1sUZOGJa/vlHb
+	 KxWsrTVpNx2Zg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: zihan zhou <15645113830zzh@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
+Cc: Ilya Bakoulin <Ilya.Bakoulin@amd.com>,
+	Wenjing Liu <wenjing.liu@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	juri.lelli@redhat.com
-Subject: [PATCH AUTOSEL 6.6 218/294] sched: Reduce the default slice to avoid tasks getting an extra tick
-Date: Mon,  5 May 2025 18:55:18 -0400
-Message-Id: <20250505225634.2688578-218-sashal@kernel.org>
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	michael.strauss@amd.com,
+	zaeem.mohamed@amd.com,
+	PeiChen.Huang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 223/294] drm/amd/display: Don't try AUX transactions on disconnected link
+Date: Mon,  5 May 2025 18:55:23 -0400
+Message-Id: <20250505225634.2688578-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505225634.2688578-1-sashal@kernel.org>
 References: <20250505225634.2688578-1-sashal@kernel.org>
@@ -52,78 +62,55 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.89
 Content-Transfer-Encoding: 8bit
 
-From: zihan zhou <15645113830zzh@gmail.com>
+From: Ilya Bakoulin <Ilya.Bakoulin@amd.com>
 
-[ Upstream commit 2ae891b826958b60919ea21c727f77bcd6ffcc2c ]
+[ Upstream commit e8bffa52e0253cfd689813a620e64521256bc712 ]
 
-The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
-means that we have a default slice of:
+[Why]
+Setting link DPMS off in response to HPD disconnect creates AUX
+transactions on a link that is supposed to be disconnected. This can
+cause issues in some cases when the sink re-asserts HPD and expects
+source to re-enable the link.
 
-  0.75 for 1 cpu
-  1.50 up to 3 cpus
-  2.25 up to 7 cpus
-  3.00 for 8 cpus and above.
+[How]
+Avoid AUX transactions on disconnected link.
 
-For HZ=250 and HZ=100, because of the tick accuracy, the runtime of
-tasks is far higher than their slice.
-
-For HZ=1000 with 8 cpus or more, the accuracy of tick is already
-satisfactory, but there is still an issue that tasks will get an extra
-tick because the tick often arrives a little faster than expected. In
-this case, the task can only wait until the next tick to consider that it
-has reached its deadline, and will run 1ms longer.
-
-vruntime + sysctl_sched_base_slice =     deadline
-        |-----------|-----------|-----------|-----------|
-             1ms          1ms         1ms         1ms
-                   ^           ^           ^           ^
-                 tick1       tick2       tick3       tick4(nearly 4ms)
-
-There are two reasons for tick error: clockevent precision and the
-CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING. with
-CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
-without it, because of clockevent precision, tick still often less than
-1ms.
-
-In order to make scheduling more precise, we changed 0.75 to 0.70,
-Using 0.70 instead of 0.75 should not change much for other configs
-and would fix this issue:
-
-  0.70 for 1 cpu
-  1.40 up to 3 cpus
-  2.10 up to 7 cpus
-  2.8 for 8 cpus and above.
-
-This does not guarantee that tasks can run the slice time accurately
-every time, but occasionally running an extra tick has little impact.
-
-Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20250208075322.13139-1-15645113830zzh@gmail.com
+Reviewed-by: Wenjing Liu <wenjing.liu@amd.com>
+Signed-off-by: Ilya Bakoulin <Ilya.Bakoulin@amd.com>
+Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../gpu/drm/amd/display/dc/link/protocols/link_dp_phy.c   | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 268e2a49b964e..6ce3028e6e852 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -73,10 +73,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
- /*
-  * Minimal preemption granularity for CPU-bound tasks:
-  *
-- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
-+ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
-  */
--unsigned int sysctl_sched_base_slice			= 750000ULL;
--static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
-+unsigned int sysctl_sched_base_slice			= 700000ULL;
-+static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
+diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_phy.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_phy.c
+index 9bde0c8bf914a..f01a3df584552 100644
+--- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_phy.c
++++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_phy.c
+@@ -74,7 +74,8 @@ void dp_disable_link_phy(struct dc_link *link,
+ 	struct dc  *dc = link->ctx->dc;
  
- /*
-  * After fork, child runs first. If set to 0 (default) then
+ 	if (!link->wa_flags.dp_keep_receiver_powered &&
+-		!link->skip_implict_edp_power_control)
++			!link->skip_implict_edp_power_control &&
++			link->type != dc_connection_none)
+ 		dpcd_write_rx_power_ctrl(link, false);
+ 
+ 	dc->hwss.disable_link_output(link, link_res, signal);
+@@ -159,8 +160,9 @@ enum dc_status dp_set_fec_ready(struct dc_link *link, const struct link_resource
+ 	} else {
+ 		if (link->fec_state == dc_link_fec_ready) {
+ 			fec_config = 0;
+-			core_link_write_dpcd(link, DP_FEC_CONFIGURATION,
+-				&fec_config, sizeof(fec_config));
++			if (link->type != dc_connection_none)
++				core_link_write_dpcd(link, DP_FEC_CONFIGURATION,
++					&fec_config, sizeof(fec_config));
+ 
+ 			link_enc->funcs->fec_set_ready(link_enc, false);
+ 			link->fec_state = dc_link_fec_not_ready;
 -- 
 2.39.5
 
