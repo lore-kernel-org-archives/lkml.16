@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE7359DED;
-	Mon,  5 May 2025 22:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF3B359DE4;
+	Mon,  5 May 2025 22:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484971; cv=none; b=RiWMEiwo8+dUmXeWcSA93/wsqKkq3nzbFTJPaMmRunATEiPwYlNnsvHlApLzYNN8dEzdHTU8iPYn9WybT5VjxR0wVQEIDMvouU+kri8Xfr9Bx4hAHbF7egHrl1MIHOjWIotpJ+BdMio0pniVyeaN2ycTGJoqLvmP7ovwqHU2gcE=
+	t=1746484970; cv=none; b=p/VDLkXbD9Z1+vJ49Y3K08rEG7/4rjLE2ApBXh+E2WdC6Rc293KCeu8MgphgUVX3Qzoc5bPoZcgGj/O3ky2AIA7iW5osZMCHcU5miRH7I5/6MQE3rAsbJ50OFSbGfLkR8/tUZG6hB3nuWBB88bFTNH1UTYyoMLdX+qGaQ1CrTHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484971; c=relaxed/simple;
-	bh=voUt6UCtPflvDhsBYQZpXVfdDV5XzYCSHE3Hzu1CIcY=;
+	s=arc-20240116; t=1746484970; c=relaxed/simple;
+	bh=WjO+egmhL/vXMYc7GhB8oOhdYaKPrwDEGtWK5+ykUtk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N5C5Kr2BO3qfBurYLtRvQpSF8qN4hw82IlbiBjP24Wv0CZYviEupZALz+QtBXVnlbye2wPQtvBN4tdcpUCClanDzhL1K4Rf0uQdbfxI2TYRS3QdQ6RADluNt87jRTfZia++Qv+342YsyoEOUFTJg0Mjki3KHUGBWxXqvd0PApT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spVKWHEl; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NtIiEiTJ5VUHm5k1WiZU/r0j6SXEEV6M2Gbztq39LpANRZ8soN7Hsxra0XQN2quvjDJ0jamSbtemqCMUqAa/LPaQMe0n/LcyuWLj3J+978wYZmi9ft6F9WrEUotHjfLlrPGfgIOsSX+wBlTegG3rz/df3nMddgI1wgzL68A6jxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8aZJDJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spVKWHEl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39835C4CEEF;
-	Mon,  5 May 2025 22:42:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8aZJDJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FC1C4CEE4;
+	Mon,  5 May 2025 22:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484971;
-	bh=voUt6UCtPflvDhsBYQZpXVfdDV5XzYCSHE3Hzu1CIcY=;
+	s=k20201202; t=1746484969;
+	bh=WjO+egmhL/vXMYc7GhB8oOhdYaKPrwDEGtWK5+ykUtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=spVKWHElt90Al0ZVOpU01VXBnY3mM9da0r24+/lnYfjG5AH1DC61z1JpAYeRoBvxU
-	 cIPgvtS3+HtiaLUl8CGw3tQNZh8HaEC4GG9GOsUTkLM+bbhMzja7IuuSW6CkjlQRBV
-	 DdpFwVCF3qOWuSDara7PxTgOiRcsm6tte4dzAwF7hh8eQIj2iI7C85h1fR0PTIwdJo
-	 Nrdb1o77wqTePvGYRf6MZuER74I9yIe48lXxjB8SnoRa/BHSjEn+QP5fQBxTWrfvS/
-	 fSuIki2dhXrm0Qn6WxE8cfycXUKN6hb/huZ10avO3euEAtqEr0Rksjm4qQXlbwE2hw
-	 9RM7up4CWi0/w==
+	b=J8aZJDJvu2DZQQt0JDgA7zN8kSJLwbkd+dSMcQBsEq3/QVF9lNiPqrzWv3iknBRT7
+	 iAeoeNIZVccs/B3D4h8zE+RKBMFZhXR6v14VmqOSu3Znnbqd5/XvI5rBqQnBa6mV+h
+	 TJL8uvq8ZZ79nmSfHRCorL2UYjloerUJJVpavVytbjTAmQbYhHnjaJqkaWrV5ZP6hB
+	 23uyA+VzPeruznH7Qbbw8K/ZiVznfi5GwSlDajmY8WSMQtw6elF3tIXICJcXPQH/u0
+	 ieAOW4/gjSPMzpthkqzt62lOvxV4DIr0712LMbbtNCbH47aU/hbqNjmuPCxtI4Lk4w
+	 JvT3Rrx+M/O6g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jan Kara <jack@suse.cz>,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Theodore Ts'o <tytso@mit.edu>,
+Cc: Frank Li <Frank.Li@nxp.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	jack@suse.com,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 102/486] jbd2: do not try to recover wiped journal
-Date: Mon,  5 May 2025 18:32:58 -0400
-Message-Id: <20250505223922.2682012-102-sashal@kernel.org>
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 101/486] PCI: dwc: Use resource start as ioremap() input in dw_pcie_pme_turn_off()
+Date: Mon,  5 May 2025 18:32:57 -0400
+Message-Id: <20250505223922.2682012-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
 References: <20250505223922.2682012-1-sashal@kernel.org>
@@ -52,56 +54,43 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
-From: Jan Kara <jack@suse.cz>
+From: Frank Li <Frank.Li@nxp.com>
 
-[ Upstream commit a662f3c03b754e1f97a2781fa242e95bdb139798 ]
+[ Upstream commit 8f4a489b370e6612700aa16b9e4373b2d85d7503 ]
 
-If a journal is wiped, we will set journal->j_tail to 0. However if
-'write' argument is not set (as it happens for read-only device or for
-ocfs2), the on-disk superblock is not updated accordingly and thus
-jbd2_journal_recover() cat try to recover the wiped journal. Fix the
-check in jbd2_journal_recover() to use journal->j_tail for checking
-empty journal instead.
+The msg_res region translates writes into PCIe Message TLPs. Previously we
+mapped this region using atu.cpu_addr, the input address programmed into
+the ATU.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
-Link: https://patch.msgid.link/20250206094657.20865-4-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+"cpu_addr" is a misnomer because when a bus fabric translates addresses
+between the CPU and the ATU, the ATU input address is different from the
+CPU address.  A future patch will rename "cpu_addr" and correct the value
+to be the ATU input address instead of the CPU physical address.
+
+Map the msg_res region before writing to it using the msg_res resource
+start, a CPU physical address.
+
+Link: https://lore.kernel.org/r/20250315201548.858189-2-helgaas@kernel.org
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/recovery.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
-index 667f67342c522..f85f401526c54 100644
---- a/fs/jbd2/recovery.c
-+++ b/fs/jbd2/recovery.c
-@@ -287,19 +287,20 @@ static int fc_do_one_pass(journal_t *journal,
- int jbd2_journal_recover(journal_t *journal)
- {
- 	int			err, err2;
--	journal_superblock_t *	sb;
--
- 	struct recovery_info	info;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 120e2aca5164a..d428457d9c432 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -902,7 +902,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+ 	if (ret)
+ 		return ret;
  
- 	memset(&info, 0, sizeof(info));
--	sb = journal->j_superblock;
+-	mem = ioremap(atu.cpu_addr, pci->region_align);
++	mem = ioremap(pci->pp.msg_res->start, pci->region_align);
+ 	if (!mem)
+ 		return -ENOMEM;
  
- 	/*
- 	 * The journal superblock's s_start field (the current log head)
- 	 * is always zero if, and only if, the journal was cleanly
--	 * unmounted.
-+	 * unmounted. We use its in-memory version j_tail here because
-+	 * jbd2_journal_wipe() could have updated it without updating journal
-+	 * superblock.
- 	 */
--	if (!sb->s_start) {
-+	if (!journal->j_tail) {
-+		journal_superblock_t *sb = journal->j_superblock;
-+
- 		jbd2_debug(1, "No recovery required, last transaction %d, head block %u\n",
- 			  be32_to_cpu(sb->s_sequence), be32_to_cpu(sb->s_head));
- 		journal->j_transaction_sequence = be32_to_cpu(sb->s_sequence) + 1;
 -- 
 2.39.5
 
