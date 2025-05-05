@@ -1,111 +1,119 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050151F3D20;
-	Mon,  5 May 2025 09:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5401EDA33;
+	Mon,  5 May 2025 09:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746436253; cv=none; b=LqJmdlDmK7fMKL9KiAFUSkALiFfu2wI6ppk5YUnFB//qfXg7VgfllCEAgx5Fgl5iVcG+5xHtCTtqjD3VTcTqXSDRWS8xGhj9vRUepDT46WkE6DO5EJUOfdUY+6pYQVJjWfjZf74pCvUFUs1wQRMwmixJXqYYPOWS73Er4SJ2RTg=
+	t=1746436275; cv=none; b=cSrgKizDeGolGQ3GzFvc52dejXwX8iXAjBGjNSbj4wMR0fsOGZ9llAeanbO6KCHv4JBw1MIHxSQ9MJmJ6vZ5YbFLUiTyLS2iZsjDEBw7NCTyftV/IOs9QH9hGKW1399AjY5PQPAl9smXUeuJhvoa7SQH7DLm8wZsC5P3VnZZbG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746436253; c=relaxed/simple;
-	bh=W1UhMgLjVd2n2XGiQWxnLIrYjuUTOOTZ7SjWfHY102Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HtnHVEC9ucf2v5gBNy4LERUHcx2rkiBit2LuQzxEh9DgcRwtpSlpAIRMJRHOW7o3fzVQ1jZdugGFAOBiccn6lGrDKfJ/S/Mz8+5QCp9K71UODIe3lqrjrBxQ6wGUZjSBMRtQNJD/kRNWPQeXmZQWxRVRKFe7N7GGOHTNV0uC6Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6yuBXwh; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746436275; c=relaxed/simple;
+	bh=Xo8XUrMn6xj4TqfQ3LqdOlexbgmagSfWnmLtxS//AnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PFtpVYR3iYugPutbNommLP42kyGEl2BPDSkeSRd40Kaij3zC7JIU6QeXXAX8mUf9jw78sFM1wAMCKa6oFlFkHsxO926XHmnKswulQ+RR319ULDnpXo3OKn5fCeuPTJ55iD6zo9CGMlp3J5EtRyxsYmNMtBnTUc8LNxHKY7OOEDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HiLtfZpO; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6yuBXwh"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-22423adf751so47127495ad.2;
-        Mon, 05 May 2025 02:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746436251; x=1747041051; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E/zvdg2/U/i/qCcOe+f7vAEo8dPot4Sa76Am+x0kALM=;
-        b=S6yuBXwht2gLJOl1zmis/Ukdeg/HniBoa0QTe9NFEvpq4ffa53yHWTc9IgEYSzfP8B
-         npSU4aRqzXop+D3OnxJR74GHOWXmEdwn3vGdf/MrGcXnuyXaZ6OJRArFUYUSJ1C/yMEP
-         nIqY43LMqqooyIr8pn2T126EUenJ5OitEnjXyiUpQvqYD32LNMUWARJCCrnupH/4u0aB
-         913LNb9g25pCxEyzqDkft9wx+GKXq2j06WO6luoxZ3iGuYqfPSQ5QSp+Q28UygeJgNks
-         JdyUpeOL2fMaVf2xGy5H91KBzew76wvq+U58eoEk8Y0TC75L9XwbHEGETSCGegwSOgm8
-         NKCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746436251; x=1747041051;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E/zvdg2/U/i/qCcOe+f7vAEo8dPot4Sa76Am+x0kALM=;
-        b=slyTKTvBje3rLtDN8r5KytXUptCq/zck+Z+wz5T9apJuh/7EUm5h9Cwl5yU7u07lcL
-         rsTTmwO+z5d8qt9rlHBzJtVK83zKg2iIbZfK3qiiRSZfuUYQvIOv4hsLFz7xsf0f+2j0
-         /KOQwISlyyh+Zu+Ep9pRqAtif5PsW1AfPs+p3fm5+E5OnvRS/klmPDzius52kNb+FEsr
-         NMOuszFi0cKbB0L3CyLa+SWDkvU8HgnwQ3XGSBQTxotW66Mi/l3eJvjVIcC7llb2SN4g
-         5ghOYE2x/y8ptePZlOql2vISLhSKwogTKWm/CHBTE3hfsF3R+Elc33uht5mUoRHDw1BG
-         tF6w==
-X-Forwarded-Encrypted: i=1; AJvYcCViPR/iCklktso6QnCRr/qe1T7zc5Zp1XhmD8spX/m84aRPwO7xd0Sq8IlHq2gMbvCwSMSWBa1HFnYhusQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDPXgwzRHoAUiT0uQ3ifnTTo03wMz8g9d8CvCoc3RM0QWn+ocT
-	8NXC/pyoakUtkSzo5Ob4fxHkw9u2HItVH5nj6vHdFwtvJOuvw5Yy
-X-Gm-Gg: ASbGncuj7SoPcfmEUT1aKzAItPAY7X0HCdlU278IkjplCZVX/hJSjlf/x3sqHm+11Ac
-	S4gLhGVTbPow41fLlX+WIs0Bb+2NLOT8b0TJI1l8/PdVHAA1nMBa5roRAXGIw772uSXZhe7GabJ
-	iaaqs0ZCdjKizy5qyu2hpg6KA26AZ077yHfPpTXtogk1lbv0H0NuhXVcm69umaxvVycgwBnWpxu
-	HfEICsMxASqTIFqEsx+RjAkOsgRcpZcio0aMQ0WvAURs+1+UhCuz3jpDyJAtle6eEB57S3rIMDt
-	RPKiztyXnk3kuw4TqUPkAjzh8SdNQF65KSZrsxrkPzn5UQ2Qp87gn86q/ig=
-X-Google-Smtp-Source: AGHT+IHLbxeGLjT/TswtMt+x7j48HKYYWzeEqiEchK77MOzKnnrmbYjxUgmkxglRUnq2YBocQ1/WiA==
-X-Received: by 2002:a17:903:3c25:b0:22c:3609:97ed with SMTP id d9443c01a7336-22e1031f6femr176430255ad.30.1746436251199;
-        Mon, 05 May 2025 02:10:51 -0700 (PDT)
-Received: from sid-Inspiron-15-3525.. ([106.222.229.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059020fe7sm6435377b3a.102.2025.05.05.02.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 May 2025 02:10:50 -0700 (PDT)
-From: Siddarth G <siddarthsgml@gmail.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	Siddarth G <siddarthsgml@gmail.com>
-Subject: [PATCH] fddi/skfp: fix null pointer dereference in smt.c
-Date: Mon,  5 May 2025 14:40:25 +0530
-Message-ID: <20250505091025.27368-1-siddarthsgml@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HiLtfZpO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5DE4940E0173;
+	Mon,  5 May 2025 09:11:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id n9tiTQf8rjA8; Mon,  5 May 2025 09:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746436265; bh=01O7tqAno4eu+silbNQlnIVAZ0Q0+jh1x3ytSuxjZN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HiLtfZpOdmjGqBsoYvwtK8QdYrhqZ/93rWN90SaS4C9YiyVRmH24RpiE07fWLKJDn
+	 9gUfJtr4Z3Jn45HZd/tzqtCRalNMh4JmQavNEsBaL35JlHeiyvO+O9xUTNwUbWhlbf
+	 UCcoz93TMl9DHH2IbGWWhWBOgfY2+mqQVQxTqBKjqfdLH7/kQj6RH//bAiYRN7Vbin
+	 qvNTKbtOTrwc89emZwS7+UcCQV5+RiuXeA/+8g6JGM14ksohSj8AsWOoogQ3EgJwQf
+	 dgUT3dX6RDNO21AvbCjb3+JSAd0Mf6SxFoi1hl4ETI4blOMI8EvfgYGIK8jHQlczKK
+	 ySJKKzbhcGLZufRXug6/lhzW2gfiO1XyvTU/isQET5MsWac4MuPz2If8NEBQgPbPDD
+	 qo72SpmSW3OALcKLL2bZ0U8wQfUZRypPnk3A9ugHj/Bha2gOzbnEbkMZNYuv+8t8QQ
+	 PIW7zO7Ul1Jp6atS6yG0X/vWwd5gkXXWR3O1fOHpW/6VUpBLsL11BWNPDd049emPVz
+	 hVXnUwQnBn/1OllDXj10875hQV1KIna3pYpAk+HXAM0aSnYQ15VuzVlstc6S+RbGIT
+	 0Z8LQIrU3iM9HxF02dnXNjK4JsA8qz8t8cRcm9JD0T5JzTgGzbdLTDaxRAp0EegrWf
+	 oQS/+dPvrWbr4dgMBn+rZ6M8=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E11E40E0222;
+	Mon,  5 May 2025 09:10:50 +0000 (UTC)
+Date: Mon, 5 May 2025 11:10:44 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc: Tony Luck <tony.luck@intel.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: Re: [v8 PATCH 0/2] Add L1 and L2 error detection for A53, A57 and A72
+Message-ID: <20250505091044.GCaBiAlCFqVgV7-3TJ@fat_crate.local>
+References: <1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com>
 
-In smt_string_swap(), when a closing bracket ']' is encountered
-before any opening bracket '[' open_paren would be NULL,
-and assigning it to format would lead to a null pointer being
-dereferenced in the format++ statement.
+On Sun, May 04, 2025 at 05:27:38PM -0700, Vijay Balakrishna wrote:
+> Hello,
+> 
+> This is an attempt to revive [v5] series. I have attempted to address comments
+> and suggestions from Marc Zyngier since [v5]. Additionally, I have extended
 
-Add a check to verify open_paren is non-NULL before assigning
-it to format
+I'd like to hear from ARM folks here, whether this makes sense to have still.
 
-Fixes: CID 100271 (Coverity Scan)
+> support for A72 processors. Testing the driver on a problematic A72 SoC
+> has led to the detection of Correctable Errors (CEs). Below are logs captured
+> from the problematic SoC during various boot instances.
+> 
+> [  876.896022] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+> 
+> [ 3700.978086] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+> 
+> [  976.956158] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+> 
+> [ 1427.933606] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+> 
+> [  192.959911] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+> 
+> Our primary focus is on A72. We have a significant number of A72-based systems
 
-Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
----
- drivers/net/fddi/skfp/smt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Then zap the support for the other CPUs as supporting those is futile.
 
-diff --git a/drivers/net/fddi/skfp/smt.c b/drivers/net/fddi/skfp/smt.c
-index dd15af4e98c2..174f279b89ac 100644
---- a/drivers/net/fddi/skfp/smt.c
-+++ b/drivers/net/fddi/skfp/smt.c
-@@ -1857,7 +1857,8 @@ static void smt_string_swap(char *data, const char *format, int len)
- 			open_paren = format ;
- 			break ;
- 		case ']' :
--			format = open_paren ;
-+			if (open_paren)
-+				format = open_paren ;
- 			break ;
- 		case '1' :
- 		case '2' :
+cortex_arm64_l1_l2.c - I don't want an EDAC driver per RAS functional unit.
+Call this edac_a72 or whatever, which will contain all A72 RAS functionality
+support. ARM folks will give you a good idea here if you don't have.
+
+Also, I'd need at least a reviewer entry to MAINTAINERS for patches to this
+driver because you'll be the only ones testing this as you have vested
+interest in this working.
+
+The dt patch needs a reviewed-by too.
+
+Once that is addressed, I'll take a look.
+
+Thx.
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
